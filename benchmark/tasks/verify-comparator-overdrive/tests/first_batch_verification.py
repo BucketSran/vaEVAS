@@ -72,6 +72,18 @@ def evaluate(rows,case,work=None):
             if len(falls)!=len(wanted_falls) or any(abs(a-b)>.3e-9 for a,b in zip(falls,wanted_falls)):
                 failures.append(node+' fall timing/count')
         if any(r['p1']>.5 and r['p2']>.5 for r in rows):failures.append('overlap')
+        # Threshold crossings alone cannot establish valid electrical rails.
+        # Test every raw point outside the published edge timing/transition guard.
+        bad_rail=False
+        for r in rows:
+            phase=r['time']%p
+            boundaries=[0,d,p/2,p/2+d,p]
+            if min(abs(phase-b) for b in boundaries)<=.5e-9:continue
+            wanted={'p1':float(d<=phase<p/2),'p2':float(p/2+d<=phase<p)}
+            if any(abs(r[node]-level)>.01 for node,level in wanted.items()):
+                bad_rail=True;break
+        if bad_rail:failures.append('phase stable electrical level')
+
         for k in range(12):
             capture=k*p+d+.05e-9
             observed=value(rows,'z',k*p+p/2+d+1e-9)

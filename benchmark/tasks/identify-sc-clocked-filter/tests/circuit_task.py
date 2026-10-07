@@ -228,6 +228,11 @@ def verify(candidate, output, tests, evaluate, case_name=None):
     complete = all(record["status"] in {"graded", "submission_failure"} for record in report["cases"])
     report.update(status="completed" if complete else "infrastructure_error",
                   reward=int(all(record["passed"] for record in report["cases"])) if complete else None)
+    if complete and any(record["status"] == "submission_failure" for record in report["cases"]):
+        # The harness has an explicit zero-score submission-contract category.
+        # Executable, complete Verilog-A output is part of that contract. Keep
+        # per-case failures distinct from numerical grading for calibration.
+        report.update(status="submission_contract_violation", reason="submission did not produce a complete executable simulation")
     return write_report(output, report)
 
 

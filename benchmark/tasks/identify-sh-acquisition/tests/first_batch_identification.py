@@ -9,7 +9,7 @@ import math
 
 def evaluate(rows, case, work=None):
     failures = []
-    nodes={p.get("node","out") for p in case.get("probes",[])} | {m.get("node","out") for m in case.get("metrics",[])} | {e.get("node","out") for e in case.get("crossings",[])}
+    nodes={g.get("node","out") for g in case.get("sample_grids",[])} | {p.get("node","out") for p in case.get("probes",[])} | {m.get("node","out") for m in case.get("metrics",[])} | {e.get("node","out") for e in case.get("crossings",[])}
     if len(rows) < 2 or any(not ({"time"}|nodes) <= r.keys() for r in rows):
         return dict(passed=False, failures=["missing waveform"])
     times = [r["time"] for r in rows]
@@ -39,6 +39,17 @@ def evaluate(rows, case, work=None):
             maxima[probe["metric"]] = max(maxima.get(probe["metric"], 0), error)
             if error > probe["tolerance"]:
                 failures.append(f"{probe['metric']} at {probe['time']:.9g}: {error:.6g} V exceeds {probe['tolerance']:.6g} V")
+        for grid in case.get("sample_grids", []):
+            bad=0; first=None
+            for j,expected in enumerate(grid["expected"]):
+                t=grid["start"]+j*grid["step"]
+                error=abs(sample(t,grid.get("node","out"))-expected)
+                maxima[grid["metric"]]=max(maxima.get(grid["metric"],0),error)
+                if error>grid["tolerance"]:
+                    bad+=1
+                    if first is None: first=(t,error)
+            if bad:
+                failures.append(f"{grid['metric']} grid: {bad}/{len(grid['expected'])} points fail; first at {first[0]:.9g}: {first[1]:.6g} V exceeds {grid['tolerance']:.6g} V")
         local = {}
         for metric in case.get("metrics", []):
             actual = sample(metric["t2"],metric.get("node","out"))-sample(metric["t1"],metric.get("node","out"))

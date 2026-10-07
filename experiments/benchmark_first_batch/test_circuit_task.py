@@ -3,6 +3,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -105,6 +106,29 @@ class ExecutionBoundaryTests(unittest.TestCase):
                 failed = runtime.verify(candidate, root / "fail", tests, lambda *args: {"passed": False})
                 self.assertEqual(failed["reward"], 0)
                 self.assertEqual(failed["status"], "completed")
+                linked = root / "linked.va"
+                linked.symlink_to(candidate)
+                with patch.object(sys, "argv", ["verify.py", "--candidate", str(linked), "--output", str(root / "linked-output"), "--tests", str(tests)]):
+                    with self.assertRaisesRegex(ValueError, "symlink"):
+                        runtime.main(lambda *args: {"passed": True})
+
+
+@unittest.skipUnless(os.environ.get("HARNESS_CHECKOUT"), "set HARNESS_CHECKOUT for actual harness protocol integration")
+class HarnessProjectionTests(unittest.TestCase):
+    def test_executable_submission_failure_retains_zero_score(self):
+        import importlib
+        checkout = Path(os.environ["HARNESS_CHECKOUT"]).resolve()
+        sys.path.insert(0, str(checkout))
+        try:
+            module = importlib.import_module("alphaapollo.common.execution.chips.benchmark_spectre")
+        finally:
+            sys.path.pop(0)
+        self.assertTrue(Path(module.__file__).resolve().is_relative_to(checkout))
+        projected = module.project_report({"status": "submission_contract_violation", "reward": 0,
+                                          "cases": [{"status": "submission_failure", "passed": False,
+                                                     "failure_kind": "compile_or_simulation_failure"}]},
+                                         purpose="final", feedback_fields=[])
+        self.assertEqual((projected["execution"], projected["score"]), ("ok", 0))
 
 
 if __name__ == "__main__":
