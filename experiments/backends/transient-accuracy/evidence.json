@@ -1,0 +1,1917 @@
+{
+  "schema_version": 1,
+  "scope": "finite development comparison; original paper fixed12 and checker unchanged; no paper P",
+  "counts": {
+    "spectre_new_numerical_launches": 8,
+    "spectre_new_version_queries": 1,
+    "evas_original_numerical_launches": 8,
+    "evas_within_domain_diagnostic_launches": 1,
+    "evas_final_accuracy_numerical_launches": 6,
+    "evas_total_numerical_launches": 15,
+    "evas_original_version_queries": 8,
+    "evas_final_identity_version_queries": 1,
+    "evas_total_version_queries": 9,
+    "automatic_numerical_retries": 0,
+    "reused_original_vco_raw_launches": 0
+  },
+  "spectre_complete_finite_passes": 2,
+  "spectre_complete_pass_cases": [
+    "nonlinear--tolerance-only",
+    "event-continuation--tolerance-only"
+  ],
+  "vco100ps": {
+    "original_denominator": 80749,
+    "within_domain_rows": 80748,
+    "beyond_stop_rows": 1,
+    "last_native_time_s": 8.000000000003679e-06,
+    "stop_s": 8e-06,
+    "full_attempt": "invalid_inputs; all80749 unpaired",
+    "diagnostic": "separate identity,80748 native times,ordinary phase gap retained"
+  },
+  "cases": [
+    {
+      "id": "nonlinear--baseline",
+      "requested_spectre": {
+        "reltol": 1e-05,
+        "vabstol_V": 1e-08,
+        "iabstol_A": 1e-12,
+        "maxstep_s": 1.0,
+        "stop_s": 1,
+        "method": "traponly",
+        "errpreset": "conservative"
+      },
+      "spectre": {
+        "id": "nonlinear--baseline",
+        "execution_status": "completed",
+        "rows": 298,
+        "analysis_pass": false,
+        "failures": 825,
+        "failure_kinds": [
+          "waveform_error"
+        ],
+        "maxima": {
+          "z": {
+            "error": 9.487862819845816e-07,
+            "time": 0.875,
+            "budget": 1e-07
+          },
+          "low": {
+            "error": 9.487862820331538e-07,
+            "time": 0.875,
+            "budget": 1e-07
+          },
+          "amp": {
+            "error": 0.009487862820378723,
+            "time": 0.875,
+            "budget": 0.001
+          },
+          "count": {
+            "error": 0.0,
+            "time": 0.0,
+            "budget": 0.0
+          }
+        },
+        "raw_wrap_brackets": null,
+        "raw_count_jumps": [],
+        "settings_parse_prior_failure": null,
+        "effective": {
+          "stop_s": 1.0,
+          "maxstep_s": 1.0,
+          "reltol": 1e-06,
+          "vabstol_V": 1e-08,
+          "iabstol_A": 1e-12,
+          "method": "traponly"
+        },
+        "unit_adapted": false,
+        "raw_bytes": 44739,
+        "analysis": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/analysis-r3/nonlinear--baseline--analysis.json",
+          "sha256": "1a15c3200437fb02e5a6d8ce2ab09a9a4f5628ab8f062e4d0464a7eed291317a"
+        },
+        "settings": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/collected-r3/output/runs/nonlinear--baseline/effective_settings.json",
+          "sha256": "a54c457ba60a9113cd9f17fd1fd3199091d260d4150399d923234905b5bcac46"
+        }
+      },
+      "evas_request_controls": {
+        "tolerances": {
+          "absolute": 1e-08,
+          "relative": 1e-05
+        },
+        "stop": 1,
+        "max_step": 1.0
+      },
+      "original_evas_attempt": {
+        "id": "nonlinear--baseline",
+        "evas_result": {
+          "status": "completed",
+          "rows": 298,
+          "physical_same_times": 298,
+          "accepted_steps": null,
+          "settings_semantics": "requested input only; this API lacks independent applied-control readback",
+          "elapsed_s": 0.3482327910605818,
+          "actual_numerical_launches": 1,
+          "actual_local_version_queries": 1
+        },
+        "spectre_native_rows": 298,
+        "paired_rows": 298,
+        "unpaired_rows": 0,
+        "identity": {
+          "evas_result_sha256": "3ba771491f8198e9c36dc60779f0efec1877ae5933678a6768fe4a69c4c69f39",
+          "evas_request_sha256": "197f7aa9c759cb17cc6a468b43b198bbc5cac5d53ede2d80a349d91ccd4922ff",
+          "spectre_observation_sha256": "8be00fe39936cde4c58d4e035f055ce36ef09700ca89ce6f210cc519b2fd8c81",
+          "checker_sha256": "a9da685e47733c10ea5630bc53b5ade3bec9f1c43d0240b914988fea241d5402"
+        },
+        "evas_reference_pass": true,
+        "evas_reference_maxima": {
+          "z": {
+            "error": 9.869882688917642e-14,
+            "time": 0.6258935842753317,
+            "budget": 1e-07
+          },
+          "low": {
+            "error": 9.869882688917642e-14,
+            "time": 0.6258935842753317,
+            "budget": 1e-07
+          },
+          "amp": {
+            "error": 9.870291250990704e-10,
+            "time": 0.6258935842753317,
+            "budget": 0.001
+          },
+          "count": {
+            "error": 0.0,
+            "time": 0.0,
+            "budget": 0.0
+          }
+        },
+        "evas_reference_failure_count": 0,
+        "evas_reference_failure_kinds": [],
+        "native_events": [],
+        "accepted_steps": 297,
+        "discarded_trials": 0,
+        "pair_pass": false,
+        "pair_maxima": {
+          "z": {
+            "error": 9.487862010493231e-07,
+            "time_s": 0.875,
+            "budget": 1e-07,
+            "spectre": 0.5333323845470513,
+            "evas": 0.5333333333332524
+          },
+          "low": {
+            "error": 9.487862010978954e-07,
+            "time_s": 0.875,
+            "budget": 1e-07,
+            "spectre": 0.03333238454705129,
+            "evas": 0.03333333333325239
+          },
+          "amp": {
+            "error": 0.009487862010985282,
+            "time_s": 0.875,
+            "budget": 0.001,
+            "spectre": 333.3238454705129,
+            "evas": 333.33333333252386
+          },
+          "count": {
+            "error": 0.0,
+            "time_s": 0.0,
+            "budget": 0.0,
+            "spectre": 0.0,
+            "evas": -0.0
+          }
+        },
+        "pair_failure_count": 825
+      },
+      "final_accuracy_attempt": {
+        "id": "nonlinear--baseline",
+        "evas_result": {
+          "id": "nonlinear--baseline",
+          "parent_attempt": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/evas-r3/nonlinear--baseline",
+          "parent_result_sha256": "3ba771491f8198e9c36dc60779f0efec1877ae5933678a6768fe4a69c4c69f39",
+          "parent_request_sha256": "197f7aa9c759cb17cc6a468b43b198bbc5cac5d53ede2d80a349d91ccd4922ff",
+          "request_sha256": "197f7aa9c759cb17cc6a468b43b198bbc5cac5d53ede2d80a349d91ccd4922ff",
+          "kernel_sha256": "b347f86ef2915f5ce19f39bdaa59882c0dd1c1b59b15b375e88d34f52972817b",
+          "source_identity_sha256": "86cf226978e1a06704ded861018b873f1deb3819c451bda88e038020d916241d",
+          "actual_numerical_launches": 1,
+          "actual_version_queries": 0,
+          "main_timeout_s": 90,
+          "returncode": 0,
+          "elapsed_s": 0.3129173330962658,
+          "stdout_sha256": "60fa3b72157686969639c4eaa4b527e2e839379759cece878c6a96717fbe7138",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "status": "completed",
+          "rows": 298,
+          "accepted_steps": 297,
+          "discarded_trials": 0
+        },
+        "spectre_native_rows": 298,
+        "paired_rows": 298,
+        "unpaired_rows": 0,
+        "identity": {
+          "evas_result_sha256": "80bb660d7174fe13a857478c813e322cf63a1c8304fb04ca0247e7f6552ee02f",
+          "evas_request_sha256": "197f7aa9c759cb17cc6a468b43b198bbc5cac5d53ede2d80a349d91ccd4922ff",
+          "spectre_observation_sha256": "8be00fe39936cde4c58d4e035f055ce36ef09700ca89ce6f210cc519b2fd8c81",
+          "checker_sha256": "a9da685e47733c10ea5630bc53b5ade3bec9f1c43d0240b914988fea241d5402"
+        },
+        "evas_reference_pass": true,
+        "evas_reference_maxima": {
+          "z": {
+            "error": 6.994405055138486e-15,
+            "time": 0.875,
+            "budget": 1e-07
+          },
+          "low": {
+            "error": 6.994405055138486e-15,
+            "time": 0.875,
+            "budget": 1e-07
+          },
+          "amp": {
+            "error": 6.997424861765467e-11,
+            "time": 0.875,
+            "budget": 0.001
+          },
+          "count": {
+            "error": 0.0,
+            "time": 0.0,
+            "budget": 0.0
+          }
+        },
+        "evas_reference_failure_count": 0,
+        "evas_reference_failure_kinds": [],
+        "native_events": [],
+        "accepted_steps": 297,
+        "discarded_trials": 0,
+        "pair_pass": false,
+        "pair_maxima": {
+          "z": {
+            "error": 9.487862749901765e-07,
+            "time_s": 0.875,
+            "budget": 1e-07,
+            "spectre": 0.5333323845470513,
+            "evas": 0.5333333333333263
+          },
+          "low": {
+            "error": 9.487862750387488e-07,
+            "time_s": 0.875,
+            "budget": 1e-07,
+            "spectre": 0.03333238454705129,
+            "evas": 0.03333333333332633
+          },
+          "amp": {
+            "error": 0.009487862750404474,
+            "time_s": 0.875,
+            "budget": 0.001,
+            "spectre": 333.3238454705129,
+            "evas": 333.3333333332633
+          },
+          "count": {
+            "error": 0.0,
+            "time_s": 0.0,
+            "budget": 0.0,
+            "spectre": 0.0,
+            "evas": -0.0
+          }
+        },
+        "pair_failure_count": 825
+      }
+    },
+    {
+      "id": "nonlinear--tolerance-only",
+      "requested_spectre": {
+        "reltol": 1e-08,
+        "vabstol_V": 1e-11,
+        "iabstol_A": 1e-15,
+        "maxstep_s": 1.0,
+        "stop_s": 1,
+        "method": "traponly",
+        "errpreset": "conservative"
+      },
+      "spectre": {
+        "id": "nonlinear--tolerance-only",
+        "execution_status": "completed",
+        "rows": 2116,
+        "analysis_pass": true,
+        "failures": 0,
+        "failure_kinds": [],
+        "maxima": {
+          "z": {
+            "error": 3.0611495227539365e-08,
+            "time": 0.5729935125115214,
+            "budget": 1e-07
+          },
+          "low": {
+            "error": 3.061149525529494e-08,
+            "time": 0.5729935125115214,
+            "budget": 1e-07
+          },
+          "amp": {
+            "error": 0.0003061149525365181,
+            "time": 0.5729935125115214,
+            "budget": 0.001
+          },
+          "count": {
+            "error": 0.0,
+            "time": 0.0,
+            "budget": 0.0
+          }
+        },
+        "raw_wrap_brackets": null,
+        "raw_count_jumps": [],
+        "settings_parse_prior_failure": "ReadbackError('wrong dimension for voltage: 10 pV')",
+        "effective": {
+          "stop_s": 1.0,
+          "maxstep_s": 1.0,
+          "reltol": 1e-09,
+          "vabstol_V": 1e-11,
+          "iabstol_A": 1e-15,
+          "method": "traponly"
+        },
+        "unit_adapted": true,
+        "raw_bytes": 301077,
+        "analysis": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/analysis-r3/nonlinear--tolerance-only--analysis.json",
+          "sha256": "f22f60cc6b4efad43bc8313454b9670a2fe83a9d6cb0273c459972947f9ebe45"
+        },
+        "settings": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/analysis-r3/nonlinear--tolerance-only--adapted-settings.json",
+          "sha256": "cd887dcc98da397a095b3a5ae84be1e48caa631693b56751b235917a4b0526f7"
+        }
+      },
+      "evas_request_controls": {
+        "tolerances": {
+          "absolute": 1e-11,
+          "relative": 1e-08
+        },
+        "stop": 1,
+        "max_step": 1.0
+      },
+      "original_evas_attempt": {
+        "id": "nonlinear--tolerance-only",
+        "evas_result": {
+          "status": "runtime_error",
+          "error": "KernelError('waveform_accuracy: nonlinear accumulated history accuracy could not be certified within 8 suffix refinements')",
+          "unpaired_rows": 2116,
+          "elapsed_s": 5.422233582939953,
+          "actual_numerical_launches": 1,
+          "actual_local_version_queries": 1
+        },
+        "spectre_native_rows": 2116,
+        "paired_rows": 0,
+        "unpaired_rows": 2116,
+        "identity": {
+          "evas_result_sha256": "5ab7a58fec79950836a8268e2621d7e21dddf8b0a1489efc46fa59ea5880bb0f",
+          "evas_request_sha256": "6dc1b54cb30f35e6865f6f7cfd3d419fff84a34c77c5b0d48fb6b8f1eb7c84b2",
+          "spectre_observation_sha256": "c8f85dc5001ade59946b316a9bf26d36e00428fff7e294ad862a206c23c908da",
+          "checker_sha256": "a9da685e47733c10ea5630bc53b5ade3bec9f1c43d0240b914988fea241d5402"
+        },
+        "observation_time_gate": {
+          "stop_s": 1,
+          "outside_stop_times": [],
+          "duplicate_or_decreasing_indices": [],
+          "first": 0.0,
+          "last": 1.0
+        }
+      },
+      "final_accuracy_attempt": {
+        "id": "nonlinear--tolerance-only",
+        "evas_result": {
+          "id": "nonlinear--tolerance-only",
+          "parent_attempt": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/evas-r3/nonlinear--tolerance-only",
+          "parent_result_sha256": "5ab7a58fec79950836a8268e2621d7e21dddf8b0a1489efc46fa59ea5880bb0f",
+          "parent_request_sha256": "6dc1b54cb30f35e6865f6f7cfd3d419fff84a34c77c5b0d48fb6b8f1eb7c84b2",
+          "request_sha256": "6dc1b54cb30f35e6865f6f7cfd3d419fff84a34c77c5b0d48fb6b8f1eb7c84b2",
+          "kernel_sha256": "b347f86ef2915f5ce19f39bdaa59882c0dd1c1b59b15b375e88d34f52972817b",
+          "source_identity_sha256": "86cf226978e1a06704ded861018b873f1deb3819c451bda88e038020d916241d",
+          "actual_numerical_launches": 1,
+          "actual_version_queries": 0,
+          "main_timeout_s": 90,
+          "returncode": 2,
+          "elapsed_s": 28.719052125001326,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "afaa3b7c3d14911d290c086aeb4cf8bb43930590e2511fd16b097819cbb7c806",
+          "status": "runtime_error",
+          "diagnostic": {
+            "kind": "waveform_accuracy",
+            "message": "nonlinear accumulated history accuracy could not be certified within 8 suffix refinements"
+          }
+        },
+        "spectre_native_rows": 2116,
+        "paired_rows": 0,
+        "unpaired_rows": 2116,
+        "identity": {
+          "evas_result_sha256": "fbe656dbe9a6c4b69d1a129cffbf931b379761e256f90114a7b75c741083f8be",
+          "evas_request_sha256": "6dc1b54cb30f35e6865f6f7cfd3d419fff84a34c77c5b0d48fb6b8f1eb7c84b2",
+          "spectre_observation_sha256": "c8f85dc5001ade59946b316a9bf26d36e00428fff7e294ad862a206c23c908da",
+          "checker_sha256": "a9da685e47733c10ea5630bc53b5ade3bec9f1c43d0240b914988fea241d5402"
+        },
+        "observation_time_gate": {
+          "stop_s": 1,
+          "outside_stop_times": [],
+          "duplicate_or_decreasing_indices": [],
+          "first": 0.0,
+          "last": 1.0
+        }
+      }
+    },
+    {
+      "id": "nonlinear--step-only",
+      "requested_spectre": {
+        "reltol": 1e-05,
+        "vabstol_V": 1e-08,
+        "iabstol_A": 1e-12,
+        "maxstep_s": 0.001,
+        "stop_s": 1,
+        "method": "traponly",
+        "errpreset": "conservative"
+      },
+      "spectre": {
+        "id": "nonlinear--step-only",
+        "execution_status": "completed",
+        "rows": 1029,
+        "analysis_pass": false,
+        "failures": 1,
+        "failure_kinds": [
+          "missing_anchor"
+        ],
+        "maxima": {
+          "z": {
+            "error": 6.058750456894302e-08,
+            "time": 0.6040000000000001,
+            "budget": 1e-07
+          },
+          "low": {
+            "error": 6.05875045966986e-08,
+            "time": 0.6040000000000001,
+            "budget": 1e-07
+          },
+          "amp": {
+            "error": 0.0006058750459487783,
+            "time": 0.6040000000000001,
+            "budget": 0.001
+          },
+          "count": {
+            "error": 0.0,
+            "time": 0.0,
+            "budget": 0.0
+          }
+        },
+        "raw_wrap_brackets": null,
+        "raw_count_jumps": [],
+        "settings_parse_prior_failure": "ReadbackError('wrong dimension for time: 1 ms')",
+        "effective": {
+          "stop_s": 1.0,
+          "maxstep_s": 0.001,
+          "reltol": 1e-06,
+          "vabstol_V": 1e-08,
+          "iabstol_A": 1e-12,
+          "method": "traponly"
+        },
+        "unit_adapted": true,
+        "raw_bytes": 147813,
+        "analysis": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/analysis-r3/nonlinear--step-only--analysis.json",
+          "sha256": "18d111029ee4761447e6f5fce4bdc3e3406c6e27451aad18e64421ccb16caaed"
+        },
+        "settings": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/analysis-r3/nonlinear--step-only--adapted-settings.json",
+          "sha256": "028bb13c624c128b817aa7592c7426a0c4b94b188e28d3ac08562def18448eb9"
+        }
+      },
+      "evas_request_controls": {
+        "tolerances": {
+          "absolute": 1e-08,
+          "relative": 1e-05
+        },
+        "stop": 1,
+        "max_step": 0.001
+      },
+      "original_evas_attempt": {
+        "id": "nonlinear--step-only",
+        "evas_result": {
+          "status": "completed",
+          "rows": 1029,
+          "physical_same_times": 1029,
+          "accepted_steps": null,
+          "settings_semantics": "requested input only; this API lacks independent applied-control readback",
+          "elapsed_s": 3.9850392499938607,
+          "actual_numerical_launches": 1,
+          "actual_local_version_queries": 1
+        },
+        "spectre_native_rows": 1029,
+        "paired_rows": 1029,
+        "unpaired_rows": 0,
+        "identity": {
+          "evas_result_sha256": "d2175ff89212098a481340521d492f4aa4d03090b2df9118b09ac5f04484c2ee",
+          "evas_request_sha256": "96d38c3ae8a7a856f33011a30e04c61041bf2b59a35ea7e241a61a5c3e51d431",
+          "spectre_observation_sha256": "998bfce04c53b85adc2688f46a7863ca16980c6c98cf779923df13f1e147d100",
+          "checker_sha256": "a9da685e47733c10ea5630bc53b5ade3bec9f1c43d0240b914988fea241d5402"
+        },
+        "evas_reference_pass": false,
+        "evas_reference_maxima": {
+          "z": {
+            "error": 1.1102230246251565e-15,
+            "time": 0.2480000000000002,
+            "budget": 1e-07
+          },
+          "low": {
+            "error": 1.1102230246251565e-15,
+            "time": 0.2480000000000002,
+            "budget": 1e-07
+          },
+          "amp": {
+            "error": 1.1368683772161603e-11,
+            "time": 0.3700000000000003,
+            "budget": 0.001
+          },
+          "count": {
+            "error": 0.0,
+            "time": 0.0,
+            "budget": 0.0
+          }
+        },
+        "evas_reference_failure_count": 1,
+        "evas_reference_failure_kinds": [
+          "missing_anchor"
+        ],
+        "native_events": [],
+        "accepted_steps": 1041,
+        "discarded_trials": 0,
+        "pair_pass": true,
+        "pair_maxima": {
+          "z": {
+            "error": 6.058750501303223e-08,
+            "time_s": 0.6040000000000001,
+            "budget": 1e-07,
+            "spectre": 0.6234413359212235,
+            "evas": 0.6234413965087285
+          },
+          "low": {
+            "error": 6.05875050407878e-08,
+            "time_s": 0.6040000000000001,
+            "budget": 1e-07,
+            "spectre": 0.1234413359212235,
+            "evas": 0.12344139650872854
+          },
+          "amp": {
+            "error": 0.0006058750502688781,
+            "time_s": 0.6040000000000001,
+            "budget": 0.001,
+            "spectre": 1234.413359212235,
+            "evas": 1234.4139650872853
+          },
+          "count": {
+            "error": 0.0,
+            "time_s": 0.0,
+            "budget": 0.0,
+            "spectre": 0.0,
+            "evas": -0.0
+          }
+        },
+        "pair_failure_count": 0
+      },
+      "final_accuracy_attempt": {
+        "id": "nonlinear--step-only",
+        "evas_result": {
+          "id": "nonlinear--step-only",
+          "parent_attempt": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/evas-r3/nonlinear--step-only",
+          "parent_result_sha256": "d2175ff89212098a481340521d492f4aa4d03090b2df9118b09ac5f04484c2ee",
+          "parent_request_sha256": "96d38c3ae8a7a856f33011a30e04c61041bf2b59a35ea7e241a61a5c3e51d431",
+          "request_sha256": "96d38c3ae8a7a856f33011a30e04c61041bf2b59a35ea7e241a61a5c3e51d431",
+          "kernel_sha256": "b347f86ef2915f5ce19f39bdaa59882c0dd1c1b59b15b375e88d34f52972817b",
+          "source_identity_sha256": "86cf226978e1a06704ded861018b873f1deb3819c451bda88e038020d916241d",
+          "actual_numerical_launches": 1,
+          "actual_version_queries": 0,
+          "main_timeout_s": 90,
+          "returncode": 0,
+          "elapsed_s": 5.109094167128205,
+          "stdout_sha256": "0751f99f5accabd45eed0896a0948e2f4c2984ae93aae2bf5a316ece920ac1ed",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "status": "completed",
+          "rows": 1029,
+          "accepted_steps": 1041,
+          "discarded_trials": 0
+        },
+        "spectre_native_rows": 1029,
+        "paired_rows": 1029,
+        "unpaired_rows": 0,
+        "identity": {
+          "evas_result_sha256": "2506f236838570318004b143be1a98038095801de1fdf0bfdf2ba210f0d1136a",
+          "evas_request_sha256": "96d38c3ae8a7a856f33011a30e04c61041bf2b59a35ea7e241a61a5c3e51d431",
+          "spectre_observation_sha256": "998bfce04c53b85adc2688f46a7863ca16980c6c98cf779923df13f1e147d100",
+          "checker_sha256": "a9da685e47733c10ea5630bc53b5ade3bec9f1c43d0240b914988fea241d5402"
+        },
+        "evas_reference_pass": false,
+        "evas_reference_maxima": {
+          "z": {
+            "error": 1.1102230246251565e-15,
+            "time": 0.2480000000000002,
+            "budget": 1e-07
+          },
+          "low": {
+            "error": 1.1102230246251565e-15,
+            "time": 0.2480000000000002,
+            "budget": 1e-07
+          },
+          "amp": {
+            "error": 1.1368683772161603e-11,
+            "time": 0.3700000000000003,
+            "budget": 0.001
+          },
+          "count": {
+            "error": 0.0,
+            "time": 0.0,
+            "budget": 0.0
+          }
+        },
+        "evas_reference_failure_count": 1,
+        "evas_reference_failure_kinds": [
+          "missing_anchor"
+        ],
+        "native_events": [],
+        "accepted_steps": 1041,
+        "discarded_trials": 0,
+        "pair_pass": true,
+        "pair_maxima": {
+          "z": {
+            "error": 6.058750501303223e-08,
+            "time_s": 0.6040000000000001,
+            "budget": 1e-07,
+            "spectre": 0.6234413359212235,
+            "evas": 0.6234413965087285
+          },
+          "low": {
+            "error": 6.05875050407878e-08,
+            "time_s": 0.6040000000000001,
+            "budget": 1e-07,
+            "spectre": 0.1234413359212235,
+            "evas": 0.12344139650872854
+          },
+          "amp": {
+            "error": 0.0006058750502688781,
+            "time_s": 0.6040000000000001,
+            "budget": 0.001,
+            "spectre": 1234.413359212235,
+            "evas": 1234.4139650872853
+          },
+          "count": {
+            "error": 0.0,
+            "time_s": 0.0,
+            "budget": 0.0,
+            "spectre": 0.0,
+            "evas": -0.0
+          }
+        },
+        "pair_failure_count": 0
+      },
+      "missing_exact_anchors_s": [
+        0.125,
+        0.25,
+        0.75
+      ]
+    },
+    {
+      "id": "event-continuation--baseline",
+      "requested_spectre": {
+        "reltol": 1e-05,
+        "vabstol_V": 1e-08,
+        "iabstol_A": 1e-12,
+        "maxstep_s": 1.0,
+        "stop_s": 1,
+        "method": "traponly",
+        "errpreset": "conservative"
+      },
+      "spectre": {
+        "id": "event-continuation--baseline",
+        "execution_status": "completed",
+        "rows": 359,
+        "analysis_pass": false,
+        "failures": 1008,
+        "failure_kinds": [
+          "waveform_error"
+        ],
+        "maxima": {
+          "z": {
+            "error": 1.1688914766105896e-06,
+            "time": 1.0,
+            "budget": 1e-07
+          },
+          "low": {
+            "error": 1.1688914766244674e-06,
+            "time": 1.0,
+            "budget": 1e-07
+          },
+          "amp": {
+            "error": 0.011688914766182279,
+            "time": 1.0,
+            "budget": 0.001
+          },
+          "count": {
+            "error": 0.0,
+            "time": 0.0,
+            "budget": 0.0
+          }
+        },
+        "raw_wrap_brackets": null,
+        "raw_count_jumps": [
+          {
+            "left": 0.4999999999,
+            "right": 0.5,
+            "from": 0.0,
+            "to": 1.0
+          }
+        ],
+        "settings_parse_prior_failure": null,
+        "effective": {
+          "stop_s": 1.0,
+          "maxstep_s": 1.0,
+          "reltol": 1e-06,
+          "vabstol_V": 1e-08,
+          "iabstol_A": 1e-12,
+          "method": "traponly"
+        },
+        "unit_adapted": false,
+        "raw_bytes": 53486,
+        "analysis": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/analysis-r3/event-continuation--baseline--analysis.json",
+          "sha256": "75bee54d5ed3b528b14e223ab80e3ac93a7735d9bb8253dfa75876414564d3f4"
+        },
+        "settings": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/collected-r3/output/runs/event-continuation--baseline/effective_settings.json",
+          "sha256": "a54c457ba60a9113cd9f17fd1fd3199091d260d4150399d923234905b5bcac46"
+        }
+      },
+      "evas_request_controls": {
+        "tolerances": {
+          "absolute": 1e-08,
+          "relative": 1e-05
+        },
+        "stop": 1,
+        "max_step": 1.0
+      },
+      "original_evas_attempt": {
+        "id": "event-continuation--baseline",
+        "evas_result": {
+          "status": "runtime_error",
+          "error": "KernelError('waveform_accuracy: nonlinear accumulated history accuracy could not be certified within 8 suffix refinements')",
+          "unpaired_rows": 359,
+          "elapsed_s": 1.798709874972701,
+          "actual_numerical_launches": 1,
+          "actual_local_version_queries": 1
+        },
+        "spectre_native_rows": 359,
+        "paired_rows": 0,
+        "unpaired_rows": 359,
+        "identity": {
+          "evas_result_sha256": "f9cd76ff490f85e2985f22e9eb6a4c3ed89c040ca138f2be7998180e50c9fb71",
+          "evas_request_sha256": "10927a6b8a87e3c8597a88a77d4d83d60802a6881d93203b114fd4cb4247272f",
+          "spectre_observation_sha256": "675b580cdb680613f09f405e97cfbc5e7570ece2df4fd529735d1778b237ac64",
+          "checker_sha256": "a9da685e47733c10ea5630bc53b5ade3bec9f1c43d0240b914988fea241d5402"
+        },
+        "observation_time_gate": {
+          "stop_s": 1,
+          "outside_stop_times": [],
+          "duplicate_or_decreasing_indices": [],
+          "first": 0.0,
+          "last": 1.0
+        }
+      },
+      "final_accuracy_attempt": {
+        "id": "event-continuation--baseline",
+        "evas_result": {
+          "id": "event-continuation--baseline",
+          "parent_attempt": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/evas-r3/event-continuation--baseline",
+          "parent_result_sha256": "f9cd76ff490f85e2985f22e9eb6a4c3ed89c040ca138f2be7998180e50c9fb71",
+          "parent_request_sha256": "10927a6b8a87e3c8597a88a77d4d83d60802a6881d93203b114fd4cb4247272f",
+          "request_sha256": "10927a6b8a87e3c8597a88a77d4d83d60802a6881d93203b114fd4cb4247272f",
+          "kernel_sha256": "b347f86ef2915f5ce19f39bdaa59882c0dd1c1b59b15b375e88d34f52972817b",
+          "source_identity_sha256": "86cf226978e1a06704ded861018b873f1deb3819c451bda88e038020d916241d",
+          "actual_numerical_launches": 1,
+          "actual_version_queries": 0,
+          "main_timeout_s": 90,
+          "returncode": 0,
+          "elapsed_s": 0.5350293340161443,
+          "stdout_sha256": "ce98e4e7140fb04b6ded3f60f9492ccf9187fc8a2e0f6d5602c075f8106f120c",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "status": "completed",
+          "rows": 359,
+          "accepted_steps": 358,
+          "discarded_trials": 0
+        },
+        "spectre_native_rows": 359,
+        "paired_rows": 359,
+        "unpaired_rows": 0,
+        "identity": {
+          "evas_result_sha256": "92768504d7408f8cd311512e76b28131be39b9a2565ed35e4453e3ca9e862cf3",
+          "evas_request_sha256": "10927a6b8a87e3c8597a88a77d4d83d60802a6881d93203b114fd4cb4247272f",
+          "spectre_observation_sha256": "675b580cdb680613f09f405e97cfbc5e7570ece2df4fd529735d1778b237ac64",
+          "checker_sha256": "a9da685e47733c10ea5630bc53b5ade3bec9f1c43d0240b914988fea241d5402"
+        },
+        "evas_reference_pass": true,
+        "evas_reference_maxima": {
+          "z": {
+            "error": 2.220446049250313e-15,
+            "time": 0.75,
+            "budget": 1e-07
+          },
+          "low": {
+            "error": 2.220446049250313e-15,
+            "time": 0.75,
+            "budget": 1e-07
+          },
+          "amp": {
+            "error": 2.220446049250313e-11,
+            "time": 0.75,
+            "budget": 0.001
+          },
+          "count": {
+            "error": 0.0,
+            "time": 0.0,
+            "budget": 0.0
+          }
+        },
+        "evas_reference_failure_count": 0,
+        "evas_reference_failure_kinds": [],
+        "native_events": [
+          {
+            "time": 0.5,
+            "event": 0,
+            "origin": "dut.va:9:3 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              0.0
+            ],
+            "after": [
+              2.0,
+              1.0
+            ]
+          }
+        ],
+        "accepted_steps": 358,
+        "discarded_trials": 0,
+        "pair_pass": false,
+        "pair_maxima": {
+          "z": {
+            "error": 1.168891474945255e-06,
+            "time_s": 1.0,
+            "budget": 1e-07,
+            "spectre": 0.3999988311085234,
+            "evas": 0.39999999999999836
+          },
+          "low": {
+            "error": 1.1688914749591328e-06,
+            "time_s": 1.0,
+            "budget": 1e-07,
+            "spectre": -0.1000011688914766,
+            "evas": -0.10000000000000164
+          },
+          "amp": {
+            "error": 0.011688914749584,
+            "time_s": 1.0,
+            "budget": 0.001,
+            "spectre": -1000.011688914766,
+            "evas": -1000.0000000000164
+          },
+          "count": {
+            "error": 0.0,
+            "time_s": 0.0,
+            "budget": 0.0,
+            "spectre": 0.0,
+            "evas": -0.0
+          }
+        },
+        "pair_failure_count": 1008
+      }
+    },
+    {
+      "id": "event-continuation--tolerance-only",
+      "requested_spectre": {
+        "reltol": 1e-08,
+        "vabstol_V": 1e-11,
+        "iabstol_A": 1e-15,
+        "maxstep_s": 1.0,
+        "stop_s": 1,
+        "method": "traponly",
+        "errpreset": "conservative"
+      },
+      "spectre": {
+        "id": "event-continuation--tolerance-only",
+        "execution_status": "completed",
+        "rows": 2213,
+        "analysis_pass": true,
+        "failures": 0,
+        "failure_kinds": [],
+        "maxima": {
+          "z": {
+            "error": 5.0443202170846746e-08,
+            "time": 0.8283984617227311,
+            "budget": 1e-07
+          },
+          "low": {
+            "error": 5.04432021083967e-08,
+            "time": 0.8283984617227311,
+            "budget": 1e-07
+          },
+          "amp": {
+            "error": 0.0005044320210458864,
+            "time": 0.8283984617227311,
+            "budget": 0.001
+          },
+          "count": {
+            "error": 0.0,
+            "time": 0.0,
+            "budget": 0.0
+          }
+        },
+        "raw_wrap_brackets": null,
+        "raw_count_jumps": [
+          {
+            "left": 0.4999999999,
+            "right": 0.5,
+            "from": 0.0,
+            "to": 1.0
+          }
+        ],
+        "settings_parse_prior_failure": "ReadbackError('wrong dimension for voltage: 10 pV')",
+        "effective": {
+          "stop_s": 1.0,
+          "maxstep_s": 1.0,
+          "reltol": 1e-09,
+          "vabstol_V": 1e-11,
+          "iabstol_A": 1e-15,
+          "method": "traponly"
+        },
+        "unit_adapted": true,
+        "raw_bytes": 315778,
+        "analysis": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/analysis-r3/event-continuation--tolerance-only--analysis.json",
+          "sha256": "61a3dde1b6aa4b04321fa0cdae07e0b1b5481c06a24ff7586c9c700e406ca956"
+        },
+        "settings": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/analysis-r3/event-continuation--tolerance-only--adapted-settings.json",
+          "sha256": "528c66bb08a9e1afa7cb550f4ca1edc7cedf41f14d423a3d6a7f668659dc985b"
+        }
+      },
+      "evas_request_controls": {
+        "tolerances": {
+          "absolute": 1e-11,
+          "relative": 1e-08
+        },
+        "stop": 1,
+        "max_step": 1.0
+      },
+      "original_evas_attempt": {
+        "id": "event-continuation--tolerance-only",
+        "evas_result": {
+          "status": "runtime_error",
+          "error": "KernelError('waveform_accuracy: nonlinear accumulated history accuracy could not be certified within 8 suffix refinements')",
+          "unpaired_rows": 2213,
+          "elapsed_s": 3.3542068342212588,
+          "actual_numerical_launches": 1,
+          "actual_local_version_queries": 1
+        },
+        "spectre_native_rows": 2213,
+        "paired_rows": 0,
+        "unpaired_rows": 2213,
+        "identity": {
+          "evas_result_sha256": "7864bc6015f6d12019beb9cd7a27f3b72c5f66191f41d1710051f82cffbfd24b",
+          "evas_request_sha256": "6a04896760824aafaa6559927bdd710c0bce35615888e0bf9eb0918405c20845",
+          "spectre_observation_sha256": "0cdb1da295f7339315cd987e37c737fcea3455673f88f42045e02d849efc0021",
+          "checker_sha256": "a9da685e47733c10ea5630bc53b5ade3bec9f1c43d0240b914988fea241d5402"
+        },
+        "observation_time_gate": {
+          "stop_s": 1,
+          "outside_stop_times": [],
+          "duplicate_or_decreasing_indices": [],
+          "first": 0.0,
+          "last": 1.0
+        }
+      },
+      "final_accuracy_attempt": {
+        "id": "event-continuation--tolerance-only",
+        "evas_result": {
+          "id": "event-continuation--tolerance-only",
+          "parent_attempt": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/evas-r3/event-continuation--tolerance-only",
+          "parent_result_sha256": "7864bc6015f6d12019beb9cd7a27f3b72c5f66191f41d1710051f82cffbfd24b",
+          "parent_request_sha256": "6a04896760824aafaa6559927bdd710c0bce35615888e0bf9eb0918405c20845",
+          "request_sha256": "6a04896760824aafaa6559927bdd710c0bce35615888e0bf9eb0918405c20845",
+          "kernel_sha256": "b347f86ef2915f5ce19f39bdaa59882c0dd1c1b59b15b375e88d34f52972817b",
+          "source_identity_sha256": "86cf226978e1a06704ded861018b873f1deb3819c451bda88e038020d916241d",
+          "actual_numerical_launches": 1,
+          "actual_version_queries": 0,
+          "main_timeout_s": 90,
+          "returncode": 2,
+          "elapsed_s": 14.270407790783793,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "347fd1c82f693ff7a1b0376ab1fcf7957130581d2310e7c0fd60c64a5d7d7836",
+          "status": "runtime_error",
+          "diagnostic": {
+            "kind": "waveform_accuracy",
+            "message": "cannot certify same-time forward error at amp: bound 3.4944669380365667e-10, budget 1.0000000011102229e-11"
+          }
+        },
+        "spectre_native_rows": 2213,
+        "paired_rows": 0,
+        "unpaired_rows": 2213,
+        "identity": {
+          "evas_result_sha256": "e728eac8a55f43b51276df890f5328ab130c104b660a72db9ab8bc00cbc316d1",
+          "evas_request_sha256": "6a04896760824aafaa6559927bdd710c0bce35615888e0bf9eb0918405c20845",
+          "spectre_observation_sha256": "0cdb1da295f7339315cd987e37c737fcea3455673f88f42045e02d849efc0021",
+          "checker_sha256": "a9da685e47733c10ea5630bc53b5ade3bec9f1c43d0240b914988fea241d5402"
+        },
+        "observation_time_gate": {
+          "stop_s": 1,
+          "outside_stop_times": [],
+          "duplicate_or_decreasing_indices": [],
+          "first": 0.0,
+          "last": 1.0
+        }
+      }
+    },
+    {
+      "id": "event-continuation--step-only",
+      "requested_spectre": {
+        "reltol": 1e-05,
+        "vabstol_V": 1e-08,
+        "iabstol_A": 1e-12,
+        "maxstep_s": 0.001,
+        "stop_s": 1,
+        "method": "traponly",
+        "errpreset": "conservative"
+      },
+      "spectre": {
+        "id": "event-continuation--step-only",
+        "execution_status": "completed",
+        "rows": 1030,
+        "analysis_pass": false,
+        "failures": 1201,
+        "failure_kinds": [
+          "missing_anchor",
+          "waveform_error"
+        ],
+        "maxima": {
+          "z": {
+            "error": 1.1649393016899268e-07,
+            "time": 0.7740000000000002,
+            "budget": 1e-07
+          },
+          "low": {
+            "error": 1.1649393018980936e-07,
+            "time": 0.7740000000000002,
+            "budget": 1e-07
+          },
+          "amp": {
+            "error": 0.0011649393018871024,
+            "time": 0.7740000000000002,
+            "budget": 0.001
+          },
+          "count": {
+            "error": 0.0,
+            "time": 0.0,
+            "budget": 0.0
+          }
+        },
+        "raw_wrap_brackets": null,
+        "raw_count_jumps": [
+          {
+            "left": 0.4999999999,
+            "right": 0.5,
+            "from": 0.0,
+            "to": 1.0
+          }
+        ],
+        "settings_parse_prior_failure": "ReadbackError('wrong dimension for time: 1 ms')",
+        "effective": {
+          "stop_s": 1.0,
+          "maxstep_s": 0.001,
+          "reltol": 1e-06,
+          "vabstol_V": 1e-08,
+          "iabstol_A": 1e-12,
+          "method": "traponly"
+        },
+        "unit_adapted": true,
+        "raw_bytes": 148454,
+        "analysis": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/analysis-r3/event-continuation--step-only--analysis.json",
+          "sha256": "c595f5ac1be7b3651295619d52c0af338efb544e540a2e7047d7fa2cd88cd389"
+        },
+        "settings": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/analysis-r3/event-continuation--step-only--adapted-settings.json",
+          "sha256": "27553715c69d3faf11ed952db26094b2dfc8c0204869ff76584332b6533d1023"
+        }
+      },
+      "evas_request_controls": {
+        "tolerances": {
+          "absolute": 1e-08,
+          "relative": 1e-05
+        },
+        "stop": 1,
+        "max_step": 0.001
+      },
+      "original_evas_attempt": {
+        "id": "event-continuation--step-only",
+        "evas_result": {
+          "status": "completed",
+          "rows": 1030,
+          "physical_same_times": 1030,
+          "accepted_steps": null,
+          "settings_semantics": "requested input only; this API lacks independent applied-control readback",
+          "elapsed_s": 5.530421374831349,
+          "actual_numerical_launches": 1,
+          "actual_local_version_queries": 1
+        },
+        "spectre_native_rows": 1030,
+        "paired_rows": 1030,
+        "unpaired_rows": 0,
+        "identity": {
+          "evas_result_sha256": "10154d658ac12c3de349a9f36bd0e1e60da41508f20bfcac76cc9414ae7ae55f",
+          "evas_request_sha256": "1f87845737d7eb1fe0dc257d067ad22e313a509823ea396aff400561de7ed8a0",
+          "spectre_observation_sha256": "a69ff75044b3923991ef837b0c56c596aa5f5eb22d958bf5c0ae5b0e86b95126",
+          "checker_sha256": "a9da685e47733c10ea5630bc53b5ade3bec9f1c43d0240b914988fea241d5402"
+        },
+        "evas_reference_pass": false,
+        "evas_reference_maxima": {
+          "z": {
+            "error": 1.1102230246251565e-15,
+            "time": 0.2480000000000002,
+            "budget": 1e-07
+          },
+          "low": {
+            "error": 1.1102230246251565e-15,
+            "time": 0.2480000000000002,
+            "budget": 1e-07
+          },
+          "amp": {
+            "error": 1.1368683772161603e-11,
+            "time": 0.3700000000000003,
+            "budget": 0.001
+          },
+          "count": {
+            "error": 0.0,
+            "time": 0.0,
+            "budget": 0.0
+          }
+        },
+        "evas_reference_failure_count": 1,
+        "evas_reference_failure_kinds": [
+          "missing_anchor"
+        ],
+        "native_events": [
+          {
+            "time": 0.5,
+            "event": 0,
+            "origin": "dut.va:9:3 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              0.0
+            ],
+            "after": [
+              2.0,
+              1.0
+            ]
+          }
+        ],
+        "accepted_steps": 1042,
+        "discarded_trials": 0,
+        "pair_pass": false,
+        "pair_maxima": {
+          "z": {
+            "error": 1.1649393050205958e-07,
+            "time_s": 0.7740000000000002,
+            "budget": 1e-07,
+            "spectre": 0.4882811335060697,
+            "evas": 0.4882812500000002
+          },
+          "low": {
+            "error": 1.1649393052287627e-07,
+            "time_s": 0.7740000000000002,
+            "budget": 1e-07,
+            "spectre": -0.0117188664939303,
+            "evas": -0.011718749999999778
+          },
+          "amp": {
+            "error": 0.0011649393052266532,
+            "time_s": 0.7740000000000002,
+            "budget": 0.001,
+            "spectre": -117.188664939303,
+            "evas": -117.18749999999777
+          },
+          "count": {
+            "error": 0.0,
+            "time_s": 0.0,
+            "budget": 0.0,
+            "spectre": 0.0,
+            "evas": -0.0
+          }
+        },
+        "pair_failure_count": 1200
+      },
+      "final_accuracy_attempt": {
+        "id": "event-continuation--step-only",
+        "evas_result": {
+          "id": "event-continuation--step-only",
+          "parent_attempt": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/evas-r3/event-continuation--step-only",
+          "parent_result_sha256": "10154d658ac12c3de349a9f36bd0e1e60da41508f20bfcac76cc9414ae7ae55f",
+          "parent_request_sha256": "1f87845737d7eb1fe0dc257d067ad22e313a509823ea396aff400561de7ed8a0",
+          "request_sha256": "1f87845737d7eb1fe0dc257d067ad22e313a509823ea396aff400561de7ed8a0",
+          "kernel_sha256": "b347f86ef2915f5ce19f39bdaa59882c0dd1c1b59b15b375e88d34f52972817b",
+          "source_identity_sha256": "86cf226978e1a06704ded861018b873f1deb3819c451bda88e038020d916241d",
+          "actual_numerical_launches": 1,
+          "actual_version_queries": 0,
+          "main_timeout_s": 90,
+          "returncode": 0,
+          "elapsed_s": 6.570620374986902,
+          "stdout_sha256": "62002902bfad64b0611563ae6f6f521162d9219e2b66bc8be015e558e7a3f620",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "status": "completed",
+          "rows": 1030,
+          "accepted_steps": 1042,
+          "discarded_trials": 0
+        },
+        "spectre_native_rows": 1030,
+        "paired_rows": 1030,
+        "unpaired_rows": 0,
+        "identity": {
+          "evas_result_sha256": "832536fd3f0a4af2e5af740c73c866b4e632956d7b2b9b214fdd83137d6d7415",
+          "evas_request_sha256": "1f87845737d7eb1fe0dc257d067ad22e313a509823ea396aff400561de7ed8a0",
+          "spectre_observation_sha256": "a69ff75044b3923991ef837b0c56c596aa5f5eb22d958bf5c0ae5b0e86b95126",
+          "checker_sha256": "a9da685e47733c10ea5630bc53b5ade3bec9f1c43d0240b914988fea241d5402"
+        },
+        "evas_reference_pass": false,
+        "evas_reference_maxima": {
+          "z": {
+            "error": 1.1102230246251565e-15,
+            "time": 0.2480000000000002,
+            "budget": 1e-07
+          },
+          "low": {
+            "error": 1.1102230246251565e-15,
+            "time": 0.2480000000000002,
+            "budget": 1e-07
+          },
+          "amp": {
+            "error": 1.1368683772161603e-11,
+            "time": 0.3700000000000003,
+            "budget": 0.001
+          },
+          "count": {
+            "error": 0.0,
+            "time": 0.0,
+            "budget": 0.0
+          }
+        },
+        "evas_reference_failure_count": 1,
+        "evas_reference_failure_kinds": [
+          "missing_anchor"
+        ],
+        "native_events": [
+          {
+            "time": 0.5,
+            "event": 0,
+            "origin": "dut.va:9:3 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              0.0
+            ],
+            "after": [
+              2.0,
+              1.0
+            ]
+          }
+        ],
+        "accepted_steps": 1042,
+        "discarded_trials": 0,
+        "pair_pass": false,
+        "pair_maxima": {
+          "z": {
+            "error": 1.1649393050205958e-07,
+            "time_s": 0.7740000000000002,
+            "budget": 1e-07,
+            "spectre": 0.4882811335060697,
+            "evas": 0.4882812500000002
+          },
+          "low": {
+            "error": 1.1649393052287627e-07,
+            "time_s": 0.7740000000000002,
+            "budget": 1e-07,
+            "spectre": -0.0117188664939303,
+            "evas": -0.011718749999999778
+          },
+          "amp": {
+            "error": 0.0011649393052266532,
+            "time_s": 0.7740000000000002,
+            "budget": 0.001,
+            "spectre": -117.188664939303,
+            "evas": -117.18749999999777
+          },
+          "count": {
+            "error": 0.0,
+            "time_s": 0.0,
+            "budget": 0.0,
+            "spectre": 0.0,
+            "evas": -0.0
+          }
+        },
+        "pair_failure_count": 1200
+      },
+      "missing_exact_anchors_s": [
+        0.125,
+        0.25,
+        0.75
+      ]
+    },
+    {
+      "id": "CO-VCO-01--tolerance-only",
+      "requested_spectre": {
+        "stop_s": 8e-06,
+        "maxstep_s": 2e-10,
+        "reltol": 1e-08,
+        "vabstol_V": 1e-10,
+        "iabstol_A": 1e-15,
+        "output_request": "native records plus prescribed exact centers; requested grid does not qualify interpolation",
+        "integration_method": "traponly/trap for SPICE; unsupported by EVAS",
+        "spice_maxstep_s": 2e-10,
+        "spice_output_estimate_bytes": 15674112,
+        "spice_observation_strategy": "global 200ps plus disconnected PWL local/center breakpoint requests; actual preflight required",
+        "spectral_strobe_strategy": "prescribed times; strobeoutput=all; actual origin qualification pending"
+      },
+      "spectre": {
+        "id": "CO-VCO-01--tolerance-only",
+        "execution_status": "completed",
+        "rows": 40878,
+        "analysis_pass": false,
+        "failures": 1,
+        "failure_kinds": [
+          "waveform_error"
+        ],
+        "maxima": {
+          "ctl": {
+            "error": 1.7832957333041577e-15,
+            "time_s": 5.963799999997536e-06,
+            "budget": 1e-05
+          },
+          "freq": {
+            "error": 9.43689570931383e-16,
+            "time_s": 5.911399999997643e-06,
+            "budget": 0.001
+          },
+          "phase_ordinary": {
+            "error": 0.9999999999999949,
+            "time_s": 2.689966442575134e-06,
+            "budget": 0.001
+          },
+          "phase_circular": {
+            "error": 4.604827630316777e-11,
+            "time_s": 5.999999999997462e-06,
+            "budget": 0.001
+          },
+          "phase_accumulated_from_drops": {
+            "error": 4.604849834777269e-11,
+            "time_s": 5.999999999997462e-06,
+            "budget": 0.001
+          },
+          "sine": {
+            "error": 2.891318590797498e-10,
+            "time_s": 6.31742515251343e-06,
+            "budget": 0.003
+          }
+        },
+        "raw_wrap_brackets": [
+          {
+            "left_s": 2.689966442575134e-06,
+            "right_s": 2.689986442575134e-06,
+            "left_phase": 0.9999999999999951,
+            "right_phase": 1.489976442092811e-05,
+            "nominal_s": 2.6899664425751338e-06,
+            "budget_s": 1e-10
+          },
+          {
+            "left_s": 3.754979999999999e-06,
+            "right_s": 3.755e-06,
+            "left_phase": 0.9999800000459217,
+            "right_phase": 4.592182190066296e-11,
+            "nominal_s": 3.7549999999999996e-06,
+            "budget_s": 1e-10
+          },
+          {
+            "left_s": 4.75498e-06,
+            "right_s": 4.754999999999999e-06,
+            "left_phase": 0.9999800000459605,
+            "right_phase": 4.596034663961746e-11,
+            "nominal_s": 4.754999999999999e-06,
+            "budget_s": 1e-10
+          },
+          {
+            "left_s": 6.31935515251343e-06,
+            "right_s": 6.31937515251343e-06,
+            "left_phase": 0.9999935968717754,
+            "right_phase": 4.601252712177484e-11,
+            "nominal_s": 6.31937515251343e-06,
+            "budget_s": 1e-10
+          }
+        ],
+        "raw_count_jumps": null,
+        "settings_parse_prior_failure": "ReadbackError('wrong dimension for voltage: 100 pV')",
+        "effective": {
+          "stop_s": 8e-06,
+          "maxstep_s": 2e-10,
+          "reltol": 1e-09,
+          "vabstol_V": 1e-10,
+          "iabstol_A": 1e-15,
+          "method": "traponly"
+        },
+        "unit_adapted": true,
+        "raw_bytes": 5924733,
+        "analysis": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/analysis-r3/CO-VCO-01--tolerance-only--analysis.json",
+          "sha256": "b4eb4a3cf772e2cbc2ff86809f1214c4f3fa66f65059e3d9975bfd8394486c1b"
+        },
+        "settings": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/analysis-r3/CO-VCO-01--tolerance-only--adapted-settings.json",
+          "sha256": "c3cbf491e51676dffb00aa7d3518cffb9e64b8c0b739954bb6c97c80e6801b13"
+        }
+      },
+      "evas_request_controls": {
+        "tolerances": {
+          "absolute": 1e-10,
+          "relative": 1e-08
+        },
+        "stop": 8e-06,
+        "max_step": 2e-10
+      },
+      "original_evas_attempt": {
+        "id": "CO-VCO-01--tolerance-only",
+        "evas_result": {
+          "status": "completed",
+          "rows": 40878,
+          "physical_same_times": 40878,
+          "accepted_steps": null,
+          "settings_semantics": "requested input only; this API lacks independent applied-control readback",
+          "elapsed_s": 27.061291750054806,
+          "actual_numerical_launches": 1,
+          "actual_local_version_queries": 1
+        },
+        "spectre_native_rows": 40878,
+        "paired_rows": 40878,
+        "unpaired_rows": 0,
+        "identity": {
+          "evas_result_sha256": "f3b05381c1a5252ab1ba3575c0be744096b86b90c06afd22c7b96f0cbfb4c024",
+          "evas_request_sha256": "bdaee491d8999d40118acd3b8f1d21d40eb2edab91bb42bcbf1d62c3ba9b2189",
+          "spectre_observation_sha256": "588be70ef9d324aec25220c746e55893c9a983e667adbdb995fac358102fd641",
+          "checker_sha256": "a9da685e47733c10ea5630bc53b5ade3bec9f1c43d0240b914988fea241d5402"
+        },
+        "evas_reference_pass": false,
+        "evas_reference_maxima": {
+          "ctl": {
+            "error": 8.881784197001252e-16,
+            "time_s": 5.618399999998241e-06,
+            "budget": 1e-05
+          },
+          "freq": {
+            "error": 4.440892098500626e-16,
+            "time_s": 5.797199999997876e-06,
+            "budget": 0.001
+          },
+          "phase_ordinary": {
+            "error": 0.9999999999999996,
+            "time_s": 4.754999999999999e-06,
+            "budget": 0.001
+          },
+          "phase_circular": {
+            "error": 1.3322676295501878e-15,
+            "time_s": 4.801999999999908e-06,
+            "budget": 0.001
+          },
+          "phase_accumulated_from_drops": {
+            "error": 1.3322676295501878e-15,
+            "time_s": 4.801999999999908e-06,
+            "budget": 0.001
+          },
+          "sine": {
+            "error": 8.520961713998076e-15,
+            "time_s": 5.294799999998902e-06,
+            "budget": 0.003
+          }
+        },
+        "evas_reference_failure_count": 1,
+        "evas_reference_failure_kinds": [
+          "waveform_error"
+        ],
+        "native_events": [],
+        "accepted_steps": 44503,
+        "discarded_trials": 0,
+        "pair_pass": false,
+        "pair_maxima": {
+          "ctl": {
+            "error": 1.3322676295501878e-15,
+            "time_s": 3.819799999999993e-06,
+            "budget": 1e-05,
+            "spectre": 1.819799999999994,
+            "evas": 1.8197999999999928
+          },
+          "freq": {
+            "error": 6.661338147750939e-16,
+            "time_s": 4.842599999999826e-06,
+            "budget": 0.001,
+            "spectre": 0.9787000000000873,
+            "evas": 0.9787000000000866
+          },
+          "phase_ordinary": {
+            "error": 0.9999999999999949,
+            "time_s": 2.689966442575134e-06,
+            "budget": 0.001,
+            "spectre": 0.9999999999999951,
+            "evas": 2.745757265300551e-16
+          },
+          "phase_circular": {
+            "error": 4.604872039237762e-11,
+            "time_s": 5.999999999997462e-06,
+            "budget": 0.001,
+            "spectre": 0.8850000000450329,
+            "evas": 0.8849999999989842
+          },
+          "sine": {
+            "error": 2.891303862995187e-10,
+            "time_s": 6.317599999999999e-06,
+            "budget": 0.003,
+            "spectre": -0.003573365254048527,
+            "evas": -0.003573365543178913
+          }
+        },
+        "pair_failure_count": 2
+      },
+      "final_accuracy_attempt": null
+    },
+    {
+      "id": "CO-VCO-01--step-only",
+      "requested_spectre": {
+        "stop_s": 8e-06,
+        "maxstep_s": 1e-10,
+        "reltol": 1e-05,
+        "vabstol_V": 1e-07,
+        "iabstol_A": 1e-12,
+        "output_request": "native records plus prescribed exact centers; requested grid does not qualify interpolation",
+        "integration_method": "traponly/trap for SPICE; unsupported by EVAS",
+        "spice_maxstep_s": 1e-10,
+        "spice_output_estimate_bytes": 15674112,
+        "spice_observation_strategy": "global 200ps plus disconnected PWL local/center breakpoint requests; actual preflight required",
+        "spectral_strobe_strategy": "prescribed times; strobeoutput=all; actual origin qualification pending"
+      },
+      "spectre": {
+        "id": "CO-VCO-01--step-only",
+        "execution_status": "completed",
+        "rows": 80749,
+        "analysis_pass": true,
+        "failures": 0,
+        "failure_kinds": [],
+        "maxima": {
+          "ctl": {
+            "error": 1.7763568394002505e-15,
+            "time_s": 4.372600000001107e-06,
+            "budget": 1e-05
+          },
+          "freq": {
+            "error": 8.881784197001252e-16,
+            "time_s": 5.969200000002658e-06,
+            "budget": 0.001
+          },
+          "phase_ordinary": {
+            "error": 2.6006341524720256e-09,
+            "time_s": 5.626900000001907e-06,
+            "budget": 0.001
+          },
+          "phase_circular": {
+            "error": 2.6006341524720256e-09,
+            "time_s": 5.626900000001907e-06,
+            "budget": 0.001
+          },
+          "phase_accumulated_from_drops": {
+            "error": 2.6006343745166305e-09,
+            "time_s": 5.626900000001907e-06,
+            "budget": 0.001
+          },
+          "sine": {
+            "error": 1.6339366810445388e-08,
+            "time_s": 5.323500000001242e-06,
+            "budget": 0.003
+          }
+        },
+        "raw_wrap_brackets": [
+          {
+            "left_s": 2.689946442575134e-06,
+            "right_s": 2.689966442575134e-06,
+            "left_phase": 0.9999851029357516,
+            "right_phase": 2.500177398445658e-09,
+            "nominal_s": 2.6899664425751338e-06,
+            "budget_s": 1e-10
+          },
+          {
+            "left_s": 3.754979999999999e-06,
+            "right_s": 3.755e-06,
+            "left_phase": 0.9999800026002761,
+            "right_phase": 2.600276216568886e-09,
+            "nominal_s": 3.7549999999999996e-06,
+            "budget_s": 1e-10
+          },
+          {
+            "left_s": 4.75498e-06,
+            "right_s": 4.754999999999999e-06,
+            "left_phase": 0.9999800026004203,
+            "right_phase": 2.600420101472878e-09,
+            "nominal_s": 4.754999999999999e-06,
+            "budget_s": 1e-10
+          },
+          {
+            "left_s": 6.31935515251343e-06,
+            "right_s": 6.31937515251343e-06,
+            "left_phase": 0.9999935981764382,
+            "right_phase": 1.350675571387683e-09,
+            "nominal_s": 6.31937515251343e-06,
+            "budget_s": 1e-10
+          }
+        ],
+        "raw_count_jumps": null,
+        "settings_parse_prior_failure": null,
+        "effective": {
+          "stop_s": 8e-06,
+          "maxstep_s": 1e-10,
+          "reltol": 1e-06,
+          "vabstol_V": 1.0000000000000001e-07,
+          "iabstol_A": 1e-12,
+          "method": "traponly"
+        },
+        "unit_adapted": false,
+        "raw_bytes": 11700927,
+        "analysis": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/analysis-r3/CO-VCO-01--step-only--analysis.json",
+          "sha256": "5762cb9fdacec1520588947ee13e933c9af590924e935cc74b375ed2b082d23d"
+        },
+        "settings": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/collected-r3/output/runs/CO-VCO-01--step-only/effective_settings.json",
+          "sha256": "eac056af2179317bf19d2b47c91a9378455c26aa4d93738de1a1f8cc1b0dfec0"
+        }
+      },
+      "evas_request_controls": {
+        "tolerances": {
+          "absolute": 1e-07,
+          "relative": 1e-05
+        },
+        "stop": 8e-06,
+        "max_step": 1e-10
+      },
+      "original_evas_attempt": {
+        "id": "CO-VCO-01--step-only",
+        "evas_result": {
+          "status": "runtime_error",
+          "error": "KernelError('invalid_inputs: PWL sources must start at 0, strictly increase and cover stop; output times must strictly increase within [0,stop]; stop/max_step must be positive and finite')",
+          "unpaired_rows": 80749,
+          "elapsed_s": 0.2092377080116421,
+          "actual_numerical_launches": 1,
+          "actual_local_version_queries": 1
+        },
+        "spectre_native_rows": 80749,
+        "paired_rows": 0,
+        "unpaired_rows": 80749,
+        "identity": {
+          "evas_result_sha256": "1854732d768746503a01854f975e2c5adf1dea192ba9d3edad5525350e634a8f",
+          "evas_request_sha256": "91b4394dc3d88654dadccae532ee7582bd28b61b03e152f2ba191e18f38b4353",
+          "spectre_observation_sha256": "efa8f918efc89318d6c2326b403f419292232b17ddf798d458d499adfccdb9c7",
+          "checker_sha256": "a9da685e47733c10ea5630bc53b5ade3bec9f1c43d0240b914988fea241d5402"
+        },
+        "observation_time_gate": {
+          "stop_s": 8e-06,
+          "outside_stop_times": [
+            8.000000000003679e-06
+          ],
+          "duplicate_or_decreasing_indices": [],
+          "first": 0.0,
+          "last": 8.000000000003679e-06
+        },
+        "within_domain_diagnostic": {
+          "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/vco100ps-domain-diagnostic/SUMMARY.json",
+          "sha256": "e4827c7ea09ed65acd9f019b595c817fd5e71fdd00e40fb6d6861c7fed7e9c67",
+          "original_denominator": 80749,
+          "paired_rows": 80748,
+          "unpaired_rows": 1,
+          "unpaired_beyond_stop_rows": [
+            {
+              "time": 8.000000000003679e-06,
+              "ctl": -1.0,
+              "freq": 0.2,
+              "phase": 0.3650000013012231,
+              "out": 0.750111064223689
+            }
+          ],
+          "evas_reference_pass": false,
+          "pair_pass": false,
+          "pair_maxima": {
+            "freq": {
+              "error": 6.661338147750939e-16,
+              "time_s": 4.986400000000503e-06,
+              "budget": 0.001,
+              "spectre": 0.9067999999997488,
+              "evas": 0.9067999999997481
+            },
+            "phase_ordinary": {
+              "error": 0.9999999973995795,
+              "time_s": 4.754999999999999e-06,
+              "budget": 0.001,
+              "spectre": 2.600420101472878e-09,
+              "evas": 0.9999999999999996
+            },
+            "phase_circular": {
+              "error": 2.6006345965612354e-09,
+              "time_s": 5.626900000001907e-06,
+              "budget": 0.001,
+              "spectre": 0.7009591001017526,
+              "evas": 0.700959097501118
+            },
+            "sine": {
+              "error": 1.633936785201131e-08,
+              "time_s": 5.323500000001242e-06,
+              "budget": 0.003,
+              "spectre": 8.205776285810139e-05,
+              "evas": 8.20741022259534e-05
+            }
+          },
+          "extra_local_calls": 1,
+          "extra_version_queries": 0
+        }
+      },
+      "final_accuracy_attempt": null
+    }
+  ],
+  "physical_budgets": {
+    "z_V": 1e-07,
+    "low_V": 1e-07,
+    "amp_V": 0.001,
+    "count": 0,
+    "event_time_s": 1e-10,
+    "event_count": 1,
+    "vco_ctl_V": 1e-05,
+    "vco_freq_V": 0.001,
+    "vco_phase_cycles": 0.001,
+    "vco_sine_V": 0.003,
+    "vco_wrap_count": 4
+  },
+  "independent_reference": "z=1/(1+t); event after.5:z=1/(1.5+2*(t-.5)); low=z-.5; amp=10000*(z-.5). VCO frozen maintained decimal-source oracle; compiled-binary64 certificate separate.",
+  "identities": {
+    "final_accuracy": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/evas-final-accuracy/IDENTITY.json",
+      "sha256": "86cf226978e1a06704ded861018b873f1deb3819c451bda88e038020d916241d",
+      "availability": "local-only"
+    },
+    "original_attempts": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/ANALYSIS_IDENTITY_R3.json",
+      "sha256": "8aff86542257f1d01af950c9ff5255c2c3e266a756ce96181f22285fc8a67850",
+      "availability": "local-only"
+    },
+    "numerical_checker": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/experiments/backends/transient-accuracy/check.py",
+      "sha256": "a9da685e47733c10ea5630bc53b5ade3bec9f1c43d0240b914988fea241d5402",
+      "availability": "repository candidate"
+    },
+    "retained_vco_oracle": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/transient-accuracy-control/experiments/backends/transient-accuracy/retained-vco/oracle.py",
+      "sha256": "96ece5a943113a6e6e79b441145a2f2238da43938914605d884b5fd0414e72dc",
+      "availability": "repository candidate"
+    },
+    "remote_freeze": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/FREEZE_MANIFEST.json",
+      "sha256": "34cac833c5ce99cd44d7a8bec44e7b1867786ed5ba061127286746cf36a970a5",
+      "availability": "local-only"
+    },
+    "allocation": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/coordinator-allocation.json",
+      "sha256": "c47cee5a06a80a80f9deb5f42cb8dee9e9a172f15b6453ccade8a84487dc7836",
+      "availability": "local-only"
+    }
+  },
+  "resources": {
+    "remote": "serial90s,4GiB,singleCPU,32MiB/file,256MiB/condition polling; operator cleanup confirmed",
+    "local": "serial90s/call; no successful AS memory enforcement claimed",
+    "max_raw_bytes": 11700927
+  },
+  "control_failures": {
+    "import_failure": {
+      "status": "packaging_import_failure",
+      "actual_simulation_launches": 0,
+      "actual_version_queries": 0,
+      "operator_status": "child_exited",
+      "cleanup_confirmed": true,
+      "child_exit_code": 1,
+      "scientific_output_directory_created": false,
+      "reason": "Tooling snapshot omitted inputs.py, runner import failed before output/preflight",
+      "remote_original": "/tmp/chips-jinzhihong/accuracy-control-20261007-r2",
+      "collection_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/collected-control-failure",
+      "no_automatic_retry": true
+    },
+    "local_preexec_failure": {
+      "operation": "local macOS preexec resource control only; not a simulator call",
+      "requested": {
+        "RLIMIT_AS_bytes": 4294967296,
+        "RLIMIT_FSIZE_bytes": 33554432
+      },
+      "status": "SubprocessError",
+      "reason": "Exception occurred in preexec_fn.",
+      "actual_numerical_launches": 0,
+      "actual_version_queries": 0,
+      "resolution": "Coordinator authorized original local serial90s constraint; remote resource controls are separately retained",
+      "numerical_retry": false
+    },
+    "collection_failure": {
+      "operation": "first collection required nonexistent scientific output; operator import failure occurred before output mkdir",
+      "returncode": 1,
+      "archive_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archive_bytes": 0,
+      "stderr_sha256": "1f3daf34c3df35187d726da5457b00b29352f1b697f874e733e4781397a3ddb5"
+    }
+  },
+  "checks": {
+    "numerical_calibration_tests": 11,
+    "SI_adapter_calibration_tests": 4,
+    "all_pass": true,
+    "exact_anchor_contract": "no nearest-neighbor substitution",
+    "wrap": "no interpolation across wrap"
+  },
+  "limitations": [
+    "Finite native observations do not qualify continuous export or stop.",
+    "requested Spectre reltol differs from conservative effective reltol and EVAS accuracy semantics.",
+    "Actual dynamic baseline/tolerance maxstep1s overrides installed-manual prediction.01s.",
+    "5 original readback errors preserved; narrow calibrated SI adapter retains original tokens.",
+    "Tolerance-only EVAS refusals are not scored as waveform passes.",
+    "VCO ordinary phase errors remain even when circular/sine errors fit.",
+    "Raw and build products remain local-only; no public reproducibility claim.",
+    "Old CHECKER_MANIFEST freezes original README too; curated README is a new document identity. Numerical checker bytes unchanged."
+  ],
+  "pointers": {
+    "analysis-r3/SUMMARY.json": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/analysis-r3/SUMMARY.json",
+      "sha256": "199d7db55da2565380258191e03539bc942ce88c689997b1944ef3232661a7e7",
+      "availability": "local-only"
+    },
+    "paired-analysis-r3/WITH-DIAGNOSTIC-SUMMARY.json": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/paired-analysis-r3/WITH-DIAGNOSTIC-SUMMARY.json",
+      "sha256": "3db72fca60123d5f185bc72da9b440c15a4ab93b4d874f51d274dd5637f164d3",
+      "availability": "local-only"
+    },
+    "paired-analysis-final-accuracy/SUMMARY.json": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/paired-analysis-final-accuracy/SUMMARY.json",
+      "sha256": "c051699b4d4fd3e5bef0ff84cd47692cbcfdb731abb7c45aaf4e219ea48242db",
+      "availability": "local-only"
+    },
+    "evas-final-accuracy/EXECUTION.json": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/evas-final-accuracy/EXECUTION.json",
+      "sha256": "f7f032f50f8bb97153cf119c00997327f8e2a8b36f502d9014f32d0a5e743bd7",
+      "availability": "local-only"
+    },
+    "ACTUAL_R3_RESULTS_MANIFEST.json": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/ACTUAL_R3_RESULTS_MANIFEST.json",
+      "sha256": "bbcffbaf3291cab55c18e917e9aef445a43a3df098b7af26dd917f12d182bb72",
+      "availability": "local-only"
+    },
+    "reused-vco.json": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/reused-vco.json",
+      "sha256": "70d3c0721644e762d3afd906edc37ec159271e2c015f8aaf999155a7dd14d9b5",
+      "availability": "local-only"
+    },
+    "VCO-CONTROLS.md": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/VCO-CONTROLS.md",
+      "sha256": "3d4a18d1f9f1182fdf0776a02e2110604069d464dd6f93ccbfa7e90a0835a8b6",
+      "availability": "local-only"
+    },
+    "TRANSFER_R3.json": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/TRANSFER_R3.json",
+      "sha256": "15a9a8e5c50a98f7eaa2bd6bd84ee4e05f45c337a595a2e0d2e83dabe001eac8",
+      "availability": "local-only"
+    },
+    "DISPATCH_R3_RECEIPT.json": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/DISPATCH_R3_RECEIPT.json",
+      "sha256": "e7225908f5ae7290f429af1cea0114539e40e234535b8d66eb72fd677c8f5f1f",
+      "availability": "local-only"
+    },
+    "collected-r3/output/TOOL_IDENTITY.json": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/collected-r3/output/TOOL_IDENTITY.json",
+      "sha256": "fb53e0da2566d13336d8081eb8374c9e50d280bb8c47707173157a96b0790fc6",
+      "availability": "local-only"
+    },
+    "collected-r3/output/version.json": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/collected-r3/output/version.json",
+      "sha256": "bf02e14ef33e7f2f9ee34a3c1e8ee0241cffa924b2aa51ace1298b995638c129",
+      "availability": "local-only"
+    },
+    "reused-vco-analysis.json": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/reused-vco-analysis.json",
+      "sha256": "6c010d79fe9f886b9dda515d51d1fe0c28afc44f62a2be7fbc49ec2557dcabd7",
+      "availability": "local-only"
+    },
+    "EVIDENCE-DRAFT-REVISED.md": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/accuracy-control-20261007/backend/EVIDENCE-DRAFT-REVISED.md",
+      "sha256": "ea35a5f4b86225562208cadd3144c87a100bf2cb0618f66f0bc43ba4765b2d71",
+      "availability": "local-only"
+    }
+  }
+}

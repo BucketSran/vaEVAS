@@ -1,0 +1,167 @@
+{
+  "id": "CO-VCO-01",
+  "primary_group": "combination",
+  "scenario": "vco",
+  "requirements": [
+    "R-VCO"
+  ],
+  "features": [
+    "if_else",
+    "sequential_assignment",
+    "idtmod",
+    "sin"
+  ],
+  "legacy_tags": [
+    "V1",
+    "V6",
+    "V7"
+  ],
+  "source": "`include \"disciplines.vams\"\n`include \"constants.vams\"\nmodule paper_vco(ctl, freq, phase, out);\n inout ctl, freq, phase, out;\n electrical ctl, freq, phase, out;\n real f,p;\n analog begin\n  f=0.4+0.5*V(ctl);\n  if(f<0.2) f=0.2; else if(f>1.0) f=1.0;\n  p=idtmod(f/1e-6,0.125,1.0,0.0);\n  V(freq)<+f; V(phase)<+p;\n  V(out)<+sin(2*`M_PI*p);\n end\nendmodule\n",
+  "parameters": {},
+  "stimulus": {
+    "ctl": {
+      "kind": "pwl",
+      "points_T_V": [
+        [
+          0,
+          -1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          6,
+          0
+        ],
+        [
+          8,
+          -1
+        ]
+      ]
+    }
+  },
+  "initial_state": "p0=0.125 cycles; frequency starts at lower clamp0.2/T Hz.",
+  "stop_T": 8,
+  "observables": [
+    "ctl",
+    "freq",
+    "phase",
+    "out"
+  ],
+  "oracle": {
+    "formula": "F=min(1,max(0.2,0.4+0.5*u)); a(x)=0.125+integral_0^x F(s)ds; p=a-floor(a), y=sin(2*pi*a)",
+    "units": "F marker V represents cycles/T; phase marker V represents cycles; out V",
+    "construction": "Split PWL segments at u=-0.4 and u=1.2, integrate affine or constant F exactly. Breakpoints x=[0,1.2,2,3.2,4,4.8,6,6.8,8]. Prefix phase a at these points=[0.125,0.365,0.605,1.445,2.245,3.045,3.885,4.125,4.365]. Solve a(x)=integer within each monotone segment for wraps; positive derivative gives one root per integer. Exact wrap roots: 2+(-0.4+sqrt(0.555))/0.5, 3.755, 4.755, 6+(0.4-sqrt(0.1025))/0.25."
+  },
+  "event_contract": [
+    {
+      "kind": "wrap",
+      "unwrapped_integer_levels": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "window_T": [
+        -0.0001,
+        0.0001
+      ],
+      "expected_count": 4,
+      "boundary_rule": "Derive roots from analytical prefix-integral polynomial before results. Exact-boundary rows separate; apply circular phase distance; coherent unwrapped phase and sine required.",
+      "nominal_T": [
+        2.689966442575134,
+        3.755,
+        4.755,
+        6.31937515251343
+      ]
+    }
+  ],
+  "anchors": [
+    {
+      "t_T": 0,
+      "freq_V": 0.2,
+      "phase_V": 0.125,
+      "out_V": 0.7071067811865475
+    },
+    {
+      "t_T": 2,
+      "freq_V": 0.4,
+      "phase_V": 0.605,
+      "out_V": -0.6129070536529763
+    },
+    {
+      "t_T": 4,
+      "freq_V": 1,
+      "phase_V": 0.245,
+      "out_V": 0.9995065603657316
+    },
+    {
+      "t_T": 6,
+      "freq_V": 0.4,
+      "phase_V": 0.885,
+      "out_V": -0.6613118653236523
+    },
+    {
+      "t_T": 8,
+      "freq_V": 0.2,
+      "phase_V": 0.365,
+      "out_V": 0.7501110696304597
+    }
+  ],
+  "distinguishable_faults": [
+    "Integrate raw unclamped frequency.",
+    "Clamp instantaneous phase instead of frequency.",
+    "Reinitialize idtmod at branch changes.",
+    "Use f(t)*t instead of accumulated phase.",
+    "Missing 2*pi in the composed sine path disagrees with the independently accumulated phase and fixed out anchors."
+  ],
+  "uncovered": [
+    "VCO reset/gating",
+    "Negative frequency",
+    "Feedback controlled frequency",
+    "Long-run phase accuracy beyond8T"
+  ],
+  "status_by_backend": {
+    "spectre": "T",
+    "evas": "T",
+    "openvaf_r_ngspice": "T",
+    "gnucap_modelgen": "T"
+  },
+  "provenance": "development-informed; selected before new results; not untouched confirmation data",
+  "observation_windows": [
+    {
+      "center_T": 2.689966442575134,
+      "start_T": 2.687966442575134,
+      "end_T": 2.6919664425751337,
+      "max_gap_s": 2e-11,
+      "include_exact_center": true
+    },
+    {
+      "center_T": 3.755,
+      "start_T": 3.753,
+      "end_T": 3.7569999999999997,
+      "max_gap_s": 2e-11,
+      "include_exact_center": true
+    },
+    {
+      "center_T": 4.755,
+      "start_T": 4.753,
+      "end_T": 4.757,
+      "max_gap_s": 2e-11,
+      "include_exact_center": true
+    },
+    {
+      "center_T": 6.31937515251343,
+      "start_T": 6.3173751525134305,
+      "end_T": 6.32137515251343,
+      "max_gap_s": 2e-11,
+      "include_exact_center": true
+    }
+  ],
+  "callback_counts": {}
+}
