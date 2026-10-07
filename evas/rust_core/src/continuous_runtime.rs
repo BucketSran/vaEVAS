@@ -81,6 +81,8 @@ impl Continuous {
         start: f64,
         horizon: f64,
     ) -> Result<Self, Error> {
+        // Production anchor_event is gated by local_epoch().is_none(); an
+        // existing local epoch remains immutable rather than being reanchored.
         if matches!(self, Self::Anchored(_)) {
             return Ok(self.clone());
         }
@@ -330,6 +332,9 @@ impl Continuous {
                 .restarted(time, bounds, states, horizon)
                 .map(|v| Self::Nonlinear(Box::new(v))),
             Self::Anchored(v) => {
+                // Without an event observation this is output replay or
+                // horizon extension: states are held mode parameters, not
+                // ODE initial conditions. Restart from the retained cursor.
                 if v.observation.is_none() {
                     let mut next = v.clone();
                     let end = v.delta(I::point(horizon))?.hi;
@@ -350,6 +355,9 @@ impl Continuous {
                 .mapped_event(time, bounds, states)
                 .map(|v| Self::Nonlinear(Box::new(v))),
             Self::Anchored(v) => {
+                // Actual event batches install observe_local permission
+                // before reset closure. None here is an immutable output
+                // replay, which must not apply a second physical reset.
                 if v.observation.is_none() {
                     Ok(self.clone())
                 } else {

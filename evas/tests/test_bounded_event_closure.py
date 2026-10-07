@@ -120,8 +120,8 @@ V(y,r)<+h+V(w,r);""", "integer n,q,h;electrical z,w;")
 @(timer(.30000000000000004,0,1e-6)) m=m+1;
 V(z,r)<+idt(q,0); V(y,r)<+q+10*m;""", "integer n,q,m;electrical z;")
         baseline=None
-        for times,step in [([0,.31],.31),([0,.3,.30000000000000004,.3000000000000001,.31],.012)]:
-            result=transient(compile_sources({"nocross.va":source},[instance()]),{"u":[[0,0],[.31,0]]},times,stop=.31,max_step=step,vabstol=1.,reltol=0.,kernel=KERNEL)
+        for times,step in [([0,.31],.31),([0,.3,.3000000000000001,.31],.31),([0,.3,.30000000000000004,.3000000000000001,.31],.012)]:
+            result=transient(compile_sources({"nocross.va":source},[instance()]),{"u":[[0,0],[.31,.31]]},times,stop=.31,max_step=step,vabstol=1.,reltol=0.,kernel=KERNEL)
             for query,state,solution in zip(times,result["transient"]["states"],result["solutions"]):
                 t=Q(query);n=int(t>=Q(.1))+int(t>=Q(.1)+Q(.2));m=int(t>=Q(.30000000000000004))
                 self.assertEqual(state,[n,max(0,n-1),m])

@@ -74,9 +74,13 @@ impl Controller {
                 Some(&next.operators),
                 Some(&next.state_bounds),
             )?;
+            // Retain the physical seed for every requested post-event phase in
+            // this certificate window, including its execution representative.
+            // The surrounding transaction may later advance beyond that query;
+            // per-microevent accepted-time comparisons lose this obligation.
             let mut needs_closure = trajectory.config.output_times.iter().any(|&query| {
-                query > self.accepted.time
-                    && query < time
+                query >= window.lo
+                    && query <= time
                     && batch.iter().all(|event| {
                         matches!(
                             event.physical_order_at(query),

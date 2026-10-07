@@ -281,7 +281,7 @@ impl Moment {
                     delta: y,
                     ..
                 },
-            ) => a == b && ((x.lo == x.hi && x == y) || (same_guard && x == y)),
+            ) => a == b && x == y && (same_guard || x.lo == x.hi),
             (Self::Dynamic { bounds: a, .. }, Self::Dynamic { bounds: b, .. }) => {
                 same_guard && a == b
             }
