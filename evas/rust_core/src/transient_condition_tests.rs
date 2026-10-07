@@ -154,11 +154,15 @@ fn sampled_uncertainty_survives_empty_steps_and_unwritten_arm_without_operators(
 fn failed_sample_certificate_and_changed_arm_retry_preserve_frame() {
     let sample = json!([{"kind":"assign","state":0,"rhs":{"op":"affine","constant":-0.5,
         "terms":[{"node":1,"coefficient":1}]}}]);
-    let (model, trajectory, initial) = fixture(
+    let (mut model, trajectory, initial) = fixture(
         conditional(0.25, sample, increment(1.0)),
         false,
         &[[0.0, 0.1], [1.0, 0.9]],
     );
+    // y=q: exact sample (.1+.9)/2-.5 is nonzero despite its zero
+    // nominal value. Check that physical error rather than state units.
+    model.tolerances.absolute = 1e-20;
+    model.tolerances.relative = 0.0;
     for _ in 0..2 {
         assert_eq!(
             prepare_batch(&model, &trajectory, &initial, 0.5, &[0])

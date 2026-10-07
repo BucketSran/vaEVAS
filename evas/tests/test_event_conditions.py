@@ -89,7 +89,8 @@ class ConditionalEvents(unittest.TestCase):
                 execute(text, points=[[0,a],[1,b]])
 
     def test_input_enclosure_reaches_sampled_state_certificate(self):
-        text = source('if (V(u,r)>0) q=V(u,r)-.5; else q=0;')
+        text = source('if (V(u,r)>0) q=V(u,r)-.5; else q=0;', rhs='1e16*q')
+        # Exact output is 1e16*((Q(.1)+Q(.9))/2-Q(.5)), about .139 V.
         # Numeric q and its equation residual are zero; exact q is nonzero.
         with self.assertRaisesRegex(KernelError, 'event_accuracy'):
             execute(text, points=[[0,.1],[1,.9]])

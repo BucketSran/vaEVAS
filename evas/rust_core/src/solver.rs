@@ -892,7 +892,20 @@ mod tests {
 
     #[test]
     fn sparse_settlement_certifies_after_numeric_solve_and_retries_changed_inputs() {
-        let model = sparse_event_model();
+        let mut program = sparse_event_model().program;
+        // y0=q exposes the lost exact 2^-55 even when other sparse rows
+        // have large offsets. Retain their topology and sparse dispatch.
+        program.contributions[0].rhs =
+            serde_json::from_value(json!({"op":"state","state":0})).unwrap();
+        let model = EventModel::new(
+            program,
+            vec!["u".into()],
+            Tolerances {
+                absolute: 1e-20,
+                relative: 1e-5,
+            },
+        )
+        .unwrap();
         let before = model.initial();
         let bounds = vec![I::ZERO];
         let accepted = model.circuit(&before).unwrap();
@@ -932,7 +945,7 @@ mod tests {
                 assert_eq!(states, [delta]);
                 assert!(certified[0].lo <= delta && certified[0].hi >= delta);
                 assert_sparse(&circuit);
-                assert_eq!(solution.voltages[2], input + delta);
+                assert_eq!(solution.voltages[2], delta);
             }
             assert_eq!(before, [0.0]);
             assert_eq!(bounds, [I::ZERO]);

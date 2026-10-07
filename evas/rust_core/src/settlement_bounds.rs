@@ -189,19 +189,21 @@ impl Bounds {
                 } else {
                     0.0
                 };
-                let relative = if integer {
-                    0.0
-                } else {
+                let relative = if voltage {
                     model.tolerances.relative
+                } else {
+                    0.0
                 };
                 // A lower bound on the requested budget and an upper bound on
-                // actual error. No voltage absolute tolerance for generic state.
+                // actual error. Generic real states have no physical unit budget.
+                // Keep their finite enclosures for later voltage, history and
+                // event consumers; integer states still require zero error.
                 let budget = I::point(absolute) + I::point(relative) * I::point(value.abs());
                 let error = I::point(value) - exact;
                 if !exact.finite()
                     || !error.finite()
                     || !budget.finite()
-                    || error.magnitude() > budget.lo.max(0.0)
+                    || ((voltage || integer) && error.magnitude() > budget.lo.max(0.0))
                 {
                     let name = if voltage {
                         model.program.nodes[k].clone()

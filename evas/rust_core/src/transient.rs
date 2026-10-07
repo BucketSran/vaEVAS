@@ -1775,7 +1775,16 @@ mod tests {
                 "right":{"op":"affine","constant":-1.0,"terms":[]}}}
         ]))
         .unwrap();
-        let model = EventModel::new(program, vec!["u".into()], Tolerances::default()).unwrap();
+        // Exact physical output is 2^-55, whereas the replay returns zero.
+        let model = EventModel::new(
+            program,
+            vec!["u".into()],
+            Tolerances {
+                absolute: 1e-20,
+                relative: 0.0,
+            },
+        )
+        .unwrap();
         let circuit = model.circuit(&model.initial()).unwrap();
         let before = Frame {
             time: 0.0,

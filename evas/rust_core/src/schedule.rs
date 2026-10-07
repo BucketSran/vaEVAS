@@ -1,7 +1,7 @@
 //! Certified event calendars. Nominal timer times never accumulate accepted steps.
 use crate::event_accuracy::{unresolved, GuardBounds};
 use crate::events::EventModel;
-use crate::interval::Interval as I;
+use crate::interval::{sum_products_sign, Interval as I};
 use crate::ir::{Error, EventTrigger};
 use crate::operators::Operators;
 use crate::pwl::{Root, Trajectory};
@@ -49,6 +49,31 @@ enum Moment {
 }
 
 impl Moment {
+    /// Static timer parameters and the bounded integer index define an exact
+    /// binary-rational nominal time even when its interval endpoints overlap.
+    fn timer_order(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        let (
+            Self::Timer {
+                start: a,
+                period: p,
+                index: k,
+                ..
+            },
+            Self::Timer {
+                start: b,
+                period: q,
+                index: l,
+                ..
+            },
+        ) = (self, other)
+        else {
+            return None;
+        };
+        // add_timer limits indices to EVENT_BUDGET, below the exact f64 integer range.
+        let sign = sum_products_sign(&[(*a, 1.0), (*p, *k as f64), (-*b, 1.0), (-*q, *l as f64)])?;
+        Some(sign.cmp(&0))
+    }
+
     fn bounds(&self) -> I {
         match self {
             Self::Cross(root) => root.bounds,
@@ -136,6 +161,68 @@ impl Moment {
             _ => false,
         }
     }
+}
+
+/// Resolve only a complete overlapping cluster of fixed timers. Keep nominal
+/// enclosures for sampling/forward-error propagation; representative delays
+/// neither erase uncertainty nor relax any clock's original tolerance.
+fn order_fixed_timers(
+    events: &mut [ScheduledEvent],
+    model: &EventModel,
+    stop: f64,
+    next_lower: Option<f64>,
+) -> Result<(), Error> {
+    let mut uncertified = false;
+    events.sort_by(|a, b| {
+        let order = a.moment.timer_order(&b.moment).unwrap_or_else(|| {
+            uncertified = true;
+            std::cmp::Ordering::Equal
+        });
+        order.then(a.event.cmp(&b.event))
+    });
+    if uncertified {
+        return Err(unresolved("cannot certify exact fixed timer order"));
+    }
+    let mut start = 0;
+    let mut previous: Option<f64> = None;
+    while start < events.len() {
+        let mut end = start + 1;
+        while end < events.len() {
+            match events[start].moment.timer_order(&events[end].moment) {
+                Some(std::cmp::Ordering::Equal) => end += 1,
+                Some(_) => break,
+                None => return Err(unresolved("cannot certify exact fixed timer group")),
+            }
+        }
+        // All equal nominal times must share one representative, including
+        // when their different arithmetic decompositions have different bounds.
+        let mut time = events[start..end]
+            .iter()
+            .map(|e| e.time.max(e.bounds().hi))
+            .fold(0.0, f64::max);
+        if let Some(prior) = previous {
+            time = time.max(prior.next_up());
+        }
+        if !time.is_finite() || time > stop || next_lower.is_some_and(|limit| time >= limit) {
+            return Err(unresolved(
+                "ordered timer representatives exceed stop or the next event boundary",
+            ));
+        }
+        for event in &mut events[start..end] {
+            if !event
+                .moment
+                .accepts(time, &model.triggers[event.event].trigger)
+            {
+                return Err(unresolved(
+                    "ordered timer representative exceeds its original time tolerance",
+                ));
+            }
+            event.time = time;
+        }
+        previous = Some(time);
+        start = end;
+    }
+    Ok(())
 }
 
 fn add_timer(
@@ -680,6 +767,32 @@ fn schedule_with_history(
     });
     let mut start = 0;
     while start < events.len() {
+        // Find the whole connected enclosure cluster before attempting a
+        // timer-only certificate. Mixed or state-dependent moments retain the
+        // existing simultaneous-root and ambiguity checks below.
+        let mut cluster_end = start + 1;
+        let mut cluster_hi = events[start].bounds().hi.max(events[start].time);
+        while cluster_end < events.len() && events[cluster_end].bounds().lo <= cluster_hi {
+            cluster_hi = cluster_hi
+                .max(events[cluster_end].bounds().hi)
+                .max(events[cluster_end].time);
+            cluster_end += 1;
+        }
+        if cluster_end > start + 1
+            && events[start..cluster_end]
+                .iter()
+                .all(|e| matches!(e.moment, Moment::Timer { .. }))
+        {
+            let next_lower = events.get(cluster_end).map(|e| e.bounds().lo);
+            order_fixed_timers(
+                &mut events[start..cluster_end],
+                model,
+                trajectory.config.stop,
+                next_lower,
+            )?;
+            start = cluster_end;
+            continue;
+        }
         let mut end = start + 1;
         let mut time = events[start].time;
         // Include uncertain nominal times on either side of the chosen time.
@@ -736,4 +849,94 @@ fn schedule_with_history(
         start = end;
     }
     Ok(events)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::ir::{Program, Tolerances, SCHEMA_VERSION};
+    use serde_json::json;
+
+    fn model() -> EventModel {
+        let origin = json!({"source":"calendar","line":1,"column":1,"instance":"dut"});
+        let program: Program = serde_json::from_value(json!({
+            "schema_version":SCHEMA_VERSION,"nodes":["0","y"],
+            "states":[{"instance":"dut","name":"n","kind":"integer","initial":0}],
+            "events":[{"trigger":{"kind":"timer","start":1.,"period":0.,
+                "time_tolerance":10.,"enabled":true},"origin":origin,
+                "body":[{"kind":"assign","state":0,"rhs":{"op":"affine","constant":1.,"terms":[]}}]}],
+            "contributions":[{"branch":{"instance":"dut","local_positive":"r","local_negative":"y","kind":"voltage"},
+                "positive":0,"negative":1,"origin":origin,"rhs":{"op":"state","state":0}}]
+        })).unwrap();
+        EventModel::new(program, vec![], Tolerances::default()).unwrap()
+    }
+
+    fn event(start: f64, lo: f64, hi: f64) -> ScheduledEvent {
+        ScheduledEvent {
+            time: hi,
+            event: 0,
+            moment: Moment::Timer {
+                bounds: I { lo, hi },
+                start,
+                period: 0.,
+                index: 0,
+            },
+        }
+    }
+
+    #[test]
+    fn exact_groups_keep_original_enclosures_and_joint_representative() {
+        let m = model();
+        // The three enclosures form a transitive chain, with an equal-time subgroup.
+        let mut events = vec![event(2., 1.5, 3.), event(1., 0.5, 1.5), event(2., 2., 4.)];
+        order_fixed_timers(&mut events, &m, 10., None).unwrap();
+        assert_eq!(
+            events.iter().map(|e| e.time).collect::<Vec<_>>(),
+            [1.5, 4., 4.]
+        );
+        assert_eq!(
+            events.iter().map(|e| e.bounds()).collect::<Vec<_>>(),
+            [
+                I { lo: 0.5, hi: 1.5 },
+                I { lo: 1.5, hi: 3. },
+                I { lo: 2., hi: 4. }
+            ]
+        );
+    }
+
+    #[test]
+    fn unrepresentable_or_outside_representatives_fail_closed() {
+        let m = model();
+        let close = || vec![event(1., 1., 1.5), event(1.1, 1., 1.5)];
+        for (stop, next) in [(1.5, None), (2., Some(1.5_f64.next_up()))] {
+            let error = order_fixed_timers(&mut close(), &m, stop, next)
+                .err()
+                .unwrap();
+            assert_eq!(error.kind, "event_resolution");
+        }
+        let mut overflow = vec![
+            event(f64::MAX.next_down(), f64::MAX.next_down(), f64::MAX),
+            event(f64::MAX, f64::MAX, f64::MAX),
+        ];
+        // Allow the first representative. The second needs next_up(MAX), never infinity.
+        let mut wide = model();
+        if let EventTrigger::Timer { time_tolerance, .. } = &mut wide.triggers[0].trigger {
+            *time_tolerance = f64::MAX;
+        }
+        assert_eq!(
+            order_fixed_timers(&mut overflow, &wide, f64::MAX, None)
+                .err()
+                .unwrap()
+                .kind,
+            "event_resolution"
+        );
+        let mut invalid = vec![event(f64::NAN, 0., 1.), event(1., 1., 1.)];
+        assert_eq!(
+            order_fixed_timers(&mut invalid, &m, 2., None)
+                .err()
+                .unwrap()
+                .kind,
+            "event_resolution"
+        );
+    }
 }
