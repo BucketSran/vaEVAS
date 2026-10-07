@@ -13,7 +13,7 @@ def dump_cases(cases):
         items=list(case.items())
         for j,(key,value) in enumerate(items):
             comma="," if j<len(items)-1 else ""
-            if key in ("probes","metrics","crossings"):
+            if key in ("probes","metrics","crossings","sample_grids"):
                 lines.append("    "+json.dumps(key)+": [")
                 lines.extend("      "+json.dumps(row)+( "," if k<len(value)-1 else "") for k,row in enumerate(value))
                 lines.append("    ]"+comma)

@@ -38,6 +38,7 @@ def model(parameters,variant="reference"):
     if variant=="wrong-clock-edge":edge=-1
     if variant=="no-history":a=b=0
     if variant=="wrong-gain":c*=.75
+    output="y" if variant!="low-phase-reset" else "(V(clk)>0.5 ? y : 0)"
     return f'''`include "constants.vams"
 `include "disciplines.vams"
 module identified_sc(vin, clk, out);
@@ -50,7 +51,7 @@ analog begin
     ynew={a:.15g}*y+{b:.15g}*yold+{c:.15g}*V(vin);
     yold=y;y=ynew;
   end
-  V(out)<+transition(y,0,5e-9,5e-9);
+  V(out)<+transition({output},0,5e-9,5e-9);
 end
 endmodule
 '''

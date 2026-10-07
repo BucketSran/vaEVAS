@@ -2,6 +2,7 @@
 import copy
 import importlib.util
 import json
+import math
 from pathlib import Path
 import sys
 import unittest
@@ -16,6 +17,8 @@ import build_sh,build_sc,build_driver,build_comparator,build_pll
 def fixture(task,c):
     times={0,c["stop"]}
     times.update(p["time"] for p in c["probes"])
+    for grid in c.get("sample_grids",[]):
+        times.update(grid["start"]+j*grid["step"] for j in range(len(grid["expected"])))
     for m in c.get("metrics",[]):times.update((m["t1"],m["t2"]))
     for e in c.get("crossings",[]):
         for t in e["expected_times"]:times.update((t-.5e-9,t,t+.5e-9))
@@ -74,6 +77,33 @@ class IdentificationCriteria(unittest.TestCase):
         for r in rows:
             if 40e-9<r["time"]<60e-9:r["out"]=1
         self.assertFalse(evaluate(rows,c)["passed"])
+
+    def test_sc_low_phase_reset_rejected_for_all_experiments(self):
+        cases=json.loads((ROOT/"benchmark/tasks/identify-sc-clocked-filter/tests/cases.json").read_text())
+        for c in cases:
+            rows=fixture("identify-sc-clocked-filter",c)
+            for row in rows:
+                if row["time"] % c["clock_period"] > .5*c["clock_period"]:
+                    row["out"]=0
+            old=copy.deepcopy(c)
+            old.pop("sample_grids")
+            self.assertTrue(evaluate(rows,old)["passed"],c["name"])
+            result=evaluate(rows,c)
+            self.assertFalse(result["passed"],c["name"])
+            self.assertGreater(result["max_error_V"]["full-cycle-hold"],2e-5)
+
+    def test_pll_grid_alias_ripple_rejected_for_all_experiments(self):
+        cases=json.loads((ROOT/"benchmark/tasks/identify-pll-hop-dynamics/tests/cases.json").read_text())
+        for c in cases:
+            rows=fixture("identify-pll-hop-dynamics",c)
+            for row in rows:
+                row["out"]+=.1*math.sin(2*math.pi*row["time"]/5e-7)
+            old=copy.deepcopy(c);old.pop("sample_grids")
+            self.assertTrue(evaluate(rows,old)["passed"],c["name"])
+            result=evaluate(rows,c)
+            self.assertFalse(result["passed"],c["name"])
+            self.assertGreater(result["max_error_V"]["phase-coherent-output"],.09)
+            self.assertEqual(result["max_error_V"]["instantaneous-frequency-monitor"],0)
 
     def test_actual_public_fits_generate_each_mutant(self):
         for task,variants in VARIANTS.items():

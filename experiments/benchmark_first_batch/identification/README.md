@@ -16,7 +16,7 @@ python3 -B experiments/benchmark_first_batch/identification/prepare_candidates.p
 ```
 
 默认输出到ignored`runs/identification-candidates/<task>/<variant>/dut.va`。
-每题reference和四个可编译语义错版需分别送现有circuit harness，
+每题reference和至少四个语义错版需分别送现有circuit harness，
 协调者管理Spectre总并发4，不在这里建立另一套SSH编排。
 task-local`circuit_task.py`与checker副本由协调者同步规范源码并绑定身份。
 
@@ -44,6 +44,16 @@ python3 -B experiments/benchmark_first_batch/identification/static_check_candida
   --runtime /absolute/path/to/benchmark/checkers/circuit_task.py
 ```
 
-`candidate-static-check.json` 保留一次25候选全部通过的来源哈希与运行时哈希。
+`candidate-static-check.json` 保留一次27候选全部通过的来源哈希与运行时哈希。
 这只证明 submission I/O 合同合规，不证明VA可编译或电路行为正确。
 PLL参考与错版生成器使用2π数值字面量，符合共享边界禁止候选宏的规则。
+
+SC保持判据覆盖每周期的高、低时钟相位，避免只在高相观测而遗漏低相清零。
+PLL在完整实验上按声明的10 ns观测间隔检查out，压缩为`sample_grids`数组，
+保留既定8 mV容差与独立解析目标，避免500 ns稀疏网格漏掉周期内纹波。
+`low-phase-reset`和`grid-alias-ripple`行级回归逐一证明旧判据接受、修正版拒绝；
+真实VA后端正负校准仍由协调者冻结并调度。公开观测数据不因这次判据修复改变。
+
+`sc-full-hold-regrading.json` 对已归档的实际Spectre参考波形重评分，四实验均通过
+新增高、低相保持要求。`regrade_archived.py` 要求旧目标、刺激和实际候选字节均未改变，
+才允许添加sample grids后重评；不把重评分称为新的后端执行收据。

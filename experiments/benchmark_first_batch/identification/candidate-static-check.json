@@ -1,10 +1,10 @@
 {
   "kind": "shared_prepare_source_static_check",
-  "runtime_sha256": "033ed88a978517c752fe4675c934b02184fde85d45a64d18ee28c93bae8f4c7d",
+  "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
   "lexer_sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
   "scope": "Static submission boundary only; not VA compilation or Spectre acceptance.",
-  "count": 25,
-  "passed_count": 25,
+  "count": 27,
+  "passed_count": 27,
   "candidates": [
     {
       "task": "identify-sh-acquisition",
@@ -118,6 +118,18 @@
       "task": "identify-sc-clocked-filter",
       "variant": "wrong-gain",
       "source_sha256": "487841d4e993ad9b5293c284c97a0dc14b6cccb73a8b64672a210f40e7ff48f9",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-sc-clocked-filter",
+      "variant": "low-phase-reset",
+      "source_sha256": "01852d60085f039c5eb344db19fd862445da72bbe2abb9358bfcac5a984de9b2",
       "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
       "status": "passed",
       "receipt": {
@@ -298,6 +310,18 @@
       "task": "identify-pll-hop-dynamics",
       "variant": "wrong-clock-phase",
       "source_sha256": "2c464f86542b340e469296da050d92e8c7aa4f4389e0ead33de70283b242d8be",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-pll-hop-dynamics",
+      "variant": "grid-alias-ripple",
+      "source_sha256": "faaa4de77ba947db1bf29c2e1df15f4c01c4ee538e6ff13f15dbbe8b79bae8be",
       "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
       "status": "passed",
       "receipt": {

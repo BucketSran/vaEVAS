@@ -60,6 +60,7 @@ def model(parameters,variant="reference"):
     if variant=="wrong-clock-edge":edge=-1
     if variant=="no-history":a=b=0
     if variant=="wrong-gain":c*=.75
+    output="y" if variant!="low-phase-reset" else "(V(clk)>0.5 ? y : 0)"
     return f\'''`include "constants.vams"
 `include "disciplines.vams"
 module identified_sc(vin, clk, out);
@@ -72,7 +73,7 @@ analog begin
     ynew={a:.15g}*y+{b:.15g}*yold+{c:.15g}*V(vin);
     yold=y;y=ynew;
   end
-  V(out)<+transition(y,0,5e-9,5e-9);
+  V(out)<+transition({output},0,5e-9,5e-9);
 end
 endmodule
 \'''
@@ -88,11 +89,17 @@ def build():
         write(TASK,f"environment/public/{c['name']}.scs",netlist(c))
     hidden=[experiment("fast-negative-step",.8e-6,-.91,"step"),experiment("slow-positive-pulse",5e-6,.93,"pulse"),experiment("mixed-frequency",1.7e-6,-.76,"multi"),experiment("sine-off-public-clock",2.7e-6,.47,"sine")]
     for c in hidden:
-        y=observations(c);probes=[];ts=c["clock_period"]
+        y=observations(c);probes=[];grids=[];ts=c["clock_period"]
         for k,v in enumerate(y,1):
             probes.append(dict(time=k*ts+10e-9,expected=v,tolerance=2e-5,metric="sampled-output"))
             probes.append(dict(time=(k+.4)*ts,expected=v,tolerance=2e-5,metric="inter-sample-hold"))
-        c.update(netlist=netlist(c),stop=(c["cycles"]+1)*ts,signals=["out","vin","clk"],probes=probes,metrics=[dict(name="post-reversal-response",t1=(c["cycles"]//2)*ts+10e-9,t2=(c["cycles"]//2+5)*ts+10e-9,expected=y[c["cycles"]//2+4]-y[c["cycles"]//2-1],tolerance=3e-5)])
+            # Uniform windows cover both phases of every hold interval,
+            # including the complete low phase outside 10 ns edge guards.
+            for phase in (0.0,0.5):
+                grids.append(dict(node="out",start=(k+phase)*ts+10e-9,
+                    step=(.5*ts-20e-9)/12,expected=[v]*13,
+                    tolerance=2e-5,metric="full-cycle-hold"))
+        c.update(netlist=netlist(c),stop=(c["cycles"]+1)*ts,signals=["out","vin","clk"],probes=probes,sample_grids=grids,metrics=[dict(name="post-reversal-response",t1=(c["cycles"]//2)*ts+10e-9,t2=(c["cycles"]//2+5)*ts+10e-9,expected=y[c["cycles"]//2+4]-y[c["cycles"]//2-1],tolerance=3e-5)])
     instruction='''# 从时钟驱动滤波实验建立模型
 
 这是ADC抗混叠链中一个原创的两节开关电容低通行为对象。
@@ -115,7 +122,7 @@ SC的时钟决定真实时间尺度，你的模型必须同时保留采样历史
 这些局部检查包含startup、通带时序与reversal，不能只用平均误差或最终DC值证明通过。
 使用public网表自测，最终只提交dut.va，不读终评、不写文件、不调用系统命令。
 '''
-    package(TASK,"identified_sc",instruction,source("时钟可调SC滤波器","https://www.analog.com/en/products/max7400.html","厂商文档支持时钟控制corner frequency的工程意义；本题原创两节低通而不是其八阶椭圆架构。","丢失一节动态、使用下降沿、丢失历史和错误增益"),hidden,public,dict(conditions="fixed voltage-domain baseband system, zero initial state, 5 ns output edge, no loading/PVT",observation_precision="12 significant digits"),FIT)
+    package(TASK,"identified_sc",instruction,source("时钟可调SC滤波器","https://www.analog.com/en/products/max7400.html","厂商文档支持时钟控制corner frequency的工程意义；本题原创两节低通而不是其八阶椭圆架构。","丢失一节动态、使用下降沿、丢失历史、错误增益和每个低时钟相位清零"),hidden,public,dict(conditions="fixed voltage-domain baseband system, zero initial state, 5 ns output edge, no loading/PVT",observation_precision="12 significant digits"),FIT)
 
 
 if __name__=="__main__":build()
