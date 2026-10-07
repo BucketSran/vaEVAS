@@ -368,10 +368,9 @@ def classify_case_packet(cases,policy,selector=None):
     raise OptimizationEvidenceError('scored packet must be the full task or one declared private condition')
 
 def performance_main(evaluate):
-    """Prospective task entry: guard before any solve, functional + repeated score.
+    """Score admitted tasks: guard before any solve, then functional and paired checks.
 
-    There are no admitted tasks/configurations yet. This entry is a prototype,
-    not a claim that current probe jobs already use performance scoring.
+    Probe jobs and offline admission evidence are distinct from this formal entry.
     """
     import argparse
     import json
