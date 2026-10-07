@@ -10,7 +10,9 @@
 本题单独校准，不加入已完成的六题初筛分母，也不改变 EVAS 原 31 条件矩阵。
 
 评分源码为 [triangle_oscillator.py](../../checkers/triangle_oscillator.py)，
-`tests/verify.py` 是逐字节相同的执行副本。配置生成、校准与后端差异证据见
+`tests/triangle_oscillator.py` 是逐字节相同的 canonical 副本。
+`tests/verify.py` 经公共 `circuit_task` 执行边界调用 `first_batch_triangle` 薄适配层，
+仍使用原 `triangle_oscillator.evaluate` 独立判据。配置生成、校准与后端差异证据见
 [振荡器兼容性实验](../../../experiments/backends/dvs2-spectre-validation/README.md#oscillator-compatibility)。
 任务需要已配置许可证的 Spectre verifier；Docker 基础镜像不包含 Spectre。
 
@@ -101,3 +103,20 @@ harness 基于 `c292140d` 的本地改动；两边均未发布本次接入。
 审查修复后的重跑保存在 `final/` 和 `final-v2/` 下的同名目录；`final-v2/`
 包含最后的依赖缓存修复，记录输入、源码和产物摘要。
 这些原始材料为 local-only，不是公开下载数据；本次没有执行 Spectre、SSH 或模型实验。
+
+## 首批公共执行入口迁移
+
+Harbor入口只更换执行边界：候选约束、实际Spectre版本、求解、归档和收据由
+首批公共`circuit_task`负责。适配层原样调用canonical独立数学答案，
+只将其`BehavioralRejection`转为完整波形的有效失败；结构和数据错误继续保持checker错误。
+参考VA、原八例cases的完整字节、刺激网表、参数、1 uV/200 ns容差和次数要求不变。
+`contract.json`额外声明观察信号`ctl,z,count`，均是原网表直接保存的节点：
+r接地，ctl是正速度输入，z是三角波输出，count是换向次数电压。
+公共执行器读取该默认映射，不把metadata写入原cases文件。
+这保留旧EVAS replay的冻结case身份；canonical数学、旧runner和EVAS支持结论不变。
+
+`experiments/benchmark_first_batch/legacy_va07/prepare_candidates.py`仅调用原
+`oscillator_compatibility.experiments`构造参考和四个历史负例，未改变其语义。
+一份等价product-guard源码另配两次历史刺激，不能称为两份不同等价实现。
+旧题真实Spectre校准仍是历史身份；首批新入口的8参考条件、4定向负例
+与可选2等价条件由协调者重新冻结和运行，迁移本身不证明后端已通过。

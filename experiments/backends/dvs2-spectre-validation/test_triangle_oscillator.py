@@ -79,7 +79,7 @@ class TriangleOracle(unittest.TestCase):
                 with self.assertRaises(ValueError):m.read_psf(p)
 
     def test_task_checker_is_identical(self):
-        self.assertEqual((ROOT/'benchmark/checkers/triangle_oscillator.py').read_bytes(),(ROOT/'benchmark/tasks/va07-triangle-repair/tests/verify.py').read_bytes())
+        self.assertEqual((ROOT/'benchmark/checkers/triangle_oscillator.py').read_bytes(),(ROOT/'benchmark/tasks/va07-triangle-repair/tests/triangle_oscillator.py').read_bytes())
 
 
 class TriangleVerifier(unittest.TestCase):
