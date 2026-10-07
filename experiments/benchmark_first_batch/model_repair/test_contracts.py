@@ -101,6 +101,19 @@ class UVLOTests(unittest.TestCase):
 
 class SARZoomTests(unittest.TestCase):
     def cases(self,task):return json.loads((ROOT/'benchmark/tasks'/task/'tests/cases.json').read_text())
+    def test_sar_public_and_private_inputs_respect_boundary_margin(self):
+        from fractions import Fraction
+        import re
+        cases=self.cases('repair-sar-abort')
+        visible=(ROOT/'benchmark/tasks/repair-sar-abort/environment/public/visible.scs').read_text()
+        wave=re.search(r'Vvin .*?wave=\[([^\]]+)\]',visible).group(1).split()
+        inputs=[Fraction(str(v)) for c in cases for t,v in c['vin']]+[Fraction(v) for v in wave[1::2]]
+        for vin in inputs:
+            self.assertGreaterEqual(vin,Fraction(2,100))
+            self.assertLessEqual(vin,Fraction(98,100))
+            self.assertGreaterEqual(min(abs(vin-Fraction(k,16)) for k in range(17)),Fraction(5,1000))
+        self.assertEqual(int(Fraction('0.44')*16),int(Fraction('0.45')*16))
+        self.assertEqual(int(Fraction('0.56')*16),int(Fraction('0.55')*16))
     def test_sar_four_decisions_abort_and_restart(self):
         for c in self.cases('repair-sar-abort'):
             targets=checker.sar_targets(c);self.assertTrue(checker.evaluate(fixture(c,targets),c)['passed'])

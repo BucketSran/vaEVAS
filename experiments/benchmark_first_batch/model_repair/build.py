@@ -303,7 +303,7 @@ def build_sar():
     negatives={'late_result_after_abort':SAR.replace('done=0;active=0;pending=0;working=0;result=0;dac=0;next_publish=1e30;','done=0;working=0;result=0;dac=0;').replace('if(active && pending && V(rst)<vth)begin result=working','if(active && pending)begin result=working'),
       'inverted_comparator':SAR.replace('if(V(cmp)>vth)','if(V(cmp)<vth)'),
       'publish_without_latency':SAR.replace('$abstime+tvalid','$abstime+1p')}
-    result=write_task('repair-sar-abort',text,'原创四位SAR试探/发布延迟合同；工程需求参考旧SAR握手资产与ADC复位扩展设计稿。人工注错为pending事件复位取消遗漏，未复制旧源码。',SAR,negatives,[sar_case('abort_then_two_codes',[.63,.21,.82]),sar_case('zero_code_and_latency',[.91,.03,.44],1.1e-9)],sar_case('public',[.56,.35,.72]),'repair','sar-controller-original')
+    result=write_task('repair-sar-abort',text,'原创四位SAR试探/发布延迟合同；工程需求参考旧SAR握手资产与ADC复位扩展设计稿。人工注错为pending事件复位取消遗漏，未复制旧源码。',SAR,negatives,[sar_case('abort_then_two_codes',[.63,.21,.82]),sar_case('zero_code_and_latency',[.91,.03,.45],1.1e-9)],sar_case('public',[.55,.35,.72]),'repair','sar-controller-original')
     p=ROOT/'benchmark/tasks/repair-sar-abort/environment/public'
     (p/'starter.va').write_text(HEADER+negatives['late_result_after_abort']);(p/'adc_compare.va').write_text(CMP_SUPPORT)
     return result
