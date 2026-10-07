@@ -67,6 +67,15 @@ class NativeEvidence(unittest.TestCase):
         warning=b'WARNING (VACOMP-2435): environment variable no longer supported'
         self.assertEqual(M.validate_solver_evidence(source,0,LOG,b'',warning)['native_errors'],0)
 
+    def test_native_machine_identity_is_optional_and_unambiguous(self):
+        self.assertIsNone(M.read_native_statistics(LOG)['native_host'])
+        header='User: user   Host: actual-host   HostID: ABC   PID: 123\nCPU Type: Actual Processor\nSystem load averages (1min, 5min, 15min) : 8 %, 5 %, 4 %\n'
+        result=M.read_native_statistics(header+LOG)
+        self.assertEqual(result['native_host'],'actual-host')
+        self.assertEqual(result['native_cpu_type'],'Actual Processor')
+        self.assertIn('8 %',result['native_load_average_log'])
+        with self.assertRaises(M.OptimizationEvidenceError):M.read_native_statistics(header+header+LOG)
+
     def test_real_merged_capture_has_no_fabricated_stderr(self):
         source=b'module x(a); electrical a; analog V(a)<+1; endmodule'
         result=M.validate_solver_evidence(source,0,LOG,b'actual combined stream',stream_layout='merged')

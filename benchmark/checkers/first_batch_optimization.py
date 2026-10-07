@@ -92,8 +92,14 @@ def read_native_statistics(log):
     # the display precision. Use a 1 us allowance for native printed rounding.
     if any(total[key]+1e-6<intrinsic[key] for key in ('cpu_s','elapsed_s')):
         raise OptimizationEvidenceError('total transient time precedes intrinsic time')
+    host=one_match(r'^User:\s+\S+\s+Host:\s+(\S+)\s+HostID:',log,'native host',required=False)
+    cpu=one_match(r'^CPU Type:\s*(.+)$',log,'native CPU type',required=False)
+    load=one_match(r'^System load averages[^\n]+$',log,'native load averages',required=False)
     return dict(version='optimization-native-stats-v1',native_log_sha256=hashlib.sha256(log.encode()).hexdigest(),
-                spectre_version=version,accepted_steps=accepted,rejected_steps=rejected,
+                spectre_version=version,native_host=host.group(1) if host else None,
+                native_cpu_type=cpu.group(1).strip() if cpu else None,
+                native_load_average_log=load.group(0) if load else None,
+                accepted_steps=accepted,rejected_steps=rejected,
                 intrinsic_tran=intrinsic,total_tran=total,native_errors=errors,
                 native_warnings=warnings,native_notices=notices,
                 aggregate_elapsed_used=False)
