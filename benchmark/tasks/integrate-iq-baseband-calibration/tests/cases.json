@@ -1,7 +1,7 @@
 [
   {
     "name": "cross-coupling-and-latched-coefficients",
-    "stop": 3.9000000000000005e-08,
+    "stop": 4.2000000000000006e-08,
     "signals": [
       "ri",
       "rq",
@@ -19,7 +19,7 @@
       "out_q",
       "clipped"
     ],
-    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nV_a (a 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n 1.2 9.995n 1.2 10.005n 0.88 39n 0.88]\nV_b (b 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n 0.23 9.995n 0.23 10.005n -0.19 39n -0.19]\nV_c (c 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n -0.16 9.995n -0.16 10.005n 0.17 39n 0.17]\nV_d (d 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n 0.82 9.995n 0.82 10.005n 1.23 39n 1.23]\nV_oi (oi 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n 0.08 9.995n 0.08 10.005n -0.12 39n -0.12]\nV_oq (oq 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n -0.05 9.995n -0.05 10.005n 0.13 39n 0.13]\nV_ri (ri 0) vsource type=pwl wave=[0n 0 6.295n 0 6.305n 0.5326 11.295n 0.5326 11.305n -0.5927 16.295n -0.5927 16.305n 0.4953 21.295n 0.4953 21.305n 1.5192 26.295n 1.5192 26.305n -0.0594 31.295n -0.0594 31.305n -0.2868 36.295n -0.2868 36.305n 0.7876 39n 0.7876]\nV_rq (rq 0) vsource type=pwl wave=[0n 0 6.295n 0 6.305n -0.4336 11.295n -0.4336 11.305n 0.3034 16.295n 0.3034 16.305n 0.4986 21.295n 0.4986 21.305n -0.378 26.295n -0.378 26.305n -1.0352 31.295n -1.0352 31.305n 0.3732 36.295n 0.3732 36.305n -0.7228 39n -0.7228]\nV_apply (apply 0) vsource type=pwl wave=[0n 0 4.995n 0 5.005n 1 5.295n 1 5.305n 0 39n 0]\nV_clk (clk 0) vsource type=pwl wave=[0n 0 6.995n 0 7.005n 1 9.495n 1 9.505n 0 11.995n 0 12.005n 1 14.495n 1 14.505n 0 16.995n 0 17.005n 1 19.495n 1 19.505n 0 21.995n 0 22.005n 1 24.495n 1 24.505n 0 26.995n 0 27.005n 1 29.495n 1 29.505n 0 31.995n 0 32.005n 1 34.495n 1 34.505n 0 36.995n 0 37.005n 1 39.495n 1 39.505n 0 39n 0]\nV_bypass (bypass 0) vsource type=pwl wave=[0n 0 6.295n 0 6.305n 0 11.295n 0 11.305n 0 16.295n 0 16.305n 0 21.295n 0 21.305n 0 26.295n 0 26.305n 0 31.295n 0 31.305n 1 36.295n 1 36.305n 0 39n 0]\nV_reset (reset 0) vsource type=pwl wave=[0n 0 0.995n 0 1.005n 1 1.295n 1 1.305n 0 39n 0]\nDUT (ri rq a b c d oi oq apply clk bypass reset out_i out_q clipped) iq_calibration \nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=39n maxstep=0.02n\nsave ri rq a b c d oi oq apply clk bypass reset out_i out_q clipped\n",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nV_a (a 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n 1.2 9.995n 1.2 10.005n 0.88 42n 0.88]\nV_b (b 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n 0.23 9.995n 0.23 10.005n -0.19 42n -0.19]\nV_c (c 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n -0.16 9.995n -0.16 10.005n 0.17 42n 0.17]\nV_d (d 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n 0.82 9.995n 0.82 10.005n 1.23 42n 1.23]\nV_oi (oi 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n 0.08 9.995n 0.08 10.005n -0.12 42n -0.12]\nV_oq (oq 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n -0.05 9.995n -0.05 10.005n 0.13 42n 0.13]\nV_ri (ri 0) vsource type=pwl wave=[0n 0 6.295n 0 6.305n 0.5326 11.295n 0.5326 11.305n -0.5927 16.295n -0.5927 16.305n 0.4953 21.295n 0.4953 21.305n 1.5192 26.295n 1.5192 26.305n -0.0594 31.295n -0.0594 31.305n -0.2868 36.295n -0.2868 36.305n 0.7876 42n 0.7876]\nV_rq (rq 0) vsource type=pwl wave=[0n 0 6.295n 0 6.305n -0.4336 11.295n -0.4336 11.305n 0.3034 16.295n 0.3034 16.305n 0.4986 21.295n 0.4986 21.305n -0.378 26.295n -0.378 26.305n -1.0352 31.295n -1.0352 31.305n 0.3732 36.295n 0.3732 36.305n -0.7228 42n -0.7228]\nV_apply (apply 0) vsource type=pwl wave=[0n 0 4.995n 0 5.005n 1 5.295n 1 5.305n 0 42n 0]\nV_clk (clk 0) vsource type=pwl wave=[0n 0 6.995n 0 7.005n 1 9.495n 1 9.505n 0 11.995n 0 12.005n 1 14.495n 1 14.505n 0 16.995n 0 17.005n 1 19.495n 1 19.505n 0 21.995n 0 22.005n 1 24.495n 1 24.505n 0 26.995n 0 27.005n 1 29.495n 1 29.505n 0 31.995n 0 32.005n 1 34.495n 1 34.505n 0 36.995n 0 37.005n 1 39.495n 1 39.505n 0 42n 0]\nV_bypass (bypass 0) vsource type=pwl wave=[0n 0 6.295n 0 6.305n 0 11.295n 0 11.305n 0 16.295n 0 16.305n 0 21.295n 0 21.305n 0 26.295n 0 26.305n 0 31.295n 0 31.305n 1 36.295n 1 36.305n 0 42n 0]\nV_reset (reset 0) vsource type=pwl wave=[0n 0 0.995n 0 1.005n 1 1.295n 1 1.305n 0 42n 0]\nDUT (ri rq a b c d oi oq apply clk bypass reset out_i out_q clipped) iq_calibration \nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=42n maxstep=0.02n\nsave ri rq a b c d oi oq apply clk bypass reset out_i out_q clipped\n",
     "windows": [
       {
         "node": "out_i",
@@ -171,21 +171,21 @@
       {
         "node": "out_i",
         "start": 3.718e-08,
-        "end": 3.895000000000001e-08,
+        "end": 4.195000000000001e-08,
         "value": 0.72,
         "atol": 0.003
       },
       {
         "node": "out_q",
         "start": 3.718e-08,
-        "end": 3.895000000000001e-08,
+        "end": 4.195000000000001e-08,
         "value": -0.68,
         "atol": 0.003
       },
       {
         "node": "clipped",
         "start": 3.718e-08,
-        "end": 3.895000000000001e-08,
+        "end": 4.195000000000001e-08,
         "value": 0.0,
         "atol": 0.01
       }
@@ -193,7 +193,7 @@
   },
   {
     "name": "reset-and-bypass",
-    "stop": 3.9000000000000005e-08,
+    "stop": 4.2000000000000006e-08,
     "signals": [
       "ri",
       "rq",
@@ -211,7 +211,7 @@
       "out_q",
       "clipped"
     ],
-    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nV_a (a 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n 0.77 9.995n 0.77 10.005n 0.88 39n 0.88]\nV_b (b 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n -0.31 9.995n -0.31 10.005n -0.19 39n -0.19]\nV_c (c 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n 0.24 9.995n 0.24 10.005n 0.17 39n 0.17]\nV_d (d 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n 1.31 9.995n 1.31 10.005n 1.23 39n 1.23]\nV_oi (oi 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n -0.09 9.995n -0.09 10.005n -0.12 39n -0.12]\nV_oq (oq 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n 0.14 9.995n 0.14 10.005n 0.13 39n 0.13]\nV_ri (ri 0) vsource type=pwl wave=[0n 0 6.295n 0 6.305n 0.3743 11.295n 0.3743 11.305n -0.6635 16.295n -0.6635 16.305n -0.1484 21.295n -0.1484 21.305n 0.9067 26.295n 0.9067 26.305n 0.3605 31.295n 0.3605 31.305n -0.5267 36.295n -0.5267 36.305n 0.6752 39n 0.6752]\nV_rq (rq 0) vsource type=pwl wave=[0n 0 6.295n 0 6.305n -0.2498 11.295n -0.2498 11.305n 0.3973 16.295n 0.3973 16.305n 1.1205 21.295n 1.1205 21.305n 0.2256 26.295n 0.2256 26.305n -1.3794 31.295n -1.3794 31.305n 0.6228 36.295n 0.6228 36.305n -0.578 39n -0.578]\nV_apply (apply 0) vsource type=pwl wave=[0n 0 4.995n 0 5.005n 1 5.295n 1 5.305n 0 39n 0]\nV_clk (clk 0) vsource type=pwl wave=[0n 0 6.995n 0 7.005n 1 9.495n 1 9.505n 0 11.995n 0 12.005n 1 14.495n 1 14.505n 0 16.995n 0 17.005n 1 19.495n 1 19.505n 0 21.995n 0 22.005n 1 24.495n 1 24.505n 0 26.995n 0 27.005n 1 29.495n 1 29.505n 0 31.995n 0 32.005n 1 34.495n 1 34.505n 0 36.995n 0 37.005n 1 39.495n 1 39.505n 0 39n 0]\nV_bypass (bypass 0) vsource type=pwl wave=[0n 0 6.295n 0 6.305n 0 11.295n 0 11.305n 0 16.295n 0 16.305n 0 21.295n 0 21.305n 0 26.295n 0 26.305n 0 31.295n 0 31.305n 1 36.295n 1 36.305n 0 39n 0]\nV_reset (reset 0) vsource type=pwl wave=[0n 0 0.995n 0 1.005n 1 1.295n 1 1.305n 0 17.995n 0 18.005n 1 18.295n 1 18.305n 0 39n 0]\nDUT (ri rq a b c d oi oq apply clk bypass reset out_i out_q clipped) iq_calibration \nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=39n maxstep=0.02n\nsave ri rq a b c d oi oq apply clk bypass reset out_i out_q clipped\n",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nV_a (a 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n 0.77 9.995n 0.77 10.005n 0.88 42n 0.88]\nV_b (b 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n -0.31 9.995n -0.31 10.005n -0.19 42n -0.19]\nV_c (c 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n 0.24 9.995n 0.24 10.005n 0.17 42n 0.17]\nV_d (d 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n 1.31 9.995n 1.31 10.005n 1.23 42n 1.23]\nV_oi (oi 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n -0.09 9.995n -0.09 10.005n -0.12 42n -0.12]\nV_oq (oq 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n 0.14 9.995n 0.14 10.005n 0.13 42n 0.13]\nV_ri (ri 0) vsource type=pwl wave=[0n 0 6.295n 0 6.305n 0.3743 11.295n 0.3743 11.305n -0.6635 16.295n -0.6635 16.305n -0.1484 21.295n -0.1484 21.305n 0.9067 26.295n 0.9067 26.305n 0.3605 31.295n 0.3605 31.305n -0.5267 36.295n -0.5267 36.305n 0.6752 42n 0.6752]\nV_rq (rq 0) vsource type=pwl wave=[0n 0 6.295n 0 6.305n -0.2498 11.295n -0.2498 11.305n 0.3973 16.295n 0.3973 16.305n 1.1205 21.295n 1.1205 21.305n 0.2256 26.295n 0.2256 26.305n -1.3794 31.295n -1.3794 31.305n 0.6228 36.295n 0.6228 36.305n -0.578 42n -0.578]\nV_apply (apply 0) vsource type=pwl wave=[0n 0 4.995n 0 5.005n 1 5.295n 1 5.305n 0 42n 0]\nV_clk (clk 0) vsource type=pwl wave=[0n 0 6.995n 0 7.005n 1 9.495n 1 9.505n 0 11.995n 0 12.005n 1 14.495n 1 14.505n 0 16.995n 0 17.005n 1 19.495n 1 19.505n 0 21.995n 0 22.005n 1 24.495n 1 24.505n 0 26.995n 0 27.005n 1 29.495n 1 29.505n 0 31.995n 0 32.005n 1 34.495n 1 34.505n 0 36.995n 0 37.005n 1 39.495n 1 39.505n 0 42n 0]\nV_bypass (bypass 0) vsource type=pwl wave=[0n 0 6.295n 0 6.305n 0 11.295n 0 11.305n 0 16.295n 0 16.305n 0 21.295n 0 21.305n 0 26.295n 0 26.305n 0 31.295n 0 31.305n 1 36.295n 1 36.305n 0 42n 0]\nV_reset (reset 0) vsource type=pwl wave=[0n 0 0.995n 0 1.005n 1 1.295n 1 1.305n 0 17.995n 0 18.005n 1 18.295n 1 18.305n 0 42n 0]\nDUT (ri rq a b c d oi oq apply clk bypass reset out_i out_q clipped) iq_calibration \nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=42n maxstep=0.02n\nsave ri rq a b c d oi oq apply clk bypass reset out_i out_q clipped\n",
     "windows": [
       {
         "node": "out_i",
@@ -384,21 +384,21 @@
       {
         "node": "out_i",
         "start": 3.718e-08,
-        "end": 3.895000000000001e-08,
+        "end": 4.195000000000001e-08,
         "value": 0.6752,
         "atol": 0.003
       },
       {
         "node": "out_q",
         "start": 3.718e-08,
-        "end": 3.895000000000001e-08,
+        "end": 4.195000000000001e-08,
         "value": -0.5780000000000002,
         "atol": 0.003
       },
       {
         "node": "clipped",
         "start": 3.718e-08,
-        "end": 3.895000000000001e-08,
+        "end": 4.195000000000001e-08,
         "value": 0.0,
         "atol": 0.01
       }
@@ -406,7 +406,7 @@
   },
   {
     "name": "opposite-mismatch",
-    "stop": 2.7e-08,
+    "stop": 2.9500000000000003e-08,
     "signals": [
       "ri",
       "rq",
@@ -424,7 +424,7 @@
       "out_q",
       "clipped"
     ],
-    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nV_a (a 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n 0.69 9.995n 0.69 10.005n 0.88 27n 0.88]\nV_b (b 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n 0.32 9.995n 0.32 10.005n -0.19 27n -0.19]\nV_c (c 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n -0.27 9.995n -0.27 10.005n 0.17 27n 0.17]\nV_d (d 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n 1.38 9.995n 1.38 10.005n 1.23 27n 1.23]\nV_oi (oi 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n 0.12 9.995n 0.12 10.005n -0.12 27n -0.12]\nV_oq (oq 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n -0.17 9.995n -0.17 10.005n 0.13 27n 0.13]\nV_ri (ri 0) vsource type=pwl wave=[0n 0 6.295n 0 6.305n -0.3083 10.795n -0.3083 10.805n 0.7035 15.295n 0.7035 15.305n 0.0571 19.795n 0.0571 19.805n -0.3395 24.295n -0.3395 24.305n 0.6003 27n 0.6003]\nV_rq (rq 0) vsource type=pwl wave=[0n 0 6.295n 0 6.305n -1.0109 10.795n -1.0109 10.805n -0.2177 15.295n -0.2177 15.305n -0.9281 19.795n -0.9281 19.805n 1.7107 24.295n 1.7107 24.305n 0.6355 27n 0.6355]\nV_apply (apply 0) vsource type=pwl wave=[0n 0 4.995n 0 5.005n 1 5.295n 1 5.305n 0 27n 0]\nV_clk (clk 0) vsource type=pwl wave=[0n 0 6.995n 0 7.005n 1 9.245n 1 9.255n 0 11.495n 0 11.505n 1 13.745n 1 13.755n 0 15.995n 0 16.005n 1 18.245n 1 18.255n 0 20.495n 0 20.505n 1 22.745n 1 22.755n 0 24.995n 0 25.005n 1 27.245n 1 27.255n 0 27n 0]\nV_bypass (bypass 0) vsource type=pwl wave=[0n 0 6.295n 0 6.305n 0 10.795n 0 10.805n 0 15.295n 0 15.305n 1 19.795n 1 19.805n 0 24.295n 0 24.305n 0 27n 0]\nV_reset (reset 0) vsource type=pwl wave=[0n 0 0.995n 0 1.005n 1 1.295n 1 1.305n 0 27n 0]\nDUT (ri rq a b c d oi oq apply clk bypass reset out_i out_q clipped) iq_calibration \nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=27.0n maxstep=0.02n\nsave ri rq a b c d oi oq apply clk bypass reset out_i out_q clipped\n",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nV_a (a 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n 0.69 9.995n 0.69 10.005n 0.88 29.5n 0.88]\nV_b (b 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n 0.32 9.995n 0.32 10.005n -0.19 29.5n -0.19]\nV_c (c 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n -0.27 9.995n -0.27 10.005n 0.17 29.5n 0.17]\nV_d (d 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n 1.38 9.995n 1.38 10.005n 1.23 29.5n 1.23]\nV_oi (oi 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n 0.12 9.995n 0.12 10.005n -0.12 29.5n -0.12]\nV_oq (oq 0) vsource type=pwl wave=[0n 0 1.995n 0 2.005n -0.17 9.995n -0.17 10.005n 0.13 29.5n 0.13]\nV_ri (ri 0) vsource type=pwl wave=[0n 0 6.295n 0 6.305n -0.3083 10.795n -0.3083 10.805n 0.7035 15.295n 0.7035 15.305n 0.0571 19.795n 0.0571 19.805n -0.3395 24.295n -0.3395 24.305n 0.6003 29.5n 0.6003]\nV_rq (rq 0) vsource type=pwl wave=[0n 0 6.295n 0 6.305n -1.0109 10.795n -1.0109 10.805n -0.2177 15.295n -0.2177 15.305n -0.9281 19.795n -0.9281 19.805n 1.7107 24.295n 1.7107 24.305n 0.6355 29.5n 0.6355]\nV_apply (apply 0) vsource type=pwl wave=[0n 0 4.995n 0 5.005n 1 5.295n 1 5.305n 0 29.5n 0]\nV_clk (clk 0) vsource type=pwl wave=[0n 0 6.995n 0 7.005n 1 9.245n 1 9.255n 0 11.495n 0 11.505n 1 13.745n 1 13.755n 0 15.995n 0 16.005n 1 18.245n 1 18.255n 0 20.495n 0 20.505n 1 22.745n 1 22.755n 0 24.995n 0 25.005n 1 27.245n 1 27.255n 0 29.5n 0]\nV_bypass (bypass 0) vsource type=pwl wave=[0n 0 6.295n 0 6.305n 0 10.795n 0 10.805n 0 15.295n 0 15.305n 1 19.795n 1 19.805n 0 24.295n 0 24.305n 0 29.5n 0]\nV_reset (reset 0) vsource type=pwl wave=[0n 0 0.995n 0 1.005n 1 1.295n 1 1.305n 0 29.5n 0]\nDUT (ri rq a b c d oi oq apply clk bypass reset out_i out_q clipped) iq_calibration \nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=29.5n maxstep=0.02n\nsave ri rq a b c d oi oq apply clk bypass reset out_i out_q clipped\n",
     "windows": [
       {
         "node": "out_i",
@@ -534,21 +534,21 @@
       {
         "node": "out_i",
         "start": 2.518e-08,
-        "end": 2.695e-08,
+        "end": 2.9450000000000002e-08,
         "value": 0.39,
         "atol": 0.003
       },
       {
         "node": "out_q",
         "start": 2.518e-08,
-        "end": 2.695e-08,
+        "end": 2.9450000000000002e-08,
         "value": 0.66,
         "atol": 0.003
       },
       {
         "node": "clipped",
         "start": 2.518e-08,
-        "end": 2.695e-08,
+        "end": 2.9450000000000002e-08,
         "value": 0.0,
         "atol": 0.01
       }

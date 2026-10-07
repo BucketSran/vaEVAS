@@ -1,5 +1,5 @@
 """Adversarial checker tests, not claims about simulated Verilog-A."""
-import copy,json,math,sys,unittest
+import copy,json,math,re,sys,unittest
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[3]
 sys.path.insert(0,str(ROOT/'benchmark/checkers'))
@@ -78,4 +78,20 @@ class CheckerTests(unittest.TestCase):
         rows=[{'time':0,'frequency':1,'wave':.5},{'time':1e-9,'frequency':1.003,'wave':.5},{'time':2e-9,'frequency':1,'wave':.5}]
         result=evaluate(rows,case)
         self.assertFalse(result['passed']);self.assertEqual(result['failures'][0]['node'],'frequency')
+    def test_every_public_and_hidden_pwl_has_monotone_times(self):
+        for task in sorted((ROOT/'benchmark/tasks').glob('integrate-*')):
+            for path in [task/'tests/cases.json',task/'environment/public/smoke_cases.json']:
+                for case in json.loads(path.read_text()):
+                    for waveform in re.findall(r'wave=\[([^]]+)\]',case['netlist']):
+                        items=waveform.split();times=[float(v[:-1])*1e-9 for v in items[::2]]
+                        self.assertTrue(all(a<b for a,b in zip(times,times[1:])),(path,case['name'],times))
+                        self.assertLessEqual(times[-1],case['stop']+1e-18,(path,case['name']))
+    def test_agc_does_not_reuse_actual_spectre_reserved_identifier(self):
+        # VACOMP-1705 in the archived actual AGC calibration established this
+        # reserved-name conflict. This is static protection, not compilation.
+        paths=list((ROOT/'benchmark/tasks/integrate-agc-attack-release').rglob('*.va'))
+        paths+=list((ROOT/'experiments/benchmark_first_batch/integration/mutants/integrate-agc-attack-release').rglob('*.va'))
+        for path in paths:
+            for declaration in re.findall(r'\breal\s+([^;]+);',path.read_text()):
+                self.assertNotIn('current',re.findall(r'[A-Za-z_][A-Za-z0-9_]*',declaration),path)
 if __name__=='__main__':unittest.main()

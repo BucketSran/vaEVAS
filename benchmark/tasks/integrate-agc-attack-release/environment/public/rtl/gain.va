@@ -6,19 +6,19 @@ parameter real attack_ns=2;
 parameter real release_ns=12;
 parameter real sample_ns=3;
 parameter real target_v=0.4;
-real current,desired,tau,elapsed,last_time;
+real gain_state,desired,tau,elapsed,last_time;
 integer seen;
 analog begin
-  @(initial_step) begin current=1; last_time=0; seen=0; end
-  @(cross(V(reset)-0.5,+1)) begin current=1; last_time=$abstime; seen=0; end
+  @(initial_step) begin gain_state=1; last_time=0; seen=0; end
+  @(cross(V(reset)-0.5,+1)) begin gain_state=1; last_time=$abstime; seen=0; end
   @(cross(V(clk)-0.5,+1)) if(V(reset)<0.5) begin
     desired=min(8,max(0.25,target_v/max(0.05,V(envelope))));
     // Legacy controller has a single recovery time constant.
     tau=release_ns;
     elapsed=(seen==0 ? sample_ns : ($abstime-last_time)/1n);
-    current=desired+(current-desired)*exp(-elapsed/tau);
+    gain_state=desired+(gain_state-desired)*exp(-elapsed/tau);
     last_time=$abstime; seen=1;
   end
-  V(gain)<+transition(current,0,0.03n);
+  V(gain)<+transition(gain_state,0,0.03n);
 end
 endmodule

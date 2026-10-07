@@ -12,6 +12,8 @@ def write(path,text):
     if path.suffix=='.sh':path.chmod(0o755)
 
 def pwl(events, stop, initial=0, ramp=.01):
+    if events and events[-1][0]+ramp/2>=stop:
+        raise ValueError('PWL transition must finish before simulation stop')
     pts=[(0,initial)];last=initial
     for t,v in events:
         pts.extend([(t-ramp/2,last),(t+ramp/2,v)]);last=v
@@ -52,7 +54,7 @@ def package(task, title, description, files, starter, cases, public_case, mutant
     write(d/'environment/Dockerfile','FROM python:3.12.12-slim-bookworm@sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c\nWORKDIR /work\nCOPY public/ /work/public/\nRUN mkdir -p /work/output\n')
     write(d/'task.toml',f'schema_version = "1.4"\n[metadata]\nname = "{task}"\ncategory = "verilog-a"\nsource_group = "original-{source}"\ncontext = "{context}"\nengineering_action = "extension-integration"\n[agent]\ntimeout_sec = 1800\n[verifier]\ntimeout_sec = 900\n[environment]\nbuild_timeout_sec = 600\ncpus = 1\nmemory_mb = 1024\nstorage_mb = 2048\n')
     inspiration={'integrate-tdc-measurement-chain':'旧v4 family346的TDC链方向','integrate-pipeline-adc-alignment':'旧v4 096的pipeline ADC方向','integrate-iq-baseband-calibration':'旧v4 094的I/Q校准方向','integrate-pll-hop-reacquisition':'旧v4 088的PLL方向','integrate-agc-attack-release':'旧v4 082的AGC方向'}[task]
-    write(d/'SOURCE.md',f'# 来源和校准边界\n\n本题是仓库作者根据 {title.strip("# ")} 的工程需求原创的小工程。`source_group=original-{source}`。{inspiration}只用于选题方向，没有复制其代码、参数、注释或文件结构，不继承旧资产许可或成绩。\n\n上下文层次为 `{context}`。本工程没有伪造工业版本史；题面明确说明是原创教学和研究工程。起点保留现有模块，只故意遗漏或错接新功能。独立验收依据为 instruction 中公开公式、事件配对和时间窗，参考解不定义真值。\n\n终评有 {len(cases)} 组独立实验。语义负例见 experiments/benchmark_first_batch/integration/mutants/{task}/。每个负例仍是可编译的 VA，针对不同条款；实际 Spectre 编译及拒绝情况待校准。行级合成测试只验证 checker 自身，不证明 VA 参考解通过。\n\n发布身份为 Spectre 扩展集候选。Spectre 校准、Harbor oracle、Agentic 主评及开源重评都需分别取得真实证据；当前不宣称已完成这些阶段。\n')
+    write(d/'SOURCE.md',f'# 来源和校准边界\n\n本题是仓库作者根据 {title.strip("# ")} 的工程需求原创的小工程。`source_group=original-{source}`。{inspiration}只用于选题方向，没有复制其代码、参数、注释或文件结构，不继承旧资产许可或成绩。\n\n上下文层次为 `{context}`。本工程没有伪造工业版本史；题面明确说明是原创教学和研究工程。起点保留现有模块，只故意遗漏或错接新功能。独立验收依据为 instruction 中公开公式、事件配对和时间窗，参考解不定义真值。\n\n终评有 {len(cases)} 组独立实验。语义负例见 experiments/benchmark_first_batch/integration/mutants/{task}/。每个负例以保持可编译 VA 为目标，针对不同条款；实际 Spectre 编译及拒绝情况待校准。行级合成测试只验证 checker 自身，不证明 VA 参考解通过。\n\n发布身份为 Spectre 扩展集候选。Spectre 校准、Harbor oracle、Agentic 主评及开源重评都需分别取得真实证据；当前不宣称已完成这些阶段。\n')
     for name,changes in mutants.items():
         md=HERE/'mutants'/task/name
         for relative,text in files.items():write(md/relative,changes.get(relative,text))
@@ -323,7 +325,7 @@ endmodule
 
 每个clk上升沿采样校准后的两路，公式 `I=(d*(ri-oi)-b*(rq-oq))/det`、`Q=(-c*(ri-oi)+a*(rq-oq))/det`。bypass高则直接采样ri/rq。无论何种路径，分别限幅到[-1,+1] V，任一路限幅前绝对值大于1时clipped=1，否则0。输出和clipped在两次采样之间保持，bypass或ri/rq变化不能提前改变已采样结果。clk周期4至6 ns，apply距clk至少0.4 ns，数据距clk至少0.2 ns。输出事件后0.15 ns内建立，电压误差0.003 V，标志误差0.01 V。工程只要求电压域，不要求模拟输出阻抗。'''
     def case(name,points,matrix,offset=(.08,-.05),period=5,reset_mid=False):
-        n=len(points);rises=[7+i*period for i in range(n)];end=rises[-1]+2
+        n=len(points);rises=[7+i*period for i in range(n)];end=rises[-1]+period
         ports=['ri','rq','a','b','c','d','oi','oq','apply','clk','bypass','reset','out_i','out_q','clipped']
         init=dict(zip(['a','b','c','d','oi','oq'],[*matrix,*offset]));sources={k:[(2,v)] for k,v in init.items()}
         sources.update(ri=[],rq=[],apply=pulses([5]),clk=pulses(rises,width=period/2),bypass=[],reset=pulses([1]))
@@ -493,19 +495,19 @@ parameter real attack_ns=2;
 parameter real release_ns=12;
 parameter real sample_ns=3;
 parameter real target_v=0.4;
-real current,desired,tau,elapsed,last_time;
+real gain_state,desired,tau,elapsed,last_time;
 integer seen;
 analog begin
-  @(initial_step) begin current=1; last_time=0; seen=0; end
-  @(cross(V(reset)-0.5,+1)) begin current=1; last_time=$abstime; seen=0; end
+  @(initial_step) begin gain_state=1; last_time=0; seen=0; end
+  @(cross(V(reset)-0.5,+1)) begin gain_state=1; last_time=$abstime; seen=0; end
   @(cross(V(clk)-0.5,+1)) if(V(reset)<0.5) begin
     desired=min(8,max(0.25,target_v/max(0.05,V(envelope))));
-    tau=(desired<current ? attack_ns : release_ns);
+    tau=(desired<gain_state ? attack_ns : release_ns);
     elapsed=(seen==0 ? sample_ns : ($abstime-last_time)/1n);
-    current=desired+(current-desired)*exp(-elapsed/tau);
+    gain_state=desired+(gain_state-desired)*exp(-elapsed/tau);
     last_time=$abstime; seen=1;
   end
-  V(gain)<+transition(current,0,0.03n);
+  V(gain)<+transition(gain_state,0,0.03n);
 end
 endmodule
 '''
@@ -538,7 +540,7 @@ agc_amplifier ua(signal_in,gain,reset,signal_out,clipped);
 endmodule
 '''
     files={'dut.va':top,'rtl/detector.va':detector,'rtl/gain.va':gain,'rtl/amplifier.va':amplifier};starter=dict(files)
-    starter['rtl/gain.va']=gain.replace('tau=(desired<current ? attack_ns : release_ns);','// Legacy controller has a single recovery time constant.\n    tau=release_ns;')
+    starter['rtl/gain.va']=gain.replace('tau=(desired<gain_state ? attack_ns : release_ns);','// Legacy controller has a single recovery time constant.\n    tau=release_ns;')
     desc='''接收机AGC需要在突发强信号到达时快速降低增益，在信号减弱时缓慢恢复增益，降低过载并避免噪声泵动。已有幅度检测、增益控制和限幅输出路径，旧控制器只使用一个恢复常数。请扩展并集成不同的attack/release行为，保持检测延迟、增益范围、复位及限幅标志。
 
 提交 `dut.va` 和 `rtl/detector.va`、`rtl/gain.va`、`rtl/amplifier.va`。顶层 `receiver_agc(signal_in,clk,reset,signal_out,gain,clipped)`。输入幅度不超过1.5 V；clk在0.5 V上升交越采样，周期sample_ns在2至4 ns。每次采样更新包络 `e_new=(1-alpha)*e_old+alpha*abs(signal_in)`，alpha在0.25至0.6。增益控制使用上一个周期的e_old，因为检测与控制各是一个寄存级。目标增益 `g_target=min(8,max(0.25,target_v/max(0.05,e_old)))`，target_v为0.3至0.5 V。若g_target小于旧g，tau=attack_ns，否则tau=release_ns，`g_new=g_target+(g_old-g_target)*exp(-dt_ns/tau)`。attack_ns在1至3、release_ns在8至18；dt是有效clk间隔，复位后第一次采样使用sample_ns。初始化和reset上升使e=0、g=1，reset高禁止采样。
@@ -581,7 +583,7 @@ endmodule
     values=[.06,-.08,.07,1.2,-1.3,1.1,-.95,.12,-.09,.05,-.07,.1,.65,-.8,.15,-.11]
     cases=[case('burst-attack-and-release',values),case('nondefault-control-parameters',values,2.5,1.3,17,.55,.32),case('reset-during-burst',values,3.5,2.7,9,.28,.47,[(1,1),(1.4,0),(18.1,1),(19.2,0),(39.1,1),(40.2,0)])]
     public=case('public-level-change',[.1,.1,1,-1,.12,-.1,.1])
-    mutants={'single-release-constant':{'rtl/gain.va':gain.replace('tau=(desired<current ? attack_ns : release_ns);','tau=release_ns;')},'signed-envelope':{'rtl/detector.va':detector.replace('abs(V(signal_in))','V(signal_in)')},'reversed-attack-release':{'rtl/gain.va':gain.replace('desired<current ? attack_ns : release_ns','desired<current ? release_ns : attack_ns')},'sampled-output':{'dut.va':top.replace('ua(signal_in,gain,reset,signal_out,clipped)','ua(signal_in,gain,clk,reset,signal_out,clipped)'), 'rtl/amplifier.va':HEADER+'''module agc_amplifier(signal_in,gain,clk,reset,signal_out,clipped);
+    mutants={'single-release-constant':{'rtl/gain.va':gain.replace('tau=(desired<gain_state ? attack_ns : release_ns);','tau=release_ns;')},'signed-envelope':{'rtl/detector.va':detector.replace('abs(V(signal_in))','V(signal_in)')},'reversed-attack-release':{'rtl/gain.va':gain.replace('desired<gain_state ? attack_ns : release_ns','desired<gain_state ? release_ns : attack_ns')},'sampled-output':{'dut.va':top.replace('ua(signal_in,gain,reset,signal_out,clipped)','ua(signal_in,gain,clk,reset,signal_out,clipped)'), 'rtl/amplifier.va':HEADER+'''module agc_amplifier(signal_in,gain,clk,reset,signal_out,clipped);
 input signal_in,gain,clk,reset; output signal_out,clipped; electrical signal_in,gain,clk,reset,signal_out,clipped;
 real product,held; integer flag;
 analog begin

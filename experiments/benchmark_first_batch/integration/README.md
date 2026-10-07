@@ -36,7 +36,7 @@ Makefile、公开回归和可执行自测入口，明确标为原创工程，没
 python3 -B -m unittest discover -s experiments/benchmark_first_batch/integration -p test_checker.py -v
 ```
 
-本次14项checker/合同测试通过。它们使用合成行数据，未执行VA，不能记作Spectre校准。
+本次16项checker/合同测试通过。它们使用合成行数据，未执行VA，不能记作Spectre校准。
 
 实际仿真使用协调者维护的 `circuit_task` 共享入口与现有circuit harness，
 全任务Spectre并发由协调者统一限制为4。任务tests/verify.py导入本checker，
@@ -55,3 +55,15 @@ Harbor oracle、Agentic主评和公开后端重评是另外的验收阶段，当
 生成器 `build.py` 可以从原创定义重建全部五题。它初始化状态为pending，已经追加真实
 证据后不得直接运行并覆盖SOURCE或校准状态；需先维护生成器对应记录或保留已校准元数据。
 完整波形、原始工具轨迹与大日志属于ignored runs，不进入本目录。
+
+## 首次实际执行发现
+
+协调者的reference-v1实际Spectre运行确认AGC在 `rtl/gain.va` 声明 `real current`
+触发VACOMP-1705/2259，I/Q的末尾时钟下降沿超过stop导致CMI-2204。
+实际job分别为 `bf-0f6a064a697840289cb5-burst-attack-and-release` 和
+`bf-a310b765d6bc4b36b2ca-cross-coupling-and-latche`。源码策略accept没有检出这些问题，
+不能作为编译通过证据。
+
+AGC变量改名为gain_state，并同步公开起点、参考解、错版及生成器；I/Q仿真末尾保留
+完整最后周期。新增PWL单调性及本次保留名冲突检查，修改前两项失败，修改后16项本地测试通过。
+本修复尚需重新运行actual Spectre，原始失败记录必须保留，不能用静态检查覆盖。
