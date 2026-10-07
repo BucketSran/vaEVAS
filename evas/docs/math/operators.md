@@ -446,7 +446,7 @@ phase 电压预算解决包裹边界问题；确实无法证明的包裹侧仍�
 本分支的补充证书保留原 compiled-binary64 IR 算术，而不是把已舍入的派生端点当作
 原源。[exact_source.rs](../../rust_core/src/exact_source.rs)把原 PWL 时间/值和 IR 常量
 转为精确有理数；按各原源断点的并集，在原表达式上精确求值，再用有理阈值根切分
-`min(hi,max(lo,f))`。比例、相加和常数乘法保留原 IR 运算顺序。模块重新检查每个乘积
+`min(hi,max(lo,f))`。以编译后 binary64 IR 的常量与结构作为精确实数参考。模块重新检查每个乘积
 至少一侧为常数，拒绝以端点线性插值代表二次函数。来源元数据仅存于内部 Trajectory，
 不改变公开 IR，也不证明 decimal Verilog-A 源与已折叠 binary64 IR 等价。
 
@@ -471,16 +471,16 @@ nominal 属于半开区间。包围可以包含上端点。原有 sine 多区间
 源未改，显式初相位 0.125，限幅拐点 1.2/3.2/4.8/6.8 us，答案来自独立分段面积及
 `sin(2πp)`。Rust 单测另用精确有理数检查非二进制根两侧全段包含、积分消费源误差、
 非法原索引/来源拒绝及 lowering 失败不修改输入。新增 public Rust 路径回归以独立
-Fraction oracle 检查原四中心、非二进制限幅根两侧/相等、负相位/offset、多源不齐断点
+Fraction oracle 使用独立算术实现同一分段积分公式，检查原四中心、非二进制限幅根两侧/相等、负相位/offset、多源不齐断点
 和观测网格不变；Rust 控制检查真实不确定性与资源耗尽保留两侧、half-open 舍入
-及 clone/query 不写历史。
+及 clone/query 不写历史。双实例边界另用手算面积 `3/4-(3/8)/(b+1/4)`，分别改变初值及输入末端，检查来源隔离。
 [实际 Spectre 精简证据](../../../experiments/backends/input-clamp/README.md)记录
 40,836 个普通同刻行及四次包裹左右括定的有限开发对齐。另一个包含四个中心的 batch
 在首次误差认证拒绝处退出，四行均未配对。后续[逐点诊断](../../../experiments/backends/input-clamp/boundary-diagnostics.json)
 在修复前原配置、收紧及仅诊断的放宽容差下分别执行，四个原模型中心均因普通 phase 的误差界拒绝；
 左右邻点完成，不同源码的常零 phase 贡献控制也完成，但不能替代原模型验收。
 本分支新证书在独立 compiled-IR 数学回归中通过四中心，第三中心保留接近 1 的
-ordinary phase；修复后 actual Spectre 重对照由相应实验提供，不能由本地回归推断。严格 stop
+ordinary phase；修复后全部40,840个原 Spectre 保存时刻已配对，第三中心普通相位差约1cycle，圆周相位差约1e-8cycle，分歧未被掩盖。详见[修复后证据](../../../experiments/backends/input-clamp/certificate-evidence.json)。严格 stop
 覆盖缺口仍保留，正式导出及输入误差资格尚缺，paper 状态为 I。开发对齐不构成
 完整能力支持、全连续轨迹证明或 formal P；分支本地回归也不是已合入支持。
 
