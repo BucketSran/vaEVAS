@@ -44,7 +44,15 @@ def audit(root, run_root, legacy_audit):
     batch = load(base / 'batch.py', 'calibration_batch_summary')
     measurement_path = base / 'verification_measurement/measurement_regrade_round2_receipt.json'
     measurement = read_json(measurement_path)
-    measurement_revision = subprocess.check_output(['git','rev-parse','563ae868'],cwd=root,text=True).strip()
+    def reachable_revision(revision):
+        full = subprocess.check_output(['git','rev-parse','--verify',revision+'^{commit}'],cwd=root,text=True).strip()
+        seal.require(subprocess.run(['git','merge-base','--is-ancestor',full,'HEAD'],cwd=root).returncode==0,
+                     'fixed Git dependency is not reachable from canonical root HEAD: '+full)
+        return full
+    # Use the integrated root revisions: an available worker object is not a
+    # publication dependency until it is reachable from the deliverable history.
+    measurement_revision = reachable_revision('c11367b41b59d7b3412a043ddcfbc91918d5710b')
+    adc_execution_revision = reachable_revision('c826fd17f259d625c4f79408a1f7295e02b03fae')
     published_measurement = subprocess.check_output(['git','show',measurement_revision+':'+str(measurement_path.relative_to(root))],cwd=root)
     seal.require(published_measurement == measurement_path.read_bytes(), 'measurement compact receipt differs from fixed revision')
     seal.require(measurement['tool_sha256'] == digest((base/'verification_measurement/regrade_measurement.py').read_bytes()), 'measurement strict regrade tool differs')
@@ -304,6 +312,9 @@ def audit(root, run_root, legacy_audit):
         raw_evidence_availability='local-only archives; no anonymous public download claim. Compact receipt records hashes and logical locators only.',
         selection='Last explicitly listed task/variant evidence in round2 then followup-v3; current VA07; audited unchanged standalone VA08.',
         tool_sha256=digest(Path(__file__).read_bytes()),inputs={p.name:digest(p.read_bytes()) for p in [run_root/'round2-active-matrix.json',run_root/'followup-function-plan-v3.json',run_root/'legacy-va07-current-v1/matrix.json',measurement_path,adc_compact_path]},
+        fixed_git_dependencies=dict(measurement_receipt_revision=measurement_revision,
+            legacy_adc_execution_revision=adc_execution_revision,all_reachable_from_canonical_root_head=True,
+            boundary='Root-history reachability verified locally; not a claim of anonymous public access.'),
         dependency_identity={p.name:digest(p.read_bytes()) for p in [base/'batch.py',base/'verification_measurement/regrade_measurement.py']},
         totals=dict(tasks=len(tasks),selected_conditions=stats(chosen),historical_attempted_conditions=stats(records),
                     selected_role_conditions={k:stats([r for r in chosen if r['role']==k]) for k in ('reference','equivalent','semantic_negative')},
@@ -318,7 +329,7 @@ def audit(root, run_root, legacy_audit):
             'This selected-input history is not an inventory of every earlier exploratory run in the repository.',
             'Targeted negative calibration does not establish full cross-product coverage; no Agentic named-model conclusions.'],
         legacy_va08_documentation_identity_delta=dict(file='benchmark/tasks/va08-adc-linearity/SOURCE.md',
-            execution_revision='c826fd17',frozen_sha256=digest(subprocess.check_output(['git','show','c826fd17:benchmark/tasks/va08-adc-linearity/SOURCE.md'],cwd=root)),
+            execution_revision=adc_execution_revision,frozen_sha256=digest(subprocess.check_output(['git','show',adc_execution_revision+':benchmark/tasks/va08-adc-linearity/SOURCE.md'],cwd=root)),
             current_sha256=digest((adc_task/'SOURCE.md').read_bytes()),interpretation='Historical evidence documentation changed; numeric inputs/reference/checker and standalone task boundary verified separately.'),
         public_reference_derivation={name:{key:value for key,value in data.items() if key!='source'} for name,data in derived_reference.items()},
         file_identity_sets=identity_sets,tasks=tasks,variants=variants,conditions=records)
