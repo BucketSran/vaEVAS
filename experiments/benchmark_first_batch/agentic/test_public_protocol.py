@@ -1,16 +1,20 @@
 """Compare the published native envelope against the actual configured harness."""
 import os
 from pathlib import Path
-import re
 import sys
 import unittest
-import jsonschema
 from public_protocol import ENVELOPE_SCHEMA, NOTE, append_note
 
-sys.path.insert(0, os.environ['CIRCUIT_HARNESS'])
-from alphaapollo.common.execution.chips import current_evas_session as session
+HARNESS = os.environ.get('CIRCUIT_HARNESS')
+if HARNESS:
+    if not Path(HARNESS).is_dir():
+        raise ValueError('configured CIRCUIT_HARNESS is not a directory')
+    import jsonschema
+    sys.path.insert(0, HARNESS)
+    from alphaapollo.common.execution.chips import current_evas_session as session
 
 
+@unittest.skipUnless(HARNESS, 'actual harness integration requires explicit CIRCUIT_HARNESS and dependencies')
 class ProtocolTests(unittest.TestCase):
     def test_tool_parameters_equal_actual_native_session(self):
         published = {item['if']['properties']['tool']['const']:

@@ -33,7 +33,7 @@ def number(value):
     return float(match[1]) * scales[match[2].lower()]
 
 
-def public_manifest(text, reference, candidate_files):
+def public_manifest(text, reference, candidate_files, public_max_step=None):
     sources = {}
     for node, wave in re.findall(r'^V\w+\s+\((\w+)\s+0\)\s+vsource type=pwl wave=\[([^\]]*)\]', text, re.M):
         values = [number(v) for v in wave.split()]
@@ -56,11 +56,15 @@ def public_manifest(text, reference, candidate_files):
     parameters = {k: number(v) for k, v in re.findall(r'(\w+)=([^\s]+)', parameter_text)}
     if parameters:
         instance['parameters'] = parameters
-    transient = re.search(r'tran tran stop=(\S+) maxstep=(\S+)', text)
+    transient = re.search(r'^\w+\s+tran\s+stop=(\S+)([^\n]*)', text, re.M)
     if transient is None:
         raise ValueError('public transient limits not identified')
-    stop, step = [number(v) for v in transient.groups()]
-    if stop <= 0 or step <= 0:
+    stop = number(transient[1])
+    bound = re.search(r'\bmaxstep=(\S+)', transient[2])
+    if bound is None and public_max_step is None:
+        raise ValueError('public netlist has no maxstep; specify --public-max-step and disclose EVAS sampling')
+    step = public_max_step if public_max_step is not None else number(bound[1])
+    if not math.isfinite(stop) or not math.isfinite(step) or stop <= 0 or step <= 0:
         raise ValueError('public transient limits must be positive')
     times = [i * step for i in range(math.floor(stop / step) + 1)]
     if times[-1] < stop:
@@ -114,15 +118,21 @@ def snapshot(args):
         instruction += '\n公开源工程因文件名与正式候选相同而归档在/work/public/project；正式交付路径仍按候选清单。\n'
     netlists = sorted(project.glob('*.scs'))
     text = netlists[0].read_text() if netlists else json.loads((project / 'smoke_cases.json').read_text())[0]['netlist']
+    candidate_includes = {path for name in contract['candidate_files']
+                          for path in (name, '../' + name, '/work/' + name)}
     fixtures = [x for x in re.findall(r'ahdl_include\s+"([^"]+)"', text)
-                if x not in contract['candidate_files'] and not x.endswith('../dut.va')]
+                if x not in candidate_includes]
     if fixtures:
         instruction += '\n公开EVAS限制：本会话只装载正式候选文件，不装载固定公共fixture ' + ', '.join(fixtures) + '；因此evas_simulate不能执行完整闭环/测量电路，只能用于有限的候选兼容性诊断。请阅读所提供的fixture源码和Python材料分析，不能把该工具返回当作完整公共网表仿真结果。\n'
+    if args.public_max_step is not None:
+        instruction += f'\nEVAS公开诊断的最大步长与采样间隔设为{args.public_max_step:g}秒；这是本会话的诊断设置，不是Spectre网表errpreset的等价转换，也不用于正式性能评分。\n'
+    if args.public_limit_note:
+        instruction += '\n公开工具预检边界：' + args.public_limit_note + '\n'
     (materials / 'instruction.md').write_text(append_note(instruction))
     declaration = {'task_id': task.name, 'task_version': manifest['task_version'],
                    'public_files': sorted(str(x.relative_to(materials)) for x in materials.rglob('*') if x.is_file()),
                    'candidate_files': contract['candidate_files'], 'feedback_fields': ['diagnostics', 'observations'],
-                   'manifest': public_manifest(text, reference, contract['candidate_files'])}
+                   'manifest': public_manifest(text, reference, contract['candidate_files'], args.public_max_step)}
     save(root / 'public-declaration.json', declaration)
     save(root / 'public-limitations.json', {
         'public_top_instance_only': True, 'immutable_fixture_models_not_in_manifest': fixtures,
@@ -155,6 +165,8 @@ def main():
     parser.add_argument('task_id')
     parser.add_argument('--label', default='v1')
     parser.add_argument('--kernel', required=True)
+    parser.add_argument('--public-max-step', type=float, help='explicit EVAS diagnostic step for public netlists without maxstep')
+    parser.add_argument('--public-limit-note', help='evidence-based public backend limitation; no hidden reference or criteria')
     parser.add_argument('--public-probe', action='store_true')
     snapshot(parser.parse_args())
 
