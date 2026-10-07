@@ -112,9 +112,10 @@ class EventHistoryContinuation(unittest.TestCase):
             for k in range(len(result)-2, -1, -1):
                 result[k] -= (k+1)*result[k+1]
             return sum(value*time**k for k, value in enumerate(result))
-        for nonlinear in (False, True):
-            with self.subTest(nonlinear=nonlinear):
-                degree = 2 if nonlinear else 1
+        for quadratic_source in (False, True):
+            with self.subTest(quadratic_source=quadratic_source):
+                # Quadratic external forcing; not nonlinear state feedback.
+                degree = 2 if quadratic_source else 1
                 coefficients = [Q(2), Q(1)] + [Q(0)]*(degree-1) + [Q(1, degree+1)]
                 y_tau = float(particular(coefficients, tau)) + (
                     2-float(particular(coefficients, Q(0))))*math.exp(-float(tau))
@@ -126,7 +127,7 @@ class EventHistoryContinuation(unittest.TestCase):
                     'y': float(particular(released, end)) + (
                         y_rho-float(particular(released, rho)))*math.exp(-duration),
                 }
-                flow = '1+pow(V(u,r),2)' if nonlinear else '1+V(u,r)'
+                flow = '1+pow(V(u,r),2)' if quadratic_source else '1+V(u,r)'
                 source = model(f'''@(initial_step) begin n=0;rst=0;h=0;end
                     @(timer(.1,.2,1e-6)) begin n=n+1;rst=n-1;end
                     @(timer({float(rho)!r},0,1e-6)) rst=0;
@@ -150,6 +151,9 @@ class EventHistoryContinuation(unittest.TestCase):
                     for event, physical_time in zip(events[1:], (tau, rho)):
                         self.assertIn('observation_time_bounds', event)
                         lower, upper = map(Q, event['observation_time_bounds'])
+                        # This fixture needs non-point windows: tau is not binary64,
+                        # and its ceil equals rho, so the ordered release must move
+                        # to a later representative. This is not a general rule.
                         self.assertLess(lower, upper)
                         self.assertLessEqual(lower, physical_time)
                         self.assertLessEqual(physical_time, upper)

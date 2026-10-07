@@ -624,3 +624,5 @@ start=0、period 从 .5 改为 .25 后依旧按 0+.25k 定位，不从改写时�
 同一 Controller 另检查新日程成功、未来流场失败后的完整回退与修正重试。
 连续电压参数、动态 tolerance、一般非线性参数仍需补齐。历史驱动 guard 的受限联合预测见“事件修改积分轨迹后的根重定位”。
 独立回归见 [test_dynamic_timer.py](../../tests/test_dynamic_timer.py)。该切片无新 Spectre 对照。
+
+有序物理历史的[独立条件和实际对照](../../../experiments/backends/ordered-event-history/README.md)分别报告原始计时容差失败与严格计时诊断。后者不替代原始结果，也不能由同一导出行内的两个计数变化推断精确回调先后。
