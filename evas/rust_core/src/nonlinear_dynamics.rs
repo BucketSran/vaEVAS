@@ -1,16 +1,117 @@
 //! Validated polynomial ODE propagation for integral and filter call-site states.
-//! A Picard enclosure proves a finite trajectory tube. Order-12 interval Taylor
-//! coefficients propagate accepted uncertainty; order 13 over the tube bounds
-//! the entire-step remainder. Output queries are immutable dense observations.
+//! A Picard enclosure proves a finite trajectory tube. Order-p interval Taylor
+//! coefficients carry accepted uncertainty; order p+1 bounds the remainder.
+//! Polynomial ODEs try p=12/24; DAE keeps p=12. Dense queries are immutable.
 use super::*;
 use crate::ir::Tolerances;
 
 const ORDER: usize = 12;
+const MAX_ORDER: usize = 24;
 const MAX_STEPS: usize = 16_384;
 const TUBE_ATTEMPTS: usize = 16;
 const MAX_REFINEMENTS: usize = 64;
 const MAX_HISTORY_REFINEMENTS: usize = 8;
 type Jet = Vec<I>;
+
+// A rounded binary64 point result lies between its adjacent representable
+// values. The exact residual determines which one-sided enclosure to use.
+fn directed(value: f64, sign: i8) -> I {
+    match sign {
+        -1 => I {
+            lo: value.next_down(),
+            hi: value,
+        },
+        0 => I::point(value),
+        _ => I {
+            lo: value,
+            hi: value.next_up(),
+        },
+    }
+}
+
+fn point_sum(a: f64, b: f64) -> I {
+    let value = a + b;
+    let b_virtual = value - a;
+    let residual = (a - (value - b_virtual)) + (b - b_virtual);
+    if value.is_finite() && residual.is_finite() {
+        directed(
+            value,
+            if residual < 0.0 {
+                -1
+            } else if residual > 0.0 {
+                1
+            } else {
+                0
+            },
+        )
+    } else {
+        I::point(a) + I::point(b)
+    }
+}
+
+fn point_product(a: f64, b: f64) -> I {
+    let value = a * b;
+    let residual = a.mul_add(b, -value);
+    if value.is_finite() && residual != 0.0 && residual.is_finite() {
+        directed(value, if residual < 0.0 { -1 } else { 1 })
+    } else if value.is_finite() && crate::interval::equal_products(a, b, value, 1.0) {
+        I::point(value)
+    } else {
+        I::point(a) * I::point(b)
+    }
+}
+
+fn tight_add(a: I, b: I) -> I {
+    I {
+        lo: point_sum(a.lo, b.lo).lo,
+        hi: point_sum(a.hi, b.hi).hi,
+    }
+}
+
+fn tight_mul(a: I, b: I) -> I {
+    let products =
+        [(a.lo, b.lo), (a.lo, b.hi), (a.hi, b.lo), (a.hi, b.hi)].map(|(a, b)| point_product(a, b));
+    I {
+        lo: products.iter().map(|v| v.lo).fold(f64::INFINITY, f64::min),
+        hi: products
+            .iter()
+            .map(|v| v.hi)
+            .fold(f64::NEG_INFINITY, f64::max),
+    }
+}
+
+fn tight_div_positive(a: I, denominator: f64) -> I {
+    let divide = |a: f64| {
+        let value = a / denominator;
+        let residual = (-value).mul_add(denominator, a);
+        if value.is_finite() && residual != 0.0 && residual.is_finite() {
+            directed(value, if residual < 0.0 { -1 } else { 1 })
+        } else if value.is_finite() && crate::interval::equal_products(value, denominator, a, 1.0) {
+            I::point(value)
+        } else {
+            I::point(a) / I::point(denominator)
+        }
+    };
+    I {
+        lo: divide(a.lo).lo,
+        hi: divide(a.hi).hi,
+    }
+}
+
+fn add_mode(a: I, b: I, tight: bool) -> I {
+    if tight {
+        tight_add(a, b)
+    } else {
+        a + b
+    }
+}
+fn mul_mode(a: I, b: I, tight: bool) -> I {
+    if tight {
+        tight_mul(a, b)
+    } else {
+        a * b
+    }
+}
 
 #[path = "continuous_initialization.rs"]
 mod initialization;
@@ -74,6 +175,47 @@ impl Polynomial {
         Ok(result)
     }
 
+    // Differentiate the polynomial expression before evaluating its Taylor
+    // jet. These are derivatives with respect to a state coordinate, not
+    // independent derivatives of already rounded coefficient endpoints.
+    fn gradient_jet(&self, variables: &[Jet], order: usize, coordinate: usize) -> Jet {
+        match self {
+            Self::Linear(row) => {
+                let mut result = vec![I::ZERO; order + 1];
+                result[0] = row[coordinate];
+                result
+            }
+            Self::Add(a, b) => a
+                .gradient_jet(variables, order, coordinate)
+                .into_iter()
+                .zip(b.gradient_jet(variables, order, coordinate))
+                .map(|(a, b)| a + b)
+                .collect(),
+            Self::Multiply(a, b) => {
+                let left = multiply(
+                    &a.gradient_jet(variables, order, coordinate),
+                    &b.jet(variables, order),
+                    order,
+                );
+                let right = multiply(
+                    &a.jet(variables, order),
+                    &b.gradient_jet(variables, order, coordinate),
+                    order,
+                );
+                left.into_iter().zip(right).map(|(a, b)| a + b).collect()
+            }
+            Self::Power(a, n) => {
+                let values = a.jet(variables, order);
+                let mut power = vec![I::ZERO; order + 1];
+                power[0] = I::point(*n as f64);
+                for _ in 1..*n {
+                    power = multiply(&power, &values, order);
+                }
+                multiply(&power, &a.gradient_jet(variables, order, coordinate), order)
+            }
+        }
+    }
+
     fn dc_affine(&self, known: &[Option<I>]) -> Option<Vec<I>> {
         match self {
             Self::Linear(row) => {
@@ -122,32 +264,39 @@ impl Polynomial {
     }
 
     fn jet(&self, variables: &[Jet], order: usize) -> Jet {
+        self.jet_with(variables, order, false)
+    }
+
+    fn jet_with(&self, variables: &[Jet], order: usize, tight: bool) -> Jet {
         match self {
             Self::Linear(row) => {
                 let mut out = vec![I::ZERO; order + 1];
                 out[0] = *row.last().unwrap();
                 for (&coefficient, variable) in row.iter().zip(variables) {
                     for (slot, value) in out.iter_mut().zip(variable) {
-                        *slot = *slot + coefficient * *value;
+                        *slot = add_mode(*slot, mul_mode(coefficient, *value, tight), tight);
                     }
                 }
                 out
             }
             Self::Add(a, b) => a
-                .jet(variables, order)
+                .jet_with(variables, order, tight)
                 .into_iter()
-                .zip(b.jet(variables, order))
-                .map(|(x, y)| x + y)
+                .zip(b.jet_with(variables, order, tight))
+                .map(|(x, y)| add_mode(x, y, tight))
                 .collect(),
-            Self::Multiply(a, b) => {
-                multiply(&a.jet(variables, order), &b.jet(variables, order), order)
-            }
+            Self::Multiply(a, b) => multiply_with(
+                &a.jet_with(variables, order, tight),
+                &b.jet_with(variables, order, tight),
+                order,
+                tight,
+            ),
             Self::Power(a, n) => {
-                let a = a.jet(variables, order);
+                let a = a.jet_with(variables, order, tight);
                 let mut out = vec![I::ZERO; order + 1];
                 out[0] = I::ONE;
                 for _ in 0..*n {
-                    out = multiply(&out, &a, order);
+                    out = multiply_with(&out, &a, order, tight);
                 }
                 out
             }
@@ -156,8 +305,16 @@ impl Polynomial {
 }
 
 fn multiply(a: &[I], b: &[I], order: usize) -> Jet {
+    multiply_with(a, b, order, false)
+}
+
+fn multiply_with(a: &[I], b: &[I], order: usize, tight: bool) -> Jet {
     (0..=order)
-        .map(|n| (0..=n).fold(I::ZERO, |sum, k| sum + a[k] * b[n - k]))
+        .map(|n| {
+            (0..=n).fold(I::ZERO, |sum, k| {
+                add_mode(sum, mul_mode(a[k], b[n - k], tight), tight)
+            })
+        })
         .collect()
 }
 
@@ -167,16 +324,168 @@ struct DenseStep {
     end: f64,
     coefficients: Vec<Jet>,
     remainder: Vec<I>,
+    centered: Option<CenteredPolynomial>,
+}
+
+#[derive(Clone, PartialEq)]
+struct CenterValue {
+    point: f64,
+    // Signed deviation from point. Keep it in its own small coordinate,
+    // rather than rounding an absolute state box after every accepted step.
+    error: I,
+}
+
+impl CenterValue {
+    fn from_interval(value: I) -> Self {
+        let point = value.lo + (value.hi - value.lo) * 0.5;
+        Self {
+            point,
+            error: value - I::point(point),
+        }
+    }
+    fn range(&self) -> I {
+        I::point(self.point) + self.error
+    }
+}
+
+// Enclose the exact residual a*b+c-rounded_fma in the small error coordinate.
+// TwoSum gives the exact addition residual; the FMA multiplication residual
+// is exact when normal, and enclosed by adjacent subnormals otherwise.
+fn fma_error(a: f64, b: f64, c: f64, value: f64) -> I {
+    let product = a * b;
+    if !product.is_finite() || !value.is_finite() {
+        return I {
+            lo: f64::NEG_INFINITY,
+            hi: f64::INFINITY,
+        };
+    }
+    let residual = a.mul_add(b, -product);
+    let product_error = if residual.abs() >= f64::MIN_POSITIVE
+        || crate::interval::equal_products(a, b, product, 1.0)
+    {
+        I::point(residual)
+    } else {
+        I {
+            lo: residual.next_down(),
+            hi: residual.next_up(),
+        }
+    };
+    let sum = product + c;
+    if !sum.is_finite() {
+        return I {
+            lo: f64::NEG_INFINITY,
+            hi: f64::INFINITY,
+        };
+    }
+    let c_virtual = sum - product;
+    let sum_error = (product - (sum - c_virtual)) + (c - c_virtual);
+    product_error + I::point(sum_error) + (I::point(sum) - I::point(value))
+}
+
+fn center_horner(row: &[I], h: I) -> CenterValue {
+    let h = CenterValue::from_interval(h);
+    row.iter().rev().fold(
+        CenterValue {
+            point: 0.0,
+            error: I::ZERO,
+        },
+        |sum, &coefficient| {
+            let coefficient = CenterValue::from_interval(coefficient);
+            let point = sum.point.mul_add(h.point, coefficient.point);
+            let error = sum.error * h.range()
+                + I::point(sum.point) * h.error
+                + coefficient.error
+                + fma_error(sum.point, h.point, coefficient.point, point);
+            CenterValue { point, error }
+        },
+    )
+}
+
+#[derive(Clone, PartialEq)]
+struct CenteredPolynomial {
+    coefficients: Vec<Jet>,
+    // [output state][initial state coordinate][Taylor coefficient]
+    sensitivities: Vec<Vec<Jet>>,
+    offsets: Vec<I>,
+}
+
+fn horner(row: &[I], h: I) -> I {
+    row.iter().rev().fold(I::ZERO, |sum, &a| sum * h + a)
 }
 
 impl DenseStep {
     fn range(&self, time: I) -> Vec<I> {
         let h = time - I::point(self.start);
-        let h13 = (0..=ORDER).fold(I::ONE, |v, _| v * h);
+        let h13 = (0..self.coefficients[0].len()).fold(I::ONE, |v, _| v * h);
+        let centered = self.centered_range(h, true);
+        self.polynomial_range(h)
+            .into_iter()
+            .zip(&self.remainder)
+            .enumerate()
+            .map(|(i, (value, &r))| {
+                let ordinary = value + r * h13;
+                let Some(centered) = &centered else {
+                    return ordinary;
+                };
+                let centered = centered[i].range();
+                let intersection = I {
+                    lo: ordinary.lo.max(centered.lo),
+                    hi: ordinary.hi.min(centered.hi),
+                };
+                if centered.finite() && intersection.lo <= intersection.hi {
+                    intersection
+                } else {
+                    ordinary
+                }
+            })
+            .collect()
+    }
+
+    fn centered_range(&self, h: I, tail: bool) -> Option<Vec<CenterValue>> {
+        let centered = self.centered.as_ref()?;
+        let power = (0..self.coefficients[0].len()).fold(I::ONE, |value, _| value * h);
+        Some(
+            centered
+                .coefficients
+                .iter()
+                .enumerate()
+                .map(|(i, row)| {
+                    let mut value = center_horner(row, h);
+                    for (derivative, &offset) in
+                        centered.sensitivities[i].iter().zip(&centered.offsets)
+                    {
+                        value.error = value.error + horner(derivative, h) * offset;
+                    }
+                    if tail {
+                        value.error = value.error + self.remainder[i] * power;
+                    }
+                    value
+                })
+                .collect(),
+        )
+    }
+
+    fn polynomial_range(&self, h: I) -> Vec<I> {
+        let centered = self.centered_range(h, false);
         self.coefficients
             .iter()
-            .zip(&self.remainder)
-            .map(|(row, &r)| row.iter().rev().fold(I::ZERO, |sum, &a| sum * h + a) + r * h13)
+            .enumerate()
+            .map(|(i, row)| {
+                let ordinary = horner(row, h);
+                let Some(centered) = &centered else {
+                    return ordinary;
+                };
+                let mean_value = centered[i].range();
+                let intersection = I {
+                    lo: ordinary.lo.max(mean_value.lo),
+                    hi: ordinary.hi.min(mean_value.hi),
+                };
+                if mean_value.finite() && intersection.lo <= intersection.hi {
+                    intersection
+                } else {
+                    ordinary
+                }
+            })
             .collect()
     }
 }
@@ -476,6 +785,17 @@ impl NonlinearContinuous {
     }
 
     fn jets(&self, state: &[I], source: &[I], slopes: &[I], order: usize) -> Option<Vec<Jet>> {
+        self.jets_mode(state, source, slopes, order, false)
+    }
+
+    fn jets_mode(
+        &self,
+        state: &[I],
+        source: &[I],
+        slopes: &[I],
+        order: usize,
+        tight: bool,
+    ) -> Option<Vec<Jet>> {
         let mut variables: Vec<_> = state
             .iter()
             .chain(source)
@@ -491,10 +811,23 @@ impl NonlinearContinuous {
             }
         }
         for n in 0..order {
-            let derivatives: Vec<_> = self
-                .derivative_jets(&variables, slopes, n)?
+            let derivatives = if tight {
+                self.functions
+                    .iter()
+                    .map(|f| f.jet_with(&variables, n, true))
+                    .collect()
+            } else {
+                self.derivative_jets(&variables, slopes, n)?
+            };
+            let derivatives: Vec<_> = derivatives
                 .into_iter()
-                .map(|row| row[n] / I::point((n + 1) as f64))
+                .map(|row| {
+                    if tight {
+                        tight_div_positive(row[n], (n + 1) as f64)
+                    } else {
+                        row[n] / I::point((n + 1) as f64)
+                    }
+                })
                 .collect();
             for (variable, value) in variables.iter_mut().zip(derivatives) {
                 variable[n + 1] = value;
@@ -503,6 +836,81 @@ impl NonlinearContinuous {
         Some(variables[..state.len()].to_vec())
     }
 
+    fn centered_polynomial(
+        &self,
+        state: &[I],
+        source: &[I],
+        slopes: &[I],
+        coefficients: &[Jet],
+        centers: Option<&[CenterValue]>,
+    ) -> Option<CenteredPolynomial> {
+        // The implicit rational field needs its own derivative proof. Its
+        // existing interval propagation remains unchanged here.
+        if self.implicit.is_some() {
+            return None;
+        }
+        let centers: Vec<_> = centers.map_or_else(
+            || {
+                state
+                    .iter()
+                    .copied()
+                    .map(CenterValue::from_interval)
+                    .collect()
+            },
+            |values| values.to_vec(),
+        );
+        let center: Vec<_> = centers.iter().map(|value| I::point(value.point)).collect();
+        if center.iter().any(|value| !value.finite()) {
+            return None;
+        }
+        let order = coefficients[0].len() - 1;
+        let center_coefficients = self.jets_mode(&center, source, slopes, order, true)?;
+        let mut variables = coefficients.to_vec();
+        variables.extend(source.iter().zip(slopes).map(|(&value, &slope)| {
+            let mut row = vec![I::ZERO; order + 1];
+            row[0] = value;
+            row[1] = slope;
+            row
+        }));
+        let count = state.len();
+        let mut sensitivities = vec![vec![vec![I::ZERO; order + 1]; count]; count];
+        for (i, row) in sensitivities.iter_mut().enumerate() {
+            row[i][0] = I::ONE;
+        }
+        // Differentiate the Taylor recurrence by the chain rule. Evaluation
+        // uses the entire original initial box, and unmodified source boxes.
+        for n in 0..order {
+            let gradients: Vec<Vec<Jet>> = self
+                .functions
+                .iter()
+                .map(|function| {
+                    (0..count)
+                        .map(|k| function.gradient_jet(&variables, n, k))
+                        .collect()
+                })
+                .collect();
+            for i in 0..count {
+                let derivatives: Vec<_> = (0..count)
+                    .map(|j| {
+                        let derivative = (0..count).fold(I::ZERO, |sum, k| {
+                            sum + multiply(&gradients[i][k], &sensitivities[k][j], n)[n]
+                        });
+                        derivative / I::point((n + 1) as f64)
+                    })
+                    .collect();
+                for (row, derivative) in sensitivities[i].iter_mut().zip(derivatives) {
+                    row[n + 1] = derivative;
+                }
+            }
+        }
+        Some(CenteredPolynomial {
+            coefficients: center_coefficients,
+            sensitivities,
+            offsets: centers.into_iter().map(|value| value.error).collect(),
+        })
+    }
+
+    #[cfg(test)]
     fn trial(
         &self,
         start: f64,
@@ -511,6 +919,28 @@ impl NonlinearContinuous {
         source: &[I],
         slopes: &[I],
     ) -> Option<DenseStep> {
+        self.trial_order(start, end, state, source, slopes, ORDER, None)
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn trial_order(
+        &self,
+        start: f64,
+        end: f64,
+        state: &[I],
+        source: &[I],
+        slopes: &[I],
+        order: usize,
+        centers: Option<&[CenterValue]>,
+    ) -> Option<DenseStep> {
+        let state: Vec<_> = state
+            .iter()
+            .enumerate()
+            .map(|(i, &value)| {
+                centers.map_or(value, |centers| value.hull(I::point(centers[i].point)))
+            })
+            .collect();
+        let state = state.as_slice();
         let duration = I::point(end) - I::point(start);
         let elapsed = I {
             lo: 0.0,
@@ -522,19 +952,21 @@ impl NonlinearContinuous {
             .map(|(&u, &m)| u + elapsed * m)
             .collect();
         let (tube, _) = self.picard_enclosure(state, &source_tube, slopes, elapsed)?;
-        let coefficients = self.jets(state, source, slopes, ORDER)?;
+        let coefficients = self.jets(state, source, slopes, order)?;
         let remainder: Vec<_> = self
-            .jets(&tube, &source_tube, slopes, ORDER + 1)?
+            .jets(&tube, &source_tube, slopes, order + 1)?
             .into_iter()
-            .map(|row| row[ORDER + 1])
+            .map(|row| row[order + 1])
             .collect();
+        let centered = self.centered_polynomial(state, source, slopes, &coefficients, centers);
         let step = DenseStep {
             start,
             end,
             coefficients,
             remainder,
+            centered,
         };
-        let tail_power = (0..=ORDER).fold(I::ONE, |v, _| v * duration);
+        let tail_power = (0..=order).fold(I::ONE, |v, _| v * duration);
         let values = step.range(I::point(end));
         if values.iter().any(|v| !v.finite())
             || step.remainder.iter().any(|&r| !(r * tail_power).finite())
@@ -556,7 +988,7 @@ impl NonlinearContinuous {
         refinement: f64,
     ) -> Result<bool, Error> {
         let duration = I::point(step.end) - I::point(step.start);
-        let power = (0..=ORDER).fold(I::ONE, |v, _| v * duration);
+        let power = (0..step.coefficients[0].len()).fold(I::ONE, |v, _| v * duration);
         let tail: Vec<_> = step
             .remainder
             .iter()
@@ -589,9 +1021,8 @@ impl NonlinearContinuous {
         // endpoint budget is already consumed by propagated history, sources
         // and coefficient rounding. Earlier tails remain in the coefficients.
         let endpoint: Vec<_> = step
-            .coefficients
-            .iter()
-            .map(|row| row.iter().rev().fold(I::ZERO, |sum, &a| sum * duration + a))
+            .polynomial_range(duration)
+            .into_iter()
             .chain(source.iter().zip(slopes).map(|(&u, &m)| u + duration * m))
             .chain(vec![I::ZERO; source.len()])
             .chain([I::ONE])
@@ -795,6 +1226,10 @@ impl NonlinearContinuous {
             || self.initial.clone(),
             |step| step.range(I::point(step.end)),
         );
+        let mut centers = self
+            .steps
+            .last()
+            .and_then(|step| step.centered_range(I::point(step.end) - I::point(step.start), true));
         let refine_history =
             self.accuracy_ratio(&state, &trajectory.value_bounds(start), false) < 0.875;
         let mut knots = vec![start];
@@ -835,12 +1270,40 @@ impl NonlinearContinuous {
                     if end <= start {
                         break;
                     }
-                    if let Some(step) = self.trial(start, end, &state, &source, &slopes) {
+                    if let Some(step) = self.trial_order(
+                        start,
+                        end,
+                        &state,
+                        &source,
+                        &slopes,
+                        ORDER,
+                        centers.as_deref(),
+                    ) {
                         if self.truncation_fits(&step, &source, &slopes, refinement)? {
                             accepted = Some(step);
                             break;
                         }
                         crate::diagnostics::counter("nonlinear_accuracy_refinements", 1);
+                        // Increase polynomial order before reducing the step:
+                        // repeated endpoint quantization can dominate a small
+                        // tail. Rational DAE propagation retains order 12.
+                        if self.implicit.is_none() {
+                            crate::diagnostics::counter("nonlinear_order_refinements", 1);
+                            if let Some(step) = self.trial_order(
+                                start,
+                                end,
+                                &state,
+                                &source,
+                                &slopes,
+                                MAX_ORDER,
+                                centers.as_deref(),
+                            ) {
+                                if self.truncation_fits(&step, &source, &slopes, refinement)? {
+                                    accepted = Some(step);
+                                    break;
+                                }
+                            }
+                        }
                     }
                     crate::diagnostics::record(
                         "nonlinear_candidate",
@@ -862,11 +1325,39 @@ impl NonlinearContinuous {
                 *remaining_work -= 1;
                 crate::diagnostics::counter("nonlinear_validated_work_steps", 1);
                 state = step.range(I::point(step.end));
+                centers = step.centered_range(I::point(step.end) - I::point(step.start), true);
                 let endpoint_source = trajectory.value_bounds(step.end);
                 if refine_history
                     && self.accuracy_ratio(&state, &endpoint_source, true) < 0.875
                     && self.accuracy_ratio(&state, &endpoint_source, false) > 0.875
                 {
+                    let h = I::point(step.end) - I::point(step.start);
+                    let tail_power =
+                        (0..step.coefficients[0].len()).fold(I::ONE, |value, _| value * h);
+                    let tail = step
+                        .remainder
+                        .iter()
+                        .map(|&r| (r * tail_power).magnitude())
+                        .fold(0.0_f64, f64::max);
+                    let radius = state
+                        .iter()
+                        .map(|value| (value.hi - value.lo) * 0.5)
+                        .fold(0.0_f64, f64::max);
+                    let center_width = centers.as_ref().map_or(f64::NAN, |values| {
+                        values
+                            .iter()
+                            .map(|value| (value.error.hi - value.error.lo) * 0.5)
+                            .fold(0.0_f64, f64::max)
+                    });
+                    let reason = format!("state_radius={radius:e}; center_error_radius={center_width:e}; current_tail={tail:e}; target_scale={refinement:e}; suffix_steps={}", self.steps.len());
+                    crate::diagnostics::record(
+                        "nonlinear_accuracy",
+                        "suffix_budget_exhausted",
+                        Some(step.start),
+                        Some(step.end),
+                        1,
+                        Some(&reason),
+                    );
                     return Ok(false);
                 }
                 start = step.end;
@@ -1307,8 +1798,226 @@ mod tests {
         // A previously discarded suffix has already consumed this call's
         // work allowance; no step may be validated in the next attempt.
         let error = candidate.propagate_once(0.125, 1.0, &mut 0).unwrap_err();
-        assert!(error.message.contains("cumulative 16384 candidate-step work limit"));
+        assert!(error
+            .message
+            .contains("cumulative 16384 candidate-step work limit"));
         assert!(candidate.same_history(&accepted));
+    }
+
+    #[test]
+    fn directed_center_arithmetic_encloses_exact_binary_operations() {
+        use num_rational::BigRational;
+        let rational = |value| BigRational::from_float(value).unwrap();
+        let contains = |bound: I, exact: BigRational| {
+            assert!(!bound.lo.is_nan() && !bound.hi.is_nan());
+            assert!(!bound.lo.is_finite() || rational(bound.lo) <= exact);
+            assert!(!bound.hi.is_finite() || exact <= rational(bound.hi));
+        };
+        let values = [
+            0.0,
+            f64::from_bits(1),
+            f64::MIN_POSITIVE,
+            1.0,
+            1.0_f64.next_up(),
+            1e100,
+            1e-100,
+            -0.5,
+        ];
+        for a in values.into_iter().chain(values.map(|a| -a)) {
+            for b in values.into_iter().chain(values.map(|b| -b)) {
+                contains(point_sum(a, b), rational(a) + rational(b));
+                contains(point_product(a, b), rational(a) * rational(b));
+                for c in [0.0, 0.5, -1.0] {
+                    let value = a.mul_add(b, c);
+                    contains(
+                        fma_error(a, b, c, value),
+                        rational(a) * rational(b) + rational(c) - rational(value),
+                    );
+                }
+            }
+            for denominator in [1.0, 3.0, 13.0, 25.0] {
+                contains(
+                    tight_div_positive(I::point(a), denominator),
+                    rational(a) / rational(denominator),
+                );
+            }
+        }
+        let coefficients = [
+            I::point(1.0),
+            I::point(-1e100),
+            I::point(1e100),
+            I {
+                lo: 0.1,
+                hi: 0.1_f64.next_up(),
+            },
+        ];
+        for h in [-0.125, 0.0, 0.125, 1.0] {
+            let bound = center_horner(&coefficients, I::point(h)).range();
+            for mask in 0..16 {
+                let exact =
+                    coefficients
+                        .iter()
+                        .enumerate()
+                        .fold(rational(0.0), |sum, (i, value)| {
+                            let coefficient = if mask & (1 << i) == 0 {
+                                value.lo
+                            } else {
+                                value.hi
+                            };
+                            sum + rational(coefficient) * rational(h).pow(i as i32)
+                        });
+                contains(bound, exact);
+            }
+        }
+    }
+
+    #[test]
+    fn twosum_and_fma_error_enclose_gradual_underflow_boundary_cases() {
+        use num_rational::BigRational;
+        let rational = |value| BigRational::from_float(value).unwrap();
+        let contains = |bound: I, exact: BigRational, operands: (f64, f64, f64)| {
+            assert!(bound.finite(), "nonfinite bound for {operands:?}");
+            assert!(
+                rational(bound.lo) <= exact && exact <= rational(bound.hi),
+                "bound {bound:?} excludes exact result for {operands:?}"
+            );
+        };
+        let tiny = f64::from_bits(1);
+        let normal = f64::MIN_POSITIVE;
+        // A fixed corpus straddles both the subnormal/normal boundary and
+        // the next binade, with small corrections, cancellation, and large
+        // magnitude differences. Both signs and operand orders are covered.
+        let positive = [
+            0.0,
+            tiny,
+            2.0 * tiny,
+            3.0 * tiny,
+            normal.next_down().next_down(),
+            normal.next_down(),
+            normal,
+            normal.next_up(),
+            normal.next_up().next_up().next_up(),
+            (2.0 * normal).next_down(),
+            2.0 * normal,
+            (2.0 * normal).next_up(),
+            1.0,
+        ];
+        let values: Vec<_> = positive.into_iter().chain(positive.map(|v| -v)).collect();
+        for &a in &values {
+            for &c in &values {
+                contains(point_sum(a, c), rational(a) + rational(c), (a, 1.0, c));
+                // Half-unit products exercise an exact residual smaller
+                // than the least subnormal; near-one factors mix normal
+                // products with subnormal addition corrections.
+                for b in [0.5, 1.0, 1.0_f64.next_up(), 1.5, -1.0] {
+                    let value = a.mul_add(b, c);
+                    contains(
+                        fma_error(a, b, c, value),
+                        rational(a) * rational(b) + rational(c) - rational(value),
+                        (a, b, c),
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn finite_fma_with_overflowing_unfused_sum_has_safe_error_fallback() {
+        let a = f64::from_bits(0x7fb745d1745d1745);
+        let b = 11.0;
+        let c = 2.0_f64.powi(970);
+        assert!((a * b).is_finite());
+        assert!(!(a * b + c).is_finite());
+        let value = a.mul_add(b, c);
+        assert!(value.is_finite());
+        let error = fma_error(a, b, c, value);
+        assert_eq!(error.lo, f64::NEG_INFINITY);
+        assert_eq!(error.hi, f64::INFINITY);
+    }
+
+    #[test]
+    fn centered_flow_encloses_states_when_nominal_center_is_outside_state_box() {
+        use num_rational::BigRational;
+        let flow = scalar(-1.0);
+        let state = I {
+            lo: 0.99,
+            hi: 0.991,
+        };
+        let center = CenterValue {
+            point: 1.0,
+            error: state - I::ONE,
+        };
+        let step = flow
+            .trial_order(0.0, 1.0 / 32.0, &[state], &[], &[], ORDER, Some(&[center]))
+            .unwrap();
+        let bound = step.range(I::point(1.0 / 32.0))[0];
+        let rational = |value| BigRational::from_float(value).unwrap();
+        for x in [state.lo, state.hi] {
+            let exact = rational(x) / (rational(1.0) + rational(x) * rational(1.0 / 32.0));
+            assert!(rational(bound.lo) <= exact && exact <= rational(bound.hi));
+        }
+    }
+
+    #[test]
+    fn centered_taylor_keeps_source_uncertainty() {
+        use num_rational::BigRational;
+        let mut flow = scalar(-1.0);
+        // x'=u*x², x(0)=1 gives x=1/(1-u*t). The source box
+        // remains uncertain even when the initial state is a point.
+        flow.functions[0] = Polynomial::Multiply(
+            Box::new(Polynomial::Linear(vec![I::ZERO, I::ONE, I::ZERO])),
+            Box::new(Polynomial::Power(
+                Box::new(Polynomial::Linear(vec![I::ONE, I::ZERO, I::ZERO])),
+                2,
+            )),
+        );
+        let step = flow
+            .trial(
+                0.0,
+                1.0 / 32.0,
+                &[I::ONE],
+                &[I { lo: -1.0, hi: 0.0 }],
+                &[I::ZERO],
+            )
+            .unwrap();
+        let bound = step.range(I::point(1.0 / 32.0))[0];
+        let rational = |value| BigRational::from_float(value).unwrap();
+        for u in [-1.0, -0.5, 0.0] {
+            let exact = rational(1.0) / (rational(1.0) - rational(u) * rational(1.0 / 32.0));
+            assert!(rational(bound.lo) <= exact && exact <= rational(bound.hi));
+        }
+        assert!(bound.hi - bound.lo > 0.03);
+    }
+
+    #[test]
+    fn centered_taylor_flow_encloses_initial_box_and_contracts_decay_uncertainty() {
+        use num_rational::BigRational;
+        let flow = scalar(-1.0);
+        let initial = I {
+            lo: 1.0 - 1e-8,
+            hi: 1.0 + 1e-8,
+        };
+        let step = flow.trial(0.0, 1.0 / 32.0, &[initial], &[], &[]).unwrap();
+        let rational = |value| BigRational::from_float(value).unwrap();
+        for t in [0.0, 1.0 / 64.0, 1.0 / 32.0] {
+            let bound = step.range(I::point(t))[0];
+            for x in [initial.lo, 1.0, initial.hi] {
+                let exact = rational(x) / (rational(1.0) + rational(x) * rational(t));
+                assert!(rational(bound.lo) <= exact && exact <= rational(bound.hi));
+            }
+        }
+        let h = I::point(1.0 / 32.0);
+        let endpoint = step.range(h)[0];
+        let ordinary = horner(&step.coefficients[0], h)
+            + step.remainder[0] * (0..=ORDER).fold(I::ONE, |v, _| v * h);
+        assert!(endpoint.hi - endpoint.lo < initial.hi - initial.lo);
+        assert!(endpoint.hi - endpoint.lo < ordinary.hi - ordinary.lo);
+        let before = step.clone();
+        let _ = step.range(I {
+            lo: 0.0,
+            hi: 1.0 / 32.0,
+        });
+        assert!(step == before);
     }
 
     #[test]
