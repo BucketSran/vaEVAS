@@ -34,3 +34,22 @@ python3 -B -m unittest discover -s experiments/benchmark_first_batch/verificatio
 ADC实际py312首轮三个条件均执行成功，但时钟cadence拒绝；DFT重算与参考输出的差值约1e-14dB。原始首沿10.05ns，后续出现111.15、211.45ns等边沿，最大偏移1.4ns。原因是合成器件时钟也用了未预约的连续时间条件。器件改为10ns/60ns起始、100ns周期的两个timer控制clk，保持原100ns采样timer。独立cadence的0.2ns容差、64样本定义及所有频谱判据不变。公开器件、隐藏support和generator同步修改，等待实际重跑。
 
 测量checker新增两项已复现的无效观测防护：合法时钟配合64个全零ADC码，旧判据在已判原始输入不符后仍调用频谱，触发除零；PLL缺少ref边沿但存在clk获取边沿，旧判据调用空集合min。现在原始ADC覆盖/码值/输入校验失败即返回结构化拒绝；PLL在配对前拒绝空参考边沿。没有通用异常捕获，不屏蔽真正的checker代码错误，也未改任何正常计算或容差。新增两个行级回归先复现异常再验证拒绝，全组12 tests通过。该复现只涉及行级输入，没有证明真实VA能诱导异常，也未运行新仿真。对保存的12个实际条件做源码/波形/冻结case哈希绑定重判，9个原有效条件和3个原cadence失败条件的分数全部保持，正常指标最大浮点差约7.1e-15。
+
+## 冻结证据严格重判
+
+`regrade_measurement.py`只导入选定源码树的canonical parser、runtime和measurement checker，不运行归档代码或模拟器，也不写入源码树。对每个已完成job，先检查归档压缩包SHA256/bytes、全成员回执、completion/results/artifact一致性、冻结package与candidate bundle身份、候选执行源码、report绑定、实际netlist/support原件、完整PSF及原始行数。冻结case每个值包括support源码、参数和端口必须与当前case相同，否则拒绝reuse；提交contract必须逐字节相同。原始输出只在临时目录供读取，工具退出后删除。
+
+通过身份校验后，对完整原波形执行当前canonical checker，记录旧新score、旧新指标与差值，以及归档/report/raw/cases/candidate/checker的身份。全零ADC码和缺ref边沿防护目前仅有行级回归，不声明已证明真实VA诱导。完整机器报告留在ignored runs，紧凑回执见 [measurement_regrade_round2_receipt.json](measurement_regrade_round2_receipt.json)。当前重判覆盖12个实际reference条件和12个实际语义负例，全部score不变；指标最大数值差约7.1e-15。此证据是保存波形重判，不是新仿真，也不代替Agentic试跑。
+
+```sh
+python3 -B experiments/benchmark_first_batch/verification_measurement/regrade_measurement.py \
+  --canonical-root "$TASK_SOURCE_ROOT" \
+  --input "$BATCH_RUN_ROOT/calibration-round2/measure-pll-relock-jitter" \
+  --input "$BATCH_RUN_ROOT/calibration-round2/measure-comparator-delay-hysteresis" \
+  --input "$BATCH_RUN_ROOT/calibration-round2/measure-sh-acquisition-droop" \
+  --input "$BATCH_RUN_ROOT/calibration-round2-adc-fixed/measure-adc-spectrum" \
+  --output "$TASK_SOURCE_ROOT/runs/measurement-regrade/new-report.json"
+python3 -B -m unittest discover -s experiments/benchmark_first_batch/verification_measurement -p test_regrade.py -v
+```
+
+设置 `TASK_SOURCE_ROOT` 为需核对的canonical checkout，`BATCH_RUN_ROOT` 为本批ignored run根目录；输出必须是新文件。`--input`可重复，每项是一道measure-*任务的variant父目录。未出现results的variant记录pending，不当成已完成；已完成档案任何身份不一致或新旧case值不等都会立即拒绝。不要把旧ADC刺激目录混入修订刺激的重判，工具会因case不等而拒绝。归档SHA或成员哈希篡改、case任意值变化的拒绝回归已通过。
