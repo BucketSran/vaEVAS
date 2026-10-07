@@ -5,3 +5,11 @@
 参考解、未完成起点和语义错版由本目录保存。错误版本分别模拟遗漏检测、指标定义混淆、覆盖条件不足等常见工程错误，具体变更见 tests/mutants/ 的完整源码；每个错误提交保持合法可编译的语义实现。错版必须在实际 Spectre 执行后拒绝；行级测试仅证明独立公式，不能代替后端校准。本题当前为 Spectre 扩展集候选，尚未声明 Agentic 完成或开源重评资格。
 
 公开与隐藏条件遵循同一 instruction.md；tests/cases.json 固定每次实验的器件参数。独立判据不运行参考解生成期望，基于实际输入、时钟和输出计算；原始观测还须满足已声明的合成器件公式。参考解只提供可行实现。校准需保存参考解、所有语义错版和有效正确电路的运行身份、后端版本及完整结果，未完成实际执行的条件保持 pending。
+
+<!-- generated first-batch metadata -->
+- `engineering_action`: `measurement-characterization`
+- `source_group`: `first-batch-measure-comparator-delay-hysteresis`
+- `context_level`: `bounded-work-unit`
+- `provenance`: `original-engineering-requirement`
+- `data_provenance`: `behavioral_synthetic`
+<!-- end generated first-batch metadata -->

@@ -2,8 +2,12 @@ schema_version = "1.4"
 [metadata]
 name = "measure-adc-spectrum"
 category = "measurement-characterization"
-source_group = "first-batch-measure-adc-spectrum"
 purpose = "ADC 动态频谱测量; synthetic circuit experiment; calibration pending"
+engineering_action = "measurement-characterization"
+source_group = "first-batch-measure-adc-spectrum"
+context_level = "bounded-work-unit"
+provenance = "original-engineering-requirement"
+data_provenance = "behavioral_synthetic"
 [agent]
 timeout_sec = 1800
 [verifier]

@@ -2,10 +2,12 @@ schema_version = "1.4"
 [metadata]
 name = "identify-sc-clocked-filter"
 category = "verilog-a"
+release_set = "spectre-extension-candidate"
 engineering_action = "from-data-modeling"
 source_group = "original-identified_sc-identification"
-provenance = "behavioral_synthetic"
-release_set = "spectre-extension-candidate"
+context_level = "bounded-work-unit"
+provenance = "original-engineering-requirement"
+data_provenance = "behavioral_synthetic"
 [agent]
 timeout_sec = 1800
 [verifier]

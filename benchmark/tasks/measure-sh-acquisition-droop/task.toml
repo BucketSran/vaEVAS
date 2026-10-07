@@ -2,8 +2,12 @@ schema_version = "1.4"
 [metadata]
 name = "measure-sh-acquisition-droop"
 category = "measurement-characterization"
-source_group = "first-batch-measure-sh-acquisition-droop"
 purpose = "采样保持建立时间和有符号下垂测量; synthetic circuit experiment; calibration pending"
+engineering_action = "measurement-characterization"
+source_group = "original-periodic-sh-observation"
+context_level = "bounded-work-unit"
+provenance = "original-engineering-requirement"
+data_provenance = "behavioral_synthetic"
 [agent]
 timeout_sec = 1800
 [verifier]

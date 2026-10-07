@@ -2,8 +2,12 @@ schema_version = "1.4"
 [metadata]
 name = "verify-sh-settling-checker"
 category = "verification-tools"
-source_group = "first-batch-verify-sh-settling-checker"
 purpose = "采样保持全窗口建立判定; synthetic circuit experiment; calibration pending"
+engineering_action = "verification-tools"
+source_group = "original-periodic-sh-observation"
+context_level = "bounded-work-unit"
+provenance = "original-engineering-requirement"
+data_provenance = "behavioral_synthetic"
 [agent]
 timeout_sec = 1800
 [verifier]

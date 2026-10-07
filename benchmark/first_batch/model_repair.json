@@ -9,7 +9,6 @@
   "tasks": [
     {
       "id": "spec-latched-comparator",
-      "action": "specification",
       "source_group": "latched-comparator-original",
       "path": "benchmark/tasks/spec-latched-comparator",
       "status": "authored_pending_spectre",
@@ -18,11 +17,14 @@
         "no_overdrive_delay",
         "stale_decision",
         "no_async_reset"
-      ]
+      ],
+      "engineering_action": "specification-modeling",
+      "context_level": "bounded-work-unit",
+      "provenance": "original-engineering-requirement",
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "id": "spec-cdr-phase-detector",
-      "action": "specification",
       "source_group": "cdr-phase-original",
       "path": "benchmark/tasks/spec-cdr-phase-detector",
       "status": "authored_pending_spectre",
@@ -30,11 +32,14 @@
         "swap_up_down",
         "ignore_falling_data",
         "never_clear_on_clock"
-      ]
+      ],
+      "engineering_action": "specification-modeling",
+      "context_level": "bounded-work-unit",
+      "provenance": "original-engineering-requirement",
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "id": "spec-sigma-delta",
-      "action": "specification",
       "source_group": "sigma-delta-original",
       "path": "benchmark/tasks/spec-sigma-delta",
       "status": "authored_pending_spectre",
@@ -42,11 +47,14 @@
         "wrong_clock_phase",
         "positive_feedback",
         "discard_accumulator"
-      ]
+      ],
+      "engineering_action": "specification-modeling",
+      "context_level": "bounded-work-unit",
+      "provenance": "original-engineering-requirement",
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "id": "spec-sample-hold-acquisition",
-      "action": "specification",
       "source_group": "sample-hold-original",
       "path": "benchmark/tasks/spec-sample-hold-acquisition",
       "status": "authored_pending_spectre",
@@ -54,11 +62,14 @@
         "instant_acquisition",
         "no_hold",
         "wrong_bandwidth"
-      ]
+      ],
+      "engineering_action": "specification-modeling",
+      "context_level": "bounded-work-unit",
+      "provenance": "original-engineering-requirement",
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "id": "spec-uvlo-deglitch",
-      "action": "specification",
       "source_group": "uvlo-monitor-original",
       "path": "benchmark/tasks/spec-uvlo-deglitch",
       "status": "authored_pending_spectre",
@@ -66,11 +77,14 @@
         "no_qualification",
         "accumulate_short_glitches",
         "skip_recovery_delay"
-      ]
+      ],
+      "engineering_action": "specification-modeling",
+      "context_level": "bounded-work-unit",
+      "provenance": "original-engineering-requirement",
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "id": "repair-sigma-delta-phase",
-      "action": "repair",
       "source_group": "sigma-delta-original",
       "path": "benchmark/tasks/repair-sigma-delta-phase",
       "status": "authored_pending_spectre",
@@ -78,11 +92,14 @@
         "wrong_clock_phase",
         "positive_feedback",
         "discard_accumulator"
-      ]
+      ],
+      "engineering_action": "diagnosis-repair",
+      "context_level": "bounded-work-unit",
+      "provenance": "injected-semantic-fault",
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "id": "repair-uvlo-recovery",
-      "action": "repair",
       "source_group": "uvlo-monitor-original",
       "path": "benchmark/tasks/repair-uvlo-recovery",
       "status": "authored_pending_spectre",
@@ -90,11 +107,14 @@
         "no_qualification",
         "accumulate_short_glitches",
         "skip_recovery_delay"
-      ]
+      ],
+      "engineering_action": "diagnosis-repair",
+      "context_level": "bounded-work-unit",
+      "provenance": "injected-semantic-fault",
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "id": "repair-sar-abort",
-      "action": "repair",
       "source_group": "sar-controller-original",
       "path": "benchmark/tasks/repair-sar-abort",
       "status": "authored_pending_spectre",
@@ -102,11 +122,14 @@
         "late_result_after_abort",
         "inverted_comparator",
         "publish_without_latency"
-      ]
+      ],
+      "engineering_action": "diagnosis-repair",
+      "context_level": "bounded-work-unit",
+      "provenance": "injected-semantic-fault",
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "id": "repair-zoom-sequencer",
-      "action": "repair",
       "source_group": "zoom-timing-original",
       "path": "benchmark/tasks/repair-zoom-sequencer",
       "status": "authored_pending_spectre",
@@ -114,15 +137,22 @@
         "zoom_parent_period",
         "missing_sar_last_bit",
         "no_zoom_reset"
-      ]
+      ],
+      "engineering_action": "diagnosis-repair",
+      "context_level": "bounded-work-unit",
+      "provenance": "injected-semantic-fault",
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "id": "va07-triangle-repair",
-      "action": "repair",
       "source_group": "repository-triangle-oscillator",
       "path": "benchmark/tasks/va07-triangle-repair",
       "status": "existing_prototype_reused_no_new_copy",
-      "notes": "Existing development/Spectre evidence belongs to va07 SOURCE; formal admission and Agentic still pending. Not counted twice."
+      "notes": "Existing development/Spectre evidence belongs to va07 SOURCE; formal admission and Agentic still pending. Not counted twice.",
+      "engineering_action": "diagnosis-repair",
+      "context_level": "bounded-work-unit",
+      "provenance": "development-regression",
+      "data_provenance": "not-applicable"
     }
   ],
   "local_checker_tests": "python3 -B -m unittest discover -s experiments/benchmark_first_batch/model_repair -p test_contracts.py -v",

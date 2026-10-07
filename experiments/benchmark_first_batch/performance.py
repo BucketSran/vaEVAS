@@ -8,6 +8,7 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
+import re
 import statistics
 import tarfile
 
@@ -72,6 +73,10 @@ def extract(prepared):
                 raise ValueError("graded waveform identity differs")
             native = verified(prefix + "spectre.log")
             combined = verified(prefix + "stdout.log")
+            hosts = re.findall(rb'^User:.*?\sHost:\s*(\S+)\s+HostID:\s*(\S+)', native, re.M)
+            if len(hosts) != 1:
+                raise ValueError("one native host identity required")
+            host_identity = digest(b"\0".join(hosts[0]))
             stats = primitive.validate_solver_evidence(source, case["returncode"], native,
                                                        combined, None, stream_layout="merged")
             records.append({"task_id": plan["task_id"], "condition_id": name,
@@ -81,6 +86,7 @@ def extract(prepared):
                             "source_sha256": digest(source), "criteria_sha256": result["criteria_sha256"],
                             "source_identity": plan["source_identity"],
                             "netlist_sha256": case["netlist_sha256"],
+                            "native_host_identity_sha256": host_identity,
                             "report_sha256": result["artifacts"]["work/verifier/report.json"]["sha256"],
                             "waveform_sha256": case["waveform_sha256"],
                             "functional_result": {k: v for k, v in case.items()
@@ -97,11 +103,23 @@ def paired_summary(records, manifest):
     if len(records) != len(manifest):
         raise ValueError("every declared attempt must have one record")
     grouped = {}
+    declared = {}
+    if len({r["job_id"] for r in records}) != len(records):
+        raise ValueError("a job cannot count as more than one attempt")
     for record, attempt in zip(records, manifest):
         if record["task_id"] != attempt["task_id"] or record["condition_id"] != attempt["condition_id"]:
             raise ValueError("attempt and execution differ")
+        if (record["candidate_bundle_sha256"] != attempt["candidate_sha256"] or
+                record["criteria_sha256"] != attempt["criteria_sha256"]):
+            raise ValueError("declared frozen identity differs from execution")
+        declared.setdefault(record["task_id"], []).append(attempt)
         if attempt["phase"] == "measurement":
             grouped.setdefault(record["task_id"], []).append((attempt, record))
+    expected = [("warmup" if pair == 0 else "measurement", pair, side)
+                for pair in range(6) for side in ("baseline", "reference")]
+    for attempts in declared.values():
+        if [(a["phase"], a["pair"], a["side"]) for a in attempts] != expected:
+            raise ValueError("one warm-up and five alternating pairs required in declared order")
     summaries = {}
     for task, group in grouped.items():
         pairs = {}
@@ -113,10 +131,12 @@ def paired_summary(records, manifest):
             pair[side] = record
         if len(pairs) < 5 or any(set(p) != {"baseline", "reference"} for p in pairs.values()):
             raise ValueError("at least five complete pairs required")
-        identity_keys = ("condition_id", "netlist_sha256", "criteria_sha256")
+        identity_keys = ("condition_id", "netlist_sha256", "criteria_sha256", "native_host_identity_sha256")
         for key in identity_keys:
             if len({record[key] for _, record in group}) != 1:
                 raise ValueError("paired experimental setup changed: " + key)
+        if len({tuple(record["solver_argv"]) for _, record in group}) != 1:
+            raise ValueError("paired solver arguments changed")
         if len({record["native_statistics"]["spectre_version"] for _, record in group}) != 1:
             raise ValueError("paired simulator version changed")
         for side in ("baseline", "reference"):

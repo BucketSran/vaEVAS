@@ -2,8 +2,12 @@ schema_version = "1.4"
 [metadata]
 name = "measure-comparator-delay-hysteresis"
 category = "measurement-characterization"
-source_group = "first-batch-measure-comparator-delay-hysteresis"
 purpose = "比较器传播延时与迟滞分离表征; synthetic circuit experiment; calibration pending"
+engineering_action = "measurement-characterization"
+source_group = "first-batch-measure-comparator-delay-hysteresis"
+context_level = "bounded-work-unit"
+provenance = "original-engineering-requirement"
+data_provenance = "behavioral_synthetic"
 [agent]
 timeout_sec = 1800
 [verifier]

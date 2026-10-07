@@ -1,3 +1,11 @@
 原创一阶S/H行为合同；旧v4 071提供有限采集的工程需求参考，本题改为连续一阶动态与可解析建立误差，非复制其离散参考代码。
 
 本次参考VA、测试网表和checker独立编写，未复制历史VA或Cadence安装库。工程需求参考旧题的架构名称与公开接口描述；不声称实测/晶体管级真实性。来源组：sample-hold-original。状态：本地构造与行级checker测试；实际Spectre、Harbor和Agentic校准必须另有执行收据。
+
+<!-- generated first-batch metadata -->
+- `engineering_action`: `specification-modeling`
+- `source_group`: `sample-hold-original`
+- `context_level`: `bounded-work-unit`
+- `provenance`: `original-engineering-requirement`
+- `data_provenance`: `behavioral_synthetic`
+<!-- end generated first-batch metadata -->

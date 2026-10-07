@@ -9,7 +9,7 @@
       "engineering_action": "from-data-modeling",
       "task_path": "benchmark/tasks/identify-sh-acquisition",
       "source_group": "original-sh-identification",
-      "provenance": "behavioral_synthetic",
+      "provenance": "original-engineering-requirement",
       "context_level": "bounded-work-unit",
       "public_experiments": 4,
       "hidden_experiments": 4,
@@ -35,14 +35,15 @@
         "row_tests": "python3 -B -m unittest discover -s experiments/benchmark_first_batch/identification -p 'test_*.py' -v",
         "candidate_generation": "python3 -B experiments/benchmark_first_batch/identification/prepare_candidates.py"
       },
-      "sources": "benchmark/tasks/identify-sh-acquisition/SOURCE.md"
+      "sources": "benchmark/tasks/identify-sh-acquisition/SOURCE.md",
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "task_id": "identify-sc-clocked-filter",
       "engineering_action": "from-data-modeling",
       "task_path": "benchmark/tasks/identify-sc-clocked-filter",
       "source_group": "original-identified_sc-identification",
-      "provenance": "behavioral_synthetic",
+      "provenance": "original-engineering-requirement",
       "context_level": "bounded-work-unit",
       "public_experiments": 4,
       "hidden_experiments": 4,
@@ -69,14 +70,15 @@
         "row_tests": "python3 -B -m unittest discover -s experiments/benchmark_first_batch/identification -p 'test_*.py' -v",
         "candidate_generation": "python3 -B experiments/benchmark_first_batch/identification/prepare_candidates.py"
       },
-      "sources": "benchmark/tasks/identify-sc-clocked-filter/SOURCE.md"
+      "sources": "benchmark/tasks/identify-sc-clocked-filter/SOURCE.md",
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "task_id": "identify-adc-driver-settling",
       "engineering_action": "from-data-modeling",
       "task_path": "benchmark/tasks/identify-adc-driver-settling",
       "source_group": "original-identified_driver-identification",
-      "provenance": "behavioral_synthetic",
+      "provenance": "original-engineering-requirement",
       "context_level": "bounded-work-unit",
       "public_experiments": 6,
       "hidden_experiments": 4,
@@ -102,14 +104,15 @@
         "row_tests": "python3 -B -m unittest discover -s experiments/benchmark_first_batch/identification -p 'test_*.py' -v",
         "candidate_generation": "python3 -B experiments/benchmark_first_batch/identification/prepare_candidates.py"
       },
-      "sources": "benchmark/tasks/identify-adc-driver-settling/SOURCE.md"
+      "sources": "benchmark/tasks/identify-adc-driver-settling/SOURCE.md",
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "task_id": "identify-comparator-overdrive",
       "engineering_action": "from-data-modeling",
       "task_path": "benchmark/tasks/identify-comparator-overdrive",
       "source_group": "original-identified_comparator-identification",
-      "provenance": "behavioral_synthetic",
+      "provenance": "original-engineering-requirement",
       "context_level": "bounded-work-unit",
       "public_experiments": 4,
       "hidden_experiments": 4,
@@ -135,14 +138,15 @@
         "row_tests": "python3 -B -m unittest discover -s experiments/benchmark_first_batch/identification -p 'test_*.py' -v",
         "candidate_generation": "python3 -B experiments/benchmark_first_batch/identification/prepare_candidates.py"
       },
-      "sources": "benchmark/tasks/identify-comparator-overdrive/SOURCE.md"
+      "sources": "benchmark/tasks/identify-comparator-overdrive/SOURCE.md",
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "task_id": "identify-pll-hop-dynamics",
       "engineering_action": "from-data-modeling",
       "task_path": "benchmark/tasks/identify-pll-hop-dynamics",
       "source_group": "original-identified_pll-identification",
-      "provenance": "behavioral_synthetic",
+      "provenance": "original-engineering-requirement",
       "context_level": "bounded-work-unit",
       "public_experiments": 4,
       "hidden_experiments": 4,
@@ -170,7 +174,8 @@
         "row_tests": "python3 -B -m unittest discover -s experiments/benchmark_first_batch/identification -p 'test_*.py' -v",
         "candidate_generation": "python3 -B experiments/benchmark_first_batch/identification/prepare_candidates.py"
       },
-      "sources": "benchmark/tasks/identify-pll-hop-dynamics/SOURCE.md"
+      "sources": "benchmark/tasks/identify-pll-hop-dynamics/SOURCE.md",
+      "data_provenance": "behavioral_synthetic"
     }
   ]
 }

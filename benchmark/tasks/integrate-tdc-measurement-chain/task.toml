@@ -2,9 +2,11 @@ schema_version = "1.4"
 [metadata]
 name = "integrate-tdc-measurement-chain"
 category = "verilog-a"
-source_group = "original-tdc-chain"
-context = "complete_original_repository"
 engineering_action = "extension-integration"
+source_group = "original-tdc-chain"
+context_level = "complete-repository"
+provenance = "original-engineering-requirement"
+data_provenance = "behavioral_synthetic"
 [agent]
 timeout_sec = 1800
 [verifier]

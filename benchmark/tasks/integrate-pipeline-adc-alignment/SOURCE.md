@@ -7,3 +7,11 @@
 终评有 3 组独立实验。语义负例见 experiments/benchmark_first_batch/integration/mutants/integrate-pipeline-adc-alignment/。每个负例以保持可编译 VA 为目标，针对不同条款；实际 Spectre 编译及拒绝情况待校准。行级合成测试只验证 checker 自身，不证明 VA 参考解通过。
 
 发布身份为 Spectre 扩展集候选。Spectre 校准、Harbor oracle、Agentic 主评及开源重评都需分别取得真实证据；当前不宣称已完成这些阶段。
+
+<!-- generated first-batch metadata -->
+- `engineering_action`: `extension-integration`
+- `source_group`: `original-pipeline-adc`
+- `context_level`: `bounded-small-project`
+- `provenance`: `original-engineering-requirement`
+- `data_provenance`: `behavioral_synthetic`
+<!-- end generated first-batch metadata -->

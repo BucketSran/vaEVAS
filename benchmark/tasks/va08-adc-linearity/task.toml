@@ -2,8 +2,12 @@ schema_version = "1.4"
 [metadata]
 name = "va08-adc-linearity"
 category = "verilog-a"
-source_group = "repository-owned-original"
 purpose = "synthetic ADC measurement task; Spectre calibration pending"
+engineering_action = "measurement-characterization"
+source_group = "repository-owned-original-adc-linearity"
+context_level = "bounded-work-unit"
+provenance = "original-engineering-requirement"
+data_provenance = "behavioral_synthetic"
 [agent]
 timeout_sec = 900
 [verifier]

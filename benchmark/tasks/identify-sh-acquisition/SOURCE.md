@@ -41,3 +41,11 @@ checker 只额外允许 trace 终点和请求时刻相差一个浮点 ULP，
 `experiments/benchmark_first_batch/identification/diagnose_sh_archive.py` 重放；
 精简诊断见该目录的 `sh-v3-diagnosis.json`。该证据证明原版本失败原因，
 不证明修正刺激版本已通过后端；修正后仍需协调者重跑实际 Spectre。
+
+<!-- generated first-batch metadata -->
+- `engineering_action`: `from-data-modeling`
+- `source_group`: `original-sh-identification`
+- `context_level`: `bounded-work-unit`
+- `provenance`: `original-engineering-requirement`
+- `data_provenance`: `behavioral_synthetic`
+<!-- end generated first-batch metadata -->

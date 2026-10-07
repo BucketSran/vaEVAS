@@ -2,8 +2,12 @@ schema_version = "1.4"
 [metadata]
 name = "va07-triangle-repair"
 category = "verilog-a"
-source_group = "repository-owned-regression"
 purpose = "candidate repair task; separate from the six-task capability screen"
+engineering_action = "diagnosis-repair"
+source_group = "repository-triangle-oscillator"
+context_level = "bounded-work-unit"
+provenance = "development-regression"
+data_provenance = "not-applicable"
 [agent]
 timeout_sec = 900
 [verifier]

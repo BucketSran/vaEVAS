@@ -2,8 +2,11 @@ schema_version = "1.4"
 [metadata]
 name = "spec-uvlo-deglitch"
 category = "verilog-a"
-action = "specification"
+engineering_action = "specification-modeling"
 source_group = "uvlo-monitor-original"
+context_level = "bounded-work-unit"
+provenance = "original-engineering-requirement"
+data_provenance = "behavioral_synthetic"
 [agent]
 timeout_sec = 1200
 [verifier]

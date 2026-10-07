@@ -2,8 +2,12 @@ schema_version = "1.4"
 [metadata]
 name = "verify-pll-lock-checker"
 category = "verification-tools"
-source_group = "first-batch-verify-pll-lock-checker"
 purpose = "PLL 持续锁定自动判定; synthetic circuit experiment; calibration pending"
+engineering_action = "verification-tools"
+source_group = "first-batch-verify-pll-lock-checker"
+context_level = "bounded-work-unit"
+provenance = "original-engineering-requirement"
+data_provenance = "behavioral_synthetic"
 [agent]
 timeout_sec = 1800
 [verifier]

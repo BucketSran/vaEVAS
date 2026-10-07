@@ -120,3 +120,11 @@ r接地，ctl是正速度输入，z是三角波输出，count是换向次数电�
 一份等价product-guard源码另配两次历史刺激，不能称为两份不同等价实现。
 旧题真实Spectre校准仍是历史身份；首批新入口的8参考条件、4定向负例
 与可选2等价条件由协调者重新冻结和运行，迁移本身不证明后端已通过。
+
+<!-- generated first-batch metadata -->
+- `engineering_action`: `diagnosis-repair`
+- `source_group`: `repository-triangle-oscillator`
+- `context_level`: `bounded-work-unit`
+- `provenance`: `development-regression`
+- `data_provenance`: `not-applicable`
+<!-- end generated first-batch metadata -->

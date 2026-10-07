@@ -13,3 +13,11 @@ checker逐条检查局部样点、时序或性能指标，不运行参考解生�
 语义负例包括固定延时、忽略正负不对称、复位后迟到决策和错误dispersion。编译错误不计这些负例。
 当前是 Spectre 扩展集候选。Python行级检查不等于实际VA校准，
 Spectre、Agentic和开源复现证据分别记录。
+
+<!-- generated first-batch metadata -->
+- `engineering_action`: `from-data-modeling`
+- `source_group`: `original-identified_comparator-identification`
+- `context_level`: `bounded-work-unit`
+- `provenance`: `original-engineering-requirement`
+- `data_provenance`: `behavioral_synthetic`
+<!-- end generated first-batch metadata -->

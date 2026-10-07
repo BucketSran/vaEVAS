@@ -2,8 +2,12 @@ schema_version = "1.4"
 [metadata]
 name = "verify-sar-flow"
 category = "verification-tools"
-source_group = "first-batch-verify-sar-flow"
 purpose = "SAR 转换完整验证流程; synthetic circuit experiment; calibration pending"
+engineering_action = "verification-tools"
+source_group = "first-batch-verify-sar-flow"
+context_level = "bounded-work-unit"
+provenance = "original-engineering-requirement"
+data_provenance = "behavioral_synthetic"
 [agent]
 timeout_sec = 1800
 [verifier]

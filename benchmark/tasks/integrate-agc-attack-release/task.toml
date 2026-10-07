@@ -2,9 +2,11 @@ schema_version = "1.4"
 [metadata]
 name = "integrate-agc-attack-release"
 category = "verilog-a"
-source_group = "original-receiver-agc"
-context = "bounded_small_project"
 engineering_action = "extension-integration"
+source_group = "original-receiver-agc"
+context_level = "bounded-small-project"
+provenance = "original-engineering-requirement"
+data_provenance = "behavioral_synthetic"
 [agent]
 timeout_sec = 1800
 [verifier]

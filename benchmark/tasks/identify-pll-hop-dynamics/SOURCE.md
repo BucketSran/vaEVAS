@@ -13,3 +13,11 @@ checker逐条检查局部样点、时序或性能指标，不运行参考解生�
 语义负例包括错误阻尼、取消积分路径、错误loop时间尺度、伪造已锁相时钟、粗网格输出混叠纹波和早期频率监测纹波。编译错误不计这些负例。
 当前是 Spectre 扩展集候选。Python行级检查不等于实际VA校准，
 Spectre、Agentic和开源复现证据分别记录。
+
+<!-- generated first-batch metadata -->
+- `engineering_action`: `from-data-modeling`
+- `source_group`: `original-identified_pll-identification`
+- `context_level`: `bounded-work-unit`
+- `provenance`: `original-engineering-requirement`
+- `data_provenance`: `behavioral_synthetic`
+<!-- end generated first-batch metadata -->

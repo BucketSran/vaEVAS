@@ -2,74 +2,104 @@
   "tasks": [
     {
       "id": "verify-sar-flow",
-      "category": "verification-tools",
       "source_group": "first-batch-verify-sar-flow",
       "status": "implemented_pending_spectre",
-      "path": "benchmark/tasks/verify-sar-flow"
+      "path": "benchmark/tasks/verify-sar-flow",
+      "engineering_action": "verification-tools",
+      "context_level": "bounded-work-unit",
+      "provenance": "original-engineering-requirement",
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "id": "verify-nonoverlap-stimulus",
-      "category": "verification-tools",
       "source_group": "first-batch-verify-nonoverlap-stimulus",
       "status": "implemented_pending_spectre",
-      "path": "benchmark/tasks/verify-nonoverlap-stimulus"
+      "path": "benchmark/tasks/verify-nonoverlap-stimulus",
+      "engineering_action": "verification-tools",
+      "context_level": "bounded-work-unit",
+      "provenance": "original-engineering-requirement",
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "id": "verify-comparator-overdrive",
-      "category": "verification-tools",
       "source_group": "first-batch-verify-comparator-overdrive",
       "status": "implemented_pending_spectre",
-      "path": "benchmark/tasks/verify-comparator-overdrive"
+      "path": "benchmark/tasks/verify-comparator-overdrive",
+      "engineering_action": "verification-tools",
+      "context_level": "bounded-work-unit",
+      "provenance": "original-engineering-requirement",
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "id": "verify-pll-lock-checker",
-      "category": "verification-tools",
       "source_group": "first-batch-verify-pll-lock-checker",
       "status": "implemented_pending_spectre",
-      "path": "benchmark/tasks/verify-pll-lock-checker"
+      "path": "benchmark/tasks/verify-pll-lock-checker",
+      "engineering_action": "verification-tools",
+      "context_level": "bounded-work-unit",
+      "provenance": "original-engineering-requirement",
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "id": "verify-sh-settling-checker",
-      "category": "verification-tools",
-      "source_group": "first-batch-verify-sh-settling-checker",
+      "source_group": "original-periodic-sh-observation",
       "status": "implemented_pending_spectre",
-      "path": "benchmark/tasks/verify-sh-settling-checker"
+      "path": "benchmark/tasks/verify-sh-settling-checker",
+      "engineering_action": "verification-tools",
+      "context_level": "bounded-work-unit",
+      "provenance": "original-engineering-requirement",
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "id": "va08-adc-linearity",
-      "category": "measurement-characterization",
       "source_group": "repository-owned-original-adc-linearity",
       "status": "existing_calibration_reference",
       "path": "benchmark/tasks/va08-adc-linearity",
-      "note": "Existing task referenced without copying or changing; Agentic status stays separate."
+      "note": "Existing task referenced without copying or changing; Agentic status stays separate.",
+      "engineering_action": "measurement-characterization",
+      "context_level": "bounded-work-unit",
+      "provenance": "original-engineering-requirement",
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "id": "measure-adc-spectrum",
-      "category": "measurement-characterization",
       "source_group": "first-batch-measure-adc-spectrum",
       "status": "implemented_pending_spectre",
-      "path": "benchmark/tasks/measure-adc-spectrum"
+      "path": "benchmark/tasks/measure-adc-spectrum",
+      "engineering_action": "measurement-characterization",
+      "context_level": "bounded-work-unit",
+      "provenance": "original-engineering-requirement",
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "id": "measure-comparator-delay-hysteresis",
-      "category": "measurement-characterization",
       "source_group": "first-batch-measure-comparator-delay-hysteresis",
       "status": "implemented_pending_spectre",
-      "path": "benchmark/tasks/measure-comparator-delay-hysteresis"
+      "path": "benchmark/tasks/measure-comparator-delay-hysteresis",
+      "engineering_action": "measurement-characterization",
+      "context_level": "bounded-work-unit",
+      "provenance": "original-engineering-requirement",
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "id": "measure-sh-acquisition-droop",
-      "category": "measurement-characterization",
-      "source_group": "first-batch-measure-sh-acquisition-droop",
+      "source_group": "original-periodic-sh-observation",
       "status": "implemented_pending_spectre",
-      "path": "benchmark/tasks/measure-sh-acquisition-droop"
+      "path": "benchmark/tasks/measure-sh-acquisition-droop",
+      "engineering_action": "measurement-characterization",
+      "context_level": "bounded-work-unit",
+      "provenance": "original-engineering-requirement",
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "id": "measure-pll-relock-jitter",
-      "category": "measurement-characterization",
       "source_group": "first-batch-measure-pll-relock-jitter",
       "status": "implemented_pending_spectre",
-      "path": "benchmark/tasks/measure-pll-relock-jitter"
+      "path": "benchmark/tasks/measure-pll-relock-jitter",
+      "engineering_action": "measurement-characterization",
+      "context_level": "bounded-work-unit",
+      "provenance": "original-engineering-requirement",
+      "data_provenance": "behavioral_synthetic"
     }
   ]
 }

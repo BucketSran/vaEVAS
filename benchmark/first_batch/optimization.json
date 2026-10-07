@@ -11,7 +11,7 @@
       "candidate_id": "optimize-vco-step",
       "engineering_action": "simulation-implementation-optimization",
       "source_group": "original-vco-boundstep-optimization",
-      "provenance": "original_behavioral_model",
+      "provenance": "original-engineering-requirement",
       "context_level": "bounded-work-unit",
       "focus": "frequency-aware time bounds",
       "experiment_path": "experiments/benchmark_first_batch/optimization/vco_boundstep",
@@ -35,13 +35,14 @@
         "spectre_semantic_negatives": "pending coordinator",
         "agentic": "pending",
         "open_source_regrading": "not validated"
-      }
+      },
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "candidate_id": "optimize-flash-thresholds",
       "engineering_action": "simulation-implementation-optimization",
       "source_group": "original-flash-thresholds-optimization",
-      "provenance": "original_behavioral_model",
+      "provenance": "original-engineering-requirement",
       "context_level": "bounded-work-unit",
       "focus": "sampled monotonic threshold decoding",
       "experiment_path": "experiments/benchmark_first_batch/optimization/flash_thresholds",
@@ -65,13 +66,14 @@
         "spectre_semantic_negatives": "pending coordinator",
         "agentic": "pending",
         "open_source_regrading": "not validated"
-      }
+      },
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "candidate_id": "optimize-power-monitor",
       "engineering_action": "simulation-implementation-optimization",
       "source_group": "original-power-monitor-optimization",
-      "provenance": "original_behavioral_model",
+      "provenance": "original-engineering-requirement",
       "context_level": "bounded-work-unit",
       "focus": "event-based supply qualification",
       "experiment_path": "experiments/benchmark_first_batch/optimization/power_monitor",
@@ -95,13 +97,14 @@
         "spectre_semantic_negatives": "pending coordinator",
         "agentic": "pending",
         "open_source_regrading": "not validated"
-      }
+      },
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "candidate_id": "optimize-sampled-dac",
       "engineering_action": "simulation-implementation-optimization",
       "source_group": "original-sampled-dac-optimization",
-      "provenance": "original_behavioral_model",
+      "provenance": "original-engineering-requirement",
       "context_level": "bounded-work-unit",
       "focus": "sample-event bit decoding",
       "experiment_path": "experiments/benchmark_first_batch/optimization/sampled_dac",
@@ -125,13 +128,14 @@
         "spectre_semantic_negatives": "pending coordinator",
         "agentic": "pending",
         "open_source_regrading": "not validated"
-      }
+      },
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "candidate_id": "optimize-sc-coefficients",
       "engineering_action": "simulation-implementation-optimization",
       "source_group": "original-sc-coefficients-optimization",
-      "provenance": "original_behavioral_model",
+      "provenance": "original-engineering-requirement",
       "context_level": "bounded-work-unit",
       "focus": "sample-event settling coefficient evaluation",
       "experiment_path": "experiments/benchmark_first_batch/optimization/sc_coefficients",
@@ -155,13 +159,14 @@
         "spectre_semantic_negatives": "pending coordinator",
         "agentic": "pending",
         "open_source_regrading": "not validated"
-      }
+      },
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "candidate_id": "optimize-sar-calendar",
       "engineering_action": "simulation-implementation-optimization",
       "source_group": "original-sensor-sar-calendar",
-      "provenance": "original_behavioral_model",
+      "provenance": "original-engineering-requirement",
       "context_level": "bounded-work-unit",
       "focus": "idle event calendar with observable twelve-bit SAR decisions",
       "experiment_path": "experiments/benchmark_first_batch/optimization/sar_calendar",
@@ -185,13 +190,14 @@
         "spectre_semantic_negatives": "pending coordinator",
         "agentic": "pending",
         "open_source_regrading": "not validated"
-      }
+      },
+      "data_provenance": "behavioral_synthetic"
     },
     {
       "candidate_id": "optimize-uart-calendar",
       "engineering_action": "simulation-implementation-optimization",
       "source_group": "original-uart-sampling-calendar",
-      "provenance": "original_behavioral_model",
+      "provenance": "original-engineering-requirement",
       "context_level": "bounded-work-unit",
       "focus": "idle oversampling replaced by qualified serial sampling calendar",
       "experiment_path": "experiments/benchmark_first_batch/optimization/uart_calendar",
@@ -215,7 +221,8 @@
         "spectre_semantic_negatives": "pending coordinator",
         "agentic": "pending",
         "open_source_regrading": "not validated"
-      }
+      },
+      "data_provenance": "behavioral_synthetic"
     }
   ],
   "evidence": [
