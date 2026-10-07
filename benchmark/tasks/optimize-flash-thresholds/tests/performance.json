@@ -1,0 +1,26 @@
+{
+  "admitted": true,
+  "metric": "intrinsic_cpu_s",
+  "max_median_ratio": 0.97,
+  "min_winning_pairs": 4,
+  "admission_evidence_sha256": "504d89e1aa58ad4cc2878bc45079b0ec69428a35dd97d22ae8f1c3f1aba67283",
+  "pairs": 5,
+  "allow_private_condition_packets": true,
+  "case_inventory": [
+    {
+      "name": "bank-throughput",
+      "performance": true,
+      "case_sha256": "a0a1b4e77297239fe33f60e93bd466cfca97f271a5e024ddc910c07968d5c63e"
+    },
+    {
+      "name": "negative-skew",
+      "performance": false,
+      "case_sha256": "446ff2ce4837152014d8126f5dee968cfb0717e28fbe71bf5bccff1a5ea3ce62"
+    },
+    {
+      "name": "positive-skew",
+      "performance": false,
+      "case_sha256": "25994c7d153e59c66772cc10025578943a66ebde2798464e7c2b0df2549392f1"
+    }
+  ]
+}
