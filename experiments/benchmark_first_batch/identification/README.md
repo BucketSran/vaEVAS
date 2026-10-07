@@ -36,3 +36,14 @@ python3 -B -m unittest discover -s experiments/benchmark_first_batch/identificat
 SH 首次实际后端失败的可重放诊断见 `sh-v3-diagnosis.json` 与
 `diagnose_sh_archive.py`。修正刺激后需重新准备候选并冻结新的任务、checker
 和刺激身份，由协调者调度实际 Spectre；原归档不能算作修正版通过。
+
+准备候选后，用协调者实际冻结的共享执行边界做静态校验：
+
+```sh
+python3 -B experiments/benchmark_first_batch/identification/static_check_candidates.py \
+  --runtime /absolute/path/to/benchmark/checkers/circuit_task.py
+```
+
+`candidate-static-check.json` 保留一次25候选全部通过的来源哈希与运行时哈希。
+这只证明 submission I/O 合同合规，不证明VA可编译或电路行为正确。
+PLL参考与错版生成器使用2π数值字面量，符合共享边界禁止候选宏的规则。

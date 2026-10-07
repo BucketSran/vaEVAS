@@ -1,0 +1,310 @@
+{
+  "kind": "shared_prepare_source_static_check",
+  "runtime_sha256": "033ed88a978517c752fe4675c934b02184fde85d45a64d18ee28c93bae8f4c7d",
+  "lexer_sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+  "scope": "Static submission boundary only; not VA compilation or Spectre acceptance.",
+  "count": 25,
+  "passed_count": 25,
+  "candidates": [
+    {
+      "task": "identify-sh-acquisition",
+      "variant": "reference",
+      "source_sha256": "8160eefef1c379449ed9eaa010f9dfe887fa0f71f904190566e01fceb428f3ae",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-sh-acquisition",
+      "variant": "no-droop",
+      "source_sha256": "80dba87ada88810261099626dcad3380ad2cae5cbaa5faee1e6e58a397c21fa3",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-sh-acquisition",
+      "variant": "no-hold-step",
+      "source_sha256": "70161ebee55ce59d9765132151b3fee38089298ed8b1f00da03b44138ed0aa61",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-sh-acquisition",
+      "variant": "wrong-polarity-step",
+      "source_sha256": "ab33b5deba347a8db1e589622560aa084096bf4a3fc5661efe29de0017b70b5f",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-sh-acquisition",
+      "variant": "fast-acquisition",
+      "source_sha256": "21134a1c56dddfa83756acafc9273580d49defa45c6921c71b40b0d7c9c5aa10",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-sc-clocked-filter",
+      "variant": "reference",
+      "source_sha256": "b8ac9a0fbacf0379c9667d0abb5e7f8ca62b4649bb39bff5f7c98ca551e49c54",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-sc-clocked-filter",
+      "variant": "single-pole",
+      "source_sha256": "8748e329a8ec8a287005df52a4925116310a3c38509b6493079542cc76b71b21",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-sc-clocked-filter",
+      "variant": "wrong-clock-edge",
+      "source_sha256": "701dca6764e5f374b189f57ef873500a9aa0072ce756944bb5d34ce06b88a6c8",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-sc-clocked-filter",
+      "variant": "no-history",
+      "source_sha256": "f628f7218311aff01f64480ee006caabdb8596793f43a52da856c97083045014",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-sc-clocked-filter",
+      "variant": "wrong-gain",
+      "source_sha256": "487841d4e993ad9b5293c284c97a0dc14b6cccb73a8b64672a210f40e7ff48f9",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-adc-driver-settling",
+      "variant": "reference",
+      "source_sha256": "7fe0b7b1bf3548237de41ab833add11c58a33b28419d8663989b32c177b29f20",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-adc-driver-settling",
+      "variant": "no-slew",
+      "source_sha256": "ef707bd7d8d2e3fc8da96668f907573488a54d2d47dc81603ae3a3ed2f3f21b1",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-adc-driver-settling",
+      "variant": "wrong-bandwidth",
+      "source_sha256": "35445ca35d6768c719b6488d6671e54be59c0b6a0a1ef4cb7a832409971c7c20",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-adc-driver-settling",
+      "variant": "no-rails",
+      "source_sha256": "a309287517b79065e0bf7cb995d0dd5735ce6bbdf7a41d79a455ebd88e635650",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-adc-driver-settling",
+      "variant": "restart-on-input",
+      "source_sha256": "91966b1f2d5d128a02362abd74afa3a74fb48d22fdf644c41271c62664582ff5",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-comparator-overdrive",
+      "variant": "reference",
+      "source_sha256": "6382b5d577d8d4ad7a74c8d20e146f19203cfc8d5532672be9dfe64fe69a9707",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-comparator-overdrive",
+      "variant": "constant-delay",
+      "source_sha256": "08b442d6d8e2fe52420d0e634bec08bc3baed8a3e96f871ed74f8cf28d21162a",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-comparator-overdrive",
+      "variant": "symmetric-delay",
+      "source_sha256": "3af6c77a21fdfb5fe0c6d5a3384f7441372f25f82267620586bcf032215344f2",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-comparator-overdrive",
+      "variant": "late-after-reset",
+      "source_sha256": "0cbff1c8dd682b5605fb97d1ae1b0f6008a67d5478886257245c34fe4065ced0",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-comparator-overdrive",
+      "variant": "wrong-dispersion",
+      "source_sha256": "2527f740bf6d0f04c6d209f4c8f63b13d4046393e463a89035fc3dc7ac6fd619",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-pll-hop-dynamics",
+      "variant": "reference",
+      "source_sha256": "64fc294c62ecf4dafb0c8defef105f99deec0431714b6e8a01b1f4ec904a4964",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-pll-hop-dynamics",
+      "variant": "wrong-damping",
+      "source_sha256": "ff48f3a891c499fd1f98598bbbe63024d1aa6e589904337b23beddb84beb5f47",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-pll-hop-dynamics",
+      "variant": "no-integral",
+      "source_sha256": "19df143ebd24e505a30ccf943acc561f47502a29f3fbc75f5eab19dc4db4076a",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-pll-hop-dynamics",
+      "variant": "wrong-loop-rate",
+      "source_sha256": "d019bf4722f95b83802cb05526e5b78422be16bc5e773f6ae1bada404b94c74c",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    },
+    {
+      "task": "identify-pll-hop-dynamics",
+      "variant": "wrong-clock-phase",
+      "source_sha256": "2c464f86542b340e469296da050d92e8c7aa4f4389e0ead33de70283b242d8be",
+      "contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "status": "passed",
+      "receipt": {
+        "version": "circuit-output-paths-v1",
+        "edits": [],
+        "inverse_verified": true
+      }
+    }
+  ]
+}

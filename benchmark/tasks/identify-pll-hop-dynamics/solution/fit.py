@@ -60,7 +60,7 @@ analog begin
   V(phase_error)<+idt(1e6*V(cmd)-8e5-deviation,0);
   V(integrated_error)<+idt(V(phase_error),0);
   V(tune)<+0.8+deviation/1e6;
-  V(out)<+sin(2*`M_PI*({phase_expression}));
+  V(out)<+sin(6.283185307179586*({phase_expression}));
   $bound_step(1e-8);
 end
 endmodule
