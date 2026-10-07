@@ -54,7 +54,7 @@ class OnlinePerformance(unittest.TestCase):
             role='baseline' if source==BASE else 'candidate';order.append(role)
             # Very costly candidate warmup must not enter measured pairs.
             cpu=999 if len(order)==2 else (10 if role=='baseline' else 7)
-            return dict(status='completed',passed=True,statistics=dict(intrinsic_tran=dict(cpu_s=cpu),accepted_steps=100))
+            return dict(status='completed',passed=True,host='fixture-host',netlist_sha256='b'*64,source_sha256=role,statistics=dict(spectre_version='fixture-only',intrinsic_tran=dict(cpu_s=cpu),accepted_steps=100))
         with tempfile.TemporaryDirectory() as d:
             result=M.run_paired_verification(CAND,BASE,{},None,Path(d)/'new',POLICY,runner=runner)
             self.assertEqual(order,['baseline','candidate']*6)
@@ -70,9 +70,15 @@ class OnlinePerformance(unittest.TestCase):
                 self.assertEqual((result['status'],result['reward']),(status,reward))
 
     def test_missing_pairs_fail_and_unchanged_work_does_not_score(self):
-        records=[dict(role=role,status='completed',passed=True,statistics=dict(intrinsic_tran=dict(cpu_s=10),accepted_steps=100)) for role in ['baseline','candidate']*5]
+        records=[dict(role=role,status='completed',passed=True,host='fixture-host',netlist_sha256='b'*64,source_sha256=role,statistics=dict(spectre_version='fixture-only',intrinsic_tran=dict(cpu_s=10),accepted_steps=100)) for role in ['baseline','candidate']*5]
         self.assertFalse(M.summarize_pairs(records,POLICY)['passed'])
         with self.assertRaises(M.OptimizationEvidenceError):M.summarize_pairs(records[:-1],POLICY)
+        records[3]['host']='different-host'
+        with self.assertRaises(M.OptimizationEvidenceError):M.summarize_pairs(records,POLICY)
+        records[3]['host']='fixture-host'
+        records[3]['source_sha256']='changed-source'
+        with self.assertRaises(M.OptimizationEvidenceError):M.summarize_pairs(records,POLICY)
+        records[3]['source_sha256']='candidate'
         records[3]['passed']=False
         with self.assertRaises(M.OptimizationEvidenceError):M.summarize_pairs(records,POLICY)
 

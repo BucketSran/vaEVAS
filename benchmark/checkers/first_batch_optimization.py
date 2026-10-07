@@ -163,6 +163,18 @@ def summarize_pairs(records,policy):
     for record in records:
         if record.get('passed') is not True or record.get('status')!='completed':
             raise OptimizationEvidenceError('failed work cannot enter performance denominator')
+    # Compare the same host, solver version and frozen netlist. The two source
+    # roles may differ, but each role is byte-identical across its five trials.
+    for key in ('host','netlist_sha256'):
+        if any(not r.get(key) for r in records) or len({r[key] for r in records})!=1:
+            raise OptimizationEvidenceError('paired '+key+' identity is missing or inconsistent')
+    versions={r['statistics'].get('spectre_version') for r in records}
+    if None in versions or len(versions)!=1:
+        raise OptimizationEvidenceError('paired native solver version is missing or inconsistent')
+    for offset in (0,1):
+        sources={r.get('source_sha256') for r in records[offset::2]}
+        if None in sources or len(sources)!=1:
+            raise OptimizationEvidenceError('source changed within a paired role')
     def measure(record):
         stats=record['statistics']
         value=stats['intrinsic_tran']['cpu_s'] if policy['metric']=='intrinsic_cpu_s' else stats['accepted_steps']
@@ -302,7 +314,10 @@ def performance_main(evaluate):
     def grade(rows,case,work):
         functional=evaluate(rows,case,work)
         if not functional.get('passed') or not case.get('performance'):return functional
-        result=run_paired_verification(source,baseline,case,evaluate,Path(work)/'paired',policy,
+        frozen=(Path(work)/'original/dut.va').read_bytes()
+        if frozen!=source:
+            return dict(passed=False,failures=['submission changed after source guard'],functional=functional)
+        result=run_paired_verification(frozen,baseline,case,evaluate,Path(work)/'paired',policy,
                                       runner=lambda s,c,e,d:run_one_source(s,c,e,d,binary=os.environ.get('SPECTRE','spectre')))
         # An invalid trusted baseline remains infrastructure, never a fast score.
         if result['reward'] is None:
