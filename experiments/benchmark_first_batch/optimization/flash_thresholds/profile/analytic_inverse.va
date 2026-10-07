@@ -1,0 +1,38 @@
+`include "disciplines.vams"
+// Original loop-free inverse of the public monotonic quadratic threshold bank.
+// Adjacent comparisons preserve the exact threshold >= tie convention.
+module offset_flash(vin, clock, code);
+ input vin, clock;
+ output code;
+ electrical vin, clock, code;
+ parameter real vref=1.0 from (0:inf);
+ parameter real skew=0.15 from [-0.3:0.3];
+ parameter real delay=0.2n from [0:inf);
+ parameter real rise=0.3n from (0:inf);
+ integer estimate, held_code;
+ real sample, normalized, fraction, threshold;
+ analog begin
+  @(initial_step) held_code=0;
+  @(cross(V(clock)-0.5,+1)) begin
+   sample=V(vin);
+   normalized=sample/vref;
+   if(normalized<0.0) normalized=0.0;
+   if(normalized>1.0) normalized=1.0;
+   // Rationalized root is continuous at skew=0 and avoids subtraction loss.
+   fraction=2.0*normalized/(1.0+skew+sqrt((1.0+skew)*(1.0+skew)-4.0*skew*normalized));
+   estimate=$rtoi(floor(256.0*fraction));
+   if(estimate<0) estimate=0;
+   if(estimate>255) estimate=255;
+   if(estimate<255) begin
+    threshold=vref*((estimate+1)/256.0+skew*((estimate+1)/256.0)*(1.0-(estimate+1)/256.0));
+    if(sample>=threshold) estimate=estimate+1;
+   end
+   if(estimate>0) begin
+    threshold=vref*(estimate/256.0+skew*(estimate/256.0)*(1.0-estimate/256.0));
+    if(sample<threshold) estimate=estimate-1;
+   end
+   held_code=estimate;
+  end
+  V(code) <+ transition(held_code/255.0,delay,rise);
+ end
+endmodule
