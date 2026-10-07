@@ -127,3 +127,189 @@ def validate_solver_evidence(source, returncode, native_log, stdout, stderr=None
     statistics=read_native_statistics(native_log)
     statistics.update(source_identity=guard,process_returncode=returncode,stream_layout=stream_layout,stream_identities=streams)
     return statistics
+
+
+class OptimizationAdmissionPending(OptimizationEvidenceError):
+    """A prototype is not a scored optimization task without actual evidence."""
+
+
+def validate_admitted_policy(policy):
+    """Reject unfinished configurations; thresholds follow actual paired evidence."""
+    if policy.get('admitted') is not True:
+        raise OptimizationAdmissionPending('optimization task has not passed the actual evidence gate')
+    evidence=policy.get('admission_evidence_sha256')
+    if not isinstance(evidence,str) or not re.fullmatch('[0-9a-f]{64}',evidence):
+        raise OptimizationEvidenceError('missing immutable admission evidence identity')
+    if policy.get('pairs')!=5:
+        raise OptimizationEvidenceError('scored optimization verification requires five alternating pairs')
+    metric=policy.get('metric')
+    if metric not in ('intrinsic_cpu_s','accepted_steps'):
+        raise OptimizationEvidenceError('unsupported performance metric')
+    limit=policy.get('max_median_ratio')
+    if isinstance(limit,bool) or not isinstance(limit,(int,float)) or not math.isfinite(limit) or not 0<limit<1:
+        raise OptimizationEvidenceError('performance threshold must be an admitted ratio in (0,1)')
+    winning=policy.get('min_winning_pairs')
+    if type(winning) is not int or not 1<=winning<=5:
+        raise OptimizationEvidenceError('invalid paired consistency requirement')
+    return policy
+
+
+def summarize_pairs(records,policy):
+    """Only successful, equivalent, completed work enters a paired score."""
+    import statistics
+    validate_admitted_policy(policy)
+    if len(records)!=10 or [r.get('role') for r in records]!=['baseline','candidate']*5:
+        raise OptimizationEvidenceError('missing or non-alternating five-pair evidence')
+    for record in records:
+        if record.get('passed') is not True or record.get('status')!='completed':
+            raise OptimizationEvidenceError('failed work cannot enter performance denominator')
+    def measure(record):
+        stats=record['statistics']
+        value=stats['intrinsic_tran']['cpu_s'] if policy['metric']=='intrinsic_cpu_s' else stats['accepted_steps']
+        if not math.isfinite(value) or value<=0:raise OptimizationEvidenceError('nonpositive measured work')
+        return value
+    baseline=[measure(r) for r in records[::2]];candidate=[measure(r) for r in records[1::2]]
+    ratios=[b/a for a,b in zip(baseline,candidate)]
+    median_ratio=statistics.median(candidate)/statistics.median(baseline)
+    winning=sum(ratio<1 for ratio in ratios)
+    result=dict(metric=policy['metric'],baseline=dict(median=statistics.median(baseline),minimum=min(baseline),maximum=max(baseline)),
+                candidate=dict(median=statistics.median(candidate),minimum=min(candidate),maximum=max(candidate)),
+                pair_ratios=ratios,median_ratio=median_ratio,winning_pairs=winning,
+                failures=0,pairs=5,admission_evidence_sha256=policy['admission_evidence_sha256'])
+    result['passed']=median_ratio<=policy['max_median_ratio'] and winning>=policy['min_winning_pairs']
+    return result
+
+
+def run_one_source(source,case,evaluate,directory,*,binary='spectre',timeout_s=90):
+    """One real sequential solve, retaining full source/netlist/log/PSF evidence.
+
+    Not called by offline extraction. The caller owns the single active job slot.
+    Spectre execution must be authorized through its normal task profile.
+    """
+    import json
+    import os
+    from pathlib import Path
+    import subprocess
+    import time
+    from adc_linearity import read_psf
+    from circuit_task import prepare_source,validate_rows
+    guard=validate_performance_source(source)
+    directory=Path(directory)
+    directory.mkdir(parents=True,exist_ok=False)
+    output=directory/'output';output.mkdir()
+    (directory/'original.va').write_bytes(source)
+    executed,relocation=prepare_source(source,['dut.va'],[],output)
+    (directory/'dut.va').write_bytes(executed)
+    netlist=case['netlist'].encode();(directory/'tb.scs').write_bytes(netlist)
+    argv=[binary,'-64','tb.scs','+log','spectre.log','-format','psfascii','-raw','psf','+lqtimeout','5','+mt=1']
+    record=dict(status='pending',passed=False,source_sha256=guard['source_sha256'],
+                executed_source_sha256=hashlib.sha256(executed).hexdigest(),
+                netlist_sha256=hashlib.sha256(netlist).hexdigest(),output_translation=relocation,
+                argv=argv,logical_cpus=os.cpu_count(),host=os.uname().nodename,
+                load_before=list(os.getloadavg()),stream_layout='merged')
+    started=time.monotonic()
+    try:
+        with (directory/'stdout.log').open('wb') as stream:
+            run=subprocess.run(argv,cwd=directory,stdout=stream,stderr=subprocess.STDOUT,timeout=timeout_s)
+        record.update(process_elapsed_s=time.monotonic()-started,returncode=run.returncode,
+                      load_after=list(os.getloadavg()))
+        native=(directory/'spectre.log').read_text(errors='replace')
+        merged=(directory/'stdout.log').read_bytes()
+        stats=validate_solver_evidence(source,run.returncode,native,merged,None,stream_layout='merged')
+        waveform=directory/'psf/tran.tran.tran';rows=read_psf(waveform);validate_rows(rows,case)
+        verdict=evaluate(rows,case,directory)
+        if not isinstance(verdict,dict) or type(verdict.get('passed')) is not bool:
+            raise OptimizationEvidenceError('oracle did not return boolean passed')
+        record.update(status='completed',passed=verdict['passed'],functional=verdict,statistics=stats,
+                      waveform_sha256=hashlib.sha256(waveform.read_bytes()).hexdigest(),waveform_rows=len(rows))
+    except subprocess.TimeoutExpired:
+        record.update(status='simulation_timeout',process_elapsed_s=time.monotonic()-started)
+    except (OSError,ValueError,KeyError,OptimizationEvidenceError) as exc:
+        record.update(status='invalid_solver_evidence',error=f'{type(exc).__name__}: {exc}')
+    (directory/'record.json').write_text(json.dumps(record,indent=2,allow_nan=False)+'\n')
+    return record
+
+
+def run_paired_verification(candidate_source,baseline_source,case,evaluate,directory,policy,*,runner=run_one_source):
+    """Preflight active-task guard, retain warmups, then five AB pairs in one job.
+
+    candidate/baseline roles remain explicit. An invalid trusted baseline is a
+    verifier/infrastructure failure; an invalid submission is a scored failure.
+    No failed solve is dropped and no denominator is reduced.
+    """
+    import json
+    from pathlib import Path
+    validate_admitted_policy(policy)
+    directory=Path(directory);directory.mkdir(parents=True,exist_ok=False)
+    result=dict(kind='online_same_job_paired_verification',status='pending',reward=None,
+                policy=policy,warmups=[],records=[])
+    def finish(status,reward,reason=None):
+        result.update(status=status,reward=reward)
+        if reason is not None:result['reason']=reason
+        (directory/'performance_report.json').write_text(json.dumps(result,indent=2,allow_nan=False)+'\n')
+        return result
+    try:validate_performance_source(candidate_source)
+    except OptimizationEvidenceError as exc:return finish('submission_contract_violation',0,str(exc))
+    try:validate_performance_source(baseline_source)
+    except OptimizationEvidenceError as exc:return finish('infrastructure_error',None,'invalid trusted baseline: '+str(exc))
+    for phase in ('warmup',*[f'pair-{i:02d}' for i in range(1,6)]):
+        for role,source in (('baseline',baseline_source),('candidate',candidate_source)):
+            record=runner(source,case,evaluate,directory/f'{phase}-{role}')
+            record.update(role=role,phase=phase)
+            result['warmups' if phase=='warmup' else 'records'].append(record)
+            if record.get('status')!='completed' or record.get('passed') is not True:
+                if role=='baseline':return finish('infrastructure_error',None,'trusted baseline did not complete equivalent work')
+                return finish('submission_failure',0,'candidate did not complete equivalent work')
+    result['comparison']=summarize_pairs(result['records'],policy)
+    return finish('completed',int(result['comparison']['passed']))
+
+
+def performance_main(evaluate):
+    """Prospective task entry: guard before any solve, functional + repeated score.
+
+    There are no admitted tasks/configurations yet. This entry is a prototype,
+    not a claim that current probe jobs already use performance scoring.
+    """
+    import argparse
+    import json
+    import os
+    from pathlib import Path
+    from circuit_task import verify,write_report
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--candidate',type=Path,required=True)
+    parser.add_argument('--output',type=Path,required=True)
+    parser.add_argument('--case')
+    parser.add_argument('--tests',type=Path,default=Path(__file__).resolve().parent)
+    args=parser.parse_args()
+    tests=args.tests.resolve();policy=json.loads((tests/'performance.json').read_text())
+    source=args.candidate.read_bytes();baseline=(tests/'baseline.va').read_bytes()
+    # Guard executes before circuit_task.verify's first simulation. Trusted
+    # policy/baseline defects are infrastructure, never a candidate zero.
+    def reject(status,reward,reason):
+        args.output.mkdir(parents=True,exist_ok=False)
+        write_report(args.output,dict(status=status,reward=reward,reason=reason,cases=[]))
+        raise SystemExit(0 if reward is not None else 2)
+    try:validate_admitted_policy(policy)
+    except OptimizationEvidenceError as exc:reject('infrastructure_error',None,str(exc))
+    try:validate_performance_source(baseline)
+    except OptimizationEvidenceError as exc:reject('infrastructure_error',None,'invalid trusted baseline: '+str(exc))
+    try:validate_performance_source(source)
+    except OptimizationEvidenceError as exc:reject('submission_contract_violation',0,str(exc))
+    selected=json.loads((tests/'cases.json').read_text())
+    performance_cases=[case for case in selected if case.get('performance')]
+    if len(performance_cases)!=1 or (args.case is not None and args.case!=performance_cases[0]['name']):
+        raise OptimizationEvidenceError('scored execution requires its unique performance case; functional selectors are not scored subsets')
+    def grade(rows,case,work):
+        functional=evaluate(rows,case,work)
+        if not functional.get('passed') or not case.get('performance'):return functional
+        result=run_paired_verification(source,baseline,case,evaluate,Path(work)/'paired',policy,
+                                      runner=lambda s,c,e,d:run_one_source(s,c,e,d,binary=os.environ.get('SPECTRE','spectre')))
+        # An invalid trusted baseline remains infrastructure, never a fast score.
+        if result['reward'] is None:
+            return dict(passed=False,status='infrastructure_error',reason=result.get('reason'),functional=functional)
+        return dict(passed=bool(result['reward']),functional=functional,
+                    performance_status=result['status'],performance=result.get('comparison'),
+                    failures=[] if result['reward'] else [result.get('reason','performance admission threshold not met')])
+    result=verify(args.candidate,args.output.absolute(),tests,grade,args.case)
+    print(json.dumps(dict(status=result['status'],reward=result['reward'])))
+    raise SystemExit(0 if result['reward'] is not None else 2)
