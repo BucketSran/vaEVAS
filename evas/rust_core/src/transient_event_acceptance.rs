@@ -243,7 +243,7 @@ mod tests {
                 .prepare_history_future(
                     &model,
                     &trajectory,
-                    &next,
+                    &mut next,
                     &calendar[controller.event..end],
                     &calendar[end..],
                 )
