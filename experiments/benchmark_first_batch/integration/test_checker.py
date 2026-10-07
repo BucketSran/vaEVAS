@@ -94,4 +94,11 @@ class CheckerTests(unittest.TestCase):
         for path in paths:
             for declaration in re.findall(r'\breal\s+([^;]+);',path.read_text()):
                 self.assertNotIn('current',re.findall(r'[A-Za-z_][A-Za-z0-9_]*',declaration),path)
+    def test_va_real_literals_have_required_leading_digit(self):
+        # Actual Spectre VACOMP-1795 rejected .9, -.9 and .5 in sampled-output.
+        paths=[]
+        for task in (ROOT/'benchmark/tasks').glob('integrate-*'):paths.extend(task.rglob('*.va'))
+        paths.extend((ROOT/'experiments/benchmark_first_batch/integration/mutants').rglob('*.va'))
+        for path in paths:
+            self.assertIsNone(re.search(r'(?<![A-Za-z0-9_.])\.[0-9]',path.read_text()),path)
 if __name__=='__main__':unittest.main()

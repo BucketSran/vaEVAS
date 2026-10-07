@@ -588,8 +588,8 @@ input signal_in,gain,clk,reset; output signal_out,clipped; electrical signal_in,
 real product,held; integer flag;
 analog begin
   @(initial_step) begin held=0; flag=0; end
-  @(cross(V(clk)-0.5,+1)) begin product=V(signal_in)*V(gain); held=min(.9,max(-.9,product)); flag=(abs(product)>.9); end
-  V(signal_out)<+(V(reset)>.5 ? 0 : held); V(clipped)<+(V(reset)>.5 ? 0 : flag);
+  @(cross(V(clk)-0.5,+1)) begin product=V(signal_in)*V(gain); held=min(0.9,max(-0.9,product)); flag=(abs(product)>0.9); end
+  V(signal_out)<+(V(reset)>0.5 ? 0 : held); V(clipped)<+(V(reset)>0.5 ? 0 : flag);
 end
 endmodule
 '''}}

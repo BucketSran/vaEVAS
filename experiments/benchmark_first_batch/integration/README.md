@@ -36,7 +36,7 @@ Makefile、公开回归和可执行自测入口，明确标为原创工程，没
 python3 -B -m unittest discover -s experiments/benchmark_first_batch/integration -p test_checker.py -v
 ```
 
-本次16项checker/合同测试通过。它们使用合成行数据，未执行VA，不能记作Spectre校准。
+本次17项checker/合同测试通过。它们使用合成行数据，未执行VA，不能记作Spectre校准。
 
 实际仿真使用协调者维护的 `circuit_task` 共享入口与现有circuit harness，
 全任务Spectre并发由协调者统一限制为4。任务tests/verify.py导入本checker，
@@ -67,3 +67,9 @@ Harbor oracle、Agentic主评和公开后端重评是另外的验收阶段，当
 AGC变量改名为gain_state，并同步公开起点、参考解、错版及生成器；I/Q仿真末尾保留
 完整最后周期。新增PWL单调性及本次保留名冲突检查，修改前两项失败，修改后16项本地测试通过。
 本修复尚需重新运行actual Spectre，原始失败记录必须保留，不能用静态检查覆盖。
+
+第二轮实际校准中，AGC sampled-output负例的三个条件均在编译时触发VACOMP-1795，
+因为其手写模型使用无前导零的 `.9`、`-.9`、`.5`。仅将这些字面量改为
+`0.9`、`-0.9`、`0.5`，保持该负例输出只在clk上升时更新的语义。新增静态回归
+修改前失败，修改后17项本地测试通过；checker和容差没有修改，实际编译与语义拒绝待重跑。
+原始失败job包括 `bf-e387a30b4aa74c628e68-burst-attack-and-release`，失败不得计为语义拒绝。
