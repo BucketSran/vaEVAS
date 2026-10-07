@@ -1,5 +1,4 @@
 `include "disciplines.vams"
-`include "constants.vams"
 // Original voltage-domain PLL stimulus oscillator. The same model must operate
 // across the whole tuning range; the baseline bounds every step at its maximum.
 module tuning_vco(control, out);
@@ -16,6 +15,6 @@ module tuning_vco(control, out);
     frequency=fmin+(fmax-fmin)*min(1.0,max(0.0,V(control)));
     phase=idtmod(frequency,0.0,1.0);
     $bound_step(1.0/(points_per_cycle*fmax));
-    V(out) <+ offset+amplitude*sin(2.0*`M_PI*phase);
+    V(out) <+ offset+amplitude*sin(6.28318530717958647692*phase);
   end
 endmodule

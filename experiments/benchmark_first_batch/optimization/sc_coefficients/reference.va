@@ -1,0 +1,35 @@
+`include "disciplines.vams"
+// Original four-stage clocked leaky low-pass model. Effective charge/settling
+// coefficients follow the actual elapsed sample interval and stage time scales.
+module clocked_filter(vin, clock, out);
+ input vin, clock;
+ output out;
+ electrical vin, clock, out;
+ parameter real tau0=20n from (0:inf);
+ parameter real tau1=40n from (0:inf);
+ parameter real tau2=80n from (0:inf);
+ parameter real tau3=160n from (0:inf);
+ parameter real rise=0.4n from (0:inf);
+ real state[0:3];
+ real alpha[0:3];
+ real elapsed, last_time;
+ analog begin
+  @(initial_step) begin
+   state[0]=0;state[1]=0;state[2]=0;state[3]=0;
+   last_time=0;
+  end
+  @(cross(V(clock)-0.5,+1)) begin
+  elapsed=max(0.0,$abstime-last_time);
+  alpha[0]=1.0-exp(-elapsed/tau0);
+  alpha[1]=1.0-exp(-elapsed/tau1);
+  alpha[2]=1.0-exp(-elapsed/tau2);
+  alpha[3]=1.0-exp(-elapsed/tau3);
+   state[3]=state[3]+alpha[3]*(state[2]-state[3]);
+   state[2]=state[2]+alpha[2]*(state[1]-state[2]);
+   state[1]=state[1]+alpha[1]*(state[0]-state[1]);
+   state[0]=state[0]+alpha[0]*(V(vin)-state[0]);
+   last_time=$abstime;
+  end
+  V(out) <+ transition(state[3],0,rise);
+ end
+endmodule

@@ -50,6 +50,65 @@ class Oracles(unittest.TestCase):
         self.assertEqual(module.expected_code(1/(4*1370000),ideal),255)
         self.assertEqual(module.expected_code(3/(4*1370000),ideal),0)
 
+    def test_dac_sampled_hold_fixture(self):
+        module,cases=oracle('sampled_dac')
+        case=dict(cases[1],stop=5e-7)
+        rows=[]
+        for i in range(10001):
+            t=case['stop']*i/10000
+            row=dict(time=t,clock=self.clock_voltage(t,case['period']))
+            for bit in range(12):
+                half=case['period']*(1<<bit)
+                phase=(t-half)%(2*half)
+                value=0.
+                if t>=half:
+                    if phase<.1e-9:value=phase/.1e-9
+                    elif phase<half:value=1.
+                    elif phase<half+.1e-9:value=1-(phase-half)/.1e-9
+                row['b'+str(bit)]=.72*value
+            sample_index=max(0,math.floor((t-case['first_cross']-.2e-9)/case['period']))
+            output_time=case['first_cross']+.2e-9+sample_index*case['period']
+            previous=max(0,sample_index-1)
+            fraction=min(1.,max(0.,(t-output_time)/.4e-9))
+            count=previous+(sample_index-previous)*fraction
+            row['out']=case['offset']+case['vref']*count/4095
+            rows.append(row)
+        self.assertTrue(module.evaluate(rows,case)['passed'])
+        wrong=[dict(row,out=case['offset']+.9*(row['out']-case['offset'])) for row in rows]
+        self.assertFalse(module.evaluate(wrong,case)['passed'])
+        wrong=[dict(row,out=case['offset']+case['vref']*int(row['time']/case['period'])/4095) for row in rows]
+        self.assertFalse(module.evaluate(wrong,case)['passed'])
+
+    @staticmethod
+    def clock_voltage(t,period):
+        if t<1e-9:return 0.
+        phase=(t-1e-9)%period
+        if phase<.1e-9:return phase/.1e-9
+        if phase<period/2:return 1.
+        if phase<period/2+.1e-9:return 1-(phase-period/2)/.1e-9
+        return 0.
+
+    def test_filter_simultaneous_recurrence_fixture(self):
+        module,cases=oracle('sc_coefficients')
+        case=dict(cases[1],stop=5e-7)
+        samples=module.recurrence_samples(case)
+        self.assertEqual([s[1] for s in samples[:3]],[0.,0.,0.])
+        self.assertGreater(samples[3][1],0.)
+        rows=[]
+        for i in range(10001):
+            t=case['stop']*i/10000
+            index=math.floor((t-case['first_cross'])/case['period'])
+            value=0.
+            if index>=0:
+                previous=0. if index==0 else samples[index-1][1]
+                fraction=min(1.,max(0.,(t-samples[index][0])/.4e-9))
+                value=previous+(samples[index][1]-previous)*fraction
+            rows.append(dict(time=t,clock=self.clock_voltage(t,case['period']),
+                             vin=.5+.45*math.sin(2*math.pi*case['sine_frequency']*t),out=value))
+        self.assertTrue(module.evaluate(rows,case)['passed'])
+        self.assertFalse(module.evaluate([dict(row,out=.9*row['out']) for row in rows],case)['passed'])
+        self.assertFalse(module.evaluate([dict(row,out=0.) for row in rows],case)['passed'])
+
     def test_supervisor_independent_edge_fixtures(self):
         module,cases=oracle('power_monitor')
         known=[[(25.0000075e-6,1),(80.0000025e-6,-1)],

@@ -1,0 +1,65 @@
+[
+  {
+    "name": "filter-throughput",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nCLK (clock 0) vsource type=pulse val0=0 val1=1 delay=1n rise=0.1n fall=0.1n width=4.9e-09 period=1e-08\nVIN (vin 0) vsource type=sine dc=0.5 ampl=0.45 freq=1370000\nDUT (vin clock out) clocked_filter tau0=2e-08 tau1=4e-08 tau2=8e-08 tau3=1.6e-07\nsimulatorOptions options reltol=1e-6 vabstol=1e-9 iabstol=1e-14\ntran tran stop=0.0001 errpreset=conservative\nsave clock vin out\n",
+    "stop": 0.0001,
+    "signals": [
+      "clock",
+      "vin",
+      "out"
+    ],
+    "taus": [
+      2e-08,
+      4e-08,
+      8e-08,
+      1.6e-07
+    ],
+    "period": 1e-08,
+    "first_cross": 1.05e-09,
+    "sine_frequency": 1370000,
+    "atol": 5e-05,
+    "performance": true
+  },
+  {
+    "name": "different-settling",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nCLK (clock 0) vsource type=pulse val0=0 val1=1 delay=1n rise=0.1n fall=0.1n width=5.9e-09 period=1.2e-08\nVIN (vin 0) vsource type=sine dc=0.5 ampl=0.45 freq=2700000\nDUT (vin clock out) clocked_filter tau0=1.5e-08 tau1=3e-08 tau2=5e-08 tau3=1e-07\nsimulatorOptions options reltol=1e-6 vabstol=1e-9 iabstol=1e-14\ntran tran stop=3e-06 errpreset=conservative\nsave clock vin out\n",
+    "stop": 3e-06,
+    "signals": [
+      "clock",
+      "vin",
+      "out"
+    ],
+    "taus": [
+      1.5e-08,
+      3e-08,
+      5e-08,
+      1e-07
+    ],
+    "period": 1.2e-08,
+    "first_cross": 1.05e-09,
+    "sine_frequency": 2700000,
+    "atol": 5e-05,
+    "performance": false
+  },
+  {
+    "name": "slow-input",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nCLK (clock 0) vsource type=pulse val0=0 val1=1 delay=1n rise=0.1n fall=0.1n width=9.9e-09 period=2e-08\nVIN (vin 0) vsource type=sine dc=0.5 ampl=0.45 freq=180000\nDUT (vin clock out) clocked_filter tau0=5e-08 tau1=1e-07 tau2=1.5e-07 tau3=2e-07\nsimulatorOptions options reltol=1e-6 vabstol=1e-9 iabstol=1e-14\ntran tran stop=3e-06 errpreset=conservative\nsave clock vin out\n",
+    "stop": 3e-06,
+    "signals": [
+      "clock",
+      "vin",
+      "out"
+    ],
+    "taus": [
+      5e-08,
+      1e-07,
+      1.5e-07,
+      2e-07
+    ],
+    "period": 2e-08,
+    "first_cross": 1.05e-09,
+    "sine_frequency": 180000,
+    "atol": 5e-05,
+    "performance": false
+  }
+]
