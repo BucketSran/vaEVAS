@@ -276,6 +276,42 @@ def run_paired_verification(candidate_source,baseline_source,case,evaluate,direc
     return finish('completed',int(result['comparison']['passed']))
 
 
+
+def canonical_case_sha256(case):
+    import json
+    return hashlib.sha256(json.dumps(case,sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest()
+
+
+def classify_case_packet(cases,policy,selector=None):
+    """Match trusted private packets to the declared complete task inventory.
+
+    --case is never a scoring shortcut. A single-condition tests packet may be
+    produced by trusted preparation, but its success does not mean task success.
+    """
+    if selector is not None:raise OptimizationEvidenceError('public case selectors cannot form scored task subsets')
+    inventory=policy.get('case_inventory')
+    if not isinstance(inventory,list) or not inventory:
+        raise OptimizationEvidenceError('missing declared full task case inventory')
+    names=[item.get('name') for item in inventory]
+    if any(not isinstance(name,str) or not name for name in names) or len(set(names))!=len(names):
+        raise OptimizationEvidenceError('invalid full task case names')
+    for item in inventory:
+        if type(item.get('performance')) is not bool or not re.fullmatch('[0-9a-f]{64}',str(item.get('case_sha256',''))):
+            raise OptimizationEvidenceError('invalid declared case identity')
+    if sum(item['performance'] for item in inventory)!=1:
+        raise OptimizationEvidenceError('full task must declare exactly one performance condition')
+    declared={item['name']:item for item in inventory}
+    actual=[case.get('name') for case in cases]
+    if not actual or len(set(actual))!=len(actual) or any(name not in declared for name in actual):
+        raise OptimizationEvidenceError('missing, duplicate or undeclared condition packet')
+    for case in cases:
+        item=declared[case['name']]
+        if canonical_case_sha256(case)!=item['case_sha256'] or bool(case.get('performance'))!=item['performance']:
+            raise OptimizationEvidenceError('condition packet differs from its declared task case')
+    if set(actual)==set(names):return 'full_task'
+    if len(actual)==1 and policy.get('allow_private_condition_packets') is True:return 'condition_packet'
+    raise OptimizationEvidenceError('scored packet must be the full task or one declared private condition')
+
 def performance_main(evaluate):
     """Prospective task entry: guard before any solve, functional + repeated score.
 
@@ -308,9 +344,8 @@ def performance_main(evaluate):
     try:validate_performance_source(source)
     except OptimizationEvidenceError as exc:reject('submission_contract_violation',0,str(exc))
     selected=json.loads((tests/'cases.json').read_text())
-    performance_cases=[case for case in selected if case.get('performance')]
-    if len(performance_cases)!=1 or (args.case is not None and args.case!=performance_cases[0]['name']):
-        raise OptimizationEvidenceError('scored execution requires its unique performance case; functional selectors are not scored subsets')
+    try:scope=classify_case_packet(selected,policy,args.case)
+    except OptimizationEvidenceError as exc:reject('infrastructure_error',None,str(exc))
     def grade(rows,case,work):
         functional=evaluate(rows,case,work)
         if not functional.get('passed') or not case.get('performance'):return functional
@@ -325,6 +360,10 @@ def performance_main(evaluate):
         return dict(passed=bool(result['reward']),functional=functional,
                     performance_status=result['status'],performance=result.get('comparison'),
                     failures=[] if result['reward'] else [result.get('reason','performance admission threshold not met')])
-    result=verify(args.candidate,args.output.absolute(),tests,grade,args.case)
-    print(json.dumps(dict(status=result['status'],reward=result['reward'])))
+    result=verify(args.candidate,args.output.absolute(),tests,grade,None)
+    result.update(verification_scope=scope,declared_full_task_cases=[item['name'] for item in policy['case_inventory']],
+                  checked_cases=[case['name'] for case in selected],
+                  full_task_success=(result['reward']==1) if scope=='full_task' else None)
+    write_report(args.output,result)
+    print(json.dumps(dict(status=result['status'],reward=result['reward'],verification_scope=scope,full_task_success=result['full_task_success'])))
     raise SystemExit(0 if result['reward'] is not None else 2)

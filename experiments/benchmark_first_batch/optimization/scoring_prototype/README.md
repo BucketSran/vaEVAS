@@ -13,8 +13,10 @@ merged stdout/stderr及PSF，不删除失败，不降低分母。baseline失败�
 候选失败为0；未变更源码必须功能过但性能不过。
 
 公共runtime负责初始各case记录；pair record另外绑定候选/基线角色、哈希、native
-版本/计时/accepted、独立波形与process耗时和机器负载。正式verify不允许只选非性能
-case形成计分子集。source guard还在每次pair启动前再检查，避免helper未接评分路径。
+版本/计时/accepted、独立波形与process耗时和机器负载。正式verify禁止公共--case选择器。policy必须声明完整case inventory（名字、canonical
+case hash、performance角色），全Harbor包须全部case且唯一performance过。受信准备器
+生成的单条件private packet可分别校准，但报告verification_scope=condition_packet、
+full_task_success=null；该包的一分只是本条件成功，不能当整题完成。source guard还在每次pair启动前再检查，避免helper未接评分路径。
 原型的25项本地测试中6项验证顺序/角色/失败/guard，使用合成时间，完全不是测速。
 
 VCO实际单次低频baseline PSF45,571,517B、reference910,872B。五对净波形约232.4MB，
