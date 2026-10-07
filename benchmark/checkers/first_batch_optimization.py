@@ -20,6 +20,13 @@ FORBIDDEN_LOG_OR_CONTROL_TASKS=frozenset({
     b'$info',b'$warning',b'$error',b'$fatal',
     b'$finish',b'$stop',b'$exit',b'$abort',
 })
+# Radix-format variants are still active output tasks even when a backend
+# accepts them as Verilog-AMS extensions. Their format strings can forge the
+# same native-looking lines as the unsuffixed task.
+FORBIDDEN_LOG_OR_CONTROL_TASKS=FORBIDDEN_LOG_OR_CONTROL_TASKS | frozenset(
+    base+suffix for base in (b'$display',b'$strobe',b'$write',b'$monitor',
+                            b'$fdisplay',b'$fstrobe',b'$fwrite',b'$fmonitor')
+    for suffix in (b'b',b'o',b'h'))
 UNITS={'s':1.,'ms':1e-3,'us':1e-6,'ns':1e-9}
 NUMBER=r'[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?'
 TIME_PAIR=rf'\s*CPU\s*=\s*({NUMBER})\s*(s|ms|us|ns),\s*elapsed\s*=\s*({NUMBER})\s*(s|ms|us|ns)[.,]'

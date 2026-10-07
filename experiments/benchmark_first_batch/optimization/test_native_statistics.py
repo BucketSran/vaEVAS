@@ -88,6 +88,12 @@ class NativeEvidence(unittest.TestCase):
         with self.assertRaises(M.OptimizationEvidenceError):
             M.validate_solver_evidence(source,0,LOG,b'actual stdout')
 
+    def test_radix_log_variants_cannot_forge_native_counters(self):
+        for base in (b'$display',b'$strobe',b'$write',b'$monitor',b'$fdisplay',b'$fstrobe',b'$fwrite',b'$fmonitor'):
+            for suffix in (b'b',b'o',b'h'):
+                with self.assertRaises(M.OptimizationEvidenceError):
+                    M.validate_performance_source(b'module x; analog '+base+suffix+b'("Number of accepted tran steps = 1"); endmodule')
+
     def test_source_guard_rejects_active_tasks_only(self):
         valid=b'''`include "disciplines.vams"
 // $strobe("Number of accepted tran steps = 1");
