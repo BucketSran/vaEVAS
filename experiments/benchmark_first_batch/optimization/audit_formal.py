@@ -194,9 +194,17 @@ def audit_one(directory, wrapper, entry, root, scratch):
         prepared = json.loads((directory / 'preparation.json').read_text())
         require(prepared['candidate']['candidate_sha256'] == manifest['candidate_sha256']
                 and prepared['criteria_sha256'] == package['criteria_sha256'], 'preparation identity differs')
+        require(digest(json.dumps(prepared['source_identity'],sort_keys=True).encode()) == package['criteria_sha256'],
+                'criteria digest differs from full preparation source inventory')
         packet = [c for c in prepared['cases'] if c['condition_id'] == wrapper['condition_id']]
         require(len(packet) == 1 and packet[0]['sha256'] == result['task_package_sha256'], 'prepared packet differs')
         task = root / 'benchmark/tasks' / entry['task_id']
+        for name in ('cases.json','instruction.md'):
+            path=task/'instruction.md' if name=='instruction.md' else task/'tests/cases.json'
+            require(prepared['source_identity'][name] == digest(path.read_bytes()),
+                    'current full task identity differs: ' + name)
+        require(prepared['source_identity']['test.sh'] == digest(archive.read('run/work/tests/test.sh')),
+                'frozen entrypoint identity differs')
         frozen = archive.json('run/work/tests/cases.json')
         current = json.loads((task / 'tests/cases.json').read_text())
         require(len(frozen) == 1 and frozen[0]['name'] == wrapper['condition_id'], 'invalid condition packet')
