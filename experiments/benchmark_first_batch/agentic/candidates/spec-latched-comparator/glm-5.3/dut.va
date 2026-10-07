@@ -1,0 +1,127 @@
+// latched_comparator : dynamic comparator behavioral model
+//
+// On the clk rising edge (vth crossing): outputs are cleared first; if rst is
+// low, the differential input d = vinp - vinn - voffset is latched. A nonzero d
+// produces a decision after the regeneration delay
+//     tbase + tau*ln(1 + vscale/(abs(d) + vfloor))
+// (larger overdrive -> faster decision). d = 0 produces no decision.
+// The latched sign and completion time are immune to input changes during the
+// same high phase. clk falling or rst rising immediately clears outp/outn/ready
+// and cancels a not-yet-completed decision. Outputs slew with rise/fall time tr
+// and no extra delay.
+//
+// Time reference: tel = idt(1) tracks elapsed simulation time. The decision
+// instant t_dec is compared against tel through an upward cross() event; an
+// inactive decision is parked far in the future (t_dec = 1e6 s).
+
+`include "disciplines.vams"
+`include "constants.vams"
+
+module latched_comparator(clk, rst, vinp, vinn, outp, outn, ready);
+
+  input  clk, rst, vinp, vinn;
+  output outp, outn, ready;
+  electrical clk, rst, vinp, vinn, outp, outn, ready;
+
+  // overridable parameters
+  parameter real vth     = 0.5;      // logic threshold (V)
+  parameter real voffset = 2.0e-3;   // input offset (V)
+  parameter real tbase   = 0.2e-9;   // base regeneration delay (s)
+  parameter real tau     = 0.25e-9;  // regeneration time constant (s)
+  parameter real vscale  = 50.0e-3;  // overdrive scale (V)
+  parameter real vfloor  = 1.0e-3;   // overdrive floor (V)
+  parameter real tr      = 50.0e-12; // output transition time (s)
+
+  real    d;        // latched differential input
+  real    tel;      // elapsed time (s)
+  real    t_dec;    // scheduled decision completion time (s)
+  real    outp_v;   // output target values
+  real    outn_v;
+  real    rdy_v;
+  integer pending;  // a decision is scheduled and not yet canceled
+  integer sgn;      // sign of the latched d (+1 / -1)
+
+  analog begin
+
+    // elapsed-time integrator, evaluated at every time point
+    tel = idt(1.0, 0.0);
+
+    // initial state: everything low, no decision pending
+    @(initial_step) begin
+      tel     = 0.0;
+      d       = 0.0;
+      t_dec   = 1.0e6;   // inactive marker (far outside simulation window)
+      outp_v  = 0.0;
+      outn_v  = 0.0;
+      rdy_v   = 0.0;
+      pending = 0;
+      sgn     = 0;
+    end
+
+    // ---------- clk rising edge: clear, then latch input if rst low ----------
+    @(cross(V(clk) - vth, 1)) begin
+      outp_v  = 0.0;
+      outn_v  = 0.0;
+      rdy_v   = 0.0;
+      pending = 0;
+      sgn     = 0;
+      t_dec   = 1.0e6;
+      if (V(rst) < vth) begin
+        d = V(vinp) - V(vinn) - voffset;
+        if (d > 0.0) begin
+          sgn     = 1;
+          t_dec   = tel + tbase + tau*ln(1.0 + vscale/(d + vfloor));
+          pending = 1;
+        end
+        if (d < 0.0) begin
+          sgn     = -1;
+          t_dec   = tel + tbase + tau*ln(1.0 + vscale/(vfloor - d));
+          pending = 1;
+        end
+      end
+    end
+
+    // ---------- clk falling edge: clear outputs, cancel pending decision ----------
+    @(cross(V(clk) - vth, -1)) begin
+      outp_v  = 0.0;
+      outn_v  = 0.0;
+      rdy_v   = 0.0;
+      pending = 0;
+      sgn     = 0;
+      t_dec   = 1.0e6;
+    end
+
+    // ---------- rst rising edge: clear outputs, cancel pending decision ----------
+    @(cross(V(rst) - vth, 1)) begin
+      outp_v  = 0.0;
+      outn_v  = 0.0;
+      rdy_v   = 0.0;
+      pending = 0;
+      sgn     = 0;
+      t_dec   = 1.0e6;
+    end
+
+    // ---------- scheduled regeneration completion ----------
+    @(cross(tel - t_dec, 1)) begin
+      if (pending > 0) begin
+        pending = 0;
+        t_dec   = 1.0e6;
+        if (sgn > 0) begin
+          outp_v = 1.0;
+          outn_v = 0.0;
+        end else begin
+          outp_v = 0.0;
+          outn_v = 1.0;
+        end
+        rdy_v = 1.0;
+      end
+    end
+
+    // ---------- output drivers: tr transition, zero extra delay ----------
+    V(outp)  <+ transition(outp_v, 0.0, tr, tr);
+    V(outn)  <+ transition(outn_v, 0.0, tr, tr);
+    V(ready) <+ transition(rdy_v,  0.0, tr, tr);
+
+  end
+
+endmodule

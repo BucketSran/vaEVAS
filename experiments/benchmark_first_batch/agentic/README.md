@@ -70,6 +70,12 @@ The runtime preserves started/finished receipts, refuses implicit reruns, and bo
 
 Harbor's command can exit zero even when the Trial has an exception. The audit returns exit 2 for a Trial exception or missing verifier result. It reports actual endpoint model IDs, transcript token fields, stop reasons, public actions, candidate/package identity, independent case results, and archive checksum verification. A graded score zero is a completed evaluation. `cost_usd: null` means billing is unknown; Pi's zero cost can reflect missing price metadata. Raw logs remain private; publish sanitized evidence separately.
 
+## Candidate source evidence
+
+Completed fixed pilot cells publish their untouched frozen candidate files under `candidates/<task_id>/<served_model>/`. Each compact manifest binds the bundle, every file hash and byte count, final package and criteria, original final job, candidate score, and agent-phase exception. Multi-file candidates retain their complete declared file set. A missing candidate or blocked credential scan is explicit; the exporter does not repair or supplement a submission.
+
+`export_candidates.py` requires `AGENTIC_OUTPUT`, `CIRCUIT_HARNESS` and the injected `BENCHMARK_MODEL_KEY` for known-token scanning. It verifies the existing frozen bundle and final package through the harness and scans original and exported bytes for known tokens and credential patterns before publication. It performs no model or solver request. Candidate source with a successful export is repository-contained. Raw transcripts, machine configuration and waveforms remain local-only; commercial model and Spectre access remain separate requirements for a full rerun.
+
 ## Increase a Pi output limit
 
 The first flash Trial ended with `stopReason=length`, before writing a candidate. Its three bash tools worked; no final solve occurred. Stock Harbor Pi's custom endpoint entry supplied only a model ID. A local transport fixture confirmed Pi's default serialized limit was 16384.
