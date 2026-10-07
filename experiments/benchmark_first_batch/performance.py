@@ -103,6 +103,7 @@ def paired_summary(records, manifest):
     if len(records) != len(manifest):
         raise ValueError("every declared attempt must have one record")
     grouped = {}
+    all_attempts = {}
     declared = {}
     if len({r["job_id"] for r in records}) != len(records):
         raise ValueError("a job cannot count as more than one attempt")
@@ -113,6 +114,7 @@ def paired_summary(records, manifest):
                 record["criteria_sha256"] != attempt["criteria_sha256"]):
             raise ValueError("declared frozen identity differs from execution")
         declared.setdefault(record["task_id"], []).append(attempt)
+        all_attempts.setdefault(record["task_id"], []).append((attempt, record))
         if attempt["phase"] == "measurement":
             grouped.setdefault(record["task_id"], []).append((attempt, record))
     expected = [("warmup" if pair == 0 else "measurement", pair, side)
@@ -122,6 +124,7 @@ def paired_summary(records, manifest):
             raise ValueError("one warm-up and five alternating pairs required in declared order")
     summaries = {}
     for task, group in grouped.items():
+        evidence = all_attempts[task]
         pairs = {}
         for attempt, record in group:
             side = attempt["side"]
@@ -133,14 +136,14 @@ def paired_summary(records, manifest):
             raise ValueError("at least five complete pairs required")
         identity_keys = ("condition_id", "netlist_sha256", "criteria_sha256", "native_host_identity_sha256")
         for key in identity_keys:
-            if len({record[key] for _, record in group}) != 1:
+            if len({record[key] for _, record in evidence}) != 1:
                 raise ValueError("paired experimental setup changed: " + key)
-        if len({tuple(record["solver_argv"]) for _, record in group}) != 1:
+        if len({tuple(record["solver_argv"]) for _, record in evidence}) != 1:
             raise ValueError("paired solver arguments changed")
-        if len({record["native_statistics"]["spectre_version"] for _, record in group}) != 1:
+        if len({record["native_statistics"]["spectre_version"] for _, record in evidence}) != 1:
             raise ValueError("paired simulator version changed")
         for side in ("baseline", "reference"):
-            if len({r["source_sha256"] for a, r in group if a["side"] == side}) != 1:
+            if len({r["source_sha256"] for a, r in evidence if a["side"] == side}) != 1:
                 raise ValueError("source changed between repetitions")
         metrics = {
             "intrinsic_cpu_s": lambda r: r["native_statistics"]["intrinsic_tran"]["cpu_s"],

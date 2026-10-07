@@ -41,6 +41,14 @@ class PairIdentityTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     paired_summary(records, self.manifest)
 
+    def test_unrelated_warmups_do_not_establish_a_paired_experiment(self):
+        for key in ("source_sha256", "native_host_identity_sha256", "netlist_sha256", "solver_argv"):
+            with self.subTest(key=key):
+                records = copy.deepcopy(self.records)
+                records[0][key] = ["other"] if key == "solver_argv" else "other"
+                with self.assertRaises(ValueError):
+                    paired_summary(records, self.manifest)
+
 
 if __name__ == "__main__":
     unittest.main()
