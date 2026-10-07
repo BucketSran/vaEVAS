@@ -71,7 +71,20 @@ def evaluate(rows, case, work=None):
             if et<t:
                 value=1 if d>0 else 0
         max_error=max(max_error,abs(row['enable']-value))
+    max_transition_error=0.
+    # Probe relative to each independently detected midpoint: poll quantization
+    # may shift an edge but cannot erase its specified finite transition.
+    for t,direction in observed:
+        for fraction in (.25,.75):
+            probe=t+(fraction-.5)*case['rise']
+            wanted=fraction if direction>0 else 1-fraction
+            j=max(0,min(len(rows)-2,bisect.bisect_right(times,probe)-1))
+            a,b=rows[j],rows[j+1]
+            actual=a['enable']+(b['enable']-a['enable'])*(probe-a['time'])/(b['time']-a['time'])
+            max_transition_error=max(max_transition_error,abs(actual-wanted))
+    if max_transition_error>case['voltage_atol']:
+        failures.append('incorrect finite output transition')
     if max_error>case['voltage_atol']:
         failures.append('incorrect enable plateau')
     return dict(passed=not failures,failures=failures,expected_edges=expected,
-                observed_edges=observed,max_plateau_error_v=max_error,saved_waveform_points=len(rows))
+                observed_edges=observed,max_plateau_error_v=max_error,max_transition_error_v=max_transition_error,saved_waveform_points=len(rows))

@@ -18,7 +18,9 @@
     "first_cross": 1.05e-09,
     "sine_frequency": 1370000,
     "atol": 5e-05,
-    "performance": true
+    "performance": true,
+    "delay": 0.0,
+    "rise": 4e-10
   },
   {
     "name": "different-settling",
@@ -39,7 +41,9 @@
     "first_cross": 1.05e-09,
     "sine_frequency": 2700000,
     "atol": 5e-05,
-    "performance": false
+    "performance": false,
+    "delay": 0.0,
+    "rise": 4e-10
   },
   {
     "name": "slow-input",
@@ -60,6 +64,8 @@
     "first_cross": 1.05e-09,
     "sine_frequency": 180000,
     "atol": 5e-05,
-    "performance": false
+    "performance": false,
+    "delay": 0.0,
+    "rise": 4e-10
   }
 ]

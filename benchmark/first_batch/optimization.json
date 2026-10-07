@@ -23,14 +23,15 @@
         "unchanged_bound",
         "undersample",
         "wrong_amplitude",
-        "wrong_phase"
+        "wrong_phase",
+        "reduced_resolution"
       ],
       "release_set": "spectre-extension-candidate",
       "status": {
         "harbor_materials": "not created; performance evidence gate first",
-        "row_criteria": "6 pure analytic family tests passed; not VA execution",
-        "spectre_functional": "v1 rejected by submission macro policy; changed literal constant awaits v2 execution",
-        "spectre_performance": "not measured",
+        "row_criteria": "7 pure analytic family tests passed; not VA execution",
+        "spectre_functional": "v2 both sides 3/3; strengthened transition oracle replay passed all actual waveforms",
+        "spectre_performance": "inconclusive; single concurrent round; repeated AB and limiter evidence pending",
         "spectre_semantic_negatives": "pending coordinator",
         "agentic": "pending",
         "open_source_regrading": "not validated"
@@ -52,14 +53,15 @@
         "no_hold",
         "unchanged_scan",
         "uniform_thresholds",
-        "wrong_skew_sign"
+        "wrong_skew_sign",
+        "no_transition"
       ],
       "release_set": "spectre-extension-candidate",
       "status": {
         "harbor_materials": "not created; performance evidence gate first",
-        "row_criteria": "6 pure analytic family tests passed; not VA execution",
-        "spectre_functional": "both sides 3/3 cases passed in first actual round",
-        "spectre_performance": "inconclusive; single concurrent pair, no hotspot profile",
+        "row_criteria": "7 pure analytic family tests passed; not VA execution",
+        "spectre_functional": "v2 both sides 3/3; strengthened transition oracle replay passed all actual waveforms",
+        "spectre_performance": "inconclusive; single concurrent round; repeated AB and limiter evidence pending",
         "spectre_semantic_negatives": "pending coordinator",
         "agentic": "pending",
         "open_source_regrading": "not validated"
@@ -81,14 +83,15 @@
         "no_hysteresis",
         "no_qualification",
         "stale_qualification",
-        "unchanged_poll"
+        "unchanged_poll",
+        "no_transition"
       ],
       "release_set": "spectre-extension-candidate",
       "status": {
         "harbor_materials": "not created; performance evidence gate first",
-        "row_criteria": "6 pure analytic family tests passed; not VA execution",
-        "spectre_functional": "pending coordinator",
-        "spectre_performance": "not measured",
+        "row_criteria": "7 pure analytic family tests passed; not VA execution",
+        "spectre_functional": "v2 reference 3/3 baseline 2/3; baseline floating time comparison repaired, new actual calibration pending",
+        "spectre_performance": "inadmissible before corrected baseline passes; old failed run excluded from performance claims",
         "spectre_semantic_negatives": "pending coordinator",
         "agentic": "pending",
         "open_source_regrading": "not validated"
@@ -110,14 +113,15 @@
         "no_hold",
         "unchanged_decode",
         "wrong_bit_weight",
-        "wrong_denominator"
+        "wrong_denominator",
+        "no_transition"
       ],
       "release_set": "spectre-extension-candidate",
       "status": {
         "harbor_materials": "not created; performance evidence gate first",
-        "row_criteria": "6 pure analytic family tests passed; not VA execution",
-        "spectre_functional": "pending coordinator",
-        "spectre_performance": "not measured",
+        "row_criteria": "7 pure analytic family tests passed; not VA execution",
+        "spectre_functional": "v2 both sides 3/3; strengthened transition oracle replay passed all actual waveforms",
+        "spectre_performance": "inconclusive; single concurrent round; no favorable signal, diagnose or replace",
         "spectre_semantic_negatives": "pending coordinator",
         "agentic": "pending",
         "open_source_regrading": "not validated"
@@ -139,19 +143,24 @@
         "forward_stage_update",
         "linearized_coefficient",
         "unchanged_coefficients",
-        "wrong_tau"
+        "wrong_tau",
+        "no_transition"
       ],
       "release_set": "spectre-extension-candidate",
       "status": {
         "harbor_materials": "not created; performance evidence gate first",
-        "row_criteria": "6 pure analytic family tests passed; not VA execution",
-        "spectre_functional": "pending coordinator",
-        "spectre_performance": "not measured",
+        "row_criteria": "7 pure analytic family tests passed; not VA execution",
+        "spectre_functional": "v2 both sides 3/3; strengthened transition oracle replay passed all actual waveforms",
+        "spectre_performance": "inconclusive; single concurrent round; small gap insufficient for task admission",
         "spectre_semantic_negatives": "pending coordinator",
         "agentic": "pending",
         "open_source_regrading": "not validated"
       }
     }
   ],
-  "evidence": "experiments/benchmark_first_batch/optimization/first_calibration.json"
+  "evidence": [
+    "experiments/benchmark_first_batch/optimization/first_calibration.json",
+    "experiments/benchmark_first_batch/optimization/second_calibration.json",
+    "experiments/benchmark_first_batch/optimization/second_waveform_replay.json"
+  ]
 }

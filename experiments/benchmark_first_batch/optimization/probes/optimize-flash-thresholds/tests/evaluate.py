@@ -36,11 +36,22 @@ def evaluate(rows, case, work=None):
     if len(edges)!=len(expected_edges) or any(abs(a-b)>1e-12 for a,b in zip(edges,expected_edges)):
         failures.append('clock edge count or timing mismatch')
     max_error=0.0
+    previous=0.0
     for t in expected_edges:
         value=expected_code(t,case)/255
+        # Preserve public delay and finite linear transition, including edges.
+        for fraction in (.25,.5,.75):
+            probe=t+case['delay']+fraction*case['rise']
+            if probe<=case['stop']:
+                wanted=previous+fraction*(value-previous)
+                max_error=max(max_error,abs(interpolate(rows,times,'code',probe)-wanted))
+        if case['delay']>0:
+            probe=t+case['delay']/2
+            max_error=max(max_error,abs(interpolate(rows,times,'code',probe)-previous))
         for dt in (2e-9,8e-9):
             if t+dt<=case['stop']:
                 max_error=max(max_error,abs(interpolate(rows,times,'code',t+dt)-value))
+        previous=value
     if abs(interpolate(rows,times,'code',5e-10))>case['atol']:
         failures.append('incorrect reset code')
     if max_error>case['atol']:

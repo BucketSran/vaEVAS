@@ -1,0 +1,1167 @@
+{
+  "kind": "observed_actual_calibration",
+  "performance_verdict": "inconclusive",
+  "limitations": [
+    "Single concurrent calibration round; not five alternating pairs.",
+    "No hot-path profile has been captured.",
+    "Rejected step counts absent from default logs remain null.",
+    "Compilation/queue/network/cache effects are not warmed or separated.",
+    "Aggregate audit elapsed duplicates CPU in observed Spectre logs; use intrinsic phase and independent process elapsed."
+  ],
+  "records": [
+    {
+      "archive_sha256": "c09f700b4bddbec126c17c98609478e869f63b74d8954e7d4e318f3438cc45a6",
+      "candidate_sha256": "1712fef760f4f4f61120191c4afd50b845e41d33d4c226569a61d91b656fe3ec",
+      "cases_sha256": "af159c3e66be6f0a33885343e33ffc37c52b6b3c4de7f9c41941d8e730e4e601",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "slew-and-clamps",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 1.6176261454820633,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 51239,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 1.19072,
+            "elapsed_s": 0.5965990000000001
+          },
+          "total_tran": {
+            "cpu_s": 1.19235,
+            "elapsed_s": 0.59723
+          },
+          "compilation_elapsed_s": 0.765,
+          "licensing_elapsed_s": 0.00394,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 3.0 %, 3.1 %, 1.9 %",
+          "waveform_sha256": "94d9e7f644401a633ee5d9ddbb75b2b29c8bf7511971a70e741c78aad639f0f2",
+          "waveform_rows": 51240,
+          "max_point_error_v": 0.0002861471920067027,
+          "max_interpolated_error_v": 0.0006456827069026561,
+          "expected_cycles": 257.877627118644
+        }
+      ],
+      "run_name": "optimize-vco-step-baseline-v2",
+      "archive_relative_path": "optimize-vco-step-baseline-v2/remote/bf-93725ec55d6e4184833d-slew-and-clamps/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "03f020f3f9562b2dc344cdd673279e50c2e6817ec52d567304e4ffb40242700c",
+      "candidate_sha256": "1712fef760f4f4f61120191c4afd50b845e41d33d4c226569a61d91b656fe3ec",
+      "cases_sha256": "8d65f5b85a5bf5082b3f258098702b97945a9708a1be83982d25d5d4401e2e21",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "low-band-end-to-end",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 6.72796443104744,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 512008,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 7.6495,
+            "elapsed_s": 5.69818
+          },
+          "total_tran": {
+            "cpu_s": 7.65112,
+            "elapsed_s": 5.69881
+          },
+          "compilation_elapsed_s": 0.781,
+          "licensing_elapsed_s": 0.00361,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 2.1 %, 2.9 %, 1.8 %",
+          "waveform_sha256": "0b46af567452f2c712d955f918e79d41004c3b6ce6842829a4df9acdb8106253",
+          "waveform_rows": 512009,
+          "max_point_error_v": 9.631540009991113e-11,
+          "max_interpolated_error_v": 1.5962740018693466e-08,
+          "expected_cycles": 159.20000000000002
+        }
+      ],
+      "run_name": "optimize-vco-step-baseline-v2",
+      "archive_relative_path": "optimize-vco-step-baseline-v2/remote/bf-9f8c557dc6f74f1cbcfd-low-band-end-to-end/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "51b2bf8aeb2256700581371faba18a935a954939fc5972e26f2abdf8d6cf1906",
+      "candidate_sha256": "1712fef760f4f4f61120191c4afd50b845e41d33d4c226569a61d91b656fe3ec",
+      "cases_sha256": "d188cfc802bf12af1b8f90629d6dbe55795faf83ffcd8d2911b78b2f2554af26",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "high-band",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 1.066886467859149,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 5134,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 0.12181,
+            "elapsed_s": 0.061177999999999996
+          },
+          "total_tran": {
+            "cpu_s": 0.123538,
+            "elapsed_s": 0.0619071
+          },
+          "compilation_elapsed_s": 0.762,
+          "licensing_elapsed_s": 0.00456,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 2.9 %, 3.1 %, 1.9 %",
+          "waveform_sha256": "a93ef31bf3c5a6c9c61432f76e27397aaff385a27644467ec77736c68774db4b",
+          "waveform_rows": 5135,
+          "max_point_error_v": 6.409317521161029e-13,
+          "max_interpolated_error_v": 0.0005585903525863328,
+          "expected_cycles": 77.624
+        }
+      ],
+      "run_name": "optimize-vco-step-baseline-v2",
+      "archive_relative_path": "optimize-vco-step-baseline-v2/remote/bf-fa47db1feca246d997b6-high-band/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "b59c6fd4677b1063a92649985a3697d5f381e83ec333b86ce175d424a8062de5",
+      "candidate_sha256": "8ef5cfedeb5bb8172c21868ddd5f7c602a7c51ede584232a7d3fb628dd85f866",
+      "cases_sha256": "af159c3e66be6f0a33885343e33ffc37c52b6b3c4de7f9c41941d8e730e4e601",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "slew-and-clamps",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 1.2170833349227905,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 16880,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 0.40522500000000006,
+            "elapsed_s": 0.20319700000000002
+          },
+          "total_tran": {
+            "cpu_s": 0.406964,
+            "elapsed_s": 0.203939
+          },
+          "compilation_elapsed_s": 0.766,
+          "licensing_elapsed_s": 0.00415,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 3.0 %, 3.1 %, 1.9 %",
+          "waveform_sha256": "6f6ec47323dd2313603d5447c235f82844a9f429c311f02f3738b881d6cf945b",
+          "waveform_rows": 16881,
+          "max_point_error_v": 0.00040910872470689696,
+          "max_interpolated_error_v": 0.0009271128559871222,
+          "expected_cycles": 257.877627118644
+        }
+      ],
+      "run_name": "optimize-vco-step-reference-v2",
+      "archive_relative_path": "optimize-vco-step-reference-v2/remote/bf-04a8cbe8a3b04c91b817-slew-and-clamps/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "7085c31c77285401d41a364b549fbd9e061049f046499dee9cbf26e080d337c7",
+      "candidate_sha256": "8ef5cfedeb5bb8172c21868ddd5f7c602a7c51ede584232a7d3fb628dd85f866",
+      "cases_sha256": "d188cfc802bf12af1b8f90629d6dbe55795faf83ffcd8d2911b78b2f2554af26",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "high-band",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 1.0666935909539461,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 4982,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 0.118353,
+            "elapsed_s": 0.0597169
+          },
+          "total_tran": {
+            "cpu_s": 0.12007899999999999,
+            "elapsed_s": 0.060446
+          },
+          "compilation_elapsed_s": 0.775,
+          "licensing_elapsed_s": 0.00414,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 3.0 %, 3.1 %, 1.9 %",
+          "waveform_sha256": "5dbabb1ffa49f113e01a091c84c14e056501f7567cb35d2a7c7e4233ac0b4078",
+          "waveform_rows": 4983,
+          "max_point_error_v": 2.7922109069322687e-13,
+          "max_interpolated_error_v": 0.0006020325375708513,
+          "expected_cycles": 77.624
+        }
+      ],
+      "run_name": "optimize-vco-step-reference-v2",
+      "archive_relative_path": "optimize-vco-step-reference-v2/remote/bf-3b3d4fdb517d4a63949c-high-band/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "2bb496d62f28c325e7d42f80c3c4684924c4beab07a27d69c8bff227746c91df",
+      "candidate_sha256": "8ef5cfedeb5bb8172c21868ddd5f7c602a7c51ede584232a7d3fb628dd85f866",
+      "cases_sha256": "8d65f5b85a5bf5082b3f258098702b97945a9708a1be83982d25d5d4401e2e21",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "low-band-end-to-end",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 1.1165809482336044,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 10203,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 0.23742400000000002,
+            "elapsed_s": 0.119187
+          },
+          "total_tran": {
+            "cpu_s": 0.239059,
+            "elapsed_s": 0.119826
+          },
+          "compilation_elapsed_s": 0.762,
+          "licensing_elapsed_s": 0.00393,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 2.1 %, 2.9 %, 1.8 %",
+          "waveform_sha256": "935a40a2501fa3cffd418dddcb380fd5805ebc0b71c4ac229e891e3dc1ead6f2",
+          "waveform_rows": 10204,
+          "max_point_error_v": 4.96269692007445e-13,
+          "max_interpolated_error_v": 0.0006021238869009932,
+          "expected_cycles": 159.20000000000002
+        }
+      ],
+      "run_name": "optimize-vco-step-reference-v2",
+      "archive_relative_path": "optimize-vco-step-reference-v2/remote/bf-aa10cd773c6d4d63bb43-low-band-end-to-end/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "9275dd38d07817479751c7636918c68fef51f870fe57c8559f8d8f97fe45f40d",
+      "candidate_sha256": "c35882d198a41c80a81257711c4e8f9ab8f9c83d3421c6472d376ca2d79663a6",
+      "cases_sha256": "ea28b5aa92039cd9b32d4fc590382b9cbf6699c987eba57d3db5c9618f6eca78",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "positive-skew",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 1.4674235600978136,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 1635,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 0.06193,
+            "elapsed_s": 0.031195900000000002
+          },
+          "total_tran": {
+            "cpu_s": 0.06370100000000001,
+            "elapsed_s": 0.031971900000000004
+          },
+          "compilation_elapsed_s": 0.777,
+          "licensing_elapsed_s": 0.806,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 3.0 %, 3.1 %, 1.9 %",
+          "waveform_sha256": "114ff043401c659c4a978b788afdb7dfb112800798f2b4c058d7fcf6214fed59",
+          "waveform_rows": 1636,
+          "max_code_voltage_error": 5.551115123125783e-17,
+          "expected_samples": 50,
+          "observed_clock_edges": 50
+        }
+      ],
+      "run_name": "optimize-flash-thresholds-baseline-v2",
+      "archive_relative_path": "optimize-flash-thresholds-baseline-v2/remote/bf-2f596eac78364fc3a525-positive-skew/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "ee2f2e533b964bed3310a55957b0b0ce8deb855b34299c7ce65c9597ea7b60a4",
+      "candidate_sha256": "c35882d198a41c80a81257711c4e8f9ab8f9c83d3421c6472d376ca2d79663a6",
+      "cases_sha256": "84ed0e1f44b737f54f1ecbbfa88f981620e4e70f57fadfc4487458afe3bb8363",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "negative-skew",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 1.0659387540072203,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 1635,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 0.064202,
+            "elapsed_s": 0.0324841
+          },
+          "total_tran": {
+            "cpu_s": 0.06594,
+            "elapsed_s": 0.033226
+          },
+          "compilation_elapsed_s": 0.793,
+          "licensing_elapsed_s": 0.004110000000000001,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 2.9 %, 3.1 %, 1.9 %",
+          "waveform_sha256": "3c39cc36a55be7b45e413033f0dd23b3c65aa84cfec06fc01c4d2310ce817e17",
+          "waveform_rows": 1636,
+          "max_code_voltage_error": 1.1102230246251565e-16,
+          "expected_samples": 50,
+          "observed_clock_edges": 50
+        }
+      ],
+      "run_name": "optimize-flash-thresholds-baseline-v2",
+      "archive_relative_path": "optimize-flash-thresholds-baseline-v2/remote/bf-c075e5863a0b4f1d8f46-negative-skew/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "f8a7d0c0a3b150ffcd57dda6b2b6626f070c8ae2a738efda7134f6e369d54f07",
+      "candidate_sha256": "c35882d198a41c80a81257711c4e8f9ab8f9c83d3421c6472d376ca2d79663a6",
+      "cases_sha256": "af98f9621c97a848e6d8fee113dd1a85d72609d4e1290a3a5b1f0b7c002056f0",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "bank-throughput",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 3.3721150774508715,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 152093,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 4.33414,
+            "elapsed_s": 2.32124
+          },
+          "total_tran": {
+            "cpu_s": 4.33607,
+            "elapsed_s": 2.32217
+          },
+          "compilation_elapsed_s": 0.778,
+          "licensing_elapsed_s": 0.0053,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 2.1 %, 2.9 %, 1.8 %",
+          "waveform_sha256": "58f4bea8449bee66b7ddf3207e9b7e9e3d05b2ba72d0cab3412a5b6dae13a2cf",
+          "waveform_rows": 152094,
+          "max_code_voltage_error": 5.551115123125783e-17,
+          "expected_samples": 10000,
+          "observed_clock_edges": 10000
+        }
+      ],
+      "run_name": "optimize-flash-thresholds-baseline-v2",
+      "archive_relative_path": "optimize-flash-thresholds-baseline-v2/remote/bf-cea81e4a6da447cb87ce-bank-throughput/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "87b3452d676292e7ce3abdf90cb9c37132c3bec8df541ae6ab682b41ef4d0861",
+      "candidate_sha256": "699ddeac4e87a2612597de81d834d728215354b145ee5d86d49e5c56e26e0b4b",
+      "cases_sha256": "af98f9621c97a848e6d8fee113dd1a85d72609d4e1290a3a5b1f0b7c002056f0",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "bank-throughput",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 3.422440528869629,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 152093,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 3.60912,
+            "elapsed_s": 1.99645
+          },
+          "total_tran": {
+            "cpu_s": 3.6099,
+            "elapsed_s": 1.99723
+          },
+          "compilation_elapsed_s": 1.16,
+          "licensing_elapsed_s": 0.00423,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 2.8 %, 3.0 %, 1.9 %",
+          "waveform_sha256": "3ade52845a9ae206682ac6f9cbf81e5cfd64b7e3dd69ebbae899ab4399895e9f",
+          "waveform_rows": 152094,
+          "max_code_voltage_error": 5.551115123125783e-17,
+          "expected_samples": 10000,
+          "observed_clock_edges": 10000
+        }
+      ],
+      "run_name": "optimize-flash-thresholds-reference-v2",
+      "archive_relative_path": "optimize-flash-thresholds-reference-v2/remote/bf-23a0987092b246bfbc35-bank-throughput/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "40769d6ee8eeb82f02472ae3f1690cecac2e7e7290469d0fac2ff3bfef7040f3",
+      "candidate_sha256": "699ddeac4e87a2612597de81d834d728215354b145ee5d86d49e5c56e26e0b4b",
+      "cases_sha256": "84ed0e1f44b737f54f1ecbbfa88f981620e4e70f57fadfc4487458afe3bb8363",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "negative-skew",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 1.417159367352724,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 1635,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 0.053964,
+            "elapsed_s": 0.027153
+          },
+          "total_tran": {
+            "cpu_s": 0.055761000000000005,
+            "elapsed_s": 0.02795
+          },
+          "compilation_elapsed_s": 1.15,
+          "licensing_elapsed_s": 0.00596,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 3.0 %, 3.1 %, 1.9 %",
+          "waveform_sha256": "a6decbebf9b21590b78e3dfb1b1976b4bdc2026384a396666c14723395255924",
+          "waveform_rows": 1636,
+          "max_code_voltage_error": 1.1102230246251565e-16,
+          "expected_samples": 50,
+          "observed_clock_edges": 50
+        }
+      ],
+      "run_name": "optimize-flash-thresholds-reference-v2",
+      "archive_relative_path": "optimize-flash-thresholds-reference-v2/remote/bf-9943921bcf5f472c9875-negative-skew/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "3dc392308b8d696868e6d9ce45cd868f8ea2d8869badfcfd066dbe37ba00df59",
+      "candidate_sha256": "699ddeac4e87a2612597de81d834d728215354b145ee5d86d49e5c56e26e0b4b",
+      "cases_sha256": "ea28b5aa92039cd9b32d4fc590382b9cbf6699c987eba57d3db5c9618f6eca78",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "positive-skew",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 1.4175318330526352,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 1635,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 0.055861,
+            "elapsed_s": 0.028087900000000002
+          },
+          "total_tran": {
+            "cpu_s": 0.057539,
+            "elapsed_s": 0.0287702
+          },
+          "compilation_elapsed_s": 1.16,
+          "licensing_elapsed_s": 0.00405,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 2.9 %, 3.0 %, 1.9 %",
+          "waveform_sha256": "8bb5df7c6fa3f46e5d705a934316c8c68f6c6f86246e0d955df921561847d835",
+          "waveform_rows": 1636,
+          "max_code_voltage_error": 5.551115123125783e-17,
+          "expected_samples": 50,
+          "observed_clock_edges": 50
+        }
+      ],
+      "run_name": "optimize-flash-thresholds-reference-v2",
+      "archive_relative_path": "optimize-flash-thresholds-reference-v2/remote/bf-a8c66c258fd6423ba286-positive-skew/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "c6b6c87e76d38b3dd641bba04e8cc666c942d3140c9d70028b12a6465e684720",
+      "candidate_sha256": "a2978eafe48850c9b95326f3b911967fba61a04fe612793ccd404f1d541597c9",
+      "cases_sha256": "f3439dd164601ba7c46e89607a40612e3729fc3601d04244963ba95b73cff892",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "lower-supply-domain",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 2.1179265454411507,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 9995,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 0.453228,
+            "elapsed_s": 0.227196
+          },
+          "total_tran": {
+            "cpu_s": 0.455068,
+            "elapsed_s": 0.22803800000000002
+          },
+          "compilation_elapsed_s": 1.22,
+          "licensing_elapsed_s": 0.806,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 4.5 %, 3.4 %, 2.1 %",
+          "waveform_sha256": "3dfcae47193c9ffee3217ff05885b14a445da4a4bb704089fe1dec80f281d7ff",
+          "waveform_rows": 9996,
+          "expected_samples": 500,
+          "observed_clock_edges": 500,
+          "max_output_error_v": 5.551115123125783e-17
+        }
+      ],
+      "run_name": "optimize-sampled-dac-baseline-v2",
+      "archive_relative_path": "optimize-sampled-dac-baseline-v2/remote/bf-3678019f36f74a148eae-lower-supply-domain/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "36576060af7fbd7e2e07e1bd2a23f4bb78b8cb09b7aa34d1cf38afd17bf15cfb",
+      "candidate_sha256": "a2978eafe48850c9b95326f3b911967fba61a04fe612793ccd404f1d541597c9",
+      "cases_sha256": "64162c84a66b0191508e19f830fc6e991121a814c438defecc07dd351731952f",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "binary-counter-throughput",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 5.977203536778688,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 199995,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 5.97698,
+            "elapsed_s": 4.4758
+          },
+          "total_tran": {
+            "cpu_s": 5.9777,
+            "elapsed_s": 4.47651
+          },
+          "compilation_elapsed_s": 1.25,
+          "licensing_elapsed_s": 0.0037300000000000002,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 3.0 %, 3.1 %, 1.9 %",
+          "waveform_sha256": "dafb4c17a9a0305d9cbc52e3282b585f4cd1672e660ca0d845a6e6164d36f23f",
+          "waveform_rows": 199996,
+          "expected_samples": 10000,
+          "observed_clock_edges": 10000,
+          "max_output_error_v": 4.440892098500626e-16
+        }
+      ],
+      "run_name": "optimize-sampled-dac-baseline-v2",
+      "archive_relative_path": "optimize-sampled-dac-baseline-v2/remote/bf-9ce314850bb84cf08119-binary-counter-throughput/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "f446731a16bb8d5fbf16530bf4ba9e148ee1e6331261eade5cec45da35c1421a",
+      "candidate_sha256": "a2978eafe48850c9b95326f3b911967fba61a04fe612793ccd404f1d541597c9",
+      "cases_sha256": "2154a4fa5108f4b260c4ea73c9ec7b8ef72f20f61fd26c5d7dcbe3a55a9beb36",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "bipolar-output-range",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 1.7180168759077787,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 9995,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 0.442716,
+            "elapsed_s": 0.221869
+          },
+          "total_tran": {
+            "cpu_s": 0.44341600000000003,
+            "elapsed_s": 0.222561
+          },
+          "compilation_elapsed_s": 1.22,
+          "licensing_elapsed_s": 0.00379,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 4.4 %, 3.5 %, 2.1 %",
+          "waveform_sha256": "2be9a82f6cea5e2c93ba714d6c971c2850db1a613eb0d557073ad05359e1f31a",
+          "waveform_rows": 9996,
+          "expected_samples": 500,
+          "observed_clock_edges": 500,
+          "max_output_error_v": 4.440892098500626e-16
+        }
+      ],
+      "run_name": "optimize-sampled-dac-baseline-v2",
+      "archive_relative_path": "optimize-sampled-dac-baseline-v2/remote/bf-e2948dc0574e4e4cb5ee-bipolar-output-range/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "82b062fc986bb0bb125726130e343a47d7bf3027ec7afcb4ec8be55805e54f25",
+      "candidate_sha256": "380ac52028a040629cbdfff83114206e48f366e8b3b0afcf1f33ea56bddc489b",
+      "cases_sha256": "2154a4fa5108f4b260c4ea73c9ec7b8ef72f20f61fd26c5d7dcbe3a55a9beb36",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "bipolar-output-range",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 1.7184061855077744,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 9995,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 0.457257,
+            "elapsed_s": 0.229332
+          },
+          "total_tran": {
+            "cpu_s": 0.459094,
+            "elapsed_s": 0.23017400000000002
+          },
+          "compilation_elapsed_s": 1.22,
+          "licensing_elapsed_s": 0.00405,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 4.4 %, 3.5 %, 2.1 %",
+          "waveform_sha256": "c8f267a953c9bb83d42cbe489ed62a03bba4ab23bb5506286ca1abf79b37d904",
+          "waveform_rows": 9996,
+          "expected_samples": 500,
+          "observed_clock_edges": 500,
+          "max_output_error_v": 4.440892098500626e-16
+        }
+      ],
+      "run_name": "optimize-sampled-dac-reference-v2",
+      "archive_relative_path": "optimize-sampled-dac-reference-v2/remote/bf-64a531037daa460c9e73-bipolar-output-range/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "6ef4931a10c67a025bbc094eef68b8bdd4e7da76dd68604bf6be2704c7039dde",
+      "candidate_sha256": "380ac52028a040629cbdfff83114206e48f366e8b3b0afcf1f33ea56bddc489b",
+      "cases_sha256": "f3439dd164601ba7c46e89607a40612e3729fc3601d04244963ba95b73cff892",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "lower-supply-domain",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 2.0691200345754623,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 9995,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 0.452443,
+            "elapsed_s": 0.22670900000000002
+          },
+          "total_tran": {
+            "cpu_s": 0.454171,
+            "elapsed_s": 0.22744
+          },
+          "compilation_elapsed_s": 1.19,
+          "licensing_elapsed_s": 0.806,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 4.5 %, 3.5 %, 2.1 %",
+          "waveform_sha256": "5d459a324555ee81dbc19d5b59cee31faaf60ab8849c8fdfe51151970d4849d9",
+          "waveform_rows": 9996,
+          "expected_samples": 500,
+          "observed_clock_edges": 500,
+          "max_output_error_v": 5.551115123125783e-17
+        }
+      ],
+      "run_name": "optimize-sampled-dac-reference-v2",
+      "archive_relative_path": "optimize-sampled-dac-reference-v2/remote/bf-ad746437bee14aad922c-lower-supply-domain/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "832ff1af9f11dbcd9744445fc9421b5011af573e17ae60db30c20bb23c83fc63",
+      "candidate_sha256": "380ac52028a040629cbdfff83114206e48f366e8b3b0afcf1f33ea56bddc489b",
+      "cases_sha256": "64162c84a66b0191508e19f830fc6e991121a814c438defecc07dd351731952f",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "binary-counter-throughput",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 5.977920634672046,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 199995,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 6.05513,
+            "elapsed_s": 4.48533
+          },
+          "total_tran": {
+            "cpu_s": 6.05595,
+            "elapsed_s": 4.48615
+          },
+          "compilation_elapsed_s": 1.2,
+          "licensing_elapsed_s": 0.0046,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 3.3 %, 3.1 %, 2.0 %",
+          "waveform_sha256": "ee8d4d818ff2737c666d1453075e94f2cb5c1a10ed25bb751f61ce2c8aa93b7f",
+          "waveform_rows": 199996,
+          "expected_samples": 10000,
+          "observed_clock_edges": 10000,
+          "max_output_error_v": 4.440892098500626e-16
+        }
+      ],
+      "run_name": "optimize-sampled-dac-reference-v2",
+      "archive_relative_path": "optimize-sampled-dac-reference-v2/remote/bf-f2e831c9578d421c8f18-binary-counter-throughput/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "cb83bba78b1d0288218bcd7d215e3dbf6415895d27ef8639fd6e88c418144ff7",
+      "candidate_sha256": "b014b01257937917f77a8226fbe87653979dad5f5248bed182c01483f336322c",
+      "cases_sha256": "71635365581aa5c33c9f6a5a3174a86b33105777829bb2f6f62a3a4a7ddc60c0",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "slow-input",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 1.4674335699528456,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 2825,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 0.081055,
+            "elapsed_s": 0.040302
+          },
+          "total_tran": {
+            "cpu_s": 0.081712,
+            "elapsed_s": 0.0409541
+          },
+          "compilation_elapsed_s": 1.19,
+          "licensing_elapsed_s": 0.00366,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 4.4 %, 3.5 %, 2.1 %",
+          "waveform_sha256": "18960b66cb7a39efdae82af4427d98450d4e5e5975992be8c1b7f00389e4536c",
+          "waveform_rows": 2826,
+          "expected_samples": 150,
+          "observed_clock_edges": 150,
+          "max_output_error_v": 3.0391494876269576e-11
+        }
+      ],
+      "run_name": "optimize-sc-coefficients-baseline-v2",
+      "archive_relative_path": "optimize-sc-coefficients-baseline-v2/remote/bf-008e2ded4d0949c9a3b6-slow-input/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "5c400b3a6f2b74d324fec46f22b7f55b37d224d9aff2bdf6c43ecb6ed7b6e9cc",
+      "candidate_sha256": "b014b01257937917f77a8226fbe87653979dad5f5248bed182c01483f336322c",
+      "cases_sha256": "1f3f82758a9d939bfff61a221b683f919da7a6764fe1216f1f9149112532428e",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "different-settling",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 1.5679669752717018,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 3995,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 0.111511,
+            "elapsed_s": 0.055809
+          },
+          "total_tran": {
+            "cpu_s": 0.113262,
+            "elapsed_s": 0.0565631
+          },
+          "compilation_elapsed_s": 1.24,
+          "licensing_elapsed_s": 0.00419,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 4.5 %, 3.5 %, 2.1 %",
+          "waveform_sha256": "f15a78a797ac62f4b5689d0e26c190c49bd1628fbca909f79f0573fdb0c1f3aa",
+          "waveform_rows": 3996,
+          "expected_samples": 250,
+          "observed_clock_edges": 250,
+          "max_output_error_v": 1.1589751380824964e-10
+        }
+      ],
+      "run_name": "optimize-sc-coefficients-baseline-v2",
+      "archive_relative_path": "optimize-sc-coefficients-baseline-v2/remote/bf-33e6ed060e14430395e6-different-settling/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "1a58f8978eae1a0e21de6efd7afc32495f543d4a703b3254d1ec0f42ba2df79f",
+      "candidate_sha256": "b014b01257937917f77a8226fbe87653979dad5f5248bed182c01483f336322c",
+      "cases_sha256": "633ed9cf9ad7618274f706f32f8a40c7b5ec756bb8cccd1ecdf91de44419aee4",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "filter-throughput",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 3.5702979378402233,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 159995,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 3.68074,
+            "elapsed_s": 2.10226
+          },
+          "total_tran": {
+            "cpu_s": 3.68252,
+            "elapsed_s": 2.10304
+          },
+          "compilation_elapsed_s": 1.2,
+          "licensing_elapsed_s": 0.00425,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 3.8 %, 3.2 %, 2.0 %",
+          "waveform_sha256": "d8748c66a09fb590249253a6f457dd1835c5274009887a0ce10fd4f6a42bc124",
+          "waveform_rows": 159996,
+          "expected_samples": 10000,
+          "observed_clock_edges": 10000,
+          "max_output_error_v": 6.92014223702131e-11
+        }
+      ],
+      "run_name": "optimize-sc-coefficients-baseline-v2",
+      "archive_relative_path": "optimize-sc-coefficients-baseline-v2/remote/bf-477c6c27fc3949d4b92a-filter-throughput/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "a3013cb84a406d7ee70678ccc73296900407788dda2f5d4ae9049947c2385f01",
+      "candidate_sha256": "2af2e1ed7ca0d1f6700835a14f6040850e0db64edc784bbea35b7e88c23132b2",
+      "cases_sha256": "1f3f82758a9d939bfff61a221b683f919da7a6764fe1216f1f9149112532428e",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "different-settling",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 1.4674766398966312,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 3995,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 0.10739900000000001,
+            "elapsed_s": 0.0537021
+          },
+          "total_tran": {
+            "cpu_s": 0.108075,
+            "elapsed_s": 0.05437210000000001
+          },
+          "compilation_elapsed_s": 1.16,
+          "licensing_elapsed_s": 0.00372,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 3.6 %, 3.4 %, 2.1 %",
+          "waveform_sha256": "231845ff7d43a4f8a2ac7fd3d400eb8ebbe545efd2a8a54a5ae06e1773272fb6",
+          "waveform_rows": 3996,
+          "expected_samples": 250,
+          "observed_clock_edges": 250,
+          "max_output_error_v": 1.1589751380824964e-10
+        }
+      ],
+      "run_name": "optimize-sc-coefficients-reference-v2",
+      "archive_relative_path": "optimize-sc-coefficients-reference-v2/remote/bf-0be29885626d4ca2adf1-different-settling/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "475633603f09035da3142e2e343c583462036038175099081932d2d3fdb6e1b7",
+      "candidate_sha256": "2af2e1ed7ca0d1f6700835a14f6040850e0db64edc784bbea35b7e88c23132b2",
+      "cases_sha256": "633ed9cf9ad7618274f706f32f8a40c7b5ec756bb8cccd1ecdf91de44419aee4",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "filter-throughput",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 3.4721084404736757,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 159995,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 3.59383,
+            "elapsed_s": 2.04667
+          },
+          "total_tran": {
+            "cpu_s": 3.5955,
+            "elapsed_s": 2.04736
+          },
+          "compilation_elapsed_s": 1.18,
+          "licensing_elapsed_s": 0.00377,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 4.5 %, 3.5 %, 2.2 %",
+          "waveform_sha256": "444bd0b371021af1b94546d1379703b1df607886289290a95fb9691d1f445b1d",
+          "waveform_rows": 159996,
+          "expected_samples": 10000,
+          "observed_clock_edges": 10000,
+          "max_output_error_v": 6.92014223702131e-11
+        }
+      ],
+      "run_name": "optimize-sc-coefficients-reference-v2",
+      "archive_relative_path": "optimize-sc-coefficients-reference-v2/remote/bf-f07f0fb0103242a69566-filter-throughput/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "86b49fb498d7e1e77bcd17103d78b4181a22eeadf5a9be8bde713a3c480b9440",
+      "candidate_sha256": "2af2e1ed7ca0d1f6700835a14f6040850e0db64edc784bbea35b7e88c23132b2",
+      "cases_sha256": "71635365581aa5c33c9f6a5a3174a86b33105777829bb2f6f62a3a4a7ddc60c0",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "slow-input",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 1.9693822246044874,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 2825,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 0.079072,
+            "elapsed_s": 0.039346200000000005
+          },
+          "total_tran": {
+            "cpu_s": 0.07972499999999999,
+            "elapsed_s": 0.039994
+          },
+          "compilation_elapsed_s": 1.18,
+          "licensing_elapsed_s": 1.01,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 3.7 %, 3.4 %, 2.2 %",
+          "waveform_sha256": "82acfb8889ff1eb8b78a3c72975cbde93c9f21e8e729b0b6de4d1ac2fc3f9512",
+          "waveform_rows": 2826,
+          "expected_samples": 150,
+          "observed_clock_edges": 150,
+          "max_output_error_v": 3.0391494876269576e-11
+        }
+      ],
+      "run_name": "optimize-sc-coefficients-reference-v2",
+      "archive_relative_path": "optimize-sc-coefficients-reference-v2/remote/bf-ff65e7d504cc4c00b68f-slow-input/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "846605a15542b560ea455e0dff2abd65113aa1ba91ea495cf0d553a59722d452",
+      "candidate_sha256": "2d8ef59f3ce8f6fbb3756a2af399b96fea1d6b786b7cdb439daafbd2638629df",
+      "cases_sha256": "d5623a8e7fbff0edbaad4e00e719900db99a3441b73e294bac532cd1767db08c",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "short-glitch-and-recovery",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 1.617333259433508,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 20122,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 0.490906,
+            "elapsed_s": 0.245957
+          },
+          "total_tran": {
+            "cpu_s": 0.491659,
+            "elapsed_s": 0.246702
+          },
+          "compilation_elapsed_s": 1.14,
+          "licensing_elapsed_s": 0.00432,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 3.0 %, 3.1 %, 1.9 %",
+          "waveform_sha256": "d0321a7e1d9319f190eea6623c0eb0201ab48f95d7262cd97ac1d617d8379197",
+          "waveform_rows": 20123
+        }
+      ],
+      "run_name": "optimize-power-monitor-baseline-v2",
+      "archive_relative_path": "optimize-power-monitor-baseline-v2/remote/bf-1f9d2a2e35744f8da323-short-glitch-and-recovery/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "45a40b99f4e970d0eacc1298045328c5619ca25635513398750ab3ccfb8131b4",
+      "candidate_sha256": "2d8ef59f3ce8f6fbb3756a2af399b96fea1d6b786b7cdb439daafbd2638629df",
+      "cases_sha256": "41af4aa2e323731aa2c19ecc1d65926ef67b50ccde91a669c33628f1a77ab120",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "initial-high-hysteresis",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 1.5668203718960285,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 15064,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 0.360899,
+            "elapsed_s": 0.18084200000000003
+          },
+          "total_tran": {
+            "cpu_s": 0.361568,
+            "elapsed_s": 0.181505
+          },
+          "compilation_elapsed_s": 1.13,
+          "licensing_elapsed_s": 0.0041600000000000005,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 2.9 %, 3.0 %, 1.9 %",
+          "waveform_sha256": "58ebae1494996c6ee8fd8e751f3cf99095472e6b31fb9d25b8a067a50cbb8d8d",
+          "waveform_rows": 15065
+        }
+      ],
+      "run_name": "optimize-power-monitor-baseline-v2",
+      "archive_relative_path": "optimize-power-monitor-baseline-v2/remote/bf-45f1996a2ab44d41a048-initial-high-hysteresis/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "cc0049bb8473b9db04df4d8f2e16055908e8f178656bc09f88dc79bde21141e9",
+      "candidate_sha256": "2d8ef59f3ce8f6fbb3756a2af399b96fea1d6b786b7cdb439daafbd2638629df",
+      "cases_sha256": "67eee8cc6ae22a75bd84ce0bcbdb2691887211fbb5c6ad0b5158306dc27ecb7e",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 0,
+      "cases": [
+        {
+          "name": "slow-rail-end-to-end",
+          "passed": false,
+          "failures": [
+            "qualification delay, hysteresis or disable timing mismatch"
+          ],
+          "process_elapsed_s": 2.570261364802718,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 100102,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 2.30632,
+            "elapsed_s": 1.15607
+          },
+          "total_tran": {
+            "cpu_s": 2.30795,
+            "elapsed_s": 1.15671
+          },
+          "compilation_elapsed_s": 1.14,
+          "licensing_elapsed_s": 0.00385,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 2.9 %, 3.1 %, 1.9 %",
+          "waveform_sha256": "58f0fd81d76ff40e1ade3fd3b09448bd285959a2e0354691d897783da21809e5",
+          "waveform_rows": 100103
+        }
+      ],
+      "run_name": "optimize-power-monitor-baseline-v2",
+      "archive_relative_path": "optimize-power-monitor-baseline-v2/remote/bf-e80541441a454b8fa321-slow-rail-end-to-end/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "c9362ee5cf0127d2b73b7c3ff753d0e48f944140eaebce4655c300d65de25376",
+      "candidate_sha256": "9b5cf95a488cc9b3979c6553f4c6a59fd1408606f98c4446611c1958e83026f2",
+      "cases_sha256": "41af4aa2e323731aa2c19ecc1d65926ef67b50ccde91a669c33628f1a77ab120",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "initial-high-hysteresis",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 1.467667032033205,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 178,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 0.006681,
+            "elapsed_s": 0.00375104
+          },
+          "total_tran": {
+            "cpu_s": 0.00948,
+            "elapsed_s": 0.00455499
+          },
+          "compilation_elapsed_s": 1.2,
+          "licensing_elapsed_s": 0.00421,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 3.0 %, 3.1 %, 1.9 %",
+          "waveform_sha256": "649ccca3579b757b56c0cdef61138e6fed82a8f0e000430815a3371a16a4b618",
+          "waveform_rows": 179
+        }
+      ],
+      "run_name": "optimize-power-monitor-reference-v2",
+      "archive_relative_path": "optimize-power-monitor-reference-v2/remote/bf-af9748716b0148e988b8-initial-high-hysteresis/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "212a64ddc5ecbf01287b1ad2667c30ac158634883f85949d1e9dc723f52ae7b9",
+      "candidate_sha256": "9b5cf95a488cc9b3979c6553f4c6a59fd1408606f98c4446611c1958e83026f2",
+      "cases_sha256": "67eee8cc6ae22a75bd84ce0bcbdb2691887211fbb5c6ad0b5158306dc27ecb7e",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "slow-rail-end-to-end",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 1.4671927839517593,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 217,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 0.008406,
+            "elapsed_s": 0.00450492
+          },
+          "total_tran": {
+            "cpu_s": 0.010194000000000002,
+            "elapsed_s": 0.0052959899999999996
+          },
+          "compilation_elapsed_s": 1.18,
+          "licensing_elapsed_s": 0.00435,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 3.0 %, 3.1 %, 1.9 %",
+          "waveform_sha256": "02259537c753c2faf8e58d2e88117de74e71e19b8515019926d10100f7665193",
+          "waveform_rows": 218
+        }
+      ],
+      "run_name": "optimize-power-monitor-reference-v2",
+      "archive_relative_path": "optimize-power-monitor-reference-v2/remote/bf-b509da0bd3c44b0cbd21-slow-rail-end-to-end/archive/job.tar.gz"
+    },
+    {
+      "archive_sha256": "a5feef4c0b93f7ffc27d446ed4fd440363952e3726455ce6d5c376ffe5b91543",
+      "candidate_sha256": "9b5cf95a488cc9b3979c6553f4c6a59fd1408606f98c4446611c1958e83026f2",
+      "cases_sha256": "d5623a8e7fbff0edbaad4e00e719900db99a3441b73e294bac532cd1767db08c",
+      "checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "status": "completed",
+      "reason": null,
+      "reward": 1,
+      "cases": [
+        {
+          "name": "short-glitch-and-recovery",
+          "passed": true,
+          "failures": [],
+          "process_elapsed_s": 1.4672359935939312,
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "accepted_steps": 247,
+          "rejected_steps": null,
+          "intrinsic_tran": {
+            "cpu_s": 0.009635999999999999,
+            "elapsed_s": 0.00471997
+          },
+          "total_tran": {
+            "cpu_s": 0.011408,
+            "elapsed_s": 0.00549412
+          },
+          "compilation_elapsed_s": 1.2,
+          "licensing_elapsed_s": 0.00405,
+          "load_average_log": "System load averages (1min, 5min, 15min) : 2.9 %, 3.0 %, 1.9 %",
+          "waveform_sha256": "5eaba6cb2150b3e13eed4babf1777843097fd70b7975815ca5eb369a64f48f55",
+          "waveform_rows": 248
+        }
+      ],
+      "run_name": "optimize-power-monitor-reference-v2",
+      "archive_relative_path": "optimize-power-monitor-reference-v2/remote/bf-d9887fbac2e24a298f07-short-glitch-and-recovery/archive/job.tar.gz"
+    }
+  ]
+}

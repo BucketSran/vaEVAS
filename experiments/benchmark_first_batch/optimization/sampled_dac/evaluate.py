@@ -37,6 +37,15 @@ def evaluate(rows,case,work=None):
             actual=interpolate(rows,times,'b'+str(bit),t)>.5
             bus_errors+=actual!=bool(integer & (1<<bit))
         value=case['offset']+case['vref']*integer/4095
+        # Preserve public delay and finite linear transition, including edges.
+        for fraction in (.25,.5,.75):
+            probe=t+case['delay']+fraction*case['rise']
+            if probe<=case['stop']:
+                wanted=previous+fraction*(value-previous)
+                max_error=max(max_error,abs(interpolate(rows,times,'out',probe)-wanted))
+        if case['delay']>0:
+            probe=t+case['delay']/2
+            max_error=max(max_error,abs(interpolate(rows,times,'out',probe)-previous))
         for dt in (2e-9,8e-9):
             if t+dt<=case['stop']:
                 max_error=max(max_error,abs(interpolate(rows,times,'out',t+dt)-value))

@@ -46,7 +46,9 @@
     "qualification": 5e-06,
     "edge_atol": 2e-09,
     "voltage_atol": 0.001,
-    "performance": true
+    "performance": true,
+    "delay": 0.0,
+    "rise": 5e-10
   },
   {
     "name": "short-glitch-and-recovery",
@@ -103,7 +105,9 @@
     "qualification": 5e-06,
     "edge_atol": 2e-09,
     "voltage_atol": 0.001,
-    "performance": false
+    "performance": false,
+    "delay": 0.0,
+    "rise": 5e-10
   },
   {
     "name": "initial-high-hysteresis",
@@ -144,6 +148,8 @@
     "qualification": 3e-06,
     "edge_atol": 2e-09,
     "voltage_atol": 0.001,
-    "performance": false
+    "performance": false,
+    "delay": 0.0,
+    "rise": 5e-10
   }
 ]

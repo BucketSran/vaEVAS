@@ -35,6 +35,8 @@ class Oracles(unittest.TestCase):
         for factor in (0,.9,-1):
             wrong=[dict(row,out=case['offset']+factor*(row['out']-case['offset'])) for row in rows]
             self.assertFalse(module.evaluate(wrong,case)['passed'])
+        lower_resolution=rows[::2]
+        self.assertFalse(module.evaluate(lower_resolution,case)['passed'])
         sparse=rows[::512]
         self.assertFalse(module.evaluate(sparse,case)['passed'])
         rows[-1]['out']=float('nan')
@@ -49,6 +51,28 @@ class Oracles(unittest.TestCase):
         self.assertEqual(module.expected_code(0,ideal),128)
         self.assertEqual(module.expected_code(1/(4*1370000),ideal),255)
         self.assertEqual(module.expected_code(3/(4*1370000),ideal),0)
+
+    def test_flash_finite_transition_fixture(self):
+        module,cases=oracle('flash_thresholds')
+        case=cases[1]
+        samples=[];t=case['clock_first_cross']
+        while t<case['stop']:
+            samples.append((t,module.expected_code(t,case)/255));t+=case['clock_period']
+        rows=[];sharp=[]
+        import bisect
+        starts=[t+case['delay'] for t,_ in samples]
+        for i in range(10001):
+            t=case['stop']*i/10000
+            index=bisect.bisect_right(starts,t)-1
+            previous=0. if index<=0 else samples[index-1][1]
+            value=0. if index<0 else samples[index][1]
+            fraction=0. if index<0 else min(1.,(t-starts[index])/case['rise'])
+            row=dict(time=t,clock=self.clock_voltage(t,case['clock_period']),
+                     vin=case['vref']*(.5+.63*math.sin(2*math.pi*1370000*t)),
+                     code=previous+fraction*(value-previous))
+            rows.append(row);sharp.append(dict(row,code=value))
+        self.assertTrue(module.evaluate(rows,case)['passed'])
+        self.assertFalse(module.evaluate(sharp,case)['passed'])
 
     def test_dac_sampled_hold_fixture(self):
         module,cases=oracle('sampled_dac')
@@ -130,6 +154,8 @@ class Oracles(unittest.TestCase):
                     value+=d*fraction
                 rows.append(dict(time=t,supply=0.,enable=value))
             self.assertTrue(module.evaluate(rows,case)['passed'])
+            sharp=[dict(row,enable=sum(d for et,d in edges if row['time']>=et)) for row in rows]
+            self.assertFalse(module.evaluate(sharp,case)['passed'])
             inverted=[dict(row,enable=1-row['enable']) for row in rows]
             self.assertFalse(module.evaluate(inverted,case)['passed'])
             self.assertFalse(module.evaluate([dict(row,enable=0.) for row in rows],case)['passed'])

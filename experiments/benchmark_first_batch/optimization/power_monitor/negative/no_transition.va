@@ -1,0 +1,34 @@
+`include "disciplines.vams"
+// The same supervisor using threshold events and one qualification deadline.
+module supply_supervisor(supply, enable);
+ input supply;
+ output enable;
+ electrical supply, enable;
+ parameter real on_voltage=1.0;
+ parameter real off_voltage=0.85;
+ parameter real qualification=5u from (0:inf);
+ parameter real poll_period=1n from (0:inf);
+ parameter real rise=0.5n from (0:inf);
+ integer enabled, pending;
+ real deadline;
+ analog begin
+  @(initial_step) begin
+   enabled=0;pending=(V(supply)>=on_voltage);
+   if(pending) deadline=qualification;else deadline=1e30;
+  end
+  @(cross(V(supply)-on_voltage,+1)) begin
+   if(!enabled) begin pending=1;deadline=$abstime+qualification;end
+  end
+  @(cross(V(supply)-on_voltage,-1)) begin
+   if(!enabled) begin pending=0;deadline=1e30;end
+  end
+  @(cross(V(supply)-off_voltage,-1)) begin
+   enabled=0;pending=0;deadline=1e30;
+  end
+  @(timer(deadline)) begin
+   if(pending && V(supply)>=on_voltage) begin enabled=1;pending=0;end
+   deadline=1e30;
+  end
+  V(enable) <+ enabled;
+ end
+endmodule

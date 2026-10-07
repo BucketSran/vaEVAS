@@ -19,7 +19,9 @@ module supply_supervisor(supply, enable);
     if(V(supply)<off_voltage) begin enabled=0;pending=0;end
    end else if(V(supply)>=on_voltage) begin
     if(!pending) begin pending=1;started=$abstime;end
-    if($abstime-started>=qualification) begin enabled=1;pending=0;end
+    // Numerical comparison guard is one millionth of a poll interval.
+    // It prevents floating subtraction from postponing an exact due poll.
+    if($abstime-started+1e-6*poll_period>=qualification) begin enabled=1;pending=0;end
    end else pending=0;
   end
   V(enable) <+ transition(enabled,0,rise);

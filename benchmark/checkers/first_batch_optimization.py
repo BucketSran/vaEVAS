@@ -97,3 +97,27 @@ def read_native_statistics(log):
                 intrinsic_tran=intrinsic,total_tran=total,native_errors=errors,
                 native_warnings=warnings,native_notices=notices,
                 aggregate_elapsed_used=False)
+
+
+def validate_solver_evidence(source, returncode, native_log, stdout, stderr):
+    """Bind a guarded source, actual subprocess outcome and separate streams.
+
+    stdout/stderr are retained by their caller. Their hashes identify the checked
+    streams; a zero native footer does not override process failure or a native
+    fatal/error diagnostic in either captured stream. Printed times in stdout
+    are never used as statistics.
+    """
+    guard=validate_performance_source(source)
+    if type(returncode) is not int or returncode!=0:
+        raise OptimizationEvidenceError('actual solver process did not exit successfully')
+    streams={}
+    fatal=re.compile(r'^(?:\s*(?:ERROR|FATAL)\s*\([A-Z][A-Z0-9_-]*-\d+\)|\s*Error found by spectre\b|\s*(?:Segmentation fault|Fatal error|Aborted)\b)',re.M|re.I)
+    for name,stream in (('stdout',stdout),('stderr',stderr)):
+        if isinstance(stream,str):stream=stream.encode('utf-8')
+        if not isinstance(stream,bytes):raise TypeError(name+' must be bytes or text')
+        if fatal.search(stream.decode('utf-8',errors='replace')):
+            raise OptimizationEvidenceError('native error/fatal diagnostic in captured '+name)
+        streams[name+'_sha256']=hashlib.sha256(stream).hexdigest()
+    statistics=read_native_statistics(native_log)
+    statistics.update(source_identity=guard,process_returncode=returncode,stream_identities=streams)
+    return statistics

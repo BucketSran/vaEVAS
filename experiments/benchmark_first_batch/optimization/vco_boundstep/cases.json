@@ -22,7 +22,8 @@
     "amplitude": 0.5,
     "offset": 0.6,
     "waveform_atol": 0.003,
-    "performance": true
+    "performance": true,
+    "max_phase_advance": 0.0156250001
   },
   {
     "name": "slew-and-clamps",
@@ -96,6 +97,7 @@
     "amplitude": 0.5,
     "offset": 0.6,
     "waveform_atol": 0.003,
-    "performance": false
+    "performance": false,
+    "max_phase_advance": 0.0156250001
   }
 ]

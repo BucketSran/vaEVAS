@@ -43,6 +43,15 @@ def evaluate(rows,case,work=None):
     max_error=abs(interpolate(rows,times,'out',.5e-9));previous=0.;stimulus_error=0.
     for t,value,vin in samples:
         stimulus_error=max(stimulus_error,abs(interpolate(rows,times,'vin',t)-vin))
+        # Preserve public delay and finite linear transition, including edges.
+        for fraction in (.25,.5,.75):
+            probe=t+case['delay']+fraction*case['rise']
+            if probe<=case['stop']:
+                wanted=previous+fraction*(value-previous)
+                max_error=max(max_error,abs(interpolate(rows,times,'out',probe)-wanted))
+        if case['delay']>0:
+            probe=t+case['delay']/2
+            max_error=max(max_error,abs(interpolate(rows,times,'out',probe)-previous))
         for dt in (2e-9,case['period']-2e-9):
             if t+dt<=case['stop']:
                 max_error=max(max_error,abs(interpolate(rows,times,'out',t+dt)-value))

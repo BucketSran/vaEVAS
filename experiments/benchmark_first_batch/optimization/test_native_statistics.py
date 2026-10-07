@@ -54,6 +54,19 @@ class NativeEvidence(unittest.TestCase):
             with self.subTest(log=log[-150:]):
                 with self.assertRaises(M.OptimizationEvidenceError):M.read_native_statistics(log)
 
+    def test_process_and_separate_stderr_remain_authoritative(self):
+        source=b'module x(a); electrical a; analog V(a)<+1; endmodule'
+        # Untrusted printed stdout timing is not the native statistics input.
+        result=M.validate_solver_evidence(source,0,LOG,b'Intrinsic tran analysis time: CPU = 0 s, elapsed = 0 s.',b'')
+        self.assertEqual(result['intrinsic_tran']['cpu_s'],4.2678)
+        self.assertIn('stderr_sha256',result['stream_identities'])
+        with self.assertRaises(M.OptimizationEvidenceError):M.validate_solver_evidence(source,1,LOG,b'',b'')
+        for stderr in (b'ERROR (SPECTRE-100): native failure',b'Error found by spectre during transient',b'Segmentation fault'):
+            with self.subTest(stderr=stderr):
+                with self.assertRaises(M.OptimizationEvidenceError):M.validate_solver_evidence(source,0,LOG,b'',stderr)
+        warning=b'WARNING (VACOMP-2435): environment variable no longer supported'
+        self.assertEqual(M.validate_solver_evidence(source,0,LOG,b'',warning)['native_errors'],0)
+
     def test_source_guard_rejects_active_tasks_only(self):
         valid=b'''`include "disciplines.vams"
 // $strobe("Number of accepted tran steps = 1");

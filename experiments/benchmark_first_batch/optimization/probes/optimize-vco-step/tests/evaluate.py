@@ -42,6 +42,10 @@ def evaluate(rows, case, work=None):
         failures.append('incomplete time coverage')
     if any(b <= a for a,b in zip(times,times[1:])):
         failures.append('non-increasing time')
+    phases=[phase_cycles(t,case) for t in times]
+    max_phase_advance=max(b-a for a,b in zip(phases,phases[1:]))
+    if 'max_phase_advance' in case and max_phase_advance>case['max_phase_advance']:
+        failures.append('prescribed 64 samples per constant-frequency cycle not retained')
     point_errors=[abs(row['out']-expected(row['time'],case)) for row in rows]
     max_point_error=max(point_errors)
     # Independent uniformly spaced probes catch a candidate that returns a few
@@ -59,4 +63,4 @@ def evaluate(rows, case, work=None):
         failures.append('inadequate waveform resolution')
     return dict(passed=not failures,failures=failures,max_point_error_v=max_point_error,
                 max_interpolated_error_v=probe_error,saved_waveform_points=len(rows),
-                expected_cycles=phase_cycles(case['stop'],case))
+                expected_cycles=phase_cycles(case['stop'],case),max_phase_advance=max_phase_advance)
