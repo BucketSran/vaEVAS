@@ -17,6 +17,11 @@
 完整 Harbor oracle Trial，尚未完成 Agentic 主评测试跑，也不加入原六题分母。
 任务位于 `tasks/`；每题 `SOURCE.md` 说明原始资产和必要改编，原始源码保持不变。
 
+[首批工程任务](first_batch/README.md)落实七类工作目标，每类先建设 5 题。
+其中复用振荡器修复和 ADC DNL/INL 两题，保留原六题初筛作为独立历史基线。
+[执行与检查入口](../experiments/benchmark_first_batch/README.md)区分实际校准、归档重判、
+模型试跑和发布资格；[来源元数据](first_batch/METADATA.md)记录同源关联与上下文层次。
+
 ## 目标与边界
 
 新题以实际 Verilog-A 使用场景为依据，建设目标是形成有可信评分、能区分模型能力的工程任务。
@@ -194,7 +199,8 @@ python3 -B -m unittest discover -s experiments/backends/dvs2-spectre-validation 
 当前 EVAS 的本地接入验收入口是 [triangle_evas.py](checkers/triangle_evas.py)，
 通过操作者指定的 circuit harness 执行，仅覆盖 `constant-tighter` 开发配置。
 [调用方式、配置映射与未完成的负例验收](tasks/va07-triangle-repair/SOURCE.md#local-evas)
-由该任务维护；原 Spectre verifier 和正式评分入口保持不变。
+由该任务维护。原解析判据与 case 文件字节保持不变。当前 Spectre 入口经由共享的
+`circuit_task` 执行，旧校准与当前入口的复核证据分别记录。
 
 ## 环境与结果
 
