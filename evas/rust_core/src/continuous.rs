@@ -70,6 +70,8 @@ pub(crate) struct OperatorSlot {
     pub(crate) value: usize,
 }
 
+#[path = "exact_affine_history.rs"]
+mod exact_affine;
 #[path = "continuous_history.rs"]
 mod history;
 #[path = "continuous_runtime.rs"]
@@ -91,6 +93,8 @@ pub(crate) struct LinearContinuous {
     // Physical state after the last event map, before propagation to its
     // representative. Used only for ordered event observations, not queries.
     event_seed: Option<(I, Vec<I>)>,
+    exact_affine: Option<exact_affine::History>,
+    exact_seed: Option<Vec<num_rational::BigRational>>,
 }
 
 struct Context {
@@ -342,6 +346,8 @@ impl LinearContinuous {
                     )
                 })
         });
+        let exact_affine =
+            exact_affine::History::build(program, &segments, start, state_count, None);
         Ok(Some(Self {
             slots,
             segments,
@@ -354,6 +360,8 @@ impl LinearContinuous {
             initial,
             event_dependent,
             event_seed: None,
+            exact_affine,
+            exact_seed: None,
         }))
     }
 

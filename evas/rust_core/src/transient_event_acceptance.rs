@@ -485,7 +485,16 @@ mod tests {
             .unwrap();
         assert_eq!(calendar.len(), 1);
         assert_eq!(calendar[0].event, 1);
-        assert!((calendar[0].time - 0.625).abs() < 1e-9);
+        assert_eq!(calendar[0].time, 0.625);
+        assert_eq!(calendar[0].bounds(), I::point(0.625));
+        assert_eq!(
+            calendar[0].physical_order_at(0.625),
+            Some(std::cmp::Ordering::Equal)
+        );
+        assert_eq!(
+            calendar[0].physical_order_at(0.625_f64.next_down()),
+            Some(std::cmp::Ordering::Greater)
+        );
         let (clean_model, clean_trajectory, mut clean, mut clean_calendar) =
             history_final_fixture();
         clean

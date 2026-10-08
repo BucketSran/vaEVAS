@@ -169,6 +169,76 @@ impl<'a> GuardTrajectory<'a> {
         })
     }
 
+    pub(crate) fn exact_affine_root(
+        &self,
+        expression: &Expression,
+        bounds: I,
+        local: bool,
+    ) -> Option<crate::exact_source::RootTime> {
+        use crate::exact_source::{binary, Budget, MAX_POINTS};
+        use num_rational::BigRational as R;
+        use num_traits::Zero;
+        let p = &self.model.program;
+        let coefficients = crate::affine_bounds::affine(expression, p).ok()?;
+        if coefficients.len() > MAX_POINTS {
+            return None;
+        }
+        let mut row = vec![I::ZERO; self.nodes.first()?.len()];
+        for (&coefficient, node) in coefficients[..p.nodes.len()].iter().zip(&self.nodes) {
+            for (a, &b) in row.iter_mut().zip(node) {
+                *a = *a + coefficient * b;
+            }
+        }
+        let state_start = self.model.driven.len();
+        let op_start = state_start + p.states.len();
+        for (i, &c) in coefficients[p.nodes.len()..p.nodes.len() + p.states.len()]
+            .iter()
+            .enumerate()
+        {
+            row[state_start + i] = row[state_start + i] + c;
+        }
+        for (i, &c) in coefficients[p.nodes.len() + p.states.len()..coefficients.len() - 1]
+            .iter()
+            .enumerate()
+        {
+            row[op_start + i] = row[op_start + i] + c;
+        }
+        let last = row.len() - 1;
+        row[last] = row[last] + *coefficients.last()?;
+        if row[..state_start].iter().any(|c| !c.zero()) {
+            return None;
+        }
+        let initial: Vec<_> = self.model.initial().into_iter().map(I::point).collect();
+        let states = self.states.unwrap_or(&initial);
+        let mut budget = Budget(0);
+        let mut result = (R::zero(), R::zero());
+        for (i, c) in row.iter().enumerate().skip(state_start) {
+            if c.zero() {
+                continue;
+            }
+            if c.lo != c.hi {
+                return None;
+            }
+            let coefficient = binary(c.lo)?;
+            let value = if i < op_start {
+                let state = states[i - state_start];
+                if state.lo != state.hi {
+                    return None;
+                }
+                (binary(state.lo)?, R::zero())
+            } else if i < last {
+                self.operators?.exact_affine_value(i - op_start, local)?
+            } else {
+                (binary(1.)?, R::zero())
+            };
+            let term = budget.check(&coefficient * value.0)?;
+            result.0 = budget.check(result.0 + term)?;
+            let term = budget.check(&coefficient * value.1)?;
+            result.1 = budget.check(result.1 + term)?;
+        }
+        crate::exact_source::RootTime::affine(result.0, result.1, bounds)
+    }
+
     pub(crate) fn changed_by(
         &self,
         expression: &Expression,

@@ -24,8 +24,18 @@ impl LinearContinuous {
             ));
         }
         let context = local_context(&self.context, horizon);
-        Self::build(context, self.parameters.clone(), 0., Some(state.clone()))?
-            .ok_or_else(|| Error::new("invalid_ir", "local continuous flow disappeared"))
+        let mut next = Self::build(context, self.parameters.clone(), 0., Some(state.clone()))?
+            .ok_or_else(|| Error::new("invalid_ir", "local continuous flow disappeared"))?;
+        next.exact_affine = self.exact_seed.as_ref().and_then(|seed| {
+            exact_affine::History::build(
+                &next.context.program,
+                &next.segments,
+                0.,
+                next.initial.len(),
+                Some(seed.clone()),
+            )
+        });
+        Ok(next)
     }
 
     pub(crate) fn changes_on_event(&self) -> bool {
@@ -37,6 +47,8 @@ impl LinearContinuous {
             && self.parameters == other.parameters
             && self.initial == other.initial
             && self.event_seed == other.event_seed
+            && self.exact_affine == other.exact_affine
+            && self.exact_seed == other.exact_seed
     }
 
     pub(crate) fn event_bounds(&self, window: I) -> Result<Vec<I>, Error> {
@@ -239,6 +251,11 @@ impl LinearContinuous {
                 })
             })
             .collect::<Result<Vec<_>, _>>()?;
+        // Only a proved point event can carry an exact seed into changed flow.
+        // The interval propagation above remains the numerical history authority.
+        let exact_seed = (time_bounds.lo == time_bounds.hi)
+            .then(|| self.exact_affine.as_ref()?.states_at(time))
+            .flatten();
         let mut next = Self::build(
             self.context.clone(),
             parameters.to_vec(),
@@ -299,6 +316,16 @@ impl LinearContinuous {
             )?
             .unwrap();
         }
+        next.exact_affine = exact_seed.as_ref().and_then(|seed| {
+            exact_affine::History::build(
+                &next.context.program,
+                &next.segments,
+                time,
+                next.initial.len(),
+                Some(seed.clone()),
+            )
+        });
+        next.exact_seed = exact_seed;
         next.event_seed = Some(event_seed);
         Ok(next)
     }
@@ -332,13 +359,60 @@ mod tests {
             .unwrap()
             .unwrap();
         let original = base.bounds(1.0).unwrap();
+        assert!(base.exact_affine.is_some());
         let window = I { lo: 0.25, hi: 0.75 };
         // With q:0->1 at tau=.75, y(1)=.25. Forward-only propagation
         // from representative .5 instead gives [.5,.75], excluding .25.
         assert!(base.restarted(0.5, window, &[I::ONE]).is_err());
         assert_eq!(base.bounds(1.0).unwrap(), original);
         let candidate = base.restarted(window.hi, window, &[I::ONE]).unwrap();
+        assert!(candidate.exact_affine.is_none());
+        assert!(candidate.exact_seed.is_none());
+        assert!(base.exact_affine.is_some());
         let at_stop = candidate.bounds(1.0).unwrap()[0];
         assert!(at_stop.lo <= 0.25 && at_stop.hi >= 0.75);
+    }
+    #[test]
+    fn exact_affine_provenance_rejects_reset_and_feedback() {
+        let origin = serde_json::json!({"source":"proof.va","line":1,"column":1,"instance":"dut"});
+        let program:Program=serde_json::from_value(serde_json::json!({
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","z"],
+            "states":[{"instance":"dut","name":"q","kind":"real","initial":3}],
+            "operators":[{"kind":"idt","input":{"op":"state","state":0},"ic":1,"origin":origin}],
+            "contributions":[{"branch":{"instance":"dut","local_positive":"z","local_negative":"r","kind":"voltage"},
+                "positive":1,"negative":0,"rhs":{"op":"operator","operator":0},"origin":origin}]
+        })).unwrap();
+        let trajectory = Trajectory::new(
+            crate::ir::TransientInputs {
+                pwl: vec![],
+                output_times: vec![0., 1.],
+                stop: 1.,
+                max_step: 1.,
+            },
+            0,
+        )
+        .unwrap();
+        let base = LinearContinuous::new(&program, &trajectory, &[], &[3.])
+            .unwrap()
+            .unwrap();
+        assert!(base.exact_affine.is_some());
+        let mut reset = program.clone();
+        if let OperatorSpec::Idt { reset, .. } = &mut reset.operators[0] {
+            *reset = Some(Expression::State { state: 0 });
+        }
+        assert!(LinearContinuous::new(&reset, &trajectory, &[], &[3.])
+            .unwrap()
+            .unwrap()
+            .exact_affine
+            .is_none());
+        let mut feedback = program;
+        if let OperatorSpec::Idt { input, .. } = &mut feedback.operators[0] {
+            *input = Expression::Operator { operator: 0 };
+        }
+        assert!(LinearContinuous::new(&feedback, &trajectory, &[], &[3.])
+            .unwrap()
+            .unwrap()
+            .exact_affine
+            .is_none());
     }
 }

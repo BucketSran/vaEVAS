@@ -938,6 +938,14 @@ impl Evaluation<'_> {
 }
 
 impl Operators {
+    pub(crate) fn exact_affine_value(
+        &self,
+        op: usize,
+        local: bool,
+    ) -> Option<(num_rational::BigRational, num_rational::BigRational)> {
+        self.continuous.as_ref()?.exact_affine_value(op, local)
+    }
+
     pub(crate) fn local_epoch(&self) -> Option<(crate::exact_time::Clock, f64)> {
         self.continuous.as_ref()?.local_epoch()
     }

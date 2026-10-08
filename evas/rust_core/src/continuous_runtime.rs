@@ -171,6 +171,18 @@ impl Continuous {
         LinearContinuous::new(program, trajectory, driven, states)
             .map(|v| v.map(|v| Self::Linear(Box::new(v))))
     }
+    pub(crate) fn exact_affine_value(
+        &self,
+        op: usize,
+        local: bool,
+    ) -> Option<(num_rational::BigRational, num_rational::BigRational)> {
+        match self {
+            Self::Linear(v) => v.exact_affine.as_ref()?.value(v.operator_value_index(op)?),
+            Self::Anchored(v) if local => v.inner.exact_affine_value(op, false),
+            _ => None,
+        }
+    }
+
     pub(crate) fn operator_value_index(&self, op: usize) -> Option<usize> {
         match self {
             Self::Linear(v) => v.operator_value_index(op),

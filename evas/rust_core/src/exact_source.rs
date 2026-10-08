@@ -13,7 +13,7 @@ const MAX_EXPR_NODES: usize = 512;
 
 #[derive(Clone)]
 pub(crate) struct Curve(Vec<(R, R)>);
-struct Budget(usize);
+pub(crate) struct Budget(pub(crate) usize);
 
 /// An immutable time proved from original affine source arithmetic. Construction
 /// is bounded and must agree with the interval discovery that found the root.
@@ -49,6 +49,14 @@ fn contains(bounds: I, value: &R) -> bool {
 }
 
 impl RootTime {
+    pub(crate) fn affine(value: R, slope: R, bounds: I) -> Option<Self> {
+        if slope.is_zero() {
+            return None;
+        }
+        let root = Budget(0).check(-value / slope)?;
+        contains(bounds, &root).then_some(Self(root))
+    }
+
     fn from_affine(segment: [f64; 2], ends: [R; 2], bounds: I) -> Option<Self> {
         let [a, b] = ends;
         if a.is_zero() || a == b {
@@ -71,6 +79,27 @@ impl RootTime {
             return None;
         }
         Self::from_affine(segment, [binary(a.lo)?, binary(b.lo)?], bounds)
+    }
+
+    pub(crate) fn shifted_clock(&self, clock: crate::exact_time::Clock) -> Option<Self> {
+        if clock.index > crate::schedule::EVENT_BUDGET {
+            return None;
+        }
+        let mut budget = Budget(0);
+        let offset = budget.check(binary(clock.period)? * R::from_integer(clock.index.into()))?;
+        let absolute = budget.check(binary(clock.start)? + offset)?;
+        Some(Self(budget.check(&self.0 + absolute)?))
+    }
+
+    pub(crate) fn refine(&self, discovery: I) -> Option<I> {
+        if !contains(discovery, &self.0) {
+            return None;
+        }
+        let tight = self.bounds()?;
+        Some(I {
+            lo: discovery.lo.max(tight.lo),
+            hi: discovery.hi.min(tight.hi),
+        })
     }
 
     pub(crate) fn bounds(&self) -> Option<I> {
@@ -105,13 +134,13 @@ impl RootTime {
     }
 }
 impl Budget {
-    fn check(&mut self, value: R) -> Option<R> {
+    pub(crate) fn check(&mut self, value: R) -> Option<R> {
         self.0 = self.0.checked_add(1)?;
         (self.0 <= MAX_OPS && value.numer().bits() <= MAX_BITS && value.denom().bits() <= MAX_BITS)
             .then_some(value)
     }
 }
-fn binary(x: f64) -> Option<R> {
+pub(crate) fn binary(x: f64) -> Option<R> {
     R::from_float(x)
 }
 

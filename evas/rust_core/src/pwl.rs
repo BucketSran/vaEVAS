@@ -26,7 +26,7 @@ impl Root {
         self
     }
 
-    fn rational_time(&self) -> Option<crate::exact_source::RootTime> {
+    pub(crate) fn rational_time(&self) -> Option<crate::exact_source::RootTime> {
         self.source_time.clone().or_else(|| {
             crate::exact_source::RootTime::point_ends(self.segment, self.ends, self.bounds)
         })
