@@ -1159,7 +1159,7 @@ fn schedule_with_history(
     let mut start = 0;
     while start < events.len() {
         // Find the whole connected enclosure cluster before attempting a
-        // timer-only certificate. Mixed or state-dependent moments retain the
+        // exact ordering certificate. Moments without that proof retain the
         // existing simultaneous-root and ambiguity checks below.
         let mut cluster_end = start + 1;
         let mut cluster_hi = events[start].bounds().hi.max(events[start].time);
@@ -1180,13 +1180,38 @@ fn schedule_with_history(
                     .all(|b| certified_order(a, b, model).is_some())
             })
         {
-            let next_lower = events.get(cluster_end).map(|e| e.bounds().lo);
-            order_fixed_timers(
-                &mut events[start..cluster_end],
-                model,
-                trajectory.config.stop,
-                next_lower,
-            )?;
+            loop {
+                order_fixed_timers(
+                    &mut events[start..cluster_end],
+                    model,
+                    trajectory.config.stop,
+                    None,
+                )?;
+                // Strict representatives may extend beyond the original
+                // connected enclosures. Include the next physical event only
+                // when its original certificate orders it against the entire
+                // cluster, then recheck every representative's own budgets.
+                // A disjoint enclosure is not a deadline when those exact
+                // proofs permit the same bounded causal transaction to grow.
+                let last = events[cluster_end - 1].time;
+                let Some(next) = events.get(cluster_end) else {
+                    break;
+                };
+                if next.bounds().lo > last {
+                    break;
+                }
+                if !(next.moment.clock().is_some()
+                    || matches!(next.moment, Moment::Cross(_) | Moment::Anchored { .. }))
+                    || events[start..cluster_end]
+                        .iter()
+                        .any(|event| certified_order(event, next, model).is_none())
+                {
+                    return Err(unresolved(
+                        "ordered timer representatives exceed stop or the next event boundary",
+                    ));
+                }
+                cluster_end += 1;
+            }
             start = cluster_end;
             continue;
         }

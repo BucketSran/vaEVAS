@@ -1380,6 +1380,12 @@ fn shared_self_counter_conflict_preserves_frame_then_retries_in_same_controller(
 // Review F3: original PWL arithmetic must survive a changed held-clock epoch,
 // and the production controller must remain retryable after replanning fails.
 fn raw_source_held_epoch_fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
+    raw_source_held_epoch_fixture_at(0.5000000000000001)
+}
+
+fn raw_source_held_epoch_fixture_at(
+    fixed: f64,
+) -> (EventModel, Trajectory, Controller, Vec<ScheduledEvent>) {
     let origin = json!({"source":"raw-source-held-epoch.va","line":1,"column":1,"instance":"dut"});
     let increment = |state| {
         json!({"kind":"assign","state":state,"rhs":{"op":"add",
@@ -1399,7 +1405,7 @@ fn raw_source_held_epoch_fixture() -> (EventModel, Trajectory, Controller, Vec<S
             {"instance":"dut","name":"held","kind":"integer","initial":0}],
         "events":[cross(0.5,json!([
             {"kind":"assign","state":0,"rhs":{"op":"affine","constant":0.75,"terms":[]}},increment(1)])),
-            {"origin":origin,"trigger":{"kind":"timer","start":0.5000000000000001,
+            {"origin":origin,"trigger":{"kind":"timer","start":fixed,
                 "period":0,"time_tolerance":1e-9,"enabled":true},"body":[increment(2)]},
             cross(0.5000000000000001,json!([increment(3)])),
             {"origin":origin,"trigger":{"kind":"held_timer","start":{"op":"state","state":0},
@@ -1606,4 +1612,76 @@ fn raw_pwl_roots_mixed_timer_held_epoch_failure_rolls_back_then_same_controller_
     );
     assert_eq!(controller.records.last().unwrap().time, 0.75);
     assert_eq!(controller.accepted.solution.voltages[2], 4.);
+}
+
+#[test]
+fn extended_source_timer_cluster_later_failure_rolls_back_then_same_controller_retries() {
+    let (model, trajectory, mut controller, mut calendar) = raw_source_held_epoch_fixture_at(0.5);
+    let before = controller.accepted.clone();
+    let signature = |events: &[ScheduledEvent]| {
+        events
+            .iter()
+            .map(|e| (e.event, e.time, e.bounds(), e.physical_order_at(0.5)))
+            .collect::<Vec<_>>()
+    };
+    let original_calendar = signature(&calendar);
+    let original_outputs = controller.outputs.clone();
+    let mut bad_program = model.program.clone();
+    // Fail during the second source root, after the first root and intervening
+    // timer have succeeded inside the candidate transaction. The uncertain
+    // held start touches the accepted boundary and cannot choose a priority.
+    bad_program.events[2].body.push(
+        serde_json::from_value(json!({"kind":"assign","state":0,
+            "rhs":{"op":"affine","constant":-1.,
+                "terms":[{"node":1,"coefficient":3.}]}}))
+        .unwrap(),
+    );
+    let bad = EventModel::new(bad_program, model.driven.clone(), model.tolerances.clone()).unwrap();
+    for _ in 0..2 {
+        let error = controller
+            .accept_relocalized(&bad, &trajectory, &mut calendar)
+            .unwrap_err();
+        assert_eq!(error.kind, "event_resolution");
+        assert!(error
+            .message
+            .contains("dynamic timer window overlaps the accepted boundary"));
+        assert_raw_source_frame_same(&controller.accepted, &before);
+        assert_eq!(signature(&calendar), original_calendar);
+        assert!(controller.records.is_empty());
+        assert_eq!(controller.event, 0);
+        assert_eq!(controller.outputs.len(), original_outputs.len());
+        for (actual, expected) in controller.outputs.iter().zip(&original_outputs) {
+            assert_raw_source_frame_same(actual, expected);
+        }
+    }
+    let (clean_model, clean_trajectory, mut clean, mut clean_calendar) =
+        raw_source_held_epoch_fixture_at(0.5);
+    while !calendar.is_empty() {
+        controller
+            .accept_relocalized(&model, &trajectory, &mut calendar)
+            .unwrap();
+        clean
+            .accept_relocalized(&clean_model, &clean_trajectory, &mut clean_calendar)
+            .unwrap();
+        assert_raw_source_frame_same(&controller.accepted, &clean.accepted);
+        assert_eq!(signature(&calendar), signature(&clean_calendar));
+        assert_eq!(
+            serde_json::to_value(&controller.records).unwrap(),
+            serde_json::to_value(&clean.records).unwrap()
+        );
+        assert_eq!(controller.event, clean.event);
+        assert_eq!(controller.outputs.len(), clean.outputs.len());
+        for (actual, expected) in controller.outputs.iter().zip(&clean.outputs) {
+            assert_raw_source_frame_same(actual, expected);
+        }
+    }
+    assert_eq!(controller.accepted.states, [0.75, 1., 1., 1., 1.]);
+    assert_eq!(
+        controller
+            .records
+            .iter()
+            .map(|r| r.event)
+            .collect::<Vec<_>>(),
+        [0, 1, 2, 3]
+    );
 }

@@ -60,6 +60,38 @@ class DynamicCrossContracts(unittest.TestCase):
         for event, root in zip(result["transient"]["events"], [.5, 2]):
             self.assertAlmostEqual(event["time"], root, delta=1e-9)
 
+    def test_directed_integral_reversal_at_exact_stop_preserves_query_phase(self):
+        # z'=sign/2, z(0)=0: the increasing arrival is at 1 and the
+        # decreasing arrival is at stop=3. Both roots are exact binary64
+        # values even when the prediction interval uses non-dyadic splits.
+        source = model("""
+          @(initial_step) begin sign=1; n=0; end
+          V(z,r)<+idt(0.5*sign*V(u,r),0);
+          @(cross(V(z,r)-0.5,1,1e-10,1e-10) or
+            cross(V(z,r)+0.5,-1,1e-10,1e-10)) begin
+            sign=-sign; n=n+1;
+          end
+          V(y,r)<+n;
+        """, "real sign; integer n; electrical z;")
+        program = compile_sources({"endpoint.va": source}, [instance()])
+        before_stop = math.nextafter(3.0, -math.inf)
+        baseline = None
+        for times in ([0, 1, 2, before_stop, 3],
+                      [0, .333, .77, 1, 1.77, 2, 2.9, before_stop, 3]):
+            result = transient(program, {"u": [[0, 1], [3, 1]]}, times,
+                               stop=3, max_step=.005, vabstol=1e-8,
+                               reltol=0, kernel=KERNEL)
+            events = result["transient"]["events"]
+            self.assertEqual([event["time"] for event in events], [1, 3])
+            if baseline is not None:
+                self.assertEqual(events, baseline)
+            baseline = events
+            y = result["nodes"].index("y")
+            self.assertEqual([row["voltages"][y]
+                              for row in result["solutions"]],
+                             [int(time >= 1) + int(time >= 3) for time in times])
+            self.assertEqual(result["transient"]["states"][-1], [1, 2])
+
     def test_sine_guard_uses_a_continuous_certified_operator_trajectory(self):
         result = run_guard("sin(V(u,r))-.5")
         events = result["transient"]["events"]

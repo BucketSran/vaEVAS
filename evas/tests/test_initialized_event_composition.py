@@ -44,13 +44,23 @@ class InitializedEventComposition(unittest.TestCase):
             if previous is not None:
                 self.assertEqual(events, previous)
             previous = events
-        # This gap is a retained conservative refusal, not a passing alignment
-        # claim: delayed representatives hit the next cluster's lower boundary.
+        # The first cluster's delayed timer representative reaches the second
+        # root's enclosure. Exact proofs must extend the connected cluster,
+        # preserving distinct callbacks and physical output phases.
         crowded = compile_model(body.replace(f'timer({fixed!r},', 'timer(.5,'), declarations)
-        with self.assertRaises(KernelError) as caught:
-            run(crowded, {'u': [[0,.1],[1,.9]]}, [0,1], stop=1)
-        self.assertEqual(caught.exception.detail['kind'], 'event_resolution')
-        self.assertIn('next event boundary', caught.exception.detail['message'])
+        previous = None
+        for times in [[0, 1], [0, .5, fixed, math.nextafter(fixed, math.inf), .625, .75, 1]]:
+            result = run(crowded, {'u': [[0,.1],[1,.9]]}, times, stop=1)
+            events = result['transient']['events']
+            self.assertEqual([event['event'] for event in events], [0, 1, 2, 3])
+            self.assertTrue(all(a['time'] < b['time'] for a,b in zip(events, events[1:])))
+            expected = [int(Fraction(t) >= roots[0]) + 10*int(t >= .5) +
+                        100*int(Fraction(t) >= roots[1]) + 1000*int(t >= .75)
+                        for t in times]
+            self.assertEqual(values(result), expected)
+            if previous is not None:
+                self.assertEqual(events, previous)
+            previous = events
         for tolerances in ['1e-20,1e-9', '1e-12,1e-20']:
             tight = compile_model(body.replace('1e-12,1e-9', tolerances), declarations)
             with self.assertRaises(KernelError) as caught:
@@ -73,6 +83,20 @@ class InitializedEventComposition(unittest.TestCase):
                 result = run(program, {'u': [[0,3],[6e-6,0]]}, [0,before,after,6e-6], stop=6e-6)
                 self.assertEqual(values(result), [0,0,1,1])
                 self.assertEqual(len(result['transient']['events']), 1)
+
+    def test_cluster_extension_does_not_invent_an_internal_root_certificate(self):
+        program = compile_model(
+            '@(initial_step) begin n=0; m=0; k=0; end '
+            '@(cross(V(u,r)-.5,1,1e-12,1e-9)) n=n+1; '
+            '@(timer(.5,0,1e-12)) k=k+1; '
+            'V(z,r)<+V(u,r); '
+            '@(cross(V(z,r)-.5000000000000001,1,1e-12,1e-9)) m=m+1; '
+            'V(y,r)<+n+m+k;', 'integer n,m,k; electrical z;')
+        for times in [[0, 1], [0, .5, math.nextafter(.5, math.inf), 1]]:
+            with self.assertRaises(KernelError) as caught:
+                run(program, {'u': [[0,.1],[1,.9]]}, times, stop=1)
+            self.assertEqual(caught.exception.detail['kind'], 'event_resolution')
+            self.assertRegex(caught.exception.detail['message'], 'ordering|next event boundary')
 
     def test_original_affine_cross_keeps_query_phase_and_transition_sample(self):
         # The original binary-rational root lies just after the nominal query;

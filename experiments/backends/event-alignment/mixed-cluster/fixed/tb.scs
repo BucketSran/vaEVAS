@@ -1,0 +1,7 @@
+simulator lang=spectre
+ahdl_include "dut.va"
+Vu (u 0) vsource type=pwl wave=[0 0.10000000000000001 1 0.90000000000000002]
+Xdut (u y z 0) mixed
+simulatorOptions options reltol=1e-8 vabstol=1e-11 iabstol=1e-15 precision="%24.17g" saveahdlvars=allwithnodes
+tran tran stop=1 maxstep=0.125 method=traponly strobeoutput=all strobetimes=[0 0.5 0.50000000000000011 0.50000000000000022 0.625 0.75 1]
+save u y z
