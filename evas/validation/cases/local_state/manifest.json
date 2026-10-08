@@ -1,0 +1,30 @@
+{
+  "case": "local-state-65-L",
+  "status": "frozen-inputs; Spectre not run by implementation agent",
+  "source": "dut.va",
+  "spectre_deck": "table.scs",
+  "input": {"u": [[0, 0], [1, 1]]},
+  "instances": [
+    {"name": "first", "module": "local_state", "connections": {"u": "u", "y": "y1", "z": "z1", "h": "h1", "qobs": "q1", "r": "0"}, "parameters": {"GAIN": 1, "OFFSET": 1}},
+    {"name": "second", "module": "local_state", "connections": {"u": "u", "y": "y2", "z": "z2", "h": "h2", "qobs": "q2", "r": "0"}, "parameters": {"GAIN": 2, "OFFSET": 3}},
+    {"name": "capture", "module": "local_capture", "connections": {"u": "u", "y": "yc", "qobs": "qc", "r": "0"}, "parameters": {}}
+  ],
+  "times": [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1],
+  "EVAS": {"stop": 1, "max_step": 0.025, "vabstol": 1e-10, "reltol": 0},
+  "independent_expectation": {
+    "q1": "1 for t<.5; 2 for t>=.5",
+    "q2": "3 for t<.5; 4 for t>=.5",
+    "qc": "1 for t<.5; 1.5 for t>=.5",
+    "y1": "t+q1", "z1": "3*t+q1", "h1": "3*t+.25+q1",
+    "y2": "2*t+q2", "z2": "6*t+q2", "h2": "3*t+.25+q2",
+    "yc": "t+qc"
+  },
+  "comparison": {
+    "oracle": "hand-derived formulas above; never EVAS or Spectre output",
+    "voltage_absolute": 1e-7, "voltage_relative": 1e-5,
+    "timer_window": [0.5, 0.500000000001],
+    "event_observation": "Use the same native q1/q2/qc pre/post change records to bracket all jumps. Do not interpolate across jumps. A .5 timestamp alone does not identify pre/post stage; require qobs stage. At .5 EVAS expects post-event; compare Spectre only after native stage qualification.",
+    "continuous_observation": "Check native records at their own time against formulas outside the event window. At requested anchors use native strobe records if present, otherwise qualify same-stage interpolation and preserve bracket/error evidence. Missing initial/stop coverage remains incomplete.",
+    "required_receipts": "Fixed EVAS source/kernel/IR version and SHA; Spectre version/settings and raw time tokens; source/deck/manifest SHA; executed command/exit; native save provenance, effective options, event bracket and initial/stop coverage. A deck alone establishes no alignment."
+  }
+}

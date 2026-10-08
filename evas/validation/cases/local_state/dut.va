@@ -1,0 +1,35 @@
+`include "disciplines.vams"
+module local_state(u,y,z,h,qobs,r);
+input u; output y,z,h,qobs; inout r;
+electrical u,y,z,h,qobs,r;
+parameter real GAIN=1, OFFSET=1;
+real a,q;
+analog begin
+  @(initial_step) q=OFFSET;
+  @(timer(0.5)) q=OFFSET+1;
+  a=GAIN*V(u,r);
+  V(y,r)<+a+q;
+  a=2*a;
+  V(z,r)<+a;
+  a=GAIN*V(u,r);
+  V(z,r)<+a+q;
+  a=idt(1,0);
+  V(h,r)<+a+q;
+  a=idt(2,0.25);
+  V(h,r)<+a;
+  V(qobs,r)<+q;
+end
+endmodule
+
+module local_capture(u,y,qobs,r);
+input u; output y,qobs; inout r;
+electrical u,y,qobs,r;
+real a,q;
+analog begin
+  @(initial_step) q=1;
+  @(timer(0.5)) begin q=V(u,r); q=q+1; end
+  a=V(u,r);
+  V(y,r)<+a+q;
+  V(qobs,r)<+q;
+end
+endmodule
