@@ -1,0 +1,29 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module case_probe(u,y,f);
+  input u; output y,f; electrical u,y,f;
+  real value;
+  analog function real pick;
+    input x; real x,t;
+    begin
+      t=0;
+      case(x)
+        0: t=2;
+        1: t=3;
+        default: t=4;
+      endcase
+      pick=t+1;
+    end
+  endfunction
+  analog begin
+    value=-1;
+    case(V(u))
+      default: value=9;
+      0,1: begin value=2; value=value+1; end
+      1: value=5;
+      2: value=7;
+    endcase
+    V(y)<+value;
+    V(f)<+pick(V(u));
+  end
+endmodule

@@ -44,6 +44,16 @@ quit
 .endc
 '''
 class Calibration(unittest.TestCase):
+ def test_spectre_observed_si_prefixes(self):
+  from settings_readback import numeric
+  for token,dimension,expected in [('125 ms','time',.125),('10 pV','voltage',1e-11),('100 fV','voltage',1e-13),('10 fA','current',1e-14),('100 aA','current',1e-16)]:
+   with self.subTest(token=token):
+    self.assertAlmostEqual(numeric(token,dimension)/expected,1.)
+   for wrong in {'time','voltage','current','dimensionless'}-{dimension}:
+    with self.subTest(token=token,wrong=wrong),self.assertRaises(ReadbackError): numeric(token,wrong)
+  log=LOG.replace('200 ps','125 ms').replace('100 nV','10 pV').replace('1 pA','10 fA')
+  psf=PSF.replace('"maxstep" 2e-10','"maxstep" .125').replace('"abstol(V)" 1e-7','"abstol(V)" 1e-11').replace('"abstol(I)" 1e-12','"abstol(I)" 1e-14')
+  self.assertEqual(spectre(log,psf)['effective']['maxstep_s']['value'],.125)
  def test_spectre_scoped_positive(self):
   r=spectre(LOG,PSF)
   self.assertEqual(r['effective']['reltol']['value'],1e-6)
