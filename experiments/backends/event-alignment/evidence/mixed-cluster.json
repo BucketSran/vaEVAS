@@ -203,7 +203,66 @@
         "fixed-instrumented/tb.scs": "80f26042454ae036093b93b0f6f104148cf97dbc9ee4a8f67c5fe18a4027e461",
         "fixed-instrumented/simulate.log": "fc4ed6c241663e7fb3e956f1ec3a6dc9f151ac1bc9def1b97488827c8ed9c837",
         "fixed-instrumented/psf/tran.tran.tran": "19c475a80a5974c1f39794faaf6753a4376fe41742be6bccfd1e7636572705ea"
-      }
+      },
+      "evas_requested_and_sparse_observations": [
+        {
+          "rows": [
+            {
+              "time": 0.0,
+              "y": -0.0,
+              "z": -0.0
+            },
+            {
+              "time": 0.5,
+              "y": 11.0,
+              "z": -0.0
+            },
+            {
+              "time": 0.5000000000000001,
+              "y": 11.0,
+              "z": -0.0
+            },
+            {
+              "time": 0.5000000000000002,
+              "y": 111.0,
+              "z": -0.0
+            },
+            {
+              "time": 0.625,
+              "y": 111.0,
+              "z": -0.0
+            },
+            {
+              "time": 0.75,
+              "y": 111.0,
+              "z": -0.0
+            },
+            {
+              "time": 1.0,
+              "y": 111.0,
+              "z": -0.0
+            }
+          ],
+          "events_match_full_native_grid": true,
+          "independent_y_exact": true
+        },
+        {
+          "rows": [
+            {
+              "time": 0,
+              "y": -0.0,
+              "z": -0.0
+            },
+            {
+              "time": 1,
+              "y": 111.0,
+              "z": -0.0
+            }
+          ],
+          "events_match_full_native_grid": true,
+          "independent_y_exact": true
+        }
+      ]
     },
     {
       "case": "held",
@@ -379,7 +438,66 @@
         "held-instrumented/tb.scs": "80f26042454ae036093b93b0f6f104148cf97dbc9ee4a8f67c5fe18a4027e461",
         "held-instrumented/simulate.log": "4d0d4457357743c4da1b48419fe55850d0f52cc2df8347acd76e35b2587bba5d",
         "held-instrumented/psf/tran.tran.tran": "3f5ff7158e09f5f7a7099dde714694f2acec5a0f34b9a64b007ff0688a33990b"
-      }
+      },
+      "evas_requested_and_sparse_observations": [
+        {
+          "rows": [
+            {
+              "time": 0.0,
+              "y": -0.0,
+              "z": -0.0
+            },
+            {
+              "time": 0.5,
+              "y": 11.0,
+              "z": 0.5
+            },
+            {
+              "time": 0.5000000000000001,
+              "y": 11.0,
+              "z": 0.5000000000000001
+            },
+            {
+              "time": 0.5000000000000002,
+              "y": 111.0,
+              "z": 0.5000000000000002
+            },
+            {
+              "time": 0.625,
+              "y": 111.0,
+              "z": 0.625
+            },
+            {
+              "time": 0.75,
+              "y": 1111.0,
+              "z": 0.75
+            },
+            {
+              "time": 1.0,
+              "y": 1111.0,
+              "z": 1.0
+            }
+          ],
+          "events_match_full_native_grid": true,
+          "independent_y_exact": true
+        },
+        {
+          "rows": [
+            {
+              "time": 0,
+              "y": -0.0,
+              "z": -0.0
+            },
+            {
+              "time": 1,
+              "y": 1111.0,
+              "z": 1.0
+            }
+          ],
+          "events_match_full_native_grid": true,
+          "independent_y_exact": true
+        }
+      ]
     }
   ],
   "analysis_base_revision": "d521c28accf09d76e6de6c77b225c29672cdaec6",
