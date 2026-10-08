@@ -1,8 +1,19 @@
 {
+  "schema_version": 2,
   "attempt": "identify-sh-acquisition-glm-5.3-prepared-v5",
   "task_id": "identify-sh-acquisition",
-  "served_model": "glm-5.3",
-  "model_identity_limit": "Transcript confirms endpoint model ID, not vendor internal routing.",
+  "requested_model": "glm-5.3",
+  "pi_recorded_model": "glm-5.3",
+  "server_response_model": null,
+  "identity_evidence": {
+    "version": "pi-response-model-distinction-v2",
+    "pi_model_assignment": "configured model.id, not independently observed server model",
+    "response_model_assignment": "response chunk.model retained only when different from configured ID",
+    "missing_response_model": "equal and omitted server response model IDs cannot be distinguished",
+    "observed_response_model_messages": 0,
+    "response_id_message_count": 55,
+    "vendor_internal_routing": "unknown"
+  },
   "final_package_sha256": "51e9955eebabf64241c79e35654cdf2f216d8df3960ebf95ddd82264abfef55a",
   "criteria_sha256": "eec2560d73702abfde41435106b643488e2e33615b3a0abaccbc137dc4ae65ea",
   "original_final_job_id": "harbor-01e12e46-b7a4-4686-8084-c3e9adea1953",

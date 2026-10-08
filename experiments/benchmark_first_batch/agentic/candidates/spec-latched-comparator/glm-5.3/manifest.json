@@ -1,8 +1,19 @@
 {
+  "schema_version": 2,
   "attempt": "spec-latched-comparator-glm-5.3-prepared-v5",
   "task_id": "spec-latched-comparator",
-  "served_model": "glm-5.3",
-  "model_identity_limit": "Transcript confirms endpoint model ID, not vendor internal routing.",
+  "requested_model": "glm-5.3",
+  "pi_recorded_model": "glm-5.3",
+  "server_response_model": null,
+  "identity_evidence": {
+    "version": "pi-response-model-distinction-v2",
+    "pi_model_assignment": "configured model.id, not independently observed server model",
+    "response_model_assignment": "response chunk.model retained only when different from configured ID",
+    "missing_response_model": "equal and omitted server response model IDs cannot be distinguished",
+    "observed_response_model_messages": 0,
+    "response_id_message_count": 18,
+    "vendor_internal_routing": "unknown"
+  },
   "final_package_sha256": "0b4e97bc2b4b5a9845dbd645c7ff87c1f519b00b73b1f7f765b7ad27c1946dd4",
   "criteria_sha256": "d79ef1054483500a0f7a04d4b9139955d92846439d5d216a4521d5516f89297f",
   "original_final_job_id": "harbor-fed34028-7055-41f9-930b-4de18863dd80",

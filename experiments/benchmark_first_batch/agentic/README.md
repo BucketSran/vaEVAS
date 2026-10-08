@@ -51,12 +51,12 @@ python3 -B experiments/benchmark_first_batch/agentic/runtime.py prepare \
   --kernel /absolute/matched/evas-kernel \
   --agent-image sha256:IMMUTABLE_AGENT_IMAGE_ID \
   --gateway-host DOCKER_REACHABLE_HOST \
-  --base-url MODEL_ENDPOINT --model SERVED_MODEL_ID
+  --base-url MODEL_ENDPOINT --model REQUESTED_MODEL_ID
 python3 -B experiments/benchmark_first_batch/agentic/runtime.py preflight \
   --name comparator-flash-example
 ```
 
-Optional `preflight --check-environment` verifies the local container bridge and cleanup. It starts no model generation and performs no remote solve. Static preflight alone does not establish endpoint reachability. An authenticated model-list response establishes a served ID, not a successful generation or vendor internal routing.
+Optional `preflight --check-environment` verifies the local container bridge and cleanup. It starts no model generation and performs no remote solve. Static preflight alone does not establish endpoint reachability. An authenticated model-list response establishes an advertised model ID. It does not establish successful generation or vendor internal routing.
 
 After the coordinator releases the required resources, run exactly once:
 
@@ -68,13 +68,44 @@ python3 -B experiments/benchmark_first_batch/agentic/audit.py comparator-flash-e
 
 The runtime preserves started/finished receipts, refuses implicit reruns, and bounds process cleanup on timeout. Initial settings of 1200 seconds, 80 public actions and 16 public simulations are engineering settings, not user budget ceilings. Increase them when evidence identifies a limiting resource; use a new attempt ID and retain the predecessor.
 
-Harbor's command can exit zero even when the Trial has an exception. The audit returns exit 2 for a Trial exception or missing verifier result. It reports actual endpoint model IDs, transcript token fields, stop reasons, public actions, candidate/package identity, independent case results, and archive checksum verification. A graded score zero is a completed evaluation. `cost_usd: null` means billing is unknown; Pi's zero cost can reflect missing price metadata. Raw logs remain private; publish sanitized evidence separately.
+Harbor's command can exit zero even when the Trial has an exception. The audit returns exit 2 for a Trial exception or missing verifier result. It reports requested and Pi-recorded model IDs, any separately recorded response model IDs, transcript token fields, stop reasons, public actions, candidate/package identity, independent case results, and archive checksum verification. A graded score zero is a completed evaluation. `cost_usd: null` means billing is unknown; Pi's zero cost can reflect missing price metadata. Raw logs remain private; publish sanitized evidence separately.
 
 ## Candidate source evidence
 
-Completed fixed pilot cells publish their untouched frozen candidate files under `candidates/<task_id>/<served_model>/`. Each compact manifest binds the bundle, every file hash and byte count, final package and criteria, original final job, candidate score, and agent-phase exception. Multi-file candidates retain their complete declared file set. A missing candidate or blocked credential scan is explicit; the exporter does not repair or supplement a submission.
+Completed fixed pilot cells publish their untouched frozen candidate files under `candidates/<task_id>/<requested_model>/`. Each compact manifest binds the bundle, every file hash and byte count, final package and criteria, original final job, candidate score, and agent-phase exception. Multi-file candidates retain their complete declared file set. A missing candidate or blocked credential scan is explicit; the exporter does not repair or supplement a submission.
 
 `export_candidates.py` requires `AGENTIC_OUTPUT`, `CIRCUIT_HARNESS` and the injected `BENCHMARK_MODEL_KEY` for known-token scanning. It verifies the existing frozen bundle and final package through the harness and scans original and exported bytes for known tokens and credential patterns before publication. It performs no model or solver request. Candidate source with a successful export is repository-contained. Raw transcripts, machine configuration and waveforms remain local-only; commercial model and Spectre access remain separate requirements for a full rerun.
+
+Candidate manifest format 2 separates `requested_model`, `pi_recorded_model`, and `server_response_model`. The observed Pi transport initializes `assistant.model` from configured `model.id`; it retains `responseModel` only when the response chunk model differs. An absent `responseModel` leaves equal and omitted server IDs indistinguishable, so `server_response_model` is null. Actual API responses establish generation, but the configured Pi label alone does not independently identify the server model. Earlier manifest fields called `served_model` were corrected in format 2; original derived bytes and hashes remain private, and committed predecessors remain in Git history.
+
+Re-evaluating a published candidate needs its fixed scoring package, corresponding backend, and deployment. It needs no model API. Generating a new candidate requires model access. `runtime.py prepare` prepares an Agent Trial and has no candidate-directory input. Use the existing harness `freeze_candidate` API to prepare published bytes for its final-evaluation API instead:
+
+```sh
+# CANDIDATE_SOURCE: published candidate directory; FINAL_PACKAGE: its fixed scoring package.
+# REPLAY_BUNDLE: a new, nonexistent ignored directory. This command makes no backend request.
+"$HARBOR_PYTHON" -B - <<'PY'
+import json, os, pathlib, sys
+sys.path.insert(0, os.environ['CIRCUIT_HARNESS'])
+from alphaapollo.common.execution.chips.candidate_bundle import freeze_candidate, verify_candidate
+from alphaapollo.common.execution.chips.benchmark_spectre import package_identity
+source = pathlib.Path(os.environ['CANDIDATE_SOURCE'])
+published = json.loads((source / 'manifest.json').read_text())
+package = package_identity(pathlib.Path(os.environ['FINAL_PACKAGE']), purpose='final')
+if package['sha256'] != published['final_package_sha256']:
+    raise ValueError('fixed scoring package mismatch')
+manifest = package['manifest']
+bundle = pathlib.Path(os.environ['REPLAY_BUNDLE'])
+freeze_candidate(source, bundle, list(published['candidate_files']),
+                 task_id=manifest['task_id'], task_version=manifest['task_version'],
+                 reason='published-candidate-revalidation')
+actual = verify_candidate(bundle)
+if actual['candidate_sha256'] != published['candidate_bundle_sha256']:
+    raise ValueError('published candidate identity mismatch')
+print('Published candidate identity verified; no model or solver request')
+PY
+```
+
+The same local preparation reproduced the first comparator cell's original bundle identity. A new remote evaluation uses the existing harness final API and a new job ID. It does not resume or replace the original model Trial.
 
 ## Increase a Pi output limit
 
@@ -92,7 +123,7 @@ Use its immutable image ID with `prepare --max-output-tokens 65536`. The extensi
 
 ## Representative matrix
 
-The intended matrix is the two actual endpoint IDs `glm-5.3` and `glm-5.3-flash`, covering specification, identification, integration, repair, verification, measurement and optimization. The fixed seven representatives are `spec-latched-comparator`, `identify-sh-acquisition`, `integrate-tdc-measurement-chain`, `repair-sar-abort`, `verify-sar-flow`, `measure-adc-spectrum`, and `optimize-vco-step`. The VCO formal task is frozen and its three-condition reference plus twelve paired performance waveforms have passed the independent sealed evidence audit. The fixed 14-cell pilot is running; results are not complete. Record task revisions and public limitations per cell. Keep failed attempts in the denominator and distinguish deployment errors, model output limits, final guard errors and fully graded candidate rejection.
+The fixed matrix uses the two requested endpoint IDs `glm-5.3` and `glm-5.3-flash`, covering specification, identification, integration, repair, verification, measurement and optimization. The fixed seven representatives are `spec-latched-comparator`, `identify-sh-acquisition`, `integrate-tdc-measurement-chain`, `repair-sar-abort`, `verify-sar-flow`, `measure-adc-spectrum`, and `optimize-vco-step`. The VCO formal task is frozen and its three-condition reference plus twelve paired performance waveforms have passed the independent sealed evidence audit. The fixed 14-cell pilot is running; results are not complete. Record task revisions and public limitations per cell. Keep failed attempts in the denominator and distinguish deployment errors, model output limits, final guard errors and fully graded candidate rejection.
 
 Optimization final packages run the main performance condition with 13 solves, plus two other functional conditions. Use the independently calibrated performance operator profile with a 900-second server limit, a 256-MiB archive limit, and a calibration `job_wait_timeout_s` of 1200. The main waveform remains raw; all twelve paired waveforms are retained as lossless gzip, with decompressed bytes, hashes and parsed rows independently verified. The initial 1-GiB declaration exceeded the existing harness 256-MiB maximum and was rejected before creating a job; that historical deployment failure is retained. Prepare with `--optimization-final --verifier-timeout 1500` and run with `--run-timeout 4200`; do not use the normal 180-second/256-MiB profile. `FrozenCandidateVerifier` polls under Harbor's verifier deadline, so `job_wait_timeout_s` is recorded from the operator configuration rather than inserted as an unsupported `FinalEvaluationConfig` field. The optimization preparation guard requires both recorded wait and verifier bounds of at least 1200. Public simulator budgets stay independent.
 

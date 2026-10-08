@@ -164,6 +164,29 @@ class AuditTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'sealed final evaluation'):
                 audit.summarize(root)
 
+    def test_configured_pi_model_and_response_model_are_distinct(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / 'attempt'
+            trial = root / 'jobs/attempt/trial'
+            sessions = trial / 'agent/pi/sessions'
+            sessions.mkdir(parents=True)
+            (trial / 'result.json').write_bytes(encoded({'id': 'fixture'}))
+            (root / 'identity.json').write_bytes(encoded({'final_task_package_sha256': 'unused'}))
+            messages = [
+                {'role': 'assistant', 'provider': 'endpoint', 'model': 'requested',
+                 'responseId': 'response-1'},
+                {'role': 'assistant', 'provider': 'endpoint', 'model': 'requested',
+                 'responseId': 'response-2', 'responseModel': 'server-other'}]
+            (sessions / 'fixture.jsonl').write_text(''.join(
+                json.dumps({'message': message}) + '\n' for message in messages))
+            result = audit.summarize(root)
+            self.assertEqual(result['pi_recorded_models'], [
+                {'provider': 'endpoint', 'model': 'requested', 'assistant_messages': 2}])
+            self.assertEqual(result['pi_response_models'], [
+                {'model': 'server-other', 'assistant_messages': 1}])
+            self.assertEqual(result['pi_response_id_message_count'], 2)
+            self.assertIn('equal and omitted', result['model_identity_limit'])
+
     def test_resealed_hash_and_identity_corruption(self):
         for corruption in ['executed', 'working', 'result_artifact', 'inverse']:
             with self.subTest(corruption=corruption), self.assertRaises(ValueError):
@@ -177,6 +200,8 @@ class AuditTests(unittest.TestCase):
         passed = audit.summarize(root / 'comparator-trial-v4')
         self.assertTrue(passed['archives'][0]['complete_pass'])
         self.assertEqual(len(passed['archives'][0]['cases']), 2)
+        self.assertEqual(passed['pi_response_models'], [])
+        self.assertGreater(passed['pi_response_id_message_count'], 0)
         failed = audit.summarize(root / 'comparator-flash-v1')
         self.assertIsNotNone(failed['exception'])
         self.assertIsNone(failed['verifier_result'])

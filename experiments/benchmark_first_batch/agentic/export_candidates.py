@@ -55,7 +55,9 @@ def export(folder, destination_root, known_token):
                 not (audited['episode_end'] or {}).get('candidate_sha256'),
                 'unobserved model has candidate/final evidence')
     else:
-        require(models == {identity['model_requested']}, 'actual served model identity is not unique/matching')
+        require(models == {identity['model_requested']}, 'Pi configured model identity is not unique/matching')
+    response_models = {row['model'] for row in audited.get('pi_response_models', [])}
+    require(len(response_models) <= 1, 'conflicting server response model identities')
     destination = destination_root / identity['task_id'] / identity['model_requested']
     require(not destination.exists(), 'refuse overwriting published candidate')
     verify_candidate, package_identity = harness_verifiers()
@@ -64,12 +66,18 @@ def export(folder, destination_root, known_token):
     require(package['sha256'] == identity['final_task_package_sha256'], 'prepared final package changed')
     require(package['manifest']['task_id'] == identity['task_id'], 'final package task differs')
     require(len(archives) <= 1, 'multiple final evaluations')
-    result = {'attempt': folder.name, 'task_id': identity['task_id'],
+    result = {'schema_version': 2, 'attempt': folder.name, 'task_id': identity['task_id'],
               'requested_model': identity['model_requested'],
-              'served_model': identity['model_requested'] if models else None,
-              'actual_model_observed': bool(models),
-              'model_identity_limit': audited['model_identity_limit'] if models else
-              'No model response observed; requested model is configuration only.',
+              'pi_recorded_model': next(iter(models)) if models else None,
+              'server_response_model': next(iter(response_models)) if response_models else None,
+              'identity_evidence': {
+                  'version': 'pi-response-model-distinction-v2',
+                  'pi_model_assignment': 'configured model.id, not independently observed server model',
+                  'response_model_assignment': 'response chunk.model retained only when different from configured ID',
+                  'missing_response_model': 'equal and omitted server response model IDs cannot be distinguished',
+                  'observed_response_model_messages': sum(row['assistant_messages'] for row in audited.get('pi_response_models', [])),
+                  'response_id_message_count': audited.get('pi_response_id_message_count', 0),
+                  'vendor_internal_routing': 'unknown'},
               'final_package_sha256': package['sha256'],
               'criteria_sha256': package['manifest']['criteria_sha256'],
               'original_final_job_id': archives[0]['job_id'] if archives else None,
@@ -144,7 +152,7 @@ def main():
     require(Path(args.attempt).name == args.attempt, 'attempt must be one directory component')
     token = os.environ['BENCHMARK_MODEL_KEY'].encode()
     result = export(Path(os.environ['AGENTIC_OUTPUT']) / args.attempt, args.destination, token)
-    print(result['task_id'], result['served_model'], result['availability'])
+    print(result['task_id'], result['requested_model'], result['availability'])
 
 
 if __name__ == '__main__':

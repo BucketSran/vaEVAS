@@ -106,8 +106,10 @@ class ExportTests(unittest.TestCase):
                 result = export.export(folder, root / 'published', b'known-test-credential')
             self.assertEqual(result['availability'], 'none_no_frozen_candidate')
             self.assertEqual(result['requested_model'], 'model')
-            self.assertIsNone(result['served_model'])
-            self.assertFalse(result['actual_model_observed'])
+            self.assertIsNone(result['pi_recorded_model'])
+            self.assertIsNone(result['server_response_model'])
+            self.assertNotIn('served_model', result)
+            self.assertNotIn('actual_model_observed', result)
 
     def test_conflicting_observed_model_is_strictly_rejected(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -115,9 +117,46 @@ class ExportTests(unittest.TestCase):
             folder, manifest, audited, package = self.fixture(root, {})
             audited['pi_recorded_models'] = [{'model': 'different'}]
             with patch.object(export, 'summarize', return_value=audited), \
-                 self.assertRaisesRegex(ValueError, 'actual served model identity'):
+                 self.assertRaisesRegex(ValueError, 'Pi configured model identity'):
                 export.export(folder, root / 'published', b'known-test-credential')
             self.assertFalse((root / 'published/task/model').exists())
+
+    def test_pi_configured_model_does_not_prove_server_model(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            folder, manifest, audited, package = self.fixture(root, {'dut.va': b'original'})
+            audited['pi_response_id_message_count'] = 3
+            with patch.object(export, 'summarize', return_value=audited), \
+                 patch.object(export, 'harness_verifiers', return_value=(lambda path: manifest,
+                     lambda path, purpose: package)):
+                result = export.export(folder, root / 'published', b'known-test-credential')
+            self.assertEqual(result['requested_model'], 'model')
+            self.assertEqual(result['pi_recorded_model'], 'model')
+            self.assertIsNone(result['server_response_model'])
+            self.assertEqual(result['identity_evidence']['response_id_message_count'], 3)
+
+    def test_different_server_response_model_is_kept_distinct(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            folder, manifest, audited, package = self.fixture(root, {'dut.va': b'original'})
+            audited['pi_response_models'] = [{'model': 'server-other', 'assistant_messages': 2}]
+            with patch.object(export, 'summarize', return_value=audited), \
+                 patch.object(export, 'harness_verifiers', return_value=(lambda path: manifest,
+                     lambda path, purpose: package)):
+                result = export.export(folder, root / 'published', b'known-test-credential')
+            self.assertEqual(result['pi_recorded_model'], 'model')
+            self.assertEqual(result['server_response_model'], 'server-other')
+            self.assertEqual(result['identity_evidence']['observed_response_model_messages'], 2)
+
+    def test_conflicting_server_response_models_are_rejected(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            folder, manifest, audited, package = self.fixture(root, {'dut.va': b'original'})
+            audited['pi_response_models'] = [{'model': value, 'assistant_messages': 1}
+                                              for value in ('server-a', 'server-b')]
+            with patch.object(export, 'summarize', return_value=audited), \
+                 self.assertRaisesRegex(ValueError, 'conflicting server response model'):
+                export.export(folder, root / 'published', b'known-test-credential')
 
 
 if __name__ == '__main__':

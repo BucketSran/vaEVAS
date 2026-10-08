@@ -198,7 +198,8 @@ def summarize(root):
         raise ValueError('expected exactly one completed Trial result')
     trial = trials[0]
     result = read(trial / 'result.json')
-    models, usage, stops, calls, actions = Counter(), Counter(), Counter(), [], []
+    models, response_models, usage, stops, calls, actions = Counter(), Counter(), Counter(), Counter(), [], []
+    response_id_messages = 0
     transcripts = sorted((trial / 'agent/pi/sessions').glob('*.jsonl'))
     for transcript in transcripts:
         for line in transcript.read_text().splitlines():
@@ -206,6 +207,10 @@ def summarize(root):
             if message.get('role') != 'assistant':
                 continue
             models[(message.get('provider'), message.get('model'))] += 1
+            if isinstance(message.get('responseModel'), str) and message['responseModel']:
+                response_models[message['responseModel']] += 1
+            if isinstance(message.get('responseId'), str) and message['responseId']:
+                response_id_messages += 1
             stops[message.get('stopReason')] += 1
             for key, value in (message.get('usage') or {}).items():
                 if isinstance(value, (int, float)):
@@ -247,7 +252,14 @@ def summarize(root):
             'verifier_result': result.get('verifier_result'),
             'pi_recorded_models': [{'provider': k[0], 'model': k[1], 'assistant_messages': v}
                                    for k, v in models.items()],
-            'model_identity_limit': 'Transcript confirms endpoint model ID, not vendor internal routing.',
+            'pi_response_models': [{'model': model, 'assistant_messages': count}
+                                   for model, count in response_models.items()],
+            'pi_response_id_message_count': response_id_messages,
+            'model_identity_evidence_version': 'pi-response-model-distinction-v2',
+            'model_identity_limit': 'Pi assistant.model records the configured request ID. '
+                'The observed Pi OpenAI transport writes responseModel only when the response model differs. '
+                'Without responseModel, equal and omitted server response IDs cannot be distinguished. '
+                'Vendor internal routing is not independently verified.',
             'actual_transcript_token_fields': dict(usage), 'assistant_stop_reasons': dict(stops),
             'cost_limit': 'Harbor cost_usd null is unknown billing; Pi zero cost may lack price metadata.',
             'pi_tool_calls': calls, 'public_tool_actions': actions,

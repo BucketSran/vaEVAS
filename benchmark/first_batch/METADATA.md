@@ -51,7 +51,8 @@ normalizer 仅修改五个首批登记 JSON、所属任务 task.toml 和 SOURCE.
 至少一个条件被拒绝。负例按提交分为 24 个语义负例、5 个仅性能负例和 1 个混合负例。
 metadata 准入计数本身不证明校准完成，执行状态以对应证据为准。
 
-模型 pilot 的 14 个固定单元覆盖七类代表题及 `glm-5.3`、`glm-5.3-flash` 两个
-同 family 的实际 endpoint。试跑正在进行，尝试、工具轨迹和成绩属于
+模型 pilot 的 14 个固定单元覆盖七类代表题，请求模型标识为 GLM 系列的
+`glm-5.3` 和 `glm-5.3-flash`。Pi 记录的配置名不等于独立观察到的服务端响应身份。
+试跑正在进行，尝试、工具轨迹和成绩属于
 [Agentic 证据](../../experiments/benchmark_first_batch/agentic/README.md)，不能由 metadata
 或人工参考解校准推导 35 题整体模型通过率。
