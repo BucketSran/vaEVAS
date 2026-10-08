@@ -1,0 +1,862 @@
+{
+  "schema_version": 1,
+  "inventory_id": "paper-a0-inventory-v1",
+  "scope": "Finite candidate inventory for accepted voltage-domain program; not an exhaustive Verilog-AMS conformance inventory.",
+  "candidates": [
+    {
+      "id": "F-V-01",
+      "primary_group": "voltage",
+      "feature": "两端电压访问、参考端贡献",
+      "engineering_purpose": "采样前端差分读取与电平参考",
+      "classification": "selected",
+      "reason": "独立变化的参考和差分可辨别绝对电压误读",
+      "condition_ids": [
+        "VR-01"
+      ],
+      "legacy_tags": [
+        "V2"
+      ],
+      "ownership": "A0/A1 new comparison; no existing repair PR assigned",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/PROTOCOL.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-V-02",
+      "primary_group": "voltage",
+      "feature": "多贡献累加、多输入关系",
+      "engineering_purpose": "增益叠加和加权输入",
+      "classification": "deferred",
+      "reason": "A2 用独立输入刺激辨别遗漏项；首批 VR 单贡献不覆盖",
+      "condition_ids": [],
+      "legacy_tags": [
+        "V1"
+      ],
+      "ownership": "LIN; legacy S1, not new paper evidence",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/PROTOCOL.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-V-03",
+      "primary_group": "voltage",
+      "feature": "供电依赖和共模不变性",
+      "engineering_purpose": "电平转换和差分驱动",
+      "classification": "deferred",
+      "reason": "A2 需单因素刺激；不沿用相关扫描替代",
+      "condition_ids": [],
+      "legacy_tags": [
+        "V2"
+      ],
+      "ownership": "A0/A1 new comparison; no existing repair PR assigned",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/PROTOCOL.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-V-04",
+      "primary_group": "voltage",
+      "feature": "有限唯一解电压反馈",
+      "engineering_purpose": "受控反馈求解",
+      "classification": "deferred",
+      "reason": "A2 固定唯一解和条件数后单独纳入",
+      "condition_ids": [],
+      "legacy_tags": [
+        "V7"
+      ],
+      "ownership": "LIN/NONLINEAR; accepted voltage-domain boundary",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/PROTOCOL.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-E-01",
+      "primary_group": "expression",
+      "feature": "顺序赋值、算术、if/else",
+      "engineering_purpose": "VCO 控制到有限正频率",
+      "classification": "selected",
+      "reason": "连续支路更新和上下限均有独立错误点",
+      "condition_ids": [
+        "EX-01",
+        "CO-VCO-01"
+      ],
+      "legacy_tags": [
+        "V1",
+        "V6"
+      ],
+      "ownership": "A0/A1 new comparison; no existing repair PR assigned",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/ANALOG_CONDITIONS_CONTRACT.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-E-02",
+      "primary_group": "expression",
+      "feature": "比较、逻辑、三元表达式",
+      "engineering_purpose": "使能选择和分段关系",
+      "classification": "deferred",
+      "reason": "A2 等价编码只在区分具体故障时成新条件",
+      "condition_ids": [],
+      "legacy_tags": [
+        "V1"
+      ],
+      "ownership": "LANG; stateless expression candidate boundaries in CAPABILITIES",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/ANALOG_CONDITIONS_CONTRACT.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-E-03",
+      "primary_group": "expression",
+      "feature": "参数默认、覆盖、范围、integer",
+      "engineering_purpose": "实例可配置行为",
+      "classification": "deferred",
+      "reason": "SI 使用覆盖作为次标签；未独立检验默认/范围/转换",
+      "condition_ids": [],
+      "legacy_tags": [
+        "V1",
+        "V7"
+      ],
+      "ownership": "LANG; #63/#64/#65 frontend boundaries",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/ANALOG_CONDITIONS_CONTRACT.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-E-04",
+      "primary_group": "expression",
+      "feature": "纯 real 函数、常量数组、静态索引",
+      "engineering_purpose": "复用转移公式与滤波系数",
+      "classification": "deferred",
+      "reason": "A2 选择有工程用途的具体编码，首批不纳入",
+      "condition_ids": [],
+      "legacy_tags": [
+        "V1",
+        "V6"
+      ],
+      "ownership": "LANG",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/ANALOG_CONDITIONS_CONTRACT.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-E-05",
+      "primary_group": "expression",
+      "feature": "静态 genvar 展开和事件体顺序循环",
+      "engineering_purpose": "重复通道与状态更新",
+      "classification": "deferred",
+      "reason": "A3 需槽隔离和语句顺序的联合答案",
+      "condition_ids": [],
+      "legacy_tags": [
+        "V4",
+        "V7"
+      ],
+      "ownership": "LANG/COMPOSE",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/ANALOG_CONDITIONS_CONTRACT.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-E-06",
+      "primary_group": "expression",
+      "feature": "运行时循环、动态索引、一般函数",
+      "engineering_purpose": "运行时选择和递推",
+      "classification": "deferred",
+      "reason": "在电压域候选范围内，但需明确源语义及成本；不能按 EVAS 拒绝改为范围外",
+      "condition_ids": [],
+      "legacy_tags": [
+        "V1",
+        "V4"
+      ],
+      "ownership": "LANG current unsupported boundary",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/ANALOG_CONDITIONS_CONTRACT.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-I-01",
+      "primary_group": "event",
+      "feature": "initial_step 常量初态",
+      "engineering_purpose": "首次事件前稳定输出",
+      "classification": "selected",
+      "reason": "采样与迟滞源明确初态，结果前固定",
+      "condition_ids": [
+        "EV-SH-01",
+        "EV-HC-01"
+      ],
+      "legacy_tags": [
+        "V3",
+        "V4"
+      ],
+      "ownership": "A0/A1 new comparison; no existing repair PR assigned",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/EVENT_CONDITIONS_CONTRACT.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-I-02",
+      "primary_group": "event",
+      "feature": "输入相关 initial_step 初态",
+      "engineering_purpose": "比较器高输入启动",
+      "classification": "selected",
+      "reason": "与低初态区别，保留现有实现可能拒绝的合法编码",
+      "condition_ids": [
+        "EV-HC-02"
+      ],
+      "legacy_tags": [
+        "V3"
+      ],
+      "ownership": "LANG initial-cross boundary; not PR #79 exception",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/EVENT_CONDITIONS_CONTRACT.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-I-03",
+      "primary_group": "event",
+      "feature": "cross 双方向、状态保持",
+      "engineering_purpose": "迟滞上下阈值与沿触发采样",
+      "classification": "selected",
+      "reason": "不同方向根及同电压不同历史可辨别错误",
+      "condition_ids": [
+        "EV-HC-01",
+        "EV-HC-02",
+        "CO-SH-01",
+        "CO-HC-01"
+      ],
+      "legacy_tags": [
+        "V3",
+        "V4"
+      ],
+      "ownership": "CROSS/EVENT-ORDER; #70 only when actual dependency demonstrated",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/EVENT_CONDITIONS_CONTRACT.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-I-04",
+      "primary_group": "event",
+      "feature": "timer 固定显式日程",
+      "engineering_purpose": "周期采样和状态脉冲",
+      "classification": "selected",
+      "reason": "首事件/周期/回调次数可分别检查",
+      "condition_ids": [
+        "EV-SH-01",
+        "TM-01",
+        "SI-01"
+      ],
+      "legacy_tags": [
+        "V4",
+        "V5"
+      ],
+      "ownership": "A0/A1 new comparison; no existing repair PR assigned",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/EVENT_CONDITIONS_CONTRACT.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-I-05",
+      "primary_group": "event",
+      "feature": "cross OR、事件体 if/else",
+      "engineering_purpose": "复位优先与采样抑制",
+      "classification": "selected",
+      "reason": "非同刻复位、释放和受抑制采样有明确单写者答案",
+      "condition_ids": [
+        "CO-SH-01"
+      ],
+      "legacy_tags": [
+        "V3",
+        "V4"
+      ],
+      "ownership": "A0/A1 new comparison; no existing repair PR assigned",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/EVENT_CONDITIONS_CONTRACT.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-I-06",
+      "primary_group": "event",
+      "feature": "同刻 reset/clock 与多写者",
+      "engineering_purpose": "竞态与批量状态更新",
+      "classification": "deferred",
+      "reason": "A3 须先声明 LRM/模型优先级；首批明确不含同刻 reset/clock",
+      "condition_ids": [],
+      "legacy_tags": [
+        "V3",
+        "V4",
+        "V7"
+      ],
+      "ownership": "EVENT-ORDER; #16; Spec B lifecycle; PR #79 unresolved semantics not accepted",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/EVENT_CONDITIONS_CONTRACT.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-I-07",
+      "primary_group": "event",
+      "feature": "above、last_crossing、平台/切触",
+      "engineering_purpose": "启动感知与过零历史",
+      "classification": "deferred",
+      "reason": "A2/A3 独立确定语义和观察，不能由 cross 单例外推",
+      "condition_ids": [],
+      "legacy_tags": [
+        "V3"
+      ],
+      "ownership": "CROSS current boundary",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/EVENT_CONDITIONS_CONTRACT.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-I-08",
+      "primary_group": "event",
+      "feature": "动态 timer 参数、enable、缺省容差",
+      "engineering_purpose": "门控和重排日程",
+      "classification": "deferred",
+      "reason": "A2 明确保持参数和新日程边界后选条件",
+      "condition_ids": [],
+      "legacy_tags": [
+        "V5"
+      ],
+      "ownership": "TIMER; existing timer-defaults evidence is historical",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/EVENT_CONDITIONS_CONTRACT.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-H-01",
+      "primary_group": "history",
+      "feature": "transition 正延迟及非对称正边沿",
+      "engineering_purpose": "离散保持值的有限输出边沿",
+      "classification": "selected",
+      "reason": "上下沿/延迟各有可分辨故障",
+      "condition_ids": [
+        "TM-01",
+        "CO-SH-01",
+        "CO-HC-01"
+      ],
+      "legacy_tags": [
+        "V5"
+      ],
+      "ownership": "A0/A1 new comparison; no existing repair PR assigned",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/TIMED_OPERATOR_CONTRACTS.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-H-02",
+      "primary_group": "history",
+      "feature": "transition 中断与延迟队列",
+      "engineering_purpose": "短脉冲及重入边沿",
+      "classification": "deferred",
+      "reason": "A3 应固定历史起点/队列及新观察需求",
+      "condition_ids": [],
+      "legacy_tags": [
+        "V5"
+      ],
+      "ownership": "TRANSITION; TIMED_OPERATOR_CONTRACTS",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/TIMED_OPERATOR_CONTRACTS.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-H-03",
+      "primary_group": "history",
+      "feature": "absdelay 固定延迟和起始历史",
+      "engineering_purpose": "连续延迟或级联",
+      "classification": "deferred",
+      "reason": "A2 固定前历史和完整 PWL 投影",
+      "condition_ids": [],
+      "legacy_tags": [
+        "V5"
+      ],
+      "ownership": "ABSDELAY",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/TIMED_OPERATOR_CONTRACTS.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-H-04",
+      "primary_group": "history",
+      "feature": "slew 正负限速与追赶",
+      "engineering_purpose": "边沿受速率限制",
+      "classification": "deferred",
+      "reason": "A2 独立追赶交点及符号错误条件",
+      "condition_ids": [],
+      "legacy_tags": [
+        "V5"
+      ],
+      "ownership": "SLEW",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/TIMED_OPERATOR_CONTRACTS.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-H-05",
+      "primary_group": "history",
+      "feature": "动态历史算子参数与零/缺省边沿",
+      "engineering_purpose": "可配置延迟和边沿",
+      "classification": "deferred",
+      "reason": "A4 需细小新能力 spec 或语义讨论，不按支持筛除",
+      "condition_ids": [],
+      "legacy_tags": [
+        "V5"
+      ],
+      "ownership": "TRANSITION/ABSDELAY/SLEW support boundaries",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/TIMED_OPERATOR_CONTRACTS.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-C-01",
+      "primary_group": "continuous",
+      "feature": "idt 初值及变输入积分",
+      "engineering_purpose": "未包裹相位累积",
+      "classification": "selected",
+      "reason": "非零初值/PWL斜率可辨別冻结输入与错误积分",
+      "condition_ids": [
+        "CP-01"
+      ],
+      "legacy_tags": [
+        "V6"
+      ],
+      "ownership": "A0/A1 new comparison; no existing repair PR assigned",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/DYNAMICS_CONTRACTS.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-C-02",
+      "primary_group": "continuous",
+      "feature": "idtmod、sin、包裹相位",
+      "engineering_purpose": "有限正频率振荡器",
+      "classification": "selected",
+      "reason": "圆周误差、输出相位及左右极限联合判定",
+      "condition_ids": [
+        "CP-02",
+        "CO-VCO-01"
+      ],
+      "legacy_tags": [
+        "V6"
+      ],
+      "ownership": "A0/A1 new comparison; no existing repair PR assigned",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/DYNAMICS_CONTRACTS.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-C-03",
+      "primary_group": "continuous",
+      "feature": "idt reset 和事件改变连续历史",
+      "engineering_purpose": "复位后继续演化",
+      "classification": "deferred",
+      "reason": "A3 重启历史需要精确定义和 actual Spectre 对照",
+      "condition_ids": [],
+      "legacy_tags": [
+        "V4",
+        "V6"
+      ],
+      "ownership": "DYNAMICS/CROSS; Spec B only if shared-lifecycle dependency demonstrated",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/DYNAMICS_CONTRACTS.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-C-04",
+      "primary_group": "continuous",
+      "feature": "ddt",
+      "engineering_purpose": "连续导数与电压域 DAE",
+      "classification": "deferred",
+      "reason": "A2 合格可导输入和唯一答案；不取 PWL 折点作导数答案",
+      "condition_ids": [],
+      "legacy_tags": [
+        "V6"
+      ],
+      "ownership": "DYNAMICS",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/DYNAMICS_CONTRACTS.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-C-05",
+      "primary_group": "continuous",
+      "feature": "laplace_nd、laplace_np",
+      "engineering_purpose": "稳定滤波启动响应",
+      "classification": "deferred",
+      "reason": "A2 明确系数/初态/极点及瞬态答案",
+      "condition_ids": [],
+      "legacy_tags": [
+        "V6"
+      ],
+      "ownership": "DYNAMICS/LANG",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/DYNAMICS_CONTRACTS.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-C-06",
+      "primary_group": "continuous",
+      "feature": "隐式积分/滤波/非线性动态反馈",
+      "engineering_purpose": "有限唯一解组合",
+      "classification": "deferred",
+      "reason": "A3 需明确解选择、初态和误差传播；非通用DAE宣称",
+      "condition_ids": [],
+      "legacy_tags": [
+        "V6",
+        "V7"
+      ],
+      "ownership": "DYNAMICS/NONLINEAR",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/DYNAMICS_CONTRACTS.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-S-01",
+      "primary_group": "structure",
+      "feature": "静态模块实例、参数与事件状态隔离",
+      "engineering_purpose": "多采样通道互不污染",
+      "classification": "selected",
+      "reason": "不同初值/输入/日程及同刻不相交写者有独立递推",
+      "condition_ids": [
+        "SI-01"
+      ],
+      "legacy_tags": [
+        "V4",
+        "V7"
+      ],
+      "ownership": "A0/A1 new comparison; no existing repair PR assigned",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/docs/math/continuous.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-S-02",
+      "primary_group": "structure",
+      "feature": "模块级联、电气向量与静态层次",
+      "engineering_purpose": "信号链路及参考传播",
+      "classification": "deferred",
+      "reason": "SI 只检验一层两实例；A2/A3 选实际通道需求",
+      "condition_ids": [],
+      "legacy_tags": [
+        "V7"
+      ],
+      "ownership": "LANG/COMPOSE",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/docs/math/continuous.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-S-03",
+      "primary_group": "structure",
+      "feature": "include、宏、编译条件",
+      "engineering_purpose": "可复用模型组织",
+      "classification": "deferred",
+      "reason": "首批 include 只为标准 discipline/constants；前处理成功不单独增加行为 N",
+      "condition_ids": [],
+      "legacy_tags": [
+        "V1"
+      ],
+      "ownership": "LANG",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/docs/math/continuous.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-K-01",
+      "primary_group": "combination",
+      "feature": "cross 采样、复位、保持、transition",
+      "engineering_purpose": "采样器复位与恢复",
+      "classification": "selected",
+      "reason": "绝对初态/复位抑制/释放不采样/未来边沿一致",
+      "condition_ids": [
+        "CO-SH-01"
+      ],
+      "legacy_tags": [
+        "V3",
+        "V4",
+        "V5",
+        "V7"
+      ],
+      "ownership": "A0/A1 new comparison; no existing repair PR assigned",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/PROTOCOL.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-K-02",
+      "primary_group": "combination",
+      "feature": "迟滞与非对称 transition",
+      "engineering_purpose": "比较器完整输出边沿",
+      "classification": "selected",
+      "reason": "状态证据排除 cross/延迟误差相抵",
+      "condition_ids": [
+        "CO-HC-01"
+      ],
+      "legacy_tags": [
+        "V3",
+        "V5",
+        "V7"
+      ],
+      "ownership": "A0/A1 new comparison; no existing repair PR assigned",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/PROTOCOL.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-K-03",
+      "primary_group": "combination",
+      "feature": "条件频率、idtmod、sin",
+      "engineering_purpose": "有限正频率变频VCO",
+      "classification": "selected",
+      "reason": "累积相位含饱和段和支路变化，保留 unsupported 结果",
+      "condition_ids": [
+        "CO-VCO-01"
+      ],
+      "legacy_tags": [
+        "V1",
+        "V6",
+        "V7"
+      ],
+      "ownership": "A0/A1 new comparison; no existing repair PR assigned",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/PROTOCOL.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-K-04",
+      "primary_group": "combination",
+      "feature": "滤波采样、延迟级联、选择器和连续状态",
+      "engineering_purpose": "组合数据链和保持历史",
+      "classification": "deferred",
+      "reason": "A2/A3 每条须新增义务，不穷举笛卡尔积",
+      "condition_ids": [],
+      "legacy_tags": [
+        "V4",
+        "V5",
+        "V6",
+        "V7"
+      ],
+      "ownership": "COMPOSE",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/PROTOCOL.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-O-01",
+      "primary_group": "voltage",
+      "feature": "一般 I/KCL、器件电流/电荷与任意负载",
+      "engineering_purpose": "晶体管网络与功耗",
+      "classification": "outside",
+      "reason": "本程序接受范围为确定电压域接口；一般电流网络需另立任务",
+      "condition_ids": [],
+      "legacy_tags": [],
+      "ownership": "A0/A1 new comparison; no existing repair PR assigned",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/PROTOCOL.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-O-02",
+      "primary_group": "continuous",
+      "feature": "AC/PSS/RF、噪声与一般多稳态",
+      "engineering_purpose": "频域/随机/全局根选择",
+      "classification": "outside",
+      "reason": "当前程序限确定瞬态与有限唯一解",
+      "condition_ids": [],
+      "legacy_tags": [],
+      "ownership": "A0/A1 new comparison; no existing repair PR assigned",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/DYNAMICS_CONTRACTS.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-O-03",
+      "primary_group": "structure",
+      "feature": "完整数字AMS、任意跨过程同刻竞态",
+      "engineering_purpose": "混合数字调度",
+      "classification": "outside",
+      "reason": "没有统一可验收语义，也不属于接受范围",
+      "condition_ids": [],
+      "legacy_tags": [],
+      "ownership": "A0/A1 new comparison; no existing repair PR assigned",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/docs/math/continuous.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    },
+    {
+      "id": "F-O-04",
+      "primary_group": "continuous",
+      "feature": "runtime、速度、P95",
+      "engineering_purpose": "性能比较",
+      "classification": "outside",
+      "reason": "Spec A 明确排除，不填行为表",
+      "condition_ids": [],
+      "legacy_tags": [],
+      "ownership": "A0/A1 new comparison; no existing repair PR assigned",
+      "current_evidence": {
+        "capability_entry": "evas/docs/CAPABILITIES.md",
+        "contract": "evas/validation/DYNAMICS_CONTRACTS.md",
+        "historical_navigation": "evas/validation/README.md",
+        "exact_new_condition_evidence": "No prior execution evidence for the new paper conditions. Related capability/development records are navigation only and do not populate new results.",
+        "status": "Selected cards unrun; deferred candidates have no admitted paper condition; outside scope has no paper obligation."
+      }
+    }
+  ],
+  "revision_rationale": "A0 review adds current capability/contract/historical navigation per candidate without inheriting historical pass counts."
+}
