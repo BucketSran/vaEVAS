@@ -163,3 +163,7 @@ python3 -B experiments/backends/event-alignment/prepare_spectre.py \
 本次远端采用串行、单线程、每次 90 秒、许可等待 30 秒、4 GiB 内存、32 MiB 单文件及
 256 MiB 条件输出限制；条件总量由 supervisor 轮询限制，不能称硬容器配额。
 性能比较还需沿用计时边界、暖机、交替顺序及完整输出验收，不能用普通 debug runner 耗时替代。
+
+原 Spec B E3/E5 查询阶段拒绝的有界精确历史证书增量见
+[常数积分历史重放](exact-history.md)。原严格 Spectre 差异与 stop 覆盖 I 继续保留；
+此增量没有解决 C1、VCO 环回或 va07 stop=3 计数，PR #108 继续 draft。

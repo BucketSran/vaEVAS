@@ -1,0 +1,287 @@
+{
+  "integration_source_revision": "fbf4635424f3d0a61e551b3a6f76cbf769345088",
+  "diagnostic_test_revision": "a5b23a40cffc9aebcad033a02db9211581d89805",
+  "main_revision": "3b588ec7c20463c6502a8b949c63f385aa8e66dd",
+  "last_rust_production_revision": "6a3ba252f7a2f100d48411b4ec89e54502a456de",
+  "rust_production_unchanged_by_main110_main111_and_evidence": true,
+  "kernel_sha256": "e4c89c9c9fe199d9535fe9886949502f1560b5fc63b2ce83bf98db77b74f0cb3",
+  "schedule_sha256": "fdf77359ed405d278f7d52486c0a064f26475570e7754a3bde8fca2d4527430b",
+  "frontend_instance_compiler_sha256": "ebe59881fb5e523c89708fc4c6f563f655a8e30b726c9b10cd08c7bc7f2fbdce",
+  "spec_b_latest_execution": {
+    "revision": "fbf4635424f3d0a61e551b3a6f76cbf769345088",
+    "kernel_sha256": "e4c89c9c9fe199d9535fe9886949502f1560b5fc63b2ce83bf98db77b74f0cb3",
+    "checker_sha256": "4a80e6cc91c553ae40d5d635c81ee0d11fd4436bc6fd96d88d1b1a51a13e28ff",
+    "kind": "actual latest-kernel local frozen request replay; no new Spectre execution",
+    "cases": [
+      {
+        "case": "E1-base",
+        "latest_compiled_program_equals_frozen_request_except_schema_version": true,
+        "historical_schema_version": 17,
+        "latest_schema_version": 18,
+        "response_sha256": "b85f1c84af4d5f91f5a61027c3187cbbdfc84cb2f043ddc2622c1b2553b4d841",
+        "numeric_status": "P",
+        "event_status": "P",
+        "response_times_nodes_shape_finite_validated": true,
+        "historical_request_sha256": "36d9c2d9874beb84013f8f78da8f0e7cb4316131e116ba154ff77ed2adb51c77",
+        "actual_latest_request_sha256": "ec83d9b3aa51433916894bf96211ea8e353f848a3ff3b4bb3867b560af2759a7"
+      },
+      {
+        "case": "E1-fine",
+        "latest_compiled_program_equals_frozen_request_except_schema_version": true,
+        "historical_schema_version": 17,
+        "latest_schema_version": 18,
+        "response_sha256": "03732081029fc3652a03a8f6b00889c71d75de5875160389adef5435bc20757c",
+        "numeric_status": "P",
+        "event_status": "P",
+        "response_times_nodes_shape_finite_validated": true,
+        "historical_request_sha256": "ee28c87106258f5bbdeee8eb8c027c826bc0f3de4c9c999cbb3b001b890d2c0f",
+        "actual_latest_request_sha256": "7b1f2411d3fe227ab07bcec813e39304baa7a9542e6a1ce3fb536c09f6482f7c"
+      },
+      {
+        "case": "E2-base",
+        "latest_compiled_program_equals_frozen_request_except_schema_version": true,
+        "historical_schema_version": 17,
+        "latest_schema_version": 18,
+        "response_sha256": "4e7aed785acbbb5733051c47b3826bcaa21cf137f0f0cfdeaccf20b4b607c658",
+        "numeric_status": "P",
+        "event_status": "P",
+        "response_times_nodes_shape_finite_validated": true,
+        "historical_request_sha256": "8cb151eeb157226bcecfb0b864d273fc8fdc2cd08d5189b2f5df4dbd5085ae2b",
+        "actual_latest_request_sha256": "9b69cfcfddad0bcb1565a0739e8bfa08237e9d01401cae5fc1906e2a07d5a5fd"
+      },
+      {
+        "case": "E2-fine",
+        "latest_compiled_program_equals_frozen_request_except_schema_version": true,
+        "historical_schema_version": 17,
+        "latest_schema_version": 18,
+        "response_sha256": "e73da3312d4c5cac778f6b7774b162ef86131ae660dd1d7153279f587743e9aa",
+        "numeric_status": "P",
+        "event_status": "P",
+        "response_times_nodes_shape_finite_validated": true,
+        "historical_request_sha256": "0d28f041f3ed8a0c04ea48f62d1c3473c9545cc4cc065aeb7d91e6e8a267092b",
+        "actual_latest_request_sha256": "6234dd7f749b30e6a5cd9f330395224dad9b01978061802a5e0bb7337a69f6aa"
+      },
+      {
+        "case": "E3-base",
+        "status": "refused",
+        "diagnostic": {
+          "kind": "event_resolution",
+          "message": "output query cannot certify its physical event phase"
+        },
+        "latest_compiled_program_equals_frozen_request_except_schema_version": true,
+        "historical_schema_version": 17,
+        "latest_schema_version": 18,
+        "historical_request_sha256": "5937063e874cdf657ef12bccf50a0f5ab47cb95827ef86962a8265694e8ad512",
+        "actual_latest_request_sha256": "d4fd002c796fb569c3024de7b5155aca34872514ac8cbd08f1586da8b1613ae4"
+      },
+      {
+        "case": "E3-fine",
+        "status": "refused",
+        "diagnostic": {
+          "kind": "event_resolution",
+          "message": "output query cannot certify its physical event phase"
+        },
+        "latest_compiled_program_equals_frozen_request_except_schema_version": true,
+        "historical_schema_version": 17,
+        "latest_schema_version": 18,
+        "historical_request_sha256": "11e027b412ec265ee40a16fc0f8e8ec5ec55666af16a54684cee51aa6f60dd83",
+        "actual_latest_request_sha256": "1281b1eea9a9262c5c69814212e4955d78e0869a07df37f001204c6d9dbf7f80"
+      },
+      {
+        "case": "E4-base",
+        "latest_compiled_program_equals_frozen_request_except_schema_version": true,
+        "historical_schema_version": 17,
+        "latest_schema_version": 18,
+        "response_sha256": "ed75e8c5419f6379cbbf3d7c43d015f0def2cbc55113173de2313e5e1e0495eb",
+        "numeric_status": "P",
+        "event_status": "P",
+        "response_times_nodes_shape_finite_validated": true,
+        "historical_request_sha256": "4dd99da4c291d8aa5adc6afffad3790757e5b8e9bf1a90a1dcf2cbc9e22e295f",
+        "actual_latest_request_sha256": "9f5a589546086a7c32bfb09005180dfa53c3daaae2e19355b6acee1eac74f2d5"
+      },
+      {
+        "case": "E4-fine",
+        "latest_compiled_program_equals_frozen_request_except_schema_version": true,
+        "historical_schema_version": 17,
+        "latest_schema_version": 18,
+        "response_sha256": "b66d7b26ce90dc4b8c4f59bb035a794894833b3743eb1c5eaac619e720ba4609",
+        "numeric_status": "P",
+        "event_status": "P",
+        "response_times_nodes_shape_finite_validated": true,
+        "historical_request_sha256": "3129ef2ba267bfbae1d86070123038b64687d26da23137f43f6f1458cb762c21",
+        "actual_latest_request_sha256": "214fc1d25fd2cd36c6eb3c1be391be4ab0c9e646e7d339913f35dc4609485cf4"
+      },
+      {
+        "case": "E5-base",
+        "status": "refused",
+        "diagnostic": {
+          "kind": "event_resolution",
+          "message": "output query cannot certify its physical event phase"
+        },
+        "latest_compiled_program_equals_frozen_request_except_schema_version": true,
+        "historical_schema_version": 17,
+        "latest_schema_version": 18,
+        "historical_request_sha256": "f111f29973fda2a696c1db8fce5a0333208439c61c7987822c4b21f9bd02b003",
+        "actual_latest_request_sha256": "114d2801b1d2af6613044d3da210aec4c0e197489d17aafb9c07ad238d56cd6f"
+      },
+      {
+        "case": "E5-fine",
+        "status": "refused",
+        "diagnostic": {
+          "kind": "event_resolution",
+          "message": "output query cannot certify its physical event phase"
+        },
+        "latest_compiled_program_equals_frozen_request_except_schema_version": true,
+        "historical_schema_version": 17,
+        "latest_schema_version": 18,
+        "historical_request_sha256": "eff69aad30d34aad1e1d065e72e8caf32b9ab883916cd6c247e72e472d1f1866",
+        "actual_latest_request_sha256": "5bb054f9d78daec2132b0e3297a51c17eee018d06335b7de32929f2631f2f19f"
+      },
+      {
+        "case": "E6-base",
+        "latest_compiled_program_equals_frozen_request_except_schema_version": true,
+        "historical_schema_version": 17,
+        "latest_schema_version": 18,
+        "response_sha256": "d465abe0567230dc79aa7501348cc988cf6d62ad7c055adc21174d2ca59d0260",
+        "numeric_status": "P",
+        "event_status": "P",
+        "response_times_nodes_shape_finite_validated": true,
+        "historical_request_sha256": "ccf90a5ed5b95e2c36ab5c46246d40ea7198e52a1c6a275de2766275288f3d12",
+        "actual_latest_request_sha256": "3af0c7f37770af3adbce801f2dabb9b57609ac8c5ec6ceba37ed2254d65f24c1"
+      },
+      {
+        "case": "E6-fine",
+        "latest_compiled_program_equals_frozen_request_except_schema_version": true,
+        "historical_schema_version": 17,
+        "latest_schema_version": 18,
+        "response_sha256": "32c3404d128a6b425362be5704a73e4a8183d5b616a6cfe19f2beace6884eba8",
+        "numeric_status": "P",
+        "event_status": "P",
+        "response_times_nodes_shape_finite_validated": true,
+        "historical_request_sha256": "5605e8ce9bb1bce150ddd4d8c3604a2187e67c78bcf423b70870558fbe3dd194",
+        "actual_latest_request_sha256": "b1fdaa898604b5f78bf0611bddb035002d57df1c9ff1df3b311ada6ae5a1542e"
+      }
+    ],
+    "passed": 8,
+    "refused": 4,
+    "original_scientific_settings_preserved": true,
+    "qualification": "Latest local execution only; existing actual Spectre matrix reused as historical evidence, not a new alignment pass."
+  },
+  "actual_local_checks": {
+    "integrated_python_combination": {
+      "tests": 84,
+      "passed": 83,
+      "failed": 1,
+      "failure": "main111 local-state negative asserted older diagnostic text; model still unsupported_transient"
+    },
+    "corrected_local_state_module": {
+      "tests": 14,
+      "passed": 14
+    },
+    "b2_b5_event_modules_in_integrated_combination": {
+      "tests": 60,
+      "passed": 60,
+      "modules": [
+        "test_bounded_event_closure",
+        "test_initialized_event_composition",
+        "test_event_window_sampling",
+        "test_event_history_continuation",
+        "test_event_relocalization",
+        "test_dynamic_cross"
+      ]
+    },
+    "case_module_in_integrated_combination": {
+      "tests": 10,
+      "passed": 10
+    },
+    "rust_event_acceptance_final_certificates_and_transaction_retry": {
+      "tests": 4,
+      "passed": 4
+    },
+    "rust_mixed_held_epoch_second_root_rollback_same_controller_retry": {
+      "tests": 1,
+      "passed": 1
+    }
+  },
+  "latest_main111_probe_replay": {
+    "m1_request_sha256": "3ae6bcfbf4d893fdace0b7321f210e6c0448f04796de22c00bb4ab1cbce05816",
+    "m1_stdout_sha256": "33639d839f62035dea4685fe5a1c6a54cbd727a8ec1cd7e12179e0e22a38ce65",
+    "identical_to_astra_reviewed_original_125ns_execution": true,
+    "new_spectre_calls": 0,
+    "new_archive_verified_again": true,
+    "mixed_six_grid_replays": {
+      "revision": "fbf4635424f3d0a61e551b3a6f76cbf769345088",
+      "archive_sha256": "b1ae29bc6a9b2f53c015cca03846911e7582a10e1f48862f528a7440b2fde9b5",
+      "regular_members_verified": 105,
+      "kernel_sha256": "e4c89c9c9fe199d9535fe9886949502f1560b5fc63b2ce83bf98db77b74f0cb3",
+      "cases": [
+        {
+          "case": "fixed",
+          "checks": [
+            {
+              "grid": "native",
+              "points": 50,
+              "events_equal_original_reviewed_candidate": true,
+              "direct_max_errors_v": {
+                "y": 0.0,
+                "z": 0.0
+              },
+              "finite_status": "P",
+              "required_query_coverage": "I"
+            },
+            {
+              "grid": "required",
+              "points": 7,
+              "events_equal_original_reviewed_candidate": true,
+              "independent_exact_phase_status": "P"
+            },
+            {
+              "grid": "sparse",
+              "points": 2,
+              "events_equal_original_reviewed_candidate": true,
+              "independent_exact_phase_status": "P"
+            }
+          ]
+        },
+        {
+          "case": "held",
+          "checks": [
+            {
+              "grid": "native",
+              "points": 68,
+              "events_equal_original_reviewed_candidate": true,
+              "direct_max_errors_v": {
+                "y": 0.0,
+                "z": 2.220446049250313e-16
+              },
+              "finite_status": "P",
+              "required_query_coverage": "I"
+            },
+            {
+              "grid": "required",
+              "points": 7,
+              "events_equal_original_reviewed_candidate": true,
+              "independent_exact_phase_status": "P"
+            },
+            {
+              "grid": "sparse",
+              "points": 2,
+              "events_equal_original_reviewed_candidate": true,
+              "independent_exact_phase_status": "P"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "b2_b5_review_reuse": {
+    "event-final-astra.md": "5d4034a2f23fc679106291a8a20743c2bdc91f1e211b56d5c7039cc2dd2a9798",
+    "event-resource-astra.md": "fcc1ea53b9af1f85ae5c590727db457609c384d9d1fac57a5806b0c627c8b511"
+  },
+  "limitations": [
+    "E3/E5 original base/fine requests now refuse exact query phase; B2/B5 general compatibility and original twelve-request success remain unmet.",
+    "B3/B4 targeted rollback/final-certificate regressions pass; this does not establish all event combinations.",
+    "The old #103 twelve byte-identical responses remain historical; no new Spectre matrix was executed."
+  ],
+  "acceptance_exception_authorized": false
+}

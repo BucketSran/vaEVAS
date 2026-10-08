@@ -1,0 +1,556 @@
+{
+  "production_revision": "4ae69045567dd6eda7460536ba6e72d122ec9964",
+  "integration_revision": "b857c4e0e82a8a2cadf355a68d2eba177c14f85f",
+  "main_revision": "d1dde9c931a5c6bf814911df9adec2645576fc15",
+  "rust_tree_unchanged_by_main112_main113": true,
+  "kernel_sha256": "15f822833234d3cd4dbfd89a9c33cd8797ceaf6e2e4f52ffd3303d5745fdcc4d",
+  "pre_fix_result": "pre-exact-history-integration.json: original 8P/4 refused retained",
+  "latest_original_twelve_requests": {
+    "revision": "b857c4e0e82a8a2cadf355a68d2eba177c14f85f",
+    "kernel_sha256": "15f822833234d3cd4dbfd89a9c33cd8797ceaf6e2e4f52ffd3303d5745fdcc4d",
+    "checker_sha256": "4a80e6cc91c553ae40d5d635c81ee0d11fd4436bc6fd96d88d1b1a51a13e28ff",
+    "new_spectre_calls": 0,
+    "cases": [
+      {
+        "case": "E1-base",
+        "historical_request_sha256": "36d9c2d9874beb84013f8f78da8f0e7cb4316131e116ba154ff77ed2adb51c77",
+        "historical_schema_version": 17,
+        "scientific_request_equal_except_schema_version": true,
+        "actual_request_sha256": "5f655c7fb140ccf20a8225401a982e9ba8687ce4b4e9e03d71cc09ae25e61479",
+        "actual_response_sha256": "7273a6116541175644ffd1d62395b0eef71ea4ea9fc7795f7d200494150ce23a",
+        "response_times_nodes_shape_finite_validated": true,
+        "numeric_status": "P",
+        "event_status": "P"
+      },
+      {
+        "case": "E1-fine",
+        "historical_request_sha256": "ee28c87106258f5bbdeee8eb8c027c826bc0f3de4c9c999cbb3b001b890d2c0f",
+        "historical_schema_version": 17,
+        "scientific_request_equal_except_schema_version": true,
+        "actual_request_sha256": "f6ecba64c8c521669eaf0e3f9af81afdaf8c2d9f6c75ec405b9b9d084e077231",
+        "actual_response_sha256": "4c729cbe822f53f85b04b37cf347b577a68cd7647df62368ed9ed8978761ada2",
+        "response_times_nodes_shape_finite_validated": true,
+        "numeric_status": "P",
+        "event_status": "P"
+      },
+      {
+        "case": "E2-base",
+        "historical_request_sha256": "8cb151eeb157226bcecfb0b864d273fc8fdc2cd08d5189b2f5df4dbd5085ae2b",
+        "historical_schema_version": 17,
+        "scientific_request_equal_except_schema_version": true,
+        "actual_request_sha256": "e77b39c7795c2b32d25a27f85a3dadf7ca1d20ab96d1e804d504fb5abf4d339b",
+        "actual_response_sha256": "2f9475aef567907988fbe860f4c71c9315fb6982fc11bdc40fffa30b40c897a4",
+        "response_times_nodes_shape_finite_validated": true,
+        "numeric_status": "P",
+        "event_status": "P"
+      },
+      {
+        "case": "E2-fine",
+        "historical_request_sha256": "0d28f041f3ed8a0c04ea48f62d1c3473c9545cc4cc065aeb7d91e6e8a267092b",
+        "historical_schema_version": 17,
+        "scientific_request_equal_except_schema_version": true,
+        "actual_request_sha256": "09fe287026e43b340203798a2e3221561dab52aa615d650169583af7809c644f",
+        "actual_response_sha256": "f08bb9d4589b54861934a2861d28d52c8666844ef1ffed0d0370d1e1b9375578",
+        "response_times_nodes_shape_finite_validated": true,
+        "numeric_status": "P",
+        "event_status": "P"
+      },
+      {
+        "case": "E3-base",
+        "historical_request_sha256": "5937063e874cdf657ef12bccf50a0f5ab47cb95827ef86962a8265694e8ad512",
+        "historical_schema_version": 17,
+        "scientific_request_equal_except_schema_version": true,
+        "actual_request_sha256": "f60b4cd183b400c926183e806e23aad290accc4e10cefb5f97863b583a79d8af",
+        "actual_response_sha256": "93baaf23242e324fc5238f90797b1f529fbd3bbcebb24ea8d580ed9f53c1acdd",
+        "response_times_nodes_shape_finite_validated": true,
+        "numeric_status": "P",
+        "event_status": "P"
+      },
+      {
+        "case": "E3-fine",
+        "historical_request_sha256": "11e027b412ec265ee40a16fc0f8e8ec5ec55666af16a54684cee51aa6f60dd83",
+        "historical_schema_version": 17,
+        "scientific_request_equal_except_schema_version": true,
+        "actual_request_sha256": "8010d1c75ab76281d079532c9c7b295494ffa3cfa3aa7a0915651366dbb007c0",
+        "actual_response_sha256": "04fae318dc682bdf4c45284b155ea1ac3cebd5621fb162b7a6bef68862fde2f3",
+        "response_times_nodes_shape_finite_validated": true,
+        "numeric_status": "P",
+        "event_status": "P"
+      },
+      {
+        "case": "E4-base",
+        "historical_request_sha256": "4dd99da4c291d8aa5adc6afffad3790757e5b8e9bf1a90a1dcf2cbc9e22e295f",
+        "historical_schema_version": 17,
+        "scientific_request_equal_except_schema_version": true,
+        "actual_request_sha256": "04e945b0e6e84fe25382df28784d4432d9cb3c9d85a7b723b2b49b11baee740e",
+        "actual_response_sha256": "6e0b7fe6eed56859887fecd7b6260d399fa63dd16075af9a2d67d47394a5240c",
+        "response_times_nodes_shape_finite_validated": true,
+        "numeric_status": "P",
+        "event_status": "P"
+      },
+      {
+        "case": "E4-fine",
+        "historical_request_sha256": "3129ef2ba267bfbae1d86070123038b64687d26da23137f43f6f1458cb762c21",
+        "historical_schema_version": 17,
+        "scientific_request_equal_except_schema_version": true,
+        "actual_request_sha256": "459e9cc47d0529a018648ae139e41cf6fcb60f7fc6a41a139b37f179ad5a84e1",
+        "actual_response_sha256": "6e390fa2e612c2fd85a848ff7229a27a5488d49a3110ea581c427f9b825f84f7",
+        "response_times_nodes_shape_finite_validated": true,
+        "numeric_status": "P",
+        "event_status": "P"
+      },
+      {
+        "case": "E5-base",
+        "historical_request_sha256": "f111f29973fda2a696c1db8fce5a0333208439c61c7987822c4b21f9bd02b003",
+        "historical_schema_version": 17,
+        "scientific_request_equal_except_schema_version": true,
+        "actual_request_sha256": "9c5f5ece7e48c56cdb031f2a48a0fb42e087543cfc3204d09c809970cd1bf438",
+        "actual_response_sha256": "c6b352e6b7d93530201be6e90e376cb9dfa9095ccf3dd55c758b0ba41578198a",
+        "response_times_nodes_shape_finite_validated": true,
+        "numeric_status": "P",
+        "event_status": "P"
+      },
+      {
+        "case": "E5-fine",
+        "historical_request_sha256": "eff69aad30d34aad1e1d065e72e8caf32b9ab883916cd6c247e72e472d1f1866",
+        "historical_schema_version": 17,
+        "scientific_request_equal_except_schema_version": true,
+        "actual_request_sha256": "5c836a78515c720ec6df2f0ad16e793817716df8e9fdd8252c50d02917ab474e",
+        "actual_response_sha256": "f4c70ec96f8962f0448c35c9d080d7cfcea47f72d5023477c703c2869bf9caaa",
+        "response_times_nodes_shape_finite_validated": true,
+        "numeric_status": "P",
+        "event_status": "P"
+      },
+      {
+        "case": "E6-base",
+        "historical_request_sha256": "ccf90a5ed5b95e2c36ab5c46246d40ea7198e52a1c6a275de2766275288f3d12",
+        "historical_schema_version": 17,
+        "scientific_request_equal_except_schema_version": true,
+        "actual_request_sha256": "ccb99ff759eb8f8b7bff318a9d1de2ed57eb3b538715ab05e12bbb721cd94c60",
+        "actual_response_sha256": "19d3a22d759955152f682d87c89d6a33430e48cf0058d8552bf1545cc8290aa3",
+        "response_times_nodes_shape_finite_validated": true,
+        "numeric_status": "P",
+        "event_status": "P"
+      },
+      {
+        "case": "E6-fine",
+        "historical_request_sha256": "5605e8ce9bb1bce150ddd4d8c3604a2187e67c78bcf423b70870558fbe3dd194",
+        "historical_schema_version": 17,
+        "scientific_request_equal_except_schema_version": true,
+        "actual_request_sha256": "e882f8376b9613e99571d0cc728cacaad6acb38d5814159a4b6b9161b0d69ee1",
+        "actual_response_sha256": "38b22aaef0ba6930967c3364a7b33541fbd5326e8d43f7469da6f4f1977d1f3e",
+        "response_times_nodes_shape_finite_validated": true,
+        "numeric_status": "P",
+        "event_status": "P"
+      }
+    ],
+    "passed": 12,
+    "refused": 0,
+    "original_scientific_settings_preserved": true
+  },
+  "native_spectre_reuse": {
+    "archive_sha256": "859b4c010f595e82c1f83d8358525aade733bcf563b5c3999d17fed80b05c7d7",
+    "regular_members_verified": 415,
+    "kernel_sha256": "15f822833234d3cd4dbfd89a9c33cd8797ceaf6e2e4f52ffd3303d5745fdcc4d",
+    "new_spectre_calls": 0,
+    "cases": [
+      {
+        "case": "E3-base",
+        "native_rows": 368,
+        "paired_native_rows": 367,
+        "unpaired_outside_original_stop_rows": [
+          {
+            "time": 2.0000000000000013,
+            "voltages": {
+              "u": 2.0,
+              "z": 3.750000010000002,
+              "history": 0.0,
+              "sample": 0.0,
+              "count": 1.0,
+              "edit": 1.0
+            }
+          }
+        ],
+        "full_native_pair_coverage": "I",
+        "paired_native_times_response_identity_validated": true,
+        "source_sha256": "68b7a1153d422a44af222e40df152f23003c2274627bd9d812d2e4cb8449e123",
+        "raw_direct_max_errors": {
+          "u": 0.0,
+          "z": 9.999999772691837e-09,
+          "history": 0.0,
+          "sample": 0.0,
+          "count": 1.0,
+          "edit": 0.0
+        },
+        "count_mismatches_all_retained": [
+          {
+            "time": 0.49999999549999985,
+            "spectre": 1.0,
+            "evas": 0.0
+          },
+          {
+            "time": 0.4999999977499999,
+            "spectre": 1.0,
+            "evas": 0.0
+          }
+        ],
+        "count_mismatches_outside_original_200ns_window": 0,
+        "continuous_finite_status": "P",
+        "exact_phase_projection_status": "F",
+        "phase_origin_qualification": "I: native exported times do not prove exact rational callback origin",
+        "events": [
+          {
+            "time": 0.25,
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "after": [
+              2.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.5,
+            "event": 1,
+            "origin": "dut.va:10:1 (dut)",
+            "kind": "cross",
+            "guard_value": 1.4432899320127035e-15,
+            "before": [
+              2.0,
+              0.0,
+              1.0
+            ],
+            "after": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        ]
+      },
+      {
+        "case": "E3-fine",
+        "native_rows": 1259,
+        "paired_native_rows": 1258,
+        "unpaired_outside_original_stop_rows": [
+          {
+            "time": 2.0000000000000013,
+            "voltages": {
+              "u": 2.0,
+              "z": 3.7500000100000017,
+              "history": 0.0,
+              "sample": 0.0,
+              "count": 1.0,
+              "edit": 1.0
+            }
+          }
+        ],
+        "full_native_pair_coverage": "I",
+        "paired_native_times_response_identity_validated": true,
+        "source_sha256": "68b7a1153d422a44af222e40df152f23003c2274627bd9d812d2e4cb8449e123",
+        "raw_direct_max_errors": {
+          "u": 0.0,
+          "z": 9.999999772691837e-09,
+          "history": 0.0,
+          "sample": 0.0,
+          "count": 1.0,
+          "edit": 0.0
+        },
+        "count_mismatches_all_retained": [
+          {
+            "time": 0.49999999549999985,
+            "spectre": 1.0,
+            "evas": 0.0
+          },
+          {
+            "time": 0.4999999977499999,
+            "spectre": 1.0,
+            "evas": 0.0
+          }
+        ],
+        "count_mismatches_outside_original_200ns_window": 0,
+        "continuous_finite_status": "P",
+        "exact_phase_projection_status": "F",
+        "phase_origin_qualification": "I: native exported times do not prove exact rational callback origin",
+        "events": [
+          {
+            "time": 0.25,
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "after": [
+              2.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.5,
+            "event": 1,
+            "origin": "dut.va:10:1 (dut)",
+            "kind": "cross",
+            "guard_value": 1.4432899320127035e-15,
+            "before": [
+              2.0,
+              0.0,
+              1.0
+            ],
+            "after": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        ]
+      },
+      {
+        "case": "E5-base",
+        "native_rows": 254,
+        "paired_native_rows": 253,
+        "unpaired_outside_original_stop_rows": [
+          {
+            "time": 2.0000000000000013,
+            "voltages": {
+              "u": 2.0,
+              "z": 2.666666668666667,
+              "history": 4.000000000000003,
+              "sample": 1.0000000015,
+              "count": 1.0,
+              "edit": 0.0
+            }
+          }
+        ],
+        "full_native_pair_coverage": "I",
+        "paired_native_times_response_identity_validated": true,
+        "source_sha256": "683387a6e759b6f7b92d1332511191465f21bee045b82941fb44a23449550645",
+        "raw_direct_max_errors": {
+          "u": 0.0,
+          "z": 1.9999930600533844e-09,
+          "history": 4.440892098500626e-16,
+          "sample": 1.4999934627724087e-09,
+          "count": 0.0,
+          "edit": 0.0
+        },
+        "count_mismatches_all_retained": [],
+        "count_mismatches_outside_original_200ns_window": 0,
+        "continuous_finite_status": "P",
+        "exact_phase_projection_status": "P",
+        "phase_origin_qualification": "I: native exported times do not prove exact rational callback origin",
+        "events": [
+          {
+            "time": 0.33333333333333337,
+            "observation_time_bounds": [
+              0.3333333333333333,
+              0.33333333333333337
+            ],
+            "event": 0,
+            "origin": "dut.va:9:1 (dut)",
+            "kind": "cross",
+            "guard_value": 6.661338147750939e-15,
+            "before": [
+              3.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "after": [
+              1.0,
+              1.0000000000000067,
+              1.0,
+              0.0
+            ]
+          }
+        ]
+      },
+      {
+        "case": "E5-fine",
+        "native_rows": 1144,
+        "paired_native_rows": 1143,
+        "unpaired_outside_original_stop_rows": [
+          {
+            "time": 2.0000000000000013,
+            "voltages": {
+              "u": 2.0,
+              "z": 2.6666666686666733,
+              "history": 4.000000000000003,
+              "sample": 1.0000000015000001,
+              "count": 1.0,
+              "edit": 0.0
+            }
+          }
+        ],
+        "full_native_pair_coverage": "I",
+        "paired_native_times_response_identity_validated": true,
+        "source_sha256": "683387a6e759b6f7b92d1332511191465f21bee045b82941fb44a23449550645",
+        "raw_direct_max_errors": {
+          "u": 0.0,
+          "z": 1.9999935041425942e-09,
+          "history": 1.1102230246251565e-16,
+          "sample": 1.4999934627724087e-09,
+          "count": 0.0,
+          "edit": 0.0
+        },
+        "count_mismatches_all_retained": [],
+        "count_mismatches_outside_original_200ns_window": 0,
+        "continuous_finite_status": "P",
+        "exact_phase_projection_status": "P",
+        "phase_origin_qualification": "I: native exported times do not prove exact rational callback origin",
+        "events": [
+          {
+            "time": 0.33333333333333337,
+            "observation_time_bounds": [
+              0.3333333333333333,
+              0.33333333333333337
+            ],
+            "event": 0,
+            "origin": "dut.va:9:1 (dut)",
+            "kind": "cross",
+            "guard_value": 6.661338147750939e-15,
+            "before": [
+              3.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "after": [
+              1.0,
+              1.0000000000000067,
+              1.0,
+              0.0
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "mixed_six_actual_grid_replays": {
+    "revision": "b857c4e0e82a8a2cadf355a68d2eba177c14f85f",
+    "archive_sha256": "b1ae29bc6a9b2f53c015cca03846911e7582a10e1f48862f528a7440b2fde9b5",
+    "regular_members_verified": 105,
+    "kernel_sha256": "15f822833234d3cd4dbfd89a9c33cd8797ceaf6e2e4f52ffd3303d5745fdcc4d",
+    "cases": [
+      {
+        "case": "fixed",
+        "checks": [
+          {
+            "grid": "native",
+            "points": 50,
+            "events_equal_original_reviewed_candidate": true,
+            "direct_max_errors_v": {
+              "y": 0.0,
+              "z": 0.0
+            },
+            "finite_status": "P",
+            "required_query_coverage": "I"
+          },
+          {
+            "grid": "required",
+            "points": 7,
+            "events_equal_original_reviewed_candidate": true,
+            "independent_exact_phase_status": "P"
+          },
+          {
+            "grid": "sparse",
+            "points": 2,
+            "events_equal_original_reviewed_candidate": true,
+            "independent_exact_phase_status": "P"
+          }
+        ]
+      },
+      {
+        "case": "held",
+        "checks": [
+          {
+            "grid": "native",
+            "points": 68,
+            "events_equal_original_reviewed_candidate": true,
+            "direct_max_errors_v": {
+              "y": 0.0,
+              "z": 2.220446049250313e-16
+            },
+            "finite_status": "P",
+            "required_query_coverage": "I"
+          },
+          {
+            "grid": "required",
+            "points": 7,
+            "events_equal_original_reviewed_candidate": true,
+            "independent_exact_phase_status": "P"
+          },
+          {
+            "grid": "sparse",
+            "points": 2,
+            "events_equal_original_reviewed_candidate": true,
+            "independent_exact_phase_status": "P"
+          }
+        ]
+      }
+    ]
+  },
+  "actual_checks": {
+    "combined_python": {
+      "passed": 86,
+      "log": "exact-affine-combined-python.log"
+    },
+    "full_rust": {
+      "passed": 210,
+      "ignored": 1,
+      "log": "exact-affine-identity-rust.log"
+    },
+    "later_new_reset_feedback_negative": {
+      "passed": 1,
+      "log": "exact-affine-reset-feedback-negative.log"
+    },
+    "later_refinement_order_negative": {
+      "passed": 1,
+      "log": "exact-affine-final-order-negative.log"
+    },
+    "later_same_controller_history_retry": {
+      "passed": 1,
+      "log": "exact-affine-proof-rollback.log"
+    },
+    "final_phase_module": {
+      "passed": 2,
+      "log": "exact-affine-final-phase.log"
+    },
+    "latest_main_defaults_local_state_case": {
+      "passed": 30,
+      "log": "exact-affine-main113-python-final.log"
+    },
+    "clippy_all_targets": "P: exact-affine-final-clippy.log",
+    "consumer_wrong_returned_time_negative": {
+      "passed": 1,
+      "mutation": "One returned timestamp advanced by one ULP; invalid_response before pairing",
+      "log": "exact-history-public-wrong-time-negative.log"
+    }
+  },
+  "b2_b5_binding": {
+    "B2": "Original-root ownership and original tolerances remain; exact history source/refinement, outside-box proof and tiny-ttol refusals tested.",
+    "B3": "Immutable-history equality includes optional proof; nonpoint seeds lose proof; reset/feedback reject proof; existing batch rollback and retry tests still pass.",
+    "B4": "history_final_certificate_refusal_preserves_controller_and_corrected_root_retry now also asserts exact .625 retry phase and nextdown pre-state after two failed certifications.",
+    "B5": "Complete original base/fine E3/E5, adjacent and sparse query layouts retain identical event records; final six mixed grids and twelve requests actually rerun."
+  },
+  "review_scope": "event-final-astra/resource review covers earlier production; new exact-affine increment has separate Astra review. Neither old #103 responses nor earlier review is represented as executing/reviewing this new source.",
+  "unresolved": [
+    "C1 callback strict alignment",
+    "VCO original left-neighbor wrap phase",
+    "va07 original stop=3 count mismatch",
+    "E3 strict native count differs at two pre-root times per profile; original 200ns checker passes without erasing strict F",
+    "Four native last rows exceed original stop and remain unpaired I",
+    "General root callback origin remains I without actual precise callback evidence"
+  ],
+  "acceptance_exception_authorized": false,
+  "pr108_status": "draft: strict blockers remain",
+  "public_replay_source_sha256": "36ee00b25f0ed0e5fb9ac6a453b146f0d6b71388fbd41de21052cde96aee36f0"
+}
