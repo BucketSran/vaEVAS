@@ -1,0 +1,34 @@
+from pathlib import Path
+import sys,json,subprocess,hashlib,shutil
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT/'experiments/backends/comparison'))
+from records import load,sha,identity
+from runner import analyze,verify
+from ingest import verify_output
+from freeze import save
+out=ROOT/'experiments/backends/comparison/evidence/cmp-actual-95-20261007/checker-reanalysis';out.mkdir(parents=True,exist_ok=False)
+raw=ROOT/'runs/cmp/remote-observations/spectre-base';verify_output(raw)
+old=ROOT/'runs/cmp/inputs';new=ROOT/'runs/cmp-completion/night-20261007/inputs';verify(new)
+refs={}
+for label,inputs in [('old',old),('new',new)]:
+ for name in ['INPUT_MANIFEST.json','provenance.json']:
+  p=out/(label+'-'+name);shutil.copyfile(inputs/name,p);refs[label+'_'+name]={'path':str(p.relative_to(ROOT)),'sha256':sha(p)}
+def sources(rev):
+ paths=[]
+ for directory in ['experiments/backends/dvs2-spectre-validation','experiments/archive/dvs2-history-validation','experiments/archive/dvs2-starter-pilot']:
+  paths += [p for p in subprocess.check_output(['git','ls-tree','-r','--name-only',rev,'--',directory],text=True).splitlines() if p.endswith('.py') and Path(p).parent==Path(directory)]
+ return {p:hashlib.sha256(subprocess.check_output(['git','show',rev+':'+p])).hexdigest() for p in sorted(paths)}
+parent=ROOT/'experiments/backends/comparison/snapshot-20261006-accounted-v2.json';data=load(parent);rows=[]
+for r in data['records']:
+ if r['dataset']!='cmp8-base' or r['backend']!='spectre':continue
+ receipt=load(ROOT/r['execution_receipt']['path']);work=raw/'runs'/r['case']/'base';result=load(work/'result.json')
+ waveform=work/result['waveform'];assert sha(waveform)==receipt['waveform_sha256']
+ for name in ['condition.json','dut.va','requested_settings.json','tb.scs']:
+  key='runs/spectre/'+r['case']+'/base/'+name
+  assert sha(work/name)==load(old/'INPUT_MANIFEST.json')[key]['sha256']==load(new/'INPUT_MANIFEST.json')[key]['sha256']
+ assessment=analyze(work,'spectre',result);assert assessment==load(ROOT/receipt['observation']['path'])
+ p=out/(r['case']+'-assessment.json');save(p,assessment)
+ rows.append({'case':r['case'],'old_receipt':r['execution_receipt'],'waveform_sha256':sha(waveform),'assessment':{'path':str(p.relative_to(ROOT)),'sha256':sha(p)},'assessment_sha256':sha(p)})
+old_rev='66173cfc140c0763cf5cc4d31fe95d284645b786';new_rev='d4b41c797840f17222121592b9fa6f16e11e2c2b'
+proof={'kind':'cmp8-pr87-fixed-checker-reanalysis','old_revision':old_rev,'new_revision':new_rev,'old_sources':sources(old_rev),'new_sources':sources(new_rev),'old_checker_identity':load(old/'provenance.json')['checker_identity'],'new_checker_identity':load(new/'provenance.json')['checker_identity'],'parent':{'path':str(parent.relative_to(ROOT)),'sha256':sha(parent)},'inputs':refs,'rows':rows,'analysis_runner_sha256':sha(ROOT/'experiments/backends/comparison/runner.py'),'analysis_command':['python3','-B',str(Path(__file__).relative_to(ROOT))],'calibration_log_sha256':sha(ROOT/'runs/cmp-completion/night-20261007/checker-calibration.log'),'raw_availability':'local-only','simulation_launches':0}
+assert identity(proof['old_sources'])==proof['old_checker_identity'];assert identity(proof['new_sources'])==proof['new_checker_identity']
+save(out/'proof.json',proof)

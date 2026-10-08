@@ -1,0 +1,62 @@
+{
+  "argv": [
+    "/usr/local/bin/python3.12",
+    "-X",
+    "utf8",
+    "-B",
+    "experiments/backends/comparison/runner.py",
+    "runs/cmp-completion/night-20261007/inputs",
+    "runs/cmp-completion/night-20261007/os-openvaf-ngspice",
+    "--backend",
+    "openvaf_ngspice",
+    "--environment",
+    "/tmp/chips-jinzhihong/cmp-backend-completion-20261006",
+    "--allocation",
+    "root-approved-issue95-os16-20261007"
+  ],
+  "file_cap_bytes": 33554432,
+  "case_cap_bytes": 268435456,
+  "monitor_interval_s": 1,
+  "cap_note": "Host inherited RLIMIT_FSIZE; case cap is polling, not a hard quota or container-tree guarantee.",
+  "started_unix_ns": 1791313212664997348,
+  "events": [
+    {
+      "argv": [
+        "podman",
+        "--root",
+        "/tmp/chips-jinzhihong/cmp-backend-completion-20261006/storage",
+        "--runroot",
+        "/tmp/chips-jinzhihong/cmp-backend-completion-20261006/runroot",
+        "--storage-driver",
+        "overlay",
+        "--storage-opt",
+        "ignore_chown_errors=true",
+        "ps",
+        "-aq"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "peak_case_bytes": {
+    "/tmp/chips-jinzhihong/cmp-backend-completion-20261006/issue95-d4b41c79-repo/runs/cmp-completion/night-20261007/os-openvaf-ngspice/runs/v1-main/base": 339824,
+    "/tmp/chips-jinzhihong/cmp-backend-completion-20261006/issue95-d4b41c79-repo/runs/cmp-completion/night-20261007/os-openvaf-ngspice/runs/v2-main/base": 725741,
+    "/tmp/chips-jinzhihong/cmp-backend-completion-20261006/issue95-d4b41c79-repo/runs/cmp-completion/night-20261007/os-openvaf-ngspice/runs/v3-main/base": 340852,
+    "/tmp/chips-jinzhihong/cmp-backend-completion-20261006/issue95-d4b41c79-repo/runs/cmp-completion/night-20261007/os-openvaf-ngspice/runs/v4-c0/base": 17474,
+    "/tmp/chips-jinzhihong/cmp-backend-completion-20261006/issue95-d4b41c79-repo/runs/cmp-completion/night-20261007/os-openvaf-ngspice/runs/v5-main/base": 42401,
+    "/tmp/chips-jinzhihong/cmp-backend-completion-20261006/issue95-d4b41c79-repo/runs/cmp-completion/night-20261007/os-openvaf-ngspice/runs/v6-standard/base": 340773,
+    "/tmp/chips-jinzhihong/cmp-backend-completion-20261006/issue95-d4b41c79-repo/runs/cmp-completion/night-20261007/os-openvaf-ngspice/runs/v7-linear-main/base": 532646,
+    "/tmp/chips-jinzhihong/cmp-backend-completion-20261006/issue95-d4b41c79-repo/runs/cmp-completion/night-20261007/os-openvaf-ngspice/runs/c1-main/base": 20631
+  },
+  "status": "complete",
+  "pid": 3265141,
+  "members_before_cleanup": [
+    3265141
+  ],
+  "cleanup_confirmed": true,
+  "child_exit_code": 0,
+  "members_after_reap": [],
+  "exit_code": 0,
+  "finished_unix_ns": 1791313327381421925
+}

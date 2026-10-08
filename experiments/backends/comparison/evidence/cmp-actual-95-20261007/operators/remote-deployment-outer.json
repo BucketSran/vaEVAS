@@ -1,0 +1,42 @@
+{
+  "operation": "fresh exact d4b41c79 deployment",
+  "started_unix_ns": 1791313164402687000,
+  "commands": [
+    {
+      "argv": [
+        "ssh",
+        "thu-sui",
+        "/usr/local/bin/python3.12 -X utf8 -B -"
+      ],
+      "exit_code": 0,
+      "timeout_s": 30,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "scp",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/overnight-cmp/runs/cmp-completion/night-20261007/source-d4b41c79.tar.gz",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/overnight-cmp/runs/cmp-completion/night-20261007/frozen-inputs.tar.gz",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/overnight-cmp/runs/cmp-completion/night-20261007/operator_wrapper.py",
+        "thu-sui:/tmp/chips-jinzhihong/cmp-backend-completion-20261006/issue95-d4b41c79-transfer/"
+      ],
+      "exit_code": 0,
+      "timeout_s": 300,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "ssh",
+        "thu-sui",
+        "/usr/local/bin/python3.12 -X utf8 -B -"
+      ],
+      "exit_code": 0,
+      "timeout_s": 120,
+      "stdout": "{\"status\": \"pass\", \"source_revision\": \"d4b41c797840f17222121592b9fa6f16e11e2c2b\", \"repo\": \"/tmp/chips-jinzhihong/cmp-backend-completion-20261006/issue95-d4b41c79-repo\", \"archives\": {\"source-d4b41c79.tar.gz\": {\"sha256\": \"9f7c3c126994274e94a71b650b67b7a6cfed94f6e890bb49bb611bf05503ce4f\", \"bytes\": 18204165}, \"frozen-inputs.tar.gz\": {\"sha256\": \"57011db3d7dcc3c4c7d16d36982a12ff53228cdc0aa26695c7cd17be5645996b\", \"bytes\": 38114}, \"operator_wrapper.py\": {\"sha256\": \"84c431ead3798324fd51217ab34b9e3d670232b7d77c30194fc29fe6b6262ae0\", \"bytes\": 6246}}, \"input_manifest_sha256\": \"781d5c293b739d6a2ade00a6b3c2f0bba9084ec576606c3463c5750c257f727f\", \"simulation_launches\": 0}\n",
+      "stderr": ""
+    }
+  ],
+  "status": "pass"
+}

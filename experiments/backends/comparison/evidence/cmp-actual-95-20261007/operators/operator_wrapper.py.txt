@@ -1,0 +1,94 @@
+"""Task-local output supervision; numerical runner bytes remain unchanged."""
+from pathlib import Path
+import argparse,json,os,resource,signal,subprocess,time
+
+def group_members(pgid):
+    p=subprocess.run(['ps','-axo','pid=,pgid='],capture_output=True,text=True,timeout=5,check=True)
+    return [int(parts[0]) for line in p.stdout.splitlines() if len(parts:=line.split())==2 and int(parts[1])==pgid]
+
+def cleanup_containers(store,output,events):
+    if store is None:return
+    base=['podman','--root',str(store/'storage'),'--runroot',str(store/'runroot'),'--storage-driver','overlay','--storage-opt','ignore_chown_errors=true']
+    def call(args,timeout=15):
+        p=subprocess.run(base+args,capture_output=True,text=True,timeout=timeout)
+        events.append({'argv':base+args,'exit_code':p.returncode,'stdout':p.stdout,'stderr':p.stderr})
+        return p
+    ids=call(['ps','-aq']);assert ids.returncode==0,'container inventory uncertain'
+    for identifier in ids.stdout.split():
+        p=call(['inspect',identifier]);assert p.returncode==0,'container identity uncertain'
+        info=json.loads(p.stdout)[0]
+        if not any(Path(m.get('Source','/')).is_relative_to(output.resolve()) for m in info.get('Mounts',[])):
+            continue
+        name=info['Name'].lstrip('/')
+        assert name.startswith('evas-env-'),'unexpected owned-container name'
+        events.append({'owned_name':name,'owned_mounts':info.get('Mounts',[])})
+        removed=call(['rm','-f',name]);assert removed.returncode==0,'owned cleanup failed'
+        absent=call(['container','exists',name],5);assert absent.returncode==1,'owned cleanup not confirmed'
+
+def case_sizes(output):
+    result={}
+    for case in (output/'runs').glob('*/base'):
+        total=sum(p.stat().st_size for p in case.rglob('*') if p.is_file() and not p.is_symlink())
+        result[str(case)]=total
+    return result
+
+def supervise(command,output,record_path,store=None,file_cap=32*1024**2,case_cap=256*1024**2,interval=1,cancel_after=None,cleanup=cleanup_containers):
+    cancelled=False
+    def cancel(signum,frame):
+        nonlocal cancelled
+        cancelled=True
+    old={s:signal.signal(s,cancel) for s in (signal.SIGINT,signal.SIGTERM)}
+    record={'argv':command,'file_cap_bytes':file_cap,'case_cap_bytes':case_cap,'monitor_interval_s':interval,'cap_note':'Host inherited RLIMIT_FSIZE; case cap is polling, not a hard quota or container-tree guarantee.','started_unix_ns':time.time_ns(),'events':[],'peak_case_bytes':{},'status':'started'}
+    def save():record_path.write_text(json.dumps(record,indent=2)+'\n')
+    def limit():resource.setrlimit(resource.RLIMIT_FSIZE,(file_cap,file_cap))
+    process=None;leader_unreaped=False;began=time.monotonic();status=None;cleanup_started=False
+    try:
+        with record_path.with_suffix('.stdout').open('xb') as stdout,record_path.with_suffix('.stderr').open('xb') as stderr:
+            process=subprocess.Popen(command,stdout=stdout,stderr=stderr,start_new_session=True,preexec_fn=limit)
+            leader_unreaped=True;record['pid']=process.pid;save()
+            while True:
+                sizes=case_sizes(output)
+                for p,size in sizes.items():record['peak_case_bytes'][p]=max(record['peak_case_bytes'].get(p,0),size)
+                if cancel_after is not None and time.monotonic()-began>=cancel_after:cancelled=True
+                if cancelled:status='cancelled';break
+                if any(size>case_cap for size in sizes.values()):status='case_output_cap';break
+                if os.waitid(os.P_PID,process.pid,os.WEXITED|os.WNOHANG|os.WNOWAIT) is not None:status='child_exited';break
+                save();time.sleep(interval)
+            # The leader has not been reaped. Its PID therefore cannot be reused
+            # before this owned process-group signal and descendant cleanup.
+            members=group_members(process.pid);record['members_before_cleanup']=members
+            descendants=[pid for pid in members if pid!=process.pid]
+            if status!='child_exited' or descendants:
+                os.killpg(process.pid,signal.SIGKILL);record['events'].append({'action':'kill_owned_unreaped_group','pgid':process.pid,'descendants':descendants})
+            cleanup_started=True
+            cleanup(store,output,record['events'])
+            record['cleanup_confirmed']=True
+            record['child_exit_code']=process.wait(timeout=10);leader_unreaped=False
+            remaining=group_members(process.pid)
+            # Do not signal after wait/reap. Unknown surviving members fail closed.
+            record['members_after_reap']=remaining
+            if remaining:raise RuntimeError('process group remains after cleanup; no post-reap signal')
+            record['status']=status
+            if status=='child_exited' and record['child_exit_code']==0:record['status']='complete'
+            record['exit_code']=0 if record['status']=='complete' else 1
+    except BaseException as exc:
+        record.update(status='failed',exception_type=type(exc).__name__,reason=str(exc),exit_code=1)
+        if process is not None and leader_unreaped:
+            try:
+                os.killpg(process.pid,signal.SIGKILL)
+                if not cleanup_started:
+                    cleanup_started=True
+                    cleanup(store,output,record['events'])
+                    record['cleanup_confirmed']=True
+            except BaseException as cleanup_error:record['cleanup_error']=str(cleanup_error)
+            try:record['child_exit_code']=process.wait(timeout=10);leader_unreaped=False
+            except BaseException as wait_error:record['wait_error']=str(wait_error)
+    finally:
+        for s,handler in old.items():signal.signal(s,handler)
+        record['finished_unix_ns']=time.time_ns();save()
+    return record
+
+if __name__=='__main__':
+    p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);p.add_argument('--receipt',type=Path,required=True);p.add_argument('--store',type=Path,required=True);p.add_argument('command',nargs=argparse.REMAINDER);args=p.parse_args()
+    command=args.command[1:] if args.command and args.command[0]=='--' else args.command
+    raise SystemExit(supervise(command,args.output,args.receipt,args.store)['exit_code'])
