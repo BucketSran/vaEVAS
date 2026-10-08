@@ -4,6 +4,9 @@
 12 个条件与 48 个四后端配置，不改变旧比较器的固定 32 配置计划。
 数学判据与评分由 `evas/validation/paper/` 拥有。输入冻结与资格适配本身不运行后端；有限执行器也不判定条件通过。
 
+[PR #108 固定候选的 12 条件工程重放与实际 Spectre 配对](integration.md)
+保留有限数值结果、窗口内阶段差及资格缺口。它不代表 main 支持，也不覆盖原论文表。
+
 ```sh
 python3 -B -m unittest discover -s experiments/backends/paper -p 'test_*.py' -v
 python3 -B experiments/backends/paper/inputs.py runs/paper-a1-inputs-NEW
