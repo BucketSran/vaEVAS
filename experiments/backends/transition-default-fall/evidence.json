@@ -3077,5 +3077,30 @@
     "integration_tests": 53,
     "traceability": "PASS81testfiles",
     "combined_contract": "public compiler/Rust test_analog_local_transition_and_event_case_keep_independent_histories: event case assignment, ordinary analog local containing three-arg transition, two instances, four isolated origins, independent full-edge values; local evidence only"
+  },
+  "report_generation_identity": {
+    "original_native_replay": {
+      "execution_source_head": "8cca81df083683cc91ffad194c5b06d1c28287bc",
+      "retained_local_generator": "transition-default-probes/native-pair.py",
+      "retained_generator_sha256": "ec3d7233eaf6d32f3f3f74a51156b6405e96d7a93bbe54e09d83bd25a99b95ea",
+      "availability": "local-only retained generation script; not in implementation commit",
+      "format": "original three cases do not contain state_difference_classification; original reports retained unchanged",
+      "limits": "execution source_head identifies compiler/kernel checkout, not an uncommitted generator revision; the historical checker dependency was not separately frozen"
+    },
+    "control_native_replay": {
+      "execution_source_head": "8cca81df083683cc91ffad194c5b06d1c28287bc",
+      "preserved_generator_snapshot_commit": "8c400fea2c28cf773f4b36cfd8141384f4cd298b",
+      "preserved_generator_path": "experiments/backends/transition-default-fall/native_replay.py",
+      "preserved_generator_sha256": "b3ab561424bcc68237c3512675709aec714be827356378a22f60d01c82152da3",
+      "format": "two controls include state_difference_classification with frozen1e-12 windows",
+      "limits": "snapshot committed after execution; compiler source_head and generator snapshot are distinct identities"
+    },
+    "current_maintained_entry": {
+      "path": "experiments/backends/transition-default-fall/native_replay.py",
+      "sha256": "f7319ec3ea49c49686181d82fcd6cde8f9e2966a11e342d9cbb256379df99f61",
+      "format": "all successful cases now include state_difference_classification; actual returned-time validation uses shared public protocol",
+      "status": "maintenance entry and read-only response recalibration, not generator identity of earlier original reports"
+    },
+    "reuse": "five original request/stdout identities and independent numerical analyses were preserved and validated offline; report schema differs from the current maintenance entry; all ordinary failures remain unchanged"
   }
 }
