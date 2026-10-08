@@ -48,6 +48,10 @@ _KERNEL_CATEGORIES = {
     'nonconvergence': 'numerical', 'event_budget': 'resource',
     'input_io': 'infrastructure', 'diagnostic_io': 'infrastructure',
     'worker_start': 'infrastructure',
+    # Audited literal Rust origins. Arithmetic overflow does not establish a
+    # source defect; state_range is the engine's exact signed-32-bit boundary.
+    'nonfinite_arithmetic': 'numerical', 'state_range': 'unsupported',
+    'worker_failure': 'internal',
     'residual_failure': 'numerical', 'waveform_accuracy': 'numerical',
     'event_resolution': 'numerical', 'nonlinear_convergence': 'numerical',
     'initialization_precision': 'numerical',

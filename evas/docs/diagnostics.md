@@ -2,7 +2,7 @@
 
 执行诊断说明内核已经做了什么。只读查询不调用模型求值，不定位新事件，也不改变数值验收。
 编译预检查单独报告已完成的静态检查，不表示执行受支持。
-普通 `solve` / `transient` 的成功 JSON 格式沿用当前 IR17。
+普通 `solve` / `transient` 的成功 JSON 格式沿用现有接口；实际包与 IR 版本见[身份接口](identity.md)。
 
 ## 编译和执行失败
 
@@ -13,7 +13,7 @@ CLI 在 stderr 输出同样的 JSON 并返回 2；命令参数错误也采用此
 `KernelError.detail` 保留原始信息；内核原有 kind/message/sample 字段继续可用。
 诊断规范元数据覆盖同名载荷值时，`diagnostic.raw_payload` 保存完整原载荷，
 包括载荷自己已有的 raw_payload 字段；规范 category/capability 仍按登记表或 unknown 生成。
-该附加诊断版本独立于求解 IR，不要求迁移 IR17。
+该附加诊断版本独立于求解 IR，诊断分类变更不要求迁移求解 IR。
 
 登记入口为 [errors.py](../src/evas/errors.py)。当前具名规则包括：
 
@@ -36,11 +36,13 @@ CLI 在 stderr 输出同样的 JSON 并返回 2；命令参数错误也采用此
 
 本 E1 切片把已审计的 token、宏/函数、genvar、层级与数组预算来源映射到已有
 `resource_budget`；递归/未确定原因继续 unknown。内核 `nonconvergence` 为 numerical，
+`nonfinite_arithmetic` 为 numerical，`state_range` 为 unsupported，`worker_failure` 为 internal。
+数值溢出不证明模型错误或内核缺陷；state_range 表示整数状态超出实现的 32 位边界。
 `event_budget` 为 resource，`input_io`、`diagnostic_io`、`worker_start` 为 infrastructure。
 来源、实际触发、全源码观察与消费者兼容见[来源登记](diagnostic-sources.md)。
 完整机器清单覆盖已审计工厂/包装/转换；不表示所有出口都实际触发，也没有交付外部 benchmark 消费适配。
 
-其他内核 code 为 `kernel.<原 kind>`；已知 kind 按输入、版本、数值、协议、资源或
+其他内核 code 为 `kernel.<原 kind>`；已知 kind 按输入、版本、数值、协议、资源、内部错误或
 基础设施归类。已登记的具体原因保留已有分类，未登记的失败保持 `unknown`。
 不会从 `unsupported_` 前缀或错误文字猜测分类。自由文本的旧编译出口也可返回
 `unknown`；本批没有完成所有出口的细分类或外部 benchmark 适配。
@@ -77,8 +79,8 @@ API 为 `evas.lint.lint_manifest(path)`。它读取清单和源文件，检查�
 完整源码观察存于 [diagnostic-inventory.json](diagnostic-inventory.json)，由
 `scripts/diagnostic_inventory.py` 生成并由 CI 检查新鲜度。它包含 Python 前端/CLI、Rust
 生产源码和 IR 子 crate 的构造、包装、转换、处理器与元数据改写；以源码结构而非行号标识。
-当前共 780 条源码观察，372 条仍为 unknown；这些数包括同一路径的多个观察，不是错误
-种类数或执行覆盖率。完整范围、数量分组、未来维护边界和实际触发证据见[来源登记](diagnostic-sources.md)。
+数量以机器清单的 `counts.total` 和 `counts.categories.unknown` 为准；这些数包括同一
+路径的多个观察，不是错误种类数或执行覆盖率。PR #91 的 780/372 是其历史审计快照。完整范围、数量分组、未来维护边界和实际触发证据见[来源登记](diagnostic-sources.md)。
 
 普通 manifest CLI、lint、results/capture 使用同一输入来源诊断。results 的 API、CLI 与失败
 marker 保持相同 diagnostic；迁移结果保留旧文本 diagnostic，并附加 error。捕获会话保留

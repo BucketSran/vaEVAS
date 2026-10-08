@@ -71,10 +71,26 @@ code 仍为 `kernel.<kind>`，stage 为 kernel，未有特定能力归因时 cap
 | `main.sidecar` / `diagnostic_io` | 原求解成功，但 sidecar 无法新建/写出；infrastructure | 真正执行 solve，sidecar 指向已存在目录。CLI 返回 2 且不输出成功 stdout；原内核 exit 3 经既有适配保留错误 |
 | `batch.spawn` / `worker_start` | OS 拒绝 spawn_scoped；infrastructure | 源码审计与载荷保真测试，未强制真实 OS 线程创建失败，不算实际出口覆盖 |
 
-`worker_failure`、`invalid_state_space`、`state_space_limit`、`nonfinite_arithmetic`、
-`event_condition`、`event_accuracy`、`event_consistency`、`event_conflict`、`state_range`、
+`invalid_state_space`、`state_space_limit`、
+`event_condition`、`event_accuracy`、`event_consistency`、`event_conflict`、
 `condition_precision`、`numerical_failure` 等尚未在本切片细分类。
 它们有多种来源或尚缺明确受审合同，仍为 unknown；未来 `unsupported_*` 也不会由前缀自动分类。
+
+## 已复现的运行原因补充
+
+本轮只修改 Python 登记类别，不改变 Rust 的构造条件、拒绝边界、阈值或求解流程。
+`test_diagnostic_sources.py` 经公开 API 和真实 CLI 子进程执行以下输入，断言版本、kind、
+code、stage、category 和原 message；solve 还断言 sample 身份。
+
+| 来源 / kind | 可复现输入与类别 | 覆盖边界 |
+| --- | --- | --- |
+| 多项式求值 / `nonfinite_arithmetic` | `V(y,r)<+pow(V(u,r),3)`，有限输入 `u=1e200`；numerical | 实际 solve 与 CLI 溢出。其他同 kind 的矩阵、区间和事件算术分支只经源码审计；不推断模型缺陷或实现 bug |
+| events.check_state / `state_range` | integer n 初值 2147483647，t=0 timer 执行 `n=n+1`；unsupported | 实际 transient 与 CLI 到 32 位状态边界。有限运行结果超出实现范围，不归因为资源不足或数值收敛失败 |
+| batch worker join / `worker_failure` | 工作线程 panic；internal | 唯一生产构造为 join 的 panic 分支。仅源码审计与原载荷/未来版本负控，未强制触发真实 panic，不计执行覆盖 |
+
+未来非 v1 载荷仍按 unknown 处理。`state_space_limit` 含维度预算、缩放预算和认证失败，
+`invalid_state_space` 由内核生成的内部状态空间校验产生；本轮不把它们统一猜成输入错误或资源。
+其余 unknown 继续保留。本轮的两个实际触发原因不代表清单所有观察的执行覆盖。
 
 ## 完整源码观察与维护
 
@@ -85,14 +101,14 @@ Rust Error 由 IR crate 的 `Error::new` 构造。当前返回 Error 的额外�
 continuous.unsupported 明确构造 unsupported_operator；event_accuracy.unresolved、
 dynamic_roots.unresolved 和 transition.invalid 明确构造 event_resolution。
 event_accuracy.unresolved 还被 affine_bounds、pwl、schedule、slew 导入使用。
-当前这四个函数的包装调用数为 continuous 11、continuous_derivatives 2、
+PR #91 历史审计中这四个函数的包装调用数为 continuous 11、continuous_derivatives 2、
 continuous_initialization 1、implicit_dynamics 3、nonlinear_dynamics 4、dynamic_roots 20、
 event_accuracy 2、transition 13、affine_bounds 7、pwl 2、schedule 10、slew 7，共 82 个。
 另有两个直接返回 Error 的具名局部闭包：continuous_derivatives 的 reject 委托
 continuous.unsupported，pwl 的 invalid 构造 invalid_inputs；各调用两次。合计 86 个包装调用。
 逐项源码计数与机器清单核对；
 slew 在生产实现中间有 cfg(test) 构造器，不能在首个 cfg(test) 处截掉整个文件。
-当前没有 Error 类型别名或其他 Error 结构体直接初始化；扫描器同时验收导入别名与限定调用。
+PR #91 审计时没有 Error 类型别名或其他 Error 结构体直接初始化；扫描器同时验收导入别名与限定调用。
 未来引入新的类型、间接函数值或条件编译约定，需要同步扩展扫描和源码审计。
 
 ```sh
@@ -114,7 +130,10 @@ factory 字段保留解析到的路径，factory_crate 标明所属 lib/bin（IR
 源码审计确认；普通同名函数/闭包、测试工厂、混合返回、导入遮蔽有维护负控。
 来源位置是否可提供仍由构造表达式中的原 token/instance 决定，工具不补运行时位置。
 
-| 源码观察 | Python | Rust | 合计 |
+下表保留 PR #91 的历史审计快照。当前数量只从机器清单的 `counts` 读取；源码与登记变化后
+必须重新生成，不能复制下表作为当前总数。
+
+| PR #91 历史源码观察 | Python | Rust | 合计 |
 | --- | ---: | ---: | ---: |
 | CompileError 及其子类构造 | 94 | 0 | 94 |
 | KernelError / Error::new 构造 | 13 | 314 | 327 |
@@ -127,7 +146,7 @@ factory 字段保留解析到的路径，factory_crate 标明所属 lib/bin（IR
 | 具名重抛 | 3 | 0 | 3 |
 | 全部观察 | 338 | 442 | 780 |
 
-其中 372 条观察为 unknown，包括未解析动态 reason、宽泛处理器及明确保持 unknown 的
+该历史快照中 372 条观察为 unknown，包括未解析动态 reason、宽泛处理器及明确保持 unknown 的
 旧代码。观察有意分别记录构造、调用和转换，同一路径会出现多条；780 不是独立错误种类数，
 不是失败执行次数，也不是覆盖率。词法函数身份不推导 Rust trait/impl 类型身份。
 Rust map_err 包括保留/转换错误的包装；analog 的 event_accuracy→waveform_accuracy、
@@ -164,7 +183,8 @@ capture 保留 payload.error 原内核载荷，新增 error_diagnostic，status 
 
 ## 剩余范围与证据复用
 
-#64 外部 benchmark/harness 的分类读取与评分分母验收仍待其拥有者交付，不能据本库清单
+#64 外部 benchmark/harness 的分类读取与评分分母验收仍待 Circuit Harness 拥有者交付，
+具体消费点、版本身份和验收输入见[外部消费移交](diagnostic-consumer-handoff.md)。不能据本库清单
 关闭总 Issue。PR87/88 是并行用户工作，本批未改其文件或接口。旧 Python API 的普通
 ValueError/OSError（如 query 校验、输出目录所有权、数值请求参数校验）继续保留原异常类别；
 调用者可选择现有 CLI 取得结构化边界诊断。完整源码清单不把这些异常猜成新的 CompileError

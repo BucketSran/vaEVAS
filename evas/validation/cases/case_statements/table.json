@@ -1,0 +1,128 @@
+{
+  "models": [
+    "dut.va"
+  ],
+  "instances": [
+    {
+      "name": "x0",
+      "module": "case_probe",
+      "connections": {
+        "u": "u0",
+        "y": "y0",
+        "f": "f0"
+      },
+      "parameters": {}
+    },
+    {
+      "name": "x1",
+      "module": "case_probe",
+      "connections": {
+        "u": "u1",
+        "y": "y1",
+        "f": "f1"
+      },
+      "parameters": {}
+    },
+    {
+      "name": "x2",
+      "module": "case_probe",
+      "connections": {
+        "u": "u2",
+        "y": "y2",
+        "f": "f2"
+      },
+      "parameters": {}
+    },
+    {
+      "name": "x3",
+      "module": "case_probe",
+      "connections": {
+        "u": "u3",
+        "y": "y3",
+        "f": "f3"
+      },
+      "parameters": {}
+    },
+    {
+      "name": "x4",
+      "module": "case_probe",
+      "connections": {
+        "u": "u4",
+        "y": "y4",
+        "f": "f4"
+      },
+      "parameters": {}
+    }
+  ],
+  "tolerances": {
+    "reltol": 1e-06,
+    "vabstol": 1e-09
+  },
+  "transient": {
+    "sources": {
+      "u0": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "u1": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "u2": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "u3": [
+        [
+          0,
+          -1
+        ],
+        [
+          1,
+          -1
+        ]
+      ],
+      "u4": [
+        [
+          0,
+          0.5
+        ],
+        [
+          1,
+          0.5
+        ]
+      ]
+    },
+    "output_times": [
+      0.0,
+      0.125,
+      0.25,
+      0.375,
+      0.5,
+      0.625,
+      0.75,
+      0.875,
+      1.0
+    ],
+    "stop": 1,
+    "max_step": 0.125
+  }
+}
