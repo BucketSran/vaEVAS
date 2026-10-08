@@ -1,82 +1,83 @@
-# Integrated engineering checkpoint
+# PR #108 固定候选的工程检查记录
 
-The PR #108 candidate now includes reviewed main `1dd8875b` through merge
-`f90971f0735054b3772415cf431ec7058fe62553`. A new local run recompiles all 12
-original paper models with that frontend and executes the debug kernel. Each
-condition runs once on its original query grid and once on the saved Spectre
-grid, for 24 kernel requests. All 24 produce waveforms. The event records remain
-identical across the two grids for all 12 conditions.
+本记录对应 PR #108 集成候选 `f90971f0735054b3772415cf431ec7058fe62553`，
+它通过正常合并包含 reviewed main `1dd8875b`。这次本地运行用该前端重新编译
+12 个原论文模型，再执行 debug 内核。每个条件在原查询网格和保存的 Spectre
+网格各执行一次，共 24 个内核请求，均产生波形；各条件两次运行的事件记录相同。
 
-This checks the integrated candidate. It does not describe main or grant paper
-qualification. The original 48-slot result and its I/F/X records remain unchanged.
+这些结果只属于该候选。原 48 配置论文表及 I/F/X 结果不变，不能据此宣称 main
+支持这 12 条件或已经取得论文证据资格。报告和收据最初发布在候选提交 `4c4cd2ec`。
 
-## Actual Spectre comparison
+## 实际 Spectre 配对
 
-The reference is actual Spectre 21.1.0.509.isr12 output. Four references come from
-the earlier corrected-reference batch, and eight from the original paper batch.
-Their source bytes match the frozen cards. The models, stimuli, instance
-parameters and original execution controls are unchanged. This replay needs no
-new Spectre execution; it tests the current EVAS compiler and kernel against
-those saved observations. It does not substitute analytic waveforms for Spectre.
+参考来自实际 Spectre 21.1.0.509.isr12 输出。4 份使用此前修正参考的批次，
+8 份使用原论文批次；源文件字节与冻结条件卡相同。模型、刺激、实例参数和原执行
+控制不变。本次复用这些实际观察，没有新跑 Spectre，也没有用解析波形代替它。
 
-There are 410,908 pairs at identical parsed binary64 times, without interpolation
-or nearest-point matching. Spectre has one record after the original stop in
-each of EV-SH-01, TM-01 and CO-SH-01. Those three records remain in the reference
-denominator and the receipt; EVAS is not run beyond the requested stop.
+共 410,908 对观察位于相同的解析后 binary64 时刻，没有插值或最近点匹配。
+EV-SH-01、TM-01 和 CO-SH-01 的 Spectre 参考各有一行越过原 stop。
+这三行仍保留在参考分母和收据里，EVAS 没有超出请求 stop 运行。
 
-| Condition | Paired rows | Selected difference outside original windows | Whole-trace difference that must remain visible |
+| 条件 | 配对行数 | 原窗口外的部分误差 | 必须保留的全轨迹误差 |
 | --- | ---: | --- | --- |
-| VR-01 | 30,008 | Output 4.44e-16 V | Same finite maximum |
-| EX-01 | 40,005 | Frequency marker 0 V | Same finite maximum |
-| EV-SH-01 | 45,836 | Held voltage 0.300 mV | 0.5997 V and a count-stage difference |
-| EV-HC-01 | 20,371 | Output/count 0 V | Same finite maximum |
-| EV-HC-02 | 30,368 | Output/count 0 V | 0.8 V and a count-stage difference |
-| TM-01 | 40,376 | Edge output 2.000 mV | State/count-stage difference; edge maximum 2.000 mV |
-| CP-01 | 30,006 | Unwrapped phase 6.00e-9 cycle | Same finite maximum |
-| CP-02 | 30,855 | Phase 5.57e-14 cycle; sine 9.24e-9 V | Ordinary phase difference near 1 cycle at a wrap |
-| SI-01 | 35,785 | Both held outputs 0.100 mV | Held output up to 0.4499 V and count-stage differences |
-| CO-SH-01 | 46,083 | Output 0.0499192 mV; state 0.004 mV | Output 0.050 mV; count difference 0 |
-| CO-HC-01 | 20,375 | Output 0.032 mV; state/count 0 | Same finite maximum |
-| CO-VCO-01 | 40,840 | Phase 1.01e-8 cycle; sine 6.35e-8 V | Ordinary phase difference near 1 cycle at a wrap |
+| VR-01 | 30,008 | 输出 4.44e-16 V | 有限最大值相同 |
+| EX-01 | 40,005 | 频率标记 0 V | 有限最大值相同 |
+| EV-SH-01 | 45,836 | 保持电压 0.300 mV | 0.5997 V 及计数阶段差 |
+| EV-HC-01 | 20,371 | 输出/计数 0 V | 有限最大值相同 |
+| EV-HC-02 | 30,368 | 输出/计数 0 V | 0.8 V 及计数阶段差 |
+| TM-01 | 40,376 | 边沿输出 2.000 mV | 状态/计数阶段差；边沿最大值 2.000 mV |
+| CP-01 | 30,006 | 未包裹相位 6.00e-9 cycle | 有限最大值相同 |
+| CP-02 | 30,855 | 相位 5.57e-14 cycle；正弦 9.24e-9 V | 环回处普通相位差接近 1 cycle |
+| SI-01 | 35,785 | 两个保持输出 0.100 mV | 保持输出最高 0.4499 V 及计数阶段差 |
+| CO-SH-01 | 46,083 | 输出 0.0499192 mV；状态 0.004 mV | 输出 0.050 mV；计数差 0 |
+| CO-HC-01 | 20,375 | 输出 0.032 mV；状态/计数 0 | 有限最大值相同 |
+| CO-VCO-01 | 40,840 | 相位 1.01e-8 cycle；正弦 6.35e-8 V | 环回处普通相位差接近 1 cycle |
 
-The windows and budgets were fixed before these executions. Windowed differences
-help locate an error; they do not erase the whole-trace differences or establish
-a shared legal callback history. Circular phase agreement does not settle the
-exact wrap side. Input, export and native-observation qualification remains I.
-The C1 diagnostic, VCO exact-neighbor probes and original PR #79 stop=3 contract
-retain their separate failures and missing observations. They are not replaced
-by the 12 paper conditions.
+窗口和预算先于本次运行固定。窗口外误差帮助定位问题，不能删除全轨迹差异，
+也不能证明双方对应同一条合法回调历史。圆周相位接近不能决定精确环回侧。
+输入、导出和原生观察资格仍为 I。C1、VCO 精确邻点及原 PR #79 stop=3
+的失败与缺失观察独立保留，12 个论文条件不能替代它们。
 
-For CO-SH-01, the earlier combined candidate had three count-stage mismatches
-and a 1.05 V maximum state difference against this same reference. The current
-candidate has no count difference on the paired rows and a 4 µV maximum state
-difference. This confirms progress in the integrated implementation. The older
-kernel ran on Linux and the new one on macOS; it does not isolate the cause to
-one patch or claim a new numerical algorithm in this increment.
+CO-SH-01 的较早组合候选对同一参考有 3 行计数阶段不一致，最大状态差 1.05 V。
+本候选的配对行没有计数差，最大状态差为 4 µV。这说明集成实现有进展。
+旧内核运行在 Linux，新内核运行在 macOS，因此不能将差异归因于某一补丁，
+也不代表新增回归测试的提交实现了新数值算法。
 
-## Regression and delivery scope
+## 回归及 main 合入边界
 
-The new public-API regression
-[`test_paper_scenarios.py`](../../../evas/tests/test_paper_scenarios.py) uses the
-unchanged models and their independent card anchors. It checks held/continuous
-values, final callback counts, and identical event records and common outputs
-when each event/wrap window's start, center and end are added as queries, together
-with anchor-interval midpoints. This regression does not request the paper's
-20 ps window grid. These finite checks cannot
-prove complete edges, all event timing or wrap counts, rollback, or paper
-observation qualification. Existing targeted lifecycle tests remain required.
+[候选公开 API 回归](https://github.com/BucketSran/vaEVAS/blob/4c4cd2ec04426330501b6cca7480022b9bba3cdb/evas/tests/test_paper_scenarios.py)
+使用原模型和独立条件卡锚点，检查电压、最终回调次数，以及增加各事件/环回窗口的
+起点、中心、终点和锚点区间中点后，共同输出与事件记录是否不变。
+它不请求论文的 20 ps 窗口网格，不证明完整边沿、全部事件时刻、环回次数、回退
+或论文观察资格；仍需针对生命周期的测试。
 
-The numerical-assurance workflow now also runs the existing paper design,
-criteria and backend/table calibration suites. Local synthetic calibration and
-CI do not execute Spectre. Production event semantics have not changed in this
-increment. PR #108 stays draft pending its original boundary obligations.
+2026-10-09 将该测试原文绑定到 main `1dd8875bfe45c47112f42a43c163e8eae7dab064`
+的前端和新编译 debug 内核执行，12 个子测试中 5 个报错：
 
-[The compact receipt](evidence/integrated-core-v1-20261009.json) records all ports,
-all/windowed maxima, missing reference rows, original/new identities and the
-reused reference selection. The raw bundles, scripts and full logs are local-only
-at the project-visible worktree's `runs/engineering-checkpoint-20261009/`.
-Kernel build revision is unreported; the receipt records its actual binary hash,
-platform/version response, source checkout and empty production diff separately.
-The receipt also binds the observed Cargo build command/log, toolchain and Git
-source trees. This local build provenance does not invent an embedded revision.
-Checksums do not provide public access to those raw files.
+| 条件 | main 报错 |
+| --- | --- |
+| EV-SH-01 | `event_accuracy`，近零 q 的内部预算拒绝 |
+| CP-02 | `waveform_accuracy`，相位误差包围为 1，预算为 1e-7 |
+| SI-01 | `event_resolution`，不同事件的时间包围重叠 |
+| CO-SH-01 | `waveform_accuracy`，近零 q 的内部预算拒绝 |
+| CO-VCO-01 | `unsupported_transient`，瞬态事件方程不支持普通 analog 条件语句 |
+
+这次运行用于检查回归对未合并实现的依赖，不给论文表重新评分。测试 SHA256 为
+`c1aa764a6b3a82f02121576d832033e1a30ed11891081bab9024609a47af17d8`，
+main 内核 SHA256 为 `870eec1f6645d032ceeb268fd7561e78b85809e3d94ca2d86a2dbc8501a18a3f`。
+原日志保留在可见 `worktrees/frontend-issue-closure/runs/pr-triage-20261009/main-scenarios.log`。
+
+因此，main 仅独立接入既有论文设计、判据和后端/表格校准的 CI，以及本检查契约
+和固定候选证据；该场景回归和生产修复继续在 #108。没有跳过失败或放宽断言。
+本次合入不改变生产事件语义，也不新增支持结论。#108 仍需完成原边界验收。
+本地校准和 CI 均不执行 Spectre。
+
+## 身份与可获得性
+
+[紧凑收据](evidence/integrated-core-v1-20261009.json)逐字节保留候选发布版本，
+记录所有端口、全轨迹/窗口误差、缺失参考行、新旧身份及参考选择。
+原始包、脚本和完整日志仅保留在可见的
+`worktrees/spectre-event-alignment/runs/engineering-checkpoint-20261009/`。
+内核未自报 build revision；收据分别记录实际二进制哈希、平台/版本响应、
+检出源码、空生产 diff、Cargo 构建命令/日志、工具链及 Git 源树。
+这些本地构建记录不能被称为内嵌版本；校验和也不提供原始数据的公共访问。

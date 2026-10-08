@@ -34,58 +34,42 @@ V1–V7 对应[旧协议](../PROTOCOL.md#七组行为要求)，不再作为新�
 
 ## 首批有限核心要求
 
-### Engineering delivery checkpoint
+### 工程交付检查点
 
-Use one integrated EVAS revision for the existing 12 conditions. The delivery
-question is whether a user can run the declared voltage-domain circuits and
-obtain the required voltages, state changes and histories within the original
-budgets. Performance is outside this checkpoint.
+用一个集成版本检查现有 12 条件。目标是在原预算内运行声明的电压域电路，
+取得所需电压、状态变化和历史；性能不属于本检查点。
 
-| Scenario | Existing condition IDs | Required observations |
+| 场景 | 现有条件 ID | 必须观察的内容 |
 | --- | --- | --- |
-| Sampling and holding | VR-01, EV-SH-01, TM-01, SI-01, CO-SH-01 | Initialized state, sample values, callback counts and order, reset suppression, delayed edges, instance isolation and subsequent history |
-| Hysteresis comparator | EV-HC-01, EV-HC-02, CO-HC-01 | Startup, both thresholds and directions, retained state, callback counts and complete output edges |
-| VCO | EX-01, CP-01, CP-02, CO-VCO-01 | Frequency limiting, accumulated phase, wrap count, circular phase error, sine output and boundary observations |
+| 采样保持 | VR-01、EV-SH-01、TM-01、SI-01、CO-SH-01 | 初态、采样值、回调次数和顺序、复位抑制、延迟边沿、实例隔离及后续历史 |
+| 迟滞比较器 | EV-HC-01、EV-HC-02、CO-HC-01 | 启动、双阈值和方向、保持状态、回调次数及完整输出边沿 |
+| VCO | EX-01、CP-01、CP-02、CO-VCO-01 | 限频、累积相位、环回次数、圆周相位误差、正弦输出及边界观察 |
 
-These scenario groups explain the existing denominator; they do not add scores
-to the language/feature table. Keep the cards, source, stimulus and budgets
-unchanged when rerunning a repaired implementation. Additional diagnostics keep
-their own identities and do not increase N.
+这些场景只是解释已有分母，不给语言特性表增加分数。修复后重跑时保持条件卡、
+源码、刺激和预算不变；额外诊断独立标识，不增加 N。
 
-Report the following conclusions separately for each condition:
+每个条件分别报告：
 
-1. Execution: did the original source compile and produce the required outputs?
-2. Independent behavior: do the observations satisfy the circuit equations and
-   one coherent event history under the existing criteria?
-3. Spectre compatibility: compare actual observations with a recorded Spectre
-   version and settings. Preserve direct differences, callback counts/order and
-   boundary coverage. Explain timing effects using the original event budgets;
-   an allowed timing difference does not erase a strict phase mismatch.
-4. Qualification: retain missing input, export, settings or native-observation
-   evidence as I. A finite numerical comparison cannot grant paper-table P.
+1. 执行结果：原始源码是否能编译并产生所需输出。
+2. 独立行为：观察值是否满足电路方程，并对应同一条符合原判据的事件历史。
+3. Spectre 兼容性：与具名版本和设置的实际观察比较，保留直接误差、回调次数/顺序及边界覆盖。用原事件预算解释时间差，不能借此抹去严格阶段差异。
+4. 证据资格：缺少输入、导出、设置或原生观察证据时保留 I。有限数值比较不能授予论文表 P。
 
-An exact callback timestamp match is a diagnostic, not an additional engineering
-requirement. Conversely, engineering agreement cannot waive an existing exact
-boundary requirement. Preserve the original F/I results and acceptance scope of
-each diagnostic, including C1, the VCO wrap probes and PR #79 at stop=3.
-This checkpoint does not change the public event-time policy in
-[the event contract](../../docs/math/events.md).
+逐位相同的回调时间不作为额外工程要求，但已有精确边界要求仍需完成。
+C1、VCO 环回探针和 PR #79 的 stop=3 等原始 F/I、模型和验收范围全部保留。
+本检查点不改变[事件契约](../../docs/math/events.md)的公开时间语义。
 
-Each comparison must bind the actual compiler/source, kernel, model, stimulus,
-settings, checker and raw-output identities. Label reused Spectre evidence and
-explain why its inputs still match. A candidate result does not describe main.
-After a shared lifecycle change, check initialization, event pre/post state,
-history continuation, future scheduling, query-grid invariance and rollback as
-applicable. An operator-only success does not complete a scenario.
+比较需绑定实际编译器/源码、内核、模型、刺激、设置、检查器和原始输出身份。
+复用 Spectre 证据须说明输入仍匹配；候选结果不能代表 main。
+共同生命周期改动后，按影响范围检查初始化、事件前后状态、历史延续、未来日程、
+查询网格不变性和失败回退。单个算子通过不能代替完整场景。
 
-The numerical-assurance workflow runs the existing card, criteria and table
-calibrations. The public-API
-[scenario regression](../../tests/test_paper_scenarios.py) checks the original
-card anchors, final callback counts and query-grid invariance. These finite
-checks do not prove all event times, complete edges or wrap counts. They do not
-run Spectre or replace actual backend
-comparisons. Keep checkpoint progress and unresolved decisions in the existing
-Issue #96 and PR #108; this contract does not create another status tracker.
+numerical-assurance 工作流运行既有条件卡、判据和表格校准。
+PR #108 的[候选场景回归](https://github.com/BucketSran/vaEVAS/blob/4c4cd2ec04426330501b6cca7480022b9bba3cdb/evas/tests/test_paper_scenarios.py)
+检查原锚点、最终回调次数和查询网格不变性，尚未进入 main。
+这些有限检查不证明全部事件时刻、完整边沿或环回次数，也不运行 Spectre。
+[固定候选报告](../../../experiments/backends/paper/integration.md)说明实际配对及 main 的独立依赖探针。
+进度和未决事项继续由 #96、#108 跟踪。
 
 | 要求 | 条件与工程来源 | 必须区分的错误 |
 | --- | --- | --- |
