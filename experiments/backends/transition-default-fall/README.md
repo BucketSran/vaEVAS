@@ -23,7 +23,7 @@ Each1e-12 control still covers49/71 requested points, with22 missing. EVAS/Spect
 
 ```sh
 PYTHONPATH=evas/src:. python3 -B experiments/backends/transition-default-fall/local_replay.py evas/rust_core/target/debug/evas-kernel /tmp/transition-anchors.json
-python3 -B -m unittest discover -s experiments/backends/transition-default-fall -p test_check.py
+python3 -B -m unittest discover -s experiments/backends/transition-default-fall -p 'test_*.py'
 python3 -B -m unittest discover -s experiments/backends/evidence -p 'test_*.py'
 python3 -B experiments/backends/transition-default-fall/check.py "$ORIGINAL_COLLECTION/spectre-output/runs" /tmp/transition-original.json
 python3 -B experiments/backends/transition-default-fall/check.py "$TIMER_COLLECTION/spectre-output/runs" /tmp/transition-timer.json --mode timer-controls
@@ -32,3 +32,5 @@ python3 -B experiments/backends/transition-default-fall/check.py "$TIMER_COLLECT
 The consumer calibration has 7 checks and the shared archive/PSF calibration has 12. `calibrate_collection.py COLLECTION OUTPUT` also verifies that disposable copies with an empty unpacked manifest or a replaced known PSF fail before parsing. The reviewed helper is included by normal merge of main `2e250c2d161324f151f27c3ca9e45ed32eff164a`. Both real archive analyses were rechecked and remain exactly equal, including failures and missing observations.
 
 Raw archives remain local; this evidence is a bounded candidate comparison, not a public qualification receipt or completion of #66.
+
+The replay consumers validate `response.transient.times` against every requested time before reading voltages. The frozen node order, solution count, every voltage row width and finite numeric values must match. Rows use the returned times after validation. Seven independent transport controls exercise this boundary. `calibrate_responses.py PROBE_DIRECTORY OUTPUT` additionally accepts the five saved real responses and rejects six altered copies of each, without modifying observations or executing a simulator. Existing failures and scientific counts remain unchanged.

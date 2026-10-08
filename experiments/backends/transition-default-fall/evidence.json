@@ -2937,7 +2937,76 @@
     },
     "temporary_parent_preflight": "macOS default /var is symlink and was correctly refused; calibration rerun in owning artifact directory; original collection never modified",
     "shared_helper_calibration": 12,
-    "post_main_merge_selected_regressions": 78
+    "post_main_merge_selected_regressions": 78,
+    "response_identity_unit_calibration": 7,
+    "response_identity_real_calibration": {
+      "native-three-arg--sparse": {
+        "valid_rows": 321,
+        "request_sha256": "5202d19bfe88a669a071ad7afc83d36594e70acf51201ab373197b5e7c2b0bc0",
+        "response_sha256": "7dd3140ca390baeab32a486193e0bcc81090eef82d79f9fda199421b5eeb38ae",
+        "rejected_mutations": [
+          "changed_time",
+          "reordered_times",
+          "missing_node",
+          "short_voltage_row",
+          "missing_solution",
+          "nonfinite_voltage"
+        ]
+      },
+      "native-three-arg--dense": {
+        "valid_rows": 546,
+        "request_sha256": "15ddda26243253c5f160dfe4ae194c2046f44ef965e68d60ee60a36acee14bec",
+        "response_sha256": "ba7f211d685a1396edadc9bf8493ef4f170e8f78cab10100e960d5e3b722cf02",
+        "rejected_mutations": [
+          "changed_time",
+          "reordered_times",
+          "missing_node",
+          "short_voltage_row",
+          "missing_solution",
+          "nonfinite_voltage"
+        ]
+      },
+      "native-four-arg--sparse": {
+        "valid_rows": 321,
+        "request_sha256": "9afd4a326ae26fefa6ac3a64569327e1b6cc3b7306aa3ed22d476c55910e74f8",
+        "response_sha256": "6a2759f060b15ded955868bb0aa3da3134b09d6354751fa4bc7b64104038d7c1",
+        "rejected_mutations": [
+          "changed_time",
+          "reordered_times",
+          "missing_node",
+          "short_voltage_row",
+          "missing_solution",
+          "nonfinite_voltage"
+        ]
+      },
+      "timer-native-pair/native-zero-period--1e-12": {
+        "valid_rows": 252,
+        "request_sha256": "7ddbe1ca1a9ce6466fbfe4eaabc59c4eb319a5d373985fdc3352afbfa5202b8a",
+        "response_sha256": "2d50f26195adbe54250dc03c7d0dcf4a4cde249393ba377eeda804f1f8d95b59",
+        "rejected_mutations": [
+          "changed_time",
+          "reordered_times",
+          "missing_node",
+          "short_voltage_row",
+          "missing_solution",
+          "nonfinite_voltage"
+        ]
+      },
+      "timer-native-pair/native-positive-period--1e-12": {
+        "valid_rows": 252,
+        "request_sha256": "3f3e362d1be00dc182de278a1bc29f3b17e93de4844b99e15d93320457829ace",
+        "response_sha256": "26e6e007c61ac872219dd16f06e8cee08d55d5d889d67261ea08297fa58cb267",
+        "rejected_mutations": [
+          "changed_time",
+          "reordered_times",
+          "missing_node",
+          "short_voltage_row",
+          "missing_solution",
+          "nonfinite_voltage"
+        ]
+      }
+    },
+    "response_identity_result": "five original real responses pass returned-time/node/shape/finite validation; six altered copies per response rejected; no new numerical or remote calls"
   },
   "limits": [
     "No saved target changes in original1e-18 or positive-period1e-18 reference; cause associated with tolerance axis in this controlled design, no internal cutoff inferred.",
@@ -2955,7 +3024,12 @@
   "checker_identity": {
     "check_sha256": "a37db939225d73686d76dfcd024657d25311525223ae7fe6ceab6c0ac5972ff4",
     "archive_sha256": "f1a143aa71dfea17035ee6d8f8b9f0c0aa404771be8fc74fc3999e9deaa4536d",
-    "psf_sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8"
+    "psf_sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8",
+    "response.py_sha256": "031487cc2ff3dcad7c94451e7e67997e3be7eefd333906f29a9b0dd77d29a47f",
+    "local_replay.py_sha256": "7ed7609127f1893009e19ff04aea0db771a8bfee2c03b60c0f3ebc9fec1859cb",
+    "native_replay.py_sha256": "ef9b85cbc5d131d961e872c7a06a3951e2f02ad0a949b1103379424eb6d22e7d",
+    "test_response.py_sha256": "a9ed8912af661b65f826695bf8deb59c7bf9f38e7abece8da2529bf4253300e3",
+    "calibrate_responses.py_sha256": "6e537929e1b6aac4a952e4524356adfbb28e3c0cba891c7e6adad27846772be2"
   },
   "source_identity": {
     "implementation_commit": "8cca81df083683cc91ffad194c5b06d1c28287bc",
