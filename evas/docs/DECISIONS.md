@@ -41,13 +41,14 @@ MNA 未知量与方程、混合量纲容差、状态生命周期和独立参考�
 维护本决定的审查与关闭；文档完成不表示 C1–C5 已实现。
 核对基线为 reviewed main `fbf896bbbb6f66a85f2d8be159eb2657ea17f972`，
 [PR108 候选](https://github.com/BucketSran/vaEVAS/tree/739d961c9894715d5be3c19dec9441eaecec6369)
-只作接口核对，尚未合并。两者均为 EVAS 0.13.0 / IR17。
+只作接口核对，尚未合并。两者的源码元数据均为 EVAS 0.14.0 / IR18，依据 `evas/pyproject.toml`、
+`evas/rust_core/Cargo.toml` 和 Python/Rust 的 `SCHEMA_VERSION`；旧 README 版本描述未作为身份依据。
 
 ### 决定与依据
 
 继续扩展现有 Python 编译、共同 IR 和 Rust 电压域执行路径。
 前端把等价静态表达展开到共同 IR；运行时条件、索引和状态依赖须保留或明确拒绝。
-当前 `Operators` 已同时管理解析算子和连续历史，`Frame` 保存电压、离散状态及其区间，
+当前 `Operators` 已同时管理解析算子和连续历史，`Frame` 保存电压解、离散状态及状态区间，并通过 `Operators` 持有连续历史，
 `Controller` 管理事件游标和记录。`implicit_dynamics` 另有受限 DAE 数值方法，
 但仍验收原电压关系。不同数值方法不是不同语言语义。
 
@@ -67,7 +68,7 @@ MNA 未知量与方程、混合量纲容差、状态生命周期和独立参考�
 下表定义语义接口，沿用现有对象；不要求先实现一组未使用的通用 trait。
 符号与五种操作详见[共同生命周期契约](../validation/DYNAMICS_CONTRACTS.md#shared-lifecycle-contract)。
 
-| 接口 | 必须携带的内容与责任 | 当前代码落点 |
+| 接口 | 必须携带的内容与责任 | 当前落点与候选扩展 |
 | --- | --- | --- |
 | 模型关系 | 原贡献累加成 R=0；程序赋值保留顺序。结构依赖、实例、源码调用点及展开身份在绑定前后保留，数值相消不能删除准入义务 | `instance_compiler.py`、共同 IR、`Circuit`、`reset_dependencies.rs` |
 | 接受历史 | 物理状态 z、离散 q、电压、各自包围、源身份及算子队列。每个算子用实例/调用点拥有状态，高阶滤波的物理状态数不等于算子数 | `Frame`、`Operators`、`continuous.rs`、`nonlinear_dynamics.rs` |
@@ -84,7 +85,7 @@ MNA 未知量与方程、混合量纲容差、状态生命周期和独立参考�
 
 C1–C5 的数学接口分别在[连续状态接口](math/continuous.md#extension-state-contract)、
 [事件接口](math/events.md#extension-event-contract)、[历史与新算子接口](math/operators.md#extension-operator-contract)。
-没有语义变化时沿用 IR17；不兼容变更须分配新版本、拒绝旧可执行 IR，并由原始 VA/manifest
+没有语义变化时沿用 IR18；不兼容变更须分配新版本、拒绝旧可执行 IR，并由原始 VA/manifest
 重编译，不能只改版本字段。ADR-001 末尾的 IR16 描述属于该决定原检查点。
 
 ### C1–C5 的依赖、验收与责任入口
