@@ -105,7 +105,10 @@ class LocalStateContracts(unittest.TestCase):
         with self.assertRaises(KernelError) as failure:
             run(program)
         self.assertEqual(failure.exception.detail['kind'],'unsupported_transient')
-        self.assertIn('ordinary analog conditionals',str(failure.exception))
+        # The integrated continuous-select gate rejects this model before the older conditional gate.
+        self.assertEqual(failure.exception.detail['message'],
+                         'continuous select requires a finite source-only affine clamp; '
+                         'event/state/internal feedback and discontinuous selects are unsupported')
 
     def test_unread_unwritten_real_declaration_requires_no_initial_state(self):
         program=compile_local("@(initial_step) q=1; @(timer(.5)) q=2; V(y,r)<+q;",'real q,dead;')
