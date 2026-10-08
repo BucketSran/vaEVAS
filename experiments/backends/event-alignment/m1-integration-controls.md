@@ -43,3 +43,5 @@ iabstol 保持 1e-15 A。实际设置从原执行日志核对，不只读取 dec
 [紧凑证据](evidence/m1-integration-controls.json)记录基线复用、实际控制、PSF 全文差异、
 来源 hash、独立误差、候选 EVAS 的全部原生配对及指定查询覆盖。
 原始输出属于 local-only，本页不构成公开完整复现包。
+
+[最终两个最小探针](final-probes.md)保留原失败并列出完整有限 M1 对齐及原 VCO 返回量的定位结果。

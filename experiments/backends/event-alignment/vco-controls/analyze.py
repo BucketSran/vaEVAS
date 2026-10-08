@@ -1,10 +1,12 @@
 """Bounded constant VCO diagnostic. Native rows only; independent idt is not idtmod state."""
-import argparse, hashlib, importlib.util, json, math, re
+import argparse, hashlib, importlib.util, json, math, re, sys
 from fractions import Fraction as F
 from pathlib import Path
 BASE=Path(__file__).resolve().parent
-spec=importlib.util.spec_from_file_location('normalize_psf',BASE.parent/'normalize_psf.py')
-normalizer=importlib.util.module_from_spec(spec);spec.loader.exec_module(normalizer)
+sys.path.insert(0,str(BASE.parents[3]))
+from experiments.backends.evidence import psf as normalizer
+from experiments.backends.evidence.archive import verify_archive_members
+ARCHIVE_SHA256='287bf5bd018082e8928da9063de532e688080df4d47a85c135e0cf4e2e4d1613'
 sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
 def exact(t):
     q=F(1,8)+524288*F(t);p=q-q.numerator//q.denominator
@@ -33,6 +35,9 @@ def native_index(rows):
 
 def analyze(root):
     manifest=json.loads((BASE/'MANIFEST.json').read_text());results={};native={}
+    required=[f'spectre-output/runs/{c["id"]}/{file}' for c in manifest['cases']
+              for file in ['dut.va','tb.scs','spectre.log','psf/tran.tran.tran']]
+    identities=verify_archive_members(root.parent.parent,ARCHIVE_SHA256,required)
     for c in manifest['cases']:
         folder=root/c['id'];nodes=['ctl','freq','phase','out']+(['raw'] if c['observer']=='raw-observer' else [])
         for f,h in c['files'].items():
@@ -55,6 +60,6 @@ def analyze(root):
     for setting in ['baseline','tight']:
         a=native['original--'+setting];b=native['raw-observer--'+setting];ia={r['time']:r['voltages'] for r in a};ib={r['time']:r['voltages'] for r in b};common=ia.keys()&ib.keys()
         pairs[setting]=dict(same_native_time_sequence=[r['time'] for r in a]==[r['time'] for r in b],common_rows=len(common),original_only=len(ia.keys()-ib.keys()),observer_only=len(ib.keys()-ia.keys()),max_signal_difference={n:max(abs(ia[t][n]-ib[t][n]) for t in common) for n in ['ctl','freq','phase','out']})
-    return dict(schema='vco-controls-diagnostic-v1',status='ordinary-phase-and-required-coverage-failures-retained',scope='constant exact-dyadic VCO only; raw is independent idt, not internal idtmod state',budgets=manifest['comparison_budgets'],cases=results,observer_effect=pairs),native
+    return dict(archive_binding={'sha256':ARCHIVE_SHA256,'regular_members_verified':len(identities)},schema='vco-controls-diagnostic-v1',status='ordinary-phase-and-required-coverage-failures-retained',scope='constant exact-dyadic VCO only; raw is independent idt, not internal idtmod state',budgets=manifest['comparison_budgets'],cases=results,observer_effect=pairs),native
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('runs',type=Path);p.add_argument('output',type=Path);a=p.parse_args();result,_=analyze(a.runs);a.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n')

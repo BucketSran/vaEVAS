@@ -39,3 +39,5 @@ python3 -m unittest discover -s experiments/backends/event-alignment/vco-control
 ```
 
 The diagnostic checks source/deck identity, preserves native rows/tokens through the existing PSF normalizer, rejects nonfinite or duplicate/nonincreasing times, evaluates exact rational expectations, retains ordinary failures, reports missing exact anchors and compares original/raw on common actual times. Six calibration tests cover the dyadic side, ordinary-vs-circular distinction, nonfinite export, missing signal refusal, duplicate/nonincreasing times and missing-anchor preservation. It is a bounded diagnostic, not a replacement alignment checker.
+
+[最终两个最小探针](final-probes.md)保留原失败并列出完整有限 M1 对齐及原 VCO 返回量的定位结果。
