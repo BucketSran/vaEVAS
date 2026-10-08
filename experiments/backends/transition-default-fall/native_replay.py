@@ -2,11 +2,11 @@ from pathlib import Path
 from fractions import Fraction as F
 import sys,importlib.util,json,subprocess,hashlib,math
 import argparse
-from response import observations
 parser=argparse.ArgumentParser();parser.add_argument('runs',type=Path);parser.add_argument('manifest',type=Path);parser.add_argument('output',type=Path);parser.add_argument('--kernel',type=Path,required=True);parser.add_argument('--select',nargs='*');parser.add_argument('--mode',choices=['original','timer-controls'],default='original');args=parser.parse_args()
 R=Path(__file__).resolve().parents[3];O=args.output;O.mkdir(parents=True,exist_ok=True)
 sys.path.insert(0,str(R/'evas/src'))
 from evas import Instance,compile_sources
+from response import observations
 spec=importlib.util.spec_from_file_location('check',R/'experiments/backends/transition-default-fall/check.py');a=importlib.util.module_from_spec(spec);spec.loader.exec_module(a)
 runs=args.runs;analysis,raw=a.analyze(runs,args.manifest,args.mode);k=args.kernel;manifest=json.loads(args.manifest.read_text());sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
 inst=[Instance(i,'transition_default',{'r':'0'}|{n:i+'_'+n for n in ['simple','reverse','extend','mirror','qs','qr','qe','qm']},{'edge':tr,'delay':d}) for i,tr,d in [('a',.5,0),('b',1,.125)]]
@@ -16,7 +16,7 @@ for name,rows in raw.items():
  src=runs/name/'dut.va';p=compile_sources({str(src):src.read_text()},inst);times=[r['time'] for r in rows];rq=dict(program=p.to_dict(),driven=[],samples=[],transient=dict(pwl=[],output_times=times,stop=3,max_step=.015625),tolerances=dict(absolute=1e-11,relative=1e-10));folder=O/('native-'+name);folder.mkdir(exist_ok=True);(folder/'request.json').write_text(json.dumps(rq,indent=2)+'\n');process=subprocess.run([str(k)],input=json.dumps(rq),capture_output=True,text=True,timeout=90);report['local_numerical_calls']+=1;(folder/'stdout.json').write_text(process.stdout);(folder/'stderr.txt').write_text(process.stderr)
  rec=dict(returncode=process.returncode,request_sha256=sha(folder/'request.json'),stdout_sha256=sha(folder/'stdout.json'),source_sha256=sha(src),native_requested_count=len(times))
  if process.returncode==0:
-  response=json.loads(process.stdout);erows=observations(response,times,sorted(['0']+a.SIGNALS));assert all(math.isfinite(v) for r in erows for v in r['voltages'].values());rec['evas_independent']=a.waveform(erows);failures=[];maxima={}
+  response=json.loads(process.stdout);erows=observations(response,times,p);assert all(math.isfinite(v) for r in erows for v in r['voltages'].values());rec['evas_independent']=a.waveform(erows);failures=[];maxima={}
   for e,s in zip(erows,rows,strict=True):
    for n in a.SIGNALS:
     diff=abs(e['voltages'][n]-s['voltages'][n]);item=dict(time=s['time'],evas=e['voltages'][n],spectre=s['voltages'][n],difference=diff,budget=1e-8)

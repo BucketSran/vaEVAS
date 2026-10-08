@@ -3006,7 +3006,8 @@
         ]
       }
     },
-    "response_identity_result": "five original real responses pass returned-time/node/shape/finite validation; six altered copies per response rejected; no new numerical or remote calls"
+    "response_identity_result": "five original real responses pass returned-time/node/shape/finite validation; six altered copies per response rejected; no new numerical or remote calls",
+    "response_identity_validator": "existing evas.protocol.validate_response(response, program, len(times), times), including public identity, diagnostics and state/event shape validation"
   },
   "limits": [
     "No saved target changes in original1e-18 or positive-period1e-18 reference; cause associated with tolerance axis in this controlled design, no internal cutoff inferred.",
@@ -3025,11 +3026,11 @@
     "check_sha256": "a37db939225d73686d76dfcd024657d25311525223ae7fe6ceab6c0ac5972ff4",
     "archive_sha256": "f1a143aa71dfea17035ee6d8f8b9f0c0aa404771be8fc74fc3999e9deaa4536d",
     "psf_sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8",
-    "response.py_sha256": "031487cc2ff3dcad7c94451e7e67997e3be7eefd333906f29a9b0dd77d29a47f",
-    "local_replay.py_sha256": "7ed7609127f1893009e19ff04aea0db771a8bfee2c03b60c0f3ebc9fec1859cb",
-    "native_replay.py_sha256": "ef9b85cbc5d131d961e872c7a06a3951e2f02ad0a949b1103379424eb6d22e7d",
-    "test_response.py_sha256": "a9ed8912af661b65f826695bf8deb59c7bf9f38e7abece8da2529bf4253300e3",
-    "calibrate_responses.py_sha256": "6e537929e1b6aac4a952e4524356adfbb28e3c0cba891c7e6adad27846772be2"
+    "response.py_sha256": "1e2e0b601fa69fc921e6fd3b65503fdef104e653c0d07647743d1e3a65f475c9",
+    "local_replay.py_sha256": "3d27ba7dfde044a1e2ff592a060a4868976898594fee4f890280f4350f196132",
+    "native_replay.py_sha256": "f7319ec3ea49c49686181d82fcd6cde8f9e2966a11e342d9cbb256379df99f61",
+    "test_response.py_sha256": "4c3d7e2bb6c1a47cb332e41bb484830d62b3e5e65bc8a3ae9c77de96b30e636c",
+    "calibrate_responses.py_sha256": "4c1a318be70bfe909151b5cbc470b6f795f6788d2be0ae5fee4ba190179d6ebe"
   },
   "source_identity": {
     "implementation_commit": "8cca81df083683cc91ffad194c5b06d1c28287bc",

@@ -11,7 +11,7 @@ def replay(kernel,output):
   source=BASE/c['id']/'dut.va'
   if sha(source)!=c['files']['dut.va']:raise ValueError('frozen source hash mismatch')
   p=compile_sources({str(source):source.read_text()},instances);times=c['requested_times'];r=transient(p,{},times,stop=3,max_step=.015625,kernel=kernel,vabstol=1e-11,reltol=1e-9)
-  rows=observations(r,times,sorted(['0']+SIGNALS))
+  rows=observations(r,times,p)
   if any(not math.isfinite(v) for row in rows for v in row['voltages'].values()):raise ValueError('nonfinite EVAS response')
   summary[c['id']]=dict(source_sha256=sha(source),requested_count=len(times),observed_count=len(rows),independent=waveform(rows),operator_count=len(p.operators),distinct_origins=len({(o.origin.instance,o.origin.line,o.origin.column) for o in p.operators}))
  output.write_text(json.dumps(summary,indent=2,allow_nan=False)+'\n');return summary
