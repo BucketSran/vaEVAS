@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "production_review_revision": "3116a76a5d31973db454a2a0f9c6c2541e89fe3f",
+  "integrated_shared_main": "2e250c2d161324f151f27c3ca9e45ed32eff164a",
+  "production_diff_from_reviewed_revision": false,
+  "local_checker": {
+    "command": "python3 -B -m unittest discover -s experiments/backends/local-state -v",
+    "tests": 10,
+    "status": "P",
+    "empty_waveform": "ValueError; invalid input, not numerical F"
+  },
+  "shared_evidence": {
+    "command": "python3 -B -m unittest discover -s experiments/backends/evidence -v",
+    "tests": 12,
+    "status": "P"
+  },
+  "consumer_mutations": [
+    {
+      "mutation": "empty-map",
+      "exit_code": 2,
+      "error": {
+        "status": "ERROR",
+        "reason": "unpacked member differs from archive: spectre-output/FILE_MANIFEST.json"
+      },
+      "no_analysis_or_evidence_created": true
+    },
+    {
+      "mutation": "modified-psf",
+      "exit_code": 2,
+      "error": {
+        "status": "ERROR",
+        "reason": "unpacked member differs from archive: spectre-output/runs/local-state/psf/tran.tran.tran"
+      },
+      "no_analysis_or_evidence_created": true
+    }
+  ],
+  "local_log_availability": "local-only: diagnostic-issue-closure/current/runs/frontend-local-state/spectre-analysis",
+  "limits": [
+    "Two actual collection mutations were tested in temporary copies; original raw unmodified.",
+    "Initial harness attempt used macOS symlink /var ancestor and was rejected before member comparison; retained ignored diagnostic, real temporary parent used for member mutations."
+  ]
+}

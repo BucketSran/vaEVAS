@@ -1,7 +1,10 @@
 # 局部 analog 量与事件状态的实际配对
 
 一个实际 Spectre 配置运行同一冻结 VA 中的三个实例。
-候选 EVAS `f0ed848d8c0a6ceb7e55407013788b1b95103cba` 与原生 67 行、
+实现基线为 `f0ed848d8c0a6ceb7e55407013788b1b95103cba`；诊断修正并正常整合
+reviewed main `5e795852` 后，实际重建/复验候选为 `3116a76a5d31973db454a2a0f9c6c2541e89fe3f`。
+包与所选内核实际报告 EVAS 0.14.0 / IR18，build_revision=null 原样保留。
+候选与原生 67 行、
 737 个电压值的同阶段数值比较通过，三个 q 观察量始终共享同一阶段，未见阶段差。
 这是有限数值观测，不代表 #65 或原 VCO 全部完成。
 [精简证据](evidence.json)保留设置重读、原 RESULT、身份、所有失败和资格缺口。
@@ -38,12 +41,18 @@ vabstol=1e-7、iabstol=1e-12、maxstep=0.025 s、stop=1 s、traponly。
 收集器旧 readback 不识别 `25 ms`，原 RESULT 设置状态 I 原样保存。
 新分析使用已合并 PR109 的 `settings_readback.py`，固定于 `5e795852`，
 重新从原 log 与 PSF 读取并核对设置，没有改写原 RESULT 或伪造执行。
+整合后冻结 VA/输入未改，canonical 公开请求与 f0ed 逐字段相同；Rust 生产源未改。
+Spectre raw 据同源同设置复用，实际 EVAS 则重新运行；这不声称所有源码审查可直接复用。
+本局部量切片未改 Model、IR 或 Rust；合并进入的 case 功能范围另见
+[case 合同](../../../evas/validation/CASE_STATEMENTS_CONTRACT.md)。
 
 psfascii 执行命令、11 个 save 节点、strobeoutput=all、skipdc=no 及 qobs 记录支持
 本案例的原生保存来源；67 行等于 66 accepted steps 加初始行。
 这些记录不单独证明任意隐藏 callback 顺序、精确实数时间序列化或严格终点。
 raw 归档 SHA 为 `e91d97bc7089cda266cea9996bd6e66f2e8e34b70cb89ac792747592b541e8fa`，
-37 个清单文件均逐项验证。raw、完整请求/响应和执行环境为 local-only，
+共享归档验证器先将全部 58 个 regular 成员与已冻结归档逐字节绑定，
+再核对 37 个清单条目。关键入口是固定路径，不从清单动态生成；空清单、
+改写解压文件、缺失成员或符号链接均不能绕过身份验证。raw、完整请求/响应和执行环境为 local-only，
 工作区相对入口为 `current/runs/issue-closure-20261008/local-state-reference-v1/collected/spectre`。
 精简 evidence 位于仓库内，但这些 local-only 材料不是公开下载链接，不能声明完整公开复现。
 
@@ -53,11 +62,16 @@ raw 归档 SHA 为 `e91d97bc7089cda266cea9996bd6e66f2e8e34b70cb89ac792747592b541
 python3 -B -m unittest discover -s experiments/backends/local-state -v
 cargo build --locked --manifest-path evas/rust_core/Cargo.toml
 git show 5e795852:experiments/backends/paper/settings_readback.py > runs/frontend-local-state/spectre-analysis/settings_readback-pr109.py
-PYTHONPATH=evas/src python3 -B experiments/backends/local-state/analyze.py --collection /absolute/path/to/collected/spectre --readback runs/frontend-local-state/spectre-analysis/settings_readback-pr109.py --output runs/frontend-local-state/spectre-analysis/full --evidence experiments/backends/local-state/evidence.json
+PYTHONPATH=evas/src python3 -B experiments/backends/local-state/analyze.py --collection /absolute/path/to/collected/spectre --readback runs/frontend-local-state/spectre-analysis/settings_readback-pr109.py --candidate-revision 3116a76a5d31973db454a2a0f9c6c2541e89fe3f --output runs/frontend-local-state/spectre-analysis/integrated --evidence experiments/backends/local-state/evidence.json
 ```
 
 [维护检查器](check.py)的[校准](test_check.py)覆盖独立正例、错误增益/积分/采样值、
-不一致 q 阶段、延迟/多次事件、同刻前后阶段差、缺初态/要求点/终点和末点 overshoot。
+不一致 q 阶段、延迟/多次事件、同刻前后阶段差、缺初态/要求点/终点和末点 overshoot，
+以及未合格阶段不能因没有比较电压值而返回通过。空波形作为无效输入
+抛出 ValueError，不混入数值比较失败。归档路径的负控由
+[共享校准](../evidence/test_archive.py)覆盖，分析入口采用同一公开验证函数。
+[校准收据](calibration.json)保留 10 项局部校准、12 项共享校准以及实际归档临时副本的
+空清单/改写 PSF 两项负控；两项均以 ERROR、退出码 2 拒绝，且未生成分析结果。
 [分析入口](analyze.py)仅重新执行本地 EVAS，不启动远端；归档、DUT、清单、
 原 deck 和 shared readback 均先绑定固定身份。
 原始 VCO 的局部事件快照、方向驱动积分及自换向验收仍未完成。

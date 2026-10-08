@@ -67,6 +67,8 @@ def phase_of(row):
 
 
 def assess(rows):
+    if not rows:
+        raise ValueError("empty waveform")
     times = [rational(row['time']) for row in rows]
     phases = [phase_of(row) for row in rows]
     failures, maximum = [], {'ratio': 0., 'absolute': 0., 'row': None, 'node': None}
@@ -126,6 +128,8 @@ def assess(rows):
 def pair(native, candidate):
     by_time = {rational(row['time']): row for row in candidate}
     phases, failures, maximum, compared = [], [], 0., 0
+    if not native or not candidate:
+        raise ValueError("empty native/candidate waveform")
     for index, row in enumerate(native):
         time = rational(row['time'])
         # Candidate times are binary64 and PSF times are decimal export tokens.

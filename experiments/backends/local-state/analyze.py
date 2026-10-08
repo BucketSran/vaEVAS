@@ -6,14 +6,23 @@ import json
 from pathlib import Path
 import re
 import subprocess
+import sys
 
-from check import NODES, assess, pair, parse_psf
+from check import NODES, assess, pair, rational
 
 ROOT = Path(__file__).resolve().parents[3]
 BEHAVIOR = 'f0ed848d8c0a6ceb7e55407013788b1b95103cba'
 READBACK = '5e795852d18548a5389ffe2332fdb5708d4f8796'
 ARCHIVE = 'e91d97bc7089cda266cea9996bd6e66f2e8e34b70cb89ac792747592b541e8fa'
 SOURCE = '20a90b472398a4f7df56d36f6b960ed98cc59985c0c3f426e8e03dc42cf1b782'
+# Protocol entrances are fixed here, never inferred from the untrusted manifest.
+REQUIRED_MEMBERS = (
+    'spectre-output/FILE_MANIFEST.json', 'spectre-output/TOOL_IDENTITY.json',
+    *('spectre-output/runs/local-state/'+name for name in (
+        'dut.va', 'manifest.json', 'original-table.scs', 'tb.scs', 'RESULT.json',
+        'simulate.json', 'spectre.log', 'psf/tran.tran.tran')),
+)
+sys.path.insert(0, str(ROOT))
 
 
 def sha(path):
@@ -51,6 +60,7 @@ def main():
     parser.add_argument('--candidate-revision',default=BEHAVIOR,help='fixed tested production revision; no uncommitted production changes')
     args = parser.parse_args()
     from evas import Instance, compile_sources
+    from evas.identity import inspect_identity
     from evas.ir import SCHEMA_VERSION
     assert not git('diff',args.candidate_revision,'--','evas/src','evas/rust_core/src','evas/rust_core/crates'), 'candidate production differs'
     shared = git('show',READBACK+':experiments/backends/paper/settings_readback.py')
@@ -58,10 +68,14 @@ def main():
     spec = importlib.util.spec_from_file_location('shared_readback',args.readback)
     readback = importlib.util.module_from_spec(spec); spec.loader.exec_module(readback)
     collected=args.collection; base=collected/'spectre-output'; raw=base/'runs/local-state'
-    assert sha(collected/'raw.tar.gz') == ARCHIVE
+    from experiments.backends.evidence.archive import verify_archive_members
+    from experiments.backends.evidence.psf import normalize
+    from experiments.backends.evidence import archive as archive_helper, psf as psf_helper
+    archive_members=verify_archive_members(collected,ARCHIVE,REQUIRED_MEMBERS)
     file_manifest=json.loads((base/'FILE_MANIFEST.json').read_text())
+    assert isinstance(file_manifest,dict) and file_manifest, 'empty/invalid file manifest'
     for name, identity in file_manifest.items():
-        assert sha(base/name)==identity['sha256'] and (base/name).stat().st_size==identity['bytes'],name
+        assert archive_members.get('spectre-output/'+name)==identity,name
     fixture=ROOT/'evas/validation/cases/local_state'
     assert sha(raw/'dut.va')==sha(fixture/'dut.va')==SOURCE
     assert (raw/'manifest.json').read_bytes()==(fixture/'manifest.json').read_bytes()
@@ -71,7 +85,9 @@ def main():
     original_result=json.loads((raw/'RESULT.json').read_text())
     psf=raw/'psf/tran.tran.tran'; log=raw/'spectre.log'
     settings=readback.spectre(log.read_text(),psf.read_text())
-    native=parse_psf(psf.read_text())
+    normalized=normalize(psf,{'voltage_nodes':list(NODES)})
+    native=normalized['decimal_tokens']
+    assert all(rational(b['time']) >= rational(a['time']) for a,b in zip(native,native[1:])), 'native time order decreases'
     args.output.mkdir(parents=True,exist_ok=True)
     save(args.output/'native-tokens.json',native)
     save(args.output/'settings-readback-pr109.json',settings)
@@ -110,15 +126,25 @@ def main():
     local_raw={str(p.relative_to(collected)):dict(sha256=sha(p),bytes=p.stat().st_size) for p in paths}
     closure={str(p.relative_to(ROOT)):sha(p) for p in sorted((ROOT/'evas/src/evas').glob('*.py'))}
     closure.update({str(p.relative_to(ROOT)):sha(p) for p in sorted((ROOT/'evas/rust_core').rglob('*.rs')) if 'target' not in p.parts})
+    closure.update({name:sha(ROOT/name) for name in ('evas/pyproject.toml','evas/rust_core/Cargo.toml','evas/rust_core/Cargo.lock')})
+    identity, identity_error=inspect_identity(ROOT/'evas/rust_core/target/debug/evas-kernel')
+    if identity_error:
+        raise identity_error
     evidence=dict(schema=1,scope='One actual Spectre configuration, three instances in one frozen DUT; not three configurations or complete #65/VCO closure.',
                   feature_revision=BEHAVIOR,tested_revision=args.candidate_revision,IR=SCHEMA_VERSION,archive_sha256=ARCHIVE,verified_manifest_files=len(file_manifest),
+                  archive_authentication=dict(verified_regular_members=len(archive_members),
+                                              required_members=list(REQUIRED_MEMBERS), members=archive_members,
+                                              helper_sha256=sha(Path(archive_helper.__file__)),
+                                              helper_revision=git("log","-1","--format=%H","--","experiments/backends/evidence/archive.py").decode().strip(),
+                                              psf_adapter_sha256=sha(Path(psf_helper.__file__))),
                   source_sha256=SOURCE,solver_controls=manifest['EVAS'],frozen_voltage_budget=dict(absolute=1e-7,relative=1e-5),
                   readback_revision=READBACK,readback_sha256=hashlib.sha256(shared).hexdigest(),settings_reanalysis_status='P',settings_reanalysis=settings,
                   preserved_original_result=original_result,raw_availability='local-only',
                   collection_workspace_relative='current/runs/issue-closure-20261008/local-state-reference-v1/collected/spectre',
                   raw_identities=local_raw,spectre=dict(version=tool['version'],binary_sha256=tool['binary_sha256'],
                                                      setup_sha256=list(tool['setup_sha256'].values()),receipt=receipt),
-                  EVAS=dict(kernel_sha256=sha(ROOT/'evas/rust_core/target/debug/evas-kernel'),production_source_closure=closure),
+                  EVAS=dict(package=identity['package'],compatibility=identity['compatibility'],kernel_reported=identity['kernel']['reported'],
+                            kernel_sha256=sha(ROOT/'evas/rust_core/target/debug/evas-kernel'),production_source_closure=closure),
                   native_provenance=native_provenance,native_independent=native_check,
                   EVAS_canonical_independent=canonical_check,EVAS_native_time_independent=candidate_check,
                   all_native_pair=native_pair,canonical_grid_invariance=grid,
@@ -126,6 +152,7 @@ def main():
                                                         purpose='Query every exported native timestamp; not evidence of exact canonical-stop serialization.'),
                   analysis_files={p.name:dict(sha256=sha(p),bytes=p.stat().st_size) for p in sorted(args.output.glob('*.json'))},
                   checker_identity={p.name:sha(p) for p in [Path(__file__),Path(__file__).with_name('check.py'),Path(__file__).with_name('test_check.py')]},
+                  calibration_receipt=dict(path="calibration.json",sha256=sha(Path(__file__).with_name("calibration.json"))),
                   overall_strict_qualification='I',
                   qualification_gaps=['5/9 requested times have no exact decimal native token, including stop; no interpolation/extrapolation performed.',
                                       'Terminal raw token is 1.0000000000000002; supplemental request differs explicitly from canonical stop.',
@@ -137,4 +164,8 @@ def main():
 
 
 if __name__=='__main__':
-    main()
+    try:
+        main()
+    except ValueError as error:
+        print(json.dumps(dict(status='ERROR',reason=str(error))),file=sys.stderr)
+        raise SystemExit(2)

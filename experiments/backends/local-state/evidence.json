@@ -1,10 +1,263 @@
 {
   "schema": 1,
   "scope": "One actual Spectre configuration, three instances in one frozen DUT; not three configurations or complete #65/VCO closure.",
-  "behavior_revision": "f0ed848d8c0a6ceb7e55407013788b1b95103cba",
+  "feature_revision": "f0ed848d8c0a6ceb7e55407013788b1b95103cba",
+  "tested_revision": "3116a76a5d31973db454a2a0f9c6c2541e89fe3f",
   "IR": 18,
   "archive_sha256": "e91d97bc7089cda266cea9996bd6e66f2e8e34b70cb89ac792747592b541e8fa",
   "verified_manifest_files": 37,
+  "archive_authentication": {
+    "verified_regular_members": 58,
+    "required_members": [
+      "spectre-output/FILE_MANIFEST.json",
+      "spectre-output/TOOL_IDENTITY.json",
+      "spectre-output/runs/local-state/dut.va",
+      "spectre-output/runs/local-state/manifest.json",
+      "spectre-output/runs/local-state/original-table.scs",
+      "spectre-output/runs/local-state/tb.scs",
+      "spectre-output/runs/local-state/RESULT.json",
+      "spectre-output/runs/local-state/simulate.json",
+      "spectre-output/runs/local-state/spectre.log",
+      "spectre-output/runs/local-state/psf/tran.tran.tran"
+    ],
+    "members": {
+      "spectre-output/EXECUTION.json": {
+        "sha256": "a81ad1105d47a549f4ef6a2b122a711d7c4d081cc303074869dfb2dfe099bf3f",
+        "bytes": 1425
+      },
+      "spectre-output/FILE_MANIFEST.json": {
+        "sha256": "4e4c9e31b54abdd52a38171148d35ccbdccf365dd8f315d060e809beb6a6e0d6",
+        "bytes": 6497
+      },
+      "spectre-output/TOOL_IDENTITY.json": {
+        "sha256": "75ca121fa7854c2104ea35656d1f72782a0ed3d2715d44e5b2a3d02afda7f1cd",
+        "bytes": 1400
+      },
+      "spectre-output/runs/local-state/RESULT.json": {
+        "sha256": "075b502a9619112861167b44c121a6d74f201ec27dcc6fd5a677ef1fa1b9683b",
+        "bytes": 1321
+      },
+      "spectre-output/runs/local-state/SHA256SUMS": {
+        "sha256": "6015a6a56b6c733810c28071e35dcf69aae771e11e7609f818255478c1b0bbd2",
+        "bytes": 229
+      },
+      "spectre-output/runs/local-state/dut.va": {
+        "sha256": "20a90b472398a4f7df56d36f6b960ed98cc59985c0c3f426e8e03dc42cf1b782",
+        "bytes": 652
+      },
+      "spectre-output/runs/local-state/manifest.json": {
+        "sha256": "5942775cf19b39fe9cfe074d45ee25995e538d1074417a86ae69033de57f444d",
+        "bytes": 2191
+      },
+      "spectre-output/runs/local-state/original-table.scs": {
+        "sha256": "ecc71ef275c81347ee341c2c12383d8a2f40c2548715af377d0c3b08cc5acb9d",
+        "bytes": 444
+      },
+      "spectre-output/runs/local-state/psf/logFile": {
+        "sha256": "94c15d1898a72479af91cf391e796b1f9d4f4eb4bad4396683bbffb54b643654",
+        "bytes": 662
+      },
+      "spectre-output/runs/local-state/psf/tran.tran.tran": {
+        "sha256": "44bb96972fc6b4813b5cf11218260942da009c322e65cf6e7a0e410a70255f89",
+        "bytes": 26967
+      },
+      "spectre-output/runs/local-state/requested_settings.json": {
+        "sha256": "b079f23eb026d7611bda7423a6b79ea52408a6fd8228f40d14eb6d9aaf294014",
+        "bytes": 105
+      },
+      "spectre-output/runs/local-state/run.csh": {
+        "sha256": "8ab92f7be2ad7461ef937b99179a2e2a41c0382543442372cd62b376715a7b1a",
+        "bytes": 215
+      },
+      "spectre-output/runs/local-state/simulate.json": {
+        "sha256": "afaea44369b6c2f6fb2a3fbacb38e4bb886ddf2b8521b5d92e817767ec579378",
+        "bytes": 676
+      },
+      "spectre-output/runs/local-state/simulate.log": {
+        "sha256": "455e70c6a14c6e20ac42d1d025477023948af1c103461229d7b99d870ebb0314",
+        "bytes": 7163
+      },
+      "spectre-output/runs/local-state/simulate.log.EXECUTION.json": {
+        "sha256": "596cabda27455a101f79cff763e2e037f44073bc04b21a6a12a9bc1bff2989bb",
+        "bytes": 538
+      },
+      "spectre-output/runs/local-state/spectre.log": {
+        "sha256": "3707412a83c814be28b829226fe52bcfc75d7cda7bccd3b3124edfd5a7e91c78",
+        "bytes": 7956
+      },
+      "spectre-output/runs/local-state/tb.ahdlSimDB/.4c737d60bcefafc1c1246ea3c936811c.Linux-64.dep": {
+        "sha256": "7cdf41638ecfcf55384f188c6056fa239555b4c3ae410119ae26551d6c0377a2",
+        "bytes": 920
+      },
+      "spectre-output/runs/local-state/tb.ahdlSimDB/4c737d60bcefafc1c1246ea3c936811c.local_capture.ahdlcmi/Linux-64/GNUmakefile": {
+        "sha256": "2be84d8957adde43eb3703f8eb442e6a600ae74a3b71b6fd4ee9c6f00fcef0d6",
+        "bytes": 2122
+      },
+      "spectre-output/runs/local-state/tb.ahdlSimDB/4c737d60bcefafc1c1246ea3c936811c.local_capture.ahdlcmi/Linux-64/ahdlcmidevicelist": {
+        "sha256": "c2efef1fc4a0b73b15f567434a512b1230250e59fbe31b060973640144fddbd1",
+        "bytes": 14
+      },
+      "spectre-output/runs/local-state/tb.ahdlSimDB/4c737d60bcefafc1c1246ea3c936811c.local_capture.ahdlcmi/Linux-64/ahdlcmidevicelist.out": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "spectre-output/runs/local-state/tb.ahdlSimDB/4c737d60bcefafc1c1246ea3c936811c.local_capture.ahdlcmi/Linux-64/devicelisttemp": {
+        "sha256": "c2efef1fc4a0b73b15f567434a512b1230250e59fbe31b060973640144fddbd1",
+        "bytes": 14
+      },
+      "spectre-output/runs/local-state/tb.ahdlSimDB/4c737d60bcefafc1c1246ea3c936811c.local_capture.ahdlcmi/Linux-64/local_capture.lst": {
+        "sha256": "c2efef1fc4a0b73b15f567434a512b1230250e59fbe31b060973640144fddbd1",
+        "bytes": 14
+      },
+      "spectre-output/runs/local-state/tb.ahdlSimDB/4c737d60bcefafc1c1246ea3c936811c.local_capture.ahdlcmi/Linux-64/obj/optimize/5.0/libahdlcmi_local_capture.so": {
+        "sha256": "1e25047d17108d930f611dd3a78959322bb376ec9bfce2af800196cac0c67cfb",
+        "bytes": 87720
+      },
+      "spectre-output/runs/local-state/tb.ahdlSimDB/4c737d60bcefafc1c1246ea3c936811c.local_capture.ahdlcmi/Linux-64/sminfo": {
+        "sha256": "6c536a32717557ccc83c4d39026e4ae0d540f5c7ce59685d753e0ebd29ff9e2f",
+        "bytes": 41
+      },
+      "spectre-output/runs/local-state/tb.ahdlSimDB/4c737d60bcefafc1c1246ea3c936811c.local_capture.ahdlcmi/ahdlcmi.out": {
+        "sha256": "36f35e0f224713745c3a56fb4f568a1555f6e4443762ccbbd43382896080e64e",
+        "bytes": 13081
+      },
+      "spectre-output/runs/local-state/tb.ahdlSimDB/4c737d60bcefafc1c1246ea3c936811c.local_state.ahdlcmi/Linux-64/GNUmakefile": {
+        "sha256": "2be84d8957adde43eb3703f8eb442e6a600ae74a3b71b6fd4ee9c6f00fcef0d6",
+        "bytes": 2122
+      },
+      "spectre-output/runs/local-state/tb.ahdlSimDB/4c737d60bcefafc1c1246ea3c936811c.local_state.ahdlcmi/Linux-64/ahdlcmidevicelist": {
+        "sha256": "d90ee8411323ba24c712182a5284d9675585e4924749f698aa9824419838cdb9",
+        "bytes": 161
+      },
+      "spectre-output/runs/local-state/tb.ahdlSimDB/4c737d60bcefafc1c1246ea3c936811c.local_state.ahdlcmi/Linux-64/ahdlcmidevicelist.out": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "spectre-output/runs/local-state/tb.ahdlSimDB/4c737d60bcefafc1c1246ea3c936811c.local_state.ahdlcmi/Linux-64/devicelisttemp": {
+        "sha256": "d90ee8411323ba24c712182a5284d9675585e4924749f698aa9824419838cdb9",
+        "bytes": 161
+      },
+      "spectre-output/runs/local-state/tb.ahdlSimDB/4c737d60bcefafc1c1246ea3c936811c.local_state.ahdlcmi/Linux-64/local_state.lst": {
+        "sha256": "d90ee8411323ba24c712182a5284d9675585e4924749f698aa9824419838cdb9",
+        "bytes": 161
+      },
+      "spectre-output/runs/local-state/tb.ahdlSimDB/4c737d60bcefafc1c1246ea3c936811c.local_state.ahdlcmi/Linux-64/obj/optimize/5.0/libahdlcmi_local_state.so": {
+        "sha256": "e3387499f61d047c73a5d198ab4215109c624b0db5a79cae7bafa11b72ca2f2a",
+        "bytes": 100376
+      },
+      "spectre-output/runs/local-state/tb.ahdlSimDB/4c737d60bcefafc1c1246ea3c936811c.local_state.ahdlcmi/Linux-64/sminfo": {
+        "sha256": "d24b914d20aa0bf7259cb5844e3719a655bea2d3cd45b1c421bb1f1539bf4b9f",
+        "bytes": 273
+      },
+      "spectre-output/runs/local-state/tb.ahdlSimDB/4c737d60bcefafc1c1246ea3c936811c.local_state.ahdlcmi/ahdlcmi.out": {
+        "sha256": "79e5072337a5b543a1932df1c5f8b1e27c4e80cea8a826d534c7eb969f0f0289",
+        "bytes": 29623
+      },
+      "spectre-output/runs/local-state/tb.scs": {
+        "sha256": "7e515e7bee3f0a1144aa5474e04fd424ececb3eb6e909be00fce8b4ef853edc4",
+        "bytes": 464
+      },
+      "spectre-output/version.csh": {
+        "sha256": "850dd1a50e8eb1e9e65953b29f47f5994a8c9e5451ac3de23e80145370680976",
+        "bytes": 144
+      },
+      "spectre-output/version.json": {
+        "sha256": "fce3bc1d5bd4ea98631c917987b93aa864c2597fab57d49c9096897de397e42a",
+        "bytes": 679
+      },
+      "spectre-output/version.log": {
+        "sha256": "d0e6c83a98026a294bfc4b9754c4e294d322b60b1872a28e38f84caccbdf7f81",
+        "bytes": 31
+      },
+      "spectre-output/version.log.EXECUTION.json": {
+        "sha256": "493955c2b9207e03f5bf0496af561fe7626adb16534d8858dfb43732bbab4689",
+        "bytes": 542
+      },
+      "spectre-operator.json": {
+        "sha256": "5b874706ca9fe3494a7494663d778011ce302ae4fdfd57475e144a019995deef",
+        "bytes": 793
+      },
+      "spectre-operator.stdout": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "spectre-operator.stderr": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "spectre-profile.json": {
+        "sha256": "836c32d9ca8e6eb3264700f69e906943e4974e6f3a8e29bacb0a44e689f6ec8a",
+        "bytes": 519
+      },
+      "allocation.json": {
+        "sha256": "c686848c8bc567fa431f95cf87766cec0515dd6c8c12cc6beb2bb660b5d94f4f",
+        "bytes": 268
+      },
+      "plan.json": {
+        "sha256": "ad1d7f453b97a39a81b0f1f4c38af20386931e5a06d6c1c4a970a5bbecfa3ba3",
+        "bytes": 1782
+      },
+      "input-manifest.json": {
+        "sha256": "c1d99bebe525924b00732570c2f1db59e300437ea0ba9464841d404f4fa450aa",
+        "bytes": 866
+      },
+      "check.py": {
+        "sha256": "cb65706f3c416499ee88de43f97e3cb3c2160047c3800630654cb97a960997a7",
+        "bytes": 9976
+      },
+      "normalize_psf.py": {
+        "sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8",
+        "bytes": 2609
+      },
+      "PREPARATION.json": {
+        "sha256": "9efe6f4661371f6c76a5e1d2c6157c96bc64be2e60a1c64c9333c09ccbd7a202",
+        "bytes": 3494
+      },
+      "inputs/local-state/SHA256SUMS": {
+        "sha256": "6015a6a56b6c733810c28071e35dcf69aae771e11e7609f818255478c1b0bbd2",
+        "bytes": 229
+      },
+      "inputs/local-state/dut.va": {
+        "sha256": "20a90b472398a4f7df56d36f6b960ed98cc59985c0c3f426e8e03dc42cf1b782",
+        "bytes": 652
+      },
+      "inputs/local-state/manifest.json": {
+        "sha256": "5942775cf19b39fe9cfe074d45ee25995e538d1074417a86ae69033de57f444d",
+        "bytes": 2191
+      },
+      "inputs/local-state/original-table.scs": {
+        "sha256": "ecc71ef275c81347ee341c2c12383d8a2f40c2548715af377d0c3b08cc5acb9d",
+        "bytes": 444
+      },
+      "inputs/local-state/requested_settings.json": {
+        "sha256": "b079f23eb026d7611bda7423a6b79ea52408a6fd8228f40d14eb6d9aaf294014",
+        "bytes": 105
+      },
+      "inputs/local-state/tb.scs": {
+        "sha256": "7e515e7bee3f0a1144aa5474e04fd424ececb3eb6e909be00fce8b4ef853edc4",
+        "bytes": 464
+      },
+      "spectre-STARTED.json": {
+        "sha256": "006bc42b0efeac252cb0e83c6deb7b866644105126aa3d6f7fa6bd40fa33eb86",
+        "bytes": 463
+      },
+      "spectre-COMPLETED.json": {
+        "sha256": "5b874706ca9fe3494a7494663d778011ce302ae4fdfd57475e144a019995deef",
+        "bytes": 793
+      },
+      "spectre-LOCK-RELEASED.json": {
+        "sha256": "3f41d7c8bdefdf637f40ba296f77d146cd130e82395df5068653796332d8e1f6",
+        "bytes": 132
+      },
+      "remote-spectre-control.py": {
+        "sha256": "6f9164532abd433e6d55e37550cf55cdec4e0694f0c9d620d9a2d049527f8ae9",
+        "bytes": 4043
+      }
+    },
+    "helper_sha256": "f1a143aa71dfea17035ee6d8f8b9f0c0aa404771be8fc74fc3999e9deaa4536d",
+    "helper_revision": "e66a208a75039df01489c7aa893a08944c4504ae",
+    "psf_adapter_sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8"
+  },
   "source_sha256": "20a90b472398a4f7df56d36f6b960ed98cc59985c0c3f426e8e03dc42cf1b782",
   "solver_controls": {
     "stop": 1,
@@ -259,6 +512,29 @@
     }
   },
   "EVAS": {
+    "package": {
+      "name": "evas-rebuild",
+      "version": "0.14.0",
+      "metadata_source": "source_pyproject",
+      "build_revision": null
+    },
+    "compatibility": {
+      "ir_schema_version": 18,
+      "request_protocol_version": null,
+      "status": "ir_matched"
+    },
+    "kernel_reported": {
+      "build_revision": null,
+      "identity_version": 1,
+      "ir_schema_version": 18,
+      "name": "evas-kernel",
+      "platform": {
+        "arch": "aarch64",
+        "os": "macos"
+      },
+      "request_protocol_version": null,
+      "version": "0.14.0"
+    },
     "kernel_sha256": "eefdcca9820d107a3d4e9dcd4cfd7ee59a7d105a41328f9cb11dfc90f09b06da",
     "production_source_closure": {
       "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
@@ -266,11 +542,11 @@
       "evas/src/evas/array_elaboration.py": "4faf4543a735ad19c89bbbc760d39f6860089d854b7f24922edaa390cf20df0b",
       "evas/src/evas/diagnostics.py": "a94641c77c61b71e7c1eeb9d36baa9c01b85adfe598472632841ed4a90744a5f",
       "evas/src/evas/elaboration.py": "1eb85eefcb393dbc58b6f248389a1d51ef792f45077b779dac0d55fc5aa5e074",
-      "evas/src/evas/errors.py": "8ecf92390d8dbba6acb3f4457c44ba6541bb8f389a4280aa4be5c4b627e14552",
+      "evas/src/evas/errors.py": "974acb0d7b262a7be9a2d520c09c062814238318f717383bf471ce731b7f5d09",
       "evas/src/evas/frontend.py": "2552416e633542f0770c1f7609ac4778aa8b841db5c0e36bd68a9904f682927c",
       "evas/src/evas/hierarchy.py": "c277bc21cbe987f7cb427a2955b6b20588d5c42ae09bbc62853dab7bdba4138f",
       "evas/src/evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
-      "evas/src/evas/instance_compiler.py": "9076a235c2fef2b9a2e338eb7468e65b595f741b06256d95dab08d44fa181de7",
+      "evas/src/evas/instance_compiler.py": "ebe59881fb5e523c89708fc4c6f563f655a8e30b726c9b10cd08c7bc7f2fbdce",
       "evas/src/evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
       "evas/src/evas/ir.py": "ec167d9f02ddde4bff1dbf7b24b903d4a178822cfc0a2749638e753b1398f8cf",
       "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
@@ -289,7 +565,7 @@
       "evas/src/evas/runtime.py": "b648c721efcb1d715cb871c644ff60b600229d9489c988edb7c4e291bbba1026",
       "evas/src/evas/scs.py": "d95097aa5e62d2fe9d6a3c6a6035ca981f64b2aebe7fce2ca58bf12b5a95b281",
       "evas/src/evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
-      "evas/src/evas/syntax.py": "56eafc9ad5c4f8773441a8e7ccf751d7ce5380b68150a2e2ab6d55524c0f6058",
+      "evas/src/evas/syntax.py": "80e359beffe6d378ed778712aa2e44f160ee94acdbb91e0a1a6edb0b4107e40a",
       "evas/rust_core/benches/static_solver.rs": "cb7e8f046aa8cde417b94e6e52bf3cd59c714dba19de48ab2c0050a70cefaaa8",
       "evas/rust_core/benches/transient_solver.rs": "d4521e1df0a5e4ae6a25af65ee63d65884f5fc5d16ddc8a6ede08dc79f67e642",
       "evas/rust_core/fuzz/fuzz_targets/parse_request.rs": "ab9d99942c6e7c7079ad3d78646ea2657277997b67686208d9398cf5548987d5",
@@ -350,7 +626,10 @@
       "evas/rust_core/src/transient_idt_tests.rs": "ba2c353e867aa4b6fbd8e27f68ad1407536e525712ddab96ebf998434e2755ad",
       "evas/rust_core/src/transient_lifecycle_tests.rs": "954487d2713727fcd0a73a30e97aa56f7f0587ccdb34beeeb073f26855941f48",
       "evas/rust_core/src/transient_window_tests.rs": "987d1bac508f0e9c780e1b8ac109bec1b077c85a7722a4d084be64e31565103e",
-      "evas/rust_core/src/transition.rs": "1d1c3e709e983a53d0616d0fda1ff2183d2a2dc33b0b65e0aff122162ba72a3c"
+      "evas/rust_core/src/transition.rs": "1d1c3e709e983a53d0616d0fda1ff2183d2a2dc33b0b65e0aff122162ba72a3c",
+      "evas/pyproject.toml": "1c23fa1d684fc070170d6694bdadeb96b488fd46ff97d198d9746d4a8cb6d345",
+      "evas/rust_core/Cargo.toml": "37da5d1a66850a76473e9dff92adddeb579240018d3a6fe4846b94a9fb1d5e44",
+      "evas/rust_core/Cargo.lock": "4e81bf2d219ac18b0269a48e03c00b0f05b9f93546e65e8bb8fb19ff9bd3f1b2"
     }
   },
   "native_provenance": {
@@ -869,9 +1148,13 @@
     }
   },
   "checker_identity": {
-    "analyze.py": "561f855405fca7e3818968870c872a781e9ae7cf7323a64dcd0cc6e397fe9612",
-    "check.py": "d961fa9b391c4e6c83680ce1ff4f92af91881542253cf345b1945088cf2382ac",
-    "test_check.py": "8169c46e08543b171082fbbde8abee79e063061dac439015e696db8f91698a18"
+    "analyze.py": "6201996fcc1f1507aeebfefa06d0cd50567a50fb2968eed661263f9f03611ddd",
+    "check.py": "3fcf8ea5cd3cebff930abefa602bdafafbaf5b0f1f81db29719686c036d48364",
+    "test_check.py": "58f7699945a938b4fcc200d41ad5dbfd9ae417dba96935bf4d9dbfeb9a651e11"
+  },
+  "calibration_receipt": {
+    "path": "calibration.json",
+    "sha256": "7016d4ced2157a3873ace49496c5a7aa5cf435b476672b34f6d598df3a925fca"
   },
   "overall_strict_qualification": "I",
   "qualification_gaps": [
