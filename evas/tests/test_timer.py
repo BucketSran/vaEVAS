@@ -214,14 +214,22 @@ class TimerContracts(unittest.TestCase):
             with self.subTest(arguments=arguments), self.assertRaises(CompileError):
                 compile_sources({'timer.va': timer_source(arguments)}, [instance()])
 
-    def test_cross_block_state_read_restrictions_remain(self):
+    def test_shared_self_increments_preserve_cross_and_timer_counts(self):
         for statement in ['@(cross(V(u)-0.5,1)) n=n+1;',
-                          '@(timer(0.5,0,0.001)) n=n+1;',
-                          '@(timer(0.5,0,0.001)) m=n+1;']:
+                          '@(timer(0.5,0,0.001)) n=n+1;']:
             source = model('''@(initial_step) begin n=0; m=0; end
                 @(timer(0,0,0.001)) n=n+1;''' + statement + 'V(y,r)<+n+m;', 'integer n,m;')
-            with self.subTest(statement=statement), self.assertRaises(KernelError):
-                run_timer(source, stop=1, times=[0, 1])
+            with self.subTest(statement=statement):
+                result = run_timer(source, stop=1, times=[0, 1])
+                self.assertEqual(result['transient']['states'], [[1,0],[2,0]])
+                self.assertEqual([event['time'] for event in result['transient']['events']], [0,.5])
+
+    def test_cross_block_other_state_read_restriction_remains(self):
+        source = model('''@(initial_step) begin n=0; m=0; end
+            @(timer(0,0,0.001)) n=n+1;
+            @(timer(0.5,0,0.001)) m=n+1; V(y,r)<+n+m;''', 'integer n,m;')
+        with self.assertRaisesRegex(KernelError, 'unsupported_cross'):
+            run_timer(source, stop=1, times=[0, 1])
 
     def test_raw_ir_rejects_malformed_timer_and_legacy_event_fields(self):
         program = compile_sources({'timer.va': timer_source()}, [instance()]).to_dict()

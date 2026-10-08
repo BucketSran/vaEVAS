@@ -29,7 +29,7 @@ CLI 在 stderr 输出同样的 JSON 并返回 2；命令参数错误也采用此
 | `parameter_type` / `parameter_range` | binding：整数子集限制，或生效值违反范围 |
 | `unsupported_integer_arithmetic` | binding：受限前端入口中的整数除法或溢出不能用实数 IR 代替 |
 | `vector_declaration` / `unsupported_vector` | binding：声明不一致，或超出静态向量子集 |
-| `unsupported_initial_event` | parse：缺少所需分析生命周期或混合全局/监测事件 |
+| `unsupported_initial_event` | 不支持的初始化生命周期、混合事件或初值表达式 |
 | `unsupported_event_context` | binding：事件位于普通模拟条件下，需要尚未支持的运行时激活语义 |
 | `scs_input` / `unsupported_scs` | netlist：非法测试台，或未支持的输入语义 |
 | `kernel.unsupported_implicit_dynamics` | kernel：包括 DAE 与事件/状态尚未联合支持的情况 |
@@ -174,3 +174,8 @@ PYTHONPATH=evas/src python3 -B -m evas.mcp runs/session.json
 
 `lint` 明确拒绝执行选项 `--kernel` 与 `--timeout`，返回 `input_error`；
 不把这些选项静默忽略，也不把仅编译通过当作内核检查成功。
+
+输入比较初始化的 Rust 拒绝为 `unsupported_initialization`（unsupported/LANG）；
+输入包围不能证明分支时为 `initialization_precision`（numerical/LANG），消息包含源码和状态身份。
+两者均先于模型/历史/接受帧构造，失败响应不含成功波形。来源见
+[初始化契约](math/events.md#input-initialization)和[公开回归](../tests/test_input_initialization.py)。

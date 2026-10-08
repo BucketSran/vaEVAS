@@ -167,7 +167,7 @@ raise SystemExit(results.main(sys.argv[3:]))
     def fixture_kernel(self, body):
         path=self.root/'fixture'
         identity=dict(identity_version=1,name='evas-kernel',version='fixture',build_revision=None,
-                      ir_schema_version=17,request_protocol_version=None,platform=dict(os='fixture',arch='fixture'))
+                      ir_schema_version=18,request_protocol_version=None,platform=dict(os='fixture',arch='fixture'))
         path.write_text('#!'+sys.executable+'\nimport json,sys,time\n'
                         +'if sys.argv[1:]==["--version","--json"]:\n print('+repr(json.dumps(identity))+')\n sys.exit(0)\n'
                         +body+'\n')
@@ -175,7 +175,7 @@ raise SystemExit(results.main(sys.argv[3:]))
         return path
 
     def test_kernel_failure_timeout_truncation_rows_nodes_and_nonfinite(self):
-        good=dict(schema_version=17,engine='fixture',nodes=['0','u','y'],solutions=[dict(voltages=[0,-.5,-.75],max_residual_v=0,max_residual_ratio=0),dict(voltages=[0,0,.25],max_residual_v=0,max_residual_ratio=0),dict(voltages=[0,.75,1.75],max_residual_v=0,max_residual_ratio=0)])
+        good=dict(schema_version=18,engine='fixture',nodes=['0','u','y'],solutions=[dict(voltages=[0,-.5,-.75],max_residual_v=0,max_residual_ratio=0),dict(voltages=[0,0,.25],max_residual_v=0,max_residual_ratio=0),dict(voltages=[0,.75,1.75],max_residual_v=0,max_residual_ratio=0)])
         bodies={
             'failure':'sys.stderr.write(\'{"kind":"invalid_request","message":"fixture failure"}\'); sys.exit(2)',
             'timeout':'time.sleep(3)',
@@ -261,7 +261,7 @@ raise SystemExit(main(sys.argv[1:]))
         self.data=dict(models=['m.va'],instances=[dict(name='dut',module='m',connections=dict(y='y'))],
                        transient=dict(sources={},output_times=[0,.25,.5],stop=.5,max_step=.5))
         self.path.write_text(json.dumps(self.data))
-        response=dict(schema_version=17,engine='fixture',nodes=['0','y'],
+        response=dict(schema_version=18,engine='fixture',nodes=['0','y'],
                       solutions=[dict(voltages=[0,v],max_residual_v=0,max_residual_ratio=0) for v in [.25,.5,.75]],
                       transient=dict(times=[0,.2,.5],state_names=[],states=[[],[],[]],events=[],accepted_steps=2,discarded_trials=0))
         result=self.cli(self.fixture_kernel('print('+repr(json.dumps(response))+')'))
