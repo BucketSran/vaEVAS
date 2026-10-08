@@ -28,7 +28,7 @@ impl LinearContinuous {
             .ok_or_else(|| Error::new("invalid_ir", "local continuous flow disappeared"))?;
         next.exact_affine = self.exact_seed.as_ref().and_then(|seed| {
             exact_affine::History::build(
-                &next.context.program,
+                &next.exact_states,
                 &next.segments,
                 0.,
                 next.initial.len(),
@@ -318,7 +318,7 @@ impl LinearContinuous {
         }
         next.exact_affine = exact_seed.as_ref().and_then(|seed| {
             exact_affine::History::build(
-                &next.context.program,
+                &next.exact_states,
                 &next.segments,
                 time,
                 next.initial.len(),

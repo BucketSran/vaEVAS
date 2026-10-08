@@ -94,7 +94,8 @@ pub(crate) struct LinearContinuous {
     // representative. Used only for ordered event observations, not queries.
     event_seed: Option<(I, Vec<I>)>,
     exact_affine: Option<exact_affine::History>,
-    exact_seed: Option<Vec<num_rational::BigRational>>,
+    exact_states: Vec<bool>,
+    exact_seed: Option<Vec<Option<num_rational::BigRational>>>,
 }
 
 struct Context {
@@ -346,8 +347,19 @@ impl LinearContinuous {
                     )
                 })
         });
+        let mut exact_states = vec![false; state_count];
+        for op in &operators {
+            if matches!(
+                program.operators[op.operator],
+                OperatorSpec::Idt { reset: None, .. }
+            ) {
+                for &state in &op.states {
+                    exact_states[state] = true;
+                }
+            }
+        }
         let exact_affine =
-            exact_affine::History::build(program, &segments, start, state_count, None);
+            exact_affine::History::build(&exact_states, &segments, start, state_count, None);
         Ok(Some(Self {
             slots,
             segments,
@@ -361,6 +373,7 @@ impl LinearContinuous {
             event_dependent,
             event_seed: None,
             exact_affine,
+            exact_states,
             exact_seed: None,
         }))
     }
