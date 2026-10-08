@@ -258,7 +258,8 @@ vout - vref = min(0.875, max(-0.75, y0))
 重复值、动态电压边界、非整数/超出 32 位控制值、嵌套同名变量和预算超限明确拒绝。
 总迭代数与实际叶子语句各限 4096，空的嵌套循环也不能逃过总工作预算。
 
-`elaboration.py::unroll_loops` 在每个实例参数绑定后替换索引并输出普通语句。
+`elaboration.py::elaborate_loops` 在每个实例参数绑定后替换索引并输出普通语句；
+已有 analog 消费入口 `unroll_loops` 读取相同展开结果。
 贡献仍加入同一方程组，局部赋值保留展开后的顺序。对 count=3，
 `sum=Σ(i+1)u=6u`，`y=sum−2y` 应解得 `y=2u`。这不是新增运行时执行器。
 模块参数覆盖必须独立于实例顺序；纯函数先内联，再替换循环索引。
@@ -281,13 +282,15 @@ analog 循环中使用历史算子。[test_loop_histories.py](../tests/test_loop
 例如 `@(timer(1,1)) for(i=0;i<3;i=i+1) n=10*n+i+1` 从 `n=0` 出发，
 在 1 s 后得到 123，在 2 s 后得到 123123。
 事件体继续只接受原有赋值和状态独立的仿射电压谓词。电压贡献、新历史调用、嵌套事件、
-状态条件、动态迭代和非法 genvar 控制仍拒绝；循环内 `initial_step` 及普通模拟条件下
+状态条件、动态迭代和非法 genvar 控制仍拒绝；循环包围 `initial_step` 及普通模拟条件下
 的事件仍拒绝。不同事件块同刻写入仍报告冲突，跨事件块读取被其他写者写入的状态
 仍受原有结构依赖规则限制。
 [test_event_body_loops.py](../tests/test_event_body_loops.py) 从公共编译/瞬态入口检查
 两个周期事件、N=2/3 实例交换、外部 PWL cross、递减/空/嵌套循环、逐元素数组值，
 以及预算、非法体、整数溢出和写者拒绝。此切片不代表原 va04 全模型已经支持。
 独立事件时刻、实例隔离、数组写入、条件赋值、历史调用点和冲突写入见上述开发测试；
+当前开发切片另接受初始化体内的有限静态赋值循环，共享 initial/analog 展开预算，
+保留唯一常量初始化和零次循环义务，见[初始化循环契约](INITIAL_STATIC_LOOP_CONTRACT.md)。
 原 ZOOM 两组时序的 EVAS/Spectre 对照见[实验记录](../../experiments/backends/dvs2-spectre-validation/README.md#zoom-static-events)。
 
 

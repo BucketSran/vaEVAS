@@ -193,7 +193,7 @@ class Model:
     parameters: dict[str, Expr]
     analog: list[Assignment | Conditional | ContributionStatement | Loop | Event]
     variables: dict[str, str]
-    initial: list[Assignment]
+    initial: list[Assignment | Loop]
     events: list[Event]
     functions: dict[str, Function] = field(default_factory=dict)
     genvars: frozenset[str] = frozenset()
@@ -613,11 +613,14 @@ class Parser:
             previous_context = self.mixed_initial_body
             self.mixed_initial_body = bool(triggers)
             try:
-                body = self.statements(bool(triggers))
+                body = self.statements(True)
             finally:
                 self.mixed_initial_body = previous_context
-            if any(not isinstance(statement, Assignment) for statement in body):
-                self.fail('mixed initial_step body requires unconditional instance-constant assignments', token, code='unsupported_initial_event')
+            def initialization(statements):
+                return all(isinstance(statement, Assignment) or isinstance(statement, Loop)
+                           and initialization(statement.body) for statement in statements)
+            if not initialization(body):
+                self.fail('initial_step body requires unconditional assignments or static genvar loops', token, code='unsupported_initial_event')
             initial.extend(body)
             return Event(tuple(triggers), body, token) if triggers else None
         return Event(tuple(triggers), self.statements(True), token)

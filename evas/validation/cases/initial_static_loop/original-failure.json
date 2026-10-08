@@ -1,0 +1,26 @@
+{
+  "baseline_revision": "3b588ec7c20463c6502a8b949c63f385aa8e66dd",
+  "source": "original-minimal.va",
+  "operation": "public compile_sources with explicit Instance; no transient or Spectre attempted",
+  "returncode": 1,
+  "result": {
+    "status": "rejected",
+    "message": "original-minimal.va:5:3: mixed initial_step body requires unconditional instance-constant assignments",
+    "diagnostic": {
+      "diagnostic_version": 1,
+      "kind": "compile_error",
+      "code": "unsupported_initial_event",
+      "category": "unsupported",
+      "stage": "parse",
+      "capability": "LANG",
+      "message": "original-minimal.va:5:3: mixed initial_step body requires unconditional instance-constant assignments",
+      "hint": "Use an unqualified initialization leaf and constant values or a real driven-input comparison.",
+      "location": {
+        "source": "original-minimal.va",
+        "line": 5,
+        "column": 3
+      }
+    }
+  },
+  "source_sha256": "a42ea57ed18d9f394ae4b175c563829aa4bf13d5d9077799ec987b213d1fcf97"
+}

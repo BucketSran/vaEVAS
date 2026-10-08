@@ -187,8 +187,8 @@ def inline_functions(model: Model) -> Model:
                            for event in model.events])
 
 
-def unroll_loops(model: Model, parameter):
-    """Instance-constant genvar loops, without adding a runtime execution path."""
+def elaborate_loops(model: Model, parameter):
+    """Expand initial and analog trees with one budget; no runtime loop path."""
     from .ir import Affine
     from .lowering import lower
     from .syntax import Assignment, ContributionStatement
@@ -199,8 +199,8 @@ def unroll_loops(model: Model, parameter):
                    or isinstance(statement, Event) and has_loop(statement.body)
                    for statement in statements)
 
-    if not has_loop(model.analog):
-        return tuple(model.analog)
+    if not has_loop(model.analog) and not has_loop(model.initial):
+        return model
 
     budget = 4096
     count = 0
@@ -335,6 +335,44 @@ def unroll_loops(model: Model, parameter):
                 if statement.index is not None:
                     expression(statement.index, True)
 
+    def validate_initial_body(statements, active, in_loop=False):
+        # Validate the unexpanded tree too: a zero-trip loop cannot erase a
+        # dynamic initializer, index, illegal nested control or declaration.
+        for statement in statements:
+            if isinstance(statement, Loop):
+                if statement.name not in model.genvars or statement.name in active:
+                    fail('static for requires an unshadowed declared genvar', statement.token)
+                start = constant(statement.start, active)
+                scope = {**active, statement.name: start}
+                constant(statement.limit, scope)
+                constant(statement.update, scope)
+                validate_initial_body(statement.body, scope, True)
+            elif in_loop:
+                if not isinstance(statement, Assignment) or statement.name not in model.variables:
+                    fail('initialization loops require declared variable assignments', statement.token,
+                         code='unsupported_initial_event')
+                if statement.index is not None:
+                    if statement.name not in model.arrays:
+                        fail('initialization loop indexed target must be a variable array', statement.token,
+                             code='unsupported_initial_event')
+                    index = constant(statement.index, active)
+                    first, last = (constant(bound, active) for bound in model.arrays[statement.name])
+                    if not min(first, last) <= index <= max(first, last):
+                        fail('initialization loop array index is outside its declaration', statement.index.token,
+                             code='unsupported_initial_event')
+                elif statement.name in model.arrays:
+                    fail('initialization loop array assignment requires an explicit element index', statement.token,
+                         code='unsupported_initial_event')
+                try:
+                    value = lower(substitute(statement.rhs, active), parameter, {}, model.source,
+                                  preserve_structure=True)
+                    if not isinstance(value, Affine) or value.terms:
+                        raise CompileError('initializer is not an instance constant')
+                except CompileError as error:
+                    fail(f'initialization loop values must be instance constants: {error}',
+                         statement.token, code='unsupported_initial_event')
+
+    validate_initial_body(model.initial, {})
     event_bodies = []
 
     def body(statements, indices, depth=0):
@@ -389,6 +427,7 @@ def unroll_loops(model: Model, parameter):
                 result.append(replace(statement, **updates))
         return tuple(result)
 
+    expanded_initial = body(model.initial,{})
     expanded = body(model.analog,{})
     # Inspect already-expanded continuous relations, so separate static vector
     # bits retain their dependencies when validating an erased event body.
@@ -414,4 +453,9 @@ def unroll_loops(model: Model, parameter):
         affected = propagated
     for statements, indices in event_bodies:
         validate_event_body(statements, indices, affected)
-    return expanded
+    return replace(model, initial=list(expanded_initial), analog=list(expanded))
+
+
+def unroll_loops(model: Model, parameter):
+    """Compatibility entry for consumers of already elaborated analog bodies."""
+    return tuple(elaborate_loops(model, parameter).analog)
