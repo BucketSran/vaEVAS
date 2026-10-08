@@ -34,6 +34,19 @@ class FrontendDiagnostics(unittest.TestCase):
         self.assertEqual(error.diagnostic['category'], 'unsupported')
         self.assertEqual(error.diagnostic['capability'], 'DYNAMICS')
 
+    def test_vector_boundary_reports_declaration_not_identifier(self):
+        source = 'module m(y); output [1:0][1:0] y; electrical y; analog begin V(y)<+1; end endmodule'
+        with self.assertRaises(CompileError) as caught:
+            compile_sources({'vectors.va': source}, [instance(connections=dict(y='y'))])
+        error = caught.exception.diagnostic
+        self.assertEqual(error['code'], 'unsupported_vector')
+        self.assertEqual(error['category'], 'unsupported')
+        self.assertEqual(error['stage'], 'binding')
+        self.assertEqual(error['capability'], 'LANG')
+        self.assertEqual(error['location']['source'], 'vectors.va')
+        self.assertIn('only one-dimensional electrical vectors', error['message'])
+        self.assertNotIn('non-reserved identifier', error['message'])
+
     def test_unclassified_frontend_and_kernel_keep_original_information(self):
         self.assertEqual(CompileError('legacy reason').diagnostic['category'], 'unknown')
         original = dict(kind='future_failure', message='reason', sample=3, future_field=42)

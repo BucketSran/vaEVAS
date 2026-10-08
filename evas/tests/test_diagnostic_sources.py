@@ -88,6 +88,79 @@ class DiagnosticSources(unittest.TestCase):
         self.assertEqual(error.diagnostic['sample'], 0)
         self.assertIn('roots.va:', error.diagnostic['message'])
 
+    def test_finite_input_overflow_is_numerical_not_unsupported(self):
+        from evas import KernelError, solve
+        from test_affine import KERNEL
+        program = compile_sources({'overflow.va': model('V(y,r)<+pow(V(u,r),3);')}, [instance()])
+        with self.assertRaises(KernelError) as caught:
+            solve(program, ['u'], [[1e200]], kernel=KERNEL)
+        error = caught.exception
+        self.assertEqual(error.detail['kind'], 'nonfinite_arithmetic')
+        self.assertEqual(error.diagnostic['code'], 'kernel.nonfinite_arithmetic')
+        self.assertEqual(error.diagnostic['stage'], 'kernel')
+        self.assertEqual(error.diagnostic['category'], 'numerical')
+        self.assertEqual(error.diagnostic['sample'], 0)
+        self.assertEqual(error.diagnostic['message'], error.detail['message'])
+        self.assertIn('nonfinite', error.detail['message'])
+
+    def test_runtime_integer_range_is_an_implementation_boundary(self):
+        from evas import KernelError
+        from test_timer import run_timer, timer_source
+        with self.assertRaises(KernelError) as caught:
+            run_timer(timer_source('0,0,0.001', initial=2147483647), stop=1, times=[0, 1])
+        error = caught.exception
+        self.assertEqual(error.detail['kind'], 'state_range')
+        self.assertEqual(error.diagnostic['code'], 'kernel.state_range')
+        self.assertEqual(error.diagnostic['stage'], 'kernel')
+        self.assertEqual(error.diagnostic['category'], 'unsupported')
+        self.assertIn('exact signed 32-bit integer', error.diagnostic['message'])
+        self.assertEqual(error.diagnostic['message'], error.detail['message'])
+
+    def test_real_kernel_categories_survive_machine_cli(self):
+        import json
+        import subprocess
+        import sys
+        import tempfile
+        from pathlib import Path
+        from test_affine import KERNEL
+        from test_timer import timer_source
+        cases = [
+            ('solve', model('V(y,r)<+pow(V(u,r),3);'),
+             dict(samples=[[1e200]]), 'nonfinite_arithmetic', 'numerical'),
+            ('transient', timer_source('0,0,0.001', initial=2147483647),
+             dict(transient=dict(sources={'u': [[0, 0], [1, 0]]}, output_times=[0, 1], stop=1, max_step=1)),
+             'state_range', 'unsupported'),
+        ]
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = root / 'sim.json'
+            for action, source, request, kind, category in cases:
+                with self.subTest(kind=kind):
+                    (root / 'm.va').write_text(source)
+                    manifest.write_text(json.dumps(dict(models=['m.va'],
+                        instances=[dict(name='dut', module='m', connections=dict(u='u', y='y', r='0'))],
+                        driven=['u'], **request)))
+                    result = subprocess.run([sys.executable, '-B', '-m', 'evas', action, str(manifest),
+                                             '--kernel', str(KERNEL)], capture_output=True, text=True, timeout=15)
+                    self.assertEqual(result.returncode, 2)
+                    self.assertEqual(result.stdout, '')
+                    error = json.loads(result.stderr)
+                    self.assertEqual(error['diagnostic_version'], 1)
+                    self.assertEqual(error['kind'], kind)
+                    self.assertEqual(error['code'], 'kernel.' + kind)
+                    self.assertEqual(error['category'], category)
+                    self.assertEqual(error['stage'], 'kernel')
+
+    def test_worker_panic_is_internal_with_no_claim_of_real_trigger(self):
+        from evas import KernelError
+        raw = dict(kind='worker_failure', message='static worker panicked', future=42)
+        error = KernelError(raw)
+        self.assertEqual(error.diagnostic['category'], 'internal')
+        self.assertEqual(error.detail, raw)
+        self.assertEqual(error.diagnostic['future'], 42)
+        future = KernelError(dict(raw, diagnostic_version=2))
+        self.assertEqual(future.diagnostic['category'], 'unknown')
+
     def test_event_calendar_limit_is_a_resource(self):
         from evas import KernelError
         from test_timer import run_timer, timer_source
