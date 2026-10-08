@@ -1,0 +1,169 @@
+{
+  "schema": "event-alignment-review-receipt-v1",
+  "reviewed_commit": "6bd242e8ab04a2143e74cd3970966774b2e97fa9",
+  "runtime_under_test": "0ac8806d7463f00487f326b2eacc32e02a0c5aa3",
+  "runtime_changes_in_this_increment": false,
+  "scope": "Direct-comparison CLI and calibration, controlled Spectre convergence evidence, documentation and capability evidence links. Prior runtime implementation review remains bound to its original revision.",
+  "reviewed_files": {
+    "experiments/backends/event-alignment/compare.py": "760381cf7bd29550d11b2225d3f67c1ebb715c7a52491f614b129052b3bf6759",
+    "experiments/backends/event-alignment/test_compare.py": "58f27db61cda3b6e7cc2206adb47066220ced0b8b52feb9b8269b1b4798272d7",
+    "experiments/backends/event-alignment/calibration/c1-phase.json": "e3579368394b2b7fbf1a4bc24a514b1a2696aecc8cc1338a9ca52339e0e2d84a",
+    "experiments/backends/event-alignment/convergence.md": "c762473e3d80fb7b6d6365e6b28f47deb787fdbfc1752979e9e1cf0dbde91ecb",
+    "experiments/backends/event-alignment/evidence/convergence.json": "ff3852aac6b3372177816c30eac250a21fd457d4af60a69cd0365ad365d84cd3",
+    "experiments/backends/event-alignment/README.md": "597ffb436bfca83e79cc1fc2b00ea9cb530931d5ab5d748ac578d8b79deba8cc",
+    "evas/docs/CAPABILITIES.md": "d77bd10fcbcb81fb6782e62db80300b7b0709f42c6687a51a276ac86ed1f0b6d"
+  },
+  "astra": {
+    "model": "gpt-6-astra",
+    "report": {
+      "local_path": "current/runs/alignment-repair-20261008/review/astra.md",
+      "sha256": "bd1ea239c2095c20e4cc62b8a94403652b7487d4bb9485494ae36654f1962637"
+    },
+    "scope": "Independent local source, calibration and archived-data verification; four append-only review stages",
+    "final_outcome": "No remaining actionable findings in this increment",
+    "actual_checks": [
+      "16 comparator/normalizer tests",
+      "19 original independent-checker tests at the unchanged checker revision",
+      "16 comparison results recomputed from frozen contracts and observations",
+      "67 paired-v4 manifest entries verified",
+      "14 effective Spectre settings cross-checked against transient log blocks and PSF headers",
+      "Native PSF and EVAS request/response correspondence",
+      "Real POSIX file-size failure, no partial published output",
+      "All 16 comparison IDs unique"
+    ]
+  },
+  "glm_reviews": [
+    {
+      "receipt": {
+        "local_path": "current/runs/alignment-repair-20261008/review/glm/receipt.json",
+        "sha256": "8cd166ace945945226bd3c53dc8d7f5bdc4d23f850aef01db1cd5347303570de"
+      },
+      "report": {
+        "local_path": "current/runs/alignment-repair-20261008/review/glm/review.md",
+        "sha256": "fa9e5d3531e8ba8259d67566cb3862a07215b26a0655dcb6dc4c989b94eb55b0"
+      },
+      "model": "glm-5.3",
+      "mode": "Actual Claude CLI supplied-text static review; no execution by the reviewer",
+      "input_sha256": "cdb2ef475f5950f05b3f04a7c4ab477e23cb3b79d6b1901157a347ed17fef543",
+      "response_sha256": "f926add4be135de4f2f0b1498674062362ee4ea8f95de94ddfe613f2bbc73e18",
+      "actual_turns": 1,
+      "elapsed_seconds": 276.688,
+      "reported_cost_usd": 0.9021300000000001,
+      "configured_budget_usd": 5.0,
+      "timeout_seconds": 900,
+      "output_token_cap": 32000,
+      "completed": true
+    },
+    {
+      "receipt": {
+        "local_path": "current/runs/alignment-repair-20261008/review/glm-final/receipt.json",
+        "sha256": "c96776f9e2477a24fe7479fbfddc5aa8a5fef3e561ef6e685b7ecdf0c8797bf0"
+      },
+      "report": {
+        "local_path": "current/runs/alignment-repair-20261008/review/glm-final/review.md",
+        "sha256": "5935e57f8a1c0bd59763c57b9ad0425cab41e1c24feafdf3e6e1ef24c93a0e46"
+      },
+      "model": "glm-5.3",
+      "mode": "Actual Claude CLI supplied-text static review; no execution by the reviewer",
+      "input_sha256": "8f631610792c0dbcffe501955d3873db823db47efda1bfc347ec5284801f705c",
+      "response_sha256": "ac6136fcd1016ce5fcbaeaf9942f29538990e8880ddcfd38e43f7ef36b85dd09",
+      "actual_turns": 1,
+      "elapsed_seconds": 215.039,
+      "reported_cost_usd": 0.42198,
+      "configured_budget_usd": 5.0,
+      "timeout_seconds": 900,
+      "output_token_cap": 32000,
+      "completed": true
+    }
+  ],
+  "addressed_findings": [
+    {
+      "reviewer": "Astra",
+      "problem": "Dropping a whole row when one column is missing hides another known finite mismatch",
+      "resolution": "Retain and compare finite columns independently; F retains priority over incomplete coverage",
+      "final_verification": "Astra replay and positive/negative calibration"
+    },
+    {
+      "reviewer": "GLM first review",
+      "problem": "Malformed inputs shared exit code with a completed mismatch",
+      "resolution": "Structured ERROR/3, separate from P/0, F/1, I/2",
+      "final_verification": "GLM final report and Astra CLI subprocess checks"
+    },
+    {
+      "reviewer": "GLM first review",
+      "problem": "Phase obligations and empty phase behavior not explicit in the supplied evidence",
+      "resolution": "Embed complete contracts, document count-only D1/D2 phase scope, test empty phase as unassessed",
+      "final_verification": "GLM final report and Astra contract replay"
+    },
+    {
+      "reviewer": "GLM final review",
+      "problem": "Write failure could leave a partial result",
+      "resolution": "Write and close a same-directory temporary file, then exclusively publish via os.link; clean up in finally",
+      "final_verification": "Astra actual RLIMIT_FSIZE test"
+    },
+    {
+      "reviewer": "GLM final review",
+      "problem": "A case-only index could collapse distinct EVAS requests against the same Spectre case",
+      "resolution": "Add unique comparison_id=analysis/case without changing the original case identity",
+      "final_verification": "Astra verified all 16 unique IDs and recomputed scientific results"
+    },
+    {
+      "reviewer": "GLM final review",
+      "problem": "Successful CLI P/F/I exit codes lacked automated coverage",
+      "resolution": "Add subprocess calibration for all completed verdicts",
+      "final_verification": "Astra reran all 16 tests"
+    }
+  ],
+  "checks": {
+    "comparator_and_normalizer": {
+      "passed": 16,
+      "log": {
+        "local_path": "current/runs/alignment-repair-20261008/comparator-tests.log",
+        "sha256": "9d1c5f2b00a0b0a4901beef38ecb83bc1dd4eee545183f22d9f9c160a86c2f43"
+      }
+    },
+    "original_independent_checker": {
+      "passed": 19,
+      "log": {
+        "local_path": "current/runs/alignment-repair-20261008/checker-tests.log",
+        "sha256": "9c2658323940e3da7cb44f6fcf34c74aec1c5e5a7bdc148aa1048066dbfb2499"
+      }
+    },
+    "traceability": {
+      "passed": true,
+      "log": {
+        "local_path": "current/runs/alignment-repair-20261008/traceability-check.log",
+        "sha256": "b094fc40a4c10bf59c38f9074fbae64a47114c288553dd44ba958ad7b27f5506"
+      }
+    },
+    "workspace_visibility": {
+      "passed": true,
+      "log": {
+        "local_path": "current/runs/alignment-repair-20261008/workspaces-handoff.log",
+        "sha256": "680bccec21edd638d09f2546cea230ec27ec8f4ffb5f00f3c2ab256369a65188"
+      }
+    },
+    "diff_whitespace": {
+      "passed": true
+    }
+  },
+  "paired_v4_manifest_sha256": "14dbeda894bb9bb5dbcaeab48973dbd90297ed6bb563430b99f485d1bbed0c7e",
+  "results": {
+    "finite_direct": {
+      "P": 2,
+      "F": 12,
+      "I": 2
+    },
+    "formal_qualification": {
+      "I": 16
+    }
+  },
+  "limits": [
+    "Full reports and raw experiment artifacts remain local-only; hashes are identity evidence, not public availability.",
+    "GLM did not execute code. Its final three findings were addressed after its last report and independently rechecked by Astra, not by another GLM call.",
+    "No new remote simulations were launched for the comparator reanalysis.",
+    "This receipt does not qualify continuous-time equivalence, exact source/export error, or any unresolved event behavior.",
+    "New CI status belongs to the eventual pushed commit; old CI is not reused as new-head success.",
+    "This review does not grant the old dependent PR source revisions the candidate results."
+  ]
+}
