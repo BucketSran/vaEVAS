@@ -3035,11 +3035,46 @@
   "source_identity": {
     "implementation_commit": "8cca81df083683cc91ffad194c5b06d1c28287bc",
     "reviewed_helper_main": "2e250c2d161324f151f27c3ca9e45ed32eff164a",
-    "production_diff_since_implementation": "no differences in evas/src or evas/rust_core after source checkpoint",
+    "production_diff_since_implementation": "reviewed main PR111 ordinary-local/event-state separation merged; transition lowering and Rust unchanged",
     "files": {
       "evas/src/evas/syntax.py": "ec28d865000055f8d649becbb0d10d8b12fd2f4be299e898c56d6849e97f44e3",
-      "evas/src/evas/instance_compiler.py": "3bd57e3786b9dfb0ff4f9af8a7aba90d970c87b7621640667afee03b7deef83c"
+      "evas/src/evas/instance_compiler.py": "eb041afc257ecdcabe13a7989dd44400b05be789aa95ea4465cdba62d509a6e1"
     },
-    "remote_evidence_reuse": "helper main adds archive/PSF verification and CI/docs only; compiler and kernel are unchanged, no new scientific execution"
+    "remote_evidence_reuse": "five actual native-request serialized Programs exactly equal after PR111 merge, including original three-argument sparse/dense and both1e-12 controls; kernel unchanged; only these frozen comparisons reused"
+  },
+  "local_state_integration": {
+    "merge_head": "394dac3135d61031614da9b7324dabb00b9410be",
+    "reviewed_main": "3b588ec7c20463c6502a8b949c63f385aa8e66dd",
+    "cases": {
+      "three-arg--sparse": {
+        "program_exactly_equal": true,
+        "request_sha256": "5202d19bfe88a669a071ad7afc83d36594e70acf51201ab373197b5e7c2b0bc0",
+        "compiled_program_sha256": "ae4a3f1971efd921ba4126062abba2f2ad27fdf92f15d8b712f4f37d6aa105c2"
+      },
+      "three-arg--dense": {
+        "program_exactly_equal": true,
+        "request_sha256": "15ddda26243253c5f160dfe4ae194c2046f44ef965e68d60ee60a36acee14bec",
+        "compiled_program_sha256": "5e5e2e79e9ab8b0e9afa096d803c7da86fb5e4043f85188e665999ede82f51ef"
+      },
+      "four-arg--sparse": {
+        "program_exactly_equal": true,
+        "request_sha256": "9afd4a326ae26fefa6ac3a64569327e1b6cc3b7306aa3ed22d476c55910e74f8",
+        "compiled_program_sha256": "588d9d29977ecf3d1b687f96f456113692e8dbd23f54134caf3e83ce7fbe2b81"
+      },
+      "zero-period--1e-12": {
+        "program_exactly_equal": true,
+        "request_sha256": "7ddbe1ca1a9ce6466fbfe4eaabc59c4eb319a5d373985fdc3352afbfa5202b8a",
+        "compiled_program_sha256": "951849aaa3d79fd137397bf3e76b51ba989297afef1e186ffcd161a92dc2fa3e"
+      },
+      "positive-period--1e-12": {
+        "program_exactly_equal": true,
+        "request_sha256": "3f3e362d1be00dc182de278a1bc29f3b17e93de4844b99e15d93320457829ace",
+        "compiled_program_sha256": "ba8f0ec988b0a919ed28a8ec23f672d7d5b4db7b9e4a2910ee81975feb0716a7"
+      }
+    },
+    "rust_diff": "none",
+    "identity_numerical_or_remote_calls": 0,
+    "integration_tests": 52,
+    "traceability": "PASS81testfiles"
   }
 }
