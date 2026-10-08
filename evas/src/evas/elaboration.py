@@ -237,6 +237,8 @@ def elaborate_loops(model: Model, parameter):
         try:
             value = lower(substitute(expr,indices), parameter, {}, model.source)
         except CompileError as exc:
+            if exc.diagnostic['code'] == 'resource_budget':
+                raise
             fail(f'genvar control requires a signed 32-bit instance-constant integer: {exc}', expr.token)
         if not isinstance(value, Affine) or value.terms or not value.constant.is_integer() or not -2147483648 <= value.constant <= 2147483647:
             fail('genvar control requires a signed 32-bit instance-constant integer', expr.token)
@@ -358,6 +360,8 @@ def elaborate_loops(model: Model, parameter):
                     try:
                         index = constant(statement.index, active)
                     except CompileError as error:
+                        if error.diagnostic['code'] == 'resource_budget':
+                            raise
                         fail(f'initialization loop array index requires an instance-constant integer: {error}',
                              statement.index.token, code='unsupported_initial_event')
                     first, last = (constant(bound, active) for bound in model.arrays[statement.name])
@@ -373,6 +377,8 @@ def elaborate_loops(model: Model, parameter):
                     if not isinstance(value, Affine) or value.terms:
                         raise CompileError('initializer is not an instance constant')
                 except CompileError as error:
+                    if error.diagnostic['code'] == 'resource_budget':
+                        raise
                     fail(f'initialization loop values must be instance constants: {error}',
                          statement.token, code='unsupported_initial_event')
 

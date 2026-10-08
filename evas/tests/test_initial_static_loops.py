@@ -57,6 +57,18 @@ class InitialStaticLoops(unittest.TestCase):
         with self.assertRaisesRegex(CompileError,'outside|out of'):
             compiled('@(initial_step) for(i=0;i<3;i=i+1) q[i]=1; V(y,r)<+q[0];')
 
+    def test_initial_loop_macro_identity_budget_keeps_resource_diagnostic(self):
+        expression='0'
+        for _ in range(64): expression='`ID('+expression+')'
+        for assignment in ('q['+expression+']=1;', 'q[0]='+expression+';'):
+            source='`define ID(x) x\n'+model('@(initial_step) for(i=0;i<0;i=i+1) '+assignment+' V(y,r)<+1;',
+                                                 'real q[0:1]; genvar i;')
+            with self.subTest(assignment=assignment),self.assertRaises(CompileError) as caught:
+                compile_sources({'budget.va':source},[Instance('dut','m',{'u':'u','y':'y','r':'0'})])
+            self.assertEqual(caught.exception.diagnostic['code'],'resource_budget')
+            self.assertEqual(caught.exception.diagnostic['category'],'resource')
+            self.assertIn('budget exceeded',str(caught.exception))
+
     def test_legal_zero_trip_mixed_loop_matches_empty_or_body(self):
         prefix='@(initial_step or cross(V(u,r)-0.5,1)) '
         results=[run(compiled(prefix+body+' V(y,r)<+1;')) for body in
