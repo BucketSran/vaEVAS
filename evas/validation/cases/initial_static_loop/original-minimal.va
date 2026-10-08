@@ -1,0 +1,8 @@
+module m(u,y,r);
+input u; output y; inout r; electrical u,y,r;
+real q[0:1]; genvar i;
+analog begin
+  @(initial_step or cross(V(u,r)-.5,1)) for(i=0;i<2;i=i+1) q[i]=i;
+  V(y,r)<+q[0]+q[1];
+end
+endmodule

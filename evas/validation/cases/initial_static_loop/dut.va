@@ -1,0 +1,19 @@
+`include "disciplines.vams"
+module initial_static_loop(u,y,qzero,qone,qlast,r);
+input u; output y,qzero,qone,qlast; inout r;
+electrical u,y,qzero,qone,qlast,r;
+parameter integer N=2;
+parameter real SEED=0, POLLUTE=40;
+real q[0:N-1];
+genvar i;
+analog begin
+  @(initial_step or cross(V(u,r)-0.5,1,1e-9,1e-12))
+    for(i=0;i<N;i=i+1) q[i]=SEED+i;
+  @(timer(0.25,0,1e-9))
+    for(i=0;i<N;i=i+1) q[i]=POLLUTE+i;
+  for(i=0;i<N;i=i+1) V(y,r)<+q[i];
+  V(qzero,r)<+q[0];
+  V(qone,r)<+q[1];
+  V(qlast,r)<+q[N-1];
+end
+endmodule
