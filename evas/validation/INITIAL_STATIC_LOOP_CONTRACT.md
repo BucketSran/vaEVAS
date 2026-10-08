@@ -51,3 +51,20 @@ qzero/qone/qlast 是独立保存的元素观察量，避免只检查总和而漏
 不跨跳变插值；原生阶段差、精确要求点/初态/stop 缺口分别保留。
 Spectre 实际执行与有效设置取证待主代理串行完成，当前不声称商业后端对齐。
 本切片不完成 #65 总项、原 SAR 动态索引或一般初始化/事件语义。
+
+## Review boundary clarification
+
+A legal zero-trip mixed body expands to no assignments in both initial and event
+trees. It initializes no element. Its cross leaf remains an empty-body event,
+just as `@(initial_step or cross(...)) begin end`. A declared real that has no
+remaining writer stays local; reading it before assignment still rejects.
+This is the existing writer classification, not a new persistent state.
+`test_legal_zero_trip_mixed_loop_matches_empty_or_body` checks that equivalence.
+
+Entry-environment index validation protects zero-trip bodies. Each nonempty
+iteration then passes `array_elaboration.py::scalarize_arrays` through
+`element()`, which checks the expanded index against the bound array range.
+`test_initial_loop_index_diagnostic_and_later_iteration_bounds` checks a later
+iteration out of bounds through public compilation. Public frontend hierarchy
+calls `hierarchy.py::elaborate` and `scalarize_nodes` before InstanceCompiler's
+array scalarization and state initialization.

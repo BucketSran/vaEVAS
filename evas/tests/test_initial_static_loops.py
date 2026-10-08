@@ -48,6 +48,29 @@ class InitialStaticLoops(unittest.TestCase):
                 compiled('@(initial_step or cross(V(u,r)-0.5,1)) '+loop+' V(y,r)<+1;')
 
 
+    def test_initial_loop_index_diagnostic_and_later_iteration_bounds(self):
+        with self.assertRaises(CompileError) as caught:
+            compiled('@(initial_step) for(i=0;i<0;i=i+1) q[V(u,r)]=1; V(y,r)<+1;')
+        self.assertEqual(caught.exception.diagnostic['code'],'unsupported_initial_event')
+        self.assertIn('initialization loop array index',str(caught.exception))
+        self.assertIn('initial-static-loop.va:',str(caught.exception))
+        with self.assertRaisesRegex(CompileError,'outside|out of'):
+            compiled('@(initial_step) for(i=0;i<3;i=i+1) q[i]=1; V(y,r)<+q[0];')
+
+    def test_legal_zero_trip_mixed_loop_matches_empty_or_body(self):
+        prefix='@(initial_step or cross(V(u,r)-0.5,1)) '
+        results=[run(compiled(prefix+body+' V(y,r)<+1;')) for body in
+                 ('for(i=0;i<0;i=i+1) q[i]=i;', 'begin end')]
+        for result in results:
+            self.assertEqual(values(result),[1]*5)
+            self.assertEqual(result['transient']['states'][0],[])
+            self.assertEqual(len(result['transient']['events']),1)
+            self.assertEqual(result['transient']['events'][0]['before'],[])
+            self.assertEqual(result['transient']['events'][0]['after'],[])
+        self.assertEqual(results[0]['solutions'],results[1]['solutions'])
+        with self.assertRaisesRegex(CompileError,'not assigned before use'):
+            compiled(prefix+'for(i=0;i<0;i=i+1) q[i]=i; V(y,r)<+q[0];')
+
     def test_explicit_element_rewrite_has_the_same_public_platforms_and_state_changes(self):
         trigger='@(initial_step or cross(V(u,r)-0.5,1,1e-12,1e-9)) '
         results=[run(compiled(trigger+body+"""

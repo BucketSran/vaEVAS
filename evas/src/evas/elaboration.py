@@ -355,7 +355,11 @@ def elaborate_loops(model: Model, parameter):
                     if statement.name not in model.arrays:
                         fail('initialization loop indexed target must be a variable array', statement.token,
                              code='unsupported_initial_event')
-                    index = constant(statement.index, active)
+                    try:
+                        index = constant(statement.index, active)
+                    except CompileError as error:
+                        fail(f'initialization loop array index requires an instance-constant integer: {error}',
+                             statement.index.token, code='unsupported_initial_event')
                     first, last = (constant(bound, active) for bound in model.arrays[statement.name])
                     if not min(first, last) <= index <= max(first, last):
                         fail('initialization loop array index is outside its declaration', statement.index.token,
