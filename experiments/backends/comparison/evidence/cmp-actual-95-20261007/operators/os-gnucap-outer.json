@@ -1,0 +1,14 @@
+{
+  "argv": [
+    "ssh",
+    "thu-sui",
+    "cd /tmp/chips-jinzhihong/cmp-backend-completion-20261006/issue95-d4b41c79-repo && /usr/local/bin/python3.12 -X utf8 -B /tmp/chips-jinzhihong/cmp-backend-completion-20261006/issue95-d4b41c79-transfer/operator_wrapper.py --output /tmp/chips-jinzhihong/cmp-backend-completion-20261006/issue95-d4b41c79-repo/runs/cmp-completion/night-20261007/os-gnucap --receipt /tmp/chips-jinzhihong/cmp-backend-completion-20261006/issue95-d4b41c79-repo/runs/cmp-completion/night-20261007/os-gnucap-operator.json --store /tmp/chips-jinzhihong/cmp-backend-completion-20261006 -- /usr/local/bin/python3.12 -X utf8 -B experiments/backends/comparison/runner.py runs/cmp-completion/night-20261007/inputs runs/cmp-completion/night-20261007/os-gnucap --backend gnucap --environment /tmp/chips-jinzhihong/cmp-backend-completion-20261006 --allocation root-approved-issue95-os16-20261007"
+  ],
+  "backend": "gnucap",
+  "operator_sha256": "84c431ead3798324fd51217ab34b9e3d670232b7d77c30194fc29fe6b6262ae0",
+  "started_unix_ns": 1791313377590004000,
+  "overall_elapsed_cutoff": null,
+  "local_ssh_pid": 80816,
+  "exit_code": 0,
+  "finished_unix_ns": 1791313400618564000
+}

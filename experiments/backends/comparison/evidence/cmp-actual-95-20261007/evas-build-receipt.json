@@ -1,0 +1,78 @@
+{
+  "source_revision": "d4b41c797840f17222121592b9fa6f16e11e2c2b",
+  "build_command": [
+    "cargo",
+    "build",
+    "--locked",
+    "--manifest-path",
+    "evas/rust_core/Cargo.toml"
+  ],
+  "build_exit_code": 0,
+  "build_log_sha256": "d7dae192715495fa89ccbe279af3efb9792c1dae1768228e369035e68a1df673",
+  "Cargo.lock_sha256": "ca69517478900f0ebdec3118312b7b58cd6edb68f78973649136bd78b8a514ea",
+  "selected_identity": {
+    "identity_version": 1,
+    "package": {
+      "name": "evas-rebuild",
+      "version": "0.13.0",
+      "metadata_source": "source_pyproject",
+      "build_revision": null
+    },
+    "platform": {
+      "os": "darwin",
+      "arch": "arm64"
+    },
+    "compatibility": {
+      "ir_schema_version": 17,
+      "request_protocol_version": null,
+      "status": "ir_matched"
+    },
+    "kernel": {
+      "status": "queried",
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/overnight-cmp/evas/rust_core/target/debug/evas-kernel",
+      "sha256": "54d8c87729e2ad2f1367d1e08e6bc92f41ad21f0109e43385a13cd7e82340ece",
+      "reported": {
+        "build_revision": null,
+        "identity_version": 1,
+        "ir_schema_version": 17,
+        "name": "evas-kernel",
+        "platform": {
+          "arch": "aarch64",
+          "os": "macos"
+        },
+        "request_protocol_version": null,
+        "version": "0.13.0"
+      }
+    }
+  },
+  "compiler_reports": [
+    {
+      "argv": [
+        "rustc",
+        "--version",
+        "--verbose"
+      ],
+      "exit_code": 0,
+      "stdout": "rustc 1.95.0 (59807616e 2026-04-14)\nbinary: rustc\ncommit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860\ncommit-date: 2026-04-14\nhost: aarch64-apple-darwin\nrelease: 1.95.0\nLLVM version: 22.1.2\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "cargo",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "Python 3.14.6\n",
+      "stderr": ""
+    }
+  ]
+}

@@ -224,7 +224,7 @@ impl<'a> GuardTrajectory<'a> {
             }
         }
         let (mut values, mut derivatives) = self.trajectory.range(time)?;
-        let initial: Vec<_> = p.states.iter().map(|s| I::point(s.initial)).collect();
+        let initial: Vec<_> = self.model.initial().into_iter().map(I::point).collect();
         let states = self.states.unwrap_or(&initial);
         values.extend(states);
         derivatives.extend(vec![I::ZERO; p.states.len()]);

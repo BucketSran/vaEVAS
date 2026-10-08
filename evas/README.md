@@ -46,7 +46,7 @@ Rust 的版本化类型与解码位于 [evas-ir](rust_core/ir/README.md)，数�
 这些能力有输入依赖、初值、参数和组合限制，不能由单个算子支持推导任意组合都支持。
 [能力表](docs/CAPABILITIES.md)列出具体支持与缺口；
 [连续动态手册](docs/math/continuous.md)说明反馈、DAE 和事件组合边界。
-当前实现为 **EVAS 0.13.0 / IR v17**；改动摘要见[更新记录](docs/UPDATE.md)，尚未发布版本 tag。
+当前实现为 **EVAS 0.14.0 / IR v18**；改动摘要见[更新记录](docs/UPDATE.md)，尚未发布版本 tag。
 
 <a id="model-handoff"></a>
 
@@ -207,7 +207,7 @@ pulse 的第 k 次起点为 `d+kP`，四个拐点为 `d+kP`、`d+kP+r`、
 [test_scs.py](tests/test_scs.py)检查。网表解析与源构造分别位于
 [scs.py](src/evas/scs.py)和[scs_sources.py](src/evas/scs_sources.py)。
 
-旧 IR 1–16 必须从原始 VA/manifest 重新编译；前端与内核需要配套。
+旧 IR 1–17 必须从原始 VA/manifest 重新编译；前端与内核需要配套。
 批量工具和兼容性规则见[IR 版本与迁移](#ir-v8-migration)。
 
 ## 验证与开发
@@ -237,7 +237,7 @@ cargo test --locked --manifest-path evas/rust_core/Cargo.toml
 
 ## 实现范围
 
-新增前端子集在已有 IR17 上展开，不增加第二执行器：
+新增前端子集在已有 IR18 上展开，不增加第二执行器：
 
 - `parameter integer` 首批接受精确的有符号 32 位值；非整数实数的隐式转换仍明确拒绝。
   涉及 integer 参数的整数除法和溢出表达式也拒绝，避免把整数语义静默换成实数运算；
@@ -251,7 +251,9 @@ cargo test --locked --manifest-path evas/rust_core/Cargo.toml
   `V(bus[index])` 接受实例常量或展开后的 genvar 下标。每个节点与贡献保留独立身份；
   electrical 与方向声明必须有相同范围。含向量模块展开后的节点上限为 4096，动态位选、切片、拼接仍拒绝。
 - `initial_step or initial_step("dc")` 等只含初始化叶、且至少含一个无分析限定叶的 OR，
-  归并为一次已有的常量初始化体。重复叶不重复执行，也不生成零时刻 timer。
+  归并为一次初始化体。重复叶不重复执行，也不生成零时刻 timer。
+  纯初始化中的 real 还接受[实际 driven 输入比较](docs/math/events.md#input-initialization)，
+  每个状态仍须初始化一次；常量初值保持原规则。
   另支持一个无分析限定 `initial_step` 与 cross 叶子的共享常量赋值体：初始化安装一次，
   后续 cross 触发时执行同一体。赋值须无条件，所有状态合计初始化须唯一、完整且为实例常量。
   混合体中的 timer、多个或分析限定初始化叶，以及电压/状态/历史相关初值仍拒绝。
@@ -331,7 +333,7 @@ CLI 与迁移工具共用 manifest 校验。`models` 和 `instances` 必须是�
 限 64；函数调用、表达式下降与条件体嵌套共同累计到 80 层展开深度预算，
 避免分别合规的嵌套相乘使编译器递归溢出；不另设累计校验图上限。
 超限时返回带源码位置的 `CompileError`。合法但过大的模型也可能被拒绝，
-包括旧版本偶尔能处理的长表达式。使用 IR17，不通过重关联算式或消去依赖绕过预算；
+包括旧版本偶尔能处理的长表达式。使用 IR18，不通过重关联算式或消去依赖绕过预算；
 更大的模型需要后续共享表达式 IR 或其他有独立验证的方案。
 
 `solve` / `transient` 的 `timeout` 默认 **300 秒**，只限制内核进程执行时间，
@@ -354,7 +356,7 @@ Python 的编译与求解接口：`compile_sources(sources, instances) -> Progra
 `solve`、`transient` 和 manifest 的 `tolerances` 接受 `vabstol`（伏特，默认 `1e-12`）与
 `reltol`（无量纲，默认 `1e-10`），例如 `solve(..., vabstol=1e-9, reltol=1e-6)`。
 保留 `absolute` / `relative` 作为对应旧名称；同一容差不能同时提供新旧名称。
-当前实现 Python 前端与 Rust 内核使用 IR v17；版本迁移规则见[下文](#ir-v8-migration)。
+当前实现 Python 前端与 Rust 内核使用 IR v18；版本迁移规则见[下文](#ir-v8-migration)。
 Rust 库接口：`Circuit::new(...)` 和无状态的 `Circuit::solve(inputs)`。
 独立 Rust 进程也校验 IR，不能依赖 Python 已验证输入。
 
@@ -364,7 +366,7 @@ Rust 库接口：`Circuit::new(...)` 和无状态的 `Circuit::solve(inputs)`。
 
 语法解析不依赖 IR；绑定层只依赖语法树与 IR。Rust 求解层依赖内部组装模块，
 组装模块依赖 IR 和表达式校验，不反向调用求解层。`Circuit::new` 保留为公开构造入口，
-内部组装结果不成为新的公共 API。结构化支路身份沿用 v2；当前实现表达式、事件与算子使用 IR v17，序列化迁移规则见下文。
+内部组装结果不成为新的公共 API。结构化支路身份沿用 v2；当前实现表达式、事件与算子使用 IR v18，序列化迁移规则见下文。
 
 当前用 JSON 进程接口使 IR 易于检查，避免先复制旧的复杂 FFI。
 性能基准覆盖 Rust 库内静态求解、批量并行和五类瞬态路径。
@@ -431,7 +433,7 @@ tests 通过的数目不折算为验证条件数；分组与运行方式见
 
 ## IR 与贡献契约
 
-当前实现使用 IR v17，支持保持状态控制的 timer，延续 v16 的 ddt、连续动态网络、动态 guard 及逐条贡献契约；每条贡献的 RHS 是带 `op` 标签的表达式，不含“直接写节点”指令。
+当前实现使用 IR v18，新增受限 driven 输入比较初值，保留 v17 的保持状态控制 timer 与 v16 的 ddt、连续动态网络、动态 guard 及逐条贡献契约；每条贡献的 RHS 是带 `op` 标签的表达式，不含“直接写节点”指令。
 `affine` 叶子保存有限常数和不重复的节点系数；`add` / `multiply` 含 `left` / `right`；
 `power` 含 `base` 和整数 `exponent`；`select` 含比较关系、两侧表达式、两臂值与源码位置。
 Rust 递归检查所有节点、指数和字段，不能绕过前端注入非法表达式。
@@ -467,17 +469,19 @@ Rust 独立检查同一实例内本地端点的绑定一致性、地绑定和规
 
 ### IR 版本与迁移
 
-Program 和成功 Response 的 `schema_version` 均为 **17**，Python 适配器与 Rust 内核同步检查。
+Program 和成功 Response 的 `schema_version` 均为 **18**，Python 适配器与 Rust 内核同步检查。
 旧版本或未知整数版本先于载荷解码返回 `unsupported_ir_version`；版本缺失/错误类型及当前格式错误返回
-`invalid_request`。Rust 库构造入口也检查版本。旧 IR 1–16 的 JSON 须从原始 VA 与 manifest 重新编译，不能只改版本号。
-前端与内核须配套使用。IR17 新增保持状态 timer 表达式；
-IR1–16 必须从原始 VA/manifest 重新编译，不原地改写历史 IR 或收据。
+`invalid_request`。Rust 库构造入口也检查版本。旧 IR 1–17 的 JSON 须从原始 VA 与 manifest 重新编译，不能只改版本号。
+前端与内核须配套使用。IR18 将 `State.initial` 扩为有限常数或明确的 0/1 `select` 比较；
+比较只适用于 real 状态，两侧限 ground/实际 driven 输入的仿射表达式。
+初始化先于算子历史、守卫日程、首次电压求解和 t=0 事件；详见[初始化契约](docs/math/events.md#input-initialization)。
+IR1–17 必须从原始 VA/manifest 重新编译，不原地改写历史 IR 或收据。
 
-仓库冒烟 manifest 的默认范围为 `evas/validation/smoke/`。批量工具读取原 VA 和实例参数，写入新的 IR17，
+仓库冒烟 manifest 的默认范围为 `evas/validation/smoke/`。批量工具读取原 VA 和实例参数，写入新的 IR18，
 保留每项 manifest/source SHA256 及失败诊断；原 IR、历史波形和收据不改写：
 
 ```sh
-python3 scripts/recompile_evas_manifests.py --output runs/recompile-ir16
+python3 scripts/recompile_evas_manifests.py --output runs/recompile-ir18
 python3 scripts/recompile_evas_manifests.py --output runs/recompile-selected evas/validation/smoke/idt.json
 ```
 
@@ -490,7 +494,7 @@ python3 scripts/recompile_evas_manifests.py --output runs/recompile-selected eva
 旧归档使用对应提交的前端和内核复现；[历史 v9 迁移说明](https://github.com/BucketSran/vaEVAS/blob/8f9c9ee84593778b1fcb52e264af6d3546466a8b/evas/README.md#ir-v8-migration)保留原身份。
 
 `Program.states/events/operators` 为空时保持静态语义；省略这些字段也只表示空列表，不推断事件。
-`state` 表达式保存状态索引，状态含实例身份、名称、类型及初始化常数；事件为 `trigger/body/origin`。
+`state` 表达式保存状态索引，状态含实例身份、名称、类型及初始化常数或上述输入比较；事件为 `trigger/body/origin`。
 body 的 `kind=assign` 含 `state/rhs`；`kind=if` 含 `relation/left/right/then_body/else_body/origin`，
 relation 为 `lt/le/gt/ge`。无 else 序列化为空 body；未知字段、关系或缺失 body 均拒绝。
 trigger 支持 cross、固定及保持状态控制的 timer，以及 cross/timer 混合 OR；格式、身份与事件记录见[事件手册](docs/math/events.md#event-or)。

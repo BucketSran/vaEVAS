@@ -285,6 +285,7 @@ pub(crate) struct EventModel {
     pub(crate) tolerances: Tolerances,
     // Bounded one-batch cache; stores coefficients, never accepted/trial state.
     certificate: RefCell<Option<(Selection, Bounds)>>,
+    initial_values: Vec<f64>,
 }
 
 impl EventModel {
@@ -293,6 +294,11 @@ impl EventModel {
         driven: Vec<String>,
         tolerances: Tolerances,
     ) -> Result<Self, Error> {
+        let initial_values = program
+            .states
+            .iter()
+            .map(|s| s.initial.constant())
+            .collect::<Result<Vec<_>, _>>()?;
         let mut identities = BTreeSet::new();
         for state in &program.states {
             if state.instance.is_empty()
@@ -310,7 +316,7 @@ impl EventModel {
                     "invalid or duplicate state identity",
                 ));
             }
-            check_state(state.initial, &state.kind)?;
+            check_state(state.initial.constant()?, &state.kind)?;
         }
         let rhs = program
             .contributions
@@ -441,10 +447,21 @@ impl EventModel {
             actions.push(body);
         }
         for (index, body) in actions.iter().enumerate() {
-            if body.iter().any(|(_, rhs)| {
-                rhs.state_dependencies
+            if body.iter().any(|(target, rhs)| {
+                let shared_read = rhs
+                    .state_dependencies
                     .iter()
-                    .any(|&state| writers[state].iter().any(|&writer| writer != index))
+                    .any(|&state| writers[state].iter().any(|&writer| writer != index));
+                // A self increment/decrement reads only this target's accepted
+                // history. Existing selected-writer checks still forbid two
+                // active blocks in one batch; do not infer safety by cancellation.
+                let self_update = rhs.state_dependencies.len() == 1
+                    && rhs.state_dependencies.contains(target)
+                    && rhs.states[*target] == 1.0
+                    && rhs.constant.is_finite()
+                    && rhs.node_dependencies.is_empty()
+                    && rhs.operator_dependencies.is_empty();
+                shared_read && !self_update
             }) {
                 return Err(Error::new(
                     "unsupported_cross",
@@ -466,6 +483,7 @@ impl EventModel {
             driven,
             tolerances,
             certificate: RefCell::new(None),
+            initial_values,
         };
         model.check_guard_dependencies()?;
         model.conditions.prepare(&model.program, &model.driven)?;
@@ -545,7 +563,7 @@ impl EventModel {
     }
 
     pub(crate) fn initial(&self) -> Vec<f64> {
-        self.program.states.iter().map(|s| s.initial).collect()
+        self.initial_values.clone()
     }
 
     pub(crate) fn circuit(&self, states: &[f64]) -> Result<Circuit, Error> {

@@ -1,0 +1,55 @@
+{
+  "started_unix_ns": 1791312303250202000,
+  "backend": "evas",
+  "input_manifest_sha256": "781d5c293b739d6a2ade00a6b3c2f0bba9084ec576606c3463c5750c257f727f",
+  "plan_sha256": "6bb21a6342b2ea2e67e613588fcf70c65bead8f62597dab4b0cc1b9ffe43a5db",
+  "configurations": 8,
+  "max_simulations": 8,
+  "max_compilations": 8,
+  "stage_timeout_s": 90,
+  "license_timeout_s": 30,
+  "tool": {
+    "revision": "d4b41c797840f17222121592b9fa6f16e11e2c2b",
+    "runtime_identity": "8b21c7a03c7a194bc1f9092d762b4a35c379f07f04d63b339dab3e6f096700da",
+    "kernel_sha256": "54d8c87729e2ad2f1367d1e08e6bc92f41ad21f0109e43385a13cd7e82340ece",
+    "kernel_version": "0.13.0",
+    "identity": {
+      "identity_version": 1,
+      "package": {
+        "name": "evas-rebuild",
+        "version": "0.13.0",
+        "metadata_source": "source_pyproject",
+        "build_revision": null
+      },
+      "platform": {
+        "os": "darwin",
+        "arch": "arm64"
+      },
+      "compatibility": {
+        "ir_schema_version": 17,
+        "request_protocol_version": null,
+        "status": "ir_matched"
+      },
+      "kernel": {
+        "status": "queried",
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/overnight-cmp/evas/rust_core/target/debug/evas-kernel",
+        "sha256": "54d8c87729e2ad2f1367d1e08e6bc92f41ad21f0109e43385a13cd7e82340ece",
+        "reported": {
+          "build_revision": null,
+          "identity_version": 1,
+          "ir_schema_version": 17,
+          "name": "evas-kernel",
+          "platform": {
+            "arch": "aarch64",
+            "os": "macos"
+          },
+          "request_protocol_version": null,
+          "version": "0.13.0"
+        }
+      }
+    },
+    "version_note": "Selected kernel identity queried before execution; an IR match does not establish full runtime compatibility."
+  },
+  "runner_sha256": "ef3b402601b7e920eaa8734f20c7275709698976ea4570b27fec24b7198c341b",
+  "allocation": "root-approved-issue95-local-evas8-20261007"
+}

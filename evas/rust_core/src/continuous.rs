@@ -1784,7 +1784,7 @@ mod tests {
                 instance: "uut".to_string(),
                 name: "n".to_string(),
                 kind: StateKind::Real,
-                initial: 0.0,
+                initial: 0.0.into(),
             }],
             events: Vec::new(),
             operators: vec![OperatorSpec::Idt {
@@ -1922,7 +1922,7 @@ mod tests {
             instance: "uut".to_string(),
             name: "n".to_string(),
             kind: StateKind::Real,
-            initial: 0.0,
+            initial: 0.0.into(),
         }];
         let trajectory = no_source_trajectory(1.0);
         let continuous = Continuous::new(&program, &trajectory, &[], &[0.0])

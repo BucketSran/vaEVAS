@@ -1,0 +1,234 @@
+{
+  "kind": "cmp8-pr87-fixed-checker-reanalysis",
+  "old_revision": "66173cfc140c0763cf5cc4d31fe95d284645b786",
+  "new_revision": "d4b41c797840f17222121592b9fa6f16e11e2c2b",
+  "old_sources": {
+    "experiments/archive/dvs2-history-validation/history.py": "1962820b9c260de8c199d8037fa1e0415d23106c3a633db657eb3df8fe341886",
+    "experiments/archive/dvs2-history-validation/recheck.py": "e3b61b913d917f4bc11871d8ef6d4a11acad0d693ea090eb506906b2bd286f70",
+    "experiments/archive/dvs2-history-validation/test_history.py": "a5c8394a5e76efd708875da94ebb74c71e2c3a129865c9a4e3a4a3ecba06d265",
+    "experiments/archive/dvs2-history-validation/test_recheck.py": "160f0372dd78f744c074a05e70352ffc2c7d3586ad5e2b33c3f9d6c0a2e5bde2",
+    "experiments/archive/dvs2-starter-pilot/analyze.py": "e10acac779cb8c8e627358832689506f4f366de9241155e9daf512d8bcb01680",
+    "experiments/archive/dvs2-starter-pilot/report.py": "2d2d62df7ac79d6bd35a165e686b3286d40cd2f287b997b205ded1ef3bf6fc1e",
+    "experiments/archive/dvs2-starter-pilot/run_remote.py": "b5d6316b2c5124f08c6a4cb14f27e52b8cb7457823bbcd82b751e8e7edfd30be",
+    "experiments/archive/dvs2-starter-pilot/suite.py": "7c4e686253688d575b32f9aec89e6e741da201c1411436b765f5f7e2f12e49ff",
+    "experiments/archive/dvs2-starter-pilot/test_analysis.py": "70d611ba71e9bda4b9419a08c7d8c7926d3045d8dc9628db2362f4859706437c",
+    "experiments/backends/dvs2-spectre-validation/check_results.py": "9072dcc2f5df4e04a10943f9bffec895647463341cfcc9238d56d75ed286d0fd",
+    "experiments/backends/dvs2-spectre-validation/cross_boundaries.py": "19168957a7a04afea944b05f12c6cf818e9c69f39ff5acf9acfb287401cca5fc",
+    "experiments/backends/dvs2-spectre-validation/cross_reference.py": "f5ab236a01594c9adb1f7df60d43e34f4ae8a085725e6008c6c3bfd07ce3fa8f",
+    "experiments/backends/dvs2-spectre-validation/cross_restart_diagnostic.py": "90ba4ced2a3204bca775b089ed1a358c478bb3a730eb3576c2af4a1abf1409cb",
+    "experiments/backends/dvs2-spectre-validation/cross_touch.py": "21dd3c27497447a2a1ee603f96c265515e33aa40abc4adb72fa122482786c26f",
+    "experiments/backends/dvs2-spectre-validation/event_or_reference.py": "684b9a5fc1835e0897e3a1dae4b0adb7b75e6684a71772bcfdf0d7a08c0d132b",
+    "experiments/backends/dvs2-spectre-validation/history_relocalization.py": "d51900031866fcd82de3ad4b15927e279a6662364af4aa233cdfb11e2b744e08",
+    "experiments/backends/dvs2-spectre-validation/oscillator_compatibility.py": "8ac633227531c3d3fa443023ba4208dceea2af911b7b8fb3dc004a8ee0bb6625",
+    "experiments/backends/dvs2-spectre-validation/remote.py": "df849e85ba940bad247caf34d2192368ec64e5b1eb3a49ead81e16737d3ba5e8",
+    "experiments/backends/dvs2-spectre-validation/report.py": "758ffbd038830cc65f7e3c10b249fd4d786abc46dad66085f748b466415353b4",
+    "experiments/backends/dvs2-spectre-validation/run_suite.py": "338613601938a6ec519bcf3fbfe19ba321c9251220c4c0bf48ac2253eb61cef3",
+    "experiments/backends/dvs2-spectre-validation/s1_review.py": "61a332979cff6de3e234ff4dd220d89046740e86e71c473d4ef9fe6b20a78a71",
+    "experiments/backends/dvs2-spectre-validation/test_checks.py": "7cdea4984ab86dbaaa875feee1e185e18c6b785456ec49c7590a79f403600c14",
+    "experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py": "12d9a1063e9086f3e85718c12de6428cdc7d2940c7d6ef1291f618e7cbe7594f",
+    "experiments/backends/dvs2-spectre-validation/test_cross_reference.py": "d82f59a435263e9e70e3f70ab2f7c77c99f579d02e1f5c91c8d25c3041d2c65a",
+    "experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py": "4548967b04f6706c5aa8efde47e7fb950d20a839458199073dc29ca04d1f5b9f",
+    "experiments/backends/dvs2-spectre-validation/test_cross_touch.py": "66a78a2d31d91f76ee29f828c6ce77561278a621a002902b8e8dfbf58ec96d3d",
+    "experiments/backends/dvs2-spectre-validation/test_event_or_reference.py": "50d5fda22d5a6bc09038e7de68306a44b654a05aec78a38b4326c6e97aa4abe9",
+    "experiments/backends/dvs2-spectre-validation/test_event_review.py": "746edafb52ba3049ac4956a3353b4593b1e85676558719c0632aad2198c3bdce",
+    "experiments/backends/dvs2-spectre-validation/test_history_relocalization_reference.py": "b08147bd2f3bca48dee811f062d5c06c2eda4c0eabc4659784182cd3ee30e1c6",
+    "experiments/backends/dvs2-spectre-validation/test_s1_review.py": "f0a560d8589e685653891c68b7999459d3316f34843b8626fc89849a5a60c12d",
+    "experiments/backends/dvs2-spectre-validation/test_timer_reference.py": "26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab",
+    "experiments/backends/dvs2-spectre-validation/test_timer_settlement.py": "91db96eefbc581d70ae507bbcd034e1e733eb1dfd8af21620e86151a87f53429",
+    "experiments/backends/dvs2-spectre-validation/test_transition_reference.py": "0ab4351e59309b74b6122c3dc1da141bfef3a2151a15a6baec7c6bb4d79e2451",
+    "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py": "8ad2b13b75cafe9c971b93f68e8a86164eba134df29d3babffa4b4fb01adb30f",
+    "experiments/backends/dvs2-spectre-validation/timer_reference.py": "5111d1a159997791e5ec6367a7d98bfebd46580b41dbfe5ef4abdd8e18945a92",
+    "experiments/backends/dvs2-spectre-validation/timer_settlement.py": "b6da5e3a1d5108d57ad4aa4db8123085df4b994c1eccb036fa2952d25f998a20",
+    "experiments/backends/dvs2-spectre-validation/transition_reference.py": "40957f3ecd6e15c2353b96c522e3144772b63ca3e7d9dd16be87cf1559c8c401"
+  },
+  "new_sources": {
+    "experiments/archive/dvs2-history-validation/history.py": "1962820b9c260de8c199d8037fa1e0415d23106c3a633db657eb3df8fe341886",
+    "experiments/archive/dvs2-history-validation/recheck.py": "e3b61b913d917f4bc11871d8ef6d4a11acad0d693ea090eb506906b2bd286f70",
+    "experiments/archive/dvs2-history-validation/test_history.py": "a5c8394a5e76efd708875da94ebb74c71e2c3a129865c9a4e3a4a3ecba06d265",
+    "experiments/archive/dvs2-history-validation/test_recheck.py": "160f0372dd78f744c074a05e70352ffc2c7d3586ad5e2b33c3f9d6c0a2e5bde2",
+    "experiments/archive/dvs2-starter-pilot/analyze.py": "e10acac779cb8c8e627358832689506f4f366de9241155e9daf512d8bcb01680",
+    "experiments/archive/dvs2-starter-pilot/report.py": "2d2d62df7ac79d6bd35a165e686b3286d40cd2f287b997b205ded1ef3bf6fc1e",
+    "experiments/archive/dvs2-starter-pilot/run_remote.py": "b5d6316b2c5124f08c6a4cb14f27e52b8cb7457823bbcd82b751e8e7edfd30be",
+    "experiments/archive/dvs2-starter-pilot/suite.py": "7c4e686253688d575b32f9aec89e6e741da201c1411436b765f5f7e2f12e49ff",
+    "experiments/archive/dvs2-starter-pilot/test_analysis.py": "70d611ba71e9bda4b9419a08c7d8c7926d3045d8dc9628db2362f4859706437c",
+    "experiments/backends/dvs2-spectre-validation/check_results.py": "9072dcc2f5df4e04a10943f9bffec895647463341cfcc9238d56d75ed286d0fd",
+    "experiments/backends/dvs2-spectre-validation/cross_boundaries.py": "19168957a7a04afea944b05f12c6cf818e9c69f39ff5acf9acfb287401cca5fc",
+    "experiments/backends/dvs2-spectre-validation/cross_reference.py": "f5ab236a01594c9adb1f7df60d43e34f4ae8a085725e6008c6c3bfd07ce3fa8f",
+    "experiments/backends/dvs2-spectre-validation/cross_restart_diagnostic.py": "90ba4ced2a3204bca775b089ed1a358c478bb3a730eb3576c2af4a1abf1409cb",
+    "experiments/backends/dvs2-spectre-validation/cross_touch.py": "21dd3c27497447a2a1ee603f96c265515e33aa40abc4adb72fa122482786c26f",
+    "experiments/backends/dvs2-spectre-validation/event_or_reference.py": "684b9a5fc1835e0897e3a1dae4b0adb7b75e6684a71772bcfdf0d7a08c0d132b",
+    "experiments/backends/dvs2-spectre-validation/history_relocalization.py": "d51900031866fcd82de3ad4b15927e279a6662364af4aa233cdfb11e2b744e08",
+    "experiments/backends/dvs2-spectre-validation/oscillator_compatibility.py": "8ac633227531c3d3fa443023ba4208dceea2af911b7b8fb3dc004a8ee0bb6625",
+    "experiments/backends/dvs2-spectre-validation/remote.py": "df849e85ba940bad247caf34d2192368ec64e5b1eb3a49ead81e16737d3ba5e8",
+    "experiments/backends/dvs2-spectre-validation/report.py": "758ffbd038830cc65f7e3c10b249fd4d786abc46dad66085f748b466415353b4",
+    "experiments/backends/dvs2-spectre-validation/run_suite.py": "338613601938a6ec519bcf3fbfe19ba321c9251220c4c0bf48ac2253eb61cef3",
+    "experiments/backends/dvs2-spectre-validation/s1_review.py": "61a332979cff6de3e234ff4dd220d89046740e86e71c473d4ef9fe6b20a78a71",
+    "experiments/backends/dvs2-spectre-validation/test_checks.py": "7cdea4984ab86dbaaa875feee1e185e18c6b785456ec49c7590a79f403600c14",
+    "experiments/backends/dvs2-spectre-validation/test_cross_boundaries.py": "12d9a1063e9086f3e85718c12de6428cdc7d2940c7d6ef1291f618e7cbe7594f",
+    "experiments/backends/dvs2-spectre-validation/test_cross_reference.py": "d82f59a435263e9e70e3f70ab2f7c77c99f579d02e1f5c91c8d25c3041d2c65a",
+    "experiments/backends/dvs2-spectre-validation/test_cross_restart_diagnostic.py": "4548967b04f6706c5aa8efde47e7fb950d20a839458199073dc29ca04d1f5b9f",
+    "experiments/backends/dvs2-spectre-validation/test_cross_touch.py": "66a78a2d31d91f76ee29f828c6ce77561278a621a002902b8e8dfbf58ec96d3d",
+    "experiments/backends/dvs2-spectre-validation/test_event_or_reference.py": "50d5fda22d5a6bc09038e7de68306a44b654a05aec78a38b4326c6e97aa4abe9",
+    "experiments/backends/dvs2-spectre-validation/test_event_review.py": "746edafb52ba3049ac4956a3353b4593b1e85676558719c0632aad2198c3bdce",
+    "experiments/backends/dvs2-spectre-validation/test_history_relocalization_reference.py": "b08147bd2f3bca48dee811f062d5c06c2eda4c0eabc4659784182cd3ee30e1c6",
+    "experiments/backends/dvs2-spectre-validation/test_s1_review.py": "f0a560d8589e685653891c68b7999459d3316f34843b8626fc89849a5a60c12d",
+    "experiments/backends/dvs2-spectre-validation/test_timer_reference.py": "26b7467fd07a0b078953408f244152afec3bb3c839b6e4749fafc1d2732334ab",
+    "experiments/backends/dvs2-spectre-validation/test_timer_settlement.py": "91db96eefbc581d70ae507bbcd034e1e733eb1dfd8af21620e86151a87f53429",
+    "experiments/backends/dvs2-spectre-validation/test_transition_reference.py": "0ab4351e59309b74b6122c3dc1da141bfef3a2151a15a6baec7c6bb4d79e2451",
+    "experiments/backends/dvs2-spectre-validation/test_triangle_oscillator.py": "2d162e2f0e0a4905e3f79b41ba52f0742bc746e3ad64256669bdcb1fca0f8c02",
+    "experiments/backends/dvs2-spectre-validation/timer_reference.py": "5111d1a159997791e5ec6367a7d98bfebd46580b41dbfe5ef4abdd8e18945a92",
+    "experiments/backends/dvs2-spectre-validation/timer_settlement.py": "b6da5e3a1d5108d57ad4aa4db8123085df4b994c1eccb036fa2952d25f998a20",
+    "experiments/backends/dvs2-spectre-validation/transition_reference.py": "40957f3ecd6e15c2353b96c522e3144772b63ca3e7d9dd16be87cf1559c8c401"
+  },
+  "old_checker_identity": "d6cc34bf0ef9a0d70e235772cdedba6ee28faa30d03835edb0e4f145e1931a2c",
+  "new_checker_identity": "d9fb72214543c0a76f6d6d564baeb1fde1ea3b0bbf5d29bc9ff81ff1a4ae5680",
+  "parent": {
+    "path": "experiments/backends/comparison/snapshot-20261006-accounted-v2.json",
+    "sha256": "19564dceb7dde85e86dd92abe8220a6e6049c7a98e6da96578ec29ad0d6c2d31"
+  },
+  "inputs": {
+    "old_INPUT_MANIFEST.json": {
+      "path": "experiments/backends/comparison/evidence/cmp-actual-95-20261007/checker-reanalysis/old-INPUT_MANIFEST.json",
+      "sha256": "a809f443ca64f54b9d72efb1b506dcca056bb827b2e244d5ed75f8ce7e11a811"
+    },
+    "old_provenance.json": {
+      "path": "experiments/backends/comparison/evidence/cmp-actual-95-20261007/checker-reanalysis/old-provenance.json",
+      "sha256": "32c26ae31afc38ea29033905c7cc5b999dd3db3d19d244510b71661ad17ab5e3"
+    },
+    "new_INPUT_MANIFEST.json": {
+      "path": "experiments/backends/comparison/evidence/cmp-actual-95-20261007/checker-reanalysis/new-INPUT_MANIFEST.json",
+      "sha256": "781d5c293b739d6a2ade00a6b3c2f0bba9084ec576606c3463c5750c257f727f"
+    },
+    "new_provenance.json": {
+      "path": "experiments/backends/comparison/evidence/cmp-actual-95-20261007/checker-reanalysis/new-provenance.json",
+      "sha256": "977b417aec4c4cb639762dc26e342dda17044de1b04a6723c3cee01558a441b2"
+    }
+  },
+  "rows": [
+    {
+      "case": "v1-main",
+      "old_receipt": {
+        "path": "experiments/backends/comparison/evidence/20261006-accounted/spectre/v1-main/receipt.json",
+        "sha256": "33b4770dec66a3cba74f04985db8ff4c9f765104974727d875a599758c0607b2"
+      },
+      "waveform_sha256": "b802e55b58c87f09a7f4c23dd7d229f27eceaa91d85151814063e42eb352025c",
+      "assessment": {
+        "path": "experiments/backends/comparison/evidence/cmp-actual-95-20261007/checker-reanalysis/v1-main-assessment.json",
+        "sha256": "ec2957d0e7b54d5622c6206e798b3245f5baa9d21a1cb83ad6c27a56257b0c79"
+      },
+      "assessment_sha256": "ec2957d0e7b54d5622c6206e798b3245f5baa9d21a1cb83ad6c27a56257b0c79"
+    },
+    {
+      "case": "v2-main",
+      "old_receipt": {
+        "path": "experiments/backends/comparison/evidence/20261006-accounted/spectre/v2-main/receipt.json",
+        "sha256": "be7458f8e190bb0ed46bf2e5543a2b863dcf6f0c18c136f7257ff040734a4525"
+      },
+      "waveform_sha256": "231955218c2e4747c8f9564cab5774ef2289846c8f2ec64b875cb82508d61718",
+      "assessment": {
+        "path": "experiments/backends/comparison/evidence/cmp-actual-95-20261007/checker-reanalysis/v2-main-assessment.json",
+        "sha256": "b6e75ff4cb3e69866cf3937b6a6636ed84e5381eb492d5a729bffadf3cfef333"
+      },
+      "assessment_sha256": "b6e75ff4cb3e69866cf3937b6a6636ed84e5381eb492d5a729bffadf3cfef333"
+    },
+    {
+      "case": "v3-main",
+      "old_receipt": {
+        "path": "experiments/backends/comparison/evidence/20261006-accounted/spectre/v3-main/receipt.json",
+        "sha256": "5de414e63a8409f162997f21bbd2dc234513f1048cdc2e7b0865efbe024aa928"
+      },
+      "waveform_sha256": "1fbc701adeee631ef2256f81bb08aa33e00bdd3994fb7c1c211864e523e2650c",
+      "assessment": {
+        "path": "experiments/backends/comparison/evidence/cmp-actual-95-20261007/checker-reanalysis/v3-main-assessment.json",
+        "sha256": "f47a14cd8cb39cf2850dab39e82e2fc4c9136cd363c20b6c7bbc02122702457d"
+      },
+      "assessment_sha256": "f47a14cd8cb39cf2850dab39e82e2fc4c9136cd363c20b6c7bbc02122702457d"
+    },
+    {
+      "case": "v4-c0",
+      "old_receipt": {
+        "path": "experiments/backends/comparison/evidence/20261006-accounted/spectre/v4-c0/receipt.json",
+        "sha256": "71bc51da515f8ff179bcc49e5353bef46f02928c01a16b902bc43d709f8f2fdb"
+      },
+      "waveform_sha256": "4eb5ce6c60f7baf97a4fedffb23a3c75c9e1d62be0cf7377e8f66cedd6db9415",
+      "assessment": {
+        "path": "experiments/backends/comparison/evidence/cmp-actual-95-20261007/checker-reanalysis/v4-c0-assessment.json",
+        "sha256": "5214f10154b5a2f8de0445cc3584409c364ba685eefa8cfd788d00c84026785f"
+      },
+      "assessment_sha256": "5214f10154b5a2f8de0445cc3584409c364ba685eefa8cfd788d00c84026785f"
+    },
+    {
+      "case": "v5-main",
+      "old_receipt": {
+        "path": "experiments/backends/comparison/evidence/20261006-accounted/spectre/v5-main/receipt.json",
+        "sha256": "3f94cca4c3839af9f0b5520459488ef178f3a5871e7e6f2fef1d9ac20d53e278"
+      },
+      "waveform_sha256": "5eca0ac4416cc8156a1b29a69d8c94b130a7664ca72cb0c375fdc1d9fb7f37b5",
+      "assessment": {
+        "path": "experiments/backends/comparison/evidence/cmp-actual-95-20261007/checker-reanalysis/v5-main-assessment.json",
+        "sha256": "a79c5bdb4d2288fc1f971dc8e9a7449f87be0e40897290a305fc920da842e118"
+      },
+      "assessment_sha256": "a79c5bdb4d2288fc1f971dc8e9a7449f87be0e40897290a305fc920da842e118"
+    },
+    {
+      "case": "v6-standard",
+      "old_receipt": {
+        "path": "experiments/backends/comparison/evidence/20261006-accounted/spectre/v6-standard/receipt.json",
+        "sha256": "0b63294c7c5125695daa64c0c8d458f57c881ea9d73ddfe3a9999ef1a28794ee"
+      },
+      "waveform_sha256": "9fe3fe66f926a4906516ab427db6b49a915ef6b69d206e8444432c5b445cb1c7",
+      "assessment": {
+        "path": "experiments/backends/comparison/evidence/cmp-actual-95-20261007/checker-reanalysis/v6-standard-assessment.json",
+        "sha256": "aa4a5de365cefe36f6c93fc7dcb4b7ad7a73f6f5138a3fb433b680b67ad6c48b"
+      },
+      "assessment_sha256": "aa4a5de365cefe36f6c93fc7dcb4b7ad7a73f6f5138a3fb433b680b67ad6c48b"
+    },
+    {
+      "case": "v7-linear-main",
+      "old_receipt": {
+        "path": "experiments/backends/comparison/evidence/20261006-accounted/spectre/v7-linear-main/receipt.json",
+        "sha256": "803d66985d62db8cb1de9905acde710dffdb6858fe5e752a775c9119b8a970a8"
+      },
+      "waveform_sha256": "b4c293c12068d86e7bc3fdf5a056b1664f47849aedc0277a9184c066e6f0f59a",
+      "assessment": {
+        "path": "experiments/backends/comparison/evidence/cmp-actual-95-20261007/checker-reanalysis/v7-linear-main-assessment.json",
+        "sha256": "ff3b5daed73fcf2afd0595605f9a96298f8624db33225522f48ea9277d565d34"
+      },
+      "assessment_sha256": "ff3b5daed73fcf2afd0595605f9a96298f8624db33225522f48ea9277d565d34"
+    },
+    {
+      "case": "c1-main",
+      "old_receipt": {
+        "path": "experiments/backends/comparison/evidence/20261006-accounted/spectre/c1-main/receipt.json",
+        "sha256": "bc1464b9734026e22ecda9c5d538343d3a8e954b76cc1e39a77f9e25a51aca5d"
+      },
+      "waveform_sha256": "f04e32f23f43076c88abd5f9ef81ad35c3a7d7bcc91541cab7aa7607e56bae42",
+      "assessment": {
+        "path": "experiments/backends/comparison/evidence/cmp-actual-95-20261007/checker-reanalysis/c1-main-assessment.json",
+        "sha256": "5cddce14cbf68bb65dab17a23ecb31241f66a1753932d53c43c200c35fad2d7f"
+      },
+      "assessment_sha256": "5cddce14cbf68bb65dab17a23ecb31241f66a1753932d53c43c200c35fad2d7f"
+    }
+  ],
+  "analysis_runner_sha256": "ef3b402601b7e920eaa8734f20c7275709698976ea4570b27fec24b7198c341b",
+  "analysis_command": [
+    "python3",
+    "-B",
+    "runs/cmp-completion/night-20261007/create-reanalysis-proof.py"
+  ],
+  "calibration_log_sha256": "bc3890d5476f579902c0e613cbd553d296e022dda40b66eccee830b971081d34",
+  "raw_availability": "local-only",
+  "simulation_launches": 0,
+  "analysis_driver": {
+    "path": "experiments/backends/comparison/evidence/cmp-actual-95-20261007/checker-reanalysis/reanalysis-driver.py.txt",
+    "sha256": "cb8d3ce67e74d0b75f577c04449f083ae6abdbabc48c171fc9e8622645721fb0"
+  },
+  "analysis_runner": {
+    "path": "experiments/backends/comparison/evidence/sources/runner-ef3b402601b7e920eaa8734f20c7275709698976ea4570b27fec24b7198c341b.py.txt",
+    "sha256": "ef3b402601b7e920eaa8734f20c7275709698976ea4570b27fec24b7198c341b"
+  },
+  "python_identity": {
+    "executable": "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "version": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]"
+  }
+}

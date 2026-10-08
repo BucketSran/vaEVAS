@@ -27,10 +27,10 @@ class IdentityCLI(unittest.TestCase):
         identity = json.loads(result.stdout)
         self.assertEqual(identity['identity_version'], 1)
         self.assertEqual(identity['package']['name'], 'evas-rebuild')
-        self.assertEqual(identity['package']['version'], '0.13.0')
+        self.assertEqual(identity['package']['version'], '0.14.0')
         self.assertIsNone(identity['package']['build_revision'])
         self.assertEqual(identity['kernel']['status'], 'not_requested')
-        self.assertEqual(identity['compatibility']['ir_schema_version'], 17)
+        self.assertEqual(identity['compatibility']['ir_schema_version'], 18)
         self.assertIsNone(identity['compatibility']['request_protocol_version'])
 
     def test_real_kernel_query_does_not_wait_for_stdin(self):
@@ -47,9 +47,9 @@ class IdentityCLI(unittest.TestCase):
             self.assertEqual(process.returncode, 0, process.stderr.read())
         self.assertEqual(identity['identity_version'], 1)
         self.assertEqual(identity['name'], 'evas-kernel')
-        self.assertEqual(identity['version'], '0.13.0')
+        self.assertEqual(identity['version'], '0.14.0')
         self.assertIsNone(identity['build_revision'])
-        self.assertEqual(identity['ir_schema_version'], 17)
+        self.assertEqual(identity['ir_schema_version'], 18)
         self.assertIsNone(identity['request_protocol_version'])
         result = self.cli('--kernel', KERNEL)
         self.assertEqual(result.returncode, 0, result.stderr)
@@ -68,7 +68,7 @@ class IdentityCLI(unittest.TestCase):
                      ('timeout', '#!/bin/sh\nexec sleep 30\n', 'kernel_timeout'),
                      ('malformed', '#!/bin/sh\necho \'{"identity_version":1,"name":"evas-kernel"}\'\n', 'invalid_response'),
                      ('protocol', '#!/bin/sh\necho \'{"identity_version":99}\'\n', 'invalid_response'),
-                     ('mismatch', '#!/bin/sh\necho \'{"identity_version":1,"name":"evas-kernel","version":"0.13.0","build_revision":null,"ir_schema_version":16,"request_protocol_version":null,"platform":{"os":"test","arch":"test"}}\'\n', 'unsupported_ir_version')]
+                     ('mismatch', '#!/bin/sh\necho \'{"identity_version":1,"name":"evas-kernel","version":"0.14.0","build_revision":null,"ir_schema_version":16,"request_protocol_version":null,"platform":{"os":"test","arch":"test"}}\'\n', 'unsupported_ir_version')]
             for label, content, kind in cases:
                 with self.subTest(label=label):
                     if path.exists():
@@ -112,7 +112,7 @@ class IdentityCLI(unittest.TestCase):
         manifest = ROOT / 'validation/smoke/idt.json'
         compiled = invoke('compile', manifest)
         self.assertEqual(compiled.returncode, 0, compiled.stderr)
-        self.assertEqual(json.loads(compiled.stdout)['schema_version'], 17)
+        self.assertEqual(json.loads(compiled.stdout)['schema_version'], 18)
         solved = invoke('transient', manifest, '--kernel', KERNEL)
         self.assertEqual(solved.returncode, 0, solved.stderr)
         response = json.loads(solved.stdout)
@@ -143,7 +143,7 @@ class IdentityCLI(unittest.TestCase):
                                     env=dict(os.environ, PYTHONPATH=str(ROOT / 'src') + os.pathsep + directory))
             self.assertEqual(result.returncode, 0, result.stderr)
             package = json.loads(result.stdout)['package']
-            self.assertEqual(package['version'], '0.13.0')
+            self.assertEqual(package['version'], '0.14.0')
             self.assertEqual(package['metadata_source'], 'source_pyproject')
 
     def test_identity_bypasses_simulation_configuration_and_artifacts(self):

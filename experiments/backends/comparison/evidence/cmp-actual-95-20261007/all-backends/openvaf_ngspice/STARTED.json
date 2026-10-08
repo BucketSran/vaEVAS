@@ -1,0 +1,38 @@
+{
+  "started_unix_ns": 1791313214166098760,
+  "backend": "openvaf_ngspice",
+  "input_manifest_sha256": "781d5c293b739d6a2ade00a6b3c2f0bba9084ec576606c3463c5750c257f727f",
+  "plan_sha256": "6bb21a6342b2ea2e67e613588fcf70c65bead8f62597dab4b0cc1b9ffe43a5db",
+  "configurations": 8,
+  "max_simulations": 8,
+  "max_compilations": 8,
+  "stage_timeout_s": 90,
+  "license_timeout_s": 30,
+  "tool": {
+    "revision": "unknown",
+    "runtime_identity": "bfc1b4a5b6deb2279d9e59ad864bbfad3988c0a7aacc7f4d0eb29e35d74fd69a",
+    "images": {
+      "openvaf_runtime": {
+        "source_ref": "vabench-openvaf-probe:24.0.2mob-ubuntu",
+        "config_id": "sha256:069ae46add7bed372258a47697ee211761db85cce726db86e18e1d77bad64832",
+        "architecture": "amd64",
+        "os": "linux",
+        "source_image_id": "sha256:e39637953f0f7233033e781ec3df6c6d6ecdeff4d4eca4e44c8706688f438c54",
+        "platform_manifest_id": "sha256:c46713d2b1cae8daa6e79f24c731ca4b905e47181bc5000f4d648730fcefc30f"
+      },
+      "ngspice": {
+        "source_ref": "ghcr.io/arcadia-1/circuit-bench-sky130-ngspice@sha256:bd5c425675eb99fc1a2c3bca10b63a871c457613767e2c6984d6c207b3160500",
+        "config_id": "sha256:233b15bcc2bdfd40c915dbf6ed41d731306f64083885d1255ae1bdd37cdcb555",
+        "architecture": "amd64",
+        "os": "linux",
+        "source_image_id": "sha256:bd5c425675eb99fc1a2c3bca10b63a871c457613767e2c6984d6c207b3160500",
+        "platform_manifest_id": "sha256:1569ba4635f3160fc23a052ba8753c645e71c9a366fb92b667ebd49ee864d9ef"
+      }
+    },
+    "environment_sha256": "3b85fddd09d943b331b0f6ca1b8d687c5932d6f2e2ec7683133f418e4901edba",
+    "environment_input_manifest_sha256": "208aa10ecf466c138ed11c76d057a75fa35006012ded363cade951686ca790d7",
+    "openvaf_artifact_sha256": "ca1037be094cbfecb1249a1f220c9c390bc265015dd177ec27800ed365d6ef3a"
+  },
+  "runner_sha256": "ef3b402601b7e920eaa8734f20c7275709698976ea4570b27fec24b7198c341b",
+  "allocation": "root-approved-issue95-os16-20261007"
+}
