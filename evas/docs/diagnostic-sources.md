@@ -195,3 +195,19 @@ lint_passed 仍只表示既有静态检查通过；支持范围与精度资格�
 编译预算、Rust 数值源码和求解控制流均未改。沿用原基线的实际 Spectre 对比所支持的原有
 数值结论，不据此声称新做 Spectre、扩大动态支持或通过新精度资格。相关本地 timer/DAE/vector
 回归用于守住此边界。若后续改变数值/事件控制流，必须重新选择相关实际 Spectre 对比。
+
+## 时序边界的有限前端原因
+
+本开发切片只细分 transition 的三个既有拒绝出口，不改变接受的 VA、数学方法、IR 或 Rust。
+实际公开 compile API 与 CLI 输入覆盖一/二参数省略 rise、三/四参数零边沿、持久态依赖 delay/rise。
+前两种分别登记 `unsupported_transition_default_edges`（parse）和
+`unsupported_transition_zero_edges`（lowering）；读取已声明持久态的时序参数登记
+`unsupported_transition_timing_dependency`（lowering）。category 为 unsupported，capability 为 TRANSITION。
+原 message 保留；源位置来自实际调用或参数表达式 token，lowering 处保留绑定 instance。
+
+负 delay/负边沿、真正未声明参数继续保留原 compile_error/unknown，未声称本批完成其细分类。
+即使依赖项被乘零，实例常量时序设置仍拒绝，不能以代数抵消新增支持。其他算子和未来原因不按名字或文本推断。
+回归见 [test_timed_boundary_diagnostics.py](../tests/test_timed_boundary_diagnostics.py)；
+它验证实际 API/CLI、负值与未声明名称对照及未来载荷保真。诊断解释不代表零/省略边沿或动态参数实现，
+也不替代 #64 的外部 Circuit Harness 消费验收。原 transition 正边沿科学收据仍绑定原身份，
+这次拒绝元数据改变不产生新的 Spectre 对齐结论。

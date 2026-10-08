@@ -357,7 +357,10 @@ class Parser:
             allowed = OPERATOR_ARITIES[token.text]
             if len(arguments) not in allowed:
                 label = " or ".join(str(count) for count in allowed)
-                self.fail(f"{token.text} requires {label} explicit arguments", token)
+                code = ('unsupported_transition_default_edges'
+                        if token.text == 'transition' and len(arguments) in (1, 2)
+                        else 'syntax_error')
+                self.fail(f"{token.text} requires {label} explicit arguments", token, code=code)
             left = Expr(token.text, None, tuple(arguments), token)
         elif token.text == "sin":
             self.take("(")
