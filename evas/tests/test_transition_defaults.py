@@ -49,6 +49,18 @@ class TransitionDefaultFall(unittest.TestCase):
  def test_unsupported_default_edges_remain_explicit_rejections(self):
   for expression in ['transition(q,d)','transition(q,d,0)','transition(q,d,-.5)']:
    with self.subTest(expression=expression),self.assertRaises(CompileError):compile_sources({'reject.va':SOURCE.replace('transition(q,d,tr)',expression)},instances())
+ def test_analog_local_transition_and_event_case_keep_independent_histories(self):
+  source=SOURCE.replace('real q,b;', 'real q,b,x;').replace('begin q=1; b=1; end',
+   'begin case(1) default: q=-1; 1: q=1; endcase b=1; end').replace(
+   'V(y,r)<+transition(q,d,tr);', 'x=transition(q,d,tr); V(y,r)<+x;')
+  p=compile_sources({'local-transition-case.va':source},instances())
+  self.assertEqual([(v.name,v.kind) for v in p.states],[('q','real'),('b','real'),('q','real'),('b','real')])
+  self.assertEqual(len({(o.origin.instance,o.origin.line,o.origin.column) for o in p.operators}),4)
+  times=[0,.5,.75,1.75,2.625]
+  result=transient(p,{},times,stop=3,max_step=.125,kernel=KERNEL,vabstol=1e-11,reltol=0)
+  for node,expected_values in [('ay',[0,.5,1,.5,0]),('by',[0,.125,.375,.875,0])]:
+   for row,value in zip(result['solutions'],expected_values,strict=True):
+    self.assertAlmostEqual(row['voltages'][result['nodes'].index(node)],value,delta=2e-12)
  def test_state_timing_names_are_diagnosed_in_constant_namespace(self):
   # This is the actual public boundary, not a fabricated Select parameter.
   for expression in ['transition(q,d,q)','transition(q,q,.5)']:
