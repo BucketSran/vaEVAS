@@ -229,5 +229,35 @@
   "canonical_trail": {
     "location": "worktrees/project-goals-workflow/runs/project-goals-workflow/decisions.tsv",
     "availability": "local-only; existing trail reused, not a duplicate review log"
+  },
+  "ci_inventory_followup": {
+    "initial_head": "e1740c0f520b1b35b7906e0d63be78ec253e44a5",
+    "run_url": "https://github.com/BucketSran/vaEVAS/actions/runs/37724110306",
+    "result": "933 Python, 208 kernel Rust, 2 IR transport tests and lint passed; one pre-existing performance test ignored. Job then failed at stale diagnostic inventory; later steps did not run.",
+    "cause": "The prior local inventory check preceded final IR rustfmt. rustfmt added one trailing comma in Error::new; the inventory fingerprints normalized source including that comma.",
+    "correction": "Regenerated evas/docs/diagnostic-inventory.json. One expression and its fingerprint changed; all counts, reasons, messages and diagnostic metadata unchanged. No production source changed.",
+    "reuse": "Actual Spectre, performance and source reviews remain tied to their original runtime identities; this generated-document correction does not require new simulator execution.",
+    "logs": {
+      "pr108-ci-first-failure.log": {
+        "sha256": "983aa228a9f9e03573ff49bb394b5f7c576a99e7b1c3a5bbf14aeb0c44adcf34",
+        "availability": "local-only"
+      },
+      "pr108-ci-first-regression.log": {
+        "sha256": "39f9d4e7f12afb3a5719a6965f7c6938ce253673fd7f73ee72375d9e461a6abb",
+        "availability": "local-only"
+      },
+      "diagnostic-ci-correction.log": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "availability": "local-only"
+      }
+    },
+    "independent_review": {
+      "report_sha256": "7ae3f098b995c585c724781e079453f0c2a05b5101262b3e1db1daf5d7fe8eac",
+      "receipt_sha256": "070dfe035e1789210ee657aa3362def10f5da7054f6d9279d414d2ad7c4c0c92",
+      "model": "gpt-6-astra",
+      "conclusion": "No actionable finding. Independently verified all 103 source files unchanged from e1740c0f, one generated expression/id change, inventory check passed, and CI failure/log identities.",
+      "availability": "local-only under review/astra-ci-inventory",
+      "limits": "No simulator execution. Review snapshot predates adding these hash fields; no claim that the next CI run has passed."
+    }
   }
 }
