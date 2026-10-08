@@ -40,3 +40,28 @@ reports an observed native/candidate stage difference as strict phase F; its
 window-compatibility and same-stage voltage verdicts remain separate. Missing
 candidate time queries leave strict phase I and numerical pairing F. No observed
 phase difference occurs in this actual run, so all three pairing dimensions are P.
+
+## Final consumer findings E1/E2
+
+E1 is confirmed as a missing frozen-control qualification. The shared PR109
+reader already rejects malformed/ambiguous metadata and log/PSF disagreement,
+but consistency alone does not match the frozen requested controls or declared
+effective profile. `settings_contract.py` now checks that mapping explicitly;
+consistent wrong-control negative examples reject. The actual original controls
+pass offline with no numerical rerun, and the prior numerical evidence remains
+bound to its original source/kernel/request identities.
+
+E2 is publicly reachable: 64 nested identity macros in an initial zero-trip
+loop index add the active genvar path and exceed the call-site identity budget.
+The original `constant()` wrapper and new initialization wrapper reclassified
+that resource rejection. The index, initial-value, and shared constant wrappers
+now propagate `resource_budget` unchanged. The public index and RHS probes first
+failed and now pass with category resource. Ordinary dynamic initial values and
+indices keep their unsupported diagnostic. This changes rejection metadata only.
+
+After normal merge of main 3bb75df4, source dc177010 builds successfully and
+84 relevant public regressions pass. All four accepted Programs, including origin
+metadata, serialize exactly like the original requests. Earlier tuple/list Python
+container comparison was corrected to JSON equality; the failed development
+offline attempt is not claimed as a pass. The offline settings evidence executes
+no kernel or Spectre and preserves the earlier immutable numeric responses.

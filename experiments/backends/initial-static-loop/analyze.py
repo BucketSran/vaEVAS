@@ -9,9 +9,10 @@ import subprocess
 import sys
 
 from check import NODES, assess, pair, rational
+from settings_contract import qualify_settings
 
 ROOT = Path(__file__).resolve().parents[3]
-BEHAVIOR = '4cb15800735047048e4a6d551f039e376e4c3a66'
+BEHAVIOR = 'dc177010d47fede4d276606e8e15d85ed2da0c13'
 READBACK = '5e795852d18548a5389ffe2332fdb5708d4f8796'
 ARCHIVE = '7b6aba27a2f7854513aa1e01f2d238d42306d6db65fba12e13a643b1c7e8daa8'
 SOURCE = 'ff6f07aa84f74b68028019216c2e72685004c5f310350e9a97b7e809ccaf8a69'
@@ -85,6 +86,7 @@ def main():
     original_result=json.loads((raw/'RESULT.json').read_text())
     psf=raw/'psf/tran.tran.tran'; log=raw/'spectre.log'
     settings=readback.spectre(log.read_text(),psf.read_text())
+    settings_qualification=qualify_settings(settings)
     normalized=normalize(psf,{'voltage_nodes':list(NODES)})
     native=normalized['decimal_tokens']
     assert all(rational(b['time']) >= rational(a['time']) for a,b in zip(native,native[1:])), 'native time order decreases'
@@ -144,7 +146,7 @@ def main():
                                               helper_revision=git("log","-1","--format=%H","--","experiments/backends/evidence/archive.py").decode().strip(),
                                               psf_adapter_sha256=sha(Path(psf_helper.__file__))),
                   source_sha256=SOURCE,solver_controls=manifest['EVAS'],frozen_voltage_budget=dict(absolute=1e-7,relative=1e-5),
-                  readback_revision=READBACK,readback_sha256=hashlib.sha256(shared).hexdigest(),settings_reanalysis_status='P',settings_reanalysis=settings,
+                  readback_revision=READBACK,readback_sha256=hashlib.sha256(shared).hexdigest(),settings_reanalysis_status=settings_qualification['status'],settings_reanalysis=settings,settings_qualification=settings_qualification,
                   preserved_original_result=original_result,raw_availability='local-only',
                   collection_workspace_relative='current/runs/issue-closure-20261008/initial-loop-reference-v2/collected/spectre',
                   raw_identities=local_raw,spectre=dict(version=tool['version'],binary_sha256=tool['binary_sha256'],
@@ -160,7 +162,7 @@ def main():
                   supplemental_terminal_extension=dict(canonical_stop=1,supplemental_stop=stop,input='Original PWL unchanged through t=1; hold last value over the extra one-ULP terminal interval.',
                                                         purpose='Query every exported native timestamp; not evidence of exact canonical-stop serialization.'),
                   analysis_files={p.name:dict(sha256=sha(p),bytes=p.stat().st_size) for p in sorted(args.output.glob('*.json'))},
-                  checker_identity={p.name:sha(p) for p in [Path(__file__),Path(__file__).with_name('check.py'),Path(__file__).with_name('test_check.py')]},
+                  checker_identity={p.name:sha(p) for p in [Path(__file__),Path(__file__).with_name('check.py'),Path(__file__).with_name('test_check.py'),Path(__file__).with_name('settings_contract.py'),Path(__file__).with_name('test_settings_contract.py')]},
                   calibration_receipt=dict(path="calibration.json",sha256=sha(Path(__file__).with_name("calibration.json"))),
                   overall_strict_qualification='I',
                   qualification_gaps=['Exact native anchor coverage is recorded under native_independent; missing anchors remain I, no interpolation/extrapolation performed.',

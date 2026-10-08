@@ -80,3 +80,31 @@ The raw is local-only; compact identities do not establish public replay.
 [Review adjudication](review-notes.md) explains F1–F4 and the stricter frozen
 Spectre timer window. This slice leaves general runtime loops, dynamic indices,
 and complete #65/SAR support unresolved.
+
+## Offline settings qualification repair
+
+The original shared reader verifies log/PSF internal consistency. The additional
+`settings_contract.py` now checks frozen requested globals, stop/maxstep/method,
+PSF metadata, and this probe's declared effective conservative profile. Its P
+comes from successful checks rather than an unconditional report field. The
+20 calibrations include a synthetic log/PSF pair that agrees on a wrong maxstep:
+the shared reader accepts its consistency and the frozen contract rejects it.
+They also reject wrong requested controls, consistent wrong effective controls,
+missing/nonfinite controls, and preserve the 15 waveform/phase controls.
+
+This metadata reanalysis reuses the four original EVAS requests/responses from
+`actual-native-analysis-v4`, authenticates every prior artifact against fixed
+a6a1b0c7 evidence, authenticates the original Spectre archive again, and verifies
+exact JSON Program equality with source dc177010 after the resource diagnostic
+fix and normal merge of main PR114. It executes no simulator. Original numerical
+production/kernel identities and original RESULT remain preserved in evidence;
+the current source/kernel identity is recorded separately for reuse assessment.
+Both raw-copy tamper controls also reject through this offline entry with ERROR2.
+
+```sh
+PYTHONPATH=evas/src:. python3 -B experiments/backends/initial-static-loop/reanalyze_settings.py \
+  --collection /absolute/path/to/initial-loop-reference-v2/collected/spectre \
+  --prior-analysis runs/initial-event-static-loop/actual-native-analysis-v4 \
+  --output runs/initial-event-static-loop/fresh-settings-analysis \
+  --evidence runs/initial-event-static-loop/fresh-settings-evidence.json
+```

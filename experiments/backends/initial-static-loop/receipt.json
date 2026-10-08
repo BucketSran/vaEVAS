@@ -2,19 +2,19 @@
   "schema": 1,
   "status": "finite numerical P; strict native observation I",
   "production_revision": "4cb15800735047048e4a6d551f039e376e4c3a66",
-  "source_review_reuse": "57a9 full GLM source review; 4cb diagnostic wrapper and boundary regressions independently checked by Astra; no IR/Rust changes",
+  "source_review_reuse": "GLM57a9+Astra4cb plus GLM a6 consumer findings E1/E2 adjudicated; resource diagnostic fix and main PR114 preserve the exact serialized Program for all four requests.",
   "spectre_execution": "one configuration, two instances; original stop=1: 80 rows/720 paired voltages P; supplemental stop+1ULP: 81 rows/729 paired voltages P; all raw formula values P, strict phase P, exact anchors 5/9, terminal+1ULP I",
   "checks": {
-    "public_regression_log": "runs/initial-event-static-loop/final-review-regression.log",
-    "checker_calibration_tests": 15,
+    "public_regression_log": "runs/initial-event-static-loop/integrated-review-regression.log",
+    "checker_calibration_tests": 20,
     "shared_archive_calibration_tests": 12,
     "archive_tamper_negative_controls": "two ERROR2 before output",
-    "matrix": "82 test files fresh",
+    "matrix": "83 test files fresh",
     "diagnostic_inventory": "fresh",
-    "public_regression_log_sha256": "f6e97d6e45e875a3cb6b4f755ccd0835b4b6e004a039baf1d46cc686761d5e34",
+    "public_regression_log_sha256": "78bbc93ce26ae99e896790eddf2548f98193c01129772185702bd7ebf760e995",
     "public_regression_tail": [
       "----------------------------------------------------------------------",
-      "Ran 60 tests in 3.131s",
+      "Ran 84 tests in 8.810s",
       "",
       "OK"
     ]
@@ -24,11 +24,18 @@
   "retention": "original timeout and immutable RESULT preserved; development analysis v1/v2/v3 retained locally",
   "pending": "complete #65 remains outside this finite slice; publication and integration owned by root",
   "files": {
-    "analyze.py": "ecb43bd693dd464610ce210565d1e8e58d8b3dfb120dd6324433077498cdec76",
+    "analyze.py": "a9f234c4aa412ca5215f460a22dce49d1a968db1537ff6503ad1dbe6258c42dc",
     "check.py": "41a010239392e3d82bc5aedc232cda320d82efb2ba997b5d4e49adaa49a3b670",
     "test_check.py": "d7846cdf0025630440793e67b1b991812b4f38a0c2c7975bb9b4e7899d7e7f84",
-    "calibration.json": "1bccbea4058d674898bab2870bbc4663f94f1265689fb16fd62a4bcc71bda119",
-    "evidence.json": "6995f764d402a27de46b041fedc6bfd1dbd58e8de4e04549c40ec344f58189f6",
-    "archive-negative-controls.json": "7a382f8fe13aea15a46b4c71a428def8d8e560b03d31029acffca7cb02db6b15"
-  }
+    "calibration.json": "3d59c90e31f673f417891e1e3bd3bb9b3ab6aa3adf4a317ef45ab1c40ed39952",
+    "evidence.json": "73482e644021ca2e01b3ccaab0c258f08d670a8138f8f70cc7bc00013e742c7e",
+    "archive-negative-controls.json": "5229b8e3a7958bd19405212d4bc4bf46103db4bfaf5fe6688d0a659d01098e9b",
+    "reanalyze_settings.py": "92b641fa128bf966994c796b9ed7ee7a4b6855770edf75b998540438c007fdac",
+    "settings_contract.py": "63d37e1898b978336f39f003882690ffb2eeb4c6ca67618b30b5e1387b97075f",
+    "test_settings_contract.py": "a7787fe46adfb75235b2d11ad8b696a22e84f2bfa2e29a044343d397ad21874e"
+  },
+  "current_production_revision": "dc177010d47fede4d276606e8e15d85ed2da0c13",
+  "offline_reanalysis_directory": "runs/initial-event-static-loop/offline-settings-analysis-v7",
+  "new_simulator_calls_for_settings_reanalysis": 0,
+  "reused_numerical_revision": "4cb15800735047048e4a6d551f039e376e4c3a66"
 }

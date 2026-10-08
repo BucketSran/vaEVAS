@@ -1,6 +1,6 @@
 {
   "status": "P",
-  "kind": "checker calibration only, no simulator execution",
+  "kind": "15 waveform/phase controls and 5 frozen settings controls; no simulator execution",
   "command": [
     "/opt/homebrew/opt/python@3.14/bin/python3.14",
     "-B",
@@ -13,12 +13,14 @@
     "test_*.py",
     "-v"
   ],
-  "tests": 15,
+  "tests": 20,
   "returncode": 0,
   "checker_files": {
     "check.py": "41a010239392e3d82bc5aedc232cda320d82efb2ba997b5d4e49adaa49a3b670",
-    "test_check.py": "d7846cdf0025630440793e67b1b991812b4f38a0c2c7975bb9b4e7899d7e7f84"
+    "test_check.py": "d7846cdf0025630440793e67b1b991812b4f38a0c2c7975bb9b4e7899d7e7f84",
+    "settings_contract.py": "63d37e1898b978336f39f003882690ffb2eeb4c6ca67618b30b5e1387b97075f",
+    "test_settings_contract.py": "a7787fe46adfb75235b2d11ad8b696a22e84f2bfa2e29a044343d397ad21874e"
   },
-  "log_sha256": "bc8c937c41181a6990e075a116589d23668aeb2822a851b137bed576e679ef46",
-  "log_availability": "local-only: runs/initial-event-static-loop/checker-calibration-final-v4.log"
+  "log_sha256": "e02744e741632e97eefd26882afeacce67903c5082682cba9539ceb5d0526130",
+  "log_availability": "local-only: runs/initial-event-static-loop/settings-calibration-final-v6.log"
 }
