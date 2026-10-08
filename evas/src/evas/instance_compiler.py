@@ -16,7 +16,8 @@ from .parameters import bind_parameters
 from .elaboration import unroll_loops
 from .array_elaboration import scalarize_arrays
 from .syntax import (CompileError, Model, contains_operator, contains_decision,
-                     Conditional as SyntaxConditional, ContributionStatement)
+                     Assignment as SyntaxAssignment, Conditional as SyntaxConditional,
+                     Loop, ContributionStatement)
 
 if TYPE_CHECKING:
     from .frontend import Instance
@@ -80,7 +81,23 @@ class InstanceCompiler:
     def compile(self):
         self.cache = bind_parameters(self.model, self.instance.parameters, self.instance.name)
         self.model = scalarize_arrays(self.model, self.parameter)
-        self.local_variables = set(self.model.variables) if not self.model.initial and not self.model.events else set()
+        # A declaration does not become held state just because another variable
+        # has an event writer. Walk writes (including conditional/loop bodies),
+        # so uninitialized event targets still require explicit initialization.
+        def writes(statements):
+            for statement in statements:
+                if isinstance(statement, SyntaxAssignment):
+                    yield statement.name
+                elif isinstance(statement, SyntaxConditional):
+                    yield from writes(statement.then_body)
+                    yield from writes(statement.else_body)
+                elif isinstance(statement, Loop):
+                    yield from writes(statement.body)
+
+        persistent = set(writes(self.model.initial))
+        for event in self.model.events:
+            persistent.update(writes(event.body))
+        self.local_variables = set(self.model.variables) - persistent
         self.preserve_analog_structure = self.compilation.preserve_structure or bool(self.local_variables)
         self.state_names = tuple(name for name in self.model.variables if name not in self.local_variables)
         self.state_ids = {name: len(self.compilation.states) + index for index, name in enumerate(self.state_names)}
@@ -144,8 +161,16 @@ class InstanceCompiler:
 
     def symbol(self, name):
         if name in self.local_variables:
-            raise CompileError(f"{self.model.source}: local real {name!r} is not assigned before use")
+            raise CompileError(f"{self.model.source}: event expressions cannot read ordinary analog local real {name!r}; use direct input or persistent state expressions",
+                               code='unsupported_local_event', instance=self.instance.name)
         return StateRef(self.state_ids[name]) if name in self.state_ids else self.parameter(name)
+
+    def event_parameter(self, name):
+        # Conditions and settings keep their constant-only/state-independent
+        # restrictions, while local aliases get the same explicit boundary.
+        if name in self.local_variables:
+            return self.symbol(name)
+        return self.parameter(name)
 
     def integral(self, expression):
         # Do not introduce an implicit real-to-integer rounding rule.
@@ -246,7 +271,7 @@ class InstanceCompiler:
                         code='unsupported_timer_dependency', token=expr.token, instance=self.instance.name)
                 pending.extend(expr.args)
         def setting(arg):
-            value = lower(arg, self.parameter, {}, self.model.source)
+            value = lower(arg, self.event_parameter, {}, self.model.source)
             if not isinstance(value, Affine) or value.terms:
                 raise CompileError(f"{leaf.kind} settings must be instance constants")
             return value.constant
@@ -289,8 +314,8 @@ class InstanceCompiler:
                 # Predicate state references are rejected even if their
                 # numeric coefficients would cancel. The kernel also
                 # proves independence through the voltage network.
-                left = lower(statement.left, self.parameter, self.node_ids, self.model.source, preserve_structure=True, memo={}, node_declarations=True)
-                right = lower(statement.right, self.parameter, self.node_ids, self.model.source, preserve_structure=True, memo={}, node_declarations=True)
+                left = lower(statement.left, self.event_parameter, self.node_ids, self.model.source, preserve_structure=True, memo={}, node_declarations=True)
+                right = lower(statement.right, self.event_parameter, self.node_ids, self.model.source, preserve_structure=True, memo={}, node_declarations=True)
                 result.append(Conditional({"<": "lt", "<=": "le", ">": "gt", ">=": "ge"}[statement.relation],
                                           left, right, self.body(statement.then_body), self.body(statement.else_body), origin))
             else:
