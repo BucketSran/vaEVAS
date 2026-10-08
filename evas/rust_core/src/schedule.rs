@@ -10,6 +10,7 @@ use crate::pwl::{Root, Trajectory};
 use std::sync::Arc;
 
 pub(crate) const EVENT_BUDGET: usize = 1_000_000;
+pub(crate) const CAUSAL_MICROEVENT_BUDGET: usize = 64;
 
 #[derive(Clone)]
 pub(crate) struct ScheduledEvent {
@@ -381,7 +382,7 @@ impl Moment {
     }
 }
 
-/// Resolve only a complete overlapping cluster of fixed timers. Keep nominal
+/// Resolve a complete cluster with certified physical order. Keep nominal
 /// enclosures for sampling/forward-error propagation; representative delays
 /// neither erase uncertainty nor relax any clock's original tolerance.
 fn order_fixed_timers(
@@ -403,7 +404,19 @@ fn order_fixed_timers(
     }
     let mut start = 0;
     let mut previous: Option<f64> = None;
+    let mut groups = 0;
     while start < events.len() {
+        // The controller permits the initial batch and at most this many
+        // subsequent causal batches. Enforce the same limit while building
+        // the connected cluster, before repeated extension can outgrow it.
+        // Equal-time leaves share a group and do not consume extra batches.
+        if groups > CAUSAL_MICROEVENT_BUDGET {
+            return Err(Error::new(
+                "event_budget",
+                "bounded exact event cluster exceeds 64 subsequent microevents",
+            ));
+        }
+        groups += 1;
         let mut end = start + 1;
         while end < events.len() {
             match certified_order(&events[start], &events[end], model) {
@@ -1028,7 +1041,7 @@ fn schedule_with_history(
                         .iter()
                         .filter(|event| matches!(event.moment, Moment::Anchored { .. }))
                         .count()
-                        >= 64
+                        >= CAUSAL_MICROEVENT_BUDGET
                     {
                         return Err(Error::new(
                             "event_budget",
@@ -1158,7 +1171,7 @@ fn schedule_with_history(
     });
     let mut start = 0;
     while start < events.len() {
-        // Find the whole connected enclosure cluster before attempting a
+        // Find the whole connected enclosure cluster before attempting an
         // exact ordering certificate. Moments without that proof retain the
         // existing simultaneous-root and ambiguity checks below.
         let mut cluster_end = start + 1;
@@ -1200,17 +1213,35 @@ fn schedule_with_history(
                 if next.bounds().lo > last {
                     break;
                 }
-                if !(next.moment.clock().is_some()
-                    || matches!(next.moment, Moment::Cross(_) | Moment::Anchored { .. }))
-                    || events[start..cluster_end]
-                        .iter()
-                        .any(|event| certified_order(event, next, model).is_none())
+                // Include the whole next enclosure component. Equal-time
+                // leaves necessarily share a component, so a large same-time
+                // batch must not cause one full sort per leaf. Disjoint
+                // components add distinct physical groups, whose count is
+                // bounded by the controller's shared microevent budget.
+                let mut extension_end = cluster_end + 1;
+                let mut extension_hi = next.bounds().hi.max(next.time);
+                while extension_end < events.len()
+                    && events[extension_end].bounds().lo <= extension_hi
                 {
-                    return Err(unresolved(
-                        "ordered timer representatives exceed stop or the next event boundary",
-                    ));
+                    extension_hi = extension_hi
+                        .max(events[extension_end].bounds().hi)
+                        .max(events[extension_end].time);
+                    extension_end += 1;
                 }
-                cluster_end += 1;
+                for index in cluster_end..extension_end {
+                    let next = &events[index];
+                    if !(next.moment.clock().is_some()
+                        || matches!(next.moment, Moment::Cross(_) | Moment::Anchored { .. }))
+                        || events[start..index]
+                            .iter()
+                            .any(|event| certified_order(event, next, model).is_none())
+                    {
+                        return Err(unresolved(
+                            "cannot certify exact ordering of the next event while extending the connected cluster",
+                        ));
+                    }
+                }
+                cluster_end = extension_end;
             }
             start = cluster_end;
             continue;

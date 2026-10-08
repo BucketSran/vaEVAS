@@ -85,18 +85,67 @@ class InitializedEventComposition(unittest.TestCase):
                 self.assertEqual(len(result['transient']['events']), 1)
 
     def test_cluster_extension_does_not_invent_an_internal_root_certificate(self):
-        program = compile_model(
-            '@(initial_step) begin n=0; m=0; k=0; end '
-            '@(cross(V(u,r)-.5,1,1e-12,1e-9)) n=n+1; '
-            '@(timer(.5,0,1e-12)) k=k+1; '
-            'V(z,r)<+V(u,r); '
-            '@(cross(V(z,r)-.5000000000000001,1,1e-12,1e-9)) m=m+1; '
-            'V(y,r)<+n+m+k;', 'integer n,m,k; electrical z;')
-        for times in [[0, 1], [0, .5, math.nextafter(.5, math.inf), 1]]:
-            with self.assertRaises(KernelError) as caught:
-                run(program, {'u': [[0,.1],[1,.9]]}, times, stop=1)
-            self.assertEqual(caught.exception.detail['kind'], 'event_resolution')
-            self.assertRegex(caught.exception.detail['message'], 'ordering|next event boundary')
+        for threshold, reason in [
+                (.5000000000000001, 'cannot certify ordering of distinct events with overlapping time bounds'),
+                (.5000000000000003, 'cannot certify exact ordering of the next event while extending the connected cluster')]:
+            program = compile_model(
+                '@(initial_step) begin n=0; m=0; k=0; end '
+                '@(cross(V(u,r)-.5,1,1e-12,1e-9)) n=n+1; '
+                '@(timer(.5,0,1e-12)) k=k+1; '
+                'V(z,r)<+V(u,r); '
+                f'@(cross(V(z,r)-{threshold!r},1,1e-12,1e-9)) m=m+1; '
+                'V(y,r)<+n+m+k;', 'integer n,m,k; electrical z;')
+            for times in [[0, 1], [0, .5, math.nextafter(.5, math.inf), 1]]:
+                with self.assertRaises(KernelError) as caught:
+                    run(program, {'u': [[0,.1],[1,.9]]}, times, stop=1)
+                self.assertEqual(caught.exception.detail['kind'], 'event_resolution')
+                self.assertEqual(caught.exception.detail['message'], reason)
+
+    def test_cluster_construction_respects_existing_transaction_microevent_budget(self):
+        # A source root represented at .5 pushes each subsequent exact clock
+        # one ULP forward. The prebuilt calendar must enforce the controller's
+        # existing first-batch + 64 subsequent-batch budget during construction.
+        for clocks in [64, 65, 1000]:
+            time = .5
+            nominal = []
+            for _ in range(clocks):
+                nominal.append(time)
+                time = math.nextafter(time, math.inf)
+            body = ('@(initial_step) n=0; '
+                    '@(cross(V(u,r)-.5,1,1e-9,1e-9)) n=n+1; ' +
+                    ''.join(f'@(timer({time!r},0,1e-9)) n=n+1; ' for time in nominal) +
+                    'V(y,r)<+n;')
+            program = compile_model(body, 'integer n;')
+            baseline = None
+            for times in [[0, 1], [0, .5, nominal[1], nominal[-1], 1]]:
+                if clocks > 64:
+                    with self.assertRaises(KernelError) as caught:
+                        run(program, {'u': [[0,.1],[1,.9]]}, times, stop=1)
+                    self.assertEqual(caught.exception.detail['kind'], 'event_budget')
+                    self.assertEqual(caught.exception.detail['message'],
+                                     'bounded exact event cluster exceeds 64 subsequent microevents')
+                else:
+                    result = run(program, {'u': [[0,.1],[1,.9]]}, times, stop=1)
+                    events = result['transient']['events']
+                    self.assertEqual(len(events), 65)
+                    expected = [int(Fraction(t) >= (Fraction(.5)-Fraction(.1))/(Fraction(.9)-Fraction(.1))) +
+                                sum(t >= clock for clock in nominal) for t in times]
+                    self.assertEqual(values(result), expected)
+                    if baseline is not None:
+                        self.assertEqual(events, baseline)
+                    baseline = events
+
+    def test_simultaneous_clock_leaves_share_one_microevent_budget_group(self):
+        names = [f'n{i}' for i in range(72)]
+        body = ('@(initial_step) begin ' + ''.join(f'{name}=0;' for name in names) +
+                ' end @(cross(V(u,r)-.5,1,1e-9,1e-9)) n0=n0+1; '
+                '@(timer(.5,0,1e-9)) n1=n1+1; ' +
+                ''.join(f'@(timer(.5000000000000001,0,1e-9)) {name}={name}+1; ' for name in names[2:]) +
+                'V(y,r)<+' + '+'.join(names) + ';')
+        result = run(compile_model(body, 'integer ' + ','.join(names) + ';'),
+                     {'u': [[0,.1],[1,.9]]}, [0,.5,.5000000000000001,1], stop=1)
+        self.assertEqual(values(result), [0,2,72,72])
+        self.assertEqual(len(result['transient']['events']), 72)
 
     def test_original_affine_cross_keeps_query_phase_and_transition_sample(self):
         # The original binary-rational root lies just after the nominal query;

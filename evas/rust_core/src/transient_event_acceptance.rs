@@ -80,7 +80,7 @@ impl Controller {
                 while cluster_end < calendar.len() && calendar[cluster_end].bounds().lo <= boundary
                 {
                     if calendar[cluster_end].time > boundary {
-                        if steps >= 64 {
+                        if steps >= crate::schedule::CAUSAL_MICROEVENT_BUDGET {
                             return Err(Error::new(
                                 "event_budget",
                                 "bounded static event closure exceeds 64 microevents",
@@ -135,7 +135,7 @@ impl Controller {
                 .first()
                 .is_some_and(|event| event.bounds().lo <= next.time)
             {
-                if microevents >= 64
+                if microevents >= crate::schedule::CAUSAL_MICROEVENT_BUDGET
                     || self.records.len() + records.len() >= crate::schedule::EVENT_BUDGET
                 {
                     return Err(Error::new("event_budget","bounded causal event closure exceeds 64 microevents or the global event budget"));
