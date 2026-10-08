@@ -16,7 +16,8 @@ updates, duplicate OR leaves, and unique element initialization.
 
 The voltage budget is the frozen `1e-7 + 1e-5 |independent expected voltage|`.
 A boundary sample may contain either permitted stage. Different stages in
-Spectre and EVAS are recorded as I; an outside-window stage difference is F.
+Spectre and EVAS are recorded as strict phase F. Window compatibility remains
+separate: an in-window difference is I, an outside-window difference is F.
 Every same-stage voltage remains in the comparison denominator. There is no
 interpolation across jumps. Exact decimal initial, stop, and nine requested
 anchors are separate observation obligations; missing anchors remain I.
@@ -34,8 +35,48 @@ cover wrong sums and each observer, mixed element stages, instance aliasing,
 missing/repeated transitions, phase differences, exact-anchor omissions,
 terminal decimal overshoot, malformed input, and absent candidate queries.
 
-Actual Spectre evidence is pending. The first lane exhausted its 90-second
-compilation limit before exporting a waveform. It establishes no numerical
-verdict. A subsequent lane must retain its own execution identity, including
-any reused compiler cache, and authenticate its fixed archive before reading
-logs or PSF. No production behavior or frozen input is changed by this checker.
+The [compact evidence](evidence.json) records one actual Spectre configuration
+with two instances. Under the original stop=1 request, 80 native rows and 720
+paired voltages pass the frozen budget. The final raw row lies beyond that stop.
+The explicit supplemental stop+1ULP request pairs all 81 rows and 729 voltages;
+that full pairing has a different request identity. All 81 raw rows separately
+satisfy the independent formula budget. No cross-backend stage difference
+was observed. EVAS canonical/sparse/dense common outputs and states agree, and
+event records agree; internal accepted step counts differ between query grids.
+
+Strict native observation remains I. Five of nine exact decimal requested
+anchors are present; the terminal token is `1.0000000000000002`. The supplemental
+EVAS request explicitly extends stop and holds the original input endpoint over
+that one-ULP interval solely to query every exported row. It does not certify the
+canonical request's exact endpoint. No jump interpolation is used.
+
+The original source/deck/manifest hashes are unchanged. Spectre completed in
+25.837658 seconds under the same 90-second limit. A compiler-cache input from the
+first timeout lane was retained, but Spectre actually compiled N2 and N3 again
+in 11.5 and 11.3 seconds. The reason for the shorter compilation is unknown.
+The first lane's immutable timeout archive remains separately identified; it
+contains no waveform and establishes no numerical failure.
+
+The shared archive helper authenticates all 64 regular archive members before
+reading the output manifest or waveform. The output manifest lists 36 files.
+[Negative controls](archive-negative-controls.json) mutate copies of that
+manifest and PSF: both exit ERROR 2 before writing analysis evidence.
+The original RESULT's ms readback I is preserved. PR109 readback reparses the
+original log and PSF successfully: effective stop 1 s, maxstep 0.025 s, traponly,
+reltol 1e-6, voltage absolute tolerance 1e-7 V. The global requested reltol is
+1e-5, distinct from the conservative transient effective value.
+
+Reanalysis from the repository root, using retained local-only raw:
+
+```sh
+PYTHONPATH=evas/src:. python3 -B experiments/backends/initial-static-loop/analyze.py \
+  --collection /absolute/path/to/initial-loop-reference-v2/collected/spectre \
+  --readback experiments/backends/paper/settings_readback.py \
+  --output runs/initial-event-static-loop/fresh-analysis \
+  --evidence runs/initial-event-static-loop/fresh-evidence.json
+```
+
+The raw is local-only; compact identities do not establish public replay.
+[Review adjudication](review-notes.md) explains F1–F4 and the stricter frozen
+Spectre timer window. This slice leaves general runtime loops, dynamic indices,
+and complete #65/SAR support unresolved.

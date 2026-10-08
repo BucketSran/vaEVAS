@@ -119,4 +119,24 @@ def pair(native,candidate):
             maximum=max(maximum,ratio); compared+=1
             if ratio>1: failures.append(dict(row=i,node=node,reason='same-stage pair mismatch',ratio=ratio))
     return dict(queried_native_rows=len(native),same_stage_values_compared=compared,maximum_pair_ratio=maximum,
-                phase_differences=phases,failures=failures,voltage_status='P' if not failures else 'F',phase_status='P' if not phases else 'I')
+                phase_differences=phases,failures=failures,voltage_status='P' if not failures else 'F',phase_status='P' if not phases else 'I',
+                strict_phase_status='F' if phases else ('I' if any(f['reason'] in ('missing candidate native-time query','unqualified observer stage in pair') for f in failures) else 'P'))
+
+
+if __name__=='__main__':
+    import argparse
+    import json
+    import sys
+    from pathlib import Path
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--native',type=Path,required=True)
+    parser.add_argument('--candidate',type=Path)
+    args=parser.parse_args()
+    try:
+        native=json.loads(args.native.read_text())
+        result=pair(native,json.loads(args.candidate.read_text())) if args.candidate else assess(native)
+        print(json.dumps(result,indent=2,allow_nan=False))
+        raise SystemExit(0 if result.get('voltage_status',result.get('formula_and_stage_status'))=='P' and result.get('strict_phase_status')!='F' else 1)
+    except ValueError as error:
+        print(json.dumps(dict(status='ERROR',reason=str(error))),file=sys.stderr)
+        raise SystemExit(2)

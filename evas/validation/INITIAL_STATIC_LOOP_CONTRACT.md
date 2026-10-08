@@ -49,7 +49,8 @@ qzero/qone/qlast 是独立保存的元素观察量，避免只检查总和而漏
 `[0.25,0.250000001]`，cross 窗口 `[0.499999999,0.500000001]`。
 每个后端分别对手算三阶段检查，同一实例的观察量必须共享阶段。
 不跨跳变插值；原生阶段差、精确要求点/初态/stop 缺口分别保留。
-Spectre 实际执行与有效设置取证待主代理串行完成，当前不声称商业后端对齐。
+[实际有限配对](../../experiments/backends/initial-static-loop/README.md)记录一个配置、两个实例、原 stop=1 内 80 行/720 配对电压在冻结预算内通过；显式延长 stop 一 ULP 的补充请求配对全部 81 行/729 值。原生严格覆盖 5/9 与 stop 缺口仍为 I。
+单侧 timer 窗口是更严格的 Spectre 开发 probe 条件，不代表所有 LRM 允许时间；见该入口审查说明。
 本切片不完成 #65 总项、原 SAR 动态索引或一般初始化/事件语义。
 
 ## Review boundary clarification
@@ -66,5 +67,5 @@ iteration then passes `array_elaboration.py::scalarize_arrays` through
 `element()`, which checks the expanded index against the bound array range.
 `test_initial_loop_index_diagnostic_and_later_iteration_bounds` checks a later
 iteration out of bounds through public compilation. Public frontend hierarchy
-calls `hierarchy.py::elaborate` and `scalarize_nodes` before InstanceCompiler's
+calls `hierarchy.py::bind_hierarchy` and `scalarize_nodes` before InstanceCompiler's
 array scalarization and state initialization.

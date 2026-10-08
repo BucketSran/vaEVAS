@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "status": "finite numerical P; strict native observation I",
+  "production_revision": "4cb15800735047048e4a6d551f039e376e4c3a66",
+  "source_review_reuse": "57a9 full GLM source review; 4cb diagnostic wrapper and boundary regressions independently checked by Astra; no IR/Rust changes",
+  "spectre_execution": "one configuration, two instances; original stop=1: 80 rows/720 paired voltages P; supplemental stop+1ULP: 81 rows/729 paired voltages P; all raw formula values P, strict phase P, exact anchors 5/9, terminal+1ULP I",
+  "checks": {
+    "public_regression_log": "runs/initial-event-static-loop/final-review-regression.log",
+    "checker_calibration_tests": 15,
+    "shared_archive_calibration_tests": 12,
+    "archive_tamper_negative_controls": "two ERROR2 before output",
+    "matrix": "82 test files fresh",
+    "diagnostic_inventory": "fresh",
+    "public_regression_log_sha256": "f6e97d6e45e875a3cb6b4f755ccd0835b4b6e004a039baf1d46cc686761d5e34",
+    "public_regression_tail": [
+      "----------------------------------------------------------------------",
+      "Ran 60 tests in 3.131s",
+      "",
+      "OK"
+    ]
+  },
+  "analysis_directory": "runs/initial-event-static-loop/actual-native-analysis-v4",
+  "raw": "local-only, current/runs/issue-closure-20261008/initial-loop-reference-v2/collected/spectre",
+  "retention": "original timeout and immutable RESULT preserved; development analysis v1/v2/v3 retained locally",
+  "pending": "complete #65 remains outside this finite slice; publication and integration owned by root",
+  "files": {
+    "analyze.py": "ecb43bd693dd464610ce210565d1e8e58d8b3dfb120dd6324433077498cdec76",
+    "check.py": "41a010239392e3d82bc5aedc232cda320d82efb2ba997b5d4e49adaa49a3b670",
+    "test_check.py": "d7846cdf0025630440793e67b1b991812b4f38a0c2c7975bb9b4e7899d7e7f84",
+    "calibration.json": "1bccbea4058d674898bab2870bbc4663f94f1265689fb16fd62a4bcc71bda119",
+    "evidence.json": "6995f764d402a27de46b041fedc6bfd1dbd58e8de4e04549c40ec344f58189f6",
+    "archive-negative-controls.json": "7a382f8fe13aea15a46b4c71a428def8d8e560b03d31029acffca7cb02db6b15"
+  }
+}

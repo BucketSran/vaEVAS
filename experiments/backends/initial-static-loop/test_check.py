@@ -62,6 +62,7 @@ class Calibration(unittest.TestCase):
         self.assertEqual(assess(rows)['formula_and_stage_status'],'P')
         result=pair(rows,ideal())
         self.assertEqual(result['phase_status'],'I')
+        self.assertEqual(result['strict_phase_status'],'F')
         self.assertEqual(result['voltage_status'],'P')
         self.assertEqual(len(result['phase_differences']),1)
         self.assertEqual(result['same_stage_values_compared'],77)
@@ -78,8 +79,46 @@ class Calibration(unittest.TestCase):
         for rows in (missing,nonfinite,decreasing):
             with self.assertRaises(ValueError): assess(rows)
 
+    def test_cli_empty_input_exits_error_two(self):
+        import json
+        from pathlib import Path
+        import subprocess
+        import sys
+        import tempfile
+        with tempfile.TemporaryDirectory() as directory:
+            path=Path(directory)/'empty.json'; path.write_text('[]')
+            for extra in ([],['--candidate',str(path)]):
+                result=subprocess.run([sys.executable,'-B',str(Path(__file__).with_name('check.py')),
+                                       '--native',str(path),*extra],capture_output=True,text=True)
+                self.assertEqual(result.returncode,2)
+                self.assertEqual(json.loads(result.stderr)['status'],'ERROR')
+
+    def test_cli_observed_phase_difference_exits_failure_one(self):
+        import json
+        from pathlib import Path
+        import subprocess
+        import sys
+        import tempfile
+        rows=ideal()
+        for node in ('y1','q01','q11','qlast1'): rows[2]['voltages'][node]=rows[1]['voltages'][node]
+        with tempfile.TemporaryDirectory() as directory:
+            native=Path(directory)/'native.json'; native.write_text(json.dumps(rows))
+            candidate=Path(directory)/'candidate.json'; candidate.write_text(json.dumps(ideal()))
+            result=subprocess.run([sys.executable,'-B',str(Path(__file__).with_name('check.py')),
+                                   '--native',str(native),'--candidate',str(candidate)],capture_output=True,text=True)
+            self.assertEqual(result.returncode,1)
+            self.assertEqual(json.loads(result.stdout)['strict_phase_status'],'F')
+
+    def test_unqualified_stage_cannot_prove_strict_phase_pass(self):
+        rows=ideal(); rows[2]['voltages']['q11']='1'
+        result=pair(rows,ideal())
+        self.assertEqual(result['voltage_status'],'F')
+        self.assertEqual(result['strict_phase_status'],'I')
+
     def test_missing_candidate_time_fails_pair(self):
-        self.assertEqual(pair(ideal(),ideal()[:-1])['voltage_status'],'F')
+        result=pair(ideal(),ideal()[:-1])
+        self.assertEqual(result['voltage_status'],'F')
+        self.assertEqual(result['strict_phase_status'],'I')
 
     def test_phase_difference_outside_window_is_failure(self):
         rows=ideal()
