@@ -1,0 +1,2970 @@
+{
+  "schema": "transition-default-fall-receipt-v1",
+  "status": "bounded waveform comparison with original failures, coverage gaps and callback qualification limits retained",
+  "implementation_commit": "8cca81df083683cc91ffad194c5b06d1c28287bc",
+  "identity": "EVAS0.14.0/IR18; original Rust Transition history unchanged",
+  "budgets": {
+    "waveform_V": 1e-08,
+    "original_timer_s": 1e-18,
+    "control_timer_s": 1e-12,
+    "coverage": "exact requested binary64 points; no substitution"
+  },
+  "scope": "three-to-four parameter positive explicit rise normalization only; not zero/default rise, dynamic parameters, original va01/va02 completion or general timer alignment",
+  "remote": {
+    "actor": "root serial controller",
+    "scientific_calls_this_slice": 6,
+    "original_archive_sha256": "b7e7f4d0e7525489697c02240a4cca74aafb438d5bf56a71b3d3781015bac5eb",
+    "timer_archive_sha256": "e9f2759b2e8126f4fcaebb1cf19d0531961361b7c39cc679cf4327bdfc981223",
+    "archive_membership": {
+      "verified_helper_commit": "e66a208a",
+      "original_regular_files": 90,
+      "timer_regular_files": 90,
+      "helper_main_integration": "normal merge of reviewed main 2e250c2d161324f151f27c3ca9e45ed32eff164a",
+      "fixed_required_paths": "FILE_MANIFEST plus source/deck/PSF/log/RESULT for each fixed known case; no required paths derived from unpacked manifest",
+      "consumer_merge_commit": "22948c7f9b6448207d7e56283e0b02d0c380e8b2",
+      "main_reanalysis": "both complete analyses exactly equal prior verified-helper analyses; all ordinary failures and missing anchors retained"
+    }
+  },
+  "original": {
+    "cases": {
+      "three-arg--sparse": {
+        "source_sha256": "afc262bc20099616fd5bc4578e0930af6b0f12a9270428d7a6135d0abdace8f2",
+        "deck_sha256": "51da2c41bf705a59490494906a420802734953654ace1da8ac5a820e5d7de3ba",
+        "psf_sha256": "f24b03df05d893311a9e021cbd2a6b95a9e2d2f203a23ad51bed5cc85edbfa03",
+        "log_sha256": "f4d4a98a95a9640d7d022216d0f0e24036ddd275bb2c00c91a2f3a4067777361",
+        "spectre_version": "Version 21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "effective_settings": {
+          "maxstep": "15.625 ms",
+          "reltol": "100e-12",
+          "abstol(V)": "10 pV",
+          "abstol(I)": "1 fA",
+          "errpreset": "conservative",
+          "method": "traponly"
+        },
+        "native_rows": 321,
+        "time_domain": [
+          0.0,
+          3.0
+        ],
+        "required_points": 71,
+        "present_points": 49,
+        "missing": [
+          0.25,
+          0.25000000000000006,
+          0.37499999999999994,
+          0.37500000000000006,
+          0.5,
+          0.5000000000000001,
+          0.6249999999999999,
+          0.6250000000000001,
+          0.7499999999999999,
+          0.7500000000000001,
+          0.875,
+          0.8750000000000001,
+          1.3749999999999998,
+          1.3750000000000002,
+          1.4999999999999998,
+          1.5000000000000002,
+          1.6249999999999998,
+          1.6250000000000002,
+          1.9999999999999998,
+          2.0000000000000004,
+          2.6249999999999996,
+          2.6250000000000004
+        ],
+        "states": {
+          "jumps": {
+            "a_qs": [],
+            "a_qr": [],
+            "a_qe": [],
+            "a_qm": [],
+            "b_qs": [],
+            "b_qr": [],
+            "b_qe": [],
+            "b_qm": []
+          },
+          "failures": [
+            {
+              "signal": "a_qs",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "a_qr",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "a_qe",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "a_qm",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "b_qs",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "b_qr",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "b_qe",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "b_qm",
+              "reason": "observed target sequence differs"
+            }
+          ],
+          "timer_window_verdict": "I: native observations do not certify every callback within 1e-18; repeated unchanged-target callback is unobservable",
+          "callback_count_verdict": "I: held targets cannot count the repeated .875 callback"
+        },
+        "native_waveform": {
+          "denominator": 2568,
+          "failure_count": 1320,
+          "maxima": {
+            "a_simple": {
+              "time": 0.75,
+              "observed": 0.0,
+              "expected": 1.0,
+              "difference": 1.0,
+              "budget": 1e-08
+            },
+            "a_reverse": {
+              "time": 0.49999999999999994,
+              "observed": 0.0,
+              "expected": 0.4999999999999999,
+              "difference": 0.4999999999999999,
+              "budget": 1e-08
+            },
+            "a_extend": {
+              "time": 0.8750000000000199,
+              "observed": 0.0,
+              "expected": 2.0,
+              "difference": 2.0,
+              "budget": 1e-08
+            },
+            "b_simple": {
+              "time": 1.375,
+              "observed": 0.0,
+              "expected": 1.0,
+              "difference": 1.0,
+              "budget": 1e-08
+            },
+            "b_reverse": {
+              "time": 0.625,
+              "observed": 0.0,
+              "expected": 0.25,
+              "difference": 0.25,
+              "budget": 1e-08
+            },
+            "b_extend": {
+              "time": 1.5,
+              "observed": 0.0,
+              "expected": 2.0,
+              "difference": 2.0,
+              "budget": 1e-08
+            },
+            "a_mirror": {
+              "time": 0.49999999999999994,
+              "observed": 0.0,
+              "expected": -0.4999999999999999,
+              "difference": 0.4999999999999999,
+              "budget": 1e-08
+            },
+            "b_mirror": {
+              "time": 0.625,
+              "observed": 0.0,
+              "expected": -0.25,
+              "difference": 0.25,
+              "budget": 1e-08
+            }
+          },
+          "first_failures": [
+            {
+              "signal": "a_simple",
+              "time": 0.2500000052459454,
+              "observed": 0.0,
+              "expected": 1.0491890800601311e-08,
+              "difference": 1.0491890800601311e-08,
+              "budget": 1e-08
+            },
+            {
+              "signal": "a_reverse",
+              "time": 0.2500000052459454,
+              "observed": 0.0,
+              "expected": 1.0491890800601311e-08,
+              "difference": 1.0491890800601311e-08,
+              "budget": 1e-08
+            },
+            {
+              "signal": "a_extend",
+              "time": 0.2500000052459454,
+              "observed": 0.0,
+              "expected": 1.0491890800601311e-08,
+              "difference": 1.0491890800601311e-08,
+              "budget": 1e-08
+            },
+            {
+              "signal": "a_mirror",
+              "time": 0.2500000052459454,
+              "observed": 0.0,
+              "expected": -1.0491890800601311e-08,
+              "difference": 1.0491890800601311e-08,
+              "budget": 1e-08
+            }
+          ]
+        },
+        "required_waveform": {
+          "denominator": 392,
+          "requested_denominator": 568,
+          "failure_count": 176,
+          "maxima": {
+            "a_simple": {
+              "time": 0.75,
+              "observed": 0.0,
+              "expected": 1.0,
+              "difference": 1.0,
+              "budget": 1e-08
+            },
+            "a_reverse": {
+              "time": 0.49999999999999994,
+              "observed": 0.0,
+              "expected": 0.4999999999999999,
+              "difference": 0.4999999999999999,
+              "budget": 1e-08
+            },
+            "a_extend": {
+              "time": 0.9375,
+              "observed": 0.0,
+              "expected": 2.0,
+              "difference": 2.0,
+              "budget": 1e-08
+            },
+            "b_simple": {
+              "time": 1.375,
+              "observed": 0.0,
+              "expected": 1.0,
+              "difference": 1.0,
+              "budget": 1e-08
+            },
+            "b_reverse": {
+              "time": 0.625,
+              "observed": 0.0,
+              "expected": 0.25,
+              "difference": 0.25,
+              "budget": 1e-08
+            },
+            "b_extend": {
+              "time": 1.5,
+              "observed": 0.0,
+              "expected": 2.0,
+              "difference": 2.0,
+              "budget": 1e-08
+            },
+            "a_mirror": {
+              "time": 0.49999999999999994,
+              "observed": 0.0,
+              "expected": -0.4999999999999999,
+              "difference": 0.4999999999999999,
+              "budget": 1e-08
+            },
+            "b_mirror": {
+              "time": 0.625,
+              "observed": 0.0,
+              "expected": -0.25,
+              "difference": 0.25,
+              "budget": 1e-08
+            }
+          }
+        }
+      },
+      "three-arg--dense": {
+        "source_sha256": "afc262bc20099616fd5bc4578e0930af6b0f12a9270428d7a6135d0abdace8f2",
+        "deck_sha256": "072b6a53e7e0c50dc1366bb2dd22148ddcf3716a05c91beb0864ed831850de3d",
+        "psf_sha256": "0aabefb75f42b29cba430e1e411410ed9225b75c45cb063499cd3e085fc8a69c",
+        "log_sha256": "396d3a8be00c79d6c41f01627b0871aec428ffeb7c75a9363a8ba4711e6b83ff",
+        "spectre_version": "Version 21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "effective_settings": {
+          "maxstep": "15.625 ms",
+          "reltol": "100e-12",
+          "abstol(V)": "10 pV",
+          "abstol(I)": "1 fA",
+          "errpreset": "conservative",
+          "method": "traponly"
+        },
+        "native_rows": 546,
+        "time_domain": [
+          0.0,
+          3.0
+        ],
+        "required_points": 407,
+        "present_points": 385,
+        "missing": [
+          0.25,
+          0.25000000000000006,
+          0.375,
+          0.37500000000000006,
+          0.5,
+          0.5000000000000001,
+          0.625,
+          0.6250000000000001,
+          0.75,
+          0.7500000000000001,
+          0.875,
+          0.8750000000000001,
+          1.375,
+          1.3750000000000002,
+          1.5,
+          1.5000000000000002,
+          1.625,
+          1.6250000000000002,
+          2.0,
+          2.0000000000000004,
+          2.625,
+          2.6250000000000004
+        ],
+        "states": {
+          "jumps": {
+            "a_qs": [],
+            "a_qr": [],
+            "a_qe": [],
+            "a_qm": [],
+            "b_qs": [],
+            "b_qr": [],
+            "b_qe": [],
+            "b_qm": []
+          },
+          "failures": [
+            {
+              "signal": "a_qs",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "a_qr",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "a_qe",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "a_qm",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "b_qs",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "b_qr",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "b_qe",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "b_qm",
+              "reason": "observed target sequence differs"
+            }
+          ],
+          "timer_window_verdict": "I: native observations do not certify every callback within 1e-18; repeated unchanged-target callback is unobservable",
+          "callback_count_verdict": "I: held targets cannot count the repeated .875 callback"
+        },
+        "native_waveform": {
+          "denominator": 4368,
+          "failure_count": 2182,
+          "maxima": {
+            "a_simple": {
+              "time": 0.7578125,
+              "observed": 0.0,
+              "expected": 1.0,
+              "difference": 1.0,
+              "budget": 1e-08
+            },
+            "a_reverse": {
+              "time": 0.49999999999999994,
+              "observed": 0.0,
+              "expected": 0.4999999999999999,
+              "difference": 0.4999999999999999,
+              "budget": 1e-08
+            },
+            "a_extend": {
+              "time": 0.8750000000000199,
+              "observed": 0.0,
+              "expected": 2.0,
+              "difference": 2.0,
+              "budget": 1e-08
+            },
+            "b_simple": {
+              "time": 1.3828125,
+              "observed": 0.0,
+              "expected": 1.0,
+              "difference": 1.0,
+              "budget": 1e-08
+            },
+            "b_reverse": {
+              "time": 0.6249999999999999,
+              "observed": 0.0,
+              "expected": 0.2499999999999999,
+              "difference": 0.2499999999999999,
+              "budget": 1e-08
+            },
+            "b_extend": {
+              "time": 1.5000000000000198,
+              "observed": 0.0,
+              "expected": 2.0,
+              "difference": 2.0,
+              "budget": 1e-08
+            },
+            "a_mirror": {
+              "time": 0.49999999999999994,
+              "observed": 0.0,
+              "expected": -0.4999999999999999,
+              "difference": 0.4999999999999999,
+              "budget": 1e-08
+            },
+            "b_mirror": {
+              "time": 0.6249999999999999,
+              "observed": 0.0,
+              "expected": -0.2499999999999999,
+              "difference": 0.2499999999999999,
+              "budget": 1e-08
+            }
+          },
+          "first_failures": [
+            {
+              "signal": "a_simple",
+              "time": 0.2500000052459454,
+              "observed": 0.0,
+              "expected": 1.0491890800601311e-08,
+              "difference": 1.0491890800601311e-08,
+              "budget": 1e-08
+            },
+            {
+              "signal": "a_reverse",
+              "time": 0.2500000052459454,
+              "observed": 0.0,
+              "expected": 1.0491890800601311e-08,
+              "difference": 1.0491890800601311e-08,
+              "budget": 1e-08
+            },
+            {
+              "signal": "a_extend",
+              "time": 0.2500000052459454,
+              "observed": 0.0,
+              "expected": 1.0491890800601311e-08,
+              "difference": 1.0491890800601311e-08,
+              "budget": 1e-08
+            },
+            {
+              "signal": "a_mirror",
+              "time": 0.2500000052459454,
+              "observed": 0.0,
+              "expected": -1.0491890800601311e-08,
+              "difference": 1.0491890800601311e-08,
+              "budget": 1e-08
+            }
+          ]
+        },
+        "required_waveform": {
+          "denominator": 3080,
+          "requested_denominator": 3256,
+          "failure_count": 1450,
+          "maxima": {
+            "a_simple": {
+              "time": 0.7578125,
+              "observed": 0.0,
+              "expected": 1.0,
+              "difference": 1.0,
+              "budget": 1e-08
+            },
+            "a_reverse": {
+              "time": 0.49999999999999994,
+              "observed": 0.0,
+              "expected": 0.4999999999999999,
+              "difference": 0.4999999999999999,
+              "budget": 1e-08
+            },
+            "a_extend": {
+              "time": 0.8828125,
+              "observed": 0.0,
+              "expected": 2.0,
+              "difference": 2.0,
+              "budget": 1e-08
+            },
+            "b_simple": {
+              "time": 1.3828125,
+              "observed": 0.0,
+              "expected": 1.0,
+              "difference": 1.0,
+              "budget": 1e-08
+            },
+            "b_reverse": {
+              "time": 0.6249999999999999,
+              "observed": 0.0,
+              "expected": 0.2499999999999999,
+              "difference": 0.2499999999999999,
+              "budget": 1e-08
+            },
+            "b_extend": {
+              "time": 1.5078125,
+              "observed": 0.0,
+              "expected": 2.0,
+              "difference": 2.0,
+              "budget": 1e-08
+            },
+            "a_mirror": {
+              "time": 0.49999999999999994,
+              "observed": 0.0,
+              "expected": -0.4999999999999999,
+              "difference": 0.4999999999999999,
+              "budget": 1e-08
+            },
+            "b_mirror": {
+              "time": 0.6249999999999999,
+              "observed": 0.0,
+              "expected": -0.2499999999999999,
+              "difference": 0.2499999999999999,
+              "budget": 1e-08
+            }
+          }
+        }
+      },
+      "four-arg--sparse": {
+        "source_sha256": "03ebc465d77088126ba9b3c0b2632fab78164940bc6ca92b978112756c583f49",
+        "deck_sha256": "51da2c41bf705a59490494906a420802734953654ace1da8ac5a820e5d7de3ba",
+        "psf_sha256": "8eb3d0ac360525119bd707b8df95a99786740fa6ce008449a7514ca8f88b9e7b",
+        "log_sha256": "456aebf9925559bd2f4732c00b52f5fd9e765498a1e433848f4f9b4fedcf153b",
+        "spectre_version": "Version 21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "effective_settings": {
+          "maxstep": "15.625 ms",
+          "reltol": "100e-12",
+          "abstol(V)": "10 pV",
+          "abstol(I)": "1 fA",
+          "errpreset": "conservative",
+          "method": "traponly"
+        },
+        "native_rows": 321,
+        "time_domain": [
+          0.0,
+          3.0
+        ],
+        "required_points": 71,
+        "present_points": 49,
+        "missing": [
+          0.25,
+          0.25000000000000006,
+          0.37499999999999994,
+          0.37500000000000006,
+          0.5,
+          0.5000000000000001,
+          0.6249999999999999,
+          0.6250000000000001,
+          0.7499999999999999,
+          0.7500000000000001,
+          0.875,
+          0.8750000000000001,
+          1.3749999999999998,
+          1.3750000000000002,
+          1.4999999999999998,
+          1.5000000000000002,
+          1.6249999999999998,
+          1.6250000000000002,
+          1.9999999999999998,
+          2.0000000000000004,
+          2.6249999999999996,
+          2.6250000000000004
+        ],
+        "states": {
+          "jumps": {
+            "a_qs": [],
+            "a_qr": [],
+            "a_qe": [],
+            "a_qm": [],
+            "b_qs": [],
+            "b_qr": [],
+            "b_qe": [],
+            "b_qm": []
+          },
+          "failures": [
+            {
+              "signal": "a_qs",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "a_qr",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "a_qe",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "a_qm",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "b_qs",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "b_qr",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "b_qe",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "b_qm",
+              "reason": "observed target sequence differs"
+            }
+          ],
+          "timer_window_verdict": "I: native observations do not certify every callback within 1e-18; repeated unchanged-target callback is unobservable",
+          "callback_count_verdict": "I: held targets cannot count the repeated .875 callback"
+        },
+        "native_waveform": {
+          "denominator": 2568,
+          "failure_count": 1320,
+          "maxima": {
+            "a_simple": {
+              "time": 0.75,
+              "observed": 0.0,
+              "expected": 1.0,
+              "difference": 1.0,
+              "budget": 1e-08
+            },
+            "a_reverse": {
+              "time": 0.49999999999999994,
+              "observed": 0.0,
+              "expected": 0.4999999999999999,
+              "difference": 0.4999999999999999,
+              "budget": 1e-08
+            },
+            "a_extend": {
+              "time": 0.8750000000000199,
+              "observed": 0.0,
+              "expected": 2.0,
+              "difference": 2.0,
+              "budget": 1e-08
+            },
+            "b_simple": {
+              "time": 1.375,
+              "observed": 0.0,
+              "expected": 1.0,
+              "difference": 1.0,
+              "budget": 1e-08
+            },
+            "b_reverse": {
+              "time": 0.625,
+              "observed": 0.0,
+              "expected": 0.25,
+              "difference": 0.25,
+              "budget": 1e-08
+            },
+            "b_extend": {
+              "time": 1.5,
+              "observed": 0.0,
+              "expected": 2.0,
+              "difference": 2.0,
+              "budget": 1e-08
+            },
+            "a_mirror": {
+              "time": 0.49999999999999994,
+              "observed": 0.0,
+              "expected": -0.4999999999999999,
+              "difference": 0.4999999999999999,
+              "budget": 1e-08
+            },
+            "b_mirror": {
+              "time": 0.625,
+              "observed": 0.0,
+              "expected": -0.25,
+              "difference": 0.25,
+              "budget": 1e-08
+            }
+          },
+          "first_failures": [
+            {
+              "signal": "a_simple",
+              "time": 0.2500000052459454,
+              "observed": 0.0,
+              "expected": 1.0491890800601311e-08,
+              "difference": 1.0491890800601311e-08,
+              "budget": 1e-08
+            },
+            {
+              "signal": "a_reverse",
+              "time": 0.2500000052459454,
+              "observed": 0.0,
+              "expected": 1.0491890800601311e-08,
+              "difference": 1.0491890800601311e-08,
+              "budget": 1e-08
+            },
+            {
+              "signal": "a_extend",
+              "time": 0.2500000052459454,
+              "observed": 0.0,
+              "expected": 1.0491890800601311e-08,
+              "difference": 1.0491890800601311e-08,
+              "budget": 1e-08
+            },
+            {
+              "signal": "a_mirror",
+              "time": 0.2500000052459454,
+              "observed": 0.0,
+              "expected": -1.0491890800601311e-08,
+              "difference": 1.0491890800601311e-08,
+              "budget": 1e-08
+            }
+          ]
+        },
+        "required_waveform": {
+          "denominator": 392,
+          "requested_denominator": 568,
+          "failure_count": 176,
+          "maxima": {
+            "a_simple": {
+              "time": 0.75,
+              "observed": 0.0,
+              "expected": 1.0,
+              "difference": 1.0,
+              "budget": 1e-08
+            },
+            "a_reverse": {
+              "time": 0.49999999999999994,
+              "observed": 0.0,
+              "expected": 0.4999999999999999,
+              "difference": 0.4999999999999999,
+              "budget": 1e-08
+            },
+            "a_extend": {
+              "time": 0.9375,
+              "observed": 0.0,
+              "expected": 2.0,
+              "difference": 2.0,
+              "budget": 1e-08
+            },
+            "b_simple": {
+              "time": 1.375,
+              "observed": 0.0,
+              "expected": 1.0,
+              "difference": 1.0,
+              "budget": 1e-08
+            },
+            "b_reverse": {
+              "time": 0.625,
+              "observed": 0.0,
+              "expected": 0.25,
+              "difference": 0.25,
+              "budget": 1e-08
+            },
+            "b_extend": {
+              "time": 1.5,
+              "observed": 0.0,
+              "expected": 2.0,
+              "difference": 2.0,
+              "budget": 1e-08
+            },
+            "a_mirror": {
+              "time": 0.49999999999999994,
+              "observed": 0.0,
+              "expected": -0.4999999999999999,
+              "difference": 0.4999999999999999,
+              "budget": 1e-08
+            },
+            "b_mirror": {
+              "time": 0.625,
+              "observed": 0.0,
+              "expected": -0.25,
+              "difference": 0.25,
+              "budget": 1e-08
+            }
+          }
+        }
+      }
+    },
+    "pairs": {
+      "three-arg--dense": {
+        "common_native_rows": 288,
+        "sparse_only": 33,
+        "other_only": 258,
+        "same_native_time_sequence": false,
+        "max_signal_difference": {
+          "a_simple": 0.0,
+          "a_reverse": 0.0,
+          "a_extend": 0.0,
+          "a_mirror": 0.0,
+          "a_qs": 0.0,
+          "a_qr": 0.0,
+          "a_qe": 0.0,
+          "a_qm": 0.0,
+          "b_simple": 0.0,
+          "b_reverse": 0.0,
+          "b_extend": 0.0,
+          "b_mirror": 0.0,
+          "b_qs": 0.0,
+          "b_qr": 0.0,
+          "b_qe": 0.0,
+          "b_qm": 0.0
+        }
+      },
+      "four-arg--sparse": {
+        "common_native_rows": 321,
+        "sparse_only": 0,
+        "other_only": 0,
+        "same_native_time_sequence": true,
+        "max_signal_difference": {
+          "a_simple": 0.0,
+          "a_reverse": 0.0,
+          "a_extend": 0.0,
+          "a_mirror": 0.0,
+          "a_qs": 0.0,
+          "a_qr": 0.0,
+          "a_qe": 0.0,
+          "a_qm": 0.0,
+          "b_simple": 0.0,
+          "b_reverse": 0.0,
+          "b_extend": 0.0,
+          "b_mirror": 0.0,
+          "b_qs": 0.0,
+          "b_qr": 0.0,
+          "b_qe": 0.0,
+          "b_qm": 0.0
+        }
+      }
+    }
+  },
+  "timer_controls": {
+    "cases": {
+      "zero-period--1e-12": {
+        "source_sha256": "31790ac2bc82c208ff06f34573304a17aa17309dd67ad9eb081dddd4579e0930",
+        "deck_sha256": "51da2c41bf705a59490494906a420802734953654ace1da8ac5a820e5d7de3ba",
+        "psf_sha256": "63ad4a120e052d1b34a7eee73788fce0735b882e0a5f9310242ca22c180b6d63",
+        "log_sha256": "98f5f7b7ef1054264b0a59caf4b4c98e6f0a592eca9eba612819b4fc024d1353",
+        "spectre_version": "Version 21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "effective_settings": {
+          "maxstep": "15.625 ms",
+          "reltol": "100e-12",
+          "abstol(V)": "10 pV",
+          "abstol(I)": "1 fA",
+          "errpreset": "conservative",
+          "method": "traponly"
+        },
+        "native_rows": 252,
+        "time_domain": [
+          0.0,
+          3.0
+        ],
+        "required_points": 71,
+        "present_points": 49,
+        "missing": [
+          0.25,
+          0.25000000000000006,
+          0.37499999999999994,
+          0.37500000000000006,
+          0.5,
+          0.5000000000000001,
+          0.6249999999999999,
+          0.6250000000000001,
+          0.7499999999999999,
+          0.7500000000000001,
+          0.8749999999999999,
+          0.8750000000000001,
+          1.3749999999999998,
+          1.3750000000000002,
+          1.5,
+          1.5000000000000002,
+          1.6249999999999998,
+          1.6250000000000002,
+          1.9999999999999998,
+          2.0000000000000004,
+          2.6249999999999996,
+          2.6250000000000004
+        ],
+        "states": {
+          "jumps": {
+            "a_qs": [
+              {
+                "previous_observation": 0.24847412109375,
+                "first_new_observation": 0.24999999999999997,
+                "before": 0.0,
+                "after": 1.0
+              },
+              {
+                "previous_observation": 1.49847412109375,
+                "first_new_observation": 1.4999999999999998,
+                "before": 1.0,
+                "after": 0.0
+              }
+            ],
+            "a_qr": [
+              {
+                "previous_observation": 0.24847412109375,
+                "first_new_observation": 0.24999999999999997,
+                "before": 0.0,
+                "after": 1.0
+              },
+              {
+                "previous_observation": 0.49847412109375,
+                "first_new_observation": 0.49999999999999994,
+                "before": 1.0,
+                "after": 0.0
+              }
+            ],
+            "a_qe": [
+              {
+                "previous_observation": 0.24847412109375,
+                "first_new_observation": 0.24999999999999997,
+                "before": 0.0,
+                "after": 1.0
+              },
+              {
+                "previous_observation": 0.49847412109375,
+                "first_new_observation": 0.49999999999999994,
+                "before": 1.0,
+                "after": 2.0
+              }
+            ],
+            "a_qm": [
+              {
+                "previous_observation": 0.24847412109375,
+                "first_new_observation": 0.24999999999999997,
+                "before": 0.0,
+                "after": -1.0
+              },
+              {
+                "previous_observation": 0.49847412109375,
+                "first_new_observation": 0.49999999999999994,
+                "before": -1.0,
+                "after": 0.0
+              }
+            ],
+            "b_qs": [
+              {
+                "previous_observation": 0.24847412109375,
+                "first_new_observation": 0.24999999999999997,
+                "before": 0.0,
+                "after": 1.0
+              },
+              {
+                "previous_observation": 1.49847412109375,
+                "first_new_observation": 1.4999999999999998,
+                "before": 1.0,
+                "after": 0.0
+              }
+            ],
+            "b_qr": [
+              {
+                "previous_observation": 0.24847412109375,
+                "first_new_observation": 0.24999999999999997,
+                "before": 0.0,
+                "after": 1.0
+              },
+              {
+                "previous_observation": 0.49847412109375,
+                "first_new_observation": 0.49999999999999994,
+                "before": 1.0,
+                "after": 0.0
+              }
+            ],
+            "b_qe": [
+              {
+                "previous_observation": 0.24847412109375,
+                "first_new_observation": 0.24999999999999997,
+                "before": 0.0,
+                "after": 1.0
+              },
+              {
+                "previous_observation": 0.49847412109375,
+                "first_new_observation": 0.49999999999999994,
+                "before": 1.0,
+                "after": 2.0
+              }
+            ],
+            "b_qm": [
+              {
+                "previous_observation": 0.24847412109375,
+                "first_new_observation": 0.24999999999999997,
+                "before": 0.0,
+                "after": -1.0
+              },
+              {
+                "previous_observation": 0.49847412109375,
+                "first_new_observation": 0.49999999999999994,
+                "before": -1.0,
+                "after": 0.0
+              }
+            ]
+          },
+          "failures": [],
+          "timer_window_verdict": "I: native observations do not certify every callback within 1e-18; repeated unchanged-target callback is unobservable",
+          "callback_count_verdict": "I: held targets cannot count the repeated .875 callback"
+        },
+        "native_waveform": {
+          "denominator": 2016,
+          "failure_count": 0,
+          "maxima": {
+            "a_simple": {
+              "time": 1.5003814697265623,
+              "observed": 0.999237060546875,
+              "expected": 0.9992370605468754,
+              "difference": 4.440892098500626e-16,
+              "budget": 1e-08
+            },
+            "a_reverse": {
+              "time": 0.5003814697265624,
+              "observed": 0.499237060546875,
+              "expected": 0.4992370605468752,
+              "difference": 2.220446049250313e-16,
+              "budget": 1e-08
+            },
+            "a_extend": {
+              "time": 0.0,
+              "observed": 0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "b_simple": {
+              "time": 0.49999999999999994,
+              "observed": 0.125,
+              "expected": 0.12499999999999994,
+              "difference": 5.551115123125783e-17,
+              "budget": 1e-08
+            },
+            "b_reverse": {
+              "time": 0.49999999999999994,
+              "observed": 0.125,
+              "expected": 0.12499999999999994,
+              "difference": 5.551115123125783e-17,
+              "budget": 1e-08
+            },
+            "b_extend": {
+              "time": 0.49999999999999994,
+              "observed": 0.125,
+              "expected": 0.12499999999999994,
+              "difference": 5.551115123125783e-17,
+              "budget": 1e-08
+            },
+            "a_mirror": {
+              "time": 0.5003814697265624,
+              "observed": -0.499237060546875,
+              "expected": -0.4992370605468752,
+              "difference": 2.220446049250313e-16,
+              "budget": 1e-08
+            },
+            "b_mirror": {
+              "time": 0.49999999999999994,
+              "observed": -0.125,
+              "expected": -0.12499999999999994,
+              "difference": 5.551115123125783e-17,
+              "budget": 1e-08
+            }
+          },
+          "first_failures": []
+        },
+        "required_waveform": {
+          "denominator": 392,
+          "requested_denominator": 568,
+          "failure_count": 0,
+          "maxima": {
+            "a_simple": {
+              "time": 1.5625,
+              "observed": 0.8749999999999996,
+              "expected": 0.875,
+              "difference": 4.440892098500626e-16,
+              "budget": 1e-08
+            },
+            "a_reverse": {
+              "time": 0.5625,
+              "observed": 0.3749999999999998,
+              "expected": 0.375,
+              "difference": 2.220446049250313e-16,
+              "budget": 1e-08
+            },
+            "a_extend": {
+              "time": 0.0,
+              "observed": 0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "b_simple": {
+              "time": 0.49999999999999994,
+              "observed": 0.125,
+              "expected": 0.12499999999999994,
+              "difference": 5.551115123125783e-17,
+              "budget": 1e-08
+            },
+            "b_reverse": {
+              "time": 0.49999999999999994,
+              "observed": 0.125,
+              "expected": 0.12499999999999994,
+              "difference": 5.551115123125783e-17,
+              "budget": 1e-08
+            },
+            "b_extend": {
+              "time": 0.49999999999999994,
+              "observed": 0.125,
+              "expected": 0.12499999999999994,
+              "difference": 5.551115123125783e-17,
+              "budget": 1e-08
+            },
+            "a_mirror": {
+              "time": 0.5625,
+              "observed": -0.3749999999999998,
+              "expected": -0.375,
+              "difference": 2.220446049250313e-16,
+              "budget": 1e-08
+            },
+            "b_mirror": {
+              "time": 0.49999999999999994,
+              "observed": -0.125,
+              "expected": -0.12499999999999994,
+              "difference": 5.551115123125783e-17,
+              "budget": 1e-08
+            }
+          }
+        }
+      },
+      "positive-period--1e-18": {
+        "source_sha256": "1fa8096a9eea11d5e7ca6cb8fe26cde1becb8ddf9d54c837c295204485eb0639",
+        "deck_sha256": "51da2c41bf705a59490494906a420802734953654ace1da8ac5a820e5d7de3ba",
+        "psf_sha256": "51f869f02cc435addc8119bc668322708b20077f2a4bceefb22e95f704af2f33",
+        "log_sha256": "fd91c680ed7b3109db7f7d472ae930a89bde546b836cace5e442230c741b4bbe",
+        "spectre_version": "Version 21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "effective_settings": {
+          "maxstep": "15.625 ms",
+          "reltol": "100e-12",
+          "abstol(V)": "10 pV",
+          "abstol(I)": "1 fA",
+          "errpreset": "conservative",
+          "method": "traponly"
+        },
+        "native_rows": 321,
+        "time_domain": [
+          0.0,
+          3.0
+        ],
+        "required_points": 71,
+        "present_points": 49,
+        "missing": [
+          0.25,
+          0.25000000000000006,
+          0.37499999999999994,
+          0.37500000000000006,
+          0.5,
+          0.5000000000000001,
+          0.6249999999999999,
+          0.6250000000000001,
+          0.7499999999999999,
+          0.7500000000000001,
+          0.875,
+          0.8750000000000001,
+          1.3749999999999998,
+          1.3750000000000002,
+          1.4999999999999998,
+          1.5000000000000002,
+          1.6249999999999998,
+          1.6250000000000002,
+          1.9999999999999998,
+          2.0000000000000004,
+          2.6249999999999996,
+          2.6250000000000004
+        ],
+        "states": {
+          "jumps": {
+            "a_qs": [],
+            "a_qr": [],
+            "a_qe": [],
+            "a_qm": [],
+            "b_qs": [],
+            "b_qr": [],
+            "b_qe": [],
+            "b_qm": []
+          },
+          "failures": [
+            {
+              "signal": "a_qs",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "a_qr",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "a_qe",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "a_qm",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "b_qs",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "b_qr",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "b_qe",
+              "reason": "observed target sequence differs"
+            },
+            {
+              "signal": "b_qm",
+              "reason": "observed target sequence differs"
+            }
+          ],
+          "timer_window_verdict": "I: native observations do not certify every callback within 1e-18; repeated unchanged-target callback is unobservable",
+          "callback_count_verdict": "I: held targets cannot count the repeated .875 callback"
+        },
+        "native_waveform": {
+          "denominator": 2568,
+          "failure_count": 1320,
+          "maxima": {
+            "a_simple": {
+              "time": 0.75,
+              "observed": 0.0,
+              "expected": 1.0,
+              "difference": 1.0,
+              "budget": 1e-08
+            },
+            "a_reverse": {
+              "time": 0.49999999999999994,
+              "observed": 0.0,
+              "expected": 0.4999999999999999,
+              "difference": 0.4999999999999999,
+              "budget": 1e-08
+            },
+            "a_extend": {
+              "time": 0.8750000000000199,
+              "observed": 0.0,
+              "expected": 2.0,
+              "difference": 2.0,
+              "budget": 1e-08
+            },
+            "b_simple": {
+              "time": 1.375,
+              "observed": 0.0,
+              "expected": 1.0,
+              "difference": 1.0,
+              "budget": 1e-08
+            },
+            "b_reverse": {
+              "time": 0.625,
+              "observed": 0.0,
+              "expected": 0.25,
+              "difference": 0.25,
+              "budget": 1e-08
+            },
+            "b_extend": {
+              "time": 1.5,
+              "observed": 0.0,
+              "expected": 2.0,
+              "difference": 2.0,
+              "budget": 1e-08
+            },
+            "a_mirror": {
+              "time": 0.49999999999999994,
+              "observed": 0.0,
+              "expected": -0.4999999999999999,
+              "difference": 0.4999999999999999,
+              "budget": 1e-08
+            },
+            "b_mirror": {
+              "time": 0.625,
+              "observed": 0.0,
+              "expected": -0.25,
+              "difference": 0.25,
+              "budget": 1e-08
+            }
+          },
+          "first_failures": [
+            {
+              "signal": "a_simple",
+              "time": 0.2500000052459454,
+              "observed": 0.0,
+              "expected": 1.0491890800601311e-08,
+              "difference": 1.0491890800601311e-08,
+              "budget": 1e-08
+            },
+            {
+              "signal": "a_reverse",
+              "time": 0.2500000052459454,
+              "observed": 0.0,
+              "expected": 1.0491890800601311e-08,
+              "difference": 1.0491890800601311e-08,
+              "budget": 1e-08
+            },
+            {
+              "signal": "a_extend",
+              "time": 0.2500000052459454,
+              "observed": 0.0,
+              "expected": 1.0491890800601311e-08,
+              "difference": 1.0491890800601311e-08,
+              "budget": 1e-08
+            },
+            {
+              "signal": "a_mirror",
+              "time": 0.2500000052459454,
+              "observed": 0.0,
+              "expected": -1.0491890800601311e-08,
+              "difference": 1.0491890800601311e-08,
+              "budget": 1e-08
+            }
+          ]
+        },
+        "required_waveform": {
+          "denominator": 392,
+          "requested_denominator": 568,
+          "failure_count": 176,
+          "maxima": {
+            "a_simple": {
+              "time": 0.75,
+              "observed": 0.0,
+              "expected": 1.0,
+              "difference": 1.0,
+              "budget": 1e-08
+            },
+            "a_reverse": {
+              "time": 0.49999999999999994,
+              "observed": 0.0,
+              "expected": 0.4999999999999999,
+              "difference": 0.4999999999999999,
+              "budget": 1e-08
+            },
+            "a_extend": {
+              "time": 0.9375,
+              "observed": 0.0,
+              "expected": 2.0,
+              "difference": 2.0,
+              "budget": 1e-08
+            },
+            "b_simple": {
+              "time": 1.375,
+              "observed": 0.0,
+              "expected": 1.0,
+              "difference": 1.0,
+              "budget": 1e-08
+            },
+            "b_reverse": {
+              "time": 0.625,
+              "observed": 0.0,
+              "expected": 0.25,
+              "difference": 0.25,
+              "budget": 1e-08
+            },
+            "b_extend": {
+              "time": 1.5,
+              "observed": 0.0,
+              "expected": 2.0,
+              "difference": 2.0,
+              "budget": 1e-08
+            },
+            "a_mirror": {
+              "time": 0.49999999999999994,
+              "observed": 0.0,
+              "expected": -0.4999999999999999,
+              "difference": 0.4999999999999999,
+              "budget": 1e-08
+            },
+            "b_mirror": {
+              "time": 0.625,
+              "observed": 0.0,
+              "expected": -0.25,
+              "difference": 0.25,
+              "budget": 1e-08
+            }
+          }
+        }
+      },
+      "positive-period--1e-12": {
+        "source_sha256": "ee462efd8cdae5859329d90fcba3906f055f2bb4d8824c84dceabbb48ad8759d",
+        "deck_sha256": "51da2c41bf705a59490494906a420802734953654ace1da8ac5a820e5d7de3ba",
+        "psf_sha256": "d62aa4e4d0e2d9ceeb236e238190f5e45bf3793592b16b10daa517e4ebc39931",
+        "log_sha256": "7e01cd338ecf2c1b6808837977f0d99e4a69d1cbc303bbb511bd6b8d151a6a91",
+        "spectre_version": "Version 21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "effective_settings": {
+          "maxstep": "15.625 ms",
+          "reltol": "100e-12",
+          "abstol(V)": "10 pV",
+          "abstol(I)": "1 fA",
+          "errpreset": "conservative",
+          "method": "traponly"
+        },
+        "native_rows": 252,
+        "time_domain": [
+          0.0,
+          3.0
+        ],
+        "required_points": 71,
+        "present_points": 49,
+        "missing": [
+          0.25,
+          0.25000000000000006,
+          0.37499999999999994,
+          0.37500000000000006,
+          0.5,
+          0.5000000000000001,
+          0.6249999999999999,
+          0.6250000000000001,
+          0.7499999999999999,
+          0.7500000000000001,
+          0.8749999999999999,
+          0.8750000000000001,
+          1.3749999999999998,
+          1.3750000000000002,
+          1.5,
+          1.5000000000000002,
+          1.6249999999999998,
+          1.6250000000000002,
+          1.9999999999999998,
+          2.0000000000000004,
+          2.6249999999999996,
+          2.6250000000000004
+        ],
+        "states": {
+          "jumps": {
+            "a_qs": [
+              {
+                "previous_observation": 0.24847412109375,
+                "first_new_observation": 0.24999999999999997,
+                "before": 0.0,
+                "after": 1.0
+              },
+              {
+                "previous_observation": 1.49847412109375,
+                "first_new_observation": 1.4999999999999998,
+                "before": 1.0,
+                "after": 0.0
+              }
+            ],
+            "a_qr": [
+              {
+                "previous_observation": 0.24847412109375,
+                "first_new_observation": 0.24999999999999997,
+                "before": 0.0,
+                "after": 1.0
+              },
+              {
+                "previous_observation": 0.49847412109375,
+                "first_new_observation": 0.49999999999999994,
+                "before": 1.0,
+                "after": 0.0
+              }
+            ],
+            "a_qe": [
+              {
+                "previous_observation": 0.24847412109375,
+                "first_new_observation": 0.24999999999999997,
+                "before": 0.0,
+                "after": 1.0
+              },
+              {
+                "previous_observation": 0.49847412109375,
+                "first_new_observation": 0.49999999999999994,
+                "before": 1.0,
+                "after": 2.0
+              }
+            ],
+            "a_qm": [
+              {
+                "previous_observation": 0.24847412109375,
+                "first_new_observation": 0.24999999999999997,
+                "before": 0.0,
+                "after": -1.0
+              },
+              {
+                "previous_observation": 0.49847412109375,
+                "first_new_observation": 0.49999999999999994,
+                "before": -1.0,
+                "after": 0.0
+              }
+            ],
+            "b_qs": [
+              {
+                "previous_observation": 0.24847412109375,
+                "first_new_observation": 0.24999999999999997,
+                "before": 0.0,
+                "after": 1.0
+              },
+              {
+                "previous_observation": 1.49847412109375,
+                "first_new_observation": 1.4999999999999998,
+                "before": 1.0,
+                "after": 0.0
+              }
+            ],
+            "b_qr": [
+              {
+                "previous_observation": 0.24847412109375,
+                "first_new_observation": 0.24999999999999997,
+                "before": 0.0,
+                "after": 1.0
+              },
+              {
+                "previous_observation": 0.49847412109375,
+                "first_new_observation": 0.49999999999999994,
+                "before": 1.0,
+                "after": 0.0
+              }
+            ],
+            "b_qe": [
+              {
+                "previous_observation": 0.24847412109375,
+                "first_new_observation": 0.24999999999999997,
+                "before": 0.0,
+                "after": 1.0
+              },
+              {
+                "previous_observation": 0.49847412109375,
+                "first_new_observation": 0.49999999999999994,
+                "before": 1.0,
+                "after": 2.0
+              }
+            ],
+            "b_qm": [
+              {
+                "previous_observation": 0.24847412109375,
+                "first_new_observation": 0.24999999999999997,
+                "before": 0.0,
+                "after": -1.0
+              },
+              {
+                "previous_observation": 0.49847412109375,
+                "first_new_observation": 0.49999999999999994,
+                "before": -1.0,
+                "after": 0.0
+              }
+            ]
+          },
+          "failures": [],
+          "timer_window_verdict": "I: native observations do not certify every callback within 1e-18; repeated unchanged-target callback is unobservable",
+          "callback_count_verdict": "I: held targets cannot count the repeated .875 callback"
+        },
+        "native_waveform": {
+          "denominator": 2016,
+          "failure_count": 0,
+          "maxima": {
+            "a_simple": {
+              "time": 1.5003814697265623,
+              "observed": 0.999237060546875,
+              "expected": 0.9992370605468754,
+              "difference": 4.440892098500626e-16,
+              "budget": 1e-08
+            },
+            "a_reverse": {
+              "time": 0.5003814697265624,
+              "observed": 0.499237060546875,
+              "expected": 0.4992370605468752,
+              "difference": 2.220446049250313e-16,
+              "budget": 1e-08
+            },
+            "a_extend": {
+              "time": 0.0,
+              "observed": 0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "b_simple": {
+              "time": 0.49999999999999994,
+              "observed": 0.125,
+              "expected": 0.12499999999999994,
+              "difference": 5.551115123125783e-17,
+              "budget": 1e-08
+            },
+            "b_reverse": {
+              "time": 0.49999999999999994,
+              "observed": 0.125,
+              "expected": 0.12499999999999994,
+              "difference": 5.551115123125783e-17,
+              "budget": 1e-08
+            },
+            "b_extend": {
+              "time": 0.49999999999999994,
+              "observed": 0.125,
+              "expected": 0.12499999999999994,
+              "difference": 5.551115123125783e-17,
+              "budget": 1e-08
+            },
+            "a_mirror": {
+              "time": 0.5003814697265624,
+              "observed": -0.499237060546875,
+              "expected": -0.4992370605468752,
+              "difference": 2.220446049250313e-16,
+              "budget": 1e-08
+            },
+            "b_mirror": {
+              "time": 0.49999999999999994,
+              "observed": -0.125,
+              "expected": -0.12499999999999994,
+              "difference": 5.551115123125783e-17,
+              "budget": 1e-08
+            }
+          },
+          "first_failures": []
+        },
+        "required_waveform": {
+          "denominator": 392,
+          "requested_denominator": 568,
+          "failure_count": 0,
+          "maxima": {
+            "a_simple": {
+              "time": 1.5625,
+              "observed": 0.8749999999999996,
+              "expected": 0.875,
+              "difference": 4.440892098500626e-16,
+              "budget": 1e-08
+            },
+            "a_reverse": {
+              "time": 0.5625,
+              "observed": 0.3749999999999998,
+              "expected": 0.375,
+              "difference": 2.220446049250313e-16,
+              "budget": 1e-08
+            },
+            "a_extend": {
+              "time": 0.0,
+              "observed": 0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "b_simple": {
+              "time": 0.49999999999999994,
+              "observed": 0.125,
+              "expected": 0.12499999999999994,
+              "difference": 5.551115123125783e-17,
+              "budget": 1e-08
+            },
+            "b_reverse": {
+              "time": 0.49999999999999994,
+              "observed": 0.125,
+              "expected": 0.12499999999999994,
+              "difference": 5.551115123125783e-17,
+              "budget": 1e-08
+            },
+            "b_extend": {
+              "time": 0.49999999999999994,
+              "observed": 0.125,
+              "expected": 0.12499999999999994,
+              "difference": 5.551115123125783e-17,
+              "budget": 1e-08
+            },
+            "a_mirror": {
+              "time": 0.5625,
+              "observed": -0.3749999999999998,
+              "expected": -0.375,
+              "difference": 2.220446049250313e-16,
+              "budget": 1e-08
+            },
+            "b_mirror": {
+              "time": 0.49999999999999994,
+              "observed": -0.125,
+              "expected": -0.12499999999999994,
+              "difference": 5.551115123125783e-17,
+              "budget": 1e-08
+            }
+          }
+        }
+      }
+    },
+    "pairs": {
+      "positive-period--1e-18": {
+        "common_native_rows": 167,
+        "sparse_only": 85,
+        "other_only": 154,
+        "same_native_time_sequence": false,
+        "max_signal_difference": {
+          "a_simple": 1.0,
+          "a_reverse": 0.4999999999999999,
+          "a_extend": 2.0,
+          "a_mirror": 0.4999999999999999,
+          "a_qs": 1.0,
+          "a_qr": 1.0,
+          "a_qe": 2.0,
+          "a_qm": 1.0,
+          "b_simple": 1.0,
+          "b_reverse": 0.25,
+          "b_extend": 2.0,
+          "b_mirror": 0.25,
+          "b_qs": 1.0,
+          "b_qr": 1.0,
+          "b_qe": 2.0,
+          "b_qm": 1.0
+        }
+      },
+      "positive-period--1e-12": {
+        "common_native_rows": 252,
+        "sparse_only": 0,
+        "other_only": 0,
+        "same_native_time_sequence": true,
+        "max_signal_difference": {
+          "a_simple": 0.0,
+          "a_reverse": 0.0,
+          "a_extend": 0.0,
+          "a_mirror": 0.0,
+          "a_qs": 0.0,
+          "a_qr": 0.0,
+          "a_qe": 0.0,
+          "a_qm": 0.0,
+          "b_simple": 0.0,
+          "b_reverse": 0.0,
+          "b_extend": 0.0,
+          "b_mirror": 0.0,
+          "b_qs": 0.0,
+          "b_qr": 0.0,
+          "b_qe": 0.0,
+          "b_qm": 0.0
+        }
+      }
+    }
+  },
+  "original_native_replay": {
+    "source_head": "8cca81df083683cc91ffad194c5b06d1c28287bc",
+    "kernel_sha256": "870eec1f6645d032ceeb268fd7561e78b85809e3d94ca2d86a2dbc8501a18a3f",
+    "kernel_identity": {
+      "build_revision": null,
+      "identity_version": 1,
+      "ir_schema_version": 18,
+      "name": "evas-kernel",
+      "platform": {
+        "arch": "aarch64",
+        "os": "macos"
+      },
+      "request_protocol_version": null,
+      "version": "0.14.0"
+    },
+    "local_numerical_calls": 3,
+    "remote_calls": 0,
+    "cases": {
+      "three-arg--sparse": {
+        "returncode": 0,
+        "request_sha256": "5202d19bfe88a669a071ad7afc83d36594e70acf51201ab373197b5e7c2b0bc0",
+        "stdout_sha256": "7dd3140ca390baeab32a486193e0bcc81090eef82d79f9fda199421b5eeb38ae",
+        "source_sha256": "afc262bc20099616fd5bc4578e0930af6b0f12a9270428d7a6135d0abdace8f2",
+        "native_requested_count": 321,
+        "evas_independent": {
+          "maxima": {
+            "a_simple": {
+              "time": 0.0,
+              "observed": -0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "a_reverse": {
+              "time": 0.0,
+              "observed": -0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "a_extend": {
+              "time": 0.0,
+              "observed": 0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "b_simple": {
+              "time": 0.0,
+              "observed": -0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "b_reverse": {
+              "time": 0.0,
+              "observed": -0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "b_extend": {
+              "time": 0.0,
+              "observed": 0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "a_mirror": {
+              "time": 0.0,
+              "observed": 0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "b_mirror": {
+              "time": 0.0,
+              "observed": 0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            }
+          },
+          "failures": []
+        },
+        "paired_failure_count": 2554,
+        "paired_waveform_failure_count": 1320,
+        "paired_state_failure_count": 1234,
+        "paired_maxima": {
+          "a_simple": {
+            "time": 0.75,
+            "evas": 1.0,
+            "spectre": 0.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "a_reverse": {
+            "time": 0.49999999999999994,
+            "evas": 0.4999999999999999,
+            "spectre": 0.0,
+            "difference": 0.4999999999999999,
+            "budget": 1e-08
+          },
+          "a_extend": {
+            "time": 0.8750000000000199,
+            "evas": 2.0,
+            "spectre": 0.0,
+            "difference": 2.0,
+            "budget": 1e-08
+          },
+          "a_mirror": {
+            "time": 0.49999999999999994,
+            "evas": -0.4999999999999999,
+            "spectre": 0.0,
+            "difference": 0.4999999999999999,
+            "budget": 1e-08
+          },
+          "a_qs": {
+            "time": 0.25000000000002,
+            "evas": 1.0,
+            "spectre": 0.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "a_qr": {
+            "time": 0.25000000000002,
+            "evas": 1.0,
+            "spectre": 0.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "a_qe": {
+            "time": 0.50000000000002,
+            "evas": 2.0,
+            "spectre": 0.0,
+            "difference": 2.0,
+            "budget": 1e-08
+          },
+          "a_qm": {
+            "time": 0.25000000000002,
+            "evas": -1.0,
+            "spectre": 0.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "b_simple": {
+            "time": 1.375,
+            "evas": 1.0,
+            "spectre": 0.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "b_reverse": {
+            "time": 0.625,
+            "evas": 0.25,
+            "spectre": 0.0,
+            "difference": 0.25,
+            "budget": 1e-08
+          },
+          "b_extend": {
+            "time": 1.5,
+            "evas": 2.0,
+            "spectre": 0.0,
+            "difference": 2.0,
+            "budget": 1e-08
+          },
+          "b_mirror": {
+            "time": 0.625,
+            "evas": -0.25,
+            "spectre": 0.0,
+            "difference": 0.25,
+            "budget": 1e-08
+          },
+          "b_qs": {
+            "time": 0.25000000000002,
+            "evas": 1.0,
+            "spectre": 0.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "b_qr": {
+            "time": 0.25000000000002,
+            "evas": 1.0,
+            "spectre": 0.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "b_qe": {
+            "time": 0.50000000000002,
+            "evas": 2.0,
+            "spectre": 0.0,
+            "difference": 2.0,
+            "budget": 1e-08
+          },
+          "b_qm": {
+            "time": 0.25000000000002,
+            "evas": -1.0,
+            "spectre": 0.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          }
+        },
+        "paired_failures_sha256": "3192c06167263d19437bc69663e2a4a3a326d42ec2f280c9a289f674030f53f7"
+      },
+      "three-arg--dense": {
+        "returncode": 0,
+        "request_sha256": "15ddda26243253c5f160dfe4ae194c2046f44ef965e68d60ee60a36acee14bec",
+        "stdout_sha256": "ba7f211d685a1396edadc9bf8493ef4f170e8f78cab10100e960d5e3b722cf02",
+        "source_sha256": "afc262bc20099616fd5bc4578e0930af6b0f12a9270428d7a6135d0abdace8f2",
+        "native_requested_count": 546,
+        "evas_independent": {
+          "maxima": {
+            "a_simple": {
+              "time": 0.0,
+              "observed": -0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "a_reverse": {
+              "time": 0.0,
+              "observed": -0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "a_extend": {
+              "time": 0.0,
+              "observed": 0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "b_simple": {
+              "time": 0.0,
+              "observed": -0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "b_reverse": {
+              "time": 0.0,
+              "observed": -0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "b_extend": {
+              "time": 0.0,
+              "observed": 0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "a_mirror": {
+              "time": 0.0,
+              "observed": 0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "b_mirror": {
+              "time": 0.0,
+              "observed": 0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            }
+          },
+          "failures": []
+        },
+        "paired_failure_count": 4054,
+        "paired_waveform_failure_count": 2182,
+        "paired_state_failure_count": 1872,
+        "paired_maxima": {
+          "a_simple": {
+            "time": 0.7578125,
+            "evas": 1.0,
+            "spectre": 0.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "a_reverse": {
+            "time": 0.49999999999999994,
+            "evas": 0.4999999999999999,
+            "spectre": 0.0,
+            "difference": 0.4999999999999999,
+            "budget": 1e-08
+          },
+          "a_extend": {
+            "time": 0.8750000000000199,
+            "evas": 2.0,
+            "spectre": 0.0,
+            "difference": 2.0,
+            "budget": 1e-08
+          },
+          "a_mirror": {
+            "time": 0.49999999999999994,
+            "evas": -0.4999999999999999,
+            "spectre": 0.0,
+            "difference": 0.4999999999999999,
+            "budget": 1e-08
+          },
+          "a_qs": {
+            "time": 0.25000000000002,
+            "evas": 1.0,
+            "spectre": 0.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "a_qr": {
+            "time": 0.25000000000002,
+            "evas": 1.0,
+            "spectre": 0.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "a_qe": {
+            "time": 0.50000000000002,
+            "evas": 2.0,
+            "spectre": 0.0,
+            "difference": 2.0,
+            "budget": 1e-08
+          },
+          "a_qm": {
+            "time": 0.25000000000002,
+            "evas": -1.0,
+            "spectre": 0.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "b_simple": {
+            "time": 1.3828125,
+            "evas": 1.0,
+            "spectre": 0.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "b_reverse": {
+            "time": 0.6249999999999999,
+            "evas": 0.2499999999999999,
+            "spectre": 0.0,
+            "difference": 0.2499999999999999,
+            "budget": 1e-08
+          },
+          "b_extend": {
+            "time": 1.5000000000000198,
+            "evas": 2.0,
+            "spectre": 0.0,
+            "difference": 2.0,
+            "budget": 1e-08
+          },
+          "b_mirror": {
+            "time": 0.6249999999999999,
+            "evas": -0.2499999999999999,
+            "spectre": 0.0,
+            "difference": 0.2499999999999999,
+            "budget": 1e-08
+          },
+          "b_qs": {
+            "time": 0.25000000000002,
+            "evas": 1.0,
+            "spectre": 0.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "b_qr": {
+            "time": 0.25000000000002,
+            "evas": 1.0,
+            "spectre": 0.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "b_qe": {
+            "time": 0.50000000000002,
+            "evas": 2.0,
+            "spectre": 0.0,
+            "difference": 2.0,
+            "budget": 1e-08
+          },
+          "b_qm": {
+            "time": 0.25000000000002,
+            "evas": -1.0,
+            "spectre": 0.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          }
+        },
+        "paired_failures_sha256": "505a2576a73a59c7d5ed60a4a028a87a1aa79e09b1eae0e6aff1fa01b3b3fa51"
+      },
+      "four-arg--sparse": {
+        "returncode": 0,
+        "request_sha256": "9afd4a326ae26fefa6ac3a64569327e1b6cc3b7306aa3ed22d476c55910e74f8",
+        "stdout_sha256": "6a2759f060b15ded955868bb0aa3da3134b09d6354751fa4bc7b64104038d7c1",
+        "source_sha256": "03ebc465d77088126ba9b3c0b2632fab78164940bc6ca92b978112756c583f49",
+        "native_requested_count": 321,
+        "evas_independent": {
+          "maxima": {
+            "a_simple": {
+              "time": 0.0,
+              "observed": -0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "a_reverse": {
+              "time": 0.0,
+              "observed": -0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "a_extend": {
+              "time": 0.0,
+              "observed": 0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "b_simple": {
+              "time": 0.0,
+              "observed": -0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "b_reverse": {
+              "time": 0.0,
+              "observed": -0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "b_extend": {
+              "time": 0.0,
+              "observed": 0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "a_mirror": {
+              "time": 0.0,
+              "observed": 0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "b_mirror": {
+              "time": 0.0,
+              "observed": 0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            }
+          },
+          "failures": []
+        },
+        "paired_failure_count": 2554,
+        "paired_waveform_failure_count": 1320,
+        "paired_state_failure_count": 1234,
+        "paired_maxima": {
+          "a_simple": {
+            "time": 0.75,
+            "evas": 1.0,
+            "spectre": 0.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "a_reverse": {
+            "time": 0.49999999999999994,
+            "evas": 0.4999999999999999,
+            "spectre": 0.0,
+            "difference": 0.4999999999999999,
+            "budget": 1e-08
+          },
+          "a_extend": {
+            "time": 0.8750000000000199,
+            "evas": 2.0,
+            "spectre": 0.0,
+            "difference": 2.0,
+            "budget": 1e-08
+          },
+          "a_mirror": {
+            "time": 0.49999999999999994,
+            "evas": -0.4999999999999999,
+            "spectre": 0.0,
+            "difference": 0.4999999999999999,
+            "budget": 1e-08
+          },
+          "a_qs": {
+            "time": 0.25000000000002,
+            "evas": 1.0,
+            "spectre": 0.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "a_qr": {
+            "time": 0.25000000000002,
+            "evas": 1.0,
+            "spectre": 0.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "a_qe": {
+            "time": 0.50000000000002,
+            "evas": 2.0,
+            "spectre": 0.0,
+            "difference": 2.0,
+            "budget": 1e-08
+          },
+          "a_qm": {
+            "time": 0.25000000000002,
+            "evas": -1.0,
+            "spectre": 0.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "b_simple": {
+            "time": 1.375,
+            "evas": 1.0,
+            "spectre": 0.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "b_reverse": {
+            "time": 0.625,
+            "evas": 0.25,
+            "spectre": 0.0,
+            "difference": 0.25,
+            "budget": 1e-08
+          },
+          "b_extend": {
+            "time": 1.5,
+            "evas": 2.0,
+            "spectre": 0.0,
+            "difference": 2.0,
+            "budget": 1e-08
+          },
+          "b_mirror": {
+            "time": 0.625,
+            "evas": -0.25,
+            "spectre": 0.0,
+            "difference": 0.25,
+            "budget": 1e-08
+          },
+          "b_qs": {
+            "time": 0.25000000000002,
+            "evas": 1.0,
+            "spectre": 0.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "b_qr": {
+            "time": 0.25000000000002,
+            "evas": 1.0,
+            "spectre": 0.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "b_qe": {
+            "time": 0.50000000000002,
+            "evas": 2.0,
+            "spectre": 0.0,
+            "difference": 2.0,
+            "budget": 1e-08
+          },
+          "b_qm": {
+            "time": 0.25000000000002,
+            "evas": -1.0,
+            "spectre": 0.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          }
+        },
+        "paired_failures_sha256": "3192c06167263d19437bc69663e2a4a3a326d42ec2f280c9a289f674030f53f7"
+      }
+    }
+  },
+  "control_native_replay": {
+    "source_head": "8cca81df083683cc91ffad194c5b06d1c28287bc",
+    "kernel_sha256": "870eec1f6645d032ceeb268fd7561e78b85809e3d94ca2d86a2dbc8501a18a3f",
+    "kernel_identity": {
+      "build_revision": null,
+      "identity_version": 1,
+      "ir_schema_version": 18,
+      "name": "evas-kernel",
+      "platform": {
+        "arch": "aarch64",
+        "os": "macos"
+      },
+      "request_protocol_version": null,
+      "version": "0.14.0"
+    },
+    "local_numerical_calls": 2,
+    "remote_calls": 0,
+    "cases": {
+      "zero-period--1e-12": {
+        "returncode": 0,
+        "request_sha256": "7ddbe1ca1a9ce6466fbfe4eaabc59c4eb319a5d373985fdc3352afbfa5202b8a",
+        "stdout_sha256": "2d50f26195adbe54250dc03c7d0dcf4a4cde249393ba377eeda804f1f8d95b59",
+        "source_sha256": "31790ac2bc82c208ff06f34573304a17aa17309dd67ad9eb081dddd4579e0930",
+        "native_requested_count": 252,
+        "evas_independent": {
+          "maxima": {
+            "a_simple": {
+              "time": 0.0,
+              "observed": -0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "a_reverse": {
+              "time": 0.0,
+              "observed": -0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "a_extend": {
+              "time": 0.0,
+              "observed": 0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "b_simple": {
+              "time": 0.0,
+              "observed": -0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "b_reverse": {
+              "time": 0.0,
+              "observed": -0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "b_extend": {
+              "time": 0.0,
+              "observed": 0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "a_mirror": {
+              "time": 0.0,
+              "observed": 0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "b_mirror": {
+              "time": 0.0,
+              "observed": 0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            }
+          },
+          "failures": []
+        },
+        "state_difference_classification": {
+          "explicit_timer_window": 1e-12,
+          "inside_timer_window": 16,
+          "outside_timer_window": 0,
+          "ordinary_failures_retained": true,
+          "limits": "Saved q values do not certify hidden callback time/count"
+        },
+        "paired_failure_count": 16,
+        "paired_waveform_failure_count": 0,
+        "paired_state_failure_count": 16,
+        "paired_maxima": {
+          "a_simple": {
+            "time": 1.5003814697265623,
+            "evas": 0.9992370605468754,
+            "spectre": 0.999237060546875,
+            "difference": 4.440892098500626e-16,
+            "budget": 1e-08
+          },
+          "a_reverse": {
+            "time": 0.5003814697265624,
+            "evas": 0.4992370605468752,
+            "spectre": 0.499237060546875,
+            "difference": 2.220446049250313e-16,
+            "budget": 1e-08
+          },
+          "a_extend": {
+            "time": 0.0,
+            "evas": 0.0,
+            "spectre": 0.0,
+            "difference": 0.0,
+            "budget": 1e-08
+          },
+          "a_mirror": {
+            "time": 0.5003814697265624,
+            "evas": -0.4992370605468752,
+            "spectre": -0.499237060546875,
+            "difference": 2.220446049250313e-16,
+            "budget": 1e-08
+          },
+          "a_qs": {
+            "time": 0.24999999999999997,
+            "evas": 0.0,
+            "spectre": 1.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "a_qr": {
+            "time": 0.24999999999999997,
+            "evas": 0.0,
+            "spectre": 1.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "a_qe": {
+            "time": 0.24999999999999997,
+            "evas": 0.0,
+            "spectre": 1.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "a_qm": {
+            "time": 0.24999999999999997,
+            "evas": 0.0,
+            "spectre": -1.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "b_simple": {
+            "time": 0.49999999999999994,
+            "evas": 0.12499999999999994,
+            "spectre": 0.125,
+            "difference": 5.551115123125783e-17,
+            "budget": 1e-08
+          },
+          "b_reverse": {
+            "time": 0.49999999999999994,
+            "evas": 0.12499999999999994,
+            "spectre": 0.125,
+            "difference": 5.551115123125783e-17,
+            "budget": 1e-08
+          },
+          "b_extend": {
+            "time": 0.49999999999999994,
+            "evas": 0.12499999999999994,
+            "spectre": 0.125,
+            "difference": 5.551115123125783e-17,
+            "budget": 1e-08
+          },
+          "b_mirror": {
+            "time": 0.49999999999999994,
+            "evas": -0.12499999999999994,
+            "spectre": -0.125,
+            "difference": 5.551115123125783e-17,
+            "budget": 1e-08
+          },
+          "b_qs": {
+            "time": 0.24999999999999997,
+            "evas": 0.0,
+            "spectre": 1.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "b_qr": {
+            "time": 0.24999999999999997,
+            "evas": 0.0,
+            "spectre": 1.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "b_qe": {
+            "time": 0.24999999999999997,
+            "evas": 0.0,
+            "spectre": 1.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "b_qm": {
+            "time": 0.24999999999999997,
+            "evas": 0.0,
+            "spectre": -1.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          }
+        },
+        "paired_failures_sha256": "d074cf12ced889a49da246340fe9fe52c055af5fa09439bcba1ae4b505af7ca3"
+      },
+      "positive-period--1e-12": {
+        "returncode": 0,
+        "request_sha256": "3f3e362d1be00dc182de278a1bc29f3b17e93de4844b99e15d93320457829ace",
+        "stdout_sha256": "26e6e007c61ac872219dd16f06e8cee08d55d5d889d67261ea08297fa58cb267",
+        "source_sha256": "ee462efd8cdae5859329d90fcba3906f055f2bb4d8824c84dceabbb48ad8759d",
+        "native_requested_count": 252,
+        "evas_independent": {
+          "maxima": {
+            "a_simple": {
+              "time": 0.0,
+              "observed": -0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "a_reverse": {
+              "time": 0.0,
+              "observed": -0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "a_extend": {
+              "time": 0.0,
+              "observed": 0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "b_simple": {
+              "time": 0.0,
+              "observed": -0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "b_reverse": {
+              "time": 0.0,
+              "observed": -0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "b_extend": {
+              "time": 0.0,
+              "observed": 0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "a_mirror": {
+              "time": 0.0,
+              "observed": 0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            },
+            "b_mirror": {
+              "time": 0.0,
+              "observed": 0.0,
+              "expected": 0.0,
+              "difference": 0.0,
+              "budget": 1e-08
+            }
+          },
+          "failures": []
+        },
+        "state_difference_classification": {
+          "explicit_timer_window": 1e-12,
+          "inside_timer_window": 16,
+          "outside_timer_window": 0,
+          "ordinary_failures_retained": true,
+          "limits": "Saved q values do not certify hidden callback time/count"
+        },
+        "paired_failure_count": 16,
+        "paired_waveform_failure_count": 0,
+        "paired_state_failure_count": 16,
+        "paired_maxima": {
+          "a_simple": {
+            "time": 1.5003814697265623,
+            "evas": 0.9992370605468754,
+            "spectre": 0.999237060546875,
+            "difference": 4.440892098500626e-16,
+            "budget": 1e-08
+          },
+          "a_reverse": {
+            "time": 0.5003814697265624,
+            "evas": 0.4992370605468752,
+            "spectre": 0.499237060546875,
+            "difference": 2.220446049250313e-16,
+            "budget": 1e-08
+          },
+          "a_extend": {
+            "time": 0.0,
+            "evas": 0.0,
+            "spectre": 0.0,
+            "difference": 0.0,
+            "budget": 1e-08
+          },
+          "a_mirror": {
+            "time": 0.5003814697265624,
+            "evas": -0.4992370605468752,
+            "spectre": -0.499237060546875,
+            "difference": 2.220446049250313e-16,
+            "budget": 1e-08
+          },
+          "a_qs": {
+            "time": 0.24999999999999997,
+            "evas": 0.0,
+            "spectre": 1.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "a_qr": {
+            "time": 0.24999999999999997,
+            "evas": 0.0,
+            "spectre": 1.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "a_qe": {
+            "time": 0.24999999999999997,
+            "evas": 0.0,
+            "spectre": 1.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "a_qm": {
+            "time": 0.24999999999999997,
+            "evas": 0.0,
+            "spectre": -1.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "b_simple": {
+            "time": 0.49999999999999994,
+            "evas": 0.12499999999999994,
+            "spectre": 0.125,
+            "difference": 5.551115123125783e-17,
+            "budget": 1e-08
+          },
+          "b_reverse": {
+            "time": 0.49999999999999994,
+            "evas": 0.12499999999999994,
+            "spectre": 0.125,
+            "difference": 5.551115123125783e-17,
+            "budget": 1e-08
+          },
+          "b_extend": {
+            "time": 0.49999999999999994,
+            "evas": 0.12499999999999994,
+            "spectre": 0.125,
+            "difference": 5.551115123125783e-17,
+            "budget": 1e-08
+          },
+          "b_mirror": {
+            "time": 0.49999999999999994,
+            "evas": -0.12499999999999994,
+            "spectre": -0.125,
+            "difference": 5.551115123125783e-17,
+            "budget": 1e-08
+          },
+          "b_qs": {
+            "time": 0.24999999999999997,
+            "evas": 0.0,
+            "spectre": 1.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "b_qr": {
+            "time": 0.24999999999999997,
+            "evas": 0.0,
+            "spectre": 1.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "b_qe": {
+            "time": 0.24999999999999997,
+            "evas": 0.0,
+            "spectre": 1.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          },
+          "b_qm": {
+            "time": 0.24999999999999997,
+            "evas": 0.0,
+            "spectre": -1.0,
+            "difference": 1.0,
+            "budget": 1e-08
+          }
+        },
+        "paired_failures_sha256": "d074cf12ced889a49da246340fe9fe52c055af5fa09439bcba1ae4b505af7ca3"
+      }
+    }
+  },
+  "source_local_replay": {
+    "three-arg--sparse": {
+      "source_sha256": "afc262bc20099616fd5bc4578e0930af6b0f12a9270428d7a6135d0abdace8f2",
+      "requested_count": 71,
+      "observed_count": 71,
+      "independent": {
+        "maxima": {
+          "a_simple": {
+            "time": 0.0,
+            "observed": -0.0,
+            "expected": 0.0,
+            "difference": 0.0,
+            "budget": 1e-08
+          },
+          "a_reverse": {
+            "time": 0.0,
+            "observed": -0.0,
+            "expected": 0.0,
+            "difference": 0.0,
+            "budget": 1e-08
+          },
+          "a_extend": {
+            "time": 0.0,
+            "observed": 0.0,
+            "expected": 0.0,
+            "difference": 0.0,
+            "budget": 1e-08
+          },
+          "b_simple": {
+            "time": 0.0,
+            "observed": -0.0,
+            "expected": 0.0,
+            "difference": 0.0,
+            "budget": 1e-08
+          },
+          "b_reverse": {
+            "time": 0.0,
+            "observed": -0.0,
+            "expected": 0.0,
+            "difference": 0.0,
+            "budget": 1e-08
+          },
+          "b_extend": {
+            "time": 0.0,
+            "observed": 0.0,
+            "expected": 0.0,
+            "difference": 0.0,
+            "budget": 1e-08
+          },
+          "a_mirror": {
+            "time": 0.0,
+            "observed": 0.0,
+            "expected": 0.0,
+            "difference": 0.0,
+            "budget": 1e-08
+          },
+          "b_mirror": {
+            "time": 0.0,
+            "observed": 0.0,
+            "expected": 0.0,
+            "difference": 0.0,
+            "budget": 1e-08
+          }
+        },
+        "failures": []
+      },
+      "operator_count": 8,
+      "distinct_origins": 8
+    },
+    "three-arg--dense": {
+      "source_sha256": "afc262bc20099616fd5bc4578e0930af6b0f12a9270428d7a6135d0abdace8f2",
+      "requested_count": 407,
+      "observed_count": 407,
+      "independent": {
+        "maxima": {
+          "a_simple": {
+            "time": 0.0,
+            "observed": -0.0,
+            "expected": 0.0,
+            "difference": 0.0,
+            "budget": 1e-08
+          },
+          "a_reverse": {
+            "time": 0.0,
+            "observed": -0.0,
+            "expected": 0.0,
+            "difference": 0.0,
+            "budget": 1e-08
+          },
+          "a_extend": {
+            "time": 0.0,
+            "observed": 0.0,
+            "expected": 0.0,
+            "difference": 0.0,
+            "budget": 1e-08
+          },
+          "b_simple": {
+            "time": 0.0,
+            "observed": -0.0,
+            "expected": 0.0,
+            "difference": 0.0,
+            "budget": 1e-08
+          },
+          "b_reverse": {
+            "time": 0.0,
+            "observed": -0.0,
+            "expected": 0.0,
+            "difference": 0.0,
+            "budget": 1e-08
+          },
+          "b_extend": {
+            "time": 0.0,
+            "observed": 0.0,
+            "expected": 0.0,
+            "difference": 0.0,
+            "budget": 1e-08
+          },
+          "a_mirror": {
+            "time": 0.0,
+            "observed": 0.0,
+            "expected": 0.0,
+            "difference": 0.0,
+            "budget": 1e-08
+          },
+          "b_mirror": {
+            "time": 0.0,
+            "observed": 0.0,
+            "expected": 0.0,
+            "difference": 0.0,
+            "budget": 1e-08
+          }
+        },
+        "failures": []
+      },
+      "operator_count": 8,
+      "distinct_origins": 8
+    },
+    "four-arg--sparse": {
+      "source_sha256": "03ebc465d77088126ba9b3c0b2632fab78164940bc6ca92b978112756c583f49",
+      "requested_count": 71,
+      "observed_count": 71,
+      "independent": {
+        "maxima": {
+          "a_simple": {
+            "time": 0.0,
+            "observed": -0.0,
+            "expected": 0.0,
+            "difference": 0.0,
+            "budget": 1e-08
+          },
+          "a_reverse": {
+            "time": 0.0,
+            "observed": -0.0,
+            "expected": 0.0,
+            "difference": 0.0,
+            "budget": 1e-08
+          },
+          "a_extend": {
+            "time": 0.0,
+            "observed": 0.0,
+            "expected": 0.0,
+            "difference": 0.0,
+            "budget": 1e-08
+          },
+          "b_simple": {
+            "time": 0.0,
+            "observed": -0.0,
+            "expected": 0.0,
+            "difference": 0.0,
+            "budget": 1e-08
+          },
+          "b_reverse": {
+            "time": 0.0,
+            "observed": -0.0,
+            "expected": 0.0,
+            "difference": 0.0,
+            "budget": 1e-08
+          },
+          "b_extend": {
+            "time": 0.0,
+            "observed": 0.0,
+            "expected": 0.0,
+            "difference": 0.0,
+            "budget": 1e-08
+          },
+          "a_mirror": {
+            "time": 0.0,
+            "observed": 0.0,
+            "expected": 0.0,
+            "difference": 0.0,
+            "budget": 1e-08
+          },
+          "b_mirror": {
+            "time": 0.0,
+            "observed": 0.0,
+            "expected": 0.0,
+            "difference": 0.0,
+            "budget": 1e-08
+          }
+        },
+        "failures": []
+      },
+      "operator_count": 8,
+      "distinct_origins": 8
+    }
+  },
+  "checks": {
+    "source_selected_regressions": 77,
+    "new_default_tests_after_diagnostic_assertion": 5,
+    "checker_calibration": 7,
+    "traceability_generator": "wrote evas/docs/TRACEABILITY.md (80 test files)",
+    "traceability_check": "validated tags, targets and matrix freshness (80 test files)",
+    "generator_traceability_no_extra_diff": true,
+    "command_selection_error": "two nonexistent test modules import-failed; 58 actual tests in that batch succeeded, rerouted to real modules; not a numerical failure",
+    "consumer_tamper_calibration": {
+      "empty_unpacked_manifest": {
+        "rejected": true,
+        "reason": "unpacked member differs from archive: spectre-output/FILE_MANIFEST.json"
+      },
+      "replaced_known_psf": {
+        "rejected": true,
+        "reason": "unpacked member differs from archive: spectre-output/runs/three-arg--sparse/psf/tran.tran.tran"
+      }
+    },
+    "temporary_parent_preflight": "macOS default /var is symlink and was correctly refused; calibration rerun in owning artifact directory; original collection never modified",
+    "shared_helper_calibration": 12,
+    "post_main_merge_selected_regressions": 78
+  },
+  "limits": [
+    "No saved target changes in original1e-18 or positive-period1e-18 reference; cause associated with tolerance axis in this controlled design, no internal cutoff inferred.",
+    "1e-12 period0/period10 output grids and values identical; all8waveform independent/paired ordinary budgets pass on252 native rows each.",
+    "16 raw target ordinary pairing differences per1e-12case retained; all within explicitly changed1e-12 windows. Cannot count unchanged target callback or certify hidden callback time from saved voltages.",
+    "Original sparse49/71,dense385/407 coverage; each22missing. Controls49/71 each22missing. Original three remote conditions remain failures; no denominator replacement."
+  ],
+  "reproduction": {
+    "checker": "check.py",
+    "full_anchor_replay": "local_replay.py",
+    "native_replay": "native_replay.py",
+    "source_rules": "rule-sources.json: local manual/LRM versions, pages and full file identities",
+    "local_raw_availability": "ignored current/runs/issue-closure-20261008; no public qualification claimed"
+  },
+  "checker_identity": {
+    "check_sha256": "a37db939225d73686d76dfcd024657d25311525223ae7fe6ceab6c0ac5972ff4",
+    "archive_sha256": "f1a143aa71dfea17035ee6d8f8b9f0c0aa404771be8fc74fc3999e9deaa4536d",
+    "psf_sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8"
+  },
+  "source_identity": {
+    "implementation_commit": "8cca81df083683cc91ffad194c5b06d1c28287bc",
+    "reviewed_helper_main": "2e250c2d161324f151f27c3ca9e45ed32eff164a",
+    "production_diff_since_implementation": "no differences in evas/src or evas/rust_core after source checkpoint",
+    "files": {
+      "evas/src/evas/syntax.py": "ec28d865000055f8d649becbb0d10d8b12fd2f4be299e898c56d6849e97f44e3",
+      "evas/src/evas/instance_compiler.py": "3bd57e3786b9dfb0ff4f9af8a7aba90d970c87b7621640667afee03b7deef83c"
+    },
+    "remote_evidence_reuse": "helper main adds archive/PSF verification and CI/docs only; compiler and kernel are unchanged, no new scientific execution"
+  }
+}

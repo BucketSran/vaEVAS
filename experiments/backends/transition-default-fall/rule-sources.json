@@ -1,0 +1,27 @@
+{
+  "sources": [
+    {
+      "sha256": "de216de12fa3580c2c67fd1ea06bcd0a7d75bca52ed142ea23e596e140a69bad",
+      "name": "veriaref.pdf"
+    },
+    {
+      "sha256": "61397bf554ef998f6beb603e985c5b7027e1b55e9b94e2278b1ef1edbf73b59f",
+      "name": "veriaref.txt"
+    },
+    {
+      "sha256": "621b2a1a3751e7685600f180fe8f362766fe13e952023ded3d7ae48314337c03",
+      "name": "VAMS-LRM-2-4.pdf"
+    },
+    {
+      "sha256": "e4113b7a07f3f2aa624cc26c13806ab8b5a30fa5060019cd31da66d58abbcaf4",
+      "name": "VAMS-LRM-2-4.txt"
+    }
+  ],
+  "rules": {
+    "default_fall": "LRM2.4 \u00a74.5.8 p72; Cadence21.1 Jan2022 p184: only positive rise specified => both rise/fall",
+    "linear": "LRM p72/Cadence p183: piecewise linear waveform; rise/fall denote complete transition duration",
+    "interruption": "LRM p73; Cadence p185\u2013186: preserve current value; same direction retain first origin, reverse use old destination; compute new slope for full duration between origin/new target",
+    "fall_reflection": "Cadence p186 explicitly states equivalent falling behavior"
+  },
+  "authority": "local full manual/LRM read; no remote doc lookup or simulator call"
+}

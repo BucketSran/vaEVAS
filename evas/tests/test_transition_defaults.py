@@ -47,6 +47,11 @@ class TransitionDefaultFall(unittest.TestCase):
    for n,values in [('az',[.5,1,1.5,2,2,2,2]),('bz',[.125,.25,.5,.75,1,2,2])]:
     for row,v in zip(r['solutions'],values,strict=True):self.assertAlmostEqual(row['voltages'][r['nodes'].index(n)],sign*v,delta=2e-12)
  def test_unsupported_default_edges_remain_explicit_rejections(self):
-  for expression in ['transition(q,d)','transition(q,d,0)','transition(q,d,-.5)','transition(q,d,q)','transition(q,q,.5)']:
+  for expression in ['transition(q,d)','transition(q,d,0)','transition(q,d,-.5)']:
    with self.subTest(expression=expression),self.assertRaises(CompileError):compile_sources({'reject.va':SOURCE.replace('transition(q,d,tr)',expression)},instances())
+ def test_state_timing_names_are_diagnosed_in_constant_namespace(self):
+  # This is the actual public boundary, not a fabricated Select parameter.
+  for expression in ['transition(q,d,q)','transition(q,q,.5)']:
+   with self.subTest(expression=expression),self.assertRaisesRegex(CompileError,"unknown parameter 'q'"):
+    compile_sources({'state-timing.va':SOURCE.replace('transition(q,d,tr)',expression)},instances())
 if __name__=='__main__':unittest.main()
