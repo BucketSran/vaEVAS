@@ -34,6 +34,59 @@ V1–V7 对应[旧协议](../PROTOCOL.md#七组行为要求)，不再作为新�
 
 ## 首批有限核心要求
 
+### Engineering delivery checkpoint
+
+Use one integrated EVAS revision for the existing 12 conditions. The delivery
+question is whether a user can run the declared voltage-domain circuits and
+obtain the required voltages, state changes and histories within the original
+budgets. Performance is outside this checkpoint.
+
+| Scenario | Existing condition IDs | Required observations |
+| --- | --- | --- |
+| Sampling and holding | VR-01, EV-SH-01, TM-01, SI-01, CO-SH-01 | Initialized state, sample values, callback counts and order, reset suppression, delayed edges, instance isolation and subsequent history |
+| Hysteresis comparator | EV-HC-01, EV-HC-02, CO-HC-01 | Startup, both thresholds and directions, retained state, callback counts and complete output edges |
+| VCO | EX-01, CP-01, CP-02, CO-VCO-01 | Frequency limiting, accumulated phase, wrap count, circular phase error, sine output and boundary observations |
+
+These scenario groups explain the existing denominator; they do not add scores
+to the language/feature table. Keep the cards, source, stimulus and budgets
+unchanged when rerunning a repaired implementation. Additional diagnostics keep
+their own identities and do not increase N.
+
+Report the following conclusions separately for each condition:
+
+1. Execution: did the original source compile and produce the required outputs?
+2. Independent behavior: do the observations satisfy the circuit equations and
+   one coherent event history under the existing criteria?
+3. Spectre compatibility: compare actual observations with a recorded Spectre
+   version and settings. Preserve direct differences, callback counts/order and
+   boundary coverage. Explain timing effects using the original event budgets;
+   an allowed timing difference does not erase a strict phase mismatch.
+4. Qualification: retain missing input, export, settings or native-observation
+   evidence as I. A finite numerical comparison cannot grant paper-table P.
+
+An exact callback timestamp match is a diagnostic, not an additional engineering
+requirement. Conversely, engineering agreement cannot waive an existing exact
+boundary requirement. Preserve the original F/I results and acceptance scope of
+each diagnostic, including C1, the VCO wrap probes and PR #79 at stop=3.
+This checkpoint does not change the public event-time policy in
+[the event contract](../../docs/math/events.md).
+
+Each comparison must bind the actual compiler/source, kernel, model, stimulus,
+settings, checker and raw-output identities. Label reused Spectre evidence and
+explain why its inputs still match. A candidate result does not describe main.
+After a shared lifecycle change, check initialization, event pre/post state,
+history continuation, future scheduling, query-grid invariance and rollback as
+applicable. An operator-only success does not complete a scenario.
+
+The numerical-assurance workflow runs the existing card, criteria and table
+calibrations. The public-API
+[scenario regression](../../tests/test_paper_scenarios.py) checks the original
+card anchors, final callback counts and query-grid invariance. These finite
+checks do not prove all event times, complete edges or wrap counts. They do not
+run Spectre or replace actual backend
+comparisons. Keep checkpoint progress and unresolved decisions in the existing
+Issue #96 and PR #108; this contract does not create another status tracker.
+
 | 要求 | 条件与工程来源 | 必须区分的错误 |
 | --- | --- | --- |
 | R-VR 差分及非零参考持续求值 | VR-01，采样前端 | 两端访问误当单端、遗漏参考、符号错误、冻结输入 |

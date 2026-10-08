@@ -1,0 +1,2568 @@
+{
+  "kind": "Finite development comparison, not paper qualification",
+  "availability": "local-only raw; this compact receipt is repository-contained",
+  "local_bundle": "worktrees/spectre-event-alignment/runs/engineering-checkpoint-20261009/core12-v2",
+  "identity": {
+    "revision": "f90971f0735054b3772415cf431ec7058fe62553",
+    "runtime_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "kernel_sha256": "00f7a30feeb2a6639f178bc66fc258b5d1c1bc003afcc82dbd54d9f27a48f286",
+    "script_sha256": "33ff47bd736803cece00f7082936c1a132bf13319fed2c12694b0ca7ef53d98e",
+    "comparator_sha256": "921274c08f7595a60e1256e5629476b6a7eb1758961d413ab4bedd9f26cd8c7e",
+    "cards_sha256": "e1ae5311da9e05991e9802da1a24e97a70d179972608a1b9d21eb00013f61a53",
+    "kind": "new local public-compiler/kernel runs; archived actual Spectre reuse; no paper qualification"
+  },
+  "kernel_self_report": {
+    "build_revision": null,
+    "identity_version": 1,
+    "ir_schema_version": 18,
+    "name": "evas-kernel",
+    "platform": {
+      "arch": "aarch64",
+      "os": "macos"
+    },
+    "request_protocol_version": null,
+    "version": "0.14.0"
+  },
+  "spectre_version": "21.1.0.509.isr12",
+  "new_spectre_runs": 0,
+  "new_evas_kernel_requests": 24,
+  "reused_spectre_runs": 12,
+  "reference_selection": "Four corrected-reference runs from four-backend-fixes-20261007; remaining eight from four-backend-round-20261007. Selection inherited before this replay; all sources match the frozen cards.",
+  "paired_rows": 410908,
+  "original_denominator": 12,
+  "claim_limit": "Same parsed binary64 times; no interpolation. Source/export/input/settings qualification remains I. No evidence that exact physical instants match. All whole-trace and window differences retained. The original 48-slot paper table is unchanged.",
+  "raw_summary_sha256": "b6b9d8160931701b2b794a98d96e94888d25e780545b5f8c8de8144835f12b3b",
+  "raw_manifest_sha256": "905eef67890d94906582264f4298722fec0d3bc0b13a811ab2f2d6721ddc3038",
+  "controls": "Original model, stimulus, source parameters, stop, max_step, reltol and vabstol; recompile with candidate frontend. Only output grid changes in the second run of each condition. Debug kernel, 90s/request; no performance claim.",
+  "setup_failures": "Initial replay used an incorrect Instance constructor keyword and stopped before any kernel launch. Failed bundle and script retained in engineering-checkpoint-20261009/core12 and replay.py.",
+  "conditions": [
+    {
+      "condition": "VR-01",
+      "source_sha256": "cc5015e28ff3629796794d3a858b38bb52bf4b32aa73767c2d3f54d56727ca11",
+      "original_request_sha256": "a104e0b35658cd138f0c34be804f6d2a3b3257bbf73259af0478e488261b4c03",
+      "original_times_sha256": "3025470920e5bd8c803fb7b13aaffc7bc9cfb51612f493b9f9bc4ba873e209f9",
+      "runs": {
+        "original": {
+          "status": "waveform_available",
+          "rows": 30004,
+          "events": 0
+        },
+        "spectre-grid": {
+          "status": "waveform_available",
+          "rows": 30008,
+          "events": 0
+        }
+      },
+      "event_records_query_invariant": true,
+      "excluded_outside_domain": [],
+      "spectre_observation_sha256": "bee760f853b4f56a5de41e404d64663b743f768b1f4d340ad01d92f28f060764",
+      "spectre_observation_local_path": "current/runs/four-backend-round-20261007/collected/spectre/outputs/spectre/runs/VR-01/observation.json",
+      "paired_rows": 30008,
+      "reference_counts": {
+        "total_rows": 30008,
+        "invalid_time_rows": 0,
+        "distinct_finite_times": 30008,
+        "duplicate_time_count": 0,
+        "rows_at_duplicate_times": 0
+      },
+      "reference_unique_times_absent_from_test": 0,
+      "shared_times_excluded_due_to_duplicates": 0,
+      "segments": {
+        "all": {
+          "paired_rows": 30008,
+          "ports": {
+            "ip": {
+              "finite_pairs": 30008,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 1.6653345369377348e-16,
+                  "time_s": 5.603599999996725e-06,
+                  "reference_row_index": 28025,
+                  "test_row_index": 28025,
+                  "reference_value": 0.23874000000114604,
+                  "test_value": 0.2387400000011462,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "im": {
+              "finite_pairs": 30008,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 5.551115123125783e-17,
+                  "time_s": 2.333600000000025e-06,
+                  "reference_row_index": 11672,
+                  "test_row_index": 11672,
+                  "reference_value": 0.25004000000000376,
+                  "test_value": 0.2500400000000038,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "ref": {
+              "finite_pairs": 30008,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 1.1102230246251565e-16,
+                  "time_s": 5.618999999996694e-06,
+                  "reference_row_index": 28102,
+                  "test_row_index": 28102,
+                  "reference_value": 0.22379999999933883,
+                  "test_value": 0.22379999999933872,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "out": {
+              "finite_pairs": 30008,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 4.440892098500626e-16,
+                  "time_s": 1.2306000000000683e-06,
+                  "reference_row_index": 6153,
+                  "test_row_index": 6153,
+                  "reference_value": 0.9826500000000173,
+                  "test_value": 0.9826500000000169,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        },
+        "inside_declared_observation_windows": {
+          "paired_rows": 0,
+          "ports": {
+            "ip": {
+              "finite_pairs": 0,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": null
+              }
+            },
+            "im": {
+              "finite_pairs": 0,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": null
+              }
+            },
+            "ref": {
+              "finite_pairs": 0,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": null
+              }
+            },
+            "out": {
+              "finite_pairs": 0,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": null
+              }
+            }
+          }
+        },
+        "outside_declared_observation_windows": {
+          "paired_rows": 30008,
+          "ports": {
+            "ip": {
+              "finite_pairs": 30008,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 1.6653345369377348e-16,
+                  "time_s": 5.603599999996725e-06,
+                  "reference_row_index": 28025,
+                  "test_row_index": 28025,
+                  "reference_value": 0.23874000000114604,
+                  "test_value": 0.2387400000011462,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "im": {
+              "finite_pairs": 30008,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 5.551115123125783e-17,
+                  "time_s": 2.333600000000025e-06,
+                  "reference_row_index": 11672,
+                  "test_row_index": 11672,
+                  "reference_value": 0.25004000000000376,
+                  "test_value": 0.2500400000000038,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "ref": {
+              "finite_pairs": 30008,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 1.1102230246251565e-16,
+                  "time_s": 5.618999999996694e-06,
+                  "reference_row_index": 28102,
+                  "test_row_index": 28102,
+                  "reference_value": 0.22379999999933883,
+                  "test_value": 0.22379999999933872,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "out": {
+              "finite_pairs": 30008,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 4.440892098500626e-16,
+                  "time_s": 1.2306000000000683e-06,
+                  "reference_row_index": 6153,
+                  "test_row_index": 6153,
+                  "reference_value": 0.9826500000000173,
+                  "test_value": 0.9826500000000169,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "condition": "EX-01",
+      "source_sha256": "7315ce904adb94404bc721b9ce32983bcc4856e16bc31c2d3ea8f2edb2bfe143",
+      "original_request_sha256": "a470c3e36d217cc37d4f06a4aa03aa9a471828514006a7b5c692bbc28f0a368e",
+      "original_times_sha256": "2d96fecf32225ff82cf6b69b1673792847ee3b5ac61853dd386ce9cc9051eac7",
+      "runs": {
+        "original": {
+          "status": "waveform_available",
+          "rows": 40001,
+          "events": 0
+        },
+        "spectre-grid": {
+          "status": "waveform_available",
+          "rows": 40005,
+          "events": 0
+        }
+      },
+      "event_records_query_invariant": true,
+      "excluded_outside_domain": [],
+      "spectre_observation_sha256": "d5b985c1443a6c4c22b5d3933a3b43f9743a27aecfbce04570c3b821d831ef50",
+      "spectre_observation_local_path": "current/runs/four-backend-fixes-20261007/collected/spectre/spectre-output/runs/EX-01/observation.json",
+      "paired_rows": 40005,
+      "reference_counts": {
+        "total_rows": 40005,
+        "invalid_time_rows": 0,
+        "distinct_finite_times": 40005,
+        "duplicate_time_count": 0,
+        "rows_at_duplicate_times": 0
+      },
+      "reference_unique_times_absent_from_test": 0,
+      "shared_times_excluded_due_to_duplicates": 0,
+      "segments": {
+        "all": {
+          "paired_rows": 40005,
+          "ports": {
+            "ctl": {
+              "finite_pairs": 40005,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 0.0,
+                  "reference_row_index": 0,
+                  "test_row_index": 0,
+                  "reference_value": -1.0,
+                  "test_value": -1.0,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "freq": {
+              "finite_pairs": 40005,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 0.0,
+                  "reference_row_index": 0,
+                  "test_row_index": 0,
+                  "reference_value": 0.2,
+                  "test_value": 0.2,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        },
+        "inside_declared_observation_windows": {
+          "paired_rows": 0,
+          "ports": {
+            "ctl": {
+              "finite_pairs": 0,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": null
+              }
+            },
+            "freq": {
+              "finite_pairs": 0,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": null
+              }
+            }
+          }
+        },
+        "outside_declared_observation_windows": {
+          "paired_rows": 40005,
+          "ports": {
+            "ctl": {
+              "finite_pairs": 40005,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 0.0,
+                  "reference_row_index": 0,
+                  "test_row_index": 0,
+                  "reference_value": -1.0,
+                  "test_value": -1.0,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "freq": {
+              "finite_pairs": 40005,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 0.0,
+                  "reference_row_index": 0,
+                  "test_row_index": 0,
+                  "reference_value": 0.2,
+                  "test_value": 0.2,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "condition": "EV-SH-01",
+      "source_sha256": "8efd7eebe977db0e3069f58b22db33c94799e65ebab6e9e13a9986cdccbdfca8",
+      "original_request_sha256": "1f5f5066c76ef1bdf5eb71e6510a6a4acc187484d1a1f961ead2a1c801306611",
+      "original_times_sha256": "1613118c6e85ae5efc7a449db85f8aef332f4d948e491a0e63b86b69a3db36e2",
+      "runs": {
+        "original": {
+          "status": "waveform_available",
+          "rows": 45788,
+          "events": 4
+        },
+        "spectre-grid": {
+          "status": "waveform_available",
+          "rows": 45836,
+          "events": 4
+        }
+      },
+      "event_records_query_invariant": true,
+      "excluded_outside_domain": [
+        {
+          "time": 9.000000000002187e-06,
+          "in": -0.1,
+          "out": 0.2002999999999998,
+          "count": 4.0
+        }
+      ],
+      "spectre_observation_sha256": "4604c7e32b6fd7c8df4f4f0144123b4a72774534e5354c3ea0f404253815fe57",
+      "spectre_observation_local_path": "current/runs/four-backend-fixes-20261007/collected/spectre/spectre-output/runs/EV-SH-01/observation.json",
+      "paired_rows": 45836,
+      "reference_counts": {
+        "total_rows": 45837,
+        "invalid_time_rows": 0,
+        "distinct_finite_times": 45837,
+        "duplicate_time_count": 0,
+        "rows_at_duplicate_times": 0
+      },
+      "reference_unique_times_absent_from_test": 1,
+      "shared_times_excluded_due_to_duplicates": 0,
+      "segments": {
+        "all": {
+          "paired_rows": 45836,
+          "ports": {
+            "in": {
+              "finite_pairs": 45836,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 3.3306690738754696e-16,
+                  "time_s": 4.532199999998917e-06,
+                  "reference_row_index": 23079,
+                  "test_row_index": 23079,
+                  "reference_value": 0.5064399999997836,
+                  "test_value": 0.5064399999997833,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "out": {
+              "finite_pairs": 45836,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.5997000000000001,
+                  "time_s": 7.999007462686569e-06,
+                  "reference_row_index": 40658,
+                  "test_row_index": 40658,
+                  "reference_value": 0.2002999999999997,
+                  "test_value": 0.7999999999999998,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "count": {
+              "finite_pairs": 45836,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 1.0,
+                  "time_s": 1.999e-06,
+                  "reference_row_index": 10040,
+                  "test_row_index": 10040,
+                  "reference_value": 1.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        },
+        "inside_declared_observation_windows": {
+          "paired_rows": 905,
+          "ports": {
+            "in": {
+              "finite_pairs": 905,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 2.220446049250313e-16,
+                  "time_s": 3.998079601990049e-06,
+                  "reference_row_index": 20177,
+                  "test_row_index": 20177,
+                  "reference_value": 0.39961592039800997,
+                  "test_value": 0.39961592039800975,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "out": {
+              "finite_pairs": 905,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.5997000000000001,
+                  "time_s": 7.999007462686569e-06,
+                  "reference_row_index": 40658,
+                  "test_row_index": 40658,
+                  "reference_value": 0.2002999999999997,
+                  "test_value": 0.7999999999999998,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "count": {
+              "finite_pairs": 905,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 1.0,
+                  "time_s": 1.999e-06,
+                  "reference_row_index": 10040,
+                  "test_row_index": 10040,
+                  "reference_value": 1.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        },
+        "outside_declared_observation_windows": {
+          "paired_rows": 44931,
+          "ports": {
+            "in": {
+              "finite_pairs": 44931,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 3.3306690738754696e-16,
+                  "time_s": 4.532199999998917e-06,
+                  "reference_row_index": 23079,
+                  "test_row_index": 23079,
+                  "reference_value": 0.5064399999997836,
+                  "test_value": 0.5064399999997833,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "out": {
+              "finite_pairs": 44931,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0003000000000006886,
+                  "time_s": 8.002039800995027e-06,
+                  "reference_row_index": 40844,
+                  "test_row_index": 40844,
+                  "reference_value": 0.2002999999999998,
+                  "test_value": 0.19999999999999912,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "count": {
+              "finite_pairs": 44931,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 0.0,
+                  "reference_row_index": 0,
+                  "test_row_index": 0,
+                  "reference_value": 0.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "condition": "EV-HC-01",
+      "source_sha256": "ed4a653c2b7bdf28d080a51b7e05134c17d93972ff88d122da0aaa34bfc2b29c",
+      "original_request_sha256": "0aad5bee59ee21f008f2987e393b9eef6c942d4a56c2cc89623838285cc332f3",
+      "original_times_sha256": "0fe6320a6d94ef81a91d25d44e51f94c125b21f07e3eb3af97c553659c5fd4dc",
+      "runs": {
+        "original": {
+          "status": "waveform_available",
+          "rows": 20378,
+          "events": 2
+        },
+        "spectre-grid": {
+          "status": "waveform_available",
+          "rows": 20371,
+          "events": 2
+        }
+      },
+      "event_records_query_invariant": true,
+      "excluded_outside_domain": [],
+      "spectre_observation_sha256": "095ef6c083dbee1745013765011452b2a9ebb50b43f68d6bb8ed627b10348b67",
+      "spectre_observation_local_path": "current/runs/four-backend-round-20261007/collected/spectre/outputs/spectre/runs/EV-HC-01/observation.json",
+      "paired_rows": 20371,
+      "reference_counts": {
+        "total_rows": 20371,
+        "invalid_time_rows": 0,
+        "distinct_finite_times": 20371,
+        "duplicate_time_count": 0,
+        "rows_at_duplicate_times": 0
+      },
+      "reference_unique_times_absent_from_test": 0,
+      "shared_times_excluded_due_to_duplicates": 0,
+      "segments": {
+        "all": {
+          "paired_rows": 20371,
+          "ports": {
+            "in": {
+              "finite_pairs": 20371,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 2.220446049250313e-16,
+                  "time_s": 1.2764000000000718e-06,
+                  "reference_row_index": 6382,
+                  "test_row_index": 6382,
+                  "reference_value": 0.6105600000000286,
+                  "test_value": 0.6105600000000289,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "out": {
+              "finite_pairs": 20371,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 1.1102230246251565e-16,
+                  "time_s": 1.3750199999999999e-06,
+                  "reference_row_index": 6966,
+                  "test_row_index": 6966,
+                  "reference_value": 0.8999999999999999,
+                  "test_value": 0.9,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "count": {
+              "finite_pairs": 20371,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 0.0,
+                  "reference_row_index": 0,
+                  "test_row_index": 0,
+                  "reference_value": 0.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        },
+        "inside_declared_observation_windows": {
+          "paired_rows": 402,
+          "ports": {
+            "in": {
+              "finite_pairs": 402,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 2.220446049250313e-16,
+                  "time_s": 1.37552e-06,
+                  "reference_row_index": 6991,
+                  "test_row_index": 6991,
+                  "reference_value": 0.6502079999999999,
+                  "test_value": 0.6502080000000001,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "out": {
+              "finite_pairs": 402,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 1.1102230246251565e-16,
+                  "time_s": 1.3750199999999999e-06,
+                  "reference_row_index": 6966,
+                  "test_row_index": 6966,
+                  "reference_value": 0.8999999999999999,
+                  "test_value": 0.9,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "count": {
+              "finite_pairs": 402,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 1.373000000000079e-06,
+                  "reference_row_index": 6865,
+                  "test_row_index": 6865,
+                  "reference_value": 0.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        },
+        "outside_declared_observation_windows": {
+          "paired_rows": 19969,
+          "ports": {
+            "in": {
+              "finite_pairs": 19969,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 2.220446049250313e-16,
+                  "time_s": 1.2764000000000718e-06,
+                  "reference_row_index": 6382,
+                  "test_row_index": 6382,
+                  "reference_value": 0.6105600000000286,
+                  "test_value": 0.6105600000000289,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "out": {
+              "finite_pairs": 19969,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 0.0,
+                  "reference_row_index": 0,
+                  "test_row_index": 0,
+                  "reference_value": 0.1,
+                  "test_value": 0.1,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "count": {
+              "finite_pairs": 19969,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 0.0,
+                  "reference_row_index": 0,
+                  "test_row_index": 0,
+                  "reference_value": 0.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "condition": "EV-HC-02",
+      "source_sha256": "02734a00e6a7502fb22f01a8f39f5628ae806af838d06c85f533d3bce762525b",
+      "original_request_sha256": "d0048bf17b681c0ca87b4c40f77d530089fa412503de374719dab9891aa750a0",
+      "original_times_sha256": "aa2159d7667b10941e7cfdd46352023b07ad16befeb1dae2ff0e17bc3c60f5f3",
+      "runs": {
+        "original": {
+          "status": "waveform_available",
+          "rows": 30386,
+          "events": 2
+        },
+        "spectre-grid": {
+          "status": "waveform_available",
+          "rows": 30368,
+          "events": 2
+        }
+      },
+      "event_records_query_invariant": true,
+      "excluded_outside_domain": [],
+      "spectre_observation_sha256": "31fee4561c0a4ebe7485180648e79c890dd372783aaec15e4a93ab939d8bd5fa",
+      "spectre_observation_local_path": "current/runs/four-backend-round-20261007/collected/spectre/outputs/spectre/runs/EV-HC-02/observation.json",
+      "paired_rows": 30368,
+      "reference_counts": {
+        "total_rows": 30368,
+        "invalid_time_rows": 0,
+        "distinct_finite_times": 30368,
+        "duplicate_time_count": 0,
+        "rows_at_duplicate_times": 0
+      },
+      "reference_unique_times_absent_from_test": 0,
+      "shared_times_excluded_due_to_duplicates": 0,
+      "segments": {
+        "all": {
+          "paired_rows": 30368,
+          "ports": {
+            "in": {
+              "finite_pairs": 30368,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 2.220446049250313e-16,
+                  "time_s": 5.137799999997677e-06,
+                  "reference_row_index": 25873,
+                  "test_row_index": 25873,
+                  "reference_value": 0.5551199999990708,
+                  "test_value": 0.5551199999990706,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "out": {
+              "finite_pairs": 30368,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.8,
+                  "time_s": 2.75e-06,
+                  "reference_row_index": 13840,
+                  "test_row_index": 13840,
+                  "reference_value": 0.09999999999999998,
+                  "test_value": 0.9,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "count": {
+              "finite_pairs": 30368,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 1.0,
+                  "time_s": 2.75e-06,
+                  "reference_row_index": 13840,
+                  "test_row_index": 13840,
+                  "reference_value": 1.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        },
+        "inside_declared_observation_windows": {
+          "paired_rows": 401,
+          "ports": {
+            "in": {
+              "finite_pairs": 401,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 2.220446049250313e-16,
+                  "time_s": 5.37572e-06,
+                  "reference_row_index": 27185,
+                  "test_row_index": 27185,
+                  "reference_value": 0.650288,
+                  "test_value": 0.6502879999999998,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "out": {
+              "finite_pairs": 401,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.8,
+                  "time_s": 2.75e-06,
+                  "reference_row_index": 13840,
+                  "test_row_index": 13840,
+                  "reference_value": 0.09999999999999998,
+                  "test_value": 0.9,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "count": {
+              "finite_pairs": 401,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 1.0,
+                  "time_s": 2.75e-06,
+                  "reference_row_index": 13840,
+                  "test_row_index": 13840,
+                  "reference_value": 1.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        },
+        "outside_declared_observation_windows": {
+          "paired_rows": 29967,
+          "ports": {
+            "in": {
+              "finite_pairs": 29967,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 2.220446049250313e-16,
+                  "time_s": 5.137799999997677e-06,
+                  "reference_row_index": 25873,
+                  "test_row_index": 25873,
+                  "reference_value": 0.5551199999990708,
+                  "test_value": 0.5551199999990706,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "out": {
+              "finite_pairs": 29967,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 0.0,
+                  "reference_row_index": 0,
+                  "test_row_index": 0,
+                  "reference_value": 0.9,
+                  "test_value": 0.9,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "count": {
+              "finite_pairs": 29967,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 0.0,
+                  "reference_row_index": 0,
+                  "test_row_index": 0,
+                  "reference_value": 0.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "condition": "TM-01",
+      "source_sha256": "54f762933e7d62a27258daf55d2049484b4add854e2953f5442b3d4a79432586",
+      "original_request_sha256": "444a7311f4170c63c804ced58996f2006e20f49e2c435bb30badb65155e8c40b",
+      "original_times_sha256": "a3560245012cc38c01d3ba678d19e42ceb55d27bb50edbdfceb3c7922583ccd2",
+      "runs": {
+        "original": {
+          "status": "waveform_available",
+          "rows": 40378,
+          "events": 2
+        },
+        "spectre-grid": {
+          "status": "waveform_available",
+          "rows": 40376,
+          "events": 2
+        }
+      },
+      "event_records_query_invariant": true,
+      "excluded_outside_domain": [
+        {
+          "time": 8.000000000000035e-06,
+          "out": 0.0,
+          "state": 0.0,
+          "count": 2.0
+        }
+      ],
+      "spectre_observation_sha256": "240171ab0559eb2251c9d5d11dcfd4bc326f7ab34a70c222b03b2e7eaa8077f8",
+      "spectre_observation_local_path": "current/runs/four-backend-round-20261007/collected/spectre/outputs/spectre/runs/TM-01/observation.json",
+      "paired_rows": 40376,
+      "reference_counts": {
+        "total_rows": 40377,
+        "invalid_time_rows": 0,
+        "distinct_finite_times": 40377,
+        "duplicate_time_count": 0,
+        "rows_at_duplicate_times": 0
+      },
+      "reference_unique_times_absent_from_test": 1,
+      "shared_times_excluded_due_to_duplicates": 0,
+      "segments": {
+        "all": {
+          "paired_rows": 40376,
+          "ports": {
+            "out": {
+              "finite_pairs": 40376,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.001999999999964086,
+                  "time_s": 2.4992000000000374e-06,
+                  "reference_row_index": 12679,
+                  "test_row_index": 12679,
+                  "reference_value": 0.5004000000000379,
+                  "test_value": 0.49840000000007384,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "state": {
+              "finite_pairs": 40376,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 1.0,
+                  "time_s": 1.999e-06,
+                  "reference_row_index": 10040,
+                  "test_row_index": 10040,
+                  "reference_value": 1.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "count": {
+              "finite_pairs": 40376,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 1.0,
+                  "time_s": 1.999e-06,
+                  "reference_row_index": 10040,
+                  "test_row_index": 10040,
+                  "reference_value": 1.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        },
+        "inside_declared_observation_windows": {
+          "paired_rows": 401,
+          "ports": {
+            "out": {
+              "finite_pairs": 401,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 1.998000000000126e-06,
+                  "reference_row_index": 9990,
+                  "test_row_index": 9990,
+                  "reference_value": 0.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "state": {
+              "finite_pairs": 401,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 1.0,
+                  "time_s": 1.999e-06,
+                  "reference_row_index": 10040,
+                  "test_row_index": 10040,
+                  "reference_value": 1.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "count": {
+              "finite_pairs": 401,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 1.0,
+                  "time_s": 1.999e-06,
+                  "reference_row_index": 10040,
+                  "test_row_index": 10040,
+                  "reference_value": 1.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        },
+        "outside_declared_observation_windows": {
+          "paired_rows": 39975,
+          "ports": {
+            "out": {
+              "finite_pairs": 39975,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.001999999999964086,
+                  "time_s": 2.4992000000000374e-06,
+                  "reference_row_index": 12679,
+                  "test_row_index": 12679,
+                  "reference_value": 0.5004000000000379,
+                  "test_value": 0.49840000000007384,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "state": {
+              "finite_pairs": 39975,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 0.0,
+                  "reference_row_index": 0,
+                  "test_row_index": 0,
+                  "reference_value": 0.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "count": {
+              "finite_pairs": 39975,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 0.0,
+                  "reference_row_index": 0,
+                  "test_row_index": 0,
+                  "reference_value": 0.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "condition": "CP-01",
+      "source_sha256": "b055706d5bef7b8055e698eb346cd94b7c69af1c5f5d0ad02078ef208f55d80e",
+      "original_request_sha256": "af768f8da2e77ab5a940cf8d9f8820ad9c4108830f0b2a690f3f2f2b1c06dcec",
+      "original_times_sha256": "0ebefcc0d0ed230834906ebd10ee055656ba1ac4459419bea36b8a2866b63afd",
+      "runs": {
+        "original": {
+          "status": "waveform_available",
+          "rows": 30003,
+          "events": 0
+        },
+        "spectre-grid": {
+          "status": "waveform_available",
+          "rows": 30006,
+          "events": 0
+        }
+      },
+      "event_records_query_invariant": true,
+      "excluded_outside_domain": [],
+      "spectre_observation_sha256": "2a35b2b0cdc51588dceb55bc07de8f768570a92c014a4c58288b8e6ff2784b34",
+      "spectre_observation_local_path": "current/runs/four-backend-round-20261007/collected/spectre/outputs/spectre/runs/CP-01/observation.json",
+      "paired_rows": 30006,
+      "reference_counts": {
+        "total_rows": 30006,
+        "invalid_time_rows": 0,
+        "distinct_finite_times": 30006,
+        "duplicate_time_count": 0,
+        "rows_at_duplicate_times": 0
+      },
+      "reference_unique_times_absent_from_test": 0,
+      "shared_times_excluded_due_to_duplicates": 0,
+      "segments": {
+        "all": {
+          "paired_rows": 30006,
+          "ports": {
+            "ctl": {
+              "finite_pairs": 30006,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 2.220446049250313e-16,
+                  "time_s": 3.0054000000002017e-06,
+                  "reference_row_index": 15032,
+                  "test_row_index": 15032,
+                  "reference_value": 0.6016200000000607,
+                  "test_value": 0.6016200000000604,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "phase": {
+              "finite_pairs": 30006,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 6.000003049955183e-09,
+                  "time_s": 2.000200000000126e-06,
+                  "reference_row_index": 10006,
+                  "test_row_index": 10006,
+                  "reference_value": 0.7250600120000409,
+                  "test_value": 0.7250600060000378,
+                  "raw_units": "V",
+                  "encoded_cycle_difference": 6.000003049955183e-09
+                }
+              }
+            }
+          }
+        },
+        "inside_declared_observation_windows": {
+          "paired_rows": 0,
+          "ports": {
+            "ctl": {
+              "finite_pairs": 0,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": null
+              }
+            },
+            "phase": {
+              "finite_pairs": 0,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": null
+              }
+            }
+          }
+        },
+        "outside_declared_observation_windows": {
+          "paired_rows": 30006,
+          "ports": {
+            "ctl": {
+              "finite_pairs": 30006,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 2.220446049250313e-16,
+                  "time_s": 3.0054000000002017e-06,
+                  "reference_row_index": 15032,
+                  "test_row_index": 15032,
+                  "reference_value": 0.6016200000000607,
+                  "test_value": 0.6016200000000604,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "phase": {
+              "finite_pairs": 30006,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 6.000003049955183e-09,
+                  "time_s": 2.000200000000126e-06,
+                  "reference_row_index": 10006,
+                  "test_row_index": 10006,
+                  "reference_value": 0.7250600120000409,
+                  "test_value": 0.7250600060000378,
+                  "raw_units": "V",
+                  "encoded_cycle_difference": 6.000003049955183e-09
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "condition": "CP-02",
+      "source_sha256": "7aa2808f968bb071ad0d074a87e4b36266ae3355b0d84e1d89e13a0f90c09466",
+      "original_request_sha256": "cc108c52be497ca6c0b50b9c6ce84c013d7f4d48f3c35898ba08d08eabd3f60a",
+      "original_times_sha256": "91864956a42efa108dfb05df99307f5e398ae2798dff4ecb953868e781d33bc1",
+      "runs": {
+        "original": {
+          "status": "waveform_available",
+          "rows": 30805,
+          "events": 0
+        },
+        "spectre-grid": {
+          "status": "waveform_available",
+          "rows": 30855,
+          "events": 0
+        }
+      },
+      "event_records_query_invariant": true,
+      "excluded_outside_domain": [],
+      "spectre_observation_sha256": "433bcc4a16a36a7e0f7be5e172af67d2fb9a4d09dc5f85f3ee21cfb1787125e9",
+      "spectre_observation_local_path": "current/runs/four-backend-round-20261007/collected/spectre/outputs/spectre/runs/CP-02/observation.json",
+      "paired_rows": 30855,
+      "reference_counts": {
+        "total_rows": 30855,
+        "invalid_time_rows": 0,
+        "distinct_finite_times": 30855,
+        "duplicate_time_count": 0,
+        "rows_at_duplicate_times": 0
+      },
+      "reference_unique_times_absent_from_test": 0,
+      "shared_times_excluded_due_to_duplicates": 0,
+      "segments": {
+        "all": {
+          "paired_rows": 30855,
+          "ports": {
+            "phase": {
+              "finite_pairs": 30855,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.99999999999996,
+                  "time_s": 5.166666666666667e-06,
+                  "reference_row_index": 26574,
+                  "test_row_index": 26574,
+                  "reference_value": 3.985700658404312e-14,
+                  "test_value": 0.9999999999999999,
+                  "raw_units": "V",
+                  "encoded_cycle_difference": 0.99999999999996
+                },
+                "circular": {
+                  "max_difference": 5.573319583618286e-14,
+                  "time_s": 5.9999999999983035e-06,
+                  "reference_row_index": 30854,
+                  "test_row_index": 30854,
+                  "reference_value": 0.624999999998783,
+                  "test_value": 0.6249999999987272,
+                  "raw_units": "V",
+                  "encoded_cycle_difference": 5.573319583618286e-14
+                }
+              }
+            },
+            "out": {
+              "finite_pairs": 30855,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 9.239690568207948e-09,
+                  "time_s": 3.43042854465723e-11,
+                  "reference_row_index": 1,
+                  "test_row_index": 1,
+                  "reference_value": 0.7072210886299347,
+                  "test_value": 0.7072210793902441,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        },
+        "inside_declared_observation_windows": {
+          "paired_rows": 918,
+          "ports": {
+            "phase": {
+              "finite_pairs": 918,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.99999999999996,
+                  "time_s": 5.166666666666667e-06,
+                  "reference_row_index": 26574,
+                  "test_row_index": 26574,
+                  "reference_value": 3.985700658404312e-14,
+                  "test_value": 0.9999999999999999,
+                  "raw_units": "V",
+                  "encoded_cycle_difference": 0.99999999999996
+                },
+                "circular": {
+                  "max_difference": 4.063416270128073e-14,
+                  "time_s": 5.164666666666667e-06,
+                  "reference_row_index": 26454,
+                  "test_row_index": 26454,
+                  "reference_value": 0.998500000000041,
+                  "test_value": 0.9985000000000004,
+                  "raw_units": "V",
+                  "encoded_cycle_difference": 4.063416270128073e-14
+                }
+              }
+            },
+            "out": {
+              "finite_pairs": 918,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 2.557849765327802e-13,
+                  "time_s": 5.164666666666667e-06,
+                  "reference_row_index": 26454,
+                  "test_row_index": 26454,
+                  "reference_value": -0.009424638432886105,
+                  "test_value": -0.00942463843314189,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        },
+        "outside_declared_observation_windows": {
+          "paired_rows": 29937,
+          "ports": {
+            "phase": {
+              "finite_pairs": 29937,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 5.573319583618286e-14,
+                  "time_s": 5.9999999999983035e-06,
+                  "reference_row_index": 30854,
+                  "test_row_index": 30854,
+                  "reference_value": 0.624999999998783,
+                  "test_value": 0.6249999999987272,
+                  "raw_units": "V",
+                  "encoded_cycle_difference": 5.573319583618286e-14
+                },
+                "circular": {
+                  "max_difference": 5.573319583618286e-14,
+                  "time_s": 5.9999999999983035e-06,
+                  "reference_row_index": 30854,
+                  "test_row_index": 30854,
+                  "reference_value": 0.624999999998783,
+                  "test_value": 0.6249999999987272,
+                  "raw_units": "V",
+                  "encoded_cycle_difference": 5.573319583618286e-14
+                }
+              }
+            },
+            "out": {
+              "finite_pairs": 29937,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 9.239690568207948e-09,
+                  "time_s": 3.43042854465723e-11,
+                  "reference_row_index": 1,
+                  "test_row_index": 1,
+                  "reference_value": 0.7072210886299347,
+                  "test_value": 0.7072210793902441,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "condition": "SI-01",
+      "source_sha256": "43ec734c64259b198d9d3e9bd84495cca98e8baaeeedd651d07121a97598eb85",
+      "original_request_sha256": "73c94d89514d4cd5b1bc07b2983dfc08f50615d4f47c953ede6d1b5e5ed34464",
+      "original_times_sha256": "d1b91c624e026578fa58b78d9d55619c10fcfd2c2a300d5f80f22788493868cf",
+      "runs": {
+        "original": {
+          "status": "waveform_available",
+          "rows": 35758,
+          "events": 5
+        },
+        "spectre-grid": {
+          "status": "waveform_available",
+          "rows": 35785,
+          "events": 5
+        }
+      },
+      "event_records_query_invariant": true,
+      "excluded_outside_domain": [],
+      "spectre_observation_sha256": "fca734297df862172d47acad081de2ae807ed31a013088ab15d91b032d126f7c",
+      "spectre_observation_local_path": "current/runs/four-backend-fixes-20261007/collected/spectre/spectre-output/runs/SI-01/observation.json",
+      "paired_rows": 35785,
+      "reference_counts": {
+        "total_rows": 35785,
+        "invalid_time_rows": 0,
+        "distinct_finite_times": 35785,
+        "duplicate_time_count": 0,
+        "rows_at_duplicate_times": 0
+      },
+      "reference_unique_times_absent_from_test": 0,
+      "shared_times_excluded_due_to_duplicates": 0,
+      "segments": {
+        "all": {
+          "paired_rows": 35785,
+          "ports": {
+            "a": {
+              "finite_pairs": 35785,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 1.1102230246251565e-16,
+                  "time_s": 3.5206000000000383e-06,
+                  "reference_row_index": 17969,
+                  "test_row_index": 17969,
+                  "reference_value": 0.35206000000000387,
+                  "test_value": 0.35206000000000376,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "b": {
+              "finite_pairs": 35785,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 2.220446049250313e-16,
+                  "time_s": 2.6166000000000454e-06,
+                  "reference_row_index": 13266,
+                  "test_row_index": 13266,
+                  "reference_value": 0.7383399999999956,
+                  "test_value": 0.7383399999999953,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "oa": {
+              "finite_pairs": 35785,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.44989999999999997,
+                  "time_s": 1.999e-06,
+                  "reference_row_index": 10040,
+                  "test_row_index": 10040,
+                  "reference_value": 0.19989999999999997,
+                  "test_value": -0.25,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "ob": {
+              "finite_pairs": 35785,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.2999019999999999,
+                  "time_s": 5.99902e-06,
+                  "reference_row_index": 30642,
+                  "test_row_index": 30642,
+                  "reference_value": 0.40009800000000006,
+                  "test_value": 0.7,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "na": {
+              "finite_pairs": 35785,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 1.0,
+                  "time_s": 1.999e-06,
+                  "reference_row_index": 10040,
+                  "test_row_index": 10040,
+                  "reference_value": 1.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "nb": {
+              "finite_pairs": 35785,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 1.0,
+                  "time_s": 2.999e-06,
+                  "reference_row_index": 15223,
+                  "test_row_index": 15223,
+                  "reference_value": 1.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        },
+        "inside_declared_observation_windows": {
+          "paired_rows": 854,
+          "ports": {
+            "a": {
+              "finite_pairs": 854,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 1.1102230246251565e-16,
+                  "time_s": 5.99812e-06,
+                  "reference_row_index": 30597,
+                  "test_row_index": 30597,
+                  "reference_value": 0.599812,
+                  "test_value": 0.5998119999999999,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "b": {
+              "finite_pairs": 854,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 2.220446049250313e-16,
+                  "time_s": 2.99888e-06,
+                  "reference_row_index": 15217,
+                  "test_row_index": 15217,
+                  "reference_value": 0.7001120000000001,
+                  "test_value": 0.7001119999999998,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "oa": {
+              "finite_pairs": 854,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.44989999999999997,
+                  "time_s": 1.999e-06,
+                  "reference_row_index": 10040,
+                  "test_row_index": 10040,
+                  "reference_value": 0.19989999999999997,
+                  "test_value": -0.25,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "ob": {
+              "finite_pairs": 854,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.2999019999999999,
+                  "time_s": 5.99902e-06,
+                  "reference_row_index": 30642,
+                  "test_row_index": 30642,
+                  "reference_value": 0.40009800000000006,
+                  "test_value": 0.7,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "na": {
+              "finite_pairs": 854,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 1.0,
+                  "time_s": 1.999e-06,
+                  "reference_row_index": 10040,
+                  "test_row_index": 10040,
+                  "reference_value": 1.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "nb": {
+              "finite_pairs": 854,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 1.0,
+                  "time_s": 2.999e-06,
+                  "reference_row_index": 15223,
+                  "test_row_index": 15223,
+                  "reference_value": 1.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        },
+        "outside_declared_observation_windows": {
+          "paired_rows": 34931,
+          "ports": {
+            "a": {
+              "finite_pairs": 34931,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 1.1102230246251565e-16,
+                  "time_s": 3.5206000000000383e-06,
+                  "reference_row_index": 17969,
+                  "test_row_index": 17969,
+                  "reference_value": 0.35206000000000387,
+                  "test_value": 0.35206000000000376,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "b": {
+              "finite_pairs": 34931,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 2.220446049250313e-16,
+                  "time_s": 2.6166000000000454e-06,
+                  "reference_row_index": 13266,
+                  "test_row_index": 13266,
+                  "reference_value": 0.7383399999999956,
+                  "test_value": 0.7383399999999953,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "oa": {
+              "finite_pairs": 34931,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 9.999999999998899e-05,
+                  "time_s": 2.00204e-06,
+                  "reference_row_index": 10191,
+                  "test_row_index": 10191,
+                  "reference_value": 0.1999,
+                  "test_value": 0.19999999999999998,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "ob": {
+              "finite_pairs": 34931,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 9.999999999998899e-05,
+                  "time_s": 3.00204e-06,
+                  "reference_row_index": 15374,
+                  "test_row_index": 15374,
+                  "reference_value": 0.7001,
+                  "test_value": 0.7,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "na": {
+              "finite_pairs": 34931,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 0.0,
+                  "reference_row_index": 0,
+                  "test_row_index": 0,
+                  "reference_value": 0.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "nb": {
+              "finite_pairs": 34931,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 0.0,
+                  "reference_row_index": 0,
+                  "test_row_index": 0,
+                  "reference_value": 0.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "condition": "CO-SH-01",
+      "source_sha256": "5f6cb341872aef5e386b625297ef8aea0163232e735d7b5a1c02ac2e94d0c135",
+      "original_request_sha256": "1aa2b00c715a7e1a82c00aeee797aac93c680ae539779781be1660bc2adf434b",
+      "original_times_sha256": "b6844f65e3b9afdd18b64601bc91e680c6067a866f9755de31abd6eef3a5cae6",
+      "runs": {
+        "original": {
+          "status": "waveform_available",
+          "rows": 45979,
+          "events": 5
+        },
+        "spectre-grid": {
+          "status": "waveform_available",
+          "rows": 46083,
+          "events": 5
+        }
+      },
+      "event_records_query_invariant": true,
+      "excluded_outside_domain": [
+        {
+          "time": 9.000000000000219e-06,
+          "in": 1.4,
+          "clk": 0.0,
+          "reset": 0.0,
+          "out": 1.1999999999999997,
+          "state": 1.1999999999999997,
+          "count": 5.0
+        }
+      ],
+      "spectre_observation_sha256": "4c2956afad517dc9f021cdbf8ef2736f3365e733a9050fe9319e10eef6e9bbc2",
+      "spectre_observation_local_path": "current/runs/four-backend-fixes-20261007/collected/spectre/spectre-output/runs/CO-SH-01/observation.json",
+      "paired_rows": 46083,
+      "reference_counts": {
+        "total_rows": 46084,
+        "invalid_time_rows": 0,
+        "distinct_finite_times": 46084,
+        "duplicate_time_count": 0,
+        "rows_at_duplicate_times": 0
+      },
+      "reference_unique_times_absent_from_test": 1,
+      "shared_times_excluded_due_to_duplicates": 0,
+      "segments": {
+        "all": {
+          "paired_rows": 46083,
+          "ports": {
+            "in": {
+              "finite_pairs": 46083,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 6.661338147750939e-16,
+                  "time_s": 8.499600000000656e-06,
+                  "reference_row_index": 43575,
+                  "test_row_index": 43575,
+                  "reference_value": 1.2999200000001307,
+                  "test_value": 1.2999200000001314,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "clk": {
+              "finite_pairs": 46083,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 0.0,
+                  "reference_row_index": 0,
+                  "test_row_index": 0,
+                  "reference_value": 0.0,
+                  "test_value": 0.0,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "reset": {
+              "finite_pairs": 46083,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 0.0,
+                  "reference_row_index": 0,
+                  "test_row_index": 0,
+                  "reference_value": 0.0,
+                  "test_value": 0.0,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "out": {
+              "finite_pairs": 46083,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 4.999999999819038e-05,
+                  "time_s": 2.0000199999999996e-06,
+                  "reference_row_index": 10094,
+                  "test_row_index": 10094,
+                  "reference_value": -0.25,
+                  "test_value": -0.2499500000000018,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "state": {
+              "finite_pairs": 46083,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 3.999999999837467e-06,
+                  "time_s": 2.0000199999999996e-06,
+                  "reference_row_index": 10094,
+                  "test_row_index": 10094,
+                  "reference_value": 3.999999999892978e-06,
+                  "test_value": 5.551115123125783e-17,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "count": {
+              "finite_pairs": 46083,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 0.0,
+                  "reference_row_index": 0,
+                  "test_row_index": 0,
+                  "reference_value": 0.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        },
+        "inside_declared_observation_windows": {
+          "paired_rows": 1107,
+          "ports": {
+            "in": {
+              "finite_pairs": 1107,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 4.440892098500626e-16,
+                  "time_s": 7.998000000000434e-06,
+                  "reference_row_index": 40829,
+                  "test_row_index": 40829,
+                  "reference_value": 1.1996000000000864,
+                  "test_value": 1.1996000000000868,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "clk": {
+              "finite_pairs": 1107,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 1.998000000000015e-06,
+                  "reference_row_index": 9993,
+                  "test_row_index": 9993,
+                  "reference_value": 0.49500000000003747,
+                  "test_value": 0.49500000000003747,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "reset": {
+              "finite_pairs": 1107,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 1.998000000000015e-06,
+                  "reference_row_index": 9993,
+                  "test_row_index": 9993,
+                  "reference_value": 0.0,
+                  "test_value": 0.0,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "out": {
+              "finite_pairs": 1107,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 4.999999999819038e-05,
+                  "time_s": 2.0000199999999996e-06,
+                  "reference_row_index": 10094,
+                  "test_row_index": 10094,
+                  "reference_value": -0.25,
+                  "test_value": -0.2499500000000018,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "state": {
+              "finite_pairs": 1107,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 3.999999999837467e-06,
+                  "time_s": 2.0000199999999996e-06,
+                  "reference_row_index": 10094,
+                  "test_row_index": 10094,
+                  "reference_value": 3.999999999892978e-06,
+                  "test_value": 5.551115123125783e-17,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "count": {
+              "finite_pairs": 1107,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 1.998000000000015e-06,
+                  "reference_row_index": 9993,
+                  "test_row_index": 9993,
+                  "reference_value": 0.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        },
+        "outside_declared_observation_windows": {
+          "paired_rows": 44976,
+          "ports": {
+            "in": {
+              "finite_pairs": 44976,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 6.661338147750939e-16,
+                  "time_s": 8.499600000000656e-06,
+                  "reference_row_index": 43575,
+                  "test_row_index": 43575,
+                  "reference_value": 1.2999200000001307,
+                  "test_value": 1.2999200000001314,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "clk": {
+              "finite_pairs": 44976,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 0.0,
+                  "reference_row_index": 0,
+                  "test_row_index": 0,
+                  "reference_value": 0.0,
+                  "test_value": 0.0,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "reset": {
+              "finite_pairs": 44976,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 0.0,
+                  "reference_row_index": 0,
+                  "test_row_index": 0,
+                  "reference_value": 0.0,
+                  "test_value": 0.0,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "out": {
+              "finite_pairs": 44976,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 4.991919999794425e-05,
+                  "time_s": 2.00204e-06,
+                  "reference_row_index": 10194,
+                  "test_row_index": 10194,
+                  "reference_value": -0.24494991919999903,
+                  "test_value": -0.2449000000000011,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "state": {
+              "finite_pairs": 44976,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 3.999999999837467e-06,
+                  "time_s": 2.00204e-06,
+                  "reference_row_index": 10194,
+                  "test_row_index": 10194,
+                  "reference_value": 3.999999999892978e-06,
+                  "test_value": 5.551115123125783e-17,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "count": {
+              "finite_pairs": 44976,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 0.0,
+                  "reference_row_index": 0,
+                  "test_row_index": 0,
+                  "reference_value": 0.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "condition": "CO-HC-01",
+      "source_sha256": "e28c95cc6b37d4154c90daebca207af538d9b707016c5043b3954df65f03c0c1",
+      "original_request_sha256": "33a9119e0a32f4a0a800c43f5ccb926daf28429d973616d014bc5cdb0a0d7965",
+      "original_times_sha256": "3096d86dc8202d604d14aa772a5a66ec30b526fa54380e6de3b49bda4df9ab5a",
+      "runs": {
+        "original": {
+          "status": "waveform_available",
+          "rows": 20379,
+          "events": 2
+        },
+        "spectre-grid": {
+          "status": "waveform_available",
+          "rows": 20375,
+          "events": 2
+        }
+      },
+      "event_records_query_invariant": true,
+      "excluded_outside_domain": [],
+      "spectre_observation_sha256": "06c115001115a778b749bfa0ab65178597ebc3735270ae0b8560efdd090192ba",
+      "spectre_observation_local_path": "current/runs/four-backend-round-20261007/collected/spectre/outputs/spectre/runs/CO-HC-01/observation.json",
+      "paired_rows": 20375,
+      "reference_counts": {
+        "total_rows": 20375,
+        "invalid_time_rows": 0,
+        "distinct_finite_times": 20375,
+        "duplicate_time_count": 0,
+        "rows_at_duplicate_times": 0
+      },
+      "reference_unique_times_absent_from_test": 0,
+      "shared_times_excluded_due_to_duplicates": 0,
+      "segments": {
+        "all": {
+          "paired_rows": 20375,
+          "ports": {
+            "in": {
+              "finite_pairs": 20375,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 2.220446049250313e-16,
+                  "time_s": 1.2764000000000718e-06,
+                  "reference_row_index": 6382,
+                  "test_row_index": 6382,
+                  "reference_value": 0.6105600000000286,
+                  "test_value": 0.6105600000000289,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "out": {
+              "finite_pairs": 20375,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 3.199999999947689e-05,
+                  "time_s": 3.6984000000000144e-06,
+                  "reference_row_index": 18866,
+                  "test_row_index": 18866,
+                  "reference_value": 0.5825919999999776,
+                  "test_value": 0.5825599999999781,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "state": {
+              "finite_pairs": 20375,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 0.0,
+                  "reference_row_index": 0,
+                  "test_row_index": 0,
+                  "reference_value": 0.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "count": {
+              "finite_pairs": 20375,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 0.0,
+                  "reference_row_index": 0,
+                  "test_row_index": 0,
+                  "reference_value": 0.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        },
+        "inside_declared_observation_windows": {
+          "paired_rows": 402,
+          "ports": {
+            "in": {
+              "finite_pairs": 402,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 2.220446049250313e-16,
+                  "time_s": 1.37552e-06,
+                  "reference_row_index": 6991,
+                  "test_row_index": 6991,
+                  "reference_value": 0.6502079999999999,
+                  "test_value": 0.6502080000000001,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "out": {
+              "finite_pairs": 402,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 1.373000000000079e-06,
+                  "reference_row_index": 6865,
+                  "test_row_index": 6865,
+                  "reference_value": 0.1,
+                  "test_value": 0.1,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "state": {
+              "finite_pairs": 402,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 1.373000000000079e-06,
+                  "reference_row_index": 6865,
+                  "test_row_index": 6865,
+                  "reference_value": 0.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "count": {
+              "finite_pairs": 402,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 1.373000000000079e-06,
+                  "reference_row_index": 6865,
+                  "test_row_index": 6865,
+                  "reference_value": 0.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        },
+        "outside_declared_observation_windows": {
+          "paired_rows": 19973,
+          "ports": {
+            "in": {
+              "finite_pairs": 19973,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 2.220446049250313e-16,
+                  "time_s": 1.2764000000000718e-06,
+                  "reference_row_index": 6382,
+                  "test_row_index": 6382,
+                  "reference_value": 0.6105600000000286,
+                  "test_value": 0.6105600000000289,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "out": {
+              "finite_pairs": 19973,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 3.199999999947689e-05,
+                  "time_s": 3.6984000000000144e-06,
+                  "reference_row_index": 18866,
+                  "test_row_index": 18866,
+                  "reference_value": 0.5825919999999776,
+                  "test_value": 0.5825599999999781,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "state": {
+              "finite_pairs": 19973,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 0.0,
+                  "reference_row_index": 0,
+                  "test_row_index": 0,
+                  "reference_value": 0.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "count": {
+              "finite_pairs": 19973,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 0.0,
+                  "reference_row_index": 0,
+                  "test_row_index": 0,
+                  "reference_value": 0.0,
+                  "test_value": -0.0,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "condition": "CO-VCO-01",
+      "source_sha256": "1bc287bb7c2bd6db604c56233239b668582093388790fe4be92f8c7fd06f327e",
+      "original_request_sha256": "4d7e8566b345017749de3b8582f80c281cdde179a7fe8d5ea0f937206cc4f6ef",
+      "original_times_sha256": "c4eaadc921360716d9546014e0ad241ec017457377a7bf42340c6561a3a3382c",
+      "runs": {
+        "original": {
+          "status": "waveform_available",
+          "rows": 40782,
+          "events": 0
+        },
+        "spectre-grid": {
+          "status": "waveform_available",
+          "rows": 40840,
+          "events": 0
+        }
+      },
+      "event_records_query_invariant": true,
+      "excluded_outside_domain": [],
+      "spectre_observation_sha256": "35c5a89ebefd50dd6cc691cb5c90c831431fcf07e1a4e466ee16a88de4203e0b",
+      "spectre_observation_local_path": "current/runs/four-backend-round-20261007/collected/spectre/outputs/spectre/runs/CO-VCO-01/observation.json",
+      "paired_rows": 40840,
+      "reference_counts": {
+        "total_rows": 40840,
+        "invalid_time_rows": 0,
+        "distinct_finite_times": 40840,
+        "duplicate_time_count": 0,
+        "rows_at_duplicate_times": 0
+      },
+      "reference_unique_times_absent_from_test": 0,
+      "shared_times_excluded_due_to_duplicates": 0,
+      "segments": {
+        "all": {
+          "paired_rows": 40840,
+          "ports": {
+            "ctl": {
+              "finite_pairs": 40840,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 0.0,
+                  "reference_row_index": 0,
+                  "test_row_index": 0,
+                  "reference_value": -1.0,
+                  "test_value": -1.0,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "freq": {
+              "finite_pairs": 40840,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 3.3306690738754696e-16,
+                  "time_s": 2.9812000000000215e-06,
+                  "reference_row_index": 15131,
+                  "test_row_index": 15131,
+                  "reference_value": 0.8906000000000109,
+                  "test_value": 0.8906000000000106,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "phase": {
+              "finite_pairs": 40840,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.9999999949000457,
+                  "time_s": 6.3193751525134295e-06,
+                  "reference_row_index": 32312,
+                  "test_row_index": 32312,
+                  "reference_value": 5.099954236698068e-09,
+                  "test_value": 0.9999999999999999,
+                  "raw_units": "V",
+                  "encoded_cycle_difference": 0.9999999949000457
+                },
+                "circular": {
+                  "max_difference": 1.0100066893947712e-08,
+                  "time_s": 5.696199999998082e-06,
+                  "reference_row_index": 29076,
+                  "test_row_index": 29076,
+                  "reference_value": 0.7404064000990077,
+                  "test_value": 0.7404063899989408,
+                  "raw_units": "V",
+                  "encoded_cycle_difference": 1.0100066893947712e-08
+                }
+              }
+            },
+            "out": {
+              "finite_pairs": 40840,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 6.346028565015977e-08,
+                  "time_s": 5.323599999998843e-06,
+                  "reference_row_index": 27213,
+                  "test_row_index": 27213,
+                  "reference_value": -0.0003818297849092647,
+                  "test_value": -0.0003817663246236145,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        },
+        "inside_declared_observation_windows": {
+          "paired_rows": 903,
+          "ports": {
+            "ctl": {
+              "finite_pairs": 903,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 2.687966442575134e-06,
+                  "reference_row_index": 13443,
+                  "test_row_index": 13443,
+                  "reference_value": 0.6879664425751342,
+                  "test_value": 0.6879664425751342,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "freq": {
+              "finite_pairs": 903,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 2.220446049250313e-16,
+                  "time_s": 2.688206442575134e-06,
+                  "reference_row_index": 13458,
+                  "test_row_index": 13458,
+                  "reference_value": 0.7441032212875671,
+                  "test_value": 0.7441032212875669,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "phase": {
+              "finite_pairs": 903,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.9999999949000457,
+                  "time_s": 6.3193751525134295e-06,
+                  "reference_row_index": 32312,
+                  "test_row_index": 32312,
+                  "reference_value": 5.099954236698068e-09,
+                  "test_value": 0.9999999999999999,
+                  "raw_units": "V",
+                  "encoded_cycle_difference": 0.9999999949000457
+                },
+                "circular": {
+                  "max_difference": 1.0099982405975538e-08,
+                  "time_s": 4.75306e-06,
+                  "reference_row_index": 24180,
+                  "test_row_index": 24180,
+                  "reference_value": 0.9980600100999821,
+                  "test_value": 0.9980599999999997,
+                  "raw_units": "V",
+                  "encoded_cycle_difference": 1.0099982405975538e-08
+                }
+              }
+            },
+            "out": {
+              "finite_pairs": 903,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 6.346005782889856e-08,
+                  "time_s": 4.75498e-06,
+                  "reference_row_index": 24276,
+                  "test_row_index": 24276,
+                  "reference_value": -0.00012560024575920982,
+                  "test_value": -0.00012566370581703872,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        },
+        "outside_declared_observation_windows": {
+          "paired_rows": 39937,
+          "ports": {
+            "ctl": {
+              "finite_pairs": 39937,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 0.0,
+                  "time_s": 0.0,
+                  "reference_row_index": 0,
+                  "test_row_index": 0,
+                  "reference_value": -1.0,
+                  "test_value": -1.0,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "freq": {
+              "finite_pairs": 39937,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 3.3306690738754696e-16,
+                  "time_s": 2.9812000000000215e-06,
+                  "reference_row_index": 15131,
+                  "test_row_index": 15131,
+                  "reference_value": 0.8906000000000109,
+                  "test_value": 0.8906000000000106,
+                  "raw_units": "V"
+                }
+              }
+            },
+            "phase": {
+              "finite_pairs": 39937,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 1.0100066893947712e-08,
+                  "time_s": 5.696199999998082e-06,
+                  "reference_row_index": 29076,
+                  "test_row_index": 29076,
+                  "reference_value": 0.7404064000990077,
+                  "test_value": 0.7404063899989408,
+                  "raw_units": "V",
+                  "encoded_cycle_difference": 1.0100066893947712e-08
+                },
+                "circular": {
+                  "max_difference": 1.0100066893947712e-08,
+                  "time_s": 5.696199999998082e-06,
+                  "reference_row_index": 29076,
+                  "test_row_index": 29076,
+                  "reference_value": 0.7404064000990077,
+                  "test_value": 0.7404063899989408,
+                  "raw_units": "V",
+                  "encoded_cycle_difference": 1.0100066893947712e-08
+                }
+              }
+            },
+            "out": {
+              "finite_pairs": 39937,
+              "missing_or_nonfinite_pairs": 0,
+              "metrics": {
+                "ordinary": {
+                  "max_difference": 6.346028565015977e-08,
+                  "time_s": 5.323599999998843e-06,
+                  "reference_row_index": 27213,
+                  "test_row_index": 27213,
+                  "reference_value": -0.0003818297849092647,
+                  "test_value": -0.0003817663246236145,
+                  "raw_units": "V"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "prior_co_sh_diagnostic": {
+    "availability": "local-only",
+    "relative_path": "current/runs/four-backend-fixes-20261007/analysis-v2/CO-SH-01.json",
+    "sha256": "6410c20e8b9acd33da22a7486142700c8b263571f73552bb4f9cd708c7ccea1a",
+    "kernel_sha256": "1f57bf057f82b63261de5fc3f177545289675b7344553e8e2e1ecb886e85f79c",
+    "prior_platform": "Linux x86_64",
+    "counter_stage_mismatch_rows": 3,
+    "state_max_difference_V": 1.0499999999999998,
+    "claim_limit": "Different integrated candidate and platform; no attribution to one patch or claim that this turn changed runtime semantics."
+  },
+  "build_provenance": {
+    "command": "cargo build --locked --manifest-path evas/rust_core/Cargo.toml",
+    "checkout_revision": "f90971f0735054b3772415cf431ec7058fe62553",
+    "build_log_sha256": "be9bcc42545a9017bcadc7bafb022ff7caf4fda68fe0815ad0a7d7b1603f9907",
+    "build_log_local_path": "worktrees/spectre-event-alignment/runs/engineering-checkpoint-20261009/build.log",
+    "build_log": "   Compiling evas-kernel v0.14.0 (/Users/bucketsran/.codex/worktrees/spectre-event-alignment/current/evas/rust_core)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.25s\n",
+    "rustc": "rustc 1.95.0 (59807616e 2026-04-14)\nbinary: rustc\ncommit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860\ncommit-date: 2026-04-14\nhost: aarch64-apple-darwin\nrelease: 1.95.0\nLLVM version: 22.1.2",
+    "cargo": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)",
+    "source_git_tree": "ec18f56a39cb3145bbab703bb02ab80566cb6eb3",
+    "compiler_git_tree": "cebb944cd27fdeebedea61e5bb62530534a7f5a3",
+    "claim": "Recorded local build provenance; not an embedded build revision or public binary archive."
+  }
+}
