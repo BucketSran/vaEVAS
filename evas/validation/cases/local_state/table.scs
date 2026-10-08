@@ -6,5 +6,5 @@ first (u y1 z1 h1 q1 0) local_state GAIN=1 OFFSET=1
 second (u y2 z2 h2 q2 0) local_state GAIN=2 OFFSET=3
 capture (u yc qc 0) local_capture
 settings options reltol=1e-5 vabstol=1e-7 iabstol=1e-12
-tran tran stop=1 maxstep=.025 method=traponly errpreset=conservative skipdc=no strobeperiod=.125 strobeoutput=all
+tran tran stop=1 maxstep=0.025 method=traponly errpreset=conservative skipdc=no strobeperiod=0.125 strobeoutput=all
 save u y1 z1 h1 q1 y2 z2 h2 q2 yc qc
