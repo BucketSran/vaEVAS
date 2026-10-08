@@ -2,6 +2,7 @@
 import copy
 import importlib.util
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -121,6 +122,45 @@ class DirectComparison(unittest.TestCase):
             proc = subprocess.run(argv, capture_output=True, text=True)
             self.assertEqual(proc.returncode, 3)
             self.assertEqual((root/'result.json').read_text(), 'preserved old result')
+
+    def test_cli_completed_verdicts_have_distinct_codes_and_valid_results(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root/'contract.json').write_text(json.dumps(self.contract))
+            (root/'spectre.json').write_text(json.dumps(self.trace))
+            for status, code in [('P', 0), ('F', 1), ('I', 2)]:
+                ev = copy.deepcopy(self.trace)
+                if status == 'F':
+                    ev['rows'][0]['voltages']['y'] = 1
+                elif status == 'I':
+                    ev['rows'].pop(1)
+                (root/'evas.json').write_text(json.dumps(ev))
+                output = root/(status+'.json')
+                proc = subprocess.run([sys.executable, str(Path(__file__).with_name('compare.py')),
+                                       str(root/'contract.json'), str(root/'evas.json'),
+                                       str(root/'spectre.json'), str(output)], capture_output=True, text=True)
+                self.assertEqual((proc.returncode, proc.stdout.strip()), (code, status))
+                self.assertEqual(json.loads(output.read_text())['finite_pair_status'], status)
+
+    @unittest.skipUnless(os.name == 'posix', 'uses a real POSIX file-size limit')
+    def test_cli_write_failure_does_not_publish_partial_result(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root/'contract.json').write_text(json.dumps(self.contract))
+            (root/'trace.json').write_text(json.dumps(self.trace))
+            # The OS rejects a real write; no comparator or file-write mock.
+            driver = ('import resource,signal,runpy,sys; '
+                      'resource.setrlimit(resource.RLIMIT_FSIZE,(200,200)); '
+                      'signal.signal(signal.SIGXFSZ,signal.SIG_IGN); '
+                      'sys.argv=sys.argv[1:]; runpy.run_path(sys.argv[0],run_name="__main__")')
+            proc = subprocess.run([sys.executable, '-B', '-c', driver,
+                                   str(Path(__file__).with_name('compare.py')),
+                                   str(root/'contract.json'), str(root/'trace.json'),
+                                   str(root/'trace.json'), str(root/'result.json')],
+                                  capture_output=True, text=True)
+            self.assertEqual(proc.returncode, 3)
+            self.assertFalse((root/'result.json').exists())
+            self.assertEqual(sorted(p.name for p in root.iterdir()), ['contract.json', 'trace.json'])
 
     def test_actual_c1_engineering_passes_still_fail_direct_comparison(self):
         root = Path(__file__).resolve().parent

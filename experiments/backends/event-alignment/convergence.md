@@ -73,8 +73,11 @@ python3 -B experiments/backends/event-alignment/compare.py CONTRACT.json EVAS.js
 CONTRACT 包含 stop、required_times、budgets_v、phase_nodes 和 event_windows_s。
 输入为含 `rows[{time, voltages}]` 的 JSON；完成比较后返回 0/P、1/F、2/I。
 输入、契约或文件错误返回 3/ERROR 并写 stderr，不是已完成比较的 F；已有输出文件不覆盖。
+结果先完整写入同目录临时文件，再原子发布，写入失败不会留下半份结果。
 未声明 phase_nodes 时 phase_status 为 I，表示未评估。D1/D2 声明 count 为该列，
 其 phase P 只证明已保存计数一致。完整逐条件合同随紧凑记录保存。
+同一 Spectre 条件可以对应多个 EVAS 控制；用记录的 comparison_id 标识一次配对，
+不能只用 case 去重而覆盖原始拒绝。
 独立判对继续调用原 checker，不由直接配对替代。
 
 ## 执行与保留范围

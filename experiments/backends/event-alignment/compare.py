@@ -8,8 +8,10 @@ from collections import Counter
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 import sys
+import tempfile
 
 
 def finite(value):
@@ -127,8 +129,18 @@ def main():
                                 for name, p in zip(['contract', 'evas', 'spectre', 'comparator'],
                                                    paths + [Path(__file__)])}
         encoded = json.dumps(report, indent=2, allow_nan=False) + '\n'
-        with args.output.open('x') as file:
-            file.write(encoded)
+        temporary = None
+        try:
+            with tempfile.NamedTemporaryFile(mode='w', dir=args.output.parent,
+                                             prefix='.compare-', delete=False) as file:
+                temporary = Path(file.name)
+                file.write(encoded)
+            # Publish only a complete file. Hard-link creation is atomic and
+            # refuses an existing result, unlike replace/rename overwrites.
+            os.link(temporary, args.output)
+        finally:
+            if temporary is not None:
+                temporary.unlink()
     except (OSError, ValueError, TypeError, KeyError, AttributeError, OverflowError) as error:
         print(json.dumps(dict(status='ERROR', kind=type(error).__name__, reason=str(error))),
               file=sys.stderr)
