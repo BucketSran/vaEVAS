@@ -320,7 +320,11 @@ mod tests {
 
     #[test]
     fn static_calendar_cursor_cluster_rollback_retry_and_successor_are_preserved() {
-        let (base, trajectory, _, _) = super::super::lifecycle_controller_tests::fixture();
+        let (base, mut trajectory, _, _) = super::super::lifecycle_controller_tests::fixture();
+        // Preserve an actual stored observation from the earlier accepted
+        // transaction, not only an empty output buffer. Later closure phases
+        // include .3, strictly before the exact .1+.2 physical timer.
+        trajectory.config.output_times = vec![0., 0.05, 0.2, 0.3, 0.6, 0.9, 1.];
         let mut value = serde_json::to_value(&base.program).unwrap();
         value["operators"] = serde_json::json!([]);
         for contribution in value["contributions"].as_array_mut().unwrap() {
@@ -383,7 +387,11 @@ mod tests {
             .unwrap();
         assert_eq!(controller.event, 1);
         assert_eq!(signature(&calendar), original);
+        assert_eq!(controller.outputs.len(), 1);
+        assert_eq!(controller.outputs[0].time, 0.05);
+        assert_eq!(controller.outputs[0].states, [0., 0.]);
         let before = controller.accepted.clone();
+        let prior_outputs = controller.outputs.clone();
         let records = serde_json::to_value(&controller.records).unwrap();
         for _ in 0..2 {
             assert_eq!(
@@ -399,6 +407,16 @@ mod tests {
             assert_eq!(controller.accepted.state_bounds, before.state_bounds);
             assert_eq!(serde_json::to_value(&controller.records).unwrap(), records);
             assert_eq!(signature(&calendar), original);
+            assert_eq!(controller.outputs.len(), prior_outputs.len());
+            for (actual, expected) in controller.outputs.iter().zip(&prior_outputs) {
+                assert_eq!(actual.time, expected.time);
+                assert_eq!(actual.states, expected.states);
+                assert_eq!(actual.state_bounds, expected.state_bounds);
+                assert_eq!(actual.solution.voltages, expected.solution.voltages);
+                assert!(actual.operators.same_reset_history(&expected.operators));
+                assert_eq!(actual.operators.bounds(actual.time).unwrap(),
+                    expected.operators.bounds(expected.time).unwrap());
+            }
         }
         value["events"][2]["body"] = serde_json::json!([]);
         let (good, mut clean, mut clean_calendar) = make(value);
@@ -415,6 +433,14 @@ mod tests {
                 .unwrap();
             assert_eq!(controller.event, clean.event);
             assert_eq!(controller.accepted.states, clean.accepted.states);
+            assert_eq!(controller.outputs.len(), clean.outputs.len());
+            for (actual, expected) in controller.outputs.iter().zip(&clean.outputs) {
+                assert_eq!(actual.time, expected.time);
+                assert_eq!(actual.states, expected.states);
+                assert_eq!(actual.state_bounds, expected.state_bounds);
+                assert_eq!(actual.solution.voltages, expected.solution.voltages);
+                assert!(actual.operators.same_reset_history(&expected.operators));
+            }
             assert_eq!(
                 serde_json::to_value(&controller.records).unwrap(),
                 serde_json::to_value(&clean.records).unwrap()
