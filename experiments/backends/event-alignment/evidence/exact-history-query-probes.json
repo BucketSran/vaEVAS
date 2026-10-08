@@ -1,0 +1,652 @@
+{
+  "settings_reanalysis": {
+    "kind": "offline mapped settings readback; original RESULT/FREEZE unchanged",
+    "archive_sha256": "74baa53c271f836833dba20e1efc2ab8971c43c2a3809bae632a52a22d370032",
+    "regular_members_verified": 91,
+    "mapping": {
+      "reltol": "reltol",
+      "vabstol": "vabstol_V",
+      "iabstol": "iabstol_A",
+      "maxstep": "maxstep_s",
+      "stop": "stop_s",
+      "method": "method",
+      "precision": "precision"
+    },
+    "mapping_changes_values": false,
+    "analyzer_sha256": "b2764e173faca08c4352fdc365bee2514b1e5e9d6dce28c2260a27ddaaed5e0b",
+    "maintained_runner_sha256": "5eceafda72f96ff41a266ca16bb24752915ab3939763b3958ef2ad8db11c1e56",
+    "maintained_reader_sha256": "875be764ac89c6f6d6e219871e65ef43fe14b10d664ae2ecd131b65f46568da8",
+    "new_simulator_calls": 0,
+    "new_evas_calls": 0,
+    "cases": {
+      "E3-fine": {
+        "original_requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "method": "traponly",
+          "maxstep": 0.002,
+          "stop": 2,
+          "precision": "%24.17g"
+        },
+        "mapped_requested": {
+          "reltol": 1e-08,
+          "vabstol_V": 1e-10,
+          "iabstol_A": 1e-14,
+          "method": "traponly",
+          "maxstep_s": 0.002,
+          "stop_s": 2,
+          "precision": "%24.17g"
+        },
+        "original_result_effective_settings": {
+          "status": "I",
+          "reason": "'vabstol_V'"
+        },
+        "fresh_readback": {
+          "actual": {
+            "reltol": 1e-08,
+            "vabstol": 1e-10,
+            "iabstol": 1.0000000000000002e-14,
+            "stop": 2.0,
+            "maxstep": 0.002,
+            "method": "traponly"
+          },
+          "requested": {
+            "reltol": 1e-08,
+            "vabstol": 1e-10,
+            "iabstol": 1e-14,
+            "stop": 2,
+            "maxstep": 0.002
+          },
+          "mismatches": [],
+          "scoped_readback": {
+            "effective": {
+              "stop_s": {
+                "value": 2.0,
+                "line": 126,
+                "raw": "    stop = 2 s",
+                "scope": "transient:tran"
+              },
+              "maxstep_s": {
+                "value": 0.002,
+                "line": 128,
+                "raw": "    maxstep = 2 ms",
+                "scope": "transient:tran"
+              },
+              "reltol": {
+                "value": 1e-08,
+                "line": 132,
+                "raw": "    reltol = 10e-09",
+                "scope": "transient:tran"
+              },
+              "vabstol_V": {
+                "value": 1e-10,
+                "line": 133,
+                "raw": "    abstol(V) = 100 pV",
+                "scope": "transient:tran"
+              },
+              "iabstol_A": {
+                "value": 1.0000000000000002e-14,
+                "line": 134,
+                "raw": "    abstol(I) = 10 fA",
+                "scope": "transient:tran"
+              },
+              "method": {
+                "value": "traponly",
+                "line": 139,
+                "raw": "    method = traponly",
+                "scope": "transient:tran"
+              }
+            },
+            "global_user": {
+              "vabstol_V": {
+                "value": 1e-10,
+                "line": 89,
+                "raw": "            vabstol = 1e-10",
+                "scope": "global_user"
+              },
+              "iabstol_A": {
+                "value": 1e-14,
+                "line": 90,
+                "raw": "            iabstol = 1e-14",
+                "scope": "global_user"
+              },
+              "reltol": {
+                "value": 1e-08,
+                "line": 91,
+                "raw": "             reltol = 1e-08",
+                "scope": "global_user"
+              }
+            },
+            "psf_effective": {
+              "stop_s": {
+                "value": 2.0,
+                "line": 14,
+                "raw": "\"stop\" 2.00000",
+                "scope": "psf_transient:tran"
+              },
+              "maxstep_s": {
+                "value": 0.002,
+                "line": 17,
+                "raw": "\"maxstep\" 0.00200000",
+                "scope": "psf_transient:tran"
+              },
+              "reltol": {
+                "value": 1e-08,
+                "line": 21,
+                "raw": "\"reltol\" 1.00000e-08",
+                "scope": "psf_transient:tran"
+              },
+              "vabstol_V": {
+                "value": 1e-10,
+                "line": 22,
+                "raw": "\"abstol(V)\" 1.00000e-10",
+                "scope": "psf_transient:tran"
+              },
+              "iabstol_A": {
+                "value": 1e-14,
+                "line": 23,
+                "raw": "\"abstol(I)\" 1.00000e-14",
+                "scope": "psf_transient:tran"
+              },
+              "method": {
+                "value": "traponly",
+                "line": 28,
+                "raw": "\"method\" \"traponly\"",
+                "scope": "psf_transient:tran"
+              }
+            },
+            "psf_relative_metadata": {
+              "tolerance.relative": {
+                "value": 1e-08,
+                "line": 11,
+                "raw": "\"tolerance.relative\" 1.00000e-08",
+                "scope": "psf_header"
+              }
+            }
+          },
+          "status": "readback_matches",
+          "claim": "scoped controls do not establish mathematical or native provenance qualification; actual/requested differences remain"
+        },
+        "method_matches": true,
+        "precision_runtime_readback": "I: this reader does not establish print precision",
+        "original_files": {
+          "requested_settings.json": "5f8778355dbe726801771c9f4fe5ab7461abdb08babb3b1b0fbea812f71e005d",
+          "RESULT.json": "cff90828a91ca6b8e40054d77e8816f82310e8dc0ad6d4327503e5d93b0d424d",
+          "spectre.log": "296ab2faf110f836050cf9b7c6aeae3451c739efa055f5162952be7922f21782",
+          "psf/tran.tran.tran": "0f7d815b2c6d4253ddd131a9bcf2c7ed049fd04769f853b91593ccb032cecb1f"
+        }
+      },
+      "E5-fine": {
+        "original_requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-10,
+          "iabstol": 1e-14,
+          "method": "traponly",
+          "maxstep": 0.002,
+          "stop": 2,
+          "precision": "%24.17g"
+        },
+        "mapped_requested": {
+          "reltol": 1e-08,
+          "vabstol_V": 1e-10,
+          "iabstol_A": 1e-14,
+          "method": "traponly",
+          "maxstep_s": 0.002,
+          "stop_s": 2,
+          "precision": "%24.17g"
+        },
+        "original_result_effective_settings": {
+          "status": "I",
+          "reason": "'vabstol_V'"
+        },
+        "fresh_readback": {
+          "actual": {
+            "reltol": 1e-08,
+            "vabstol": 1e-10,
+            "iabstol": 1.0000000000000002e-14,
+            "stop": 2.0,
+            "maxstep": 0.002,
+            "method": "traponly"
+          },
+          "requested": {
+            "reltol": 1e-08,
+            "vabstol": 1e-10,
+            "iabstol": 1e-14,
+            "stop": 2,
+            "maxstep": 0.002
+          },
+          "mismatches": [],
+          "scoped_readback": {
+            "effective": {
+              "stop_s": {
+                "value": 2.0,
+                "line": 126,
+                "raw": "    stop = 2 s",
+                "scope": "transient:tran"
+              },
+              "maxstep_s": {
+                "value": 0.002,
+                "line": 128,
+                "raw": "    maxstep = 2 ms",
+                "scope": "transient:tran"
+              },
+              "reltol": {
+                "value": 1e-08,
+                "line": 132,
+                "raw": "    reltol = 10e-09",
+                "scope": "transient:tran"
+              },
+              "vabstol_V": {
+                "value": 1e-10,
+                "line": 133,
+                "raw": "    abstol(V) = 100 pV",
+                "scope": "transient:tran"
+              },
+              "iabstol_A": {
+                "value": 1.0000000000000002e-14,
+                "line": 134,
+                "raw": "    abstol(I) = 10 fA",
+                "scope": "transient:tran"
+              },
+              "method": {
+                "value": "traponly",
+                "line": 139,
+                "raw": "    method = traponly",
+                "scope": "transient:tran"
+              }
+            },
+            "global_user": {
+              "vabstol_V": {
+                "value": 1e-10,
+                "line": 89,
+                "raw": "            vabstol = 1e-10",
+                "scope": "global_user"
+              },
+              "iabstol_A": {
+                "value": 1e-14,
+                "line": 90,
+                "raw": "            iabstol = 1e-14",
+                "scope": "global_user"
+              },
+              "reltol": {
+                "value": 1e-08,
+                "line": 91,
+                "raw": "             reltol = 1e-08",
+                "scope": "global_user"
+              }
+            },
+            "psf_effective": {
+              "stop_s": {
+                "value": 2.0,
+                "line": 14,
+                "raw": "\"stop\" 2.00000",
+                "scope": "psf_transient:tran"
+              },
+              "maxstep_s": {
+                "value": 0.002,
+                "line": 17,
+                "raw": "\"maxstep\" 0.00200000",
+                "scope": "psf_transient:tran"
+              },
+              "reltol": {
+                "value": 1e-08,
+                "line": 21,
+                "raw": "\"reltol\" 1.00000e-08",
+                "scope": "psf_transient:tran"
+              },
+              "vabstol_V": {
+                "value": 1e-10,
+                "line": 22,
+                "raw": "\"abstol(V)\" 1.00000e-10",
+                "scope": "psf_transient:tran"
+              },
+              "iabstol_A": {
+                "value": 1e-14,
+                "line": 23,
+                "raw": "\"abstol(I)\" 1.00000e-14",
+                "scope": "psf_transient:tran"
+              },
+              "method": {
+                "value": "traponly",
+                "line": 28,
+                "raw": "\"method\" \"traponly\"",
+                "scope": "psf_transient:tran"
+              }
+            },
+            "psf_relative_metadata": {
+              "tolerance.relative": {
+                "value": 1e-08,
+                "line": 11,
+                "raw": "\"tolerance.relative\" 1.00000e-08",
+                "scope": "psf_header"
+              }
+            }
+          },
+          "status": "readback_matches",
+          "claim": "scoped controls do not establish mathematical or native provenance qualification; actual/requested differences remain"
+        },
+        "method_matches": true,
+        "precision_runtime_readback": "I: this reader does not establish print precision",
+        "original_files": {
+          "requested_settings.json": "5f8778355dbe726801771c9f4fe5ab7461abdb08babb3b1b0fbea812f71e005d",
+          "RESULT.json": "24dbad2ec323c88a2cf098b8f1dfef5028f020325fe9677fd8a51f0f2ce10370",
+          "spectre.log": "831ea3e83135bb20c6e486fa8fa61991243ff90341417f6631c421524c76b917",
+          "psf/tran.tran.tran": "0d9fa20f933b8fcdac9055ca8c2d0b1058df783396fbc1064732186394f0d268"
+        }
+      }
+    }
+  },
+  "reference_only_analysis_identity": {
+    "actual-analysis/README.md": "5e1eecadf7b43fdb4bf969aca2dae97d50703a18c3758b8419c02eb4f239b00b",
+    "actual-analysis/analysis.json": "111245fdba7e7cf7ac77f59358c5a183a7c0661bb0785a02e835efd5feb982ef",
+    "actual-analysis/analyze.py": "6a425e3c61d2e45d65439e39d6045444805c2f85f3c85fd57d6dc16303bfff33",
+    "FREEZE.json": "8701d31ae3c88f6b14b406c65eb6b5ee174df797ffd3103458279eb2105ba484"
+  },
+  "archive_members_verified": {
+    "new": 91,
+    "old": 415
+  },
+  "paired_evas_execution_reused_from": "exact-affine-history.json native_spectre_reuse; actual kernel15f822 execution, no new query run",
+  "new_evas_calls": 0,
+  "new_remote_calls": 0,
+  "cases": {
+    "E3-fine": {
+      "full_psf_date_only_differences": [
+        {
+          "new": "\"date\" \"9:43:05 PM, Thur Oct 8, 2026\"",
+          "old": "\"date\" \"3:21:12 AM, Thur Oct 8, 2026\""
+        }
+      ],
+      "complete_value_bytes_equal": true,
+      "new_psf_sha256": "0f7d815b2c6d4253ddd131a9bcf2c7ed049fd04769f853b91593ccb032cecb1f",
+      "old_psf_sha256": "dc6c010157528f562e9149c3ac3167d7c9060cbfb450162ca7e305cfbe45e67e",
+      "native_rows": 1259,
+      "requested_count": 1201,
+      "missing_requested_count": 944,
+      "required_coverage_status": "I",
+      "callback_records": [
+        {
+          "event": "timer",
+          "tokens": {
+            "time": "2.50000000000000000000e-01",
+            "guard": "-4.99999990000000060775e-01",
+            "z": "2.50000009999999939225e-01",
+            "slope": "2.00000000000000000000e+00",
+            "count": "0",
+            "edit": "1"
+          },
+          "time": 0.25,
+          "time_hex": "0x1.0000000000000p-2",
+          "guard": -0.49999999000000006,
+          "z": 0.25000000999999994,
+          "slope_after": 2.0,
+          "count_after": 0,
+          "edit": 1.0,
+          "callback_minus_exact_event_s": 0.0,
+          "native_row": {
+            "time": 0.25,
+            "voltages": {
+              "u": 0.25,
+              "count": 0.0,
+              "z": 0.25000000999999994,
+              "history": 0.0,
+              "edit": 1.0,
+              "sample": 0.0
+            }
+          },
+          "native_z_and_count_and_local_recorded_field_equal": true,
+          "z_minus_ideal_preflow_v": 9.99999993922529e-09,
+          "guard_divided_by_preflow_slope_s": -0.49999999000000006
+        },
+        {
+          "event": "cross",
+          "tokens": {
+            "time": "4.99999995499999849713e-01",
+            "guard": "9.99999860695766074059e-10",
+            "z": "7.50000000999999860696e-01",
+            "slope": "2.00000000000000000000e+00",
+            "count": "1",
+            "edit": "1"
+          },
+          "time": 0.49999999549999985,
+          "time_hex": "0x1.ffffffb2b0ca4p-2",
+          "guard": 9.99999860695766e-10,
+          "z": 0.7500000009999999,
+          "slope_after": 2.0,
+          "count_after": 1,
+          "edit": 1.0,
+          "callback_minus_exact_event_s": -4.5000001502870646e-09,
+          "native_row": {
+            "time": 0.49999999549999985,
+            "voltages": {
+              "u": 0.49999999549999985,
+              "count": 1.0,
+              "z": 0.7500000009999999,
+              "history": 0.0,
+              "edit": 1.0,
+              "sample": 0.0
+            }
+          },
+          "native_z_and_count_and_local_recorded_field_equal": true,
+          "z_minus_ideal_preflow_v": 1.0000000161269895e-08,
+          "guard_divided_by_preflow_slope_s": 4.99999930347883e-10
+        }
+      ],
+      "reused_evas_response_sha256": "d66fe3bce42903298d698edaf18502206fb3c160ab84d703c8084d31183a215d",
+      "reused_evas_response_actual_times_nodes_shape_finite_validated": true,
+      "original_kernel_sha256": "15f822833234d3cd4dbfd89a9c33cd8797ceaf6e2e4f52ffd3303d5745fdcc4d",
+      "prior_native_pair": {
+        "case": "E3-fine",
+        "native_rows": 1259,
+        "paired_native_rows": 1258,
+        "unpaired_outside_original_stop_rows": [
+          {
+            "time": 2.0000000000000013,
+            "voltages": {
+              "u": 2.0,
+              "z": 3.7500000100000017,
+              "history": 0.0,
+              "sample": 0.0,
+              "count": 1.0,
+              "edit": 1.0
+            }
+          }
+        ],
+        "full_native_pair_coverage": "I",
+        "paired_native_times_response_identity_validated": true,
+        "source_sha256": "68b7a1153d422a44af222e40df152f23003c2274627bd9d812d2e4cb8449e123",
+        "raw_direct_max_errors": {
+          "u": 0.0,
+          "z": 9.999999772691837e-09,
+          "history": 0.0,
+          "sample": 0.0,
+          "count": 1.0,
+          "edit": 0.0
+        },
+        "count_mismatches_all_retained": [
+          {
+            "time": 0.49999999549999985,
+            "spectre": 1.0,
+            "evas": 0.0
+          },
+          {
+            "time": 0.4999999977499999,
+            "spectre": 1.0,
+            "evas": 0.0
+          }
+        ],
+        "count_mismatches_outside_original_200ns_window": 0,
+        "continuous_finite_status": "P",
+        "exact_phase_projection_status": "F",
+        "phase_origin_qualification": "I: native exported times do not prove exact rational callback origin",
+        "events": [
+          {
+            "time": 0.25,
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "after": [
+              2.0,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.5,
+            "event": 1,
+            "origin": "dut.va:10:1 (dut)",
+            "kind": "cross",
+            "guard_value": 1.4432899320127035e-15,
+            "before": [
+              2.0,
+              0.0,
+              1.0
+            ],
+            "after": [
+              2.0,
+              1.0,
+              1.0
+            ]
+          }
+        ]
+      },
+      "reanalysis_evas_execution": false
+    },
+    "E5-fine": {
+      "full_psf_date_only_differences": [
+        {
+          "new": "\"date\" \"9:43:19 PM, Thur Oct 8, 2026\"",
+          "old": "\"date\" \"3:22:09 AM, Thur Oct 8, 2026\""
+        }
+      ],
+      "complete_value_bytes_equal": true,
+      "new_psf_sha256": "0d9fa20f933b8fcdac9055ca8c2d0b1058df783396fbc1064732186394f0d268",
+      "old_psf_sha256": "6d2ba3cd2ab7c1390f7c2b5105eca1ff9870737c806fe998ab8d8f66387ed0c0",
+      "native_rows": 1144,
+      "requested_count": 1102,
+      "missing_requested_count": 987,
+      "required_coverage_status": "I",
+      "callback_records": [
+        {
+          "event": "cross",
+          "tokens": {
+            "time": "3.33333333833333800289e-01",
+            "guard": "1.50000012411055649864e-09",
+            "z": "1.00000000150000012411e+00",
+            "slope": "1.00000000000000000000e+00",
+            "count": "1",
+            "sample": "1.00000000150000012411e+00"
+          },
+          "time": 0.3333333338333338,
+          "time_hex": "0x1.5555555dec5bdp-2",
+          "guard": 1.5000001241105565e-09,
+          "z": 1.0000000015000001,
+          "slope_after": 1.0,
+          "count_after": 1,
+          "sample": 1.0000000015000001,
+          "callback_minus_exact_event_s": 5.000004669556782e-10,
+          "native_row": {
+            "time": 0.3333333338333338,
+            "voltages": {
+              "u": 0.3333333338333338,
+              "count": 1.0,
+              "z": 1.0000000015000001,
+              "history": 0.6666666676666676,
+              "edit": 0.0,
+              "sample": 1.0000000015000001
+            }
+          },
+          "native_z_and_count_and_local_recorded_field_equal": true,
+          "z_minus_ideal_preflow_v": -1.27675647831893e-15,
+          "guard_divided_by_preflow_slope_s": 5.000000413701855e-10
+        }
+      ],
+      "reused_evas_response_sha256": "588e6fccafcb1084345db4992a820c18f7f2ac586d2110aded768e321f65a71f",
+      "reused_evas_response_actual_times_nodes_shape_finite_validated": true,
+      "original_kernel_sha256": "15f822833234d3cd4dbfd89a9c33cd8797ceaf6e2e4f52ffd3303d5745fdcc4d",
+      "prior_native_pair": {
+        "case": "E5-fine",
+        "native_rows": 1144,
+        "paired_native_rows": 1143,
+        "unpaired_outside_original_stop_rows": [
+          {
+            "time": 2.0000000000000013,
+            "voltages": {
+              "u": 2.0,
+              "z": 2.6666666686666733,
+              "history": 4.000000000000003,
+              "sample": 1.0000000015000001,
+              "count": 1.0,
+              "edit": 0.0
+            }
+          }
+        ],
+        "full_native_pair_coverage": "I",
+        "paired_native_times_response_identity_validated": true,
+        "source_sha256": "683387a6e759b6f7b92d1332511191465f21bee045b82941fb44a23449550645",
+        "raw_direct_max_errors": {
+          "u": 0.0,
+          "z": 1.9999935041425942e-09,
+          "history": 1.1102230246251565e-16,
+          "sample": 1.4999934627724087e-09,
+          "count": 0.0,
+          "edit": 0.0
+        },
+        "count_mismatches_all_retained": [],
+        "count_mismatches_outside_original_200ns_window": 0,
+        "continuous_finite_status": "P",
+        "exact_phase_projection_status": "P",
+        "phase_origin_qualification": "I: native exported times do not prove exact rational callback origin",
+        "events": [
+          {
+            "time": 0.33333333333333337,
+            "observation_time_bounds": [
+              0.3333333333333333,
+              0.33333333333333337
+            ],
+            "event": 0,
+            "origin": "dut.va:9:1 (dut)",
+            "kind": "cross",
+            "guard_value": 6.661338147750939e-15,
+            "before": [
+              3.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "after": [
+              1.0,
+              1.0000000000000067,
+              1.0,
+              0.0
+            ]
+          }
+        ]
+      },
+      "reanalysis_evas_execution": false
+    }
+  },
+  "production_revision_unchanged": "4ae69045567dd6eda7460536ba6e72d122ec9964",
+  "integration_revision_reused": "9b8d5e88d4017b6778b1ad9b46e9c94cf9eff156",
+  "settings_mapping_negative": {
+    "status": "P",
+    "mutation": "maxstep_s doubled in an independent temporary copied view",
+    "actual_reader_status": "I",
+    "actual_mismatches": [
+      "maxstep"
+    ],
+    "original_inputs_unchanged": true
+  },
+  "scientific_budgets_unchanged": {
+    "waveform_v": 1e-06,
+    "event_window_s": 2e-07
+  },
+  "old_four_native_coverage_and_strict_failures_retained": true,
+  "pr108_status": "draft; no compatibility exception"
+}

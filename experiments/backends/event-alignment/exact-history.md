@@ -31,3 +31,20 @@ PYTHONPATH=.:evas/src python3 -B experiments/backends/event-alignment/exact-hist
 ```
 
 入口使用公开的十二个 manifest，逐项保存完整实际请求与响应、校验返回协议并运行原 checker。有原始 #103 请求目录时可加 `--historical-requests PATH`，严格比较 Program 除 schema 外的字段及全部其他请求字段。其结果只能说明本地请求通过；严格 Spectre 差异与覆盖缺口仍单列。
+
+## 新 fine callback 打印对照
+
+新探针归档 `74baa53c271f836833dba20e1efc2ab8971c43c2a3809bae632a52a22d370032` 的 E3/E5 fine 与原 fine 的完整 PSF 分别保留 1259/1144 行，仅 date header 不同；VALUE 字节及全部原生时间/信号完全相同。新 callback 日志精确匹配唯一原生行：E3 timer `.25`、cross `.49999999549999985`，E5 cross `.3333333338333338`。E3 数值积分在 timer 点已有约 10 nV 偏移；这些真实 callback 不能被改写成解析根或规范 tie 规则。
+
+独立参考分析是当前任务 `runs/issue-closure-20261008/spec-b-query-probes/actual-analysis/README.md` 及其 `analysis.json`，其固定 SHA 与本轮关系记录在 [新探针收据](evidence/exact-history-query-probes.json)。本次只读重析再次核对新 91 / 原 415 个正规归档成员、完整 PSF 非扰动及旧实际 EVAS response 返回协议。旧四配置 native 配对仍由原收据绑定；本轮只把新两个 fine 保存轨迹与其中两个旧 fine 配对关联，没有执行新 EVAS 查询。base 不能被算成本轮新打印配置。
+
+原新探针 RESULT 的 settings I（`'vabstol_V'`）来自准备 schema：使用 deck 键 `vabstol/iabstol/maxstep/stop`，维护 reader 要求 `vabstol_V/iabstol_A/maxstep_s/stop_s`。离线映射只更名、不改值，重新调用现有 paper reader，同时交叉验证实际 log/PSF 中的有效控制；两配置均 `readback_matches`，method 也与原请求一致。原 RESULT、FREEZE 和输入未修改，新的分析另存并绑定 reader/mapping 身份。precision 仍未由该 reader 建立运行资格。错误 mapped maxstep 的负控仍返回 I。
+
+复验映射读回（输出目录必须不存在）：
+
+```sh
+python3 -B experiments/backends/event-alignment/exact-history/query_readback.py \
+  PATH_TO_NEW_COLLECTION runs/query-readback
+```
+
+原覆盖分母仍是 E3 1201（缺944）/E5 1102（缺987），左右一 ULP 查询均无原生行，继续 I。中心 E3 `.5` 后态、E5 `float(1/3)` 前态存在于保存行中；不能推广为三点严格相容。E3 两个原生前根计数差 F、四个原配置末行超过 stop 的完整配对 I，以及一般 callback 来源资格均未被删除或豁免。B2–B5 本地证明证据不变，PR #108 继续 draft。
