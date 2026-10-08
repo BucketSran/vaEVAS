@@ -11,7 +11,7 @@ from typing import Literal
 
 
 from .errors import CompileError
-from .limits import MAX_SOURCE_NESTING, check_expression
+from .limits import MAX_SOURCE_NESTING, check_expression, check_ir
 
 
 @dataclass(frozen=True)
@@ -40,7 +40,8 @@ OPERATOR_NAMES = frozenset(OPERATOR_ARITIES) | {"sin"}
 DECISION_NAMES = frozenset(("<", "<=", ">", ">=", "&&", "||", "unary!", "ternary"))
 _KEYWORDS = {"module", "endmodule", "input", "output", "inout", "electrical",
              "parameter", "real", "analog", "begin", "end", "integer", "initial_step", "if", "else", "or",
-             "function", "endfunction", "for", "genvar", "from", "exclude", "inf"}
+             "function", "endfunction", "for", "genvar", "from", "exclude", "inf",
+             "case", "endcase", "default", "casex", "casez"}
 _BUILTINS = OPERATOR_NAMES | {"V", "pow", "timer", "cross"}
 _RESERVED = _KEYWORDS | _BUILTINS
 
@@ -448,6 +449,49 @@ class Parser:
                 self.take("else")
                 else_body = self.statements(True, analog)
             return (Conditional(relation.text, left, right, then_body, else_body, token),)
+        if (analog or conditional) and token.text == "case":
+            self.take("case")
+            self.take("(")
+            selector = self.expression()
+            self.take(")")
+            if contains_operator(selector):
+                self.fail("case selectors cannot contain waveform operators", token)
+            items, default = [], None
+            while self.token.text != "endcase":
+                if self.token.text == "default":
+                    default_token = self.take("default")
+                    if default is not None:
+                        self.fail("case permits at most one default item", default_token)
+                    if self.token.text == ":":
+                        self.take(":")
+                    default = self.statements(True, analog)
+                    continue
+                labels = [self.expression()]
+                while self.token.text == ",":
+                    self.take(",")
+                    labels.append(self.expression())
+                self.take(":")
+                if any(contains_operator(label) for label in labels):
+                    self.fail("case labels cannot contain waveform operators", token)
+                if len(items) + len(labels) > 16:
+                    self.fail("case label budget (16) exceeded", token, code="resource_budget")
+                body = self.statements(True, analog)
+                items.extend((label, body) for label in labels)
+            self.take("endcase")
+            if not items:
+                self.fail("case requires at least one non-default label in this slice", token)
+            # Scalar finite values match exactly when both ordered comparisons
+            # hold. No body executes between these comparisons, so its writes
+            # cannot change the captured selection. Else links preserve the
+            # first matching label, including overlapping labels/items.
+            result = default or ()
+            for label, body in reversed(items):
+                equal = Conditional(">=", selector, label, body, result, token)
+                result = (Conditional("<=", selector, label, (equal,), result, token),)
+            # Generated comparison trees duplicate fallbacks on the wire.
+            # Check their expanded size before later recursive compiler passes.
+            check_ir(result, token)
+            return result
         if (analog or conditional) and token.text == "for":
             self.take("for")
             self.take("(")

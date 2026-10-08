@@ -11,8 +11,8 @@ def numeric(token, dimension="dimensionless"):
     if not m:
         raise ReadbackError('malformed numeric: ' + token)
     suffix = m[2]
-    scale = {'':1., 's':1., 'V':1., 'A':1., 'ps':1e-12, 'ns':1e-9, 'us':1e-6, 'nV':1e-9, 'pA':1e-12}
-    allowed={'dimensionless':{''}, 'time':{'','s','ps','ns','us'}, 'voltage':{'','V','nV'}, 'current':{'','A','pA'}}
+    scale = {'':1., 's':1., 'V':1., 'A':1., 'ms':1e-3, 'ps':1e-12, 'ns':1e-9, 'us':1e-6, 'nV':1e-9, 'pV':1e-12, 'fV':1e-15, 'pA':1e-12, 'fA':1e-15, 'aA':1e-18}
+    allowed={'dimensionless':{''}, 'time':{'','s','ms','ps','ns','us'}, 'voltage':{'','V','nV','pV','fV'}, 'current':{'','A','pA','fA','aA'}}
     if suffix not in allowed[dimension]:
         raise ReadbackError('wrong dimension for '+dimension+': '+token)
     if suffix not in scale:

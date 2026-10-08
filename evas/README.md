@@ -104,6 +104,8 @@ PYTHONPATH=evas/src python3 -m evas lint evas/examples/01-static-gain/sim.json
 默认选择校验包内核身份；显式 `--kernel` 保持可用，失败不回退。
 构建、安装、平台证据边界和源码方式见[安装合同](docs/install.md)。尚未发布到公共索引或打 tag。
 
+有限标量 `case/default` 的支持范围、资源预算与拒绝边界见 [case 契约](validation/CASE_STATEMENTS_CONTRACT.md)。
+
 ## 构建与运行
 
 需要 Python 3.10+ 和 Rust/Cargo。以下命令从仓库根目录运行。

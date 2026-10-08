@@ -1,0 +1,720 @@
+{
+  "analysis_id": "case-statements-retained-reanalysis-20261008-v3",
+  "execution_kind": "reanalysis of completed executions; no new simulator invocation",
+  "checker_sha256": "d80a23ec22b4755e4ea6b02163ff69cb1360ee0aded9576f8afa0953c1599e1f",
+  "shared_psf_parser_sha256": "739163eb8986a4575b3a020955bf46ac5bc7c1a5e0ca836fd3df3d354778724a",
+  "fixture_sha256": {
+    "dut.va": "e36142af3426a9e0ba93a71ecf1d101e5e48c103b7c56b38840e4c7cfcdd662f",
+    "expected.json": "5b8087434de9e5994a9a7e866e42f838814f7a9a1aded6fb6a1e40dfa66a374a",
+    "table.json": "4839fe24ec25696843c018e8bcc2d90bb50967d1243bf493876bb2d4d20e449a",
+    "table.scs": "83fff26bc83d94a2786c3b77be7bbe09cb66ad2d2d0c1a64e34d0c8a2bf5196d"
+  },
+  "raw_artifact_sha256": {
+    "PAIR.json": "cebf0a38e786e6855f9b713630f0221537cc969e3b9642b159cd1213d30283f6",
+    "PREPARATION.json": "92ef783b0a7a3b1e1e26ffe14d3cd50d8801522fe19159e7578a74845496a86e",
+    "normalized.json": "86e926010ea1bceefdae094c91076e47a2c3d00f5fd62ccc3070b7b27cd3e55e",
+    "evas-native.stdout.json": "b9158f14ff111ae337af97dba17d0c0460cb45a24d43f44aff4f264f5d06375e",
+    "evas-native.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "native-query.json": "5de8f510a576604390a5f26080cf4334cfa9d134c79ec145ba6e8b29637ca09f",
+    "settings-readback.json": "c7e94d9c8bc2a39faae168ac2c2636c8ec28ec8ba4e2e21e2964b662656d010f",
+    "check.py": "cb65706f3c416499ee88de43f97e3cb3c2160047c3800630654cb97a960997a7",
+    "normalize_psf.py": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8",
+    "collected/spectre/COLLECTION.json": "3d99ea523ef4f1475fd05da87ca50d53318533e12ba54638536a2a7554aa4b23",
+    "collected/spectre/spectre-output/TOOL_IDENTITY.json": "0cd88374865ee385dd4cce4bf0f4886021ba95a624997f9fba175ef413c74d23",
+    "collected/spectre/spectre-output/runs/case-statements/psf/tran.tran.tran": "4ff00f825cd91fe992789f272d2fae4d816e21c022f2d9b3a29cab6a25fd25eb",
+    "collected/spectre/spectre-output/runs/case-statements/spectre.log": "506a6efae39c9c0f74b6a7661c63b7d25510301c4e18a613577a0967fefe549f",
+    "collected/spectre/spectre-output/runs/case-statements/RESULT.json": "bbd2b3496158725ab11a0e269f6ea2bb287b9feab317dd7f4258fcde1e5cf83d",
+    "collected/spectre/spectre-output/runs/case-statements/dut.va": "e36142af3426a9e0ba93a71ecf1d101e5e48c103b7c56b38840e4c7cfcdd662f",
+    "collected/spectre/spectre-output/runs/case-statements/tb.scs": "3b9639dbbc493134a3193dd0ef59d89e2701efb37ba52f7b2bcf4dd7000c7c1b",
+    "collected/spectre/spectre-output/runs/case-statements/expected.json": "5b8087434de9e5994a9a7e866e42f838814f7a9a1aded6fb6a1e40dfa66a374a",
+    "collected/spectre/spectre-output/runs/case-statements/table.json": "4839fe24ec25696843c018e8bcc2d90bb50967d1243bf493876bb2d4d20e449a",
+    "collected/spectre/spectre-output/runs/case-statements/original-table.scs": "83fff26bc83d94a2786c3b77be7bbe09cb66ad2d2d0c1a64e34d0c8a2bf5196d"
+  },
+  "execution_identity": {
+    "evas_commit": "3352f12d59574f0cf07f889966a891df1ac8b0e2",
+    "production_source_dirty": false,
+    "production_source_dirty_evidence": "coordinator execution record; not independently embedded in response",
+    "frontend_syntax_sha256": "80e359beffe6d378ed778712aa2e44f160ee94acdbb91e0a1a6edb0b4107e40a",
+    "kernel_sha256": "51b8033a2d1f2d96c06773396f35273cff30618eb9bc12777321e91c1b3b687a",
+    "engine": "evas-events-0.14.0",
+    "ir_schema_version": 18,
+    "embedded_build_revision": null,
+    "request_protocol_version": null,
+    "spectre_version": "sub-version  21.1.0.509.isr12",
+    "spectre_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "spectre_setup_sha256": [
+      "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+      "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+    ],
+    "model_sha256": "e36142af3426a9e0ba93a71ecf1d101e5e48c103b7c56b38840e4c7cfcdd662f",
+    "original_deck_sha256": "83fff26bc83d94a2786c3b77be7bbe09cb66ad2d2d0c1a64e34d0c8a2bf5196d",
+    "executed_deck_sha256": "3b9639dbbc493134a3193dd0ef59d89e2701efb37ba52f7b2bcf4dd7000c7c1b",
+    "deck_changes": [
+      "analysis name tr to tran for maintained collector",
+      "17-digit output precision",
+      "explicit iabstol1e-12 traponly",
+      "nine exact strobe times while retaining native grid"
+    ]
+  },
+  "requested_settings": {
+    "EVAS": {
+      "reltol": 1e-06,
+      "vabstol": 1e-09
+    },
+    "EVAS_transient": {
+      "output_times": [
+        0.0,
+        0.001,
+        0.003,
+        0.007,
+        0.015,
+        0.031,
+        0.063,
+        0.125,
+        0.1875,
+        0.25,
+        0.375,
+        0.5,
+        0.625,
+        0.75,
+        0.875,
+        1.0
+      ],
+      "stop": 1,
+      "max_step": 0.125
+    },
+    "Spectre": {
+      "reltol": 1e-06,
+      "vabstol_V": 1e-09,
+      "iabstol_A": 1e-12,
+      "stop_s": 1,
+      "maxstep_s": 0.125,
+      "method": "traponly",
+      "output_precision_digits": 17,
+      "strobe_times_s": [
+        0.0,
+        0.125,
+        0.25,
+        0.375,
+        0.5,
+        0.625,
+        0.75,
+        0.875,
+        1.0
+      ]
+    }
+  },
+  "effective_settings": {
+    "Spectre": {
+      "effective": {
+        "stop_s": {
+          "value": 1.0,
+          "line": 131,
+          "raw": "    stop = 1 s",
+          "scope": "transient:tran"
+        },
+        "maxstep_s": {
+          "value": 0.125,
+          "line": 133,
+          "raw": "    maxstep = 125 ms",
+          "scope": "transient:tran"
+        },
+        "reltol": {
+          "value": 1e-06,
+          "line": 137,
+          "raw": "    reltol = 1e-06",
+          "scope": "transient:tran"
+        },
+        "vabstol_V": {
+          "value": 1e-09,
+          "line": 138,
+          "raw": "    abstol(V) = 1 nV",
+          "scope": "transient:tran"
+        },
+        "iabstol_A": {
+          "value": 1e-12,
+          "line": 139,
+          "raw": "    abstol(I) = 1 pA",
+          "scope": "transient:tran"
+        },
+        "method": {
+          "value": "traponly",
+          "line": 144,
+          "raw": "    method = traponly",
+          "scope": "transient:tran"
+        }
+      },
+      "global_user": {
+        "vabstol_V": {
+          "value": 1e-09,
+          "line": 89,
+          "raw": "            vabstol = 1e-09",
+          "scope": "global_user"
+        },
+        "iabstol_A": {
+          "value": 1e-12,
+          "line": 90,
+          "raw": "            iabstol = 1e-12",
+          "scope": "global_user"
+        },
+        "reltol": {
+          "value": 1e-06,
+          "line": 92,
+          "raw": "             reltol = 1e-06",
+          "scope": "global_user"
+        }
+      },
+      "psf_effective": {
+        "stop_s": {
+          "value": 1.0,
+          "line": 14,
+          "raw": "\"stop\" 1.00000",
+          "scope": "psf_transient:tran"
+        },
+        "maxstep_s": {
+          "value": 0.125,
+          "line": 17,
+          "raw": "\"maxstep\" 0.125000",
+          "scope": "psf_transient:tran"
+        },
+        "reltol": {
+          "value": 1e-06,
+          "line": 21,
+          "raw": "\"reltol\" 1.00000e-06",
+          "scope": "psf_transient:tran"
+        },
+        "vabstol_V": {
+          "value": 1e-09,
+          "line": 22,
+          "raw": "\"abstol(V)\" 1.00000e-09",
+          "scope": "psf_transient:tran"
+        },
+        "iabstol_A": {
+          "value": 1e-12,
+          "line": 23,
+          "raw": "\"abstol(I)\" 1.00000e-12",
+          "scope": "psf_transient:tran"
+        },
+        "method": {
+          "value": "traponly",
+          "line": 28,
+          "raw": "\"method\" \"traponly\"",
+          "scope": "psf_transient:tran"
+        }
+      },
+      "psf_relative_metadata": {
+        "tolerance.relative": {
+          "value": 1e-06,
+          "line": 11,
+          "raw": "\"tolerance.relative\" 1.00000e-06",
+          "scope": "psf_header"
+        }
+      }
+    },
+    "EVAS": "requested values sent to successful kernel request; no independent runtime settings readback"
+  },
+  "execution_attempts": {
+    "Spectre_simulations": 1,
+    "Spectre_version_queries": 1,
+    "Spectre_returncode": 0,
+    "EVAS_returncode": 0,
+    "new_simulations_for_this_reanalysis": 0,
+    "original_settings_record": {
+      "status": "I",
+      "reason": "[Errno 2] No such file or directory: '/tmp/chips-jinzhihong/issue-closure-20261008-frontend-v1/spectre-output/runs/case-statements/requested_settings.json'"
+    }
+  },
+  "analysis_failures": {
+    "original_settings_readback": {
+      "reason": "local settings parser did not accept 125 ms",
+      "original_exception_output_availability": "tool transcript only; no standalone preserved exception file",
+      "reproduction": "worktrees/operator-contract-closure/runs/issue-closure/readback-red.log",
+      "reproduction_sha256": "86fe47c74883de190a7fd654b20d888bbb92758d152b951486e4bb0885e5ef2f",
+      "repair": "maintenance parser adds ms/pV/fV/fA/aA; readback reanalysis uses retained log/PSF"
+    },
+    "original_pair_analysis": {
+      "reason": "KeyError: 'time' from per-solution time access",
+      "original_exception_output_availability": "tool transcript only; no standalone preserved exception file",
+      "original_script": "current/runs/issue-closure-20261008/analyze_case.py",
+      "original_script_sha256": "7606d8d2dfbbe2f06d5e0d4a1541f5317b5fc471c107e794dc4dfdbea0a60d0d",
+      "corrected_script": "current/runs/issue-closure-20261008/analyze_case_v2.py",
+      "corrected_script_sha256": "ea71f87297ed3b1e63248f8ff5e802f87c5e3a3674fa84a5d819f3c820a14b94",
+      "repair": "use documented response.transient.times; retained successful EVAS stdout reused without rerun"
+    }
+  },
+  "observations": [
+    {
+      "time_s": 0.0,
+      "Spectre_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      },
+      "EVAS_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      }
+    },
+    {
+      "time_s": 0.001,
+      "Spectre_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      },
+      "EVAS_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      }
+    },
+    {
+      "time_s": 0.003,
+      "Spectre_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      },
+      "EVAS_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      }
+    },
+    {
+      "time_s": 0.007,
+      "Spectre_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      },
+      "EVAS_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      }
+    },
+    {
+      "time_s": 0.015,
+      "Spectre_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      },
+      "EVAS_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      }
+    },
+    {
+      "time_s": 0.031,
+      "Spectre_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      },
+      "EVAS_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      }
+    },
+    {
+      "time_s": 0.063,
+      "Spectre_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      },
+      "EVAS_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      }
+    },
+    {
+      "time_s": 0.125,
+      "Spectre_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      },
+      "EVAS_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      }
+    },
+    {
+      "time_s": 0.1875,
+      "Spectre_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      },
+      "EVAS_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      }
+    },
+    {
+      "time_s": 0.25,
+      "Spectre_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      },
+      "EVAS_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      }
+    },
+    {
+      "time_s": 0.375,
+      "Spectre_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      },
+      "EVAS_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      }
+    },
+    {
+      "time_s": 0.5,
+      "Spectre_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      },
+      "EVAS_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      }
+    },
+    {
+      "time_s": 0.625,
+      "Spectre_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      },
+      "EVAS_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      }
+    },
+    {
+      "time_s": 0.75,
+      "Spectre_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      },
+      "EVAS_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      }
+    },
+    {
+      "time_s": 0.875,
+      "Spectre_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      },
+      "EVAS_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      }
+    },
+    {
+      "time_s": 1.0,
+      "Spectre_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      },
+      "EVAS_V": {
+        "y0": 3.0,
+        "f0": 3.0,
+        "y1": 3.0,
+        "f1": 4.0,
+        "y2": 7.0,
+        "f2": 5.0,
+        "y3": 9.0,
+        "f3": 5.0,
+        "y4": 9.0,
+        "f4": 5.0
+      }
+    }
+  ],
+  "result": {
+    "finite_comparison": "P",
+    "formal_qualification": "I",
+    "fixed_points": 9,
+    "fixed_scalars": 90,
+    "native_points": 16,
+    "native_scalars": 160,
+    "maxima": {
+      "Spectre_expected_V": 0.0,
+      "EVAS_expected_V": 0.0,
+      "EVAS_Spectre_V": 0.0
+    },
+    "failures": []
+  },
+  "availability": {
+    "compact_inputs_checker": "repository-contained",
+    "full_raw": "local-only; current/runs/issue-closure-20261008/frontend-reference-v1; no public retrieval URL",
+    "raw_archive_sha256": "1b5f830afebee09468c072539af74ec94ba267b6f6d085470e567c8643209f25",
+    "verified_collection_files": 28,
+    "remote_original_retained": true,
+    "remote_lock_released": true
+  },
+  "limits": [
+    "finite saved scalar comparison P, formal qualification I; decimal export enclosure is not certified",
+    "DC stimuli do not establish dynamic equality boundary, arbitrary state case, or analysis lifecycle behavior",
+    "execution commit identifies actually run source; later docs/readback maintenance is reanalysis, not new simulator execution",
+    "production source dirty status from coordinator; embedded kernel build revision unknown"
+  ],
+  "execution_binding": {
+    "evas_commit": "3352f12d59574f0cf07f889966a891df1ac8b0e2",
+    "frontend_syntax_sha256": "80e359beffe6d378ed778712aa2e44f160ee94acdbb91e0a1a6edb0b4107e40a",
+    "kernel_sha256": "51b8033a2d1f2d96c06773396f35273cff30618eb9bc12777321e91c1b3b687a",
+    "engine": "evas-events-0.14.0",
+    "ir_schema_version": 18,
+    "spectre_version": "sub-version  21.1.0.509.isr12",
+    "spectre_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "model_sha256": "e36142af3426a9e0ba93a71ecf1d101e5e48c103b7c56b38840e4c7cfcdd662f",
+    "original_deck_sha256": "83fff26bc83d94a2786c3b77be7bbe09cb66ad2d2d0c1a64e34d0c8a2bf5196d",
+    "executed_deck_sha256": "3b9639dbbc493134a3193dd0ef59d89e2701efb37ba52f7b2bcf4dd7000c7c1b",
+    "EVAS_output_sha256": "b9158f14ff111ae337af97dba17d0c0460cb45a24d43f44aff4f264f5d06375e"
+  }
+}
