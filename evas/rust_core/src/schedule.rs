@@ -413,7 +413,7 @@ fn order_fixed_timers(
         if groups > CAUSAL_MICROEVENT_BUDGET {
             return Err(Error::new(
                 "event_budget",
-                "bounded exact event cluster exceeds 64 subsequent microevents",
+                format!("bounded exact event cluster exceeds {CAUSAL_MICROEVENT_BUDGET} subsequent microevents"),
             ));
         }
         groups += 1;
@@ -434,9 +434,15 @@ fn order_fixed_timers(
         if let Some(prior) = previous {
             time = time.max(prior.next_up());
         }
-        if !time.is_finite() || time > stop || next_lower.is_some_and(|limit| time >= limit) {
+        if !time.is_finite() {
+            return Err(unresolved("ordered timer representative is not finite"));
+        }
+        if time > stop {
+            return Err(unresolved("ordered timer representatives exceed stop"));
+        }
+        if next_lower.is_some_and(|limit| time >= limit) {
             return Err(unresolved(
-                "ordered timer representatives exceed stop or the next event boundary",
+                "ordered timer representatives reach the next event boundary",
             ));
         }
         for event in &mut events[start..end] {
@@ -1362,11 +1368,19 @@ mod tests {
     fn unrepresentable_or_outside_representatives_fail_closed() {
         let m = model();
         let close = || vec![event(1., 1., 1.5), event(1.1, 1., 1.5)];
-        for (stop, next) in [(1.5, None), (2., Some(1.5_f64.next_up()))] {
+        for (stop, next, message) in [
+            (1.5, None, "ordered timer representatives exceed stop"),
+            (
+                2.,
+                Some(1.5_f64.next_up()),
+                "ordered timer representatives reach the next event boundary",
+            ),
+        ] {
             let error = order_fixed_timers(&mut close(), &m, stop, next)
                 .err()
                 .unwrap();
             assert_eq!(error.kind, "event_resolution");
+            assert_eq!(error.message, message);
         }
         let mut overflow = vec![
             event(f64::MAX.next_down(), f64::MAX.next_down(), f64::MAX),
@@ -1377,13 +1391,11 @@ mod tests {
         if let EventTrigger::Timer { time_tolerance, .. } = &mut wide.triggers[0].trigger {
             *time_tolerance = f64::MAX;
         }
-        assert_eq!(
-            order_fixed_timers(&mut overflow, &wide, f64::MAX, None)
-                .err()
-                .unwrap()
-                .kind,
-            "event_resolution"
-        );
+        let error = order_fixed_timers(&mut overflow, &wide, f64::MAX, None)
+            .err()
+            .unwrap();
+        assert_eq!(error.kind, "event_resolution");
+        assert_eq!(error.message, "ordered timer representative is not finite");
         let mut invalid = vec![event(f64::NAN, 0., 1.), event(1., 1., 1.)];
         assert_eq!(
             order_fixed_timers(&mut invalid, &m, 2., None)
