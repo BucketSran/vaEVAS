@@ -1,0 +1,475 @@
+{
+  "condition": "CO-VCO-01",
+  "scope": "Per-point local EVAS diagnosis using retained actual Spectre samples; not a repaired or newly qualified paper run",
+  "paper_status": "I",
+  "identity": {
+    "base_commit": "d7034820de63c0ca13c5bf5bab5d8c79117d5c26",
+    "kernel_sha256": "c096bf2d03d7ac8c32745975ada486826fb05e2b7cc9bf1affad3dd97f8c5eeb",
+    "script_sha256": "cf48595ad56e195e3f75467ceb50ab4d1ea11a1cff434719623873d0e651a48a",
+    "source_sha256": "1bc287bb7c2bd6db604c56233239b668582093388790fe4be92f8c7fd06f327e",
+    "original_request_sha256": "f052c3f035807f8eaaab5bc7645336d64b694b742c12ee43885aaa049c21f3fc",
+    "spectre_observation_sha256": "f1c74acfc1f97a652a2dba4b47533c26e1d16d17c7525209d0bbd5698e09addb",
+    "control_source_sha256": "e16e44237349ccd2ea45d98e67a8928b713ee17dff22d2be9c358760f71459d4",
+    "new_spectre_runs": 0,
+    "local_kernel_invocations": 48,
+    "purpose": "Per-point diagnosis and unchanged error-policy controls; no production repair, grading change or formal qualification"
+  },
+  "new_spectre_runs": 0,
+  "local_kernel_invocations": 48,
+  "diagnostic_totals": {
+    "original_center_rejections": 12,
+    "original_neighbor_completions": 24,
+    "changed_source_control_completions": 12
+  },
+  "successful_nominal_node_values_identical_across_three_profiles": true,
+  "profiles": {
+    "original": {
+      "tolerances": {
+        "absolute": 1e-07,
+        "relative": 1e-05
+      },
+      "original_centers_rejected": 4,
+      "original_neighbors_completed": 8,
+      "constant_phase_controls_completed": 4,
+      "neighbor_max_absolute_difference_from_reused_spectre": {
+        "freq": 2.220446049250313e-16,
+        "phase": 1.0099981961886328e-08,
+        "out": 6.346005782892567e-08
+      },
+      "control_retained_nodes_max_absolute_difference_from_original_spectre": {
+        "freq": 3.3306690738754696e-16,
+        "out": 6.346005869552267e-08
+      }
+    },
+    "tighter": {
+      "tolerances": {
+        "absolute": 1e-08,
+        "relative": 1e-06
+      },
+      "original_centers_rejected": 4,
+      "original_neighbors_completed": 8,
+      "constant_phase_controls_completed": 4,
+      "neighbor_max_absolute_difference_from_reused_spectre": {
+        "freq": 2.220446049250313e-16,
+        "phase": 1.0099981961886328e-08,
+        "out": 6.346005782892567e-08
+      },
+      "control_retained_nodes_max_absolute_difference_from_original_spectre": {
+        "freq": 3.3306690738754696e-16,
+        "out": 6.346005869552267e-08
+      }
+    },
+    "looser_diagnostic_only": {
+      "tolerances": {
+        "absolute": 1e-06,
+        "relative": 0.0001
+      },
+      "original_centers_rejected": 4,
+      "original_neighbors_completed": 8,
+      "constant_phase_controls_completed": 4,
+      "neighbor_max_absolute_difference_from_reused_spectre": {
+        "freq": 2.220446049250313e-16,
+        "phase": 1.0099981961886328e-08,
+        "out": 6.346005782892567e-08
+      },
+      "control_retained_nodes_max_absolute_difference_from_original_spectre": {
+        "freq": 3.3306690738754696e-16,
+        "out": 6.346005869552267e-08
+      }
+    }
+  },
+  "centers": [
+    {
+      "center_index": 1,
+      "actual_time_s": 2.689966442575134e-06,
+      "observation_row_index_zero_based": 13563,
+      "actual_neighbors_s": [
+        2.689946442575134e-06,
+        2.689986442575134e-06
+      ],
+      "spectre_values": {
+        "ctl": 0.689966442575134,
+        "freq": 0.744983221287567,
+        "phase": 9.999969963203625e-09,
+        "out": 6.283166498506183e-08
+      },
+      "outcomes": {
+        "original": {
+          "original_source": {
+            "status": "rejected",
+            "error": {
+              "kind": "waveform_accuracy",
+              "message": "cannot certify same-time forward error at phase: bound 9.999999999999998e-1, budget 1.000000000000022e-7"
+            }
+          },
+          "constant_phase_diagnostic": {
+            "status": "completed",
+            "values": {
+              "0": 0.0,
+              "ctl": 0.6899664425751343,
+              "freq": 0.7449832212875671,
+              "out": 1.3951473992034527e-15,
+              "phase": -0.0
+            }
+          }
+        },
+        "tighter": {
+          "original_source": {
+            "status": "rejected",
+            "error": {
+              "kind": "waveform_accuracy",
+              "message": "cannot certify same-time forward error at phase: bound 9.999999999999998e-1, budget 1.000000000000022e-8"
+            }
+          },
+          "constant_phase_diagnostic": {
+            "status": "completed",
+            "values": {
+              "0": 0.0,
+              "ctl": 0.6899664425751343,
+              "freq": 0.7449832212875671,
+              "out": 1.3951473992034527e-15,
+              "phase": -0.0
+            }
+          }
+        },
+        "looser_diagnostic_only": {
+          "original_source": {
+            "status": "rejected",
+            "error": {
+              "kind": "waveform_accuracy",
+              "message": "cannot certify same-time forward error at phase: bound 9.999999999999998e-1, budget 1.000000000000022e-6"
+            }
+          },
+          "constant_phase_diagnostic": {
+            "status": "completed",
+            "values": {
+              "0": 0.0,
+              "ctl": 0.6899664425751343,
+              "freq": 0.7449832212875671,
+              "out": 1.3951473992034527e-15,
+              "phase": -0.0
+            }
+          }
+        }
+      },
+      "independent_compiled_binary64_IR_reference": {
+        "side_sign": 1,
+        "phase_minus_nearest_turn_cycle": "2.7457572653005506437980036791570314242799928744568247723141180804389215655249352E-16",
+        "wrapped_phase_cycle": "2.7457572653005506437980036791570314242799928744568247723141180804389215655249352E-16"
+      }
+    },
+    {
+      "center_index": 2,
+      "actual_time_s": 3.755e-06,
+      "observation_row_index_zero_based": 19090,
+      "actual_neighbors_s": [
+        3.754979999999999e-06,
+        3.75502e-06
+      ],
+      "spectre_values": {
+        "ctl": 1.755,
+        "freq": 1.0,
+        "phase": 1.009994510248191e-08,
+        "out": 6.345982614890613e-08
+      },
+      "outcomes": {
+        "original": {
+          "original_source": {
+            "status": "rejected",
+            "error": {
+              "kind": "waveform_accuracy",
+              "message": "cannot certify same-time forward error at phase: bound 1e0, budget 1e-7"
+            }
+          },
+          "constant_phase_diagnostic": {
+            "status": "completed",
+            "values": {
+              "0": 0.0,
+              "ctl": 1.7550000000000001,
+              "freq": 1.0,
+              "out": -0.0,
+              "phase": -0.0
+            }
+          }
+        },
+        "tighter": {
+          "original_source": {
+            "status": "rejected",
+            "error": {
+              "kind": "waveform_accuracy",
+              "message": "cannot certify same-time forward error at phase: bound 1e0, budget 1e-8"
+            }
+          },
+          "constant_phase_diagnostic": {
+            "status": "completed",
+            "values": {
+              "0": 0.0,
+              "ctl": 1.7550000000000001,
+              "freq": 1.0,
+              "out": -0.0,
+              "phase": -0.0
+            }
+          }
+        },
+        "looser_diagnostic_only": {
+          "original_source": {
+            "status": "rejected",
+            "error": {
+              "kind": "waveform_accuracy",
+              "message": "cannot certify same-time forward error at phase: bound 1e0, budget 1e-6"
+            }
+          },
+          "constant_phase_diagnostic": {
+            "status": "completed",
+            "values": {
+              "0": 0.0,
+              "ctl": 1.7550000000000001,
+              "freq": 1.0,
+              "out": -0.0,
+              "phase": -0.0
+            }
+          }
+        }
+      },
+      "independent_compiled_binary64_IR_reference": {
+        "side_sign": 1,
+        "phase_minus_nearest_turn_cycle": "1.8993649968795933416482980551471166210124165346255775268795649867426044675234008E-16",
+        "wrapped_phase_cycle": "1.8993649968795933416482980551471166210124165346255775268795649867426044675234008E-16"
+      }
+    },
+    {
+      "center_index": 3,
+      "actual_time_s": 4.754999999999999e-06,
+      "observation_row_index_zero_based": 24277,
+      "actual_neighbors_s": [
+        4.75498e-06,
+        4.75502e-06
+      ],
+      "spectre_values": {
+        "ctl": 1.245000000000001,
+        "freq": 1.0,
+        "phase": 1.009998107370791e-08,
+        "out": 6.346005312152279e-08
+      },
+      "outcomes": {
+        "original": {
+          "original_source": {
+            "status": "rejected",
+            "error": {
+              "kind": "waveform_accuracy",
+              "message": "cannot certify same-time forward error at phase: bound 9.999999999999991e-1, budget 1.009999999999999e-5"
+            }
+          },
+          "constant_phase_diagnostic": {
+            "status": "completed",
+            "values": {
+              "0": 0.0,
+              "ctl": 1.2450000000000006,
+              "freq": 1.0,
+              "out": -5.573999878030222e-15,
+              "phase": -0.0
+            }
+          }
+        },
+        "tighter": {
+          "original_source": {
+            "status": "rejected",
+            "error": {
+              "kind": "waveform_accuracy",
+              "message": "cannot certify same-time forward error at phase: bound 9.999999999999991e-1, budget 1.0099999999999986e-6"
+            }
+          },
+          "constant_phase_diagnostic": {
+            "status": "completed",
+            "values": {
+              "0": 0.0,
+              "ctl": 1.2450000000000006,
+              "freq": 1.0,
+              "out": -5.573999878030222e-15,
+              "phase": -0.0
+            }
+          }
+        },
+        "looser_diagnostic_only": {
+          "original_source": {
+            "status": "rejected",
+            "error": {
+              "kind": "waveform_accuracy",
+              "message": "cannot certify same-time forward error at phase: bound 9.999999999999991e-1, budget 1.0099999999999988e-4"
+            }
+          },
+          "constant_phase_diagnostic": {
+            "status": "completed",
+            "values": {
+              "0": 0.0,
+              "ctl": 1.2450000000000006,
+              "freq": 1.0,
+              "out": -5.573999878030222e-15,
+              "phase": -0.0
+            }
+          }
+        }
+      },
+      "independent_compiled_binary64_IR_reference": {
+        "side_sign": -1,
+        "phase_minus_nearest_turn_cycle": "-4.9059009892687966145079813127132900161793559263119224731204350132573955324765992E-16",
+        "wrapped_phase_cycle": "0.99999999999999950940990107312033854920186872867099838206440736880775268795649867"
+      }
+    },
+    {
+      "center_index": 4,
+      "actual_time_s": 6.31937515251343e-06,
+      "observation_row_index_zero_based": 32312,
+      "actual_neighbors_s": [
+        6.31935515251343e-06,
+        6.31939515251343e-06
+      ],
+      "spectre_values": {
+        "ctl": -0.1596875762567147,
+        "freq": 0.3201562118716427,
+        "phase": 5.099954236698068e-09,
+        "out": 3.204395817461691e-08
+      },
+      "outcomes": {
+        "original": {
+          "original_source": {
+            "status": "rejected",
+            "error": {
+              "kind": "waveform_accuracy",
+              "message": "cannot certify same-time forward error at phase: bound 9.999999999999996e-1, budget 1.0099999999999993e-5"
+            }
+          },
+          "constant_phase_diagnostic": {
+            "status": "completed",
+            "values": {
+              "0": 0.0,
+              "ctl": -0.15968757625671515,
+              "freq": 0.3201562118716424,
+              "out": -2.9094646189298464e-15,
+              "phase": -0.0
+            }
+          }
+        },
+        "tighter": {
+          "original_source": {
+            "status": "rejected",
+            "error": {
+              "kind": "waveform_accuracy",
+              "message": "cannot certify same-time forward error at phase: bound 9.999999999999996e-1, budget 1.009999999999999e-6"
+            }
+          },
+          "constant_phase_diagnostic": {
+            "status": "completed",
+            "values": {
+              "0": 0.0,
+              "ctl": -0.15968757625671515,
+              "freq": 0.3201562118716424,
+              "out": -2.9094646189298464e-15,
+              "phase": -0.0
+            }
+          }
+        },
+        "looser_diagnostic_only": {
+          "original_source": {
+            "status": "rejected",
+            "error": {
+              "kind": "waveform_accuracy",
+              "message": "cannot certify same-time forward error at phase: bound 9.999999999999996e-1, budget 1.0099999999999993e-4"
+            }
+          },
+          "constant_phase_diagnostic": {
+            "status": "completed",
+            "values": {
+              "0": 0.0,
+              "ctl": -0.15968757625671515,
+              "freq": 0.3201562118716424,
+              "out": -2.9094646189298464e-15,
+              "phase": -0.0
+            }
+          }
+        }
+      },
+      "independent_compiled_binary64_IR_reference": {
+        "side_sign": 1,
+        "phase_minus_nearest_turn_cycle": "2.5175620983412306654995328399117399566384609706084846914129751847094400078236137E-16",
+        "wrapped_phase_cycle": "2.5175620983412306654995328399117399566384609706084846914129751847094400078236137E-16"
+      }
+    }
+  ],
+  "case_specific_input_audit": {
+    "unique_exact_center_matches": 4,
+    "all_centers_have_actual_left_and_right_neighbors": true,
+    "original_tolerance_keys": [
+      "absolute",
+      "relative"
+    ],
+    "unrelated_request_fields_preserved": true,
+    "control_IR_diff": "Only the ordinary phase contribution RHS becomes constant zero; nodes/operators/states/events and other contributions unchanged",
+    "all_48_request_stdout_stderr_hashes_verified": true
+  },
+  "spectre_effective_settings_addendum": {
+    "version": "21.1.0.509.isr12 64bit",
+    "reltol": 1e-06,
+    "vabstol_V": 1e-07,
+    "iabstol_A": 1e-12,
+    "errpreset": "conservative",
+    "method": "traponly",
+    "maxstep_s": 2e-10,
+    "lteratio": 10,
+    "relref": "alllocal",
+    "log_lines_one_based": [
+      121,
+      141
+    ],
+    "method_explicit_in_deck": true
+  },
+  "limits": [
+    "Three EVAS tolerance profiles, not a Spectre convergence scan.",
+    "Constant-phase control is a different diagnostic source; it cannot replace original-source acceptance.",
+    "Exact-IR arithmetic is not decimal-source mathematics or a source-to-IR equivalence proof.",
+    "No grading budget changed; no source/export or strict-stop qualification resolved.",
+    "Original batch failure remains in evidence.json; this supplement resolves the previously unknown per-center outcomes."
+  ],
+  "artifacts": {
+    "diagnostic_script": {
+      "availability": "local-only",
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-continuous-clamp/runs/clamp/boundary-followup/diagnose.py",
+      "sha256": "cf48595ad56e195e3f75467ceb50ab4d1ea11a1cff434719623873d0e651a48a"
+    },
+    "identity": {
+      "availability": "local-only",
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-continuous-clamp/runs/clamp/boundary-followup/local-execution/identity.json",
+      "sha256": "5b41551a76a49e9207337bf771488a53854db7cc140ffd4d43030853e8a7498f"
+    },
+    "execution_records": {
+      "availability": "local-only",
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-continuous-clamp/runs/clamp/boundary-followup/local-execution/results.json",
+      "sha256": "49b97b7e72eccef82497d934a565be493e4d2b00932d8947d589820ce47f63af"
+    },
+    "constant_phase_control": {
+      "availability": "local-only",
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-continuous-clamp/runs/clamp/boundary-followup/local-execution/constant-phase-control.va",
+      "sha256": "e16e44237349ccd2ea45d98e67a8928b713ee17dff22d2be9c358760f71459d4"
+    },
+    "exact_IR_probe": {
+      "availability": "local-only",
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-continuous-clamp/runs/clamp/boundary-followup/astra/exact_ir_phase_probe.py",
+      "sha256": "f959d34169b37629f8fbb9ed0c101f2479f7f21f19cee083c69647c61882d1a7"
+    },
+    "exact_IR_result": {
+      "availability": "local-only",
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-continuous-clamp/runs/clamp/boundary-followup/astra/exact-ir-four-point.json",
+      "sha256": "c70cb8f5c6b77f4c6bbd8ed0ceb59ca06a0c035011575da59cbbf42084acb9e5"
+    },
+    "spectre_log": {
+      "availability": "local-only",
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/CO-VCO-01/spectre.log",
+      "sha256": "812015d2a0d5a9f78f82b98f50795e53dd3c61d90b23fa1005903a2590eba3f7"
+    },
+    "verification_and_summary_script": {
+      "availability": "local-only",
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-continuous-clamp/runs/clamp/boundary-followup/summarize.py",
+      "sha256": "0f7c6fe0574cecb0b9b59613fbf96ab8b9a8be268037c2521e5e1b2f6d8f3047"
+    }
+  }
+}

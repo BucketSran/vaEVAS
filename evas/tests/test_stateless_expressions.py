@@ -72,15 +72,15 @@ class StatelessExpressionContracts(unittest.TestCase):
             if baseline is None:baseline=selected
             self.assertEqual(selected,baseline)
 
-    def test_active_precision_refusal_and_unselected_nested_decisions(self):
+    def test_active_exact_certificate_and_unselected_nested_decisions(self):
         ambiguous='V(u)>0.3333333333333333'
         self.assertGreater(F(1,3),F(float('0.3333333333333333')))
         for expr, answer in [('0&&('+ambiguous+')',0),('1||('+ambiguous+')',1),
                              ('V(b)&&('+ambiguous+')',0),('V(b)?(('+ambiguous+')?1:2):3',3)]:
             with self.subTest(expr=expr):self.assertEqual(values(run_wave(expr)),[answer])
         for expr in [ambiguous,'1&&('+ambiguous+')','0||('+ambiguous+')','V(b)?(('+ambiguous+')?1:2):3']:
-            with self.subTest(expr=expr),self.assertRaisesRegex(KernelError,'condition_precision'):
-                run_wave(expr,selector=1)
+            with self.subTest(expr=expr):
+                self.assertEqual(values(run_wave(expr,selector=1)),[1])
 
     def test_original_affine_sign_is_not_separately_rounded(self):
         p=compile_expr('(V(u)+1e16>1e16)?1:0')

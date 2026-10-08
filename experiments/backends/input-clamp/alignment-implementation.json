@@ -1,0 +1,141 @@
+{
+  "scope": "PR100 alignment implementation from 4bc99bf8 to 043290c0",
+  "production_commit": "043290c0",
+  "current_kernel_sha256": "feaa1a27c803da7d36d26e8972a0451e1bd6eb7aed34f8f3dab9bd0b86648d28",
+  "baseline_kernel_sha256": "9909791cf16904753793c042bb756cba078dc97e50fe32db5b15509e7edce484",
+  "baseline_source": "4bc99bf8; two independent tests were added before the production edit",
+  "red_green_identity_note": "Supplement reconstructed from this task execution sequence, build logs and saved seven-request kernel receipts; the unittest text logs did not themselves contain a simultaneous build receipt. No claim that this note was recorded before the runs.",
+  "request_replay": {
+    "count": 7,
+    "before_returned": 3,
+    "after_returned": 7,
+    "all_request_sha256_unchanged": true,
+    "meaning": "Execution success only; physical/reference/backend comparison is reported separately."
+  },
+  "checks": {
+    "python_mapped": {
+      "passed": 82,
+      "log": "runs/clamp/alignment-regressions.txt"
+    },
+    "rust_full_before_final_rollback_test": {
+      "passed": 162,
+      "ignored": 1,
+      "log": "runs/clamp/alignment-rust.txt"
+    },
+    "additional_late_rejection_rollback": {
+      "passed": 1,
+      "log": "runs/clamp/alignment-rollback.txt"
+    },
+    "clippy": "passed",
+    "traceability": "passed, 77 files",
+    "frozen_identity": "passed; identity-only, no simulator correctness claim",
+    "diff_check": "passed"
+  },
+  "review": {
+    "astra": "12 supplied file hashes matched; five independently executed kernel requests; no actionable findings; excludes new backend evidence",
+    "glm": {
+      "model": "glm-5.3",
+      "cli": "actual Claude CLI invocation",
+      "completed": true,
+      "elapsed_seconds": 411.545,
+      "findings": "F1 resolved by complete direct_points structural validation plus three executed probes; existing linear voltage relations remain supported and documentation clarified. F2 has no current provenance leak: unique production caller overwrites candidate provenance including None before publication; documented caller contract. F3 supplementary identities are reconstructed from accessible execution sequence, not contemporaneous unittest receipts. Astra independently checked these dispositions.",
+      "actionable_remaining": [],
+      "limitations": "Static text review; no tool execution. First packet omitted direct_points and events::affine; conditional F1 concern was checked by coordinator and Astra using full code and actual probes. Does not cover new backend checker/evidence."
+    },
+    "backend_and_checker": {
+      "astra_report": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/astra/checker-r3-final-review.md",
+      "actual_glm_original": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/glm/backend/receipt.json",
+        "sha256": "5732b4228c84025a0d1b892a20112e1c98d498b6f000613ba20b6dcead1e0435",
+        "availability": "local-only"
+      },
+      "actual_glm_evidence_delta": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/glm/evidence-delta/receipt.json",
+        "sha256": "b80581eef8f5034327149300069cbd8b0631a5356a337568fb82d93c1e6ffae1",
+        "availability": "local-only"
+      },
+      "actual_glm_unforced": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/glm/unforced-event/receipt.json",
+        "sha256": "8f5c20ad26b2c8342ee5ec62958cfc635d362930534414bcf9a6dc2ec0cff8e6",
+        "availability": "local-only"
+      },
+      "actual_glm_final_delta": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/glm/final-delta/receipt.json",
+        "sha256": "ba2eedae0ddb0789cf646eb7d3c01daa3bdd062efa15931fda10ed8262ab5515",
+        "availability": "local-only"
+      },
+      "final_delta_disposition": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/glm/final-delta/adjudication.json",
+        "sha256": "8fcba4ba3c89c490b3c1e8a9424512937f28ade14b616f4816304a3387bb3cd8",
+        "availability": "local-only"
+      },
+      "scope": "Layered reference/export/observer evidence and checker r3. F1-F5 corrected; final FD1 minimum-obligation versus exclusive-schema distinction clarified, no checker behavior change; dual independent review completed.",
+      "limits": "GLM supplied-text static review; Astra additionally checked local artifacts and negative controls. Full raw/reviews local-only; no paper qualification inferred."
+    }
+  },
+  "local_evidence_root": "current/runs/spectre-alignment-20261007",
+  "availability": "Curated summary in repository; raw requests, waveforms, binaries and complete review logs local-only. Hashes alone do not establish public reproduction.",
+  "requests": [
+    {
+      "id": "clip--observer-off",
+      "sha256": "8cb6ec644e2ed284a3308ebb1039dac294d1ea974e21680fd328114af109cf07",
+      "before_returncode": 0,
+      "after_returncode": 0
+    },
+    {
+      "id": "clip--observer-on",
+      "sha256": "446812992d5767646608f64ebe8baa6ee90dc2cd2171711c1deb6262ce328f9a",
+      "before_returncode": 2,
+      "after_returncode": 0
+    },
+    {
+      "id": "constant--observer-off",
+      "sha256": "48cd32cb157e12bba281de381cfab28a97e3caadffd7e2fb4ee05e07f43fc069",
+      "before_returncode": 0,
+      "after_returncode": 0
+    },
+    {
+      "id": "constant--observer-on",
+      "sha256": "c2389d9c0ebb1e9aa5fd7c01265276a6058b3db764395649a75cd18f04bff906",
+      "before_returncode": 0,
+      "after_returncode": 0
+    },
+    {
+      "id": "original--observer-on",
+      "sha256": "f9814aad3f998e4966c81757be0f30ee55c2447a69fecdd557df98264971650a",
+      "before_returncode": 2,
+      "after_returncode": 0
+    },
+    {
+      "id": "pwl--observer-off",
+      "sha256": "05631823123150c493d58b57056320700ddd08ea0265e38dc23db2f26e84b133",
+      "before_returncode": 2,
+      "after_returncode": 0
+    },
+    {
+      "id": "pwl--observer-on",
+      "sha256": "7fec3cb96d9ff04018cee6e6d7c9d4b794cfd74303559cd9275410f314e9c8b9",
+      "before_returncode": 2,
+      "after_returncode": 0
+    }
+  ],
+  "combined_snapshot": {
+    "identity": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/integration-identity.json",
+      "sha256": "9cea58bd97ed0d1d4ea9b8f058039ab9a40c8f72bfbdbcba895581c550b6b29d",
+      "availability": "local-only"
+    },
+    "result": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/integration-public.json",
+      "sha256": "a874c111a533c89b1046970106c3be1d8b868136ea8526489d8eabc5c2ef9c9a",
+      "availability": "local-only"
+    },
+    "public_tests_passed": 60,
+    "formal_merge": false,
+    "documentation_conflicts": [
+      "evas/docs/CAPABILITIES.md",
+      "evas/docs/TRACEABILITY.md",
+      "evas/docs/diagnostic-inventory.json"
+    ]
+  }
+}

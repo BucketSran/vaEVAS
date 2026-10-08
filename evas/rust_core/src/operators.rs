@@ -1186,9 +1186,20 @@ impl Operators {
                 } => {
                     let (points, bounds) =
                         direct_points(input, program, trajectory, driven, origin)?;
-                    entries.push(Runtime::IdtMod(IdtMod::enclosed(
-                        points, bounds, *ic, *modulus, *offset,
-                    )?));
+                    let driven_nodes: Vec<_> = driven
+                        .iter()
+                        .map(|name| program.nodes.iter().position(|n| n == name).unwrap())
+                        .collect();
+                    let exact_source = crate::exact_source::Curve::expression(
+                        input,
+                        &driven_nodes,
+                        &trajectory.exact_sources,
+                        trajectory.config.stop,
+                    );
+                    entries.push(Runtime::IdtMod(
+                        IdtMod::enclosed(points, bounds, *ic, *modulus, *offset)?
+                            .with_exact_source(exact_source),
+                    ));
                 }
                 OperatorSpec::Sin { input, origin } => {
                     let bound_input = affine(input, program, &origin.instance)?;

@@ -1,0 +1,3998 @@
+{
+  "schema_version": 1,
+  "claim": "finite layered development diagnostics, no paper P or source/export/stop qualification",
+  "conclusion": {
+    "source_math": "newdyadic VCO rational piecewise integral reference independent of simulators; fixed EVAS all six newVCO source/strobe checks pass",
+    "export": "constant strict ordinary failure remains, 16digit time interval contains true dyadic root; modulo versus export boundary unresolved; cannot infer hidden mechanism",
+    "snapshot": "fixed EVAS queried requested binary64 times; exact native intersections683/685/680 and original4 separately, all other raw rows retained unpaired",
+    "observer": "all five matched off/on controls have identical native grids and zero common-output differences; independent idt bypass is not modulo internal state",
+    "events": "Spectre observer-on stores callback abstime; observer-off has no firedtime field; EVAS legalprojection uses nominal/representative mathroot EventRecord, all sample .375/count1; mathroot raw token missing due16-digit output; no general ttol-insensitivity claim"
+  },
+  "cases": [
+    {
+      "id": "constant--observer-off",
+      "execution": "completed",
+      "spectre_native_denominator": 32815,
+      "complete_observation_qualified": false,
+      "reference_failure_kinds": [
+        "missing_anchors",
+        "waveform_error"
+      ],
+      "reference_failure_count": 2,
+      "spectre_reference_maxima": {
+        "ctl": {
+          "error": 0.0,
+          "budget": 1e-05,
+          "time": 0.0,
+          "actual": 0.0,
+          "reference": 0.0,
+          "exact_accum": "1/8",
+          "exact_phase": "1/8"
+        },
+        "freq": {
+          "error": 0.0,
+          "budget": 0.001,
+          "time": 0.0,
+          "actual": 0.5,
+          "reference": 0.5,
+          "exact_accum": "1/8",
+          "exact_phase": "1/8"
+        },
+        "phase_ordinary": {
+          "error": 0.9999999999999996,
+          "budget": 0.001,
+          "time": 7.390975952148437e-06,
+          "actual": 0.0,
+          "reference": 0.9999999999999996,
+          "exact_accum": "9007199254740991/2251799813685248",
+          "exact_phase": "2251799813685247/2251799813685248"
+        },
+        "phase_circular": {
+          "error": 8.881784197001252e-16,
+          "budget": 0.001,
+          "time": 5.484324901772412e-06,
+          "actual": 0.0003657341004550396,
+          "reference": 0.00036573410045415145,
+          "exact_accum": "6756223001035005/2251799813685248",
+          "exact_phase": "823559979261/2251799813685248"
+        },
+        "sine": {
+          "error": 7.518306976983524e-09,
+          "budget": 0.003,
+          "time": 4.426619402622967e-11,
+          "actual": 0.7072098926548932,
+          "reference": 0.7072098851365862,
+          "exact_accum": "9225084502291395965/73786976294838206464",
+          "exact_phase": "9225084502291395965/73786976294838206464"
+        }
+      },
+      "spectre_independent_idt_maximum": null,
+      "anchor_tokens": {
+        "id": "constant--observer-off",
+        "requested_count": 1041,
+        "requested_duplicates": 0,
+        "native_count": 32815,
+        "native_duplicate_time_tokens": 0,
+        "missing_count": 358,
+        "missing_with_exact_predicted_16digit_token": 350,
+        "missing_not_explained_by_predicted_token": 8,
+        "raw_sha256": "1a2ae4c81f11d307c936cefcc6e9b970fcdd1af8f5af67f7e9766962612db6b2",
+        "claim": "diagnostic exact string lookup only; no substitute pairing, nearest-neighbor, interpolation or claim that hidden internal times are known"
+      },
+      "requested_settings": {
+        "reltol": 1e-05,
+        "vabstol_V": 1e-07,
+        "iabstol_A": 1e-12,
+        "maxstep_s": 2.3283064365386963e-10,
+        "stop_s": 7.62939453125e-06,
+        "method": "traponly",
+        "errpreset": "conservative"
+      },
+      "actual_reported_settings": {
+        "effective": {
+          "stop_s": {
+            "value": 7.6293899999999995e-06,
+            "line": 124,
+            "raw": "    stop = 7.62939 us",
+            "scope": "transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2.3283099999999997e-10,
+            "line": 126,
+            "raw": "    maxstep = 232.831 ps",
+            "scope": "transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 130,
+            "raw": "    reltol = 1e-06",
+            "scope": "transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1.0000000000000001e-07,
+            "line": 131,
+            "raw": "    abstol(V) = 100 nV",
+            "scope": "transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 132,
+            "raw": "    abstol(I) = 1 pA",
+            "scope": "transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 137,
+            "raw": "    method = traponly",
+            "scope": "transient:tran"
+          }
+        },
+        "global_user": {
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 87,
+            "raw": "            vabstol = 1e-07",
+            "scope": "global_user"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 88,
+            "raw": "            iabstol = 1e-12",
+            "scope": "global_user"
+          },
+          "reltol": {
+            "value": 1e-05,
+            "line": 89,
+            "raw": "             reltol = 1e-05",
+            "scope": "global_user"
+          }
+        },
+        "psf_effective": {
+          "stop_s": {
+            "value": 7.62939e-06,
+            "line": 14,
+            "raw": "\"stop\" 7.62939e-06",
+            "scope": "psf_transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2.32831e-10,
+            "line": 17,
+            "raw": "\"maxstep\" 2.32831e-10",
+            "scope": "psf_transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 21,
+            "raw": "\"reltol\" 1.00000e-06",
+            "scope": "psf_transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 22,
+            "raw": "\"abstol(V)\" 1.00000e-07",
+            "scope": "psf_transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 23,
+            "raw": "\"abstol(I)\" 1.00000e-12",
+            "scope": "psf_transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 28,
+            "raw": "\"method\" \"traponly\"",
+            "scope": "psf_transient:tran"
+          }
+        },
+        "psf_relative_metadata": {
+          "tolerance.relative": {
+            "value": 1e-05,
+            "line": 11,
+            "raw": "\"tolerance.relative\" 1.00000e-05",
+            "scope": "psf_header"
+          }
+        },
+        "unit_adaptations": [],
+        "claim": "actual log/PSF settings with recorded SI unit conversion, not numeric/export qualification"
+      },
+      "actual_settings_precision": "log/PSF display about6 significant digits, not exact hidden solver values",
+      "raw": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/collected/output/runs/constant--observer-off/psf/tran.tran.tran",
+        "sha256": "1a2ae4c81f11d307c936cefcc6e9b970fcdd1af8f5af67f7e9766962612db6b2",
+        "availability": "local-only"
+      },
+      "strict_report": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/analysis-r3-checked/constant--observer-off--reference.json",
+        "sha256": "4eb1bb753c9f662efd20700a718db6507bffa0b3d4275ac3e3d02a6c80076be2",
+        "availability": "local-only"
+      },
+      "existing_fixed_evas_rows": 1041,
+      "evas_reference_pass": true,
+      "evas_reference_failure_kinds": [],
+      "evas_reference_maxima": {
+        "ctl": {
+          "error": 0.0,
+          "budget": 1e-05,
+          "time": 0.0,
+          "actual": 0.0,
+          "reference": 0.0,
+          "exact_accum": "1/8",
+          "exact_phase": "1/8"
+        },
+        "freq": {
+          "error": 0.0,
+          "budget": 0.001,
+          "time": 0.0,
+          "actual": 0.5,
+          "reference": 0.5,
+          "exact_accum": "1/8",
+          "exact_phase": "1/8"
+        },
+        "phase_ordinary": {
+          "error": 0.0,
+          "budget": 0.001,
+          "time": 0.0,
+          "actual": 0.125,
+          "reference": 0.125,
+          "exact_accum": "1/8",
+          "exact_phase": "1/8"
+        },
+        "phase_circular": {
+          "error": 0.0,
+          "budget": 0.001,
+          "time": 0.0,
+          "actual": 0.125,
+          "reference": 0.125,
+          "exact_accum": "1/8",
+          "exact_phase": "1/8"
+        },
+        "sine": {
+          "error": 0.0,
+          "budget": 0.003,
+          "time": 0.0,
+          "actual": 0.7071067811865475,
+          "reference": 0.7071067811865475,
+          "exact_accum": "1/8",
+          "exact_phase": "1/8"
+        }
+      },
+      "exact_intersection_pair": {
+        "exact_intersection": 683,
+        "native_denominator": 32815,
+        "native_unpaired": 32132,
+        "pass_": false,
+        "maxima": {
+          "ctl": {
+            "time": 0.0,
+            "error": 0.0,
+            "budget": 1e-05,
+            "spectre": 0.0,
+            "evas": 0.0
+          },
+          "freq": {
+            "time": 0.0,
+            "error": 0.0,
+            "budget": 0.001,
+            "spectre": 0.5,
+            "evas": 0.5
+          },
+          "phase_ordinary": {
+            "time": 7.390975952148437e-06,
+            "error": 0.9999999999999996,
+            "budget": 0.001,
+            "spectre": 0.0,
+            "evas": 0.9999999999999996
+          },
+          "phase_circular": {
+            "time": 5.483628228830639e-06,
+            "error": 4.440892098500626e-16,
+            "budget": 0.001,
+            "spectre": 4.768371586472142e-07,
+            "evas": 4.76837158203125e-07
+          },
+          "sine": {
+            "time": 7.264316082000732e-06,
+            "error": 3.3306690738754696e-15,
+            "budget": 0.003,
+            "spectre": -0.4052413140049871,
+            "evas": -0.4052413140049904
+          }
+        },
+        "failure_count": 1
+      },
+      "local_pair_report": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/local-fixed-analysis-r3-checked/constant--observer-off--pair.json",
+        "sha256": "dacde7111e3017cb0026e35a901da6d0d662f4f2deee89bfb7a644775d895b8f",
+        "availability": "local-only"
+      }
+    },
+    {
+      "id": "constant--observer-on",
+      "execution": "completed",
+      "spectre_native_denominator": 32815,
+      "complete_observation_qualified": false,
+      "reference_failure_kinds": [
+        "missing_anchors",
+        "waveform_error"
+      ],
+      "reference_failure_count": 2,
+      "spectre_reference_maxima": {
+        "ctl": {
+          "error": 0.0,
+          "budget": 1e-05,
+          "time": 0.0,
+          "actual": 0.0,
+          "reference": 0.0,
+          "exact_accum": "1/8",
+          "exact_phase": "1/8"
+        },
+        "freq": {
+          "error": 0.0,
+          "budget": 0.001,
+          "time": 0.0,
+          "actual": 0.5,
+          "reference": 0.5,
+          "exact_accum": "1/8",
+          "exact_phase": "1/8"
+        },
+        "phase_ordinary": {
+          "error": 0.9999999999999996,
+          "budget": 0.001,
+          "time": 7.390975952148437e-06,
+          "actual": 0.0,
+          "reference": 0.9999999999999996,
+          "exact_accum": "9007199254740991/2251799813685248",
+          "exact_phase": "2251799813685247/2251799813685248"
+        },
+        "phase_circular": {
+          "error": 8.881784197001252e-16,
+          "budget": 0.001,
+          "time": 5.484324901772412e-06,
+          "actual": 0.0003657341004550396,
+          "reference": 0.00036573410045415145,
+          "exact_accum": "6756223001035005/2251799813685248",
+          "exact_phase": "823559979261/2251799813685248"
+        },
+        "sine": {
+          "error": 7.518306976983524e-09,
+          "budget": 0.003,
+          "time": 4.426619402622967e-11,
+          "actual": 0.7072098926548932,
+          "reference": 0.7072098851365862,
+          "exact_accum": "9225084502291395965/73786976294838206464",
+          "exact_phase": "9225084502291395965/73786976294838206464"
+        },
+        "accum": {
+          "error": 1.7763568394002505e-15,
+          "budget": 0.001,
+          "time": 7.390978680632545e-06,
+          "actual": 4.000001430511475,
+          "reference": 4.000001430511476,
+          "exact_accum": "9007202475966467/2251799813685248",
+          "exact_phase": "3221225475/2251799813685248"
+        }
+      },
+      "spectre_independent_idt_maximum": null,
+      "anchor_tokens": {
+        "id": "constant--observer-on",
+        "requested_count": 1041,
+        "requested_duplicates": 0,
+        "native_count": 32815,
+        "native_duplicate_time_tokens": 0,
+        "missing_count": 358,
+        "missing_with_exact_predicted_16digit_token": 350,
+        "missing_not_explained_by_predicted_token": 8,
+        "raw_sha256": "a99b9eeaaa460a830575b468aed228087189e4d6651fa24b02eeb88ac6470b8a",
+        "claim": "diagnostic exact string lookup only; no substitute pairing, nearest-neighbor, interpolation or claim that hidden internal times are known"
+      },
+      "requested_settings": {
+        "reltol": 1e-05,
+        "vabstol_V": 1e-07,
+        "iabstol_A": 1e-12,
+        "maxstep_s": 2.3283064365386963e-10,
+        "stop_s": 7.62939453125e-06,
+        "method": "traponly",
+        "errpreset": "conservative"
+      },
+      "actual_reported_settings": {
+        "effective": {
+          "stop_s": {
+            "value": 7.6293899999999995e-06,
+            "line": 126,
+            "raw": "    stop = 7.62939 us",
+            "scope": "transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2.3283099999999997e-10,
+            "line": 128,
+            "raw": "    maxstep = 232.831 ps",
+            "scope": "transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 132,
+            "raw": "    reltol = 1e-06",
+            "scope": "transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1.0000000000000001e-07,
+            "line": 133,
+            "raw": "    abstol(V) = 100 nV",
+            "scope": "transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 134,
+            "raw": "    abstol(I) = 1 pA",
+            "scope": "transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 139,
+            "raw": "    method = traponly",
+            "scope": "transient:tran"
+          }
+        },
+        "global_user": {
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 89,
+            "raw": "            vabstol = 1e-07",
+            "scope": "global_user"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 90,
+            "raw": "            iabstol = 1e-12",
+            "scope": "global_user"
+          },
+          "reltol": {
+            "value": 1e-05,
+            "line": 91,
+            "raw": "             reltol = 1e-05",
+            "scope": "global_user"
+          }
+        },
+        "psf_effective": {
+          "stop_s": {
+            "value": 7.62939e-06,
+            "line": 14,
+            "raw": "\"stop\" 7.62939e-06",
+            "scope": "psf_transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2.32831e-10,
+            "line": 17,
+            "raw": "\"maxstep\" 2.32831e-10",
+            "scope": "psf_transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 21,
+            "raw": "\"reltol\" 1.00000e-06",
+            "scope": "psf_transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 22,
+            "raw": "\"abstol(V)\" 1.00000e-07",
+            "scope": "psf_transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 23,
+            "raw": "\"abstol(I)\" 1.00000e-12",
+            "scope": "psf_transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 28,
+            "raw": "\"method\" \"traponly\"",
+            "scope": "psf_transient:tran"
+          }
+        },
+        "psf_relative_metadata": {
+          "tolerance.relative": {
+            "value": 1e-05,
+            "line": 11,
+            "raw": "\"tolerance.relative\" 1.00000e-05",
+            "scope": "psf_header"
+          }
+        },
+        "unit_adaptations": [],
+        "claim": "actual log/PSF settings with recorded SI unit conversion, not numeric/export qualification"
+      },
+      "actual_settings_precision": "log/PSF display about6 significant digits, not exact hidden solver values",
+      "raw": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/collected/output/runs/constant--observer-on/psf/tran.tran.tran",
+        "sha256": "a99b9eeaaa460a830575b468aed228087189e4d6651fa24b02eeb88ac6470b8a",
+        "availability": "local-only"
+      },
+      "strict_report": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/analysis-r3-checked/constant--observer-on--reference.json",
+        "sha256": "5c8650ef6b0c9fc715474ed492efbe590b9f3bf00a4680a28e38c9a05f63d339",
+        "availability": "local-only"
+      },
+      "existing_fixed_evas_rows": 1041,
+      "evas_reference_pass": true,
+      "evas_reference_failure_kinds": [],
+      "evas_reference_maxima": {
+        "ctl": {
+          "error": 0.0,
+          "budget": 1e-05,
+          "time": 0.0,
+          "actual": 0.0,
+          "reference": 0.0,
+          "exact_accum": "1/8",
+          "exact_phase": "1/8"
+        },
+        "freq": {
+          "error": 0.0,
+          "budget": 0.001,
+          "time": 0.0,
+          "actual": 0.5,
+          "reference": 0.5,
+          "exact_accum": "1/8",
+          "exact_phase": "1/8"
+        },
+        "phase_ordinary": {
+          "error": 0.0,
+          "budget": 0.001,
+          "time": 0.0,
+          "actual": 0.125,
+          "reference": 0.125,
+          "exact_accum": "1/8",
+          "exact_phase": "1/8"
+        },
+        "phase_circular": {
+          "error": 0.0,
+          "budget": 0.001,
+          "time": 0.0,
+          "actual": 0.125,
+          "reference": 0.125,
+          "exact_accum": "1/8",
+          "exact_phase": "1/8"
+        },
+        "sine": {
+          "error": 0.0,
+          "budget": 0.003,
+          "time": 0.0,
+          "actual": 0.7071067811865475,
+          "reference": 0.7071067811865475,
+          "exact_accum": "1/8",
+          "exact_phase": "1/8"
+        },
+        "accum": {
+          "error": 0.0,
+          "budget": 0.001,
+          "time": 0.0,
+          "actual": 0.125,
+          "reference": 0.125,
+          "exact_accum": "1/8",
+          "exact_phase": "1/8"
+        }
+      },
+      "exact_intersection_pair": {
+        "exact_intersection": 683,
+        "native_denominator": 32815,
+        "native_unpaired": 32132,
+        "pass_": false,
+        "maxima": {
+          "ctl": {
+            "time": 0.0,
+            "error": 0.0,
+            "budget": 1e-05,
+            "spectre": 0.0,
+            "evas": 0.0
+          },
+          "freq": {
+            "time": 0.0,
+            "error": 0.0,
+            "budget": 0.001,
+            "spectre": 0.5,
+            "evas": 0.5
+          },
+          "phase_ordinary": {
+            "time": 7.390975952148437e-06,
+            "error": 0.9999999999999996,
+            "budget": 0.001,
+            "spectre": 0.0,
+            "evas": 0.9999999999999996
+          },
+          "phase_circular": {
+            "time": 5.483628228830639e-06,
+            "error": 4.440892098500626e-16,
+            "budget": 0.001,
+            "spectre": 4.768371586472142e-07,
+            "evas": 4.76837158203125e-07
+          },
+          "sine": {
+            "time": 7.264316082000732e-06,
+            "error": 3.3306690738754696e-15,
+            "budget": 0.003,
+            "spectre": -0.4052413140049871,
+            "evas": -0.4052413140049904
+          },
+          "accum": {
+            "time": 3.576278686523437e-06,
+            "error": 8.881784197001252e-16,
+            "budget": 0.001,
+            "spectre": 1.999999999999999,
+            "evas": 1.9999999999999998
+          }
+        },
+        "failure_count": 1
+      },
+      "local_pair_report": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/local-fixed-analysis-r3-checked/constant--observer-on--pair.json",
+        "sha256": "5bc6dc6c445a8dda5b420c55a712c02e8d02aae5a5d1a4530ded79205c00488f",
+        "availability": "local-only"
+      }
+    },
+    {
+      "id": "pwl--observer-off",
+      "execution": "completed",
+      "spectre_native_denominator": 32813,
+      "complete_observation_qualified": false,
+      "reference_failure_kinds": [
+        "missing_anchors"
+      ],
+      "reference_failure_count": 1,
+      "spectre_reference_maxima": {
+        "ctl": {
+          "error": 1.1102230246251565e-15,
+          "budget": 1e-05,
+          "time": 2.46140881695026e-06,
+          "actual": 1.161948423284873,
+          "reference": 1.1619484232848718,
+          "exact_accum": "20279770141520219207162107261417/20282409603651670423947251286016",
+          "exact_phase": "20279770141520219207162107261417/20282409603651670423947251286016"
+        },
+        "freq": {
+          "error": 2.220446049250313e-16,
+          "budget": 0.001,
+          "time": 1.000706106424332e-06,
+          "actual": 0.024658203125,
+          "reference": 0.024658203125000222,
+          "exact_accum": "7618235853655265463292745744385/20282409603651670423947251286016",
+          "exact_phase": "7618235853655265463292745744385/20282409603651670423947251286016"
+        },
+        "phase_ordinary": {
+          "error": 6.727301771203287e-10,
+          "budget": 0.001,
+          "time": 1.015141606330872e-07,
+          "actual": 0.1753900044389642,
+          "reference": 0.17539000511169436,
+          "exact_accum": "3642707890239431826510472915451895/20769187434139310514121985316880384",
+          "exact_phase": "3642707890239431826510472915451895/20769187434139310514121985316880384"
+        },
+        "phase_circular": {
+          "error": 6.727302048759043e-10,
+          "budget": 0.001,
+          "time": 1.015141606330872e-07,
+          "actual": 0.1753900044389642,
+          "reference": 0.17539000511169436,
+          "exact_accum": "3642707890239431826510472915451895/20769187434139310514121985316880384",
+          "exact_phase": "3642707890239431826510472915451895/20769187434139310514121985316880384"
+        },
+        "sine": {
+          "error": 3.917264174082237e-09,
+          "budget": 0.003,
+          "time": 5.00679288961692e-06,
+          "actual": 8.98425142309321e-06,
+          "reference": 8.988168687267292e-06,
+          "exact_accum": "6755402662281219/2251799813685248",
+          "exact_phase": "3221225475/2251799813685248"
+        }
+      },
+      "spectre_independent_idt_maximum": null,
+      "anchor_tokens": {
+        "id": "pwl--observer-off",
+        "requested_count": 1043,
+        "requested_duplicates": 0,
+        "native_count": 32813,
+        "native_duplicate_time_tokens": 0,
+        "missing_count": 358,
+        "missing_with_exact_predicted_16digit_token": 353,
+        "missing_not_explained_by_predicted_token": 5,
+        "raw_sha256": "be1134a6359a5c8889929b24efcbd36720947a90e095f1288cacd129a2e1b2db",
+        "claim": "diagnostic exact string lookup only; no substitute pairing, nearest-neighbor, interpolation or claim that hidden internal times are known"
+      },
+      "requested_settings": {
+        "reltol": 1e-05,
+        "vabstol_V": 1e-07,
+        "iabstol_A": 1e-12,
+        "maxstep_s": 2.3283064365386963e-10,
+        "stop_s": 7.62939453125e-06,
+        "method": "traponly",
+        "errpreset": "conservative"
+      },
+      "actual_reported_settings": {
+        "effective": {
+          "stop_s": {
+            "value": 7.6293899999999995e-06,
+            "line": 124,
+            "raw": "    stop = 7.62939 us",
+            "scope": "transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2.3283099999999997e-10,
+            "line": 126,
+            "raw": "    maxstep = 232.831 ps",
+            "scope": "transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 130,
+            "raw": "    reltol = 1e-06",
+            "scope": "transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1.0000000000000001e-07,
+            "line": 131,
+            "raw": "    abstol(V) = 100 nV",
+            "scope": "transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 132,
+            "raw": "    abstol(I) = 1 pA",
+            "scope": "transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 137,
+            "raw": "    method = traponly",
+            "scope": "transient:tran"
+          }
+        },
+        "global_user": {
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 87,
+            "raw": "            vabstol = 1e-07",
+            "scope": "global_user"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 88,
+            "raw": "            iabstol = 1e-12",
+            "scope": "global_user"
+          },
+          "reltol": {
+            "value": 1e-05,
+            "line": 89,
+            "raw": "             reltol = 1e-05",
+            "scope": "global_user"
+          }
+        },
+        "psf_effective": {
+          "stop_s": {
+            "value": 7.62939e-06,
+            "line": 14,
+            "raw": "\"stop\" 7.62939e-06",
+            "scope": "psf_transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2.32831e-10,
+            "line": 17,
+            "raw": "\"maxstep\" 2.32831e-10",
+            "scope": "psf_transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 21,
+            "raw": "\"reltol\" 1.00000e-06",
+            "scope": "psf_transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 22,
+            "raw": "\"abstol(V)\" 1.00000e-07",
+            "scope": "psf_transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 23,
+            "raw": "\"abstol(I)\" 1.00000e-12",
+            "scope": "psf_transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 28,
+            "raw": "\"method\" \"traponly\"",
+            "scope": "psf_transient:tran"
+          }
+        },
+        "psf_relative_metadata": {
+          "tolerance.relative": {
+            "value": 1e-05,
+            "line": 11,
+            "raw": "\"tolerance.relative\" 1.00000e-05",
+            "scope": "psf_header"
+          }
+        },
+        "unit_adaptations": [],
+        "claim": "actual log/PSF settings with recorded SI unit conversion, not numeric/export qualification"
+      },
+      "actual_settings_precision": "log/PSF display about6 significant digits, not exact hidden solver values",
+      "raw": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/collected/output/runs/pwl--observer-off/psf/tran.tran.tran",
+        "sha256": "be1134a6359a5c8889929b24efcbd36720947a90e095f1288cacd129a2e1b2db",
+        "availability": "local-only"
+      },
+      "strict_report": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/analysis-r3-checked/pwl--observer-off--reference.json",
+        "sha256": "13989cd829680a6ec2db390e59169969fcce3ad8a396159cad8fd7af0903e542",
+        "availability": "local-only"
+      },
+      "existing_fixed_evas_rows": 1043,
+      "evas_reference_pass": true,
+      "evas_reference_failure_kinds": [],
+      "evas_reference_maxima": {
+        "ctl": {
+          "error": 0.0,
+          "budget": 1e-05,
+          "time": 0.0,
+          "actual": 0.0,
+          "reference": 0.0,
+          "exact_accum": "1/8",
+          "exact_phase": "1/8"
+        },
+        "freq": {
+          "error": 0.0,
+          "budget": 0.001,
+          "time": 0.0,
+          "actual": 0.5,
+          "reference": 0.5,
+          "exact_accum": "1/8",
+          "exact_phase": "1/8"
+        },
+        "phase_ordinary": {
+          "error": 4.440892098500626e-16,
+          "budget": 0.001,
+          "time": 6.914138793945313e-06,
+          "actual": -0.0,
+          "reference": 4.440892098500626e-16,
+          "exact_accum": "9007199254740993/2251799813685248",
+          "exact_phase": "1/2251799813685248"
+        },
+        "phase_circular": {
+          "error": 4.440892098500626e-16,
+          "budget": 0.001,
+          "time": 6.914138793945313e-06,
+          "actual": -0.0,
+          "reference": 4.440892098500626e-16,
+          "exact_accum": "9007199254740993/2251799813685248",
+          "exact_phase": "1/2251799813685248"
+        },
+        "sine": {
+          "error": 2.7902947984069054e-15,
+          "budget": 0.003,
+          "time": 6.914138793945313e-06,
+          "actual": -0.0,
+          "reference": 2.7902947984069054e-15,
+          "exact_accum": "9007199254740993/2251799813685248",
+          "exact_phase": "1/2251799813685248"
+        }
+      },
+      "exact_intersection_pair": {
+        "exact_intersection": 685,
+        "native_denominator": 32813,
+        "native_unpaired": 32128,
+        "pass_": true,
+        "maxima": {
+          "ctl": {
+            "time": 2.461565809330167e-06,
+            "error": 2.220446049250313e-16,
+            "budget": 1e-05,
+            "spectre": 1.162277660168378,
+            "evas": 1.1622776601683782
+          },
+          "freq": {
+            "time": 0.0,
+            "error": 0.0,
+            "budget": 0.001,
+            "spectre": 0.5,
+            "evas": 0.5
+          },
+          "phase_ordinary": {
+            "time": 7.450580596923828e-09,
+            "error": 6.727300938536018e-10,
+            "budget": 0.001,
+            "spectre": 0.1288909905382074,
+            "evas": 0.1288909912109375
+          },
+          "phase_circular": {
+            "time": 7.450580596923828e-09,
+            "error": 6.727300938536018e-10,
+            "budget": 0.001,
+            "spectre": 0.1288909905382074,
+            "evas": 0.1288909912109375
+          },
+          "sine": {
+            "time": 5.006791070627514e-06,
+            "error": 3.917261383927757e-09,
+            "budget": 0.003,
+            "spectre": 2.992138964950733e-06,
+            "evas": 2.996056226334661e-06
+          }
+        },
+        "failure_count": 0
+      },
+      "local_pair_report": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/local-fixed-analysis-r3-checked/pwl--observer-off--pair.json",
+        "sha256": "0a49c068af0dcab270f1533d814bacbce3f6e06c67467e1565c97491e9366091",
+        "availability": "local-only"
+      }
+    },
+    {
+      "id": "pwl--observer-on",
+      "execution": "completed",
+      "spectre_native_denominator": 32813,
+      "complete_observation_qualified": false,
+      "reference_failure_kinds": [
+        "missing_anchors"
+      ],
+      "reference_failure_count": 1,
+      "spectre_reference_maxima": {
+        "ctl": {
+          "error": 1.1102230246251565e-15,
+          "budget": 1e-05,
+          "time": 2.46140881695026e-06,
+          "actual": 1.161948423284873,
+          "reference": 1.1619484232848718,
+          "exact_accum": "20279770141520219207162107261417/20282409603651670423947251286016",
+          "exact_phase": "20279770141520219207162107261417/20282409603651670423947251286016"
+        },
+        "freq": {
+          "error": 2.220446049250313e-16,
+          "budget": 0.001,
+          "time": 1.000706106424332e-06,
+          "actual": 0.024658203125,
+          "reference": 0.024658203125000222,
+          "exact_accum": "7618235853655265463292745744385/20282409603651670423947251286016",
+          "exact_phase": "7618235853655265463292745744385/20282409603651670423947251286016"
+        },
+        "phase_ordinary": {
+          "error": 6.727301771203287e-10,
+          "budget": 0.001,
+          "time": 1.015141606330872e-07,
+          "actual": 0.1753900044389642,
+          "reference": 0.17539000511169436,
+          "exact_accum": "3642707890239431826510472915451895/20769187434139310514121985316880384",
+          "exact_phase": "3642707890239431826510472915451895/20769187434139310514121985316880384"
+        },
+        "phase_circular": {
+          "error": 6.727302048759043e-10,
+          "budget": 0.001,
+          "time": 1.015141606330872e-07,
+          "actual": 0.1753900044389642,
+          "reference": 0.17539000511169436,
+          "exact_accum": "3642707890239431826510472915451895/20769187434139310514121985316880384",
+          "exact_phase": "3642707890239431826510472915451895/20769187434139310514121985316880384"
+        },
+        "sine": {
+          "error": 3.917264174082237e-09,
+          "budget": 0.003,
+          "time": 5.00679288961692e-06,
+          "actual": 8.98425142309321e-06,
+          "reference": 8.988168687267292e-06,
+          "exact_accum": "6755402662281219/2251799813685248",
+          "exact_phase": "3221225475/2251799813685248"
+        },
+        "accum": {
+          "error": 6.727301771203287e-10,
+          "budget": 0.001,
+          "time": 1.015141606330872e-07,
+          "actual": 0.1753900044389642,
+          "reference": 0.17539000511169436,
+          "exact_accum": "3642707890239431826510472915451895/20769187434139310514121985316880384",
+          "exact_phase": "3642707890239431826510472915451895/20769187434139310514121985316880384"
+        }
+      },
+      "spectre_independent_idt_maximum": null,
+      "anchor_tokens": {
+        "id": "pwl--observer-on",
+        "requested_count": 1043,
+        "requested_duplicates": 0,
+        "native_count": 32813,
+        "native_duplicate_time_tokens": 0,
+        "missing_count": 358,
+        "missing_with_exact_predicted_16digit_token": 353,
+        "missing_not_explained_by_predicted_token": 5,
+        "raw_sha256": "83fbead32881f228370aa303cd27594f71508ce724d7adbbd06739595c1446f0",
+        "claim": "diagnostic exact string lookup only; no substitute pairing, nearest-neighbor, interpolation or claim that hidden internal times are known"
+      },
+      "requested_settings": {
+        "reltol": 1e-05,
+        "vabstol_V": 1e-07,
+        "iabstol_A": 1e-12,
+        "maxstep_s": 2.3283064365386963e-10,
+        "stop_s": 7.62939453125e-06,
+        "method": "traponly",
+        "errpreset": "conservative"
+      },
+      "actual_reported_settings": {
+        "effective": {
+          "stop_s": {
+            "value": 7.6293899999999995e-06,
+            "line": 126,
+            "raw": "    stop = 7.62939 us",
+            "scope": "transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2.3283099999999997e-10,
+            "line": 128,
+            "raw": "    maxstep = 232.831 ps",
+            "scope": "transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 132,
+            "raw": "    reltol = 1e-06",
+            "scope": "transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1.0000000000000001e-07,
+            "line": 133,
+            "raw": "    abstol(V) = 100 nV",
+            "scope": "transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 134,
+            "raw": "    abstol(I) = 1 pA",
+            "scope": "transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 139,
+            "raw": "    method = traponly",
+            "scope": "transient:tran"
+          }
+        },
+        "global_user": {
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 89,
+            "raw": "            vabstol = 1e-07",
+            "scope": "global_user"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 90,
+            "raw": "            iabstol = 1e-12",
+            "scope": "global_user"
+          },
+          "reltol": {
+            "value": 1e-05,
+            "line": 91,
+            "raw": "             reltol = 1e-05",
+            "scope": "global_user"
+          }
+        },
+        "psf_effective": {
+          "stop_s": {
+            "value": 7.62939e-06,
+            "line": 14,
+            "raw": "\"stop\" 7.62939e-06",
+            "scope": "psf_transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2.32831e-10,
+            "line": 17,
+            "raw": "\"maxstep\" 2.32831e-10",
+            "scope": "psf_transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 21,
+            "raw": "\"reltol\" 1.00000e-06",
+            "scope": "psf_transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 22,
+            "raw": "\"abstol(V)\" 1.00000e-07",
+            "scope": "psf_transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 23,
+            "raw": "\"abstol(I)\" 1.00000e-12",
+            "scope": "psf_transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 28,
+            "raw": "\"method\" \"traponly\"",
+            "scope": "psf_transient:tran"
+          }
+        },
+        "psf_relative_metadata": {
+          "tolerance.relative": {
+            "value": 1e-05,
+            "line": 11,
+            "raw": "\"tolerance.relative\" 1.00000e-05",
+            "scope": "psf_header"
+          }
+        },
+        "unit_adaptations": [],
+        "claim": "actual log/PSF settings with recorded SI unit conversion, not numeric/export qualification"
+      },
+      "actual_settings_precision": "log/PSF display about6 significant digits, not exact hidden solver values",
+      "raw": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/collected/output/runs/pwl--observer-on/psf/tran.tran.tran",
+        "sha256": "83fbead32881f228370aa303cd27594f71508ce724d7adbbd06739595c1446f0",
+        "availability": "local-only"
+      },
+      "strict_report": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/analysis-r3-checked/pwl--observer-on--reference.json",
+        "sha256": "241b02b2298c0503fc8e868815247e6381a02a915c620879608d2c9b64143285",
+        "availability": "local-only"
+      },
+      "existing_fixed_evas_rows": 1043,
+      "evas_reference_pass": true,
+      "evas_reference_failure_kinds": [],
+      "evas_reference_maxima": {
+        "ctl": {
+          "error": 0.0,
+          "budget": 1e-05,
+          "time": 0.0,
+          "actual": 0.0,
+          "reference": 0.0,
+          "exact_accum": "1/8",
+          "exact_phase": "1/8"
+        },
+        "freq": {
+          "error": 0.0,
+          "budget": 0.001,
+          "time": 0.0,
+          "actual": 0.5,
+          "reference": 0.5,
+          "exact_accum": "1/8",
+          "exact_phase": "1/8"
+        },
+        "phase_ordinary": {
+          "error": 4.440892098500626e-16,
+          "budget": 0.001,
+          "time": 6.914138793945313e-06,
+          "actual": -0.0,
+          "reference": 4.440892098500626e-16,
+          "exact_accum": "9007199254740993/2251799813685248",
+          "exact_phase": "1/2251799813685248"
+        },
+        "phase_circular": {
+          "error": 4.440892098500626e-16,
+          "budget": 0.001,
+          "time": 6.914138793945313e-06,
+          "actual": -0.0,
+          "reference": 4.440892098500626e-16,
+          "exact_accum": "9007199254740993/2251799813685248",
+          "exact_phase": "1/2251799813685248"
+        },
+        "sine": {
+          "error": 2.7902947984069054e-15,
+          "budget": 0.003,
+          "time": 6.914138793945313e-06,
+          "actual": -0.0,
+          "reference": 2.7902947984069054e-15,
+          "exact_accum": "9007199254740993/2251799813685248",
+          "exact_phase": "1/2251799813685248"
+        },
+        "accum": {
+          "error": 0.0,
+          "budget": 0.001,
+          "time": 0.0,
+          "actual": 0.125,
+          "reference": 0.125,
+          "exact_accum": "1/8",
+          "exact_phase": "1/8"
+        }
+      },
+      "exact_intersection_pair": {
+        "exact_intersection": 685,
+        "native_denominator": 32813,
+        "native_unpaired": 32128,
+        "pass_": true,
+        "maxima": {
+          "ctl": {
+            "time": 2.461565809330167e-06,
+            "error": 2.220446049250313e-16,
+            "budget": 1e-05,
+            "spectre": 1.162277660168378,
+            "evas": 1.1622776601683782
+          },
+          "freq": {
+            "time": 0.0,
+            "error": 0.0,
+            "budget": 0.001,
+            "spectre": 0.5,
+            "evas": 0.5
+          },
+          "phase_ordinary": {
+            "time": 7.450580596923828e-09,
+            "error": 6.727300938536018e-10,
+            "budget": 0.001,
+            "spectre": 0.1288909905382074,
+            "evas": 0.1288909912109375
+          },
+          "phase_circular": {
+            "time": 7.450580596923828e-09,
+            "error": 6.727300938536018e-10,
+            "budget": 0.001,
+            "spectre": 0.1288909905382074,
+            "evas": 0.1288909912109375
+          },
+          "sine": {
+            "time": 5.006791070627514e-06,
+            "error": 3.917261383927757e-09,
+            "budget": 0.003,
+            "spectre": 2.992138964950733e-06,
+            "evas": 2.996056226334661e-06
+          },
+          "accum": {
+            "time": 7.450580596923828e-09,
+            "error": 6.727300938536018e-10,
+            "budget": 0.001,
+            "spectre": 0.1288909905382074,
+            "evas": 0.1288909912109375
+          }
+        },
+        "failure_count": 0
+      },
+      "local_pair_report": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/local-fixed-analysis-r3-checked/pwl--observer-on--pair.json",
+        "sha256": "d3590ca555b5c16d686c63fbbc0e1a413a8ff646da8a56a0852c78687a0eb747",
+        "availability": "local-only"
+      }
+    },
+    {
+      "id": "clip--observer-off",
+      "execution": "completed",
+      "spectre_native_denominator": 32813,
+      "complete_observation_qualified": false,
+      "reference_failure_kinds": [
+        "missing_anchors"
+      ],
+      "reference_failure_count": 1,
+      "spectre_reference_maxima": {
+        "ctl": {
+          "error": 8.881784197001252e-16,
+          "budget": 1e-05,
+          "time": 1.000706106424332e-06,
+          "actual": -1.9013671875,
+          "reference": -1.9013671874999991,
+          "exact_accum": "4051700348354561/9007199254740992",
+          "exact_phase": "4051700348354561/9007199254740992"
+        },
+        "freq": {
+          "error": 2.220446049250313e-16,
+          "budget": 0.001,
+          "time": 1.431209966540337e-06,
+          "actual": 0.2503662109375,
+          "reference": 0.2503662109375002,
+          "exact_accum": "11412571942255017142309017878529/20282409603651670423947251286016",
+          "exact_phase": "11412571942255017142309017878529/20282409603651670423947251286016"
+        },
+        "phase_ordinary": {
+          "error": 6.727304269205092e-10,
+          "budget": 0.001,
+          "time": 2.147164195775986e-06,
+          "actual": 0.8915410631128229,
+          "reference": 0.8915410637855533,
+          "exact_accum": "18082601034173931843210683875329/20282409603651670423947251286016",
+          "exact_phase": "18082601034173931843210683875329/20282409603651670423947251286016"
+        },
+        "phase_circular": {
+          "error": 6.727304269205092e-10,
+          "budget": 0.001,
+          "time": 2.147164195775986e-06,
+          "actual": 0.8915410631128229,
+          "reference": 0.8915410637855533,
+          "exact_accum": "18082601034173931843210683875329/20282409603651670423947251286016",
+          "exact_phase": "18082601034173931843210683875329/20282409603651670423947251286016"
+        },
+        "sine": {
+          "error": 4.226888306057587e-09,
+          "budget": 0.003,
+          "time": 1.191860064864159e-06,
+          "actual": 0.0003834994144591983,
+          "reference": 0.0003834951875708922,
+          "exact_accum": "4503049871556609/9007199254740992",
+          "exact_phase": "4503049871556609/9007199254740992"
+        }
+      },
+      "spectre_independent_idt_maximum": null,
+      "anchor_tokens": {
+        "id": "clip--observer-off",
+        "requested_count": 1042,
+        "requested_duplicates": 0,
+        "native_count": 32813,
+        "native_duplicate_time_tokens": 0,
+        "missing_count": 362,
+        "missing_with_exact_predicted_16digit_token": 354,
+        "missing_not_explained_by_predicted_token": 8,
+        "raw_sha256": "08805e3ea1d0a6ee47fa04b3fc3a92a4bd1ae93271156e33dc0b31d9de74972a",
+        "claim": "diagnostic exact string lookup only; no substitute pairing, nearest-neighbor, interpolation or claim that hidden internal times are known"
+      },
+      "requested_settings": {
+        "reltol": 1e-05,
+        "vabstol_V": 1e-07,
+        "iabstol_A": 1e-12,
+        "maxstep_s": 2.3283064365386963e-10,
+        "stop_s": 7.62939453125e-06,
+        "method": "traponly",
+        "errpreset": "conservative"
+      },
+      "actual_reported_settings": {
+        "effective": {
+          "stop_s": {
+            "value": 7.6293899999999995e-06,
+            "line": 124,
+            "raw": "    stop = 7.62939 us",
+            "scope": "transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2.3283099999999997e-10,
+            "line": 126,
+            "raw": "    maxstep = 232.831 ps",
+            "scope": "transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 130,
+            "raw": "    reltol = 1e-06",
+            "scope": "transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1.0000000000000001e-07,
+            "line": 131,
+            "raw": "    abstol(V) = 100 nV",
+            "scope": "transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 132,
+            "raw": "    abstol(I) = 1 pA",
+            "scope": "transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 137,
+            "raw": "    method = traponly",
+            "scope": "transient:tran"
+          }
+        },
+        "global_user": {
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 87,
+            "raw": "            vabstol = 1e-07",
+            "scope": "global_user"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 88,
+            "raw": "            iabstol = 1e-12",
+            "scope": "global_user"
+          },
+          "reltol": {
+            "value": 1e-05,
+            "line": 89,
+            "raw": "             reltol = 1e-05",
+            "scope": "global_user"
+          }
+        },
+        "psf_effective": {
+          "stop_s": {
+            "value": 7.62939e-06,
+            "line": 14,
+            "raw": "\"stop\" 7.62939e-06",
+            "scope": "psf_transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2.32831e-10,
+            "line": 17,
+            "raw": "\"maxstep\" 2.32831e-10",
+            "scope": "psf_transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 21,
+            "raw": "\"reltol\" 1.00000e-06",
+            "scope": "psf_transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 22,
+            "raw": "\"abstol(V)\" 1.00000e-07",
+            "scope": "psf_transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 23,
+            "raw": "\"abstol(I)\" 1.00000e-12",
+            "scope": "psf_transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 28,
+            "raw": "\"method\" \"traponly\"",
+            "scope": "psf_transient:tran"
+          }
+        },
+        "psf_relative_metadata": {
+          "tolerance.relative": {
+            "value": 1e-05,
+            "line": 11,
+            "raw": "\"tolerance.relative\" 1.00000e-05",
+            "scope": "psf_header"
+          }
+        },
+        "unit_adaptations": [],
+        "claim": "actual log/PSF settings with recorded SI unit conversion, not numeric/export qualification"
+      },
+      "actual_settings_precision": "log/PSF display about6 significant digits, not exact hidden solver values",
+      "raw": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/collected/output/runs/clip--observer-off/psf/tran.tran.tran",
+        "sha256": "08805e3ea1d0a6ee47fa04b3fc3a92a4bd1ae93271156e33dc0b31d9de74972a",
+        "availability": "local-only"
+      },
+      "strict_report": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/analysis-r3-checked/clip--observer-off--reference.json",
+        "sha256": "58a6410574981199e32c117deea28441030ac21c255737ae792270169be2e8fa",
+        "availability": "local-only"
+      },
+      "existing_fixed_evas_rows": 1042,
+      "evas_reference_pass": true,
+      "evas_reference_failure_kinds": [],
+      "evas_reference_maxima": {
+        "ctl": {
+          "error": 0.0,
+          "budget": 1e-05,
+          "time": 0.0,
+          "actual": 0.0,
+          "reference": 0.0,
+          "exact_accum": "1/8",
+          "exact_phase": "1/8"
+        },
+        "freq": {
+          "error": 0.0,
+          "budget": 0.001,
+          "time": 0.0,
+          "actual": 0.5,
+          "reference": 0.5,
+          "exact_accum": "1/8",
+          "exact_phase": "1/8"
+        },
+        "phase_ordinary": {
+          "error": 1.1102230246251565e-16,
+          "budget": 0.001,
+          "time": 3.576278686523437e-06,
+          "actual": 0.9999999999999996,
+          "reference": 0.9999999999999997,
+          "exact_accum": "18014398509481981/9007199254740992",
+          "exact_phase": "9007199254740989/9007199254740992"
+        },
+        "phase_circular": {
+          "error": 1.1102230246251565e-16,
+          "budget": 0.001,
+          "time": 2.3023743782495607e-06,
+          "actual": 6.74349803553298e-07,
+          "reference": 6.743498034593287e-07,
+          "exact_accum": "5070605820272650082013195664041/5070602400912917605986812821504",
+          "exact_phase": "3419359732476026382842537/5070602400912917605986812821504"
+        },
+        "sine": {
+          "error": 8.881784197001252e-16,
+          "budget": 0.003,
+          "time": 3.576278686523437e-06,
+          "actual": -2.9094646189298464e-15,
+          "reference": -2.021286199229721e-15,
+          "exact_accum": "18014398509481981/9007199254740992",
+          "exact_phase": "9007199254740989/9007199254740992"
+        }
+      },
+      "exact_intersection_pair": {
+        "exact_intersection": 680,
+        "native_denominator": 32813,
+        "native_unpaired": 32133,
+        "pass_": true,
+        "maxima": {
+          "ctl": {
+            "time": 3.576278686523437e-06,
+            "error": 4.440892098500626e-16,
+            "budget": 1e-05,
+            "spectre": 1.25,
+            "evas": 1.2500000000000004
+          },
+          "freq": {
+            "time": 0.0,
+            "error": 0.0,
+            "budget": 0.001,
+            "spectre": 0.5,
+            "evas": 0.5
+          },
+          "phase_ordinary": {
+            "time": 7.450580596923828e-09,
+            "error": 6.727300938536018e-10,
+            "budget": 0.001,
+            "spectre": 0.1288909905382074,
+            "evas": 0.1288909912109375
+          },
+          "phase_circular": {
+            "time": 7.450580596923828e-09,
+            "error": 6.727300938536018e-10,
+            "budget": 0.001,
+            "spectre": 0.1288909905382074,
+            "evas": 0.1288909912109375
+          },
+          "sine": {
+            "time": 2.302372559260157e-06,
+            "error": 4.226888198727501e-09,
+            "budget": 0.003,
+            "spectre": -4.241288809306341e-06,
+            "evas": -4.237061921107614e-06
+          }
+        },
+        "failure_count": 0
+      },
+      "local_pair_report": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/local-fixed-analysis-r3-checked/clip--observer-off--pair.json",
+        "sha256": "315c20b4067d72e993ea6ddbe5070153f7f4521c17e1359434e6dd32a49bb80d",
+        "availability": "local-only"
+      }
+    },
+    {
+      "id": "clip--observer-on",
+      "execution": "completed",
+      "spectre_native_denominator": 32813,
+      "complete_observation_qualified": false,
+      "reference_failure_kinds": [
+        "missing_anchors"
+      ],
+      "reference_failure_count": 1,
+      "spectre_reference_maxima": {
+        "ctl": {
+          "error": 8.881784197001252e-16,
+          "budget": 1e-05,
+          "time": 1.000706106424332e-06,
+          "actual": -1.9013671875,
+          "reference": -1.9013671874999991,
+          "exact_accum": "4051700348354561/9007199254740992",
+          "exact_phase": "4051700348354561/9007199254740992"
+        },
+        "freq": {
+          "error": 2.220446049250313e-16,
+          "budget": 0.001,
+          "time": 1.431209966540337e-06,
+          "actual": 0.2503662109375,
+          "reference": 0.2503662109375002,
+          "exact_accum": "11412571942255017142309017878529/20282409603651670423947251286016",
+          "exact_phase": "11412571942255017142309017878529/20282409603651670423947251286016"
+        },
+        "phase_ordinary": {
+          "error": 6.727304269205092e-10,
+          "budget": 0.001,
+          "time": 2.147164195775986e-06,
+          "actual": 0.8915410631128229,
+          "reference": 0.8915410637855533,
+          "exact_accum": "18082601034173931843210683875329/20282409603651670423947251286016",
+          "exact_phase": "18082601034173931843210683875329/20282409603651670423947251286016"
+        },
+        "phase_circular": {
+          "error": 6.727304269205092e-10,
+          "budget": 0.001,
+          "time": 2.147164195775986e-06,
+          "actual": 0.8915410631128229,
+          "reference": 0.8915410637855533,
+          "exact_accum": "18082601034173931843210683875329/20282409603651670423947251286016",
+          "exact_phase": "18082601034173931843210683875329/20282409603651670423947251286016"
+        },
+        "sine": {
+          "error": 4.226888306057587e-09,
+          "budget": 0.003,
+          "time": 1.191860064864159e-06,
+          "actual": 0.0003834994144591983,
+          "reference": 0.0003834951875708922,
+          "exact_accum": "4503049871556609/9007199254740992",
+          "exact_phase": "4503049871556609/9007199254740992"
+        },
+        "accum": {
+          "error": 6.727304269205092e-10,
+          "budget": 0.001,
+          "time": 2.147164195775986e-06,
+          "actual": 0.8915410631128229,
+          "reference": 0.8915410637855533,
+          "exact_accum": "18082601034173931843210683875329/20282409603651670423947251286016",
+          "exact_phase": "18082601034173931843210683875329/20282409603651670423947251286016"
+        }
+      },
+      "spectre_independent_idt_maximum": null,
+      "anchor_tokens": {
+        "id": "clip--observer-on",
+        "requested_count": 1042,
+        "requested_duplicates": 0,
+        "native_count": 32813,
+        "native_duplicate_time_tokens": 0,
+        "missing_count": 362,
+        "missing_with_exact_predicted_16digit_token": 354,
+        "missing_not_explained_by_predicted_token": 8,
+        "raw_sha256": "7c06f6373076a71f7a90c475cffaf963bc9a2d4a63ea72b011736abd40b0736d",
+        "claim": "diagnostic exact string lookup only; no substitute pairing, nearest-neighbor, interpolation or claim that hidden internal times are known"
+      },
+      "requested_settings": {
+        "reltol": 1e-05,
+        "vabstol_V": 1e-07,
+        "iabstol_A": 1e-12,
+        "maxstep_s": 2.3283064365386963e-10,
+        "stop_s": 7.62939453125e-06,
+        "method": "traponly",
+        "errpreset": "conservative"
+      },
+      "actual_reported_settings": {
+        "effective": {
+          "stop_s": {
+            "value": 7.6293899999999995e-06,
+            "line": 126,
+            "raw": "    stop = 7.62939 us",
+            "scope": "transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2.3283099999999997e-10,
+            "line": 128,
+            "raw": "    maxstep = 232.831 ps",
+            "scope": "transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 132,
+            "raw": "    reltol = 1e-06",
+            "scope": "transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1.0000000000000001e-07,
+            "line": 133,
+            "raw": "    abstol(V) = 100 nV",
+            "scope": "transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 134,
+            "raw": "    abstol(I) = 1 pA",
+            "scope": "transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 139,
+            "raw": "    method = traponly",
+            "scope": "transient:tran"
+          }
+        },
+        "global_user": {
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 89,
+            "raw": "            vabstol = 1e-07",
+            "scope": "global_user"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 90,
+            "raw": "            iabstol = 1e-12",
+            "scope": "global_user"
+          },
+          "reltol": {
+            "value": 1e-05,
+            "line": 91,
+            "raw": "             reltol = 1e-05",
+            "scope": "global_user"
+          }
+        },
+        "psf_effective": {
+          "stop_s": {
+            "value": 7.62939e-06,
+            "line": 14,
+            "raw": "\"stop\" 7.62939e-06",
+            "scope": "psf_transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2.32831e-10,
+            "line": 17,
+            "raw": "\"maxstep\" 2.32831e-10",
+            "scope": "psf_transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 21,
+            "raw": "\"reltol\" 1.00000e-06",
+            "scope": "psf_transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 22,
+            "raw": "\"abstol(V)\" 1.00000e-07",
+            "scope": "psf_transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 23,
+            "raw": "\"abstol(I)\" 1.00000e-12",
+            "scope": "psf_transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 28,
+            "raw": "\"method\" \"traponly\"",
+            "scope": "psf_transient:tran"
+          }
+        },
+        "psf_relative_metadata": {
+          "tolerance.relative": {
+            "value": 1e-05,
+            "line": 11,
+            "raw": "\"tolerance.relative\" 1.00000e-05",
+            "scope": "psf_header"
+          }
+        },
+        "unit_adaptations": [],
+        "claim": "actual log/PSF settings with recorded SI unit conversion, not numeric/export qualification"
+      },
+      "actual_settings_precision": "log/PSF display about6 significant digits, not exact hidden solver values",
+      "raw": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/collected/output/runs/clip--observer-on/psf/tran.tran.tran",
+        "sha256": "7c06f6373076a71f7a90c475cffaf963bc9a2d4a63ea72b011736abd40b0736d",
+        "availability": "local-only"
+      },
+      "strict_report": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/analysis-r3-checked/clip--observer-on--reference.json",
+        "sha256": "4317ef94bb1348386cf0d6db7320ed88ef890a07fcd55a9a5a055bc223a7fafa",
+        "availability": "local-only"
+      },
+      "existing_fixed_evas_rows": 1042,
+      "evas_reference_pass": true,
+      "evas_reference_failure_kinds": [],
+      "evas_reference_maxima": {
+        "ctl": {
+          "error": 0.0,
+          "budget": 1e-05,
+          "time": 0.0,
+          "actual": 0.0,
+          "reference": 0.0,
+          "exact_accum": "1/8",
+          "exact_phase": "1/8"
+        },
+        "freq": {
+          "error": 0.0,
+          "budget": 0.001,
+          "time": 0.0,
+          "actual": 0.5,
+          "reference": 0.5,
+          "exact_accum": "1/8",
+          "exact_phase": "1/8"
+        },
+        "phase_ordinary": {
+          "error": 1.1102230246251565e-16,
+          "budget": 0.001,
+          "time": 3.576278686523437e-06,
+          "actual": 0.9999999999999996,
+          "reference": 0.9999999999999997,
+          "exact_accum": "18014398509481981/9007199254740992",
+          "exact_phase": "9007199254740989/9007199254740992"
+        },
+        "phase_circular": {
+          "error": 1.1102230246251565e-16,
+          "budget": 0.001,
+          "time": 2.3023743782495607e-06,
+          "actual": 6.74349803553298e-07,
+          "reference": 6.743498034593287e-07,
+          "exact_accum": "5070605820272650082013195664041/5070602400912917605986812821504",
+          "exact_phase": "3419359732476026382842537/5070602400912917605986812821504"
+        },
+        "sine": {
+          "error": 8.881784197001252e-16,
+          "budget": 0.003,
+          "time": 3.576278686523437e-06,
+          "actual": -2.9094646189298464e-15,
+          "reference": -2.021286199229721e-15,
+          "exact_accum": "18014398509481981/9007199254740992",
+          "exact_phase": "9007199254740989/9007199254740992"
+        },
+        "accum": {
+          "error": 0.0,
+          "budget": 0.001,
+          "time": 0.0,
+          "actual": 0.125,
+          "reference": 0.125,
+          "exact_accum": "1/8",
+          "exact_phase": "1/8"
+        }
+      },
+      "exact_intersection_pair": {
+        "exact_intersection": 680,
+        "native_denominator": 32813,
+        "native_unpaired": 32133,
+        "pass_": true,
+        "maxima": {
+          "ctl": {
+            "time": 3.576278686523437e-06,
+            "error": 4.440892098500626e-16,
+            "budget": 1e-05,
+            "spectre": 1.25,
+            "evas": 1.2500000000000004
+          },
+          "freq": {
+            "time": 0.0,
+            "error": 0.0,
+            "budget": 0.001,
+            "spectre": 0.5,
+            "evas": 0.5
+          },
+          "phase_ordinary": {
+            "time": 7.450580596923828e-09,
+            "error": 6.727300938536018e-10,
+            "budget": 0.001,
+            "spectre": 0.1288909905382074,
+            "evas": 0.1288909912109375
+          },
+          "phase_circular": {
+            "time": 7.450580596923828e-09,
+            "error": 6.727300938536018e-10,
+            "budget": 0.001,
+            "spectre": 0.1288909905382074,
+            "evas": 0.1288909912109375
+          },
+          "sine": {
+            "time": 2.302372559260157e-06,
+            "error": 4.226888198727501e-09,
+            "budget": 0.003,
+            "spectre": -4.241288809306341e-06,
+            "evas": -4.237061921107614e-06
+          },
+          "accum": {
+            "time": 7.450580596923828e-09,
+            "error": 6.727300938536018e-10,
+            "budget": 0.001,
+            "spectre": 0.1288909905382074,
+            "evas": 0.1288909912109375
+          }
+        },
+        "failure_count": 0
+      },
+      "local_pair_report": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/local-fixed-analysis-r3-checked/clip--observer-on--pair.json",
+        "sha256": "07ab189a6fd8a4672968affd9ba8f18bda7a889c353df2952318dbe77540245d",
+        "availability": "local-only"
+      }
+    },
+    {
+      "id": "original--observer-on",
+      "execution": "completed",
+      "spectre_native_denominator": 40840,
+      "complete_observation_qualified": false,
+      "reference_failure_kinds": [
+        "missing_anchors"
+      ],
+      "reference_failure_count": 1,
+      "spectre_reference_maxima": {
+        "ctl": {
+          "error": 1.7832957333041577e-15,
+          "time_s": 5.963799999997536e-06,
+          "budget": 1e-05
+        },
+        "freq": {
+          "error": 9.43689570931383e-16,
+          "time_s": 5.911399999997643e-06,
+          "budget": 0.001
+        },
+        "phase_ordinary": {
+          "error": 1.010006678292541e-08,
+          "time_s": 5.701399999998071e-06,
+          "budget": 0.001
+        },
+        "phase_circular": {
+          "error": 1.010006678292541e-08,
+          "time_s": 5.701399999998071e-06,
+          "budget": 0.001
+        },
+        "phase_accumulated_from_drops": {
+          "error": 1.0100067004970015e-08,
+          "time_s": 5.701399999998071e-06,
+          "budget": 0.001
+        },
+        "sine": {
+          "error": 6.346028505265595e-08,
+          "time_s": 5.323599999998843e-06,
+          "budget": 0.003
+        }
+      },
+      "spectre_independent_idt_maximum": {
+        "index": 16487,
+        "time": 3.252400000000042e-06,
+        "actual": 1.497400010100051,
+        "reference": 1.4974000000000418,
+        "error": 1.0100009273372734e-08,
+        "budget": 0.001
+      },
+      "anchor_tokens": {
+        "id": "original--observer-on",
+        "requested_count": 40782,
+        "requested_duplicates": 0,
+        "native_count": 40840,
+        "native_duplicate_time_tokens": 0,
+        "missing_count": 40160,
+        "missing_with_exact_predicted_16digit_token": 380,
+        "missing_not_explained_by_predicted_token": 39780,
+        "raw_sha256": "bd9ac810eb8cd4803b8bcd8e33186cd59fc3438fced93755d0931ccdbf65f632",
+        "claim": "diagnostic exact string lookup only; no substitute pairing, nearest-neighbor, interpolation or claim that hidden internal times are known"
+      },
+      "requested_settings": {
+        "stop_s": 8e-06,
+        "maxstep_s": 2e-10,
+        "reltol": 1e-05,
+        "vabstol_V": 1e-07,
+        "iabstol_A": 1e-12,
+        "output_request": "native records plus prescribed exact centers; requested grid does not qualify interpolation",
+        "integration_method": "traponly/trap for SPICE; unsupported by EVAS",
+        "spice_maxstep_s": 2e-10,
+        "spice_output_estimate_bytes": 15674112,
+        "spice_observation_strategy": "global 200ps plus disconnected PWL local/center breakpoint requests; actual preflight required",
+        "spectral_strobe_strategy": "prescribed times; strobeoutput=all; actual origin qualification pending"
+      },
+      "actual_reported_settings": {
+        "effective": {
+          "stop_s": {
+            "value": 8e-06,
+            "line": 126,
+            "raw": "    stop = 8 us",
+            "scope": "transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2e-10,
+            "line": 128,
+            "raw": "    maxstep = 200 ps",
+            "scope": "transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 132,
+            "raw": "    reltol = 1e-06",
+            "scope": "transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1.0000000000000001e-07,
+            "line": 133,
+            "raw": "    abstol(V) = 100 nV",
+            "scope": "transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 134,
+            "raw": "    abstol(I) = 1 pA",
+            "scope": "transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 139,
+            "raw": "    method = traponly",
+            "scope": "transient:tran"
+          }
+        },
+        "global_user": {
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 89,
+            "raw": "            vabstol = 1e-07",
+            "scope": "global_user"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 90,
+            "raw": "            iabstol = 1e-12",
+            "scope": "global_user"
+          },
+          "reltol": {
+            "value": 1e-05,
+            "line": 91,
+            "raw": "             reltol = 1e-05",
+            "scope": "global_user"
+          }
+        },
+        "psf_effective": {
+          "stop_s": {
+            "value": 8e-06,
+            "line": 14,
+            "raw": "\"stop\" 8.00000e-06",
+            "scope": "psf_transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2e-10,
+            "line": 17,
+            "raw": "\"maxstep\" 2.00000e-10",
+            "scope": "psf_transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 21,
+            "raw": "\"reltol\" 1.00000e-06",
+            "scope": "psf_transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 22,
+            "raw": "\"abstol(V)\" 1.00000e-07",
+            "scope": "psf_transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 23,
+            "raw": "\"abstol(I)\" 1.00000e-12",
+            "scope": "psf_transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 28,
+            "raw": "\"method\" \"traponly\"",
+            "scope": "psf_transient:tran"
+          }
+        },
+        "psf_relative_metadata": {
+          "tolerance.relative": {
+            "value": 1e-05,
+            "line": 11,
+            "raw": "\"tolerance.relative\" 1.00000e-05",
+            "scope": "psf_header"
+          }
+        },
+        "unit_adaptations": [],
+        "claim": "actual log/PSF settings with recorded SI unit conversion, not numeric/export qualification"
+      },
+      "actual_settings_precision": "log/PSF display about6 significant digits, not exact hidden solver values",
+      "raw": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/collected/output/runs/original--observer-on/psf/tran.tran.tran",
+        "sha256": "bd9ac810eb8cd4803b8bcd8e33186cd59fc3438fced93755d0931ccdbf65f632",
+        "availability": "local-only"
+      },
+      "strict_report": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/analysis-r3-checked/original--observer-on--reference.json",
+        "sha256": "ba5d9e8565bc204b8420465a61c20ba27453fdd24dd7a9821835d343408ace11",
+        "availability": "local-only"
+      },
+      "existing_fixed_evas_rows": 4,
+      "evas_reference_pass": false,
+      "evas_reference_failure_kinds": [
+        "missing_initial",
+        "waveform_error",
+        "wrap_bracket",
+        "wrap_count"
+      ],
+      "evas_reference_maxima": {
+        "ctl": {
+          "error": 4.440892098500626e-16,
+          "time_s": 4.754999999999999e-06,
+          "budget": 1e-05
+        },
+        "freq": {
+          "error": 1.1102230246251565e-16,
+          "time_s": 2.689966442575134e-06,
+          "budget": 0.001
+        },
+        "phase_ordinary": {
+          "error": 0.9999999999999996,
+          "time_s": 4.754999999999999e-06,
+          "budget": 0.001
+        },
+        "phase_circular": {
+          "error": 4.440892098500626e-16,
+          "time_s": 4.754999999999999e-06,
+          "budget": 0.001
+        },
+        "phase_accumulated_from_drops": {
+          "error": 3.0,
+          "time_s": 6.31937515251343e-06,
+          "budget": 0.001
+        },
+        "sine": {
+          "error": 2.5615483579388653e-15,
+          "time_s": 6.31937515251343e-06,
+          "budget": 0.003
+        }
+      },
+      "exact_intersection_pair": {
+        "exact_intersection": 4,
+        "native_denominator": 40840,
+        "native_unpaired": 40836,
+        "pass_": false,
+        "maxima": {
+          "ctl": {
+            "time": 4.754999999999999e-06,
+            "error": 4.440892098500626e-16,
+            "budget": 1e-05,
+            "spectre": 1.245000000000001,
+            "evas": 1.2450000000000006
+          },
+          "freq": {
+            "time": 6.31937515251343e-06,
+            "error": 3.3306690738754696e-16,
+            "budget": 0.001,
+            "spectre": 0.3201562118716427,
+            "evas": 0.3201562118716424
+          },
+          "phase_ordinary": {
+            "time": 4.754999999999999e-06,
+            "error": 0.9999999899000185,
+            "budget": 0.001,
+            "spectre": 1.009998107370791e-08,
+            "evas": 0.9999999999999996
+          },
+          "phase_circular": {
+            "time": 4.754999999999999e-06,
+            "error": 1.0099981517797119e-08,
+            "budget": 0.001,
+            "spectre": 1.009998107370791e-08,
+            "evas": 0.9999999999999996
+          },
+          "sine": {
+            "time": 4.754999999999999e-06,
+            "error": 6.346005603098741e-08,
+            "budget": 0.003,
+            "spectre": 6.346005312152279e-08,
+            "evas": -2.9094646189298464e-15
+          },
+          "accum": {
+            "time": 3.755e-06,
+            "error": 1.0099939995455998e-08,
+            "budget": 0.001,
+            "spectre": 2.00000001009994,
+            "evas": 2.0
+          }
+        },
+        "failure_count": 1
+      },
+      "local_pair_report": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/local-fixed-analysis-r3-checked/original--observer-on--pair.json",
+        "sha256": "5ecfe07fef52e803195462c334dbda89a71120e0bebfe86bf236a9dfbc8b08f7",
+        "availability": "local-only"
+      }
+    },
+    {
+      "id": "event--wide",
+      "execution": "completed",
+      "spectre_native_denominator": 57,
+      "complete_observation_qualified": false,
+      "reference_failure_kinds": [
+        "missing_anchors"
+      ],
+      "reference_failure_count": 1,
+      "spectre_reference_maxima": null,
+      "spectre_independent_idt_maximum": null,
+      "anchor_tokens": {
+        "id": "event--wide",
+        "requested_count": 7,
+        "requested_duplicates": 0,
+        "native_count": 57,
+        "native_duplicate_time_tokens": 0,
+        "missing_count": 1,
+        "missing_with_exact_predicted_16digit_token": 1,
+        "missing_not_explained_by_predicted_token": 0,
+        "raw_sha256": "d45f7da058c33724ae9e8e9cc8c182e15322d514a4a3054e31323aa8dc5d5e84",
+        "claim": "diagnostic exact string lookup only; no substitute pairing, nearest-neighbor, interpolation or claim that hidden internal times are known"
+      },
+      "requested_settings": {
+        "reltol": 1e-05,
+        "vabstol_V": 1e-07,
+        "iabstol_A": 1e-12,
+        "maxstep_s": 2.9802322387695312e-08,
+        "stop_s": 9.5367431640625e-07,
+        "method": "traponly",
+        "errpreset": "conservative"
+      },
+      "actual_reported_settings": {
+        "effective": {
+          "stop_s": {
+            "value": 9.53674e-07,
+            "line": 123,
+            "raw": "    stop = 953.674 ns",
+            "scope": "transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2.98023e-08,
+            "line": 125,
+            "raw": "    maxstep = 29.8023 ns",
+            "scope": "transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 129,
+            "raw": "    reltol = 1e-06",
+            "scope": "transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1.0000000000000001e-07,
+            "line": 130,
+            "raw": "    abstol(V) = 100 nV",
+            "scope": "transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 131,
+            "raw": "    abstol(I) = 1 pA",
+            "scope": "transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 136,
+            "raw": "    method = traponly",
+            "scope": "transient:tran"
+          }
+        },
+        "global_user": {
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 86,
+            "raw": "            vabstol = 1e-07",
+            "scope": "global_user"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 87,
+            "raw": "            iabstol = 1e-12",
+            "scope": "global_user"
+          },
+          "reltol": {
+            "value": 1e-05,
+            "line": 88,
+            "raw": "             reltol = 1e-05",
+            "scope": "global_user"
+          }
+        },
+        "psf_effective": {
+          "stop_s": {
+            "value": 9.53674e-07,
+            "line": 14,
+            "raw": "\"stop\" 9.53674e-07",
+            "scope": "psf_transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2.98023e-08,
+            "line": 17,
+            "raw": "\"maxstep\" 2.98023e-08",
+            "scope": "psf_transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 21,
+            "raw": "\"reltol\" 1.00000e-06",
+            "scope": "psf_transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 22,
+            "raw": "\"abstol(V)\" 1.00000e-07",
+            "scope": "psf_transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 23,
+            "raw": "\"abstol(I)\" 1.00000e-12",
+            "scope": "psf_transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 28,
+            "raw": "\"method\" \"traponly\"",
+            "scope": "psf_transient:tran"
+          }
+        },
+        "psf_relative_metadata": {
+          "tolerance.relative": {
+            "value": 1e-05,
+            "line": 11,
+            "raw": "\"tolerance.relative\" 1.00000e-05",
+            "scope": "psf_header"
+          }
+        },
+        "unit_adaptations": [],
+        "claim": "actual log/PSF settings with recorded SI unit conversion, not numeric/export qualification"
+      },
+      "actual_settings_precision": "log/PSF display about6 significant digits, not exact hidden solver values",
+      "raw": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/collected/output/runs/event--wide/psf/tran.tran.tran",
+        "sha256": "d45f7da058c33724ae9e8e9cc8c182e15322d514a4a3054e31323aa8dc5d5e84",
+        "availability": "local-only"
+      },
+      "strict_report": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/analysis-r3-checked/event--wide--reference.json",
+        "sha256": "71fb8249a1b47ed01bf7381215343ec2b902be068841a3ce0ba37b78c6453d12",
+        "availability": "local-only"
+      },
+      "event_observations": {
+        "count_jumps": [
+          {
+            "left": 3.57626959157642e-07,
+            "right": 3.576278686523438e-07,
+            "before": 0.0,
+            "after": 1.0
+          }
+        ],
+        "latched_observations": [
+          {
+            "read_time": 3.576278686523438e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.576287781470455e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.576305971364491e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.576342351152562e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.576415110728703e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.576560629880987e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.576851668185554e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.577433744794689e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.578597898012958e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.580926204449497e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.585582817322575e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.594896043068729e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.613522494561039e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.650775397545658e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.725281203514896e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.874292815453373e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 4.023308974865358e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 4.172325134277344e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 4.470348358154297e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 4.76837158203125e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 5.066394805908203e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 5.364418029785156e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 5.662441253662109e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 5.960464477539062e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 6.258487701416016e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 6.556510925292969e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 6.854534149169922e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 7.152557373046875e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 7.450580596923828e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 7.748603820800781e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 8.046627044677734e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 8.344650268554688e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 8.642673492431641e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 8.940696716308594e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 9.238719940185547e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 9.5367431640625e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          }
+        ],
+        "initial": {
+          "time": 0.0,
+          "x": 0.0,
+          "firedtime": -1.0,
+          "samplevalue": -1.0,
+          "count": 0.0
+        },
+        "final": {
+          "time": 9.5367431640625e-07,
+          "x": 1.0,
+          "firedtime": 3.576278686523438e-07,
+          "samplevalue": 0.375,
+          "count": 1.0
+        },
+        "firedtime_available": true,
+        "first_post_event": {
+          "time": 3.576278686523438e-07,
+          "x": 0.375,
+          "firedtime": 3.576278686523438e-07,
+          "samplevalue": 0.375,
+          "count": 1.0
+        }
+      }
+    },
+    {
+      "id": "event--tight",
+      "execution": "completed",
+      "spectre_native_denominator": 57,
+      "complete_observation_qualified": false,
+      "reference_failure_kinds": [
+        "missing_anchors"
+      ],
+      "reference_failure_count": 1,
+      "spectre_reference_maxima": null,
+      "spectre_independent_idt_maximum": null,
+      "anchor_tokens": {
+        "id": "event--tight",
+        "requested_count": 7,
+        "requested_duplicates": 0,
+        "native_count": 57,
+        "native_duplicate_time_tokens": 0,
+        "missing_count": 1,
+        "missing_with_exact_predicted_16digit_token": 1,
+        "missing_not_explained_by_predicted_token": 0,
+        "raw_sha256": "25c50f0153d25a261becc43efa341ba9f276da619ecf4ea5785652e9bcd09f86",
+        "claim": "diagnostic exact string lookup only; no substitute pairing, nearest-neighbor, interpolation or claim that hidden internal times are known"
+      },
+      "requested_settings": {
+        "reltol": 1e-05,
+        "vabstol_V": 1e-07,
+        "iabstol_A": 1e-12,
+        "maxstep_s": 2.9802322387695312e-08,
+        "stop_s": 9.5367431640625e-07,
+        "method": "traponly",
+        "errpreset": "conservative"
+      },
+      "actual_reported_settings": {
+        "effective": {
+          "stop_s": {
+            "value": 9.53674e-07,
+            "line": 123,
+            "raw": "    stop = 953.674 ns",
+            "scope": "transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2.98023e-08,
+            "line": 125,
+            "raw": "    maxstep = 29.8023 ns",
+            "scope": "transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 129,
+            "raw": "    reltol = 1e-06",
+            "scope": "transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1.0000000000000001e-07,
+            "line": 130,
+            "raw": "    abstol(V) = 100 nV",
+            "scope": "transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 131,
+            "raw": "    abstol(I) = 1 pA",
+            "scope": "transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 136,
+            "raw": "    method = traponly",
+            "scope": "transient:tran"
+          }
+        },
+        "global_user": {
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 86,
+            "raw": "            vabstol = 1e-07",
+            "scope": "global_user"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 87,
+            "raw": "            iabstol = 1e-12",
+            "scope": "global_user"
+          },
+          "reltol": {
+            "value": 1e-05,
+            "line": 88,
+            "raw": "             reltol = 1e-05",
+            "scope": "global_user"
+          }
+        },
+        "psf_effective": {
+          "stop_s": {
+            "value": 9.53674e-07,
+            "line": 14,
+            "raw": "\"stop\" 9.53674e-07",
+            "scope": "psf_transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2.98023e-08,
+            "line": 17,
+            "raw": "\"maxstep\" 2.98023e-08",
+            "scope": "psf_transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 21,
+            "raw": "\"reltol\" 1.00000e-06",
+            "scope": "psf_transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 22,
+            "raw": "\"abstol(V)\" 1.00000e-07",
+            "scope": "psf_transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 23,
+            "raw": "\"abstol(I)\" 1.00000e-12",
+            "scope": "psf_transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 28,
+            "raw": "\"method\" \"traponly\"",
+            "scope": "psf_transient:tran"
+          }
+        },
+        "psf_relative_metadata": {
+          "tolerance.relative": {
+            "value": 1e-05,
+            "line": 11,
+            "raw": "\"tolerance.relative\" 1.00000e-05",
+            "scope": "psf_header"
+          }
+        },
+        "unit_adaptations": [],
+        "claim": "actual log/PSF settings with recorded SI unit conversion, not numeric/export qualification"
+      },
+      "actual_settings_precision": "log/PSF display about6 significant digits, not exact hidden solver values",
+      "raw": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/collected/output/runs/event--tight/psf/tran.tran.tran",
+        "sha256": "25c50f0153d25a261becc43efa341ba9f276da619ecf4ea5785652e9bcd09f86",
+        "availability": "local-only"
+      },
+      "strict_report": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/analysis-r3-checked/event--tight--reference.json",
+        "sha256": "71fb8249a1b47ed01bf7381215343ec2b902be068841a3ce0ba37b78c6453d12",
+        "availability": "local-only"
+      },
+      "event_observations": {
+        "count_jumps": [
+          {
+            "left": 3.57626959157642e-07,
+            "right": 3.576278686523438e-07,
+            "before": 0.0,
+            "after": 1.0
+          }
+        ],
+        "latched_observations": [
+          {
+            "read_time": 3.576278686523438e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.576287781470455e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.576305971364491e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.576342351152562e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.576415110728703e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.576560629880987e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.576851668185554e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.577433744794689e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.578597898012958e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.580926204449497e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.585582817322575e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.594896043068729e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.613522494561039e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.650775397545658e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.725281203514896e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 3.874292815453373e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 4.023308974865358e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 4.172325134277344e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 4.470348358154297e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 4.76837158203125e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 5.066394805908203e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 5.364418029785156e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 5.662441253662109e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 5.960464477539062e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 6.258487701416016e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 6.556510925292969e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 6.854534149169922e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 7.152557373046875e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 7.450580596923828e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 7.748603820800781e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 8.046627044677734e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 8.344650268554688e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 8.642673492431641e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 8.940696716308594e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 9.238719940185547e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          },
+          {
+            "read_time": 9.5367431640625e-07,
+            "stored_callback_abstime": 3.576278686523438e-07,
+            "math_root": 3.5762786865234375e-07,
+            "delay": 5.293955920339377e-23,
+            "samplevalue": 0.375,
+            "math_root_sample": 0.375,
+            "callback_time_sample": 0.37500000000000006
+          }
+        ],
+        "initial": {
+          "time": 0.0,
+          "x": 0.0,
+          "firedtime": -1.0,
+          "samplevalue": -1.0,
+          "count": 0.0
+        },
+        "final": {
+          "time": 9.5367431640625e-07,
+          "x": 1.0,
+          "firedtime": 3.576278686523438e-07,
+          "samplevalue": 0.375,
+          "count": 1.0
+        },
+        "firedtime_available": true,
+        "first_post_event": {
+          "time": 3.576278686523438e-07,
+          "x": 0.375,
+          "firedtime": 3.576278686523438e-07,
+          "samplevalue": 0.375,
+          "count": 1.0
+        }
+      }
+    },
+    {
+      "id": "event--tight-observer-off",
+      "execution": "completed",
+      "spectre_native_denominator": 57,
+      "complete_observation_qualified": false,
+      "reference_failure_kinds": [
+        "missing_anchors"
+      ],
+      "reference_failure_count": 1,
+      "spectre_reference_maxima": null,
+      "spectre_independent_idt_maximum": null,
+      "anchor_tokens": {
+        "id": "event--tight-observer-off",
+        "requested_count": 7,
+        "requested_duplicates": 0,
+        "native_count": 57,
+        "native_duplicate_time_tokens": 0,
+        "missing_count": 1,
+        "missing_with_exact_predicted_16digit_token": 1,
+        "missing_not_explained_by_predicted_token": 0,
+        "raw_sha256": "570a099ad3e34fb4e18cc1733aa8bad969cce978eb7d676a8dd5fc8faedb8b1b",
+        "claim": "diagnostic exact string lookup only; no substitute pairing, nearest-neighbor, interpolation or claim that hidden internal times are known"
+      },
+      "requested_settings": {
+        "reltol": 1e-05,
+        "vabstol_V": 1e-07,
+        "iabstol_A": 1e-12,
+        "maxstep_s": 2.9802322387695312e-08,
+        "stop_s": 9.5367431640625e-07,
+        "method": "traponly",
+        "errpreset": "conservative"
+      },
+      "actual_reported_settings": {
+        "effective": {
+          "stop_s": {
+            "value": 9.53674e-07,
+            "line": 122,
+            "raw": "    stop = 953.674 ns",
+            "scope": "transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2.98023e-08,
+            "line": 124,
+            "raw": "    maxstep = 29.8023 ns",
+            "scope": "transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 128,
+            "raw": "    reltol = 1e-06",
+            "scope": "transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1.0000000000000001e-07,
+            "line": 129,
+            "raw": "    abstol(V) = 100 nV",
+            "scope": "transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 130,
+            "raw": "    abstol(I) = 1 pA",
+            "scope": "transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 135,
+            "raw": "    method = traponly",
+            "scope": "transient:tran"
+          }
+        },
+        "global_user": {
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 85,
+            "raw": "            vabstol = 1e-07",
+            "scope": "global_user"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 86,
+            "raw": "            iabstol = 1e-12",
+            "scope": "global_user"
+          },
+          "reltol": {
+            "value": 1e-05,
+            "line": 87,
+            "raw": "             reltol = 1e-05",
+            "scope": "global_user"
+          }
+        },
+        "psf_effective": {
+          "stop_s": {
+            "value": 9.53674e-07,
+            "line": 14,
+            "raw": "\"stop\" 9.53674e-07",
+            "scope": "psf_transient:tran"
+          },
+          "maxstep_s": {
+            "value": 2.98023e-08,
+            "line": 17,
+            "raw": "\"maxstep\" 2.98023e-08",
+            "scope": "psf_transient:tran"
+          },
+          "reltol": {
+            "value": 1e-06,
+            "line": 21,
+            "raw": "\"reltol\" 1.00000e-06",
+            "scope": "psf_transient:tran"
+          },
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 22,
+            "raw": "\"abstol(V)\" 1.00000e-07",
+            "scope": "psf_transient:tran"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 23,
+            "raw": "\"abstol(I)\" 1.00000e-12",
+            "scope": "psf_transient:tran"
+          },
+          "method": {
+            "value": "traponly",
+            "line": 28,
+            "raw": "\"method\" \"traponly\"",
+            "scope": "psf_transient:tran"
+          }
+        },
+        "psf_relative_metadata": {
+          "tolerance.relative": {
+            "value": 1e-05,
+            "line": 11,
+            "raw": "\"tolerance.relative\" 1.00000e-05",
+            "scope": "psf_header"
+          }
+        },
+        "unit_adaptations": [],
+        "claim": "actual log/PSF settings with recorded SI unit conversion, not numeric/export qualification"
+      },
+      "actual_settings_precision": "log/PSF display about6 significant digits, not exact hidden solver values",
+      "raw": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/collected/output/runs/event--tight-observer-off/psf/tran.tran.tran",
+        "sha256": "570a099ad3e34fb4e18cc1733aa8bad969cce978eb7d676a8dd5fc8faedb8b1b",
+        "availability": "local-only"
+      },
+      "strict_report": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/analysis-r3-checked/event--tight-observer-off--reference.json",
+        "sha256": "8cdda631d724100e56b5d60bb4fa89ff2345c14131a72bfd22191811de00009a",
+        "availability": "local-only"
+      },
+      "event_observations": {
+        "count_jumps": [
+          {
+            "left": 3.57626959157642e-07,
+            "right": 3.576278686523438e-07,
+            "before": 0.0,
+            "after": 1.0
+          }
+        ],
+        "latched_observations": [],
+        "initial": {
+          "time": 0.0,
+          "x": 0.0,
+          "samplevalue": -1.0,
+          "count": 0.0
+        },
+        "final": {
+          "time": 9.5367431640625e-07,
+          "x": 1.0,
+          "samplevalue": 0.375,
+          "count": 1.0
+        },
+        "firedtime_available": false,
+        "first_post_event": {
+          "time": 3.576278686523438e-07,
+          "x": 0.375,
+          "samplevalue": 0.375,
+          "count": 1.0
+        }
+      }
+    }
+  ],
+  "time_resolution": [
+    {
+      "id": "constant--observer-off",
+      "strict_failure": {
+        "kind": "waveform_error",
+        "index": 31782,
+        "signal": "phase_ordinary",
+        "error": 0.9999999999999996,
+        "budget": 0.001,
+        "time": 7.390975952148437e-06,
+        "actual": 0.0,
+        "reference": 0.9999999999999996,
+        "exact_accum": "9007199254740991/2251799813685248",
+        "exact_phase": "2251799813685247/2251799813685248"
+      },
+      "raw_time_token": "7.390975952148437e-06",
+      "parsed_binary_time_hex": "0x1.effffffffffffp-18",
+      "conservative_16digit_nearest_rounding_interval_s": [
+        "0.0000073909759521484365",
+        "0.0000073909759521484375"
+      ],
+      "interval_contains_true_dyadic_roots": [
+        "0.0000073909759521484375"
+      ],
+      "time_resolution_ambiguity": true,
+      "qualification": "closed interval diagnostic assumes nearest16-digit output; tie mode and internal actual time unknown; never substitutes into strict checker",
+      "inference": "modulo/output boundary unresolved at native export precision; not proof of hidden idtmod mechanism difference",
+      "raw_sha256": "1a2ae4c81f11d307c936cefcc6e9b970fcdd1af8f5af67f7e9766962612db6b2"
+    },
+    {
+      "id": "constant--observer-on",
+      "strict_failure": {
+        "kind": "waveform_error",
+        "index": 31782,
+        "signal": "phase_ordinary",
+        "error": 0.9999999999999996,
+        "budget": 0.001,
+        "time": 7.390975952148437e-06,
+        "actual": 0.0,
+        "reference": 0.9999999999999996,
+        "exact_accum": "9007199254740991/2251799813685248",
+        "exact_phase": "2251799813685247/2251799813685248"
+      },
+      "raw_time_token": "7.390975952148437e-06",
+      "parsed_binary_time_hex": "0x1.effffffffffffp-18",
+      "conservative_16digit_nearest_rounding_interval_s": [
+        "0.0000073909759521484365",
+        "0.0000073909759521484375"
+      ],
+      "interval_contains_true_dyadic_roots": [
+        "0.0000073909759521484375"
+      ],
+      "time_resolution_ambiguity": true,
+      "qualification": "closed interval diagnostic assumes nearest16-digit output; tie mode and internal actual time unknown; never substitutes into strict checker",
+      "inference": "modulo/output boundary unresolved at native export precision; not proof of hidden idtmod mechanism difference",
+      "raw_sha256": "a99b9eeaaa460a830575b468aed228087189e4d6651fa24b02eeb88ac6470b8a"
+    }
+  ],
+  "native_observer_controls": [
+    {
+      "id": "constant",
+      "pass_": true,
+      "maxima": {
+        "ctl": {
+          "time": 0.0,
+          "error": 0.0,
+          "budget": 1e-05,
+          "off": 0.0,
+          "on": 0.0
+        },
+        "freq": {
+          "time": 0.0,
+          "error": 0.0,
+          "budget": 0.001,
+          "off": 0.5,
+          "on": 0.5
+        },
+        "phase": {
+          "time": 0.0,
+          "error": 0.0,
+          "budget": 0.001,
+          "off": 0.125,
+          "on": 0.125
+        },
+        "out": {
+          "time": 0.0,
+          "error": 0.0,
+          "budget": 0.003,
+          "off": 0.7071067811865475,
+          "on": 0.7071067811865475
+        }
+      },
+      "failures": [],
+      "ordinary_side_changes": [],
+      "native_grid_equal": true,
+      "off_rows": 32815,
+      "on_rows": 32815,
+      "required_time_count": 32815,
+      "compared_time_count": 32815,
+      "compared_signal_count": 4,
+      "compared_times_sha256": "d77a2725cfc81c5641b2f0954f9759971804ab77b6a24e5819144dae144de870",
+      "claim": "independent idt observer is not modulo internal state"
+    },
+    {
+      "id": "pwl",
+      "pass_": true,
+      "maxima": {
+        "ctl": {
+          "time": 0.0,
+          "error": 0.0,
+          "budget": 1e-05,
+          "off": 0.0,
+          "on": 0.0
+        },
+        "freq": {
+          "time": 0.0,
+          "error": 0.0,
+          "budget": 0.001,
+          "off": 0.5,
+          "on": 0.5
+        },
+        "phase": {
+          "time": 0.0,
+          "error": 0.0,
+          "budget": 0.001,
+          "off": 0.125,
+          "on": 0.125
+        },
+        "out": {
+          "time": 0.0,
+          "error": 0.0,
+          "budget": 0.003,
+          "off": 0.7071067811865475,
+          "on": 0.7071067811865475
+        }
+      },
+      "failures": [],
+      "ordinary_side_changes": [],
+      "native_grid_equal": true,
+      "off_rows": 32813,
+      "on_rows": 32813,
+      "required_time_count": 32813,
+      "compared_time_count": 32813,
+      "compared_signal_count": 4,
+      "compared_times_sha256": "44dcac3ae5ea9037c4cfbb980f6f9128377d26dcc8521d18353263bf9fcc2dab",
+      "claim": "independent idt observer is not modulo internal state"
+    },
+    {
+      "id": "clip",
+      "pass_": true,
+      "maxima": {
+        "ctl": {
+          "time": 0.0,
+          "error": 0.0,
+          "budget": 1e-05,
+          "off": 0.0,
+          "on": 0.0
+        },
+        "freq": {
+          "time": 0.0,
+          "error": 0.0,
+          "budget": 0.001,
+          "off": 0.5,
+          "on": 0.5
+        },
+        "phase": {
+          "time": 0.0,
+          "error": 0.0,
+          "budget": 0.001,
+          "off": 0.125,
+          "on": 0.125
+        },
+        "out": {
+          "time": 0.0,
+          "error": 0.0,
+          "budget": 0.003,
+          "off": 0.7071067811865475,
+          "on": 0.7071067811865475
+        }
+      },
+      "failures": [],
+      "ordinary_side_changes": [],
+      "native_grid_equal": true,
+      "off_rows": 32813,
+      "on_rows": 32813,
+      "required_time_count": 32813,
+      "compared_time_count": 32813,
+      "compared_signal_count": 4,
+      "compared_times_sha256": "ffb5ea454f75fe3c433f765f13bae20ad2ae0838c82324ebf7ce79e0ad4730c3",
+      "claim": "independent idt observer is not modulo internal state"
+    },
+    {
+      "id": "original",
+      "pass_": true,
+      "maxima": {
+        "ctl": {
+          "time": 0.0,
+          "error": 0.0,
+          "budget": 1e-05,
+          "off": -1.0,
+          "on": -1.0
+        },
+        "freq": {
+          "time": 0.0,
+          "error": 0.0,
+          "budget": 0.001,
+          "off": 0.2,
+          "on": 0.2
+        },
+        "phase": {
+          "time": 0.0,
+          "error": 0.0,
+          "budget": 0.001,
+          "off": 0.125,
+          "on": 0.125
+        },
+        "out": {
+          "time": 0.0,
+          "error": 0.0,
+          "budget": 0.003,
+          "off": 0.7071067811865475,
+          "on": 0.7071067811865475
+        }
+      },
+      "failures": [],
+      "ordinary_side_changes": [],
+      "native_grid_equal": true,
+      "off_rows": 40840,
+      "on_rows": 40840,
+      "required_time_count": 40840,
+      "compared_time_count": 40840,
+      "compared_signal_count": 4,
+      "compared_times_sha256": "b8e347e50d70635ac973e696984f7325e935116ff8fbb42a1cbf5f579ce0afe7",
+      "claim": "independent idt observer is not modulo internal state"
+    },
+    {
+      "id": "event--tight",
+      "pass_": true,
+      "maxima": {
+        "x": {
+          "time": 0.0,
+          "error": 0.0,
+          "budget": 1e-05,
+          "off": 0.0,
+          "on": 0.0
+        },
+        "samplevalue": {
+          "time": 0.0,
+          "error": 0.0,
+          "budget": 0.001,
+          "off": -1.0,
+          "on": -1.0
+        },
+        "count": {
+          "time": 0.0,
+          "error": 0.0,
+          "budget": 0.0,
+          "off": 0.0,
+          "on": 0.0
+        }
+      },
+      "failures": [],
+      "ordinary_side_changes": [],
+      "native_grid_equal": true,
+      "off_rows": 57,
+      "on_rows": 57,
+      "required_time_count": 57,
+      "compared_time_count": 57,
+      "compared_signal_count": 3,
+      "compared_times_sha256": "b79fe4b4f73c8884838fb610def66e44ba968ce4e0384fc23cd912e9cc04b996",
+      "claim": "independent idt observer is not modulo internal state"
+    }
+  ],
+  "event_projections": [
+    {
+      "id": "event--wide",
+      "parent_result": {
+        "id": "event--wide",
+        "status": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.7228669999167323,
+        "kernel_sha256": "feaa1a27c803da7d36d26e8972a0451e1bd6eb7aed34f8f3dab9bd0b86648d28",
+        "request_sha256": "2b7f19c87ff8b501c790c491b2215bcb0e5672a97449c5294c4e1ababad6a316",
+        "actual_numerical_launches": 1,
+        "actual_version_queries": 0,
+        "stdout_sha256": "a47543d183f2b502d6fb2a703b135860b762f901f8dcb6fd89637ecd950ed8cc",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "native_events": [
+          {
+            "time": 3.5762786865234375e-07,
+            "event": 0,
+            "origin": "dut.va:8:3 (dut)",
+            "kind": "cross",
+            "guard_value": 0.0,
+            "before": [
+              -1.0,
+              0.0
+            ],
+            "after": [
+              0.375,
+              1.0
+            ]
+          }
+        ],
+        "accepted_steps": 34
+      },
+      "projection_reference_pass": true,
+      "original_source_compile_status": "unsupported $abstime, retained in DRY_IMPORT",
+      "exact_intersection": 6,
+      "spectre_native_denominator": 57,
+      "spectre_native_unpaired": 51,
+      "evas_requested": 7,
+      "requested_unexported_times": [
+        3.5762786865234375e-07
+      ],
+      "maxima": {
+        "x": {
+          "error": 0.0,
+          "time": 0.0,
+          "budget": 1e-05,
+          "spectre": 0.0,
+          "evas": 0.0
+        },
+        "samplevalue": {
+          "error": 0.0,
+          "time": 0.0,
+          "budget": 0.001,
+          "spectre": -1.0,
+          "evas": -1.0
+        },
+        "count": {
+          "error": 0.0,
+          "time": 0.0,
+          "budget": 0.0,
+          "spectre": 0.0,
+          "evas": -0.0
+        }
+      },
+      "native_event_record_fields": [
+        "after",
+        "before",
+        "event",
+        "guard_value",
+        "kind",
+        "origin",
+        "time"
+      ],
+      "observation_time_bounds": "not emitted in these exact-root EventRecords; absence retained",
+      "new_version_queries": 0
+    },
+    {
+      "id": "event--tight",
+      "parent_result": {
+        "id": "event--tight",
+        "status": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.010957457823678851,
+        "kernel_sha256": "feaa1a27c803da7d36d26e8972a0451e1bd6eb7aed34f8f3dab9bd0b86648d28",
+        "request_sha256": "d5d10ab5773a76f3f53489ead9da39cd2a18eed4f19a363b12be5a805d75da3b",
+        "actual_numerical_launches": 1,
+        "actual_version_queries": 0,
+        "stdout_sha256": "a47543d183f2b502d6fb2a703b135860b762f901f8dcb6fd89637ecd950ed8cc",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "native_events": [
+          {
+            "time": 3.5762786865234375e-07,
+            "event": 0,
+            "origin": "dut.va:8:3 (dut)",
+            "kind": "cross",
+            "guard_value": 0.0,
+            "before": [
+              -1.0,
+              0.0
+            ],
+            "after": [
+              0.375,
+              1.0
+            ]
+          }
+        ],
+        "accepted_steps": 34
+      },
+      "projection_reference_pass": true,
+      "original_source_compile_status": "unsupported $abstime, retained in DRY_IMPORT",
+      "exact_intersection": 6,
+      "spectre_native_denominator": 57,
+      "spectre_native_unpaired": 51,
+      "evas_requested": 7,
+      "requested_unexported_times": [
+        3.5762786865234375e-07
+      ],
+      "maxima": {
+        "x": {
+          "error": 0.0,
+          "time": 0.0,
+          "budget": 1e-05,
+          "spectre": 0.0,
+          "evas": 0.0
+        },
+        "samplevalue": {
+          "error": 0.0,
+          "time": 0.0,
+          "budget": 0.001,
+          "spectre": -1.0,
+          "evas": -1.0
+        },
+        "count": {
+          "error": 0.0,
+          "time": 0.0,
+          "budget": 0.0,
+          "spectre": 0.0,
+          "evas": -0.0
+        }
+      },
+      "native_event_record_fields": [
+        "after",
+        "before",
+        "event",
+        "guard_value",
+        "kind",
+        "origin",
+        "time"
+      ],
+      "observation_time_bounds": "not emitted in these exact-root EventRecords; absence retained",
+      "new_version_queries": 0
+    }
+  ],
+  "counters": {
+    "new_spectre_numerical_launches": 10,
+    "new_spectre_version_queries": 1,
+    "previous_numerical": 56,
+    "previous_version": 23,
+    "cumulative_numerical": 66,
+    "cumulative_version": 24,
+    "operator_cleanup_confirmed": true,
+    "automatic_numerical_retries": 0,
+    "classification": "all10stage receipts completed; one completed version record"
+  },
+  "local_calls": {
+    "root_owned_baseline": 7,
+    "root_owned_fixed": 7,
+    "reused_root_response_analysis_new_calls": 0,
+    "new_event_projection_numerical_calls": 2,
+    "new_event_projection_version_queries": 0,
+    "local_control_failure": {
+      "status": "local_frozen_copy_missing_executable_mode",
+      "actual_numerical_launches": 0,
+      "actual_version_queries": 0,
+      "error": "Popen PermissionError before kernel launch",
+      "resolution": "use copy2 preserving executable mode; new result directory; no numerical retry"
+    }
+  },
+  "calibration": {
+    "tests": 20,
+    "status": "PASS",
+    "identity": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/checker-correction-r3/calibration.log",
+      "sha256": "ab3fa2283e7a79d74a5b4795d63cc5cd4e69121e83172ae4ffe80c095c2f96e1",
+      "availability": "local-only"
+    },
+    "old_tests": 8,
+    "old_identity": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/calibration.log",
+      "sha256": "fc149d7ef15c9a8414e96b3af5cd5fe7d79a4ca9891a3cf94c340503ff420590",
+      "availability": "local-only"
+    },
+    "negative_probe_old": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/checker-correction-r2/astra-negative-probe-old.json",
+      "sha256": "b779e510f17a121e768e4faeefd85b75c73150b482448e207cc55d3a66bf1c96",
+      "availability": "local-only"
+    },
+    "negative_probe_corrected": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/checker-correction-r2/astra-negative-probe-corrected.json",
+      "sha256": "4312d1e102470e124799c6a4bd7e0cfc42743a28f310bb8cbe1ae6bd7d05e3fc",
+      "availability": "local-only"
+    },
+    "previous_r2_tests": 17,
+    "previous_r2_identity": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/checker-correction-r2/calibration.log",
+      "sha256": "fe38527e339d00b85438c732143222a792379079be6a877bd5bfc52a1ea422e4",
+      "availability": "local-only"
+    }
+  },
+  "identities": {
+    "freeze": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/FREEZE_MANIFEST.json",
+      "sha256": "fcff0cb032a26839f58c49b7d3f39d111e1a64b7622557af90d4ee56bb926832",
+      "availability": "local-only"
+    },
+    "allocation": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/coordinator-allocation.json",
+      "sha256": "8c170ac59a0236c4b7d345e391b8f924a7dbcf3a160b38887ee2191178dfb0c9",
+      "availability": "local-only"
+    },
+    "new_checker": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/checker-correction-r3/checker/check.py",
+      "sha256": "2433664f5949d6f623fba88d00013455044504cb907d662bf4c3f4b556b81d7e",
+      "availability": "local-only"
+    },
+    "old_frozen_checker": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/checker/check.py",
+      "sha256": "f9efcf3fe46f4ca481c19d2183136e0b50aafa24c23a2f500fb720306f16775b",
+      "availability": "local-only"
+    },
+    "source_compile": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/DRY_IMPORT.json",
+      "sha256": "700cb5a69bd59c7f79b2d6c67281661201084ec6866813031538661ba8b1c1ba",
+      "availability": "local-only"
+    },
+    "scientific_output": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/collected/output/FILE_MANIFEST.json",
+      "sha256": "6d8d158c741718a238110b8d1e928f0afbc4e3e7abb6deebb979ff07fb5d0e08",
+      "availability": "local-only"
+    },
+    "tool": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/collected/output/TOOL_IDENTITY.json",
+      "sha256": "62466870507bb2214d45a7b8584698c298fd080c8dfb6858e4ee3a8be332388d",
+      "availability": "local-only"
+    },
+    "events": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/event-projection-local-r2/IDENTITY.json",
+      "sha256": "d6d05045c586a138bdc639e71202b554c9c57008c70768bb4cce695e41ef207b",
+      "availability": "local-only"
+    },
+    "root_fixed_results": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/local-vco-fixed/RESULTS.json",
+      "sha256": "164233a7e50bdfacee50704575ab9d22130b2b8f5355efb0ecfa479e603f3ee5",
+      "availability": "local-only"
+    },
+    "root_baseline_results": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/local-vco-baseline/RESULTS.json",
+      "sha256": "0d36afd225213bafa37b96a4a7612162413e8f0cf5b22e2d948be7e50f101a9d",
+      "availability": "local-only"
+    },
+    "r2_checker": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/checker-correction-r2/checker/check.py",
+      "sha256": "3734416f523bb401fd5679cd40e81c01f5359d5f34dc0de48ad440d718c5dfc8",
+      "availability": "local-only"
+    }
+  },
+  "resources": {
+    "remote": "serial90s/call;4GiB;singleCPU/thread;32MiB/file;256MiB/condition polling",
+    "max_native_raw_bytes": 7144432,
+    "operator_cleanup_confirmed": true,
+    "local_event_projection": "serial90s only; no remote memory/CPU enforcement claim"
+  },
+  "limitations": [
+    "All10strict complete native observations fail exact-anchor obligations, no failures deleted.",
+    "PSF16digit rounding diagnosis does not replace strict timestamps or certify internal scheduling.",
+    "350 of358constant missing anchors match predicted16digit raw token; remaining8are rootcenter/right-nextafter clusters, no duplicated requested binary timestamps.",
+    "Original observer matches legacy source/deck controls and reuses oldoff only at identical grid; old failures/denominators unchanged.",
+    "Original$abstime source rejected by EVAS frontend; projection is explicitly different source.",
+    "Independent idt is a separate history state, not idtmod internals.",
+    "No nearest-neighbor substitution or interpolation.",
+    "PR79 exceptions not enlarged; no CAP or production edit.",
+    "Raw local-only; checksums not public reproducibility."
+  ],
+  "pointers": {
+    "analysis-r2-checked/SUMMARY.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/analysis-r3-checked/SUMMARY.json",
+      "sha256": "3e4aed09539db5ede806b16bd0a13de15a2bae4b4a242627975a34b6ea359a35",
+      "availability": "local-only"
+    },
+    "analysis-r2-checked/OBSERVER_CONTROLS.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/analysis-r3-checked/OBSERVER_CONTROLS.json",
+      "sha256": "820a7a8eea1a2154b3824270010321439d8d2fbe92ce3b862e5e2d8a9b4ed439",
+      "availability": "local-only"
+    },
+    "analysis-r2-checked/NATIVE_OBSERVER_CONTROLS.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/analysis-r3-checked/NATIVE_OBSERVER_CONTROLS.json",
+      "sha256": "f85e4d5a91b0ad242e281e8af404fe2b216133e5ddc4cb319ec6b5e8fda41045",
+      "availability": "local-only"
+    },
+    "analysis/TIME_RESOLUTION_AMBIGUITY.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/analysis/TIME_RESOLUTION_AMBIGUITY.json",
+      "sha256": "c988c7a03965d7ce23f7250a80de11874deb0b40cc57442d5e73824fbb3a0e9b",
+      "availability": "local-only"
+    },
+    "analysis/anchor-tokens/SUMMARY.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/analysis/anchor-tokens/SUMMARY.json",
+      "sha256": "a506ccf12ab495686eefc9b4a89ed28b5a1dbe19727148190a9be1e14b4362ac",
+      "availability": "local-only"
+    },
+    "analysis/anchor-tokens/CONSTANT_UNEXPLAINED_DIAGNOSTIC.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/analysis/anchor-tokens/CONSTANT_UNEXPLAINED_DIAGNOSTIC.json",
+      "sha256": "057194518fa2690c5f69d3890a534d45823d71b2d3ff3c391d689538e17cfe8a",
+      "availability": "local-only"
+    },
+    "local-fixed-analysis-r2-checked/SUMMARY.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/local-fixed-analysis-r3-checked/SUMMARY.json",
+      "sha256": "39a0bbe64c892ff9247216024d9410084dd6478a07d56b4aba41b7747804a62b",
+      "availability": "local-only"
+    },
+    "analysis-r2-checked/EVENT_PROJECTIONS.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/analysis-r3-checked/EVENT_PROJECTIONS.json",
+      "sha256": "403e8902a2a633d988f88a21676097c792f9e2f490f1b95e527b83a7893148d3",
+      "availability": "local-only"
+    },
+    "collected/COLLECTION.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/collected/COLLECTION.json",
+      "sha256": "e6a0a55f9435d61654fb0061507a61d669544e6e482b8b0c6e796ed87c42d149",
+      "availability": "local-only"
+    },
+    "TRANSFER.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/TRANSFER.json",
+      "sha256": "beae201fc25d75d022e8059b8b78e05718857d1b8e000fc5f04c437ccd696e22",
+      "availability": "local-only"
+    },
+    "DISPATCH_RECEIPT.json": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/DISPATCH_RECEIPT.json",
+      "sha256": "693ff0bc33cc968f8f12930b84c49ee865da266340465203e6acb262ca19ed1e",
+      "availability": "local-only"
+    }
+  },
+  "analysis_revision": "r3 explicit ports observation contract, fail closed missing/invalid declaration; all existing verdicts/denominators unchanged",
+  "previous_frozen_results": {
+    "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/FROZEN_RESULTS_MANIFEST.json",
+    "sha256": "2ca6d9e0a081103cda57fc6273075234cb5669bc05e275f784202945c132e221",
+    "preserved_candidate": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/checker-correction-r2/previous-candidate",
+    "note": "Original candidate paths now contain reviewed corrections; original bytes preserved separately, original manifest unmodified."
+  },
+  "reanalysis": {
+    "new_simulator_calls": 0,
+    "new_version_queries": 0,
+    "existing_spectre_outputs": 10,
+    "existing_fixed_vco_outputs": 7,
+    "existing_event_projection_outputs": 2,
+    "verdict_and_denominators_unchanged": true
+  },
+  "previous_r2_candidate": {
+    "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/spectre-alignment-20261007/backend/checker-correction-r3/previous-candidate/evidence.json",
+    "sha256": "aa8e8f63088f5a94fdc0717a84a8cf1a6c0203e2f689eb1b37b6183139f4563c",
+    "availability": "local-only"
+  }
+}

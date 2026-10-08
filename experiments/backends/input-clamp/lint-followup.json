@@ -1,0 +1,32 @@
+{
+  "kernel_sha256": "c096bf2d03d7ac8c32745975ada486826fb05e2b7cc9bf1affad3dd97f8c5eeb",
+  "source_sha256": "7d71383d80b2d55b4f1df712ba47c597424458154fcb8c83e6db2b04d85ba90b",
+  "pairs": [
+    {
+      "batch": "ordinary",
+      "request_sha256": "2daae9f643a164e44c6831c43798dac013e95c5d324efbeb3bb62a71365e9b3d",
+      "returncode": 0,
+      "elapsed_s": 21.993620249908417,
+      "stdout_bytes_identical": true,
+      "stdout_json_equal": true,
+      "stderr_bytes_identical": true
+    },
+    {
+      "batch": "boundary",
+      "request_sha256": "f052c3f035807f8eaaab5bc7645336d64b694b742c12ee43885aaa049c21f3fc",
+      "returncode": 2,
+      "elapsed_s": 6.592287792125717,
+      "stdout_bytes_identical": true,
+      "stdout_json_equal": null,
+      "stderr_bytes_identical": true,
+      "stdout_format": "empty, no JSON value; equality is established by stdout_bytes_identical"
+    }
+  ],
+  "previous_kernel_sha256": "eb470e923bb0f6d05b5638eab542aa0c4e970ad7cfb64c51d00aa34f353b4a34",
+  "previous_head": "6d328f3189ca0abb024873262c5973b86ca22753",
+  "change": "Equivalent single-pattern match to if let; generated diagnostic inventory adds19 source_audit records",
+  "spectre_reference": "evidence.json",
+  "raw_availability": "local-only runs/clamp/ci-lint-followup and runs/clamp/spectre-comparison",
+  "paper_qualification": "I, unchanged",
+  "new_remote_invocations": 0
+}

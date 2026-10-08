@@ -1,0 +1,14 @@
+`include "disciplines.vams"
+`include "constants.vams"
+module paper_vco(ctl, freq, phase, out);
+ inout ctl, freq, phase, out;
+ electrical ctl, freq, phase, out;
+ real f,p;
+ analog begin
+  f=0.4+0.5*V(ctl);
+  if(f<0.2) f=0.2; else if(f>1.0) f=1.0;
+  p=idtmod(f/1e-6,0.125,1.0,0.0);
+  V(freq)<+f; V(phase)<+p;
+  V(out)<+sin(2*`M_PI*p);
+ end
+endmodule

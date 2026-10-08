@@ -98,10 +98,12 @@ input x; real x,t,i; begin {body} end endfunction
         with self.assertRaises(CompileError):
             program(prefix, 'V(y,r)<+1;')
 
-    def test_function_branch_keeps_existing_uncertain_predicate_refusal(self):
-        with self.assertRaisesRegex(KernelError, 'condition_precision'):
-            transient(program(), {'u':[[0,0],[3,1]]}, [2.7], stop=3,
-                      max_step=3, kernel=KERNEL)
+    def test_function_branch_certifies_original_pwl_boundary(self):
+        from fractions import Fraction
+        self.assertGreater(Fraction(2.7)/3, Fraction(.9))
+        result = transient(program(), {'u':[[0,0],[3,1]]}, [2.7], stop=3,
+                           max_step=3, kernel=KERNEL)
+        self.assertEqual(result['solutions'][0]['voltages'][result['nodes'].index('y')], .9)
 
     def test_instance_rails_and_continuous_crossings_have_independent_values(self):
         p = program(instances=[instance('a', connections={'u':'u','y':'a','r':'0'}),

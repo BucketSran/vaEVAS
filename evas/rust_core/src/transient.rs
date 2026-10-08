@@ -659,7 +659,7 @@ fn prepare_calendar_batch(
     Ok((next, records))
 }
 
-pub(crate) fn run(request: Request) -> Result<Response, Error> {
+pub(crate) fn run(mut request: Request) -> Result<Response, Error> {
     if !request.samples.is_empty() {
         return Err(Error::new(
             "invalid_inputs",
@@ -696,7 +696,9 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
             request.tolerances,
         );
     }
-    let trajectory = Trajectory::new(transient, request.driven.len())?;
+    let mut trajectory = Trajectory::new(transient, request.driven.len())?;
+    let output_count =
+        crate::input_clamp::lower(&mut request.program, &mut request.driven, &mut trajectory)?;
 
     let model = EventModel::new(request.program, request.driven, request.tolerances)?;
     let initial = model.initial();
@@ -964,10 +966,17 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
         }
     }
     trace.events = controller.records;
+    // Internal source-derived nodes are mathematical lowering details, never
+    // user inputs/outputs or a change to the external serialized IR contract.
+    for solution in &mut solutions {
+        solution.voltages.truncate(output_count);
+    }
+    let mut nodes = model.program.nodes;
+    nodes.truncate(output_count);
     Ok(Response {
         engine: concat!("evas-events-", env!("CARGO_PKG_VERSION")).into(),
         schema_version: SCHEMA_VERSION,
-        nodes: model.program.nodes,
+        nodes,
         solutions,
         transient: Some(trace),
     })
@@ -993,6 +1002,8 @@ fn run_stateless_transient(
                 &trajectory.values(time),
                 &trajectory.value_bounds(time),
                 previous.as_ref().map(|s| s.voltages.as_slice()),
+                time,
+                &trajectory.exact_sources,
             )
             .map_err(|mut error| {
                 error.sample = Some(sample);

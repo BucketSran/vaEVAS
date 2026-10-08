@@ -1,0 +1,406 @@
+{
+  "scope": "Development comparison after original-source rational wrap certification; paper I remains. Original source and fixed budgets retained. No public raw archive.",
+  "implementation": {
+    "production_commits": [
+      "9a219dcb8af4a54bf8701d4d463e321578bc7830",
+      "b781af77"
+    ],
+    "test_followup": "a09f4cab",
+    "kernel_sha256": "9909791cf16904753793c042bb756cba078dc97e50fe32db5b15509e7edce484",
+    "source_closure": {
+      "evas/rust_core/Cargo.lock": "04e54521af836123f7ec9984c11006593a14ff0da901529a403387645d50f550",
+      "evas/rust_core/Cargo.toml": "53eb7d8b09b70ca679e4e6775d60ea59c344c842e86919c06b0142a6fbdd242c",
+      "evas/rust_core/ir/Cargo.toml": "ee626ead9fe9620b9b48c956bef41d283578683d25bc879b20f25730adf325f0",
+      "evas/rust_core/ir/src/lib.rs": "eb15b564a7181a454b81109f0023bc91245949a301fb689fe5fd4395d4b97a33",
+      "evas/rust_core/src/absdelay.rs": "e0f6144590856b3a95d03a59af58e9032309fa1e316a41c063a40ec9f73109c7",
+      "evas/rust_core/src/affine_bounds.rs": "3695b89a725216f3a3a555dd353cf5c8c81f82a4696aca0a0cb7436622174cb0",
+      "evas/rust_core/src/analog.rs": "3838af457af4b8b44c29401796acee2574733aa7ef3811f40b38883621cf0e68",
+      "evas/rust_core/src/assembly.rs": "57b93621d4940a7974a0132329c87e43a1e3ff348fe1e16d2d784e7708b9ef62",
+      "evas/rust_core/src/batch.rs": "a41166d5cd9a6fab300d48197bc4093145885d19044b398e48095fdb35473688",
+      "evas/rust_core/src/continuous.rs": "5903d519795fa3dc0705d99518847aa25490ada448295efcc66222db8955b865",
+      "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+      "evas/rust_core/src/continuous_history.rs": "d62a3daa15da4e0ea396e90b7b3f1d7e86d0eba85f3b4f53aa23659c1273fe55",
+      "evas/rust_core/src/continuous_initialization.rs": "5145a36a517b9ba3ace0fb6241ebbd615fef6004b50aeb5dc99d76ff295874a8",
+      "evas/rust_core/src/continuous_runtime.rs": "331ea3f4ff5027ff14155287537b0231a7e6a818e6fd6885dfc470151bdf9ccd",
+      "evas/rust_core/src/diagnostics.rs": "0a5deae544550e34379582625632cf5c45f21c7f8d1f60178e9cf26ae2a4d65f",
+      "evas/rust_core/src/dynamic_roots.rs": "1e9370915346a19f61b08368a36fd4b8aa55ea20099ebf8f4f497b731277c3ac",
+      "evas/rust_core/src/event_accuracy.rs": "d2b621cb23080ee219b5272fc489010dfc6a4ba15930fd8e6d94f0428e253dd6",
+      "evas/rust_core/src/event_conditions.rs": "8b0c00b449cf1b27326972a95b97a5f5c911b4f56cd6d30dec7f8905312ab30f",
+      "evas/rust_core/src/events.rs": "7c22143158ff27b2cf186f70fcdb256252f86f10e28086b9e9ca9fe98f6c755e",
+      "evas/rust_core/src/exact_source.rs": "8a8200ba337ecee650aa70b75e3cd6c3daec68adbf810ec056ec51e73e09a72d",
+      "evas/rust_core/src/expression.rs": "0b25b767f67598227eb3b5957ce208b1262fc87d096f9775f10bda1a6c26c90f",
+      "evas/rust_core/src/guard_trajectory.rs": "2df472c82dba22c9168950c8c62fbbe83b94622bb901fbc64766acb6d46bcfc2",
+      "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+      "evas/rust_core/src/idtmod.rs": "c57464703c5332f4a5ea827e8a6f85799f57c7d9a6655351475684b3fdeda190",
+      "evas/rust_core/src/implicit_dynamics.rs": "5a1b5dfb3f182b071c58f341281b7ac35204abecf5691838509cbb78ac0172ed",
+      "evas/rust_core/src/input_clamp.rs": "d5ce43603a764ab29a1822e42cbb7298ea6c3eba47b3f0a0014603ac186081b8",
+      "evas/rust_core/src/interval.rs": "89a83ce96dbf6cdc217a046c9885ca0cf580c6e6f932c36f0195120d49e53f56",
+      "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
+      "evas/rust_core/src/ir.rs": "cc687fdd3d78e908644537aa8194d3a3ccb3dcb5b88c11a78d7b3e640ad97ea0",
+      "evas/rust_core/src/laplace.rs": "4efcad4da1934849c90985c908aaf750f5bd823392deae3ad555515f8bf71a23",
+      "evas/rust_core/src/lib.rs": "80d0dc9c8b26a69fcadeb4b0dcd5b0c107d50fe9a11d33b04dd09f75b5c48159",
+      "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+      "evas/rust_core/src/linear/dense.rs": "00a1d9e1a9c5f933f765dd586ab9a8982073d270fed73ed7e602af858e732cad",
+      "evas/rust_core/src/linear/properties.rs": "d1a8b5ec069fef4f621b99290b532f7563cb8f55a1ba2178a77877f60192ab7f",
+      "evas/rust_core/src/linear/refinement.rs": "8476ad2ea3f3698e3c4552f8ff785c00ff878caab584b157dbb80b9c282f32a8",
+      "evas/rust_core/src/linear/sparse.rs": "3914adce2368b027027c06240f160864af0f53de934c0b3285515114fe7aa869",
+      "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+      "evas/rust_core/src/linear.rs": "e0280cfcaaebd2449ab5e4474daf5cd19e6a9fbda5db53e14e5229fc81a4eb36",
+      "evas/rust_core/src/main.rs": "70626c73fa421340afcc53c025a220720b208657273ba3f5e20bc1e4c6e01c3c",
+      "evas/rust_core/src/nonlinear/continuation.rs": "6d0aabe1bb6563a32d4e920fabdefde881777a54b8dc2b4658de432347f6448a",
+      "evas/rust_core/src/nonlinear.rs": "6d7b269023f4b65c4542c5a77a7e5386c061c1c4cd8eb9623d8e1aeef2ec30af",
+      "evas/rust_core/src/nonlinear_dynamics.rs": "dfa6753cd77197cbf0225b24169f652eda1bfb514b1dd4527ee3a80b7137fc8a",
+      "evas/rust_core/src/operators.rs": "199412107b2bff1c7d5f36c71ec3cf6fc12d3b332cdb0a90fc9db0f486f66657",
+      "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+      "evas/rust_core/src/pwl.rs": "f4b066a7be9afd0ace2ca0ef548a1aea34fc0be08047ae743461fcc4c7f1370b",
+      "evas/rust_core/src/reset_dependencies.rs": "d2adaba2e28d70511e0977c223ea7922b627c832e633b7f94360c951a6f0e3fa",
+      "evas/rust_core/src/schedule.rs": "f04c5e10b007b01bb016582a2175ab6ad48e2c6b8588e2023435c2b64f3d6281",
+      "evas/rust_core/src/settlement.rs": "48584be254805a3c0e990281ca00367efc988fb59351c855930960bd82793687",
+      "evas/rust_core/src/settlement_bounds.rs": "580dcd5fe6e9777bed0fcb04a8fd4bef98f5974905ec1c6bf77c26ca2f56d274",
+      "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+      "evas/rust_core/src/solver.rs": "fbbef1378759e01433d2e3bde7106f61f001db505ede5128198a6dcb3e808446",
+      "evas/rust_core/src/solver_cache_tests.rs": "727acd4fc9084bb6e546a8aa70e2f1e5bd476d27265f5198c5cdd08b0a7fd3fa",
+      "evas/rust_core/src/state_space.rs": "c7e8ff82302cb87c6ba150e5def9d1cf9eba15e23657e2f2686eb067ce4ef74c",
+      "evas/rust_core/src/transient.rs": "f378652388dc0fc38edec05d9d226b39198ec7a28e0e575e6c6dd53247c94373",
+      "evas/rust_core/src/transient_condition_tests.rs": "51b89c0648fc1d92282c6d6c46dbeced83ad472ddbf2b8ad64e953d3c7befa25",
+      "evas/rust_core/src/transient_history_calendar.rs": "c54256bb4d0febf2d41f9a6422d69bf3968258337d8dbb5f3d3e18e82cf786a5",
+      "evas/rust_core/src/transient_idt_tests.rs": "ba2c353e867aa4b6fbd8e27f68ad1407536e525712ddab96ebf998434e2755ad",
+      "evas/rust_core/src/transient_lifecycle_tests.rs": "5184d9a6f7fb5c5fa9345c0fa59388d62d9d79eb6f88f82351a5025f18e75bb6",
+      "evas/rust_core/src/transient_window_tests.rs": "987d1bac508f0e9c780e1b8ac109bec1b077c85a7722a4d084be64e31565103e",
+      "evas/rust_core/src/transition.rs": "1d1c3e709e983a53d0616d0fda1ff2183d2a2dc33b0b65e0aff122162ba72a3c",
+      "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/src/evas/__main__.py": "f98567eedc0052dddf00fd13f5380e996409f72aed9fbf09702d5bf173fae1d5",
+      "evas/src/evas/array_elaboration.py": "4faf4543a735ad19c89bbbc760d39f6860089d854b7f24922edaa390cf20df0b",
+      "evas/src/evas/diagnostics.py": "a94641c77c61b71e7c1eeb9d36baa9c01b85adfe598472632841ed4a90744a5f",
+      "evas/src/evas/elaboration.py": "1eb85eefcb393dbc58b6f248389a1d51ef792f45077b779dac0d55fc5aa5e074",
+      "evas/src/evas/errors.py": "f5782a2c5ee28db98b0fe5d1d4a2e06ba3ec9f1b74b8a0da5bede3ca4154b958",
+      "evas/src/evas/frontend.py": "2552416e633542f0770c1f7609ac4778aa8b841db5c0e36bd68a9904f682927c",
+      "evas/src/evas/hierarchy.py": "c277bc21cbe987f7cb427a2955b6b20588d5c42ae09bbc62853dab7bdba4138f",
+      "evas/src/evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+      "evas/src/evas/instance_compiler.py": "2c935b8054d5ebe51e1a5488340920f95d8adba53bd21314060842c1ce723c05",
+      "evas/src/evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+      "evas/src/evas/ir.py": "3445e952b7bd96571303c2faf4474f5945855e26a3adfb80370bbe1935ce4ca9",
+      "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+      "evas/src/evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+      "evas/src/evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+      "evas/src/evas/lowering.py": "3df0c3f873285e45aa9de85863ca7d42b4c1cffc205a24164700b953b1874c71",
+      "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+      "evas/src/evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+      "evas/src/evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+      "evas/src/evas/node_elaboration.py": "f100e5e857b53a5ccaf43b10f61c1f1d719b0f5205490364dbf30a103bf480e6",
+      "evas/src/evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+      "evas/src/evas/preprocessor.py": "68c7c9d6df5a1f14ea33b8bbaebf79863b64110381d8bad910b98f281e2e2ffe",
+      "evas/src/evas/protocol.py": "82302d948c4c0eff0b88318eb804344a1f60d3dd4798d2c2c561149b6a188607",
+      "evas/src/evas/query.py": "6222b10aa9d889e93fa8b65059b5fb31799f7269770ebc72167c7c67e4a0b92b",
+      "evas/src/evas/results.py": "d085a8a2b57aa2ae48b6fc69e47825b02326ca8e05ff56df61bc791b7771c0d1",
+      "evas/src/evas/runtime.py": "b648c721efcb1d715cb871c644ff60b600229d9489c988edb7c4e291bbba1026",
+      "evas/src/evas/scs.py": "d95097aa5e62d2fe9d6a3c6a6035ca981f64b2aebe7fce2ca58bf12b5a95b281",
+      "evas/src/evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
+      "evas/src/evas/syntax.py": "56eafc9ad5c4f8773441a8e7ccf751d7ce5380b68150a2e2ab6d55524c0f6058"
+    }
+  },
+  "availability": "local-only raw, requests, stdout and analysis; this compact summary is repository-contained",
+  "reference": "Actual original Spectre21.1.0.509 baseline reused without new remote execution for this record",
+  "execution": {
+    "ordinary": {
+      "status": "runtime_completed",
+      "rows": 40836
+    },
+    "boundary": {
+      "status": "runtime_completed",
+      "rows": 4
+    }
+  },
+  "paired_rows": 40840,
+  "ordinary_phase_over_budget_rows": 1,
+  "paired_maxima": {
+    "paired_same_time:ctl": {
+      "error": 1.3322676295501878e-15,
+      "time_s": 3.819799999999993e-06,
+      "left": 1.819799999999994,
+      "right": 1.8197999999999928,
+      "budget": 1e-05
+    },
+    "paired_same_time:freq": {
+      "error": 6.661338147750939e-16,
+      "time_s": 4.842599999999826e-06,
+      "left": 0.9787000000000873,
+      "right": 0.9787000000000866,
+      "budget": 0.001
+    },
+    "paired_same_time:phase": {
+      "error": 1.010006722701462e-08,
+      "time_s": 5.701399999998071e-06,
+      "left": 0.7432695200990069,
+      "right": 0.7432695099989397,
+      "budget": 0.001
+    },
+    "paired_same_time:phase_absolute_all": {
+      "error": 0.9999999899000185,
+      "time_s": 4.754999999999999e-06,
+      "budget": 0.001,
+      "left": 1.009998107370791e-08,
+      "right": 0.9999999999999996
+    },
+    "paired_same_time:out": {
+      "error": 6.346028565015977e-08,
+      "time_s": 5.323599999998843e-06,
+      "left": -0.0003818297849092647,
+      "right": -0.0003817663246236145,
+      "budget": 0.003
+    }
+  },
+  "wraps": {
+    "spectre": {
+      "count": 4,
+      "expected_count": 4,
+      "brackets": [
+        {
+          "left_s": 2.689946442575134e-06,
+          "right_s": 2.689966442575134e-06,
+          "left_phase": 0.9999851104355444,
+          "right_phase": 9.999969963203625e-09,
+          "nominal_s": 2.6899664425751338e-06,
+          "window_s": [
+            2.6898664425751336e-06,
+            2.690066442575134e-06
+          ],
+          "bracket_wholly_in_window": true
+        },
+        {
+          "left_s": 3.754979999999999e-06,
+          "right_s": 3.755e-06,
+          "left_phase": 0.999980010099945,
+          "right_phase": 1.009994510248191e-08,
+          "nominal_s": 3.7549999999999996e-06,
+          "window_s": [
+            3.7548999999999994e-06,
+            3.7551e-06
+          ],
+          "bracket_wholly_in_window": true
+        },
+        {
+          "left_s": 4.75498e-06,
+          "right_s": 4.754999999999999e-06,
+          "left_phase": 0.9999800100999814,
+          "right_phase": 1.009998107370791e-08,
+          "nominal_s": 4.754999999999999e-06,
+          "window_s": [
+            4.7549e-06,
+            4.7551e-06
+          ],
+          "bracket_wholly_in_window": true
+        },
+        {
+          "left_s": 6.31935515251343e-06,
+          "right_s": 6.31937515251343e-06,
+          "left_phase": 0.9999936019257171,
+          "right_phase": 5.099954236698068e-09,
+          "nominal_s": 6.31937515251343e-06,
+          "window_s": [
+            6.31927515251343e-06,
+            6.31947515251343e-06
+          ],
+          "bracket_wholly_in_window": true
+        }
+      ]
+    },
+    "evas": {
+      "count": 4,
+      "expected_count": 4,
+      "brackets": [
+        {
+          "left_s": 2.689946442575134e-06,
+          "right_s": 2.689966442575134e-06,
+          "left_phase": 0.9999851004355744,
+          "right_phase": 2.745757265300551e-16,
+          "nominal_s": 2.6899664425751338e-06,
+          "window_s": [
+            2.6898664425751336e-06,
+            2.690066442575134e-06
+          ],
+          "bracket_wholly_in_window": true
+        },
+        {
+          "left_s": 3.754979999999999e-06,
+          "right_s": 3.755e-06,
+          "left_phase": 0.999979999999999,
+          "right_phase": 1.8993649968795934e-16,
+          "nominal_s": 3.7549999999999996e-06,
+          "window_s": [
+            3.7548999999999994e-06,
+            3.7551e-06
+          ],
+          "bracket_wholly_in_window": true
+        },
+        {
+          "left_s": 4.754999999999999e-06,
+          "right_s": 4.75502e-06,
+          "left_phase": 0.9999999999999996,
+          "right_phase": 1.9999999999686935e-05,
+          "nominal_s": 4.754999999999999e-06,
+          "window_s": [
+            4.7549e-06,
+            4.7551e-06
+          ],
+          "bracket_wholly_in_window": true
+        },
+        {
+          "left_s": 6.31935515251343e-06,
+          "right_s": 6.31937515251343e-06,
+          "left_phase": 0.999993596825762,
+          "right_phase": 2.517562098341231e-16,
+          "nominal_s": 6.31937515251343e-06,
+          "window_s": [
+            6.31927515251343e-06,
+            6.31947515251343e-06
+          ],
+          "bracket_wholly_in_window": true
+        }
+      ]
+    }
+  },
+  "center_comparisons": [
+    {
+      "time_s": 2.689966442575134e-06,
+      "side_sign": 1,
+      "exact_phase": {
+        "numerator": "3104853225465728762364969080207387202522183374910853",
+        "denominator": "11307821214581659197632842909634388695443824574515724921681286791168",
+        "decimal_80_digits": "2.7457572653005506437980036791570314242799928744568247723141180804389215655249352E-16"
+      },
+      "evas": 2.745757265300551e-16,
+      "spectre": 9.999969963203625e-09,
+      "ordinary_error": 9.999969688627898e-09,
+      "circular_error": 9.99996968564787e-09
+    },
+    {
+      "time_s": 3.755e-06,
+      "side_sign": 1,
+      "exact_phase": {
+        "numerator": "2274037803277132579565304265869560515",
+        "denominator": "11972621413014756705924586149611790497021399392059392",
+        "decimal_80_digits": "1.8993649968795933416482980551471166210124165346255775268795649867426044675234008E-16"
+      },
+      "evas": 1.8993649968795934e-16,
+      "spectre": 1.009994510248191e-08,
+      "ordinary_error": 1.009994491254541e-08,
+      "circular_error": 1.0099944935948457e-08
+    },
+    {
+      "time_s": 4.754999999999999e-06,
+      "side_sign": -1,
+      "exact_phase": {
+        "numerator": "11972621413014750832275062724624540717627456653560515",
+        "denominator": "11972621413014756705924586149611790497021399392059392",
+        "decimal_80_digits": "0.99999999999999950940990107312033854920186872867099838206440736880775268795649867"
+      },
+      "evas": 0.9999999999999996,
+      "spectre": 1.009998107370791e-08,
+      "ordinary_error": 0.9999999899000185,
+      "circular_error": 1.0099981517797119e-08
+    },
+    {
+      "time_s": 6.31937515251343e-06,
+      "side_sign": 1,
+      "exact_phase": {
+        "numerator": "395390862564578881277102701384905559115495874429549",
+        "denominator": "1570530724247452333765077820372645487573138146133003544083528941568",
+        "decimal_80_digits": "2.5175620983412306654995328399117399566384609706084846914129751847094400078236137E-16"
+      },
+      "evas": 2.517562098341231e-16,
+      "spectre": 5.099954236698068e-09,
+      "ordinary_error": 5.099953984941858e-09,
+      "circular_error": 5.0999539591423115e-09
+    }
+  ],
+  "reference_limits": "Compiled-binary64 rational mathematics, decimal-source engineering oracle, and actual Spectre results are separate; no source-to-IR equivalence proof. Center3 remains an ordinary-phase discrepancy, not masked by circular error.",
+  "artifacts": {
+    "runs/clamp/certificate-comparison/COMPARISON.json": {
+      "sha256": "c452c01734a0a0565b0c10b4245dcac61ef8bda5452ee8a59dd0baa2488d3666",
+      "bytes": 7664
+    },
+    "runs/clamp/certificate-comparison/EXECUTION.json": {
+      "sha256": "0eb63e9026ba4cfdb39d206f86a669f0162eccde66f95cca836c5be87ca8f4d8",
+      "bytes": 147
+    },
+    "runs/clamp/certificate-comparison/IDENTITY.json": {
+      "sha256": "76991ad301689e80c1ebb0b4026e27a383b5bbfa31a69ea99a35e8feaaa3cda4",
+      "bytes": 10560
+    },
+    "runs/clamp/certificate-comparison/PLAN.md": {
+      "sha256": "7c459d1a1c7783cb729fa91d3995ccfef4d0437c0c044bbc253a51897a4a3582",
+      "bytes": 475
+    },
+    "runs/clamp/certificate-comparison/boundary-request.json": {
+      "sha256": "f052c3f035807f8eaaab5bc7645336d64b694b742c12ee43885aaa049c21f3fc",
+      "bytes": 4729
+    },
+    "runs/clamp/certificate-comparison/boundary-response.json": {
+      "sha256": "a136301db3f41b9f3f9db1af69fe461b042f69e45dd1f5e41a97710e9dc0a715",
+      "bytes": 1365
+    },
+    "runs/clamp/certificate-comparison/boundary-spectre.json": {
+      "sha256": "aaee982942e5e009352eef7980c81d684d877ac9ccead454cbcffb97c4292636",
+      "bytes": 1412
+    },
+    "runs/clamp/certificate-comparison/boundary-stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "runs/clamp/certificate-comparison/boundary-stdout.json": {
+      "sha256": "2e765e6e07de86cbd430823f354dd114df22ba779b84b30431a18c468a0d61bc",
+      "bytes": 860
+    },
+    "runs/clamp/certificate-comparison/compare.py": {
+      "sha256": "aa3b6f43b58e29fd5f153b89fbf4e03c25de2f0a6d28becc785cc06fe2722b95",
+      "bytes": 5993
+    },
+    "runs/clamp/certificate-comparison/exact-center-comparison.json": {
+      "sha256": "f85d40c2d6209ffcd3c6f0fb671d1cf3be39030fdc0abf95ed831677f13ffd95",
+      "bytes": 8251
+    },
+    "runs/clamp/certificate-comparison/mismatches.json": {
+      "sha256": "de8e6a4c027c90e2ebeb9dbc7c6de4addc261974b5e5ee1835962981f443fbec",
+      "bytes": 428
+    },
+    "runs/clamp/certificate-comparison/ordinary-request.json": {
+      "sha256": "2daae9f643a164e44c6831c43798dac013e95c5d324efbeb3bb62a71365e9b3d",
+      "bytes": 933857
+    },
+    "runs/clamp/certificate-comparison/ordinary-response.json": {
+      "sha256": "1cbf80c838b4563b951169716c96bee1bf1122c08ab476b6162f2ca33f484dd9",
+      "bytes": 10610157
+    },
+    "runs/clamp/certificate-comparison/ordinary-stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "runs/clamp/certificate-comparison/ordinary-stdout.json": {
+      "sha256": "29f472f40f31a6d3a747404c96b4bb4cf4d8b0c7fa00f1726c16451c8ce9af0b",
+      "bytes": 6485674
+    },
+    "runs/clamp/certificate-comparison/program.json": {
+      "sha256": "009bb21ccc3b238a04a60bde0fd56c7ad5b70f280ad389e928a4c4c1f6b4e208",
+      "bytes": 9546
+    },
+    "runs/clamp/certificate-comparison/run.log": {
+      "sha256": "cbf022f337174b99fd8cc5561750dd0c3d8cdd93050bf90527f23747345bbd94",
+      "bytes": 108
+    }
+  },
+  "spectre_identity": {
+    "condition.json": "e51c7cbe7bd1355dac595d347cb6e342cc60dd156de913e438dcc3e74f0cb84c",
+    "dut.va": "1bc287bb7c2bd6db604c56233239b668582093388790fe4be92f8c7fd06f327e",
+    "tb.scs": "8fdf75883a869f80a9d6544e93983ec9261eb6185ac2d4bc23d5e312dd258d17",
+    "observation.json": "f1c74acfc1f97a652a2dba4b47533c26e1d16d17c7525209d0bbd5698e09addb",
+    "RESULT.json": "0ddb349a68c626b05e981ed6a43227acc34b9e9d78b9ce993efdf672cc1076e4",
+    "spectre.log": "812015d2a0d5a9f78f82b98f50795e53dd3c61d90b23fa1005903a2590eba3f7",
+    "psf/tran.tran.tran": "76790e1b0d992a08fa3b0aeaa82e63b2af2efe18b70c90b57551c7fee2e39f9e"
+  },
+  "known_qualification_gaps": [
+    "original native stop token before prescribed stop",
+    "native export and actual input error bounds not qualified",
+    "finite development cases do not certify full continuous trajectories"
+  ]
+}
