@@ -29,6 +29,7 @@ RULES = {
     'unsupported_initial_event': ('unsupported', 'parse', 'LANG', 'Use an unqualified initialization leaf and constant values or a real driven-input comparison.'),
     'unsupported_event_context': ('unsupported', 'binding', 'LANG', 'Declare monitored events unconditionally, at top level or inside static genvar loops.'),
     'unsupported_local_event': ('unsupported', 'lowering', 'LANG', 'Event expressions require direct input or persistent state expressions; ordinary analog local snapshots are not supported.'),
+    'unsupported_event_state_dependency': ('unsupported', 'lowering', 'LANG', 'Use state-independent event predicates and instance-constant direction/tolerance settings; held timer start/period/enable remain supported.'),
     'scs_input': ('invalid_input', 'netlist', 'LANG', 'Check the netlist statement and its constant values.'),
     'unsupported_scs': ('unsupported', 'netlist', 'LANG', 'Use the documented voltage-testbench subset.'),
     'input_error': ('invalid_input', 'input', None, 'Check the input fields and command arguments.'),

@@ -170,7 +170,20 @@ class InstanceCompiler:
         # restrictions, while local aliases get the same explicit boundary.
         if name in self.local_variables:
             return self.symbol(name)
+        if name in self.state_ids:
+            raise CompileError(f"{self.model.source}: event predicates and constant settings cannot depend on persistent state {name!r}",
+                               code='unsupported_event_state_dependency', instance=self.instance.name)
         return self.parameter(name)
+
+    def lower_event(self, expr, resolve, nodes, *args, **kwargs):
+        try:
+            return lower(expr, resolve, nodes, self.model.source, *args, **kwargs)
+        except CompileError as error:
+            if (error.diagnostic['code'] in ('unsupported_local_event', 'unsupported_event_state_dependency')
+                    and 'location' not in error.diagnostic):
+                raise CompileError(str(error), code=error.diagnostic['code'], token=expr.token,
+                                   instance=self.instance.name) from error
+            raise
 
     def integral(self, expression):
         # Do not introduce an implicit real-to-integer rounding rule.
@@ -271,7 +284,7 @@ class InstanceCompiler:
                         code='unsupported_timer_dependency', token=expr.token, instance=self.instance.name)
                 pending.extend(expr.args)
         def setting(arg):
-            value = lower(arg, self.event_parameter, {}, self.model.source)
+            value = self.lower_event(arg, self.event_parameter, {})
             if not isinstance(value, Affine) or value.terms:
                 raise CompileError(f"{leaf.kind} settings must be instance constants")
             return value.constant
@@ -283,7 +296,7 @@ class InstanceCompiler:
             direction, time_tol, expr_tol = settings
             if direction not in (-1, 0, 1) or time_tol <= 0 or expr_tol <= 0:
                 raise CompileError("cross requires direction -1/0/1 and positive tolerances")
-            result = CrossTrigger(lower(leaf.arguments[0], self.symbol, self.node_ids, self.model.source, lambda expr: self.waveform(expr, self.symbol), preserve_structure=True, node_declarations=True),
+            result = CrossTrigger(self.lower_event(leaf.arguments[0], self.symbol, self.node_ids, lambda expr: self.waveform(expr, self.symbol), preserve_structure=True, node_declarations=True),
                                    int(direction), time_tol, expr_tol)
         else:
             # Lower optional source arguments into the existing explicit IR.
@@ -293,7 +306,7 @@ class InstanceCompiler:
             time_tol = 1e-12 if tolerance_arg is None else setting(tolerance_arg)
             if time_tol <= 0:
                 raise CompileError("timer requires nonnegative start and positive time_tol")
-            values = [lower(arg, self.symbol, {}, self.model.source, preserve_structure=True) if arg is not None else Affine(0., ())
+            values = [self.lower_event(arg, self.symbol, {}, preserve_structure=True) if arg is not None else Affine(0., ())
                       for arg in (start_arg, period_arg, enable_arg)]
             if enable_arg is None:
                 values[2] = Affine(1., ())
@@ -314,8 +327,8 @@ class InstanceCompiler:
                 # Predicate state references are rejected even if their
                 # numeric coefficients would cancel. The kernel also
                 # proves independence through the voltage network.
-                left = lower(statement.left, self.event_parameter, self.node_ids, self.model.source, preserve_structure=True, memo={}, node_declarations=True)
-                right = lower(statement.right, self.event_parameter, self.node_ids, self.model.source, preserve_structure=True, memo={}, node_declarations=True)
+                left = self.lower_event(statement.left, self.event_parameter, self.node_ids, preserve_structure=True, memo={}, node_declarations=True)
+                right = self.lower_event(statement.right, self.event_parameter, self.node_ids, preserve_structure=True, memo={}, node_declarations=True)
                 result.append(Conditional({"<": "lt", "<=": "le", ">": "gt", ">=": "ge"}[statement.relation],
                                           left, right, self.body(statement.then_body), self.body(statement.else_body), origin))
             else:
@@ -323,7 +336,7 @@ class InstanceCompiler:
                     raise CompileError(f"{self.model.source}:{statement.token.line}: assignment target must be an instance state")
                 # Reset feedback checks need voltage dependencies even
                 # when a coefficient cancels or underflows to zero.
-                value = lower(statement.rhs, self.symbol, self.node_ids, self.model.source, preserve_structure=True, node_declarations=True)
+                value = self.lower_event(statement.rhs, self.symbol, self.node_ids, preserve_structure=True, node_declarations=True)
                 if self.model.variables[statement.name] == "integer" and not self.integral(value):
                     raise CompileError("integer assignment requires integral state arithmetic")
                 result.append(Assignment(self.state_ids[statement.name], value))

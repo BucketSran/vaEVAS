@@ -48,10 +48,11 @@ def main():
     parser.add_argument('--readback',type=Path,required=True,help='exact PR109 settings_readback.py')
     parser.add_argument('--output',type=Path,required=True,help='ignored local full analysis directory')
     parser.add_argument('--evidence',type=Path,required=True,help='compact curated JSON')
+    parser.add_argument('--candidate-revision',default=BEHAVIOR,help='fixed tested production revision; no uncommitted production changes')
     args = parser.parse_args()
     from evas import Instance, compile_sources
     from evas.ir import SCHEMA_VERSION
-    assert not git('diff',BEHAVIOR,'--','evas/src','evas/rust_core/src','evas/rust_core/crates'), 'candidate production differs'
+    assert not git('diff',args.candidate_revision,'--','evas/src','evas/rust_core/src','evas/rust_core/crates'), 'candidate production differs'
     shared = git('show',READBACK+':experiments/backends/paper/settings_readback.py')
     assert args.readback.read_bytes() == shared, 'wrong shared readback revision'
     spec = importlib.util.spec_from_file_location('shared_readback',args.readback)
@@ -110,7 +111,7 @@ def main():
     closure={str(p.relative_to(ROOT)):sha(p) for p in sorted((ROOT/'evas/src/evas').glob('*.py'))}
     closure.update({str(p.relative_to(ROOT)):sha(p) for p in sorted((ROOT/'evas/rust_core').rglob('*.rs')) if 'target' not in p.parts})
     evidence=dict(schema=1,scope='One actual Spectre configuration, three instances in one frozen DUT; not three configurations or complete #65/VCO closure.',
-                  behavior_revision=BEHAVIOR,IR=SCHEMA_VERSION,archive_sha256=ARCHIVE,verified_manifest_files=len(file_manifest),
+                  feature_revision=BEHAVIOR,tested_revision=args.candidate_revision,IR=SCHEMA_VERSION,archive_sha256=ARCHIVE,verified_manifest_files=len(file_manifest),
                   source_sha256=SOURCE,solver_controls=manifest['EVAS'],frozen_voltage_budget=dict(absolute=1e-7,relative=1e-5),
                   readback_revision=READBACK,readback_sha256=hashlib.sha256(shared).hexdigest(),settings_reanalysis_status='P',settings_reanalysis=settings,
                   preserved_original_result=original_result,raw_availability='local-only',

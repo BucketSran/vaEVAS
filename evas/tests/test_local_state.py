@@ -1,11 +1,11 @@
 """Sequential analog locals combined with held event state, public Rust path."""
-GUARDS = ["LANG", "TIMER", "EVENT-ORDER", "DYNAMICS"]
+GUARDS = ["LANG", "TIMER", "EVENT-ORDER", "DYNAMICS", "case:local_state"]
 
 import unittest
 import json
 from pathlib import Path
 
-from evas import CompileError, Instance, compile_sources, transient
+from evas import CompileError, KernelError, Instance, compile_sources, transient
 from test_affine import KERNEL, instance, model
 
 
@@ -76,6 +76,41 @@ class LocalStateContracts(unittest.TestCase):
                      "V(y,r)<+a+q;"):
             with self.subTest(body=body), self.assertRaisesRegex(CompileError, "not assigned before use"):
                 compile_local("@(initial_step) q=1; @(timer(.5)) q=2; " + body)
+
+    def test_local_event_errors_keep_available_source_location(self):
+        for event in ("@(timer(.5)) q=a;", "@(cross(a-.5,1)) q=2;",
+                      "@(timer(.5)) if(a>0) q=2;", "@(timer(.5,0,a)) q=2;"):
+            with self.subTest(event=event), self.assertRaises(CompileError) as failure:
+                compile_local("@(initial_step) q=1;\na=V(u,r);\n" + event + "\nV(y,r)<+q;")
+            diagnostic=failure.exception.diagnostic
+            self.assertEqual(diagnostic['code'],'unsupported_local_event')
+            self.assertEqual(diagnostic['location']['source'],'local-state.va')
+            self.assertEqual(diagnostic['location']['line'],3)
+            self.assertGreater(diagnostic['location']['column'],0)
+
+    def test_state_predicate_and_constant_setting_dependency_are_explicit(self):
+        for event in ("@(timer(.5)) if(q>0) q=2;", "@(timer(.5,0,q)) q=2;",
+                      "@(cross(V(u,r)-.5,q)) q=2;"):
+            with self.subTest(event=event), self.assertRaises(CompileError) as failure:
+                compile_local("@(initial_step) q=1;\n" + event + "\na=V(u,r); V(y,r)<+a+q;")
+            diagnostic=failure.exception.diagnostic
+            self.assertEqual(diagnostic['code'],'unsupported_event_state_dependency')
+            self.assertEqual(diagnostic['category'],'unsupported')
+            self.assertIn('persistent state',str(failure.exception))
+            self.assertEqual(diagnostic['location']['line'],2)
+
+    def test_ordinary_input_if_compiles_but_event_transient_stays_unsupported(self):
+        program=compile_local("""@(initial_step) q=1; @(timer(.5)) q=2;
+                                if(V(u,r)>.5) a=1; else a=2; V(y,r)<+a+q;""")
+        with self.assertRaises(KernelError) as failure:
+            run(program)
+        self.assertEqual(failure.exception.detail['kind'],'unsupported_transient')
+        self.assertIn('ordinary analog conditionals',str(failure.exception))
+
+    def test_unread_unwritten_real_declaration_requires_no_initial_state(self):
+        program=compile_local("@(initial_step) q=1; @(timer(.5)) q=2; V(y,r)<+q;",'real q,dead;')
+        self.assertEqual([state.name for state in program.states],['q'])
+        self.assertEqual(values(run(program)),[1,1,2,2,2])
 
     def test_writer_roles_are_not_inferred_from_initialization_alone(self):
         for body in ("@(initial_step) q=1; @(timer(.5)) a=2; V(y,r)<+q;",
