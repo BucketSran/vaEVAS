@@ -1,0 +1,883 @@
+{
+  "schema": 1,
+  "scope": "One actual Spectre configuration, three instances in one frozen DUT; not three configurations or complete #65/VCO closure.",
+  "behavior_revision": "f0ed848d8c0a6ceb7e55407013788b1b95103cba",
+  "IR": 18,
+  "archive_sha256": "e91d97bc7089cda266cea9996bd6e66f2e8e34b70cb89ac792747592b541e8fa",
+  "verified_manifest_files": 37,
+  "source_sha256": "20a90b472398a4f7df56d36f6b960ed98cc59985c0c3f426e8e03dc42cf1b782",
+  "solver_controls": {
+    "stop": 1,
+    "max_step": 0.025,
+    "vabstol": 1e-10,
+    "reltol": 0
+  },
+  "frozen_voltage_budget": {
+    "absolute": 1e-07,
+    "relative": 1e-05
+  },
+  "readback_revision": "5e795852d18548a5389ffe2332fdb5708d4f8796",
+  "readback_sha256": "875be764ac89c6f6d6e219871e65ef43fe14b10d664ae2ecd131b65f46568da8",
+  "settings_reanalysis_status": "P",
+  "settings_reanalysis": {
+    "effective": {
+      "stop_s": {
+        "value": 1.0,
+        "line": 137,
+        "raw": "    stop = 1 s",
+        "scope": "transient:tran"
+      },
+      "maxstep_s": {
+        "value": 0.025,
+        "line": 139,
+        "raw": "    maxstep = 25 ms",
+        "scope": "transient:tran"
+      },
+      "reltol": {
+        "value": 1e-06,
+        "line": 143,
+        "raw": "    reltol = 1e-06",
+        "scope": "transient:tran"
+      },
+      "vabstol_V": {
+        "value": 1.0000000000000001e-07,
+        "line": 144,
+        "raw": "    abstol(V) = 100 nV",
+        "scope": "transient:tran"
+      },
+      "iabstol_A": {
+        "value": 1e-12,
+        "line": 145,
+        "raw": "    abstol(I) = 1 pA",
+        "scope": "transient:tran"
+      },
+      "method": {
+        "value": "traponly",
+        "line": 150,
+        "raw": "    method = traponly",
+        "scope": "transient:tran"
+      }
+    },
+    "global_user": {
+      "vabstol_V": {
+        "value": 1e-07,
+        "line": 94,
+        "raw": "            vabstol = 1e-07",
+        "scope": "global_user"
+      },
+      "iabstol_A": {
+        "value": 1e-12,
+        "line": 95,
+        "raw": "            iabstol = 1e-12",
+        "scope": "global_user"
+      },
+      "reltol": {
+        "value": 1e-05,
+        "line": 97,
+        "raw": "             reltol = 1e-05",
+        "scope": "global_user"
+      }
+    },
+    "psf_effective": {
+      "stop_s": {
+        "value": 1.0,
+        "line": 14,
+        "raw": "\"stop\" 1.00000",
+        "scope": "psf_transient:tran"
+      },
+      "maxstep_s": {
+        "value": 0.025,
+        "line": 17,
+        "raw": "\"maxstep\" 0.0250000",
+        "scope": "psf_transient:tran"
+      },
+      "reltol": {
+        "value": 1e-06,
+        "line": 21,
+        "raw": "\"reltol\" 1.00000e-06",
+        "scope": "psf_transient:tran"
+      },
+      "vabstol_V": {
+        "value": 1e-07,
+        "line": 22,
+        "raw": "\"abstol(V)\" 1.00000e-07",
+        "scope": "psf_transient:tran"
+      },
+      "iabstol_A": {
+        "value": 1e-12,
+        "line": 23,
+        "raw": "\"abstol(I)\" 1.00000e-12",
+        "scope": "psf_transient:tran"
+      },
+      "method": {
+        "value": "traponly",
+        "line": 28,
+        "raw": "\"method\" \"traponly\"",
+        "scope": "psf_transient:tran"
+      }
+    },
+    "psf_relative_metadata": {
+      "tolerance.relative": {
+        "value": 1e-05,
+        "line": 11,
+        "raw": "\"tolerance.relative\" 1.00000e-05",
+        "scope": "psf_header"
+      }
+    }
+  },
+  "preserved_original_result": {
+    "condition": "local-state",
+    "source_sha256": "20a90b472398a4f7df56d36f6b960ed98cc59985c0c3f426e8e03dc42cf1b782",
+    "deck_sha256": "7e515e7bee3f0a1144aa5474e04fd424ececb3eb6e909be00fce8b4ef853edc4",
+    "stages": [
+      {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 20.12086496502161,
+        "completed_utc": "2026-10-08T12:11:03Z",
+        "log": "simulate.log",
+        "log_sha256": "455e70c6a14c6e20ac42d1d025477023948af1c103461229d7b99d870ebb0314",
+        "stage": "simulate",
+        "resource_caps": {
+          "memory_limit_bytes": 4294967296,
+          "file_limit_bytes": 33554432,
+          "threads": 1
+        }
+      }
+    ],
+    "status": "waveform_available",
+    "waveform": "psf/tran.tran.tran",
+    "waveform_sha256": "44bb96972fc6b4813b5cf11218260942da009c322e65cf6e7a0e410a70255f89",
+    "abort_batch": false,
+    "effective_settings": {
+      "status": "I",
+      "reason": "wrong dimension for time: 25 ms"
+    }
+  },
+  "raw_availability": "local-only",
+  "collection_workspace_relative": "current/runs/issue-closure-20261008/local-state-reference-v1/collected/spectre",
+  "raw_identities": {
+    "spectre-output/runs/local-state/psf/tran.tran.tran": {
+      "sha256": "44bb96972fc6b4813b5cf11218260942da009c322e65cf6e7a0e410a70255f89",
+      "bytes": 26967
+    },
+    "spectre-output/runs/local-state/spectre.log": {
+      "sha256": "3707412a83c814be28b829226fe52bcfc75d7cda7bccd3b3124edfd5a7e91c78",
+      "bytes": 7956
+    },
+    "spectre-output/runs/local-state/RESULT.json": {
+      "sha256": "075b502a9619112861167b44c121a6d74f201ec27dcc6fd5a677ef1fa1b9683b",
+      "bytes": 1321
+    },
+    "spectre-output/runs/local-state/tb.scs": {
+      "sha256": "7e515e7bee3f0a1144aa5474e04fd424ececb3eb6e909be00fce8b4ef853edc4",
+      "bytes": 464
+    },
+    "spectre-output/runs/local-state/dut.va": {
+      "sha256": "20a90b472398a4f7df56d36f6b960ed98cc59985c0c3f426e8e03dc42cf1b782",
+      "bytes": 652
+    },
+    "spectre-output/runs/local-state/manifest.json": {
+      "sha256": "5942775cf19b39fe9cfe074d45ee25995e538d1074417a86ae69033de57f444d",
+      "bytes": 2191
+    },
+    "spectre-output/runs/local-state/simulate.json": {
+      "sha256": "afaea44369b6c2f6fb2a3fbacb38e4bb886ddf2b8521b5d92e817767ec579378",
+      "bytes": 676
+    },
+    "spectre-output/TOOL_IDENTITY.json": {
+      "sha256": "75ca121fa7854c2104ea35656d1f72782a0ed3d2715d44e5b2a3d02afda7f1cd",
+      "bytes": 1400
+    },
+    "spectre-output/FILE_MANIFEST.json": {
+      "sha256": "4e4c9e31b54abdd52a38171148d35ccbdccf365dd8f315d060e809beb6a6e0d6",
+      "bytes": 6497
+    }
+  },
+  "spectre": {
+    "version": "sub-version  21.1.0.509.isr12",
+    "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "setup_sha256": [
+      "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+      "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+    ],
+    "receipt": {
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "prlimit",
+        "--as=4294967296",
+        "--fsize=33554432",
+        "--",
+        "/bin/csh",
+        "-f",
+        "run.csh"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "status": "completed",
+      "cleanup": {
+        "signals": [
+          "SIGTERM",
+          "SIGKILL"
+        ],
+        "errors": [],
+        "complete": true
+      },
+      "elapsed_seconds": 20.12086496502161,
+      "completed_utc": "2026-10-08T12:11:03Z",
+      "log": "simulate.log",
+      "log_sha256": "455e70c6a14c6e20ac42d1d025477023948af1c103461229d7b99d870ebb0314",
+      "stage": "simulate",
+      "resource_caps": {
+        "memory_limit_bytes": 4294967296,
+        "file_limit_bytes": 33554432,
+        "threads": 1
+      }
+    }
+  },
+  "EVAS": {
+    "kernel_sha256": "eefdcca9820d107a3d4e9dcd4cfd7ee59a7d105a41328f9cb11dfc90f09b06da",
+    "production_source_closure": {
+      "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/src/evas/__main__.py": "f98567eedc0052dddf00fd13f5380e996409f72aed9fbf09702d5bf173fae1d5",
+      "evas/src/evas/array_elaboration.py": "4faf4543a735ad19c89bbbc760d39f6860089d854b7f24922edaa390cf20df0b",
+      "evas/src/evas/diagnostics.py": "a94641c77c61b71e7c1eeb9d36baa9c01b85adfe598472632841ed4a90744a5f",
+      "evas/src/evas/elaboration.py": "1eb85eefcb393dbc58b6f248389a1d51ef792f45077b779dac0d55fc5aa5e074",
+      "evas/src/evas/errors.py": "8ecf92390d8dbba6acb3f4457c44ba6541bb8f389a4280aa4be5c4b627e14552",
+      "evas/src/evas/frontend.py": "2552416e633542f0770c1f7609ac4778aa8b841db5c0e36bd68a9904f682927c",
+      "evas/src/evas/hierarchy.py": "c277bc21cbe987f7cb427a2955b6b20588d5c42ae09bbc62853dab7bdba4138f",
+      "evas/src/evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+      "evas/src/evas/instance_compiler.py": "9076a235c2fef2b9a2e338eb7468e65b595f741b06256d95dab08d44fa181de7",
+      "evas/src/evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+      "evas/src/evas/ir.py": "ec167d9f02ddde4bff1dbf7b24b903d4a178822cfc0a2749638e753b1398f8cf",
+      "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+      "evas/src/evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+      "evas/src/evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+      "evas/src/evas/lowering.py": "3df0c3f873285e45aa9de85863ca7d42b4c1cffc205a24164700b953b1874c71",
+      "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+      "evas/src/evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+      "evas/src/evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+      "evas/src/evas/node_elaboration.py": "f100e5e857b53a5ccaf43b10f61c1f1d719b0f5205490364dbf30a103bf480e6",
+      "evas/src/evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+      "evas/src/evas/preprocessor.py": "68c7c9d6df5a1f14ea33b8bbaebf79863b64110381d8bad910b98f281e2e2ffe",
+      "evas/src/evas/protocol.py": "82302d948c4c0eff0b88318eb804344a1f60d3dd4798d2c2c561149b6a188607",
+      "evas/src/evas/query.py": "6222b10aa9d889e93fa8b65059b5fb31799f7269770ebc72167c7c67e4a0b92b",
+      "evas/src/evas/results.py": "d085a8a2b57aa2ae48b6fc69e47825b02326ca8e05ff56df61bc791b7771c0d1",
+      "evas/src/evas/runtime.py": "b648c721efcb1d715cb871c644ff60b600229d9489c988edb7c4e291bbba1026",
+      "evas/src/evas/scs.py": "d95097aa5e62d2fe9d6a3c6a6035ca981f64b2aebe7fce2ca58bf12b5a95b281",
+      "evas/src/evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
+      "evas/src/evas/syntax.py": "56eafc9ad5c4f8773441a8e7ccf751d7ce5380b68150a2e2ab6d55524c0f6058",
+      "evas/rust_core/benches/static_solver.rs": "cb7e8f046aa8cde417b94e6e52bf3cd59c714dba19de48ab2c0050a70cefaaa8",
+      "evas/rust_core/benches/transient_solver.rs": "d4521e1df0a5e4ae6a25af65ee63d65884f5fc5d16ddc8a6ede08dc79f67e642",
+      "evas/rust_core/fuzz/fuzz_targets/parse_request.rs": "ab9d99942c6e7c7079ad3d78646ea2657277997b67686208d9398cf5548987d5",
+      "evas/rust_core/fuzz/fuzz_targets/run.rs": "6dba9b211200fce17a36129ecbebf4332b50964abd63b829893a8940d0ac33bb",
+      "evas/rust_core/ir/src/lib.rs": "9216242d4eab4a59cab8a40fc11f22c5aaf2a190fe8bf5bfa764429ad26abc49",
+      "evas/rust_core/ir/tests/transport.rs": "4199c2369bf3ed486612d8bbe1fbc46ee64e75409eb834abc6e15cfa74078cf1",
+      "evas/rust_core/src/absdelay.rs": "e0f6144590856b3a95d03a59af58e9032309fa1e316a41c063a40ec9f73109c7",
+      "evas/rust_core/src/affine_bounds.rs": "3695b89a725216f3a3a555dd353cf5c8c81f82a4696aca0a0cb7436622174cb0",
+      "evas/rust_core/src/analog.rs": "3838af457af4b8b44c29401796acee2574733aa7ef3811f40b38883621cf0e68",
+      "evas/rust_core/src/assembly.rs": "57b93621d4940a7974a0132329c87e43a1e3ff348fe1e16d2d784e7708b9ef62",
+      "evas/rust_core/src/batch.rs": "a41166d5cd9a6fab300d48197bc4093145885d19044b398e48095fdb35473688",
+      "evas/rust_core/src/continuous.rs": "9f93bbbf1537a09adaef261c56efea9cff4d04572cbbc512c47b2a91534654ed",
+      "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+      "evas/rust_core/src/continuous_history.rs": "d62a3daa15da4e0ea396e90b7b3f1d7e86d0eba85f3b4f53aa23659c1273fe55",
+      "evas/rust_core/src/continuous_initialization.rs": "5145a36a517b9ba3ace0fb6241ebbd615fef6004b50aeb5dc99d76ff295874a8",
+      "evas/rust_core/src/continuous_runtime.rs": "331ea3f4ff5027ff14155287537b0231a7e6a818e6fd6885dfc470151bdf9ccd",
+      "evas/rust_core/src/diagnostics.rs": "0a5deae544550e34379582625632cf5c45f21c7f8d1f60178e9cf26ae2a4d65f",
+      "evas/rust_core/src/dynamic_roots.rs": "1e9370915346a19f61b08368a36fd4b8aa55ea20099ebf8f4f497b731277c3ac",
+      "evas/rust_core/src/event_accuracy.rs": "d2b621cb23080ee219b5272fc489010dfc6a4ba15930fd8e6d94f0428e253dd6",
+      "evas/rust_core/src/event_conditions.rs": "8b0c00b449cf1b27326972a95b97a5f5c911b4f56cd6d30dec7f8905312ab30f",
+      "evas/rust_core/src/events.rs": "afde14fb199224d58fe91926503aa13c49a9b4a2ccdfa0bf32b723ab92d65ef5",
+      "evas/rust_core/src/expression.rs": "0b25b767f67598227eb3b5957ce208b1262fc87d096f9775f10bda1a6c26c90f",
+      "evas/rust_core/src/guard_trajectory.rs": "a36c31e9724504931b1e037a69a24762136adcf8a7c2c71f96bb8ebc3144b2a7",
+      "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+      "evas/rust_core/src/idtmod.rs": "6be25e77695a85ed80e2a0faa2f780215a039258ddd8c9efd9a600bac14c5bfb",
+      "evas/rust_core/src/implicit_dynamics.rs": "5a1b5dfb3f182b071c58f341281b7ac35204abecf5691838509cbb78ac0172ed",
+      "evas/rust_core/src/initialization.rs": "7a0bf9345d0cb264ea766c9ff3c801d781948f1683474eb1e1a53f6abd1af365",
+      "evas/rust_core/src/interval.rs": "89a83ce96dbf6cdc217a046c9885ca0cf580c6e6f932c36f0195120d49e53f56",
+      "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
+      "evas/rust_core/src/ir.rs": "cc687fdd3d78e908644537aa8194d3a3ccb3dcb5b88c11a78d7b3e640ad97ea0",
+      "evas/rust_core/src/laplace.rs": "4efcad4da1934849c90985c908aaf750f5bd823392deae3ad555515f8bf71a23",
+      "evas/rust_core/src/lib.rs": "7abe5a48737d991a17fb693df44e2957d66f12d68ac0560149f0a99fd13ee73a",
+      "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+      "evas/rust_core/src/linear/dense.rs": "00a1d9e1a9c5f933f765dd586ab9a8982073d270fed73ed7e602af858e732cad",
+      "evas/rust_core/src/linear/properties.rs": "d1a8b5ec069fef4f621b99290b532f7563cb8f55a1ba2178a77877f60192ab7f",
+      "evas/rust_core/src/linear/refinement.rs": "8476ad2ea3f3698e3c4552f8ff785c00ff878caab584b157dbb80b9c282f32a8",
+      "evas/rust_core/src/linear/sparse.rs": "3914adce2368b027027c06240f160864af0f53de934c0b3285515114fe7aa869",
+      "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+      "evas/rust_core/src/linear.rs": "e0280cfcaaebd2449ab5e4474daf5cd19e6a9fbda5db53e14e5229fc81a4eb36",
+      "evas/rust_core/src/main.rs": "70626c73fa421340afcc53c025a220720b208657273ba3f5e20bc1e4c6e01c3c",
+      "evas/rust_core/src/nonlinear/continuation.rs": "6d0aabe1bb6563a32d4e920fabdefde881777a54b8dc2b4658de432347f6448a",
+      "evas/rust_core/src/nonlinear.rs": "6d7b269023f4b65c4542c5a77a7e5386c061c1c4cd8eb9623d8e1aeef2ec30af",
+      "evas/rust_core/src/nonlinear_dynamics.rs": "dfa6753cd77197cbf0225b24169f652eda1bfb514b1dd4527ee3a80b7137fc8a",
+      "evas/rust_core/src/operators.rs": "7a474615d4fc4d7760016178fafb303a0a5a3595f784b4fa5c48b468b1590fc0",
+      "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+      "evas/rust_core/src/pwl.rs": "9eb6a7cc54f86eb91bdf946fe60955b01e14bcd27be2b0683e781c473dfa2bfa",
+      "evas/rust_core/src/reset_dependencies.rs": "d2adaba2e28d70511e0977c223ea7922b627c832e633b7f94360c951a6f0e3fa",
+      "evas/rust_core/src/schedule.rs": "f04c5e10b007b01bb016582a2175ab6ad48e2c6b8588e2023435c2b64f3d6281",
+      "evas/rust_core/src/settlement.rs": "48584be254805a3c0e990281ca00367efc988fb59351c855930960bd82793687",
+      "evas/rust_core/src/settlement_bounds.rs": "580dcd5fe6e9777bed0fcb04a8fd4bef98f5974905ec1c6bf77c26ca2f56d274",
+      "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+      "evas/rust_core/src/solver.rs": "fbbef1378759e01433d2e3bde7106f61f001db505ede5128198a6dcb3e808446",
+      "evas/rust_core/src/solver_cache_tests.rs": "727acd4fc9084bb6e546a8aa70e2f1e5bd476d27265f5198c5cdd08b0a7fd3fa",
+      "evas/rust_core/src/state_space.rs": "c7e8ff82302cb87c6ba150e5def9d1cf9eba15e23657e2f2686eb067ce4ef74c",
+      "evas/rust_core/src/transient.rs": "8e59ceda03169d883ebeeaa55f56a80c6a80dbdad322ce911d51a95adc768f13",
+      "evas/rust_core/src/transient_condition_tests.rs": "51b89c0648fc1d92282c6d6c46dbeced83ad472ddbf2b8ad64e953d3c7befa25",
+      "evas/rust_core/src/transient_history_calendar.rs": "c54256bb4d0febf2d41f9a6422d69bf3968258337d8dbb5f3d3e18e82cf786a5",
+      "evas/rust_core/src/transient_idt_tests.rs": "ba2c353e867aa4b6fbd8e27f68ad1407536e525712ddab96ebf998434e2755ad",
+      "evas/rust_core/src/transient_lifecycle_tests.rs": "954487d2713727fcd0a73a30e97aa56f7f0587ccdb34beeeb073f26855941f48",
+      "evas/rust_core/src/transient_window_tests.rs": "987d1bac508f0e9c780e1b8ac109bec1b077c85a7722a4d084be64e31565103e",
+      "evas/rust_core/src/transition.rs": "1d1c3e709e983a53d0616d0fda1ff2183d2a2dc33b0b65e0aff122162ba72a3c"
+    }
+  },
+  "native_provenance": {
+    "parsed_saved_rows": 67,
+    "accepted_steps": 66,
+    "count_matches_steps_plus_initial": true,
+    "evidence": "Executed psfascii command, save 11 nodes, strobeoutput=all, skipdc=no, native qobs values and accepted-step count.",
+    "qualification_limit": "Count/deck/format do not certify arbitrary hidden callback stages, exact endpoint or exact-real time serialization."
+  },
+  "native_independent": {
+    "rows": 67,
+    "checked_values": 737,
+    "formula_and_stage_status": "P",
+    "failures": [],
+    "max_error": {
+      "ratio": 2.321927839169218e-11,
+      "absolute": 1.09e-15,
+      "row": 30,
+      "node": "h2"
+    },
+    "phase_counts": {
+      "0": 39,
+      "1": 28,
+      "None": 0
+    },
+    "shared_observer_stage": true,
+    "event_bracket": {
+      "before_row": 38,
+      "after_row": 39,
+      "before_token": "0.499237060546875",
+      "after_token": "0.5",
+      "intersects_frozen_window": true,
+      "limit": "Native change bracket; not a callback-time certificate."
+    },
+    "required_points": [
+      {
+        "requested": "0.0",
+        "exact_decimal_rows": [
+          0
+        ],
+        "nearest_row": 0,
+        "nearest_time_token": "0",
+        "decimal_offset": "0.0",
+        "nearest_stage": 0,
+        "left_row": null,
+        "right_row": 1,
+        "interpolated": false
+      },
+      {
+        "requested": "0.125",
+        "exact_decimal_rows": [
+          15
+        ],
+        "nearest_row": 15,
+        "nearest_time_token": "0.125",
+        "decimal_offset": "0.000",
+        "nearest_stage": 0,
+        "left_row": 14,
+        "right_row": 16,
+        "interpolated": false
+      },
+      {
+        "requested": "0.25",
+        "exact_decimal_rows": [],
+        "nearest_row": 20,
+        "nearest_time_token": "0.24999999999999997",
+        "decimal_offset": "-3E-17",
+        "nearest_stage": 0,
+        "left_row": 20,
+        "right_row": 21,
+        "interpolated": false
+      },
+      {
+        "requested": "0.375",
+        "exact_decimal_rows": [],
+        "nearest_row": 25,
+        "nearest_time_token": "0.37500000000000006",
+        "decimal_offset": "6E-17",
+        "nearest_stage": 0,
+        "left_row": 24,
+        "right_row": 25,
+        "interpolated": false
+      },
+      {
+        "requested": "0.5",
+        "exact_decimal_rows": [
+          39
+        ],
+        "nearest_row": 39,
+        "nearest_time_token": "0.5",
+        "decimal_offset": "0.0",
+        "nearest_stage": 1,
+        "left_row": 38,
+        "right_row": 40,
+        "interpolated": false
+      },
+      {
+        "requested": "0.625",
+        "exact_decimal_rows": [
+          51
+        ],
+        "nearest_row": 51,
+        "nearest_time_token": "0.625",
+        "decimal_offset": "0.000",
+        "nearest_stage": 1,
+        "left_row": 50,
+        "right_row": 52,
+        "interpolated": false
+      },
+      {
+        "requested": "0.75",
+        "exact_decimal_rows": [],
+        "nearest_row": 56,
+        "nearest_time_token": "0.75000000000000011",
+        "decimal_offset": "1.1E-16",
+        "nearest_stage": 1,
+        "left_row": 55,
+        "right_row": 56,
+        "interpolated": false
+      },
+      {
+        "requested": "0.875",
+        "exact_decimal_rows": [],
+        "nearest_row": 61,
+        "nearest_time_token": "0.87500000000000022",
+        "decimal_offset": "2.2E-16",
+        "nearest_stage": 1,
+        "left_row": 60,
+        "right_row": 61,
+        "interpolated": false
+      },
+      {
+        "requested": "1.0",
+        "exact_decimal_rows": [],
+        "nearest_row": 66,
+        "nearest_time_token": "1.0000000000000002",
+        "decimal_offset": "2E-16",
+        "nearest_stage": 1,
+        "left_row": 65,
+        "right_row": 66,
+        "interpolated": false
+      }
+    ],
+    "initial_status": "P",
+    "exact_stop_status": "I",
+    "exact_required_point_count": 4,
+    "required_point_status": "I",
+    "strict_observation_status": "I"
+  },
+  "EVAS_canonical_independent": {
+    "rows": 9,
+    "checked_values": 99,
+    "formula_and_stage_status": "P",
+    "failures": [],
+    "max_error": {
+      "ratio": 0.0,
+      "absolute": 0.0,
+      "row": null,
+      "node": null
+    },
+    "phase_counts": {
+      "0": 4,
+      "1": 5,
+      "None": 0
+    },
+    "shared_observer_stage": true,
+    "event_bracket": {
+      "before_row": 3,
+      "after_row": 4,
+      "before_token": "0.375",
+      "after_token": "0.5",
+      "intersects_frozen_window": true,
+      "limit": "Native change bracket; not a callback-time certificate."
+    },
+    "required_points": [
+      {
+        "requested": "0.0",
+        "exact_decimal_rows": [
+          0
+        ],
+        "nearest_row": 0,
+        "nearest_time_token": "0",
+        "decimal_offset": "0.0",
+        "nearest_stage": 0,
+        "left_row": null,
+        "right_row": 1,
+        "interpolated": false
+      },
+      {
+        "requested": "0.125",
+        "exact_decimal_rows": [
+          1
+        ],
+        "nearest_row": 1,
+        "nearest_time_token": "0.125",
+        "decimal_offset": "0.000",
+        "nearest_stage": 0,
+        "left_row": 0,
+        "right_row": 2,
+        "interpolated": false
+      },
+      {
+        "requested": "0.25",
+        "exact_decimal_rows": [
+          2
+        ],
+        "nearest_row": 2,
+        "nearest_time_token": "0.25",
+        "decimal_offset": "0.00",
+        "nearest_stage": 0,
+        "left_row": 1,
+        "right_row": 3,
+        "interpolated": false
+      },
+      {
+        "requested": "0.375",
+        "exact_decimal_rows": [
+          3
+        ],
+        "nearest_row": 3,
+        "nearest_time_token": "0.375",
+        "decimal_offset": "0.000",
+        "nearest_stage": 0,
+        "left_row": 2,
+        "right_row": 4,
+        "interpolated": false
+      },
+      {
+        "requested": "0.5",
+        "exact_decimal_rows": [
+          4
+        ],
+        "nearest_row": 4,
+        "nearest_time_token": "0.5",
+        "decimal_offset": "0.0",
+        "nearest_stage": 1,
+        "left_row": 3,
+        "right_row": 5,
+        "interpolated": false
+      },
+      {
+        "requested": "0.625",
+        "exact_decimal_rows": [
+          5
+        ],
+        "nearest_row": 5,
+        "nearest_time_token": "0.625",
+        "decimal_offset": "0.000",
+        "nearest_stage": 1,
+        "left_row": 4,
+        "right_row": 6,
+        "interpolated": false
+      },
+      {
+        "requested": "0.75",
+        "exact_decimal_rows": [
+          6
+        ],
+        "nearest_row": 6,
+        "nearest_time_token": "0.75",
+        "decimal_offset": "0.00",
+        "nearest_stage": 1,
+        "left_row": 5,
+        "right_row": 7,
+        "interpolated": false
+      },
+      {
+        "requested": "0.875",
+        "exact_decimal_rows": [
+          7
+        ],
+        "nearest_row": 7,
+        "nearest_time_token": "0.875",
+        "decimal_offset": "0.000",
+        "nearest_stage": 1,
+        "left_row": 6,
+        "right_row": 8,
+        "interpolated": false
+      },
+      {
+        "requested": "1.0",
+        "exact_decimal_rows": [
+          8
+        ],
+        "nearest_row": 8,
+        "nearest_time_token": "1",
+        "decimal_offset": "0.0",
+        "nearest_stage": 1,
+        "left_row": 7,
+        "right_row": null,
+        "interpolated": false
+      }
+    ],
+    "initial_status": "P",
+    "exact_stop_status": "P",
+    "exact_required_point_count": 9,
+    "required_point_status": "P",
+    "strict_observation_status": "P"
+  },
+  "EVAS_native_time_independent": {
+    "rows": 67,
+    "checked_values": 737,
+    "formula_and_stage_status": "P",
+    "failures": [],
+    "max_error": {
+      "ratio": 1.882845188284518e-11,
+      "absolute": 1.8e-15,
+      "row": 63,
+      "node": "z2"
+    },
+    "phase_counts": {
+      "0": 39,
+      "1": 28,
+      "None": 0
+    },
+    "shared_observer_stage": true,
+    "event_bracket": {
+      "before_row": 38,
+      "after_row": 39,
+      "before_token": "0.499237060546875",
+      "after_token": "0.5",
+      "intersects_frozen_window": true,
+      "limit": "Native change bracket; not a callback-time certificate."
+    },
+    "required_points": [
+      {
+        "requested": "0.0",
+        "exact_decimal_rows": [
+          0
+        ],
+        "nearest_row": 0,
+        "nearest_time_token": "0.0",
+        "decimal_offset": "0.0",
+        "nearest_stage": 0,
+        "left_row": null,
+        "right_row": 1,
+        "interpolated": false
+      },
+      {
+        "requested": "0.125",
+        "exact_decimal_rows": [
+          15
+        ],
+        "nearest_row": 15,
+        "nearest_time_token": "0.125",
+        "decimal_offset": "0.000",
+        "nearest_stage": 0,
+        "left_row": 14,
+        "right_row": 16,
+        "interpolated": false
+      },
+      {
+        "requested": "0.25",
+        "exact_decimal_rows": [],
+        "nearest_row": 20,
+        "nearest_time_token": "0.24999999999999997",
+        "decimal_offset": "-3E-17",
+        "nearest_stage": 0,
+        "left_row": 20,
+        "right_row": 21,
+        "interpolated": false
+      },
+      {
+        "requested": "0.375",
+        "exact_decimal_rows": [],
+        "nearest_row": 25,
+        "nearest_time_token": "0.37500000000000006",
+        "decimal_offset": "6E-17",
+        "nearest_stage": 0,
+        "left_row": 24,
+        "right_row": 25,
+        "interpolated": false
+      },
+      {
+        "requested": "0.5",
+        "exact_decimal_rows": [
+          39
+        ],
+        "nearest_row": 39,
+        "nearest_time_token": "0.5",
+        "decimal_offset": "0.0",
+        "nearest_stage": 1,
+        "left_row": 38,
+        "right_row": 40,
+        "interpolated": false
+      },
+      {
+        "requested": "0.625",
+        "exact_decimal_rows": [
+          51
+        ],
+        "nearest_row": 51,
+        "nearest_time_token": "0.625",
+        "decimal_offset": "0.000",
+        "nearest_stage": 1,
+        "left_row": 50,
+        "right_row": 52,
+        "interpolated": false
+      },
+      {
+        "requested": "0.75",
+        "exact_decimal_rows": [],
+        "nearest_row": 56,
+        "nearest_time_token": "0.7500000000000001",
+        "decimal_offset": "1E-16",
+        "nearest_stage": 1,
+        "left_row": 55,
+        "right_row": 56,
+        "interpolated": false
+      },
+      {
+        "requested": "0.875",
+        "exact_decimal_rows": [],
+        "nearest_row": 61,
+        "nearest_time_token": "0.8750000000000002",
+        "decimal_offset": "2E-16",
+        "nearest_stage": 1,
+        "left_row": 60,
+        "right_row": 61,
+        "interpolated": false
+      },
+      {
+        "requested": "1.0",
+        "exact_decimal_rows": [],
+        "nearest_row": 66,
+        "nearest_time_token": "1.0000000000000002",
+        "decimal_offset": "2E-16",
+        "nearest_stage": 1,
+        "left_row": 65,
+        "right_row": 66,
+        "interpolated": false
+      }
+    ],
+    "initial_status": "P",
+    "exact_stop_status": "I",
+    "exact_required_point_count": 4,
+    "required_point_status": "I",
+    "strict_observation_status": "I"
+  },
+  "all_native_pair": {
+    "queried_native_rows": 67,
+    "same_stage_values_compared": 737,
+    "maximum_pair_ratio": 3.621355345493276e-11,
+    "phase_differences": [],
+    "failures": [],
+    "voltage_status": "P",
+    "phase_status": "P"
+  },
+  "canonical_grid_invariance": {
+    "common_canonical_voltages_bitwise_equal": true,
+    "sparse_common_voltages_bitwise_equal": true,
+    "common_canonical_states_equal": true,
+    "event_records_equal": true,
+    "output_counts": [
+      3,
+      9,
+      71
+    ],
+    "accepted_steps": [
+      40,
+      41,
+      70
+    ],
+    "discarded_trials": [
+      0,
+      0,
+      0
+    ]
+  },
+  "supplemental_terminal_extension": {
+    "canonical_stop": 1,
+    "supplemental_stop": 1.0000000000000002,
+    "input": "Original PWL unchanged through t=1; hold last value over the extra one-ULP terminal interval.",
+    "purpose": "Query every exported native timestamp; not evidence of exact canonical-stop serialization."
+  },
+  "analysis_files": {
+    "all-native-supplemental-request.json": {
+      "sha256": "057e370d0251c06fbe919f2c1d479d6d25a87f1e8360416cff3f5e33a1296ed4",
+      "bytes": 18730
+    },
+    "all-native-supplemental-response.json": {
+      "sha256": "eb244589ef61247ea7f33f1698e6ce293b0f8eeacd2d1556dc05ac3a8092d98d",
+      "bytes": 29086
+    },
+    "canonical-request.json": {
+      "sha256": "7ae6c9c42f6df20bf071a276ee3dcbd7c3c79e9ed3f6835b93698af697bb3b5a",
+      "bytes": 17120
+    },
+    "canonical-response.json": {
+      "sha256": "6c3e822e2ac17ace6d07cc425abedb6cf2fe1ba29fac633b47dad3312dcc1843",
+      "bytes": 4251
+    },
+    "dense-request.json": {
+      "sha256": "9fe14a54b343eed3261dd16030b995c36e213ef7e7c535ff3d69dc299e947a6d",
+      "bytes": 18681
+    },
+    "dense-response.json": {
+      "sha256": "1b97e8b4e66c2a00f26caccea8fbec839f866ae30a6fde2bfa67389f52d2e8f4",
+      "bytes": 30409
+    },
+    "native-tokens.json": {
+      "sha256": "a4d9ecd9fa046c7db1c1ba7fb92dc76f490fada73d87b4e4bf200825c2c74765",
+      "bytes": 24751
+    },
+    "settings-readback-pr109.json": {
+      "sha256": "6f68d07ee1185dbf6a1ceaf68390048462d778f6087a220f91b78491ded2db7a",
+      "bytes": 2334
+    },
+    "sparse-request.json": {
+      "sha256": "86c305aeb7d315a1853915f5387beea121bafa2db78678badbe9837050144114",
+      "bytes": 17044
+    },
+    "sparse-response.json": {
+      "sha256": "5fb5265975d7b20840b38cd5bdf76a8427629bead7fb69b75174990162d29ca2",
+      "bytes": 2233
+    }
+  },
+  "checker_identity": {
+    "analyze.py": "561f855405fca7e3818968870c872a781e9ae7cf7323a64dcd0cc6e397fe9612",
+    "check.py": "d961fa9b391c4e6c83680ce1ff4f92af91881542253cf345b1945088cf2382ac",
+    "test_check.py": "8169c46e08543b171082fbbde8abee79e063061dac439015e696db8f91698a18"
+  },
+  "overall_strict_qualification": "I",
+  "qualification_gaps": [
+    "5/9 requested times have no exact decimal native token, including stop; no interpolation/extrapolation performed.",
+    "Terminal raw token is 1.0000000000000002; supplemental request differs explicitly from canonical stop.",
+    "Native event bracket is a timing observation, not a strict callback/serialization certificate.",
+    "Raw/tool receipts are local-only; compact evidence is not full public reproducibility."
+  ]
+}

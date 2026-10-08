@@ -1,7 +1,8 @@
 # 普通 analog 局部量与事件状态
 
 本切片处理 #65 的 65-L 阻塞，属于 LANG、TIMER、EVENT-ORDER 和 DYNAMICS。
-这是开发分支行为，Spectre 配对待执行，不表示原始 VCO 或 #65 全部完成。
+这是开发分支行为，已完成一个真实 Spectre 配置的有限数值配对；严格观察资格仍为 I，
+不表示原始 VCO 或 #65 全部完成。
 
 声明中的 real 变量不会因为另一变量有事件就自动变成持久状态。
 `initial_step` 或事件体写入的目标是持久状态，包括条件和静态循环体中的写目标。
@@ -33,7 +34,9 @@ protocol 状态名验证及 Rust 状态/历史消费。Model、Program、IR18 �
 [冻结 VA](cases/local_state/dut.va)、[Spectre deck](cases/local_state/table.scs)和
 [手写 manifest](cases/local_state/manifest.json)分别保存输入、独立公式及电压/事件容差。
 冻结模型同时观察状态，禁止把精确事件时刻的不同前后 stage 当成电压偏差。
-必须保留实际原生记录和观察资格证据；仅本地回归通过不能声明 Spectre 对齐。
+[实际配对](../../experiments/backends/local-state/README.md)覆盖 67 个原生时刻和三个状态观察量，
+保存实际设置重读、独立公式及查询不变性。9 个要求点中仅 4 个原生 token 精确命中，
+末记录比 stop 大一个 ULP，严格观察资格 I 保留；原生数值相容不替代这一缺口。
 
 原 `benchmark/tasks/va05-dynamic-vco/solution/dut.va` 原字节保留。
 本切片移除将 `freq/triangle` 错当作未初始化持久状态的首失败，
