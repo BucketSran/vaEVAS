@@ -1,0 +1,1007 @@
+{
+  "status": "unmerged candidate; strict C1/VCO/#79 gates unresolved",
+  "source_revision": "41c3f34e248fe6bf5403552d89c1a1793b172899",
+  "kernel_sha256": "d5c4be73fa4c66399fabbf17475e1a2eb9e43645f97c10d0f718f3bfd0de7f16",
+  "actual_reference_version": "Spectre 21.1.0.509.isr12",
+  "external_controls": "Original per-case budgets and queries retained; simulator precision controls are distinct",
+  "reference_v2": {
+    "archive": {
+      "path": "runs/alignment-implementation-20261009/reference-v2/collected/spectre/raw.tar.gz",
+      "sha256": "a204d9969b3ec9c282bfedac7ebc8c03956216d7d1b3e592eb8b6cb9ebe24618",
+      "availability": "local-only"
+    },
+    "analysis": {
+      "path": "runs/alignment-implementation-20261009/al0/new-reference-comparison/SUMMARY.json",
+      "sha256": "19cebbd67649faefd98f1a6ea12d4d0a72eac2f292f068a972f246aa621f4c66",
+      "availability": "local-only"
+    },
+    "cases": [
+      {
+        "case": "root-control",
+        "source_sha256": "e9c37933b49ffae0c5fd11f9045f34edb0793f23fe1f926a1f15ac57189b9839",
+        "source_correction_receipt_sha256": "01d6cbdf19993d4b01ed96840ecdfecae846b21d736848223d87dba101abd4cb",
+        "budget": 1e-08,
+        "spectre_rows": 161,
+        "requested_evas_rows": 161,
+        "exit_code": 0,
+        "evas_status": "ACCEPTED",
+        "direct_status": "F",
+        "direct_max_errors_v": {
+          "z": 6.705203881018917e-08,
+          "y": 1.0
+        },
+        "required_coverage_status": "P",
+        "required_missing_spectre": [],
+        "evas_math_status": "P",
+        "evas_math_max_errors_v": {
+          "z": 7.993605777301127e-15,
+          "y": 0.0
+        },
+        "spectre_math_status": "F",
+        "spectre_math_max_errors_v": {
+          "z": 6.705203903223378e-08,
+          "y": 1.0
+        },
+        "classification": "reference_numerical_error_with_early_observed_root; exact .5 count agrees; hidden callback mechanism unknown",
+        "next_discriminating_task": "Same-source independent numerical tight control, unchanged timer/cross tolerances and query contract, remeasure z and callback bracket."
+      },
+      {
+        "case": "root-unrelated",
+        "source_sha256": "8ebd7f5a2e0b7d1fe8557f3cb2632f334733d5baf8a6c229c7aacac680498ce0",
+        "source_correction_receipt_sha256": "eb0127660187079963fef143dfe9d65a59257c9df39ef294b028183ac308e09b",
+        "budget": 1e-08,
+        "spectre_rows": 130,
+        "requested_evas_rows": 130,
+        "exit_code": 0,
+        "evas_status": "ACCEPTED",
+        "direct_status": "F",
+        "direct_max_errors_v": {
+          "z": 9.448688292890139e-07,
+          "y": 1.0,
+          "x": 1.3322676295501878e-15,
+          "f": 8.881784197001252e-16
+        },
+        "required_coverage_status": "P",
+        "required_missing_spectre": [],
+        "evas_math_status": "P",
+        "evas_math_max_errors_v": {
+          "z": 7.993605777301127e-15,
+          "y": 0.0,
+          "x": 0.0,
+          "f": 0.0
+        },
+        "spectre_math_status": "F",
+        "spectre_math_max_errors_v": {
+          "z": 9.448688294555474e-07,
+          "y": 1.0,
+          "x": 1.3322676295501878e-15,
+          "f": 8.881784197001252e-16
+        },
+        "classification": "reference_numerical_error_with_early_observed_root; exact .5 count agrees; hidden callback mechanism unknown",
+        "next_discriminating_task": "Same-source independent numerical tight control, unchanged timer/cross tolerances and query contract, remeasure z and callback bracket."
+      },
+      {
+        "case": "near-zero-filter-gain-100000000",
+        "source_sha256": "07f8c97132f28eb24942091528f44ef46aa35c9229ac8e891bd7d5e63b8532df",
+        "source_correction_receipt_sha256": "840b4ab25d6500946f2ec7558eea3f29e7db9b0c8c229eb6bceb97076bc9287e",
+        "budget": 1e-07,
+        "spectre_rows": 394,
+        "requested_evas_rows": 394,
+        "exit_code": 0,
+        "evas_status": "ACCEPTED",
+        "direct_status": "F",
+        "direct_max_errors_v": {
+          "y": 1.3377950722481824e-06
+        },
+        "required_coverage_status": "P",
+        "required_missing_spectre": [],
+        "evas_math_status": "P",
+        "evas_math_max_errors_v": {
+          "y": 7.760223436070746e-09
+        },
+        "spectre_math_status": "F",
+        "spectre_math_max_errors_v": {
+          "y": 1.334868007712986e-06
+        },
+        "classification": "reference_numerical_error_supported_by_independent_math; accepted EVAS within original budget",
+        "next_discriminating_task": "Same-source solver-tight/maxstep control only; retain original 1e-7 budget and timer/input rounding identity."
+      },
+      {
+        "case": "near-zero-filter-gain-10000000000000000",
+        "source_sha256": "7d5e60fb122873e75c204c3c8f24edab41180876695bb8865dc7ee0d464fa9d2",
+        "source_correction_receipt_sha256": "f7830c397be6d07a4aac012ce898e867c19504306aee5725229fa2b890c9b415",
+        "budget": 1e-07,
+        "spectre_rows": 502,
+        "requested_evas_rows": 502,
+        "exit_code": 2,
+        "evas_status": "REFUSED",
+        "direct_status": "I; no accepted EVAS waveform",
+        "required_missing_spectre": [],
+        "spectre_math_status": "F",
+        "spectre_math_max_errors_v": {
+          "y": 0.46786437629744787
+        },
+        "control_status": "P",
+        "classification": "expected_sample_uncertainty_refusal_control_P; reference_math_F_not_oracle",
+        "next_discriminating_task": "No unchanged rerun needed. Preserve refusal and native reference rounding discrepancy."
+      },
+      {
+        "case": "interrupted-edge",
+        "source_sha256": "57ea210b0495d9336e91e0f029630d5c466e5a4423eea5d822a42b66a3902d4a",
+        "source_correction_receipt_sha256": "3ab1ff8713241a13c7b6f5a0f02430efde63c91a038bf4a291df85de9db3fcdc",
+        "budget": 1e-08,
+        "spectre_rows": 10035,
+        "requested_evas_rows": 10041,
+        "exit_code": 0,
+        "evas_status": "ACCEPTED",
+        "direct_status": "P",
+        "direct_max_errors_v": {
+          "y": 1.3877787807814457e-16,
+          "x": 3.907985046680551e-14,
+          "f": 1.0873133504674115e-09,
+          "count": 0.0
+        },
+        "required_coverage_status": "I",
+        "required_missing_spectre": [
+          0.125,
+          0.375,
+          0.499999,
+          0.500001,
+          0.625,
+          0.8125
+        ],
+        "evas_math_status": "P",
+        "evas_math_max_errors_v": {
+          "y": 0.0,
+          "x": 0.0,
+          "f": 4.440892098500626e-16,
+          "count": 0.0
+        },
+        "spectre_math_status": "P",
+        "spectre_math_max_errors_v": {
+          "y": 1.3877787807814457e-16,
+          "x": 3.907985046680551e-14,
+          "f": 1.0873133504674115e-09,
+          "count": 0.0
+        },
+        "classification": "finite_native_shape_agreement_P; exact_requested_coverage_I",
+        "next_discriminating_task": "Original query native export obligation still missing six points; no interpolation. Changed-flow cross at .5 is a separate source/contract and not tested by this timer-only probe."
+      }
+    ]
+  },
+  "retained_reference_revalidation": {
+    "requested": 23,
+    "actual_requests": 23,
+    "accepted": 21,
+    "refused": 2,
+    "timeout": 0,
+    "classification": {
+      "unchanged": 23
+    },
+    "SpecB": {
+      "requests": 12,
+      "independent_numeric_P": 12,
+      "independent_event_P": 12
+    },
+    "D": {
+      "requests": 10,
+      "finite_pair_P": 2,
+      "finite_pair_F": 6,
+      "refused": 2,
+      "adequate_control_native_rows": 3628
+    },
+    "M1": {
+      "requests": 1,
+      "finite_z_P": 1,
+      "exact_phase_P": 1,
+      "coverage_P": 1,
+      "native_rows": 10215,
+      "required_rows": 173
+    },
+    "new_spectre_calls": 0,
+    "new_oss_calls": 0,
+    "source_or_build_or_git_writes": 0,
+    "retain_original_verdicts": [
+      "SpecB pre-fix 8P/4refused historical remains",
+      "SpecB E3 strict native count F",
+      "SpecB four native final rows outside original stop remain unpaired I",
+      "M1 base original F and old solver-tight missing3query I",
+      "D1/D2 original six direct F and two strict EVAS refusals",
+      "C1/VCO/#79 original strict F/I unaffected",
+      "12paper original48 slots unchanged; AL5 owns candidate reruns"
+    ]
+  },
+  "local_test_counts": {
+    "python": 156,
+    "rust_passed": 211,
+    "rust_ignored_existing": 1,
+    "scope": "mapped regressions, not additive with prior individual reports"
+  },
+  "identity_receipt": {
+    "path": "runs/alignment-implementation-20261009/integration/kernel-identity-verified.json",
+    "sha256": "f8a8d9a1acf44f80a03ed59e24b73e555c568b67a38474dfbd449617d447236e",
+    "availability": "local-only"
+  },
+  "review": {
+    "astra": {
+      "path": "runs/alignment-implementation-20261009/spec-astra/REPORT.md",
+      "sha256": "c8c93c1c060bfd395e93da8b20ce2e6c7bf2f37ffa9d680f4106459eed4fbefe",
+      "availability": "local-only"
+    },
+    "standards": {
+      "path": "runs/alignment-implementation-20261009/standards-review/REPORT.md",
+      "sha256": "68439bc867c4b5fd1dea876c47a3d5cf5721ed81a924e48142850f16f5804006",
+      "availability": "local-only"
+    },
+    "glm_source": {
+      "path": "runs/alignment-implementation-20261009/glm-code/receipt.json",
+      "sha256": "96a93232c57681bb00759b74b788357ebe87dbd6efc2b3e34a615eee8bc715fe",
+      "availability": "local-only"
+    },
+    "glm_consumers": {
+      "path": "runs/alignment-implementation-20261009/glm-consumers/receipt.json",
+      "sha256": "b8f5b3259aa1f130e456dbd0b2795cb4c8f83ee69a8971708b5642d6249732e1",
+      "availability": "local-only"
+    },
+    "scope": "Astra independently reviewed source and final native evidence; Standards original documentation finding resolved in followup; actual GLM reports are static source/consumer reviews. No review waives unresolved gates or establishes all-AL completion.",
+    "standards_followup": {
+      "path": "runs/alignment-implementation-20261009/standards-review/FOLLOWUP.md",
+      "sha256": "4e58927d28bb320780415866ef68a5581072cf1e0b6fe838e38260bbdf46bf30",
+      "availability": "local-only"
+    }
+  },
+  "raw_location": "visible project worktrees/spectre-event-alignment/runs/alignment-implementation-20261009",
+  "availability": "Public code/regressions plus compact receipt; raw local-only, hashes are not retrieval addresses",
+  "reference_v3": {
+    "old_new": [
+      {
+        "case": "root-control",
+        "v2_result_sha256": "69715e4bed65023a245405dc4f826db64377314f5362bf46e2464d267410c112",
+        "v3_result_sha256": "f1ce135af23f191fb7623bbdcf7a20ed37f36ca04fee13df299a616092435e0e",
+        "v2": {
+          "spectre_rows": 161,
+          "direct_status": "F",
+          "direct_max_errors_v": {
+            "z": 6.705203881018917e-08,
+            "y": 1.0
+          },
+          "evas_math_status": "P",
+          "spectre_math_status": "F",
+          "spectre_math_max_errors_v": {
+            "z": 6.705203903223378e-08,
+            "y": 1.0
+          },
+          "required_coverage_status": "P",
+          "required_missing_spectre": [],
+          "native_count_bracket": {
+            "last_zero": {
+              "time": 0.4999999530463971,
+              "voltages": {
+                "Xdut.z": 0.7499999731448332,
+                "y": 0.0
+              }
+            },
+            "first_one": {
+              "time": 0.4999999664989805,
+              "voltages": {
+                "Xdut.z": 0.75000000005,
+                "y": 1.0
+              }
+            },
+            "first_one_displacement_s": -3.350101951404838e-08
+          },
+          "exact_half_count": [
+            1.0
+          ]
+        },
+        "v3": {
+          "spectre_rows": 200,
+          "direct_status": "P",
+          "direct_max_errors_v": {
+            "z": 6.7856276153577255e-12,
+            "y": 0.0
+          },
+          "evas_math_status": "P",
+          "spectre_math_status": "P",
+          "spectre_math_max_errors_v": {
+            "z": 6.785905171113882e-12,
+            "y": 0.0
+          },
+          "required_coverage_status": "P",
+          "required_missing_spectre": [],
+          "native_count_bracket": {
+            "last_zero": {
+              "time": 0.499999,
+              "voltages": {
+                "Xdut.z": 0.7499980000067858,
+                "y": 0.0
+              }
+            },
+            "first_one": {
+              "time": 0.5,
+              "voltages": {
+                "Xdut.z": 0.7500000000067858,
+                "y": 1.0
+              }
+            },
+            "first_one_displacement_s": 0.0
+          },
+          "exact_half_count": [
+            1.0
+          ]
+        },
+        "classification": "v2 reference numerical discrepancy supported by isolated solver precision control; v2 F preserved, v3 finite strict original-budget P; no EVAS behavioral change",
+        "remaining_unknown": "Hidden exact callback algorithm/origin and rounded export enclosure remain unqualified I"
+      },
+      {
+        "case": "root-unrelated",
+        "v2_result_sha256": "ea781260e8252dff587d79fa0df206cdd2c7290b5881af2132f5b940c078a6a1",
+        "v3_result_sha256": "2ef17db7dab6c81ccc806ce05f64523c9a9ca6b9b2943cc5baca4c8893cb9692",
+        "v2": {
+          "spectre_rows": 130,
+          "direct_status": "F",
+          "direct_max_errors_v": {
+            "z": 9.448688292890139e-07,
+            "y": 1.0,
+            "x": 1.3322676295501878e-15,
+            "f": 8.881784197001252e-16
+          },
+          "evas_math_status": "P",
+          "spectre_math_status": "F",
+          "spectre_math_max_errors_v": {
+            "z": 9.448688294555474e-07,
+            "y": 1.0,
+            "x": 1.3322676295501878e-15,
+            "f": 8.881784197001252e-16
+          },
+          "required_coverage_status": "P",
+          "required_missing_spectre": [],
+          "native_count_bracket": {
+            "last_zero": {
+              "time": 0.499999,
+              "voltages": {
+                "Xdut.z": 0.7499989448688295,
+                "y": 0.0,
+                "Xdut.x": 3.4999990000000003,
+                "Xdut.f": 1.9999999999999996
+              }
+            },
+            "first_one": {
+              "time": 0.4999995275905853,
+              "voltages": {
+                "Xdut.z": 0.75000000005,
+                "y": 1.0,
+                "Xdut.x": 3.4999995275905857,
+                "Xdut.f": 1.9999999999999996
+              }
+            },
+            "first_one_displacement_s": -4.724094146979496e-07
+          },
+          "exact_half_count": [
+            1.0
+          ]
+        },
+        "v3": {
+          "spectre_rows": 208,
+          "direct_status": "P",
+          "direct_max_errors_v": {
+            "z": 6.421452258820182e-11,
+            "y": 0.0,
+            "x": 1.7763568394002505e-15,
+            "f": 8.881784197001252e-16
+          },
+          "evas_math_status": "P",
+          "spectre_math_status": "P",
+          "spectre_math_max_errors_v": {
+            "z": 6.421468912165551e-11,
+            "y": 0.0,
+            "x": 1.7763568394002505e-15,
+            "f": 8.881784197001252e-16
+          },
+          "required_coverage_status": "P",
+          "required_missing_spectre": [],
+          "native_count_bracket": {
+            "last_zero": {
+              "time": 0.4999999999623753,
+              "voltages": {
+                "Xdut.z": 0.7499999999889653,
+                "y": 0.0,
+                "Xdut.x": 3.4999999999623754,
+                "Xdut.f": 1.9999999999999996
+              }
+            },
+            "first_one": {
+              "time": 0.5,
+              "voltages": {
+                "Xdut.z": 0.7500000000642146,
+                "y": 1.0,
+                "Xdut.x": 3.5000000000000004,
+                "Xdut.f": 1.9999999999999993
+              }
+            },
+            "first_one_displacement_s": 0.0
+          },
+          "exact_half_count": [
+            1.0
+          ]
+        },
+        "classification": "v2 reference numerical discrepancy supported by isolated solver precision control; v2 F preserved, v3 finite strict original-budget P; no EVAS behavioral change",
+        "remaining_unknown": "Hidden exact callback algorithm/origin and rounded export enclosure remain unqualified I"
+      },
+      {
+        "case": "near-zero-filter-gain-100000000",
+        "v2_result_sha256": "e27fd7de877603015386d723ee4c9381199990a2d32b7574c63115ec9b308b9a",
+        "v3_result_sha256": "63e4be68072959aefe6f713878810bd70d2b3f9196d92efc06a8b084491584bc",
+        "v2": {
+          "spectre_rows": 394,
+          "direct_status": "F",
+          "direct_max_errors_v": {
+            "y": 1.3377950722481824e-06
+          },
+          "evas_math_status": "P",
+          "spectre_math_status": "F",
+          "spectre_math_max_errors_v": {
+            "y": 1.334868007712986e-06
+          },
+          "required_coverage_status": "P",
+          "required_missing_spectre": []
+        },
+        "v3": {
+          "spectre_rows": 6149,
+          "direct_status": "P",
+          "direct_max_errors_v": {
+            "y": 7.599938095514958e-09
+          },
+          "evas_math_status": "P",
+          "spectre_math_status": "P",
+          "spectre_math_max_errors_v": {
+            "y": 7.265712809179092e-09
+          },
+          "required_coverage_status": "P",
+          "required_missing_spectre": []
+        },
+        "classification": "v2 reference numerical discrepancy supported by isolated solver precision control; v2 F preserved, v3 finite strict original-budget P; no EVAS behavioral change",
+        "remaining_unknown": "Hidden exact callback algorithm/origin and rounded export enclosure remain unqualified I"
+      }
+    ],
+    "analysis_sha256": "067dd66c25c43045400f3e513023532ae47354b109c2f4d82d1df0113657ef17",
+    "archive_sha256": "efc5b38f2f1bf08168cf5b568606faa93eab954109d2a09747f6b928806b7a7f",
+    "availability": "local-only",
+    "counts": {
+      "actual_local_evas_requests": 3,
+      "accepted": 3,
+      "refused": 0,
+      "timeout": 0,
+      "automatic_retries": 0,
+      "actual_root_owned_spectre_reference_cases": 3,
+      "remote_calls_by_this_worker": 0,
+      "evAS_values_reused_across_different_native_grids": false,
+      "native_rows": [
+        200,
+        208,
+        6149
+      ],
+      "native_rows_total": 6557,
+      "union_evas_query_rows_total": 6557,
+      "direct_statuses": [
+        "P",
+        "P",
+        "P"
+      ],
+      "evas_math_statuses": [
+        "P",
+        "P",
+        "P"
+      ],
+      "spectre_math_statuses": [
+        "P",
+        "P",
+        "P"
+      ],
+      "required_exact_query_coverage": [
+        "10/10",
+        "10/10",
+        "9/9"
+      ],
+      "calibration_controls": 5,
+      "original_external_budgets_unchanged": true,
+      "v2_original_direct_and_math_F_retained": true,
+      "scope_limit": "Finite original-budget comparison only; hidden callback origin remains I; not whole AL0/EVAS alignment acceptance."
+    }
+  },
+  "reference_v4": {
+    "original-contract-assessment": {
+      "frozen_original_contract": "/Users/bucketsran/.codex/worktrees/spectre-event-alignment/current/runs/alignment-implementation-20261009/reference-v4/inputs/interrupted-edge/contract.json",
+      "frozen_original_contract_sha256": "2e48cb526fa5a265f6a29e5de117d7c9fb8fcf373979556fa717a71ac3cc245b",
+      "original_voltage_allowance_v": 1e-08,
+      "original_event_time_allowance_s": 1e-10,
+      "original_required_queries": [
+        0,
+        0.125,
+        0.25,
+        0.375,
+        0.499999,
+        0.5,
+        0.500001,
+        0.625,
+        0.75,
+        0.8125,
+        0.875,
+        1
+      ],
+      "anchors": [
+        {
+          "time": 0,
+          "expected": {
+            "y": 0.0,
+            "x": 3.0,
+            "f": 2.0,
+            "count": 0
+          },
+          "evas": {
+            "y": -0.0,
+            "x": 3.0,
+            "f": 2.0,
+            "count": 0.0
+          },
+          "spectre": {
+            "y": 0.0,
+            "x": 3.0,
+            "f": 2.0,
+            "count": 0.0
+          },
+          "native_spectre_exact_match": true,
+          "evas_numeric_and_count_status": "P",
+          "spectre_original_anchor_status": "P"
+        },
+        {
+          "time": 0.125,
+          "expected": {
+            "y": 0.0,
+            "x": 3.125,
+            "f": 2.0074969025845952,
+            "count": 0
+          },
+          "evas": {
+            "y": -0.0,
+            "x": 3.125,
+            "f": 2.0074969025845952,
+            "count": 0.0
+          },
+          "spectre": {
+            "y": 0.0,
+            "x": 3.125000000000038,
+            "f": 2.0074969024927842,
+            "count": 0.0
+          },
+          "native_spectre_exact_match": true,
+          "evas_numeric_and_count_status": "P",
+          "spectre_original_anchor_status": "P"
+        },
+        {
+          "time": 0.25,
+          "expected": {
+            "y": 0.0,
+            "x": 3.25,
+            "f": 2.028800783071405,
+            "count": 0
+          },
+          "evas": {
+            "y": -0.0,
+            "x": 3.25,
+            "f": 2.028800783071405,
+            "count": 0.0
+          },
+          "spectre": null,
+          "native_spectre_exact_match": false,
+          "evas_numeric_and_count_status": "P",
+          "spectre_original_anchor_status": "I"
+        },
+        {
+          "time": 0.375,
+          "expected": {
+            "y": 0.125,
+            "x": 3.375,
+            "f": 2.0622892787909723,
+            "count": 0
+          },
+          "evas": {
+            "y": 0.125,
+            "x": 3.375,
+            "f": 2.0622892787909723,
+            "count": 0.0
+          },
+          "spectre": {
+            "y": 0.12500000000001377,
+            "x": 3.375000000000036,
+            "f": 2.0622892792342267,
+            "count": 0.0
+          },
+          "native_spectre_exact_match": true,
+          "evas_numeric_and_count_status": "P",
+          "spectre_original_anchor_status": "P"
+        },
+        {
+          "time": 0.499999,
+          "expected": {
+            "y": 0.24999900000000003,
+            "x": 3.499999,
+            "f": 2.1065302662435963,
+            "count": 0
+          },
+          "evas": {
+            "y": 0.24999900000000003,
+            "x": 3.499999,
+            "f": 2.1065302662435963,
+            "count": 0.0
+          },
+          "spectre": {
+            "y": 0.24999900000001385,
+            "x": 3.4999990000000336,
+            "f": 2.10653026657159,
+            "count": 0.0
+          },
+          "native_spectre_exact_match": true,
+          "evas_numeric_and_count_status": "P",
+          "spectre_original_anchor_status": "P"
+        },
+        {
+          "time": 0.5,
+          "expected": {
+            "y": 0.25,
+            "x": 3.5,
+            "f": 2.106530659712633,
+            "count": 0
+          },
+          "evas": {
+            "y": 0.25,
+            "x": 3.5,
+            "f": 2.106530659712633,
+            "count": 0.0
+          },
+          "spectre": {
+            "y": 0.25000000000001377,
+            "x": 3.5000000000000338,
+            "f": 2.1065306600409297,
+            "count": 0.0
+          },
+          "native_spectre_exact_match": true,
+          "evas_numeric_and_count_status": "P",
+          "spectre_original_anchor_status": "P"
+        },
+        {
+          "time": 0.500001,
+          "expected": {
+            "y": 0.24999899999999997,
+            "x": 3.500001,
+            "f": 2.106531053182277,
+            "count": 0
+          },
+          "evas": {
+            "y": 0.24999899999999997,
+            "x": 3.500001,
+            "f": 2.106531053182277,
+            "count": 0.0
+          },
+          "spectre": {
+            "y": 0.24999900000001374,
+            "x": 3.500001000000034,
+            "f": 2.106531053510876,
+            "count": 0.0
+          },
+          "native_spectre_exact_match": true,
+          "evas_numeric_and_count_status": "P",
+          "spectre_original_anchor_status": "P"
+        },
+        {
+          "time": 0.625,
+          "expected": {
+            "y": 0.125,
+            "x": 3.625,
+            "f": 2.1602614285189903,
+            "count": 0
+          },
+          "evas": {
+            "y": 0.125,
+            "x": 3.625,
+            "f": 2.1602614285189903,
+            "count": 0.0
+          },
+          "spectre": {
+            "y": 0.12500000000001377,
+            "x": 3.625000000000033,
+            "f": 2.16026142875328,
+            "count": 0.0
+          },
+          "native_spectre_exact_match": true,
+          "evas_numeric_and_count_status": "P",
+          "spectre_original_anchor_status": "P"
+        },
+        {
+          "time": 0.75,
+          "expected": {
+            "y": 0.0,
+            "x": 3.75,
+            "f": 2.222366552741015,
+            "count": 0
+          },
+          "evas": {
+            "y": -0.0,
+            "x": 3.75,
+            "f": 2.222366552741015,
+            "count": 0.0
+          },
+          "spectre": null,
+          "native_spectre_exact_match": false,
+          "evas_numeric_and_count_status": "P",
+          "spectre_original_anchor_status": "I"
+        },
+        {
+          "time": 0.8125,
+          "expected": {
+            "y": 0.0,
+            "x": 3.8125,
+            "f": 2.2543342472676042,
+            "count": 0
+          },
+          "evas": {
+            "y": -0.0,
+            "x": 3.8125,
+            "f": 2.2543342472676042,
+            "count": 0.0
+          },
+          "spectre": {
+            "y": 0.0,
+            "x": 3.8125000000000333,
+            "f": 2.254334247441355,
+            "count": 0.0
+          },
+          "native_spectre_exact_match": true,
+          "evas_numeric_and_count_status": "P",
+          "spectre_original_anchor_status": "P"
+        },
+        {
+          "time": 0.875,
+          "expected": {
+            "y": 0.0,
+            "x": 3.875,
+            "f": 2.284365117093913,
+            "count": 1
+          },
+          "evas": {
+            "y": -0.0,
+            "x": 3.875,
+            "f": 2.284365117093913,
+            "count": 1.0
+          },
+          "spectre": null,
+          "native_spectre_exact_match": false,
+          "evas_numeric_and_count_status": "P",
+          "spectre_original_anchor_status": "I"
+        },
+        {
+          "time": 1,
+          "expected": {
+            "y": 0.0,
+            "x": 4.0,
+            "f": 2.3390786581000373,
+            "count": 1
+          },
+          "evas": {
+            "y": -0.0,
+            "x": 4.0,
+            "f": 2.3390786581000373,
+            "count": 1.0
+          },
+          "spectre": {
+            "y": 0.0,
+            "x": 4.000000000000031,
+            "f": 2.339078657524256,
+            "count": 1.0
+          },
+          "native_spectre_exact_match": true,
+          "evas_numeric_and_count_status": "P",
+          "spectre_original_anchor_status": "P"
+        }
+      ],
+      "evas_all12_original_anchor_status": "P",
+      "spectre_observed_9_original_anchor_status": "P",
+      "spectre_original12_query_coverage_status": "I",
+      "missing_required_exact_native_times": [
+        0.25,
+        0.75,
+        0.875
+      ],
+      "continuous_all_native_original_budget_status": "P",
+      "evas_original_event_count_order_times_status": "P",
+      "evas_events": [
+        {
+          "time": 0.25,
+          "event": 0,
+          "origin": "dut.va:5:1 (Xdut)",
+          "kind": "timer",
+          "before": [
+            0.0,
+            0.0
+          ],
+          "after": [
+            1.0,
+            0.0
+          ]
+        },
+        {
+          "time": 0.5,
+          "event": 1,
+          "origin": "dut.va:6:1 (Xdut)",
+          "kind": "timer",
+          "before": [
+            1.0,
+            0.0
+          ],
+          "after": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "time": 0.875,
+          "event": 2,
+          "origin": "dut.va:7:1 (Xdut)",
+          "kind": "timer",
+          "before": [
+            0.0,
+            0.0
+          ],
+          "after": [
+            0.0,
+            1.0
+          ]
+        }
+      ],
+      "spectre_internal_callback_time_status": "I; no hidden callback receipt",
+      "original_contract_acceptance_status": "I; missing3exact original required queries",
+      "extra_strict_native_diagnostic": {
+        "direct_status": "F",
+        "reference_math_status": "F",
+        "failed_point": {
+          "raw_decimal_time_token": "0.87499999999999312",
+          "projected_time": 0.8749999999999931,
+          "relative_to_nominal_s": -6.8833827526759706e-15,
+          "spectre_count": 1,
+          "evas_count": 0
+        },
+        "scope": "All-native exact count is an additional diagnostic; this timestamp is not an original required anchor. Do not convert it into a new Spec acceptance obligation or callback/LRM violation. Original event allowance remains1e-10; exported count/time origin is unqualified."
+      }
+    },
+    "v2-v4-native-comparison": {
+      "finite_status": "P",
+      "missing_nodes": [],
+      "common_rows": 775,
+      "unpaired_a_rows": 9260,
+      "unpaired_b_rows": 9265,
+      "max_errors_v": {
+        "y": 1.3766765505351941e-14,
+        "x": 5.329070518200751e-15,
+        "f": 4.964380018179781e-10,
+        "count": 0.0
+      },
+      "failed_values": 0,
+      "failures": [],
+      "required_missing_a": [
+        0.125,
+        0.375,
+        0.499999,
+        0.500001,
+        0.625,
+        0.8125
+      ],
+      "required_missing_b": [
+        0.25,
+        0.75,
+        0.875
+      ],
+      "required_coverage_status": "I",
+      "duplicates_a": 0,
+      "duplicates_b": 0,
+      "v2_rows": 10035,
+      "v4_rows": 10040,
+      "strict_native_time_prefix_rows": 1,
+      "first_time_divergence": {
+        "v2": {
+          "time": 2.299999890755868e-09,
+          "voltages": {
+            "y": 0.0,
+            "x": 3.0000000023,
+            "f": 2.0,
+            "count": 0.0
+          }
+        },
+        "v4": {
+          "time": 2.2999998907558678e-09,
+          "voltages": {
+            "y": 0.0,
+            "x": 3.0000000022999997,
+            "f": 2.0,
+            "count": 0.0
+          }
+        }
+      },
+      "native_prefix_before_first_added_strobe": {
+        "cutoff_s": 0.125,
+        "result": {
+          "finite_status": "P",
+          "missing_nodes": [],
+          "common_rows": 773,
+          "unpaired_a_rows": 492,
+          "unpaired_b_rows": 493,
+          "max_errors_v": {
+            "y": 0.0,
+            "x": 4.440892098500626e-16,
+            "f": 4.440892098500626e-16,
+            "count": 0.0
+          },
+          "failed_values": 0,
+          "failures": [],
+          "required_missing_a": [],
+          "required_missing_b": [],
+          "required_coverage_status": "P",
+          "duplicates_a": 0,
+          "duplicates_b": 0
+        }
+      },
+      "v2_missing_required": [
+        0.125,
+        0.375,
+        0.499999,
+        0.500001,
+        0.625,
+        0.8125
+      ],
+      "v4_missing_required": [
+        0.25,
+        0.75,
+        0.875
+      ],
+      "interpretation": "Strict time identity only; low precision v2 numeric projection differs from v4 at many times. No interpolation, coordinate correction, nearest mapping or relabel used. Same source/solver, observation settings changed only; export precision and extra strobes both change comparisons, not causally separated.",
+      "full_record": {
+        "path": "runs/alignment-implementation-20261009/al0/v4-reference-comparison/V2-V4-NATIVE-COMPARISON.json",
+        "sha256": "eaa5790a1ba6660322818ff87050be6bde6abce649e4a52b0b380fbda7167736",
+        "availability": "local-only"
+      }
+    },
+    "counts": {
+      "actual_local_evas_requests": 1,
+      "accepted": 1,
+      "refused": 0,
+      "timeout": 0,
+      "automatic_retries": 0,
+      "new_remote_calls_by_this_worker": 0,
+      "root_owned_v4_spectre_reference_cases": 1,
+      "spectre_native_rows": 10040,
+      "union_evas_query_rows": 10043,
+      "original_required_exact_query_matches": 9,
+      "original_required_queries": 12,
+      "original_required_missing": [
+        0.25,
+        0.75,
+        0.875
+      ],
+      "original_acceptance_status": "I",
+      "original_continuous_voltage_budget_status": "P",
+      "observed_original9anchors_status": "P",
+      "evas_original12anchors_and_event_times_order_status": "P",
+      "additional_strict_all_native_count_diagnostic_status": "F; not an added original spec obligation",
+      "native_v2_v4_exact_shared_points": 775,
+      "native_v2_v4_shared_comparison_status": "P",
+      "native_prefix_before_first_added_strobe_exact_shared_points": 773,
+      "native_time_sequence_identical_prefix_rows": 1,
+      "evas_v2_v4_exact_shared_queries": 784,
+      "evas_v2_v4_shared_voltages_and_events_identical": true,
+      "comparison_calibration_controls": 5,
+      "archive_regular_members": 59,
+      "original_solver_and_budgets_unchanged": true
+    },
+    "archive_sha256": "3b0085d422f18dc1c90a53f21ebe3a90c9023eb5aa2ca3201dd820130be1970d",
+    "availability": "local-only"
+  }
+}

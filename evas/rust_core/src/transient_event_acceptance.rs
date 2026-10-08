@@ -414,8 +414,10 @@ mod tests {
                 assert_eq!(actual.state_bounds, expected.state_bounds);
                 assert_eq!(actual.solution.voltages, expected.solution.voltages);
                 assert!(actual.operators.same_reset_history(&expected.operators));
-                assert_eq!(actual.operators.bounds(actual.time).unwrap(),
-                    expected.operators.bounds(expected.time).unwrap());
+                assert_eq!(
+                    actual.operators.bounds(actual.time).unwrap(),
+                    expected.operators.bounds(expected.time).unwrap()
+                );
             }
         }
         value["events"][2]["body"] = serde_json::json!([]);

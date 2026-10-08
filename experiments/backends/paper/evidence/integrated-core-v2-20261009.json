@@ -1,0 +1,297 @@
+{
+  "source_revision": "41c3f34e248fe6bf5403552d89c1a1793b172899",
+  "status": "actual maintained strict table accepted; current candidate, not reviewed main",
+  "denominator": {
+    "conditions": 12,
+    "backends": 4,
+    "slots": 48
+  },
+  "counts": {
+    "spectre": {
+      "P": 0,
+      "F": 0,
+      "U": 0,
+      "X": 0,
+      "I": 12,
+      "T": 0
+    },
+    "openvaf_r_ngspice": {
+      "P": 0,
+      "F": 0,
+      "U": 0,
+      "X": 7,
+      "I": 5,
+      "T": 0
+    },
+    "gnucap_modelgen": {
+      "P": 0,
+      "F": 0,
+      "U": 0,
+      "X": 2,
+      "I": 10,
+      "T": 0
+    },
+    "evas": {
+      "P": 0,
+      "F": 0,
+      "U": 0,
+      "X": 0,
+      "I": 12,
+      "T": 0
+    }
+  },
+  "overall": {
+    "I": 39,
+    "X": 9
+  },
+  "actual_calls": {
+    "new_evas_simulations": 12,
+    "new_evas_version_probe": 1,
+    "new_spectre": 0,
+    "new_oss": 0,
+    "new_release_build": 1,
+    "nonbackend_supervision_controls": 3,
+    "local_scorer_backend_calls": 0,
+    "separate_prior_local_engineering_requests": 24
+  },
+  "verified_manifest_entries": {
+    "collection": 698,
+    "lane": 259
+  },
+  "kernel_sha256": "bfa07ee9733d05d286d255bb9c49f5ac011ea177b9cd236d6a4242e90bc27bc6",
+  "checker_identity": {
+    "version": "paper-criteria-v1",
+    "files": {
+      "criteria.py": "4f505a7670542b83d1395a7e19669f244502a2946e5cb6bcd879a6ccdb350c21",
+      "oracle.py": "96ece5a943113a6e6e79b441145a2f2238da43938914605d884b5fd0414e72dc",
+      "core-v1.json": "e1ae5311da9e05991e9802da1a24e97a70d179972608a1b9d21eb00013f61a53"
+    },
+    "runtime": {
+      "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "math_sha256": "cc7d168e6933da397995ce0c3bf0b96813ddbfcacaeb37988e5c98aa02810452"
+    },
+    "sha256": "c7c3ba10206549b13a83b80b90f715f41ffa08e23aa13e3357303196b5f7e192"
+  },
+  "inputs_new_sha256": "fbee9d4d1e18de10a28e7383cff98f93f02f465f7c3c09804fe0eb387b82d369",
+  "inputs_old_sha256": "b31ab5415f7b4900f034f49e2e75c341a3e8d154a61be9ba6b6fcd38f2d216a3",
+  "remaining_qualification": "All12 observations: missing independent source/units/error qualification, native/exact origin certificates and input bounds. Effective settings actual unknown; request_echo is not readback. Fixed-grid gap coverage does not certify unobserved pulses or continuous-time behavior. Kernel self-reported build_revision unknown; source/build/binary receipts separately bound. Old36 remain historical with their own inputs and receipts; no new reference execution or qualification.",
+  "selection": {
+    "current_evas": 12,
+    "unchanged_historical_reference": 36,
+    "preserved_prior_evas_attempts": 12,
+    "historical_reference_run": "four-backend-round-20261007",
+    "qualification_change": false,
+    "tolerances_changed": false,
+    "acceptance_exception": false
+  },
+  "compiler": {
+    "cargo": {
+      "version": "cargo 1.96.0 (30a34c682 2026-05-25)",
+      "actual_binary_sha256": "f30f9fd1b1d0b8fd10dc33219eb4cd4bec3543f40e434ac71f5a03fd0359063f",
+      "identity_kind": "actual rustup-selected toolchain binary"
+    },
+    "rustc": {
+      "version": "rustc 1.96.0 (ac68faa20 2026-05-25)",
+      "actual_binary_sha256": "ba4b837efb6612dfa8d941c5a72b8a50d1d03a0f36216743b173949aa8d9eb75",
+      "identity_kind": "actual rustup-selected toolchain binary"
+    }
+  },
+  "receipt_sha256": {
+    "PLAN.json": "a989860aa49f07f1b3e9ef0bf5fac48d4d54f1e55274f3d22fd63ec3eab4e5df",
+    "SOURCE_MANIFEST.json": "1060dbbbfbc5793ec413e5140cc358d3aa6e6cd9ba50dc0b55c390cd8f73f4e2",
+    "SOURCE_PROVENANCE.json": "62df97c9d49cd38f654cce1b07a9e06508b9faff8c5711d4cca7f8732d03ae3a",
+    "DEPLOYMENT_MANIFEST.json": "be3cd623507feeef1df201de1c6aa03bf64cb0254a48c297dc40fe9198f36e1b",
+    "COLLECTION_MANIFEST.json": "4194ddf6cf1a1983f926b5ee02e82c7da3378df19f9c407b58f56262aecaebdb",
+    "build/BUILD.json": "314127e9b7c6ec56356bd4ec88db0c7fbbddf3e9bdfd4bd034ee3d88df0b99e4",
+    "build/target/release/evas-kernel": "bfa07ee9733d05d286d255bb9c49f5ac011ea177b9cd236d6a4242e90bc27bc6",
+    "evas-profile.json": "e9bf8ad75fab1d53cefe741cd4f16eddb7ce4edbeec95675dbde127c9441e6ec",
+    "evas-allocation.json": "a2334d0cb484800c4a64da2b77cbe9835fd59be87d473a2266bac24b3972179c",
+    "RUN-STARTED.json": "24fe900c8172845d6cd016f2c581e781fdb57b5afdafcf1f5d635d997262e8e3",
+    "RUN-COMPLETED.json": "11ff416b20a5e5615252ae645920643e51775818d197dbd3ce97e15ebe998e2c",
+    "OPERATOR.json": "78868a5aa865cee294bee5c848173e697ce5ab47f4809fc5d432dd54f7b67d0d",
+    "build-LOCK-RELEASED.json": "c6d59da7537fc29f4879d699c96f1134b81721e04eeba012c5fe903092aa6535",
+    "run-LOCK-RELEASED.json": "f02b8709a0359804d47e2e8d1b78df0561b1ac068c7a0a19d395b1a8f60b49e7",
+    "supervision-check-LOCK-RELEASED.json": "753997e3fc5a060a50bf96af28ccf6daa9b1e137e27e733aecb244fb1ca5d578",
+    "supervisor-calibration/SUMMARY.json": "6060e4f92809811e2f02ec64bf1e39a80dd38ecc30edeb9b211a21b6bf84205e",
+    "outputs/evas/STARTED.json": "bf278836c832d8e9865ed14620c5e5dcfa13078383ed8e30344923c914a43434",
+    "outputs/evas/TOOL_IDENTITY.json": "877a3abef29b375ae627d1171f56e00d8f25ff1e20475e59acdbf8e03f3394d3",
+    "outputs/evas/EXECUTION.json": "06af4b14dd3bb1e2f4c29061ebc42aad3ab5d58238e838a7351838f1cc1a5623",
+    "outputs/evas/FILE_MANIFEST.json": "42b4bdb9c1bf7526ba5fde6e2e995d1c214952aa3e15ebd7b7c7f12d21cfdd22"
+  },
+  "artifact_sha256": {
+    "ANALYSIS.json": "7aac65325c72569055b761bc59b435a3c0ecc3953d4ec1504adbb4cf96fc87e5",
+    "records.json": "e3463cdc8d301f6816beba552dd4e56c045223cfad1a3765b10538c68f97d93a",
+    "table.md": "33b33464632d99a17dfcf0875a1ca781a85f9710bf0f1979eab0dcc7249909b2"
+  },
+  "archive_sha256": "964e8f9163d7e6f5cdf74c39948c681e89d8e15cea7d99805f8dc1ba4ccb84c4",
+  "condition_summary": [
+    {
+      "condition": "VR-01",
+      "waveform_available": true,
+      "assessment": "I",
+      "rows": 30004,
+      "sample_origin_counts": {
+        "unknown": 30004
+      },
+      "fixed_grid_coverage": true,
+      "local_window_count": 0,
+      "local_windows_coverage": true,
+      "effective_settings_readback": "unknown",
+      "qualification": "unqualified"
+    },
+    {
+      "condition": "EX-01",
+      "waveform_available": true,
+      "assessment": "I",
+      "rows": 40001,
+      "sample_origin_counts": {
+        "unknown": 40001
+      },
+      "fixed_grid_coverage": true,
+      "local_window_count": 0,
+      "local_windows_coverage": true,
+      "effective_settings_readback": "unknown",
+      "qualification": "unqualified"
+    },
+    {
+      "condition": "EV-SH-01",
+      "waveform_available": true,
+      "assessment": "I",
+      "rows": 45788,
+      "sample_origin_counts": {
+        "unknown": 45788
+      },
+      "fixed_grid_coverage": true,
+      "local_window_count": 4,
+      "local_windows_coverage": true,
+      "effective_settings_readback": "unknown",
+      "qualification": "unqualified"
+    },
+    {
+      "condition": "EV-HC-01",
+      "waveform_available": true,
+      "assessment": "I",
+      "rows": 20378,
+      "sample_origin_counts": {
+        "unknown": 20378
+      },
+      "fixed_grid_coverage": true,
+      "local_window_count": 2,
+      "local_windows_coverage": true,
+      "effective_settings_readback": "unknown",
+      "qualification": "unqualified"
+    },
+    {
+      "condition": "EV-HC-02",
+      "waveform_available": true,
+      "assessment": "I",
+      "rows": 30386,
+      "sample_origin_counts": {
+        "unknown": 30386
+      },
+      "fixed_grid_coverage": true,
+      "local_window_count": 2,
+      "local_windows_coverage": true,
+      "effective_settings_readback": "unknown",
+      "qualification": "unqualified"
+    },
+    {
+      "condition": "TM-01",
+      "waveform_available": true,
+      "assessment": "I",
+      "rows": 40378,
+      "sample_origin_counts": {
+        "unknown": 40378
+      },
+      "fixed_grid_coverage": true,
+      "local_window_count": 2,
+      "local_windows_coverage": true,
+      "effective_settings_readback": "unknown",
+      "qualification": "unqualified"
+    },
+    {
+      "condition": "CP-01",
+      "waveform_available": true,
+      "assessment": "I",
+      "rows": 30003,
+      "sample_origin_counts": {
+        "unknown": 30003
+      },
+      "fixed_grid_coverage": true,
+      "local_window_count": 0,
+      "local_windows_coverage": true,
+      "effective_settings_readback": "unknown",
+      "qualification": "unqualified"
+    },
+    {
+      "condition": "CP-02",
+      "waveform_available": true,
+      "assessment": "I",
+      "rows": 30805,
+      "sample_origin_counts": {
+        "unknown": 30805
+      },
+      "fixed_grid_coverage": true,
+      "local_window_count": 4,
+      "local_windows_coverage": true,
+      "effective_settings_readback": "unknown",
+      "qualification": "unqualified"
+    },
+    {
+      "condition": "SI-01",
+      "waveform_available": true,
+      "assessment": "I",
+      "rows": 35758,
+      "sample_origin_counts": {
+        "unknown": 35758
+      },
+      "fixed_grid_coverage": true,
+      "local_window_count": 4,
+      "local_windows_coverage": true,
+      "effective_settings_readback": "unknown",
+      "qualification": "unqualified"
+    },
+    {
+      "condition": "CO-SH-01",
+      "waveform_available": true,
+      "assessment": "I",
+      "rows": 45979,
+      "sample_origin_counts": {
+        "unknown": 45979
+      },
+      "fixed_grid_coverage": true,
+      "local_window_count": 5,
+      "local_windows_coverage": true,
+      "effective_settings_readback": "unknown",
+      "qualification": "unqualified"
+    },
+    {
+      "condition": "CO-HC-01",
+      "waveform_available": true,
+      "assessment": "I",
+      "rows": 20379,
+      "sample_origin_counts": {
+        "unknown": 20379
+      },
+      "fixed_grid_coverage": true,
+      "local_window_count": 2,
+      "local_windows_coverage": true,
+      "effective_settings_readback": "unknown",
+      "qualification": "unqualified"
+    },
+    {
+      "condition": "CO-VCO-01",
+      "waveform_available": true,
+      "assessment": "I",
+      "rows": 40782,
+      "sample_origin_counts": {
+        "unknown": 40782
+      },
+      "fixed_grid_coverage": true,
+      "local_window_count": 4,
+      "local_windows_coverage": true,
+      "effective_settings_readback": "unknown",
+      "qualification": "unqualified"
+    }
+  ]
+}
