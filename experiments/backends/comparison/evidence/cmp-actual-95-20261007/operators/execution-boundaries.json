@@ -1,0 +1,90 @@
+{
+  "source_revision": "d4b41c797840f17222121592b9fa6f16e11e2c2b",
+  "allocation": "root-approved-issue95-os16-20261007",
+  "refs": {
+    "operator_wrapper.py": {
+      "path": "experiments/backends/comparison/evidence/cmp-actual-95-20261007/operators/operator_wrapper.py.txt",
+      "sha256": "84c431ead3798324fd51217ab34b9e3d670232b7d77c30194fc29fe6b6262ae0"
+    },
+    "test_operator_wrapper.py": {
+      "path": "experiments/backends/comparison/evidence/cmp-actual-95-20261007/operators/test_operator_wrapper.py.txt",
+      "sha256": "7989fd452d44345a24d099e40badfdbf00471e304e7d4a3db4991ab26e0ca098"
+    },
+    "operator-controls-final.log": {
+      "path": "experiments/backends/comparison/evidence/cmp-actual-95-20261007/operators/operator-controls-final.log",
+      "sha256": "467d857cae7d62e7e92c14a55015bf96e7748eedb1959798d8e9f0f1de33aa59"
+    },
+    "os-openvaf-ngspice-operator.json": {
+      "path": "experiments/backends/comparison/evidence/cmp-actual-95-20261007/operators/os-openvaf-ngspice-operator.json",
+      "sha256": "e259284342e08e4bda6f54461d520716b0798149f6ea899721d1f6b334641160"
+    },
+    "os-gnucap-operator.json": {
+      "path": "experiments/backends/comparison/evidence/cmp-actual-95-20261007/operators/os-gnucap-operator.json",
+      "sha256": "0646a2221e17924fc1f6b07de37b5b8e4748b877db7ce87752e6ee77dfa03fba"
+    },
+    "os-openvaf-ngspice-outer.json": {
+      "path": "experiments/backends/comparison/evidence/cmp-actual-95-20261007/operators/os-openvaf-ngspice-outer.json",
+      "sha256": "247012404a4da736b0a5365ff256ec8f9e0bdb3237f812f120bf56d5394417ba"
+    },
+    "os-gnucap-outer.json": {
+      "path": "experiments/backends/comparison/evidence/cmp-actual-95-20261007/operators/os-gnucap-outer.json",
+      "sha256": "e54673347a63bb50042b077a931ea6eda14df860875e5b7611147af27f217523"
+    },
+    "remote-preflight-outer.json": {
+      "path": "experiments/backends/comparison/evidence/cmp-actual-95-20261007/operators/remote-preflight-outer.json",
+      "sha256": "d454d7dca07c6f4485ebef6bcce6b3a21b91400a4ec60c50822c19360cd694af"
+    },
+    "remote-preflight.stdout": {
+      "path": "experiments/backends/comparison/evidence/cmp-actual-95-20261007/operators/remote-preflight.stdout",
+      "sha256": "331b1fbde5cd5f9b718027dfd7f5b664690f752caddf2a22a01f762b9d1412a6"
+    },
+    "remote-deployment-outer.json": {
+      "path": "experiments/backends/comparison/evidence/cmp-actual-95-20261007/operators/remote-deployment-outer.json",
+      "sha256": "bc5195c414c5b18345e1e19f178337431413149c8568904db62803d659c30564"
+    },
+    "os16-return-receipt.json": {
+      "path": "experiments/backends/comparison/evidence/cmp-actual-95-20261007/operators/os16-return-receipt.json",
+      "sha256": "e510aefc5c17bb154b67ee4f62f6acfe82e2bbe5021c980869184884e18a0541"
+    }
+  },
+  "actual_batches": {
+    "os-openvaf-ngspice": {
+      "compile_stages": 8,
+      "simulation_stages": 6,
+      "version_probes": 2,
+      "timed_out_stages": 1,
+      "manifest_sha256": "f9877667becfb7259e67eb1a82f4de1510bf0f0ee4082b6eff5e6d85fc0a1f2c",
+      "started_sha256": "2fc860421184117b66bfed2cd63f36c75413f9afb5adff2102eb48ff5df583af",
+      "assessment_counts": {
+        "observations_within_targets": 4,
+        "observed_violation": 1,
+        "compile_failed": 2,
+        "timeout": 1
+      }
+    },
+    "os-gnucap": {
+      "compile_stages": 8,
+      "simulation_stages": 8,
+      "version_probes": 1,
+      "timed_out_stages": 0,
+      "manifest_sha256": "964c7279239bec4371c08a921ac4d38ccea23456b55f8006fef84e74d03e5c4b",
+      "started_sha256": "624b32ed90a883c3b897abece3890e5be6d3be65095b321af60d01a18cb2523c",
+      "assessment_counts": {
+        "observations_within_targets": 5,
+        "observed_violation": 3
+      }
+    }
+  },
+  "local_evas_simulations": 8,
+  "new_spectre_simulations": 0,
+  "case_retries": 0,
+  "restore_or_load_operations": 0,
+  "lane_released": true,
+  "raw_availability": "local-only",
+  "limits": [
+    "FSIZE32MiB applies to inherited host child processes, not a proved OCI tree quota.",
+    "Per-case256MiB polling every1s can overshoot before detection.",
+    "The OpenVAF v5-main timeout completed the unchanged runner cleanup path; rm/exists commands are implied by successful timeout branch completion, not separately logged.",
+    "The separately recorded operator cleanup inventory contained no residual containers after each batch."
+  ]
+}

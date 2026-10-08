@@ -1,0 +1,81 @@
+{
+  "formal_dvs_qualification": "I",
+  "continuous_time_qualified": false,
+  "scope": "finite accepted exports; candidate uncertainty bounds are not qualified",
+  "observation": {
+    "sample_count": 4001,
+    "max_gap_s": 1.0000000000021927e-09,
+    "input_max_error_v": {
+      "vin": 6.661338147750939e-16
+    }
+  },
+  "v1_screen": {
+    "status": "observed_violation",
+    "formal_dvs_qualification": "I",
+    "sample_count": 4001,
+    "max_gap_s": 1.0000000000021927e-09,
+    "input_max_error_v": {
+      "vin": 6.661338147750939e-16
+    },
+    "max_observed_error": {
+      "vout": {
+        "error_v": 0.8,
+        "time_s": 1.425e-06
+      }
+    },
+    "violating_sample_count": 2049,
+    "plateau_error_v": 0.8,
+    "waveform_excess_over_nominal_event_allowance_v": 0.8,
+    "differential_error_v": null,
+    "common_mode_error_v": null,
+    "max_relationship_residual_v": null,
+    "edges": [
+      {
+        "nominal_start_s": 1.375e-06,
+        "status": "missing_or_multiple_crossings",
+        "fraction": 0.1,
+        "count": 0
+      },
+      {
+        "nominal_start_s": 3.375e-06,
+        "status": "missing_or_multiple_crossings",
+        "fraction": 0.1,
+        "count": 0
+      }
+    ],
+    "interpretation": "finite exported observations; internal event and unsampled behavior remain unqualified"
+  },
+  "history": {
+    "vout": {
+      "exact_export_assumption": {
+        "status": "F",
+        "reason": "outer_domain_proved_empty",
+        "witness_offsets": null,
+        "boxes_examined": 1,
+        "boxes_excluded": 1,
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "arithmetic": "exact rational over supplied numeric values",
+        "sample_count": 4001,
+        "constraint_count": 103,
+        "epsilon": "1/1000",
+        "uncertainty": "0"
+      },
+      "candidate_budget_sensitivity": {
+        "status": "F",
+        "reason": "outer_domain_proved_empty",
+        "witness_offsets": null,
+        "boxes_examined": 1,
+        "boxes_excluded": 1,
+        "formal_dvs_qualification": "I",
+        "continuous_time_qualified": false,
+        "arithmetic": "exact rational over supplied numeric values",
+        "sample_count": 4001,
+        "constraint_count": 103,
+        "epsilon": "1/1000",
+        "uncertainty": "1/4000"
+      }
+    }
+  },
+  "status": "observed_violation"
+}

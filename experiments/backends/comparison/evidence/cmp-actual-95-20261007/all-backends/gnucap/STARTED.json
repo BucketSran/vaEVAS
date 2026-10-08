@@ -1,0 +1,29 @@
+{
+  "started_unix_ns": 1791313379432144131,
+  "backend": "gnucap",
+  "input_manifest_sha256": "781d5c293b739d6a2ade00a6b3c2f0bba9084ec576606c3463c5750c257f727f",
+  "plan_sha256": "6bb21a6342b2ea2e67e613588fcf70c65bead8f62597dab4b0cc1b9ffe43a5db",
+  "configurations": 8,
+  "max_simulations": 8,
+  "max_compilations": 8,
+  "stage_timeout_s": 90,
+  "license_timeout_s": 30,
+  "tool": {
+    "revision": "unknown",
+    "runtime_identity": "90f0f237d4b94a9b0c17cf8ed42883d1a516ea90f26def9a5c70f02f4ffa0dec",
+    "images": {
+      "gnucap": {
+        "source_ref": "vabench-gnucap:20260729-final",
+        "config_id": "sha256:6a094609a9dbe4e6e535625807569a212d681ecf6a66fa5d532344f10121a698",
+        "architecture": "amd64",
+        "os": "linux",
+        "source_image_id": "sha256:c78bfede9d62a758f491890df05231258bb6de39d057e00a0a19c5cfe0b451e9",
+        "platform_manifest_id": "sha256:78e7b2a836f6447f1cd39c21123b1ac27742b5e65913a4985d0d463afbb5cc2f"
+      }
+    },
+    "environment_sha256": "3b85fddd09d943b331b0f6ca1b8d687c5932d6f2e2ec7683133f418e4901edba",
+    "environment_input_manifest_sha256": "208aa10ecf466c138ed11c76d057a75fa35006012ded363cade951686ca790d7"
+  },
+  "runner_sha256": "ef3b402601b7e920eaa8734f20c7275709698976ea4570b27fec24b7198c341b",
+  "allocation": "root-approved-issue95-os16-20261007"
+}
