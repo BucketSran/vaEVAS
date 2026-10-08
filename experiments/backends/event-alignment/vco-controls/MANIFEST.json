@@ -1,0 +1,129 @@
+{
+  "status": "frozen-inputs; execution-results-in-../evidence/vco-controls.json",
+  "remote_calls_requested": 4,
+  "source_relation": "new raw idt observer added to original exact-dyadic constant model; original failures not replaced",
+  "required_times": [
+    0.0,
+    1.6689291442162357e-06,
+    1.6689300537109373e-06,
+    1.6689300537109375e-06,
+    1.6689300537109377e-06,
+    1.6689309632056393e-06,
+    3.5762777770287357e-06,
+    3.576278686523437e-06,
+    3.5762786865234375e-06,
+    3.576278686523438e-06,
+    3.5762795960181393e-06,
+    5.483626409841236e-06,
+    5.483627319335937e-06,
+    5.4836273193359375e-06,
+    5.483627319335938e-06,
+    5.483628228830639e-06,
+    7.390975042653736e-06,
+    7.390975952148437e-06,
+    7.3909759521484375e-06,
+    7.390975952148438e-06,
+    7.390976861643139e-06,
+    7.62939453125e-06
+  ],
+  "comparison_budgets": {
+    "freq_V": 0.001,
+    "phase_ordinary_cycle": 0.001,
+    "phase_circular_cycle": 0.001,
+    "sine_V": 0.003,
+    "raw_cycle": 0.001
+  },
+  "additional_discriminator": "Raw q vs nearest integer in exact ULPs, with both raw idt and idtmod outputs; separate idt history is diagnostic, not proof of internal idtmod accumulator identity.",
+  "resources": {
+    "serial": true,
+    "timeout_s": 90,
+    "license_wait_s": 30,
+    "memory_GiB": 4,
+    "max_file_MiB": 32,
+    "max_condition_MiB": 256
+  },
+  "files": {
+    "independent-expected.json": "549579d3a3d78f60e7276902e91dccb82adc4697f1ef2e005dd01b24d93b17e6"
+  },
+  "cases": [
+    {
+      "id": "original--baseline",
+      "setting": "baseline",
+      "observer": "original",
+      "files": {
+        "tb.scs": "158cb0f8171724044d8f696fea75f1f95cae21bd7112cc96fcbf65bff1708d79",
+        "dut.va": "17c3096782b23880e161b4109bcca14dcbfccca768d6d6b3a56720171314a2f7"
+      },
+      "source_relation": "original constant VA bytes",
+      "requested_settings": {
+        "reltol": 1e-05,
+        "vabstol": 1e-07,
+        "iabstol": 1e-12,
+        "errpreset": "conservative",
+        "method": "traponly",
+        "precision": "%24.17g",
+        "strobeoutput": "all"
+      }
+    },
+    {
+      "id": "raw-observer--baseline",
+      "setting": "baseline",
+      "observer": "raw-observer",
+      "files": {
+        "tb.scs": "dffe93090c8b007f4d5ee52a343e99907bbd804a8120d8af915169fba8d5146e",
+        "dut.va": "f88b3b17d822d7fd4cdea4a83c3a166cbff857eded72ae7c02b8dc846e55f3ac"
+      },
+      "source_relation": "new independent idt observer; not idtmod internal state",
+      "requested_settings": {
+        "reltol": 1e-05,
+        "vabstol": 1e-07,
+        "iabstol": 1e-12,
+        "errpreset": "conservative",
+        "method": "traponly",
+        "precision": "%24.17g",
+        "strobeoutput": "all"
+      }
+    },
+    {
+      "id": "original--tight",
+      "setting": "tight",
+      "observer": "original",
+      "files": {
+        "tb.scs": "8627b27a1b7f7226b0f138f06356e12e02005632de6c0f0f3fe7442918ed91f8",
+        "dut.va": "17c3096782b23880e161b4109bcca14dcbfccca768d6d6b3a56720171314a2f7"
+      },
+      "source_relation": "original constant VA bytes",
+      "requested_settings": {
+        "reltol": 1e-08,
+        "vabstol": 1e-10,
+        "iabstol": 1e-15,
+        "errpreset": "conservative",
+        "method": "traponly",
+        "precision": "%24.17g",
+        "strobeoutput": "all"
+      }
+    },
+    {
+      "id": "raw-observer--tight",
+      "setting": "tight",
+      "observer": "raw-observer",
+      "files": {
+        "tb.scs": "d09a5aca02c838ceef51313220176b1effedcdad4911c1af45126e1f88cb1256",
+        "dut.va": "f88b3b17d822d7fd4cdea4a83c3a166cbff857eded72ae7c02b8dc846e55f3ac"
+      },
+      "source_relation": "new independent idt observer; not idtmod internal state",
+      "requested_settings": {
+        "reltol": 1e-08,
+        "vabstol": 1e-10,
+        "iabstol": 1e-15,
+        "errpreset": "conservative",
+        "method": "traponly",
+        "precision": "%24.17g",
+        "strobeoutput": "all"
+      }
+    }
+  ],
+  "observer_check": "At same actual time compare original vs raw-observer freq,phase,out under unchanged budgets; missing 22 required times remain coverage failures.",
+  "freeze_revision": "2-controls-preserve-original-conservative-and-native-output",
+  "effective_settings": "must read actual tran log; expected conservative reltol1e-6/1e-9 is inference"
+}

@@ -1,0 +1,12 @@
+`include "disciplines.vams"
+`include "constants.vams"
+module layer_vco(ctl,freq,phase,out);
+ inout ctl,freq,phase,out;
+ electrical ctl,freq,phase,out;
+ real f,p;
+ analog begin
+  f=0.5;
+  p=idtmod(f*1048576,0.125,1.0,0.0);
+  V(freq)<+f; V(phase)<+p; V(out)<+sin(2*`M_PI*p);
+ end
+endmodule

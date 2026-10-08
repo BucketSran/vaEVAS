@@ -1,0 +1,14 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module phase_observer(ctl,freq,phase,out,raw);
+ inout ctl,freq,phase,out,raw;
+ electrical ctl,freq,phase,out,raw;
+ real f,p,q;
+ analog begin
+  f=0.5;
+  p=idtmod(f*1048576,0.125,1.0,0.0);
+  q=idt(f*1048576,0.125);
+  V(freq)<+f; V(phase)<+p; V(out)<+sin(2*`M_PI*p);
+  V(raw)<+q;
+ end
+endmodule

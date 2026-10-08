@@ -1,0 +1,1671 @@
+{
+  "schema": "vco-controls-diagnostic-v1",
+  "status": "ordinary-phase-and-required-coverage-failures-retained",
+  "scope": "constant exact-dyadic VCO only; raw is independent idt, not internal idtmod state",
+  "budgets": {
+    "freq_V": 0.001,
+    "phase_ordinary_cycle": 0.001,
+    "phase_circular_cycle": 0.001,
+    "sine_V": 0.003,
+    "raw_cycle": 0.001
+  },
+  "cases": {
+    "original--baseline": {
+      "source_sha256": "17c3096782b23880e161b4109bcca14dcbfccca768d6d6b3a56720171314a2f7",
+      "deck_sha256": "158cb0f8171724044d8f696fea75f1f95cae21bd7112cc96fcbf65bff1708d79",
+      "psf_sha256": "3c92cb82f9f401da3015ee6053ae5f485301aa3cbd213372e8d07ea083a61258",
+      "log_sha256": "9f576b7771890577ccabad4dfd608830e4454a218093fd4a1c050001a101a9ff",
+      "spectre_version": "Version 21.1.0.509.isr12 64bit -- 24 Sep 2022",
+      "effective_settings": {
+        "maxstep": "232.831 ps",
+        "reltol": "1e-06",
+        "abstol(V)": "100 nV",
+        "abstol(I)": "1 pA",
+        "errpreset": "conservative",
+        "method": "traponly"
+      },
+      "native_rows": 32805,
+      "required_count": 22,
+      "present_count": 11,
+      "missing": [
+        1.6689300537109375e-06,
+        1.6689300537109377e-06,
+        3.5762777770287357e-06,
+        3.5762786865234375e-06,
+        3.576278686523438e-06,
+        5.483626409841236e-06,
+        5.4836273193359375e-06,
+        5.483627319335938e-06,
+        7.390975042653736e-06,
+        7.3909759521484375e-06,
+        7.390975952148438e-06
+      ],
+      "anchors": [
+        {
+          "time": 0.0,
+          "time_hex": "0x0.0p+0",
+          "present": true,
+          "exact_q": "1/8",
+          "exact_phase": "1/8",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 0.125,
+            "out": 0.7071067811865475
+          }
+        },
+        {
+          "time": 1.6689291442162357e-06,
+          "time_hex": "0x1.bffff00000000p-20",
+          "present": true,
+          "exact_q": "2097151/2097152",
+          "exact_phase": "2097151/2097152",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 0.9999995231628418,
+            "out": -2.9960562264636788e-06
+          }
+        },
+        {
+          "time": 1.6689300537109373e-06,
+          "time_hex": "0x1.bffffffffffffp-20",
+          "present": true,
+          "exact_q": "9007199254740991/9007199254740992",
+          "exact_phase": "9007199254740991/9007199254740992",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 0.9999999999999999,
+            "out": -1.3237124997904138e-15
+          }
+        },
+        {
+          "time": 1.6689300537109375e-06,
+          "time_hex": "0x1.c000000000000p-20",
+          "present": false,
+          "exact_q": "1",
+          "exact_phase": "0"
+        },
+        {
+          "time": 1.6689300537109377e-06,
+          "time_hex": "0x1.c000000000001p-20",
+          "present": false,
+          "exact_q": "9007199254740993/9007199254740992",
+          "exact_phase": "1/9007199254740992"
+        },
+        {
+          "time": 1.6689309632056393e-06,
+          "time_hex": "0x1.c000100000000p-20",
+          "present": true,
+          "exact_q": "2097153/2097152",
+          "exact_phase": "1/2097152",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 4.76837158203125e-07,
+            "out": 2.996056226334661e-06
+          }
+        },
+        {
+          "time": 3.5762777770287357e-06,
+          "time_hex": "0x1.dffff80000000p-19",
+          "present": false,
+          "exact_q": "4194303/2097152",
+          "exact_phase": "2097151/2097152"
+        },
+        {
+          "time": 3.576278686523437e-06,
+          "time_hex": "0x1.dffffffffffffp-19",
+          "present": true,
+          "exact_q": "9007199254740991/4503599627370496",
+          "exact_phase": "4503599627370495/4503599627370496",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 0.9999999999999998,
+            "out": -2.0212861992297208e-15
+          }
+        },
+        {
+          "time": 3.5762786865234375e-06,
+          "time_hex": "0x1.e000000000000p-19",
+          "present": false,
+          "exact_q": "2",
+          "exact_phase": "0"
+        },
+        {
+          "time": 3.576278686523438e-06,
+          "time_hex": "0x1.e000000000001p-19",
+          "present": false,
+          "exact_q": "9007199254740993/4503599627370496",
+          "exact_phase": "1/4503599627370496"
+        },
+        {
+          "time": 3.5762795960181393e-06,
+          "time_hex": "0x1.e000080000000p-19",
+          "present": true,
+          "exact_q": "4194305/2097152",
+          "exact_phase": "1/2097152",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 4.76837158203125e-07,
+            "out": 2.996056226334661e-06
+          }
+        },
+        {
+          "time": 5.483626409841236e-06,
+          "time_hex": "0x1.6ffffc0000000p-18",
+          "present": false,
+          "exact_q": "6291455/2097152",
+          "exact_phase": "2097151/2097152"
+        },
+        {
+          "time": 5.483627319335937e-06,
+          "time_hex": "0x1.6ffffffffffffp-18",
+          "present": true,
+          "exact_q": "6755399441055743/2251799813685248",
+          "exact_phase": "2251799813685247/2251799813685248",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 0.9999999999999996,
+            "out": -2.909464618929846e-15
+          }
+        },
+        {
+          "time": 5.4836273193359375e-06,
+          "time_hex": "0x1.7000000000000p-18",
+          "present": false,
+          "exact_q": "3",
+          "exact_phase": "0"
+        },
+        {
+          "time": 5.483627319335938e-06,
+          "time_hex": "0x1.7000000000001p-18",
+          "present": false,
+          "exact_q": "6755399441055745/2251799813685248",
+          "exact_phase": "1/2251799813685248"
+        },
+        {
+          "time": 5.483628228830639e-06,
+          "time_hex": "0x1.7000040000000p-18",
+          "present": true,
+          "exact_q": "6291457/2097152",
+          "exact_phase": "1/2097152",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 4.76837158203125e-07,
+            "out": 2.996056226334661e-06
+          }
+        },
+        {
+          "time": 7.390975042653736e-06,
+          "time_hex": "0x1.effffc0000000p-18",
+          "present": false,
+          "exact_q": "8388607/2097152",
+          "exact_phase": "2097151/2097152"
+        },
+        {
+          "time": 7.390975952148437e-06,
+          "time_hex": "0x1.effffffffffffp-18",
+          "present": true,
+          "exact_q": "9007199254740991/2251799813685248",
+          "exact_phase": "2251799813685247/2251799813685248",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 0.9999999999999996,
+            "out": -2.909464618929846e-15
+          }
+        },
+        {
+          "time": 7.3909759521484375e-06,
+          "time_hex": "0x1.f000000000000p-18",
+          "present": false,
+          "exact_q": "4",
+          "exact_phase": "0"
+        },
+        {
+          "time": 7.390975952148438e-06,
+          "time_hex": "0x1.f000000000001p-18",
+          "present": false,
+          "exact_q": "9007199254740993/2251799813685248",
+          "exact_phase": "1/2251799813685248"
+        },
+        {
+          "time": 7.390976861643139e-06,
+          "time_hex": "0x1.f000040000000p-18",
+          "present": true,
+          "exact_q": "8388609/2097152",
+          "exact_phase": "1/2097152",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 4.76837158203125e-07,
+            "out": 2.996056226334661e-06
+          }
+        },
+        {
+          "time": 7.62939453125e-06,
+          "time_hex": "0x1.0000000000000p-17",
+          "present": true,
+          "exact_q": "33/8",
+          "exact_phase": "1/8",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 0.125,
+            "out": 0.7071067811865475
+          }
+        }
+      ],
+      "maxima": {
+        "freq": {
+          "time": 0.0,
+          "observed": 0.5,
+          "expected": 0.5,
+          "difference": 0.0,
+          "budget": 0.001
+        },
+        "phase": {
+          "time": 5.483633685798855e-06,
+          "observed": 3.3378601109745887e-06,
+          "expected": 3.3378601100864103e-06,
+          "difference": 8.881784197001252e-16,
+          "budget": 0.001
+        },
+        "out": {
+          "time": 4.426619402622967e-11,
+          "observed": 0.7072098926548932,
+          "expected": 0.7072098851365862,
+          "difference": 7.518306976983524e-09,
+          "budget": 0.003
+        },
+        "phase_circular": {
+          "time": 5.483633685798855e-06,
+          "difference": 8.881784197001252e-16,
+          "budget": 0.001
+        }
+      },
+      "ordinary_failures": []
+    },
+    "raw-observer--baseline": {
+      "source_sha256": "f88b3b17d822d7fd4cdea4a83c3a166cbff857eded72ae7c02b8dc846e55f3ac",
+      "deck_sha256": "dffe93090c8b007f4d5ee52a343e99907bbd804a8120d8af915169fba8d5146e",
+      "psf_sha256": "c9d36a77faece76576d42d949f1d0a86d358bee3a62d1091bd189cb22a0e4b51",
+      "log_sha256": "79e0e3e0a619d3108d9326ccf185e891d83ba5f81cc53e55e213e84ebf5a1a48",
+      "spectre_version": "Version 21.1.0.509.isr12 64bit -- 24 Sep 2022",
+      "effective_settings": {
+        "maxstep": "232.831 ps",
+        "reltol": "1e-06",
+        "abstol(V)": "100 nV",
+        "abstol(I)": "1 pA",
+        "errpreset": "conservative",
+        "method": "traponly"
+      },
+      "native_rows": 32805,
+      "required_count": 22,
+      "present_count": 11,
+      "missing": [
+        1.6689300537109375e-06,
+        1.6689300537109377e-06,
+        3.5762777770287357e-06,
+        3.5762786865234375e-06,
+        3.576278686523438e-06,
+        5.483626409841236e-06,
+        5.4836273193359375e-06,
+        5.483627319335938e-06,
+        7.390975042653736e-06,
+        7.3909759521484375e-06,
+        7.390975952148438e-06
+      ],
+      "anchors": [
+        {
+          "time": 0.0,
+          "time_hex": "0x0.0p+0",
+          "present": true,
+          "exact_q": "1/8",
+          "exact_phase": "1/8",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 0.125,
+            "out": 0.7071067811865475,
+            "raw": 0.125
+          },
+          "raw_hex": "0x1.0000000000000p-3",
+          "raw_error_ULP": "0",
+          "raw_minus_nearest_integer_ULP": "4503599627370496",
+          "exported_raw_modulo": 0.125
+        },
+        {
+          "time": 1.6689291442162357e-06,
+          "time_hex": "0x1.bffff00000000p-20",
+          "present": true,
+          "exact_q": "2097151/2097152",
+          "exact_phase": "2097151/2097152",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 0.9999995231628418,
+            "out": -2.9960562264636788e-06,
+            "raw": 0.9999995231628418
+          },
+          "raw_hex": "0x1.fffff00000000p-1",
+          "raw_error_ULP": "0",
+          "raw_minus_nearest_integer_ULP": "-4294967296",
+          "exported_raw_modulo": 0.9999995231628418
+        },
+        {
+          "time": 1.6689300537109373e-06,
+          "time_hex": "0x1.bffffffffffffp-20",
+          "present": true,
+          "exact_q": "9007199254740991/9007199254740992",
+          "exact_phase": "9007199254740991/9007199254740992",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 0.9999999999999999,
+            "out": -1.3237124997904138e-15,
+            "raw": 0.9999999999999999
+          },
+          "raw_hex": "0x1.fffffffffffffp-1",
+          "raw_error_ULP": "0",
+          "raw_minus_nearest_integer_ULP": "-1",
+          "exported_raw_modulo": 0.9999999999999999
+        },
+        {
+          "time": 1.6689300537109375e-06,
+          "time_hex": "0x1.c000000000000p-20",
+          "present": false,
+          "exact_q": "1",
+          "exact_phase": "0"
+        },
+        {
+          "time": 1.6689300537109377e-06,
+          "time_hex": "0x1.c000000000001p-20",
+          "present": false,
+          "exact_q": "9007199254740993/9007199254740992",
+          "exact_phase": "1/9007199254740992"
+        },
+        {
+          "time": 1.6689309632056393e-06,
+          "time_hex": "0x1.c000100000000p-20",
+          "present": true,
+          "exact_q": "2097153/2097152",
+          "exact_phase": "1/2097152",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 4.76837158203125e-07,
+            "out": 2.996056226334661e-06,
+            "raw": 1.0000004768371582
+          },
+          "raw_hex": "0x1.0000080000000p+0",
+          "raw_error_ULP": "0",
+          "raw_minus_nearest_integer_ULP": "2147483648",
+          "exported_raw_modulo": 4.76837158203125e-07
+        },
+        {
+          "time": 3.5762777770287357e-06,
+          "time_hex": "0x1.dffff80000000p-19",
+          "present": false,
+          "exact_q": "4194303/2097152",
+          "exact_phase": "2097151/2097152"
+        },
+        {
+          "time": 3.576278686523437e-06,
+          "time_hex": "0x1.dffffffffffffp-19",
+          "present": true,
+          "exact_q": "9007199254740991/4503599627370496",
+          "exact_phase": "4503599627370495/4503599627370496",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 0.9999999999999998,
+            "out": -2.0212861992297208e-15,
+            "raw": 2.0
+          },
+          "raw_hex": "0x1.0000000000000p+1",
+          "raw_error_ULP": "1/2",
+          "raw_minus_nearest_integer_ULP": "0",
+          "exported_raw_modulo": 0.0
+        },
+        {
+          "time": 3.5762786865234375e-06,
+          "time_hex": "0x1.e000000000000p-19",
+          "present": false,
+          "exact_q": "2",
+          "exact_phase": "0"
+        },
+        {
+          "time": 3.576278686523438e-06,
+          "time_hex": "0x1.e000000000001p-19",
+          "present": false,
+          "exact_q": "9007199254740993/4503599627370496",
+          "exact_phase": "1/4503599627370496"
+        },
+        {
+          "time": 3.5762795960181393e-06,
+          "time_hex": "0x1.e000080000000p-19",
+          "present": true,
+          "exact_q": "4194305/2097152",
+          "exact_phase": "1/2097152",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 4.76837158203125e-07,
+            "out": 2.996056226334661e-06,
+            "raw": 2.0000004768371586
+          },
+          "raw_hex": "0x1.0000040000001p+1",
+          "raw_error_ULP": "1",
+          "raw_minus_nearest_integer_ULP": "1073741825",
+          "exported_raw_modulo": 4.768371586472142e-07
+        },
+        {
+          "time": 5.483626409841236e-06,
+          "time_hex": "0x1.6ffffc0000000p-18",
+          "present": false,
+          "exact_q": "6291455/2097152",
+          "exact_phase": "2097151/2097152"
+        },
+        {
+          "time": 5.483627319335937e-06,
+          "time_hex": "0x1.6ffffffffffffp-18",
+          "present": true,
+          "exact_q": "6755399441055743/2251799813685248",
+          "exact_phase": "2251799813685247/2251799813685248",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 0.9999999999999996,
+            "out": -2.909464618929846e-15,
+            "raw": 3.0
+          },
+          "raw_hex": "0x1.8000000000000p+1",
+          "raw_error_ULP": "1",
+          "raw_minus_nearest_integer_ULP": "0",
+          "exported_raw_modulo": 0.0
+        },
+        {
+          "time": 5.4836273193359375e-06,
+          "time_hex": "0x1.7000000000000p-18",
+          "present": false,
+          "exact_q": "3",
+          "exact_phase": "0"
+        },
+        {
+          "time": 5.483627319335938e-06,
+          "time_hex": "0x1.7000000000001p-18",
+          "present": false,
+          "exact_q": "6755399441055745/2251799813685248",
+          "exact_phase": "1/2251799813685248"
+        },
+        {
+          "time": 5.483628228830639e-06,
+          "time_hex": "0x1.7000040000000p-18",
+          "present": true,
+          "exact_q": "6291457/2097152",
+          "exact_phase": "1/2097152",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 4.76837158203125e-07,
+            "out": 2.996056226334661e-06,
+            "raw": 3.0000004768371586
+          },
+          "raw_hex": "0x1.8000040000001p+1",
+          "raw_error_ULP": "1",
+          "raw_minus_nearest_integer_ULP": "1073741825",
+          "exported_raw_modulo": 4.768371586472142e-07
+        },
+        {
+          "time": 7.390975042653736e-06,
+          "time_hex": "0x1.effffc0000000p-18",
+          "present": false,
+          "exact_q": "8388607/2097152",
+          "exact_phase": "2097151/2097152"
+        },
+        {
+          "time": 7.390975952148437e-06,
+          "time_hex": "0x1.effffffffffffp-18",
+          "present": true,
+          "exact_q": "9007199254740991/2251799813685248",
+          "exact_phase": "2251799813685247/2251799813685248",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 0.9999999999999996,
+            "out": -2.909464618929846e-15,
+            "raw": 4.0
+          },
+          "raw_hex": "0x1.0000000000000p+2",
+          "raw_error_ULP": "1/2",
+          "raw_minus_nearest_integer_ULP": "0",
+          "exported_raw_modulo": 0.0
+        },
+        {
+          "time": 7.3909759521484375e-06,
+          "time_hex": "0x1.f000000000000p-18",
+          "present": false,
+          "exact_q": "4",
+          "exact_phase": "0"
+        },
+        {
+          "time": 7.390975952148438e-06,
+          "time_hex": "0x1.f000000000001p-18",
+          "present": false,
+          "exact_q": "9007199254740993/2251799813685248",
+          "exact_phase": "1/2251799813685248"
+        },
+        {
+          "time": 7.390976861643139e-06,
+          "time_hex": "0x1.f000040000000p-18",
+          "present": true,
+          "exact_q": "8388609/2097152",
+          "exact_phase": "1/2097152",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 4.76837158203125e-07,
+            "out": 2.996056226334661e-06,
+            "raw": 4.000000476837158
+          },
+          "raw_hex": "0x1.0000020000000p+2",
+          "raw_error_ULP": "0",
+          "raw_minus_nearest_integer_ULP": "536870912",
+          "exported_raw_modulo": 4.76837158203125e-07
+        },
+        {
+          "time": 7.62939453125e-06,
+          "time_hex": "0x1.0000000000000p-17",
+          "present": true,
+          "exact_q": "33/8",
+          "exact_phase": "1/8",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 0.125,
+            "out": 0.7071067811865475,
+            "raw": 4.125
+          },
+          "raw_hex": "0x1.0800000000000p+2",
+          "raw_error_ULP": "0",
+          "raw_minus_nearest_integer_ULP": "140737488355328",
+          "exported_raw_modulo": 0.125
+        }
+      ],
+      "maxima": {
+        "freq": {
+          "time": 0.0,
+          "observed": 0.5,
+          "expected": 0.5,
+          "difference": 0.0,
+          "budget": 0.001
+        },
+        "phase": {
+          "time": 5.483633685798855e-06,
+          "observed": 3.3378601109745887e-06,
+          "expected": 3.3378601100864103e-06,
+          "difference": 8.881784197001252e-16,
+          "budget": 0.001
+        },
+        "out": {
+          "time": 4.426619402622967e-11,
+          "observed": 0.7072098926548932,
+          "expected": 0.7072098851365862,
+          "difference": 7.518306976983524e-09,
+          "budget": 0.003
+        },
+        "raw": {
+          "time": 7.3909786806325445e-06,
+          "observed": 4.000001430511476,
+          "expected": 4.0000014305114755,
+          "difference": 8.881784197001252e-16,
+          "budget": 0.001
+        },
+        "phase_circular": {
+          "time": 5.483633685798855e-06,
+          "difference": 8.881784197001252e-16,
+          "budget": 0.001
+        }
+      },
+      "ordinary_failures": []
+    },
+    "original--tight": {
+      "source_sha256": "17c3096782b23880e161b4109bcca14dcbfccca768d6d6b3a56720171314a2f7",
+      "deck_sha256": "8627b27a1b7f7226b0f138f06356e12e02005632de6c0f0f3fe7442918ed91f8",
+      "psf_sha256": "323b24d5aba4ae377dc2eec2625a8ee93fe4be83b7f51ffc89ddca073a674e77",
+      "log_sha256": "756276d065d58c55376ea01314e895c6858bdf106340a150e199259206224605",
+      "spectre_version": "Version 21.1.0.509.isr12 64bit -- 24 Sep 2022",
+      "effective_settings": {
+        "maxstep": "232.831 ps",
+        "reltol": "1e-09",
+        "abstol(V)": "100 pV",
+        "abstol(I)": "1 fA",
+        "errpreset": "conservative",
+        "method": "traponly"
+      },
+      "native_rows": 32811,
+      "required_count": 22,
+      "present_count": 11,
+      "missing": [
+        1.6689300537109375e-06,
+        1.6689300537109377e-06,
+        3.5762777770287357e-06,
+        3.5762786865234375e-06,
+        3.576278686523438e-06,
+        5.483626409841236e-06,
+        5.4836273193359375e-06,
+        5.483627319335938e-06,
+        7.390975042653736e-06,
+        7.3909759521484375e-06,
+        7.390975952148438e-06
+      ],
+      "anchors": [
+        {
+          "time": 0.0,
+          "time_hex": "0x0.0p+0",
+          "present": true,
+          "exact_q": "1/8",
+          "exact_phase": "1/8",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 0.125,
+            "out": 0.7071067811865475
+          }
+        },
+        {
+          "time": 1.6689291442162357e-06,
+          "time_hex": "0x1.bffff00000000p-20",
+          "present": true,
+          "exact_q": "2097151/2097152",
+          "exact_phase": "2097151/2097152",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 0.999999523162842,
+            "out": -2.996056225280735e-06
+          }
+        },
+        {
+          "time": 1.6689300537109373e-06,
+          "time_hex": "0x1.bffffffffffffp-20",
+          "present": true,
+          "exact_q": "9007199254740991/9007199254740992",
+          "exact_phase": "9007199254740991/9007199254740992",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 1.1102230246251565e-16,
+            "out": 6.97573699439307e-16
+          }
+        },
+        {
+          "time": 1.6689300537109375e-06,
+          "time_hex": "0x1.c000000000000p-20",
+          "present": false,
+          "exact_q": "1",
+          "exact_phase": "0"
+        },
+        {
+          "time": 1.6689300537109377e-06,
+          "time_hex": "0x1.c000000000001p-20",
+          "present": false,
+          "exact_q": "9007199254740993/9007199254740992",
+          "exact_phase": "1/9007199254740992"
+        },
+        {
+          "time": 1.6689309632056393e-06,
+          "time_hex": "0x1.c000100000000p-20",
+          "present": true,
+          "exact_q": "2097153/2097152",
+          "exact_phase": "1/2097152",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 4.768371584251696e-07,
+            "out": 2.9960562270322344e-06
+          }
+        },
+        {
+          "time": 3.5762777770287357e-06,
+          "time_hex": "0x1.dffff80000000p-19",
+          "present": false,
+          "exact_q": "4194303/2097152",
+          "exact_phase": "2097151/2097152"
+        },
+        {
+          "time": 3.576278686523437e-06,
+          "time_hex": "0x1.dffffffffffffp-19",
+          "present": true,
+          "exact_q": "9007199254740991/4503599627370496",
+          "exact_phase": "4503599627370495/4503599627370496",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 0.9999999999999999,
+            "out": -1.323712541206621e-15
+          }
+        },
+        {
+          "time": 3.5762786865234375e-06,
+          "time_hex": "0x1.e000000000000p-19",
+          "present": false,
+          "exact_q": "2",
+          "exact_phase": "0"
+        },
+        {
+          "time": 3.576278686523438e-06,
+          "time_hex": "0x1.e000000000001p-19",
+          "present": false,
+          "exact_q": "9007199254740993/4503599627370496",
+          "exact_phase": "1/4503599627370496"
+        },
+        {
+          "time": 3.5762795960181393e-06,
+          "time_hex": "0x1.e000080000000p-19",
+          "present": true,
+          "exact_q": "4194305/2097152",
+          "exact_phase": "1/2097152",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 4.768371584251696e-07,
+            "out": 2.9960562277298084e-06
+          }
+        },
+        {
+          "time": 5.483626409841236e-06,
+          "time_hex": "0x1.6ffffc0000000p-18",
+          "present": false,
+          "exact_q": "6291455/2097152",
+          "exact_phase": "2097151/2097152"
+        },
+        {
+          "time": 5.483627319335937e-06,
+          "time_hex": "0x1.6ffffffffffffp-18",
+          "present": true,
+          "exact_q": "6755399441055743/2251799813685248",
+          "exact_phase": "2251799813685247/2251799813685248",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 0.9999999999999998,
+            "out": -2.0212861992297208e-15
+          }
+        },
+        {
+          "time": 5.4836273193359375e-06,
+          "time_hex": "0x1.7000000000000p-18",
+          "present": false,
+          "exact_q": "3",
+          "exact_phase": "0"
+        },
+        {
+          "time": 5.483627319335938e-06,
+          "time_hex": "0x1.7000000000001p-18",
+          "present": false,
+          "exact_q": "6755399441055745/2251799813685248",
+          "exact_phase": "1/2251799813685248"
+        },
+        {
+          "time": 5.483628228830639e-06,
+          "time_hex": "0x1.7000040000000p-18",
+          "present": true,
+          "exact_q": "6291457/2097152",
+          "exact_phase": "1/2097152",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 4.768371584251696e-07,
+            "out": 2.9960562277298084e-06
+          }
+        },
+        {
+          "time": 7.390975042653736e-06,
+          "time_hex": "0x1.effffc0000000p-18",
+          "present": false,
+          "exact_q": "8388607/2097152",
+          "exact_phase": "2097151/2097152"
+        },
+        {
+          "time": 7.390975952148437e-06,
+          "time_hex": "0x1.effffffffffffp-18",
+          "present": true,
+          "exact_q": "9007199254740991/2251799813685248",
+          "exact_phase": "2251799813685247/2251799813685248",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 0.9999999999999998,
+            "out": -2.0212861992297208e-15
+          }
+        },
+        {
+          "time": 7.3909759521484375e-06,
+          "time_hex": "0x1.f000000000000p-18",
+          "present": false,
+          "exact_q": "4",
+          "exact_phase": "0"
+        },
+        {
+          "time": 7.390975952148438e-06,
+          "time_hex": "0x1.f000000000001p-18",
+          "present": false,
+          "exact_q": "9007199254740993/2251799813685248",
+          "exact_phase": "1/2251799813685248"
+        },
+        {
+          "time": 7.390976861643139e-06,
+          "time_hex": "0x1.f000040000000p-18",
+          "present": true,
+          "exact_q": "8388609/2097152",
+          "exact_phase": "1/2097152",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 4.768371584251696e-07,
+            "out": 2.996056227729808e-06
+          }
+        },
+        {
+          "time": 7.62939453125e-06,
+          "time_hex": "0x1.0000000000000p-17",
+          "present": true,
+          "exact_q": "33/8",
+          "exact_phase": "1/8",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 0.12500000000000022,
+            "out": 0.7071067811865486
+          }
+        }
+      ],
+      "maxima": {
+        "freq": {
+          "time": 0.0,
+          "observed": 0.5,
+          "expected": 0.5,
+          "difference": 0.0,
+          "budget": 0.001
+        },
+        "phase": {
+          "time": 1.6689300537109373e-06,
+          "observed": 1.1102230246251565e-16,
+          "expected": 0.9999999999999999,
+          "difference": 0.9999999999999998,
+          "budget": 0.001
+        },
+        "out": {
+          "time": 6.476253089470147e-13,
+          "observed": 0.7071082897326968,
+          "expected": 0.7071082897310876,
+          "difference": 1.6091572518917019e-12,
+          "budget": 0.003
+        },
+        "phase_circular": {
+          "time": 3.5762850529863525e-06,
+          "difference": 4.440892098500626e-16,
+          "budget": 0.001
+        }
+      },
+      "ordinary_failures": [
+        {
+          "signal": "phase",
+          "time": 1.6689300537109373e-06,
+          "observed": 1.1102230246251565e-16,
+          "expected": 0.9999999999999999,
+          "difference": 0.9999999999999998,
+          "budget": 0.001
+        }
+      ]
+    },
+    "raw-observer--tight": {
+      "source_sha256": "f88b3b17d822d7fd4cdea4a83c3a166cbff857eded72ae7c02b8dc846e55f3ac",
+      "deck_sha256": "d09a5aca02c838ceef51313220176b1effedcdad4911c1af45126e1f88cb1256",
+      "psf_sha256": "0a1876866d19b9035f2fc2ea7cc48fbc625a6c89a79aedfe5180d7ddbe813238",
+      "log_sha256": "12b58f354c6d00f80c44d36b417242abaa0c9a4af47eec43a77566f9da80582b",
+      "spectre_version": "Version 21.1.0.509.isr12 64bit -- 24 Sep 2022",
+      "effective_settings": {
+        "maxstep": "232.831 ps",
+        "reltol": "1e-09",
+        "abstol(V)": "100 pV",
+        "abstol(I)": "1 fA",
+        "errpreset": "conservative",
+        "method": "traponly"
+      },
+      "native_rows": 32811,
+      "required_count": 22,
+      "present_count": 11,
+      "missing": [
+        1.6689300537109375e-06,
+        1.6689300537109377e-06,
+        3.5762777770287357e-06,
+        3.5762786865234375e-06,
+        3.576278686523438e-06,
+        5.483626409841236e-06,
+        5.4836273193359375e-06,
+        5.483627319335938e-06,
+        7.390975042653736e-06,
+        7.3909759521484375e-06,
+        7.390975952148438e-06
+      ],
+      "anchors": [
+        {
+          "time": 0.0,
+          "time_hex": "0x0.0p+0",
+          "present": true,
+          "exact_q": "1/8",
+          "exact_phase": "1/8",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 0.125,
+            "out": 0.7071067811865475,
+            "raw": 0.125
+          },
+          "raw_hex": "0x1.0000000000000p-3",
+          "raw_error_ULP": "0",
+          "raw_minus_nearest_integer_ULP": "4503599627370496",
+          "exported_raw_modulo": 0.125
+        },
+        {
+          "time": 1.6689291442162357e-06,
+          "time_hex": "0x1.bffff00000000p-20",
+          "present": true,
+          "exact_q": "2097151/2097152",
+          "exact_phase": "2097151/2097152",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 0.999999523162842,
+            "out": -2.996056225280735e-06,
+            "raw": 0.999999523162842
+          },
+          "raw_hex": "0x1.fffff00000002p-1",
+          "raw_error_ULP": "2",
+          "raw_minus_nearest_integer_ULP": "-4294967294",
+          "exported_raw_modulo": 0.999999523162842
+        },
+        {
+          "time": 1.6689300537109373e-06,
+          "time_hex": "0x1.bffffffffffffp-20",
+          "present": true,
+          "exact_q": "9007199254740991/9007199254740992",
+          "exact_phase": "9007199254740991/9007199254740992",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 1.1102230246251565e-16,
+            "out": 6.97573699439307e-16,
+            "raw": 1.0
+          },
+          "raw_hex": "0x1.0000000000000p+0",
+          "raw_error_ULP": "1/2",
+          "raw_minus_nearest_integer_ULP": "0",
+          "exported_raw_modulo": 0.0
+        },
+        {
+          "time": 1.6689300537109375e-06,
+          "time_hex": "0x1.c000000000000p-20",
+          "present": false,
+          "exact_q": "1",
+          "exact_phase": "0"
+        },
+        {
+          "time": 1.6689300537109377e-06,
+          "time_hex": "0x1.c000000000001p-20",
+          "present": false,
+          "exact_q": "9007199254740993/9007199254740992",
+          "exact_phase": "1/9007199254740992"
+        },
+        {
+          "time": 1.6689309632056393e-06,
+          "time_hex": "0x1.c000100000000p-20",
+          "present": true,
+          "exact_q": "2097153/2097152",
+          "exact_phase": "1/2097152",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 4.768371584251696e-07,
+            "out": 2.9960562270322344e-06,
+            "raw": 1.0000004768371582
+          },
+          "raw_hex": "0x1.0000080000000p+0",
+          "raw_error_ULP": "0",
+          "raw_minus_nearest_integer_ULP": "2147483648",
+          "exported_raw_modulo": 4.76837158203125e-07
+        },
+        {
+          "time": 3.5762777770287357e-06,
+          "time_hex": "0x1.dffff80000000p-19",
+          "present": false,
+          "exact_q": "4194303/2097152",
+          "exact_phase": "2097151/2097152"
+        },
+        {
+          "time": 3.576278686523437e-06,
+          "time_hex": "0x1.dffffffffffffp-19",
+          "present": true,
+          "exact_q": "9007199254740991/4503599627370496",
+          "exact_phase": "4503599627370495/4503599627370496",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 0.9999999999999999,
+            "out": -1.323712541206621e-15,
+            "raw": 2.0
+          },
+          "raw_hex": "0x1.0000000000000p+1",
+          "raw_error_ULP": "1/2",
+          "raw_minus_nearest_integer_ULP": "0",
+          "exported_raw_modulo": 0.0
+        },
+        {
+          "time": 3.5762786865234375e-06,
+          "time_hex": "0x1.e000000000000p-19",
+          "present": false,
+          "exact_q": "2",
+          "exact_phase": "0"
+        },
+        {
+          "time": 3.576278686523438e-06,
+          "time_hex": "0x1.e000000000001p-19",
+          "present": false,
+          "exact_q": "9007199254740993/4503599627370496",
+          "exact_phase": "1/4503599627370496"
+        },
+        {
+          "time": 3.5762795960181393e-06,
+          "time_hex": "0x1.e000080000000p-19",
+          "present": true,
+          "exact_q": "4194305/2097152",
+          "exact_phase": "1/2097152",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 4.768371584251696e-07,
+            "out": 2.9960562277298084e-06,
+            "raw": 2.0000004768371586
+          },
+          "raw_hex": "0x1.0000040000001p+1",
+          "raw_error_ULP": "1",
+          "raw_minus_nearest_integer_ULP": "1073741825",
+          "exported_raw_modulo": 4.768371586472142e-07
+        },
+        {
+          "time": 5.483626409841236e-06,
+          "time_hex": "0x1.6ffffc0000000p-18",
+          "present": false,
+          "exact_q": "6291455/2097152",
+          "exact_phase": "2097151/2097152"
+        },
+        {
+          "time": 5.483627319335937e-06,
+          "time_hex": "0x1.6ffffffffffffp-18",
+          "present": true,
+          "exact_q": "6755399441055743/2251799813685248",
+          "exact_phase": "2251799813685247/2251799813685248",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 0.9999999999999998,
+            "out": -2.0212861992297208e-15,
+            "raw": 3.0
+          },
+          "raw_hex": "0x1.8000000000000p+1",
+          "raw_error_ULP": "1",
+          "raw_minus_nearest_integer_ULP": "0",
+          "exported_raw_modulo": 0.0
+        },
+        {
+          "time": 5.4836273193359375e-06,
+          "time_hex": "0x1.7000000000000p-18",
+          "present": false,
+          "exact_q": "3",
+          "exact_phase": "0"
+        },
+        {
+          "time": 5.483627319335938e-06,
+          "time_hex": "0x1.7000000000001p-18",
+          "present": false,
+          "exact_q": "6755399441055745/2251799813685248",
+          "exact_phase": "1/2251799813685248"
+        },
+        {
+          "time": 5.483628228830639e-06,
+          "time_hex": "0x1.7000040000000p-18",
+          "present": true,
+          "exact_q": "6291457/2097152",
+          "exact_phase": "1/2097152",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 4.768371584251696e-07,
+            "out": 2.9960562277298084e-06,
+            "raw": 3.0000004768371586
+          },
+          "raw_hex": "0x1.8000040000001p+1",
+          "raw_error_ULP": "1",
+          "raw_minus_nearest_integer_ULP": "1073741825",
+          "exported_raw_modulo": 4.768371586472142e-07
+        },
+        {
+          "time": 7.390975042653736e-06,
+          "time_hex": "0x1.effffc0000000p-18",
+          "present": false,
+          "exact_q": "8388607/2097152",
+          "exact_phase": "2097151/2097152"
+        },
+        {
+          "time": 7.390975952148437e-06,
+          "time_hex": "0x1.effffffffffffp-18",
+          "present": true,
+          "exact_q": "9007199254740991/2251799813685248",
+          "exact_phase": "2251799813685247/2251799813685248",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 0.9999999999999998,
+            "out": -2.0212861992297208e-15,
+            "raw": 4.0
+          },
+          "raw_hex": "0x1.0000000000000p+2",
+          "raw_error_ULP": "1/2",
+          "raw_minus_nearest_integer_ULP": "0",
+          "exported_raw_modulo": 0.0
+        },
+        {
+          "time": 7.3909759521484375e-06,
+          "time_hex": "0x1.f000000000000p-18",
+          "present": false,
+          "exact_q": "4",
+          "exact_phase": "0"
+        },
+        {
+          "time": 7.390975952148438e-06,
+          "time_hex": "0x1.f000000000001p-18",
+          "present": false,
+          "exact_q": "9007199254740993/2251799813685248",
+          "exact_phase": "1/2251799813685248"
+        },
+        {
+          "time": 7.390976861643139e-06,
+          "time_hex": "0x1.f000040000000p-18",
+          "present": true,
+          "exact_q": "8388609/2097152",
+          "exact_phase": "1/2097152",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 4.768371584251696e-07,
+            "out": 2.996056227729808e-06,
+            "raw": 4.000000476837158
+          },
+          "raw_hex": "0x1.0000020000000p+2",
+          "raw_error_ULP": "0",
+          "raw_minus_nearest_integer_ULP": "536870912",
+          "exported_raw_modulo": 4.76837158203125e-07
+        },
+        {
+          "time": 7.62939453125e-06,
+          "time_hex": "0x1.0000000000000p-17",
+          "present": true,
+          "exact_q": "33/8",
+          "exact_phase": "1/8",
+          "observed": {
+            "ctl": 0.0,
+            "freq": 0.5,
+            "phase": 0.12500000000000022,
+            "out": 0.7071067811865486,
+            "raw": 4.125
+          },
+          "raw_hex": "0x1.0800000000000p+2",
+          "raw_error_ULP": "0",
+          "raw_minus_nearest_integer_ULP": "140737488355328",
+          "exported_raw_modulo": 0.125
+        }
+      ],
+      "maxima": {
+        "freq": {
+          "time": 0.0,
+          "observed": 0.5,
+          "expected": 0.5,
+          "difference": 0.0,
+          "budget": 0.001
+        },
+        "phase": {
+          "time": 1.6689300537109373e-06,
+          "observed": 1.1102230246251565e-16,
+          "expected": 0.9999999999999999,
+          "difference": 0.9999999999999998,
+          "budget": 0.001
+        },
+        "out": {
+          "time": 6.476253089470147e-13,
+          "observed": 0.7071082897326968,
+          "expected": 0.7071082897310876,
+          "difference": 1.6091572518917019e-12,
+          "budget": 0.003
+        },
+        "raw": {
+          "time": 7.3909786806325445e-06,
+          "observed": 4.000001430511476,
+          "expected": 4.0000014305114755,
+          "difference": 8.881784197001252e-16,
+          "budget": 0.001
+        },
+        "phase_circular": {
+          "time": 3.5762850529863525e-06,
+          "difference": 4.440892098500626e-16,
+          "budget": 0.001
+        }
+      },
+      "ordinary_failures": [
+        {
+          "signal": "phase",
+          "time": 1.6689300537109373e-06,
+          "observed": 1.1102230246251565e-16,
+          "expected": 0.9999999999999999,
+          "difference": 0.9999999999999998,
+          "budget": 0.001
+        }
+      ]
+    }
+  },
+  "observer_effect": {
+    "baseline": {
+      "same_native_time_sequence": true,
+      "common_rows": 32805,
+      "original_only": 0,
+      "observer_only": 0,
+      "max_signal_difference": {
+        "ctl": 0.0,
+        "freq": 0.0,
+        "phase": 0.0,
+        "out": 0.0
+      }
+    },
+    "tight": {
+      "same_native_time_sequence": true,
+      "common_rows": 32811,
+      "original_only": 0,
+      "observer_only": 0,
+      "max_signal_difference": {
+        "ctl": 0.0,
+        "freq": 0.0,
+        "phase": 0.0,
+        "out": 0.0
+      }
+    }
+  },
+  "local_replay": {
+    "revision": "c33a2f672bdbe549f706f8aa8d218e0f800881da",
+    "kernel_sha256": "2b21ee6c8f12323477eea9de5852d4887cd7aa20afc88287a9ae0d77cea9435c",
+    "kernel_identity": {
+      "build_revision": null,
+      "identity_version": 1,
+      "ir_schema_version": 18,
+      "name": "evas-kernel",
+      "platform": {
+        "arch": "aarch64",
+        "os": "macos"
+      },
+      "request_protocol_version": null,
+      "version": "0.14.0"
+    },
+    "new_local_numerical_calls": 4,
+    "new_remote_calls": 0,
+    "cases": {
+      "original--baseline": {
+        "returncode": 0,
+        "elapsed_s": 15.719513708958402,
+        "source_sha256": "17c3096782b23880e161b4109bcca14dcbfccca768d6d6b3a56720171314a2f7",
+        "request_sha256": "75fa4acc27b07c1ce8fb698e2db5a24cb8bd49f208a5b4dc856e8d1aef2c6d0f",
+        "stdout_sha256": "f8f2d84132d4033640684c47843e917a269101b6468ef14d47e1e3ad2849c4ef",
+        "evas_independent": {
+          "maxima": {
+            "freq": {
+              "time": 0.0,
+              "observed": 0.5,
+              "expected": 0.5,
+              "difference": 0.0,
+              "budget": 0.001
+            },
+            "phase": {
+              "time": 7.62927766118093e-06,
+              "observed": 0.12493872642522774,
+              "expected": 0.1249387264252273,
+              "difference": 4.440892098500626e-16,
+              "budget": 0.001
+            },
+            "out": {
+              "time": 7.62927766118093e-06,
+              "observed": 0.7068344974697507,
+              "expected": 0.7068344974697487,
+              "difference": 1.9984014443252818e-15,
+              "budget": 0.003
+            },
+            "phase_circular": {
+              "time": 7.62927766118093e-06,
+              "difference": 4.440892098500626e-16,
+              "budget": 0.001
+            }
+          },
+          "ordinary_failures": []
+        },
+        "evas_rows": 32805,
+        "paired_maxima": {
+          "ctl": {
+            "time": 0.0,
+            "evas": 0.0,
+            "spectre": 0.0,
+            "difference": 0.0,
+            "budget": 0.001
+          },
+          "freq": {
+            "time": 0.0,
+            "evas": 0.5,
+            "spectre": 0.5,
+            "difference": 0.0,
+            "budget": 0.001
+          },
+          "phase": {
+            "time": 5.483633685798855e-06,
+            "evas": 3.3378601100864103e-06,
+            "spectre": 3.3378601109745887e-06,
+            "difference": 8.881784197001252e-16,
+            "budget": 0.001
+          },
+          "out": {
+            "time": 4.426619402622967e-11,
+            "evas": 0.7072098851365862,
+            "spectre": 0.7072098926548932,
+            "difference": 7.518306976983524e-09,
+            "budget": 0.003
+          }
+        },
+        "paired_ordinary_failures": []
+      },
+      "raw-observer--baseline": {
+        "returncode": 0,
+        "elapsed_s": 17.25245395884849,
+        "source_sha256": "f88b3b17d822d7fd4cdea4a83c3a166cbff857eded72ae7c02b8dc846e55f3ac",
+        "request_sha256": "9dc28cb6ebfaee2af6c6862951ced622d4d85691fea89ed95a9322bfedc99a89",
+        "stdout_sha256": "1a41363780006e16e8e521ca4f448d0fb27a16e95186e6b7798c6f8e1d832536",
+        "evas_independent": {
+          "maxima": {
+            "freq": {
+              "time": 0.0,
+              "observed": 0.5,
+              "expected": 0.5,
+              "difference": 0.0,
+              "budget": 0.001
+            },
+            "phase": {
+              "time": 7.62927766118093e-06,
+              "observed": 0.12493872642522774,
+              "expected": 0.1249387264252273,
+              "difference": 4.440892098500626e-16,
+              "budget": 0.001
+            },
+            "out": {
+              "time": 7.62927766118093e-06,
+              "observed": 0.7068344974697507,
+              "expected": 0.7068344974697487,
+              "difference": 1.9984014443252818e-15,
+              "budget": 0.003
+            },
+            "raw": {
+              "time": 0.0,
+              "observed": 0.125,
+              "expected": 0.125,
+              "difference": 0.0,
+              "budget": 0.001
+            },
+            "phase_circular": {
+              "time": 7.62927766118093e-06,
+              "difference": 4.440892098500626e-16,
+              "budget": 0.001
+            }
+          },
+          "ordinary_failures": []
+        },
+        "evas_rows": 32805,
+        "paired_maxima": {
+          "ctl": {
+            "time": 0.0,
+            "evas": 0.0,
+            "spectre": 0.0,
+            "difference": 0.0,
+            "budget": 0.001
+          },
+          "freq": {
+            "time": 0.0,
+            "evas": 0.5,
+            "spectre": 0.5,
+            "difference": 0.0,
+            "budget": 0.001
+          },
+          "phase": {
+            "time": 5.483633685798855e-06,
+            "evas": 3.3378601100864103e-06,
+            "spectre": 3.3378601109745887e-06,
+            "difference": 8.881784197001252e-16,
+            "budget": 0.001
+          },
+          "out": {
+            "time": 4.426619402622967e-11,
+            "evas": 0.7072098851365862,
+            "spectre": 0.7072098926548932,
+            "difference": 7.518306976983524e-09,
+            "budget": 0.003
+          },
+          "raw": {
+            "time": 7.3909786806325445e-06,
+            "evas": 4.0000014305114755,
+            "spectre": 4.000001430511476,
+            "difference": 8.881784197001252e-16,
+            "budget": 0.001
+          }
+        },
+        "paired_ordinary_failures": []
+      },
+      "original--tight": {
+        "returncode": 0,
+        "elapsed_s": 15.578815416898578,
+        "source_sha256": "17c3096782b23880e161b4109bcca14dcbfccca768d6d6b3a56720171314a2f7",
+        "request_sha256": "0beac8cf28c74ff831ab6d35edcd9804ceadf7592302309bb0c66a28a2ac17da",
+        "stdout_sha256": "5f1b05328cf50c0d727a5a2f3b4eeb2508b570736a2c9ed899b1a65505ef13df",
+        "evas_independent": {
+          "maxima": {
+            "freq": {
+              "time": 0.0,
+              "observed": 0.5,
+              "expected": 0.5,
+              "difference": 0.0,
+              "budget": 0.001
+            },
+            "phase": {
+              "time": 7.62927766118093e-06,
+              "observed": 0.12493872642522774,
+              "expected": 0.1249387264252273,
+              "difference": 4.440892098500626e-16,
+              "budget": 0.001
+            },
+            "out": {
+              "time": 7.62927766118093e-06,
+              "observed": 0.7068344974697507,
+              "expected": 0.7068344974697487,
+              "difference": 1.9984014443252818e-15,
+              "budget": 0.003
+            },
+            "phase_circular": {
+              "time": 7.62927766118093e-06,
+              "difference": 4.440892098500626e-16,
+              "budget": 0.001
+            }
+          },
+          "ordinary_failures": []
+        },
+        "evas_rows": 32811,
+        "paired_maxima": {
+          "ctl": {
+            "time": 0.0,
+            "evas": 0.0,
+            "spectre": 0.0,
+            "difference": 0.0,
+            "budget": 0.001
+          },
+          "freq": {
+            "time": 0.0,
+            "evas": 0.5,
+            "spectre": 0.5,
+            "difference": 0.0,
+            "budget": 0.001
+          },
+          "phase": {
+            "time": 1.6689300537109373e-06,
+            "evas": 0.9999999999999999,
+            "spectre": 1.1102230246251565e-16,
+            "difference": 0.9999999999999998,
+            "budget": 0.001
+          },
+          "out": {
+            "time": 6.476253089470147e-13,
+            "evas": 0.7071082897310876,
+            "spectre": 0.7071082897326968,
+            "difference": 1.6091572518917019e-12,
+            "budget": 0.003
+          }
+        },
+        "paired_ordinary_failures": [
+          {
+            "signal": "phase",
+            "time": 1.6689300537109373e-06,
+            "evas": 0.9999999999999999,
+            "spectre": 1.1102230246251565e-16,
+            "difference": 0.9999999999999998,
+            "budget": 0.001
+          }
+        ]
+      },
+      "raw-observer--tight": {
+        "returncode": 0,
+        "elapsed_s": 21.187675124965608,
+        "source_sha256": "f88b3b17d822d7fd4cdea4a83c3a166cbff857eded72ae7c02b8dc846e55f3ac",
+        "request_sha256": "8b94f4f6f7b3ea09e65d60d91c285c121274281727b7a3d0675db8cf27d88eb7",
+        "stdout_sha256": "6a2f177e21b8a0436a8a37151f6c15a89306917b5f4b63007f3f5fd7e7d209b7",
+        "evas_independent": {
+          "maxima": {
+            "freq": {
+              "time": 0.0,
+              "observed": 0.5,
+              "expected": 0.5,
+              "difference": 0.0,
+              "budget": 0.001
+            },
+            "phase": {
+              "time": 7.62927766118093e-06,
+              "observed": 0.12493872642522774,
+              "expected": 0.1249387264252273,
+              "difference": 4.440892098500626e-16,
+              "budget": 0.001
+            },
+            "out": {
+              "time": 7.62927766118093e-06,
+              "observed": 0.7068344974697507,
+              "expected": 0.7068344974697487,
+              "difference": 1.9984014443252818e-15,
+              "budget": 0.003
+            },
+            "raw": {
+              "time": 0.0,
+              "observed": 0.125,
+              "expected": 0.125,
+              "difference": 0.0,
+              "budget": 0.001
+            },
+            "phase_circular": {
+              "time": 7.62927766118093e-06,
+              "difference": 4.440892098500626e-16,
+              "budget": 0.001
+            }
+          },
+          "ordinary_failures": []
+        },
+        "evas_rows": 32811,
+        "paired_maxima": {
+          "ctl": {
+            "time": 0.0,
+            "evas": 0.0,
+            "spectre": 0.0,
+            "difference": 0.0,
+            "budget": 0.001
+          },
+          "freq": {
+            "time": 0.0,
+            "evas": 0.5,
+            "spectre": 0.5,
+            "difference": 0.0,
+            "budget": 0.001
+          },
+          "phase": {
+            "time": 1.6689300537109373e-06,
+            "evas": 0.9999999999999999,
+            "spectre": 1.1102230246251565e-16,
+            "difference": 0.9999999999999998,
+            "budget": 0.001
+          },
+          "out": {
+            "time": 6.476253089470147e-13,
+            "evas": 0.7071082897310876,
+            "spectre": 0.7071082897326968,
+            "difference": 1.6091572518917019e-12,
+            "budget": 0.003
+          },
+          "raw": {
+            "time": 7.3909786806325445e-06,
+            "evas": 4.0000014305114755,
+            "spectre": 4.000001430511476,
+            "difference": 8.881784197001252e-16,
+            "budget": 0.001
+          }
+        },
+        "paired_ordinary_failures": [
+          {
+            "signal": "phase",
+            "time": 1.6689300537109373e-06,
+            "evas": 0.9999999999999999,
+            "spectre": 1.1102230246251565e-16,
+            "difference": 0.9999999999999998,
+            "budget": 0.001
+          }
+        ]
+      }
+    }
+  },
+  "remote_collection": {
+    "archive_sha256": "287bf5bd018082e8928da9063de532e688080df4d47a85c135e0cf4e2e4d1613",
+    "file_count": 82,
+    "hash_verification": "parent controller reports verified; per-case source/deck/psf/log hashes independently recorded here",
+    "availability": "local archive, not public qualification"
+  },
+  "calibration": {
+    "command": "python3 -m unittest discover -s experiments/backends/event-alignment/vco-controls -p test_analyze.py",
+    "passed": 6
+  },
+  "local_preflight_error": {
+    "type": "ModuleNotFoundError: evas",
+    "numerical_calls": 0,
+    "resolution": "PYTHONPATH=evas/src; no scientific replay repeated"
+  }
+}
