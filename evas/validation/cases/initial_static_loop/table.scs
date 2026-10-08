@@ -1,0 +1,9 @@
+simulator lang=spectre
+global 0
+ahdl_include "dut.va"
+vin (u 0) vsource type=pwl wave=[0 0 1 1]
+first (u y1 q01 q11 qlast1 0) initial_static_loop N=2 SEED=0 POLLUTE=40
+second (u y2 q02 q12 qlast2 0) initial_static_loop N=3 SEED=10 POLLUTE=70
+settings options reltol=1e-5 vabstol=1e-7 iabstol=1e-12 precision="%24.17g"
+tran tran stop=1 maxstep=0.025 method=traponly errpreset=conservative skipdc=no strobeperiod=0.125 strobeoutput=all
+save u y1 q01 q11 qlast1 y2 q02 q12 qlast2

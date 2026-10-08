@@ -1,0 +1,1630 @@
+{
+  "schema": 1,
+  "scope": "One actual Spectre configuration, two instances in one frozen DUT; not two configurations or complete #65/SAR closure.",
+  "first_timeout": {
+    "archive_sha256": "839b3b229878592fc8c85e0bfb597a1fd3a3ed19c171026d86042ec68c1ddbb0",
+    "status": "compile timeout, no waveform; not numerical F"
+  },
+  "execution_condition": "Warm-cache input retained from first lane; both N2 and N3 actually compiled again. Speedup cause unknown.",
+  "feature_revision": "4cb15800735047048e4a6d551f039e376e4c3a66",
+  "tested_revision": "4cb15800735047048e4a6d551f039e376e4c3a66",
+  "IR": 18,
+  "archive_sha256": "7b6aba27a2f7854513aa1e01f2d238d42306d6db65fba12e13a643b1c7e8daa8",
+  "verified_manifest_files": 36,
+  "archive_authentication": {
+    "verified_regular_members": 64,
+    "required_members": [
+      "spectre-output/FILE_MANIFEST.json",
+      "spectre-output/TOOL_IDENTITY.json",
+      "spectre-output/runs/initial-loop/dut.va",
+      "spectre-output/runs/initial-loop/manifest.json",
+      "spectre-output/runs/initial-loop/tb.scs",
+      "spectre-output/runs/initial-loop/RESULT.json",
+      "spectre-output/runs/initial-loop/simulate.json",
+      "spectre-output/runs/initial-loop/spectre.log",
+      "spectre-output/runs/initial-loop/psf/tran.tran.tran"
+    ],
+    "members": {
+      "spectre-output/EXECUTION.json": {
+        "sha256": "f5cbe055234f027519b87690a5bdc7abcd45175a434ac650c8343ad32e546f3e",
+        "bytes": 1427
+      },
+      "spectre-output/FILE_MANIFEST.json": {
+        "sha256": "fb9a1c00e94ed94b0f46c8552838a8a07c2ce4d39e490bf20344f44008ba58de",
+        "bytes": 6605
+      },
+      "spectre-output/TOOL_IDENTITY.json": {
+        "sha256": "550cb7ca0b4fa2c31bf410eff3354a36914dea62bd2d26b8f37092922176a290",
+        "bytes": 1400
+      },
+      "spectre-output/runs/initial-loop/RESULT.json": {
+        "sha256": "0760cac60057888c5ae77a79c7d2f88017d3c86de731ce5b7ea27d2030f6aa83",
+        "bytes": 1323
+      },
+      "spectre-output/runs/initial-loop/SHA256SUMS": {
+        "sha256": "09c42d893dec07bfdbde0b25db98bc901a48455d3dcb13559639adcea11c9b3a",
+        "bytes": 315
+      },
+      "spectre-output/runs/initial-loop/dut.va": {
+        "sha256": "ff6f07aa84f74b68028019216c2e72685004c5f310350e9a97b7e809ccaf8a69",
+        "bytes": 517
+      },
+      "spectre-output/runs/initial-loop/manifest.json": {
+        "sha256": "0878ac3e630310ebc8d45055896e3133befa7b9f0818fadbca382b2ad3c8505e",
+        "bytes": 3106
+      },
+      "spectre-output/runs/initial-loop/psf/logFile": {
+        "sha256": "99e2cea90f2d3e5423cde85b4d859022f7e6e56b093f5c126f969f6a2622ae9a",
+        "bytes": 662
+      },
+      "spectre-output/runs/initial-loop/psf/tran.tran.tran": {
+        "sha256": "7e58059de57827922f71826121addfa611e200d06830b5c6027e367088243fa1",
+        "bytes": 28127
+      },
+      "spectre-output/runs/initial-loop/requested_settings.json": {
+        "sha256": "b079f23eb026d7611bda7423a6b79ea52408a6fd8228f40d14eb6d9aaf294014",
+        "bytes": 105
+      },
+      "spectre-output/runs/initial-loop/run.csh": {
+        "sha256": "8ab92f7be2ad7461ef937b99179a2e2a41c0382543442372cd62b376715a7b1a",
+        "bytes": 215
+      },
+      "spectre-output/runs/initial-loop/simulate.json": {
+        "sha256": "2428d6cbd0aeb23c0b8b100050f04523410ee87f1dbf843a9d016cd20a0fe899",
+        "bytes": 677
+      },
+      "spectre-output/runs/initial-loop/simulate.log": {
+        "sha256": "d403929a9571241eb01f3bc0d68c18a0f52a4e6a8ebde5af1b8b50fe05bb44d7",
+        "bytes": 7382
+      },
+      "spectre-output/runs/initial-loop/simulate.log.EXECUTION.json": {
+        "sha256": "881890acbb3f8267b4e991afcb92844b161fc0ed90cd2e41a1c7c71aa37ae85d",
+        "bytes": 539
+      },
+      "spectre-output/runs/initial-loop/spectre.log": {
+        "sha256": "0ba1ab9e01b292e88806553e03b92ddcf0da093636db845d52dbf974daa9c46d",
+        "bytes": 8211
+      },
+      "spectre-output/runs/initial-loop/tb.ahdlSimDB/.437a2ac5b05dc2d14f37ea35d33ae8b3.Linux-64.dep": {
+        "sha256": "94457a2fbadf9d4a35ec0a11b32e6c5de65e3dda1474704c836b287be0ff25e8",
+        "bytes": 1508
+      },
+      "spectre-output/runs/initial-loop/tb.ahdlSimDB/437a2ac5b05dc2d14f37ea35d33ae8b3.initial_static_loop_N_2.ahdlcmi/Linux-64/GNUmakefile": {
+        "sha256": "2be84d8957adde43eb3703f8eb442e6a600ae74a3b71b6fd4ee9c6f00fcef0d6",
+        "bytes": 2122
+      },
+      "spectre-output/runs/initial-loop/tb.ahdlSimDB/437a2ac5b05dc2d14f37ea35d33ae8b3.initial_static_loop_N_2.ahdlcmi/Linux-64/ahdlcmidevicelist": {
+        "sha256": "faedd51edf810a06b766b411426f3094aa9bbec20b8eaa1022c047ed20f4c024",
+        "bytes": 245
+      },
+      "spectre-output/runs/initial-loop/tb.ahdlSimDB/437a2ac5b05dc2d14f37ea35d33ae8b3.initial_static_loop_N_2.ahdlcmi/Linux-64/ahdlcmidevicelist.out": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "spectre-output/runs/initial-loop/tb.ahdlSimDB/437a2ac5b05dc2d14f37ea35d33ae8b3.initial_static_loop_N_2.ahdlcmi/Linux-64/devicelisttemp": {
+        "sha256": "faedd51edf810a06b766b411426f3094aa9bbec20b8eaa1022c047ed20f4c024",
+        "bytes": 245
+      },
+      "spectre-output/runs/initial-loop/tb.ahdlSimDB/437a2ac5b05dc2d14f37ea35d33ae8b3.initial_static_loop_N_2.ahdlcmi/Linux-64/initial_static_loop_N_2.lst": {
+        "sha256": "faedd51edf810a06b766b411426f3094aa9bbec20b8eaa1022c047ed20f4c024",
+        "bytes": 245
+      },
+      "spectre-output/runs/initial-loop/tb.ahdlSimDB/437a2ac5b05dc2d14f37ea35d33ae8b3.initial_static_loop_N_2.ahdlcmi/Linux-64/obj/optimize/5.0/libahdlcmi_initial_static_loop_N_2.so": {
+        "sha256": "f008eb5da1bf1b52d76b9fdf7fa7897a231c3566c1a7301e217393ffb7ef00e5",
+        "bytes": 96472
+      },
+      "spectre-output/runs/initial-loop/tb.ahdlSimDB/437a2ac5b05dc2d14f37ea35d33ae8b3.initial_static_loop_N_2.ahdlcmi/Linux-64/sminfo": {
+        "sha256": "b1f1df017c047411c7259d370d1b4879c63552876126864e1160a91fa9ca4cc7",
+        "bytes": 357
+      },
+      "spectre-output/runs/initial-loop/tb.ahdlSimDB/437a2ac5b05dc2d14f37ea35d33ae8b3.initial_static_loop_N_2.ahdlcmi/ahdlcmi.out": {
+        "sha256": "1556f4c019773fc0edfa39740ee1cbf0d908fff282201dd14caa691d9cd62f13",
+        "bytes": 13800
+      },
+      "spectre-output/runs/initial-loop/tb.ahdlSimDB/437a2ac5b05dc2d14f37ea35d33ae8b3.initial_static_loop_N_3.ahdlcmi/Linux-64/GNUmakefile": {
+        "sha256": "2be84d8957adde43eb3703f8eb442e6a600ae74a3b71b6fd4ee9c6f00fcef0d6",
+        "bytes": 2122
+      },
+      "spectre-output/runs/initial-loop/tb.ahdlSimDB/437a2ac5b05dc2d14f37ea35d33ae8b3.initial_static_loop_N_3.ahdlcmi/Linux-64/ahdlcmidevicelist": {
+        "sha256": "244c28a9bc0b4c1658b7f296634944cd1d378759dea05334907592162e44ad1b",
+        "bytes": 245
+      },
+      "spectre-output/runs/initial-loop/tb.ahdlSimDB/437a2ac5b05dc2d14f37ea35d33ae8b3.initial_static_loop_N_3.ahdlcmi/Linux-64/ahdlcmidevicelist.out": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "spectre-output/runs/initial-loop/tb.ahdlSimDB/437a2ac5b05dc2d14f37ea35d33ae8b3.initial_static_loop_N_3.ahdlcmi/Linux-64/devicelisttemp": {
+        "sha256": "244c28a9bc0b4c1658b7f296634944cd1d378759dea05334907592162e44ad1b",
+        "bytes": 245
+      },
+      "spectre-output/runs/initial-loop/tb.ahdlSimDB/437a2ac5b05dc2d14f37ea35d33ae8b3.initial_static_loop_N_3.ahdlcmi/Linux-64/initial_static_loop_N_3.lst": {
+        "sha256": "244c28a9bc0b4c1658b7f296634944cd1d378759dea05334907592162e44ad1b",
+        "bytes": 245
+      },
+      "spectre-output/runs/initial-loop/tb.ahdlSimDB/437a2ac5b05dc2d14f37ea35d33ae8b3.initial_static_loop_N_3.ahdlcmi/Linux-64/obj/optimize/5.0/libahdlcmi_initial_static_loop_N_3.so": {
+        "sha256": "145fa14b9cf5c970d2507e66ede833d60df1a785dfa94db131cd6d31ff7ca381",
+        "bytes": 100568
+      },
+      "spectre-output/runs/initial-loop/tb.ahdlSimDB/437a2ac5b05dc2d14f37ea35d33ae8b3.initial_static_loop_N_3.ahdlcmi/Linux-64/sminfo": {
+        "sha256": "a99d571a2cefca1b9aec11bffe15d294a4e517adbc092d6f9c5996f3b462269b",
+        "bytes": 357
+      },
+      "spectre-output/runs/initial-loop/tb.ahdlSimDB/437a2ac5b05dc2d14f37ea35d33ae8b3.initial_static_loop_N_3.ahdlcmi/ahdlcmi.out": {
+        "sha256": "a2b6296a9297740ee01a7e8b6584922f4c7e09002e92c02fb4ef14851078b035",
+        "bytes": 13800
+      },
+      "spectre-output/runs/initial-loop/tb.scs": {
+        "sha256": "0a325e2ec38f5c9caa4c22299b07cb6cdac1b1e55ea523098a4d745246c4fd7c",
+        "bytes": 477
+      },
+      "spectre-output/version.csh": {
+        "sha256": "850dd1a50e8eb1e9e65953b29f47f5994a8c9e5451ac3de23e80145370680976",
+        "bytes": 144
+      },
+      "spectre-output/version.json": {
+        "sha256": "003421e912990309eda445fcd67c18e2ba2330d0afe0748feedf3d1c48a70fe2",
+        "bytes": 679
+      },
+      "spectre-output/version.log": {
+        "sha256": "d0e6c83a98026a294bfc4b9754c4e294d322b60b1872a28e38f84caccbdf7f81",
+        "bytes": 31
+      },
+      "spectre-output/version.log.EXECUTION.json": {
+        "sha256": "07940b0da76f1a0d5bdf7eb566e84a93fce3d9be86f95799e7f7dc3ef5508974",
+        "bytes": 542
+      },
+      "spectre-operator.json": {
+        "sha256": "5b9f66d917c33c92f1d544c3042f32bde8d894673d127753d120440af0588453",
+        "bytes": 816
+      },
+      "spectre-operator.stdout": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "spectre-operator.stderr": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "spectre-profile.json": {
+        "sha256": "836c32d9ca8e6eb3264700f69e906943e4974e6f3a8e29bacb0a44e689f6ec8a",
+        "bytes": 519
+      },
+      "allocation.json": {
+        "sha256": "c686848c8bc567fa431f95cf87766cec0515dd6c8c12cc6beb2bb660b5d94f4f",
+        "bytes": 268
+      },
+      "plan.json": {
+        "sha256": "eb04b169eb403b77192a4793cbdf3297cb5722b3f7267662668e1113df1a146b",
+        "bytes": 2021
+      },
+      "input-manifest.json": {
+        "sha256": "7349091577d367ad79d5f12ab5e27e32aefd65c9765eb3c1f1a4c048ed6f8911",
+        "bytes": 2629
+      },
+      "check.py": {
+        "sha256": "cb65706f3c416499ee88de43f97e3cb3c2160047c3800630654cb97a960997a7",
+        "bytes": 9976
+      },
+      "normalize_psf.py": {
+        "sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8",
+        "bytes": 2609
+      },
+      "PREPARATION.json": {
+        "sha256": "68ae5a9b21479c7a7e734fcb956a604c5ad25f3e7453f46a15dc96f909525fcd",
+        "bytes": 4504
+      },
+      "inputs/initial-loop/SHA256SUMS": {
+        "sha256": "09c42d893dec07bfdbde0b25db98bc901a48455d3dcb13559639adcea11c9b3a",
+        "bytes": 315
+      },
+      "inputs/initial-loop/dut.va": {
+        "sha256": "ff6f07aa84f74b68028019216c2e72685004c5f310350e9a97b7e809ccaf8a69",
+        "bytes": 517
+      },
+      "inputs/initial-loop/manifest.json": {
+        "sha256": "0878ac3e630310ebc8d45055896e3133befa7b9f0818fadbca382b2ad3c8505e",
+        "bytes": 3106
+      },
+      "inputs/initial-loop/requested_settings.json": {
+        "sha256": "b079f23eb026d7611bda7423a6b79ea52408a6fd8228f40d14eb6d9aaf294014",
+        "bytes": 105
+      },
+      "inputs/initial-loop/tb.ahdlSimDB/437a2ac5b05dc2d14f37ea35d33ae8b3.initial_static_loop_N_2.ahdlcmi/Linux-64/GNUmakefile": {
+        "sha256": "2be84d8957adde43eb3703f8eb442e6a600ae74a3b71b6fd4ee9c6f00fcef0d6",
+        "bytes": 2122
+      },
+      "inputs/initial-loop/tb.ahdlSimDB/437a2ac5b05dc2d14f37ea35d33ae8b3.initial_static_loop_N_2.ahdlcmi/Linux-64/ahdlcmidevicelist": {
+        "sha256": "faedd51edf810a06b766b411426f3094aa9bbec20b8eaa1022c047ed20f4c024",
+        "bytes": 245
+      },
+      "inputs/initial-loop/tb.ahdlSimDB/437a2ac5b05dc2d14f37ea35d33ae8b3.initial_static_loop_N_2.ahdlcmi/Linux-64/ahdlcmidevicelist.out": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "inputs/initial-loop/tb.ahdlSimDB/437a2ac5b05dc2d14f37ea35d33ae8b3.initial_static_loop_N_2.ahdlcmi/Linux-64/devicelisttemp": {
+        "sha256": "faedd51edf810a06b766b411426f3094aa9bbec20b8eaa1022c047ed20f4c024",
+        "bytes": 245
+      },
+      "inputs/initial-loop/tb.ahdlSimDB/437a2ac5b05dc2d14f37ea35d33ae8b3.initial_static_loop_N_2.ahdlcmi/Linux-64/initial_static_loop_N_2.lst": {
+        "sha256": "faedd51edf810a06b766b411426f3094aa9bbec20b8eaa1022c047ed20f4c024",
+        "bytes": 245
+      },
+      "inputs/initial-loop/tb.ahdlSimDB/437a2ac5b05dc2d14f37ea35d33ae8b3.initial_static_loop_N_2.ahdlcmi/Linux-64/obj/optimize/5.0/libahdlcmi_initial_static_loop_N_2.so": {
+        "sha256": "f008eb5da1bf1b52d76b9fdf7fa7897a231c3566c1a7301e217393ffb7ef00e5",
+        "bytes": 96472
+      },
+      "inputs/initial-loop/tb.ahdlSimDB/437a2ac5b05dc2d14f37ea35d33ae8b3.initial_static_loop_N_2.ahdlcmi/Linux-64/sminfo": {
+        "sha256": "6ec7017c97f041cb504db1dcdd54719bbc05e38e60da11bf5464f4bd743f010c",
+        "bytes": 357
+      },
+      "inputs/initial-loop/tb.ahdlSimDB/437a2ac5b05dc2d14f37ea35d33ae8b3.initial_static_loop_N_2.ahdlcmi/ahdlcmi.out": {
+        "sha256": "2494ff7c90cb9198e8dab464ae16c1f58ef74f2d1635be0e1e05b912b71999c2",
+        "bytes": 13800
+      },
+      "inputs/initial-loop/tb.scs": {
+        "sha256": "0a325e2ec38f5c9caa4c22299b07cb6cdac1b1e55ea523098a4d745246c4fd7c",
+        "bytes": 477
+      },
+      "spectre-STARTED.json": {
+        "sha256": "71dabd8a28bc07cdfe847c436d96b4147e913f7057d5bf600b57650bbab2c91e",
+        "bytes": 464
+      },
+      "spectre-COMPLETED.json": {
+        "sha256": "5b9f66d917c33c92f1d544c3042f32bde8d894673d127753d120440af0588453",
+        "bytes": 816
+      },
+      "spectre-LOCK-RELEASED.json": {
+        "sha256": "b2076410c25b6b83e7a0ddb062f138c7b18ddc35b0e8d67eb922a6e729d860e9",
+        "bytes": 132
+      },
+      "remote-spectre-control.py": {
+        "sha256": "845f178148d86b64b3a07e6ae1e99347586aabbc96e83a3cdf189cc8d3309343",
+        "bytes": 4035
+      }
+    },
+    "helper_sha256": "f1a143aa71dfea17035ee6d8f8b9f0c0aa404771be8fc74fc3999e9deaa4536d",
+    "helper_revision": "e66a208a75039df01489c7aa893a08944c4504ae",
+    "psf_adapter_sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8"
+  },
+  "source_sha256": "ff6f07aa84f74b68028019216c2e72685004c5f310350e9a97b7e809ccaf8a69",
+  "solver_controls": {
+    "stop": 1,
+    "max_step": 0.025,
+    "vabstol": 1e-10,
+    "reltol": 0
+  },
+  "frozen_voltage_budget": {
+    "absolute": 1e-07,
+    "relative": 1e-05
+  },
+  "readback_revision": "5e795852d18548a5389ffe2332fdb5708d4f8796",
+  "readback_sha256": "875be764ac89c6f6d6e219871e65ef43fe14b10d664ae2ecd131b65f46568da8",
+  "settings_reanalysis_status": "P",
+  "settings_reanalysis": {
+    "effective": {
+      "stop_s": {
+        "value": 1.0,
+        "line": 136,
+        "raw": "    stop = 1 s",
+        "scope": "transient:tran"
+      },
+      "maxstep_s": {
+        "value": 0.025,
+        "line": 138,
+        "raw": "    maxstep = 25 ms",
+        "scope": "transient:tran"
+      },
+      "reltol": {
+        "value": 1e-06,
+        "line": 142,
+        "raw": "    reltol = 1e-06",
+        "scope": "transient:tran"
+      },
+      "vabstol_V": {
+        "value": 1.0000000000000001e-07,
+        "line": 143,
+        "raw": "    abstol(V) = 100 nV",
+        "scope": "transient:tran"
+      },
+      "iabstol_A": {
+        "value": 1e-12,
+        "line": 144,
+        "raw": "    abstol(I) = 1 pA",
+        "scope": "transient:tran"
+      },
+      "method": {
+        "value": "traponly",
+        "line": 149,
+        "raw": "    method = traponly",
+        "scope": "transient:tran"
+      }
+    },
+    "global_user": {
+      "vabstol_V": {
+        "value": 1e-07,
+        "line": 94,
+        "raw": "            vabstol = 1e-07",
+        "scope": "global_user"
+      },
+      "iabstol_A": {
+        "value": 1e-12,
+        "line": 95,
+        "raw": "            iabstol = 1e-12",
+        "scope": "global_user"
+      },
+      "reltol": {
+        "value": 1e-05,
+        "line": 97,
+        "raw": "             reltol = 1e-05",
+        "scope": "global_user"
+      }
+    },
+    "psf_effective": {
+      "stop_s": {
+        "value": 1.0,
+        "line": 14,
+        "raw": "\"stop\" 1.00000",
+        "scope": "psf_transient:tran"
+      },
+      "maxstep_s": {
+        "value": 0.025,
+        "line": 17,
+        "raw": "\"maxstep\" 0.0250000",
+        "scope": "psf_transient:tran"
+      },
+      "reltol": {
+        "value": 1e-06,
+        "line": 21,
+        "raw": "\"reltol\" 1.00000e-06",
+        "scope": "psf_transient:tran"
+      },
+      "vabstol_V": {
+        "value": 1e-07,
+        "line": 22,
+        "raw": "\"abstol(V)\" 1.00000e-07",
+        "scope": "psf_transient:tran"
+      },
+      "iabstol_A": {
+        "value": 1e-12,
+        "line": 23,
+        "raw": "\"abstol(I)\" 1.00000e-12",
+        "scope": "psf_transient:tran"
+      },
+      "method": {
+        "value": "traponly",
+        "line": 28,
+        "raw": "\"method\" \"traponly\"",
+        "scope": "psf_transient:tran"
+      }
+    },
+    "psf_relative_metadata": {
+      "tolerance.relative": {
+        "value": 1e-05,
+        "line": 11,
+        "raw": "\"tolerance.relative\" 1.00000e-05",
+        "scope": "psf_header"
+      }
+    }
+  },
+  "preserved_original_result": {
+    "condition": "initial-loop",
+    "source_sha256": "ff6f07aa84f74b68028019216c2e72685004c5f310350e9a97b7e809ccaf8a69",
+    "deck_sha256": "0a325e2ec38f5c9caa4c22299b07cb6cdac1b1e55ea523098a4d745246c4fd7c",
+    "stages": [
+      {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 25.837658317759633,
+        "completed_utc": "2026-10-08T13:48:26Z",
+        "log": "simulate.log",
+        "log_sha256": "d403929a9571241eb01f3bc0d68c18a0f52a4e6a8ebde5af1b8b50fe05bb44d7",
+        "stage": "simulate",
+        "resource_caps": {
+          "memory_limit_bytes": 4294967296,
+          "file_limit_bytes": 33554432,
+          "threads": 1
+        }
+      }
+    ],
+    "status": "waveform_available",
+    "waveform": "psf/tran.tran.tran",
+    "waveform_sha256": "7e58059de57827922f71826121addfa611e200d06830b5c6027e367088243fa1",
+    "abort_batch": false,
+    "effective_settings": {
+      "status": "I",
+      "reason": "wrong dimension for time: 25 ms"
+    }
+  },
+  "raw_availability": "local-only",
+  "collection_workspace_relative": "current/runs/issue-closure-20261008/initial-loop-reference-v2/collected/spectre",
+  "raw_identities": {
+    "spectre-output/runs/initial-loop/psf/tran.tran.tran": {
+      "sha256": "7e58059de57827922f71826121addfa611e200d06830b5c6027e367088243fa1",
+      "bytes": 28127
+    },
+    "spectre-output/runs/initial-loop/spectre.log": {
+      "sha256": "0ba1ab9e01b292e88806553e03b92ddcf0da093636db845d52dbf974daa9c46d",
+      "bytes": 8211
+    },
+    "spectre-output/runs/initial-loop/RESULT.json": {
+      "sha256": "0760cac60057888c5ae77a79c7d2f88017d3c86de731ce5b7ea27d2030f6aa83",
+      "bytes": 1323
+    },
+    "spectre-output/runs/initial-loop/tb.scs": {
+      "sha256": "0a325e2ec38f5c9caa4c22299b07cb6cdac1b1e55ea523098a4d745246c4fd7c",
+      "bytes": 477
+    },
+    "spectre-output/runs/initial-loop/dut.va": {
+      "sha256": "ff6f07aa84f74b68028019216c2e72685004c5f310350e9a97b7e809ccaf8a69",
+      "bytes": 517
+    },
+    "spectre-output/runs/initial-loop/manifest.json": {
+      "sha256": "0878ac3e630310ebc8d45055896e3133befa7b9f0818fadbca382b2ad3c8505e",
+      "bytes": 3106
+    },
+    "spectre-output/runs/initial-loop/simulate.json": {
+      "sha256": "2428d6cbd0aeb23c0b8b100050f04523410ee87f1dbf843a9d016cd20a0fe899",
+      "bytes": 677
+    },
+    "spectre-output/TOOL_IDENTITY.json": {
+      "sha256": "550cb7ca0b4fa2c31bf410eff3354a36914dea62bd2d26b8f37092922176a290",
+      "bytes": 1400
+    },
+    "spectre-output/FILE_MANIFEST.json": {
+      "sha256": "fb9a1c00e94ed94b0f46c8552838a8a07c2ce4d39e490bf20344f44008ba58de",
+      "bytes": 6605
+    }
+  },
+  "spectre": {
+    "version": "sub-version  21.1.0.509.isr12",
+    "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "setup_sha256": [
+      "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+      "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+    ],
+    "receipt": {
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "prlimit",
+        "--as=4294967296",
+        "--fsize=33554432",
+        "--",
+        "/bin/csh",
+        "-f",
+        "run.csh"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "status": "completed",
+      "cleanup": {
+        "signals": [
+          "SIGTERM",
+          "SIGKILL"
+        ],
+        "errors": [],
+        "complete": true
+      },
+      "elapsed_seconds": 25.837658317759633,
+      "completed_utc": "2026-10-08T13:48:26Z",
+      "log": "simulate.log",
+      "log_sha256": "d403929a9571241eb01f3bc0d68c18a0f52a4e6a8ebde5af1b8b50fe05bb44d7",
+      "stage": "simulate",
+      "resource_caps": {
+        "memory_limit_bytes": 4294967296,
+        "file_limit_bytes": 33554432,
+        "threads": 1
+      }
+    }
+  },
+  "EVAS": {
+    "package": {
+      "name": "evas-rebuild",
+      "version": "0.14.0",
+      "metadata_source": "source_pyproject",
+      "build_revision": null
+    },
+    "compatibility": {
+      "ir_schema_version": 18,
+      "request_protocol_version": null,
+      "status": "ir_matched"
+    },
+    "kernel_reported": {
+      "build_revision": null,
+      "identity_version": 1,
+      "ir_schema_version": 18,
+      "name": "evas-kernel",
+      "platform": {
+        "arch": "aarch64",
+        "os": "macos"
+      },
+      "request_protocol_version": null,
+      "version": "0.14.0"
+    },
+    "kernel_sha256": "eefdcca9820d107a3d4e9dcd4cfd7ee59a7d105a41328f9cb11dfc90f09b06da",
+    "production_source_closure": {
+      "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/src/evas/__main__.py": "f98567eedc0052dddf00fd13f5380e996409f72aed9fbf09702d5bf173fae1d5",
+      "evas/src/evas/array_elaboration.py": "4faf4543a735ad19c89bbbc760d39f6860089d854b7f24922edaa390cf20df0b",
+      "evas/src/evas/diagnostics.py": "a94641c77c61b71e7c1eeb9d36baa9c01b85adfe598472632841ed4a90744a5f",
+      "evas/src/evas/elaboration.py": "28eec983a7c83475ab3b2aab7f552f6af266837a5ae9898167b03093d26df9a6",
+      "evas/src/evas/errors.py": "974acb0d7b262a7be9a2d520c09c062814238318f717383bf471ce731b7f5d09",
+      "evas/src/evas/frontend.py": "2552416e633542f0770c1f7609ac4778aa8b841db5c0e36bd68a9904f682927c",
+      "evas/src/evas/hierarchy.py": "c277bc21cbe987f7cb427a2955b6b20588d5c42ae09bbc62853dab7bdba4138f",
+      "evas/src/evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+      "evas/src/evas/instance_compiler.py": "eb041afc257ecdcabe13a7989dd44400b05be789aa95ea4465cdba62d509a6e1",
+      "evas/src/evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+      "evas/src/evas/ir.py": "ec167d9f02ddde4bff1dbf7b24b903d4a178822cfc0a2749638e753b1398f8cf",
+      "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+      "evas/src/evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+      "evas/src/evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+      "evas/src/evas/lowering.py": "3df0c3f873285e45aa9de85863ca7d42b4c1cffc205a24164700b953b1874c71",
+      "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+      "evas/src/evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+      "evas/src/evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+      "evas/src/evas/node_elaboration.py": "2b68adb511d792c349e40f98fa71933402f1569467c8e2cb6e6e9125773e7658",
+      "evas/src/evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+      "evas/src/evas/preprocessor.py": "68c7c9d6df5a1f14ea33b8bbaebf79863b64110381d8bad910b98f281e2e2ffe",
+      "evas/src/evas/protocol.py": "82302d948c4c0eff0b88318eb804344a1f60d3dd4798d2c2c561149b6a188607",
+      "evas/src/evas/query.py": "6222b10aa9d889e93fa8b65059b5fb31799f7269770ebc72167c7c67e4a0b92b",
+      "evas/src/evas/results.py": "d085a8a2b57aa2ae48b6fc69e47825b02326ca8e05ff56df61bc791b7771c0d1",
+      "evas/src/evas/runtime.py": "b648c721efcb1d715cb871c644ff60b600229d9489c988edb7c4e291bbba1026",
+      "evas/src/evas/scs.py": "d95097aa5e62d2fe9d6a3c6a6035ca981f64b2aebe7fce2ca58bf12b5a95b281",
+      "evas/src/evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
+      "evas/src/evas/syntax.py": "cdc7198d3c52a1d0c5a48929e8e9caebaa3ea7a69d7170e34ba2d73f7d356111",
+      "evas/rust_core/benches/static_solver.rs": "cb7e8f046aa8cde417b94e6e52bf3cd59c714dba19de48ab2c0050a70cefaaa8",
+      "evas/rust_core/benches/transient_solver.rs": "d4521e1df0a5e4ae6a25af65ee63d65884f5fc5d16ddc8a6ede08dc79f67e642",
+      "evas/rust_core/fuzz/fuzz_targets/parse_request.rs": "ab9d99942c6e7c7079ad3d78646ea2657277997b67686208d9398cf5548987d5",
+      "evas/rust_core/fuzz/fuzz_targets/run.rs": "6dba9b211200fce17a36129ecbebf4332b50964abd63b829893a8940d0ac33bb",
+      "evas/rust_core/ir/src/lib.rs": "9216242d4eab4a59cab8a40fc11f22c5aaf2a190fe8bf5bfa764429ad26abc49",
+      "evas/rust_core/ir/tests/transport.rs": "4199c2369bf3ed486612d8bbe1fbc46ee64e75409eb834abc6e15cfa74078cf1",
+      "evas/rust_core/src/absdelay.rs": "e0f6144590856b3a95d03a59af58e9032309fa1e316a41c063a40ec9f73109c7",
+      "evas/rust_core/src/affine_bounds.rs": "3695b89a725216f3a3a555dd353cf5c8c81f82a4696aca0a0cb7436622174cb0",
+      "evas/rust_core/src/analog.rs": "3838af457af4b8b44c29401796acee2574733aa7ef3811f40b38883621cf0e68",
+      "evas/rust_core/src/assembly.rs": "57b93621d4940a7974a0132329c87e43a1e3ff348fe1e16d2d784e7708b9ef62",
+      "evas/rust_core/src/batch.rs": "a41166d5cd9a6fab300d48197bc4093145885d19044b398e48095fdb35473688",
+      "evas/rust_core/src/continuous.rs": "9f93bbbf1537a09adaef261c56efea9cff4d04572cbbc512c47b2a91534654ed",
+      "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+      "evas/rust_core/src/continuous_history.rs": "d62a3daa15da4e0ea396e90b7b3f1d7e86d0eba85f3b4f53aa23659c1273fe55",
+      "evas/rust_core/src/continuous_initialization.rs": "5145a36a517b9ba3ace0fb6241ebbd615fef6004b50aeb5dc99d76ff295874a8",
+      "evas/rust_core/src/continuous_runtime.rs": "331ea3f4ff5027ff14155287537b0231a7e6a818e6fd6885dfc470151bdf9ccd",
+      "evas/rust_core/src/diagnostics.rs": "0a5deae544550e34379582625632cf5c45f21c7f8d1f60178e9cf26ae2a4d65f",
+      "evas/rust_core/src/dynamic_roots.rs": "1e9370915346a19f61b08368a36fd4b8aa55ea20099ebf8f4f497b731277c3ac",
+      "evas/rust_core/src/event_accuracy.rs": "d2b621cb23080ee219b5272fc489010dfc6a4ba15930fd8e6d94f0428e253dd6",
+      "evas/rust_core/src/event_conditions.rs": "8b0c00b449cf1b27326972a95b97a5f5c911b4f56cd6d30dec7f8905312ab30f",
+      "evas/rust_core/src/events.rs": "afde14fb199224d58fe91926503aa13c49a9b4a2ccdfa0bf32b723ab92d65ef5",
+      "evas/rust_core/src/expression.rs": "0b25b767f67598227eb3b5957ce208b1262fc87d096f9775f10bda1a6c26c90f",
+      "evas/rust_core/src/guard_trajectory.rs": "a36c31e9724504931b1e037a69a24762136adcf8a7c2c71f96bb8ebc3144b2a7",
+      "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+      "evas/rust_core/src/idtmod.rs": "6be25e77695a85ed80e2a0faa2f780215a039258ddd8c9efd9a600bac14c5bfb",
+      "evas/rust_core/src/implicit_dynamics.rs": "5a1b5dfb3f182b071c58f341281b7ac35204abecf5691838509cbb78ac0172ed",
+      "evas/rust_core/src/initialization.rs": "7a0bf9345d0cb264ea766c9ff3c801d781948f1683474eb1e1a53f6abd1af365",
+      "evas/rust_core/src/interval.rs": "89a83ce96dbf6cdc217a046c9885ca0cf580c6e6f932c36f0195120d49e53f56",
+      "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
+      "evas/rust_core/src/ir.rs": "cc687fdd3d78e908644537aa8194d3a3ccb3dcb5b88c11a78d7b3e640ad97ea0",
+      "evas/rust_core/src/laplace.rs": "4efcad4da1934849c90985c908aaf750f5bd823392deae3ad555515f8bf71a23",
+      "evas/rust_core/src/lib.rs": "7abe5a48737d991a17fb693df44e2957d66f12d68ac0560149f0a99fd13ee73a",
+      "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+      "evas/rust_core/src/linear/dense.rs": "00a1d9e1a9c5f933f765dd586ab9a8982073d270fed73ed7e602af858e732cad",
+      "evas/rust_core/src/linear/properties.rs": "d1a8b5ec069fef4f621b99290b532f7563cb8f55a1ba2178a77877f60192ab7f",
+      "evas/rust_core/src/linear/refinement.rs": "8476ad2ea3f3698e3c4552f8ff785c00ff878caab584b157dbb80b9c282f32a8",
+      "evas/rust_core/src/linear/sparse.rs": "3914adce2368b027027c06240f160864af0f53de934c0b3285515114fe7aa869",
+      "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+      "evas/rust_core/src/linear.rs": "e0280cfcaaebd2449ab5e4474daf5cd19e6a9fbda5db53e14e5229fc81a4eb36",
+      "evas/rust_core/src/main.rs": "70626c73fa421340afcc53c025a220720b208657273ba3f5e20bc1e4c6e01c3c",
+      "evas/rust_core/src/nonlinear/continuation.rs": "6d0aabe1bb6563a32d4e920fabdefde881777a54b8dc2b4658de432347f6448a",
+      "evas/rust_core/src/nonlinear.rs": "6d7b269023f4b65c4542c5a77a7e5386c061c1c4cd8eb9623d8e1aeef2ec30af",
+      "evas/rust_core/src/nonlinear_dynamics.rs": "dfa6753cd77197cbf0225b24169f652eda1bfb514b1dd4527ee3a80b7137fc8a",
+      "evas/rust_core/src/operators.rs": "7a474615d4fc4d7760016178fafb303a0a5a3595f784b4fa5c48b468b1590fc0",
+      "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+      "evas/rust_core/src/pwl.rs": "9eb6a7cc54f86eb91bdf946fe60955b01e14bcd27be2b0683e781c473dfa2bfa",
+      "evas/rust_core/src/reset_dependencies.rs": "d2adaba2e28d70511e0977c223ea7922b627c832e633b7f94360c951a6f0e3fa",
+      "evas/rust_core/src/schedule.rs": "f04c5e10b007b01bb016582a2175ab6ad48e2c6b8588e2023435c2b64f3d6281",
+      "evas/rust_core/src/settlement.rs": "48584be254805a3c0e990281ca00367efc988fb59351c855930960bd82793687",
+      "evas/rust_core/src/settlement_bounds.rs": "580dcd5fe6e9777bed0fcb04a8fd4bef98f5974905ec1c6bf77c26ca2f56d274",
+      "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+      "evas/rust_core/src/solver.rs": "fbbef1378759e01433d2e3bde7106f61f001db505ede5128198a6dcb3e808446",
+      "evas/rust_core/src/solver_cache_tests.rs": "727acd4fc9084bb6e546a8aa70e2f1e5bd476d27265f5198c5cdd08b0a7fd3fa",
+      "evas/rust_core/src/state_space.rs": "c7e8ff82302cb87c6ba150e5def9d1cf9eba15e23657e2f2686eb067ce4ef74c",
+      "evas/rust_core/src/transient.rs": "8e59ceda03169d883ebeeaa55f56a80c6a80dbdad322ce911d51a95adc768f13",
+      "evas/rust_core/src/transient_condition_tests.rs": "51b89c0648fc1d92282c6d6c46dbeced83ad472ddbf2b8ad64e953d3c7befa25",
+      "evas/rust_core/src/transient_history_calendar.rs": "c54256bb4d0febf2d41f9a6422d69bf3968258337d8dbb5f3d3e18e82cf786a5",
+      "evas/rust_core/src/transient_idt_tests.rs": "ba2c353e867aa4b6fbd8e27f68ad1407536e525712ddab96ebf998434e2755ad",
+      "evas/rust_core/src/transient_lifecycle_tests.rs": "954487d2713727fcd0a73a30e97aa56f7f0587ccdb34beeeb073f26855941f48",
+      "evas/rust_core/src/transient_window_tests.rs": "987d1bac508f0e9c780e1b8ac109bec1b077c85a7722a4d084be64e31565103e",
+      "evas/rust_core/src/transition.rs": "1d1c3e709e983a53d0616d0fda1ff2183d2a2dc33b0b65e0aff122162ba72a3c",
+      "evas/pyproject.toml": "1c23fa1d684fc070170d6694bdadeb96b488fd46ff97d198d9746d4a8cb6d345",
+      "evas/rust_core/Cargo.toml": "37da5d1a66850a76473e9dff92adddeb579240018d3a6fe4846b94a9fb1d5e44",
+      "evas/rust_core/Cargo.lock": "4e81bf2d219ac18b0269a48e03c00b0f05b9f93546e65e8bb8fb19ff9bd3f1b2"
+    }
+  },
+  "native_provenance": {
+    "parsed_saved_rows": 81,
+    "accepted_steps": 80,
+    "count_matches_steps_plus_initial": true,
+    "evidence": "Executed psfascii command, save 9 nodes, strobeoutput=all, skipdc=no, native q observer values and accepted-step count.",
+    "qualification_limit": "Count/deck/format do not certify arbitrary hidden callback stages, exact endpoint or exact-real time serialization."
+  },
+  "native_independent": {
+    "rows": 81,
+    "checked_values": 729,
+    "formula_and_stage_status": "P",
+    "failures": [],
+    "max_error": {
+      "ratio": 2.120569524386549e-11,
+      "absolute": 7e-15,
+      "row": 54,
+      "node": "y2"
+    },
+    "stage_counts": {
+      "first": {
+        "0": 55,
+        "1": 26,
+        "None": 0
+      },
+      "second": {
+        "0": 55,
+        "1": 26,
+        "None": 0
+      }
+    },
+    "event_brackets": {
+      "first": [
+        {
+          "before_row": 26,
+          "after_row": 27,
+          "before_token": "0.249237060546875",
+          "after_token": "0.25",
+          "intersects_frozen_window": true,
+          "limit": "Native change bracket, not a callback-time certificate."
+        },
+        {
+          "before_row": 52,
+          "after_row": 53,
+          "before_token": "0.49923706054699807",
+          "after_token": "0.50000000000050004",
+          "intersects_frozen_window": true,
+          "limit": "Native change bracket, not a callback-time certificate."
+        }
+      ],
+      "second": [
+        {
+          "before_row": 26,
+          "after_row": 27,
+          "before_token": "0.249237060546875",
+          "after_token": "0.25",
+          "intersects_frozen_window": true,
+          "limit": "Native change bracket, not a callback-time certificate."
+        },
+        {
+          "before_row": 52,
+          "after_row": 53,
+          "before_token": "0.49923706054699807",
+          "after_token": "0.50000000000050004",
+          "intersects_frozen_window": true,
+          "limit": "Native change bracket, not a callback-time certificate."
+        }
+      ]
+    },
+    "required_points": [
+      {
+        "requested": "0.0",
+        "exact_decimal_rows": [
+          0
+        ],
+        "nearest_row": 0,
+        "nearest_time_token": "0",
+        "decimal_offset": "0.0",
+        "interpolated": false
+      },
+      {
+        "requested": "0.125",
+        "exact_decimal_rows": [
+          13
+        ],
+        "nearest_row": 13,
+        "nearest_time_token": "0.125",
+        "decimal_offset": "0.000",
+        "interpolated": false
+      },
+      {
+        "requested": "0.25",
+        "exact_decimal_rows": [
+          27
+        ],
+        "nearest_row": 27,
+        "nearest_time_token": "0.25",
+        "decimal_offset": "0.00",
+        "interpolated": false
+      },
+      {
+        "requested": "0.375",
+        "exact_decimal_rows": [
+          39
+        ],
+        "nearest_row": 39,
+        "nearest_time_token": "0.375",
+        "decimal_offset": "0.000",
+        "interpolated": false
+      },
+      {
+        "requested": "0.5",
+        "exact_decimal_rows": [],
+        "nearest_row": 53,
+        "nearest_time_token": "0.50000000000050004",
+        "decimal_offset": "5.0004E-13",
+        "interpolated": false
+      },
+      {
+        "requested": "0.625",
+        "exact_decimal_rows": [
+          65
+        ],
+        "nearest_row": 65,
+        "nearest_time_token": "0.625",
+        "decimal_offset": "0.000",
+        "interpolated": false
+      },
+      {
+        "requested": "0.75",
+        "exact_decimal_rows": [],
+        "nearest_row": 70,
+        "nearest_time_token": "0.75000000000000011",
+        "decimal_offset": "1.1E-16",
+        "interpolated": false
+      },
+      {
+        "requested": "0.875",
+        "exact_decimal_rows": [],
+        "nearest_row": 75,
+        "nearest_time_token": "0.87500000000000022",
+        "decimal_offset": "2.2E-16",
+        "interpolated": false
+      },
+      {
+        "requested": "1.0",
+        "exact_decimal_rows": [],
+        "nearest_row": 80,
+        "nearest_time_token": "1.0000000000000002",
+        "decimal_offset": "2E-16",
+        "interpolated": false
+      }
+    ],
+    "initial_status": "P",
+    "exact_stop_status": "I",
+    "exact_required_point_count": 5,
+    "required_point_status": "I",
+    "strict_observation_status": "I"
+  },
+  "EVAS_canonical_independent": {
+    "rows": 9,
+    "checked_values": 81,
+    "formula_and_stage_status": "P",
+    "failures": [],
+    "max_error": {
+      "ratio": 0.0,
+      "absolute": 0.0,
+      "row": null,
+      "node": null
+    },
+    "stage_counts": {
+      "first": {
+        "0": 7,
+        "1": 2,
+        "None": 0
+      },
+      "second": {
+        "0": 7,
+        "1": 2,
+        "None": 0
+      }
+    },
+    "event_brackets": {
+      "first": [
+        {
+          "before_row": 1,
+          "after_row": 2,
+          "before_token": "0.125",
+          "after_token": "0.25",
+          "intersects_frozen_window": true,
+          "limit": "Native change bracket, not a callback-time certificate."
+        },
+        {
+          "before_row": 3,
+          "after_row": 4,
+          "before_token": "0.375",
+          "after_token": "0.5",
+          "intersects_frozen_window": true,
+          "limit": "Native change bracket, not a callback-time certificate."
+        }
+      ],
+      "second": [
+        {
+          "before_row": 1,
+          "after_row": 2,
+          "before_token": "0.125",
+          "after_token": "0.25",
+          "intersects_frozen_window": true,
+          "limit": "Native change bracket, not a callback-time certificate."
+        },
+        {
+          "before_row": 3,
+          "after_row": 4,
+          "before_token": "0.375",
+          "after_token": "0.5",
+          "intersects_frozen_window": true,
+          "limit": "Native change bracket, not a callback-time certificate."
+        }
+      ]
+    },
+    "required_points": [
+      {
+        "requested": "0.0",
+        "exact_decimal_rows": [
+          0
+        ],
+        "nearest_row": 0,
+        "nearest_time_token": "0",
+        "decimal_offset": "0.0",
+        "interpolated": false
+      },
+      {
+        "requested": "0.125",
+        "exact_decimal_rows": [
+          1
+        ],
+        "nearest_row": 1,
+        "nearest_time_token": "0.125",
+        "decimal_offset": "0.000",
+        "interpolated": false
+      },
+      {
+        "requested": "0.25",
+        "exact_decimal_rows": [
+          2
+        ],
+        "nearest_row": 2,
+        "nearest_time_token": "0.25",
+        "decimal_offset": "0.00",
+        "interpolated": false
+      },
+      {
+        "requested": "0.375",
+        "exact_decimal_rows": [
+          3
+        ],
+        "nearest_row": 3,
+        "nearest_time_token": "0.375",
+        "decimal_offset": "0.000",
+        "interpolated": false
+      },
+      {
+        "requested": "0.5",
+        "exact_decimal_rows": [
+          4
+        ],
+        "nearest_row": 4,
+        "nearest_time_token": "0.5",
+        "decimal_offset": "0.0",
+        "interpolated": false
+      },
+      {
+        "requested": "0.625",
+        "exact_decimal_rows": [
+          5
+        ],
+        "nearest_row": 5,
+        "nearest_time_token": "0.625",
+        "decimal_offset": "0.000",
+        "interpolated": false
+      },
+      {
+        "requested": "0.75",
+        "exact_decimal_rows": [
+          6
+        ],
+        "nearest_row": 6,
+        "nearest_time_token": "0.75",
+        "decimal_offset": "0.00",
+        "interpolated": false
+      },
+      {
+        "requested": "0.875",
+        "exact_decimal_rows": [
+          7
+        ],
+        "nearest_row": 7,
+        "nearest_time_token": "0.875",
+        "decimal_offset": "0.000",
+        "interpolated": false
+      },
+      {
+        "requested": "1.0",
+        "exact_decimal_rows": [
+          8
+        ],
+        "nearest_row": 8,
+        "nearest_time_token": "1",
+        "decimal_offset": "0.0",
+        "interpolated": false
+      }
+    ],
+    "initial_status": "P",
+    "exact_stop_status": "P",
+    "exact_required_point_count": 9,
+    "required_point_status": "P",
+    "strict_observation_status": "P"
+  },
+  "EVAS_native_time_independent": {
+    "rows": 81,
+    "checked_values": 729,
+    "formula_and_stage_status": "P",
+    "failures": [],
+    "max_error": {
+      "ratio": 0.0,
+      "absolute": 0.0,
+      "row": null,
+      "node": null
+    },
+    "stage_counts": {
+      "first": {
+        "0": 55,
+        "1": 26,
+        "None": 0
+      },
+      "second": {
+        "0": 55,
+        "1": 26,
+        "None": 0
+      }
+    },
+    "event_brackets": {
+      "first": [
+        {
+          "before_row": 26,
+          "after_row": 27,
+          "before_token": "0.249237060546875",
+          "after_token": "0.25",
+          "intersects_frozen_window": true,
+          "limit": "Native change bracket, not a callback-time certificate."
+        },
+        {
+          "before_row": 52,
+          "after_row": 53,
+          "before_token": "0.49923706054699807",
+          "after_token": "0.5000000000005",
+          "intersects_frozen_window": true,
+          "limit": "Native change bracket, not a callback-time certificate."
+        }
+      ],
+      "second": [
+        {
+          "before_row": 26,
+          "after_row": 27,
+          "before_token": "0.249237060546875",
+          "after_token": "0.25",
+          "intersects_frozen_window": true,
+          "limit": "Native change bracket, not a callback-time certificate."
+        },
+        {
+          "before_row": 52,
+          "after_row": 53,
+          "before_token": "0.49923706054699807",
+          "after_token": "0.5000000000005",
+          "intersects_frozen_window": true,
+          "limit": "Native change bracket, not a callback-time certificate."
+        }
+      ]
+    },
+    "required_points": [
+      {
+        "requested": "0.0",
+        "exact_decimal_rows": [
+          0
+        ],
+        "nearest_row": 0,
+        "nearest_time_token": "0.0",
+        "decimal_offset": "0.0",
+        "interpolated": false
+      },
+      {
+        "requested": "0.125",
+        "exact_decimal_rows": [
+          13
+        ],
+        "nearest_row": 13,
+        "nearest_time_token": "0.125",
+        "decimal_offset": "0.000",
+        "interpolated": false
+      },
+      {
+        "requested": "0.25",
+        "exact_decimal_rows": [
+          27
+        ],
+        "nearest_row": 27,
+        "nearest_time_token": "0.25",
+        "decimal_offset": "0.00",
+        "interpolated": false
+      },
+      {
+        "requested": "0.375",
+        "exact_decimal_rows": [
+          39
+        ],
+        "nearest_row": 39,
+        "nearest_time_token": "0.375",
+        "decimal_offset": "0.000",
+        "interpolated": false
+      },
+      {
+        "requested": "0.5",
+        "exact_decimal_rows": [],
+        "nearest_row": 53,
+        "nearest_time_token": "0.5000000000005",
+        "decimal_offset": "5E-13",
+        "interpolated": false
+      },
+      {
+        "requested": "0.625",
+        "exact_decimal_rows": [
+          65
+        ],
+        "nearest_row": 65,
+        "nearest_time_token": "0.625",
+        "decimal_offset": "0.000",
+        "interpolated": false
+      },
+      {
+        "requested": "0.75",
+        "exact_decimal_rows": [],
+        "nearest_row": 70,
+        "nearest_time_token": "0.7500000000000001",
+        "decimal_offset": "1E-16",
+        "interpolated": false
+      },
+      {
+        "requested": "0.875",
+        "exact_decimal_rows": [],
+        "nearest_row": 75,
+        "nearest_time_token": "0.8750000000000002",
+        "decimal_offset": "2E-16",
+        "interpolated": false
+      },
+      {
+        "requested": "1.0",
+        "exact_decimal_rows": [],
+        "nearest_row": 80,
+        "nearest_time_token": "1.0000000000000002",
+        "decimal_offset": "2E-16",
+        "interpolated": false
+      }
+    ],
+    "initial_status": "P",
+    "exact_stop_status": "I",
+    "exact_required_point_count": 5,
+    "required_point_status": "I",
+    "strict_observation_status": "I"
+  },
+  "original_stop_native_pair": {
+    "request_stop": 1,
+    "native_rows": 80,
+    "pair": {
+      "queried_native_rows": 80,
+      "same_stage_values_compared": 720,
+      "maximum_pair_ratio": 2.120569524386549e-11,
+      "phase_differences": [],
+      "failures": [],
+      "voltage_status": "P",
+      "phase_status": "P",
+      "strict_phase_status": "P"
+    },
+    "excluded_terminal_rows": 1,
+    "exact_stop_status": "I"
+  },
+  "all_native_pair": {
+    "queried_native_rows": 81,
+    "same_stage_values_compared": 729,
+    "maximum_pair_ratio": 2.120569524386549e-11,
+    "phase_differences": [],
+    "failures": [],
+    "voltage_status": "P",
+    "phase_status": "P",
+    "strict_phase_status": "P"
+  },
+  "all_native_pair_request": "supplemental stop+1ULP, not original canonical request",
+  "canonical_grid_invariance": {
+    "common_canonical_voltages_bitwise_equal": true,
+    "sparse_common_voltages_bitwise_equal": true,
+    "common_canonical_states_equal": true,
+    "event_records_equal": true,
+    "output_counts": [
+      3,
+      9,
+      84
+    ],
+    "accepted_steps": [
+      41,
+      41,
+      83
+    ],
+    "discarded_trials": [
+      2,
+      0,
+      0
+    ]
+  },
+  "supplemental_terminal_extension": {
+    "canonical_stop": 1,
+    "supplemental_stop": 1.0000000000000002,
+    "input": "Original PWL unchanged through t=1; hold last value over the extra one-ULP terminal interval.",
+    "purpose": "Query every exported native timestamp; not evidence of exact canonical-stop serialization."
+  },
+  "analysis_files": {
+    "all-native-supplemental-request.json": {
+      "sha256": "1b402dffbfd2139159e11e2762322f177085e750151e3358c100c38f09c3e5e8",
+      "bytes": 14114
+    },
+    "all-native-supplemental-response.json": {
+      "sha256": "7d96d0f4db63be15dcfca1414765d94a06ef2d908fb7bb9f2447b92bfae8c155",
+      "bytes": 30990
+    },
+    "canonical-request.json": {
+      "sha256": "19827bb6cce9851ab81aad1777fe34b8443323317480a92d1b65d8df5bd02065",
+      "bytes": 12191
+    },
+    "canonical-response.json": {
+      "sha256": "8e44a0e29533b101c669cfba323c392b2c308553d0ffdc1098b9062df2a21aa2",
+      "bytes": 4911
+    },
+    "dense-request.json": {
+      "sha256": "02a8773937d894d3837a0c0fa6c059f9dae09f9322aa6b65a7ffe924c1d073f9",
+      "bytes": 14051
+    },
+    "dense-response.json": {
+      "sha256": "5b913e340f16399455ea80da12167a1a33e952d5bfceb5532261ad67a6959db9",
+      "bytes": 31974
+    },
+    "native-tokens.json": {
+      "sha256": "37fbd56ff4c0cbd9873178af988edf1b9e6c2be158fe9204ebc272a84202fb10",
+      "bytes": 20451
+    },
+    "settings-readback-pr109.json": {
+      "sha256": "5367fd49fb45c7b46b6321562faeabd71bbaba78ffa8c0596062fe22a3d032e3",
+      "bytes": 2334
+    },
+    "sparse-request.json": {
+      "sha256": "de8e7e468257435737fb77dcaab613cd11c88d1f9ee14196f261075c3f959478",
+      "bytes": 12117
+    },
+    "sparse-response.json": {
+      "sha256": "dc628bab416c2144a7561c7556005113ef392ed32b003fc448d2ae27a30a55d0",
+      "bytes": 2902
+    }
+  },
+  "checker_identity": {
+    "analyze.py": "ecb43bd693dd464610ce210565d1e8e58d8b3dfb120dd6324433077498cdec76",
+    "check.py": "41a010239392e3d82bc5aedc232cda320d82efb2ba997b5d4e49adaa49a3b670",
+    "test_check.py": "d7846cdf0025630440793e67b1b991812b4f38a0c2c7975bb9b4e7899d7e7f84"
+  },
+  "calibration_receipt": {
+    "path": "calibration.json",
+    "sha256": "1bccbea4058d674898bab2870bbc4663f94f1265689fb16fd62a4bcc71bda119"
+  },
+  "overall_strict_qualification": "I",
+  "qualification_gaps": [
+    "Exact native anchor coverage is recorded under native_independent; missing anchors remain I, no interpolation/extrapolation performed.",
+    "Terminal raw token is 1.0000000000000002; supplemental request differs explicitly from canonical stop.",
+    "Native event brackets are timing observations, not strict callback/serialization certificates.",
+    "Raw/tool receipts are local-only; compact evidence is not full public reproducibility."
+  ],
+  "settings_qualification": {
+    "status": "P",
+    "requested": {
+      "reltol": 1e-05,
+      "vabstol_V": 1e-07,
+      "iabstol_A": 1e-12,
+      "stop_s": 1.0,
+      "maxstep_s": 0.025,
+      "method": "traponly",
+      "errpreset": "conservative"
+    },
+    "declared_effective": {
+      "reltol": 1e-06,
+      "vabstol_V": 1e-07,
+      "iabstol_A": 1e-12,
+      "stop_s": 1.0,
+      "maxstep_s": 0.025,
+      "method": "traponly"
+    },
+    "checks": [
+      {
+        "scope": "global_user",
+        "key": "reltol",
+        "requested_or_effective": 1e-05,
+        "readback": 1e-05,
+        "status": "P"
+      },
+      {
+        "scope": "global_user",
+        "key": "vabstol_V",
+        "requested_or_effective": 1e-07,
+        "readback": 1e-07,
+        "status": "P"
+      },
+      {
+        "scope": "global_user",
+        "key": "iabstol_A",
+        "requested_or_effective": 1e-12,
+        "readback": 1e-12,
+        "status": "P"
+      },
+      {
+        "scope": "effective",
+        "key": "reltol",
+        "requested_or_effective": 1e-06,
+        "readback": 1e-06,
+        "status": "P"
+      },
+      {
+        "scope": "effective",
+        "key": "vabstol_V",
+        "requested_or_effective": 1e-07,
+        "readback": 1.0000000000000001e-07,
+        "status": "P"
+      },
+      {
+        "scope": "effective",
+        "key": "iabstol_A",
+        "requested_or_effective": 1e-12,
+        "readback": 1e-12,
+        "status": "P"
+      },
+      {
+        "scope": "effective",
+        "key": "stop_s",
+        "requested_or_effective": 1.0,
+        "readback": 1.0,
+        "status": "P"
+      },
+      {
+        "scope": "effective",
+        "key": "maxstep_s",
+        "requested_or_effective": 0.025,
+        "readback": 0.025,
+        "status": "P"
+      },
+      {
+        "scope": "effective",
+        "key": "method",
+        "requested_or_effective": "traponly",
+        "readback": "traponly",
+        "status": "P"
+      },
+      {
+        "scope": "psf_effective",
+        "key": "reltol",
+        "requested_or_effective": 1e-06,
+        "readback": 1e-06,
+        "status": "P"
+      },
+      {
+        "scope": "psf_effective",
+        "key": "vabstol_V",
+        "requested_or_effective": 1e-07,
+        "readback": 1e-07,
+        "status": "P"
+      },
+      {
+        "scope": "psf_effective",
+        "key": "iabstol_A",
+        "requested_or_effective": 1e-12,
+        "readback": 1e-12,
+        "status": "P"
+      },
+      {
+        "scope": "psf_effective",
+        "key": "stop_s",
+        "requested_or_effective": 1.0,
+        "readback": 1.0,
+        "status": "P"
+      },
+      {
+        "scope": "psf_effective",
+        "key": "maxstep_s",
+        "requested_or_effective": 0.025,
+        "readback": 0.025,
+        "status": "P"
+      },
+      {
+        "scope": "psf_effective",
+        "key": "method",
+        "requested_or_effective": "traponly",
+        "readback": "traponly",
+        "status": "P"
+      },
+      {
+        "scope": "psf_relative_metadata",
+        "key": "tolerance.relative",
+        "requested_or_effective": 1e-05,
+        "readback": 1e-05,
+        "status": "P"
+      }
+    ],
+    "preset_mapping": "This frozen conservative probe: requested global reltol=1e-5, observed/declared transient reltol=1e-6; not a universal preset mapping."
+  },
+  "offline_reanalysis": {
+    "original_evidence_revision": "a6a1b0c754242e632c01732aac1993b98b5ce927",
+    "original_evidence_sha256": "6995f764d402a27de46b041fedc6bfd1dbd58e8de4e04549c40ec344f58189f6",
+    "reused_analysis_files": {
+      "all-native-supplemental-request.json": {
+        "sha256": "1b402dffbfd2139159e11e2762322f177085e750151e3358c100c38f09c3e5e8",
+        "bytes": 14114
+      },
+      "all-native-supplemental-response.json": {
+        "sha256": "7d96d0f4db63be15dcfca1414765d94a06ef2d908fb7bb9f2447b92bfae8c155",
+        "bytes": 30990
+      },
+      "canonical-request.json": {
+        "sha256": "19827bb6cce9851ab81aad1777fe34b8443323317480a92d1b65d8df5bd02065",
+        "bytes": 12191
+      },
+      "canonical-response.json": {
+        "sha256": "8e44a0e29533b101c669cfba323c392b2c308553d0ffdc1098b9062df2a21aa2",
+        "bytes": 4911
+      },
+      "dense-request.json": {
+        "sha256": "02a8773937d894d3837a0c0fa6c059f9dae09f9322aa6b65a7ffe924c1d073f9",
+        "bytes": 14051
+      },
+      "dense-response.json": {
+        "sha256": "5b913e340f16399455ea80da12167a1a33e952d5bfceb5532261ad67a6959db9",
+        "bytes": 31974
+      },
+      "native-tokens.json": {
+        "sha256": "37fbd56ff4c0cbd9873178af988edf1b9e6c2be158fe9204ebc272a84202fb10",
+        "bytes": 20451
+      },
+      "settings-readback-pr109.json": {
+        "sha256": "5367fd49fb45c7b46b6321562faeabd71bbaba78ffa8c0596062fe22a3d032e3",
+        "bytes": 2334
+      },
+      "sparse-request.json": {
+        "sha256": "de8e7e468257435737fb77dcaab613cd11c88d1f9ee14196f261075c3f959478",
+        "bytes": 12117
+      },
+      "sparse-response.json": {
+        "sha256": "dc628bab416c2144a7561c7556005113ef392ed32b003fc448d2ae27a30a55d0",
+        "bytes": 2902
+      }
+    },
+    "prior_analysis": "runs/initial-event-static-loop/actual-native-analysis-v4",
+    "new_simulator_calls": 0,
+    "source_revision": "dc177010d47fede4d276606e8e15d85ed2da0c13",
+    "production_changes": "Resource diagnostic propagation and main PR114 diagnostic changes; accepted Program exactly equal for all four original requests.",
+    "program_equal_for_all_four_requests": true,
+    "current_kernel_identity": {
+      "identity_version": 1,
+      "package": {
+        "name": "evas-rebuild",
+        "version": "0.14.0",
+        "metadata_source": "source_pyproject",
+        "build_revision": null
+      },
+      "platform": {
+        "os": "darwin",
+        "arch": "arm64"
+      },
+      "compatibility": {
+        "ir_schema_version": 18,
+        "request_protocol_version": null,
+        "status": "ir_matched"
+      },
+      "kernel": {
+        "status": "queried",
+        "path": "/Users/bucketsran/.codex/worktrees/diagnostic-issue-closure/current/evas/rust_core/target/debug/evas-kernel",
+        "sha256": "eefdcca9820d107a3d4e9dcd4cfd7ee59a7d105a41328f9cb11dfc90f09b06da",
+        "reported": {
+          "build_revision": null,
+          "identity_version": 1,
+          "ir_schema_version": 18,
+          "name": "evas-kernel",
+          "platform": {
+            "arch": "aarch64",
+            "os": "macos"
+          },
+          "request_protocol_version": null,
+          "version": "0.14.0"
+        }
+      }
+    },
+    "current_kernel_sha256": "eefdcca9820d107a3d4e9dcd4cfd7ee59a7d105a41328f9cb11dfc90f09b06da",
+    "current_production_source_closure": {
+      "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/src/evas/__main__.py": "f98567eedc0052dddf00fd13f5380e996409f72aed9fbf09702d5bf173fae1d5",
+      "evas/src/evas/array_elaboration.py": "4faf4543a735ad19c89bbbc760d39f6860089d854b7f24922edaa390cf20df0b",
+      "evas/src/evas/diagnostics.py": "a94641c77c61b71e7c1eeb9d36baa9c01b85adfe598472632841ed4a90744a5f",
+      "evas/src/evas/elaboration.py": "ff4ffb36428b7a5fd26a646b31788e2699de050c0a2ec6935d807ed79286fbd8",
+      "evas/src/evas/errors.py": "e59da7a8b07134dd5cb6ee382ed6bdbf41585b33535108867a8ca629d2836c63",
+      "evas/src/evas/frontend.py": "2552416e633542f0770c1f7609ac4778aa8b841db5c0e36bd68a9904f682927c",
+      "evas/src/evas/hierarchy.py": "c277bc21cbe987f7cb427a2955b6b20588d5c42ae09bbc62853dab7bdba4138f",
+      "evas/src/evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+      "evas/src/evas/instance_compiler.py": "030b7172416a21a273eefe18e03ea2ce19bbc3ebd95fa27c143459f898cc0e6a",
+      "evas/src/evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+      "evas/src/evas/ir.py": "ec167d9f02ddde4bff1dbf7b24b903d4a178822cfc0a2749638e753b1398f8cf",
+      "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+      "evas/src/evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+      "evas/src/evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+      "evas/src/evas/lowering.py": "3df0c3f873285e45aa9de85863ca7d42b4c1cffc205a24164700b953b1874c71",
+      "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+      "evas/src/evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+      "evas/src/evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+      "evas/src/evas/node_elaboration.py": "2b68adb511d792c349e40f98fa71933402f1569467c8e2cb6e6e9125773e7658",
+      "evas/src/evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+      "evas/src/evas/preprocessor.py": "68c7c9d6df5a1f14ea33b8bbaebf79863b64110381d8bad910b98f281e2e2ffe",
+      "evas/src/evas/protocol.py": "82302d948c4c0eff0b88318eb804344a1f60d3dd4798d2c2c561149b6a188607",
+      "evas/src/evas/query.py": "6222b10aa9d889e93fa8b65059b5fb31799f7269770ebc72167c7c67e4a0b92b",
+      "evas/src/evas/results.py": "d085a8a2b57aa2ae48b6fc69e47825b02326ca8e05ff56df61bc791b7771c0d1",
+      "evas/src/evas/runtime.py": "b648c721efcb1d715cb871c644ff60b600229d9489c988edb7c4e291bbba1026",
+      "evas/src/evas/scs.py": "d95097aa5e62d2fe9d6a3c6a6035ca981f64b2aebe7fce2ca58bf12b5a95b281",
+      "evas/src/evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
+      "evas/src/evas/syntax.py": "c429e44c25fbca1bbc3dc3d0874352980a2c149ceb680ba85c882eb5f56515b0",
+      "evas/rust_core/benches/static_solver.rs": "cb7e8f046aa8cde417b94e6e52bf3cd59c714dba19de48ab2c0050a70cefaaa8",
+      "evas/rust_core/benches/transient_solver.rs": "d4521e1df0a5e4ae6a25af65ee63d65884f5fc5d16ddc8a6ede08dc79f67e642",
+      "evas/rust_core/fuzz/fuzz_targets/parse_request.rs": "ab9d99942c6e7c7079ad3d78646ea2657277997b67686208d9398cf5548987d5",
+      "evas/rust_core/fuzz/fuzz_targets/run.rs": "6dba9b211200fce17a36129ecbebf4332b50964abd63b829893a8940d0ac33bb",
+      "evas/rust_core/ir/src/lib.rs": "9216242d4eab4a59cab8a40fc11f22c5aaf2a190fe8bf5bfa764429ad26abc49",
+      "evas/rust_core/ir/tests/transport.rs": "4199c2369bf3ed486612d8bbe1fbc46ee64e75409eb834abc6e15cfa74078cf1",
+      "evas/rust_core/src/absdelay.rs": "e0f6144590856b3a95d03a59af58e9032309fa1e316a41c063a40ec9f73109c7",
+      "evas/rust_core/src/affine_bounds.rs": "3695b89a725216f3a3a555dd353cf5c8c81f82a4696aca0a0cb7436622174cb0",
+      "evas/rust_core/src/analog.rs": "3838af457af4b8b44c29401796acee2574733aa7ef3811f40b38883621cf0e68",
+      "evas/rust_core/src/assembly.rs": "57b93621d4940a7974a0132329c87e43a1e3ff348fe1e16d2d784e7708b9ef62",
+      "evas/rust_core/src/batch.rs": "a41166d5cd9a6fab300d48197bc4093145885d19044b398e48095fdb35473688",
+      "evas/rust_core/src/continuous.rs": "9f93bbbf1537a09adaef261c56efea9cff4d04572cbbc512c47b2a91534654ed",
+      "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+      "evas/rust_core/src/continuous_history.rs": "d62a3daa15da4e0ea396e90b7b3f1d7e86d0eba85f3b4f53aa23659c1273fe55",
+      "evas/rust_core/src/continuous_initialization.rs": "5145a36a517b9ba3ace0fb6241ebbd615fef6004b50aeb5dc99d76ff295874a8",
+      "evas/rust_core/src/continuous_runtime.rs": "331ea3f4ff5027ff14155287537b0231a7e6a818e6fd6885dfc470151bdf9ccd",
+      "evas/rust_core/src/diagnostics.rs": "0a5deae544550e34379582625632cf5c45f21c7f8d1f60178e9cf26ae2a4d65f",
+      "evas/rust_core/src/dynamic_roots.rs": "1e9370915346a19f61b08368a36fd4b8aa55ea20099ebf8f4f497b731277c3ac",
+      "evas/rust_core/src/event_accuracy.rs": "d2b621cb23080ee219b5272fc489010dfc6a4ba15930fd8e6d94f0428e253dd6",
+      "evas/rust_core/src/event_conditions.rs": "8b0c00b449cf1b27326972a95b97a5f5c911b4f56cd6d30dec7f8905312ab30f",
+      "evas/rust_core/src/events.rs": "afde14fb199224d58fe91926503aa13c49a9b4a2ccdfa0bf32b723ab92d65ef5",
+      "evas/rust_core/src/expression.rs": "0b25b767f67598227eb3b5957ce208b1262fc87d096f9775f10bda1a6c26c90f",
+      "evas/rust_core/src/guard_trajectory.rs": "a36c31e9724504931b1e037a69a24762136adcf8a7c2c71f96bb8ebc3144b2a7",
+      "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+      "evas/rust_core/src/idtmod.rs": "6be25e77695a85ed80e2a0faa2f780215a039258ddd8c9efd9a600bac14c5bfb",
+      "evas/rust_core/src/implicit_dynamics.rs": "5a1b5dfb3f182b071c58f341281b7ac35204abecf5691838509cbb78ac0172ed",
+      "evas/rust_core/src/initialization.rs": "7a0bf9345d0cb264ea766c9ff3c801d781948f1683474eb1e1a53f6abd1af365",
+      "evas/rust_core/src/interval.rs": "89a83ce96dbf6cdc217a046c9885ca0cf580c6e6f932c36f0195120d49e53f56",
+      "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
+      "evas/rust_core/src/ir.rs": "cc687fdd3d78e908644537aa8194d3a3ccb3dcb5b88c11a78d7b3e640ad97ea0",
+      "evas/rust_core/src/laplace.rs": "4efcad4da1934849c90985c908aaf750f5bd823392deae3ad555515f8bf71a23",
+      "evas/rust_core/src/lib.rs": "7abe5a48737d991a17fb693df44e2957d66f12d68ac0560149f0a99fd13ee73a",
+      "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+      "evas/rust_core/src/linear/dense.rs": "00a1d9e1a9c5f933f765dd586ab9a8982073d270fed73ed7e602af858e732cad",
+      "evas/rust_core/src/linear/properties.rs": "d1a8b5ec069fef4f621b99290b532f7563cb8f55a1ba2178a77877f60192ab7f",
+      "evas/rust_core/src/linear/refinement.rs": "8476ad2ea3f3698e3c4552f8ff785c00ff878caab584b157dbb80b9c282f32a8",
+      "evas/rust_core/src/linear/sparse.rs": "3914adce2368b027027c06240f160864af0f53de934c0b3285515114fe7aa869",
+      "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+      "evas/rust_core/src/linear.rs": "e0280cfcaaebd2449ab5e4474daf5cd19e6a9fbda5db53e14e5229fc81a4eb36",
+      "evas/rust_core/src/main.rs": "70626c73fa421340afcc53c025a220720b208657273ba3f5e20bc1e4c6e01c3c",
+      "evas/rust_core/src/nonlinear/continuation.rs": "6d0aabe1bb6563a32d4e920fabdefde881777a54b8dc2b4658de432347f6448a",
+      "evas/rust_core/src/nonlinear.rs": "6d7b269023f4b65c4542c5a77a7e5386c061c1c4cd8eb9623d8e1aeef2ec30af",
+      "evas/rust_core/src/nonlinear_dynamics.rs": "dfa6753cd77197cbf0225b24169f652eda1bfb514b1dd4527ee3a80b7137fc8a",
+      "evas/rust_core/src/operators.rs": "7a474615d4fc4d7760016178fafb303a0a5a3595f784b4fa5c48b468b1590fc0",
+      "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+      "evas/rust_core/src/pwl.rs": "9eb6a7cc54f86eb91bdf946fe60955b01e14bcd27be2b0683e781c473dfa2bfa",
+      "evas/rust_core/src/reset_dependencies.rs": "d2adaba2e28d70511e0977c223ea7922b627c832e633b7f94360c951a6f0e3fa",
+      "evas/rust_core/src/schedule.rs": "f04c5e10b007b01bb016582a2175ab6ad48e2c6b8588e2023435c2b64f3d6281",
+      "evas/rust_core/src/settlement.rs": "48584be254805a3c0e990281ca00367efc988fb59351c855930960bd82793687",
+      "evas/rust_core/src/settlement_bounds.rs": "580dcd5fe6e9777bed0fcb04a8fd4bef98f5974905ec1c6bf77c26ca2f56d274",
+      "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+      "evas/rust_core/src/solver.rs": "fbbef1378759e01433d2e3bde7106f61f001db505ede5128198a6dcb3e808446",
+      "evas/rust_core/src/solver_cache_tests.rs": "727acd4fc9084bb6e546a8aa70e2f1e5bd476d27265f5198c5cdd08b0a7fd3fa",
+      "evas/rust_core/src/state_space.rs": "c7e8ff82302cb87c6ba150e5def9d1cf9eba15e23657e2f2686eb067ce4ef74c",
+      "evas/rust_core/src/transient.rs": "8e59ceda03169d883ebeeaa55f56a80c6a80dbdad322ce911d51a95adc768f13",
+      "evas/rust_core/src/transient_condition_tests.rs": "51b89c0648fc1d92282c6d6c46dbeced83ad472ddbf2b8ad64e953d3c7befa25",
+      "evas/rust_core/src/transient_history_calendar.rs": "c54256bb4d0febf2d41f9a6422d69bf3968258337d8dbb5f3d3e18e82cf786a5",
+      "evas/rust_core/src/transient_idt_tests.rs": "ba2c353e867aa4b6fbd8e27f68ad1407536e525712ddab96ebf998434e2755ad",
+      "evas/rust_core/src/transient_lifecycle_tests.rs": "954487d2713727fcd0a73a30e97aa56f7f0587ccdb34beeeb073f26855941f48",
+      "evas/rust_core/src/transient_window_tests.rs": "987d1bac508f0e9c780e1b8ac109bec1b077c85a7722a4d084be64e31565103e",
+      "evas/rust_core/src/transition.rs": "1d1c3e709e983a53d0616d0fda1ff2183d2a2dc33b0b65e0aff122162ba72a3c"
+    },
+    "public_program_sha256": "11e91eb97accfcdf46ad1eb6aa345c5a38bb0f74e37cb398d8a1c9bc4a40b7bd",
+    "preserved_numerical_execution_revision": "4cb15800735047048e4a6d551f039e376e4c3a66",
+    "preserved_original_result": {
+      "condition": "initial-loop",
+      "source_sha256": "ff6f07aa84f74b68028019216c2e72685004c5f310350e9a97b7e809ccaf8a69",
+      "deck_sha256": "0a325e2ec38f5c9caa4c22299b07cb6cdac1b1e55ea523098a4d745246c4fd7c",
+      "stages": [
+        {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "prlimit",
+            "--as=4294967296",
+            "--fsize=33554432",
+            "--",
+            "/bin/csh",
+            "-f",
+            "run.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "status": "completed",
+          "cleanup": {
+            "signals": [
+              "SIGTERM",
+              "SIGKILL"
+            ],
+            "errors": [],
+            "complete": true
+          },
+          "elapsed_seconds": 25.837658317759633,
+          "completed_utc": "2026-10-08T13:48:26Z",
+          "log": "simulate.log",
+          "log_sha256": "d403929a9571241eb01f3bc0d68c18a0f52a4e6a8ebde5af1b8b50fe05bb44d7",
+          "stage": "simulate",
+          "resource_caps": {
+            "memory_limit_bytes": 4294967296,
+            "file_limit_bytes": 33554432,
+            "threads": 1
+          }
+        }
+      ],
+      "status": "waveform_available",
+      "waveform": "psf/tran.tran.tran",
+      "waveform_sha256": "7e58059de57827922f71826121addfa611e200d06830b5c6027e367088243fa1",
+      "abort_batch": false,
+      "effective_settings": {
+        "status": "I",
+        "reason": "wrong dimension for time: 25 ms"
+      }
+    },
+    "settings_checker_identity": {
+      "reanalyze_settings.py": "92b641fa128bf966994c796b9ed7ee7a4b6855770edf75b998540438c007fdac",
+      "settings_contract.py": "63d37e1898b978336f39f003882690ffb2eeb4c6ca67618b30b5e1387b97075f",
+      "test_settings_contract.py": "a7787fe46adfb75235b2d11ad8b696a22e84f2bfa2e29a044343d397ad21874e",
+      "analyze.py": "a9f234c4aa412ca5215f460a22dce49d1a968db1537ff6503ad1dbe6258c42dc"
+    },
+    "offline_files": {
+      "settings-qualification.json": {
+        "sha256": "4941dcdacc9e6b9f154a1465e3d35afeb0fb1e1c1a21d0bcc6a2681111278699",
+        "bytes": 3031
+      },
+      "settings-readback-pr109.json": {
+        "sha256": "5367fd49fb45c7b46b6321562faeabd71bbaba78ffa8c0596062fe22a3d032e3",
+        "bytes": 2334
+      }
+    },
+    "calibration_receipt": {
+      "path": "calibration.json",
+      "sha256": "3d59c90e31f673f417891e1e3bd3bb9b3ab6aa3adf4a317ef45ab1c40ed39952",
+      "tests": 20
+    }
+  }
+}

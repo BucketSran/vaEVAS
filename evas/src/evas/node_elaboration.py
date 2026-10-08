@@ -7,7 +7,7 @@ from dataclasses import replace
 from .errors import CompileError
 from .ir import Affine
 from .lowering import lower
-from .elaboration import unroll_loops
+from .elaboration import elaborate_loops
 from .syntax import Assignment, Conditional, ContributionStatement, Event
 from .integer_constants import check_integer_model, check_integer_expression
 
@@ -22,9 +22,9 @@ def scalarize_nodes(model, parameters):
             fail(f'unknown parameter {name!r} in electrical bound/index')
         return parameters[name]
 
-    expanded = unroll_loops(model, parameter)
-    model = replace(model, analog=[s for s in expanded if not isinstance(s,Event)],
-                    events=[*model.events, *(s for s in expanded if isinstance(s,Event))])
+    model = elaborate_loops(model, parameter)
+    model = replace(model, analog=[s for s in model.analog if not isinstance(s,Event)],
+                    events=[*model.events, *(s for s in model.analog if isinstance(s,Event))])
     # Genvar substitution can expose integer-only arithmetic in both values and
     # node/array indices. Recheck the complete expanded tree before real lowering.
     check_integer_model(model, parameters)
