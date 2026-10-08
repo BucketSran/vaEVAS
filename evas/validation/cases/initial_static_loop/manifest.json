@@ -1,0 +1,143 @@
+{
+  "case": "initial-static-loop-65-I",
+  "status": "frozen inputs; actual Spectre pending",
+  "source": "dut.va",
+  "spectre_deck": "table.scs",
+  "preserved_original": "original-minimal.va",
+  "input": {
+    "u": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        1
+      ]
+    ]
+  },
+  "instances": [
+    {
+      "name": "first",
+      "module": "initial_static_loop",
+      "connections": {
+        "u": "u",
+        "y": "y1",
+        "qzero": "q01",
+        "qone": "q11",
+        "qlast": "qlast1",
+        "r": "0"
+      },
+      "parameters": {
+        "N": 2,
+        "SEED": 0,
+        "POLLUTE": 40
+      }
+    },
+    {
+      "name": "second",
+      "module": "initial_static_loop",
+      "connections": {
+        "u": "u",
+        "y": "y2",
+        "qzero": "q02",
+        "qone": "q12",
+        "qlast": "qlast2",
+        "r": "0"
+      },
+      "parameters": {
+        "N": 3,
+        "SEED": 10,
+        "POLLUTE": 70
+      }
+    }
+  ],
+  "times": [
+    0,
+    0.125,
+    0.25,
+    0.375,
+    0.5,
+    0.625,
+    0.75,
+    0.875,
+    1
+  ],
+  "EVAS": {
+    "stop": 1,
+    "max_step": 0.025,
+    "vabstol": 1e-10,
+    "reltol": 0
+  },
+  "independent_expectation": {
+    "phase": "A before timer at 0.25; B after timer before rising cross at 0.5; C after cross; no initialization event record",
+    "u": "t",
+    "y1": [
+      1,
+      81,
+      1
+    ],
+    "q01": [
+      0,
+      40,
+      0
+    ],
+    "q11": [
+      1,
+      41,
+      1
+    ],
+    "qlast1": [
+      1,
+      41,
+      1
+    ],
+    "y2": [
+      33,
+      213,
+      33
+    ],
+    "q02": [
+      10,
+      70,
+      10
+    ],
+    "q12": [
+      11,
+      71,
+      11
+    ],
+    "qlast2": [
+      12,
+      72,
+      12
+    ],
+    "event_records_per_instance": 2,
+    "initial_state_first": [
+      0,
+      1
+    ],
+    "initial_state_second": [
+      10,
+      11,
+      12
+    ]
+  },
+  "comparison": {
+    "oracle": "Hand-derived three stages; initialization and cross restore each element to SEED+i; timer overwrites each element with POLLUTE+i. Sum arithmetic is independent of either simulator.",
+    "voltage_absolute": 1e-07,
+    "voltage_relative": 1e-05,
+    "timer_window": [
+      0.25,
+      0.250000001
+    ],
+    "cross_window": [
+      0.499999999,
+      0.500000001
+    ],
+    "native_stage": "All q observers and sum must match the same hand stage per instance. Preserve A/B/C records and event brackets. No interpolation across jumps; differing stages remain explicit.",
+    "required_points": "9 exact decimal native anchors, initial and stop are checked separately. Missing exact anchors or stop remain I; no binary64-nearness substitution.",
+    "settings": "Record actual Spectre version/selected binary identity, effective time/voltage controls from log+PSF, original immutable RESULT and execution/collection archive identities. One actual configuration contains two instances, not two configurations.",
+    "scope": "Static genvar expansion only. No dynamic index, state-dependent condition, runtime loop, event-local snapshot, history call, or complete #65/SAR closure."
+  }
+}

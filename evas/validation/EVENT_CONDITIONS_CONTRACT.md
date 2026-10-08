@@ -96,7 +96,9 @@ n_v4_02/dut.va:16:30: unsupported or invalid token '>= 0.5)…'
   初始高 clk 不取样。初始高 rst 下 held 仍取源码初值；后续 clk 触发时执行复位臂。
   rst 下降只释放，本模型的 +1 cross 不在释放时取样。
 - 受限共享初始化体允许一个不带分析限定的 `initial_step` 与已有 cross 叶子 OR，
-  叶子可以按任意顺序书写。body 必须是无条件赋值，且与其他初始化体合起来满足
+  叶子可以按任意顺序书写。body 必须是无条件赋值；当前开发切片也允许
+  [初始化体内的静态 genvar 循环](INITIAL_STATIC_LOOP_CONTRACT.md)，展开后仍为这些赋值。
+  它与其他初始化体合起来满足
   每个状态唯一、完整、实例常量的初始化契约。该 body 的赋值通过已有初始化路径
   安装一次；只有 cross 叶子保留为运行时事件，后续 cross 再执行同一 body。
   初始化不会增加 cross/timer 记录，也不变成 timer(0)。纯 initial_step 和已有冗余

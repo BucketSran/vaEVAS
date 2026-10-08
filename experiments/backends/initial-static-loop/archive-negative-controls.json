@@ -1,0 +1,40 @@
+{
+  "status": "P",
+  "controls": [
+    {
+      "control": "empty-manifest",
+      "returncode": 2,
+      "stdout": "",
+      "stderr": "{\"status\": \"ERROR\", \"reason\": \"unpacked member differs from archive: spectre-output/FILE_MANIFEST.json\"}\n",
+      "analysis_output_exists": false,
+      "evidence_output_exists": false
+    },
+    {
+      "control": "psf-tamper",
+      "returncode": 2,
+      "stdout": "",
+      "stderr": "{\"status\": \"ERROR\", \"reason\": \"unpacked member differs from archive: spectre-output/runs/initial-loop/psf/tran.tran.tran\"}\n",
+      "analysis_output_exists": false,
+      "evidence_output_exists": false
+    }
+  ],
+  "original_raw_unchanged": true,
+  "offline_settings_reanalysis_controls": [
+    {
+      "control": "empty-manifest",
+      "consumer": "reanalyze_settings.py",
+      "returncode": 2,
+      "stderr": "{\"status\": \"ERROR\", \"reason\": \"unpacked member differs from archive: spectre-output/FILE_MANIFEST.json\"}\n",
+      "analysis_output_exists": false,
+      "evidence_output_exists": false
+    },
+    {
+      "control": "psf-tamper",
+      "consumer": "reanalyze_settings.py",
+      "returncode": 2,
+      "stderr": "{\"status\": \"ERROR\", \"reason\": \"unpacked member differs from archive: spectre-output/runs/initial-loop/psf/tran.tran.tran\"}\n",
+      "analysis_output_exists": false,
+      "evidence_output_exists": false
+    }
+  ]
+}
