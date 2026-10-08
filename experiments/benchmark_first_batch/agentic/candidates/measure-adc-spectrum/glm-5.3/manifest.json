@@ -1,0 +1,46 @@
+{
+  "schema_version": 2,
+  "attempt": "measure-adc-spectrum-glm-5.3-prepared-v5",
+  "task_id": "measure-adc-spectrum",
+  "requested_model": "glm-5.3",
+  "pi_recorded_model": "glm-5.3",
+  "server_response_model": null,
+  "identity_evidence": {
+    "version": "pi-response-model-distinction-v2",
+    "pi_model_assignment": "configured model.id, not independently observed server model",
+    "response_model_assignment": "response chunk.model retained only when different from configured ID",
+    "missing_response_model": "equal and omitted server response model IDs cannot be distinguished",
+    "observed_response_model_messages": 0,
+    "response_id_message_count": 55,
+    "vendor_internal_routing": "unknown"
+  },
+  "final_package_sha256": "e3083d7e4ab946c17eb7102f33cc637eb32e1520b2b044cee88994ede6bb89d0",
+  "criteria_sha256": "1849d9dc3a61c8958d79cd7110bc285e49127db39f92f38166fddf80bb87b765",
+  "original_final_job_id": "harbor-214aca11-2ec1-4446-9c64-5ac6eecdeec2",
+  "final_archive_sha256": "02ec8155b9c09ad83ca69df64e2c72eafb1a8b7c391a8a68acded518bdda4987",
+  "candidate_final_score": 1,
+  "phase_exception_type": "AgentTimeoutError",
+  "copy_policy": "original frozen bytes without edits",
+  "new_model_or_solver_requests": 0,
+  "candidate_bundle_sha256": "7e6ef7486893ca4f45975748eb04735057ab1c554c9f7fdd97d9d583bb34554c",
+  "candidate_files": {
+    "dut.va": {
+      "sha256": "0b7e523507e06335a8d11ce0cc89493863b546caa838070f38738694bd173cbc",
+      "bytes": 6946
+    }
+  },
+  "freeze_reason": "cancelled",
+  "pre_export_credential_scan": {
+    "dut.va": {
+      "known_token_hits": 0,
+      "generic_pattern_hits": {}
+    }
+  },
+  "availability": "repository-contained",
+  "post_export_credential_scan": {
+    "dut.va": {
+      "known_token_hits": 0,
+      "generic_pattern_hits": {}
+    }
+  }
+}

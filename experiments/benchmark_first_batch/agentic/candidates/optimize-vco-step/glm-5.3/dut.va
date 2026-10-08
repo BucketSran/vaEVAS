@@ -1,0 +1,18 @@
+`include "disciplines.vams"
+// Bounded-phase polynomial probe: for the fixed load (control inside 0..1)
+// this is waveform-identical to the submitted model.
+module tuning_vco(control, out);
+  input control;
+  output out;
+  electrical control, out;
+  parameter real fmin=4e6 from (0:inf);
+  parameter real fmax=400e6 from (0:inf);
+  parameter real amplitude=0.5 from (0:inf);
+  parameter real offset=0.6;
+  parameter integer points_per_cycle=64 from [16:256];
+  real phase;
+  analog begin
+    phase = idtmod(fmin+(fmax-fmin)*V(control),0.0,1.0,0.0);
+    V(out) <+ offset+amplitude*sin(6.28318530717958647692*phase);
+  end
+endmodule

@@ -1,0 +1,56 @@
+// identified_sh - voltage-behavior sample-and-hold model identified from
+// the public characterization data (behavioral_synthetic, one fixed system).
+//
+// Identified structure:
+//   * Acquisition (track high): linear first-order settling of the output
+//     toward the input voltage with time constant tau = 3.7 us.
+//   * Track-to-hold switch: instantaneous pedestal step
+//         out <- out + step_off + step_gain * out
+//     with step_off = 0.7 mV and step_gain = 1.3e-3 V/V.
+//   * Hold (track low): constant-velocity droop, d(out)/dt = -12 V/s.
+//   * Hold-to-track switch: no jump; acquisition restarts from the held
+//     value, so the history state is preserved across hold phases.
+//
+// Realization: the output is the time integral of the mode-gated rate
+//   d(out)/dt = track_mode * (vin - out) / tau + (1 - track_mode) * droop,
+// accumulated with the idt() operator (integral starts at 0 V), plus a
+// pedestal offset accumulated at each falling control crossing.
+//
+// Initial condition: out(0) = 0 V with track = 1 V (acquiring).
+
+`include "disciplines.vams"
+
+module identified_sh(vin, track, out);
+
+  input  vin;
+  input  track;
+  output out;
+  electrical vin, track, out;
+
+  parameter real tau_acq    = 3.7e-6;  // acquisition time constant [s]
+  parameter real droop_rate = -12.0;   // hold drift rate [V/s]
+  parameter real step_off   = 0.7e-3;  // pedestal offset at hold switch [V]
+  parameter real step_gain  = 1.3e-3;  // signal-proportional pedestal [V/V]
+
+  real ped;
+  real tracking;
+
+  analog begin
+
+    @(initial_step) begin
+      ped = 0.0;
+    end
+
+    // track-to-hold: apply the identified pedestal step once per falling edge
+    @(cross(V(track) - 0.5, -1)) begin
+      ped = ped + step_off + step_gain * V(out);
+    end
+
+    // mode selector: 1.0 while acquiring, 0.0 while holding
+    tracking = (V(track) > 0.5);
+
+    V(out) <+ idt(tracking * (V(vin) - V(out)) / tau_acq + (1.0 - tracking) * droop_rate) + ped;
+
+  end
+
+endmodule

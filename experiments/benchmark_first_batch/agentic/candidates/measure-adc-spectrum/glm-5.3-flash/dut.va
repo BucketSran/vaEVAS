@@ -1,0 +1,105 @@
+// ADC coherent dynamic-specification measurement
+// Captures the first 64 stable code values at the first 64 rising edges of
+// clk, performs a 64-point rectangular-window DFT (DC excluded) and reports
+// SNDR / SFDR in dB and the code mean on the result ports.
+// Power convention: k = 1..31 -> 2|X[k]|^2/64^2 ; k = 32 (Nyquist) -> |X[32]|^2/64^2
+// sndr = 10log10(P_fund / sum of all other bin powers)
+// sfdr = 10log10(P_fund / largest other bin power)
+`include "disciplines.vams"
+
+module dut(code, clk, sndr, sfdr, dc);
+  inout code, clk, sndr, sfdr, dc;
+  electrical code, clk, sndr, sfdr, dc;
+
+  parameter integer tone_bin = 5;
+
+  real xs[0:63];
+  integer nsamp;
+  integer k;
+  integer n;
+  real re;
+  real im;
+  real ang;
+  real p;
+  real pw_fund;
+  real pw_sum;
+  real pw_max;
+  real mean_c;
+  real sndr_val;
+  real sfdr_val;
+  real dc_val;
+  real vnow;
+  real vprev;
+
+  analog begin
+    @(initial_step) begin
+      nsamp = 0;
+      sndr_val = 0.0;
+      sfdr_val = 0.0;
+      dc_val = 0.0;
+      vprev = 0.0;
+    end
+
+    // Rising-edge detect of clk (mid-scale threshold). The measured code is
+    // updated 10 ns before every clk rise and stays stable for 90 ns after,
+    // so reading V(code) at the detected edge yields the settled sample.
+    vnow = V(clk);
+    if (vprev < 0.5) begin
+      if (vnow >= 0.5) begin
+        if (nsamp < 64) begin
+          xs[nsamp] = V(code);
+          nsamp = nsamp + 1;
+          if (nsamp > 63) begin
+            mean_c = 0.0;
+            for (n = 0; n < 64; n = n + 1)
+              mean_c = mean_c + xs[n];
+            mean_c = mean_c / 64.0;
+            pw_fund = 0.0;
+            pw_sum = 0.0;
+            pw_max = 0.0;
+            for (k = 1; k <= 32; k = k + 1) begin
+              re = 0.0;
+              im = 0.0;
+              for (n = 0; n < 64; n = n + 1) begin
+                ang = 6.283185307179586476925286766559 * k * n / 64.0;
+                re = re + xs[n] * cos(ang);
+                im = im - xs[n] * sin(ang);
+              end
+              p = re * re + im * im;
+              if (k < 32)
+                p = 2.0 * p;
+              p = p / 4096.0;
+              if (k < tone_bin) begin
+                pw_sum = pw_sum + p;
+                if (p > pw_max)
+                  pw_max = p;
+              end else begin
+                if (k > tone_bin) begin
+                  pw_sum = pw_sum + p;
+                  if (p > pw_max)
+                    pw_max = p;
+                end else begin
+                  pw_fund = p;
+                end
+              end
+            end
+            dc_val = mean_c;
+            if (pw_fund > 0.0) begin
+              if (pw_sum > 0.0) begin
+                if (pw_max > 0.0) begin
+                  sndr_val = 10.0 * ln(pw_fund / pw_sum) / 2.302585092994045684017991454684;
+                  sfdr_val = 10.0 * ln(pw_fund / pw_max) / 2.302585092994045684017991454684;
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+    vprev = vnow;
+
+    V(sndr) <+ sndr_val;
+    V(sfdr) <+ sfdr_val;
+    V(dc) <+ dc_val;
+  end
+endmodule

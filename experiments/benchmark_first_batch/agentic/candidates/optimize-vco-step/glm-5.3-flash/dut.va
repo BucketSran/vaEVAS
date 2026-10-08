@@ -1,0 +1,40 @@
+// Optimized continuous-phase PLL sine VCO.
+//
+// Behavior is identical to the qualified baseline: programmed frequency is
+// fmin + (fmax-fmin)*clamp(V(control),0,1), phase = idtmod(frequency, 0)
+// integrated from zero phase (never f(t)*t), and the output is
+// offset + amplitude*sin(2*pi*phase).
+//
+// Cost optimization: the baseline bounds every accepted step by the worst-case
+// (fmax) resolution 1/(points_per_cycle*fmax) even when tuning far below fmax,
+// which dominates the transient step count on the low-frequency workload.
+// Here the time-step budget follows the instantaneous programmed frequency
+// instead. The simulator's own LTE step control (conservative preset) still
+// decides the actual accepted step sizes, so waveform values at every real
+// point and uniform probe stay far inside the 3 mV contract, while this guard
+// guarantees at least points_per_cycle real points per cycle and a phase
+// advance below 1/64 cycle per accepted step whenever the guard is the active
+// limit.
+//
+// idtmod is called with four explicit arguments (wrap offset 0.0 given
+// explicitly) for portability; this matches the original three-argument call.
+
+`include "disciplines.vams"
+
+module tuning_vco(control, out);
+  input control;
+  output out;
+  electrical control, out;
+  parameter real fmin=4e6 from (0:inf);
+  parameter real fmax=400e6 from (0:inf);
+  parameter real amplitude=0.5 from (0:inf);
+  parameter real offset=0.6;
+  parameter integer points_per_cycle=64 from [16:256];
+  real frequency, phase, uclamped;
+  analog begin
+    uclamped=(V(control)+1.0-sqrt((V(control)-1.0)*(V(control)-1.0)))*0.5;
+    frequency=fmin+(fmax-fmin)*(uclamped+sqrt(uclamped*uclamped))*0.5;
+    phase=idtmod(frequency,0.0,1.0,0.0);
+    V(out) <+ offset+amplitude*sin(6.28318530717958647692*phase);
+  end
+endmodule

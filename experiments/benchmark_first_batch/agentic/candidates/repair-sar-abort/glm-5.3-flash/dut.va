@@ -1,0 +1,78 @@
+`include "constants.vams"
+`include "disciplines.vams"
+// 4-bit SAR controller with delayed result publication.
+// Fix vs starter: reset rise fully aborts any in-flight conversion AND
+// any pending (not yet published) result: clear active/pending and
+// disarm the publication timer, so no stale code can ever be published
+// after reset (or on a low clock). Written in a conservative Verilog-A
+// subset (no logical &&/!, no ?:, no %): nested ifs and integer
+// bit decomposition only.
+module sar_controller(clk,start,rst,cmp,d3,d2,d1,d0,trial,busy,valid);
+input clk,start,rst,cmp;output d3,d2,d1,d0,trial,busy,valid;
+electrical clk,start,rst,cmp,d3,d2,d1,d0,trial,busy,valid;
+parameter real vth=0.5,tr=50p,tvalid=0.8n;
+integer active,pending,position,working,result,weight,done;
+integer d3i,d2i,d1i,d0i;
+real dac,next_publish;
+analog begin
+ @(initial_step)begin
+  done=0;active=0;pending=0;position=3;weight=8;working=0;result=0;dac=0;next_publish=1e30;
+  d3i=0;d2i=0;d1i=0;d0i=0;
+ end
+ // Reset: clear result code, trial, busy, valid; abort the conversion
+ // and cancel any pending publication (disarm the publish timer).
+ @(cross(V(rst)-vth,+1))begin
+  done=0;active=0;pending=0;working=0;result=0;dac=0;next_publish=1e30;
+ end
+ // Start accepted only when idle and rst low: clear code/valid, set
+ // busy, begin MSB trial at 8/16 V.
+ @(cross(V(start)-vth,+1))begin
+  if(V(rst)<vth)begin
+   if(active<1)begin
+    done=0;active=1;pending=0;position=3;weight=8;working=0;result=0;dac=0.5;next_publish=1e30;
+   end
+  end
+ end
+ // Bit decisions on clk rising edge only while converting (not during
+ // the publish wait) and never while rst is high. cmp high means
+ // vin >= trial: keep the bit, then drive the next trial code /16.
+ @(cross(V(clk)-vth,+1))begin
+  if(active>0)begin
+   if(pending<1)begin
+    if(V(rst)<vth)begin
+     if(V(cmp)>vth)begin
+      working=working+weight;
+     end
+     if(position<1)begin
+      pending=1;dac=working/16.0;next_publish=$abstime+tvalid;
+     end
+     if(position>0)begin
+      position=position-1;weight=weight/2;dac=(working+weight)/16.0;
+     end
+    end
+   end
+  end
+ end
+ // Publish after tvalid, only if this conversion is still pending
+ // (guard makes any stale/aborted timer event harmless).
+ @(timer(next_publish))begin
+  if(active>0)begin
+   if(pending>0)begin
+    result=working;done=1;active=0;pending=0;next_publish=1e30;
+   end
+  end
+ end
+ // Binary decode of result (0..15) without % or ?: operators.
+ d3i=result/8;
+ d2i=(result-d3i*8)/4;
+ d1i=(result-d3i*8-d2i*4)/2;
+ d0i=result-d3i*8-d2i*4-d1i*2;
+ V(d3)<+transition(d3i,0,tr,tr);
+ V(d2)<+transition(d2i,0,tr,tr);
+ V(d1)<+transition(d1i,0,tr,tr);
+ V(d0)<+transition(d0i,0,tr,tr);
+ V(trial)<+transition(dac,0,tr,tr);
+ V(busy)<+transition(active,0,tr,tr);
+ V(valid)<+transition(done,0,tr,tr);
+end
+endmodule

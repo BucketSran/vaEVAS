@@ -1,0 +1,46 @@
+{
+  "schema_version": 2,
+  "attempt": "verify-sar-flow-glm-5.3-flash-prepared-v5",
+  "task_id": "verify-sar-flow",
+  "requested_model": "glm-5.3-flash",
+  "pi_recorded_model": "glm-5.3-flash",
+  "server_response_model": null,
+  "identity_evidence": {
+    "version": "pi-response-model-distinction-v2",
+    "pi_model_assignment": "configured model.id, not independently observed server model",
+    "response_model_assignment": "response chunk.model retained only when different from configured ID",
+    "missing_response_model": "equal and omitted server response model IDs cannot be distinguished",
+    "observed_response_model_messages": 0,
+    "response_id_message_count": 17,
+    "vendor_internal_routing": "unknown"
+  },
+  "final_package_sha256": "65535f83b87b93b87f55a76ddb52f99d14494975587000a4d3db7c5cedc6d2ca",
+  "criteria_sha256": "d14cb82d111380873353fda124125c9a7d2a87626ebb011772055ea14bc3838e",
+  "original_final_job_id": "harbor-49154b48-dab5-4b89-aaa5-6c58f8360751",
+  "final_archive_sha256": "30d1a54d661e337ce626bb71e49e7da52bc00fb886c4484e08af182622d80a43",
+  "candidate_final_score": 0,
+  "phase_exception_type": "AgentTimeoutError",
+  "copy_policy": "original frozen bytes without edits",
+  "new_model_or_solver_requests": 0,
+  "candidate_bundle_sha256": "a4c6a8189cc70971d61bd1107d0f0d35791f1b49cb5de98344b728e6da047705",
+  "candidate_files": {
+    "dut.va": {
+      "sha256": "b963365e74f8f7fe167eb0f1a49e39b442939f770e6b34fcee99017e2c0b131c",
+      "bytes": 6801
+    }
+  },
+  "freeze_reason": "cancelled",
+  "pre_export_credential_scan": {
+    "dut.va": {
+      "known_token_hits": 0,
+      "generic_pattern_hits": {}
+    }
+  },
+  "availability": "repository-contained",
+  "post_export_credential_scan": {
+    "dut.va": {
+      "known_token_hits": 0,
+      "generic_pattern_hits": {}
+    }
+  }
+}

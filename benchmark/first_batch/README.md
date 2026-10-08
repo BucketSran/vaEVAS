@@ -30,12 +30,14 @@ Flash 旧二分提交另有 3 个 CPU-only equivalent 校准条件通过。30 �
 本批共有 32 个 `source_group`。上下文分布为 30 个工作单元、4 个有边界的小工程和
 1 个完整仓库任务，计数与同源关联见 [元数据映射](METADATA.md)。
 
-真实模型 pilot 正在 14 个固定单元上进行，覆盖七类代表题，请求模型标识为
-`glm-5.3` 和 `glm-5.3-flash`，两者均为 GLM 系列标签。
+真实模型 pilot 已完成七类代表题的 14 个固定单元，全部取得有效的冻结候选终评。
+按请求标识，`glm-5.3` 为 5/7、`glm-5.3-flash` 为 3/7。11 次 Agent 阶段超时、
+3 次主动提交正常结束；阶段状态与截止时候选的终评分分别记录。
 Pi 的模型名字段来自请求配置，不能单凭它确认服务端响应模型或内部路由。
-按请求标识、可观察的响应身份、任务和冻结尝试分别报告。
-代表题试跑不能推导 35 题整体通过率；实际工具交互也不代表任务规格在多轮中动态演化。
-试跑入口和反馈限制见 [Agentic 实验说明](../../experiments/benchmark_first_batch/agentic/README.md)。
+公开仿真反馈大量失败，因此本轮成绩不能用于给题目难度定级，也不能外推为 35 题整体通过率。
+两次 VCO 均先因功能不符被拒绝，没有进入配对性能阶段。
+逐项结果、原始候选和后续推进顺序见 [pilot 报告](../../experiments/benchmark_first_batch/agentic/PILOT.md)；
+运行协议见 [Agentic 实验说明](../../experiments/benchmark_first_batch/agentic/README.md)。
 
 ## 任务合同
 
