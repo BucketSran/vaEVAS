@@ -1,7 +1,7 @@
 //! The only executable model format for the voltage kernel.
 use serde::{Deserialize, Serialize};
 
-pub const SCHEMA_VERSION: u32 = 17;
+pub const SCHEMA_VERSION: u32 = 18;
 
 pub fn check_schema_version(version: u64) -> Result<(), Error> {
     if version != u64::from(SCHEMA_VERSION) {
@@ -287,13 +287,38 @@ pub enum StateKind {
     Integer,
 }
 
+/// IR18 keeps the constant wire shape and adds a structurally checked predicate.
+/// An expression must resolve to exact 0/1 before constructing an event model.
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(untagged)]
+pub enum StateInitial {
+    Constant(f64),
+    Predicate(Expression),
+}
+
+impl From<f64> for StateInitial {
+    fn from(value: f64) -> Self {
+        Self::Constant(value)
+    }
+}
+
+impl StateInitial {
+    pub fn constant(&self) -> Result<f64, Error> {
+        match self {
+            Self::Constant(value) => Ok(*value),
+            Self::Predicate(_) => Err(Error::new(
+                "unsupported_initialization", "initial predicate requires driven-input resolution")),
+        }
+    }
+}
+
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct State {
     pub instance: String,
     pub name: String,
     pub kind: StateKind,
-    pub initial: f64,
+    pub initial: StateInitial,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]

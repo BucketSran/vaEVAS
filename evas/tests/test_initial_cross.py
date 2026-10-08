@@ -85,7 +85,7 @@ class InitialCross(unittest.TestCase):
             with self.subTest(value=value), self.assertRaises(CompileError) as caught:
                 compiled(source(value=value))
             self.assertEqual(caught.exception.diagnostic['code'], 'unsupported_initial_event')
-            self.assertIn('initial_step values must be instance constants', str(caught.exception))
+            self.assertIn('unsupported initial_step value', str(caught.exception))
 
     def test_qualified_repeated_initial_and_timer_mixtures_remain_rejected(self):
         for trigger in (

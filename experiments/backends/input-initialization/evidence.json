@@ -1,0 +1,3301 @@
+{
+  "format_version": 1,
+  "purpose": "actual Spectre finite development comparison for input comparison initialization and bounded shared self counter repair",
+  "capability_ids": [
+    "LANG",
+    "CROSS",
+    "EVENT-ORDER"
+  ],
+  "implementation": {
+    "commit": "ee7df138e312d220dd01d3b099a8d4adb259ff65",
+    "dirty_state_at_execution": "clean source at ee7; later evidence-only files do not alter simulator closure",
+    "kernel_identity": {
+      "build_revision": null,
+      "identity_version": 1,
+      "ir_schema_version": 18,
+      "name": "evas-kernel",
+      "platform": {
+        "arch": "aarch64",
+        "os": "macos"
+      },
+      "request_protocol_version": null,
+      "version": "0.14.0"
+    },
+    "kernel_sha256": "f77da92c10620aaeeb2d096652cd3a5a3e2ef1df9dbab4278a70a45ff78ebe2f",
+    "sourceclosure": {
+      "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/src/evas/__main__.py": "f98567eedc0052dddf00fd13f5380e996409f72aed9fbf09702d5bf173fae1d5",
+      "evas/src/evas/array_elaboration.py": "4faf4543a735ad19c89bbbc760d39f6860089d854b7f24922edaa390cf20df0b",
+      "evas/src/evas/diagnostics.py": "a94641c77c61b71e7c1eeb9d36baa9c01b85adfe598472632841ed4a90744a5f",
+      "evas/src/evas/elaboration.py": "1eb85eefcb393dbc58b6f248389a1d51ef792f45077b779dac0d55fc5aa5e074",
+      "evas/src/evas/errors.py": "95a088471a4b5534c13bcda719af9fa0a1ef962ea7d35b8d7fbc622e7aede083",
+      "evas/src/evas/frontend.py": "2552416e633542f0770c1f7609ac4778aa8b841db5c0e36bd68a9904f682927c",
+      "evas/src/evas/hierarchy.py": "c277bc21cbe987f7cb427a2955b6b20588d5c42ae09bbc62853dab7bdba4138f",
+      "evas/src/evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+      "evas/src/evas/instance_compiler.py": "d4f6a41becc6a19c4d5133eaedecfa95c2bf7649612d42299e6fdd68cd79b3c8",
+      "evas/src/evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+      "evas/src/evas/ir.py": "ec167d9f02ddde4bff1dbf7b24b903d4a178822cfc0a2749638e753b1398f8cf",
+      "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+      "evas/src/evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+      "evas/src/evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+      "evas/src/evas/lowering.py": "3df0c3f873285e45aa9de85863ca7d42b4c1cffc205a24164700b953b1874c71",
+      "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+      "evas/src/evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+      "evas/src/evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+      "evas/src/evas/node_elaboration.py": "f100e5e857b53a5ccaf43b10f61c1f1d719b0f5205490364dbf30a103bf480e6",
+      "evas/src/evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+      "evas/src/evas/preprocessor.py": "68c7c9d6df5a1f14ea33b8bbaebf79863b64110381d8bad910b98f281e2e2ffe",
+      "evas/src/evas/protocol.py": "82302d948c4c0eff0b88318eb804344a1f60d3dd4798d2c2c561149b6a188607",
+      "evas/src/evas/query.py": "6222b10aa9d889e93fa8b65059b5fb31799f7269770ebc72167c7c67e4a0b92b",
+      "evas/src/evas/results.py": "d085a8a2b57aa2ae48b6fc69e47825b02326ca8e05ff56df61bc791b7771c0d1",
+      "evas/src/evas/runtime.py": "b648c721efcb1d715cb871c644ff60b600229d9489c988edb7c4e291bbba1026",
+      "evas/src/evas/scs.py": "d95097aa5e62d2fe9d6a3c6a6035ca981f64b2aebe7fce2ca58bf12b5a95b281",
+      "evas/src/evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
+      "evas/src/evas/syntax.py": "56eafc9ad5c4f8773441a8e7ccf751d7ce5380b68150a2e2ab6d55524c0f6058",
+      "evas/rust_core/src/absdelay.rs": "e0f6144590856b3a95d03a59af58e9032309fa1e316a41c063a40ec9f73109c7",
+      "evas/rust_core/src/affine_bounds.rs": "3695b89a725216f3a3a555dd353cf5c8c81f82a4696aca0a0cb7436622174cb0",
+      "evas/rust_core/src/analog.rs": "3838af457af4b8b44c29401796acee2574733aa7ef3811f40b38883621cf0e68",
+      "evas/rust_core/src/assembly.rs": "57b93621d4940a7974a0132329c87e43a1e3ff348fe1e16d2d784e7708b9ef62",
+      "evas/rust_core/src/batch.rs": "a41166d5cd9a6fab300d48197bc4093145885d19044b398e48095fdb35473688",
+      "evas/rust_core/src/continuous.rs": "9f93bbbf1537a09adaef261c56efea9cff4d04572cbbc512c47b2a91534654ed",
+      "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+      "evas/rust_core/src/continuous_history.rs": "d62a3daa15da4e0ea396e90b7b3f1d7e86d0eba85f3b4f53aa23659c1273fe55",
+      "evas/rust_core/src/continuous_initialization.rs": "5145a36a517b9ba3ace0fb6241ebbd615fef6004b50aeb5dc99d76ff295874a8",
+      "evas/rust_core/src/continuous_runtime.rs": "331ea3f4ff5027ff14155287537b0231a7e6a818e6fd6885dfc470151bdf9ccd",
+      "evas/rust_core/src/diagnostics.rs": "0a5deae544550e34379582625632cf5c45f21c7f8d1f60178e9cf26ae2a4d65f",
+      "evas/rust_core/src/dynamic_roots.rs": "1e9370915346a19f61b08368a36fd4b8aa55ea20099ebf8f4f497b731277c3ac",
+      "evas/rust_core/src/event_accuracy.rs": "d2b621cb23080ee219b5272fc489010dfc6a4ba15930fd8e6d94f0428e253dd6",
+      "evas/rust_core/src/event_conditions.rs": "8b0c00b449cf1b27326972a95b97a5f5c911b4f56cd6d30dec7f8905312ab30f",
+      "evas/rust_core/src/events.rs": "afde14fb199224d58fe91926503aa13c49a9b4a2ccdfa0bf32b723ab92d65ef5",
+      "evas/rust_core/src/expression.rs": "0b25b767f67598227eb3b5957ce208b1262fc87d096f9775f10bda1a6c26c90f",
+      "evas/rust_core/src/guard_trajectory.rs": "a36c31e9724504931b1e037a69a24762136adcf8a7c2c71f96bb8ebc3144b2a7",
+      "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+      "evas/rust_core/src/idtmod.rs": "6be25e77695a85ed80e2a0faa2f780215a039258ddd8c9efd9a600bac14c5bfb",
+      "evas/rust_core/src/implicit_dynamics.rs": "5a1b5dfb3f182b071c58f341281b7ac35204abecf5691838509cbb78ac0172ed",
+      "evas/rust_core/src/initialization.rs": "8bb399f7b85b3dd938c012ba7c0eb8d5ec88e9849b9e27e90d77cf9438046e97",
+      "evas/rust_core/src/interval.rs": "89a83ce96dbf6cdc217a046c9885ca0cf580c6e6f932c36f0195120d49e53f56",
+      "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
+      "evas/rust_core/src/ir.rs": "cc687fdd3d78e908644537aa8194d3a3ccb3dcb5b88c11a78d7b3e640ad97ea0",
+      "evas/rust_core/src/laplace.rs": "4efcad4da1934849c90985c908aaf750f5bd823392deae3ad555515f8bf71a23",
+      "evas/rust_core/src/lib.rs": "7abe5a48737d991a17fb693df44e2957d66f12d68ac0560149f0a99fd13ee73a",
+      "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+      "evas/rust_core/src/linear/dense.rs": "00a1d9e1a9c5f933f765dd586ab9a8982073d270fed73ed7e602af858e732cad",
+      "evas/rust_core/src/linear/properties.rs": "d1a8b5ec069fef4f621b99290b532f7563cb8f55a1ba2178a77877f60192ab7f",
+      "evas/rust_core/src/linear/refinement.rs": "8476ad2ea3f3698e3c4552f8ff785c00ff878caab584b157dbb80b9c282f32a8",
+      "evas/rust_core/src/linear/sparse.rs": "3914adce2368b027027c06240f160864af0f53de934c0b3285515114fe7aa869",
+      "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+      "evas/rust_core/src/linear.rs": "e0280cfcaaebd2449ab5e4474daf5cd19e6a9fbda5db53e14e5229fc81a4eb36",
+      "evas/rust_core/src/main.rs": "70626c73fa421340afcc53c025a220720b208657273ba3f5e20bc1e4c6e01c3c",
+      "evas/rust_core/src/nonlinear/continuation.rs": "6d0aabe1bb6563a32d4e920fabdefde881777a54b8dc2b4658de432347f6448a",
+      "evas/rust_core/src/nonlinear.rs": "6d7b269023f4b65c4542c5a77a7e5386c061c1c4cd8eb9623d8e1aeef2ec30af",
+      "evas/rust_core/src/nonlinear_dynamics.rs": "dfa6753cd77197cbf0225b24169f652eda1bfb514b1dd4527ee3a80b7137fc8a",
+      "evas/rust_core/src/operators.rs": "7a474615d4fc4d7760016178fafb303a0a5a3595f784b4fa5c48b468b1590fc0",
+      "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+      "evas/rust_core/src/pwl.rs": "9eb6a7cc54f86eb91bdf946fe60955b01e14bcd27be2b0683e781c473dfa2bfa",
+      "evas/rust_core/src/reset_dependencies.rs": "d2adaba2e28d70511e0977c223ea7922b627c832e633b7f94360c951a6f0e3fa",
+      "evas/rust_core/src/schedule.rs": "f04c5e10b007b01bb016582a2175ab6ad48e2c6b8588e2023435c2b64f3d6281",
+      "evas/rust_core/src/settlement.rs": "48584be254805a3c0e990281ca00367efc988fb59351c855930960bd82793687",
+      "evas/rust_core/src/settlement_bounds.rs": "580dcd5fe6e9777bed0fcb04a8fd4bef98f5974905ec1c6bf77c26ca2f56d274",
+      "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+      "evas/rust_core/src/solver.rs": "fbbef1378759e01433d2e3bde7106f61f001db505ede5128198a6dcb3e808446",
+      "evas/rust_core/src/solver_cache_tests.rs": "727acd4fc9084bb6e546a8aa70e2f1e5bd476d27265f5198c5cdd08b0a7fd3fa",
+      "evas/rust_core/src/state_space.rs": "c7e8ff82302cb87c6ba150e5def9d1cf9eba15e23657e2f2686eb067ce4ef74c",
+      "evas/rust_core/src/transient.rs": "8e59ceda03169d883ebeeaa55f56a80c6a80dbdad322ce911d51a95adc768f13",
+      "evas/rust_core/src/transient_condition_tests.rs": "51b89c0648fc1d92282c6d6c46dbeced83ad472ddbf2b8ad64e953d3c7befa25",
+      "evas/rust_core/src/transient_history_calendar.rs": "c54256bb4d0febf2d41f9a6422d69bf3968258337d8dbb5f3d3e18e82cf786a5",
+      "evas/rust_core/src/transient_idt_tests.rs": "ba2c353e867aa4b6fbd8e27f68ad1407536e525712ddab96ebf998434e2755ad",
+      "evas/rust_core/src/transient_lifecycle_tests.rs": "954487d2713727fcd0a73a30e97aa56f7f0587ccdb34beeeb073f26855941f48",
+      "evas/rust_core/src/transient_window_tests.rs": "987d1bac508f0e9c780e1b8ac109bec1b077c85a7722a4d084be64e31565103e",
+      "evas/rust_core/src/transition.rs": "1d1c3e709e983a53d0616d0fda1ff2183d2a2dc33b0b65e0aff122162ba72a3c",
+      "evas/rust_core/ir/src/lib.rs": "9216242d4eab4a59cab8a40fc11f22c5aaf2a190fe8bf5bfa764429ad26abc49"
+    },
+    "build_command": "cargo build --locked (cwd evas/rust_core)",
+    "build_log": {
+      "availability": "local-only",
+      "workspace_relative_path": "worktrees/spec-a-initialization/runs/initialization/spectre-comparison/build-ee7.log",
+      "sha256": "c92508a29848820f033cd2ea015c85dde0953c88b07cc967ce34b7c08f610549"
+    },
+    "build_revision_limit": "CLI build_revision=null retained; kernel hash and source closure plus cargo log identify this local developer artifact; no release provenance inferred"
+  },
+  "judgment_authority": {
+    "criteria.py": {
+      "commit": "cf14a9e654668b027d02413d774f11627cfe7ba0",
+      "repository_path": "evas/validation/paper/criteria.py",
+      "sha256": "4f505a7670542b83d1395a7e19669f244502a2946e5cb6bcd879a6ccdb350c21",
+      "url": "https://github.com/BucketSran/vaEVAS/blob/cf14a9e654668b027d02413d774f11627cfe7ba0/evas/validation/paper/criteria.py"
+    },
+    "oracle.py": {
+      "commit": "cf14a9e654668b027d02413d774f11627cfe7ba0",
+      "repository_path": "evas/validation/paper/oracle.py",
+      "sha256": "96ece5a943113a6e6e79b441145a2f2238da43938914605d884b5fd0414e72dc",
+      "url": "https://github.com/BucketSran/vaEVAS/blob/cf14a9e654668b027d02413d774f11627cfe7ba0/evas/validation/paper/oracle.py"
+    },
+    "core-v1.json": {
+      "commit": "cf14a9e654668b027d02413d774f11627cfe7ba0",
+      "repository_path": "evas/validation/paper/core-v1.json",
+      "sha256": "e1ae5311da9e05991e9802da1a24e97a70d179972608a1b9d21eb00013f61a53",
+      "url": "https://github.com/BucketSran/vaEVAS/blob/cf14a9e654668b027d02413d774f11627cfe7ba0/evas/validation/paper/core-v1.json"
+    }
+  },
+  "checker_identity": {
+    "version": "paper-criteria-v1",
+    "files": {
+      "criteria.py": "4f505a7670542b83d1395a7e19669f244502a2946e5cb6bcd879a6ccdb350c21",
+      "oracle.py": "96ece5a943113a6e6e79b441145a2f2238da43938914605d884b5fd0414e72dc",
+      "core-v1.json": "e1ae5311da9e05991e9802da1a24e97a70d179972608a1b9d21eb00013f61a53"
+    },
+    "runtime": {
+      "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "math_sha256": "cc7d168e6933da397995ce0c3bf0b96813ddbfcacaeb37988e5c98aa02810452"
+    },
+    "sha256": "c7c3ba10206549b13a83b80b90f715f41ffa08e23aa13e3357303196b5f7e192"
+  },
+  "native_reader_identity": {
+    "experiments/backends/paper/observations.py": {
+      "sha256": "0aff2f248d63b9e81b1fcf5bab5722df13bdcf42fd7edffe4fe65f45b79b845c",
+      "commit": "cf14a9e654668b027d02413d774f11627cfe7ba0",
+      "url": "https://github.com/BucketSran/vaEVAS/blob/cf14a9e654668b027d02413d774f11627cfe7ba0/experiments/backends/paper/observations.py"
+    },
+    "experiments/archive/dvs2-starter-pilot/analyze.py": {
+      "sha256": "e10acac779cb8c8e627358832689506f4f366de9241155e9daf512d8bcb01680",
+      "commit": "cf14a9e654668b027d02413d774f11627cfe7ba0",
+      "url": "https://github.com/BucketSran/vaEVAS/blob/cf14a9e654668b027d02413d774f11627cfe7ba0/experiments/archive/dvs2-starter-pilot/analyze.py"
+    },
+    "experiments/archive/dvs2-starter-pilot/suite.py": {
+      "sha256": "7c4e686253688d575b32f9aec89e6e741da201c1411436b765f5f7e2f12e49ff",
+      "commit": "cf14a9e654668b027d02413d774f11627cfe7ba0",
+      "url": "https://github.com/BucketSran/vaEVAS/blob/cf14a9e654668b027d02413d774f11627cfe7ba0/experiments/archive/dvs2-starter-pilot/suite.py"
+    }
+  },
+  "method": {
+    "frozen_five": {
+      "availability": "local-only",
+      "workspace_relative_path": "worktrees/spec-a-initialization/runs/initialization/spectre-comparison/METHOD.md",
+      "sha256": "f58fdc636deef66c2815fca2911451c123e28719a7389088613967f88f9c3d47"
+    },
+    "frozen_additional_expected_manifest": {
+      "availability": "local-only",
+      "workspace_relative_path": "worktrees/spec-a-initialization/runs/initialization/spectre-comparison/additional-controls/INPUT_MANIFEST.json",
+      "sha256": "8e4a8ad48aaed1665d87de2a5505162c0980d44899062e2e562e0c02b4204087"
+    },
+    "analysis_commands": [
+      "python3 -B runs/initialization/spectre-comparison/compare.py",
+      "python3 -B runs/initialization/spectre-comparison/analyze-additional.py"
+    ],
+    "scripts": [
+      {
+        "availability": "local-only",
+        "workspace_relative_path": "worktrees/spec-a-initialization/runs/initialization/spectre-comparison/compare.py",
+        "sha256": "38d0c2574712a3b0a757b9c72a0f6f62a1e13e224fb6968f244e813985160c52"
+      },
+      {
+        "availability": "local-only",
+        "workspace_relative_path": "worktrees/spec-a-initialization/runs/initialization/spectre-comparison/analyze-additional.py",
+        "sha256": "fcdd814b7a4c7d359cdda3ffa7a4823adfb6561528639f71f59a32a0f67a8169"
+      }
+    ],
+    "report": {
+      "availability": "local-only",
+      "workspace_relative_path": "worktrees/spec-a-initialization/runs/initialization/spectre-comparison/REPORT.md",
+      "sha256": "bd21f4ec0a820811b409b1c8e7509feca6b390670d9c72b99b2e129e5349a70e"
+    },
+    "installed_native_initial_contract_addendum": {
+      "availability": "local-only",
+      "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/reviews/spec-a-actual-astra/installed-contract-addendum.md",
+      "sha256": "ede271966f41721735f8ad7793729d24ea6de478babc72c9eba44713a7fbd69f"
+    },
+    "additional_report": {
+      "availability": "local-only",
+      "workspace_relative_path": "worktrees/spec-a-initialization/runs/initialization/spectre-comparison/additional-analysis/REPORT.md",
+      "sha256": "e302fd1fd34ebe8c25231f88618b8364fcb9ba66f8b6b472e7bc05840f4334fc"
+    },
+    "no_second_checker": "Analysis extracts finite observations using unchanged published oracle/criteria; formal assess preserved I",
+    "exact_stop_rows_definition": "Count of native records whose Python parsed-float time equals the requested float stop. This is not exact equality of decimal raw/deck tokens, attested requested-center identity or a serialization-error certificate.",
+    "freeze_sequence_evidence": {
+      "basis": "Each control expectation was fixed before its respective Spectre dispatch. The five-pair METHOD was fixed before numerical reanalysis, with no claim that it preceded the earlier Spectre executions. The additional dispatch also binds the prior METHOD/REPORT. Accepted budgets unchanged.",
+      "traceability": [
+        {
+          "batch": "three-held-controls",
+          "input_dispatch_identity": {
+            "availability": "local-only",
+            "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/INPUT_IDENTITY.json",
+            "sha256": "fc6961917114bb6ea77f228794e1ba3819bb6836605bf1d77f18360fa382b0ee"
+          },
+          "operator_started": {
+            "availability": "local-only",
+            "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/OPERATOR_STARTED.json",
+            "sha256": "eb382a047d8de15600097e54b6daea367be67f8fe30fbc19b6805a430a6c14e0"
+          },
+          "operator_receipt": {
+            "availability": "local-only",
+            "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/operator-receipt.json",
+            "sha256": "ff57918359d95c8c9ee15062f8d56b9f603265a5d8085e5503c77f218928b2f1"
+          },
+          "execution_receipt": {
+            "availability": "local-only",
+            "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/output/EXECUTION.json",
+            "sha256": "3c912750748a0203cba51da7f55ba2822e7e7e8c0a3dae021d6858daff88e166"
+          },
+          "statement": "Dispatch input identity binds expected/request/response and preparation manifests; only the additional batch also binds prior METHOD/REPORT. Actual UTC completion fields remain in execution stages. These local records are not an independent timestamp or third-party preregistration."
+        },
+        {
+          "batch": "three-additional-controls",
+          "input_dispatch_identity": {
+            "availability": "local-only",
+            "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/INPUT_IDENTITY.json",
+            "sha256": "2fbbedb1f48dab568451012333dbc6bc8101588f870dd94e336288e9b6fb0f21"
+          },
+          "operator_started": {
+            "availability": "local-only",
+            "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/OPERATOR_STARTED.json",
+            "sha256": "e5996d8c0520dfc2896c3bfba4d6b7cdf1e4a9ad2b1eaf61151f731883c018dd"
+          },
+          "operator_receipt": {
+            "availability": "local-only",
+            "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/operator-receipt.json",
+            "sha256": "f788a5c5f9c1bd840f268ce03c05fcfb486b346e9263042417621de611f20137"
+          },
+          "execution_receipt": {
+            "availability": "local-only",
+            "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/output/EXECUTION.json",
+            "sha256": "6ddea6598a3edaac179846ba76911ec19cd642f2a2a9626a59acfd116699c79d"
+          },
+          "statement": "Dispatch input identity binds expected/request/response and preparation manifests; only the additional batch also binds prior METHOD/REPORT. Actual UTC completion fields remain in execution stages. These local records are not an independent timestamp or third-party preregistration."
+        }
+      ],
+      "additional_identity_check": "Held-control dispatch INPUT_IDENTITY binds frozen expected/request/response and preparation manifest. Additional dispatch also binds prior METHOD/REPORT; those hashes match the retained local prepared artifacts. Five-pair METHOD ordering is before numerical reanalysis only, not before earlier Spectre execution.",
+      "public_limit": "The public summary does not provide third-party preregistration or an independent timestamp proof; local availability limits external verification. The claimed sequence is respective control expectations before dispatch and five-pair METHOD before numerical reanalysis, without an earlier-Spectre timing claim for that METHOD."
+    }
+  },
+  "execution_denominator": {
+    "actual_spectre_conditions": 8,
+    "actual_spectre_main_runs": 8,
+    "spectre_version_probes": 3,
+    "paper_original_conditions_in_this_report": 2,
+    "development_controls": 6,
+    "paper_denominator_unchanged": 12,
+    "statement": "three original Spectre collection bundles include other paper executions; report retains only these eight named pairs"
+  },
+  "raw_bundles": [
+    {
+      "archive": {
+        "availability": "local-only",
+        "workspace_relative_path": "worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/raw.tar.gz",
+        "sha256": "913a17abb151e881c0f7e068c1759f0d29c2d73174415480247dbe5498e15910"
+      },
+      "collection": {
+        "availability": "local-only",
+        "workspace_relative_path": "worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/COLLECTION.json",
+        "sha256": "100abbf03b1ce089909a9c70d420bb9f1a368e7e23290db424a1f77bb418e86f"
+      },
+      "file_manifest": {
+        "artifact": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/FILE_MANIFEST.json",
+          "sha256": "f9e96c4f5ad0c53f1846f42fbfc653bb3808d2ffc4417f8806ee2e493e74c00c"
+        },
+        "verified_files": 104
+      },
+      "tool_identity": {
+        "profile_identity": "4d05474e15dc181d4f8f99bf749e8190c872d621288b1aa3bc6ffa000370fa4f",
+        "unknowns": [],
+        "binary": "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre",
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "setup_sha256": {
+          "/home/cshrc/.cshrc.cadence.sui": "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+          "/home/cshrc/.cshrc.mentor25.sui": "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+        },
+        "version": "sub-version  21.1.0.509.isr12",
+        "probe": {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "prlimit",
+            "--as=4294967296",
+            "--fsize=33554432",
+            "--",
+            "/bin/csh",
+            "-f",
+            "version.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "status": "completed",
+          "cleanup": {
+            "signals": [
+              "SIGTERM",
+              "SIGKILL"
+            ],
+            "errors": [],
+            "complete": true
+          },
+          "elapsed_seconds": 1.3236595690250397,
+          "completed_utc": "2026-10-06T20:58:35Z",
+          "log": "version.log",
+          "log_sha256": "d0e6c83a98026a294bfc4b9754c4e294d322b60b1872a28e38f84caccbdf7f81",
+          "stage": "version",
+          "resource_caps": {
+            "memory_limit_bytes": 4294967296,
+            "file_limit_bytes": 33554432,
+            "threads": 1
+          }
+        },
+        "setup": "source /home/cshrc/.cshrc.cadence.sui\nsource /home/cshrc/.cshrc.mentor25.sui\n"
+      },
+      "tool_identity_artifact": {
+        "availability": "local-only",
+        "workspace_relative_path": "worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/TOOL_IDENTITY.json",
+        "sha256": "6511c93ce1e2691a3ace48e9c518378a9b9c1978cee6dde63b59bc26cedc7939"
+      },
+      "operator_receipt": {
+        "availability": "local-only",
+        "workspace_relative_path": "worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/operator-receipt.json",
+        "sha256": "c04bc0ddb9508f514a689675f870075affbd40bed60c3dd20c29ab2e2875752b"
+      },
+      "operator_receipt_content": {
+        "argv": [
+          "/usr/local/bin/python3.12",
+          "-B",
+          "/tmp/chips-jinzhihong/spec-a-first-checkpoint-20261007-v3/repo/experiments/backends/paper/runner.py",
+          "/tmp/chips-jinzhihong/spec-a-first-checkpoint-20261007-v3/deployment/inputs",
+          "/tmp/chips-jinzhihong/spec-a-first-checkpoint-20261007-v3/spectre-repair-three/output",
+          "--backend",
+          "spectre",
+          "--tool-profile",
+          "/tmp/chips-jinzhihong/spec-a-first-checkpoint-20261007-v3/deployment/spectre-profile.json",
+          "--allocation",
+          "/tmp/chips-jinzhihong/spec-a-first-checkpoint-20261007-v3/spectre-repair-three/allocation.json"
+        ],
+        "file_cap_bytes": 33554432,
+        "case_cap_bytes": 268435456,
+        "monitor_interval_s": 1,
+        "cap_note": "Host inherited RLIMIT_FSIZE; case cap is polling, not a hard quota or container-tree guarantee.",
+        "started_unix_ns": 1791320314270776237,
+        "events": [
+          {
+            "argv": [
+              "podman",
+              "--root",
+              "/tmp/chips-jinzhihong/cmp-backend-completion-20261006/storage",
+              "--runroot",
+              "/tmp/chips-jinzhihong/cmp-backend-completion-20261006/runroot",
+              "--storage-driver",
+              "overlay",
+              "--storage-opt",
+              "ignore_chown_errors=true",
+              "ps",
+              "-aq"
+            ],
+            "exit_code": 0,
+            "stdout": "",
+            "stderr": ""
+          }
+        ],
+        "peak_case_bytes": {
+          "/tmp/chips-jinzhihong/spec-a-first-checkpoint-20261007-v3/spectre-repair-three/output/runs/EV-HC-01": 6031001,
+          "/tmp/chips-jinzhihong/spec-a-first-checkpoint-20261007-v3/spectre-repair-three/output/runs/EV-HC-02": 8895720,
+          "/tmp/chips-jinzhihong/spec-a-first-checkpoint-20261007-v3/spectre-repair-three/output/runs/CO-VCO-01": 15655190
+        },
+        "status": "complete",
+        "pid": 3358733,
+        "members_before_cleanup": [
+          3358733
+        ],
+        "cleanup_confirmed": true,
+        "child_exit_code": 0,
+        "members_after_reap": [],
+        "exit_code": 0,
+        "finished_unix_ns": 1791320345385648551
+      }
+    },
+    {
+      "archive": {
+        "availability": "local-only",
+        "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/raw.tar.gz",
+        "sha256": "b1c9bb43b93b491e018d6d8752eeac2f34739a4e628a52a327a693cca027cac9"
+      },
+      "collection": {
+        "availability": "local-only",
+        "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/COLLECTION.json",
+        "sha256": "d6acdf90b851b0a862b215f1b406ee0aef147750da5b2791caa80cffd509d551"
+      },
+      "file_manifest": {
+        "artifact": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/output/FILE_MANIFEST.json",
+          "sha256": "62b0ee93b1c71a42baf66e15f71fc72755d9f5fb59b3fb9ea68a4f6d4fcc232a"
+        },
+        "verified_files": 92
+      },
+      "tool_identity": {
+        "profile_identity": "4d05474e15dc181d4f8f99bf749e8190c872d621288b1aa3bc6ffa000370fa4f",
+        "unknowns": [],
+        "binary": "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre",
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "setup_sha256": {
+          "/home/cshrc/.cshrc.cadence.sui": "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+          "/home/cshrc/.cshrc.mentor25.sui": "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+        },
+        "version": "sub-version  21.1.0.509.isr12",
+        "probe": {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "prlimit",
+            "--as=4294967296",
+            "--fsize=33554432",
+            "--",
+            "/bin/csh",
+            "-f",
+            "version.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "status": "completed",
+          "cleanup": {
+            "signals": [
+              "SIGTERM",
+              "SIGKILL"
+            ],
+            "errors": [],
+            "complete": true
+          },
+          "elapsed_seconds": 1.3028994873166084,
+          "completed_utc": "2026-10-06T20:52:13Z",
+          "log": "version.log",
+          "log_sha256": "d0e6c83a98026a294bfc4b9754c4e294d322b60b1872a28e38f84caccbdf7f81",
+          "stage": "version",
+          "resource_caps": {
+            "memory_limit_bytes": 4294967296,
+            "file_limit_bytes": 33554432,
+            "threads": 1
+          }
+        },
+        "setup": "source /home/cshrc/.cshrc.cadence.sui\nsource /home/cshrc/.cshrc.mentor25.sui\n"
+      },
+      "tool_identity_artifact": {
+        "availability": "local-only",
+        "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/output/TOOL_IDENTITY.json",
+        "sha256": "a445c522138d10b907d37ed488415178112191010e7002ae917e04ee1a1940b7"
+      },
+      "operator_receipt": {
+        "availability": "local-only",
+        "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/operator-receipt.json",
+        "sha256": "ff57918359d95c8c9ee15062f8d56b9f603265a5d8085e5503c77f218928b2f1"
+      },
+      "operator_receipt_content": {
+        "argv": [
+          "/usr/local/bin/python3.12",
+          "-B",
+          "/tmp/chips-jinzhihong/spec-a-first-checkpoint-20261007-v3/dev-init-pairs/run.py",
+          "--output",
+          "/tmp/chips-jinzhihong/spec-a-first-checkpoint-20261007-v3/dev-init-pairs/output"
+        ],
+        "file_cap_bytes": 33554432,
+        "case_cap_bytes": 268435456,
+        "monitor_interval_s": 1,
+        "cap_note": "Host inherited RLIMIT_FSIZE; case cap is polling, not a hard quota or container-tree guarantee.",
+        "started_unix_ns": 1791319931595877531,
+        "events": [
+          {
+            "argv": [
+              "podman",
+              "--root",
+              "/tmp/chips-jinzhihong/cmp-backend-completion-20261006/storage",
+              "--runroot",
+              "/tmp/chips-jinzhihong/cmp-backend-completion-20261006/runroot",
+              "--storage-driver",
+              "overlay",
+              "--storage-opt",
+              "ignore_chown_errors=true",
+              "ps",
+              "-aq"
+            ],
+            "exit_code": 0,
+            "stdout": "",
+            "stderr": ""
+          }
+        ],
+        "peak_case_bytes": {
+          "/tmp/chips-jinzhihong/spec-a-first-checkpoint-20261007-v3/dev-init-pairs/output/runs/hc02-low": 6305245,
+          "/tmp/chips-jinzhihong/spec-a-first-checkpoint-20261007-v3/dev-init-pairs/output/runs/hc02-strict-tie": 6335293,
+          "/tmp/chips-jinzhihong/spec-a-first-checkpoint-20261007-v3/dev-init-pairs/output/runs/hc02-nonstrict-tie": 6335285
+        },
+        "status": "complete",
+        "pid": 3353998,
+        "members_before_cleanup": [
+          3353998
+        ],
+        "cleanup_confirmed": true,
+        "child_exit_code": 0,
+        "members_after_reap": [],
+        "exit_code": 0,
+        "finished_unix_ns": 1791319961706560507
+      }
+    },
+    {
+      "archive": {
+        "availability": "local-only",
+        "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/raw.tar.gz",
+        "sha256": "1b5b19256e8f86e69e7045807687cfcf407e4903564c57973d16087fe8c86c77"
+      },
+      "collection": {
+        "availability": "local-only",
+        "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/COLLECTION.json",
+        "sha256": "062c9dddc1f808699f44e75f11af6209cebec5c21109832cc16c75a926519e68"
+      },
+      "file_manifest": {
+        "artifact": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/output/FILE_MANIFEST.json",
+          "sha256": "96565f4cc8286e2611c131a6424f5b8e9481b1507142c8a2fd8fef75bb24e789"
+        },
+        "verified_files": 92
+      },
+      "tool_identity": {
+        "profile_identity": "4d05474e15dc181d4f8f99bf749e8190c872d621288b1aa3bc6ffa000370fa4f",
+        "unknowns": [],
+        "binary": "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre",
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "setup_sha256": {
+          "/home/cshrc/.cshrc.cadence.sui": "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+          "/home/cshrc/.cshrc.mentor25.sui": "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+        },
+        "version": "sub-version  21.1.0.509.isr12",
+        "probe": {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "prlimit",
+            "--as=4294967296",
+            "--fsize=33554432",
+            "--",
+            "/bin/csh",
+            "-f",
+            "version.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "status": "completed",
+          "cleanup": {
+            "signals": [
+              "SIGTERM",
+              "SIGKILL"
+            ],
+            "errors": [],
+            "complete": true
+          },
+          "elapsed_seconds": 1.3243802040815353,
+          "completed_utc": "2026-10-06T21:12:34Z",
+          "log": "version.log",
+          "log_sha256": "d0e6c83a98026a294bfc4b9754c4e294d322b60b1872a28e38f84caccbdf7f81",
+          "stage": "version",
+          "resource_caps": {
+            "memory_limit_bytes": 4294967296,
+            "file_limit_bytes": 33554432,
+            "threads": 1
+          }
+        },
+        "setup": "source /home/cshrc/.cshrc.cadence.sui\nsource /home/cshrc/.cshrc.mentor25.sui\n"
+      },
+      "tool_identity_artifact": {
+        "availability": "local-only",
+        "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/output/TOOL_IDENTITY.json",
+        "sha256": "6bc900b90d6f1d174d6dc6fd6c8fadeb952ecc7592f4dc8250d51ee6a9d599ef"
+      },
+      "operator_receipt": {
+        "availability": "local-only",
+        "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/operator-receipt.json",
+        "sha256": "f788a5c5f9c1bd840f268ce03c05fcfb486b346e9263042417621de611f20137"
+      },
+      "operator_receipt_content": {
+        "argv": [
+          "/usr/local/bin/python3.12",
+          "-B",
+          "/tmp/chips-jinzhihong/spec-a-first-checkpoint-20261007-v3/dev-init-additional/run.py",
+          "--output",
+          "/tmp/chips-jinzhihong/spec-a-first-checkpoint-20261007-v3/dev-init-additional/output"
+        ],
+        "file_cap_bytes": 33554432,
+        "case_cap_bytes": 268435456,
+        "monitor_interval_s": 1,
+        "cap_note": "Host inherited RLIMIT_FSIZE; case cap is polling, not a hard quota or container-tree guarantee.",
+        "started_unix_ns": 1791321152304664723,
+        "events": [
+          {
+            "argv": [
+              "podman",
+              "--root",
+              "/tmp/chips-jinzhihong/cmp-backend-completion-20261006/storage",
+              "--runroot",
+              "/tmp/chips-jinzhihong/cmp-backend-completion-20261006/runroot",
+              "--storage-driver",
+              "overlay",
+              "--storage-opt",
+              "ignore_chown_errors=true",
+              "ps",
+              "-aq"
+            ],
+            "exit_code": 0,
+            "stdout": "",
+            "stderr": ""
+          }
+        ],
+        "peak_case_bytes": {
+          "/tmp/chips-jinzhihong/spec-a-first-checkpoint-20261007-v3/dev-init-additional/output/runs/hc02-lower-strict-tie": 6336366,
+          "/tmp/chips-jinzhihong/spec-a-first-checkpoint-20261007-v3/dev-init-additional/output/runs/hc02-lower-nonstrict-tie": 6336346,
+          "/tmp/chips-jinzhihong/spec-a-first-checkpoint-20261007-v3/dev-init-additional/output/runs/hc01-integer-shared-counter": 4543519
+        },
+        "status": "complete",
+        "pid": 3368112,
+        "members_before_cleanup": [
+          3368112
+        ],
+        "cleanup_confirmed": true,
+        "child_exit_code": 0,
+        "members_after_reap": [],
+        "exit_code": 0,
+        "finished_unix_ns": 1791321181457253330
+      }
+    }
+  ],
+  "records": [
+    {
+      "control": "hc01-original",
+      "paper_card": "EV-HC-01",
+      "scientific_denominator": "original paper condition",
+      "development_agreement": true,
+      "judgment": {
+        "output_budget_V": 0.001,
+        "counter_marker_budget_V": 0.001,
+        "construction": {
+          "authority": "fixed Spec A card and oracle; no local replacement",
+          "card": "EV-HC-01"
+        },
+        "authority": "published fixed Spec A oracle/event_limits; held ties use pre-execution frozen direct comparison expectations",
+        "qualifier": "finite observed agreement; no independent numerical error certificate",
+        "construction_role": "Frozen independent expected behavior, not an assertion of bitwise constancy or equality of observed native records. Observed errors are reported separately against the unchanged budget."
+      },
+      "source": {
+        "text": "`include \"disciplines.vams\"\n`include \"constants.vams\"\nmodule paper_hc(in, out, count);\n inout in, out, count;\n electrical in, out, count;\n real q,n;\n analog begin\n  @(initial_step) begin q=0; n=0; end\n  @(cross(V(in)-0.65,+1,1e-9,2e-4)) begin q=1; n=n+1; end\n  @(cross(V(in)-0.35,-1,1e-9,2e-4)) begin q=0; n=n+1; end\n  V(out)<+0.1+0.8*q;\n  V(count)<+n;\n end\nendmodule\n",
+        "sha256": "ed4a653c2b7bdf28d080a51b7e05134c17d93972ff88d122da0aaa34bfc2b29c",
+        "artifact": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/EV-HC-01/dut.va",
+          "sha256": "ed4a653c2b7bdf28d080a51b7e05134c17d93972ff88d122da0aaa34bfc2b29c"
+        }
+      },
+      "inputs": {
+        "driven": [
+          "in"
+        ],
+        "pwl": [
+          [
+            [
+              0,
+              0.1
+            ],
+            [
+              2e-06,
+              0.9
+            ],
+            [
+              4e-06,
+              0.1
+            ]
+          ]
+        ],
+        "parameters": {},
+        "output_times_s": [
+          0,
+          1e-06,
+          1.373e-06,
+          1.375e-06,
+          1.377e-06,
+          2e-06,
+          3e-06,
+          3.373e-06,
+          3.375e-06,
+          3.3769999999999996e-06,
+          4e-06
+        ],
+        "stop_s": 4e-06,
+        "max_step_s": 4e-06
+      },
+      "spectre": {
+        "deck": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/EV-HC-01/tb.scs",
+          "sha256": "4f64fe0e1c56d0ccc9775c1827ccc3785176cd0c632b9486cf471f13291e5e9a"
+        },
+        "binding": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/EV-HC-01/binding.json",
+          "sha256": "2ca22db37ffa5b65ea76605336fba39f507e9b03dbd8ca9b61c23d425bfc3bb9"
+        },
+        "settings_requested": {
+          "stop_s": 4e-06,
+          "maxstep_s": 2e-10,
+          "reltol": 1e-05,
+          "vabstol_V": 1e-07,
+          "iabstol_A": 1e-12,
+          "output_request": "native records plus prescribed exact centers; requested grid does not qualify interpolation",
+          "integration_method": "traponly/trap for SPICE; unsupported by EVAS",
+          "spice_maxstep_s": 2e-10,
+          "spice_output_estimate_bytes": 6531840,
+          "spice_observation_strategy": "global 200ps plus disconnected PWL local/center breakpoint requests; actual preflight required",
+          "spectral_strobe_strategy": "prescribed times; strobeoutput=all; actual origin qualification pending"
+        },
+        "settings_effective": {
+          "global_reltol": 1e-05,
+          "transient_reltol": 1e-06,
+          "reason": "conservative preset multiplies global reltol by .1 per installed Spectre21.1 docs; retains old RESULT inconsistent status",
+          "vabstol_V": 1e-07,
+          "iabstol_A": 1e-12,
+          "maxstep_s": 2e-10,
+          "log_sha256": "507f1aa9b13b2d9a8a442a5d9df79c0f145a956fd84fb498f9442103b99db0b1"
+        },
+        "waveform": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/EV-HC-01/psf/tran.tran.tran",
+          "sha256": "9a73161ed95b9e0e0a1beb4e456d5a0a8ef322867b67e1efeb7aed46f3d77863"
+        },
+        "receipt_artifact": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/EV-HC-01/RESULT.json",
+          "sha256": "6d2452cd08951fb7b3bfd4f2474673a567122200c34d27144bec7a76af2f0441"
+        },
+        "execution_stages": [
+          {
+            "argv": [
+              "taskset",
+              "-c",
+              "0",
+              "prlimit",
+              "--as=4294967296",
+              "--fsize=33554432",
+              "--",
+              "/bin/csh",
+              "-f",
+              "run.csh"
+            ],
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            },
+            "elapsed_seconds": 8.512048557400703,
+            "completed_utc": "2026-10-06T20:58:44Z",
+            "log": "simulate.log",
+            "log_sha256": "1cdd5178ef8074c6b629214dfb0a0d8bae3df704908571c4b4310716b599963a",
+            "stage": "simulate",
+            "resource_caps": {
+              "memory_limit_bytes": 4294967296,
+              "file_limit_bytes": 33554432,
+              "threads": 1
+            }
+          }
+        ],
+        "actual_command_script": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/EV-HC-01/run.csh",
+          "sha256": "8ab92f7be2ad7461ef937b99179a2e2a41c0382543442372cd62b376715a7b1a"
+        },
+        "actual_command_text": "source /home/cshrc/.cshrc.cadence.sui\nsource /home/cshrc/.cshrc.mentor25.sui\n/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre -64 tb.scs +log spectre.log -format psfascii -raw psf +lqtimeout 30 +mt=1\nexit $status\n",
+        "native_record_audit": {
+          "accepted_steps": 20370,
+          "parsed_records": 20371,
+          "records_equal_steps_plus_initial": true,
+          "initial_time_zero": true,
+          "strobeoutput_all": true,
+          "skipdc_no": true,
+          "source_outputs": "direct V(out)/V(count) contributions of q/n; no output reconstruction",
+          "scope": "installed contract plus actual simple direct-state model evidence; finite native records only"
+        }
+      },
+      "evas": {
+        "request": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-initialization/runs/initialization/spectre-comparison/hc01-original/request.json",
+          "sha256": "7d4f003876e6cac00d9a095f57d670dcc4e639aa02bc8bb5d66668e7a7672489"
+        },
+        "response": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-initialization/runs/initialization/spectre-comparison/hc01-original/response.json",
+          "sha256": "1d4a9700e08f5b3a333ef6fa5ee7bb7c0b831c063a2a36e048f04f1528aae98e"
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        },
+        "kernel_sha256": "f77da92c10620aaeeb2d096652cd3a5a3e2ef1df9dbab4278a70a45ff78ebe2f",
+        "execution_command": [
+          "evas/rust_core/target/debug/evas-kernel"
+        ],
+        "invocation": "public compile_sources then stdin JSON request; stdout response persisted; no simulator output reconstruction",
+        "new_or_reused": "new final ee7 public execution"
+      },
+      "observations": {
+        "initial": {
+          "time": 0.0,
+          "in": 0.1,
+          "out": 0.1,
+          "count": 0.0
+        },
+        "last": {
+          "time": 3.999999999999654e-06,
+          "in": 0.1000000000001382,
+          "out": 0.1,
+          "count": 2.0
+        },
+        "count_sequence": [
+          0,
+          1,
+          2
+        ],
+        "max_errors_V": {
+          "in": 4.996003610813204e-16,
+          "out": 1.1102230246251565e-16,
+          "count": 0.0
+        },
+        "coverage": {
+          "requested_stop_s": 4e-06,
+          "last_time_s": 3.999999999999654e-06,
+          "covers_requested_stop": false,
+          "exact_stop_rows": 0
+        },
+        "event_history": [
+          {
+            "native_bracket_T": [
+              1.37498,
+              1.375
+            ],
+            "legal_window_T": [
+              1.375,
+              1.3755
+            ],
+            "intersection_T": [
+              1.375,
+              1.375
+            ],
+            "compatible": true,
+            "count_after": 1,
+            "compatible_basis": "Derived from nonempty intersection of parsed native bracket and unchanged legal window; finite numerical compatibility only.",
+            "intersection_width_T": 0.0,
+            "single_point_contact": true
+          },
+          {
+            "native_bracket_T": [
+              3.374999999999999,
+              3.37502
+            ],
+            "legal_window_T": [
+              3.375,
+              3.3755
+            ],
+            "intersection_T": [
+              3.375,
+              3.37502
+            ],
+            "compatible": true,
+            "count_after": 2,
+            "compatible_basis": "Derived from nonempty intersection of parsed native bracket and unchanged legal window; finite numerical compatibility only.",
+            "intersection_width_T": 2.0000000000131024e-05,
+            "single_point_contact": false
+          }
+        ],
+        "ev_initial": {
+          "0": 0.0,
+          "count": -0.0,
+          "in": 0.1,
+          "out": 0.1,
+          "time": 0.0
+        },
+        "ev_last": {
+          "0": 0.0,
+          "count": 2.0,
+          "in": 0.1,
+          "out": 0.1,
+          "time": 4e-06
+        },
+        "ev_count_sequence": [
+          0,
+          1,
+          2
+        ],
+        "ev_max_errors_V": {
+          "in": 1.1102230246251565e-16,
+          "out": 0.0,
+          "count": 0.0
+        },
+        "ev_initial_states": [
+          0.0,
+          0.0
+        ],
+        "ev_final_states": [
+          0.0,
+          2.0
+        ],
+        "ev_state_names": [
+          "dut:q",
+          "dut:n"
+        ],
+        "ev_event_trace": [
+          {
+            "time": 1.3750000000000008e-06,
+            "observation_time_bounds": [
+              1.3749999999999991e-06,
+              1.3750000000000008e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:9:3 (dut)",
+            "kind": "cross",
+            "guard_value": 4.440892098500626e-16,
+            "before": [
+              0.0,
+              0.0
+            ],
+            "after": [
+              1.0,
+              1.0
+            ]
+          },
+          {
+            "time": 3.375000000000001e-06,
+            "observation_time_bounds": [
+              3.3749999999999986e-06,
+              3.375000000000001e-06
+            ],
+            "event": 1,
+            "origin": "dut.va:10:3 (dut)",
+            "kind": "cross",
+            "guard_value": -4.996003610813204e-16,
+            "before": [
+              1.0,
+              1.0
+            ],
+            "after": [
+              0.0,
+              2.0
+            ]
+          }
+        ],
+        "anchors": [
+          {
+            "requested_time_s": 1e-06,
+            "exact": false,
+            "bracket": [
+              {
+                "row_index": 4999,
+                "row": {
+                  "time": 9.99800000000051e-07,
+                  "in": 0.4999200000000205,
+                  "out": 0.1,
+                  "count": 0.0
+                }
+              },
+              {
+                "row_index": 5000,
+                "row": {
+                  "time": 1.000000000000051e-06,
+                  "in": 0.5000000000000204,
+                  "out": 0.1,
+                  "count": 0.0
+                }
+              }
+            ],
+            "platform_stage_consistent": true,
+            "expected": {
+              "t_T": 1,
+              "out_V": 0.1,
+              "count_V": 0
+            }
+          },
+          {
+            "requested_time_s": 2e-06,
+            "exact": false,
+            "bracket": [
+              {
+                "row_index": 10182,
+                "row": {
+                  "time": 1.999800000000046e-06,
+                  "in": 0.8999200000000186,
+                  "out": 0.9,
+                  "count": 1.0
+                }
+              },
+              {
+                "row_index": 10183,
+                "row": {
+                  "time": 2.000000000000046e-06,
+                  "in": 0.8999999999999814,
+                  "out": 0.9,
+                  "count": 1.0
+                }
+              }
+            ],
+            "platform_stage_consistent": true,
+            "expected": {
+              "t_T": 2,
+              "out_V": 0.9,
+              "count_V": 1
+            }
+          },
+          {
+            "requested_time_s": 3e-06,
+            "exact": false,
+            "bracket": [
+              {
+                "row_index": 15186,
+                "row": {
+                  "time": 2.999800000000075e-06,
+                  "in": 0.5000799999999699,
+                  "out": 0.9,
+                  "count": 1.0
+                }
+              },
+              {
+                "row_index": 15187,
+                "row": {
+                  "time": 3.000000000000075e-06,
+                  "in": 0.49999999999997,
+                  "out": 0.9,
+                  "count": 1.0
+                }
+              }
+            ],
+            "platform_stage_consistent": true,
+            "expected": {
+              "t_T": 3,
+              "out_V": 0.9,
+              "count_V": 1
+            }
+          },
+          {
+            "requested_time_s": 4e-06,
+            "exact": false,
+            "bracket": [],
+            "platform_stage_consistent": false,
+            "expected": {
+              "t_T": 4,
+              "out_V": 0.1,
+              "count_V": 2
+            }
+          }
+        ],
+        "original_observation_windows": [
+          {
+            "center_T": 1.375,
+            "start_T": 1.373,
+            "end_T": 1.377,
+            "max_gap_s": 2e-11,
+            "include_exact_center": true
+          },
+          {
+            "center_T": 3.375,
+            "start_T": 3.373,
+            "end_T": 3.377,
+            "max_gap_s": 2e-11,
+            "include_exact_center": true
+          }
+        ],
+        "counter_marker_error_definition": "Maximum abs(native count voltage - nearest integer), using the original criteria rounding rule; independently reread actual raw, not inferred from count_sequence."
+      },
+      "paper_qualification": "I",
+      "limits": [
+        "No exact stop record/short coverage",
+        "Export error proof and independent input/voltage uncertainty certificates not supplied"
+      ]
+    },
+    {
+      "control": "hc02-original-high",
+      "paper_card": "EV-HC-02",
+      "scientific_denominator": "original paper condition",
+      "development_agreement": true,
+      "judgment": {
+        "output_budget_V": 0.001,
+        "counter_marker_budget_V": 0.001,
+        "construction": {
+          "authority": "fixed Spec A card and oracle; no local replacement",
+          "card": "EV-HC-02"
+        },
+        "authority": "published fixed Spec A oracle/event_limits; held ties use pre-execution frozen direct comparison expectations",
+        "qualifier": "finite observed agreement; no independent numerical error certificate",
+        "construction_role": "Frozen independent expected behavior, not an assertion of bitwise constancy or equality of observed native records. Observed errors are reported separately against the unchanged budget."
+      },
+      "source": {
+        "text": "`include \"disciplines.vams\"\n`include \"constants.vams\"\nmodule paper_hc_start(in, out, count);\n inout in, out, count;\n electrical in, out, count;\n real q,n;\n analog begin\n  @(initial_step) begin q=(V(in)>0.65); n=0; end\n  @(cross(V(in)-0.65,+1,1e-9,2e-4)) begin q=1; n=n+1; end\n  @(cross(V(in)-0.35,-1,1e-9,2e-4)) begin q=0; n=n+1; end\n  V(out)<+0.1+0.8*q;\n  V(count)<+n;\n end\nendmodule\n",
+        "sha256": "02734a00e6a7502fb22f01a8f39f5628ae806af838d06c85f533d3bce762525b",
+        "artifact": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/EV-HC-02/dut.va",
+          "sha256": "02734a00e6a7502fb22f01a8f39f5628ae806af838d06c85f533d3bce762525b"
+        }
+      },
+      "inputs": {
+        "driven": [
+          "in"
+        ],
+        "pwl": [
+          [
+            [
+              0,
+              0.9
+            ],
+            [
+              2e-06,
+              0.5
+            ],
+            [
+              4e-06,
+              0.1
+            ],
+            [
+              6e-06,
+              0.9
+            ]
+          ]
+        ],
+        "parameters": {},
+        "output_times_s": [
+          0,
+          2e-06,
+          2.748e-06,
+          2.75e-06,
+          2.7519999999999997e-06,
+          3e-06,
+          4e-06,
+          5e-06,
+          5.373e-06,
+          5.374999999999999e-06,
+          5.3769999999999995e-06,
+          6e-06
+        ],
+        "stop_s": 6e-06,
+        "max_step_s": 6e-06
+      },
+      "spectre": {
+        "deck": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/EV-HC-02/tb.scs",
+          "sha256": "a6bdc38837ef76bd49867dd6041efea827a18d28102ac7e25dd61fe159c01c8a"
+        },
+        "binding": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/EV-HC-02/binding.json",
+          "sha256": "f838d892a9370e770255b85af2157f180b9b0085a514b964a5b663d5384e004a"
+        },
+        "settings_requested": {
+          "stop_s": 6e-06,
+          "maxstep_s": 2e-10,
+          "reltol": 1e-05,
+          "vabstol_V": 1e-07,
+          "iabstol_A": 1e-12,
+          "output_request": "native records plus prescribed exact centers; requested grid does not qualify interpolation",
+          "integration_method": "traponly/trap for SPICE; unsupported by EVAS",
+          "spice_maxstep_s": 2e-10,
+          "spice_output_estimate_bytes": 9731520,
+          "spice_observation_strategy": "global 200ps plus disconnected PWL local/center breakpoint requests; actual preflight required",
+          "spectral_strobe_strategy": "prescribed times; strobeoutput=all; actual origin qualification pending"
+        },
+        "settings_effective": {
+          "global_reltol": 1e-05,
+          "transient_reltol": 1e-06,
+          "reason": "conservative preset multiplies global reltol by .1 per installed Spectre21.1 docs; retains old RESULT inconsistent status",
+          "vabstol_V": 1e-07,
+          "iabstol_A": 1e-12,
+          "maxstep_s": 2e-10,
+          "log_sha256": "d1da374baa3f705130bc35e2aff0ed2f188032bbf0c3ac62b281b7b722c81090"
+        },
+        "waveform": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/EV-HC-02/psf/tran.tran.tran",
+          "sha256": "831a47d3ad11e0fe0c20bb5d637ca6b288116399061d08ae85f67c94d75eb9ee"
+        },
+        "receipt_artifact": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/EV-HC-02/RESULT.json",
+          "sha256": "3dc792362133c9333987691a0370757950f75f473ccfe39b6a1eadfe5a02c414"
+        },
+        "execution_stages": [
+          {
+            "argv": [
+              "taskset",
+              "-c",
+              "0",
+              "prlimit",
+              "--as=4294967296",
+              "--fsize=33554432",
+              "--",
+              "/bin/csh",
+              "-f",
+              "run.csh"
+            ],
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            },
+            "elapsed_seconds": 8.73482888378203,
+            "completed_utc": "2026-10-06T20:58:53Z",
+            "log": "simulate.log",
+            "log_sha256": "09370b48bb60c7209355cd4de61e6d2fb9fb5786b8930a3a6b6656c90d2ca853",
+            "stage": "simulate",
+            "resource_caps": {
+              "memory_limit_bytes": 4294967296,
+              "file_limit_bytes": 33554432,
+              "threads": 1
+            }
+          }
+        ],
+        "actual_command_script": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/EV-HC-02/run.csh",
+          "sha256": "8ab92f7be2ad7461ef937b99179a2e2a41c0382543442372cd62b376715a7b1a"
+        },
+        "actual_command_text": "source /home/cshrc/.cshrc.cadence.sui\nsource /home/cshrc/.cshrc.mentor25.sui\n/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre -64 tb.scs +log spectre.log -format psfascii -raw psf +lqtimeout 30 +mt=1\nexit $status\n",
+        "native_record_audit": {
+          "accepted_steps": 30367,
+          "parsed_records": 30368,
+          "records_equal_steps_plus_initial": true,
+          "initial_time_zero": true,
+          "strobeoutput_all": true,
+          "skipdc_no": true,
+          "source_outputs": "direct V(out)/V(count) contributions of q/n; no output reconstruction",
+          "scope": "installed contract plus actual simple direct-state model evidence; finite native records only"
+        }
+      },
+      "evas": {
+        "request": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-initialization/runs/initialization/spectre-comparison/hc02-original-high/request.json",
+          "sha256": "c6ee059ac4765bd3f4fe5237a213b4b8fcabd1ed4436eddd81943fa8cc1ba531"
+        },
+        "response": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-initialization/runs/initialization/spectre-comparison/hc02-original-high/response.json",
+          "sha256": "e4c7766c01548e575c6cb357eb426b9dd5da9bdfec33c0fd51d3dd8e0d36e719"
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        },
+        "kernel_sha256": "f77da92c10620aaeeb2d096652cd3a5a3e2ef1df9dbab4278a70a45ff78ebe2f",
+        "execution_command": [
+          "evas/rust_core/target/debug/evas-kernel"
+        ],
+        "invocation": "public compile_sources then stdin JSON request; stdout response persisted; no simulator output reconstruction",
+        "new_or_reused": "new final ee7 public execution"
+      },
+      "observations": {
+        "initial": {
+          "time": 0.0,
+          "in": 0.9,
+          "out": 0.9,
+          "count": 0.0
+        },
+        "last": {
+          "time": 5.999999999998727e-06,
+          "in": 0.8999999999994908,
+          "out": 0.9,
+          "count": 2.0
+        },
+        "count_sequence": [
+          0,
+          1,
+          2
+        ],
+        "max_errors_V": {
+          "in": 7.216449660063518e-16,
+          "out": 1.1102230246251565e-16,
+          "count": 0.0
+        },
+        "coverage": {
+          "requested_stop_s": 6e-06,
+          "last_time_s": 5.999999999998727e-06,
+          "covers_requested_stop": false,
+          "exact_stop_rows": 0
+        },
+        "event_history": [
+          {
+            "native_bracket_T": [
+              2.74998,
+              2.75
+            ],
+            "legal_window_T": [
+              2.75,
+              2.751
+            ],
+            "intersection_T": [
+              2.75,
+              2.75
+            ],
+            "compatible": true,
+            "count_after": 1,
+            "compatible_basis": "Derived from nonempty intersection of parsed native bracket and unchanged legal window; finite numerical compatibility only.",
+            "intersection_width_T": 0.0,
+            "single_point_contact": true
+          },
+          {
+            "native_bracket_T": [
+              5.375,
+              5.37502
+            ],
+            "legal_window_T": [
+              5.375,
+              5.3755
+            ],
+            "intersection_T": [
+              5.375,
+              5.37502
+            ],
+            "compatible": true,
+            "count_after": 2,
+            "compatible_basis": "Derived from nonempty intersection of parsed native bracket and unchanged legal window; finite numerical compatibility only.",
+            "intersection_width_T": 2.0000000000131024e-05,
+            "single_point_contact": false
+          }
+        ],
+        "ev_initial": {
+          "0": 0.0,
+          "count": -0.0,
+          "in": 0.9,
+          "out": 0.9,
+          "time": 0.0
+        },
+        "ev_last": {
+          "0": 0.0,
+          "count": 2.0,
+          "in": 0.9,
+          "out": 0.9,
+          "time": 6e-06
+        },
+        "ev_count_sequence": [
+          0,
+          1,
+          2
+        ],
+        "ev_max_errors_V": {
+          "in": 3.3306690738754696e-16,
+          "out": 0.0,
+          "count": 0.0
+        },
+        "ev_initial_states": [
+          1.0,
+          0.0
+        ],
+        "ev_final_states": [
+          1.0,
+          2.0
+        ],
+        "ev_state_names": [
+          "dut:q",
+          "dut:n"
+        ],
+        "ev_event_trace": [
+          {
+            "time": 2.7500000000000004e-06,
+            "observation_time_bounds": [
+              2.749999999999999e-06,
+              2.7500000000000004e-06
+            ],
+            "event": 1,
+            "origin": "dut.va:10:3 (dut)",
+            "kind": "cross",
+            "guard_value": -5.551115123125783e-17,
+            "before": [
+              1.0,
+              0.0
+            ],
+            "after": [
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "time": 5.375000000000002e-06,
+            "observation_time_bounds": [
+              5.3749999999999985e-06,
+              5.375000000000002e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:9:3 (dut)",
+            "kind": "cross",
+            "guard_value": 6.661338147750939e-16,
+            "before": [
+              0.0,
+              1.0
+            ],
+            "after": [
+              1.0,
+              2.0
+            ]
+          }
+        ],
+        "anchors": [
+          {
+            "requested_time_s": 0.0,
+            "exact": true,
+            "bracket": [
+              {
+                "row_index": 0,
+                "row": {
+                  "time": 0.0,
+                  "in": 0.9,
+                  "out": 0.9,
+                  "count": 0.0
+                }
+              }
+            ],
+            "platform_stage_consistent": true,
+            "expected": {
+              "t_T": 0,
+              "out_V": 0.9,
+              "count_V": 0
+            }
+          },
+          {
+            "requested_time_s": 2e-06,
+            "exact": false,
+            "bracket": [
+              {
+                "row_index": 9999,
+                "row": {
+                  "time": 1.999800000000126e-06,
+                  "in": 0.5000399999999747,
+                  "out": 0.9,
+                  "count": 0.0
+                }
+              },
+              {
+                "row_index": 10000,
+                "row": {
+                  "time": 2.000000000000126e-06,
+                  "in": 0.4999999999999747,
+                  "out": 0.9,
+                  "count": 0.0
+                }
+              }
+            ],
+            "platform_stage_consistent": true,
+            "expected": {
+              "t_T": 2,
+              "out_V": 0.9,
+              "count_V": 0
+            }
+          },
+          {
+            "requested_time_s": 4e-06,
+            "exact": false,
+            "bracket": [
+              {
+                "row_index": 20183,
+                "row": {
+                  "time": 3.999999999999702e-06,
+                  "in": 0.1000000000000596,
+                  "out": 0.1,
+                  "count": 1.0
+                }
+              },
+              {
+                "row_index": 20184,
+                "row": {
+                  "time": 4.000099999999851e-06,
+                  "in": 0.1000399999999405,
+                  "out": 0.1,
+                  "count": 1.0
+                }
+              }
+            ],
+            "platform_stage_consistent": true,
+            "expected": {
+              "t_T": 4,
+              "out_V": 0.1,
+              "count_V": 1
+            }
+          },
+          {
+            "requested_time_s": 6e-06,
+            "exact": false,
+            "bracket": [],
+            "platform_stage_consistent": false,
+            "expected": {
+              "t_T": 6,
+              "out_V": 0.9,
+              "count_V": 2
+            }
+          }
+        ],
+        "original_observation_windows": [
+          {
+            "center_T": 2.75,
+            "start_T": 2.748,
+            "end_T": 2.752,
+            "max_gap_s": 2e-11,
+            "include_exact_center": true
+          },
+          {
+            "center_T": 5.375,
+            "start_T": 5.373,
+            "end_T": 5.377,
+            "max_gap_s": 2e-11,
+            "include_exact_center": true
+          }
+        ],
+        "counter_marker_error_definition": "Maximum abs(native count voltage - nearest integer), using the original criteria rounding rule; independently reread actual raw, not inferred from count_sequence."
+      },
+      "paper_qualification": "I",
+      "limits": [
+        "No exact stop record/short coverage",
+        "Export error proof and independent input/voltage uncertainty certificates not supplied"
+      ]
+    },
+    {
+      "control": "hc02-low",
+      "paper_card": null,
+      "scientific_denominator": "development control, outside original twelve cards",
+      "development_agreement": true,
+      "judgment": {
+        "output_budget_V": 1e-07,
+        "counter_marker_budget_V": 1e-07,
+        "construction": {
+          "construction": "independent direct constant-input comparison, out=0.1+0.8*q and n=0; no crossing for held input",
+          "relation": ">",
+          "threshold_V": 0.65,
+          "input_V": 0.1,
+          "state_q": 0,
+          "state_n": 0,
+          "observables": [
+            "in",
+            "out",
+            "count"
+          ],
+          "requested_observations": [
+            {
+              "time_s": 0,
+              "in_V": 0.1,
+              "out_V": 0.1,
+              "count_V": 0
+            },
+            {
+              "time_s": 6e-06,
+              "in_V": 0.1,
+              "out_V": 0.1,
+              "count_V": 0
+            }
+          ],
+          "all_native_records": {
+            "in_V": 0.1,
+            "out_V": 0.1,
+            "count_V": 0
+          },
+          "event_count": 0,
+          "voltage_comparison_allowance_V": 1e-07,
+          "allowance_basis": "retained HC02 requested vabstol; conditional comparison threshold, not a proven error bound",
+          "ties": "decimal source 0.65 and source stimulus 0.65 encode the same binary64 value; no tolerance-based tie",
+          "qualification": "development alignment control only, outside paper twelve-card denominator"
+        },
+        "authority": "published fixed Spec A oracle/event_limits; held ties use pre-execution frozen direct comparison expectations",
+        "qualifier": "finite observed agreement; no independent numerical error certificate",
+        "construction_role": "Frozen independent expected behavior, not an assertion of bitwise constancy or equality of observed native records. Observed errors are reported separately against the unchanged budget."
+      },
+      "source": {
+        "text": "`include \"disciplines.vams\"\n`include \"constants.vams\"\nmodule paper_hc_start(in, out, count);\n inout in, out, count;\n electrical in, out, count;\n real q,n;\n analog begin\n  @(initial_step) begin q=(V(in)>0.65); n=0; end\n  @(cross(V(in)-0.65,+1,1e-9,2e-4)) begin q=1; n=n+1; end\n  @(cross(V(in)-0.35,-1,1e-9,2e-4)) begin q=0; n=n+1; end\n  V(out)<+0.1+0.8*q;\n  V(count)<+n;\n end\nendmodule\n",
+        "sha256": "02734a00e6a7502fb22f01a8f39f5628ae806af838d06c85f533d3bce762525b",
+        "artifact": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/output/runs/hc02-low/dut.va",
+          "sha256": "02734a00e6a7502fb22f01a8f39f5628ae806af838d06c85f533d3bce762525b"
+        }
+      },
+      "inputs": {
+        "driven": [
+          "in"
+        ],
+        "pwl": [
+          [
+            [
+              0,
+              0.1
+            ],
+            [
+              6e-06,
+              0.1
+            ]
+          ]
+        ],
+        "parameters": {},
+        "output_times_s": [
+          0,
+          6e-06
+        ],
+        "stop_s": 6e-06,
+        "max_step_s": 6e-06
+      },
+      "spectre": {
+        "deck": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/output/runs/hc02-low/tb.scs",
+          "sha256": "07fcd2d7c8f4ff1da043bbb963e5f3778b13eeabbd71a9c0459c27aff6cf6cc7"
+        },
+        "binding": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/output/runs/hc02-low/binding.json",
+          "sha256": "093401cbcb9056c9e876f1e0045f5ced239764bf25d4042515e9a814841c1783"
+        },
+        "settings_requested": {
+          "stop_s": 6e-06,
+          "maxstep_s": 2e-10,
+          "reltol": 1e-05,
+          "vabstol_V": 1e-07,
+          "iabstol_A": 1e-12,
+          "output_request": "native records plus exact public-control times; no jump interpolation",
+          "integration_method": "traponly/trap for SPICE; unsupported by EVAS",
+          "spice_maxstep_s": 2e-10,
+          "spice_output_estimate_bytes": 9731520,
+          "spice_observation_strategy": "global 200ps plus disconnected PWL local/center breakpoint requests; actual preflight required",
+          "spectral_strobe_strategy": "public-control times; strobeoutput=all; actual export/readback pending"
+        },
+        "settings_effective": {
+          "global_reltol": 1e-05,
+          "transient_reltol": 1e-06,
+          "reason": "conservative preset multiplies global reltol by .1 per installed Spectre21.1 docs; retains old RESULT inconsistent status",
+          "vabstol_V": 1e-07,
+          "iabstol_A": 1e-12,
+          "maxstep_s": 2e-10,
+          "log_sha256": "d2f1c808221da3c80c8245b577b6c518ea45c6a5c91b0758acf47ec8fc49b497"
+        },
+        "waveform": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/output/runs/hc02-low/psf/tran.tran.tran",
+          "sha256": "cc1b1bc1fe246c3362c4c6b2f4bb759a35ef0056350c953dd3d8e232dc8901af"
+        },
+        "receipt_artifact": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/output/runs/hc02-low/RESULT.json",
+          "sha256": "34f5a1a069bbdfe72ddc0562b16eb9b89b3ca2ad82bfa4671a2ce4d428e73efd"
+        },
+        "execution_stages": [
+          {
+            "argv": [
+              "taskset",
+              "-c",
+              "0",
+              "prlimit",
+              "--as=4294967296",
+              "--fsize=33554432",
+              "--",
+              "/bin/csh",
+              "-f",
+              "run.csh"
+            ],
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            },
+            "elapsed_seconds": 8.100037859752774,
+            "completed_utc": "2026-10-06T20:52:21Z",
+            "log": "simulate.log",
+            "log_sha256": "424eb0b190ec9a347ac5b6e2ee53d70911b31adc9ddea27180459a50ea69aee5",
+            "stage": "simulate",
+            "resource_caps": {
+              "memory_limit_bytes": 4294967296,
+              "file_limit_bytes": 33554432,
+              "threads": 1
+            }
+          }
+        ],
+        "actual_command_script": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/output/runs/hc02-low/run.csh",
+          "sha256": "8ab92f7be2ad7461ef937b99179a2e2a41c0382543442372cd62b376715a7b1a"
+        },
+        "actual_command_text": "source /home/cshrc/.cshrc.cadence.sui\nsource /home/cshrc/.cshrc.mentor25.sui\n/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre -64 tb.scs +log spectre.log -format psfascii -raw psf +lqtimeout 30 +mt=1\nexit $status\n",
+        "native_record_audit": {
+          "accepted_steps": 30000,
+          "parsed_records": 30001,
+          "records_equal_steps_plus_initial": true,
+          "initial_time_zero": true,
+          "strobeoutput_all": true,
+          "skipdc_no": true,
+          "source_outputs": "direct V(out)/V(count) contributions of q/n; no output reconstruction",
+          "scope": "installed contract plus actual simple direct-state model evidence; finite native records only"
+        }
+      },
+      "evas": {
+        "request": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-initialization/runs/initialization/spectre-comparison/hc02-low/request.json",
+          "sha256": "e65e439c42a2508d627d21fab8d69715db4977c15b5e267a5de6b55ee7a7f14e"
+        },
+        "response": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-initialization/runs/initialization/spectre-comparison/hc02-low/response.json",
+          "sha256": "b8acd534f4a8458498c1a62b35112d86dcd99f9a95c96183749520dc88cd8d2d"
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        },
+        "kernel_sha256": "f77da92c10620aaeeb2d096652cd3a5a3e2ef1df9dbab4278a70a45ff78ebe2f",
+        "execution_command": [
+          "evas/rust_core/target/debug/evas-kernel"
+        ],
+        "invocation": "public compile_sources then stdin JSON request; stdout response persisted; no simulator output reconstruction",
+        "new_or_reused": "new final ee7 public execution"
+      },
+      "observations": {
+        "initial": {
+          "time": 0.0,
+          "in": 0.1,
+          "out": 0.1,
+          "count": 0.0
+        },
+        "last": {
+          "time": 5.999999999995799e-06,
+          "in": 0.1,
+          "out": 0.1,
+          "count": 0.0
+        },
+        "count_sequence": [
+          0
+        ],
+        "max_errors_V": {
+          "in": 0.0,
+          "out": 0.0,
+          "count": 0.0
+        },
+        "coverage": {
+          "requested_stop_s": 6e-06,
+          "last_time_s": 5.999999999995799e-06,
+          "covers_requested_stop": false,
+          "exact_stop_rows": 0
+        },
+        "event_history": [],
+        "ev_initial": {
+          "0": 0.0,
+          "count": -0.0,
+          "in": 0.1,
+          "out": 0.1,
+          "time": 0.0
+        },
+        "ev_last": {
+          "0": 0.0,
+          "count": -0.0,
+          "in": 0.1,
+          "out": 0.1,
+          "time": 6e-06
+        },
+        "ev_count_sequence": [
+          0
+        ],
+        "ev_max_errors_V": {
+          "in": 0.0,
+          "out": 0.0,
+          "count": 0.0
+        },
+        "ev_initial_states": [
+          0.0,
+          0.0
+        ],
+        "ev_final_states": [
+          0.0,
+          0.0
+        ],
+        "ev_state_names": [
+          "dut:q",
+          "dut:n"
+        ],
+        "ev_event_trace": [],
+        "anchors": [],
+        "original_observation_windows": []
+      },
+      "paper_qualification": "not a paper condition",
+      "limits": [
+        "No exact stop record/short coverage",
+        "Export error proof and independent input/voltage uncertainty certificates not supplied"
+      ]
+    },
+    {
+      "control": "hc02-strict-tie",
+      "paper_card": null,
+      "scientific_denominator": "development control, outside original twelve cards",
+      "development_agreement": true,
+      "judgment": {
+        "output_budget_V": 1e-07,
+        "counter_marker_budget_V": 1e-07,
+        "construction": {
+          "construction": "independent direct constant-input comparison, out=0.1+0.8*q and n=0; no crossing for held input",
+          "relation": ">",
+          "threshold_V": 0.65,
+          "input_V": 0.65,
+          "state_q": 0,
+          "state_n": 0,
+          "observables": [
+            "in",
+            "out",
+            "count"
+          ],
+          "requested_observations": [
+            {
+              "time_s": 0,
+              "in_V": 0.65,
+              "out_V": 0.1,
+              "count_V": 0
+            },
+            {
+              "time_s": 6e-06,
+              "in_V": 0.65,
+              "out_V": 0.1,
+              "count_V": 0
+            }
+          ],
+          "all_native_records": {
+            "in_V": 0.65,
+            "out_V": 0.1,
+            "count_V": 0
+          },
+          "event_count": 0,
+          "voltage_comparison_allowance_V": 1e-07,
+          "allowance_basis": "retained HC02 requested vabstol; conditional comparison threshold, not a proven error bound",
+          "ties": "decimal source 0.65 and source stimulus 0.65 encode the same binary64 value; no tolerance-based tie",
+          "qualification": "development alignment control only, outside paper twelve-card denominator"
+        },
+        "authority": "published fixed Spec A oracle/event_limits; held ties use pre-execution frozen direct comparison expectations",
+        "qualifier": "finite observed agreement; no independent numerical error certificate",
+        "construction_role": "Frozen independent expected behavior, not an assertion of bitwise constancy or equality of observed native records. Observed errors are reported separately against the unchanged budget."
+      },
+      "source": {
+        "text": "`include \"disciplines.vams\"\n`include \"constants.vams\"\nmodule paper_hc_start(in, out, count);\n inout in, out, count;\n electrical in, out, count;\n real q,n;\n analog begin\n  @(initial_step) begin q=(V(in)>0.65); n=0; end\n  @(cross(V(in)-0.65,+1,1e-9,2e-4)) begin q=1; n=n+1; end\n  @(cross(V(in)-0.35,-1,1e-9,2e-4)) begin q=0; n=n+1; end\n  V(out)<+0.1+0.8*q;\n  V(count)<+n;\n end\nendmodule\n",
+        "sha256": "02734a00e6a7502fb22f01a8f39f5628ae806af838d06c85f533d3bce762525b",
+        "artifact": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/output/runs/hc02-strict-tie/dut.va",
+          "sha256": "02734a00e6a7502fb22f01a8f39f5628ae806af838d06c85f533d3bce762525b"
+        }
+      },
+      "inputs": {
+        "driven": [
+          "in"
+        ],
+        "pwl": [
+          [
+            [
+              0,
+              0.65
+            ],
+            [
+              6e-06,
+              0.65
+            ]
+          ]
+        ],
+        "parameters": {},
+        "output_times_s": [
+          0,
+          6e-06
+        ],
+        "stop_s": 6e-06,
+        "max_step_s": 6e-06
+      },
+      "spectre": {
+        "deck": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/output/runs/hc02-strict-tie/tb.scs",
+          "sha256": "458f3b33ec141593eafe07c11fc0ae8b9b1ba19123f9e32030955f9466a03c74"
+        },
+        "binding": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/output/runs/hc02-strict-tie/binding.json",
+          "sha256": "093401cbcb9056c9e876f1e0045f5ced239764bf25d4042515e9a814841c1783"
+        },
+        "settings_requested": {
+          "stop_s": 6e-06,
+          "maxstep_s": 2e-10,
+          "reltol": 1e-05,
+          "vabstol_V": 1e-07,
+          "iabstol_A": 1e-12,
+          "output_request": "native records plus exact public-control times; no jump interpolation",
+          "integration_method": "traponly/trap for SPICE; unsupported by EVAS",
+          "spice_maxstep_s": 2e-10,
+          "spice_output_estimate_bytes": 9731520,
+          "spice_observation_strategy": "global 200ps plus disconnected PWL local/center breakpoint requests; actual preflight required",
+          "spectral_strobe_strategy": "public-control times; strobeoutput=all; actual export/readback pending"
+        },
+        "settings_effective": {
+          "global_reltol": 1e-05,
+          "transient_reltol": 1e-06,
+          "reason": "conservative preset multiplies global reltol by .1 per installed Spectre21.1 docs; retains old RESULT inconsistent status",
+          "vabstol_V": 1e-07,
+          "iabstol_A": 1e-12,
+          "maxstep_s": 2e-10,
+          "log_sha256": "24b6de520018fa1e66634c82611946dfc8c3614a3584f4d3e1f422183b65f0b1"
+        },
+        "waveform": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/output/runs/hc02-strict-tie/psf/tran.tran.tran",
+          "sha256": "0c4b0cad9c68e87d60dcae0989dab8b277691a64b433d2e5d6c8378be0ea19e5"
+        },
+        "receipt_artifact": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/output/runs/hc02-strict-tie/RESULT.json",
+          "sha256": "d0868b64e73414c29c2ddb540e5928172fee123f2dfe4f0c3ef041072c7e9199"
+        },
+        "execution_stages": [
+          {
+            "argv": [
+              "taskset",
+              "-c",
+              "0",
+              "prlimit",
+              "--as=4294967296",
+              "--fsize=33554432",
+              "--",
+              "/bin/csh",
+              "-f",
+              "run.csh"
+            ],
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            },
+            "elapsed_seconds": 8.653972433879972,
+            "completed_utc": "2026-10-06T20:52:30Z",
+            "log": "simulate.log",
+            "log_sha256": "833ccb17b826a4377ec9a5a2c6683ea4715e83b24d4d0855ef0cb11908104bef",
+            "stage": "simulate",
+            "resource_caps": {
+              "memory_limit_bytes": 4294967296,
+              "file_limit_bytes": 33554432,
+              "threads": 1
+            }
+          }
+        ],
+        "actual_command_script": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/output/runs/hc02-strict-tie/run.csh",
+          "sha256": "8ab92f7be2ad7461ef937b99179a2e2a41c0382543442372cd62b376715a7b1a"
+        },
+        "actual_command_text": "source /home/cshrc/.cshrc.cadence.sui\nsource /home/cshrc/.cshrc.mentor25.sui\n/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre -64 tb.scs +log spectre.log -format psfascii -raw psf +lqtimeout 30 +mt=1\nexit $status\n",
+        "native_record_audit": {
+          "accepted_steps": 30000,
+          "parsed_records": 30001,
+          "records_equal_steps_plus_initial": true,
+          "initial_time_zero": true,
+          "strobeoutput_all": true,
+          "skipdc_no": true,
+          "source_outputs": "direct V(out)/V(count) contributions of q/n; no output reconstruction",
+          "scope": "installed contract plus actual simple direct-state model evidence; finite native records only"
+        }
+      },
+      "evas": {
+        "request": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-initialization/runs/initialization/spectre-comparison/hc02-strict-tie/request.json",
+          "sha256": "f7f417b467108a39c691923144b308a4ab88ecd4434eca9e31dc07e89969d2b5"
+        },
+        "response": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-initialization/runs/initialization/spectre-comparison/hc02-strict-tie/response.json",
+          "sha256": "5fc55a846f2453c9f27267a6dc20ff9d8ca15ffb07bcd99fdb127dbac0611a23"
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        },
+        "kernel_sha256": "f77da92c10620aaeeb2d096652cd3a5a3e2ef1df9dbab4278a70a45ff78ebe2f",
+        "execution_command": [
+          "evas/rust_core/target/debug/evas-kernel"
+        ],
+        "invocation": "public compile_sources then stdin JSON request; stdout response persisted; no simulator output reconstruction",
+        "new_or_reused": "new final ee7 public execution"
+      },
+      "observations": {
+        "initial": {
+          "time": 0.0,
+          "in": 0.65,
+          "out": 0.1,
+          "count": 0.0
+        },
+        "last": {
+          "time": 5.999999999995799e-06,
+          "in": 0.65,
+          "out": 0.1,
+          "count": 0.0
+        },
+        "count_sequence": [
+          0
+        ],
+        "max_errors_V": {
+          "in": 0.0,
+          "out": 0.0,
+          "count": 0.0
+        },
+        "coverage": {
+          "requested_stop_s": 6e-06,
+          "last_time_s": 5.999999999995799e-06,
+          "covers_requested_stop": false,
+          "exact_stop_rows": 0
+        },
+        "event_history": [],
+        "ev_initial": {
+          "0": 0.0,
+          "count": -0.0,
+          "in": 0.65,
+          "out": 0.1,
+          "time": 0.0
+        },
+        "ev_last": {
+          "0": 0.0,
+          "count": -0.0,
+          "in": 0.65,
+          "out": 0.1,
+          "time": 6e-06
+        },
+        "ev_count_sequence": [
+          0
+        ],
+        "ev_max_errors_V": {
+          "in": 0.0,
+          "out": 0.0,
+          "count": 0.0
+        },
+        "ev_initial_states": [
+          0.0,
+          0.0
+        ],
+        "ev_final_states": [
+          0.0,
+          0.0
+        ],
+        "ev_state_names": [
+          "dut:q",
+          "dut:n"
+        ],
+        "ev_event_trace": [],
+        "anchors": [],
+        "original_observation_windows": []
+      },
+      "paper_qualification": "not a paper condition",
+      "limits": [
+        "No exact stop record/short coverage",
+        "Export error proof and independent input/voltage uncertainty certificates not supplied"
+      ]
+    },
+    {
+      "control": "hc02-nonstrict-tie",
+      "paper_card": null,
+      "scientific_denominator": "development control, outside original twelve cards",
+      "development_agreement": true,
+      "judgment": {
+        "output_budget_V": 1e-07,
+        "counter_marker_budget_V": 1e-07,
+        "construction": {
+          "construction": "independent direct constant-input comparison, out=0.1+0.8*q and n=0; no crossing for held input",
+          "relation": ">=",
+          "threshold_V": 0.65,
+          "input_V": 0.65,
+          "state_q": 1,
+          "state_n": 0,
+          "observables": [
+            "in",
+            "out",
+            "count"
+          ],
+          "requested_observations": [
+            {
+              "time_s": 0,
+              "in_V": 0.65,
+              "out_V": 0.9,
+              "count_V": 0
+            },
+            {
+              "time_s": 6e-06,
+              "in_V": 0.65,
+              "out_V": 0.9,
+              "count_V": 0
+            }
+          ],
+          "all_native_records": {
+            "in_V": 0.65,
+            "out_V": 0.9,
+            "count_V": 0
+          },
+          "event_count": 0,
+          "voltage_comparison_allowance_V": 1e-07,
+          "allowance_basis": "retained HC02 requested vabstol; conditional comparison threshold, not a proven error bound",
+          "ties": "decimal source 0.65 and source stimulus 0.65 encode the same binary64 value; no tolerance-based tie",
+          "qualification": "development alignment control only, outside paper twelve-card denominator"
+        },
+        "authority": "published fixed Spec A oracle/event_limits; held ties use pre-execution frozen direct comparison expectations",
+        "qualifier": "finite observed agreement; no independent numerical error certificate",
+        "construction_role": "Frozen independent expected behavior, not an assertion of bitwise constancy or equality of observed native records. Observed errors are reported separately against the unchanged budget."
+      },
+      "source": {
+        "text": "`include \"disciplines.vams\"\n`include \"constants.vams\"\nmodule paper_hc_start(in, out, count);\n inout in, out, count;\n electrical in, out, count;\n real q,n;\n analog begin\n  @(initial_step) begin q=(V(in)>=0.65); n=0; end\n  @(cross(V(in)-0.65,+1,1e-9,2e-4)) begin q=1; n=n+1; end\n  @(cross(V(in)-0.35,-1,1e-9,2e-4)) begin q=0; n=n+1; end\n  V(out)<+0.1+0.8*q;\n  V(count)<+n;\n end\nendmodule\n",
+        "sha256": "f2baa4df6ca3e55aa648c9da523f87e4c795a4fa4319e6b1321de310ff44da50",
+        "artifact": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/output/runs/hc02-nonstrict-tie/dut.va",
+          "sha256": "f2baa4df6ca3e55aa648c9da523f87e4c795a4fa4319e6b1321de310ff44da50"
+        }
+      },
+      "inputs": {
+        "driven": [
+          "in"
+        ],
+        "pwl": [
+          [
+            [
+              0,
+              0.65
+            ],
+            [
+              6e-06,
+              0.65
+            ]
+          ]
+        ],
+        "parameters": {},
+        "output_times_s": [
+          0,
+          6e-06
+        ],
+        "stop_s": 6e-06,
+        "max_step_s": 6e-06
+      },
+      "spectre": {
+        "deck": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/output/runs/hc02-nonstrict-tie/tb.scs",
+          "sha256": "458f3b33ec141593eafe07c11fc0ae8b9b1ba19123f9e32030955f9466a03c74"
+        },
+        "binding": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/output/runs/hc02-nonstrict-tie/binding.json",
+          "sha256": "093401cbcb9056c9e876f1e0045f5ced239764bf25d4042515e9a814841c1783"
+        },
+        "settings_requested": {
+          "stop_s": 6e-06,
+          "maxstep_s": 2e-10,
+          "reltol": 1e-05,
+          "vabstol_V": 1e-07,
+          "iabstol_A": 1e-12,
+          "output_request": "native records plus exact public-control times; no jump interpolation",
+          "integration_method": "traponly/trap for SPICE; unsupported by EVAS",
+          "spice_maxstep_s": 2e-10,
+          "spice_output_estimate_bytes": 9731520,
+          "spice_observation_strategy": "global 200ps plus disconnected PWL local/center breakpoint requests; actual preflight required",
+          "spectral_strobe_strategy": "public-control times; strobeoutput=all; actual export/readback pending"
+        },
+        "settings_effective": {
+          "global_reltol": 1e-05,
+          "transient_reltol": 1e-06,
+          "reason": "conservative preset multiplies global reltol by .1 per installed Spectre21.1 docs; retains old RESULT inconsistent status",
+          "vabstol_V": 1e-07,
+          "iabstol_A": 1e-12,
+          "maxstep_s": 2e-10,
+          "log_sha256": "af2776ebbc9f7e1b8d8f97caf6d24ec798837179cdda280030734ad5e405f155"
+        },
+        "waveform": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/output/runs/hc02-nonstrict-tie/psf/tran.tran.tran",
+          "sha256": "5b15592e85a7ad202d567a9b72d64ac100e5702b86cc88ef987b0f48a60d5f1e"
+        },
+        "receipt_artifact": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/output/runs/hc02-nonstrict-tie/RESULT.json",
+          "sha256": "d925d3e25adc1f4d29dc8cbaf9b5a78f5653d2c6b91ae3eac0da845e4d78b595"
+        },
+        "execution_stages": [
+          {
+            "argv": [
+              "taskset",
+              "-c",
+              "0",
+              "prlimit",
+              "--as=4294967296",
+              "--fsize=33554432",
+              "--",
+              "/bin/csh",
+              "-f",
+              "run.csh"
+            ],
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            },
+            "elapsed_seconds": 8.77797750942409,
+            "completed_utc": "2026-10-06T20:52:39Z",
+            "log": "simulate.log",
+            "log_sha256": "0bd0d73ffa7df56e5559fb5ea574fde43a829ec4fd9caa6562848a1b359ab425",
+            "stage": "simulate",
+            "resource_caps": {
+              "memory_limit_bytes": 4294967296,
+              "file_limit_bytes": 33554432,
+              "threads": 1
+            }
+          }
+        ],
+        "actual_command_script": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-three-actual/output/runs/hc02-nonstrict-tie/run.csh",
+          "sha256": "8ab92f7be2ad7461ef937b99179a2e2a41c0382543442372cd62b376715a7b1a"
+        },
+        "actual_command_text": "source /home/cshrc/.cshrc.cadence.sui\nsource /home/cshrc/.cshrc.mentor25.sui\n/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre -64 tb.scs +log spectre.log -format psfascii -raw psf +lqtimeout 30 +mt=1\nexit $status\n",
+        "native_record_audit": {
+          "accepted_steps": 30000,
+          "parsed_records": 30001,
+          "records_equal_steps_plus_initial": true,
+          "initial_time_zero": true,
+          "strobeoutput_all": true,
+          "skipdc_no": true,
+          "source_outputs": "direct V(out)/V(count) contributions of q/n; no output reconstruction",
+          "scope": "installed contract plus actual simple direct-state model evidence; finite native records only"
+        }
+      },
+      "evas": {
+        "request": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-initialization/runs/initialization/spectre-comparison/hc02-nonstrict-tie/request.json",
+          "sha256": "8abc074742ef6a1f4d7caa986a418c6fc8fec457921c06551a88f067e87a84e9"
+        },
+        "response": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-initialization/runs/initialization/spectre-comparison/hc02-nonstrict-tie/response.json",
+          "sha256": "cc64834070a1c9ec81b9aec8a40eb0a062340866002f9f3b2a1dcdc971f3ad74"
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        },
+        "kernel_sha256": "f77da92c10620aaeeb2d096652cd3a5a3e2ef1df9dbab4278a70a45ff78ebe2f",
+        "execution_command": [
+          "evas/rust_core/target/debug/evas-kernel"
+        ],
+        "invocation": "public compile_sources then stdin JSON request; stdout response persisted; no simulator output reconstruction",
+        "new_or_reused": "new final ee7 public execution"
+      },
+      "observations": {
+        "initial": {
+          "time": 0.0,
+          "in": 0.65,
+          "out": 0.9,
+          "count": 0.0
+        },
+        "last": {
+          "time": 5.999999999995799e-06,
+          "in": 0.65,
+          "out": 0.9,
+          "count": 0.0
+        },
+        "count_sequence": [
+          0
+        ],
+        "max_errors_V": {
+          "in": 0.0,
+          "out": 0.0,
+          "count": 0.0
+        },
+        "coverage": {
+          "requested_stop_s": 6e-06,
+          "last_time_s": 5.999999999995799e-06,
+          "covers_requested_stop": false,
+          "exact_stop_rows": 0
+        },
+        "event_history": [],
+        "ev_initial": {
+          "0": 0.0,
+          "count": -0.0,
+          "in": 0.65,
+          "out": 0.9,
+          "time": 0.0
+        },
+        "ev_last": {
+          "0": 0.0,
+          "count": -0.0,
+          "in": 0.65,
+          "out": 0.9,
+          "time": 6e-06
+        },
+        "ev_count_sequence": [
+          0
+        ],
+        "ev_max_errors_V": {
+          "in": 0.0,
+          "out": 0.0,
+          "count": 0.0
+        },
+        "ev_initial_states": [
+          1.0,
+          0.0
+        ],
+        "ev_final_states": [
+          1.0,
+          0.0
+        ],
+        "ev_state_names": [
+          "dut:q",
+          "dut:n"
+        ],
+        "ev_event_trace": [],
+        "anchors": [],
+        "original_observation_windows": []
+      },
+      "paper_qualification": "not a paper condition",
+      "limits": [
+        "No exact stop record/short coverage",
+        "Export error proof and independent input/voltage uncertainty certificates not supplied"
+      ]
+    },
+    {
+      "control": "hc02-lower-strict-tie",
+      "paper_card": null,
+      "scientific_denominator": "development control, outside original twelve cards",
+      "development_agreement": true,
+      "judgment": {
+        "output_budget_V": 1e-07,
+        "counter_marker_budget_V": 1e-07,
+        "construction": {
+          "construction": "direct exact tie comparison at .65; constant source gives no cross",
+          "q": 0,
+          "n": 0,
+          "out_V": 0.1,
+          "count_V": 0,
+          "all_native_records_constant": true,
+          "voltage_allowance_V": 1e-07
+        },
+        "authority": "published fixed Spec A oracle/event_limits; held ties use pre-execution frozen direct comparison expectations",
+        "qualifier": "finite observed agreement; no independent numerical error certificate",
+        "construction_role": "Frozen independent expected behavior, not an assertion of bitwise constancy or equality of observed native records. Observed errors are reported separately against the unchanged budget."
+      },
+      "source": {
+        "text": "`include \"disciplines.vams\"\n`include \"constants.vams\"\nmodule paper_hc_start(in, out, count);\n inout in, out, count;\n electrical in, out, count;\n real q,n;\n analog begin\n  @(initial_step) begin q=(V(in)<0.65); n=0; end\n  @(cross(V(in)-0.65,+1,1e-9,2e-4)) begin q=1; n=n+1; end\n  @(cross(V(in)-0.35,-1,1e-9,2e-4)) begin q=0; n=n+1; end\n  V(out)<+0.1+0.8*q;\n  V(count)<+n;\n end\nendmodule\n",
+        "sha256": "8037bc6ee438c7ee971da39fc905f85d5d0f5ad8a3775eaf8ab3731032dcfd3d",
+        "artifact": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/output/runs/hc02-lower-strict-tie/dut.va",
+          "sha256": "8037bc6ee438c7ee971da39fc905f85d5d0f5ad8a3775eaf8ab3731032dcfd3d"
+        }
+      },
+      "inputs": {
+        "driven": [
+          "in"
+        ],
+        "pwl": [
+          [
+            [
+              0,
+              0.65
+            ],
+            [
+              6e-06,
+              0.65
+            ]
+          ]
+        ],
+        "parameters": {},
+        "output_times_s": [
+          0,
+          6e-06
+        ],
+        "stop_s": 6e-06,
+        "max_step_s": 6e-06
+      },
+      "spectre": {
+        "deck": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/output/runs/hc02-lower-strict-tie/tb.scs",
+          "sha256": "5982ecaf1ff5217e434fcd916e3529404450ed5a8cecc92ca3c9d387a9df922e"
+        },
+        "binding": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/output/runs/hc02-lower-strict-tie/binding.json",
+          "sha256": "a1f046615535b1d030e8f5f82dc7ac040c9766fcfa567220dfa2e8a5ce238b44"
+        },
+        "settings_requested": {
+          "stop_s": 6e-06,
+          "maxstep_s": 2e-10,
+          "reltol": 1e-05,
+          "vabstol_V": 1e-07,
+          "iabstol_A": 1e-12,
+          "method": "traponly",
+          "export": "psfascii native/strobeoutput=all"
+        },
+        "settings_effective": {
+          "global_reltol": 1e-05,
+          "transient_reltol": 1e-06,
+          "vabstol_V": 1e-07,
+          "iabstol_A": 1e-12,
+          "maxstep_s": 2e-10,
+          "preset": "conservative",
+          "log_sha256": "15573c1f19ccb53641b1dc259774913bdb7b7643defec8867c25f3850a335168"
+        },
+        "waveform": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/output/runs/hc02-lower-strict-tie/psf/tran.tran.tran",
+          "sha256": "8f942860b96eb63249925d0b70f26d6311b973e039fbd5bb03c3bb24fc1785b0"
+        },
+        "receipt_artifact": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/output/runs/hc02-lower-strict-tie/RESULT.json",
+          "sha256": "6d9d42d9836ffd31f7ea65755edb4e113387c862d6a7049208763eef16244b80"
+        },
+        "execution_stages": [
+          {
+            "argv": [
+              "taskset",
+              "-c",
+              "0",
+              "prlimit",
+              "--as=4294967296",
+              "--fsize=33554432",
+              "--",
+              "/bin/csh",
+              "-f",
+              "run.csh"
+            ],
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            },
+            "elapsed_seconds": 8.311490546911955,
+            "completed_utc": "2026-10-06T21:12:42Z",
+            "log": "simulate.log",
+            "log_sha256": "dc4fa21124465b43aa7e4294e55e0740a0b4c03cbc628806c7cb165a6ee06df4",
+            "stage": "simulate",
+            "resource_caps": {
+              "memory_limit_bytes": 4294967296,
+              "file_limit_bytes": 33554432,
+              "threads": 1
+            }
+          }
+        ],
+        "actual_command_script": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/output/runs/hc02-lower-strict-tie/run.csh",
+          "sha256": "8ab92f7be2ad7461ef937b99179a2e2a41c0382543442372cd62b376715a7b1a"
+        },
+        "actual_command_text": "source /home/cshrc/.cshrc.cadence.sui\nsource /home/cshrc/.cshrc.mentor25.sui\n/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre -64 tb.scs +log spectre.log -format psfascii -raw psf +lqtimeout 30 +mt=1\nexit $status\n",
+        "native_record_audit": {
+          "records": 30001,
+          "accepted_steps": 30000,
+          "steps_plus_initial": true,
+          "initial_t0": true,
+          "strobeoutput_all": true,
+          "skipdc_no": true
+        }
+      },
+      "evas": {
+        "request": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-initialization/runs/initialization/spectre-comparison/additional-controls/hc02-lower-strict-tie/request.json",
+          "sha256": "d59c6d147bfab8ea70bbba962a27c4f656a36f0d1e852d1a62d2de8a23051e7b"
+        },
+        "response": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-initialization/runs/initialization/spectre-comparison/additional-controls/hc02-lower-strict-tie/response.json",
+          "sha256": "5fc55a846f2453c9f27267a6dc20ff9d8ca15ffb07bcd99fdb127dbac0611a23"
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        },
+        "kernel_sha256": "f77da92c10620aaeeb2d096652cd3a5a3e2ef1df9dbab4278a70a45ff78ebe2f",
+        "execution_command": [
+          "evas/rust_core/target/debug/evas-kernel"
+        ],
+        "invocation": "public compile_sources then stdin JSON request; stdout response persisted; no simulator output reconstruction",
+        "new_or_reused": "new final ee7 request for first five pairs; frozen final ee7 request reused after kernel/source closure verification for additional three"
+      },
+      "observations": {
+        "initial": {
+          "time": 0.0,
+          "in": 0.65,
+          "out": 0.09999999999999998,
+          "count": 0.0
+        },
+        "last": {
+          "time": 5.999999999995799e-06,
+          "in": 0.65,
+          "out": 0.1,
+          "count": 0.0
+        },
+        "count_sequence": [
+          0
+        ],
+        "max_errors_V": {
+          "in": 0.0,
+          "out": 2.7755575615628914e-17,
+          "count": 0.0
+        },
+        "coverage": {
+          "stop_s": 6e-06,
+          "last_time_s": 5.999999999995799e-06,
+          "covers_stop": false,
+          "exact_stop_rows": 0
+        },
+        "event_history": [],
+        "ev_initial": {
+          "0": 0.0,
+          "count": -0.0,
+          "in": 0.65,
+          "out": 0.1,
+          "time": 0.0
+        },
+        "ev_last": {
+          "0": 0.0,
+          "count": -0.0,
+          "in": 0.65,
+          "out": 0.1,
+          "time": 6e-06
+        },
+        "ev_count_sequence": [
+          0
+        ],
+        "ev_max_errors_V": {
+          "in": 0.0,
+          "out": 0.0,
+          "count": 0.0
+        },
+        "ev_initial_states": [
+          0.0,
+          0.0
+        ],
+        "ev_final_states": [
+          0.0,
+          0.0
+        ],
+        "ev_state_names": [
+          "dut:q",
+          "dut:n"
+        ],
+        "ev_event_trace": [],
+        "anchors": [],
+        "original_observation_windows": []
+      },
+      "paper_qualification": "not a paper condition",
+      "limits": [
+        "No exact stop record/short coverage",
+        "Export error proof and independent input/voltage uncertainty certificates not supplied"
+      ]
+    },
+    {
+      "control": "hc02-lower-nonstrict-tie",
+      "paper_card": null,
+      "scientific_denominator": "development control, outside original twelve cards",
+      "development_agreement": true,
+      "judgment": {
+        "output_budget_V": 1e-07,
+        "counter_marker_budget_V": 1e-07,
+        "construction": {
+          "construction": "direct exact tie comparison at .65; constant source gives no cross",
+          "q": 1,
+          "n": 0,
+          "out_V": 0.9,
+          "count_V": 0,
+          "all_native_records_constant": true,
+          "voltage_allowance_V": 1e-07
+        },
+        "authority": "published fixed Spec A oracle/event_limits; held ties use pre-execution frozen direct comparison expectations",
+        "qualifier": "finite observed agreement; no independent numerical error certificate",
+        "construction_role": "Frozen independent expected behavior, not an assertion of bitwise constancy or equality of observed native records. Observed errors are reported separately against the unchanged budget."
+      },
+      "source": {
+        "text": "`include \"disciplines.vams\"\n`include \"constants.vams\"\nmodule paper_hc_start(in, out, count);\n inout in, out, count;\n electrical in, out, count;\n real q,n;\n analog begin\n  @(initial_step) begin q=(V(in)<=0.65); n=0; end\n  @(cross(V(in)-0.65,+1,1e-9,2e-4)) begin q=1; n=n+1; end\n  @(cross(V(in)-0.35,-1,1e-9,2e-4)) begin q=0; n=n+1; end\n  V(out)<+0.1+0.8*q;\n  V(count)<+n;\n end\nendmodule\n",
+        "sha256": "0022068307f6e7bfe20f309439b3a176996c869f69a38acca02fe41545f36e45",
+        "artifact": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/output/runs/hc02-lower-nonstrict-tie/dut.va",
+          "sha256": "0022068307f6e7bfe20f309439b3a176996c869f69a38acca02fe41545f36e45"
+        }
+      },
+      "inputs": {
+        "driven": [
+          "in"
+        ],
+        "pwl": [
+          [
+            [
+              0,
+              0.65
+            ],
+            [
+              6e-06,
+              0.65
+            ]
+          ]
+        ],
+        "parameters": {},
+        "output_times_s": [
+          0,
+          6e-06
+        ],
+        "stop_s": 6e-06,
+        "max_step_s": 6e-06
+      },
+      "spectre": {
+        "deck": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/output/runs/hc02-lower-nonstrict-tie/tb.scs",
+          "sha256": "5982ecaf1ff5217e434fcd916e3529404450ed5a8cecc92ca3c9d387a9df922e"
+        },
+        "binding": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/output/runs/hc02-lower-nonstrict-tie/binding.json",
+          "sha256": "a1f046615535b1d030e8f5f82dc7ac040c9766fcfa567220dfa2e8a5ce238b44"
+        },
+        "settings_requested": {
+          "stop_s": 6e-06,
+          "maxstep_s": 2e-10,
+          "reltol": 1e-05,
+          "vabstol_V": 1e-07,
+          "iabstol_A": 1e-12,
+          "method": "traponly",
+          "export": "psfascii native/strobeoutput=all"
+        },
+        "settings_effective": {
+          "global_reltol": 1e-05,
+          "transient_reltol": 1e-06,
+          "vabstol_V": 1e-07,
+          "iabstol_A": 1e-12,
+          "maxstep_s": 2e-10,
+          "preset": "conservative",
+          "log_sha256": "ab6e882525962d5ccd881d8eb9ef274d2820363b1460a47bc5ae41ac33688582"
+        },
+        "waveform": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/output/runs/hc02-lower-nonstrict-tie/psf/tran.tran.tran",
+          "sha256": "6a6fa6a4bea8c4aa10b9b0ec01840d62beaf8c2a80e6cf1825f16b40e283a296"
+        },
+        "receipt_artifact": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/output/runs/hc02-lower-nonstrict-tie/RESULT.json",
+          "sha256": "aaad13f3d6cd241f4f478e94e4db27c48df980fa50faacc706fd3a4aa9a3d86e"
+        },
+        "execution_stages": [
+          {
+            "argv": [
+              "taskset",
+              "-c",
+              "0",
+              "prlimit",
+              "--as=4294967296",
+              "--fsize=33554432",
+              "--",
+              "/bin/csh",
+              "-f",
+              "run.csh"
+            ],
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            },
+            "elapsed_seconds": 8.204163448885083,
+            "completed_utc": "2026-10-06T21:12:50Z",
+            "log": "simulate.log",
+            "log_sha256": "afef51093a4ded68ed5a1683538904a85e76f253d1f86f854c4fe1c15238bfdf",
+            "stage": "simulate",
+            "resource_caps": {
+              "memory_limit_bytes": 4294967296,
+              "file_limit_bytes": 33554432,
+              "threads": 1
+            }
+          }
+        ],
+        "actual_command_script": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/output/runs/hc02-lower-nonstrict-tie/run.csh",
+          "sha256": "8ab92f7be2ad7461ef937b99179a2e2a41c0382543442372cd62b376715a7b1a"
+        },
+        "actual_command_text": "source /home/cshrc/.cshrc.cadence.sui\nsource /home/cshrc/.cshrc.mentor25.sui\n/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre -64 tb.scs +log spectre.log -format psfascii -raw psf +lqtimeout 30 +mt=1\nexit $status\n",
+        "native_record_audit": {
+          "records": 30001,
+          "accepted_steps": 30000,
+          "steps_plus_initial": true,
+          "initial_t0": true,
+          "strobeoutput_all": true,
+          "skipdc_no": true
+        }
+      },
+      "evas": {
+        "request": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-initialization/runs/initialization/spectre-comparison/additional-controls/hc02-lower-nonstrict-tie/request.json",
+          "sha256": "ba5d0fc57cf17c603eca67ebe9ab84e1d459ad3276425728320f69a6c14bbc5f"
+        },
+        "response": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-initialization/runs/initialization/spectre-comparison/additional-controls/hc02-lower-nonstrict-tie/response.json",
+          "sha256": "cc64834070a1c9ec81b9aec8a40eb0a062340866002f9f3b2a1dcdc971f3ad74"
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        },
+        "kernel_sha256": "f77da92c10620aaeeb2d096652cd3a5a3e2ef1df9dbab4278a70a45ff78ebe2f",
+        "execution_command": [
+          "evas/rust_core/target/debug/evas-kernel"
+        ],
+        "invocation": "public compile_sources then stdin JSON request; stdout response persisted; no simulator output reconstruction",
+        "new_or_reused": "new final ee7 request for first five pairs; frozen final ee7 request reused after kernel/source closure verification for additional three"
+      },
+      "observations": {
+        "initial": {
+          "time": 0.0,
+          "in": 0.65,
+          "out": 0.9,
+          "count": 0.0
+        },
+        "last": {
+          "time": 5.999999999995799e-06,
+          "in": 0.65,
+          "out": 0.9,
+          "count": 0.0
+        },
+        "count_sequence": [
+          0
+        ],
+        "max_errors_V": {
+          "in": 0.0,
+          "out": 0.0,
+          "count": 0.0
+        },
+        "coverage": {
+          "stop_s": 6e-06,
+          "last_time_s": 5.999999999995799e-06,
+          "covers_stop": false,
+          "exact_stop_rows": 0
+        },
+        "event_history": [],
+        "ev_initial": {
+          "0": 0.0,
+          "count": -0.0,
+          "in": 0.65,
+          "out": 0.9,
+          "time": 0.0
+        },
+        "ev_last": {
+          "0": 0.0,
+          "count": -0.0,
+          "in": 0.65,
+          "out": 0.9,
+          "time": 6e-06
+        },
+        "ev_count_sequence": [
+          0
+        ],
+        "ev_max_errors_V": {
+          "in": 0.0,
+          "out": 0.0,
+          "count": 0.0
+        },
+        "ev_initial_states": [
+          1.0,
+          0.0
+        ],
+        "ev_final_states": [
+          1.0,
+          0.0
+        ],
+        "ev_state_names": [
+          "dut:q",
+          "dut:n"
+        ],
+        "ev_event_trace": [],
+        "anchors": [],
+        "original_observation_windows": []
+      },
+      "paper_qualification": "not a paper condition",
+      "limits": [
+        "No exact stop record/short coverage",
+        "Export error proof and independent input/voltage uncertainty certificates not supplied"
+      ]
+    },
+    {
+      "control": "hc01-integer-shared-counter",
+      "paper_card": null,
+      "scientific_denominator": "development control, outside original twelve cards",
+      "development_agreement": true,
+      "judgment": {
+        "output_budget_V": 0.001,
+        "counter_marker_budget_V": 0.001,
+        "construction": {
+          "construction": "reuse original EV-HC-01 oracle/criteria without altering paper card",
+          "card_id": "EV-HC-01",
+          "initial_q": 0,
+          "initial_n": 0,
+          "count_sequence": [
+            0,
+            1,
+            2
+          ],
+          "legal_windows_T": [
+            [
+              1.375,
+              1.3755
+            ],
+            [
+              3.375,
+              3.3755
+            ]
+          ],
+          "voltage_budget_V": 0.001
+        },
+        "authority": "published fixed Spec A oracle/event_limits; held ties use pre-execution frozen direct comparison expectations",
+        "qualifier": "finite observed agreement; no independent numerical error certificate",
+        "construction_role": "Frozen independent expected behavior, not an assertion of bitwise constancy or equality of observed native records. Observed errors are reported separately against the unchanged budget."
+      },
+      "source": {
+        "text": "`include \"disciplines.vams\"\n`include \"constants.vams\"\nmodule paper_hc(in, out, count);\n inout in, out, count;\n electrical in, out, count;\n real q; integer n;\n analog begin\n  @(initial_step) begin q=0; n=0; end\n  @(cross(V(in)-0.65,+1,1e-9,2e-4)) begin q=1; n=n+1; end\n  @(cross(V(in)-0.35,-1,1e-9,2e-4)) begin q=0; n=n+1; end\n  V(out)<+0.1+0.8*q;\n  V(count)<+n;\n end\nendmodule\n",
+        "sha256": "8ee0eb70f375e8d78c7195e7012e21f5151bdde58d84fc8a972e7f56257a80fd",
+        "artifact": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/output/runs/hc01-integer-shared-counter/dut.va",
+          "sha256": "8ee0eb70f375e8d78c7195e7012e21f5151bdde58d84fc8a972e7f56257a80fd"
+        }
+      },
+      "inputs": {
+        "driven": [
+          "in"
+        ],
+        "pwl": [
+          [
+            [
+              0,
+              0.1
+            ],
+            [
+              2e-06,
+              0.9
+            ],
+            [
+              4e-06,
+              0.1
+            ]
+          ]
+        ],
+        "parameters": {},
+        "output_times_s": [
+          0,
+          2e-06,
+          4e-06
+        ],
+        "stop_s": 4e-06,
+        "max_step_s": 4e-06
+      },
+      "spectre": {
+        "deck": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/output/runs/hc01-integer-shared-counter/tb.scs",
+          "sha256": "106a9cea8281339e4fabce1b2743de00cb50c768d84436ff8f42f9a8e74445c0"
+        },
+        "binding": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/output/runs/hc01-integer-shared-counter/binding.json",
+          "sha256": "4f7856a1e5fde8e71100808a5ca9f1f4670d857a25bddbc225564f7df14ebd8b"
+        },
+        "settings_requested": {
+          "stop_s": 4e-06,
+          "maxstep_s": 2e-10,
+          "reltol": 1e-05,
+          "vabstol_V": 1e-07,
+          "iabstol_A": 1e-12,
+          "method": "traponly",
+          "export": "psfascii native/strobeoutput=all"
+        },
+        "settings_effective": {
+          "global_reltol": 1e-05,
+          "transient_reltol": 1e-06,
+          "vabstol_V": 1e-07,
+          "iabstol_A": 1e-12,
+          "maxstep_s": 2e-10,
+          "preset": "conservative",
+          "log_sha256": "9353da553b1e6bb033a4619d4c66d801ada3c42a5653d3a27106e219cb446c2a"
+        },
+        "waveform": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/output/runs/hc01-integer-shared-counter/psf/tran.tran.tran",
+          "sha256": "3846e9b68727c16237ab56eee1b93d4f3d39a16009ac046761146cef2f367289"
+        },
+        "receipt_artifact": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/output/runs/hc01-integer-shared-counter/RESULT.json",
+          "sha256": "3ff96259845bf502875c7741f759afb87750a7c81c17ee7c1656dd71441b27bc"
+        },
+        "execution_stages": [
+          {
+            "argv": [
+              "taskset",
+              "-c",
+              "0",
+              "prlimit",
+              "--as=4294967296",
+              "--fsize=33554432",
+              "--",
+              "/bin/csh",
+              "-f",
+              "run.csh"
+            ],
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            },
+            "elapsed_seconds": 8.122923709452152,
+            "completed_utc": "2026-10-06T21:12:59Z",
+            "log": "simulate.log",
+            "log_sha256": "6b8ff50300ae8de2599321ef6cc313c91854a7aa421cb83297edb7ef008c1df0",
+            "stage": "simulate",
+            "resource_caps": {
+              "memory_limit_bytes": 4294967296,
+              "file_limit_bytes": 33554432,
+              "threads": 1
+            }
+          }
+        ],
+        "actual_command_script": {
+          "availability": "local-only",
+          "workspace_relative_path": "current/runs/gap-completion-20261006/night-execution/initialization-additional-actual/output/runs/hc01-integer-shared-counter/run.csh",
+          "sha256": "8ab92f7be2ad7461ef937b99179a2e2a41c0382543442372cd62b376715a7b1a"
+        },
+        "actual_command_text": "source /home/cshrc/.cshrc.cadence.sui\nsource /home/cshrc/.cshrc.mentor25.sui\n/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre -64 tb.scs +log spectre.log -format psfascii -raw psf +lqtimeout 30 +mt=1\nexit $status\n",
+        "native_record_audit": {
+          "records": 20003,
+          "accepted_steps": 20002,
+          "steps_plus_initial": true,
+          "initial_t0": true,
+          "strobeoutput_all": true,
+          "skipdc_no": true
+        }
+      },
+      "evas": {
+        "request": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-initialization/runs/initialization/spectre-comparison/additional-controls/hc01-integer-shared-counter/request.json",
+          "sha256": "c2ef86f4c927b563bceab0e1cf900ed6f3d7e6a631f9c3a05b534ee552c0088c"
+        },
+        "response": {
+          "availability": "local-only",
+          "workspace_relative_path": "worktrees/spec-a-initialization/runs/initialization/spectre-comparison/additional-controls/hc01-integer-shared-counter/response.json",
+          "sha256": "c589a148d986cf30d818b58f07eebafb013aa5f5800e0a4dcf3bb31b47f86319"
+        },
+        "tolerances": {
+          "absolute": 1e-12,
+          "relative": 1e-10
+        },
+        "kernel_sha256": "f77da92c10620aaeeb2d096652cd3a5a3e2ef1df9dbab4278a70a45ff78ebe2f",
+        "execution_command": [
+          "evas/rust_core/target/debug/evas-kernel"
+        ],
+        "invocation": "public compile_sources then stdin JSON request; stdout response persisted; no simulator output reconstruction",
+        "new_or_reused": "new final ee7 request for first five pairs; frozen final ee7 request reused after kernel/source closure verification for additional three"
+      },
+      "observations": {
+        "initial": {
+          "time": 0.0,
+          "in": 0.1,
+          "out": 0.1,
+          "count": 0.0
+        },
+        "last": {
+          "time": 4e-06,
+          "in": 0.1,
+          "out": 0.1,
+          "count": 2.0
+        },
+        "count_sequence": [
+          0,
+          1,
+          2
+        ],
+        "max_errors_V": {
+          "in": 4.85722573273506e-16,
+          "out": 1.1102230246251565e-16,
+          "count": 0.0
+        },
+        "coverage": {
+          "stop_s": 4e-06,
+          "last_time_s": 4e-06,
+          "covers_stop": true,
+          "exact_stop_rows": 1,
+          "decimal_token_audit": {
+            "deck_stop_token": "3.9999999999999998e-06",
+            "raw_last_time_token": "4.000000000000000e-06",
+            "last_minus_deck_stop_s": "2E-22",
+            "arithmetic": "exact Decimal subtraction of original tokens",
+            "decimal_tokens_equal": false,
+            "parsed_float_equality": true,
+            "claim": "Coverage of deck stop holds; nominal 4us parsed-float match holds. No center identity or serialization-error certificate inferred."
+          }
+        },
+        "event_history": [
+          {
+            "native_bracket_T": [
+              1.374800000000079,
+              1.375000000000079
+            ],
+            "legal_window_T": [
+              1.375,
+              1.3755
+            ],
+            "intersection_T": [
+              1.375,
+              1.375000000000079
+            ],
+            "compatible": true,
+            "compatible_basis": "Derived from nonempty intersection of parsed native bracket and unchanged legal window; finite numerical compatibility only.",
+            "intersection_width_T": 7.904787935331115e-14,
+            "single_point_contact": false
+          },
+          {
+            "native_bracket_T": [
+              3.3749895833336834,
+              3.3751895833336834
+            ],
+            "legal_window_T": [
+              3.375,
+              3.3755
+            ],
+            "intersection_T": [
+              3.375,
+              3.3751895833336834
+            ],
+            "compatible": true,
+            "compatible_basis": "Derived from nonempty intersection of parsed native bracket and unchanged legal window; finite numerical compatibility only.",
+            "intersection_width_T": 0.0001895833336833519,
+            "single_point_contact": false
+          }
+        ],
+        "ev_initial": {
+          "0": 0.0,
+          "count": -0.0,
+          "in": 0.1,
+          "out": 0.1,
+          "time": 0.0
+        },
+        "ev_last": {
+          "0": 0.0,
+          "count": 2.0,
+          "in": 0.1,
+          "out": 0.1,
+          "time": 4e-06
+        },
+        "ev_count_sequence": [
+          0,
+          1,
+          2
+        ],
+        "ev_max_errors_V": {
+          "in": 0.0,
+          "out": 0.0,
+          "count": 0.0
+        },
+        "ev_initial_states": [
+          0.0,
+          0.0
+        ],
+        "ev_final_states": [
+          0.0,
+          2.0
+        ],
+        "ev_state_names": [
+          "dut:q",
+          "dut:n"
+        ],
+        "ev_event_trace": [
+          {
+            "time": 1.3750000000000008e-06,
+            "observation_time_bounds": [
+              1.3749999999999991e-06,
+              1.3750000000000008e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:9:3 (dut)",
+            "kind": "cross",
+            "guard_value": 4.440892098500626e-16,
+            "before": [
+              0.0,
+              0.0
+            ],
+            "after": [
+              1.0,
+              1.0
+            ]
+          },
+          {
+            "time": 3.375000000000001e-06,
+            "observation_time_bounds": [
+              3.3749999999999986e-06,
+              3.375000000000001e-06
+            ],
+            "event": 1,
+            "origin": "dut.va:10:3 (dut)",
+            "kind": "cross",
+            "guard_value": -4.996003610813204e-16,
+            "before": [
+              1.0,
+              1.0
+            ],
+            "after": [
+              0.0,
+              2.0
+            ]
+          }
+        ],
+        "anchors": [],
+        "original_observation_windows": [],
+        "counter_marker_error_definition": "Maximum abs(native count voltage - nearest integer), using the original criteria rounding rule; independently reread actual raw, not inferred from count_sequence."
+      },
+      "paper_qualification": "not a paper condition",
+      "limits": [
+        "Parsed-float stop equality observed; raw/deck decimal tokens differ by +2e-22 s. Neither this equality nor coverage establishes requested-center identity or serialization qualification.",
+        "Export error proof and independent input/voltage uncertainty certificates not supplied"
+      ]
+    }
+  ],
+  "summary": {
+    "finite_development_agreement": 8,
+    "formal_paper_P_claim": false,
+    "paper_original_status": {
+      "EV-HC-01": "I",
+      "EV-HC-02": "I"
+    },
+    "short_stop_records": 7,
+    "exact_stop_controls": [
+      "hc01-integer-shared-counter"
+    ],
+    "actual_covered": [
+      "original real-counter HC01/HC02 both asynchronous cross writers",
+      "real > low/high/exact tie",
+      "real >= exact tie",
+      "real < exact tie",
+      "real <= exact tie",
+      "integer shared self increment asynchronous crosses"
+    ],
+    "actual_uncovered": [
+      "general affine driven combinations",
+      "same-batch conflict/rollback compared with Spectre",
+      "integer decrement/overflow boundaries compared with Spectre",
+      "t0 timer/operator history ordering compared with Spectre"
+    ],
+    "unknowns": [
+      "strict ASCII export error proof",
+      "input/voltage independent numerical error certificate",
+      "precisely sourced nominal center uncertainty",
+      "endpoint coverage for seven cases"
+    ],
+    "exact_stop_controls_definition": "Parsed-float equality only, using the exact_stop_rows definition; not raw/deck decimal-token equality.",
+    "single_point_event_contacts": [
+      {
+        "control": "hc01-original",
+        "event_index": 0,
+        "intersection_T": [
+          1.375,
+          1.375
+        ],
+        "claim": "finite parsed numerical boundary contact; no positive overlap width or strict timing certificate"
+      },
+      {
+        "control": "hc02-original-high",
+        "event_index": 0,
+        "intersection_T": [
+          2.75,
+          2.75
+        ],
+        "claim": "finite parsed numerical boundary contact; no positive overlap width or strict timing certificate"
+      }
+    ]
+  },
+  "availability": {
+    "summary": "repository-contained compact summary only",
+    "bulk": "local-only; paths relative to vaEVAS workspace, not public retrieval addresses",
+    "reproduction": "requires authorized access to retained raw archives and Spectre21.1 tool/license/setup; hashes and installed docs do not grant public retrieval",
+    "raw_preservation": "archives retained by root; no workspace cleanup performed"
+  },
+  "record_schema_notes": {
+    "native_record_audit_aliases": {
+      "parsed_records": [
+        "parsed_records",
+        "records"
+      ],
+      "records_equal_steps_plus_initial": [
+        "records_equal_steps_plus_initial",
+        "steps_plus_initial"
+      ],
+      "initial_time_zero": [
+        "initial_time_zero",
+        "initial_t0"
+      ],
+      "accepted_steps": [
+        "accepted_steps"
+      ],
+      "strobeoutput_all": [
+        "strobeoutput_all"
+      ],
+      "skipdc_no": [
+        "skipdc_no"
+      ]
+    },
+    "native_record_audit_alias_rule": "The first listed key present is the canonical value; older batch keys retained without rewriting source receipts.",
+    "settings_rule": "spectre.settings_requested retains each original preparation schema. All eight settings_effective objects share global_reltol/transient_reltol/vabstol_V/iabstol_A/maxstep_s/log_sha256; reason and preset are descriptive metadata, not alternate numerical setting fields. Requested integration_method and method describe the original deck vocabulary; actual deck hash is authoritative.",
+    "construction_rule": "construction is frozen independent expected behavior. all_native_records_constant=true is the constant mathematical expectation, not an observed bitwise-constant assertion.",
+    "event_history_rule": "compatible is derived from intersection_T[0] <= intersection_T[1]; zero width is explicitly single_point_contact, with no timing certificate inferred."
+  }
+}

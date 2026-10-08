@@ -1,4 +1,4 @@
-"""Version 17: voltage/event IR with held timers and expanded call-site identities.
+"""Version 18: voltage/event IR with held timers and expanded call-site identities.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -11,7 +11,7 @@ from typing import Literal
 from .limits import check_ir
 
 
-SCHEMA_VERSION = 17
+SCHEMA_VERSION = 18
 
 
 @dataclass(frozen=True)
@@ -150,7 +150,7 @@ class State:
     instance: str
     name: str
     kind: Literal["real", "integer"]
-    initial: float
+    initial: float | Select
 
 
 @dataclass(frozen=True)

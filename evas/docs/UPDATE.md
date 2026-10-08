@@ -4,6 +4,13 @@
 不在此重复——见 [CAPABILITIES 检查点身份](CAPABILITIES.md#检查点身份)与
 [追溯矩阵](TRACEABILITY.md)。单 PR 的细节以 PR/commit 描述为准，本页只留摘要。
 
+## 2026-10-07：输入比较初值与迟滞计数候选
+
+- EVAS 0.14.0 / IR18 新增 real 状态由实际 driven/ground 仿射比较决定 0/1 初值。
+- 全部初值先于模型、算子、守卫、t=0 事件和首行观察解析，严格/非严格 tie 分别保留。
+- 异刻事件块可共享自增/自减计数；同刻选中两个写者仍原子拒绝。
+- 旧 IR 必须从 VA 重新编译。原论文卡未改；开发回归不表示 Spectre 对齐或已合并支持。
+
 以下 2026-10-06 检查点描述各 PR 引入的源码行为，合并状态见
 [PR74](https://github.com/BucketSran/vaEVAS/pull/74)、
 [PR75](https://github.com/BucketSran/vaEVAS/pull/75)、
