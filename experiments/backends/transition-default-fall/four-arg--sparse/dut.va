@@ -1,0 +1,21 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module transition_default(r,simple,reverse,extend,mirror,qs,qr,qe,qm);
+ inout r,simple,reverse,extend,mirror,qs,qr,qe,qm;
+ electrical r,simple,reverse,extend,mirror,qs,qr,qe,qm;
+ parameter real edge=0.5;
+ parameter real delay=0.0;
+ real s,b,e,m;
+ analog begin
+  @(initial_step) begin s=0; b=0; e=0; m=0; end
+  @(timer(0.25,0,1e-18)) begin s=1; b=1; e=1; m=-1; end
+  @(timer(0.5,0,1e-18)) begin b=0; e=2; m=0; end
+  @(timer(0.875,0,1e-18)) e=2;
+  @(timer(1.5,0,1e-18)) s=0;
+  V(simple,r)<+transition(s,delay,edge,edge);
+  V(reverse,r)<+transition(b,delay,edge,edge);
+  V(extend,r)<+transition(e,delay,edge,edge);
+  V(mirror,r)<+transition(m,delay,edge,edge);
+  V(qs,r)<+s; V(qr,r)<+b; V(qe,r)<+e; V(qm,r)<+m;
+ end
+endmodule

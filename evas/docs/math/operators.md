@@ -65,7 +65,10 @@ IR 保存 operators 与调用点引用。结构依赖在数值绑定前检查，
 
 ## transition
 
-接受本实例已提交标量状态与常数的仿射输入；四参数须显式提供，延迟和边沿为有限实例常数，`d≥0`、`tr>0,tf>0`。
+接受本实例已提交标量状态与常数的仿射输入；支持三参数 `transition(x,d,tr)` 和四参数 `transition(x,d,tr,tf)`。
+延迟和边沿为有限实例常数，`d≥0`、`tr>0,tf>0`。仅省略 fall 且显式 rise 为正时，
+按 Verilog-AMS LRM 2.4 §4.5.8 将 `tf=tr`，编译到同一 Transition IR；保留原源位置、实例和调用点。
+这不引入零边沿或完全省略边沿的默认最小时间。
 初值为已初始化输入，不凭空添加从零开始的边沿。未中断变化在实际接受时刻 te 发生，
 选择完整上/下沿时间 D，则
 
@@ -85,7 +88,9 @@ IR 保存 operators 与调用点引用。结构依赖在数值绑定前检查，
 包含 TR-EDGE/REVERSE/EXTEND/REPEAT/QUEUE、反射、实例隔离、网格与步长、浮点分辨率及拒绝边界。
 Rust 另检查队列/边沿的候选回退；新增同刻电压目标与变化算子值上的缓存回归。
 专属 Spectre 有限对照见[执行记录](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/dvs2-spectre-validation/README.md#pr13-transition-061)，不由有限样例宣称通用兼容。
-连续电压输入、嵌套、动态参数、缺省/零边沿和算子反馈尚未支持。
+三参数独立上/下沿、中断与实例隔离回归见 [test_transition_defaults.py](../../tests/test_transition_defaults.py)。
+本地分支已通过；这项新增默认 fall 的实际同源 Spectre 对照仍待执行，旧四参数收据不替代它。
+连续电压输入、嵌套、动态参数、缺省 rise/零边沿和算子反馈尚未支持。
 
 ### 历史误差与电压精度
 
