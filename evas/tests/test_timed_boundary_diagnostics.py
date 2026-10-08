@@ -12,6 +12,9 @@ CASES=[('transition(q)', 'unsupported_transition_default_edges','parse','transit
        ('transition(q,q,.5)', 'unsupported_transition_timing_dependency','lowering',"unknown parameter 'q'"),
        ('transition(q,0,0*q+.5)', 'unsupported_transition_timing_dependency','lowering',"unknown parameter 'q'"),
        ('transition(q,0,.5,q)', 'unsupported_transition_timing_dependency','lowering',"unknown parameter 'q'")]
+# One representative guards the shared non-transition settings path.
+OUTSIDE_BOUNDARIES=[('absdelay(q,q)','compile_error','compile',"unknown parameter 'q'"),
+                    ('transition(q,0,.5,.5,0)','syntax_error','parse','transition requires 3 or 4 explicit arguments')]
 class TimedBoundaryReasons(unittest.TestCase):
  def test_actual_api_reasons_preserve_messages_and_origins(self):
   for expression,code,stage,message in CASES:
@@ -20,11 +23,16 @@ class TimedBoundaryReasons(unittest.TestCase):
    self.assertEqual((error['code'],error['category'],error['stage'],error['capability']),(code,'unsupported',stage,'TRANSITION'))
    self.assertIn(message,str(caught.exception));self.assertEqual(error['message'],str(caught.exception))
    self.assertEqual(error['location']['source'],'timing.va');self.assertGreater(error['location']['line'],0)
- def test_negative_or_unknown_names_do_not_acquire_default_edge_reason(self):
+ def test_outside_scope_api_rejections_keep_their_original_reason(self):
   for expression in ['transition(q,-1,.5)','transition(q,0,-.5)','transition(q,0,.5,-.5)','transition(q,-1,0)','transition(q,0,missing)']:
    with self.subTest(expression=expression),self.assertRaises(CompileError) as caught:compile_sources({'negative.va':SOURCE(expression)},[instance()])
    self.assertEqual(caught.exception.diagnostic['category'],'unknown')
    self.assertEqual(caught.exception.diagnostic['code'],'compile_error')
+  for expression,code,stage,message in OUTSIDE_BOUNDARIES:
+   with self.subTest(expression=expression),self.assertRaises(CompileError) as caught:compile_sources({'negative.va':SOURCE(expression)},[instance()])
+   diagnostic=caught.exception.diagnostic
+   self.assertEqual((diagnostic['code'],diagnostic['category'],diagnostic['stage']),(code,'unknown',stage))
+   self.assertIn(message,diagnostic['message'])
  def test_future_payload_and_unclassified_frontend_remain_unknown(self):
   self.assertEqual(CompileError('legacy').diagnostic['category'],'unknown')
   payload={'kind':'unsupported_transition_zero_edges','message':'future','diagnostic_version':2,'sample':4,'other':19}
@@ -32,12 +40,14 @@ class TimedBoundaryReasons(unittest.TestCase):
 class TimedBoundaryCLI(unittest.TestCase):
  setUp=test_manifest.ManifestContracts.setUp
  cli=test_manifest.ManifestContracts.cli
- def test_negative_and_undeclared_cli_reasons_stay_unknown(self):
-  for expression in ['transition(q,-1,0)', 'transition(q,0,missing)']:
+ def test_outside_scope_cli_rejections_keep_their_original_reason(self):
+  controls=[('transition(q,-1,0)','compile_error','compile','transition requires nonnegative delay and positive explicit edge times'),
+            ('transition(q,0,missing)','compile_error','compile',"unknown parameter 'missing'")]
+  for expression,code,stage,message in controls+OUTSIDE_BOUNDARIES:
    (self.root/'m.va').write_text(SOURCE(expression))
    with self.subTest(expression=expression):
     result=self.cli('compile');self.assertEqual(result.returncode,2);self.assertEqual(result.stdout,'')
-    diagnostic=json.loads(result.stderr);self.assertEqual((diagnostic['code'],diagnostic['category']),('compile_error','unknown'))
+    diagnostic=json.loads(result.stderr);self.assertEqual((diagnostic['code'],diagnostic['category'],diagnostic['stage']),(code,'unknown',stage));self.assertIn(message,diagnostic['message'])
  def test_real_compile_cli_matches_api_reason_and_preserves_failure(self):
   for expression,code,stage,message in CASES:
    (self.root/'m.va').write_text(SOURCE(expression))

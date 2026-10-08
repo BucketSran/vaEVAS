@@ -199,7 +199,7 @@ lint_passed 仍只表示既有静态检查通过；支持范围与精度资格�
 ## 时序边界的有限前端原因
 
 本开发切片只细分 transition 的三个既有拒绝出口，不改变接受的 VA、数学方法、IR 或 Rust。
-实际公开 compile API 与 CLI 输入覆盖一/二参数省略 rise、三/四参数零边沿、持久态依赖 delay/rise。
+实际公开 compile API 与 CLI 输入覆盖一/二参数省略 rise、三/四参数零边沿、持久态依赖 delay/rise/fall。
 前两种分别登记 `unsupported_transition_default_edges`（parse）和
 `unsupported_transition_zero_edges`（lowering）；读取已声明持久态的时序参数登记
 `unsupported_transition_timing_dependency`（lowering）。category 为 unsupported，capability 为 TRANSITION。
