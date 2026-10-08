@@ -167,7 +167,7 @@ class TransitionContracts(unittest.TestCase):
 class TransitionRejections(unittest.TestCase):
     def test_unsupported_inputs_settings_and_contexts(self):
         for expression in ['transition(V(u,r),0,1n,1n)', 'transition(a,0,0,1n)',
-                           'transition(a,-1n,1n,1n)', 'transition(a,0,1n)',
+                           'transition(a,-1n,1n,1n)', 'transition(a,0)',
                            'transition(transition(a,0,1n,1n),0,1n,1n)',
                            'transition(a,a,1n,1n)']:
             with self.subTest(expression=expression), self.assertRaises(CompileError):
