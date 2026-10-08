@@ -260,7 +260,9 @@ class InstanceCompiler:
                 raise CompileError("absdelay requires nonnegative delay; zero is an EVAS extension")
             self.compilation.operators.append(AbsDelay(value, delay, origin))
         elif expr.op == "transition":
-            delay, rise, fall = (v.constant for v in settings)
+            delay, rise = (v.constant for v in settings[:2])
+            # LRM 2.4 §4.5.8: a positive explicit rise supplies omitted fall.
+            fall = settings[2].constant if len(settings) == 3 else rise
             if delay < 0 or rise <= 0 or fall <= 0:
                 raise CompileError("transition requires nonnegative delay and positive explicit edge times")
             self.compilation.operators.append(Transition(value, delay, rise, fall, origin))

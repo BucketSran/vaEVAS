@@ -37,9 +37,10 @@ MNA 未知量与方程、混合量纲容差、状态生命周期和独立参考�
 
 ## ADR-002：电压域扩展共用状态、事件与误差事务
 
-状态：设计交付，待独立设计审查和合入。[#62](https://github.com/BucketSran/vaEVAS/issues/62)
-维护本决定的审查与关闭；文档完成不表示 C1–C5 已实现。
-核对基线为 reviewed main `fbf896bbbb6f66a85f2d8be159eb2657ea17f972`，
+状态：设计已独立审查，并由 [PR109](https://github.com/BucketSran/vaEVAS/pull/109) 合入。
+[#62](https://github.com/BucketSran/vaEVAS/issues/62)记录设计验收；未完成实施已按下表移交，
+由对应 Issue 持续验收。设计关闭不表示 C1–C5 已实现。
+设计时核对基线为 reviewed main `fbf896bbbb6f66a85f2d8be159eb2657ea17f972`，
 [PR108 候选](https://github.com/BucketSran/vaEVAS/tree/739d961c9894715d5be3c19dec9441eaecec6369)
 只作接口核对，尚未合并。两者的源码元数据均为 EVAS 0.14.0 / IR18，依据 `evas/pyproject.toml`、
 `evas/rust_core/Cargo.toml` 和 Python/Rust 的 `SCHEMA_VERSION`；旧 README 版本描述未作为身份依据。
@@ -96,14 +97,17 @@ C1–C5 的数学接口分别在[连续状态接口](math/continuous.md#extensio
 
 | 项 | 已交付范围与候选 | 剩余接口和首个独立答案 | 依赖顺序与责任入口 |
 | --- | --- | --- | --- |
-| C1 改阈值/流场后的根 | main 有状态相关仿射/多项式阈值重定位，以及受限积分流重启；#108 继续修事件物理阶段与可见状态，未完成对齐 | 事件后重建 guard/导数，撤销受影响旧根，保留状态和误差；`z'=1` 在 .25 改为 2，z 连续，`cross(z-.75,+1)` 应在 .5，旧 .75 作废。还需失败后同控制器重试与网格不变性 | 依赖共同观察/事务，再验未来根；有限对齐归 [#96/#108](https://github.com/BucketSran/vaEVAS/issues/96)，双向自换向分辨率归 [#70](https://github.com/BucketSran/vaEVAS/issues/70)；更广历史反馈设计保留 #62/C1 |
-| C2 DAE 事件/复位/ddt | main 的 index-one 多项式 DAE 限无事件、无保持状态、无复位；proper 滤波可联合。#108 不解除该边界 | 事件保持 z 后重解 `F(v,z,u,q+)=0` 并证明选定代数根；`y+y²=z,z'=q(1+2y)`，q 从 1 在 .25 改为 2，应有 y=t 至 .25，之后 y=.25+2(t-.25)，z=y+y²。显式复位须只改变指定积分，单独检验一致根、导数跳变与奇异拒绝 | 先设计一致重启，再做复位，最后定义 ddt 跳变/脉冲边界；归 #62/C2，实施须关联独立切片，不能由普通 ODE 事件通过推定 |
-| C3 历史组合 | [#86](https://github.com/BucketSran/vaEVAS/pull/86) 已交付两级固定 absdelay；内部仿射投影不等于任意历史输入 | 固定 slew 前馈、动态参数、深层延迟与反馈分别定义。首个 slew 组合可取 u=t、两层限速分别 .5/-.5 和 .25/-.25，初值 0，应有内层 .5t、外层 .25t；还须拐点追赶和误差放大负控，不能只解常斜坡 | 先固定前馈的历史/断点查询，再定义参数变化，反馈需联合存在/唯一性；剩余归 #62/C3 与 [#66](https://github.com/BucketSran/vaEVAS/issues/66)，新切片不得直接解除结构检查 |
-| C4 非线性滤波直接通路 | main 有 1–8 阶 proper 滤波、受限非线性 DC 及 DAE 联合；[#80](https://github.com/BucketSran/vaEVAS/pull/80) 只增加有限单负实极点转换 | 将 `h=Cx+D*e(v,h,u)` 纳入原代数关系、初始化与历史误差。首个前馈 `h=laplace_nd(u²,'{1,1},'{2,1})`、u=t、DC 初值0，应有 `h=t²/2+t/2-1/4+exp(-2t)/4`。反馈另需证明输出代数根，不得只验证变换关系 | 先前馈非线性 D 通路与原关系验收，再做联合反馈/初始化；归 #62/C4，形式扩展归 #66；保留 `test_implicit_filters` 的现有拒绝义务直到对应切片交付 |
-| C5 timer/跳变/隐式 guard | main 有固定及保持状态 timer、受限历史 guard；#108 的有界局部因果闭包仍为候选 | 时钟参数依赖类别、同刻跳变的触发集合/解唯一性、隐式 guard 的电压分支与导数各自定义。保持 timer `next=.25`、每次 `next+=.25` 应为 .25/.5/.75/1；C2 的选定 DAE 上 `cross(y-.5,+1)` 应为 .375。连续电压 timer 和动态容差仍须具体模型，不能猜测下一次事件的含义 | 共同事务归 [#97/#103](https://github.com/BucketSran/vaEVAS/issues/97)，已选有界组合/对齐归 #96/#108；隐式 guard 依赖 C2 一致延续，连续 timer/动态容差及一般跳变仍归 #62/C5，实施须另关联切片 |
+| C1 改阈值/流场后的根 | main 有状态相关仿射/多项式阈值重定位，以及受限积分流重启；#108 继续修事件物理阶段与可见状态，未完成对齐 | 事件后重建 guard/导数，撤销受影响旧根，保留状态和误差；`z'=1` 在 .25 改为 2，z 连续，`cross(z-.75,+1)` 应在 .5，旧 .75 作废。还需失败后同控制器重试与网格不变性 | 依赖共同观察/事务，再验未来根；有限对齐归 [#96/#108](https://github.com/BucketSran/vaEVAS/issues/96)，双向自换向分辨率归 [#70](https://github.com/BucketSran/vaEVAS/issues/70)；更广历史反馈由 #96 的 C1 条目继续跟踪 |
+| C2 DAE 事件/复位/ddt | main 的 index-one 多项式 DAE 限无事件、无保持状态、无复位；proper 滤波可联合。#108 不解除该边界 | 事件保持 z 后重解 `F(v,z,u,q+)=0` 并证明选定代数根；`y+y²=z,z'=q(1+2y)`，q 从 1 在 .25 改为 2，应有 y=t 至 .25，之后 y=.25+2(t-.25)，z=y+y²。显式复位须只改变指定积分，单独检验一致根、导数跳变与奇异拒绝 | 先设计一致重启，再做复位，最后定义 ddt 跳变/脉冲边界；归 #96 的 C2-a/C2-b 独立实施条目，不能由普通 ODE 事件通过推定 |
+| C3 历史组合 | [#86](https://github.com/BucketSran/vaEVAS/pull/86) 已交付两级固定 absdelay；内部仿射投影不等于任意历史输入 | 固定 slew 前馈、动态参数、深层延迟与反馈分别定义。首个 slew 组合可取 u=t、两层限速分别 .5/-.5 和 .25/-.25，初值 0，应有内层 .5t、外层 .25t；还须拐点追赶和误差放大负控，不能只解常斜坡 | 先固定前馈的历史/断点查询，再定义参数变化，反馈需联合存在/唯一性；剩余归 [#66](https://github.com/BucketSran/vaEVAS/issues/66) 的 C3 固定前馈、参数变化/深层组合/反馈条目，新切片不得直接解除结构检查 |
+| C4 非线性滤波直接通路 | main 有 1–8 阶 proper 滤波、受限非线性 DC 及 DAE 联合；[#80](https://github.com/BucketSran/vaEVAS/pull/80) 只增加有限单负实极点转换 | 将 `h=Cx+D*e(v,h,u)` 纳入原代数关系、初始化与历史误差。首个前馈 `h=laplace_nd(u²,'{1,1},'{2,1})`、u=t、DC 初值0，应有 `h=t²/2+t/2-1/4+exp(-2t)/4`。反馈另需证明输出代数根，不得只验证变换关系 | 先前馈非线性 D 通路与原关系验收，再做联合反馈/初始化；归 #66 的 C4 非线性直接通路、联合反馈/初始化条目；保留 `test_implicit_filters` 的现有拒绝义务直到对应切片交付 |
+| C5 timer/跳变/隐式 guard | main 有固定及保持状态 timer、受限历史 guard；#108 的有界局部因果闭包仍为候选 | 时钟参数依赖类别、同刻跳变的触发集合/解唯一性、隐式 guard 的电压分支与导数各自定义。保持 timer `next=.25`、每次 `next+=.25` 应为 .25/.5/.75/1；C2 的选定 DAE 上 `cross(y-.5,+1)` 应为 .375。连续电压 timer 和动态容差仍须具体模型，不能猜测下一次事件的含义 | 共同事务归 [#97/#103](https://github.com/BucketSran/vaEVAS/issues/97)，已选有界组合/对齐归 #96/#108；隐式 guard 依赖 C2 一致延续，归 #96 的 C5-b，连续 timer/动态容差及一般跳变归 C5-c，实施须另关联切片 |
 
-上述剩余项仍保留在原跟踪入口。#62 的设计关闭要求独立审查确认共同接口与归属；
-C2、更广 C3/C4/C5 在实际关联实施切片和验收前保持未交付，不能仅通过修改 Issue 标题关闭。
+上述实施交接已发布到 [#96](https://github.com/BucketSran/vaEVAS/issues/96)、
+[#66](https://github.com/BucketSran/vaEVAS/issues/66) 和 [#70](https://github.com/BucketSran/vaEVAS/issues/70)，
+各条目保留独立预期、依赖、真实 Spectre 比较和未完成验收。
+#62 完成共同接口设计和责任移交后可关闭，不要求先完成这些实施项。
+未选切片不自动加入当前执行批次或验证分母，也不授权尚未决定的模型或接受语义。
 #66 原目录的六批验收和未交付范围在[算子扩展入口](math/operators.md#operator-breadth-backlog)，
 有限 np 或一个数学函数不会完成整个目录。
 
