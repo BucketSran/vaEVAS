@@ -21,6 +21,9 @@ CLI 在 stderr 输出同样的 JSON 并返回 2；命令参数错误也采用此
 | --- | --- |
 | `undeclared_node` | lowering：完整电气声明环境中，电压访问引用未声明的节点；受限算子上下文仍 unknown，保留原 token 与绑定实例 |
 | `duplicate_module` / `connection_mismatch` | parse/binding：重复模块定义，或实例端口/电气连接与声明不符 |
+| `unsupported_transition_default_edges` | parse：省略 rise 的一/二参数调用仍拒绝；实现不提供默认最小边沿 |
+| `unsupported_transition_zero_edges` | lowering：非负 delay/rise/fall 中存在零边沿，仍拒绝模拟器选择的最小边沿 |
+| `unsupported_transition_timing_dependency` | lowering：transition 时序参数读取已声明持久态，实例常量要求仍拒绝；真正未声明参数保留旧 unknown |
 | `unsupported_timer_dependency` | lowering：timer 参数依赖连续电压或算子；不会误报未声明节点 |
 | `manifest_input` / `manifest_io` | input：清单结构或编码错误；清单文件访问失败 |
 | `source_input` / `source_io` | input：源文本编码错误；源文件访问失败 |

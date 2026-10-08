@@ -235,7 +235,17 @@ class InstanceCompiler:
             settings = ()
         else:
             setting_args = expr.args[1:2] if expr.op == "idt" else expr.args[1:]
-            settings = [lower(arg, self.parameter, {}, self.model.source) for arg in setting_args]
+            def setting(arg):
+                def parameter(name):
+                    try:
+                        return self.parameter(name)
+                    except CompileError as error:
+                        if expr.op == "transition" and name in self.state_ids:
+                            raise CompileError(str(error), code='unsupported_transition_timing_dependency',
+                                               token=arg.token, instance=self.instance.name) from error
+                        raise
+                return lower(arg, parameter, {}, self.model.source)
+            settings = [setting(arg) for arg in setting_args]
             if any(not isinstance(v, Affine) or v.terms for v in settings):
                 raise CompileError(f"{expr.op} settings must be instance constants")
         origin = Origin(expr.token.source or self.model.source, expr.token.line, expr.token.column, self.instance.name, expr.expansion)
@@ -263,8 +273,12 @@ class InstanceCompiler:
             delay, rise = (v.constant for v in settings[:2])
             # LRM 2.4 §4.5.8: a positive explicit rise supplies omitted fall.
             fall = settings[2].constant if len(settings) == 3 else rise
-            if delay < 0 or rise <= 0 or fall <= 0:
+            if delay < 0 or rise < 0 or fall < 0:
                 raise CompileError("transition requires nonnegative delay and positive explicit edge times")
+            if rise == 0 or fall == 0:
+                raise CompileError("transition requires nonnegative delay and positive explicit edge times",
+                                   code='unsupported_transition_zero_edges', token=expr.token,
+                                   instance=self.instance.name)
             self.compilation.operators.append(Transition(value, delay, rise, fall, origin))
         elif expr.op == "slew":
             rise, fall = (v.constant for v in settings)
