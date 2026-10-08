@@ -1,0 +1,1383 @@
+{
+  "paired-analysis-v3": {
+    "records": [
+      {
+        "id": "T1-base",
+        "status": "settings_consistent_at_header_precision",
+        "fields": {
+          "reltol": {
+            "header_token": "1.00000e-09",
+            "header_line": 21,
+            "actual_decimal": "1.00000E-9",
+            "requested_deck_decimal": "1.0000000000000001E-9",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-15"
+          },
+          "maxstep": {
+            "header_token": "1.25000e-07",
+            "header_line": 17,
+            "actual_decimal": "1.25000E-7",
+            "requested_deck_decimal": "1.2499999999999999E-7",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-13"
+          },
+          "abstol(V)": {
+            "header_token": "1.00000e-11",
+            "header_line": 22,
+            "actual_decimal": "1.00000E-11",
+            "requested_deck_decimal": "9.9999999999999994E-12",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-17"
+          },
+          "abstol(I)": {
+            "header_token": "1.00000e-15",
+            "header_line": 23,
+            "actual_decimal": "1.00000E-15",
+            "requested_deck_decimal": "1.0000000000000001E-15",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-21"
+          },
+          "start": {
+            "header_token": "0.00000",
+            "header_line": 12,
+            "actual_decimal": "0.00000",
+            "requested_deck_decimal": "0",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "0.000005"
+          },
+          "stop": {
+            "header_token": "1.00000e-05",
+            "header_line": 14,
+            "actual_decimal": "0.0000100000",
+            "requested_deck_decimal": "0.0000099999999999999991",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-11"
+          },
+          "method": {
+            "header_token": "\"traponly\"",
+            "header_line": 28,
+            "requested": "traponly",
+            "equal": true
+          }
+        },
+        "psf_sha256": "1cbc0a4390167ad50155ec0afff8c2c357e6c493677560099a351c60c1d9de4c",
+        "profile_sha256": "ec4520243bf270faef57ae642a5bc39768ee9d431f11a1d93f4bdf897a7d18e7",
+        "deck_sha256": "ecd38d7f9e0b32a1a65db3285165f006ff9e4b0667f5c77b74d8b588f54800bd",
+        "case_sha256": "63e34e89d99f9b43d5542beb36a941caf1836d46b70ecf0148be75441005e68c",
+        "original_effective_settings": {
+          "status": "I",
+          "reason": "[Errno 2] No such file or directory: '<batch>/spectre-output/runs/T1-base/requested_settings.json'"
+        },
+        "original_RESULT_sha256": "cd00fb645c1c1c9e0c2123de914dd5eafdff8fb8d2b5b3f659e90ee4901b13ee",
+        "limits": "Direct HEADER decimal parsing, no SI suffix conversion. Print-rounding consistency does not prove exact stop or waveform endpoint qualification; original reader I retained."
+      },
+      {
+        "id": "T1-tight",
+        "status": "settings_consistent_at_header_precision",
+        "fields": {
+          "reltol": {
+            "header_token": "1.00000e-10",
+            "header_line": 21,
+            "actual_decimal": "1.00000E-10",
+            "requested_deck_decimal": "1E-10",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-16"
+          },
+          "maxstep": {
+            "header_token": "3.12500e-08",
+            "header_line": 17,
+            "actual_decimal": "3.12500E-8",
+            "requested_deck_decimal": "3.1249999999999999E-8",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-14"
+          },
+          "abstol(V)": {
+            "header_token": "1.00000e-12",
+            "header_line": 22,
+            "actual_decimal": "1.00000E-12",
+            "requested_deck_decimal": "9.9999999999999998E-13",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-18"
+          },
+          "abstol(I)": {
+            "header_token": "1.00000e-16",
+            "header_line": 23,
+            "actual_decimal": "1.00000E-16",
+            "requested_deck_decimal": "9.9999999999999998E-17",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-22"
+          },
+          "start": {
+            "header_token": "0.00000",
+            "header_line": 12,
+            "actual_decimal": "0.00000",
+            "requested_deck_decimal": "0",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "0.000005"
+          },
+          "stop": {
+            "header_token": "1.00000e-05",
+            "header_line": 14,
+            "actual_decimal": "0.0000100000",
+            "requested_deck_decimal": "0.0000099999999999999991",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-11"
+          },
+          "method": {
+            "header_token": "\"traponly\"",
+            "header_line": 28,
+            "requested": "traponly",
+            "equal": true
+          }
+        },
+        "psf_sha256": "f99ba3308a523fef9b7b1b59caac6bbf1d504443ba57c244d32b602fe578cd30",
+        "profile_sha256": "daf48993ec6fd5d5f0e93c73d1becef18e1ca74a767149c824c5a1f28858b8d2",
+        "deck_sha256": "85298c8169d2e823243d580af3c8fda73dabe5e8bf9b724f4a466882716973a8",
+        "case_sha256": "63e34e89d99f9b43d5542beb36a941caf1836d46b70ecf0148be75441005e68c",
+        "original_effective_settings": {
+          "status": "I",
+          "reason": "[Errno 2] No such file or directory: '<batch>/spectre-output/runs/T1-tight/requested_settings.json'"
+        },
+        "original_RESULT_sha256": "6eaee2853c1c5fc98144172f92e8375cdaec98354992905f49fe0482e63a2186",
+        "limits": "Direct HEADER decimal parsing, no SI suffix conversion. Print-rounding consistency does not prove exact stop or waveform endpoint qualification; original reader I retained."
+      },
+      {
+        "id": "T2-base",
+        "status": "settings_consistent_at_header_precision",
+        "fields": {
+          "reltol": {
+            "header_token": "1.00000e-09",
+            "header_line": 21,
+            "actual_decimal": "1.00000E-9",
+            "requested_deck_decimal": "1.0000000000000001E-9",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-15"
+          },
+          "maxstep": {
+            "header_token": "1.25000e-07",
+            "header_line": 17,
+            "actual_decimal": "1.25000E-7",
+            "requested_deck_decimal": "1.2499999999999999E-7",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-13"
+          },
+          "abstol(V)": {
+            "header_token": "1.00000e-11",
+            "header_line": 22,
+            "actual_decimal": "1.00000E-11",
+            "requested_deck_decimal": "9.9999999999999994E-12",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-17"
+          },
+          "abstol(I)": {
+            "header_token": "1.00000e-15",
+            "header_line": 23,
+            "actual_decimal": "1.00000E-15",
+            "requested_deck_decimal": "1.0000000000000001E-15",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-21"
+          },
+          "start": {
+            "header_token": "0.00000",
+            "header_line": 12,
+            "actual_decimal": "0.00000",
+            "requested_deck_decimal": "0",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "0.000005"
+          },
+          "stop": {
+            "header_token": "8.00000e-06",
+            "header_line": 14,
+            "actual_decimal": "0.00000800000",
+            "requested_deck_decimal": "0.0000079999999999999996",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-12"
+          },
+          "method": {
+            "header_token": "\"traponly\"",
+            "header_line": 28,
+            "requested": "traponly",
+            "equal": true
+          }
+        },
+        "psf_sha256": "f7f14430f82c411e1face8f17f5f65fe3cb5ce6d970b93b08db8dd4175a23769",
+        "profile_sha256": "ec4520243bf270faef57ae642a5bc39768ee9d431f11a1d93f4bdf897a7d18e7",
+        "deck_sha256": "cab2a57d8f65fbe0459727507489bb24f6109ee9cb5595afd6cdd6c815f5093c",
+        "case_sha256": "fef1fc3ab7c3c903a53b207dd53a4920365f12f28c3d4512da18e9fd5dd18e8c",
+        "original_effective_settings": {
+          "status": "I",
+          "reason": "[Errno 2] No such file or directory: '<batch>/spectre-output/runs/T2-base/requested_settings.json'"
+        },
+        "original_RESULT_sha256": "d806fe6661f633b01b061310dfb3842ab58637ea060e650dac56a77a8abf7bf5",
+        "limits": "Direct HEADER decimal parsing, no SI suffix conversion. Print-rounding consistency does not prove exact stop or waveform endpoint qualification; original reader I retained."
+      },
+      {
+        "id": "T2-tight",
+        "status": "settings_consistent_at_header_precision",
+        "fields": {
+          "reltol": {
+            "header_token": "1.00000e-10",
+            "header_line": 21,
+            "actual_decimal": "1.00000E-10",
+            "requested_deck_decimal": "1E-10",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-16"
+          },
+          "maxstep": {
+            "header_token": "3.12500e-08",
+            "header_line": 17,
+            "actual_decimal": "3.12500E-8",
+            "requested_deck_decimal": "3.1249999999999999E-8",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-14"
+          },
+          "abstol(V)": {
+            "header_token": "1.00000e-12",
+            "header_line": 22,
+            "actual_decimal": "1.00000E-12",
+            "requested_deck_decimal": "9.9999999999999998E-13",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-18"
+          },
+          "abstol(I)": {
+            "header_token": "1.00000e-16",
+            "header_line": 23,
+            "actual_decimal": "1.00000E-16",
+            "requested_deck_decimal": "9.9999999999999998E-17",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-22"
+          },
+          "start": {
+            "header_token": "0.00000",
+            "header_line": 12,
+            "actual_decimal": "0.00000",
+            "requested_deck_decimal": "0",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "0.000005"
+          },
+          "stop": {
+            "header_token": "8.00000e-06",
+            "header_line": 14,
+            "actual_decimal": "0.00000800000",
+            "requested_deck_decimal": "0.0000079999999999999996",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-12"
+          },
+          "method": {
+            "header_token": "\"traponly\"",
+            "header_line": 28,
+            "requested": "traponly",
+            "equal": true
+          }
+        },
+        "psf_sha256": "2c0ff04570a4c570c009c46cc8758a88ef81c3b7da381dcf5288e5d85e41d0be",
+        "profile_sha256": "daf48993ec6fd5d5f0e93c73d1becef18e1ca74a767149c824c5a1f28858b8d2",
+        "deck_sha256": "79b03e821083a9b861ca7659f84e9bf114650d4564dd27c26c6b1a20b1d16fce",
+        "case_sha256": "fef1fc3ab7c3c903a53b207dd53a4920365f12f28c3d4512da18e9fd5dd18e8c",
+        "original_effective_settings": {
+          "status": "I",
+          "reason": "[Errno 2] No such file or directory: '<batch>/spectre-output/runs/T2-tight/requested_settings.json'"
+        },
+        "original_RESULT_sha256": "efe1d73b085d1689a5f41e54dd2cb635ad053d4611a311e9fb38133d9b3dfacc",
+        "limits": "Direct HEADER decimal parsing, no SI suffix conversion. Print-rounding consistency does not prove exact stop or waveform endpoint qualification; original reader I retained."
+      },
+      {
+        "id": "C1-base",
+        "status": "settings_consistent_at_header_precision",
+        "fields": {
+          "reltol": {
+            "header_token": "1.00000e-09",
+            "header_line": 21,
+            "actual_decimal": "1.00000E-9",
+            "requested_deck_decimal": "1.0000000000000001E-9",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-15"
+          },
+          "maxstep": {
+            "header_token": "1.25000e-07",
+            "header_line": 17,
+            "actual_decimal": "1.25000E-7",
+            "requested_deck_decimal": "1.2499999999999999E-7",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-13"
+          },
+          "abstol(V)": {
+            "header_token": "1.00000e-11",
+            "header_line": 22,
+            "actual_decimal": "1.00000E-11",
+            "requested_deck_decimal": "9.9999999999999994E-12",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-17"
+          },
+          "abstol(I)": {
+            "header_token": "1.00000e-15",
+            "header_line": 23,
+            "actual_decimal": "1.00000E-15",
+            "requested_deck_decimal": "1.0000000000000001E-15",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-21"
+          },
+          "start": {
+            "header_token": "0.00000",
+            "header_line": 12,
+            "actual_decimal": "0.00000",
+            "requested_deck_decimal": "0",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "0.000005"
+          },
+          "stop": {
+            "header_token": "6.00000e-06",
+            "header_line": 14,
+            "actual_decimal": "0.00000600000",
+            "requested_deck_decimal": "0.0000060000000000000002",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-12"
+          },
+          "method": {
+            "header_token": "\"traponly\"",
+            "header_line": 28,
+            "requested": "traponly",
+            "equal": true
+          }
+        },
+        "psf_sha256": "c5e21372b4d4e7e9e467487458ccc5102b8d3a2b888fda6213910be892c85cc4",
+        "profile_sha256": "ec4520243bf270faef57ae642a5bc39768ee9d431f11a1d93f4bdf897a7d18e7",
+        "deck_sha256": "42a5c0288b9261e19c7bbff74eaac535fddf8761829171ab8bbc1d4174faa7ac",
+        "case_sha256": "00d6f76734def2237fdc578d9695335bd4159186851d620f8db74fb022dd8438",
+        "original_effective_settings": {
+          "status": "I",
+          "reason": "[Errno 2] No such file or directory: '<batch>/spectre-output/runs/C1-base/requested_settings.json'"
+        },
+        "original_RESULT_sha256": "cb4073c08f9c507bc6f303e3cf6ead533920fbeece09d19b0b9820592da36a0b",
+        "limits": "Direct HEADER decimal parsing, no SI suffix conversion. Print-rounding consistency does not prove exact stop or waveform endpoint qualification; original reader I retained."
+      },
+      {
+        "id": "C1-tight",
+        "status": "settings_consistent_at_header_precision",
+        "fields": {
+          "reltol": {
+            "header_token": "1.00000e-10",
+            "header_line": 21,
+            "actual_decimal": "1.00000E-10",
+            "requested_deck_decimal": "1E-10",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-16"
+          },
+          "maxstep": {
+            "header_token": "3.12500e-08",
+            "header_line": 17,
+            "actual_decimal": "3.12500E-8",
+            "requested_deck_decimal": "3.1249999999999999E-8",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-14"
+          },
+          "abstol(V)": {
+            "header_token": "1.00000e-12",
+            "header_line": 22,
+            "actual_decimal": "1.00000E-12",
+            "requested_deck_decimal": "9.9999999999999998E-13",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-18"
+          },
+          "abstol(I)": {
+            "header_token": "1.00000e-16",
+            "header_line": 23,
+            "actual_decimal": "1.00000E-16",
+            "requested_deck_decimal": "9.9999999999999998E-17",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-22"
+          },
+          "start": {
+            "header_token": "0.00000",
+            "header_line": 12,
+            "actual_decimal": "0.00000",
+            "requested_deck_decimal": "0",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "0.000005"
+          },
+          "stop": {
+            "header_token": "6.00000e-06",
+            "header_line": 14,
+            "actual_decimal": "0.00000600000",
+            "requested_deck_decimal": "0.0000060000000000000002",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-12"
+          },
+          "method": {
+            "header_token": "\"traponly\"",
+            "header_line": 28,
+            "requested": "traponly",
+            "equal": true
+          }
+        },
+        "psf_sha256": "74675312f32a0f9f452e4578f993b4b6b706c657e55f3121b0562fc8423e76cc",
+        "profile_sha256": "daf48993ec6fd5d5f0e93c73d1becef18e1ca74a767149c824c5a1f28858b8d2",
+        "deck_sha256": "1558b36068d3c5608da9b84b4557703f3936bb0b05cab3b3239a774583d6a57b",
+        "case_sha256": "00d6f76734def2237fdc578d9695335bd4159186851d620f8db74fb022dd8438",
+        "original_effective_settings": {
+          "status": "I",
+          "reason": "[Errno 2] No such file or directory: '<batch>/spectre-output/runs/C1-tight/requested_settings.json'"
+        },
+        "original_RESULT_sha256": "e163d8e0a495e216594233c56f37b6607b0ed2528f9d3831ec843a8ae91ee3e6",
+        "limits": "Direct HEADER decimal parsing, no SI suffix conversion. Print-rounding consistency does not prove exact stop or waveform endpoint qualification; original reader I retained."
+      },
+      {
+        "id": "C2-base",
+        "status": "settings_consistent_at_header_precision",
+        "fields": {
+          "reltol": {
+            "header_token": "1.00000e-09",
+            "header_line": 21,
+            "actual_decimal": "1.00000E-9",
+            "requested_deck_decimal": "1.0000000000000001E-9",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-15"
+          },
+          "maxstep": {
+            "header_token": "1.25000e-07",
+            "header_line": 17,
+            "actual_decimal": "1.25000E-7",
+            "requested_deck_decimal": "1.2499999999999999E-7",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-13"
+          },
+          "abstol(V)": {
+            "header_token": "1.00000e-11",
+            "header_line": 22,
+            "actual_decimal": "1.00000E-11",
+            "requested_deck_decimal": "9.9999999999999994E-12",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-17"
+          },
+          "abstol(I)": {
+            "header_token": "1.00000e-15",
+            "header_line": 23,
+            "actual_decimal": "1.00000E-15",
+            "requested_deck_decimal": "1.0000000000000001E-15",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-21"
+          },
+          "start": {
+            "header_token": "0.00000",
+            "header_line": 12,
+            "actual_decimal": "0.00000",
+            "requested_deck_decimal": "0",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "0.000005"
+          },
+          "stop": {
+            "header_token": "1.80000e-05",
+            "header_line": 14,
+            "actual_decimal": "0.0000180000",
+            "requested_deck_decimal": "0.000018",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-11"
+          },
+          "method": {
+            "header_token": "\"traponly\"",
+            "header_line": 28,
+            "requested": "traponly",
+            "equal": true
+          }
+        },
+        "psf_sha256": "b6682b60f70733f521ec65d4cff63c0f06b7de806888c9e57c68fb006e77e89f",
+        "profile_sha256": "ec4520243bf270faef57ae642a5bc39768ee9d431f11a1d93f4bdf897a7d18e7",
+        "deck_sha256": "50ea1000415ff4f60adf93bd8f80679a9930137007ef49667ddfa4b1ee189500",
+        "case_sha256": "7e573f92a637e0a20b43d0cd5a986b16bcb5ee96fc298fc27024192f91e30ed4",
+        "original_effective_settings": {
+          "status": "I",
+          "reason": "[Errno 2] No such file or directory: '<batch>/spectre-output/runs/C2-base/requested_settings.json'"
+        },
+        "original_RESULT_sha256": "6e1ccc552af5c4367be3b55e1b8846c7ccfbdba681ef857529a57355592a7014",
+        "limits": "Direct HEADER decimal parsing, no SI suffix conversion. Print-rounding consistency does not prove exact stop or waveform endpoint qualification; original reader I retained."
+      },
+      {
+        "id": "C2-tight",
+        "status": "settings_consistent_at_header_precision",
+        "fields": {
+          "reltol": {
+            "header_token": "1.00000e-10",
+            "header_line": 21,
+            "actual_decimal": "1.00000E-10",
+            "requested_deck_decimal": "1E-10",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-16"
+          },
+          "maxstep": {
+            "header_token": "3.12500e-08",
+            "header_line": 17,
+            "actual_decimal": "3.12500E-8",
+            "requested_deck_decimal": "3.1249999999999999E-8",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-14"
+          },
+          "abstol(V)": {
+            "header_token": "1.00000e-12",
+            "header_line": 22,
+            "actual_decimal": "1.00000E-12",
+            "requested_deck_decimal": "9.9999999999999998E-13",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-18"
+          },
+          "abstol(I)": {
+            "header_token": "1.00000e-16",
+            "header_line": 23,
+            "actual_decimal": "1.00000E-16",
+            "requested_deck_decimal": "9.9999999999999998E-17",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-22"
+          },
+          "start": {
+            "header_token": "0.00000",
+            "header_line": 12,
+            "actual_decimal": "0.00000",
+            "requested_deck_decimal": "0",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "0.000005"
+          },
+          "stop": {
+            "header_token": "1.80000e-05",
+            "header_line": 14,
+            "actual_decimal": "0.0000180000",
+            "requested_deck_decimal": "0.000018",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-11"
+          },
+          "method": {
+            "header_token": "\"traponly\"",
+            "header_line": 28,
+            "requested": "traponly",
+            "equal": true
+          }
+        },
+        "psf_sha256": "d8b371ad5816d5ec26cb4a7894c65dab9adfaf6a00d58388fc0c5659413c790a",
+        "profile_sha256": "daf48993ec6fd5d5f0e93c73d1becef18e1ca74a767149c824c5a1f28858b8d2",
+        "deck_sha256": "ed596de2de5c13d2d433af44aa4cdaac68ff01c4ac770acac78d1cbf2c2e7b4e",
+        "case_sha256": "7e573f92a637e0a20b43d0cd5a986b16bcb5ee96fc298fc27024192f91e30ed4",
+        "original_effective_settings": {
+          "status": "I",
+          "reason": "[Errno 2] No such file or directory: '<batch>/spectre-output/runs/C2-tight/requested_settings.json'"
+        },
+        "original_RESULT_sha256": "19f317d3b4022ce81773bdc4f5f0ef54a82b6118dd1066f0bbb73a5f9fcf69d7",
+        "limits": "Direct HEADER decimal parsing, no SI suffix conversion. Print-rounding consistency does not prove exact stop or waveform endpoint qualification; original reader I retained."
+      },
+      {
+        "id": "M1-base",
+        "status": "settings_consistent_at_header_precision",
+        "fields": {
+          "reltol": {
+            "header_token": "1.00000e-09",
+            "header_line": 21,
+            "actual_decimal": "1.00000E-9",
+            "requested_deck_decimal": "1.0000000000000001E-9",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-15"
+          },
+          "maxstep": {
+            "header_token": "1.25000e-07",
+            "header_line": 17,
+            "actual_decimal": "1.25000E-7",
+            "requested_deck_decimal": "1.2499999999999999E-7",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-13"
+          },
+          "abstol(V)": {
+            "header_token": "1.00000e-11",
+            "header_line": 22,
+            "actual_decimal": "1.00000E-11",
+            "requested_deck_decimal": "9.9999999999999994E-12",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-17"
+          },
+          "abstol(I)": {
+            "header_token": "1.00000e-15",
+            "header_line": 23,
+            "actual_decimal": "1.00000E-15",
+            "requested_deck_decimal": "1.0000000000000001E-15",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-21"
+          },
+          "start": {
+            "header_token": "0.00000",
+            "header_line": 12,
+            "actual_decimal": "0.00000",
+            "requested_deck_decimal": "0",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "0.000005"
+          },
+          "stop": {
+            "header_token": "1.00000e-05",
+            "header_line": 14,
+            "actual_decimal": "0.0000100000",
+            "requested_deck_decimal": "0.0000099999999999999991",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-11"
+          },
+          "method": {
+            "header_token": "\"traponly\"",
+            "header_line": 28,
+            "requested": "traponly",
+            "equal": true
+          }
+        },
+        "psf_sha256": "4aafc6248c77d5146bd5440082520e5987b3421a2ae530597eba16853e4d886f",
+        "profile_sha256": "ec4520243bf270faef57ae642a5bc39768ee9d431f11a1d93f4bdf897a7d18e7",
+        "deck_sha256": "ecd38d7f9e0b32a1a65db3285165f006ff9e4b0667f5c77b74d8b588f54800bd",
+        "case_sha256": "a25787384fae352e62ef83bf40afaab1addf45517c9d931baf9e2ce9c2257698",
+        "original_effective_settings": {
+          "status": "I",
+          "reason": "[Errno 2] No such file or directory: '<batch>/spectre-output/runs/M1-base/requested_settings.json'"
+        },
+        "original_RESULT_sha256": "1949e9d49853a63dd6041c871366a0bb74cd0efbcf83389aab541db5273ee39e",
+        "limits": "Direct HEADER decimal parsing, no SI suffix conversion. Print-rounding consistency does not prove exact stop or waveform endpoint qualification; original reader I retained."
+      },
+      {
+        "id": "M1-tight",
+        "status": "settings_consistent_at_header_precision",
+        "fields": {
+          "reltol": {
+            "header_token": "1.00000e-10",
+            "header_line": 21,
+            "actual_decimal": "1.00000E-10",
+            "requested_deck_decimal": "1E-10",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-16"
+          },
+          "maxstep": {
+            "header_token": "3.12500e-08",
+            "header_line": 17,
+            "actual_decimal": "3.12500E-8",
+            "requested_deck_decimal": "3.1249999999999999E-8",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-14"
+          },
+          "abstol(V)": {
+            "header_token": "1.00000e-12",
+            "header_line": 22,
+            "actual_decimal": "1.00000E-12",
+            "requested_deck_decimal": "9.9999999999999998E-13",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-18"
+          },
+          "abstol(I)": {
+            "header_token": "1.00000e-16",
+            "header_line": 23,
+            "actual_decimal": "1.00000E-16",
+            "requested_deck_decimal": "9.9999999999999998E-17",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-22"
+          },
+          "start": {
+            "header_token": "0.00000",
+            "header_line": 12,
+            "actual_decimal": "0.00000",
+            "requested_deck_decimal": "0",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "0.000005"
+          },
+          "stop": {
+            "header_token": "1.00000e-05",
+            "header_line": 14,
+            "actual_decimal": "0.0000100000",
+            "requested_deck_decimal": "0.0000099999999999999991",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-11"
+          },
+          "method": {
+            "header_token": "\"traponly\"",
+            "header_line": 28,
+            "requested": "traponly",
+            "equal": true
+          }
+        },
+        "psf_sha256": "a1004161c792db11303b6a7d2c54ee8a0a06dc6445772ef56762385e53469d03",
+        "profile_sha256": "daf48993ec6fd5d5f0e93c73d1becef18e1ca74a767149c824c5a1f28858b8d2",
+        "deck_sha256": "85298c8169d2e823243d580af3c8fda73dabe5e8bf9b724f4a466882716973a8",
+        "case_sha256": "a25787384fae352e62ef83bf40afaab1addf45517c9d931baf9e2ce9c2257698",
+        "original_effective_settings": {
+          "status": "I",
+          "reason": "[Errno 2] No such file or directory: '<batch>/spectre-output/runs/M1-tight/requested_settings.json'"
+        },
+        "original_RESULT_sha256": "f121f18e3e36f1fcbd9c1330c9e2e16c988d60bbb277e28aa184451844fe795d",
+        "limits": "Direct HEADER decimal parsing, no SI suffix conversion. Print-rounding consistency does not prove exact stop or waveform endpoint qualification; original reader I retained."
+      },
+      {
+        "id": "H1-base",
+        "status": "settings_consistent_at_header_precision",
+        "fields": {
+          "reltol": {
+            "header_token": "1.00000e-09",
+            "header_line": 21,
+            "actual_decimal": "1.00000E-9",
+            "requested_deck_decimal": "1.0000000000000001E-9",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-15"
+          },
+          "maxstep": {
+            "header_token": "1.25000e-07",
+            "header_line": 17,
+            "actual_decimal": "1.25000E-7",
+            "requested_deck_decimal": "1.2499999999999999E-7",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-13"
+          },
+          "abstol(V)": {
+            "header_token": "1.00000e-11",
+            "header_line": 22,
+            "actual_decimal": "1.00000E-11",
+            "requested_deck_decimal": "9.9999999999999994E-12",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-17"
+          },
+          "abstol(I)": {
+            "header_token": "1.00000e-15",
+            "header_line": 23,
+            "actual_decimal": "1.00000E-15",
+            "requested_deck_decimal": "1.0000000000000001E-15",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-21"
+          },
+          "start": {
+            "header_token": "0.00000",
+            "header_line": 12,
+            "actual_decimal": "0.00000",
+            "requested_deck_decimal": "0",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "0.000005"
+          },
+          "stop": {
+            "header_token": "1.00000e-05",
+            "header_line": 14,
+            "actual_decimal": "0.0000100000",
+            "requested_deck_decimal": "0.0000099999999999999991",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-11"
+          },
+          "method": {
+            "header_token": "\"traponly\"",
+            "header_line": 28,
+            "requested": "traponly",
+            "equal": true
+          }
+        },
+        "psf_sha256": "2533a746f9d638ed4a7bacd9803c52d8b321d0e9641be29d5a25384c06f66d39",
+        "profile_sha256": "ec4520243bf270faef57ae642a5bc39768ee9d431f11a1d93f4bdf897a7d18e7",
+        "deck_sha256": "9b1d89700ba110a2b218c53389b089c1d806a9d791ff42058cc77a94c74e3d27",
+        "case_sha256": "44c11e462f14797e9ba15d5cc1f38bb6e333c7e86e67b63ea2591d98960f040b",
+        "original_effective_settings": {
+          "status": "I",
+          "reason": "[Errno 2] No such file or directory: '<batch>/spectre-output/runs/H1-base/requested_settings.json'"
+        },
+        "original_RESULT_sha256": "14dde43cb7288df6d6cdf900269d5ab3a518fe421286c60000722f39c3866ce9",
+        "limits": "Direct HEADER decimal parsing, no SI suffix conversion. Print-rounding consistency does not prove exact stop or waveform endpoint qualification; original reader I retained."
+      },
+      {
+        "id": "H1-tight",
+        "status": "settings_consistent_at_header_precision",
+        "fields": {
+          "reltol": {
+            "header_token": "1.00000e-10",
+            "header_line": 21,
+            "actual_decimal": "1.00000E-10",
+            "requested_deck_decimal": "1E-10",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-16"
+          },
+          "maxstep": {
+            "header_token": "3.12500e-08",
+            "header_line": 17,
+            "actual_decimal": "3.12500E-8",
+            "requested_deck_decimal": "3.1249999999999999E-8",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-14"
+          },
+          "abstol(V)": {
+            "header_token": "1.00000e-12",
+            "header_line": 22,
+            "actual_decimal": "1.00000E-12",
+            "requested_deck_decimal": "9.9999999999999998E-13",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-18"
+          },
+          "abstol(I)": {
+            "header_token": "1.00000e-16",
+            "header_line": 23,
+            "actual_decimal": "1.00000E-16",
+            "requested_deck_decimal": "9.9999999999999998E-17",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-22"
+          },
+          "start": {
+            "header_token": "0.00000",
+            "header_line": 12,
+            "actual_decimal": "0.00000",
+            "requested_deck_decimal": "0",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "0.000005"
+          },
+          "stop": {
+            "header_token": "1.00000e-05",
+            "header_line": 14,
+            "actual_decimal": "0.0000100000",
+            "requested_deck_decimal": "0.0000099999999999999991",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-11"
+          },
+          "method": {
+            "header_token": "\"traponly\"",
+            "header_line": 28,
+            "requested": "traponly",
+            "equal": true
+          }
+        },
+        "psf_sha256": "adf2ecd86eb4cbc9bbdba617cb6a2a0364bea8c7bb921d7bf7eab1803172fc6c",
+        "profile_sha256": "daf48993ec6fd5d5f0e93c73d1becef18e1ca74a767149c824c5a1f28858b8d2",
+        "deck_sha256": "cb812ac4f021c49bb641246cfd200f8e7b31fd7d8cb6f3ac6d9d99c871797bda",
+        "case_sha256": "44c11e462f14797e9ba15d5cc1f38bb6e333c7e86e67b63ea2591d98960f040b",
+        "original_effective_settings": {
+          "status": "I",
+          "reason": "[Errno 2] No such file or directory: '<batch>/spectre-output/runs/H1-tight/requested_settings.json'"
+        },
+        "original_RESULT_sha256": "ad176e212c252d7afa11b0727dcdfff49a9d2d260113738999fb6111d7eedea2",
+        "limits": "Direct HEADER decimal parsing, no SI suffix conversion. Print-rounding consistency does not prove exact stop or waveform endpoint qualification; original reader I retained."
+      },
+      {
+        "id": "N1-base",
+        "status": "settings_consistent_at_header_precision",
+        "fields": {
+          "reltol": {
+            "header_token": "1.00000e-09",
+            "header_line": 21,
+            "actual_decimal": "1.00000E-9",
+            "requested_deck_decimal": "1.0000000000000001E-9",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-15"
+          },
+          "maxstep": {
+            "header_token": "1.25000e-07",
+            "header_line": 17,
+            "actual_decimal": "1.25000E-7",
+            "requested_deck_decimal": "1.2499999999999999E-7",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-13"
+          },
+          "abstol(V)": {
+            "header_token": "1.00000e-11",
+            "header_line": 22,
+            "actual_decimal": "1.00000E-11",
+            "requested_deck_decimal": "9.9999999999999994E-12",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-17"
+          },
+          "abstol(I)": {
+            "header_token": "1.00000e-15",
+            "header_line": 23,
+            "actual_decimal": "1.00000E-15",
+            "requested_deck_decimal": "1.0000000000000001E-15",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-21"
+          },
+          "start": {
+            "header_token": "0.00000",
+            "header_line": 12,
+            "actual_decimal": "0.00000",
+            "requested_deck_decimal": "0",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "0.000005"
+          },
+          "stop": {
+            "header_token": "4.00000e-06",
+            "header_line": 14,
+            "actual_decimal": "0.00000400000",
+            "requested_deck_decimal": "0.0000039999999999999998",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-12"
+          },
+          "method": {
+            "header_token": "\"traponly\"",
+            "header_line": 28,
+            "requested": "traponly",
+            "equal": true
+          }
+        },
+        "psf_sha256": "2b1171e17cf9a13872fc2cdb9ae8e3ee7ca4d91e90fddd834f0d0ec2c61192e9",
+        "profile_sha256": "ec4520243bf270faef57ae642a5bc39768ee9d431f11a1d93f4bdf897a7d18e7",
+        "deck_sha256": "a27dce6060e55a6bf40a8418291592f5e5c1173e6bf55a42c5feb8d0a63025cc",
+        "case_sha256": "b75a55cbd7cd90dcaab99fb639a2c5a847119722b6beb8306ac1c160d0349fb2",
+        "original_effective_settings": {
+          "status": "I",
+          "reason": "[Errno 2] No such file or directory: '<batch>/spectre-output/runs/N1-base/requested_settings.json'"
+        },
+        "original_RESULT_sha256": "3e0b35788b0925d8097bb8bae612fa34cfc2719dfebeed9e9315be525401c9be",
+        "limits": "Direct HEADER decimal parsing, no SI suffix conversion. Print-rounding consistency does not prove exact stop or waveform endpoint qualification; original reader I retained."
+      },
+      {
+        "id": "N1-tight",
+        "status": "settings_consistent_at_header_precision",
+        "fields": {
+          "reltol": {
+            "header_token": "1.00000e-10",
+            "header_line": 21,
+            "actual_decimal": "1.00000E-10",
+            "requested_deck_decimal": "1E-10",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-16"
+          },
+          "maxstep": {
+            "header_token": "3.12500e-08",
+            "header_line": 17,
+            "actual_decimal": "3.12500E-8",
+            "requested_deck_decimal": "3.1249999999999999E-8",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-14"
+          },
+          "abstol(V)": {
+            "header_token": "1.00000e-12",
+            "header_line": 22,
+            "actual_decimal": "1.00000E-12",
+            "requested_deck_decimal": "9.9999999999999998E-13",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-18"
+          },
+          "abstol(I)": {
+            "header_token": "1.00000e-16",
+            "header_line": 23,
+            "actual_decimal": "1.00000E-16",
+            "requested_deck_decimal": "9.9999999999999998E-17",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-22"
+          },
+          "start": {
+            "header_token": "0.00000",
+            "header_line": 12,
+            "actual_decimal": "0.00000",
+            "requested_deck_decimal": "0",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "0.000005"
+          },
+          "stop": {
+            "header_token": "4.00000e-06",
+            "header_line": 14,
+            "actual_decimal": "0.00000400000",
+            "requested_deck_decimal": "0.0000039999999999999998",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-12"
+          },
+          "method": {
+            "header_token": "\"traponly\"",
+            "header_line": 28,
+            "requested": "traponly",
+            "equal": true
+          }
+        },
+        "psf_sha256": "d70ee18b98ac5edead7f11f0b148889bcde4249c3fd704aaeda4fc358ab109d5",
+        "profile_sha256": "daf48993ec6fd5d5f0e93c73d1becef18e1ca74a767149c824c5a1f28858b8d2",
+        "deck_sha256": "fc05b041e97d0dd9394916fb46d83e00821dd7e8355350f41b8775f607f11687",
+        "case_sha256": "b75a55cbd7cd90dcaab99fb639a2c5a847119722b6beb8306ac1c160d0349fb2",
+        "original_effective_settings": {
+          "status": "I",
+          "reason": "[Errno 2] No such file or directory: '<batch>/spectre-output/runs/N1-tight/requested_settings.json'"
+        },
+        "original_RESULT_sha256": "97daa7c02183ad8f61156323f011b650f086d4aa04ecfee78c2dd3cf2c81c07e",
+        "limits": "Direct HEADER decimal parsing, no SI suffix conversion. Print-rounding consistency does not prove exact stop or waveform endpoint qualification; original reader I retained."
+      }
+    ],
+    "reader_sha256": "45628184ac55c21b941a5ff58212791ae90a6f952e2fa8af366417dff6b862a8",
+    "original_outputs_not_modified": true
+  },
+  "reference-variants-analysis-v1": {
+    "records": [
+      {
+        "id": "C1-negative-base",
+        "status": "settings_consistent_at_header_precision",
+        "fields": {
+          "reltol": {
+            "header_token": "1.00000e-09",
+            "header_line": 21,
+            "actual_decimal": "1.00000E-9",
+            "requested_deck_decimal": "1.0000000000000001E-9",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-15"
+          },
+          "maxstep": {
+            "header_token": "1.25000e-07",
+            "header_line": 17,
+            "actual_decimal": "1.25000E-7",
+            "requested_deck_decimal": "1.2499999999999999E-7",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-13"
+          },
+          "abstol(V)": {
+            "header_token": "1.00000e-11",
+            "header_line": 22,
+            "actual_decimal": "1.00000E-11",
+            "requested_deck_decimal": "9.9999999999999994E-12",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-17"
+          },
+          "abstol(I)": {
+            "header_token": "1.00000e-15",
+            "header_line": 23,
+            "actual_decimal": "1.00000E-15",
+            "requested_deck_decimal": "1.0000000000000001E-15",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-21"
+          },
+          "start": {
+            "header_token": "0.00000",
+            "header_line": 12,
+            "actual_decimal": "0.00000",
+            "requested_deck_decimal": "0",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "0.000005"
+          },
+          "stop": {
+            "header_token": "6.00000e-06",
+            "header_line": 14,
+            "actual_decimal": "0.00000600000",
+            "requested_deck_decimal": "0.0000060000000000000002",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-12"
+          },
+          "method": {
+            "header_token": "\"traponly\"",
+            "header_line": 28,
+            "requested": "traponly",
+            "equal": true
+          }
+        },
+        "psf_sha256": "0a13ecd6e928b68036a00eb8c8dda1091760d7905e6393507cb1e768b5022eba",
+        "profile_sha256": "ec4520243bf270faef57ae642a5bc39768ee9d431f11a1d93f4bdf897a7d18e7",
+        "deck_sha256": "42a5c0288b9261e19c7bbff74eaac535fddf8761829171ab8bbc1d4174faa7ac",
+        "case_sha256": "00d6f76734def2237fdc578d9695335bd4159186851d620f8db74fb022dd8438",
+        "original_effective_settings": {
+          "status": "I",
+          "reason": "[Errno 2] No such file or directory: '<batch>/spectre-output/runs/C1-negative-base/requested_settings.json'"
+        },
+        "original_RESULT_sha256": "ebea0ef05a12b9015de7a1f81434cebff48068e076f2dc4cee1ea71dd67f7d42",
+        "limits": "Direct HEADER decimal parsing, no SI suffix conversion. Print-rounding consistency does not prove exact stop or waveform endpoint qualification; original reader I retained."
+      },
+      {
+        "id": "C1-negative-tight",
+        "status": "settings_consistent_at_header_precision",
+        "fields": {
+          "reltol": {
+            "header_token": "1.00000e-10",
+            "header_line": 21,
+            "actual_decimal": "1.00000E-10",
+            "requested_deck_decimal": "1E-10",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-16"
+          },
+          "maxstep": {
+            "header_token": "3.12500e-08",
+            "header_line": 17,
+            "actual_decimal": "3.12500E-8",
+            "requested_deck_decimal": "3.1249999999999999E-8",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-14"
+          },
+          "abstol(V)": {
+            "header_token": "1.00000e-12",
+            "header_line": 22,
+            "actual_decimal": "1.00000E-12",
+            "requested_deck_decimal": "9.9999999999999998E-13",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-18"
+          },
+          "abstol(I)": {
+            "header_token": "1.00000e-16",
+            "header_line": 23,
+            "actual_decimal": "1.00000E-16",
+            "requested_deck_decimal": "9.9999999999999998E-17",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-22"
+          },
+          "start": {
+            "header_token": "0.00000",
+            "header_line": 12,
+            "actual_decimal": "0.00000",
+            "requested_deck_decimal": "0",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "0.000005"
+          },
+          "stop": {
+            "header_token": "6.00000e-06",
+            "header_line": 14,
+            "actual_decimal": "0.00000600000",
+            "requested_deck_decimal": "0.0000060000000000000002",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-12"
+          },
+          "method": {
+            "header_token": "\"traponly\"",
+            "header_line": 28,
+            "requested": "traponly",
+            "equal": true
+          }
+        },
+        "psf_sha256": "9281b1838eaad532d2ae811ac93b52cf3034495a957a697af5c011d9be5ba261",
+        "profile_sha256": "daf48993ec6fd5d5f0e93c73d1becef18e1ca74a767149c824c5a1f28858b8d2",
+        "deck_sha256": "1558b36068d3c5608da9b84b4557703f3936bb0b05cab3b3239a774583d6a57b",
+        "case_sha256": "00d6f76734def2237fdc578d9695335bd4159186851d620f8db74fb022dd8438",
+        "original_effective_settings": {
+          "status": "I",
+          "reason": "[Errno 2] No such file or directory: '<batch>/spectre-output/runs/C1-negative-tight/requested_settings.json'"
+        },
+        "original_RESULT_sha256": "107985566a64f2e23fc3a5fc186e4fa77f340403360a13e767e61870dc4d40d6",
+        "limits": "Direct HEADER decimal parsing, no SI suffix conversion. Print-rounding consistency does not prove exact stop or waveform endpoint qualification; original reader I retained."
+      },
+      {
+        "id": "C1-or-base",
+        "status": "settings_consistent_at_header_precision",
+        "fields": {
+          "reltol": {
+            "header_token": "1.00000e-09",
+            "header_line": 21,
+            "actual_decimal": "1.00000E-9",
+            "requested_deck_decimal": "1.0000000000000001E-9",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-15"
+          },
+          "maxstep": {
+            "header_token": "1.25000e-07",
+            "header_line": 17,
+            "actual_decimal": "1.25000E-7",
+            "requested_deck_decimal": "1.2499999999999999E-7",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-13"
+          },
+          "abstol(V)": {
+            "header_token": "1.00000e-11",
+            "header_line": 22,
+            "actual_decimal": "1.00000E-11",
+            "requested_deck_decimal": "9.9999999999999994E-12",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-17"
+          },
+          "abstol(I)": {
+            "header_token": "1.00000e-15",
+            "header_line": 23,
+            "actual_decimal": "1.00000E-15",
+            "requested_deck_decimal": "1.0000000000000001E-15",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-21"
+          },
+          "start": {
+            "header_token": "0.00000",
+            "header_line": 12,
+            "actual_decimal": "0.00000",
+            "requested_deck_decimal": "0",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "0.000005"
+          },
+          "stop": {
+            "header_token": "6.00000e-06",
+            "header_line": 14,
+            "actual_decimal": "0.00000600000",
+            "requested_deck_decimal": "0.0000060000000000000002",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-12"
+          },
+          "method": {
+            "header_token": "\"traponly\"",
+            "header_line": 28,
+            "requested": "traponly",
+            "equal": true
+          }
+        },
+        "psf_sha256": "5f07c7e4c0fdad34263b696d021c6f005e8400d8c464b38332fea32043afad3e",
+        "profile_sha256": "ec4520243bf270faef57ae642a5bc39768ee9d431f11a1d93f4bdf897a7d18e7",
+        "deck_sha256": "42a5c0288b9261e19c7bbff74eaac535fddf8761829171ab8bbc1d4174faa7ac",
+        "case_sha256": "00d6f76734def2237fdc578d9695335bd4159186851d620f8db74fb022dd8438",
+        "original_effective_settings": {
+          "status": "I",
+          "reason": "[Errno 2] No such file or directory: '<batch>/spectre-output/runs/C1-or-base/requested_settings.json'"
+        },
+        "original_RESULT_sha256": "4ed07f7f813fb15c36dbb2abb66fa5b9f1d6cc99e5e00f6055d84b0a5b6de5cd",
+        "limits": "Direct HEADER decimal parsing, no SI suffix conversion. Print-rounding consistency does not prove exact stop or waveform endpoint qualification; original reader I retained."
+      },
+      {
+        "id": "C1-or-tight",
+        "status": "settings_consistent_at_header_precision",
+        "fields": {
+          "reltol": {
+            "header_token": "1.00000e-10",
+            "header_line": 21,
+            "actual_decimal": "1.00000E-10",
+            "requested_deck_decimal": "1E-10",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-16"
+          },
+          "maxstep": {
+            "header_token": "3.12500e-08",
+            "header_line": 17,
+            "actual_decimal": "3.12500E-8",
+            "requested_deck_decimal": "3.1249999999999999E-8",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-14"
+          },
+          "abstol(V)": {
+            "header_token": "1.00000e-12",
+            "header_line": 22,
+            "actual_decimal": "1.00000E-12",
+            "requested_deck_decimal": "9.9999999999999998E-13",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-18"
+          },
+          "abstol(I)": {
+            "header_token": "1.00000e-16",
+            "header_line": 23,
+            "actual_decimal": "1.00000E-16",
+            "requested_deck_decimal": "9.9999999999999998E-17",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-22"
+          },
+          "start": {
+            "header_token": "0.00000",
+            "header_line": 12,
+            "actual_decimal": "0.00000",
+            "requested_deck_decimal": "0",
+            "equal_decimal": true,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "0.000005"
+          },
+          "stop": {
+            "header_token": "6.00000e-06",
+            "header_line": 14,
+            "actual_decimal": "0.00000600000",
+            "requested_deck_decimal": "0.0000060000000000000002",
+            "equal_decimal": false,
+            "consistent_with_header_print_rounding": true,
+            "header_print_half_quantum": "5E-12"
+          },
+          "method": {
+            "header_token": "\"traponly\"",
+            "header_line": 28,
+            "requested": "traponly",
+            "equal": true
+          }
+        },
+        "psf_sha256": "8a6465eb03610073b6f87eff7943a260579a238bb8f490a61e91bd5c78700a92",
+        "profile_sha256": "daf48993ec6fd5d5f0e93c73d1becef18e1ca74a767149c824c5a1f28858b8d2",
+        "deck_sha256": "1558b36068d3c5608da9b84b4557703f3936bb0b05cab3b3239a774583d6a57b",
+        "case_sha256": "00d6f76734def2237fdc578d9695335bd4159186851d620f8db74fb022dd8438",
+        "original_effective_settings": {
+          "status": "I",
+          "reason": "[Errno 2] No such file or directory: '<batch>/spectre-output/runs/C1-or-tight/requested_settings.json'"
+        },
+        "original_RESULT_sha256": "fd7507a22c50dd533541f612742d950829b323e3be46b01f64c51f8a5255d73d",
+        "limits": "Direct HEADER decimal parsing, no SI suffix conversion. Print-rounding consistency does not prove exact stop or waveform endpoint qualification; original reader I retained."
+      }
+    ],
+    "reader_sha256": "5ce70abc503f6159fb68139d4d75b44a05ea06371272d3573027800d02c91a68",
+    "original_outputs_not_modified": true
+  },
+  "curation": "Machine-local path prefixes in original reader failure messages are replaced by <batch>; status, missing filename, fields and original result hashes are unchanged."
+}

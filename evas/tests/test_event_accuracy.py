@@ -169,8 +169,8 @@ class EventAccuracy(unittest.TestCase):
 
     def test_original_source_proves_neighbouring_roots_are_distinct(self):
         source=model('''@(initial_step) begin n=0; m=0; end
-          @(cross(V(u,r)-.5,1)) n=n+1;
-          @(cross(V(u,r)-.5000000000000001,1)) m=m+1;
+          @(cross(V(u,r)-.5,1,1e-12,1e-9)) n=n+1;
+          @(cross(V(u,r)-.5000000000000001,1,1e-12,1e-9)) m=m+1;
           V(y,r)<+n+m;''','integer n,m;')
         result = execute_event(source,sources={'u':[[0,.1],[1,.9]]},
                                times=[0,1],stop=1,max_step=1)
@@ -181,6 +181,11 @@ class EventAccuracy(unittest.TestCase):
         self.assertEqual([e['event'] for e in events], [0, 1])
         self.assertLess(events[0]['time'], events[1]['time'])
         self.assertEqual(result['transient']['states'][-1], [1, 1])
+        for event, threshold in zip(events, [.5, .5000000000000001]):
+            root = (Q(threshold)-Q(.1))/(Q(.9)-Q(.1))
+            self.assertGreaterEqual(Q(event['time']), root)
+            self.assertLessEqual(Q(event['time'])-root, Q(1e-12))
+            self.assertLessEqual(abs(Q(.1)+(Q(.9)-Q(.1))*Q(event['time'])-Q(threshold)), Q(1e-9))
 
     def test_unproved_internal_neighbouring_roots_still_reject(self):
         # Structural internal-node provenance is not an original input proof,
@@ -190,9 +195,11 @@ class EventAccuracy(unittest.TestCase):
           @(cross(V(z,r)-.5,1)) n=n+1;
           @(cross(V(z,r)-.5000000000000001,1)) m=m+1;
           V(y,r)<+n+m;''','integer n,m; electrical z;')
-        with self.assertRaisesRegex(KernelError, 'event_resolution.*ordering'):
+        with self.assertRaises(KernelError) as caught:
             execute_event(source,sources={'u':[[0,.1],[1,.9]]},
                           times=[0,1],stop=1,max_step=1)
+        self.assertEqual(caught.exception.detail['kind'], 'event_resolution')
+        self.assertIn('ordering', caught.exception.detail['message'])
 
     def test_falling_roots_and_large_time_translation(self):
         for start, ttol in [(0.,1e-14),(2.**30,1e-5)]:

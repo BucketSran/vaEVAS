@@ -1,14 +1,65 @@
 """IR18 initialization and shared writes retain exact physical query phases."""
-GUARDS = ['LANG', 'TIMER', 'EVENT-ORDER']
+GUARDS = ['LANG', 'TIMER', 'EVENT-ORDER', 'CROSS', 'TRANSITION']
 
 import unittest
 import math
 from fractions import Fraction
 
+from evas import KernelError
 from test_continuous_dynamics import compile_model, run, values
 
 
 class InitializedEventComposition(unittest.TestCase):
+    def test_source_roots_and_timer_keep_order_after_held_timer_replanning(self):
+        low, high = Fraction(.1), Fraction(.9)
+        roots = [(Fraction(threshold)-low)/(high-low)
+                 for threshold in [.5, .5000000000000001]]
+        fixed = math.nextafter(.5, math.inf)
+        self.assertLess(roots[0], Fraction(fixed))
+        self.assertLess(Fraction(fixed), roots[1])
+        body = (
+            '@(initial_step) begin n=0; m=0; k=0; h=0; due=.9; end '
+            '@(cross(V(u,r)-.5,1,1e-12,1e-9)) begin n=n+1; due=.75; end '
+            f'@(timer({fixed!r},0,1e-12)) k=k+1; '
+            '@(cross(V(u,r)-.5000000000000001,1,1e-12,1e-9)) m=m+1; '
+            '@(timer(due,0,1e-12)) h=h+1; '
+            'V(y,r)<+n+10*k+100*m+1000*h; '
+            'V(z,r)<+transition(n,0,.125,.125);')
+        declarations = 'integer n,m,k,h; real due; electrical z;'
+        program = compile_model(body, declarations)
+        previous = None
+        for times in [[0, 1], [0, .25, .625, .75, .875, 1]]:
+            result = run(program, {'u': [[0,.1],[1,.9]]}, times,
+                         stop=1, vabstol=1e-6, reltol=1e-8)
+            events = result['transient']['events']
+            self.assertEqual([event['event'] for event in events], [0, 1, 2, 3])
+            for event, nominal in zip(events, [roots[0], Fraction(fixed), roots[1], Fraction(.75)]):
+                self.assertGreaterEqual(Fraction(event['time']), nominal)
+                self.assertLessEqual(Fraction(event['time'])-nominal, Fraction(1e-12))
+            for event, threshold in zip([events[0], events[2]], [.5, .5000000000000001]):
+                self.assertLessEqual(abs(low+(high-low)*Fraction(event['time'])-Fraction(threshold)), Fraction(1e-9))
+            self.assertTrue(all(a['time'] < b['time'] for a,b in zip(events, events[1:])))
+            self.assertEqual(values(result)[-1], 1111)
+            self.assertEqual(values(result, 'dut:z')[-1], 1)
+            if previous is not None:
+                self.assertEqual(events, previous)
+            previous = events
+        # This gap is a retained conservative refusal, not a passing alignment
+        # claim: delayed representatives hit the next cluster's lower boundary.
+        crowded = compile_model(body.replace(f'timer({fixed!r},', 'timer(.5,'), declarations)
+        with self.assertRaises(KernelError) as caught:
+            run(crowded, {'u': [[0,.1],[1,.9]]}, [0,1], stop=1)
+        self.assertEqual(caught.exception.detail['kind'], 'event_resolution')
+        self.assertIn('next event boundary', caught.exception.detail['message'])
+        for tolerances in ['1e-20,1e-9', '1e-12,1e-20']:
+            tight = compile_model(body.replace('1e-12,1e-9', tolerances), declarations)
+            with self.assertRaises(KernelError) as caught:
+                run(tight, {'u': [[0,.1],[1,.9]]}, [0,1], stop=1)
+            self.assertEqual(caught.exception.detail['kind'], 'event_resolution')
+            # Both budgets share this production certificate diagnostic.
+            self.assertIn('event uncertainty or representable time exceeds tolerances',
+                          caught.exception.detail['message'])
+
     def test_falling_source_root_and_equivalent_or_share_the_exact_time(self):
         root = (Fraction(0.7)-Fraction(3))/(Fraction(0)-Fraction(3))*Fraction(6e-6)
         before = math.nextafter(float(root), -math.inf)

@@ -1,0 +1,233 @@
+{
+  "availability": "Repository-contained review summary; full prompts, logs and reports local-only under current/runs/spectre-event-alignment-20261008/review",
+  "runtime_reviewed_commit": "cc8d8b0c08960bc71cbc60e098239ab949fe3165",
+  "glm": [
+    {
+      "name": "glm-source-v3",
+      "provider": "actual configured Claude CLI",
+      "requested_model": "glm-5.3",
+      "reported_models": [
+        "glm-5.3"
+      ],
+      "canonical_model": "glm-5.3",
+      "cli_version": "2.1.284 (Claude Code)",
+      "review_valid": true,
+      "completed_at": "2026-10-08T03:09:18.923842+00:00",
+      "reported_turns": 1,
+      "wall_seconds": 802.315,
+      "reported_cost_usd": 1.25045,
+      "prompt_sha256": "377f49408ca0428be1bccba64f38df79400eb2079eb662cf4e12b33ee0be1486",
+      "receipt_sha256": "c7af3c413630e2abd3f550557bd06bdcc2658c7ae57c64df92bb0819ffe505cc",
+      "report_sha256": "995eeed083d3aea70054cd597df26b8a8b0d4fb11326bc6b24981216a606c7ed",
+      "availability": "local-only",
+      "limits": "Supplied-text static review, no independent simulator execution. Each prompt has its own fixed scope; final assertions were strengthened after these reports."
+    },
+    {
+      "name": "glm-followup-v1",
+      "provider": "actual configured Claude CLI",
+      "requested_model": "glm-5.3",
+      "reported_models": [
+        "glm-5.3"
+      ],
+      "canonical_model": "glm-5.3",
+      "cli_version": "2.1.284 (Claude Code)",
+      "review_valid": true,
+      "completed_at": "2026-10-08T03:30:23.800195+00:00",
+      "reported_turns": 1,
+      "wall_seconds": 394.543,
+      "reported_cost_usd": 0.88045,
+      "prompt_sha256": "880a38491abca00b020959f92f79f35d57e3cc61997abe6251ff4c165565c75f",
+      "receipt_sha256": "3376bd8cec8c52c9cb112551764fc451ae556781326be535a513be6797057ae8",
+      "report_sha256": "10d394976231cd3164ebc680e20d889720ed7d4ca2ac44e1d4d95e8b19ec1522",
+      "availability": "local-only",
+      "limits": "Supplied-text static review, no independent simulator execution. Each prompt has its own fixed scope; final assertions were strengthened after these reports."
+    },
+    {
+      "name": "glm-final-test",
+      "provider": "actual configured Claude CLI",
+      "requested_model": "glm-5.3",
+      "reported_models": [
+        "glm-5.3"
+      ],
+      "canonical_model": "glm-5.3",
+      "cli_version": "2.1.284 (Claude Code)",
+      "review_valid": true,
+      "completed_at": "2026-10-08T03:30:57.367265+00:00",
+      "reported_turns": 1,
+      "wall_seconds": 179.274,
+      "reported_cost_usd": 0.32294,
+      "prompt_sha256": "8c6dd4bdebbb76d5c61e236a1edb81934b690ea711367284e77e8241a7493f21",
+      "receipt_sha256": "20a1af8699487b55e90c19a5980f55380ac53925ea53a0328c4249a6a55a2ca8",
+      "report_sha256": "2fa3e887d8511844486b37007b4c1310ca69dda059832915e86be02d58637e8d",
+      "availability": "local-only",
+      "limits": "Supplied-text static review, no independent simulator execution. Each prompt has its own fixed scope; final assertions were strengthened after these reports."
+    }
+  ],
+  "astra": {
+    "model": "gpt-6-astra",
+    "report_sha256": "38500901376f72cd6e55a00217c4679b9b831517ded0cc59feb04a33bba44104",
+    "receipt_sha256": "48f02cc7517ce95de67ceef55183a3f2e908dc48017654d404237cedb1b29501",
+    "conclusion": "No actionable source or evidence-processing defect in scoped review; 103 source files, 17 frozen assets and 44 final output files checked; 2252 pairs independently recomputed, 14 raw PSF token sets verified, checker19 replayed.",
+    "limits": "Not a general Spectre compatibility or core-speed approval; later review supplements test-only and delivery changes.",
+    "followup": {
+      "report_sha256": "f94173077cee7aff0e5af80a228c9ce9d6ab7abd8041c211f4ce15deae2d705b",
+      "receipt_sha256": "1efab2400835cf9e13aa290b93c36b246d1f40e34a602dcf3714390244681830",
+      "delivery_audit_sha256": "984b62310d4c300a283e73981ed8df8dff20f4be1a001d954954a9d36c2a095a",
+      "model": "gpt-6-astra",
+      "availability": "local-only under review/astra-followup",
+      "conclusion": "No actionable defect in final tests, assertion corrections, frozen assets, public evidence, or performance reanalysis identity. Independently reconstructed 18 decks; checked 18 paired records, 40 formal performance samples, 30-sample reanalysis and preserved limits.",
+      "limits": "Audited snapshot predates adding these report hashes. No new simulator or performance execution. Final publication and later trail metadata are not covered by this snapshot."
+    }
+  },
+  "dispositions": [
+    {
+      "id": "F1",
+      "result": "withdrawn",
+      "reason": "EventModel::new validates driven through check_guard_dependencies and assembly::assemble before the scheduling unwrap; redundant node mapping is not a demonstrated defect."
+    },
+    {
+      "id": "F2",
+      "result": "resolved",
+      "reason": "Explicit error kind/message assertions and independent Fraction root, ttol and etol checks."
+    },
+    {
+      "id": "F3",
+      "result": "resolved for the requested narrow coverage",
+      "reason": "Mixed source cross/fixed timer/held rescheduling plus sparse/dense query invariance; genuine same-controller failure and corrected retry with nonempty idt history and initial output snapshot. The crowded timer(.5) case still refuses and is retained outside frozen engineering denominator."
+    },
+    {
+      "id": "F4",
+      "result": "resolved",
+      "reason": "Event handbook now specifies original-source provenance, finite rational proof, interval checks and unchanged acceptance budgets."
+    },
+    {
+      "id": "NF1",
+      "result": "resolved after GLM final test report",
+      "reason": "Rust failure injection now asserts the specific dynamic timer window overlaps the accepted boundary message; actual targeted test passes."
+    },
+    {
+      "id": "NF2",
+      "result": "resolved",
+      "reason": "Both tight variants assert the actual shared event uncertainty or representable time exceeds tolerances diagnostic. Runtime does not expose separate ttol/etol error kinds; no new distinction invented."
+    },
+    {
+      "id": "GLM-final-test-info",
+      "result": "retained limitation",
+      "reason": "New injection occurs before first committed record; nonempty records rollback is covered by existing lifecycle tests. New test has nonempty history and initial output rollback, but later output comparisons can be empty."
+    }
+  ],
+  "source_delta_after_runtime_freeze": {
+    "production": "Only rustfmt changes in evas/rust_core/ir/src/lib.rs after cc8d8b0c; numerical runtime unchanged. Existing actual comparisons reused on that explicit basis.",
+    "tests": "Python assertions/composition and cfg(test) lifecycle regression added. Final entire checkout is not byte-identical to the original 103-file snapshot.",
+    "final_file_hashes": {
+      "evas/rust_core/src/exact_source.rs": {
+        "sha256": "3c92845a9de10371b429de1ec49a62e2c3affc96490c8adb51b58e8673f951ff",
+        "bytes": 24326
+      },
+      "evas/rust_core/src/pwl.rs": {
+        "sha256": "678f78776d1f1b5bd99c3fb1c8c7d7ac474c0e43533108cdca41336e8467f480",
+        "bytes": 22563
+      },
+      "evas/rust_core/src/schedule.rs": {
+        "sha256": "090dc19199a60ef6c416ee8fd68cf1c016d7143feeb73d6a07fd00e936d2241f",
+        "bytes": 47606
+      },
+      "evas/rust_core/ir/src/lib.rs": {
+        "sha256": "7426a6bf680f3e0c0a3806ea9feb916bff6e8f99df5421aa57cda4830fbe2252",
+        "bytes": 12778
+      },
+      "evas/rust_core/src/transient_lifecycle_tests.rs": {
+        "sha256": "d7648770bc54e1bb96a142472447f41c7b3bd7b669cc514711f7f992b71c54a7",
+        "bytes": 62604
+      },
+      "evas/tests/test_event_accuracy.py": {
+        "sha256": "2c0c52bffbe06948a4c6deeff514258d40851adedad82f879ac4ca0fa09fc021",
+        "bytes": 12751
+      },
+      "evas/tests/test_initialized_event_composition.py": {
+        "sha256": "1aa5c606c43061514efc3932593a332c13b9063e36bd2a526abafede4c821f39",
+        "bytes": 7102
+      }
+    }
+  },
+  "observed_checks": {
+    "rust": {
+      "passed": 208,
+      "failed": 0,
+      "ignored": 1,
+      "scope": "full kernel test run, then targeted1 rerun after stronger diagnostic assertion"
+    },
+    "python": {
+      "mapped": 178,
+      "followup": 18,
+      "overlap": true,
+      "note": "Do not add these counts. 928 belongs to earlier integration baseline, not final all-Python run."
+    },
+    "checker": 19,
+    "normalizer": 2,
+    "clippy": "passed -D warnings",
+    "format": "passed workspace; original IR rustfmt differences fixed",
+    "logs": {
+      "final-rust-followup-2.log": {
+        "sha256": "22b67a5bf9715cd28ab6de4c797f8c85eba92952c749e1bc8749e9c250c9d948",
+        "availability": "local-only"
+      },
+      "final-python-mapped.log": {
+        "sha256": "40dd55b85fdf13819b1e2ea5601bef44fb3ea45c6465090b6c0c2eb7daf5ef96",
+        "availability": "local-only"
+      },
+      "review-message-specific-rust.log": {
+        "sha256": "8555e3ccb05201d8d7d759402efdab865f9921ee720af547bb2ce7ffbc619e09",
+        "availability": "local-only"
+      },
+      "review-message-specific-python.log": {
+        "sha256": "50087a616976f81a60a87ed222977ce8cce87e7a3d09a0543e93c784a795db59",
+        "availability": "local-only"
+      },
+      "final-clippy-followup.log": {
+        "sha256": "3a333abcf532195897ae04d11d899710ecdfb5475e2a76ee81c45db9438cf5ac",
+        "availability": "local-only"
+      },
+      "final-format-check-2.log": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "availability": "local-only"
+      },
+      "checker-final.log": {
+        "sha256": "a92f051a91371506679ffb65685d166fae0d236f8410b61ef4bb2f5ca6f13253",
+        "availability": "local-only"
+      },
+      "normalizer-final.log": {
+        "sha256": "6417e9b0f345162a187c7bf69573864efd394ee626596e6edbb6f09434fe91c2",
+        "availability": "local-only"
+      },
+      "validation-identity-final.log": {
+        "sha256": "9242b9c11dec33bf3663414e007b31c02350ea1ae9ea5101ca6daf1d318409b2",
+        "availability": "local-only"
+      },
+      "traceability-handoff.log": {
+        "sha256": "b094fc40a4c10bf59c38f9074fbae64a47114c288553dd44ba958ad7b27f5506",
+        "availability": "local-only"
+      },
+      "diagnostic-final.log": {
+        "sha256": "b9f8236dfc69b6908651491c5a474009b0e8d57624e2817fe99051fe14fb273b",
+        "availability": "local-only"
+      }
+    },
+    "git_diff_check": {
+      "status": "Six whitespace-only frozen VA lines retained; all other staged paths pass",
+      "reason": "Changing the executed assets would invalidate their frozen byte identities. No checker/source rule was relaxed.",
+      "files": [
+        "C1/dut.va",
+        "M1/dut.va",
+        "T1/dut.va",
+        "T2/dut.va",
+        "encodings/C1-negative/dut.va",
+        "encodings/C1-or/dut.va"
+      ]
+    }
+  },
+  "canonical_trail": {
+    "location": "worktrees/project-goals-workflow/runs/project-goals-workflow/decisions.tsv",
+    "availability": "local-only; existing trail reused, not a duplicate review log"
+  }
+}

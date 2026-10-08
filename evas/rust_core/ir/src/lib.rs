@@ -194,7 +194,9 @@ impl Origin {
         self.expansion.len() <= 64
             && self.expansion.iter().all(|(name, _)| {
                 let mut bytes = name.bytes();
-                bytes.next().is_some_and(|c| c == b'_' || c.is_ascii_alphabetic())
+                bytes
+                    .next()
+                    .is_some_and(|c| c == b'_' || c.is_ascii_alphabetic())
                     && bytes.all(|c| c == b'_' || c.is_ascii_alphanumeric())
             })
     }
@@ -307,7 +309,9 @@ impl StateInitial {
         match self {
             Self::Constant(value) => Ok(*value),
             Self::Predicate(_) => Err(Error::new(
-                "unsupported_initialization", "initial predicate requires driven-input resolution")),
+                "unsupported_initialization",
+                "initial predicate requires driven-input resolution",
+            )),
         }
     }
 }
