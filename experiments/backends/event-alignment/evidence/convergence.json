@@ -1,0 +1,4054 @@
+{
+  "schema_version": 1,
+  "scope": "Fixed-budget finite native observations and single-factor solver convergence; no timing claims; not a new independent benchmark",
+  "retained_failure": "reference-v1 D1/D2 eight attempted AHDL compilations failed VACOMP-1795 on leading-dot real literals authored by coordinator; corrected eight fixtures form new reference-v2; C1/M1 six original runs reused.",
+  "readback_limit": "Original runner effective_settings raised KeyError reltol for the new nested requested-settings schema. Separate scoped log+PSF reanalysis verified 14 completed cases; original I records remain.",
+  "settings_readback_identity": {
+    "sha256": "e3c9d64d16ae693ca3fae0df70b1bd95b7f0595164e3cb02b8ffd04510adf428",
+    "reader_sha256": "875be764ac89c6f6d6e219871e65ef43fe14b10d664ae2ecd131b65f46568da8",
+    "parent_reader_sha256": "244fe270b28465c5fe98c1b593e01e49628906680adaf5e096ad9d1d4474778d",
+    "patch": "Recognize fV as 1e-15 V in dimensions voltage. No numerical fallback or original log rewriting."
+  },
+  "raw_batches": [
+    {
+      "batch": "reference-v1",
+      "collection": "fca4b664877aac9061499b468eadb88e86c98e6191ffd581a031ca1c422de534",
+      "inputs_manifest_sha256": "714f9ea4011f58ee022910e33bb1a049d7f381504d9f27c3b4cde501889014de",
+      "tool_identity": {
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "version": "sub-version  21.1.0.509.isr12"
+      },
+      "launch_count": 14,
+      "executions": [
+        {
+          "case": "D1-base",
+          "status": "execution_failed",
+          "source_sha256": "4e7b8733fa797430a22668cd06c770f09db42ddf1fb139a53b7e7f9ee4e69b96",
+          "deck_sha256": "fc35d05b4b35d062d05a2446af68c1e30a34091f445054f291d6931b85fc9b36"
+        },
+        {
+          "case": "D1-tol1000",
+          "status": "execution_failed",
+          "source_sha256": "4e7b8733fa797430a22668cd06c770f09db42ddf1fb139a53b7e7f9ee4e69b96",
+          "deck_sha256": "f3f17976e2f0304e0e7901f2cce42e2f83c26164121be424f5a4f58bf6d5ce43"
+        },
+        {
+          "case": "D1-tol100000",
+          "status": "execution_failed",
+          "source_sha256": "4e7b8733fa797430a22668cd06c770f09db42ddf1fb139a53b7e7f9ee4e69b96",
+          "deck_sha256": "d42e92796b7f6bc54882565d3174ff53eb42a3375b3efce002245c7a75ca7b62"
+        },
+        {
+          "case": "D1-step8",
+          "status": "execution_failed",
+          "source_sha256": "4e7b8733fa797430a22668cd06c770f09db42ddf1fb139a53b7e7f9ee4e69b96",
+          "deck_sha256": "535254e7272dd52fe46678aec0e19787b803977ea04b97cca21ab28829d16000"
+        },
+        {
+          "case": "D2-base",
+          "status": "execution_failed",
+          "source_sha256": "1989ac7ae07c4a95618da1e3ce3110b582f45801a6f5c6d674b1ae18fe4dfa8f",
+          "deck_sha256": "fc35d05b4b35d062d05a2446af68c1e30a34091f445054f291d6931b85fc9b36"
+        },
+        {
+          "case": "D2-tol1000",
+          "status": "execution_failed",
+          "source_sha256": "1989ac7ae07c4a95618da1e3ce3110b582f45801a6f5c6d674b1ae18fe4dfa8f",
+          "deck_sha256": "f3f17976e2f0304e0e7901f2cce42e2f83c26164121be424f5a4f58bf6d5ce43"
+        },
+        {
+          "case": "D2-tol100000",
+          "status": "execution_failed",
+          "source_sha256": "1989ac7ae07c4a95618da1e3ce3110b582f45801a6f5c6d674b1ae18fe4dfa8f",
+          "deck_sha256": "d42e92796b7f6bc54882565d3174ff53eb42a3375b3efce002245c7a75ca7b62"
+        },
+        {
+          "case": "D2-step8",
+          "status": "execution_failed",
+          "source_sha256": "1989ac7ae07c4a95618da1e3ce3110b582f45801a6f5c6d674b1ae18fe4dfa8f",
+          "deck_sha256": "535254e7272dd52fe46678aec0e19787b803977ea04b97cca21ab28829d16000"
+        },
+        {
+          "case": "C1-base",
+          "status": "waveform_available",
+          "source_sha256": "47f25c781213ffa5bf7dc90484ef884f59641adfdd63c9286d9b9d652359b1da",
+          "deck_sha256": "42a5c0288b9261e19c7bbff74eaac535fddf8761829171ab8bbc1d4174faa7ac"
+        },
+        {
+          "case": "C1-tol10",
+          "status": "waveform_available",
+          "source_sha256": "47f25c781213ffa5bf7dc90484ef884f59641adfdd63c9286d9b9d652359b1da",
+          "deck_sha256": "e892234e7f4c391e9bd56f992bcd8c5fb10e8017c90046a97092f18ad7e2af03"
+        },
+        {
+          "case": "C1-tol100",
+          "status": "waveform_available",
+          "source_sha256": "47f25c781213ffa5bf7dc90484ef884f59641adfdd63c9286d9b9d652359b1da",
+          "deck_sha256": "74aed9f3c7f8d85db6f25885730847d6af4ea3ada11d63ff61a8b4e1f0d80087"
+        },
+        {
+          "case": "M1-base",
+          "status": "waveform_available",
+          "source_sha256": "3b4ca8fa5a16c39c9e54aaefef638f2e7e7784a6fddb8cbb5f01d76642b833d8",
+          "deck_sha256": "ecd38d7f9e0b32a1a65db3285165f006ff9e4b0667f5c77b74d8b588f54800bd"
+        },
+        {
+          "case": "M1-tol10",
+          "status": "waveform_available",
+          "source_sha256": "3b4ca8fa5a16c39c9e54aaefef638f2e7e7784a6fddb8cbb5f01d76642b833d8",
+          "deck_sha256": "3ab2851ce219ef67047aad48328e5106866105d16b2fba1e7c8bd755301944d5"
+        },
+        {
+          "case": "M1-tol100",
+          "status": "waveform_available",
+          "source_sha256": "3b4ca8fa5a16c39c9e54aaefef638f2e7e7784a6fddb8cbb5f01d76642b833d8",
+          "deck_sha256": "4e6b2fe22cf1b43de0199f9234fed4f67558ddc9f61d7257bdf22451d7ee978e"
+        }
+      ],
+      "allocation": {
+        "stage_timeout_s": 90,
+        "license_timeout_s": 30,
+        "memory_limit_bytes": 4294967296,
+        "file_limit_bytes": 33554432,
+        "threads": 1,
+        "max_simulation_launches": 14,
+        "max_compilation_launches": 14,
+        "automatic_retries": 0,
+        "condition_limit_bytes": 268435456
+      },
+      "local_path": "current/runs/alignment-repair-20261008/reference-v1/collected/spectre",
+      "availability": "local-only"
+    },
+    {
+      "batch": "reference-v2",
+      "collection": "78e5069381021e0ee445894bb9f7261c5d03da27c6598f4fc3ef8ac9e1e8cb5a",
+      "inputs_manifest_sha256": "a36f134f373757a1be5aae68ad3f45b3607de9ea6378829bed98f48e7f19407b",
+      "tool_identity": {
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "version": "sub-version  21.1.0.509.isr12"
+      },
+      "launch_count": 8,
+      "executions": [
+        {
+          "case": "D1-base",
+          "status": "waveform_available",
+          "source_sha256": "7be49bbf243a3c2652c32b7aaf7b80895be34ad2e9648f3fd797a30e633f6556",
+          "deck_sha256": "fc35d05b4b35d062d05a2446af68c1e30a34091f445054f291d6931b85fc9b36"
+        },
+        {
+          "case": "D1-tol1000",
+          "status": "waveform_available",
+          "source_sha256": "7be49bbf243a3c2652c32b7aaf7b80895be34ad2e9648f3fd797a30e633f6556",
+          "deck_sha256": "f3f17976e2f0304e0e7901f2cce42e2f83c26164121be424f5a4f58bf6d5ce43"
+        },
+        {
+          "case": "D1-tol100000",
+          "status": "waveform_available",
+          "source_sha256": "7be49bbf243a3c2652c32b7aaf7b80895be34ad2e9648f3fd797a30e633f6556",
+          "deck_sha256": "d42e92796b7f6bc54882565d3174ff53eb42a3375b3efce002245c7a75ca7b62"
+        },
+        {
+          "case": "D1-step8",
+          "status": "waveform_available",
+          "source_sha256": "7be49bbf243a3c2652c32b7aaf7b80895be34ad2e9648f3fd797a30e633f6556",
+          "deck_sha256": "535254e7272dd52fe46678aec0e19787b803977ea04b97cca21ab28829d16000"
+        },
+        {
+          "case": "D2-base",
+          "status": "waveform_available",
+          "source_sha256": "e72ee802e2e2fcb0d19b7fb862796a49d5e6b4cee1c0bda5db997c59965166f8",
+          "deck_sha256": "fc35d05b4b35d062d05a2446af68c1e30a34091f445054f291d6931b85fc9b36"
+        },
+        {
+          "case": "D2-tol1000",
+          "status": "waveform_available",
+          "source_sha256": "e72ee802e2e2fcb0d19b7fb862796a49d5e6b4cee1c0bda5db997c59965166f8",
+          "deck_sha256": "f3f17976e2f0304e0e7901f2cce42e2f83c26164121be424f5a4f58bf6d5ce43"
+        },
+        {
+          "case": "D2-tol100000",
+          "status": "waveform_available",
+          "source_sha256": "e72ee802e2e2fcb0d19b7fb862796a49d5e6b4cee1c0bda5db997c59965166f8",
+          "deck_sha256": "d42e92796b7f6bc54882565d3174ff53eb42a3375b3efce002245c7a75ca7b62"
+        },
+        {
+          "case": "D2-step8",
+          "status": "waveform_available",
+          "source_sha256": "e72ee802e2e2fcb0d19b7fb862796a49d5e6b4cee1c0bda5db997c59965166f8",
+          "deck_sha256": "535254e7272dd52fe46678aec0e19787b803977ea04b97cca21ab28829d16000"
+        }
+      ],
+      "allocation": {
+        "stage_timeout_s": 90,
+        "license_timeout_s": 30,
+        "memory_limit_bytes": 4294967296,
+        "file_limit_bytes": 33554432,
+        "threads": 1,
+        "max_simulation_launches": 8,
+        "max_compilation_launches": 8,
+        "automatic_retries": 0,
+        "condition_limit_bytes": 268435456
+      },
+      "local_path": "current/runs/alignment-repair-20261008/reference-v2/collected/spectre",
+      "availability": "local-only"
+    }
+  ],
+  "settings": [
+    {
+      "batch": "reference-v1",
+      "case": "C1-base",
+      "effective": {
+        "stop_s": 6e-06,
+        "maxstep_s": 1.2500000000000002e-07,
+        "reltol": 1e-09,
+        "vabstol_V": 1e-11,
+        "iabstol_A": 1e-15,
+        "method": "traponly"
+      },
+      "global_user": {
+        "vabstol_V": 1e-11,
+        "iabstol_A": 1e-15,
+        "reltol": 1e-09
+      },
+      "psf": "da9c3dc2605ae1b115e25f73a4f5b8397245c2e6d8f8d5b0e3a5753049636bb9",
+      "log": "989f05bbcf9b02f3437369263b7fbb9774c3caf495e9f855f8570f7069f6e831"
+    },
+    {
+      "batch": "reference-v1",
+      "case": "C1-tol10",
+      "effective": {
+        "stop_s": 6e-06,
+        "maxstep_s": 1.2500000000000002e-07,
+        "reltol": 1e-10,
+        "vabstol_V": 1e-12,
+        "iabstol_A": 1.0000000000000001e-16,
+        "method": "traponly"
+      },
+      "global_user": {
+        "vabstol_V": 1e-12,
+        "iabstol_A": 1e-16,
+        "reltol": 1e-10
+      },
+      "psf": "ae48182b97e83b11e52f4b342a31c530062ac6f3d6d7028ef0114b4fcaad72b4",
+      "log": "6e365e243db30df46ff686b9350cd84d09dd5611df161e2f33ba5a0650a4d85d"
+    },
+    {
+      "batch": "reference-v1",
+      "case": "C1-tol100",
+      "effective": {
+        "stop_s": 6e-06,
+        "maxstep_s": 1.2500000000000002e-07,
+        "reltol": 1e-11,
+        "vabstol_V": 1e-13,
+        "iabstol_A": 1e-17,
+        "method": "traponly"
+      },
+      "global_user": {
+        "vabstol_V": 1e-13,
+        "iabstol_A": 1e-17,
+        "reltol": 1e-11
+      },
+      "psf": "f139b7d4fcac5a200e389de1c342bed6e8f41d4438af55d0a96296c49ca9fe2a",
+      "log": "b692454d45b76fb6933c2620b7afa8777b349ad12959ca9ef7847cb893c5bda2"
+    },
+    {
+      "batch": "reference-v1",
+      "case": "M1-base",
+      "effective": {
+        "stop_s": 9.999999999999999e-06,
+        "maxstep_s": 1.2500000000000002e-07,
+        "reltol": 1e-09,
+        "vabstol_V": 1e-11,
+        "iabstol_A": 1e-15,
+        "method": "traponly"
+      },
+      "global_user": {
+        "vabstol_V": 1e-11,
+        "iabstol_A": 1e-15,
+        "reltol": 1e-09
+      },
+      "psf": "0ba52ce51723454f5aa11d1f9b226fd64214b7821cf2471952423ad5f37f56ad",
+      "log": "fa74393d2c44862464be45884802fdad664abdc37fe63a3842c755bcac9fc42b"
+    },
+    {
+      "batch": "reference-v1",
+      "case": "M1-tol10",
+      "effective": {
+        "stop_s": 9.999999999999999e-06,
+        "maxstep_s": 1.2500000000000002e-07,
+        "reltol": 1e-10,
+        "vabstol_V": 1e-12,
+        "iabstol_A": 1.0000000000000001e-16,
+        "method": "traponly"
+      },
+      "global_user": {
+        "vabstol_V": 1e-12,
+        "iabstol_A": 1e-16,
+        "reltol": 1e-10
+      },
+      "psf": "87db2cc6ab11ae305aca2f7c0a79964f2471a0b6150b044c55f90d45403c9595",
+      "log": "fb5646e22a25f483a44fff4319980943153f9c9fea0aac367982165cca747e48"
+    },
+    {
+      "batch": "reference-v1",
+      "case": "M1-tol100",
+      "effective": {
+        "stop_s": 9.999999999999999e-06,
+        "maxstep_s": 1.2500000000000002e-07,
+        "reltol": 1e-11,
+        "vabstol_V": 1e-13,
+        "iabstol_A": 1e-17,
+        "method": "traponly"
+      },
+      "global_user": {
+        "vabstol_V": 1e-13,
+        "iabstol_A": 1e-17,
+        "reltol": 1e-11
+      },
+      "psf": "f782c1cce1eeeb450e8fc63fd777ad9f057441430232b265ee56e34c51d810a4",
+      "log": "bac1908ee9c06b7e8e7be36b714acaeae679e49117844b42ffc7cbc5f587b8cf"
+    },
+    {
+      "batch": "reference-v2",
+      "case": "D1-base",
+      "effective": {
+        "stop_s": 1.0,
+        "maxstep_s": 0.125,
+        "reltol": 1e-05,
+        "vabstol_V": 1e-08,
+        "iabstol_A": 1e-12,
+        "method": "traponly"
+      },
+      "global_user": {
+        "vabstol_V": 1e-08,
+        "iabstol_A": 1e-12,
+        "reltol": 1e-05
+      },
+      "psf": "495d9e1353ed7f929c49f7437f48b12fc9e29ff9243e7c1de5a9b617e62995c2",
+      "log": "b1138e7c64d06566e1382637837f04f4bc511c1027b1b961ef28d28569082d78"
+    },
+    {
+      "batch": "reference-v2",
+      "case": "D1-tol1000",
+      "effective": {
+        "stop_s": 1.0,
+        "maxstep_s": 0.125,
+        "reltol": 1e-08,
+        "vabstol_V": 1e-11,
+        "iabstol_A": 1e-15,
+        "method": "traponly"
+      },
+      "global_user": {
+        "vabstol_V": 1e-11,
+        "iabstol_A": 1e-15,
+        "reltol": 1e-08
+      },
+      "psf": "f4c2159b0bede5ab5bb9f9b90d706d59201927bf5dc80c36066f5bd5c90ce666",
+      "log": "52fc09871b2ed517b094c10b321f2a2037ae961caee145989c3a6a4eed391495"
+    },
+    {
+      "batch": "reference-v2",
+      "case": "D1-tol100000",
+      "effective": {
+        "stop_s": 1.0,
+        "maxstep_s": 0.125,
+        "reltol": 1e-10,
+        "vabstol_V": 1e-13,
+        "iabstol_A": 1e-17,
+        "method": "traponly"
+      },
+      "global_user": {
+        "vabstol_V": 1e-13,
+        "iabstol_A": 1e-17,
+        "reltol": 1e-10
+      },
+      "psf": "13592edef0bf9f07234531c032683d8174f43c8ee93ccee172e4b97e13e2b663",
+      "log": "94402c7648e0b195e63854e67d3413455ff3eea5487f97c2afe50a3343ddb447"
+    },
+    {
+      "batch": "reference-v2",
+      "case": "D1-step8",
+      "effective": {
+        "stop_s": 1.0,
+        "maxstep_s": 0.015625,
+        "reltol": 1e-05,
+        "vabstol_V": 1e-08,
+        "iabstol_A": 1e-12,
+        "method": "traponly"
+      },
+      "global_user": {
+        "vabstol_V": 1e-08,
+        "iabstol_A": 1e-12,
+        "reltol": 1e-05
+      },
+      "psf": "b3066ebda03b8f7e4786c38fe0a930f0cd43249f4d8c6aba56142881eb9fd322",
+      "log": "64188789c8e00f0a9ce0679bf8bdc73c1d45135fed40e4f461f351d669f7ed18"
+    },
+    {
+      "batch": "reference-v2",
+      "case": "D2-base",
+      "effective": {
+        "stop_s": 1.0,
+        "maxstep_s": 0.125,
+        "reltol": 1e-05,
+        "vabstol_V": 1e-08,
+        "iabstol_A": 1e-12,
+        "method": "traponly"
+      },
+      "global_user": {
+        "vabstol_V": 1e-08,
+        "iabstol_A": 1e-12,
+        "reltol": 1e-05
+      },
+      "psf": "0f94899e220e0e83e3e77f27fd93c9957770468cffa1805bcf2f46ce91e1ac08",
+      "log": "599c1c2347878c8ea4c8920756b06deb383ddb34411aacaad9225b3e077005f6"
+    },
+    {
+      "batch": "reference-v2",
+      "case": "D2-tol1000",
+      "effective": {
+        "stop_s": 1.0,
+        "maxstep_s": 0.125,
+        "reltol": 1e-08,
+        "vabstol_V": 1e-11,
+        "iabstol_A": 1e-15,
+        "method": "traponly"
+      },
+      "global_user": {
+        "vabstol_V": 1e-11,
+        "iabstol_A": 1e-15,
+        "reltol": 1e-08
+      },
+      "psf": "168b6881a2660fa4b046bf366de095c054b38e064bb8424654d708f2f28c93f3",
+      "log": "ec03d763a8d353ba2b7adcaabac33f545d19c244f725154d7615e5b6ef49ccf3"
+    },
+    {
+      "batch": "reference-v2",
+      "case": "D2-tol100000",
+      "effective": {
+        "stop_s": 1.0,
+        "maxstep_s": 0.125,
+        "reltol": 1e-10,
+        "vabstol_V": 1e-13,
+        "iabstol_A": 1e-17,
+        "method": "traponly"
+      },
+      "global_user": {
+        "vabstol_V": 1e-13,
+        "iabstol_A": 1e-17,
+        "reltol": 1e-10
+      },
+      "psf": "ecf5e33c2a34cb794bc2f5c375f6d5d48decd78e9254e472eb03218f1a36f0c4",
+      "log": "5dda9fdc6edf5e66c4cb287709a6b016fc7e866a2c47a4c5e147de31a1658323"
+    },
+    {
+      "batch": "reference-v2",
+      "case": "D2-step8",
+      "effective": {
+        "stop_s": 1.0,
+        "maxstep_s": 0.015625,
+        "reltol": 1e-05,
+        "vabstol_V": 1e-08,
+        "iabstol_A": 1e-12,
+        "method": "traponly"
+      },
+      "global_user": {
+        "vabstol_V": 1e-08,
+        "iabstol_A": 1e-12,
+        "reltol": 1e-05
+      },
+      "psf": "34c1e1cf19fc7361116e92171089a4b428b8bc95d7083ff05b1f4e480a298d87",
+      "log": "d62b2be6275eb4923320b024c8bcd96218ebaefc71a9cae23612c6cdc10b55b3"
+    }
+  ],
+  "comparisons": [
+    {
+      "finite_pair_status": "F",
+      "phase_status": "F",
+      "formal_qualification": "I",
+      "native_rows": 171,
+      "paired_rows": 171,
+      "paired_values": 1539,
+      "unpaired_native_rows": 0,
+      "failed_values": 4,
+      "failed_inside_windows": 4,
+      "failed_outside_windows": 0,
+      "phase_failed_values": 4,
+      "worst": {
+        "y": {
+          "error_v": 1.9027663423825877e-16,
+          "time_s": 1.650006e-06,
+          "evas_v": 4.199999999819475e-06,
+          "spectre_v": 4.2000000000097515e-06
+        },
+        "z": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        },
+        "q": {
+          "error_v": 0.7,
+          "time_s": 1.4e-06,
+          "evas_v": 0.0,
+          "spectre_v": 0.7
+        },
+        "n": {
+          "error_v": 1.0,
+          "time_s": 1.4e-06,
+          "evas_v": 0.0,
+          "spectre_v": 1.0
+        },
+        "m": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        },
+        "s": {
+          "error_v": 0.7,
+          "time_s": 1.4e-06,
+          "evas_v": -0.0,
+          "spectre_v": 0.7
+        },
+        "h1": {
+          "error_v": 2.4,
+          "time_s": 1.4e-06,
+          "evas_v": -1.0,
+          "spectre_v": 1.4
+        },
+        "h2": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        },
+        "h3": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        }
+      },
+      "coverage_gaps": [
+        "spectre: missing required observation times"
+      ],
+      "missing_required_times": {
+        "evas": [],
+        "spectre": [
+          2.5e-07
+        ]
+      },
+      "duplicate_times": {
+        "evas": [],
+        "spectre": []
+      },
+      "scope": "All native rows at identical parsed binary64 times; no interpolation. Formal source/export/continuous-time qualification is not established.",
+      "unpaired_native_values": 0,
+      "case": "C1-base",
+      "analysis": "analysis-cm-v1",
+      "spectre_batch": "reference-v1",
+      "evas_execution_status": "DIRECT_DIFFERENCE",
+      "independent_errors": null,
+      "source_case_sha256": "a830139ddd11a2c8e5a76257b823bd1e8a62392080fb581ebf2d070255e5dc7b",
+      "source_va_sha256": "47f25c781213ffa5bf7dc90484ef884f59641adfdd63c9286d9b9d652359b1da",
+      "evas_identity": {
+        "head": "0ac8806d7463f00487f326b2eacc32e02a0c5aa3",
+        "kernel_sha256": "c35795bf13acf7b00455843db5a4a1c4a512fb2db6bea32f9221c5bf9b8d96ca",
+        "analyzer_sha256": "3f6df0c3737e400bc9645faad02ea0d5f56de4ee63303eb0c17b6349342df932",
+        "normalizer_sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8",
+        "input_manifests": {
+          "reference-v1/collected/spectre": "714f9ea4011f58ee022910e33bb1a049d7f381504d9f27c3b4cde501889014de"
+        },
+        "note": "Native decimal export qualification remains separate; no interpolation or case removal."
+      },
+      "identities": {
+        "contract": "427c9ddf69064d8256e1dcba4b7997ecbb950a1bc6238df7a533f62c8a22f7b7",
+        "evas": "9487806fd10aafdce8b0fea0a0a3d6e0a759a477bce1f3766cabdab7ffab6e90",
+        "spectre": "fb11075935127cafba7fdcda9aa8c2c8970e258cb090d1d69687b8d7e63fa5b6"
+      },
+      "original_result_sha256": "ee217d2f219be5e94b72b722dd6ff1ced6d50322630aec54562e64e3c7fe1a8f",
+      "contract": {
+        "stop": 6e-06,
+        "required_times": [
+          0.0,
+          6.25e-08,
+          1.25e-07,
+          1.875e-07,
+          2.5e-07,
+          3.1249999999999997e-07,
+          3.75e-07,
+          4.375e-07,
+          5e-07,
+          5.625e-07,
+          6.249999999999999e-07,
+          6.875e-07,
+          7.5e-07,
+          8.125e-07,
+          8.75e-07,
+          9.374999999999999e-07,
+          1e-06,
+          1.0625e-06,
+          1.125e-06,
+          1.1874999999999999e-06,
+          1.2499999999999999e-06,
+          1.3125e-06,
+          1.375e-06,
+          1.3999979999999999e-06,
+          1.4e-06,
+          1.400002e-06,
+          1.4375e-06,
+          1.5e-06,
+          1.5624999999999999e-06,
+          1.625e-06,
+          1.6499979999999998e-06,
+          1.6499999999999999e-06,
+          1.650002e-06,
+          1.6875e-06,
+          1.75e-06,
+          1.8125e-06,
+          1.8749999999999998e-06,
+          1.9375e-06,
+          2e-06,
+          2.0624999999999997e-06,
+          2.125e-06,
+          2.1875e-06,
+          2.25e-06,
+          2.3125e-06,
+          2.3749999999999997e-06,
+          2.4375e-06,
+          2.4999999999999998e-06,
+          2.5625e-06,
+          2.625e-06,
+          2.6499979999999996e-06,
+          2.6499999999999996e-06,
+          2.6500019999999997e-06,
+          2.6874999999999997e-06,
+          2.75e-06,
+          2.8124999999999998e-06,
+          2.875e-06,
+          2.9375e-06,
+          3e-06,
+          3.0625e-06,
+          3.1249999999999997e-06,
+          3.1875e-06,
+          3.25e-06,
+          3.3125e-06,
+          3.375e-06,
+          3.4374999999999997e-06,
+          3.5e-06,
+          3.5624999999999998e-06,
+          3.625e-06,
+          3.6875e-06,
+          3.7499999999999997e-06,
+          3.8125e-06,
+          3.875e-06,
+          3.9375e-06,
+          4e-06,
+          4.0625e-06,
+          4.1249999999999995e-06,
+          4.1875e-06,
+          4.25e-06,
+          4.3125e-06,
+          4.375e-06,
+          4.4374999999999994e-06,
+          4.5e-06,
+          4.5625e-06,
+          4.625e-06,
+          4.6875e-06,
+          4.749999999999999e-06,
+          4.8125e-06,
+          4.875e-06,
+          4.9375e-06,
+          4.9999999999999996e-06,
+          5.062499999999999e-06,
+          5.125e-06,
+          5.1875e-06,
+          5.25e-06,
+          5.3124999999999995e-06,
+          5.374999999999999e-06,
+          5.4375e-06,
+          5.5e-06,
+          5.5625e-06,
+          5.6249999999999995e-06,
+          5.687499999999999e-06,
+          5.75e-06,
+          5.8125e-06,
+          5.875e-06,
+          5.9374999999999995e-06,
+          6e-06
+        ],
+        "budgets_v": {
+          "y": 1e-06,
+          "z": 1e-06,
+          "q": 1e-07,
+          "n": 0,
+          "m": 0,
+          "s": 1e-06,
+          "h1": 1e-07,
+          "h2": 1e-07,
+          "h3": 1e-07
+        },
+        "phase_nodes": [
+          "n",
+          "m",
+          "q",
+          "s",
+          "h1",
+          "h2",
+          "h3"
+        ],
+        "event_windows_s": [
+          [
+            1.399999e-06,
+            1.400001e-06
+          ]
+        ],
+        "budget_scope": "Strict direct observed values; stamp measurement budgets are not nominal event displacement allowances. No engineering verdict inferred from this strict report."
+      },
+      "comparator_sha256": "9cbaa5b6d0bb7e825a9aae27f8fda41c74ec1480cbbdb0fe09334513b084227f",
+      "previous_report_sha256": "4295592a6ac2c83cb80290ff5c8075e1c7f952a9448eb3894ea6599ebae95218",
+      "reanalysis_source_sha256": "fa86220d087df802d90fff7486535f3c461a70b7a0b954580d0ef0afc9098124"
+    },
+    {
+      "finite_pair_status": "F",
+      "phase_status": "F",
+      "formal_qualification": "I",
+      "native_rows": 171,
+      "paired_rows": 171,
+      "paired_values": 1539,
+      "unpaired_native_rows": 0,
+      "failed_values": 4,
+      "failed_inside_windows": 4,
+      "failed_outside_windows": 0,
+      "phase_failed_values": 4,
+      "worst": {
+        "y": {
+          "error_v": 1.9027663423825877e-16,
+          "time_s": 1.650006e-06,
+          "evas_v": 4.199999999819475e-06,
+          "spectre_v": 4.2000000000097515e-06
+        },
+        "z": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        },
+        "q": {
+          "error_v": 0.7,
+          "time_s": 1.4e-06,
+          "evas_v": 0.0,
+          "spectre_v": 0.7
+        },
+        "n": {
+          "error_v": 1.0,
+          "time_s": 1.4e-06,
+          "evas_v": 0.0,
+          "spectre_v": 1.0
+        },
+        "m": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        },
+        "s": {
+          "error_v": 0.7,
+          "time_s": 1.4e-06,
+          "evas_v": -0.0,
+          "spectre_v": 0.7
+        },
+        "h1": {
+          "error_v": 2.4,
+          "time_s": 1.4e-06,
+          "evas_v": -1.0,
+          "spectre_v": 1.4
+        },
+        "h2": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        },
+        "h3": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        }
+      },
+      "coverage_gaps": [
+        "spectre: missing required observation times"
+      ],
+      "missing_required_times": {
+        "evas": [],
+        "spectre": [
+          2.5e-07
+        ]
+      },
+      "duplicate_times": {
+        "evas": [],
+        "spectre": []
+      },
+      "scope": "All native rows at identical parsed binary64 times; no interpolation. Formal source/export/continuous-time qualification is not established.",
+      "unpaired_native_values": 0,
+      "case": "C1-tol10",
+      "analysis": "analysis-cm-v1",
+      "spectre_batch": "reference-v1",
+      "evas_execution_status": "DIRECT_DIFFERENCE",
+      "independent_errors": null,
+      "source_case_sha256": "7ab3f75402c4218a582d729706da705ec7fba647e45734bcde5482dab5c9a8f5",
+      "source_va_sha256": "47f25c781213ffa5bf7dc90484ef884f59641adfdd63c9286d9b9d652359b1da",
+      "evas_identity": {
+        "head": "0ac8806d7463f00487f326b2eacc32e02a0c5aa3",
+        "kernel_sha256": "c35795bf13acf7b00455843db5a4a1c4a512fb2db6bea32f9221c5bf9b8d96ca",
+        "analyzer_sha256": "3f6df0c3737e400bc9645faad02ea0d5f56de4ee63303eb0c17b6349342df932",
+        "normalizer_sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8",
+        "input_manifests": {
+          "reference-v1/collected/spectre": "714f9ea4011f58ee022910e33bb1a049d7f381504d9f27c3b4cde501889014de"
+        },
+        "note": "Native decimal export qualification remains separate; no interpolation or case removal."
+      },
+      "identities": {
+        "contract": "427c9ddf69064d8256e1dcba4b7997ecbb950a1bc6238df7a533f62c8a22f7b7",
+        "evas": "43d469ccedf40bdbe4c3a0cbd110f843fbb2e22f5aae28a8d830d56af685415e",
+        "spectre": "f1bee7e2b60558f55d78ac18f5e0ee6f5db52445b5ddd54431692eaa7fd2f844"
+      },
+      "original_result_sha256": "0503158fd98fe8527784ed8966e1a27fca1ec84116e018372f28e3c2966de9be",
+      "contract": {
+        "stop": 6e-06,
+        "required_times": [
+          0.0,
+          6.25e-08,
+          1.25e-07,
+          1.875e-07,
+          2.5e-07,
+          3.1249999999999997e-07,
+          3.75e-07,
+          4.375e-07,
+          5e-07,
+          5.625e-07,
+          6.249999999999999e-07,
+          6.875e-07,
+          7.5e-07,
+          8.125e-07,
+          8.75e-07,
+          9.374999999999999e-07,
+          1e-06,
+          1.0625e-06,
+          1.125e-06,
+          1.1874999999999999e-06,
+          1.2499999999999999e-06,
+          1.3125e-06,
+          1.375e-06,
+          1.3999979999999999e-06,
+          1.4e-06,
+          1.400002e-06,
+          1.4375e-06,
+          1.5e-06,
+          1.5624999999999999e-06,
+          1.625e-06,
+          1.6499979999999998e-06,
+          1.6499999999999999e-06,
+          1.650002e-06,
+          1.6875e-06,
+          1.75e-06,
+          1.8125e-06,
+          1.8749999999999998e-06,
+          1.9375e-06,
+          2e-06,
+          2.0624999999999997e-06,
+          2.125e-06,
+          2.1875e-06,
+          2.25e-06,
+          2.3125e-06,
+          2.3749999999999997e-06,
+          2.4375e-06,
+          2.4999999999999998e-06,
+          2.5625e-06,
+          2.625e-06,
+          2.6499979999999996e-06,
+          2.6499999999999996e-06,
+          2.6500019999999997e-06,
+          2.6874999999999997e-06,
+          2.75e-06,
+          2.8124999999999998e-06,
+          2.875e-06,
+          2.9375e-06,
+          3e-06,
+          3.0625e-06,
+          3.1249999999999997e-06,
+          3.1875e-06,
+          3.25e-06,
+          3.3125e-06,
+          3.375e-06,
+          3.4374999999999997e-06,
+          3.5e-06,
+          3.5624999999999998e-06,
+          3.625e-06,
+          3.6875e-06,
+          3.7499999999999997e-06,
+          3.8125e-06,
+          3.875e-06,
+          3.9375e-06,
+          4e-06,
+          4.0625e-06,
+          4.1249999999999995e-06,
+          4.1875e-06,
+          4.25e-06,
+          4.3125e-06,
+          4.375e-06,
+          4.4374999999999994e-06,
+          4.5e-06,
+          4.5625e-06,
+          4.625e-06,
+          4.6875e-06,
+          4.749999999999999e-06,
+          4.8125e-06,
+          4.875e-06,
+          4.9375e-06,
+          4.9999999999999996e-06,
+          5.062499999999999e-06,
+          5.125e-06,
+          5.1875e-06,
+          5.25e-06,
+          5.3124999999999995e-06,
+          5.374999999999999e-06,
+          5.4375e-06,
+          5.5e-06,
+          5.5625e-06,
+          5.6249999999999995e-06,
+          5.687499999999999e-06,
+          5.75e-06,
+          5.8125e-06,
+          5.875e-06,
+          5.9374999999999995e-06,
+          6e-06
+        ],
+        "budgets_v": {
+          "y": 1e-06,
+          "z": 1e-06,
+          "q": 1e-07,
+          "n": 0,
+          "m": 0,
+          "s": 1e-06,
+          "h1": 1e-07,
+          "h2": 1e-07,
+          "h3": 1e-07
+        },
+        "phase_nodes": [
+          "n",
+          "m",
+          "q",
+          "s",
+          "h1",
+          "h2",
+          "h3"
+        ],
+        "event_windows_s": [
+          [
+            1.399999e-06,
+            1.400001e-06
+          ]
+        ],
+        "budget_scope": "Strict direct observed values; stamp measurement budgets are not nominal event displacement allowances. No engineering verdict inferred from this strict report."
+      },
+      "comparator_sha256": "9cbaa5b6d0bb7e825a9aae27f8fda41c74ec1480cbbdb0fe09334513b084227f",
+      "previous_report_sha256": "1c2d65509604dfa25175e627e360a19cf35d0f4f2f70baec9d4461dc0773649e",
+      "reanalysis_source_sha256": "fa86220d087df802d90fff7486535f3c461a70b7a0b954580d0ef0afc9098124"
+    },
+    {
+      "finite_pair_status": "F",
+      "phase_status": "F",
+      "formal_qualification": "I",
+      "native_rows": 171,
+      "paired_rows": 171,
+      "paired_values": 1539,
+      "unpaired_native_rows": 0,
+      "failed_values": 4,
+      "failed_inside_windows": 4,
+      "failed_outside_windows": 0,
+      "phase_failed_values": 4,
+      "worst": {
+        "y": {
+          "error_v": 1.9027663423825877e-16,
+          "time_s": 1.650006e-06,
+          "evas_v": 4.199999999819475e-06,
+          "spectre_v": 4.2000000000097515e-06
+        },
+        "z": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        },
+        "q": {
+          "error_v": 0.7,
+          "time_s": 1.4e-06,
+          "evas_v": 0.0,
+          "spectre_v": 0.7
+        },
+        "n": {
+          "error_v": 1.0,
+          "time_s": 1.4e-06,
+          "evas_v": 0.0,
+          "spectre_v": 1.0
+        },
+        "m": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        },
+        "s": {
+          "error_v": 0.7,
+          "time_s": 1.4e-06,
+          "evas_v": -0.0,
+          "spectre_v": 0.7
+        },
+        "h1": {
+          "error_v": 2.4,
+          "time_s": 1.4e-06,
+          "evas_v": -1.0,
+          "spectre_v": 1.4
+        },
+        "h2": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        },
+        "h3": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        }
+      },
+      "coverage_gaps": [
+        "spectre: missing required observation times"
+      ],
+      "missing_required_times": {
+        "evas": [],
+        "spectre": [
+          2.5e-07
+        ]
+      },
+      "duplicate_times": {
+        "evas": [],
+        "spectre": []
+      },
+      "scope": "All native rows at identical parsed binary64 times; no interpolation. Formal source/export/continuous-time qualification is not established.",
+      "unpaired_native_values": 0,
+      "case": "C1-tol100",
+      "analysis": "analysis-cm-v1",
+      "spectre_batch": "reference-v1",
+      "evas_execution_status": "DIRECT_DIFFERENCE",
+      "independent_errors": null,
+      "source_case_sha256": "2cddd3b28d2d657dc4cdfde0723745ecf859ea93252a53aa4c609705d671cb7b",
+      "source_va_sha256": "47f25c781213ffa5bf7dc90484ef884f59641adfdd63c9286d9b9d652359b1da",
+      "evas_identity": {
+        "head": "0ac8806d7463f00487f326b2eacc32e02a0c5aa3",
+        "kernel_sha256": "c35795bf13acf7b00455843db5a4a1c4a512fb2db6bea32f9221c5bf9b8d96ca",
+        "analyzer_sha256": "3f6df0c3737e400bc9645faad02ea0d5f56de4ee63303eb0c17b6349342df932",
+        "normalizer_sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8",
+        "input_manifests": {
+          "reference-v1/collected/spectre": "714f9ea4011f58ee022910e33bb1a049d7f381504d9f27c3b4cde501889014de"
+        },
+        "note": "Native decimal export qualification remains separate; no interpolation or case removal."
+      },
+      "identities": {
+        "contract": "427c9ddf69064d8256e1dcba4b7997ecbb950a1bc6238df7a533f62c8a22f7b7",
+        "evas": "43d469ccedf40bdbe4c3a0cbd110f843fbb2e22f5aae28a8d830d56af685415e",
+        "spectre": "863d0571b26cac73948c0a133f71c341ffa9ccd890c4d3fd4cdb358a5f7479c3"
+      },
+      "original_result_sha256": "d18a33cb2a684aea303d75278c8b92faed037c1e2a4d9c0fa88dfe01e974523c",
+      "contract": {
+        "stop": 6e-06,
+        "required_times": [
+          0.0,
+          6.25e-08,
+          1.25e-07,
+          1.875e-07,
+          2.5e-07,
+          3.1249999999999997e-07,
+          3.75e-07,
+          4.375e-07,
+          5e-07,
+          5.625e-07,
+          6.249999999999999e-07,
+          6.875e-07,
+          7.5e-07,
+          8.125e-07,
+          8.75e-07,
+          9.374999999999999e-07,
+          1e-06,
+          1.0625e-06,
+          1.125e-06,
+          1.1874999999999999e-06,
+          1.2499999999999999e-06,
+          1.3125e-06,
+          1.375e-06,
+          1.3999979999999999e-06,
+          1.4e-06,
+          1.400002e-06,
+          1.4375e-06,
+          1.5e-06,
+          1.5624999999999999e-06,
+          1.625e-06,
+          1.6499979999999998e-06,
+          1.6499999999999999e-06,
+          1.650002e-06,
+          1.6875e-06,
+          1.75e-06,
+          1.8125e-06,
+          1.8749999999999998e-06,
+          1.9375e-06,
+          2e-06,
+          2.0624999999999997e-06,
+          2.125e-06,
+          2.1875e-06,
+          2.25e-06,
+          2.3125e-06,
+          2.3749999999999997e-06,
+          2.4375e-06,
+          2.4999999999999998e-06,
+          2.5625e-06,
+          2.625e-06,
+          2.6499979999999996e-06,
+          2.6499999999999996e-06,
+          2.6500019999999997e-06,
+          2.6874999999999997e-06,
+          2.75e-06,
+          2.8124999999999998e-06,
+          2.875e-06,
+          2.9375e-06,
+          3e-06,
+          3.0625e-06,
+          3.1249999999999997e-06,
+          3.1875e-06,
+          3.25e-06,
+          3.3125e-06,
+          3.375e-06,
+          3.4374999999999997e-06,
+          3.5e-06,
+          3.5624999999999998e-06,
+          3.625e-06,
+          3.6875e-06,
+          3.7499999999999997e-06,
+          3.8125e-06,
+          3.875e-06,
+          3.9375e-06,
+          4e-06,
+          4.0625e-06,
+          4.1249999999999995e-06,
+          4.1875e-06,
+          4.25e-06,
+          4.3125e-06,
+          4.375e-06,
+          4.4374999999999994e-06,
+          4.5e-06,
+          4.5625e-06,
+          4.625e-06,
+          4.6875e-06,
+          4.749999999999999e-06,
+          4.8125e-06,
+          4.875e-06,
+          4.9375e-06,
+          4.9999999999999996e-06,
+          5.062499999999999e-06,
+          5.125e-06,
+          5.1875e-06,
+          5.25e-06,
+          5.3124999999999995e-06,
+          5.374999999999999e-06,
+          5.4375e-06,
+          5.5e-06,
+          5.5625e-06,
+          5.6249999999999995e-06,
+          5.687499999999999e-06,
+          5.75e-06,
+          5.8125e-06,
+          5.875e-06,
+          5.9374999999999995e-06,
+          6e-06
+        ],
+        "budgets_v": {
+          "y": 1e-06,
+          "z": 1e-06,
+          "q": 1e-07,
+          "n": 0,
+          "m": 0,
+          "s": 1e-06,
+          "h1": 1e-07,
+          "h2": 1e-07,
+          "h3": 1e-07
+        },
+        "phase_nodes": [
+          "n",
+          "m",
+          "q",
+          "s",
+          "h1",
+          "h2",
+          "h3"
+        ],
+        "event_windows_s": [
+          [
+            1.399999e-06,
+            1.400001e-06
+          ]
+        ],
+        "budget_scope": "Strict direct observed values; stamp measurement budgets are not nominal event displacement allowances. No engineering verdict inferred from this strict report."
+      },
+      "comparator_sha256": "9cbaa5b6d0bb7e825a9aae27f8fda41c74ec1480cbbdb0fe09334513b084227f",
+      "previous_report_sha256": "71d5766914d8cf22c9d2a0c0a73386345c6b74331a8624680741c940058f09d3",
+      "reanalysis_source_sha256": "fa86220d087df802d90fff7486535f3c461a70b7a0b954580d0ef0afc9098124"
+    },
+    {
+      "finite_pair_status": "F",
+      "phase_status": "F",
+      "formal_qualification": "I",
+      "native_rows": 288,
+      "paired_rows": 288,
+      "paired_values": 2592,
+      "unpaired_native_rows": 0,
+      "failed_values": 358,
+      "failed_inside_windows": 10,
+      "failed_outside_windows": 348,
+      "phase_failed_values": 237,
+      "worst": {
+        "y": {
+          "error_v": 8.257518885335102e-07,
+          "time_s": 2.75e-06,
+          "evas_v": 0.49999999999999944,
+          "spectre_v": 0.500000825751888
+        },
+        "z": {
+          "error_v": 2.0000000000644502e-06,
+          "time_s": 2.0624999999999997e-06,
+          "evas_v": 0.062499999999999827,
+          "spectre_v": 0.06250199999999989
+        },
+        "q": {
+          "error_v": 1.0,
+          "time_s": 1.9999991742481117e-06,
+          "evas_v": 0.0,
+          "spectre_v": 1.0
+        },
+        "n": {
+          "error_v": 1.0,
+          "time_s": 1.9999991742481117e-06,
+          "evas_v": 0.0,
+          "spectre_v": 1.0
+        },
+        "m": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        },
+        "s": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        },
+        "h1": {
+          "error_v": 2.999999174248112,
+          "time_s": 1.9999991742481117e-06,
+          "evas_v": -1.0,
+          "spectre_v": 1.9999991742481118
+        },
+        "h2": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        },
+        "h3": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        }
+      },
+      "coverage_gaps": [
+        "spectre: missing required observation times"
+      ],
+      "missing_required_times": {
+        "evas": [],
+        "spectre": [
+          1.875e-07,
+          2.4375e-06,
+          8.4375e-06
+        ]
+      },
+      "duplicate_times": {
+        "evas": [],
+        "spectre": []
+      },
+      "scope": "All native rows at identical parsed binary64 times; no interpolation. Formal source/export/continuous-time qualification is not established.",
+      "unpaired_native_values": 0,
+      "case": "M1-base",
+      "analysis": "analysis-cm-v1",
+      "spectre_batch": "reference-v1",
+      "evas_execution_status": "DIRECT_DIFFERENCE",
+      "independent_errors": null,
+      "source_case_sha256": "a6c2ec4e86ef6ab2119512f4a003fbffe89c554cdf9df7a77690b721b8537ffe",
+      "source_va_sha256": "3b4ca8fa5a16c39c9e54aaefef638f2e7e7784a6fddb8cbb5f01d76642b833d8",
+      "evas_identity": {
+        "head": "0ac8806d7463f00487f326b2eacc32e02a0c5aa3",
+        "kernel_sha256": "c35795bf13acf7b00455843db5a4a1c4a512fb2db6bea32f9221c5bf9b8d96ca",
+        "analyzer_sha256": "3f6df0c3737e400bc9645faad02ea0d5f56de4ee63303eb0c17b6349342df932",
+        "normalizer_sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8",
+        "input_manifests": {
+          "reference-v1/collected/spectre": "714f9ea4011f58ee022910e33bb1a049d7f381504d9f27c3b4cde501889014de"
+        },
+        "note": "Native decimal export qualification remains separate; no interpolation or case removal."
+      },
+      "identities": {
+        "contract": "13b3c089cee5c412200e78c6f486ab31ea106a739cd14e5d7d264dae398f64bb",
+        "evas": "6663571c9382961f5c97a696ce80eeadfc1126fe42a10c8797d099f28a0adea6",
+        "spectre": "63b9cfef5d6c5c5f85c91ce748e25b8777abae180c90e52a81572b2bf80cb3a6"
+      },
+      "original_result_sha256": "7ffc18c0cffcca1c81edd6c9947a095dbfa6578728382db640d9088d0cd7128f",
+      "contract": {
+        "stop": 9.999999999999999e-06,
+        "required_times": [
+          0.0,
+          6.25e-08,
+          1.25e-07,
+          1.875e-07,
+          2.5e-07,
+          3.1249999999999997e-07,
+          3.75e-07,
+          4.375e-07,
+          5e-07,
+          5.625e-07,
+          6.249999999999999e-07,
+          6.875e-07,
+          7.5e-07,
+          8.125e-07,
+          8.75e-07,
+          9.374999999999999e-07,
+          1e-06,
+          1.0625e-06,
+          1.125e-06,
+          1.1874999999999999e-06,
+          1.2499999999999999e-06,
+          1.3125e-06,
+          1.375e-06,
+          1.4375e-06,
+          1.5e-06,
+          1.5624999999999999e-06,
+          1.625e-06,
+          1.6875e-06,
+          1.75e-06,
+          1.8125e-06,
+          1.8749999999999998e-06,
+          1.9375e-06,
+          1.999998e-06,
+          2e-06,
+          2.000002e-06,
+          2.0624999999999997e-06,
+          2.125e-06,
+          2.1875e-06,
+          2.249998e-06,
+          2.25e-06,
+          2.250002e-06,
+          2.3125e-06,
+          2.3749999999999997e-06,
+          2.4375e-06,
+          2.4999999999999998e-06,
+          2.5625e-06,
+          2.625e-06,
+          2.6874999999999997e-06,
+          2.75e-06,
+          2.8124999999999998e-06,
+          2.875e-06,
+          2.9375e-06,
+          3e-06,
+          3.0625e-06,
+          3.1249999999999997e-06,
+          3.1875e-06,
+          3.2499979999999997e-06,
+          3.25e-06,
+          3.250002e-06,
+          3.3125e-06,
+          3.375e-06,
+          3.4374999999999997e-06,
+          3.5e-06,
+          3.5624999999999998e-06,
+          3.625e-06,
+          3.6875e-06,
+          3.7499999999999997e-06,
+          3.8125e-06,
+          3.875e-06,
+          3.9375e-06,
+          4e-06,
+          4.0625e-06,
+          4.1249999999999995e-06,
+          4.1875e-06,
+          4.25e-06,
+          4.3125e-06,
+          4.375e-06,
+          4.4374999999999994e-06,
+          4.5e-06,
+          4.5625e-06,
+          4.625e-06,
+          4.6875e-06,
+          4.749999999999999e-06,
+          4.8125e-06,
+          4.875e-06,
+          4.9375e-06,
+          4.9999999999999996e-06,
+          5.062499999999999e-06,
+          5.125e-06,
+          5.1875e-06,
+          5.25e-06,
+          5.3124999999999995e-06,
+          5.374999999999999e-06,
+          5.4375e-06,
+          5.5e-06,
+          5.5625e-06,
+          5.6249999999999995e-06,
+          5.687499999999999e-06,
+          5.75e-06,
+          5.8125e-06,
+          5.875e-06,
+          5.9374999999999995e-06,
+          5.9999980000000005e-06,
+          6e-06,
+          6.000002e-06,
+          6.0625e-06,
+          6.125e-06,
+          6.1875e-06,
+          6.249998e-06,
+          6.2499999999999995e-06,
+          6.250001999999999e-06,
+          6.3125e-06,
+          6.375e-06,
+          6.4375e-06,
+          6.5e-06,
+          6.5624999999999994e-06,
+          6.625e-06,
+          6.6875e-06,
+          6.75e-06,
+          6.8124999999999996e-06,
+          6.874999999999999e-06,
+          6.9375e-06,
+          7e-06,
+          7.0625e-06,
+          7.1249999999999995e-06,
+          7.187499999999999e-06,
+          7.25e-06,
+          7.3125e-06,
+          7.375e-06,
+          7.4374999999999995e-06,
+          7.499999999999999e-06,
+          7.5625e-06,
+          7.625e-06,
+          7.687499999999999e-06,
+          7.75e-06,
+          7.8125e-06,
+          7.875e-06,
+          7.9375e-06,
+          8e-06,
+          8.0625e-06,
+          8.125e-06,
+          8.187499999999999e-06,
+          8.249997999999998e-06,
+          8.249999999999999e-06,
+          8.250002e-06,
+          8.3125e-06,
+          8.375e-06,
+          8.4375e-06,
+          8.5e-06,
+          8.5625e-06,
+          8.625e-06,
+          8.6875e-06,
+          8.75e-06,
+          8.812499999999999e-06,
+          8.874999999999999e-06,
+          8.9375e-06,
+          9e-06,
+          9.0625e-06,
+          9.125e-06,
+          9.1875e-06,
+          9.25e-06,
+          9.3125e-06,
+          9.375e-06,
+          9.437499999999999e-06,
+          9.499999999999999e-06,
+          9.5625e-06,
+          9.625e-06,
+          9.6875e-06,
+          9.75e-06,
+          9.8125e-06,
+          9.875e-06,
+          9.9375e-06,
+          9.999999999999999e-06
+        ],
+        "budgets_v": {
+          "y": 1e-06,
+          "z": 1e-06,
+          "q": 1e-07,
+          "n": 0,
+          "m": 0,
+          "s": 1e-06,
+          "h1": 1e-07,
+          "h2": 1e-07,
+          "h3": 1e-07
+        },
+        "phase_nodes": [
+          "n",
+          "m",
+          "q",
+          "s",
+          "h1",
+          "h2",
+          "h3"
+        ],
+        "event_windows_s": [
+          [
+            1.999999e-06,
+            2.0000009999999997e-06
+          ],
+          [
+            5.999999e-06,
+            6.000001e-06
+          ]
+        ],
+        "budget_scope": "Strict direct observed values; stamp measurement budgets are not nominal event displacement allowances. No engineering verdict inferred from this strict report."
+      },
+      "comparator_sha256": "9cbaa5b6d0bb7e825a9aae27f8fda41c74ec1480cbbdb0fe09334513b084227f",
+      "previous_report_sha256": "7fd44d424708afae3e74537afae65289407027ddf8dcc7d5f5e33758193ae73e",
+      "reanalysis_source_sha256": "fa86220d087df802d90fff7486535f3c461a70b7a0b954580d0ef0afc9098124"
+    },
+    {
+      "finite_pair_status": "F",
+      "phase_status": "F",
+      "formal_qualification": "I",
+      "native_rows": 322,
+      "paired_rows": 322,
+      "paired_values": 2898,
+      "unpaired_native_rows": 0,
+      "failed_values": 415,
+      "failed_inside_windows": 51,
+      "failed_outside_windows": 364,
+      "phase_failed_values": 415,
+      "worst": {
+        "y": {
+          "error_v": 9.893650682092918e-07,
+          "time_s": 2.2500040000000006e-06,
+          "evas_v": 4.000000000110415e-06,
+          "spectre_v": 4.989365068319707e-06
+        },
+        "z": {
+          "error_v": 9.969817112154278e-07,
+          "time_s": 2.096461740321779e-06,
+          "evas_v": 0.0964617403217789,
+          "spectre_v": 0.09646273730349011
+        },
+        "q": {
+          "error_v": 1.0,
+          "time_s": 1.999999010634932e-06,
+          "evas_v": 0.0,
+          "spectre_v": 1.0
+        },
+        "n": {
+          "error_v": 1.0,
+          "time_s": 1.999999010634932e-06,
+          "evas_v": 0.0,
+          "spectre_v": 1.0
+        },
+        "m": {
+          "error_v": 1.0,
+          "time_s": 5.999999321047451e-06,
+          "evas_v": 0.0,
+          "spectre_v": 1.0
+        },
+        "s": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        },
+        "h1": {
+          "error_v": 2.9999990106349324,
+          "time_s": 1.999999010634932e-06,
+          "evas_v": -1.0,
+          "spectre_v": 1.9999990106349324
+        },
+        "h2": {
+          "error_v": 6.999999321047452,
+          "time_s": 5.999999321047451e-06,
+          "evas_v": -1.0,
+          "spectre_v": 5.999999321047452
+        },
+        "h3": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        }
+      },
+      "coverage_gaps": [
+        "spectre: missing required observation times"
+      ],
+      "missing_required_times": {
+        "evas": [],
+        "spectre": [
+          2.5e-07,
+          2.4375e-06,
+          8.4375e-06
+        ]
+      },
+      "duplicate_times": {
+        "evas": [],
+        "spectre": []
+      },
+      "scope": "All native rows at identical parsed binary64 times; no interpolation. Formal source/export/continuous-time qualification is not established.",
+      "unpaired_native_values": 0,
+      "case": "M1-tol10",
+      "analysis": "analysis-cm-v1",
+      "spectre_batch": "reference-v1",
+      "evas_execution_status": "DIRECT_DIFFERENCE",
+      "independent_errors": null,
+      "source_case_sha256": "17529400fb5f114d79c563863ae9eaaf0ba666574ba894ac2ba9ce8b0d671e61",
+      "source_va_sha256": "3b4ca8fa5a16c39c9e54aaefef638f2e7e7784a6fddb8cbb5f01d76642b833d8",
+      "evas_identity": {
+        "head": "0ac8806d7463f00487f326b2eacc32e02a0c5aa3",
+        "kernel_sha256": "c35795bf13acf7b00455843db5a4a1c4a512fb2db6bea32f9221c5bf9b8d96ca",
+        "analyzer_sha256": "3f6df0c3737e400bc9645faad02ea0d5f56de4ee63303eb0c17b6349342df932",
+        "normalizer_sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8",
+        "input_manifests": {
+          "reference-v1/collected/spectre": "714f9ea4011f58ee022910e33bb1a049d7f381504d9f27c3b4cde501889014de"
+        },
+        "note": "Native decimal export qualification remains separate; no interpolation or case removal."
+      },
+      "identities": {
+        "contract": "13b3c089cee5c412200e78c6f486ab31ea106a739cd14e5d7d264dae398f64bb",
+        "evas": "4c62a5c4cb239ee2961d248781cecd93673a522b02cc14d80462c2bc16751ce8",
+        "spectre": "78c0435dce101240e9f66bef606b787ccd842371dee443d0119de7a7895a6c12"
+      },
+      "original_result_sha256": "8ac74e01ca5c60644f433e809c58953fa8c7c5019af4991868453dfd91efb615",
+      "contract": {
+        "stop": 9.999999999999999e-06,
+        "required_times": [
+          0.0,
+          6.25e-08,
+          1.25e-07,
+          1.875e-07,
+          2.5e-07,
+          3.1249999999999997e-07,
+          3.75e-07,
+          4.375e-07,
+          5e-07,
+          5.625e-07,
+          6.249999999999999e-07,
+          6.875e-07,
+          7.5e-07,
+          8.125e-07,
+          8.75e-07,
+          9.374999999999999e-07,
+          1e-06,
+          1.0625e-06,
+          1.125e-06,
+          1.1874999999999999e-06,
+          1.2499999999999999e-06,
+          1.3125e-06,
+          1.375e-06,
+          1.4375e-06,
+          1.5e-06,
+          1.5624999999999999e-06,
+          1.625e-06,
+          1.6875e-06,
+          1.75e-06,
+          1.8125e-06,
+          1.8749999999999998e-06,
+          1.9375e-06,
+          1.999998e-06,
+          2e-06,
+          2.000002e-06,
+          2.0624999999999997e-06,
+          2.125e-06,
+          2.1875e-06,
+          2.249998e-06,
+          2.25e-06,
+          2.250002e-06,
+          2.3125e-06,
+          2.3749999999999997e-06,
+          2.4375e-06,
+          2.4999999999999998e-06,
+          2.5625e-06,
+          2.625e-06,
+          2.6874999999999997e-06,
+          2.75e-06,
+          2.8124999999999998e-06,
+          2.875e-06,
+          2.9375e-06,
+          3e-06,
+          3.0625e-06,
+          3.1249999999999997e-06,
+          3.1875e-06,
+          3.2499979999999997e-06,
+          3.25e-06,
+          3.250002e-06,
+          3.3125e-06,
+          3.375e-06,
+          3.4374999999999997e-06,
+          3.5e-06,
+          3.5624999999999998e-06,
+          3.625e-06,
+          3.6875e-06,
+          3.7499999999999997e-06,
+          3.8125e-06,
+          3.875e-06,
+          3.9375e-06,
+          4e-06,
+          4.0625e-06,
+          4.1249999999999995e-06,
+          4.1875e-06,
+          4.25e-06,
+          4.3125e-06,
+          4.375e-06,
+          4.4374999999999994e-06,
+          4.5e-06,
+          4.5625e-06,
+          4.625e-06,
+          4.6875e-06,
+          4.749999999999999e-06,
+          4.8125e-06,
+          4.875e-06,
+          4.9375e-06,
+          4.9999999999999996e-06,
+          5.062499999999999e-06,
+          5.125e-06,
+          5.1875e-06,
+          5.25e-06,
+          5.3124999999999995e-06,
+          5.374999999999999e-06,
+          5.4375e-06,
+          5.5e-06,
+          5.5625e-06,
+          5.6249999999999995e-06,
+          5.687499999999999e-06,
+          5.75e-06,
+          5.8125e-06,
+          5.875e-06,
+          5.9374999999999995e-06,
+          5.9999980000000005e-06,
+          6e-06,
+          6.000002e-06,
+          6.0625e-06,
+          6.125e-06,
+          6.1875e-06,
+          6.249998e-06,
+          6.2499999999999995e-06,
+          6.250001999999999e-06,
+          6.3125e-06,
+          6.375e-06,
+          6.4375e-06,
+          6.5e-06,
+          6.5624999999999994e-06,
+          6.625e-06,
+          6.6875e-06,
+          6.75e-06,
+          6.8124999999999996e-06,
+          6.874999999999999e-06,
+          6.9375e-06,
+          7e-06,
+          7.0625e-06,
+          7.1249999999999995e-06,
+          7.187499999999999e-06,
+          7.25e-06,
+          7.3125e-06,
+          7.375e-06,
+          7.4374999999999995e-06,
+          7.499999999999999e-06,
+          7.5625e-06,
+          7.625e-06,
+          7.687499999999999e-06,
+          7.75e-06,
+          7.8125e-06,
+          7.875e-06,
+          7.9375e-06,
+          8e-06,
+          8.0625e-06,
+          8.125e-06,
+          8.187499999999999e-06,
+          8.249997999999998e-06,
+          8.249999999999999e-06,
+          8.250002e-06,
+          8.3125e-06,
+          8.375e-06,
+          8.4375e-06,
+          8.5e-06,
+          8.5625e-06,
+          8.625e-06,
+          8.6875e-06,
+          8.75e-06,
+          8.812499999999999e-06,
+          8.874999999999999e-06,
+          8.9375e-06,
+          9e-06,
+          9.0625e-06,
+          9.125e-06,
+          9.1875e-06,
+          9.25e-06,
+          9.3125e-06,
+          9.375e-06,
+          9.437499999999999e-06,
+          9.499999999999999e-06,
+          9.5625e-06,
+          9.625e-06,
+          9.6875e-06,
+          9.75e-06,
+          9.8125e-06,
+          9.875e-06,
+          9.9375e-06,
+          9.999999999999999e-06
+        ],
+        "budgets_v": {
+          "y": 1e-06,
+          "z": 1e-06,
+          "q": 1e-07,
+          "n": 0,
+          "m": 0,
+          "s": 1e-06,
+          "h1": 1e-07,
+          "h2": 1e-07,
+          "h3": 1e-07
+        },
+        "phase_nodes": [
+          "n",
+          "m",
+          "q",
+          "s",
+          "h1",
+          "h2",
+          "h3"
+        ],
+        "event_windows_s": [
+          [
+            1.999999e-06,
+            2.0000009999999997e-06
+          ],
+          [
+            5.999999e-06,
+            6.000001e-06
+          ]
+        ],
+        "budget_scope": "Strict direct observed values; stamp measurement budgets are not nominal event displacement allowances. No engineering verdict inferred from this strict report."
+      },
+      "comparator_sha256": "9cbaa5b6d0bb7e825a9aae27f8fda41c74ec1480cbbdb0fe09334513b084227f",
+      "previous_report_sha256": "0dabc0f513493ed2bee5ebcde4ba4bc348b774ddc5ab5c1d97284ef749cd7563",
+      "reanalysis_source_sha256": "fa86220d087df802d90fff7486535f3c461a70b7a0b954580d0ef0afc9098124"
+    },
+    {
+      "finite_pair_status": "F",
+      "phase_status": "F",
+      "formal_qualification": "I",
+      "native_rows": 324,
+      "paired_rows": 324,
+      "paired_values": 2916,
+      "unpaired_native_rows": 0,
+      "failed_values": 433,
+      "failed_inside_windows": 75,
+      "failed_outside_windows": 358,
+      "phase_failed_values": 433,
+      "worst": {
+        "y": {
+          "error_v": 9.955045570109178e-07,
+          "time_s": 2.8124999999999998e-06,
+          "evas_v": 0.5624999999999992,
+          "spectre_v": 0.5625009955045562
+        },
+        "z": {
+          "error_v": 9.98699723156471e-07,
+          "time_s": 2.09375e-06,
+          "evas_v": 0.09375000000000017,
+          "spectre_v": 0.09375099869972332
+        },
+        "q": {
+          "error_v": 1.0,
+          "time_s": 1.9999990044954437e-06,
+          "evas_v": 0.0,
+          "spectre_v": 1.0
+        },
+        "n": {
+          "error_v": 1.0,
+          "time_s": 1.9999990044954437e-06,
+          "evas_v": 0.0,
+          "spectre_v": 1.0
+        },
+        "m": {
+          "error_v": 1.0,
+          "time_s": 5.99999900811678e-06,
+          "evas_v": 0.0,
+          "spectre_v": 1.0
+        },
+        "s": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        },
+        "h1": {
+          "error_v": 2.999999004495444,
+          "time_s": 1.9999990044954437e-06,
+          "evas_v": -1.0,
+          "spectre_v": 1.9999990044954439
+        },
+        "h2": {
+          "error_v": 6.999999008116781,
+          "time_s": 5.99999900811678e-06,
+          "evas_v": -1.0,
+          "spectre_v": 5.999999008116781
+        },
+        "h3": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        }
+      },
+      "coverage_gaps": [
+        "spectre: missing required observation times"
+      ],
+      "missing_required_times": {
+        "evas": [],
+        "spectre": [
+          2.5e-07,
+          2.4375e-06,
+          8.4375e-06
+        ]
+      },
+      "duplicate_times": {
+        "evas": [],
+        "spectre": []
+      },
+      "scope": "All native rows at identical parsed binary64 times; no interpolation. Formal source/export/continuous-time qualification is not established.",
+      "unpaired_native_values": 0,
+      "case": "M1-tol100",
+      "analysis": "analysis-cm-v1",
+      "spectre_batch": "reference-v1",
+      "evas_execution_status": "DIRECT_DIFFERENCE",
+      "independent_errors": null,
+      "source_case_sha256": "0fe3c0f06d3bb8e5212f63b56dc14c347fdb2a68b0b29294d9de3baf78f52b7d",
+      "source_va_sha256": "3b4ca8fa5a16c39c9e54aaefef638f2e7e7784a6fddb8cbb5f01d76642b833d8",
+      "evas_identity": {
+        "head": "0ac8806d7463f00487f326b2eacc32e02a0c5aa3",
+        "kernel_sha256": "c35795bf13acf7b00455843db5a4a1c4a512fb2db6bea32f9221c5bf9b8d96ca",
+        "analyzer_sha256": "3f6df0c3737e400bc9645faad02ea0d5f56de4ee63303eb0c17b6349342df932",
+        "normalizer_sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8",
+        "input_manifests": {
+          "reference-v1/collected/spectre": "714f9ea4011f58ee022910e33bb1a049d7f381504d9f27c3b4cde501889014de"
+        },
+        "note": "Native decimal export qualification remains separate; no interpolation or case removal."
+      },
+      "identities": {
+        "contract": "13b3c089cee5c412200e78c6f486ab31ea106a739cd14e5d7d264dae398f64bb",
+        "evas": "9d554228f628d611a0ff0e6147ea489b3a0f91ed989eb49b00c6681af3857091",
+        "spectre": "79ec2a92d1c3171843bd759f779214934cee60e7fb7cc294cb05c446644e90b2"
+      },
+      "original_result_sha256": "9e73ed84bf41bf288caa81406ec37b484586da0b3adc23ab13afbc4240766f6e",
+      "contract": {
+        "stop": 9.999999999999999e-06,
+        "required_times": [
+          0.0,
+          6.25e-08,
+          1.25e-07,
+          1.875e-07,
+          2.5e-07,
+          3.1249999999999997e-07,
+          3.75e-07,
+          4.375e-07,
+          5e-07,
+          5.625e-07,
+          6.249999999999999e-07,
+          6.875e-07,
+          7.5e-07,
+          8.125e-07,
+          8.75e-07,
+          9.374999999999999e-07,
+          1e-06,
+          1.0625e-06,
+          1.125e-06,
+          1.1874999999999999e-06,
+          1.2499999999999999e-06,
+          1.3125e-06,
+          1.375e-06,
+          1.4375e-06,
+          1.5e-06,
+          1.5624999999999999e-06,
+          1.625e-06,
+          1.6875e-06,
+          1.75e-06,
+          1.8125e-06,
+          1.8749999999999998e-06,
+          1.9375e-06,
+          1.999998e-06,
+          2e-06,
+          2.000002e-06,
+          2.0624999999999997e-06,
+          2.125e-06,
+          2.1875e-06,
+          2.249998e-06,
+          2.25e-06,
+          2.250002e-06,
+          2.3125e-06,
+          2.3749999999999997e-06,
+          2.4375e-06,
+          2.4999999999999998e-06,
+          2.5625e-06,
+          2.625e-06,
+          2.6874999999999997e-06,
+          2.75e-06,
+          2.8124999999999998e-06,
+          2.875e-06,
+          2.9375e-06,
+          3e-06,
+          3.0625e-06,
+          3.1249999999999997e-06,
+          3.1875e-06,
+          3.2499979999999997e-06,
+          3.25e-06,
+          3.250002e-06,
+          3.3125e-06,
+          3.375e-06,
+          3.4374999999999997e-06,
+          3.5e-06,
+          3.5624999999999998e-06,
+          3.625e-06,
+          3.6875e-06,
+          3.7499999999999997e-06,
+          3.8125e-06,
+          3.875e-06,
+          3.9375e-06,
+          4e-06,
+          4.0625e-06,
+          4.1249999999999995e-06,
+          4.1875e-06,
+          4.25e-06,
+          4.3125e-06,
+          4.375e-06,
+          4.4374999999999994e-06,
+          4.5e-06,
+          4.5625e-06,
+          4.625e-06,
+          4.6875e-06,
+          4.749999999999999e-06,
+          4.8125e-06,
+          4.875e-06,
+          4.9375e-06,
+          4.9999999999999996e-06,
+          5.062499999999999e-06,
+          5.125e-06,
+          5.1875e-06,
+          5.25e-06,
+          5.3124999999999995e-06,
+          5.374999999999999e-06,
+          5.4375e-06,
+          5.5e-06,
+          5.5625e-06,
+          5.6249999999999995e-06,
+          5.687499999999999e-06,
+          5.75e-06,
+          5.8125e-06,
+          5.875e-06,
+          5.9374999999999995e-06,
+          5.9999980000000005e-06,
+          6e-06,
+          6.000002e-06,
+          6.0625e-06,
+          6.125e-06,
+          6.1875e-06,
+          6.249998e-06,
+          6.2499999999999995e-06,
+          6.250001999999999e-06,
+          6.3125e-06,
+          6.375e-06,
+          6.4375e-06,
+          6.5e-06,
+          6.5624999999999994e-06,
+          6.625e-06,
+          6.6875e-06,
+          6.75e-06,
+          6.8124999999999996e-06,
+          6.874999999999999e-06,
+          6.9375e-06,
+          7e-06,
+          7.0625e-06,
+          7.1249999999999995e-06,
+          7.187499999999999e-06,
+          7.25e-06,
+          7.3125e-06,
+          7.375e-06,
+          7.4374999999999995e-06,
+          7.499999999999999e-06,
+          7.5625e-06,
+          7.625e-06,
+          7.687499999999999e-06,
+          7.75e-06,
+          7.8125e-06,
+          7.875e-06,
+          7.9375e-06,
+          8e-06,
+          8.0625e-06,
+          8.125e-06,
+          8.187499999999999e-06,
+          8.249997999999998e-06,
+          8.249999999999999e-06,
+          8.250002e-06,
+          8.3125e-06,
+          8.375e-06,
+          8.4375e-06,
+          8.5e-06,
+          8.5625e-06,
+          8.625e-06,
+          8.6875e-06,
+          8.75e-06,
+          8.812499999999999e-06,
+          8.874999999999999e-06,
+          8.9375e-06,
+          9e-06,
+          9.0625e-06,
+          9.125e-06,
+          9.1875e-06,
+          9.25e-06,
+          9.3125e-06,
+          9.375e-06,
+          9.437499999999999e-06,
+          9.499999999999999e-06,
+          9.5625e-06,
+          9.625e-06,
+          9.6875e-06,
+          9.75e-06,
+          9.8125e-06,
+          9.875e-06,
+          9.9375e-06,
+          9.999999999999999e-06
+        ],
+        "budgets_v": {
+          "y": 1e-06,
+          "z": 1e-06,
+          "q": 1e-07,
+          "n": 0,
+          "m": 0,
+          "s": 1e-06,
+          "h1": 1e-07,
+          "h2": 1e-07,
+          "h3": 1e-07
+        },
+        "phase_nodes": [
+          "n",
+          "m",
+          "q",
+          "s",
+          "h1",
+          "h2",
+          "h3"
+        ],
+        "event_windows_s": [
+          [
+            1.999999e-06,
+            2.0000009999999997e-06
+          ],
+          [
+            5.999999e-06,
+            6.000001e-06
+          ]
+        ],
+        "budget_scope": "Strict direct observed values; stamp measurement budgets are not nominal event displacement allowances. No engineering verdict inferred from this strict report."
+      },
+      "comparator_sha256": "9cbaa5b6d0bb7e825a9aae27f8fda41c74ec1480cbbdb0fe09334513b084227f",
+      "previous_report_sha256": "c6d063d92b1bd626d40389eb5bbc963db0eac02ef0a663ebbb86ebdf450f5bec",
+      "reanalysis_source_sha256": "fa86220d087df802d90fff7486535f3c461a70b7a0b954580d0ef0afc9098124"
+    },
+    {
+      "finite_pair_status": "F",
+      "phase_status": "P",
+      "formal_qualification": "I",
+      "native_rows": 94,
+      "paired_rows": 94,
+      "paired_values": 376,
+      "unpaired_native_rows": 0,
+      "failed_values": 279,
+      "failed_inside_windows": 0,
+      "failed_outside_windows": 279,
+      "phase_failed_values": 0,
+      "worst": {
+        "z": {
+          "error_v": 1.5965518884386576e-05,
+          "time_s": 0.49999999,
+          "evas_v": 0.6666666711111111,
+          "spectre_v": 0.6666507055922267
+        },
+        "low": {
+          "error_v": 1.596551888435882e-05,
+          "time_s": 0.49999999,
+          "evas_v": 0.1666666711111111,
+          "spectre_v": 0.16665070559222675
+        },
+        "amp": {
+          "error_v": 0.15965518884354424,
+          "time_s": 0.49999999,
+          "evas_v": 1666.666711111111,
+          "spectre_v": 1666.5070559222675
+        },
+        "count": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        }
+      },
+      "coverage_gaps": [],
+      "missing_required_times": {
+        "evas": [],
+        "spectre": []
+      },
+      "duplicate_times": {
+        "evas": [],
+        "spectre": []
+      },
+      "scope": "All native rows at identical parsed binary64 times; no interpolation. Formal source/export/continuous-time qualification is not established.",
+      "unpaired_native_values": 0,
+      "case": "D1-base",
+      "analysis": "analysis-d-v2",
+      "spectre_batch": "reference-v2",
+      "evas_execution_status": "DIRECT_DIFFERENCE",
+      "independent_errors": {
+        "evas": {
+          "z": 6.668739634581774e-15,
+          "low": 6.668739634581774e-15,
+          "amp": 6.669627813001473e-11,
+          "count": 0.0
+        },
+        "spectre": {
+          "z": 1.5965518884416205e-05,
+          "low": 1.596551888438845e-05,
+          "amp": 0.15965518884392935,
+          "count": 0.0
+        }
+      },
+      "source_case_sha256": "a968ec9e7af1fd29255a4963ddc73ce9ca5a48e878a8797f09ae98b847d388a9",
+      "source_va_sha256": "7be49bbf243a3c2652c32b7aaf7b80895be34ad2e9648f3fd797a30e633f6556",
+      "evas_identity": {
+        "head": "0ac8806d7463f00487f326b2eacc32e02a0c5aa3",
+        "kernel_sha256": "c35795bf13acf7b00455843db5a4a1c4a512fb2db6bea32f9221c5bf9b8d96ca",
+        "analyzer_sha256": "3f6df0c3737e400bc9645faad02ea0d5f56de4ee63303eb0c17b6349342df932",
+        "normalizer_sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8",
+        "input_manifests": {
+          "reference-v2/collected/spectre": "a36f134f373757a1be5aae68ad3f45b3607de9ea6378829bed98f48e7f19407b"
+        },
+        "note": "Native decimal export qualification remains separate; no interpolation or case removal."
+      },
+      "identities": {
+        "contract": "a578724cd1391fcd3b5c0f9c7cec585b3ec4798b4d908d4fc5f018994cc5f4f5",
+        "evas": "19db8a73123dd834a614f2dced8d2001efef21dfa4bebf808f482a0edaa32180",
+        "spectre": "af1af8e5507070d448c5fee21b7e28563a41764f9364976d9c4792a3991c7386"
+      },
+      "original_result_sha256": "b5b09326899c50a25e99c35ae4bccb706708f13016f478346e4d266ff312a4d8",
+      "contract": {
+        "stop": 1.0,
+        "required_times": [
+          0.0,
+          0.015625,
+          0.03125,
+          0.046875,
+          0.0625,
+          0.078125,
+          0.09375,
+          0.109375,
+          0.125,
+          0.140625,
+          0.15625,
+          0.171875,
+          0.1875,
+          0.203125,
+          0.21875,
+          0.234375,
+          0.25,
+          0.265625,
+          0.28125,
+          0.296875,
+          0.3125,
+          0.328125,
+          0.34375,
+          0.359375,
+          0.375,
+          0.390625,
+          0.40625,
+          0.421875,
+          0.4375,
+          0.453125,
+          0.46875,
+          0.484375,
+          0.49999999,
+          0.5,
+          0.50000001,
+          0.515625,
+          0.53125,
+          0.546875,
+          0.5625,
+          0.578125,
+          0.59375,
+          0.609375,
+          0.625,
+          0.640625,
+          0.65625,
+          0.671875,
+          0.6875,
+          0.703125,
+          0.71875,
+          0.734375,
+          0.75,
+          0.765625,
+          0.78125,
+          0.796875,
+          0.8125,
+          0.828125,
+          0.84375,
+          0.859375,
+          0.875,
+          0.890625,
+          0.90625,
+          0.921875,
+          0.9375,
+          0.953125,
+          0.96875,
+          0.984375,
+          1.0
+        ],
+        "budgets_v": {
+          "z": 1e-07,
+          "low": 1e-07,
+          "amp": 0.001,
+          "count": 0
+        },
+        "phase_nodes": [
+          "count"
+        ],
+        "event_windows_s": [],
+        "budget_scope": "Strict direct observed values; stamp measurement budgets are not nominal event displacement allowances. No engineering verdict inferred from this strict report."
+      },
+      "comparator_sha256": "9cbaa5b6d0bb7e825a9aae27f8fda41c74ec1480cbbdb0fe09334513b084227f",
+      "previous_report_sha256": "612ec71226ac0fd3fb8b1ea074eb4a931208c8c0301f347175288109731c330c",
+      "reanalysis_source_sha256": "fa86220d087df802d90fff7486535f3c461a70b7a0b954580d0ef0afc9098124"
+    },
+    {
+      "finite_pair_status": "F",
+      "phase_status": "P",
+      "formal_qualification": "I",
+      "native_rows": 398,
+      "paired_rows": 398,
+      "paired_values": 1592,
+      "unpaired_native_rows": 0,
+      "failed_values": 1143,
+      "failed_inside_windows": 0,
+      "failed_outside_windows": 1143,
+      "phase_failed_values": 0,
+      "worst": {
+        "z": {
+          "error_v": 7.414812880357502e-07,
+          "time_s": 0.4945618504176265,
+          "evas_v": 0.6690924164299854,
+          "spectre_v": 0.6690916749486974
+        },
+        "low": {
+          "error_v": 7.414812880357502e-07,
+          "time_s": 0.4945618504176265,
+          "evas_v": 0.1690924164299854,
+          "spectre_v": 0.16909167494869737
+        },
+        "amp": {
+          "error_v": 0.0074148128803699365,
+          "time_s": 0.4945618504176265,
+          "evas_v": 1690.924164299854,
+          "spectre_v": 1690.9167494869737
+        },
+        "count": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        }
+      },
+      "coverage_gaps": [],
+      "missing_required_times": {
+        "evas": [],
+        "spectre": []
+      },
+      "duplicate_times": {
+        "evas": [],
+        "spectre": []
+      },
+      "scope": "All native rows at identical parsed binary64 times; no interpolation. Formal source/export/continuous-time qualification is not established.",
+      "unpaired_native_values": 0,
+      "case": "D1-tol1000",
+      "analysis": "analysis-d-v2",
+      "spectre_batch": "reference-v2",
+      "evas_execution_status": "DIRECT_DIFFERENCE",
+      "independent_errors": {
+        "evas": {
+          "z": 8.570698296881452e-17,
+          "low": 8.570698296881452e-17,
+          "amp": 1.0991972040770187e-12,
+          "count": 0.0
+        },
+        "spectre": {
+          "z": 7.414812879594979e-07,
+          "low": 7.414812879594979e-07,
+          "amp": 0.007414812879589649,
+          "count": 0.0
+        }
+      },
+      "source_case_sha256": "2e30b8970a3a6d49e5e2b4030c5362a746dc9ad057b2be06dccf8795ec41fc0c",
+      "source_va_sha256": "7be49bbf243a3c2652c32b7aaf7b80895be34ad2e9648f3fd797a30e633f6556",
+      "evas_identity": {
+        "head": "0ac8806d7463f00487f326b2eacc32e02a0c5aa3",
+        "kernel_sha256": "c35795bf13acf7b00455843db5a4a1c4a512fb2db6bea32f9221c5bf9b8d96ca",
+        "analyzer_sha256": "3f6df0c3737e400bc9645faad02ea0d5f56de4ee63303eb0c17b6349342df932",
+        "normalizer_sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8",
+        "input_manifests": {
+          "reference-v2/collected/spectre": "a36f134f373757a1be5aae68ad3f45b3607de9ea6378829bed98f48e7f19407b"
+        },
+        "note": "Native decimal export qualification remains separate; no interpolation or case removal."
+      },
+      "identities": {
+        "contract": "a578724cd1391fcd3b5c0f9c7cec585b3ec4798b4d908d4fc5f018994cc5f4f5",
+        "evas": "6272ab66c166815021dd05690e10605adf91b1a9d6763d008da0b2bc6b6429eb",
+        "spectre": "9359d2c11a29d2d34fe0046b121ab9cb8257f10bcce10f140a2d9b9e9b8f6da9"
+      },
+      "original_result_sha256": "0a9293b1b17d5f4817774ebd7b9b2c1fd43e08a2bdbb7fd89eed3b8c726d1c99",
+      "contract": {
+        "stop": 1.0,
+        "required_times": [
+          0.0,
+          0.015625,
+          0.03125,
+          0.046875,
+          0.0625,
+          0.078125,
+          0.09375,
+          0.109375,
+          0.125,
+          0.140625,
+          0.15625,
+          0.171875,
+          0.1875,
+          0.203125,
+          0.21875,
+          0.234375,
+          0.25,
+          0.265625,
+          0.28125,
+          0.296875,
+          0.3125,
+          0.328125,
+          0.34375,
+          0.359375,
+          0.375,
+          0.390625,
+          0.40625,
+          0.421875,
+          0.4375,
+          0.453125,
+          0.46875,
+          0.484375,
+          0.49999999,
+          0.5,
+          0.50000001,
+          0.515625,
+          0.53125,
+          0.546875,
+          0.5625,
+          0.578125,
+          0.59375,
+          0.609375,
+          0.625,
+          0.640625,
+          0.65625,
+          0.671875,
+          0.6875,
+          0.703125,
+          0.71875,
+          0.734375,
+          0.75,
+          0.765625,
+          0.78125,
+          0.796875,
+          0.8125,
+          0.828125,
+          0.84375,
+          0.859375,
+          0.875,
+          0.890625,
+          0.90625,
+          0.921875,
+          0.9375,
+          0.953125,
+          0.96875,
+          0.984375,
+          1.0
+        ],
+        "budgets_v": {
+          "z": 1e-07,
+          "low": 1e-07,
+          "amp": 0.001,
+          "count": 0
+        },
+        "phase_nodes": [
+          "count"
+        ],
+        "event_windows_s": [],
+        "budget_scope": "Strict direct observed values; stamp measurement budgets are not nominal event displacement allowances. No engineering verdict inferred from this strict report."
+      },
+      "comparator_sha256": "9cbaa5b6d0bb7e825a9aae27f8fda41c74ec1480cbbdb0fe09334513b084227f",
+      "previous_report_sha256": "aa460a9c6634aada3a1d533358e0c6e2faa903ec5e8a85b5f59cc3743d8fcdfc",
+      "reanalysis_source_sha256": "fa86220d087df802d90fff7486535f3c461a70b7a0b954580d0ef0afc9098124"
+    },
+    {
+      "finite_pair_status": "I",
+      "phase_status": "I",
+      "formal_qualification": "I",
+      "native_rows": 1731,
+      "paired_rows": 0,
+      "paired_values": 0,
+      "unpaired_native_rows": 1731,
+      "failed_values": 0,
+      "failed_inside_windows": 0,
+      "failed_outside_windows": 0,
+      "phase_failed_values": 0,
+      "worst": {
+        "z": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        },
+        "low": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        },
+        "amp": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        },
+        "count": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        }
+      },
+      "coverage_gaps": [
+        "evas: no successful observations",
+        "evas: missing required observation times",
+        "evas: missing exact parsed start/stop",
+        "unpaired native rows remain in the comparison denominator"
+      ],
+      "missing_required_times": {
+        "evas": [
+          0.0,
+          0.015625,
+          0.03125,
+          0.046875,
+          0.0625,
+          0.078125,
+          0.09375,
+          0.109375,
+          0.125,
+          0.140625,
+          0.15625,
+          0.171875,
+          0.1875,
+          0.203125,
+          0.21875,
+          0.234375,
+          0.25,
+          0.265625,
+          0.28125,
+          0.296875,
+          0.3125,
+          0.328125,
+          0.34375,
+          0.359375,
+          0.375,
+          0.390625,
+          0.40625,
+          0.421875,
+          0.4375,
+          0.453125,
+          0.46875,
+          0.484375,
+          0.49999999,
+          0.5,
+          0.50000001,
+          0.515625,
+          0.53125,
+          0.546875,
+          0.5625,
+          0.578125,
+          0.59375,
+          0.609375,
+          0.625,
+          0.640625,
+          0.65625,
+          0.671875,
+          0.6875,
+          0.703125,
+          0.71875,
+          0.734375,
+          0.75,
+          0.765625,
+          0.78125,
+          0.796875,
+          0.8125,
+          0.828125,
+          0.84375,
+          0.859375,
+          0.875,
+          0.890625,
+          0.90625,
+          0.921875,
+          0.9375,
+          0.953125,
+          0.96875,
+          0.984375,
+          1.0
+        ],
+        "spectre": []
+      },
+      "duplicate_times": {
+        "evas": [],
+        "spectre": []
+      },
+      "scope": "All native rows at identical parsed binary64 times; no interpolation. Formal source/export/continuous-time qualification is not established.",
+      "unpaired_native_values": 6924,
+      "case": "D1-tol100000",
+      "analysis": "analysis-d-v2",
+      "spectre_batch": "reference-v2",
+      "evas_execution_status": "EVAS_REFUSED",
+      "independent_errors": null,
+      "source_case_sha256": "1333a857ddc83e1513e6dcf1bc2e3ce54ddfe664e814392cb665459b117fb5c8",
+      "source_va_sha256": "7be49bbf243a3c2652c32b7aaf7b80895be34ad2e9648f3fd797a30e633f6556",
+      "evas_identity": {
+        "head": "0ac8806d7463f00487f326b2eacc32e02a0c5aa3",
+        "kernel_sha256": "c35795bf13acf7b00455843db5a4a1c4a512fb2db6bea32f9221c5bf9b8d96ca",
+        "analyzer_sha256": "3f6df0c3737e400bc9645faad02ea0d5f56de4ee63303eb0c17b6349342df932",
+        "normalizer_sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8",
+        "input_manifests": {
+          "reference-v2/collected/spectre": "a36f134f373757a1be5aae68ad3f45b3607de9ea6378829bed98f48e7f19407b"
+        },
+        "note": "Native decimal export qualification remains separate; no interpolation or case removal."
+      },
+      "identities": {
+        "contract": "a578724cd1391fcd3b5c0f9c7cec585b3ec4798b4d908d4fc5f018994cc5f4f5",
+        "evas": "7a0019d4fff4d3f3aaff1f91c482fb2a5ecccac64e4a005598134ba13fc50862",
+        "spectre": "615c369c2b0c3f025e287938b64271a57925836998c3fbcc59d9a0b82f9263bb"
+      },
+      "original_result_sha256": "352daf6a44e2dc40d5476349373f97ae95f80e2108878d5175f9179aeb469597",
+      "contract": {
+        "stop": 1.0,
+        "required_times": [
+          0.0,
+          0.015625,
+          0.03125,
+          0.046875,
+          0.0625,
+          0.078125,
+          0.09375,
+          0.109375,
+          0.125,
+          0.140625,
+          0.15625,
+          0.171875,
+          0.1875,
+          0.203125,
+          0.21875,
+          0.234375,
+          0.25,
+          0.265625,
+          0.28125,
+          0.296875,
+          0.3125,
+          0.328125,
+          0.34375,
+          0.359375,
+          0.375,
+          0.390625,
+          0.40625,
+          0.421875,
+          0.4375,
+          0.453125,
+          0.46875,
+          0.484375,
+          0.49999999,
+          0.5,
+          0.50000001,
+          0.515625,
+          0.53125,
+          0.546875,
+          0.5625,
+          0.578125,
+          0.59375,
+          0.609375,
+          0.625,
+          0.640625,
+          0.65625,
+          0.671875,
+          0.6875,
+          0.703125,
+          0.71875,
+          0.734375,
+          0.75,
+          0.765625,
+          0.78125,
+          0.796875,
+          0.8125,
+          0.828125,
+          0.84375,
+          0.859375,
+          0.875,
+          0.890625,
+          0.90625,
+          0.921875,
+          0.9375,
+          0.953125,
+          0.96875,
+          0.984375,
+          1.0
+        ],
+        "budgets_v": {
+          "z": 1e-07,
+          "low": 1e-07,
+          "amp": 0.001,
+          "count": 0
+        },
+        "phase_nodes": [
+          "count"
+        ],
+        "event_windows_s": [],
+        "budget_scope": "Strict direct observed values; stamp measurement budgets are not nominal event displacement allowances. No engineering verdict inferred from this strict report."
+      },
+      "comparator_sha256": "9cbaa5b6d0bb7e825a9aae27f8fda41c74ec1480cbbdb0fe09334513b084227f",
+      "previous_report_sha256": "5a1833d638b8143d29a30bd4250e451087868cedc834cfdd3053cd85d09f5896",
+      "reanalysis_source_sha256": "fa86220d087df802d90fff7486535f3c461a70b7a0b954580d0ef0afc9098124"
+    },
+    {
+      "finite_pair_status": "F",
+      "phase_status": "P",
+      "formal_qualification": "I",
+      "native_rows": 94,
+      "paired_rows": 94,
+      "paired_values": 376,
+      "unpaired_native_rows": 0,
+      "failed_values": 279,
+      "failed_inside_windows": 0,
+      "failed_outside_windows": 279,
+      "phase_failed_values": 0,
+      "worst": {
+        "z": {
+          "error_v": 1.5965518884386576e-05,
+          "time_s": 0.49999999,
+          "evas_v": 0.6666666711111111,
+          "spectre_v": 0.6666507055922267
+        },
+        "low": {
+          "error_v": 1.596551888435882e-05,
+          "time_s": 0.49999999,
+          "evas_v": 0.1666666711111111,
+          "spectre_v": 0.16665070559222675
+        },
+        "amp": {
+          "error_v": 0.15965518884354424,
+          "time_s": 0.49999999,
+          "evas_v": 1666.666711111111,
+          "spectre_v": 1666.5070559222675
+        },
+        "count": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        }
+      },
+      "coverage_gaps": [],
+      "missing_required_times": {
+        "evas": [],
+        "spectre": []
+      },
+      "duplicate_times": {
+        "evas": [],
+        "spectre": []
+      },
+      "scope": "All native rows at identical parsed binary64 times; no interpolation. Formal source/export/continuous-time qualification is not established.",
+      "unpaired_native_values": 0,
+      "case": "D1-step8",
+      "analysis": "analysis-d-v2",
+      "spectre_batch": "reference-v2",
+      "evas_execution_status": "DIRECT_DIFFERENCE",
+      "independent_errors": {
+        "evas": {
+          "z": 7.401486830834377e-17,
+          "low": 7.401486830834377e-17,
+          "amp": 8.845770387106562e-13,
+          "count": 0.0
+        },
+        "spectre": {
+          "z": 1.5965518884416205e-05,
+          "low": 1.596551888438845e-05,
+          "amp": 0.15965518884392935,
+          "count": 0.0
+        }
+      },
+      "source_case_sha256": "a115a05b3ca9fe884de2f5c93f58b36b76ba0833a9c36cdaae55a47365fac1bb",
+      "source_va_sha256": "7be49bbf243a3c2652c32b7aaf7b80895be34ad2e9648f3fd797a30e633f6556",
+      "evas_identity": {
+        "head": "0ac8806d7463f00487f326b2eacc32e02a0c5aa3",
+        "kernel_sha256": "c35795bf13acf7b00455843db5a4a1c4a512fb2db6bea32f9221c5bf9b8d96ca",
+        "analyzer_sha256": "3f6df0c3737e400bc9645faad02ea0d5f56de4ee63303eb0c17b6349342df932",
+        "normalizer_sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8",
+        "input_manifests": {
+          "reference-v2/collected/spectre": "a36f134f373757a1be5aae68ad3f45b3607de9ea6378829bed98f48e7f19407b"
+        },
+        "note": "Native decimal export qualification remains separate; no interpolation or case removal."
+      },
+      "identities": {
+        "contract": "a578724cd1391fcd3b5c0f9c7cec585b3ec4798b4d908d4fc5f018994cc5f4f5",
+        "evas": "14922c2ddac7cbc8af3fb63ec19732d408016a67811984c23a3d6ee0c6edf28e",
+        "spectre": "0fc4335ba877c7d0c87d739c907e7f6cc14c5cab07b4cd2df0e76781276b1ed3"
+      },
+      "original_result_sha256": "cc5c49e4c65a150177b0b0b0fd6a883923a81ce1e01a968ac7518e3a73503fd3",
+      "contract": {
+        "stop": 1.0,
+        "required_times": [
+          0.0,
+          0.015625,
+          0.03125,
+          0.046875,
+          0.0625,
+          0.078125,
+          0.09375,
+          0.109375,
+          0.125,
+          0.140625,
+          0.15625,
+          0.171875,
+          0.1875,
+          0.203125,
+          0.21875,
+          0.234375,
+          0.25,
+          0.265625,
+          0.28125,
+          0.296875,
+          0.3125,
+          0.328125,
+          0.34375,
+          0.359375,
+          0.375,
+          0.390625,
+          0.40625,
+          0.421875,
+          0.4375,
+          0.453125,
+          0.46875,
+          0.484375,
+          0.49999999,
+          0.5,
+          0.50000001,
+          0.515625,
+          0.53125,
+          0.546875,
+          0.5625,
+          0.578125,
+          0.59375,
+          0.609375,
+          0.625,
+          0.640625,
+          0.65625,
+          0.671875,
+          0.6875,
+          0.703125,
+          0.71875,
+          0.734375,
+          0.75,
+          0.765625,
+          0.78125,
+          0.796875,
+          0.8125,
+          0.828125,
+          0.84375,
+          0.859375,
+          0.875,
+          0.890625,
+          0.90625,
+          0.921875,
+          0.9375,
+          0.953125,
+          0.96875,
+          0.984375,
+          1.0
+        ],
+        "budgets_v": {
+          "z": 1e-07,
+          "low": 1e-07,
+          "amp": 0.001,
+          "count": 0
+        },
+        "phase_nodes": [
+          "count"
+        ],
+        "event_windows_s": [],
+        "budget_scope": "Strict direct observed values; stamp measurement budgets are not nominal event displacement allowances. No engineering verdict inferred from this strict report."
+      },
+      "comparator_sha256": "9cbaa5b6d0bb7e825a9aae27f8fda41c74ec1480cbbdb0fe09334513b084227f",
+      "previous_report_sha256": "5f58a445353fb9f8d78c3280c9e5527c0a9e6f656cb86053c0a293cb0e32272a",
+      "reanalysis_source_sha256": "fa86220d087df802d90fff7486535f3c461a70b7a0b954580d0ef0afc9098124"
+    },
+    {
+      "finite_pair_status": "F",
+      "phase_status": "P",
+      "formal_qualification": "I",
+      "native_rows": 102,
+      "paired_rows": 102,
+      "paired_values": 408,
+      "unpaired_native_rows": 0,
+      "failed_values": 303,
+      "failed_inside_windows": 3,
+      "failed_outside_windows": 300,
+      "phase_failed_values": 0,
+      "worst": {
+        "z": {
+          "error_v": 2.5639970563373637e-05,
+          "time_s": 0.6875,
+          "evas_v": 0.5333333333333333,
+          "spectre_v": 0.53330769336277
+        },
+        "low": {
+          "error_v": 2.563997056341527e-05,
+          "time_s": 0.6875,
+          "evas_v": 0.033333333333333326,
+          "spectre_v": 0.03330769336276991
+        },
+        "amp": {
+          "error_v": 0.25639970563418046,
+          "time_s": 0.6875,
+          "evas_v": 333.33333333333326,
+          "spectre_v": 333.0769336276991
+        },
+        "count": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        }
+      },
+      "coverage_gaps": [],
+      "missing_required_times": {
+        "evas": [],
+        "spectre": []
+      },
+      "duplicate_times": {
+        "evas": [],
+        "spectre": []
+      },
+      "scope": "All native rows at identical parsed binary64 times; no interpolation. Formal source/export/continuous-time qualification is not established.",
+      "unpaired_native_values": 0,
+      "case": "D2-base",
+      "analysis": "analysis-d-v2",
+      "spectre_batch": "reference-v2",
+      "evas_execution_status": "DIRECT_DIFFERENCE",
+      "independent_errors": {
+        "evas": {
+          "z": 1.2672072629896288e-16,
+          "low": 1.2672072629896288e-16,
+          "amp": 1.2095550080866296e-12,
+          "count": 0.0
+        },
+        "spectre": {
+          "z": 2.563997056338104e-05,
+          "low": 2.5639970563422674e-05,
+          "amp": 0.25639970563425624,
+          "count": 0.0
+        }
+      },
+      "source_case_sha256": "a771193894c7940302b47b4eb94abc554cffd7ad997732a24fd7c711ff9c69b0",
+      "source_va_sha256": "e72ee802e2e2fcb0d19b7fb862796a49d5e6b4cee1c0bda5db997c59965166f8",
+      "evas_identity": {
+        "head": "0ac8806d7463f00487f326b2eacc32e02a0c5aa3",
+        "kernel_sha256": "c35795bf13acf7b00455843db5a4a1c4a512fb2db6bea32f9221c5bf9b8d96ca",
+        "analyzer_sha256": "3f6df0c3737e400bc9645faad02ea0d5f56de4ee63303eb0c17b6349342df932",
+        "normalizer_sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8",
+        "input_manifests": {
+          "reference-v2/collected/spectre": "a36f134f373757a1be5aae68ad3f45b3607de9ea6378829bed98f48e7f19407b"
+        },
+        "note": "Native decimal export qualification remains separate; no interpolation or case removal."
+      },
+      "identities": {
+        "contract": "5f1612f082dcc69a67430c985aa0aa2ee4b049820bcdffc5c4c0d379f077d71a",
+        "evas": "f8ab30e4db7ecff7ab59587ef8714d09502887555649fb56231187f01201579e",
+        "spectre": "905599906245590903fb6c067e3976ac236d1d03924721deeebfce3ed0ea9f84"
+      },
+      "original_result_sha256": "d6ba41474ddaff1a2e4cc4595d4028465c7ba367e1cd72202edd0db8828089fd",
+      "contract": {
+        "stop": 1.0,
+        "required_times": [
+          0.0,
+          0.015625,
+          0.03125,
+          0.046875,
+          0.0625,
+          0.078125,
+          0.09375,
+          0.109375,
+          0.125,
+          0.140625,
+          0.15625,
+          0.171875,
+          0.1875,
+          0.203125,
+          0.21875,
+          0.234375,
+          0.25,
+          0.265625,
+          0.28125,
+          0.296875,
+          0.3125,
+          0.328125,
+          0.34375,
+          0.359375,
+          0.375,
+          0.390625,
+          0.40625,
+          0.421875,
+          0.4375,
+          0.453125,
+          0.46875,
+          0.484375,
+          0.49999999,
+          0.5,
+          0.50000001,
+          0.515625,
+          0.53125,
+          0.546875,
+          0.5625,
+          0.578125,
+          0.59375,
+          0.609375,
+          0.625,
+          0.640625,
+          0.65625,
+          0.671875,
+          0.6875,
+          0.703125,
+          0.71875,
+          0.734375,
+          0.75,
+          0.765625,
+          0.78125,
+          0.796875,
+          0.8125,
+          0.828125,
+          0.84375,
+          0.859375,
+          0.875,
+          0.890625,
+          0.90625,
+          0.921875,
+          0.9375,
+          0.953125,
+          0.96875,
+          0.984375,
+          1.0
+        ],
+        "budgets_v": {
+          "z": 1e-07,
+          "low": 1e-07,
+          "amp": 0.001,
+          "count": 0
+        },
+        "phase_nodes": [
+          "count"
+        ],
+        "event_windows_s": [
+          [
+            0.499999999999,
+            0.500000000001
+          ]
+        ],
+        "budget_scope": "Strict direct observed values; stamp measurement budgets are not nominal event displacement allowances. No engineering verdict inferred from this strict report."
+      },
+      "comparator_sha256": "9cbaa5b6d0bb7e825a9aae27f8fda41c74ec1480cbbdb0fe09334513b084227f",
+      "previous_report_sha256": "abd69cb61544b1f2460bbea306a848b5041c289fa9c9f0acc7cca66d53c0b609",
+      "reanalysis_source_sha256": "fa86220d087df802d90fff7486535f3c461a70b7a0b954580d0ef0afc9098124"
+    },
+    {
+      "finite_pair_status": "F",
+      "phase_status": "P",
+      "formal_qualification": "I",
+      "native_rows": 497,
+      "paired_rows": 497,
+      "paired_values": 1988,
+      "unpaired_native_rows": 0,
+      "failed_values": 1440,
+      "failed_inside_windows": 3,
+      "failed_outside_windows": 1437,
+      "phase_failed_values": 0,
+      "worst": {
+        "z": {
+          "error_v": 7.881186404601337e-07,
+          "time_s": 0.5922061162468157,
+          "evas_v": 0.5936788992084103,
+          "spectre_v": 0.5936781110897699
+        },
+        "low": {
+          "error_v": 7.881186404323781e-07,
+          "time_s": 0.5922061162468157,
+          "evas_v": 0.09367889920841033,
+          "spectre_v": 0.0936781110897699
+        },
+        "amp": {
+          "error_v": 0.007881186404233631,
+          "time_s": 0.5922061162468157,
+          "evas_v": 936.7889920841033,
+          "spectre_v": 936.781110897699
+        },
+        "count": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        }
+      },
+      "coverage_gaps": [],
+      "missing_required_times": {
+        "evas": [],
+        "spectre": []
+      },
+      "duplicate_times": {
+        "evas": [],
+        "spectre": []
+      },
+      "scope": "All native rows at identical parsed binary64 times; no interpolation. Formal source/export/continuous-time qualification is not established.",
+      "unpaired_native_values": 0,
+      "case": "D2-tol1000",
+      "analysis": "analysis-d-v2",
+      "spectre_batch": "reference-v2",
+      "evas_execution_status": "DIRECT_DIFFERENCE",
+      "independent_errors": {
+        "evas": {
+          "z": 1.2672072629896288e-16,
+          "low": 1.2672072629896288e-16,
+          "amp": 1.2095550080866296e-12,
+          "count": 0.0
+        },
+        "spectre": {
+          "z": 7.88118640422017e-07,
+          "low": 7.881186403942614e-07,
+          "amp": 0.007881186403863122,
+          "count": 0.0
+        }
+      },
+      "source_case_sha256": "c6cf536842d01a849809a773ff6e427c7cd7ef56990ea4db851137c935c80624",
+      "source_va_sha256": "e72ee802e2e2fcb0d19b7fb862796a49d5e6b4cee1c0bda5db997c59965166f8",
+      "evas_identity": {
+        "head": "0ac8806d7463f00487f326b2eacc32e02a0c5aa3",
+        "kernel_sha256": "c35795bf13acf7b00455843db5a4a1c4a512fb2db6bea32f9221c5bf9b8d96ca",
+        "analyzer_sha256": "3f6df0c3737e400bc9645faad02ea0d5f56de4ee63303eb0c17b6349342df932",
+        "normalizer_sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8",
+        "input_manifests": {
+          "reference-v2/collected/spectre": "a36f134f373757a1be5aae68ad3f45b3607de9ea6378829bed98f48e7f19407b"
+        },
+        "note": "Native decimal export qualification remains separate; no interpolation or case removal."
+      },
+      "identities": {
+        "contract": "5f1612f082dcc69a67430c985aa0aa2ee4b049820bcdffc5c4c0d379f077d71a",
+        "evas": "1dc5284a6e1d30e166008a4434e75b5b358918f847bccc59758ba9bda08451ee",
+        "spectre": "1d50225965e1d2113df5e4b921397c77bafaa8d18ccb918580b46539b20b81eb"
+      },
+      "original_result_sha256": "9a31b2db144a590022daa10a81c675d20f8706d0bbe73dc48720c879003a7b6d",
+      "contract": {
+        "stop": 1.0,
+        "required_times": [
+          0.0,
+          0.015625,
+          0.03125,
+          0.046875,
+          0.0625,
+          0.078125,
+          0.09375,
+          0.109375,
+          0.125,
+          0.140625,
+          0.15625,
+          0.171875,
+          0.1875,
+          0.203125,
+          0.21875,
+          0.234375,
+          0.25,
+          0.265625,
+          0.28125,
+          0.296875,
+          0.3125,
+          0.328125,
+          0.34375,
+          0.359375,
+          0.375,
+          0.390625,
+          0.40625,
+          0.421875,
+          0.4375,
+          0.453125,
+          0.46875,
+          0.484375,
+          0.49999999,
+          0.5,
+          0.50000001,
+          0.515625,
+          0.53125,
+          0.546875,
+          0.5625,
+          0.578125,
+          0.59375,
+          0.609375,
+          0.625,
+          0.640625,
+          0.65625,
+          0.671875,
+          0.6875,
+          0.703125,
+          0.71875,
+          0.734375,
+          0.75,
+          0.765625,
+          0.78125,
+          0.796875,
+          0.8125,
+          0.828125,
+          0.84375,
+          0.859375,
+          0.875,
+          0.890625,
+          0.90625,
+          0.921875,
+          0.9375,
+          0.953125,
+          0.96875,
+          0.984375,
+          1.0
+        ],
+        "budgets_v": {
+          "z": 1e-07,
+          "low": 1e-07,
+          "amp": 0.001,
+          "count": 0
+        },
+        "phase_nodes": [
+          "count"
+        ],
+        "event_windows_s": [
+          [
+            0.499999999999,
+            0.500000000001
+          ]
+        ],
+        "budget_scope": "Strict direct observed values; stamp measurement budgets are not nominal event displacement allowances. No engineering verdict inferred from this strict report."
+      },
+      "comparator_sha256": "9cbaa5b6d0bb7e825a9aae27f8fda41c74ec1480cbbdb0fe09334513b084227f",
+      "previous_report_sha256": "f65bf439d57e440643bc12a042b058eb4f9236ba00607fc97507dfd2c29a85fe",
+      "reanalysis_source_sha256": "fa86220d087df802d90fff7486535f3c461a70b7a0b954580d0ef0afc9098124"
+    },
+    {
+      "finite_pair_status": "I",
+      "phase_status": "I",
+      "formal_qualification": "I",
+      "native_rows": 1897,
+      "paired_rows": 0,
+      "paired_values": 0,
+      "unpaired_native_rows": 1897,
+      "failed_values": 0,
+      "failed_inside_windows": 0,
+      "failed_outside_windows": 0,
+      "phase_failed_values": 0,
+      "worst": {
+        "z": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        },
+        "low": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        },
+        "amp": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        },
+        "count": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        }
+      },
+      "coverage_gaps": [
+        "evas: no successful observations",
+        "evas: missing required observation times",
+        "evas: missing exact parsed start/stop",
+        "unpaired native rows remain in the comparison denominator"
+      ],
+      "missing_required_times": {
+        "evas": [
+          0.0,
+          0.015625,
+          0.03125,
+          0.046875,
+          0.0625,
+          0.078125,
+          0.09375,
+          0.109375,
+          0.125,
+          0.140625,
+          0.15625,
+          0.171875,
+          0.1875,
+          0.203125,
+          0.21875,
+          0.234375,
+          0.25,
+          0.265625,
+          0.28125,
+          0.296875,
+          0.3125,
+          0.328125,
+          0.34375,
+          0.359375,
+          0.375,
+          0.390625,
+          0.40625,
+          0.421875,
+          0.4375,
+          0.453125,
+          0.46875,
+          0.484375,
+          0.49999999,
+          0.5,
+          0.50000001,
+          0.515625,
+          0.53125,
+          0.546875,
+          0.5625,
+          0.578125,
+          0.59375,
+          0.609375,
+          0.625,
+          0.640625,
+          0.65625,
+          0.671875,
+          0.6875,
+          0.703125,
+          0.71875,
+          0.734375,
+          0.75,
+          0.765625,
+          0.78125,
+          0.796875,
+          0.8125,
+          0.828125,
+          0.84375,
+          0.859375,
+          0.875,
+          0.890625,
+          0.90625,
+          0.921875,
+          0.9375,
+          0.953125,
+          0.96875,
+          0.984375,
+          1.0
+        ],
+        "spectre": []
+      },
+      "duplicate_times": {
+        "evas": [],
+        "spectre": []
+      },
+      "scope": "All native rows at identical parsed binary64 times; no interpolation. Formal source/export/continuous-time qualification is not established.",
+      "unpaired_native_values": 7588,
+      "case": "D2-tol100000",
+      "analysis": "analysis-d-v2",
+      "spectre_batch": "reference-v2",
+      "evas_execution_status": "EVAS_REFUSED",
+      "independent_errors": null,
+      "source_case_sha256": "8422bf3ea99ee9297782b4723482682fc4134e49cde7cceda96e1876e6f39684",
+      "source_va_sha256": "e72ee802e2e2fcb0d19b7fb862796a49d5e6b4cee1c0bda5db997c59965166f8",
+      "evas_identity": {
+        "head": "0ac8806d7463f00487f326b2eacc32e02a0c5aa3",
+        "kernel_sha256": "c35795bf13acf7b00455843db5a4a1c4a512fb2db6bea32f9221c5bf9b8d96ca",
+        "analyzer_sha256": "3f6df0c3737e400bc9645faad02ea0d5f56de4ee63303eb0c17b6349342df932",
+        "normalizer_sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8",
+        "input_manifests": {
+          "reference-v2/collected/spectre": "a36f134f373757a1be5aae68ad3f45b3607de9ea6378829bed98f48e7f19407b"
+        },
+        "note": "Native decimal export qualification remains separate; no interpolation or case removal."
+      },
+      "identities": {
+        "contract": "5f1612f082dcc69a67430c985aa0aa2ee4b049820bcdffc5c4c0d379f077d71a",
+        "evas": "7a0019d4fff4d3f3aaff1f91c482fb2a5ecccac64e4a005598134ba13fc50862",
+        "spectre": "19aea8c3e9b6cb35405e8a6aafc8a040be200d2d92c00ea35059fe84063b587c"
+      },
+      "original_result_sha256": "cc90b0dc5d092c189731dc03c434e070c40b27a5aabdbfe3fd72adacf2bbdb53",
+      "contract": {
+        "stop": 1.0,
+        "required_times": [
+          0.0,
+          0.015625,
+          0.03125,
+          0.046875,
+          0.0625,
+          0.078125,
+          0.09375,
+          0.109375,
+          0.125,
+          0.140625,
+          0.15625,
+          0.171875,
+          0.1875,
+          0.203125,
+          0.21875,
+          0.234375,
+          0.25,
+          0.265625,
+          0.28125,
+          0.296875,
+          0.3125,
+          0.328125,
+          0.34375,
+          0.359375,
+          0.375,
+          0.390625,
+          0.40625,
+          0.421875,
+          0.4375,
+          0.453125,
+          0.46875,
+          0.484375,
+          0.49999999,
+          0.5,
+          0.50000001,
+          0.515625,
+          0.53125,
+          0.546875,
+          0.5625,
+          0.578125,
+          0.59375,
+          0.609375,
+          0.625,
+          0.640625,
+          0.65625,
+          0.671875,
+          0.6875,
+          0.703125,
+          0.71875,
+          0.734375,
+          0.75,
+          0.765625,
+          0.78125,
+          0.796875,
+          0.8125,
+          0.828125,
+          0.84375,
+          0.859375,
+          0.875,
+          0.890625,
+          0.90625,
+          0.921875,
+          0.9375,
+          0.953125,
+          0.96875,
+          0.984375,
+          1.0
+        ],
+        "budgets_v": {
+          "z": 1e-07,
+          "low": 1e-07,
+          "amp": 0.001,
+          "count": 0
+        },
+        "phase_nodes": [
+          "count"
+        ],
+        "event_windows_s": [
+          [
+            0.499999999999,
+            0.500000000001
+          ]
+        ],
+        "budget_scope": "Strict direct observed values; stamp measurement budgets are not nominal event displacement allowances. No engineering verdict inferred from this strict report."
+      },
+      "comparator_sha256": "9cbaa5b6d0bb7e825a9aae27f8fda41c74ec1480cbbdb0fe09334513b084227f",
+      "previous_report_sha256": "5b46858634ebf3b0cf84827721397067f3842f5a4eed9f193382339c7b490c54",
+      "reanalysis_source_sha256": "fa86220d087df802d90fff7486535f3c461a70b7a0b954580d0ef0afc9098124"
+    },
+    {
+      "finite_pair_status": "F",
+      "phase_status": "P",
+      "formal_qualification": "I",
+      "native_rows": 102,
+      "paired_rows": 102,
+      "paired_values": 408,
+      "unpaired_native_rows": 0,
+      "failed_values": 303,
+      "failed_inside_windows": 3,
+      "failed_outside_windows": 300,
+      "phase_failed_values": 0,
+      "worst": {
+        "z": {
+          "error_v": 2.5639970563373637e-05,
+          "time_s": 0.6875,
+          "evas_v": 0.5333333333333333,
+          "spectre_v": 0.53330769336277
+        },
+        "low": {
+          "error_v": 2.563997056341527e-05,
+          "time_s": 0.6875,
+          "evas_v": 0.033333333333333326,
+          "spectre_v": 0.03330769336276991
+        },
+        "amp": {
+          "error_v": 0.25639970563418046,
+          "time_s": 0.6875,
+          "evas_v": 333.33333333333326,
+          "spectre_v": 333.0769336276991
+        },
+        "count": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        }
+      },
+      "coverage_gaps": [],
+      "missing_required_times": {
+        "evas": [],
+        "spectre": []
+      },
+      "duplicate_times": {
+        "evas": [],
+        "spectre": []
+      },
+      "scope": "All native rows at identical parsed binary64 times; no interpolation. Formal source/export/continuous-time qualification is not established.",
+      "unpaired_native_values": 0,
+      "case": "D2-step8",
+      "analysis": "analysis-d-v2",
+      "spectre_batch": "reference-v2",
+      "evas_execution_status": "DIRECT_DIFFERENCE",
+      "independent_errors": {
+        "evas": {
+          "z": 1.2672072629896288e-16,
+          "low": 1.2672072629896288e-16,
+          "amp": 1.2095550080866296e-12,
+          "count": 0.0
+        },
+        "spectre": {
+          "z": 2.563997056338104e-05,
+          "low": 2.5639970563422674e-05,
+          "amp": 0.25639970563425624,
+          "count": 0.0
+        }
+      },
+      "source_case_sha256": "6a5b41609a2bbffabedf582662321d007b68f299d6d08786d0c7888d97405af1",
+      "source_va_sha256": "e72ee802e2e2fcb0d19b7fb862796a49d5e6b4cee1c0bda5db997c59965166f8",
+      "evas_identity": {
+        "head": "0ac8806d7463f00487f326b2eacc32e02a0c5aa3",
+        "kernel_sha256": "c35795bf13acf7b00455843db5a4a1c4a512fb2db6bea32f9221c5bf9b8d96ca",
+        "analyzer_sha256": "3f6df0c3737e400bc9645faad02ea0d5f56de4ee63303eb0c17b6349342df932",
+        "normalizer_sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8",
+        "input_manifests": {
+          "reference-v2/collected/spectre": "a36f134f373757a1be5aae68ad3f45b3607de9ea6378829bed98f48e7f19407b"
+        },
+        "note": "Native decimal export qualification remains separate; no interpolation or case removal."
+      },
+      "identities": {
+        "contract": "5f1612f082dcc69a67430c985aa0aa2ee4b049820bcdffc5c4c0d379f077d71a",
+        "evas": "053f97491efdd19eab91c5db181453b23ea3514ca6be92ed123070bba9f154ca",
+        "spectre": "294ef2a48b40b667ddd7d8ab9d0de4e36e931ff4b58ac3ca41ee32da64666eb4"
+      },
+      "original_result_sha256": "46d02fdc2c664c1c47327031175e39bfab67e1c4009c2c7658101673c287ab17",
+      "contract": {
+        "stop": 1.0,
+        "required_times": [
+          0.0,
+          0.015625,
+          0.03125,
+          0.046875,
+          0.0625,
+          0.078125,
+          0.09375,
+          0.109375,
+          0.125,
+          0.140625,
+          0.15625,
+          0.171875,
+          0.1875,
+          0.203125,
+          0.21875,
+          0.234375,
+          0.25,
+          0.265625,
+          0.28125,
+          0.296875,
+          0.3125,
+          0.328125,
+          0.34375,
+          0.359375,
+          0.375,
+          0.390625,
+          0.40625,
+          0.421875,
+          0.4375,
+          0.453125,
+          0.46875,
+          0.484375,
+          0.49999999,
+          0.5,
+          0.50000001,
+          0.515625,
+          0.53125,
+          0.546875,
+          0.5625,
+          0.578125,
+          0.59375,
+          0.609375,
+          0.625,
+          0.640625,
+          0.65625,
+          0.671875,
+          0.6875,
+          0.703125,
+          0.71875,
+          0.734375,
+          0.75,
+          0.765625,
+          0.78125,
+          0.796875,
+          0.8125,
+          0.828125,
+          0.84375,
+          0.859375,
+          0.875,
+          0.890625,
+          0.90625,
+          0.921875,
+          0.9375,
+          0.953125,
+          0.96875,
+          0.984375,
+          1.0
+        ],
+        "budgets_v": {
+          "z": 1e-07,
+          "low": 1e-07,
+          "amp": 0.001,
+          "count": 0
+        },
+        "phase_nodes": [
+          "count"
+        ],
+        "event_windows_s": [
+          [
+            0.499999999999,
+            0.500000000001
+          ]
+        ],
+        "budget_scope": "Strict direct observed values; stamp measurement budgets are not nominal event displacement allowances. No engineering verdict inferred from this strict report."
+      },
+      "comparator_sha256": "9cbaa5b6d0bb7e825a9aae27f8fda41c74ec1480cbbdb0fe09334513b084227f",
+      "previous_report_sha256": "1149dbbb755b146492087b761c4cb2b1ff2b12f3d6aebbf7c6319f97a07cfaa3",
+      "reanalysis_source_sha256": "fa86220d087df802d90fff7486535f3c461a70b7a0b954580d0ef0afc9098124"
+    },
+    {
+      "finite_pair_status": "P",
+      "phase_status": "P",
+      "formal_qualification": "I",
+      "native_rows": 1731,
+      "paired_rows": 1731,
+      "paired_values": 6924,
+      "unpaired_native_rows": 0,
+      "failed_values": 0,
+      "failed_inside_windows": 0,
+      "failed_outside_windows": 0,
+      "phase_failed_values": 0,
+      "worst": {
+        "z": {
+          "error_v": 3.168665985153751e-08,
+          "time_s": 0.5287851774360431,
+          "evas_v": 0.6541141389643249,
+          "spectre_v": 0.6541141072776651
+        },
+        "low": {
+          "error_v": 3.168665985153751e-08,
+          "time_s": 0.5287851774360431,
+          "evas_v": 0.1541141389643249,
+          "spectre_v": 0.15411410727766506
+        },
+        "amp": {
+          "error_v": 0.00031686659826846153,
+          "time_s": 0.5287851774360431,
+          "evas_v": 1541.141389643249,
+          "spectre_v": 1541.1410727766508
+        },
+        "count": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        }
+      },
+      "coverage_gaps": [],
+      "missing_required_times": {
+        "evas": [],
+        "spectre": []
+      },
+      "duplicate_times": {
+        "evas": [],
+        "spectre": []
+      },
+      "scope": "All native rows at identical parsed binary64 times; no interpolation. Formal source/export/continuous-time qualification is not established.",
+      "unpaired_native_values": 0,
+      "case": "D1-tol100000",
+      "analysis": "analysis-d-controls",
+      "spectre_batch": "reference-v2",
+      "evas_execution_status": "FINITE_NATIVE_AGREEMENT",
+      "independent_errors": {
+        "evas": {
+          "z": 8.758288721375822e-17,
+          "low": 8.758288721375822e-17,
+          "amp": 1.1666832419091438e-12,
+          "count": 0.0
+        },
+        "spectre": {
+          "z": 3.168665982731514e-08,
+          "low": 3.168665982731514e-08,
+          "amp": 0.00031686659800669783,
+          "count": 0.0
+        }
+      },
+      "source_case_sha256": "1333a857ddc83e1513e6dcf1bc2e3ce54ddfe664e814392cb665459b117fb5c8",
+      "source_va_sha256": "7be49bbf243a3c2652c32b7aaf7b80895be34ad2e9648f3fd797a30e633f6556",
+      "evas_identity": {
+        "head": "0eb09a14fdb0a853bed350147bdb575ea9549aba",
+        "kernel_sha256": "c35795bf13acf7b00455843db5a4a1c4a512fb2db6bea32f9221c5bf9b8d96ca",
+        "analyzer_sha256": "86a631f7b061091df2a4e33834c6eef92b64abdd5be0b8893f80a9a008bd248e",
+        "normalizer_sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8",
+        "input_manifests": {
+          "reference-v2/collected/spectre": "a36f134f373757a1be5aae68ad3f45b3607de9ea6378829bed98f48e7f19407b"
+        },
+        "note": "Native decimal export qualification remains separate; no interpolation or case removal."
+      },
+      "identities": {
+        "contract": "a578724cd1391fcd3b5c0f9c7cec585b3ec4798b4d908d4fc5f018994cc5f4f5",
+        "evas": "6df74b21590f5f1bace82880e28ec2c522b48edb268af06632cf1b88e2790a61",
+        "spectre": "615c369c2b0c3f025e287938b64271a57925836998c3fbcc59d9a0b82f9263bb"
+      },
+      "original_result_sha256": "e4d11633ca8131e4d0b56f5f3d2be8d199e923ca01df86b38d8fe0b192b6a323",
+      "contract": {
+        "stop": 1.0,
+        "required_times": [
+          0.0,
+          0.015625,
+          0.03125,
+          0.046875,
+          0.0625,
+          0.078125,
+          0.09375,
+          0.109375,
+          0.125,
+          0.140625,
+          0.15625,
+          0.171875,
+          0.1875,
+          0.203125,
+          0.21875,
+          0.234375,
+          0.25,
+          0.265625,
+          0.28125,
+          0.296875,
+          0.3125,
+          0.328125,
+          0.34375,
+          0.359375,
+          0.375,
+          0.390625,
+          0.40625,
+          0.421875,
+          0.4375,
+          0.453125,
+          0.46875,
+          0.484375,
+          0.49999999,
+          0.5,
+          0.50000001,
+          0.515625,
+          0.53125,
+          0.546875,
+          0.5625,
+          0.578125,
+          0.59375,
+          0.609375,
+          0.625,
+          0.640625,
+          0.65625,
+          0.671875,
+          0.6875,
+          0.703125,
+          0.71875,
+          0.734375,
+          0.75,
+          0.765625,
+          0.78125,
+          0.796875,
+          0.8125,
+          0.828125,
+          0.84375,
+          0.859375,
+          0.875,
+          0.890625,
+          0.90625,
+          0.921875,
+          0.9375,
+          0.953125,
+          0.96875,
+          0.984375,
+          1.0
+        ],
+        "budgets_v": {
+          "z": 1e-07,
+          "low": 1e-07,
+          "amp": 0.001,
+          "count": 0
+        },
+        "phase_nodes": [
+          "count"
+        ],
+        "event_windows_s": [],
+        "budget_scope": "Strict direct observed values; stamp measurement budgets are not nominal event displacement allowances. No engineering verdict inferred from this strict report."
+      },
+      "comparator_sha256": "9cbaa5b6d0bb7e825a9aae27f8fda41c74ec1480cbbdb0fe09334513b084227f",
+      "previous_report_sha256": "33d26c7dba9e2da6a19858cffc922272abca714d88e25df6d4c819105cc34e05",
+      "reanalysis_source_sha256": "fa86220d087df802d90fff7486535f3c461a70b7a0b954580d0ef0afc9098124"
+    },
+    {
+      "finite_pair_status": "P",
+      "phase_status": "P",
+      "formal_qualification": "I",
+      "native_rows": 1897,
+      "paired_rows": 1897,
+      "paired_values": 7588,
+      "unpaired_native_rows": 0,
+      "failed_values": 0,
+      "failed_inside_windows": 0,
+      "failed_outside_windows": 0,
+      "phase_failed_values": 0,
+      "worst": {
+        "z": {
+          "error_v": 4.961809063619427e-08,
+          "time_s": 0.7167111410186677,
+          "evas_v": 0.5172175831894594,
+          "spectre_v": 0.5172175335713688
+        },
+        "low": {
+          "error_v": 4.9618090604969245e-08,
+          "time_s": 0.7167111410186677,
+          "evas_v": 0.01721758318945943,
+          "spectre_v": 0.017217533571368824
+        },
+        "amp": {
+          "error_v": 0.0004961809060546329,
+          "time_s": 0.7167111410186677,
+          "evas_v": 172.17583189459427,
+          "spectre_v": 172.1753357136882
+        },
+        "count": {
+          "error_v": 0.0,
+          "time_s": null,
+          "evas_v": null,
+          "spectre_v": null
+        }
+      },
+      "coverage_gaps": [],
+      "missing_required_times": {
+        "evas": [],
+        "spectre": []
+      },
+      "duplicate_times": {
+        "evas": [],
+        "spectre": []
+      },
+      "scope": "All native rows at identical parsed binary64 times; no interpolation. Formal source/export/continuous-time qualification is not established.",
+      "unpaired_native_values": 0,
+      "case": "D2-tol100000",
+      "analysis": "analysis-d-controls",
+      "spectre_batch": "reference-v2",
+      "evas_execution_status": "FINITE_NATIVE_AGREEMENT",
+      "independent_errors": {
+        "evas": {
+          "z": 1.2672072629896288e-16,
+          "low": 1.2672072629896288e-16,
+          "amp": 1.2095550080866296e-12,
+          "count": 0.0
+        },
+        "spectre": {
+          "z": 4.96180906135399e-08,
+          "low": 4.961809058231488e-08,
+          "amp": 0.0004961809058494056,
+          "count": 0.0
+        }
+      },
+      "source_case_sha256": "8422bf3ea99ee9297782b4723482682fc4134e49cde7cceda96e1876e6f39684",
+      "source_va_sha256": "e72ee802e2e2fcb0d19b7fb862796a49d5e6b4cee1c0bda5db997c59965166f8",
+      "evas_identity": {
+        "head": "0eb09a14fdb0a853bed350147bdb575ea9549aba",
+        "kernel_sha256": "c35795bf13acf7b00455843db5a4a1c4a512fb2db6bea32f9221c5bf9b8d96ca",
+        "analyzer_sha256": "86a631f7b061091df2a4e33834c6eef92b64abdd5be0b8893f80a9a008bd248e",
+        "normalizer_sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8",
+        "input_manifests": {
+          "reference-v2/collected/spectre": "a36f134f373757a1be5aae68ad3f45b3607de9ea6378829bed98f48e7f19407b"
+        },
+        "note": "Native decimal export qualification remains separate; no interpolation or case removal."
+      },
+      "identities": {
+        "contract": "5f1612f082dcc69a67430c985aa0aa2ee4b049820bcdffc5c4c0d379f077d71a",
+        "evas": "59e60deaadd21e105bc4b75c3afb7e715580bf8f6c0dc75f90e6802d2f16dcb7",
+        "spectre": "19aea8c3e9b6cb35405e8a6aafc8a040be200d2d92c00ea35059fe84063b587c"
+      },
+      "original_result_sha256": "3017928840e9754ac790b793cfc3abd941eeb32a88879de2e3f88ce8fbb2be13",
+      "contract": {
+        "stop": 1.0,
+        "required_times": [
+          0.0,
+          0.015625,
+          0.03125,
+          0.046875,
+          0.0625,
+          0.078125,
+          0.09375,
+          0.109375,
+          0.125,
+          0.140625,
+          0.15625,
+          0.171875,
+          0.1875,
+          0.203125,
+          0.21875,
+          0.234375,
+          0.25,
+          0.265625,
+          0.28125,
+          0.296875,
+          0.3125,
+          0.328125,
+          0.34375,
+          0.359375,
+          0.375,
+          0.390625,
+          0.40625,
+          0.421875,
+          0.4375,
+          0.453125,
+          0.46875,
+          0.484375,
+          0.49999999,
+          0.5,
+          0.50000001,
+          0.515625,
+          0.53125,
+          0.546875,
+          0.5625,
+          0.578125,
+          0.59375,
+          0.609375,
+          0.625,
+          0.640625,
+          0.65625,
+          0.671875,
+          0.6875,
+          0.703125,
+          0.71875,
+          0.734375,
+          0.75,
+          0.765625,
+          0.78125,
+          0.796875,
+          0.8125,
+          0.828125,
+          0.84375,
+          0.859375,
+          0.875,
+          0.890625,
+          0.90625,
+          0.921875,
+          0.9375,
+          0.953125,
+          0.96875,
+          0.984375,
+          1.0
+        ],
+        "budgets_v": {
+          "z": 1e-07,
+          "low": 1e-07,
+          "amp": 0.001,
+          "count": 0
+        },
+        "phase_nodes": [
+          "count"
+        ],
+        "event_windows_s": [
+          [
+            0.499999999999,
+            0.500000000001
+          ]
+        ],
+        "budget_scope": "Strict direct observed values; stamp measurement budgets are not nominal event displacement allowances. No engineering verdict inferred from this strict report."
+      },
+      "comparator_sha256": "9cbaa5b6d0bb7e825a9aae27f8fda41c74ec1480cbbdb0fe09334513b084227f",
+      "previous_report_sha256": "73a6f4e1542cff9b06115e0718f70b98da6fd8091fe1b2f1dc6e1ab1135f3c8d",
+      "reanalysis_source_sha256": "fa86220d087df802d90fff7486535f3c461a70b7a0b954580d0ef0afc9098124"
+    }
+  ],
+  "counts": {
+    "spectre_attempts": 22,
+    "spectre_waveforms": 14,
+    "compile_failures": 8,
+    "version_preflights": 2,
+    "evas_requests": 16,
+    "direct_comparisons": 16,
+    "finite_P": 2,
+    "finite_F": 12,
+    "finite_I": 2,
+    "formal_qualification_I": 16
+  },
+  "gap_scope": "P means every retained native row and required parsed time satisfied this direct budget only. C1 has a stable exact-boundary phase difference. M1 strict held stamps differ outside windows as a consequence of differing event times; these stamp measurement budgets are not event-time allowances. D1/D2 original same-number requests and relaxed reference settings remain F/I.",
+  "merge_decision": "PR101 and98 merged, issue95closed. No additional PR102/103/104/106 merge recommendation: tested candidate is not identical to those original heads and their acceptance obligations differ.",
+  "result_manifest_sha256": "2a9ee5027d7c07bcc7780f141045f75ef888ec1cffb9686acdec263e81ff204d",
+  "analysis_revision": "paired-v3: frozen comparator and reanalysis source; embedded contracts; all16 scientific verdicts unchanged; paired-v1/v2 preserved; no new simulator invocation"
+}

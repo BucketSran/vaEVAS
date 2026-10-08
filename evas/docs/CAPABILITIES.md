@@ -2,6 +2,10 @@
 
 核对日期：2026-10-06；DYNAMICS 瞬态精度控制与证据于2026-10-07增量核对；TIMER近邻历史与限幅集成于2026-10-08增量核对；事件组合候选完成有限实际Spectre对照，仍未合并。本源码为 **EVAS 0.14.0 / IR v18**，未发布 tag。
 
+2026-10-08 [单因素对照](../../experiments/backends/event-alignment/convergence.md)新增 14 份实际 Spectre 波形。
+D1/D2 在分别选定的控制下有 3,628 个原生点满足直接预算；C1/M1 的直接差异和
+两个过严 EVAS 请求拒绝保留。此结果不增加下表的正式资格或旧矩阵通过数。
+
 上一合并检查点的实现与审查见 [PR61](https://github.com/BucketSran/vaEVAS/pull/61)。
 改动摘要见[更新记录](UPDATE.md)，合并身份以 Git/PR 为准。
 测试文件声明的契约/能力关联见[追溯矩阵](TRACEABILITY.md)（自动生成）；
