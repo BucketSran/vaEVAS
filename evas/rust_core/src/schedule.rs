@@ -845,7 +845,10 @@ fn schedule_with_history(
                 continue;
             }
             let event = &model.program.events[leaf.event];
-            let EventTrigger::Cross { direction, .. } = &leaf.trigger else {
+            let EventTrigger::Cross {
+                guard, direction, ..
+            } = &leaf.trigger
+            else {
                 continue;
             };
             // A state-independent guard is affine on the union of the knots
@@ -871,7 +874,25 @@ fn schedule_with_history(
                         .push_str(&format!(" at {}", event.origin.label()));
                     error
                 })?;
+            let source_curve = if roots.is_empty() {
+                None
+            } else {
+                let input_nodes = model
+                    .driven
+                    .iter()
+                    .map(|name| {
+                        model
+                            .program
+                            .nodes
+                            .iter()
+                            .position(|node| node == name)
+                            .unwrap()
+                    })
+                    .collect::<Vec<_>>();
+                trajectory.original_guard_curve(guard, &input_nodes)
+            };
             for root in roots {
+                let root = root.with_source_time(source_curve.as_ref());
                 if events.len() == EVENT_BUDGET {
                     return Err(Error::new(
                         "event_budget",

@@ -14,6 +14,96 @@ const MAX_EXPR_NODES: usize = 512;
 #[derive(Clone)]
 pub(crate) struct Curve(Vec<(R, R)>);
 struct Budget(usize);
+
+/// An immutable time proved from original affine source arithmetic. Construction
+/// is bounded and must agree with the interval discovery that found the root.
+#[derive(Clone)]
+pub(crate) struct RootTime(R);
+
+fn enclosure(value: &R) -> Option<I> {
+    let nearest = value.to_f64()?;
+    if !nearest.is_finite() {
+        return None;
+    }
+    let represented = binary(nearest)?;
+    let bounds = I {
+        lo: if represented > *value {
+            nearest.next_down()
+        } else {
+            nearest
+        },
+        hi: if represented < *value {
+            nearest.next_up()
+        } else {
+            nearest
+        },
+    };
+    (bounds.finite() && binary(bounds.lo)? <= *value && *value <= binary(bounds.hi)?)
+        .then_some(bounds)
+}
+
+fn contains(bounds: I, value: &R) -> bool {
+    bounds.finite()
+        && binary(bounds.lo).is_some_and(|lo| lo <= *value)
+        && binary(bounds.hi).is_some_and(|hi| *value <= hi)
+}
+
+impl RootTime {
+    fn from_affine(segment: [f64; 2], ends: [R; 2], bounds: I) -> Option<Self> {
+        let [a, b] = ends;
+        if a.is_zero() || a == b {
+            return None;
+        }
+        let mut budget = Budget(0);
+        let start = binary(segment[0])?;
+        let end = binary(segment[1])?;
+        let duration = budget.check(&end - &start)?;
+        let change = budget.check(b - &a)?;
+        let numerator = budget.check(a * duration)?;
+        let shift = budget.check(numerator / change)?;
+        let time = budget.check(&start - shift)?;
+        (start < time && time <= end && contains(bounds, &time)).then_some(Self(time))
+    }
+
+    pub(crate) fn point_ends(segment: [f64; 2], ends: [I; 2], bounds: I) -> Option<Self> {
+        let [a, b] = ends;
+        if a.lo != a.hi || b.lo != b.hi {
+            return None;
+        }
+        Self::from_affine(segment, [binary(a.lo)?, binary(b.lo)?], bounds)
+    }
+
+    pub(crate) fn bounds(&self) -> Option<I> {
+        enclosure(&self.0)
+    }
+
+    pub(crate) fn order(&self, other: &Self) -> std::cmp::Ordering {
+        self.0.cmp(&other.0)
+    }
+
+    fn difference_from_clock(&self, clock: crate::exact_time::Clock) -> Option<R> {
+        if clock.index > crate::schedule::EVENT_BUDGET {
+            return None;
+        }
+        let mut budget = Budget(0);
+        let offset = budget.check(binary(clock.period)? * R::from_integer(clock.index.into()))?;
+        let absolute = budget.check(binary(clock.start)? + offset)?;
+        budget.check(&self.0 - absolute)
+    }
+
+    pub(crate) fn clock_delta_order(
+        &self,
+        clock: crate::exact_time::Clock,
+        delta: f64,
+    ) -> Option<std::cmp::Ordering> {
+        let difference = Budget(0).check(self.difference_from_clock(clock)? - binary(delta)?)?;
+        Some(difference.cmp(&R::zero()))
+    }
+
+    pub(crate) fn local_bounds(&self, clock: crate::exact_time::Clock) -> Option<I> {
+        enclosure(&self.difference_from_clock(clock)?)
+    }
+}
 impl Budget {
     fn check(&mut self, value: R) -> Option<R> {
         self.0 = self.0.checked_add(1)?;
@@ -96,6 +186,23 @@ pub(crate) fn predicate_sign(
 }
 
 impl Curve {
+    /// Match an already discovered root without bridging an interior source kink.
+    /// A redundant interior knot also takes the conservative fallback path.
+    pub(crate) fn root_in(&self, segment: [f64; 2], ends: [I; 2], bounds: I) -> Option<RootTime> {
+        let start = binary(segment[0])?;
+        let end = binary(segment[1])?;
+        if self.0.iter().any(|(t, _)| start < *t && *t < end) {
+            return None;
+        }
+        let mut budget = Budget(0);
+        let a = self.value(&start, &mut budget)?;
+        let b = self.value(&end, &mut budget)?;
+        if !contains(ends[0], &a) || !contains(ends[1], &b) {
+            return None;
+        }
+        RootTime::from_affine(segment, [a, b], bounds)
+    }
+
     pub(crate) fn source(points: &[[f64; 2]]) -> Option<Self> {
         if points.len() > MAX_POINTS {
             return None;
@@ -319,6 +426,88 @@ impl Curve {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn root_proof_retains_subulp_phase_and_local_clock_difference() {
+        let threshold = binary(0.7).unwrap();
+        let stop = binary(6e-6).unwrap();
+        let curve = Curve(vec![
+            (R::zero(), -threshold.clone()),
+            (stop.clone(), binary(3.0).unwrap() - &threshold),
+        ]);
+        let query = 1.4e-6_f64;
+        let root = curve
+            .root_in(
+                [0.0, 6e-6],
+                [
+                    I::point(-0.7),
+                    I {
+                        lo: 2.3,
+                        hi: 2.3_f64.next_up(),
+                    },
+                ],
+                I {
+                    lo: query.next_down(),
+                    hi: query.next_up(),
+                },
+            )
+            .unwrap();
+        let expected = threshold * stop / binary(3.0).unwrap();
+        assert_eq!(root.0, expected);
+        let clock = crate::exact_time::Clock {
+            start: query,
+            period: 0.0,
+            index: 0,
+        };
+        assert_eq!(
+            root.clock_delta_order(clock, 0.0),
+            Some(std::cmp::Ordering::Greater)
+        );
+        let local = root.local_bounds(clock).unwrap();
+        assert!(local.lo > 0.0);
+        assert!(contains(local, &(expected - binary(query).unwrap())));
+        assert_eq!(
+            root.bounds().unwrap(),
+            I {
+                lo: query,
+                hi: query.next_up()
+            }
+        );
+        assert!(root
+            .local_bounds(crate::exact_time::Clock {
+                index: crate::schedule::EVENT_BUDGET + 1,
+                ..clock
+            })
+            .is_none());
+    }
+
+    #[test]
+    fn root_proof_requires_matching_segment_endpoints_and_interval() {
+        let curve = Curve::source(&[[0.0, -1.0], [2.0, 1.0]]).unwrap();
+        let ends = [I::point(-1.0), I::ONE];
+        let bounds = I { lo: 0.5, hi: 1.5 };
+        assert_eq!(
+            curve.root_in([0.0, 2.0], ends, bounds).unwrap().bounds(),
+            Some(I::ONE)
+        );
+        assert!(curve
+            .root_in([0.0, 2.0], [I::point(-2.0), I::ONE], bounds)
+            .is_none());
+        assert!(curve
+            .root_in([0.0, 2.0], ends, I { lo: 1.1, hi: 1.5 })
+            .is_none());
+        let kink = Curve::source(&[[0.0, -1.0], [1.0, 0.5], [2.0, 1.0]]).unwrap();
+        assert!(kink.root_in([0.0, 2.0], ends, bounds).is_none());
+        // A segment starting on zero must not rediscover an already consumed root.
+        assert!(RootTime::point_ends([0.0, 1.0], [I::ZERO, I::ONE], bounds).is_none());
+        // No exact source proof: an interval endpoint is not converted to its midpoint.
+        assert!(
+            RootTime::point_ends([0.0, 2.0], [I { lo: -1.1, hi: -0.9 }, I::ONE], bounds).is_none()
+        );
+        let huge = R::from_integer(binary(1.0).unwrap().numer().clone() << (MAX_BITS as usize + 1));
+        assert!(RootTime::from_affine([0.0, 2.0], [-huge.clone(), huge], bounds).is_none());
+    }
+
     #[test]
     fn ordinary_point_certificate_requires_exact_source_provenance() {
         let input = Expression::Affine {
