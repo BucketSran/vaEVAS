@@ -6,7 +6,7 @@
 
 [PR #108 固定候选的 12 条件工程重放与实际 Spectre 配对](integration.md)
 保留有限数值结果、窗口内阶段差及资格缺口。它不代表 main 支持，也不覆盖原论文表。
-[当前候选四后端表](candidate-table.md)使用新的实际 EVAS12 与原参考36，保留固定48槽及原资格判据。
+[当前候选四后端表](candidate-table.md)使用新的实际 EVAS12 与原参考36，保留固定48槽及原误差预算；原结果和已校准的 checker 时间排序修复重分析分别绑定身份。
 
 ```sh
 python3 -B -m unittest discover -s experiments/backends/paper -p 'test_*.py' -v

@@ -110,6 +110,18 @@ cover those later changes. These local checks do not replace the Spectre gates.
 
 ## Evidence availability and remaining decision
 
+The refreshed [paper candidate table](../paper/candidate-table.md) uses twelve
+new Linux executions from `830c8168` and the original thirty-six reference slots.
+Actual source/build/native-record and error-bound evidence first produces
+8 P / 4 I. The four I are caused by normalization of two distinct adjacent SI
+timestamps to one binary64 value. A calibrated checker correction checks strict
+ordering in the original seconds; identical or reversed seconds still reject.
+Reanalysis of all forty-eight slots under that explicitly frozen checker gives
+EVAS 12 P, Spectre 12 I, OpenVAF/ngspice 5 I + 7 X and Gnucap/modelgen 10 I + 2 X.
+No waveform, external budget or old result is rewritten. Both original I12 and
+8 P / 4 I remain available. These are finite-observation results; reference
+qualification gaps and the original strict boundary obligations remain open.
+
 All new reference runs use Spectre 21.1.0.509.isr12, binary SHA256
 `72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f`.
 Complete logs, source/deck copies, receipts and raw outputs are retained locally
@@ -122,6 +134,7 @@ under the integration checkout's `runs/alignment-implementation-20261009/`:
 | #79 callback/continuation | `event-continuation-v2` | `19b6a5cd316d5bf058327aef76b9cce6e3965b0d6dbd2875fc354c85b0dc2cb0` |
 | VCO separated requests | `vco-separated-v1` | `885271cf33d7f014a3f9b0214015340121ca737c27d3fcae29a4028c046b690b` |
 | Spec B preservation | `spec-b-current` | Per-request local receipts; no remote run |
+| Paper EVAS12 refresh | `paper-current-v1` | `7ca2d0ea207ef2dc896e7365e29c3a37e2060d32dc1d58a02e4aea15706f0677` |
 
 These hashes bind retained local evidence; they do not make the commercial
 reference runs publicly reproducible. The old failed deployment before #79
