@@ -1,0 +1,28 @@
+{
+  "kind": "new Spectre run, archived for subsequent EVAS pairing",
+  "spectre_version": "21.1.0.509.isr12",
+  "simulation_calls": 4,
+  "version_calls": 1,
+  "retries": 0,
+  "availability": "raw local-only",
+  "frozen_plan_sha256": "111833619d867c39d1c3b1acc33e483a046bce9526af80fa2e42d45997316209",
+  "tool_hashes": {
+    "operator_wrapper.py": "20717db5327bee8fe8509d7c10353401627b8330f8a10400fe0709f9d39a963c",
+    "repo/experiments/backends/paper/runner.py": "5eceafda72f96ff41a266ca16bb24752915ab3939763b3958ef2ad8db11c1e56",
+    "repo/experiments/backends/paper/process.py": "f89324f3b7eda04a695cf63770ad462a5a935782526f7bf7f112c2d93b9af5dd",
+    "repo/experiments/backends/paper/inputs.py": "5337c1fa562bacf470bea8d60668fc6036b77ef9397ef2546f2c01e9f96ba702",
+    "repo/experiments/backends/paper/observations.py": "0aff2f248d63b9e81b1fcf5bab5722df13bdcf42fd7edffe4fe65f45b79b845c",
+    "repo/experiments/backends/paper/settings_readback.py": "ed2474442c6ffeddb7d126d86831e56b38509bf4a16b757836f0f612e311c8b8",
+    "repo/experiments/archive/dvs2-starter-pilot/analyze.py": "e10acac779cb8c8e627358832689506f4f366de9241155e9daf512d8bcb01680",
+    "repo/experiments/archive/dvs2-starter-pilot/suite.py": "7c4e686253688d575b32f9aec89e6e741da201c1411436b765f5f7e2f12e49ff"
+  },
+  "input_manifest_sha256": "80f3eb8bfa351d5d9f6362f5993069422796b9fb644c22d5f4ad6904e21cd720",
+  "profile_sha256": "836c32d9ca8e6eb3264700f69e906943e4974e6f3a8e29bacb0a44e689f6ec8a",
+  "normalizer_sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8",
+  "requested_settings_readback": "I; missing requested_settings.json; native excerpts do not overwrite it",
+  "files": {
+    "collected/spectre/COLLECTION.json": "b43e806e7d56ca76f5b9e358291f6e20555af54a26a539db7ec642eae0adbf5a",
+    "spectre-dispatch/RECEIPT.json": "8283e3f80746f13745b47238728325e994c55fd556cb69567020bbfe83af7cad",
+    "reference-analysis.json": "23ee0331390bb10aec063dac0bdbcf7eda048dd5eaddca517fbbc4f7fb1159e9"
+  }
+}

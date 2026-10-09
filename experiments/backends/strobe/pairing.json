@@ -1,0 +1,548 @@
+{
+  "kind": "new EVAS execution with archived Spectre native-row pairing",
+  "source_commit": "940e5600f60299d52a7e23ea1562232accdd37c7",
+  "kernel_sha256": "f56564db64449ae77326e8cec3dd9cf54a00158027e968a13acfaf3a3576861e",
+  "checker_sha256": "bc5094295c218053ea32c2b34b6fcf09469233ee559c8779c5d92ccb5aa77c98",
+  "reference_analysis_sha256": "23ee0331390bb10aec063dac0bdbcf7eda048dd5eaddca517fbbc4f7fb1159e9",
+  "spectre_version": "21.1.0.509.isr12",
+  "cases": [
+    {
+      "case": "static-irregular",
+      "inputs": {
+        "case.json": "b0a467dfc399f12e70fcd244a98d2243bb104fd1c8a403261723fe70c36e8839",
+        "dut.va": "acb8643bfa8449d65b634030b5ace388e00afcd0baa616f05794d8b4be069c32",
+        "evas-manifest.json": "976ba503bab6cd2df9210346aef969ebd4e4c9b7af0e0562f20d97323e07ee25",
+        "tb.scs": "1edce315fb8a042f842accde1d9c2a1cf448cd484b1a7ece96e847341bc278fa"
+      },
+      "request_sha256": "172966335025ed58eb211d18264e34305a03d820605d6c0cf6b6fc3ed0cf47d3",
+      "response_sha256": "d70f25ee36fa1bdb62045075c69c343eb8623e5ea808c781a65a9a7dc82c614a",
+      "bundle_sha256": "56730a38bcda8d80c6f5f65d22a4e128b64a90397d16bd76ff2f92435daee564",
+      "strobe_evidence": {
+        "schema_version": 1,
+        "times": [
+          0.2,
+          0.7
+        ],
+        "sample_origins": [
+          "stateless_working_point",
+          "stateless_working_point"
+        ],
+        "voltages_V": [
+          [
+            0.0,
+            0.2,
+            0.4
+          ],
+          [
+            0.0,
+            0.7,
+            1.4
+          ]
+        ]
+      },
+      "rows": [
+        {
+          "time": 0,
+          "forced": false,
+          "evas_y_V": -0.0,
+          "native_rows": [],
+          "direct_max_V": null,
+          "direct_status": "I",
+          "evas_analytic_error_V": 0.0,
+          "evas_analytic_status": "P"
+        },
+        {
+          "time": 0.2,
+          "forced": true,
+          "evas_y_V": 0.4,
+          "native_rows": [
+            {
+              "time": 0.2,
+              "voltages": {
+                "u": 0.2,
+                "y": 0.4
+              }
+            }
+          ],
+          "direct_max_V": 0.0,
+          "direct_status": "P",
+          "evas_analytic_error_V": 0.0,
+          "evas_analytic_status": "P"
+        },
+        {
+          "time": 0.7,
+          "forced": true,
+          "evas_y_V": 1.4,
+          "native_rows": [
+            {
+              "time": 0.7,
+              "voltages": {
+                "u": 0.7,
+                "y": 1.4
+              }
+            }
+          ],
+          "direct_max_V": 0.0,
+          "direct_status": "P",
+          "evas_analytic_error_V": 0.0,
+          "evas_analytic_status": "P"
+        },
+        {
+          "time": 1,
+          "forced": false,
+          "evas_y_V": 2.0,
+          "native_rows": [
+            {
+              "time": 1.0,
+              "voltages": {
+                "u": 1.0,
+                "y": 2.0
+              }
+            }
+          ],
+          "direct_max_V": 0.0,
+          "direct_status": "P",
+          "evas_analytic_error_V": 0.0,
+          "evas_analytic_status": "P"
+        }
+      ],
+      "bundle_identity_sha256": "be68ad450b3a16778073dfe449e91abfa963859ed27eab00b38aeec9f0cc1e72",
+      "native_psf_sha256": "84b6ee775031104f06a4e7fbc5bdf6e2ad0781e62b4d772372c76b81495abde3"
+    },
+    {
+      "case": "continuous-periodic",
+      "inputs": {
+        "case.json": "b863142576a9052af1070191c2cc06ab29420bc295e92d1b1a99c2a3ffe19bf1",
+        "dut.va": "93782f6da2331f0003ebd94dff5af8b094ac49aaf3f713362f21b81ac189844a",
+        "evas-manifest.json": "ea735cdd061539b630904a47152f3642eb4446fbf173e222b415bea759a2f25f",
+        "tb.scs": "cc9ea21ff72411049fdc93f3547d0277fbe12bcbcbb515da0d36c642f0ee7db7"
+      },
+      "request_sha256": "927d25e011bd38207d6dd4e2df2f0bc310ebb813f6fdf265fd0eaa0805e7bea1",
+      "response_sha256": "f4cb44e60fb6989cc9e234fc651043f22aa62a5fd416370735fb6f94c84dc446",
+      "bundle_sha256": "788dd28aaaf350b5d1ba352345129caa7d1ab07ab8507f99525f657af50cacd8",
+      "strobe_evidence": {
+        "schema_version": 1,
+        "times": [
+          0.125,
+          0.375,
+          0.625,
+          0.875
+        ],
+        "sample_origins": [
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame"
+        ],
+        "voltages_V": [
+          [
+            0.0,
+            0.125,
+            0.11750309741540459
+          ],
+          [
+            0.0,
+            0.375,
+            0.31271072120902776
+          ],
+          [
+            0.0,
+            0.625,
+            0.46473857148100955
+          ],
+          [
+            0.0,
+            0.875,
+            0.5831379803214911
+          ]
+        ]
+      },
+      "rows": [
+        {
+          "time": 0,
+          "forced": false,
+          "evas_y_V": -0.0,
+          "native_rows": [
+            {
+              "time": 0.0,
+              "voltages": {
+                "u": 0.0,
+                "y": 0.0
+              }
+            }
+          ],
+          "direct_max_V": 0.0,
+          "direct_status": "P",
+          "evas_analytic_error_V": 0.0,
+          "evas_analytic_status": "P"
+        },
+        {
+          "time": 0.125,
+          "forced": true,
+          "evas_y_V": 0.11750309741540459,
+          "native_rows": [
+            {
+              "time": 0.125,
+              "voltages": {
+                "u": 0.125,
+                "y": 0.11750310995588717
+              }
+            }
+          ],
+          "direct_max_V": 1.2540482582923396e-08,
+          "direct_status": "P",
+          "evas_analytic_error_V": 1.3877787807814457e-17,
+          "evas_analytic_status": "P"
+        },
+        {
+          "time": 0.375,
+          "forced": true,
+          "evas_y_V": 0.31271072120902776,
+          "native_rows": [
+            {
+              "time": 0.375,
+              "voltages": {
+                "u": 0.375,
+                "y": 0.31271074438316593
+              }
+            }
+          ],
+          "direct_max_V": 2.317413816399494e-08,
+          "direct_status": "P",
+          "evas_analytic_error_V": 5.551115123125783e-17,
+          "evas_analytic_status": "P"
+        },
+        {
+          "time": 0.625,
+          "forced": true,
+          "evas_y_V": 0.46473857148100955,
+          "native_rows": [
+            {
+              "time": 0.625,
+              "voltages": {
+                "u": 0.625,
+                "y": 0.4647386084559609
+              }
+            }
+          ],
+          "direct_max_V": 3.697495132293227e-08,
+          "direct_status": "P",
+          "evas_analytic_error_V": 2.220446049250313e-16,
+          "evas_analytic_status": "P"
+        },
+        {
+          "time": 0.875,
+          "forced": true,
+          "evas_y_V": 0.5831379803214911,
+          "native_rows": [
+            {
+              "time": 0.875,
+              "voltages": {
+                "u": 0.875,
+                "y": 0.5831380213186128
+              }
+            }
+          ],
+          "direct_max_V": 4.0997121697472494e-08,
+          "direct_status": "P",
+          "evas_analytic_error_V": 4.440892098500626e-16,
+          "evas_analytic_status": "P"
+        },
+        {
+          "time": 1,
+          "forced": false,
+          "evas_y_V": 0.6321205588285571,
+          "native_rows": [
+            {
+              "time": 1.0,
+              "voltages": {
+                "u": 1.0,
+                "y": 0.6321206022967367
+              }
+            }
+          ],
+          "direct_max_V": 4.346817961131677e-08,
+          "direct_status": "P",
+          "evas_analytic_error_V": 5.551115123125783e-16,
+          "evas_analytic_status": "P"
+        }
+      ],
+      "bundle_identity_sha256": "be68ad450b3a16778073dfe449e91abfa963859ed27eab00b38aeec9f0cc1e72",
+      "native_psf_sha256": "f78c5e973e5b22f34df8a72292066972a93da55ed0a7f05be3ebc30fa05e83f7"
+    },
+    {
+      "case": "implicit-irregular",
+      "inputs": {
+        "case.json": "f3c9d1a647fd1db1fa1e81d20e60c9b3136416a273aaf2631a86d1b187faeb38",
+        "dut.va": "7b79276df98e22eb5e167c3b0893e32ce2c1c41c4713b389a598d2d4fbd1a007",
+        "evas-manifest.json": "976ba503bab6cd2df9210346aef969ebd4e4c9b7af0e0562f20d97323e07ee25",
+        "tb.scs": "1edce315fb8a042f842accde1d9c2a1cf448cd484b1a7ece96e847341bc278fa"
+      },
+      "request_sha256": "22c671ee2b34774230a2d908f486604765ea9979e8df400ec4187dd1301b020a",
+      "response_sha256": "68b007e492a15935f97f86bfb5d8a191bc0fb60b8fbc2e594ca6ba6fbbd00688",
+      "bundle_sha256": "d6dc053754b35c6b25b779b4c9255edebdc5733fc87f8ab00c2092fa15ef5a77",
+      "strobe_evidence": {
+        "schema_version": 1,
+        "times": [
+          0.2,
+          0.7
+        ],
+        "sample_origins": [
+          "implicit_history_evaluation",
+          "implicit_history_evaluation"
+        ],
+        "voltages_V": [
+          [
+            0.0,
+            0.2,
+            0.20000000000000004
+          ],
+          [
+            0.0,
+            0.7,
+            0.7
+          ]
+        ]
+      },
+      "rows": [
+        {
+          "time": 0,
+          "forced": false,
+          "evas_y_V": 0.0,
+          "native_rows": [],
+          "direct_max_V": null,
+          "direct_status": "I",
+          "evas_analytic_error_V": 0.0,
+          "evas_analytic_status": "P"
+        },
+        {
+          "time": 0.2,
+          "forced": true,
+          "evas_y_V": 0.20000000000000004,
+          "native_rows": [
+            {
+              "time": 0.2,
+              "voltages": {
+                "u": 0.2,
+                "y": 0.20000000000473586
+              }
+            }
+          ],
+          "direct_max_V": 4.735822844992299e-12,
+          "direct_status": "P",
+          "evas_analytic_error_V": 2.7755575615628914e-17,
+          "evas_analytic_status": "P"
+        },
+        {
+          "time": 0.7,
+          "forced": true,
+          "evas_y_V": 0.7,
+          "native_rows": [
+            {
+              "time": 0.7,
+              "voltages": {
+                "u": 0.7,
+                "y": 0.700000000004743
+              }
+            }
+          ],
+          "direct_max_V": 4.743094805803594e-12,
+          "direct_status": "P",
+          "evas_analytic_error_V": 0.0,
+          "evas_analytic_status": "P"
+        },
+        {
+          "time": 1,
+          "forced": false,
+          "evas_y_V": 1.0,
+          "native_rows": [
+            {
+              "time": 1.0,
+              "voltages": {
+                "u": 1.0,
+                "y": 1.0000000000047433
+              }
+            }
+          ],
+          "direct_max_V": 4.743316850408519e-12,
+          "direct_status": "P",
+          "evas_analytic_error_V": 0.0,
+          "evas_analytic_status": "P"
+        }
+      ],
+      "bundle_identity_sha256": "be68ad450b3a16778073dfe449e91abfa963859ed27eab00b38aeec9f0cc1e72",
+      "native_psf_sha256": "242477cf42d37a183889c1fa66628402e7ff2774ac8335c094d843735292a689"
+    },
+    {
+      "case": "timer-periodic",
+      "inputs": {
+        "case.json": "930224bbd863929099a491e3c3214afd69b1e7e6da265a068f1c21bc73bfe8f0",
+        "dut.va": "e99855a1a997fdf04f9d4e55912dbb1cd5d7fe9ff29cafcf83ebd438d0df059a",
+        "evas-manifest.json": "ea735cdd061539b630904a47152f3642eb4446fbf173e222b415bea759a2f25f",
+        "tb.scs": "cc9ea21ff72411049fdc93f3547d0277fbe12bcbcbb515da0d36c642f0ee7db7"
+      },
+      "request_sha256": "a3cf59a227a502d31eba61f8cfa55b0f0f0c8e078f5b08db829131dcd6925797",
+      "response_sha256": "8829e229d87acadb788d3689ee6ab71115f6a32b5470e83876a26a77f4d5bab0",
+      "bundle_sha256": "007e92da29003a3d4dc009e23f452ceaeda5cb34837d59c82c10db6b1f7c267b",
+      "strobe_evidence": {
+        "schema_version": 1,
+        "times": [
+          0.125,
+          0.375,
+          0.625,
+          0.875
+        ],
+        "sample_origins": [
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame"
+        ],
+        "voltages_V": [
+          [
+            0.0,
+            0.125,
+            -0.0
+          ],
+          [
+            0.0,
+            0.375,
+            1.0
+          ],
+          [
+            0.0,
+            0.625,
+            2.0
+          ],
+          [
+            0.0,
+            0.875,
+            3.0
+          ]
+        ]
+      },
+      "rows": [
+        {
+          "time": 0,
+          "forced": false,
+          "evas_y_V": -0.0,
+          "native_rows": [
+            {
+              "time": 0.0,
+              "voltages": {
+                "u": 0.0,
+                "y": 0.0
+              }
+            }
+          ],
+          "direct_max_V": 0.0,
+          "direct_status": "P",
+          "evas_analytic_error_V": 0.0,
+          "evas_analytic_status": "P"
+        },
+        {
+          "time": 0.125,
+          "forced": true,
+          "evas_y_V": -0.0,
+          "native_rows": [
+            {
+              "time": 0.125,
+              "voltages": {
+                "u": 0.125,
+                "y": 0.0
+              }
+            }
+          ],
+          "direct_max_V": 0.0,
+          "direct_status": "P",
+          "evas_analytic_error_V": 0.0,
+          "evas_analytic_status": "P"
+        },
+        {
+          "time": 0.375,
+          "forced": true,
+          "evas_y_V": 1.0,
+          "native_rows": [
+            {
+              "time": 0.375,
+              "voltages": {
+                "u": 0.375,
+                "y": 1.0
+              }
+            }
+          ],
+          "direct_max_V": 0.0,
+          "direct_status": "P",
+          "evas_analytic_error_V": 0.0,
+          "evas_analytic_status": "P"
+        },
+        {
+          "time": 0.625,
+          "forced": true,
+          "evas_y_V": 2.0,
+          "native_rows": [
+            {
+              "time": 0.625,
+              "voltages": {
+                "u": 0.625,
+                "y": 2.0
+              }
+            }
+          ],
+          "direct_max_V": 0.0,
+          "direct_status": "P",
+          "evas_analytic_error_V": 0.0,
+          "evas_analytic_status": "P"
+        },
+        {
+          "time": 0.875,
+          "forced": true,
+          "evas_y_V": 3.0,
+          "native_rows": [
+            {
+              "time": 0.875,
+              "voltages": {
+                "u": 0.875,
+                "y": 3.0
+              }
+            }
+          ],
+          "direct_max_V": 0.0,
+          "direct_status": "P",
+          "evas_analytic_error_V": 0.0,
+          "evas_analytic_status": "P"
+        },
+        {
+          "time": 1,
+          "forced": false,
+          "evas_y_V": 4.0,
+          "native_rows": [
+            {
+              "time": 1.0,
+              "voltages": {
+                "u": 1.0,
+                "y": 4.0
+              }
+            }
+          ],
+          "direct_max_V": 0.0,
+          "direct_status": "P",
+          "evas_analytic_error_V": 0.0,
+          "evas_analytic_status": "P"
+        }
+      ],
+      "bundle_identity_sha256": "be68ad450b3a16778073dfe449e91abfa963859ed27eab00b38aeec9f0cc1e72",
+      "native_psf_sha256": "e2fc2a218207ea7fbd2d8613079ab4680594a2dcb2aa5965dff3a6f0fc53160c"
+    }
+  ],
+  "limits": [
+    "raw evidence local-only",
+    "two irregular t=0 rows missing remain I",
+    "Spectre effective reltol=1e-8 differs from requested 1e-7; original settings readback I retained",
+    "does not certify exact physical callback order or close original C1/#79/VCO F/I"
+  ],
+  "availability": {
+    "compact_report": "repository-contained",
+    "raw_runs_and_full_bundles": "local-only"
+  }
+}

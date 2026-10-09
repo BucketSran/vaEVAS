@@ -21,6 +21,7 @@
 | 当前支持什么、还有哪些限制？ | [能力表](../evas/docs/CAPABILITIES.md) |
 | 当前版本实际验证了什么？ | [当前执行证据](runs/parallel-gap-integration/README.md#当前证据) |
 | 正确答案与精度要求从哪里来？ | [独立验证集](../evas/validation/README.md)、[技术手册](../evas/docs/README.md) |
+| 指定求解时刻是否与 Spectre 有限配对？ | [strobe 对照](backends/strobe/README.md)，保留缺失观测和有效设置差异 |
 | EVAS 与 Spectre 如何受容差及步长影响？ | [瞬态精度与 VCO 对照](backends/transient-accuracy/README.md)，区分旧严格认证拒绝、本轮同请求重放及普通相位边界分歧 |
 | 共同事件验收重构有何前后对照？ | [六模型、两设置对照](backends/event-acceptance/README.md)，保留原参考误差、精确边界差异和未决资格 |
 | 极近事件后的非线性历史和 PWL 转折是否保持？ | [有序事件历史对照](backends/ordered-event-history/README.md)，保留原四项失败、两项严格计时诊断和未确认的精确顺序 |

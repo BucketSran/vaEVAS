@@ -1,0 +1,61 @@
+{
+  "base": "54241ab176da586eeb5a6f0a06057c30c1cb6a32",
+  "initial_reviewed_head": "5911c89e1b328adf2fcdf4c3c76348fa990f986c",
+  "fixed_runtime": "940e5600f60299d52a7e23ea1562232accdd37c7",
+  "availability": "full reports and logs local-only; compact receipt repository-contained",
+  "astra": {
+    "model": "gpt-6-astra",
+    "method": "fresh code review, independent copied and isolated built kernels, original PSF recomputation, final compact evidence hash audit",
+    "confirmed_finding": "signed zero caused panic or missing initial observation",
+    "resolution": "numeric sorting and lookup agree with equality; public and raw IR both directions pass",
+    "focused_tests": 13
+  },
+  "glm": {
+    "cli_version": "2.1.284 (Claude Code)",
+    "requested_model": "glm-5.3",
+    "reported_models": [
+      "glm-5.3"
+    ],
+    "num_turns": 1,
+    "input_sha256": "0c8b7de979b9008685bd9be4d6458d4b590f0bb31b9308a5ab56dd9a9087566b",
+    "stop_reason": "end_turn",
+    "elapsed_seconds": 385.575,
+    "review_valid": true,
+    "total_cost_usd": null,
+    "model_usage": {
+      "glm-5.3": {
+        "inputTokens": 133246,
+        "outputTokens": 26962,
+        "cacheReadInputTokens": 0,
+        "cacheCreationInputTokens": 0,
+        "webSearchRequests": 0,
+        "costUSD": 1.34028,
+        "contextWindow": 200000,
+        "maxOutputTokens": 32000,
+        "thinkingTokens": 0,
+        "canonicalModel": "glm-5.3",
+        "provider": "firstParty",
+        "costBasis": "unknown"
+      }
+    }
+  },
+  "glm_scope": "actual supplied-text static review through5911; later fixes covered by Astra, not claimed as second GLM review",
+  "glm_initial_failure": "prompt-too-long, 0 tokens/0USD; preserved first attempt; reduced duplicate context before real review",
+  "dispositions": {
+    "F1": "fixed and independently reproduced/retested",
+    "F2": "empty expanded schedule explicitly documented as no-op with no receipt",
+    "F3": "hypothetical unknown origin not reachable in current producers; no confirmed defect",
+    "F4": "strobe records appended after solver returns; bounded append discards new records, does not evict earlier event records",
+    "F5": "GUARDS added and traceability regenerated",
+    "F6": "intentional documented refusal; local clock would discard absolute future forced endpoints"
+  },
+  "original_strict_gates": "C1/#79/VCO F/I unchanged; no main merge recommendation",
+  "files": {
+    "review/astra/REPORT.md": "e3fd1e7ab3f9246b654d6689a6060ffd4058cf4f0445b6a2094efe1d41843527",
+    "review/astra/delta-focused-tests.log": "52522d6720162be1e8af2408e31b8b8c8efc2f7642d32a01176bceaa6fc09131",
+    "review/astra/final-compact-verification.json": "9ce62bc3f56779c9105315a7ddab928cbee0ec37cb14ab6fdc3c65511d95229a",
+    "review/astra/final-pairing-verification.json": "1fbe81ae8e3390ed1f24d95fa58daa2a3db82e23398aba21aa155f1f87acdf99",
+    "review/glm/receipt.json": "bb85396f03c8cb7f30f8fd6cda45d22e0865c33e7e51d8182e73e20ad6ea175b",
+    "review/glm/review.md": "3eb6cb3a1bbe79c43a0bef672375352002638058f4599756ed725ff3a6eb525c"
+  }
+}
