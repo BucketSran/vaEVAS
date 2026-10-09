@@ -3,7 +3,7 @@
 本轮使用服务器实际执行。结论更新在唯一的[支持总表](../../../evas/docs/COMPARISON.md)，
 本页保存逐条件结果、判据和证据边界；首轮收据为 [20261009.json](20261009.json)，
 Gnucap 时间分辨率补测为 [20261009-timegrid.json](20261009-timegrid.json)。
-当前表采用补测后的 Gnucap 结果，首轮失败和原始判定继续保留。
+当前表采用补测后的 Gnucap 结果和[新的 EVAS 核心验收](20261009-core-evidence.json)，首轮失败和原始判定继续保留。
 
 ## 版本、范围与执行身份
 
@@ -11,8 +11,12 @@ EVAS 为 main `6ee1ebaaea827dc52b506984d732aa74a74bc6e8`、0.14.0 / IR18。
 运行时源码未改，现有工作区差异是文档与验证资产。服务器新建隔离目录、复制源码、
 锁定依赖并重新构建 release 内核，SHA256 为
 `5f569a5aad2f3e0627d7a89841853eee01a4b51c010839d3d8b4a9f47662c59f`。
-内核自报 build_revision 为空；源码到二进制的关系由完整源码清单和实际构建收据补充。
-后续补测复用同一二进制，并逐文件核对运行时源码一致。
+内核自报 build_revision 为空。原 BUILD 缺实际编译器哈希与 Cargo.lock 字段，不能补造这些字段。
+本轮从 main `5d357251` 新建隔离目录，记录实际 cargo/rustc 路径、哈希、版本和 Cargo.lock，
+以 `--offline --locked --release -j 1` 重新构建，再运行原 12 条核心条件。新内核 SHA256 为
+`ae6fcaf25770ebefe0fac8e226aeec952068f84a69e7d4c5aa1977b6e8b5caf5`。
+运行时源码与首轮相同；新执行的全部数值记录与首轮逐项相同。新身份链用于新执行，原收据不回填。
+专项和 Gnucap 补测仍使用各自原身份。
 
 | 后端 | 实际身份 |
 | --- | --- |
@@ -30,7 +34,9 @@ v2 保持原数学、刺激、参数和预算，仅重跑 13×4；两个源文�
 未执行的中间准备目录不计实验。**60 份 v1、52 份 v2、48 份 core、3 份设置复核均保留，共 163 个后端配置尝试**；
 编译失败的配置没有启动其后续瞬态模拟。最终结果不把首次失败冒充成未运行。
 后续另执行 13 个 Gnucap 时间分辨率补测及 3 个细步长诊断，共 **179 个配置尝试**。
-主比较仍为 108 个位置；其中 13 个 Gnucap 专项位置使用新设置，其他位置复用原收据。
+本轮再执行 12 个 EVAS 核心条件和 2 个 Spectre 输出格式预检，合计 **193 个配置尝试**。
+主比较仍为 108 个位置；12 个 EVAS 核心位置和 13 个 Gnucap 专项位置使用新记录，其他位置复用原收据。
+Spectre 两次预检另列，不增加条件数，也不替换原先的 I。
 
 ## 核心 12 条件
 
@@ -38,51 +44,63 @@ core-v1 源码、刺激、网格、检查器和原资格门槛保持不变。
 请求 `reltol=1e-5`、`vabstol=1e-7 V`、`iabstol=1e-12 A`、`maxstep=200 ps`。
 Spectre 实际瞬态 reltol 为 `1e-6`，EVAS 响应回显 `1e-5`，不声称同名容差等价。
 
-下表是执行结果；W 表示可解析波形、C 表示编译失败、R 表示瞬态失败无波形。
-W **不是行为通过**：观察资料未达到 core-v1 检查要求，W 的正式判定均为 I；C/R 为 X。
+下表是当前结果；✓ 是原 core-v1 有限观测验收通过，W 表示可解析波形但未完成验收，
+C 表示编译失败，R 表示瞬态失败无波形。W 的正式判定为 I，C/R 为 X。
+EVAS 采用新执行与完整身份链，**12 项 P**；其余后端保留首轮的 **27 项 I、9 项 X**。
 
 | 条件 | Spectre | OpenVAF-R + ngspice | Gnucap | EVAS |
 | --- | --- | --- | --- | --- |
-| VR-01 | W | W | W | W |
-| EX-01 | W | W | W | W |
-| EV-SH-01 | W | R | W | W |
-| EV-HC-01 | W | R | W | W |
-| EV-HC-02 | W | R | W | W |
-| TM-01 | W | R | W | W |
-| CP-01 | W | W | W | W |
-| CP-02 | W | W | C | W |
-| SI-01 | W | C | W | W |
-| CO-SH-01 | W | C | W | W |
-| CO-HC-01 | W | R | W | W |
-| CO-VCO-01 | W | W | C | W |
+| VR-01 | W | W | W | ✓ |
+| EX-01 | W | W | W | ✓ |
+| EV-SH-01 | W | R | W | ✓ |
+| EV-HC-01 | W | R | W | ✓ |
+| EV-HC-02 | W | R | W | ✓ |
+| TM-01 | W | R | W | ✓ |
+| CP-01 | W | W | W | ✓ |
+| CP-02 | W | W | C | ✓ |
+| SI-01 | W | C | W | ✓ |
+| CO-SH-01 | W | C | W | ✓ |
+| CO-HC-01 | W | R | W | ✓ |
+| CO-VCO-01 | W | W | C | ✓ |
 
 OpenVAF-R/ngspice 的 5 个 R 是瞬态工作点失败，日志提示 timestep too small；SI-01 的层次语法
 和 CO-SH-01 的事件 OR 在编译阶段失败。Gnucap 的 CP-02、CO-VCO-01 在 modelgen 编译阶段失败。
 这些是所测输入和固定工具组合的结果，不是对所有等价写法的“不支持证明”。
 
-### 为什么两者都未判通过
+### 本轮补齐的取证与剩余缺口
 
-Spectre 和 EVAS 的 24 份核心判定均为 `execution_state=completed`、`status=I`，
-唯一性质记录都是 `observation: Missing source/units/uncertainty qualification`。
-[检查器](../../../evas/validation/paper/criteria.py)的 `assess` 在此前置检查直接返回，
-**还没有对电压、事件次数或边界行为正式判 P/F**。
+首轮 Spectre 和 EVAS 都停在 `Missing source/units/uncertainty qualification`，尚未正式判行为对错。
+本轮 EVAS 的新构建、新执行、完整源码依赖、实际编译器和内核哈希已连通；
+[独立源码审查](core-source-review.json)来自 `support_publication_review` 审查 agent，
+逐项阅读固定源码并从方程重算 119 个解析锚点，覆盖全部 12 份模型；不是由输出吻合自动生成的证书。
+现有 `actual_observation.py` 从实际响应推导时间序列化、输入 PWL 表示差、输出区间半径及原生记录来源，
+再交给未修改的 core-v1 检查器。12 项的规定计分性质均通过，基础观察资格项齐全，原模型、网格、误差目标和分母未变。
+**CP-02、CO-VCO-01 的精确模端点语义仍单列 I**，未纳入这个 P。新报告完整保留
+`endpoint_semantics_status`、逐边界记录及 `separate_diagnostics`，没有把边界待核折叠掉。
+具体是 22 条事件精确边界记录和 8 条环回精确边界记录均为 I；这些原本属于单列诊断，
+不在规定计分性质内。有限时间不确定度下，边界的左右侧尚不能由这些记录唯一确定。
 
-适配器尚未提供经过资格核验的时间、电压和输入误差界，以及来源、输入和原生初值资料；
-例如两端 VR-01 的 `time_error_s`、`voltage_error_V`、`input_error_V` 都是 null，
-`qualified`、`source_validated`、`input_bounds_qualified`、`native_initial` 均为 false。
-这表示适配器没有建立这些资格，不能反推实际输入或初值错误。已有源码清单和输出哈希，
-也不能替代数值误差界。VR-01 在 69 个共同采样点的后端最大差约 `4.996e-16 V`，但仍得到 I。
+这个 P 是规定观察点的电压、计数、环回与一致历史检查通过。
+事件规则要求存在一条与原生计数括区和全部相关输出相容的合法历史，
+**不证明每个潜在实际回调时刻都满足窗口，也不证明点间连续波形或与 Spectre 完全一致**。
+输出区间取自 EVAS 的实际证书，适配器检查其传输、包含关系和身份，没有独立重证整个求解器。
 
-这项资格针对有依据的有限观测误差，检查器明确不覆盖未观察到的点间短脉冲；
-不能把 I 一概解释成“缺完整连续时间证明”。专项检查器使用另一套预先固定的有限采样判据，
-因此其 ✓ 与 core-v1 的 I 可以同时成立，两份结果都保留。
+Spectre 安装版 User Guide pp.253–254、Reference pp.443、456 说明 strobe 在保存点求解，
+Reference p.201 定义 PSFASCII precision。手册版本与文件哈希见[安装手册依据](../event-alignment/spectre-numerics-and-portability.md#sources-and-identity)。原 12 份 PSF 的行数均等于日志接受步数加初始点，
+已核对原生保存记录、端口、时间顺序和身份；这些事实不能替代输入及导出误差资格。
+原 12 份中有 9 份末行早于固定 stop，部分条件缺少精确中心。
 
-语言语义、选定设置下的精度目标和本项目的证据资料要求分别判断。
-例如 [Verilog-AMS LRM 2.4 §5.10.3.3](https://accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
-允许 `timer` 在显式 `time_tol` 范围内放置事件点，并未要求两款工具选择同一个浮点时刻。
-因此两端时刻不同本身不证明违反语言语义；但也不能据此豁免本轮所有事件差异。
-要认定某个实现有语言缺陷，仍需给出合法模型、对应条款、实际设置与超出允许范围的可靠观察。
-当前核心 I 记录不能证明 Spectre 和 EVAS 都无法实现相应语言能力。
+两项新预检显式设置 `precision="%.17g"`、`compression=no`、`skipcount=1` 和步进日志；
+源码、刺激、容差、最大步长、完整 strobe 请求及 stop 均保持不变。日志确认 17 位格式生效：
+
+| 预检 | 实际结果 | 仍缺什么 |
+| --- | --- | --- |
+| EV-SH-01 | 45,837 行；覆盖 stop；规定网格间隔达标 | 2 µs 精确中心仍无记录 |
+| CP-02 | 30,855 行；局部间隔超限消失；缺失精确中心由 3 个减至 1 个 | 末行仍早于 6 µs 约 1.70×10⁻¹⁸ s；一个环回中心缺失 |
+
+两例仍为 I。17 位导出只能修复部分十进制表示损失，不能消除实际时间调度偏差。
+Spectre 实际 PWL 输入在未保存回调时刻的全域误差界也尚未建立，不能把容差或采样点吻合当作该界。
+后续先解决这些具体观察缺口，再扩展同一取证方法；不把 I 当成语言能力失败。
 
 ### EVAS 与 Spectre 的实测差异
 
@@ -199,6 +217,10 @@ python3 -B experiments/backends/support/probes.py freeze runs/new-support-inputs
 python3 -B experiments/backends/support/summarize.py runs/support-comparison-20261009 /tmp/support-summary.json
 python3 -B -m unittest discover -s experiments/backends/support -p 'test_*.py'
 python3 -B experiments/backends/support/timegrid_report.py runs/support-comparison-20261009 /tmp/support-timegrid.json
+python3 -B experiments/backends/support/core_report.py \
+  runs/core-evidence-20261009 runs/core-spectre-evidence-20261009 \
+  runs/support-comparison-20261009 experiments/backends/support/core-source-review.json \
+  runs/new-core-reanalysis
 ```
 
 执行入口为 `probes.py run INPUTS --output NEW_DIR --backend BACKEND --profile PROFILE`。
@@ -209,5 +231,7 @@ python3 -B experiments/backends/support/timegrid_report.py runs/support-comparis
 
 主比较与设置复核的清理收据全部确认完成。精简收据、模型和检查器是 repository-contained；
 原始波形、完整日志、冻结输入、实际请求与二进制为 **local-only**，保存在项目可见入口
-`runs/support-comparison-20261009/`，服务器原目录也保留。哈希不是公开下载地址。
+`runs/support-comparison-20261009/`。核心补测分别在 `runs/core-evidence-20261009/` 和
+`runs/core-spectre-evidence-20261009/`，服务器原目录也保留。`core_report.py` 复核原始清单，
+用现有适配器和原检查器重算，并另存新报告。哈希不是公开下载地址。
 本轮可支持开发文档的实测说明，尚不能宣称独立论文评价、全面 Spectre 对齐或完整公开复现已完成。

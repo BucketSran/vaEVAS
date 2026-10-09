@@ -1,0 +1,3473 @@
+{
+  "schema_version": 1,
+  "claim": "New EVAS execution assessed by unchanged finite core-v1 criteria; Spectre format preflight is separate and remains I. No full-domain or cross-backend equivalence claim.",
+  "previous_receipt": {
+    "path": "experiments/backends/support/20261009-timegrid.json",
+    "sha256": "91362b594802f9f97608bc9a65aae91dd734e72845f27ed0a6e6924a50f7668e"
+  },
+  "source_revision": "5d3572513ced06ae0f1d245f23c83b47cf72d7f8",
+  "source_manifest": {
+    "path": "runs/core-evidence-20261009/SOURCE_MANIFEST.json",
+    "sha256": "75971199bc1e96e4384b2b5a27207ae4674dd5fb833f9b65c9c7f8b7b2578469",
+    "availability": "local-only"
+  },
+  "source_review": {
+    "path": "experiments/backends/support/core-source-review.json",
+    "sha256": "7529300b147d99da2248ad5aa7247c85878fb127a032096bc87aeed7cccd7111",
+    "availability": "repository-contained"
+  },
+  "build_record": {
+    "path": "runs/core-evidence-20261009/collected/evas/build/BUILD.json",
+    "sha256": "bff299a03b4d3d122df022d8ecdc290b2c43bfc836f11da3987c8b868a8be8e1",
+    "availability": "local-only"
+  },
+  "kernel_sha256": "ae6fcaf25770ebefe0fac8e226aeec952068f84a69e7d4c5aa1977b6e8b5caf5",
+  "cargo_lock_sha256": "4ac34a67969cbd69004115347a99e1d1ad71b577ca98d5dacdadd707aedadd01",
+  "compiler_identity": {
+    "cargo": {
+      "actual_binary_sha256": "f30f9fd1b1d0b8fd10dc33219eb4cd4bec3543f40e434ac71f5a03fd0359063f",
+      "version": "cargo 1.96.0 (30a34c682 2026-05-25)"
+    },
+    "rustc": {
+      "actual_binary_sha256": "ba4b837efb6612dfa8d941c5a72b8a50d1d03a0f36216743b173949aa8d9eb75",
+      "version": "rustc 1.96.0 (ac68faa20 2026-05-25)"
+    }
+  },
+  "build_flags": [
+    "--offline",
+    "--locked",
+    "--release",
+    "-j",
+    "1"
+  ],
+  "counts": {
+    "P": 12
+  },
+  "evas": [
+    {
+      "condition": "VR-01",
+      "execution": "waveform_available",
+      "status": "P",
+      "properties": [
+        {
+          "name": "observation",
+          "status": "P",
+          "rows": 30004
+        },
+        {
+          "name": "input_consistency:ref",
+          "status": "P",
+          "max_observed_error": 2.220446049250313e-16,
+          "max_budget_excess": -1.2748428191153569e-15,
+          "units": "V",
+          "scope": "Observation/source compatibility, not DUT behavior"
+        },
+        {
+          "name": "input_consistency:ip",
+          "status": "P",
+          "max_observed_error": 3.885780586188048e-16,
+          "max_budget_excess": -1.1506561169268679e-15,
+          "units": "V",
+          "scope": "Observation/source compatibility, not DUT behavior"
+        },
+        {
+          "name": "input_consistency:im",
+          "status": "P",
+          "max_observed_error": 1.1102230246251565e-16,
+          "max_budget_excess": -1.3435183700725881e-15,
+          "units": "V",
+          "scope": "Observation/source compatibility, not DUT behavior"
+        },
+        {
+          "name": "voltage:out",
+          "status": "P",
+          "max_error_lower_bound": 0,
+          "max_error_upper_bound": 2.5301162082479416e-15,
+          "max_observed_error": 4.440892098500626e-16,
+          "uncertainty": 2.086026998397879e-15,
+          "budget": 0.001,
+          "units": "V"
+        }
+      ],
+      "checker_identity": {
+        "version": "paper-criteria-v1",
+        "files": {
+          "criteria.py": "ecdabb0c187d968400e8ee8c23f6f99a7552b3533962917539557436b8a95c1c",
+          "oracle.py": "96ece5a943113a6e6e79b441145a2f2238da43938914605d884b5fd0414e72dc",
+          "core-v1.json": "e1ae5311da9e05991e9802da1a24e97a70d179972608a1b9d21eb00013f61a53"
+        },
+        "runtime": {
+          "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+          "math_sha256": "cc7d168e6933da397995ce0c3bf0b96813ddbfcacaeb37988e5c98aa02810452"
+        },
+        "sha256": "df1269e0be8a50a10eba6dfa267de18f5da1080da510ca893a4fea0050355ecb"
+      },
+      "claim_limit": "Maximum error on qualified observed records; unobserved between-record short pulses remain outside this claim.",
+      "required_properties": [
+        "observation",
+        "input_consistency:ref",
+        "input_consistency:ip",
+        "input_consistency:im",
+        "voltage:out"
+      ],
+      "separate_diagnostics": [],
+      "execution_identity_verified": true,
+      "missing_roles": [],
+      "uncertainty": {
+        "time_error_s": 4.2346751505284356e-22,
+        "voltage_error_V": 1.3322676295501878e-15,
+        "input_error_V": 5.875291572698948e-17
+      },
+      "same_numeric_rows_as_original": true,
+      "previous_observation": {
+        "path": "runs/support-comparison-20261009/collected/evas/outputs/evas/runs/VR-01/observation.json",
+        "sha256": "d5a1c6c8498a2cb6b4391e8fea74688f96cf5554b85127f568a8209c048698d2",
+        "availability": "local-only"
+      },
+      "evidence": {
+        "path": "runs/core-evidence-20261009/replay-v2/VR-01/evidence.json",
+        "sha256": "34b1b976cede28abc9e3685435d91157d329412a40b3545b5efc85302e119d78",
+        "availability": "local-only"
+      },
+      "assessment": {
+        "path": "runs/core-evidence-20261009/replay-v2/VR-01/assessment.json",
+        "sha256": "7faacf22050e6fb9c9efee5d59b68b56403ef8846e63e50ef85850142c4334ed",
+        "availability": "local-only"
+      },
+      "effective_controls": {
+        "absolute_V": 1e-07,
+        "relative": 1e-05,
+        "stop_s": 6e-06,
+        "max_step_s": 2e-10,
+        "max_step_applied": false
+      }
+    },
+    {
+      "condition": "EX-01",
+      "execution": "waveform_available",
+      "status": "P",
+      "properties": [
+        {
+          "name": "observation",
+          "status": "P",
+          "rows": 40001
+        },
+        {
+          "name": "input_consistency:ctl",
+          "status": "P",
+          "max_observed_error": 8.881784197001252e-16,
+          "max_budget_excess": -5.839310805721977e-16,
+          "units": "V",
+          "scope": "Observation/source compatibility, not DUT behavior"
+        },
+        {
+          "name": "voltage:freq",
+          "status": "P",
+          "max_error_lower_bound": 0,
+          "max_error_upper_bound": 1.4021885649112554e-15,
+          "max_observed_error": 4.440892098500626e-16,
+          "uncertainty": 9.580993550611928e-16,
+          "budget": 0.001,
+          "units": "V"
+        }
+      ],
+      "checker_identity": {
+        "version": "paper-criteria-v1",
+        "files": {
+          "criteria.py": "ecdabb0c187d968400e8ee8c23f6f99a7552b3533962917539557436b8a95c1c",
+          "oracle.py": "96ece5a943113a6e6e79b441145a2f2238da43938914605d884b5fd0414e72dc",
+          "core-v1.json": "e1ae5311da9e05991e9802da1a24e97a70d179972608a1b9d21eb00013f61a53"
+        },
+        "runtime": {
+          "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+          "math_sha256": "cc7d168e6933da397995ce0c3bf0b96813ddbfcacaeb37988e5c98aa02810452"
+        },
+        "sha256": "df1269e0be8a50a10eba6dfa267de18f5da1080da510ca893a4fea0050355ecb"
+      },
+      "claim_limit": "Maximum error on qualified observed records; unobserved between-record short pulses remain outside this claim.",
+      "required_properties": [
+        "observation",
+        "input_consistency:ctl",
+        "voltage:freq"
+      ],
+      "separate_diagnostics": [],
+      "execution_identity_verified": true,
+      "missing_roles": [],
+      "uncertainty": {
+        "time_error_s": 8.470127377258053e-22,
+        "voltage_error_V": 4.440892098500626e-16,
+        "input_error_V": 1.8100755269645497e-16
+      },
+      "same_numeric_rows_as_original": true,
+      "previous_observation": {
+        "path": "runs/support-comparison-20261009/collected/evas/outputs/evas/runs/EX-01/observation.json",
+        "sha256": "5c582be58fbe5dd60a1e2d45bde51bf125abb13a53a1f01284a13ee4ad172f5a",
+        "availability": "local-only"
+      },
+      "evidence": {
+        "path": "runs/core-evidence-20261009/replay-v2/EX-01/evidence.json",
+        "sha256": "bf6c522b51df90f49c996edf6e49f7df788f178949d983a46713492f640f2582",
+        "availability": "local-only"
+      },
+      "assessment": {
+        "path": "runs/core-evidence-20261009/replay-v2/EX-01/assessment.json",
+        "sha256": "c5662b48dc048a97994933cde030a029d8cc4d8c14283f9eb578e7d1842ba0c7",
+        "availability": "local-only"
+      },
+      "effective_controls": {
+        "absolute_V": 1e-07,
+        "relative": 1e-05,
+        "stop_s": 8e-06,
+        "max_step_s": 2e-10,
+        "max_step_applied": false
+      }
+    },
+    {
+      "condition": "EV-SH-01",
+      "execution": "waveform_available",
+      "status": "P",
+      "properties": [
+        {
+          "name": "observation",
+          "status": "P",
+          "rows": 45788
+        },
+        {
+          "name": "input_consistency:in",
+          "status": "P",
+          "max_observed_error": 5.273559366969494e-16,
+          "max_budget_excess": -1.6486263396120473e-15,
+          "units": "V",
+          "scope": "Observation/source compatibility, not DUT behavior"
+        },
+        {
+          "name": "boundary_cohort",
+          "status": "P",
+          "missing": [],
+          "rule": "Attested requested nominal centers within evidenced serialization precision"
+        },
+        {
+          "name": "counter_voltage:count",
+          "status": "P",
+          "max_observed_error": 0.0,
+          "uncertainty": 1.8318679906315083e-15,
+          "budget": 0.001,
+          "units": "V"
+        },
+        {
+          "name": "event_history",
+          "status": "P",
+          "port": "count",
+          "intervals_T": [
+            [
+              1.9999999999999987,
+              2.000000000000001
+            ],
+            [
+              3.9999900497512426,
+              4.000000000000001
+            ],
+            [
+              5.999979999999999,
+              6.000000000000001
+            ],
+            [
+              7.999990049751244,
+              8.0
+            ]
+          ],
+          "native_brackets_T": [
+            [
+              1.9999999999999987,
+              2.000000000000001
+            ],
+            [
+              3.9999900497512426,
+              4.000000000000001
+            ],
+            [
+              5.999979999999999,
+              6.000000000000001
+            ],
+            [
+              7.999990049751244,
+              8.0
+            ]
+          ],
+          "native_sample_pairs_T": [
+            [
+              1.9999999999999996,
+              2.0
+            ],
+            [
+              3.9999900497512435,
+              4.0
+            ],
+            [
+              5.99998,
+              6.0
+            ],
+            [
+              7.999990049751245,
+              8.0
+            ]
+          ],
+          "legal_windows_T": [
+            [
+              1.999,
+              2.001
+            ],
+            [
+              3.999,
+              4.001
+            ],
+            [
+              5.999,
+              6.001
+            ],
+            [
+              7.999,
+              8.001
+            ]
+          ],
+          "rule": "Exists one compatible legal native-counter history shared by every dependent port; not a measured bound proving every possible actual callback time legal"
+        },
+        {
+          "name": "voltage:out",
+          "status": "P",
+          "max_error_lower_bound": 0,
+          "max_error_upper_bound": 5.00000000193243e-06,
+          "max_observed_error": 1.9999999997244444e-06,
+          "uncertainty": 3.0000000022079854e-06,
+          "budget": 0.001,
+          "units": "V"
+        }
+      ],
+      "checker_identity": {
+        "version": "paper-criteria-v1",
+        "files": {
+          "criteria.py": "ecdabb0c187d968400e8ee8c23f6f99a7552b3533962917539557436b8a95c1c",
+          "oracle.py": "96ece5a943113a6e6e79b441145a2f2238da43938914605d884b5fd0414e72dc",
+          "core-v1.json": "e1ae5311da9e05991e9802da1a24e97a70d179972608a1b9d21eb00013f61a53"
+        },
+        "runtime": {
+          "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+          "math_sha256": "cc7d168e6933da397995ce0c3bf0b96813ddbfcacaeb37988e5c98aa02810452"
+        },
+        "sha256": "df1269e0be8a50a10eba6dfa267de18f5da1080da510ca893a4fea0050355ecb"
+      },
+      "claim_limit": "Maximum error on qualified observed records; unobserved between-record short pulses remain outside this claim.",
+      "event_boundary_observations": [
+        {
+          "cohort_source": {
+            "nominal_time_s": 2e-06,
+            "row_index": 10096,
+            "request_id": "EV-SH-01:breakpoint:103",
+            "serialization_error_s": 8.470127377258053e-22
+          },
+          "counter_port": "count",
+          "nominal_T": 2,
+          "sample_time_s": 2e-06,
+          "raw_values": {
+            "in": -5.551115123125783e-17,
+            "out": -5.551115123125783e-17,
+            "count": 1.0
+          },
+          "latent_event_interval_T": [
+            1.9999999999999987,
+            2.000000000000001
+          ],
+          "observed_callback_stage": 1,
+          "relation": "unresolved tie",
+          "status": "I",
+          "time_uncertainty_s": 8.470127377258053e-22
+        },
+        {
+          "cohort_source": {
+            "nominal_time_s": 4e-06,
+            "row_index": 20297,
+            "request_id": "EV-SH-01:breakpoint:307",
+            "serialization_error_s": 8.470127377258053e-22
+          },
+          "counter_port": "count",
+          "nominal_T": 4,
+          "sample_time_s": 4e-06,
+          "raw_values": {
+            "in": 0.39999999999999997,
+            "out": 0.39999999999999997,
+            "count": 2.0
+          },
+          "latent_event_interval_T": [
+            3.9999900497512426,
+            4.000000000000001
+          ],
+          "observed_callback_stage": 2,
+          "relation": "unresolved tie",
+          "status": "I",
+          "time_uncertainty_s": 8.470127377258053e-22
+        },
+        {
+          "cohort_source": {
+            "nominal_time_s": 6e-06,
+            "row_index": 30491,
+            "request_id": "EV-SH-01:breakpoint:511",
+            "serialization_error_s": 8.470127377258053e-22
+          },
+          "counter_port": "count",
+          "nominal_T": 6,
+          "sample_time_s": 6e-06,
+          "raw_values": {
+            "in": 0.8,
+            "out": 0.7999999999999998,
+            "count": 3.0
+          },
+          "latent_event_interval_T": [
+            5.999979999999999,
+            6.000000000000001
+          ],
+          "observed_callback_stage": 3,
+          "relation": "unresolved tie",
+          "status": "I",
+          "time_uncertainty_s": 8.470127377258053e-22
+        },
+        {
+          "cohort_source": {
+            "nominal_time_s": 8e-06,
+            "row_index": 40687,
+            "request_id": "EV-SH-01:breakpoint:715",
+            "serialization_error_s": 8.470127377258053e-22
+          },
+          "counter_port": "count",
+          "nominal_T": 8,
+          "sample_time_s": 8e-06,
+          "raw_values": {
+            "in": 0.20000000000000012,
+            "out": 0.19999999999999912,
+            "count": 4.0
+          },
+          "latent_event_interval_T": [
+            7.999990049751244,
+            8.0
+          ],
+          "observed_callback_stage": 4,
+          "relation": "unresolved tie",
+          "status": "I",
+          "time_uncertainty_s": 8.470127377258053e-22
+        }
+      ],
+      "required_properties": [
+        "observation",
+        "input_consistency:in",
+        "boundary_cohort",
+        "counter_voltage:count",
+        "event_history",
+        "voltage:out"
+      ],
+      "separate_diagnostics": [
+        "event_boundary_observations"
+      ],
+      "execution_identity_verified": true,
+      "missing_roles": [],
+      "uncertainty": {
+        "time_error_s": 8.470127377258053e-22,
+        "voltage_error_V": 1.8318679906315083e-15,
+        "input_error_V": 9.001046435974658e-17
+      },
+      "same_numeric_rows_as_original": true,
+      "previous_observation": {
+        "path": "runs/support-comparison-20261009/collected/evas/outputs/evas/runs/EV-SH-01/observation.json",
+        "sha256": "93b143a1e355f7c24d5b9d78af41d439fd7a43209516d59956d10ca4341bae05",
+        "availability": "local-only"
+      },
+      "evidence": {
+        "path": "runs/core-evidence-20261009/replay-v2/EV-SH-01/evidence.json",
+        "sha256": "0afa9b50feb093a73840fb1426d25ce181f371eabc90b1b1ba8d34f0b670d4e4",
+        "availability": "local-only"
+      },
+      "assessment": {
+        "path": "runs/core-evidence-20261009/replay-v2/EV-SH-01/assessment.json",
+        "sha256": "38e6aa488664a12b22e5eae13e292f134636eb282ee9710493af87f6ce5bb3d4",
+        "availability": "local-only"
+      },
+      "effective_controls": {
+        "absolute_V": 1e-07,
+        "relative": 1e-05,
+        "stop_s": 9e-06,
+        "max_step_s": 2e-10,
+        "max_step_applied": true
+      }
+    },
+    {
+      "condition": "EV-HC-01",
+      "execution": "waveform_available",
+      "status": "P",
+      "properties": [
+        {
+          "name": "observation",
+          "status": "P",
+          "rows": 20378
+        },
+        {
+          "name": "input_consistency:in",
+          "status": "P",
+          "max_observed_error": 2.220446049250313e-16,
+          "max_budget_excess": -5.693213608881643e-16,
+          "units": "V",
+          "scope": "Observation/source compatibility, not DUT behavior"
+        },
+        {
+          "name": "boundary_cohort",
+          "status": "P",
+          "missing": [],
+          "rule": "Attested requested nominal centers within evidenced serialization precision"
+        },
+        {
+          "name": "counter_voltage:count",
+          "status": "P",
+          "max_observed_error": 0.0,
+          "uncertainty": 5.551115123125783e-16,
+          "budget": 0.001,
+          "units": "V"
+        },
+        {
+          "name": "event_history",
+          "status": "P",
+          "port": "count",
+          "intervals_T": [
+            [
+              1.3749999999999998,
+              1.3750000000000004
+            ],
+            [
+              3.375,
+              3.3750200000000006
+            ]
+          ],
+          "native_brackets_T": [
+            [
+              1.3749799999999996,
+              1.3750000000000004
+            ],
+            [
+              3.3749999999999996,
+              3.3750200000000006
+            ]
+          ],
+          "native_sample_pairs_T": [
+            [
+              1.37498,
+              1.375
+            ],
+            [
+              3.375,
+              3.37502
+            ]
+          ],
+          "legal_windows_T": [
+            [
+              1.3749999999999998,
+              1.3755000000000002
+            ],
+            [
+              3.375,
+              3.3755
+            ]
+          ],
+          "rule": "Exists one compatible legal native-counter history shared by every dependent port; not a measured bound proving every possible actual callback time legal"
+        },
+        {
+          "name": "voltage:out",
+          "status": "P",
+          "max_error_lower_bound": 0,
+          "max_error_upper_bound": 5.551115123125783e-16,
+          "max_observed_error": 0,
+          "uncertainty": 5.551115123125783e-16,
+          "budget": 0.001,
+          "units": "V"
+        }
+      ],
+      "checker_identity": {
+        "version": "paper-criteria-v1",
+        "files": {
+          "criteria.py": "ecdabb0c187d968400e8ee8c23f6f99a7552b3533962917539557436b8a95c1c",
+          "oracle.py": "96ece5a943113a6e6e79b441145a2f2238da43938914605d884b5fd0414e72dc",
+          "core-v1.json": "e1ae5311da9e05991e9802da1a24e97a70d179972608a1b9d21eb00013f61a53"
+        },
+        "runtime": {
+          "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+          "math_sha256": "cc7d168e6933da397995ce0c3bf0b96813ddbfcacaeb37988e5c98aa02810452"
+        },
+        "sha256": "df1269e0be8a50a10eba6dfa267de18f5da1080da510ca893a4fea0050355ecb"
+      },
+      "claim_limit": "Maximum error on qualified observed records; unobserved between-record short pulses remain outside this claim.",
+      "event_boundary_observations": [
+        {
+          "cohort_source": {
+            "nominal_time_s": 1.375e-06,
+            "row_index": 6966,
+            "request_id": "EV-HC-01:breakpoint:103",
+            "serialization_error_s": 4.2350636886290264e-22
+          },
+          "counter_port": "count",
+          "nominal_T": 1.375,
+          "sample_time_s": 1.375e-06,
+          "raw_values": {
+            "in": 0.65,
+            "out": 0.9,
+            "count": 1.0
+          },
+          "latent_event_interval_T": [
+            1.3749999999999998,
+            1.3750000000000004
+          ],
+          "observed_callback_stage": 1,
+          "relation": "unresolved tie",
+          "status": "I",
+          "time_uncertainty_s": 4.2350636886290264e-22
+        },
+        {
+          "cohort_source": {
+            "nominal_time_s": 3.375e-06,
+            "row_index": 17157,
+            "request_id": "EV-HC-01:breakpoint:308",
+            "serialization_error_s": 4.2350636886290264e-22
+          },
+          "counter_port": "count",
+          "nominal_T": 3.375,
+          "sample_time_s": 3.375e-06,
+          "raw_values": {
+            "in": 0.35,
+            "out": 0.9,
+            "count": 1.0
+          },
+          "latent_event_interval_T": [
+            3.375,
+            3.3750200000000006
+          ],
+          "observed_callback_stage": 1,
+          "relation": "unresolved tie",
+          "status": "I",
+          "time_uncertainty_s": 4.2350636886290264e-22
+        }
+      ],
+      "required_properties": [
+        "observation",
+        "input_consistency:in",
+        "boundary_cohort",
+        "counter_voltage:count",
+        "event_history",
+        "voltage:out"
+      ],
+      "separate_diagnostics": [
+        "event_boundary_observations"
+      ],
+      "execution_identity_verified": true,
+      "missing_roles": [],
+      "uncertainty": {
+        "time_error_s": 4.2350636886290264e-22,
+        "voltage_error_V": 5.551115123125783e-16,
+        "input_error_V": 6.68519059554562e-17
+      },
+      "same_numeric_rows_as_original": true,
+      "previous_observation": {
+        "path": "runs/support-comparison-20261009/collected/evas/outputs/evas/runs/EV-HC-01/observation.json",
+        "sha256": "abebc3896034c5b0e5fdc9bf60b102b04857110585e670fda0999475c1be430f",
+        "availability": "local-only"
+      },
+      "evidence": {
+        "path": "runs/core-evidence-20261009/replay-v2/EV-HC-01/evidence.json",
+        "sha256": "fa518ce9a3d466ce971367dba975e96c2cc54a4e493349c7d40542fccea16b29",
+        "availability": "local-only"
+      },
+      "assessment": {
+        "path": "runs/core-evidence-20261009/replay-v2/EV-HC-01/assessment.json",
+        "sha256": "83c34c65026d63cc858da58c1dc9644d6c1374bfcbdb75adea23cae8eb054fe8",
+        "availability": "local-only"
+      },
+      "effective_controls": {
+        "absolute_V": 1e-07,
+        "relative": 1e-05,
+        "stop_s": 4e-06,
+        "max_step_s": 2e-10,
+        "max_step_applied": true
+      }
+    },
+    {
+      "condition": "EV-HC-02",
+      "execution": "waveform_available",
+      "status": "P",
+      "properties": [
+        {
+          "name": "observation",
+          "status": "P",
+          "rows": 30386
+        },
+        {
+          "name": "input_consistency:in",
+          "status": "P",
+          "max_observed_error": 4.440892098500626e-16,
+          "max_budget_excess": -4.450866758487494e-16,
+          "units": "V",
+          "scope": "Observation/source compatibility, not DUT behavior"
+        },
+        {
+          "name": "boundary_cohort",
+          "status": "P",
+          "missing": [],
+          "rule": "Attested requested nominal centers within evidenced serialization precision"
+        },
+        {
+          "name": "counter_voltage:count",
+          "status": "P",
+          "max_observed_error": 0.0,
+          "uncertainty": 5.551115123125783e-16,
+          "budget": 0.001,
+          "units": "V"
+        },
+        {
+          "name": "event_history",
+          "status": "P",
+          "port": "count",
+          "intervals_T": [
+            [
+              2.7499999999999996,
+              2.7500200000000006
+            ],
+            [
+              5.375,
+              5.375000000000002
+            ]
+          ],
+          "native_brackets_T": [
+            [
+              2.7499999999999996,
+              2.7500200000000006
+            ],
+            [
+              5.374999999999999,
+              5.375000000000002
+            ]
+          ],
+          "native_sample_pairs_T": [
+            [
+              2.75,
+              2.75002
+            ],
+            [
+              5.375,
+              5.375000000000001
+            ]
+          ],
+          "legal_windows_T": [
+            [
+              2.7499999999999996,
+              2.7510000000000003
+            ],
+            [
+              5.375,
+              5.3755
+            ]
+          ],
+          "rule": "Exists one compatible legal native-counter history shared by every dependent port; not a measured bound proving every possible actual callback time legal"
+        },
+        {
+          "name": "voltage:out",
+          "status": "P",
+          "max_error_lower_bound": 0,
+          "max_error_upper_bound": 5.551115123125783e-16,
+          "max_observed_error": 0,
+          "uncertainty": 5.551115123125783e-16,
+          "budget": 0.001,
+          "units": "V"
+        }
+      ],
+      "checker_identity": {
+        "version": "paper-criteria-v1",
+        "files": {
+          "criteria.py": "ecdabb0c187d968400e8ee8c23f6f99a7552b3533962917539557436b8a95c1c",
+          "oracle.py": "96ece5a943113a6e6e79b441145a2f2238da43938914605d884b5fd0414e72dc",
+          "core-v1.json": "e1ae5311da9e05991e9802da1a24e97a70d179972608a1b9d21eb00013f61a53"
+        },
+        "runtime": {
+          "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+          "math_sha256": "cc7d168e6933da397995ce0c3bf0b96813ddbfcacaeb37988e5c98aa02810452"
+        },
+        "sha256": "df1269e0be8a50a10eba6dfa267de18f5da1080da510ca893a4fea0050355ecb"
+      },
+      "claim_limit": "Maximum error on qualified observed records; unobserved between-record short pulses remain outside this claim.",
+      "event_boundary_observations": [
+        {
+          "cohort_source": {
+            "nominal_time_s": 2.75e-06,
+            "row_index": 13847,
+            "request_id": "EV-HC-02:breakpoint:103",
+            "serialization_error_s": 6.402755929613147e-22
+          },
+          "counter_port": "count",
+          "nominal_T": 2.75,
+          "sample_time_s": 2.75e-06,
+          "raw_values": {
+            "in": 0.35,
+            "out": 0.9,
+            "count": -0.0
+          },
+          "latent_event_interval_T": [
+            2.7499999999999996,
+            2.7500200000000006
+          ],
+          "observed_callback_stage": 0,
+          "relation": "unresolved tie",
+          "status": "I",
+          "time_uncertainty_s": 6.402755929613147e-22
+        },
+        {
+          "cohort_source": {
+            "nominal_time_s": 5.374999999999999e-06,
+            "row_index": 27164,
+            "request_id": "EV-HC-02:breakpoint:307",
+            "serialization_error_s": 6.402755929613147e-22
+          },
+          "counter_port": "count",
+          "nominal_T": 5.375,
+          "sample_time_s": 5.374999999999999e-06,
+          "raw_values": {
+            "in": 0.6499999999999997,
+            "out": 0.1,
+            "count": 1.0
+          },
+          "latent_event_interval_T": [
+            5.375,
+            5.375000000000002
+          ],
+          "observed_callback_stage": 1,
+          "relation": "unresolved tie",
+          "status": "I",
+          "time_uncertainty_s": 6.402755929613147e-22
+        }
+      ],
+      "required_properties": [
+        "observation",
+        "input_consistency:in",
+        "boundary_cohort",
+        "counter_voltage:count",
+        "event_history",
+        "voltage:out"
+      ],
+      "separate_diagnostics": [
+        "event_boundary_observations"
+      ],
+      "execution_identity_verified": true,
+      "missing_roles": [],
+      "uncertainty": {
+        "time_error_s": 6.402755929613147e-22,
+        "voltage_error_V": 5.551115123125783e-16,
+        "input_error_V": 7.795413620170777e-17
+      },
+      "same_numeric_rows_as_original": true,
+      "previous_observation": {
+        "path": "runs/support-comparison-20261009/collected/evas/outputs/evas/runs/EV-HC-02/observation.json",
+        "sha256": "b3ec5cf709f1aef1d8ecd59b6a5fd91cfef833e72cb42079f8d9846a1a3bdaf8",
+        "availability": "local-only"
+      },
+      "evidence": {
+        "path": "runs/core-evidence-20261009/replay-v2/EV-HC-02/evidence.json",
+        "sha256": "216e2c0debd11c103c0c9877a75bd5a1291c8fc81d5a78d50e4aa476f41e100c",
+        "availability": "local-only"
+      },
+      "assessment": {
+        "path": "runs/core-evidence-20261009/replay-v2/EV-HC-02/assessment.json",
+        "sha256": "33b048ebe96d51db6920a224e33ebb29ea5529a89a95c76c75e447cce0881aa2",
+        "availability": "local-only"
+      },
+      "effective_controls": {
+        "absolute_V": 1e-07,
+        "relative": 1e-05,
+        "stop_s": 6e-06,
+        "max_step_s": 2e-10,
+        "max_step_applied": true
+      }
+    },
+    {
+      "condition": "TM-01",
+      "execution": "waveform_available",
+      "status": "P",
+      "properties": [
+        {
+          "name": "observation",
+          "status": "P",
+          "rows": 40378
+        },
+        {
+          "name": "boundary_cohort",
+          "status": "P",
+          "missing": [],
+          "rule": "Attested requested nominal centers within evidenced serialization precision"
+        },
+        {
+          "name": "counter_voltage:count",
+          "status": "P",
+          "max_observed_error": 0.0,
+          "uncertainty": 1.9984014443252818e-15,
+          "budget": 0.001,
+          "units": "V"
+        },
+        {
+          "name": "event_history",
+          "status": "P",
+          "port": "count",
+          "intervals_T": [
+            [
+              1.9999999999999987,
+              2.000000000000001
+            ],
+            [
+              5.999979999999999,
+              6.000000000000001
+            ]
+          ],
+          "native_brackets_T": [
+            [
+              1.9999999999999987,
+              2.000000000000001
+            ],
+            [
+              5.999979999999999,
+              6.000000000000001
+            ]
+          ],
+          "native_sample_pairs_T": [
+            [
+              1.9999999999999996,
+              2.0
+            ],
+            [
+              5.99998,
+              6.0
+            ]
+          ],
+          "legal_windows_T": [
+            [
+              1.999,
+              2.001
+            ],
+            [
+              5.999,
+              6.001
+            ]
+          ],
+          "rule": "Exists one compatible legal native-counter history shared by every dependent port; not a measured bound proving every possible actual callback time legal"
+        },
+        {
+          "name": "voltage:state",
+          "status": "P",
+          "max_error_lower_bound": 0,
+          "max_error_upper_bound": 2.0000000005599808e-05,
+          "max_observed_error": 0,
+          "uncertainty": 2.0000000005599808e-05,
+          "budget": 0.001,
+          "units": "V"
+        },
+        {
+          "name": "voltage:out",
+          "status": "P",
+          "max_error_lower_bound": 0,
+          "max_error_upper_bound": 3.0000000007996788e-05,
+          "max_observed_error": 1.000000000239698e-05,
+          "uncertainty": 2.0000000005599808e-05,
+          "budget": 0.003,
+          "units": "V"
+        }
+      ],
+      "checker_identity": {
+        "version": "paper-criteria-v1",
+        "files": {
+          "criteria.py": "ecdabb0c187d968400e8ee8c23f6f99a7552b3533962917539557436b8a95c1c",
+          "oracle.py": "96ece5a943113a6e6e79b441145a2f2238da43938914605d884b5fd0414e72dc",
+          "core-v1.json": "e1ae5311da9e05991e9802da1a24e97a70d179972608a1b9d21eb00013f61a53"
+        },
+        "runtime": {
+          "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+          "math_sha256": "cc7d168e6933da397995ce0c3bf0b96813ddbfcacaeb37988e5c98aa02810452"
+        },
+        "sha256": "df1269e0be8a50a10eba6dfa267de18f5da1080da510ca893a4fea0050355ecb"
+      },
+      "claim_limit": "Maximum error on qualified observed records; unobserved between-record short pulses remain outside this claim.",
+      "event_boundary_observations": [
+        {
+          "cohort_source": {
+            "nominal_time_s": 2e-06,
+            "row_index": 10093,
+            "request_id": "TM-01:breakpoint:103",
+            "serialization_error_s": 8.470127377258053e-22
+          },
+          "counter_port": "count",
+          "nominal_T": 2,
+          "sample_time_s": 2e-06,
+          "raw_values": {
+            "out": -0.0,
+            "state": 1.0,
+            "count": 1.0
+          },
+          "latent_event_interval_T": [
+            1.9999999999999987,
+            2.000000000000001
+          ],
+          "observed_callback_stage": 1,
+          "relation": "unresolved tie",
+          "status": "I",
+          "time_uncertainty_s": 8.470127377258053e-22
+        },
+        {
+          "cohort_source": {
+            "nominal_time_s": 6e-06,
+            "row_index": 30284,
+            "request_id": "TM-01:breakpoint:308",
+            "serialization_error_s": 8.470127377258053e-22
+          },
+          "counter_port": "count",
+          "nominal_T": 6,
+          "sample_time_s": 6e-06,
+          "raw_values": {
+            "out": 1.0,
+            "state": -0.0,
+            "count": 2.0
+          },
+          "latent_event_interval_T": [
+            5.999979999999999,
+            6.000000000000001
+          ],
+          "observed_callback_stage": 2,
+          "relation": "unresolved tie",
+          "status": "I",
+          "time_uncertainty_s": 8.470127377258053e-22
+        }
+      ],
+      "required_properties": [
+        "observation",
+        "boundary_cohort",
+        "counter_voltage:count",
+        "event_history",
+        "voltage:state",
+        "voltage:out"
+      ],
+      "separate_diagnostics": [
+        "event_boundary_observations"
+      ],
+      "execution_identity_verified": true,
+      "missing_roles": [],
+      "uncertainty": {
+        "time_error_s": 8.470127377258053e-22,
+        "voltage_error_V": 1.9984014443252818e-15,
+        "input_error_V": 0
+      },
+      "same_numeric_rows_as_original": true,
+      "previous_observation": {
+        "path": "runs/support-comparison-20261009/collected/evas/outputs/evas/runs/TM-01/observation.json",
+        "sha256": "7691ad1d1af6ca5f3f7478c485883e57e1d8cfbcaa098b53d1416972a0cb0d14",
+        "availability": "local-only"
+      },
+      "evidence": {
+        "path": "runs/core-evidence-20261009/replay-v2/TM-01/evidence.json",
+        "sha256": "e95bae16b89cdd8cca0420cb52ec4b1474e6c7cfaabb85a9b9443c9baf9504b2",
+        "availability": "local-only"
+      },
+      "assessment": {
+        "path": "runs/core-evidence-20261009/replay-v2/TM-01/assessment.json",
+        "sha256": "4c7211ba0ee81cff285727945713d4531be5600420229a98462109efc5e3129d",
+        "availability": "local-only"
+      },
+      "effective_controls": {
+        "absolute_V": 1e-07,
+        "relative": 1e-05,
+        "stop_s": 8e-06,
+        "max_step_s": 2e-10,
+        "max_step_applied": true
+      }
+    },
+    {
+      "condition": "CP-01",
+      "execution": "waveform_available",
+      "status": "P",
+      "properties": [
+        {
+          "name": "observation",
+          "status": "P",
+          "rows": 30003
+        },
+        {
+          "name": "input_consistency:ctl",
+          "status": "P",
+          "max_observed_error": 2.220446049250313e-16,
+          "max_budget_excess": -3.0901268448426997e-15,
+          "units": "V",
+          "scope": "Observation/source compatibility, not DUT behavior"
+        },
+        {
+          "name": "voltage:phase",
+          "status": "P",
+          "max_error_lower_bound": 0,
+          "max_error_upper_bound": 4.8367803938636376e-15,
+          "max_observed_error": 8.881784197001252e-16,
+          "uncertainty": 3.948785590306636e-15,
+          "budget": 0.001,
+          "units": "cycle"
+        }
+      ],
+      "checker_identity": {
+        "version": "paper-criteria-v1",
+        "files": {
+          "criteria.py": "ecdabb0c187d968400e8ee8c23f6f99a7552b3533962917539557436b8a95c1c",
+          "oracle.py": "96ece5a943113a6e6e79b441145a2f2238da43938914605d884b5fd0414e72dc",
+          "core-v1.json": "e1ae5311da9e05991e9802da1a24e97a70d179972608a1b9d21eb00013f61a53"
+        },
+        "runtime": {
+          "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+          "math_sha256": "cc7d168e6933da397995ce0c3bf0b96813ddbfcacaeb37988e5c98aa02810452"
+        },
+        "sha256": "df1269e0be8a50a10eba6dfa267de18f5da1080da510ca893a4fea0050355ecb"
+      },
+      "claim_limit": "Maximum error on qualified observed records; unobserved between-record short pulses remain outside this claim.",
+      "required_properties": [
+        "observation",
+        "input_consistency:ctl",
+        "voltage:phase"
+      ],
+      "separate_diagnostics": [],
+      "execution_identity_verified": true,
+      "missing_roles": [],
+      "uncertainty": {
+        "time_error_s": 4.2346751505284356e-22,
+        "voltage_error_V": 3.1086244689504383e-15,
+        "input_error_V": 7.650672630143963e-17
+      },
+      "same_numeric_rows_as_original": true,
+      "previous_observation": {
+        "path": "runs/support-comparison-20261009/collected/evas/outputs/evas/runs/CP-01/observation.json",
+        "sha256": "c9c4571008526c0a957714cf6d23e911ed17a9489a2873a3a5ee06a550d5f415",
+        "availability": "local-only"
+      },
+      "evidence": {
+        "path": "runs/core-evidence-20261009/replay-v2/CP-01/evidence.json",
+        "sha256": "76e21662929f3a9c1b2be8cd2edd15d9e75163eb22c3a8dd5ce34ae9ded19408",
+        "availability": "local-only"
+      },
+      "assessment": {
+        "path": "runs/core-evidence-20261009/replay-v2/CP-01/assessment.json",
+        "sha256": "f6dda5b26190f5516e6fdcf302337123b5b896d152c1caa51929f71f974c40ed",
+        "availability": "local-only"
+      },
+      "effective_controls": {
+        "absolute_V": 1e-07,
+        "relative": 1e-05,
+        "stop_s": 6e-06,
+        "max_step_s": 2e-10,
+        "max_step_applied": true
+      }
+    },
+    {
+      "condition": "CP-02",
+      "execution": "waveform_available",
+      "status": "P",
+      "properties": [
+        {
+          "name": "observation",
+          "status": "P",
+          "rows": 30805
+        },
+        {
+          "name": "boundary_cohort",
+          "status": "P",
+          "missing": [],
+          "rule": "Attested requested nominal centers within evidenced serialization precision"
+        },
+        {
+          "name": "voltage:phase",
+          "status": "P",
+          "max_error_lower_bound": 0,
+          "max_error_upper_bound": 7.292618644677487e-14,
+          "max_observed_error": 8.881784197001252e-16,
+          "uncertainty": 7.203800802707475e-14,
+          "budget": 0.001,
+          "units": "cycle"
+        },
+        {
+          "name": "voltage:out",
+          "status": "P",
+          "max_error_lower_bound": 0,
+          "max_error_upper_bound": 8.162629009272526e-14,
+          "max_observed_error": 7.91033905045424e-15,
+          "uncertainty": 7.371595104227102e-14,
+          "budget": 0.003,
+          "units": "V"
+        },
+        {
+          "name": "modulo_range",
+          "status": "P"
+        },
+        {
+          "name": "phase_absolute_outside_wrap_windows",
+          "status": "P",
+          "max_error_lower_bound": 0,
+          "max_error_upper_bound": 7.292618644677487e-14,
+          "max_observed_error": 8.881784197001252e-16,
+          "uncertainty": 7.203800802707475e-14,
+          "budget": 0.001,
+          "units": "cycle"
+        },
+        {
+          "name": "wrap_count_and_windows",
+          "status": "P",
+          "count": 4,
+          "expected_count": 4,
+          "intervals_T": [
+            [
+              1.16665671641791,
+              1.1666666666666672
+            ],
+            [
+              2.4999999999999996,
+              2.5000200000000006
+            ],
+            [
+              3.8333333333333326,
+              3.8333333333333344
+            ],
+            [
+              5.166666666666667,
+              5.166666666666668
+            ]
+          ]
+        }
+      ],
+      "checker_identity": {
+        "version": "paper-criteria-v1",
+        "files": {
+          "criteria.py": "ecdabb0c187d968400e8ee8c23f6f99a7552b3533962917539557436b8a95c1c",
+          "oracle.py": "96ece5a943113a6e6e79b441145a2f2238da43938914605d884b5fd0414e72dc",
+          "core-v1.json": "e1ae5311da9e05991e9802da1a24e97a70d179972608a1b9d21eb00013f61a53"
+        },
+        "runtime": {
+          "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+          "math_sha256": "cc7d168e6933da397995ce0c3bf0b96813ddbfcacaeb37988e5c98aa02810452"
+        },
+        "sha256": "df1269e0be8a50a10eba6dfa267de18f5da1080da510ca893a4fea0050355ecb"
+      },
+      "claim_limit": "Maximum error on qualified observed records; unobserved between-record short pulses remain outside this claim. Exact modulo endpoint semantics remain separately I at finite observation-time uncertainty.",
+      "exact_boundary_observations": [
+        {
+          "cohort_source": {
+            "nominal_time_s": 1.1666666666666668e-06,
+            "row_index": 5936,
+            "request_id": "CP-02:breakpoint:103",
+            "serialization_error_s": 4.2346751505284356e-22
+          },
+          "nominal_T": 1.1666666666666667,
+          "unwrapped_integer_level": 1,
+          "sample_time_s": 1.1666666666666668e-06,
+          "raw_phase": 9.27534958561349e-17,
+          "scalar_endpoint_error": 9.27534958561349e-17,
+          "circular_error": 9.27534958561349e-17,
+          "time_uncertainty_s": 4.2346751505284356e-22,
+          "status": "I",
+          "reason": "Finite time uncertainty straddles modulo endpoint; raw discrepancy retained."
+        },
+        {
+          "cohort_source": {
+            "nominal_time_s": 2.4999999999999998e-06,
+            "row_index": 12800,
+            "request_id": "CP-02:breakpoint:307",
+            "serialization_error_s": 4.2346751505284356e-22
+          },
+          "nominal_T": 2.5,
+          "unwrapped_integer_level": 2,
+          "sample_time_s": 2.4999999999999998e-06,
+          "raw_phase": 0.9999999999999999,
+          "scalar_endpoint_error": 0.9999999999999999,
+          "circular_error": 1.1102230246251565e-16,
+          "time_uncertainty_s": 4.2346751505284356e-22,
+          "status": "I",
+          "reason": "Finite time uncertainty straddles modulo endpoint; raw discrepancy retained."
+        },
+        {
+          "cohort_source": {
+            "nominal_time_s": 3.833333333333334e-06,
+            "row_index": 19667,
+            "request_id": "CP-02:breakpoint:510",
+            "serialization_error_s": 4.2346751505284356e-22
+          },
+          "nominal_T": 3.8333333333333335,
+          "unwrapped_integer_level": 3,
+          "sample_time_s": 3.833333333333334e-06,
+          "raw_phase": 2.140079563214825e-16,
+          "scalar_endpoint_error": 2.140079563214825e-16,
+          "circular_error": 2.140079563214825e-16,
+          "time_uncertainty_s": 4.2346751505284356e-22,
+          "status": "I",
+          "reason": "Finite time uncertainty straddles modulo endpoint; raw discrepancy retained."
+        },
+        {
+          "cohort_source": {
+            "nominal_time_s": 5.166666666666667e-06,
+            "row_index": 26536,
+            "request_id": "CP-02:breakpoint:714",
+            "serialization_error_s": 4.2346751505284356e-22
+          },
+          "nominal_T": 5.166666666666667,
+          "unwrapped_integer_level": 4,
+          "sample_time_s": 5.166666666666667e-06,
+          "raw_phase": 0.9999999999999999,
+          "scalar_endpoint_error": 0.9999999999999999,
+          "circular_error": 1.1102230246251565e-16,
+          "time_uncertainty_s": 4.2346751505284356e-22,
+          "status": "I",
+          "reason": "Finite time uncertainty straddles modulo endpoint; raw discrepancy retained."
+        }
+      ],
+      "endpoint_semantics_status": "I",
+      "required_properties": [
+        "observation",
+        "boundary_cohort",
+        "voltage:phase",
+        "voltage:out",
+        "modulo_range",
+        "phase_absolute_outside_wrap_windows",
+        "wrap_count_and_windows"
+      ],
+      "separate_diagnostics": [
+        "exact_boundary_observations"
+      ],
+      "execution_identity_verified": true,
+      "missing_roles": [],
+      "uncertainty": {
+        "time_error_s": 4.2346751505284356e-22,
+        "voltage_error_V": 7.172040739078511e-14,
+        "input_error_V": 0
+      },
+      "same_numeric_rows_as_original": true,
+      "previous_observation": {
+        "path": "runs/support-comparison-20261009/collected/evas/outputs/evas/runs/CP-02/observation.json",
+        "sha256": "b6d7af06cea5b239625c1538110d709a99c0d3849453937c81502bab7d9418b7",
+        "availability": "local-only"
+      },
+      "evidence": {
+        "path": "runs/core-evidence-20261009/replay-v2/CP-02/evidence.json",
+        "sha256": "39a45a42cdd7d68121617360739b3fdc9bdc249abd76db3ad5036b31a9cbe779",
+        "availability": "local-only"
+      },
+      "assessment": {
+        "path": "runs/core-evidence-20261009/replay-v2/CP-02/assessment.json",
+        "sha256": "1ed920d1a6e1003f1aa9c4a6e3f0d5f2c9cef69c26497e49671b26055a33620c",
+        "availability": "local-only"
+      },
+      "effective_controls": {
+        "absolute_V": 1e-07,
+        "relative": 1e-05,
+        "stop_s": 6e-06,
+        "max_step_s": 2e-10,
+        "max_step_applied": true
+      }
+    },
+    {
+      "condition": "SI-01",
+      "execution": "waveform_available",
+      "status": "P",
+      "properties": [
+        {
+          "name": "observation",
+          "status": "P",
+          "rows": 35758
+        },
+        {
+          "name": "input_consistency:a",
+          "status": "P",
+          "max_observed_error": 2.220446049250313e-16,
+          "max_budget_excess": -2.983040724158226e-16,
+          "units": "V",
+          "scope": "Observation/source compatibility, not DUT behavior"
+        },
+        {
+          "name": "input_consistency:b",
+          "status": "P",
+          "max_observed_error": 2.220446049250313e-16,
+          "max_budget_excess": -2.983040724158226e-16,
+          "units": "V",
+          "scope": "Observation/source compatibility, not DUT behavior"
+        },
+        {
+          "name": "boundary_cohort",
+          "status": "P",
+          "missing": [],
+          "rule": "Attested requested nominal centers within evidenced serialization precision"
+        },
+        {
+          "name": "counter_voltage:na",
+          "status": "P",
+          "max_observed_error": 0.0,
+          "uncertainty": 4.440892098500626e-16,
+          "budget": 0.001,
+          "units": "V"
+        },
+        {
+          "name": "event_history",
+          "status": "P",
+          "port": "na",
+          "intervals_T": [
+            [
+              1.9999999999999991,
+              2.0000000000000004
+            ],
+            [
+              3.999990049751243,
+              4.0
+            ],
+            [
+              5.99998,
+              6.0
+            ]
+          ],
+          "native_brackets_T": [
+            [
+              1.9999999999999991,
+              2.0000000000000004
+            ],
+            [
+              3.999990049751243,
+              4.0
+            ],
+            [
+              5.99998,
+              6.0
+            ]
+          ],
+          "native_sample_pairs_T": [
+            [
+              1.9999999999999996,
+              2.0
+            ],
+            [
+              3.9999900497512435,
+              4.0
+            ],
+            [
+              5.99998,
+              6.0
+            ]
+          ],
+          "legal_windows_T": [
+            [
+              1.999,
+              2.001
+            ],
+            [
+              3.999,
+              4.001
+            ],
+            [
+              5.999,
+              6.001
+            ]
+          ],
+          "rule": "Exists one compatible legal native-counter history shared by every dependent port; not a measured bound proving every possible actual callback time legal"
+        },
+        {
+          "name": "counter_voltage:nb",
+          "status": "P",
+          "max_observed_error": 0.0,
+          "uncertainty": 4.440892098500626e-16,
+          "budget": 0.001,
+          "units": "V"
+        },
+        {
+          "name": "event_history",
+          "status": "P",
+          "port": "nb",
+          "intervals_T": [
+            [
+              2.9999799999999994,
+              3.0000000000000004
+            ],
+            [
+              5.99998,
+              6.0
+            ]
+          ],
+          "native_brackets_T": [
+            [
+              2.9999799999999994,
+              3.0000000000000004
+            ],
+            [
+              5.99998,
+              6.0
+            ]
+          ],
+          "native_sample_pairs_T": [
+            [
+              2.99998,
+              3.0
+            ],
+            [
+              5.99998,
+              6.0
+            ]
+          ],
+          "legal_windows_T": [
+            [
+              2.999,
+              3.001
+            ],
+            [
+              5.999,
+              6.001
+            ]
+          ],
+          "rule": "Exists one compatible legal native-counter history shared by every dependent port; not a measured bound proving every possible actual callback time legal"
+        },
+        {
+          "name": "voltage:oa",
+          "status": "P",
+          "max_error_lower_bound": 0,
+          "max_error_upper_bound": 2.0000000005577135e-06,
+          "max_observed_error": 1.0000000000287557e-06,
+          "uncertainty": 1.0000000005289578e-06,
+          "budget": 0.001,
+          "units": "V"
+        },
+        {
+          "name": "voltage:ob",
+          "status": "P",
+          "max_error_lower_bound": 0,
+          "max_error_upper_bound": 2.000000000668736e-06,
+          "max_observed_error": 1.000000000139778e-06,
+          "uncertainty": 1.0000000005289578e-06,
+          "budget": 0.001,
+          "units": "V"
+        }
+      ],
+      "checker_identity": {
+        "version": "paper-criteria-v1",
+        "files": {
+          "criteria.py": "ecdabb0c187d968400e8ee8c23f6f99a7552b3533962917539557436b8a95c1c",
+          "oracle.py": "96ece5a943113a6e6e79b441145a2f2238da43938914605d884b5fd0414e72dc",
+          "core-v1.json": "e1ae5311da9e05991e9802da1a24e97a70d179972608a1b9d21eb00013f61a53"
+        },
+        "runtime": {
+          "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+          "math_sha256": "cc7d168e6933da397995ce0c3bf0b96813ddbfcacaeb37988e5c98aa02810452"
+        },
+        "sha256": "df1269e0be8a50a10eba6dfa267de18f5da1080da510ca893a4fea0050355ecb"
+      },
+      "claim_limit": "Maximum error on qualified observed records; unobserved between-record short pulses remain outside this claim.",
+      "event_boundary_observations": [
+        {
+          "cohort_source": {
+            "nominal_time_s": 2e-06,
+            "row_index": 10091,
+            "request_id": "SI-01:breakpoint:103",
+            "serialization_error_s": 4.2351044546307116e-22
+          },
+          "counter_port": "na",
+          "nominal_T": 2,
+          "sample_time_s": 2e-06,
+          "raw_values": {
+            "a": 0.19999999999999998,
+            "b": 0.8,
+            "oa": 0.19999999999999998,
+            "ob": 0.75,
+            "na": 1.0,
+            "nb": -0.0
+          },
+          "latent_event_interval_T": [
+            1.9999999999999991,
+            2.0000000000000004
+          ],
+          "observed_callback_stage": 1,
+          "relation": "unresolved tie",
+          "status": "I",
+          "time_uncertainty_s": 4.2351044546307116e-22
+        },
+        {
+          "cohort_source": {
+            "nominal_time_s": 4e-06,
+            "row_index": 20474,
+            "request_id": "SI-01:breakpoint:511",
+            "serialization_error_s": 4.2351044546307116e-22
+          },
+          "counter_port": "na",
+          "nominal_T": 4,
+          "sample_time_s": 4e-06,
+          "raw_values": {
+            "a": 0.39999999999999997,
+            "b": 0.6,
+            "oa": 0.39999999999999997,
+            "ob": 0.7,
+            "na": 2.0,
+            "nb": 1.0
+          },
+          "latent_event_interval_T": [
+            3.999990049751243,
+            4.0
+          ],
+          "observed_callback_stage": 2,
+          "relation": "unresolved tie",
+          "status": "I",
+          "time_uncertainty_s": 4.2351044546307116e-22
+        },
+        {
+          "cohort_source": {
+            "nominal_time_s": 6e-06,
+            "row_index": 30664,
+            "request_id": "SI-01:breakpoint:715",
+            "serialization_error_s": 4.2351044546307116e-22
+          },
+          "counter_port": "na",
+          "nominal_T": 6,
+          "sample_time_s": 6e-06,
+          "raw_values": {
+            "a": 0.6,
+            "b": 0.39999999999999997,
+            "oa": 0.6000000000000001,
+            "ob": 0.3999999999999998,
+            "na": 3.0,
+            "nb": 2.0
+          },
+          "latent_event_interval_T": [
+            5.99998,
+            6.0
+          ],
+          "observed_callback_stage": 3,
+          "relation": "unresolved tie",
+          "status": "I",
+          "time_uncertainty_s": 4.2351044546307116e-22
+        },
+        {
+          "cohort_source": {
+            "nominal_time_s": 3e-06,
+            "row_index": 15279,
+            "request_id": "SI-01:breakpoint:307",
+            "serialization_error_s": 4.2351044546307116e-22
+          },
+          "counter_port": "nb",
+          "nominal_T": 3,
+          "sample_time_s": 3e-06,
+          "raw_values": {
+            "a": 0.3,
+            "b": 0.7,
+            "oa": 0.19999999999999998,
+            "ob": 0.7,
+            "na": 1.0,
+            "nb": 1.0
+          },
+          "latent_event_interval_T": [
+            2.9999799999999994,
+            3.0000000000000004
+          ],
+          "observed_callback_stage": 1,
+          "relation": "unresolved tie",
+          "status": "I",
+          "time_uncertainty_s": 4.2351044546307116e-22
+        },
+        {
+          "cohort_source": {
+            "nominal_time_s": 6e-06,
+            "row_index": 30664,
+            "request_id": "SI-01:breakpoint:715",
+            "serialization_error_s": 4.2351044546307116e-22
+          },
+          "counter_port": "nb",
+          "nominal_T": 6,
+          "sample_time_s": 6e-06,
+          "raw_values": {
+            "a": 0.6,
+            "b": 0.39999999999999997,
+            "oa": 0.6000000000000001,
+            "ob": 0.3999999999999998,
+            "na": 3.0,
+            "nb": 2.0
+          },
+          "latent_event_interval_T": [
+            5.99998,
+            6.0
+          ],
+          "observed_callback_stage": 2,
+          "relation": "unresolved tie",
+          "status": "I",
+          "time_uncertainty_s": 4.2351044546307116e-22
+        }
+      ],
+      "required_properties": [
+        "observation",
+        "input_consistency:a",
+        "input_consistency:b",
+        "boundary_cohort",
+        "counter_voltage:na",
+        "event_history",
+        "counter_voltage:nb",
+        "event_history",
+        "voltage:oa",
+        "voltage:ob"
+      ],
+      "separate_diagnostics": [
+        "event_boundary_observations"
+      ],
+      "execution_identity_verified": true,
+      "missing_roles": [],
+      "uncertainty": {
+        "time_error_s": 4.2351044546307116e-22,
+        "voltage_error_V": 4.440892098500626e-16,
+        "input_error_V": 3.390842294448415e-17
+      },
+      "same_numeric_rows_as_original": true,
+      "previous_observation": {
+        "path": "runs/support-comparison-20261009/collected/evas/outputs/evas/runs/SI-01/observation.json",
+        "sha256": "86df54df0a5be7b8eb11158e510b6c2fe6afdc7ef4ed71ecf646764e0107aa72",
+        "availability": "local-only"
+      },
+      "evidence": {
+        "path": "runs/core-evidence-20261009/replay-v2/SI-01/evidence.json",
+        "sha256": "f4f9d0ec96c4e5593121d485f199d61c56d8446c4f6275335e1acf88020e3c99",
+        "availability": "local-only"
+      },
+      "assessment": {
+        "path": "runs/core-evidence-20261009/replay-v2/SI-01/assessment.json",
+        "sha256": "e6b116345350e53ecdee239a6875092d34039431599a3389b1364e4caa2555b4",
+        "availability": "local-only"
+      },
+      "effective_controls": {
+        "absolute_V": 1e-07,
+        "relative": 1e-05,
+        "stop_s": 7e-06,
+        "max_step_s": 2e-10,
+        "max_step_applied": true
+      }
+    },
+    {
+      "condition": "CO-SH-01",
+      "execution": "waveform_available",
+      "status": "P",
+      "properties": [
+        {
+          "name": "observation",
+          "status": "P",
+          "rows": 45979
+        },
+        {
+          "name": "input_consistency:in",
+          "status": "P",
+          "max_observed_error": 6.661338147750939e-16,
+          "max_budget_excess": -3.4028186865486813e-15,
+          "units": "V",
+          "scope": "Observation/source compatibility, not DUT behavior"
+        },
+        {
+          "name": "input_consistency:clk",
+          "status": "P",
+          "max_observed_error": 3.552713678800501e-15,
+          "max_budget_excess": -2.464368119292629e-15,
+          "units": "V",
+          "scope": "Observation/source compatibility, not DUT behavior"
+        },
+        {
+          "name": "input_consistency:reset",
+          "status": "P",
+          "max_observed_error": 1.7763568394002505e-15,
+          "max_budget_excess": -4.240724958692875e-15,
+          "units": "V",
+          "scope": "Observation/source compatibility, not DUT behavior"
+        },
+        {
+          "name": "boundary_cohort",
+          "status": "P",
+          "missing": [],
+          "rule": "Attested requested nominal centers within evidenced serialization precision"
+        },
+        {
+          "name": "counter_voltage:count",
+          "status": "P",
+          "max_observed_error": 0.0,
+          "uncertainty": 2.4424906541753444e-15,
+          "budget": 0.001,
+          "units": "V"
+        },
+        {
+          "name": "event_history",
+          "status": "P",
+          "port": "count",
+          "intervals_T": [
+            [
+              1.9999999999999993,
+              2.0000200000000006
+            ],
+            [
+              2.9999999999999996,
+              3.000000000000001
+            ],
+            [
+              3.9999999999999996,
+              4.000000000000001
+            ],
+            [
+              5.999999999999999,
+              6.000000000000001
+            ],
+            [
+              7.999999999999999,
+              8.0
+            ]
+          ],
+          "native_brackets_T": [
+            [
+              1.9999999999999991,
+              2.0000200000000006
+            ],
+            [
+              2.999979999999999,
+              3.000000000000001
+            ],
+            [
+              3.9999900497512426,
+              4.000000000000001
+            ],
+            [
+              5.999979999999999,
+              6.000000000000001
+            ],
+            [
+              7.999990049751244,
+              8.0
+            ]
+          ],
+          "native_sample_pairs_T": [
+            [
+              2.0,
+              2.0000199999999997
+            ],
+            [
+              2.99998,
+              3.0
+            ],
+            [
+              3.9999900497512435,
+              4.0
+            ],
+            [
+              5.99998,
+              6.0
+            ],
+            [
+              7.999990049751245,
+              8.0
+            ]
+          ],
+          "legal_windows_T": [
+            [
+              1.9999999999999993,
+              2.0000800000000005
+            ],
+            [
+              2.9999999999999996,
+              3.0000800000000005
+            ],
+            [
+              3.9999999999999996,
+              4.0000800000000005
+            ],
+            [
+              5.999999999999999,
+              6.0000800000000005
+            ],
+            [
+              7.999999999999999,
+              8.00008
+            ]
+          ],
+          "rule": "Exists one compatible legal native-counter history shared by every dependent port; not a measured bound proving every possible actual callback time legal"
+        },
+        {
+          "name": "voltage:state",
+          "status": "P",
+          "max_error_lower_bound": 0,
+          "max_error_upper_bound": 4.000000003914653e-06,
+          "max_observed_error": 1.999999999890978e-06,
+          "uncertainty": 2.000000004023675e-06,
+          "budget": 0.001,
+          "units": "V"
+        },
+        {
+          "name": "voltage:out",
+          "status": "P",
+          "max_error_lower_bound": 0,
+          "max_error_upper_bound": 0.00013199980001858187,
+          "max_observed_error": 2.499979999914803e-05,
+          "uncertainty": 0.00010700000001943385,
+          "budget": 0.003,
+          "units": "V"
+        }
+      ],
+      "checker_identity": {
+        "version": "paper-criteria-v1",
+        "files": {
+          "criteria.py": "ecdabb0c187d968400e8ee8c23f6f99a7552b3533962917539557436b8a95c1c",
+          "oracle.py": "96ece5a943113a6e6e79b441145a2f2238da43938914605d884b5fd0414e72dc",
+          "core-v1.json": "e1ae5311da9e05991e9802da1a24e97a70d179972608a1b9d21eb00013f61a53"
+        },
+        "runtime": {
+          "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+          "math_sha256": "cc7d168e6933da397995ce0c3bf0b96813ddbfcacaeb37988e5c98aa02810452"
+        },
+        "sha256": "df1269e0be8a50a10eba6dfa267de18f5da1080da510ca893a4fea0050355ecb"
+      },
+      "claim_limit": "Maximum error on qualified observed records; unobserved between-record short pulses remain outside this claim.",
+      "event_boundary_observations": [
+        {
+          "cohort_source": {
+            "nominal_time_s": 2e-06,
+            "row_index": 10096,
+            "request_id": "CO-SH-01:breakpoint:103",
+            "serialization_error_s": 8.470127377258053e-22
+          },
+          "counter_port": "count",
+          "nominal_T": 2,
+          "sample_time_s": 2e-06,
+          "raw_values": {
+            "in": -5.551115123125783e-17,
+            "clk": 0.4999999999999997,
+            "reset": 0.0,
+            "out": -0.25,
+            "state": -0.25,
+            "count": -0.0
+          },
+          "latent_event_interval_T": [
+            1.9999999999999993,
+            2.0000200000000006
+          ],
+          "observed_callback_stage": 0,
+          "relation": "unresolved tie",
+          "status": "I",
+          "time_uncertainty_s": 8.470127377258053e-22
+        },
+        {
+          "cohort_source": {
+            "nominal_time_s": 3e-06,
+            "row_index": 15290,
+            "request_id": "CO-SH-01:breakpoint:307",
+            "serialization_error_s": 8.470127377258053e-22
+          },
+          "counter_port": "count",
+          "nominal_T": 3,
+          "sample_time_s": 3e-06,
+          "raw_values": {
+            "in": 0.1999999999999999,
+            "clk": 0.0,
+            "reset": 0.5000000000000006,
+            "out": 5.551115123125783e-17,
+            "state": -0.25,
+            "count": 2.0
+          },
+          "latent_event_interval_T": [
+            2.9999999999999996,
+            3.000000000000001
+          ],
+          "observed_callback_stage": 2,
+          "relation": "unresolved tie",
+          "status": "I",
+          "time_uncertainty_s": 8.470127377258053e-22
+        },
+        {
+          "cohort_source": {
+            "nominal_time_s": 4e-06,
+            "row_index": 20489,
+            "request_id": "CO-SH-01:breakpoint:511",
+            "serialization_error_s": 8.470127377258053e-22
+          },
+          "counter_port": "count",
+          "nominal_T": 4,
+          "sample_time_s": 4e-06,
+          "raw_values": {
+            "in": 0.3999999999999999,
+            "clk": 0.5000000000000006,
+            "reset": 1.0,
+            "out": -0.25,
+            "state": -0.25,
+            "count": 3.0
+          },
+          "latent_event_interval_T": [
+            3.9999999999999996,
+            4.000000000000001
+          ],
+          "observed_callback_stage": 3,
+          "relation": "unresolved tie",
+          "status": "I",
+          "time_uncertainty_s": 8.470127377258053e-22
+        },
+        {
+          "cohort_source": {
+            "nominal_time_s": 6e-06,
+            "row_index": 30682,
+            "request_id": "CO-SH-01:breakpoint:716",
+            "serialization_error_s": 8.470127377258053e-22
+          },
+          "counter_port": "count",
+          "nominal_T": 6,
+          "sample_time_s": 6e-06,
+          "raw_values": {
+            "in": 0.7999999999999998,
+            "clk": 0.5000000000000011,
+            "reset": 0.0,
+            "out": -0.25,
+            "state": 0.7999999999999998,
+            "count": 4.0
+          },
+          "latent_event_interval_T": [
+            5.999999999999999,
+            6.000000000000001
+          ],
+          "observed_callback_stage": 4,
+          "relation": "unresolved tie",
+          "status": "I",
+          "time_uncertainty_s": 8.470127377258053e-22
+        },
+        {
+          "cohort_source": {
+            "nominal_time_s": 8e-06,
+            "row_index": 40878,
+            "request_id": "CO-SH-01:breakpoint:920",
+            "serialization_error_s": 8.470127377258053e-22
+          },
+          "counter_port": "count",
+          "nominal_T": 8,
+          "sample_time_s": 8e-06,
+          "raw_values": {
+            "in": 1.1999999999999997,
+            "clk": 0.5,
+            "reset": 0.0,
+            "out": 0.7999999999999998,
+            "state": 1.1999999999999997,
+            "count": 5.0
+          },
+          "latent_event_interval_T": [
+            7.999999999999999,
+            8.0
+          ],
+          "observed_callback_stage": 5,
+          "relation": "unresolved tie",
+          "status": "I",
+          "time_uncertainty_s": 8.470127377258053e-22
+        }
+      ],
+      "required_properties": [
+        "observation",
+        "input_consistency:in",
+        "input_consistency:clk",
+        "input_consistency:reset",
+        "boundary_cohort",
+        "counter_voltage:count",
+        "event_history",
+        "voltage:state",
+        "voltage:out"
+      ],
+      "separate_diagnostics": [
+        "event_boundary_observations"
+      ],
+      "execution_identity_verified": true,
+      "missing_roles": [],
+      "uncertainty": {
+        "time_error_s": 8.470127377258053e-22,
+        "voltage_error_V": 2.4424906541753444e-15,
+        "input_error_V": 1.4570592996032694e-15
+      },
+      "same_numeric_rows_as_original": true,
+      "previous_observation": {
+        "path": "runs/support-comparison-20261009/collected/evas/outputs/evas/runs/CO-SH-01/observation.json",
+        "sha256": "2d83db02ff3c50e05d3a0a616d4e88345b30cf83eb3af9e0aeb1df8230b4d0cd",
+        "availability": "local-only"
+      },
+      "evidence": {
+        "path": "runs/core-evidence-20261009/replay-v2/CO-SH-01/evidence.json",
+        "sha256": "b59e25c367bcdff80d6d588c209f0e3bb2bbfc9386f51faf68c37703ef37052d",
+        "availability": "local-only"
+      },
+      "assessment": {
+        "path": "runs/core-evidence-20261009/replay-v2/CO-SH-01/assessment.json",
+        "sha256": "5d8637b0bffa8134d6335e095680a0095d61f9e5a4132f0283204b7bef704b0f",
+        "availability": "local-only"
+      },
+      "effective_controls": {
+        "absolute_V": 1e-07,
+        "relative": 1e-05,
+        "stop_s": 9e-06,
+        "max_step_s": 2e-10,
+        "max_step_applied": true
+      }
+    },
+    {
+      "condition": "CO-HC-01",
+      "execution": "waveform_available",
+      "status": "P",
+      "properties": [
+        {
+          "name": "observation",
+          "status": "P",
+          "rows": 20379
+        },
+        {
+          "name": "input_consistency:in",
+          "status": "P",
+          "max_observed_error": 2.220446049250313e-16,
+          "max_budget_excess": -1.901588990438352e-15,
+          "units": "V",
+          "scope": "Observation/source compatibility, not DUT behavior"
+        },
+        {
+          "name": "boundary_cohort",
+          "status": "P",
+          "missing": [],
+          "rule": "Attested requested nominal centers within evidenced serialization precision"
+        },
+        {
+          "name": "counter_voltage:count",
+          "status": "P",
+          "max_observed_error": 0.0,
+          "uncertainty": 1.887379141862766e-15,
+          "budget": 0.001,
+          "units": "V"
+        },
+        {
+          "name": "event_history",
+          "status": "P",
+          "port": "count",
+          "intervals_T": [
+            [
+              1.3749999999999998,
+              1.3750000000000004
+            ],
+            [
+              3.375,
+              3.3750200000000006
+            ]
+          ],
+          "native_brackets_T": [
+            [
+              1.3749799999999996,
+              1.3750000000000004
+            ],
+            [
+              3.3749999999999996,
+              3.3750200000000006
+            ]
+          ],
+          "native_sample_pairs_T": [
+            [
+              1.37498,
+              1.375
+            ],
+            [
+              3.375,
+              3.37502
+            ]
+          ],
+          "legal_windows_T": [
+            [
+              1.3749999999999998,
+              1.3755000000000002
+            ],
+            [
+              3.375,
+              3.3755
+            ]
+          ],
+          "rule": "Exists one compatible legal native-counter history shared by every dependent port; not a measured bound proving every possible actual callback time legal"
+        },
+        {
+          "name": "voltage:out",
+          "status": "P",
+          "max_error_lower_bound": 0,
+          "max_error_upper_bound": 4.8000000003845714e-05,
+          "max_observed_error": 1.5999999999682935e-05,
+          "uncertainty": 3.200000000416278e-05,
+          "budget": 0.003,
+          "units": "V"
+        },
+        {
+          "name": "voltage:state",
+          "status": "P",
+          "max_error_lower_bound": 0,
+          "max_error_upper_bound": 1.887379141862766e-15,
+          "max_observed_error": 0,
+          "uncertainty": 1.887379141862766e-15,
+          "budget": 0.001,
+          "units": "V"
+        }
+      ],
+      "checker_identity": {
+        "version": "paper-criteria-v1",
+        "files": {
+          "criteria.py": "ecdabb0c187d968400e8ee8c23f6f99a7552b3533962917539557436b8a95c1c",
+          "oracle.py": "96ece5a943113a6e6e79b441145a2f2238da43938914605d884b5fd0414e72dc",
+          "core-v1.json": "e1ae5311da9e05991e9802da1a24e97a70d179972608a1b9d21eb00013f61a53"
+        },
+        "runtime": {
+          "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+          "math_sha256": "cc7d168e6933da397995ce0c3bf0b96813ddbfcacaeb37988e5c98aa02810452"
+        },
+        "sha256": "df1269e0be8a50a10eba6dfa267de18f5da1080da510ca893a4fea0050355ecb"
+      },
+      "claim_limit": "Maximum error on qualified observed records; unobserved between-record short pulses remain outside this claim.",
+      "event_boundary_observations": [
+        {
+          "cohort_source": {
+            "nominal_time_s": 1.375e-06,
+            "row_index": 6966,
+            "request_id": "CO-HC-01:breakpoint:103",
+            "serialization_error_s": 4.2350636886290264e-22
+          },
+          "counter_port": "count",
+          "nominal_T": 1.375,
+          "sample_time_s": 1.375e-06,
+          "raw_values": {
+            "in": 0.65,
+            "out": 0.1,
+            "state": 1.0,
+            "count": 1.0
+          },
+          "latent_event_interval_T": [
+            1.3749999999999998,
+            1.3750000000000004
+          ],
+          "observed_callback_stage": 1,
+          "relation": "unresolved tie",
+          "status": "I",
+          "time_uncertainty_s": 4.2350636886290264e-22
+        },
+        {
+          "cohort_source": {
+            "nominal_time_s": 3.375e-06,
+            "row_index": 17158,
+            "request_id": "CO-HC-01:breakpoint:309",
+            "serialization_error_s": 4.2350636886290264e-22
+          },
+          "counter_port": "count",
+          "nominal_T": 3.375,
+          "sample_time_s": 3.375e-06,
+          "raw_values": {
+            "in": 0.35,
+            "out": 0.9,
+            "state": 1.0,
+            "count": 1.0
+          },
+          "latent_event_interval_T": [
+            3.375,
+            3.3750200000000006
+          ],
+          "observed_callback_stage": 1,
+          "relation": "unresolved tie",
+          "status": "I",
+          "time_uncertainty_s": 4.2350636886290264e-22
+        }
+      ],
+      "required_properties": [
+        "observation",
+        "input_consistency:in",
+        "boundary_cohort",
+        "counter_voltage:count",
+        "event_history",
+        "voltage:out",
+        "voltage:state"
+      ],
+      "separate_diagnostics": [
+        "event_boundary_observations"
+      ],
+      "execution_identity_verified": true,
+      "missing_roles": [],
+      "uncertainty": {
+        "time_error_s": 4.2350636886290264e-22,
+        "voltage_error_V": 1.887379141862766e-15,
+        "input_error_V": 6.68519059554562e-17
+      },
+      "same_numeric_rows_as_original": true,
+      "previous_observation": {
+        "path": "runs/support-comparison-20261009/collected/evas/outputs/evas/runs/CO-HC-01/observation.json",
+        "sha256": "448a7cda1e754f5afd4f0e357b0bfbdb8f7b47dcc5ead73372f3f9ac13b34aa0",
+        "availability": "local-only"
+      },
+      "evidence": {
+        "path": "runs/core-evidence-20261009/replay-v2/CO-HC-01/evidence.json",
+        "sha256": "4d4ab8e8db40f879a61cb75489eb8153d0de32c8a0a2e218fe9c60d7e6b2b904",
+        "availability": "local-only"
+      },
+      "assessment": {
+        "path": "runs/core-evidence-20261009/replay-v2/CO-HC-01/assessment.json",
+        "sha256": "d3a3975c14fee923e7c8235a71b6186a9319ea5323b0899a6e5c8b5226b4e13e",
+        "availability": "local-only"
+      },
+      "effective_controls": {
+        "absolute_V": 1e-07,
+        "relative": 1e-05,
+        "stop_s": 4e-06,
+        "max_step_s": 2e-10,
+        "max_step_applied": true
+      }
+    },
+    {
+      "condition": "CO-VCO-01",
+      "execution": "waveform_available",
+      "status": "P",
+      "properties": [
+        {
+          "name": "observation",
+          "status": "P",
+          "rows": 40782
+        },
+        {
+          "name": "input_consistency:ctl",
+          "status": "P",
+          "max_observed_error": 8.881784197001252e-16,
+          "max_budget_excess": -9.976154164911821e-14,
+          "units": "V",
+          "scope": "Observation/source compatibility, not DUT behavior"
+        },
+        {
+          "name": "boundary_cohort",
+          "status": "P",
+          "missing": [],
+          "rule": "Attested requested nominal centers within evidenced serialization precision"
+        },
+        {
+          "name": "voltage:freq",
+          "status": "P",
+          "max_error_lower_bound": 0,
+          "max_error_upper_bound": 1.0057979913345727e-13,
+          "max_observed_error": 4.440892098500626e-16,
+          "uncertainty": 1.0013570992360721e-13,
+          "budget": 0.001,
+          "units": "V"
+        },
+        {
+          "name": "voltage:phase",
+          "status": "P",
+          "max_error_lower_bound": 0,
+          "max_error_upper_bound": 1.0228955573191034e-13,
+          "max_observed_error": 1.3322676295501878e-15,
+          "uncertainty": 1.011927427269077e-13,
+          "budget": 0.001,
+          "units": "cycle"
+        },
+        {
+          "name": "voltage:out",
+          "status": "P",
+          "max_error_lower_bound": 0,
+          "max_error_upper_bound": 1.157975845257739e-13,
+          "max_observed_error": 8.104628079763643e-15,
+          "uncertainty": 1.0949285374943242e-13,
+          "budget": 0.003,
+          "units": "V"
+        },
+        {
+          "name": "modulo_range",
+          "status": "P"
+        },
+        {
+          "name": "phase_absolute_outside_wrap_windows",
+          "status": "P",
+          "max_error_lower_bound": 0,
+          "max_error_upper_bound": 1.0228955573191034e-13,
+          "max_observed_error": 1.3322676295501878e-15,
+          "uncertainty": 1.011927427269077e-13,
+          "budget": 0.001,
+          "units": "cycle"
+        },
+        {
+          "name": "wrap_count_and_windows",
+          "status": "P",
+          "count": 4,
+          "expected_count": 4,
+          "intervals_T": [
+            [
+              2.689966442575133,
+              2.689986442575135
+            ],
+            [
+              3.754999999999999,
+              3.7550000000000012
+            ],
+            [
+              4.754999999999999,
+              4.755020000000001
+            ],
+            [
+              6.3193751525134285,
+              6.319375152513431
+            ]
+          ]
+        }
+      ],
+      "checker_identity": {
+        "version": "paper-criteria-v1",
+        "files": {
+          "criteria.py": "ecdabb0c187d968400e8ee8c23f6f99a7552b3533962917539557436b8a95c1c",
+          "oracle.py": "96ece5a943113a6e6e79b441145a2f2238da43938914605d884b5fd0414e72dc",
+          "core-v1.json": "e1ae5311da9e05991e9802da1a24e97a70d179972608a1b9d21eb00013f61a53"
+        },
+        "runtime": {
+          "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+          "math_sha256": "cc7d168e6933da397995ce0c3bf0b96813ddbfcacaeb37988e5c98aa02810452"
+        },
+        "sha256": "df1269e0be8a50a10eba6dfa267de18f5da1080da510ca893a4fea0050355ecb"
+      },
+      "claim_limit": "Maximum error on qualified observed records; unobserved between-record short pulses remain outside this claim. Exact modulo endpoint semantics remain separately I at finite observation-time uncertainty.",
+      "exact_boundary_observations": [
+        {
+          "cohort_source": {
+            "nominal_time_s": 2.6899664425751338e-06,
+            "row_index": 13550,
+            "request_id": "CO-VCO-01:breakpoint:103",
+            "serialization_error_s": 8.470127377258053e-22
+          },
+          "nominal_T": 2.689966442575134,
+          "unwrapped_integer_level": 1,
+          "sample_time_s": 2.6899664425751338e-06,
+          "raw_phase": 0.9999999999999999,
+          "scalar_endpoint_error": 0.9999999999999999,
+          "circular_error": 1.1102230246251565e-16,
+          "time_uncertainty_s": 8.470127377258053e-22,
+          "status": "I",
+          "reason": "Finite time uncertainty straddles modulo endpoint; raw discrepancy retained."
+        },
+        {
+          "cohort_source": {
+            "nominal_time_s": 3.7549999999999996e-06,
+            "row_index": 19071,
+            "request_id": "CO-VCO-01:breakpoint:306",
+            "serialization_error_s": 8.470127377258053e-22
+          },
+          "nominal_T": 3.755,
+          "unwrapped_integer_level": 2,
+          "sample_time_s": 3.7549999999999996e-06,
+          "raw_phase": 0.9999999999999998,
+          "scalar_endpoint_error": 0.9999999999999998,
+          "circular_error": 2.220446049250313e-16,
+          "time_uncertainty_s": 8.470127377258053e-22,
+          "status": "I",
+          "reason": "Finite time uncertainty straddles modulo endpoint; raw discrepancy retained."
+        },
+        {
+          "cohort_source": {
+            "nominal_time_s": 4.754999999999999e-06,
+            "row_index": 24261,
+            "request_id": "CO-VCO-01:breakpoint:510",
+            "serialization_error_s": 8.470127377258053e-22
+          },
+          "nominal_T": 4.755,
+          "unwrapped_integer_level": 3,
+          "sample_time_s": 4.754999999999999e-06,
+          "raw_phase": 0.9999999999999996,
+          "scalar_endpoint_error": 0.9999999999999996,
+          "circular_error": 4.440892098500626e-16,
+          "time_uncertainty_s": 8.470127377258053e-22,
+          "status": "I",
+          "reason": "Finite time uncertainty straddles modulo endpoint; raw discrepancy retained."
+        },
+        {
+          "cohort_source": {
+            "nominal_time_s": 6.31937515251343e-06,
+            "row_index": 32277,
+            "request_id": "CO-VCO-01:breakpoint:714",
+            "serialization_error_s": 8.470127377258053e-22
+          },
+          "nominal_T": 6.31937515251343,
+          "unwrapped_integer_level": 4,
+          "sample_time_s": 6.31937515251343e-06,
+          "raw_phase": 2.517562098341231e-16,
+          "scalar_endpoint_error": 2.517562098341231e-16,
+          "circular_error": 2.517562098341231e-16,
+          "time_uncertainty_s": 8.470127377258053e-22,
+          "status": "I",
+          "reason": "Finite time uncertainty straddles modulo endpoint; raw discrepancy retained."
+        }
+      ],
+      "endpoint_semantics_status": "I",
+      "required_properties": [
+        "observation",
+        "input_consistency:ctl",
+        "boundary_cohort",
+        "voltage:freq",
+        "voltage:phase",
+        "voltage:out",
+        "modulo_range",
+        "phase_absolute_outside_wrap_windows",
+        "wrap_count_and_windows"
+      ],
+      "separate_diagnostics": [
+        "exact_boundary_observations"
+      ],
+      "execution_identity_verified": true,
+      "missing_roles": [],
+      "uncertainty": {
+        "time_error_s": 8.470127377258053e-22,
+        "voltage_error_V": 9.962169977839608e-14,
+        "input_error_V": 1.8100755269645497e-16
+      },
+      "same_numeric_rows_as_original": true,
+      "previous_observation": {
+        "path": "runs/support-comparison-20261009/collected/evas/outputs/evas/runs/CO-VCO-01/observation.json",
+        "sha256": "3e630c74cc006475df228151e10be3c272bbea0e4e09900b19f699e15291e98f",
+        "availability": "local-only"
+      },
+      "evidence": {
+        "path": "runs/core-evidence-20261009/replay-v2/CO-VCO-01/evidence.json",
+        "sha256": "79f0e4f0723cc640d7f86c4b8ff119ec2322986ce101f2d3276445bd3d0d1b78",
+        "availability": "local-only"
+      },
+      "assessment": {
+        "path": "runs/core-evidence-20261009/replay-v2/CO-VCO-01/assessment.json",
+        "sha256": "28cd6874d9b186262fa3a8419837d8e35f9db1415c110aeaaa9b927d58151746",
+        "availability": "local-only"
+      },
+      "effective_controls": {
+        "absolute_V": 1e-07,
+        "relative": 1e-05,
+        "stop_s": 8e-06,
+        "max_step_s": 2e-10,
+        "max_step_applied": true
+      }
+    }
+  ],
+  "spectre_original": [
+    {
+      "condition": "VR-01",
+      "raw": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/VR-01/psf/tran.tran.tran",
+        "sha256": "25794fba5e344a1ad67743c52a0b1ebe0b8debdf33dc4523f30a08567ef460da",
+        "availability": "local-only"
+      },
+      "log": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/VR-01/spectre.log",
+        "sha256": "6b777b8b1e26703993fc43c3296c70069dd6823a582db72aa85af577610bf3f1",
+        "availability": "local-only"
+      },
+      "deck": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/VR-01/tb.scs",
+        "sha256": "c7b4aa1fc83a408c9ed44511bb798952b335d5c10bb7a7805cf9a939eb32ff99",
+        "availability": "local-only"
+      },
+      "rows": 30008,
+      "logged_accepted_steps": 30007,
+      "rows_equal_accepted_steps_plus_initial": true,
+      "first_time_s": 0.0,
+      "last_time_s": 5.999999999995916e-06,
+      "requested_stop_s": 6e-06,
+      "last_minus_stop_s": -4.084392871660236e-18,
+      "coverage": false,
+      "max_gap_s": 2.0000000000086206e-10,
+      "local_windows": [],
+      "missing_exact_centers": 0,
+      "local_gap_limits_met": true,
+      "precision_17g_readback": false,
+      "assessment": "I",
+      "limit": "Native row-count and time facts only; no new source/input/uncertainty or boundary qualification. No interpolation or nearest-row substitution."
+    },
+    {
+      "condition": "EX-01",
+      "raw": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/EX-01/psf/tran.tran.tran",
+        "sha256": "d865c1c6340f87031c2894bd1d2b1a5ce6a524df54ef7520f5740c2f0d61c46b",
+        "availability": "local-only"
+      },
+      "log": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/EX-01/spectre.log",
+        "sha256": "b3a57277c7d87eab6e920cf561a420521c8b1d1a361947b87959b48267ecb2cc",
+        "availability": "local-only"
+      },
+      "deck": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/EX-01/tb.scs",
+        "sha256": "e094ce06236677399f3cc9d46e30695098f2b586bfa0dedb97b09d4d16005ad4",
+        "availability": "local-only"
+      },
+      "rows": 40005,
+      "logged_accepted_steps": 40004,
+      "rows_equal_accepted_steps_plus_initial": true,
+      "first_time_s": 0.0,
+      "last_time_s": 7.999999999993401e-06,
+      "requested_stop_s": 8e-06,
+      "last_minus_stop_s": -6.598386659111e-18,
+      "coverage": false,
+      "max_gap_s": 2.0000000000086206e-10,
+      "local_windows": [],
+      "missing_exact_centers": 0,
+      "local_gap_limits_met": true,
+      "precision_17g_readback": false,
+      "assessment": "I",
+      "limit": "Native row-count and time facts only; no new source/input/uncertainty or boundary qualification. No interpolation or nearest-row substitution."
+    },
+    {
+      "condition": "EV-SH-01",
+      "raw": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/EV-SH-01/psf/tran.tran.tran",
+        "sha256": "fac2822631aaec14d80c5f331e80dfa7a062c1fbe43ebdabd48fd8d8ea7fd046",
+        "availability": "local-only"
+      },
+      "log": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/EV-SH-01/spectre.log",
+        "sha256": "81c9b4f31c981699e3089f982f97d32faa4e4f2306297da3e2ee24a0a8c8704a",
+        "availability": "local-only"
+      },
+      "deck": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/EV-SH-01/tb.scs",
+        "sha256": "31588083e51b74598d1be8e67d614ac11bd5db3a770d9cb6687bf57fce761220",
+        "availability": "local-only"
+      },
+      "rows": 45837,
+      "logged_accepted_steps": 45836,
+      "rows_equal_accepted_steps_plus_initial": true,
+      "first_time_s": 0.0,
+      "last_time_s": 9.000000000002187e-06,
+      "requested_stop_s": 9e-06,
+      "last_minus_stop_s": 2.1870390698106035e-18,
+      "coverage": true,
+      "max_gap_s": 2.0000000000086206e-10,
+      "local_windows": [
+        {
+          "start_s": 1.9979999999999998e-06,
+          "end_s": 2.0019999999999996e-06,
+          "center_s": 2e-06,
+          "max_gap_s": 2.000000000097559e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [],
+          "proved_center_rows": [],
+          "coverage": true
+        },
+        {
+          "start_s": 3.998e-06,
+          "end_s": 4.002e-06,
+          "center_s": 4e-06,
+          "max_gap_s": 1.990049751642584e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [
+            20297
+          ],
+          "proved_center_rows": [],
+          "coverage": true
+        },
+        {
+          "start_s": 5.998e-06,
+          "end_s": 6.0019999999999995e-06,
+          "center_s": 6e-06,
+          "max_gap_s": 2.0000000001399107e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [
+            30508
+          ],
+          "proved_center_rows": [],
+          "coverage": true
+        },
+        {
+          "start_s": 7.998e-06,
+          "end_s": 8.002e-06,
+          "center_s": 8e-06,
+          "max_gap_s": 1.990049751981397e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [
+            40716
+          ],
+          "proved_center_rows": [],
+          "coverage": true
+        }
+      ],
+      "missing_exact_centers": 1,
+      "local_gap_limits_met": true,
+      "precision_17g_readback": false,
+      "assessment": "I",
+      "limit": "Native row-count and time facts only; no new source/input/uncertainty or boundary qualification. No interpolation or nearest-row substitution."
+    },
+    {
+      "condition": "EV-HC-01",
+      "raw": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/EV-HC-01/psf/tran.tran.tran",
+        "sha256": "ce3e7aa22c1528b136508a208c5050df0a3c753f7cdca380dff127746cae4e14",
+        "availability": "local-only"
+      },
+      "log": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/EV-HC-01/spectre.log",
+        "sha256": "bb71e8d517df9389500e56601f6a7964eb597802a0d0a1230957c98792780915",
+        "availability": "local-only"
+      },
+      "deck": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/EV-HC-01/tb.scs",
+        "sha256": "4f64fe0e1c56d0ccc9775c1827ccc3785176cd0c632b9486cf471f13291e5e9a",
+        "availability": "local-only"
+      },
+      "rows": 20371,
+      "logged_accepted_steps": 20370,
+      "rows_equal_accepted_steps_plus_initial": true,
+      "first_time_s": 0.0,
+      "last_time_s": 3.999999999999654e-06,
+      "requested_stop_s": 4e-06,
+      "last_minus_stop_s": -3.4558944247975454e-19,
+      "coverage": false,
+      "max_gap_s": 2.0000000000086206e-10,
+      "local_windows": [
+        {
+          "start_s": 1.373e-06,
+          "end_s": 1.377e-06,
+          "center_s": 1.375e-06,
+          "max_gap_s": 2.0000000000128558e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [
+            6965
+          ],
+          "proved_center_rows": [],
+          "coverage": true
+        },
+        {
+          "start_s": 3.373e-06,
+          "end_s": 3.3769999999999996e-06,
+          "center_s": 3.375e-06,
+          "max_gap_s": 2.000000000097559e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [],
+          "proved_center_rows": [],
+          "coverage": true
+        }
+      ],
+      "missing_exact_centers": 1,
+      "local_gap_limits_met": true,
+      "precision_17g_readback": false,
+      "assessment": "I",
+      "limit": "Native row-count and time facts only; no new source/input/uncertainty or boundary qualification. No interpolation or nearest-row substitution."
+    },
+    {
+      "condition": "EV-HC-02",
+      "raw": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/EV-HC-02/psf/tran.tran.tran",
+        "sha256": "0e6e6177a3c972d6694e68fa32004bad97cc47e4f881eea46a3cff39a90941eb",
+        "availability": "local-only"
+      },
+      "log": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/EV-HC-02/spectre.log",
+        "sha256": "2e257dbac86e4294435b37725e236320ff696f7096a3eab7dce8550c715e3624",
+        "availability": "local-only"
+      },
+      "deck": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/EV-HC-02/tb.scs",
+        "sha256": "a6bdc38837ef76bd49867dd6041efea827a18d28102ac7e25dd61fe159c01c8a",
+        "availability": "local-only"
+      },
+      "rows": 30368,
+      "logged_accepted_steps": 30367,
+      "rows_equal_accepted_steps_plus_initial": true,
+      "first_time_s": 0.0,
+      "last_time_s": 5.999999999998727e-06,
+      "requested_stop_s": 6e-06,
+      "last_minus_stop_s": -1.2730905197232134e-18,
+      "coverage": false,
+      "max_gap_s": 2.0000000000086206e-10,
+      "local_windows": [
+        {
+          "start_s": 2.748e-06,
+          "end_s": 2.7519999999999997e-06,
+          "center_s": 2.75e-06,
+          "max_gap_s": 2.000000000097559e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [
+            13840
+          ],
+          "proved_center_rows": [],
+          "coverage": true
+        },
+        {
+          "start_s": 5.373e-06,
+          "end_s": 5.3769999999999995e-06,
+          "center_s": 5.374999999999999e-06,
+          "max_gap_s": 2.0000000001399107e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [
+            27149
+          ],
+          "proved_center_rows": [],
+          "coverage": true
+        }
+      ],
+      "missing_exact_centers": 0,
+      "local_gap_limits_met": true,
+      "precision_17g_readback": false,
+      "assessment": "I",
+      "limit": "Native row-count and time facts only; no new source/input/uncertainty or boundary qualification. No interpolation or nearest-row substitution."
+    },
+    {
+      "condition": "TM-01",
+      "raw": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/TM-01/psf/tran.tran.tran",
+        "sha256": "31aaa1c4e5937b83c846af5ed3d1b4efb935ca422d243ce72d752b9053412119",
+        "availability": "local-only"
+      },
+      "log": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/TM-01/spectre.log",
+        "sha256": "18f77a4455192981f57c3690cef089195af30a1c69cd89b94297438a2966d013",
+        "availability": "local-only"
+      },
+      "deck": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/TM-01/tb.scs",
+        "sha256": "e9a96a30a6421eef1b85a2b1cc747110237822aafb28aa4a0d6b23ea0c2add68",
+        "availability": "local-only"
+      },
+      "rows": 40377,
+      "logged_accepted_steps": 40376,
+      "rows_equal_accepted_steps_plus_initial": true,
+      "first_time_s": 0.0,
+      "last_time_s": 8.000000000000035e-06,
+      "requested_stop_s": 8e-06,
+      "last_minus_stop_s": 3.5575383784680614e-20,
+      "coverage": true,
+      "max_gap_s": 2.0000000000086206e-10,
+      "local_windows": [
+        {
+          "start_s": 1.9979999999999998e-06,
+          "end_s": 2.0019999999999996e-06,
+          "center_s": 2e-06,
+          "max_gap_s": 2.000000000097559e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [],
+          "proved_center_rows": [],
+          "coverage": true
+        },
+        {
+          "start_s": 5.998e-06,
+          "end_s": 6.0019999999999995e-06,
+          "center_s": 6e-06,
+          "max_gap_s": 2.0000000001399107e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [
+            30273
+          ],
+          "proved_center_rows": [],
+          "coverage": true
+        }
+      ],
+      "missing_exact_centers": 1,
+      "local_gap_limits_met": true,
+      "precision_17g_readback": false,
+      "assessment": "I",
+      "limit": "Native row-count and time facts only; no new source/input/uncertainty or boundary qualification. No interpolation or nearest-row substitution."
+    },
+    {
+      "condition": "CP-01",
+      "raw": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/CP-01/psf/tran.tran.tran",
+        "sha256": "887556c6a6a812a477517d4b606e1ddc7b8594ec4e0c2f97078a77b8864cb3d3",
+        "availability": "local-only"
+      },
+      "log": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/CP-01/spectre.log",
+        "sha256": "adf7cefeb24155aebf0b89732ce616364a6102609ae80d5c05b78c4868778859",
+        "availability": "local-only"
+      },
+      "deck": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/CP-01/tb.scs",
+        "sha256": "0999a90a3df4a43499417ff87646c2e11ab865484d0b3711f0e08b2c5761c4a2",
+        "availability": "local-only"
+      },
+      "rows": 30006,
+      "logged_accepted_steps": 30005,
+      "rows_equal_accepted_steps_plus_initial": true,
+      "first_time_s": 0.0,
+      "last_time_s": 5.999999999995799e-06,
+      "requested_stop_s": 6e-06,
+      "last_minus_stop_s": -4.20128341838133e-18,
+      "coverage": false,
+      "max_gap_s": 2.0000000000086206e-10,
+      "local_windows": [],
+      "missing_exact_centers": 0,
+      "local_gap_limits_met": true,
+      "precision_17g_readback": false,
+      "assessment": "I",
+      "limit": "Native row-count and time facts only; no new source/input/uncertainty or boundary qualification. No interpolation or nearest-row substitution."
+    },
+    {
+      "condition": "CP-02",
+      "raw": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/CP-02/psf/tran.tran.tran",
+        "sha256": "56f42b585253ad235eebce6ebe10cdec8f9bdaed4f4a62c72f23f3fe22ff5fd9",
+        "availability": "local-only"
+      },
+      "log": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/CP-02/spectre.log",
+        "sha256": "7abd53221bb8acb077b46e5d4dc93043544b425295bce912dff3420b0ded9987",
+        "availability": "local-only"
+      },
+      "deck": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/CP-02/tb.scs",
+        "sha256": "9ba6e9f7384647fb713818b4a0ae9f7b2e320d8dc824de8d3981e007857a91e0",
+        "availability": "local-only"
+      },
+      "rows": 30855,
+      "logged_accepted_steps": 30854,
+      "rows_equal_accepted_steps_plus_initial": true,
+      "first_time_s": 0.0,
+      "last_time_s": 5.999999999998304e-06,
+      "requested_stop_s": 6e-06,
+      "last_minus_stop_s": -1.6957599604031093e-18,
+      "coverage": false,
+      "max_gap_s": 2.0000000000086206e-10,
+      "local_windows": [
+        {
+          "start_s": 1.1646666666666666e-06,
+          "end_s": 1.1686666666666667e-06,
+          "center_s": 1.1666666666666668e-06,
+          "max_gap_s": 1.9900497513037707e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [],
+          "proved_center_rows": [],
+          "coverage": true
+        },
+        {
+          "start_s": 2.498e-06,
+          "end_s": 2.5019999999999995e-06,
+          "center_s": 2.4999999999999998e-06,
+          "max_gap_s": 2.000000000097559e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [],
+          "proved_center_rows": [],
+          "coverage": true
+        },
+        {
+          "start_s": 3.8313333333333335e-06,
+          "end_s": 3.835333333333333e-06,
+          "center_s": 3.833333333333334e-06,
+          "max_gap_s": 2.0000000001399107e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [],
+          "proved_center_rows": [],
+          "coverage": true
+        },
+        {
+          "start_s": 5.164666666666667e-06,
+          "end_s": 5.168666666666667e-06,
+          "center_s": 5.166666666666667e-06,
+          "max_gap_s": 2.000000000224614e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [
+            26574
+          ],
+          "proved_center_rows": [],
+          "coverage": true
+        }
+      ],
+      "missing_exact_centers": 3,
+      "local_gap_limits_met": false,
+      "precision_17g_readback": false,
+      "assessment": "I",
+      "limit": "Native row-count and time facts only; no new source/input/uncertainty or boundary qualification. No interpolation or nearest-row substitution."
+    },
+    {
+      "condition": "SI-01",
+      "raw": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/SI-01/psf/tran.tran.tran",
+        "sha256": "2a51ae073145cb1ea1ce4ef3ace94abf13a25a8e8ede68a4eafc59b0de63e9f7",
+        "availability": "local-only"
+      },
+      "log": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/SI-01/spectre.log",
+        "sha256": "9a7f0cfab9ad365b82ff48422f38a700d76571346c7604e93ec981b65cf94408",
+        "availability": "local-only"
+      },
+      "deck": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/SI-01/tb.scs",
+        "sha256": "1dfd723df82e844e57ca625edc25c8f37cb299269a6370a8d77f03e25b95bc51",
+        "availability": "local-only"
+      },
+      "rows": 35785,
+      "logged_accepted_steps": 35784,
+      "rows_equal_accepted_steps_plus_initial": true,
+      "first_time_s": 0.0,
+      "last_time_s": 6.999999999997961e-06,
+      "requested_stop_s": 7e-06,
+      "last_minus_stop_s": -2.038808304041101e-18,
+      "coverage": false,
+      "max_gap_s": 2.0000000000086206e-10,
+      "local_windows": [
+        {
+          "start_s": 1.9979999999999998e-06,
+          "end_s": 2.0019999999999996e-06,
+          "center_s": 2e-06,
+          "max_gap_s": 2.000000000097559e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [],
+          "proved_center_rows": [],
+          "coverage": true
+        },
+        {
+          "start_s": 2.998e-06,
+          "end_s": 3.002e-06,
+          "center_s": 3e-06,
+          "max_gap_s": 2.0000000000128558e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [
+            15273
+          ],
+          "proved_center_rows": [],
+          "coverage": true
+        },
+        {
+          "start_s": 3.998e-06,
+          "end_s": 4.002e-06,
+          "center_s": 4e-06,
+          "max_gap_s": 1.9900497514731773e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [
+            20480
+          ],
+          "proved_center_rows": [],
+          "coverage": true
+        },
+        {
+          "start_s": 5.998e-06,
+          "end_s": 6.0019999999999995e-06,
+          "center_s": 6e-06,
+          "max_gap_s": 2.0000000001399107e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [
+            30691
+          ],
+          "proved_center_rows": [],
+          "coverage": true
+        }
+      ],
+      "missing_exact_centers": 1,
+      "local_gap_limits_met": true,
+      "precision_17g_readback": false,
+      "assessment": "I",
+      "limit": "Native row-count and time facts only; no new source/input/uncertainty or boundary qualification. No interpolation or nearest-row substitution."
+    },
+    {
+      "condition": "CO-SH-01",
+      "raw": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/CO-SH-01/psf/tran.tran.tran",
+        "sha256": "dff48cef23bd444e7bf1427a6f81f3941906f34b830f3221331416616be4950c",
+        "availability": "local-only"
+      },
+      "log": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/CO-SH-01/spectre.log",
+        "sha256": "8ed51ada7294fc0d5e17e102099c1ba8c878ddb04336162bf98c6dbbad32d3fa",
+        "availability": "local-only"
+      },
+      "deck": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/CO-SH-01/tb.scs",
+        "sha256": "2cc116c538b031fb7bb4447c884fff62263a53ac832d527ca966e64e705e2094",
+        "availability": "local-only"
+      },
+      "rows": 46084,
+      "logged_accepted_steps": 46083,
+      "rows_equal_accepted_steps_plus_initial": true,
+      "first_time_s": 0.0,
+      "last_time_s": 9.000000000000219e-06,
+      "requested_stop_s": 9e-06,
+      "last_minus_stop_s": 2.185345003916095e-19,
+      "coverage": true,
+      "max_gap_s": 2.0000000000086206e-10,
+      "local_windows": [
+        {
+          "start_s": 1.9979999999999998e-06,
+          "end_s": 2.0019999999999996e-06,
+          "center_s": 2e-06,
+          "max_gap_s": 2.000000000097559e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [],
+          "proved_center_rows": [],
+          "coverage": true
+        },
+        {
+          "start_s": 2.998e-06,
+          "end_s": 3.002e-06,
+          "center_s": 3e-06,
+          "max_gap_s": 2.0000000000128558e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [
+            15292
+          ],
+          "proved_center_rows": [],
+          "coverage": true
+        },
+        {
+          "start_s": 3.998e-06,
+          "end_s": 4.002e-06,
+          "center_s": 4e-06,
+          "max_gap_s": 1.990049751642584e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [
+            20505
+          ],
+          "proved_center_rows": [],
+          "coverage": true
+        },
+        {
+          "start_s": 5.998e-06,
+          "end_s": 6.0019999999999995e-06,
+          "center_s": 6e-06,
+          "max_gap_s": 2.0000000001399107e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [
+            30734
+          ],
+          "proved_center_rows": [],
+          "coverage": true
+        },
+        {
+          "start_s": 7.998e-06,
+          "end_s": 8.002e-06,
+          "center_s": 8e-06,
+          "max_gap_s": 1.990049751981397e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [
+            40954
+          ],
+          "proved_center_rows": [],
+          "coverage": true
+        }
+      ],
+      "missing_exact_centers": 1,
+      "local_gap_limits_met": true,
+      "precision_17g_readback": false,
+      "assessment": "I",
+      "limit": "Native row-count and time facts only; no new source/input/uncertainty or boundary qualification. No interpolation or nearest-row substitution."
+    },
+    {
+      "condition": "CO-HC-01",
+      "raw": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/CO-HC-01/psf/tran.tran.tran",
+        "sha256": "b50a4c126d9ead905793cbbbb340fac01ac730c33d9ec7be2bbba84397e16e9c",
+        "availability": "local-only"
+      },
+      "log": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/CO-HC-01/spectre.log",
+        "sha256": "11a8b3b7fa5671d29d2dd3a9edc05a2d8b95f2c34df2911d8cb0a7044726e74c",
+        "availability": "local-only"
+      },
+      "deck": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/CO-HC-01/tb.scs",
+        "sha256": "a90ca55b4fb41309bb0a0f6ee75baa9fd5ab30787b2c96df19d522a43773acdc",
+        "availability": "local-only"
+      },
+      "rows": 20375,
+      "logged_accepted_steps": 20374,
+      "rows_equal_accepted_steps_plus_initial": true,
+      "first_time_s": 0.0,
+      "last_time_s": 3.999999999999645e-06,
+      "requested_stop_s": 4e-06,
+      "last_minus_stop_s": -3.5490680489955184e-19,
+      "coverage": false,
+      "max_gap_s": 2.0000000000086206e-10,
+      "local_windows": [
+        {
+          "start_s": 1.373e-06,
+          "end_s": 1.377e-06,
+          "center_s": 1.375e-06,
+          "max_gap_s": 2.0000000000128558e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [
+            6965
+          ],
+          "proved_center_rows": [],
+          "coverage": true
+        },
+        {
+          "start_s": 3.373e-06,
+          "end_s": 3.3769999999999996e-06,
+          "center_s": 3.375e-06,
+          "max_gap_s": 2.000000000097559e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [],
+          "proved_center_rows": [],
+          "coverage": true
+        }
+      ],
+      "missing_exact_centers": 1,
+      "local_gap_limits_met": true,
+      "precision_17g_readback": false,
+      "assessment": "I",
+      "limit": "Native row-count and time facts only; no new source/input/uncertainty or boundary qualification. No interpolation or nearest-row substitution."
+    },
+    {
+      "condition": "CO-VCO-01",
+      "raw": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/CO-VCO-01/psf/tran.tran.tran",
+        "sha256": "1fce2e32d8f5f6982b2cf8a43af09f393b15797ac3c928122ab4e73a791497d4",
+        "availability": "local-only"
+      },
+      "log": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/CO-VCO-01/spectre.log",
+        "sha256": "530b5cba80e25f0e2742f77714d7fb5ad790f5e3e425a960a010aa6d62150ec4",
+        "availability": "local-only"
+      },
+      "deck": {
+        "path": "runs/support-comparison-20261009/collected/spectre/outputs/spectre/runs/CO-VCO-01/tb.scs",
+        "sha256": "8fdf75883a869f80a9d6544e93983ec9261eb6185ac2d4bc23d5e312dd258d17",
+        "availability": "local-only"
+      },
+      "rows": 40840,
+      "logged_accepted_steps": 40839,
+      "rows_equal_accepted_steps_plus_initial": true,
+      "first_time_s": 0.0,
+      "last_time_s": 7.999999999998141e-06,
+      "requested_stop_s": 8e-06,
+      "last_minus_stop_s": -1.858390286275935e-18,
+      "coverage": false,
+      "max_gap_s": 2.0000000000086206e-10,
+      "local_windows": [
+        {
+          "start_s": 2.687966442575134e-06,
+          "end_s": 2.6919664425751335e-06,
+          "center_s": 2.6899664425751338e-06,
+          "max_gap_s": 2.000000000097559e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [],
+          "proved_center_rows": [],
+          "coverage": true
+        },
+        {
+          "start_s": 3.753e-06,
+          "end_s": 3.7569999999999994e-06,
+          "center_s": 3.7549999999999996e-06,
+          "max_gap_s": 2.000000000097559e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [],
+          "proved_center_rows": [],
+          "coverage": true
+        },
+        {
+          "start_s": 4.753e-06,
+          "end_s": 4.7569999999999995e-06,
+          "center_s": 4.754999999999999e-06,
+          "max_gap_s": 2.0000000001399107e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [
+            24277
+          ],
+          "proved_center_rows": [],
+          "coverage": true
+        },
+        {
+          "start_s": 6.31737515251343e-06,
+          "end_s": 6.32137515251343e-06,
+          "center_s": 6.31937515251343e-06,
+          "max_gap_s": 2.0000000001399107e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [
+            32312
+          ],
+          "proved_center_rows": [],
+          "coverage": true
+        }
+      ],
+      "missing_exact_centers": 2,
+      "local_gap_limits_met": true,
+      "precision_17g_readback": false,
+      "assessment": "I",
+      "limit": "Native row-count and time facts only; no new source/input/uncertainty or boundary qualification. No interpolation or nearest-row substitution."
+    }
+  ],
+  "spectre_preflight": [
+    {
+      "condition": "EV-SH-01",
+      "raw": {
+        "path": "runs/core-spectre-evidence-20261009/collected/spectre/outputs/spectre/runs/EV-SH-01/psf/tran.tran.tran",
+        "sha256": "9da1e21f9588e8476f5361290855a8c5c7f8ccc298cf95c7d5de2317a75976e7",
+        "availability": "local-only"
+      },
+      "log": {
+        "path": "runs/core-spectre-evidence-20261009/collected/spectre/outputs/spectre/runs/EV-SH-01/spectre.log",
+        "sha256": "d2c53a7c1d097b3ad36aa62bc634a55b81b168f1fb90caa5cfccbe939df067b8",
+        "availability": "local-only"
+      },
+      "deck": {
+        "path": "runs/core-spectre-evidence-20261009/collected/spectre/outputs/spectre/runs/EV-SH-01/tb.scs",
+        "sha256": "fd27eb1ed9d5b5235b9e2aefd5922bad5ab0664c980944a86abece73c6e3912f",
+        "availability": "local-only"
+      },
+      "rows": 45837,
+      "logged_accepted_steps": 45836,
+      "rows_equal_accepted_steps_plus_initial": true,
+      "first_time_s": 0.0,
+      "last_time_s": 9.000000000002187e-06,
+      "requested_stop_s": 9e-06,
+      "last_minus_stop_s": 2.1870390698106035e-18,
+      "coverage": true,
+      "max_gap_s": 2.0000000000043854e-10,
+      "local_windows": [
+        {
+          "start_s": 1.9979999999999998e-06,
+          "end_s": 2.0019999999999996e-06,
+          "center_s": 2e-06,
+          "max_gap_s": 2.0000000000128558e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [],
+          "proved_center_rows": [],
+          "coverage": true
+        },
+        {
+          "start_s": 3.998e-06,
+          "end_s": 4.002e-06,
+          "center_s": 4e-06,
+          "max_gap_s": 1.990049751642584e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [
+            20297
+          ],
+          "proved_center_rows": [],
+          "coverage": true
+        },
+        {
+          "start_s": 5.998e-06,
+          "end_s": 6.0019999999999995e-06,
+          "center_s": 6e-06,
+          "max_gap_s": 2.0000000000552074e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [
+            30508
+          ],
+          "proved_center_rows": [],
+          "coverage": true
+        },
+        {
+          "start_s": 7.998e-06,
+          "end_s": 8.002e-06,
+          "center_s": 8e-06,
+          "max_gap_s": 1.990049751981397e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [
+            40716
+          ],
+          "proved_center_rows": [],
+          "coverage": true
+        }
+      ],
+      "missing_exact_centers": 1,
+      "local_gap_limits_met": true,
+      "precision_17g_readback": true,
+      "assessment": "I",
+      "limit": "Native row-count and time facts only; no new source/input/uncertainty or boundary qualification. No interpolation or nearest-row substitution."
+    },
+    {
+      "condition": "CP-02",
+      "raw": {
+        "path": "runs/core-spectre-evidence-20261009/collected/spectre/outputs/spectre/runs/CP-02/psf/tran.tran.tran",
+        "sha256": "efb9a40e953826ad5bc827c3568fd58542402e4026fe8b55a0b233a5ad491b7a",
+        "availability": "local-only"
+      },
+      "log": {
+        "path": "runs/core-spectre-evidence-20261009/collected/spectre/outputs/spectre/runs/CP-02/spectre.log",
+        "sha256": "8c20b23aa389c1b84d1afbef03fee2dea85b1d1123e99a251380c63f7004f47c",
+        "availability": "local-only"
+      },
+      "deck": {
+        "path": "runs/core-spectre-evidence-20261009/collected/spectre/outputs/spectre/runs/CP-02/tb.scs",
+        "sha256": "82cac384b889c13217df745f7213443d6b1812806b746fb8bf3f215d6c0a4068",
+        "availability": "local-only"
+      },
+      "rows": 30855,
+      "logged_accepted_steps": 30854,
+      "rows_equal_accepted_steps_plus_initial": true,
+      "first_time_s": 0.0,
+      "last_time_s": 5.9999999999983035e-06,
+      "requested_stop_s": 6e-06,
+      "last_minus_stop_s": -1.6966069933503636e-18,
+      "coverage": false,
+      "max_gap_s": 2.0000000000001503e-10,
+      "local_windows": [
+        {
+          "start_s": 1.1646666666666666e-06,
+          "end_s": 1.1686666666666667e-06,
+          "center_s": 1.1666666666666668e-06,
+          "max_gap_s": 1.990049751282595e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [
+            5962
+          ],
+          "proved_center_rows": [],
+          "coverage": true
+        },
+        {
+          "start_s": 2.498e-06,
+          "end_s": 2.5019999999999995e-06,
+          "center_s": 2.4999999999999998e-06,
+          "max_gap_s": 2.0000000000128558e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [
+            12832
+          ],
+          "proved_center_rows": [],
+          "coverage": true
+        },
+        {
+          "start_s": 3.8313333333333335e-06,
+          "end_s": 3.835333333333333e-06,
+          "center_s": 3.833333333333334e-06,
+          "max_gap_s": 2.0000000001399107e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [],
+          "proved_center_rows": [],
+          "coverage": true
+        },
+        {
+          "start_s": 5.164666666666667e-06,
+          "end_s": 5.168666666666667e-06,
+          "center_s": 5.166666666666667e-06,
+          "max_gap_s": 2.0000000001399107e-11,
+          "required_max_gap_s": 2e-11,
+          "exact_center_rows": [
+            26574
+          ],
+          "proved_center_rows": [],
+          "coverage": true
+        }
+      ],
+      "missing_exact_centers": 1,
+      "local_gap_limits_met": true,
+      "precision_17g_readback": true,
+      "assessment": "I",
+      "limit": "Native row-count and time facts only; no new source/input/uncertainty or boundary qualification. No interpolation or nearest-row substitution."
+    }
+  ],
+  "operator_receipts": {
+    "evas": {
+      "path": "runs/core-evidence-20261009/collected/evas/operator-receipts/evas.json",
+      "sha256": "e11e92f2123b1bbd02fe0981039fd866f6256fc33813b7d2d42bceaa5c269b4b",
+      "availability": "local-only"
+    },
+    "spectre_original": {
+      "path": "runs/support-comparison-20261009/collected/spectre/operator-receipts/spectre.json",
+      "sha256": "3f73d27cd8366dc82c723842a80626aac4caf2e3f94f33db1f1d25613293d494",
+      "availability": "local-only"
+    },
+    "spectre_preflight": {
+      "path": "runs/core-spectre-evidence-20261009/collected/spectre/operator-receipts/spectre.json",
+      "sha256": "caf491de996fe74ed12787050767076577bf8cf0b0dc65004fd4991993d6f31f",
+      "availability": "local-only"
+    }
+  },
+  "tool_identities": {
+    "evas": {
+      "path": "runs/core-evidence-20261009/collected/evas/outputs/evas/TOOL_IDENTITY.json",
+      "sha256": "3c3570c27283bd1af59d1d41b0ea6a19492705c460e4de226ffcc344f8a0e67a",
+      "availability": "local-only"
+    },
+    "spectre": {
+      "path": "runs/core-spectre-evidence-20261009/collected/spectre/outputs/spectre/TOOL_IDENTITY.json",
+      "sha256": "715c0b57a6989c9a3033457992abb9e26ded94c72ef4baa909ec29da892858e3",
+      "availability": "local-only"
+    }
+  },
+  "new_configurations": 14,
+  "total_configurations_including_original": 193,
+  "primary_conditions": 27,
+  "primary_slots": 108,
+  "selection": "Replace 12 EVAS core slots with this new execution; reuse other 36 original core slots and all 60 selected supplemental slots. Spectre 2-format preflights are diagnostics. Original I/X and all attempts remain retained.",
+  "checked_in_analysis": {
+    "experiments/backends/support/core_report.py": "c751243a9880b25124459744df93b171ed051096c24ee73b0b3b90310a5f942f",
+    "experiments/backends/paper/actual_observation.py": "ae933f27295d47b4a983fd55029d9159fc68070d8ac9a36846b84ac30b39b55d",
+    "experiments/backends/paper/observations.py": "0aff2f248d63b9e81b1fcf5bab5722df13bdcf42fd7edffe4fe65f45b79b845c",
+    "evas/validation/paper/criteria.py": "ecdabb0c187d968400e8ee8c23f6f99a7552b3533962917539557436b8a95c1c",
+    "evas/validation/paper/oracle.py": "96ece5a943113a6e6e79b441145a2f2238da43938914605d884b5fd0414e72dc",
+    "evas/validation/paper/core-v1.json": "e1ae5311da9e05991e9802da1a24e97a70d179972608a1b9d21eb00013f61a53"
+  },
+  "raw_availability": "local-only; paths relative to repository root; raw archives retained locally and on the execution server"
+}

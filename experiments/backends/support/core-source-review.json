@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "cards_sha256": "e1ae5311da9e05991e9802da1a24e97a70d179972608a1b9d21eb00013f61a53",
+  "records": [
+    {
+      "condition": "VR-01",
+      "source_sha256": "cc5015e28ff3629796794d3a858b38bb52bf4b32aa73767c2d3f54d56727ca11",
+      "card_sha256": "a1e34c5f1cfb2725bff86e0598088b32f253bbfc9c9ec77f59c47b68d1137426",
+      "status": "reviewed",
+      "basis": [
+        "双端贡献 V(out,ref)=1.5*(V(ip)-V(im))-0.125，所以绝对 out=ref+1.5*(ip-im)-0.125；参考方向与卡一致，5 个 out 锚点从三个 PWL 独立重算。无状态、无历史算子、无负载或反馈。",
+        "实际 dut.va 与冻结 source 字节相同；condition.json 与冻结卡相同；request 的源、顶层/端口/参数、PWL 与 stop 均相符。"
+      ],
+      "limits": [
+        "reviewed 仅表示这份固定源与卡的合法电压域编码和解析意图已实际审查；不是后端行为通过、完整 LRM 认证、数值资格或求解器区间证书证明。",
+        "未从编译成功或仿真输出推导合法性；未检查其他等价写法、一般负载、电流/KCL 网络或卡外组合。",
+        "事件时移与实际驱动误差必须由后续资格分析传播；名义锚点不是逐点固定实际事件时刻。",
+        "卡已列出的未覆盖范围：Supply-dependent transfer；Multiple contributions；Finite load and output impedance"
+      ]
+    },
+    {
+      "condition": "EX-01",
+      "source_sha256": "7315ce904adb94404bc721b9ce32983bcc4856e16bc31c2d3ea8f2edb2bfe143",
+      "card_sha256": "51338864b4d0e3a3fc6b31709cea6677b05e9870a400e09e9aede3dc4e9018d8",
+      "status": "reviewed",
+      "basis": [
+        "f 在每次连续求值先赋 0.4+0.5*ctl，再按顺序夹在 [0.2,1]，贡献位于 if 之外。分支修改普通 real，不条件调用历史算子；6 个频率锚点独立重算。",
+        "实际 dut.va 与冻结 source 字节相同；condition.json 与冻结卡相同；request 的源、顶层/端口/参数、PWL 与 stop 均相符。"
+      ],
+      "limits": [
+        "reviewed 仅表示这份固定源与卡的合法电压域编码和解析意图已实际审查；不是后端行为通过、完整 LRM 认证、数值资格或求解器区间证书证明。",
+        "未从编译成功或仿真输出推导合法性；未检查其他等价写法、一般负载、电流/KCL 网络或卡外组合。",
+        "事件时移与实际驱动误差必须由后续资格分析传播；名义锚点不是逐点固定实际事件时刻。",
+        "卡已列出的未覆盖范围：Boolean and ternary encoding；Runtime loops/functions；State-dependent analog branches"
+      ]
+    },
+    {
+      "condition": "EV-SH-01",
+      "source_sha256": "8efd7eebe977db0e3069f58b22db33c94799e65ebab6e9e13a9986cdccbdfca8",
+      "card_sha256": "bfd87f0602c79cef0aadac6397e3e52d41f5024e62bcf147919aea2140eab41a",
+      "status": "reviewed",
+      "basis": [
+        "initial_step 将 q=-0.25、n=0；无条件 timer(2us,2us,1ns) 在域内名义 2/4/6/8T 更新保持值和计数。输出为持续贡献，事件体读实际 in 并只赋离散标量。4 次回调、保持值 0/0.4/0.8/0.2 与全部锚点一致。",
+        "实际 dut.va 与冻结 source 字节相同；condition.json 与冻结卡相同；request 的源、顶层/端口/参数、PWL 与 stop 均相符。"
+      ],
+      "limits": [
+        "reviewed 仅表示这份固定源与卡的合法电压域编码和解析意图已实际审查；不是后端行为通过、完整 LRM 认证、数值资格或求解器区间证书证明。",
+        "未从编译成功或仿真输出推导合法性；未检查其他等价写法、一般负载、电流/KCL 网络或卡外组合。",
+        "事件时移与实际驱动误差必须由后续资格分析传播；名义锚点不是逐点固定实际事件时刻。",
+        "卡已列出的未覆盖范围：Cross sampling；Reset and simultaneous priorities；Dynamic timer scheduling"
+      ]
+    },
+    {
+      "condition": "EV-HC-01",
+      "source_sha256": "ed4a653c2b7bdf28d080a51b7e05134c17d93972ff88d122da0aaa34bfc2b29c",
+      "card_sha256": "6b7a47b9d7e8b92d0fc6309d6a432aa629fdbb55552daa0bb2e3e7cdb9429438",
+      "status": "reviewed",
+      "basis": [
+        "输入从 0.1V 起，q=0、n=0。PWL 与 0.65V 上穿和 0.35V 下穿产生根 1.375/3.375T，各一次；状态平台 0/1/0，out=0.1+0.8*q。0.4V/T 斜率给出 min(1ns,0.2mV/斜率)=0.5ns 卡窗，锚点一致。",
+        "实际 dut.va 与冻结 source 字节相同；condition.json 与冻结卡相同；request 的源、顶层/端口/参数、PWL 与 stop 均相符。"
+      ],
+      "limits": [
+        "reviewed 仅表示这份固定源与卡的合法电压域编码和解析意图已实际审查；不是后端行为通过、完整 LRM 认证、数值资格或求解器区间证书证明。",
+        "未从编译成功或仿真输出推导合法性；未检查其他等价写法、一般负载、电流/KCL 网络或卡外组合。",
+        "事件时移与实际驱动误差必须由后续资格分析传播；名义锚点不是逐点固定实际事件时刻。",
+        "卡已列出的未覆盖范围：Tangency/plateau crossing；above and last_crossing；Conditional event enable；Simultaneous event closure"
+      ]
+    },
+    {
+      "condition": "EV-HC-02",
+      "source_sha256": "02734a00e6a7502fb22f01a8f39f5628ae806af838d06c85f533d3bce762525b",
+      "card_sha256": "430c36c21ab6becbb6497d738d1f6fffb3e23fbbe462e7f08650a65fe1dde8f8",
+      "status": "reviewed",
+      "basis": [
+        "输入 t0 为 0.9V，initial_step 比较 in>0.65 明确初始化 q=1，不把启动计为 cross。后续 0.35V 下穿 2.75T、0.65V 上穿 5.375T，q 为 1/0/1；各段斜率分别 0.2/0.4V/T，得到 1/0.5ns 卡窗。计数与锚点一致。",
+        "实际 dut.va 与冻结 source 字节相同；condition.json 与冻结卡相同；request 的源、顶层/端口/参数、PWL 与 stop 均相符。"
+      ],
+      "limits": [
+        "reviewed 仅表示这份固定源与卡的合法电压域编码和解析意图已实际审查；不是后端行为通过、完整 LRM 认证、数值资格或求解器区间证书证明。",
+        "未从编译成功或仿真输出推导合法性；未检查其他等价写法、一般负载、电流/KCL 网络或卡外组合。",
+        "事件时移与实际驱动误差必须由后续资格分析传播；名义锚点不是逐点固定实际事件时刻。",
+        "卡已列出的未覆盖范围：Initial input exactly H or within hysteresis band；Analysis-qualified initialization；Dynamic cross/initial_step shared body",
+        "需由原生 t0 资料证明记录确在 initial_step 稳定后，源审查不能证明执行初始化顺序。"
+      ]
+    },
+    {
+      "condition": "TM-01",
+      "source_sha256": "54f762933e7d62a27258daf55d2049484b4add854e2953f5442b3d4a79432586",
+      "card_sha256": "7d5098dfdb41e26e743c9f8928b53e7a62aa59508fdbfae53136ddedaf0fb5ae",
+      "status": "reviewed",
+      "basis": [
+        "q/n 先初始化 0，timer(2us,4us,1ns) 的域内日程为 2/6T，事件体切换 q 并加计数。transition 在无条件连续路径，输入 q 分段常量，延迟 0.25T、完整上沿 0.5T、下沿 1T。两沿未中断，线性边沿锚点均独立重算。",
+        "实际 dut.va 与冻结 source 字节相同；condition.json 与冻结卡相同；request 的源、顶层/端口/参数、PWL 与 stop 均相符。"
+      ],
+      "limits": [
+        "reviewed 仅表示这份固定源与卡的合法电压域编码和解析意图已实际审查；不是后端行为通过、完整 LRM 认证、数值资格或求解器区间证书证明。",
+        "未从编译成功或仿真输出推导合法性；未检查其他等价写法、一般负载、电流/KCL 网络或卡外组合。",
+        "事件时移与实际驱动误差必须由后续资格分析传播；名义锚点不是逐点固定实际事件时刻。",
+        "卡已列出的未覆盖范围：Interrupted edge/transport queue；Dynamic transition parameters；Zero or omitted edge durations"
+      ]
+    },
+    {
+      "condition": "CP-01",
+      "source_sha256": "b055706d5bef7b8055e698eb346cd94b7c69af1c5f5d0ad02078ef208f55d80e",
+      "card_sha256": "fae17d67bef0a374648d45cd8a54d9301cd54459c62872b21155d977c0fa72b4",
+      "status": "reviewed",
+      "basis": [
+        "idt 在无条件连续路径且有显式初值 0.125，无需未指定初值的反馈约束。输入 ctl/1us 为积分速率，连续 PWL 分段积分给出 0.125+0.3x、0.725+0.3z+0.15z^2、1.925+0.9*(x-4)，全部相位锚点一致。",
+        "实际 dut.va 与冻结 source 字节相同；condition.json 与冻结卡相同；request 的源、顶层/端口/参数、PWL 与 stop 均相符。"
+      ],
+      "limits": [
+        "reviewed 仅表示这份固定源与卡的合法电压域编码和解析意图已实际审查；不是后端行为通过、完整 LRM 认证、数值资格或求解器区间证书证明。",
+        "未从编译成功或仿真输出推导合法性；未检查其他等价写法、一般负载、电流/KCL 网络或卡外组合。",
+        "事件时移与实际驱动误差必须由后续资格分析传播；名义锚点不是逐点固定实际事件时刻。",
+        "卡已列出的未覆盖范围：Integral reset；Implicit feedback；Negative frequency；Long-time drift beyond 6T"
+      ]
+    },
+    {
+      "condition": "CP-02",
+      "source_sha256": "7aa2808f968bb071ad0d074a87e4b36266ae3355b0d84e1d89e13a0f90c09466",
+      "card_sha256": "e9e9648b37be909c6db530492a3750b6a81585a6123dbb914f33bb2aa7f5b835",
+      "status": "reviewed",
+      "basis": [
+        "无条件 idtmod(0.75/1us,0.125,1,0) 的模数为正且初值已指定；sin 持续读取同一 p。独立未包裹相位为 0.125+0.75x；四个整数根与卡一致，模相位和正弦的全部锚点一致。",
+        "实际 dut.va 与冻结 source 字节相同；condition.json 与冻结卡相同；request 的源、顶层/端口/参数、PWL 与 stop 均相符。"
+      ],
+      "limits": [
+        "reviewed 仅表示这份固定源与卡的合法电压域编码和解析意图已实际审查；不是后端行为通过、完整 LRM 认证、数值资格或求解器区间证书证明。",
+        "未从编译成功或仿真输出推导合法性；未检查其他等价写法、一般负载、电流/KCL 网络或卡外组合。",
+        "事件时移与实际驱动误差必须由后续资格分析传播；名义锚点不是逐点固定实际事件时刻。",
+        "卡已列出的未覆盖范围：Reset/wrap collision；Negative phase/frequency；idtmod used as cross guard；Exact-boundary callback semantics",
+        "环回精确端点、左右侧、次数及原生观察资料尚需独立资格；这里只核验理想积分和根。"
+      ]
+    },
+    {
+      "condition": "SI-01",
+      "source_sha256": "43ec734c64259b198d9d3e9bd84495cca98e8baaeeedd651d07121a97598eb85",
+      "card_sha256": "35be77dce9a75268920c8bc0b7c4b474aa37b1a237ed96194b16949aea85bcf3",
+      "status": "reviewed",
+      "basis": [
+        "两个真实 paper_cell 实例 A/B 通过命名参数覆盖分别建立初值和 2T/3T 周期。局部 q/n 属于各自实例，端口连接及计数节点不交叉。A 日程 2/4/6T，B 日程 3/6T，6T 为互不相交的写入；两条保持递推独立重算全部锚点。",
+        "实际 dut.va 与冻结 source 字节相同；condition.json 与冻结卡相同；request 的源、顶层/端口/参数、PWL 与 stop 均相符。"
+      ],
+      "limits": [
+        "reviewed 仅表示这份固定源与卡的合法电压域编码和解析意图已实际审查；不是后端行为通过、完整 LRM 认证、数值资格或求解器区间证书证明。",
+        "未从编译成功或仿真输出推导合法性；未检查其他等价写法、一般负载、电流/KCL 网络或卡外组合。",
+        "事件时移与实际驱动误差必须由后续资格分析传播；名义锚点不是逐点固定实际事件时刻。",
+        "卡已列出的未覆盖范围：Cascades and feedback；Instance arrays/genvar；Shared-state same-time writes"
+      ]
+    },
+    {
+      "condition": "CO-SH-01",
+      "source_sha256": "5f6cb341872aef5e386b625297ef8aea0163232e735d7b5a1c02ac2e94d0c135",
+      "card_sha256": "8ff8b88a5584e00fcd24a42bc7baaeac2c9c1461ce31d30fe41d439945461865",
+      "status": "reviewed",
+      "basis": [
+        "一个 OR 事件体写 q/n；clk 上穿 0.5V 位于 2/4/6/8T，reset 上穿位于 3T，均无同刻竞争。reset>0.25 在 reset 回调为真，时钟回调处 reset 为稳定 0/1，所以 4T 抑制采样且 5T 释放不产生事件。5 次回调与 q=-0.25/0/-0.25/-0.25/0.8/1.2 一致；无条件 transition 的 0.1T 边沿互不重叠，全部锚点一致。",
+        "实际 dut.va 与冻结 source 字节相同；condition.json 与冻结卡相同；request 的源、顶层/端口/参数、PWL 与 stop 均相符。"
+      ],
+      "limits": [
+        "reviewed 仅表示这份固定源与卡的合法电压域编码和解析意图已实际审查；不是后端行为通过、完整 LRM 认证、数值资格或求解器区间证书证明。",
+        "未从编译成功或仿真输出推导合法性；未检查其他等价写法、一般负载、电流/KCL 网络或卡外组合。",
+        "事件时移与实际驱动误差必须由后续资格分析传播；名义锚点不是逐点固定实际事件时刻。",
+        "卡已列出的未覆盖范围：Simultaneous reset/clock explicitly deferred; no inferred race semantics；Reset initially high；Interrupted transition；Dynamic reset/edge parameters；Clock event during reset rise/fall ramp; body predicate threshold0.25 V is not an asserted generic reset threshold contract"
+      ]
+    },
+    {
+      "condition": "CO-HC-01",
+      "source_sha256": "e28c95cc6b37d4154c90daebca207af538d9b707016c5043b3954df65f03c0c1",
+      "card_sha256": "30838e9933f4cd5a80cb01bd7a85ecd087ac373703095e9cbdebd00293bb5cf9",
+      "status": "reviewed",
+      "basis": [
+        "与 EV-HC-01 同样的 1.375/3.375T 阈值根和独立 q/n 状态；transition 在事件体外持续求值，延迟 0.125T、上沿 0.25T、下沿 0.5T，out=0.1+0.8*r。事件间隔 2T，未中断边沿的 1.625/3.75T 中点输出均为 0.5V，全部锚点一致。",
+        "实际 dut.va 与冻结 source 字节相同；condition.json 与冻结卡相同；request 的源、顶层/端口/参数、PWL 与 stop 均相符。"
+      ],
+      "limits": [
+        "reviewed 仅表示这份固定源与卡的合法电压域编码和解析意图已实际审查；不是后端行为通过、完整 LRM 认证、数值资格或求解器区间证书证明。",
+        "未从编译成功或仿真输出推导合法性；未检查其他等价写法、一般负载、电流/KCL 网络或卡外组合。",
+        "事件时移与实际驱动误差必须由后续资格分析传播；名义锚点不是逐点固定实际事件时刻。",
+        "卡已列出的未覆盖范围：Supply modulation of transition；Rapid threshold recrossing/interruption；Multiple event writers"
+      ]
+    },
+    {
+      "condition": "CO-VCO-01",
+      "source_sha256": "1bc287bb7c2bd6db604c56233239b668582093388790fe4be92f8c7fd06f327e",
+      "card_sha256": "f37ab79a55e29b5d8113b658868b984d218c75e7718d5b5543b72f9ce876256f",
+      "status": "reviewed",
+      "basis": [
+        "每次连续求值先夹限 f，再无条件调用 idtmod(f/1us,0.125,1,0)，没有把算子置于时变分支。将 ctl 的各段在 -0.4/1.2V 夹限边界切分，梯形积分得前缀相位 0.125/0.365/0.605/1.445/2.245/3.045/3.885/4.125/4.365；全部锚点及四个整数环回根独立核验。",
+        "实际 dut.va 与冻结 source 字节相同；condition.json 与冻结卡相同；request 的源、顶层/端口/参数、PWL 与 stop 均相符。"
+      ],
+      "limits": [
+        "reviewed 仅表示这份固定源与卡的合法电压域编码和解析意图已实际审查；不是后端行为通过、完整 LRM 认证、数值资格或求解器区间证书证明。",
+        "未从编译成功或仿真输出推导合法性；未检查其他等价写法、一般负载、电流/KCL 网络或卡外组合。",
+        "事件时移与实际驱动误差必须由后续资格分析传播；名义锚点不是逐点固定实际事件时刻。",
+        "卡已列出的未覆盖范围：VCO reset/gating；Negative frequency；Feedback controlled frequency；Long-run phase accuracy beyond8T",
+        "环回精确端点、左右侧、次数及原生观察资料尚需独立资格；这里只核验理想积分和根。"
+      ]
+    }
+  ]
+}
