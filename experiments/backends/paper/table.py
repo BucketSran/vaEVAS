@@ -19,6 +19,12 @@ EXECUTION_FAILURES = frozenset(('compile_failed', 'compile_timeout', 'runtime_ti
     'execution_failed', 'execution_error', 'cancelled', 'cleanup_incomplete',
     'missing_compile_artifact', 'missing_waveform', 'observation_invalid',
     'condition_directory_limit_exceeded', 'deck_parse_error'))
+# A reviewed checker correction is admitted by fixed artifact hashes, never by
+# whichever checker happens to be installed at report time.
+CHECKER_ANALYSIS_METHODS = {'native_si_time_order_v1': {
+    'criteria.py': 'ecdabb0c187d968400e8ee8c23f6f99a7552b3533962917539557436b8a95c1c',
+    'oracle.py': '96ece5a943113a6e6e79b441145a2f2238da43938914605d884b5fd0414e72dc',
+    'core-v1.json': CARDS_SHA}}
 
 
 def artifact_bytes(ref):
@@ -302,16 +308,53 @@ def analysis_observation(record, execution):
         seen.add(ref['sha256'])
         if prior.get('input_observation_sha256') != original_ref['sha256']:
             raise ValueError('Prior analysis must assess the original observation')
-        prior_record = {k: v for k, v in record.items() if k not in ('analysis_observation', 'derivation', 'analysis_method', 'prior_analyses')}
+        prior_record = {k: v for k, v in record.items() if k not in ('analysis_observation', 'derivation', 'analysis_method', 'prior_analyses', 'checker_reanalysis')}
         prior_record['assessment'] = ref
         validate(prior_record)
     return derived_ref
 
 
+def checker_analysis(record, assessment, checker):
+    """Validate a reviewed checker correction while retaining the old verdict."""
+    ref = record.get('checker_reanalysis')
+    if ref is None:
+        return checker
+    packet = read_artifact(ref)
+    admitted = CHECKER_ANALYSIS_METHODS.get(packet.get('method'))
+    if packet.get('schema_version') != 1 or admitted is None or any(not isinstance(digest, str) for digest in admitted.values()):
+        raise ValueError('Unadmitted checker reanalysis method')
+    selected = packet.get('assessment')
+    if not isinstance(selected, dict) or selected.get('sha256') != record['assessment']['sha256'] or Path(selected.get('path', '')).resolve() != Path(record['assessment']['path']).resolve():
+        raise ValueError('Checker reanalysis assessment identity mismatch')
+    artifact_bytes(selected)
+    snapshot = packet.get('checker', {})
+    files = snapshot.get('files', {})
+    if snapshot.get('identity') != checker or checker['files'] != admitted or set(files) != set(admitted):
+        raise ValueError('Checker reanalysis fixed identity mismatch')
+    for name, digest in admitted.items():
+        artifact = files[name]
+        if not isinstance(artifact, dict) or artifact.get('sha256') != digest:
+            raise ValueError('Checker reanalysis snapshot identity mismatch: ' + name)
+        artifact_bytes(artifact)
+    for name in ('calibration', 'review'):
+        if not artifact_bytes(packet.get(name)):
+            raise ValueError('Empty checker reanalysis evidence: ' + name)
+    original = read_artifact(packet.get('original_record'))
+    if not isinstance(original, dict):
+        raise ValueError('Checker reanalysis requires original record')
+    for key in set(original) | set(record):
+        if key not in ('assessment', 'checker_reanalysis') and original.get(key) != record.get(key):
+            raise ValueError('Checker reanalysis changed original record: ' + key)
+    if original.get('assessment') == record.get('assessment'):
+        raise ValueError('Checker reanalysis must preserve a separate original assessment')
+    validate(original)
+    return read_artifact(original['assessment'])['checker_identity']
+
+
 def validate(record):
     prior_attempts(record)
     if record.get('status') == 'T' and 'assessment' not in record:
-        if any(key in record for key in ('analysis_observation', 'derivation', 'analysis_method', 'prior_analyses')):
+        if any(key in record for key in ('analysis_observation', 'derivation', 'analysis_method', 'prior_analyses', 'checker_reanalysis')):
             raise ValueError('Derived analysis requires completed waveform execution')
         if 'execution' in record:
             execution = read_artifact(record['execution'])
@@ -347,6 +390,7 @@ def validate(record):
     dependency = {key: checker[key] for key in ('files', 'runtime')}
     if hashlib.sha256(json.dumps(dependency, sort_keys=True).encode()).hexdigest() != checker['sha256']:
         raise ValueError('Checker dependency digest mismatch')
+    execution_checker = checker_analysis(record, assessment, checker)
     status = assessment.get('status')
     if not isinstance(status, str) or len(status) != 1 or status not in STATUSES:
         raise ValueError('Unknown assessment status')
@@ -387,7 +431,7 @@ def validate(record):
         expected = 'F' if 'F' in states else 'I' if 'I' in states else 'P'
         if status != expected:
             raise ValueError('Assessment/property status mismatch')
-    execution_files(record, execution, started, checker)
+    execution_files(record, execution, started, execution_checker)
     return status, assessment, tool
 
 
@@ -491,6 +535,20 @@ def render(records, allow_pending=False):
             lines.append('| ' + ' | '.join([c + '/' + backend, text(record['analysis_method']),
                 link(record['analysis_observation']) + ' / ' + link(record['derivation']) + ' / ' + link(packet['adapter']) + ' SHA256 `' + packet['adapter']['sha256'] + '`',
                 ', '.join(read_artifact(ref)['status'] + ' ' + link(ref) for ref in record['prior_analyses'])]) + ' |')
+    reanalyses = [(key, value[3]) for key, value in results.items() if value[3] and value[3].get('checker_reanalysis')]
+    if reanalyses:
+        lines.extend(['', '## Reviewed checker reanalyses', '',
+                      'Original verdicts and frozen execution identities remain preserved. No new execution is counted.', '',
+                      '| Condition/backend | Method / evidence | Original verdict | Current checker identity |',
+                      '| --- | --- | --- | --- |'])
+        for (c, backend), record in reanalyses:
+            packet = read_artifact(record['checker_reanalysis'])
+            original = read_artifact(packet['original_record'])
+            previous = read_artifact(original['assessment'])
+            lines.append('| ' + ' | '.join([c + '/' + backend,
+                text(packet['method']) + ' ' + link(record['checker_reanalysis']) + ' / ' + link(packet['calibration']) + ' / ' + link(packet['review']),
+                previous['status'] + ' ' + link(original['assessment']) + ' / ' + link(packet['original_record']),
+                '`' + packet['checker']['identity']['sha256'] + '`']) + ' |')
     return '\n'.join(lines) + '\n'
 
 
@@ -501,7 +559,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     records = json.loads(args.records.read_text())
     for record in records:
-        for ref in [record.get('assessment'), record.get('execution'), record.get('analysis_observation'), record.get('derivation'), *record.get('prior_analyses', []), *record.get('prior_attempts', []), *[record.get('identity', {}).get(k) for k in ('tool', 'condition_started', 'lane_started', 'input_manifest', 'execution_manifest', 'observation')]]:
+        for ref in [record.get('assessment'), record.get('execution'), record.get('analysis_observation'), record.get('derivation'), record.get('checker_reanalysis'), *record.get('prior_analyses', []), *record.get('prior_attempts', []), *[record.get('identity', {}).get(k) for k in ('tool', 'condition_started', 'lane_started', 'input_manifest', 'execution_manifest', 'observation')]]:
             if isinstance(ref, dict) and isinstance(ref.get('path'), str):
                 ref['path'] = str((args.records.resolve().parent / ref['path']).resolve())
     print(render(records, args.allow_pending), end='')

@@ -226,6 +226,20 @@ criteria.identity 的 `json.dumps({files, runtime}, sort_keys=True)` 重算顶�
 interpreter、环境身份和 compiler flags；版本 probe 的时戳、argv、日志收据
 不参与工具相等判断。各次 TOOL_IDENTITY 原字节哈希仍分别保留在表中。
 
+经过校准、审核的 checker 时间排序修复可显式重新评估全部 48 槽，包括 X。
+仅接纳 `native_si_time_order_v1` 对应的固定 criteria.py/oracle.py/core-v1.json
+哈希；不能选择任意当前 checker。新 record 只替换 `assessment` 并增加
+`checker_reanalysis` 的 path/sha256 引用，其余字段必须逐对象保持不变。
+该引用指向 schema_version=1 的 packet，包含上述 `method`、原 record 的
+`original_record` 引用、新 `assessment` 引用、`checker`（完整 `identity`
+及按文件名组织的 `files` 快照引用）、实际 `calibration` 和 `review` 引用。
+packet 内引用使用绝对路径，全部校验可读取的文件字节哈希。
+
+汇总器递归验证原 record 及其原 assessment，以原 checker 检查执行中冻结的
+CHECKER_IDENTITY；另外检查新 assessment 的固定 checker 快照。派生观察
+和既有 prior analyses、prior attempts 继续完整保留。新表独立列出原 verdict、
+新 checker 身份、校准和审核证据，不覆盖原 8P/4I 表或将重分析计为新执行。
+
 condition STARTED、TOOL_IDENTITY、final-record 和原始 source/deck 必须属于
 该 lane 的 FILE_MANIFEST；源码还须与 execution.source_sha256、card.source
 原字节及冻结输入清单一致，deck 须与冻结清单和实际执行目录原字节一致。

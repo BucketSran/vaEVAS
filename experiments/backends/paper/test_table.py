@@ -1,5 +1,6 @@
 """Fault controls for fixed-denominator reporting; no backend invocation."""
 import hashlib
+import copy
 import json
 from pathlib import Path
 import tempfile
@@ -243,6 +244,75 @@ class TableControls(unittest.TestCase):
                   'analysis_method': 'not an actual completed analysis'}
         with self.assertRaisesRegex(ValueError, 'completed waveform'):
             table.render([record], allow_pending=True)
+
+    def checker_reanalysis_record(self, status='I', backend='evas', derived=False):
+        original = self.derived_record() if derived else self.record(status, backend=backend)
+        if not derived:
+            self.report([original], allow_pending=True)
+        original_ref = self.artifact('original-record.json', original)
+        record = copy.deepcopy(original)
+        assessment = table.read_artifact(original['assessment'])
+        assessment['checker_identity'] = self.checker(files=table.CHECKER_ANALYSIS_METHODS['native_si_time_order_v1'])
+        record['assessment'] = self.artifact('new-checker-assessment.json', assessment)
+        paths = {'criteria.py': table.CARDS_PATH.parent / 'criteria.py',
+                 'oracle.py': table.CARDS_PATH.parent / 'oracle.py', 'core-v1.json': table.CARDS_PATH}
+        packet = {'schema_version': 1, 'method': 'native_si_time_order_v1', 'original_record': original_ref,
+                  'assessment': record['assessment'], 'checker': {'identity': assessment['checker_identity'],
+                  'files': {name: {'path': str(path), 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
+                            for name, path in paths.items()}},
+                  'calibration': self.artifact('calibration.json', {'claim': 'synthetic control only'}),
+                  'review': self.artifact('review.json', {'claim': 'synthetic control only'})}
+        record['checker_reanalysis'] = self.artifact('checker-reanalysis.json', packet)
+        return record
+
+    def test_checker_reanalysis_preserves_original_verdict_for_all_backends_and_X(self):
+        for backend in table.BACKENDS:
+            for status in ('I', 'X'):
+                with self.subTest(backend=backend, status=status):
+                    record = self.checker_reanalysis_record(status, backend)
+                    report = table.render([record], allow_pending=True)
+                    self.assertEqual(table.validate(record)[0], status)
+                    self.assertIn('Reviewed checker reanalyses', report)
+                    packet = table.read_artifact(record['checker_reanalysis'])
+                    original = table.read_artifact(packet['original_record'])
+                    self.assertEqual(table.read_artifact(original['assessment'])['status'], status)
+
+    def test_checker_reanalysis_composes_with_unchanged_observation_derivation(self):
+        record = self.checker_reanalysis_record(derived=True)
+        self.assertEqual(table.validate(record)[0], 'P')
+        self.assertIn('Derived analyses of unchanged executions', table.render([record], allow_pending=True))
+
+    def test_checker_reanalysis_rejects_unadmitted_method_and_snapshot_drift(self):
+        for name in ('method', 'criteria.py', 'oracle.py', 'core-v1.json', 'calibration', 'review', 'original_record', 'assessment'):
+            with self.subTest(name=name):
+                record = self.checker_reanalysis_record()
+                packet = table.read_artifact(record['checker_reanalysis'])
+                if name == 'method': packet[name] = 'arbitrary_latest_checker'
+                elif name in packet['checker']['files']: packet['checker']['files'][name]['sha256'] = '0' * 64
+                else: packet[name]['sha256'] = '0' * 64
+                record['checker_reanalysis'] = self.artifact('changed-checker-packet.json', packet)
+                with self.assertRaises(ValueError): table.render([record], allow_pending=True)
+
+    def test_checker_reanalysis_rejects_changes_to_execution_or_observation_fields(self):
+        for name in ('execution', 'identity', 'prior_attempts', 'condition_id', 'backend'):
+            with self.subTest(name=name):
+                record = self.checker_reanalysis_record()
+                if name in ('condition_id', 'backend'): record[name] = 'unrelated'
+                elif name == 'prior_attempts': record[name] = []
+                else: record[name] = {**record[name], 'extra': 'changed'}
+                with self.assertRaises(ValueError): table.validate(record)
+
+    def test_checker_reanalysis_requires_actual_original_record_validation(self):
+        record = self.checker_reanalysis_record()
+        packet = table.read_artifact(record['checker_reanalysis'])
+        original = table.read_artifact(packet['original_record'])
+        old = table.read_artifact(original['assessment'])
+        old['checker_identity']['files']['criteria.py'] = '0' * 64
+        original['assessment'] = self.artifact('invalid-original-assessment.json', old)
+        packet['original_record'] = self.artifact('invalid-original-record.json', original)
+        record['checker_reanalysis'] = self.artifact('invalid-original-packet.json', packet)
+        with self.assertRaisesRegex(ValueError, 'Checker dependency digest mismatch'):
+            table.validate(record)
 
     def test_derived_analysis_rejects_rehashed_evidence_identity_changes(self):
         for name in ('normalized', 'raw', 'source', 'final_record', 'lane_manifest', 'tool', 'adapter'):
