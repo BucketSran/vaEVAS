@@ -24,6 +24,8 @@ from evas.ir import Affine, Binary, Power
 from evas.manifest import parse_manifest
 
 
+TIMER_SOURCE = '`include "disciplines.vams"\nmodule timer_count(y,r); output y; inout r; electrical y,r; integer n; analog begin @(initial_step) n=0; @(timer(0.25,0.25,1e-12)) n=n+1; V(y,r)<+n; end endmodule'
+
 class Unsupported(ValueError):
     """The exporter has no established equivalence for this input."""
 
@@ -132,7 +134,7 @@ def generated(size, seed):
         rhs = f'({bias:.17g})+({1-sum(g for _,g in terms):.17g})*V(u,r)'
         rhs += ''.join(f'+({g:.17g})*V(y{j},r)' for j, g in terms)
         equations.append(f'V(y{i},r)<+{rhs};')
-    source = f'module m({",".join(ports)}); input u; output {",".join(ports[1:-1])}; inout r; electrical {",".join(ports)}; analog begin {"".join(equations)} end endmodule'
+    source = '`include "disciplines.vams"\n'+f'module m({",".join(ports)}); input u; output {",".join(ports[1:-1])}; inout r; electrical {",".join(ports)}; analog begin {"".join(equations)} end endmodule'
     program = compile_sources({'generated.va': source}, [Instance('dut', 'm', {n: '0' if n == 'r' else n for n in ports})])
     return program, roots, source
 
@@ -189,7 +191,7 @@ def run_suite(kernel, ngspice, out):
             ratios.append(compare(solution['voltages'], [0.0, *rows[0][1:]]))
         records.append(dict(case=path.name,status='pass' if max(ratios) <= 1 else 'fail',max_error_ratio=max(ratios),static_samples=len(ratios)))
 
-    source = 'module timer_count(y,r); output y; inout r; electrical y,r; integer n; analog begin @(initial_step) n=0; @(timer(.25,.25,1e-12)) n=n+1; V(y,r)<+n; end endmodule'
+    source = TIMER_SOURCE
     program = compile_sources({'timer-reference.va': source}, [Instance('dut','timer_count',dict(y='y',r='0'))])
     times = [0, .125, .375, .625, .875]
     result = transient(program, {}, times, stop=1, max_step=.1, kernel=kernel)

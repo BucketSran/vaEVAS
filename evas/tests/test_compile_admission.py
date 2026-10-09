@@ -105,3 +105,14 @@ class CompileAdmission(unittest.TestCase):
             'custom.vams':'`include "disciplines.vams"\n`define HEADER_VALUE 3\n'})
         # Two module definitions in one textual include graph share its environment.
         compile_sources({'top.va':a+'\n`include "child.vams"\n', 'child.vams':b.split('\n',2)[2]}, bindings)
+
+    def test_frozen_smoke_refusals_and_versioned_manifest_successors(self):
+        from pathlib import Path
+        from evas.lint import lint_manifest
+        root = Path(__file__).resolve().parents[1]
+        for case, reason in (('absdelay','not declared'), ('timer_counter','not declared'),
+                             ('cross_counter','real literal')):
+            with self.subTest(case=case):
+                with self.assertRaisesRegex(CompileError, reason):
+                    lint_manifest(root/'validation/smoke'/f'{case}.json')
+                self.assertEqual(lint_manifest(root/'tests/fixtures/smoke-admission-v1'/f'{case}.json')['status'], 'lint_passed')

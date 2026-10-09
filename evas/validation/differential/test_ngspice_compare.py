@@ -3,7 +3,7 @@ import math
 import unittest
 
 from ngspice_compare import (
-    Affine, Instance, Power, Unsupported, compare, compile_sources,
+    Affine, Instance, Power, TIMER_SOURCE, Unsupported, compare, compile_sources,
     expression, generated, interpolate, relations,
 )
 
@@ -36,7 +36,7 @@ class DifferentialCalibration(unittest.TestCase):
         self.assertEqual(eval(text, {'__builtins__': {}}), -8.0)
 
     def test_contributions_sum_within_branch(self):
-        source = 'module m(y,r); output y; inout r; electrical y,r; analog begin V(y,r)<+1; V(y,r)<+2; end endmodule'
+        source = '`include "disciplines.vams"\nmodule m(y,r); output y; inout r; electrical y,r; analog begin V(y,r)<+1; V(y,r)<+2; end endmodule'
         program = compile_sources({'m.va': source}, [Instance('d', 'm', {'y':'y', 'r':'0'})])
         lines = relations(program, [])
         self.assertEqual(len(lines), 1)
@@ -45,10 +45,21 @@ class DifferentialCalibration(unittest.TestCase):
         self.assertEqual(orientation * voltage, 3.0)
 
     def test_exporter_rejects_two_independent_ideal_sources_on_same_node(self):
-        source = 'module m(y,r); output y; inout r; electrical y,r; analog begin V(y,r)<+1; end endmodule'
+        source = '`include "disciplines.vams"\nmodule m(y,r); output y; inout r; electrical y,r; analog begin V(y,r)<+1; end endmodule'
         program = compile_sources({'m.va': source}, [Instance(n, 'm', {'y':'y', 'r':'0'}) for n in ['a', 'b']])
         with self.assertRaises(Unsupported):
             relations(program, [])
+
+    def test_actual_suite_sources_reach_their_intended_export_paths(self):
+        for size in (1, 4, 16, 64):
+            with self.subTest(size=size):
+                program, roots, source = generated(size, 20261003+size)
+                self.assertEqual(len(roots), size)
+                self.assertEqual(len(relations(program, ['u'])), size)
+        timer = compile_sources({'timer-reference.va': TIMER_SOURCE},
+                                [Instance('dut','timer_count',{'y':'y','r':'0'})])
+        with self.assertRaisesRegex(Unsupported, 'state, event and operator'):
+            relations(timer, [])
 
     def test_generated_cases_are_deterministic(self):
         first = generated(4, 31)
