@@ -56,8 +56,8 @@ identify remaining criteria without presenting a partial implementation as compl
   verification of this diff. Identify the revision or local diff actually checked
   and reviewed. Reuse matching review; after a change, identify affected claims
   and any review or verification still needed before calling the result ready.
-- For EVAS behavior or support/evidence changes, verify that affected
-  [capability rows](../../../evas/docs/CAPABILITIES.md), mathematical explanations
+- For EVAS behavior or support/evidence changes, verify that affected rows in the
+  [support matrix](../../../evas/docs/COMPARISON.md), mathematical explanations
   and evidence links agree. Separate implementation,
   verification and review/release status. Link existing Issues for deferred work;
   avoid duplicating the register in a new progress document.

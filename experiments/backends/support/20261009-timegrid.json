@@ -1,0 +1,2316 @@
+{
+  "schema_version": 1,
+  "claim": "Finite sampled behavior at declared settings; no formal core qualification or full-language claim",
+  "original_receipt": {
+    "path": "experiments/backends/support/20261009.json",
+    "sha256": "40890bc057c173e14c3cf9ca54a4a939c9f9c7c09ce983481caf6a8e236e549a"
+  },
+  "source_revision": "6ee1ebaaea827dc52b506984d732aa74a74bc6e8",
+  "counts": {
+    "spectre": {
+      "observed_within_target": 14,
+      "observed_difference": 1
+    },
+    "evas": {
+      "observed_within_target": 15
+    },
+    "openvaf_r_ngspice": {
+      "compile_failed": 8,
+      "observed_within_target": 7
+    },
+    "gnucap_modelgen": {
+      "observed_within_target": 9,
+      "observed_difference": 3,
+      "observation_invalid": 1,
+      "compile_failed": 2
+    }
+  },
+  "selected_slots": [
+    {
+      "backend": "spectre",
+      "condition": "AD-ramp",
+      "receipt": {
+        "path": "portable-v2/collected/spectre/outputs/spectre/runs/AD-ramp/RESULT.json",
+        "sha256": "7731b90371fb8f45dcc63552b7105950a5510d57c43e73f8da30b9cb420b402d",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "spectre",
+      "condition": "AD-after-stop",
+      "receipt": {
+        "path": "portable-v2/collected/spectre/outputs/spectre/runs/AD-after-stop/RESULT.json",
+        "sha256": "eab6816ae0267f9171f0aaa3210fa531cc1043312e303e13703d94b878d9480c",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "spectre",
+      "condition": "SL-catch",
+      "receipt": {
+        "path": "portable-v2/collected/spectre/outputs/spectre/runs/SL-catch/RESULT.json",
+        "sha256": "eb880f5169a362366c73b199657dbaf9f490fb4b2014dbb9e5a28e4d4a128496",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "spectre",
+      "condition": "SL-reverse",
+      "receipt": {
+        "path": "portable-v2/collected/spectre/outputs/spectre/runs/SL-reverse/RESULT.json",
+        "sha256": "f8db710489e5b18ba743ce9848710f7940b2daeaf3ba08bbadeb6f7a8e50c5ee",
+        "availability": "local-only"
+      },
+      "status": "observed_difference"
+    },
+    {
+      "backend": "spectre",
+      "condition": "SL-tracking",
+      "receipt": {
+        "path": "portable-v2/collected/spectre/outputs/spectre/runs/SL-tracking/RESULT.json",
+        "sha256": "6fa696980ed58a40af2184b23e19704bbf28a0f362a2317dd1228180ff2053e4",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "spectre",
+      "condition": "LP-nd",
+      "receipt": {
+        "path": "portable-v2/collected/spectre/outputs/spectre/runs/LP-nd/RESULT.json",
+        "sha256": "75e9e74960964aef3c4d532777872dffa7f04b0bf7183f828c089fd26e599a28",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "spectre",
+      "condition": "LP-np",
+      "receipt": {
+        "path": "portable-v2/collected/spectre/outputs/spectre/runs/LP-np/RESULT.json",
+        "sha256": "d704c887e17078988f59b852e63b75058116bbfd27900351a77f74c6a7661941",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "spectre",
+      "condition": "DDT-pwl",
+      "receipt": {
+        "path": "portable-v2/collected/spectre/outputs/spectre/runs/DDT-pwl/RESULT.json",
+        "sha256": "24925856ee38b7e00684cee9b049c825a62c54c089e2acc0c685732df7dfe7d3",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "spectre",
+      "condition": "NL-cubic",
+      "receipt": {
+        "path": "portable-v2/collected/spectre/outputs/spectre/runs/NL-cubic/RESULT.json",
+        "sha256": "2724d22365442f1b048bab81bab14c5fe80d9747de1dd0e3dda92b379b276a78",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "spectre",
+      "condition": "VR-add",
+      "receipt": {
+        "path": "portable-v2/collected/spectre/outputs/spectre/runs/VR-add/RESULT.json",
+        "sha256": "1ae1ed1f81c267cf60b44baf72faaec1f4ef5dddfc13bb414bf2dd05db5c4c70",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "spectre",
+      "condition": "LANG-preprocess",
+      "receipt": {
+        "path": "portable-v2/collected/spectre/outputs/spectre/runs/LANG-preprocess/RESULT.json",
+        "sha256": "08e9ad4c7543c8fa7c459c7b89ab5f3ae7f98468d36c847ba495fb05fcad46ec",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "spectre",
+      "condition": "LANG-hierarchy",
+      "receipt": {
+        "path": "portable-v2/collected/spectre/outputs/spectre/runs/LANG-hierarchy/RESULT.json",
+        "sha256": "8f0dea9cec0e106b33ed6fd083b858838c585a9e5115c8cca650a77397dae110",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "spectre",
+      "condition": "LANG-functions",
+      "receipt": {
+        "path": "supplement-collected/spectre/supplement-outputs/spectre/runs/LANG-functions/RESULT.json",
+        "sha256": "27f8cf82f83124d31993e7a77734f0f4a8593a14c923a02543eaf305641e2127",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "spectre",
+      "condition": "LANG-array-events",
+      "receipt": {
+        "path": "supplement-collected/spectre/supplement-outputs/spectre/runs/LANG-array-events/RESULT.json",
+        "sha256": "ad14526ff1e01806181069a1f064da8693f3950407c41e5efac50e12817e28d4",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "spectre",
+      "condition": "LANG-vector",
+      "receipt": {
+        "path": "portable-v2/collected/spectre/outputs/spectre/runs/LANG-vector/RESULT.json",
+        "sha256": "bd4c842072d7a43f87b0e1d37c514609ae84ba216481d3fcb95555cf2a5ad1ea",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "evas",
+      "condition": "AD-ramp",
+      "receipt": {
+        "path": "portable-v2/collected/evas/outputs/evas/runs/AD-ramp/RESULT.json",
+        "sha256": "b23fe957fb34d4ce2138c360f8e0edc3b180b5da64bd49537b160a73f2f26431",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "evas",
+      "condition": "AD-after-stop",
+      "receipt": {
+        "path": "portable-v2/collected/evas/outputs/evas/runs/AD-after-stop/RESULT.json",
+        "sha256": "9eb4caca046469ba911a91a05458c8c7e2811138f67979b605609967fec78579",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "evas",
+      "condition": "SL-catch",
+      "receipt": {
+        "path": "portable-v2/collected/evas/outputs/evas/runs/SL-catch/RESULT.json",
+        "sha256": "b82b797d953dc4802c8668298de040cd902dc6d019583008a996dadff37ab463",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "evas",
+      "condition": "SL-reverse",
+      "receipt": {
+        "path": "portable-v2/collected/evas/outputs/evas/runs/SL-reverse/RESULT.json",
+        "sha256": "4f91cf698a0ea968ef904dc81707856a9a6e3738ee10bdd3fe5cb4234b29abbc",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "evas",
+      "condition": "SL-tracking",
+      "receipt": {
+        "path": "portable-v2/collected/evas/outputs/evas/runs/SL-tracking/RESULT.json",
+        "sha256": "2561275e290e011b6a8eb2dd5d4a0fca9e4d9127d4eb2abc304f4c03c131f22e",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "evas",
+      "condition": "LP-nd",
+      "receipt": {
+        "path": "portable-v2/collected/evas/outputs/evas/runs/LP-nd/RESULT.json",
+        "sha256": "54fa64d1b71054042f39e093718d878bd128e00a156c9ec4fc168babaf257f92",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "evas",
+      "condition": "LP-np",
+      "receipt": {
+        "path": "portable-v2/collected/evas/outputs/evas/runs/LP-np/RESULT.json",
+        "sha256": "fd57a35d7a8e1d435c5e37711b559537979fc3b81a579310e0189b3cecfcb06a",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "evas",
+      "condition": "DDT-pwl",
+      "receipt": {
+        "path": "portable-v2/collected/evas/outputs/evas/runs/DDT-pwl/RESULT.json",
+        "sha256": "2520ae5ac1fa6fd950034fae1fb405ff28ac818e2bad30b38833ef2e2e8a48ea",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "evas",
+      "condition": "NL-cubic",
+      "receipt": {
+        "path": "portable-v2/collected/evas/outputs/evas/runs/NL-cubic/RESULT.json",
+        "sha256": "bb292a5fc688eaf045dc0336dd6fa1175b9b937fb8a02552a3f70ae81a30953d",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "evas",
+      "condition": "VR-add",
+      "receipt": {
+        "path": "portable-v2/collected/evas/outputs/evas/runs/VR-add/RESULT.json",
+        "sha256": "e51d80f979f49621b599d4145a25c308f0723945b01acaea24572b450be1013d",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "evas",
+      "condition": "LANG-preprocess",
+      "receipt": {
+        "path": "portable-v2/collected/evas/outputs/evas/runs/LANG-preprocess/RESULT.json",
+        "sha256": "725f09d4fa5b7c229fb24783d4d6a8973dd66c877e884549ec38920e005d7577",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "evas",
+      "condition": "LANG-hierarchy",
+      "receipt": {
+        "path": "portable-v2/collected/evas/outputs/evas/runs/LANG-hierarchy/RESULT.json",
+        "sha256": "30e99d51b3a260f2658971f4031a130c1a517f46f4850870a294a9385ff0d916",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "evas",
+      "condition": "LANG-functions",
+      "receipt": {
+        "path": "supplement-collected/evas/supplement-outputs/evas/runs/LANG-functions/RESULT.json",
+        "sha256": "05065a0b10ea6b55f771ac3488d3ccbbb2c571ab11898fe59a43f08e0761bff1",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "evas",
+      "condition": "LANG-array-events",
+      "receipt": {
+        "path": "supplement-collected/evas/supplement-outputs/evas/runs/LANG-array-events/RESULT.json",
+        "sha256": "c286bfcdd907fb61ff0f857077a52c5a7f34cf50d378e10e36452b5a6259c982",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "evas",
+      "condition": "LANG-vector",
+      "receipt": {
+        "path": "portable-v2/collected/evas/outputs/evas/runs/LANG-vector/RESULT.json",
+        "sha256": "822aa0dfce2f8f8a07476b2eda437d96fe64f9bd72df5d983113daefc3c8a312",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "openvaf_r_ngspice",
+      "condition": "AD-ramp",
+      "receipt": {
+        "path": "portable-v2/collected/openvaf_r_ngspice/outputs/openvaf_r_ngspice/runs/AD-ramp/RESULT.json",
+        "sha256": "a3f1c775a19f98ab8e6887b664483b7eba45cc5a33b6033eb4e70b22ea05f0e7",
+        "availability": "local-only"
+      },
+      "status": "compile_failed"
+    },
+    {
+      "backend": "openvaf_r_ngspice",
+      "condition": "AD-after-stop",
+      "receipt": {
+        "path": "portable-v2/collected/openvaf_r_ngspice/outputs/openvaf_r_ngspice/runs/AD-after-stop/RESULT.json",
+        "sha256": "0cf9e5384e3ea334c69cc126d29464331c937b896ee1b3e69af6ecb6315c26ac",
+        "availability": "local-only"
+      },
+      "status": "compile_failed"
+    },
+    {
+      "backend": "openvaf_r_ngspice",
+      "condition": "SL-catch",
+      "receipt": {
+        "path": "portable-v2/collected/openvaf_r_ngspice/outputs/openvaf_r_ngspice/runs/SL-catch/RESULT.json",
+        "sha256": "c2e8d475f97ebae1d80681c31ada950530c531c119eea86904b23b7298940c1d",
+        "availability": "local-only"
+      },
+      "status": "compile_failed"
+    },
+    {
+      "backend": "openvaf_r_ngspice",
+      "condition": "SL-reverse",
+      "receipt": {
+        "path": "portable-v2/collected/openvaf_r_ngspice/outputs/openvaf_r_ngspice/runs/SL-reverse/RESULT.json",
+        "sha256": "7e518e10a4cc7d5c5ced2acccf910bbbbdb19661b53995c30a2b10b02f18c4ef",
+        "availability": "local-only"
+      },
+      "status": "compile_failed"
+    },
+    {
+      "backend": "openvaf_r_ngspice",
+      "condition": "SL-tracking",
+      "receipt": {
+        "path": "portable-v2/collected/openvaf_r_ngspice/outputs/openvaf_r_ngspice/runs/SL-tracking/RESULT.json",
+        "sha256": "b31c349b80a3ee7086df27fff4805d37686eb9d11e4d1cddcbea426f36bde78a",
+        "availability": "local-only"
+      },
+      "status": "compile_failed"
+    },
+    {
+      "backend": "openvaf_r_ngspice",
+      "condition": "LP-nd",
+      "receipt": {
+        "path": "portable-v2/collected/openvaf_r_ngspice/outputs/openvaf_r_ngspice/runs/LP-nd/RESULT.json",
+        "sha256": "4bd6df71dfea487076bdc940af138546b041402ed7b9f7b52f84911951818f4f",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "openvaf_r_ngspice",
+      "condition": "LP-np",
+      "receipt": {
+        "path": "portable-v2/collected/openvaf_r_ngspice/outputs/openvaf_r_ngspice/runs/LP-np/RESULT.json",
+        "sha256": "0870f9cabcd8ee99ab4eb7c648c9702a745c3ccee25e24cbceb6f635e652412d",
+        "availability": "local-only"
+      },
+      "status": "compile_failed"
+    },
+    {
+      "backend": "openvaf_r_ngspice",
+      "condition": "DDT-pwl",
+      "receipt": {
+        "path": "portable-v2/collected/openvaf_r_ngspice/outputs/openvaf_r_ngspice/runs/DDT-pwl/RESULT.json",
+        "sha256": "4d900dafd9b0c1638f4ab5c7436bfd1f03b5be596c42181cd2f23c21b7b7ea0b",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "openvaf_r_ngspice",
+      "condition": "NL-cubic",
+      "receipt": {
+        "path": "portable-v2/collected/openvaf_r_ngspice/outputs/openvaf_r_ngspice/runs/NL-cubic/RESULT.json",
+        "sha256": "5e6f12448134fe892b675772c7efb3d1a2eac5074bd8c8e8422562276e4df618",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "openvaf_r_ngspice",
+      "condition": "VR-add",
+      "receipt": {
+        "path": "portable-v2/collected/openvaf_r_ngspice/outputs/openvaf_r_ngspice/runs/VR-add/RESULT.json",
+        "sha256": "cf7ec58f952abbfb2adfa24875b058e45ad8bb9defdfff21203ec8e6a6f66eb4",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "openvaf_r_ngspice",
+      "condition": "LANG-preprocess",
+      "receipt": {
+        "path": "portable-v2/collected/openvaf_r_ngspice/outputs/openvaf_r_ngspice/runs/LANG-preprocess/RESULT.json",
+        "sha256": "74c884597f3f1b245bcfae6c8b140a879c85cfdab52a4c1c9149772f0292c25a",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "openvaf_r_ngspice",
+      "condition": "LANG-hierarchy",
+      "receipt": {
+        "path": "portable-v2/collected/openvaf_r_ngspice/outputs/openvaf_r_ngspice/runs/LANG-hierarchy/RESULT.json",
+        "sha256": "16afdb998ed1069c90fd1b584d3b8a03c5d3c0c0204f3d138faa5bd954cb099d",
+        "availability": "local-only"
+      },
+      "status": "compile_failed"
+    },
+    {
+      "backend": "openvaf_r_ngspice",
+      "condition": "LANG-functions",
+      "receipt": {
+        "path": "supplement-collected/openvaf_r_ngspice/supplement-outputs/openvaf_r_ngspice/runs/LANG-functions/RESULT.json",
+        "sha256": "60d4d08f572e6e70330942fef4f700bc6b03b528c6f663060b59a2d414e387d0",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "openvaf_r_ngspice",
+      "condition": "LANG-array-events",
+      "receipt": {
+        "path": "supplement-collected/openvaf_r_ngspice/supplement-outputs/openvaf_r_ngspice/runs/LANG-array-events/RESULT.json",
+        "sha256": "5e117a09645cacef2ea38e6c4a5aae26e30ee3c79e249a9c8dc607853ac65f4e",
+        "availability": "local-only"
+      },
+      "status": "compile_failed"
+    },
+    {
+      "backend": "openvaf_r_ngspice",
+      "condition": "LANG-vector",
+      "receipt": {
+        "path": "portable-v2/collected/openvaf_r_ngspice/outputs/openvaf_r_ngspice/runs/LANG-vector/RESULT.json",
+        "sha256": "6a43fcd4ec823e6f1f368e469ff7ebfd0d1be4a9590a2b6ac129fdb709a67ddd",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "gnucap_modelgen",
+      "condition": "AD-ramp",
+      "receipt": {
+        "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/AD-ramp/RESULT.json",
+        "sha256": "caceb3affc42393fad97986ed0ad73420c63f6688c5c5d65ec94bad8114722f7",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "gnucap_modelgen",
+      "condition": "AD-after-stop",
+      "receipt": {
+        "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/AD-after-stop/RESULT.json",
+        "sha256": "842e505b268c9bbba174dceacebd4ad2305506842fa8b7724814d83fd928c7e3",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "gnucap_modelgen",
+      "condition": "SL-catch",
+      "receipt": {
+        "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/SL-catch/RESULT.json",
+        "sha256": "9adf96697926a14fba7d4601f285179170738f9f5a9f33520c1020ec9776fa4c",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "gnucap_modelgen",
+      "condition": "SL-reverse",
+      "receipt": {
+        "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/SL-reverse/RESULT.json",
+        "sha256": "ba5caf59e17813755e0e3a3eeff9e3f54c39b41c68d2720fd083a1a433f3c12d",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "gnucap_modelgen",
+      "condition": "SL-tracking",
+      "receipt": {
+        "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/SL-tracking/RESULT.json",
+        "sha256": "f33922399ee3a1a0f9957784179034396e5fd56178d1e72295a66f8dd837f469",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "gnucap_modelgen",
+      "condition": "LP-nd",
+      "receipt": {
+        "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/LP-nd/RESULT.json",
+        "sha256": "60d5dda4eab5d2c648eca661c3f4796e5fcb8ea884f248d7fa2e19edc52b1432",
+        "availability": "local-only"
+      },
+      "status": "observed_difference"
+    },
+    {
+      "backend": "gnucap_modelgen",
+      "condition": "LP-np",
+      "receipt": {
+        "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/LP-np/RESULT.json",
+        "sha256": "8d82883850c696926f4c6df97254b834c471d6c5ebf479e1e4a7fe80fbadc378",
+        "availability": "local-only"
+      },
+      "status": "observed_difference"
+    },
+    {
+      "backend": "gnucap_modelgen",
+      "condition": "DDT-pwl",
+      "receipt": {
+        "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/DDT-pwl/RESULT.json",
+        "sha256": "229904d91faa6df1fcf49113b2ac0f6c09c5f9a2bc2b40ace49725c28fbc42eb",
+        "availability": "local-only"
+      },
+      "status": "observed_difference"
+    },
+    {
+      "backend": "gnucap_modelgen",
+      "condition": "NL-cubic",
+      "receipt": {
+        "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/NL-cubic/RESULT.json",
+        "sha256": "526daf042f1230b54edb1e4d90c87770621b003c2bbdd89b9ffc761e89d2afb4",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "gnucap_modelgen",
+      "condition": "VR-add",
+      "receipt": {
+        "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/VR-add/RESULT.json",
+        "sha256": "a140cf09564c9a9ae2d5907da5616949f6fc00becaae257b7353d2c74b9c1e16",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "gnucap_modelgen",
+      "condition": "LANG-preprocess",
+      "receipt": {
+        "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/LANG-preprocess/RESULT.json",
+        "sha256": "43de14f1d1b29b0e4ac8c4a10a3afb5f206a21112d203b32d39174b53821d336",
+        "availability": "local-only"
+      },
+      "status": "observation_invalid"
+    },
+    {
+      "backend": "gnucap_modelgen",
+      "condition": "LANG-hierarchy",
+      "receipt": {
+        "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/LANG-hierarchy/RESULT.json",
+        "sha256": "e5c3400e25a49ea6e1cc019e81bf9759301cc3e65f57e50bdf90491f00987d48",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "gnucap_modelgen",
+      "condition": "LANG-functions",
+      "receipt": {
+        "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/LANG-functions/RESULT.json",
+        "sha256": "85cbc676d2cf80f89755e198ad4f43e9e5aef8088afaa0b9cf5ef16441099bab",
+        "availability": "local-only"
+      },
+      "status": "observed_within_target"
+    },
+    {
+      "backend": "gnucap_modelgen",
+      "condition": "LANG-array-events",
+      "receipt": {
+        "path": "supplement-collected/gnucap_modelgen/supplement-outputs/gnucap_modelgen/runs/LANG-array-events/RESULT.json",
+        "sha256": "6147c3389b40ff009b1af27a4072a6a55262d949fc38c857f183f671c059189e",
+        "availability": "local-only"
+      },
+      "status": "compile_failed"
+    },
+    {
+      "backend": "gnucap_modelgen",
+      "condition": "LANG-vector",
+      "receipt": {
+        "path": "portable-v2/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/LANG-vector/RESULT.json",
+        "sha256": "82d2e64c36f358eb2537b11bcee04a1dcbfe107d022e2869f22759a2a070cdd3",
+        "availability": "local-only"
+      },
+      "status": "compile_failed"
+    }
+  ],
+  "followups": {
+    "gnucap-timegrid": [
+      {
+        "condition": "AD-ramp",
+        "backend": "gnucap_modelgen",
+        "status": "waveform_available",
+        "waveform_sha256": "d53fd0668c2b98ced468d864ae7fc9815951ced912b4dc10303b1d002dc20031",
+        "source_sha256": "15f8374f6d821b19d1234cae75d39a851c0a3e4e0f0143e951494d75307032fc",
+        "assessment": {
+          "formal_qualification": false,
+          "status": "observed_within_target",
+          "output_target_V": 0.001,
+          "input_target_V": 1e-07,
+          "row_count": 1288,
+          "checked_rows": 1288,
+          "max_gap_s": 7.27595761418353e-12,
+          "max_error_V": {
+            "y": 3.219646771412954e-15
+          },
+          "input_max_error_V": {
+            "u": 4.440892098500626e-16
+          },
+          "worst": {
+            "y": {
+              "time_s": 2.7971013838445913e-09,
+              "actual_V": -0.998317629098889,
+              "expected_V": -0.9983176290988922
+            }
+          },
+          "boundary_status": "not_applicable",
+          "boundary_row_count": 0
+        },
+        "rows_sha256": "df4144cb73fd9484b8731a1311153cb999fd74f5db4fd3ffbfda603c672e14b5",
+        "effective_settings": {
+          "actual": {
+            "reltol": 1.0000000000000001e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": "unknown; waveform extent is not setting readback",
+            "maxstep": "unknown; requested deck is not setting readback"
+          },
+          "requested": {
+            "reltol": 1e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": 9.313225746154785e-09,
+            "maxstep": 7.275957614183426e-12
+          },
+          "mismatches": [],
+          "status": "I"
+        },
+        "receipt": {
+          "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/AD-ramp/RESULT.json",
+          "sha256": "caceb3affc42393fad97986ed0ad73420c63f6688c5c5d65ec94bad8114722f7",
+          "availability": "local-only"
+        },
+        "stages": [
+          {
+            "stage": "compile",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "a632e06f72759e6e9c5e35125d9b5f4826150020c4fd7d498fadc077b529339e",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          },
+          {
+            "stage": "simulate",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "7986f220eaaac5d0726d9f56cf9b5b61c5f1c88171b52ed88d0061830cc1faa9",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          }
+        ],
+        "solver_settings": {
+          "stop_s": 9.313225746154785e-09,
+          "maxstep_s": 7.275957614183426e-12,
+          "spice_maxstep_s": 7.275957614183426e-12,
+          "reltol": 1e-07,
+          "vabstol_V": 1e-09,
+          "iabstol_A": 1e-13,
+          "gnucap_dtmin_s": 5.551115123125783e-17
+        },
+        "input_manifest": {
+          "path": "gnucap-timegrid/inputs/INPUT_MANIFEST.json",
+          "sha256": "72156af3521ecd7ea101d1ee02f9eb3213d270fad4cf4a86c2c48d596e167071",
+          "availability": "local-only"
+        },
+        "source_generation": "unchanged v2 model; new Gnucap dtmin"
+      },
+      {
+        "condition": "AD-after-stop",
+        "backend": "gnucap_modelgen",
+        "status": "waveform_available",
+        "waveform_sha256": "0cb686af427b9a9f6ed14a869dda640453530a2c677a6a2b344e5e56f78fd711",
+        "source_sha256": "f4c593d2b63b58123e217392b0ecf3b2e06d4236aab532215b7cd92b7ca8b028",
+        "assessment": {
+          "formal_qualification": false,
+          "status": "observed_within_target",
+          "output_target_V": 0.001,
+          "input_target_V": 1e-07,
+          "row_count": 1282,
+          "checked_rows": 1282,
+          "max_gap_s": 7.27595761418353e-12,
+          "max_error_V": {
+            "y": 0.0
+          },
+          "input_max_error_V": {
+            "u": 3.3306690738754696e-16
+          },
+          "worst": {},
+          "boundary_status": "not_applicable",
+          "boundary_row_count": 0
+        },
+        "rows_sha256": "89f5faf2889b8de32be67a5bddd9e3a91c01029d5ce62300da5aa35bc754edac",
+        "effective_settings": {
+          "actual": {
+            "reltol": 1.0000000000000001e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": "unknown; waveform extent is not setting readback",
+            "maxstep": "unknown; requested deck is not setting readback"
+          },
+          "requested": {
+            "reltol": 1e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": 9.313225746154785e-09,
+            "maxstep": 7.275957614183426e-12
+          },
+          "mismatches": [],
+          "status": "I"
+        },
+        "receipt": {
+          "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/AD-after-stop/RESULT.json",
+          "sha256": "842e505b268c9bbba174dceacebd4ad2305506842fa8b7724814d83fd928c7e3",
+          "availability": "local-only"
+        },
+        "stages": [
+          {
+            "stage": "compile",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "a632e06f72759e6e9c5e35125d9b5f4826150020c4fd7d498fadc077b529339e",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          },
+          {
+            "stage": "simulate",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "7986f220eaaac5d0726d9f56cf9b5b61c5f1c88171b52ed88d0061830cc1faa9",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          }
+        ],
+        "solver_settings": {
+          "stop_s": 9.313225746154785e-09,
+          "maxstep_s": 7.275957614183426e-12,
+          "spice_maxstep_s": 7.275957614183426e-12,
+          "reltol": 1e-07,
+          "vabstol_V": 1e-09,
+          "iabstol_A": 1e-13,
+          "gnucap_dtmin_s": 5.551115123125783e-17
+        },
+        "input_manifest": {
+          "path": "gnucap-timegrid/inputs/INPUT_MANIFEST.json",
+          "sha256": "72156af3521ecd7ea101d1ee02f9eb3213d270fad4cf4a86c2c48d596e167071",
+          "availability": "local-only"
+        },
+        "source_generation": "unchanged v2 model; new Gnucap dtmin"
+      },
+      {
+        "condition": "SL-catch",
+        "backend": "gnucap_modelgen",
+        "status": "waveform_available",
+        "waveform_sha256": "d634bef6b757aaf9333f87b43aaecdb7895127fbf016009879e61f823023fbd4",
+        "source_sha256": "28df3f858882da5805d37747e7377f77409b26783b584123cd4e3225cf905487",
+        "assessment": {
+          "formal_qualification": false,
+          "status": "observed_within_target",
+          "output_target_V": 0.001,
+          "input_target_V": 1e-07,
+          "row_count": 1030,
+          "checked_rows": 1030,
+          "max_gap_s": 7.27595761418353e-12,
+          "max_error_V": {
+            "y": 1.7763568394002505e-15
+          },
+          "input_max_error_V": {
+            "u": 1.3322676295501878e-15
+          },
+          "worst": {
+            "y": {
+              "time_s": 2.10275175049901e-09,
+              "actual_V": 2.2578125000000018,
+              "expected_V": 2.2578125
+            }
+          },
+          "boundary_status": "not_applicable",
+          "boundary_row_count": 0
+        },
+        "rows_sha256": "6548e649c2f4eb193208e682d489386eb38bf5ef17dbd69f43a6a8f24d6ddae2",
+        "effective_settings": {
+          "actual": {
+            "reltol": 1.0000000000000001e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": "unknown; waveform extent is not setting readback",
+            "maxstep": "unknown; requested deck is not setting readback"
+          },
+          "requested": {
+            "reltol": 1e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": 7.450580596923828e-09,
+            "maxstep": 7.275957614183426e-12
+          },
+          "mismatches": [],
+          "status": "I"
+        },
+        "receipt": {
+          "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/SL-catch/RESULT.json",
+          "sha256": "9adf96697926a14fba7d4601f285179170738f9f5a9f33520c1020ec9776fa4c",
+          "availability": "local-only"
+        },
+        "stages": [
+          {
+            "stage": "compile",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "ad2694143be3a97786880dc03b5a0dfa7efd809eb5c82d4591819e7abdfd7337",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          },
+          {
+            "stage": "simulate",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "436e45e7310ac96d86cb450628d1fa757f7210226808d3345737366f40abd722",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          }
+        ],
+        "solver_settings": {
+          "stop_s": 7.450580596923828e-09,
+          "maxstep_s": 7.275957614183426e-12,
+          "spice_maxstep_s": 7.275957614183426e-12,
+          "reltol": 1e-07,
+          "vabstol_V": 1e-09,
+          "iabstol_A": 1e-13,
+          "gnucap_dtmin_s": 5.551115123125783e-17
+        },
+        "input_manifest": {
+          "path": "gnucap-timegrid/inputs/INPUT_MANIFEST.json",
+          "sha256": "72156af3521ecd7ea101d1ee02f9eb3213d270fad4cf4a86c2c48d596e167071",
+          "availability": "local-only"
+        },
+        "source_generation": "unchanged v2 model; new Gnucap dtmin"
+      },
+      {
+        "condition": "SL-reverse",
+        "backend": "gnucap_modelgen",
+        "status": "waveform_available",
+        "waveform_sha256": "bcb9c5c036586ed9fdf93a0cc8c88d76c9a3eb2551c35d6c92cea916bd1a78c6",
+        "source_sha256": "28df3f858882da5805d37747e7377f77409b26783b584123cd4e3225cf905487",
+        "assessment": {
+          "formal_qualification": false,
+          "status": "observed_within_target",
+          "output_target_V": 0.001,
+          "input_target_V": 1e-07,
+          "row_count": 1036,
+          "checked_rows": 1036,
+          "max_gap_s": 7.27595761418353e-12,
+          "max_error_V": {
+            "y": 7.152557368605983e-08
+          },
+          "input_max_error_V": {
+            "u": 2.220446049250313e-15
+          },
+          "worst": {
+            "y": {
+              "time_s": 3.856257535517216e-09,
+              "actual_V": -1.0812500715255744,
+              "expected_V": -1.0812500000000007
+            }
+          },
+          "boundary_status": "not_applicable",
+          "boundary_row_count": 0
+        },
+        "rows_sha256": "b6cd566904035f3ca845dbd03d2714874f425e1ce66ddf4090fe3ff5cf732300",
+        "effective_settings": {
+          "actual": {
+            "reltol": 1.0000000000000001e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": "unknown; waveform extent is not setting readback",
+            "maxstep": "unknown; requested deck is not setting readback"
+          },
+          "requested": {
+            "reltol": 1e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": 7.450580596923828e-09,
+            "maxstep": 7.275957614183426e-12
+          },
+          "mismatches": [],
+          "status": "I"
+        },
+        "receipt": {
+          "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/SL-reverse/RESULT.json",
+          "sha256": "ba5caf59e17813755e0e3a3eeff9e3f54c39b41c68d2720fd083a1a433f3c12d",
+          "availability": "local-only"
+        },
+        "stages": [
+          {
+            "stage": "compile",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "ad2694143be3a97786880dc03b5a0dfa7efd809eb5c82d4591819e7abdfd7337",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          },
+          {
+            "stage": "simulate",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "436e45e7310ac96d86cb450628d1fa757f7210226808d3345737366f40abd722",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          }
+        ],
+        "solver_settings": {
+          "stop_s": 7.450580596923828e-09,
+          "maxstep_s": 7.275957614183426e-12,
+          "spice_maxstep_s": 7.275957614183426e-12,
+          "reltol": 1e-07,
+          "vabstol_V": 1e-09,
+          "iabstol_A": 1e-13,
+          "gnucap_dtmin_s": 5.551115123125783e-17
+        },
+        "input_manifest": {
+          "path": "gnucap-timegrid/inputs/INPUT_MANIFEST.json",
+          "sha256": "72156af3521ecd7ea101d1ee02f9eb3213d270fad4cf4a86c2c48d596e167071",
+          "availability": "local-only"
+        },
+        "source_generation": "unchanged v2 model; new Gnucap dtmin"
+      },
+      {
+        "condition": "SL-tracking",
+        "backend": "gnucap_modelgen",
+        "status": "waveform_available",
+        "waveform_sha256": "56464854d2fb615e4fe724d3a2749bae8e1661c40d4cd37ca4f9ad941f9468a2",
+        "source_sha256": "28df3f858882da5805d37747e7377f77409b26783b584123cd4e3225cf905487",
+        "assessment": {
+          "formal_qualification": false,
+          "status": "observed_within_target",
+          "output_target_V": 0.001,
+          "input_target_V": 1e-07,
+          "row_count": 1031,
+          "checked_rows": 1031,
+          "max_gap_s": 7.27595761418353e-12,
+          "max_error_V": {
+            "y": 2.220446049250313e-16
+          },
+          "input_max_error_V": {
+            "u": 2.220446049250313e-16
+          },
+          "worst": {
+            "y": {
+              "time_s": 7.277511926417901e-14,
+              "actual_V": -0.9999804645776751,
+              "expected_V": -0.9999804645776749
+            }
+          },
+          "boundary_status": "not_applicable",
+          "boundary_row_count": 0
+        },
+        "rows_sha256": "50bc1e6e6da09e77dab7f5e6d9d65e823781d01e6fa08bfa1e7dbc37fb68aa8c",
+        "effective_settings": {
+          "actual": {
+            "reltol": 1.0000000000000001e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": "unknown; waveform extent is not setting readback",
+            "maxstep": "unknown; requested deck is not setting readback"
+          },
+          "requested": {
+            "reltol": 1e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": 7.450580596923828e-09,
+            "maxstep": 7.275957614183426e-12
+          },
+          "mismatches": [],
+          "status": "I"
+        },
+        "receipt": {
+          "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/SL-tracking/RESULT.json",
+          "sha256": "f33922399ee3a1a0f9957784179034396e5fd56178d1e72295a66f8dd837f469",
+          "availability": "local-only"
+        },
+        "stages": [
+          {
+            "stage": "compile",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "ad2694143be3a97786880dc03b5a0dfa7efd809eb5c82d4591819e7abdfd7337",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          },
+          {
+            "stage": "simulate",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "436e45e7310ac96d86cb450628d1fa757f7210226808d3345737366f40abd722",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          }
+        ],
+        "solver_settings": {
+          "stop_s": 7.450580596923828e-09,
+          "maxstep_s": 7.275957614183426e-12,
+          "spice_maxstep_s": 7.275957614183426e-12,
+          "reltol": 1e-07,
+          "vabstol_V": 1e-09,
+          "iabstol_A": 1e-13,
+          "gnucap_dtmin_s": 5.551115123125783e-17
+        },
+        "input_manifest": {
+          "path": "gnucap-timegrid/inputs/INPUT_MANIFEST.json",
+          "sha256": "72156af3521ecd7ea101d1ee02f9eb3213d270fad4cf4a86c2c48d596e167071",
+          "availability": "local-only"
+        },
+        "source_generation": "unchanged v2 model; new Gnucap dtmin"
+      },
+      {
+        "condition": "LP-nd",
+        "backend": "gnucap_modelgen",
+        "status": "waveform_available",
+        "waveform_sha256": "cc65b45319798b09171032cbe1f675f22084ed31882ffdbffaa6f5679e27164d",
+        "source_sha256": "fe16f14b9608fe04d6c24f6491d1e2b97806aa359aad6923c728e4ea07a7030e",
+        "assessment": {
+          "formal_qualification": false,
+          "status": "observed_difference",
+          "output_target_V": 0.001,
+          "input_target_V": 1e-07,
+          "row_count": 130,
+          "checked_rows": 130,
+          "max_gap_s": 7.27595761418353e-12,
+          "max_error_V": {
+            "y": 0.4052335867088355
+          },
+          "input_max_error_V": {
+            "u": 4.629001175426861e-16
+          },
+          "worst": {
+            "y": {
+              "time_s": 9.313225746154785e-10,
+              "actual_V": 0.34934532301334803,
+              "expected_V": 0.7545789097221836
+            }
+          },
+          "boundary_status": "not_applicable",
+          "boundary_row_count": 0
+        },
+        "rows_sha256": "69d1a759e7cae56f8fda08b8ee1f51e2bc25b390f64584fc48d2b7d5ed2b4c56",
+        "effective_settings": {
+          "actual": {
+            "reltol": 1.0000000000000001e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": "unknown; waveform extent is not setting readback",
+            "maxstep": "unknown; requested deck is not setting readback"
+          },
+          "requested": {
+            "reltol": 1e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": 9.313225746154785e-10,
+            "maxstep": 7.275957614183426e-12
+          },
+          "mismatches": [],
+          "status": "I"
+        },
+        "receipt": {
+          "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/LP-nd/RESULT.json",
+          "sha256": "60d5dda4eab5d2c648eca661c3f4796e5fcb8ea884f248d7fa2e19edc52b1432",
+          "availability": "local-only"
+        },
+        "stages": [
+          {
+            "stage": "compile",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "a632e06f72759e6e9c5e35125d9b5f4826150020c4fd7d498fadc077b529339e",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          },
+          {
+            "stage": "simulate",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "9d8c5c8f7275401db01c903fe2d1c8e3cd78691cb653c0bde838ba2fd4edac2c",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          }
+        ],
+        "solver_settings": {
+          "stop_s": 9.313225746154785e-10,
+          "maxstep_s": 7.275957614183426e-12,
+          "spice_maxstep_s": 7.275957614183426e-12,
+          "reltol": 1e-07,
+          "vabstol_V": 1e-09,
+          "iabstol_A": 1e-13,
+          "gnucap_dtmin_s": 5.551115123125783e-17
+        },
+        "input_manifest": {
+          "path": "gnucap-timegrid/inputs/INPUT_MANIFEST.json",
+          "sha256": "72156af3521ecd7ea101d1ee02f9eb3213d270fad4cf4a86c2c48d596e167071",
+          "availability": "local-only"
+        },
+        "source_generation": "unchanged v2 model; new Gnucap dtmin"
+      },
+      {
+        "condition": "LP-np",
+        "backend": "gnucap_modelgen",
+        "status": "waveform_available",
+        "waveform_sha256": "cc65b45319798b09171032cbe1f675f22084ed31882ffdbffaa6f5679e27164d",
+        "source_sha256": "53de01ed0568707421867e6170a4e0bb6d77e28aa8d5e7769cc9d768cc40b7df",
+        "assessment": {
+          "formal_qualification": false,
+          "status": "observed_difference",
+          "output_target_V": 0.001,
+          "input_target_V": 1e-07,
+          "row_count": 130,
+          "checked_rows": 130,
+          "max_gap_s": 7.27595761418353e-12,
+          "max_error_V": {
+            "y": 0.4052335867088355
+          },
+          "input_max_error_V": {
+            "u": 4.629001175426861e-16
+          },
+          "worst": {
+            "y": {
+              "time_s": 9.313225746154785e-10,
+              "actual_V": 0.34934532301334803,
+              "expected_V": 0.7545789097221836
+            }
+          },
+          "boundary_status": "not_applicable",
+          "boundary_row_count": 0
+        },
+        "rows_sha256": "69d1a759e7cae56f8fda08b8ee1f51e2bc25b390f64584fc48d2b7d5ed2b4c56",
+        "effective_settings": {
+          "actual": {
+            "reltol": 1.0000000000000001e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": "unknown; waveform extent is not setting readback",
+            "maxstep": "unknown; requested deck is not setting readback"
+          },
+          "requested": {
+            "reltol": 1e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": 9.313225746154785e-10,
+            "maxstep": 7.275957614183426e-12
+          },
+          "mismatches": [],
+          "status": "I"
+        },
+        "receipt": {
+          "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/LP-np/RESULT.json",
+          "sha256": "8d82883850c696926f4c6df97254b834c471d6c5ebf479e1e4a7fe80fbadc378",
+          "availability": "local-only"
+        },
+        "stages": [
+          {
+            "stage": "compile",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "a632e06f72759e6e9c5e35125d9b5f4826150020c4fd7d498fadc077b529339e",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          },
+          {
+            "stage": "simulate",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "7e8fc83b925ae30a968875751106b95d8b7662de0158e9dfdd53d9d6dc0d4726",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          }
+        ],
+        "solver_settings": {
+          "stop_s": 9.313225746154785e-10,
+          "maxstep_s": 7.275957614183426e-12,
+          "spice_maxstep_s": 7.275957614183426e-12,
+          "reltol": 1e-07,
+          "vabstol_V": 1e-09,
+          "iabstol_A": 1e-13,
+          "gnucap_dtmin_s": 5.551115123125783e-17
+        },
+        "input_manifest": {
+          "path": "gnucap-timegrid/inputs/INPUT_MANIFEST.json",
+          "sha256": "72156af3521ecd7ea101d1ee02f9eb3213d270fad4cf4a86c2c48d596e167071",
+          "availability": "local-only"
+        },
+        "source_generation": "unchanged v2 model; new Gnucap dtmin"
+      },
+      {
+        "condition": "DDT-pwl",
+        "backend": "gnucap_modelgen",
+        "status": "waveform_available",
+        "waveform_sha256": "511a95c56945befacfefbb44a885332693a71a17953f4b30bb23487e9cada3b8",
+        "source_sha256": "bef7e8972d4efcd4ebb3578c174973229341973f956fc3bd8dea36f23fc89179",
+        "assessment": {
+          "formal_qualification": false,
+          "status": "observed_difference",
+          "output_target_V": 0.001,
+          "input_target_V": 1e-07,
+          "row_count": 521,
+          "checked_rows": 501,
+          "max_gap_s": 7.27595761418353e-12,
+          "max_error_V": {
+            "y": 5.999999999994031
+          },
+          "input_max_error_V": {
+            "u": 8.881784197001252e-16
+          },
+          "worst": {
+            "y": {
+              "time_s": 2.815795596688986e-09,
+              "actual_V": -5.999999999994031,
+              "expected_V": 0
+            }
+          },
+          "boundary_status": "not_graded",
+          "boundary_row_count": 20,
+          "boundary_record_location": "receipt.assessment.boundary_rows; not graded"
+        },
+        "rows_sha256": "52ac2d51b76a8f86617870494d596ec864fe4a0e30da28d9c5dcb3fd6dc75403",
+        "effective_settings": {
+          "actual": {
+            "reltol": 1.0000000000000001e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": "unknown; waveform extent is not setting readback",
+            "maxstep": "unknown; requested deck is not setting readback"
+          },
+          "requested": {
+            "reltol": 1e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": 3.725290298461914e-09,
+            "maxstep": 7.275957614183426e-12
+          },
+          "mismatches": [],
+          "status": "I"
+        },
+        "receipt": {
+          "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/DDT-pwl/RESULT.json",
+          "sha256": "229904d91faa6df1fcf49113b2ac0f6c09c5f9a2bc2b40ace49725c28fbc42eb",
+          "availability": "local-only"
+        },
+        "stages": [
+          {
+            "stage": "compile",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "a632e06f72759e6e9c5e35125d9b5f4826150020c4fd7d498fadc077b529339e",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          },
+          {
+            "stage": "simulate",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "7986f220eaaac5d0726d9f56cf9b5b61c5f1c88171b52ed88d0061830cc1faa9",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          }
+        ],
+        "solver_settings": {
+          "stop_s": 3.725290298461914e-09,
+          "maxstep_s": 7.275957614183426e-12,
+          "spice_maxstep_s": 7.275957614183426e-12,
+          "reltol": 1e-07,
+          "vabstol_V": 1e-09,
+          "iabstol_A": 1e-13,
+          "gnucap_dtmin_s": 5.551115123125783e-17
+        },
+        "input_manifest": {
+          "path": "gnucap-timegrid/inputs/INPUT_MANIFEST.json",
+          "sha256": "72156af3521ecd7ea101d1ee02f9eb3213d270fad4cf4a86c2c48d596e167071",
+          "availability": "local-only"
+        },
+        "source_generation": "unchanged v2 model; new Gnucap dtmin"
+      },
+      {
+        "condition": "NL-cubic",
+        "backend": "gnucap_modelgen",
+        "status": "waveform_available",
+        "waveform_sha256": "b62a8670e65a41fd5cd42536a69222bb7b0bcc6fdf1aed2fd6d2e95ca730a8cc",
+        "source_sha256": "e133d6d320951ca5bdad7a093ed0048026584073f758e856c94ed328091c2fbf",
+        "assessment": {
+          "formal_qualification": false,
+          "status": "observed_within_target",
+          "output_target_V": 0.001,
+          "input_target_V": 1e-07,
+          "row_count": 1026,
+          "checked_rows": 1026,
+          "max_gap_s": 7.27595761418353e-12,
+          "max_error_V": {
+            "y": 2.69562150378988e-13
+          },
+          "input_max_error_V": {
+            "u": 8.881784197001252e-16,
+            "r": 3.5704772471945034e-13
+          },
+          "worst": {
+            "y": {
+              "time_s": 7.261405698955059e-09,
+              "actual_V": 1.46895910968583,
+              "expected_V": 1.4689591096855605
+            }
+          },
+          "boundary_status": "not_applicable",
+          "boundary_row_count": 0
+        },
+        "rows_sha256": "0db834fd2a6cd4fa28b4e222e6625529ae8cf950dc08815419c20a27060b068c",
+        "effective_settings": {
+          "actual": {
+            "reltol": 1.0000000000000001e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": "unknown; waveform extent is not setting readback",
+            "maxstep": "unknown; requested deck is not setting readback"
+          },
+          "requested": {
+            "reltol": 1e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": 7.450580596923828e-09,
+            "maxstep": 7.275957614183426e-12
+          },
+          "mismatches": [],
+          "status": "I"
+        },
+        "receipt": {
+          "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/NL-cubic/RESULT.json",
+          "sha256": "526daf042f1230b54edb1e4d90c87770621b003c2bbdd89b9ffc761e89d2afb4",
+          "availability": "local-only"
+        },
+        "stages": [
+          {
+            "stage": "compile",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "ad2694143be3a97786880dc03b5a0dfa7efd809eb5c82d4591819e7abdfd7337",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          },
+          {
+            "stage": "simulate",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "7986f220eaaac5d0726d9f56cf9b5b61c5f1c88171b52ed88d0061830cc1faa9",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          }
+        ],
+        "solver_settings": {
+          "stop_s": 7.450580596923828e-09,
+          "maxstep_s": 7.275957614183426e-12,
+          "spice_maxstep_s": 7.275957614183426e-12,
+          "reltol": 1e-07,
+          "vabstol_V": 1e-09,
+          "iabstol_A": 1e-13,
+          "gnucap_dtmin_s": 5.551115123125783e-17
+        },
+        "input_manifest": {
+          "path": "gnucap-timegrid/inputs/INPUT_MANIFEST.json",
+          "sha256": "72156af3521ecd7ea101d1ee02f9eb3213d270fad4cf4a86c2c48d596e167071",
+          "availability": "local-only"
+        },
+        "source_generation": "unchanged v2 model; new Gnucap dtmin"
+      },
+      {
+        "condition": "VR-add",
+        "backend": "gnucap_modelgen",
+        "status": "waveform_available",
+        "waveform_sha256": "46fdeb97503accd432a4251c5bec4662dcf54df3be0e0d44a6e3f2044b9a1172",
+        "source_sha256": "e954e34e0f81fbfd8c70bbc08da2260ccfd61d49b7c2a4cc219fc33ecf0b578b",
+        "assessment": {
+          "formal_qualification": false,
+          "status": "observed_within_target",
+          "output_target_V": 0.001,
+          "input_target_V": 1e-07,
+          "row_count": 1026,
+          "checked_rows": 1026,
+          "max_gap_s": 7.27595761418353e-12,
+          "max_error_V": {
+            "y": 2.6645352591003757e-15
+          },
+          "input_max_error_V": {
+            "u": 8.881784197001252e-16,
+            "r": 0.0
+          },
+          "worst": {
+            "y": {
+              "time_s": 7.195922080427408e-09,
+              "actual_V": 4.294921875000003,
+              "expected_V": 4.294921875
+            }
+          },
+          "boundary_status": "not_applicable",
+          "boundary_row_count": 0
+        },
+        "rows_sha256": "72d4d094cc0f957c6b594973cf20f621b7542200c3bae0d6888443cb10ac2836",
+        "effective_settings": {
+          "actual": {
+            "reltol": 1.0000000000000001e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": "unknown; waveform extent is not setting readback",
+            "maxstep": "unknown; requested deck is not setting readback"
+          },
+          "requested": {
+            "reltol": 1e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": 7.450580596923828e-09,
+            "maxstep": 7.275957614183426e-12
+          },
+          "mismatches": [],
+          "status": "I"
+        },
+        "receipt": {
+          "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/VR-add/RESULT.json",
+          "sha256": "a140cf09564c9a9ae2d5907da5616949f6fc00becaae257b7353d2c74b9c1e16",
+          "availability": "local-only"
+        },
+        "stages": [
+          {
+            "stage": "compile",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "ad2694143be3a97786880dc03b5a0dfa7efd809eb5c82d4591819e7abdfd7337",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          },
+          {
+            "stage": "simulate",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "7986f220eaaac5d0726d9f56cf9b5b61c5f1c88171b52ed88d0061830cc1faa9",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          }
+        ],
+        "solver_settings": {
+          "stop_s": 7.450580596923828e-09,
+          "maxstep_s": 7.275957614183426e-12,
+          "spice_maxstep_s": 7.275957614183426e-12,
+          "reltol": 1e-07,
+          "vabstol_V": 1e-09,
+          "iabstol_A": 1e-13,
+          "gnucap_dtmin_s": 5.551115123125783e-17
+        },
+        "input_manifest": {
+          "path": "gnucap-timegrid/inputs/INPUT_MANIFEST.json",
+          "sha256": "72156af3521ecd7ea101d1ee02f9eb3213d270fad4cf4a86c2c48d596e167071",
+          "availability": "local-only"
+        },
+        "source_generation": "unchanged v2 model; new Gnucap dtmin"
+      },
+      {
+        "condition": "LANG-preprocess",
+        "backend": "gnucap_modelgen",
+        "status": "waveform_available",
+        "waveform_sha256": "41a9ca1d33541aa6413f56ac0546b6c966853b2ef64187ad7877772993841a15",
+        "source_sha256": "d6091f4c1ff6a4831510b4aef6d739f914a732fe063c51eec896758010c40615",
+        "assessment": {
+          "formal_qualification": false,
+          "status": "observation_invalid",
+          "output_target_V": 0.001,
+          "input_target_V": 1e-07,
+          "row_count": 1026,
+          "checked_rows": 1026,
+          "max_gap_s": 7.27595761418353e-12,
+          "max_error_V": {
+            "y": 2.6645352591003757e-15
+          },
+          "input_max_error_V": {
+            "u": 8.881784197001252e-16,
+            "r": 8388608.5
+          },
+          "worst": {
+            "y": {
+              "time_s": 7.195922080427408e-09,
+              "actual_V": 4.294921875000003,
+              "expected_V": 4.294921875
+            }
+          },
+          "boundary_status": "not_applicable",
+          "boundary_row_count": 0
+        },
+        "rows_sha256": "144a33869f509bda99a767b3f54dfa4dae5d88dea91ce982651e3153cd2660a1",
+        "effective_settings": {
+          "actual": {
+            "reltol": 1.0000000000000001e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": "unknown; waveform extent is not setting readback",
+            "maxstep": "unknown; requested deck is not setting readback"
+          },
+          "requested": {
+            "reltol": 1e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": 7.450580596923828e-09,
+            "maxstep": 7.275957614183426e-12
+          },
+          "mismatches": [],
+          "status": "I"
+        },
+        "receipt": {
+          "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/LANG-preprocess/RESULT.json",
+          "sha256": "43de14f1d1b29b0e4ac8c4a10a3afb5f206a21112d203b32d39174b53821d336",
+          "availability": "local-only"
+        },
+        "stages": [
+          {
+            "stage": "compile",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "ad2694143be3a97786880dc03b5a0dfa7efd809eb5c82d4591819e7abdfd7337",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          },
+          {
+            "stage": "simulate",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "7986f220eaaac5d0726d9f56cf9b5b61c5f1c88171b52ed88d0061830cc1faa9",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          }
+        ],
+        "solver_settings": {
+          "stop_s": 7.450580596923828e-09,
+          "maxstep_s": 7.275957614183426e-12,
+          "spice_maxstep_s": 7.275957614183426e-12,
+          "reltol": 1e-07,
+          "vabstol_V": 1e-09,
+          "iabstol_A": 1e-13,
+          "gnucap_dtmin_s": 5.551115123125783e-17
+        },
+        "input_manifest": {
+          "path": "gnucap-timegrid/inputs/INPUT_MANIFEST.json",
+          "sha256": "72156af3521ecd7ea101d1ee02f9eb3213d270fad4cf4a86c2c48d596e167071",
+          "availability": "local-only"
+        },
+        "source_generation": "unchanged v2 model; new Gnucap dtmin"
+      },
+      {
+        "condition": "LANG-hierarchy",
+        "backend": "gnucap_modelgen",
+        "status": "waveform_available",
+        "waveform_sha256": "8059a39be932c4cf5fd0dfe6d4423d3b286b31ef946ecd2e125b83774c02db53",
+        "source_sha256": "3d3d686f9d2eea6700df37341cd8debb26d926433bf3781706b640895a0de2b8",
+        "assessment": {
+          "formal_qualification": false,
+          "status": "observed_within_target",
+          "output_target_V": 0.001,
+          "input_target_V": 1e-07,
+          "row_count": 1026,
+          "checked_rows": 1026,
+          "max_gap_s": 7.27595761418353e-12,
+          "max_error_V": {
+            "y": 1.7763568394002505e-15
+          },
+          "input_max_error_V": {
+            "u": 8.881784197001252e-16,
+            "r": 9.992007221626409e-16
+          },
+          "worst": {
+            "y": {
+              "time_s": 6.213667802512646e-09,
+              "actual_V": 2.0029296875000018,
+              "expected_V": 2.0029296875
+            }
+          },
+          "boundary_status": "not_applicable",
+          "boundary_row_count": 0
+        },
+        "rows_sha256": "5cf372345bf83949980e1cef8f64c9cc2194d8563c886448cec8f168d3d84056",
+        "effective_settings": {
+          "actual": {
+            "reltol": 1.0000000000000001e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": "unknown; waveform extent is not setting readback",
+            "maxstep": "unknown; requested deck is not setting readback"
+          },
+          "requested": {
+            "reltol": 1e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": 7.450580596923828e-09,
+            "maxstep": 7.275957614183426e-12
+          },
+          "mismatches": [],
+          "status": "I"
+        },
+        "receipt": {
+          "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/LANG-hierarchy/RESULT.json",
+          "sha256": "e5c3400e25a49ea6e1cc019e81bf9759301cc3e65f57e50bdf90491f00987d48",
+          "availability": "local-only"
+        },
+        "stages": [
+          {
+            "stage": "compile",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "70f2e728c7736f7b38dfcc3c09a53d6a7664b805b5fa1fc8add599185e4ebe3e",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          },
+          {
+            "stage": "simulate",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "7986f220eaaac5d0726d9f56cf9b5b61c5f1c88171b52ed88d0061830cc1faa9",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          }
+        ],
+        "solver_settings": {
+          "stop_s": 7.450580596923828e-09,
+          "maxstep_s": 7.275957614183426e-12,
+          "spice_maxstep_s": 7.275957614183426e-12,
+          "reltol": 1e-07,
+          "vabstol_V": 1e-09,
+          "iabstol_A": 1e-13,
+          "gnucap_dtmin_s": 5.551115123125783e-17
+        },
+        "input_manifest": {
+          "path": "gnucap-timegrid/inputs/INPUT_MANIFEST.json",
+          "sha256": "72156af3521ecd7ea101d1ee02f9eb3213d270fad4cf4a86c2c48d596e167071",
+          "availability": "local-only"
+        },
+        "source_generation": "unchanged v2 model; new Gnucap dtmin"
+      },
+      {
+        "condition": "LANG-functions",
+        "backend": "gnucap_modelgen",
+        "status": "waveform_available",
+        "waveform_sha256": "cbb62208d6dbaaf81bfb32ee37647219e0a814184e77b52943ac95520e1455d7",
+        "source_sha256": "0de3a18ede103742ff658d6c9105f95f0e2600f8a9b40a431a7a70cb8857e2ae",
+        "assessment": {
+          "formal_qualification": false,
+          "status": "observed_within_target",
+          "output_target_V": 0.001,
+          "input_target_V": 1e-07,
+          "row_count": 514,
+          "checked_rows": 509,
+          "max_gap_s": 7.27595761418353e-12,
+          "max_error_V": {
+            "y": 2.220446049250313e-16,
+            "z": 3.3306690738754696e-16
+          },
+          "input_max_error_V": {
+            "u": 3.3306690738754696e-16
+          },
+          "worst": {
+            "z": {
+              "time_s": 7.277511926417901e-14,
+              "actual_V": -0.9999609291553501,
+              "expected_V": -0.9999609291553497
+            },
+            "y": {
+              "time_s": 3.194145392626524e-09,
+              "actual_V": 0.7148437500000002,
+              "expected_V": 0.71484375
+            }
+          },
+          "boundary_status": "not_graded",
+          "boundary_row_count": 5,
+          "boundary_record_location": "receipt.assessment.boundary_rows; not graded"
+        },
+        "rows_sha256": "fbbe54af364a7e71a061122a61b89245c5b63da3e0574c0bc93a2fab5d42b655",
+        "effective_settings": {
+          "actual": {
+            "reltol": 1.0000000000000001e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": "unknown; waveform extent is not setting readback",
+            "maxstep": "unknown; requested deck is not setting readback"
+          },
+          "requested": {
+            "reltol": 1e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": 3.725290298461914e-09,
+            "maxstep": 7.275957614183426e-12
+          },
+          "mismatches": [],
+          "status": "I"
+        },
+        "receipt": {
+          "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/LANG-functions/RESULT.json",
+          "sha256": "85cbc676d2cf80f89755e198ad4f43e9e5aef8088afaa0b9cf5ef16441099bab",
+          "availability": "local-only"
+        },
+        "stages": [
+          {
+            "stage": "compile",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "ad2694143be3a97786880dc03b5a0dfa7efd809eb5c82d4591819e7abdfd7337",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          },
+          {
+            "stage": "simulate",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "7986f220eaaac5d0726d9f56cf9b5b61c5f1c88171b52ed88d0061830cc1faa9",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          }
+        ],
+        "solver_settings": {
+          "stop_s": 3.725290298461914e-09,
+          "maxstep_s": 7.275957614183426e-12,
+          "spice_maxstep_s": 7.275957614183426e-12,
+          "reltol": 1e-07,
+          "vabstol_V": 1e-09,
+          "iabstol_A": 1e-13,
+          "gnucap_dtmin_s": 5.551115123125783e-17
+        },
+        "input_manifest": {
+          "path": "gnucap-timegrid/inputs/INPUT_MANIFEST.json",
+          "sha256": "72156af3521ecd7ea101d1ee02f9eb3213d270fad4cf4a86c2c48d596e167071",
+          "availability": "local-only"
+        },
+        "source_generation": "unchanged v2 model; new Gnucap dtmin"
+      }
+    ],
+    "gnucap-step-scan": [
+      {
+        "condition": "LP-nd",
+        "backend": "gnucap_modelgen",
+        "status": "waveform_available",
+        "waveform_sha256": "508a7907e68bfbf42ee84f5650043306530031c4708b14d395094fc18aebf902",
+        "source_sha256": "fe16f14b9608fe04d6c24f6491d1e2b97806aa359aad6923c728e4ea07a7030e",
+        "assessment": {
+          "formal_qualification": false,
+          "status": "observed_difference",
+          "output_target_V": 0.001,
+          "input_target_V": 1e-07,
+          "row_count": 2050,
+          "checked_rows": 2050,
+          "max_gap_s": 4.547473508865675e-13,
+          "max_error_V": {
+            "y": 0.40523185668385053
+          },
+          "input_max_error_V": {
+            "u": 4.17970101888529e-16
+          },
+          "worst": {
+            "y": {
+              "time_s": 9.313225746154785e-10,
+              "actual_V": 0.349347053038333,
+              "expected_V": 0.7545789097221836
+            }
+          },
+          "boundary_status": "not_applicable",
+          "boundary_row_count": 0
+        },
+        "rows_sha256": "920b3ffe8a90947284af43a7a32f08081cc4a98734b05efa1ca1e6d5bdf33ef8",
+        "effective_settings": {
+          "actual": {
+            "reltol": 1.0000000000000001e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": "unknown; waveform extent is not setting readback",
+            "maxstep": "unknown; requested deck is not setting readback"
+          },
+          "requested": {
+            "reltol": 1e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": 9.313225746154785e-10,
+            "maxstep": 4.547473508864641e-13
+          },
+          "mismatches": [],
+          "status": "I"
+        },
+        "receipt": {
+          "path": "gnucap-step-scan/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/LP-nd/RESULT.json",
+          "sha256": "2ef8b18f0ce1e50795868ac867658c383d23491bcc8fac8681853d508682f5dc",
+          "availability": "local-only"
+        },
+        "stages": [
+          {
+            "stage": "compile",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "a632e06f72759e6e9c5e35125d9b5f4826150020c4fd7d498fadc077b529339e",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          },
+          {
+            "stage": "simulate",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "9d8c5c8f7275401db01c903fe2d1c8e3cd78691cb653c0bde838ba2fd4edac2c",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          }
+        ],
+        "solver_settings": {
+          "stop_s": 9.313225746154785e-10,
+          "maxstep_s": 4.547473508864641e-13,
+          "spice_maxstep_s": 4.547473508864641e-13,
+          "reltol": 1e-07,
+          "vabstol_V": 1e-09,
+          "iabstol_A": 1e-13,
+          "gnucap_dtmin_s": 5.551115123125783e-17
+        },
+        "input_manifest": {
+          "path": "gnucap-step-scan/inputs/INPUT_MANIFEST.json",
+          "sha256": "bfd02dc0be09763bc941ade56fc76439cab7539889312b5c4324f79e897deb46",
+          "availability": "local-only"
+        },
+        "source_generation": "unchanged v2 model; new Gnucap dtmin and maxstep/16"
+      },
+      {
+        "condition": "LP-np",
+        "backend": "gnucap_modelgen",
+        "status": "waveform_available",
+        "waveform_sha256": "508a7907e68bfbf42ee84f5650043306530031c4708b14d395094fc18aebf902",
+        "source_sha256": "53de01ed0568707421867e6170a4e0bb6d77e28aa8d5e7769cc9d768cc40b7df",
+        "assessment": {
+          "formal_qualification": false,
+          "status": "observed_difference",
+          "output_target_V": 0.001,
+          "input_target_V": 1e-07,
+          "row_count": 2050,
+          "checked_rows": 2050,
+          "max_gap_s": 4.547473508865675e-13,
+          "max_error_V": {
+            "y": 0.40523185668385053
+          },
+          "input_max_error_V": {
+            "u": 4.17970101888529e-16
+          },
+          "worst": {
+            "y": {
+              "time_s": 9.313225746154785e-10,
+              "actual_V": 0.349347053038333,
+              "expected_V": 0.7545789097221836
+            }
+          },
+          "boundary_status": "not_applicable",
+          "boundary_row_count": 0
+        },
+        "rows_sha256": "920b3ffe8a90947284af43a7a32f08081cc4a98734b05efa1ca1e6d5bdf33ef8",
+        "effective_settings": {
+          "actual": {
+            "reltol": 1.0000000000000001e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": "unknown; waveform extent is not setting readback",
+            "maxstep": "unknown; requested deck is not setting readback"
+          },
+          "requested": {
+            "reltol": 1e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": 9.313225746154785e-10,
+            "maxstep": 4.547473508864641e-13
+          },
+          "mismatches": [],
+          "status": "I"
+        },
+        "receipt": {
+          "path": "gnucap-step-scan/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/LP-np/RESULT.json",
+          "sha256": "c637b716876f33a8cafde0d40b6789a0cdbecda6a0c2bbdf6970ac8449174341",
+          "availability": "local-only"
+        },
+        "stages": [
+          {
+            "stage": "compile",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "a632e06f72759e6e9c5e35125d9b5f4826150020c4fd7d498fadc077b529339e",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          },
+          {
+            "stage": "simulate",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "7e8fc83b925ae30a968875751106b95d8b7662de0158e9dfdd53d9d6dc0d4726",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          }
+        ],
+        "solver_settings": {
+          "stop_s": 9.313225746154785e-10,
+          "maxstep_s": 4.547473508864641e-13,
+          "spice_maxstep_s": 4.547473508864641e-13,
+          "reltol": 1e-07,
+          "vabstol_V": 1e-09,
+          "iabstol_A": 1e-13,
+          "gnucap_dtmin_s": 5.551115123125783e-17
+        },
+        "input_manifest": {
+          "path": "gnucap-step-scan/inputs/INPUT_MANIFEST.json",
+          "sha256": "bfd02dc0be09763bc941ade56fc76439cab7539889312b5c4324f79e897deb46",
+          "availability": "local-only"
+        },
+        "source_generation": "unchanged v2 model; new Gnucap dtmin and maxstep/16"
+      },
+      {
+        "condition": "DDT-pwl",
+        "backend": "gnucap_modelgen",
+        "status": "waveform_available",
+        "waveform_sha256": "0efc005fdd1d69fa72a73594ae3a87b299eb3356a64c25d14250a65e1b88c21d",
+        "source_sha256": "bef7e8972d4efcd4ebb3578c174973229341973f956fc3bd8dea36f23fc89179",
+        "assessment": {
+          "formal_qualification": false,
+          "status": "observed_difference",
+          "output_target_V": 0.001,
+          "input_target_V": 1e-07,
+          "row_count": 8201,
+          "checked_rows": 8031,
+          "max_gap_s": 4.547473508865675e-13,
+          "max_error_V": {
+            "y": 5.999999999989086
+          },
+          "input_max_error_V": {
+            "u": 8.881784197001252e-16
+          },
+          "worst": {
+            "y": {
+              "time_s": 2.8094291337765753e-09,
+              "actual_V": 5.999999999989086,
+              "expected_V": 0
+            }
+          },
+          "boundary_status": "not_graded",
+          "boundary_row_count": 170,
+          "boundary_record_location": "receipt.assessment.boundary_rows; not graded"
+        },
+        "rows_sha256": "5a4d43601946bd395358507023aacd4e612bcdc9c3cad7c8b79389f6566e84e3",
+        "effective_settings": {
+          "actual": {
+            "reltol": 1.0000000000000001e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": "unknown; waveform extent is not setting readback",
+            "maxstep": "unknown; requested deck is not setting readback"
+          },
+          "requested": {
+            "reltol": 1e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-13,
+            "stop": 3.725290298461914e-09,
+            "maxstep": 4.547473508864641e-13
+          },
+          "mismatches": [],
+          "status": "I"
+        },
+        "receipt": {
+          "path": "gnucap-step-scan/collected/gnucap_modelgen/outputs/gnucap_modelgen/runs/DDT-pwl/RESULT.json",
+          "sha256": "6f4c249957058cd21a3a8ca9e75e6ced3628862d5f8b7b4ffb35d935f1d5535e",
+          "availability": "local-only"
+        },
+        "stages": [
+          {
+            "stage": "compile",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "a632e06f72759e6e9c5e35125d9b5f4826150020c4fd7d498fadc077b529339e",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          },
+          {
+            "stage": "simulate",
+            "returncode": 0,
+            "timeout": false,
+            "status": "completed",
+            "log_sha256": "7986f220eaaac5d0726d9f56cf9b5b61c5f1c88171b52ed88d0061830cc1faa9",
+            "cleanup": {
+              "signals": [
+                "SIGTERM",
+                "SIGKILL"
+              ],
+              "errors": [],
+              "complete": true
+            }
+          }
+        ],
+        "solver_settings": {
+          "stop_s": 3.725290298461914e-09,
+          "maxstep_s": 4.547473508864641e-13,
+          "spice_maxstep_s": 4.547473508864641e-13,
+          "reltol": 1e-07,
+          "vabstol_V": 1e-09,
+          "iabstol_A": 1e-13,
+          "gnucap_dtmin_s": 5.551115123125783e-17
+        },
+        "input_manifest": {
+          "path": "gnucap-step-scan/inputs/INPUT_MANIFEST.json",
+          "sha256": "bfd02dc0be09763bc941ade56fc76439cab7539889312b5c4324f79e897deb46",
+          "availability": "local-only"
+        },
+        "source_generation": "unchanged v2 model; new Gnucap dtmin and maxstep/16"
+      }
+    ]
+  },
+  "operator_receipts": {
+    "gnucap-timegrid": {
+      "path": "gnucap-timegrid/collected/gnucap_modelgen/operator-receipts/gnucap_modelgen.json",
+      "sha256": "dad50445c93654eff8c5a822b04334af19aa2aa362fd74376afbda3f79a0ef76",
+      "availability": "local-only"
+    },
+    "gnucap-step-scan": {
+      "path": "gnucap-step-scan/collected/gnucap_modelgen/operator-receipts/gnucap_modelgen.json",
+      "sha256": "e7193ef550b47b9dfecde27b966ca114d4318d8b47896e470dccf44789bae9ca",
+      "availability": "local-only"
+    }
+  },
+  "tool_identities": {
+    "gnucap-timegrid": {
+      "path": "gnucap-timegrid/collected/gnucap_modelgen/outputs/gnucap_modelgen/TOOL_IDENTITY.json",
+      "sha256": "d516519bb019cb01513eedc03581548598a5780be579868363e177b12a35186c",
+      "availability": "local-only"
+    },
+    "gnucap-step-scan": {
+      "path": "gnucap-step-scan/collected/gnucap_modelgen/outputs/gnucap_modelgen/TOOL_IDENTITY.json",
+      "sha256": "db703eca592aed62a30b0f9d2fe81ec82672e48f51a3979b7b66c344edc6a8ca",
+      "availability": "local-only"
+    }
+  },
+  "primary_conditions": 27,
+  "primary_slots": 108,
+  "core_results": "original 48 reused, including I/X; not regraded",
+  "new_configurations": 16,
+  "total_configurations_including_original": 179,
+  "time_quantization_source": {
+    "path": "gnucap-timegrid/time-rounding-source.txt",
+    "sha256": "82a3e1f78f43e133361219835f1c1ffff65c2c9b9afbfa8dc755c25e12b1c320",
+    "availability": "local-only"
+  },
+  "checked_in_analysis": {
+    "experiments/backends/support/timegrid_report.py": "ae1cef76bf2be533310c92555119c08d9c73c6b19b7d18ac5843097987d0af35",
+    "evas/validation/support/checker.py": "35bf9725b752bf6a810c7ed2d5983efc3875bcd165ba672f324f5b005b39257f",
+    "experiments/backends/support/probes.py": "3cfb3fb8e0b935d6f27ec29d61dbe677d9ac80fa47e484c69178592f92f6853a"
+  },
+  "raw_availability": "local-only; raw paths relative to runs/support-comparison-20261009",
+  "correction": "Original endpoint failures were caused by Gnucap dtmin time quantization, not a short decimal print format. The native output already has 17 digits. Old verdicts are retained."
+}

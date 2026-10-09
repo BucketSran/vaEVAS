@@ -1,13 +1,13 @@
 # EVAS：电压域 Verilog-A 仿真器
 
-四后端的行为与误差比较见[比较表](../experiments/backends/comparison/README.md)及[维护契约](docs/development/COMPARISON.md)。新论文集尚未冻结，既有开发集与候选分支证据分别标记；本轮不统计耗时。
+模型支持范围及已有对照证据见[四后端支持范围](docs/COMPARISON.md)。
 
 EVAS 面向 Verilog-A 行为模型的开发与验证。首要目标是提供开源、可审查的电压域仿真环境，
 让使用者不依赖商业仿真器也能运行和验证目标模型，为 benchmark 提供开源复现路径。
 EVAS 有独立的使用者、验收标准和交付成果；速度优化须保持模型语义和误差要求。
 
 用户可以先用 EVAS 迭代模型，再用同一份 VA 验证 Spectre 兼容性，最后与实际器件网表共同仿真。
-开源复现是建设目标，当前覆盖程度以[能力表](docs/CAPABILITIES.md)及具体模型的对照证据为准。
+开源复现是建设目标，覆盖程度以具名版本和具体模型的对照证据为准。
 benchmark 遇到 EVAS 能力缺口时，可以继续使用已校准的 Spectre 验收；
 EVAS 按受影响的任务类别、工程使用频率与实现成本选择扩展，不要求题目等待全部能力补齐。
 
@@ -23,31 +23,7 @@ EVAS 把限定范围内的 Verilog-A 电压关系编译为方程，联立求解�
 同一支路的多条贡献会相加；程序赋值则保留顺序语义。
 瞬态试算从已接受历史出发，电压、状态和误差检查通过后一起提交。
 
-## 可以做什么
-
-| 功能 | 使用方式与边界 |
-| --- | --- |
-| 静态电压方程 | `solve` 独立求每个样本的工作点；支持仿射关系和受限多项式非线性 |
-| 瞬态输入与事件 | `transient` 推进 PWL 输入、`cross`、固定及保持状态控制的 `timer`、事件体条件与顺序赋值 |
-| 波形与历史算子 | 受限 `transition`、`absdelay`、`slew`、`idt`、`idtmod`、`laplace_nd`、有限单实极点 `laplace_np` 和 `ddt` |
-| 连续动态反馈 | 在声明的边界内联合处理积分、滤波、导数关系和非线性动态 |
-| 精度控制 | 电压容差、历史误差传播、事件时刻/条件认证；不能证明预算时明确拒绝 |
-| 诊断与来源查询 | manifest 仅编译预检；可选、有预算的试算/提交记录，编译 IR 静态查询，以及单会话只读 stdio MCP；缺少证据时明确返回未知 |
-
-当前分支的 `absdelay` 候选可组合两级固定延迟，第一级输入限外部连续 PWL。
-第二级可直接嵌套，或读取同实例的单位增益、零偏置内部别名。
-移位时间误差保留在整段历史的电压包围中，仍受最终节点预算约束；第三层、其他历史组合和历史反馈继续拒绝。
-数学与保守拒绝边界见[两级固定延迟说明](docs/math/operators.md#两级固定-absdelay-的移位历史包围)。
-
-查询入口和身份/截断规则见[诊断说明](docs/reference/diagnostics.md)。
-Rust 的版本化类型与解码位于 [evas-ir](rust_core/ir/README.md)，数值与历史仍由一个内核统一管理。
-配对测量与结构取舍见[性能实验](../experiments/performance/README.md)。
-
-这些能力有输入依赖、初值、参数和组合限制，不能由单个算子支持推导任意组合都支持。
-[能力表](docs/CAPABILITIES.md)列出具体支持与缺口；
-[连续动态手册](docs/math/continuous.md)说明反馈、DAE 和事件组合边界。
-当前实现为 **EVAS 0.14.0 / IR v18**；本次开发基线、已集成架构和保留差异见[版本说明](docs/UPDATE.md#baseline-20261009)。
-论文最终验收及完整 Spectre 兼容性仍未完成，历史实验各自绑定原版本。
+当前开发基线和历史版本见[版本记录](docs/UPDATE.md#baseline-20261009)。
 
 <a id="model-handoff"></a>
 
@@ -248,85 +224,9 @@ cargo test --locked --manifest-path evas/rust_core/Cargo.toml
 新增能力需要同时说明数学含义、状态生命周期、组合边界和独立答案，要求见
 [技术手册](docs/README.md#feature-documentation-contract)。
 
-## 实现范围
+<a id="实现范围"></a>
 
-新增前端子集在已有 IR18 上展开，不增加第二执行器：
-
-- `parameter integer` 首批接受精确的有符号 32 位值；非整数实数的隐式转换仍明确拒绝。
-  涉及 integer 参数的整数除法和溢出表达式也拒绝，避免把整数语义静默换成实数运算；
-  新增的整数默认值/子实例覆盖、范围约束及电气向量下标也检查只含字面量的整数运算。
-  如需实数除法，显式写 `N/2.0`。已有 real 参数表达式的行为保持不变。
-  `from` 的多个区间取并集，随后扣除 `exclude` 的区间或单值；支持开闭端点、
-  无穷端点及其他参数构成的边界。检查每个实例最终生效的值，覆盖值可以替换越界默认值，
-  但不能掩盖非法的约束表达式。
-- 一维 electrical/端口向量在实例参数绑定后按声明方向展开。Python/manifest 使用
-  `{"u[0]":"a", "u[1]":"b"}` 的显式位连接；模块内部的整向量连接按各自声明顺序配对。
-  `V(bus[index])` 接受实例常量或展开后的 genvar 下标。每个节点与贡献保留独立身份；
-  electrical 与方向声明必须有相同范围。含向量模块展开后的节点上限为 4096，动态位选、切片、拼接仍拒绝。
-- `initial_step or initial_step("dc")` 等只含初始化叶、且至少含一个无分析限定叶的 OR，
-  归并为一次初始化体。重复叶不重复执行，也不生成零时刻 timer。
-  纯初始化中的 real 还接受[实际 driven 输入比较](docs/math/events.md#input-initialization)，
-  每个状态仍须初始化一次；常量初值保持原规则。
-  另支持一个无分析限定 `initial_step` 与 cross 叶子的共享常量赋值体：初始化安装一次，
-  后续 cross 触发时执行同一体。赋值须无条件，所有状态合计初始化须唯一、完整且为实例常量。
-  混合体中的 timer、多个或分析限定初始化叶，以及电压/状态/历史相关初值仍拒绝。
-  纯初始化 OR 保持已有规则；详见[初始化/cross 契约](docs/math/events.md#initial-cross)。
-
-依据是 [Verilog-AMS 2.4 LRM](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
-的参数范围、向量连接和全局事件规则（§3.4、§5.10.2、§6）。整数隐式转换与分析生命周期
-是本子集的限制，不是语言标准禁止。独立回归见
-[参数约束](tests/test_parameter_constraints.py)、[向量端口](tests/test_vector_ports.py)、
-[初始化事件](tests/test_initial_events.py)。参数绑定、节点展开和初始化降低分别位于
-`parameters.py`、`node_elaboration.py` 和 `instance_compiler.py`。
-
-- 允许一个源文件多个 module；端口需显式方向与 electrical 声明，内部节点需 electrical 声明。
-- 预处理器支持对象/函数宏、续行、define/undef、条件编译和 include guard。
-  include 只读取调用者在 sources/manifest models 中提供的文件，不搜索外部目录。
-  显式包含标准 `constants.vams` / `disciplines.vams` 时，优先使用调用者提供的同路径头；
-  未提供时采用版本化的有限 `evas-voltage-vams-v1` 环境，数学常量仅保留 `M_PI`。
-  `electrical` 使用前必须有支持的 discipline/nature 定义；缺失定义与不兼容头文件拒绝编译。
-  实数字面量的小数点两侧必须有数字，例如 `0.5`、`1.0`；`.5`、`1.` 均拒绝。
-  具体范围及迁移见[编译准入契约](docs/reference/frontend-admission.md)。
-  语法位置、包含路径及宏展开路径会进入 Origin；支持边界见[预处理契约](validation/ANALOG_CONDITIONS_CONTRACT.md#preprocessing)。
-- `parameter real` 默认值、实例覆盖以及参数依赖，有限实数与 SI 后缀。
-- 一个 `analog begin ... end`，含无条件 `V(p)` / `V(p,n)` 贡献，以及受限事件块。
-- 当前分支候选支持无状态电压表达式中的 `< <= > >= && || ! ?:`，比较返回 0/1，有限非零值为真。
-  所有分支先检查支持范围，数值认证只访问选中路径。谓词限外部输入仿射电压，分支限分段仿射；
-  历史、事件状态、输出反馈谓词与非线性结构仍拒绝。见[普通条件契约](validation/ANALOG_CONDITIONS_CONTRACT.md)。
-- 表达式支持括号、单目正负、加减、乘法及非零常数分母。
-- `pow(base, exponent)` 的指数须在实例绑定后为 **1–32 的整数常数**，支持负数、零和正数底数；
-  该界限是本内核的实现范围，不声称覆盖完整 `pow`。变量、分数、零和负指数仍拒绝。
-  数学函数的语言来源见 [LRM 2.4 数学函数表](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)。
-- manifest 指定顶层实例和端口到全局网络的映射；可展开模块内层次实例。
-  命名/位置端口及参数覆盖进入同一关系 IR；内部节点与动态身份按完整实例路径隔离。
-- 全局 `0` 为固定地；其他驱动节点由调用者显式指定。每个样本提供完整驱动值。
-- 支持 real 输入的纯 `analog function`：局部顺序赋值、模块参数和受限嵌套调用。
-  当前开发切片另支持 `< <= > >=` 谓词的有限 if/else 分支，保留条件进入时的局部值及所有支路结构校验。
-  函数在绑定前展开为同一关系 IR；不含电压访问、历史调用或递归。范围与独立答案见
-  [函数展开契约](validation/ANALOG_CONDITIONS_CONTRACT.md#纯函数的分支候选)。
-
-同时允许实例常量控制的 `genvar for`，在编译时展开顺序赋值、累加贡献和 `cross/timer` 事件（含 OR）。
-事件参数与体内表达式代入各层循环下标，再进入既有事件内核；不同展开事件保留独立来源，
-同刻冲突写入仍拒绝。监测事件体内支持实例常量控制的静态 `genvar for`，
-保持顺序赋值与实例隔离；条件赋值可用。事件体贡献、历史调用、嵌套事件和运行时循环
-仍拒绝，空循环不隐藏非法事件体。当前开发切片允许纯初始化体或初始化/cross 共用体内
-的静态 genvar 赋值循环，初值仍须是实例常量并唯一初始化每个持久状态，见
-[初始化循环契约](validation/INITIAL_STATIC_LOOP_CONTRACT.md)。模拟条件下的事件及
-循环包围 `initial_step` 事件仍未支持。数学与 ZOOM 对照见[静态循环事件](docs/math/events.md#static-loop-events)。
-总迭代与展开语句各限 4096，事件及其体内叶子分别计数；每个展开的历史调用分别占用一个算子槽。
-也支持一维 real/integer 变量数组：实例常量范围和静态下标，总元素数限 4096，
-数组元素在绑定后展开为独立标量。动态下标、多维及参数数组仍缺。
-范围与独立答案见[循环展开契约](validation/ANALOG_CONDITIONS_CONTRACT.md#静态-genvar-循环的分支候选)。
-
-`laplace_np` 当前只接受常量单项分子、一个有限负实极点、零虚部且不提供 epsilon。
-只有 `-1/p` 能精确表示为 binary64 才转换为既有 `laplace_nd`；其余域明确拒绝。
-独立解析答案、调用点隔离和未扩大的依赖限制见[单极点契约](docs/math/operators.md#laplace_np)。
-
-动态算子的精确支持范围见[算子手册](docs/math/operators.md)；事件语义与同刻求解见
-[事件手册](docs/math/events.md)。未列明的合法 VA 写法也可能是当前能力缺口，
-不应把实现拒绝解释为语言标准禁止。
-仍拒绝超出范围的循环、generate/实例数组、通用数组、命名支路、电流贡献、宏拼接/字符串化及其他编译指令等。
-不同本地贡献支路因端口连接成为同一节点对的情况也明确拒绝，等待独立契约验证。
+语法和参数的详细约束见[模型编译](docs/reference/frontend-admission.md#模型编译)。
 
 <a id="frontend-boundaries"></a>
 

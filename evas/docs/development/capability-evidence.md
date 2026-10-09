@@ -1,8 +1,8 @@
 # 能力 ID 与证据索引
 
 本页供开发和审查使用，登记测试 `GUARDS` 所用的稳定 ID、契约和历史证据。
-面向使用者的支持结论见 [能力概览](../CAPABILITIES.md)，详细接受与拒绝条件由所链接的契约维护。
-收据只证明其固定执行版本；下表不是当前 main 的通过率。生成器读取三列表格，不读取能力概览的措辞。
+面向使用者的支持结论只在[四后端支持范围](../COMPARISON.md)维护，详细接受与拒绝条件由所链接的契约维护。
+收据只证明其固定执行版本；下表仅登记 ID 与证据，供追溯工具读取，不维护第二份支持状态或当前 main 通过率。
 
 | 能力 ID | 契约或数学入口 | 验证与历史证据 |
 | --- | --- | --- |
@@ -23,3 +23,5 @@
 
 旧能力表的逐轮叙事保留在 [整理前的固定版本](https://github.com/BucketSran/vaEVAS/blob/dbeff2f22475ace8644470346a2d097dee6de418/evas/docs/CAPABILITIES.md)。
 检查点身份见 [版本记录](../UPDATE.md#检查点身份)。旧 #79、#97 的未完成验收统一由 [#96](https://github.com/BucketSran/vaEVAS/issues/96) 跟踪；关闭入口不表示原差异通过。
+
+2026-10-09 的[当前 main 四后端复验](../../../experiments/backends/support/README.md)补充 LANG、LIN、NONLINEAR、CROSS、TIMER、EVENT-ORDER、TRANSITION、ABSDELAY、SLEW、DYNAMICS、COMPOSE、QUALIFICATION 的有限证据；原边界失败和资格限制保留。

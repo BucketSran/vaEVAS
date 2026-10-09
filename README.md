@@ -55,14 +55,8 @@ EVAS 将优化集中在行为级电压关系上，服务于模型编写、调试
 现有测量尚不能证明 EVAS 普遍快于 Spectre。
 
 EVAS 将 Verilog-A 中的电压贡献转为方程，由 Rust 内核联立求解节点电压。
-它面向以电压关系描述的行为模型，目前在限定范围内提供：
-
-- **静态求解**：线性关系、多项式非线性反馈及稠密/稀疏矩阵求解。
-- **瞬态与事件**：随时间推进输入和状态，处理 `cross`、固定 `timer`、采样与复位。
-- **动态算子**：`transition`、`absdelay`、`slew`，以及受限的积分、微分和滤波关系。
-
-输入由 `.va` 模型和 JSON manifest 组成；manifest 指定实例、节点连接和输入刺激。
-当前不支持电流贡献和器件级电路网表求解，各算子的参数与组合限制见[能力表](evas/docs/CAPABILITIES.md)。
+它面向以电压关系描述的行为模型。使用方法见 [EVAS README](evas/README.md)，
+支持范围、限制和后端对照统一见[四后端支持范围](evas/docs/COMPARISON.md)。
 
 ## 从行为建模到电路验证
 
@@ -121,7 +115,7 @@ main 保留持续维护的工具与支撑公开结论的精简证据；已结束
 ## 仓库导航
 
 本仓库是 EVAS 与 benchmark 的共同开发入口。两条线各按可验收结果建立任务；
-EVAS 从[能力表](evas/docs/CAPABILITIES.md)选择问题，benchmark 从[候选登记](benchmark/CANDIDATES.md)
+EVAS 从[四后端支持范围](evas/docs/COMPARISON.md)选择问题，benchmark 从[候选登记](benchmark/CANDIDATES.md)
 和[题库入口](benchmark/README.md)继续。候选与设计稿不等于已发布任务。
 
 共享电路仿真 harness 在独立仓库维护执行与结果回收，目标是接入当前 EVAS 和远端仿真器。
