@@ -76,4 +76,48 @@ does not constitute new Spectre execution or broader compatibility acceptance.
 Raw requests, responses, failed verifier attempts and independent reviews are
 local-only in the visible `worktrees/spectre-event-alignment/runs/event-candidate-step-20261009/`
 entry. The repository retains the comparator and compact receipt, not a public
-Spectre waveform archive. The wider refactor waits for user acceptance.
+Spectre waveform archive. The user accepted this stage; the following section records the wider refactor.
+
+
+## Whole event-cluster transaction checkpoint
+
+The next structural checkpoint is runtime commit `7f091d3d`, based on the accepted
+small checkpoint `521a4a57`. Its [receipt](cluster-refactor.json) records identities
+and results. It changes ownership, with no new event or numerical policy.
+
+```text
+accept_changed_events
+  PreparedEvents::prepare, immutable Controller and calendar
+    prepare_changed_batch for each connected event batch
+    check microevent budgets and prepare physical-phase outputs
+    return frame, records, outputs and typed calendar update
+  PreparedEvents::publish, consume the completed result
+    publish frame, cursor, records, outputs and calendar without fallible work
+```
+
+Static calendars keep their storage and advance their cursor. Held/history
+calendars are replaced and restart at cursor zero. The existing batch arithmetic,
+root certificates, history algorithms, budget checks and error order are retained.
+An added production-entrance regression samples a held timer from `.1*.3` and
+requests an uncertifiable `.03` output. It verifies that two failed attempts keep
+previously stored outputs and accepted state intact, then retries the same
+Controller after removing that query. The clean run and retry agree. This test
+passes on the original implementation too; it protects existing rollback behavior.
+
+The candidate passes 218 Rust tests with one ignored. The fixed event test set
+passes 251 tests; all 706 baseline/candidate responses agree exactly, including
+140 rejections. The two captured diagnostic sidecars also match in a separate
+post-analysis; only `stages.*.nanos` is excluded. Records, their order, counters
+and errors are compared. Other requests did not enable sidecar capture.
+Twelve frozen Spec B responses and seven engineering-model
+responses are also byte-identical. The same fourteen actual Spectre base/tight
+comparisons retain their original results. The original archive's 371 files and
+fourteen PSF traces were rebound and checked. No new remote Spectre run was made;
+models, stimuli, settings, checker and reference data are unchanged.
+
+These finite preservation checks do not resolve C1, #79, VCO, M1 or incomplete
+observation qualification. The change stays in PR117 pending user review. Raw
+runs, the scope and complete independent reports remain local-only under the
+visible `worktrees/spectre-event-alignment/runs/event-cluster-transaction-20261009/`
+entry. The diagnostic inventory was regenerated because code movement changed
+its source-function references; the preceding checkpoint's CI failed that freshness check.

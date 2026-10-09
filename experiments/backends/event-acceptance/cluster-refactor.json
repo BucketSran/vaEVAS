@@ -1,0 +1,629 @@
+{
+  "scope": "Behavior-preserving whole event-cluster transaction after user acceptance of the narrow checkpoint; no new event, numerical, precision or performance policy.",
+  "baseline": {
+    "head": "521a4a5703d18f6103d5cfffc959c75055439e8f",
+    "kernel_sha256": "78e06546e84b6f0330da61866475c4e7115a46b28c30fb40e2a0e8dd8d1bd2ec",
+    "rustc": "rustc 1.95.0 (59807616e 2026-04-14)\nbinary: rustc\ncommit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860\ncommit-date: 2026-04-14\nhost: aarch64-apple-darwin\nrelease: 1.95.0\nLLVM version: 22.1.2\n",
+    "status": "",
+    "runtime_commit": "cacc8550a1a415db77cae05c8b2713b01124a363",
+    "prior_receipt": "batch-refactor.json"
+  },
+  "candidate": {
+    "runtime_commit": "7f091d3d12629308a32b07047de6cf7476988313",
+    "source_file": "evas/rust_core/src/transient_event_acceptance.rs",
+    "source_sha256": "6a0a688dab3c1c358de500d906b209a7905a4acf1ac454bb850eb38eb66b36cd",
+    "kernel_sha256": "fbd5b02551ef272a6bb5968fe6b81e6c1bd2ddf620adba1b122c4a8bceadf163"
+  },
+  "checks": {
+    "rust": {
+      "passed": 218,
+      "ignored": 1,
+      "failed": 0
+    },
+    "new_query_rollback_test": {
+      "baseline_passed": 1,
+      "candidate_passed": 1,
+      "entry": "Controller::accept_relocalized",
+      "obligation": "Preserve prior nonempty outputs, frame, state bounds, calendar, cursor and records on two phase-query failures; retry in same Controller matches clean execution. Fixture has no operators; nonempty-history rollback is covered by existing lifecycle tests."
+    },
+    "python": {
+      "modules": [
+        "test_events",
+        "test_timer",
+        "test_dynamic_timer",
+        "test_dynamic_cross",
+        "test_event_horizons",
+        "test_event_window_sampling",
+        "test_lifecycle_closure",
+        "test_semantic_invariants",
+        "test_event_history_continuation",
+        "test_bounded_event_closure",
+        "test_al4_lifecycle",
+        "test_initialized_event_composition",
+        "test_event_relocalization",
+        "test_history_relocalization",
+        "test_event_or",
+        "test_event_conditions",
+        "test_event_writers",
+        "test_timed_composition",
+        "test_sample_state_precision",
+        "test_timer_history_order",
+        "test_strobe",
+        "test_boundary_portability",
+        "test_input_clamp",
+        "test_timer_ordering"
+      ],
+      "tests": 251,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "kernel_pairs": {
+      "requests": 706,
+      "different": 0,
+      "baseline_rejections": 140,
+      "timeouts": [],
+      "comparator_controls": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    "comparison_rule": "Exact returncode and complete stdout/stderr text on identical inputs for 706 requests; no tolerance or metadata normalization. Separately compare all two captured diagnostic sidecar pairs, excluding only stages.*.nanos. Other requests did not enable sidecar capture. Finite subprocess.run coverage, not universal equivalence.",
+    "spec_b": [
+      {
+        "case": "E1-base",
+        "request_sha256": "ec83d9b3aa51433916894bf96211ea8e353f848a3ff3b4bb3867b560af2759a7",
+        "returncodes": [
+          0,
+          0
+        ],
+        "equal": true,
+        "response_sha256": "cd57e4a36d58e0fdbee38cbab73dcb394c7f27f832b8b523706d1238bf261caa"
+      },
+      {
+        "case": "E1-fine",
+        "request_sha256": "7b1f2411d3fe227ab07bcec813e39304baa7a9542e6a1ce3fb536c09f6482f7c",
+        "returncodes": [
+          0,
+          0
+        ],
+        "equal": true,
+        "response_sha256": "4ee9f320aded971f8291b2ac033ca278696f0ff8f57d9d2be5d555a5c422ca82"
+      },
+      {
+        "case": "E2-base",
+        "request_sha256": "9b69cfcfddad0bcb1565a0739e8bfa08237e9d01401cae5fc1906e2a07d5a5fd",
+        "returncodes": [
+          0,
+          0
+        ],
+        "equal": true,
+        "response_sha256": "8049647f743687775277ba8b0364614f5f3683f6ae071864096a084396b5123c"
+      },
+      {
+        "case": "E2-fine",
+        "request_sha256": "6234dd7f749b30e6a5cd9f330395224dad9b01978061802a5e0bb7337a69f6aa",
+        "returncodes": [
+          0,
+          0
+        ],
+        "equal": true,
+        "response_sha256": "e01fc2c89dbb6d70c18aa99ac91322f5e7fb7b0759f72c980e3690f4d508f715"
+      },
+      {
+        "case": "E3-base",
+        "request_sha256": "d4fd002c796fb569c3024de7b5155aca34872514ac8cbd08f1586da8b1613ae4",
+        "returncodes": [
+          0,
+          0
+        ],
+        "equal": true,
+        "response_sha256": "83cda5654a19cc1479d79407f3ceaf479f21d61d765f327ab630d7d5cc5c6421"
+      },
+      {
+        "case": "E3-fine",
+        "request_sha256": "1281b1eea9a9262c5c69814212e4955d78e0869a07df37f001204c6d9dbf7f80",
+        "returncodes": [
+          0,
+          0
+        ],
+        "equal": true,
+        "response_sha256": "28ebd484ce7995793ef4d2ad94026b2e2f4ee0958b48cbd2c9ac747e3cd8d1f2"
+      },
+      {
+        "case": "E4-base",
+        "request_sha256": "9f5a589546086a7c32bfb09005180dfa53c3daaae2e19355b6acee1eac74f2d5",
+        "returncodes": [
+          0,
+          0
+        ],
+        "equal": true,
+        "response_sha256": "877ef6ad3bbd3cca0f0aa04dfbdee1c8119a2070597b154b71412a2032c79800"
+      },
+      {
+        "case": "E4-fine",
+        "request_sha256": "214fc1d25fd2cd36c6eb3c1be391be4ab0c9e646e7d339913f35dc4609485cf4",
+        "returncodes": [
+          0,
+          0
+        ],
+        "equal": true,
+        "response_sha256": "2a27e3e5ece5ea311b00f1b64f72dca274e2d62f3d4a9eef98ef08a81a31dce8"
+      },
+      {
+        "case": "E5-base",
+        "request_sha256": "114d2801b1d2af6613044d3da210aec4c0e197489d17aafb9c07ad238d56cd6f",
+        "returncodes": [
+          0,
+          0
+        ],
+        "equal": true,
+        "response_sha256": "11e5b22160c184946245bfff31781623ed8f2d7d90cf54412bfe199869fc2131"
+      },
+      {
+        "case": "E5-fine",
+        "request_sha256": "5bb054f9d78daec2132b0e3297a51c17eee018d06335b7de32929f2631f2f19f",
+        "returncodes": [
+          0,
+          0
+        ],
+        "equal": true,
+        "response_sha256": "98a2d543b71105c56d4f0d084adc3824449109f620ac7288eda155a53dfd51ec"
+      },
+      {
+        "case": "E6-base",
+        "request_sha256": "3af0c7f37770af3adbce801f2dabb9b57609ac8c5ec6ceba37ed2254d65f24c1",
+        "returncodes": [
+          0,
+          0
+        ],
+        "equal": true,
+        "response_sha256": "e20ea19349e4dd8a5d5dece30434b0f908336ad3eeb851c5014abbe5d6a75b7f"
+      },
+      {
+        "case": "E6-fine",
+        "request_sha256": "b1fdaa898604b5f78bf0611bddb035002d57df1c9ff1df3b311ada6ae5a1542e",
+        "returncodes": [
+          0,
+          0
+        ],
+        "equal": true,
+        "response_sha256": "8baacd621d287aa4e588bd879a9128cdfd561808ea27f6b922fe423a3765d1fd"
+      }
+    ],
+    "engineering_responses": [
+      {
+        "case": "T1",
+        "equal": {
+          "request.json": true,
+          "stdout.json": true,
+          "stderr.json": true,
+          "normalized.json": true,
+          "check.json": true
+        }
+      },
+      {
+        "case": "T2",
+        "equal": {
+          "request.json": true,
+          "stdout.json": true,
+          "stderr.json": true,
+          "normalized.json": true,
+          "check.json": true
+        }
+      },
+      {
+        "case": "C1",
+        "equal": {
+          "request.json": true,
+          "stdout.json": true,
+          "stderr.json": true,
+          "normalized.json": true,
+          "check.json": true
+        }
+      },
+      {
+        "case": "C2",
+        "equal": {
+          "request.json": true,
+          "stdout.json": true,
+          "stderr.json": true,
+          "normalized.json": true,
+          "check.json": true
+        }
+      },
+      {
+        "case": "M1",
+        "equal": {
+          "request.json": true,
+          "stdout.json": true,
+          "stderr.json": true,
+          "normalized.json": true,
+          "check.json": true
+        }
+      },
+      {
+        "case": "H1",
+        "equal": {
+          "request.json": true,
+          "stdout.json": true,
+          "stderr.json": true,
+          "normalized.json": true,
+          "check.json": true
+        }
+      },
+      {
+        "case": "N1",
+        "equal": {
+          "request.json": true,
+          "stdout.json": true,
+          "stderr.json": true,
+          "normalized.json": true,
+          "check.json": true
+        }
+      }
+    ],
+    "clippy": "pass",
+    "fmt": "pass",
+    "maintenance_tests": 31,
+    "diagnostic_inventory": "regenerated and --check passed",
+    "traceability": "pass",
+    "validation_version": "identity check pass; not numerical validation",
+    "diagnostic_sidecars": {
+      "scope": "Post-run comparison of all two captured sidecar pairs in the frozen 706-request corpus; other requests did not enable sidecar capture. No universal diagnostic-coverage claim.",
+      "excluded_fields": [
+        "stages.*.nanos"
+      ],
+      "controls": {
+        "differences": [
+          {
+            "control": "calls",
+            "detected": true
+          },
+          {
+            "control": "record_order",
+            "detected": true
+          },
+          {
+            "control": "counter",
+            "detected": true
+          },
+          {
+            "control": "signed_zero",
+            "detected": true
+          },
+          {
+            "control": "error",
+            "detected": true
+          },
+          {
+            "control": "new_field",
+            "detected": true
+          }
+        ],
+        "timing_only_equal": true,
+        "identical_equal": true
+      },
+      "records": [
+        {
+          "id": "0645",
+          "test": "test_strobe.StrobeControl.test_manifest_capture_and_saved_bundle_retain_forced_points",
+          "equal_except_stage_nanos": true,
+          "baseline_sha256": "51078aff881ddf954b460fae7a585c9ba9c7338ceb8f052bcbf8bcce04704d91",
+          "candidate_sha256": "ba8d8e989e05a9473466abfe591774e64580b891ae342bcc759c09316c4d4b68",
+          "records": 2
+        },
+        {
+          "id": "0657",
+          "test": "test_boundary_portability.BoundaryPortability.test_or_cross_identity_and_capture_result_bundles_retain_advisories",
+          "equal_except_stage_nanos": true,
+          "baseline_sha256": "35d1aa5ee22dc8d11417418b1186a66d21d1445eafd511e0b27585e5bd14963c",
+          "candidate_sha256": "d6ee2de9313186354617f9705170092d61df217d3e817472282990356784e802",
+          "records": 3
+        }
+      ],
+      "script_sha256": "bdd7afc95a1438fe687b9d39f8538cdf4149f605b70f16259a2e80197e77f220"
+    }
+  },
+  "spectre_reference": {
+    "tool": {
+      "version": "21.1.0.509.isr12",
+      "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f"
+    },
+    "archive": {
+      "run": "reference-v1",
+      "sha256": "0cd9f65a1c29f2ec96516e43241af3690d97f658f455ceea9841fc4d10d7a07e",
+      "relative_location": "reference-v1/collected/spectre/raw.tar.gz",
+      "availability": "local-only"
+    },
+    "raw_binding": {
+      "verified_regular_files": 371,
+      "required_files": 70,
+      "psf_reparsed": 14
+    },
+    "new_remote_calls": 0,
+    "reason": "Unchanged frozen VA, stimuli, settings, checker, raw Spectre records; archive, VA and PSF identity verified. New baseline and candidate EVAS runs on identical frozen requests.",
+    "checker_sha256": "cb65706f3c416499ee88de43f97e3cb3c2160047c3800630654cb97a960997a7",
+    "analyzer_sha256": "45628184ac55c21b941a5ff58212791ae90a6f952e2fa8af366417dff6b862a8",
+    "paired_analyses": [
+      {
+        "id": "T1-base",
+        "comparison_equal": true,
+        "matched": 170,
+        "requested": 173,
+        "missing": 3,
+        "ambiguous": 0,
+        "evas": "P",
+        "spectre": "P"
+      },
+      {
+        "id": "T1-tight",
+        "comparison_equal": true,
+        "matched": 39,
+        "requested": 173,
+        "missing": 134,
+        "ambiguous": 0,
+        "evas": "P",
+        "spectre": "P"
+      },
+      {
+        "id": "T2-base",
+        "comparison_equal": true,
+        "matched": 135,
+        "requested": 139,
+        "missing": 4,
+        "ambiguous": 0,
+        "evas": "P",
+        "spectre": "P"
+      },
+      {
+        "id": "T2-tight",
+        "comparison_equal": true,
+        "matched": 30,
+        "requested": 139,
+        "missing": 109,
+        "ambiguous": 0,
+        "evas": "P",
+        "spectre": "P"
+      },
+      {
+        "id": "C1-base",
+        "comparison_equal": true,
+        "matched": 105,
+        "requested": 106,
+        "missing": 1,
+        "ambiguous": 0,
+        "evas": "P",
+        "spectre": "P"
+      },
+      {
+        "id": "C1-tight",
+        "comparison_equal": true,
+        "matched": 23,
+        "requested": 106,
+        "missing": 83,
+        "ambiguous": 0,
+        "evas": "P",
+        "spectre": "P"
+      },
+      {
+        "id": "C2-base",
+        "comparison_equal": true,
+        "matched": 292,
+        "requested": 295,
+        "missing": 3,
+        "ambiguous": 0,
+        "evas": "P",
+        "spectre": "P"
+      },
+      {
+        "id": "C2-tight",
+        "comparison_equal": true,
+        "matched": 20,
+        "requested": 295,
+        "missing": 275,
+        "ambiguous": 0,
+        "evas": "P",
+        "spectre": "P"
+      },
+      {
+        "id": "M1-base",
+        "comparison_equal": true,
+        "matched": 170,
+        "requested": 173,
+        "missing": 3,
+        "ambiguous": 0,
+        "evas": "P",
+        "spectre": "F"
+      },
+      {
+        "id": "M1-tight",
+        "comparison_equal": true,
+        "matched": 39,
+        "requested": 173,
+        "missing": 134,
+        "ambiguous": 0,
+        "evas": "P",
+        "spectre": "P"
+      },
+      {
+        "id": "H1-base",
+        "comparison_equal": true,
+        "matched": 165,
+        "requested": 167,
+        "missing": 2,
+        "ambiguous": 0,
+        "evas": "P",
+        "spectre": "P"
+      },
+      {
+        "id": "H1-tight",
+        "comparison_equal": true,
+        "matched": 19,
+        "requested": 167,
+        "missing": 148,
+        "ambiguous": 0,
+        "evas": "P",
+        "spectre": "P"
+      },
+      {
+        "id": "N1-base",
+        "comparison_equal": true,
+        "matched": 70,
+        "requested": 73,
+        "missing": 3,
+        "ambiguous": 0,
+        "evas": "P",
+        "spectre": "P"
+      },
+      {
+        "id": "N1-tight",
+        "comparison_equal": true,
+        "matched": 13,
+        "requested": 73,
+        "missing": 60,
+        "ambiguous": 0,
+        "evas": "P",
+        "spectre": "P"
+      }
+    ],
+    "limits": "Exact parsed binary64 time matching only, no interpolation or nearest point. Original missing points, F/I and qualification limits remain. Archived reference reuse is not a new Spectre run, continuous-time proof, or resolution of C1/#79/VCO/M1."
+  },
+  "review": {
+    "spec": "gpt-6-astra, independent fresh context; report local review/astra.md",
+    "standards": "gpt-6.1-sol medium, independent fresh context; report local review/standards.md",
+    "glm": {
+      "review_valid": true,
+      "requested_model": "glm-5.3",
+      "reported_models": [
+        "glm-5.3"
+      ],
+      "num_turns": 1,
+      "reported_cost_usd": 0.52552,
+      "configured_cli_budget_usd": 5.0,
+      "output_token_cap": 32000,
+      "wall_limit_seconds": 900,
+      "response_sha256": "ed83c607a5549d78d5f9df2eb26d8594b76316ad2ebd2d0aa35b598fa1b96721",
+      "input_sha256": "043d1c5d1536861f5d3671965fdb9db3e527c13cd7b3b4673b0df572616451ca"
+    },
+    "glm_evidence_followup": {
+      "review_valid": true,
+      "requested_model": "glm-5.3",
+      "reported_models": [
+        "glm-5.3"
+      ],
+      "num_turns": 1,
+      "reported_cost_usd": 0.408425,
+      "configured_cli_budget_usd": 5.0,
+      "output_token_cap": 32000,
+      "wall_limit_seconds": 900,
+      "response_sha256": "6d5a2112edd534ca56d41b0f53621cd1857791380f141d8a6136f715c7060c38",
+      "input_sha256": "71a26a0acdfa8345a27b24208c586559384d96950b3b884d3f9c0d5c8ae62a34"
+    },
+    "disposition": "No implementation defects found. GLM F1 was resolved by final comparison evidence; GLM F2 was resolved by comparing the two saved diagnostic sidecars with only stages.*.nanos excluded. Fresh Standards reviewer independently executed the post-analysis and verified all eight controls and both raw pairs. Full reports and coordinator assessment are local-only."
+  },
+  "retained_failed_attempts": [
+    {
+      "path": "paired-tests/",
+      "reason": "Early pairing launched before build pipeline completed; terminated and invalidated. Final suite uses the completed candidate build."
+    },
+    {
+      "github_run": 37894550686,
+      "head": "521a4a57",
+      "reason": "Prior checkpoint CI failed stale diagnostic line inventory. This refactor regenerates it; prior test results are not relabeled."
+    }
+  ],
+  "commands": [
+    "cargo test --locked --manifest-path evas/rust_core/Cargo.toml",
+    "cargo build --locked --manifest-path evas/rust_core/Cargo.toml",
+    "python3 -B experiments/backends/event-acceptance/check_batch_refactor.py runs/event-cluster-transaction-20261009/baseline-kernel evas/rust_core/target/debug/evas-kernel runs/event-cluster-transaction-20261009/paired-tests-final --expected-requests 706",
+    "python3 -B runs/event-cluster-transaction-20261009/replay_spec_b.py",
+    "python3 -B experiments/backends/event-alignment/run_evas.py . FROZEN_ASSETS NEW_OUTPUT --kernel SAVED_BINARY",
+    "python3 -B runs/event-cluster-transaction-20261009/compare_reference.py",
+    "python3 -B runs/event-cluster-transaction-20261009/verify_reference.py",
+    "python3 -B runs/event-cluster-transaction-20261009/check_diagnostics.py"
+  ],
+  "artifacts": [
+    {
+      "path": "runs/event-cluster-transaction-20261009/baseline-identity.json",
+      "sha256": "e8a15b2a71de09a367407bc209ffa576c7bbeeddea2dc013f29a11799c5d7da5"
+    },
+    {
+      "path": "runs/event-cluster-transaction-20261009/candidate-identity.json",
+      "sha256": "e780a7e88f14d56636960fba4161fe49d555f11fd0e4f8f543bb22d1dc1cf243"
+    },
+    {
+      "path": "runs/event-cluster-transaction-20261009/baseline-phase-query.log",
+      "sha256": "e18f4872abcd2f095cfab183734bc3352194d41b24488b72c6f840469debfc17"
+    },
+    {
+      "path": "runs/event-cluster-transaction-20261009/rust-tests.log",
+      "sha256": "81c68e0110c33209d2591c4c53ef6fced284280254797d329b1a33a0d7ea3706"
+    },
+    {
+      "path": "runs/event-cluster-transaction-20261009/build.log",
+      "sha256": "81fb030962b525ee8feec32a635bac0bcde3d5d2fc0ea4224a619323ca01d4e1"
+    },
+    {
+      "path": "runs/event-cluster-transaction-20261009/clippy.log",
+      "sha256": "2ad6833b1be08824221255ce6194513477e3bb9ae0279a3019afb1ee5911140d"
+    },
+    {
+      "path": "runs/event-cluster-transaction-20261009/scripts-tests.log",
+      "sha256": "5229a7e4253de4bc3546561156e9226bfa9e9a46bdc4ca2e3c0e0449abec7916"
+    },
+    {
+      "path": "runs/event-cluster-transaction-20261009/paired-tests-final/summary.json",
+      "sha256": "a621747bc0b149af27646ebcd57dcee745eb81879a943d6e737de373a4ea31fb"
+    },
+    {
+      "path": "runs/event-cluster-transaction-20261009/spec-b/summary.json",
+      "sha256": "c7310d896bfff86b797b9917839d7fef3b7d715b1beac26e2a55f22dc30d9447"
+    },
+    {
+      "path": "runs/event-cluster-transaction-20261009/reference-comparison.json",
+      "sha256": "c10bb7357e30c9c2961523cce8d528d662a8b3163dcb8826bb6a3dcdbff9acac"
+    },
+    {
+      "path": "runs/event-cluster-transaction-20261009/reference-archive-binding.json",
+      "sha256": "5d76689cf3909cc9ee656b2d6f90581146d72bbfffe11440805fd6b0fa7f5768"
+    },
+    {
+      "path": "runs/event-cluster-transaction-20261009/reference-normalization-check.json",
+      "sha256": "c02272269f9ee0ad7d1b2e0ca93bbc9da941678f69b909d412845797a8db5870"
+    },
+    {
+      "path": "runs/event-cluster-transaction-20261009/diagnostics-comparison.json",
+      "sha256": "4bcab004da1999a8f70e10e355eb3f948ee7f6f0f2031287823296bfabdd4869"
+    },
+    {
+      "path": "runs/event-cluster-transaction-20261009/check_diagnostics.py",
+      "sha256": "bdd7afc95a1438fe687b9d39f8538cdf4149f605b70f16259a2e80197e77f220"
+    },
+    {
+      "path": "runs/event-cluster-transaction-20261009/review/glm/receipt.json",
+      "sha256": "6b8dffd24ea8a609821efc146efc4d0320dac3b27a94403b83677c07db4c82ef"
+    },
+    {
+      "path": "runs/event-cluster-transaction-20261009/review/glm-evidence/receipt.json",
+      "sha256": "0242ca2dacd95e8ec4aa5efab7778b9bf1d13949825cb913d6061aa04612e507"
+    },
+    {
+      "path": "runs/event-cluster-transaction-20261009/prior-ci-failure.log",
+      "sha256": "21f0434f972da87289cba6d973f12c37e299e6d2b14890ca5d3e3ce42be7b2c4"
+    }
+  ],
+  "availability": "Compact receipt and unchanged reusable comparator are tracked. Raw requests/responses/binaries, Spectre archive and reviews are local-only, visible via project worktrees/spectre-event-alignment. Not a public Spectre waveform release.",
+  "remaining": [
+    "C1 exact root/callback difference",
+    "Original #79 stop=3 event counts",
+    "VCO wrap boundary and broader consumers",
+    "M1 reference eligibility",
+    "Missing exact-time matched observations; no full continuous-time/observation qualification",
+    "PR117 remains unmerged; CI results belong to each exact head"
+  ]
+}
