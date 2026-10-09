@@ -1,5 +1,7 @@
 # 实验与结果
 
+当前 main 的四后端实测见 [support](backends/support/README.md)；支持结论只维护在 [EVAS 总表](../evas/docs/COMPARISON.md)。
+
 这里提供 vaEVAS 的执行工具、精简结果、收据与历史材料入口。
 [首批七类电路工程任务](benchmark_first_batch/README.md)记录 35 个 Harbor 任务的
 实际校准、性能配对证据与 Agentic 试跑入口；[Verilog-A 能力初筛](va_screen/README.md)
@@ -19,7 +21,7 @@
 
 | 想了解什么 | 阅读入口 |
 | --- | --- |
-| 当前支持什么、还有哪些限制？ | [能力表](../evas/docs/CAPABILITIES.md) |
+| 当前支持什么、还有哪些限制？ | [四后端支持范围](../evas/docs/COMPARISON.md) |
 | 当前版本实际验证了什么？ | [当前执行证据](runs/parallel-gap-integration/README.md#当前证据) |
 | 正确答案与精度要求从哪里来？ | [独立验证集](../evas/validation/README.md)、[技术手册](../evas/docs/README.md) |
 | 指定求解时刻是否与 Spectre 有限配对？ | [strobe 对照](backends/strobe/README.md)，保留缺失观测和有效设置差异 |

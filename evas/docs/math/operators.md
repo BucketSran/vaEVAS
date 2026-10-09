@@ -1,7 +1,7 @@
 # 有历史的波形算子
 
 适用范围：当前 IR18 的直接输入基础算子路径。能力 ID 为 TRANSITION、ABSDELAY、SLEW、DYNAMICS、COMPOSE；
-支持与缺口见[能力表](../CAPABILITIES.md)。独立需求和手算答案由 validation 的专项契约维护。
+支持与缺口见[四后端支持范围](../COMPARISON.md)。独立需求和手算答案由 validation 的专项契约维护。
 
 积分反馈、联合复位、高阶滤波及内部节点/算子输入的 `ddt` 由[连续动态章节](continuous.md)维护。
 本页的直接输入限制不自动推广到联合网络。需要历史的算子按实例与调用点保存历史；

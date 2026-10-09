@@ -1,7 +1,7 @@
 # 连续动态联合求解与动态 cross
 
 本页说明当前 IR18 的联合连续网络：电压代数关系、调用点物理状态、误差传播与动态事件。
-能力 ID 为 DYNAMICS、CROSS、COMPOSE、LANG；支持与缺口由[能力表](../CAPABILITIES.md)维护，
+能力 ID 为 DYNAMICS、CROSS、COMPOSE、LANG；支持与缺口由[四后端支持范围](../COMPARISON.md)维护，
 被测版本和结果由[实验入口](../../../experiments/runs/parallel-gap-integration/README.md#当前证据)维护。
 直接输入算子的解析路径见 [OPERATORS](operators.md)，事件语句规则见 [EVENTS](events.md)。
 

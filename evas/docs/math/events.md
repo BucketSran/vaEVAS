@@ -1,7 +1,7 @@
 # 事件、时间推进与历史
 
 适用范围：IR18 的 `cross`、固定/保持状态 `timer`、受限事件体条件、事件 OR 与多事件写者。
-能力 ID 为 LANG、CROSS、TIMER、EVENT-ORDER、COMPOSE；支持与缺口见[能力表](../CAPABILITIES.md)。
+能力 ID 为 LANG、CROSS、TIMER、EVENT-ORDER、COMPOSE；支持与缺口见[四后端支持范围](../COMPARISON.md)。
 
 本页维护定位、顺序赋值和同刻关系。历史的复位、观察及未来传播见
 [共同生命周期](continuous.md#shared-lifecycle-closure)。
@@ -500,7 +500,7 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 完整目标契约与剩余组合边界见[验证契约](../../validation/EVENT_CONDITIONS_CONTRACT.md)。
 
 状态反馈谓词、通用非线性谓词及普通 analog 条件与动态算子的组合仍超出本页范围。
-受限 idt reset 见[算子手册](operators.md#idt)，当前总体缺口见[能力表](../CAPABILITIES.md#能力矩阵)。
+受限 idt reset 见[算子手册](operators.md#idt)，当前总体缺口见[四后端支持范围](../COMPARISON.md#支持矩阵)。
 区间传播会增加运算和存储，丢失相关性时可能保守拒绝；这条路径没有自动细化步长或高精度回退。
 
 ## timer 与同刻兼容性

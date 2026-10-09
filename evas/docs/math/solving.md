@@ -4,7 +4,7 @@
 有历史的联合积分/滤波/DAE 由[连续动态手册](continuous.md)维护。
 事件定位与状态的额外认证见[事件手册](events.md)。
 本章分别说明工作点收敛、瞬态根盒和稀疏求解；三者提供的保证不同。
-实现、证据和交付状态见[能力总表](../CAPABILITIES.md)，能力 ID 为 LIN、NONLINEAR、SPARSE、PERFORMANCE。
+实现、证据和交付状态见[四后端支持范围](../COMPARISON.md)，能力 ID 为 LIN、NONLINEAR、SPARSE、PERFORMANCE。
 
 ## 数学对象
 

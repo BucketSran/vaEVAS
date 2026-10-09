@@ -46,11 +46,12 @@
 
 | 目的 | 入口 |
 | --- | --- |
-| 查看新论文集的特性映射、有限首批和独立条件卡 | [论文比较设计](paper/README.md)，A0设计材料，尚无新的四后端成绩 |
+| 查看新论文集的特性映射、有限首批和独立条件卡 | [论文比较设计](paper/README.md)，设计与冻结条件；[当前 main 实测](../../experiments/backends/support/README.md)保留 I/X |
+| 检查支持表的 15 个专项探针 | [固定模型、判据与校准](support/README.md)，有限开发观测 |
 | 查看模型源码与条件对应关系 | [共同 DUT](cases/README.md) |
 | 理解原条件的刺激、答案与错误对照 | [起步案例卡](CASE_CARDS.md)、[补充案例卡](NEXT_CASE_CARDS.md) |
 | 理解误差、事件历史与正式资格 | [范围与判定协议](PROTOCOL.md)、[观察资格协议](METHOD_QUALIFICATION.md) |
-| 查看当前实现的组合边界 | [能力表](../docs/CAPABILITIES.md)、[连续动态手册](../docs/math/continuous.md) |
+| 查看当前实现的组合边界 | [四后端支持范围](../docs/COMPARISON.md)、[连续动态手册](../docs/math/continuous.md) |
 | 找到执行结果、版本与原始材料说明 | [实验目录](../../experiments/README.md) |
 | 运行 ngspice 共同子集对照 | [差分验证](differential/README.md) |
 | 检查两类事件路径重构是否保持行为 | [共同事件验收](event_acceptance/README.md)：六模型、十二配置，原数学失败与观察限制单列 |
@@ -194,6 +195,6 @@ PR26 的 7 个拒绝条件已在 IR15 的限定范围内补齐，并由上面的
 | `v7-nonlinear-0.5`、`v7-nonlinear-2.0` | 2 | [无状态、无事件、无历史多项式瞬态](NONLINEAR_TRANSIENT_CONTRACT.md) |
 
 原 31 条件已没有未达标项；更广的 DAE 与事件/复位组合、事件后历史轨迹重定位及验证资格缺口仍见
-[能力表](../docs/CAPABILITIES.md#能力矩阵)，不要从开发矩阵满分推导完整仿真器覆盖。
+[四后端支持范围](../docs/COMPARISON.md#支持矩阵)，不要从开发矩阵满分推导完整仿真器覆盖。
 
 </details>

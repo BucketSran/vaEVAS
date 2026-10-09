@@ -195,7 +195,7 @@ what the observations cannot establish. Keep curated summaries according to
 [experiment ownership](../../../experiments/README.md), without tracking raw
 runs or machine-specific configuration.
 Update affected entries in the [evidence index](../../../evas/docs/development/capability-evidence.md)
-and support conclusions in the [capability overview](../../../evas/docs/CAPABILITIES.md)
+and support conclusions in the [support matrix](../../../evas/docs/COMPARISON.md)
 separately from review/release status. Backend differences such as
 same-time event reads stay visible; do not label them LRM violations without a
 supporting contract or silently rewrite the expected answer to match a backend.

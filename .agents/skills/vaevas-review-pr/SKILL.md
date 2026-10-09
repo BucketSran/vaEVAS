@@ -49,8 +49,8 @@ and documented repository rules are respected, and whether independent evidence
 supports the claims. A pass in one question does not answer the others. Treat code
 smells as hypotheses requiring concrete impact, not automatic blockers.
 
-For EVAS behavior or support/evidence changes, resolve affected
-[capability rows](../../../evas/docs/CAPABILITIES.md) and
+For EVAS behavior or support/evidence changes, resolve affected rows in the
+[support matrix](../../../evas/docs/COMPARISON.md) and
 [handbook explanation](../../../evas/docs/README.md#feature-documentation-contract).
 Check the three separate claims: what the reviewed commit implements, what the
 identified evidence demonstrates, and whether the change is merged/released.
