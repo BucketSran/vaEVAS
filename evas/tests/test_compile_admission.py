@@ -1,4 +1,6 @@
 """Public compilation admission, independently specified by VAMS 2.4 §2.6."""
+GUARDS = ['LANG']
+
 import unittest
 from evas import CompileError, Instance, compile_sources
 
