@@ -25,11 +25,21 @@ def file_hash(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def acceptance_indices(ladder):
+    ids=[p['id'] for p in ladder['levels']]
+    pair=ladder.get('acceptance_pair')
+    if (not isinstance(pair,list) or len(pair)!=2 or any(p not in ids for p in pair)
+            or ids.index(pair[0]) >= ids.index(pair[1])):
+        raise ValueError('acceptance_pair must declare two distinct increasing frozen levels')
+    return [ids.index(p) for p in pair]
+
+
 def freeze(case, model, ladder, contract, initialization):
     if ladder.get('method') != 'traponly':
         raise ValueError('maintained deck builder admits only declared traponly method')
     if ladder['version'] != 1 or len(ladder['levels']) < 3:
         raise ValueError('version 1 requires at least three predeclared levels')
+    acceptance_indices(ladder)
     ids = [ident(p['id']) for p in ladder['levels']]
     if len(set(ids)) != len(ids):
         raise ValueError('duplicate profile id')
@@ -58,6 +68,7 @@ def freeze(case, model, ladder, contract, initialization):
 
 
 def analyze(frozen, records):
+    chosen = acceptance_indices(frozen['ladder'])
     expected = [p['id'] for p in frozen['ladder']['levels']]
     if len(records) != len(expected) or [r['profile_id'] for r in records] != expected:
         raise ValueError('every frozen profile must appear once, in declared order')
@@ -80,25 +91,27 @@ def analyze(frozen, records):
     traces = [dict(rows=[row for row in r.get('rows',[]) if row['time'] in required]) for r in records]
     pairs = [dict(left=expected[i],right=expected[i+1],comparison=compare(contract,traces[i],traces[i+1]))
              for i in range(len(traces)-1)]
+    acceptance = dict(left=expected[chosen[0]],right=expected[chosen[1]],
+                      comparison=compare(contract,traces[chosen[0]],traces[chosen[1]]))
     counts = {n:[] for n in frozen['event_count_nodes']}
     unstable = False
     for n, samples in counts.items():
         for trace in traces:
             samples.append({r['time']:r['voltages'][n] for r in trace['rows']
                             if n in r['voltages'] and finite(r['voltages'][n])})
-        for left,right in zip(samples,samples[1:]):
-            unstable |= any(left[t] != right[t] for t in left.keys() & right.keys())
-    statuses = [p['comparison']['finite_pair_status'] for p in pairs]
+        left,right = samples[chosen[0]],samples[chosen[1]]
+        unstable |= any(left[t] != right[t] for t in left.keys() & right.keys())
+    statuses = [acceptance['comparison']['finite_pair_status']]
     classification = ('event_count_unstable' if unstable else
                       'not_converged' if 'F' in statuses else
-                      'incomplete' if gaps or 'I' in statuses else 'finite_stable')
+                      'incomplete' if gaps or 'I' in statuses else 'finite_reference_stability')
     return dict(classification=classification,formal_qualification='I',
                 event_count_status='unstable' if unstable else 'unknown' if not counts else
                     'incomplete' if any(set(sample)!=required for samples in counts.values() for sample in samples)
                     or any(p['comparison']['duplicate_times'][engine] for p in pairs for engine in ['evas','spectre'])
                     else 'finite_stable',
                 analysis_sha256=file_hash(Path(__file__)),native_observation_audits=native_audits,
-                frozen_sha256=digest(frozen),profiles=records,pairs=pairs,
+                frozen_sha256=digest(frozen),profiles=records,pairs=pairs,acceptance_pair=acceptance,
                 event_count_samples=counts,identity_gaps=gaps,
                 limits=frozen['limits'])
 

@@ -12,7 +12,7 @@ class PrecisionProfileTests(unittest.TestCase):
                 'voltage_nodes':['y','n'], 'criteria':{'expected_final_counts':{'n':1}},
                 'module':'probe','ports':['y','n','r'],'ground_port':'r',
                 'settings':{'strobeoutput':'all','save_all_named_outputs':True}}
-        ladder = {'version':1,'id':'calibration','method':'traponly','levels':[
+        ladder = {'version':1,'id':'calibration','method':'traponly','acceptance_pair':['tight','tighter'],'levels':[
             {'id':name,'reltol':tol,'vabstol':tol/100,'iabstol':tol/10000,'maxstep':.1}
             for name,tol in [('base',1e-8),('tight',1e-9),('tighter',1e-10)]]}
         contract = {'stop':1.,'required_times':[0.,1.], 'budgets_v':{'y':1e-6,'n':0.},'phase_nodes':['n']}
@@ -28,7 +28,7 @@ class PrecisionProfileTests(unittest.TestCase):
     def test_finite_stability_retains_every_level_and_does_not_claim_proof(self):
         frozen, records = self.fixture()
         result = precision.analyze(frozen,records)
-        self.assertEqual(result['classification'],'finite_stable')
+        self.assertEqual(result['classification'],'finite_reference_stability')
         self.assertEqual(len(result['profiles']),3)
         self.assertEqual(result['formal_qualification'],'I')
 
@@ -64,10 +64,12 @@ class PrecisionProfileTests(unittest.TestCase):
         records[1]['settings_status']='I'
         self.assertEqual(precision.analyze(frozen,records)['classification'],'incomplete')
 
-    def test_all_passes_are_needed_without_opportunistic_last_pair_selection(self):
+    def test_predeclared_tail_acceptance_retains_baseline_failure(self):
         frozen, records = self.fixture()
         records[0]['rows'][1]['voltages']['y']=1.00001
-        self.assertEqual(precision.analyze(frozen,records)['classification'],'not_converged')
+        result=precision.analyze(frozen,records)
+        self.assertEqual(result['classification'],'finite_reference_stability')
+        self.assertEqual(result['pairs'][0]['comparison']['finite_pair_status'],'F')
 
     def test_actual_readback_and_byte_identity_are_required(self):
         frozen, _ = self.fixture()
@@ -97,6 +99,27 @@ class PrecisionProfileTests(unittest.TestCase):
     def test_invalid_native_observation_is_not_hidden_by_fixed_grid_filter(self):
         frozen, records = self.fixture()
         records[1]['rows'].append({'time':2.,'voltages':{'y':1.,'n':1.}})
+        self.assertEqual(precision.analyze(frozen,records)['classification'],'incomplete')
+
+    def test_target_failure_is_not_hidden_by_baseline_or_tail_selection(self):
+        frozen, records = self.fixture()
+        records[1]['rows'][1]['voltages']['y']=1.00001
+        self.assertEqual(precision.analyze(frozen,records)['classification'],'not_converged')
+
+    def test_malformed_acceptance_pair_is_rejected_before_preparation(self):
+        frozen, records = self.fixture()
+        for pair in [None,[],['tight'],['tight','tight'],['tighter','tight'],['tight','unknown']]:
+            modified=copy.deepcopy(frozen)
+            modified['ladder']['acceptance_pair']=pair
+            for record in records: record['frozen_sha256']=precision.digest(modified)
+            with self.assertRaises(ValueError): precision.analyze(modified,records)
+        modified=copy.deepcopy(frozen)
+        del modified['ladder']['acceptance_pair']
+        with self.assertRaises(ValueError): precision.analyze(modified,records)
+
+    def test_missing_confirmation_cannot_be_selected_away(self):
+        frozen, records = self.fixture()
+        records[2]['rows'].pop()
         self.assertEqual(precision.analyze(frozen,records)['classification'],'incomplete')
 
 

@@ -3,8 +3,30 @@
   "id": "event-alignment-traponly-tolerance-ladder-v1",
   "method": "traponly",
   "levels": [
-    {"id": "baseline", "reltol": 1e-9, "vabstol": 1e-11, "iabstol": 1e-15, "maxstep": 1.25e-7},
-    {"id": "target", "reltol": 1e-10, "vabstol": 1e-12, "iabstol": 1e-16, "maxstep": 1.25e-7},
-    {"id": "confirmation", "reltol": 1e-11, "vabstol": 1e-13, "iabstol": 1e-17, "maxstep": 1.25e-7}
+    {
+      "id": "baseline",
+      "reltol": 1e-09,
+      "vabstol": 1e-11,
+      "iabstol": 1e-15,
+      "maxstep": 1.25e-07
+    },
+    {
+      "id": "target",
+      "reltol": 1e-10,
+      "vabstol": 1e-12,
+      "iabstol": 1e-16,
+      "maxstep": 1.25e-07
+    },
+    {
+      "id": "confirmation",
+      "reltol": 1e-11,
+      "vabstol": 1e-13,
+      "iabstol": 1e-17,
+      "maxstep": 1.25e-07
+    }
+  ],
+  "acceptance_pair": [
+    "target",
+    "confirmation"
   ]
 }

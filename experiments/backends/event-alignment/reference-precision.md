@@ -4,7 +4,7 @@
 `prepare_spectre.deck`、`normalize_psf.normalize`、`compare.compare` 和
 `paper/settings_readback.spectre`，继续沿用原模型、观察和外部预算。
 
-参考精度的有限判据是冻结网格上的相邻档位稳定性。每个档位均保留，不能执行后
+参考精度的有限判据是冻结网格上预先声明的 target/confirmation 配对稳定性。每个档位均保留，不能执行后
 删去失败档位或改预算。它不证明参考真值，也不替代原独立数学 checker 或
 EVAS/Spectre 直接比较。`reltol` 是求解器控制，不是输出误差上界。
 连续时间资格始终为 I；这里没有新加通用证明门槛。
@@ -14,7 +14,8 @@ EVAS/Spectre 直接比较。`reltol` 是求解器控制，不是输出误差上�
 输入是已有 `case.json` 和 `dut.va`，以及三个显式文件：
 
 - ladder：版本、标识、`method=traponly` 和至少三个有序档位，每档声明
-  reltol/vabstol/iabstol/maxstep。给定的 `precision-ladder-v1.json` 是原事件模型
+  reltol/vabstol/iabstol/maxstep。必填 `acceptance_pair` 在执行前指定两个不同且
+  次序递增的档位，例如 `["target","confirmation"]`；缺失、重复、逆序或未知档位拒绝。给定的 `precision-ladder-v1.json` 是原事件模型
   125 ns 步长的单因素容差计划，不自动适用于其他模型。选择不同步长、方法或
   档位须执行前另存计划，不覆盖旧计划。
 - contract：沿用原观察和预算，字段为 `stop`、`required_times`、`budgets_v`，
@@ -70,13 +71,18 @@ python3 -B experiments/backends/event-alignment/precision_profile.py analyze \
 记录顺序必须与冻结档位完全相同。分析比较冻结 required_times 的精确 parsed
 binary64 时刻；逐档原生行留在报告中，但网格外 native 行不冒充 required
 观察。重复时刻不选相位。原计数通道取自 case 的
-`criteria.expected_final_counts`；比较同一要求时刻的计数值。原生行数不当作
+`criteria.expected_final_counts`；验收配对比较同一要求时刻的计数值，全部早期档位计数观察也保留。原生行数不当作
 事件数，没有计数通道时 event_count_status 为 unknown。
 
 - `event_count_unstable`：已有同刻计数观察变化；即使其他点缺失也保留变化。
-- `not_converged`：已有相邻档位差异超过原电压预算。
+- `not_converged`：预先声明的验收配对差异超过原电压预算。
 - `incomplete`：没有已知越界，但档位、设置、版本或要求观察不足。
-- `finite_stable`：全部相邻档位在原有限观察预算内，并具备实际设置/版本覆盖。
+- `finite_reference_stability`：预先声明的验收配对在原有限观察预算内，且
+  全计划的身份、实际设置、版本和要求观察覆盖完整。它不表示模型正确。
+
+全部相邻档位比较仍保留。baseline→target 的 F 不会因 target→confirmation
+稳定而消失，但也不强制 baseline 差异阻止预先声明的 tail 稳定判定。原独立
+数学失败继续由原 checker 保留，不由这个稳定判定升级。
 
 上述状态只表示当前固定计划结果。不能在看见结果后选择通过的一对子计划，
 也不能将 reference 稳定直接称为数学准确或与 EVAS 对齐。
