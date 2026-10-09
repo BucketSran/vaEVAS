@@ -2,7 +2,7 @@
 import copy
 from fractions import Fraction as F
 import unittest
-from actual_observation import adapt,derive,canonical_sha,upper,input_curve_bound,sha,execution_identity
+from actual_observation import adapt,derive,canonical_sha,upper,input_curve_bound,sha,execution_identity,production_dependencies,producer_identity
 
 
 class ActualEvidence(unittest.TestCase):
@@ -118,6 +118,11 @@ class ActualEvidence(unittest.TestCase):
             self.assertIn('native_counters',report['missing_roles'])
             self.assertEqual(before,{p.name:p.read_bytes() for p in work.iterdir()})
             self.assertTrue((output/'evidence.json').exists())
+            snapshot=Path(report['analysis_adapter']['path'])
+            self.assertEqual(snapshot.read_bytes(),Path(__file__).with_name('actual_observation.py').read_bytes())
+            self.assertEqual(sha(snapshot),report['analysis_adapter']['sha256'])
+            snapshot.write_bytes(snapshot.read_bytes()+b'\n# changed after analysis\n')
+            self.assertNotEqual(sha(snapshot),report['analysis_adapter']['sha256'])
             with self.assertRaises(ValueError):adapt(core,'fixture',work,source_review,output)
 
     def test_full_existing_receipt_chain_and_boundary_packet_fail_closed_on_drift(self):
@@ -133,8 +138,7 @@ class ActualEvidence(unittest.TestCase):
             for name,value in [('request.json',{**self.request,'requested_times':'times.json'}),('times.json',[0,1e-6]),('condition.json',self.card),
                     ('raw-response.json',self.response),('observation.json',self.previous),('program.json',{'nodes':['u','count'],'states':[],'events':[],'operators':[]}),
                     ('worker-result.json',{'status':'waveform_available'}),('breakpoint_requests.json',{'records':[{'time_s':1e-6,'request_id':'fixture:real-id'}]})]:write(work/name,value)
-            sources={name:sha(Path(__file__).resolve().parents[3]/name) for name in
-                     ('evas/rust_core/src/transient.rs','evas/rust_core/src/transient_event_acceptance.rs','evas/rust_core/src/implicit_dynamics.rs','evas/rust_core/src/observation.rs','evas/rust_core/src/exact_source.rs','evas/rust_core/Cargo.lock')}
+            sources=production_dependencies(Path(__file__).resolve().parents[3])
             write(sources_path,sources)
             stage={'status':'completed','returncode':0,'timeout':False,'cleanup':{'complete':True},'argv':['kernel']}
             build={'stage':stage,'kernel_sha256':'synthetic-kernel','source_revision':'synthetic-revision','source_manifest_sha256':sha(sources_path),
@@ -156,6 +160,25 @@ class ActualEvidence(unittest.TestCase):
             write(build_path,{**build,'kernel_sha256':'synthetic-kernel'})
             (work/'raw-response.json').write_text('{}')
             with self.assertRaisesRegex(ValueError,'manifest identity'):execution_identity(lane,work,self.card,**{k:v for k,v in options.items() if k!='lane'})
+
+    def test_production_closure_cannot_be_omitted_or_changed_in_manifest(self):
+        from pathlib import Path
+        repo=Path(__file__).resolve().parents[3]
+        sources=production_dependencies(repo)
+        self.assertTrue(producer_identity(sources,repo)['verified'])
+        for name in ('evas/rust_core/src/analog.rs','evas/rust_core/src/settlement_bounds.rs',
+                     'evas/rust_core/src/nonlinear_dynamics.rs','evas/src/evas/runtime.py',
+                     'evas/src/evas/protocol.py','experiments/backends/paper/runner.py'):
+            missing=dict(sources);missing.pop(name)
+            result=producer_identity(missing,repo)
+            self.assertFalse(result['verified']);self.assertIn(name,result['missing_dependencies'])
+            changed=dict(sources);changed[name]='0'*64
+            result=producer_identity(changed,repo)
+            self.assertFalse(result['verified']);self.assertIn(name,result['changed_dependencies'])
+        extra=dict(sources);extra['evas/rust_core/src/unreviewed.rs']='0'*64
+        self.assertFalse(producer_identity(extra,repo)['verified'])
+        unrelated=dict(sources);unrelated['evas/docs/unrelated.md']='0'*64
+        self.assertTrue(producer_identity(unrelated,repo)['verified'])
 
     def test_outward_conversion_never_shrinks_rational_bound(self):
         for value in (F(1,10),F(1,10**400),F(0),F(1,3)):

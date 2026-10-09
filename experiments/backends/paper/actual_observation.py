@@ -51,6 +51,49 @@ def input_curve_bound(card,request):
     return max((b['bound_V'] for b in maxima.values()),default=0),{'inputs':maxima,'domain_s':[0,request['stop']],'reference_endpoint_semantics':'oracle.pwl endpoint hold; no actual-source extension'}
 
 
+WORKER_DEPENDENCIES=tuple('experiments/backends/paper/'+name+'.py' for name in
+                          ('runner','inputs','process','settings_readback','observations'))+(
+    'experiments/archive/dvs2-starter-pilot/analyze.py','experiments/archive/dvs2-starter-pilot/suite.py')
+BUILD_METADATA=('evas/pyproject.toml','evas/rust_core/Cargo.toml','evas/rust_core/Cargo.lock',
+                'evas/rust_core/ir/Cargo.toml','evas/rust_core/ir/Cargo.lock',
+                'evas/rust_core/build.rs','evas/rust_core/ir/build.rs',
+                'evas/rust_core/rust-toolchain','evas/rust_core/rust-toolchain.toml',
+                'evas/rust_core/.cargo/config','evas/rust_core/.cargo/config.toml',
+                'evas/rust_core/ir/.cargo/config','evas/rust_core/ir/.cargo/config.toml')
+
+
+def production_dependency(name):
+    """Production scopes are defined independently of supplied manifest entries."""
+    return (name in WORKER_DEPENDENCIES or name in BUILD_METADATA
+            or name.startswith('evas/src/') and name.endswith('.py')
+            or any(name.startswith(prefix) for prefix in ('evas/rust_core/src/','evas/rust_core/ir/src/')) and name.endswith('.rs'))
+
+
+def production_dependencies(repo):
+    """Enumerate the complete current production closure from the fixed audit repo."""
+    repo=Path(repo)
+    expected=set(WORKER_DEPENDENCIES)
+    for directory,suffix in (('evas/src','.py'),('evas/rust_core/src','.rs'),('evas/rust_core/ir/src','.rs')):
+        found={str(path.relative_to(repo)) for path in (repo/directory).rglob('*'+suffix) if path.is_file()}
+        if not found:raise ValueError('audited production source directory missing: '+directory)
+        expected.update(found)
+    expected.update(name for name in BUILD_METADATA if (repo/name).is_file())
+    mandatory=('evas/pyproject.toml','evas/rust_core/Cargo.toml','evas/rust_core/Cargo.lock','evas/rust_core/ir/Cargo.toml')
+    if any(not (repo/name).is_file() for name in (*WORKER_DEPENDENCIES,*mandatory)):
+        raise ValueError('audited production dependency missing')
+    return {name:sha(repo/name) for name in sorted(expected)}
+
+
+def producer_identity(sources,repo):
+    expected=production_dependencies(repo)
+    supplied={name for name in sources if production_dependency(name)}
+    missing=sorted(set(expected)-supplied);extra=sorted(supplied-set(expected))
+    changed=sorted(name for name,digest in expected.items() if name in supplied and sources[name]!=digest)
+    return {'verified':not (missing or extra or changed),'required_source_count':len(expected),
+            'missing_dependencies':missing,'unexpected_dependencies':extra,'changed_dependencies':changed,
+            'audited_production_sources':expected}
+
+
 def execution_identity(lane,work,card,*,build_record=None,source_manifest=None,tool_profile=None,producer_repo=None):
     """Verify existing receipts; never create a source/build/execution receipt."""
     if any(p is None for p in (lane,build_record,source_manifest,tool_profile)):
@@ -99,15 +142,14 @@ def execution_identity(lane,work,card,*,build_record=None,source_manifest=None,t
     if not all(compiler.get(name,{}).get('actual_binary_sha256') for name in ('cargo','rustc')):
         raise ValueError('missing actual compiler identity')
     repo=Path(producer_repo) if producer_repo else Path(__file__).resolve().parents[3]
-    audited=('evas/rust_core/src/transient.rs','evas/rust_core/src/transient_event_acceptance.rs',
-             'evas/rust_core/src/implicit_dynamics.rs','evas/rust_core/src/observation.rs','evas/rust_core/src/exact_source.rs')
-    compatible=all(sources.get(name)==sha(repo/name) for name in audited)
+    producer=producer_identity(sources,repo)
+    compatible=producer['verified']
     return {'verified':compatible,'basis':'actual source/build/kernel/profile/launch/raw identity chain; native producer files match audited implementation' if compatible else 'producer source differs from audited implementation',
             'source_revision':build['source_revision'],'kernel_sha256':tool['kernel_sha256'],
             'stateless_program':all(program.get(key)==[] for key in ('states','events','operators')),
             'artifacts':{name:bind(path) for name,path in {'lane_manifest':lane/'FILE_MANIFEST.json','tool':lane/'TOOL_IDENTITY.json',
                 'final_record':lane/('final-record-'+card['id']+'.json'),'build_record':build_record,'source_manifest':source_manifest,'tool_profile':tool_profile}.items()},
-            'audited_producer_sources':{name:sources.get(name) for name in audited}}
+            'producer_identity':producer}
 
 
 def derive(card, request, requested_times, response, previous, review, *, core_sha, source_sha, breakpoints=None, execution=None):
@@ -272,6 +314,9 @@ def adapt(core, condition, work, source_review, output, *, lane=None, build_reco
     report.update(schema_version=1,condition=condition,backend='evas',identities=identities,
                   claim='new actual-evidence derivation; preserves previous raw/normalized rows and leaves missing qualifications unknown')
     output.mkdir(parents=True)
+    snapshot=output/'analysis_adapter.py'
+    snapshot.write_bytes(Path(__file__).read_bytes())
+    report['analysis_adapter']={'path':str(snapshot.resolve()),'sha256':sha(snapshot)}
     report_path=output/'evidence.json';report_path.write_text(json.dumps(report,separators=(',',':'),allow_nan=False)+'\n')
     certificates={role:{'method':fact['basis'],'artifact_path':str(report_path.resolve()),'sha256':sha(report_path)}
                   for role,fact in report['roles'].items() if fact['status']=='established'}

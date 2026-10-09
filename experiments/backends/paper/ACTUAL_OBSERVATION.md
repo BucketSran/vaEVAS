@@ -15,7 +15,11 @@ python3 -B experiments/backends/paper/actual_observation.py \
 ```
 
 The new output directory must be outside the actual work directory. Both new
-files use compact JSON. `evidence.json` binds every consumed artifact; hashes
+files use compact JSON. The executing adapter copies its exact bytes to `analysis_adapter.py` in the
+new packet directory. `evidence.analysis_adapter` records that retained absolute
+path and SHA256; downstream packet adapter identity uses this same field. A
+later checkout update does not invalidate old analysis, while changing the
+retained snapshot fails its recorded hash. `evidence.json` binds every consumed artifact; hashes
 bind bytes and do not independently prove mathematical or execution semantics.
 `observation.json` calls the unchanged qualifier with precisely the old rows.
 
@@ -33,8 +37,13 @@ identity and worker completion. It binds BUILD's successful compiler stage,
 actual compiler hashes, source revision, source manifest and Cargo.lock to the
 kernel hash in TOOL_IDENTITY and the profile's build_record_sha256. The profile
 must also match the actual tool profile identity and kernel path/hash. The source
-manifest's five native producer files must equal the audited producer repository
-(the adapter's repository by default). Missing chain inputs keep native unknown;
+manifest's full production closure must equal the fixed audited producer repository
+(the adapter's repository by default). The required file set is enumerated from
+that repository independently of manifest entries: all evas/src Python files,
+Rust src and IR src modules, Cargo/build metadata, plus the actual runner, inputs,
+process, settings, observations and native-reader Python entries. Both set and
+hashes are checked; missing, changed or extra production dependencies prevent
+verification. Unrelated docs, tests, benches and fuzz projects are excluded. Missing chain inputs keep native unknown;
 stale or conflicting supplied identities fail closed. A kernel's absent
 self-reported build revision is not repaired: the separate actual build receipt
 supplies the source/build/binary chain.
