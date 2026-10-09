@@ -30,6 +30,41 @@ def _bounds(value):
     return _vector(value, 2) and value[0] <= value[1]
 
 
+def _observation_evidence(response, solutions, output_times):
+    if 'observation_evidence' not in response:
+        return  # Old kernels remain supported; missing evidence stays missing.
+    evidence=response['observation_evidence']
+    if (output_times is None or not isinstance(evidence,dict)
+            or type(evidence.get('schema_version')) is not int or evidence['schema_version']!=1
+            or evidence.get('nodes')!=response['nodes']):
+        _invalid('invalid observation evidence identity')
+    controls=evidence.get('effective_controls')
+    if (not isinstance(controls,dict)
+            or any(not _finite(controls.get(k)) or controls[k]<=0 for k in ('absolute_V','stop_s','max_step_s'))
+            or not _finite(controls.get('relative')) or controls['relative']<0
+            or type(controls.get('max_step_applied')) is not bool
+            or output_times and output_times[-1]>controls['stop_s']):
+        _invalid('invalid observation effective controls')
+    origins=evidence.get('sample_origins')
+    kinds={'stateless_working_point','accepted_controller_frame','certified_causal_frame','implicit_history_evaluation','unknown'}
+    if (not isinstance(origins,list) or len(origins)!=len(solutions)
+            or any(not isinstance(origin,str) or origin not in kinds for origin in origins)):
+        _invalid('invalid observation sample origins')
+    if ('initial_settled' in evidence and evidence['initial_settled'] is not None
+            and (type(evidence['initial_settled']) is not bool or not output_times or output_times[0]!=0)):
+        _invalid('invalid initial settlement evidence')
+    bounds=evidence.get('voltage_bounds_V')
+    if not isinstance(bounds,list) or len(bounds)!=len(solutions):
+        _invalid('invalid observation voltage bounds rows')
+    for row,solution in zip(bounds,solutions):
+        if row is None:
+            continue
+        if (not isinstance(row,list) or len(row)!=len(response['nodes'])
+                or any(not _bounds(interval) or not interval[0]<=value<=interval[1]
+                       for interval,value in zip(row,solution['voltages']))):
+            _invalid('invalid observation voltage bounds or representative containment')
+
+
 def validate_response(response, program, count, output_times=None):
     if (not isinstance(response, dict) or type(response.get('schema_version')) is not int
             or response['schema_version'] != SCHEMA_VERSION
@@ -47,6 +82,7 @@ def validate_response(response, program, count, output_times=None):
             _invalid('kernel solution must contain finite voltages and residuals with the requested shape')
         if any(not _finite(row[key]) or row[key] < 0 for key in diagnostics if key in row):
             _invalid('kernel residual/correction diagnostics must be finite and nonnegative')
+    _observation_evidence(response, solutions, output_times)
     if output_times is None:
         if 'transient' in response:
             _invalid('static response unexpectedly contains a transient trace')

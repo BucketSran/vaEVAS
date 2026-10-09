@@ -14,3 +14,10 @@ The solver, operators, intervals and transient controller remain in
 Splitting those modules is a separate design change, not a consequence of this
 crate boundary. Build measurements and the decision are described in
 [performance measurements](../../../experiments/performance/README.md).
+
+Transient responses may include optional `observation_evidence` schema 1,
+with effective controls, row provenance and node-bound interval columns.
+Its version is independent of request IR v18; old JSON responses remain valid.
+Internal Solution certificates are not serialized as duplicate fields. See the
+[observation contract](../../docs/observation-evidence.md) for indexing, missing
+evidence, conservative hulls and qualification limits.

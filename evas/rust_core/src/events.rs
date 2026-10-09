@@ -490,7 +490,8 @@ impl EventModel {
         Ok(model)
     }
 
-    pub(crate) fn certify(
+    /// Same acceptance certificate, retaining its already-computed node intervals.
+    pub(crate) fn certify_observation(
         &self,
         selection: &Selection,
         inputs: &[I],
@@ -498,9 +499,8 @@ impl EventModel {
         operators: &[I],
         voltages: &[f64],
         states: &[f64],
-    ) -> Result<Vec<I>, Error> {
+    ) -> Result<(Vec<I>, Vec<I>), Error> {
         let _timing = crate::diagnostics::span("event.certificate");
-
         let mut cache = self.certificate.borrow_mut();
         if !cache.as_ref().is_some_and(|(path, _)| path == selection) {
             *cache = Some((selection.clone(), Bounds::new(self, selection)?));
@@ -509,7 +509,7 @@ impl EventModel {
             .as_ref()
             .unwrap()
             .1
-            .check(self, inputs, before, operators, voltages, states)
+            .check_observation(self, inputs, before, operators, voltages, states)
     }
 
     pub(crate) fn certify_event_states(

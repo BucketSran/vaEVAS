@@ -196,6 +196,7 @@ fn newton(
         // full Newton correction, and retain both original and scaled rows.
         if ratio <= 1.0 && scaled_ratio <= 1.0 && correction_ratio <= 1.0 {
             return Ok(Solution {
+                certified_voltage_bounds: None,
                 voltages: values,
                 max_residual_v: current
                     .residuals
