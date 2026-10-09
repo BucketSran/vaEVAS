@@ -16,13 +16,13 @@ class TraceabilityChecks(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         self.write("scripts/traceability.py", SCRIPT.read_text())
-        self.write("evas/docs/CAPABILITIES.md", """# Capabilities
+        self.write("evas/docs/development/capability-evidence.md", """# Capabilities
 ## 能力矩阵
-| ID / 能力 | 限定支持 | 数学入口 | 剩余边界 | 证据入口 |
-| --- | --- | --- | --- | --- |
-| TIMER | Fixed timer | [Math](math/events.md) | Dynamic timer | [Run](../../experiments/receipt.json) |
-| NONLINEAR | Polynomial | [Math](math/solving.md) | General functions | [Run](../../experiments/receipt.json) |
-| QUALIFICATION | Finite observations | [Contract](../validation/README.md) | Continuous time | [Run](../../experiments/receipt.json) |
+| 能力 ID | 契约 | 证据 |
+| --- | --- | --- |
+| TIMER | [Math](../math/events.md) | [Run](../../../experiments/receipt.json) |
+| NONLINEAR | [Math](../math/solving.md) | [Run](../../../experiments/receipt.json) |
+| QUALIFICATION | [Contract](../../validation/README.md) | [Run](../../../experiments/receipt.json) |
 """)
         for path in ("evas/README.md", "evas/docs/math/events.md",
                      "evas/docs/math/solving.md", "evas/docs/math/continuous.md"):
@@ -48,11 +48,11 @@ class TraceabilityChecks(unittest.TestCase):
     def test_round_trip_is_read_only_and_includes_capabilities_and_evidence(self):
         result = self.run_cli()
         self.assertEqual(result.returncode, 0, result.stderr)
-        output = self.root / "evas/docs/TRACEABILITY.md"
+        output = self.root / "evas/docs/development/TRACEABILITY.md"
         text = output.read_text()
         self.assertIn("| TIMER", text)
         self.assertIn("| NONLINEAR", text)
-        self.assertIn("../../experiments/receipt.json", text)
+        self.assertIn("../../../experiments/receipt.json", text)
         self.assertIn("case:unmapped", text)
         before = output.read_bytes(), output.stat().st_mtime_ns
         self.assertEqual(self.run_cli("--check").returncode, 0)
@@ -60,13 +60,22 @@ class TraceabilityChecks(unittest.TestCase):
 
     def test_stale_or_missing_matrix_fails_without_rewriting(self):
         self.assertNotEqual(self.run_cli("--check").returncode, 0)
-        self.assertFalse((self.root / "evas/docs/TRACEABILITY.md").exists())
+        self.assertFalse((self.root / "evas/docs/development/TRACEABILITY.md").exists())
         self.assertEqual(self.run_cli().returncode, 0)
         self.write("evas/tests/test_timer.py", 'GUARDS = ["NONLINEAR"]\n')
-        path = self.root / "evas/docs/TRACEABILITY.md"
+        path = self.root / "evas/docs/development/TRACEABILITY.md"
         before = path.read_bytes()
         self.assertNotEqual(self.run_cli("--check").returncode, 0)
         self.assertEqual(path.read_bytes(), before)
+
+    def test_human_overview_can_change_without_invalidating_evidence(self):
+        self.assertEqual(self.run_cli().returncode, 0)
+        path = self.root / "evas/docs/development/TRACEABILITY.md"
+        before = path.read_bytes(), path.stat().st_mtime_ns
+        self.write("evas/docs/CAPABILITIES.md", "# 能力概览\n\n给使用者的自由格式简表。\n")
+        result = self.run_cli("--check")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual((path.read_bytes(), path.stat().st_mtime_ns), before)
 
     def test_invalid_tags_fail_in_both_modes(self):
         for declaration in ('pass', 'GUARDS = []', 'GUARDS = "TIMER"',
@@ -78,7 +87,7 @@ class TraceabilityChecks(unittest.TestCase):
                 self.write("evas/tests/test_timer.py", declaration + "\n")
                 for flags in ((), ("--check",)):
                     self.assertNotEqual(self.run_cli(*flags).returncode, 0)
-                self.assertFalse((self.root / "evas/docs/TRACEABILITY.md").exists())
+                self.assertFalse((self.root / "evas/docs/development/TRACEABILITY.md").exists())
 
     def test_missing_contract_or_evidence_target_fails(self):
         for name in ("evas/validation/DYNAMICS_CONTRACTS.md", "experiments/receipt.json"):

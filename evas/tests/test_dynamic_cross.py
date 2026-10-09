@@ -1,6 +1,6 @@
 """Independent roots: a parabola has two roots; an integral has sqrt roots."""
 
-# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+# Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
 GUARDS = ["CROSS", "EVENT-CONDITIONS", "DYNAMICS"]
 
 import math

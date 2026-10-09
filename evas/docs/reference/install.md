@@ -34,7 +34,7 @@ results 仍需已有身份查询合同。请求协议没有独立版本，字段
 
 ## 平台与验证边界
 
-新增 [安装 CI](../../.github/workflows/package-install.yml) 的目标是 Ubuntu 24.04 x86_64 / Python 3.10
+新增 [安装 CI](../../../.github/workflows/package-install.yml) 的目标是 Ubuntu 24.04 x86_64 / Python 3.10
 及 macOS 14 arm64 / Python 3.12。实际通过情况以对应工作流 revision、runner 和 artifact 为准；
 配置任务不等于已获得执行证据。本地首次安装验收在 macOS 26 arm64 / Python 3.14 执行。
 
@@ -80,7 +80,7 @@ editable 安装保留这条显式内核路径，不在源码目录生成二进�
 
 ## 安装验收
 
-[check_installed_evas.py](../../scripts/check_installed_evas.py) 独立比较文件名与 WHEEL 标签、
+[check_installed_evas.py](../../../scripts/check_installed_evas.py) 独立比较文件名与 WHEEL 标签、
 receipt 和真实 Mach-O/ELF 头，并检查 macOS 架构与 LC_BUILD_VERSION 最小系统。
 thin arm64 冒充 universal2、声明比内核更旧的系统、标签/receipt/目标不一致均拒绝。
 该检查不调用构建钩子的判据代码。随后检查 sdist 构建输入，

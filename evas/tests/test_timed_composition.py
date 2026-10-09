@@ -1,6 +1,6 @@
 """Fixed rational composition contract; no simulator-generated golden values."""
 
-# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+# Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
 GUARDS = ["TIMED-OPERATOR"]
 
 from fractions import Fraction as F

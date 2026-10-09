@@ -44,7 +44,7 @@ stdout 保留可取得的身份及 `kernel.status=error`，stderr 输出已有�
 直接内核查询不含工件哈希，选择文件和计算哈希由 Python 调用者负责。
 配套 wheel、默认内核选择和安装验证边界见[安装合同](install.md)。
 
-实现见 [identity.py](../src/evas/identity.py)、
-[Python CLI](../src/evas/__main__.py) 和 [Rust CLI](../rust_core/src/main.rs)。
-公共入口回归见 [test_identity.py](../tests/test_identity.py)。
+实现见 [identity.py](../../src/evas/identity.py)、
+[Python CLI](../../src/evas/__main__.py) 和 [Rust CLI](../../rust_core/src/main.rs)。
+公共入口回归见 [test_identity.py](../../tests/test_identity.py)。
 真实编译和瞬态 smoke 的运行身份以对应收据为准。

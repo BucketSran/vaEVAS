@@ -7,7 +7,7 @@ test margin for binary64 encoding and evaluation; no forward-error theorem is
 claimed for other inputs.
 """
 
-# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+# Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
 GUARDS = ["SLEW", "TIMED-OPERATOR"]
 
 import copy

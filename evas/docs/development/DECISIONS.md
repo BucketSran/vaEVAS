@@ -1,7 +1,7 @@
 # 架构决策
 
-本页保留影响产品边界和兼容性的决定。数学推导仍在 [math/](math/README.md)，
-具体支持范围仍在 [能力表](CAPABILITIES.md)。
+本页保留影响产品边界和兼容性的决定。数学推导仍在 [math/](../math/README.md)，
+具体支持范围仍在 [能力表](../CAPABILITIES.md)。
 
 ## ADR-001：保持电压域定位
 
@@ -67,7 +67,7 @@ MNA 未知量与方程、混合量纲容差、状态生命周期和独立参考�
 ### 共同数据与职责
 
 下表定义语义接口，沿用现有对象；不要求先实现一组未使用的通用 trait。
-符号与五种操作详见[共同生命周期契约](../validation/DYNAMICS_CONTRACTS.md#shared-lifecycle-contract)。
+符号与五种操作详见[共同生命周期契约](../../validation/DYNAMICS_CONTRACTS.md#shared-lifecycle-contract)。
 
 | 接口 | 必须携带的内容与责任 | 当前落点与候选扩展 |
 | --- | --- | --- |
@@ -84,8 +84,8 @@ MNA 未知量与方程、混合量纲容差、状态生命周期和独立参考�
 候选 #108 增加 `Controller.outputs` 和共同事件接受入口，覆盖相连微事件簇；
 本决定不会把这些未合并字段描述为 main 已有实现。
 
-C1–C5 的数学接口分别在[连续状态接口](math/continuous.md#extension-state-contract)、
-[事件接口](math/events.md#extension-event-contract)、[历史与新算子接口](math/operators.md#extension-operator-contract)。
+C1–C5 的数学接口分别在[连续状态接口](../math/continuous.md#extension-state-contract)、
+[事件接口](../math/events.md#extension-event-contract)、[历史与新算子接口](../math/operators.md#extension-operator-contract)。
 没有语义变化时沿用 IR18；不兼容变更须分配新版本、拒绝旧可执行 IR，并由原始 VA/manifest
 重编译，不能只改版本字段。ADR-001 末尾的 IR16 描述属于该决定原检查点。
 
@@ -108,7 +108,7 @@ C1–C5 的数学接口分别在[连续状态接口](math/continuous.md#extensio
 各条目保留独立预期、依赖、真实 Spectre 比较和未完成验收。
 #62 完成共同接口设计和责任移交后可关闭，不要求先完成这些实施项。
 未选切片不自动加入当前执行批次或验证分母，也不授权尚未决定的模型或接受语义。
-#66 原目录的六批验收和未交付范围在[算子扩展入口](math/operators.md#operator-breadth-backlog)，
+#66 原目录的六批验收和未交付范围在[算子扩展入口](../math/operators.md#operator-breadth-backlog)，
 有限 np 或一个数学函数不会完成整个目录。
 
 ### 验证与兼容性后果
@@ -116,7 +116,7 @@ C1–C5 的数学接口分别在[连续状态接口](math/continuous.md#extensio
 每个实施切片先冻结实际模型、正/负边界、独立答案和容差，跑出可观察失败，
 再实现并覆盖初始化、原关系、依赖误差、查询不变性及同控制器失败重试。
 涉及事件/复位的变更还要验收未受影响状态和后续轨迹，不能用重开进程证明回退。
-实际 Spectre 比较按[对齐验收](../../docs/contributing/validation.md#spectre-alignment-acceptance)完成，
+实际 Spectre 比较按[对齐验收](../../../docs/contributing/validation.md#spectre-alignment-acceptance)完成，
 数学答案、有限配对、代码合并和正式资格分别报告。候选 #108 的 C1/M1 阶段差异与 timer 历史
 尚未对齐，不因本设计采用物理阶段接口而改为通过。
 

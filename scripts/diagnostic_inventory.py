@@ -15,7 +15,7 @@ import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / 'evas/docs/diagnostic-inventory.json'
+OUT = ROOT / 'evas/docs/development/diagnostic-inventory.json'
 
 
 def registries():

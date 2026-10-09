@@ -48,13 +48,13 @@ EVAS 对输入 binary64 值作精确有理数运算，再将每个时刻舍入�
 该字段不提供 Spectre 回调次序证明，也不扩大已有连续时间误差证据。
 请求协议保持 IR18 的可选扩展；旧内核拒绝未知请求字段，新前端拒绝缺失回执。
 
-验证入口为 [公共控制测试](../tests/test_strobe.py)、
-[独立模型与冻结预算](../validation/strobe/README.md)。
+验证入口为 [公共控制测试](../../tests/test_strobe.py)、
+[独立模型与冻结预算](../../validation/strobe/README.md)。
 原 C1、#79 和 VCO 的严格边界缺口继续保留，不因新增控制或提示转为通过。
 
 `.scs` 示例：`tran tran stop=1 maxstep=0.5 strobeperiod=0.25 strobedelay=0.125`。
 常规观察网格仍为 `[0,0.5,1]`，四个强制点单独保存在 `strobe_evidence`；
 它们不改写源 PWL。`load_scs` 在编译前检查时间表类型、范围和资源上限，
 `simulate_scs` 将原控制交给已有 API。适配元数据同时记录控制参数和展开时间表。
-[入口测试](../tests/test_scs.py)与[接入配对说明](../../experiments/backends/strobe/README.md#scs-adapter-checkpoint)
+[入口测试](../../tests/test_scs.py)与[接入配对说明](../../../experiments/backends/strobe/README.md#scs-adapter-checkpoint)
 覆盖该入口；沿用既有实际 Spectre 观测，原缺失时间与设置资格 I 保留。

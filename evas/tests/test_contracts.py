@@ -1,6 +1,6 @@
 """Parameter binding and versioned branch identity contracts, with hand answers."""
 
-# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+# Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
 GUARDS = ["LANG", "LIN"]
 
 

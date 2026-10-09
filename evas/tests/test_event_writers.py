@@ -5,7 +5,7 @@ write the same state when a candidate batch selects at most one writer.
 Simultaneous selected writers remain an atomic runtime conflict.
 """
 
-# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+# Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
 GUARDS = ["EVENT-ORDER", "EVENT-CONDITIONS"]
 
 import unittest

@@ -41,11 +41,11 @@ stderr 保留额外写入错误，完成标记仍为缺失或 `running`。
 原有 JSON API 和 CLI 命令保持可用。本接口不提供流式输出、SCS save/export、分块取消、
 发布安装。源码快照可能包含客户数据，运行目录应留在所属客户/项目位置，不提交原始批量产物。
 
-实现见 [results.py](../src/evas/results.py)，公共入口和文件写入失败回归见
-[test_result_outputs.py](../tests/test_result_outputs.py)。独立静态答案为
+实现见 [results.py](../../src/evas/results.py)，公共入口和文件写入失败回归见
+[test_result_outputs.py](../../tests/test_result_outputs.py)。独立静态答案为
 `2*u+0.25` 在 `u=-0.5,0,0.75 V` 的 `-0.75,0.25,1.75 V`；
 瞬态 `idt(1,0.25)` 在 `t=0,0.25,0.5 s` 的答案为 `0.25,0.5,0.75 V`，
 采用 `reltol=0,vabstol=1e-9 V`，外部绝对容差 `1e-9 V`。
 这些是本地产物序列化检查，不是仿真器资格或已发表后端证据。
 
-完整运行记录与比较/benchmark 收据的区别见[执行收据规则](../../docs/contributing/evidence.md#complete-local-run-bundles)。
+完整运行记录与比较/benchmark 收据的区别见[执行收据规则](../../../docs/contributing/evidence.md#complete-local-run-bundles)。

@@ -4,7 +4,7 @@ These are development controls, not additional cross-backend conditions or an
 untouched holdout. Thresholds describe these problems, not a global error bound.
 """
 
-# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+# Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
 GUARDS = ["LIN", "DEV:precision-chain"]
 
 from decimal import Decimal, localcontext

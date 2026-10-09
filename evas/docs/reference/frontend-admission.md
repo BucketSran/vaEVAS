@@ -31,7 +31,7 @@ nature 的 abstol 也不改变 manifest 的求解容差。
 旧测试夹具的简化 VA 字符串已显式补 include 并改用有效字面量。
 冻结 `evas/validation/`、实验源、结果、收据和哈希不改写；旧归档需其原提交前端复现。
 其中 event_relocalization、projected_history、pure_function 的开发回归使用
-[显式 successor](../tests/fixtures/README.md)，仅修正头文件与数字拼写。
+[显式 successor](../../tests/fixtures/README.md)，仅修正头文件与数字拼写。
 公开准入测试同时确认冻结原版本拒绝和 successor 接受；这不把原验证收据重标为通过。
 当前前端拒绝非法归档源码是预期结果，不证明历史波形的数值正确性。
 

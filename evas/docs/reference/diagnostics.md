@@ -27,9 +27,9 @@
 与结果目录的 `result.json` 保留完整响应字段。提示不改变成功/失败、已有波形、残差、
 事件和状态，截断也不影响模拟。
 
-公共回归见 [test_boundary_portability.py](../tests/test_boundary_portability.py)，包含原始
-[C1](../validation/event_alignment/C1/dut.va)、binary64 邻点、远离边界与 timer 负例、OR
-触发身份、预算和响应保存。C1 的[既有实际 Spectre 证据](../../experiments/backends/event-alignment/c1-shared-callback.md)
+公共回归见 [test_boundary_portability.py](../../tests/test_boundary_portability.py)，包含原始
+[C1](../../validation/event_alignment/C1/dut.va)、binary64 邻点、远离边界与 timer 负例、OR
+触发身份、预算和响应保存。C1 的[既有实际 Spectre 证据](../../../experiments/backends/event-alignment/c1-shared-callback.md)
 只作为该原模型的背景，原严格 C1 仍为 F，指定查询覆盖仍为 I；本提示不产生新的
 后端对照结论。仅增加诊断且保持模拟行为不变时，不需要新的 Spectre 运行。
 
@@ -44,7 +44,7 @@ CLI 在 stderr 输出同样的 JSON 并返回 2；命令参数错误也采用此
 包括载荷自己已有的 raw_payload 字段；规范 category/capability 仍按登记表或 unknown 生成。
 该附加诊断版本独立于求解 IR，诊断分类变更不要求迁移求解 IR。
 
-登记入口为 [errors.py](../src/evas/errors.py)。当前具名规则包括：
+登记入口为 [errors.py](../../src/evas/errors.py)。当前具名规则包括：
 
 | code | 阶段与原因 |
 | --- | --- |
@@ -71,7 +71,7 @@ CLI 在 stderr 输出同样的 JSON 并返回 2；命令参数错误也采用此
 `nonfinite_arithmetic` 为 numerical，`state_range` 为 unsupported，`worker_failure` 为 internal。
 数值溢出不证明模型错误或内核缺陷；state_range 表示整数状态超出实现的 32 位边界。
 `event_budget` 为 resource，`input_io`、`diagnostic_io`、`worker_start` 为 infrastructure。
-来源、实际触发、全源码观察与消费者兼容见[来源登记](diagnostic-sources.md)。
+来源、实际触发、全源码观察与消费者兼容见[来源登记](../development/diagnostic-sources.md)。
 完整机器清单覆盖已审计工厂/包装/转换；不表示所有出口都实际触发，也没有交付外部 benchmark 消费适配。
 
 其他内核 code 为 `kernel.<原 kind>`；已知 kind 按输入、版本、数值、协议、资源、内部错误或
@@ -79,7 +79,7 @@ CLI 在 stderr 输出同样的 JSON 并返回 2；命令参数错误也采用此
 不会从 `unsupported_` 前缀或错误文字猜测分类。自由文本的旧编译出口也可返回
 `unknown`；本批没有完成所有出口的细分类或外部 benchmark 适配。
 编译成功不意味着执行或精度验收成功。回归见
-[test_frontend_diagnostics.py](../tests/test_frontend_diagnostics.py)。
+[test_frontend_diagnostics.py](../../tests/test_frontend_diagnostics.py)。
 
 ## 只编译的预检查
 
@@ -90,8 +90,8 @@ PYTHONPATH=evas/src python3 -m evas lint evas/examples/01-static-gain/sim.json
 API 为 `evas.lint.lint_manifest(path)`。它读取清单和源文件，检查编译所需结构，
 绑定参数并编译当前支持的源码，还检查展开 IR 的资源预算。它不发现、查询或
 启动内核，机器没有安装内核也能运行。编译入口为
-[evas/lint.py](../src/evas/lint.py)，CLI 分派为
-[__main__.py](../src/evas/__main__.py)。
+[evas/lint.py](../../src/evas/lint.py)，CLI 分派为
+[__main__.py](../../src/evas/__main__.py)。
 
 成功 JSON 使用 `lint_version=1` 和 `status=lint_passed`，`checks` 列出实际完成的
 编译检查；`not_checked` 明示尚未检查数值请求有效性、动态执行支持、数值验收和
@@ -102,23 +102,23 @@ API 为 `evas.lint.lint_manifest(path)`。它读取清单和源文件，检查�
 当前内核仍返回 `unsupported_implicit_dynamics`，原因为
 `index-one polynomial DAE currently requires an event-free network`。
 该案例在改诊断前以现有真实内核冻结并验证，回归见
-[test_lint.py](../tests/test_lint.py) 与已有 #69
-[test_frontend_diagnostics.py](../tests/test_frontend_diagnostics.py)。timer 连续依赖
+[test_lint.py](../../tests/test_lint.py) 与已有 #69
+[test_frontend_diagnostics.py](../../tests/test_frontend_diagnostics.py)。timer 连续依赖
 与 DAE/事件组合保留原来的 `unsupported` 分类和对应能力；其他额外内核载荷字段也保留。
 
 ## 来源盘点与覆盖边界
 
-完整源码观察存于 [diagnostic-inventory.json](diagnostic-inventory.json)，由
+完整源码观察存于 [diagnostic-inventory.json](../development/diagnostic-inventory.json)，由
 `scripts/diagnostic_inventory.py` 生成并由 CI 检查新鲜度。它包含 Python 前端/CLI、Rust
 生产源码和 IR 子 crate 的构造、包装、转换、处理器与元数据改写；以源码结构而非行号标识。
 数量以机器清单的 `counts.total` 和 `counts.categories.unknown` 为准；这些数包括同一
-路径的多个观察，不是错误种类数或执行覆盖率。PR #91 的 780/372 是其历史审计快照。完整范围、数量分组、未来维护边界和实际触发证据见[来源登记](diagnostic-sources.md)。
+路径的多个观察，不是错误种类数或执行覆盖率。PR #91 的 780/372 是其历史审计快照。完整范围、数量分组、未来维护边界和实际触发证据见[来源登记](../development/diagnostic-sources.md)。
 
 普通 manifest CLI、lint、results/capture 使用同一输入来源诊断。results 的 API、CLI 与失败
 marker 保持相同 diagnostic；迁移结果保留旧文本 diagnostic，并附加 error。捕获会话保留
 原内核 payload.error，另含 error_diagnostic；status/MCP status 传递两者。旧会话缺附加字段
 时返回 null，不能解释为执行成功。明确非 v1 的内核诊断保留原版本和载荷，按 unknown
-处理，不根据已知 kind 套当前类别。回归见 [消费者测试](../tests/test_diagnostic_consumers.py)。
+处理，不根据已知 kind 套当前类别。回归见 [消费者测试](../../tests/test_diagnostic_consumers.py)。
 
 已执行的来源负例与源码盘点分开报告；unknown 不表示候选模型非法，也不表示实现缺陷。
 外部 benchmark/harness 的读取及评分分母验收仍待完成，因此 #64 总项继续开放。
@@ -165,7 +165,7 @@ Rust 调用者可使用 `evas_kernel::diagnostics::capture(Options, || run(reque
 sidecar 报告有效预算、`record_bytes`、`dropped_records` 与 `truncated`。
 预算针对轨迹记录，不包括响应、身份、汇总和原错误。截断不影响内核结果，
 但不能据此声称完整观察了事件和试算。默认不启用诊断。
-实际开销见[测量协议与结果](../../experiments/performance/README.md)。
+实际开销见[测量协议与结果](../../../experiments/performance/README.md)。
 
 ## 静态与运行查询
 
@@ -212,4 +212,4 @@ PYTHONPATH=evas/src python3 -B -m evas.mcp runs/session.json
 输入比较初始化的 Rust 拒绝为 `unsupported_initialization`（unsupported/LANG）；
 输入包围不能证明分支时为 `initialization_precision`（numerical/LANG），消息包含源码和状态身份。
 两者均先于模型/历史/接受帧构造，失败响应不含成功波形。来源见
-[初始化契约](math/events.md#input-initialization)和[公开回归](../tests/test_input_initialization.py)。
+[初始化契约](../math/events.md#input-initialization)和[公开回归](../../tests/test_input_initialization.py)。

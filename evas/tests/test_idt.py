@@ -5,7 +5,7 @@ The oracle integrates the source polyline by exact rational trapezoid areas;
 it does not use the kernel's history or output sampling grid.
 """
 
-# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+# Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
 GUARDS = ["DYNAMICS"]
 
 import copy

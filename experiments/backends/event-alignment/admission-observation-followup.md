@@ -14,7 +14,7 @@ standard environment, not an implicit declaration and not the full Verilog-AMS
 discipline implementation. Each independent source root has its own macro,
 include-guard and nature/discipline environment; includes within that root share
 the environment. Module definitions remain available for hierarchy construction.
-See [the frontend contract](../../../evas/docs/frontend-admission.md).
+See [the frontend contract](../../../evas/docs/reference/frontend-admission.md).
 
 Three new actual Spectre configurations isolate the root-scope rule. If module B
 omits its header, both A-then-B and B-then-A reject `electrical` in B with
@@ -86,7 +86,7 @@ The mathematical half-open wrap rule is unchanged.
 
 ## Actual EVAS observation evidence
 
-The optional [response evidence](../../../evas/docs/observation-evidence.md)
+The optional [response evidence](../../../evas/docs/reference/observation-evidence.md)
 exports actual runtime controls, the origin of each query result, and existing
 per-node certified intervals. A missing interval remains unknown. The adapter
 uses those intervals rather than treating a tolerance setting as an error

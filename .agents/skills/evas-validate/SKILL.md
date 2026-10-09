@@ -22,7 +22,7 @@ The implementation and validation assets may live on development branches.
 Confirm which of the entry points below exist in the current checkout; report
 missing prerequisites without inventing commands or switching branches.
 Resolve the claim being checked and, for EVAS behavior or support/evidence
-changes, the affected [capability IDs](../../../evas/docs/CAPABILITIES.md).
+changes, the affected [capability IDs](../../../evas/docs/development/capability-evidence.md).
 Follow [asset ownership](../../../docs/contributing/evidence.md#evidence-and-assets); use the
 [receipt fields](../../../docs/contributing/evidence.md#execution-receipts) for experiment evidence.
 Documentation changes only need relevant link/consistency/diff checks.
@@ -194,7 +194,8 @@ outcomes. State what ran, what failed or was unsupported, evidence paths, and
 what the observations cannot establish. Keep curated summaries according to
 [experiment ownership](../../../experiments/README.md), without tracking raw
 runs or machine-specific configuration.
-Update affected evidence/known-gap cells in the capability register separately
-from implementation and review/release status. Backend differences such as
+Update affected entries in the [evidence index](../../../evas/docs/development/capability-evidence.md)
+and support conclusions in the [capability overview](../../../evas/docs/CAPABILITIES.md)
+separately from review/release status. Backend differences such as
 same-time event reads stay visible; do not label them LRM violations without a
 supporting contract or silently rewrite the expected answer to match a backend.

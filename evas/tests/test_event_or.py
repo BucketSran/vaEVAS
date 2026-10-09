@@ -4,7 +4,7 @@ The roots and counter values below are hand-derived from u(t)=t, not from
 EVAS output or a second implementation of its root finder.
 """
 
-# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+# Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
 GUARDS = ["EVENT-ORDER", "EVENT-CONDITIONS"]
 
 import copy

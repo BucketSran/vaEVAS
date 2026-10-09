@@ -3,7 +3,7 @@
 These are development combinations, not new conditions or an untouched holdout.
 """
 
-# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+# Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
 GUARDS = ["DYNAMICS", "COMPOSE"]
 
 import math

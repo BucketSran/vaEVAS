@@ -61,5 +61,5 @@ The reviewed documentation supports reproducible tolerance-based experiments wit
 The current candidate implements a narrower local advisory than the possibilities
 above: committed cross certificates within one binary64 neighbor of a saved output
 query. It does not infer a Spectre phase, inspect all model equality predicates,
-or cover timer/VCO boundaries. See the [runtime advisory contract](../../../evas/docs/diagnostics.md#事件边界观察的可移植性提示)
-and the independent [strobe control contract](../../../evas/docs/strobe.md).
+or cover timer/VCO boundaries. See the [runtime advisory contract](../../../evas/docs/reference/diagnostics.md#事件边界观察的可移植性提示)
+and the independent [strobe control contract](../../../evas/docs/reference/strobe.md).

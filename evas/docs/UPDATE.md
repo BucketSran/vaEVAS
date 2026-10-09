@@ -1,8 +1,7 @@
 # 更新记录
 
-按版本/检查点倒序记录"改了什么、为什么"。执行身份、收据与逐项证据
-不在此重复——见 [CAPABILITIES 检查点身份](CAPABILITIES.md#检查点身份)与
-[追溯矩阵](TRACEABILITY.md)。单 PR 的细节以 PR/commit 描述为准，本页只留摘要。
+本页记录版本变化与[历史执行身份](#检查点身份)。当前支持结论见[能力概览](CAPABILITIES.md)，
+逐项证据见[证据索引](development/capability-evidence.md)。单 PR 的细节以 PR/commit 描述为准，本页只留摘要。
 
 <a id="baseline-20261009"></a>
 
@@ -17,7 +16,7 @@
   [责任与保持性证据](../../experiments/backends/event-acceptance/README.md)绑定原重构版本，
   不能推导 Spectre 兼容范围扩大。
 - **输入接入。** `.scs` 的 tran 支持 `strobetimes`、`strobeperiod`、`strobedelay`、
-  `skipstart`、`skipstop`；常规输出网格保持不变。见[控制合同](strobe.md)
+  `skipstart`、`skipstop`；常规输出网格保持不变。见[控制合同](reference/strobe.md)
   和[实际参考复用](../../experiments/backends/strobe/README.md#scs-adapter-checkpoint)。
 - **已知差异。** C1 精确边界前后态、#79 stop=3 计数、VCO 环回及 M1 参考资格继续保留原 F/I。
   Spec B 的原十二槽严格参考义务由 [#96](https://github.com/BucketSran/vaEVAS/issues/96)
@@ -73,20 +72,20 @@
 
 - 新增显式 `evas.results run`，保存生效请求、完整响应和无展示舍入的 CSV。
 - 只有全部必需文件完成与校验后才原子写入完成状态，失败保留版本化诊断。
-- 依赖包/内核身份接口，不改变原 JSON API 或数值内核。见[契约](results.md)。
+- 依赖包/内核身份接口，不改变原 JSON API 或数值内核。见[契约](reference/results.md)。
 
 ## 2026-10-06：仅编译预检与有限诊断登记（DIAG）
 
 - 新增 `python -m evas lint manifest.json`，不查找或启动内核；成功仅表示编译检查通过。
 - 在 manifest/source I/O、参数依赖/覆盖和编译资源预算来源登记稳定分类。
   未登记的诊断保留原 payload，类别为 `unknown`；来源盘点与实际执行检查分别计数。
-- 不改变 IR17、数值行为或包版本；接口、已测边界与剩余缺口见[诊断说明](diagnostics.md)。
+- 不改变 IR17、数值行为或包版本；接口、已测边界与剩余缺口见[诊断说明](reference/diagnostics.md)。
 
 ## 2026-10-06：显式身份查询（PKG-ID）
 
 - Python 与 Rust CLI 可在无 manifest、无 stdin 数据时查询实际包/内核身份。
 - 绑定所选二进制哈希与报告的 IR schema；无来源或请求协议元数据时保留未知。
-- 不改变 IR17、数值请求协议或包版本，详见[身份接口](identity.md)。
+- 不改变 IR17、数值请求协议或包版本，详见[身份接口](reference/identity.md)。
 
 ## 2026-10-06：有限单极点 laplace_np（O2）
 
@@ -181,5 +180,25 @@
 
 ## 更早检查点
 
-PR26–PR32（IR11→IR16 演进）摘要见 [CAPABILITIES 检查点身份](CAPABILITIES.md#检查点身份)；
+PR26–PR32（IR11→IR16 演进）摘要见[检查点身份](#检查点身份)；
 完整过程叙述保留在各 PR 与固定历史提交，不在本页展开。
+
+## 检查点身份
+
+以下是历史执行记录，不是当前版本重跑结果。
+
+| 检查点 | 固定执行身份 |
+| --- | --- |
+| PR61 / 0.13.0 / IR17 | 确认冻结 `5171558c`、首次运行后端 `63afd040`；前一矩阵/确认及整合回归 `152a920d`；一致初值与观察修复 `114d676e`；包含身份审查修复及最终矩阵/确认复跑和回归 `d68d3db4`；见[候选收据](../../experiments/runs/capability-completion/README.md) |
+| 诊断与性能 / 0.12.3 / IR16 | 配对基线 `e91cf6ff`、候选 `eb03f94d`；原矩阵运行时 `a388a651`；见[当前收据](../../experiments/performance/README.md) |
+| PR50 / 0.12.3 / IR16：前轮矩阵重跑 | 被测 main `a7a42e17`；运行时、内核及新执行见前轮收据 |
+| PR33 / IR16：事件截止点 | 运行时 `8618339`，合并点 `b4921ca` |
+| PR32 / IR16：混合动态与生命周期 | 运行时 `1b99c33`，合并点 `431f335` |
+| PR31 / IR16：非线性积分与联合事件 | 运行时 `d06e7f3`，合并点 `09b4222` |
+| PR30 / IR16：连续动态 | 运行时 `ba5ab46`/`071a813`，合并点 `bedf20f` |
+| PR29 / IR15：矩阵补齐与精度链 | 运行时 `d451605` |
+| PR26 / IR11 及旧 EVAS 0.8.7 | 历史失败不改写为新版本成绩，见 [四后端矩阵](../../experiments/backends/dvs2-four-backend-validation/results/MATRIX.md) |
+
+各检查点的收据由上表链接及[追溯矩阵](development/TRACEABILITY.md)导航，完整历史入口见
+[实验目录](../../experiments/README.md)；早期失败（根盒等号、复位误拒绝、
+Spectre 不一致等）保留在对应历史段落，修复不删除。

@@ -2,18 +2,18 @@
 
 比较列固定为Spectre、ngspice + OpenVAF-R、Gnucap + modelgen-verilog、EVAS。
 Spectre是最终参考后端，其输出也必须满足独立数学/语言判据。
-[生成表和记录](../../experiments/backends/comparison/README.md)保留每格的行为、工件、
-checker和证据身份。源码支持列表仍由[能力表](CAPABILITIES.md)维护，不能代替执行证据。
+[生成表和记录](../../../experiments/backends/comparison/README.md)保留每格的行为、工件、
+checker和证据身份。源码支持列表仍由[能力表](../CAPABILITIES.md)维护，不能代替执行证据。
 
 ## 三个数据集与A/B/C
 
 新论文评价集尚未冻结，分母unknown，所有V1–V7显示pending。
 原31条件已用于开发，单列为历史开发证据，不能填入新集，也不能用确认14/14替代。
-今晚小批量固定8条件×4后端、只用基础档，合计32配置；每组显示实际选定分母。
+CMP8 开发批次固定8条件×4后端、只用基础档，合计32配置；每组显示实际选定分母。
 应用回放C仅使用固定正确参考版本；错误候选的校准/诊断不进入行为或应用分母。
 四方相同应用编码与完整回放合同未冻结时，C也保持pending。
 
-A按[P/F/U/X/I/T协议](../validation/PROTOCOL.md#方法校准与计数)统计行为。
+A按[P/F/U/X/I/T协议](../../validation/PROTOCOL.md#方法校准与计数)统计行为。
 N包含失败、未知和未执行。P只表示该记录声明的全部限定性质通过；历史有限导出
 观测的P与正式连续时间资格I分别保存。编译报错本身不能证明U，缺失结果不能证明P。
 
@@ -22,7 +22,7 @@ B报告共同通过子集上的最大目标归一化观测电压/时间误差，
 空子集显示无数值比较。当前历史电压子集只含静态 `v1-main`/`v2-main`。
 V1 使用输出误差及 1mV 预算；V2 分别使用差模误差及 2mV 预算、共模误差及 1mV 预算，
 各物理性质先除以自己的预算，再取归一化最大值。旧 schema1 的 V2 单端指标解释失效，
-保留原快照但从 B 中排除；当前表使用 [schema2 派生记录](../../experiments/backends/comparison/snapshot-20261006-accounted-v2.json)。
+保留原快照但从 B 中排除；当前表使用 [schema2 派生记录](../../../experiments/backends/comparison/snapshot-20261006-accounted-v2.json)。
 时间性质没有四方统一绑定的实测指标，故无时间数字。样点误差不是连续时间最大误差。
 
 性能测量不属于本次比较。历史耗时和独立性能实验保持原身份，表不显示速度排序。
@@ -32,7 +32,7 @@ V1 使用输出误差及 1mV 预算；V2 分别使用差模误差及 2mV 预算�
 
 ### 容差选择与边界比较
 
-两后端的[内部容差含义](math/solving.md#spectre-与-evas-的容差含义)不同。
+两后端的[内部容差含义](../math/solving.md#spectre-与-evas-的容差含义)不同。
 先固定共同的物理误差预算，分别选择内部求解设置；不强制同名参数取相同数值，
 也不以更小的 `reltol` 数字推导结果一定更准确。requested 与 effective 同时保留。
 
@@ -55,12 +55,12 @@ profile、日期、失败阶段和证据可用性。版本回显unknown时保留
 前端/parser、运行时、IR或内核变化使受影响旧证据需复验。
 文档变化可以复用相同输入/runtime/checker的测量，但必须记录原因。
 不把后来的目标提交写进旧测量字段。错误解释/checker变化按
-[重验证触发](../../.agents/skills/evas-validate/SKILL.md#revalidation-triggers)做新分析，
+[重验证触发](../../../.agents/skills/evas-validate/SKILL.md#revalidation-triggers)做新分析，
 保留原判定；只补受影响配置，不强制无关全矩阵。
 
 新观察保存输入清单、实际工具/内核身份、请求/生效设置、完整阶段命令与退出/超时状态、
 输入/输出/checker哈希和可取得的精简分析。按
-[执行收据](../../docs/contributing/evidence.md#execution-receipts)区分新执行、复用和重判。
+[执行收据](../../../docs/contributing/evidence.md#execution-receipts)区分新执行、复用和重判。
 私有原始材料缺失不推翻原收据，也不能声称已重跑、重判或公开完整复现。
 
 ## 快照和论文使用
@@ -74,10 +74,10 @@ V1–V7的覆盖/缺口映射位于生成表，链接能力ID和现有Issue，�
 独立答案。它是需求地图，不是新增评价条件的实施或冻结证明。
 许可证按组成工具分别检查；上游声明和实际安装工件映射未能确认时，表明确标unknown。
 
-本次固定32配置的[结果与收据](../../experiments/backends/comparison/TABLE.md)已完整记账，
+初始32配置的[结果与收据](../../../experiments/backends/comparison/TABLE.md)已完整记账，
 其中16配置有新观察、16因既有容器层缺失未运行。表C记录va07正确参考候选及独立checker身份，
 四后端公共回放合同仍pending；候选身份不等于跨后端资格或新论文数据集。
 
-补齐现有8条件开发表使用[completion静态合同](../../experiments/backends/comparison/README.md#补齐开源后端的静态组合)：
+补齐现有8条件开发表使用[completion静态合同](../../../experiments/backends/comparison/README.md#补齐开源后端的静态组合)：
 三个完整8项新执行批次加原Spectre8复用；所有失败仍在32分母中。它与仅刷新EVAS的旧合同分开，
 不改变历史收据或正式资格。论文集和C跨后端合同仍待冻结，不能将开发补测称为新独立评估。

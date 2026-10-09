@@ -2,7 +2,7 @@
 
 本轮增加独立强制求解点后，用四个冻结模型与实际 Spectre 配对。
 模型、刺激和预算在运行前固定，见 [验证夹具](../../../evas/validation/strobe/README.md)。
-当前实现范围见 [控制契约](../../../evas/docs/strobe.md)。
+当前实现范围见 [控制契约](../../../evas/docs/reference/strobe.md)。
 
 Spectre 版本为 `21.1.0.509.isr12`，新执行恰好4次模拟和1次版本查询，无重试。
 输入 deck 请求 `reltol=1e-7`、`vabstol=1e-9 V`、`iabstol=1e-12 A`、

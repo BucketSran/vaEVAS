@@ -1,6 +1,6 @@
 """Independent affine simultaneous-event equations and rejection controls."""
 
-# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+# Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
 GUARDS = ["EVENT-ORDER", "EVENT-CONDITIONS"]
 
 from fractions import Fraction as Q

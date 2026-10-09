@@ -1,6 +1,6 @@
 """Known-event horizons, checked against independent piecewise IVP answers."""
 
-# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+# Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
 GUARDS = ["DYNAMICS"]
 
 from fractions import Fraction
