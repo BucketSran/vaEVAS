@@ -4,7 +4,7 @@ Predicates refer to the exact-real interpolation of submitted binary64 points
 at the chosen event time. Fraction supplies boundary controls, not EVAS output.
 """
 
-# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+# Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
 GUARDS = ["EVENT-ORDER", "EVENT-CONDITIONS"]
 
 import copy

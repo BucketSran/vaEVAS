@@ -20,7 +20,7 @@ and the task's existing PR checkpoint when present. Confirm that the checkout
 contains the intended implementation, then inspect affected code and callers.
 Separate current behavior from proposals and historical verification.
 
-Use the stable IDs in the [capability register](../../../evas/docs/CAPABILITIES.md)
+Use the stable IDs in the [evidence index](../../../evas/docs/development/capability-evidence.md)
 to identify the change and its dependencies. Follow [repository coordination
 policy](../../../docs/contributing/workspaces.md#parallel-work). Reuse suitable
 in-progress work; when parallel work is authorized, agree file ownership and a
@@ -95,7 +95,7 @@ benchmark construction unless it is part of the requested scope.
 For semantic/numerical work, update the relevant handbook chapter using the
 [feature documentation contract](../../../evas/docs/README.md#feature-documentation-contract):
 behavior, source/assumption distinction, mathematics, numerical method, code map,
-independent evidence and limits. Update only affected capability rows; do not
+independent evidence and limits. Update affected support summaries and evidence-index entries; do not
 promote branch work to merged support or an old run to verification of a new base.
 Hand off the requirements, actual diff and evidence for the independent review
 required by the [review policy](../../../CONTRIBUTING.md#reviewing-diffs).

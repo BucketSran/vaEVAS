@@ -1,6 +1,6 @@
 """Independent dynamic composition answers, separate from the frozen 31 cases."""
 
-# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+# Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
 GUARDS = ["DYNAMICS"]
 
 import math

@@ -20,7 +20,7 @@
 [振荡器专项](../../experiments/backends/dvs2-spectre-validation/README.md#oscillator-compatibility)
 展示了这种区分：收紧某个容差既可能减小波形误差，也可能暴露更多返回事件。
 
-测试文件声明的契约关联与能力证据入口见[追溯矩阵](../docs/TRACEABILITY.md)；
+测试文件声明的契约关联与能力证据入口见[追溯矩阵](../docs/development/TRACEABILITY.md)；
 它不证明逐条件覆盖或执行通过。
 验证目录分两级：[smoke/](smoke/) 是各能力路径的最小可运行冒烟集，
 只验证链路连通，不带期望值；[cases/](cases/) 及各协议文档构成完整验证集。
@@ -194,6 +194,6 @@ PR26 的 7 个拒绝条件已在 IR15 的限定范围内补齐，并由上面的
 | `v7-nonlinear-0.5`、`v7-nonlinear-2.0` | 2 | [无状态、无事件、无历史多项式瞬态](NONLINEAR_TRANSIENT_CONTRACT.md) |
 
 原 31 条件已没有未达标项；更广的 DAE 与事件/复位组合、事件后历史轨迹重定位及验证资格缺口仍见
-[能力表](../docs/CAPABILITIES.md#后续工作)，不要从开发矩阵满分推导完整仿真器覆盖。
+[能力表](../docs/CAPABILITIES.md#能力矩阵)，不要从开发矩阵满分推导完整仿真器覆盖。
 
 </details>

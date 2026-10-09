@@ -1,5 +1,5 @@
 """Index-one polynomial DAE answers derived by substitution, not a solver oracle."""
-# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+# Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
 GUARDS = ["DYNAMICS"]
 
 import unittest

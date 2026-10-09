@@ -1,5 +1,5 @@
 """Post-reset joint closure with independent piecewise IVP answers."""
-# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+# Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
 GUARDS = ["DYNAMICS"]
 
 import math

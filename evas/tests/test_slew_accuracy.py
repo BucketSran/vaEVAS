@@ -1,6 +1,6 @@
 """Independent binary64-input rational contracts for operator error transfer."""
 
-# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+# Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
 GUARDS = ["SLEW", "TIMED-OPERATOR"]
 
 from fractions import Fraction as F

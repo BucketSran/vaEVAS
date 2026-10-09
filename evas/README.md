@@ -1,6 +1,6 @@
 # EVAS：电压域 Verilog-A 仿真器
 
-四后端的行为与误差比较见[比较表](../experiments/backends/comparison/README.md)及[维护契约](docs/COMPARISON.md)。新论文集尚未冻结，既有开发集与候选分支证据分别标记；本轮不统计耗时。
+四后端的行为与误差比较见[比较表](../experiments/backends/comparison/README.md)及[维护契约](docs/development/COMPARISON.md)。新论文集尚未冻结，既有开发集与候选分支证据分别标记；本轮不统计耗时。
 
 EVAS 面向 Verilog-A 行为模型的开发与验证。首要目标是提供开源、可审查的电压域仿真环境，
 让使用者不依赖商业仿真器也能运行和验证目标模型，为 benchmark 提供开源复现路径。
@@ -39,7 +39,7 @@ EVAS 把限定范围内的 Verilog-A 电压关系编译为方程，联立求解�
 移位时间误差保留在整段历史的电压包围中，仍受最终节点预算约束；第三层、其他历史组合和历史反馈继续拒绝。
 数学与保守拒绝边界见[两级固定延迟说明](docs/math/operators.md#两级固定-absdelay-的移位历史包围)。
 
-查询入口和身份/截断规则见[诊断说明](docs/diagnostics.md)。
+查询入口和身份/截断规则见[诊断说明](docs/reference/diagnostics.md)。
 Rust 的版本化类型与解码位于 [evas-ir](rust_core/ir/README.md)，数值与历史仍由一个内核统一管理。
 配对测量与结构取舍见[性能实验](../experiments/performance/README.md)。
 
@@ -84,7 +84,7 @@ EVAS 通过独立测试，也不能直接标记为已通过 Spectre 兼容性验
 查询所选二进制的身份、SHA-256 与 IR 版本；省略 `--kernel` 时只查询 Python 包。
 内核可直接运行 `evas-kernel --version --json`，无需 manifest 或标准输入。
 缺少构建来源和独立请求协议元数据时明确返回 null；IR 匹配不等于全部运行兼容。
-字段及失败行为见[身份接口](docs/identity.md)。
+字段及失败行为见[身份接口](docs/reference/identity.md)。
 
 ## 仅编译预检
 
@@ -97,13 +97,13 @@ PYTHONPATH=evas/src python3 -m evas lint evas/examples/01-static-gain/sim.json
 数值精度或外部仿真器兼容性。例如可编译的 timer/多项式 DAE 组合仍可能在瞬态执行时拒绝。
 诊断只为已登记的 manifest/source I/O、参数依赖/覆盖和资源来源补充分类；
 未登记的 code/kind 保留原消息、位置与额外字段，类别为 `unknown`，不按前缀或消息猜测。
-接口与来源盘点边界见[诊断说明](docs/diagnostics.md)。
+接口与来源盘点边界见[诊断说明](docs/reference/diagnostics.md)。
 
 ## 安装配套发行包
 
 平台 wheel 可携带独立 Rust 内核，安装后 `evas-rebuild solve MANIFEST` 无需 PYTHONPATH 或显式内核。
 默认选择校验包内核身份；显式 `--kernel` 保持可用，失败不回退。
-构建、安装、平台证据边界和源码方式见[安装合同](docs/install.md)。尚未发布到公共索引或打 tag。
+构建、安装、平台证据边界和源码方式见[安装合同](docs/reference/install.md)。尚未发布到公共索引或打 tag。
 
 有限标量 `case/default` 的支持范围、资源预算与拒绝边界见 [case 契约](validation/CASE_STATEMENTS_CONTRACT.md)。
 
@@ -160,13 +160,13 @@ API 运行已有 `Program` 不重复源码准入，但仍须满足当前 IR/内�
 
 ## 精度与结果解释
 
-当前开发候选支持独立于输出网格的 `strobetimes` 和周期 strobe 控制，见[强制求解时刻](docs/strobe.md)。
+当前开发候选支持独立于输出网格的 `strobetimes` 和周期 strobe 控制，见[强制求解时刻](docs/reference/strobe.md)。
 `solve`、`transient` 和 manifest 的 `tolerances` 接受 `vabstol`（默认 `1e-12 V`）
 与 `reltol`（默认 `1e-10`，无量纲）。这两个数字是求解/验收设置，
 不能直接解释为所有输出都具有同样的全时域精度。
 静态 Newton 检查原方程残差；瞬态还要考虑输入、历史、采样及事件时刻的误差和网络放大。
 具体判据、保守拒绝和数值方法见[数值手册](docs/math/solving.md)。
-瞬态响应可选保存实际控制值、逐行来源和已有节点认证区间，见[观察证据接口](docs/observation-evidence.md)。缺失区间保持未知，这些字段不自动授予外部观察资格。
+瞬态响应可选保存实际控制值、逐行来源和已有节点认证区间，见[观察证据接口](docs/reference/observation-evidence.md)。缺失区间保持未知，这些字段不自动授予外部观察资格。
 
 <a id="spectre-testbench"></a>
 
@@ -188,7 +188,7 @@ API 为 `evas.scs.load_scs(path)`（检查测试台并返回 manifest 和模型�
 | 模型与连接 | `ahdl_include "file.va"`；按 VA 声明顺序展开静态向量后逐位连接的标量节点列表；常量参数覆盖；`global 0` |
 | 数字 | 有限十进制、科学计数和单字母 SI 后缀 `T G M k K m u n p f a`；可引用先前 `parameters` 语句的常量 |
 | `vsource` | 一端接地；`dc`；从零开始、时间严格递增的 `wave=[time value ...]`；显式 `delay/rise/width/fall/period/val0/val1` 的线性 pulse |
-| 瞬态 | 一条 `tran tran stop=... maxstep=...`，两项必须显式指定且为正；观察点取 `0`、小于 stop 的 `k*maxstep` 和 stop；可另给 [strobe 五项控制](docs/strobe.md)，不改变常规观察网格 |
+| 瞬态 | 一条 `tran tran stop=... maxstep=...`，两项必须显式指定且为正；观察点取 `0`、小于 stop 的 `k*maxstep` 和 stop；可另给 [strobe 五项控制](docs/reference/strobe.md)，不改变常规观察网格 |
 | 精度 | `options reltol=... vabstol=...`，映射到现有 EVAS 设置；未指定项使用 EVAS 默认值，不采用 Spectre 默认值 |
 | 输出 | `save` 选择标量端口节点；`saved` 输出所选列，原 `solutions` 保留完整求解响应 |
 
@@ -286,7 +286,7 @@ cargo test --locked --manifest-path evas/rust_core/Cargo.toml
   未提供时采用版本化的有限 `evas-voltage-vams-v1` 环境，数学常量仅保留 `M_PI`。
   `electrical` 使用前必须有支持的 discipline/nature 定义；缺失定义与不兼容头文件拒绝编译。
   实数字面量的小数点两侧必须有数字，例如 `0.5`、`1.0`；`.5`、`1.` 均拒绝。
-  具体范围及迁移见[编译准入契约](docs/frontend-admission.md)。
+  具体范围及迁移见[编译准入契约](docs/reference/frontend-admission.md)。
   语法位置、包含路径及宏展开路径会进入 Origin；支持边界见[预处理契约](validation/ANALOG_CONDITIONS_CONTRACT.md#preprocessing)。
 - `parameter real` 默认值、实例覆盖以及参数依赖，有限实数与 SI 后缀。
 - 一个 `analog begin ... end`，含无条件 `V(p)` / `V(p,n)` 贡献，以及受限事件块。
@@ -373,7 +373,7 @@ CLI 的内核失败在 stderr 输出 JSON，保留 `kind`、`message` 和存在�
 Python 的编译与求解接口：`compile_sources(sources, instances) -> Program`，
 `solve(program, driven, samples, kernel=...) -> result`，以及
 `transient(program, sources, output_times, stop=..., max_step=..., kernel=...) -> result`。
-当前开发候选支持独立于输出网格的 `strobetimes` 和周期 strobe 控制，见[强制求解时刻](docs/strobe.md)。
+当前开发候选支持独立于输出网格的 `strobetimes` 和周期 strobe 控制，见[强制求解时刻](docs/reference/strobe.md)。
 `solve`、`transient` 和 manifest 的 `tolerances` 接受 `vabstol`（伏特，默认 `1e-12`）与
 `reltol`（无量纲，默认 `1e-10`），例如 `solve(..., vabstol=1e-9, reltol=1e-6)`。
 保留 `absolute` / `relative` 作为对应旧名称；同一容差不能同时提供新旧名称。
@@ -561,4 +561,4 @@ cargo bench --locked --offline --manifest-path evas/rust_core/Cargo.toml --bench
 
 ## 保存完整运行结果
 
-使用 `python3 -m evas.results run MANIFEST --kernel PATH --out NEW_DIR` 保存带身份的完整 JSON、CSV 和源码快照。只有最后写入的 `manifest.json` 标记为 `complete` 才表示完整产物；失败保留诊断与部分文件。单位、精度、失败处理和使用示例见[运行产物契约](docs/results.md)。
+使用 `python3 -m evas.results run MANIFEST --kernel PATH --out NEW_DIR` 保存带身份的完整 JSON、CSV 和源码快照。只有最后写入的 `manifest.json` 标记为 `complete` 才表示完整产物；失败保留诊断与部分文件。单位、精度、失败处理和使用示例见[运行产物契约](docs/reference/results.md)。

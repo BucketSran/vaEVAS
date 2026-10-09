@@ -500,7 +500,7 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 完整目标契约与剩余组合边界见[验证契约](../../validation/EVENT_CONDITIONS_CONTRACT.md)。
 
 状态反馈谓词、通用非线性谓词及普通 analog 条件与动态算子的组合仍超出本页范围。
-受限 idt reset 见[算子手册](operators.md#idt)，当前总体缺口见[能力表](../CAPABILITIES.md#后续工作)。
+受限 idt reset 见[算子手册](operators.md#idt)，当前总体缺口见[能力表](../CAPABILITIES.md#能力矩阵)。
 区间传播会增加运算和存储，丢失相关性时可能保守拒绝；这条路径没有自动细化步长或高精度回退。
 
 ## timer 与同刻兼容性
@@ -829,7 +829,7 @@ The common acceptance refactor has a [six-model, two-setting preservation compar
 
 ## C1/C5 扩展的共同事件接口
 
-本节是 [ADR-002](../DECISIONS.md#adr-002) 的设计契约。
+本节是 [ADR-002](../development/DECISIONS.md#adr-002) 的设计契约。
 main `fbf896bb` 与未合并候选 #108 的差别须保留，候选的物理阶段输出及有界微事件事务
 不因接口被采用而成为已合并支持或完整 Spectre 对齐。
 

@@ -76,7 +76,7 @@ and its verified old-to-new path mapping. Package versions alone do not identify
 
 ### Complete local run bundles
 
-The [results command](../../evas/docs/results.md) writes a local execution bundle.
+The [results command](../../evas/docs/reference/results.md) writes a local execution bundle.
 Treat `manifest.json` with `status=complete` as the completion marker, then verify
 its recorded file sizes and hashes before reanalysis. `running`, `failed`, a missing
 marker, or `manifest.tmp` does not establish complete observations.

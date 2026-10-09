@@ -50,8 +50,8 @@ python3 -B scripts/traceability.py --check
 python3 -B -m unittest discover -s scripts/tests -v
 ```
 
-`traceability.py` 读取测试 GUARDS 标签、能力表证据入口和 DUT 目录，生成
-[追溯矩阵](../evas/docs/TRACEABILITY.md)。`--check` 不写文件，拒绝无效标签、
+`traceability.py` 读取测试 GUARDS 标签、[能力 ID 与证据索引](../evas/docs/development/capability-evidence.md)和 DUT 目录，生成
+[追溯矩阵](../evas/docs/development/TRACEABILITY.md)。`--check` 不写文件，拒绝无效标签、
 失效本地目标和过期矩阵。它不执行测试，也不证明完整覆盖或验证资格。
 维护工具的回归在 `scripts/tests/`，不计入 EVAS 测试或原矩阵分母。
 
@@ -88,7 +88,7 @@ python3 -B scripts/diagnostic_inventory.py --write
 python3 -B scripts/diagnostic_inventory.py --check
 ```
 
-生成 [diagnostic-inventory.json](../evas/docs/diagnostic-inventory.json)，记录 Python/Rust
+生成 [diagnostic-inventory.json](../evas/docs/development/diagnostic-inventory.json)，记录 Python/Rust
 生产源码的诊断构造、包装、转换和处理器。条目都是源码观察，不能作为实际触发覆盖率；
-维护范围、动态原因与消费者兼容边界见 [诊断来源](../evas/docs/diagnostic-sources.md)。
+维护范围、动态原因与消费者兼容边界见 [诊断来源](../evas/docs/development/diagnostic-sources.md)。
 修改相关源码或登记后重新生成；CI 拒绝旧清单。

@@ -4,7 +4,7 @@ All supplied binary64 values are interpreted exactly. These are development
 regressions, separate from the frozen 31-condition cross-backend suite.
 """
 
-# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+# Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
 GUARDS = ["CROSS"]
 
 from fractions import Fraction as Q

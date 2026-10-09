@@ -4,7 +4,7 @@ Known roots are constructed algebraically, without using EVAS to define answers.
 The original 31-condition contracts and checkers remain unchanged.
 """
 
-# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+# Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
 GUARDS = ["NONLINEAR"]
 
 import copy

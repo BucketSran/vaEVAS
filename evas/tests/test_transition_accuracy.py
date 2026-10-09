@@ -4,7 +4,7 @@ Accepted source event times are fixed; these tests do not charge the permitted
 timer/cross timing window to the voltage budget. No simulator supplies goldens.
 """
 
-# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+# Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
 GUARDS = ["TRANSITION", "TIMED-OPERATOR"]
 
 from fractions import Fraction as F

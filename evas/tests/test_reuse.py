@@ -1,6 +1,6 @@
 """Public contracts for repeated solves; expected values do not use EVAS algebra."""
 
-# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+# Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
 GUARDS = ["LIN", "SPARSE", "DEV:sparse-reuse"]
 
 import unittest

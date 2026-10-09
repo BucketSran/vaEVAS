@@ -5,7 +5,7 @@ values actually passed to EVAS. It never reads an EVAS-generated waveform to
 construct expected values. Zero delay is an EVAS extension, not an LRM demand.
 """
 
-# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+# Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
 GUARDS = ["ABSDELAY", "TIMED-OPERATOR"]
 
 import copy

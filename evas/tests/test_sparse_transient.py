@@ -1,6 +1,6 @@
 """Sparse-size event/operator integration with independent mathematical answers."""
 
-# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+# Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
 GUARDS = ["SPARSE", "DEV:sparse-reuse"]
 
 from fractions import Fraction as F

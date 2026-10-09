@@ -3,7 +3,7 @@
 These are new, transition-free probes, not replacements for DVS E1 or additional
 conditions in its fixed 31-condition denominator. Freeze before implementing.
 """
-# Guarded conditions/capabilities: see docs/PROCESS.md and docs/TRACEABILITY.md
+# Guarded conditions/capabilities: see docs/development/PROCESS.md and docs/development/TRACEABILITY.md
 GUARDS = ["CROSS", "EVENT-CONDITIONS"]
 
 import copy

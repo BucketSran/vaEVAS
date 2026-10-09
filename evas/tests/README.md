@@ -19,8 +19,8 @@ PYTHONPATH=src:tests python3 -m unittest test_idt -v       # 单个文件
 每个测试文件声明非空 `GUARDS` 列表，标注契约、能力或直接使用的 DUT 模型。
 它是文件级导航，不是逐方法覆盖或执行证明；开发主题可加 `DEV:<主题>`。
 从仓库根目录运行 `python3 -B scripts/traceability.py --check`，检查标签、
-本地目标和[生成矩阵](../docs/TRACEABILITY.md)是否同步。标签语义与生成命令见
-[PROCESS.md](../docs/PROCESS.md)。
+本地目标和[生成矩阵](../docs/development/TRACEABILITY.md)是否同步。标签语义与生成命令见
+[PROCESS.md](../docs/development/PROCESS.md)。
 
 ## 期望值的独立性约定
 

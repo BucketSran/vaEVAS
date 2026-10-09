@@ -1,6 +1,6 @@
 # 四后端比较记录
 
-[维护契约](../../../evas/docs/COMPARISON.md)定义数据集、身份与复验规则。
+[维护契约](../../../evas/docs/development/COMPARISON.md)定义数据集、身份与复验规则。
 [当前结果表](TABLE.md)由[snapshot-20261007-issue95-completed.json](snapshot-20261007-issue95-completed.json)
 生成。固定8开发条件、基础档、四后端共32配置。Spectre原8项在当前checker下重分析并复用；
 受审main `d4b41c79` 的EVAS8、OpenVAF/ngspice8与Gnucap8有24项新执行结果，包含失败。
