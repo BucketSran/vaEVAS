@@ -65,6 +65,55 @@ def _observation_evidence(response, solutions, output_times):
             _invalid('invalid observation voltage bounds or representative containment')
 
 
+def _portability_advisories(response, program, output_times):
+    if 'portability_advisories' not in response:
+        return
+    advice=response['portability_advisories']
+    if (output_times is None or not isinstance(advice,dict)
+            or type(advice.get('schema_version')) is not int or advice['schema_version']!=1
+            or type(advice.get('record_limit')) is not int or advice['record_limit']!=128
+            or not _index(advice.get('dropped_records'))
+            or type(advice.get('truncated')) is not bool
+            or advice['truncated']!=(advice['dropped_records']>0)):
+        _invalid('invalid portability advisory identity or budget')
+    records=advice.get('records')
+    if (not isinstance(records,list) or not 0<len(records)<=advice['record_limit']
+            or advice['dropped_records'] and len(records)!=advice['record_limit']):
+        _invalid('invalid portability advisory records')
+    events=response['transient']['events']
+    seen=set()
+    for record in records:
+        if (not isinstance(record,dict) or record.get('code')!='cross_observation_boundary'
+                or record.get('nonblocking') is not True
+                or not isinstance(record.get('message'),str) or not record['message']
+                or any(not _index(record.get(k)) for k in ('event_record','event','trigger','query_index'))
+                or record['event_record']>=len(events) or record['query_index']>=len(output_times)
+                or not _finite(record.get('query_time_s'))
+                or record['query_time_s']!=output_times[record['query_index']]
+                or not _bounds(record.get('root_time_bounds_s'))):
+            _invalid('invalid portability advisory record')
+        event=events[record['event_record']]
+        requested=program.events[event['event']].trigger
+        leaves=requested.triggers if isinstance(requested,OrTrigger) else (requested,)
+        if record['trigger']>=len(leaves) or leaves[record['trigger']].kind!='cross':
+            _invalid('portability advisory trigger does not match a requested cross')
+        bounds=record['root_time_bounds_s']
+        if event['kind']=='cross' and record['trigger']==0:
+            expected=event.get('observation_time_bounds',[event['time'],event['time']])
+        else:
+            leaf=next((f for f in event.get('fired_triggers',[])
+                       if f['trigger']==record['trigger'] and f.get('kind')=='cross'),None)
+            expected=leaf.get('time_bounds') if leaf else None
+        lo,hi=bounds
+        identity=(record['event_record'],record['trigger'],record['query_index'])
+        if (record['event']!=event['event'] or record.get('origin')!=event['origin']
+                or bounds!=expected or lo<0 or hi>math.nextafter(lo,math.inf)
+                or not math.nextafter(lo,-math.inf)<=record['query_time_s']<=math.nextafter(hi,math.inf)
+                or identity in seen):
+            _invalid('portability advisory does not match a nearby committed cross certificate')
+        seen.add(identity)
+
+
 def validate_response(response, program, count, output_times=None, *, strobetimes=None):
     if (not isinstance(response, dict) or type(response.get('schema_version')) is not int
             or response['schema_version'] != SCHEMA_VERSION
@@ -105,6 +154,7 @@ def validate_response(response, program, count, output_times=None, *, strobetime
     if output_times is None:
         if 'transient' in response:
             _invalid('static response unexpectedly contains a transient trace')
+        _portability_advisories(response, program, output_times)
         return response
     trace = response.get('transient')
     if (not isinstance(trace, dict) or not _vector(trace.get('times'), count)
@@ -146,4 +196,5 @@ def validate_response(response, program, count, output_times=None, *, strobetime
                     or kind == 'cross' and not _finite(leaf.get('guard_value'))
                     or kind == 'timer' and 'guard_value' in leaf):
                 _invalid('fired trigger type or guard value does not match the request')
+    _portability_advisories(response, program, output_times)
     return response

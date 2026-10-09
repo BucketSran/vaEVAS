@@ -262,6 +262,8 @@ pub struct Response {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub strobe_evidence: Option<StrobeEvidence>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub portability_advisories: Option<PortabilityAdvisories>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub observation_evidence: Option<ObservationEvidence>,
     pub engine: String,
     pub schema_version: u32,
@@ -519,4 +521,28 @@ pub struct TransientTrace {
     pub events: Vec<EventRecord>,
     pub accepted_steps: usize,
     pub discarded_trials: usize,
+}
+
+/// Bounded, nonblocking local portability notices, independent of IR versions.
+#[derive(Debug, Serialize)]
+pub struct PortabilityAdvisories {
+    pub schema_version: u32,
+    pub record_limit: usize,
+    pub records: Vec<PortabilityAdvisory>,
+    pub dropped_records: usize,
+    pub truncated: bool,
+}
+
+#[derive(Debug, Serialize)]
+pub struct PortabilityAdvisory {
+    pub code: &'static str,
+    pub nonblocking: bool,
+    pub message: &'static str,
+    pub event_record: usize,
+    pub event: usize,
+    pub trigger: usize,
+    pub origin: String,
+    pub query_index: usize,
+    pub query_time_s: f64,
+    pub root_time_bounds_s: [f64; 2],
 }

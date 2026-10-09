@@ -25,6 +25,7 @@ mod linear;
 mod nonlinear;
 mod observation;
 mod operators;
+mod portability;
 mod pwl;
 mod reset_dependencies;
 mod schedule;
@@ -58,7 +59,9 @@ pub fn run_with_threads(request: Request, static_threads: usize) -> Result<Respo
         ));
     }
     if request.transient.is_some() {
-        return transient::run(request);
+        let mut response = transient::run(request)?;
+        response.portability_advisories = portability::collect(response.transient.as_ref());
+        return Ok(response);
     }
     if !request.program.states.is_empty()
         || !request.program.events.is_empty()
@@ -79,6 +82,7 @@ pub fn run_with_threads(request: Request, static_threads: usize) -> Result<Respo
     let solutions = batch::solve(&circuit, &request.samples, static_threads)?;
     Ok(Response {
         strobe_evidence: None,
+        portability_advisories: None,
         observation_evidence: None,
         engine: concat!("evas-static-", env!("CARGO_PKG_VERSION")).into(),
         schema_version: SCHEMA_VERSION,

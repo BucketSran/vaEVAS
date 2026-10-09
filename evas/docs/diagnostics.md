@@ -4,6 +4,34 @@
 编译预检查单独报告已完成的静态检查，不表示执行受支持。
 普通 `solve` / `transient` 的成功 JSON 格式沿用现有接口；实际包与 IR 版本见[身份接口](identity.md)。
 
+## 事件边界观察的可移植性提示
+
+成功的瞬态响应可选包含 `portability_advisories`，其 `schema_version=1` 独立于 IR
+版本。当前唯一 code 为 `cross_observation_boundary`。它表示某个请求观察点位于已提交
+`cross` 根证书端点的一位 binary64 邻点以内。普通 cross 使用事件提交记录的
+`observation_time_bounds`，点证书使用记录时间；OR 事件使用已触发 cross 叶子的
+`time_bounds`。证书端点最多相隔一个 binary64 邻点，跨度更大的证书不生成提示。
+内核在成功求解后用已排序观察网格查找邻点，不重新求根、不调用模型，也不修改历史。
+
+每条记录提供 `event_record`、`event`、`trigger`、源码位置标签 `origin`、`query_index`、
+`query_time_s` 和 `root_time_bounds_s`，索引绑定本次响应与编译 IR。
+`nonblocking=true` 和消息说明边界样本可能依赖后端的事件与观察顺序，建议对比附近
+样本。该提示只报告本次 EVAS 运行的局部风险，不能由证书推断根的精确前后关系，
+不能证明实际 Spectre 差异、模型非法或函数不稳定。没有近邻观察请求的普通 cross
+不生成提示；timer 本身不触发此提示。
+
+`record_limit=128` 限制存储条数，`dropped_records` 保留超限匹配数，
+`truncated` 与是否存在超限匹配一致。缺少此可选字段表示没有保存提示，旧内核响应
+继续接受。Python 协议验证记录的版本、预算、观察身份和提交证书绑定；诊断 capture
+与结果目录的 `result.json` 保留完整响应字段。提示不改变成功/失败、已有波形、残差、
+事件和状态，截断也不影响模拟。
+
+公共回归见 [test_boundary_portability.py](../tests/test_boundary_portability.py)，包含原始
+[C1](../validation/event_alignment/C1/dut.va)、binary64 邻点、远离边界与 timer 负例、OR
+触发身份、预算和响应保存。C1 的[既有实际 Spectre 证据](../../experiments/backends/event-alignment/c1-shared-callback.md)
+只作为该原模型的背景，原严格 C1 仍为 F，指定查询覆盖仍为 I；本提示不产生新的
+后端对照结论。仅增加诊断且保持模拟行为不变时，不需要新的 Spectre 运行。
+
 ## 编译和执行失败
 
 Python `CompileError.diagnostic` 与 `KernelError.diagnostic` 提供

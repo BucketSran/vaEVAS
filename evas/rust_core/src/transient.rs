@@ -1008,6 +1008,7 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
     );
     Ok(Response {
         strobe_evidence: None,
+        portability_advisories: None,
         observation_evidence: Some(observation_evidence),
         engine: concat!("evas-events-", env!("CARGO_PKG_VERSION")).into(),
         schema_version: SCHEMA_VERSION,
@@ -1059,6 +1060,7 @@ fn run_stateless_transient(
     );
     Ok(Response {
         strobe_evidence: None,
+        portability_advisories: None,
         observation_evidence: Some(observation_evidence),
         engine: concat!("evas-events-", env!("CARGO_PKG_VERSION")).into(),
         schema_version: SCHEMA_VERSION,

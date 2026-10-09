@@ -679,6 +679,7 @@ pub(crate) fn run(
     );
     Ok(Response {
         strobe_evidence: None,
+        portability_advisories: None,
         observation_evidence: Some(observation_evidence),
         engine: concat!("evas-implicit-", env!("CARGO_PKG_VERSION")).into(),
         schema_version: crate::ir::SCHEMA_VERSION,
