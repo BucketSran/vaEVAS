@@ -102,6 +102,53 @@ class RunnerContracts(unittest.TestCase):
             self.assertEqual(result['request_echo']['maxstep'],2e-10)
             self.assertEqual(result['observed_response']['engine'],'fixture')
 
+    def test_compact_response_preserves_all_fields_values_and_unknown_bounds(self):
+        import json,math
+        from runner import save_raw_response
+        response={'engine':'synthetic calibration', 'nodes':['u','phase'],
+                  'solutions':[{'voltages':[0.1,-0.0]},{'voltages':[1.0,0.9999999999999999]}],
+                  'observation_evidence':{'voltage_bounds_V':[None,[[0.9,1.1],[0.99,1.0]]]},
+                  'transient':{'times':[0,0.30000000000000004],'events':[{'time':0.1,'before':[0],'after':[1]}]}}
+        with tempfile.TemporaryDirectory() as tmp:
+            path=Path(tmp)/'raw.json';save_raw_response(path,response)
+            blob=path.read_text();parsed=json.loads(blob)
+            self.assertEqual(parsed,response)
+            self.assertEqual(math.copysign(1,parsed['solutions'][0]['voltages'][1]),-1)
+            self.assertTrue(blob.endswith('\n'));self.assertEqual(blob.count('\n'),1)
+            self.assertLess(len(blob),len(json.dumps(response,indent=2)))
+            with self.assertRaises(FileExistsError):save_raw_response(path,response)
+            with self.assertRaises(ValueError):save_raw_response(Path(tmp)/'invalid.json',{'v':float('nan')})
+
+    def test_actual_controls_override_request_echo_and_keep_unsupported_unknown(self):
+        import json
+        from runner import evas_effective_record,effective_settings
+        request={'reltol':1e-5,'vabstol':1e-7,'stop':6e-6,'max_step':2e-10}
+        controls={'relative':2e-5,'absolute_V':3e-7,'stop_s':5e-6,'max_step_s':1e-10,'max_step_applied':False}
+        response={'engine':'synthetic calibration','transient':{'accepted_steps':0},
+                  'observation_evidence':{'effective_controls':controls,'sample_origins':['stateless_working_point']*3}}
+        with tempfile.TemporaryDirectory() as tmp:
+            work=Path(tmp)
+            (work/'requested_settings.json').write_text(json.dumps({'reltol':1e-5,'vabstol_V':1e-7,
+                 'iabstol_A':1e-12,'stop_s':6e-6,'maxstep_s':2e-10}))
+            record=evas_effective_record(request,response)
+            self.assertEqual(record['runtime_controls'],controls)
+            self.assertEqual(record['sample_origin_summary'],{'stateless_working_point':3})
+            (work/'effective.json').write_text(json.dumps(record))
+            result=effective_settings(work,'evas')
+            self.assertEqual(result['actual']['reltol'],2e-5)
+            self.assertEqual(result['actual']['vabstol'],3e-7)
+            self.assertEqual(result['actual']['stop'],5e-6)
+            self.assertEqual(result['actual']['maxstep'],1e-10)
+            self.assertFalse(result['max_step_applied'])
+            self.assertEqual(set(result['mismatches']),{'reltol','vabstol','stop','maxstep'})
+            self.assertEqual(result['actual']['iabstol'],'unknown')
+            self.assertIn('unknown',result['actual']['method']);self.assertEqual(result['status'],'I')
+            legacy=dict(response);legacy.pop('observation_evidence')
+            (work/'effective.json').write_text(json.dumps(evas_effective_record(request,legacy)))
+            old=effective_settings(work,'evas')
+            self.assertEqual(old['actual']['reltol'],'unknown')
+            self.assertEqual(old['max_step_applied'],'unknown');self.assertEqual(old['status'],'I')
+
     def test_drift_after_first_case_preserves_complete_lane_receipt(self):
         import json
         from unittest.mock import patch
