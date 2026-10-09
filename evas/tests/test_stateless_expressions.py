@@ -26,7 +26,7 @@ def compile_expr(expressions, prefix='', declarations=''):
     if isinstance(expressions,str): expressions={'y':expressions}
     outputs=tuple(expressions)
     ports=','.join((*INPUTS,*outputs,'r'))
-    source=f'module logic({ports}); input a,b,c,u; output '+','.join(outputs)+f'; inout r; electrical {ports}; {declarations} analog begin '
+    source='`include "disciplines.vams"\n'+f'module logic({ports}); input a,b,c,u; output '+','.join(outputs)+f'; inout r; electrical {ports}; {declarations} analog begin '
     source+=prefix+''.join(f'V({n},r)<+{expr};' for n,expr in expressions.items())+' end endmodule'
     return compile_sources({'logic.va':source},[Instance('dut','logic',{n:n for n in (*INPUTS,*outputs)}|{'r':'0'}, {})])
 
