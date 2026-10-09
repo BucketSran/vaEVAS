@@ -17,9 +17,9 @@ from test_affine import KERNEL, instance, model
 
 COUNTER = model('''
   @(initial_step) begin up=0; down=0; end
-  @(cross(V(u,r)-.5, +1, 100p, 100u)) up=up+1;
-  @(cross(V(u,r)-.5, -1, 100p, 100u)) down=down+1;
-  V(y,r)<+.1*up+.01*down;
+  @(cross(V(u,r)-0.5, +1, 100p, 100u)) up=up+1;
+  @(cross(V(u,r)-0.5, -1, 100p, 100u)) down=down+1;
+  V(y,r)<+0.1*up+0.01*down;
 ''', 'integer up,down;')
 
 
@@ -105,7 +105,7 @@ class EventContracts(unittest.TestCase):
                 arrival = 1 if before < .5 else -1
                 for direction in [0, 1, -1]:
                     source = model(f'''@(initial_step) n=0;
-                      @(cross(V(u,r)-.5,{direction},100p,100u)) n=n+1;
+                      @(cross(V(u,r)-0.5,{direction},100p,100u)) n=n+1;
                       V(y,r)<+n;''', 'integer n;')
                     expected = int(direction in [0, arrival])
                     for step in [10e-6, 7e-9]:
@@ -144,7 +144,7 @@ class EventContracts(unittest.TestCase):
 
     def test_both_directions_sequential_assignments_and_initial_parameter(self):
         source = model('''@(initial_step) begin n=start; v=1; end
-          @(cross(V(u,r)-.5,0)) begin n=n+1; v=n+v; end
+          @(cross(V(u,r)-0.5,0)) begin n=n+1; v=n+v; end
           V(y,r)<+v;''', 'parameter real start=2; integer n; real v;')
         r = execute_event(source)
         self.assertEqual(r['transient']['states'][-1],[5,13])
@@ -152,9 +152,9 @@ class EventContracts(unittest.TestCase):
 
     def test_internal_affine_feedback_guard_uses_solved_voltage(self):
         source = model('''@(initial_step) n=0;
-          V(z,r)<+V(u,r)+.5*V(z,r);
+          V(z,r)<+V(u,r)+0.5*V(z,r);
           @(cross(V(z,r)-1,0)) n=n+1;
-          V(y,r)<+.1*n;''', 'integer n; electrical z;')
+          V(y,r)<+0.1*n;''', 'integer n; electrical z;')
         r = execute_event(source)
         self.assertEqual(r['transient']['states'][-1],[3])
         for e,t in zip(r['transient']['events'],[.5e-6,1.5e-6,2.5e-6]):
@@ -174,8 +174,8 @@ class EventContracts(unittest.TestCase):
 
     def test_simultaneous_events_sample_common_settled_voltages(self):
         source = model('''@(initial_step) begin n=0; held=0; end
-          @(cross(V(u,r)-.5,1)) n=n+1;
-          @(cross(V(u,r)-.5,1)) held=V(y,r);
+          @(cross(V(u,r)-0.5,1)) n=n+1;
+          @(cross(V(u,r)-0.5,1)) held=V(y,r);
           V(y,r)<+n;''','integer n; real held;')
         r = execute_event(source)
         self.assertEqual(r['transient']['states'][-1],[2,2])
@@ -191,15 +191,15 @@ class EventContracts(unittest.TestCase):
             self.assertAlmostEqual(e['time'],t,delta=1e-18)
 
     def test_empty_event_body_forces_evaluation_without_state(self):
-        source = model('@(cross(V(u,r)-.5)) ; V(y,r)<+V(u,r);')
+        source = model('@(cross(V(u,r)-0.5)) ; V(y,r)<+V(u,r);')
         r = execute_event(source,times=[0,3e-6])
         self.assertEqual(r['transient']['state_names'],[])
         self.assertEqual(len(r['transient']['events']),3)
         self.assertEqual(len(r['solutions']),2)
 
     def test_state_contributions_keep_orientation_addition_and_feedback(self):
-        source = model('''@(initial_step) n=0; @(cross(V(u,r)-.5,0)) n=n+1;
-          V(y,r)<+.1*n+.5*V(y,r); V(r,y)<+-.2*n;''','integer n;')
+        source = model('''@(initial_step) n=0; @(cross(V(u,r)-0.5,0)) n=n+1;
+          V(y,r)<+0.1*n+0.5*V(y,r); V(r,y)<+-0.2*n;''','integer n;')
         r = execute_event(source)
         y = r['nodes'].index('y')
         self.assertAlmostEqual(r['solutions'][-1]['voltages'][y],1.8,places=12)
@@ -220,7 +220,7 @@ class EventRejections(unittest.TestCase):
             ('integer n;','@(initial_step) n=0; @(cross(V(u),2)) n=n+1; V(y)<+n;'),
             ('integer n;','@(initial_step) n=0; @(cross(V(u),1,0)) n=n+1; V(y)<+n;'),
             ('integer n;','@(initial_step) n=0; @(timer(V(u))) n=n+1; V(y)<+n;'),
-            ('integer n;','@(initial_step) n=0; @(cross(V(u),1)) n=n+.5; V(y)<+n;'),
+            ('integer n;','@(initial_step) n=0; @(cross(V(u),1)) n=n+0.5; V(y)<+n;'),
             ('integer n;','@(initial_step) n=0; @(cross(V(u),1)) n=n+1; V(y)<+transition(n,0);'),
         ]
         for declarations, body in bodies:
@@ -229,13 +229,13 @@ class EventRejections(unittest.TestCase):
 
     def test_state_feedback_nonlinear_and_cross_block_state_dependency_rejected(self):
         for source in [
-            model('@(initial_step) n=0; @(cross(V(y)-.5,1)) n=n+1; V(y)<+V(u)+n;','integer n;'),
-            model('''@(initial_step) n=0; @(cross(V(u)-.5,1)) n=n+1;
-              @(cross(V(y)-.25,1)) ; V(y)<+V(y)+n; V(y)<+-2*V(y);''','integer n;'),
+            model('@(initial_step) n=0; @(cross(V(y)-0.5,1)) n=n+1; V(y)<+V(u)+n;','integer n;'),
+            model('''@(initial_step) n=0; @(cross(V(u)-0.5,1)) n=n+1;
+              @(cross(V(y)-0.25,1)) ; V(y)<+V(y)+n; V(y)<+-2*V(y);''','integer n;'),
             model('@(initial_step) n=0; @(cross(V(u),1)) n=n+1; V(y)<+V(u)*V(u)+n;','integer n;'),
             model('''@(initial_step) begin n=0; m=0; end
-              @(cross(V(u)-.5,1)) n=m+1;
-              @(cross(V(u)-.5,-1)) m=n+1; V(y)<+n+m;''','integer n,m;'),
+              @(cross(V(u)-0.5,1)) n=m+1;
+              @(cross(V(u)-0.5,-1)) m=n+1; V(y)<+n+m;''','integer n,m;'),
         ]:
             with self.subTest(source=source), self.assertRaises((CompileError,KernelError)):
                 execute_event(source)
@@ -245,7 +245,7 @@ class EventRejections(unittest.TestCase):
             arrival = 1 if before < .5 else -1
             for direction in [0,1,-1]:
                 source = model(f'''@(initial_step) n=0;
-                  @(cross(V(u,r)-.5,{direction},100p,100u)) n=n+1;
+                  @(cross(V(u,r)-0.5,{direction},100p,100u)) n=n+1;
                   V(y,r)<+n;''', 'integer n;')
                 expected = int(direction in [0,arrival])
                 for continued in [False,True]:
@@ -267,7 +267,7 @@ class EventRejections(unittest.TestCase):
                 for end in [1e-6+20e-12,2e-6]:
                     for direction in [0,1,-1]:
                         source = model(f'''@(initial_step) n=0;
-                          @(cross(V(u,r)-.5,{direction},100p,100u)) n=n+1;
+                          @(cross(V(u,r)-0.5,{direction},100p,100u)) n=n+1;
                           V(y,r)<+n;''', 'integer n;')
                         expected = int(direction in [0,arrival])
                         for step in [10e-6,7e-9]:
@@ -299,8 +299,8 @@ class EventRejections(unittest.TestCase):
 
     def test_terminal_batch_settles_without_stop_output(self):
         source = model('''@(initial_step) begin n=0; held=0; end
-          @(cross(V(u,r)-.5,1)) n=n+1;
-          @(cross(V(u,r)-.5,1)) held=V(y,r);
+          @(cross(V(u,r)-0.5,1)) n=n+1;
+          @(cross(V(u,r)-0.5,1)) held=V(y,r);
           V(y,r)<+n;''', 'integer n; real held;')
         for times in [[0,1e-6],[0,1e-6,3e-6]]:
             r = execute_event(source, sources={'u':[[0,.375],[3e-6,.5]]}, times=times)

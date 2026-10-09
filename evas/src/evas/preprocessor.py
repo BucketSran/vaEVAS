@@ -4,12 +4,12 @@ No filesystem lookup. Tokens retain invocation/include locations and expansion
 paths, so preprocessing cannot collapse operator call-site identities.
 """
 from dataclasses import dataclass, replace
-import math
 import posixpath
 import re
 from .errors import CompileError
 from .limits import MAX_IR_ITEMS, MAX_SOURCE_NESTING
 from .syntax import Token, _tokens
+from .standard_headers import STANDARD_HEADERS
 
 
 @dataclass(frozen=True)
@@ -25,8 +25,7 @@ def preprocess_sources(sources):
         if key in files:
             raise CompileError(f'duplicate normalized source path {key!r}')
         files[key] = _tokens(text, key, tolerant=True)[:-1]
-    macros = {'M_PI':Macro(None,(Token(repr(math.pi),'number',1,1),)),
-              '__VAMS_ENABLE__':Macro(None,()), '__LINE__':Macro(None,()), '__FILE__':Macro(None,())}
+    macros = {'__VAMS_ENABLE__':Macro(None,()), '__LINE__':Macro(None,()), '__FILE__':Macro(None,())}
     count = 0
 
     def fail(message, token, *, code="compile_error"):
@@ -165,8 +164,8 @@ def preprocess_sources(sources):
                 i += 1
                 target = include_path(token)
                 requested = token.text.split('"')[1]
-                if requested in ('constants.vams','disciplines.vams') and target not in files:
-                    continue
+                if requested in STANDARD_HEADERS and target not in files:
+                    files[target] = _tokens(STANDARD_HEADERS[requested], target, tolerant=True)[:-1]
                 if target not in files:
                     fail(f'include source {target!r} was not provided',token)
                 # The same source location can occur through several include
@@ -227,6 +226,11 @@ def preprocess_sources(sources):
     result = []
     for name in roots:
         tokens=file_tokens(name)
+        # Validate only tokens retained by preprocessing. An unused macro
+        # argument or inactive branch is not part of the compiled program.
+        for token in tokens:
+            if token.kind == 'number' and not re.fullmatch(r'\d+(?:\.\d+)?(?:[eE][+-]?\d+)?[TGMkKmunpfa]?', token.text):
+                fail('real literal requires digits on both sides of the decimal point', token, code='syntax_error')
         if tokens:
             tokens.append(Token('<eof>','eof',tokens[-1].line,tokens[-1].column,name))
             result.append((name,tokens))

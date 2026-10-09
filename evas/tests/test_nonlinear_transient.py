@@ -73,8 +73,8 @@ class NonlinearTransientContracts(unittest.TestCase):
     def test_scalar_positive_and_negative_slopes_match_exact_pwl_cubic_roots(self):
         times = [0.125, 1.0, 1.75, 3.0]
         # Both equations express y + .5*y^3 = u, with opposite F' signs.
-        for body in ("V(y,r)<+V(u,r)-.5*pow(V(y,r),3);",
-                     "V(y,r)<+2*V(y,r)+.5*pow(V(y,r),3)-V(u,r);"):
+        for body in ("V(y,r)<+V(u,r)-0.5*pow(V(y,r),3);",
+                     "V(y,r)<+2*V(y,r)+0.5*pow(V(y,r),3)-V(u,r);"):
             with self.subTest(body=body):
                 program = compile_sources({"scalar.va": model(body)},
                                           [instance(connections=dict(u="u", y="y", r="0"))])
@@ -86,7 +86,7 @@ class NonlinearTransientContracts(unittest.TestCase):
                     lo, hi = Decimal(0), Decimal(1)
                     for _ in range(260):
                         mid = (lo+hi)/2
-                        if mid + Decimal('.5')*mid**3 < target:
+                        if mid + Decimal('0.5')*mid**3 < target:
                             lo = mid
                         else:
                             hi = mid
@@ -94,7 +94,7 @@ class NonlinearTransientContracts(unittest.TestCase):
                     self.assertLessEqual(abs(value-(lo+hi)/2), exact_float(1e-10))
 
     def test_scalar_certificate_keeps_feedback_amplification_in_the_budget(self):
-        source = model("V(y,r)<+.99999999999999*V(y,r)+(V(u,r)-1)-1e-40*pow(V(y,r),3);")
+        source = model("V(y,r)<+0.99999999999999*V(y,r)+(V(u,r)-1)-1e-40*pow(V(y,r),3);")
         program = compile_sources({"scalar-gain.va": source},
                                   [instance(connections=dict(u="u", y="y", r="0"))])
         sources = {"u": [[0,1],[3,math.nextafter(1,math.inf)]]}
@@ -109,7 +109,7 @@ class NonlinearTransientContracts(unittest.TestCase):
     def compile_cubic(self, cubic=0.5, scale=1.0):
         source = model(
             "V(y,r)<+V(u,r)-c*pow(V(y,r),3)/(s*s);",
-            "parameter real c=.5; parameter real s=1;",
+            "parameter real c=0.5; parameter real s=1;",
         )
         return compile_sources(
             {"nonlinear.va": source},

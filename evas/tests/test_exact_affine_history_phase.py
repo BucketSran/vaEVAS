@@ -30,7 +30,7 @@ class ExactAffineHistoryPhase(unittest.TestCase):
     def test_polynomial_history_query_does_not_inherit_affine_root_certificate(self):
         folder=Path(__file__).resolve().parents[1]/'validation/event_acceptance/cases/E5-base'
         manifest=json.loads((folder/'evas-manifest.json').read_text())
-        source=(folder/'dut.va').read_text().replace('V(z,r)-1','V(z,r)*V(z,r)-.1')
+        source=(folder/'dut.va').read_text().replace('V(z,r)-1','V(z,r)*V(z,r)-0.1')
         program=compile_sources({'dut.va':source},[Instance(**i) for i in manifest['instances']])
         with self.assertRaises(KernelError) as failure:
             transient(program,manifest['transient']['sources'],[0,math.sqrt(.1)/3,2],stop=2,max_step=.02,vabstol=1e-8,reltol=0,kernel=KERNEL)

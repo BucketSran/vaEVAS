@@ -54,7 +54,7 @@ class HistoryAccuracy(unittest.TestCase):
         self.assertLessEqual(abs(F(value(result, 1))-F(1073741824, 3)), F(1e-6))
 
     def test_initial_affine_input_arithmetic_is_enclosed(self):
-        body = 'V(y,r)<+absdelay(.1*V(u,r)+.2*V(u,r),0);'
+        body = 'V(y,r)<+absdelay(0.1*V(u,r)+0.2*V(u,r),0);'
         sources = {'u': [[0, 1], [3, 1]]}
         with self.assertRaisesRegex(KernelError, 'waveform_accuracy'):
             execute(body, sources=sources, atol=1e-18)
@@ -76,8 +76,8 @@ class HistoryAccuracy(unittest.TestCase):
 
     def test_sampled_history_error_survives_later_event(self):
         body = ('@(initial_step) begin b=0;c=0;end '
-                '@(timer(1,0,.001)) b=V(y,r); '
-                '@(timer(2,0,.001)) c=1073741824*V(z,r)-357913941.3333333+1; '
+                '@(timer(1,0,0.001)) b=V(y,r); '
+                '@(timer(2,0,0.001)) c=1073741824*V(z,r)-357913941.3333333+1; '
                 'V(y,r)<+absdelay(V(u,r),0); V(z,r)<+b; V(w,r)<+c;')
         declarations = 'real b,c; electrical z,w;'
         with self.assertRaisesRegex(KernelError, 'waveform_accuracy'):

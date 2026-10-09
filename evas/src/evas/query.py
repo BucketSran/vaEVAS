@@ -2,7 +2,7 @@
 from dataclasses import asdict
 
 from .ir import Program
-from .syntax import Parser
+from .frontend import parse_sources
 
 
 def _references(value):
@@ -32,9 +32,8 @@ def _references(value):
 def static_index(program: Program, instances=(), sources=None):
     """Return actual source origins and connectivity. Indices belong to this IR."""
     modules = []
-    for path, source in (sources or {}).items():
-        model = Parser(source, path).parse()
-        modules.append(dict(name=model.name, source=path, ports=list(model.ports),
+    for model in parse_sources(sources or {}).values():
+        modules.append(dict(name=model.name, source=model.source, ports=list(model.ports),
                             local_nodes=sorted(model.nodes), parameters=list(model.parameters)))
     ir = program.to_dict()
     contributions = []

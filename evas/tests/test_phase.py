@@ -37,7 +37,8 @@ def decimal_sin(value):
 
 
 def source(body, ports="f,out,total,phase,r", declarations=""):
-    return f"""`include "constants.vams"
+    return f"""`include "disciplines.vams"
+`include "constants.vams"
 module m({ports});
 input f; output out,total,phase; inout r;
 electrical {ports};
@@ -55,11 +56,11 @@ def compile_phase(body, declarations="real total_phase, phase_v;"):
 
 def run_phase(points, times, body=None, declarations="real total_phase, phase_v;", **tolerances):
     body = body or """
-total_phase = idt(V(f,r), .125);
-phase_v = idtmod(V(f,r), .125, 1, 0);
+total_phase = idt(V(f,r), 0.125);
+phase_v = idtmod(V(f,r), 0.125, 1, 0);
 V(total,r)<+total_phase;
 V(phase,r)<+phase_v;
-V(out,r)<+.8*sin(2*`M_PI*phase_v);
+V(out,r)<+0.8*sin(2*`M_PI*phase_v);
 """
     return transient(compile_phase(body, declarations), {"f": points}, times, stop=points[-1][0],
                      max_step=points[-1][0] or 1, kernel=KERNEL, **tolerances)
@@ -151,7 +152,7 @@ class PhaseContracts(unittest.TestCase):
 
     def test_repeated_phase_alias_affine_coefficients_match_decimal_reference(self):
         body = """
-phase_v = idtmod(V(f,r), .125, 1, 0);
+phase_v = idtmod(V(f,r), 0.125, 1, 0);
 V(out,r)<+sin(2*phase_v + phase_v);
 V(total,r)<+0;
 V(phase,r)<+phase_v;
@@ -164,7 +165,7 @@ V(phase,r)<+phase_v;
 
     def test_repeated_phase_alias_cancellation_keeps_coefficient_roundoff_budget(self):
         body = """
-phase_v = idtmod(V(f,r), .125, 1, 0);
+phase_v = idtmod(V(f,r), 0.125, 1, 0);
 V(out,r)<+sin(1e16*phase_v + phase_v - (1e16-2)*phase_v);
 V(total,r)<+0;
 V(phase,r)<+phase_v;
@@ -179,8 +180,8 @@ V(phase,r)<+phase_v;
 
     def test_sin_rejects_second_operator_hidden_by_exact_cancellation(self):
         body = """
-phase_p = idtmod(V(f,r), .125, 1, 0);
-phase_q = idtmod(V(f,r), .25, 1, 0);
+phase_p = idtmod(V(f,r), 0.125, 1, 0);
+phase_q = idtmod(V(f,r), 0.25, 1, 0);
 V(out,r)<+sin(phase_p + phase_q - phase_q);
 V(total,r)<+0;
 V(phase,r)<+phase_p;
@@ -192,8 +193,8 @@ V(phase,r)<+phase_p;
 
     def test_sin_rejects_second_operator_hidden_by_zero_multiplier(self):
         body = """
-phase_p = idtmod(V(f,r), .125, 1, 0);
-phase_q = idtmod(V(f,r), .25, 1, 0);
+phase_p = idtmod(V(f,r), 0.125, 1, 0);
+phase_q = idtmod(V(f,r), 0.25, 1, 0);
 V(out,r)<+sin(phase_p + 0*phase_q);
 V(total,r)<+0;
 V(phase,r)<+phase_p;
@@ -212,8 +213,8 @@ V(phase,r)<+phase_p;
 
     def test_sine_of_wrapped_phase_uses_two_side_certificate_at_wrap(self):
         body = """
-phase_v = idtmod(V(f,r), .125, 1, 0);
-V(out,r)<+.8*sin(2*`M_PI*phase_v);
+phase_v = idtmod(V(f,r), 0.125, 1, 0);
+V(out,r)<+0.8*sin(2*`M_PI*phase_v);
 V(total,r)<+0;
 V(phase,r)<+phase_v;
 """
@@ -223,7 +224,7 @@ V(phase,r)<+phase_v;
 
     def test_wrapped_phase_voltage_certifies_binary64_side_and_exact_boundary(self):
         body = """
-phase_v = idtmod(V(f,r), .125, 1, 0);
+phase_v = idtmod(V(f,r), 0.125, 1, 0);
 V(out,r)<+0;
 V(total,r)<+0;
 V(phase,r)<+phase_v;
@@ -246,7 +247,7 @@ V(phase,r)<+phase_v;
 
     def test_wrapped_phase_voltage_certifies_negative_frequency_and_offset_boundary(self):
         body = """
-phase_v = idtmod(V(f,r), .125, 1, 0);
+phase_v = idtmod(V(f,r), 0.125, 1, 0);
 V(out,r)<+0;
 V(total,r)<+0;
 V(phase,r)<+phase_v;
@@ -264,7 +265,7 @@ V(phase,r)<+phase_v;
                 self.assertLessEqual(abs(F(observed) - exact), budget)
 
         offset_body = """
-phase_v = idtmod(V(f,r), .125, 1, .25);
+phase_v = idtmod(V(f,r), 0.125, 1, 0.25);
 V(out,r)<+0;
 V(total,r)<+0;
 V(phase,r)<+phase_v;
@@ -289,7 +290,7 @@ V(phase,r)<+phase_v;
 
     def test_wrapped_phase_voltage_certifies_binary64_coefficient_boundary(self):
         body = """
-phase_v = idtmod(V(f,r)/3, .125, 1, 0);
+phase_v = idtmod(V(f,r)/3, 0.125, 1, 0);
 V(out,r)<+0;
 V(total,r)<+0;
 V(phase,r)<+phase_v;
@@ -311,7 +312,7 @@ V(phase,r)<+phase_v;
 
     def test_exact_binary_wrapped_output_meets_strict_voltage_budget(self):
         body = """
-phase_v = idtmod(V(f,r), .125, 1, 0);
+phase_v = idtmod(V(f,r), 0.125, 1, 0);
 V(total,r)<+0;
 V(phase,r)<+phase_v;
 V(out,r)<+0;
@@ -334,7 +335,7 @@ V(out,r)<+0;
 
     def test_raw_ir_rejects_missing_or_extra_phase_operator_fields(self):
         program = compile_phase("""
-phase_v = idtmod(V(f,r), .125, 1, 0);
+phase_v = idtmod(V(f,r), 0.125, 1, 0);
 V(out,r)<+sin(2*`M_PI*phase_v); V(total,r)<+0; V(phase,r)<+phase_v;
 """, declarations="real phase_v;").to_dict()
         mutations = []

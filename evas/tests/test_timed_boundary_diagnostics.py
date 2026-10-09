@@ -8,13 +8,13 @@ SOURCE=lambda expression:model('@(initial_step) q=0; V(y,r)<+'+expression+';', '
 CASES=[('transition(q)', 'unsupported_transition_default_edges','parse','transition requires 3 or 4 explicit arguments'),
        ('transition(q,0)', 'unsupported_transition_default_edges','parse','transition requires 3 or 4 explicit arguments'),
        ('transition(q,0,0)', 'unsupported_transition_zero_edges','lowering','transition requires nonnegative delay and positive explicit edge times'),
-       ('transition(q,0,.5,0)', 'unsupported_transition_zero_edges','lowering','transition requires nonnegative delay and positive explicit edge times'),
-       ('transition(q,q,.5)', 'unsupported_transition_timing_dependency','lowering',"unknown parameter 'q'"),
-       ('transition(q,0,0*q+.5)', 'unsupported_transition_timing_dependency','lowering',"unknown parameter 'q'"),
-       ('transition(q,0,.5,q)', 'unsupported_transition_timing_dependency','lowering',"unknown parameter 'q'")]
+       ('transition(q,0,0.5,0)', 'unsupported_transition_zero_edges','lowering','transition requires nonnegative delay and positive explicit edge times'),
+       ('transition(q,q,0.5)', 'unsupported_transition_timing_dependency','lowering',"unknown parameter 'q'"),
+       ('transition(q,0,0*q+0.5)', 'unsupported_transition_timing_dependency','lowering',"unknown parameter 'q'"),
+       ('transition(q,0,0.5,q)', 'unsupported_transition_timing_dependency','lowering',"unknown parameter 'q'")]
 # One representative guards the shared non-transition settings path.
 OUTSIDE_BOUNDARIES=[('absdelay(q,q)','compile_error','compile',"unknown parameter 'q'"),
-                    ('transition(q,0,.5,.5,0)','syntax_error','parse','transition requires 3 or 4 explicit arguments')]
+                    ('transition(q,0,0.5,0.5,0)','syntax_error','parse','transition requires 3 or 4 explicit arguments')]
 class TimedBoundaryReasons(unittest.TestCase):
  def test_actual_api_reasons_preserve_messages_and_origins(self):
   for expression,code,stage,message in CASES:
@@ -24,7 +24,7 @@ class TimedBoundaryReasons(unittest.TestCase):
    self.assertIn(message,str(caught.exception));self.assertEqual(error['message'],str(caught.exception))
    self.assertEqual(error['location']['source'],'timing.va');self.assertGreater(error['location']['line'],0)
  def test_outside_scope_api_rejections_keep_their_original_reason(self):
-  for expression in ['transition(q,-1,.5)','transition(q,0,-.5)','transition(q,0,.5,-.5)','transition(q,-1,0)','transition(q,0,missing)']:
+  for expression in ['transition(q,-1,0.5)','transition(q,0,-0.5)','transition(q,0,0.5,-0.5)','transition(q,-1,0)','transition(q,0,missing)']:
    with self.subTest(expression=expression),self.assertRaises(CompileError) as caught:compile_sources({'negative.va':SOURCE(expression)},[instance()])
    self.assertEqual(caught.exception.diagnostic['category'],'unknown')
    self.assertEqual(caught.exception.diagnostic['code'],'compile_error')

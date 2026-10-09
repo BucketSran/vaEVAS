@@ -91,7 +91,7 @@ class RuntimeContracts(unittest.TestCase):
     def test_mixed_or_records_cannot_fabricate_a_timer_guard_or_leaf_type(self):
         from evas.protocol import validate_response
         self.program=compile_sources({'runtime.va':model('''@(initial_step) n=0;
-            @(timer(.5,0,.001) or cross(V(u,r)-.5,1,.001,.001)) n=n+1;
+            @(timer(0.5,0,0.001) or cross(V(u,r)-0.5,1,0.001,0.001)) n=n+1;
             V(y,r)<+n;''','integer n;')},[instance()])
         record=dict(time=.5,event=0,origin='runtime.va',kind='or',before=[0],after=[1],
                     fired_triggers=[dict(trigger=0,kind='timer',time_bounds=[.5,.5]),

@@ -58,7 +58,7 @@ class LaplaceNpContracts(unittest.TestCase):
 
     def test_equivalent_nd_is_secondary_lowering_evidence(self):
         np = compile_np()
-        nd = compile_np("V(y,r)<+laplace_nd(V(u,r),'{b0},'{1,.25});")
+        nd = compile_np("V(y,r)<+laplace_nd(V(u,r),'{b0},'{1,0.25});")
         self.assertEqual(np.operators[0].kind, 'laplace_nd')
         self.assertEqual(np.operators[0].numerator, (1.,))
         self.assertEqual(np.operators[0].denominator, (1., .25))
@@ -113,8 +113,8 @@ class LaplaceNpContracts(unittest.TestCase):
             self.assertEqual(program.operators[0].denominator, (1., tau))
 
     def test_downstream_history_dependency_rejection_is_unchanged(self):
-        body = "V(z,r)<+laplace_np(V(u,r),'{1},'{-4,0}); V(y,r)<+absdelay(V(z,r),.25);"
-        for text in (body, body.replace("laplace_np(V(u,r),'{1},'{-4,0})", "laplace_nd(V(u,r),'{1},'{1,.25})")):
+        body = "V(z,r)<+laplace_np(V(u,r),'{1},'{-4,0}); V(y,r)<+absdelay(V(z,r),0.25);"
+        for text in (body, body.replace("laplace_np(V(u,r),'{1},'{-4,0})", "laplace_nd(V(u,r),'{1},'{1,0.25})")):
             with self.subTest(text=text), self.assertRaises(KernelError):
                 run(compile_np(text))
 

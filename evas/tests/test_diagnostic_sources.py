@@ -17,8 +17,8 @@ class DiagnosticSources(unittest.TestCase):
         self.assertEqual(error['stage'], 'lowering')
         self.assertEqual(error['location']['source'], 'nodes.va')
         self.assertEqual(error['instance'], 'dut')
-        self.assertEqual(error['location'], dict(source='nodes.va', line=1, column=source.index('V(missing,r)') + 1))
-        self.assertEqual(error['message'], f"nodes.va:1:{source.index('V(missing,r)') + 1}: undeclared electrical node in V(missing,r)")
+        self.assertEqual(error['location'], dict(source='nodes.va', line=2, column=source.splitlines()[1].index('V(missing,r)') + 1))
+        self.assertEqual(error['message'], f"nodes.va:2:{source.splitlines()[1].index('V(missing,r)') + 1}: undeclared electrical node in V(missing,r)")
 
     def test_duplicate_module_and_connection_mismatch_are_input_failures(self):
         source = model('V(y,r)<+V(u,r);')
@@ -28,7 +28,7 @@ class DiagnosticSources(unittest.TestCase):
         self.assertEqual(error['code'], 'duplicate_module')
         self.assertEqual(error['category'], 'invalid_input')
         self.assertEqual(error['location']['source'], 'second.va')
-        self.assertEqual(error['location']['line'], 1)
+        self.assertEqual(error['location']['line'], 2)
         bad = instance()
         from evas import Instance
         with self.assertRaises(CompileError) as missing:

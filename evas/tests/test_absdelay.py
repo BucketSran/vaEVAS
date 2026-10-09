@@ -91,7 +91,7 @@ class AbsDelayContracts(unittest.TestCase):
                     self.assertEqual(values, baseline)
 
     def test_affine_combination_uses_union_of_direct_source_knots(self):
-        source = model("V(y,r)<+absdelay(2*V(u,r)-.5*V(v,r)+.125,3n);",
+        source = model("V(y,r)<+absdelay(2*V(u,r)-0.5*V(v,r)+0.125,3n);",
                        ports="u,v,y,r", directions="input u,v; output y; inout r;")
         sources = {"u": POINTS, "v": [[0, 1], [2e-9, -1], [10e-9, 0]],
                    "r": [[0, .25], [6e-9, .5], [10e-9, .5]]}
@@ -167,7 +167,7 @@ class AbsDelayRejections(unittest.TestCase):
                 execute_delay(source)
 
     def test_cross_on_delayed_output_direct_or_indirect_is_rejected(self):
-        for guard in ["V(y,r)-.5", "V(z,r)-.5", "0*V(z,r)+V(u,r)-.5"]:
+        for guard in ["V(y,r)-0.5", "V(z,r)-0.5", "0*V(z,r)+V(u,r)-0.5"]:
             source = model(f'''@(initial_step) n=0;
               V(y,r)<+absdelay(V(u,r),1n); V(z,r)<+2*V(y,r);
               @(cross({guard},1)) n=n+1;''', "integer n; electrical z;")
@@ -179,7 +179,7 @@ class AbsDelayRejections(unittest.TestCase):
         for link in ["V(u,r)", "0*V(u,r)+V(v,r)",
                      "V(u,r)-V(u,r)+V(v,r)", "V(u,r)/1e308/1e308+V(v,r)"]:
             monitor = model(f'''@(initial_step) n=0; V(z,r)<+{link};
-              @(cross(V(z,r)-.5,1)) n=n+1; V(y,r)<+n;''', "integer n; electrical z;",
+              @(cross(V(z,r)-0.5,1)) n=n+1; V(y,r)<+n;''', "integer n; electrical z;",
                             ports="u,v,y,r", directions="input u,v; output y; inout r;")
             instances = [instance("producer", module="delayed", connections=dict(u="u", y="d", r="0")),
                          instance("monitor", connections=dict(u="d", v="u", y="y", r="0"))]

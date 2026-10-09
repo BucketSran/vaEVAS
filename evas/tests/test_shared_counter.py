@@ -30,8 +30,8 @@ class SharedCounter(unittest.TestCase):
 
     def test_self_updates_keep_statement_order_and_instance_isolation(self):
         source=model('''@(initial_step) n=4;
-          @(timer(.25)) begin n=n+1; n=n+2; end
-          @(timer(.75)) n=n-1; V(y,r)<+n;''','integer n;')
+          @(timer(0.25)) begin n=n+1; n=n+2; end
+          @(timer(0.75)) n=n-1; V(y,r)<+n;''','integer n;')
         p=compile_sources({'counter.va':source},[instance('a',connections=dict(u='u',y='a',r='0')),instance('b',connections=dict(u='u',y='b',r='0'))])
         result=transient(p,{'u':[[0,0],[1,0]]},[0,.5,1],stop=1,max_step=1,kernel=KERNEL)
         self.assertEqual(result['transient']['states'],[[4,4],[7,7],[6,6]])
@@ -44,7 +44,7 @@ class SharedCounter(unittest.TestCase):
             transient(p,{'u':[[0,0],[1,0]]},[0,1],stop=1,max_step=1,kernel=KERNEL)
 
     def test_integer_self_updates_check_intermediate_range(self):
-        source=model('@(initial_step) n=2147483647;\n            @(timer(0)) begin n=n+1; n=n-1; end\n            @(timer(.75)) n=n-1; V(y,r)<+n;', 'integer n;')
+        source=model('@(initial_step) n=2147483647;\n            @(timer(0)) begin n=n+1; n=n-1; end\n            @(timer(0.75)) n=n-1; V(y,r)<+n;', 'integer n;')
         p=compile_sources({'counter-range.va':source},[instance()])
         with self.assertRaisesRegex(KernelError,'state_range'):
             transient(p,{'u':[[0,0],[1,0]]},[0,1],stop=1,max_step=1,kernel=KERNEL)
@@ -53,8 +53,8 @@ class SharedCounter(unittest.TestCase):
         for rhs in ['q-q', '0*q', '(1e-200*1e-200)*q', 'n+q-q', 'n+0*q',
                     '2*n+1', '0*n+1', 'n+V(u,r)', 'n+idt(V(u,r),0)']:
             source=model(f'''@(initial_step) begin n=0; q=1; end
-              @(timer(.25)) begin n=n+1; q=2; end
-              @(timer(.75)) n={rhs}; V(y,r)<+n;''','real n,q;')
+              @(timer(0.25)) begin n=n+1; q=2; end
+              @(timer(0.75)) n={rhs}; V(y,r)<+n;''','real n,q;')
             with self.subTest(rhs=rhs):
                 try:
                     p=compile_sources({'counter-bad.va':source},[instance()])

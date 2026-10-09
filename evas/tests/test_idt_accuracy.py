@@ -136,7 +136,7 @@ fn main() {
     def test_fractional_integral_and_network_gain_require_history_budget(self):
         points = [[0, 0], [3, 1]]
         for body, gain in [('V(y,r)<+1073741824*idt(V(u,r),0);', 2**30),
-                           ('V(y,r)<+.99999904632568359375*V(y,r)+idt(V(u,r),0);', 2**20)]:
+                           ('V(y,r)<+0.99999904632568359375*V(y,r)+idt(V(u,r),0);', 2**20)]:
             program = compiled(body)
             with self.subTest(gain=gain), self.assertRaisesRegex(KernelError, 'waveform_accuracy'):
                 execute(program, points, [0, 1, 3], vabstol=1e-12, reltol=0)
@@ -157,7 +157,7 @@ fn main() {
             self.assertLessEqual(abs(F(actual)-F(2**30*t*t, 6)), F(1e-5))
 
     def test_affine_arithmetic_and_prior_segments_are_not_reset_to_points(self):
-        program = compiled('V(y,r)<+idt(.1*V(u,r)+.2*V(u,r),.1);')
+        program = compiled('V(y,r)<+idt(0.1*V(u,r)+0.2*V(u,r),0.1);')
         points = [[0, 1], [1, 1], [2, 1], [3, 1]]
         with self.assertRaisesRegex(KernelError, 'waveform_accuracy'):
             execute(program, points, [0, 1, 2, 3], vabstol=1e-18, reltol=0)
@@ -182,15 +182,15 @@ fn main() {
         times = [i/16 for i in range(257)]
         for sign in [1, -1]:
             source = [[t, sign*u] for t, u in points]
-            result = execute(compiled(f'V(y,r)<+idt(V(u,r),{sign*.125});'), source, times,
+            result = execute(compiled(f'V(y,r)<+idt(V(u,r),{sign*0.125});'), source, times,
                              vabstol=1e-10, reltol=0)
             for t, actual in zip(times, values(result)):
                 self.assertLessEqual(abs(F(actual)-integral(source, t, sign*.125)), F(1e-10))
 
     def test_sampled_integral_error_survives_later_event(self):
         body = ('@(initial_step) begin b=0; c=0; end '
-                '@(timer(1,0,.001)) b=V(z,r); '
-                '@(timer(2,0,.001)) c=1073741824*V(w,r)-178956970.66666666+1; '
+                '@(timer(1,0,0.001)) b=V(z,r); '
+                '@(timer(2,0,0.001)) c=1073741824*V(w,r)-178956970.66666666+1; '
                 'V(z,r)<+idt(V(u,r),0); V(w,r)<+b; V(y,r)<+c;')
         program = compiled(body, 'real b,c; electrical z,w;')
         with self.assertRaisesRegex(KernelError, 'waveform_accuracy'):

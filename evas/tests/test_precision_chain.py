@@ -38,8 +38,8 @@ class PointRootAccuracy(unittest.TestCase):
                     y = result["solutions"][0]["voltages"][result["nodes"].index("y")]
                     with localcontext() as context:
                         context.prec = 100
-                        distance = (Decimal('.25')-Decimal.from_float(u)).sqrt()
-                        roots = [Decimal('.5')-distance, Decimal('.5')+distance]
+                        distance = (Decimal('0.25')-Decimal.from_float(u)).sqrt()
+                        roots = [Decimal('0.5')-distance, Decimal('0.5')+distance]
                         error = min(abs(Decimal.from_float(y)-root) for root in roots)
                         self.assertLessEqual(error, Decimal.from_float(1e-12))
 
@@ -49,7 +49,7 @@ class PointRootAccuracy(unittest.TestCase):
                   "V(y,r)<+pow(V(y,r),2); V(y,r)<+V(u,r);"]
         with localcontext() as context:
             context.prec = 100
-            expected = Decimal('.5')-(Decimal('.25')-Decimal.from_float(.2)).sqrt()
+            expected = Decimal('0.5')-(Decimal('0.25')-Decimal.from_float(.2)).sqrt()
             for body in bodies:
                 with self.subTest(body=body):
                     result = run(model(body), [[0, .2], [1, .2]], [0, 1],
@@ -66,7 +66,7 @@ class PointRootAccuracy(unittest.TestCase):
         with localcontext() as context:
             context.prec = 100
             u = Decimal.from_float(.1)+(Decimal.from_float(.2)-Decimal.from_float(.1))/3
-            expected = Decimal('.5')-(Decimal('.25')-u).sqrt()
+            expected = Decimal('0.5')-(Decimal('0.25')-u).sqrt()
             values = []
             for body in bodies:
                 result = run(model(body), [[0, .1], [3, .2]], [1],
@@ -84,7 +84,7 @@ class PointRootAccuracy(unittest.TestCase):
         y = result["solutions"][0]["voltages"][result["nodes"].index("y")]
         with localcontext() as context:
             context.prec = 100
-            expected = Decimal('.5')-(Decimal('.25')-Decimal.from_float(u)).sqrt()
+            expected = Decimal('0.5')-(Decimal('0.25')-Decimal.from_float(u)).sqrt()
             self.assertLessEqual(abs(Decimal.from_float(y)-expected), Decimal.from_float(1e-7))
 
 
@@ -139,7 +139,7 @@ class SampleHistoryAccuracy(unittest.TestCase):
         traces = []
         for assignment in forms:
             result = run(model(f"""@(initial_step) held=0;
-                @(timer(.5,0,1e-12)) begin {assignment} end
+                @(timer(0.5,0,1e-12)) begin {assignment} end
                 V(y,r)<+held;""", "real held;"),
                          [[0, .125], [1, .875]], [0, .25, .5, .75, 1],
                          vabstol=1e-12, reltol=1e-5)

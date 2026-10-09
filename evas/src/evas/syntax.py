@@ -217,12 +217,13 @@ class ParameterRange:
 
 
 class Parser:
-    def __init__(self, source: str, name: str, *, tokens=None):
+    def __init__(self, source: str, name: str, *, tokens=None, declarations=None):
         self.source = name
         self.tokens = _tokens(source, name) if tokens is None else tokens
         self.index = 0
         self.nesting = 0
         self.mixed_initial_body = False
+        self.declarations = declarations if declarations is not None else {}
 
     @property
     def token(self) -> Token:
@@ -709,9 +710,53 @@ class Parser:
     def parse_all(self):
         result = []
         while self.token.kind != 'eof':
-            result.append(self.parse(eof=False))
+            if self.token.text in ('nature', 'discipline'):
+                self.physical_declaration()
+            else:
+                result.append(self.parse(eof=False))
         self.take('<eof>')
         return tuple(result)
+
+    def physical_declaration(self):
+        token = self.take()
+        kind = token.text
+        name = self.take('electrical').text if kind == 'discipline' and self.token.text == 'electrical' else self.name()
+        self.take(';')
+        attributes = {}
+        end = 'endnature' if kind == 'nature' else 'enddiscipline'
+        allowed = {'units', 'access', 'abstol'} if kind == 'nature' else {'potential', 'flow', 'domain'}
+        while self.token.text != end:
+            key_token = self.token
+            key = self.take().text
+            if key not in allowed or key in attributes:
+                self.fail('unsupported or duplicate physical declaration attribute', key_token)
+            if kind == 'nature':
+                self.take('=')
+            value = self.take()
+            expected = 'string' if key == 'units' else 'number' if key == 'abstol' else 'name'
+            if value.kind != expected:
+                self.fail('invalid physical declaration attribute', value)
+            attributes[key] = value.text
+            self.take(';')
+        self.take(end)
+        if (kind, name) in self.declarations:
+            self.fail(f'duplicate {kind} definition {name!r}', token)
+        if kind == 'nature':
+            expected = {'Voltage': ('"V"', 'V'), 'Current': ('"A"', 'I')}.get(name)
+            if expected is None or (attributes.get('units'), attributes.get('access')) != expected:
+                self.fail('unsupported nature: requires Voltage/V or Current/I with matching units', token)
+            if 'abstol' in attributes:
+                text = attributes['abstol']
+                suffix = text[-1] if text[-1] in _SUFFIX else ''
+                value = float(text[:-1] if suffix else text) * _SUFFIX.get(suffix, 1)
+                if not math.isfinite(value) or value <= 0:
+                    self.fail('nature abstol must be finite and positive', token)
+        else:
+            if name != 'electrical' or attributes != {'potential': 'Voltage', 'flow': 'Current', 'domain': 'continuous'}:
+                self.fail('unsupported discipline: requires continuous electrical Voltage/Current', token)
+            if any(('nature', n) not in self.declarations for n in ('Voltage', 'Current')):
+                self.fail('electrical discipline requires preceding Voltage and Current natures', token)
+        self.declarations[(kind, name)] = attributes
 
     def parse(self, *, eof=True) -> Model:
         while self.token.kind == "include":
@@ -733,7 +778,10 @@ class Parser:
                     self.fail("duplicate analog function name", function.token)
                 functions[function.name] = function
                 continue
-            kind = self.take().text
+            declaration_token = self.take()
+            kind = declaration_token.text
+            if kind == 'electrical' and ('discipline', 'electrical') not in self.declarations:
+                self.fail('electrical discipline is not declared; include disciplines.vams or provide its supported definition', declaration_token)
             if kind == "parameter":
                 if self.token.text not in ('real', 'integer'):
                     self.fail('parameter requires an explicit real or integer type')

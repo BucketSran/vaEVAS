@@ -18,9 +18,9 @@ def run(body, declarations="real slope; integer n;", *, stop=2, times=None, step
 
 def timer_body(slope):
     return f"""@(initial_step) begin slope=1; n=0; end
-      @(timer(.25,0,1e-12)) slope={slope};
+      @(timer(0.25,0,1e-12)) slope={slope};
       V(z,r)<+idt(slope,0);
-      @(cross(V(z,r)-.75,1,1e-9,1e-8)) n=n+1;
+      @(cross(V(z,r)-0.75,1,1e-9,1e-8)) n=n+1;
       V(y,r)<+n;"""
 
 
@@ -39,8 +39,8 @@ class HistoryRelocalization(unittest.TestCase):
                 self.assertEqual(row["y"], 0 if expected is None else 1)
 
     def test_history_threshold_change_relocates_root(self):
-        result = run("""@(initial_step) begin q=.125; n=0; end
-          @(timer(.25,0,1e-12)) q=.28125;
+        result = run("""@(initial_step) begin q=0.125; n=0; end
+          @(timer(0.25,0,1e-12)) q=0.28125;
           V(z,r)<+idt(V(u,r),0);
           @(cross(V(z,r)-q,1,1e-9,1e-8)) n=n+1;
           V(y,r)<+n;""", "real q; integer n;")
@@ -80,7 +80,7 @@ class HistoryRelocalization(unittest.TestCase):
         with self.assertRaisesRegex(KernelError, "unsupported_cross.*revers"):
             run("""@(initial_step) begin slope=1; n=0; end
               V(z,r)<+idt(slope,0);
-              @(cross((V(z,r)-.5)*(V(z,r)+.5),0,1e-9,1e-8)) begin
+              @(cross((V(z,r)-0.5)*(V(z,r)+0.5),0,1e-9,1e-8)) begin
                 slope=-slope; n=n+1;
               end
               V(y,r)<+n;""", stop=3)
@@ -90,7 +90,7 @@ class HistoryRelocalization(unittest.TestCase):
         # reverse its trajectory, and the later falling root must survive.
         result = run("""@(initial_step) n=0;
           V(z,r)<+idt(1-V(u,r),0);
-          @(cross(V(z,r)-.375,0,1e-9,1e-8)) n=n+1;
+          @(cross(V(z,r)-0.375,0,1e-9,1e-8)) n=n+1;
           V(y,r)<+n;""", "integer n;")
         events = result["transient"]["events"]
         self.assertEqual(len(events), 2)
@@ -109,17 +109,17 @@ class HistoryRelocalization(unittest.TestCase):
 
     def test_history_guard_jump_across_zero_is_not_silently_ignored(self):
         with self.assertRaisesRegex(KernelError, "unsupported_cross"):
-            run("""@(initial_step) begin q=.75; n=0; end
-              @(timer(.25,0,1e-12)) q=.125;
+            run("""@(initial_step) begin q=0.75; n=0; end
+              @(timer(0.25,0,1e-12)) q=0.125;
               V(z,r)<+idt(1,0);
               @(cross(V(z,r)-q,1,1e-9,1e-8)) n=n+1;
               V(y,r)<+n;""", "real q; integer n;")
 
     def test_independent_nonexact_cross_and_unrelated_history_are_preserved(self):
         result = run("""@(initial_step) begin slope=1; n=0; end
-          @(cross(V(u,r)*V(u,r)-.125,1,1e-9,1e-8)) slope=2;
+          @(cross(V(u,r)*V(u,r)-0.125,1,1e-9,1e-8)) slope=2;
           V(z,r)<+idt(slope,0);
-          @(cross(V(z,r)-.75,1,1e-9,1e-8)) n=n+1;
+          @(cross(V(z,r)-0.75,1,1e-9,1e-8)) n=n+1;
           V(y,r)<+n+idt(V(u,r),0);""")
         events=result["transient"]["events"]
         self.assertEqual(len(events),2)
@@ -133,7 +133,7 @@ class HistoryRelocalization(unittest.TestCase):
         # representative. A point-only check would silently overlook the jump.
         with self.assertRaisesRegex(KernelError, "unsupported_cross"):
             run("""@(initial_step) begin q=-1; n=0; end
-              @(cross(V(u,r)*V(u,r)-.125,1,1e-9,1e-8)) q=.3535533905932738;
+              @(cross(V(u,r)*V(u,r)-0.125,1,1e-9,1e-8)) q=0.3535533905932738;
               V(z,r)<+idt(0,0);
               @(cross(V(z,r)+V(u,r)-q,1,1e-9,1e-8)) n=n+1;
               V(y,r)<+n;""", "real q; integer n;", stop=1)

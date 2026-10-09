@@ -13,8 +13,8 @@ class BoundedLifecycleContracts(unittest.TestCase):
         # z'=1 before .25 and 2 afterwards: z=.75 at .5, not .75.
         program = compile_model(
             '@(initial_step) begin q=1; n=0; end '
-            '@(timer(.25,0,1e-12)) q=2; '
-            '@(cross(V(z,r)-.75,1,1e-10,1e-10)) n=n+1; '
+            '@(timer(0.25,0,1e-12)) q=2; '
+            '@(cross(V(z,r)-0.75,1,1e-10,1e-10)) n=n+1; '
             'V(z,r)<+idt(q,0); V(y,r)<+n;',
             'real q; integer n; electrical z;')
         anchors = [0,.125,.25,.375,.5,.625,.75,.875,1]
@@ -40,9 +40,9 @@ class BoundedLifecycleContracts(unittest.TestCase):
         # Thus f=1+t+exp(-t), also across the input corner at .75.
         program = compile_model(
             '@(initial_step) begin q=0; n=0; end '
-            '@(timer(.25,0,1e-12)) q=1; '
-            '@(timer(.5,0,1e-12)) q=0; '
-            '@(timer(.875,0,1e-12)) n=n+1; '
+            '@(timer(0.25,0,1e-12)) q=1; '
+            '@(timer(0.5,0,1e-12)) q=0; '
+            '@(timer(0.875,0,1e-12)) n=n+1; '
             'V(y,r)<+transition(q,0,1,1); V(x,r)<+idt(1,3); '
             "V(f,r)<+laplace_nd(V(u,r),'{1},'{1,1}); V(count,r)<+n;",
             'real q; integer n; electrical x,f,count;')

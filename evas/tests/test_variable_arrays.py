@@ -29,14 +29,14 @@ class VariableArrays(unittest.TestCase):
 
     def test_event_elements_are_distinct_ordered_states(self):
         p = self.compile('@(initial_step) begin a[0]=0; a[1]=1; end '
-                         '@(timer(.25,.25,1e-9)) begin a[0]=a[0]+1; a[1]=a[0]+a[1]; end V(y,r)<+a[1];',
+                         '@(timer(0.25,0.25,1e-9)) begin a[0]=a[0]+1; a[1]=a[0]+a[1]; end V(y,r)<+a[1];',
                          'integer a[0:1];')
         result = transient(p, {'u':[[0,0],[1,0]]}, [.5,1], stop=1, max_step=.5, kernel=KERNEL)
         self.assertEqual(result['transient']['states'][-1], [4,11])
         self.assertEqual(len(p.states),2)
 
     def test_instance_array_sizes_and_states_are_private(self):
-        source = model('@(initial_step) begin a[0]=0; a[1]=1; end @(timer(.5,0,1e-9)) a[0]=a[1]+1; V(y,r)<+a[0];', 'real a[0:1];')
+        source = model('@(initial_step) begin a[0]=0; a[1]=1; end @(timer(0.5,0,1e-9)) a[0]=a[1]+1; V(y,r)<+a[0];', 'real a[0:1];')
         instances = [instance('left'), instance('right')]
         p = compile_sources({'arrays.va':source}, instances)
         self.assertEqual([(state.instance,state.name) for state in p.states],
@@ -45,12 +45,12 @@ class VariableArrays(unittest.TestCase):
     def test_invalid_or_unsupported_indices_are_diagnostic(self):
         for body, declarations in [
             ('a[3]=1; V(y,r)<+1;', 'real a[0:2];'),
-            ('a[.5]=1; V(y,r)<+1;', 'real a[0:2];'),
+            ('a[0.5]=1; V(y,r)<+1;', 'real a[0:2];'),
             ('a[0]=1; V(y,r)<+a[V(u,r)];','real a[0:2];'),
             ('a=1; V(y,r)<+1;', 'real a[0:2];'),
             ('x[0]=1; V(y,r)<+1;', 'real x;'),
             ('V(y,r)<+1;', 'real a[0:5000];'),
-            ('V(y,r)<+1;', 'real a[0:.5];'),
+            ('V(y,r)<+1;', 'real a[0:0.5];'),
         ]:
             with self.subTest(body=body), self.assertRaisesRegex(CompileError, r'arrays.va:.*(array|index|budget)'):
                 self.compile(body, declarations)

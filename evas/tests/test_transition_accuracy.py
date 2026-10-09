@@ -52,7 +52,7 @@ class TransitionAccuracy(unittest.TestCase):
     def test_network_gain_is_included_in_history_error_budget(self):
         # An inexact 1/3 ramp value is amplified; checking the operator alone
         # against a voltage tolerance would miss the output's tighter budget.
-        body = ('@(initial_step) a=0; @(timer(0,0,.001)) a=1; '
+        body = ('@(initial_step) a=0; @(timer(0,0,0.001)) a=1; '
                 'V(y,r)<+1073741824*transition(a,0,3,3);')
         with self.assertRaisesRegex(KernelError, 'waveform_accuracy'):
             execute(body, [0,1,3], 3, atol=1e-10)
@@ -63,8 +63,8 @@ class TransitionAccuracy(unittest.TestCase):
     def test_multiple_interruptions_match_independent_rational_knots(self):
         # m=1/3 to t=1, then -1/6 to t=2, then +1/6 to t=4.
         body = ('@(initial_step) begin a=0;b=0;c=0;end '
-                '@(timer(0,0,.001)) a=1; @(timer(1,0,.001)) b=-1; '
-                '@(timer(2,0,.001)) c=.5; '
+                '@(timer(0,0,0.001)) a=1; @(timer(1,0,0.001)) b=-1; '
+                '@(timer(2,0,0.001)) c=0.5; '
                 'V(y,r)<+transition(a+b+c,0,3,6);')
         times = [0,.5,1,1.5,2,2.5,4,5]
         expected = [F(0),F(1,6),F(1,3),F(1,4),F(1,6),F(1,4),F(1,2),F(1,2)]
@@ -77,8 +77,8 @@ class TransitionAccuracy(unittest.TestCase):
 
     def test_sampled_state_keeps_history_error_across_events(self):
         body = ('@(initial_step) begin a=0;b=0;c=0;end '
-                '@(timer(0,0,.001)) a=1; @(timer(1,0,.001)) b=V(y,r); '
-                '@(timer(2,0,.001)) c=1073741824*V(z,r)-357913941.3333333+1; '
+                '@(timer(0,0,0.001)) a=1; @(timer(1,0,0.001)) b=V(y,r); '
+                '@(timer(2,0,0.001)) c=1073741824*V(z,r)-357913941.3333333+1; '
                 'V(y,r)<+transition(a,0,3,3); V(z,r)<+b; V(w,r)<+c;')
         declarations = 'real a,b,c; electrical z,w;'
         # At t=1, sampling 1/3 meets this budget. At t=2, amplifying the
@@ -94,7 +94,7 @@ class TransitionAccuracy(unittest.TestCase):
     def test_initial_affine_input_roundoff_is_checked(self):
         # State coefficients remain in IR. Their exact sum is not the rounded
         # coefficient produced by nominal affine evaluation.
-        body = '@(initial_step) a=1; V(y,r)<+transition(.1*a+.2*a,0,1,1);'
+        body = '@(initial_step) a=1; V(y,r)<+transition(0.1*a+0.2*a,0,1,1);'
         with self.assertRaisesRegex(KernelError, 'waveform_accuracy'):
             execute(body,[0,1],1,atol=1e-18)
         result = execute(body,[0,1],1,atol=1e-12)

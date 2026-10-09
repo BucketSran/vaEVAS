@@ -83,7 +83,7 @@ class VoltageAccuracy(unittest.TestCase):
 
     def test_coupled_equations_with_different_row_scales(self):
         # q=(.5,-.25); diagonal >=1, off-diagonal .25, hence a unique root.
-        source = model('V(y,r)<+V(y,r)-s*(V(y,r)+pow(V(y,r),3)+.25*V(u,r)-b);',
+        source = model('V(y,r)<+V(y,r)-s*(V(y,r)+pow(V(y,r),3)+0.25*V(u,r)-b);',
                        'parameter real s=1; parameter real b=0;')
         instances = [
             instance('a', connections=dict(u='b', y='a', r='0'),
@@ -140,7 +140,7 @@ class VoltageAccuracy(unittest.TestCase):
         with localcontext() as context:
             context.prec=70
             k=Decimal.from_float(1+1e-15)
-            lo,hi=Decimal('.4'),Decimal('.5')
+            lo,hi=Decimal('0.4'),Decimal('0.5')
             for _ in range(220):
                 a=(lo+hi)/2
                 b=1-a-a**3

@@ -24,7 +24,8 @@ FEEDBACK = (EVAS / "validation/cases/d2_v7_01/dut.va").read_text()
 
 
 def model(body, declarations="", ports="u,y,r", directions="input u; output y; inout r;"):
-    return f"module m({ports}); {directions} electrical {ports}; {declarations} analog begin {body} end endmodule"
+    constants = '`include "constants.vams"\n' if '`M_PI' in body or '`M_PI' in declarations else ''
+    return constants + f"`include \"disciplines.vams\"\nmodule m({ports}); {directions} electrical {ports}; {declarations} analog begin {body} end endmodule"
 
 
 def instance(name="dut", module="m", connections=None, parameters=None):
@@ -39,11 +40,11 @@ def execute(source, instances=None, driven=None, samples=None, **tolerances):
 
 class AffineContracts(unittest.TestCase):
     def test_additive_contributions_all_permutations_and_combined_form(self):
-        pieces = ["V(y,r)<+1.5*V(u,r);", "V(y,r)<+-.5*V(v,r);", "V(y,r)<+.125;"]
+        pieces = ["V(y,r)<+1.5*V(u,r);", "V(y,r)<+-0.5*V(v,r);", "V(y,r)<+0.125;"]
         inputs = [[0, -.2, 0], [1.4, .8, 1], [-1.2, -.7, -1]]
         inst = instance(connections=dict(u="u", v="v", y="y", r="r"))
         bodies = ["".join(order) for order in itertools.permutations(pieces)]
-        bodies += ["V(y,r)<+1.5*V(u,r)-.5*V(v,r)+.125;"]
+        bodies += ["V(y,r)<+1.5*V(u,r)-0.5*V(v,r)+0.125;"]
         for body in bodies:
             with self.subTest(body=body):
                 rows = execute(model(body, ports="u,v,y,r", directions="input u,v; output y; inout r;"),
@@ -59,7 +60,7 @@ class AffineContracts(unittest.TestCase):
                 self.assertAlmostEqual(rows[0]["y"], expected, places=12)
 
     def test_branch_orientation_and_single_node_access(self):
-        for body in ["V(y,r)<+V(u,r); V(r,y)<+-.125;", "V(y)<+V(u)+.125;"]:
+        for body in ["V(y,r)<+V(u,r); V(r,y)<+-0.125;", "V(y)<+V(u)+0.125;"]:
             self.assertAlmostEqual(execute(model(body))[0]["y"], .325, places=12)
 
     def test_feedback_is_solved_at_first_sample_without_history(self):
@@ -84,7 +85,7 @@ class AffineContracts(unittest.TestCase):
         self.assertAlmostEqual(rows[0]["yb"], .4)
 
     def test_coupled_instances_solve_one_system(self):
-        source = model("V(y,r)<+gain*V(u,r)+bias;", "parameter real gain=.5; parameter real bias=0;")
+        source = model("V(y,r)<+gain*V(u,r)+bias;", "parameter real gain=0.5; parameter real bias=0;")
         # a = .5*b + 1, b = .25*a + 2 => a=16/7, b=18/7.
         instances = [instance("a", connections=dict(u="b", y="a", r="0"), parameters=dict(bias=1)),
                      instance("b", connections=dict(u="a", y="b", r="0"), parameters=dict(gain=.25,bias=2))]

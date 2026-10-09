@@ -86,7 +86,7 @@ class AffineIntegralFeedbackContracts(unittest.TestCase):
             assert_close(self, row["q"], math.cos(time), delta=3e-8)
 
     def test_same_branch_integral_feedback_is_order_invariant(self):
-        pieces = ["V(y,r)<+.25;", "V(y,r)<+idt(1-V(y,r),0);"]
+        pieces = ["V(y,r)<+0.25;", "V(y,r)<+idt(1-V(y,r),0);"]
         times = [0.0, 0.25, 0.5, 1.0, 2.0]
         baseline = None
         for order in itertools.permutations(pieces):
@@ -203,7 +203,7 @@ class ContinuousInitializationContracts(unittest.TestCase):
                     assert_close(self, actual, answer, delta=1e-10)
 
     def test_ddt_identity_feedback_keeps_contribution_order_and_dc(self):
-        pieces = ["V(y,r)<+1;", "V(y,r)<+laplace_nd(2+ddt(V(u,r))+.5*V(y,r),'{1,1},'{1,1});"]
+        pieces = ["V(y,r)<+1;", "V(y,r)<+laplace_nd(2+ddt(V(u,r))+0.5*V(y,r),'{1,1},'{1,1});"]
         # y=1+2+d+.5*y => y=6+2*d, with d(DC)=0 and d(t>0)=m.
         for slope in (-1.0, 1.0):
             for order in itertools.permutations(pieces):
@@ -260,7 +260,7 @@ class DerivativeContracts(unittest.TestCase):
                     run(program, {"u": [[0.0, 0.0], [2.0, 2.0]]}, [0.0, 1.0, 2.0], stop=2.0, max_step=2.0)
 
         program = compile_model(
-            "@(initial_step) n=0; @(cross(ddt(V(u,r))-.5,1,1e-12,1e-9)) n=n+1; V(y,r)<+n;",
+            "@(initial_step) n=0; @(cross(ddt(V(u,r))-0.5,1,1e-12,1e-9)) n=n+1; V(y,r)<+n;",
             "integer n;",
         )
         with self.assertRaisesRegex(KernelError, "unsupported_cross"):
@@ -304,7 +304,7 @@ class HigherOrderLaplaceContracts(unittest.TestCase):
             assert_close(self, actual, expected, delta=3e-8)
 
     def test_laplace_dc_feedback_uses_joint_equilibrium(self):
-        program = compile_model("V(y,r)<+laplace_nd(1-.5*V(y,r),'{1},'{1,2,1});")
+        program = compile_model("V(y,r)<+laplace_nd(1-0.5*V(y,r),'{1},'{1,2,1});")
         result = run(program, times=[0.0, 0.5, 2.0, 4.0], stop=4.0, max_step=4.0)
         for actual in values(result):
             assert_close(self, actual, 2.0 / 3.0, delta=2e-9)
