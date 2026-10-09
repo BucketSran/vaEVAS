@@ -61,7 +61,7 @@ class TableControls(unittest.TestCase):
             entries = {str(Path(ref['path']).relative_to(self.root)): {'sha256': ref['sha256']} for ref in refs if ref}
             entries['EXECUTION.json'] = {'sha256': execution_sha}
             work = Path(identity['condition_started']['path']).parent
-            for name in ('dut.va', 'tb.deck', 'waveform.csv', 'psf/tran.tran.tran', 'simulate.log'):
+            for name in ('dut.va', 'tb.deck', 'waveform.csv', 'raw-response.json', 'psf/tran.tran.tran', 'simulate.log'):
                 if (work / name).is_file():
                     entries[str((work / name).relative_to(self.root))] = {'sha256': hashlib.sha256((work / name).read_bytes()).hexdigest()}
             identity['execution_manifest'] = self.artifact('FILE_MANIFEST.json', entries)
@@ -117,6 +117,167 @@ class TableControls(unittest.TestCase):
                 'tool': tool, 'condition_started': started, 'lane_started': lane_started,
                 'input_manifest': self.input_manifest, 'observation': observation, 'method': 'synthetic control only',
                 'availability': 'local-only'}}
+
+    def derived_record(self):
+        record = self.record('I')
+        work = Path(record['identity']['condition_started']['path']).parent
+        rows = [{'time': 0., 'out': 1.}, {'time': 1., 'out': 2.}]
+        original = {'schema_version': 1, 'condition': 'VR-01', 'backend': 'evas',
+                    'status': 'observation_available', 'units': {'time': 's', 'voltage': 'V'},
+                    'rows': rows, 'qualification': {'qualified': False},
+                    'metadata': {'sample_origins': ['unknown', 'unknown'], 'coverage': True}}
+        original_ref = self.artifact('original-observation.json', original)
+        record['identity']['observation'] = original_ref
+        execution = table.read_artifact(record['execution'])
+        execution['observation'] = original_ref
+        record['execution'] = self.artifact('actual-final.json', execution)
+        old = table.read_artifact(record['assessment'])
+        old.update(execution_sha256=record['execution']['sha256'], input_observation_sha256=original_ref['sha256'])
+        old_ref = self.artifact('original-I-assessment.json', old)
+        raw = work / 'raw-response.json'
+        raw.write_text(json.dumps({'nodes': ['out'], 'transient': {'times': [0., 1.]},
+                                   'solutions': [{'voltages': [1.]}, {'voltages': [2.]}]}))
+        raw_ref = {'path': str(raw), 'sha256': hashlib.sha256(raw.read_bytes()).hexdigest()}
+        source = work / 'dut.va'
+        source_ref = {'path': str(source), 'sha256': hashlib.sha256(source.read_bytes()).hexdigest()}
+        # Finalize the synthetic actual lane before constructing analysis-only artifacts.
+        record['assessment'] = old_ref
+        self.report([record], allow_pending=True)
+        adapter_path = table.HERE / 'actual_observation.py'
+        adapter = Path(self.tmp.name) / 'retained-actual-observation.py'
+        adapter.write_bytes(adapter_path.read_bytes())
+        adapter_ref = {'path': str(adapter), 'sha256': hashlib.sha256(adapter.read_bytes()).hexdigest()}
+        evidence = self.artifact('adapter-evidence.json', {'schema_version': 1, 'condition': 'VR-01', 'backend': 'evas',
+            'analysis_adapter': adapter_ref,
+            'identities': {'normalized': original_ref, 'raw': raw_ref, 'source': source_ref},
+            'roles': {'time': {'status': 'established'}},
+            'execution_identity': {'artifacts': {'final_record': record['execution'],
+                'lane_manifest': record['identity']['execution_manifest'], 'tool': record['identity']['tool']}}})
+        derived = {**original, 'qualification': {'qualified': True, 'qualification_evidence': {'time': {
+            'method': 'synthetic role control only', 'artifact_path': evidence['path'], 'sha256': evidence['sha256']}}},
+            'metadata': {**original['metadata'], 'sample_origins': ['accepted', 'accepted']}}
+        derived_ref = self.artifact('derived-observation.json', derived)
+        packet = {'schema_version': 1, 'execution': record['execution'], 'original_observation': original_ref,
+                  'derived_observation': derived_ref, 'raw': raw_ref, 'source': source_ref,
+                  'adapter': adapter_ref, 'evidence': evidence}
+        record.update(analysis_observation=derived_ref, derivation=self.artifact('derivation.json', packet),
+                      analysis_method='Actual-response evidence reanalysis, synthetic control', prior_analyses=[old_ref])
+        assessment = {**old, 'status': 'P', 'properties': [{'name': 'voltage:out', 'status': 'P'}],
+                      'input_observation_sha256': derived_ref['sha256']}
+        record['assessment'] = self.artifact('derived-assessment.json', assessment)
+        return record
+
+    def test_derived_analysis_keeps_original_I_without_new_attempt(self):
+        record = self.derived_record()
+        report = table.render([record], allow_pending=True)
+        self.assertIn('1/0/0/0/0/11', report)
+        self.assertIn('Derived analyses of unchanged executions', report)
+        self.assertIn(Path(record['prior_analyses'][0]['path']).name, report)
+        self.assertNotIn('Declared prior attempts', report)
+        self.assertEqual(table.read_artifact(record['prior_analyses'][0])['status'], 'I')
+
+    def test_derived_analysis_rejects_actual_or_analysis_artifact_drift(self):
+        for name in ('original_observation', 'raw', 'source', 'adapter', 'evidence', 'derived_observation', 'execution'):
+            with self.subTest(name=name):
+                record = self.derived_record()
+                packet = table.read_artifact(record['derivation'])
+                packet[name] = {**packet[name], 'sha256': '0' * 64}
+                record['derivation'] = self.artifact('drift-packet.json', packet)
+                with self.assertRaises(ValueError):
+                    table.render([record], allow_pending=True)
+
+    def test_derived_analysis_cannot_change_time_voltage_or_geometry(self):
+        for name in ('time', 'out', 'coverage'):
+            with self.subTest(name=name):
+                record = self.derived_record()
+                derived = table.read_artifact(record['analysis_observation'])
+                if name == 'coverage': derived['metadata'][name] = False
+                else: derived['rows'][0][name] += .125
+                new_ref = self.artifact('changed-derived.json', derived)
+                packet = table.read_artifact(record['derivation']);packet['derived_observation'] = new_ref
+                record.update(analysis_observation=new_ref, derivation=self.artifact('changed-packet.json', packet))
+                assessment = table.read_artifact(record['assessment']);assessment['input_observation_sha256'] = new_ref['sha256']
+                record['assessment'] = self.artifact('changed-assessment.json', assessment)
+                with self.assertRaisesRegex(ValueError, 'changed actual'):
+                    table.render([record], allow_pending=True)
+
+    def test_derived_analysis_retains_required_roles_and_property_failure(self):
+        record = self.derived_record()
+        packet = table.read_artifact(record['derivation'])
+        evidence = table.read_artifact(packet['evidence'])
+        evidence['roles']['time']['status'] = 'unknown'
+        packet['evidence'] = self.artifact('unestablished-evidence.json', evidence)
+        derived = table.read_artifact(record['analysis_observation'])
+        derived['qualification']['qualification_evidence']['time'].update(
+            artifact_path=packet['evidence']['path'], sha256=packet['evidence']['sha256'])
+        packet['derived_observation'] = self.artifact('unestablished-observation.json', derived)
+        record.update(analysis_observation=packet['derived_observation'],
+                      derivation=self.artifact('unestablished-packet.json', packet))
+        assessment = table.read_artifact(record['assessment'])
+        assessment['input_observation_sha256'] = packet['derived_observation']['sha256']
+        record['assessment'] = self.artifact('unestablished-assessment.json', assessment)
+        with self.assertRaisesRegex(ValueError, 'established evidence role'):
+            table.render([record], allow_pending=True)
+        record = self.derived_record()
+        assessment = table.read_artifact(record['assessment'])
+        assessment['properties'][0]['status'] = 'I'
+        record['assessment'] = self.artifact('missing-role-assessment.json', assessment)
+        with self.assertRaisesRegex(ValueError, 'Assessment/property status mismatch'):
+            table.render([record], allow_pending=True)
+        assessment['status'] = 'I';record['assessment'] = self.artifact('honest-I-assessment.json', assessment)
+        self.assertIn('0/0/0/0/1/11', table.render([record], allow_pending=True))
+
+    def test_derived_analysis_requires_original_assessment_and_exact_execution(self):
+        for name in ('prior_analyses', 'analysis_method', 'execution'):
+            with self.subTest(name=name):
+                record = self.derived_record()
+                if name == 'execution':
+                    packet = table.read_artifact(record['derivation'])
+                    packet['execution'] = self.record()['execution']
+                    record['derivation'] = self.artifact('other-execution-packet.json', packet)
+                else: record.pop(name)
+                with self.assertRaises(ValueError): table.render([record], allow_pending=True)
+
+    def test_pending_placeholder_cannot_claim_derived_analysis(self):
+        record = {'condition_id': 'VR-01', 'backend': 'evas', 'status': 'T',
+                  'analysis_method': 'not an actual completed analysis'}
+        with self.assertRaisesRegex(ValueError, 'completed waveform'):
+            table.render([record], allow_pending=True)
+
+    def test_derived_analysis_rejects_rehashed_evidence_identity_changes(self):
+        for name in ('normalized', 'raw', 'source', 'final_record', 'lane_manifest', 'tool', 'adapter'):
+            with self.subTest(name=name):
+                record = self.derived_record()
+                packet = table.read_artifact(record['derivation'])
+                evidence = table.read_artifact(packet['evidence'])
+                if name == 'adapter': target = evidence['analysis_adapter']
+                elif name in evidence['identities']: target = evidence['identities'][name]
+                else: target = evidence['execution_identity']['artifacts'][name]
+                target['sha256'] = '0' * 64
+                packet['evidence'] = self.artifact('rehashed-drift-evidence.json', evidence)
+                record['derivation'] = self.artifact('rehashed-drift-packet.json', packet)
+                with self.assertRaisesRegex(ValueError, 'identity mismatch|execution mismatch'):
+                    table.render([record], allow_pending=True)
+
+    def test_derived_analysis_retained_adapter_does_not_require_latest_checkout(self):
+        record = self.derived_record()
+        packet = table.read_artifact(record['derivation'])
+        adapter = Path(packet['adapter']['path'])
+        adapter.write_bytes(adapter.read_bytes() + b'\n# retained historical tool snapshot\n')
+        packet['adapter']['sha256'] = hashlib.sha256(adapter.read_bytes()).hexdigest()
+        evidence = table.read_artifact(packet['evidence'])
+        evidence['analysis_adapter'] = packet['adapter']
+        packet['evidence'] = self.artifact('retained-adapter-evidence.json', evidence)
+        derived = table.read_artifact(record['analysis_observation'])
+        derived['qualification']['qualification_evidence']['time'].update(
+            artifact_path=packet['evidence']['path'], sha256=packet['evidence']['sha256'])
+        packet['derived_observation'] = self.artifact('retained-adapter-observation.json', derived)
+        record.update(analysis_observation=packet['derived_observation'],
+                      derivation=self.artifact('retained-adapter-packet.json', packet))
+        assessment = table.read_artifact(record['assessment'])
+        assessment['input_observation_sha256'] = packet['derived_observation']['sha256']
+        record['assessment'] = self.artifact('retained-adapter-assessment.json', assessment)
+        self.assertEqual(table.validate(record)[0], 'P')
 
     def test_frozen_runner_checker_and_dependency_digest_are_bound(self):
         for change in ('runner', 'criteria.py', 'oracle.py', 'digest'):
