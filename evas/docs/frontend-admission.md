@@ -20,6 +20,11 @@
 `discipline electrical; potential Voltage; flow Current; domain continuous; enddiscipline`。
 重复定义、不兼容属性和更广 nature/discipline 语义明确拒绝。
 声明随活跃 include 展开按顺序生效，头文件不会同时作为独立编译根。
+每个独立源码根是一个编译单元，宏、include guard 和 nature/discipline 声明不会
+跨根传播；同一根的 include 图内共享这些环境。两个独立根都使用 electrical 时，
+各自必须通过自己的源码或 include 声明它。编译后模块汇入同一实例绑定库存。
+该规则依据实际 Spectre 独立 ahdl_include 对照：A 声明 electrical、B 未声明时，
+两种 include 顺序都拒绝 B；A/B 各显式 include 的正控接受。
 Voltage/Current 的声明承认电压域所需类型环境，不增加电流贡献的执行支持；
 nature 的 abstol 也不改变 manifest 的求解容差。
 
