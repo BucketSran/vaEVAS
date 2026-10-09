@@ -10,6 +10,7 @@ import unittest
 import zipfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'evas/src'))
 from check_installed_evas import CHECK, check_wheel_payload
 
 

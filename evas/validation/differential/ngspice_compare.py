@@ -19,7 +19,7 @@ import sys
 
 EVAS = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(EVAS / 'src'))
-from evas import Instance, compile_sources, solve, transient
+from evas import CompileError, Instance, compile_sources, solve, transient
 from evas.ir import Affine, Binary, Power
 from evas.manifest import parse_manifest
 
@@ -178,7 +178,16 @@ def run_suite(kernel, ngspice, out):
     for path in sorted((EVAS/'validation/smoke').glob('*.json')):
         manifest = parse_manifest(path.read_text())
         sources = {str((path.parent/p).resolve()):(path.parent/p).read_text() for p in manifest['models']}
-        program = compile_sources(sources, [Instance(**i) for i in manifest['instances']])
+        try:
+            program = compile_sources(sources, [Instance(**i) for i in manifest['instances']])
+        except CompileError as exc:
+            # Frozen invalid sources remain visible; do not normalize them or
+            # let their expected admission refusal hide the remaining cases.
+            records.append(dict(case=path.name,status='compile_refused',reason=str(exc),
+                                diagnostic=exc.diagnostic,
+                                manifest_sha256=sha256(path.read_bytes()).hexdigest(),
+                                source_sha256={name:sha256(text.encode()).hexdigest() for name,text in sources.items()}))
+            continue
         try:
             relations(program, manifest.get('driven', []))
         except Unsupported as exc:

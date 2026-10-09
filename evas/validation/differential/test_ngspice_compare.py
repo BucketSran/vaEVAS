@@ -3,8 +3,8 @@ import math
 import unittest
 
 from ngspice_compare import (
-    Affine, Instance, Power, TIMER_SOURCE, Unsupported, compare, compile_sources,
-    expression, generated, interpolate, relations,
+    Affine, CompileError, EVAS, Instance, Power, TIMER_SOURCE, Unsupported, compare, compile_sources,
+    expression, generated, interpolate, parse_manifest, relations,
 )
 
 
@@ -49,6 +49,21 @@ class DifferentialCalibration(unittest.TestCase):
         program = compile_sources({'m.va': source}, [Instance(n, 'm', {'y':'y', 'r':'0'}) for n in ['a', 'b']])
         with self.assertRaises(Unsupported):
             relations(program, [])
+
+    def test_original_smoke_admission_outcomes_remain_explicit(self):
+        rejected = {'absdelay':'not declared', 'timer_counter':'not declared', 'cross_counter':'real literal'}
+        paths = sorted((EVAS/'validation/smoke').glob('*.json'))
+        self.assertEqual(len(paths), 6)
+        for path in paths:
+            with self.subTest(case=path.stem):
+                manifest = parse_manifest(path.read_text())
+                sources = {str((path.parent/n).resolve()):(path.parent/n).read_text() for n in manifest['models']}
+                instances = [Instance(**row) for row in manifest['instances']]
+                if path.stem in rejected:
+                    with self.assertRaisesRegex(CompileError, rejected[path.stem]):
+                        compile_sources(sources, instances)
+                else:
+                    compile_sources(sources, instances)
 
     def test_actual_suite_sources_reach_their_intended_export_paths(self):
         for size in (1, 4, 16, 64):
