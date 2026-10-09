@@ -200,9 +200,119 @@ def prior_attempts(record):
     return refs
 
 
+def analysis_observation(record, execution):
+    """Bind a new analysis to immutable actual observations, not a new run."""
+    original_ref = record['identity'].get('observation')
+    original = read_artifact(original_ref)
+    derived_ref = record.get('analysis_observation')
+    if derived_ref is None:
+        if any(key in record for key in ('derivation', 'analysis_method', 'prior_analyses')):
+            raise ValueError('Analysis fields require analysis_observation')
+        return original_ref
+    if record['backend'] != 'evas' or not isinstance(record.get('analysis_method'), str) or not record['analysis_method'].strip():
+        raise ValueError('Derived analysis requires EVAS and explicit analysis_method')
+    packet = read_artifact(record.get('derivation'))
+    if packet.get('schema_version') != 1:
+        raise ValueError('Invalid analysis derivation schema')
+    expected = {'execution': record['execution'], 'original_observation': original_ref,
+                'derived_observation': derived_ref}
+    for key, ref in expected.items():
+        bound = packet.get(key)
+        if not isinstance(bound, dict) or bound.get('sha256') != ref.get('sha256') or Path(bound.get('path', '')).resolve() != Path(ref['path']).resolve():
+            raise ValueError('Analysis derivation identity mismatch: ' + key)
+        artifact_bytes(bound)
+    work = Path(record['identity']['condition_started']['path']).parent.resolve()
+    manifest = read_artifact(record['identity']['execution_manifest'])
+    lane = Path(record['identity']['execution_manifest']['path']).parent.resolve()
+    for key, name in (('raw', 'raw-response.json'), ('source', 'dut.va')):
+        ref = packet.get(key)
+        if not isinstance(ref, dict) or Path(ref.get('path', '')).resolve() != work / name:
+            raise ValueError('Analysis actual artifact path mismatch: ' + key)
+        artifact_bytes(ref)
+        relative = str((work / name).relative_to(lane))
+        if manifest.get(relative, {}).get('sha256') != ref['sha256']:
+            raise ValueError('Analysis actual artifact outside frozen manifest: ' + key)
+    if packet['source']['sha256'] != execution.get('source_sha256'):
+        raise ValueError('Analysis source differs from execution')
+    adapter = packet.get('adapter')
+    artifact_bytes(adapter)
+    evidence_ref = packet.get('evidence')
+    evidence = read_artifact(evidence_ref)
+    bound_adapter = evidence.get('analysis_adapter')
+    if not isinstance(bound_adapter, dict) or bound_adapter.get('sha256') != adapter['sha256'] or Path(bound_adapter.get('path', '')).resolve() != Path(adapter['path']).resolve():
+        raise ValueError('Analysis evidence adapter identity mismatch')
+    artifact_bytes(bound_adapter)
+    for ref in (record['derivation'], evidence_ref, derived_ref, adapter):
+        if Path(ref['path']).resolve().is_relative_to(work):
+            raise ValueError('Analysis artifacts must stay outside actual run directory')
+    if evidence.get('schema_version') != 1 or evidence.get('condition') != record['condition_id'] or evidence.get('backend') != record['backend']:
+        raise ValueError('Analysis evidence condition/backend mismatch')
+    identities = evidence.get('identities', {})
+    for key, ref in (('normalized', original_ref), ('raw', packet['raw']), ('source', packet['source'])):
+        bound = identities.get(key)
+        if not isinstance(bound, dict) or bound.get('sha256') != ref['sha256'] or Path(bound.get('path', '')).resolve() != Path(ref['path']).resolve():
+            raise ValueError('Analysis evidence actual identity mismatch: ' + key)
+    for ref in identities.values():
+        artifact_bytes(ref)
+    chain = evidence.get('execution_identity', {})
+    final_ref = chain.get('artifacts', {}).get('final_record')
+    if not isinstance(final_ref, dict) or final_ref.get('sha256') != record['execution']['sha256'] or Path(final_ref.get('path', '')).resolve() != Path(record['execution']['path']).resolve():
+        raise ValueError('Analysis evidence final execution mismatch')
+    for key, ref in (('lane_manifest', record['identity']['execution_manifest']), ('tool', record['identity']['tool'])):
+        bound = chain.get('artifacts', {}).get(key)
+        if not isinstance(bound, dict) or bound.get('sha256') != ref['sha256'] or Path(bound.get('path', '')).resolve() != Path(ref['path']).resolve():
+            raise ValueError('Analysis execution chain identity mismatch: ' + key)
+    for ref in chain.get('artifacts', {}).values():
+        artifact_bytes(ref)
+    derived = read_artifact(derived_ref)
+    for key in ('schema_version', 'condition', 'backend', 'status', 'units', 'rows'):
+        if key not in original or derived.get(key) != original[key]:
+            raise ValueError('Derived observation changed actual ' + key)
+    if original.get('condition') != record['condition_id'] or original.get('backend') != record['backend']:
+        raise ValueError('Original observation condition/backend mismatch')
+    raw = read_artifact(packet['raw'])
+    try:
+        rows = [dict(time=t, **dict(zip(raw['nodes'], solution['voltages'], strict=True)))
+                for t, solution in zip(raw['transient']['times'], raw['solutions'], strict=True)]
+    except (KeyError, TypeError, ValueError) as error:
+        raise ValueError('Invalid actual raw response') from error
+    if rows != original['rows']:
+        raise ValueError('Analysis raw/normalized rows mismatch')
+    def geometry(observation):
+        metadata = dict(observation.get('metadata', {}))
+        for key in ('sample_origins', 'unmatched_boundary_records', 'boundary_cohort_rejection'):
+            metadata.pop(key, None)
+        if 'local_windows' in metadata:
+            metadata['local_windows'] = [{k: v for k, v in window.items() if k != 'proved_center_rows'}
+                                         for window in metadata['local_windows']]
+        return metadata
+    if geometry(original) != geometry(derived):
+        raise ValueError('Derived observation changed actual observation geometry')
+    for role, ref in derived.get('qualification', {}).get('qualification_evidence', {}).items():
+        if not isinstance(ref, dict) or ref.get('sha256') != evidence_ref['sha256'] or Path(ref.get('artifact_path', '')).resolve() != Path(evidence_ref['path']).resolve() or evidence.get('roles', {}).get(role, {}).get('status') != 'established':
+            raise ValueError('Derived qualification does not bind an established evidence role')
+    priors = record.get('prior_analyses')
+    if not isinstance(priors, list) or not priors:
+        raise ValueError('Derived analysis must retain prior_analyses')
+    seen = {record['assessment']['sha256']}
+    for ref in priors:
+        prior = read_artifact(ref)
+        if ref['sha256'] in seen or prior.get('condition_id') != record['condition_id'] or prior.get('execution_sha256') != record['execution']['sha256'] or prior.get('status') not in ('P', 'F', 'I') or prior.get('execution_state') != 'completed':
+            raise ValueError('Invalid prior analysis for this actual execution')
+        seen.add(ref['sha256'])
+        if prior.get('input_observation_sha256') != original_ref['sha256']:
+            raise ValueError('Prior analysis must assess the original observation')
+        prior_record = {k: v for k, v in record.items() if k not in ('analysis_observation', 'derivation', 'analysis_method', 'prior_analyses')}
+        prior_record['assessment'] = ref
+        validate(prior_record)
+    return derived_ref
+
+
 def validate(record):
     prior_attempts(record)
     if record.get('status') == 'T' and 'assessment' not in record:
+        if any(key in record for key in ('analysis_observation', 'derivation', 'analysis_method', 'prior_analyses')):
+            raise ValueError('Derived analysis requires completed waveform execution')
         if 'execution' in record:
             execution = read_artifact(record['execution'])
             if execution.get('condition') != record['condition_id'] or execution.get('backend') != record['backend'] or execution.get('status') != 'not_run':
@@ -241,6 +351,8 @@ def validate(record):
     if not isinstance(status, str) or len(status) != 1 or status not in STATUSES:
         raise ValueError('Unknown assessment status')
     state = assessment.get('execution_state')
+    if state != 'completed' and any(key in record for key in ('analysis_observation', 'derivation', 'analysis_method', 'prior_analyses')):
+        raise ValueError('Derived analysis requires completed waveform execution')
     if status in 'UXT':
         if state != status:
             raise ValueError('Assessment execution state mismatch')
@@ -265,7 +377,8 @@ def validate(record):
         read_artifact(observation)
         if not isinstance(execution.get('observation'), dict) or execution['observation'].get('sha256') != observation['sha256']:
             raise ValueError('Execution/assessment observation hash mismatch')
-        if assessment.get('input_observation_sha256') != observation['sha256']:
+        analysis_input = analysis_observation(record, execution)
+        if assessment.get('input_observation_sha256') != analysis_input['sha256']:
             raise ValueError('Assessment input observation hash mismatch')
         properties = assessment.get('properties', [])
         states = {p.get('status') for p in properties}
@@ -367,6 +480,17 @@ def render(records, allow_pending=False):
         for (c, backend), record in histories:
             lines.append('| ' + ' | '.join([c + '/' + backend, link(record['execution']),
                 ', '.join(link(ref) for ref in record['prior_attempts']), text(record['selection_reason'])]) + ' |')
+    analyses = [(key, value[3]) for key, value in results.items() if value[3] and value[3].get('analysis_observation')]
+    if analyses:
+        lines.extend(['', '## Derived analyses of unchanged executions', '',
+                      'Original observations and prior analyses remain immutable. Reanalysis adds no run or condition.', '',
+                      '| Condition/backend | Method | Derived observation / derivation / adapter | Prior analyses |',
+                      '| --- | --- | --- | --- |'])
+        for (c, backend), record in analyses:
+            packet = read_artifact(record['derivation'])
+            lines.append('| ' + ' | '.join([c + '/' + backend, text(record['analysis_method']),
+                link(record['analysis_observation']) + ' / ' + link(record['derivation']) + ' / ' + link(packet['adapter']) + ' SHA256 `' + packet['adapter']['sha256'] + '`',
+                ', '.join(read_artifact(ref)['status'] + ' ' + link(ref) for ref in record['prior_analyses'])]) + ' |')
     return '\n'.join(lines) + '\n'
 
 
@@ -377,7 +501,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     records = json.loads(args.records.read_text())
     for record in records:
-        for ref in [record.get('assessment'), record.get('execution'), *record.get('prior_attempts', []), *[record.get('identity', {}).get(k) for k in ('tool', 'condition_started', 'lane_started', 'input_manifest', 'execution_manifest', 'observation')]]:
+        for ref in [record.get('assessment'), record.get('execution'), record.get('analysis_observation'), record.get('derivation'), *record.get('prior_analyses', []), *record.get('prior_attempts', []), *[record.get('identity', {}).get(k) for k in ('tool', 'condition_started', 'lane_started', 'input_manifest', 'execution_manifest', 'observation')]]:
             if isinstance(ref, dict) and isinstance(ref.get('path'), str):
                 ref['path'] = str((args.records.resolve().parent / ref['path']).resolve())
     print(render(records, args.allow_pending), end='')
