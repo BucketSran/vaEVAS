@@ -34,3 +34,46 @@ The original settings reader rejected Spectre's `ms`, `pV`, and `fA` display uni
 The frozen checker’s `failures` array records diagnostics and coverage problems; it does not list every numerical threshold violation. Read its numeric status and maximum errors together. The public receipt adds `numeric_failure_reasons` derived from the unchanged 1 µV threshold, preserving all original fields.
 
 Compact identities and outcomes are in [receipt.json](receipt.json). Frozen shared models, input plans and the unchanged checker are [repository-contained](../../../evas/validation/event_acceptance/README.md). Complete raw outputs and execution logs remain local-only under `current/runs/event-closure-20261008/`; checksums alone do not establish public reproducibility.
+
+## Single-batch preparation checkpoint
+
+The small refactor from `bb89c830` to `cacc8550` gives the first event and each
+subsequent microevent one `prepare_changed_batch` entry. It preserves static
+calendar truncation, causal-loop budgets, phase queries and atomic publication.
+It changes no root policy, numerical budget, supported model or checker.
+
+[The checkpoint receipt](batch-refactor.json) binds the two binaries, tests and
+frozen reference reuse. The selected 251 Python tests retain their original
+assertions. Their 706 captured model requests compare return codes and complete
+stdout/stderr text without numerical tolerances, including rejected requests.
+This is a finite same-host numerical preservation check, not proof for every
+possible input or subprocess entry point. Diagnostic timings are not compared.
+Existing Rust production-entry tests retain same-Controller rollback/retry
+coverage; final-stage helper tests remain a separate obligation.
+
+To repeat the response check, build the baseline and candidate separately with
+the same Rust toolchain/profile, preserve the baseline binary, then run from the
+candidate checkout:
+
+```sh
+python3 -B experiments/backends/event-acceptance/check_batch_refactor.py \
+  /path/to/baseline/evas-kernel evas/rust_core/target/debug/evas-kernel \
+  runs/batch-refactor-recheck --expected-requests 706
+```
+
+The output directory must be new. The 706 count is for the pinned test revision.
+The verifier isolates diagnostic files and fails on a request-count mismatch,
+response difference or timeout. All existing test assertions still run.
+
+Seven frozen engineering models and twelve Spec B requests were also executed
+on both binaries. The engineering responses were compared with the same actual
+Spectre 21.1.0.509.isr12 records in both EVAS runs. All fourteen base/tight paired
+analyses are unchanged. Exact time-key pairing still has missing observations;
+M1-base still fails its original independent check. C1, #79 and VCO strict
+differences and observation-qualification limits remain open. This checkpoint
+does not constitute new Spectre execution or broader compatibility acceptance.
+
+Raw requests, responses, failed verifier attempts and independent reviews are
+local-only in the visible `worktrees/spectre-event-alignment/runs/event-candidate-step-20261009/`
+entry. The repository retains the comparator and compact receipt, not a public
+Spectre waveform archive. The wider refactor waits for user acceptance.
