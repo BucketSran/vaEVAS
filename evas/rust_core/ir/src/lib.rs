@@ -260,6 +260,8 @@ pub struct Solution {
 #[derive(Debug, Serialize)]
 pub struct Response {
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub strobe_evidence: Option<StrobeEvidence>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub observation_evidence: Option<ObservationEvidence>,
     pub engine: String,
     pub schema_version: u32,
@@ -463,10 +465,22 @@ impl EventTrigger {
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct TransientInputs {
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub strobetimes: Vec<f64>,
     pub pwl: Vec<Vec<[f64; 2]>>,
     pub output_times: Vec<f64>,
     pub stop: f64,
     pub max_step: f64,
+}
+
+/// Computed forced points, independent of the saved output grid.
+#[derive(Debug, Serialize)]
+pub struct StrobeEvidence {
+    pub schema_version: u32,
+    pub times: Vec<f64>,
+    pub sample_origins: Vec<&'static str>,
+    #[serde(rename = "voltages_V")]
+    pub voltages_v: Vec<Vec<f64>>,
 }
 
 #[derive(Debug, Serialize)]

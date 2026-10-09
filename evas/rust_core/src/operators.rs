@@ -1765,6 +1765,7 @@ mod phase_operator_tests {
         })).unwrap();
             let trajectory = Trajectory::new(
                 crate::ir::TransientInputs {
+                    strobetimes: Vec::new(),
                     pwl: vec![vec![[0.0, 0.0], [0.5, 0.0], [2.0, 0.0]]],
                     output_times: vec![0.0, 0.5, 2.0],
                     stop: 2.0,
@@ -1862,6 +1863,7 @@ mod phase_operator_tests {
         })).unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                strobetimes: Vec::new(),
                 pwl: vec![vec![[0.0, 0.25], [4.0, 0.25]]],
                 output_times: vec![0.0, 1.0, 4.0],
                 stop: 4.0,

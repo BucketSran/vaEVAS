@@ -194,6 +194,7 @@ impl Root {
 pub(crate) struct Trajectory {
     pub(crate) config: TransientInputs,
     pub(crate) knots: Vec<f64>,
+    pub(crate) solver_points: Vec<f64>,
     source_errors: Vec<f64>,
     pub(crate) exact_sources: Vec<Option<crate::exact_source::Curve>>,
     original_source_count: usize,
@@ -246,6 +247,12 @@ impl Trajectory {
             || !config.max_step.is_finite()
             || config.max_step <= 0.0
             || config.pwl.len() != driven_count
+            || config.strobetimes.len() > 100_000
+            || config
+                .strobetimes
+                .iter()
+                .any(|t| !t.is_finite() || *t < 0.0 || *t > config.stop)
+            || config.strobetimes.windows(2).any(|p| p[0] >= p[1])
             || config.output_times.is_empty()
             || config
                 .output_times
@@ -275,7 +282,12 @@ impl Trajectory {
             .iter()
             .map(|p| crate::exact_source::Curve::source(p))
             .collect();
+        let mut solver_points = knots.clone();
+        solver_points.extend(&config.strobetimes);
+        solver_points.sort_by(f64::total_cmp);
+        solver_points.dedup();
         Ok(Self {
+            solver_points,
             original_source_count: config.pwl.len(),
             exact_sources,
             config,
@@ -310,6 +322,10 @@ impl Trajectory {
         );
         self.knots.sort_by(f64::total_cmp);
         self.knots.dedup();
+        self.solver_points = self.knots.clone();
+        self.solver_points.extend(&self.config.strobetimes);
+        self.solver_points.sort_by(f64::total_cmp);
+        self.solver_points.dedup();
         self.exact_sources.push(if error == 0.0 {
             crate::exact_source::Curve::source(&points)
         } else {
@@ -465,6 +481,7 @@ mod tests {
         let points = vec![[0.0, -1.0], [2.0, 1.0]];
         let mut trajectory = Trajectory::new(
             TransientInputs {
+                strobetimes: Vec::new(),
                 pwl: vec![points.clone()],
                 output_times: vec![0.0, 2.0],
                 stop: 2.0,

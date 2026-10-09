@@ -159,6 +159,7 @@ API 运行已有 `Program` 不重复源码准入，但仍须满足当前 IR/内�
 
 ## 精度与结果解释
 
+当前开发候选支持独立于输出网格的 `strobetimes` 和周期 strobe 控制，见[强制求解时刻](docs/strobe.md)。
 `solve`、`transient` 和 manifest 的 `tolerances` 接受 `vabstol`（默认 `1e-12 V`）
 与 `reltol`（默认 `1e-10`，无量纲）。这两个数字是求解/验收设置，
 不能直接解释为所有输出都具有同样的全时域精度。
@@ -371,6 +372,7 @@ CLI 的内核失败在 stderr 输出 JSON，保留 `kind`、`message` 和存在�
 Python 的编译与求解接口：`compile_sources(sources, instances) -> Program`，
 `solve(program, driven, samples, kernel=...) -> result`，以及
 `transient(program, sources, output_times, stop=..., max_step=..., kernel=...) -> result`。
+当前开发候选支持独立于输出网格的 `strobetimes` 和周期 strobe 控制，见[强制求解时刻](docs/strobe.md)。
 `solve`、`transient` 和 manifest 的 `tolerances` 接受 `vabstol`（伏特，默认 `1e-12`）与
 `reltol`（无量纲，默认 `1e-10`），例如 `solve(..., vabstol=1e-9, reltol=1e-6)`。
 保留 `absolute` / `relative` 作为对应旧名称；同一容差不能同时提供新旧名称。

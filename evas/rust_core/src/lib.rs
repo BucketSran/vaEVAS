@@ -33,6 +33,7 @@ mod settlement_bounds;
 mod slew;
 pub mod solver;
 mod state_space;
+mod strobe;
 mod transient;
 mod transition;
 
@@ -77,6 +78,7 @@ pub fn run_with_threads(request: Request, static_threads: usize) -> Result<Respo
     let circuit = Circuit::new(request.program, &request.driven, request.tolerances)?;
     let solutions = batch::solve(&circuit, &request.samples, static_threads)?;
     Ok(Response {
+        strobe_evidence: None,
         observation_evidence: None,
         engine: concat!("evas-static-", env!("CARGO_PKG_VERSION")).into(),
         schema_version: SCHEMA_VERSION,

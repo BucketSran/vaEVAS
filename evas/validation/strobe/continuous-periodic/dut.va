@@ -1,0 +1,8 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module m(u,y,r);
+input u; output y; inout r; electrical u,y,r;
+analog begin
+V(y,r)<+idt(1-V(y,r),0);
+end
+endmodule

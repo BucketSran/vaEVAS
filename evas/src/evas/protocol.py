@@ -65,7 +65,7 @@ def _observation_evidence(response, solutions, output_times):
             _invalid('invalid observation voltage bounds or representative containment')
 
 
-def validate_response(response, program, count, output_times=None):
+def validate_response(response, program, count, output_times=None, *, strobetimes=None):
     if (not isinstance(response, dict) or type(response.get('schema_version')) is not int
             or response['schema_version'] != SCHEMA_VERSION
             or response.get('nodes') != list(program.nodes)
@@ -83,6 +83,25 @@ def validate_response(response, program, count, output_times=None):
         if any(not _finite(row[key]) or row[key] < 0 for key in diagnostics if key in row):
             _invalid('kernel residual/correction diagnostics must be finite and nonnegative')
     _observation_evidence(response, solutions, output_times)
+    strobe = response.get('strobe_evidence')
+    if strobetimes and strobe is None:
+        _invalid('kernel did not acknowledge forced solve points')
+    if strobe is not None:
+        points = strobe.get('times') if isinstance(strobe, dict) else None
+        kinds = {'stateless_working_point', 'accepted_controller_frame', 'implicit_history_evaluation'}
+        if (output_times is None or not isinstance(strobe, dict)
+                or type(strobe.get('schema_version')) is not int or strobe['schema_version'] != 1
+                or not isinstance(points, list) or not points or len(points) > 100_000
+                or not _vector(points, len(points)) or any(t < 0 for t in points)
+                or any(a >= b for a,b in zip(points,points[1:]))
+                or strobetimes is not None and points != strobetimes
+                or not isinstance(strobe.get('sample_origins'), list)
+                or len(strobe['sample_origins']) != len(points)
+                or any(not isinstance(k,str) or k not in kinds for k in strobe['sample_origins'])
+                or not isinstance(strobe.get('voltages_V'), list)
+                or len(strobe['voltages_V']) != len(points)
+                or any(not _vector(row, len(response['nodes'])) for row in strobe['voltages_V'])):
+            _invalid('invalid strobe execution evidence')
     if output_times is None:
         if 'transient' in response:
             _invalid('static response unexpectedly contains a transient trace')

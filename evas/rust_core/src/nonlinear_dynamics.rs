@@ -1285,7 +1285,7 @@ impl NonlinearContinuous {
         let mut knots = vec![start];
         knots.extend(
             trajectory
-                .knots
+                .solver_points
                 .iter()
                 .copied()
                 .filter(|t| *t > start && *t < horizon),
@@ -1711,6 +1711,7 @@ mod tests {
         })).unwrap();
         let trajectory = Trajectory::new(
             crate::ir::TransientInputs {
+                strobetimes: Vec::new(),
                 pwl: vec![],
                 output_times: vec![0.0, 0.5],
                 stop: 0.5,
@@ -1758,6 +1759,7 @@ mod tests {
         .unwrap();
         let trajectory = Trajectory::new(
             crate::ir::TransientInputs {
+                strobetimes: Vec::new(),
                 pwl: vec![],
                 output_times: vec![0.0, 0.125],
                 stop: 0.125,
@@ -1790,6 +1792,23 @@ mod tests {
                     2,
                 )),
             )],
+        }
+    }
+
+    #[test]
+    fn forced_points_end_accepted_dense_steps() {
+        let mut flow = scalar(-1.0);
+        let context = Arc::get_mut(&mut flow.context).unwrap();
+        let mut config = context.trajectory.config.clone();
+        config.strobetimes = vec![0.025, 0.075];
+        context.trajectory = Trajectory::new(config, 0).unwrap();
+        flow.propagate_until(0.125).unwrap();
+        for time in [0.025, 0.075] {
+            assert!(flow.steps.iter().any(|s| s.end == time));
+            assert!(!flow.steps.iter().any(|s| s.start < time && time < s.end));
+            let value = flow.range_bounds(I::point(time)).unwrap()[0];
+            let expected = 1.0 / (1.0 + time);
+            assert!((0.5 * (value.lo + value.hi) - expected).abs() < 1e-7);
         }
     }
 
@@ -2206,6 +2225,7 @@ mod tests {
         })).unwrap();
         let trajectory = Trajectory::new(
             crate::ir::TransientInputs {
+                strobetimes: Vec::new(),
                 pwl: vec![vec![[0.0, 0.0], [0.5, 1.0], [1.0, 0.0]]],
                 output_times: vec![0.0, 1.0],
                 stop: 1.0,

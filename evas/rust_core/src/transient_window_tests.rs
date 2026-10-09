@@ -25,6 +25,7 @@ fn fixture() -> (EventModel, Trajectory, Frame) {
     .unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            strobetimes: Vec::new(),
             pwl: vec![vec![[0.0, 0.0], [1.0, 1.0]]],
             output_times: vec![0.0, 1.0],
             stop: 1.0,

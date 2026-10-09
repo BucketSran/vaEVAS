@@ -11,6 +11,7 @@ from .errors import KernelError
 from .manifest import finite_float, reject_constant, unique_object
 from .protocol import validate_response
 from .kernel import select_kernel
+from .strobe import expand
 
 DEFAULT_TIMEOUT = 300.0
 
@@ -28,6 +29,7 @@ def solve(program: Program, driven: list[str], samples: list[list[float]], *,
 
 def transient(program: Program, sources: dict[str, list[list[float]]],
               output_times: list[float], *, stop: float, max_step: float,
+              strobetimes=None, strobeperiod=None, strobedelay=0.0, skipstart=0.0, skipstop=None,
               kernel: str | Path | None = None, vabstol: float | None = None, reltol: float | None = None,
               absolute: float | None = None, relative: float | None = None,
               timeout: float | None = DEFAULT_TIMEOUT) -> dict:
@@ -36,8 +38,13 @@ def transient(program: Program, sources: dict[str, list[list[float]]],
                    transient=dict(pwl=list(sources.values()), output_times=output_times,
                                   stop=stop, max_step=max_step),
                    tolerances=_tolerances(vabstol, reltol, absolute, relative))
+    points = (expand(stop, strobetimes=strobetimes, strobeperiod=strobeperiod,
+                     strobedelay=strobedelay, skipstart=skipstart, skipstop=skipstop)
+              if strobetimes is not None or strobeperiod is not None or strobedelay != 0 or skipstart != 0 or skipstop is not None else [])
+    if points:
+        request["transient"]["strobetimes"] = points
     response = _invoke(request, kernel, timeout)
-    return validate_response(response, program, len(output_times), output_times)
+    return validate_response(response, program, len(output_times), output_times, strobetimes=points)
 
 
 def _tolerances(vabstol, reltol, absolute, relative):

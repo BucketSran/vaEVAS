@@ -35,6 +35,7 @@ fn relocalization_fixture() -> (EventModel, Trajectory, Controller, Vec<Schedule
     .unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            strobetimes: Vec::new(),
             pwl: vec![vec![[0., 0.], [1., 1.]]],
             output_times: vec![0., 1.],
             stop: 1.,
@@ -404,6 +405,7 @@ pub(super) fn fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEve
     .unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            strobetimes: Vec::new(),
             pwl: vec![vec![[0., 0.], [1., 0.]]],
             output_times: vec![0., 1.],
             stop: 1.,
@@ -539,6 +541,7 @@ pub(super) fn nonlinear_horizon_fixture(
     .unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            strobetimes: Vec::new(),
             pwl: vec![],
             output_times: vec![0., 2.],
             stop: 2.,
@@ -803,6 +806,7 @@ fn two_delays_accuracy_failure_discard_and_earlier_retry_preserve_frame() {
     .unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            strobetimes: Vec::new(),
             pwl: vec![vec![[0.0, 0.0], [3.0, 1.0]]],
             output_times: vec![0.0, 3.0],
             stop: 3.0,
@@ -874,6 +878,7 @@ fn delayed_timer_root_fixture(
     .unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            strobetimes: Vec::new(),
             pwl: vec![vec![[0., 0.], [0.31, 0.31]]],
             output_times: vec![0., 0.31],
             stop: 0.31,
@@ -1431,6 +1436,7 @@ fn raw_source_held_epoch_fixture_at(
     .unwrap();
     let trajectory = Trajectory::new(
         TransientInputs {
+            strobetimes: Vec::new(),
             pwl: vec![vec![[0., 0.1], [1., 0.9]]],
             output_times: vec![0., 1.],
             stop: 1.,

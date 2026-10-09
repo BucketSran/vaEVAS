@@ -678,6 +678,7 @@ pub(crate) fn run(
         (trace.times.first() == Some(&0.0)).then_some(true),
     );
     Ok(Response {
+        strobe_evidence: None,
         observation_evidence: Some(observation_evidence),
         engine: concat!("evas-implicit-", env!("CARGO_PKG_VERSION")).into(),
         schema_version: crate::ir::SCHEMA_VERSION,
@@ -815,6 +816,7 @@ mod tests {
         })).unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                strobetimes: Vec::new(),
                 pwl: vec![vec![[0.0, 0.0], [0.75, 0.75]]],
                 output_times: vec![0.0, 0.75],
                 stop: 0.75,
@@ -848,6 +850,7 @@ mod tests {
         })).unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                strobetimes: Vec::new(),
                 pwl: vec![vec![[0.0, 2.25], [1.0, 2.25]]],
                 output_times: vec![0.0, 1.0],
                 stop: 1.0,

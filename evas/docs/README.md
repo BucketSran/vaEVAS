@@ -14,6 +14,7 @@
 | [CAPABILITIES.md](CAPABILITIES.md) | 能力与缺口总表（一句话矩阵 + 检查点身份） |
 | [TRACEABILITY.md](TRACEABILITY.md) | 追溯矩阵（**自动生成**，勿手编） |
 | [math/](math/README.md) | 数学原理章节：求解、事件、算子、连续动态 |
+| [strobe.md](strobe.md) | 独立强制求解点、周期表和当前拒绝边界 |
 | [diagnostics.md](diagnostics.md) | 可选诊断、静态来源查询与只读 MCP |
 
 ## 按问题阅读

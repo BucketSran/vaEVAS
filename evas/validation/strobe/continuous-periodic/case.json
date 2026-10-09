@@ -1,0 +1,28 @@
+{
+  "name": "continuous-periodic",
+  "analytic": "1-exp(-t)",
+  "voltage_nodes": [
+    "u",
+    "y"
+  ],
+  "requested_times": [
+    0,
+    0.125,
+    0.375,
+    0.625,
+    0.875,
+    1
+  ],
+  "forced_times": [
+    0.125,
+    0.375,
+    0.625,
+    0.875
+  ],
+  "acceptance": {
+    "analytic_absolute_V": 1e-06,
+    "direct_absolute_V": 1e-06,
+    "time_presence": "exact numeric equality; separate outcome; no closest-point substitution",
+    "timer_boundary": "compare interior forced points; stop phase recorded separately"
+  }
+}

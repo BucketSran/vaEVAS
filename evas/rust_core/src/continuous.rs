@@ -110,6 +110,7 @@ fn local_context(context: &Arc<Context>, horizon: f64) -> Arc<Context> {
     trajectory.config.output_times = vec![0., horizon];
     trajectory.config.pwl = vec![vec![[0., 0.], [horizon, 0.]]; context.driven.len()];
     trajectory.knots = vec![0., horizon];
+    trajectory.solver_points = vec![0., horizon];
     Arc::new(Context {
         program: context.program.clone(),
         trajectory,
@@ -1229,7 +1230,13 @@ fn build_segments(
     let mut state = initial_state;
     let mut segments = Vec::new();
     let mut knots = vec![start_time];
-    knots.extend(trajectory.knots.iter().copied().filter(|t| *t > start_time));
+    knots.extend(
+        trajectory
+            .solver_points
+            .iter()
+            .copied()
+            .filter(|t| *t > start_time),
+    );
     if knots.len() == 1 {
         knots.push(start_time);
     }
@@ -1569,6 +1576,7 @@ mod tests {
     fn no_source_trajectory(stop: f64) -> Trajectory {
         Trajectory::new(
             TransientInputs {
+                strobetimes: Vec::new(),
                 pwl: Vec::new(),
                 output_times: vec![0.0, stop],
                 stop,
@@ -1577,6 +1585,38 @@ mod tests {
             0,
         )
         .unwrap()
+    }
+
+    #[test]
+    fn forced_points_partition_propagation_without_becoming_source_knots() {
+        let program = program_with_idt(
+            Expression::Affine {
+                constant: 1.0,
+                terms: vec![Term {
+                    node: 1,
+                    coefficient: -1.0,
+                }],
+            },
+            0.0,
+        );
+        let mut config = no_source_trajectory(1.0).config;
+        config.strobetimes = vec![0.2, 0.7];
+        let trajectory = Trajectory::new(config, 0).unwrap();
+        assert_eq!(trajectory.knots, vec![0.0, 1.0]);
+        let continuous = Continuous::new(&program, &trajectory, &[], &[])
+            .unwrap()
+            .unwrap();
+        let Continuous::Linear(flow) = continuous else {
+            panic!("expected affine propagation")
+        };
+        assert_eq!(
+            flow.segments.iter().map(|s| s.end).collect::<Vec<_>>(),
+            vec![0.2, 0.7, 1.0]
+        );
+        for &time in &[0.2, 0.7, 1.0] {
+            let value = flow.bounds(time).unwrap()[0];
+            assert!((0.5 * (value.lo + value.hi) - (1.0 - (-time).exp())).abs() < 1e-7);
+        }
     }
 
     fn cancelled_node(node: usize) -> Expression {
@@ -1652,6 +1692,7 @@ mod tests {
     fn ramp_filter_trajectory(tau: f64) -> Trajectory {
         Trajectory::new(
             TransientInputs {
+                strobetimes: Vec::new(),
                 pwl: vec![vec![[0.0, 0.0], [2.0 * tau, 2.0]]],
                 output_times: vec![0.0, 0.5 * tau, tau, 2.0 * tau],
                 stop: 2.0 * tau,
@@ -1906,6 +1947,7 @@ mod tests {
         };
         let trajectory = Trajectory::new(
             TransientInputs {
+                strobetimes: Vec::new(),
                 pwl: vec![vec![[0.0, 1.0], [1.0, 1.0]]],
                 output_times: vec![0.0, 1.0],
                 stop: 1.0,

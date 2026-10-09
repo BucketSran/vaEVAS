@@ -347,6 +347,7 @@ mod tests {
         })).unwrap();
         let trajectory = Trajectory::new(
             crate::ir::TransientInputs {
+                strobetimes: Vec::new(),
                 pwl: vec![],
                 output_times: vec![0.0, 1.0],
                 stop: 1.0,
@@ -384,6 +385,7 @@ mod tests {
         })).unwrap();
         let trajectory = Trajectory::new(
             crate::ir::TransientInputs {
+                strobetimes: Vec::new(),
                 pwl: vec![],
                 output_times: vec![0., 1.],
                 stop: 1.,

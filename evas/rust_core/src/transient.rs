@@ -661,6 +661,10 @@ fn prepare_calendar_batch(
 }
 
 pub(crate) fn run(request: Request) -> Result<Response, Error> {
+    crate::strobe::run(request)
+}
+
+pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
     if !request.samples.is_empty() {
         return Err(Error::new(
             "invalid_inputs",
@@ -1003,6 +1007,7 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
         (trace.times.first() == Some(&0.0)).then_some(true),
     );
     Ok(Response {
+        strobe_evidence: None,
         observation_evidence: Some(observation_evidence),
         engine: concat!("evas-events-", env!("CARGO_PKG_VERSION")).into(),
         schema_version: SCHEMA_VERSION,
@@ -1053,6 +1058,7 @@ fn run_stateless_transient(
         (times.first() == Some(&0.0)).then_some(true),
     );
     Ok(Response {
+        strobe_evidence: None,
         observation_evidence: Some(observation_evidence),
         engine: concat!("evas-events-", env!("CARGO_PKG_VERSION")).into(),
         schema_version: SCHEMA_VERSION,
@@ -1109,6 +1115,7 @@ mod tests {
         let model = EventModel::new(program, vec!["u".into()], tolerances).unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                strobetimes: Vec::new(),
                 pwl: vec![vec![[0.0, 0.0], [3.0, 1.0]]],
                 output_times: vec![0.0, 3.0],
                 stop: 3.0,
@@ -1213,6 +1220,7 @@ mod tests {
         // isolates reset-time uncertainty rather than PWL interpolation error.
         let trajectory = Trajectory::new(
             TransientInputs {
+                strobetimes: Vec::new(),
                 pwl: vec![vec![
                     [0.0, 0.0],
                     [0.5, 1.0 / 6.0],
@@ -1505,6 +1513,7 @@ mod tests {
         .unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                strobetimes: Vec::new(),
                 pwl: vec![vec![
                     [0.0, 1.0],
                     [0.75, 1.0],
@@ -1591,6 +1600,7 @@ mod tests {
         let model = EventModel::new(program, vec!["u".into()], Tolerances::default()).unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                strobetimes: Vec::new(),
                 pwl: vec![vec![[0.0, 0.0], [1.0, 1.0], [2.0, 0.0]]],
                 output_times: vec![0.0, 2.0],
                 stop: 2.0,
