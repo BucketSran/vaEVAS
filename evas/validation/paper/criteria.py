@@ -136,8 +136,11 @@ def assess(case_id, rows, qualification, execution_state='completed'):
         props.append(prop('observation','I',reason='Uncertainty exceeds the predeclared observation contract'));return answer
     if len(rows)<2 or any(not required|{'time_s'} <= r.keys() or any(not isinstance(r[k],(float,int)) or isinstance(r[k],bool) or not math.isfinite(r[k]) for k in required|{'time_s'}) for r in rows):
         props.append(prop('observation','I',reason='Missing/nonfinite samples or columns'));return answer
-    times=[r['time_s']/T for r in rows]
-    if any(b<=a for a,b in zip(times,times[1:])) or abs(times[0])>1e-12 or abs(times[-1]-card['stop_T'])>1e-10:
+    native_times=[r['time_s'] for r in rows]
+    times=[t/T for t in native_times]
+    # Unit conversion can round adjacent native floats to the same value.
+    # Record ordering belongs to the original SI timestamps.
+    if any(b<=a for a,b in zip(native_times,native_times[1:])) or abs(times[0])>1e-12 or abs(times[-1]-card['stop_T'])>1e-10:
         props.append(prop('observation','I',reason='Nonmonotone or truncated time domain'));return answer
     gap_ok=all((b-a)*T<=2e-10+1e-20 for a,b in zip(times,times[1:]))
     local_ok=True
