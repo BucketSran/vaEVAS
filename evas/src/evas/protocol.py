@@ -51,7 +51,7 @@ def _observation_evidence(response, solutions, output_times):
             or any(not isinstance(origin,str) or origin not in kinds for origin in origins)):
         _invalid('invalid observation sample origins')
     if ('initial_settled' in evidence and evidence['initial_settled'] is not None
-            and (type(evidence['initial_settled']) is not bool or not output_times or output_times[0]!=0)):
+            and (evidence['initial_settled'] is not True or not output_times or output_times[0]!=0)):
         _invalid('invalid initial settlement evidence')
     bounds=evidence.get('voltage_bounds_V')
     if not isinstance(bounds,list) or len(bounds)!=len(solutions):
