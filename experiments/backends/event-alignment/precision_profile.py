@@ -1,6 +1,7 @@
 """Freeze, attest, and compare a predeclared Spectre precision ladder. Never dispatch."""
 import argparse
 import copy
+from collections import Counter
 import hashlib
 import importlib.util
 import json
@@ -43,12 +44,16 @@ def freeze(case, model, ladder, contract, initialization):
     ids = [ident(p['id']) for p in ladder['levels']]
     if len(set(ids)) != len(ids):
         raise ValueError('duplicate profile id')
-    if not initialization or not isinstance(initialization,dict):
-        raise ValueError('explicit initial-condition declaration required')
+    if (not isinstance(initialization,dict) or any(
+            not isinstance(initialization.get(key),str) or not initialization[key].strip()
+            for key in ['declaration','evidence'])):
+        raise ValueError('initialization requires nonempty declaration and evidence strings')
     if contract['stop'] != case['stop'] or contract['required_times'] != case['times']:
         raise ValueError('case/observation contract mismatch')
     if set(contract['budgets_v']) != set(case['voltage_nodes']):
         raise ValueError('all declared observations need frozen budgets')
+    if not set(case.get('criteria',{}).get('expected_final_counts',{})) <= set(case['voltage_nodes']) & set(contract['budgets_v']):
+        raise ValueError('declared event counters must be saved and budgeted')
     # Validate the contract through the maintained checker, without executing.
     compare(contract, {}, {})
     decks = {p['id']:deck(case,p) for p in ladder['levels']}
@@ -79,6 +84,8 @@ def analyze(frozen, records):
     if len(versions) != 1 or any(not isinstance(v,str) or not v.strip() for v in versions):
         gaps.append('missing or differing simulator version')
     for r in records:
+        if r.get('identity_status','P') != 'P':
+            gaps.append(r['profile_id']+': returned source/deck identity missing')
         if r['settings_status'] != 'P' or r['execution_status'] != 'success':
             gaps.append(r['profile_id']+': execution/settings not qualified')
     contract = frozen['contract']
@@ -93,14 +100,24 @@ def analyze(frozen, records):
              for i in range(len(traces)-1)]
     acceptance = dict(left=expected[chosen[0]],right=expected[chosen[1]],
                       comparison=compare(contract,traces[chosen[0]],traces[chosen[1]]))
-    counts = {n:[] for n in frozen['event_count_nodes']}
+    count_nodes=list(dict.fromkeys([*frozen['event_count_nodes'],
+        *frozen['case'].get('criteria',{}).get('expected_final_counts',{})]))
+    missing_count_nodes=set(count_nodes)- (set(frozen['case']['voltage_nodes']) & set(contract['budgets_v']))
+    if missing_count_nodes:
+        gaps.append('declared event counters not saved/budgeted: '+','.join(sorted(missing_count_nodes)))
+    ambiguous_times=[{t for t,count in Counter(row['time'] for row in trace['rows']).items() if count>1}
+                     for trace in traces]
+    counts = {n:[] for n in count_nodes}
     unstable = False
     for n, samples in counts.items():
-        for trace in traces:
+        for trace,ambiguous in zip(traces,ambiguous_times):
             samples.append({r['time']:r['voltages'][n] for r in trace['rows']
-                            if n in r['voltages'] and finite(r['voltages'][n])})
+                            if r['time'] not in ambiguous
+                            and n in r['voltages'] and finite(r['voltages'][n])})
         left,right = samples[chosen[0]],samples[chosen[1]]
         unstable |= any(left[t] != right[t] for t in left.keys() & right.keys())
+    if any(set(sample)!=required for samples in counts.values() for sample in samples):
+        gaps.append('incomplete required event-count observations')
     statuses = [acceptance['comparison']['finite_pair_status']]
     classification = ('event_count_unstable' if unstable else
                       'not_converged' if 'F' in statuses else
@@ -109,12 +126,14 @@ def analyze(frozen, records):
                 finite_reference_stability_status='I' if gaps or 'I' in statuses else
                     'F' if unstable or 'F' in statuses else 'P',
                 event_count_status='unstable' if unstable else 'unknown' if not counts else
+                    'ambiguous' if any(ambiguous_times) else
                     'incomplete' if any(set(sample)!=required for samples in counts.values() for sample in samples)
                     or any(p['comparison']['duplicate_times'][engine] for p in pairs for engine in ['evas','spectre'])
                     else 'finite_stable',
                 analysis_sha256=file_hash(Path(__file__)),native_observation_audits=native_audits,
                 frozen_sha256=digest(frozen),profiles=records,pairs=pairs,acceptance_pair=acceptance,
                 event_count_samples=counts,identity_gaps=gaps,
+                ambiguous_event_count_times={profile:sorted(times) for profile,times in zip(expected,ambiguous_times)},
                 limits=frozen['limits'])
 
 
@@ -122,13 +141,25 @@ def attest(frozen, profile_id, folder, psf_path, log_path, spectre_version, exec
     if not isinstance(spectre_version,str) or not spectre_version.strip():
         raise ValueError('nonempty simulator version required')
     profile = next(p for p in frozen['ladder']['levels'] if p['id']==profile_id)
-    if file_hash(folder/'dut.va') != frozen['model_sha256'] or file_hash(folder/'tb.scs') != frozen['deck_sha256'][profile_id]:
-        raise ValueError('executed model/deck differs from frozen inputs')
     result = dict(profile_id=profile_id,frozen_sha256=digest(frozen),
                   execution_status=execution_status,spectre_version=spectre_version,
                   requested_settings=profile,settings_status='I',observation_status='I',
-                  rows=[],identities={},gaps=[],settings_gaps=[],observation_gaps=[])
-    for name,path in [('model',folder/'dut.va'),('deck',folder/'tb.scs'),('psf',psf_path),('log',log_path)]:
+                  rows=[],identities={},gaps=[],settings_gaps=[],observation_gaps=[],
+                  identity_status='I',identity_gaps=[])
+    for name,path,expected_hash in [('model',folder/'dut.va',frozen['model_sha256']),
+                                    ('deck',folder/'tb.scs',frozen['deck_sha256'][profile_id])]:
+        try:
+            actual_hash=file_hash(path)
+        except OSError as error:
+            result['identity_gaps'].append(name+': '+str(error))
+            result['gaps'].append('identity: '+name+': '+str(error))
+            continue
+        if actual_hash!=expected_hash:
+            raise ValueError('executed model/deck differs from frozen inputs: '+name)
+        result['identities'][name]=dict(path=str(path.resolve()),sha256=actual_hash)
+    if not result['identity_gaps']:
+        result['identity_status']='P'
+    for name,path in [('psf',psf_path),('log',log_path)]:
         if path.exists():
             result['identities'][name] = dict(path=str(path.resolve()),sha256=file_hash(path))
     try:

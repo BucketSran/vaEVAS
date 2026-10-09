@@ -16,7 +16,7 @@ class PrecisionProfileTests(unittest.TestCase):
             {'id':name,'reltol':tol,'vabstol':tol/100,'iabstol':tol/10000,'maxstep':.1}
             for name,tol in [('base',1e-8),('tight',1e-9),('tighter',1e-10)]]}
         contract = {'stop':1.,'required_times':[0.,1.], 'budgets_v':{'y':1e-6,'n':0.},'phase_nodes':['n']}
-        frozen = precision.freeze(case,b'module probe; endmodule\n',ladder,contract,{'declaration':'zero DC initialization'})
+        frozen = precision.freeze(case,b'module probe; endmodule\n',ladder,contract,{'declaration':'zero DC initialization','evidence':'calibration model initial state'})
         records = []
         for level in frozen['ladder']['levels']:
             records.append({'profile_id':level['id'],'frozen_sha256':precision.digest(frozen),
@@ -139,6 +139,63 @@ class PrecisionProfileTests(unittest.TestCase):
             with tempfile.TemporaryDirectory() as directory:
                 with self.assertRaises(ValueError):
                     precision.attest(frozen,'base',Path(directory),Path(directory)/'psf',Path(directory)/'log',version,'success')
+
+    def test_declared_counter_must_be_saved_and_budgeted_before_freeze(self):
+        frozen, _ = self.fixture()
+        case=copy.deepcopy(frozen['case']);case['voltage_nodes']=['y']
+        contract=copy.deepcopy(frozen['contract']);contract['budgets_v']={'y':1e-6};contract['phase_nodes']=[]
+        with self.assertRaises(ValueError):
+            precision.freeze(case,b'module probe; endmodule\n',frozen['ladder'],contract,frozen['initialization'])
+
+    def test_old_incomplete_counter_plan_cannot_report_stability_p(self):
+        frozen, records = self.fixture()
+        frozen['case']['voltage_nodes']=['y']
+        frozen['contract']['budgets_v']={'y':1e-6};frozen['contract']['phase_nodes']=[]
+        for record in records:
+            record['frozen_sha256']=precision.digest(frozen)
+            for row in record['rows']: del row['voltages']['n']
+        result=precision.analyze(frozen,records)
+        self.assertEqual(result['finite_reference_stability_status'],'I')
+        self.assertEqual(result['classification'],'incomplete')
+
+    def test_duplicate_count_observation_is_ambiguous_not_last_wins(self):
+        frozen, records=self.fixture()
+        records[1]['rows'].append({'time':1.,'voltages':{'y':1.,'n':2.}})
+        result=precision.analyze(frozen,records)
+        self.assertEqual(result['event_count_status'],'ambiguous')
+        self.assertEqual(result['finite_reference_stability_status'],'I')
+        self.assertNotEqual(result['classification'],'event_count_unstable')
+        records[2]['rows'][0]['voltages']['y']=1e-5
+        result=precision.analyze(frozen,records)
+        self.assertEqual(result['acceptance_pair']['comparison']['finite_pair_status'],'F')
+        self.assertEqual(result['event_count_status'],'ambiguous')
+        self.assertEqual(result['finite_reference_stability_status'],'I')
+
+    def test_failed_return_without_model_and_deck_retains_missing_identity(self):
+        frozen, records=self.fixture()
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory)
+            failed=precision.attest(frozen,'tight',root,root/'psf',root/'log','21.1','infrastructure_failure')
+            self.assertEqual(failed['identity_status'],'I')
+            self.assertEqual(failed['execution_status'],'infrastructure_failure')
+            self.assertNotIn('model',failed['identities'])
+            self.assertNotIn('deck',failed['identities'])
+            self.assertTrue(failed['identity_gaps'])
+            records[1]=failed
+            self.assertEqual(precision.analyze(frozen,records)['finite_reference_stability_status'],'I')
+            (root/'dut.va').write_text('wrong returned source')
+            with self.assertRaises(ValueError):
+                precision.attest(frozen,'tight',root,root/'psf',root/'log','21.1','infrastructure_failure')
+
+    def test_initialization_requires_nonempty_declaration_and_evidence_strings(self):
+        frozen,_=self.fixture()
+        for initial in [{'x':1},{'declaration':'zero DC state'},
+                        {'declaration':'   ','evidence':'source initial state'},
+                        {'declaration':'zero DC state','evidence':'\t'},
+                        {'declaration':1,'evidence':'source initial state'}]:
+            with self.subTest(initial=initial),self.assertRaises(ValueError):
+                precision.freeze(frozen['case'],b'module probe; endmodule\n',
+                                 frozen['ladder'],frozen['contract'],initial)
 
 
 if __name__ == '__main__':

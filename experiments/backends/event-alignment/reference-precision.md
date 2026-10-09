@@ -23,6 +23,7 @@ EVAS/Spectre 直接比较。`reltol` 是求解器控制，不是输出误差上�
   等于原 case 的 times，不新增近邻匹配容差。
 - initialization：显式声明原初态与其证据，例如
   `{"declaration":"原模型 initial_step 与默认 DC 初态；没有外加 ic", "evidence":"dut.va"}`。
+  新冻结须含非空字符串 `declaration` 和 `evidence`，任意字典或空白字段拒绝。
   该声明冻结初态要求，不证明隐藏内部状态已读回。需要实际初态检查时继续使用
   原 checker。
 
@@ -60,7 +61,9 @@ version 参数拒绝空串或空白，且必须出现于日志；分析器也把
 有效 PSF 即使读回失败也保留 rows/token，并分别记录 settings_gaps 和
 observation_gaps。规范化保留全部原生行、重复
 时刻和十进制 token，既不插值也不替换最近点。失败/超时档位也应调用 attest，
-保存缺失证据，不从计划分母移除。
+保存缺失证据，不从计划分母移除。缺少返回 model/deck 时保留
+`identity_status=I` 与 identity_gaps，不能以本地准备文件补成实际身份；
+已有返回文件明确不符冻结 SHA 仍拒绝为 stale。
 
 ## 固定网格分析
 
@@ -74,8 +77,12 @@ python3 -B experiments/backends/event-alignment/precision_profile.py analyze \
 记录顺序必须与冻结档位完全相同。分析比较冻结 required_times 的精确 parsed
 binary64 时刻；逐档原生行留在报告中，但网格外 native 行不冒充 required
 观察。重复时刻不选相位。原计数通道取自 case 的
-`criteria.expected_final_counts`；验收配对比较同一要求时刻的计数值，全部早期档位计数观察也保留。原生行数不当作
-事件数，没有计数通道时 event_count_status 为 unknown。
+`criteria.expected_final_counts`。新冻结要求其每个节点都在 voltage_nodes 与
+预算中；分析旧计划也将声明或实际计数缺失计入 I，不能同时给稳定性 P。验收配对比较同一要求时刻的计数值，全部早期档位计数观察也保留。原生行数不当作
+事件数，没有计数通道时 event_count_status 为 unknown。重复要求时刻的计数
+行全部保留在原记录中，分析不取最后一行；其时刻列入
+ambiguous_event_count_times，计数结论为 ambiguous，稳定资格为 I。其他唯一
+时刻已经确证的数值 F 或计数变化仍保留。
 
 - `event_count_unstable`：已有同刻计数观察变化；即使其他点缺失也保留变化。
 - `not_converged`：预先声明的验收配对差异超过原电压预算。
@@ -106,3 +113,7 @@ python3 -B -m unittest discover -s experiments/backends/event-alignment \
 
 覆盖错误源/预算/请求设置身份、实际有效设置冲突、缺失观察/档位、事件计数
 变化与观察缺失的区别，以及没有连续时间证明时仍可记录有限稳定性。
+
+对旧执行重分析时保留原 FROZEN、原 attest、原分析与原 raw，另存新 analysis
+及分析器 SHA。重分析不调用 freeze，不将旧工具身份改成新工具；分别说明
+新准入检查在原案例中的适用性。历史初始化证据的字段拼写也保持原样。
