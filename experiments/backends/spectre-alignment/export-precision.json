@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "scope": "export precision diagnostic only; original constant observer-off source/physical inputs and fixed checker preserved; no paper qualification",
+  "baseline_pr_head": "5c53b3c3c73b08a0a63b2a50c2aac7548e7ae45d",
+  "execution_receipt": {
+    "freeze_manifest_sha256": "c7291d159e1bfb413b2d52bb350aab0507888e8eda4fadf3c4ce48404169b1ba",
+    "allocation_sha256": "f6e2d041a22c82fac647d275b66b89b6181604199866eecc7ccf2ee0a80b2dc1",
+    "orchestration_manifest_sha256": "5c9de50bfd40ed9e97062a9e665d5c1b4496c3e289755995d14537dd55b8c61b",
+    "numerical_launches": 2,
+    "version_queries": 0,
+    "help_queries": 0,
+    "retries": 0,
+    "dispatch_sha256": "b0a86f246ef87038a490a9f9b298765dde97ef3c89346bfb32b9ff3aacc69ad3",
+    "collection_sha256": "34ec81fc814be8530407b7f62642c3f7f248ed282ae206ae6ca5ba278035a221",
+    "operator_receipt_sha256": "38890df7b8ae4eaf0ab71adfbf75f6b1048920fb2682ba810acca3b3e0023060",
+    "scientific_manifest_sha256": "eb68f8e774a7540c050dc83c154c09ae38e1219bdbfb7674f5e6fdd170ff078f",
+    "summary_sha256": "ab438029da1f51309827643e2d0b2a1104d3c9400c9c311988aee6b3abd010d9",
+    "results_sha256": "a52c90e669e5005ef18d178dfe92718199d56d684aa76422566369d2ae76f1c1",
+    "availability": "local-only",
+    "remote_root": "/tmp/chips-jinzhihong/gap-audit-20261007-export-precision",
+    "remote_originals_retained": true,
+    "serial_lane_released": true
+  },
+  "additional_root_help_queries": 1,
+  "program_counts_after": {
+    "spectre_numerical": 72,
+    "spectre_version": 24,
+    "help_queries_this_followup": 1
+  },
+  "results": {
+    "requested_anchors": 1041,
+    "default_missing_anchors": 358,
+    "g17_missing_anchors": 8,
+    "g21_missing_anchors": 8,
+    "native_rows_each": 32815,
+    "numeric_tokens_each": 164075,
+    "g17_g21_binary64_differences": 0,
+    "g21_to_g17_format_differences": 0,
+    "failure_kinds_retained": [
+      "missing_anchors",
+      "phase_ordinary waveform_error"
+    ],
+    "qualification": "incomplete; output format matching is not internal solver or physical observation proof"
+  },
+  "evidence": {
+    "receipt": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/export/probe/RESULTS_RECEIPT.json",
+      "sha256": "222eb1adced43885e3f41fb84a686983b193bb47cc1765c8bff735a449cb45fc",
+      "availability": "local-only"
+    },
+    "summary": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/export/probe/analysis/SUMMARY.json",
+      "sha256": "ab438029da1f51309827643e2d0b2a1104d3c9400c9c311988aee6b3abd010d9",
+      "availability": "local-only"
+    },
+    "report": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/export/probe/RESULTS.md",
+      "sha256": "a52c90e669e5005ef18d178dfe92718199d56d684aa76422566369d2ae76f1c1",
+      "availability": "local-only"
+    },
+    "freeze": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/export/probe/FREEZE_MANIFEST.json",
+      "sha256": "c7291d159e1bfb413b2d52bb350aab0507888e8eda4fadf3c4ce48404169b1ba",
+      "availability": "local-only"
+    },
+    "allocation": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/export/probe/coordinator-allocation.json",
+      "sha256": "f6e2d041a22c82fac647d275b66b89b6181604199866eecc7ccf2ee0a80b2dc1",
+      "availability": "local-only"
+    },
+    "analysis_script": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/export/probe/analyze_probe.py",
+      "sha256": "31a499d91e70acd367f1edb7226d0b859cda9ccf34e536ec24ebd6f772c16e7b",
+      "availability": "local-only"
+    },
+    "installed_help": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-audit-20261007/export/spectre-options-help.txt",
+      "sha256": "634291d90bb69fa39eedd81e18f37505c912f7d7289525c3be0c3ba1fa7a6979",
+      "availability": "local-only"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+`include "disciplines.vams"
+`include "constants.vams"
+module layer_vco(ctl,freq,phase,out);
+ inout ctl,freq,phase,out;
+ electrical ctl,freq,phase,out;
+ real f,p;
+ analog begin
+  f=0.5;
+  p=idtmod(f*1048576,0.125,1.0,0.0);
+  if (($abstime >= 1.66892914421623572707e-06 && $abstime <= 1.66893096320563927293e-06) ||
+      ($abstime >= 3.57627777702873572707e-06 && $abstime <= 3.57627959601813927293e-06) ||
+      ($abstime >= 5.48362640984123572707e-06 && $abstime <= 5.48362822883063927293e-06) ||
+      ($abstime >= 7.39097504265373572707e-06 && $abstime <= 7.39097686164313927293e-06))
+   $strobe("VCO_P t=%.20e p=%.20e phase=%.20e out=%.20e", $abstime,p,V(phase),V(out));
+  V(freq)<+f; V(phase)<+p; V(out)<+sin(2*`M_PI*p);
+ end
+endmodule

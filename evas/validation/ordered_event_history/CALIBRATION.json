@@ -1,0 +1,146 @@
+{
+  "checks": [
+    {
+      "name": "nonlinear_near independent positive",
+      "pass_": true,
+      "numeric": "P",
+      "event": "P"
+    },
+    {
+      "name": "nonlinear_near z 2uV fault",
+      "pass_": true,
+      "numeric": "F",
+      "event": "P"
+    },
+    {
+      "name": "nonlinear_near y 2uV fault",
+      "pass_": true,
+      "numeric": "F",
+      "event": "P"
+    },
+    {
+      "name": "nonlinear_near duplicate timer",
+      "pass_": true,
+      "numeric": "P",
+      "event": "F"
+    },
+    {
+      "name": "nonlinear_near missing counter observation",
+      "pass_": true,
+      "numeric": "P",
+      "event": "I"
+    },
+    {
+      "name": "nonlinear_near insufficient event bracket",
+      "pass_": true,
+      "numeric": "P",
+      "event": "I"
+    },
+    {
+      "name": "nonlinear_near delayed2ns counter",
+      "pass_": true,
+      "numeric": "P",
+      "event": "F"
+    },
+    {
+      "name": "nonlinear_near nonfinite",
+      "pass_": true,
+      "numeric": "F",
+      "event": "F"
+    },
+    {
+      "name": "nonlinear_near missing scientific stop",
+      "pass_": true,
+      "numeric": "I",
+      "event": "I"
+    },
+    {
+      "name": "nonlinear_near spuriouscross",
+      "pass_": true,
+      "numeric": "P",
+      "event": "F"
+    },
+    {
+      "name": "linear_pwl_near independent positive",
+      "pass_": true,
+      "numeric": "P",
+      "event": "P"
+    },
+    {
+      "name": "linear_pwl_near z 2uV fault",
+      "pass_": true,
+      "numeric": "F",
+      "event": "P"
+    },
+    {
+      "name": "linear_pwl_near y 2uV fault",
+      "pass_": true,
+      "numeric": "F",
+      "event": "P"
+    },
+    {
+      "name": "linear_pwl_near duplicate timer",
+      "pass_": true,
+      "numeric": "P",
+      "event": "F"
+    },
+    {
+      "name": "linear_pwl_near missing counter observation",
+      "pass_": true,
+      "numeric": "P",
+      "event": "I"
+    },
+    {
+      "name": "linear_pwl_near insufficient event bracket",
+      "pass_": true,
+      "numeric": "P",
+      "event": "I"
+    },
+    {
+      "name": "linear_pwl_near delayed2ns counter",
+      "pass_": true,
+      "numeric": "P",
+      "event": "F"
+    },
+    {
+      "name": "linear_pwl_near nonfinite",
+      "pass_": true,
+      "numeric": "F",
+      "event": "F"
+    },
+    {
+      "name": "linear_pwl_near missing scientific stop",
+      "pass_": true,
+      "numeric": "I",
+      "event": "I"
+    },
+    {
+      "name": "linear_pwl_near spuriouscross",
+      "pass_": true,
+      "numeric": "P",
+      "event": "F"
+    },
+    {
+      "name": "E6 unchanged checker positive",
+      "pass_": true,
+      "numeric": "P",
+      "event": "P"
+    },
+    {
+      "name": "E6 unchanged checker2uVreject",
+      "pass_": true,
+      "numeric": "F",
+      "event": "P"
+    },
+    {
+      "name": "nonlinear_near exact3A-between-2B calendar/sample control",
+      "pass_": true
+    },
+    {
+      "name": "linear_pwl_near exact3A-between-2B calendar/sample control",
+      "pass_": true
+    }
+  ],
+  "passed": 24,
+  "total": 24
+}

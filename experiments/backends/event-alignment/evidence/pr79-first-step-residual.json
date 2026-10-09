@@ -1,0 +1,42 @@
+{
+  "scope": "original interior diagnostic finite saved rows; not endpoint acceptance replacement",
+  "raw_sha256": "d4f29f65b8632b06a2f7eece04fa573e81a1efc395d28c16bd663cc895b78d6f",
+  "raw_location": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/overnight-d7/runs/d7-discriminating-20261007/sparse1/spectre-raw-sparse1/original-interior-sparse/psf/tran.tran.tran",
+  "native_rows": 663,
+  "endpoint_stop3_status": "F retained; original task checker count mismatch remains independent",
+  "at_1s": [
+    {
+      "time": 1.0,
+      "count": 1.0,
+      "u": 1.0,
+      "z": 0.5000000000000001
+    }
+  ],
+  "first_post_event_row": {
+    "time": 1.000000001048621,
+    "count": 1.0,
+    "u": 1.0,
+    "z": 0.5000000000000001
+  },
+  "first_post_event_residual_v": 5.243105949404026e-10,
+  "formula": "z - (1 - time/2), for all n=1 rows with 1<time<=3",
+  "rows_in_residual_domain": 427,
+  "max_abs_residual_drift_from_first_v": 4.163336342344337e-16,
+  "at_3s": [
+    {
+      "time": 3.0,
+      "count": 1.0,
+      "u": 1.0,
+      "z": -0.4999999994756893
+    }
+  ],
+  "guard_z_plus_half_zero_extrapolation_delay_s": 1.0486211898808051e-09,
+  "first_saved_second_event_row": {
+    "time": 3.000000001098621,
+    "count": 2.0,
+    "u": 1.0,
+    "z": -0.500000000025
+  },
+  "first_saved_second_count_delay_beyond_extrapolated_guard_zero_s": 5.000000413701855e-11,
+  "interpretation": "A persistent first-step offset explains the later z+0.5 guard zero extrapolation on this finite n=1 trajectory. It does not identify a proprietary integration/restart formula or prove a continuous in-step trajectory. The diagnostic extends past 3 and does not satisfy the original stop=3 task."
+}

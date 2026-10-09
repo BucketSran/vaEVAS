@@ -139,13 +139,15 @@ class SettlementContracts(unittest.TestCase):
             run_timer(source,stop=1,times=[0,1])
         self.assertEqual(caught.exception.detail['kind'],'event_accuracy')
 
-    def test_generic_state_error_has_no_voltage_absolute_floor(self):
+    def test_generic_state_uncertainty_is_checked_after_unit_conversion(self):
         for exponent in [-80,0,80]:
             unit,delta=2.**exponent,2.**(exponent-55)
             self.assertEqual((Q(unit)+Q(delta))-Q(unit),Q(delta))
             source=model(f'''@(initial_step) s=0;
                 @(timer(0.5,0,0.01)) begin s={unit!r}; s=s+{delta!r}; s=s-{unit!r}; end
-                V(y,r)<+0;''','real s;')
+                V(y,r)<+1e16*s/{unit!r};''','real s;')
+            # Exact output is 1e16*2^-55 in every state unit. Binary64
+            # replay loses delta; the physical output must reject that error.
             with self.assertRaises(KernelError) as caught:
                 run_timer(source,stop=1,times=[0,1])
             self.assertEqual(caught.exception.detail['kind'],'event_accuracy')

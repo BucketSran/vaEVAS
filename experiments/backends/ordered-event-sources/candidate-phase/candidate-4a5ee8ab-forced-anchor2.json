@@ -1,0 +1,155 @@
+[
+  {
+    "candidate_identity_label": "candidate-4a5ee8ab",
+    "checker_sha256": "7080824abe86321d00927f980364b1a3b9e0861454b4f77fdca7b8416b935717",
+    "expected": "complete finite output",
+    "independent_check": {
+      "event_source_order": [
+        0,
+        0
+      ],
+      "failures": [],
+      "observations": [
+        {
+          "actual_states": [
+            0.0,
+            0.0
+          ],
+          "actual_y": -0.0,
+          "errors_V": {
+            "u": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "exact_query": "0",
+          "expected_states": [
+            "0",
+            "0"
+          ],
+          "expected_y": 0.0,
+          "time": 0.0
+        },
+        {
+          "actual_states": [
+            2.0,
+            1.0
+          ],
+          "actual_y": 0.003049999999999986,
+          "errors_V": {
+            "u": 0.0,
+            "y": 8.433531650808846e-18,
+            "z": 8.433531650808846e-18
+          },
+          "exact_query": "5584463537939415/18014398509481984",
+          "expected_states": [
+            "2",
+            "1"
+          ],
+          "expected_y": 0.003049999999999994,
+          "time": 0.31
+        }
+      ],
+      "scope": "Separate forced single-timer scope probe; no uncertain jump-window omission at the proven queries. Numeric/event/query-state checks do not establish exact representative=physicalclock equality.",
+      "status": "P"
+    },
+    "kernel_sha256": "13783d83c3ffb2151308a0be7b7670fff1c63cabebca1bcbb0fc457cf0d739f5",
+    "name": "original",
+    "request_sha256": "ca2647391761a0755ea76517a04ca2b4dcf0262d63926c52c74821724c280555",
+    "response_artifact_sha256": "fcd683d7538c1ddf14ce138c1706c5b77b7e87fb3333c4a90d4c221bbfc3b34c",
+    "response_channel": "stdout",
+    "returncode": 0,
+    "source_revision": "4a5ee8abbc000b23bf31d278c05ea75bf53aceb3",
+    "source_sha256": "365866f2726bc9a66d4b652830ade229b41566384582e56d8c9fd53481c095aa",
+    "status": "P",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_sha256": "fcd683d7538c1ddf14ce138c1706c5b77b7e87fb3333c4a90d4c221bbfc3b34c",
+    "wire": "original.request.json",
+    "wire_sha256": "ca2647391761a0755ea76517a04ca2b4dcf0262d63926c52c74821724c280555"
+  },
+  {
+    "candidate_identity_label": "candidate-4a5ee8ab",
+    "checker_sha256": "7080824abe86321d00927f980364b1a3b9e0861454b4f77fdca7b8416b935717",
+    "expected": "complete finite output",
+    "independent_check": {
+      "event_source_order": [
+        0,
+        0
+      ],
+      "failures": [],
+      "observations": [
+        {
+          "actual_states": [
+            0.0,
+            0.0
+          ],
+          "actual_y": -0.0,
+          "errors_V": {
+            "u": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "exact_query": "0",
+          "expected_states": [
+            "0",
+            "0"
+          ],
+          "expected_y": 0.0,
+          "time": 0.0
+        },
+        {
+          "actual_states": [
+            2.0,
+            1.0
+          ],
+          "actual_y": -0.0,
+          "errors_V": {
+            "u": 0.0,
+            "y": 2.4980018054066026e-17,
+            "z": 2.4980018054066026e-17
+          },
+          "exact_query": "5404319552844597/18014398509481984",
+          "expected_states": [
+            "2",
+            "1"
+          ],
+          "expected_y": 2.4980018054066026e-17,
+          "time": 0.3000000000000001
+        },
+        {
+          "actual_states": [
+            2.0,
+            1.0
+          ],
+          "actual_y": 0.003049999999999986,
+          "errors_V": {
+            "u": 0.0,
+            "y": 8.433531650808846e-18,
+            "z": 8.433531650808846e-18
+          },
+          "exact_query": "5584463537939415/18014398509481984",
+          "expected_states": [
+            "2",
+            "1"
+          ],
+          "expected_y": 0.003049999999999994,
+          "time": 0.31
+        }
+      ],
+      "scope": "Separate forced single-timer scope probe; no uncertain jump-window omission at the proven queries. Numeric/event/query-state checks do not establish exact representative=physicalclock equality.",
+      "status": "P"
+    },
+    "kernel_sha256": "13783d83c3ffb2151308a0be7b7670fff1c63cabebca1bcbb0fc457cf0d739f5",
+    "name": "add-representative-query",
+    "request_sha256": "a290431914488cf1053bfc464ca7de6538b6e36d15404ed5a3c841785a3f4cc0",
+    "response_artifact_sha256": "297f92859530ad57a0f330fde9df1c8844069f6fed772bc869526ddbdd039adb",
+    "response_channel": "stdout",
+    "returncode": 0,
+    "source_revision": "4a5ee8abbc000b23bf31d278c05ea75bf53aceb3",
+    "source_sha256": "365866f2726bc9a66d4b652830ade229b41566384582e56d8c9fd53481c095aa",
+    "status": "P",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_sha256": "297f92859530ad57a0f330fde9df1c8844069f6fed772bc869526ddbdd039adb",
+    "wire": "add-representative-query.request.json",
+    "wire_sha256": "a290431914488cf1053bfc464ca7de6538b6e36d15404ed5a3c841785a3f4cc0"
+  }
+]

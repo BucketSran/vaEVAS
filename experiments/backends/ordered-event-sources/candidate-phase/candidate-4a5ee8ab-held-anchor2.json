@@ -1,0 +1,99 @@
+[
+  {
+    "candidate_identity_label": "candidate-4a5ee8ab",
+    "checker_sha256": "8ba49e44a5e0803fc8af158681d32e6caed58339a936e0305994ee9d74887c3d",
+    "expected": "complete finite output",
+    "independent_check": {
+      "event_source_order": [
+        0,
+        0
+      ],
+      "failures": [],
+      "observations": [
+        {
+          "actual_states": [
+            0.0,
+            0.0,
+            0.0,
+            0.30000000000000004
+          ],
+          "actual_y": -0.0,
+          "errors_V": {
+            "u": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "exact_query": "0",
+          "expected_states": [
+            "0",
+            "0",
+            "0",
+            "1351079888211149/4503599627370496"
+          ],
+          "expected_y": 0.0,
+          "time": 0.0
+        },
+        {
+          "actual_states": [
+            2.0,
+            1.0,
+            0.0,
+            0.4
+          ],
+          "actual_y": 0.003049999999999986,
+          "errors_V": {
+            "u": 0.0,
+            "y": 8.433531650808846e-18,
+            "z": 8.433531650808846e-18
+          },
+          "exact_query": "5584463537939415/18014398509481984",
+          "expected_states": [
+            "2",
+            "1",
+            "0",
+            "3602879701896397/9007199254740992"
+          ],
+          "expected_y": 0.003049999999999994,
+          "time": 0.31
+        }
+      ],
+      "scope": "Separate forced replanned-held-timer scope probe; no uncertain jump-window omission at the proven queries. Numeric/event/query-state checks do not establish exact representative=physicalclock equality.",
+      "status": "P"
+    },
+    "kernel_sha256": "13783d83c3ffb2151308a0be7b7670fff1c63cabebca1bcbb0fc457cf0d739f5",
+    "name": "original",
+    "request_sha256": "2001e8444fc4a834597b795676523890258ae14a2495dcb8196a5d7518cef1d0",
+    "response_artifact_sha256": "b42405e101f40c51a7f8fb904e55acda6ca05fbc3e6cf22b40de23f85e97ab5f",
+    "response_channel": "stdout",
+    "returncode": 0,
+    "source_revision": "4a5ee8abbc000b23bf31d278c05ea75bf53aceb3",
+    "source_sha256": "230dc144b58fa73735b47530b5bea38a5283d59758422f33c818046c71b76a80",
+    "status": "P",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_sha256": "b42405e101f40c51a7f8fb904e55acda6ca05fbc3e6cf22b40de23f85e97ab5f",
+    "wire": "original.request.json",
+    "wire_sha256": "2001e8444fc4a834597b795676523890258ae14a2495dcb8196a5d7518cef1d0"
+  },
+  {
+    "actual_error": {
+      "kind": "event_resolution",
+      "message": "local causal closure requires autonomous polynomial flow and outputs"
+    },
+    "candidate_identity_label": "candidate-4a5ee8ab",
+    "checker_sha256": "8ba49e44a5e0803fc8af158681d32e6caed58339a936e0305994ee9d74887c3d",
+    "expected": "complete finite output",
+    "kernel_sha256": "13783d83c3ffb2151308a0be7b7670fff1c63cabebca1bcbb0fc457cf0d739f5",
+    "name": "add-representative-query",
+    "request_sha256": "547b0b9b113b39e683d48e5cb90de53a51fa5b88fb3f8ff2e758b958a7673139",
+    "response_artifact_sha256": "90ff0045af17889735551d3a1ed99b8990fd9e44088f80687ef923c529ef010f",
+    "response_channel": "stderr",
+    "returncode": 2,
+    "source_revision": "4a5ee8abbc000b23bf31d278c05ea75bf53aceb3",
+    "source_sha256": "230dc144b58fa73735b47530b5bea38a5283d59758422f33c818046c71b76a80",
+    "status": "F",
+    "stderr_sha256": "90ff0045af17889735551d3a1ed99b8990fd9e44088f80687ef923c529ef010f",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "wire": "add-representative-query.request.json",
+    "wire_sha256": "547b0b9b113b39e683d48e5cb90de53a51fa5b88fb3f8ff2e758b958a7673139"
+  }
+]

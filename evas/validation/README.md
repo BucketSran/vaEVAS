@@ -25,6 +25,11 @@
 验证目录分两级：[smoke/](smoke/) 是各能力路径的最小可运行冒烟集，
 只验证链路连通，不带期望值；[cases/](cases/) 及各协议文档构成完整验证集。
 
+近邻事件的非线性历史与 PWL 分段传播有[独立条件和冻结判据](ordered_event_history/README.md)，原始失败与严格计时诊断分别保留。
+
+固定时钟、保持时钟与窗口内新根的组合见[有序事件源契约](ordered_event_sources/README.md)。
+[物理采样相位检查](ordered_event_sources/candidate-phase/README.md)分别验证实际返回状态、直接输出和规定拒绝。
+
 ## 验证集包含什么
 
 原矩阵固定为 **31 个条件**：14 个不变的 v1 条件、1 个低通标准数组语法修订、
@@ -48,6 +53,7 @@
 | 查看当前实现的组合边界 | [能力表](../docs/CAPABILITIES.md)、[连续动态手册](../docs/math/continuous.md) |
 | 找到执行结果、版本与原始材料说明 | [实验目录](../../experiments/README.md) |
 | 运行 ngspice 共同子集对照 | [差分验证](differential/README.md) |
+| 检查两类事件路径重构是否保持行为 | [共同事件验收](event_acceptance/README.md)：六模型、十二配置，原数学失败与观察限制单列 |
 | 运行新增功能组合的有限确认 | [确认集及冻结检查器](confirmation/README.md) |
 | 核验历史输入没有被改写 | [冻结 v1](versions/v1/README.md) |
 

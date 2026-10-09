@@ -273,6 +273,32 @@ def verify_tool(tool, profile, env):
                 raise ValueError('compiler changed after preflight')
 
 
+def save_raw_response(path, response):
+    """Only the potentially large response uses compact JSON; preserve all values."""
+    with path.open('x') as stream:
+        json.dump(response,stream,separators=(',',':'),ensure_ascii=False,allow_nan=False)
+        stream.write('\n')
+
+
+def evas_effective_record(request,response):
+    """The transient public API has already validated the actual response."""
+    evidence=response.get('observation_evidence')
+    record={'request_echo':{'reltol':request['reltol'],'vabstol':request['vabstol'],
+                           'stop':request['stop'],'maxstep':request['max_step']},
+            'observed_response':{'engine':response['engine'],'accepted_steps':response['transient'].get('accepted_steps')},
+            'unsupported_controls':['iabstol','integration_method']}
+    if evidence is None:
+        record.update(sample_origin='unknown; legacy response has no observation evidence',
+                      settings_readback='unknown; legacy response does not report actual controls')
+    else:
+        record['runtime_controls']=dict(evidence['effective_controls'])
+        origins=evidence['sample_origins']
+        record['sample_origin_summary']={origin:origins.count(origin) for origin in sorted(set(origins))}
+        record['sample_origin']='actual response origins; these do not independently establish paper native qualification'
+        record['settings_readback']='validated public response observation_evidence.effective_controls'
+    return record
+
+
 def worker(work, kernel):
     """Normal compiler/top hierarchy, current transient API, no source rewriting."""
     sys.path.insert(0,str(ROOT/'evas/src'))
@@ -286,18 +312,13 @@ def worker(work, kernel):
         times=load(work/request['requested_times'])
         response=transient(program,request['inputs'],times,stop=request['stop'],max_step=request['max_step'],
                            kernel=kernel,vabstol=request['vabstol'],reltol=request['reltol'],timeout=None)
-        save(work/'raw-response.json',response)
+        save_raw_response(work/'raw-response.json',response)
         # Owned outer stage kills the complete worker/kernel group at its limit.
         with (work/'waveform.csv').open('x') as f:
             writer=csv.writer(f)
             writer.writerow(['time',*response['nodes']])
             writer.writerows([t,*r['voltages']] for t,r in zip(times,response['solutions'],strict=True))
-        save(work/'effective.json',{'request_echo':{'reltol':request['reltol'],'vabstol':request['vabstol'],
-            'stop':request['stop'],'maxstep':request['max_step']},
-            'observed_response':{'engine':response['engine'],'accepted_steps':response['transient'].get('accepted_steps')},
-            'unsupported_controls':['iabstol','integration_method'],
-            'sample_origin':'unknown; output query is not automatically an accepted step',
-            'settings_readback':'unknown; current response does not report applied tolerances/maxstep/stop'})
+        save(work/'effective.json',evas_effective_record(request,response))
         result={'status':'waveform_available','waveform':'waveform.csv'}
     except CompileError as exc:
         result={'status':'compile_failed','failure_stage':'compile','reason':str(exc)}
@@ -315,10 +336,28 @@ def effective_settings(work, backend):
               'maxstep':request['maxstep_s'] if backend in ('evas','spectre') else request['spice_maxstep_s']}
     if backend=='evas':
         record=load(work/'effective.json')
-        return {'status':'I','actual':{k:'unknown' for k in expected},'requested':expected,
+        controls=record.get('runtime_controls')
+        actual={k:'unknown' for k in expected}
+        actual['method']='unknown; unsupported integration_method control'
+        max_step_applied='unknown'
+        if controls is not None:
+            if not isinstance(controls,dict):raise ValueError('invalid EVAS runtime controls')
+            mapping={'reltol':'relative','vabstol':'absolute_V','stop':'stop_s','maxstep':'max_step_s'}
+            for key,field in mapping.items():
+                value=controls.get(field)
+                if isinstance(value,bool) or not isinstance(value,(int,float)) or not math.isfinite(value) or value<0 or (key!='reltol' and value==0):
+                    raise ValueError('invalid EVAS runtime controls')
+                actual[key]=value
+            if type(controls.get('max_step_applied')) is not bool:
+                raise ValueError('invalid EVAS max_step application evidence')
+            max_step_applied=controls['max_step_applied']
+        mismatches=[k for k in expected if isinstance(actual[k],(int,float)) and not math.isclose(actual[k],expected[k],rel_tol=1e-12,abs_tol=0)]
+        return {'status':'I','actual':actual,'requested':expected,'mismatches':mismatches,
+                'max_step_applied':max_step_applied,
                 'request_echo':record.get('request_echo',{k:record[k] for k in ('reltol','vabstol','stop','maxstep') if k in record}),
                 'observed_response':record.get('observed_response',{k:record[k] for k in ('engine','accepted_steps') if k in record}),
-                'claim':'current EVAS response does not establish effective settings; request echo is not readback'}
+                'sample_origin_summary':record.get('sample_origin_summary'),
+                'claim':'actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification'}
     elif backend in ('spectre','openvaf_r_ngspice'):
         if backend=='spectre':
             scoped=spectre_readback((work/'spectre.log').read_text(),

@@ -144,6 +144,48 @@ lambda=0 的解是 a；lambda=1 的零点与原方程相同。中间每一步用
 事件的 `ttol` / `tol` 仍独立控制定位；idt 等历史算子的运算误差还需独立传播和验收，见[算子手册](operators.md#历史误差与电压精度)。
 静态电压容差不替代事件时间容差或积分精度。
 
+### Spectre 与 EVAS 的容差含义
+
+`reltol` 和 `vabstol` 是求解器控制参数，不是跨后端波形的验收阈值。
+Spectre 的 Newton 收敛检查使用相邻迭代的电压和电流变化及相应方程检查。
+这里是同一个时刻的求解迭代，不是相邻时间采样点。
+其电压迭代判据可概括为
+`abs(V_new-V_old) <= vabstol + reltol*V_reference`。
+这里的 `V_reference` 取决于分析及 `relref` 等设置，不能总用输出当前值替代。
+它约束的是迭代变化，不是已知真解与当前解的距离。
+参见 Cadence 的 [Accuracy 101](https://community.cadence.com/cadence_blogs_8/b/cic/posts/spectre-tech-tips-accuracy-101)
+及 [Local Options](https://community.cadence.com/cadence_blogs_8/b/cic/posts/spectre-tech-tips-spectre-local-options)。
+
+瞬态分析还要控制时间离散的局部截断误差。`reltol` 参与 Newton 和 LTE 检查，
+`lteratio` 调整积分误差控制，`maxstep` 限制步长上限，积分方法影响误差和稳定性。
+收紧设置可能增加迭代或缩小时间步，也可能暴露舍入、收敛或事件问题。
+不能保证每个样点误差都单调下降，更不能把局部控制参数当成整段轨迹误差证明。
+对振荡器，频率误差随积分积累为相位误差，约有
+`delta_phase(t) = integral(delta_frequency(t))` 和 `delta_t ≈ delta_phase/frequency`。
+这解释了为什么电压看似接近，长期相位或事件时刻仍需单独验证。
+
+EVAS 也有本章的残差和 Newton 局部收敛检查，不能概括为所有入口都提供前向误差证书。
+在受支持的瞬态包围路径中，还把输入、历史及求值误差传播到节点，检查
+`max(abs(v - enclosure.lo), abs(v - enclosure.hi)) <= vabstol + reltol*abs(v)`。
+实现以向外舍入的误差上界和预算区间下界做保守比较，而非直接比较两个名义浮点表达式。
+[同刻包围检查](../../rust_core/src/settlement_bounds.rs)约束返回值与参考集合的距离。
+参考集合依赖该路径的输入解释和数学假设，不覆盖任意 VA、连续时间观察或模型误差。
+对已有解析历史，改变容差未必改变名义结果，可能只改变能否通过证书检查。
+
+因此两后端使用相同参数名和值不表示等精度。比较先固定外部电压、圆周相位、事件
+次数及时间预算，再记录各自 requested/effective 设置，以独立答案和实际观察验收。
+进一步的容差/步长细化是数值稳定性证据，不是普遍误差上界。执行和导出资格仍分别记录。
+[VCO 对照](../../../experiments/backends/input-clamp/README.md)保留一个实际例子：
+Spectre 的 requested reltol 为 1e-5，conservative 瞬态 effective 为 1e-6，
+EVAS 使用 1e-5；不能将该记录标为实际容差完全相同。实际 deck 显式设置 `method=traponly`，
+日志还记录 `lteratio=10`、`relref=alllocal`。`alllocal` 的相对误差参考该节点此前出现过的
+最大幅值；例如相位电压已接近1V，回绕到零附近时，该参考仍可接近1V，
+而 EVAS 上述检查使用当前返回值的幅值。这个例子说明预算含义不同，不表示 Spectre
+允许相邻时刻相差至多该预算，也不表示任一方真实波形误差就等于预算。
+`relref`、`lteratio` 和预设覆盖规则见 Cadence
+[Spectre Reference，tran accuracy](https://ee.kpi.ua/~yv/edu/ok/book/spectre_refManual.pdf#page=430)；
+该公开手册为19.1版，本次21.1运行值以归档日志为准。
+
 错误区分编译拒绝、IR/输入错误、线性奇异、`singular_jacobian`、`nonconvergence`、
 非有限运算与残差超限；
 方程错误带源码/实例信息，运行期样本错误带从 0 开始的样本下标。
@@ -153,8 +195,16 @@ lambda=0 的解是 a；lambda=1 的零点与原方程相同。中间每一步用
 
 普通条件入口支持无事件、无状态、无动态算子的
 输入驱动分段仿射瞬态。局部程序赋值按顺序代入表达式，电压贡献仍联合组装为关系。
-先用原始 PWL 输入的向外舍入区间证明条件真值，再求选中分支；区间无法证明时
-报 `condition_precision`。源结点和静态点输入沿用精确 binary64 乘积和判符号。
+先用原始 PWL 输入的向外舍入区间或点输入的精确乘积和证明条件真值，再求选中分支。
+这两条路径不能判号时，普通无状态瞬态尝试原始源的有预算定点有理数证书，保留原 binary64 时间、端点
+与 IR 系数的数学值。缺少精确来源或超预算仍报 `condition_precision`；源结点和
+点输入也可能因乘积舍入而需要该证书。输出电压继续按原输入区间认证。
+原两参数 `resolve_selects` 入口保持原区间/点谓词行为，不启用该扩展，供初始化等调用者使用。
+共享有理求值器将显式地节点项作为精确零。这也修正旧相位曲线求值器对地节点项的保守拒绝；
+驱动索引仍禁止包含地节点，其他缺失来源继续拒绝。
+实现入口为 `analog.rs::solve`、`expression.rs::resolve_selects_with_sources` 与
+`exact_source.rs::predicate_sign`；数学、预算和独立 `Fraction` 回归见
+[条件契约](../../validation/ANALOG_CONDITIONS_CONTRACT.md#实现入口)。
 
 纯无状态 RHS/local 表达式的四种排序比较、数值逻辑和三元选择复用这些 `select`。
 比较与逻辑给出 0/1，正负零为假，有限非零为真；`?:` 右结合，`&&` 高于 `||`。

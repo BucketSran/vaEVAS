@@ -33,7 +33,8 @@ unsupported $$$ code
         self.assertEqual(r['solutions'][0]['voltages'][p.nodes.index('y')],2)
 
     def test_else_if_undef_and_inactive_directives(self):
-        source='''`define A 1
+        source='''`include "constants.vams"
+`define A 1
 `undef A
 `ifdef A
 `include "missing.vams"
@@ -57,7 +58,7 @@ unsupported $$$ code
         source='`define F(x) ((x)+ \\\n1)\n`undef __VAMS_ENABLE__\n`ifdef __VAMS_ENABLE__\n'+model('V(y,r)<+`F(`__LINE__);')+'\n`endif\n'
         p=self.compile(source)
         r=solve(p,['u'],[[0]],kernel=KERNEL)
-        self.assertEqual(r['solutions'][0]['voltages'][p.nodes.index('y')],6)
+        self.assertEqual(r['solutions'][0]['voltages'][p.nodes.index('y')],7)
         inventory={'header.vams':'`define G 3\n','dut.va':'`include "header.vams"\n'+model('V(y,r)<+`G;')}
         p=compile_sources(inventory,[instance()])
         r=solve(p,['u'],[[0]],kernel=KERNEL)
@@ -69,7 +70,7 @@ unsupported $$$ code
         self.assertEqual(len(p.operators),2)
         origins=[o.origin for o in p.operators]
         self.assertEqual({o.source for o in origins},{'dut.va'})
-        self.assertEqual({o.line for o in origins},{2})
+        self.assertEqual({o.line for o in origins},{3})
         self.assertNotEqual(origins[0].expansion,origins[1].expansion)
         r=transient(p,{'u':[[0,0],[1,1]]},[0,.5,1],stop=1,max_step=1,kernel=KERNEL)
         for t,row in zip([0,.5,1],r['solutions']):
@@ -90,7 +91,7 @@ unsupported $$$ code
         p=self.compile('// `define G 100\n`define G 2\n'+model('V(y,r)<+`G;'))
         result=solve(p,['u'],[[0]],kernel=KERNEL)
         self.assertEqual(result['solutions'][0]['voltages'][p.nodes.index('y')],2)
-        with self.assertRaisesRegex(CompileError,r'bad.vams:1:'):
+        with self.assertRaisesRegex(CompileError,r'bad.vams:2:'):
             self.compile('`include "bad.vams"\n',{'bad.vams':model('V(y,r)<+@;')})
         with self.assertRaisesRegex(CompileError,r'bad.vams:1:'):
             self.compile(model('V(y,r)<+1;', '`include "bad.vams"\n'),{'bad.vams':'parameter real x=V(u,r);'})
@@ -124,7 +125,7 @@ unsupported $$$ code
     def test_repeated_includes_in_implicit_feedback_keep_distinct_histories(self):
         source=model('\n`include "hist.vams"\n`include "hist.vams"\n'
                      'V(y,r)<+-pow(V(y,r),2);')
-        p=self.compile(source,{'hist.vams':'V(y,r)<+idt(.5+V(y,r),0);'})
+        p=self.compile(source,{'hist.vams':'V(y,r)<+idt(0.5+V(y,r),0);'})
         times=[0,.25,.5,1]
         r=transient(p,{'u':[[0,0],[1,0]]},times,stop=1,max_step=1,
                     kernel=KERNEL,vabstol=1e-10,reltol=0)

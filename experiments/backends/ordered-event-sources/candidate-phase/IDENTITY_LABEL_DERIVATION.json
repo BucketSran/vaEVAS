@@ -1,0 +1,8 @@
+{
+  "parent_manifest_sha256": "58cf1af84180c1d1821be901c39e0e3e632a2e39069f2f88c62471aefd8995ec",
+  "change": "Only distinguish the canonically serialized local identity snapshot bytes from the original author CHECKPOINT.json bytes. All three identity objects are equal as parsed JSON. No source, wire input, kernel, frontend, response or verdict changes.",
+  "changed_files": [
+    "IDENTITIES.json"
+  ],
+  "original_package_retained": true
+}

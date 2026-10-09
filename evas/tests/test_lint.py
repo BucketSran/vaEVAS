@@ -20,7 +20,7 @@ class LintCLI(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root=Path(self.temp.name)
         self.source=self.root/'m.va'
-        self.source.write_text(model('V(y,r)<+2*V(u,r)+.25;'))
+        self.source.write_text(model('V(y,r)<+2*V(u,r)+0.25;'))
         self.data=dict(models=['m.va'],instances=[dict(name='dut',module='m',connections=dict(u='u',y='y',r='0'))])
         self.path=self.root/'sim.json'
         self.path.write_text(json.dumps(self.data))
@@ -121,7 +121,7 @@ raise SystemExit(main())
     def test_api_lint_then_real_kernel_rejects_frozen_dynamic_limitation(self):
         from evas.lint import lint_manifest
         self.source.write_text(model('''@(initial_step) q=1;
-            @(timer(.5,0,1e-12)) q=2;
+            @(timer(0.5,0,1e-12)) q=2;
             V(y,r)<+idt(q+2*V(y,r),0)-pow(V(y,r),2);''','real q;'))
         self.data['transient']=dict(sources=dict(u=[[0,0],[1,0]]),output_times=[0,1],stop=1,max_step=1)
         self.path.write_text(json.dumps(self.data))

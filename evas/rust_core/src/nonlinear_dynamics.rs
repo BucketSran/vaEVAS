@@ -1,13 +1,117 @@
 //! Validated polynomial ODE propagation for integral and filter call-site states.
-//! A Picard enclosure proves a finite trajectory tube. Order-12 interval Taylor
-//! coefficients propagate accepted uncertainty; order 13 over the tube bounds
-//! the entire-step remainder. Output queries are immutable dense observations.
+//! A Picard enclosure proves a finite trajectory tube. Order-p interval Taylor
+//! coefficients carry accepted uncertainty; order p+1 bounds the remainder.
+//! Polynomial ODEs try p=12/24; DAE keeps p=12. Dense queries are immutable.
 use super::*;
+use crate::ir::Tolerances;
 
 const ORDER: usize = 12;
+const MAX_ORDER: usize = 24;
 const MAX_STEPS: usize = 16_384;
 const TUBE_ATTEMPTS: usize = 16;
+const MAX_REFINEMENTS: usize = 64;
+const MAX_HISTORY_REFINEMENTS: usize = 8;
 type Jet = Vec<I>;
+
+// A rounded binary64 point result lies between its adjacent representable
+// values. The exact residual determines which one-sided enclosure to use.
+fn directed(value: f64, sign: i8) -> I {
+    match sign {
+        -1 => I {
+            lo: value.next_down(),
+            hi: value,
+        },
+        0 => I::point(value),
+        _ => I {
+            lo: value,
+            hi: value.next_up(),
+        },
+    }
+}
+
+fn point_sum(a: f64, b: f64) -> I {
+    let value = a + b;
+    let b_virtual = value - a;
+    let residual = (a - (value - b_virtual)) + (b - b_virtual);
+    if value.is_finite() && residual.is_finite() {
+        directed(
+            value,
+            if residual < 0.0 {
+                -1
+            } else if residual > 0.0 {
+                1
+            } else {
+                0
+            },
+        )
+    } else {
+        I::point(a) + I::point(b)
+    }
+}
+
+fn point_product(a: f64, b: f64) -> I {
+    let value = a * b;
+    let residual = a.mul_add(b, -value);
+    if value.is_finite() && residual != 0.0 && residual.is_finite() {
+        directed(value, if residual < 0.0 { -1 } else { 1 })
+    } else if value.is_finite() && crate::interval::equal_products(a, b, value, 1.0) {
+        I::point(value)
+    } else {
+        I::point(a) * I::point(b)
+    }
+}
+
+fn tight_add(a: I, b: I) -> I {
+    I {
+        lo: point_sum(a.lo, b.lo).lo,
+        hi: point_sum(a.hi, b.hi).hi,
+    }
+}
+
+fn tight_mul(a: I, b: I) -> I {
+    let products =
+        [(a.lo, b.lo), (a.lo, b.hi), (a.hi, b.lo), (a.hi, b.hi)].map(|(a, b)| point_product(a, b));
+    I {
+        lo: products.iter().map(|v| v.lo).fold(f64::INFINITY, f64::min),
+        hi: products
+            .iter()
+            .map(|v| v.hi)
+            .fold(f64::NEG_INFINITY, f64::max),
+    }
+}
+
+fn tight_div_positive(a: I, denominator: f64) -> I {
+    let divide = |a: f64| {
+        let value = a / denominator;
+        let residual = (-value).mul_add(denominator, a);
+        if value.is_finite() && residual != 0.0 && residual.is_finite() {
+            directed(value, if residual < 0.0 { -1 } else { 1 })
+        } else if value.is_finite() && crate::interval::equal_products(value, denominator, a, 1.0) {
+            I::point(value)
+        } else {
+            I::point(a) / I::point(denominator)
+        }
+    };
+    I {
+        lo: divide(a.lo).lo,
+        hi: divide(a.hi).hi,
+    }
+}
+
+fn add_mode(a: I, b: I, tight: bool) -> I {
+    if tight {
+        tight_add(a, b)
+    } else {
+        a + b
+    }
+}
+fn mul_mode(a: I, b: I, tight: bool) -> I {
+    if tight {
+        tight_mul(a, b)
+    } else {
+        a * b
+    }
+}
 
 #[path = "continuous_initialization.rs"]
 mod initialization;
@@ -71,6 +175,47 @@ impl Polynomial {
         Ok(result)
     }
 
+    // Differentiate the polynomial expression before evaluating its Taylor
+    // jet. These are derivatives with respect to a state coordinate, not
+    // independent derivatives of already rounded coefficient endpoints.
+    fn gradient_jet(&self, variables: &[Jet], order: usize, coordinate: usize) -> Jet {
+        match self {
+            Self::Linear(row) => {
+                let mut result = vec![I::ZERO; order + 1];
+                result[0] = row[coordinate];
+                result
+            }
+            Self::Add(a, b) => a
+                .gradient_jet(variables, order, coordinate)
+                .into_iter()
+                .zip(b.gradient_jet(variables, order, coordinate))
+                .map(|(a, b)| a + b)
+                .collect(),
+            Self::Multiply(a, b) => {
+                let left = multiply(
+                    &a.gradient_jet(variables, order, coordinate),
+                    &b.jet(variables, order),
+                    order,
+                );
+                let right = multiply(
+                    &a.jet(variables, order),
+                    &b.gradient_jet(variables, order, coordinate),
+                    order,
+                );
+                left.into_iter().zip(right).map(|(a, b)| a + b).collect()
+            }
+            Self::Power(a, n) => {
+                let values = a.jet(variables, order);
+                let mut power = vec![I::ZERO; order + 1];
+                power[0] = I::point(*n as f64);
+                for _ in 1..*n {
+                    power = multiply(&power, &values, order);
+                }
+                multiply(&power, &a.gradient_jet(variables, order, coordinate), order)
+            }
+        }
+    }
+
     fn dc_affine(&self, known: &[Option<I>]) -> Option<Vec<I>> {
         match self {
             Self::Linear(row) => {
@@ -119,32 +264,39 @@ impl Polynomial {
     }
 
     fn jet(&self, variables: &[Jet], order: usize) -> Jet {
+        self.jet_with(variables, order, false)
+    }
+
+    fn jet_with(&self, variables: &[Jet], order: usize, tight: bool) -> Jet {
         match self {
             Self::Linear(row) => {
                 let mut out = vec![I::ZERO; order + 1];
                 out[0] = *row.last().unwrap();
                 for (&coefficient, variable) in row.iter().zip(variables) {
                     for (slot, value) in out.iter_mut().zip(variable) {
-                        *slot = *slot + coefficient * *value;
+                        *slot = add_mode(*slot, mul_mode(coefficient, *value, tight), tight);
                     }
                 }
                 out
             }
             Self::Add(a, b) => a
-                .jet(variables, order)
+                .jet_with(variables, order, tight)
                 .into_iter()
-                .zip(b.jet(variables, order))
-                .map(|(x, y)| x + y)
+                .zip(b.jet_with(variables, order, tight))
+                .map(|(x, y)| add_mode(x, y, tight))
                 .collect(),
-            Self::Multiply(a, b) => {
-                multiply(&a.jet(variables, order), &b.jet(variables, order), order)
-            }
+            Self::Multiply(a, b) => multiply_with(
+                &a.jet_with(variables, order, tight),
+                &b.jet_with(variables, order, tight),
+                order,
+                tight,
+            ),
             Self::Power(a, n) => {
-                let a = a.jet(variables, order);
+                let a = a.jet_with(variables, order, tight);
                 let mut out = vec![I::ZERO; order + 1];
                 out[0] = I::ONE;
                 for _ in 0..*n {
-                    out = multiply(&out, &a, order);
+                    out = multiply_with(&out, &a, order, tight);
                 }
                 out
             }
@@ -153,8 +305,16 @@ impl Polynomial {
 }
 
 fn multiply(a: &[I], b: &[I], order: usize) -> Jet {
+    multiply_with(a, b, order, false)
+}
+
+fn multiply_with(a: &[I], b: &[I], order: usize, tight: bool) -> Jet {
     (0..=order)
-        .map(|n| (0..=n).fold(I::ZERO, |sum, k| sum + a[k] * b[n - k]))
+        .map(|n| {
+            (0..=n).fold(I::ZERO, |sum, k| {
+                add_mode(sum, mul_mode(a[k], b[n - k], tight), tight)
+            })
+        })
         .collect()
 }
 
@@ -164,18 +324,178 @@ struct DenseStep {
     end: f64,
     coefficients: Vec<Jet>,
     remainder: Vec<I>,
+    centered: Option<CenteredPolynomial>,
+}
+
+#[derive(Clone, PartialEq)]
+struct CenterValue {
+    point: f64,
+    // Signed deviation from point. Keep it in its own small coordinate,
+    // rather than rounding an absolute state box after every accepted step.
+    error: I,
+}
+
+impl CenterValue {
+    fn from_interval(value: I) -> Self {
+        let point = value.lo + (value.hi - value.lo) * 0.5;
+        Self {
+            point,
+            error: value - I::point(point),
+        }
+    }
+    fn range(&self) -> I {
+        I::point(self.point) + self.error
+    }
+}
+
+// Enclose the exact residual a*b+c-rounded_fma in the small error coordinate.
+// TwoSum gives the exact addition residual; the FMA multiplication residual
+// is exact when normal, and enclosed by adjacent subnormals otherwise.
+fn fma_error(a: f64, b: f64, c: f64, value: f64) -> I {
+    let product = a * b;
+    if !product.is_finite() || !value.is_finite() {
+        return I {
+            lo: f64::NEG_INFINITY,
+            hi: f64::INFINITY,
+        };
+    }
+    let residual = a.mul_add(b, -product);
+    let product_error = if residual.abs() >= f64::MIN_POSITIVE
+        || crate::interval::equal_products(a, b, product, 1.0)
+    {
+        I::point(residual)
+    } else {
+        I {
+            lo: residual.next_down(),
+            hi: residual.next_up(),
+        }
+    };
+    let sum = product + c;
+    if !sum.is_finite() {
+        return I {
+            lo: f64::NEG_INFINITY,
+            hi: f64::INFINITY,
+        };
+    }
+    let c_virtual = sum - product;
+    let sum_error = (product - (sum - c_virtual)) + (c - c_virtual);
+    product_error + I::point(sum_error) + (I::point(sum) - I::point(value))
+}
+
+fn center_horner(row: &[I], h: I) -> CenterValue {
+    let h = CenterValue::from_interval(h);
+    row.iter().rev().fold(
+        CenterValue {
+            point: 0.0,
+            error: I::ZERO,
+        },
+        |sum, &coefficient| {
+            let coefficient = CenterValue::from_interval(coefficient);
+            let point = sum.point.mul_add(h.point, coefficient.point);
+            let error = sum.error * h.range()
+                + I::point(sum.point) * h.error
+                + coefficient.error
+                + fma_error(sum.point, h.point, coefficient.point, point);
+            CenterValue { point, error }
+        },
+    )
+}
+
+#[derive(Clone, PartialEq)]
+struct CenteredPolynomial {
+    coefficients: Vec<Jet>,
+    // [output state][initial state coordinate][Taylor coefficient]
+    sensitivities: Vec<Vec<Jet>>,
+    offsets: Vec<I>,
+}
+
+fn horner(row: &[I], h: I) -> I {
+    row.iter().rev().fold(I::ZERO, |sum, &a| sum * h + a)
 }
 
 impl DenseStep {
     fn range(&self, time: I) -> Vec<I> {
         let h = time - I::point(self.start);
-        let h13 = (0..=ORDER).fold(I::ONE, |v, _| v * h);
-        self.coefficients
-            .iter()
+        let h13 = (0..self.coefficients[0].len()).fold(I::ONE, |v, _| v * h);
+        let centered = self.centered_range(h, true);
+        self.polynomial_range(h)
+            .into_iter()
             .zip(&self.remainder)
-            .map(|(row, &r)| row.iter().rev().fold(I::ZERO, |sum, &a| sum * h + a) + r * h13)
+            .enumerate()
+            .map(|(i, (value, &r))| {
+                let ordinary = value + r * h13;
+                let Some(centered) = &centered else {
+                    return ordinary;
+                };
+                let centered = centered[i].range();
+                let intersection = I {
+                    lo: ordinary.lo.max(centered.lo),
+                    hi: ordinary.hi.min(centered.hi),
+                };
+                if centered.finite() && intersection.lo <= intersection.hi {
+                    intersection
+                } else {
+                    ordinary
+                }
+            })
             .collect()
     }
+
+    fn centered_range(&self, h: I, tail: bool) -> Option<Vec<CenterValue>> {
+        let centered = self.centered.as_ref()?;
+        let power = (0..self.coefficients[0].len()).fold(I::ONE, |value, _| value * h);
+        Some(
+            centered
+                .coefficients
+                .iter()
+                .enumerate()
+                .map(|(i, row)| {
+                    let mut value = center_horner(row, h);
+                    for (derivative, &offset) in
+                        centered.sensitivities[i].iter().zip(&centered.offsets)
+                    {
+                        value.error = value.error + horner(derivative, h) * offset;
+                    }
+                    if tail {
+                        value.error = value.error + self.remainder[i] * power;
+                    }
+                    value
+                })
+                .collect(),
+        )
+    }
+
+    fn polynomial_range(&self, h: I) -> Vec<I> {
+        let centered = self.centered_range(h, false);
+        self.coefficients
+            .iter()
+            .enumerate()
+            .map(|(i, row)| {
+                let ordinary = horner(row, h);
+                let Some(centered) = &centered else {
+                    return ordinary;
+                };
+                let mean_value = centered[i].range();
+                let intersection = I {
+                    lo: ordinary.lo.max(mean_value.lo),
+                    hi: ordinary.hi.min(mean_value.hi),
+                };
+                if mean_value.finite() && intersection.lo <= intersection.hi {
+                    intersection
+                } else {
+                    ordinary
+                }
+            })
+            .collect()
+    }
+}
+
+// Physical state immediately after the final event map, before propagation
+// from its uncertain time to the published representative.
+#[derive(Clone, PartialEq)]
+struct PhysicalEventSeed {
+    window: I,
+    state_after_map: Vec<I>,
 }
 
 #[derive(Clone)]
@@ -186,19 +506,81 @@ pub(crate) struct NonlinearContinuous {
     implicit: Option<implicit::ImplicitField>,
     operators: Vec<NetworkOperator>,
     values: Vec<Vec<I>>,
+    accuracy_rows: Vec<Vec<I>>,
+    tolerances: Tolerances,
     initial: Vec<I>,
     steps: Vec<DenseStep>,
     start: f64,
     event_dependent: bool,
+    event_seed: Option<PhysicalEventSeed>,
 }
 
 impl NonlinearContinuous {
+    pub(super) fn local_from_seed(&self, horizon: f64) -> Result<Self, Error> {
+        fn autonomous(p: &Polynomial, count: usize, sources: usize) -> bool {
+            match p {
+                Polynomial::Linear(row) => row[count..count + 2 * sources].iter().all(|c| c.zero()),
+                Polynomial::Add(a, b) | Polynomial::Multiply(a, b) => {
+                    autonomous(a, count, sources) && autonomous(b, count, sources)
+                }
+                Polynomial::Power(a, _) => autonomous(a, count, sources),
+            }
+        }
+        let seed = self.event_seed.as_ref().ok_or_else(|| {
+            Error::new(
+                "event_resolution",
+                "local polynomial flow lacks a physical seed",
+            )
+        })?;
+        let count = seed.state_after_map.len();
+        let sources = self.context.driven.len();
+        if self.implicit.is_some()
+            || !self.functions.iter().all(|p| autonomous(p, count, sources))
+            || !self
+                .values
+                .iter()
+                .all(|r| r[count..count + 2 * sources].iter().all(|c| c.zero()))
+        {
+            return Err(Error::new(
+                "event_resolution",
+                "local causal closure requires autonomous polynomial flow and outputs",
+            ));
+        }
+        Self::build(
+            local_context(&self.context, horizon),
+            self.parameters.clone(),
+            0.,
+            Some(seed.state_after_map.clone()),
+            horizon,
+            &self.tolerances,
+        )
+    }
+
+    #[cfg(test)]
     pub(super) fn new(
         program: &Program,
         trajectory: &Trajectory,
         driven: &[String],
         states: &[f64],
         horizon: f64,
+    ) -> Result<Self, Error> {
+        Self::new_with_tolerances(
+            program,
+            trajectory,
+            driven,
+            states,
+            horizon,
+            &Tolerances::default(),
+        )
+    }
+
+    pub(super) fn new_with_tolerances(
+        program: &Program,
+        trajectory: &Trajectory,
+        driven: &[String],
+        states: &[f64],
+        horizon: f64,
+        tolerances: &Tolerances,
     ) -> Result<Self, Error> {
         Self::build(
             Arc::new(Context {
@@ -210,6 +592,7 @@ impl NonlinearContinuous {
             0.0,
             None,
             horizon,
+            tolerances,
         )
     }
 
@@ -219,8 +602,9 @@ impl NonlinearContinuous {
         start: f64,
         restart: Option<Vec<I>>,
         horizon: f64,
+        tolerances: &Tolerances,
     ) -> Result<Self, Error> {
-        let mut result = Self::initialized(context, parameters, start, restart)?;
+        let mut result = Self::initialized(context, parameters, start, restart, tolerances)?;
         result.propagate_until(horizon)?;
         Ok(result)
     }
@@ -232,6 +616,7 @@ impl NonlinearContinuous {
         parameters: Vec<I>,
         start: f64,
         restart: Option<Vec<I>>,
+        tolerances: &Tolerances,
     ) -> Result<Self, Error> {
         let program = &context.program;
         let driven = driven_node_indices(program, &context.driven)?;
@@ -318,6 +703,14 @@ impl NonlinearContinuous {
         let rows = affine_bounds::eliminate(system.rows.clone(), system.x_count, system.width)?;
         let mapping = back_substitute_eliminated(&rows, system.x_count, system.width)?;
         let values = build_value_rows(&operators, &system, &mapping)?;
+        // Include every solved voltage, including high-gain aliases, rather
+        // than applying a state-magnitude budget to the operator values alone.
+        let accuracy_rows = system
+            .node_columns
+            .iter()
+            .flatten()
+            .map(|&column| mapping[column].clone())
+            .collect();
         let mut functions = vec![Polynomial::Linear(vec![I::ZERO; system.width]); state_count];
         for op in &operators {
             match &program.operators[op.operator] {
@@ -418,10 +811,13 @@ impl NonlinearContinuous {
             implicit: None,
             operators,
             values,
+            accuracy_rows,
+            tolerances: tolerances.clone(),
             initial,
             steps: Vec::new(),
             start,
             event_dependent,
+            event_seed: None,
         })
     }
 
@@ -439,6 +835,17 @@ impl NonlinearContinuous {
     }
 
     fn jets(&self, state: &[I], source: &[I], slopes: &[I], order: usize) -> Option<Vec<Jet>> {
+        self.jets_mode(state, source, slopes, order, false)
+    }
+
+    fn jets_mode(
+        &self,
+        state: &[I],
+        source: &[I],
+        slopes: &[I],
+        order: usize,
+        tight: bool,
+    ) -> Option<Vec<Jet>> {
         let mut variables: Vec<_> = state
             .iter()
             .chain(source)
@@ -454,10 +861,23 @@ impl NonlinearContinuous {
             }
         }
         for n in 0..order {
-            let derivatives: Vec<_> = self
-                .derivative_jets(&variables, slopes, n)?
+            let derivatives = if tight {
+                self.functions
+                    .iter()
+                    .map(|f| f.jet_with(&variables, n, true))
+                    .collect()
+            } else {
+                self.derivative_jets(&variables, slopes, n)?
+            };
+            let derivatives: Vec<_> = derivatives
                 .into_iter()
-                .map(|row| row[n] / I::point((n + 1) as f64))
+                .map(|row| {
+                    if tight {
+                        tight_div_positive(row[n], (n + 1) as f64)
+                    } else {
+                        row[n] / I::point((n + 1) as f64)
+                    }
+                })
                 .collect();
             for (variable, value) in variables.iter_mut().zip(derivatives) {
                 variable[n + 1] = value;
@@ -466,6 +886,81 @@ impl NonlinearContinuous {
         Some(variables[..state.len()].to_vec())
     }
 
+    fn centered_polynomial(
+        &self,
+        state: &[I],
+        source: &[I],
+        slopes: &[I],
+        coefficients: &[Jet],
+        centers: Option<&[CenterValue]>,
+    ) -> Option<CenteredPolynomial> {
+        // The implicit rational field needs its own derivative proof. Its
+        // existing interval propagation remains unchanged here.
+        if self.implicit.is_some() {
+            return None;
+        }
+        let centers: Vec<_> = centers.map_or_else(
+            || {
+                state
+                    .iter()
+                    .copied()
+                    .map(CenterValue::from_interval)
+                    .collect()
+            },
+            |values| values.to_vec(),
+        );
+        let center: Vec<_> = centers.iter().map(|value| I::point(value.point)).collect();
+        if center.iter().any(|value| !value.finite()) {
+            return None;
+        }
+        let order = coefficients[0].len() - 1;
+        let center_coefficients = self.jets_mode(&center, source, slopes, order, true)?;
+        let mut variables = coefficients.to_vec();
+        variables.extend(source.iter().zip(slopes).map(|(&value, &slope)| {
+            let mut row = vec![I::ZERO; order + 1];
+            row[0] = value;
+            row[1] = slope;
+            row
+        }));
+        let count = state.len();
+        let mut sensitivities = vec![vec![vec![I::ZERO; order + 1]; count]; count];
+        for (i, row) in sensitivities.iter_mut().enumerate() {
+            row[i][0] = I::ONE;
+        }
+        // Differentiate the Taylor recurrence by the chain rule. Evaluation
+        // uses the entire original initial box, and unmodified source boxes.
+        for n in 0..order {
+            let gradients: Vec<Vec<Jet>> = self
+                .functions
+                .iter()
+                .map(|function| {
+                    (0..count)
+                        .map(|k| function.gradient_jet(&variables, n, k))
+                        .collect()
+                })
+                .collect();
+            for i in 0..count {
+                let derivatives: Vec<_> = (0..count)
+                    .map(|j| {
+                        let derivative = (0..count).fold(I::ZERO, |sum, k| {
+                            sum + multiply(&gradients[i][k], &sensitivities[k][j], n)[n]
+                        });
+                        derivative / I::point((n + 1) as f64)
+                    })
+                    .collect();
+                for (row, derivative) in sensitivities[i].iter_mut().zip(derivatives) {
+                    row[n + 1] = derivative;
+                }
+            }
+        }
+        Some(CenteredPolynomial {
+            coefficients: center_coefficients,
+            sensitivities,
+            offsets: centers.into_iter().map(|value| value.error).collect(),
+        })
+    }
+
+    #[cfg(test)]
     fn trial(
         &self,
         start: f64,
@@ -474,6 +969,28 @@ impl NonlinearContinuous {
         source: &[I],
         slopes: &[I],
     ) -> Option<DenseStep> {
+        self.trial_order(start, end, state, source, slopes, ORDER, None)
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn trial_order(
+        &self,
+        start: f64,
+        end: f64,
+        state: &[I],
+        source: &[I],
+        slopes: &[I],
+        order: usize,
+        centers: Option<&[CenterValue]>,
+    ) -> Option<DenseStep> {
+        let state: Vec<_> = state
+            .iter()
+            .enumerate()
+            .map(|(i, &value)| {
+                centers.map_or(value, |centers| value.hull(I::point(centers[i].point)))
+            })
+            .collect();
+        let state = state.as_slice();
         let duration = I::point(end) - I::point(start);
         let elapsed = I {
             lo: 0.0,
@@ -485,29 +1002,172 @@ impl NonlinearContinuous {
             .map(|(&u, &m)| u + elapsed * m)
             .collect();
         let (tube, _) = self.picard_enclosure(state, &source_tube, slopes, elapsed)?;
-        let coefficients = self.jets(state, source, slopes, ORDER)?;
+        let coefficients = self.jets(state, source, slopes, order)?;
         let remainder: Vec<_> = self
-            .jets(&tube, &source_tube, slopes, ORDER + 1)?
+            .jets(&tube, &source_tube, slopes, order + 1)?
             .into_iter()
-            .map(|row| row[ORDER + 1])
+            .map(|row| row[order + 1])
             .collect();
+        let centered = self.centered_polynomial(state, source, slopes, &coefficients, centers);
         let step = DenseStep {
             start,
             end,
             coefficients,
             remainder,
+            centered,
         };
-        let tail_power = (0..=ORDER).fold(I::ONE, |v, _| v * duration);
+        let tail_power = (0..=order).fold(I::ONE, |v, _| v * duration);
         let values = step.range(I::point(end));
         if values.iter().any(|v| !v.finite())
-            || step.remainder.iter().zip(&values).any(|(&r, v)| {
-                !(r * tail_power).finite()
-                    || (r * tail_power).magnitude() > 1e-16 * (1.0 + v.magnitude())
-            })
+            || step.remainder.iter().any(|&r| !(r * tail_power).finite())
         {
             return None;
         }
         Some(step)
+    }
+
+    // Reserve one eighth of each voltage budget for local truncation, with
+    // h/stop allocation independent of requested observations and candidate
+    // horizons. Full interval states carry all previously accumulated error.
+    // This is a refinement target, never a replacement for voltage acceptance.
+    fn truncation_fits(
+        &self,
+        step: &DenseStep,
+        source: &[I],
+        slopes: &[I],
+        refinement: f64,
+    ) -> Result<bool, Error> {
+        let duration = I::point(step.end) - I::point(step.start);
+        let power = (0..step.coefficients[0].len()).fold(I::ONE, |v, _| v * duration);
+        let tail: Vec<_> = step
+            .remainder
+            .iter()
+            .map(|&r| (r * power).magnitude())
+            .collect();
+        if self.implicit.is_some() {
+            // The rational DAE field retains its existing local stability
+            // ceiling. User budgets may tighten it, never remove this guard.
+            let endpoint = step.range(I::point(step.end));
+            if tail
+                .iter()
+                .zip(&endpoint)
+                .any(|(&error, value)| error > 1e-16 * (1.0 + value.magnitude()))
+            {
+                return Ok(false);
+            }
+        }
+        let elapsed = I {
+            lo: 0.0,
+            hi: duration.hi,
+        };
+        let state = step.range(elapsed + I::point(step.start));
+        let forcing: Vec<_> = state
+            .into_iter()
+            .chain(source.iter().zip(slopes).map(|(&u, &m)| u + elapsed * m))
+            .chain(vec![I::ZERO; source.len()])
+            .chain([I::ONE])
+            .collect();
+        // Remove only the current truncation tail to measure how much of the
+        // endpoint budget is already consumed by propagated history, sources
+        // and coefficient rounding. Earlier tails remain in the coefficients.
+        let endpoint: Vec<_> = step
+            .polynomial_range(duration)
+            .into_iter()
+            .chain(source.iter().zip(slopes).map(|(&u, &m)| u + duration * m))
+            .chain(vec![I::ZERO; source.len()])
+            .chain([I::ONE])
+            .collect();
+        let mut fits = true;
+        for row in &self.accuracy_rows {
+            let voltage = dot(row, &forcing, "nonlinear accuracy target")?;
+            let inherited = dot(row, &endpoint, "nonlinear accumulated accuracy")?;
+            // The lower magnitude of the whole step makes relative targets
+            // valid even when an amplified output crosses or approaches zero.
+            let lower = if voltage.lo <= 0.0 && voltage.hi >= 0.0 {
+                0.0
+            } else {
+                voltage.lo.abs().min(voltage.hi.abs())
+            };
+            // An affine offset can cancel the state contribution in a later
+            // mode. Preserve an absolute tail allowance before accepting that
+            // prefix; suffix refinement cannot recover its earlier truncation.
+            // This is a conservative step-selection heuristic, not a proof of
+            // future output accuracy; the full enclosure still certifies it.
+            let budget = if !row.last().unwrap().zero() {
+                self.tolerances.absolute
+            } else {
+                self.tolerances.absolute + self.tolerances.relative * lower
+            };
+            let end_lower = if inherited.lo <= 0.0 && inherited.hi >= 0.0 {
+                0.0
+            } else {
+                inherited.lo.abs().min(inherited.hi.abs())
+            };
+            let end_budget = I::point(self.tolerances.absolute)
+                + I::point(self.tolerances.relative) * I::point(end_lower);
+            let inherited_radius =
+                (I::point(inherited.hi) - I::point(inherited.lo)) * I::point(0.5);
+            let remaining = end_budget - inherited_radius;
+            let mut local = budget
+                * ((step.end - step.start) / self.context.trajectory.config.stop)
+                * 0.125
+                * refinement;
+            if remaining.lo > 0.0 {
+                local = local.min(remaining.lo * 0.125);
+            } else if !row[..tail.len()].iter().all(|gain| gain.zero()) {
+                // A valid uncertain trajectory must remain queryable, including
+                // event-window propagation. Do not reject its enclosure here or
+                // confuse inherited error with the currently shrinkable tail.
+                // The unchanged final voltage certificate rejects any sample
+                // whose full history enclosure exceeds the user requirement.
+                crate::diagnostics::counter("nonlinear_history_budget_exhausted", 1);
+                crate::diagnostics::record("nonlinear_accuracy", "inherited_budget_exhausted",
+                    Some(step.start), Some(step.end), 1,
+                    Some("accumulated history/source/coefficient rounding already consumes the endpoint voltage budget"));
+            }
+            let error = row.iter().zip(&tail).fold(I::ZERO, |sum, (&gain, &error)| {
+                sum + I::point(gain.magnitude()) * I::point(error)
+            });
+            fits &= error.finite() && error.hi <= local;
+        }
+        Ok(fits)
+    }
+
+    // Relative budgets use the lower magnitude so a midpoint cannot hide
+    // cancellation. Full state intervals include accumulated truncation.
+    fn accuracy_ratio(&self, state: &[I], source: &[I], source_only: bool) -> f64 {
+        let forcing: Vec<_> = state
+            .iter()
+            .copied()
+            .chain(source.iter().copied())
+            .chain(vec![I::ZERO; source.len()])
+            .chain([I::ONE])
+            .collect();
+        self.accuracy_rows.iter().fold(0.0_f64, |worst, row| {
+            let Ok(voltage) = dot(row, &forcing, "nonlinear history accuracy") else {
+                return f64::INFINITY;
+            };
+            let lower = if voltage.lo <= 0.0 && voltage.hi >= 0.0 {
+                0.0
+            } else {
+                voltage.lo.abs().min(voltage.hi.abs())
+            };
+            let budget = self.tolerances.absolute + self.tolerances.relative * lower;
+            let radius = if source_only {
+                row[state.len()..state.len() + source.len()]
+                    .iter()
+                    .zip(source)
+                    .fold(I::ZERO, |sum, (&gain, &value)| {
+                        sum + I::point(gain.magnitude())
+                            * (I::point(value.hi) - I::point(value.lo))
+                            * I::point(0.5)
+                    })
+                    .hi
+            } else {
+                ((I::point(voltage.hi) - I::point(voltage.lo)) * I::point(0.5)).hi
+            };
+            worst.max(if radius == 0.0 { 0.0 } else { radius / budget })
+        })
     }
 
     // Bounds all flows starting anywhere in `initial`, with any source value
@@ -573,6 +1233,32 @@ impl NonlinearContinuous {
     // Extend only a disposable candidate; retained dense steps and their
     // endpoint enclosures stay unchanged when an event leaves the mode intact.
     fn propagate_until(&mut self, horizon: f64) -> Result<(), Error> {
+        let base = self.clone();
+        let mut refinement = 1.0;
+        // Count valid attempted steps across discarded suffixes too. Otherwise
+        // eight retries would multiply the documented integration-work limit.
+        let mut remaining_work = MAX_STEPS.saturating_sub(base.steps.len());
+        for _ in 0..MAX_HISTORY_REFINEMENTS {
+            let mut candidate = base.clone();
+            if candidate.propagate_once(horizon, refinement, &mut remaining_work)? {
+                *self = candidate;
+                return Ok(());
+            }
+            crate::diagnostics::counter("nonlinear_history_refinements", 1);
+            // Refining only the latest step cannot recover earlier candidate
+            // tails. Rebuild the disposable suffix; keep the accepted prefix.
+            refinement /= 256.0;
+        }
+        Err(Error::new("waveform_accuracy",
+            "nonlinear accumulated history accuracy could not be certified within 8 suffix refinements"))
+    }
+
+    fn propagate_once(
+        &mut self,
+        horizon: f64,
+        refinement: f64,
+        remaining_work: &mut usize,
+    ) -> Result<bool, Error> {
         let _timing = crate::diagnostics::span("history.nonlinear_propagate");
 
         let trajectory = &self.context.trajectory;
@@ -584,16 +1270,22 @@ impl NonlinearContinuous {
         }
         let start = self.certified_end();
         if horizon <= start {
-            return Ok(());
+            return Ok(true);
         }
         let mut state = self.steps.last().map_or_else(
             || self.initial.clone(),
             |step| step.range(I::point(step.end)),
         );
+        let mut centers = self
+            .steps
+            .last()
+            .and_then(|step| step.centered_range(I::point(step.end) - I::point(step.start), true));
+        let refine_history =
+            self.accuracy_ratio(&state, &trajectory.value_bounds(start), false) < 0.875;
         let mut knots = vec![start];
         knots.extend(
             trajectory
-                .knots
+                .solver_points
                 .iter()
                 .copied()
                 .filter(|t| *t > start && *t < horizon),
@@ -612,19 +1304,56 @@ impl NonlinearContinuous {
                 if self.steps.len() >= MAX_STEPS {
                     return Err(Error::new(
                         "waveform_accuracy",
-                        "validated nonlinear integration exceeded 16384 internal steps",
+                        "validated nonlinear integration exceeded 16384 stored internal steps",
+                    ));
+                }
+                if *remaining_work == 0 {
+                    return Err(Error::new(
+                        "waveform_accuracy",
+                        "validated nonlinear integration exhausted the cumulative 16384 candidate-step work limit",
                     ));
                 }
                 let source = trajectory.value_bounds(start);
-                let mut end = (start + 0.125).min(b);
+                let mut end = (start + 0.125_f64.min(trajectory.config.max_step)).min(b);
                 let mut accepted = None;
-                for _ in 0..64 {
+                for _ in 0..MAX_REFINEMENTS {
                     if end <= start {
                         break;
                     }
-                    if let Some(step) = self.trial(start, end, &state, &source, &slopes) {
-                        accepted = Some(step);
-                        break;
+                    if let Some(step) = self.trial_order(
+                        start,
+                        end,
+                        &state,
+                        &source,
+                        &slopes,
+                        ORDER,
+                        centers.as_deref(),
+                    ) {
+                        if self.truncation_fits(&step, &source, &slopes, refinement)? {
+                            accepted = Some(step);
+                            break;
+                        }
+                        crate::diagnostics::counter("nonlinear_accuracy_refinements", 1);
+                        // Increase polynomial order before reducing the step:
+                        // repeated endpoint quantization can dominate a small
+                        // tail. Rational DAE propagation retains order 12.
+                        if self.implicit.is_none() {
+                            crate::diagnostics::counter("nonlinear_order_refinements", 1);
+                            if let Some(step) = self.trial_order(
+                                start,
+                                end,
+                                &state,
+                                &source,
+                                &slopes,
+                                MAX_ORDER,
+                                centers.as_deref(),
+                            ) {
+                                if self.truncation_fits(&step, &source, &slopes, refinement)? {
+                                    accepted = Some(step);
+                                    break;
+                                }
+                            }
+                        }
                     }
                     crate::diagnostics::record(
                         "nonlinear_candidate",
@@ -632,7 +1361,7 @@ impl NonlinearContinuous {
                         Some(start),
                         Some(end),
                         1,
-                        Some("tube or Taylor remainder not certified"),
+                        Some("tube or user-budget Taylor remainder not certified"),
                     );
                     crate::diagnostics::counter("nonlinear_rejected_trials", 1);
                     end = start + (end - start) * 0.5;
@@ -640,10 +1369,47 @@ impl NonlinearContinuous {
                 let step = accepted.ok_or_else(|| {
                     Error::new(
                         "waveform_accuracy",
-                        "cannot certify a finite nonlinear trajectory tube or Taylor remainder",
+                        "cannot refine nonlinear trajectory within 64 trials: tube or user-budget Taylor remainder not certified",
                     )
                 })?;
+                *remaining_work -= 1;
+                crate::diagnostics::counter("nonlinear_validated_work_steps", 1);
                 state = step.range(I::point(step.end));
+                centers = step.centered_range(I::point(step.end) - I::point(step.start), true);
+                let endpoint_source = trajectory.value_bounds(step.end);
+                if refine_history
+                    && self.accuracy_ratio(&state, &endpoint_source, true) < 0.875
+                    && self.accuracy_ratio(&state, &endpoint_source, false) > 0.875
+                {
+                    let h = I::point(step.end) - I::point(step.start);
+                    let tail_power =
+                        (0..step.coefficients[0].len()).fold(I::ONE, |value, _| value * h);
+                    let tail = step
+                        .remainder
+                        .iter()
+                        .map(|&r| (r * tail_power).magnitude())
+                        .fold(0.0_f64, f64::max);
+                    let radius = state
+                        .iter()
+                        .map(|value| (value.hi - value.lo) * 0.5)
+                        .fold(0.0_f64, f64::max);
+                    let center_width = centers.as_ref().map_or(f64::NAN, |values| {
+                        values
+                            .iter()
+                            .map(|value| (value.error.hi - value.error.lo) * 0.5)
+                            .fold(0.0_f64, f64::max)
+                    });
+                    let reason = format!("state_radius={radius:e}; center_error_radius={center_width:e}; current_tail={tail:e}; target_scale={refinement:e}; suffix_steps={}", self.steps.len());
+                    crate::diagnostics::record(
+                        "nonlinear_accuracy",
+                        "suffix_budget_exhausted",
+                        Some(step.start),
+                        Some(step.end),
+                        1,
+                        Some(&reason),
+                    );
+                    return Ok(false);
+                }
                 start = step.end;
                 self.steps.push(step);
                 crate::diagnostics::counter("nonlinear_certified_candidate_steps", 1);
@@ -657,7 +1423,7 @@ impl NonlinearContinuous {
                 );
             }
         }
-        Ok(())
+        Ok(true)
     }
 
     pub(super) fn operator_value_index(&self, op: usize) -> Option<usize> {
@@ -678,6 +1444,7 @@ impl NonlinearContinuous {
             && self.initial == other.initial
             && self.parameters == other.parameters
             && self.steps == other.steps
+            && self.event_seed == other.event_seed
     }
     pub(super) fn next_breakpoint(&self, time: f64) -> Option<f64> {
         self.context
@@ -775,26 +1542,62 @@ impl NonlinearContinuous {
         }
         source
     }
-    pub(super) fn event_bounds(&self, window: I) -> Result<Vec<I>, Error> {
-        if window.lo < self.start && window.hi == self.start {
-            // Candidate initial already encloses R(z(tau)) and the new flow
-            // to b. Include the full source window for direct filter paths.
-            let source = self.source_bounds(window);
-            let forcing: Vec<_> = self
-                .initial
-                .iter()
-                .copied()
-                .chain(source.iter().copied())
-                .chain(vec![I::ZERO; source.len()])
-                .chain([I::ONE])
-                .collect();
-            self.values
-                .iter()
-                .map(|row| dot(row, &forcing, "nonlinear event sample"))
-                .collect()
-        } else {
-            self.range_bounds(window)
+    // Only ordered event observations may use this backward-reaching box.
+    // Ordinary state_bounds deliberately keeps its accepted-start restriction.
+    fn ordered_event_state(&self, window: I) -> Result<Vec<I>, Error> {
+        let seed = self.event_seed.as_ref().ok_or_else(|| {
+            Error::new(
+                "event_resolution",
+                "ordered nonlinear event has no physical history enclosure",
+            )
+        })?;
+        if !window.finite()
+            || window.lo > window.hi
+            || window.lo < seed.window.lo
+            || window.hi < self.start
+            || window.hi > self.context.trajectory.config.stop
+        {
+            return Err(Error::new(
+                "event_resolution",
+                "ordered nonlinear event exceeds retained history coverage",
+            ));
         }
+        let coverage = I {
+            lo: seed.window.lo,
+            hi: window.hi,
+        };
+        let elapsed = I {
+            lo: 0.0,
+            hi: (I::point(window.hi) - I::point(seed.window.lo)).hi,
+        };
+        let (source, slopes) = self.context.trajectory.range(coverage)?;
+        let (_, image) = self
+            .picard_enclosure(&seed.state_after_map, &source, &slopes, elapsed)
+            .ok_or_else(|| {
+                Error::new(
+                    "event_resolution",
+                    "cannot certify ordered nonlinear event trajectory tube",
+                )
+            })?;
+        Ok(image)
+    }
+
+    pub(super) fn event_bounds(&self, window: I) -> Result<Vec<I>, Error> {
+        if window.lo >= self.start {
+            return self.range_bounds(window);
+        }
+        let state = self.ordered_event_state(window)?;
+        let source = self.source_bounds(window);
+        let forcing: Vec<_> = state
+            .into_iter()
+            .chain(source.iter().copied())
+            .chain(vec![I::ZERO; source.len()])
+            .chain([I::ONE])
+            .collect();
+        self.values
+            .iter()
+            .map(|row| dot(row, &forcing, "ordered nonlinear event sample"))
+            .collect()
     }
 
     pub(super) fn restarted(
@@ -843,12 +1646,23 @@ impl NonlinearContinuous {
                 "nonlinear event representative must be the upper endpoint of its time enclosure",
             ));
         }
-        Self::initialized(
+        let physical = if window.lo < self.start {
+            self.ordered_event_state(window)?
+        } else {
+            self.state_bounds(window)?
+        };
+        let mut next = Self::initialized(
             self.context.clone(),
             parameters.to_vec(),
             time,
-            Some(self.state_bounds(window)?),
-        )
+            Some(physical),
+            &self.tolerances,
+        )?;
+        next.event_seed = Some(PhysicalEventSeed {
+            window,
+            state_after_map: next.initial.clone(),
+        });
+        Ok(next)
     }
 }
 
@@ -897,6 +1711,7 @@ mod tests {
         })).unwrap();
         let trajectory = Trajectory::new(
             crate::ir::TransientInputs {
+                strobetimes: Vec::new(),
                 pwl: vec![],
                 output_times: vec![0.0, 0.5],
                 stop: 0.5,
@@ -919,6 +1734,7 @@ mod tests {
             }],
             0.0,
             None,
+            &accepted.tolerances,
         );
         assert_eq!(uncertain.err().unwrap().kind, "waveform_accuracy");
         let failed = accepted.restarted(0.125, I::point(0.125), &[I::point(1e300)], 0.5);
@@ -943,6 +1759,7 @@ mod tests {
         .unwrap();
         let trajectory = Trajectory::new(
             crate::ir::TransientInputs {
+                strobetimes: Vec::new(),
                 pwl: vec![],
                 output_times: vec![0.0, 0.125],
                 stop: 0.125,
@@ -963,8 +1780,11 @@ mod tests {
             steps: vec![],
             start: 0.0,
             event_dependent: false,
+            event_seed: None,
             operators: Vec::new(),
             values: vec![vec![I::ONE, I::ZERO]],
+            accuracy_rows: vec![vec![I::ONE, I::ZERO]],
+            tolerances: Tolerances::default(),
             functions: vec![Polynomial::Multiply(
                 Box::new(Polynomial::Linear(vec![I::ZERO, I::point(quadratic_sign)])),
                 Box::new(Polynomial::Power(
@@ -976,10 +1796,63 @@ mod tests {
     }
 
     #[test]
+    fn forced_points_end_accepted_dense_steps() {
+        let mut flow = scalar(-1.0);
+        let context = Arc::get_mut(&mut flow.context).unwrap();
+        let mut config = context.trajectory.config.clone();
+        config.strobetimes = vec![0.025, 0.075];
+        context.trajectory = Trajectory::new(config, 0).unwrap();
+        flow.propagate_until(0.125).unwrap();
+        for time in [0.025, 0.075] {
+            assert!(flow.steps.iter().any(|s| s.end == time));
+            assert!(!flow.steps.iter().any(|s| s.start < time && time < s.end));
+            let value = flow.range_bounds(I::point(time)).unwrap()[0];
+            let expected = 1.0 / (1.0 + time);
+            assert!((0.5 * (value.lo + value.hi) - expected).abs() < 1e-7);
+        }
+    }
+
+    #[test]
+    fn ordered_physical_seed_is_event_only_and_failure_does_not_mutate_it() {
+        let mut accepted = scalar(-1.0);
+        accepted.start = 0.05;
+        let window = I {
+            lo: 0.05 - 1e-8,
+            hi: 0.05 + 1e-8,
+        };
+        assert!(accepted.ordered_event_state(window).is_err());
+        accepted.event_seed = Some(PhysicalEventSeed {
+            window: I {
+                lo: 0.05 - 2e-8,
+                hi: 0.05,
+            },
+            state_after_map: vec![I::ONE],
+        });
+        let before = accepted.clone();
+        assert!(accepted.state_bounds(window).is_err());
+        let bounds = accepted.ordered_event_state(window).unwrap()[0];
+        assert!(bounds.lo <= 1.0 / (1.0 + 3e-8) && bounds.hi >= 1.0);
+        assert!(accepted
+            .ordered_event_state(I { lo: 0.04, hi: 0.05 })
+            .is_err());
+        assert!(accepted.same_history(&before));
+        let mut failed = accepted.clone();
+        failed.functions = scalar(1.0).functions;
+        failed.event_seed.as_mut().unwrap().state_after_map = vec![I::point(1e300)];
+        let failed_before = failed.clone();
+        assert!(failed.ordered_event_state(window).is_err());
+        assert!(failed.same_history(&failed_before));
+        assert_eq!(accepted.ordered_event_state(window).unwrap()[0], bounds);
+        let mut changed_seed = accepted.clone();
+        changed_seed.event_seed.as_mut().unwrap().state_after_map = vec![I::point(2.0)];
+        assert!(!accepted.same_history(&changed_seed));
+    }
+
+    #[test]
     fn candidate_horizon_extension_preserves_prefix_and_rejected_retry() {
         let mut accepted = scalar(-1.0);
-        accepted.propagate_until(0.0625).unwrap();
-        let prefix = accepted.range_bounds(I::point(0.0625)).unwrap();
+        accepted.propagate_until(0.05).unwrap();
+        let prefix = accepted.range_bounds(I::point(0.05)).unwrap();
         assert_eq!(
             accepted.range_bounds(I::point(0.125)).err().unwrap().kind,
             "event_resolution"
@@ -989,12 +1862,12 @@ mod tests {
             failed.propagate_until(0.25).err().unwrap().kind,
             "event_resolution"
         );
-        assert_eq!(accepted.certified_end(), 0.0625);
-        assert_eq!(accepted.range_bounds(I::point(0.0625)).unwrap(), prefix);
+        assert_eq!(accepted.certified_end(), 0.05);
+        assert_eq!(accepted.range_bounds(I::point(0.05)).unwrap(), prefix);
         let mut discarded = accepted.clone();
         discarded.propagate_until(0.125).unwrap();
         let future = discarded.range_bounds(I::point(0.125)).unwrap();
-        assert_eq!(discarded.range_bounds(I::point(0.0625)).unwrap(), prefix);
+        assert_eq!(discarded.range_bounds(I::point(0.05)).unwrap(), prefix);
         assert!(!accepted.same_history(&discarded));
         drop(discarded);
         let mut retry = accepted.clone();
@@ -1013,6 +1886,291 @@ mod tests {
         assert!(
             crate::interval::sum_products_sign(&[(future[0].hi, 9.0), (-8.0, 1.0)]).unwrap() >= 0
         );
+    }
+
+    #[test]
+    fn bounded_refinement_failure_preserves_accepted_history() {
+        let accepted = scalar(1e300);
+        let prefix = accepted.initial.clone();
+        let mut candidate = accepted.clone();
+        let (result, report) =
+            crate::diagnostics::capture(Default::default(), || candidate.propagate_until(0.125));
+        let error = result.unwrap_err();
+        assert_eq!(error.kind, "waveform_accuracy");
+        assert!(error.message.contains("64 trials"));
+        assert_eq!(
+            report.counters["nonlinear_rejected_trials"],
+            MAX_REFINEMENTS as u64
+        );
+        assert_eq!(accepted.initial, prefix);
+        assert_eq!(accepted.certified_end(), 0.0);
+        assert!(accepted.steps.is_empty());
+    }
+
+    #[test]
+    fn accumulated_roundoff_has_a_bounded_suffix_refinement_refusal() {
+        let mut candidate = scalar(-1.0);
+        candidate.tolerances = Tolerances {
+            absolute: 1e-20,
+            relative: 0.0,
+        };
+        let accepted = candidate.clone();
+        let (result, report) =
+            crate::diagnostics::capture(Default::default(), || candidate.propagate_until(0.125));
+        let error = result.unwrap_err();
+        assert_eq!(error.kind, "waveform_accuracy");
+        assert!(error.message.contains("8 suffix refinements"));
+        assert_eq!(
+            report.counters["nonlinear_history_refinements"],
+            MAX_HISTORY_REFINEMENTS as u64
+        );
+        assert!(report.counters["nonlinear_history_budget_exhausted"] > 0);
+        assert!(candidate.same_history(&accepted));
+    }
+
+    #[test]
+    fn internal_step_resource_limit_is_explicit() {
+        let mut candidate = scalar(-1.0);
+        candidate.functions[0] = Polynomial::Linear(vec![I::ZERO, I::ZERO]);
+        Arc::get_mut(&mut candidate.context)
+            .unwrap()
+            .trajectory
+            .config
+            .max_step = 2_f64.powi(-20);
+        let error = candidate.propagate_until(0.125).unwrap_err();
+        assert_eq!(error.kind, "waveform_accuracy");
+        assert!(error.message.contains("16384 stored internal steps"));
+        assert!(candidate.steps.is_empty());
+        assert_eq!(candidate.certified_end(), 0.0);
+    }
+
+    #[test]
+    fn discarded_candidates_share_the_remaining_work_limit() {
+        let mut candidate = scalar(-1.0);
+        let accepted = candidate.clone();
+        // A previously discarded suffix has already consumed this call's
+        // work allowance; no step may be validated in the next attempt.
+        let error = candidate.propagate_once(0.125, 1.0, &mut 0).unwrap_err();
+        assert!(error
+            .message
+            .contains("cumulative 16384 candidate-step work limit"));
+        assert!(candidate.same_history(&accepted));
+    }
+
+    #[test]
+    fn directed_center_arithmetic_encloses_exact_binary_operations() {
+        use num_rational::BigRational;
+        let rational = |value| BigRational::from_float(value).unwrap();
+        let contains = |bound: I, exact: BigRational| {
+            assert!(!bound.lo.is_nan() && !bound.hi.is_nan());
+            assert!(!bound.lo.is_finite() || rational(bound.lo) <= exact);
+            assert!(!bound.hi.is_finite() || exact <= rational(bound.hi));
+        };
+        let values = [
+            0.0,
+            f64::from_bits(1),
+            f64::MIN_POSITIVE,
+            1.0,
+            1.0_f64.next_up(),
+            1e100,
+            1e-100,
+            -0.5,
+        ];
+        for a in values.into_iter().chain(values.map(|a| -a)) {
+            for b in values.into_iter().chain(values.map(|b| -b)) {
+                contains(point_sum(a, b), rational(a) + rational(b));
+                contains(point_product(a, b), rational(a) * rational(b));
+                for c in [0.0, 0.5, -1.0] {
+                    let value = a.mul_add(b, c);
+                    contains(
+                        fma_error(a, b, c, value),
+                        rational(a) * rational(b) + rational(c) - rational(value),
+                    );
+                }
+            }
+            for denominator in [1.0, 3.0, 13.0, 25.0] {
+                contains(
+                    tight_div_positive(I::point(a), denominator),
+                    rational(a) / rational(denominator),
+                );
+            }
+        }
+        let coefficients = [
+            I::point(1.0),
+            I::point(-1e100),
+            I::point(1e100),
+            I {
+                lo: 0.1,
+                hi: 0.1_f64.next_up(),
+            },
+        ];
+        for h in [-0.125, 0.0, 0.125, 1.0] {
+            let bound = center_horner(&coefficients, I::point(h)).range();
+            for mask in 0..16 {
+                let exact =
+                    coefficients
+                        .iter()
+                        .enumerate()
+                        .fold(rational(0.0), |sum, (i, value)| {
+                            let coefficient = if mask & (1 << i) == 0 {
+                                value.lo
+                            } else {
+                                value.hi
+                            };
+                            sum + rational(coefficient) * rational(h).pow(i as i32)
+                        });
+                contains(bound, exact);
+            }
+        }
+    }
+
+    #[test]
+    fn twosum_and_fma_error_enclose_gradual_underflow_boundary_cases() {
+        use num_rational::BigRational;
+        let rational = |value| BigRational::from_float(value).unwrap();
+        let contains = |bound: I, exact: BigRational, operands: (f64, f64, f64)| {
+            assert!(bound.finite(), "nonfinite bound for {operands:?}");
+            assert!(
+                rational(bound.lo) <= exact && exact <= rational(bound.hi),
+                "bound {bound:?} excludes exact result for {operands:?}"
+            );
+        };
+        let tiny = f64::from_bits(1);
+        let normal = f64::MIN_POSITIVE;
+        // A fixed corpus straddles both the subnormal/normal boundary and
+        // the next binade, with small corrections, cancellation, and large
+        // magnitude differences. Both signs and operand orders are covered.
+        let positive = [
+            0.0,
+            tiny,
+            2.0 * tiny,
+            3.0 * tiny,
+            normal.next_down().next_down(),
+            normal.next_down(),
+            normal,
+            normal.next_up(),
+            normal.next_up().next_up().next_up(),
+            (2.0 * normal).next_down(),
+            2.0 * normal,
+            (2.0 * normal).next_up(),
+            1.0,
+        ];
+        let values: Vec<_> = positive.into_iter().chain(positive.map(|v| -v)).collect();
+        for &a in &values {
+            for &c in &values {
+                contains(point_sum(a, c), rational(a) + rational(c), (a, 1.0, c));
+                // Half-unit products exercise an exact residual smaller
+                // than the least subnormal; near-one factors mix normal
+                // products with subnormal addition corrections.
+                for b in [0.5, 1.0, 1.0_f64.next_up(), 1.5, -1.0] {
+                    let value = a.mul_add(b, c);
+                    contains(
+                        fma_error(a, b, c, value),
+                        rational(a) * rational(b) + rational(c) - rational(value),
+                        (a, b, c),
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn finite_fma_with_overflowing_unfused_sum_has_safe_error_fallback() {
+        let a = f64::from_bits(0x7fb745d1745d1745);
+        let b = 11.0;
+        let c = 2.0_f64.powi(970);
+        assert!((a * b).is_finite());
+        assert!(!(a * b + c).is_finite());
+        let value = a.mul_add(b, c);
+        assert!(value.is_finite());
+        let error = fma_error(a, b, c, value);
+        assert_eq!(error.lo, f64::NEG_INFINITY);
+        assert_eq!(error.hi, f64::INFINITY);
+    }
+
+    #[test]
+    fn centered_flow_encloses_states_when_nominal_center_is_outside_state_box() {
+        use num_rational::BigRational;
+        let flow = scalar(-1.0);
+        let state = I {
+            lo: 0.99,
+            hi: 0.991,
+        };
+        let center = CenterValue {
+            point: 1.0,
+            error: state - I::ONE,
+        };
+        let step = flow
+            .trial_order(0.0, 1.0 / 32.0, &[state], &[], &[], ORDER, Some(&[center]))
+            .unwrap();
+        let bound = step.range(I::point(1.0 / 32.0))[0];
+        let rational = |value| BigRational::from_float(value).unwrap();
+        for x in [state.lo, state.hi] {
+            let exact = rational(x) / (rational(1.0) + rational(x) * rational(1.0 / 32.0));
+            assert!(rational(bound.lo) <= exact && exact <= rational(bound.hi));
+        }
+    }
+
+    #[test]
+    fn centered_taylor_keeps_source_uncertainty() {
+        use num_rational::BigRational;
+        let mut flow = scalar(-1.0);
+        // x'=u*x², x(0)=1 gives x=1/(1-u*t). The source box
+        // remains uncertain even when the initial state is a point.
+        flow.functions[0] = Polynomial::Multiply(
+            Box::new(Polynomial::Linear(vec![I::ZERO, I::ONE, I::ZERO])),
+            Box::new(Polynomial::Power(
+                Box::new(Polynomial::Linear(vec![I::ONE, I::ZERO, I::ZERO])),
+                2,
+            )),
+        );
+        let step = flow
+            .trial(
+                0.0,
+                1.0 / 32.0,
+                &[I::ONE],
+                &[I { lo: -1.0, hi: 0.0 }],
+                &[I::ZERO],
+            )
+            .unwrap();
+        let bound = step.range(I::point(1.0 / 32.0))[0];
+        let rational = |value| BigRational::from_float(value).unwrap();
+        for u in [-1.0, -0.5, 0.0] {
+            let exact = rational(1.0) / (rational(1.0) - rational(u) * rational(1.0 / 32.0));
+            assert!(rational(bound.lo) <= exact && exact <= rational(bound.hi));
+        }
+        assert!(bound.hi - bound.lo > 0.03);
+    }
+
+    #[test]
+    fn centered_taylor_flow_encloses_initial_box_and_contracts_decay_uncertainty() {
+        use num_rational::BigRational;
+        let flow = scalar(-1.0);
+        let initial = I {
+            lo: 1.0 - 1e-8,
+            hi: 1.0 + 1e-8,
+        };
+        let step = flow.trial(0.0, 1.0 / 32.0, &[initial], &[], &[]).unwrap();
+        let rational = |value| BigRational::from_float(value).unwrap();
+        for t in [0.0, 1.0 / 64.0, 1.0 / 32.0] {
+            let bound = step.range(I::point(t))[0];
+            for x in [initial.lo, 1.0, initial.hi] {
+                let exact = rational(x) / (rational(1.0) + rational(x) * rational(t));
+                assert!(rational(bound.lo) <= exact && exact <= rational(bound.hi));
+            }
+        }
+        let h = I::point(1.0 / 32.0);
+        let endpoint = step.range(h)[0];
+        let ordinary = horner(&step.coefficients[0], h)
+            + step.remainder[0] * (0..=ORDER).fold(I::ONE, |v, _| v * h);
+        assert!(endpoint.hi - endpoint.lo < initial.hi - initial.lo);
+        assert!(endpoint.hi - endpoint.lo < ordinary.hi - ordinary.lo);
+        let before = step.clone();
+        let _ = step.range(I {
+            lo: 0.0,
+            hi: 1.0 / 32.0,
+        });
+        assert!(step == before);
     }
 
     #[test]
@@ -1067,6 +2225,7 @@ mod tests {
         })).unwrap();
         let trajectory = Trajectory::new(
             crate::ir::TransientInputs {
+                strobetimes: Vec::new(),
                 pwl: vec![vec![[0.0, 0.0], [0.5, 1.0], [1.0, 0.0]]],
                 output_times: vec![0.0, 1.0],
                 stop: 1.0,

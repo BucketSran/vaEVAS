@@ -13,6 +13,7 @@ from .errors import DiagnosticArgumentParser, diagnostic
 from .identity import inspect_identity
 from .lint import read_input_bytes, decode_input, parse_manifest_input
 from .protocol import validate_response
+from .strobe import FIELDS as STROBE_FIELDS, controls as strobe_controls
 from .runtime import DEFAULT_TIMEOUT, _invoke, _tolerances
 
 
@@ -51,7 +52,7 @@ def _request(manifest, program):
         request.update(driven=manifest['driven'], samples=manifest['samples'])
         return 'static', request, len(manifest['samples']), None
     config = manifest['transient']
-    if set(config) != {'sources', 'output_times', 'stop', 'max_step'}:
+    if not {'sources', 'output_times', 'stop', 'max_step'} <= config.keys() or set(config) - {'sources', 'output_times', 'stop', 'max_step'} - STROBE_FIELDS:
         raise ValueError('transient mode requires sources/output_times/stop/max_step')
     times = config['output_times']
     stop = config['stop']
@@ -64,7 +65,7 @@ def _request(manifest, program):
         raise ValueError('transient observation times must be finite, increasing and within stop')
     request.update(driven=list(config['sources']), samples=[], transient=dict(
         pwl=list(config['sources'].values()), output_times=times,
-        stop=stop, max_step=config['max_step']))
+        stop=stop, max_step=config['max_step'], **strobe_controls(config)))
     return 'transient', request, len(times), times
 
 
@@ -129,7 +130,7 @@ def run(manifest_path, *, kernel=None, out, timeout=DEFAULT_TIMEOUT):
         response = _invoke(request, selected, timeout)
         # Preserve the original decoded machine response even if it is incomplete.
         save('result.json', _json(response))
-        validate_response(response, program, count, times)
+        validate_response(response, program, count, times, strobetimes=request.get("transient", {}).get("strobetimes", []))
         if not selected.is_file() or _digest(selected.read_bytes()) != identity['kernel']['sha256']:
             raise KernelError(dict(kind='kernel_process', message='selected kernel changed during run'))
         first = dict(name='sample_index', unit='1') if times is None else dict(name='time_s', unit='s')

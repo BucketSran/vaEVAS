@@ -1,0 +1,127 @@
+{
+  "EVAS_candidate": {
+    "source_revision": "709a43769aaff9a494a2df54a8e9b820a77aae7d",
+    "source_tree": "9b4d2b6c195d2f5c06553c453fb1ae105b1eec24",
+    "kernel_sha256": "0a889a1a0099d0e94d2522a5bff6c9ec939517264f50528d75c54250f31433da",
+    "original16": "14 finite outputs P; 2 prescribed tight rejections P",
+    "phase16": "14 finite outputs P; 2 prescribed tight rejections P",
+    "receipt": "candidate-phase/README.md",
+    "history": "29ed phase14F, b456 phase2F, 42 forced1F, 4a held1F retained; no reference failures removed",
+    "qualification": "Frozen development inputs only; not complete Spectre alignment or paper qualification",
+    "forced_scope2": "2 accepted outputs P; separate denominator",
+    "held_scope2": "2 accepted outputs P; separate denominator"
+  },
+  "actual_archives": {
+    "new_timer_1fs": "b7a84485cb818a7d6ccb0580e4b3d58734761892ef3f9b2bf03756563bfb2135",
+    "normalized_originaltimer": "68dc0fa3415600b64aa26390bf8264f43d173e597a6aa936eebb806492b9089f",
+    "original_lexical_compilefail": "0792fcf7bd2b2f2c15b18af395118286693e5bfe1d4a5181ae5b8cb135daa14a"
+  },
+  "actual_reference_denominator": 5,
+  "calibration_controls": "21 actual assertions:17positive/fault/missing plus4manually expected nearclockstates. Reusedoriginalchecker identity unchanged; public calibration executed beforecandidate.",
+  "calibration_runner_sha256": "574b006a37defebfa2088d80b43417df1bf8e53a48747de7945834948a5ad8e1",
+  "calibration_sha256": "5df9c22d5667cf7043a5d97b5ee09c45e611ab9d26106ae8075cf55a226009c8",
+  "checker_sha256": "a3fbaca35324598d590559b759019c4ff9c2e947fa9a6646c53180a1762ab679",
+  "configurations": 5,
+  "exact_order": "I from actual exported jointly changing variables; finitecounts do not prove subULPclockorder",
+  "fixtures": [
+    {
+      "condition_curated_sha256": "533ddfa38cfeee628b79472e8065a50665a1512b869d2af98a246934f64ac91b",
+      "condition_derivation": "Only private originpath field removed; independent equation/order/budget unchanged.",
+      "configuration": "mixed_source-timer-1us",
+      "exact_fixture_hashes": {
+        "compile.va": "b3784722fc233cc7cf32ba43ee13abebbfa39b0676e5c653f79af840dc497ce7",
+        "dut.va": "bdef311b3a2ba89e3ac0f41f631c1da54a6aeb820adc952c19a8c8de77b2fedb",
+        "evas-coarse.json": "c8b6a9b5f036d24c5c63d3a94dc7c9273bd1a25693f8c9790fd748b50a7fec38",
+        "evas-fine.json": "08b98aef751f63971bef904764f1cbdc0fc8a9e7177179a7040483356a72fa0b",
+        "original.failedsource.va": "724f1d980480084a7f6608343148197afc0faa50e79dea16389a0b6ebd2f72ff",
+        "original.input.json": "c1ce3c0ff64ed43a2a4a01fe5894c905a6f2fae1bd6c3ec15f44cfa8b1e5cdc6",
+        "reference-output-plan.json": "8d98c51d549f81fb8095e2c5e60fd98f5a3d62bfaacd9a250170435ca139b490",
+        "tb.scs": "dfaee3fc435820336b4cb7200f58e861cb78e5ffb06a764ff2731267725abc86"
+      },
+      "new_timer_diagnostic": false,
+      "original_condition_sha256": "27ef4bd0f1f97c8deb9f2b11e15fc74c6a1af213a22ef4b5f02f569358c3905d",
+      "program": "mixed_source"
+    },
+    {
+      "condition_curated_sha256": "be695f96bf3402c0e8933a9e356bc0acafe25dac60bee81910c01534c4c5eb5c",
+      "condition_derivation": "Only private originpath field removed; independent equation/order/budget unchanged.",
+      "configuration": "hidden_loose-timer-1us",
+      "exact_fixture_hashes": {
+        "compile.va": "b3784722fc233cc7cf32ba43ee13abebbfa39b0676e5c653f79af840dc497ce7",
+        "dut.va": "11df0e01129bd39a229dda3df7cae76c0269f1e48ea52ea8819b09fce329ec6f",
+        "evas-coarse.json": "e5a2b9b2f47f608cbd74721e62d54eb61042e2cebb2d3fa02569876954e91876",
+        "evas-fine.json": "0975ff9e06d713c6f455ba870185d133a8a9acf0ba53d615156a0d80fcad2dc3",
+        "original.failedsource.va": "c011a483797dca8551911afc59533897c30a6ac9c7999fa03095f32e0a3fade3",
+        "original.input.json": "4b67232e0b78f74c2dfcfc8f43b91995ffdc5c35bae94b481e35cc1b53e93fe1",
+        "reference-output-plan.json": "6fb254b644dd34be9697ab27852bd76ca57afc0f41a118e565f46c308724d490",
+        "tb.scs": "6b3a4e95213b1cece7ba1123b024e99f52031ded305c49954a6c1546668f5a2c"
+      },
+      "new_timer_diagnostic": false,
+      "original_condition_sha256": "8f26bdb5b5f27260e5770e2628785d0eb84d6c5dfcbc4b19187046bd1236f806",
+      "program": "hidden_loose"
+    },
+    {
+      "condition_curated_sha256": "58c2b09bd1a2ca9c019586aa3350cb446281a7224d86f3bd9ddcf7600a61d501",
+      "condition_derivation": "Only private originpath field removed; independent equation/order/budget unchanged.",
+      "configuration": "hidden_tight-timer-1us",
+      "exact_fixture_hashes": {
+        "compile.va": "b3784722fc233cc7cf32ba43ee13abebbfa39b0676e5c653f79af840dc497ce7",
+        "dut.va": "4cc37ad6b83b6bc0180cc8e107e1ae8b9a56728214fb75d61d00206b289b9564",
+        "evas-coarse.json": "e5a2b9b2f47f608cbd74721e62d54eb61042e2cebb2d3fa02569876954e91876",
+        "evas-fine.json": "0975ff9e06d713c6f455ba870185d133a8a9acf0ba53d615156a0d80fcad2dc3",
+        "original.failedsource.va": "7403d725b2f86545a7762d9b3730ff3284c599eeccf88e29a980fd3b90adf4d2",
+        "original.input.json": "4b67232e0b78f74c2dfcfc8f43b91995ffdc5c35bae94b481e35cc1b53e93fe1",
+        "reference-output-plan.json": "6fb254b644dd34be9697ab27852bd76ca57afc0f41a118e565f46c308724d490",
+        "tb.scs": "6b3a4e95213b1cece7ba1123b024e99f52031ded305c49954a6c1546668f5a2c"
+      },
+      "new_timer_diagnostic": false,
+      "original_condition_sha256": "3fc2f84eb98bb3db2634af2eb559dea42a2e190a087b8f19fbf5e0bbc7f03793",
+      "program": "hidden_tight"
+    },
+    {
+      "condition_curated_sha256": "aba34036e9598ce495e96141a898a3ae4bd2762cc2dbaeef3cb3aa52cd2898f3",
+      "condition_derivation": "Only private originpath field removed; independent equation/order/budget unchanged.",
+      "configuration": "mixed_source-timer-1fs",
+      "exact_fixture_hashes": {
+        "compile.va": "b3784722fc233cc7cf32ba43ee13abebbfa39b0676e5c653f79af840dc497ce7",
+        "dut.va": "1ce556712eccc4e8261984e36f4718f2871f2dff127b2df8a26a1cf02e59d8fe",
+        "evas-coarse.json": "c8b6a9b5f036d24c5c63d3a94dc7c9273bd1a25693f8c9790fd748b50a7fec38",
+        "evas-fine.json": "08b98aef751f63971bef904764f1cbdc0fc8a9e7177179a7040483356a72fa0b",
+        "original.failedsource.va": "724f1d980480084a7f6608343148197afc0faa50e79dea16389a0b6ebd2f72ff",
+        "original.input.json": "c1ce3c0ff64ed43a2a4a01fe5894c905a6f2fae1bd6c3ec15f44cfa8b1e5cdc6",
+        "reference-output-plan.json": "8d98c51d549f81fb8095e2c5e60fd98f5a3d62bfaacd9a250170435ca139b490",
+        "tb.scs": "dfaee3fc435820336b4cb7200f58e861cb78e5ffb06a764ff2731267725abc86"
+      },
+      "new_timer_diagnostic": true,
+      "original_condition_sha256": "757db41d282fcd2bf665135d2e484432a81769d00ef8044a40197202c2c72d3b",
+      "program": "mixed_source"
+    },
+    {
+      "condition_curated_sha256": "df002bac4fe9390b584cdb0d2d443c26237896ab8a3bb35275212c8cb99942d2",
+      "condition_derivation": "Only private originpath field removed; independent equation/order/budget unchanged.",
+      "configuration": "hidden_loose-timer-1fs",
+      "exact_fixture_hashes": {
+        "compile.va": "b3784722fc233cc7cf32ba43ee13abebbfa39b0676e5c653f79af840dc497ce7",
+        "dut.va": "284cdac4ff7d8569c7af76e6eacc4fe77cffc39dd1086a7b2bf847951233604c",
+        "evas-coarse.json": "e5a2b9b2f47f608cbd74721e62d54eb61042e2cebb2d3fa02569876954e91876",
+        "evas-fine.json": "0975ff9e06d713c6f455ba870185d133a8a9acf0ba53d615156a0d80fcad2dc3",
+        "original.failedsource.va": "c011a483797dca8551911afc59533897c30a6ac9c7999fa03095f32e0a3fade3",
+        "original.input.json": "4b67232e0b78f74c2dfcfc8f43b91995ffdc5c35bae94b481e35cc1b53e93fe1",
+        "reference-output-plan.json": "6fb254b644dd34be9697ab27852bd76ca57afc0f41a118e565f46c308724d490",
+        "tb.scs": "6b3a4e95213b1cece7ba1123b024e99f52031ded305c49954a6c1546668f5a2c"
+      },
+      "new_timer_diagnostic": true,
+      "original_condition_sha256": "608bf8480bdb936734e050d71b298247032bc407fe6b020dc94c835ad051f15b",
+      "program": "hidden_loose"
+    }
+  ],
+  "new_timer_diagnostic_two": "mixedfinite numericP/eventI; hiddenloosefiniteF/eventF",
+  "no_new_tight_run": "Newtimerdiagnostic containsmixed/hiddenlooseonly; originaltightfailure retained inoriginaldenominator",
+  "original_lexical_compile_failure_denominator": 3,
+  "original_lexical_compile_failures": 3,
+  "original_normalized_three": "two finiteF plusonefatal runtimefailure; none removed",
+  "raw_availability": "local-only; raw PSF/logs, native requests/response bulk and binary products omitted. Hashes identify retained local originals; not public waveform reproducibility.",
+  "settings_reader_sha256": "244fe270b28465c5fe98c1b593e01e49628906680adaf5e096ad9d1d4474778d",
+  "thresholds": "Original frozen strict external1ns time; mixed1e-7V, hidden1e-6V. OriginalEVAS hidden solver1V is retained independently from physical evidence criterion.",
+  "reference_reuse": "Actual Spectre source, deck, observation plans, settings and independent checker are unchanged by the EVAS implementation repair. Their finite results and F/I are reused at the recorded identities. The extra EVAS phase probes use independent mathematical answers, not new matched Spectre samples."
+}

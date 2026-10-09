@@ -19,7 +19,7 @@ from test_contracts import wire_request
 class PolynomialContracts(unittest.TestCase):
     def test_cubic_known_roots_references_scales_and_sample_order(self):
         source = model('V(y,r)<+V(u,r)-c*pow(V(y,r),3)/(s*s);',
-                       'parameter real c=.5; parameter real s=1;')
+                       'parameter real c=0.5; parameter real s=1;')
         for c in (.125, .5, 2, 8):
             for scale, reference in ((.01, -.7), (1, 0), (10, 2)):
                 targets = [-3, -.5, 0, .25, 2, -3]
@@ -41,7 +41,7 @@ class PolynomialContracts(unittest.TestCase):
 
     def test_reverse_additive_contributions_and_parameter_exponent(self):
         source = model('V(y,r)<+V(u,r); V(r,y)<+c*pow(V(y,r),p);',
-                       'parameter real p=3; parameter real c=.5;')
+                       'parameter real p=3; parameter real c=0.5;')
         for power in (1,3,5,9):
             q=.75
             row=execute(source,[instance(parameters=dict(p=power))],samples=[[q+.5*q**power]])[0]
@@ -52,7 +52,7 @@ class PolynomialContracts(unittest.TestCase):
     def test_coupled_nonlinear_instances_and_declaration_order(self):
         # The symmetric Jacobian has diagonal >= 1 and off-diagonal .25.
         # Construct the RHS from q=(.5,-.25), not from an EVAS run.
-        source=model('V(y,r)<+bias-.25*V(u,r)-pow(V(y,r),3);', 'parameter real bias=0;')
+        source=model('V(y,r)<+bias-0.25*V(u,r)-pow(V(y,r),3);', 'parameter real bias=0;')
         a,b=.5,-.25
         instances=[instance('a',connections=dict(u='b',y='a',r='0'),parameters=dict(bias=a+a**3+.25*b)),
                    instance('b',connections=dict(u='a',y='b',r='0'),parameters=dict(bias=b+b**3+.25*a))]
@@ -149,7 +149,7 @@ class PolynomialContracts(unittest.TestCase):
         self.assertEqual(error.exception.detail['kind'],'residual_failure')
 
     def test_unsupported_exponents_divisors_and_calls_are_explicit(self):
-        for expression in ('pow(V(u,r),0)','pow(V(u,r),-1)','pow(V(u,r),.5)',
+        for expression in ('pow(V(u,r),0)','pow(V(u,r),-1)','pow(V(u,r),0.5)',
                            'pow(V(u,r),33)','pow(V(u,r),V(u,r))','1/V(u,r)',
                            'pow(V(u,r))','pow(V(u,r),2,3)'):
             with self.subTest(expression=expression),self.assertRaises(CompileError):

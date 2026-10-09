@@ -1,0 +1,87 @@
+{
+  "at": "2026-10-08T02:37:48.958522+00:00",
+  "status": "frozen_before_backend_execution",
+  "supersedes": "FREEZE-v1.json, before either backend was run; require one feasible event time across all observations",
+  "revision": "e2832326e330b0c2dd428a686d91d8ddde420f05",
+  "kernel_sha256": "f75de14c156cdb6093d6d4d34f211bceb76eb1212776afad6330791d7ac485b1",
+  "assets": {
+    "C1/case.json": {
+      "sha256": "00d6f76734def2237fdc578d9695335bd4159186851d620f8db74fb022dd8438",
+      "bytes": 3520
+    },
+    "C1/dut.va": {
+      "sha256": "47f25c781213ffa5bf7dc90484ef884f59641adfdd63c9286d9b9d652359b1da",
+      "bytes": 698
+    },
+    "C2/case.json": {
+      "sha256": "7e573f92a637e0a20b43d0cd5a986b16bcb5ee96fc298fc27024192f91e30ed4",
+      "bytes": 7204
+    },
+    "C2/dut.va": {
+      "sha256": "8bd0c957c19a8570acdece27ce7677796dc24c2e4e2c92e8c87c16f713235191",
+      "bytes": 761
+    },
+    "H1/case.json": {
+      "sha256": "44c11e462f14797e9ba15d5cc1f38bb6e333c7e86e67b63ea2591d98960f040b",
+      "bytes": 4871
+    },
+    "H1/dut.va": {
+      "sha256": "02c10096fca66f9e2f14c320685775cbb43cc5fb7dcd413b255a7644f52ffa19",
+      "bytes": 855
+    },
+    "M1/case.json": {
+      "sha256": "a25787384fae352e62ef83bf40afaab1addf45517c9d931baf9e2ce9c2257698",
+      "bytes": 4874
+    },
+    "M1/dut.va": {
+      "sha256": "3b4ca8fa5a16c39c9e54aaefef638f2e7e7784a6fddb8cbb5f01d76642b833d8",
+      "bytes": 749
+    },
+    "N1/case.json": {
+      "sha256": "b75a55cbd7cd90dcaab99fb639a2c5a847119722b6beb8306ac1c160d0349fb2",
+      "bytes": 3116
+    },
+    "N1/dut.va": {
+      "sha256": "44af44d55c378d4ef3b4816318f820afa1f13bc0c74dd622d45509d4899dee27",
+      "bytes": 825
+    },
+    "README.md": {
+      "sha256": "7d1f7c058e8cd2213f3c5ac9b11c787e3f4288fb37713ea9dada720674a6b8de",
+      "bytes": 7238
+    },
+    "T1/case.json": {
+      "sha256": "63e34e89d99f9b43d5542beb36a941caf1836d46b70ecf0148be75441005e68c",
+      "bytes": 4864
+    },
+    "T1/dut.va": {
+      "sha256": "dc568b8d80194568ec17a6623215683d154df9fe5519b48ecbaa370346356236",
+      "bytes": 738
+    },
+    "T2/case.json": {
+      "sha256": "fef1fc3ab7c3c903a53b207dd53a4920365f12f28c3d4512da18e9fd5dd18e8c",
+      "bytes": 4229
+    },
+    "T2/dut.va": {
+      "sha256": "cfcf90535777f499b82496c9ea263a88b4e609818e2088d4a02bf0c7cfbba278",
+      "bytes": 753
+    },
+    "checker.py": {
+      "sha256": "cb65706f3c416499ee88de43f97e3cb3c2160047c3800630654cb97a960997a7",
+      "bytes": 9976
+    },
+    "test_checker.py": {
+      "sha256": "93bc691893685462da8f3a76c89f11c9b7dc3815cceed6e60907032aee9262aa",
+      "bytes": 7631
+    }
+  },
+  "calibration_sha256": "a4d3b402ab2fba5d070b2e1eaa571f2786dea99426dbabd59e7e78cdb70f29c4",
+  "cases": [
+    "T1",
+    "T2",
+    "C1",
+    "C2",
+    "M1",
+    "H1",
+    "N1"
+  ]
+}

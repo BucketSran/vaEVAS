@@ -1,0 +1,582 @@
+[
+  {
+    "EVAS_candidate_status": "not_run_pending_freeze",
+    "accepted_steps": 148,
+    "actual_counter_changes": [
+      {
+        "changes": {
+          "n": {
+            "after": "1",
+            "before": "0"
+          }
+        },
+        "time_token": "0.099999998000000007"
+      },
+      {
+        "changes": {
+          "j": {
+            "after": "1",
+            "before": "0"
+          },
+          "n": {
+            "after": "2",
+            "before": "1"
+          }
+        },
+        "time_token": "0.29999999799999999"
+      },
+      {
+        "changes": {
+          "k": {
+            "after": "1",
+            "before": "0"
+          }
+        },
+        "time_token": "0.29999999999999999"
+      }
+    ],
+    "actual_effective_settings": {
+      "iabstol_A": {
+        "line": 130,
+        "raw": "    abstol(I) = 100 aA",
+        "scope": "transient:tran",
+        "value": 1.0000000000000001e-16
+      },
+      "maxstep_s": {
+        "line": 124,
+        "raw": "    maxstep = 12 ms",
+        "scope": "transient:tran",
+        "value": 0.012
+      },
+      "method": {
+        "line": 135,
+        "raw": "    method = traponly",
+        "scope": "transient:tran",
+        "value": "traponly"
+      },
+      "reltol": {
+        "line": 128,
+        "raw": "    reltol = 100e-12",
+        "scope": "transient:tran",
+        "value": 1e-10
+      },
+      "stop_s": {
+        "line": 122,
+        "raw": "    stop = 490 ms",
+        "scope": "transient:tran",
+        "value": 0.49
+      },
+      "vabstol_V": {
+        "line": 129,
+        "raw": "    abstol(V) = 1 pV",
+        "scope": "transient:tran",
+        "value": 1e-12
+      }
+    },
+    "actual_event_brackets": {
+      "j": [
+        {
+          "lower": "14400000000000007/50000000000000000",
+          "nominal": "1351079888211149/4503599627370496",
+          "upper": "29999999799999999/100000000000000000"
+        }
+      ],
+      "k": [
+        {
+          "lower": "599999999/2000000000",
+          "nominal": "19471113219505603967277331424215/64903710731685344455911278641152",
+          "upper": "29999999999999999/100000000000000000"
+        }
+      ],
+      "n": [
+        {
+          "lower": "23999999999999997/250000000000000000",
+          "nominal": "3602879701896397/36028797018963968",
+          "upper": "99999998000000007/1000000000000000000"
+        },
+        {
+          "lower": "14400000000000007/50000000000000000",
+          "nominal": "10808639105689191/36028797018963968",
+          "upper": "29999999799999999/100000000000000000"
+        }
+      ]
+    },
+    "actual_named_signals": [
+      "Xdut:j",
+      "Xdut:k",
+      "Xdut:n",
+      "time",
+      "u",
+      "y"
+    ],
+    "actual_rows": 50,
+    "actual_settings_status": "P",
+    "complete_reference_status": "analyzed",
+    "configuration": "mixed_source-timer-1us",
+    "deck_sha256": "dfaee3fc435820336b4cb7200f58e861cb78e5ffb06a764ff2731267725abc86",
+    "execution_status": "waveform_available",
+    "fatal_SPECTRE_18_segmentation_observed": false,
+    "final_counters": {
+      "j": "1",
+      "k": "1",
+      "n": "2"
+    },
+    "independent_actual_log_PSF_settings_status": "P",
+    "independent_record_sha256": "e35cbc2555e05c0379641d535a0f5048e7f221a9133e9c0c60179e4a79b4f62b",
+    "last_time_token": "0.48999999999999999",
+    "original_orchestrator_settings_receipt_status": "I",
+    "program": "mixed_source",
+    "raw_execution_result_sha256": "48052e14c1fbdb23244a2317845418f55965381d033697b7f33dac5edcbbb1be",
+    "raw_token_domain_exterior": [],
+    "reference_event_status": "F",
+    "reference_exact_order_status": "I",
+    "reference_failures": [],
+    "reference_finite_event_status": "F",
+    "reference_finite_numeric_status": "F",
+    "reference_max_errors_V": {
+      "u": 4.222044604925032e-17,
+      "y": 2.0
+    },
+    "reference_numeric_status": "F",
+    "reference_qualification_status": "I",
+    "rows_equal_steps_plus_initial": false,
+    "source_sha256": "bdef311b3a2ba89e3ac0f41f631c1da54a6aeb820adc952c19a8c8de77b2fedb",
+    "timer_diagnostic": false
+  },
+  {
+    "EVAS_candidate_status": "not_run_pending_freeze",
+    "accepted_steps": 142,
+    "actual_counter_changes": [
+      {
+        "changes": {
+          "n": {
+            "after": "1",
+            "before": "0"
+          }
+        },
+        "time_token": "0.099999998000000007"
+      },
+      {
+        "changes": {
+          "h": {
+            "after": "1",
+            "before": "0"
+          },
+          "m": {
+            "after": "1",
+            "before": "0"
+          },
+          "n": {
+            "after": "2",
+            "before": "1"
+          },
+          "q": {
+            "after": "1",
+            "before": "0"
+          }
+        },
+        "time_token": "0.29999999799999999"
+      }
+    ],
+    "actual_effective_settings": {
+      "iabstol_A": {
+        "line": 130,
+        "raw": "    abstol(I) = 100 aA",
+        "scope": "transient:tran",
+        "value": 1.0000000000000001e-16
+      },
+      "maxstep_s": {
+        "line": 124,
+        "raw": "    maxstep = 12 ms",
+        "scope": "transient:tran",
+        "value": 0.012
+      },
+      "method": {
+        "line": 135,
+        "raw": "    method = traponly",
+        "scope": "transient:tran",
+        "value": "traponly"
+      },
+      "reltol": {
+        "line": 128,
+        "raw": "    reltol = 100e-12",
+        "scope": "transient:tran",
+        "value": 1e-10
+      },
+      "stop_s": {
+        "line": 122,
+        "raw": "    stop = 310 ms",
+        "scope": "transient:tran",
+        "value": 0.31
+      },
+      "vabstol_V": {
+        "line": 129,
+        "raw": "    abstol(V) = 1 pV",
+        "scope": "transient:tran",
+        "value": 1e-12
+      }
+    },
+    "actual_event_brackets": {
+      "h": [
+        {
+          "lower": "14400000000000007/50000000000000000",
+          "nominal": "389422264390112095055139650703595/1298074214633706907132624082305024",
+          "upper": "29999999799999999/100000000000000000"
+        }
+      ],
+      "m": [
+        {
+          "lower": "14400000000000007/50000000000000000",
+          "nominal": "1351079888211149/4503599627370496",
+          "upper": "29999999799999999/100000000000000000"
+        }
+      ],
+      "n": [
+        {
+          "lower": "23999999999999997/250000000000000000",
+          "nominal": "3602879701896397/36028797018963968",
+          "upper": "99999998000000007/1000000000000000000"
+        },
+        {
+          "lower": "14400000000000007/50000000000000000",
+          "nominal": "10808639105689191/36028797018963968",
+          "upper": "29999999799999999/100000000000000000"
+        }
+      ],
+      "q": [
+        {
+          "lower": "14400000000000007/50000000000000000",
+          "nominal": "10808639105689191/36028797018963968",
+          "upper": "29999999799999999/100000000000000000"
+        }
+      ]
+    },
+    "actual_named_signals": [
+      "Xdut.z",
+      "Xdut:h",
+      "Xdut:m",
+      "Xdut:n",
+      "Xdut:q",
+      "time",
+      "u",
+      "y"
+    ],
+    "actual_rows": 35,
+    "actual_settings_status": "P",
+    "complete_reference_status": "analyzed",
+    "configuration": "hidden_loose-timer-1us",
+    "deck_sha256": "6b3a4e95213b1cece7ba1123b024e99f52031ded305c49954a6c1546668f5a2c",
+    "execution_status": "waveform_available",
+    "fatal_SPECTRE_18_segmentation_observed": false,
+    "final_counters": {
+      "h": "1",
+      "m": "1",
+      "n": "2",
+      "q": "1"
+    },
+    "independent_actual_log_PSF_settings_status": "P",
+    "independent_record_sha256": "a5e21d57c8a0d3e18c7a981f77199d343d42ca4612bc64a8d7c2491a727625e8",
+    "last_time_token": "0.31",
+    "original_orchestrator_settings_receipt_status": "I",
+    "program": "hidden_loose",
+    "raw_execution_result_sha256": "b6b052973af1ab016aa0c10e63cdd87d36ee1d806c299acfbef6b8a6457e9acc",
+    "raw_token_domain_exterior": [
+      {
+        "index": 34,
+        "numeric_projection_in_domain": true,
+        "time_token": "0.31"
+      }
+    ],
+    "reference_event_status": "F",
+    "reference_exact_order_status": "I",
+    "reference_failures": [],
+    "reference_finite_event_status": "F",
+    "reference_finite_numeric_status": "F",
+    "reference_max_errors_V": {
+      "u": 3e-17,
+      "y": 1.0,
+      "z": 9.989928447285112e-07
+    },
+    "reference_numeric_status": "F",
+    "reference_qualification_status": "I",
+    "rows_equal_steps_plus_initial": false,
+    "source_sha256": "11df0e01129bd39a229dda3df7cae76c0269f1e48ea52ea8819b09fce329ec6f",
+    "timer_diagnostic": false
+  },
+  {
+    "EVAS_candidate_status": "not_run_pending_freeze",
+    "EVAS_specific_rejection_obligation": "Still pending: actual Spectre runtime failure cannot prove EVAS cross_ttol_unrepresentable rejection.",
+    "actual_settings_status": "I",
+    "complete_reference_status": "F",
+    "configuration": "hidden_tight-timer-1us",
+    "deck_sha256": "6b3a4e95213b1cece7ba1123b024e99f52031ded305c49954a6c1546668f5a2c",
+    "execution_status": "execution_failed",
+    "fatal_SPECTRE_18_segmentation_observed": true,
+    "independent_actual_log_PSF_settings_status": "I",
+    "original_orchestrator_settings_receipt_status": "not_recorded",
+    "program": "hidden_tight",
+    "raw_execution_result_sha256": "ccb8733dec06cfb6d9cf7518e27d72dc288ce621cf052072c8f00bb559ff8e3b",
+    "reason": "Actual fatal segmentation fault; partial PSF is not treated as complete finite numerical/event evidence.",
+    "reference_event_status": "I",
+    "reference_exact_order_status": "I",
+    "reference_numeric_status": "I",
+    "reference_qualification_status": "I",
+    "source_sha256": "4cc37ad6b83b6bc0180cc8e107e1ae8b9a56728214fb75d61d00206b289b9564",
+    "timer_diagnostic": false
+  },
+  {
+    "EVAS_candidate_status": "not_run_pending_freeze",
+    "accepted_steps": 151,
+    "actual_counter_changes": [
+      {
+        "changes": {
+          "n": {
+            "after": "1",
+            "before": "0"
+          }
+        },
+        "time_token": "0.10000000050000001"
+      },
+      {
+        "changes": {
+          "j": {
+            "after": "1",
+            "before": "0"
+          },
+          "k": {
+            "after": "1",
+            "before": "0"
+          },
+          "n": {
+            "after": "2",
+            "before": "1"
+          }
+        },
+        "time_token": "0.29999999999999999"
+      }
+    ],
+    "actual_effective_settings": {
+      "iabstol_A": {
+        "line": 130,
+        "raw": "    abstol(I) = 100 aA",
+        "scope": "transient:tran",
+        "value": 1.0000000000000001e-16
+      },
+      "maxstep_s": {
+        "line": 124,
+        "raw": "    maxstep = 12 ms",
+        "scope": "transient:tran",
+        "value": 0.012
+      },
+      "method": {
+        "line": 135,
+        "raw": "    method = traponly",
+        "scope": "transient:tran",
+        "value": "traponly"
+      },
+      "reltol": {
+        "line": 128,
+        "raw": "    reltol = 100e-12",
+        "scope": "transient:tran",
+        "value": 1e-10
+      },
+      "stop_s": {
+        "line": 122,
+        "raw": "    stop = 490 ms",
+        "scope": "transient:tran",
+        "value": 0.49
+      },
+      "vabstol_V": {
+        "line": 129,
+        "raw": "    abstol(V) = 1 pV",
+        "scope": "transient:tran",
+        "value": 1e-12
+      }
+    },
+    "actual_event_brackets": {
+      "j": [
+        {
+          "lower": "599999999/2000000000",
+          "nominal": "1351079888211149/4503599627370496",
+          "upper": "29999999999999999/100000000000000000"
+        }
+      ],
+      "k": [
+        {
+          "lower": "599999999/2000000000",
+          "nominal": "19471113219505603967277331424215/64903710731685344455911278641152",
+          "upper": "29999999999999999/100000000000000000"
+        }
+      ],
+      "n": [
+        {
+          "lower": "49999999750000003/500000000000000000",
+          "nominal": "3602879701896397/36028797018963968",
+          "upper": "10000000050000001/100000000000000000"
+        },
+        {
+          "lower": "599999999/2000000000",
+          "nominal": "10808639105689191/36028797018963968",
+          "upper": "29999999999999999/100000000000000000"
+        }
+      ]
+    },
+    "actual_named_signals": [
+      "Xdut:j",
+      "Xdut:k",
+      "Xdut:n",
+      "time",
+      "u",
+      "y"
+    ],
+    "actual_rows": 50,
+    "actual_settings_status": "P",
+    "complete_reference_status": "analyzed",
+    "configuration": "mixed_source-timer-1fs",
+    "deck_sha256": "dfaee3fc435820336b4cb7200f58e861cb78e5ffb06a764ff2731267725abc86",
+    "execution_status": "waveform_available",
+    "fatal_SPECTRE_18_segmentation_observed": false,
+    "final_counters": {
+      "j": "1",
+      "k": "1",
+      "n": "2"
+    },
+    "independent_actual_log_PSF_settings_status": "P",
+    "independent_record_sha256": "81c843891394197b4576cffdeb446a6e45f31f28aecd63d76922b28bd3a36fb3",
+    "last_time_token": "0.48999999999999999",
+    "original_orchestrator_settings_receipt_status": "I",
+    "program": "mixed_source",
+    "raw_execution_result_sha256": "efc547a0ff62ef614baa4c8947afa1599615796495a53377c6a2e7f3b817c3e1",
+    "raw_token_domain_exterior": [],
+    "reference_event_status": "I",
+    "reference_exact_order_status": "I",
+    "reference_failures": [],
+    "reference_finite_event_status": "I",
+    "reference_finite_numeric_status": "P",
+    "reference_max_errors_V": {
+      "u": 4.222044604925032e-17,
+      "y": 0.0
+    },
+    "reference_numeric_status": "I",
+    "reference_qualification_status": "I",
+    "rows_equal_steps_plus_initial": false,
+    "source_sha256": "1ce556712eccc4e8261984e36f4718f2871f2dff127b2df8a26a1cf02e59d8fe",
+    "timer_diagnostic": true
+  },
+  {
+    "EVAS_candidate_status": "not_run_pending_freeze",
+    "accepted_steps": 132,
+    "actual_counter_changes": [
+      {
+        "changes": {
+          "n": {
+            "after": "1",
+            "before": "0"
+          }
+        },
+        "time_token": "0.10000000050000001"
+      }
+    ],
+    "actual_effective_settings": {
+      "iabstol_A": {
+        "line": 130,
+        "raw": "    abstol(I) = 100 aA",
+        "scope": "transient:tran",
+        "value": 1.0000000000000001e-16
+      },
+      "maxstep_s": {
+        "line": 124,
+        "raw": "    maxstep = 12 ms",
+        "scope": "transient:tran",
+        "value": 0.012
+      },
+      "method": {
+        "line": 135,
+        "raw": "    method = traponly",
+        "scope": "transient:tran",
+        "value": "traponly"
+      },
+      "reltol": {
+        "line": 128,
+        "raw": "    reltol = 100e-12",
+        "scope": "transient:tran",
+        "value": 1e-10
+      },
+      "stop_s": {
+        "line": 122,
+        "raw": "    stop = 310 ms",
+        "scope": "transient:tran",
+        "value": 0.31
+      },
+      "vabstol_V": {
+        "line": 129,
+        "raw": "    abstol(V) = 1 pV",
+        "scope": "transient:tran",
+        "value": 1e-12
+      }
+    },
+    "actual_event_brackets": {
+      "h": [],
+      "m": [],
+      "n": [
+        {
+          "lower": "49999999750000003/500000000000000000",
+          "nominal": "3602879701896397/36028797018963968",
+          "upper": "10000000050000001/100000000000000000"
+        }
+      ],
+      "q": []
+    },
+    "actual_named_signals": [
+      "Xdut.z",
+      "Xdut:h",
+      "Xdut:m",
+      "Xdut:n",
+      "Xdut:q",
+      "time",
+      "u",
+      "y"
+    ],
+    "actual_rows": 35,
+    "actual_settings_status": "P",
+    "complete_reference_status": "analyzed",
+    "configuration": "hidden_loose-timer-1fs",
+    "deck_sha256": "6b3a4e95213b1cece7ba1123b024e99f52031ded305c49954a6c1546668f5a2c",
+    "execution_status": "waveform_available",
+    "fatal_SPECTRE_18_segmentation_observed": false,
+    "final_counters": {
+      "h": "0",
+      "m": "0",
+      "n": "1",
+      "q": "0"
+    },
+    "independent_actual_log_PSF_settings_status": "P",
+    "independent_record_sha256": "2481e1e5a7356d583d0b829f1f4c5da29bc808707597816de809d7191c8f5ad2",
+    "last_time_token": "0.31",
+    "original_orchestrator_settings_receipt_status": "I",
+    "program": "hidden_loose",
+    "raw_execution_result_sha256": "e7173df90d5be699bff14b6395afaffab0257f6224e0ae55ab13890213a111f3",
+    "raw_token_domain_exterior": [
+      {
+        "index": 34,
+        "numeric_projection_in_domain": true,
+        "time_token": "0.31"
+      }
+    ],
+    "reference_event_status": "F",
+    "reference_exact_order_status": "I",
+    "reference_failures": [],
+    "reference_finite_event_status": "F",
+    "reference_finite_numeric_status": "F",
+    "reference_max_errors_V": {
+      "u": 3e-17,
+      "y": 1.0,
+      "z": 0.009999999999999983
+    },
+    "reference_numeric_status": "F",
+    "reference_qualification_status": "I",
+    "rows_equal_steps_plus_initial": false,
+    "source_sha256": "284cdac4ff7d8569c7af76e6eacc4fe77cffc39dd1086a7b2bf847951233604c",
+    "timer_diagnostic": true
+  }
+]

@@ -1,4 +1,5 @@
 """Distribution tags must describe the actual shipped executable."""
+import ast
 import hashlib
 import json
 from pathlib import Path
@@ -9,7 +10,26 @@ import unittest
 import zipfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from check_installed_evas import check_wheel_payload
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'evas/src'))
+from check_installed_evas import CHECK, check_wheel_payload
+
+
+class InstalledSourceAdmission(unittest.TestCase):
+    def test_actual_installed_check_sources_compile_before_kernel_checks(self):
+        # Read the actual authored CHECK fixtures; do not execute its installed
+        # metadata assertions or normalize source on the way to compilation.
+        from evas import Instance, KernelError, compile_sources, solve
+        sources = [node.value.value for node in ast.parse(CHECK).body
+                   if isinstance(node, ast.Assign)
+                   and any(isinstance(t, ast.Name) and t.id == 'source' for t in node.targets)]
+        self.assertEqual(len(sources), 2)
+        static = compile_sources({'m.va': sources[0]}, [Instance('dut','m',{'u':'u','y':'y'})])
+        integral = compile_sources({'integral.va': sources[1]}, [Instance('dut','m',{'y':'y'})])
+        self.assertEqual(len(integral.operators), 1)
+        with tempfile.TemporaryDirectory() as directory:
+            missing = Path(directory)/'absent-kernel'
+            with self.assertRaisesRegex(KernelError, 'absent-kernel'):
+                solve(static, ['u'], [[0]], kernel=missing)
 
 
 class InstalledWheelTags(unittest.TestCase):

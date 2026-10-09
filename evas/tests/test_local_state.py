@@ -25,19 +25,19 @@ def values(result, node="y"):
 
 class LocalStateContracts(unittest.TestCase):
     def test_local_ramp_and_timer_state_have_independent_answer(self):
-        program = compile_local("""@(initial_step) q=1; @(timer(.5)) q=2;
+        program = compile_local("""@(initial_step) q=1; @(timer(0.5)) q=2;
                                 a=V(u,r); V(y,r)<+a+q;""")
         self.assertEqual(values(run(program)), [1, 1.25, 2.5, 2.75, 3])
         self.assertEqual([(state.name, state.kind) for state in program.states], [("q", "real")])
 
     def test_program_order_captures_each_contribution_before_reassignment(self):
-        program = compile_local("""@(initial_step) q=1; @(timer(.5)) q=2;
+        program = compile_local("""@(initial_step) q=1; @(timer(0.5)) q=2;
                                 a=V(u,r); V(y,r)<+a+q;
                                 a=2*a; V(y,r)<+a;""")
         self.assertEqual(values(run(program)), [1, 1.75, 3.5, 4.25, 5])
 
     def test_input_reference_and_parameters_are_instance_local(self):
-        source = model("""@(initial_step) q=OFFSET; @(timer(.5)) q=OFFSET+1;
+        source = model("""@(initial_step) q=OFFSET; @(timer(0.5)) q=OFFSET+1;
                            a=GAIN*V(u,r); V(y,r)<+a+q;""",
                        "real a,q; parameter real GAIN=1, OFFSET=1;")
         instances = [instance("first", connections=dict(u="u", y="first", r="0")),
@@ -53,17 +53,17 @@ class LocalStateContracts(unittest.TestCase):
 
     def test_event_reads_direct_input_and_current_persistent_state(self):
         program = compile_local("""@(initial_step) q=1;
-                                @(timer(.5)) begin q=V(u,r); q=q+1; end
+                                @(timer(0.5)) begin q=V(u,r); q=q+1; end
                                 a=V(u,r); V(y,r)<+a+q;""")
         self.assertEqual(values(run(program)), [1, 1.25, 2, 2.25, 2.5])
 
     def test_event_cannot_capture_an_analog_local_at_an_ambiguous_sequence(self):
-        for body in ("a=V(u,r); @(timer(.5)) q=a;",
-                     "@(timer(.5)) q=a; a=V(u,r);",
-                     "a=V(u,r); @(cross(a-.5,1)) q=2;",
-                     "a=.5; @(timer(a)) q=2;",
-                     "a=V(u,r); @(timer(.5)) if(a>0) q=2;",
-                     "a=.125; @(timer(.5,0,a)) q=2;"):
+        for body in ("a=V(u,r); @(timer(0.5)) q=a;",
+                     "@(timer(0.5)) q=a; a=V(u,r);",
+                     "a=V(u,r); @(cross(a-0.5,1)) q=2;",
+                     "a=0.5; @(timer(a)) q=2;",
+                     "a=V(u,r); @(timer(0.5)) if(a>0) q=2;",
+                     "a=0.125; @(timer(0.5,0,a)) q=2;"):
             with self.subTest(body=body), self.assertRaisesRegex(CompileError, "event expressions cannot read ordinary analog local") as failure:
                 compile_local("@(initial_step) q=1; " + body + " V(y,r)<+q;")
             self.assertEqual(failure.exception.diagnostic["code"], "unsupported_local_event")
@@ -75,46 +75,49 @@ class LocalStateContracts(unittest.TestCase):
         for body in ("V(y,r)<+a+q; a=V(u,r);", "a=a+1; V(y,r)<+a+q;",
                      "V(y,r)<+a+q;"):
             with self.subTest(body=body), self.assertRaisesRegex(CompileError, "not assigned before use"):
-                compile_local("@(initial_step) q=1; @(timer(.5)) q=2; " + body)
+                compile_local("@(initial_step) q=1; @(timer(0.5)) q=2; " + body)
 
     def test_local_event_errors_keep_available_source_location(self):
-        for event in ("@(timer(.5)) q=a;", "@(cross(a-.5,1)) q=2;",
-                      "@(timer(.5)) if(a>0) q=2;", "@(timer(.5,0,a)) q=2;"):
+        for event in ("@(timer(0.5)) q=a;", "@(cross(a-0.5,1)) q=2;",
+                      "@(timer(0.5)) if(a>0) q=2;", "@(timer(0.5,0,a)) q=2;"):
             with self.subTest(event=event), self.assertRaises(CompileError) as failure:
                 compile_local("@(initial_step) q=1;\na=V(u,r);\n" + event + "\nV(y,r)<+q;")
             diagnostic=failure.exception.diagnostic
             self.assertEqual(diagnostic['code'],'unsupported_local_event')
             self.assertEqual(diagnostic['location']['source'],'local-state.va')
-            self.assertEqual(diagnostic['location']['line'],3)
+            self.assertEqual(diagnostic['location']['line'],4)
             self.assertGreater(diagnostic['location']['column'],0)
 
     def test_state_predicate_and_constant_setting_dependency_are_explicit(self):
-        for event in ("@(timer(.5)) if(q>0) q=2;", "@(timer(.5,0,q)) q=2;",
-                      "@(cross(V(u,r)-.5,q)) q=2;"):
+        for event in ("@(timer(0.5)) if(q>0) q=2;", "@(timer(0.5,0,q)) q=2;",
+                      "@(cross(V(u,r)-0.5,q)) q=2;"):
             with self.subTest(event=event), self.assertRaises(CompileError) as failure:
                 compile_local("@(initial_step) q=1;\n" + event + "\na=V(u,r); V(y,r)<+a+q;")
             diagnostic=failure.exception.diagnostic
             self.assertEqual(diagnostic['code'],'unsupported_event_state_dependency')
             self.assertEqual(diagnostic['category'],'unsupported')
             self.assertIn('persistent state',str(failure.exception))
-            self.assertEqual(diagnostic['location']['line'],2)
+            self.assertEqual(diagnostic['location']['line'],3)
 
     def test_ordinary_input_if_compiles_but_event_transient_stays_unsupported(self):
-        program=compile_local("""@(initial_step) q=1; @(timer(.5)) q=2;
-                                if(V(u,r)>.5) a=1; else a=2; V(y,r)<+a+q;""")
+        program=compile_local("""@(initial_step) q=1; @(timer(0.5)) q=2;
+                                if(V(u,r)>0.5) a=1; else a=2; V(y,r)<+a+q;""")
         with self.assertRaises(KernelError) as failure:
             run(program)
         self.assertEqual(failure.exception.detail['kind'],'unsupported_transient')
-        self.assertIn('ordinary analog conditionals',str(failure.exception))
+        # The integrated continuous-select gate rejects this model before the older conditional gate.
+        self.assertEqual(failure.exception.detail['message'],
+                         'continuous select requires a finite source-only affine clamp; '
+                         'event/state/internal feedback and discontinuous selects are unsupported')
 
     def test_unread_unwritten_real_declaration_requires_no_initial_state(self):
-        program=compile_local("@(initial_step) q=1; @(timer(.5)) q=2; V(y,r)<+q;",'real q,dead;')
+        program=compile_local("@(initial_step) q=1; @(timer(0.5)) q=2; V(y,r)<+q;",'real q,dead;')
         self.assertEqual([state.name for state in program.states],['q'])
         self.assertEqual(values(run(program)),[1,1,2,2,2])
 
     def test_writer_roles_are_not_inferred_from_initialization_alone(self):
-        for body in ("@(initial_step) q=1; @(timer(.5)) a=2; V(y,r)<+q;",
-                     "@(initial_step) q=1; @(timer(.5)) if(V(u,r)>0) a=2; V(y,r)<+q;"):
+        for body in ("@(initial_step) q=1; @(timer(0.5)) a=2; V(y,r)<+q;",
+                     "@(initial_step) q=1; @(timer(0.5)) if(V(u,r)>0) a=2; V(y,r)<+q;"):
             with self.subTest(body=body), self.assertRaisesRegex(CompileError, "every state requires one initial_step"):
                 compile_local(body)
         with self.assertRaisesRegex(CompileError, "assignment target must be a local real"):
@@ -122,14 +125,14 @@ class LocalStateContracts(unittest.TestCase):
         with self.assertRaisesRegex(CompileError, "only support real variables"):
             compile_local("@(initial_step) q=1; a=1; V(y,r)<+a+q;", "integer a; real q;")
         with self.assertRaises(CompileError):
-            compile_local("@(initial_step) q=1; @(timer(.5)) if(q>0) q=2; a=V(u,r); V(y,r)<+a+q;")
+            compile_local("@(initial_step) q=1; @(timer(0.5)) if(q>0) q=2; a=V(u,r); V(y,r)<+a+q;")
         with self.assertRaisesRegex(CompileError, "predicates must be affine"):
             compile_local("@(initial_step) q=1; if(q>0) a=1; else a=2; V(y,r)<+a+q;")
 
     def test_integrator_histories_belong_to_call_sites_not_reassigned_local(self):
-        program = compile_local("""@(initial_step) q=1; @(timer(.5)) q=2;
+        program = compile_local("""@(initial_step) q=1; @(timer(0.5)) q=2;
                                 a=idt(1,0); V(y,r)<+a+q;
-                                a=idt(2,.25); V(y,r)<+a;""")
+                                a=idt(2,0.25); V(y,r)<+a;""")
         self.assertEqual(len(program.operators), 2)
         self.assertNotEqual(program.operators[0].origin, program.operators[1].origin)
         sparse = run(program, (0, .5, 1))
@@ -140,7 +143,7 @@ class LocalStateContracts(unittest.TestCase):
         self.assertEqual(dense["transient"]["events"], sparse["transient"]["events"])
 
     def test_integrator_call_sites_are_isolated_across_instances(self):
-        source = model("""@(initial_step) q=1; @(timer(.5)) q=2;
+        source = model("""@(initial_step) q=1; @(timer(0.5)) q=2;
                            a=idt(GAIN,0); V(y,r)<+a+q;""",
                        "real a,q; parameter real GAIN=1;")
         program = compile_sources({"local-state.va": source}, [

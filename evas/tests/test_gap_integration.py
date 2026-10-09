@@ -27,7 +27,7 @@ class GapIntegration(unittest.TestCase):
             V(y,r) <+ local;
             local = local + 1;
             V(y,r) <+ local;
-            V(filtered,r) <+ laplace_nd(V(u,r), '{1}, '{1,.5});
+            V(filtered,r) <+ laplace_nd(V(u,r), '{1}, '{1,0.5});
         """, "real local;", ports="u,y,filtered,r",
             directions="input u; output y,filtered; inout r;")
         program = compile_sources({"snapshots.va": source}, [Instance("dut", "m",
@@ -43,8 +43,8 @@ class GapIntegration(unittest.TestCase):
             @(initial_step) reset_flag=0;
             @(timer(1,0,1e-8)) reset_flag=1;
             @(timer(2,0,1e-8)) reset_flag=0;
-            V(y,r) <+ idt(V(u,r),.25,reset_flag);
-            V(q,r) <+ transition(reset_flag,0,.25,.25);
+            V(y,r) <+ idt(V(u,r),0.25,reset_flag);
+            V(q,r) <+ transition(reset_flag,0,0.25,0.25);
         """, "integer reset_flag;", ports="u,y,q,r",
             directions="input u; output y,q; inout r;")
         program = compile_sources({"reset-transition.va": source}, [Instance("dut", "m",
@@ -69,11 +69,11 @@ class GapIntegration(unittest.TestCase):
 
     def test_phase_aliases_and_filter_preserve_independent_histories(self):
         source = "`include \"constants.vams\"\n"+model("""
-            accumulated = idt(V(u,r),.125);
-            phase = idtmod(V(u,r),.125,1,0);
+            accumulated = idt(V(u,r),0.125);
+            phase = idtmod(V(u,r),0.125,1,0);
             V(y,r) <+ sin(2*`M_PI*phase);
             V(total,r) <+ accumulated;
-            V(filtered,r) <+ laplace_nd(V(u,r), '{1}, '{1,.5});
+            V(filtered,r) <+ laplace_nd(V(u,r), '{1}, '{1,0.5});
         """, "real accumulated,phase;", ports="u,y,total,filtered,r",
             directions="input u; output y,total,filtered; inout r;")
         program = compile_sources({"phase-filter.va": source}, [Instance("dut", "m",
@@ -91,7 +91,7 @@ class GapIntegration(unittest.TestCase):
         source = model("""
             @(initial_step) n=0;
             @(timer(1,0,1e-8)) n=n+1;
-            V(y,r) <+ V(u,r)-.5*pow(V(y,r),3)+n;
+            V(y,r) <+ V(u,r)-0.5*pow(V(y,r),3)+n;
         """, "integer n;")
         program = compile_sources({"nonlinear-state.va": source},
                                   [Instance("dut","m",dict(u="u",y="y",r="0"))])
@@ -124,7 +124,7 @@ class GapIntegration(unittest.TestCase):
             self.assertAlmostEqual(row["y"],0,delta=1e-12)
 
     def test_select_with_dynamic_operator_keeps_documented_rejection(self):
-        source=model("tmp=V(u,r); if(V(u,r)>.5) tmp=1; else tmp=0; V(y,r)<+tmp+idt(V(u,r),0);","real tmp;")
+        source=model("tmp=V(u,r); if(V(u,r)>0.5) tmp=1; else tmp=0; V(y,r)<+tmp+idt(V(u,r),0);","real tmp;")
         program=compile_sources({"select-idt.va":source},[Instance("dut","m",dict(u="u",y="y",r="0"))])
         with self.assertRaisesRegex(KernelError,"unsupported_transient"):
             rows(program,{"u":[[0,0],[1,1]]},[0,1],max_step=1)
@@ -145,7 +145,7 @@ class GapIntegration(unittest.TestCase):
         for extra in ("", "if(V(u,r)>-2) begin end",
                       "unused=0; if(V(u,r)>-2) unused=1;"):
             with self.subTest(extra=extra):
-                source = model("tmp=V(u,r)-.25*pow(V(y,r),3); " + extra +
+                source = model("tmp=V(u,r)-0.25*pow(V(y,r),3); " + extra +
                                " V(y,r)<+tmp;", "real tmp,unused;")
                 program = compile_sources({"poly-noop.va":source},
                                           [Instance("dut","m",dict(u="u",y="y",r="0"))])
@@ -175,7 +175,7 @@ class GapIntegration(unittest.TestCase):
         source = model("""
             @(initial_step) reset=0;
             @(timer(1,0,1e-8)) reset=V(y,r);
-            V(y,r)<+sin(idt(V(u,r),.25,reset));
+            V(y,r)<+sin(idt(V(u,r),0.25,reset));
         """, "real reset;")
         program = compile_sources({"reset-sin-feedback.va":source},
                                   [Instance("dut","m",dict(u="u",y="y",r="0"))])
@@ -187,10 +187,10 @@ class GapIntegration(unittest.TestCase):
             @(initial_step) reset=0;
             @(timer(1,0,1e-8)) reset=1;
             @(timer(2,0,1e-8)) reset=0;
-            V(y,r)<+idt(V(u,r),.125,reset);
-            V(filtered,r)<+laplace_nd(V(u,r), '{1}, '{1,.5});
-            V(phase,r)<+idtmod(V(u,r),.125,1,0);
-            V(sine,r)<+sin(idt(V(u,r),.125,reset));
+            V(y,r)<+idt(V(u,r),0.125,reset);
+            V(filtered,r)<+laplace_nd(V(u,r), '{1}, '{1,0.5});
+            V(phase,r)<+idtmod(V(u,r),0.125,1,0);
+            V(sine,r)<+sin(idt(V(u,r),0.125,reset));
         """, "real reset;", ports="u,y,filtered,phase,sine,r",
                        directions="input u; output y,filtered,phase,sine; inout r;")
         program = compile_sources({"reset-filter-phase.va":source}, [Instance("dut","m",

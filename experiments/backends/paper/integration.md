@@ -1,5 +1,23 @@
 # PR #108 固定候选的工程检查记录
 
+当前候选 `41c3f34e248fe6bf5403552d89c1a1793b172899` 已完成新的 Linux release
+12 条件执行，并由维护 checker/table 生成[当前四后端表](candidate-table.md)。
+原 48 槽为 I39/X9，EVAS 为 I12；实际能执行不等于完成论文资格。
+新内核 SHA256 为 `bfa07ee9733d05d286d255bb9c49f5ac011ea177b9cd236d6a4242e90bc27bc6`。
+实际构建、工具链、原样复用的 36 条参考、旧 EVAS attempts 与逐条缺口均见
+[新紧凑收据](evidence/integrated-core-v2-20261009.json)。
+
+同一源码的 macOS debug 候选也重放了以下 24 个工程请求，12 条件全部输出，
+两种网格的事件记录相同，410,908 个同一解析后 binary64 时刻配对。
+窗口内计数差及 VCO 普通相位差仍在；新源码没有使这些历史义务自动通过。
+本轮[精确根与消费者修复](../event-alignment/consumer-precision.md)及其新参考实验
+单独说明。reviewed main 仍为 `f8b624f8`，#108、#79 的边界门禁和 #97 的实际
+main 集成义务均未解除。
+
+## 历史候选 f90971f0
+
+以下保留旧候选的实际结果、main 依赖探针和原收据身份。
+
 本记录对应 PR #108 集成候选 `f90971f0735054b3772415cf431ec7058fe62553`，
 它通过正常合并包含 reviewed main `1dd8875b`。这次本地运行用该前端重新编译
 12 个原论文模型，再执行 debug 内核。每个条件在原查询网格和保存的 Spectre

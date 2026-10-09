@@ -29,7 +29,7 @@ def write_bytes(path, data):
 
 def source(body="V(y,r)<+V(u,r)+1;"):
     return (
-        "module m(u,y,r); input u; output y; inout r; electrical u,y,r; "
+        "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; "
         f"analog begin {body} end endmodule"
     )
 

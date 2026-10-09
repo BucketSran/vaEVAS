@@ -149,13 +149,23 @@ manifest 声明源文件、实例参数和端口到全局网络的映射。
 | [absdelay.json](validation/smoke/absdelay.json) | 延迟历史查询 |
 | [idt.json](validation/smoke/idt.json) | 连续输入积分 |
 
+当前准入下，冻结的 `absdelay`、`timer_counter` 原 VA 缺少 discipline 声明，
+`cross_counter` 原 VA 含非法小数拼写，直接按这些 manifest 重编译会拒绝。
+原文件与历史结果保留；可运行的显式版本见
+[smoke-admission-v1 successors](tests/fixtures/smoke-admission-v1/README.md)。
+`idt`、`transition_pulse` 和 `static_nonlinear` 的原 manifest 仍可编译。
+CLI 的 `solve`/`transient` 会读取 manifest 的 VA 并重新编译；
+API 运行已有 `Program` 不重复源码准入，但仍须满足当前 IR/内核版本契约。
+
 ## 精度与结果解释
 
+当前开发候选支持独立于输出网格的 `strobetimes` 和周期 strobe 控制，见[强制求解时刻](docs/strobe.md)。
 `solve`、`transient` 和 manifest 的 `tolerances` 接受 `vabstol`（默认 `1e-12 V`）
 与 `reltol`（默认 `1e-10`，无量纲）。这两个数字是求解/验收设置，
 不能直接解释为所有输出都具有同样的全时域精度。
 静态 Newton 检查原方程残差；瞬态还要考虑输入、历史、采样及事件时刻的误差和网络放大。
 具体判据、保守拒绝和数值方法见[数值手册](docs/math/solving.md)。
+瞬态响应可选保存实际控制值、逐行来源和已有节点认证区间，见[观察证据接口](docs/observation-evidence.md)。缺失区间保持未知，这些字段不自动授予外部观察资格。
 
 <a id="spectre-testbench"></a>
 
@@ -271,7 +281,11 @@ cargo test --locked --manifest-path evas/rust_core/Cargo.toml
 - 允许一个源文件多个 module；端口需显式方向与 electrical 声明，内部节点需 electrical 声明。
 - 预处理器支持对象/函数宏、续行、define/undef、条件编译和 include guard。
   include 只读取调用者在 sources/manifest models 中提供的文件，不搜索外部目录。
-  未提供的标准 `constants.vams` / `disciplines.vams` 仍为内建前导，数学常量仅保留 `M_PI`。
+  显式包含标准 `constants.vams` / `disciplines.vams` 时，优先使用调用者提供的同路径头；
+  未提供时采用版本化的有限 `evas-voltage-vams-v1` 环境，数学常量仅保留 `M_PI`。
+  `electrical` 使用前必须有支持的 discipline/nature 定义；缺失定义与不兼容头文件拒绝编译。
+  实数字面量的小数点两侧必须有数字，例如 `0.5`、`1.0`；`.5`、`1.` 均拒绝。
+  具体范围及迁移见[编译准入契约](docs/frontend-admission.md)。
   语法位置、包含路径及宏展开路径会进入 Origin；支持边界见[预处理契约](validation/ANALOG_CONDITIONS_CONTRACT.md#preprocessing)。
 - `parameter real` 默认值、实例覆盖以及参数依赖，有限实数与 SI 后缀。
 - 一个 `analog begin ... end`，含无条件 `V(p)` / `V(p,n)` 贡献，以及受限事件块。
@@ -358,10 +372,16 @@ CLI 的内核失败在 stderr 输出 JSON，保留 `kind`、`message` 和存在�
 Python 的编译与求解接口：`compile_sources(sources, instances) -> Program`，
 `solve(program, driven, samples, kernel=...) -> result`，以及
 `transient(program, sources, output_times, stop=..., max_step=..., kernel=...) -> result`。
+当前开发候选支持独立于输出网格的 `strobetimes` 和周期 strobe 控制，见[强制求解时刻](docs/strobe.md)。
 `solve`、`transient` 和 manifest 的 `tolerances` 接受 `vabstol`（伏特，默认 `1e-12`）与
 `reltol`（无量纲，默认 `1e-10`），例如 `solve(..., vabstol=1e-9, reltol=1e-6)`。
 保留 `absolute` / `relative` 作为对应旧名称；同一容差不能同时提供新旧名称。
+本分支的非线性 Taylor/DAE 路径将节点容差用于候选细化，并保留最终前向电压误差验收。
+`max_step` 同时限制其内部试步；线性/PWL 解析路径保持解析传播。观察网格不定义积分历史。
+极小步长或无法认证的累计包围会明确失败，资源上限与数学说明见
+[非线性精度控制](docs/math/continuous.md#多项式非线性积分与误差证明)。
 当前实现 Python 前端与 Rust 内核使用 IR v18；版本迁移规则见[下文](#ir-v8-migration)。
+
 Rust 库接口：`Circuit::new(...)` 和无状态的 `Circuit::solve(inputs)`。
 独立 Rust 进程也校验 IR，不能依赖 Python 已验证输入。
 
@@ -488,6 +508,13 @@ IR1–17 必须从原始 VA/manifest 重新编译，不原地改写历史 IR 或
 ```sh
 python3 scripts/recompile_evas_manifests.py --output runs/recompile-ir18
 python3 scripts/recompile_evas_manifests.py --output runs/recompile-selected evas/validation/smoke/idt.json
+```
+
+默认六项当前会有上述三项准入拒绝，命令返回非零并保留另三项成功输出。
+需要演示修正后的三条路径时，显式选择版本化 successor：
+
+```sh
+python3 scripts/recompile_evas_manifests.py --output runs/recompile-smoke-admission-v1 evas/tests/fixtures/smoke-admission-v1
 ```
 
 输出目录必须不存在；部分失败返回非零，成功项仍保留。没有原始 VA/manifest 的旧 IR 无法凭改版本号迁移。

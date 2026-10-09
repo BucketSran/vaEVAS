@@ -1,0 +1,1211 @@
+{
+  "scope": "Near-coincident fixed timers with linear history and history guards; branch candidate, not merged or a paper qualification",
+  "capabilities": [
+    "TIMER",
+    "EVENT-ORDER",
+    "DYNAMICS",
+    "CROSS",
+    "COMPOSE"
+  ],
+  "implementation": {
+    "base": "ab58d4b35bb0abf7542b4f136774902985cf198b",
+    "files": {
+      "evas/rust_core/src/continuous.rs": "90106c4d427b607bf671705774cb567bb8d77f5741712db24ee0b0a84b073d36",
+      "evas/rust_core/src/continuous_history.rs": "84c5372d73e0a7e7af13a95dd7971f1022f9ad540a63549e12ac14f67a2eb897",
+      "evas/rust_core/src/guard_trajectory.rs": "2451724b7b5d44de3547ebedeb10795c0cdeb7016515144cb8ea50113420e90c",
+      "evas/rust_core/src/schedule.rs": "6e92a58e681c13cf630e51f9a836002e7fb8d2aff7a44e2693e1fb3c5e4573f0",
+      "evas/rust_core/src/transient_history_calendar.rs": "b8df38329387af48f9d9ad1721659b01892a5f6848663f6a99c929fa46c4bdd1",
+      "evas/rust_core/src/transient_lifecycle_tests.rs": "d40b8a05f03ea6f956b785b991e541889315efeb8b1930bb8a49f265445e2965",
+      "evas/tests/test_timer_ordering.py": "043c0756bfc74f8c3a8a3a99441e57a8654ed78438ff52fe5a60a4d6611c5d41",
+      "evas/tests/test_timer_history_order.py": "59a1a59808ee4bde4797b4d14fa10d257098786e1e8017e2c85a90b839333f40"
+    },
+    "kernel_sha256": "abc000634aba8444483278baa26ac14cccddf06511781b29c1941dd6d5ce4e26",
+    "availability": "local-only; retrievable source copies under review-source",
+    "source_retrieval": "Base commit plus changed files in the commit containing this evidence; original local source copies and patch retained.",
+    "version": "0.13.0",
+    "ir_version": 17,
+    "build_revision": null,
+    "environment_readback": {
+      "rustc": "1.95.0 (59807616e 2026-04-14)",
+      "cargo": "1.95.0 (f2d3ce0bd 2026-03-21)",
+      "python": "3.14.6",
+      "platform": "Darwin arm64",
+      "profile": "debug",
+      "note": "Read from the same local toolchain at handoff; build_revision metadata is null."
+    }
+  },
+  "before": {
+    "kernel_sha256": "f3c4433d3eb3466d12ca5ac2eed0aff90d7df62436a1fc62c8805ca1aee4ec51",
+    "red": {
+      "path": "current/runs/near-clock-history-20261008/red.log",
+      "sha256": "f89a458e6ea8a9f27c3ab81689544057e5b8e636ca44c9ea88d38985cd3c0d3e",
+      "availability": "local-only"
+    },
+    "observed": "Two new requests refused future event window overlaps accepted boundary. Original default request budgets were stricter than final explicitly configured positive fixtures; those original budgets are not claimed accepted."
+  },
+  "local_checks": {
+    "new_methods": 7,
+    "new_methods_pass": 7,
+    "timer_modules_independent_review_pass": 15,
+    "mapped_run": {
+      "total": 159,
+      "pass": 158,
+      "error": 1,
+      "error_kind": "new filter fixture used unsupported array syntax; corrected module separately rerun 7/7"
+    },
+    "rust": {
+      "pass": 166,
+      "ignored": 1
+    },
+    "clippy": "pass",
+    "traceability_test_files": 80,
+    "artifacts": [
+      {
+        "path": "current/runs/near-clock-history-20261008/mapped-final.log",
+        "sha256": "5732d958e42e2647af12d2c3f2a48a4d72e3c575256d9fdecc39ad2ce00b86ce",
+        "availability": "local-only"
+      },
+      {
+        "path": "current/runs/near-clock-history-20261008/new-regression-final.log",
+        "sha256": "68eb2ab9d9d3b0a4dfbd8cce3e1fbdcdc2b708dfb8277f563a541e65ffedb55d",
+        "availability": "local-only"
+      },
+      {
+        "path": "current/runs/near-clock-history-20261008/rust-v2.log",
+        "sha256": "ea4a64e14e4115e8ad8fdd9806caeb5c42272936a86dbf8fdd6c32c29b055be0",
+        "availability": "local-only"
+      },
+      {
+        "path": "current/runs/near-clock-history-20261008/clippy.log",
+        "sha256": "d59e6109befd1e87b2c336c5963bab1f99af03e8a875293e4173d1344e2b8901",
+        "availability": "local-only"
+      }
+    ]
+  },
+  "calendar_replay": {
+    "model_configurations": 24,
+    "output_grids_per_configuration": 2,
+    "executions": 48,
+    "passed": 48,
+    "oracle": "Exact binary64 Fraction fixed schedules and integral sum of elapsed intervals; full event records invariant across two output grids.",
+    "input_pairs": [
+      {
+        "a": 0.125,
+        "b": 0.1875,
+        "stop": 0.9
+      },
+      {
+        "a": 0.1,
+        "b": 0.15,
+        "stop": 0.91
+      },
+      {
+        "a": 2e-06,
+        "b": 3e-06,
+        "stop": 7e-06
+      },
+      {
+        "a": 0.2,
+        "b": 0.3,
+        "stop": 1.39
+      },
+      {
+        "a": 0.125,
+        "b": 0.25,
+        "stop": 0.9
+      },
+      {
+        "a": 0.1,
+        "b": 0.2,
+        "stop": 0.91
+      }
+    ],
+    "modes": [
+      "counter",
+      "integral",
+      "history_monitor",
+      "or_clock"
+    ],
+    "original_screen_counts": {
+      "pass": 42,
+      "refused": 6
+    },
+    "lineage_limit": "Original exploratory screen used the PR100/101/102 combined candidate; this replay uses standalone PR102. These are 48 executions, not 48 independent cases or added paper cells.",
+    "artifact": {
+      "path": "current/runs/near-clock-history-20261008/calendar-replay/RESULTS.json",
+      "sha256": "ebbd809af62f28ed45c995c199014a4960ebb0329092c1896a57c4a858d6505a",
+      "availability": "local-only"
+    },
+    "checker": {
+      "path": "current/runs/near-clock-history-20261008/calendar-replay/probe.py",
+      "sha256": "a16e769a4f8c53c5d406e94d273eb2c64e84b56a6641fe8f5c08a92a84043184",
+      "availability": "local-only"
+    }
+  },
+  "reference_contract": {
+    "source_examples": {
+      "guard100": "`include \"disciplines.vams\"\nmodule m(u,y,r,z); input u; output y,z; inout r; electrical u,y,r,z; integer n,m,h; analog begin @(initial_step) begin n=0; m=0; h=0;  end\n @(timer(2e-6,2e-6,1e-12)) n=n+1;\n @(timer(3e-6,3e-6,1e-12)) m=m+1;\n V(z,r)<+idt(1e6*n,0);\n @(cross(V(z,r)-100.0,1,1e-12,1e-7)) h=h+1;\n V(y,r)<+n+10*m+100*h; end endmodule\n",
+      "guard8": "`include \"disciplines.vams\"\nmodule m(u,y,r,z); input u; output y,z; inout r; electrical u,y,r,z; integer n,m,h; analog begin @(initial_step) begin n=0; m=0; h=0;  end\n @(timer(2e-6,2e-6,1e-12)) n=n+1;\n @(timer(3e-6,3e-6,1e-12)) m=m+1;\n V(z,r)<+idt(1e6*n,0);\n @(cross(V(z,r)-8.0,1,1e-12,1e-7)) h=h+1;\n V(y,r)<+n+10*m+100*h; end endmodule\n",
+      "sample_slope": "`include \"disciplines.vams\"\nmodule m(u,y,r,z); input u; output y,z; inout r; electrical u,y,r,z; integer n,m,h; real s; analog begin @(initial_step) begin n=0; m=0; h=0; s=0; end\n @(timer(2e-6,2e-6,1e-12)) n=n+1;\n @(timer(3e-6,3e-6,1e-12)) begin m=m+1; s=V(z,r); end\n V(z,r)<+idt(1e6*(n+10*m),0);\n @(cross(V(z,r)-100.0,1,1e-12,1e-7)) h=h+1;\n V(y,r)<+s; end endmodule\n"
+    },
+    "oracle": "A=Fraction(binary64(2e-6)); B=Fraction(binary64(3e-6)); Z(t)=1e6*sum(max(0,t-k*A)); sample_slope adds 10e6*sum(max(0,t-k*B)). k spans events before stop. Sample is Z at the latest B event; guard8 root=(8/1e6+6*A)/3. All initial states zero.",
+    "stop_s": 7e-06,
+    "source_pwl_u": [
+      [
+        0,
+        0
+      ],
+      [
+        7e-06,
+        7e-06
+      ]
+    ],
+    "external_targets": {
+      "z_V": {
+        "guard100": 0.001,
+        "guard8": 0.001,
+        "sample_slope": 0.01
+      },
+      "y_V": {
+        "guard100": 1e-07,
+        "guard8": 1e-07,
+        "sample_slope": 0.01
+      },
+      "y_boundary_exclusion_s": 1e-09,
+      "cross_bracket_extension_s": 1e-10,
+      "maximum_cross_bracket_width_s": 2e-10,
+      "endpoint_coverage_absolute_s": 1e-18
+    },
+    "qualification": "Finite development targets frozen before execution, not error certificates derived from solver settings. Complete checker, numerical subchecks and paired differences are separate.",
+    "checker": {
+      "path": "current/runs/near-clock-history-20261008/spectre-prep-v4/check.py",
+      "sha256": "80c53b437278790826b4eb0faf32f4cda649bdcecd2dc59251b2eb99ebe6c522",
+      "availability": "local-only"
+    },
+    "calibration": {
+      "path": "current/runs/near-clock-history-20261008/spectre-prep-v4/CALIBRATION.json",
+      "sha256": "6296777fdf6451b82dedbc5bb41ad19b845c440688c2ab7e863052dde8e5e1eb",
+      "availability": "local-only"
+    },
+    "observation_reader": {
+      "path": "current/runs/four-backend-round-20261007/repo/experiments/backends/paper/observations.py",
+      "sha256": "0aff2f248d63b9e81b1fcf5bab5722df13bdcf42fd7edffe4fe65f45b79b845c",
+      "availability": "local-only frozen source snapshot"
+    }
+  },
+  "spectre": {
+    "numerical_runs": 9,
+    "version_probes": 3,
+    "v1": "deployed only, zero simulations; rejected preparation with strobe beyond stop",
+    "version": "21.1.0.509.isr12",
+    "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "requested": {
+      "reltol": 1e-08,
+      "vabstol_V": 1e-09,
+      "iabstol_A": 1e-12,
+      "maxstep_s": 1e-10,
+      "method": "traponly",
+      "errpreset": "conservative"
+    },
+    "actual": {
+      "reltol": 1e-09,
+      "vabstol_V": 1e-09,
+      "iabstol_A": 1e-12,
+      "maxstep_s": 1e-10,
+      "method": "traponly"
+    },
+    "resource_limits": {
+      "serial": true,
+      "simulation_timeout_s": 90,
+      "license_wait_s": 30,
+      "memory_bytes": 4294967296,
+      "threads": 1,
+      "per_file_bytes": 33554432,
+      "per_case_bytes_polled": 268435456
+    },
+    "versions": [
+      {
+        "id": "v2",
+        "timer_time_tol_s": 1e-09,
+        "denominator": 3,
+        "pass_count": 0,
+        "analysis": {
+          "path": "current/runs/near-clock-history-20261008/spectre-prep-v2/ANALYSIS.json",
+          "sha256": "3cb479da4763f6481d7699139400cb2687c6191dab2ee0445a251aae0b94c60d",
+          "availability": "local-only"
+        },
+        "results": [
+          {
+            "case": "guard100",
+            "status": "inconclusive",
+            "reason": "expected one explicit DUT z key; got ['time', 'y']"
+          },
+          {
+            "case": "guard8",
+            "status": "inconclusive",
+            "reason": "expected one explicit DUT z key; got ['time', 'y']"
+          },
+          {
+            "case": "sample_slope",
+            "status": "inconclusive",
+            "reason": "expected one explicit DUT z key; got ['time', 'y']"
+          }
+        ],
+        "input_manifest": {
+          "path": "current/runs/near-clock-history-20261008/spectre-prep-v2/input-manifest.json",
+          "sha256": "bb9d88af1773209d5eded72857a107da338ef01b5d3d91f6b09bb90e29864751",
+          "availability": "local-only"
+        },
+        "collection_archive": {
+          "sha256": "3e02281aa77a59ebbd495882303c233b579a4dbbb1b67d529cd7cdbaa5f1de6c",
+          "availability": "local-only"
+        },
+        "models": {
+          "guard100": {
+            "source_sha256": "70f384221a756a6ae5edd159329c33d8b273668b72715a9d618b8e814b786615",
+            "deck_sha256": "c49c5272a4d8a27af5e2d6813ea4f93dcf6599ed0cc832c3c1bcddbe7ad3b83f",
+            "status": "waveform_available",
+            "waveform_sha256": "dd06812b62c2a87e3c6b65dc16d04d851b4c206114d564d9e6bd71acbb2ed7cb"
+          },
+          "guard8": {
+            "source_sha256": "9e20c78e7214e1ce5b6e68a9ae16dd6d82fbaa923f9a21b35817b89e4f78710c",
+            "deck_sha256": "c49c5272a4d8a27af5e2d6813ea4f93dcf6599ed0cc832c3c1bcddbe7ad3b83f",
+            "status": "waveform_available",
+            "waveform_sha256": "ead0e6a4ce5e22943010869729626bf3411c3c6ad2402a58dcb083c31aa16a0c"
+          },
+          "sample_slope": {
+            "source_sha256": "1361b9ae35f5fa368b71e2f93271ba5d0797082cfeee9d758281e5624f6723a5",
+            "deck_sha256": "c49c5272a4d8a27af5e2d6813ea4f93dcf6599ed0cc832c3c1bcddbe7ad3b83f",
+            "status": "waveform_available",
+            "waveform_sha256": "0606bc20be1ee9c7ca85bae97ce86411ec5eab190e47b08b87a1e643d57cf3ab"
+          }
+        }
+      },
+      {
+        "id": "v3",
+        "timer_time_tol_s": 1e-09,
+        "denominator": 3,
+        "pass_count": 0,
+        "analysis": {
+          "path": "current/runs/near-clock-history-20261008/spectre-prep-v3/ANALYSIS.json",
+          "sha256": "e191f6756f161846d1a3079713fb7b3adf0ce0dae2d79b0f5bf06854b193e8bb",
+          "availability": "local-only"
+        },
+        "results": [
+          {
+            "case": "guard100",
+            "status": "fail",
+            "errors": [
+              "missing start/stop coverage",
+              "z exceeds frozen tolerance",
+              "final z incorrect"
+            ],
+            "rows": 70036,
+            "max_error_V": {
+              "z": 0.0029948288370160725,
+              "y": 0.0
+            },
+            "final_expected": {
+              "y": 23.0,
+              "z": 9.0
+            },
+            "final_observed": {
+              "time": 7.000000000002193e-06,
+              "y": 23.0,
+              "z": 9.002994828843596
+            },
+            "cross_brackets_s": [],
+            "origin": "unknown; PSF format and strobeoutput do not certify accepted origins",
+            "near_6us_order": "unresolved by analog encoded output when both changes coalesce",
+            "tolerances": {
+              "z_V": 0.001,
+              "y_V": 1e-07,
+              "cross_time_s": 1e-10,
+              "boundary_exclusion_s": 1e-09
+            },
+            "raw_sha256": "341c5bee1283a1d7695bb7dfd1adb16fbdd8f865b22567f54402e429758f1b00"
+          },
+          {
+            "case": "guard8",
+            "status": "fail",
+            "errors": [
+              "z exceeds frozen tolerance",
+              "final z incorrect",
+              "cross bracket exceeds frozen time target"
+            ],
+            "rows": 70037,
+            "max_error_V": {
+              "z": 0.00299482883701252,
+              "y": 0.0
+            },
+            "final_expected": {
+              "y": 123.0,
+              "z": 9.0
+            },
+            "final_observed": {
+              "time": 7.000000000000733e-06,
+              "y": 123.0,
+              "z": 9.002994828839212
+            },
+            "cross_brackets_s": [
+              [
+                6.665584203528067e-06,
+                6.665668407054677e-06
+              ]
+            ],
+            "origin": "unknown; PSF format and strobeoutput do not certify accepted origins",
+            "near_6us_order": "unresolved by analog encoded output when both changes coalesce",
+            "tolerances": {
+              "z_V": 0.001,
+              "y_V": 1e-07,
+              "cross_time_s": 1e-10,
+              "boundary_exclusion_s": 1e-09
+            },
+            "raw_sha256": "dbbbc78bddde746b98e993436ef1729b8b59d4c318d0cac64c796c30cd598c80"
+          },
+          {
+            "case": "sample_slope",
+            "status": "fail",
+            "errors": [
+              "missing start/stop coverage",
+              "z exceeds frozen tolerance",
+              "final z incorrect"
+            ],
+            "rows": 70049,
+            "max_error_V": {
+              "z": 0.02299326494347298,
+              "y": 6.735056501838699e-06
+            },
+            "final_expected": {
+              "y": 36.0,
+              "z": 58.99999999999999
+            },
+            "final_observed": {
+              "time": 7.000000000002193e-06,
+              "y": 35.9999932649435,
+              "z": 59.022993264981565
+            },
+            "cross_brackets_s": [],
+            "origin": "unknown; PSF format and strobeoutput do not certify accepted origins",
+            "near_6us_order": "unresolved by analog encoded output when both changes coalesce",
+            "tolerances": {
+              "z_V": 0.01,
+              "y_V": 0.01,
+              "cross_time_s": 1e-10,
+              "boundary_exclusion_s": 1e-09
+            },
+            "raw_sha256": "bb532b6c62a77a3c2cacc319f535d6671d6fe0caec8e1c29a03906cb2af02d81"
+          }
+        ],
+        "input_manifest": {
+          "path": "current/runs/near-clock-history-20261008/spectre-prep-v3/input-manifest.json",
+          "sha256": "a0be77063313250ea5a571655e9f9ff1ba6312b467e0883fb743a713f9421547",
+          "availability": "local-only"
+        },
+        "collection_archive": {
+          "sha256": "b43e047ca877de95d7d81f4d23eac30a6ed823a5e482ecf886ab476b4a5eef73",
+          "availability": "local-only"
+        },
+        "models": {
+          "guard100": {
+            "source_sha256": "2507fe1ab78ee645319b07378135f2e0d50c519ce5491dc1dc1a41bcd56d34b7",
+            "deck_sha256": "f7e0b713ac4bf849d4b3fe0199d022cb17b2da2d97b542ebb47d3c608c9d32f7",
+            "status": "waveform_available",
+            "waveform_sha256": "341c5bee1283a1d7695bb7dfd1adb16fbdd8f865b22567f54402e429758f1b00"
+          },
+          "guard8": {
+            "source_sha256": "c1e20b8ec41fbaf4dc3e63f33d29a025e09f6463cc64c82d8138fc76682de440",
+            "deck_sha256": "f7e0b713ac4bf849d4b3fe0199d022cb17b2da2d97b542ebb47d3c608c9d32f7",
+            "status": "waveform_available",
+            "waveform_sha256": "dbbbc78bddde746b98e993436ef1729b8b59d4c318d0cac64c796c30cd598c80"
+          },
+          "sample_slope": {
+            "source_sha256": "16717d7bc24a76428976f6650ce06c942abc13eea2b7a0fe4d6d109a348f5260",
+            "deck_sha256": "f7e0b713ac4bf849d4b3fe0199d022cb17b2da2d97b542ebb47d3c608c9d32f7",
+            "status": "waveform_available",
+            "waveform_sha256": "bb532b6c62a77a3c2cacc319f535d6671d6fe0caec8e1c29a03906cb2af02d81"
+          }
+        }
+      },
+      {
+        "id": "v4",
+        "timer_time_tol_s": 1e-12,
+        "denominator": 3,
+        "pass_count": 1,
+        "analysis": {
+          "path": "current/runs/near-clock-history-20261008/spectre-prep-v4/ANALYSIS.json",
+          "sha256": "ec2a53bb6c53c7f77ff7044c8adca320ad6e2c31d20f7fa4c6f99c5fccd691a3",
+          "availability": "local-only"
+        },
+        "results": [
+          {
+            "case": "guard100",
+            "status": "fail",
+            "errors": [
+              "missing start/stop coverage"
+            ],
+            "rows": 70060,
+            "max_error_V": {
+              "z": 3.143694270235642e-06,
+              "y": 0.0
+            },
+            "final_expected": {
+              "y": 23.0,
+              "z": 9.0
+            },
+            "final_observed": {
+              "time": 7.000000000002191e-06,
+              "y": 23.0,
+              "z": 9.000003143700843
+            },
+            "cross_brackets_s": [],
+            "origin": "unknown; PSF format and strobeoutput do not certify accepted origins",
+            "near_6us_order": "unresolved by analog encoded output when both changes coalesce",
+            "tolerances": {
+              "z_V": 0.001,
+              "y_V": 1e-07,
+              "cross_time_s": 1e-10,
+              "boundary_exclusion_s": 1e-09
+            },
+            "raw_sha256": "326ceaaf7c60f726ce59a7c601879d7a6c1a74a83a3103ef69e814b050b0a736"
+          },
+          {
+            "case": "guard8",
+            "status": "pass",
+            "errors": [],
+            "rows": 70061,
+            "max_error_V": {
+              "z": 3.1436942613538577e-06,
+              "y": 0.0
+            },
+            "final_expected": {
+              "y": 123.0,
+              "z": 9.0
+            },
+            "final_observed": {
+              "time": 7.000000000000731e-06,
+              "y": 123.0,
+              "z": 9.000003143696455
+            },
+            "cross_brackets_s": [
+              [
+                6.666582817718524e-06,
+                6.666665635435588e-06
+              ]
+            ],
+            "origin": "unknown; PSF format and strobeoutput do not certify accepted origins",
+            "near_6us_order": "unresolved by analog encoded output when both changes coalesce",
+            "tolerances": {
+              "z_V": 0.001,
+              "y_V": 1e-07,
+              "cross_time_s": 1e-10,
+              "boundary_exclusion_s": 1e-09
+            },
+            "raw_sha256": "876e1c5c18078e79581719fe305b1a3206690dac6526349954de404d62dd5d82"
+          },
+          {
+            "case": "sample_slope",
+            "status": "fail",
+            "errors": [
+              "missing start/stop coverage"
+            ],
+            "rows": 70086,
+            "max_error_V": {
+              "z": 2.4236554189371873e-05,
+              "y": 7.117432062386797e-06
+            },
+            "final_expected": {
+              "y": 36.0,
+              "z": 58.99999999999999
+            },
+            "final_observed": {
+              "time": 7.000000000002191e-06,
+              "y": 36.00000711743206,
+              "z": 59.000024236592274
+            },
+            "cross_brackets_s": [],
+            "origin": "unknown; PSF format and strobeoutput do not certify accepted origins",
+            "near_6us_order": "unresolved by analog encoded output when both changes coalesce",
+            "tolerances": {
+              "z_V": 0.01,
+              "y_V": 0.01,
+              "cross_time_s": 1e-10,
+              "boundary_exclusion_s": 1e-09
+            },
+            "raw_sha256": "09e89e7780137998abb72349b20aafdd3b81dc857eaac65fa9d9feb0d311cd82"
+          }
+        ],
+        "input_manifest": {
+          "path": "current/runs/near-clock-history-20261008/spectre-prep-v4/input-manifest.json",
+          "sha256": "d7736b26e01225450ff64d5d362638f600067bf05b2d5c5cefc4ea4b5e05a960",
+          "availability": "local-only"
+        },
+        "collection_archive": {
+          "sha256": "2ee5ce2a01730c40a481bea15a227017faa94b9a1d21c3d872b73c8fffc97bdc",
+          "availability": "local-only"
+        },
+        "models": {
+          "guard100": {
+            "source_sha256": "cf11bb24c1f1cf41a608534e038701458666df43d0102ada8b127fb578a35e91",
+            "deck_sha256": "f7e0b713ac4bf849d4b3fe0199d022cb17b2da2d97b542ebb47d3c608c9d32f7",
+            "status": "waveform_available",
+            "waveform_sha256": "326ceaaf7c60f726ce59a7c601879d7a6c1a74a83a3103ef69e814b050b0a736"
+          },
+          "guard8": {
+            "source_sha256": "1f9af62db4a65c070e4e1713db3c41766c4d96996d3a4b7298769be0392db50c",
+            "deck_sha256": "f7e0b713ac4bf849d4b3fe0199d022cb17b2da2d97b542ebb47d3c608c9d32f7",
+            "status": "waveform_available",
+            "waveform_sha256": "876e1c5c18078e79581719fe305b1a3206690dac6526349954de404d62dd5d82"
+          },
+          "sample_slope": {
+            "source_sha256": "bcfc975be5b1006c6bcc26a59709f11fd4e6935795684f11533ec77fef0c5c7c",
+            "deck_sha256": "f7e0b713ac4bf849d4b3fe0199d022cb17b2da2d97b542ebb47d3c608c9d32f7",
+            "status": "waveform_available",
+            "waveform_sha256": "09e89e7780137998abb72349b20aafdd3b81dc857eaac65fa9d9feb0d311cd82"
+          }
+        }
+      }
+    ]
+  },
+  "limits": [
+    "Only unchanged pure fixed-timer predecessor chains receive retained order proof. Mixed/held clusters and arbitrary new roots do not.",
+    "Overlapping-history support is linear and may refuse PWL corners, nonlinear histories, excessive error, or a possible hidden cross; original time_tol and stop remain enforced.",
+    "Ordinary output queries do not access the event-only backward window. All fallible checks precede commit.",
+    "Spectre raw sample origin is unknown; output can coalesce two timers at 6us, so exact internal callback order is unresolved.",
+    "No continuous-time or paper P qualification; raw/reviews/checker run bundles are local-only. Public regressions and compact summary are repository-contained."
+  ],
+  "review": {
+    "astra": {
+      "path": "current/runs/near-clock-history-20261008/spec-review/review.md",
+      "sha256": "7a5b522e14e33378b6ff283a33059d49efc870b2d5e9501a41ef7a34bbb5b3c3",
+      "availability": "local-only"
+    },
+    "standards_initial": {
+      "path": "current/runs/near-clock-history-20261008/standards-review/REPORT.md",
+      "sha256": "42f944600c47ca80e9ac1e35e05b74bfdaaa2838cce4bc854a49ebf837475a74",
+      "availability": "local-only"
+    },
+    "glm_status": "completed; supplied-text static review, one finding investigated separately",
+    "glm_receipt": {
+      "path": "current/runs/near-clock-history-20261008/glm-review/receipt.json",
+      "sha256": "5287699b0b2f68244113d282a6687713e83205d4aa66d3efebe1a9c2b8036ad7",
+      "availability": "local-only"
+    },
+    "glm_report": {
+      "path": "current/runs/near-clock-history-20261008/glm-review/review.md",
+      "sha256": "c006f5dc9f78dfe1d9429e21b15f6ccafaa1e5883d215e28a780fdd04fc0e45f",
+      "availability": "local-only"
+    },
+    "standards_evidence": {
+      "path": "current/runs/near-clock-history-20261008/standards-review/final-evidence.md",
+      "sha256": "dfb9c302ce956078ff046a629b21d2f11043dc35ce18bf9c1a76d3cbd449677b",
+      "availability": "local-only"
+    },
+    "reference_raw_reanalysis": {
+      "path": "current/runs/near-clock-history-20261008/analysis-v4/reference-review.json",
+      "sha256": "c5627fe83a51f188792985c7fc77aad14b06882a2abe3e77b07c3ebc8c12515d",
+      "availability": "local-only"
+    },
+    "glm_f1_resolution": {
+      "path": "current/runs/near-clock-history-20261008/spec-review/glm-f1-response.md",
+      "sha256": "615748fdccaf6c90cfdb70364a5c3bab34f8d3be46218bd228945223fc8f3abd",
+      "availability": "local-only"
+    },
+    "standards_supplement": {
+      "path": "current/runs/near-clock-history-20261008/standards-review/final-supplement.md",
+      "sha256": "f46186203ed82ca2938a95744cf6bb8206fb29e6b34975f789c40a9afd6c65cb",
+      "availability": "local-only"
+    },
+    "paired_review": {
+      "path": "current/runs/near-clock-history-20261008/analysis-v4/paired-review.md",
+      "sha256": "c864e702386abad14273431d928afdbdbaa71b996ab46dc5cb93f915ddb9b57e",
+      "availability": "local-only"
+    }
+  },
+  "full_native_evas_attempts": [
+    {
+      "artifact": {
+        "path": "current/runs/near-clock-history-20261008/analysis-v4/evas-v3-native-grid/COMPARISON.json",
+        "sha256": "cfca35b9c0e4bf5f61d2a860e6fcc92c458f6ce03aa8f0121a99ad06cd54cb3d",
+        "availability": "local-only"
+      },
+      "timeout_s": 300,
+      "results": [
+        {
+          "case": "guard100",
+          "raw_sha256": "341c5bee1283a1d7695bb7dfd1adb16fbdd8f865b22567f54402e429758f1b00",
+          "exact_common_times": 70035,
+          "fraction_verdict": {
+            "case": "guard100",
+            "status": "fail",
+            "errors": [
+              "missing start/stop coverage"
+            ],
+            "rows": 70035,
+            "max_error_V": {
+              "z": 3.446132268436486e-13,
+              "y": 0.0
+            },
+            "final_expected": {
+              "y": 23.0,
+              "z": 9.0
+            },
+            "final_observed": {
+              "time": 6.999900000002193e-06,
+              "y": 23.0,
+              "z": 8.999700000006921
+            },
+            "cross_brackets_s": [],
+            "origin": "unknown; PSF format and strobeoutput do not certify accepted origins",
+            "near_6us_order": "unresolved by analog encoded output when both changes coalesce",
+            "tolerances": {
+              "z_V": 0.001,
+              "y_V": 1e-07,
+              "cross_time_s": 1e-10,
+              "boundary_exclusion_s": 1e-09
+            }
+          },
+          "alignment_max_error_V": {
+            "z": 0.0029948288366732356,
+            "y": 0.0
+          },
+          "alignment_status": "fail",
+          "alignment_tolerance": "sum of independently frozen per-engine finite observation targets",
+          "events": [
+            {
+              "time": 2e-06,
+              "event": 0,
+              "origin": "dut.va:3:2 (dut)",
+              "kind": "timer",
+              "before": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "after": [
+                1.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "time": 3e-06,
+              "event": 1,
+              "origin": "dut.va:4:2 (dut)",
+              "kind": "timer",
+              "before": [
+                1.0,
+                0.0,
+                0.0
+              ],
+              "after": [
+                1.0,
+                1.0,
+                0.0
+              ]
+            },
+            {
+              "time": 4e-06,
+              "event": 0,
+              "origin": "dut.va:3:2 (dut)",
+              "kind": "timer",
+              "before": [
+                1.0,
+                1.0,
+                0.0
+              ],
+              "after": [
+                2.0,
+                1.0,
+                0.0
+              ]
+            },
+            {
+              "time": 6.000000000000001e-06,
+              "observation_time_bounds": [
+                5.999999999999999e-06,
+                6.000000000000001e-06
+              ],
+              "event": 0,
+              "origin": "dut.va:3:2 (dut)",
+              "kind": "timer",
+              "before": [
+                2.0,
+                1.0,
+                0.0
+              ],
+              "after": [
+                3.0,
+                1.0,
+                0.0
+              ]
+            },
+            {
+              "time": 6.000000000000002e-06,
+              "observation_time_bounds": [
+                6e-06,
+                6.000000000000002e-06
+              ],
+              "event": 1,
+              "origin": "dut.va:4:2 (dut)",
+              "kind": "timer",
+              "before": [
+                3.0,
+                1.0,
+                0.0
+              ],
+              "after": [
+                3.0,
+                2.0,
+                0.0
+              ]
+            }
+          ],
+          "final_states": [
+            3.0,
+            2.0,
+            0.0
+          ]
+        },
+        {
+          "case": "guard8",
+          "status": "inconclusive",
+          "reason": "kernel_timeout: kernel exceeded execution timeout (300.0 s)"
+        },
+        {
+          "case": "sample_slope",
+          "status": "inconclusive",
+          "reason": "kernel_timeout: kernel exceeded execution timeout (300.0 s)"
+        }
+      ],
+      "raw_record_accounting": [
+        {
+          "case": "guard100",
+          "raw_sha256": "341c5bee1283a1d7695bb7dfd1adb16fbdd8f865b22567f54402e429758f1b00",
+          "raw_rows_total": 70036,
+          "in_domain_rows": 70035,
+          "excluded_rows": 1
+        },
+        {
+          "case": "guard8",
+          "raw_sha256": "dbbbc78bddde746b98e993436ef1729b8b59d4c318d0cac64c796c30cd598c80",
+          "raw_rows_total": 70037,
+          "in_domain_rows": 70036,
+          "excluded_rows": 1
+        },
+        {
+          "case": "sample_slope",
+          "raw_sha256": "bb532b6c62a77a3c2cacc319f535d6671d6fe0caec8e1c29a03906cb2af02d81",
+          "raw_rows_total": 70049,
+          "in_domain_rows": 70048,
+          "excluded_rows": 1
+        }
+      ]
+    },
+    {
+      "artifact": {
+        "path": "current/runs/near-clock-history-20261008/spectre-prep-v4/evas-native-grid/COMPARISON.json",
+        "sha256": "9e2a77398b9f773ae3ba2b75bdb0266c242d551a2356fca9b33077bb7187822b",
+        "availability": "local-only"
+      },
+      "timeout_s": 300,
+      "results": [
+        {
+          "case": "guard100",
+          "status": "inconclusive",
+          "reason": "kernel_timeout: kernel exceeded execution timeout (300.0 s)"
+        },
+        {
+          "case": "guard8",
+          "status": "inconclusive",
+          "reason": "kernel_timeout: kernel exceeded execution timeout (300.0 s)"
+        },
+        {
+          "case": "sample_slope",
+          "status": "inconclusive",
+          "reason": "kernel_timeout: kernel exceeded execution timeout (300.0 s)"
+        }
+      ],
+      "raw_record_accounting": [
+        {
+          "case": "guard100",
+          "raw_sha256": "326ceaaf7c60f726ce59a7c601879d7a6c1a74a83a3103ef69e814b050b0a736",
+          "raw_rows_total": 70060,
+          "in_domain_rows": 70059,
+          "excluded_rows": 1
+        },
+        {
+          "case": "guard8",
+          "raw_sha256": "876e1c5c18078e79581719fe305b1a3206690dac6526349954de404d62dd5d82",
+          "raw_rows_total": 70061,
+          "in_domain_rows": 70060,
+          "excluded_rows": 1
+        },
+        {
+          "case": "sample_slope",
+          "raw_sha256": "09e89e7780137998abb72349b20aafdd3b81dc857eaac65fa9d9feb0d311cd82",
+          "raw_rows_total": 70086,
+          "in_domain_rows": 70085,
+          "excluded_rows": 1
+        }
+      ]
+    }
+  ],
+  "failed_observation_attempts": {
+    "v2": "Comparison script failed on missing z before any EVAS execution; original STARTED.json remains, no completion claimed.",
+    "v3_unfiltered": {
+      "artifact": {
+        "path": "current/runs/near-clock-history-20261008/spectre-prep-v3/evas-native-grid/COMPARISON.json",
+        "sha256": "1caea971c845b8e68265a86f0f8041d815ed53fd42d68adcdcd010ed2c2064a8",
+        "availability": "local-only"
+      },
+      "kernel_requests": 3,
+      "outcome": "All invalid_inputs because the original PSF last row exceeds stop; preserved, no waveform."
+    }
+  },
+  "finite_subset_comparisons": [
+    {
+      "id": "v3",
+      "artifact": {
+        "path": "current/runs/near-clock-history-20261008/analysis-v4/evas-v3-subset/COMPARISON.json",
+        "sha256": "648bab1f5332b57e3497ff6db183396b81499f03981f9269663abaae49ca8ed2",
+        "availability": "local-only"
+      },
+      "selection_rule": "domain rows indexed every100; first/last domain record; every original domain record within ±binary64(1ns) of Fraction nominal timer/cross boundaries",
+      "timeout_seconds": 90,
+      "checker_sha256": "80c53b437278790826b4eb0faf32f4cda649bdcecd2dc59251b2eb99ebe6c522",
+      "comparison_script_sha256": "7d791fecc287a20388cfcd23a82f9ecdecb718c5e7986265eff64ddfe9deecb4",
+      "raw_record_accounting": [
+        {
+          "case": "guard100",
+          "raw_sha256": "341c5bee1283a1d7695bb7dfd1adb16fbdd8f865b22567f54402e429758f1b00",
+          "raw_rows_total": 70036,
+          "in_domain_rows": 70035,
+          "selected_rows": 803,
+          "excluded_rows": 1
+        },
+        {
+          "case": "guard8",
+          "raw_sha256": "dbbbc78bddde746b98e993436ef1729b8b59d4c318d0cac64c796c30cd598c80",
+          "raw_rows_total": 70037,
+          "in_domain_rows": 70036,
+          "selected_rows": 823,
+          "excluded_rows": 1
+        },
+        {
+          "case": "sample_slope",
+          "raw_sha256": "bb532b6c62a77a3c2cacc319f535d6671d6fe0caec8e1c29a03906cb2af02d81",
+          "raw_rows_total": 70049,
+          "in_domain_rows": 70048,
+          "selected_rows": 816,
+          "excluded_rows": 1
+        }
+      ],
+      "results": [
+        {
+          "case": "guard100",
+          "exact_common_times": 803,
+          "fraction_verdict": {
+            "case": "guard100",
+            "status": "fail",
+            "errors": [
+              "missing start/stop coverage"
+            ],
+            "rows": 803,
+            "max_error_V": {
+              "z": 3.4283687000424834e-13,
+              "y": 0.0
+            },
+            "final_expected": {
+              "y": 23.0,
+              "z": 9.0
+            },
+            "final_observed": {
+              "time": 6.999900000002193e-06,
+              "y": 23.0,
+              "z": 8.999700000006921
+            },
+            "cross_brackets_s": [],
+            "origin": "unknown; PSF format and strobeoutput do not certify accepted origins",
+            "near_6us_order": "unresolved by analog encoded output when both changes coalesce",
+            "tolerances": {
+              "z_V": 0.001,
+              "y_V": 1e-07,
+              "cross_time_s": 1e-10,
+              "boundary_exclusion_s": 1e-09
+            }
+          },
+          "alignment_max_error_V": {
+            "z": 0.0029948288366732356,
+            "y": 0.0
+          },
+          "alignment_status": "fail"
+        },
+        {
+          "case": "guard8",
+          "exact_common_times": 823,
+          "fraction_verdict": {
+            "case": "guard8",
+            "status": "fail",
+            "errors": [
+              "missing start/stop coverage"
+            ],
+            "rows": 823,
+            "max_error_V": {
+              "z": 3.7125857943465235e-13,
+              "y": 0.0
+            },
+            "final_expected": {
+              "y": 123.0,
+              "z": 9.0
+            },
+            "final_observed": {
+              "time": 6.999900000000732e-06,
+              "y": 123.0,
+              "z": 8.99970000000257
+            },
+            "cross_brackets_s": [
+              [
+                6.6666000000000015e-06,
+                6.666700000000002e-06
+              ]
+            ],
+            "origin": "unknown; PSF format and strobeoutput do not certify accepted origins",
+            "near_6us_order": "unresolved by analog encoded output when both changes coalesce",
+            "tolerances": {
+              "z_V": 0.001,
+              "y_V": 1e-07,
+              "cross_time_s": 1e-10,
+              "boundary_exclusion_s": 1e-09
+            }
+          },
+          "alignment_max_error_V": {
+            "z": 0.002994828836641261,
+            "y": 0.0
+          },
+          "alignment_status": "fail"
+        },
+        {
+          "case": "sample_slope",
+          "exact_common_times": 816,
+          "fraction_verdict": {
+            "case": "sample_slope",
+            "status": "fail",
+            "errors": [
+              "missing start/stop coverage"
+            ],
+            "rows": 816,
+            "max_error_V": {
+              "z": 1.27613475342514e-11,
+              "y": 5.101696842757519e-12
+            },
+            "final_expected": {
+              "y": 36.0,
+              "z": 58.99999999999999
+            },
+            "final_observed": {
+              "time": 6.999900000002193e-06,
+              "y": 36.0000000000051,
+              "z": 58.99770000006319
+            },
+            "cross_brackets_s": [],
+            "origin": "unknown; PSF format and strobeoutput do not certify accepted origins",
+            "near_6us_order": "unresolved by analog encoded output when both changes coalesce",
+            "tolerances": {
+              "z_V": 0.01,
+              "y_V": 0.01,
+              "cross_time_s": 1e-10,
+              "boundary_exclusion_s": 1e-09
+            }
+          },
+          "alignment_max_error_V": {
+            "z": 0.022993264938399705,
+            "y": 6.7350616035355415e-06
+          },
+          "alignment_status": "fail"
+        }
+      ],
+      "interpretation": "Only pointwise finite subset differences. All Fraction complete verdicts fail missing stop coverage after exact-domain selection. The original Spectre verdicts and full-grid timeout attempts remain separate."
+    },
+    {
+      "id": "v4",
+      "artifact": {
+        "path": "current/runs/near-clock-history-20261008/analysis-v4/evas-v4-subset/COMPARISON.json",
+        "sha256": "b176285200c2570f76432cf95f34b9f812c8b20e7068ab95fe75c93d8d04b7d5",
+        "availability": "local-only"
+      },
+      "selection_rule": "domain rows indexed every100; first/last domain record; every original domain record within ±binary64(1ns) of Fraction nominal timer/cross boundaries",
+      "timeout_seconds": 90,
+      "checker_sha256": "80c53b437278790826b4eb0faf32f4cda649bdcecd2dc59251b2eb99ebe6c522",
+      "comparison_script_sha256": "7d791fecc287a20388cfcd23a82f9ecdecb718c5e7986265eff64ddfe9deecb4",
+      "raw_record_accounting": [
+        {
+          "case": "guard100",
+          "raw_sha256": "326ceaaf7c60f726ce59a7c601879d7a6c1a74a83a3103ef69e814b050b0a736",
+          "raw_rows_total": 70060,
+          "in_domain_rows": 70059,
+          "selected_rows": 838,
+          "excluded_rows": 1
+        },
+        {
+          "case": "guard8",
+          "raw_sha256": "876e1c5c18078e79581719fe305b1a3206690dac6526349954de404d62dd5d82",
+          "raw_rows_total": 70061,
+          "in_domain_rows": 70060,
+          "selected_rows": 859,
+          "excluded_rows": 1
+        },
+        {
+          "case": "sample_slope",
+          "raw_sha256": "09e89e7780137998abb72349b20aafdd3b81dc857eaac65fa9d9feb0d311cd82",
+          "raw_rows_total": 70086,
+          "in_domain_rows": 70085,
+          "selected_rows": 863,
+          "excluded_rows": 1
+        }
+      ],
+      "results": [
+        {
+          "case": "guard100",
+          "exact_common_times": 838,
+          "fraction_verdict": {
+            "case": "guard100",
+            "status": "fail",
+            "errors": [
+              "missing start/stop coverage"
+            ],
+            "rows": 838,
+            "max_error_V": {
+              "z": 3.446132268436486e-13,
+              "y": 0.0
+            },
+            "final_expected": {
+              "y": 23.0,
+              "z": 9.0
+            },
+            "final_observed": {
+              "time": 6.999900000002191e-06,
+              "y": 23.0,
+              "z": 8.999700000006918
+            },
+            "cross_brackets_s": [],
+            "origin": "unknown; PSF format and strobeoutput do not certify accepted origins",
+            "near_6us_order": "unresolved by analog encoded output when both changes coalesce",
+            "tolerances": {
+              "z_V": 0.001,
+              "y_V": 1e-07,
+              "cross_time_s": 1e-10,
+              "boundary_exclusion_s": 1e-09
+            }
+          },
+          "alignment_max_error_V": {
+            "z": 3.143693923846058e-06,
+            "y": 0.0
+          },
+          "alignment_status": "pass"
+        },
+        {
+          "case": "guard8",
+          "exact_common_times": 859,
+          "fraction_verdict": {
+            "case": "guard8",
+            "status": "fail",
+            "errors": [
+              "missing start/stop coverage"
+            ],
+            "rows": 859,
+            "max_error_V": {
+              "z": 3.730349362740526e-13,
+              "y": 0.0
+            },
+            "final_expected": {
+              "y": 123.0,
+              "z": 9.0
+            },
+            "final_observed": {
+              "time": 6.999900000000731e-06,
+              "y": 123.0,
+              "z": 8.999700000002562
+            },
+            "cross_brackets_s": [
+              [
+                6.666665635435588e-06,
+                6.666765635435589e-06
+              ]
+            ],
+            "origin": "unknown; PSF format and strobeoutput do not certify accepted origins",
+            "near_6us_order": "unresolved by analog encoded output when both changes coalesce",
+            "tolerances": {
+              "z_V": 0.001,
+              "y_V": 1e-07,
+              "cross_time_s": 1e-10,
+              "boundary_exclusion_s": 1e-09
+            }
+          },
+          "alignment_max_error_V": {
+            "z": 3.143693891871635e-06,
+            "y": 0.0
+          },
+          "alignment_status": "pass"
+        },
+        {
+          "case": "sample_slope",
+          "exact_common_times": 863,
+          "fraction_verdict": {
+            "case": "sample_slope",
+            "status": "fail",
+            "errors": [
+              "missing start/stop coverage"
+            ],
+            "rows": 863,
+            "max_error_V": {
+              "z": 1.27613475342514e-11,
+              "y": 5.101696842757519e-12
+            },
+            "final_expected": {
+              "y": 36.0,
+              "z": 58.99999999999999
+            },
+            "final_observed": {
+              "time": 6.999900000002191e-06,
+              "y": 36.0000000000051,
+              "z": 58.997700000063155
+            },
+            "cross_brackets_s": [],
+            "origin": "unknown; PSF format and strobeoutput do not certify accepted origins",
+            "near_6us_order": "unresolved by analog encoded output when both changes coalesce",
+            "tolerances": {
+              "z_V": 0.01,
+              "y_V": 0.01,
+              "cross_time_s": 1e-10,
+              "boundary_exclusion_s": 1e-09
+            }
+          },
+          "alignment_max_error_V": {
+            "z": 2.423654911609674e-05,
+            "y": 7.117426960689954e-06
+          },
+          "alignment_status": "pass"
+        }
+      ],
+      "interpretation": "Only pointwise finite subset differences. All Fraction complete verdicts fail missing stop coverage after exact-domain selection. The original Spectre verdicts and full-grid timeout attempts remain separate."
+    }
+  ],
+  "comparison_execution_accounting": {
+    "v2_missing_z_kernel_requests": 0,
+    "v3_original_unfiltered_kernel_requests": 3,
+    "corrected_full_domain_kernel_requests": 6,
+    "corrected_full_domain_waveforms": 1,
+    "corrected_full_domain_timeout": 5,
+    "finite_subset_kernel_requests": 6,
+    "finite_subset_waveforms": 6,
+    "kernel_timeout_full_domain_seconds": 300,
+    "note": "Counts concern these comparison scripts only, not developer tests, version queries or calendar replay; not performance measurements."
+  },
+  "finite_subset_request": {
+    "vabstol": 1e-07,
+    "reltol": 1e-08,
+    "max_step_s": 7e-06,
+    "kernel_sha256": "abc000634aba8444483278baa26ac14cccddf06511781b29c1941dd6d5ce4e26"
+  }
+}

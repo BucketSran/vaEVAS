@@ -42,7 +42,7 @@ RULES = {
 _KERNEL_CATEGORIES = {
     # These existing typed Rust origins retain their prior categories. No
     # prefix or message inference classifies an unseen future reason.
-    'unsupported_analysis': 'unsupported', 'unsupported_condition': 'unsupported',
+    'unsupported_strobe': 'unsupported', 'unsupported_analysis': 'unsupported', 'unsupported_condition': 'unsupported',
     'unsupported_operator': 'unsupported', 'unsupported_transient': 'unsupported',
     'unsupported_cross': 'unsupported', 'unsupported_timer': 'unsupported',
     'unsupported_implicit_dynamics': 'unsupported', 'unsupported_initialization': 'unsupported',
@@ -61,7 +61,7 @@ _KERNEL_CATEGORIES = {
     'event_resolution': 'numerical', 'nonlinear_convergence': 'numerical',
     'initialization_precision': 'numerical',
 }
-_KERNEL_CAPABILITIES = {'unsupported_timer': 'TIMER', 'unsupported_cross': 'CROSS',
+_KERNEL_CAPABILITIES = {'unsupported_strobe': 'DYNAMICS', 'unsupported_timer': 'TIMER', 'unsupported_cross': 'CROSS',
                         'unsupported_implicit_dynamics': 'DYNAMICS',
                         'unsupported_initialization': 'LANG', 'initialization_precision': 'LANG'}
 

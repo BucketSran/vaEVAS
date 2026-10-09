@@ -7,6 +7,7 @@ use std::sync::{Arc, OnceLock};
 
 type AffineFactor = Arc<OnceLock<Result<linear::Factorization, Error>>>;
 
+#[derive(Clone)]
 pub struct Circuit {
     pub nodes: Vec<String>,
     equations: Vec<Equation>,
@@ -23,6 +24,7 @@ pub struct Circuit {
 // Cache dense spans only when they occupy at most twice the actual terms.
 // Sparse rows retain indexed traversal, so isolated distant nodes never cause
 // an allocation proportional to their node-number span.
+#[derive(Clone)]
 struct DenseResidual {
     start: usize,
     coefficients: Vec<f64>,
@@ -676,6 +678,7 @@ impl Circuit {
 
     fn affine_solution(values: Vec<f64>, absolute: f64, ratio: f64) -> Solution {
         Solution {
+            certified_voltage_bounds: None,
             voltages: values,
             max_residual_v: absolute,
             max_residual_ratio: ratio,
@@ -892,7 +895,20 @@ mod tests {
 
     #[test]
     fn sparse_settlement_certifies_after_numeric_solve_and_retries_changed_inputs() {
-        let model = sparse_event_model();
+        let mut program = sparse_event_model().program;
+        // y0=q exposes the lost exact 2^-55 even when other sparse rows
+        // have large offsets. Retain their topology and sparse dispatch.
+        program.contributions[0].rhs =
+            serde_json::from_value(json!({"op":"state","state":0})).unwrap();
+        let model = EventModel::new(
+            program,
+            vec!["u".into()],
+            Tolerances {
+                absolute: 1e-20,
+                relative: 1e-5,
+            },
+        )
+        .unwrap();
         let before = model.initial();
         let bounds = vec![I::ZERO];
         let accepted = model.circuit(&before).unwrap();
@@ -932,7 +948,7 @@ mod tests {
                 assert_eq!(states, [delta]);
                 assert!(certified[0].lo <= delta && certified[0].hi >= delta);
                 assert_sparse(&circuit);
-                assert_eq!(solution.voltages[2], input + delta);
+                assert_eq!(solution.voltages[2], delta);
             }
             assert_eq!(before, [0.0]);
             assert_eq!(bounds, [I::ZERO]);

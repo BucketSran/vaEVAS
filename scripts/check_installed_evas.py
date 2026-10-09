@@ -45,7 +45,7 @@ assert identity['compatibility']['request_protocol_version'] is None
 assert identity['kernel']['reported']['request_protocol_version'] is None
 assert identity['package']['metadata_source'] == 'distribution'
 cli = str(Path(sys.executable).parent / 'evas-rebuild')
-source = 'module m(u,y); input u; output y; electrical u,y; analog begin V(y)<+2*V(u)+0.25; end endmodule'
+source = '`include "disciplines.vams"\nmodule m(u,y); input u; output y; electrical u,y; analog begin V(y)<+2*V(u)+0.25; end endmodule'
 (root/'m.va').write_text(source)
 data = dict(models=['m.va'], instances=[dict(name='dut', module='m', connections=dict(u='u', y='y'))], driven=['u'], samples=[[-.5],[0],[.75]])
 (root/'static.json').write_text(json.dumps(data))
@@ -63,7 +63,7 @@ verify(solve(program, ['u'], data['samples'], kernel=selected), answers)
 verify(command(cli, 'solve', 'static.json'), answers)
 verify(command(sys.executable, '-m', 'evas', 'solve', 'static.json'), answers)
 
-source = 'module m(y); output y; electrical y; analog begin V(y)<+idt(1,0.25); end endmodule'
+source = '`include "disciplines.vams"\nmodule m(y); output y; electrical y; analog begin V(y)<+idt(1,0.25); end endmodule'
 (root/'integral.va').write_text(source)
 dynamic = dict(models=['integral.va'], instances=[dict(name='dut', module='m', connections=dict(y='y'))], transient=dict(sources={},output_times=[0,.25,.5],stop=.5,max_step=.5), tolerances=dict(reltol=0,vabstol=1e-9))
 (root/'transient.json').write_text(json.dumps(dynamic))

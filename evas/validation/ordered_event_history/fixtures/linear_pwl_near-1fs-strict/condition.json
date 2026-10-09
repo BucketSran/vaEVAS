@@ -1,0 +1,33 @@
+{
+  "diagnostic": true,
+  "expected_timer_counts": {
+    "h": 0,
+    "m": 2,
+    "n": 3
+  },
+  "family": "linear_pwl_near",
+  "id": "linear_pwl_near-1fs-strict",
+  "input_original_sha256": "31690d773d3f621b0ef76b9719b4574e46105e32ea878a25efd05ec7125888e8",
+  "maxstep_s": 1.1e-07,
+  "oracle_derivation": "A=Fraction.from_float(2e-6), B=Fraction.from_float(3e-6), C=Fraction.from_float(6e-6), STOP=Fraction.from_float(7e-6), M=Fraction.from_float(1e6). Integral clock area=sum_j max(0,t-j*A)+10sum_j max(0,t-j*B). Nonlinear z=1/(1+M*area), linear z=M*(area+integral u), input knot C. y retains z(B), then z(2B); initial y1. 3A<2B exactly, third A already fires before second B. No formula fitted to a backend.",
+  "original_source_sha256": "44eedc6b8ab2d19770020e837fa1753feed1f3fc8d7ed7d2b3d795a45a81ae14",
+  "original_timer_declared_tolerance_s": 1e-09,
+  "physical_event_time_s": 1e-09,
+  "physical_voltage_V": 1e-06,
+  "profile": "fine",
+  "sample_times_rational": [
+    "1770887431076117/590295810358705651712",
+    "1770887431076117/295147905179352825856"
+  ],
+  "source_sha256": "30e44241fc3d90dfb6252b4088c209d5a16573222f674eb03f65458e39911263",
+  "spectre": {
+    "iabstol": 1e-16,
+    "method": "traponly",
+    "precision": "%24.17g",
+    "reltol": 1e-10,
+    "saveahdlvars": "allwithnodes",
+    "vabstol": 1e-12
+  },
+  "stop_s": 7e-06,
+  "timer_declared_tolerance_s": 1e-15
+}

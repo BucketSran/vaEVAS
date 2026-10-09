@@ -10,6 +10,7 @@ from .ir import SCHEMA_VERSION
 from .manifest import unique_object, reject_constant, finite_float
 from .lint import read_input_bytes, decode_input, parse_manifest_input
 from .protocol import validate_response
+from .strobe import FIELDS as STROBE_FIELDS, controls as strobe_controls
 from .query import static_index, query_static
 from .runtime import _invoke, _tolerances, DEFAULT_TIMEOUT
 
@@ -55,11 +56,11 @@ def capture(manifest_path, kernel, *, timeout=DEFAULT_TIMEOUT):
     # arguments are validated explicitly; unknown keys cannot silently disappear.
     if 'transient' in manifest:
         config = manifest['transient']
-        if set(config) != {'sources', 'output_times', 'stop', 'max_step'}:
+        if not {'sources', 'output_times', 'stop', 'max_step'} <= config.keys() or set(config) - {'sources', 'output_times', 'stop', 'max_step'} - STROBE_FIELDS:
             raise ValueError('diagnostic transient requires sources/output_times/stop/max_step')
         request.update(driven=list(config['sources']), samples=[], transient=dict(
             pwl=list(config['sources'].values()), output_times=config['output_times'],
-            stop=config['stop'], max_step=config['max_step']))
+            stop=config['stop'], max_step=config['max_step'], **strobe_controls(config)))
         count, times = len(config['output_times']), config['output_times']
     else:
         request.update(driven=manifest['driven'], samples=manifest['samples'])
@@ -72,7 +73,7 @@ def capture(manifest_path, kernel, *, timeout=DEFAULT_TIMEOUT):
         sidecar = Path(directory) / 'kernel.json'
         try:
             response = _invoke(request, kernel, timeout, diagnostics_path=sidecar)
-            validate_response(response, program, count, times)
+            validate_response(response, program, count, times, strobetimes=request.get("transient", {}).get("strobetimes", []))
         except KernelError as exc:
             error = exc.detail
             error_diagnostic = exc.diagnostic

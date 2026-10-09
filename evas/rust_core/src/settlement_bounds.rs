@@ -128,18 +128,6 @@ impl Bounds {
         })
     }
 
-    pub(crate) fn check(
-        &self,
-        model: &EventModel,
-        inputs: &[I],
-        before: &[I],
-        operators: &[I],
-        voltages: &[f64],
-        states: &[f64],
-    ) -> Result<Vec<I>, Error> {
-        self.check_selected(model, (inputs, before, operators), voltages, states, true)
-    }
-
     pub(crate) fn check_states(
         &self,
         model: &EventModel,
@@ -150,6 +138,19 @@ impl Bounds {
         states: &[f64],
     ) -> Result<Vec<I>, Error> {
         self.check_selected(model, (inputs, before, operators), voltages, states, false)
+            .map(|(states, _)| states)
+    }
+
+    pub(crate) fn check_observation(
+        &self,
+        model: &EventModel,
+        inputs: &[I],
+        before: &[I],
+        operators: &[I],
+        voltages: &[f64],
+        states: &[f64],
+    ) -> Result<(Vec<I>, Vec<I>), Error> {
+        self.check_selected(model, (inputs, before, operators), voltages, states, true)
     }
 
     fn check_selected(
@@ -159,7 +160,7 @@ impl Bounds {
         voltages: &[f64],
         states: &[f64],
         check_voltages: bool,
-    ) -> Result<Vec<I>, Error> {
+    ) -> Result<(Vec<I>, Vec<I>), Error> {
         let (inputs, before, operators) = inputs;
         let parameters: Vec<_> = inputs
             .iter()
@@ -169,6 +170,7 @@ impl Bounds {
             .chain([I::ONE])
             .collect();
         let mut state_bounds = Vec::new();
+        let mut voltage_bounds = Vec::new();
         for (rows, actual, voltage) in
             [(&self.nodes, voltages, true), (&self.states, states, false)]
         {
@@ -182,6 +184,8 @@ impl Bounds {
                     .fold(I::ZERO, |sum, (&a, &b)| sum + a * b);
                 if !voltage {
                     state_bounds.push(exact);
+                } else {
+                    voltage_bounds.push(exact);
                 }
                 let integer = !voltage && model.program.states[k].kind == StateKind::Integer;
                 let absolute = if voltage {
@@ -189,19 +193,21 @@ impl Bounds {
                 } else {
                     0.0
                 };
-                let relative = if integer {
-                    0.0
-                } else {
+                let relative = if voltage {
                     model.tolerances.relative
+                } else {
+                    0.0
                 };
                 // A lower bound on the requested budget and an upper bound on
-                // actual error. No voltage absolute tolerance for generic state.
+                // actual error. Generic real states have no physical unit budget.
+                // Keep their finite enclosures for later voltage, history and
+                // event consumers; integer states still require zero error.
                 let budget = I::point(absolute) + I::point(relative) * I::point(value.abs());
                 let error = I::point(value) - exact;
                 if !exact.finite()
                     || !error.finite()
                     || !budget.finite()
-                    || error.magnitude() > budget.lo.max(0.0)
+                    || ((voltage || integer) && error.magnitude() > budget.lo.max(0.0))
                 {
                     let name = if voltage {
                         model.program.nodes[k].clone()
@@ -221,6 +227,6 @@ impl Bounds {
                 }
             }
         }
-        Ok(state_bounds)
+        Ok((state_bounds, voltage_bounds))
     }
 }

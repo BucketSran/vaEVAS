@@ -21,7 +21,7 @@ class ResultOutputs(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         self.source = self.root / 'm.va'
-        self.source.write_text('module m(u,y); input u; output y; electrical u,y; analog begin V(y)<+2*V(u)+0.25; end endmodule')
+        self.source.write_text('`include "disciplines.vams"\nmodule m(u,y); input u; output y; electrical u,y; analog begin V(y)<+2*V(u)+0.25; end endmodule')
         self.data = dict(models=['m.va'], instances=[dict(name='dut', module='m', connections=dict(u='u', y='y'))], driven=['u'], samples=[[-.5], [0.0], [.75]])
         self.path = self.root / 'sim.json'
         self.path.write_text(json.dumps(self.data))
@@ -57,7 +57,7 @@ class ResultOutputs(unittest.TestCase):
             self.assertTrue((self.out / file['path']).is_file())
 
     def test_transient_csv_time_units_order_and_round_trip(self):
-        self.source.write_text('module m(y); output y; electrical y; analog begin V(y)<+idt(1,0.25); end endmodule')
+        self.source.write_text('`include "disciplines.vams"\nmodule m(y); output y; electrical y; analog begin V(y)<+idt(1,0.25); end endmodule')
         self.data['instances'][0]['connections'] = dict(y='y')
         self.data.pop('driven')
         self.data.pop('samples')
@@ -93,7 +93,7 @@ class ResultOutputs(unittest.TestCase):
                 if kind == 'missing_source':
                     self.source.unlink()
                 else:
-                    self.source.write_text('module m(u,y); input u; output y; electrical u,y; analog begin V(y)<+2*V(u)+0.25; end endmodule' if kind != 'compile' else 'invalid Verilog-A')
+                    self.source.write_text('`include "disciplines.vams"\nmodule m(u,y); input u; output y; electrical u,y; analog begin V(y)<+2*V(u)+0.25; end endmodule' if kind != 'compile' else 'invalid Verilog-A')
                 if kind == 'missing_mode':
                     manifest = dict(self.data)
                     manifest.pop('driven'); manifest.pop('samples')
@@ -257,7 +257,7 @@ raise SystemExit(main(sys.argv[1:]))
         self.assertNotIn('Traceback',result.stderr)
 
     def test_wrong_transient_time_coverage_is_failed(self):
-        self.source.write_text('module m(y); output y; electrical y; analog begin V(y)<+idt(1,0.25); end endmodule')
+        self.source.write_text('`include "disciplines.vams"\nmodule m(y); output y; electrical y; analog begin V(y)<+idt(1,0.25); end endmodule')
         self.data=dict(models=['m.va'],instances=[dict(name='dut',module='m',connections=dict(y='y'))],
                        transient=dict(sources={},output_times=[0,.25,.5],stop=.5,max_step=.5))
         self.path.write_text(json.dumps(self.data))

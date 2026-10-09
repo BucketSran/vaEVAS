@@ -1,0 +1,402 @@
+[
+  {
+    "accepted_steps": 130,
+    "actual_counter_changes": [
+      {
+        "changes": {
+          "n": {
+            "after": "1",
+            "before": "0"
+          }
+        },
+        "time_token": "0.10000000050000001"
+      },
+      {
+        "changes": {
+          "h": {
+            "after": "1",
+            "before": "0"
+          },
+          "m": {
+            "after": "1",
+            "before": "0"
+          },
+          "n": {
+            "after": "2",
+            "before": "1"
+          },
+          "q": {
+            "after": "1",
+            "before": "0"
+          }
+        },
+        "time_token": "0.29999999999999999"
+      }
+    ],
+    "actual_effective_settings": {
+      "iabstol_A": {
+        "line": 130,
+        "raw": "    abstol(I) = 100 aA",
+        "scope": "transient:tran",
+        "value": 1.0000000000000001e-16
+      },
+      "maxstep_s": {
+        "line": 124,
+        "raw": "    maxstep = 12 ms",
+        "scope": "transient:tran",
+        "value": 0.012
+      },
+      "method": {
+        "line": 135,
+        "raw": "    method = traponly",
+        "scope": "transient:tran",
+        "value": "traponly"
+      },
+      "reltol": {
+        "line": 128,
+        "raw": "    reltol = 100e-12",
+        "scope": "transient:tran",
+        "value": 1e-10
+      },
+      "stop_s": {
+        "line": 122,
+        "raw": "    stop = 310 ms",
+        "scope": "transient:tran",
+        "value": 0.31
+      },
+      "vabstol_V": {
+        "line": 129,
+        "raw": "    abstol(V) = 1 pV",
+        "scope": "transient:tran",
+        "value": 1e-12
+      }
+    },
+    "actual_rows": 35,
+    "complete_reference_status": "analyzed",
+    "configuration": "hidden_loose-timer-1ps",
+    "deck_sha256": "6b3a4e95213b1cece7ba1123b024e99f52031ded305c49954a6c1546668f5a2c",
+    "domain_exact_rational_complete": false,
+    "event_brackets": {
+      "h": [
+        {
+          "lower": "599999999/2000000000",
+          "nominal": "389422264390112095055139650703595/1298074214633706907132624082305024",
+          "upper": "29999999999999999/100000000000000000"
+        }
+      ],
+      "m": [
+        {
+          "lower": "599999999/2000000000",
+          "nominal": "1351079888211149/4503599627370496",
+          "upper": "29999999999999999/100000000000000000"
+        }
+      ],
+      "n": [
+        {
+          "lower": "49999999750000003/500000000000000000",
+          "nominal": "3602879701896397/36028797018963968",
+          "upper": "10000000050000001/100000000000000000"
+        },
+        {
+          "lower": "599999999/2000000000",
+          "nominal": "10808639105689191/36028797018963968",
+          "upper": "29999999999999999/100000000000000000"
+        }
+      ],
+      "q": [
+        {
+          "lower": "599999999/2000000000",
+          "nominal": "10808639105689191/36028797018963968",
+          "upper": "29999999999999999/100000000000000000"
+        }
+      ]
+    },
+    "family": "hidden_loose",
+    "final_counters": {
+      "h": "1",
+      "m": "1",
+      "n": "2",
+      "q": "1"
+    },
+    "last_time_token": "0.31",
+    "raw_independent_analysis_sha256": "1755e43b34a7388dee9f3bc5ac042f153aa0ec817c72dc14caa37ce899982455",
+    "raw_token_domain_exterior": [
+      {
+        "index": 34,
+        "numeric_projection_in_domain": true,
+        "time_token": "0.31"
+      }
+    ],
+    "reference_event_status": "I",
+    "reference_exact_order_status": "I",
+    "reference_finite_event_status": "I",
+    "reference_finite_numeric_status": "P",
+    "reference_max_errors_V": {
+      "u": 3e-17,
+      "y": 0.0,
+      "z": 1.8539370294552695e-12
+    },
+    "reference_numeric_status": "I",
+    "reference_qualification_status": "I",
+    "rows_equal_steps_plus_initial": false,
+    "settings_status": "P",
+    "source_sha256": "786abce6b0903d21dfe373a55ef1cdf1f070445c85ab93302fc71b9f2760b6f9"
+  },
+  {
+    "accepted_steps": 111,
+    "actual_counter_changes": [
+      {
+        "changes": {
+          "n": {
+            "after": "1",
+            "before": "0"
+          }
+        },
+        "time_token": "0.10000000050000001"
+      },
+      {
+        "changes": {
+          "m": {
+            "after": "1",
+            "before": "0"
+          },
+          "n": {
+            "after": "2",
+            "before": "1"
+          },
+          "q": {
+            "after": "1",
+            "before": "0"
+          }
+        },
+        "time_token": "0.29999999999999999"
+      }
+    ],
+    "actual_effective_settings": {
+      "iabstol_A": {
+        "line": 130,
+        "raw": "    abstol(I) = 100 aA",
+        "scope": "transient:tran",
+        "value": 1.0000000000000001e-16
+      },
+      "maxstep_s": {
+        "line": 124,
+        "raw": "    maxstep = 12 ms",
+        "scope": "transient:tran",
+        "value": 0.012
+      },
+      "method": {
+        "line": 135,
+        "raw": "    method = traponly",
+        "scope": "transient:tran",
+        "value": "traponly"
+      },
+      "reltol": {
+        "line": 128,
+        "raw": "    reltol = 100e-12",
+        "scope": "transient:tran",
+        "value": 1e-10
+      },
+      "stop_s": {
+        "line": 122,
+        "raw": "    stop = 310 ms",
+        "scope": "transient:tran",
+        "value": 0.31
+      },
+      "vabstol_V": {
+        "line": 129,
+        "raw": "    abstol(V) = 1 pV",
+        "scope": "transient:tran",
+        "value": 1e-12
+      }
+    },
+    "actual_rows": 35,
+    "complete_reference_status": "analyzed",
+    "configuration": "hidden_loose-timer-1fs-nocross",
+    "deck_sha256": "6b3a4e95213b1cece7ba1123b024e99f52031ded305c49954a6c1546668f5a2c",
+    "domain_exact_rational_complete": false,
+    "event_brackets": {
+      "h": [],
+      "m": [
+        {
+          "lower": "599999999/2000000000",
+          "nominal": "1351079888211149/4503599627370496",
+          "upper": "29999999999999999/100000000000000000"
+        }
+      ],
+      "n": [
+        {
+          "lower": "49999999750000003/500000000000000000",
+          "nominal": "3602879701896397/36028797018963968",
+          "upper": "10000000050000001/100000000000000000"
+        },
+        {
+          "lower": "599999999/2000000000",
+          "nominal": "10808639105689191/36028797018963968",
+          "upper": "29999999999999999/100000000000000000"
+        }
+      ],
+      "q": [
+        {
+          "lower": "599999999/2000000000",
+          "nominal": "10808639105689191/36028797018963968",
+          "upper": "29999999999999999/100000000000000000"
+        }
+      ]
+    },
+    "family": "hidden_loose_nocross",
+    "final_counters": {
+      "h": "0",
+      "m": "1",
+      "n": "2",
+      "q": "1"
+    },
+    "last_time_token": "0.31",
+    "raw_independent_analysis_sha256": "349479fafb20d8c390315c4ca36968222e197126d5ff109279d60569aa78d607",
+    "raw_token_domain_exterior": [
+      {
+        "index": 34,
+        "numeric_projection_in_domain": true,
+        "time_token": "0.31"
+      }
+    ],
+    "reference_event_status": "I",
+    "reference_exact_order_status": "I",
+    "reference_finite_event_status": "I",
+    "reference_finite_numeric_status": "P",
+    "reference_max_errors_V": {
+      "u": 3e-17,
+      "y": 0.0,
+      "z": 2.500000240413021e-10
+    },
+    "reference_numeric_status": "I",
+    "reference_qualification_status": "I",
+    "rows_equal_steps_plus_initial": false,
+    "settings_status": "P",
+    "source_sha256": "c1b490cc75bf07cc6017be66c3258c8bfd7ff549f4b18d193d5e9de93b966acc"
+  },
+  {
+    "accepted_steps": 154,
+    "actual_counter_changes": [
+      {
+        "changes": {
+          "n": {
+            "after": "1",
+            "before": "0"
+          }
+        },
+        "time_token": "0.10000000025000001"
+      },
+      {
+        "changes": {
+          "j": {
+            "after": "1",
+            "before": "0"
+          },
+          "k": {
+            "after": "1",
+            "before": "0"
+          },
+          "n": {
+            "after": "2",
+            "before": "1"
+          }
+        },
+        "time_token": "0.29999999999999999"
+      }
+    ],
+    "actual_effective_settings": {
+      "iabstol_A": {
+        "line": 130,
+        "raw": "    abstol(I) = 100 aA",
+        "scope": "transient:tran",
+        "value": 1.0000000000000001e-16
+      },
+      "maxstep_s": {
+        "line": 124,
+        "raw": "    maxstep = 12 ms",
+        "scope": "transient:tran",
+        "value": 0.012
+      },
+      "method": {
+        "line": 135,
+        "raw": "    method = traponly",
+        "scope": "transient:tran",
+        "value": "traponly"
+      },
+      "reltol": {
+        "line": 128,
+        "raw": "    reltol = 100e-12",
+        "scope": "transient:tran",
+        "value": 1e-10
+      },
+      "stop_s": {
+        "line": 122,
+        "raw": "    stop = 490 ms",
+        "scope": "transient:tran",
+        "value": 0.49
+      },
+      "vabstol_V": {
+        "line": 129,
+        "raw": "    abstol(V) = 1 pV",
+        "scope": "transient:tran",
+        "value": 1e-12
+      }
+    },
+    "actual_rows": 54,
+    "complete_reference_status": "analyzed",
+    "configuration": "mixed_source-quarter-ns-strobes",
+    "deck_sha256": "6065e32b2ee9a4181e52e9647bd78ec93253c0f440262bdba5f97126df198d89",
+    "domain_exact_rational_complete": false,
+    "event_brackets": {
+      "j": [
+        {
+          "lower": "14999999987500001/50000000000000000",
+          "nominal": "1351079888211149/4503599627370496",
+          "upper": "29999999999999999/100000000000000000"
+        }
+      ],
+      "k": [
+        {
+          "lower": "14999999987500001/50000000000000000",
+          "nominal": "19471113219505603967277331424215/64903710731685344455911278641152",
+          "upper": "29999999999999999/100000000000000000"
+        }
+      ],
+      "n": [
+        {
+          "lower": "99999999749999999/1000000000000000000",
+          "nominal": "3602879701896397/36028797018963968",
+          "upper": "10000000025000001/100000000000000000"
+        },
+        {
+          "lower": "14999999987500001/50000000000000000",
+          "nominal": "10808639105689191/36028797018963968",
+          "upper": "29999999999999999/100000000000000000"
+        }
+      ]
+    },
+    "family": "mixed_source",
+    "final_counters": {
+      "j": "1",
+      "k": "1",
+      "n": "2"
+    },
+    "last_time_token": "0.48999999999999999",
+    "raw_independent_analysis_sha256": "fba2d01c8783aa9856d2f3a6c4f9f8bfdd16baed2b905e4d79706efc4f6f69d7",
+    "raw_token_domain_exterior": [],
+    "reference_event_status": "I",
+    "reference_exact_order_status": "I",
+    "reference_finite_event_status": "P",
+    "reference_finite_numeric_status": "P",
+    "reference_max_errors_V": {
+      "u": 4.222044604925032e-17,
+      "y": 0.0
+    },
+    "reference_numeric_status": "I",
+    "reference_qualification_status": "I",
+    "rows_equal_steps_plus_initial": false,
+    "settings_status": "P",
+    "source_sha256": "1ce556712eccc4e8261984e36f4718f2871f2dff127b2df8a26a1cf02e59d8fe"
+  }
+]

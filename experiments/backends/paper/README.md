@@ -6,6 +6,7 @@
 
 [PR #108 固定候选的 12 条件工程重放与实际 Spectre 配对](integration.md)
 保留有限数值结果、窗口内阶段差及资格缺口。它不代表 main 支持，也不覆盖原论文表。
+[当前候选四后端表](candidate-table.md)使用新的实际 EVAS12 与原参考36，保留固定48槽及原误差预算；原结果和已校准的 checker 时间排序修复重分析分别绑定身份。
 
 ```sh
 python3 -B -m unittest discover -s experiments/backends/paper -p 'test_*.py' -v
@@ -167,6 +168,29 @@ python3 -B -m unittest discover -s experiments/backends/paper -p test_table.py -
 也可显式写 `{"condition_id":"VR-01","backend":"evas","status":"T"}`，
 表示尚无执行结果的占位槽。若同时附 execution 引用，其实际状态必须为
 not_run，不能将已有执行结果替换为 T。
+
+同一次 EVAS 执行可另存派生分析，不改写原 lane、final-record、
+FILE_MANIFEST、observation 或原 assessment。条目仍以 `identity.observation`
+引用原观察，另外声明 `analysis_observation`、`derivation` 两个 path/sha256
+引用、非空 `analysis_method`，以及 `prior_analyses` 原 assessment 引用数组。
+新 assessment 的 `execution_sha256` 仍是原 final-record 哈希；
+`input_observation_sha256` 则是派生 observation 的哈希。原 I/F/P 会在独立的
+prior analyses 栏保留；分析不是一次新执行，不能填入 `prior_attempts`。
+
+`derivation` 引用 schema_version=1 的 JSON，其 `execution`、
+`original_observation`、`derived_observation`、`raw`、`source`、`adapter`、
+`evidence` 均为可读取的绝对 path/sha256 引用。raw/source 必须是原 lane
+FILE_MANIFEST 内的 raw-response.json/dut.va。adapter 是此次分析实际使用并
+保留的工具快照；evidence 使用 `actual_observation.py` 生成的 evidence.json，
+其中 `analysis_adapter` 须绑定该快照，`identities.normalized/raw/source`
+须绑定原文件，`execution_identity.artifacts.final_record/lane_manifest/tool`
+须绑定原执行链。每个引用都校验文件字节哈希，维护工具之后仍可展示历史分析。
+
+派生 observation 的条件、后端、状态、单位、全部时间和电压行，以及实测
+间隔、覆盖范围和窗口几何必须与原观察相同；raw response 的行也须逐行相等。
+只有资格及其来源证据可以改变，资格引用必须指向 evidence.json 中已建立的
+对应 role。table 验证这些绑定和原 assessment 的冻结身份，不代替 criteria
+评分；缺失的角色继续由原 checker 判 I，固定 48 槽及全部原尝试不变。
 P/F/I 必须来自 completed assessment 和 waveform_available execution，
 且 assessment 的 input_observation_sha256、execution 的 observation 引用
 和实际 observation 三方哈希一致，execution_sha256 与实际执行文件一致，
@@ -201,6 +225,20 @@ criteria.identity 的 `json.dumps({files, runtime}, sort_keys=True)` 重算顶�
 使用 runner 已保存的 profile_identity、kernel/binary/image 身份、实际版本、
 interpreter、环境身份和 compiler flags；版本 probe 的时戳、argv、日志收据
 不参与工具相等判断。各次 TOOL_IDENTITY 原字节哈希仍分别保留在表中。
+
+经过校准、审核的 checker 时间排序修复可显式重新评估全部 48 槽，包括 X。
+仅接纳 `native_si_time_order_v1` 对应的固定 criteria.py/oracle.py/core-v1.json
+哈希；不能选择任意当前 checker。新 record 只替换 `assessment` 并增加
+`checker_reanalysis` 的 path/sha256 引用，其余字段必须逐对象保持不变。
+该引用指向 schema_version=1 的 packet，包含上述 `method`、原 record 的
+`original_record` 引用、新 `assessment` 引用、`checker`（完整 `identity`
+及按文件名组织的 `files` 快照引用）、实际 `calibration` 和 `review` 引用。
+packet 内引用使用绝对路径，全部校验可读取的文件字节哈希。
+
+汇总器递归验证原 record 及其原 assessment，以原 checker 检查执行中冻结的
+CHECKER_IDENTITY；另外检查新 assessment 的固定 checker 快照。派生观察
+和既有 prior analyses、prior attempts 继续完整保留。新表独立列出原 verdict、
+新 checker 身份、校准和审核证据，不覆盖原 8P/4I 表或将重分析计为新执行。
 
 condition STARTED、TOOL_IDENTITY、final-record 和原始 source/deck 必须属于
 该 lane 的 FILE_MANIFEST；源码还须与 execution.source_sha256、card.source

@@ -194,7 +194,9 @@ impl Origin {
         self.expansion.len() <= 64
             && self.expansion.iter().all(|(name, _)| {
                 let mut bytes = name.bytes();
-                bytes.next().is_some_and(|c| c == b'_' || c.is_ascii_alphabetic())
+                bytes
+                    .next()
+                    .is_some_and(|c| c == b'_' || c.is_ascii_alphabetic())
                     && bytes.all(|c| c == b'_' || c.is_ascii_alphanumeric())
             })
     }
@@ -239,6 +241,9 @@ pub struct Request {
 
 #[derive(Debug, Clone, Serialize)]
 pub struct Solution {
+    /// Internal certificate transport; exposed only by ObservationEvidence.
+    #[serde(skip)]
+    pub certified_voltage_bounds: Option<Vec<[f64; 2]>>,
     /// Same node order as Program.nodes; ground is always exactly zero.
     pub voltages: Vec<f64>,
     pub max_residual_v: f64,
@@ -254,12 +259,42 @@ pub struct Solution {
 
 #[derive(Debug, Serialize)]
 pub struct Response {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub strobe_evidence: Option<StrobeEvidence>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub portability_advisories: Option<PortabilityAdvisories>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub observation_evidence: Option<ObservationEvidence>,
     pub engine: String,
     pub schema_version: u32,
     pub nodes: Vec<String>,
     pub solutions: Vec<Solution>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub transient: Option<TransientTrace>,
+}
+
+/// Optional, versioned evidence for the returned transient observation rows.
+/// Bounds and origins index solutions/transient.times; nodes binds column order.
+#[derive(Debug, Serialize)]
+pub struct ObservationEvidence {
+    pub schema_version: u32,
+    pub nodes: Vec<String>,
+    pub effective_controls: EffectiveObservationControls,
+    pub sample_origins: Vec<&'static str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub initial_settled: Option<bool>,
+    #[serde(rename = "voltage_bounds_V")]
+    pub voltage_bounds_v: Vec<Option<Vec<[f64; 2]>>>,
+}
+
+#[derive(Debug, Serialize)]
+pub struct EffectiveObservationControls {
+    #[serde(rename = "absolute_V")]
+    pub absolute_v: f64,
+    pub relative: f64,
+    pub stop_s: f64,
+    pub max_step_s: f64,
+    pub max_step_applied: bool,
 }
 
 #[derive(Debug, Serialize)]
@@ -307,7 +342,9 @@ impl StateInitial {
         match self {
             Self::Constant(value) => Ok(*value),
             Self::Predicate(_) => Err(Error::new(
-                "unsupported_initialization", "initial predicate requires driven-input resolution")),
+                "unsupported_initialization",
+                "initial predicate requires driven-input resolution",
+            )),
         }
     }
 }
@@ -430,10 +467,22 @@ impl EventTrigger {
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct TransientInputs {
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub strobetimes: Vec<f64>,
     pub pwl: Vec<Vec<[f64; 2]>>,
     pub output_times: Vec<f64>,
     pub stop: f64,
     pub max_step: f64,
+}
+
+/// Computed forced points, independent of the saved output grid.
+#[derive(Debug, Serialize)]
+pub struct StrobeEvidence {
+    pub schema_version: u32,
+    pub times: Vec<f64>,
+    pub sample_origins: Vec<&'static str>,
+    #[serde(rename = "voltages_V")]
+    pub voltages_v: Vec<Vec<f64>>,
 }
 
 #[derive(Debug, Serialize)]
@@ -472,4 +521,28 @@ pub struct TransientTrace {
     pub events: Vec<EventRecord>,
     pub accepted_steps: usize,
     pub discarded_trials: usize,
+}
+
+/// Bounded, nonblocking local portability notices, independent of IR versions.
+#[derive(Debug, Serialize)]
+pub struct PortabilityAdvisories {
+    pub schema_version: u32,
+    pub record_limit: usize,
+    pub records: Vec<PortabilityAdvisory>,
+    pub dropped_records: usize,
+    pub truncated: bool,
+}
+
+#[derive(Debug, Serialize)]
+pub struct PortabilityAdvisory {
+    pub code: &'static str,
+    pub nonblocking: bool,
+    pub message: &'static str,
+    pub event_record: usize,
+    pub event: usize,
+    pub trigger: usize,
+    pub origin: String,
+    pub query_index: usize,
+    pub query_time_s: f64,
+    pub root_time_bounds_s: [f64; 2],
 }

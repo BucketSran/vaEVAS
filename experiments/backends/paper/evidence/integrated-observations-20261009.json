@@ -1,0 +1,185 @@
+{
+  "source_revision": "830c8168ada17122bb64932553a02591181461d9",
+  "runtime_revision": "5ddf820d8b4aa5f0c847905da86f4fee470b94db",
+  "status": "unmerged current candidate; qualified finite observations, not overall Spectre compatibility",
+  "denominator": {
+    "conditions": 12,
+    "backends": 4,
+    "slots": 48
+  },
+  "counts": {
+    "evas": {
+      "P": 12,
+      "F": 0,
+      "U": 0,
+      "X": 0,
+      "I": 0,
+      "T": 0
+    },
+    "spectre": {
+      "P": 0,
+      "F": 0,
+      "U": 0,
+      "X": 0,
+      "I": 12,
+      "T": 0
+    },
+    "openvaf_r_ngspice": {
+      "P": 0,
+      "F": 0,
+      "U": 0,
+      "X": 7,
+      "I": 5,
+      "T": 0
+    },
+    "gnucap_modelgen": {
+      "P": 0,
+      "F": 0,
+      "U": 0,
+      "X": 2,
+      "I": 10,
+      "T": 0
+    }
+  },
+  "checker_identity": {
+    "version": "paper-criteria-v1",
+    "files": {
+      "criteria.py": "ecdabb0c187d968400e8ee8c23f6f99a7552b3533962917539557436b8a95c1c",
+      "oracle.py": "96ece5a943113a6e6e79b441145a2f2238da43938914605d884b5fd0414e72dc",
+      "core-v1.json": "e1ae5311da9e05991e9802da1a24e97a70d179972608a1b9d21eb00013f61a53"
+    },
+    "runtime": {
+      "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "math_sha256": "cc7d168e6933da397995ce0c3bf0b96813ddbfcacaeb37988e5c98aa02810452"
+    },
+    "sha256": "df1269e0be8a50a10eba6dfa267de18f5da1080da510ca893a4fea0050355ecb"
+  },
+  "new_runs": {
+    "evas_simulations": 12,
+    "release_build": 1,
+    "spectre_paper_runs": 0,
+    "other_backend_paper_runs": 0,
+    "reanalysis_backend_calls": 0
+  },
+  "kernel_sha256": "ec013f4546a4bfa3070612c9989a1d7fb3fd4d7e3edfa3894405d09562f209f6",
+  "archive_sha256": "7ca2d0ea207ef2dc896e7365e29c3a37e2060d32dc1d58a02e4aea15706f0677",
+  "verified_manifest_entries": {
+    "collection": 697,
+    "lane": 259
+  },
+  "analysis": {
+    "analysis-adapter-v1/IDENTITY.json": {
+      "path": "runs/alignment-implementation-20261009/paper-current-v1/analysis-adapter-v1/IDENTITY.json",
+      "sha256": "5ee9ac9069e8c2c7cad7ea73a20199f92fb66a505ce030bd57df08fbf740e475"
+    },
+    "analysis-table-v1/SUMMARY.json": {
+      "path": "runs/alignment-implementation-20261009/paper-current-v1/analysis-table-v1/SUMMARY.json",
+      "sha256": "bb44e2dde2bdbb97f4a2aefbaf4e7f5eeccdb4ab9089fb2e2b6b40ad13c78d7f"
+    },
+    "analysis-table-v1/ANALYSIS_MANIFEST.json": {
+      "path": "runs/alignment-implementation-20261009/paper-current-v1/analysis-table-v1/ANALYSIS_MANIFEST.json",
+      "sha256": "ee0bd33dc0748142d4f9aa88394c611a109588ec665a49f87ff76a3675d75f4b"
+    },
+    "analysis-table-v2/SUMMARY.json": {
+      "path": "runs/alignment-implementation-20261009/paper-current-v1/analysis-table-v2/SUMMARY.json",
+      "sha256": "c10a40d9564aef126c93239e18f67e1ad8b39f3f752f0b3cfa1caa8920e64155"
+    },
+    "analysis-table-v2/ANALYSIS_MANIFEST.json": {
+      "path": "runs/alignment-implementation-20261009/paper-current-v1/analysis-table-v2/ANALYSIS_MANIFEST.json",
+      "sha256": "70aabb3f1d26e42fec2c7899ce98efa569aaec71e7ce8ce095bddf1ed183a91d"
+    },
+    "analysis-table-v2/table.md": {
+      "path": "runs/alignment-implementation-20261009/paper-current-v1/analysis-table-v2/table.md",
+      "sha256": "d0f20e93ad887e7effdcbf05de0eeb5bd820946326a59a29775f9326d4d44266"
+    }
+  },
+  "artifact_availability": "local-only; hashes bind retained bytes, not public reproducibility",
+  "prior_verdicts": {
+    "original_observation_evas": "I12",
+    "qualified_old_checker_evas": "P8/I4",
+    "historical36": "unchanged I27/X9"
+  },
+  "changed_conditions": [
+    {
+      "condition": "EV-HC-01",
+      "backend": "evas",
+      "old_status": "I",
+      "new_status": "P",
+      "original_assessment": {
+        "path": "/Users/bucketsran/.codex/worktrees/spectre-event-alignment/current/runs/alignment-implementation-20261009/paper-current-v1/analysis-table-v1/derived/assessment/evas-EV-HC-01.json",
+        "sha256": "ec86d8761c0e5f232ec0f090a597774452ec66e4532e724f7dd7195616a45bea"
+      },
+      "assessment": {
+        "path": "/Users/bucketsran/.codex/worktrees/spectre-event-alignment/current/runs/alignment-implementation-20261009/paper-current-v1/analysis-table-v2/assessment/evas-EV-HC-01.json",
+        "sha256": "713add4a71f9c5bd7dde4702cd0fa674b6349c825f69d187ceb1ebee8f94b49d"
+      },
+      "checker_reanalysis": {
+        "path": "/Users/bucketsran/.codex/worktrees/spectre-event-alignment/current/runs/alignment-implementation-20261009/paper-current-v1/analysis-table-v2/reanalysis/evas-EV-HC-01.json",
+        "sha256": "948ef0bc3322630833b569893c0b7ce5d9b054c62f13ff619bd8f0c06ad9c515"
+      }
+    },
+    {
+      "condition": "CP-02",
+      "backend": "evas",
+      "old_status": "I",
+      "new_status": "P",
+      "original_assessment": {
+        "path": "/Users/bucketsran/.codex/worktrees/spectre-event-alignment/current/runs/alignment-implementation-20261009/paper-current-v1/analysis-table-v1/derived/assessment/evas-CP-02.json",
+        "sha256": "2734042fbd9fb66aa5860b28c30ba7512a0eeaeb335571ccfd503b401f36cb2e"
+      },
+      "assessment": {
+        "path": "/Users/bucketsran/.codex/worktrees/spectre-event-alignment/current/runs/alignment-implementation-20261009/paper-current-v1/analysis-table-v2/assessment/evas-CP-02.json",
+        "sha256": "9863adb9e7e92513fa3581cf368fd57e76bfefd9e91a31e6b11d3fe8cb9fe479"
+      },
+      "checker_reanalysis": {
+        "path": "/Users/bucketsran/.codex/worktrees/spectre-event-alignment/current/runs/alignment-implementation-20261009/paper-current-v1/analysis-table-v2/reanalysis/evas-CP-02.json",
+        "sha256": "68dedd09beee77b41909708fc3af877cda88bf37e467612dea9e6f34a2c9bc9b"
+      }
+    },
+    {
+      "condition": "CO-HC-01",
+      "backend": "evas",
+      "old_status": "I",
+      "new_status": "P",
+      "original_assessment": {
+        "path": "/Users/bucketsran/.codex/worktrees/spectre-event-alignment/current/runs/alignment-implementation-20261009/paper-current-v1/analysis-table-v1/derived/assessment/evas-CO-HC-01.json",
+        "sha256": "d5bf509c53a1da51442ec77d5b55ea6bb0ac609777315cc411c9a9d38206a959"
+      },
+      "assessment": {
+        "path": "/Users/bucketsran/.codex/worktrees/spectre-event-alignment/current/runs/alignment-implementation-20261009/paper-current-v1/analysis-table-v2/assessment/evas-CO-HC-01.json",
+        "sha256": "0d5fbcf9fd0f1d29289545f509eb58c7f90b15be3c43242e0a1c5b3d21ae3742"
+      },
+      "checker_reanalysis": {
+        "path": "/Users/bucketsran/.codex/worktrees/spectre-event-alignment/current/runs/alignment-implementation-20261009/paper-current-v1/analysis-table-v2/reanalysis/evas-CO-HC-01.json",
+        "sha256": "f5fd3ae02434bef4b7485c6619a0abc5231dbba89ed44861db43a4d0159d230b"
+      }
+    },
+    {
+      "condition": "CO-VCO-01",
+      "backend": "evas",
+      "old_status": "I",
+      "new_status": "P",
+      "original_assessment": {
+        "path": "/Users/bucketsran/.codex/worktrees/spectre-event-alignment/current/runs/alignment-implementation-20261009/paper-current-v1/analysis-table-v1/derived/assessment/evas-CO-VCO-01.json",
+        "sha256": "6aa45b726094d311a1962258a8728df07a41c9162e6e66242f0958457a696c35"
+      },
+      "assessment": {
+        "path": "/Users/bucketsran/.codex/worktrees/spectre-event-alignment/current/runs/alignment-implementation-20261009/paper-current-v1/analysis-table-v2/assessment/evas-CO-VCO-01.json",
+        "sha256": "30f4ac4312b69e88fcba2c7fca4aff04610afff0de80697661b573d1095edc22"
+      },
+      "checker_reanalysis": {
+        "path": "/Users/bucketsran/.codex/worktrees/spectre-event-alignment/current/runs/alignment-implementation-20261009/paper-current-v1/analysis-table-v2/reanalysis/evas-CO-VCO-01.json",
+        "sha256": "0d9da3d01a6257f6c8f54bafeb584e97da1d26b5ff87e283d4ce5ce4965f8d1d"
+      }
+    }
+  ],
+  "limits": [
+    "P is maximum-error acceptance on qualified observed records, not a continuous-time supremum or unseen-pulse guarantee.",
+    "C1/#79 strict failures and original VCO exact-neighbor F/I are unchanged.",
+    "Paper CP-02 and CO-VCO-01 exact-boundary diagnostic remains I.",
+    "Reference36 retain their original settings and source/tool identities; I means incomplete evidence, not incapability.",
+    "No raw row, source, external budget or historical execution identity was changed.",
+    "Native SI monotonicity checker correction is explicitly versioned; original I12 and 8P4I remain retrievable.",
+    "Formal publication still requires reference qualification, compatible settings, boundary acceptance and main integration."
+  ]
+}

@@ -14,7 +14,8 @@ from test_affine import KERNEL
 
 
 def bus_source(order='1:0'):
-    return f'''module bus(u,y); input [{order}] u; output [0:1] y;
+    return f'''`include "disciplines.vams"
+module bus(u,y); input [{order}] u; output [0:1] y;
       electrical [{order}] u; electrical [0:1] y;
       analog begin V(y[0])<+V(u[0])+1; V(y[1])<+2*V(u[1]); end endmodule'''
 
@@ -26,7 +27,7 @@ class ScsVectors(unittest.TestCase):
         self.root = Path(self.temp.name)
         self.path = self.root/'tb.scs'
 
-    def deck(self, source, devices='DUT (a b c d) bus', drives=None, save='c d', step='.25'):
+    def deck(self, source, devices='DUT (a b c d) bus', drives=None, save='c d', step='0.25'):
         (self.root/'dut.va').write_text(source)
         self.path.write_text('simulator lang=spectre\nglobal 0\nahdl_include "dut.va"\n'+devices+'\n'+
             (drives or 'VA (a 0) vsource type=dc dc=2\nVB (b 0) vsource type=dc dc=5')+
@@ -54,7 +55,8 @@ class ScsVectors(unittest.TestCase):
         self.assertEqual(json.loads(child.stdout)['saved'], result['saved'])
 
     def test_mixed_scalar_negative_nonzero_and_single_bit_ranges(self):
-        source = '''module bus(r,u,v,y,z,w);
+        source = '''`include "disciplines.vams"
+module bus(r,u,v,y,z,w);
           input r; input [1:0] u; input [-1:0] v;
           output y; output [-2:-1] z; output [4:4] w;
           electrical r,y; electrical [1:0] u; electrical [-1:0] v;
@@ -65,7 +67,8 @@ class ScsVectors(unittest.TestCase):
         self.assertEqual(result['saved']['values'], [[0, 7, 2, 5, 9]]*5)
 
     def test_width_binding_and_instance_declaration_order(self):
-        source = '''module bus(u,y); parameter integer N=2 from [1:4];
+        source = '''`include "disciplines.vams"
+module bus(u,y); parameter integer N=2 from [1:4];
           input [N-1:0] u; output [0:N-1] y;
           electrical [N-1:0] u; electrical [0:N-1] y; genvar i;
           analog begin for(i=0;i<N;i=i+1) V(y[i])<+10*V(u[i])+i; end endmodule'''
@@ -79,9 +82,9 @@ class ScsVectors(unittest.TestCase):
 
     def test_pwl_outputs_match_answer_and_common_times_after_grid_refinement(self):
         results = []
-        for step in ('.25', '.125'):
+        for step in ('0.25', '0.125'):
             result = simulate_scs(self.deck(bus_source(), step=step,
-                drives='VA (a 0) vsource type=dc dc=2\nVB (b 0) vsource type=pwl wave=[0 0 .5 1 1 0]'), kernel=KERNEL)
+                drives='VA (a 0) vsource type=dc dc=2\nVB (b 0) vsource type=pwl wave=[0 0 0.5 1 1 0]'), kernel=KERNEL)
             observed = dict(zip(result['saved']['times'], result['saved']['values']))
             for time, (c, d) in observed.items():
                 expected_c = 1+2*time if time<=.5 else 3-2*time
@@ -101,7 +104,8 @@ class ScsVectors(unittest.TestCase):
             self.assertEqual(caught.exception.diagnostic['location']['source'], str(self.path.resolve()))
 
     def test_invalid_width_declarations_and_resource_budgets_are_rejected(self):
-        width = '''module bus(u,y); parameter integer N=2 from [1:4096];
+        width = '''`include "disciplines.vams"
+module bus(u,y); parameter integer N=2 from [1:4096];
           input [N-1:0] u; output [0:N-1] y; electrical [N-1:0] u;
           electrical [0:N-1] y; genvar i;
           analog begin for(i=0;i<N;i=i+1) V(y[i])<+V(u[i]); end endmodule'''

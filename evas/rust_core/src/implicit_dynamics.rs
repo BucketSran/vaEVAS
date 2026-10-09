@@ -351,6 +351,7 @@ fn initialize(
     program: &Program,
     trajectory: &Trajectory,
     driven: &[String],
+    tolerances: &Tolerances,
 ) -> Result<(NonlinearContinuous, Coordinates), Error> {
     if !program.states.is_empty() || !program.events.is_empty() {
         return Err(Error::new(
@@ -436,16 +437,7 @@ fn initialize(
         });
     }
     // Validate original node/branch indices before building any coordinate row.
-    let root_tolerances = Tolerances {
-        absolute: 1e-15,
-        relative: 1e-14,
-    };
-    let _ = circuit(
-        program,
-        driven,
-        &vec![0.0; operators.len()],
-        &root_tolerances,
-    )?;
+    let _ = circuit(program, driven, &vec![0.0; operators.len()], tolerances)?;
     let physical = initial.len();
     let unknown: Vec<_> = (1..program.nodes.len())
         .filter(|node| !input_nodes.contains(node))
@@ -568,10 +560,22 @@ fn initialize(
         }),
         operators,
         values,
+        accuracy_rows: coordinates
+            .nodes
+            .iter()
+            .flatten()
+            .map(|&state| {
+                let mut row = vec![I::ZERO; count + 2 * input_nodes.len() + 1];
+                row[state] = I::ONE;
+                row
+            })
+            .collect(),
+        tolerances: tolerances.clone(),
         initial,
         steps: Vec::new(),
         start: 0.0,
         event_dependent: false,
+        event_seed: None,
     };
     // The common Picard/Taylor engine validates the rational reduced field;
     // F_v inversion is mandatory even when the resulting derivative is zero.
@@ -598,6 +602,7 @@ fn observe(
     }
     let mut solution = circuit.solve_with_initial(&point_inputs, Some(&guess))?;
     solution.voltages.truncate(program.nodes.len());
+    let mut observation_bounds = Vec::new();
     for (node, &actual) in solution.voltages.iter().enumerate() {
         let exact = if node == 0 {
             I::ZERO
@@ -609,6 +614,7 @@ fn observe(
                 .position(|name| *name == program.nodes[node])
                 .unwrap()]
         };
+        observation_bounds.push(exact);
         let budget =
             I::point(tolerances.absolute) + I::point(tolerances.relative) * I::point(actual.abs());
         let error = I::point(actual) - exact;
@@ -627,6 +633,7 @@ fn observe(
     // Recheck the original simultaneous relations against full histories and
     // coefficient enclosures, independently of the approximate point solve.
     coordinates.check_original_relations(program, state, input_bounds, &solution, tolerances)?;
+    crate::observation::retain_bounds(&mut solution, observation_bounds);
     Ok(solution)
 }
 
@@ -637,7 +644,7 @@ pub(crate) fn run(
     tolerances: Tolerances,
 ) -> Result<Response, Error> {
     let trajectory = Trajectory::new(config, driven.len())?;
-    let (flow, coordinates) = initialize(&program, &trajectory, &driven)?;
+    let (flow, coordinates) = initialize(&program, &trajectory, &driven, &tolerances)?;
     let mut solutions = Vec::<Solution>::new();
     for &time in &trajectory.config.output_times {
         let state = flow.state_bounds(I::point(time))?;
@@ -661,7 +668,19 @@ pub(crate) fn run(
         accepted_steps: flow.steps.len(),
         discarded_trials: 0,
     };
+    let observation_evidence = crate::observation::evidence(
+        &program.nodes,
+        &solutions,
+        &trajectory.config,
+        &tolerances,
+        vec!["implicit_history_evaluation"; solutions.len()],
+        true,
+        (trace.times.first() == Some(&0.0)).then_some(true),
+    );
     Ok(Response {
+        strobe_evidence: None,
+        portability_advisories: None,
+        observation_evidence: Some(observation_evidence),
         engine: concat!("evas-implicit-", env!("CARGO_PKG_VERSION")).into(),
         schema_version: crate::ir::SCHEMA_VERSION,
         nodes: program.nodes,
@@ -798,6 +817,7 @@ mod tests {
         })).unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                strobetimes: Vec::new(),
                 pwl: vec![vec![[0.0, 0.0], [0.75, 0.75]]],
                 output_times: vec![0.0, 0.75],
                 stop: 0.75,
@@ -806,7 +826,8 @@ mod tests {
             1,
         )
         .unwrap();
-        let (flow, coordinates) = initialize(&program, &trajectory, &["u".into()]).unwrap();
+        let (flow, coordinates) =
+            initialize(&program, &trajectory, &["u".into()], &Tolerances::default()).unwrap();
         let index = coordinates.nodes[2].unwrap();
         let original = flow.state_bounds(I::point(0.75)).unwrap();
         // At u=3/4, y+y^2=3/4 has the exact selected root y=1/2.
@@ -830,6 +851,7 @@ mod tests {
         })).unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                strobetimes: Vec::new(),
                 pwl: vec![vec![[0.0, 2.25], [1.0, 2.25]]],
                 output_times: vec![0.0, 1.0],
                 stop: 1.0,
@@ -838,7 +860,8 @@ mod tests {
             1,
         )
         .unwrap();
-        let (flow, coordinates) = initialize(&program, &trajectory, &["u".into()]).unwrap();
+        let (flow, coordinates) =
+            initialize(&program, &trajectory, &["u".into()], &Tolerances::default()).unwrap();
         // f(0)=9/4 / 3=3/4 and y+y^2=3/4 has the selected exact root 1/2.
         let voltage = coordinates.nodes[2].unwrap();
         let initial = flow.state_bounds(I::ZERO).unwrap();

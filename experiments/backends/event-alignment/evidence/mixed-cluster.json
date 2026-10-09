@@ -1,0 +1,505 @@
+{
+  "archive_sha256": "b1ae29bc6a9b2f53c015cca03846911e7582a10e1f48862f528a7440b2fde9b5",
+  "archive_scope": "local-only",
+  "verified_archive_files": 82,
+  "contract": {
+    "source_parameters": "Exact-real interpretation of original binary64 .1/.9 endpoints and .5/.5000000000000001 thresholds",
+    "source_roots_fraction": [
+      "14411518807585587/28823037615171175",
+      "14411518807585591/28823037615171175"
+    ],
+    "event_order": [
+      "first",
+      "timer",
+      "second",
+      "held at .75"
+    ],
+    "times": [
+      0.0,
+      0.5,
+      0.5000000000000001,
+      0.5000000000000002,
+      0.625,
+      0.75,
+      1.0
+    ],
+    "expected_y_fixed": [
+      0,
+      11,
+      11,
+      111,
+      111,
+      111,
+      111
+    ],
+    "expected_y_held": [
+      0,
+      11,
+      11,
+      111,
+      111,
+      1111,
+      1111
+    ],
+    "voltage_budgets": {
+      "y": 0,
+      "z": 1e-06
+    },
+    "event_time_tolerance": 1e-12,
+    "limits": "Finite saved rows cannot certify sub-ULP callback ordering. Instrumented accepted logs are a separate observation; original and instrumented VALUE equality must be checked."
+  },
+  "cases": [
+    {
+      "case": "fixed",
+      "value_bytes_equal": true,
+      "value_sha256": "d1a33048ad561d2b2ce0a1e9e0c249ddf9071bf14ae602f220073d8cb10ff218",
+      "callbacks": [
+        {
+          "event": "first",
+          "abstime_token": "5.00000000000500044450e-01"
+        },
+        {
+          "event": "timer",
+          "abstime_token": "5.00000000000500044450e-01"
+        },
+        {
+          "event": "second",
+          "abstime_token": "5.00000000000500044450e-01"
+        }
+      ],
+      "native_rows": 50,
+      "requested_rows": [
+        {
+          "time": 0.0,
+          "spectre_y": 0.0,
+          "independent_y": 0
+        },
+        {
+          "time": 0.5,
+          "spectre_y": null,
+          "independent_y": 11
+        },
+        {
+          "time": 0.5000000000000001,
+          "spectre_y": null,
+          "independent_y": 11
+        },
+        {
+          "time": 0.5000000000000002,
+          "spectre_y": null,
+          "independent_y": 111
+        },
+        {
+          "time": 0.625,
+          "spectre_y": 111.0,
+          "independent_y": 111
+        },
+        {
+          "time": 0.75,
+          "spectre_y": 111.0,
+          "independent_y": 111
+        },
+        {
+          "time": 1.0,
+          "spectre_y": 111.0,
+          "independent_y": 111
+        }
+      ],
+      "missing_requested_times": [
+        0.5,
+        0.5000000000000001,
+        0.5000000000000002
+      ],
+      "full_native_y_difference_rows": [],
+      "spectre_independent_y_failure_rows": [],
+      "evas_independent_max_y_error": 0,
+      "full_native_max_direct_z_difference_v": 0,
+      "finite_native_y_status": "P",
+      "finite_native_z_status": "P",
+      "required_query_coverage_status": "I",
+      "original_budget_unchanged": true,
+      "evas_events": [
+        {
+          "time": 0.5,
+          "observation_time_bounds": [
+            0.49999999999999994,
+            0.5
+          ],
+          "event": 0,
+          "origin": "dut.va:7:1 (dut)",
+          "kind": "cross",
+          "guard_value": 0.0,
+          "before": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.9
+          ],
+          "after": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.9
+          ]
+        },
+        {
+          "time": 0.5000000000000001,
+          "observation_time_bounds": [
+            0.5,
+            0.5000000000000001
+          ],
+          "event": 1,
+          "origin": "dut.va:8:1 (dut)",
+          "kind": "timer",
+          "before": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.9
+          ],
+          "after": [
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            0.9
+          ]
+        },
+        {
+          "time": 0.5000000000000002,
+          "observation_time_bounds": [
+            0.5000000000000001,
+            0.5000000000000002
+          ],
+          "event": 2,
+          "origin": "dut.va:9:1 (dut)",
+          "kind": "cross",
+          "guard_value": 1.1102230246251565e-16,
+          "before": [
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            0.9
+          ],
+          "after": [
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            0.9
+          ]
+        }
+      ],
+      "files": {
+        "fixed-original/dut.va": "35c13b155d71074223a7c5ca1192e07637401420844003c27ba9dfbb1d7f147a",
+        "fixed-original/tb.scs": "80f26042454ae036093b93b0f6f104148cf97dbc9ee4a8f67c5fe18a4027e461",
+        "fixed-original/simulate.log": "d868a4810cbb647f55b83ab9f52c0ccba0c690f8a25fa755bd79e0e930aa4f9b",
+        "fixed-original/psf/tran.tran.tran": "d0ef447d724b48c1cb4a424b6d41827b9021790dc0940b1891fa4aec0fce5b8f",
+        "fixed-instrumented/dut.va": "f24826f5b31d0ad1870217adde80f02ea048e6efa79c7f9c4bf7ab54978b8c37",
+        "fixed-instrumented/tb.scs": "80f26042454ae036093b93b0f6f104148cf97dbc9ee4a8f67c5fe18a4027e461",
+        "fixed-instrumented/simulate.log": "fc4ed6c241663e7fb3e956f1ec3a6dc9f151ac1bc9def1b97488827c8ed9c837",
+        "fixed-instrumented/psf/tran.tran.tran": "19c475a80a5974c1f39794faaf6753a4376fe41742be6bccfd1e7636572705ea"
+      },
+      "evas_requested_and_sparse_observations": [
+        {
+          "rows": [
+            {
+              "time": 0.0,
+              "y": -0.0,
+              "z": -0.0
+            },
+            {
+              "time": 0.5,
+              "y": 11.0,
+              "z": -0.0
+            },
+            {
+              "time": 0.5000000000000001,
+              "y": 11.0,
+              "z": -0.0
+            },
+            {
+              "time": 0.5000000000000002,
+              "y": 111.0,
+              "z": -0.0
+            },
+            {
+              "time": 0.625,
+              "y": 111.0,
+              "z": -0.0
+            },
+            {
+              "time": 0.75,
+              "y": 111.0,
+              "z": -0.0
+            },
+            {
+              "time": 1.0,
+              "y": 111.0,
+              "z": -0.0
+            }
+          ],
+          "events_match_full_native_grid": true,
+          "independent_y_exact": true
+        },
+        {
+          "rows": [
+            {
+              "time": 0,
+              "y": -0.0,
+              "z": -0.0
+            },
+            {
+              "time": 1,
+              "y": 111.0,
+              "z": -0.0
+            }
+          ],
+          "events_match_full_native_grid": true,
+          "independent_y_exact": true
+        }
+      ]
+    },
+    {
+      "case": "held",
+      "value_bytes_equal": true,
+      "value_sha256": "f9ba4d80ed7088975be49ba90d4e4eb9ba844c0f366c773656bfdd732ecd1878",
+      "callbacks": [
+        {
+          "event": "first",
+          "abstime_token": "5.00000000000500155473e-01"
+        },
+        {
+          "event": "timer",
+          "abstime_token": "5.00000000000500155473e-01"
+        },
+        {
+          "event": "second",
+          "abstime_token": "5.00000000000500155473e-01"
+        }
+      ],
+      "native_rows": 68,
+      "requested_rows": [
+        {
+          "time": 0.0,
+          "spectre_y": 0.0,
+          "independent_y": 0
+        },
+        {
+          "time": 0.5,
+          "spectre_y": null,
+          "independent_y": 11
+        },
+        {
+          "time": 0.5000000000000001,
+          "spectre_y": null,
+          "independent_y": 11
+        },
+        {
+          "time": 0.5000000000000002,
+          "spectre_y": null,
+          "independent_y": 111
+        },
+        {
+          "time": 0.625,
+          "spectre_y": 111.0,
+          "independent_y": 111
+        },
+        {
+          "time": 0.75,
+          "spectre_y": 1111.0,
+          "independent_y": 1111
+        },
+        {
+          "time": 1.0,
+          "spectre_y": 1111.0,
+          "independent_y": 1111
+        }
+      ],
+      "missing_requested_times": [
+        0.5,
+        0.5000000000000001,
+        0.5000000000000002
+      ],
+      "full_native_y_difference_rows": [],
+      "spectre_independent_y_failure_rows": [],
+      "evas_independent_max_y_error": 0,
+      "full_native_max_direct_z_difference_v": 2.220446049250313e-16,
+      "finite_native_y_status": "P",
+      "finite_native_z_status": "P",
+      "required_query_coverage_status": "I",
+      "original_budget_unchanged": true,
+      "evas_events": [
+        {
+          "time": 0.5,
+          "observation_time_bounds": [
+            0.49999999999999994,
+            0.5
+          ],
+          "event": 0,
+          "origin": "dut.va:7:1 (dut)",
+          "kind": "cross",
+          "guard_value": 0.0,
+          "before": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.9
+          ],
+          "after": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.75
+          ]
+        },
+        {
+          "time": 0.5000000000000001,
+          "observation_time_bounds": [
+            0.5,
+            0.5000000000000001
+          ],
+          "event": 1,
+          "origin": "dut.va:8:1 (dut)",
+          "kind": "timer",
+          "before": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.75
+          ],
+          "after": [
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            0.75
+          ]
+        },
+        {
+          "time": 0.5000000000000002,
+          "observation_time_bounds": [
+            0.5000000000000001,
+            0.5000000000000002
+          ],
+          "event": 2,
+          "origin": "dut.va:9:1 (dut)",
+          "kind": "cross",
+          "guard_value": 1.1102230246251565e-16,
+          "before": [
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            0.75
+          ],
+          "after": [
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            0.75
+          ]
+        },
+        {
+          "time": 0.75,
+          "event": 3,
+          "origin": "dut.va:10:1 (dut)",
+          "kind": "timer",
+          "before": [
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            0.75
+          ],
+          "after": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            0.75
+          ]
+        }
+      ],
+      "files": {
+        "held-original/dut.va": "4bc3fc6fc26b77683e291dc2ab7ce5f5f5d2fca5cb6e4beb6d72db99b3f183ab",
+        "held-original/tb.scs": "80f26042454ae036093b93b0f6f104148cf97dbc9ee4a8f67c5fe18a4027e461",
+        "held-original/simulate.log": "afac52dc2b26a5c659f7845ff56d051d2e78f080f248ff0866618dad67f180e5",
+        "held-original/psf/tran.tran.tran": "b08fbe17bb7a8ede865b99da18ff84666cd441a66a614ebdbe6274274aac0db9",
+        "held-instrumented/dut.va": "4787440f95dcd988f103bb4d6e75947de66cb2316fec39f11604ced257b3dc46",
+        "held-instrumented/tb.scs": "80f26042454ae036093b93b0f6f104148cf97dbc9ee4a8f67c5fe18a4027e461",
+        "held-instrumented/simulate.log": "4d0d4457357743c4da1b48419fe55850d0f52cc2df8347acd76e35b2587bba5d",
+        "held-instrumented/psf/tran.tran.tran": "3f5ff7158e09f5f7a7099dde714694f2acec5a0f34b9a64b007ff0688a33990b"
+      },
+      "evas_requested_and_sparse_observations": [
+        {
+          "rows": [
+            {
+              "time": 0.0,
+              "y": -0.0,
+              "z": -0.0
+            },
+            {
+              "time": 0.5,
+              "y": 11.0,
+              "z": 0.5
+            },
+            {
+              "time": 0.5000000000000001,
+              "y": 11.0,
+              "z": 0.5000000000000001
+            },
+            {
+              "time": 0.5000000000000002,
+              "y": 111.0,
+              "z": 0.5000000000000002
+            },
+            {
+              "time": 0.625,
+              "y": 111.0,
+              "z": 0.625
+            },
+            {
+              "time": 0.75,
+              "y": 1111.0,
+              "z": 0.75
+            },
+            {
+              "time": 1.0,
+              "y": 1111.0,
+              "z": 1.0
+            }
+          ],
+          "events_match_full_native_grid": true,
+          "independent_y_exact": true
+        },
+        {
+          "rows": [
+            {
+              "time": 0,
+              "y": -0.0,
+              "z": -0.0
+            },
+            {
+              "time": 1,
+              "y": 1111.0,
+              "z": 1.0
+            }
+          ],
+          "events_match_full_native_grid": true,
+          "independent_y_exact": true
+        }
+      ]
+    }
+  ],
+  "analysis_base_revision": "d521c28accf09d76e6de6c77b225c29672cdaec6",
+  "candidate_schedule_sha256": "c949245a36da6e7a76f500303e17f97b4809c014143da39849e83838dfa94c7e"
+}

@@ -10,6 +10,7 @@ const SCALES: [f64; 4] = [1.0, -2.0, 2.0, 0.5];
 fn source(tail: f64) -> Trajectory {
     Trajectory::new(
         TransientInputs {
+            strobetimes: Vec::new(),
             // Every corrected source preserves the complete accepted [0,1].
             pwl: vec![vec![[0.0, -1.0], [1.0, -1.0], [3.0, tail]]],
             output_times: vec![0.0, 1.0, 2.0, 3.0],

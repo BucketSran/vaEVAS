@@ -1,0 +1,24 @@
+{
+  "name": "implicit-irregular",
+  "analytic": "t",
+  "voltage_nodes": [
+    "u",
+    "y"
+  ],
+  "requested_times": [
+    0,
+    0.2,
+    0.7,
+    1
+  ],
+  "forced_times": [
+    0.2,
+    0.7
+  ],
+  "acceptance": {
+    "analytic_absolute_V": 1e-06,
+    "direct_absolute_V": 1e-06,
+    "time_presence": "exact numeric equality; separate outcome; no closest-point substitution",
+    "timer_boundary": "compare interior forced points; stop phase recorded separately"
+  }
+}

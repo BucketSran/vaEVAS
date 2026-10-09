@@ -1,0 +1,36 @@
+{
+  "schema": "final-alignment-probes-v1",
+  "cases": [
+    {
+      "name": "M1-solver-tight-maxstep-1ns",
+      "change": "Only maxstep: 125 ns -> 1 ns, retaining tight solver and timer ttol18.",
+      "files": {
+        "dut.va": {
+          "base_sha256": "7a549cca0fb40a2fa7c5f905aefb5e561c81977940c5e26a2cff7c45fc7b1c7a",
+          "sha256": "7a549cca0fb40a2fa7c5f905aefb5e561c81977940c5e26a2cff7c45fc7b1c7a",
+          "retained_text_sha256": "a5ff308dd7758fb12a4759af7d3551c4db1c964e8fef98da7d93e8e366ddfa10",
+          "retained_text_relation": "Public text removes two spaces on one empty line. sha256 remains the exact executed/archive source identity; analysis reads that archive source."
+        },
+        "tb.scs": {
+          "base_sha256": "5a4957837d6dc52798fe8375b11f5fa9bc9fc8be194c1bda838d61e8b166004c",
+          "sha256": "e309f89c401dd3679dca3a0a0dfc733d1482706732f8e9b9247fd8990d42f654"
+        }
+      }
+    },
+    {
+      "name": "VCO-original-tight-p-log",
+      "change": "Only bounded ordinary analog $strobe immediately after the original idtmod assignment; same p and four exact dyadic root +/- 2^-40 s windows.",
+      "files": {
+        "dut.va": {
+          "base_sha256": "17c3096782b23880e161b4109bcca14dcbfccca768d6d6b3a56720171314a2f7",
+          "sha256": "ab0206c56cfd6df1cb4a8511fca6692cf91a328887798470e99dc7fd03674619"
+        },
+        "tb.scs": {
+          "base_sha256": "8627b27a1b7f7226b0f138f06356e12e02005632de6c0f0f3fe7442918ed91f8",
+          "sha256": "8627b27a1b7f7226b0f138f06356e12e02005632de6c0f0f3fe7442918ed91f8"
+        }
+      }
+    }
+  ],
+  "status": "frozen-inputs; two actual runs completed; old strict failures unchanged"
+}

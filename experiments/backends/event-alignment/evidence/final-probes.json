@@ -1,0 +1,325 @@
+{
+  "archive_sha256": "371a1e184ad96b39b83baaacd96f20d42d1340cb7888f95bebf8557a4570ca7d",
+  "root_verified_files": 44,
+  "source_revision": "17ba42cd5468b23f8b54b9daaedc483481765dd2",
+  "kernel_sha256": "e4c89c9c9fe199d9535fe9886949502f1560b5fc63b2ce83bf98db77b74f0cb3",
+  "original_budgets_unchanged": true,
+  "evas_settings": {
+    "max_step_s": 1.25e-07,
+    "vabstol_v": 1e-06,
+    "reltol": 1e-08
+  },
+  "evas_execution": {
+    "exit_code": 0,
+    "request_sha256": "3ae6bcfbf4d893fdace0b7321f210e6c0448f04796de22c00bb4ab1cbce05816",
+    "stdout_sha256": "33639d839f62035dea4685fe5a1c6a54cbd727a8ec1cd7e12179e0e22a38ce65",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "archive_binding": {
+    "final_sha256": "371a1e184ad96b39b83baaacd96f20d42d1340cb7888f95bebf8557a4570ca7d",
+    "final_regular_members_verified": 63,
+    "original_vco_sha256": "287bf5bd018082e8928da9063de532e688080df4d47a85c135e0cf4e2e4d1613",
+    "original_vco_regular_members_verified": 105
+  },
+  "M1": {
+    "native_rows": 10215,
+    "required_rows": 173,
+    "missing_required_times": [],
+    "direct_max_errors_v": {
+      "u": 1.7763568394002505e-15,
+      "clk": 1.7763568394002505e-15,
+      "y": 1.2212453270876722e-15,
+      "z": 3.72528494163582e-10,
+      "q": 0.0,
+      "n": 0.0,
+      "m": 0.0,
+      "s": 0.0,
+      "h1": 0.0,
+      "h2": 8.881784197001252e-16,
+      "h3": 0.0
+    },
+    "spectre_independent_max_z_error_v": 3.725286190636723e-10,
+    "evas_independent_max_z_error_v": 1.4210854715202004e-13,
+    "phase_failure_rows": [],
+    "z_budget_v": 1e-06,
+    "direct_z_status": "P",
+    "coverage_status": "P",
+    "files": {
+      "dut.va": "7a549cca0fb40a2fa7c5f905aefb5e561c81977940c5e26a2cff7c45fc7b1c7a",
+      "tb.scs": "e309f89c401dd3679dca3a0a0dfc733d1482706732f8e9b9247fd8990d42f654",
+      "simulate.log": "bb437f50ab4fab3db25ccced2b6cc6f47f1bbeb7aa6ecc9b91d1b2e4a96246f7",
+      "tran.tran.tran": "14f24d3e66254648d7e66c4deb9d4796a36f28e70a9d4795adb86cca1574020c"
+    }
+  },
+  "VCO": {
+    "native_rows": 32811,
+    "required_rows": 22,
+    "missing_required_times": [
+      1.6689300537109375e-06,
+      1.6689300537109377e-06,
+      3.5762777770287357e-06,
+      3.5762786865234375e-06,
+      3.576278686523438e-06,
+      5.483626409841236e-06,
+      5.4836273193359375e-06,
+      5.483627319335938e-06,
+      7.390975042653736e-06,
+      7.3909759521484375e-06,
+      7.390975952148438e-06
+    ],
+    "original_psf_value_bytes_equal": true,
+    "full_psf_differences": [
+      {
+        "new": "\"date\" \"8:38:46 PM, Thur Oct 8, 2026\"",
+        "original": "\"date\" \"8:00:30 PM, Thur Oct 8, 2026\""
+      }
+    ],
+    "matched_log_rows": [
+      {
+        "tokens": {
+          "time": "1.66893005371093728824e-06",
+          "p": "0.00000000000000000000e+00",
+          "phase": "1.11022302462515654042e-16",
+          "out": "6.97573699439306992066e-16"
+        },
+        "time_binary64_hex": "0x1.bffffffffffffp-20",
+        "p": 0.0,
+        "phase": 1.1102230246251565e-16,
+        "out": 6.97573699439307e-16,
+        "matched_native_time": true,
+        "native": {
+          "time": 1.6689300537109373e-06,
+          "ctl": 0.0,
+          "freq": 0.5,
+          "phase": 1.1102230246251565e-16,
+          "out": 6.97573699439307e-16
+        },
+        "logged_phase_psf_equal": true,
+        "logged_out_psf_equal": true,
+        "independent_exact_phase": "9007199254740991/9007199254740992",
+        "p_low_side": true,
+        "phase_low_side": true
+      },
+      {
+        "tokens": {
+          "time": "3.57627777702878951366e-06",
+          "p": "9.99999523162870107562e-01",
+          "phase": "9.99999523162870107562e-01",
+          "out": "-2.99605604863738997657e-06"
+        },
+        "time_binary64_hex": "0x1.dffff8000007fp-19",
+        "p": 0.9999995231628701,
+        "phase": 0.9999995231628701,
+        "out": -2.99605604863739e-06,
+        "matched_native_time": true,
+        "native": {
+          "time": 3.5762777770287895e-06,
+          "ctl": 0.0,
+          "freq": 0.5,
+          "phase": 0.9999995231628701,
+          "out": -2.99605604863739e-06
+        },
+        "logged_phase_psf_equal": true,
+        "logged_out_psf_equal": true,
+        "independent_exact_phase": "4503597479886975/4503599627370496",
+        "p_low_side": false,
+        "phase_low_side": false
+      },
+      {
+        "tokens": {
+          "time": "3.57627868652343707648e-06",
+          "p": "9.99999999999999888978e-01",
+          "phase": "9.99999999999999888978e-01",
+          "out": "-1.32371254120662103498e-15"
+        },
+        "time_binary64_hex": "0x1.dffffffffffffp-19",
+        "p": 0.9999999999999999,
+        "phase": 0.9999999999999999,
+        "out": -1.323712541206621e-15,
+        "matched_native_time": true,
+        "native": {
+          "time": 3.576278686523437e-06,
+          "ctl": 0.0,
+          "freq": 0.5,
+          "phase": 0.9999999999999999,
+          "out": -1.323712541206621e-15
+        },
+        "logged_phase_psf_equal": true,
+        "logged_out_psf_equal": true,
+        "independent_exact_phase": "4503599627370495/4503599627370496",
+        "p_low_side": false,
+        "phase_low_side": false
+      },
+      {
+        "tokens": {
+          "time": "5.48362640984134330026e-06",
+          "p": "9.99999523162898418249e-01",
+          "phase": "9.99999523162898418249e-01",
+          "out": "-2.99605587119231089605e-06"
+        },
+        "time_binary64_hex": "0x1.6ffffc000007fp-18",
+        "p": 0.9999995231628984,
+        "phase": 0.9999995231628984,
+        "out": -2.996055871192311e-06,
+        "matched_native_time": true,
+        "native": {
+          "time": 5.483626409841343e-06,
+          "ctl": 0.0,
+          "freq": 0.5,
+          "phase": 0.9999995231628984,
+          "out": -2.996055871192311e-06
+        },
+        "logged_phase_psf_equal": true,
+        "logged_out_psf_equal": true,
+        "independent_exact_phase": "2251798739943551/2251799813685248",
+        "p_low_side": false,
+        "phase_low_side": false
+      },
+      {
+        "tokens": {
+          "time": "5.48362731933593665297e-06",
+          "p": "9.99999999999999777955e-01",
+          "phase": "9.99999999999999777955e-01",
+          "out": "-2.02128619922972076099e-15"
+        },
+        "time_binary64_hex": "0x1.6ffffffffffffp-18",
+        "p": 0.9999999999999998,
+        "phase": 0.9999999999999998,
+        "out": -2.0212861992297208e-15,
+        "matched_native_time": true,
+        "native": {
+          "time": 5.483627319335937e-06,
+          "ctl": 0.0,
+          "freq": 0.5,
+          "phase": 0.9999999999999998,
+          "out": -2.0212861992297208e-15
+        },
+        "logged_phase_psf_equal": true,
+        "logged_out_psf_equal": true,
+        "independent_exact_phase": "2251799813685247/2251799813685248",
+        "p_low_side": false,
+        "phase_low_side": false
+      },
+      {
+        "tokens": {
+          "time": "5.48362822883063927293e-06",
+          "p": "4.76837158425169604925e-07",
+          "phase": "4.76837158425169604925e-07",
+          "out": "2.99605622772980837907e-06"
+        },
+        "time_binary64_hex": "0x1.7000040000000p-18",
+        "p": 4.768371584251696e-07,
+        "phase": 4.768371584251696e-07,
+        "out": 2.9960562277298084e-06,
+        "matched_native_time": true,
+        "native": {
+          "time": 5.483628228830639e-06,
+          "ctl": 0.0,
+          "freq": 0.5,
+          "phase": 4.768371584251696e-07,
+          "out": 2.9960562277298084e-06
+        },
+        "logged_phase_psf_equal": true,
+        "logged_out_psf_equal": true,
+        "independent_exact_phase": "1/2097152",
+        "p_low_side": true,
+        "phase_low_side": true
+      },
+      {
+        "tokens": {
+          "time": "7.39097504265395087344e-06",
+          "p": "9.99999523162954817579e-01",
+          "phase": "9.99999523162954817579e-01",
+          "out": "-2.99605551680912143570e-06"
+        },
+        "time_binary64_hex": "0x1.effffc00000fep-18",
+        "p": 0.9999995231629548,
+        "phase": 0.9999995231629548,
+        "out": -2.9960555168091214e-06,
+        "matched_native_time": true,
+        "native": {
+          "time": 7.390975042653951e-06,
+          "ctl": 0.0,
+          "freq": 0.5,
+          "phase": 0.9999995231629548,
+          "out": -2.9960555168091214e-06
+        },
+        "logged_phase_psf_equal": true,
+        "logged_out_psf_equal": true,
+        "independent_exact_phase": "1125899369971839/1125899906842624",
+        "p_low_side": false,
+        "phase_low_side": false
+      },
+      {
+        "tokens": {
+          "time": "7.39097595214843665297e-06",
+          "p": "9.99999999999999777955e-01",
+          "phase": "9.99999999999999777955e-01",
+          "out": "-2.02128619922972076099e-15"
+        },
+        "time_binary64_hex": "0x1.effffffffffffp-18",
+        "p": 0.9999999999999998,
+        "phase": 0.9999999999999998,
+        "out": -2.0212861992297208e-15,
+        "matched_native_time": true,
+        "native": {
+          "time": 7.390975952148437e-06,
+          "ctl": 0.0,
+          "freq": 0.5,
+          "phase": 0.9999999999999998,
+          "out": -2.0212861992297208e-15
+        },
+        "logged_phase_psf_equal": true,
+        "logged_out_psf_equal": true,
+        "independent_exact_phase": "2251799813685247/2251799813685248",
+        "p_low_side": false,
+        "phase_low_side": false
+      },
+      {
+        "tokens": {
+          "time": "7.39097686164313927293e-06",
+          "p": "4.76837158425169604925e-07",
+          "phase": "4.76837158425169604925e-07",
+          "out": "2.99605622772980795555e-06"
+        },
+        "time_binary64_hex": "0x1.f000040000000p-18",
+        "p": 4.768371584251696e-07,
+        "phase": 4.768371584251696e-07,
+        "out": 2.996056227729808e-06,
+        "matched_native_time": true,
+        "native": {
+          "time": 7.390976861643139e-06,
+          "ctl": 0.0,
+          "freq": 0.5,
+          "phase": 4.768371584251696e-07,
+          "out": 2.996056227729808e-06
+        },
+        "logged_phase_psf_equal": true,
+        "logged_out_psf_equal": true,
+        "independent_exact_phase": "1/2097152",
+        "p_low_side": true,
+        "phase_low_side": true
+      }
+    ],
+    "max_ordinary_phase_error_cycle": 0.9999999999999998,
+    "max_circular_phase_error_cycle": 4.440892098500626e-16,
+    "max_sine_error_v": 1.6091572518917019e-12,
+    "ordinary_phase_failure_rows": [
+      {
+        "time": 1.6689300537109373e-06,
+        "observed_phase": 1.1102230246251565e-16,
+        "expected_phase": 0.9999999999999999
+      }
+    ],
+    "ordinary_phase_status": "F",
+    "coverage_status": "I",
+    "interpretation": "At the first root left-neighbor timestamp the original idtmod returned p=0 itself; the low-side result is not caused only by port solution or ASCII PSF conversion. This does not expose the internal unwrapped accumulator or its algorithm.",
+    "files": {
+      "dut.va": "ab0206c56cfd6df1cb4a8511fca6692cf91a328887798470e99dc7fd03674619",
+      "tb.scs": "8627b27a1b7f7226b0f138f06356e12e02005632de6c0f0f3fe7442918ed91f8",
+      "simulate.log": "651e5553b58b97505687aca6d34e05f31032ea6b5f1646b907bc454658e1d8d1",
+      "psf/tran.tran.tran": "7c3d4a8f426a52a68b72fb9295a038ed7f60acc1ac9797d22b82b6e21952c1cd"
+    },
+    "original_tight_psf_sha256": "323b24d5aba4ae377dc2eec2625a8ee93fe4be83b7f51ffc89ddca073a674e77"
+  }
+}

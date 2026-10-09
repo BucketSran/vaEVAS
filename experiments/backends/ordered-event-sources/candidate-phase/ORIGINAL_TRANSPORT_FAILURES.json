@@ -1,0 +1,41 @@
+{
+  "initial_execution_failures": [
+    {
+      "case": "hidden_tight",
+      "checker_sha256": "a3fbaca35324598d590559b759019c4ff9c2e947fa9a6646c53180a1762ab679",
+      "elapsed_s_execution_receipt_only": 0.2303860830143094,
+      "expected": "specific_rejection",
+      "failure_type": "JSONDecodeError",
+      "family": "hidden_tight",
+      "manifest_sha256": "e5a2b9b2f47f608cbd74721e62d54eb61042e2cebb2d3fa02569876954e91876",
+      "name": "complex-reference-v3--hidden_tight--coarse",
+      "prep": "complex-reference-v3-prep",
+      "profile": "coarse",
+      "reason": "Expecting value: line 1 column 1 (char 0)",
+      "request_sha256": "919b3f72e79150f657ee932a1d4c825439f03b23adcfd4b7497c2e3ba8a54fca",
+      "returncode": 2,
+      "source_sha256": "4cc37ad6b83b6bc0180cc8e107e1ae8b9a56728214fb75d61d00206b289b9564",
+      "status": "F",
+      "stop": 0.31
+    },
+    {
+      "case": "hidden_tight",
+      "checker_sha256": "a3fbaca35324598d590559b759019c4ff9c2e947fa9a6646c53180a1762ab679",
+      "elapsed_s_execution_receipt_only": 0.2988351248204708,
+      "expected": "specific_rejection",
+      "failure_type": "JSONDecodeError",
+      "family": "hidden_tight",
+      "manifest_sha256": "0975ff9e06d713c6f455ba870185d133a8a9acf0ba53d615156a0d80fcad2dc3",
+      "name": "complex-reference-v3--hidden_tight--fine",
+      "prep": "complex-reference-v3-prep",
+      "profile": "fine",
+      "reason": "Expecting value: line 1 column 1 (char 0)",
+      "request_sha256": "d47280620057767594da174411b7127167d33568bd1e3c30aacd2a857a1ea90f",
+      "returncode": 2,
+      "source_sha256": "4cc37ad6b83b6bc0180cc8e107e1ae8b9a56728214fb75d61d00206b289b9564",
+      "status": "F",
+      "stop": 0.31
+    }
+  ],
+  "preservation": "Initial empty-stdout parsing F remains retained. The later adapter_v2 reanalysis of the same actual bytes identifies the required structured stderr rejection; no candidate rerun was substituted."
+}

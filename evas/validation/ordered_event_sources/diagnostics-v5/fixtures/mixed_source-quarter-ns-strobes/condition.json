@@ -1,0 +1,61 @@
+{
+  "EVAS_expected": "accept",
+  "Spectre_settings": {
+    "iabstol": 1e-16,
+    "maxstep": 0.012,
+    "method": "traponly",
+    "precision": "%24.17g",
+    "reltol": 1e-10,
+    "vabstol": 1e-12
+  },
+  "coarse_fine_change": "output grid and max_step only",
+  "derivation": "Only both timer third arguments1e-6\u21921e-15; cross ttol/etol and all equations unchanged; exact nominal timer/PWL/root oracle and external criteria unchanged.",
+  "diagnostic_question": "Whether narrower explicit \u00b10.25ns retained strobes resolve firsttimer bracket rounding justabove1ns. Source/settings unchanged; no inference of callback order inside jointly changing exportedrecord.",
+  "exact_event_index_and_physical_clock": [
+    [
+      0,
+      "3602879701896397/36028797018963968"
+    ],
+    [
+      1,
+      "19471113219505603967277331424215/64903710731685344455911278641152"
+    ],
+    [
+      0,
+      "10808639105689191/36028797018963968"
+    ],
+    [
+      2,
+      "1351079888211149/4503599627370496"
+    ]
+  ],
+  "expected_final": {
+    "j": "1",
+    "k": "1",
+    "n": "2",
+    "u": "3602879701896397/36028797018963968",
+    "y": "4"
+  },
+  "external_event_time_s": 1e-09,
+  "external_voltage_budget_V": 1e-07,
+  "family": "mixed_source",
+  "final": {
+    "j": "1",
+    "k": "1",
+    "n": "2",
+    "u": "3602879701896397/36028797018963968",
+    "y": "4"
+  },
+  "id": "mixed_source-quarter-ns-strobes",
+  "input_sha256": "c1ce3c0ff64ed43a2a4a01fe5894c905a6f2fae1bd6c3ec15f44cfa8b1e5cdc6",
+  "lexical_derivation": "Only leading0 added to decimal real tokens; binary64 values and full non-token source bytes unchanged.",
+  "original_source_sha256": "724f1d980480084a7f6608343148197afc0faa50e79dea16389a0b6ebd2f72ff",
+  "original_tolerances": {
+    "reltol": 1e-08,
+    "vabstol": 1e-07
+  },
+  "parent_source_sha256": "1ce556712eccc4e8261984e36f4718f2871f2dff127b2df8a26a1cf02e59d8fe",
+  "parent_timer_declared_tolerance_s": 1e-06,
+  "source_sha256": "1ce556712eccc4e8261984e36f4718f2871f2dff127b2df8a26a1cf02e59d8fe",
+  "timer_declared_tolerance_s": 1e-15
+}

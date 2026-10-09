@@ -20,7 +20,7 @@ class Instance:
 
 
 def parse_sources(sources: Mapping[str, str]):
-    """Shared parsed module inventory, including preprocessing and pure functions."""
+    """Collect modules from independent compilation units and their include graphs."""
     models = {}
     for path, tokens in preprocess_sources(sources):
         for parsed in Parser('', path, tokens=tokens).parse_all():

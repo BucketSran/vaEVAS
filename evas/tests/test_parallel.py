@@ -17,7 +17,7 @@ def invoke(request, workers):
 
 
 class ParallelContracts(unittest.TestCase):
-    def request(self, body='V(y,r)<+V(u,r)/2+.125;'):
+    def request(self, body='V(y,r)<+V(u,r)/2+0.125;'):
         program=compile_sources({'batch.va':model(body)},[instance()])
         return dict(program=program.to_dict(),driven=['u'],samples=[[i/16] for i in range(-64,65)])
 
@@ -29,7 +29,7 @@ class ParallelContracts(unittest.TestCase):
                 self.assertEqual(json.loads(result.stderr)['kind'],'invalid_config')
 
     def test_affine_and_nonlinear_results_keep_order_and_bits(self):
-        for body in ['V(y,r)<+V(u,r)/2+.125;', 'V(y,r)<+V(u,r)-pow(V(y,r),3);']:
+        for body in ['V(y,r)<+V(u,r)/2+0.125;', 'V(y,r)<+V(u,r)-pow(V(y,r),3);']:
             request=self.request(body)
             serial=invoke(request,1)
             self.assertEqual(serial.returncode,0,serial.stderr)

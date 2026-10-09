@@ -1,0 +1,1600 @@
+[
+  {
+    "actual-query-state": {
+      "checked": [
+        {
+          "actual": {
+            "h": "0",
+            "m": "0",
+            "n": "1",
+            "q": "0"
+          },
+          "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+          "expected": {
+            "h": "0",
+            "m": "0",
+            "n": "1",
+            "q": "0"
+          },
+          "status": "P",
+          "time": 0.3
+        },
+        {
+          "actual": {
+            "h": "1",
+            "m": "1",
+            "n": "2",
+            "q": "1"
+          },
+          "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+          "expected": {
+            "h": "1",
+            "m": "1",
+            "n": "2",
+            "q": "1"
+          },
+          "status": "P",
+          "time": 0.3000000000000001
+        }
+      ],
+      "exact_boundary_records": [],
+      "failures": [],
+      "scope": "Actual transient.states at actual numeric querytimes, compared independently to exact Fraction phases. Never reconstructed from eventrepresentatives. Exactclock boundaries remain separateI. This is stronger phaseobligation, not change to frozen finite1ns waveformwindow checker.",
+      "status": "P"
+    },
+    "actual_query_state_failures": [],
+    "actual_query_state_status": "P",
+    "case": "hidden_loose",
+    "checker_sha256": "a3fbaca35324598d590559b759019c4ff9c2e947fa9a6646c53180a1762ab679",
+    "direct-phase-y": {
+      "records": [
+        {
+          "actual_y": -0.0,
+          "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+          "expected_y": 0.0,
+          "status": "P",
+          "time": 0.3
+        },
+        {
+          "actual_y": 1.0,
+          "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+          "expected_y": 1.0,
+          "status": "P",
+          "time": 0.3000000000000001
+        }
+      ],
+      "scope": "No blanketjump-window exemption at these separately proved physicalphase probes; original finitechecker unchanged for its originalscope. Exact-clock boundaries are not amongthese probes.",
+      "status": "P"
+    },
+    "direct_y_phase_records": [
+      {
+        "actual_y": -0.0,
+        "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+        "expected_y": 0.0,
+        "status": "P",
+        "time": 0.3
+      },
+      {
+        "actual_y": 1.0,
+        "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+        "expected_y": 1.0,
+        "status": "P",
+        "time": 0.3000000000000001
+      }
+    ],
+    "direct_y_phase_status": "P",
+    "event_failures": [],
+    "event_order": [
+      0,
+      0,
+      2,
+      1
+    ],
+    "event_status": "P",
+    "expected": "finite_output",
+    "extra_queries": {
+      "before_tau": 0.3,
+      "strictly_after_all_roots": 0.3000000000000001
+    },
+    "family": "hidden_loose",
+    "lane": "phase16",
+    "manifest_sha256": "e5a2b9b2f47f608cbd74721e62d54eb61042e2cebb2d3fa02569876954e91876",
+    "name": "complex-reference-v3--hidden_loose--coarse--physical-phase",
+    "numeric_max_errors_V": {
+      "u": 0.0,
+      "y": 0.0,
+      "z": 1.232595164407831e-32
+    },
+    "numeric_status": "P",
+    "original_request_sha256": "d48bbfa59aa8cc5f3e736773f0ac253e9967d45529b94c7cf1ec9ea74d0098d2",
+    "output_count": 4,
+    "prep": "complex-reference-v3-prep",
+    "profile": "coarse",
+    "qualification_scope": "Frozenfiniteobservations plus independentexactFractionqueryphase obligations; no exportorigin or exactcallbacktimestamp qualification.",
+    "qualification_status": "I",
+    "request_sha256": "5cae995260043c90a56b4838ce6ce1607a148ddcedc30947946a70723484309f",
+    "response_artifact_sha256": "dce3fc37dffe22d1a618b7a4d301ac16f9d49a7ac6181f0f02d2bc9b4787f752",
+    "response_channel": "stdout",
+    "returncode": 0,
+    "source_sha256": "11df0e01129bd39a229dda3df7cae76c0269f1e48ea52ea8819b09fce329ec6f",
+    "status": "P",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdin_sha256": "5cae995260043c90a56b4838ce6ce1607a148ddcedc30947946a70723484309f",
+    "stdout_sha256": "dce3fc37dffe22d1a618b7a4d301ac16f9d49a7ac6181f0f02d2bc9b4787f752",
+    "stop": 0.31
+  },
+  {
+    "actual-query-state": {
+      "checked": [
+        {
+          "actual": {
+            "h": "0",
+            "m": "0",
+            "n": "1",
+            "q": "0"
+          },
+          "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+          "expected": {
+            "h": "0",
+            "m": "0",
+            "n": "1",
+            "q": "0"
+          },
+          "status": "P",
+          "time": 0.3
+        },
+        {
+          "actual": {
+            "h": "1",
+            "m": "1",
+            "n": "2",
+            "q": "1"
+          },
+          "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+          "expected": {
+            "h": "1",
+            "m": "1",
+            "n": "2",
+            "q": "1"
+          },
+          "status": "P",
+          "time": 0.3000000000000001
+        }
+      ],
+      "exact_boundary_records": [],
+      "failures": [],
+      "scope": "Actual transient.states at actual numeric querytimes, compared independently to exact Fraction phases. Never reconstructed from eventrepresentatives. Exactclock boundaries remain separateI. This is stronger phaseobligation, not change to frozen finite1ns waveformwindow checker.",
+      "status": "P"
+    },
+    "actual_query_state_failures": [],
+    "actual_query_state_status": "P",
+    "case": "hidden_loose",
+    "checker_sha256": "a3fbaca35324598d590559b759019c4ff9c2e947fa9a6646c53180a1762ab679",
+    "direct-phase-y": {
+      "records": [
+        {
+          "actual_y": -0.0,
+          "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+          "expected_y": 0.0,
+          "status": "P",
+          "time": 0.3
+        },
+        {
+          "actual_y": 1.0,
+          "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+          "expected_y": 1.0,
+          "status": "P",
+          "time": 0.3000000000000001
+        }
+      ],
+      "scope": "No blanketjump-window exemption at these separately proved physicalphase probes; original finitechecker unchanged for its originalscope. Exact-clock boundaries are not amongthese probes.",
+      "status": "P"
+    },
+    "direct_y_phase_records": [
+      {
+        "actual_y": -0.0,
+        "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+        "expected_y": 0.0,
+        "status": "P",
+        "time": 0.3
+      },
+      {
+        "actual_y": 1.0,
+        "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+        "expected_y": 1.0,
+        "status": "P",
+        "time": 0.3000000000000001
+      }
+    ],
+    "direct_y_phase_status": "P",
+    "event_failures": [],
+    "event_order": [
+      0,
+      0,
+      2,
+      1
+    ],
+    "event_status": "P",
+    "expected": "finite_output",
+    "extra_queries": {
+      "before_tau": 0.3,
+      "strictly_after_all_roots": 0.3000000000000001
+    },
+    "family": "hidden_loose",
+    "lane": "phase16",
+    "manifest_sha256": "0975ff9e06d713c6f455ba870185d133a8a9acf0ba53d615156a0d80fcad2dc3",
+    "name": "complex-reference-v3--hidden_loose--fine--physical-phase",
+    "numeric_max_errors_V": {
+      "u": 0.0,
+      "y": 0.0,
+      "z": 1.232595164407831e-32
+    },
+    "numeric_status": "P",
+    "original_request_sha256": "6ac671b7bd41fd74be02eb22369c2d8b4c700ab1efd4becaf3cd4fdb7187f48b",
+    "output_count": 7,
+    "prep": "complex-reference-v3-prep",
+    "profile": "fine",
+    "qualification_scope": "Frozenfiniteobservations plus independentexactFractionqueryphase obligations; no exportorigin or exactcallbacktimestamp qualification.",
+    "qualification_status": "I",
+    "request_sha256": "e517cc44a185b0baed348874c7d5c6f7dc287bfaace6634217c3b40a7aac3eb9",
+    "response_artifact_sha256": "5ea23399477015b71ea58a74e2d30d8bf4d441dee070e83862f27b3f71abd282",
+    "response_channel": "stdout",
+    "returncode": 0,
+    "source_sha256": "11df0e01129bd39a229dda3df7cae76c0269f1e48ea52ea8819b09fce329ec6f",
+    "status": "P",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdin_sha256": "e517cc44a185b0baed348874c7d5c6f7dc287bfaace6634217c3b40a7aac3eb9",
+    "stdout_sha256": "5ea23399477015b71ea58a74e2d30d8bf4d441dee070e83862f27b3f71abd282",
+    "stop": 0.31
+  },
+  {
+    "actual_structured_error": {
+      "kind": "event_resolution",
+      "message": "cross_ttol_unrepresentable: no strictly ordered binary64 representative satisfies the original cross time tolerance"
+    },
+    "case": "hidden_tight",
+    "checker_sha256": "a3fbaca35324598d590559b759019c4ff9c2e947fa9a6646c53180a1762ab679",
+    "expected": "specific_rejection",
+    "extra_queries": {
+      "before_tau": 0.3,
+      "strictly_after_all_roots": 0.3000000000000001
+    },
+    "family": "hidden_tight",
+    "lane": "phase16",
+    "manifest_sha256": "e5a2b9b2f47f608cbd74721e62d54eb61042e2cebb2d3fa02569876954e91876",
+    "name": "complex-reference-v3--hidden_tight--coarse--physical-phase",
+    "original_request_sha256": "919b3f72e79150f657ee932a1d4c825439f03b23adcfd4b7497c2e3ba8a54fca",
+    "prep": "complex-reference-v3-prep",
+    "profile": "coarse",
+    "request_sha256": "2951f619d86344b071687acfbfa32b466569b9029f28f61e012216d65d669ad4",
+    "response_artifact_sha256": "51d79830c8f746698fbfcfe8d56f34103b0fef86b165450daa5ad63d5b762a45",
+    "response_channel": "stderr",
+    "returncode": 2,
+    "source_sha256": "4cc37ad6b83b6bc0180cc8e107e1ae8b9a56728214fb75d61d00206b289b9564",
+    "specific_rejection": {
+      "accepted_waveform": false,
+      "actual_kind": "event_resolution",
+      "actual_message": "cross_ttol_unrepresentable: no strictly ordered binary64 representative satisfies the original cross time tolerance",
+      "channel": "stderr top-level structured error",
+      "returncode": 2,
+      "status": "P"
+    },
+    "status": "P",
+    "stderr_sha256": "51d79830c8f746698fbfcfe8d56f34103b0fef86b165450daa5ad63d5b762a45",
+    "stdin_sha256": "2951f619d86344b071687acfbfa32b466569b9029f28f61e012216d65d669ad4",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stop": 0.31
+  },
+  {
+    "actual_structured_error": {
+      "kind": "event_resolution",
+      "message": "cross_ttol_unrepresentable: no strictly ordered binary64 representative satisfies the original cross time tolerance"
+    },
+    "case": "hidden_tight",
+    "checker_sha256": "a3fbaca35324598d590559b759019c4ff9c2e947fa9a6646c53180a1762ab679",
+    "expected": "specific_rejection",
+    "extra_queries": {
+      "before_tau": 0.3,
+      "strictly_after_all_roots": 0.3000000000000001
+    },
+    "family": "hidden_tight",
+    "lane": "phase16",
+    "manifest_sha256": "0975ff9e06d713c6f455ba870185d133a8a9acf0ba53d615156a0d80fcad2dc3",
+    "name": "complex-reference-v3--hidden_tight--fine--physical-phase",
+    "original_request_sha256": "d47280620057767594da174411b7127167d33568bd1e3c30aacd2a857a1ea90f",
+    "prep": "complex-reference-v3-prep",
+    "profile": "fine",
+    "request_sha256": "5918da3f394bedf7ef9116bfce6f2d9fc24bb41b58bd7f46b093dfa3b448675f",
+    "response_artifact_sha256": "51d79830c8f746698fbfcfe8d56f34103b0fef86b165450daa5ad63d5b762a45",
+    "response_channel": "stderr",
+    "returncode": 2,
+    "source_sha256": "4cc37ad6b83b6bc0180cc8e107e1ae8b9a56728214fb75d61d00206b289b9564",
+    "specific_rejection": {
+      "accepted_waveform": false,
+      "actual_kind": "event_resolution",
+      "actual_message": "cross_ttol_unrepresentable: no strictly ordered binary64 representative satisfies the original cross time tolerance",
+      "channel": "stderr top-level structured error",
+      "returncode": 2,
+      "status": "P"
+    },
+    "status": "P",
+    "stderr_sha256": "51d79830c8f746698fbfcfe8d56f34103b0fef86b165450daa5ad63d5b762a45",
+    "stdin_sha256": "5918da3f394bedf7ef9116bfce6f2d9fc24bb41b58bd7f46b093dfa3b448675f",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stop": 0.31
+  },
+  {
+    "actual-query-state": {
+      "checked": [
+        {
+          "actual": {
+            "j": "0",
+            "k": "0",
+            "n": "1"
+          },
+          "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+          "expected": {
+            "j": "0",
+            "k": "0",
+            "n": "1"
+          },
+          "status": "P",
+          "time": 0.3
+        },
+        {
+          "actual": {
+            "j": "1",
+            "k": "1",
+            "n": "2"
+          },
+          "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+          "expected": {
+            "j": "1",
+            "k": "1",
+            "n": "2"
+          },
+          "status": "P",
+          "time": 0.3000000000000001
+        }
+      ],
+      "exact_boundary_records": [],
+      "failures": [],
+      "scope": "Actual transient.states at actual numeric querytimes, compared independently to exact Fraction phases. Never reconstructed from eventrepresentatives. Exactclock boundaries remain separateI. This is stronger phaseobligation, not change to frozen finite1ns waveformwindow checker.",
+      "status": "P"
+    },
+    "actual_query_state_failures": [],
+    "actual_query_state_status": "P",
+    "case": "mixed_source",
+    "checker_sha256": "a3fbaca35324598d590559b759019c4ff9c2e947fa9a6646c53180a1762ab679",
+    "direct-phase-y": {
+      "records": [
+        {
+          "actual_y": 1.0,
+          "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+          "expected_y": 1.0,
+          "status": "P",
+          "time": 0.3
+        },
+        {
+          "actual_y": 4.0,
+          "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+          "expected_y": 4.0,
+          "status": "P",
+          "time": 0.3000000000000001
+        }
+      ],
+      "scope": "No blanketjump-window exemption at these separately proved physicalphase probes; original finitechecker unchanged for its originalscope. Exact-clock boundaries are not amongthese probes.",
+      "status": "P"
+    },
+    "direct_y_phase_records": [
+      {
+        "actual_y": 1.0,
+        "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+        "expected_y": 1.0,
+        "status": "P",
+        "time": 0.3
+      },
+      {
+        "actual_y": 4.0,
+        "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+        "expected_y": 4.0,
+        "status": "P",
+        "time": 0.3000000000000001
+      }
+    ],
+    "direct_y_phase_status": "P",
+    "event_failures": [],
+    "event_order": [
+      0,
+      1,
+      0,
+      2
+    ],
+    "event_status": "P",
+    "expected": "finite_output",
+    "extra_queries": {
+      "before_tau": 0.3,
+      "strictly_after_all_roots": 0.3000000000000001
+    },
+    "family": "mixed_source",
+    "lane": "phase16",
+    "manifest_sha256": "c8b6a9b5f036d24c5c63d3a94dc7c9273bd1a25693f8c9790fd748b50a7fec38",
+    "name": "complex-reference-v3--mixed_source--coarse--physical-phase",
+    "numeric_max_errors_V": {
+      "u": 6.938893903907235e-18,
+      "y": 0.0
+    },
+    "numeric_status": "P",
+    "original_request_sha256": "2f1ffbb14a1f37044bc4de55c440737bedd220a745b0f110320f7c0a6a1f0b80",
+    "output_count": 4,
+    "prep": "complex-reference-v3-prep",
+    "profile": "coarse",
+    "qualification_scope": "Frozenfiniteobservations plus independentexactFractionqueryphase obligations; no exportorigin or exactcallbacktimestamp qualification.",
+    "qualification_status": "I",
+    "request_sha256": "93172f80a23b436daa293f161cfab81ff154a1b08e2c9a8d7f988425d4e71019",
+    "response_artifact_sha256": "366c05f02db06a1eb9bd9423a0496ab04e92fbd3bde16e45d0dc0ea0c4d3bde3",
+    "response_channel": "stdout",
+    "returncode": 0,
+    "source_sha256": "bdef311b3a2ba89e3ac0f41f631c1da54a6aeb820adc952c19a8c8de77b2fedb",
+    "status": "P",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdin_sha256": "93172f80a23b436daa293f161cfab81ff154a1b08e2c9a8d7f988425d4e71019",
+    "stdout_sha256": "366c05f02db06a1eb9bd9423a0496ab04e92fbd3bde16e45d0dc0ea0c4d3bde3",
+    "stop": 0.49
+  },
+  {
+    "actual-query-state": {
+      "checked": [
+        {
+          "actual": {
+            "j": "0",
+            "k": "0",
+            "n": "1"
+          },
+          "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+          "expected": {
+            "j": "0",
+            "k": "0",
+            "n": "1"
+          },
+          "status": "P",
+          "time": 0.3
+        },
+        {
+          "actual": {
+            "j": "1",
+            "k": "1",
+            "n": "2"
+          },
+          "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+          "expected": {
+            "j": "1",
+            "k": "1",
+            "n": "2"
+          },
+          "status": "P",
+          "time": 0.3000000000000001
+        }
+      ],
+      "exact_boundary_records": [],
+      "failures": [],
+      "scope": "Actual transient.states at actual numeric querytimes, compared independently to exact Fraction phases. Never reconstructed from eventrepresentatives. Exactclock boundaries remain separateI. This is stronger phaseobligation, not change to frozen finite1ns waveformwindow checker.",
+      "status": "P"
+    },
+    "actual_query_state_failures": [],
+    "actual_query_state_status": "P",
+    "case": "mixed_source",
+    "checker_sha256": "a3fbaca35324598d590559b759019c4ff9c2e947fa9a6646c53180a1762ab679",
+    "direct-phase-y": {
+      "records": [
+        {
+          "actual_y": 1.0,
+          "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+          "expected_y": 1.0,
+          "status": "P",
+          "time": 0.3
+        },
+        {
+          "actual_y": 4.0,
+          "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+          "expected_y": 4.0,
+          "status": "P",
+          "time": 0.3000000000000001
+        }
+      ],
+      "scope": "No blanketjump-window exemption at these separately proved physicalphase probes; original finitechecker unchanged for its originalscope. Exact-clock boundaries are not amongthese probes.",
+      "status": "P"
+    },
+    "direct_y_phase_records": [
+      {
+        "actual_y": 1.0,
+        "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+        "expected_y": 1.0,
+        "status": "P",
+        "time": 0.3
+      },
+      {
+        "actual_y": 4.0,
+        "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+        "expected_y": 4.0,
+        "status": "P",
+        "time": 0.3000000000000001
+      }
+    ],
+    "direct_y_phase_status": "P",
+    "event_failures": [],
+    "event_order": [
+      0,
+      1,
+      0,
+      2
+    ],
+    "event_status": "P",
+    "expected": "finite_output",
+    "extra_queries": {
+      "before_tau": 0.3,
+      "strictly_after_all_roots": 0.3000000000000001
+    },
+    "family": "mixed_source",
+    "lane": "phase16",
+    "manifest_sha256": "08b98aef751f63971bef904764f1cbdc0fc8a9e7177179a7040483356a72fa0b",
+    "name": "complex-reference-v3--mixed_source--fine--physical-phase",
+    "numeric_max_errors_V": {
+      "u": 1.0408340855860841e-17,
+      "y": 0.0
+    },
+    "numeric_status": "P",
+    "original_request_sha256": "2bbbaeee552a8df0528e038a4ac8998b6cc77f1417eac30331ff46345b9544ca",
+    "output_count": 6,
+    "prep": "complex-reference-v3-prep",
+    "profile": "fine",
+    "qualification_scope": "Frozenfiniteobservations plus independentexactFractionqueryphase obligations; no exportorigin or exactcallbacktimestamp qualification.",
+    "qualification_status": "I",
+    "request_sha256": "8757d7ff7c28cdcc654c3e5c2c901e74ebeac656fc165663aad5895c2d152034",
+    "response_artifact_sha256": "206d99adb2c51db39da7216811da0976986eae883c14e501b5843a99239c9fba",
+    "response_channel": "stdout",
+    "returncode": 0,
+    "source_sha256": "bdef311b3a2ba89e3ac0f41f631c1da54a6aeb820adc952c19a8c8de77b2fedb",
+    "status": "P",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdin_sha256": "8757d7ff7c28cdcc654c3e5c2c901e74ebeac656fc165663aad5895c2d152034",
+    "stdout_sha256": "206d99adb2c51db39da7216811da0976986eae883c14e501b5843a99239c9fba",
+    "stop": 0.49
+  },
+  {
+    "actual-query-state": {
+      "checked": [
+        {
+          "actual": {
+            "h": "0",
+            "m": "0",
+            "n": "1",
+            "q": "0"
+          },
+          "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+          "expected": {
+            "h": "0",
+            "m": "0",
+            "n": "1",
+            "q": "0"
+          },
+          "status": "P",
+          "time": 0.3
+        },
+        {
+          "actual": {
+            "h": "1",
+            "m": "1",
+            "n": "2",
+            "q": "1"
+          },
+          "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+          "expected": {
+            "h": "1",
+            "m": "1",
+            "n": "2",
+            "q": "1"
+          },
+          "status": "P",
+          "time": 0.3000000000000001
+        }
+      ],
+      "exact_boundary_records": [],
+      "failures": [],
+      "scope": "Actual transient.states at actual numeric querytimes, compared independently to exact Fraction phases. Never reconstructed from eventrepresentatives. Exactclock boundaries remain separateI. This is stronger phaseobligation, not change to frozen finite1ns waveformwindow checker.",
+      "status": "P"
+    },
+    "actual_query_state_failures": [],
+    "actual_query_state_status": "P",
+    "case": "hidden_loose",
+    "checker_sha256": "a3fbaca35324598d590559b759019c4ff9c2e947fa9a6646c53180a1762ab679",
+    "direct-phase-y": {
+      "records": [
+        {
+          "actual_y": -0.0,
+          "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+          "expected_y": 0.0,
+          "status": "P",
+          "time": 0.3
+        },
+        {
+          "actual_y": 1.0,
+          "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+          "expected_y": 1.0,
+          "status": "P",
+          "time": 0.3000000000000001
+        }
+      ],
+      "scope": "No blanketjump-window exemption at these separately proved physicalphase probes; original finitechecker unchanged for its originalscope. Exact-clock boundaries are not amongthese probes.",
+      "status": "P"
+    },
+    "direct_y_phase_records": [
+      {
+        "actual_y": -0.0,
+        "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+        "expected_y": 0.0,
+        "status": "P",
+        "time": 0.3
+      },
+      {
+        "actual_y": 1.0,
+        "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+        "expected_y": 1.0,
+        "status": "P",
+        "time": 0.3000000000000001
+      }
+    ],
+    "direct_y_phase_status": "P",
+    "event_failures": [],
+    "event_order": [
+      0,
+      0,
+      2,
+      1
+    ],
+    "event_status": "P",
+    "expected": "finite_output",
+    "extra_queries": {
+      "before_tau": 0.3,
+      "strictly_after_all_roots": 0.3000000000000001
+    },
+    "family": "hidden_loose",
+    "lane": "phase16",
+    "manifest_sha256": "e5a2b9b2f47f608cbd74721e62d54eb61042e2cebb2d3fa02569876954e91876",
+    "name": "complex-reference-v4--hidden_loose--coarse--physical-phase",
+    "numeric_max_errors_V": {
+      "u": 0.0,
+      "y": 0.0,
+      "z": 1.232595164407831e-32
+    },
+    "numeric_status": "P",
+    "original_request_sha256": "b2627b1ab4e90456296efdd0b652801e4201aeaaa9c4bbb81a33598589a150d5",
+    "output_count": 4,
+    "prep": "complex-reference-v4-prep",
+    "profile": "coarse",
+    "qualification_scope": "Frozenfiniteobservations plus independentexactFractionqueryphase obligations; no exportorigin or exactcallbacktimestamp qualification.",
+    "qualification_status": "I",
+    "request_sha256": "39d5a4f64ede71f9d91ae2247f8da806fd3fced4ebb2a2a9f2a3e8abdc05fd69",
+    "response_artifact_sha256": "dce3fc37dffe22d1a618b7a4d301ac16f9d49a7ac6181f0f02d2bc9b4787f752",
+    "response_channel": "stdout",
+    "returncode": 0,
+    "source_sha256": "284cdac4ff7d8569c7af76e6eacc4fe77cffc39dd1086a7b2bf847951233604c",
+    "status": "P",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdin_sha256": "39d5a4f64ede71f9d91ae2247f8da806fd3fced4ebb2a2a9f2a3e8abdc05fd69",
+    "stdout_sha256": "dce3fc37dffe22d1a618b7a4d301ac16f9d49a7ac6181f0f02d2bc9b4787f752",
+    "stop": 0.31
+  },
+  {
+    "actual-query-state": {
+      "checked": [
+        {
+          "actual": {
+            "h": "0",
+            "m": "0",
+            "n": "1",
+            "q": "0"
+          },
+          "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+          "expected": {
+            "h": "0",
+            "m": "0",
+            "n": "1",
+            "q": "0"
+          },
+          "status": "P",
+          "time": 0.3
+        },
+        {
+          "actual": {
+            "h": "1",
+            "m": "1",
+            "n": "2",
+            "q": "1"
+          },
+          "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+          "expected": {
+            "h": "1",
+            "m": "1",
+            "n": "2",
+            "q": "1"
+          },
+          "status": "P",
+          "time": 0.3000000000000001
+        }
+      ],
+      "exact_boundary_records": [],
+      "failures": [],
+      "scope": "Actual transient.states at actual numeric querytimes, compared independently to exact Fraction phases. Never reconstructed from eventrepresentatives. Exactclock boundaries remain separateI. This is stronger phaseobligation, not change to frozen finite1ns waveformwindow checker.",
+      "status": "P"
+    },
+    "actual_query_state_failures": [],
+    "actual_query_state_status": "P",
+    "case": "hidden_loose",
+    "checker_sha256": "a3fbaca35324598d590559b759019c4ff9c2e947fa9a6646c53180a1762ab679",
+    "direct-phase-y": {
+      "records": [
+        {
+          "actual_y": -0.0,
+          "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+          "expected_y": 0.0,
+          "status": "P",
+          "time": 0.3
+        },
+        {
+          "actual_y": 1.0,
+          "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+          "expected_y": 1.0,
+          "status": "P",
+          "time": 0.3000000000000001
+        }
+      ],
+      "scope": "No blanketjump-window exemption at these separately proved physicalphase probes; original finitechecker unchanged for its originalscope. Exact-clock boundaries are not amongthese probes.",
+      "status": "P"
+    },
+    "direct_y_phase_records": [
+      {
+        "actual_y": -0.0,
+        "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+        "expected_y": 0.0,
+        "status": "P",
+        "time": 0.3
+      },
+      {
+        "actual_y": 1.0,
+        "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+        "expected_y": 1.0,
+        "status": "P",
+        "time": 0.3000000000000001
+      }
+    ],
+    "direct_y_phase_status": "P",
+    "event_failures": [],
+    "event_order": [
+      0,
+      0,
+      2,
+      1
+    ],
+    "event_status": "P",
+    "expected": "finite_output",
+    "extra_queries": {
+      "before_tau": 0.3,
+      "strictly_after_all_roots": 0.3000000000000001
+    },
+    "family": "hidden_loose",
+    "lane": "phase16",
+    "manifest_sha256": "0975ff9e06d713c6f455ba870185d133a8a9acf0ba53d615156a0d80fcad2dc3",
+    "name": "complex-reference-v4--hidden_loose--fine--physical-phase",
+    "numeric_max_errors_V": {
+      "u": 0.0,
+      "y": 0.0,
+      "z": 1.232595164407831e-32
+    },
+    "numeric_status": "P",
+    "original_request_sha256": "5b7ac983974ec7c81a0dd68825c1d8bef8f91eede23078ca345594e3d6e59c52",
+    "output_count": 7,
+    "prep": "complex-reference-v4-prep",
+    "profile": "fine",
+    "qualification_scope": "Frozenfiniteobservations plus independentexactFractionqueryphase obligations; no exportorigin or exactcallbacktimestamp qualification.",
+    "qualification_status": "I",
+    "request_sha256": "10652d22a291f0cf7c34839b15f3f671aaa67390b6c2e336ff225938e7cea578",
+    "response_artifact_sha256": "5ea23399477015b71ea58a74e2d30d8bf4d441dee070e83862f27b3f71abd282",
+    "response_channel": "stdout",
+    "returncode": 0,
+    "source_sha256": "284cdac4ff7d8569c7af76e6eacc4fe77cffc39dd1086a7b2bf847951233604c",
+    "status": "P",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdin_sha256": "10652d22a291f0cf7c34839b15f3f671aaa67390b6c2e336ff225938e7cea578",
+    "stdout_sha256": "5ea23399477015b71ea58a74e2d30d8bf4d441dee070e83862f27b3f71abd282",
+    "stop": 0.31
+  },
+  {
+    "actual-query-state": {
+      "checked": [
+        {
+          "actual": {
+            "j": "0",
+            "k": "0",
+            "n": "1"
+          },
+          "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+          "expected": {
+            "j": "0",
+            "k": "0",
+            "n": "1"
+          },
+          "status": "P",
+          "time": 0.3
+        },
+        {
+          "actual": {
+            "j": "1",
+            "k": "1",
+            "n": "2"
+          },
+          "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+          "expected": {
+            "j": "1",
+            "k": "1",
+            "n": "2"
+          },
+          "status": "P",
+          "time": 0.3000000000000001
+        }
+      ],
+      "exact_boundary_records": [],
+      "failures": [],
+      "scope": "Actual transient.states at actual numeric querytimes, compared independently to exact Fraction phases. Never reconstructed from eventrepresentatives. Exactclock boundaries remain separateI. This is stronger phaseobligation, not change to frozen finite1ns waveformwindow checker.",
+      "status": "P"
+    },
+    "actual_query_state_failures": [],
+    "actual_query_state_status": "P",
+    "case": "mixed_source",
+    "checker_sha256": "a3fbaca35324598d590559b759019c4ff9c2e947fa9a6646c53180a1762ab679",
+    "direct-phase-y": {
+      "records": [
+        {
+          "actual_y": 1.0,
+          "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+          "expected_y": 1.0,
+          "status": "P",
+          "time": 0.3
+        },
+        {
+          "actual_y": 4.0,
+          "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+          "expected_y": 4.0,
+          "status": "P",
+          "time": 0.3000000000000001
+        }
+      ],
+      "scope": "No blanketjump-window exemption at these separately proved physicalphase probes; original finitechecker unchanged for its originalscope. Exact-clock boundaries are not amongthese probes.",
+      "status": "P"
+    },
+    "direct_y_phase_records": [
+      {
+        "actual_y": 1.0,
+        "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+        "expected_y": 1.0,
+        "status": "P",
+        "time": 0.3
+      },
+      {
+        "actual_y": 4.0,
+        "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+        "expected_y": 4.0,
+        "status": "P",
+        "time": 0.3000000000000001
+      }
+    ],
+    "direct_y_phase_status": "P",
+    "event_failures": [],
+    "event_order": [
+      0,
+      1,
+      0,
+      2
+    ],
+    "event_status": "P",
+    "expected": "finite_output",
+    "extra_queries": {
+      "before_tau": 0.3,
+      "strictly_after_all_roots": 0.3000000000000001
+    },
+    "family": "mixed_source",
+    "lane": "phase16",
+    "manifest_sha256": "c8b6a9b5f036d24c5c63d3a94dc7c9273bd1a25693f8c9790fd748b50a7fec38",
+    "name": "complex-reference-v4--mixed_source--coarse--physical-phase",
+    "numeric_max_errors_V": {
+      "u": 6.938893903907235e-18,
+      "y": 0.0
+    },
+    "numeric_status": "P",
+    "original_request_sha256": "19b82c14c2df06ac55c3db5c33d89a4083187b0595538d5abe51fbf2e6f1e2dd",
+    "output_count": 4,
+    "prep": "complex-reference-v4-prep",
+    "profile": "coarse",
+    "qualification_scope": "Frozenfiniteobservations plus independentexactFractionqueryphase obligations; no exportorigin or exactcallbacktimestamp qualification.",
+    "qualification_status": "I",
+    "request_sha256": "ee7780d27a45e72b2d0bba0dfe224b0a834e7c0bbc8846eface7396ca955e4c9",
+    "response_artifact_sha256": "366c05f02db06a1eb9bd9423a0496ab04e92fbd3bde16e45d0dc0ea0c4d3bde3",
+    "response_channel": "stdout",
+    "returncode": 0,
+    "source_sha256": "1ce556712eccc4e8261984e36f4718f2871f2dff127b2df8a26a1cf02e59d8fe",
+    "status": "P",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdin_sha256": "ee7780d27a45e72b2d0bba0dfe224b0a834e7c0bbc8846eface7396ca955e4c9",
+    "stdout_sha256": "366c05f02db06a1eb9bd9423a0496ab04e92fbd3bde16e45d0dc0ea0c4d3bde3",
+    "stop": 0.49
+  },
+  {
+    "actual-query-state": {
+      "checked": [
+        {
+          "actual": {
+            "j": "0",
+            "k": "0",
+            "n": "1"
+          },
+          "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+          "expected": {
+            "j": "0",
+            "k": "0",
+            "n": "1"
+          },
+          "status": "P",
+          "time": 0.3
+        },
+        {
+          "actual": {
+            "j": "1",
+            "k": "1",
+            "n": "2"
+          },
+          "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+          "expected": {
+            "j": "1",
+            "k": "1",
+            "n": "2"
+          },
+          "status": "P",
+          "time": 0.3000000000000001
+        }
+      ],
+      "exact_boundary_records": [],
+      "failures": [],
+      "scope": "Actual transient.states at actual numeric querytimes, compared independently to exact Fraction phases. Never reconstructed from eventrepresentatives. Exactclock boundaries remain separateI. This is stronger phaseobligation, not change to frozen finite1ns waveformwindow checker.",
+      "status": "P"
+    },
+    "actual_query_state_failures": [],
+    "actual_query_state_status": "P",
+    "case": "mixed_source",
+    "checker_sha256": "a3fbaca35324598d590559b759019c4ff9c2e947fa9a6646c53180a1762ab679",
+    "direct-phase-y": {
+      "records": [
+        {
+          "actual_y": 1.0,
+          "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+          "expected_y": 1.0,
+          "status": "P",
+          "time": 0.3
+        },
+        {
+          "actual_y": 4.0,
+          "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+          "expected_y": 4.0,
+          "status": "P",
+          "time": 0.3000000000000001
+        }
+      ],
+      "scope": "No blanketjump-window exemption at these separately proved physicalphase probes; original finitechecker unchanged for its originalscope. Exact-clock boundaries are not amongthese probes.",
+      "status": "P"
+    },
+    "direct_y_phase_records": [
+      {
+        "actual_y": 1.0,
+        "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+        "expected_y": 1.0,
+        "status": "P",
+        "time": 0.3
+      },
+      {
+        "actual_y": 4.0,
+        "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+        "expected_y": 4.0,
+        "status": "P",
+        "time": 0.3000000000000001
+      }
+    ],
+    "direct_y_phase_status": "P",
+    "event_failures": [],
+    "event_order": [
+      0,
+      1,
+      0,
+      2
+    ],
+    "event_status": "P",
+    "expected": "finite_output",
+    "extra_queries": {
+      "before_tau": 0.3,
+      "strictly_after_all_roots": 0.3000000000000001
+    },
+    "family": "mixed_source",
+    "lane": "phase16",
+    "manifest_sha256": "08b98aef751f63971bef904764f1cbdc0fc8a9e7177179a7040483356a72fa0b",
+    "name": "complex-reference-v4--mixed_source--fine--physical-phase",
+    "numeric_max_errors_V": {
+      "u": 1.0408340855860841e-17,
+      "y": 0.0
+    },
+    "numeric_status": "P",
+    "original_request_sha256": "4781314e413d43e1c7b8a3fb49426a66db16aa992ad22264d856f44d8f372899",
+    "output_count": 6,
+    "prep": "complex-reference-v4-prep",
+    "profile": "fine",
+    "qualification_scope": "Frozenfiniteobservations plus independentexactFractionqueryphase obligations; no exportorigin or exactcallbacktimestamp qualification.",
+    "qualification_status": "I",
+    "request_sha256": "5bb26f167b9465dd369b8cbec5a36b8c7f36cde1cc4a9e34c5b41143599c7c06",
+    "response_artifact_sha256": "206d99adb2c51db39da7216811da0976986eae883c14e501b5843a99239c9fba",
+    "response_channel": "stdout",
+    "returncode": 0,
+    "source_sha256": "1ce556712eccc4e8261984e36f4718f2871f2dff127b2df8a26a1cf02e59d8fe",
+    "status": "P",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdin_sha256": "5bb26f167b9465dd369b8cbec5a36b8c7f36cde1cc4a9e34c5b41143599c7c06",
+    "stdout_sha256": "206d99adb2c51db39da7216811da0976986eae883c14e501b5843a99239c9fba",
+    "stop": 0.49
+  },
+  {
+    "actual_structured_error": {
+      "kind": "invalid_inputs",
+      "message": "continuous trajectory query must be within the finite source history"
+    },
+    "case": "hidden_loose-timer-1fs-nocross",
+    "checker_sha256": "7c0eac46e35579cc48730d26cf0e6d63dcc3192ea3409908abbde9bc0fb964ed",
+    "expected": "finite_output",
+    "extra_queries": {
+      "before_tau": 0.3,
+      "strictly_after_all_roots": 0.3000000000000001
+    },
+    "failure_type": "JSONDecodeError",
+    "family": "hidden_loose_nocross",
+    "lane": "phase16",
+    "manifest_sha256": "e5a2b9b2f47f608cbd74721e62d54eb61042e2cebb2d3fa02569876954e91876",
+    "name": "complex-reference-v5--hidden_loose-timer-1fs-nocross--coarse--physical-phase",
+    "original_request_sha256": "018a10309ad8000fb01ac0ecdcf1e18d6fc4f7b656a0a32aa38d3b12b5080281",
+    "prep": "complex-reference-v5-prep",
+    "profile": "coarse",
+    "reason": "Expecting value: line 1 column 1 (char 0)",
+    "request_sha256": "4eed01eeee34c187b48de75bd7e5e63035584435511056f9090f4346a0fd1669",
+    "response_artifact_sha256": "7930a5ea92c7a8d0a752458110c374f8e07d0cc02e3d923bdc6cbedb4dfc325c",
+    "response_channel": "stderr",
+    "returncode": 2,
+    "source_sha256": "c1b490cc75bf07cc6017be66c3258c8bfd7ff549f4b18d193d5e9de93b966acc",
+    "status": "F",
+    "stderr_sha256": "7930a5ea92c7a8d0a752458110c374f8e07d0cc02e3d923bdc6cbedb4dfc325c",
+    "stdin_sha256": "4eed01eeee34c187b48de75bd7e5e63035584435511056f9090f4346a0fd1669",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stop": 0.31
+  },
+  {
+    "actual_structured_error": {
+      "kind": "invalid_inputs",
+      "message": "continuous trajectory query must be within the finite source history"
+    },
+    "case": "hidden_loose-timer-1fs-nocross",
+    "checker_sha256": "7c0eac46e35579cc48730d26cf0e6d63dcc3192ea3409908abbde9bc0fb964ed",
+    "expected": "finite_output",
+    "extra_queries": {
+      "before_tau": 0.3,
+      "strictly_after_all_roots": 0.3000000000000001
+    },
+    "failure_type": "JSONDecodeError",
+    "family": "hidden_loose_nocross",
+    "lane": "phase16",
+    "manifest_sha256": "0975ff9e06d713c6f455ba870185d133a8a9acf0ba53d615156a0d80fcad2dc3",
+    "name": "complex-reference-v5--hidden_loose-timer-1fs-nocross--fine--physical-phase",
+    "original_request_sha256": "f8bc40ba0cb2055e4dd3d3ff9f66adae0f2610b22faa344519431634945c5da3",
+    "prep": "complex-reference-v5-prep",
+    "profile": "fine",
+    "reason": "Expecting value: line 1 column 1 (char 0)",
+    "request_sha256": "6ceb73aa021d5d66105d005f19ede89b648f5d933fa3648cc1d259d25eb3352d",
+    "response_artifact_sha256": "7930a5ea92c7a8d0a752458110c374f8e07d0cc02e3d923bdc6cbedb4dfc325c",
+    "response_channel": "stderr",
+    "returncode": 2,
+    "source_sha256": "c1b490cc75bf07cc6017be66c3258c8bfd7ff549f4b18d193d5e9de93b966acc",
+    "status": "F",
+    "stderr_sha256": "7930a5ea92c7a8d0a752458110c374f8e07d0cc02e3d923bdc6cbedb4dfc325c",
+    "stdin_sha256": "6ceb73aa021d5d66105d005f19ede89b648f5d933fa3648cc1d259d25eb3352d",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stop": 0.31
+  },
+  {
+    "actual-query-state": {
+      "checked": [
+        {
+          "actual": {
+            "h": "0",
+            "m": "0",
+            "n": "1",
+            "q": "0"
+          },
+          "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+          "expected": {
+            "h": "0",
+            "m": "0",
+            "n": "1",
+            "q": "0"
+          },
+          "status": "P",
+          "time": 0.3
+        },
+        {
+          "actual": {
+            "h": "1",
+            "m": "1",
+            "n": "2",
+            "q": "1"
+          },
+          "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+          "expected": {
+            "h": "1",
+            "m": "1",
+            "n": "2",
+            "q": "1"
+          },
+          "status": "P",
+          "time": 0.3000000000000001
+        }
+      ],
+      "exact_boundary_records": [],
+      "failures": [],
+      "scope": "Actual transient.states at actual numeric querytimes, compared independently to exact Fraction phases. Never reconstructed from eventrepresentatives. Exactclock boundaries remain separateI. This is stronger phaseobligation, not change to frozen finite1ns waveformwindow checker.",
+      "status": "P"
+    },
+    "actual_query_state_failures": [],
+    "actual_query_state_status": "P",
+    "case": "hidden_loose-timer-1ps",
+    "checker_sha256": "7c0eac46e35579cc48730d26cf0e6d63dcc3192ea3409908abbde9bc0fb964ed",
+    "direct-phase-y": {
+      "records": [
+        {
+          "actual_y": -0.0,
+          "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+          "expected_y": 0.0,
+          "status": "P",
+          "time": 0.3
+        },
+        {
+          "actual_y": 1.0,
+          "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+          "expected_y": 1.0,
+          "status": "P",
+          "time": 0.3000000000000001
+        }
+      ],
+      "scope": "No blanketjump-window exemption at these separately proved physicalphase probes; original finitechecker unchanged for its originalscope. Exact-clock boundaries are not amongthese probes.",
+      "status": "P"
+    },
+    "direct_y_phase_records": [
+      {
+        "actual_y": -0.0,
+        "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+        "expected_y": 0.0,
+        "status": "P",
+        "time": 0.3
+      },
+      {
+        "actual_y": 1.0,
+        "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+        "expected_y": 1.0,
+        "status": "P",
+        "time": 0.3000000000000001
+      }
+    ],
+    "direct_y_phase_status": "P",
+    "event_failures": [],
+    "event_order": [
+      0,
+      0,
+      2,
+      1
+    ],
+    "event_status": "P",
+    "expected": "finite_output",
+    "extra_queries": {
+      "before_tau": 0.3,
+      "strictly_after_all_roots": 0.3000000000000001
+    },
+    "family": "hidden_loose",
+    "lane": "phase16",
+    "manifest_sha256": "e5a2b9b2f47f608cbd74721e62d54eb61042e2cebb2d3fa02569876954e91876",
+    "name": "complex-reference-v5--hidden_loose-timer-1ps--coarse--physical-phase",
+    "numeric_max_errors_V": {
+      "u": 0.0,
+      "y": 0.0,
+      "z": 1.232595164407831e-32
+    },
+    "numeric_status": "P",
+    "original_request_sha256": "8685cd7ec066c5daad98f3581b96125908d43ee539106f0adea1c106ebd4dd4b",
+    "output_count": 4,
+    "prep": "complex-reference-v5-prep",
+    "profile": "coarse",
+    "qualification_scope": "Frozenfiniteobservations plus independentexactFractionqueryphase obligations; no exportorigin or exactcallbacktimestamp qualification.",
+    "qualification_status": "I",
+    "request_sha256": "f5910a9f71931a6bdc9e78fd562109fb1f8d41bd54e0cab4c15157dc43316626",
+    "response_artifact_sha256": "dce3fc37dffe22d1a618b7a4d301ac16f9d49a7ac6181f0f02d2bc9b4787f752",
+    "response_channel": "stdout",
+    "returncode": 0,
+    "source_sha256": "786abce6b0903d21dfe373a55ef1cdf1f070445c85ab93302fc71b9f2760b6f9",
+    "status": "P",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdin_sha256": "f5910a9f71931a6bdc9e78fd562109fb1f8d41bd54e0cab4c15157dc43316626",
+    "stdout_sha256": "dce3fc37dffe22d1a618b7a4d301ac16f9d49a7ac6181f0f02d2bc9b4787f752",
+    "stop": 0.31
+  },
+  {
+    "actual-query-state": {
+      "checked": [
+        {
+          "actual": {
+            "h": "0",
+            "m": "0",
+            "n": "1",
+            "q": "0"
+          },
+          "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+          "expected": {
+            "h": "0",
+            "m": "0",
+            "n": "1",
+            "q": "0"
+          },
+          "status": "P",
+          "time": 0.3
+        },
+        {
+          "actual": {
+            "h": "1",
+            "m": "1",
+            "n": "2",
+            "q": "1"
+          },
+          "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+          "expected": {
+            "h": "1",
+            "m": "1",
+            "n": "2",
+            "q": "1"
+          },
+          "status": "P",
+          "time": 0.3000000000000001
+        }
+      ],
+      "exact_boundary_records": [],
+      "failures": [],
+      "scope": "Actual transient.states at actual numeric querytimes, compared independently to exact Fraction phases. Never reconstructed from eventrepresentatives. Exactclock boundaries remain separateI. This is stronger phaseobligation, not change to frozen finite1ns waveformwindow checker.",
+      "status": "P"
+    },
+    "actual_query_state_failures": [],
+    "actual_query_state_status": "P",
+    "case": "hidden_loose-timer-1ps",
+    "checker_sha256": "7c0eac46e35579cc48730d26cf0e6d63dcc3192ea3409908abbde9bc0fb964ed",
+    "direct-phase-y": {
+      "records": [
+        {
+          "actual_y": -0.0,
+          "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+          "expected_y": 0.0,
+          "status": "P",
+          "time": 0.3
+        },
+        {
+          "actual_y": 1.0,
+          "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+          "expected_y": 1.0,
+          "status": "P",
+          "time": 0.3000000000000001
+        }
+      ],
+      "scope": "No blanketjump-window exemption at these separately proved physicalphase probes; original finitechecker unchanged for its originalscope. Exact-clock boundaries are not amongthese probes.",
+      "status": "P"
+    },
+    "direct_y_phase_records": [
+      {
+        "actual_y": -0.0,
+        "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+        "expected_y": 0.0,
+        "status": "P",
+        "time": 0.3
+      },
+      {
+        "actual_y": 1.0,
+        "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+        "expected_y": 1.0,
+        "status": "P",
+        "time": 0.3000000000000001
+      }
+    ],
+    "direct_y_phase_status": "P",
+    "event_failures": [],
+    "event_order": [
+      0,
+      0,
+      2,
+      1
+    ],
+    "event_status": "P",
+    "expected": "finite_output",
+    "extra_queries": {
+      "before_tau": 0.3,
+      "strictly_after_all_roots": 0.3000000000000001
+    },
+    "family": "hidden_loose",
+    "lane": "phase16",
+    "manifest_sha256": "0975ff9e06d713c6f455ba870185d133a8a9acf0ba53d615156a0d80fcad2dc3",
+    "name": "complex-reference-v5--hidden_loose-timer-1ps--fine--physical-phase",
+    "numeric_max_errors_V": {
+      "u": 0.0,
+      "y": 0.0,
+      "z": 1.232595164407831e-32
+    },
+    "numeric_status": "P",
+    "original_request_sha256": "17d211e08e5355e76e80c1aff9f860fd1ebdfda090c2218ba0445a72c58f2292",
+    "output_count": 7,
+    "prep": "complex-reference-v5-prep",
+    "profile": "fine",
+    "qualification_scope": "Frozenfiniteobservations plus independentexactFractionqueryphase obligations; no exportorigin or exactcallbacktimestamp qualification.",
+    "qualification_status": "I",
+    "request_sha256": "633d85d177d33a55f43fe5feaab679f2d4ef0b551297f2924a63101debe4d179",
+    "response_artifact_sha256": "5ea23399477015b71ea58a74e2d30d8bf4d441dee070e83862f27b3f71abd282",
+    "response_channel": "stdout",
+    "returncode": 0,
+    "source_sha256": "786abce6b0903d21dfe373a55ef1cdf1f070445c85ab93302fc71b9f2760b6f9",
+    "status": "P",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdin_sha256": "633d85d177d33a55f43fe5feaab679f2d4ef0b551297f2924a63101debe4d179",
+    "stdout_sha256": "5ea23399477015b71ea58a74e2d30d8bf4d441dee070e83862f27b3f71abd282",
+    "stop": 0.31
+  },
+  {
+    "actual-query-state": {
+      "checked": [
+        {
+          "actual": {
+            "j": "0",
+            "k": "0",
+            "n": "1"
+          },
+          "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+          "expected": {
+            "j": "0",
+            "k": "0",
+            "n": "1"
+          },
+          "status": "P",
+          "time": 0.3
+        },
+        {
+          "actual": {
+            "j": "1",
+            "k": "1",
+            "n": "2"
+          },
+          "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+          "expected": {
+            "j": "1",
+            "k": "1",
+            "n": "2"
+          },
+          "status": "P",
+          "time": 0.3000000000000001
+        }
+      ],
+      "exact_boundary_records": [],
+      "failures": [],
+      "scope": "Actual transient.states at actual numeric querytimes, compared independently to exact Fraction phases. Never reconstructed from eventrepresentatives. Exactclock boundaries remain separateI. This is stronger phaseobligation, not change to frozen finite1ns waveformwindow checker.",
+      "status": "P"
+    },
+    "actual_query_state_failures": [],
+    "actual_query_state_status": "P",
+    "case": "mixed_source-quarter-ns-strobes",
+    "checker_sha256": "7c0eac46e35579cc48730d26cf0e6d63dcc3192ea3409908abbde9bc0fb964ed",
+    "direct-phase-y": {
+      "records": [
+        {
+          "actual_y": 1.0,
+          "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+          "expected_y": 1.0,
+          "status": "P",
+          "time": 0.3
+        },
+        {
+          "actual_y": 4.0,
+          "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+          "expected_y": 4.0,
+          "status": "P",
+          "time": 0.3000000000000001
+        }
+      ],
+      "scope": "No blanketjump-window exemption at these separately proved physicalphase probes; original finitechecker unchanged for its originalscope. Exact-clock boundaries are not amongthese probes.",
+      "status": "P"
+    },
+    "direct_y_phase_records": [
+      {
+        "actual_y": 1.0,
+        "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+        "expected_y": 1.0,
+        "status": "P",
+        "time": 0.3
+      },
+      {
+        "actual_y": 4.0,
+        "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+        "expected_y": 4.0,
+        "status": "P",
+        "time": 0.3000000000000001
+      }
+    ],
+    "direct_y_phase_status": "P",
+    "event_failures": [],
+    "event_order": [
+      0,
+      1,
+      0,
+      2
+    ],
+    "event_status": "P",
+    "expected": "finite_output",
+    "extra_queries": {
+      "before_tau": 0.3,
+      "strictly_after_all_roots": 0.3000000000000001
+    },
+    "family": "mixed_source",
+    "lane": "phase16",
+    "manifest_sha256": "c8b6a9b5f036d24c5c63d3a94dc7c9273bd1a25693f8c9790fd748b50a7fec38",
+    "name": "complex-reference-v5--mixed_source-quarter-ns-strobes--coarse--physical-phase",
+    "numeric_max_errors_V": {
+      "u": 6.938893903907235e-18,
+      "y": 0.0
+    },
+    "numeric_status": "P",
+    "original_request_sha256": "19b82c14c2df06ac55c3db5c33d89a4083187b0595538d5abe51fbf2e6f1e2dd",
+    "output_count": 4,
+    "prep": "complex-reference-v5-prep",
+    "profile": "coarse",
+    "qualification_scope": "Frozenfiniteobservations plus independentexactFractionqueryphase obligations; no exportorigin or exactcallbacktimestamp qualification.",
+    "qualification_status": "I",
+    "request_sha256": "ee7780d27a45e72b2d0bba0dfe224b0a834e7c0bbc8846eface7396ca955e4c9",
+    "response_artifact_sha256": "366c05f02db06a1eb9bd9423a0496ab04e92fbd3bde16e45d0dc0ea0c4d3bde3",
+    "response_channel": "stdout",
+    "returncode": 0,
+    "source_sha256": "1ce556712eccc4e8261984e36f4718f2871f2dff127b2df8a26a1cf02e59d8fe",
+    "status": "P",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdin_sha256": "ee7780d27a45e72b2d0bba0dfe224b0a834e7c0bbc8846eface7396ca955e4c9",
+    "stdout_sha256": "366c05f02db06a1eb9bd9423a0496ab04e92fbd3bde16e45d0dc0ea0c4d3bde3",
+    "stop": 0.49
+  },
+  {
+    "actual-query-state": {
+      "checked": [
+        {
+          "actual": {
+            "j": "0",
+            "k": "0",
+            "n": "1"
+          },
+          "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+          "expected": {
+            "j": "0",
+            "k": "0",
+            "n": "1"
+          },
+          "status": "P",
+          "time": 0.3
+        },
+        {
+          "actual": {
+            "j": "1",
+            "k": "1",
+            "n": "2"
+          },
+          "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+          "expected": {
+            "j": "1",
+            "k": "1",
+            "n": "2"
+          },
+          "status": "P",
+          "time": 0.3000000000000001
+        }
+      ],
+      "exact_boundary_records": [],
+      "failures": [],
+      "scope": "Actual transient.states at actual numeric querytimes, compared independently to exact Fraction phases. Never reconstructed from eventrepresentatives. Exactclock boundaries remain separateI. This is stronger phaseobligation, not change to frozen finite1ns waveformwindow checker.",
+      "status": "P"
+    },
+    "actual_query_state_failures": [],
+    "actual_query_state_status": "P",
+    "case": "mixed_source-quarter-ns-strobes",
+    "checker_sha256": "7c0eac46e35579cc48730d26cf0e6d63dcc3192ea3409908abbde9bc0fb964ed",
+    "direct-phase-y": {
+      "records": [
+        {
+          "actual_y": 1.0,
+          "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+          "expected_y": 1.0,
+          "status": "P",
+          "time": 0.3
+        },
+        {
+          "actual_y": 4.0,
+          "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+          "expected_y": 4.0,
+          "status": "P",
+          "time": 0.3000000000000001
+        }
+      ],
+      "scope": "No blanketjump-window exemption at these separately proved physicalphase probes; original finitechecker unchanged for its originalscope. Exact-clock boundaries are not amongthese probes.",
+      "status": "P"
+    },
+    "direct_y_phase_records": [
+      {
+        "actual_y": 1.0,
+        "exact_numeric_query_rational": "5404319552844595/18014398509481984",
+        "expected_y": 1.0,
+        "status": "P",
+        "time": 0.3
+      },
+      {
+        "actual_y": 4.0,
+        "exact_numeric_query_rational": "5404319552844597/18014398509481984",
+        "expected_y": 4.0,
+        "status": "P",
+        "time": 0.3000000000000001
+      }
+    ],
+    "direct_y_phase_status": "P",
+    "event_failures": [],
+    "event_order": [
+      0,
+      1,
+      0,
+      2
+    ],
+    "event_status": "P",
+    "expected": "finite_output",
+    "extra_queries": {
+      "before_tau": 0.3,
+      "strictly_after_all_roots": 0.3000000000000001
+    },
+    "family": "mixed_source",
+    "lane": "phase16",
+    "manifest_sha256": "08b98aef751f63971bef904764f1cbdc0fc8a9e7177179a7040483356a72fa0b",
+    "name": "complex-reference-v5--mixed_source-quarter-ns-strobes--fine--physical-phase",
+    "numeric_max_errors_V": {
+      "u": 1.0408340855860841e-17,
+      "y": 0.0
+    },
+    "numeric_status": "P",
+    "original_request_sha256": "4781314e413d43e1c7b8a3fb49426a66db16aa992ad22264d856f44d8f372899",
+    "output_count": 6,
+    "prep": "complex-reference-v5-prep",
+    "profile": "fine",
+    "qualification_scope": "Frozenfiniteobservations plus independentexactFractionqueryphase obligations; no exportorigin or exactcallbacktimestamp qualification.",
+    "qualification_status": "I",
+    "request_sha256": "5bb26f167b9465dd369b8cbec5a36b8c7f36cde1cc4a9e34c5b41143599c7c06",
+    "response_artifact_sha256": "206d99adb2c51db39da7216811da0976986eae883c14e501b5843a99239c9fba",
+    "response_channel": "stdout",
+    "returncode": 0,
+    "source_sha256": "1ce556712eccc4e8261984e36f4718f2871f2dff127b2df8a26a1cf02e59d8fe",
+    "status": "P",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdin_sha256": "5bb26f167b9465dd369b8cbec5a36b8c7f36cde1cc4a9e34c5b41143599c7c06",
+    "stdout_sha256": "206d99adb2c51db39da7216811da0976986eae883c14e501b5843a99239c9fba",
+    "stop": 0.49
+  }
+]

@@ -1,0 +1,46 @@
+{
+  "models": [
+    "dut.va"
+  ],
+  "instances": [
+    {
+      "name": "dut",
+      "module": "m",
+      "connections": {
+        "u": "u",
+        "y": "y",
+        "r": "0"
+      }
+    }
+  ],
+  "tolerances": {
+    "vabstol": 1e-09,
+    "reltol": 1e-07
+  },
+  "transient": {
+    "sources": {
+      "u": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    "output_times": [
+      0,
+      0.125,
+      0.375,
+      0.625,
+      0.875,
+      1
+    ],
+    "stop": 1,
+    "max_step": 0.5,
+    "strobeperiod": 0.25,
+    "strobedelay": 0.125
+  }
+}

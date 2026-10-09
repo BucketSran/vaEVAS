@@ -1,0 +1,308 @@
+{
+  "candidate_revision": "b15981e21d97ac10cfc80b48ee36046168cf1abc",
+  "candidate_schedule_sha256": "c949245a36da6e7a76f500303e17f97b4809c014143da39849e83838dfa94c7e",
+  "kernel_sha256": "2b21ee6c8f12323477eea9de5852d4887cd7aa20afc88287a9ae0d77cea9435c",
+  "archive_sha256": "5df6fcf31bffa7405423a57b240724c3e887b69e3b33034beab3383d598da33b",
+  "verified_archive_files": 120,
+  "raw_scope": "local-only",
+  "original_z_budget_v": 1e-06,
+  "budget_changed": false,
+  "independent_z_formula": "Fraction(1e6)*min(max(Fraction(t)-Fraction(2e-6),0),Fraction(6e-6)-Fraction(2e-6))",
+  "cases": [
+    {
+      "name": "timer-ttol18",
+      "archive": "event-reference-v2b",
+      "reused_baseline": true,
+      "raw_psf_bytes_equal": false,
+      "value_bytes_equal": true,
+      "header_differences": [
+        {
+          "original": "\"date\" \"7:35:00 PM, Thur Oct 8, 2026\"",
+          "instrumented": "\"date\" \"7:35:15 PM, Thur Oct 8, 2026\""
+        }
+      ],
+      "value_sha256": "2b7f671867c012124f0b9c56ace197d75e23e0a86e75809c152ef549f60240fd",
+      "callbacks": [
+        {
+          "event": "rise",
+          "abstime_token": "1.99999999999999990950e-06"
+        },
+        {
+          "event": "fall",
+          "abstime_token": "6.00000000000000015201e-06"
+        }
+      ],
+      "native_rows": 287,
+      "required_rows": 173,
+      "missing_required_times": [
+        1.875e-07,
+        2.4375e-06,
+        8.4375e-06
+      ],
+      "effective_settings_log_lines": [
+        "vabstol = 1e-11",
+        "iabstol = 1e-15",
+        "reltol = 1e-09",
+        "maxstep = 125 ns",
+        "reltol = 1e-09",
+        "method = traponly",
+        "maxstep = 125 ns, default 200 ns",
+        "reltol = 1e-09, default 1e-03"
+      ],
+      "max_abs_spectre_independent_z_error_v": 1.5871240570675127e-06,
+      "max_abs_evas_independent_z_error_v": 1.4210854715202004e-13,
+      "max_abs_direct_errors_v": {
+        "u": 1.7763568394002505e-15,
+        "clk": 1.7763568394002505e-15,
+        "y": 1.1657341758564144e-15,
+        "z": 1.5871241991760598e-06,
+        "q": 0,
+        "n": 0,
+        "m": 0,
+        "s": 0,
+        "h1": 2.220446049250313e-16,
+        "h2": 0,
+        "h3": 0
+      },
+      "phase_failure_rows": [],
+      "post_rise_prefall_offset_min_v": 4.1287594298999863e-07,
+      "post_rise_prefall_offset_max_v": 4.1287594454431087e-07,
+      "final_z_v": 3.9999984128759465,
+      "z_direct_status": "F",
+      "required_query_coverage_status": "I",
+      "files": {
+        "M1-timer-ttol18-original/dut.va": "7a549cca0fb40a2fa7c5f905aefb5e561c81977940c5e26a2cff7c45fc7b1c7a",
+        "M1-timer-ttol18-original/tb.scs": "ecd38d7f9e0b32a1a65db3285165f006ff9e4b0667f5c77b74d8b588f54800bd",
+        "M1-timer-ttol18-original/simulate.log": "7fd8724812b02871f862c04b9ed430c9ecb281292a8d3eee4b065d5c624156ca",
+        "M1-timer-ttol18-original/psf/tran.tran.tran": "a5afa91ccd4d9e91a152a18c0ef9b64349900d521599b8c7964b4507654672cf",
+        "M1-timer-ttol18-instrumented/dut.va": "fb219616396f2be42ff4554bca5b36e038da763aa8b0c104519ad38e13fae1ad",
+        "M1-timer-ttol18-instrumented/tb.scs": "ecd38d7f9e0b32a1a65db3285165f006ff9e4b0667f5c77b74d8b588f54800bd",
+        "M1-timer-ttol18-instrumented/simulate.log": "da3d949561022e3ff0b3699c01385c9be82f8227d13cb0703998bcb0d941490a",
+        "M1-timer-ttol18-instrumented/psf/tran.tran.tran": "f2f0d55bb343e1dbccbb46439cddc297c816f4bba624be94182ec71309ee5055"
+      },
+      "full_psf_except_date_bytes_equal": true,
+      "saved_q_n_m_phase_status": "P"
+    },
+    {
+      "name": "solver-tight",
+      "archive": "m1-convergence-v1",
+      "reused_baseline": false,
+      "raw_psf_bytes_equal": false,
+      "value_bytes_equal": true,
+      "header_differences": [
+        {
+          "original": "\"date\" \"7:49:48 PM, Thur Oct 8, 2026\"",
+          "instrumented": "\"date\" \"7:50:03 PM, Thur Oct 8, 2026\""
+        }
+      ],
+      "value_sha256": "e1a99c3fd5b584fefbe0a6304f70214d11879420ed23d9d9e6fc0f19461cf709",
+      "callbacks": [
+        {
+          "event": "rise",
+          "abstime_token": "1.99999999999999990950e-06"
+        },
+        {
+          "event": "fall",
+          "abstime_token": "6.00000000000000015201e-06"
+        }
+      ],
+      "native_rows": 349,
+      "required_rows": 173,
+      "missing_required_times": [
+        2.5e-07,
+        2.4375e-06,
+        8.4375e-06
+      ],
+      "effective_settings_log_lines": [
+        "vabstol = 1e-15",
+        "iabstol = 1e-15",
+        "reltol = 1e-12",
+        "maxstep = 125 ns",
+        "reltol = 1e-12",
+        "method = traponly",
+        "maxstep = 125 ns, default 200 ns",
+        "reltol = 1e-12, default 1e-03"
+      ],
+      "max_abs_spectre_independent_z_error_v": 3.7252867457482353e-10,
+      "max_abs_evas_independent_z_error_v": 1.4210854715202004e-13,
+      "max_abs_direct_errors_v": {
+        "u": 1.7763568394002505e-15,
+        "clk": 1.7763568394002505e-15,
+        "y": 1.1657341758564144e-15,
+        "z": 3.725284802857942e-10,
+        "q": 0,
+        "n": 0,
+        "m": 0,
+        "s": 0,
+        "h1": 0,
+        "h2": 8.881784197001252e-16,
+        "h3": 0
+      },
+      "phase_failure_rows": [],
+      "post_rise_prefall_offset_min_v": 3.725264541287743e-10,
+      "post_rise_prefall_offset_max_v": 3.7252867457482353e-10,
+      "final_z_v": 4.000000000190685,
+      "z_direct_status": "P",
+      "required_query_coverage_status": "I",
+      "files": {
+        "M1-solver-tight-original/dut.va": "7a549cca0fb40a2fa7c5f905aefb5e561c81977940c5e26a2cff7c45fc7b1c7a",
+        "M1-solver-tight-original/tb.scs": "5a4957837d6dc52798fe8375b11f5fa9bc9fc8be194c1bda838d61e8b166004c",
+        "M1-solver-tight-original/simulate.log": "a23e2f9c86e98aabc2d446861443c67c3860c3ee3910a89df0f1000392ea03d6",
+        "M1-solver-tight-original/psf/tran.tran.tran": "5d46e882c519298cec9a9bfea4d78b9b32df00314a7a35a404f81acc0d8dfc8a",
+        "M1-solver-tight-instrumented/dut.va": "fb219616396f2be42ff4554bca5b36e038da763aa8b0c104519ad38e13fae1ad",
+        "M1-solver-tight-instrumented/tb.scs": "5a4957837d6dc52798fe8375b11f5fa9bc9fc8be194c1bda838d61e8b166004c",
+        "M1-solver-tight-instrumented/simulate.log": "a5042cf56f28d8026c6b10aac86a9a0ae49976efffa6f2afade973a8c3067b17",
+        "M1-solver-tight-instrumented/psf/tran.tran.tran": "31643dd9e175724edcb8fe859f5548a186d3ee7cb95c36fa43acc7342ebfac6c"
+      },
+      "full_psf_except_date_bytes_equal": true,
+      "saved_q_n_m_phase_status": "P"
+    },
+    {
+      "name": "maxstep-1ns",
+      "archive": "m1-convergence-v1",
+      "reused_baseline": false,
+      "raw_psf_bytes_equal": false,
+      "value_bytes_equal": true,
+      "header_differences": [
+        {
+          "original": "\"date\" \"7:50:18 PM, Thur Oct 8, 2026\"",
+          "instrumented": "\"date\" \"7:50:33 PM, Thur Oct 8, 2026\""
+        }
+      ],
+      "value_sha256": "c373dd665abeae68d4167fb93fd74aca96431f42c6a86e066e8f859322f7b4ab",
+      "callbacks": [
+        {
+          "event": "rise",
+          "abstime_token": "1.99999999999999990950e-06"
+        },
+        {
+          "event": "fall",
+          "abstime_token": "6.00000000000000015201e-06"
+        }
+      ],
+      "native_rows": 10156,
+      "required_rows": 173,
+      "missing_required_times": [],
+      "effective_settings_log_lines": [
+        "vabstol = 1e-11",
+        "iabstol = 1e-15",
+        "reltol = 1e-09",
+        "maxstep = 1 ns",
+        "reltol = 1e-09",
+        "method = traponly",
+        "maxstep = 1 ns, default 200 ns",
+        "reltol = 1e-09, default 1e-03"
+      ],
+      "max_abs_spectre_independent_z_error_v": 1.5871241227927158e-06,
+      "max_abs_evas_independent_z_error_v": 1.4210854715202004e-13,
+      "max_abs_direct_errors_v": {
+        "u": 1.7763568394002505e-15,
+        "clk": 1.7763568394002505e-15,
+        "y": 1.2212453270876722e-15,
+        "z": 1.587124264901263e-06,
+        "q": 0,
+        "n": 0,
+        "m": 0,
+        "s": 0,
+        "h1": 0,
+        "h2": 0,
+        "h3": 0
+      },
+      "phase_failure_rows": [],
+      "post_rise_prefall_offset_min_v": 4.128758779309294e-07,
+      "post_rise_prefall_offset_max_v": 4.128759458765785e-07,
+      "final_z_v": 3.999998412875879,
+      "z_direct_status": "F",
+      "required_query_coverage_status": "P",
+      "files": {
+        "M1-maxstep-1ns-original/dut.va": "7a549cca0fb40a2fa7c5f905aefb5e561c81977940c5e26a2cff7c45fc7b1c7a",
+        "M1-maxstep-1ns-original/tb.scs": "e914d1e0df7f35fb01ad0a585266389ecceb115a7195b209dc42182f2fe757eb",
+        "M1-maxstep-1ns-original/simulate.log": "057112b89ec23d0ffefb1512587c5b6ac2aaf5083b7ad889764bab41ace90042",
+        "M1-maxstep-1ns-original/psf/tran.tran.tran": "d22e198bd2286bb0c42cf6dbd0699999cd7f4fdf43a97e589e36deff344e7177",
+        "M1-maxstep-1ns-instrumented/dut.va": "fb219616396f2be42ff4554bca5b36e038da763aa8b0c104519ad38e13fae1ad",
+        "M1-maxstep-1ns-instrumented/tb.scs": "e914d1e0df7f35fb01ad0a585266389ecceb115a7195b209dc42182f2fe757eb",
+        "M1-maxstep-1ns-instrumented/simulate.log": "577373626e72d0f945f65ff8d99ae09f57f0c9132348074a1dbde50d844bf576",
+        "M1-maxstep-1ns-instrumented/psf/tran.tran.tran": "4816284321c4fb3298ba4f9e7f6a6444de8fe5925675a699811103ba0816067b"
+      },
+      "full_psf_except_date_bytes_equal": true,
+      "saved_q_n_m_phase_status": "P"
+    },
+    {
+      "name": "gear2",
+      "archive": "m1-convergence-v1",
+      "reused_baseline": false,
+      "raw_psf_bytes_equal": false,
+      "value_bytes_equal": true,
+      "header_differences": [
+        {
+          "original": "\"date\" \"7:50:48 PM, Thur Oct 8, 2026\"",
+          "instrumented": "\"date\" \"7:51:03 PM, Thur Oct 8, 2026\""
+        }
+      ],
+      "value_sha256": "88a6b6d5c8d3df15da565eaf93e42c16a003038e076f48c055e04c8dac7737ea",
+      "callbacks": [
+        {
+          "event": "rise",
+          "abstime_token": "1.99999999999999990950e-06"
+        },
+        {
+          "event": "fall",
+          "abstime_token": "6.00000000000000015201e-06"
+        }
+      ],
+      "native_rows": 287,
+      "required_rows": 173,
+      "missing_required_times": [
+        1.875e-07,
+        2.4375e-06,
+        8.4375e-06
+      ],
+      "effective_settings_log_lines": [
+        "vabstol = 1e-11",
+        "iabstol = 1e-15",
+        "reltol = 1e-09",
+        "maxstep = 125 ns",
+        "reltol = 1e-09",
+        "method = gear2only",
+        "maxstep = 125 ns, default 200 ns",
+        "reltol = 1e-09, default 1e-03"
+      ],
+      "max_abs_spectre_independent_z_error_v": 1.4155524565850897e-06,
+      "max_abs_evas_independent_z_error_v": 1.4210854715202004e-13,
+      "max_abs_direct_errors_v": {
+        "u": 1.7763568394002505e-15,
+        "clk": 1.7763568394002505e-15,
+        "y": 1.1657341758564144e-15,
+        "z": 1.4155525986936368e-06,
+        "q": 0,
+        "n": 0,
+        "m": 0,
+        "s": 0,
+        "h1": 2.220446049250313e-16,
+        "h2": 0,
+        "h3": 0
+      },
+      "phase_failure_rows": [],
+      "post_rise_prefall_offset_min_v": 5.844475529093174e-07,
+      "post_rise_prefall_offset_max_v": 5.844475752248002e-07,
+      "final_z_v": 3.999998584447571,
+      "z_direct_status": "F",
+      "required_query_coverage_status": "I",
+      "files": {
+        "M1-gear2-original/dut.va": "7a549cca0fb40a2fa7c5f905aefb5e561c81977940c5e26a2cff7c45fc7b1c7a",
+        "M1-gear2-original/tb.scs": "4e78a8b0428a6f8bab59e56dacaa9fde0b05a49c12e8e8639d4562a28af49e4d",
+        "M1-gear2-original/simulate.log": "ddda657cc6ca33481e29d0773638d54eca0534481e947986a6b7759144ec0524",
+        "M1-gear2-original/psf/tran.tran.tran": "252e8442cfa1f321ddc363836bd4f6d2e2197fc88e98737f04a49b7d096d84b2",
+        "M1-gear2-instrumented/dut.va": "fb219616396f2be42ff4554bca5b36e038da763aa8b0c104519ad38e13fae1ad",
+        "M1-gear2-instrumented/tb.scs": "4e78a8b0428a6f8bab59e56dacaa9fde0b05a49c12e8e8639d4562a28af49e4d",
+        "M1-gear2-instrumented/simulate.log": "d6ca4cb4f724b16fd32a444b3b79cc71c4c97b2395880fbbc4df89a536f13d1b",
+        "M1-gear2-instrumented/psf/tran.tran.tran": "c75c9608ac6e072bb51ec9c47076ba79b116540c460ab385f1634c0df8f7479e"
+      },
+      "full_psf_except_date_bytes_equal": true,
+      "saved_q_n_m_phase_status": "P"
+    }
+  ],
+  "analysis_script_local_path": "runs/event-alignment-diagnosis-20261008/analyze_m1_controls.py",
+  "analysis_script_sha256": "9f63c9905d37cc490adc5d24eecbc0b9ae96026691abb0e6c87fa5dd24cd6677",
+  "canonical_psf_reader_sha256": "9e38eb5abcf0db2122355415b50904c9a4a8d01cf0e2b243861d83d9600171ea"
+}

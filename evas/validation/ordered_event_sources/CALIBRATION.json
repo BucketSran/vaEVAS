@@ -1,0 +1,158 @@
+{
+  "passed": 21,
+  "breakdown": "17 accept/fault/missing +4 manually expected nearbyclock fixtures",
+  "checks": [
+    {
+      "case": "mixed_source",
+      "control": "Fraction positive finite",
+      "expected": "P",
+      "asserted": true
+    },
+    {
+      "case": "mixed_source",
+      "control": "external voltage2uVfault",
+      "expected": "F",
+      "asserted": true
+    },
+    {
+      "case": "mixed_source",
+      "control": "missing callbackfault",
+      "expected": "F",
+      "asserted": true
+    },
+    {
+      "case": "mixed_source",
+      "control": "reversed eventindexorder",
+      "expected": "F",
+      "asserted": true
+    },
+    {
+      "case": "mixed_source",
+      "control": "missing observer",
+      "expected": "I",
+      "asserted": true
+    },
+    {
+      "case": "hidden_loose",
+      "control": "Fraction positive finite",
+      "expected": "P",
+      "asserted": true
+    },
+    {
+      "case": "hidden_loose",
+      "control": "external voltage2uVfault",
+      "expected": "F",
+      "asserted": true
+    },
+    {
+      "case": "hidden_loose",
+      "control": "missing callbackfault",
+      "expected": "F",
+      "asserted": true
+    },
+    {
+      "case": "hidden_loose",
+      "control": "reversed eventindexorder",
+      "expected": "F",
+      "asserted": true
+    },
+    {
+      "case": "hidden_loose",
+      "control": "missing observer",
+      "expected": "I",
+      "asserted": true
+    },
+    {
+      "case": "hidden_tight",
+      "control": "Fraction positive finite",
+      "expected": "P",
+      "asserted": true
+    },
+    {
+      "case": "hidden_tight",
+      "control": "external voltage2uVfault",
+      "expected": "F",
+      "asserted": true
+    },
+    {
+      "case": "hidden_tight",
+      "control": "missing callbackfault",
+      "expected": "F",
+      "asserted": true
+    },
+    {
+      "case": "hidden_tight",
+      "control": "reversed eventindexorder",
+      "expected": "F",
+      "asserted": true
+    },
+    {
+      "case": "hidden_tight",
+      "control": "missing observer",
+      "expected": "I",
+      "asserted": true
+    },
+    {
+      "case": "hidden_tight",
+      "control": "specific rejection",
+      "expected": "P",
+      "asserted": true
+    },
+    {
+      "case": "hidden_tight",
+      "control": "generic failure isnotproof",
+      "expected": "F",
+      "asserted": true
+    },
+    {
+      "case": "mixed_source",
+      "control": "manually expected nearby clock state",
+      "time": "311537811512089667079317004683837/1038459371706965511294580458258432",
+      "expected": {
+        "n": 1,
+        "k": 1,
+        "j": 0,
+        "y": 2
+      },
+      "asserted": true
+    },
+    {
+      "case": "mixed_source",
+      "control": "manually expected nearby clock state",
+      "time": "21617278211378383/72057594037927936",
+      "expected": {
+        "n": 2,
+        "k": 1,
+        "j": 0,
+        "y": 3
+      },
+      "asserted": true
+    },
+    {
+      "case": "hidden_loose",
+      "control": "manually expected nearby clock state",
+      "time": "778844528780224188812205086773483/2596148429267413814265248164610048",
+      "expected": {
+        "n": 2,
+        "q": 1,
+        "h": 0,
+        "m": 0,
+        "y": 0
+      },
+      "asserted": true
+    },
+    {
+      "case": "hidden_loose",
+      "control": "manually expected nearby clock state",
+      "time": "778844528780224224841002105737451/2596148429267413814265248164610048",
+      "expected": {
+        "n": 2,
+        "q": 1,
+        "h": 1,
+        "m": 0,
+        "y": 1
+      },
+      "asserted": true
+    }
+  ]
+}

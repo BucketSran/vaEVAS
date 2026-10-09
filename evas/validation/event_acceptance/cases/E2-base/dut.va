@@ -1,0 +1,13 @@
+`include "disciplines.vams"
+module m(u,count,z,history,edit,sample,r);
+input u; output count,z,history,edit,sample; inout r;
+electrical u,count,z,history,edit,sample,r;
+real q; integer n,k;
+analog begin
+@(initial_step) begin q=0.75; n=0; k=0; end
+@(timer(0.25,0,1e-12)) begin q=0.5; k=k+1; end
+@(cross(V(u,r)-q,1,1e-9,1e-8)) n=n+1;
+V(z,r)<+0; V(history,r)<+idt(V(u,r),0); V(sample,r)<+0;
+V(count,r)<+n; V(edit,r)<+k;
+end
+endmodule

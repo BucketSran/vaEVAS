@@ -1,0 +1,2680 @@
+{
+  "purpose": "Spec B semantics-preserving common event acceptance refactor; development evidence, not paper denominator",
+  "baseline_revision": "5647394420994b3bac1a822d2e5a45bd9de6feab",
+  "candidate_revision": "5e38bdf882f41ad17f2a704268907ae0e36600d9",
+  "baseline_kernel_sha256": "abc000634aba8444483278baa26ac14cccddf06511781b29c1941dd6d5ce4e26",
+  "source_diff_production": "transient.rs, transient_history_calendar.rs, new transient_event_acceptance.rs",
+  "checker_sha256": "4a80e6cc91c553ae40d5d635c81ee0d11fd4436bc6fd96d88d1b1a51a13e28ff",
+  "checker_controls": {
+    "checks": [
+      {
+        "name": "E1 positive",
+        "pass": true,
+        "numeric_status": "P",
+        "event_status": "P",
+        "failures": []
+      },
+      {
+        "name": "E1 voltage exceeds 1uV",
+        "pass": true,
+        "numeric_status": "F",
+        "event_status": "P",
+        "failures": []
+      },
+      {
+        "name": "E1 duplicate count",
+        "pass": true,
+        "numeric_status": "P",
+        "event_status": "F",
+        "failures": [
+          "wrong total count"
+        ]
+      },
+      {
+        "name": "E1 insufficient event observations",
+        "pass": true,
+        "numeric_status": "I",
+        "event_status": "I",
+        "failures": [
+          "global observation gap exceeds maxstep"
+        ]
+      },
+      {
+        "name": "E1 nonfinite",
+        "pass": true,
+        "numeric_status": "F",
+        "event_status": "F",
+        "failures": [
+          "nonfinite value"
+        ]
+      },
+      {
+        "name": "E1 missing scientific stop",
+        "pass": true,
+        "numeric_status": "I",
+        "event_status": "I",
+        "failures": [
+          "missing exact domain endpoint"
+        ]
+      },
+      {
+        "name": "E1 origin unqualified",
+        "pass": true
+      },
+      {
+        "name": "E1 stale root/deadline",
+        "pass": true,
+        "numeric_status": "P",
+        "event_status": "F",
+        "failures": [
+          "event bracket outside time budget"
+        ]
+      },
+      {
+        "name": "E2 positive",
+        "pass": true,
+        "numeric_status": "P",
+        "event_status": "P",
+        "failures": []
+      },
+      {
+        "name": "E2 voltage exceeds 1uV",
+        "pass": true,
+        "numeric_status": "F",
+        "event_status": "P",
+        "failures": []
+      },
+      {
+        "name": "E2 duplicate count",
+        "pass": true,
+        "numeric_status": "P",
+        "event_status": "F",
+        "failures": [
+          "wrong total count"
+        ]
+      },
+      {
+        "name": "E2 insufficient event observations",
+        "pass": true,
+        "numeric_status": "I",
+        "event_status": "I",
+        "failures": [
+          "global observation gap exceeds maxstep"
+        ]
+      },
+      {
+        "name": "E2 nonfinite",
+        "pass": true,
+        "numeric_status": "F",
+        "event_status": "F",
+        "failures": [
+          "nonfinite value"
+        ]
+      },
+      {
+        "name": "E2 missing scientific stop",
+        "pass": true,
+        "numeric_status": "I",
+        "event_status": "I",
+        "failures": [
+          "missing exact domain endpoint"
+        ]
+      },
+      {
+        "name": "E2 origin unqualified",
+        "pass": true
+      },
+      {
+        "name": "E2 stale root/deadline",
+        "pass": true,
+        "numeric_status": "P",
+        "event_status": "F",
+        "failures": [
+          "event bracket outside time budget"
+        ]
+      },
+      {
+        "name": "E3 positive",
+        "pass": true,
+        "numeric_status": "P",
+        "event_status": "P",
+        "failures": []
+      },
+      {
+        "name": "E3 voltage exceeds 1uV",
+        "pass": true,
+        "numeric_status": "F",
+        "event_status": "P",
+        "failures": []
+      },
+      {
+        "name": "E3 duplicate count",
+        "pass": true,
+        "numeric_status": "P",
+        "event_status": "F",
+        "failures": [
+          "wrong total count"
+        ]
+      },
+      {
+        "name": "E3 insufficient event observations",
+        "pass": true,
+        "numeric_status": "I",
+        "event_status": "I",
+        "failures": [
+          "global observation gap exceeds maxstep"
+        ]
+      },
+      {
+        "name": "E3 nonfinite",
+        "pass": true,
+        "numeric_status": "F",
+        "event_status": "F",
+        "failures": [
+          "nonfinite value"
+        ]
+      },
+      {
+        "name": "E3 missing scientific stop",
+        "pass": true,
+        "numeric_status": "I",
+        "event_status": "I",
+        "failures": [
+          "missing exact domain endpoint"
+        ]
+      },
+      {
+        "name": "E3 origin unqualified",
+        "pass": true
+      },
+      {
+        "name": "E3 stale root/deadline",
+        "pass": true,
+        "numeric_status": "P",
+        "event_status": "F",
+        "failures": [
+          "event bracket outside time budget"
+        ]
+      },
+      {
+        "name": "E4 positive",
+        "pass": true,
+        "numeric_status": "P",
+        "event_status": "P",
+        "failures": []
+      },
+      {
+        "name": "E4 voltage exceeds 1uV",
+        "pass": true,
+        "numeric_status": "F",
+        "event_status": "P",
+        "failures": []
+      },
+      {
+        "name": "E4 duplicate count",
+        "pass": true,
+        "numeric_status": "P",
+        "event_status": "F",
+        "failures": [
+          "wrong total count"
+        ]
+      },
+      {
+        "name": "E4 insufficient event observations",
+        "pass": true,
+        "numeric_status": "P",
+        "event_status": "I",
+        "failures": []
+      },
+      {
+        "name": "E4 nonfinite",
+        "pass": true,
+        "numeric_status": "F",
+        "event_status": "F",
+        "failures": [
+          "nonfinite value"
+        ]
+      },
+      {
+        "name": "E4 missing scientific stop",
+        "pass": true,
+        "numeric_status": "I",
+        "event_status": "I",
+        "failures": [
+          "missing exact domain endpoint"
+        ]
+      },
+      {
+        "name": "E4 origin unqualified",
+        "pass": true
+      },
+      {
+        "name": "E4 stale root/deadline",
+        "pass": true,
+        "numeric_status": "P",
+        "event_status": "F",
+        "failures": [
+          "event bracket outside time budget"
+        ]
+      },
+      {
+        "name": "E5 positive",
+        "pass": true,
+        "numeric_status": "P",
+        "event_status": "P",
+        "failures": []
+      },
+      {
+        "name": "E5 voltage exceeds 1uV",
+        "pass": true,
+        "numeric_status": "F",
+        "event_status": "P",
+        "failures": []
+      },
+      {
+        "name": "E5 duplicate count",
+        "pass": true,
+        "numeric_status": "P",
+        "event_status": "F",
+        "failures": [
+          "wrong total count"
+        ]
+      },
+      {
+        "name": "E5 insufficient event observations",
+        "pass": true,
+        "numeric_status": "P",
+        "event_status": "I",
+        "failures": []
+      },
+      {
+        "name": "E5 nonfinite",
+        "pass": true,
+        "numeric_status": "F",
+        "event_status": "F",
+        "failures": [
+          "nonfinite value"
+        ]
+      },
+      {
+        "name": "E5 missing scientific stop",
+        "pass": true,
+        "numeric_status": "I",
+        "event_status": "I",
+        "failures": [
+          "missing exact domain endpoint"
+        ]
+      },
+      {
+        "name": "E5 origin unqualified",
+        "pass": true
+      },
+      {
+        "name": "E5 stale root/deadline",
+        "pass": true,
+        "numeric_status": "P",
+        "event_status": "F",
+        "failures": [
+          "event bracket outside time budget"
+        ]
+      },
+      {
+        "name": "E6 positive",
+        "pass": true,
+        "numeric_status": "P",
+        "event_status": "P",
+        "failures": []
+      },
+      {
+        "name": "E6 voltage exceeds 1uV",
+        "pass": true,
+        "numeric_status": "F",
+        "event_status": "P",
+        "failures": []
+      },
+      {
+        "name": "E6 duplicate count",
+        "pass": true,
+        "numeric_status": "P",
+        "event_status": "F",
+        "failures": [
+          "wrong total count"
+        ]
+      },
+      {
+        "name": "E6 insufficient event observations",
+        "pass": true,
+        "numeric_status": "I",
+        "event_status": "I",
+        "failures": [
+          "global observation gap exceeds maxstep"
+        ]
+      },
+      {
+        "name": "E6 nonfinite",
+        "pass": true,
+        "numeric_status": "F",
+        "event_status": "F",
+        "failures": [
+          "nonfinite value"
+        ]
+      },
+      {
+        "name": "E6 missing scientific stop",
+        "pass": true,
+        "numeric_status": "I",
+        "event_status": "I",
+        "failures": [
+          "missing exact domain endpoint"
+        ]
+      },
+      {
+        "name": "E6 origin unqualified",
+        "pass": true
+      },
+      {
+        "name": "E6 stale root/deadline",
+        "pass": true,
+        "numeric_status": "P",
+        "event_status": "F",
+        "failures": [
+          "event bracket outside time budget"
+        ]
+      }
+    ],
+    "passed": 48,
+    "total": 48
+  },
+  "refactor_comparison": {
+    "denominator": 12,
+    "baseline_identity": {
+      "checker_sha256": "4a80e6cc91c553ae40d5d635c81ee0d11fd4436bc6fd96d88d1b1a51a13e28ff",
+      "frontend_sources": {
+        "evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+        "evas/__main__.py": "f98567eedc0052dddf00fd13f5380e996409f72aed9fbf09702d5bf173fae1d5",
+        "evas/array_elaboration.py": "4faf4543a735ad19c89bbbc760d39f6860089d854b7f24922edaa390cf20df0b",
+        "evas/diagnostics.py": "a94641c77c61b71e7c1eeb9d36baa9c01b85adfe598472632841ed4a90744a5f",
+        "evas/elaboration.py": "1eb85eefcb393dbc58b6f248389a1d51ef792f45077b779dac0d55fc5aa5e074",
+        "evas/errors.py": "f5782a2c5ee28db98b0fe5d1d4a2e06ba3ec9f1b74b8a0da5bede3ca4154b958",
+        "evas/frontend.py": "2552416e633542f0770c1f7609ac4778aa8b841db5c0e36bd68a9904f682927c",
+        "evas/hierarchy.py": "c277bc21cbe987f7cb427a2955b6b20588d5c42ae09bbc62853dab7bdba4138f",
+        "evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+        "evas/instance_compiler.py": "2c935b8054d5ebe51e1a5488340920f95d8adba53bd21314060842c1ce723c05",
+        "evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+        "evas/ir.py": "3445e952b7bd96571303c2faf4474f5945855e26a3adfb80370bbe1935ce4ca9",
+        "evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+        "evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+        "evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+        "evas/lowering.py": "3df0c3f873285e45aa9de85863ca7d42b4c1cffc205a24164700b953b1874c71",
+        "evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+        "evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+        "evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+        "evas/node_elaboration.py": "f100e5e857b53a5ccaf43b10f61c1f1d719b0f5205490364dbf30a103bf480e6",
+        "evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+        "evas/preprocessor.py": "68c7c9d6df5a1f14ea33b8bbaebf79863b64110381d8bad910b98f281e2e2ffe",
+        "evas/protocol.py": "82302d948c4c0eff0b88318eb804344a1f60d3dd4798d2c2c561149b6a188607",
+        "evas/query.py": "6222b10aa9d889e93fa8b65059b5fb31799f7269770ebc72167c7c67e4a0b92b",
+        "evas/results.py": "d085a8a2b57aa2ae48b6fc69e47825b02326ca8e05ff56df61bc791b7771c0d1",
+        "evas/runtime.py": "b648c721efcb1d715cb871c644ff60b600229d9489c988edb7c4e291bbba1026",
+        "evas/scs.py": "d95097aa5e62d2fe9d6a3c6a6035ca981f64b2aebe7fce2ca58bf12b5a95b281",
+        "evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
+        "evas/syntax.py": "56eafc9ad5c4f8773441a8e7ccf751d7ce5380b68150a2e2ab6d55524c0f6058"
+      },
+      "input_manifest_sha256": "24ea862cb19a30126ef7bb7128eb1e3dcb3106a6a4e9da9ed6d159891917f308",
+      "kernel_sha256": "abc000634aba8444483278baa26ac14cccddf06511781b29c1941dd6d5ce4e26",
+      "revision": "56473944",
+      "runner_sha256": "dbfec6af4e006a482cff5ac8e258e158c6acdc6a93c21f98fd1105b16ebf3fe8",
+      "timeout_s": 90
+    },
+    "candidate_identity": {
+      "checker_sha256": "4a80e6cc91c553ae40d5d635c81ee0d11fd4436bc6fd96d88d1b1a51a13e28ff",
+      "frontend_sources": {
+        "evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+        "evas/__main__.py": "f98567eedc0052dddf00fd13f5380e996409f72aed9fbf09702d5bf173fae1d5",
+        "evas/array_elaboration.py": "4faf4543a735ad19c89bbbc760d39f6860089d854b7f24922edaa390cf20df0b",
+        "evas/diagnostics.py": "a94641c77c61b71e7c1eeb9d36baa9c01b85adfe598472632841ed4a90744a5f",
+        "evas/elaboration.py": "1eb85eefcb393dbc58b6f248389a1d51ef792f45077b779dac0d55fc5aa5e074",
+        "evas/errors.py": "f5782a2c5ee28db98b0fe5d1d4a2e06ba3ec9f1b74b8a0da5bede3ca4154b958",
+        "evas/frontend.py": "2552416e633542f0770c1f7609ac4778aa8b841db5c0e36bd68a9904f682927c",
+        "evas/hierarchy.py": "c277bc21cbe987f7cb427a2955b6b20588d5c42ae09bbc62853dab7bdba4138f",
+        "evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+        "evas/instance_compiler.py": "2c935b8054d5ebe51e1a5488340920f95d8adba53bd21314060842c1ce723c05",
+        "evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+        "evas/ir.py": "3445e952b7bd96571303c2faf4474f5945855e26a3adfb80370bbe1935ce4ca9",
+        "evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+        "evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+        "evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+        "evas/lowering.py": "3df0c3f873285e45aa9de85863ca7d42b4c1cffc205a24164700b953b1874c71",
+        "evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+        "evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+        "evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+        "evas/node_elaboration.py": "f100e5e857b53a5ccaf43b10f61c1f1d719b0f5205490364dbf30a103bf480e6",
+        "evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+        "evas/preprocessor.py": "68c7c9d6df5a1f14ea33b8bbaebf79863b64110381d8bad910b98f281e2e2ffe",
+        "evas/protocol.py": "82302d948c4c0eff0b88318eb804344a1f60d3dd4798d2c2c561149b6a188607",
+        "evas/query.py": "6222b10aa9d889e93fa8b65059b5fb31799f7269770ebc72167c7c67e4a0b92b",
+        "evas/results.py": "d085a8a2b57aa2ae48b6fc69e47825b02326ca8e05ff56df61bc791b7771c0d1",
+        "evas/runtime.py": "b648c721efcb1d715cb871c644ff60b600229d9489c988edb7c4e291bbba1026",
+        "evas/scs.py": "d95097aa5e62d2fe9d6a3c6a6035ca981f64b2aebe7fce2ca58bf12b5a95b281",
+        "evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
+        "evas/syntax.py": "56eafc9ad5c4f8773441a8e7ccf751d7ce5380b68150a2e2ab6d55524c0f6058"
+      },
+      "input_manifest_sha256": "24ea862cb19a30126ef7bb7128eb1e3dcb3106a6a4e9da9ed6d159891917f308",
+      "kernel_sha256": "935c40f1d54215e7ce63834d69c3918e4edc6323e93fcf234c98c09eb18f0afc",
+      "revision": "5e38bdf882f41ad17f2a704268907ae0e36600d9",
+      "runner_sha256": "dbfec6af4e006a482cff5ac8e258e158c6acdc6a93c21f98fd1105b16ebf3fe8",
+      "timeout_s": 90
+    },
+    "records": [
+      {
+        "configuration": "E1-base",
+        "baseline": {
+          "configuration": "E1-base",
+          "elapsed_s": 0.1522179578896612,
+          "event_status": "P",
+          "failures": [],
+          "max_errors_V": {
+            "history": 2.6911806116913795e-17,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 0.0
+          },
+          "numeric_status": "P",
+          "qualification_status": "I",
+          "returncode": 0,
+          "status": "executed"
+        },
+        "candidate": {
+          "configuration": "E1-base",
+          "elapsed_s": 0.43447683309204876,
+          "event_status": "P",
+          "failures": [],
+          "max_errors_V": {
+            "history": 2.6911806116913795e-17,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 0.0
+          },
+          "numeric_status": "P",
+          "qualification_status": "I",
+          "returncode": 0,
+          "status": "executed"
+        },
+        "request_identical": true,
+        "waveform_byte_identical": true,
+        "new_regression": false,
+        "interpretation": "Identical I proves only preserved incompleteness. Compatibility acceptance requires its own complete observations and origin evidence."
+      },
+      {
+        "configuration": "E1-fine",
+        "baseline": {
+          "configuration": "E1-fine",
+          "elapsed_s": 0.7833956249523908,
+          "event_status": "P",
+          "failures": [],
+          "max_errors_V": {
+            "history": 2.7256419343757443e-17,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 0.0
+          },
+          "numeric_status": "P",
+          "qualification_status": "I",
+          "returncode": 0,
+          "status": "executed"
+        },
+        "candidate": {
+          "configuration": "E1-fine",
+          "elapsed_s": 0.3572077911812812,
+          "event_status": "P",
+          "failures": [],
+          "max_errors_V": {
+            "history": 2.7256419343757443e-17,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 0.0
+          },
+          "numeric_status": "P",
+          "qualification_status": "I",
+          "returncode": 0,
+          "status": "executed"
+        },
+        "request_identical": true,
+        "waveform_byte_identical": true,
+        "new_regression": false,
+        "interpretation": "Identical I proves only preserved incompleteness. Compatibility acceptance requires its own complete observations and origin evidence."
+      },
+      {
+        "configuration": "E2-base",
+        "baseline": {
+          "configuration": "E2-base",
+          "elapsed_s": 0.15408983314409852,
+          "event_status": "P",
+          "failures": [],
+          "max_errors_V": {
+            "history": 2.6911806116913795e-17,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 0.0
+          },
+          "numeric_status": "P",
+          "qualification_status": "I",
+          "returncode": 0,
+          "status": "executed"
+        },
+        "candidate": {
+          "configuration": "E2-base",
+          "elapsed_s": 0.15315829101018608,
+          "event_status": "P",
+          "failures": [],
+          "max_errors_V": {
+            "history": 2.6911806116913795e-17,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 0.0
+          },
+          "numeric_status": "P",
+          "qualification_status": "I",
+          "returncode": 0,
+          "status": "executed"
+        },
+        "request_identical": true,
+        "waveform_byte_identical": true,
+        "new_regression": false,
+        "interpretation": "Identical I proves only preserved incompleteness. Compatibility acceptance requires its own complete observations and origin evidence."
+      },
+      {
+        "configuration": "E2-fine",
+        "baseline": {
+          "configuration": "E2-fine",
+          "elapsed_s": 0.39019829081371427,
+          "event_status": "P",
+          "failures": [],
+          "max_errors_V": {
+            "history": 2.7256419343757443e-17,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 0.0
+          },
+          "numeric_status": "P",
+          "qualification_status": "I",
+          "returncode": 0,
+          "status": "executed"
+        },
+        "candidate": {
+          "configuration": "E2-fine",
+          "elapsed_s": 0.32492604199796915,
+          "event_status": "P",
+          "failures": [],
+          "max_errors_V": {
+            "history": 2.7256419343757443e-17,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 0.0
+          },
+          "numeric_status": "P",
+          "qualification_status": "I",
+          "returncode": 0,
+          "status": "executed"
+        },
+        "request_identical": true,
+        "waveform_byte_identical": true,
+        "new_regression": false,
+        "interpretation": "Identical I proves only preserved incompleteness. Compatibility acceptance requires its own complete observations and origin evidence."
+      },
+      {
+        "configuration": "E3-base",
+        "baseline": {
+          "configuration": "E3-base",
+          "elapsed_s": 3.1604935829527676,
+          "event_status": "P",
+          "failures": [],
+          "max_errors_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 5.5067062021407764e-14
+          },
+          "numeric_status": "P",
+          "qualification_status": "I",
+          "returncode": 0,
+          "status": "executed"
+        },
+        "candidate": {
+          "configuration": "E3-base",
+          "elapsed_s": 1.7142350829672068,
+          "event_status": "P",
+          "failures": [],
+          "max_errors_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 5.5067062021407764e-14
+          },
+          "numeric_status": "P",
+          "qualification_status": "I",
+          "returncode": 0,
+          "status": "executed"
+        },
+        "request_identical": true,
+        "waveform_byte_identical": true,
+        "new_regression": false,
+        "interpretation": "Identical I proves only preserved incompleteness. Compatibility acceptance requires its own complete observations and origin evidence."
+      },
+      {
+        "configuration": "E3-fine",
+        "baseline": {
+          "configuration": "E3-fine",
+          "elapsed_s": 8.832694416865706,
+          "event_status": "P",
+          "failures": [],
+          "max_errors_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 5.551115123125783e-14
+          },
+          "numeric_status": "P",
+          "qualification_status": "I",
+          "returncode": 0,
+          "status": "executed"
+        },
+        "candidate": {
+          "configuration": "E3-fine",
+          "elapsed_s": 5.4952109169680625,
+          "event_status": "P",
+          "failures": [],
+          "max_errors_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 5.551115123125783e-14
+          },
+          "numeric_status": "P",
+          "qualification_status": "I",
+          "returncode": 0,
+          "status": "executed"
+        },
+        "request_identical": true,
+        "waveform_byte_identical": true,
+        "new_regression": false,
+        "interpretation": "Identical I proves only preserved incompleteness. Compatibility acceptance requires its own complete observations and origin evidence."
+      },
+      {
+        "configuration": "E4-base",
+        "baseline": {
+          "configuration": "E4-base",
+          "elapsed_s": 0.19010158418677747,
+          "event_status": "P",
+          "failures": [],
+          "max_errors_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 1.0764722446765518e-16
+          },
+          "numeric_status": "P",
+          "qualification_status": "I",
+          "returncode": 0,
+          "status": "executed"
+        },
+        "candidate": {
+          "configuration": "E4-base",
+          "elapsed_s": 0.43557216692715883,
+          "event_status": "P",
+          "failures": [],
+          "max_errors_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 1.0764722446765518e-16
+          },
+          "numeric_status": "P",
+          "qualification_status": "I",
+          "returncode": 0,
+          "status": "executed"
+        },
+        "request_identical": true,
+        "waveform_byte_identical": true,
+        "new_regression": false,
+        "interpretation": "Identical I proves only preserved incompleteness. Compatibility acceptance requires its own complete observations and origin evidence."
+      },
+      {
+        "configuration": "E4-fine",
+        "baseline": {
+          "configuration": "E4-fine",
+          "elapsed_s": 0.8979837081860751,
+          "event_status": "P",
+          "failures": [],
+          "max_errors_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 1.1015899303856713e-16
+          },
+          "numeric_status": "P",
+          "qualification_status": "I",
+          "returncode": 0,
+          "status": "executed"
+        },
+        "candidate": {
+          "configuration": "E4-fine",
+          "elapsed_s": 0.6287940421607345,
+          "event_status": "P",
+          "failures": [],
+          "max_errors_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 1.1015899303856713e-16
+          },
+          "numeric_status": "P",
+          "qualification_status": "I",
+          "returncode": 0,
+          "status": "executed"
+        },
+        "request_identical": true,
+        "waveform_byte_identical": true,
+        "new_regression": false,
+        "interpretation": "Identical I proves only preserved incompleteness. Compatibility acceptance requires its own complete observations and origin evidence."
+      },
+      {
+        "configuration": "E5-base",
+        "baseline": {
+          "configuration": "E5-base",
+          "elapsed_s": 1.711687333881855,
+          "event_status": "P",
+          "failures": [],
+          "max_errors_V": {
+            "history": 0.0,
+            "sample": 2.9109159527251904e-11,
+            "u": 0.0,
+            "z": 4.876395583626921e-12
+          },
+          "numeric_status": "P",
+          "qualification_status": "I",
+          "returncode": 0,
+          "status": "executed"
+        },
+        "candidate": {
+          "configuration": "E5-base",
+          "elapsed_s": 1.6844259169884026,
+          "event_status": "P",
+          "failures": [],
+          "max_errors_V": {
+            "history": 0.0,
+            "sample": 2.9109159527251904e-11,
+            "u": 0.0,
+            "z": 4.876395583626921e-12
+          },
+          "numeric_status": "P",
+          "qualification_status": "I",
+          "returncode": 0,
+          "status": "executed"
+        },
+        "request_identical": true,
+        "waveform_byte_identical": true,
+        "new_regression": false,
+        "interpretation": "Identical I proves only preserved incompleteness. Compatibility acceptance requires its own complete observations and origin evidence."
+      },
+      {
+        "configuration": "E5-fine",
+        "baseline": {
+          "configuration": "E5-fine",
+          "elapsed_s": 8.019003792200238,
+          "event_status": "P",
+          "failures": [],
+          "max_errors_V": {
+            "history": 0.0,
+            "sample": 2.9109159527251904e-11,
+            "u": 0.0,
+            "z": 4.876839672836771e-12
+          },
+          "numeric_status": "P",
+          "qualification_status": "I",
+          "returncode": 0,
+          "status": "executed"
+        },
+        "candidate": {
+          "configuration": "E5-fine",
+          "elapsed_s": 9.81212104181759,
+          "event_status": "P",
+          "failures": [],
+          "max_errors_V": {
+            "history": 0.0,
+            "sample": 2.9109159527251904e-11,
+            "u": 0.0,
+            "z": 4.876839672836771e-12
+          },
+          "numeric_status": "P",
+          "qualification_status": "I",
+          "returncode": 0,
+          "status": "executed"
+        },
+        "request_identical": true,
+        "waveform_byte_identical": true,
+        "new_regression": false,
+        "interpretation": "Identical I proves only preserved incompleteness. Compatibility acceptance requires its own complete observations and origin evidence."
+      },
+      {
+        "configuration": "E6-base",
+        "baseline": {
+          "configuration": "E6-base",
+          "elapsed_s": 1.370893832994625,
+          "event_status": "P",
+          "failures": [],
+          "max_errors_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 3.8301796981049646e-16
+          },
+          "numeric_status": "P",
+          "qualification_status": "I",
+          "returncode": 0,
+          "status": "executed"
+        },
+        "candidate": {
+          "configuration": "E6-base",
+          "elapsed_s": 1.7616504579782486,
+          "event_status": "P",
+          "failures": [],
+          "max_errors_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 3.8301796981049646e-16
+          },
+          "numeric_status": "P",
+          "qualification_status": "I",
+          "returncode": 0,
+          "status": "executed"
+        },
+        "request_identical": true,
+        "waveform_byte_identical": true,
+        "new_regression": false,
+        "interpretation": "Identical I proves only preserved incompleteness. Compatibility acceptance requires its own complete observations and origin evidence."
+      },
+      {
+        "configuration": "E6-fine",
+        "baseline": {
+          "configuration": "E6-fine",
+          "elapsed_s": 12.786548416828737,
+          "event_status": "P",
+          "failures": [],
+          "max_errors_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 3.7371074852587784e-16
+          },
+          "numeric_status": "P",
+          "qualification_status": "I",
+          "returncode": 0,
+          "status": "executed"
+        },
+        "candidate": {
+          "configuration": "E6-fine",
+          "elapsed_s": 11.399666750105098,
+          "event_status": "P",
+          "failures": [],
+          "max_errors_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 3.7371074852587784e-16
+          },
+          "numeric_status": "P",
+          "qualification_status": "I",
+          "returncode": 0,
+          "status": "executed"
+        },
+        "request_identical": true,
+        "waveform_byte_identical": true,
+        "new_regression": false,
+        "interpretation": "Identical I proves only preserved incompleteness. Compatibility acceptance requires its own complete observations and origin evidence."
+      }
+    ],
+    "new_regressions": 0,
+    "byte_identical_waveforms": 12,
+    "compatibility_acceptance": "not established by refactor replay or identical I qualification"
+  },
+  "actual_spectre_collection": {
+    "files": 306,
+    "archive_sha256": "859b4c010f595e82c1f83d8358525aade733bcf563b5c3999d17fed80b05c7d7",
+    "availability": "local-only; remote original retained"
+  },
+  "source_settings": "All12 shared VA unchanged; Spectre decks derived only for17significantdigit output. Each original/derived deck hash retained in case metadata.",
+  "frozen_inputs": {
+    "cases/E1-base/DECK_DERIVATION.json": "57450ef5983d650d14199e2f6483e98e43495c28cb992c5997d8a828f5d1b4d8",
+    "cases/E1-base/condition.json": "e2a112d4c662a99f30fa2572d06a87f688b11fed5bd3ec7ca20675a03308f84c",
+    "cases/E1-base/dut.va": "326062e92f947abaa76ce755ab1be453b8975f157da065a1cbdf87882e5260cb",
+    "cases/E1-base/evas-manifest.json": "863a106d9df816d9e08684c8653a5c34780abdde793b2de276213aee8ef6255c",
+    "cases/E1-base/tb.scs": "1d156d9813b8fa3a2fad27ae130fa5b1f9c48674dd548f60d19304465365f283",
+    "cases/E1-fine/DECK_DERIVATION.json": "8ec6f9e3aee6cf1cea645de5b5b1bc59cb4c241652c501bad62bba6b64fb5aa4",
+    "cases/E1-fine/condition.json": "71e250e5af860cdbcbac771656a9e14167cc08e28a996e25587590c2ff96a6d1",
+    "cases/E1-fine/dut.va": "326062e92f947abaa76ce755ab1be453b8975f157da065a1cbdf87882e5260cb",
+    "cases/E1-fine/evas-manifest.json": "06da81bbcfe46e63baca8a51c542bf9b9dd86e73df4f15846ba7b757360ab2df",
+    "cases/E1-fine/tb.scs": "fc85660c931fcad63c3c37f11d9fa65bbc546ca250b49a8c7de0109cd7d00ea4",
+    "cases/E2-base/DECK_DERIVATION.json": "57450ef5983d650d14199e2f6483e98e43495c28cb992c5997d8a828f5d1b4d8",
+    "cases/E2-base/condition.json": "40c3b5c6c9c285babf45b08e8e5b1212da3d8baa4b09d0718b690817df722997",
+    "cases/E2-base/dut.va": "844715d7691fc21a6ce81ff123363177cf6b39468294afdd32235f20fede4a22",
+    "cases/E2-base/evas-manifest.json": "863a106d9df816d9e08684c8653a5c34780abdde793b2de276213aee8ef6255c",
+    "cases/E2-base/tb.scs": "1d156d9813b8fa3a2fad27ae130fa5b1f9c48674dd548f60d19304465365f283",
+    "cases/E2-fine/DECK_DERIVATION.json": "8ec6f9e3aee6cf1cea645de5b5b1bc59cb4c241652c501bad62bba6b64fb5aa4",
+    "cases/E2-fine/condition.json": "fe0c037b8b12b3c903f09e59414c3f40f04abdd27e716ed8b489a4f6bb588fff",
+    "cases/E2-fine/dut.va": "844715d7691fc21a6ce81ff123363177cf6b39468294afdd32235f20fede4a22",
+    "cases/E2-fine/evas-manifest.json": "06da81bbcfe46e63baca8a51c542bf9b9dd86e73df4f15846ba7b757360ab2df",
+    "cases/E2-fine/tb.scs": "fc85660c931fcad63c3c37f11d9fa65bbc546ca250b49a8c7de0109cd7d00ea4",
+    "cases/E3-base/DECK_DERIVATION.json": "e1b26bd399703e43ed81f41a0c8f14dd08c104bbbbf27a54452b7297a01136e9",
+    "cases/E3-base/condition.json": "47a9327cd40925183b2f1e6f831b183e25a7d238b0d7893fe862b3ac1be88a1e",
+    "cases/E3-base/dut.va": "68b7a1153d422a44af222e40df152f23003c2274627bd9d812d2e4cb8449e123",
+    "cases/E3-base/evas-manifest.json": "6ca100c743f5855098bcfec0c82dc30e204bbbe762985a6ada0ca7027ccc7d1d",
+    "cases/E3-base/tb.scs": "8aeb37c6e42ddeba5c0fe9abc0ece6772dd9ff618f729cc93b0671e453ebf3a2",
+    "cases/E3-fine/DECK_DERIVATION.json": "dd36a8d7b9344f221592de8221b7e17cb519180ab34c5a332f1b029f2038e039",
+    "cases/E3-fine/condition.json": "b034d8240916ea7a521cea5c8e37861ad60a0f22da431b901715dd8b4af97557",
+    "cases/E3-fine/dut.va": "68b7a1153d422a44af222e40df152f23003c2274627bd9d812d2e4cb8449e123",
+    "cases/E3-fine/evas-manifest.json": "b823a54d9d99060eff53be79b62c53e5395dcd45fb442942a3ff014f57998009",
+    "cases/E3-fine/tb.scs": "82487d6f172b25bbad7288686a24d2626e74749a6b3d78452ed357da2677e7bd",
+    "cases/E4-base/DECK_DERIVATION.json": "656bb64a78fe66da674f4f2ddbf5527b3bcca455e1b4b403ed457abd22af3475",
+    "cases/E4-base/condition.json": "645f93c619acf07ce9656bbfa69182fed36264d6c9bf117956d335eca0b93c18",
+    "cases/E4-base/dut.va": "ba01568c1e7cd74e2c57460d4e49b8ce3c3e1b197e0bfdd0016ce3adbdb2299d",
+    "cases/E4-base/evas-manifest.json": "a52bd551996b2bb228fb993a2160476150f64bc096e6ddea4a76ec0333b681b1",
+    "cases/E4-base/tb.scs": "31aa5a6f7e615e55fef45941c09f42fc3ee183f8993643e65944008558985515",
+    "cases/E4-fine/DECK_DERIVATION.json": "2eaaf0ba4c70805799bc4e97ede9cb200f57956c1fcef9a88fbf41c819bf4491",
+    "cases/E4-fine/condition.json": "00fc367e8a73fc7fdb25b97c8c878269bf9bf8bbdd3223b9b26c5d889aff9e05",
+    "cases/E4-fine/dut.va": "ba01568c1e7cd74e2c57460d4e49b8ce3c3e1b197e0bfdd0016ce3adbdb2299d",
+    "cases/E4-fine/evas-manifest.json": "bda8113620a241ba53cf586b44a05dd9baef02f9aa6f08a82fb68b759191eb38",
+    "cases/E4-fine/tb.scs": "c791024962bf51d83eedec0ce9c8fc1de22dc3cc81923cf136e553bce5aadf25",
+    "cases/E5-base/DECK_DERIVATION.json": "27142093a32832fb3c811fb8fc307ee8423f80a848c70bc34f19a0c56be7abdf",
+    "cases/E5-base/condition.json": "79eba3f0212506cb885f1c0c1f9bca28eb1a5fc5160e50756ab7fd05538202df",
+    "cases/E5-base/dut.va": "683387a6e759b6f7b92d1332511191465f21bee045b82941fb44a23449550645",
+    "cases/E5-base/evas-manifest.json": "e95c2a9be2f33197212fd3873983e54ad844068a0fc1b0ed70ebe8c7f3e09e08",
+    "cases/E5-base/tb.scs": "cdd8287d8632c3facda8025df4076b9429edc8ba6568d59ca2f11334d4b89384",
+    "cases/E5-fine/DECK_DERIVATION.json": "c95ca6a270d3ab227e13b793eb39d9f239c9d0748cb518d52bacc1bd78cd9c3b",
+    "cases/E5-fine/condition.json": "9fc780a0146ecc9b51cdb15c9317672bcc9a1e6f3f6a7e5161b8766d769258bc",
+    "cases/E5-fine/dut.va": "683387a6e759b6f7b92d1332511191465f21bee045b82941fb44a23449550645",
+    "cases/E5-fine/evas-manifest.json": "9e1bf0127fa9457d09bc555c79594b5aee2311986a60bfb6d58bdc3e87664226",
+    "cases/E5-fine/tb.scs": "22d7b771ae83289d5b529914ffd0e117baf31bd24593b49e37c64848af074298",
+    "cases/E6-base/DECK_DERIVATION.json": "e1b26bd399703e43ed81f41a0c8f14dd08c104bbbbf27a54452b7297a01136e9",
+    "cases/E6-base/condition.json": "8d69044bfd1b504e10f690cfbe97f7149afa0758f72e0a040ef143183b57676c",
+    "cases/E6-base/dut.va": "36374dd08827950fb22ac96aaab88d2b7056b3fef13b71cef744fc64601c0abd",
+    "cases/E6-base/evas-manifest.json": "6ca100c743f5855098bcfec0c82dc30e204bbbe762985a6ada0ca7027ccc7d1d",
+    "cases/E6-base/tb.scs": "8aeb37c6e42ddeba5c0fe9abc0ece6772dd9ff618f729cc93b0671e453ebf3a2",
+    "cases/E6-fine/DECK_DERIVATION.json": "dd36a8d7b9344f221592de8221b7e17cb519180ab34c5a332f1b029f2038e039",
+    "cases/E6-fine/condition.json": "e02f17812b677f9c9734eea0e47d501462c40afbb47bf3bd2e86e0cdb954bc24",
+    "cases/E6-fine/dut.va": "36374dd08827950fb22ac96aaab88d2b7056b3fef13b71cef744fc64601c0abd",
+    "cases/E6-fine/evas-manifest.json": "b823a54d9d99060eff53be79b62c53e5395dcd45fb442942a3ff014f57998009",
+    "cases/E6-fine/tb.scs": "82487d6f172b25bbad7288686a24d2626e74749a6b3d78452ed357da2677e7bd"
+  },
+  "configurations": [
+    {
+      "configuration": "E1-base",
+      "status": "analyzed",
+      "independent_numeric_status": "P",
+      "independent_event_status": "P",
+      "qualification_status": "I",
+      "max_errors_V": {
+        "history": 1.8645230051199943e-14,
+        "sample": 0.0,
+        "u": 0.0,
+        "z": 0.0
+      },
+      "failures": [],
+      "rows": 378,
+      "first_time_token": "0",
+      "last_time_token": "1",
+      "effective_settings_status": "P",
+      "effective_settings_mismatches": [],
+      "observation_origin_evidence": {
+        "accepted_stepcount_tokens": [
+          "377"
+        ],
+        "help": "coordinator-retained Spectre strobe/compression and precision help",
+        "qualification": "I; computed-grid help/record count alone does not certify rounded-export bounds or exact rational boundaries",
+        "saved_rows": 378
+      },
+      "finite_pairs": {
+        "baseline-p102": {
+          "matched_numeric_projection_records": 247,
+          "exact_rational_coordinate_records": 4,
+          "max_reference_normalized_residual_difference_V": {
+            "history": 1.8626060858816416e-14,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 0.0
+          },
+          "max_raw_difference_V": {
+            "history": 1.8626683027802648e-14,
+            "sample": 0.0,
+            "u": 4.904949214032967e-18,
+            "z": 0.0
+          },
+          "max_exact_formula_coordinate_correction_V": {
+            "history": 4.293948683515191e-18,
+            "sample": 0.0,
+            "u": 4.904949214032967e-18,
+            "z": 0.0
+          },
+          "continuous_pair_status": "P",
+          "count_differences_outside_event_windows": [],
+          "event_window_or_boundary_differences": [],
+          "interpretation": "Finite residual pairs matched by explicit numeric binary64 projection. Subtract independently computed exact-rational formula coordinate difference; does not establish PSF origin or exact simultaneous callback convention."
+        },
+        "candidate-5e38bdf8": {
+          "matched_numeric_projection_records": 247,
+          "exact_rational_coordinate_records": 4,
+          "max_reference_normalized_residual_difference_V": {
+            "history": 1.8626060858816416e-14,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 0.0
+          },
+          "max_raw_difference_V": {
+            "history": 1.8626683027802648e-14,
+            "sample": 0.0,
+            "u": 4.904949214032967e-18,
+            "z": 0.0
+          },
+          "max_exact_formula_coordinate_correction_V": {
+            "history": 4.293948683515191e-18,
+            "sample": 0.0,
+            "u": 4.904949214032967e-18,
+            "z": 0.0
+          },
+          "continuous_pair_status": "P",
+          "count_differences_outside_event_windows": [],
+          "event_window_or_boundary_differences": [],
+          "interpretation": "Finite residual pairs matched by explicit numeric binary64 projection. Subtract independently computed exact-rational formula coordinate difference; does not establish PSF origin or exact simultaneous callback convention."
+        }
+      },
+      "numeric_failure_reasons": []
+    },
+    {
+      "configuration": "E1-fine",
+      "status": "analyzed",
+      "independent_numeric_status": "I",
+      "independent_event_status": "I",
+      "qualification_status": "I",
+      "max_errors_V": {
+        "history": 1.914e-14,
+        "sample": 0.0,
+        "u": 4e-16,
+        "z": 0.0
+      },
+      "failures": [
+        "missing exact domain endpoint"
+      ],
+      "rows": 760,
+      "first_time_token": "0",
+      "last_time_token": "1.0000000000000004",
+      "effective_settings_status": "P",
+      "effective_settings_mismatches": [],
+      "observation_origin_evidence": {
+        "accepted_stepcount_tokens": [
+          "759"
+        ],
+        "help": "coordinator-retained Spectre strobe/compression and precision help",
+        "qualification": "I; computed-grid help/record count alone does not certify rounded-export bounds or exact rational boundaries",
+        "saved_rows": 760
+      },
+      "finite_pairs": {
+        "baseline-p102": {
+          "matched_numeric_projection_records": 291,
+          "exact_rational_coordinate_records": 3,
+          "max_reference_normalized_residual_difference_V": {
+            "history": 1.8769149836278587e-14,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 0.0
+          },
+          "max_raw_difference_V": {
+            "history": 1.8767427831986935e-14,
+            "sample": 0.0,
+            "u": 4.932937978592236e-18,
+            "z": 0.0
+          },
+          "max_exact_formula_coordinate_correction_V": {
+            "history": 2.7723111439688365e-18,
+            "sample": 0.0,
+            "u": 4.932937978592236e-18,
+            "z": 0.0
+          },
+          "continuous_pair_status": "P",
+          "count_differences_outside_event_windows": [],
+          "event_window_or_boundary_differences": [],
+          "interpretation": "Finite residual pairs matched by explicit numeric binary64 projection. Subtract independently computed exact-rational formula coordinate difference; does not establish PSF origin or exact simultaneous callback convention."
+        },
+        "candidate-5e38bdf8": {
+          "matched_numeric_projection_records": 291,
+          "exact_rational_coordinate_records": 3,
+          "max_reference_normalized_residual_difference_V": {
+            "history": 1.8769149836278587e-14,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 0.0
+          },
+          "max_raw_difference_V": {
+            "history": 1.8767427831986935e-14,
+            "sample": 0.0,
+            "u": 4.932937978592236e-18,
+            "z": 0.0
+          },
+          "max_exact_formula_coordinate_correction_V": {
+            "history": 2.7723111439688365e-18,
+            "sample": 0.0,
+            "u": 4.932937978592236e-18,
+            "z": 0.0
+          },
+          "continuous_pair_status": "P",
+          "count_differences_outside_event_windows": [],
+          "event_window_or_boundary_differences": [],
+          "interpretation": "Finite residual pairs matched by explicit numeric binary64 projection. Subtract independently computed exact-rational formula coordinate difference; does not establish PSF origin or exact simultaneous callback convention."
+        }
+      },
+      "numeric_failure_reasons": []
+    },
+    {
+      "configuration": "E2-base",
+      "status": "analyzed",
+      "independent_numeric_status": "P",
+      "independent_event_status": "P",
+      "qualification_status": "I",
+      "max_errors_V": {
+        "history": 1.84500000156e-14,
+        "sample": 0.0,
+        "u": 0.0,
+        "z": 0.0
+      },
+      "failures": [],
+      "rows": 378,
+      "first_time_token": "0",
+      "last_time_token": "1",
+      "effective_settings_status": "P",
+      "effective_settings_mismatches": [],
+      "observation_origin_evidence": {
+        "accepted_stepcount_tokens": [
+          "377"
+        ],
+        "help": "coordinator-retained Spectre strobe/compression and precision help",
+        "qualification": "I; computed-grid help/record count alone does not certify rounded-export bounds or exact rational boundaries",
+        "saved_rows": 378
+      },
+      "finite_pairs": {
+        "baseline-p102": {
+          "matched_numeric_projection_records": 246,
+          "exact_rational_coordinate_records": 4,
+          "max_reference_normalized_residual_difference_V": {
+            "history": 1.845062514276308e-14,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 0.0
+          },
+          "max_raw_difference_V": {
+            "history": 1.8453038070303137e-14,
+            "sample": 0.0,
+            "u": 4.904949214032967e-18,
+            "z": 0.0
+          },
+          "max_exact_formula_coordinate_correction_V": {
+            "history": 4.293948683515191e-18,
+            "sample": 0.0,
+            "u": 4.904949214032967e-18,
+            "z": 0.0
+          },
+          "continuous_pair_status": "P",
+          "count_differences_outside_event_windows": [],
+          "event_window_or_boundary_differences": [],
+          "interpretation": "Finite residual pairs matched by explicit numeric binary64 projection. Subtract independently computed exact-rational formula coordinate difference; does not establish PSF origin or exact simultaneous callback convention."
+        },
+        "candidate-5e38bdf8": {
+          "matched_numeric_projection_records": 246,
+          "exact_rational_coordinate_records": 4,
+          "max_reference_normalized_residual_difference_V": {
+            "history": 1.845062514276308e-14,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 0.0
+          },
+          "max_raw_difference_V": {
+            "history": 1.8453038070303137e-14,
+            "sample": 0.0,
+            "u": 4.904949214032967e-18,
+            "z": 0.0
+          },
+          "max_exact_formula_coordinate_correction_V": {
+            "history": 4.293948683515191e-18,
+            "sample": 0.0,
+            "u": 4.904949214032967e-18,
+            "z": 0.0
+          },
+          "continuous_pair_status": "P",
+          "count_differences_outside_event_windows": [],
+          "event_window_or_boundary_differences": [],
+          "interpretation": "Finite residual pairs matched by explicit numeric binary64 projection. Subtract independently computed exact-rational formula coordinate difference; does not establish PSF origin or exact simultaneous callback convention."
+        }
+      },
+      "numeric_failure_reasons": []
+    },
+    {
+      "configuration": "E2-fine",
+      "status": "analyzed",
+      "independent_numeric_status": "I",
+      "independent_event_status": "I",
+      "qualification_status": "I",
+      "max_errors_V": {
+        "history": 1.858e-14,
+        "sample": 0.0,
+        "u": 4e-16,
+        "z": 0.0
+      },
+      "failures": [
+        "missing exact domain endpoint"
+      ],
+      "rows": 760,
+      "first_time_token": "0",
+      "last_time_token": "1.0000000000000004",
+      "effective_settings_status": "P",
+      "effective_settings_mismatches": [],
+      "observation_origin_evidence": {
+        "accepted_stepcount_tokens": [
+          "759"
+        ],
+        "help": "coordinator-retained Spectre strobe/compression and precision help",
+        "qualification": "I; computed-grid help/record count alone does not certify rounded-export bounds or exact rational boundaries",
+        "saved_rows": 760
+      },
+      "finite_pairs": {
+        "baseline-p102": {
+          "matched_numeric_projection_records": 290,
+          "exact_rational_coordinate_records": 3,
+          "max_reference_normalized_residual_difference_V": {
+            "history": 1.8456060858816415e-14,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 0.0
+          },
+          "max_raw_difference_V": {
+            "history": 1.8456683027802647e-14,
+            "sample": 0.0,
+            "u": 4.932937978592236e-18,
+            "z": 0.0
+          },
+          "max_exact_formula_coordinate_correction_V": {
+            "history": 2.7723111439688365e-18,
+            "sample": 0.0,
+            "u": 4.932937978592236e-18,
+            "z": 0.0
+          },
+          "continuous_pair_status": "P",
+          "count_differences_outside_event_windows": [],
+          "event_window_or_boundary_differences": [],
+          "interpretation": "Finite residual pairs matched by explicit numeric binary64 projection. Subtract independently computed exact-rational formula coordinate difference; does not establish PSF origin or exact simultaneous callback convention."
+        },
+        "candidate-5e38bdf8": {
+          "matched_numeric_projection_records": 290,
+          "exact_rational_coordinate_records": 3,
+          "max_reference_normalized_residual_difference_V": {
+            "history": 1.8456060858816415e-14,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 0.0
+          },
+          "max_raw_difference_V": {
+            "history": 1.8456683027802647e-14,
+            "sample": 0.0,
+            "u": 4.932937978592236e-18,
+            "z": 0.0
+          },
+          "max_exact_formula_coordinate_correction_V": {
+            "history": 2.7723111439688365e-18,
+            "sample": 0.0,
+            "u": 4.932937978592236e-18,
+            "z": 0.0
+          },
+          "continuous_pair_status": "P",
+          "count_differences_outside_event_windows": [],
+          "event_window_or_boundary_differences": [],
+          "interpretation": "Finite residual pairs matched by explicit numeric binary64 projection. Subtract independently computed exact-rational formula coordinate difference; does not establish PSF origin or exact simultaneous callback convention."
+        }
+      },
+      "numeric_failure_reasons": []
+    },
+    {
+      "configuration": "E3-base",
+      "status": "analyzed",
+      "independent_numeric_status": "I",
+      "independent_event_status": "I",
+      "qualification_status": "I",
+      "max_errors_V": {
+        "history": 0.0,
+        "sample": 0.0,
+        "u": 1.3e-15,
+        "z": 1.000000028e-08
+      },
+      "failures": [
+        "missing exact domain endpoint"
+      ],
+      "rows": 368,
+      "first_time_token": "0",
+      "last_time_token": "2.0000000000000013",
+      "effective_settings_status": "P",
+      "effective_settings_mismatches": [],
+      "observation_origin_evidence": {
+        "accepted_stepcount_tokens": [
+          "367"
+        ],
+        "help": "coordinator-retained Spectre strobe/compression and precision help",
+        "qualification": "I; computed-grid help/record count alone does not certify rounded-export bounds or exact rational boundaries",
+        "saved_rows": 368
+      },
+      "finite_pairs": {
+        "baseline-p102": {
+          "matched_numeric_projection_records": 216,
+          "exact_rational_coordinate_records": 3,
+          "max_reference_normalized_residual_difference_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 9.999999773466546e-09
+          },
+          "max_raw_difference_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 4.904949214032967e-18,
+            "z": 9.999999773466546e-09
+          },
+          "max_exact_formula_coordinate_correction_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 4.904949214032967e-18,
+            "z": 9.809898428065935e-18
+          },
+          "continuous_pair_status": "P",
+          "count_differences_outside_event_windows": [],
+          "event_window_or_boundary_differences": [
+            {
+              "evas": 0.0,
+              "evas_time_binary64_rational": "1/2",
+              "signal": "count",
+              "spectre": "1",
+              "spectre_time_token": "0.5"
+            }
+          ],
+          "interpretation": "Finite residual pairs matched by explicit numeric binary64 projection. Subtract independently computed exact-rational formula coordinate difference; does not establish PSF origin or exact simultaneous callback convention."
+        },
+        "candidate-5e38bdf8": {
+          "matched_numeric_projection_records": 216,
+          "exact_rational_coordinate_records": 3,
+          "max_reference_normalized_residual_difference_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 9.999999773466546e-09
+          },
+          "max_raw_difference_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 4.904949214032967e-18,
+            "z": 9.999999773466546e-09
+          },
+          "max_exact_formula_coordinate_correction_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 4.904949214032967e-18,
+            "z": 9.809898428065935e-18
+          },
+          "continuous_pair_status": "P",
+          "count_differences_outside_event_windows": [],
+          "event_window_or_boundary_differences": [
+            {
+              "evas": 0.0,
+              "evas_time_binary64_rational": "1/2",
+              "signal": "count",
+              "spectre": "1",
+              "spectre_time_token": "0.5"
+            }
+          ],
+          "interpretation": "Finite residual pairs matched by explicit numeric binary64 projection. Subtract independently computed exact-rational formula coordinate difference; does not establish PSF origin or exact simultaneous callback convention."
+        }
+      },
+      "numeric_failure_reasons": []
+    },
+    {
+      "configuration": "E3-fine",
+      "status": "analyzed",
+      "independent_numeric_status": "I",
+      "independent_event_status": "I",
+      "qualification_status": "I",
+      "max_errors_V": {
+        "history": 0.0,
+        "sample": 0.0,
+        "u": 1.3e-15,
+        "z": 1.000000028e-08
+      },
+      "failures": [
+        "missing exact domain endpoint"
+      ],
+      "rows": 1259,
+      "first_time_token": "0",
+      "last_time_token": "2.0000000000000013",
+      "effective_settings_status": "P",
+      "effective_settings_mismatches": [],
+      "observation_origin_evidence": {
+        "accepted_stepcount_tokens": [
+          "1258"
+        ],
+        "help": "coordinator-retained Spectre strobe/compression and precision help",
+        "qualification": "I; computed-grid help/record count alone does not certify rounded-export bounds or exact rational boundaries",
+        "saved_rows": 1259
+      },
+      "finite_pairs": {
+        "baseline-p102": {
+          "matched_numeric_projection_records": 257,
+          "exact_rational_coordinate_records": 3,
+          "max_reference_normalized_residual_difference_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 9.999999773466546e-09
+          },
+          "max_raw_difference_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 4.932937978592236e-18,
+            "z": 9.999999773466546e-09
+          },
+          "max_exact_formula_coordinate_correction_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 4.932937978592236e-18,
+            "z": 9.865875957184471e-18
+          },
+          "continuous_pair_status": "P",
+          "count_differences_outside_event_windows": [],
+          "event_window_or_boundary_differences": [
+            {
+              "evas": 0.0,
+              "evas_time_binary64_rational": "1/2",
+              "signal": "count",
+              "spectre": "1",
+              "spectre_time_token": "0.5"
+            }
+          ],
+          "interpretation": "Finite residual pairs matched by explicit numeric binary64 projection. Subtract independently computed exact-rational formula coordinate difference; does not establish PSF origin or exact simultaneous callback convention."
+        },
+        "candidate-5e38bdf8": {
+          "matched_numeric_projection_records": 257,
+          "exact_rational_coordinate_records": 3,
+          "max_reference_normalized_residual_difference_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 9.999999773466546e-09
+          },
+          "max_raw_difference_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 4.932937978592236e-18,
+            "z": 9.999999773466546e-09
+          },
+          "max_exact_formula_coordinate_correction_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 4.932937978592236e-18,
+            "z": 9.865875957184471e-18
+          },
+          "continuous_pair_status": "P",
+          "count_differences_outside_event_windows": [],
+          "event_window_or_boundary_differences": [
+            {
+              "evas": 0.0,
+              "evas_time_binary64_rational": "1/2",
+              "signal": "count",
+              "spectre": "1",
+              "spectre_time_token": "0.5"
+            }
+          ],
+          "interpretation": "Finite residual pairs matched by explicit numeric binary64 projection. Subtract independently computed exact-rational formula coordinate difference; does not establish PSF origin or exact simultaneous callback convention."
+        }
+      },
+      "numeric_failure_reasons": []
+    },
+    {
+      "configuration": "E4-base",
+      "status": "analyzed",
+      "independent_numeric_status": "P",
+      "independent_event_status": "P",
+      "qualification_status": "I",
+      "max_errors_V": {
+        "history": 0.0,
+        "sample": 0.0,
+        "u": 0.0,
+        "z": 7.1552e-14
+      },
+      "failures": [],
+      "rows": 487,
+      "first_time_token": "0",
+      "last_time_token": "2",
+      "effective_settings_status": "P",
+      "effective_settings_mismatches": [],
+      "observation_origin_evidence": {
+        "accepted_stepcount_tokens": [
+          "486"
+        ],
+        "help": "coordinator-retained Spectre strobe/compression and precision help",
+        "qualification": "I; computed-grid help/record count alone does not certify rounded-export bounds or exact rational boundaries",
+        "saved_rows": 487
+      },
+      "finite_pairs": {
+        "baseline-p102": {
+          "matched_numeric_projection_records": 298,
+          "exact_rational_coordinate_records": 7,
+          "max_reference_normalized_residual_difference_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 7.158952838470578e-14
+          },
+          "max_raw_difference_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 4.6709294817992486e-17,
+            "z": 7.160830801597345e-14
+          },
+          "max_exact_formula_coordinate_correction_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 4.6709294817992486e-17,
+            "z": 9.061603194690542e-17
+          },
+          "continuous_pair_status": "P",
+          "count_differences_outside_event_windows": [],
+          "event_window_or_boundary_differences": [
+            {
+              "evas": 0.0,
+              "evas_time_binary64_rational": "3/4",
+              "signal": "count",
+              "spectre": "1",
+              "spectre_time_token": "0.75"
+            }
+          ],
+          "interpretation": "Finite residual pairs matched by explicit numeric binary64 projection. Subtract independently computed exact-rational formula coordinate difference; does not establish PSF origin or exact simultaneous callback convention."
+        },
+        "candidate-5e38bdf8": {
+          "matched_numeric_projection_records": 298,
+          "exact_rational_coordinate_records": 7,
+          "max_reference_normalized_residual_difference_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 7.158952838470578e-14
+          },
+          "max_raw_difference_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 4.6709294817992486e-17,
+            "z": 7.160830801597345e-14
+          },
+          "max_exact_formula_coordinate_correction_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 4.6709294817992486e-17,
+            "z": 9.061603194690542e-17
+          },
+          "continuous_pair_status": "P",
+          "count_differences_outside_event_windows": [],
+          "event_window_or_boundary_differences": [
+            {
+              "evas": 0.0,
+              "evas_time_binary64_rational": "3/4",
+              "signal": "count",
+              "spectre": "1",
+              "spectre_time_token": "0.75"
+            }
+          ],
+          "interpretation": "Finite residual pairs matched by explicit numeric binary64 projection. Subtract independently computed exact-rational formula coordinate difference; does not establish PSF origin or exact simultaneous callback convention."
+        }
+      },
+      "numeric_failure_reasons": []
+    },
+    {
+      "configuration": "E4-fine",
+      "status": "analyzed",
+      "independent_numeric_status": "I",
+      "independent_event_status": "I",
+      "qualification_status": "I",
+      "max_errors_V": {
+        "history": 0.0,
+        "sample": 0.0,
+        "u": 9e-16,
+        "z": 7.4668e-14
+      },
+      "failures": [
+        "missing exact domain endpoint"
+      ],
+      "rows": 1248,
+      "first_time_token": "0",
+      "last_time_token": "2.0000000000000009",
+      "effective_settings_status": "P",
+      "effective_settings_mismatches": [],
+      "observation_origin_evidence": {
+        "accepted_stepcount_tokens": [
+          "1247"
+        ],
+        "help": "coordinator-retained Spectre strobe/compression and precision help",
+        "qualification": "I; computed-grid help/record count alone does not certify rounded-export bounds or exact rational boundaries",
+        "saved_rows": 1248
+      },
+      "finite_pairs": {
+        "baseline-p102": {
+          "matched_numeric_projection_records": 261,
+          "exact_rational_coordinate_records": 3,
+          "max_reference_normalized_residual_difference_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 7.144817932858688e-14
+          },
+          "max_raw_difference_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 4.932937978592236e-18,
+            "z": 7.144511130291095e-14
+          },
+          "max_exact_formula_coordinate_correction_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 4.932937978592236e-18,
+            "z": 4.005545638616896e-18
+          },
+          "continuous_pair_status": "P",
+          "count_differences_outside_event_windows": [],
+          "event_window_or_boundary_differences": [
+            {
+              "evas": 0.0,
+              "evas_time_binary64_rational": "3/4",
+              "signal": "count",
+              "spectre": "1",
+              "spectre_time_token": "0.75"
+            }
+          ],
+          "interpretation": "Finite residual pairs matched by explicit numeric binary64 projection. Subtract independently computed exact-rational formula coordinate difference; does not establish PSF origin or exact simultaneous callback convention."
+        },
+        "candidate-5e38bdf8": {
+          "matched_numeric_projection_records": 261,
+          "exact_rational_coordinate_records": 3,
+          "max_reference_normalized_residual_difference_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 7.144817932858688e-14
+          },
+          "max_raw_difference_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 4.932937978592236e-18,
+            "z": 7.144511130291095e-14
+          },
+          "max_exact_formula_coordinate_correction_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 4.932937978592236e-18,
+            "z": 4.005545638616896e-18
+          },
+          "continuous_pair_status": "P",
+          "count_differences_outside_event_windows": [],
+          "event_window_or_boundary_differences": [
+            {
+              "evas": 0.0,
+              "evas_time_binary64_rational": "3/4",
+              "signal": "count",
+              "spectre": "1",
+              "spectre_time_token": "0.75"
+            }
+          ],
+          "interpretation": "Finite residual pairs matched by explicit numeric binary64 projection. Subtract independently computed exact-rational formula coordinate difference; does not establish PSF origin or exact simultaneous callback convention."
+        }
+      },
+      "numeric_failure_reasons": []
+    },
+    {
+      "configuration": "E5-base",
+      "status": "analyzed",
+      "independent_numeric_status": "I",
+      "independent_event_status": "I",
+      "qualification_status": "I",
+      "max_errors_V": {
+        "history": 5e-16,
+        "sample": 1.4999999e-09,
+        "u": 1.3e-15,
+        "z": 2.0000003333333333e-09
+      },
+      "failures": [
+        "missing exact domain endpoint"
+      ],
+      "rows": 254,
+      "first_time_token": "0",
+      "last_time_token": "2.0000000000000013",
+      "effective_settings_status": "P",
+      "effective_settings_mismatches": [],
+      "observation_origin_evidence": {
+        "accepted_stepcount_tokens": [
+          "253"
+        ],
+        "help": "coordinator-retained Spectre strobe/compression and precision help",
+        "qualification": "I; computed-grid help/record count alone does not certify rounded-export bounds or exact rational boundaries",
+        "saved_rows": 254
+      },
+      "finite_pairs": {
+        "baseline-p102": {
+          "matched_numeric_projection_records": 111,
+          "exact_rational_coordinate_records": 1,
+          "max_reference_normalized_residual_difference_V": {
+            "history": 2.3e-16,
+            "sample": 1.470890740472748e-09,
+            "u": 0.0,
+            "z": 1.9951425339853687e-09
+          },
+          "max_raw_difference_V": {
+            "history": 2.268882039799064e-16,
+            "sample": 1.470890740472748e-09,
+            "u": 4.958581417595269e-18,
+            "z": 1.9951425344588535e-09
+          },
+          "max_exact_formula_coordinate_correction_V": {
+            "history": 9.917162835190538e-18,
+            "sample": 0.0,
+            "u": 4.958581417595269e-18,
+            "z": 1.472610395263473e-17
+          },
+          "continuous_pair_status": "P",
+          "count_differences_outside_event_windows": [],
+          "event_window_or_boundary_differences": [],
+          "interpretation": "Finite residual pairs matched by explicit numeric binary64 projection. Subtract independently computed exact-rational formula coordinate difference; does not establish PSF origin or exact simultaneous callback convention."
+        },
+        "candidate-5e38bdf8": {
+          "matched_numeric_projection_records": 111,
+          "exact_rational_coordinate_records": 1,
+          "max_reference_normalized_residual_difference_V": {
+            "history": 2.3e-16,
+            "sample": 1.470890740472748e-09,
+            "u": 0.0,
+            "z": 1.9951425339853687e-09
+          },
+          "max_raw_difference_V": {
+            "history": 2.268882039799064e-16,
+            "sample": 1.470890740472748e-09,
+            "u": 4.958581417595269e-18,
+            "z": 1.9951425344588535e-09
+          },
+          "max_exact_formula_coordinate_correction_V": {
+            "history": 9.917162835190538e-18,
+            "sample": 0.0,
+            "u": 4.958581417595269e-18,
+            "z": 1.472610395263473e-17
+          },
+          "continuous_pair_status": "P",
+          "count_differences_outside_event_windows": [],
+          "event_window_or_boundary_differences": [],
+          "interpretation": "Finite residual pairs matched by explicit numeric binary64 projection. Subtract independently computed exact-rational formula coordinate difference; does not establish PSF origin or exact simultaneous callback convention."
+        }
+      },
+      "numeric_failure_reasons": []
+    },
+    {
+      "configuration": "E5-fine",
+      "status": "analyzed",
+      "independent_numeric_status": "I",
+      "independent_event_status": "I",
+      "qualification_status": "I",
+      "max_errors_V": {
+        "history": 1.2e-16,
+        "sample": 1.5000001e-09,
+        "u": 1.3e-15,
+        "z": 2.0000054333333333e-09
+      },
+      "failures": [
+        "missing exact domain endpoint"
+      ],
+      "rows": 1144,
+      "first_time_token": "0",
+      "last_time_token": "2.0000000000000013",
+      "effective_settings_status": "P",
+      "effective_settings_mismatches": [],
+      "observation_origin_evidence": {
+        "accepted_stepcount_tokens": [
+          "1143"
+        ],
+        "help": "coordinator-retained Spectre strobe/compression and precision help",
+        "qualification": "I; computed-grid help/record count alone does not certify rounded-export bounds or exact rational boundaries",
+        "saved_rows": 1144
+      },
+      "finite_pairs": {
+        "baseline-p102": {
+          "matched_numeric_projection_records": 115,
+          "exact_rational_coordinate_records": 1,
+          "max_reference_normalized_residual_difference_V": {
+            "history": 1e-17,
+            "sample": 1.4708909404727481e-09,
+            "u": 0.0,
+            "z": 1.9951425339853687e-09
+          },
+          "max_raw_difference_V": {
+            "history": 4.9623335211072115e-18,
+            "sample": 1.4708909404727481e-09,
+            "u": 4.958581417595269e-18,
+            "z": 1.9951425344588535e-09
+          },
+          "max_exact_formula_coordinate_correction_V": {
+            "history": 9.917162835190538e-18,
+            "sample": 0.0,
+            "u": 4.958581417595269e-18,
+            "z": 1.472610395263473e-17
+          },
+          "continuous_pair_status": "P",
+          "count_differences_outside_event_windows": [],
+          "event_window_or_boundary_differences": [],
+          "interpretation": "Finite residual pairs matched by explicit numeric binary64 projection. Subtract independently computed exact-rational formula coordinate difference; does not establish PSF origin or exact simultaneous callback convention."
+        },
+        "candidate-5e38bdf8": {
+          "matched_numeric_projection_records": 115,
+          "exact_rational_coordinate_records": 1,
+          "max_reference_normalized_residual_difference_V": {
+            "history": 1e-17,
+            "sample": 1.4708909404727481e-09,
+            "u": 0.0,
+            "z": 1.9951425339853687e-09
+          },
+          "max_raw_difference_V": {
+            "history": 4.9623335211072115e-18,
+            "sample": 1.4708909404727481e-09,
+            "u": 4.958581417595269e-18,
+            "z": 1.9951425344588535e-09
+          },
+          "max_exact_formula_coordinate_correction_V": {
+            "history": 9.917162835190538e-18,
+            "sample": 0.0,
+            "u": 4.958581417595269e-18,
+            "z": 1.472610395263473e-17
+          },
+          "continuous_pair_status": "P",
+          "count_differences_outside_event_windows": [],
+          "event_window_or_boundary_differences": [],
+          "interpretation": "Finite residual pairs matched by explicit numeric binary64 projection. Subtract independently computed exact-rational formula coordinate difference; does not establish PSF origin or exact simultaneous callback convention."
+        }
+      },
+      "numeric_failure_reasons": []
+    },
+    {
+      "configuration": "E6-base",
+      "status": "analyzed",
+      "independent_numeric_status": "F",
+      "independent_event_status": "P",
+      "qualification_status": "F",
+      "max_errors_V": {
+        "history": 0.0,
+        "sample": 0.0,
+        "u": 0.0,
+        "z": 7.85259115986e-06
+      },
+      "failures": [],
+      "rows": 920,
+      "first_time_token": "0",
+      "last_time_token": "2",
+      "effective_settings_status": "P",
+      "effective_settings_mismatches": [],
+      "observation_origin_evidence": {
+        "accepted_stepcount_tokens": [
+          "919"
+        ],
+        "help": "coordinator-retained Spectre strobe/compression and precision help",
+        "qualification": "I; computed-grid help/record count alone does not certify rounded-export bounds or exact rational boundaries",
+        "saved_rows": 920
+      },
+      "finite_pairs": {
+        "baseline-p102": {
+          "matched_numeric_projection_records": 302,
+          "exact_rational_coordinate_records": 6,
+          "max_reference_normalized_residual_difference_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 7.852591159951376e-06
+          },
+          "max_raw_difference_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 4.6709294817992486e-17,
+            "z": 7.852591159949267e-06
+          },
+          "max_exact_formula_coordinate_correction_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 4.6709294817992486e-17,
+            "z": 4.157110610358889e-17
+          },
+          "continuous_pair_status": "F",
+          "count_differences_outside_event_windows": [],
+          "event_window_or_boundary_differences": [],
+          "interpretation": "Finite residual pairs matched by explicit numeric binary64 projection. Subtract independently computed exact-rational formula coordinate difference; does not establish PSF origin or exact simultaneous callback convention."
+        },
+        "candidate-5e38bdf8": {
+          "matched_numeric_projection_records": 302,
+          "exact_rational_coordinate_records": 6,
+          "max_reference_normalized_residual_difference_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 7.852591159951376e-06
+          },
+          "max_raw_difference_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 4.6709294817992486e-17,
+            "z": 7.852591159949267e-06
+          },
+          "max_exact_formula_coordinate_correction_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 4.6709294817992486e-17,
+            "z": 4.157110610358889e-17
+          },
+          "continuous_pair_status": "F",
+          "count_differences_outside_event_windows": [],
+          "event_window_or_boundary_differences": [],
+          "interpretation": "Finite residual pairs matched by explicit numeric binary64 projection. Subtract independently computed exact-rational formula coordinate difference; does not establish PSF origin or exact simultaneous callback convention."
+        }
+      },
+      "numeric_failure_reasons": [
+        "z: 7.85259115986e-06 V exceeds frozen 1e-6 V limit"
+      ]
+    },
+    {
+      "configuration": "E6-fine",
+      "status": "analyzed",
+      "independent_numeric_status": "F",
+      "independent_event_status": "I",
+      "qualification_status": "F",
+      "max_errors_V": {
+        "history": 0.0,
+        "sample": 0.0,
+        "u": 9e-16,
+        "z": 4.67175138126e-06
+      },
+      "failures": [
+        "missing exact domain endpoint"
+      ],
+      "rows": 1414,
+      "first_time_token": "0",
+      "last_time_token": "2.0000000000000009",
+      "effective_settings_status": "P",
+      "effective_settings_mismatches": [],
+      "observation_origin_evidence": {
+        "accepted_stepcount_tokens": [
+          "1413"
+        ],
+        "help": "coordinator-retained Spectre strobe/compression and precision help",
+        "qualification": "I; computed-grid help/record count alone does not certify rounded-export bounds or exact rational boundaries",
+        "saved_rows": 1414
+      },
+      "finite_pairs": {
+        "baseline-p102": {
+          "matched_numeric_projection_records": 411,
+          "exact_rational_coordinate_records": 3,
+          "max_reference_normalized_residual_difference_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 4.671751381351375e-06
+          },
+          "max_raw_difference_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 4.932937978592236e-18,
+            "z": 4.671751381349267e-06
+          },
+          "max_exact_formula_coordinate_correction_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 4.932937978592236e-18,
+            "z": 1.9619759186176148e-17
+          },
+          "continuous_pair_status": "F",
+          "count_differences_outside_event_windows": [],
+          "event_window_or_boundary_differences": [],
+          "interpretation": "Finite residual pairs matched by explicit numeric binary64 projection. Subtract independently computed exact-rational formula coordinate difference; does not establish PSF origin or exact simultaneous callback convention."
+        },
+        "candidate-5e38bdf8": {
+          "matched_numeric_projection_records": 411,
+          "exact_rational_coordinate_records": 3,
+          "max_reference_normalized_residual_difference_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 0.0,
+            "z": 4.671751381351375e-06
+          },
+          "max_raw_difference_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 4.932937978592236e-18,
+            "z": 4.671751381349267e-06
+          },
+          "max_exact_formula_coordinate_correction_V": {
+            "history": 0.0,
+            "sample": 0.0,
+            "u": 4.932937978592236e-18,
+            "z": 1.9619759186176148e-17
+          },
+          "continuous_pair_status": "F",
+          "count_differences_outside_event_windows": [],
+          "event_window_or_boundary_differences": [],
+          "interpretation": "Finite residual pairs matched by explicit numeric binary64 projection. Subtract independently computed exact-rational formula coordinate difference; does not establish PSF origin or exact simultaneous callback convention."
+        }
+      },
+      "numeric_failure_reasons": [
+        "z: 4.6717513812599998e-06 V exceeds frozen 1e-6 V limit"
+      ]
+    }
+  ],
+  "triage": [
+    {
+      "configuration": "E6-base",
+      "phase_maxima": [
+        {
+          "phase": "before_edit",
+          "rows": 169,
+          "worst_time_token": "0.24999998000000001",
+          "worst_z_token": "1.3333350142003966",
+          "independent_z_rational": "100000000000000000/75000001999999999",
+          "signed_error_V": 1.7164226178562963e-06,
+          "absolute_error_V": 1.7164226178562963e-06
+        },
+        {
+          "phase": "after_edit_before_changed_timer",
+          "rows": 260,
+          "worst_time_token": "0.49999998000000001",
+          "worst_z_token": "2.0000077725911631",
+          "independent_z_rational": "100000000000000000/50000001999999999",
+          "signed_error_V": 7.85259115986e-06,
+          "absolute_error_V": 7.85259115986e-06
+        },
+        {
+          "phase": "at_and_after_changed_timer",
+          "rows": 491,
+          "worst_time_token": "0.5",
+          "worst_z_token": "2.0000077725911627",
+          "independent_z_rational": "2",
+          "signed_error_V": 7.7725911627e-06,
+          "absolute_error_V": 7.7725911627e-06
+        }
+      ],
+      "event_brackets": [
+        {
+          "kind": "timer",
+          "lower": "24999998000000001/100000000000000000",
+          "nominal": "1/4",
+          "signal": "edit",
+          "upper": "1/4",
+          "width_s": 1.999999999e-08
+        },
+        {
+          "kind": "timer",
+          "lower": "49999998000000001/100000000000000000",
+          "nominal": "1/2",
+          "signal": "count",
+          "upper": "1/2",
+          "width_s": 1.999999999e-08
+        }
+      ],
+      "exact_anchor_records": [
+        {
+          "rational": "0",
+          "exact_token_records": [
+            {
+              "time": "0",
+              "u": "0",
+              "z": "1",
+              "count": "0",
+              "edit": "0"
+            }
+          ],
+          "nearest_record_is_not_exact_evidence": {
+            "time": "0",
+            "u": "0",
+            "count": "0",
+            "z": "1",
+            "history": "0",
+            "edit": "0",
+            "sample": "0"
+          }
+        },
+        {
+          "rational": "1/4",
+          "exact_token_records": [
+            {
+              "time": "0.25",
+              "u": "0.25",
+              "z": "1.3333350497560428",
+              "count": "0",
+              "edit": "1"
+            }
+          ],
+          "nearest_record_is_not_exact_evidence": {
+            "time": "0.25",
+            "u": "0.25",
+            "count": "0",
+            "z": "1.3333350497560428",
+            "history": "0",
+            "edit": "1",
+            "sample": "0"
+          }
+        },
+        {
+          "rational": "1/2",
+          "exact_token_records": [
+            {
+              "time": "0.5",
+              "u": "0.5",
+              "z": "2.0000077725911627",
+              "count": "1",
+              "edit": "1"
+            }
+          ],
+          "nearest_record_is_not_exact_evidence": {
+            "time": "0.5",
+            "u": "0.5",
+            "count": "1",
+            "z": "2.0000077725911627",
+            "history": "0",
+            "edit": "1",
+            "sample": "0"
+          }
+        },
+        {
+          "rational": "3/4",
+          "exact_token_records": [],
+          "nearest_record_is_not_exact_evidence": {
+            "time": "0.74970255014294251",
+            "u": "0.74970255014294251",
+            "count": "1",
+            "z": "1.3338638052261462",
+            "history": "0",
+            "edit": "1",
+            "sample": "0"
+          }
+        },
+        {
+          "rational": "1",
+          "exact_token_records": [
+            {
+              "time": "1",
+              "u": "1",
+              "z": "0.99999945722564476",
+              "count": "1",
+              "edit": "1"
+            }
+          ],
+          "nearest_record_is_not_exact_evidence": {
+            "time": "1",
+            "u": "1",
+            "count": "1",
+            "z": "0.99999945722564476",
+            "history": "0",
+            "edit": "1",
+            "sample": "0"
+          }
+        },
+        {
+          "rational": "2",
+          "exact_token_records": [
+            {
+              "time": "2",
+              "u": "2",
+              "z": "0.49999816849521272",
+              "count": "1",
+              "edit": "1"
+            }
+          ],
+          "nearest_record_is_not_exact_evidence": {
+            "time": "2",
+            "u": "2",
+            "count": "1",
+            "z": "0.49999816849521272",
+            "history": "0",
+            "edit": "1",
+            "sample": "0"
+          }
+        }
+      ],
+      "triage": "Changed timer fires within200ns at0.5, before the original0.75 deadline. Numerical z drift exceeds1uV before the mode-change timer; thus failure is retained as Spectre/reference numerical discrepancy, not a candidate regression or an automatic compatibility waiver."
+    },
+    {
+      "configuration": "E6-fine",
+      "phase_maxima": [
+        {
+          "phase": "before_edit",
+          "rows": 189,
+          "worst_time_token": "0.24999998000000001",
+          "worst_z_token": "1.3333344710114086",
+          "independent_z_rational": "100000000000000000/75000001999999999",
+          "signed_error_V": 1.1732336298562963e-06,
+          "absolute_error_V": 1.1732336298562963e-06
+        },
+        {
+          "phase": "after_edit_before_changed_timer",
+          "rows": 334,
+          "worst_time_token": "0.49999998000000001",
+          "worst_z_token": "2.0000045917513845",
+          "independent_z_rational": "100000000000000000/50000001999999999",
+          "signed_error_V": 4.67175138126e-06,
+          "absolute_error_V": 4.67175138126e-06
+        },
+        {
+          "phase": "at_and_after_changed_timer",
+          "rows": 891,
+          "worst_time_token": "0.5",
+          "worst_z_token": "2.0000045917513845",
+          "independent_z_rational": "2",
+          "signed_error_V": 4.5917513845e-06,
+          "absolute_error_V": 4.5917513845e-06
+        }
+      ],
+      "event_brackets": [
+        {
+          "kind": "timer",
+          "lower": "24999998000000001/100000000000000000",
+          "nominal": "1/4",
+          "signal": "edit",
+          "upper": "1/4",
+          "width_s": 1.999999999e-08
+        },
+        {
+          "kind": "timer",
+          "lower": "49999998000000001/100000000000000000",
+          "nominal": "1/2",
+          "signal": "count",
+          "upper": "1/2",
+          "width_s": 1.999999999e-08
+        }
+      ],
+      "exact_anchor_records": [
+        {
+          "rational": "0",
+          "exact_token_records": [
+            {
+              "time": "0",
+              "u": "0",
+              "z": "1",
+              "count": "0",
+              "edit": "0"
+            }
+          ],
+          "nearest_record_is_not_exact_evidence": {
+            "time": "0",
+            "u": "0",
+            "count": "0",
+            "z": "1",
+            "history": "0",
+            "edit": "0",
+            "sample": "0"
+          }
+        },
+        {
+          "rational": "1/4",
+          "exact_token_records": [
+            {
+              "time": "0.25",
+              "u": "0.25",
+              "z": "1.3333345065670257",
+              "count": "0",
+              "edit": "1"
+            }
+          ],
+          "nearest_record_is_not_exact_evidence": {
+            "time": "0.25",
+            "u": "0.25",
+            "count": "0",
+            "z": "1.3333345065670257",
+            "history": "0",
+            "edit": "1",
+            "sample": "0"
+          }
+        },
+        {
+          "rational": "1/2",
+          "exact_token_records": [
+            {
+              "time": "0.5",
+              "u": "0.5",
+              "z": "2.0000045917513845",
+              "count": "1",
+              "edit": "1"
+            }
+          ],
+          "nearest_record_is_not_exact_evidence": {
+            "time": "0.5",
+            "u": "0.5",
+            "count": "1",
+            "z": "2.0000045917513845",
+            "history": "0",
+            "edit": "1",
+            "sample": "0"
+          }
+        },
+        {
+          "rational": "3/4",
+          "exact_token_records": [],
+          "nearest_record_is_not_exact_evidence": {
+            "time": "0.75000000000000011",
+            "u": "0.75000000000000011",
+            "count": "1",
+            "z": "1.3333342509384176",
+            "history": "0",
+            "edit": "1",
+            "sample": "0"
+          }
+        },
+        {
+          "rational": "1",
+          "exact_token_records": [],
+          "nearest_record_is_not_exact_evidence": {
+            "time": "1.0000000000000002",
+            "u": "1.0000000000000002",
+            "count": "1",
+            "z": "0.99999984948189857",
+            "history": "0",
+            "edit": "1",
+            "sample": "0"
+          }
+        },
+        {
+          "rational": "2",
+          "exact_token_records": [],
+          "nearest_record_is_not_exact_evidence": {
+            "time": "2.0000000000000009",
+            "u": "2",
+            "count": "1",
+            "z": "0.49999971237027346",
+            "history": "0",
+            "edit": "1",
+            "sample": "0"
+          }
+        }
+      ],
+      "triage": "Changed timer fires within200ns at0.5, before the original0.75 deadline. Numerical z drift exceeds1uV before the mode-change timer; thus failure is retained as Spectre/reference numerical discrepancy, not a candidate regression or an automatic compatibility waiver."
+    }
+  ],
+  "availability": {
+    "models_checker_inputs": "repository-contained",
+    "raw_outputs_logs_review_transcripts": "local-only; current/runs/event-closure-20261008"
+  },
+  "candidate_kernel_sha256": "935c40f1d54215e7ce63834d69c3918e4edc6323e93fcf234c98c09eb18f0afc",
+  "source_tree_frontend_identity": {
+    "baseline": {
+      "evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/__main__.py": "f98567eedc0052dddf00fd13f5380e996409f72aed9fbf09702d5bf173fae1d5",
+      "evas/array_elaboration.py": "4faf4543a735ad19c89bbbc760d39f6860089d854b7f24922edaa390cf20df0b",
+      "evas/diagnostics.py": "a94641c77c61b71e7c1eeb9d36baa9c01b85adfe598472632841ed4a90744a5f",
+      "evas/elaboration.py": "1eb85eefcb393dbc58b6f248389a1d51ef792f45077b779dac0d55fc5aa5e074",
+      "evas/errors.py": "f5782a2c5ee28db98b0fe5d1d4a2e06ba3ec9f1b74b8a0da5bede3ca4154b958",
+      "evas/frontend.py": "2552416e633542f0770c1f7609ac4778aa8b841db5c0e36bd68a9904f682927c",
+      "evas/hierarchy.py": "c277bc21cbe987f7cb427a2955b6b20588d5c42ae09bbc62853dab7bdba4138f",
+      "evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+      "evas/instance_compiler.py": "2c935b8054d5ebe51e1a5488340920f95d8adba53bd21314060842c1ce723c05",
+      "evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+      "evas/ir.py": "3445e952b7bd96571303c2faf4474f5945855e26a3adfb80370bbe1935ce4ca9",
+      "evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+      "evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+      "evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+      "evas/lowering.py": "3df0c3f873285e45aa9de85863ca7d42b4c1cffc205a24164700b953b1874c71",
+      "evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+      "evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+      "evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+      "evas/node_elaboration.py": "f100e5e857b53a5ccaf43b10f61c1f1d719b0f5205490364dbf30a103bf480e6",
+      "evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+      "evas/preprocessor.py": "68c7c9d6df5a1f14ea33b8bbaebf79863b64110381d8bad910b98f281e2e2ffe",
+      "evas/protocol.py": "82302d948c4c0eff0b88318eb804344a1f60d3dd4798d2c2c561149b6a188607",
+      "evas/query.py": "6222b10aa9d889e93fa8b65059b5fb31799f7269770ebc72167c7c67e4a0b92b",
+      "evas/results.py": "d085a8a2b57aa2ae48b6fc69e47825b02326ca8e05ff56df61bc791b7771c0d1",
+      "evas/runtime.py": "b648c721efcb1d715cb871c644ff60b600229d9489c988edb7c4e291bbba1026",
+      "evas/scs.py": "d95097aa5e62d2fe9d6a3c6a6035ca981f64b2aebe7fce2ca58bf12b5a95b281",
+      "evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
+      "evas/syntax.py": "56eafc9ad5c4f8773441a8e7ccf751d7ce5380b68150a2e2ab6d55524c0f6058"
+    },
+    "candidate": {
+      "evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/__main__.py": "f98567eedc0052dddf00fd13f5380e996409f72aed9fbf09702d5bf173fae1d5",
+      "evas/array_elaboration.py": "4faf4543a735ad19c89bbbc760d39f6860089d854b7f24922edaa390cf20df0b",
+      "evas/diagnostics.py": "a94641c77c61b71e7c1eeb9d36baa9c01b85adfe598472632841ed4a90744a5f",
+      "evas/elaboration.py": "1eb85eefcb393dbc58b6f248389a1d51ef792f45077b779dac0d55fc5aa5e074",
+      "evas/errors.py": "f5782a2c5ee28db98b0fe5d1d4a2e06ba3ec9f1b74b8a0da5bede3ca4154b958",
+      "evas/frontend.py": "2552416e633542f0770c1f7609ac4778aa8b841db5c0e36bd68a9904f682927c",
+      "evas/hierarchy.py": "c277bc21cbe987f7cb427a2955b6b20588d5c42ae09bbc62853dab7bdba4138f",
+      "evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+      "evas/instance_compiler.py": "2c935b8054d5ebe51e1a5488340920f95d8adba53bd21314060842c1ce723c05",
+      "evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+      "evas/ir.py": "3445e952b7bd96571303c2faf4474f5945855e26a3adfb80370bbe1935ce4ca9",
+      "evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+      "evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+      "evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+      "evas/lowering.py": "3df0c3f873285e45aa9de85863ca7d42b4c1cffc205a24164700b953b1874c71",
+      "evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+      "evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+      "evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+      "evas/node_elaboration.py": "f100e5e857b53a5ccaf43b10f61c1f1d719b0f5205490364dbf30a103bf480e6",
+      "evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+      "evas/preprocessor.py": "68c7c9d6df5a1f14ea33b8bbaebf79863b64110381d8bad910b98f281e2e2ffe",
+      "evas/protocol.py": "82302d948c4c0eff0b88318eb804344a1f60d3dd4798d2c2c561149b6a188607",
+      "evas/query.py": "6222b10aa9d889e93fa8b65059b5fb31799f7269770ebc72167c7c67e4a0b92b",
+      "evas/results.py": "d085a8a2b57aa2ae48b6fc69e47825b02326ca8e05ff56df61bc791b7771c0d1",
+      "evas/runtime.py": "b648c721efcb1d715cb871c644ff60b600229d9489c988edb7c4e291bbba1026",
+      "evas/scs.py": "d95097aa5e62d2fe9d6a3c6a6035ca981f64b2aebe7fce2ca58bf12b5a95b281",
+      "evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
+      "evas/syntax.py": "56eafc9ad5c4f8773441a8e7ccf751d7ce5380b68150a2e2ab6d55524c0f6058"
+    }
+  },
+  "final_test_document_followup": {
+    "revision": "cd4f0ae936600fdd958bc1db3c2c9262561e30a5",
+    "production_equivalence": {
+      "base": "5e38bdf882f41ad17f2a704268907ae0e36600d9",
+      "acceptance_production_prefix_sha256": "4381e559dc95694528e3ea8908629a8f8bd7793898b56918505d5a5b8f9214cf",
+      "acceptance_production_prefix_byte_identical": true,
+      "transient_and_history_calendar_byte_identical": true,
+      "timer_exact_sum": "22517998136852481/36028797018963968",
+      "timer_delta_above_0_625": "1/36028797018963968",
+      "exact_sum_representable_as_binary64": false
+    },
+    "focused_tests": "3 final gates +10 Controller lifecycle +23 public tests; clippy/fmt/traceability/workspace passed",
+    "historical_full_tests": "5e38:168 Rust +1ignored,201public; independent82public/212calls eachrevisionidentical"
+  },
+  "analysis": {
+    "analysis_script_sha256": "30702b99b717a071236ee64ee75a97f83ea9817fe1e93dbd231694d862d18750",
+    "checker_sha256": "4a80e6cc91c553ae40d5d635c81ee0d11fd4436bc6fd96d88d1b1a51a13e28ff",
+    "comparison": "Both EVAS revisions use the same actual Spectre reference. Independent formula checks and finite pairs are separate. Identical I does not prove compatibility acceptance.",
+    "plan_sha256": "c0ef26732965cbd765c53ae5d993b0a9c5561029820e98b46280327016297057",
+    "raw_availability": "local-only; remote original retained",
+    "raw_manifest_sha256": "990b699098d3fdf64a0b129ab9ab1622ab7042d8b5587542bf18095bbb67552e",
+    "settings_reader_change": "SI additions ms,pV,fA only, local calibration recorded",
+    "settings_reader_parent_sha256": "ed2474442c6ffeddb7d126d86831e56b38509bf4a16b757836f0f612e311c8b8",
+    "settings_reader_sha256": "79cf4a9cc44e30ce6551781e8e44e00c0963c179032c660928ed38556c3baf14",
+    "derived_public_failure_reasons": "Adds explanatory strings only; does not rerun or alter frozen checker decisions."
+  },
+  "settings_reader_calibration": {
+    "checks": [
+      {
+        "token": "20 ms",
+        "dimension": "time",
+        "pass_": true,
+        "value": 0.02
+      },
+      {
+        "token": "2 ms",
+        "dimension": "time",
+        "pass_": true,
+        "value": 0.002
+      },
+      {
+        "token": "100 pV",
+        "dimension": "voltage",
+        "pass_": true,
+        "value": 1e-10
+      },
+      {
+        "token": "10 fA",
+        "dimension": "current",
+        "pass_": true,
+        "value": 1.0000000000000002e-14
+      },
+      {
+        "token": "2 s",
+        "dimension": "time",
+        "pass_": true,
+        "value": 2.0
+      },
+      {
+        "token": "10e-09",
+        "dimension": "dimensionless",
+        "pass_": true,
+        "value": 1e-08
+      },
+      {
+        "token": "20 ms",
+        "dimension": "voltage",
+        "pass_": true,
+        "expected": "rejected"
+      },
+      {
+        "token": "100 pV",
+        "dimension": "time",
+        "pass_": true,
+        "expected": "rejected"
+      },
+      {
+        "token": "10 fA",
+        "dimension": "voltage",
+        "pass_": true,
+        "expected": "rejected"
+      },
+      {
+        "token": "0 ms",
+        "dimension": "time",
+        "pass_": true,
+        "expected": "rejected"
+      },
+      {
+        "token": "nan",
+        "dimension": "dimensionless",
+        "pass_": true,
+        "expected": "rejected"
+      },
+      {
+        "token": "-2 ms",
+        "dimension": "time",
+        "pass_": true,
+        "expected": "rejected"
+      }
+    ],
+    "passed": 12,
+    "reader_sha256": "79cf4a9cc44e30ce6551781e8e44e00c0963c179032c660928ed38556c3baf14"
+  },
+  "spectre_tool": {
+    "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "version": "sub-version  21.1.0.509.isr12"
+  },
+  "failure_field_note": "Frozen checker failures lists diagnostic/coverage messages, not every numerical threshold violation. numeric_failure_reasons is derived from max_errors_V under the unchanged 1e-6 V limit; authoritative status and original failures are retained.",
+  "separate_reference_convergence_diagnostics": {
+    "original_denominator_unchanged": true,
+    "source_and_external_contract_unchanged": true,
+    "collection_archive_sha256": "b867fee94cf3055ab9f7839e248c634e85ac6fa31db682c11a0e4f83a0da658e",
+    "settings": {
+      "reltol": 1e-10,
+      "vabstol": 1e-12,
+      "iabstol": 1e-16,
+      "method": "traponly"
+    },
+    "interpretation": "Finite error decreases under stricter numerical controls. This supports a reference numerical-convergence explanation, not proof of an internal Spectre algorithm or complete qualification.",
+    "records": [
+      {
+        "configuration": "E6-strict-002",
+        "rows": 3737,
+        "numeric_status": "P",
+        "event_status": "P",
+        "qualification_status": "I",
+        "max_errors_V": {
+          "u": 0.0,
+          "z": 3.342914256360336e-07,
+          "history": 0.0,
+          "sample": 0.0
+        },
+        "maxstep_s": 0.002,
+        "checker_sha256": "4a80e6cc91c553ae40d5d635c81ee0d11fd4436bc6fd96d88d1b1a51a13e28ff"
+      },
+      {
+        "configuration": "E6-strict-0001",
+        "rows": 20250,
+        "numeric_status": "I",
+        "event_status": "I",
+        "qualification_status": "I",
+        "max_errors_V": {
+          "u": 0.0,
+          "z": 1.9991239444134473e-08,
+          "history": 0.0,
+          "sample": 0.0
+        },
+        "maxstep_s": 9.999999999999999e-05,
+        "checker_sha256": "4a80e6cc91c553ae40d5d635c81ee0d11fd4436bc6fd96d88d1b1a51a13e28ff"
+      }
+    ]
+  },
+  "independent_review": {
+    "astra": {
+      "method": "fresh-context gpt-6-astra review with independent local execution",
+      "scope": "production refactor, final gates, mathematical evidence and final test/document followup",
+      "production_report_sha256": "17e1a91bfa85b30b745a7a6c366d436083076ef942f43a78408f282d387d1536",
+      "evidence_report_sha256": "9b9d3d5eea1c850f129b22ca3b49d65831043f3465dd732450f7ce4ff4e99b80",
+      "final_report_sha256": "2344a912298416cbac1b7898397ed7f8af1b544a0c051257ca31faf4d7bae827",
+      "open_blocking_findings": []
+    },
+    "glm": {
+      "method": "actual Claude CLI supplied-text static review",
+      "model": "glm-5.3",
+      "reviews": [
+        {
+          "input_sha256": "4e0e211d6fcf63b093e561a118bea165b5ffae546622d9cdf1fdcd97f7a00a37",
+          "response_sha256": "ab25e8dacae8d4ff6f2a04a7c150469e5de9e9bb1561b96ea1f47e8237a4e2b7",
+          "requested_model": "glm-5.3",
+          "reported_models": [
+            "glm-5.3"
+          ],
+          "review_valid": true,
+          "returncode": 0,
+          "terminal_reason": "completed",
+          "elapsed_seconds": 230.717
+        },
+        {
+          "input_sha256": "289eac069eeab3492585158a61ea79aa9f020b81fca0421f3a3f8fed7cc552e2",
+          "response_sha256": "e6ebe0fc45aa95b8cdb3d018905b9d02393eb367a6b9d18e5d39bbfd7a4b9c73",
+          "requested_model": "glm-5.3",
+          "reported_models": [
+            "glm-5.3"
+          ],
+          "review_valid": true,
+          "returncode": 0,
+          "terminal_reason": "completed",
+          "elapsed_seconds": 192.177
+        }
+      ],
+      "disposition": {
+        "initial_F1": "Actual parent #102 identified; parent change requires affected revalidation.",
+        "initial_F2": "Added final History-plan certificate rollback, negative deletion control and corrected retry.",
+        "initial_F3": "Disclosed 148 baseline checks frozen before edits and 53 supplemental checks after edits.",
+        "initial_F4": "Retained nonpoint prerequisite; reduced diagnostic coupling.",
+        "final_F1": "Frozen checker unchanged; public receipt adds numeric_failure_reasons and README explains original failures field.",
+        "final_F2": "Corrected max-error channel description to include stored samples.",
+        "final_F3": "Nonblocking future fixture-maintenance risk retained: positional truncation is followed by explicit history-root and .625 calendar/state assertions; no current false pass demonstrated. Broader fixture redesign is not part of the refactor."
+      }
+    },
+    "availability": "Full review transcripts and independent logs are local-only; compact hashes identify reviewed artifacts."
+  }
+}

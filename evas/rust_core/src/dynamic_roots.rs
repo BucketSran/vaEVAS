@@ -169,6 +169,37 @@ pub(crate) fn depart_consumed(
     ))
 }
 
+// A signed monotone bracket already proves one root. Try deterministic
+// binary grid points inside it before discarding an available exact-zero
+// certificate. Queries never choose these points; containment of zero alone
+// is insufficient. Clearing significand bits covers at most 53 candidates.
+fn exact_point_in_bracket(
+    bounds: I,
+    range: &mut impl FnMut(I) -> Result<I, Error>,
+    derivative: &mut impl FnMut(I) -> Result<I, Error>,
+    ttol: f64,
+    etol: f64,
+) -> Result<Option<CertifiedRoot>, Error> {
+    if bounds.lo < 0. || !bounds.finite() {
+        return Ok(None);
+    }
+    for bits in (0..=52).rev() {
+        let mask = (1_u64 << bits) - 1;
+        let time = f64::from_bits(bounds.hi.to_bits() & !mask);
+        if time < bounds.lo || time > bounds.hi {
+            continue;
+        }
+        if endpoint_value(time, range)?.zero() {
+            let point = I::point(time);
+            let slope = derivative_bounds(point, derivative)?;
+            if matches!(slope.sign(), Some(-1 | 1)) {
+                return Ok(Some(certified_root(point, slope, ttol, etol)?));
+            }
+        }
+    }
+    Ok(None)
+}
+
 #[allow(clippy::too_many_arguments)]
 fn bisect_monotone(
     mut lo: f64,
@@ -203,6 +234,9 @@ fn bisect_monotone(
         // acceptance limits; existing history uncertainty may prevent reserve.
         let accepted = accepted_width(bounds, slope, ttol, etol);
         if accepted && accepted_width(bounds, slope, ttol / reserve, etol / reserve) {
+            if let Some(point) = exact_point_in_bracket(bounds, range, derivative, ttol, etol)? {
+                return Ok(Some(point));
+            }
             return Ok(Some(CertifiedRoot {
                 bounds,
                 derivative: slope,
@@ -479,6 +513,32 @@ fn isolate_with_reserve(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn exact_point_refinement_requires_zero_not_zero_containment() {
+        let bounds = I {
+            lo: 0.499999999,
+            hi: 0.500000001,
+        };
+        let mut exact = |time: I| Ok(time - I::point(0.5));
+        let mut slope = |_| Ok(I::ONE);
+        let root = exact_point_in_bracket(bounds, &mut exact, &mut slope, 1e-8, 1e-8)
+            .unwrap()
+            .unwrap();
+        assert_eq!(root.bounds, I::point(0.5));
+        let mut uncertain = |time: I| {
+            Ok(time - I::point(0.5)
+                + I {
+                    lo: -1e-12,
+                    hi: 1e-12,
+                })
+        };
+        assert!(
+            exact_point_in_bracket(bounds, &mut uncertain, &mut slope, 1e-8, 1e-8)
+                .unwrap()
+                .is_none()
+        );
+    }
 
     fn iv(lo: f64, hi: f64) -> I {
         I { lo, hi }

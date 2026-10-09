@@ -18,14 +18,14 @@ from test_affine import KERNEL, instance, model
 
 class EventOrContracts(unittest.TestCase):
     def test_distinct_roots_execute_body_twice(self):
-        trigger = 'cross(V(u,r)-.25,1,.001,.001) or cross(V(u,r)-.75,1,.001,.001)'
+        trigger = 'cross(V(u,r)-0.25,1,0.001,0.001) or cross(V(u,r)-0.75,1,0.001,0.001)'
         result = execute(source('q=q+1;', kind='integer', trigger=trigger), times=[0,.25,.5,.75,1])
         self.assertEqual(states(result), [0,1,1,2,2])
         self.assertEqual([e['time'] for e in result['transient']['events']], [.25,.75])
 
     def test_same_root_executes_body_once_and_retains_both_sources(self):
-        a = 'cross(V(u,r)-.5,1,.001,.001)'
-        b = 'cross(2*V(u,r)-1,1,.001,.001)'
+        a = 'cross(V(u,r)-0.5,1,0.001,0.001)'
+        b = 'cross(2*V(u,r)-1,1,0.001,0.001)'
         for trigger in [a+' or '+b, b+' or '+a, a+' or '+a]:
             with self.subTest(trigger=trigger):
                 result = execute(source('q=q+1;', kind='integer', trigger=trigger))
@@ -36,15 +36,15 @@ class EventOrContracts(unittest.TestCase):
 
     def test_nearby_distinct_roots_are_not_tolerance_clustered(self):
         # Separation 2^-10 is smaller than ttol=.01, but the exact roots differ.
-        a = 'cross(V(u,r)-.5,1,.01,.01)'
-        b = 'cross(V(u,r)-.5009765625,1,.01,.01)'
+        a = 'cross(V(u,r)-0.5,1,0.01,0.01)'
+        b = 'cross(V(u,r)-0.5009765625,1,0.01,0.01)'
         for trigger in [a+' or '+b, b+' or '+a]:
             result = execute(source('q=q+1;', kind='integer', trigger=trigger), times=[0,.5,.5009765625,1])
             self.assertEqual(states(result), [0,1,2,2])
             self.assertEqual([e['time'] for e in result['transient']['events']], [.5,.5009765625])
 
     def test_output_grid_does_not_create_triggers(self):
-        trigger = 'cross(V(u,r)-.25,1,.001,.001) or cross(V(u,r)-.75,1,.001,.001)'
+        trigger = 'cross(V(u,r)-0.25,1,0.001,0.001) or cross(V(u,r)-0.75,1,0.001,0.001)'
         text = source('q=q+1;', kind='integer', trigger=trigger)
         sparse = execute(text, times=[0,1])
         dense = execute(text, times=[i/16 for i in range(17)])
@@ -52,8 +52,8 @@ class EventOrContracts(unittest.TestCase):
         self.assertEqual(states(sparse), [0,2])
 
     def test_each_leaf_keeps_direction_and_its_own_tolerance(self):
-        a = 'cross(V(u,r)-.25,-1,.001,.001)'
-        b = 'cross(V(u,r)-.75,1,.001,.001)'
+        a = 'cross(V(u,r)-0.25,-1,0.001,0.001)'
+        b = 'cross(V(u,r)-0.75,1,0.001,0.001)'
         r = execute(source('q=q+1;', kind='integer', trigger=a+' or '+b))
         self.assertEqual(states(r), [0,0,1])
         self.assertEqual(r['transient']['events'][0]['fired_triggers'][0]['trigger'], 1)
@@ -65,10 +65,10 @@ class EventOrContracts(unittest.TestCase):
         for simultaneous in [False, True]:
             times = [.5, .5, .5] if simultaneous else [.25, .5, .75]
             blocks = [
-                f"@(cross(V(u,r)-{times[0]},1,.001,.001)) a=a+1;",
-                f"@(cross(V(u,r)-{times[1]},1,.001,.001) or "
-                f"cross(2*V(u,r)-{2*times[1]},1,.001,.001)) b=b+1;",
-                f"@(timer({times[2]},0,.001)) c=c+1;",
+                f"@(cross(V(u,r)-{times[0]},1,0.001,0.001)) a=a+1;",
+                f"@(cross(V(u,r)-{times[1]},1,0.001,0.001) or "
+                f"cross(2*V(u,r)-{2*times[1]},1,0.001,0.001)) b=b+1;",
+                f"@(timer({times[2]},0,0.001)) c=c+1;",
             ]
             for order in itertools.permutations(blocks):
                 with self.subTest(simultaneous=simultaneous, order=order):
@@ -86,12 +86,12 @@ class EventOrContracts(unittest.TestCase):
                     self.assertEqual([leaf['trigger'] for leaf in group['fired_triggers']], [0,1])
 
     def test_simultaneous_clock_reset_obeys_source_comparison_at_exact_root(self):
-        clock = 'cross(V(u,r)-.5,1,.001,.001)'
-        reset = 'cross(V(v,r)-.5,1,.001,.001)'
+        clock = 'cross(V(u,r)-0.5,1,0.001,0.001)'
+        reset = 'cross(V(v,r)-0.5,1,0.001,0.001)'
         for relation, expected in [('>=',1),('>',2)]:
             for trigger in [clock+' or '+reset,reset+' or '+clock]:
                 text = model('@(initial_step) q=0; @('+trigger+') '
-                             f'if(V(v,r){relation}.5) q=1; else q=2; V(y,r)<+q;',
+                             f'if(V(v,r){relation}0.5) q=1; else q=2; V(y,r)<+q;',
                              'integer q;',ports='u,v,y,r',directions='input u,v; output y; inout r;')
                 program = compile_sources({'reset.va':text},[instance(connections=dict(u='u',v='v',y='y',r='0'))])
                 result = transient(program,{'u':[[0,0],[1,1]],'v':[[0,0],[1,1]]},
@@ -101,8 +101,8 @@ class EventOrContracts(unittest.TestCase):
                 self.assertEqual(len(result['transient']['events'][0]['fired_triggers']),2)
 
     def test_timer_and_cross_or_preserve_typed_proofs_and_execute_once(self):
-        cross = 'cross(V(u,r)-.5,1,.001,.001)'
-        timer = 'timer(.5,0,.001)'
+        cross = 'cross(V(u,r)-0.5,1,0.001,0.001)'
+        timer = 'timer(0.5,0,0.001)'
         for trigger in (timer+' or '+cross, cross+' or '+timer, timer+' or '+timer):
             with self.subTest(trigger=trigger):
                 result = execute(source('q=q+1;', kind='integer', trigger=trigger))
@@ -118,18 +118,18 @@ class EventOrContracts(unittest.TestCase):
                         self.assertEqual(leaf['guard_value'], 0)
 
     def test_periodic_timer_union_keeps_distinct_roots_and_disabled_leaves(self):
-        trigger = 'timer(.25,.25,.001) or cross(V(u,r)-.5,1,.001,.001)'
+        trigger = 'timer(0.25,0.25,0.001) or cross(V(u,r)-0.5,1,0.001,0.001)'
         result = execute(source('q=q+1;', kind='integer', trigger=trigger), times=[0,.25,.5,.75,1])
         self.assertEqual(states(result), [0,1,2,3,4])
         self.assertEqual([e['time'] for e in result['transient']['events']], [.25,.5,.75,1])
         self.assertEqual(len(result['transient']['events'][1]['fired_triggers']), 2)
-        trigger = 'timer(.5,0,.001,0) or cross(V(u,r)-.75,1,.001,.001)'
+        trigger = 'timer(0.5,0,0.001,0) or cross(V(u,r)-0.75,1,0.001,0.001)'
         result = execute(source('q=q+1;',kind='integer',trigger=trigger))
         self.assertEqual([e['time'] for e in result['transient']['events']], [.75])
         self.assertEqual(result['transient']['events'][0]['fired_triggers'][0]['trigger'], 1)
 
     def test_raw_ir_rejects_empty_single_nested_or(self):
-        trigger = 'cross(V(u,r)-.25,1,.001,.001) or cross(V(u,r)-.75,1,.001,.001)'
+        trigger = 'cross(V(u,r)-0.25,1,0.001,0.001) or cross(V(u,r)-0.75,1,0.001,0.001)'
         program = compile_sources({'or.va': source('q=q+1;', kind='integer', trigger=trigger)}, [instance()]).to_dict()
         original = program['events'][0]['trigger']
         variants = [[], original['triggers'][:1], [original, original['triggers'][0]]]
@@ -153,7 +153,7 @@ class EventOrContracts(unittest.TestCase):
         for j in range(4):
             points += [[(j+.65)*unit,0],[(j+.85)*unit,1],[(j+.9)*unit,1],[(j+1)*unit,0]]
             roots.append((Q((j+.65)*unit)+Q((j+.85)*unit))/2)
-        text = model('@(initial_step) q=0; @(cross(V(u,r)-.5,1,1e-9,2e-4)) q=q+1; V(y,r)<+q;',
+        text = model('@(initial_step) q=0; @(cross(V(u,r)-0.5,1,1e-9,2e-4)) q=q+1; V(y,r)<+q;',
                      'integer q;',ports='u,w,y,r',directions='input u,w; output y; inout r;')
         p = compile_sources({'unrelated.va':text},[instance(connections=dict(u='u',w='w',y='y',r='0'))])
         observed=[]

@@ -1,0 +1,837 @@
+{
+  "condition": "CO-VCO-01",
+  "capabilities": [
+    "DYNAMICS",
+    "COMPOSE"
+  ],
+  "scope": "input-only continuous clamp with closed-form idtmod/sin; development finite-observation alignment only",
+  "paper_status": "I",
+  "claim_limits": [
+    "40836 same-time pairs; not a full continuous-trajectory certificate",
+    "One four-row boundary batch stops on first waveform_accuracy error; all four unpaired, subsequent individual results unknown",
+    "Spectre strict stop shortfall retained",
+    "Formal export/input uncertainty qualification incomplete",
+    "EVAS comparison grid has 40ps wrap-side brackets after omitted centers; not formal 20ps local grid"
+  ],
+  "fixed_scientific_contract": {
+    "core-v1.json": {
+      "published_url": "https://github.com/BucketSran/vaEVAS/blob/cf14a9e654668b027d02413d774f11627cfe7ba0/evas/validation/paper/core-v1.json",
+      "sha256": "e1ae5311da9e05991e9802da1a24e97a70d179972608a1b9d21eb00013f61a53"
+    },
+    "oracle.py": {
+      "published_url": "https://github.com/BucketSran/vaEVAS/blob/cf14a9e654668b027d02413d774f11627cfe7ba0/evas/validation/paper/oracle.py",
+      "sha256": "96ece5a943113a6e6e79b441145a2f2238da43938914605d884b5fd0414e72dc"
+    }
+  },
+  "source": {
+    "sha256": "1bc287bb7c2bd6db604c56233239b668582093388790fe4be92f8c7fd06f327e",
+    "repository_fixture": "evas/tests/fixtures/input_clamp_vco.va",
+    "parameters": {},
+    "stimulus": {
+      "ctl": {
+        "kind": "pwl",
+        "points_T_V": [
+          [
+            0,
+            -1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            8,
+            -1
+          ]
+        ]
+      }
+    },
+    "initial_phase_cycles": 0.125,
+    "stop_s": 8e-06
+  },
+  "evas": {
+    "reviewed_base": "4368a8907e211292f6d7f70fd59655a60917dd97",
+    "production_source_dirty": true,
+    "committed": false,
+    "kernel_sha256": "eb470e923bb0f6d05b5638eab542aa0c4e970ad7cfb64c51d00aa34f353b4a34",
+    "kernel_version": {
+      "build_revision": null,
+      "identity_version": 1,
+      "ir_schema_version": 17,
+      "name": "evas-kernel",
+      "platform": {
+        "arch": "aarch64",
+        "os": "macos"
+      },
+      "request_protocol_version": null,
+      "version": "0.13.0"
+    },
+    "source_closure_sha256_by_path": {
+      "evas/rust_core/Cargo.lock": "ca69517478900f0ebdec3118312b7b58cd6edb68f78973649136bd78b8a514ea",
+      "evas/rust_core/Cargo.toml": "94b6b3a3280e51859f39a7b9ddd38595920dfe1b1be858471b01775b08dd5024",
+      "evas/rust_core/ir/Cargo.toml": "ee626ead9fe9620b9b48c956bef41d283578683d25bc879b20f25730adf325f0",
+      "evas/rust_core/ir/src/lib.rs": "eb15b564a7181a454b81109f0023bc91245949a301fb689fe5fd4395d4b97a33",
+      "evas/rust_core/src/absdelay.rs": "e0f6144590856b3a95d03a59af58e9032309fa1e316a41c063a40ec9f73109c7",
+      "evas/rust_core/src/affine_bounds.rs": "3695b89a725216f3a3a555dd353cf5c8c81f82a4696aca0a0cb7436622174cb0",
+      "evas/rust_core/src/analog.rs": "3838af457af4b8b44c29401796acee2574733aa7ef3811f40b38883621cf0e68",
+      "evas/rust_core/src/assembly.rs": "57b93621d4940a7974a0132329c87e43a1e3ff348fe1e16d2d784e7708b9ef62",
+      "evas/rust_core/src/batch.rs": "a41166d5cd9a6fab300d48197bc4093145885d19044b398e48095fdb35473688",
+      "evas/rust_core/src/continuous.rs": "5903d519795fa3dc0705d99518847aa25490ada448295efcc66222db8955b865",
+      "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+      "evas/rust_core/src/continuous_history.rs": "d62a3daa15da4e0ea396e90b7b3f1d7e86d0eba85f3b4f53aa23659c1273fe55",
+      "evas/rust_core/src/continuous_initialization.rs": "5145a36a517b9ba3ace0fb6241ebbd615fef6004b50aeb5dc99d76ff295874a8",
+      "evas/rust_core/src/continuous_runtime.rs": "331ea3f4ff5027ff14155287537b0231a7e6a818e6fd6885dfc470151bdf9ccd",
+      "evas/rust_core/src/diagnostics.rs": "0a5deae544550e34379582625632cf5c45f21c7f8d1f60178e9cf26ae2a4d65f",
+      "evas/rust_core/src/dynamic_roots.rs": "1e9370915346a19f61b08368a36fd4b8aa55ea20099ebf8f4f497b731277c3ac",
+      "evas/rust_core/src/event_accuracy.rs": "d2b621cb23080ee219b5272fc489010dfc6a4ba15930fd8e6d94f0428e253dd6",
+      "evas/rust_core/src/event_conditions.rs": "8b0c00b449cf1b27326972a95b97a5f5c911b4f56cd6d30dec7f8905312ab30f",
+      "evas/rust_core/src/events.rs": "7c22143158ff27b2cf186f70fcdb256252f86f10e28086b9e9ca9fe98f6c755e",
+      "evas/rust_core/src/expression.rs": "0b25b767f67598227eb3b5957ce208b1262fc87d096f9775f10bda1a6c26c90f",
+      "evas/rust_core/src/guard_trajectory.rs": "2df472c82dba22c9168950c8c62fbbe83b94622bb901fbc64766acb6d46bcfc2",
+      "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+      "evas/rust_core/src/idtmod.rs": "6be25e77695a85ed80e2a0faa2f780215a039258ddd8c9efd9a600bac14c5bfb",
+      "evas/rust_core/src/implicit_dynamics.rs": "5a1b5dfb3f182b071c58f341281b7ac35204abecf5691838509cbb78ac0172ed",
+      "evas/rust_core/src/input_clamp.rs": "78e3347c49f0fbd6083ae260d44fa3e54d7be329f3690bacbb3fada93d487671",
+      "evas/rust_core/src/interval.rs": "89a83ce96dbf6cdc217a046c9885ca0cf580c6e6f932c36f0195120d49e53f56",
+      "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
+      "evas/rust_core/src/ir.rs": "cc687fdd3d78e908644537aa8194d3a3ccb3dcb5b88c11a78d7b3e640ad97ea0",
+      "evas/rust_core/src/laplace.rs": "4efcad4da1934849c90985c908aaf750f5bd823392deae3ad555515f8bf71a23",
+      "evas/rust_core/src/lib.rs": "d6279d3c6e6092c77d408fdf8708370e4584b2008985d4d676cb0bb196ee7e72",
+      "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+      "evas/rust_core/src/linear/dense.rs": "00a1d9e1a9c5f933f765dd586ab9a8982073d270fed73ed7e602af858e732cad",
+      "evas/rust_core/src/linear/properties.rs": "d1a8b5ec069fef4f621b99290b532f7563cb8f55a1ba2178a77877f60192ab7f",
+      "evas/rust_core/src/linear/refinement.rs": "8476ad2ea3f3698e3c4552f8ff785c00ff878caab584b157dbb80b9c282f32a8",
+      "evas/rust_core/src/linear/sparse.rs": "3914adce2368b027027c06240f160864af0f53de934c0b3285515114fe7aa869",
+      "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+      "evas/rust_core/src/linear.rs": "e0280cfcaaebd2449ab5e4474daf5cd19e6a9fbda5db53e14e5229fc81a4eb36",
+      "evas/rust_core/src/main.rs": "70626c73fa421340afcc53c025a220720b208657273ba3f5e20bc1e4c6e01c3c",
+      "evas/rust_core/src/nonlinear/continuation.rs": "6d0aabe1bb6563a32d4e920fabdefde881777a54b8dc2b4658de432347f6448a",
+      "evas/rust_core/src/nonlinear.rs": "6d7b269023f4b65c4542c5a77a7e5386c061c1c4cd8eb9623d8e1aeef2ec30af",
+      "evas/rust_core/src/nonlinear_dynamics.rs": "dfa6753cd77197cbf0225b24169f652eda1bfb514b1dd4527ee3a80b7137fc8a",
+      "evas/rust_core/src/operators.rs": "7a474615d4fc4d7760016178fafb303a0a5a3595f784b4fa5c48b468b1590fc0",
+      "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+      "evas/rust_core/src/pwl.rs": "296cd4ed2367d54684d889c4e9ac6867925925b2cbc6da29fac6f1a9fe837015",
+      "evas/rust_core/src/reset_dependencies.rs": "d2adaba2e28d70511e0977c223ea7922b627c832e633b7f94360c951a6f0e3fa",
+      "evas/rust_core/src/schedule.rs": "f04c5e10b007b01bb016582a2175ab6ad48e2c6b8588e2023435c2b64f3d6281",
+      "evas/rust_core/src/settlement.rs": "48584be254805a3c0e990281ca00367efc988fb59351c855930960bd82793687",
+      "evas/rust_core/src/settlement_bounds.rs": "580dcd5fe6e9777bed0fcb04a8fd4bef98f5974905ec1c6bf77c26ca2f56d274",
+      "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+      "evas/rust_core/src/solver.rs": "fbbef1378759e01433d2e3bde7106f61f001db505ede5128198a6dcb3e808446",
+      "evas/rust_core/src/solver_cache_tests.rs": "727acd4fc9084bb6e546a8aa70e2f1e5bd476d27265f5198c5cdd08b0a7fd3fa",
+      "evas/rust_core/src/state_space.rs": "c7e8ff82302cb87c6ba150e5def9d1cf9eba15e23657e2f2686eb067ce4ef74c",
+      "evas/rust_core/src/transient.rs": "f378652388dc0fc38edec05d9d226b39198ec7a28e0e575e6c6dd53247c94373",
+      "evas/rust_core/src/transient_condition_tests.rs": "51b89c0648fc1d92282c6d6c46dbeced83ad472ddbf2b8ad64e953d3c7befa25",
+      "evas/rust_core/src/transient_history_calendar.rs": "c54256bb4d0febf2d41f9a6422d69bf3968258337d8dbb5f3d3e18e82cf786a5",
+      "evas/rust_core/src/transient_idt_tests.rs": "ba2c353e867aa4b6fbd8e27f68ad1407536e525712ddab96ebf998434e2755ad",
+      "evas/rust_core/src/transient_lifecycle_tests.rs": "5184d9a6f7fb5c5fa9345c0fa59388d62d9d79eb6f88f82351a5025f18e75bb6",
+      "evas/rust_core/src/transient_window_tests.rs": "987d1bac508f0e9c780e1b8ac109bec1b077c85a7722a4d084be64e31565103e",
+      "evas/rust_core/src/transition.rs": "1d1c3e709e983a53d0616d0fda1ff2183d2a2dc33b0b65e0aff122162ba72a3c",
+      "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/src/evas/__main__.py": "f98567eedc0052dddf00fd13f5380e996409f72aed9fbf09702d5bf173fae1d5",
+      "evas/src/evas/array_elaboration.py": "4faf4543a735ad19c89bbbc760d39f6860089d854b7f24922edaa390cf20df0b",
+      "evas/src/evas/diagnostics.py": "a94641c77c61b71e7c1eeb9d36baa9c01b85adfe598472632841ed4a90744a5f",
+      "evas/src/evas/elaboration.py": "1eb85eefcb393dbc58b6f248389a1d51ef792f45077b779dac0d55fc5aa5e074",
+      "evas/src/evas/errors.py": "f5782a2c5ee28db98b0fe5d1d4a2e06ba3ec9f1b74b8a0da5bede3ca4154b958",
+      "evas/src/evas/frontend.py": "2552416e633542f0770c1f7609ac4778aa8b841db5c0e36bd68a9904f682927c",
+      "evas/src/evas/hierarchy.py": "c277bc21cbe987f7cb427a2955b6b20588d5c42ae09bbc62853dab7bdba4138f",
+      "evas/src/evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+      "evas/src/evas/instance_compiler.py": "2c935b8054d5ebe51e1a5488340920f95d8adba53bd21314060842c1ce723c05",
+      "evas/src/evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+      "evas/src/evas/ir.py": "3445e952b7bd96571303c2faf4474f5945855e26a3adfb80370bbe1935ce4ca9",
+      "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+      "evas/src/evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+      "evas/src/evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+      "evas/src/evas/lowering.py": "3df0c3f873285e45aa9de85863ca7d42b4c1cffc205a24164700b953b1874c71",
+      "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+      "evas/src/evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+      "evas/src/evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+      "evas/src/evas/node_elaboration.py": "f100e5e857b53a5ccaf43b10f61c1f1d719b0f5205490364dbf30a103bf480e6",
+      "evas/src/evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+      "evas/src/evas/preprocessor.py": "68c7c9d6df5a1f14ea33b8bbaebf79863b64110381d8bad910b98f281e2e2ffe",
+      "evas/src/evas/protocol.py": "82302d948c4c0eff0b88318eb804344a1f60d3dd4798d2c2c561149b6a188607",
+      "evas/src/evas/query.py": "6222b10aa9d889e93fa8b65059b5fb31799f7269770ebc72167c7c67e4a0b92b",
+      "evas/src/evas/results.py": "d085a8a2b57aa2ae48b6fc69e47825b02326ca8e05ff56df61bc791b7771c0d1",
+      "evas/src/evas/runtime.py": "b648c721efcb1d715cb871c644ff60b600229d9489c988edb7c4e291bbba1026",
+      "evas/src/evas/scs.py": "d95097aa5e62d2fe9d6a3c6a6035ca981f64b2aebe7fce2ca58bf12b5a95b281",
+      "evas/src/evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
+      "evas/src/evas/syntax.py": "56eafc9ad5c4f8773441a8e7ccf751d7ce5380b68150a2e2ab6d55524c0f6058"
+    },
+    "review_fixes_source_sha256_by_path": {
+      "benchmark/CANDIDATES.md": "fcddec9297d2c4613cd3c19709e4e8d155e2cfe5026707bb9d94380313ba5a21",
+      "evas/docs/CAPABILITIES.md": "44dd73c0e8f4c657eb73d47cbd56aa16910469486c32cf2d2f28db3229e873f1",
+      "evas/docs/math/operators.md": "24391a4f326cc374c4eeefc351c3e3704bcc42193d80e573970dc89bb92f3ad7",
+      "evas/rust_core/src/lib.rs": "d6279d3c6e6092c77d408fdf8708370e4584b2008985d4d676cb0bb196ee7e72",
+      "evas/rust_core/src/pwl.rs": "296cd4ed2367d54684d889c4e9ac6867925925b2cbc6da29fac6f1a9fe837015",
+      "evas/rust_core/src/transient.rs": "f378652388dc0fc38edec05d9d226b39198ec7a28e0e575e6c6dd53247c94373",
+      "evas/rust_core/src/input_clamp.rs": "78e3347c49f0fbd6083ae260d44fa3e54d7be329f3690bacbb3fada93d487671",
+      "evas/tests/fixtures/input_clamp_vco.va": "1bc287bb7c2bd6db604c56233239b668582093388790fe4be92f8c7fd06f327e",
+      "evas/tests/test_input_clamp.py": "d857b895617f89071d328d31cac49081b492a2b68f94103eccd7b06ddfc770d6",
+      "evas/docs/TRACEABILITY.md": "0106f50a6fe298b0dc40767930421f276fa5db78bf23e69a27ab45f08ed452a8"
+    },
+    "requested_settings": {
+      "max_step_s": 2e-10,
+      "vabstol_V": 1e-07,
+      "reltol": 1e-05,
+      "per_command_timeout_s": 90
+    },
+    "requests": {
+      "ordinary": {
+        "availability": "local-only",
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-continuous-clamp/runs/clamp/spectre-comparison/ordinary-request.json",
+        "sha256": "2daae9f643a164e44c6831c43798dac013e95c5d324efbeb3bb62a71365e9b3d"
+      },
+      "boundary": {
+        "availability": "local-only",
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-continuous-clamp/runs/clamp/spectre-comparison/boundary-request.json",
+        "sha256": "f052c3f035807f8eaaab5bc7645336d64b694b742c12ee43885aaa049c21f3fc"
+      }
+    },
+    "outputs": {
+      "ordinary-response.json": {
+        "availability": "local-only",
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-continuous-clamp/runs/clamp/spectre-comparison/ordinary-response.json",
+        "sha256": "1cbf80c838b4563b951169716c96bee1bf1122c08ab476b6162f2ca33f484dd9"
+      },
+      "ordinary-stdout.json": {
+        "availability": "local-only",
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-continuous-clamp/runs/clamp/spectre-comparison/ordinary-stdout.json",
+        "sha256": "29f472f40f31a6d3a747404c96b4bb4cf4d8b0c7fa00f1726c16451c8ce9af0b"
+      },
+      "ordinary-stderr.log": {
+        "availability": "local-only",
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-continuous-clamp/runs/clamp/spectre-comparison/ordinary-stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "boundary-stdout.json": {
+        "availability": "local-only",
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-continuous-clamp/runs/clamp/spectre-comparison/boundary-stdout.json",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "boundary-stderr.log": {
+        "availability": "local-only",
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-continuous-clamp/runs/clamp/spectre-comparison/boundary-stderr.log",
+        "sha256": "6125ac15d294a2ce78cd4f9b8645240f5ae7997527584f347e9680a334d44c5f"
+      }
+    },
+    "execution": {
+      "ordinary": {
+        "status": "runtime_completed",
+        "rows": 40836
+      },
+      "boundary": {
+        "status": "runtime_error",
+        "error": "waveform_accuracy: cannot certify same-time forward error at phase: bound 9.999999999999998e-1, budget 1.000000000000022e-7",
+        "unpaired_rows": 4
+      }
+    }
+  },
+  "spectre": {
+    "version": "21.1.0.509.isr12 64bit",
+    "accepted_steps": 40839,
+    "raw_rows": 40840,
+    "requested_settings": {
+      "stop_s": 8e-06,
+      "maxstep_s": 2e-10,
+      "reltol": 1e-05,
+      "vabstol_V": 1e-07,
+      "iabstol_A": 1e-12,
+      "output_request": "native records plus prescribed exact centers; requested grid does not qualify interpolation",
+      "integration_method": "traponly/trap for SPICE; unsupported by EVAS",
+      "spice_maxstep_s": 2e-10,
+      "spice_output_estimate_bytes": 15674112,
+      "spice_observation_strategy": "global 200ps plus disconnected PWL local/center breakpoint requests; actual preflight required",
+      "spectral_strobe_strategy": "prescribed times; strobeoutput=all; actual origin qualification pending"
+    },
+    "effective_transient": {
+      "reltol": 1e-06,
+      "vabstol_V": 1e-07,
+      "iabstol_A": 1e-12,
+      "method": "traponly",
+      "errpreset": "conservative",
+      "maxstep_s": 2e-10,
+      "strobeoutput": "all",
+      "skipdc": "no",
+      "ic": "all"
+    },
+    "reltol_contract": "conservative scales global options reltol by0.1; requested/effective values remain separate",
+    "archive": {
+      "availability": "local-only",
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/raw.tar.gz",
+      "sha256": "913a17abb151e881c0f7e068c1759f0d29c2d73174415480247dbe5498e15910"
+    },
+    "collection_receipt": {
+      "availability": "local-only",
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/COLLECTION.json",
+      "sha256": "100abbf03b1ce089909a9c70d420bb9f1a368e7e23290db424a1f77bb418e86f"
+    },
+    "raw_files": {
+      "dut.va": {
+        "availability": "local-only",
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/CO-VCO-01/dut.va",
+        "sha256": "1bc287bb7c2bd6db604c56233239b668582093388790fe4be92f8c7fd06f327e"
+      },
+      "condition.json": {
+        "availability": "local-only",
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/CO-VCO-01/condition.json",
+        "sha256": "e51c7cbe7bd1355dac595d347cb6e342cc60dd156de913e438dcc3e74f0cb84c"
+      },
+      "tb.scs": {
+        "availability": "local-only",
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/CO-VCO-01/tb.scs",
+        "sha256": "8fdf75883a869f80a9d6544e93983ec9261eb6185ac2d4bc23d5e312dd258d17"
+      },
+      "requested_times.json": {
+        "availability": "local-only",
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/CO-VCO-01/requested_times.json",
+        "sha256": "c4eaadc921360716d9546014e0ad241ec017457377a7bf42340c6561a3a3382c"
+      },
+      "requested_settings.json": {
+        "availability": "local-only",
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/CO-VCO-01/requested_settings.json",
+        "sha256": "60ff92b17605a053f4e978a89b3d0136953354cf6ba9714a11d36210e80afe35"
+      },
+      "observation.json": {
+        "availability": "local-only",
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/CO-VCO-01/observation.json",
+        "sha256": "f1c74acfc1f97a652a2dba4b47533c26e1d16d17c7525209d0bbd5698e09addb"
+      },
+      "RESULT.json": {
+        "availability": "local-only",
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/CO-VCO-01/RESULT.json",
+        "sha256": "0ddb349a68c626b05e981ed6a43227acc34b9e9d78b9ce993efdf672cc1076e4"
+      },
+      "spectre.log": {
+        "availability": "local-only",
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/CO-VCO-01/spectre.log",
+        "sha256": "812015d2a0d5a9f78f82b98f50795e53dd3c61d90b23fa1005903a2590eba3f7"
+      },
+      "psf/tran.tran.tran": {
+        "availability": "local-only",
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-first-checkpoint/runs/spec-a-execution-20261007/collected-spectre-repair-three/output/runs/CO-VCO-01/psf/tran.tran.tran",
+        "sha256": "76790e1b0d992a08fa3b0aeaa82e63b2af2efe18b70c90b57551c7fee2e39f9e"
+      }
+    },
+    "execution_stage": [
+      {
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 8.949533635750413,
+        "completed_utc": "2026-10-06T20:59:03Z",
+        "log": "simulate.log",
+        "log_sha256": "3a6eb2a57d9e836ce5a898d8c514f90840a5626be8da0d94c56121242ae484f4",
+        "stage": "simulate",
+        "resource_caps": {
+          "memory_limit_bytes": 4294967296,
+          "file_limit_bytes": 33554432,
+          "threads": 1
+        }
+      }
+    ],
+    "native_origin_contract": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/gap-completion-20261006/night-execution/reviews/spec-a-actual-astra/installed-contract-addendum.md",
+      "sha256": "ede271966f41721735f8ad7793729d24ea6de478babc72c9eba44713a7fbd69f"
+    }
+  },
+  "analysis": {
+    "predeclared_plan": {
+      "availability": "local-only",
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-continuous-clamp/runs/clamp/spectre-comparison/PLAN.md",
+      "sha256": "a6435470eda293ab2a724f7b9c2d3827264e9976adc5ab8e79d2b1ff2f343790"
+    },
+    "scripts": {
+      "compare.py": {
+        "availability": "local-only",
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-continuous-clamp/runs/clamp/spectre-comparison/compare.py",
+        "sha256": "d4123edd24ebed8a322e3c02de541864b302b5deff5828501e0d162f0e6bf2fd"
+      },
+      "analyze.py": {
+        "availability": "local-only",
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-continuous-clamp/runs/clamp/spectre-comparison/analyze.py",
+        "sha256": "e073f4dbeba36dd74fffbe63d3b38f9cbbcf427a27a908d029e523e85d30849c"
+      }
+    },
+    "identity": {
+      "availability": "local-only",
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-continuous-clamp/runs/clamp/spectre-comparison/IDENTITY.json",
+      "sha256": "1d2c7a33e97ab472d0acc084f8ee907a28a250400d41bcf8b8554eea633deead"
+    },
+    "raw_verification": {
+      "PSF_to_observation_all_rows_equal": true,
+      "receipt_waveform_and_observation_hashes_match": true,
+      "raw_rows": 40840,
+      "accepted_steps_log": 40839
+    },
+    "budgets": {
+      "frequency_V": 0.001,
+      "phase_cycles": 0.001,
+      "sine_V": 0.003,
+      "wrap_window_s": [
+        -1e-10,
+        1e-10
+      ]
+    },
+    "uncertainty_assumptions_only_not_certified": {
+      "time_s": 1e-11,
+      "voltage_V": 5e-05,
+      "input_V": 1e-05
+    },
+    "paired_rows": 40836,
+    "maxima": {
+      "spectre_oracle:ctl": {
+        "error": 1.7832957333041577e-15,
+        "time_s": 5.963799999997536e-06,
+        "left": 0.03620000000246471,
+        "right": 0.03620000000246293,
+        "budget": 1e-05,
+        "conditional_upper_at_max_error_row_not_property_bound": 1.0000000001783297e-05
+      },
+      "spectre_oracle:freq": {
+        "error": 9.43689570931383e-16,
+        "time_s": 5.911399999997643e-06,
+        "left": 0.4443000000011789,
+        "right": 0.444300000001178,
+        "budget": 0.001,
+        "conditional_upper_at_max_error_row_not_property_bound": 6.000000000094369e-05
+      },
+      "spectre_oracle:phase": {
+        "error": 1.010006678292541e-08,
+        "time_s": 5.701399999998071e-06,
+        "left": 0.7432695200990069,
+        "right": 0.7432695099989401,
+        "budget": 0.001,
+        "conditional_upper_at_max_error_row_not_property_bound": 8.851710006677329e-05
+      },
+      "spectre_oracle:phase_absolute_outside": {
+        "error": 1.010006678292541e-08,
+        "time_s": 5.701399999998071e-06,
+        "budget": 0.001
+      },
+      "spectre_oracle:out": {
+        "error": 6.346028505265595e-08,
+        "time_s": 5.323599999998843e-06,
+        "left": -0.0003818297849092647,
+        "right": -0.000381766324624212,
+        "budget": 0.003,
+        "conditional_upper_at_max_error_row_not_property_bound": 0.00028014113986331844
+      },
+      "evas_oracle:ctl": {
+        "error": 8.881784197001252e-16,
+        "time_s": 5.618399999998241e-06,
+        "left": 0.3816000000017592,
+        "right": 0.3816000000017583,
+        "budget": 1e-05,
+        "conditional_upper_at_max_error_row_not_property_bound": 1.000000000088818e-05
+      },
+      "evas_oracle:freq": {
+        "error": 4.440892098500626e-16,
+        "time_s": 5.797199999997876e-06,
+        "left": 0.5014000000010622,
+        "right": 0.5014000000010618,
+        "budget": 0.001,
+        "conditional_upper_at_max_error_row_not_property_bound": 6.000000000044409e-05
+      },
+      "evas_oracle:phase": {
+        "error": 1.3322676295501878e-15,
+        "time_s": 4.801999999999908e-06,
+        "left": 0.0469989999999072,
+        "right": 0.04699899999990853,
+        "budget": 0.001,
+        "conditional_upper_at_max_error_row_not_property_bound": 8.401000000133181e-05
+      },
+      "evas_oracle:phase_absolute_outside": {
+        "error": 1.3322676295501878e-15,
+        "time_s": 4.801999999999908e-06,
+        "budget": 0.001
+      },
+      "evas_oracle:out": {
+        "error": 8.520961713998076e-15,
+        "time_s": 5.294799999998902e-06,
+        "left": 0.13409745960729555,
+        "right": 0.13409745960728703,
+        "budget": 0.003,
+        "conditional_upper_at_max_error_row_not_property_bound": 0.0002791729009025547
+      },
+      "paired_same_time:ctl": {
+        "error": 1.3322676295501878e-15,
+        "time_s": 3.819799999999993e-06,
+        "left": 1.819799999999994,
+        "right": 1.8197999999999928,
+        "budget": 1e-05,
+        "conditional_upper_at_max_error_row_not_property_bound": 1.0000000001332268e-05
+      },
+      "paired_same_time:freq": {
+        "error": 6.661338147750939e-16,
+        "time_s": 4.842599999999826e-06,
+        "left": 0.9787000000000873,
+        "right": 0.9787000000000866,
+        "budget": 0.001,
+        "conditional_upper_at_max_error_row_not_property_bound": 6.0000000000666135e-05
+      },
+      "paired_same_time:phase": {
+        "error": 1.010006722701462e-08,
+        "time_s": 5.701399999998071e-06,
+        "left": 0.7432695200990069,
+        "right": 0.7432695099989397,
+        "budget": 0.001,
+        "conditional_upper_at_max_error_row_not_property_bound": 8.851710006721738e-05
+      },
+      "paired_same_time:phase_absolute_outside": {
+        "error": 1.010006722701462e-08,
+        "time_s": 5.701399999998071e-06,
+        "budget": 0.001
+      },
+      "paired_same_time:out": {
+        "error": 6.346028565015977e-08,
+        "time_s": 5.323599999998843e-06,
+        "left": -0.0003818297849092647,
+        "right": -0.0003817663246236145,
+        "budget": 0.003,
+        "conditional_upper_at_max_error_row_not_property_bound": 0.00028014113986391594
+      }
+    },
+    "conditional_property_upper_errors": {
+      "spectre_oracle:freq": {
+        "upper_error": 6.000000000094369e-05,
+        "time_s": 5.911399999997643e-06,
+        "observed_error": 9.43689570931383e-16,
+        "assumption": "requires each backend time<=10ps, voltage<=50uV, actual-input<=10uV; not independently certified"
+      },
+      "spectre_oracle:phase": {
+        "upper_error": 0.00010000504993335109,
+        "time_s": 7.999999999998141e-06,
+        "observed_error": 5.049933360368186e-09,
+        "assumption": "requires each backend time<=10ps, voltage<=50uV, actual-input<=10uV; not independently certified"
+      },
+      "spectre_oracle:out": {
+        "upper_error": 0.0003641802485660928,
+        "time_s": 7.999999999998141e-06,
+        "observed_error": 2.098320717180968e-08,
+        "assumption": "requires each backend time<=10ps, voltage<=50uV, actual-input<=10uV; not independently certified"
+      },
+      "evas_oracle:freq": {
+        "upper_error": 6.000000000044409e-05,
+        "time_s": 5.797199999997876e-06,
+        "observed_error": 4.440892098500626e-16,
+        "assumption": "requires each backend time<=10ps, voltage<=50uV, actual-input<=10uV; not independently certified"
+      },
+      "evas_oracle:phase": {
+        "upper_error": 0.0001000000000008789,
+        "time_s": 7.999999999998141e-06,
+        "observed_error": 8.881784197001252e-16,
+        "assumption": "requires each backend time<=10ps, voltage<=50uV, actual-input<=10uV; not independently certified"
+      },
+      "evas_oracle:out": {
+        "upper_error": 0.00036415926536114145,
+        "time_s": 7.999999999998141e-06,
+        "observed_error": 2.220446049250313e-15,
+        "assumption": "requires each backend time<=10ps, voltage<=50uV, actual-input<=10uV; not independently certified"
+      },
+      "paired_same_time:freq": {
+        "upper_error": 0.00012000000000066614,
+        "time_s": 4.842599999999826e-06,
+        "observed_error": 6.661338147750939e-16,
+        "assumption": "requires each backend time<=10ps, voltage<=50uV, actual-input<=10uV; not independently certified"
+      },
+      "paired_same_time:phase": {
+        "upper_error": 0.00020000504993423,
+        "time_s": 7.999999999998141e-06,
+        "observed_error": 5.049934248546606e-09,
+        "assumption": "requires each backend time<=10ps, voltage<=50uV, actual-input<=10uV; not independently certified"
+      },
+      "paired_same_time:out": {
+        "upper_error": 0.0007283395139272343,
+        "time_s": 7.999999999998141e-06,
+        "observed_error": 2.098320939225573e-08,
+        "assumption": "requires each backend time<=10ps, voltage<=50uV, actual-input<=10uV; not independently certified"
+      }
+    },
+    "wraps": {
+      "spectre": {
+        "count": 4,
+        "expected_count": 4,
+        "brackets": [
+          {
+            "left_s": 2.689946442575134e-06,
+            "right_s": 2.689966442575134e-06,
+            "left_phase": 0.9999851104355444,
+            "right_phase": 9.999969963203625e-09,
+            "nominal_s": 2.6899664425751338e-06,
+            "window_s": [
+              2.6898664425751336e-06,
+              2.690066442575134e-06
+            ],
+            "bracket_wholly_in_window": true,
+            "with_assumed_10ps_time_error_s": [
+              2.6899364425751342e-06,
+              2.689976442575134e-06
+            ],
+            "expanded_bracket_wholly_in_window": true
+          },
+          {
+            "left_s": 3.754979999999999e-06,
+            "right_s": 3.755e-06,
+            "left_phase": 0.999980010099945,
+            "right_phase": 1.009994510248191e-08,
+            "nominal_s": 3.7549999999999996e-06,
+            "window_s": [
+              3.7548999999999994e-06,
+              3.7551e-06
+            ],
+            "bracket_wholly_in_window": true,
+            "with_assumed_10ps_time_error_s": [
+              3.7549699999999992e-06,
+              3.75501e-06
+            ],
+            "expanded_bracket_wholly_in_window": true
+          },
+          {
+            "left_s": 4.75498e-06,
+            "right_s": 4.754999999999999e-06,
+            "left_phase": 0.9999800100999814,
+            "right_phase": 1.009998107370791e-08,
+            "nominal_s": 4.754999999999999e-06,
+            "window_s": [
+              4.7549e-06,
+              4.7551e-06
+            ],
+            "bracket_wholly_in_window": true,
+            "with_assumed_10ps_time_error_s": [
+              4.75497e-06,
+              4.755009999999999e-06
+            ],
+            "expanded_bracket_wholly_in_window": true
+          },
+          {
+            "left_s": 6.31935515251343e-06,
+            "right_s": 6.31937515251343e-06,
+            "left_phase": 0.9999936019257171,
+            "right_phase": 5.099954236698068e-09,
+            "nominal_s": 6.31937515251343e-06,
+            "window_s": [
+              6.31927515251343e-06,
+              6.31947515251343e-06
+            ],
+            "bracket_wholly_in_window": true,
+            "with_assumed_10ps_time_error_s": [
+              6.31934515251343e-06,
+              6.31938515251343e-06
+            ],
+            "expanded_bracket_wholly_in_window": true
+          }
+        ]
+      },
+      "evas": {
+        "count": 4,
+        "expected_count": 4,
+        "brackets": [
+          {
+            "left_s": 2.689946442575134e-06,
+            "right_s": 2.689986442575134e-06,
+            "left_phase": 0.9999851004355744,
+            "right_phase": 1.4899764425813089e-05,
+            "nominal_s": 2.6899664425751338e-06,
+            "window_s": [
+              2.6898664425751336e-06,
+              2.690066442575134e-06
+            ],
+            "bracket_wholly_in_window": true,
+            "with_assumed_10ps_time_error_s": [
+              2.6899364425751342e-06,
+              2.6899964425751338e-06
+            ],
+            "expanded_bracket_wholly_in_window": true
+          },
+          {
+            "left_s": 3.754979999999999e-06,
+            "right_s": 3.75502e-06,
+            "left_phase": 0.999979999999999,
+            "right_phase": 2.0000000000131024e-05,
+            "nominal_s": 3.7549999999999996e-06,
+            "window_s": [
+              3.7548999999999994e-06,
+              3.7551e-06
+            ],
+            "bracket_wholly_in_window": true,
+            "with_assumed_10ps_time_error_s": [
+              3.7549699999999992e-06,
+              3.75503e-06
+            ],
+            "expanded_bracket_wholly_in_window": true
+          },
+          {
+            "left_s": 4.75498e-06,
+            "right_s": 4.75502e-06,
+            "left_phase": 0.9999799999999994,
+            "right_phase": 1.9999999999686935e-05,
+            "nominal_s": 4.754999999999999e-06,
+            "window_s": [
+              4.7549e-06,
+              4.7551e-06
+            ],
+            "bracket_wholly_in_window": true,
+            "with_assumed_10ps_time_error_s": [
+              4.75497e-06,
+              4.75503e-06
+            ],
+            "expanded_bracket_wholly_in_window": true
+          },
+          {
+            "left_s": 6.31935515251343e-06,
+            "right_s": 6.31939515251343e-06,
+            "left_phase": 0.999993596825762,
+            "right_phase": 6.403074237049111e-06,
+            "nominal_s": 6.31937515251343e-06,
+            "window_s": [
+              6.31927515251343e-06,
+              6.31947515251343e-06
+            ],
+            "bracket_wholly_in_window": true,
+            "with_assumed_10ps_time_error_s": [
+              6.31934515251343e-06,
+              6.31940515251343e-06
+            ],
+            "expanded_bracket_wholly_in_window": true
+          }
+        ]
+      }
+    },
+    "budget_exceedance_count": 0,
+    "boundary_spectre_raw": [
+      {
+        "row": {
+          "time": 2.689966442575134e-06,
+          "ctl": 0.689966442575134,
+          "freq": 0.744983221287567,
+          "phase": 9.999969963203625e-09,
+          "out": 6.283166498506183e-08
+        },
+        "scalar_error": 9.999969963203625e-09,
+        "circular_endpoint_error": 9.999969963203625e-09,
+        "nominal_T": 2.689966442575134,
+        "exact_time_qualified": false,
+        "oracle_at_actual_time": {
+          "ctl": 0.6899664425751344,
+          "freq": 0.7449832212875672,
+          "phase": 2.220446049250313e-16,
+          "out": 1.5314274795707798e-15
+        },
+        "circular_error_vs_oracle": 9.99996974115902e-09,
+        "unpaired_evas_reason": "waveform_accuracy: cannot certify same-time forward error at phase: bound 9.999999999999998e-1, budget 1.000000000000022e-7"
+      },
+      {
+        "row": {
+          "time": 3.755e-06,
+          "ctl": 1.755,
+          "freq": 1.0,
+          "phase": 1.009994510248191e-08,
+          "out": 6.345982614890613e-08
+        },
+        "scalar_error": 1.009994510248191e-08,
+        "circular_endpoint_error": 1.009994510248191e-08,
+        "nominal_T": 3.755,
+        "exact_time_qualified": false,
+        "oracle_at_actual_time": {
+          "ctl": 1.7550000000000003,
+          "freq": 1,
+          "phase": 0.0,
+          "out": -4.898587196589413e-16
+        },
+        "circular_error_vs_oracle": 1.0099945102481911e-08,
+        "unpaired_evas_reason": "waveform_accuracy: cannot certify same-time forward error at phase: bound 9.999999999999998e-1, budget 1.000000000000022e-7"
+      },
+      {
+        "row": {
+          "time": 4.754999999999999e-06,
+          "ctl": 1.245000000000001,
+          "freq": 1.0,
+          "phase": 1.009998107370791e-08,
+          "out": 6.346005312152279e-08
+        },
+        "scalar_error": 1.009998107370791e-08,
+        "circular_endpoint_error": 1.009998107370791e-08,
+        "nominal_T": 4.755,
+        "exact_time_qualified": false,
+        "oracle_at_actual_time": {
+          "ctl": 1.245,
+          "freq": 1,
+          "phase": 0.0,
+          "out": -7.347880794884119e-16
+        },
+        "circular_error_vs_oracle": 1.0099981073707909e-08,
+        "unpaired_evas_reason": "waveform_accuracy: cannot certify same-time forward error at phase: bound 9.999999999999998e-1, budget 1.000000000000022e-7"
+      },
+      {
+        "row": {
+          "time": 6.31937515251343e-06,
+          "ctl": -0.1596875762567147,
+          "freq": 0.3201562118716427,
+          "phase": 5.099954236698068e-09,
+          "out": 3.204395817461691e-08
+        },
+        "scalar_error": 5.099954236698068e-09,
+        "circular_endpoint_error": 5.099954236698068e-09,
+        "nominal_T": 6.31937515251343,
+        "exact_time_qualified": false,
+        "oracle_at_actual_time": {
+          "ctl": -0.15968757625671515,
+          "freq": 0.32015621187164245,
+          "phase": 0.0,
+          "out": -9.797174393178826e-16
+        },
+        "circular_error_vs_oracle": 5.099954236698068e-09,
+        "unpaired_evas_reason": "waveform_accuracy: cannot certify same-time forward error at phase: bound 9.999999999999998e-1, budget 1.000000000000022e-7"
+      }
+    ],
+    "initial": {
+      "spectre": {
+        "time": 0.0,
+        "ctl": -1.0,
+        "freq": 0.2,
+        "phase": 0.125,
+        "out": 0.7071067811865475
+      },
+      "evas": {
+        "time": 0.0,
+        "0": 0.0,
+        "ctl": -1.0,
+        "freq": 0.2,
+        "out": 0.7071067811865475,
+        "phase": 0.125
+      }
+    },
+    "strict_stop": {
+      "deck_stop_token": "7.9999999999999996e-06",
+      "last_raw_time_token": "7.999999999998141e-06",
+      "exact_decimal_shortfall_s": "1.8586E-18",
+      "binary64_shortfall_s": 1.858390286275935e-18
+    },
+    "local_report": {
+      "availability": "local-only",
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-continuous-clamp/runs/clamp/spectre-comparison/report.md",
+      "sha256": "34b08227b13e4f7f16bfcdfc461cea6ff9f803ed4c813dbb6711ae7ccf9d42f4"
+    },
+    "local_evidence_manifest": {
+      "availability": "local-only",
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/spec-a-continuous-clamp/runs/clamp/spectre-comparison/MANIFEST.json",
+      "sha256": "28c09ae7a16ee5dd797c231768a277cdbca14c25ef626bd1c85450c543b6fc64"
+    }
+  },
+  "availability": "Only compact evidence/fixture and published contract links are public repository assets; full raw/archive/kernel/requests and analysis scripts remain local-only. Hashes are identities, not download addresses or qualification certificates."
+}

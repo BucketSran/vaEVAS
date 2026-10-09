@@ -1,0 +1,244 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-07",
+  "scope": "Finite observed diagnostics on a combined candidate, not merged support or paper grading.",
+  "qualification_granted": false,
+  "paper_status": "Unchanged. Original fixed48 adjudication I35/X13/T0 is historical and not rewritten.",
+  "pairing": "Unique identical binary64 times only. No interpolation, nearest-time replacement, stop expansion or changed physical budget.",
+  "availability": "Compact summary public with this commit; raw, binaries, full logs and review transcripts local-only and retained on existing server. Hashes are not download URLs.",
+  "local_evidence_root": "current/runs/four-backend-fixes-20261007",
+  "candidate": {
+    "composition": "main 49a8865c plus PR100/101/102; branch diffs composed against their own ancestors. This is a combined snapshot, not either PR standalone.",
+    "pr100_parent": "3bcf5be4aa3ba129296531a176c66e07ba076807",
+    "pr101_fixed": "7c509e60aaeb4776a3b69f7543ed5576472a858f",
+    "pr102_parent": "4b63b4d2e5b35ffea587f798d4d2f3947dfb404c",
+    "source_manifest_sha256": "a6f97fddb72180b35b98212ce61fda304625fa21102ab88cda951953dff6a874",
+    "kernel_sha256": "1f57bf057f82b63261de5fc3f177545289675b7344553e8e2e1ecb886e85f79c",
+    "identity": {
+      "build_revision": null,
+      "identity_version": 1,
+      "ir_schema_version": 18,
+      "name": "evas-kernel",
+      "platform": {
+        "arch": "x86_64",
+        "os": "linux"
+      },
+      "request_protocol_version": null,
+      "version": "0.14.0"
+    },
+    "source_note": "93 source-manifest files include separate test modules and two build-required benches. Later changes only adjust cfg(test) fixtures/add a ground unit test and documentation; runtime source unchanged."
+  },
+  "settings": {
+    "evas_requested": {
+      "reltol": 1e-05,
+      "vabstol_V": 1e-07,
+      "max_step_s": 2e-10
+    },
+    "spectre_version": "sub-version  21.1.0.509.isr12",
+    "spectre_requested_reltol": 1e-05,
+    "spectre_effective_reltol": 1e-06,
+    "interpretation": "Spectre integration/solve tolerances and EVAS forward-error bounds are different obligations. Neither supplies an independent observation-error qualification."
+  },
+  "execution": {
+    "old_evas_waveforms": 8,
+    "new_evas_waveforms": 12,
+    "fixed_case_count": 12,
+    "final_evas_main_launches": 16,
+    "final_evas_query_variants": 4,
+    "earlier_retained_evas_main_launches": 12,
+    "fresh_spectre_main_launches": 4,
+    "fresh_spectre_version_probes": 1,
+    "open_backends": "Not rerun: original OpenVAF-R/ngspice 5/12 and Gnucap/modelgen 10/12 waveform availability retained with failures.",
+    "cleanup": "All remote stages cleaned and shared lock released; serialized stages, 90 s simulation, 300 s build, 1 CPU, 4 GiB memory."
+  },
+  "artifacts": {
+    "old_cards_sha256": "e1ae5311da9e05991e9802da1a24e97a70d179972608a1b9d21eb00013f61a53",
+    "analysis_sha256": "2eb797aae1a951845ab5d35307370d4e69cb45d4ebd2ad2f94caff5b62c6bd38",
+    "analysis_summary_sha256": "ec3bc0ef17d82959d63143c1e9cf4b9e1e706774e7a680806a65b55f350914a0",
+    "comparison_helper_sha256": "921274c08f7595a60e1256e5629476b6a7eb1758961d413ab4bedd9f26cd8c7e",
+    "nominal_helper_sha256": "202889ead23edf017ee25635ea25b65686a5b41e7b26cb427bbd5316d672726c",
+    "spectre_archive_sha256": "a3c58213a35b6e41d82ab31d37fdb8d29be915a40223e733418701c278f072a9",
+    "evas_archive_sha256": "cf043fd6ef89a55ffb7b756db0748ab155a83fbbc10098e6ae81342d253bd05a",
+    "verified_summary_sha256": "a4589e4d30f4f83ca9576f99b602106d57881d5ca1f4e3abda00a0f94b0a9ba2"
+  },
+  "checks": {
+    "pr100": "90 mapped Python; full Rust 167 passed/1 ignored; subsequent ground-zero and cross-IR fixture target tests separately passed. clippy/fmt/traceability passed.",
+    "pr102": "162 mapped Python; full Rust 165 passed/1 ignored; clippy/fmt/traceability passed.",
+    "combined": "126 public tests passed. Full Rust first 185 passed/2 failed/1 ignored; wrong IR seed and omitted cfg(test) overlay corrected, both target tests then passed. Full batch not rerun. Production source unchanged by fixture corrections.",
+    "code_reviews": "Astra and actual Claude CLI GLM-5.3 completed review. Old-API exact-certificate leakage fixed; original red evidence retained. Ground-zero acceptance expansion explicitly documented and tested."
+  },
+  "limits": [
+    "No full continuous-trajectory, export-origin or independent observation-error qualification; no paper P.",
+    "Event-window differences and all raw maxima retained. Matching final callback counts does not prove identical timing.",
+    "Original models and cards are development-informed, not untouched confirmation data.",
+    "Mixed fixed/held/cross ordering and uncertain history boundaries can still reject. Real state nominal values have no standalone relative-accuracy guarantee; consumers retain the full interval."
+  ],
+  "records": [
+    {
+      "condition": "EX-01",
+      "paired_rows": 40005,
+      "reference_counts": {
+        "total_rows": 40005,
+        "invalid_time_rows": 0,
+        "distinct_finite_times": 40005,
+        "duplicate_time_count": 0,
+        "rows_at_duplicate_times": 0
+      },
+      "unpaired_reference_unique_times": 0,
+      "unpaired_reason": "Preserve Spectre end records beyond original EVAS stop; no stop expansion.",
+      "frozen_observation_windows": [],
+      "segments": {
+        "all": {
+          "paired_rows": 40005,
+          "ports": {
+            "ctl": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 40005,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 0.0,
+                "time_s": 0.0,
+                "reference_row_index": 0,
+                "test_row_index": 0,
+                "reference_value": -1.0,
+                "test_value": -1.0,
+                "raw_units": "V"
+              }
+            },
+            "freq": {
+              "units": "V",
+              "meaning": "cycles/T marker encoded as node V",
+              "finite_pairs": 40005,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 0.0,
+                "time_s": 0.0,
+                "reference_row_index": 0,
+                "test_row_index": 0,
+                "reference_value": 0.2,
+                "test_value": 0.2,
+                "raw_units": "V"
+              }
+            }
+          }
+        },
+        "inside_declared_observation_windows": {
+          "paired_rows": 0,
+          "ports": {
+            "ctl": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 0,
+              "invalid_pairs": 0,
+              "ordinary": null
+            },
+            "freq": {
+              "units": "V",
+              "meaning": "cycles/T marker encoded as node V",
+              "finite_pairs": 0,
+              "invalid_pairs": 0,
+              "ordinary": null
+            }
+          }
+        },
+        "outside_declared_observation_windows": {
+          "paired_rows": 40005,
+          "ports": {
+            "ctl": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 40005,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 0.0,
+                "time_s": 0.0,
+                "reference_row_index": 0,
+                "test_row_index": 0,
+                "reference_value": -1.0,
+                "test_value": -1.0,
+                "raw_units": "V"
+              }
+            },
+            "freq": {
+              "units": "V",
+              "meaning": "cycles/T marker encoded as node V",
+              "finite_pairs": 40005,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 0.0,
+                "time_s": 0.0,
+                "reference_row_index": 0,
+                "test_row_index": 0,
+                "reference_value": 0.2,
+                "test_value": 0.2,
+                "raw_units": "V"
+              }
+            }
+          }
+        }
+      },
+      "counter_stage_mismatch_rows": 0,
+      "counter_stage_mismatch_outside_fixed_windows": 0,
+      "counters": {},
+      "query_invariance": {
+        "condition": "EX-01",
+        "original_query_count": 40001,
+        "aligned_query_count": 40005,
+        "program_bytes_equal": true,
+        "physical_request_bytes_equal": true,
+        "original_event_count": 0,
+        "aligned_event_count": 0,
+        "event_records_semantically_equal": true,
+        "event_records_raw_json_bytes_equal": true,
+        "original_event_json_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "aligned_event_json_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "spectre_settings_and_identity": {
+        "condition": "EX-01",
+        "status": "waveform_available",
+        "source_sha256": "7315ce904adb94404bc721b9ce32983bcc4856e16bc31c2d3ea8f2edb2bfe143",
+        "deck_sha256": "6455e3f77c9a1fc5736d2c37359db1c69c492661cc2fab3ae2e58955b95480af",
+        "frozen_inputs_byte_match": {
+          "dut.va": true,
+          "tb.scs": true,
+          "condition.json": true,
+          "requested_settings.json": true,
+          "requested_times.json": true,
+          "binding.json": true
+        },
+        "simulate_stages": 1,
+        "receipt_sha256": "9f9c5dfb0011d7944d0b640c47113ce6079440526f509679e891f086d8158608",
+        "waveform_sha256": "5261bf180bd7a4f7ccaf18fc0888521562d93792e788e38d3342095488d78f11",
+        "effective_settings_status": "I",
+        "effective_settings": {
+          "reltol": 1e-06,
+          "vabstol": 1.0000000000000001e-07,
+          "iabstol": 1e-12,
+          "stop": 8e-06,
+          "maxstep": 2e-10,
+          "method": "traponly"
+        },
+        "requested_settings": {
+          "reltol": 1e-05,
+          "vabstol": 1e-07,
+          "iabstol": 1e-12,
+          "stop": 8e-06,
+          "maxstep": 2e-10
+        },
+        "mismatches": [
+          "reltol"
+        ]
+      },
+      "input_files_sha256": {
+        "collected/spectre/spectre-output/runs/EX-01/observation.json": "d5b985c1443a6c4c22b5d3933a3b43f9743a27aecfbce04570c3b821d831ef50",
+        "collected/evas/final-v4/evas-aligned-output-v4/runs/EX-01/raw-response.json": "f02809556741358610158df920997707e945109ccb75eb01f882a8f6ffae90b1",
+        "collected/evas/final-v4/evas-aligned-output-v4/runs/EX-01/requested_times.json": "c6fa56b59da38d578e4aa3ee4802bf0d127d82743b2977a81b628ea1be0b226f"
+      },
+      "full_analysis_local": {
+        "path": "current/runs/four-backend-fixes-20261007/analysis-v2/EX-01.json",
+        "sha256": "62626fabbf85119a1f117b8a4d492b7ea24542f25510e01bc936ed4431678de2"
+      }
+    }
+  ]
+}

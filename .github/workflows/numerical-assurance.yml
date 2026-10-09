@@ -14,7 +14,8 @@ permissions:
 jobs:
   regression:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # The prior regression job took 17m52s before adding the circuit replays.
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -50,6 +51,9 @@ jobs:
           python3 -B evas/validation/check_event_conditions_math.py
           python3 -B -m unittest discover -s experiments/backends/evidence -v
           python3 -B -m unittest discover -s experiments/backends/dvs2-spectre-validation -p 'test_*.py' -v
+          python3 -B -m unittest discover -s experiments/backends/spectre-alignment -p 'test_*.py' -v
+          python3 -B -m unittest discover -s evas/validation/event_alignment -p 'test_checker.py' -v
+          python3 -B -m unittest discover -s experiments/backends/event-alignment -p 'test_*.py' -v
       - name: Paper contracts, observable criteria and table provenance
         run: |
           python3 -B evas/validation/paper/check_design.py

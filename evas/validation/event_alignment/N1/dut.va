@@ -1,0 +1,15 @@
+`include "disciplines.vams"
+module probe(u,clk,y,z,q,n,m,s,h1,h2,h3,r);
+ input u,clk; output y,z,q,n,m,s,h1,h2,h3; inout r;
+ electrical u,clk,y,z,q,n,m,s,h1,h2,h3,r;
+ real a,state_s,state_h1,state_h2,state_h3,nextA; integer state_n,state_m,enabledB;
+ analog begin
+  @(initial_step) begin a=0; state_s=0; state_n=0; state_m=0; state_h1=-1; state_h2=-1; state_h3=-1; nextA=6e-6; enabledB=1; end
+  @(timer(2e-06,0,1e-12)) begin state_n=state_n+1; state_h1=V(clk,r); end
+ @(timer(2.00001e-06,0,1e-12)) begin a=a+1; state_h3=V(clk,r); end
+  @(cross(V(u,r)-2.000005,1,1e-13,1e-10)) begin state_m=state_m+1; state_s=V(u,r); state_h2=V(clk,r); end
+  V(y,r)<+state_n+10*state_m+100*a; V(z,r)<+0; V(q,r)<+a;
+  V(n,r)<+state_n; V(m,r)<+state_m; V(s,r)<+state_s;
+  V(h1,r)<+state_h1; V(h2,r)<+state_h2; V(h3,r)<+state_h3;
+ end
+endmodule

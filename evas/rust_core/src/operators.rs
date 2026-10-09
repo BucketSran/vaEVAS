@@ -6,7 +6,7 @@ use crate::events::{affine, AffineState};
 use crate::idt::Idt;
 use crate::idtmod::IdtMod;
 use crate::interval::{equal_products, sum_products_sign, Interval as I};
-use crate::ir::{Error, Expression, OperatorSpec, Origin, Program};
+use crate::ir::{Error, Expression, OperatorSpec, Origin, Program, Tolerances};
 use crate::laplace::LaplaceNd;
 use crate::pwl::Trajectory;
 use crate::slew::Slew;
@@ -922,12 +922,83 @@ impl Evaluation<'_> {
         crate::diagnostics::counter("history_clone_calls", 1);
         crate::diagnostics::counter("history_clone_operator_slots", self.base.entries.len());
         candidate.horizon = horizon;
+        if let Some(continuous) = &candidate.continuous {
+            if continuous.has_local_observation() {
+                candidate.continuous = Some(Arc::new(continuous.restarted(
+                    self.time,
+                    time_bounds,
+                    bounds,
+                    horizon,
+                )?));
+            }
+        }
         candidate.advance(self.time, time_bounds, states, bounds, changed)?;
         Ok(candidate)
     }
 }
 
 impl Operators {
+    pub(crate) fn exact_affine_value(
+        &self,
+        op: usize,
+        local: bool,
+    ) -> Option<(num_rational::BigRational, num_rational::BigRational)> {
+        self.continuous.as_ref()?.exact_affine_value(op, local)
+    }
+
+    pub(crate) fn local_epoch(&self) -> Option<(crate::exact_time::Clock, f64)> {
+        self.continuous.as_ref()?.local_epoch()
+    }
+    pub(crate) fn anchor_event(
+        &mut self,
+        clock: crate::exact_time::Clock,
+        time: f64,
+        horizon: f64,
+    ) -> Result<(), Error> {
+        if let Some(c) = &self.continuous {
+            self.continuous = Some(Arc::new(c.anchored(clock, time, horizon)?));
+        } else {
+            return Err(Error::new(
+                "event_resolution",
+                "causal closure has no continuous physical flow",
+            ));
+        }
+        Ok(())
+    }
+    pub(crate) fn history_certificate(&self) -> Option<Arc<Continuous>> {
+        self.continuous.clone()
+    }
+    pub(crate) fn observe_local(
+        &mut self,
+        observation: crate::schedule::OrderedObservation,
+    ) -> Result<(), Error> {
+        let c = self.continuous.as_ref().ok_or_else(|| {
+            Error::new(
+                "event_resolution",
+                "local observation lacks continuous history",
+            )
+        })?;
+        if !observation.validate(c) {
+            return Err(Error::new(
+                "event_resolution",
+                "local event certificate does not match the immutable physical mode history",
+            ));
+        }
+        self.continuous = Some(Arc::new(c.local_observation(observation.delta())?));
+        Ok(())
+    }
+    pub(crate) fn local_range(&self, index: usize, delta: I) -> Result<(I, I), Error> {
+        self.check_guard(index)?;
+        let Runtime::Continuous(slot) = self.entries[index] else {
+            return Err(Error::new(
+                "event_resolution",
+                "local causal guard requires continuous network operators",
+            ));
+        };
+        let (values, derivatives) = self.continuous.as_ref().unwrap().local_range(delta)?;
+        Ok((values[slot], derivatives[slot]))
+    }
+
     pub(crate) fn event_bounds(&self, time: f64, window: I) -> Result<Vec<I>, Error> {
         if window.lo == window.hi {
             return self.bounds(time);
@@ -985,7 +1056,14 @@ impl Operators {
         driven: &[String],
         states: &[f64],
     ) -> Result<Self, Error> {
-        Self::new_until(program, trajectory, driven, states, trajectory.config.stop)
+        Self::new_until(
+            program,
+            trajectory,
+            driven,
+            states,
+            trajectory.config.stop,
+            &Tolerances::default(),
+        )
     }
 
     pub(crate) fn new_until(
@@ -994,6 +1072,7 @@ impl Operators {
         driven: &[String],
         states: &[f64],
         horizon: f64,
+        tolerances: &Tolerances,
     ) -> Result<Self, Error> {
         let _timing = crate::diagnostics::span("history.prepare");
 
@@ -1044,7 +1123,8 @@ impl Operators {
             }
         }
         let continuous =
-            Continuous::new_until(program, trajectory, driven, states, horizon)?.map(Arc::new);
+            Continuous::new_until(program, trajectory, driven, states, horizon, tolerances)?
+                .map(Arc::new);
         let mut entries = Vec::new();
         let mut direct = Vec::new();
         for (index, spec) in program.operators.iter().enumerate() {
@@ -1114,9 +1194,20 @@ impl Operators {
                 } => {
                     let (points, bounds) =
                         direct_points(input, program, trajectory, driven, origin)?;
-                    entries.push(Runtime::IdtMod(IdtMod::enclosed(
-                        points, bounds, *ic, *modulus, *offset,
-                    )?));
+                    let driven_nodes: Vec<_> = driven
+                        .iter()
+                        .map(|name| program.nodes.iter().position(|n| n == name).unwrap())
+                        .collect();
+                    let exact_source = crate::exact_source::Curve::expression(
+                        input,
+                        &driven_nodes,
+                        &trajectory.exact_sources,
+                        trajectory.config.stop,
+                    );
+                    entries.push(Runtime::IdtMod(
+                        IdtMod::enclosed(points, bounds, *ic, *modulus, *offset)?
+                            .with_exact_source(exact_source),
+                    ));
                 }
                 OperatorSpec::Sin { input, origin } => {
                     let bound_input = affine(input, program, &origin.instance)?;
@@ -1674,6 +1765,7 @@ mod phase_operator_tests {
         })).unwrap();
             let trajectory = Trajectory::new(
                 crate::ir::TransientInputs {
+                    strobetimes: Vec::new(),
                     pwl: vec![vec![[0.0, 0.0], [0.5, 0.0], [2.0, 0.0]]],
                     output_times: vec![0.0, 0.5, 2.0],
                     stop: 2.0,
@@ -1694,9 +1786,9 @@ mod phase_operator_tests {
                 &[I::ONE],
                 &[0],
             );
-            if nonlinear {
-                // A bounded nonlinear flow can cross the source corner. Its
-                // candidate must remain disposable and reproducible.
+            {
+                // Both bounded flows can cross the source corner. Their
+                // candidates must remain disposable and reproducible.
                 let candidate = uncertain.unwrap();
                 let bounds = candidate.bounds(1.0).unwrap();
                 drop(candidate);
@@ -1712,8 +1804,6 @@ mod phase_operator_tests {
                     )
                     .unwrap();
                 assert_eq!(retry.bounds(1.0).unwrap(), bounds);
-            } else {
-                assert!(uncertain.is_err());
             }
             assert_eq!(base.bounds(1.0).unwrap(), original);
             assert!(frozen
@@ -1773,6 +1863,7 @@ mod phase_operator_tests {
         })).unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                strobetimes: Vec::new(),
                 pwl: vec![vec![[0.0, 0.25], [4.0, 0.25]]],
                 output_times: vec![0.0, 1.0, 4.0],
                 stop: 4.0,

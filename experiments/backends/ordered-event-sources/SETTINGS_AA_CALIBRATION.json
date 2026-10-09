@@ -1,0 +1,27 @@
+{
+  "checks": [
+    {
+      "token": "100 aA",
+      "pass_": true
+    },
+    {
+      "token": "1 aA",
+      "pass_": true
+    },
+    {
+      "token": "100 aA",
+      "dimension": "time",
+      "pass_": true,
+      "expected": "rejected"
+    },
+    {
+      "token": "100 aA",
+      "dimension": "voltage",
+      "pass_": true,
+      "expected": "rejected"
+    }
+  ],
+  "passed": 4,
+  "reader_sha256": "244fe270b28465c5fe98c1b593e01e49628906680adaf5e096ad9d1d4474778d",
+  "parent_reader_sha256": "79cf4a9cc44e30ce6551781e8e44e00c0963c179032c660928ed38556c3baf14"
+}

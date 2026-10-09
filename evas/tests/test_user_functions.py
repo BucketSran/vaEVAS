@@ -6,7 +6,8 @@ import unittest
 from evas import CompileError, compile_sources, solve, transient
 from test_affine import KERNEL, instance
 
-PREFIX = '''module m(u,y,r); input u; output y; inout r; electrical u,y,r;
+PREFIX = '''`include "disciplines.vams"
+module m(u,y,r); input u; output y; inout r; electrical u,y,r;
 parameter real gain=2;
 analog function real transfer;
   input x;
@@ -23,7 +24,7 @@ def compiled(body, prefix=PREFIX, instances=None):
 
 class PureFunctions(unittest.TestCase):
     def test_parameter_binding_and_noncontractive_voltage_feedback(self):
-        path = Path(__file__).resolve().parents[1] / 'validation/cases/pure_function/dut.va'
+        path = Path(__file__).with_name('fixtures') / 'pure_function.va'
         p = compile_sources({'function.va':path.read_text()},[instance(module='pure_function')])
         result = solve(p,['u'],[[1],[2]],kernel=KERNEL)
         y = result['nodes'].index('y')
@@ -37,11 +38,12 @@ class PureFunctions(unittest.TestCase):
         self.assertEqual(result['solutions'][0]['voltages'][result['nodes'].index('y')],9)
 
     def test_function_polynomial_guard_keeps_all_roots(self):
-        prefix = '''module m(u,y,r); input u; output y; inout r; electrical u,y,r;
+        prefix = '''`include "disciplines.vams"
+module m(u,y,r); input u; output y; inout r; electrical u,y,r;
 integer n;
 analog function real guard;
 input x; real x;
-begin guard=(x-.25)*(x-.75); end
+begin guard=(x-0.25)*(x-0.75); end
 endfunction
 '''
         p = compiled('@(initial_step) n=0; @(cross(guard(V(u,r)),0,1e-9,1e-8)) n=n+1; V(y,r)<+n;',prefix)
@@ -73,7 +75,7 @@ input x; real x; begin twice=transfer(transfer(x)); end endfunction
             return len(seen)
         names=['t'+str(i) for i in range(1,15)]
         body='t1=x+x;'+''.join('t'+str(i)+'=t'+str(i-1)+'+t'+str(i-1)+';' for i in range(2,15))
-        prefix=('module m(u,y,r); input u; output y; inout r; electrical u,y,r; '
+        prefix=('`include "disciplines.vams"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; '
                 'genvar i; parameter real count=2; analog function real f; input x; '
                 'real x,'+','.join(names)+'; begin '+body+'f=1; end endfunction ')
         source=prefix+'analog begin for(i=0;i<count;i=i+1) V(y,r)<+f(V(u,r))+i; end endmodule'

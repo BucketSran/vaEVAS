@@ -1,0 +1,289 @@
+{
+  "driven": [
+    "u"
+  ],
+  "program": {
+    "contributions": [
+      {
+        "branch": {
+          "instance": "Xdut",
+          "kind": "voltage",
+          "local_negative": "z",
+          "local_positive": "r"
+        },
+        "negative": 1,
+        "origin": {
+          "column": 1,
+          "expansion": [],
+          "instance": "Xdut",
+          "line": 4,
+          "source": "dut.va"
+        },
+        "positive": 0,
+        "rhs": {
+          "left": {
+            "constant": -1.0,
+            "op": "affine",
+            "terms": []
+          },
+          "op": "multiply",
+          "right": {
+            "op": "operator",
+            "operator": 0
+          }
+        }
+      },
+      {
+        "branch": {
+          "instance": "Xdut",
+          "kind": "voltage",
+          "local_negative": "y",
+          "local_positive": "r"
+        },
+        "negative": 3,
+        "origin": {
+          "column": 1,
+          "expansion": [],
+          "instance": "Xdut",
+          "line": 6,
+          "source": "dut.va"
+        },
+        "positive": 0,
+        "rhs": {
+          "left": {
+            "constant": -1.0,
+            "op": "affine",
+            "terms": []
+          },
+          "op": "multiply",
+          "right": {
+            "op": "state",
+            "state": 2
+          }
+        }
+      }
+    ],
+    "events": [
+      {
+        "body": [
+          {
+            "kind": "assign",
+            "rhs": {
+              "left": {
+                "op": "state",
+                "state": 0
+              },
+              "op": "add",
+              "right": {
+                "constant": 1.0,
+                "op": "affine",
+                "terms": []
+              }
+            },
+            "state": 0
+          },
+          {
+            "kind": "assign",
+            "rhs": {
+              "left": {
+                "op": "state",
+                "state": 0
+              },
+              "op": "add",
+              "right": {
+                "constant": -1.0,
+                "op": "affine",
+                "terms": []
+              }
+            },
+            "state": 1
+          }
+        ],
+        "origin": {
+          "column": 1,
+          "expansion": [],
+          "instance": "Xdut",
+          "line": 2,
+          "source": "dut.va"
+        },
+        "trigger": {
+          "enabled": true,
+          "kind": "timer",
+          "period": 0.2,
+          "start": 0.1,
+          "time_tolerance": 1e-12
+        }
+      },
+      {
+        "body": [
+          {
+            "kind": "assign",
+            "rhs": {
+              "left": {
+                "op": "state",
+                "state": 3
+              },
+              "op": "add",
+              "right": {
+                "constant": 1.0,
+                "op": "affine",
+                "terms": []
+              }
+            },
+            "state": 3
+          }
+        ],
+        "origin": {
+          "column": 1,
+          "expansion": [],
+          "instance": "Xdut",
+          "line": 3,
+          "source": "dut.va"
+        },
+        "trigger": {
+          "enabled": true,
+          "kind": "timer",
+          "period": 0.0,
+          "start": 0.30000000000000004,
+          "time_tolerance": 1e-12
+        }
+      },
+      {
+        "body": [
+          {
+            "kind": "assign",
+            "rhs": {
+              "left": {
+                "op": "state",
+                "state": 2
+              },
+              "op": "add",
+              "right": {
+                "constant": 1.0,
+                "op": "affine",
+                "terms": []
+              }
+            },
+            "state": 2
+          }
+        ],
+        "origin": {
+          "column": 1,
+          "expansion": [],
+          "instance": "Xdut",
+          "line": 5,
+          "source": "dut.va"
+        },
+        "trigger": {
+          "direction": 1,
+          "expression_tolerance": 1e-06,
+          "guard": {
+            "left": {
+              "constant": 0.0,
+              "op": "affine",
+              "terms": [
+                {
+                  "coefficient": -1.0,
+                  "node": 0
+                },
+                {
+                  "coefficient": 1.0,
+                  "node": 1
+                }
+              ]
+            },
+            "op": "add",
+            "right": {
+              "constant": -1e-18,
+              "op": "affine",
+              "terms": []
+            }
+          },
+          "kind": "cross",
+          "time_tolerance": 1e-06
+        }
+      }
+    ],
+    "nodes": [
+      "0",
+      "Xdut:z",
+      "u",
+      "y"
+    ],
+    "operators": [
+      {
+        "ic": 0.0,
+        "input": {
+          "op": "state",
+          "state": 1
+        },
+        "kind": "idt",
+        "origin": {
+          "column": 9,
+          "expansion": [],
+          "instance": "Xdut",
+          "line": 4,
+          "source": "dut.va"
+        },
+        "reset": null
+      }
+    ],
+    "schema_version": 17,
+    "states": [
+      {
+        "initial": 0.0,
+        "instance": "Xdut",
+        "kind": "integer",
+        "name": "n"
+      },
+      {
+        "initial": 0.0,
+        "instance": "Xdut",
+        "kind": "integer",
+        "name": "q"
+      },
+      {
+        "initial": 0.0,
+        "instance": "Xdut",
+        "kind": "integer",
+        "name": "h"
+      },
+      {
+        "initial": 0.0,
+        "instance": "Xdut",
+        "kind": "integer",
+        "name": "m"
+      }
+    ]
+  },
+  "samples": [],
+  "tolerances": {
+    "absolute": 1.0,
+    "relative": 0.0
+  },
+  "transient": {
+    "max_step": 0.012,
+    "output_times": [
+      0,
+      0.15,
+      0.29,
+      0.3,
+      0.3000000000000001,
+      0.305,
+      0.31
+    ],
+    "pwl": [
+      [
+        [
+          0,
+          0
+        ],
+        [
+          0.31,
+          0.31
+        ]
+      ]
+    ],
+    "stop": 0.31
+  }
+}

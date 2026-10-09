@@ -15,8 +15,8 @@ SOURCE = model('''
     @(timer(1,2,1e-8)) n=n+1;
     @(timer(1,2,1e-8)) q=V(z,r);
     @(cross(V(u,r),-1,1e-8,1e-9)) c=c+1;
-    V(y,r)<+transition(n,.25,.5,.5);
-    V(z,r)<+gain*(n+c+absdelay(V(u,r),.5)+slew(V(u,r),1,-2));
+    V(y,r)<+transition(n,0.25,0.5,0.5);
+    V(z,r)<+gain*(n+c+absdelay(V(u,r),0.5)+slew(V(u,r),1,-2));
     V(h,r)<+q;
 ''', 'integer n,c; real q; parameter real gain=1;',
     ports='u,y,z,h,r', directions='input u; output y,z,h; inout r;')

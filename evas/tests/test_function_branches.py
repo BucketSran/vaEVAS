@@ -8,8 +8,9 @@ from evas import CompileError, KernelError, compile_sources, solve, transient
 from test_affine import KERNEL, instance
 
 
-PREFIX = '''module m(u,y,r); input u; output y; inout r; electrical u,y,r;
-parameter real vss=0, vdd=.9;
+PREFIX = '''`include "disciplines.vams"
+module m(u,y,r); input u; output y; inout r; electrical u,y,r;
+parameter real vss=0, vdd=0.9;
 analog function real clip;
 input x; real x;
 begin if(x<vss) clip=vss; else if(x>vdd) clip=vdd; else clip=x; end
@@ -98,10 +99,12 @@ input x; real x,t,i; begin {body} end endfunction
         with self.assertRaises(CompileError):
             program(prefix, 'V(y,r)<+1;')
 
-    def test_function_branch_keeps_existing_uncertain_predicate_refusal(self):
-        with self.assertRaisesRegex(KernelError, 'condition_precision'):
-            transient(program(), {'u':[[0,0],[3,1]]}, [2.7], stop=3,
-                      max_step=3, kernel=KERNEL)
+    def test_function_branch_certifies_original_pwl_boundary(self):
+        from fractions import Fraction
+        self.assertGreater(Fraction(2.7)/3, Fraction(.9))
+        result = transient(program(), {'u':[[0,0],[3,1]]}, [2.7], stop=3,
+                           max_step=3, kernel=KERNEL)
+        self.assertEqual(result['solutions'][0]['voltages'][result['nodes'].index('y')], .9)
 
     def test_instance_rails_and_continuous_crossings_have_independent_values(self):
         p = program(instances=[instance('a', connections={'u':'u','y':'a','r':'0'}),

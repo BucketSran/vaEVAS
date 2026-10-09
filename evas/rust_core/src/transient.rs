@@ -12,9 +12,13 @@ use crate::schedule::{
 };
 use crate::solver::Circuit;
 
+#[path = "transient_event_acceptance.rs"]
+mod event_acceptance;
+
 #[path = "transient_history_calendar.rs"]
 mod history_calendar;
 
+#[derive(Clone)]
 struct Frame {
     time: f64,
     states: Vec<f64>,
@@ -30,9 +34,11 @@ struct Controller {
     accepted: Frame,
     event: usize,
     records: Vec<EventRecord>,
+    outputs: Vec<Frame>,
 }
 
 impl Controller {
+    #[cfg(test)]
     fn accept_events(
         &mut self,
         model: &EventModel,
@@ -44,6 +50,7 @@ impl Controller {
         Ok(())
     }
 
+    #[cfg(test)]
     fn prepare_events(
         &self,
         model: &EventModel,
@@ -91,12 +98,22 @@ impl Controller {
         trajectory: &Trajectory,
         crossings: &mut Vec<ScheduledEvent>,
     ) -> Result<(), Error> {
-        // Close observation/reset at the event before predicting new flow.
-        // The changed held calendar, not its stale predecessor, owns the next
-        // prediction horizon. No fallible phase mutates the accepted frame.
-        let time = crossings[self.event].time;
-        let (mut next, records, end) =
-            self.prepare_events_until(model, trajectory, crossings, Some(time))?;
+        self.accept_changed_events(
+            model,
+            trajectory,
+            crossings,
+            event_acceptance::Strategy::Held,
+        )
+    }
+
+    fn prepare_held_future(
+        &self,
+        model: &EventModel,
+        trajectory: &Trajectory,
+        next: &Frame,
+        records: &[EventRecord],
+        remaining: &[ScheduledEvent],
+    ) -> Result<Vec<ScheduledEvent>, Error> {
         let window = records.iter().fold(I::point(next.time), |t, r| {
             let [lo, hi] = r.observation_time_bounds.unwrap_or([r.time, r.time]);
             t.hull(I { lo, hi })
@@ -180,40 +197,14 @@ impl Controller {
                 ));
             }
         }
-        let future = reschedule_held(
+        reschedule_held(
             model,
             trajectory,
             &next.state_bounds,
             next.time,
             &changed,
-            &crossings[end..],
-        )?;
-        next.operators = next.operators.evaluation(next.time)?.advanced_until(
-            I::point(next.time),
-            &next.states,
-            &next.state_bounds,
-            &[],
-            prediction_end(model, trajectory, future.first()),
-        )?;
-        next.operators
-            .check_deadline_order(next.time, future.first().map(|e| e.bounds()))?;
-        // Extending a nonlinear dense history can widen its endpoint box.
-        // The committed observation must satisfy the budget against that
-        // final history as well as the earlier reset/observation closure.
-        let point_inputs = trajectory.value_bounds(next.time);
-        model.certify(
-            &model.conditions.select(&[], &point_inputs)?,
-            &point_inputs,
-            &next.state_bounds,
-            &next.operators.bounds(next.time)?,
-            &next.solution.voltages,
-            &next.states,
-        )?;
-        // Build and validate the future first; calendar replacement and state
-        // acceptance have no remaining fallible operation between them.
-        self.commit_events(next, records, 0);
-        *crossings = future;
-        Ok(())
+            remaining,
+        )
     }
 
     fn commit_events(&mut self, next: Frame, records: Vec<EventRecord>, end: usize) {
@@ -411,7 +402,7 @@ fn prepare_root_window(
     if time_bounds.lo != time_bounds.hi {
         // Sampling at tau and observing the committed frame at b are distinct
         // obligations. Do not resample the event using post-event history.
-        model.certify(
+        let (_, nodes) = model.certify_observation(
             &model
                 .conditions
                 .select(&[], &trajectory.value_bounds(time))?,
@@ -421,6 +412,7 @@ fn prepare_root_window(
             &prepared.solution.voltages,
             &prepared.states,
         )?;
+        crate::observation::retain_bounds(&mut prepared.solution, nodes);
     }
     Ok(Frame {
         time,
@@ -613,6 +605,24 @@ fn prepare_calendar_batch(
     scheduled: &[ScheduledEvent],
     prediction_end: f64,
 ) -> Result<(Frame, Vec<EventRecord>), Error> {
+    let local_accepted;
+    let accepted = if let Some((clock, _)) = accepted.operators.local_epoch() {
+        let mut operators = accepted.operators.clone();
+        operators.observe_local(crate::schedule::ordered_observation(
+            scheduled, clock, model,
+        )?)?;
+        local_accepted = Frame {
+            time: accepted.time,
+            states: accepted.states.clone(),
+            state_bounds: accepted.state_bounds.clone(),
+            solution: accepted.solution.clone(),
+            circuit: accepted.circuit.clone(),
+            operators,
+        };
+        &local_accepted
+    } else {
+        accepted
+    };
     let ids: Vec<_> = scheduled.iter().map(|e| e.event).collect();
     let bounds =
         scheduled
@@ -651,6 +661,10 @@ fn prepare_calendar_batch(
 }
 
 pub(crate) fn run(request: Request) -> Result<Response, Error> {
+    crate::strobe::run(request)
+}
+
+pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
     if !request.samples.is_empty() {
         return Err(Error::new(
             "invalid_inputs",
@@ -669,13 +683,13 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
             request.tolerances,
         );
     }
-    let trajectory = Trajectory::new(transient.clone(), request.driven.len())?;
+    let mut trajectory = Trajectory::new(transient.clone(), request.driven.len())?;
     let program = crate::initialization::resolve(
         request.program,
         &request.driven,
         &trajectory.value_bounds(0.0),
     )?;
-    let request = Request {
+    let mut request = Request {
         program,
         transient: Some(transient.clone()),
         ..request
@@ -698,6 +712,9 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
             request.tolerances,
         );
     }
+    let output_count =
+        crate::input_clamp::lower(&mut request.program, &mut request.driven, &mut trajectory)?;
+
     let model = EventModel::new(request.program, request.driven, request.tolerances)?;
     let initial = model.initial();
     let relocalize = model.relocalized_guards.iter().any(|&held| held);
@@ -713,6 +730,7 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
             &model.driven,
             &initial,
             prediction_end(&model, &trajectory, crossings.first()),
+            &model.tolerances,
         )?;
         (operators, crossings)
     } else if model.dynamic_guards.iter().any(|&dynamic| dynamic) {
@@ -722,6 +740,7 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
             &model.driven,
             &initial,
             trajectory.config.stop,
+            &model.tolerances,
         )?;
         let crossings = schedule(&model, &trajectory, &operators)?;
         (operators, crossings)
@@ -733,6 +752,7 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
             &model.driven,
             &initial,
             prediction_end(&model, &trajectory, crossings.first()),
+            &model.tolerances,
         )?;
         (operators, crossings)
     };
@@ -746,7 +766,7 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
         operators,
     };
     let inputs = trajectory.value_bounds(0.0);
-    accepted.state_bounds = model.certify(
+    let (state_bounds, node_bounds) = model.certify_observation(
         &model.conditions.select(&[], &inputs)?,
         &inputs,
         &accepted.state_bounds,
@@ -754,6 +774,8 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
         &accepted.solution.voltages,
         &accepted.states,
     )?;
+    accepted.state_bounds = state_bounds;
+    crate::observation::retain_bounds(&mut accepted.solution, node_bounds);
     let mut trace = TransientTrace {
         times: trajectory.config.output_times.clone(),
         state_names: model
@@ -768,11 +790,13 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
         discarded_trials: 0,
     };
     let mut solutions = Vec::new();
+    let mut sample_origins = Vec::new();
     let (mut output, mut knot) = (0, 1);
     let mut controller = Controller {
         accepted,
         event: 0,
         records: Vec::new(),
+        outputs: Vec::new(),
     };
     loop {
         controller.accepted.operators.check_deadline_order(
@@ -789,16 +813,39 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
             } else if relocalize {
                 controller.accept_relocalized(&model, &trajectory, &mut crossings)?;
             } else {
-                controller.accept_events(&model, &trajectory, &crossings)?;
+                controller.accept_changed_events(
+                    &model,
+                    &trajectory,
+                    &mut crossings,
+                    event_acceptance::Strategy::Static,
+                )?;
             }
         }
         controller.accepted.operators.check_deadline_order(
             controller.accepted.time,
             crossings.get(controller.event).map(|e| e.bounds()),
         )?;
+        while output < trace.times.len() && trace.times[output] < controller.accepted.time {
+            let index = controller
+                .outputs
+                .iter()
+                .position(|frame| frame.time == trace.times[output])
+                .ok_or_else(|| {
+                    Error::new(
+                        "event_consistency",
+                        "causal closure omitted an output phase",
+                    )
+                })?;
+            let frame = controller.outputs.remove(index);
+            solutions.push(frame.solution);
+            sample_origins.push("certified_causal_frame");
+            trace.states.push(frame.states);
+            output += 1;
+        }
         if output < trace.times.len() && controller.accepted.time == trace.times[output] {
             let _output = crate::diagnostics::span("output.collect");
             solutions.push(controller.accepted.solution.clone());
+            sample_origins.push("accepted_controller_frame");
             trace.states.push(controller.accepted.states.clone());
             output += 1;
         }
@@ -832,7 +879,28 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
         }
         // Discard an overshooting time proposal before evaluating history:
         // the earlier event can change the future waveform and constraints.
-        if controller.event < crossings.len() && crossings[controller.event].time <= time {
+        if output < trace.times.len()
+            && time == trace.times[output]
+            && crossings.get(controller.event).is_some_and(|event| {
+                event.time > time
+                    && event.bounds().lo <= time
+                    && event.physical_order_at(time).is_none()
+            })
+        {
+            return Err(Error::new(
+                "event_resolution",
+                "output query cannot certify its physical event phase",
+            ));
+        }
+        let physically_due = crossings.get(controller.event).is_some_and(|event| {
+            matches!(
+                event.physical_order_at(time),
+                Some(std::cmp::Ordering::Less | std::cmp::Ordering::Equal)
+            )
+        });
+        if controller.event < crossings.len()
+            && (crossings[controller.event].time <= time || physically_due)
+        {
             if crossings[controller.event].time < time {
                 trace.discarded_trials += 1;
                 crate::diagnostics::record(
@@ -849,7 +917,12 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
             } else if relocalize {
                 controller.accept_relocalized(&model, &trajectory, &mut crossings)?;
             } else {
-                controller.accept_events(&model, &trajectory, &crossings)?;
+                controller.accept_changed_events(
+                    &model,
+                    &trajectory,
+                    &mut crossings,
+                    event_acceptance::Strategy::Static,
+                )?;
             }
         } else {
             if !model.program.operators.is_empty() {
@@ -885,8 +958,8 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
                 // committing any observation or time advance.
                 let inputs = trajectory.values(time);
                 let input_bounds = trajectory.value_bounds(time);
-                let solution = controller.accepted.circuit.solve(&inputs)?;
-                let state_bounds = model.certify(
+                let mut solution = controller.accepted.circuit.solve(&inputs)?;
+                let (state_bounds, node_bounds) = model.certify_observation(
                     &model.conditions.select(&[], &input_bounds)?,
                     &input_bounds,
                     &controller.accepted.state_bounds,
@@ -894,6 +967,7 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
                     &solution.voltages,
                     &controller.accepted.states,
                 )?;
+                crate::observation::retain_bounds(&mut solution, node_bounds);
                 controller.accepted.solution = solution;
                 controller.accepted.state_bounds = state_bounds;
                 controller.accepted.time = time;
@@ -908,15 +982,37 @@ pub(crate) fn run(request: Request) -> Result<Response, Error> {
             1,
             None,
         );
-        if controller.accepted.time == trajectory.knots[knot] {
+        while knot < trajectory.knots.len() && trajectory.knots[knot] <= controller.accepted.time {
             knot += 1;
         }
     }
     trace.events = controller.records;
+    // Internal source-derived nodes are mathematical lowering details, never
+    // user inputs/outputs or a change to the external serialized IR contract.
+    for solution in &mut solutions {
+        solution.voltages.truncate(output_count);
+        if let Some(bounds) = &mut solution.certified_voltage_bounds {
+            bounds.truncate(output_count);
+        }
+    }
+    let mut nodes = model.program.nodes;
+    nodes.truncate(output_count);
+    let observation_evidence = crate::observation::evidence(
+        &nodes,
+        &solutions,
+        &trajectory.config,
+        &model.tolerances,
+        sample_origins,
+        true,
+        (trace.times.first() == Some(&0.0)).then_some(true),
+    );
     Ok(Response {
+        strobe_evidence: None,
+        portability_advisories: None,
+        observation_evidence: Some(observation_evidence),
         engine: concat!("evas-events-", env!("CARGO_PKG_VERSION")).into(),
         schema_version: SCHEMA_VERSION,
-        nodes: model.program.nodes,
+        nodes,
         solutions,
         transient: Some(trace),
     })
@@ -933,7 +1029,7 @@ fn run_stateless_transient(
     let trajectory = Trajectory::new(transient, driven.len())?;
     let times = trajectory.config.output_times.clone();
     let nodes = program.nodes.clone();
-    let mut circuit = crate::analog::Analog::new(program, driven, tolerances)?;
+    let mut circuit = crate::analog::Analog::new(program, driven, tolerances.clone())?;
     let mut solutions = Vec::new();
     let mut previous: Option<Solution> = None;
     for (sample, &time) in times.iter().enumerate() {
@@ -942,6 +1038,8 @@ fn run_stateless_transient(
                 &trajectory.values(time),
                 &trajectory.value_bounds(time),
                 previous.as_ref().map(|s| s.voltages.as_slice()),
+                time,
+                &trajectory.exact_sources,
             )
             .map_err(|mut error| {
                 error.sample = Some(sample);
@@ -951,7 +1049,19 @@ fn run_stateless_transient(
         solutions.push(solution);
     }
     let sample_count = solutions.len();
+    let observation_evidence = crate::observation::evidence(
+        &nodes,
+        &solutions,
+        &trajectory.config,
+        &tolerances,
+        vec!["stateless_working_point"; sample_count],
+        false,
+        (times.first() == Some(&0.0)).then_some(true),
+    );
     Ok(Response {
+        strobe_evidence: None,
+        portability_advisories: None,
+        observation_evidence: Some(observation_evidence),
         engine: concat!("evas-events-", env!("CARGO_PKG_VERSION")).into(),
         schema_version: SCHEMA_VERSION,
         nodes,
@@ -1007,6 +1117,7 @@ mod tests {
         let model = EventModel::new(program, vec!["u".into()], tolerances).unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                strobetimes: Vec::new(),
                 pwl: vec![vec![[0.0, 0.0], [3.0, 1.0]]],
                 output_times: vec![0.0, 3.0],
                 stop: 3.0,
@@ -1111,6 +1222,7 @@ mod tests {
         // isolates reset-time uncertainty rather than PWL interpolation error.
         let trajectory = Trajectory::new(
             TransientInputs {
+                strobetimes: Vec::new(),
                 pwl: vec![vec![
                     [0.0, 0.0],
                     [0.5, 1.0 / 6.0],
@@ -1403,6 +1515,7 @@ mod tests {
         .unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                strobetimes: Vec::new(),
                 pwl: vec![vec![
                     [0.0, 1.0],
                     [0.75, 1.0],
@@ -1489,6 +1602,7 @@ mod tests {
         let model = EventModel::new(program, vec!["u".into()], Tolerances::default()).unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                strobetimes: Vec::new(),
                 pwl: vec![vec![[0.0, 0.0], [1.0, 1.0], [2.0, 0.0]]],
                 output_times: vec![0.0, 2.0],
                 stop: 2.0,
@@ -1781,7 +1895,16 @@ mod tests {
                 "right":{"op":"affine","constant":-1.0,"terms":[]}}}
         ]))
         .unwrap();
-        let model = EventModel::new(program, vec!["u".into()], Tolerances::default()).unwrap();
+        // Exact physical output is 2^-55, whereas the replay returns zero.
+        let model = EventModel::new(
+            program,
+            vec!["u".into()],
+            Tolerances {
+                absolute: 1e-20,
+                relative: 0.0,
+            },
+        )
+        .unwrap();
         let circuit = model.circuit(&model.initial()).unwrap();
         let before = Frame {
             time: 0.0,

@@ -1,0 +1,243 @@
+{
+  "scope": "finite native PSF values and actual callback logs; original F unchanged",
+  "spectre_version": "21.1.0.509.isr12",
+  "archive_scope": "local-only",
+  "pairs": [
+    {
+      "archive": "event-reference-v1",
+      "case": "C1-adjacent-instrumented",
+      "value_bytes_equal": true,
+      "value_sha256": "46db72a24d7439002b4bfa45a8c059ac176e90f4cd8a1e734fe757b12895b125",
+      "callbacks": [
+        {
+          "model": "C1",
+          "event": "event",
+          "abstime_token": "1.40000000100000004615e-06"
+        }
+      ],
+      "files": {
+        "C1-adjacent-original/dut.va": "47f25c781213ffa5bf7dc90484ef884f59641adfdd63c9286d9b9d652359b1da",
+        "C1-adjacent-original/tb.scs": "88ee7d9f49b44f7baae9df0510cdc7528c84905565ae5018cc1397ea335eabad",
+        "C1-adjacent-original/simulate.log": "762a37b8f4a90749b1ff9a086cd1605ee0d684081e5a068803c3da5cec5ee44a",
+        "C1-adjacent-original/psf/tran.tran.tran": "b8cff6a0d5feeef8ca1ab67b9ec4b2faa947794f412f69006770ec2709574b0a",
+        "C1-adjacent-instrumented/dut.va": "02cafc861aeaa13e31974c09fbdb8467a639c7bfc1521cf7806815070b1f8b1c",
+        "C1-adjacent-instrumented/tb.scs": "88ee7d9f49b44f7baae9df0510cdc7528c84905565ae5018cc1397ea335eabad",
+        "C1-adjacent-instrumented/simulate.log": "ac6a7ce09e6cc47bdfde3e5e7f7bfff1c179b5c3267b7f42245af9a127cbd151",
+        "C1-adjacent-instrumented/psf/tran.tran.tran": "55cf701633e118dc2246d0bb3ad71523438fa272e4dac4553b0f48e2bca0c217"
+      },
+      "native_rows": 108
+    },
+    {
+      "archive": "event-reference-v1",
+      "case": "C1-instrumented",
+      "value_bytes_equal": true,
+      "value_sha256": "d1b572c5132cd6f3e9351852c1596b4de90b0aaf1605dc54b1228b015813b85a",
+      "callbacks": [
+        {
+          "model": "C1",
+          "event": "event",
+          "abstime_token": "1.39999999999999993665e-06"
+        }
+      ],
+      "files": {
+        "C1-original/dut.va": "47f25c781213ffa5bf7dc90484ef884f59641adfdd63c9286d9b9d652359b1da",
+        "C1-original/tb.scs": "42a5c0288b9261e19c7bbff74eaac535fddf8761829171ab8bbc1d4174faa7ac",
+        "C1-original/simulate.log": "59aa685ea520865a35841963a091c4fceefe0efb6cfb8063b3271dff62e7e371",
+        "C1-original/psf/tran.tran.tran": "bbc8b046482749d8d2692ef1026c788a751bfffc9f02c01aee45c19ce46ce786",
+        "C1-instrumented/dut.va": "02cafc861aeaa13e31974c09fbdb8467a639c7bfc1521cf7806815070b1f8b1c",
+        "C1-instrumented/tb.scs": "42a5c0288b9261e19c7bbff74eaac535fddf8761829171ab8bbc1d4174faa7ac",
+        "C1-instrumented/simulate.log": "7a4b8f0090b898d3be2bbf6f9c266c0e30e1a1d79cace5ed92c6eb895b666298",
+        "C1-instrumented/psf/tran.tran.tran": "178cc5e625f9dc8c09aaceece1e890076a27add55d2f37a6ec7fdb2754f42deb"
+      },
+      "native_rows": 171
+    },
+    {
+      "archive": "event-reference-v1",
+      "case": "M1-adjacent-instrumented",
+      "value_bytes_equal": true,
+      "value_sha256": "79c9ef0a02cf66c1410adca808082b101030d3662dbbdf97260134d470d5bdd5",
+      "callbacks": [
+        {
+          "model": "M1",
+          "event": "rise",
+          "abstime_token": "1.99999917424811170992e-06"
+        },
+        {
+          "model": "M1",
+          "event": "fall",
+          "abstime_token": "5.99999999999999930497e-06"
+        }
+      ],
+      "files": {
+        "M1-adjacent-original/dut.va": "3b4ca8fa5a16c39c9e54aaefef638f2e7e7784a6fddb8cbb5f01d76642b833d8",
+        "M1-adjacent-original/tb.scs": "0747129df1463c369c8994075e91e3310959ce86f8c380b61ff168e99b42d8f0",
+        "M1-adjacent-original/simulate.log": "e1b86b1c9003e2e5ce3dcf5177e7f955701003a65c5d869d6c603db3e83e440d",
+        "M1-adjacent-original/psf/tran.tran.tran": "f5be2d78d1fe9bf86f10ec510b9bfc7b55fb6188449701eb5d952bbe20617391",
+        "M1-adjacent-instrumented/dut.va": "3d75f38b5c053b84486d1ec9255308f5683938475b13410d00453794393b5c56",
+        "M1-adjacent-instrumented/tb.scs": "0747129df1463c369c8994075e91e3310959ce86f8c380b61ff168e99b42d8f0",
+        "M1-adjacent-instrumented/simulate.log": "55c22b2fc5474212861ab7fcbd1272e63b51b8a53f5a56d603b3ede231900df3",
+        "M1-adjacent-instrumented/psf/tran.tran.tran": "fb09add70b80f083bd9646b3c7b2e04df82a0cab98dfe8c566caff13e51a0c4c"
+      },
+      "native_rows": 162,
+      "integral": {
+        "independent_full_native_max_abs_error_v": 2.0000000009456897e-06,
+        "post_rise_prefall_offset_min_v": 1.1742481117460457e-06,
+        "post_rise_prefall_offset_max_v": 1.1742481127452464e-06,
+        "subset_margin_s": 1e-10,
+        "original_voltage_budget_v": 1e-06,
+        "budget_changed": false,
+        "final_z_v": 4.000000000000001
+      }
+    },
+    {
+      "archive": "event-reference-v1",
+      "case": "M1-instrumented",
+      "value_bytes_equal": true,
+      "value_sha256": "d0370a938d66d6cc9ef65c44d5a8334f6279d5aad035c6846add843babb70477",
+      "callbacks": [
+        {
+          "model": "M1",
+          "event": "rise",
+          "abstime_token": "1.99999917424811170992e-06"
+        },
+        {
+          "model": "M1",
+          "event": "fall",
+          "abstime_token": "6.00000000000000015201e-06"
+        }
+      ],
+      "files": {
+        "M1-original/dut.va": "3b4ca8fa5a16c39c9e54aaefef638f2e7e7784a6fddb8cbb5f01d76642b833d8",
+        "M1-original/tb.scs": "ecd38d7f9e0b32a1a65db3285165f006ff9e4b0667f5c77b74d8b588f54800bd",
+        "M1-original/simulate.log": "f64a72b0a45f0a2dea606d8a8cfb5cf3d2cd2efb4ad371ddaf1a5de4f89b6936",
+        "M1-original/psf/tran.tran.tran": "38e3f868a55db3664b64d9963287bf61d06ee9d629c051fc7366c377d02415b9",
+        "M1-instrumented/dut.va": "3d75f38b5c053b84486d1ec9255308f5683938475b13410d00453794393b5c56",
+        "M1-instrumented/tb.scs": "ecd38d7f9e0b32a1a65db3285165f006ff9e4b0667f5c77b74d8b588f54800bd",
+        "M1-instrumented/simulate.log": "8f3f280bf207214480167b9e07b366bae33b14482830bfd7ed042f87a87947e6",
+        "M1-instrumented/psf/tran.tran.tran": "24efa90fba5ce55a3765ee21851ba6ecc98374520651faa344d57700871acca0"
+      },
+      "native_rows": 288,
+      "integral": {
+        "independent_full_native_max_abs_error_v": 2.0000000011677344e-06,
+        "post_rise_prefall_offset_min_v": 1.1742481111909342e-06,
+        "post_rise_prefall_offset_max_v": 1.174248112967291e-06,
+        "subset_margin_s": 1e-10,
+        "original_voltage_budget_v": 1e-06,
+        "budget_changed": false,
+        "final_z_v": 4.000000000000001
+      }
+    },
+    {
+      "archive": "event-reference-v2b",
+      "case": "C1-cross-etol18-instrumented",
+      "value_bytes_equal": true,
+      "value_sha256": "a29ca097fe6964d6b682094f3eb394f1fcd40dcd08a0176e00e07d26a679a900",
+      "callbacks": [
+        {
+          "model": "C1",
+          "event": "event",
+          "abstime_token": "1.39999999999999993665e-06"
+        }
+      ],
+      "files": {
+        "C1-cross-etol18-original/dut.va": "16d690fb2ca5e4c271a3182c34573cd6bc1b2f31049fa87c76e47c383fab2e16",
+        "C1-cross-etol18-original/tb.scs": "88ee7d9f49b44f7baae9df0510cdc7528c84905565ae5018cc1397ea335eabad",
+        "C1-cross-etol18-original/simulate.log": "c4b8339ad54160fa5f4930946107c2ba3e1e01d6c202610a9539e2dc75b53ccb",
+        "C1-cross-etol18-original/psf/tran.tran.tran": "1b6221d578fe8f9957f320e5b355cd53980b0edf9e6ba5aecbcbe24ea596e02e",
+        "C1-cross-etol18-instrumented/dut.va": "135a98cb3b85d4e1af39e7c0b6bb11d86bd3a773d417b6bb5112600f1597d3ed",
+        "C1-cross-etol18-instrumented/tb.scs": "88ee7d9f49b44f7baae9df0510cdc7528c84905565ae5018cc1397ea335eabad",
+        "C1-cross-etol18-instrumented/simulate.log": "7825eca208a2c992f742015f3cb2aeb31ab4aa317c3e8a963c405deb3b9fc30f",
+        "C1-cross-etol18-instrumented/psf/tran.tran.tran": "9a1bb38c42c3772225171ce67356b55d2b44a93c79142ae294782b3b00508b8d"
+      },
+      "native_rows": 97
+    },
+    {
+      "archive": "event-reference-v2b",
+      "case": "C1-cross-ttol18-instrumented",
+      "value_bytes_equal": true,
+      "value_sha256": "4655933e62215a5365ce4e183b72243c83f60e4f296894940e78e69c3fb703cc",
+      "callbacks": [
+        {
+          "model": "C1",
+          "event": "event",
+          "abstime_token": "1.40000000000049989784e-06"
+        }
+      ],
+      "files": {
+        "C1-cross-ttol18-original/dut.va": "103d60848e6848917c1f2dcd7a7a427d83471c2a076ba0e2af219153683aa84b",
+        "C1-cross-ttol18-original/tb.scs": "88ee7d9f49b44f7baae9df0510cdc7528c84905565ae5018cc1397ea335eabad",
+        "C1-cross-ttol18-original/simulate.log": "bd11397320c8f1682d073f3a1c271025e5c670846a425ac447329d4ca8adb767",
+        "C1-cross-ttol18-original/psf/tran.tran.tran": "70eac186d6baf657f033c79e02eb912058fd84e28774f4935ab1e92fe0686b86",
+        "C1-cross-ttol18-instrumented/dut.va": "88490f9562c5fda3a4885cf211bba30c2558b4b84ed8b89eaab58d8cac5ed24c",
+        "C1-cross-ttol18-instrumented/tb.scs": "88ee7d9f49b44f7baae9df0510cdc7528c84905565ae5018cc1397ea335eabad",
+        "C1-cross-ttol18-instrumented/simulate.log": "108bbd1ae31122e614ce5fd8416fb9918f1b9a0f2b3ff9c83b85e5b90d071f8b",
+        "C1-cross-ttol18-instrumented/psf/tran.tran.tran": "3f0d0c15056e44bd61a536770246fa3928a98773bc1cfd9c18859ba579925093"
+      },
+      "native_rows": 97
+    },
+    {
+      "archive": "event-reference-v2b",
+      "case": "C1-no-strobe-instrumented",
+      "value_bytes_equal": true,
+      "value_sha256": "39fa53c1d767f7641f963e44ffa06592df1d3e2cfe2ab22d34fb73258b30c89e",
+      "callbacks": [
+        {
+          "model": "C1",
+          "event": "event",
+          "abstime_token": "1.40000000099999983440e-06"
+        }
+      ],
+      "files": {
+        "C1-no-strobe-original/dut.va": "47f25c781213ffa5bf7dc90484ef884f59641adfdd63c9286d9b9d652359b1da",
+        "C1-no-strobe-original/tb.scs": "d1c16763a559e9320730db3f1a4227a264c9cd12e03302d4dcb6bd7ab449736d",
+        "C1-no-strobe-original/simulate.log": "aeed605432262130a5ba590f84127a4a3cae1347b802ee0bdce06bb2ad194b7c",
+        "C1-no-strobe-original/psf/tran.tran.tran": "1f80f2e411a9ec8bc21a3234a06d0d9c5ad21b175cb9cfa73b72fbe02ab2f4a2",
+        "C1-no-strobe-instrumented/dut.va": "02cafc861aeaa13e31974c09fbdb8467a639c7bfc1521cf7806815070b1f8b1c",
+        "C1-no-strobe-instrumented/tb.scs": "d1c16763a559e9320730db3f1a4227a264c9cd12e03302d4dcb6bd7ab449736d",
+        "C1-no-strobe-instrumented/simulate.log": "d8122553f2ea2009e301284d3f40d4f0e08718c5cfdb7ca48ad75ee6a46427b0",
+        "C1-no-strobe-instrumented/psf/tran.tran.tran": "da2ad6d8eea0a7b64b1c3692e01e798997aa8707ab9f6ae3092cf145c2ed0486"
+      },
+      "native_rows": 92
+    },
+    {
+      "archive": "event-reference-v2b",
+      "case": "M1-timer-ttol18-instrumented",
+      "value_bytes_equal": true,
+      "value_sha256": "2b7f671867c012124f0b9c56ace197d75e23e0a86e75809c152ef549f60240fd",
+      "callbacks": [
+        {
+          "model": "M1",
+          "event": "rise",
+          "abstime_token": "1.99999999999999990950e-06"
+        },
+        {
+          "model": "M1",
+          "event": "fall",
+          "abstime_token": "6.00000000000000015201e-06"
+        }
+      ],
+      "files": {
+        "M1-timer-ttol18-original/dut.va": "7a549cca0fb40a2fa7c5f905aefb5e561c81977940c5e26a2cff7c45fc7b1c7a",
+        "M1-timer-ttol18-original/tb.scs": "ecd38d7f9e0b32a1a65db3285165f006ff9e4b0667f5c77b74d8b588f54800bd",
+        "M1-timer-ttol18-original/simulate.log": "7fd8724812b02871f862c04b9ed430c9ecb281292a8d3eee4b065d5c624156ca",
+        "M1-timer-ttol18-original/psf/tran.tran.tran": "a5afa91ccd4d9e91a152a18c0ef9b64349900d521599b8c7964b4507654672cf",
+        "M1-timer-ttol18-instrumented/dut.va": "fb219616396f2be42ff4554bca5b36e038da763aa8b0c104519ad38e13fae1ad",
+        "M1-timer-ttol18-instrumented/tb.scs": "ecd38d7f9e0b32a1a65db3285165f006ff9e4b0667f5c77b74d8b588f54800bd",
+        "M1-timer-ttol18-instrumented/simulate.log": "da3d949561022e3ff0b3699c01385c9be82f8227d13cb0703998bcb0d941490a",
+        "M1-timer-ttol18-instrumented/psf/tran.tran.tran": "f2f0d55bb343e1dbccbb46439cddc297c816f4bba624be94182ec71309ee5055"
+      },
+      "native_rows": 287,
+      "integral": {
+        "independent_full_native_max_abs_error_v": 1.5871240570675127e-06,
+        "post_rise_prefall_offset_min_v": 4.1287594298999863e-07,
+        "post_rise_prefall_offset_max_v": 4.128759449884001e-07,
+        "subset_margin_s": 1e-10,
+        "original_voltage_budget_v": 1e-06,
+        "budget_changed": false,
+        "final_z_v": 3.9999984128759465
+      }
+    }
+  ],
+  "analysis_base_revision": "d521c28accf09d76e6de6c77b225c29672cdaec6",
+  "candidate_schedule_sha256": "c949245a36da6e7a76f500303e17f97b4809c014143da39849e83838dfa94c7e"
+}

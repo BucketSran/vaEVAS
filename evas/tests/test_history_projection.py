@@ -7,7 +7,7 @@ from evas import KernelError, compile_sources, transient
 from test_affine import KERNEL, instance, model
 
 
-DUT = (Path(__file__).resolve().parents[1] / 'validation/cases/projected_history/dut.va').read_text()
+DUT = (Path(__file__).with_name('fixtures') / 'projected_history.va').read_text()
 
 
 def execute(body=None, *, times=None, step=8):

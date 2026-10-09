@@ -1,0 +1,64 @@
+{
+  "candidate_EVAS": "pending separate identifiedcandidate6gridexecution",
+  "checker_sha256": "7c0eac46e35579cc48730d26cf0e6d63dcc3192ea3409908abbde9bc0fb964ed",
+  "configurations": [
+    {
+      "condition_public_sha256": "8e4f805732668c9e67d33e0287fadebae2ac042b4388783c005ecc26373a90cc",
+      "configuration": "hidden_loose-timer-1ps",
+      "family": "hidden_loose",
+      "files": {
+        "compile.va": "b3784722fc233cc7cf32ba43ee13abebbfa39b0676e5c653f79af840dc497ce7",
+        "dut.va": "786abce6b0903d21dfe373a55ef1cdf1f070445c85ab93302fc71b9f2760b6f9",
+        "evas-coarse.json": "e5a2b9b2f47f608cbd74721e62d54eb61042e2cebb2d3fa02569876954e91876",
+        "evas-fine.json": "0975ff9e06d713c6f455ba870185d133a8a9acf0ba53d615156a0d80fcad2dc3",
+        "parent-v4.dut.va": "284cdac4ff7d8569c7af76e6eacc4fe77cffc39dd1086a7b2bf847951233604c",
+        "reference-output-plan.json": "6fb254b644dd34be9697ab27852bd76ca57afc0f41a118e565f46c308724d490",
+        "tb.scs": "6b3a4e95213b1cece7ba1123b024e99f52031ded305c49954a6c1546668f5a2c"
+      },
+      "original_condition_sha256": "604fb8af5976b378356b8b8f99fc1e5d9a2f1dd8f1b7b4b7a28814f2c9842bd5"
+    },
+    {
+      "condition_public_sha256": "39e92d5e27966c2b0bd0a1dd4c07657ba64cf35c737c0bbfc46e49991c672d04",
+      "configuration": "hidden_loose-timer-1fs-nocross",
+      "family": "hidden_loose_nocross",
+      "files": {
+        "compile.va": "b3784722fc233cc7cf32ba43ee13abebbfa39b0676e5c653f79af840dc497ce7",
+        "dut.va": "c1b490cc75bf07cc6017be66c3258c8bfd7ff549f4b18d193d5e9de93b966acc",
+        "evas-coarse.json": "e5a2b9b2f47f608cbd74721e62d54eb61042e2cebb2d3fa02569876954e91876",
+        "evas-fine.json": "0975ff9e06d713c6f455ba870185d133a8a9acf0ba53d615156a0d80fcad2dc3",
+        "parent-v4.dut.va": "284cdac4ff7d8569c7af76e6eacc4fe77cffc39dd1086a7b2bf847951233604c",
+        "reference-output-plan.json": "6fb254b644dd34be9697ab27852bd76ca57afc0f41a118e565f46c308724d490",
+        "tb.scs": "6b3a4e95213b1cece7ba1123b024e99f52031ded305c49954a6c1546668f5a2c"
+      },
+      "original_condition_sha256": "9fdcb925b180eca75208926fbe2cdf0089ec165932ee7d325f71f165a5b9147e"
+    },
+    {
+      "condition_public_sha256": "8bef4558b535fcb2f2722664e63df8648ba1f34e8786da612039d1bcaacb4113",
+      "configuration": "mixed_source-quarter-ns-strobes",
+      "family": "mixed_source",
+      "files": {
+        "compile.va": "b3784722fc233cc7cf32ba43ee13abebbfa39b0676e5c653f79af840dc497ce7",
+        "dut.va": "1ce556712eccc4e8261984e36f4718f2871f2dff127b2df8a26a1cf02e59d8fe",
+        "evas-coarse.json": "c8b6a9b5f036d24c5c63d3a94dc7c9273bd1a25693f8c9790fd748b50a7fec38",
+        "evas-fine.json": "08b98aef751f63971bef904764f1cbdc0fc8a9e7177179a7040483356a72fa0b",
+        "parent-v4.dut.va": "1ce556712eccc4e8261984e36f4718f2871f2dff127b2df8a26a1cf02e59d8fe",
+        "reference-output-plan.json": "1b0ece4263cc3d022a486a01b42dd9d357207773d80438a07f428124cd24dc64",
+        "tb.scs": "6065e32b2ee9a4181e52e9647bd78ec93253c0f440262bdba5f97126df198d89"
+      },
+      "original_condition_sha256": "e4b278afd1a60eadc40fdf9c227613a769f4c21f27b7501033bb684ff0db3572"
+    }
+  ],
+  "deployment_format_adapter": "Firstv5deployment had0sim/0probe. Newv5bchanged INPUT_MANIFEST values fromSHAonly to{sha256,bytes}; all actual source/deck bytesmatch originalfrozenv5. The deployment-only nonrun is retained separately byroot.",
+  "diagnostic_denominator": 3,
+  "earlier_result_denominators_retained": "Original3compilefail; normalized3F/F/runtimefail; v4twoP-I/F-F remainunaltered. Diagnostic3 doesnotreplace original5.",
+  "finite_results": "1pshiddenP/I;1fsnocrossP/I;quarter-nsmixedP/P. Exactendpoint/orderIforallthree.",
+  "frozen_calibration_sha256": "d49026b1c55ab815f080d46196ffdc62597b10836c757647b85e157d5f2b3591",
+  "frozen_prep_manifest_sha256": "162420dac1bfada5a4c991c46642d26bb4feb537a55be3fad429799de09a2d2e",
+  "interpretation": "1fswithcross anomaly disappears either withtimer1psorwithcrosscallbackremoved, supporting association withthiscombination. Doesnotestablish closedsourceinternalcause.",
+  "public_calibration_runner_sha256": "89a05db807121829d3251a0327cbc7b3bac5d8bf598b3a9fc0b100e8a782ee51",
+  "public_calibration_sha256": "85afab6d4132e5f566fc72901a2e23a5917b0cb8f38a3d32bb21fc08eb348417",
+  "raw_actual_archive_sha256": "6ccec6adbbef06a4d04c4e0e914d8eb0f1d1b72e1a82a018c3dc566f04c78dd8",
+  "raw_availability": "local-only; rawwaveforms/logs and kernel productsnotincluded; no publichistoricalwaveformreproducibilityclaim",
+  "settings_reader_sha256": "244fe270b28465c5fe98c1b593e01e49628906680adaf5e096ad9d1d4474778d",
+  "verified_raw_files": 90
+}

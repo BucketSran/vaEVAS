@@ -1,0 +1,289 @@
+{
+  "actual_archive_sha256": {
+    "original_history_v2": "b867fee94cf3055ab9f7839e248c634e85ac6fa31db682c11a0e4f83a0da658e",
+    "strict_timer_v3": "101b06db0a840a64e38848e06605e0d37b00987c160b37f765460e3b920fd9a3"
+  },
+  "actual_settings_note": "Initial settings reader missingSI units producedI. Derived reader was separately calibrated and actual settings reanalyzedP; no requested-value fallback. Original failures retained in local archive.",
+  "calibration_controls": "24 actual controls:22 history controls plus2 unchanged E6 dependency controls",
+  "calibration_sha256": "29415ba391ee7a7a31fc190f059ad6495783c17badf894a94aad61b111663389",
+  "checker_dependency_sha256": "4a80e6cc91c553ae40d5d635c81ee0d11fd4436bc6fd96d88d1b1a51a13e28ff",
+  "checker_sha256": "76cd94f48d9c4a608c91449c438703d0af5a7df5d682fcb8c20d173aa0e2c056",
+  "denominator": 6,
+  "exact_endpoint_and_nearby_order": "I for all6",
+  "frozen_fixture_identities": [
+    {
+      "condition_derivation": "Only private source-origin path fields removed; oracle values and criteria unchanged.",
+      "condition_frozen_original_sha256": "2f473df91d85ec331d2f9e6415eae97c8f6f5e704adfc2da115514e62e1a06e0",
+      "condition_public_sha256": "a8587a5ba386db148f90fe73f0203ec10a6e340e06842649b3f6483ce8ad78d4",
+      "configuration": "nonlinear_near-base",
+      "frozen_original_file_hashes": {
+        "compile.va": "b3784722fc233cc7cf32ba43ee13abebbfa39b0676e5c653f79af840dc497ce7",
+        "dut.va": "8f84b211cc4954c0cc5cb0e7671930767e840cd0ec33f4e99fe62d5c23ef0e90",
+        "evas-manifest.json": "92314bb2010e63efbd377c122168b66189715778c1b376ce94d22a9f50f8c1c1",
+        "tb.scs": "e6ee27171e113219cfc6e55dcc68c60d94c4d8bc6a93671a83c5b8d5f64e0045"
+      }
+    },
+    {
+      "condition_derivation": "Only private source-origin path fields removed; oracle values and criteria unchanged.",
+      "condition_frozen_original_sha256": "95bfc3bbb6ef8555bb9bb62d1846b70fd761acc9123e4872b51a9c458d78059a",
+      "condition_public_sha256": "a3657fe99a08a72cd0bd70d01a181a8d71904d07e14e617455cc1e231f1168b5",
+      "configuration": "nonlinear_near-fine",
+      "frozen_original_file_hashes": {
+        "compile.va": "b3784722fc233cc7cf32ba43ee13abebbfa39b0676e5c653f79af840dc497ce7",
+        "dut.va": "8f84b211cc4954c0cc5cb0e7671930767e840cd0ec33f4e99fe62d5c23ef0e90",
+        "evas-manifest.json": "69f2b55368aba7ac9e4f4e1792d64f0a5f971b293becb6f3d5c1787e649f1d7c",
+        "tb.scs": "dd0af7f1589884c2dab80d17f45bd346606a12e739238ff19de7b6450df80557"
+      }
+    },
+    {
+      "condition_derivation": "Only private source-origin path fields removed; oracle values and criteria unchanged.",
+      "condition_frozen_original_sha256": "3d496fe854f6078302070407cb23b4fa89bdf36ba67bc9a7ce008c632db52643",
+      "condition_public_sha256": "1c085d4baffbc8fc0ea5706a991fa6141a7e5e69780add7e0824bfa489b79c01",
+      "configuration": "linear_pwl_near-base",
+      "frozen_original_file_hashes": {
+        "compile.va": "b3784722fc233cc7cf32ba43ee13abebbfa39b0676e5c653f79af840dc497ce7",
+        "dut.va": "44eedc6b8ab2d19770020e837fa1753feed1f3fc8d7ed7d2b3d795a45a81ae14",
+        "evas-manifest.json": "97fc81922f2e50fa2fdca6ee76130a1e0b54369c29c6ae83ec8399a982416f9d",
+        "tb.scs": "6f407c79a6b15857aa813c98b66c93f324f480168c89ed390f98ca24ceaea797"
+      }
+    },
+    {
+      "condition_derivation": "Only private source-origin path fields removed; oracle values and criteria unchanged.",
+      "condition_frozen_original_sha256": "90c006ef1c84512899ab47383f89a5aed863bf297fb973bfa29ba926f593bd53",
+      "condition_public_sha256": "19aba3e655b8c2b4131d06835b0bd30345260cec615bebb9300d52ba2474bdad",
+      "configuration": "linear_pwl_near-fine",
+      "frozen_original_file_hashes": {
+        "compile.va": "b3784722fc233cc7cf32ba43ee13abebbfa39b0676e5c653f79af840dc497ce7",
+        "dut.va": "44eedc6b8ab2d19770020e837fa1753feed1f3fc8d7ed7d2b3d795a45a81ae14",
+        "evas-manifest.json": "86d7d0d9c78e7ff48202ca970a632d7000f40c65f845ac5a8acd84a6e64587d1",
+        "tb.scs": "5fec635fb8285432d9313d53fa95ece23153bdd0a3a9bdc7c1cc704d646d9487"
+      }
+    },
+    {
+      "condition_derivation": "Only private source-origin path fields removed; oracle values and criteria unchanged.",
+      "condition_frozen_original_sha256": "31c5d978bd0a9df1b25f89294f269a459eaa0ed0d26c5e944e237e47ceabf26c",
+      "condition_public_sha256": "3d7b2fce11b76bd84f75f73cd3bfc9a1bb7307be9eab83561ff6c9c7cb7d9317",
+      "configuration": "nonlinear_near-1fs-strict",
+      "frozen_original_file_hashes": {
+        "compile.va": "b3784722fc233cc7cf32ba43ee13abebbfa39b0676e5c653f79af840dc497ce7",
+        "dut.va": "b7398a353873f950a3147773e087ddae5a2146b2734d5c8c78f5af69b5756a22",
+        "evas-manifest.json": "69f2b55368aba7ac9e4f4e1792d64f0a5f971b293becb6f3d5c1787e649f1d7c",
+        "tb.scs": "69ee1be35250284df85286f301b04bbb6ea22b8f177b2864a39f4e65c224989a"
+      }
+    },
+    {
+      "condition_derivation": "Only private source-origin path fields removed; oracle values and criteria unchanged.",
+      "condition_frozen_original_sha256": "53c83f891965e3390a459aa0da3880eeaae0c7c3374794bacaae850cbd9c68a3",
+      "condition_public_sha256": "263731e9fe7a794d23433394e89a264034b28bba0852be135e655beb0512f117",
+      "configuration": "linear_pwl_near-1fs-strict",
+      "frozen_original_file_hashes": {
+        "compile.va": "b3784722fc233cc7cf32ba43ee13abebbfa39b0676e5c653f79af840dc497ce7",
+        "dut.va": "30e44241fc3d90dfb6252b4088c209d5a16573222f674eb03f65458e39911263",
+        "evas-manifest.json": "86d7d0d9c78e7ff48202ca970a632d7000f40c65f845ac5a8acd84a6e64587d1",
+        "tb.scs": "8fd25c6785bf56691905411f97454adba24d96985ba524b5b5087b6920845468"
+      }
+    }
+  ],
+  "original_actual_reference_numeric_failures": 4,
+  "original_execution_identity": {
+    "E6_checker_sha256": "4a80e6cc91c553ae40d5d635c81ee0d11fd4436bc6fd96d88d1b1a51a13e28ff",
+    "adapter_calibration_sha256": "24549f77729c9feb392296819565676de5c53115575f824610318b97eeecd197",
+    "candidate_kernel_identity": {
+      "frontend": "local-only original artifact; not repository-contained",
+      "original_kernel": "local-only original artifact; not repository-contained",
+      "revision": "e5aedbf111461e1be747a73bd5d09f038011c318",
+      "sha256": "81691857e432e8e4d1569c4c3c8ad31de6bde0b487e0d1284aae45c5cee99038"
+    },
+    "frontend_identity": {
+      "hashes": {
+        "evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+        "evas/__main__.py": "f98567eedc0052dddf00fd13f5380e996409f72aed9fbf09702d5bf173fae1d5",
+        "evas/array_elaboration.py": "4faf4543a735ad19c89bbbc760d39f6860089d854b7f24922edaa390cf20df0b",
+        "evas/diagnostics.py": "a94641c77c61b71e7c1eeb9d36baa9c01b85adfe598472632841ed4a90744a5f",
+        "evas/elaboration.py": "1eb85eefcb393dbc58b6f248389a1d51ef792f45077b779dac0d55fc5aa5e074",
+        "evas/errors.py": "f5782a2c5ee28db98b0fe5d1d4a2e06ba3ec9f1b74b8a0da5bede3ca4154b958",
+        "evas/frontend.py": "2552416e633542f0770c1f7609ac4778aa8b841db5c0e36bd68a9904f682927c",
+        "evas/hierarchy.py": "c277bc21cbe987f7cb427a2955b6b20588d5c42ae09bbc62853dab7bdba4138f",
+        "evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+        "evas/instance_compiler.py": "2c935b8054d5ebe51e1a5488340920f95d8adba53bd21314060842c1ce723c05",
+        "evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+        "evas/ir.py": "3445e952b7bd96571303c2faf4474f5945855e26a3adfb80370bbe1935ce4ca9",
+        "evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+        "evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+        "evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+        "evas/lowering.py": "3df0c3f873285e45aa9de85863ca7d42b4c1cffc205a24164700b953b1874c71",
+        "evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+        "evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+        "evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+        "evas/node_elaboration.py": "f100e5e857b53a5ccaf43b10f61c1f1d719b0f5205490364dbf30a103bf480e6",
+        "evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+        "evas/preprocessor.py": "68c7c9d6df5a1f14ea33b8bbaebf79863b64110381d8bad910b98f281e2e2ffe",
+        "evas/protocol.py": "82302d948c4c0eff0b88318eb804344a1f60d3dd4798d2c2c561149b6a188607",
+        "evas/query.py": "6222b10aa9d889e93fa8b65059b5fb31799f7269770ebc72167c7c67e4a0b92b",
+        "evas/results.py": "d085a8a2b57aa2ae48b6fc69e47825b02326ca8e05ff56df61bc791b7771c0d1",
+        "evas/runtime.py": "b648c721efcb1d715cb871c644ff60b600229d9489c988edb7c4e291bbba1026",
+        "evas/scs.py": "d95097aa5e62d2fe9d6a3c6a6035ca981f64b2aebe7fce2ca58bf12b5a95b281",
+        "evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
+        "evas/syntax.py": "56eafc9ad5c4f8773441a8e7ccf751d7ce5380b68150a2e2ab6d55524c0f6058"
+      },
+      "revision": "e5aedbf111461e1be747a73bd5d09f038011c318",
+      "snapshot": "local-only original artifact; not repository-contained"
+    },
+    "history_checker_sha256": "76cd94f48d9c4a608c91449c438703d0af5a7df5d682fcb8c20d173aa0e2c056",
+    "observation_adapter_sha256": "a933613a5b55c1f2dc10aae775f055d9cb1337e6928180b9cf4ed7da7ee152bd",
+    "plan_sha256": "cd0c2e9f99d972c37efdf4c67e8cceb7bbb2484db520c4fb9ec5cbac0feeacea",
+    "raw_availability": "local-only; original reference and failures retained",
+    "raw_manifest_sha256": "d1f9bb8c122b9aaf7c5543a5f0aed25e28bac21a85fa5320f80fc68e1837aeca",
+    "runner_sha256": "12643406ddf32a721b5786d2f359055f8dbe0d9fa751a0f1bbe7fb86541cdea3",
+    "settings_reader_sha256": "79cf4a9cc44e30ce6551781e8e44e00c0963c179032c660928ed38556c3baf14",
+    "tool_identity": {
+      "binary": "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre",
+      "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+      "probe": {
+        "cleanup": {
+          "complete": true,
+          "errors": [],
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ]
+        },
+        "completed_utc": "2026-10-07T19:45:22Z",
+        "log": "version.log",
+        "log_sha256": "d0e6c83a98026a294bfc4b9754c4e294d322b60b1872a28e38f84caccbdf7f81",
+        "resource_caps": {
+          "file_limit_bytes": 33554432,
+          "memory_limit_bytes": 4294967296,
+          "threads": 1
+        },
+        "returncode": 0,
+        "stage": "version",
+        "status": "completed",
+        "timeout": false
+      },
+      "profile_identity": "4d05474e15dc181d4f8f99bf749e8190c872d621288b1aa3bc6ffa000370fa4f",
+      "setup_basename_sha256": {
+        ".cshrc.cadence.sui": "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+        ".cshrc.mentor25.sui": "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+      },
+      "unknowns": [],
+      "version": "sub-version  21.1.0.509.isr12"
+    }
+  },
+  "raw_availability": "local-only; raw PSF, kernel binaries, frontend snapshot and native request/response bulk are not committed. Hashes identify retained local artifacts, do not establish public reproducibility.",
+  "repository_contained_after_root_copy": "sources, original execution decks, manifests, independent checker, calibration, SI reader and compact receipts only",
+  "scope": "Six mathematical history configurations: four original1ns sources and two new1fs diagnostic sources. No original failure replaced.",
+  "settings_reader_sha256": "244fe270b28465c5fe98c1b593e01e49628906680adaf5e096ad9d1d4474778d",
+  "strict_timer_diagnostic_finite_passes": 2,
+  "strict_timer_execution_identity": {
+    "E6_checker_sha256": "4a80e6cc91c553ae40d5d635c81ee0d11fd4436bc6fd96d88d1b1a51a13e28ff",
+    "adapter_calibration_sha256": "24549f77729c9feb392296819565676de5c53115575f824610318b97eeecd197",
+    "candidate_kernel_identity": {
+      "frontend": "local-only original artifact; not repository-contained",
+      "original_kernel": "local-only original artifact; not repository-contained",
+      "revision": "e5aedbf111461e1be747a73bd5d09f038011c318",
+      "sha256": "81691857e432e8e4d1569c4c3c8ad31de6bde0b487e0d1284aae45c5cee99038"
+    },
+    "frontend_identity": {
+      "hashes": {
+        "evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+        "evas/__main__.py": "f98567eedc0052dddf00fd13f5380e996409f72aed9fbf09702d5bf173fae1d5",
+        "evas/array_elaboration.py": "4faf4543a735ad19c89bbbc760d39f6860089d854b7f24922edaa390cf20df0b",
+        "evas/diagnostics.py": "a94641c77c61b71e7c1eeb9d36baa9c01b85adfe598472632841ed4a90744a5f",
+        "evas/elaboration.py": "1eb85eefcb393dbc58b6f248389a1d51ef792f45077b779dac0d55fc5aa5e074",
+        "evas/errors.py": "f5782a2c5ee28db98b0fe5d1d4a2e06ba3ec9f1b74b8a0da5bede3ca4154b958",
+        "evas/frontend.py": "2552416e633542f0770c1f7609ac4778aa8b841db5c0e36bd68a9904f682927c",
+        "evas/hierarchy.py": "c277bc21cbe987f7cb427a2955b6b20588d5c42ae09bbc62853dab7bdba4138f",
+        "evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+        "evas/instance_compiler.py": "2c935b8054d5ebe51e1a5488340920f95d8adba53bd21314060842c1ce723c05",
+        "evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+        "evas/ir.py": "3445e952b7bd96571303c2faf4474f5945855e26a3adfb80370bbe1935ce4ca9",
+        "evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+        "evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+        "evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+        "evas/lowering.py": "3df0c3f873285e45aa9de85863ca7d42b4c1cffc205a24164700b953b1874c71",
+        "evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+        "evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+        "evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+        "evas/node_elaboration.py": "f100e5e857b53a5ccaf43b10f61c1f1d719b0f5205490364dbf30a103bf480e6",
+        "evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+        "evas/preprocessor.py": "68c7c9d6df5a1f14ea33b8bbaebf79863b64110381d8bad910b98f281e2e2ffe",
+        "evas/protocol.py": "82302d948c4c0eff0b88318eb804344a1f60d3dd4798d2c2c561149b6a188607",
+        "evas/query.py": "6222b10aa9d889e93fa8b65059b5fb31799f7269770ebc72167c7c67e4a0b92b",
+        "evas/results.py": "d085a8a2b57aa2ae48b6fc69e47825b02326ca8e05ff56df61bc791b7771c0d1",
+        "evas/runtime.py": "b648c721efcb1d715cb871c644ff60b600229d9489c988edb7c4e291bbba1026",
+        "evas/scs.py": "d95097aa5e62d2fe9d6a3c6a6035ca981f64b2aebe7fce2ca58bf12b5a95b281",
+        "evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
+        "evas/syntax.py": "56eafc9ad5c4f8773441a8e7ccf751d7ce5380b68150a2e2ab6d55524c0f6058"
+      },
+      "revision": "e5aedbf111461e1be747a73bd5d09f038011c318",
+      "snapshot": "local-only original artifact; not repository-contained"
+    },
+    "history_checker_sha256": "76cd94f48d9c4a608c91449c438703d0af5a7df5d682fcb8c20d173aa0e2c056",
+    "observation_adapter_sha256": "a933613a5b55c1f2dc10aae775f055d9cb1337e6928180b9cf4ed7da7ee152bd",
+    "plan_sha256": "88e7db0ca66a54fd32c133bcb48fb7cc8fb9d10c9388fbf59c53ad7f8f5a3aa5",
+    "raw_availability": "local-only; original reference and failures retained",
+    "raw_manifest_sha256": "4ba4c9e5d6e3395e311fb621d9073f2470329f052ff4e218b607da7da2c6227d",
+    "runner_sha256": "c692840690dd20745ae5c9c94c8caf9e3dcaac147cb9dbfeab4f6c325cca5fb4",
+    "settings_reader_sha256": "244fe270b28465c5fe98c1b593e01e49628906680adaf5e096ad9d1d4474778d",
+    "tool_identity": {
+      "binary": "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre",
+      "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+      "probe": {
+        "cleanup": {
+          "complete": true,
+          "errors": [],
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ]
+        },
+        "completed_utc": "2026-10-07T20:02:52Z",
+        "log": "version.log",
+        "log_sha256": "d0e6c83a98026a294bfc4b9754c4e294d322b60b1872a28e38f84caccbdf7f81",
+        "resource_caps": {
+          "file_limit_bytes": 33554432,
+          "memory_limit_bytes": 4294967296,
+          "threads": 1
+        },
+        "returncode": 0,
+        "stage": "version",
+        "status": "completed",
+        "timeout": false
+      },
+      "profile_identity": "4d05474e15dc181d4f8f99bf749e8190c872d621288b1aa3bc6ffa000370fa4f",
+      "setup_basename_sha256": {
+        ".cshrc.cadence.sui": "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+        ".cshrc.mentor25.sui": "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+      },
+      "unknowns": [],
+      "version": "sub-version  21.1.0.509.isr12"
+    }
+  },
+  "production_revision": "e5aedbf111461e1be747a73bd5d09f038011c318",
+  "tests_only_followups": [
+    "ed334e2748f5d9c3070774d5c52d5f66a2c624f1",
+    "4e98dbd1"
+  ],
+  "production_identity_note": "Test followups and final comments do not change recorded physical-history production code or the frozen kernel.",
+  "independent_astra_review": {
+    "method": "fresh-context gpt-6-astra source review and independent test/raw-evidence execution",
+    "production_report_sha256": "b79ec3f19e2931f373729946b4e2fe0d01987b315541e743e78ed9548742f55e",
+    "final_evidence_report_sha256": "401ccd653364c1380abfe7d9f2ff77b79e3e7cd8de79a6ae7efe257a2d7da654",
+    "open_blocking_findings": [],
+    "full_reports_availability": "local-only"
+  },
+  "manifest_identity_note": "EVAS manifests reference dut.va by relative path and do not embed its contents. Fine and strict manifests can share a hash while dut.va changes. Source and manifest hashes together identify each case; neither hash alone identifies the full experiment.",
+  "independent_glm_review": {
+    "method": "actual Claude CLI glm-5.3 supplied-source and frozen-evidence review",
+    "final_report_sha256": "4079a6006dcbe5c92137a42cb42cf8a4a128beb5525e7f736331bc448d16cc18",
+    "full_report_availability": "local-only",
+    "blocking_findings": [],
+    "low_findings_disposition": {
+      "F1": "Retain non-point assertion for this exact fixture; comment explains tau rounding and ordered rho representative. No universal non-point requirement claimed.",
+      "F2": "Rename test loop to quadratic_source and explicitly distinguish source forcing from nonlinear state feedback.",
+      "F3": "Include existing strict-case PSF and global log actual readback plus hashes in summary; no new reference execution or verdict change.",
+      "F4": "Explain separate source and relative-path manifest identities; frozen manifests unchanged."
+    }
+  }
+}

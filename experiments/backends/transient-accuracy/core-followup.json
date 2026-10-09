@@ -1,0 +1,1154 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-07",
+  "scope": "Finite observed diagnostics on a combined candidate, not merged support or paper grading.",
+  "qualification_granted": false,
+  "paper_status": "Unchanged. Original fixed48 adjudication I35/X13/T0 is historical and not rewritten.",
+  "pairing": "Unique identical binary64 times only. No interpolation, nearest-time replacement, stop expansion or changed physical budget.",
+  "availability": "Compact summary public with this commit; raw, binaries, full logs and review transcripts local-only and retained on existing server. Hashes are not download URLs.",
+  "local_evidence_root": "current/runs/four-backend-fixes-20261007",
+  "candidate": {
+    "composition": "main 49a8865c plus PR100/101/102; branch diffs composed against their own ancestors. This is a combined snapshot, not either PR standalone.",
+    "pr100_parent": "3bcf5be4aa3ba129296531a176c66e07ba076807",
+    "pr101_fixed": "7c509e60aaeb4776a3b69f7543ed5576472a858f",
+    "pr102_parent": "4b63b4d2e5b35ffea587f798d4d2f3947dfb404c",
+    "source_manifest_sha256": "a6f97fddb72180b35b98212ce61fda304625fa21102ab88cda951953dff6a874",
+    "kernel_sha256": "1f57bf057f82b63261de5fc3f177545289675b7344553e8e2e1ecb886e85f79c",
+    "identity": {
+      "build_revision": null,
+      "identity_version": 1,
+      "ir_schema_version": 18,
+      "name": "evas-kernel",
+      "platform": {
+        "arch": "x86_64",
+        "os": "linux"
+      },
+      "request_protocol_version": null,
+      "version": "0.14.0"
+    },
+    "source_note": "93 source-manifest files include separate test modules and two build-required benches. Later changes only adjust cfg(test) fixtures/add a ground unit test and documentation; runtime source unchanged."
+  },
+  "settings": {
+    "evas_requested": {
+      "reltol": 1e-05,
+      "vabstol_V": 1e-07,
+      "max_step_s": 2e-10
+    },
+    "spectre_version": "sub-version  21.1.0.509.isr12",
+    "spectre_requested_reltol": 1e-05,
+    "spectre_effective_reltol": 1e-06,
+    "interpretation": "Spectre integration/solve tolerances and EVAS forward-error bounds are different obligations. Neither supplies an independent observation-error qualification."
+  },
+  "execution": {
+    "old_evas_waveforms": 8,
+    "new_evas_waveforms": 12,
+    "fixed_case_count": 12,
+    "final_evas_main_launches": 16,
+    "final_evas_query_variants": 4,
+    "earlier_retained_evas_main_launches": 12,
+    "fresh_spectre_main_launches": 4,
+    "fresh_spectre_version_probes": 1,
+    "open_backends": "Not rerun: original OpenVAF-R/ngspice 5/12 and Gnucap/modelgen 10/12 waveform availability retained with failures.",
+    "cleanup": "All remote stages cleaned and shared lock released; serialized stages, 90 s simulation, 300 s build, 1 CPU, 4 GiB memory."
+  },
+  "artifacts": {
+    "old_cards_sha256": "e1ae5311da9e05991e9802da1a24e97a70d179972608a1b9d21eb00013f61a53",
+    "analysis_sha256": "2eb797aae1a951845ab5d35307370d4e69cb45d4ebd2ad2f94caff5b62c6bd38",
+    "analysis_summary_sha256": "ec3bc0ef17d82959d63143c1e9cf4b9e1e706774e7a680806a65b55f350914a0",
+    "comparison_helper_sha256": "921274c08f7595a60e1256e5629476b6a7eb1758961d413ab4bedd9f26cd8c7e",
+    "nominal_helper_sha256": "202889ead23edf017ee25635ea25b65686a5b41e7b26cb427bbd5316d672726c",
+    "spectre_archive_sha256": "a3c58213a35b6e41d82ab31d37fdb8d29be915a40223e733418701c278f072a9",
+    "evas_archive_sha256": "cf043fd6ef89a55ffb7b756db0748ab155a83fbbc10098e6ae81342d253bd05a",
+    "verified_summary_sha256": "a4589e4d30f4f83ca9576f99b602106d57881d5ca1f4e3abda00a0f94b0a9ba2"
+  },
+  "checks": {
+    "pr100": "90 mapped Python; full Rust 167 passed/1 ignored; subsequent ground-zero and cross-IR fixture target tests separately passed. clippy/fmt/traceability passed.",
+    "pr102": "162 mapped Python; full Rust 165 passed/1 ignored; clippy/fmt/traceability passed.",
+    "combined": "126 public tests passed. Full Rust first 185 passed/2 failed/1 ignored; wrong IR seed and omitted cfg(test) overlay corrected, both target tests then passed. Full batch not rerun. Production source unchanged by fixture corrections.",
+    "code_reviews": "Astra and actual Claude CLI GLM-5.3 completed review. Old-API exact-certificate leakage fixed; original red evidence retained. Ground-zero acceptance expansion explicitly documented and tested."
+  },
+  "limits": [
+    "No full continuous-trajectory, export-origin or independent observation-error qualification; no paper P.",
+    "Event-window differences and all raw maxima retained. Matching final callback counts does not prove identical timing.",
+    "Original models and cards are development-informed, not untouched confirmation data.",
+    "Mixed fixed/held/cross ordering and uncertain history boundaries can still reject. Real state nominal values have no standalone relative-accuracy guarantee; consumers retain the full interval."
+  ],
+  "records": [
+    {
+      "condition": "EV-SH-01",
+      "paired_rows": 45836,
+      "reference_counts": {
+        "total_rows": 45837,
+        "invalid_time_rows": 0,
+        "distinct_finite_times": 45837,
+        "duplicate_time_count": 0,
+        "rows_at_duplicate_times": 0
+      },
+      "unpaired_reference_unique_times": 1,
+      "unpaired_reason": "Preserve Spectre end records beyond original EVAS stop; no stop expansion.",
+      "frozen_observation_windows": [
+        {
+          "center_T": 2,
+          "start_T": 1.998,
+          "end_T": 2.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 4,
+          "start_T": 3.998,
+          "end_T": 4.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 6,
+          "start_T": 5.998,
+          "end_T": 6.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 8,
+          "start_T": 7.998,
+          "end_T": 8.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        }
+      ],
+      "segments": {
+        "all": {
+          "paired_rows": 45836,
+          "ports": {
+            "in": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 45836,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 3.3306690738754696e-16,
+                "time_s": 4.532199999998917e-06,
+                "reference_row_index": 23079,
+                "test_row_index": 23079,
+                "reference_value": 0.5064399999997836,
+                "test_value": 0.5064399999997833,
+                "raw_units": "V"
+              }
+            },
+            "out": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 45836,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 0.5997000000000001,
+                "time_s": 7.999007462686569e-06,
+                "reference_row_index": 40658,
+                "test_row_index": 40658,
+                "reference_value": 0.2002999999999997,
+                "test_value": 0.7999999999999998,
+                "raw_units": "V"
+              }
+            },
+            "count": {
+              "units": "V",
+              "meaning": "callback-count marker encoded as node V",
+              "finite_pairs": 45836,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 1.0,
+                "time_s": 1.999e-06,
+                "reference_row_index": 10040,
+                "test_row_index": 10040,
+                "reference_value": 1.0,
+                "test_value": -0.0,
+                "raw_units": "V"
+              }
+            }
+          }
+        },
+        "inside_declared_observation_windows": {
+          "paired_rows": 905,
+          "ports": {
+            "in": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 905,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 2.220446049250313e-16,
+                "time_s": 3.998079601990049e-06,
+                "reference_row_index": 20177,
+                "test_row_index": 20177,
+                "reference_value": 0.39961592039800997,
+                "test_value": 0.39961592039800975,
+                "raw_units": "V"
+              }
+            },
+            "out": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 905,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 0.5997000000000001,
+                "time_s": 7.999007462686569e-06,
+                "reference_row_index": 40658,
+                "test_row_index": 40658,
+                "reference_value": 0.2002999999999997,
+                "test_value": 0.7999999999999998,
+                "raw_units": "V"
+              }
+            },
+            "count": {
+              "units": "V",
+              "meaning": "callback-count marker encoded as node V",
+              "finite_pairs": 905,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 1.0,
+                "time_s": 1.999e-06,
+                "reference_row_index": 10040,
+                "test_row_index": 10040,
+                "reference_value": 1.0,
+                "test_value": -0.0,
+                "raw_units": "V"
+              }
+            }
+          }
+        },
+        "outside_declared_observation_windows": {
+          "paired_rows": 44931,
+          "ports": {
+            "in": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 44931,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 3.3306690738754696e-16,
+                "time_s": 4.532199999998917e-06,
+                "reference_row_index": 23079,
+                "test_row_index": 23079,
+                "reference_value": 0.5064399999997836,
+                "test_value": 0.5064399999997833,
+                "raw_units": "V"
+              }
+            },
+            "out": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 44931,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 0.0003000000000006886,
+                "time_s": 8.002039800995027e-06,
+                "reference_row_index": 40844,
+                "test_row_index": 40844,
+                "reference_value": 0.2002999999999998,
+                "test_value": 0.19999999999999912,
+                "raw_units": "V"
+              }
+            },
+            "count": {
+              "units": "V",
+              "meaning": "callback-count marker encoded as node V",
+              "finite_pairs": 44931,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 0.0,
+                "time_s": 0.0,
+                "reference_row_index": 0,
+                "test_row_index": 0,
+                "reference_value": 0.0,
+                "test_value": -0.0,
+                "raw_units": "V"
+              }
+            }
+          }
+        }
+      },
+      "counter_stage_mismatch_rows": 220,
+      "counter_stage_mismatch_outside_fixed_windows": 0,
+      "counters": {
+        "count": {
+          "expected_final": 4,
+          "spectre_final": 4.0,
+          "evas_final": 4.0,
+          "spectre_changes": 4,
+          "evas_changes": 4
+        }
+      },
+      "query_invariance": {
+        "condition": "EV-SH-01",
+        "original_query_count": 45788,
+        "aligned_query_count": 45836,
+        "program_bytes_equal": true,
+        "physical_request_bytes_equal": true,
+        "original_event_count": 4,
+        "aligned_event_count": 4,
+        "event_records_semantically_equal": true,
+        "event_records_raw_json_bytes_equal": true,
+        "original_event_json_sha256": "a80e94d44eab13638172f2ba632cd7175822d576d66b9461e6a873e1d6432f2b",
+        "aligned_event_json_sha256": "a80e94d44eab13638172f2ba632cd7175822d576d66b9461e6a873e1d6432f2b"
+      },
+      "spectre_settings_and_identity": {
+        "condition": "EV-SH-01",
+        "status": "waveform_available",
+        "source_sha256": "8efd7eebe977db0e3069f58b22db33c94799e65ebab6e9e13a9986cdccbdfca8",
+        "deck_sha256": "00b47228195270a797e651883dfb72b79a4cd62eb1b7771a3f047b2d4167ee06",
+        "frozen_inputs_byte_match": {
+          "dut.va": true,
+          "tb.scs": true,
+          "condition.json": true,
+          "requested_settings.json": true,
+          "requested_times.json": true,
+          "binding.json": true
+        },
+        "simulate_stages": 1,
+        "receipt_sha256": "ef0669ee152802b4545cfa276ccb96b8ff5c97b2d8e86d29a99ed85cf31bf91b",
+        "waveform_sha256": "5e56e09fa9aad0e261c8013d71e9d409891ee2acf84a8343963052974e0f3639",
+        "effective_settings_status": "I",
+        "effective_settings": {
+          "reltol": 1e-06,
+          "vabstol": 1.0000000000000001e-07,
+          "iabstol": 1e-12,
+          "stop": 9e-06,
+          "maxstep": 2e-10,
+          "method": "traponly"
+        },
+        "requested_settings": {
+          "reltol": 1e-05,
+          "vabstol": 1e-07,
+          "iabstol": 1e-12,
+          "stop": 9e-06,
+          "maxstep": 2e-10
+        },
+        "mismatches": [
+          "reltol"
+        ]
+      },
+      "input_files_sha256": {
+        "collected/spectre/spectre-output/runs/EV-SH-01/observation.json": "4604c7e32b6fd7c8df4f4f0144123b4a72774534e5354c3ea0f404253815fe57",
+        "collected/evas/final-v4/evas-aligned-output-v4/runs/EV-SH-01/raw-response.json": "be9edcfa7b7c7f75199fd0a8607f16a06bb4ddab63a4a841507741d7842d09d0",
+        "collected/evas/final-v4/evas-aligned-output-v4/runs/EV-SH-01/requested_times.json": "69417edd2537fbcc52393fa7fd2710e0bd0d9952fe56b3f34d9976b51e5d5d43"
+      },
+      "full_analysis_local": {
+        "path": "current/runs/four-backend-fixes-20261007/analysis-v2/EV-SH-01.json",
+        "sha256": "838ab49756013d7de87453f6e7dd7eb9f589f5af4503dc1325753f02e0bfa67a"
+      }
+    },
+    {
+      "condition": "CO-SH-01",
+      "paired_rows": 46083,
+      "reference_counts": {
+        "total_rows": 46084,
+        "invalid_time_rows": 0,
+        "distinct_finite_times": 46084,
+        "duplicate_time_count": 0,
+        "rows_at_duplicate_times": 0
+      },
+      "unpaired_reference_unique_times": 1,
+      "unpaired_reason": "Preserve Spectre end records beyond original EVAS stop; no stop expansion.",
+      "frozen_observation_windows": [
+        {
+          "center_T": 2,
+          "start_T": 1.998,
+          "end_T": 2.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 3,
+          "start_T": 2.998,
+          "end_T": 3.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 4,
+          "start_T": 3.998,
+          "end_T": 4.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 6,
+          "start_T": 5.998,
+          "end_T": 6.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 8,
+          "start_T": 7.998,
+          "end_T": 8.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        }
+      ],
+      "segments": {
+        "all": {
+          "paired_rows": 46083,
+          "ports": {
+            "in": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 46083,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 6.661338147750939e-16,
+                "time_s": 8.499600000000656e-06,
+                "reference_row_index": 43575,
+                "test_row_index": 43575,
+                "reference_value": 1.2999200000001307,
+                "test_value": 1.2999200000001314,
+                "raw_units": "V"
+              }
+            },
+            "clk": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 46083,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 0.0,
+                "time_s": 0.0,
+                "reference_row_index": 0,
+                "test_row_index": 0,
+                "reference_value": 0.0,
+                "test_value": 0.0,
+                "raw_units": "V"
+              }
+            },
+            "reset": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 46083,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 0.0,
+                "time_s": 0.0,
+                "reference_row_index": 0,
+                "test_row_index": 0,
+                "reference_value": 0.0,
+                "test_value": 0.0,
+                "raw_units": "V"
+              }
+            },
+            "out": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 46083,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 4.999999999819038e-05,
+                "time_s": 2.0000199999999996e-06,
+                "reference_row_index": 10094,
+                "test_row_index": 10094,
+                "reference_value": -0.25,
+                "test_value": -0.2499500000000018,
+                "raw_units": "V"
+              }
+            },
+            "state": {
+              "units": "V",
+              "meaning": "state marker encoded as node V",
+              "finite_pairs": 46083,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 1.0499999999999998,
+                "time_s": 6e-06,
+                "reference_row_index": 30734,
+                "test_row_index": 30734,
+                "reference_value": 0.7999999999999999,
+                "test_value": -0.25,
+                "raw_units": "V"
+              }
+            },
+            "count": {
+              "units": "V",
+              "meaning": "callback-count marker encoded as node V",
+              "finite_pairs": 46083,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 1.0,
+                "time_s": 3e-06,
+                "reference_row_index": 15292,
+                "test_row_index": 15292,
+                "reference_value": 2.0,
+                "test_value": 1.0,
+                "raw_units": "V"
+              }
+            }
+          }
+        },
+        "inside_declared_observation_windows": {
+          "paired_rows": 1107,
+          "ports": {
+            "in": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 1107,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 4.440892098500626e-16,
+                "time_s": 7.998000000000434e-06,
+                "reference_row_index": 40829,
+                "test_row_index": 40829,
+                "reference_value": 1.1996000000000864,
+                "test_value": 1.1996000000000868,
+                "raw_units": "V"
+              }
+            },
+            "clk": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 1107,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 0.0,
+                "time_s": 1.998000000000015e-06,
+                "reference_row_index": 9993,
+                "test_row_index": 9993,
+                "reference_value": 0.49500000000003747,
+                "test_value": 0.49500000000003747,
+                "raw_units": "V"
+              }
+            },
+            "reset": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 1107,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 0.0,
+                "time_s": 1.998000000000015e-06,
+                "reference_row_index": 9993,
+                "test_row_index": 9993,
+                "reference_value": 0.0,
+                "test_value": 0.0,
+                "raw_units": "V"
+              }
+            },
+            "out": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 1107,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 4.999999999819038e-05,
+                "time_s": 2.0000199999999996e-06,
+                "reference_row_index": 10094,
+                "test_row_index": 10094,
+                "reference_value": -0.25,
+                "test_value": -0.2499500000000018,
+                "raw_units": "V"
+              }
+            },
+            "state": {
+              "units": "V",
+              "meaning": "state marker encoded as node V",
+              "finite_pairs": 1107,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 1.0499999999999998,
+                "time_s": 6e-06,
+                "reference_row_index": 30734,
+                "test_row_index": 30734,
+                "reference_value": 0.7999999999999999,
+                "test_value": -0.25,
+                "raw_units": "V"
+              }
+            },
+            "count": {
+              "units": "V",
+              "meaning": "callback-count marker encoded as node V",
+              "finite_pairs": 1107,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 1.0,
+                "time_s": 3e-06,
+                "reference_row_index": 15292,
+                "test_row_index": 15292,
+                "reference_value": 2.0,
+                "test_value": 1.0,
+                "raw_units": "V"
+              }
+            }
+          }
+        },
+        "outside_declared_observation_windows": {
+          "paired_rows": 44976,
+          "ports": {
+            "in": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 44976,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 6.661338147750939e-16,
+                "time_s": 8.499600000000656e-06,
+                "reference_row_index": 43575,
+                "test_row_index": 43575,
+                "reference_value": 1.2999200000001307,
+                "test_value": 1.2999200000001314,
+                "raw_units": "V"
+              }
+            },
+            "clk": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 44976,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 0.0,
+                "time_s": 0.0,
+                "reference_row_index": 0,
+                "test_row_index": 0,
+                "reference_value": 0.0,
+                "test_value": 0.0,
+                "raw_units": "V"
+              }
+            },
+            "reset": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 44976,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 0.0,
+                "time_s": 0.0,
+                "reference_row_index": 0,
+                "test_row_index": 0,
+                "reference_value": 0.0,
+                "test_value": 0.0,
+                "raw_units": "V"
+              }
+            },
+            "out": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 44976,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 4.991919999794425e-05,
+                "time_s": 2.00204e-06,
+                "reference_row_index": 10194,
+                "test_row_index": 10194,
+                "reference_value": -0.24494991919999903,
+                "test_value": -0.2449000000000011,
+                "raw_units": "V"
+              }
+            },
+            "state": {
+              "units": "V",
+              "meaning": "state marker encoded as node V",
+              "finite_pairs": 44976,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 3.999999999837467e-06,
+                "time_s": 2.00204e-06,
+                "reference_row_index": 10194,
+                "test_row_index": 10194,
+                "reference_value": 3.999999999892978e-06,
+                "test_value": 5.551115123125783e-17,
+                "raw_units": "V"
+              }
+            },
+            "count": {
+              "units": "V",
+              "meaning": "callback-count marker encoded as node V",
+              "finite_pairs": 44976,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 0.0,
+                "time_s": 0.0,
+                "reference_row_index": 0,
+                "test_row_index": 0,
+                "reference_value": 0.0,
+                "test_value": -0.0,
+                "raw_units": "V"
+              }
+            }
+          }
+        }
+      },
+      "counter_stage_mismatch_rows": 3,
+      "counter_stage_mismatch_outside_fixed_windows": 0,
+      "counters": {
+        "count": {
+          "expected_final": 5,
+          "spectre_final": 5.0,
+          "evas_final": 5.0,
+          "spectre_changes": 5,
+          "evas_changes": 5
+        }
+      },
+      "query_invariance": {
+        "condition": "CO-SH-01",
+        "original_query_count": 45979,
+        "aligned_query_count": 46083,
+        "program_bytes_equal": true,
+        "physical_request_bytes_equal": true,
+        "original_event_count": 5,
+        "aligned_event_count": 5,
+        "event_records_semantically_equal": true,
+        "event_records_raw_json_bytes_equal": true,
+        "original_event_json_sha256": "5f5e116e9b6905d9b1b0c8b077fc2fe7f524899b4a8a30f091f3d53a7e994028",
+        "aligned_event_json_sha256": "5f5e116e9b6905d9b1b0c8b077fc2fe7f524899b4a8a30f091f3d53a7e994028"
+      },
+      "spectre_settings_and_identity": {
+        "condition": "CO-SH-01",
+        "status": "waveform_available",
+        "source_sha256": "5f6cb341872aef5e386b625297ef8aea0163232e735d7b5a1c02ac2e94d0c135",
+        "deck_sha256": "194f532181679c1bd04f1b12dbb5e5e7811c917bca92d171062759bd28ceeb8c",
+        "frozen_inputs_byte_match": {
+          "dut.va": true,
+          "tb.scs": true,
+          "condition.json": true,
+          "requested_settings.json": true,
+          "requested_times.json": true,
+          "binding.json": true
+        },
+        "simulate_stages": 1,
+        "receipt_sha256": "19d07ca65f17159a0f14b9ab3c2da86d02a480c0c6b1f6012c25ff809895fc64",
+        "waveform_sha256": "989b9fcc296e9b814025d17acd6eeba372b6c8d9b4f695cd75ec1deac892b2b4",
+        "effective_settings_status": "I",
+        "effective_settings": {
+          "reltol": 1e-06,
+          "vabstol": 1.0000000000000001e-07,
+          "iabstol": 1e-12,
+          "stop": 9e-06,
+          "maxstep": 2e-10,
+          "method": "traponly"
+        },
+        "requested_settings": {
+          "reltol": 1e-05,
+          "vabstol": 1e-07,
+          "iabstol": 1e-12,
+          "stop": 9e-06,
+          "maxstep": 2e-10
+        },
+        "mismatches": [
+          "reltol"
+        ]
+      },
+      "input_files_sha256": {
+        "collected/spectre/spectre-output/runs/CO-SH-01/observation.json": "4c2956afad517dc9f021cdbf8ef2736f3365e733a9050fe9319e10eef6e9bbc2",
+        "collected/evas/final-v4/evas-aligned-output-v4/runs/CO-SH-01/raw-response.json": "db9ee33a1ae4951dc27f716222e63977a32b143d1259c2f97df5a908317b7cd7",
+        "collected/evas/final-v4/evas-aligned-output-v4/runs/CO-SH-01/requested_times.json": "fdc066c63acc74f2d0b5b595e55824eef95f1b0a462205e62ec1b1db66f633bb"
+      },
+      "full_analysis_local": {
+        "path": "current/runs/four-backend-fixes-20261007/analysis-v2/CO-SH-01.json",
+        "sha256": "6410c20e8b9acd33da22a7486142700c8b263571f73552bb4f9cd708c7ccea1a"
+      }
+    },
+    {
+      "condition": "SI-01",
+      "paired_rows": 35785,
+      "reference_counts": {
+        "total_rows": 35785,
+        "invalid_time_rows": 0,
+        "distinct_finite_times": 35785,
+        "duplicate_time_count": 0,
+        "rows_at_duplicate_times": 0
+      },
+      "unpaired_reference_unique_times": 0,
+      "unpaired_reason": "Preserve Spectre end records beyond original EVAS stop; no stop expansion.",
+      "frozen_observation_windows": [
+        {
+          "center_T": 2,
+          "start_T": 1.998,
+          "end_T": 2.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 3,
+          "start_T": 2.998,
+          "end_T": 3.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 4,
+          "start_T": 3.998,
+          "end_T": 4.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        },
+        {
+          "center_T": 6,
+          "start_T": 5.998,
+          "end_T": 6.002,
+          "max_gap_s": 2e-11,
+          "include_exact_center": true
+        }
+      ],
+      "segments": {
+        "all": {
+          "paired_rows": 35785,
+          "ports": {
+            "a": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 35785,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 1.1102230246251565e-16,
+                "time_s": 3.5206000000000383e-06,
+                "reference_row_index": 17969,
+                "test_row_index": 17969,
+                "reference_value": 0.35206000000000387,
+                "test_value": 0.35206000000000376,
+                "raw_units": "V"
+              }
+            },
+            "b": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 35785,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 2.220446049250313e-16,
+                "time_s": 2.6166000000000454e-06,
+                "reference_row_index": 13266,
+                "test_row_index": 13266,
+                "reference_value": 0.7383399999999956,
+                "test_value": 0.7383399999999953,
+                "raw_units": "V"
+              }
+            },
+            "oa": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 35785,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 0.44989999999999997,
+                "time_s": 1.999e-06,
+                "reference_row_index": 10040,
+                "test_row_index": 10040,
+                "reference_value": 0.19989999999999997,
+                "test_value": -0.25,
+                "raw_units": "V"
+              }
+            },
+            "ob": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 35785,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 0.2999019999999999,
+                "time_s": 5.99902e-06,
+                "reference_row_index": 30642,
+                "test_row_index": 30642,
+                "reference_value": 0.40009800000000006,
+                "test_value": 0.7,
+                "raw_units": "V"
+              }
+            },
+            "na": {
+              "units": "V",
+              "meaning": "callback-count marker encoded as node V",
+              "finite_pairs": 35785,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 1.0,
+                "time_s": 1.999e-06,
+                "reference_row_index": 10040,
+                "test_row_index": 10040,
+                "reference_value": 1.0,
+                "test_value": -0.0,
+                "raw_units": "V"
+              }
+            },
+            "nb": {
+              "units": "V",
+              "meaning": "callback-count marker encoded as node V",
+              "finite_pairs": 35785,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 1.0,
+                "time_s": 2.999e-06,
+                "reference_row_index": 15223,
+                "test_row_index": 15223,
+                "reference_value": 1.0,
+                "test_value": -0.0,
+                "raw_units": "V"
+              }
+            }
+          }
+        },
+        "inside_declared_observation_windows": {
+          "paired_rows": 854,
+          "ports": {
+            "a": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 854,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 1.1102230246251565e-16,
+                "time_s": 5.99812e-06,
+                "reference_row_index": 30597,
+                "test_row_index": 30597,
+                "reference_value": 0.599812,
+                "test_value": 0.5998119999999999,
+                "raw_units": "V"
+              }
+            },
+            "b": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 854,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 2.220446049250313e-16,
+                "time_s": 2.99888e-06,
+                "reference_row_index": 15217,
+                "test_row_index": 15217,
+                "reference_value": 0.7001120000000001,
+                "test_value": 0.7001119999999998,
+                "raw_units": "V"
+              }
+            },
+            "oa": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 854,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 0.44989999999999997,
+                "time_s": 1.999e-06,
+                "reference_row_index": 10040,
+                "test_row_index": 10040,
+                "reference_value": 0.19989999999999997,
+                "test_value": -0.25,
+                "raw_units": "V"
+              }
+            },
+            "ob": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 854,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 0.2999019999999999,
+                "time_s": 5.99902e-06,
+                "reference_row_index": 30642,
+                "test_row_index": 30642,
+                "reference_value": 0.40009800000000006,
+                "test_value": 0.7,
+                "raw_units": "V"
+              }
+            },
+            "na": {
+              "units": "V",
+              "meaning": "callback-count marker encoded as node V",
+              "finite_pairs": 854,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 1.0,
+                "time_s": 1.999e-06,
+                "reference_row_index": 10040,
+                "test_row_index": 10040,
+                "reference_value": 1.0,
+                "test_value": -0.0,
+                "raw_units": "V"
+              }
+            },
+            "nb": {
+              "units": "V",
+              "meaning": "callback-count marker encoded as node V",
+              "finite_pairs": 854,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 1.0,
+                "time_s": 2.999e-06,
+                "reference_row_index": 15223,
+                "test_row_index": 15223,
+                "reference_value": 1.0,
+                "test_value": -0.0,
+                "raw_units": "V"
+              }
+            }
+          }
+        },
+        "outside_declared_observation_windows": {
+          "paired_rows": 34931,
+          "ports": {
+            "a": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 34931,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 1.1102230246251565e-16,
+                "time_s": 3.5206000000000383e-06,
+                "reference_row_index": 17969,
+                "test_row_index": 17969,
+                "reference_value": 0.35206000000000387,
+                "test_value": 0.35206000000000376,
+                "raw_units": "V"
+              }
+            },
+            "b": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 34931,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 2.220446049250313e-16,
+                "time_s": 2.6166000000000454e-06,
+                "reference_row_index": 13266,
+                "test_row_index": 13266,
+                "reference_value": 0.7383399999999956,
+                "test_value": 0.7383399999999953,
+                "raw_units": "V"
+              }
+            },
+            "oa": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 34931,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 9.999999999998899e-05,
+                "time_s": 2.00204e-06,
+                "reference_row_index": 10191,
+                "test_row_index": 10191,
+                "reference_value": 0.1999,
+                "test_value": 0.19999999999999998,
+                "raw_units": "V"
+              }
+            },
+            "ob": {
+              "units": "V",
+              "meaning": "node voltage",
+              "finite_pairs": 34931,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 9.999999999998899e-05,
+                "time_s": 3.00204e-06,
+                "reference_row_index": 15374,
+                "test_row_index": 15374,
+                "reference_value": 0.7001,
+                "test_value": 0.7,
+                "raw_units": "V"
+              }
+            },
+            "na": {
+              "units": "V",
+              "meaning": "callback-count marker encoded as node V",
+              "finite_pairs": 34931,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 0.0,
+                "time_s": 0.0,
+                "reference_row_index": 0,
+                "test_row_index": 0,
+                "reference_value": 0.0,
+                "test_value": -0.0,
+                "raw_units": "V"
+              }
+            },
+            "nb": {
+              "units": "V",
+              "meaning": "callback-count marker encoded as node V",
+              "finite_pairs": 34931,
+              "invalid_pairs": 0,
+              "ordinary": {
+                "max_difference": 0.0,
+                "time_s": 0.0,
+                "reference_row_index": 0,
+                "test_row_index": 0,
+                "reference_value": 0.0,
+                "test_value": -0.0,
+                "raw_units": "V"
+              }
+            }
+          }
+        }
+      },
+      "counter_stage_mismatch_rows": 210,
+      "counter_stage_mismatch_outside_fixed_windows": 0,
+      "counters": {
+        "na": {
+          "expected_final": 3,
+          "spectre_final": 3.0,
+          "evas_final": 3.0,
+          "spectre_changes": 3,
+          "evas_changes": 3
+        },
+        "nb": {
+          "expected_final": 2,
+          "spectre_final": 2.0,
+          "evas_final": 2.0,
+          "spectre_changes": 2,
+          "evas_changes": 2
+        }
+      },
+      "query_invariance": {
+        "condition": "SI-01",
+        "original_query_count": 35758,
+        "aligned_query_count": 35785,
+        "program_bytes_equal": true,
+        "physical_request_bytes_equal": true,
+        "original_event_count": 5,
+        "aligned_event_count": 5,
+        "event_records_semantically_equal": true,
+        "event_records_raw_json_bytes_equal": true,
+        "original_event_json_sha256": "a51ae640b244f703bb9f214bd5f88ddf6f53580215c4589f0db2f9d45df00661",
+        "aligned_event_json_sha256": "a51ae640b244f703bb9f214bd5f88ddf6f53580215c4589f0db2f9d45df00661"
+      },
+      "spectre_settings_and_identity": {
+        "condition": "SI-01",
+        "status": "waveform_available",
+        "source_sha256": "43ec734c64259b198d9d3e9bd84495cca98e8baaeeedd651d07121a97598eb85",
+        "deck_sha256": "ff92afffc78098268a82419e002b5b4630fa51a9f674cb7a2003467802d02e9e",
+        "frozen_inputs_byte_match": {
+          "dut.va": true,
+          "tb.scs": true,
+          "condition.json": true,
+          "requested_settings.json": true,
+          "requested_times.json": true,
+          "binding.json": true
+        },
+        "simulate_stages": 1,
+        "receipt_sha256": "376c8fd399988cd0006a771044fe9d9ef1b408d712dbec57e8addaf154ced3b4",
+        "waveform_sha256": "f4430d49622c79f802a8990f4cecffb85b9222ced6c89a4792ee71637e83bea8",
+        "effective_settings_status": "I",
+        "effective_settings": {
+          "reltol": 1e-06,
+          "vabstol": 1.0000000000000001e-07,
+          "iabstol": 1e-12,
+          "stop": 7e-06,
+          "maxstep": 2e-10,
+          "method": "traponly"
+        },
+        "requested_settings": {
+          "reltol": 1e-05,
+          "vabstol": 1e-07,
+          "iabstol": 1e-12,
+          "stop": 7e-06,
+          "maxstep": 2e-10
+        },
+        "mismatches": [
+          "reltol"
+        ]
+      },
+      "input_files_sha256": {
+        "collected/spectre/spectre-output/runs/SI-01/observation.json": "fca734297df862172d47acad081de2ae807ed31a013088ab15d91b032d126f7c",
+        "collected/evas/final-v4/evas-aligned-output-v4/runs/SI-01/raw-response.json": "fa44511cad72ef158ecc9387af6420ee764bd7c363ea78bf3f3bd4e9cee5338e",
+        "collected/evas/final-v4/evas-aligned-output-v4/runs/SI-01/requested_times.json": "1db6f60d649c9de828ef47f9705ef951b09a4c700499a51fcd576bd145cfaf00"
+      },
+      "full_analysis_local": {
+        "path": "current/runs/four-backend-fixes-20261007/analysis-v2/SI-01.json",
+        "sha256": "4f42b938e4a7e84e3bf8bd3a2e473547c55c3577030cb3d290ab610ecd6620ad"
+      }
+    }
+  ]
+}

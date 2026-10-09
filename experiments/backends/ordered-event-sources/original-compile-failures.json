@@ -1,0 +1,62 @@
+{
+  "archive_sha256": "0792fcf7bd2b2f2c15b18af395118286693e5bfe1d4a5181ae5b8cb135daa14a",
+  "denominator": 3,
+  "derived_prep": "complex-reference-v3-prep",
+  "discovery": "EVAS-only precompile did not establish Spectre lexical compatibility. Explicit leading0 numeric spelling normalization is new source identity, value-preserving and IR-equivalent; original failures retained.",
+  "executed_compile_failures": 3,
+  "raw_availability": "local-only",
+  "records": [
+    {
+      "VACOMP_1795_observed": true,
+      "configuration": "mixed_source",
+      "deck_sha256": "dfaee3fc435820336b4cb7200f58e861cb78e5ffb06a764ff2731267725abc86",
+      "event_status": "I",
+      "execution_status": "execution_failed",
+      "numeric_status": "I",
+      "overall_execution": "F",
+      "raw_result_sha256": "af302e6a99a82a6149c1ece0e96c5897a6a75a566d32f26768faabb068675e49",
+      "retained_in_denominator": true,
+      "returncodes": [
+        2
+      ],
+      "source_sha256": "724f1d980480084a7f6608343148197afc0faa50e79dea16389a0b6ebd2f72ff",
+      "timeout": false,
+      "waveform_available": false
+    },
+    {
+      "VACOMP_1795_observed": true,
+      "configuration": "hidden_loose",
+      "deck_sha256": "6b3a4e95213b1cece7ba1123b024e99f52031ded305c49954a6c1546668f5a2c",
+      "event_status": "I",
+      "execution_status": "execution_failed",
+      "numeric_status": "I",
+      "overall_execution": "F",
+      "raw_result_sha256": "f6e4b0d9722437d3bd586f1fa25ec0aab1020409d5db7dbae49691528717070b",
+      "retained_in_denominator": true,
+      "returncodes": [
+        2
+      ],
+      "source_sha256": "c011a483797dca8551911afc59533897c30a6ac9c7999fa03095f32e0a3fade3",
+      "timeout": false,
+      "waveform_available": false
+    },
+    {
+      "VACOMP_1795_observed": true,
+      "configuration": "hidden_tight",
+      "deck_sha256": "6b3a4e95213b1cece7ba1123b024e99f52031ded305c49954a6c1546668f5a2c",
+      "event_status": "I",
+      "execution_status": "execution_failed",
+      "numeric_status": "I",
+      "overall_execution": "F",
+      "raw_result_sha256": "50b12551bd9042bec1abccccdd1e0be67c43a8d9ae3d390e7821a37edd9681c4",
+      "retained_in_denominator": true,
+      "returncodes": [
+        2
+      ],
+      "source_sha256": "7403d725b2f86545a7762d9b3730ff3284c599eeccf88e29a980fd3b90adf4d2",
+      "timeout": false,
+      "waveform_available": false
+    }
+  ],
+  "verified_raw_files": 48
+}

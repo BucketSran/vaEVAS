@@ -12,7 +12,7 @@ INPUTS = ('a', 'b', 'c', 'u')
 ORACLE = json.loads((Path(__file__).parent/'fixtures/l1a_expected.json').read_text())['cases']
 EXPRESSIONS = {
  'and2': {'y':'(V(a)>0.5 && V(b)>0.5) ? 1.25 : -0.25'},
- 'comparison_boundary':dict(lt='V(u)<.5',le='V(u)<=.5',gt='V(u)>.5',ge='V(u)>=.5'),
+ 'comparison_boundary':dict(lt='V(u)<0.5',le='V(u)<=0.5',gt='V(u)>0.5',ge='V(u)>=0.5'),
  'not_truth':{'value':'!V(a)'},
  'numeric_logic':{'and_value':'V(a)&&V(b)','or_value':'V(a)||V(b)'},
  'logic_precedence':{'unparenthesized':'V(a)||V(b)&&V(c)','parenthesized':'(V(a)||V(b))&&V(c)'},
@@ -26,7 +26,7 @@ def compile_expr(expressions, prefix='', declarations=''):
     if isinstance(expressions,str): expressions={'y':expressions}
     outputs=tuple(expressions)
     ports=','.join((*INPUTS,*outputs,'r'))
-    source=f'module logic({ports}); input a,b,c,u; output '+','.join(outputs)+f'; inout r; electrical {ports}; {declarations} analog begin '
+    source='`include "disciplines.vams"\n'+f'module logic({ports}); input a,b,c,u; output '+','.join(outputs)+f'; inout r; electrical {ports}; {declarations} analog begin '
     source+=prefix+''.join(f'V({n},r)<+{expr};' for n,expr in expressions.items())+' end endmodule'
     return compile_sources({'logic.va':source},[Instance('dut','logic',{n:n for n in (*INPUTS,*outputs)}|{'r':'0'}, {})])
 
@@ -60,7 +60,7 @@ class StatelessExpressionContracts(unittest.TestCase):
     def test_external_pwl_crossing_boundary_and_query_refinement(self):
         cases=[c for c in ORACLE if c['group']=='pwl_crossing']
         times=[float(F(c['inputs']['t'])) for c in cases]
-        expr='(V(a)>.5 && V(b)>.5)?1.25:-.25'
+        expr='(V(a)>0.5 && V(b)>0.5)?1.25:-0.25'
         p=compile_expr(expr)
         sources={'a':[[0,0],[2,1]],'b':[[0,1],[2,1]],'c':[[0,0],[2,0]],'u':[[0,0],[2,0]]}
         baseline=None
@@ -72,15 +72,15 @@ class StatelessExpressionContracts(unittest.TestCase):
             if baseline is None:baseline=selected
             self.assertEqual(selected,baseline)
 
-    def test_active_precision_refusal_and_unselected_nested_decisions(self):
+    def test_active_exact_certificate_and_unselected_nested_decisions(self):
         ambiguous='V(u)>0.3333333333333333'
         self.assertGreater(F(1,3),F(float('0.3333333333333333')))
         for expr, answer in [('0&&('+ambiguous+')',0),('1||('+ambiguous+')',1),
                              ('V(b)&&('+ambiguous+')',0),('V(b)?(('+ambiguous+')?1:2):3',3)]:
             with self.subTest(expr=expr):self.assertEqual(values(run_wave(expr)),[answer])
         for expr in [ambiguous,'1&&('+ambiguous+')','0||('+ambiguous+')','V(b)?(('+ambiguous+')?1:2):3']:
-            with self.subTest(expr=expr),self.assertRaisesRegex(KernelError,'condition_precision'):
-                run_wave(expr,selector=1)
+            with self.subTest(expr=expr):
+                self.assertEqual(values(run_wave(expr,selector=1)),[1])
 
     def test_original_affine_sign_is_not_separately_rounded(self):
         p=compile_expr('(V(u)+1e16>1e16)?1:0')
@@ -171,7 +171,7 @@ class StatelessExpressionContracts(unittest.TestCase):
         for expression,prefix,declaration in fixtures:
             with self.subTest(expression=expression,prefix=prefix,declaration=declaration),self.assertRaises(CompileError):
                 compile_expr(expression,prefix,discard+declaration)
-        source='module m(a,y,r); input a; output y; inout r; electrical a,y,r; '+discard+' parameter real k=discard(1>0); analog begin V(y,r)<+k; end endmodule'
+        source='`include "disciplines.vams"\nmodule m(a,y,r); input a; output y; inout r; electrical a,y,r; '+discard+' parameter real k=discard(1>0); analog begin V(y,r)<+k; end endmodule'
         with self.assertRaises(CompileError):
             compile_sources({'closed.va':source},[Instance('dut','m',{'a':'a','y':'y','r':'0'},{'k':2})])
 
@@ -241,7 +241,7 @@ class StatelessExpressionContracts(unittest.TestCase):
         self.assertEqual(values(solve(program,list(INPUTS),[[0,0,0,2]],kernel=KERNEL)),[1600])
 
     def test_discarded_decisions_cannot_escape_electrical_node_indices(self):
-        source=('module m(u,y); input u; output y; electrical u,y; electrical [1:0] bus; '
+        source=('`include "disciplines.vams"\nmodule m(u,y); input u; output y; electrical u,y; electrical [1:0] bus; '
                 'analog function real discard; input x; real x,tmp; '
                 'begin tmp=x+x; discard=1; end endfunction '
                 'analog begin V(bus[0])<+0; V(bus[1])<+1; '
@@ -254,7 +254,7 @@ class StatelessExpressionContracts(unittest.TestCase):
         self.assertEqual(values(solve(program,['u'],[[2]],kernel=KERNEL)),[1])
 
     def test_function_checks_bind_independently_in_each_instance(self):
-        source=('module m(u,y); input u; output y; electrical u,y; parameter real degree=1; '
+        source=('`include "disciplines.vams"\nmodule m(u,y); input u; output y; electrical u,y; parameter real degree=1; '
                 'analog function real discard; input x; real x; begin discard=1; end endfunction '
                 'analog begin V(y)<+discard((V(u)>0)+pow(V(u),degree)); end endmodule')
         good=Instance('good','m',{'u':'u','y':'good_y'},{'degree':1})

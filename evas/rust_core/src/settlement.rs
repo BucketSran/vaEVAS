@@ -93,7 +93,7 @@ fn prepare_impl(
     if let Some(previous) = previous {
         circuit.reuse_affine_factor_from(previous);
     }
-    let solution = circuit.solve(inputs)?;
+    let mut solution = circuit.solve(inputs)?;
     // Replay the same input/root certificate. A small equation residual
     // cannot certify a branch chosen from rounded representative inputs.
     if model
@@ -123,20 +123,27 @@ fn prepare_impl(
             ));
         }
     }
-    let certify = if check_voltages {
-        EventModel::certify
+    let bounds = if check_voltages {
+        let (states, nodes) = model.certify_observation(
+            &selection,
+            input_bounds,
+            before_bounds,
+            operator_bounds,
+            &solution.voltages,
+            &states,
+        )?;
+        crate::observation::retain_bounds(&mut solution, nodes);
+        states
     } else {
-        EventModel::certify_event_states
+        model.certify_event_states(
+            &selection,
+            input_bounds,
+            before_bounds,
+            operator_bounds,
+            &solution.voltages,
+            &states,
+        )?
     };
-    let bounds = certify(
-        model,
-        &selection,
-        input_bounds,
-        before_bounds,
-        operator_bounds,
-        &solution.voltages,
-        &states,
-    )?;
     Ok(Prepared {
         states,
         bounds,

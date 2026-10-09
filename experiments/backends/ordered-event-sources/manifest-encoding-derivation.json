@@ -1,0 +1,99 @@
+{
+  "Spectre_reexecution_needed": false,
+  "calibration": "17 original asserted accept/fault/insufficient controls;4 between-clock expectations independently asserted in COMPLEX_V2_PREFLIGHT.json",
+  "changed_assets": "EVAS coarse/fine JSON instance connections changed from invalid list encoding to port\u2192node mapping only. V1 original frozen retained. V2 precompile P on all6, no candidate execution.",
+  "unchanged_reference_identities": [
+    {
+      "configuration": "mixed_source",
+      "file": "dut.va",
+      "identical_sha256": "724f1d980480084a7f6608343148197afc0faa50e79dea16389a0b6ebd2f72ff"
+    },
+    {
+      "configuration": "mixed_source",
+      "file": "compile.va",
+      "identical_sha256": "b3784722fc233cc7cf32ba43ee13abebbfa39b0676e5c653f79af840dc497ce7"
+    },
+    {
+      "configuration": "mixed_source",
+      "file": "tb.scs",
+      "identical_sha256": "dfaee3fc435820336b4cb7200f58e861cb78e5ffb06a764ff2731267725abc86"
+    },
+    {
+      "configuration": "mixed_source",
+      "file": "reference-output-plan.json",
+      "identical_sha256": "8d98c51d549f81fb8095e2c5e60fd98f5a3d62bfaacd9a250170435ca139b490"
+    },
+    {
+      "configuration": "mixed_source",
+      "file": "original.input.json",
+      "identical_sha256": "c1ce3c0ff64ed43a2a4a01fe5894c905a6f2fae1bd6c3ec15f44cfa8b1e5cdc6"
+    },
+    {
+      "configuration": "mixed_source",
+      "file": "condition.json",
+      "identical_sha256": "a35819565653433710d36068165825ec5b8d5ae7408f93c4aaebdb6b00977e78"
+    },
+    {
+      "configuration": "hidden_loose",
+      "file": "dut.va",
+      "identical_sha256": "c011a483797dca8551911afc59533897c30a6ac9c7999fa03095f32e0a3fade3"
+    },
+    {
+      "configuration": "hidden_loose",
+      "file": "compile.va",
+      "identical_sha256": "b3784722fc233cc7cf32ba43ee13abebbfa39b0676e5c653f79af840dc497ce7"
+    },
+    {
+      "configuration": "hidden_loose",
+      "file": "tb.scs",
+      "identical_sha256": "6b3a4e95213b1cece7ba1123b024e99f52031ded305c49954a6c1546668f5a2c"
+    },
+    {
+      "configuration": "hidden_loose",
+      "file": "reference-output-plan.json",
+      "identical_sha256": "6fb254b644dd34be9697ab27852bd76ca57afc0f41a118e565f46c308724d490"
+    },
+    {
+      "configuration": "hidden_loose",
+      "file": "original.input.json",
+      "identical_sha256": "4b67232e0b78f74c2dfcfc8f43b91995ffdc5c35bae94b481e35cc1b53e93fe1"
+    },
+    {
+      "configuration": "hidden_loose",
+      "file": "condition.json",
+      "identical_sha256": "88f0dfc45cf005cebf0b14ca8d2a6159f431ac79c0b578ca13e69d629b698467"
+    },
+    {
+      "configuration": "hidden_tight",
+      "file": "dut.va",
+      "identical_sha256": "7403d725b2f86545a7762d9b3730ff3284c599eeccf88e29a980fd3b90adf4d2"
+    },
+    {
+      "configuration": "hidden_tight",
+      "file": "compile.va",
+      "identical_sha256": "b3784722fc233cc7cf32ba43ee13abebbfa39b0676e5c653f79af840dc497ce7"
+    },
+    {
+      "configuration": "hidden_tight",
+      "file": "tb.scs",
+      "identical_sha256": "6b3a4e95213b1cece7ba1123b024e99f52031ded305c49954a6c1546668f5a2c"
+    },
+    {
+      "configuration": "hidden_tight",
+      "file": "reference-output-plan.json",
+      "identical_sha256": "6fb254b644dd34be9697ab27852bd76ca57afc0f41a118e565f46c308724d490"
+    },
+    {
+      "configuration": "hidden_tight",
+      "file": "original.input.json",
+      "identical_sha256": "4b67232e0b78f74c2dfcfc8f43b91995ffdc5c35bae94b481e35cc1b53e93fe1"
+    },
+    {
+      "configuration": "hidden_tight",
+      "file": "condition.json",
+      "identical_sha256": "530e842b15235dc28f06418e16142074f22cfd90d157d8054a04c80e8252d0e3"
+    }
+  ],
+  "v1_frozen_manifest_sha256": "18db5e4fc17ded0ed88811156371ee6f8645749275fabb0aa18b609db931c2ca",
+  "v2_frozen_manifest_sha256": "178ce8e4e35105302eb01378c7365f712e29e851aeaeb1502fb2e8ce63ccdeb2"
+}

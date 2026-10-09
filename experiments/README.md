@@ -21,6 +21,12 @@
 | 当前支持什么、还有哪些限制？ | [能力表](../evas/docs/CAPABILITIES.md) |
 | 当前版本实际验证了什么？ | [当前执行证据](runs/parallel-gap-integration/README.md#当前证据) |
 | 正确答案与精度要求从哪里来？ | [独立验证集](../evas/validation/README.md)、[技术手册](../evas/docs/README.md) |
+| 指定求解时刻是否与 Spectre 有限配对？ | [strobe 对照](backends/strobe/README.md)，保留缺失观测和有效设置差异 |
+| EVAS 与 Spectre 如何受容差及步长影响？ | [瞬态精度与 VCO 对照](backends/transient-accuracy/README.md)，区分旧严格认证拒绝、本轮同请求重放及普通相位边界分歧 |
+| 共同事件验收重构有何前后对照？ | [六模型、两设置对照](backends/event-acceptance/README.md)，保留原参考误差、精确边界差异和未决资格 |
+| 极近事件后的非线性历史和 PWL 转折是否保持？ | [有序事件历史对照](backends/ordered-event-history/README.md)，保留原四项失败、两项严格计时诊断和未确认的精确顺序 |
+| timer、transition、cross 的工程组合和完整请求成本？ | [事件组合对照](backends/event-alignment/README.md)，保留 C1 阶段差、M1-base 失败及性能限制 |
+| 微事件闭包与查询相位如何验证？ | [有序事件源对照](backends/ordered-event-sources/README.md)，区分两组 16 请求、旧相位失败和实际 Spectre 分歧 |
 | Spectre 的事件与历史行为有何差异？ | [Spectre 对照](backends/dvs2-spectre-validation/README.md)、[共同生命周期历史报告](https://github.com/BucketSran/vaEVAS/blob/f3440b214e10294de2135415fac4ac72d121d6d6/experiments/parallel-gap-integration/README.md#shared-lifecycle-review) |
 | 旧四后端的结果与失败是什么？ | [历史矩阵](backends/dvs2-four-backend-validation/results/MATRIX.md)、[故障归因](backends/dvs2-four-backend-validation/DIAGNOSIS.md) |
 | 当前电压共同子集与 ngspice 是否一致？ | [ngspice 差分对照](backends/ngspice-differential/README.md) |
@@ -40,7 +46,7 @@
 | [adc_linearity/](adc_linearity/REMOTE_PLAN.md) | Benchmark 首题校准 | 原创ADC测量器的本地行为校准、冻结输入生成与待执行Spectre定向计划 |
 | [performance/](performance/README.md) | 成本测量 | 固定请求配对、构建基线、紧凑收据；数学与支持范围仍归 EVAS 手册 |
 | [runs/](runs/) | 当前证据 | [parallel-gap-integration](runs/parallel-gap-integration/README.md)：合并检查点收据、矩阵分析、生命周期验证工具及独立校准；[capability-completion](runs/capability-completion/README.md)：本分支 0.13.0 候选、原矩阵重跑和冻结确认集的收据及审查入口 |
-| [backends/](backends/) | 跨后端对照 | [case-statements](backends/case-statements/README.md)：有限标量 case 的实际 Spectre DC 对照、固定判据与 local-only raw 身份；[initial-static-loop](backends/initial-static-loop/README.md)：65-I 一个实际配置两个实例的有限平台配对、严格观察 I 与独立检查器；[local-state](backends/local-state/README.md)：普通 real 局部量与事件状态一个实际配置的有限数值配对、严格观察 I 与维护检查器； [input-initialization](backends/input-initialization/README.md)：输入初值与共享计数八例实际 Spectre 有限开发配对、固定判据及 local-only raw 身份； [function-branches](backends/function-branches/README.md)：纯 real 函数两例有限观测与原编译失败； [dvs2-spectre-validation](backends/dvs2-spectre-validation/README.md)：31 条件 Spectre 基线、后端运行/报告工具与身份收据；[dvs2-four-backend-validation](backends/dvs2-four-backend-validation/README.md)：四后端适配工具、共同设置协议、完整分母矩阵与失败归因 |
+| [backends/](backends/) | 跨后端对照 | [case-statements](backends/case-statements/README.md)：有限标量 case 的实际 Spectre DC 对照、固定判据与 local-only raw 身份；[initial-static-loop](backends/initial-static-loop/README.md)：65-I 一个实际配置两个实例的有限平台配对、严格观察 I 与独立检查器；[local-state](backends/local-state/README.md)：普通 real 局部量与事件状态一个实际配置的有限数值配对、严格观察 I 与维护检查器； [input-initialization](backends/input-initialization/README.md)：输入初值与共享计数八例实际 Spectre 有限开发配对、固定判据及 local-only raw 身份； [spectre-alignment](backends/spectre-alignment/README.md)：恒频/PWL/限幅 VCO 分层诊断、观察探针控制、完整导出分母与事件读取； [input-clamp](backends/input-clamp/README.md)：原 VCO 的40,836行同刻开发对齐、未配对边界batch及paper I； [function-branches](backends/function-branches/README.md)：纯 real 函数两例有限观测与原编译失败； [dvs2-spectre-validation](backends/dvs2-spectre-validation/README.md)：31 条件 Spectre 基线、后端运行/报告工具与身份收据；[dvs2-four-backend-validation](backends/dvs2-four-backend-validation/README.md)：四后端适配工具、共同设置协议、完整分母矩阵与失败归因 |
 | [archive/](archive/) | 已结束批次 | [dvs2-starter-pilot](archive/dvs2-starter-pilot/README.md)：试点输入生成与工具身份；[dvs2-history-validation](archive/dvs2-history-validation/README.md)：精确有理数事件判据与旧波形重判；[pr14-pr15-validation](archive/pr14-pr15-validation/README.md)：该批次矩阵与算子探针 |
 
 历史收据与冻结输入保持原字节；仍在使用的工具可维护其导入路径。

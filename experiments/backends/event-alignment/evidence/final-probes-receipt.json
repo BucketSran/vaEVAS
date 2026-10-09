@@ -1,0 +1,181 @@
+{
+  "scope": "two frozen actual Spectre probes; archived full native readback and actual EVAS M1 pairing; original failures retained",
+  "candidate_revision": "17ba42cd5468b23f8b54b9daaedc483481765dd2",
+  "last_production_revision": "6a3ba252f7a2f100d48411b4ec89e54502a456de",
+  "merged_main_revision": "2e250c2d161324f151f27c3ca9e45ed32eff164a",
+  "archive_binding": {
+    "final_sha256": "371a1e184ad96b39b83baaacd96f20d42d1340cb7888f95bebf8557a4570ca7d",
+    "final_regular_members_verified": 63,
+    "original_vco_sha256": "287bf5bd018082e8928da9063de532e688080df4d47a85c135e0cf4e2e4d1613",
+    "original_vco_regular_members_verified": 105
+  },
+  "spectre_runs": 2,
+  "spectre_waveform_available": 2,
+  "effective_settings": {
+    "M1-solver-tight-maxstep-1ns": {
+      "maxstep": "1 ns",
+      "reltol": "1e-12",
+      "abstol(V)": "1 fV",
+      "abstol(I)": "1 fA",
+      "errpreset": "moderate",
+      "method": "traponly"
+    },
+    "VCO-original-tight-p-log": {
+      "maxstep": "232.831 ps",
+      "reltol": "1e-09",
+      "abstol(V)": "100 pV",
+      "abstol(I)": "1 fA",
+      "errpreset": "conservative",
+      "method": "traponly"
+    }
+  },
+  "psf_module_sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8",
+  "archive_module_sha256": "f1a143aa71dfea17035ee6d8f8b9f0c0aa404771be8fc74fc3999e9deaa4536d",
+  "analyzer_sha256": "08cae9cc9540dbcf44994bf5d1f98ea3cd5cc5fc79a123699f03c8f4b247b5a4",
+  "vco_analyzer_sha256": "8a7a8552c40fc0c40d47d9413b365d0c5263a820b57a31a16a966d0ce6e06dc2",
+  "result_sha256": "2ad03b18035737597c6abc060fbccc4b6660ac9d86b308cfe307a32ee2224633",
+  "kernel_sha256": "e4c89c9c9fe199d9535fe9886949502f1560b5fc63b2ce83bf98db77b74f0cb3",
+  "schedule_sha256": "fdf77359ed405d278f7d52486c0a064f26475570e7754a3bde8fca2d4527430b",
+  "evas_settings": {
+    "max_step_s": 1.25e-07,
+    "vabstol_v": 1e-06,
+    "reltol": 1e-08
+  },
+  "evas_execution": {
+    "exit_code": 0,
+    "request_sha256": "3ae6bcfbf4d893fdace0b7321f210e6c0448f04796de22c00bb4ab1cbce05816",
+    "stdout_sha256": "33639d839f62035dea4685fe5a1c6a54cbd727a8ec1cd7e12179e0e22a38ce65",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "actual_request_stdout_location": "runs/event-alignment-diagnosis-20261008/final-probes-shared-api-receipts/ (local-only)",
+  "checks": {
+    "shared_archive_psf_calibration_passed": 12,
+    "vco_calibration_passed": 6,
+    "existing_vco_scientific_fields_exactly_preserved": true,
+    "archive_mutation_calibration": [
+      {
+        "mutation": "empty-file-manifest",
+        "refused_before_psf_analysis_and_evas_execution": true,
+        "exit_code": 1,
+        "diagnostic": "ValueError: unpacked member differs from archive: spectre-output/FILE_MANIFEST.json"
+      },
+      {
+        "mutation": "same-shape-same-length-psf-value",
+        "refused_before_psf_analysis_and_evas_execution": true,
+        "exit_code": 1,
+        "diagnostic": "ValueError: unpacked member differs from archive: spectre-output/runs/M1-solver-tight-maxstep-1ns/psf/tran.tran.tran"
+      }
+    ],
+    "vco_archive_mutation_calibration": {
+      "mutation": "VCO same-shape-same-length phase value",
+      "refused_before_psf_analysis": true,
+      "exit_code": 1,
+      "diagnostic": "ValueError: unpacked member differs from archive: spectre-output/runs/original--tight/psf/tran.tran.tran"
+    },
+    "final_mixed_spectre_reference_replay": {
+      "revision": "17ba42cd5468b23f8b54b9daaedc483481765dd2",
+      "archive_sha256": "b1ae29bc6a9b2f53c015cca03846911e7582a10e1f48862f528a7440b2fde9b5",
+      "regular_members_verified": 105,
+      "kernel_sha256": "e4c89c9c9fe199d9535fe9886949502f1560b5fc63b2ce83bf98db77b74f0cb3",
+      "cases": [
+        {
+          "case": "fixed",
+          "checks": [
+            {
+              "grid": "native",
+              "points": 50,
+              "events_equal_original_reviewed_candidate": true,
+              "direct_max_errors_v": {
+                "y": 0.0,
+                "z": 0.0
+              },
+              "finite_status": "P",
+              "required_query_coverage": "I"
+            },
+            {
+              "grid": "required",
+              "points": 7,
+              "events_equal_original_reviewed_candidate": true,
+              "independent_exact_phase_status": "P"
+            },
+            {
+              "grid": "sparse",
+              "points": 2,
+              "events_equal_original_reviewed_candidate": true,
+              "independent_exact_phase_status": "P"
+            }
+          ]
+        },
+        {
+          "case": "held",
+          "checks": [
+            {
+              "grid": "native",
+              "points": 68,
+              "events_equal_original_reviewed_candidate": true,
+              "direct_max_errors_v": {
+                "y": 0.0,
+                "z": 2.220446049250313e-16
+              },
+              "finite_status": "P",
+              "required_query_coverage": "I"
+            },
+            {
+              "grid": "required",
+              "points": 7,
+              "events_equal_original_reviewed_candidate": true,
+              "independent_exact_phase_status": "P"
+            },
+            {
+              "grid": "sparse",
+              "points": 2,
+              "events_equal_original_reviewed_candidate": true,
+              "independent_exact_phase_status": "P"
+            }
+          ]
+        }
+      ]
+    },
+    "actual_m1_response_binding_calibration": [
+      {
+        "mutation": "returned-time-one-ulp",
+        "refused_before_solution_comparison": true,
+        "kind": "invalid_response",
+        "message": "transient response identity mismatch"
+      },
+      {
+        "mutation": "wrong-node-order",
+        "refused_before_solution_comparison": true,
+        "kind": "invalid_response",
+        "message": "kernel response identity mismatch"
+      },
+      {
+        "mutation": "short-voltage-vector",
+        "refused_before_solution_comparison": true,
+        "kind": "invalid_response",
+        "message": "kernel solution must contain finite voltages and residuals with the requested shape"
+      },
+      {
+        "mutation": "nonfinite-voltage",
+        "refused_before_solution_comparison": true,
+        "kind": "invalid_response",
+        "message": "kernel solution must contain finite voltages and residuals with the requested shape"
+      }
+    ]
+  },
+  "remaining_failures": {
+    "C1_original_strict_query_phase": "F",
+    "C1_original_required_query_coverage": "I",
+    "M1_timer_ttol18_original_voltage_budget": "F",
+    "M1_old_solver_tight_required_query_coverage": "I",
+    "VCO_original_ordinary_phase": "F",
+    "VCO_original_required_query_coverage": "I",
+    "pr79_original_stop3_count": "F"
+  },
+  "acceptance_exception_authorized": false,
+  "response_binding": "final-probes/analyze.py invokes evas.protocol.validate_response before pairing; returned times exactly equal request, nodes/state names equal program, all rows have expected finite shape",
+  "analysis_tree": "New analysis entry points executed from local diff at candidate revision; analyzer and result hashes bind the executed files.",
+  "executed_frozen_manifest_sha256": "7007d5552f7e50c36bfb2cc89fd989598e43ca61afee99238969c2daab038382",
+  "retained_frozen_manifest_sha256": "7e1beadeeb073c8a2131d412debfb3d0a5cedce9b65d79f6bee580a5f2ab4106",
+  "retained_input_text_note": "M1 public copy removes only two trailing spaces on one empty line; exact executed source hash remains fixed in manifest, and archive source is used in replay. No frozen execution input or scientific outcome changed."
+}

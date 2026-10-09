@@ -33,7 +33,7 @@ class EventAccuracy(unittest.TestCase):
         for term in ['((n+1e-16*n)-n)*1e16*V(u,r)',
                      '(1e-200*(1e-200*n))*(1e300*V(u,r))*1e100']:
             source = model(f'''@(initial_step) n=1;
-              @(cross(V(u,r)-.5+{term},1,1e-12,1e-9)) n=n+1;
+              @(cross(V(u,r)-0.5+{term},1,1e-12,1e-9)) n=n+1;
               V(y,r)<+n;''', 'integer n;')
             with self.subTest(term=term):
                 with self.assertRaises(KernelError) as caught:
@@ -45,7 +45,7 @@ class EventAccuracy(unittest.TestCase):
 
     def test_raw_ir_cannot_hide_voltage_products_in_any_event_expression(self):
         program = compile_event(model('''@(initial_step) held=0;
-          @(cross(V(u,r)-.5,1)) held=V(u,r); V(y,r)<+held;''',
+          @(cross(V(u,r)-0.5,1)) held=V(u,r); V(y,r)<+held;''',
                                       'real held;')).to_dict()
         u = program['nodes'].index('u')
         def leaf(coefficient):
@@ -97,7 +97,7 @@ class EventAccuracy(unittest.TestCase):
         for internal in [False, True]:
             gain = 2 if internal else 1
             source = counter('V(z,r)-2' if internal else 'V(u,r)-1', 1e-15,
-                             extra='V(z,r)<+V(u,r)+.5*V(z,r);' if internal else 'V(z,r)<+0;')
+                             extra='V(z,r)<+V(u,r)+0.5*V(z,r);' if internal else 'V(z,r)<+0;')
             for step in [1., .07]:
                 result = execute_event(source, sources={'u':[[0,a],[1,b]]},
                                        times=[0,1], stop=1, max_step=step)
@@ -127,7 +127,7 @@ class EventAccuracy(unittest.TestCase):
         # z = .1*u + .9*z. The ideal binary64-coefficient gain is known exactly.
         # Endpoint roundoff is comparable with this tiny input swing.
         source = counter('V(z,r)-1',1e-15,
-                         extra='V(z,r)<+.1*V(u,r)+.9*V(z,r);')
+                         extra='V(z,r)<+0.1*V(u,r)+0.9*V(z,r);')
         a,b = 1-2**-49,1+2**-49
         gain=Q(.1)/(1-Q(.9))
         root=(1/gain-Q(a))/(Q(b)-Q(a))
@@ -144,8 +144,8 @@ class EventAccuracy(unittest.TestCase):
     def test_scaled_simultaneous_guards_share_settled_voltage(self):
         for scale in [2,3,10]:
             source=model(f'''@(initial_step) begin n=0; held=0; end
-              @(cross(V(u,r)-.5,1)) n=n+1;
-              @(cross({scale}*(V(u,r)-.5),1)) held=V(y,r);
+              @(cross(V(u,r)-0.5,1)) n=n+1;
+              @(cross({scale}*(V(u,r)-0.5),1)) held=V(y,r);
               V(y,r)<+n;''','integer n; real held;')
             for step in [10e-6, 97e-9]:
                 result=execute_event(source,max_step=step)
@@ -160,23 +160,46 @@ class EventAccuracy(unittest.TestCase):
             source=model(f'''@(initial_step) n=0;
               V(x,r)<+{a}*V(u,r)+{b}*V(z,r);
               V(z,r)<+{c}*V(u,r)+{d}*V(x,r);
-              @(cross(V(x,r)-.125,1,1e-11,1e-8)) n=n+1;
+              @(cross(V(x,r)-0.125,1,1e-11,1e-8)) n=n+1;
               V(y,r)<+n;''','integer n; electrical x,z;')
             root=Q(1,8)/gain
             result=execute_event(source,sources={'u':[[0,0],[1,1]]},
                                  times=[0,1],stop=1,max_step=1)
             self.assert_root(result,root,1e-11,lambda t:gain*t-Q(1,8),1e-8)
 
-    def test_ambiguous_neighbouring_roots_are_rejected_not_merged(self):
+    def test_original_source_proves_neighbouring_roots_are_distinct(self):
         source=model('''@(initial_step) begin n=0; m=0; end
-          @(cross(V(u,r)-.5,1)) n=n+1;
-          @(cross(V(u,r)-.5000000000000001,1)) m=m+1;
+          @(cross(V(u,r)-0.5,1,1e-12,1e-9)) n=n+1;
+          @(cross(V(u,r)-0.5000000000000001,1,1e-12,1e-9)) m=m+1;
           V(y,r)<+n+m;''','integer n,m;')
+        result = execute_event(source,sources={'u':[[0,.1],[1,.9]]},
+                               times=[0,1],stop=1,max_step=1)
+        # The same two inputs previously lost their exact provenance when
+        # endpoint subtraction rounded. Each original rational root now owns
+        # its event; tolerance overlap cannot merge the two callbacks.
+        events = result['transient']['events']
+        self.assertEqual([e['event'] for e in events], [0, 1])
+        self.assertLess(events[0]['time'], events[1]['time'])
+        self.assertEqual(result['transient']['states'][-1], [1, 1])
+        for event, threshold in zip(events, [.5, .5000000000000001]):
+            root = (Q(threshold)-Q(.1))/(Q(.9)-Q(.1))
+            self.assertGreaterEqual(Q(event['time']), root)
+            self.assertLessEqual(Q(event['time'])-root, Q(1e-12))
+            self.assertLessEqual(abs(Q(.1)+(Q(.9)-Q(.1))*Q(event['time'])-Q(threshold)), Q(1e-9))
+
+    def test_unproved_internal_neighbouring_roots_still_reject(self):
+        # Structural internal-node provenance is not an original input proof,
+        # even if this particular relay has a simple mathematical answer.
+        source=model('''@(initial_step) begin n=0; m=0; end
+          V(z,r)<+V(u,r);
+          @(cross(V(z,r)-0.5,1)) n=n+1;
+          @(cross(V(z,r)-0.5000000000000001,1)) m=m+1;
+          V(y,r)<+n+m;''','integer n,m; electrical z;')
         with self.assertRaises(KernelError) as caught:
             execute_event(source,sources={'u':[[0,.1],[1,.9]]},
                           times=[0,1],stop=1,max_step=1)
-        self.assertEqual(caught.exception.detail['kind'],'event_resolution')
-        self.assertIn('ordering',caught.exception.detail['message'])
+        self.assertEqual(caught.exception.detail['kind'], 'event_resolution')
+        self.assertIn('ordering', caught.exception.detail['message'])
 
     def test_falling_roots_and_large_time_translation(self):
         for start, ttol in [(0.,1e-14),(2.**30,1e-5)]:
@@ -193,7 +216,7 @@ class EventAccuracy(unittest.TestCase):
     def test_state_dependency_lost_to_underflow_is_rejected(self):
         source=model('''@(initial_step) n=0;
           V(z,r)<+V(u,r)+1e-200*(1e-200*n);
-          @(cross(V(z,r)-.5,1)) n=n+1; V(y,r)<+n;''',
+          @(cross(V(z,r)-0.5,1)) n=n+1; V(y,r)<+n;''',
                      'integer n; electrical z;')
         with self.assertRaises(KernelError) as caught:
             execute_event(source)
@@ -205,7 +228,7 @@ class EventAccuracy(unittest.TestCase):
     def test_inconsistent_redundant_constraints_cannot_define_a_root(self):
         constraint=model('V(y,r)<+V(u,r)+offset;',
                          'parameter real offset=0;').replace('module m(', 'module constraint(')
-        program=compile_sources({'counter.va':counter('V(u,r)-.5',1e-12,extra='V(z,r)<+0;'),
+        program=compile_sources({'counter.va':counter('V(u,r)-0.5',1e-12,extra='V(z,r)<+0;'),
                                  'constraint.va':constraint},
                                 [instance(),instance('a','constraint',dict(u='u',y='w',r='0')),
                                  instance('b','constraint',dict(u='u',y='w',r='0'),dict(offset=1e-14))])

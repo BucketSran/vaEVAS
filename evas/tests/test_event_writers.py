@@ -16,9 +16,9 @@ from test_affine import KERNEL, instance, model
 
 V3_SOURCE = model('''
   @(initial_step) q=0;
-  @(cross(V(u,r)-.65,+1,100p,100u)) q=1;
-  @(cross(V(u,r)-.35,-1,100p,100u)) q=0;
-  V(y,r)<+transition(.1+.8*q,0,50n,50n);
+  @(cross(V(u,r)-0.65,+1,100p,100u)) q=1;
+  @(cross(V(u,r)-0.35,-1,100p,100u)) q=0;
+  V(y,r)<+transition(0.1+0.8*q,0,50n,50n);
 ''', 'integer q;')
 
 
@@ -75,8 +75,8 @@ class EventWriterContracts(unittest.TestCase):
 
     def test_simultaneous_writers_are_atomic_conflicts(self):
         source = model('''@(initial_step) q=0;
-          @(cross(V(u,r)-.5,+1,100p,100u)) q=1;
-          @(cross(V(u,r)-.5,+1,100p,100u)) q=2;
+          @(cross(V(u,r)-0.5,+1,100p,100u)) q=1;
+          @(cross(V(u,r)-0.5,+1,100p,100u)) q=2;
           V(y,r)<+q;''', 'integer q;')
         program = compile_sources({'event_writers.va': source}, [instance()])
         with self.assertRaisesRegex(KernelError, 'event_conflict'):
@@ -91,8 +91,8 @@ class EventWriterContracts(unittest.TestCase):
 
     def test_same_time_conditional_blocks_count_only_selected_assignments(self):
         writers = [
-            '@(cross(V(u,r)-.5,+1,100p,100u)) if (V(sel,r)>=.5) q=1;',
-            '@(cross(V(u,r)-.5,+1,100p,100u)) if (V(sel,r)<.5) q=2;',
+            '@(cross(V(u,r)-0.5,+1,100p,100u)) if (V(sel,r)>=0.5) q=1;',
+            '@(cross(V(u,r)-0.5,+1,100p,100u)) if (V(sel,r)<0.5) q=2;',
         ]
         for label, body in [('selected_first', writers), ('selected_second', list(reversed(writers)))]:
             source = model('@(initial_step) q=0;' + ''.join(body) + 'V(y,r)<+q;',
@@ -117,8 +117,8 @@ class EventWriterContracts(unittest.TestCase):
 
     def test_same_time_conditional_blocks_conflict_when_both_selected_even_same_value(self):
         source = model('''@(initial_step) q=0;
-          @(cross(V(u,r)-.5,+1,100p,100u)) if (V(sel,r)>=.5) q=1;
-          @(cross(V(u,r)-.5,+1,100p,100u)) if (V(sel,r)<=.5) q=1;
+          @(cross(V(u,r)-0.5,+1,100p,100u)) if (V(sel,r)>=0.5) q=1;
+          @(cross(V(u,r)-0.5,+1,100p,100u)) if (V(sel,r)<=0.5) q=1;
           V(y,r)<+q;''', 'integer q;', ports='u,sel,y,r',
                        directions='input u,sel; output y; inout r;')
         program = compile_sources({'event_writers.va': source}, [event_writer_instance()])

@@ -16,8 +16,8 @@ class EventWindowSamplingContracts(unittest.TestCase):
         root = (Q(.5)-Q(.2))/(Q(.8)-Q(.2))
         for relation, expected_state in [('>=', 2), ('<=', 2), ('>', 3), ('<', 3)]:
             program = compile_model(
-                "@(initial_step) q=0; @(cross(V(u,r)-.5,1,1e-9,1e-8)) "
-                f"if (V(u,r){relation}.5) q=2; else q=3; V(y,r)<+idt(q*q,0);",
+                "@(initial_step) q=0; @(cross(V(u,r)-0.5,1,1e-9,1e-8)) "
+                f"if (V(u,r){relation}0.5) q=2; else q=3; V(y,r)<+idt(q*q,0);",
                 "integer q;")
             with self.subTest(relation=relation):
                 result = run(program, {"u": [[0,.2],[1,.8]]}, [0,1], stop=1,
@@ -29,9 +29,9 @@ class EventWindowSamplingContracts(unittest.TestCase):
         from fractions import Fraction as Q
         root = (Q(.5)-Q(.2))/(Q(.8)-Q(.2))
         program = compile_model(
-            "@(initial_step) q=0; @(cross(V(u,r)-.5,1,1e-9,1e-8) "
-            "or cross(V(c,r)-.5,1,1e-9,1e-8)) "
-            "if (V(c,r)>=.5) q=2; else q=3; V(y,r)<+idt(q*q,0);",
+            "@(initial_step) q=0; @(cross(V(u,r)-0.5,1,1e-9,1e-8) "
+            "or cross(V(c,r)-0.5,1,1e-9,1e-8)) "
+            "if (V(c,r)>=0.5) q=2; else q=3; V(y,r)<+idt(q*q,0);",
             "integer q;", ports="u,c,y,r", directions="input u,c; output y; inout r;")
         result = run(program, {"u": [[0,.2],[1,.8]], "c": [[0,.25],[1,.25]]}, [0,1],
                      stop=1, vabstol=1e-8, reltol=0)

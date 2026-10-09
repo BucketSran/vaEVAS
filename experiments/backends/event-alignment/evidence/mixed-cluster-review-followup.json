@@ -1,0 +1,65 @@
+{
+  "base_revision": "c33a2f672bdbe549f706f8aa8d218e0f800881da",
+  "reused_actual_spectre_archive_sha256": "b1ae29bc6a9b2f53c015cca03846911e7582a10e1f48862f528a7440b2fde9b5",
+  "reuse_reason": "Spectre model/deck, checker, query grid and budgets unchanged; patch moves existing resource-budget rejection earlier and clarifies a missing-certificate diagnostic. Both accepted models still use three near-root batches and fit the shared budget. Extension now admits a complete next enclosure component, preserving original pairwise certificates and avoiding full sorting once per simultaneous leaf.",
+  "original_evidence_sha256": "2dccfdb660c10b1db407352443e82bff84021eb4f8c127ebce9bcb59cfa8072a",
+  "candidate_source_sha256": {
+    "schedule.rs": "58d3f861bc6271637c7e474c4da5a09dd7a22e7352eae0f928ee13183f35a4e9",
+    "transient_event_acceptance.rs": "19047582d8ba10a6062033c6e4e456c47ef83c3a1d0e2ec1e5f3afb6c511a9f9"
+  },
+  "cases": [
+    {
+      "case": "fixed",
+      "observations": [
+        {
+          "grid": "full_native",
+          "rows": 50,
+          "max_abs_direct_y_v": 0.0,
+          "max_abs_direct_z_v": 0.0,
+          "finite_native_status": "P",
+          "required_query_coverage_status": "I",
+          "events_equal_original_candidate": true
+        },
+        {
+          "grid": "required",
+          "rows": 7,
+          "values_equal_original_candidate": true,
+          "events_equal_original_candidate": true
+        },
+        {
+          "grid": "sparse",
+          "rows": 2,
+          "values_equal_original_candidate": true,
+          "events_equal_original_candidate": true
+        }
+      ]
+    },
+    {
+      "case": "held",
+      "observations": [
+        {
+          "grid": "full_native",
+          "rows": 68,
+          "max_abs_direct_y_v": 0.0,
+          "max_abs_direct_z_v": 2.220446049250313e-16,
+          "finite_native_status": "P",
+          "required_query_coverage_status": "I",
+          "events_equal_original_candidate": true
+        },
+        {
+          "grid": "required",
+          "rows": 7,
+          "values_equal_original_candidate": true,
+          "events_equal_original_candidate": true
+        },
+        {
+          "grid": "sparse",
+          "rows": 2,
+          "values_equal_original_candidate": true,
+          "events_equal_original_candidate": true
+        }
+      ]
+    }
+  ],
+  "kernel_sha256": "4b16ae34c8018c212419f214adf91ace01f7304362ddf34c857163396ff3fcaa"
+}

@@ -1,0 +1,324 @@
+{
+  "reviewed_base": "e889068028517b17d552f37b79ee09cb01e90277",
+  "source_and_analysis_checkpoint": "96027b33",
+  "public_claim_checkpoint": "8f4c84cd44f7b9e67885d0f748381e46a113435d",
+  "runtime_under_test": "5ddf820d8b4aa5f0c847905da86f4fee470b94db",
+  "paper_execution_revision": "830c8168ada17122bb64932553a02591181461d9",
+  "availability": "local-only complete reports and raw evidence; this file is a compact identity summary",
+  "reports": [
+    {
+      "path": "runs/alignment-implementation-20261009/current-astra/REPORT.md",
+      "sha256": "7a03c0bd408a9c7ce5011361ecdca8d8d3ef18f409a63f0b36ca2661127644d2"
+    },
+    {
+      "path": "runs/alignment-implementation-20261009/current-observation-astra/REPORT.md",
+      "sha256": "112ada721d30112cd7a035a4d7c9d14e1d61fba1ceb32a26e098e6a304fb5f5a"
+    },
+    {
+      "path": "runs/alignment-implementation-20261009/current-observation-astra/adapter-review.md",
+      "sha256": "1c99ee2d32c9f6c5b02b760d96a66fcdfb0e0703dc2395affaccfb3057c19ac6"
+    },
+    {
+      "path": "runs/alignment-implementation-20261009/current-observation-astra/adapter-followup.md",
+      "sha256": "4cb60fe583cf7fae06559a37be1acd0c13f51fa1345ca9e93a9840b71b312af8"
+    },
+    {
+      "path": "runs/alignment-implementation-20261009/current-final-astra/REPORT.md",
+      "sha256": "30024ed649ba04ef4fa3489120436902559601b13c766c9cfa7ff7666fd9f066"
+    },
+    {
+      "path": "runs/alignment-implementation-20261009/current-native-time-astra/REPORT.md",
+      "sha256": "66efa3e0ede32e7cee3272355209730ee88810ec1e881df2d6785d7d1d2b903b"
+    },
+    {
+      "path": "runs/alignment-implementation-20261009/current-table-final-astra/REPORT.md",
+      "sha256": "2fe8ed9ddf3ede4c549b32a015b82d75f8be9cfbb162ca4e808d32aa51279f69"
+    },
+    {
+      "path": "runs/alignment-implementation-20261009/current-checker-table-glm/REPORT.md",
+      "sha256": "0ea02b34bf664ff5c8074a5a4c6dde86549441b46846f337319088ec91423533"
+    }
+  ],
+  "glm_calls": [
+    {
+      "requested_model": "glm-5.3",
+      "reported_models": [
+        "glm-5.3"
+      ],
+      "model_identity_valid": true,
+      "cli_version": "2.1.284 (Claude Code)",
+      "review_valid": true,
+      "num_turns": 1,
+      "reported_cost_usd": 1.032835,
+      "elapsed_seconds": 327.257,
+      "configured_cli_budget_usd": 5.0,
+      "output_token_cap": 32000,
+      "wall_limit_seconds": 900,
+      "terminal_reason": "completed",
+      "stop_reason": "end_turn",
+      "runner_sha256": "9e3e594542295a9081b1831a575c60c68476ac891cfbea0c3c14210f0fbd8b45",
+      "input_sha256": "edd1d5b009d1c5d97557ded64525ae26806a49058d336bac776ff57bca079708",
+      "response_sha256": "6647acc8cd519e372d29f2624980c2b47e17388f8305ec2cad37b1686f91cf53",
+      "package": "compile",
+      "input_tokens": 108907,
+      "output_tokens": 19532
+    },
+    {
+      "requested_model": "glm-5.3",
+      "reported_models": [
+        "glm-5.3"
+      ],
+      "model_identity_valid": true,
+      "cli_version": "2.1.284 (Claude Code)",
+      "review_valid": true,
+      "num_turns": 1,
+      "reported_cost_usd": 0.403815,
+      "elapsed_seconds": 166.043,
+      "configured_cli_budget_usd": 5.0,
+      "output_token_cap": 32000,
+      "wall_limit_seconds": 900,
+      "terminal_reason": "completed",
+      "stop_reason": "end_turn",
+      "runner_sha256": "fcdaf493edb189fa9d94e7cf5f77fb557b1a7b80d69a3d04087267a590c2dd07",
+      "input_sha256": "9cbc0ccf4da353aa5d6858f6a071aefbad6779e8f3a5158e7a58fe5c886eb951",
+      "response_sha256": "c59c45329a58230c3dea630355f6669a3486f504b1bd6d1eea06ef3f9bfd40f9",
+      "package": "reference",
+      "input_tokens": 31873,
+      "output_tokens": 9778
+    },
+    {
+      "requested_model": "glm-5.3",
+      "reported_models": [
+        "glm-5.3"
+      ],
+      "model_identity_valid": true,
+      "review_valid": true,
+      "num_turns": 1,
+      "reported_cost_usd": 1.078385,
+      "elapsed_seconds": 365.945,
+      "stop_reason": "end_turn",
+      "terminal_reason": "completed",
+      "receipt": {
+        "path": "runs/alignment-implementation-20261009/current-observation-glm/CLI-SUMMARY.json",
+        "sha256": "e9f368034eb5ebe20bb469658ec9058423aac33e02e052d7eae39e4c550a52cb"
+      }
+    },
+    {
+      "requested_model": "glm-5.3",
+      "reported_models": [
+        "glm-5.3"
+      ],
+      "model_identity_valid": true,
+      "review_valid": true,
+      "num_turns": 1,
+      "reported_cost_usd": 1.033865,
+      "elapsed_seconds": 282.591,
+      "stop_reason": "end_turn",
+      "terminal_reason": "completed",
+      "receipt": {
+        "path": "runs/alignment-implementation-20261009/current-final-tools-glm/receipt.json",
+        "sha256": "e67693e44badde3d3ab46da11ad3cc4106fdc95c662effbc04ef3cfa90917784"
+      }
+    },
+    {
+      "requested_model": "glm-5.3",
+      "reported_models": [
+        "glm-5.3"
+      ],
+      "model_identity_valid": true,
+      "review_valid": true,
+      "num_turns": 1,
+      "reported_cost_usd": 1.08314,
+      "elapsed_seconds": 469.543,
+      "stop_reason": "end_turn",
+      "terminal_reason": "completed",
+      "receipt": {
+        "path": "runs/alignment-implementation-20261009/current-final-adapter-glm/receipt.json",
+        "sha256": "a41ed4bd19814c1c6ac3308385a554250e2c3dbb91e004ede54ec10143036f35"
+      }
+    },
+    {
+      "requested_model": "glm-5.3",
+      "reported_models": [
+        "glm-5.3"
+      ],
+      "model_identity_valid": true,
+      "review_valid": true,
+      "num_turns": 1,
+      "reported_cost_usd": 1.0797599999999998,
+      "elapsed_seconds": 473.513,
+      "stop_reason": "end_turn",
+      "terminal_reason": "completed",
+      "receipt": {
+        "path": "runs/alignment-implementation-20261009/current-final-adapter-glm/final-increment/receipt.json",
+        "sha256": "5fa69a5274d22d5ebd4e64b9dc8301a45b166a9fe327ce8263ec4cc6872cd5a3"
+      }
+    },
+    {
+      "requested_model": "glm-5.3",
+      "reported_models": [
+        "glm-5.3"
+      ],
+      "model_identity_valid": true,
+      "review_valid": true,
+      "num_turns": 1,
+      "reported_cost_usd": 1.5297049999999999,
+      "elapsed_seconds": 816.889,
+      "stop_reason": "end_turn",
+      "terminal_reason": "completed",
+      "receipt": {
+        "path": "runs/alignment-implementation-20261009/current-checker-table-glm/receipt.json",
+        "sha256": "f14db95ebe3b4df0deb087443aa6be064eef7de645dec18bee6693766663a3ed"
+      }
+    }
+  ],
+  "glm_total_reported_usd": 7.241505,
+  "glm_scope_limit": "Actual Claude CLI glm-5.3 read-only supplied-text review. No simulated execution claimed. Last call binds c1e4fd0d/9da1f016/4c51d363/5c96f616/e72cca98/b4a32db5; 96027b33 and public8f4c84cd have subsequent Astra review. Two earlier context-rejected calls with zero inference are retained separately.",
+  "findings_disposition": {
+    "reference_missing_counter": "fixed in30b50078;35 calibration checks and final review retain incomplete asI",
+    "producer_dependency_closure": "fixed in cbc021b3; actual103-source closure and206missing/changed negative controls checked",
+    "checker_native_time_order": "fixed in c1e4fd0d;29 checks, actual4-case reanalysis and8duplicate/reversed controls",
+    "table_field_presence": "tightened in96027b33;Astra final delta review",
+    "glm_final_P4": "No present defect after scoped verification; future unexpected source-refusal CI detection is covered by fixed admission controls, actual successor bytes/hashes verified, full mixed checker runtime identity already rejected."
+  },
+  "checks": {
+    "integrated-checks-v3/python-full.log": {
+      "sha256": "b82c54f3d91d56ff530cd489db821cd398fb798cbfc383027ec725d535cb36ac",
+      "last_lines": [
+        "----------------------------------------------------------------------",
+        "Ran 1016 tests in 1329.134s",
+        "",
+        "OK"
+      ]
+    },
+    "integrated-checks-v3/rust.log": {
+      "sha256": "1f1444c11f1730a2ab876db1231212063e9b721050bde267f3c0cbb9f5b80666",
+      "last_lines": [
+        "running 0 tests",
+        "",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        ""
+      ]
+    },
+    "integrated-checks-v3/clippy.log": {
+      "sha256": "1676f1e7cb8eaef1f3a7b01c043c3c0aaa6391cb795cb0c60ce598bf82bda779",
+      "last_lines": [
+        "    Checking evas-ir v0.1.0 (/Users/bucketsran/.codex/worktrees/spectre-event-alignment/current/evas/rust_core/ir)",
+        "    Checking evas-kernel v0.14.0 (/Users/bucketsran/.codex/worktrees/spectre-event-alignment/current/evas/rust_core)",
+        "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 7.01s"
+      ]
+    },
+    "native-time-checker/calibration.log": {
+      "sha256": "0399e0619d88bc546067246d4a290fc45319336118369648cc6b2e8e3f7a6a18",
+      "last_lines": [
+        "----------------------------------------------------------------------",
+        "Ran 29 tests in 28.360s",
+        "",
+        "OK"
+      ]
+    },
+    "native-time-checker/scripts-tests.log": {
+      "sha256": "58da6b1833827d45d8c1292d7fc3a670aa6e1ba154ed806e2392c1b425e64467",
+      "last_lines": [
+        "----------------------------------------------------------------------",
+        "Ran 31 tests in 12.043s",
+        "",
+        "OK"
+      ]
+    },
+    "native-time-checker/admission-tests.log": {
+      "sha256": "fed4b87dc444ad1444ed497f7ca6ed1ed962e1f89cb3ec819b7d2ca42c118c37",
+      "last_lines": [
+        "----------------------------------------------------------------------",
+        "Ran 21 tests in 0.071s",
+        "",
+        "OK"
+      ]
+    },
+    "native-time-checker/differential-tests.log": {
+      "sha256": "1795d7fd3ad29a92ab1305aa7538bd600333bfa6981fb7870fc7eb844cb84685",
+      "last_lines": [
+        "----------------------------------------------------------------------",
+        "Ran 9 tests in 0.067s",
+        "",
+        "OK"
+      ]
+    },
+    "native-time-checker/paper-tools-tests.log": {
+      "sha256": "ba5752a37f747429e2a52b1f9eafdd2a695a68d6d4e357aebad82c3b2253c640",
+      "last_lines": [
+        "----------------------------------------------------------------------",
+        "Ran 115 tests in 10.772s",
+        "",
+        "OK"
+      ]
+    },
+    "native-time-checker/table-final-tests.log": {
+      "sha256": "8ac0196ad19d6f6084057efd52802ab0cf97dba83409e39891a2c30fe6283f65",
+      "last_lines": [
+        "----------------------------------------------------------------------",
+        "Ran 39 tests in 1.479s",
+        "",
+        "OK"
+      ]
+    },
+    "integrated-checks-v3/precision-tests.log": {
+      "sha256": "c456c51d2fba78274ec35c754fa56984001450b207583378a3b33b1c67faaaa4",
+      "last_lines": [
+        "----------------------------------------------------------------------",
+        "Ran 35 tests in 0.474s",
+        "",
+        "OK"
+      ]
+    },
+    "workspace-final.log": {
+      "sha256": "7bf17330829faa88fce5cc5c1e41e0a367fe6e694bd1574920abb4e990f413c9",
+      "last_lines": [
+        "  Commits not reachable from local base: 0",
+        "",
+        "Visibility check: PASS",
+        "Git state is an observation, not proof of integration or permission to retire a worktree."
+      ]
+    }
+  },
+  "spec_b": {
+    "summary": {
+      "path": "runs/alignment-implementation-20261009/spec-b-current/SUMMARY.json",
+      "sha256": "a8db0983b8ea3442d040076c6ca70e754efddb8323b4e058f6793d762fc07a0d"
+    },
+    "requests": 12,
+    "numeric_P": 12,
+    "events_P": 12,
+    "old_public_fields_equal": 12,
+    "maximum_independent_voltage_error_V": 5.373479439e-14
+  },
+  "paper": {
+    "summary": {
+      "path": "runs/alignment-implementation-20261009/paper-current-v1/analysis-table-v2/SUMMARY.json",
+      "sha256": "c10a40d9564aef126c93239e18f67e1ad8b39f3f752f0b3cfa1caa8920e64155"
+    },
+    "manifest": {
+      "path": "runs/alignment-implementation-20261009/paper-current-v1/analysis-table-v2/ANALYSIS_MANIFEST.json",
+      "sha256": "70aabb3f1d26e42fec2c7899ce98efa569aaec71e7ce8ce095bddf1ed183a91d"
+    },
+    "counts": "EVAS12P; historical36 I27/X9; original8P4I retained",
+    "audit": {
+      "path": "runs/alignment-implementation-20261009/current-table-final-astra/final-package-audit.json",
+      "sha256": "9b8568a6c8e6334085c4c8a0d71744de5875f0c2733448eff2500ebf4a0eb6bc"
+    }
+  },
+  "trail": {
+    "path": "runs/alignment-implementation-20261009/decisions.tsv",
+    "audit": {
+      "path": "runs/alignment-implementation-20261009/current-table-final-astra/compact-trail-final.json",
+      "sha256": "9ffb264c8437e6c5e6a9d9fa41879277b32cf5507f87962d3445e8526bb43f72"
+    },
+    "scope": "Accessible current-resume evidence only; full precompaction transcript not independently audited."
+  },
+  "remaining_gates": [
+    "AL2 public semantics or original boundary requirements require the specific user decision; no implicit waiver",
+    "Original C1/#79 and VCO exact-neighbor F/I retained",
+    "Reference36 qualifications and actual setting applicability remain incomplete",
+    "No main merge; publication CI has not yet run for the forthcoming final head"
+  ]
+}

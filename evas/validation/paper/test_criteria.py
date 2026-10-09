@@ -141,9 +141,25 @@ class Calibration(unittest.TestCase):
     def test_malformed_records_are_undecided(self):
         rows=rows_for('VR-01')
         variants=[rows[:-1],[rows[0],rows[2],rows[1]]+rows[3:],
+                  rows[:10]+[rows[9]]+rows[10:],
                   [dict(r,out=float('nan')) if i==10 else r for i,r in enumerate(rows)]]
         for trace in variants:self.assertEqual(assess('VR-01',trace,Q)['status'],'I')
         self.assertEqual(assess('VR-01',rows,dict(Q,time_error_s='unknown'))['status'],'I')
+
+    def test_distinct_native_times_survive_unit_conversion_collision(self):
+        # Actual EV-HC-01 adjacent SI records collide only after division by T.
+        left=float.fromhex('0x1.c51e7a0b005b8p-19')
+        right=float.fromhex('0x1.c51e7a0b005b9p-19')
+        self.assertLess(left,right)
+        self.assertEqual(left/1e-6,right/1e-6)
+        rows=rows_for('EV-HC-01')
+        rows=[r for r in rows if r['time_s'] not in (left,right)]
+        for t in (left,right):
+            # Both records follow the second falling event at 3.375 us.
+            rows.append({'time_s':t,'in':.9-.4*(t/1e-6-2),
+                         'count':2,'out':.1})
+        rows.sort(key=lambda r:r['time_s'])
+        self.assertEqual(assess('EV-HC-01',rows,Q)['status'],'P')
 
     def test_counter_uncertainty_overlap_is_undecided(self):
         rows=rows_for('EV-HC-01')

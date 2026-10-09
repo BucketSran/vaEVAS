@@ -15,7 +15,7 @@ from evas import Instance, KernelError, compile_sources, solve
 
 class KernelSelection(unittest.TestCase):
     def program(self):
-        return compile_sources({'m.va': 'module m(u,y); input u; output y; electrical u,y; analog begin V(y)<+2*V(u); end endmodule'},
+        return compile_sources({'m.va': '`include "disciplines.vams"\nmodule m(u,y); input u; output y; electrical u,y; analog begin V(y)<+2*V(u); end endmodule'},
                                [Instance(name='dut', module='m', connections={'u':'u', 'y':'y'})])
 
     def test_source_install_without_bundle_has_actionable_default_error(self):
@@ -51,7 +51,7 @@ class KernelSelection(unittest.TestCase):
             executable = command_folder/'evas-test-path-command'
             executable.symlink_to(root/'rust_core/target/debug/evas-kernel')
             source = directory/'m.va'
-            source.write_text('module m(u,y); input u; output y; electrical u,y; analog begin V(y)<+2*V(u); end endmodule')
+            source.write_text('`include "disciplines.vams"\nmodule m(u,y); input u; output y; electrical u,y; analog begin V(y)<+2*V(u); end endmodule')
             manifest = directory/'sim.json'
             manifest.write_text(json.dumps(dict(models=['m.va'], instances=[dict(name='dut',module='m',connections=dict(u='u',y='y'))],driven=['u'],samples=[[.25]])))
             result = subprocess.run([sys.executable,'-m','evas','solve',str(manifest),'--kernel',executable.name],cwd=directory,
