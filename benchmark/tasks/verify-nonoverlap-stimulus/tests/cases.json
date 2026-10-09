@@ -1,0 +1,53 @@
+[
+  {
+    "name": "p100-d5",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXtb (p1 p2) dut period=1e-07 dead=5e-09\nXsw (p1 p2 vin z) phase_device\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=1.2e-06 maxstep=0.5n\nsaveOptions options save=allpub\n",
+    "stop": 1.2e-06,
+    "signals": [
+      "p1",
+      "p2",
+      "vin",
+      "z"
+    ],
+    "period": 1e-07,
+    "dead": 5e-09,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule phase_device(p1,p2,vin,z);\ninout p1,p2,vin,z; electrical p1,p2,vin,z;\nreal held,out;\nanalog begin\n @(initial_step)begin held=0;out=0;end\n V(vin)<+0.5+0.3*sin(2*3.1415926535897932384626433832795*$abstime/700n);\n @(cross(V(p1)-0.5,+1))held=V(vin);\n @(cross(V(p2)-0.5,+1))out=held;\n V(z)<+transition(out,0,0.2n);\nend\nendmodule\n"
+    },
+    "task": "verify-nonoverlap-stimulus"
+  },
+  {
+    "name": "p160-d9",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXtb (p1 p2) dut period=1.6e-07 dead=9e-09\nXsw (p1 p2 vin z) phase_device\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=1.92e-06 maxstep=0.5n\nsaveOptions options save=allpub\n",
+    "stop": 1.9200000000000003e-06,
+    "signals": [
+      "p1",
+      "p2",
+      "vin",
+      "z"
+    ],
+    "period": 1.6e-07,
+    "dead": 9e-09,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule phase_device(p1,p2,vin,z);\ninout p1,p2,vin,z; electrical p1,p2,vin,z;\nreal held,out;\nanalog begin\n @(initial_step)begin held=0;out=0;end\n V(vin)<+0.5+0.3*sin(2*3.1415926535897932384626433832795*$abstime/700n);\n @(cross(V(p1)-0.5,+1))held=V(vin);\n @(cross(V(p2)-0.5,+1))out=held;\n V(z)<+transition(out,0,0.2n);\nend\nendmodule\n"
+    },
+    "task": "verify-nonoverlap-stimulus"
+  },
+  {
+    "name": "p120-d3",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXtb (p1 p2) dut period=1.2e-07 dead=3e-09\nXsw (p1 p2 vin z) phase_device\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=1.44e-06 maxstep=0.5n\nsaveOptions options save=allpub\n",
+    "stop": 1.4399999999999998e-06,
+    "signals": [
+      "p1",
+      "p2",
+      "vin",
+      "z"
+    ],
+    "period": 1.2e-07,
+    "dead": 3e-09,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule phase_device(p1,p2,vin,z);\ninout p1,p2,vin,z; electrical p1,p2,vin,z;\nreal held,out;\nanalog begin\n @(initial_step)begin held=0;out=0;end\n V(vin)<+0.5+0.3*sin(2*3.1415926535897932384626433832795*$abstime/700n);\n @(cross(V(p1)-0.5,+1))held=V(vin);\n @(cross(V(p2)-0.5,+1))out=held;\n V(z)<+transition(out,0,0.2n);\nend\nendmodule\n"
+    },
+    "task": "verify-nonoverlap-stimulus"
+  }
+]

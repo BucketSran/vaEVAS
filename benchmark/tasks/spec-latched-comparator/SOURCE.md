@@ -1,0 +1,11 @@
+架构需求参考旧v4 017锁存比较器；本题新增明确再生延迟、ready与短时钟取消合同。私有实验包括决策前复位再释放以检查取消，以及正负决策后高相复位以检查异步清空；no_async_reset人工移除复位事件。参考代码原创，未复制旧源码。
+
+本次参考VA、测试网表和checker独立编写，未复制历史VA或Cadence安装库。工程需求参考旧题的架构名称与公开接口描述；不声称实测/晶体管级真实性。来源组：latched-comparator-original。状态：本地构造与行级checker测试；实际Spectre、Harbor和Agentic校准必须另有执行收据。
+
+<!-- generated first-batch metadata -->
+- `engineering_action`: `specification-modeling`
+- `source_group`: `latched-comparator-original`
+- `context_level`: `bounded-work-unit`
+- `provenance`: `original-engineering-requirement`
+- `data_provenance`: `behavioral_synthetic`
+<!-- end generated first-batch metadata -->

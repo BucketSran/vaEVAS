@@ -1,0 +1,24 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module latched_comparator(clk,rst,vinp,vinn,outp,outn,ready);
+input clk,rst,vinp,vinn; output outp,outn,ready;
+electrical clk,rst,vinp,vinn,outp,outn,ready;
+parameter real vth=0.5, voffset=0.002, tbase=0.2n, tau=0.25n, vscale=0.05, vfloor=0.001, tr=50p;
+real op,on,rd,d,decision_at; integer sign_latched,active;
+analog begin
+ @(initial_step) begin op=0;on=0;rd=0;active=0;decision_at=1e30;sign_latched=0;end
+ @(cross(V(clk)-vth,+1)) begin
+  op=0;on=0;rd=0;active=0;decision_at=1e30;
+  if(V(rst)<vth) begin
+   d=V(vinp)-V(vinn)-voffset;
+   sign_latched=(d>0)?1:((d<0)?-1:0);
+   if(sign_latched!=0) begin active=1;decision_at=$abstime+tbase+tau*ln(1+vscale/(abs(d)+vfloor));end
+  end
+ end
+ @(cross(V(clk)-vth,-1)) begin op=0;on=0;rd=0;active=0;decision_at=1e30;end
+ @(timer(decision_at)) begin
+  if(active && V(clk)>vth && V(rst)<vth) begin op=(sign_latched>0)?1:0;on=(sign_latched<0)?1:0;rd=1;active=0;end
+ end
+ V(outp)<+transition(op,0,tr,tr);V(outn)<+transition(on,0,tr,tr);V(ready)<+transition(rd,0,tr,tr);
+end
+endmodule

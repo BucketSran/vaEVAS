@@ -1,0 +1,46 @@
+[
+  {
+    "name": "public-hop-up-small",
+    "initial_command_V": 0.8,
+    "steps": [
+      {
+        "time": 1e-05,
+        "command_V": 0.88
+      }
+    ],
+    "stop": 0.0002
+  },
+  {
+    "name": "public-hop-up-large",
+    "initial_command_V": 0.8,
+    "steps": [
+      {
+        "time": 1e-05,
+        "command_V": 1.16
+      }
+    ],
+    "stop": 0.0002
+  },
+  {
+    "name": "public-hop-down-small",
+    "initial_command_V": 0.8,
+    "steps": [
+      {
+        "time": 1e-05,
+        "command_V": 0.74
+      }
+    ],
+    "stop": 0.0002
+  },
+  {
+    "name": "public-hop-down-large",
+    "initial_command_V": 0.8,
+    "steps": [
+      {
+        "time": 1e-05,
+        "command_V": 0.65
+      }
+    ],
+    "stop": 0.0002
+  }
+]

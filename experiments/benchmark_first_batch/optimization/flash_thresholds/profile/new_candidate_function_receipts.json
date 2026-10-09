@@ -1,0 +1,466 @@
+{
+  "kind": "compact_actual_flash_candidate_function_receipts",
+  "new_simulations": false,
+  "performance_verdict": "unmeasured repeatability; six functional calibrations only",
+  "old_binary_reference_unchanged": true,
+  "native_clock_timezone": null,
+  "native_clock_precision_s": 1,
+  "records": [
+    {
+      "candidate": "event-only",
+      "case": "positive-skew",
+      "archive_sha256": "d6fa456bad0f8a850e9dd9e1542ef2e3ccde14567eddb78cff92e8ba0f85fee5",
+      "raw_artifact_availability": "local-only",
+      "report_sha256": "b5b7c6eae8678fca0221eee7a5afda3ccc9a5f554666749f1f1de0a25384a73c",
+      "source_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+      "executed_source_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+      "waveform_sha256": "ba00d5a78a55945c9df39ee83c3cadae81502a6b59a260f680e0f10c356c9011",
+      "netlist_sha256": "b2757414794dcc38b42e769d2f46b33fcab6776638283f5f86059f89c6e3a587",
+      "executed_cases_sha256": "ea28b5aa92039cd9b32d4fc590382b9cbf6699c987eba57d3db5c9618f6eca78",
+      "executed_verify_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "executed_runtime_sha256": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "executed_contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "replay_checker_sha256": "acdea3de391e0d12cbde5a00952221254edb049992dd39f9962132c3e3f87888",
+      "replay_cases_sha256": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+      "functional_result": {
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 3.634705902921809e-08,
+        "max_raw_transition_error_v": 3.634705902921809e-08,
+        "expected_samples": 50,
+        "observed_clock_edges": 50,
+        "saved_waveform_points": 1636
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "52a236b062092b9289bfb44c0a3bb2dd9045f5a9c7d8371a2ce334d9360ccaec",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "native_host": "thu-sui",
+        "native_cpu_type": "Intel(R) Xeon(R) Gold 6326 CPU @ 2.90GHz",
+        "native_load_average_log": "System load averages (1min, 5min, 15min) : 0.9 %, 0.8 %, 1.4 %",
+        "accepted_steps": 1635,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.052317999999999996,
+          "elapsed_s": 0.026524100000000002
+        },
+        "total_tran": {
+          "cpu_s": 0.053954,
+          "elapsed_s": 0.027162099999999998
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "b6e3f11f3f19173cc3d233303c1cac2bd97b805d55051d150e358447ac5a2327"
+        }
+      },
+      "solver_argv": [
+        "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre",
+        "-64",
+        "tb.scs",
+        "+log",
+        "spectre.log",
+        "-format",
+        "psfascii",
+        "-raw",
+        "psf",
+        "+lqtimeout",
+        "5",
+        "+mt=1"
+      ],
+      "native_start_clock": "2026-10-08T03:51:21",
+      "native_end_clock": "2026-10-08T03:51:22",
+      "solver_process_elapsed_s": 1.0667045395821333,
+      "cold_compile_elapsed_s": 0.791
+    },
+    {
+      "candidate": "event-only",
+      "case": "bank-throughput",
+      "archive_sha256": "14bedfdf29eb3ef444d4ed89c32883c7a2958c09e8fcbb728a50dd33abf13393",
+      "raw_artifact_availability": "local-only",
+      "report_sha256": "1271f4be2851464b9c9895e7abdf272603a8f4b1d4a007af3bceca03fb7132d4",
+      "source_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+      "executed_source_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+      "waveform_sha256": "7cdb3327d452938ecfc6e97ebb95efd9665c2c8cafe529fab2b95b6bc1229794",
+      "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+      "executed_cases_sha256": "af98f9621c97a848e6d8fee113dd1a85d72609d4e1290a3a5b1f0b7c002056f0",
+      "executed_verify_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "executed_runtime_sha256": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "executed_contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "replay_checker_sha256": "acdea3de391e0d12cbde5a00952221254edb049992dd39f9962132c3e3f87888",
+      "replay_cases_sha256": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+      "functional_result": {
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 3.896666694869211e-08,
+        "max_raw_transition_error_v": 3.896666694869211e-08,
+        "expected_samples": 10000,
+        "observed_clock_edges": 10000,
+        "saved_waveform_points": 152094
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "da9c1c1b9d08808e49eb37fd8f04b65996cdb30d214960a6a13f5562f043332d",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "native_host": "thu-sui",
+        "native_cpu_type": "Intel(R) Xeon(R) Gold 6326 CPU @ 2.90GHz",
+        "native_load_average_log": "System load averages (1min, 5min, 15min) : 0.3 %, 0.7 %, 1.4 %",
+        "accepted_steps": 152093,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 3.93537,
+          "elapsed_s": 1.9942
+        },
+        "total_tran": {
+          "cpu_s": 3.93602,
+          "elapsed_s": 1.99484
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "c12f3249fcc0c7742489fb0b0aa742e71fbdd330fbd7302a452a4ec606842ca9"
+        }
+      },
+      "solver_argv": [
+        "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre",
+        "-64",
+        "tb.scs",
+        "+log",
+        "spectre.log",
+        "-format",
+        "psfascii",
+        "-raw",
+        "psf",
+        "+lqtimeout",
+        "5",
+        "+mt=1"
+      ],
+      "native_start_clock": "2026-10-08T03:50:46",
+      "native_end_clock": "2026-10-08T03:50:49",
+      "solver_process_elapsed_s": 3.021128898486495,
+      "cold_compile_elapsed_s": 0.777
+    },
+    {
+      "candidate": "event-only",
+      "case": "negative-skew",
+      "archive_sha256": "0eac6ef021e1f686139b410b9a2a1a0fd0e4ae1191c95b6786f0b2d6cbd78e31",
+      "raw_artifact_availability": "local-only",
+      "report_sha256": "1bc90bd7dff616c6f4c0a548ebb1bfc572491aff515406b2f052eda486ae9d29",
+      "source_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+      "executed_source_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+      "waveform_sha256": "355a81cc7416310c4424dfb9bf2bc1d70ab3d035716b5e7d23ce7e7f5bd3d679",
+      "netlist_sha256": "0f1a7956af91c27e8410e979a2a91f2083c5d1c6bb4df6dc5148d4be0923a403",
+      "executed_cases_sha256": "84ed0e1f44b737f54f1ecbbfa88f981620e4e70f57fadfc4487458afe3bb8363",
+      "executed_verify_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "executed_runtime_sha256": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "executed_contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "replay_checker_sha256": "acdea3de391e0d12cbde5a00952221254edb049992dd39f9962132c3e3f87888",
+      "replay_cases_sha256": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+      "functional_result": {
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 4.780784351732237e-08,
+        "max_raw_transition_error_v": 4.780784351732237e-08,
+        "expected_samples": 50,
+        "observed_clock_edges": 50,
+        "saved_waveform_points": 1636
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "14b13f2a250cb2008752532215546c1b79fe59fba25f14d9915c54747f3e823d",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "native_host": "thu-sui",
+        "native_cpu_type": "Intel(R) Xeon(R) Gold 6326 CPU @ 2.90GHz",
+        "native_load_average_log": "System load averages (1min, 5min, 15min) : 0.4 %, 0.7 %, 1.4 %",
+        "accepted_steps": 1635,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.053964,
+          "elapsed_s": 0.027143
+        },
+        "total_tran": {
+          "cpu_s": 0.055588000000000005,
+          "elapsed_s": 0.027771
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "aaec2b1960bc2f1d5eecf7fcb23626a712a0fcec3bfdced90ca88922c7801d6a"
+        }
+      },
+      "solver_argv": [
+        "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre",
+        "-64",
+        "tb.scs",
+        "+log",
+        "spectre.log",
+        "-format",
+        "psfascii",
+        "-raw",
+        "psf",
+        "+lqtimeout",
+        "5",
+        "+mt=1"
+      ],
+      "native_start_clock": "2026-10-08T03:51:08",
+      "native_end_clock": "2026-10-08T03:51:09",
+      "solver_process_elapsed_s": 1.0666874703019857,
+      "cold_compile_elapsed_s": 0.788
+    },
+    {
+      "candidate": "analytic",
+      "case": "bank-throughput",
+      "archive_sha256": "bae74246344935e0bab27b24107554854a6a477d97de926353bec7d6fb9d6075",
+      "raw_artifact_availability": "local-only",
+      "report_sha256": "fd19e57805476d92801b8c2cae0efaa24c66258fef0f4ee95221768c210db136",
+      "source_sha256": "f3ab055d482654226599fd187f667a70bacd3b6cb666ee809ba56914ce1bef36",
+      "executed_source_sha256": "f3ab055d482654226599fd187f667a70bacd3b6cb666ee809ba56914ce1bef36",
+      "waveform_sha256": "50e2149149fcdaa0236997465e3dd24bb4b0ffc8bef189df7a4c5e8038f50e33",
+      "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+      "executed_cases_sha256": "af98f9621c97a848e6d8fee113dd1a85d72609d4e1290a3a5b1f0b7c002056f0",
+      "executed_verify_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "executed_runtime_sha256": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "executed_contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "replay_checker_sha256": "acdea3de391e0d12cbde5a00952221254edb049992dd39f9962132c3e3f87888",
+      "replay_cases_sha256": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+      "functional_result": {
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 3.896666694869211e-08,
+        "max_raw_transition_error_v": 3.896666694869211e-08,
+        "expected_samples": 10000,
+        "observed_clock_edges": 10000,
+        "saved_waveform_points": 152094
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "33022059c62360ac3acbe221ae4ff8fe7ad29855d417b3e88988e114024ea93c",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "native_host": "thu-sui",
+        "native_cpu_type": "Intel(R) Xeon(R) Gold 6326 CPU @ 2.90GHz",
+        "native_load_average_log": "System load averages (1min, 5min, 15min) : 0.3 %, 0.6 %, 1.2 %",
+        "accepted_steps": 152093,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 3.50341,
+          "elapsed_s": 1.96624
+        },
+        "total_tran": {
+          "cpu_s": 3.50521,
+          "elapsed_s": 1.96704
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "f3ab055d482654226599fd187f667a70bacd3b6cb666ee809ba56914ce1bef36",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "6690250d5ed997fbd09d76f227229a0269b6fb86973e4272bec0af2895e9bdad"
+        }
+      },
+      "solver_argv": [
+        "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre",
+        "-64",
+        "tb.scs",
+        "+log",
+        "spectre.log",
+        "-format",
+        "psfascii",
+        "-raw",
+        "psf",
+        "+lqtimeout",
+        "5",
+        "+mt=1"
+      ],
+      "native_start_clock": "2026-10-08T03:53:43",
+      "native_end_clock": "2026-10-08T03:53:46",
+      "solver_process_elapsed_s": 3.421969447284937,
+      "cold_compile_elapsed_s": 1.22
+    },
+    {
+      "candidate": "analytic",
+      "case": "positive-skew",
+      "archive_sha256": "f424001ff5c8d4089fe149b92c0f32003144753ce5d4d2c04c9974d34bf9741f",
+      "raw_artifact_availability": "local-only",
+      "report_sha256": "50383551987b99055ddbb80e44bfdc1a785bf0febc755dc4e3d4052b506b97c3",
+      "source_sha256": "f3ab055d482654226599fd187f667a70bacd3b6cb666ee809ba56914ce1bef36",
+      "executed_source_sha256": "f3ab055d482654226599fd187f667a70bacd3b6cb666ee809ba56914ce1bef36",
+      "waveform_sha256": "82b63e64005783e7b848bf1ddf41e140eda9b781848ae1c78149d6d041419a34",
+      "netlist_sha256": "b2757414794dcc38b42e769d2f46b33fcab6776638283f5f86059f89c6e3a587",
+      "executed_cases_sha256": "ea28b5aa92039cd9b32d4fc590382b9cbf6699c987eba57d3db5c9618f6eca78",
+      "executed_verify_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "executed_runtime_sha256": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "executed_contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "replay_checker_sha256": "acdea3de391e0d12cbde5a00952221254edb049992dd39f9962132c3e3f87888",
+      "replay_cases_sha256": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+      "functional_result": {
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 3.634705902921809e-08,
+        "max_raw_transition_error_v": 3.634705902921809e-08,
+        "expected_samples": 50,
+        "observed_clock_edges": 50,
+        "saved_waveform_points": 1636
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "a8737962c669628dde08ecfca7eb9b14c7ba389788df7c5d706b770edb7fcdda",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "native_host": "thu-sui",
+        "native_cpu_type": "Intel(R) Xeon(R) Gold 6326 CPU @ 2.90GHz",
+        "native_load_average_log": "System load averages (1min, 5min, 15min) : 1.0 %, 0.7 %, 1.2 %",
+        "accepted_steps": 1635,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.05264,
+          "elapsed_s": 0.026829000000000002
+        },
+        "total_tran": {
+          "cpu_s": 0.054321,
+          "elapsed_s": 0.027514
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "f3ab055d482654226599fd187f667a70bacd3b6cb666ee809ba56914ce1bef36",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "62d73fb8e6f32d4b12bde3925854a9ecec407ab7b846e29b91b45929709bd8c7"
+        }
+      },
+      "solver_argv": [
+        "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre",
+        "-64",
+        "tb.scs",
+        "+log",
+        "spectre.log",
+        "-format",
+        "psfascii",
+        "-raw",
+        "psf",
+        "+lqtimeout",
+        "5",
+        "+mt=1"
+      ],
+      "native_start_clock": "2026-10-08T03:54:15",
+      "native_end_clock": "2026-10-08T03:54:17",
+      "solver_process_elapsed_s": 1.5178562235087156,
+      "cold_compile_elapsed_s": 1.23
+    },
+    {
+      "candidate": "analytic",
+      "case": "negative-skew",
+      "archive_sha256": "d9d18c454b406daa6c115bf8b9c5f96601da63ae27b70e18a6e6da04d2295a1c",
+      "raw_artifact_availability": "local-only",
+      "report_sha256": "801730debc4fe7fc9a68cab8bb47fe819536cef2c75301e218afa5623655e64d",
+      "source_sha256": "f3ab055d482654226599fd187f667a70bacd3b6cb666ee809ba56914ce1bef36",
+      "executed_source_sha256": "f3ab055d482654226599fd187f667a70bacd3b6cb666ee809ba56914ce1bef36",
+      "waveform_sha256": "14c20ba79421a0b2def74688459df6725f63faeb6c56549df96dd559b6a77eaf",
+      "netlist_sha256": "0f1a7956af91c27e8410e979a2a91f2083c5d1c6bb4df6dc5148d4be0923a403",
+      "executed_cases_sha256": "84ed0e1f44b737f54f1ecbbfa88f981620e4e70f57fadfc4487458afe3bb8363",
+      "executed_verify_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "executed_runtime_sha256": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "executed_contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "replay_checker_sha256": "acdea3de391e0d12cbde5a00952221254edb049992dd39f9962132c3e3f87888",
+      "replay_cases_sha256": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+      "functional_result": {
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 4.780784351732237e-08,
+        "max_raw_transition_error_v": 4.780784351732237e-08,
+        "expected_samples": 50,
+        "observed_clock_edges": 50,
+        "saved_waveform_points": 1636
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "0a7ca647eda23e171c2f27460128d3f59ace7befb16cbf2e757a49cff2b71d91",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "native_host": "thu-sui",
+        "native_cpu_type": "Intel(R) Xeon(R) Gold 6326 CPU @ 2.90GHz",
+        "native_load_average_log": "System load averages (1min, 5min, 15min) : 0.7 %, 0.7 %, 1.2 %",
+        "accepted_steps": 1635,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.05353,
+          "elapsed_s": 0.026726
+        },
+        "total_tran": {
+          "cpu_s": 0.055189,
+          "elapsed_s": 0.0273879
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "f3ab055d482654226599fd187f667a70bacd3b6cb666ee809ba56914ce1bef36",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "926232091d742000f98df5f835575a0d4124d332ec50ccff04e4e3c43dc88e3e"
+        }
+      },
+      "solver_argv": [
+        "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre",
+        "-64",
+        "tb.scs",
+        "+log",
+        "spectre.log",
+        "-format",
+        "psfascii",
+        "-raw",
+        "psf",
+        "+lqtimeout",
+        "5",
+        "+mt=1"
+      ],
+      "native_start_clock": "2026-10-08T03:54:02",
+      "native_end_clock": "2026-10-08T03:54:04",
+      "solver_process_elapsed_s": 1.517715560272336,
+      "cold_compile_elapsed_s": 1.23
+    }
+  ]
+}

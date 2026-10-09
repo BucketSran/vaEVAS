@@ -1,0 +1,94 @@
+# 首批电路工程任务
+
+本批按七种工程动作建设，每类 5 题，共 35 个正式 Harbor 资产。任务围绕电路架构、时序和性能，
+不是按电路名称复制相同模板。一个任务的参数与刺激变体属于该任务的校准条件。
+共享电路资产的任务使用同一个 `source_group`，单独记录任务目标。
+
+正式资产数量与校准题数分别统计。只有实际完成参考解、代表负例与后端校准的任务才计为已校准题目。
+Agentic 试跑、开源复现与正式发布资格另行记录，不能由参考解通过推出。
+总体约定见 [benchmark README](../README.md)，当前建设与证据归属
+[议题 #72](https://github.com/BucketSran/vaEVAS/issues/72)。
+
+## 当前建设状态
+
+前六类各 5 题，共 30 题，已完成参考与代表语义错版的
+[实际封存校准核验](../../experiments/benchmark_first_batch/CALIBRATION.md)。
+这些计数评价人工提交与独立判据，不是模型成功率。
+
+优化类 VCO、电源监控、SAR、UART 和 Flash ADC 均已准入并完成正式校准，
+本批已达到 **七类各 5 题，共 35 个已校准正式资产**。优化校准的 36 个提交、
+108 个条件均完成封存身份核验，无待处理条件。5 个参考的 15 个条件全部通过，
+Flash 旧二分提交另有 3 个 CPU-only equivalent 校准条件通过。30 个负例的 90 个条件中，63 个因语义错误
+被拒绝、5 个因性能不足被拒绝、22 个通过；每个负例至少一个条件被拒绝。
+负例按提交分为 24 个语义负例、5 个仅性能负例和 1 个混合负例。
+具体身份和判分范围见 [优化正式校准说明](../../experiments/benchmark_first_batch/optimization/FORMAL_CALIBRATION.md)
+及[封存核验收据](../../experiments/benchmark_first_batch/optimization/formal_calibration_receipt.json)。
+
+采样 DAC 和 SC 系数计算保留为候选，不占正式题量。优化准入与性能取证见
+[优化登记](optimization.json)及[优化实验说明](../../experiments/benchmark_first_batch/optimization/README.md)。
+
+本批共有 32 个 `source_group`。上下文分布为 30 个工作单元、4 个有边界的小工程和
+1 个完整仓库任务，计数与同源关联见 [元数据映射](METADATA.md)。
+
+真实模型 pilot 已完成七类代表题的 14 个固定单元，全部取得有效的冻结候选终评。
+按请求标识，`glm-5.3` 为 5/7、`glm-5.3-flash` 为 3/7。11 次 Agent 阶段超时、
+3 次主动提交正常结束；阶段状态与截止时候选的终评分分别记录。
+Pi 的模型名字段来自请求配置，不能单凭它确认服务端响应模型或内部路由。
+公开仿真反馈大量失败，因此本轮成绩不能用于给题目难度定级，也不能外推为 35 题整体通过率。
+两次 VCO 均先因功能不符被拒绝，没有进入配对性能阶段。
+逐项结果、原始候选和后续推进顺序见 [pilot 报告](../../experiments/benchmark_first_batch/agentic/PILOT.md)；
+运行协议见 [Agentic 实验说明](../../experiments/benchmark_first_batch/agentic/README.md)。
+
+## 任务合同
+
+每道新题使用 `benchmark/tasks/<id>/` 的 Harbor 格式，包含以下材料：
+
+- `instruction.md` 公开电路用途、端口、可提交文件、行为/性能、容差、允许条件与自测入口。
+- `environment/public/` 只放公开上下文、起始工程与自测材料，不含终评、参考解或私有数据。
+- `solution/` 保存独立编写的参考解和 `solve.sh`。参考解只负责提供可行提交，不定义正确性。
+- `tests/` 保存终评条件与入口；`SOURCE.md` 记录来源、同源组、人工故障原因和适用范围。
+- 校准工具和简明证据属于 `experiments/benchmark_first_batch/`；大波形及原始轨迹留在 `runs/`。
+
+建模任务以 Verilog-A 电压域交付物为核心。验证与测量任务应确实驱动或观测电路，
+可包含必要的网表与分析脚本；纯问答、文字测试计划和已知结果抄录不计任务。
+测量器不能只靠自己报告的统计量证明正确，终评应核对实际刺激和原始观测。
+完整流程验证题至少交付可执行刺激、测试台和自动判断，能接受正确电路并拒绝代表错误电路。
+
+每题的独立判据必须说明公式、事件配对、时间窗、单位及容差。不得单用全局 RMSE
+掩盖采样时刻、错过边沿、局部越限或晚期未建立。隐藏条件只能变化公开合同内的值。
+训练/表征数据与隐藏输入按完整实验划分，不能把一条轨迹的相邻点随机分为训练和测试。
+合成数据明确标记 `behavioral_synthetic`；没有物理电路仿真或实测证据时不称器件表征。
+
+## 首批选题
+
+以下记录七类的五项正式任务。已完成的校准范围见上方证据链接。性能改善题先取证，
+若无法证明实际问题或等价改进，就退回候选并寻找新的电路问题，不把功能修复改名为性能优化。
+
+| 类别 | 五项工作目标 |
+| --- | --- |
+| 按规格构建模型 | [CDR 判相脉冲](../tasks/spec-cdr-phase-detector/instruction.md)；[锁存比较器决策与复位](../tasks/spec-latched-comparator/instruction.md)；[ΣΔ 量化反馈](../tasks/spec-sigma-delta/instruction.md)；[S/H 有限采集](../tasks/spec-sample-hold-acquisition/instruction.md)；[UVLO 毛刺拒绝与恢复](../tasks/spec-uvlo-deglitch/instruction.md) |
+| 从数据建立模型 | [S/H 采集与下垂](../tasks/identify-sh-acquisition/instruction.md)；[时钟可调 SC 滤波](../tasks/identify-sc-clocked-filter/instruction.md)；[ADC 驱动建立](../tasks/identify-adc-driver-settling/instruction.md)；[比较器过驱动延时](../tasks/identify-comparator-overdrive/instruction.md)；[PLL 跳频锁定动态](../tasks/identify-pll-hop-dynamics/instruction.md) |
+| 扩展与集成 | [TDC 测量链](../tasks/integrate-tdc-measurement-chain/instruction.md)；[pipeline ADC 级间对齐](../tasks/integrate-pipeline-adc-alignment/instruction.md)；[I/Q 基带校准](../tasks/integrate-iq-baseband-calibration/instruction.md)；[PLL 跳频重捕获](../tasks/integrate-pll-hop-reacquisition/instruction.md)；[AGC attack/release](../tasks/integrate-agc-attack-release/instruction.md) |
+| 诊断与修复 | [ZOOM 多相时序](../tasks/repair-zoom-sequencer/instruction.md)；[SAR 转换中止与旧结果](../tasks/repair-sar-abort/instruction.md)；[受控三角振荡器换向](../tasks/va07-triangle-repair/instruction.md)；[ΣΔ 采样相位](../tasks/repair-sigma-delta-phase/instruction.md)；[UVLO 去抖恢复](../tasks/repair-uvlo-recovery/instruction.md) |
+| 开发验证工具 | [SAR 完整验证流程](../tasks/verify-sar-flow/instruction.md)；[非重叠时钟刺激](../tasks/verify-nonoverlap-stimulus/instruction.md)；[比较器过驱动实验](../tasks/verify-comparator-overdrive/instruction.md)；[PLL 锁定 checker](../tasks/verify-pll-lock-checker/instruction.md)；[S/H 建立 checker](../tasks/verify-sh-settling-checker/instruction.md) |
+| 测量与表征 | [已有 ADC DNL/INL](../tasks/va08-adc-linearity/instruction.md)；[ADC 动态频谱](../tasks/measure-adc-spectrum/instruction.md)；[比较器延时与迟滞](../tasks/measure-comparator-delay-hysteresis/instruction.md)；[S/H 建立与下垂](../tasks/measure-sh-acquisition-droop/instruction.md)；[PLL 重锁与周期抖动](../tasks/measure-pll-relock-jitter/instruction.md) |
+| 改善仿真实现 | [VCO 频率相关步长](../tasks/optimize-vco-step/)；[电源监控轮询](../tasks/optimize-power-monitor/)；[SAR 空闲事件调度](../tasks/optimize-sar-calendar/)；[UART 空闲采样调度](../tasks/optimize-uart-calendar/)；[Flash ADC 阈值解码](../tasks/optimize-flash-thresholds/) |
+
+每项任务都需给出其新增工程要求。尤其同一 S/H、PLL 或比较器上的建模、验证和测量
+若只改变文件名或输出格式，不能算不同任务；应分别核验功能目标和能力要求。
+候选数量允许在审阅后调整，但七类均需达到已确认的首轮覆盖目标。
+采样 DAC 重复解码与 SC 滤波器重复系数计算保留在优化登记的 `candidates` 中，
+不计入五个正式优化资产。
+
+## 验收顺序
+
+先验证一个完整工作单元，再扩展其他题目。每题至少包含一个能通过的参考提交、
+未完成起点与若干针对不同合同条款的语义错误版本。编译失败不能代替语义负例校准。
+性能题先通过同一功能判据，再用固定工作负载、相同后端设置和重复运行评价改进。
+
+所有新执行绑定源码、输入、checker 和实际工具版本。仿真由现有 circuit harness 调度，
+本仓库只维护任务包与评分。公开自测与终评包分开；Agent 不读取隐藏材料。
+实际 Agent 试跑必须保存工具调用、候选冻结身份和最终成绩；one-shot 结果单列。
+
+本批初始使用 Spectre 扩展集候选身份。只有完成公开主集要求的判分对照，才能声明
+无需商业工具的重评资格。继承旧资产不继承未复核的来源许可、旧成绩或校准状态。

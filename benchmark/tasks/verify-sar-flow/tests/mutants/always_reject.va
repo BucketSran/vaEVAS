@@ -1,0 +1,31 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module dut(vin,start,rst,code,done,verdict);
+inout vin,start,rst,code,done,verdict; electrical vin,start,rst,code,done,verdict;
+integer k,slot,bad,busy,lasts,lastd,expected,s,d;
+real x,r,deadline;
+analog begin
+ @(initial_step) begin bad=0;busy=0;lasts=0;lastd=0;deadline=0;expected=0;end
+ k=$rtoi($abstime/200n);slot=$rtoi(($abstime-k*200n)/1n);
+ x=(2*(k%6)+1.25)/16.0; r=1;s=0;
+ if($abstime<21n)r=0;
+ if(slot>=31 && slot<42)s=1;
+ if(slot>=51 && slot<62)s=1;
+ if(k==2 && slot>=65 && slot<76)r=0;
+ V(vin)<+transition(x,0,0.1n);V(start)<+transition(s,0,0.1n);V(rst)<+transition(r,0,0.1n);
+ @(timer(5n,5n)) begin
+  if(V(rst)<0.5)busy=0;
+  if(V(start)>0.5 && lasts==0 && busy==0 && V(rst)>0.5) begin
+   busy=1;expected=$rtoi(V(vin)*16);deadline=$abstime+70n;
+  end
+  if(V(done)>0.5 && lastd==0) begin
+   if(busy==0 || $abstime>deadline+1p || abs(V(code)-expected)>0.1)bad=1;
+   busy=0;
+  end
+  if(busy!=0 && $abstime>deadline+1p)begin bad=1;busy=0;end
+  if(V(start)>0.5)lasts=1;else lasts=0;
+  if(V(done)>0.5)lastd=1;else lastd=0;
+ end
+ V(verdict)<+1;
+end
+endmodule

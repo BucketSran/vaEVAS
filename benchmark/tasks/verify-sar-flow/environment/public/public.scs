@@ -1,0 +1,8 @@
+simulator lang=spectre
+ahdl_include "dut.va"
+ahdl_include "device.va"
+Xbench (vin start rst code done verdict) dut
+Xadc (vin start rst code done) sar_device fault=0 latency=4
+simulatorOptions options reltol=1e-6 vabstol=1e-9
+tran tran stop=1.2u maxstep=1n
+saveOptions options save=allpub

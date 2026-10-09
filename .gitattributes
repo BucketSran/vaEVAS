@@ -1,0 +1,10 @@
+# Harbor tasks contain byte-for-byte copies of the maintained checker modules.
+# sync_runtime.py --check verifies these copies; review benchmark/checkers first.
+benchmark/tasks/*/tests/circuit_task.py linguist-generated=true
+benchmark/tasks/*/tests/adc_linearity.py linguist-generated=true
+benchmark/tasks/*/tests/first_batch_*.py linguist-generated=true
+benchmark/tasks/*/tests/triangle_oscillator.py linguist-generated=true
+
+# Generated receipts remain expandable; their readable counts live in CALIBRATION.md.
+experiments/benchmark_first_batch/calibration_receipt.json linguist-generated=true
+experiments/benchmark_first_batch/optimization/*receipt.json linguist-generated=true

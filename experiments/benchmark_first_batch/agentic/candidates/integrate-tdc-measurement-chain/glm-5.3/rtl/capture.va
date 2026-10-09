@@ -1,0 +1,112 @@
+// Time interval capture front end.
+//
+// Opens a measurement on an accepted start edge and closes it on the first
+// accepted stop edge, reporting the measured interval on `width`.  This block
+// also owns the protocol state: re-triggers while a window is open are
+// ignored, stops that arrive late or while reset is asserted are inert, a
+// reset rise wipes the stored result and every status bit, and an expiry
+// indication is raised when the running window reaches start + timeout.
+//
+// Status levels settle over 20 ps, so every edge is established 10 ps after
+// the event that causes it - well inside the 120 ps budget.  The deadline is
+// evaluated analytically from the stored start instant rather than by a
+// polled watchdog, so the expiry report is never late.
+`include "constants.vams"
+`include "disciplines.vams"
+
+module tdc_capture(start,stop,reset,width,done,pending,expired);
+  input start,stop,reset;
+  output width,done,pending,expired;
+  electrical start,stop,reset,width,done,pending,expired;
+
+  parameter real timeout_ns = 12;
+
+  real tstart;       // accepted start instant
+  real deadline;     // accepted start + timeout
+  real measured;     // last completed interval, in ns
+  real t_exp_rise;   // rise anchor of a held expiry pulse
+  real t_exp_fall;   // fall anchor of that pulse
+  integer armed;     // measurement window open
+  integer complete;  // conversion result available
+  integer exp_hold;  // expiry pulse held back for smooth clearing
+
+  real tnow, armed_r, complete_r, lvl, done_lvl;
+  real win_r, win_f, win, exp_win, hold_r, hold_f;
+
+  analog begin
+    @(initial_step) begin
+      tstart = 0.0;
+      deadline = 0.0;
+      measured = 0.0;
+      t_exp_rise = -1.0;
+      t_exp_fall = -1.0;
+      armed = 0;
+      complete = 0;
+      exp_hold = 0;
+    end
+
+    // Reset rise: clear the stored result and all state.
+    @(cross(V(reset)-0.5, +1)) begin
+      if (armed == 1 && $abstime >= deadline) begin
+        t_exp_rise = deadline;
+        t_exp_fall = $abstime;
+        exp_hold = 1;
+      end
+      measured = 0.0;
+      armed = 0;
+      complete = 0;
+    end
+
+    // Start: accepted only when no unexpired window is open.
+    @(cross(V(start)-0.5, +1)) begin
+      if (V(reset) < 0.5) begin
+        if (armed == 0 || $abstime >= deadline) begin
+          if (armed == 1) begin
+            t_exp_rise = deadline;
+            t_exp_fall = $abstime;
+            exp_hold = 1;
+          end
+          tstart = $abstime;
+          deadline = $abstime + timeout_ns*1n;
+          armed = 1;
+          complete = 0;
+        end
+      end
+    end
+
+    // Stop: the first stop inside the open window closes the measurement.
+    @(cross(V(stop)-0.5, +1)) begin
+      if (V(reset) < 0.5 && armed == 1 && $abstime < deadline) begin
+        measured = ($abstime - tstart)/1n;
+        armed = 0;
+        complete = 1;
+        exp_hold = 0;
+      end
+    end
+
+    tnow = $abstime;
+    armed_r = armed;
+    complete_r = complete;
+    lvl = transition(armed_r, 0.0, 0.02n);
+    done_lvl = transition(complete_r, 0.0, 0.02n);
+
+    // Measurement window: rises at the accepted start, falls at the deadline.
+    win_r = max(0.0, min(1.0, (tnow - tstart)/0.02n));
+    win_f = max(0.0, min(1.0, (deadline + 0.02n - tnow)/0.02n));
+    win = win_r*win_f;
+
+    V(pending) <+ min(lvl, win);
+    V(done) <+ done_lvl;
+
+    // Expiry: raised at the deadline of a still open window and cleared
+    // smoothly by the restart or reset that closes it.
+    exp_win = max(0.0, min(1.0, (tnow - deadline)/0.02n));
+    hold_r = max(0.0, min(1.0, (tnow - t_exp_rise)/0.02n));
+    hold_f = max(0.0, min(1.0, (t_exp_fall + 0.02n - tnow)/0.02n));
+    V(expired) <+ max(lvl*exp_win, exp_hold*hold_r*hold_f);
+
+    // The interval is handed on as an essentially instantaneous held level;
+    // the downstream blocks own the analog settling of the derived signals.
+    V(width) <+ transition(measured, 0.0, 1e-12);
+  end
+endmodule

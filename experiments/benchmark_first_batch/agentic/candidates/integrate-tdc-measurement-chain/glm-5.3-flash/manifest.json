@@ -1,0 +1,82 @@
+{
+  "schema_version": 2,
+  "attempt": "integrate-tdc-measurement-chain-glm-5.3-flash-prepared-v5",
+  "task_id": "integrate-tdc-measurement-chain",
+  "requested_model": "glm-5.3-flash",
+  "pi_recorded_model": "glm-5.3-flash",
+  "server_response_model": null,
+  "identity_evidence": {
+    "version": "pi-response-model-distinction-v2",
+    "pi_model_assignment": "configured model.id, not independently observed server model",
+    "response_model_assignment": "response chunk.model retained only when different from configured ID",
+    "missing_response_model": "equal and omitted server response model IDs cannot be distinguished",
+    "observed_response_model_messages": 0,
+    "response_id_message_count": 39,
+    "vendor_internal_routing": "unknown"
+  },
+  "final_package_sha256": "379076d150e336a29297185da0113a3059005caf868d92e10ad02d52784b7446",
+  "criteria_sha256": "63e296dd63f8c8c255e85903f9100046ba0202f454b46bd93230519f427721cd",
+  "original_final_job_id": "harbor-1fc16ce9-8306-4aab-846d-f7697e8b317c",
+  "final_archive_sha256": "834f82951259a573153d4fdae10890060398806954736363b9c65f191a130148",
+  "candidate_final_score": 1,
+  "phase_exception_type": "AgentTimeoutError",
+  "copy_policy": "original frozen bytes without edits",
+  "new_model_or_solver_requests": 0,
+  "candidate_bundle_sha256": "1898bcab9e1dc87c56cfc615fa3b954839749d404d885bddc667c92dfb9abf54",
+  "candidate_files": {
+    "dut.va": {
+      "sha256": "3adc66618243cbd4d26078e8842172ca24a287b56fd91e3bdc174a7abfb6779a",
+      "bytes": 622
+    },
+    "rtl/capture.va": {
+      "sha256": "6ea26ab8e3ee25fc575afbd98a617f246c25fe1f68dbe8279d4659d6729ee0b0",
+      "bytes": 1319
+    },
+    "rtl/formatter.va": {
+      "sha256": "8a9a56e42b349aaa27c8a4ebbe753e01c7d387c46c63423fff6fabcdef628bed",
+      "bytes": 452
+    },
+    "rtl/quantizer.va": {
+      "sha256": "32b167698dc9b0ec62e98aed3a56c803c2bf2e57a56788b339771fa9b0e677f8",
+      "bytes": 350
+    }
+  },
+  "freeze_reason": "cancelled",
+  "pre_export_credential_scan": {
+    "dut.va": {
+      "known_token_hits": 0,
+      "generic_pattern_hits": {}
+    },
+    "rtl/capture.va": {
+      "known_token_hits": 0,
+      "generic_pattern_hits": {}
+    },
+    "rtl/formatter.va": {
+      "known_token_hits": 0,
+      "generic_pattern_hits": {}
+    },
+    "rtl/quantizer.va": {
+      "known_token_hits": 0,
+      "generic_pattern_hits": {}
+    }
+  },
+  "availability": "repository-contained",
+  "post_export_credential_scan": {
+    "dut.va": {
+      "known_token_hits": 0,
+      "generic_pattern_hits": {}
+    },
+    "rtl/capture.va": {
+      "known_token_hits": 0,
+      "generic_pattern_hits": {}
+    },
+    "rtl/formatter.va": {
+      "known_token_hits": 0,
+      "generic_pattern_hits": {}
+    },
+    "rtl/quantizer.va": {
+      "known_token_hits": 0,
+      "generic_pattern_hits": {}
+    }
+  }
+}

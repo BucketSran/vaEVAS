@@ -1,0 +1,205 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// ============================================================
+// SAR ADC front-end verification environment.
+// Generates the stimulus required by the task, monitors the raw
+// device outputs (code, done) and latches a verdict.
+//
+// Stimulus (per instruction):
+//   run 1.2 us, one conversion per 200 ns cycle k = 0..5
+//   vin(k)  = (2*(k mod 6)+1.25)/16 V
+//   main start : high during [200k+31, 200k+42] ns
+//   busy start : high during [200k+51, 200k+62] ns (must be ignored)
+//   rst : low on [0,21] ns and on [465,476] ns (abort in cycle k=2),
+//         high otherwise; all edges transition in 0.1 ns (max 0.2 ns)
+//
+// Checks (verdict latches to 1 on any violation):
+//   * code equals floor(16*vin) clamped to 0..15, tolerance 0.1 V
+//   * the main request lands on the 10 ns tick at 200k+40 ns; its done
+//     rising edge must arrive 40, 50 or 60 ns later (latency 4..6
+//     ticks), i.e. inside the required 35..75 ns window; no done may
+//     appear anywhere else, busy-time request must stay ignored
+//   * aborted cycle k=2: no done at all and code cleared to 0 V
+//   * end-of-run audit: exactly one done per served cycle, result held
+// verdict initial 0, held to the end of simulation.
+//
+// Time bookkeeping: the simulator fires timer() events exactly once at
+// every scheduled grid point, so event counters reproduce absolute time
+// without any system timing function:
+//   tn : integer ns of the current stimulus tick (0,1,...,1199)
+//   T  : time in 0.5 ns units at the monitor samples (1,3,...,2399)
+// ============================================================
+
+module dut(vin,start,rst,code,done,verdict);
+inout vin,start,rst,code,done,verdict;
+electrical vin,start,rst,code,done,verdict;
+
+integer tn,cyc,ph,kk,sv,rv;
+real vv;
+integer T,dnow,pd,ck,off,err,cd,leg,miss;
+integer ce0,ce1,ce2,ce3,ce4,ce5;
+
+analog begin
+  @(initial_step) begin
+    tn = -1; cyc = 0; ph = 0; kk = 0; sv = 0; rv = 0;
+    vv = 1.25/16.0;
+    T = -1; dnow = 0; pd = 0; ck = 0; off = 0; err = 0; cd = 0;
+    leg = 0; miss = 0;
+    ce0 = 0; ce1 = 0; ce2 = 0; ce3 = 0; ce4 = 0; ce5 = 0;
+  end
+
+  // ------------- stimulus scheduler, 1 ns grid -------------
+  @(timer(0,1n)) begin
+    tn = tn + 1;
+    if (tn < 1200) begin
+      cyc = tn/200;
+      ph  = tn - 200*cyc;
+      kk  = cyc - 6*(cyc/6);
+      // start: main pulse 31..42 ns, busy-time pulse 51..62 ns per cycle
+      sv = 0;
+      if (ph >= 31) begin
+        if (ph < 42) begin
+          sv = 1;
+        end
+      end
+      if (ph >= 51) begin
+        if (ph < 62) begin
+          sv = 1;
+        end
+      end
+      // rst: low 0..21 ns, low 465..476 ns (abort in cycle k=2)
+      if (tn < 21)
+        rv = 0;
+      else if (tn < 465)
+        rv = 1;
+      else if (tn < 476)
+        rv = 0;
+      else
+        rv = 1;
+      // vin = (2*(k mod 6)+1.25)/16 V during cycle k
+      vv = (2.0*kk + 1.25)/16.0;
+    end
+  end
+
+  // ------------- monitor and referee, 0.5 ns grid -------------
+  @(timer(0.5n,1n)) begin
+    T = T + 2;                     // time in units of 0.5 ns
+
+    // code accuracy checks, tolerance 0.1 V
+    if (T == 61) begin            // 30.5 ns : cleared initial reset state
+      cd = V(code);
+    end else if (T == 171) begin  // 85.5 ns : cycle 0 conversion value
+      cd = V(code) - 1.0;
+    end else if (T == 301) begin  // 150.5 ns : cycle 0 hold value
+      cd = V(code) - 1.0;
+    end else if (T == 571) begin  // 285.5 ns : cycle 1 conversion value
+      cd = V(code) - 3.0;
+    end else if (T == 701) begin  // 350.5 ns : cycle 1 hold value
+      cd = V(code) - 3.0;
+    end else if (T == 945) begin  // 472.5 ns : code cleared after abort
+      cd = V(code);
+    end else if (T == 1041) begin // 520.5 ns : aborted cycle keeps 0
+      cd = V(code);
+    end else if (T == 1371) begin // 685.5 ns : cycle 3 conversion value
+      cd = V(code) - 7.0;
+    end else if (T == 1501) begin // 750.5 ns : cycle 3 hold value
+      cd = V(code) - 7.0;
+    end else if (T == 1771) begin // 885.5 ns : cycle 4 conversion value
+      cd = V(code) - 9.0;
+    end else if (T == 1901) begin // 950.5 ns : cycle 4 hold value
+      cd = V(code) - 9.0;
+    end else if (T == 2171) begin // 1085.5 ns : cycle 5 conversion value
+      cd = V(code) - 11.0;
+    end else if (T == 2301) begin // 1150.5 ns : cycle 5 hold value
+      cd = V(code) - 11.0;
+    end else begin
+      cd = 0.0;
+    end
+    if (cd > 0.1)
+      err = 1;
+    if (cd < -0.1)
+      err = 1;
+
+    // done handshake checks
+    if (V(done) > 0.5)
+      dnow = 1;
+    else
+      dnow = 0;
+    if (dnow == 1) begin
+      if (pd == 0) begin
+        ck  = T/400;                 // cycle index (200 ns cycles)
+        off = T - 400*ck;            // offset in cycle, 0.5 ns units
+        if (ck == 2)
+          err = 1;                   // old done after reset abort
+        else if (ck > 5)
+          err = 1;                   // done outside any request cycle
+        else begin
+          // request accepted on tick 200k+40 ns; done must rise after
+          // latency 4..6 ticks, i.e. 40, 50 or 60 ns later
+          leg = 0;
+          if (off == 161)
+            leg = 1;
+          if (off == 181)
+            leg = 1;
+          if (off == 201)
+            leg = 1;
+          if (leg == 0)
+            err = 1;
+          // only one done per served cycle, busy request stays ignored
+          if (ck == 0) begin
+            if (ce0 >= 1) err = 1;
+            ce0 = ce0 + 1;
+          end else if (ck == 1) begin
+            if (ce1 >= 1) err = 1;
+            ce1 = ce1 + 1;
+          end else if (ck == 3) begin
+            if (ce3 >= 1) err = 1;
+            ce3 = ce3 + 1;
+          end else if (ck == 4) begin
+            if (ce4 >= 1) err = 1;
+            ce4 = ce4 + 1;
+          end else begin
+            if (ce5 >= 1) err = 1;
+            ce5 = ce5 + 1;
+          end
+        end
+      end
+    end
+    pd = dnow;
+
+    // end-of-run audit: every served cycle exactly one done, none aborted
+    if (T == 2399) begin           // 1199.5 ns
+      miss = 0;
+      if (ce0 != 1)
+        miss = 1;
+      if (ce1 != 1)
+        miss = 1;
+      if (ce3 != 1)
+        miss = 1;
+      if (ce4 != 1)
+        miss = 1;
+      if (ce5 != 1)
+        miss = 1;
+      if (miss == 1)
+        err = 1;
+      if (ce2 != 0)
+        err = 1;
+      cd = V(code) - 11.0;         // result held to the end
+      if (cd > 0.1)
+        err = 1;
+      if (cd < -0.1)
+        err = 1;
+    end
+  end
+
+  // drive stimulus and result ports
+  V(vin)     <+ transition(vv, 0, 0.1n);
+  V(start)   <+ transition(sv, 0, 0.1n);
+  V(rst)     <+ transition(rv, 0, 0.1n);
+  V(verdict) <+ transition(err, 0, 0.1n);
+  // keep observation nodes well defined even when no device is attached
+  V(code) <+ 0;
+  V(done) <+ 0;
+end
+endmodule

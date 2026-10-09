@@ -1,0 +1,9 @@
+simulator lang=spectre
+global 0
+ahdl_include "/work/dut.va"
+CLK (clock 0) vsource type=pulse val0=0 val1=1 delay=1n rise=0.1n fall=0.1n width=4.9n period=10n
+VIN (vin 0) vsource type=sine dc=0.5 ampl=0.63 freq=1370000
+DUT (vin clock code) offset_flash skew=0.15 vref=1
+simulatorOptions options reltol=1e-6 vabstol=1e-9 iabstol=1e-14
+tran tran stop=0.0001 errpreset=conservative
+save clock vin code

@@ -1,0 +1,23 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module sh_device(vin,track,y);
+inout vin,track,y;electrical vin,track,y;
+parameter integer fault=0;
+real phase,target,tau,a;
+integer k,tr;
+analog begin
+ k=$rtoi($abstime/500n);phase=$abstime-k*500n;
+ target=0.2;if(k%2==0)target=0.8;
+ tr=(phase<250n);tau=20n;if(fault==1)tau=60n;
+ a=1-exp(-phase/tau);
+ if(phase>=250n)a=1-exp(-250n/tau);
+ V(vin)<+target;V(track)<+transition(tr,0,0.1n);
+ if(tr!=0)begin
+  if(fault==2 && phase>=180n && phase<200n)V(y)<+target+0.025;
+  else V(y)<+0.5+(target-0.5)*a;
+ end else begin
+  if(fault==3)V(y)<+0.5+(target-0.5)*a-2e5*(phase-250n);
+  else V(y)<+0.5+(target-0.5)*a;
+ end
+end
+endmodule

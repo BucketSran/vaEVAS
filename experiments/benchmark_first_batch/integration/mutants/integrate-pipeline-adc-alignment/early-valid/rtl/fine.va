@@ -1,0 +1,12 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module fine_stage(residue,clk,reset,fine);
+input residue,clk,reset; output fine; electrical residue,clk,reset,fine;
+real f;
+analog begin
+  @(initial_step) f=0;
+  @(cross(V(reset)-0.5,+1)) f=0;
+  @(cross(V(clk)-0.5,-1)) if(V(reset)<0.5) f=floor(min(7.999999999,max(0,8*V(residue))));
+  V(fine)<+transition(f,0,0.03n);
+end
+endmodule

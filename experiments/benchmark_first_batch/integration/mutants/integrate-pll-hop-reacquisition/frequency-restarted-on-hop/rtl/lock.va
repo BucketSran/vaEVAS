@@ -1,0 +1,20 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module pll_lock(frequency,target,hop,reset,locked);
+input frequency,target,hop,reset; output locked; electrical frequency,target,hop,reset,locked;
+parameter real lock_tolerance=0.01;
+parameter real dwell_ns=0.5;
+real since; integer ready;
+analog begin
+  @(initial_step) begin since=-1; ready=0; end
+  @(cross(V(hop)-0.5,+1) or cross(V(reset)-0.5,+1)) begin since=-1; ready=0; end
+  @(timer(0,0.025n)) begin
+    if(V(reset)>0.5 || abs(V(frequency)-V(target))>lock_tolerance) begin since=-1; ready=0; end
+    else begin
+      if(since<0) since=$abstime;
+      if($abstime-since>=dwell_ns*1n) ready=1;
+    end
+  end
+  V(locked)<+transition(ready,0,0.03n);
+end
+endmodule

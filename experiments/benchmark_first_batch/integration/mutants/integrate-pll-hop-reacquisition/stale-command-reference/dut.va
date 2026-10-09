@@ -1,0 +1,14 @@
+`include "rtl/tracker.va"
+`include "rtl/oscillator.va"
+`include "rtl/lock.va"
+module hopping_pll(command,hop,reset,frequency,wave,locked);
+input command,hop,reset; output frequency,wave,locked;
+electrical command,hop,reset,frequency,wave,locked;
+electrical phase,target;
+parameter real tau_ns=5;
+parameter real lock_tolerance=0.01;
+parameter real dwell_ns=0.5;
+pll_tracker #(.tau_ns(tau_ns)) ut(command,hop,reset,frequency,phase,target);
+pll_oscillator uo(phase,reset,wave);
+pll_lock #(.lock_tolerance(lock_tolerance),.dwell_ns(dwell_ns)) ul(frequency,command,hop,reset,locked);
+endmodule

@@ -1,0 +1,10 @@
+simulator lang=spectre
+global 0
+ahdl_include "../dut.va"
+Vvin (vin 0) vsource type=pwl wave=[0 0.7 1.2e-08 0.7 1.204e-08 0.2]
+Vsample (sample 0) vsource type=pwl wave=[0 0 1.98e-09 0 2.02e-09 1 9.98e-09 1 1.002e-08 0 1.798e-08 0 1.802e-08 1 2.598e-08 1 2.602e-08 0]
+Vrst (rst 0) vsource type=pwl wave=[0 0 1.398e-08 0 1.402e-08 1 1.598e-08 1 1.602e-08 0]
+XDUT (vin sample rst vout) sample_hold tau=2e-09
+simulatorOptions options reltol=1e-6 vabstol=1e-9
+tran tran stop=3.2e-08 maxstep=2e-11
+save vin sample rst vout

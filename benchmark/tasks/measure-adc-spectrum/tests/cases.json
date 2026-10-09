@@ -1,0 +1,65 @@
+[
+  {
+    "name": "bin5",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXmeasure (code clk sndr sfdr dc) dut tone_bin=5\nXadc (vin clk code) adc_device tone_bin=5 amp=1700 h2=0.02 h3=0.01\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=6.6u maxstep=2n\nsaveOptions options save=allpub\n",
+    "stop": 6.6e-06,
+    "signals": [
+      "vin",
+      "clk",
+      "code",
+      "sndr",
+      "sfdr",
+      "dc"
+    ],
+    "tone_bin": 5,
+    "amp": 1700,
+    "h2": 0.02,
+    "h3": 0.01,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule adc_device(vin,clk,code);\ninout vin,clk,code; electrical vin,clk,code;\nparameter integer tone_bin=5;parameter real amp=1700,h2=0.02,h3=0.01;\ninteger q,c;real x;\nanalog begin\n x=2048+amp*sin(2*3.1415926535897932384626433832795*tone_bin*$abstime/6.4u)+amp*h2*sin(4*3.1415926535897932384626433832795*tone_bin*$abstime/6.4u)+amp*h3*cos(6*3.1415926535897932384626433832795*tone_bin*$abstime/6.4u);\n V(vin)<+x/4096;\n @(initial_step)begin q=2048;c=0;end\n @(timer(0,100n))begin q=$rtoi(x);if(q<0)q=0;if(q>4095)q=4095;end\n @(timer(10n,100n))c=1;\n @(timer(60n,100n))c=0;\n V(clk)<+transition(c,0,0.1n);V(code)<+transition(q,0,0.1n);\nend\nendmodule\n"
+    },
+    "task": "measure-adc-spectrum"
+  },
+  {
+    "name": "bin3",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXmeasure (code clk sndr sfdr dc) dut tone_bin=3\nXadc (vin clk code) adc_device tone_bin=3 amp=1500 h2=0.04 h3=0.005\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=6.6u maxstep=2n\nsaveOptions options save=allpub\n",
+    "stop": 6.6e-06,
+    "signals": [
+      "vin",
+      "clk",
+      "code",
+      "sndr",
+      "sfdr",
+      "dc"
+    ],
+    "tone_bin": 3,
+    "amp": 1500,
+    "h2": 0.04,
+    "h3": 0.005,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule adc_device(vin,clk,code);\ninout vin,clk,code; electrical vin,clk,code;\nparameter integer tone_bin=5;parameter real amp=1700,h2=0.02,h3=0.01;\ninteger q,c;real x;\nanalog begin\n x=2048+amp*sin(2*3.1415926535897932384626433832795*tone_bin*$abstime/6.4u)+amp*h2*sin(4*3.1415926535897932384626433832795*tone_bin*$abstime/6.4u)+amp*h3*cos(6*3.1415926535897932384626433832795*tone_bin*$abstime/6.4u);\n V(vin)<+x/4096;\n @(initial_step)begin q=2048;c=0;end\n @(timer(0,100n))begin q=$rtoi(x);if(q<0)q=0;if(q>4095)q=4095;end\n @(timer(10n,100n))c=1;\n @(timer(60n,100n))c=0;\n V(clk)<+transition(c,0,0.1n);V(code)<+transition(q,0,0.1n);\nend\nendmodule\n"
+    },
+    "task": "measure-adc-spectrum"
+  },
+  {
+    "name": "bin7",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXmeasure (code clk sndr sfdr dc) dut tone_bin=7\nXadc (vin clk code) adc_device tone_bin=7 amp=1800 h2=0.005 h3=0.025\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=6.6u maxstep=2n\nsaveOptions options save=allpub\n",
+    "stop": 6.6e-06,
+    "signals": [
+      "vin",
+      "clk",
+      "code",
+      "sndr",
+      "sfdr",
+      "dc"
+    ],
+    "tone_bin": 7,
+    "amp": 1800,
+    "h2": 0.005,
+    "h3": 0.025,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule adc_device(vin,clk,code);\ninout vin,clk,code; electrical vin,clk,code;\nparameter integer tone_bin=5;parameter real amp=1700,h2=0.02,h3=0.01;\ninteger q,c;real x;\nanalog begin\n x=2048+amp*sin(2*3.1415926535897932384626433832795*tone_bin*$abstime/6.4u)+amp*h2*sin(4*3.1415926535897932384626433832795*tone_bin*$abstime/6.4u)+amp*h3*cos(6*3.1415926535897932384626433832795*tone_bin*$abstime/6.4u);\n V(vin)<+x/4096;\n @(initial_step)begin q=2048;c=0;end\n @(timer(0,100n))begin q=$rtoi(x);if(q<0)q=0;if(q>4095)q=4095;end\n @(timer(10n,100n))c=1;\n @(timer(60n,100n))c=0;\n V(clk)<+transition(c,0,0.1n);V(code)<+transition(q,0,0.1n);\nend\nendmodule\n"
+    },
+    "task": "measure-adc-spectrum"
+  }
+]

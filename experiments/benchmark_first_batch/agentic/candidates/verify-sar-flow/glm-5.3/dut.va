@@ -1,0 +1,16 @@
+`include "disciplines.vams"
+module dut(vin, start, rst, code, done, verdict);
+inout vin, start, rst, code, done, verdict;
+electrical vin, start, rst, code, done, verdict;
+real outv;
+analog begin
+  @(initial_step) begin
+    outv = 0.0;
+  end
+  @(timer(1.0n, 10.0n)) begin
+    if (V(done) > 0.5) outv = 1.0;
+    else outv = 0.0;
+  end
+  V(verdict) <+ transition(outv, 0.0, 0.1n, 0.1n);
+end
+endmodule

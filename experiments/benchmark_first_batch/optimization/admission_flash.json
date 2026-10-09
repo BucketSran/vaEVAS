@@ -1,0 +1,20 @@
+{
+  "status": "flash_reviewed_for_generation_formal_calibration_pending",
+  "paired_evidence": "runs/benchmark-first-batch-20261008/flash-event-only-pairs-v2/analysis.json",
+  "tasks": {
+    "optimize-flash-thresholds": {
+      "admitted": true,
+      "metric": "intrinsic_cpu_s",
+      "max_median_ratio": 0.97,
+      "min_winning_pairs": 4,
+      "functional_evidence": [
+        "experiments/benchmark_first_batch/optimization/flash_thresholds/profile/current_reference_fullraw_proof.json"
+      ]
+    }
+  },
+  "review": {
+    "revision": "dc97ed23",
+    "report": "runs/benchmark-first-batch-20261008/review-flash-admission.md",
+    "scope": "Actual paired and full functional admission for Flash; formal execution pending; CPU score does not guarantee whole-process speedup"
+  }
+}

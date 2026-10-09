@@ -1,0 +1,6 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module dut(vin,q,high_mv,low_mv,rise_ns,fall_ns);
+inout vin,q,high_mv,low_mv,rise_ns,fall_ns; electrical vin,q,high_mv,low_mv,rise_ns,fall_ns;
+// TODO: implement the required experiment and result ports.
+endmodule

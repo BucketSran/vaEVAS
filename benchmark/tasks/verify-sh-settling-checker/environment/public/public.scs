@@ -1,0 +1,8 @@
+simulator lang=spectre
+ahdl_include "dut.va"
+ahdl_include "device.va"
+Xmon (vin track y verdict) dut
+Xsh (vin track y) sh_device fault=0
+simulatorOptions options reltol=1e-6 vabstol=1e-9
+tran tran stop=2u maxstep=0.5n
+saveOptions options save=allpub

@@ -1,0 +1,56 @@
+[
+  {
+    "name": "bank-throughput",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nCLK (clock 0) vsource type=pulse val0=0 val1=1 delay=1n rise=0.1n fall=0.1n width=4.9n period=10n\nVIN (vin 0) vsource type=sine dc=0.5 ampl=0.63 freq=1370000\nDUT (vin clock code) offset_flash skew=0.15 vref=1\nsimulatorOptions options reltol=1e-6 vabstol=1e-9 iabstol=1e-14\ntran tran stop=0.0001 errpreset=conservative\nsave clock vin code\n",
+    "stop": 0.0001,
+    "signals": [
+      "clock",
+      "vin",
+      "code"
+    ],
+    "skew": 0.15,
+    "vref": 1,
+    "clock_period": 1e-08,
+    "clock_first_cross": 1.05e-09,
+    "delay": 2e-10,
+    "rise": 3e-10,
+    "atol": 0.0003,
+    "performance": true
+  },
+  {
+    "name": "negative-skew",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nCLK (clock 0) vsource type=pulse val0=0 val1=1 delay=1n rise=0.1n fall=0.1n width=4.9n period=10n\nVIN (vin 0) vsource type=sine dc=0.65 ampl=0.8190000000000001 freq=1370000\nDUT (vin clock code) offset_flash skew=-0.27 vref=1.3\nsimulatorOptions options reltol=1e-6 vabstol=1e-9 iabstol=1e-14\ntran tran stop=5e-07 errpreset=conservative\nsave clock vin code\n",
+    "stop": 5e-07,
+    "signals": [
+      "clock",
+      "vin",
+      "code"
+    ],
+    "skew": -0.27,
+    "vref": 1.3,
+    "clock_period": 1e-08,
+    "clock_first_cross": 1.05e-09,
+    "delay": 2e-10,
+    "rise": 3e-10,
+    "atol": 0.0003,
+    "performance": false
+  },
+  {
+    "name": "positive-skew",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nCLK (clock 0) vsource type=pulse val0=0 val1=1 delay=1n rise=0.1n fall=0.1n width=4.9n period=10n\nVIN (vin 0) vsource type=sine dc=0.4 ampl=0.504 freq=1370000\nDUT (vin clock code) offset_flash skew=0.29 vref=0.8\nsimulatorOptions options reltol=1e-6 vabstol=1e-9 iabstol=1e-14\ntran tran stop=5e-07 errpreset=conservative\nsave clock vin code\n",
+    "stop": 5e-07,
+    "signals": [
+      "clock",
+      "vin",
+      "code"
+    ],
+    "skew": 0.29,
+    "vref": 0.8,
+    "clock_period": 1e-08,
+    "clock_first_cross": 1.05e-09,
+    "delay": 2e-10,
+    "rise": 3e-10,
+    "atol": 0.0003,
+    "performance": false
+  }
+]

@@ -1,0 +1,23 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module sar_device(vin,start,rst,code,done);
+inout vin,start,rst,code,done; electrical vin,start,rst,code,done;
+parameter integer fault=0, latency=5;
+integer busy,count,q,lasts,d,seq;
+analog begin
+ @(initial_step) begin busy=0;count=0;q=0;lasts=0;d=0;seq=0;end
+ @(timer(0,10n)) begin
+  d=0;
+  if(V(rst)<0.5 && fault!=3) begin busy=0;count=0;q=0;end
+  else begin
+   if(busy!=0) begin count=count-1;if(count==0) begin busy=0;d=1;end end
+   if(V(start)>0.5 && lasts==0 && (busy==0 || fault==2) && V(rst)>0.5) begin
+    busy=1;count=latency;q=$rtoi(V(vin)*16);if(q<0)q=0;if(q>15)q=15;
+    if(fault==1)q=(q+1)%16;
+   end
+  end
+  if(V(start)>0.5)lasts=1;else lasts=0;
+ end
+ V(code)<+transition(q,0,0.1n); V(done)<+transition(d,0,0.1n);
+end
+endmodule

@@ -1,0 +1,40 @@
+`include "disciplines.vams"
+// Same conversion architecture and sample/hold; idle inputs use edge events.
+module sensor_sar(vin, start, reset, busy, valid, code, dac);
+ input vin,start,reset;
+ output busy,valid,code,dac;
+ electrical vin,start,reset,busy,valid,code,dac;
+ parameter real vref=1.0 from (0:inf);
+ parameter real bit_period=50n from (0:inf);
+ parameter real poll_period=1n from (0:inf);
+ parameter real rise=0.5n from (0:inf);
+ integer active, ready, held_code, partial, bit_index, trial;
+ real sampled, next_bit;
+ analog begin
+  @(initial_step) begin
+   active=0;ready=0;held_code=0;partial=0;trial=0;bit_index=11;
+   sampled=0;next_bit=1e30;
+  end
+  @(cross(V(reset)-0.5,+1)) begin
+   active=0;ready=0;held_code=0;partial=0;trial=0;next_bit=1e30;
+  end
+  @(cross(V(start)-0.5,+1)) begin
+   if(V(reset)<0.5 && !active) begin
+    sampled=V(vin);partial=0;bit_index=11;trial=2048;active=1;ready=0;
+    next_bit=$abstime+bit_period;
+   end
+  end
+  @(timer(next_bit)) begin
+   if(active && V(reset)<0.5) begin
+    if(V(vin)>=vref*trial/4096.0) partial=trial;
+    if(bit_index==0) begin
+     held_code=partial;trial=partial;active=0;ready=1;next_bit=1e30;
+    end else begin bit_index=bit_index-1;trial=partial+(1<<bit_index);next_bit=$abstime+bit_period;end
+   end
+  end
+  V(busy) <+ transition(active,0,rise);
+  V(valid) <+ transition(ready,0,rise);
+  V(dac) <+ transition(trial/4096.0,0,rise);
+  V(code) <+ transition(held_code/4095.0,0,rise);
+ end
+endmodule

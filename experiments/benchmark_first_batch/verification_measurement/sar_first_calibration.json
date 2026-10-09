@@ -1,0 +1,124 @@
+{
+  "evidence_kind": "actual_spectre_archives_plus_local_numerical_replay",
+  "source_run": "verify-sar-reference-v3",
+  "note": "Replay is diagnosis, not a rerun of revised VA. Original latency6 false-positive occurs at polling arithmetic deadline equality. Need revised reference actual rerun.",
+  "conditions": [
+    {
+      "condition": "fault1-lat5",
+      "original_passed": true,
+      "original_failures": [],
+      "raw_device_bad": true,
+      "raw_done_edges_s": [
+        9.004999999999991e-08,
+        2.900500000000006e-07,
+        6.900499999999992e-07,
+        8.900499999999992e-07,
+        1.090050000000002e-06
+      ],
+      "polling_replay_1ps": {
+        "bad": true,
+        "first_s": 9.5e-08
+      },
+      "archive_sha256": "02a40d991565bbcf2ca3bf3e483fdc512d7f9321141ad57d0172e8f45839ca46",
+      "original_candidate_sha256": "c5362a80aadac0cb745d3bbe6af3c7ad298d77f09d28e0fb58b6641221d3880c"
+    },
+    {
+      "condition": "fault0-lat6",
+      "original_passed": false,
+      "original_failures": [
+        "verdict disagrees with raw handshake/code"
+      ],
+      "raw_device_bad": false,
+      "raw_done_edges_s": [
+        1.0004999999999988e-07,
+        3.000500000000008e-07,
+        7.000499999999989e-07,
+        9.000499999999989e-07,
+        1.1000500000000031e-06
+      ],
+      "polling_replay_1ps": {
+        "bad": false,
+        "first_s": null
+      },
+      "archive_sha256": "5d1654df18bce0ba29e419684735719cc14b1c836528bb01d359b79704a3c7a4",
+      "original_candidate_sha256": "c5362a80aadac0cb745d3bbe6af3c7ad298d77f09d28e0fb58b6641221d3880c"
+    },
+    {
+      "condition": "fault2-lat5",
+      "original_passed": true,
+      "original_failures": [],
+      "raw_device_bad": true,
+      "raw_done_edges_s": [
+        1.100499999999998e-07,
+        3.10050000000001e-07,
+        7.100499999999986e-07,
+        9.100499999999986e-07,
+        1.110050000000003e-06
+      ],
+      "polling_replay_1ps": {
+        "bad": true,
+        "first_s": 1.1e-07
+      },
+      "archive_sha256": "b2bb11a9051f5eb6b8c681bb499afea93ef33377b3e9c2809bc73967c081b826",
+      "original_candidate_sha256": "c5362a80aadac0cb745d3bbe6af3c7ad298d77f09d28e0fb58b6641221d3880c"
+    },
+    {
+      "condition": "fault0-lat4",
+      "original_passed": true,
+      "original_failures": [],
+      "raw_device_bad": false,
+      "raw_done_edges_s": [
+        8.004999999999995e-08,
+        2.800500000000003e-07,
+        6.800499999999995e-07,
+        8.800499999999995e-07,
+        1.0800500000000012e-06
+      ],
+      "polling_replay_1ps": {
+        "bad": false,
+        "first_s": null
+      },
+      "archive_sha256": "52ed80bbeff49e004018f9dd2fa8485cff76f04424c6d68014d16676614f78e3",
+      "original_candidate_sha256": "c5362a80aadac0cb745d3bbe6af3c7ad298d77f09d28e0fb58b6641221d3880c"
+    },
+    {
+      "condition": "fault0-lat5",
+      "original_passed": true,
+      "original_failures": [],
+      "raw_device_bad": false,
+      "raw_done_edges_s": [
+        9.004999999999991e-08,
+        2.900500000000006e-07,
+        6.900499999999992e-07,
+        8.900499999999992e-07,
+        1.090050000000002e-06
+      ],
+      "polling_replay_1ps": {
+        "bad": false,
+        "first_s": null
+      },
+      "archive_sha256": "ccb6bed5ea19a3a5f6a3d69ed025bfe995929e03dfda96196b6932d892b13da2",
+      "original_candidate_sha256": "c5362a80aadac0cb745d3bbe6af3c7ad298d77f09d28e0fb58b6641221d3880c"
+    },
+    {
+      "condition": "fault3-lat5",
+      "original_passed": true,
+      "original_failures": [],
+      "raw_device_bad": true,
+      "raw_done_edges_s": [
+        9.004999999999991e-08,
+        2.900500000000006e-07,
+        4.900499999999997e-07,
+        6.900499999999992e-07,
+        8.900499999999992e-07,
+        1.090050000000002e-06
+      ],
+      "polling_replay_1ps": {
+        "bad": true,
+        "first_s": 4.95e-07
+      },
+      "archive_sha256": "542b245625cec13bfe464d1a4500357f7d3c6d4d175c9735089c2a4a5d632985",
+      "original_candidate_sha256": "c5362a80aadac0cb745d3bbe6af3c7ad298d77f09d28e0fb58b6641221d3880c"
+    }
+  ]
+}

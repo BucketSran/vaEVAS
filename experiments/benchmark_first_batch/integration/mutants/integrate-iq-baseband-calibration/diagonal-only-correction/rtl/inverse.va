@@ -1,0 +1,12 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module iq_inverse(ri,rq,a,b,c,d,oi,oq,ci,cq);
+input ri,rq,a,b,c,d,oi,oq; output ci,cq;
+electrical ri,rq,a,b,c,d,oi,oq,ci,cq;
+real determinant;
+analog begin
+  determinant=V(a)*V(d)-V(b)*V(c);
+  V(ci)<+(V(ri)-V(oi))/V(a);
+  V(cq)<+(V(rq)-V(oq))/V(d);
+end
+endmodule

@@ -1,0 +1,15 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module dut(vp,vn,clk);
+inout vp,vn,clk;electrical vp,vn,clk;
+parameter real cm=0.5;
+integer k,sgn,c;real d,t;
+analog begin
+ k=$rtoi($abstime/100n);t=$abstime-k*100n;
+ if(k%3==0)d=0.01;else if(k%3==1)d=0.025;else d=0.05;
+ if(k%2==0)sgn=1;else sgn=-1;
+ c=(t>=20n && t<70n);
+ V(vp)<+transition(0.5+sgn*d/2,0,0.1n);V(vn)<+transition(cm-sgn*d/2,0,0.1n);
+ V(clk)<+transition(c,0,0.1n);
+end
+endmodule

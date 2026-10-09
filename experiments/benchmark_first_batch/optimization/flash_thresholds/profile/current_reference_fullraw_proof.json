@@ -1,0 +1,361 @@
+{
+  "kind": "actual_waveform_replay_not_new_va_execution",
+  "new_simulations": false,
+  "raw_artifact_availability": "local-only; archive hashes are not download links",
+  "records": [
+    {
+      "task_id": "optimize-flash-thresholds",
+      "role": "baseline",
+      "case": "positive-skew",
+      "candidate_sha256": "c35882d198a41c80a81257711c4e8f9ab8f9c83d3421c6472d376ca2d79663a6",
+      "archive_sha256": "9275dd38d07817479751c7636918c68fef51f870fe57c8559f8d8f97fe45f40d",
+      "report_sha256": "22be0f8420d841fe03cee79596d19e531394ca02732e989898fb8855082cae97",
+      "waveform_sha256": "114ff043401c659c4a978b788afdb7dfb112800798f2b4c058d7fcf6214fed59",
+      "netlist_sha256": "b2757414794dcc38b42e769d2f46b33fcab6776638283f5f86059f89c6e3a587",
+      "native_log_sha256": "ac96f57a109c3a5d45a6d43c646aa44d3320a442cf157b23a1618b224ebdb5ac",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "executed_cases_sha256": "ea28b5aa92039cd9b32d4fc590382b9cbf6699c987eba57d3db5c9618f6eca78",
+      "executed_runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "executed_contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "replay_checker_sha256": "acdea3de391e0d12cbde5a00952221254edb049992dd39f9962132c3e3f87888",
+      "replay_cases_sha256": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 3.634705902921809e-08,
+        "max_raw_transition_error_v": 3.634705902921809e-08,
+        "expected_samples": 50,
+        "observed_clock_edges": 50,
+        "saved_waveform_points": 1636
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "ac96f57a109c3a5d45a6d43c646aa44d3320a442cf157b23a1618b224ebdb5ac",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "native_host": "thu-sui",
+        "native_cpu_type": "Intel(R) Xeon(R) Gold 6326 CPU @ 2.90GHz",
+        "native_load_average_log": "System load averages (1min, 5min, 15min) : 3.0 %, 3.1 %, 1.9 %",
+        "accepted_steps": 1635,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.06193,
+          "elapsed_s": 0.031195900000000002
+        },
+        "total_tran": {
+          "cpu_s": 0.06370100000000001,
+          "elapsed_s": 0.031971900000000004
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "c35882d198a41c80a81257711c4e8f9ab8f9c83d3421c6472d376ca2d79663a6",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "497576aacb1fe4b6cbcf33b1d43538b59d1fd228211622378592965fa92cdcb2"
+        }
+      },
+      "local_archive_locator": "calibration/optimize-flash-thresholds-baseline-v2/remote/bf-2f596eac78364fc3a525-positive-skew/archive/job.tar.gz"
+    },
+    {
+      "task_id": "optimize-flash-thresholds",
+      "role": "baseline",
+      "case": "negative-skew",
+      "candidate_sha256": "c35882d198a41c80a81257711c4e8f9ab8f9c83d3421c6472d376ca2d79663a6",
+      "archive_sha256": "ee2f2e533b964bed3310a55957b0b0ce8deb855b34299c7ce65c9597ea7b60a4",
+      "report_sha256": "64258318a97ddcad0b49d3a1cd765fac34fa9cfd6828b9ee7c79dc9089ea5e5f",
+      "waveform_sha256": "3c39cc36a55be7b45e413033f0dd23b3c65aa84cfec06fc01c4d2310ce817e17",
+      "netlist_sha256": "0f1a7956af91c27e8410e979a2a91f2083c5d1c6bb4df6dc5148d4be0923a403",
+      "native_log_sha256": "079f35f01c3ac300d2ecddf542ad1f8e5e35686becaedacdb412d1f65bc4774e",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "executed_cases_sha256": "84ed0e1f44b737f54f1ecbbfa88f981620e4e70f57fadfc4487458afe3bb8363",
+      "executed_runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "executed_contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "replay_checker_sha256": "acdea3de391e0d12cbde5a00952221254edb049992dd39f9962132c3e3f87888",
+      "replay_cases_sha256": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 4.780784351732237e-08,
+        "max_raw_transition_error_v": 4.780784351732237e-08,
+        "expected_samples": 50,
+        "observed_clock_edges": 50,
+        "saved_waveform_points": 1636
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "079f35f01c3ac300d2ecddf542ad1f8e5e35686becaedacdb412d1f65bc4774e",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "native_host": "thu-sui",
+        "native_cpu_type": "Intel(R) Xeon(R) Gold 6326 CPU @ 2.90GHz",
+        "native_load_average_log": "System load averages (1min, 5min, 15min) : 2.9 %, 3.1 %, 1.9 %",
+        "accepted_steps": 1635,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.064202,
+          "elapsed_s": 0.0324841
+        },
+        "total_tran": {
+          "cpu_s": 0.06594,
+          "elapsed_s": 0.033226
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "c35882d198a41c80a81257711c4e8f9ab8f9c83d3421c6472d376ca2d79663a6",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "38bb358f4f2f85b5fa606a94dea7fab813eebfc519168d1f7a4bd938699c66d6"
+        }
+      },
+      "local_archive_locator": "calibration/optimize-flash-thresholds-baseline-v2/remote/bf-c075e5863a0b4f1d8f46-negative-skew/archive/job.tar.gz"
+    },
+    {
+      "task_id": "optimize-flash-thresholds",
+      "role": "baseline",
+      "case": "bank-throughput",
+      "candidate_sha256": "c35882d198a41c80a81257711c4e8f9ab8f9c83d3421c6472d376ca2d79663a6",
+      "archive_sha256": "f8a7d0c0a3b150ffcd57dda6b2b6626f070c8ae2a738efda7134f6e369d54f07",
+      "report_sha256": "c083bd14f3233266cf42423d91c3a751a76e4f63ba35f9791f13e2095a817480",
+      "waveform_sha256": "58f4bea8449bee66b7ddf3207e9b7e9e3d05b2ba72d0cab3412a5b6dae13a2cf",
+      "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+      "native_log_sha256": "be30ffc61cdf157abd364e0ace793e809a7b3d93d0adf29a7b3b43c93b07e3e2",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "executed_cases_sha256": "af98f9621c97a848e6d8fee113dd1a85d72609d4e1290a3a5b1f0b7c002056f0",
+      "executed_runtime_sha256": "62d89414972b3db974071bdb97652f9fa1374df04153a0f95406f69f8cec27e7",
+      "executed_contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "replay_checker_sha256": "acdea3de391e0d12cbde5a00952221254edb049992dd39f9962132c3e3f87888",
+      "replay_cases_sha256": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 3.896666694869211e-08,
+        "max_raw_transition_error_v": 3.896666694869211e-08,
+        "expected_samples": 10000,
+        "observed_clock_edges": 10000,
+        "saved_waveform_points": 152094
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "be30ffc61cdf157abd364e0ace793e809a7b3d93d0adf29a7b3b43c93b07e3e2",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "native_host": "thu-sui",
+        "native_cpu_type": "Intel(R) Xeon(R) Gold 6326 CPU @ 2.90GHz",
+        "native_load_average_log": "System load averages (1min, 5min, 15min) : 2.1 %, 2.9 %, 1.8 %",
+        "accepted_steps": 152093,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 4.33414,
+          "elapsed_s": 2.32124
+        },
+        "total_tran": {
+          "cpu_s": 4.33607,
+          "elapsed_s": 2.32217
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "c35882d198a41c80a81257711c4e8f9ab8f9c83d3421c6472d376ca2d79663a6",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "1d417d122861eb690cd60ca03a40d7a22bc3c1f76e70d69145db14805cc24b6c"
+        }
+      },
+      "local_archive_locator": "calibration/optimize-flash-thresholds-baseline-v2/remote/bf-cea81e4a6da447cb87ce-bank-throughput/archive/job.tar.gz"
+    },
+    {
+      "task_id": "optimize-flash-thresholds",
+      "role": "reference",
+      "case": "positive-skew",
+      "candidate_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+      "archive_sha256": "d6fa456bad0f8a850e9dd9e1542ef2e3ccde14567eddb78cff92e8ba0f85fee5",
+      "report_sha256": "b5b7c6eae8678fca0221eee7a5afda3ccc9a5f554666749f1f1de0a25384a73c",
+      "waveform_sha256": "ba00d5a78a55945c9df39ee83c3cadae81502a6b59a260f680e0f10c356c9011",
+      "netlist_sha256": "b2757414794dcc38b42e769d2f46b33fcab6776638283f5f86059f89c6e3a587",
+      "native_log_sha256": "52a236b062092b9289bfb44c0a3bb2dd9045f5a9c7d8371a2ce334d9360ccaec",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "executed_cases_sha256": "ea28b5aa92039cd9b32d4fc590382b9cbf6699c987eba57d3db5c9618f6eca78",
+      "executed_runtime_sha256": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "executed_contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "replay_checker_sha256": "acdea3de391e0d12cbde5a00952221254edb049992dd39f9962132c3e3f87888",
+      "replay_cases_sha256": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 3.634705902921809e-08,
+        "max_raw_transition_error_v": 3.634705902921809e-08,
+        "expected_samples": 50,
+        "observed_clock_edges": 50,
+        "saved_waveform_points": 1636
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "52a236b062092b9289bfb44c0a3bb2dd9045f5a9c7d8371a2ce334d9360ccaec",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "native_host": "thu-sui",
+        "native_cpu_type": "Intel(R) Xeon(R) Gold 6326 CPU @ 2.90GHz",
+        "native_load_average_log": "System load averages (1min, 5min, 15min) : 0.9 %, 0.8 %, 1.4 %",
+        "accepted_steps": 1635,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.052317999999999996,
+          "elapsed_s": 0.026524100000000002
+        },
+        "total_tran": {
+          "cpu_s": 0.053954,
+          "elapsed_s": 0.027162099999999998
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "b6e3f11f3f19173cc3d233303c1cac2bd97b805d55051d150e358447ac5a2327"
+        }
+      },
+      "local_archive_locator": "flash-event-only-function-v1/remote/bf-a6f226fda70f4cb997ad-positive-skew/archive/job.tar.gz"
+    },
+    {
+      "task_id": "optimize-flash-thresholds",
+      "role": "reference",
+      "case": "bank-throughput",
+      "candidate_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+      "archive_sha256": "14bedfdf29eb3ef444d4ed89c32883c7a2958c09e8fcbb728a50dd33abf13393",
+      "report_sha256": "1271f4be2851464b9c9895e7abdf272603a8f4b1d4a007af3bceca03fb7132d4",
+      "waveform_sha256": "7cdb3327d452938ecfc6e97ebb95efd9665c2c8cafe529fab2b95b6bc1229794",
+      "netlist_sha256": "bc712aa85cb0458df3f3a89d9189152c7c043b0afb293ec0850626b12a66440b",
+      "native_log_sha256": "da9c1c1b9d08808e49eb37fd8f04b65996cdb30d214960a6a13f5562f043332d",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "executed_cases_sha256": "af98f9621c97a848e6d8fee113dd1a85d72609d4e1290a3a5b1f0b7c002056f0",
+      "executed_runtime_sha256": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "executed_contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "replay_checker_sha256": "acdea3de391e0d12cbde5a00952221254edb049992dd39f9962132c3e3f87888",
+      "replay_cases_sha256": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 3.896666694869211e-08,
+        "max_raw_transition_error_v": 3.896666694869211e-08,
+        "expected_samples": 10000,
+        "observed_clock_edges": 10000,
+        "saved_waveform_points": 152094
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "da9c1c1b9d08808e49eb37fd8f04b65996cdb30d214960a6a13f5562f043332d",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "native_host": "thu-sui",
+        "native_cpu_type": "Intel(R) Xeon(R) Gold 6326 CPU @ 2.90GHz",
+        "native_load_average_log": "System load averages (1min, 5min, 15min) : 0.3 %, 0.7 %, 1.4 %",
+        "accepted_steps": 152093,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 3.93537,
+          "elapsed_s": 1.9942
+        },
+        "total_tran": {
+          "cpu_s": 3.93602,
+          "elapsed_s": 1.99484
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "c12f3249fcc0c7742489fb0b0aa742e71fbdd330fbd7302a452a4ec606842ca9"
+        }
+      },
+      "local_archive_locator": "flash-event-only-function-v1/remote/bf-b3cfc91d04ea4bd7a4e9-bank-throughput/archive/job.tar.gz"
+    },
+    {
+      "task_id": "optimize-flash-thresholds",
+      "role": "reference",
+      "case": "negative-skew",
+      "candidate_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+      "archive_sha256": "0eac6ef021e1f686139b410b9a2a1a0fd0e4ae1191c95b6786f0b2d6cbd78e31",
+      "report_sha256": "1bc90bd7dff616c6f4c0a548ebb1bfc572491aff515406b2f052eda486ae9d29",
+      "waveform_sha256": "355a81cc7416310c4424dfb9bf2bc1d70ab3d035716b5e7d23ce7e7f5bd3d679",
+      "netlist_sha256": "0f1a7956af91c27e8410e979a2a91f2083c5d1c6bb4df6dc5148d4be0923a403",
+      "native_log_sha256": "14b13f2a250cb2008752532215546c1b79fe59fba25f14d9915c54747f3e823d",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "executed_cases_sha256": "84ed0e1f44b737f54f1ecbbfa88f981620e4e70f57fadfc4487458afe3bb8363",
+      "executed_runtime_sha256": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "executed_contract_sha256": "11ae6621bfbdbde4156ae283a81444604ea91f6cd4fc1d00a87b1c89fe2b4910",
+      "replay_checker_sha256": "acdea3de391e0d12cbde5a00952221254edb049992dd39f9962132c3e3f87888",
+      "replay_cases_sha256": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 4.780784351732237e-08,
+        "max_raw_transition_error_v": 4.780784351732237e-08,
+        "expected_samples": 50,
+        "observed_clock_edges": 50,
+        "saved_waveform_points": 1636
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "14b13f2a250cb2008752532215546c1b79fe59fba25f14d9915c54747f3e823d",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "native_host": "thu-sui",
+        "native_cpu_type": "Intel(R) Xeon(R) Gold 6326 CPU @ 2.90GHz",
+        "native_load_average_log": "System load averages (1min, 5min, 15min) : 0.4 %, 0.7 %, 1.4 %",
+        "accepted_steps": 1635,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.053964,
+          "elapsed_s": 0.027143
+        },
+        "total_tran": {
+          "cpu_s": 0.055588000000000005,
+          "elapsed_s": 0.027771
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false,
+        "source_identity": {
+          "version": "optimization-native-io-v1",
+          "source_sha256": "723e3129453deb04607d94c43eb5a152960bd5ea9702f397f48c029ea97606ae",
+          "passed": true
+        },
+        "process_returncode": 0,
+        "stream_layout": "merged",
+        "stream_identities": {
+          "stdout_stderr_merged_sha256": "aaec2b1960bc2f1d5eecf7fcb23626a712a0fcec3bfdced90ca88922c7801d6a"
+        }
+      },
+      "local_archive_locator": "flash-event-only-function-v1/remote/bf-e8ba89e3640843fea5f3-negative-skew/archive/job.tar.gz"
+    }
+  ]
+}

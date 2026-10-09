@@ -1,0 +1,15 @@
+{
+  "kind": "trusted_original_flash_limiter_diagnostics_not_performance_scoring",
+  "probe_path": "experiments/benchmark_first_batch/optimization/probes/optimize-flash-thresholds",
+  "condition_id": "bank-throughput",
+  "run_after_quiet_measurements": true,
+  "not_final_timing_evidence": true,
+  "requests": [
+    {"label": "count-continuous-linear-scan", "source": "experiments/benchmark_first_batch/optimization/flash_thresholds/profile/baseline.va", "instrumented": true},
+    {"label": "count-sampled-binary-search", "source": "experiments/benchmark_first_batch/optimization/flash_thresholds/profile/reference.va", "instrumented": true},
+    {"label": "ablate-event-location-only", "source": "experiments/benchmark_first_batch/optimization/flash_thresholds/profile/sampled_linear_scan.va", "instrumented": false},
+    {"label": "ablate-search-only", "source": "experiments/benchmark_first_batch/optimization/flash_thresholds/profile/continuous_binary_search.va", "instrumented": false}
+  ],
+  "correctness": "same strengthened independent threshold/sample/hold/delay/transition oracle",
+  "limits": ["Do not overlap quiet timing.", "Instrumented source contains declared $strobe; excluded from formal scoring.", "Counters reflect preserved simulator state, not necessarily rejected Newton attempts.", "Single ablation CPU is diagnostic, not a speedup claim."]
+}

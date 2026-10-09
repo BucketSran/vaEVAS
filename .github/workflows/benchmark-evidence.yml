@@ -2,10 +2,10 @@ name: Benchmark evidence
 
 on:
   pull_request:
-    paths: ['benchmark/tasks/**', 'benchmark/checkers/**', 'experiments/va_screen/**', '.github/workflows/benchmark-evidence.yml']
+    paths: ['benchmark/tasks/**', 'benchmark/checkers/**', 'benchmark/first_batch/**', 'experiments/va_screen/**', 'experiments/benchmark_first_batch/**', '.github/workflows/benchmark-evidence.yml']
   push:
     branches: [main]
-    paths: ['benchmark/tasks/**', 'benchmark/checkers/**', 'experiments/va_screen/**', '.github/workflows/benchmark-evidence.yml']
+    paths: ['benchmark/tasks/**', 'benchmark/checkers/**', 'benchmark/first_batch/**', 'experiments/va_screen/**', 'experiments/benchmark_first_batch/**', '.github/workflows/benchmark-evidence.yml']
   workflow_dispatch:
 
 permissions:
@@ -28,3 +28,20 @@ jobs:
         run: python3 -B -m unittest experiments.va_screen.test_identity experiments.va_screen.test_summarize -v
       - name: Saved-candidate EVAS replay regressions
         run: python3 -B -m unittest discover -s benchmark/checkers -p test_triangle_evas_replay.py -v
+  first-batch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Portable checker copies and task lineage
+        run: |
+          python3 -B experiments/benchmark_first_batch/sync_runtime.py --check
+          python3 -B experiments/benchmark_first_batch/sync_metadata.py --check
+      - name: Independent criteria and evidence boundary regressions
+        run: |
+          for directory in experiments/benchmark_first_batch experiments/benchmark_first_batch/model_repair experiments/benchmark_first_batch/identification experiments/benchmark_first_batch/integration experiments/benchmark_first_batch/verification_measurement experiments/benchmark_first_batch/optimization experiments/benchmark_first_batch/legacy_va07 experiments/benchmark_first_batch/agentic; do
+            python3 -B -m unittest discover -s "$directory" -p 'test_*.py' -v || exit $?
+          done

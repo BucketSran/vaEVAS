@@ -1,0 +1,9 @@
+simulator lang=spectre
+global 0
+ahdl_include "dut.va"
+Vvin (vin 0) vsource type=pwl wave=[0 -0.09 1.2e-07 -0.09 1.20001e-07 -0.28 2.4e-07 -0.28 2.40001e-07 -0.7 3.6e-07 -0.7]
+Vclk (clk 0) vsource type=pwl wave=[0 0 2e-08 0 2.0001e-08 1 9.5e-08 1 9.5001e-08 0 1.4e-07 0 1.40001e-07 1 2.15e-07 1 2.15001e-07 0 2.6e-07 0 2.60001e-07 1 3.35e-07 1 3.35001e-07 0 3.6e-07 0]
+DUT (vin clk out) identified_comparator
+simulatorOptions options reltol=1e-7 vabstol=1e-10 iabstol=1e-13
+tran tran stop=3.6e-07 maxstep=1e-10 errpreset=conservative
+save out vin clk

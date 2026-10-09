@@ -1,0 +1,19 @@
+schema_version = "1.4"
+[metadata]
+name = "identify-pll-hop-dynamics"
+category = "verilog-a"
+release_set = "spectre-extension-candidate"
+engineering_action = "from-data-modeling"
+source_group = "original-identified_pll-identification"
+context_level = "bounded-work-unit"
+provenance = "original-engineering-requirement"
+data_provenance = "behavioral_synthetic"
+[agent]
+timeout_sec = 1800
+[verifier]
+timeout_sec = 600
+[environment]
+build_timeout_sec = 600
+cpus = 1
+memory_mb = 1024
+storage_mb = 2048

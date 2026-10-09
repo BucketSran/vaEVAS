@@ -1,0 +1,83 @@
+{
+  "kind": "local_lossless_storage_check_of_actual_archived_psf",
+  "new_simulations": false,
+  "performance_measurement": false,
+  "solver_process_timer_unchanged": true,
+  "compression_host": "local workstation, not solver host",
+  "python_version": "3.14.6",
+  "input_analysis_sha256": "3a62c085546b0ec2a2c9421cdbf060c90f145be50d1ded4b0ca69323fc92c393",
+  "records": [
+    {
+      "task_id": "optimize-vco-step",
+      "role": "baseline",
+      "archive_sha256": "06e9b1bd12e21c822b33c57e2ca3567fa92fc56ccd560de5c84d1f37a02b4e7e",
+      "storage": {
+        "version": "gzip-lossless-psf-v1",
+        "encoding": "gzip",
+        "compression_level": 6,
+        "zlib_runtime_version": "1.2.12",
+        "raw_bytes": 45571517,
+        "raw_sha256": "9b670719d317a0f08cc98252a11158201383974c1e794914f4ee3b3d24c0f1b0",
+        "gzip_bytes": 7212703,
+        "gzip_sha256": "f76fec44ce71c4f530255ebeb200e25dcebc751a8214f1145f62219c7d29bdd9",
+        "gzip_path": "tran.tran.tran.gz",
+        "roundtrip_verified": true,
+        "compression_elapsed_s": 1.4731676247902215
+      }
+    },
+    {
+      "task_id": "optimize-vco-step",
+      "role": "reference",
+      "archive_sha256": "8a79c60a29608d7c40d0b5b9436c78e86d7183cc58302d98e3e5d45fceb0c5ed",
+      "storage": {
+        "version": "gzip-lossless-psf-v1",
+        "encoding": "gzip",
+        "compression_level": 6,
+        "zlib_runtime_version": "1.2.12",
+        "raw_bytes": 910872,
+        "raw_sha256": "6bde356b7c174cf2a55a9fe607f32635cf43e69cb826ab8589e4f91f8cc00d78",
+        "gzip_bytes": 154429,
+        "gzip_sha256": "0418213428ed32f842bab7919b4ad4d5e395a1eb6d32435dde5ce6a4e915b1e2",
+        "gzip_path": "tran.tran.tran.gz",
+        "roundtrip_verified": true,
+        "compression_elapsed_s": 0.01969500002451241
+      }
+    },
+    {
+      "task_id": "optimize-uart-calendar",
+      "role": "baseline",
+      "archive_sha256": "6f2b4edfae9938cd31e7c698c1818990a815fe9a15f50825d648cbf1f249d3f5",
+      "storage": {
+        "version": "gzip-lossless-psf-v1",
+        "encoding": "gzip",
+        "compression_level": 6,
+        "zlib_runtime_version": "1.2.12",
+        "raw_bytes": 43704608,
+        "raw_sha256": "5767a7e0cc59fcb5bf2b858e8cf349523b0bcd26f4f52f3bc1069ffd4c664795",
+        "gzip_bytes": 1194148,
+        "gzip_sha256": "31cde897d729ca94e8b435448b1c4db04ec57c455d02b5f3baf25f304ca73067",
+        "gzip_path": "tran.tran.tran.gz",
+        "roundtrip_verified": true,
+        "compression_elapsed_s": 0.359974917024374
+      }
+    },
+    {
+      "task_id": "optimize-uart-calendar",
+      "role": "reference",
+      "archive_sha256": "af1bccd221d206a6c71dead88bc690be568ba92f2a102da7564254c22078146e",
+      "storage": {
+        "version": "gzip-lossless-psf-v1",
+        "encoding": "gzip",
+        "compression_level": 6,
+        "zlib_runtime_version": "1.2.12",
+        "raw_bytes": 663350,
+        "raw_sha256": "9c59ff333818651b159039d656d09536fdee01b5f3368488acf36e8d5de8f459",
+        "gzip_bytes": 29721,
+        "gzip_sha256": "e1bee8c41ef0e7eefc99917803b68bd57101dd39e461fddfab73f924ab8d7c1c",
+        "gzip_path": "tran.tran.tran.gz",
+        "roundtrip_verified": true,
+        "compression_elapsed_s": 0.010203707963228226
+      }
+    }
+  ]
+}

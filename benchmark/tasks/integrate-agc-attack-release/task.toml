@@ -1,0 +1,18 @@
+schema_version = "1.4"
+[metadata]
+name = "integrate-agc-attack-release"
+category = "verilog-a"
+engineering_action = "extension-integration"
+source_group = "original-receiver-agc"
+context_level = "bounded-small-project"
+provenance = "original-engineering-requirement"
+data_provenance = "behavioral_synthetic"
+[agent]
+timeout_sec = 1800
+[verifier]
+timeout_sec = 900
+[environment]
+build_timeout_sec = 600
+cpus = 1
+memory_mb = 1024
+storage_mb = 2048

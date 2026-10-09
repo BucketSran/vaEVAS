@@ -1,0 +1,15 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module dut(vin,q,high_mv,low_mv,rise_ns,fall_ns);
+inout vin,q,high_mv,low_mv,rise_ns,fall_ns;electrical vin,q,high_mv,low_mv,rise_ns,fall_ns;
+real rh,rl,ts,dr,df;integer pos;
+analog begin
+ @(initial_step)begin rh=0;rl=0;dr=0;df=0;ts=0;pos=0;end
+ @(cross(V(vin),+1))if($abstime>=900n)ts=$abstime;
+ @(cross(V(vin),-1))if($abstime>=900n)ts=$abstime;
+ @(cross(V(q)-0.5,+1))begin if($abstime<800n)rh=V(vin);else dr=$abstime-ts;end
+ @(cross(V(q)-0.5,-1))begin if($abstime<800n)rl=V(vin);else df=$abstime-ts;end
+ V(high_mv)<+1000*(rh);V(low_mv)<+1000*(rl);
+ V(rise_ns)<+dr/1n;V(fall_ns)<+df/1n;
+end
+endmodule

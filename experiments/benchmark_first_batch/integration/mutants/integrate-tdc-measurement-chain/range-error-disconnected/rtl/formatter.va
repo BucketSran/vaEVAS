@@ -1,0 +1,12 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module tdc_formatter(code,done,pending,expired,range_error,result,valid,busy,overflow);
+input code,done,pending,expired,range_error; output result,valid,busy,overflow;
+electrical code,done,pending,expired,range_error,result,valid,busy,overflow;
+analog begin
+  V(result)<+0.02*V(code);
+  V(valid)<+V(done);
+  V(busy)<+V(pending);
+  V(overflow)<+V(expired);
+end
+endmodule

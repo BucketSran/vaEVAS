@@ -1,0 +1,6 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module adc_compare(vin,trial,cmp);
+input vin,trial;output cmp;electrical vin,trial,cmp;
+analog V(cmp)<+transition((V(vin)>=V(trial))?1:0,0,10p,10p);
+endmodule

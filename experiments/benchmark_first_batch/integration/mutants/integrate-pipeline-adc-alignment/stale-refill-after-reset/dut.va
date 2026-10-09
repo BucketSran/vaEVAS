@@ -1,0 +1,19 @@
+`include "rtl/coarse.va"
+`include "rtl/fine.va"
+module pipeline_adc(vin,clk,reset,result,valid);
+input vin,clk,reset; output result,valid; electrical vin,clk,reset,result,valid;
+electrical coarse,residue,fine;
+real held; integer filled,ready;
+coarse_stage uc(vin,clk,reset,coarse,residue);
+fine_stage uf(residue,clk,reset,fine);
+analog begin
+  @(initial_step) begin held=0; filled=0; ready=0; end
+  @(cross(V(reset)-0.5,+1)) begin held=0; ready=0; end
+  @(cross(V(clk)-0.5,+1)) if(V(reset)<0.5) begin
+    if(filled==1) begin held=0.01*(8*V(coarse)+V(fine)); ready=1; end
+    filled=1;
+  end
+  V(result)<+transition(held,0,0.03n);
+  V(valid)<+transition(ready,0,0.03n);
+end
+endmodule

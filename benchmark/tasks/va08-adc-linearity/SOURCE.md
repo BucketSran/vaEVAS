@@ -78,3 +78,11 @@ Oracle预期上传solution/reference，这不属于模型候选隔离证据。
 作者早期直接辅助调用曾将str传给source_contract而TypeError，并非完整verify CLI失败；
 仅改为bytes入参，checker无修改，原异常保留，未采集的当次argv/SHA不补造。后续成功CLI身份另记。
 取回归档的实际未压缩主PSF约85.6MB/数值场景、gzip归档约1.56MB；逐job大小与限制口径见校准报告。
+
+<!-- generated first-batch metadata -->
+- `engineering_action`: `measurement-characterization`
+- `source_group`: `repository-owned-original-adc-linearity`
+- `context_level`: `bounded-work-unit`
+- `provenance`: `original-engineering-requirement`
+- `data_provenance`: `behavioral_synthetic`
+<!-- end generated first-batch metadata -->

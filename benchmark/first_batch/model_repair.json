@@ -1,0 +1,262 @@
+{
+  "schema": "first-batch-model-repair-v1",
+  "counts": {
+    "specification": 5,
+    "repair": 5,
+    "new_tasks": 9,
+    "reused_tasks": 1
+  },
+  "tasks": [
+    {
+      "id": "spec-latched-comparator",
+      "source_group": "latched-comparator-original",
+      "path": "benchmark/tasks/spec-latched-comparator",
+      "status": "actual_spectre_calibration_audited",
+      "negative_files": [
+        "wrong_polarity",
+        "no_overdrive_delay",
+        "stale_decision",
+        "no_async_reset"
+      ],
+      "engineering_action": "specification-modeling",
+      "context_level": "bounded-work-unit",
+      "provenance": "original-engineering-requirement",
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 2,
+        "semantic_negative_variants": 4,
+        "semantic_negative_conditions": 8,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 7,
+          "graded_pass": 1
+        }
+      }
+    },
+    {
+      "id": "spec-cdr-phase-detector",
+      "source_group": "cdr-phase-original",
+      "path": "benchmark/tasks/spec-cdr-phase-detector",
+      "status": "actual_spectre_calibration_audited",
+      "negative_files": [
+        "swap_up_down",
+        "ignore_falling_data",
+        "never_clear_on_clock"
+      ],
+      "engineering_action": "specification-modeling",
+      "context_level": "bounded-work-unit",
+      "provenance": "original-engineering-requirement",
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 2,
+        "semantic_negative_variants": 3,
+        "semantic_negative_conditions": 6,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 6
+        }
+      }
+    },
+    {
+      "id": "spec-sigma-delta",
+      "source_group": "sigma-delta-original",
+      "path": "benchmark/tasks/spec-sigma-delta",
+      "status": "actual_spectre_calibration_audited",
+      "negative_files": [
+        "wrong_clock_phase",
+        "positive_feedback",
+        "discard_accumulator"
+      ],
+      "engineering_action": "specification-modeling",
+      "context_level": "bounded-work-unit",
+      "provenance": "original-engineering-requirement",
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 2,
+        "semantic_negative_variants": 3,
+        "semantic_negative_conditions": 6,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 6
+        }
+      }
+    },
+    {
+      "id": "spec-sample-hold-acquisition",
+      "source_group": "sample-hold-original",
+      "path": "benchmark/tasks/spec-sample-hold-acquisition",
+      "status": "actual_spectre_calibration_audited",
+      "negative_files": [
+        "instant_acquisition",
+        "no_hold",
+        "wrong_bandwidth"
+      ],
+      "engineering_action": "specification-modeling",
+      "context_level": "bounded-work-unit",
+      "provenance": "original-engineering-requirement",
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 2,
+        "semantic_negative_variants": 3,
+        "semantic_negative_conditions": 6,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 6
+        }
+      }
+    },
+    {
+      "id": "spec-uvlo-deglitch",
+      "source_group": "uvlo-monitor-original",
+      "path": "benchmark/tasks/spec-uvlo-deglitch",
+      "status": "actual_spectre_calibration_audited",
+      "negative_files": [
+        "no_qualification",
+        "accumulate_short_glitches",
+        "skip_recovery_delay"
+      ],
+      "engineering_action": "specification-modeling",
+      "context_level": "bounded-work-unit",
+      "provenance": "original-engineering-requirement",
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 2,
+        "semantic_negative_variants": 3,
+        "semantic_negative_conditions": 6,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 6
+        }
+      }
+    },
+    {
+      "id": "repair-sigma-delta-phase",
+      "source_group": "sigma-delta-original",
+      "path": "benchmark/tasks/repair-sigma-delta-phase",
+      "status": "actual_spectre_calibration_audited",
+      "negative_files": [
+        "wrong_clock_phase",
+        "positive_feedback",
+        "discard_accumulator"
+      ],
+      "engineering_action": "diagnosis-repair",
+      "context_level": "bounded-work-unit",
+      "provenance": "injected-semantic-fault",
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 2,
+        "semantic_negative_variants": 3,
+        "semantic_negative_conditions": 6,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 6
+        }
+      }
+    },
+    {
+      "id": "repair-uvlo-recovery",
+      "source_group": "uvlo-monitor-original",
+      "path": "benchmark/tasks/repair-uvlo-recovery",
+      "status": "actual_spectre_calibration_audited",
+      "negative_files": [
+        "no_qualification",
+        "accumulate_short_glitches",
+        "skip_recovery_delay"
+      ],
+      "engineering_action": "diagnosis-repair",
+      "context_level": "bounded-work-unit",
+      "provenance": "injected-semantic-fault",
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 2,
+        "semantic_negative_variants": 3,
+        "semantic_negative_conditions": 6,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 6
+        }
+      }
+    },
+    {
+      "id": "repair-sar-abort",
+      "source_group": "sar-controller-original",
+      "path": "benchmark/tasks/repair-sar-abort",
+      "status": "actual_spectre_calibration_audited",
+      "negative_files": [
+        "late_result_after_abort",
+        "inverted_comparator",
+        "publish_without_latency"
+      ],
+      "engineering_action": "diagnosis-repair",
+      "context_level": "bounded-work-unit",
+      "provenance": "injected-semantic-fault",
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 2,
+        "semantic_negative_variants": 3,
+        "semantic_negative_conditions": 6,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 6
+        }
+      }
+    },
+    {
+      "id": "repair-zoom-sequencer",
+      "source_group": "zoom-timing-original",
+      "path": "benchmark/tasks/repair-zoom-sequencer",
+      "status": "actual_spectre_calibration_audited",
+      "negative_files": [
+        "zoom_parent_period",
+        "missing_sar_last_bit",
+        "no_zoom_reset"
+      ],
+      "engineering_action": "diagnosis-repair",
+      "context_level": "bounded-work-unit",
+      "provenance": "injected-semantic-fault",
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 2,
+        "semantic_negative_variants": 3,
+        "semantic_negative_conditions": 6,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 6
+        }
+      }
+    },
+    {
+      "id": "va07-triangle-repair",
+      "source_group": "repository-triangle-oscillator",
+      "path": "benchmark/tasks/va07-triangle-repair",
+      "status": "actual_spectre_calibration_audited",
+      "notes": "Existing development/Spectre evidence belongs to va07 SOURCE; formal admission and Agentic still pending. Not counted twice.",
+      "engineering_action": "diagnosis-repair",
+      "context_level": "bounded-work-unit",
+      "provenance": "development-regression",
+      "data_provenance": "not-applicable",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 8,
+        "semantic_negative_variants": 4,
+        "semantic_negative_conditions": 4,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 4
+        }
+      }
+    }
+  ],
+  "local_checker_tests": "python3 -B -m unittest discover -s experiments/benchmark_first_batch/model_repair -p test_contracts.py -v",
+  "evidence_boundary": "Actual Spectre numerical calibration audited in calibration_receipt.json; package/protocol identity deltas and model trials remain separately reported.",
+  "completed_backend_calibrated_count": 10
+}

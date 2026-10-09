@@ -1,0 +1,16 @@
+`include "rtl/detector.va"
+`include "rtl/gain.va"
+`include "rtl/amplifier.va"
+module receiver_agc(signal_in,clk,reset,signal_out,gain,clipped);
+input signal_in,clk,reset; output signal_out,gain,clipped;
+electrical signal_in,clk,reset,signal_out,gain,clipped;
+electrical envelope;
+parameter real attack_ns=2;
+parameter real release_ns=12;
+parameter real sample_ns=3;
+parameter real target_v=0.4;
+parameter real alpha=0.4;
+agc_detector #(.alpha(alpha)) ud(signal_in,clk,reset,envelope);
+agc_gain #(.attack_ns(attack_ns),.release_ns(release_ns),.sample_ns(sample_ns),.target_v(target_v)) ug(envelope,clk,reset,gain);
+agc_amplifier ua(signal_in,gain,reset,signal_out,clipped);
+endmodule

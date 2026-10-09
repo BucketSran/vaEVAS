@@ -1,0 +1,32 @@
+`include "disciplines.vams"
+// Original 12-bit sampled voltage DAC, for SAR reconstruction/transmitter drive.
+module sampled_dac(b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, clock, out);
+ input b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, clock;
+ output out;
+ electrical b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, clock, out;
+ parameter real vref=1.2 from (0:inf);
+ parameter real logic_threshold=0.5;
+ parameter real offset=-0.1;
+ parameter real delay=0.2n from [0:inf);
+ parameter real rise=0.4n from (0:inf);
+ real decoded, held;
+ analog begin
+  @(initial_step) held=offset;
+  @(cross(V(clock)-0.5,-1)) begin
+   decoded=((V(b0)>logic_threshold) ? 1.0 : 0.0) +
+      ((V(b1)>logic_threshold) ? 2.0 : 0.0) +
+      ((V(b2)>logic_threshold) ? 4.0 : 0.0) +
+      ((V(b3)>logic_threshold) ? 8.0 : 0.0) +
+      ((V(b4)>logic_threshold) ? 16.0 : 0.0) +
+      ((V(b5)>logic_threshold) ? 32.0 : 0.0) +
+      ((V(b6)>logic_threshold) ? 64.0 : 0.0) +
+      ((V(b7)>logic_threshold) ? 128.0 : 0.0) +
+      ((V(b8)>logic_threshold) ? 256.0 : 0.0) +
+      ((V(b9)>logic_threshold) ? 512.0 : 0.0) +
+      ((V(b10)>logic_threshold) ? 1024.0 : 0.0) +
+      ((V(b11)>logic_threshold) ? 2048.0 : 0.0);
+   held=offset+vref*decoded/4095.0;
+  end
+  V(out) <+ transition(held,delay,rise);
+ end
+endmodule

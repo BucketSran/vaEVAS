@@ -1,0 +1,98 @@
+{
+  "kind": "actual_archived_spectre_diagnostic",
+  "parameters_source": "public CSV fit; no hidden system coefficients",
+  "scope": "Read-only replay plus independent finite-edge analytical integration. Does not establish corrected-stimulus backend acceptance.",
+  "cases": [
+    {
+      "case": "long-positive",
+      "archive_sha256": "3f285c9867ec55bb0fa66f3ceb9ededae4870a31b1b06ad646cf22c37b0d3bb4",
+      "spectre_version": "sub-version  21.1.0.509.isr12 \n",
+      "archived_passed": false,
+      "archived_max_error_V": {
+        "acquisition": 1.804429583418532e-06,
+        "hold": 2.5860013614931177e-06,
+        "reacquisition": 0.0002737172721939407
+      },
+      "archived_failures": [
+        "reacquisition at 0.00020101: 0.000273717 V exceeds 8e-05 V",
+        "reacquisition at 0.000201943: 0.000210757 V exceeds 8e-05 V",
+        "reacquisition at 0.000202876: 0.000161031 V exceeds 8e-05 V",
+        "reacquisition at 0.000203809: 0.000125729 V exceeds 8e-05 V",
+        "reacquisition at 0.000204742: 9.61442e-05 V exceeds 8e-05 V"
+      ],
+      "finite_edge_diagnostic_max_error_V": {
+        "acquisition": 1.8044295102548347e-06,
+        "hold": 2.2413821694211578e-06,
+        "reacquisition": 4.386215899820911e-06
+      },
+      "endpoint_difference_s": 0.0
+    },
+    {
+      "case": "mid-positive",
+      "archive_sha256": "605bebd1299f506b7c91dad0eef0f483ef219eb902ae0725522b71889421e5b0",
+      "spectre_version": "sub-version  21.1.0.509.isr12 \n",
+      "archived_passed": false,
+      "archived_max_error_V": {
+        "acquisition": 4.7501048447418093e-07,
+        "hold": 5.508581740809593e-06,
+        "reacquisition": 0.0001028798922143026
+      },
+      "archived_failures": [
+        "reacquisition at 7.151e-05: 0.00010288 V exceeds 8e-05 V",
+        "reacquisition at 7.2443e-05: 8.01049e-05 V exceeds 8e-05 V"
+      ],
+      "finite_edge_diagnostic_max_error_V": {
+        "acquisition": 4.7501046748776865e-07,
+        "hold": 1.5324737110966602e-06,
+        "reacquisition": 1.7739828545582093e-06
+      },
+      "endpoint_difference_s": 0.0
+    },
+    {
+      "case": "long-negative",
+      "archive_sha256": "94a3ba9da4c7f5a8721ee2ccb972efbf7fc77a16b60137c7d579b1952280318b",
+      "spectre_version": "sub-version  21.1.0.509.isr12 \n",
+      "archived_passed": false,
+      "archived_max_error_V": {
+        "acquisition": 9.706760018546312e-07,
+        "hold": 1.1906370311343117e-06,
+        "reacquisition": 0.00013367620265680724
+      },
+      "archived_failures": [
+        "reacquisition at 0.00016001: 0.000133676 V exceeds 8e-05 V",
+        "reacquisition at 0.000160943: 0.00010359 V exceeds 8e-05 V",
+        "observation 0.00018800000000000002 outside trace"
+      ],
+      "finite_edge_diagnostic_max_error_V": {
+        "acquisition": 9.706759556138422e-07,
+        "hold": 6.972233707047693e-08,
+        "reacquisition": 2.259891480876214e-06
+      },
+      "endpoint_difference_s": 2.710505431213761e-20
+    },
+    {
+      "case": "short-negative",
+      "archive_sha256": "b6ace569224f98365e2106c648a7cbdcec8ecf96fd3a7b490563185638443894",
+      "spectre_version": "sub-version  21.1.0.509.isr12 \n",
+      "archived_passed": false,
+      "archived_max_error_V": {
+        "acquisition": 7.992478381069201e-07,
+        "hold": 5.731739199899e-05,
+        "reacquisition": 0.0002756089449460486
+      },
+      "archived_failures": [
+        "reacquisition at 9.801e-05: 0.000275609 V exceeds 8e-05 V",
+        "reacquisition at 9.8943e-05: 0.00021369 V exceeds 8e-05 V",
+        "reacquisition at 9.9876e-05: 0.000164556 V exceeds 8e-05 V",
+        "reacquisition at 0.000100809: 0.000125561 V exceeds 8e-05 V",
+        "reacquisition at 0.000101742: 9.79328e-05 V exceeds 8e-05 V"
+      ],
+      "finite_edge_diagnostic_max_error_V": {
+        "acquisition": 7.992478989748975e-07,
+        "hold": 1.9934367804230746e-06,
+        "reacquisition": 3.0233420632019836e-06
+      },
+      "endpoint_difference_s": 0.0
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+// identified_sh : behavioral sample-and-hold front-end identified from
+// public experiments public-1..4 (behavioral_synthetic data).
+//
+// Identified behavior of the fixed system:
+//   * acquisition (track high): first-order exponential approach to vin,
+//     tau = 3.7 us, unity gain, starting from the stored state (history kept)
+//   * track->hold switch: output jumps, step = 1.3e-3 * v_hold + 700 uV
+//   * hold: linear droop at -12.0 V/s (independent of stored value)
+//   * hold->track: continuous, reacquisition from the held value
+//   * out(0) = 0 V with track high at start
+//
+// Implementation: the state is a single integrator idt() whose derivative is
+// the phase-dependent rate (exponential acquisition toward vin while track
+// is high, constant droop while holding), plus an event-driven offset z that
+// realizes the charge-injection step at the track-to-hold switch.
+
+`include "disciplines.vams"
+
+module identified_sh(vin, track, out);
+
+  input  vin, track;
+  output out;
+  electrical vin, track, out;
+
+  parameter real tau_acq = 3.7e-6;    // acquisition time constant [s]
+  parameter real v_droop = -12.0;     // hold droop rate [V/s]
+  parameter real k_step  = 1.3e-3;    // hold-step slope [V/V]
+  parameter real v_step  = 700.0e-6;  // hold-step offset [V]
+
+  real mtrk;   // 1.0 while tracking, 0.0 while holding
+  real z;      // accumulated switch-step offsets
+
+  analog begin
+
+    // initial state: output 0 V, tracking
+    @(initial_step) begin
+      mtrk = 1.0;
+      z = 0.0;
+    end
+
+    // continuous state: exponential acquisition toward vin while tracking,
+    // constant droop while holding; z adds the switch steps
+    V(out) <+ idt(mtrk*(V(vin) - V(out))/tau_acq
+                  + (1.0 - mtrk)*v_droop, 0.0) + z;
+
+    // control falls through 0.5 V: charge-injection style step, then droop
+    @(cross(V(track) - 0.5, -1)) begin
+      z = z + k_step*V(out) + v_step;
+      mtrk = 0.0;
+    end
+
+    // control rises through 0.5 V: re-enter acquisition from stored value
+    @(cross(V(track) - 0.5, 1)) begin
+      mtrk = 1.0;
+    end
+
+  end
+
+endmodule

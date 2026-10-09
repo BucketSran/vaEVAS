@@ -1,0 +1,8 @@
+simulator lang=spectre
+global 0
+ahdl_include "dut.va"
+Vcmd (cmd 0) vsource type=pwl wave=[0 0.8 1e-05 0.8 1.0000001e-05 0.74 0.0002 0.74]
+DUT (cmd out tune) identified_pll
+simulatorOptions options reltol=1e-7 vabstol=1e-10 iabstol=1e-13
+tran tran stop=0.0002 maxstep=1e-8 errpreset=conservative
+save out tune cmd

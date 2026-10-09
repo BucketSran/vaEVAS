@@ -1,0 +1,78 @@
+{
+  "kind": "existing_actual_spectre_waveform_regrading",
+  "task": "identify-sc-clocked-filter",
+  "source_run": "identify-sc-clocked-filter-reference-v1",
+  "cases_sha256": "73a79ee06cef2564a6b0373115df6e186203ebbd83cca5d413ca71f419af3944",
+  "checker_sha256": "95f7326f7517bf7417e262752b6a53b37f150c3f7dec1fed8a9576212dae28b4",
+  "scope": "Regrade immutable actual archived PSF against new sample grids. No simulator launched; not a new frozen-run execution receipt.",
+  "cases": [
+    {
+      "case": "mixed-frequency",
+      "archive_sha256": "178a0633c33bd3909c130e98f8f6bb057baf37ad5c6bca5e63d02e1d7fab658a",
+      "candidate_sha256": "b8ac9a0fbacf0379c9667d0abb5e7f8ca62b4649bb39bff5f7c98ca551e49c54",
+      "spectre_version": "sub-version  21.1.0.509.isr12 \n",
+      "old_contract_and_stimulus_unchanged": true,
+      "passed": true,
+      "failures": [],
+      "max_error_V": {
+        "sampled-output": 1.4935275238769918e-13,
+        "inter-sample-hold": 1.4935275238769918e-13,
+        "full-cycle-hold": 1.4935275238769918e-13
+      },
+      "local_metrics": {
+        "post-reversal-response": 0.06950962128971044
+      }
+    },
+    {
+      "case": "slow-positive-pulse",
+      "archive_sha256": "9e974a541833bfb0924e020a0ba9003eb0fc6b98480a1cb85ac441bf73bbfc51",
+      "candidate_sha256": "b8ac9a0fbacf0379c9667d0abb5e7f8ca62b4649bb39bff5f7c98ca551e49c54",
+      "spectre_version": "sub-version  21.1.0.509.isr12 \n",
+      "old_contract_and_stimulus_unchanged": true,
+      "passed": true,
+      "failures": [],
+      "max_error_V": {
+        "sampled-output": 1.379452108096757e-13,
+        "inter-sample-hold": 1.379452108096757e-13,
+        "full-cycle-hold": 1.379452108096757e-13
+      },
+      "local_metrics": {
+        "post-reversal-response": -0.0005673135067032991
+      }
+    },
+    {
+      "case": "sine-off-public-clock",
+      "archive_sha256": "2c34fc7ad1e53e85c6913b0f0284d36fe6a4fd364e4a52b79c0afad10c235eb9",
+      "candidate_sha256": "b8ac9a0fbacf0379c9667d0abb5e7f8ca62b4649bb39bff5f7c98ca551e49c54",
+      "spectre_version": "sub-version  21.1.0.509.isr12 \n",
+      "old_contract_and_stimulus_unchanged": true,
+      "passed": true,
+      "failures": [],
+      "max_error_V": {
+        "sampled-output": 6.333822355486518e-14,
+        "inter-sample-hold": 6.333822355486518e-14,
+        "full-cycle-hold": 6.333822355486518e-14
+      },
+      "local_metrics": {
+        "post-reversal-response": -0.13983933319280328
+      }
+    },
+    {
+      "case": "fast-negative-step",
+      "archive_sha256": "d8a2f03ee31497e26bf07173f950c7e14a2d10a2e8abd128bc6dcc3a820a438b",
+      "candidate_sha256": "b8ac9a0fbacf0379c9667d0abb5e7f8ca62b4649bb39bff5f7c98ca551e49c54",
+      "spectre_version": "sub-version  21.1.0.509.isr12 \n",
+      "old_contract_and_stimulus_unchanged": true,
+      "passed": true,
+      "failures": [],
+      "max_error_V": {
+        "sampled-output": 1.8185453143360064e-13,
+        "inter-sample-hold": 1.8185453143360064e-13,
+        "full-cycle-hold": 1.8185453143360064e-13
+      },
+      "local_metrics": {
+        "post-reversal-response": 0.6624623248566908
+      }
+    }
+  ]
+}

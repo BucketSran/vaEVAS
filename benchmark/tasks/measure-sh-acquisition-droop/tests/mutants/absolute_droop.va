@@ -1,0 +1,17 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module dut(vin,track,y,settle_ns,droop_mvus);
+inout vin,track,y,settle_ns,droop_mvus;electrical vin,track,y,settle_ns,droop_mvus;
+real settling,drooping,held,phase;integer ns,nd,k;
+analog begin
+ @(initial_step)begin settling=0;drooping=0;held=0;ns=0;nd=0;end
+ @(cross(abs(V(y)-V(vin))-0.003,-1))begin
+  k=$rtoi($abstime/500n);phase=$abstime-k*500n;
+  if(V(track)>0.5 && k<4)begin settling=settling+phase;ns=ns+1;end
+ end
+ @(timer(260n,500n))held=V(y);
+ @(timer(490n,500n))if(nd<4)begin drooping=drooping+1000*(abs(held-V(y)))/0.23;nd=nd+1;end
+ if(ns>0)V(settle_ns)<+settling/ns/1n;else V(settle_ns)<+0;
+ if(nd>0)V(droop_mvus)<+drooping/nd;else V(droop_mvus)<+0;
+end
+endmodule

@@ -1,0 +1,20 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module hysteresis_device(vin,q);
+inout vin,q;electrical vin,q;
+parameter real hysteresis=0.008,delay=4n;
+real x,due;integer state,pending,target;
+analog begin
+ if($abstime<400n)x=-0.02+1e5*$abstime;
+ else if($abstime<800n)x=0.02-1e5*($abstime-400n);
+ else if($abstime<1u)x=-0.02;
+ else if($abstime<1.2u)x=0.02;
+ else x=-0.02;
+ V(vin)<+x;
+ @(initial_step)begin state=0;pending=0;target=0;due=-1;end
+ @(cross(x-hysteresis/2,+1))begin if(state==0)begin due=$abstime+delay;pending=1;target=1;end end
+ @(cross(x+hysteresis/2,-1))begin if(state==1)begin due=$abstime+delay;pending=1;target=0;end end
+ @(timer(0,0.1n))begin if(pending!=0 && $abstime>=due)begin state=target;pending=0;end end
+ V(q)<+transition(state,0,0.1n);
+end
+endmodule

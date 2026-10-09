@@ -1,0 +1,690 @@
+{
+  "kind": "native_phase_analysis_of_actual_archives",
+  "new_simulations": false,
+  "input_evidence_sha256": "597445fd6d6231d2194031a3880fbbf74a70861f4be135f7c70af2e8015d616d",
+  "stream_layout": "merged",
+  "aggregate_audit_elapsed_used": false,
+  "compile_cache": "all twelve logs explicitly compile; warmup is another cold job, not a cache warmup",
+  "rows": [
+    {
+      "phase": "warmup",
+      "pair": 0,
+      "side": "baseline",
+      "archive_sha256": "9453ae929c921867aaa5dac39f29aa004f04cf7e0268e851fac34ae527699c2d",
+      "native_log_sha256": "d5e1b014849bbc3db0e93c0fd57430723384ca1b5bae4a60b3b9626435fbfbd2",
+      "functional_passed": true,
+      "accepted_steps": 152093,
+      "native_errors": 0,
+      "cold_compile_elapsed_s": 0.772,
+      "phases": {
+        "NDB Parsing": {
+          "cpu_s": 0.090257,
+          "elapsed_s": 0.103559
+        },
+        "Elaboration": {
+          "cpu_s": 0.8143360000000001,
+          "elapsed_s": 0.7939320000000001
+        },
+        "EDB Visiting": {
+          "cpu_s": 0.000376,
+          "elapsed_s": 0.00037694
+        },
+        "parsing": {
+          "cpu_s": 0.0031019999999999997,
+          "elapsed_s": 0.00133896
+        }
+      },
+      "intrinsic_cpu_s": 4.16194,
+      "intrinsic_elapsed_s": 2.21232,
+      "tran_elapsed_s": 2.21296,
+      "last_accumulated_cpu_s": 5.10792,
+      "last_accumulated_elapsed_s": 3.11698,
+      "solver_process_elapsed_s": 3.22167481854558,
+      "process_minus_tran_elapsed_s": 1.00871481854558,
+      "process_minus_last_accumulated_elapsed_s": 0.10469481854558005
+    },
+    {
+      "phase": "warmup",
+      "pair": 0,
+      "side": "reference",
+      "archive_sha256": "4c467384f9950aad7f5fb3997e231dfbf58729e6d258cba6f52d727a96c69ada",
+      "native_log_sha256": "7f567e5ac91a4fdb38701d3bfd53cee1f9f74943b08f16490ca5d04cfd5bad93",
+      "functional_passed": true,
+      "accepted_steps": 152093,
+      "native_errors": 0,
+      "cold_compile_elapsed_s": 1.15,
+      "phases": {
+        "NDB Parsing": {
+          "cpu_s": 0.091255,
+          "elapsed_s": 0.102577
+        },
+        "Elaboration": {
+          "cpu_s": 1.19484,
+          "elapsed_s": 1.17359
+        },
+        "EDB Visiting": {
+          "cpu_s": 0.00147,
+          "elapsed_s": 0.000479937
+        },
+        "parsing": {
+          "cpu_s": 0.003403,
+          "elapsed_s": 0.00178695
+        }
+      },
+      "intrinsic_cpu_s": 3.5166,
+      "intrinsic_elapsed_s": 1.95211,
+      "tran_elapsed_s": 1.95277,
+      "last_accumulated_cpu_s": 4.8462,
+      "last_accumulated_elapsed_s": 3.23795,
+      "solver_process_elapsed_s": 3.3219493571668863,
+      "process_minus_tran_elapsed_s": 1.3691793571668864,
+      "process_minus_last_accumulated_elapsed_s": 0.08399935716688622
+    },
+    {
+      "phase": "measurement",
+      "pair": 1,
+      "side": "baseline",
+      "archive_sha256": "e2ac77b51d6ea8451ec0b86aefd60162741ee6aeeadcabb32508057b5061b57b",
+      "native_log_sha256": "5ae18b254bfc3c3007a6c0dd58637cb5be190d6089cbeb135337379d2cf4168b",
+      "functional_passed": true,
+      "accepted_steps": 152093,
+      "native_errors": 0,
+      "cold_compile_elapsed_s": 0.771,
+      "phases": {
+        "NDB Parsing": {
+          "cpu_s": 0.089897,
+          "elapsed_s": 0.102173
+        },
+        "Elaboration": {
+          "cpu_s": 0.813535,
+          "elapsed_s": 0.793165
+        },
+        "EDB Visiting": {
+          "cpu_s": 0.000381,
+          "elapsed_s": 0.000381947
+        },
+        "parsing": {
+          "cpu_s": 0.003094,
+          "elapsed_s": 0.0012779199999999999
+        }
+      },
+      "intrinsic_cpu_s": 4.23279,
+      "intrinsic_elapsed_s": 2.2844,
+      "tran_elapsed_s": 2.28504,
+      "last_accumulated_cpu_s": 5.18019,
+      "last_accumulated_elapsed_s": 3.18849,
+      "solver_process_elapsed_s": 3.5222771521657705,
+      "process_minus_tran_elapsed_s": 1.2372371521657706,
+      "process_minus_last_accumulated_elapsed_s": 0.3337871521657707
+    },
+    {
+      "phase": "measurement",
+      "pair": 1,
+      "side": "reference",
+      "archive_sha256": "129828e61353f3527ac5e187d8239e1b4319811353e64125e09454168d50db30",
+      "native_log_sha256": "60a9db0b746464a6e0a41597cde9caea7fa296d6c10b50e3bae2e7cfd94f2199",
+      "functional_passed": true,
+      "accepted_steps": 152093,
+      "native_errors": 0,
+      "cold_compile_elapsed_s": 1.16,
+      "phases": {
+        "NDB Parsing": {
+          "cpu_s": 0.091297,
+          "elapsed_s": 0.6037129999999999
+        },
+        "Elaboration": {
+          "cpu_s": 1.20515,
+          "elapsed_s": 1.18277
+        },
+        "EDB Visiting": {
+          "cpu_s": 0.0014110000000000001,
+          "elapsed_s": 0.00041794799999999996
+        },
+        "parsing": {
+          "cpu_s": 0.00244,
+          "elapsed_s": 0.00168109
+        }
+      },
+      "intrinsic_cpu_s": 3.54706,
+      "intrinsic_elapsed_s": 1.97221,
+      "tran_elapsed_s": 1.97286,
+      "last_accumulated_cpu_s": 4.88729,
+      "last_accumulated_elapsed_s": 3.76652,
+      "solver_process_elapsed_s": 3.8728962559252977,
+      "process_minus_tran_elapsed_s": 1.9000362559252977,
+      "process_minus_last_accumulated_elapsed_s": 0.10637625592529787
+    },
+    {
+      "phase": "measurement",
+      "pair": 2,
+      "side": "baseline",
+      "archive_sha256": "697fd787a122060b3061af69eedba485ae11764c7edfda2469ef158aab2d1af6",
+      "native_log_sha256": "b61bfebe38d1db2f31d390d144820a2df145210a71781cbb711303a541f1a61c",
+      "functional_passed": true,
+      "accepted_steps": 152093,
+      "native_errors": 0,
+      "cold_compile_elapsed_s": 0.774,
+      "phases": {
+        "NDB Parsing": {
+          "cpu_s": 0.089449,
+          "elapsed_s": 0.103866
+        },
+        "Elaboration": {
+          "cpu_s": 0.8181620000000001,
+          "elapsed_s": 0.7970370000000001
+        },
+        "EDB Visiting": {
+          "cpu_s": 0.000386,
+          "elapsed_s": 0.00038695299999999994
+        },
+        "parsing": {
+          "cpu_s": 0.003139,
+          "elapsed_s": 0.0013780600000000002
+        }
+      },
+      "intrinsic_cpu_s": 4.20362,
+      "intrinsic_elapsed_s": 2.25952,
+      "tran_elapsed_s": 2.26018,
+      "last_accumulated_cpu_s": 5.15565,
+      "last_accumulated_elapsed_s": 3.16933,
+      "solver_process_elapsed_s": 3.271827433258295,
+      "process_minus_tran_elapsed_s": 1.011647433258295,
+      "process_minus_last_accumulated_elapsed_s": 0.10249743325829508
+    },
+    {
+      "phase": "measurement",
+      "pair": 2,
+      "side": "reference",
+      "archive_sha256": "a0956bb13d3a92179c173fe2b4a8f84cd521ad172550471053d993a2a81f7f3e",
+      "native_log_sha256": "c83883ff4e1dd601d88cc5e8669c397974fd43716f7b78ddb4b4489f3445792e",
+      "functional_passed": true,
+      "accepted_steps": 152093,
+      "native_errors": 0,
+      "cold_compile_elapsed_s": 1.15,
+      "phases": {
+        "NDB Parsing": {
+          "cpu_s": 0.08990600000000001,
+          "elapsed_s": 0.101896
+        },
+        "Elaboration": {
+          "cpu_s": 1.20255,
+          "elapsed_s": 1.17858
+        },
+        "EDB Visiting": {
+          "cpu_s": 0.000432,
+          "elapsed_s": 0.000432014
+        },
+        "parsing": {
+          "cpu_s": 0.002449,
+          "elapsed_s": 0.00170207
+        }
+      },
+      "intrinsic_cpu_s": 3.54602,
+      "intrinsic_elapsed_s": 1.98773,
+      "tran_elapsed_s": 1.98841,
+      "last_accumulated_cpu_s": 4.88171,
+      "last_accumulated_elapsed_s": 3.27803,
+      "solver_process_elapsed_s": 3.3720398638397455,
+      "process_minus_tran_elapsed_s": 1.3836298638397455,
+      "process_minus_last_accumulated_elapsed_s": 0.0940098638397453
+    },
+    {
+      "phase": "measurement",
+      "pair": 3,
+      "side": "baseline",
+      "archive_sha256": "85d8ce531a8781cb0ab0e03156110a4f36c9ae238b941f064c88f402b23babcd",
+      "native_log_sha256": "6901cd363b01515e9db559f00b8fa9ecb7a255e1f2fe82c03d1f6e2f784920c3",
+      "functional_passed": true,
+      "accepted_steps": 152093,
+      "native_errors": 0,
+      "cold_compile_elapsed_s": 0.779,
+      "phases": {
+        "NDB Parsing": {
+          "cpu_s": 0.09005500000000001,
+          "elapsed_s": 0.102931
+        },
+        "Elaboration": {
+          "cpu_s": 0.824636,
+          "elapsed_s": 0.8027880000000001
+        },
+        "EDB Visiting": {
+          "cpu_s": 0.000408,
+          "elapsed_s": 0.00040888799999999994
+        },
+        "parsing": {
+          "cpu_s": 0.003112,
+          "elapsed_s": 0.0012800700000000001
+        }
+      },
+      "intrinsic_cpu_s": 4.19897,
+      "intrinsic_elapsed_s": 2.26523,
+      "tran_elapsed_s": 2.26588,
+      "last_accumulated_cpu_s": 5.15709,
+      "last_accumulated_elapsed_s": 3.18022,
+      "solver_process_elapsed_s": 3.271667482331395,
+      "process_minus_tran_elapsed_s": 1.005787482331395,
+      "process_minus_last_accumulated_elapsed_s": 0.09144748233139532
+    },
+    {
+      "phase": "measurement",
+      "pair": 3,
+      "side": "reference",
+      "archive_sha256": "04e78c100a916241a17e46e81ec279139b79f05159be112a6c22a7827bb210c1",
+      "native_log_sha256": "e737cba26674e75bc0abb06f2ddce10c69a44ac3762da3907aa433a424ebc8a9",
+      "functional_passed": true,
+      "accepted_steps": 152093,
+      "native_errors": 0,
+      "cold_compile_elapsed_s": 1.15,
+      "phases": {
+        "NDB Parsing": {
+          "cpu_s": 0.094254,
+          "elapsed_s": 0.10529000000000001
+        },
+        "Elaboration": {
+          "cpu_s": 1.19789,
+          "elapsed_s": 1.17439
+        },
+        "EDB Visiting": {
+          "cpu_s": 0.000443,
+          "elapsed_s": 0.00044393499999999996
+        },
+        "parsing": {
+          "cpu_s": 0.0035550000000000004,
+          "elapsed_s": 0.00174785
+        }
+      },
+      "intrinsic_cpu_s": 3.61508,
+      "intrinsic_elapsed_s": 1.99539,
+      "tran_elapsed_s": 1.99615,
+      "last_accumulated_cpu_s": 4.95473,
+      "last_accumulated_elapsed_s": 3.28547,
+      "solver_process_elapsed_s": 3.41936825029552,
+      "process_minus_tran_elapsed_s": 1.4232182502955197,
+      "process_minus_last_accumulated_elapsed_s": 0.13389825029551972
+    },
+    {
+      "phase": "measurement",
+      "pair": 4,
+      "side": "baseline",
+      "archive_sha256": "5d63c3112692eed7b9b6b5726ffef0b033660783db12d7ec771aac9919b988e5",
+      "native_log_sha256": "8cbf6901475e72f23d151775fd0be7e16f79cc243d3e1d6aab88bbe3afc5ba3d",
+      "functional_passed": true,
+      "accepted_steps": 152093,
+      "native_errors": 0,
+      "cold_compile_elapsed_s": 0.779,
+      "phases": {
+        "NDB Parsing": {
+          "cpu_s": 0.09414,
+          "elapsed_s": 0.105931
+        },
+        "Elaboration": {
+          "cpu_s": 0.8235560000000001,
+          "elapsed_s": 0.801876
+        },
+        "EDB Visiting": {
+          "cpu_s": 0.00041799999999999997,
+          "elapsed_s": 0.000420094
+        },
+        "parsing": {
+          "cpu_s": 0.00318,
+          "elapsed_s": 0.00133801
+        }
+      },
+      "intrinsic_cpu_s": 4.24477,
+      "intrinsic_elapsed_s": 2.25874,
+      "tran_elapsed_s": 2.25945,
+      "last_accumulated_cpu_s": 5.21049,
+      "last_accumulated_elapsed_s": 3.17656,
+      "solver_process_elapsed_s": 3.271664071828127,
+      "process_minus_tran_elapsed_s": 1.0122140718281267,
+      "process_minus_last_accumulated_elapsed_s": 0.09510407182812708
+    },
+    {
+      "phase": "measurement",
+      "pair": 4,
+      "side": "reference",
+      "archive_sha256": "3deb0d7f4f68beb8e50955d01924174ce07f6d33fe4e6986e99cf68deeb789e4",
+      "native_log_sha256": "a1f3cd48d593c7900786833c41ffa2e672ae51569ea32b931cd719c9b1251cfa",
+      "functional_passed": true,
+      "accepted_steps": 152093,
+      "native_errors": 0,
+      "cold_compile_elapsed_s": 1.16,
+      "phases": {
+        "NDB Parsing": {
+          "cpu_s": 0.095889,
+          "elapsed_s": 0.10577299999999999
+        },
+        "Elaboration": {
+          "cpu_s": 1.20809,
+          "elapsed_s": 1.18379
+        },
+        "EDB Visiting": {
+          "cpu_s": 0.000464,
+          "elapsed_s": 0.000464201
+        },
+        "parsing": {
+          "cpu_s": 0.0036320000000000002,
+          "elapsed_s": 0.0019271400000000001
+        }
+      },
+      "intrinsic_cpu_s": 3.53225,
+      "intrinsic_elapsed_s": 1.97095,
+      "tran_elapsed_s": 1.9717,
+      "last_accumulated_cpu_s": 4.8821,
+      "last_accumulated_elapsed_s": 3.27124,
+      "solver_process_elapsed_s": 3.3720367178320885,
+      "process_minus_tran_elapsed_s": 1.4003367178320885,
+      "process_minus_last_accumulated_elapsed_s": 0.10079671783208832
+    },
+    {
+      "phase": "measurement",
+      "pair": 5,
+      "side": "baseline",
+      "archive_sha256": "5bd02553345f35cd5933443f5bc597438dcaf4891f101b1808829180f3c64602",
+      "native_log_sha256": "4cb1eccd7bf90c0c3329ee9602e9df1b49710a503392e31277c29c3a82d3c4ca",
+      "functional_passed": true,
+      "accepted_steps": 152093,
+      "native_errors": 0,
+      "cold_compile_elapsed_s": 0.798,
+      "phases": {
+        "NDB Parsing": {
+          "cpu_s": 0.09466200000000001,
+          "elapsed_s": 0.105185
+        },
+        "Elaboration": {
+          "cpu_s": 0.848153,
+          "elapsed_s": 0.8240470000000001
+        },
+        "EDB Visiting": {
+          "cpu_s": 0.00040899999999999997,
+          "elapsed_s": 0.00040912599999999995
+        },
+        "parsing": {
+          "cpu_s": 0.003174,
+          "elapsed_s": 0.00142503
+        }
+      },
+      "intrinsic_cpu_s": 4.22635,
+      "intrinsic_elapsed_s": 2.2992,
+      "tran_elapsed_s": 2.29988,
+      "last_accumulated_cpu_s": 5.21404,
+      "last_accumulated_elapsed_s": 3.23813,
+      "solver_process_elapsed_s": 3.3716948870569468,
+      "process_minus_tran_elapsed_s": 1.0718148870569468,
+      "process_minus_last_accumulated_elapsed_s": 0.1335648870569468
+    },
+    {
+      "phase": "measurement",
+      "pair": 5,
+      "side": "reference",
+      "archive_sha256": "f2954e372d434b3076bf5da1d8bd49828f60b03177f49fa9ca009d87884e208b",
+      "native_log_sha256": "54350900be106bbbad654086ef36098728393cbd3ca36c43529f7be6015c40e1",
+      "functional_passed": true,
+      "accepted_steps": 152093,
+      "native_errors": 0,
+      "cold_compile_elapsed_s": 1.16,
+      "phases": {
+        "NDB Parsing": {
+          "cpu_s": 0.09642,
+          "elapsed_s": 0.5072420000000001
+        },
+        "Elaboration": {
+          "cpu_s": 1.21465,
+          "elapsed_s": 1.18785
+        },
+        "EDB Visiting": {
+          "cpu_s": 0.0015,
+          "elapsed_s": 0.00050807
+        },
+        "parsing": {
+          "cpu_s": 0.003765,
+          "elapsed_s": 0.00203705
+        }
+      },
+      "intrinsic_cpu_s": 3.58821,
+      "intrinsic_elapsed_s": 2.03189,
+      "tran_elapsed_s": 2.03263,
+      "last_accumulated_cpu_s": 4.94498,
+      "last_accumulated_elapsed_s": 3.73551,
+      "solver_process_elapsed_s": 3.8227029275149107,
+      "process_minus_tran_elapsed_s": 1.7900729275149105,
+      "process_minus_last_accumulated_elapsed_s": 0.08719292751491059
+    }
+  ],
+  "measured_summary": {
+    "cold_compile_elapsed_s": {
+      "baseline": {
+        "median": 0.779,
+        "min": 0.771,
+        "max": 0.798,
+        "values": [
+          0.771,
+          0.774,
+          0.779,
+          0.779,
+          0.798
+        ]
+      },
+      "reference": {
+        "median": 1.16,
+        "min": 1.15,
+        "max": 1.16,
+        "values": [
+          1.16,
+          1.15,
+          1.15,
+          1.16,
+          1.16
+        ]
+      }
+    },
+    "intrinsic_cpu_s": {
+      "baseline": {
+        "median": 4.22635,
+        "min": 4.19897,
+        "max": 4.24477,
+        "values": [
+          4.23279,
+          4.20362,
+          4.19897,
+          4.24477,
+          4.22635
+        ]
+      },
+      "reference": {
+        "median": 3.54706,
+        "min": 3.53225,
+        "max": 3.61508,
+        "values": [
+          3.54706,
+          3.54602,
+          3.61508,
+          3.53225,
+          3.58821
+        ]
+      }
+    },
+    "intrinsic_elapsed_s": {
+      "baseline": {
+        "median": 2.26523,
+        "min": 2.25874,
+        "max": 2.2992,
+        "values": [
+          2.2844,
+          2.25952,
+          2.26523,
+          2.25874,
+          2.2992
+        ]
+      },
+      "reference": {
+        "median": 1.98773,
+        "min": 1.97095,
+        "max": 2.03189,
+        "values": [
+          1.97221,
+          1.98773,
+          1.99539,
+          1.97095,
+          2.03189
+        ]
+      }
+    },
+    "tran_elapsed_s": {
+      "baseline": {
+        "median": 2.26588,
+        "min": 2.25945,
+        "max": 2.29988,
+        "values": [
+          2.28504,
+          2.26018,
+          2.26588,
+          2.25945,
+          2.29988
+        ]
+      },
+      "reference": {
+        "median": 1.98841,
+        "min": 1.9717,
+        "max": 2.03263,
+        "values": [
+          1.97286,
+          1.98841,
+          1.99615,
+          1.9717,
+          2.03263
+        ]
+      }
+    },
+    "last_accumulated_cpu_s": {
+      "baseline": {
+        "median": 5.18019,
+        "min": 5.15565,
+        "max": 5.21404,
+        "values": [
+          5.18019,
+          5.15565,
+          5.15709,
+          5.21049,
+          5.21404
+        ]
+      },
+      "reference": {
+        "median": 4.88729,
+        "min": 4.88171,
+        "max": 4.95473,
+        "values": [
+          4.88729,
+          4.88171,
+          4.95473,
+          4.8821,
+          4.94498
+        ]
+      }
+    },
+    "last_accumulated_elapsed_s": {
+      "baseline": {
+        "median": 3.18022,
+        "min": 3.16933,
+        "max": 3.23813,
+        "values": [
+          3.18849,
+          3.16933,
+          3.18022,
+          3.17656,
+          3.23813
+        ]
+      },
+      "reference": {
+        "median": 3.28547,
+        "min": 3.27124,
+        "max": 3.76652,
+        "values": [
+          3.76652,
+          3.27803,
+          3.28547,
+          3.27124,
+          3.73551
+        ]
+      }
+    },
+    "solver_process_elapsed_s": {
+      "baseline": {
+        "median": 3.271827433258295,
+        "min": 3.271664071828127,
+        "max": 3.5222771521657705,
+        "values": [
+          3.5222771521657705,
+          3.271827433258295,
+          3.271667482331395,
+          3.271664071828127,
+          3.3716948870569468
+        ]
+      },
+      "reference": {
+        "median": 3.41936825029552,
+        "min": 3.3720367178320885,
+        "max": 3.8728962559252977,
+        "values": [
+          3.8728962559252977,
+          3.3720398638397455,
+          3.41936825029552,
+          3.3720367178320885,
+          3.8227029275149107
+        ]
+      }
+    },
+    "process_minus_tran_elapsed_s": {
+      "baseline": {
+        "median": 1.0122140718281267,
+        "min": 1.005787482331395,
+        "max": 1.2372371521657706,
+        "values": [
+          1.2372371521657706,
+          1.011647433258295,
+          1.005787482331395,
+          1.0122140718281267,
+          1.0718148870569468
+        ]
+      },
+      "reference": {
+        "median": 1.4232182502955197,
+        "min": 1.3836298638397455,
+        "max": 1.9000362559252977,
+        "values": [
+          1.9000362559252977,
+          1.3836298638397455,
+          1.4232182502955197,
+          1.4003367178320885,
+          1.7900729275149105
+        ]
+      }
+    },
+    "process_minus_last_accumulated_elapsed_s": {
+      "baseline": {
+        "median": 0.10249743325829508,
+        "min": 0.09144748233139532,
+        "max": 0.3337871521657707,
+        "values": [
+          0.3337871521657707,
+          0.10249743325829508,
+          0.09144748233139532,
+          0.09510407182812708,
+          0.1335648870569468
+        ]
+      },
+      "reference": {
+        "median": 0.10079671783208832,
+        "min": 0.08719292751491059,
+        "max": 0.13389825029551972,
+        "values": [
+          0.10637625592529787,
+          0.0940098638397453,
+          0.13389825029551972,
+          0.10079671783208832,
+          0.08719292751491059
+        ]
+      }
+    }
+  }
+}

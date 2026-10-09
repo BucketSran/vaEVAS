@@ -1,0 +1,27 @@
+// Uniform quantizer with saturation.
+//
+// Converts the captured interval (ns) into the rounded bin count
+// floor(width/lsb + 1/2), saturates the code at 31 and flagging the codes
+// that exceed the range.  The tiny bias only absorbs binary rounding noise
+// of the interval arithmetic, it is far below any meaningful bin fraction.
+`include "constants.vams"
+`include "disciplines.vams"
+
+module tdc_quantizer(width,code,range_error);
+  input width;
+  output code,range_error;
+  electrical width,code,range_error;
+
+  parameter real lsb_ns = 0.5;
+
+  real bins, code_lvl, error_lvl;
+
+  analog begin
+    bins = floor(V(width)/lsb_ns + 0.5 + 1e-9);
+    code_lvl = min(31.0, max(0.0, bins));
+    error_lvl = (bins > 31.0) ? 1.0 : 0.0;
+
+    V(code) <+ transition(code_lvl, 0.0, 0.02n);
+    V(range_error) <+ transition(error_lvl, 0.0, 0.02n);
+  end
+endmodule

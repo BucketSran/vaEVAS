@@ -1,0 +1,27 @@
+// Top level of the time-to-digital measurement chain.
+//
+//   start/stop/reset : 0.5 V rising crossings are the protocol events
+//   result           : 0.02*min(31,floor(dt/(lsb*1ns)+1/2)) volt
+//   valid/busy/overflow : protocol status, see rtl/capture.va
+//
+// The capture block owns the event and timeout state, the quantizer fixes the
+// bin count and its saturation, and the formatter merges both into the
+// calibrated result and status outputs.
+`include "rtl/capture.va"
+`include "rtl/quantizer.va"
+`include "rtl/formatter.va"
+
+module tdc_chain(start,stop,reset,result,valid,busy,overflow);
+  input start,stop,reset;
+  output result,valid,busy,overflow;
+  electrical start,stop,reset,result,valid,busy,overflow;
+
+  electrical width,done,pending,expired,code,range_error;
+
+  parameter real lsb_ns = 0.5;
+  parameter real timeout_ns = 12;
+
+  tdc_capture #(.timeout_ns(timeout_ns)) ucap (start,stop,reset,width,done,pending,expired);
+  tdc_quantizer #(.lsb_ns(lsb_ns)) uq (width,code,range_error);
+  tdc_formatter ufmt (code,done,pending,expired,range_error,result,valid,busy,overflow);
+endmodule

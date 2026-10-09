@@ -1,0 +1,19 @@
+schema_version = "1.4"
+[metadata]
+name = "verify-nonoverlap-stimulus"
+category = "verification-tools"
+purpose = "开关电容两相非重叠时钟实验; synthetic circuit experiment; calibration pending"
+engineering_action = "verification-tools"
+source_group = "first-batch-verify-nonoverlap-stimulus"
+context_level = "bounded-work-unit"
+provenance = "original-engineering-requirement"
+data_provenance = "behavioral_synthetic"
+[agent]
+timeout_sec = 1800
+[verifier]
+timeout_sec = 600
+[environment]
+build_timeout_sec = 600
+cpus = 1
+memory_mb = 1024
+storage_mb = 2048

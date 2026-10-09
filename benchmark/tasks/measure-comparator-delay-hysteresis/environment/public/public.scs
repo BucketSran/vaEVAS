@@ -1,0 +1,8 @@
+simulator lang=spectre
+ahdl_include "dut.va"
+ahdl_include "device.va"
+Xmeasure (vin q high_mv low_mv rise_ns fall_ns) dut
+Xcmp (vin q) hysteresis_device hysteresis=0.008 delay=4e-09
+simulatorOptions options reltol=1e-6 vabstol=1e-9
+tran tran stop=1.5u maxstep=0.1n
+saveOptions options save=allpub

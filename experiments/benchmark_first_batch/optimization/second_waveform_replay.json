@@ -1,0 +1,1279 @@
+{
+  "kind": "actual_waveform_replay_not_new_va_execution",
+  "records": [
+    {
+      "run_name": "optimize-vco-step-baseline-v2",
+      "case": "slew-and-clamps",
+      "archive_sha256": "c09f700b4bddbec126c17c98609478e869f63b74d8954e7d4e318f3438cc45a6",
+      "waveform_sha256": "94d9e7f644401a633ee5d9ddbb75b2b29c8bf7511971a70e741c78aad639f0f2",
+      "candidate_sha256": "1712fef760f4f4f61120191c4afd50b845e41d33d4c226569a61d91b656fe3ec",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "67aeebc88926835f474be445e7479ac330c09a72210198e2f63d67a59de843c8",
+      "replay_cases_sha256": "3eda2a96dd03daaa41236921ba5d96e2840a1605acdcd5814cd6041b7664faf0",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_point_error_v": 0.0002861471920067027,
+        "max_interpolated_error_v": 0.0006456827069026561,
+        "saved_waveform_points": 51240,
+        "expected_cycles": 257.877627118644,
+        "max_phase_advance": 0.015625000000113687
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "2f5210ad506aee2a465160a478d208089940e9525b2bb3f6697b98390ed841ce",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 51239,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 1.19072,
+          "elapsed_s": 0.5965990000000001
+        },
+        "total_tran": {
+          "cpu_s": 1.19235,
+          "elapsed_s": 0.59723
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-vco-step-baseline-v2",
+      "case": "low-band-end-to-end",
+      "archive_sha256": "03f020f3f9562b2dc344cdd673279e50c2e6817ec52d567304e4ffb40242700c",
+      "waveform_sha256": "0b46af567452f2c712d955f918e79d41004c3b6ce6842829a4df9acdb8106253",
+      "candidate_sha256": "1712fef760f4f4f61120191c4afd50b845e41d33d4c226569a61d91b656fe3ec",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "67aeebc88926835f474be445e7479ac330c09a72210198e2f63d67a59de843c8",
+      "replay_cases_sha256": "3eda2a96dd03daaa41236921ba5d96e2840a1605acdcd5814cd6041b7664faf0",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_point_error_v": 9.631540009991113e-11,
+        "max_interpolated_error_v": 1.5962740018693466e-08,
+        "saved_waveform_points": 512009,
+        "expected_cycles": 159.20000000000002,
+        "max_phase_advance": 0.0003109375000462933
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "1d1cc7043198b74fc965400b7654457dd327061ef3d5248d7504f6bdb6b8bc88",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 512008,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 7.6495,
+          "elapsed_s": 5.69818
+        },
+        "total_tran": {
+          "cpu_s": 7.65112,
+          "elapsed_s": 5.69881
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-vco-step-baseline-v2",
+      "case": "high-band",
+      "archive_sha256": "51b2bf8aeb2256700581371faba18a935a954939fc5972e26f2abdf8d6cf1906",
+      "waveform_sha256": "a93ef31bf3c5a6c9c61432f76e27397aaff385a27644467ec77736c68774db4b",
+      "candidate_sha256": "1712fef760f4f4f61120191c4afd50b845e41d33d4c226569a61d91b656fe3ec",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "67aeebc88926835f474be445e7479ac330c09a72210198e2f63d67a59de843c8",
+      "replay_cases_sha256": "3eda2a96dd03daaa41236921ba5d96e2840a1605acdcd5814cd6041b7664faf0",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_point_error_v": 6.409317521161029e-13,
+        "max_interpolated_error_v": 0.0005585903525863328,
+        "saved_waveform_points": 5135,
+        "expected_cycles": 77.624,
+        "max_phase_advance": 0.015160937500056093
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "a3e012a9feb0550ad135d9be9b320f9dcc38e7a7740784d4729789438d44cc60",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 5134,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.12181,
+          "elapsed_s": 0.061177999999999996
+        },
+        "total_tran": {
+          "cpu_s": 0.123538,
+          "elapsed_s": 0.0619071
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-vco-step-reference-v2",
+      "case": "slew-and-clamps",
+      "archive_sha256": "b59c6fd4677b1063a92649985a3697d5f381e83ec333b86ce175d424a8062de5",
+      "waveform_sha256": "6f6ec47323dd2313603d5447c235f82844a9f429c311f02f3738b881d6cf945b",
+      "candidate_sha256": "8ef5cfedeb5bb8172c21868ddd5f7c602a7c51ede584232a7d3fb628dd85f866",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "67aeebc88926835f474be445e7479ac330c09a72210198e2f63d67a59de843c8",
+      "replay_cases_sha256": "3eda2a96dd03daaa41236921ba5d96e2840a1605acdcd5814cd6041b7664faf0",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_point_error_v": 0.00040910872470689696,
+        "max_interpolated_error_v": 0.0009271128559871222,
+        "saved_waveform_points": 16881,
+        "expected_cycles": 257.877627118644,
+        "max_phase_advance": 0.01715661189884421
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "30f393e7da6b7be90f07a5b80c1d39911fffbcaeaf14d54df4b52707bd743919",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 16880,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.40522500000000006,
+          "elapsed_s": 0.20319700000000002
+        },
+        "total_tran": {
+          "cpu_s": 0.406964,
+          "elapsed_s": 0.203939
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-vco-step-reference-v2",
+      "case": "high-band",
+      "archive_sha256": "7085c31c77285401d41a364b549fbd9e061049f046499dee9cbf26e080d337c7",
+      "waveform_sha256": "5dbabb1ffa49f113e01a091c84c14e056501f7567cb35d2a7c7e4233ac0b4078",
+      "candidate_sha256": "8ef5cfedeb5bb8172c21868ddd5f7c602a7c51ede584232a7d3fb628dd85f866",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "67aeebc88926835f474be445e7479ac330c09a72210198e2f63d67a59de843c8",
+      "replay_cases_sha256": "3eda2a96dd03daaa41236921ba5d96e2840a1605acdcd5814cd6041b7664faf0",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_point_error_v": 2.7922109069322687e-13,
+        "max_interpolated_error_v": 0.0006020325375708513,
+        "saved_waveform_points": 4983,
+        "expected_cycles": 77.624,
+        "max_phase_advance": 0.01562500000002842
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "449ea1c4856136616a3f543e82ea5e78e2ddb33beb74e6379880e4a1ebef2049",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 4982,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.118353,
+          "elapsed_s": 0.0597169
+        },
+        "total_tran": {
+          "cpu_s": 0.12007899999999999,
+          "elapsed_s": 0.060446
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-vco-step-reference-v2",
+      "case": "low-band-end-to-end",
+      "archive_sha256": "2bb496d62f28c325e7d42f80c3c4684924c4beab07a27d69c8bff227746c91df",
+      "waveform_sha256": "935a40a2501fa3cffd418dddcb380fd5805ebc0b71c4ac229e891e3dc1ead6f2",
+      "candidate_sha256": "8ef5cfedeb5bb8172c21868ddd5f7c602a7c51ede584232a7d3fb628dd85f866",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "67aeebc88926835f474be445e7479ac330c09a72210198e2f63d67a59de843c8",
+      "replay_cases_sha256": "3eda2a96dd03daaa41236921ba5d96e2840a1605acdcd5814cd6041b7664faf0",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_point_error_v": 4.96269692007445e-13,
+        "max_interpolated_error_v": 0.0006021238869009932,
+        "saved_waveform_points": 10204,
+        "expected_cycles": 159.20000000000002,
+        "max_phase_advance": 0.015625000000071054
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "0f48072dc59fdffe33417ec32b4325a2e6ade40cfba567c6b56409f7f12052e1",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 10203,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.23742400000000002,
+          "elapsed_s": 0.119187
+        },
+        "total_tran": {
+          "cpu_s": 0.239059,
+          "elapsed_s": 0.119826
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-flash-thresholds-baseline-v2",
+      "case": "positive-skew",
+      "archive_sha256": "9275dd38d07817479751c7636918c68fef51f870fe57c8559f8d8f97fe45f40d",
+      "waveform_sha256": "114ff043401c659c4a978b788afdb7dfb112800798f2b4c058d7fcf6214fed59",
+      "candidate_sha256": "c35882d198a41c80a81257711c4e8f9ab8f9c83d3421c6472d376ca2d79663a6",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "28f334b1102ab3339a86cb783fadc3fc3f9baba171cab19571a24620cfc52630",
+      "replay_cases_sha256": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 3.634705902921809e-08,
+        "expected_samples": 50,
+        "observed_clock_edges": 50,
+        "saved_waveform_points": 1636
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "ac96f57a109c3a5d45a6d43c646aa44d3320a442cf157b23a1618b224ebdb5ac",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 1635,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.06193,
+          "elapsed_s": 0.031195900000000002
+        },
+        "total_tran": {
+          "cpu_s": 0.06370100000000001,
+          "elapsed_s": 0.031971900000000004
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-flash-thresholds-baseline-v2",
+      "case": "negative-skew",
+      "archive_sha256": "ee2f2e533b964bed3310a55957b0b0ce8deb855b34299c7ce65c9597ea7b60a4",
+      "waveform_sha256": "3c39cc36a55be7b45e413033f0dd23b3c65aa84cfec06fc01c4d2310ce817e17",
+      "candidate_sha256": "c35882d198a41c80a81257711c4e8f9ab8f9c83d3421c6472d376ca2d79663a6",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "28f334b1102ab3339a86cb783fadc3fc3f9baba171cab19571a24620cfc52630",
+      "replay_cases_sha256": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 4.7807843406300066e-08,
+        "expected_samples": 50,
+        "observed_clock_edges": 50,
+        "saved_waveform_points": 1636
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "079f35f01c3ac300d2ecddf542ad1f8e5e35686becaedacdb412d1f65bc4774e",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 1635,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.064202,
+          "elapsed_s": 0.0324841
+        },
+        "total_tran": {
+          "cpu_s": 0.06594,
+          "elapsed_s": 0.033226
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-flash-thresholds-baseline-v2",
+      "case": "bank-throughput",
+      "archive_sha256": "f8a7d0c0a3b150ffcd57dda6b2b6626f070c8ae2a738efda7134f6e369d54f07",
+      "waveform_sha256": "58f4bea8449bee66b7ddf3207e9b7e9e3d05b2ba72d0cab3412a5b6dae13a2cf",
+      "candidate_sha256": "c35882d198a41c80a81257711c4e8f9ab8f9c83d3421c6472d376ca2d79663a6",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "28f334b1102ab3339a86cb783fadc3fc3f9baba171cab19571a24620cfc52630",
+      "replay_cases_sha256": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 3.8966666837669806e-08,
+        "expected_samples": 10000,
+        "observed_clock_edges": 10000,
+        "saved_waveform_points": 152094
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "be30ffc61cdf157abd364e0ace793e809a7b3d93d0adf29a7b3b43c93b07e3e2",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 152093,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 4.33414,
+          "elapsed_s": 2.32124
+        },
+        "total_tran": {
+          "cpu_s": 4.33607,
+          "elapsed_s": 2.32217
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-flash-thresholds-reference-v2",
+      "case": "bank-throughput",
+      "archive_sha256": "87b3452d676292e7ce3abdf90cb9c37132c3bec8df541ae6ab682b41ef4d0861",
+      "waveform_sha256": "3ade52845a9ae206682ac6f9cbf81e5cfd64b7e3dd69ebbae899ab4399895e9f",
+      "candidate_sha256": "699ddeac4e87a2612597de81d834d728215354b145ee5d86d49e5c56e26e0b4b",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "28f334b1102ab3339a86cb783fadc3fc3f9baba171cab19571a24620cfc52630",
+      "replay_cases_sha256": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 3.8966666837669806e-08,
+        "expected_samples": 10000,
+        "observed_clock_edges": 10000,
+        "saved_waveform_points": 152094
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "77a7f7ce625e1eb780d4469671a2e570c6b04bc5f32abad5494c7f48aabae6ef",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 152093,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 3.60912,
+          "elapsed_s": 1.99645
+        },
+        "total_tran": {
+          "cpu_s": 3.6099,
+          "elapsed_s": 1.99723
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-flash-thresholds-reference-v2",
+      "case": "negative-skew",
+      "archive_sha256": "40769d6ee8eeb82f02472ae3f1690cecac2e7e7290469d0fac2ff3bfef7040f3",
+      "waveform_sha256": "a6decbebf9b21590b78e3dfb1b1976b4bdc2026384a396666c14723395255924",
+      "candidate_sha256": "699ddeac4e87a2612597de81d834d728215354b145ee5d86d49e5c56e26e0b4b",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "28f334b1102ab3339a86cb783fadc3fc3f9baba171cab19571a24620cfc52630",
+      "replay_cases_sha256": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 4.7807843406300066e-08,
+        "expected_samples": 50,
+        "observed_clock_edges": 50,
+        "saved_waveform_points": 1636
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "b98c89bab06501a7a97b56fb6be76e8903069d32f3252e2855e06e95e1394436",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 1635,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.053964,
+          "elapsed_s": 0.027153
+        },
+        "total_tran": {
+          "cpu_s": 0.055761000000000005,
+          "elapsed_s": 0.02795
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-flash-thresholds-reference-v2",
+      "case": "positive-skew",
+      "archive_sha256": "3dc392308b8d696868e6d9ce45cd868f8ea2d8869badfcfd066dbe37ba00df59",
+      "waveform_sha256": "8bb5df7c6fa3f46e5d705a934316c8c68f6c6f86246e0d955df921561847d835",
+      "candidate_sha256": "699ddeac4e87a2612597de81d834d728215354b145ee5d86d49e5c56e26e0b4b",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "28f334b1102ab3339a86cb783fadc3fc3f9baba171cab19571a24620cfc52630",
+      "replay_cases_sha256": "488d2a740466d299b08510082edf877a2f39db07e7b4f95b8a1320ac0aba36cc",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_code_voltage_error": 3.634705902921809e-08,
+        "expected_samples": 50,
+        "observed_clock_edges": 50,
+        "saved_waveform_points": 1636
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "81b25a63c0f4d60e21868e54a5b39ef5346a22e5a43004378d4c54a1dfa6e92b",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 1635,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.055861,
+          "elapsed_s": 0.028087900000000002
+        },
+        "total_tran": {
+          "cpu_s": 0.057539,
+          "elapsed_s": 0.0287702
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-power-monitor-baseline-v2",
+      "case": "short-glitch-and-recovery",
+      "archive_sha256": "846605a15542b560ea455e0dff2abd65113aa1ba91ea495cf0d553a59722d452",
+      "waveform_sha256": "d0321a7e1d9319f190eea6623c0eb0201ab48f95d7262cd97ac1d617d8379197",
+      "candidate_sha256": "2d8ef59f3ce8f6fbb3756a2af399b96fea1d6b786b7cdb439daafbd2638629df",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "a05322f5f1390e495582abc4c4adf23a2f2ffd071ad716b02798634ddb9cf4dc",
+      "replay_cases_sha256": "a1619ec632f12b43b95bbd19b3bfc2fc18b1d5ad5b6c52e1c3fe737516748aa2",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "expected_edges": [
+          [
+            1.3000075e-05,
+            1
+          ],
+          [
+            1.60000625e-05,
+            -1
+          ]
+        ],
+        "observed_edges": [
+          [
+            1.300125e-05,
+            1
+          ],
+          [
+            1.600125e-05,
+            -1
+          ]
+        ],
+        "max_plateau_error_v": 0.0,
+        "max_transition_error_v": 3.9362957338084925e-12,
+        "saved_waveform_points": 20123
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "b7c36ac6d35304e4413a28341efa6ec7b2ad3c88d3fe3b96e1d11bdac87eb963",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 20122,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.490906,
+          "elapsed_s": 0.245957
+        },
+        "total_tran": {
+          "cpu_s": 0.491659,
+          "elapsed_s": 0.246702
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-power-monitor-baseline-v2",
+      "case": "initial-high-hysteresis",
+      "archive_sha256": "45a40b99f4e970d0eacc1298045328c5619ca25635513398750ab3ccfb8131b4",
+      "waveform_sha256": "58ebae1494996c6ee8fd8e751f3cf99095472e6b31fb9d25b8a067a50cbb8d8d",
+      "candidate_sha256": "2d8ef59f3ce8f6fbb3756a2af399b96fea1d6b786b7cdb439daafbd2638629df",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "a05322f5f1390e495582abc4c4adf23a2f2ffd071ad716b02798634ddb9cf4dc",
+      "replay_cases_sha256": "a1619ec632f12b43b95bbd19b3bfc2fc18b1d5ad5b6c52e1c3fe737516748aa2",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "expected_edges": [
+          [
+            3e-06,
+            1
+          ],
+          [
+            1.0000050000000001e-05,
+            -1
+          ]
+        ],
+        "observed_edges": [
+          [
+            3.0002499999999998e-06,
+            1
+          ],
+          [
+            1.0001249999999998e-05,
+            -1
+          ]
+        ],
+        "max_plateau_error_v": 0.0,
+        "max_transition_error_v": 2.2423174428354287e-12,
+        "saved_waveform_points": 15065
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "1fed08c637e9c2edc04142d1901650bbf46968bc53919a25a19d3643eba2b348",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 15064,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.360899,
+          "elapsed_s": 0.18084200000000003
+        },
+        "total_tran": {
+          "cpu_s": 0.361568,
+          "elapsed_s": 0.181505
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-power-monitor-baseline-v2",
+      "case": "slow-rail-end-to-end",
+      "archive_sha256": "cc0049bb8473b9db04df4d8f2e16055908e8f178656bc09f88dc79bde21141e9",
+      "waveform_sha256": "58f0fd81d76ff40e1ade3fd3b09448bd285959a2e0354691d897783da21809e5",
+      "candidate_sha256": "2d8ef59f3ce8f6fbb3756a2af399b96fea1d6b786b7cdb439daafbd2638629df",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "a05322f5f1390e495582abc4c4adf23a2f2ffd071ad716b02798634ddb9cf4dc",
+      "replay_cases_sha256": "a1619ec632f12b43b95bbd19b3bfc2fc18b1d5ad5b6c52e1c3fe737516748aa2",
+      "executed_passed": false,
+      "replay": {
+        "passed": false,
+        "failures": [
+          "qualification delay, hysteresis or disable timing mismatch"
+        ],
+        "expected_edges": [
+          [
+            2.50000075e-05,
+            1
+          ],
+          [
+            8.000000250000001e-05,
+            -1
+          ]
+        ],
+        "observed_edges": [
+          [
+            2.500225e-05,
+            1
+          ],
+          [
+            8.000125000000001e-05,
+            -1
+          ]
+        ],
+        "max_plateau_error_v": 0.0,
+        "max_transition_error_v": 2.032873869239893e-11,
+        "saved_waveform_points": 100103
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "4894c99f5412aff3555a31204ce5eeaf37f8b1846b008e2c00fff218f0b38b95",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 100102,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 2.30632,
+          "elapsed_s": 1.15607
+        },
+        "total_tran": {
+          "cpu_s": 2.30795,
+          "elapsed_s": 1.15671
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-power-monitor-reference-v2",
+      "case": "initial-high-hysteresis",
+      "archive_sha256": "c9362ee5cf0127d2b73b7c3ff753d0e48f944140eaebce4655c300d65de25376",
+      "waveform_sha256": "649ccca3579b757b56c0cdef61138e6fed82a8f0e000430815a3371a16a4b618",
+      "candidate_sha256": "9b5cf95a488cc9b3979c6553f4c6a59fd1408606f98c4446611c1958e83026f2",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "a05322f5f1390e495582abc4c4adf23a2f2ffd071ad716b02798634ddb9cf4dc",
+      "replay_cases_sha256": "a1619ec632f12b43b95bbd19b3bfc2fc18b1d5ad5b6c52e1c3fe737516748aa2",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "expected_edges": [
+          [
+            3e-06,
+            1
+          ],
+          [
+            1.0000050000000001e-05,
+            -1
+          ]
+        ],
+        "observed_edges": [
+          [
+            3.0002499999999998e-06,
+            1
+          ],
+          [
+            1.0000300000125498e-05,
+            -1
+          ]
+        ],
+        "max_plateau_error_v": 0.0,
+        "max_transition_error_v": 1.4128698211379742e-12,
+        "saved_waveform_points": 179
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "e66f5fef96e866ac4c1765d1766a5ed8a8f53af4834a76e9e3445ca4cb1d8525",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 178,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.006681,
+          "elapsed_s": 0.00375104
+        },
+        "total_tran": {
+          "cpu_s": 0.00948,
+          "elapsed_s": 0.00455499
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-power-monitor-reference-v2",
+      "case": "slow-rail-end-to-end",
+      "archive_sha256": "212a64ddc5ecbf01287b1ad2667c30ac158634883f85949d1e9dc723f52ae7b9",
+      "waveform_sha256": "02259537c753c2faf8e58d2e88117de74e71e19b8515019926d10100f7665193",
+      "candidate_sha256": "9b5cf95a488cc9b3979c6553f4c6a59fd1408606f98c4446611c1958e83026f2",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "a05322f5f1390e495582abc4c4adf23a2f2ffd071ad716b02798634ddb9cf4dc",
+      "replay_cases_sha256": "a1619ec632f12b43b95bbd19b3bfc2fc18b1d5ad5b6c52e1c3fe737516748aa2",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "expected_edges": [
+          [
+            2.50000075e-05,
+            1
+          ],
+          [
+            8.000000250000001e-05,
+            -1
+          ]
+        ],
+        "observed_edges": [
+          [
+            2.500025750000376e-05,
+            1
+          ],
+          [
+            8.000025250000626e-05,
+            -1
+          ]
+        ],
+        "max_plateau_error_v": 0.0,
+        "max_transition_error_v": 1.1808776179123015e-11,
+        "saved_waveform_points": 218
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "0cb1e446d976f209dc27581e79d12a8e6dc91d222f7f070863f66577242779d0",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 217,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.008406,
+          "elapsed_s": 0.00450492
+        },
+        "total_tran": {
+          "cpu_s": 0.010194000000000002,
+          "elapsed_s": 0.0052959899999999996
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-power-monitor-reference-v2",
+      "case": "short-glitch-and-recovery",
+      "archive_sha256": "a5feef4c0b93f7ffc27d446ed4fd440363952e3726455ce6d5c376ffe5b91543",
+      "waveform_sha256": "5eaba6cb2150b3e13eed4babf1777843097fd70b7975815ca5eb369a64f48f55",
+      "candidate_sha256": "9b5cf95a488cc9b3979c6553f4c6a59fd1408606f98c4446611c1958e83026f2",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "a05322f5f1390e495582abc4c4adf23a2f2ffd071ad716b02798634ddb9cf4dc",
+      "replay_cases_sha256": "a1619ec632f12b43b95bbd19b3bfc2fc18b1d5ad5b6c52e1c3fe737516748aa2",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "expected_edges": [
+          [
+            1.3000075e-05,
+            1
+          ],
+          [
+            1.60000625e-05,
+            -1
+          ]
+        ],
+        "observed_edges": [
+          [
+            1.300032500003762e-05,
+            1
+          ],
+          [
+            1.6000312500031378e-05,
+            -1
+          ]
+        ],
+        "max_plateau_error_v": 0.0,
+        "max_transition_error_v": 1.3330780923581642e-11,
+        "saved_waveform_points": 248
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "623053bff882e753d72909882c24e039ca3e031f8b5dda85fd36fea601850591",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 247,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.009635999999999999,
+          "elapsed_s": 0.00471997
+        },
+        "total_tran": {
+          "cpu_s": 0.011408,
+          "elapsed_s": 0.00549412
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-sampled-dac-baseline-v2",
+      "case": "lower-supply-domain",
+      "archive_sha256": "c6b6c87e76d38b3dd641bba04e8cc666c942d3140c9d70028b12a6465e684720",
+      "waveform_sha256": "3dfcae47193c9ffee3217ff05885b14a445da4a4bb704089fe1dec80f281d7ff",
+      "candidate_sha256": "a2978eafe48850c9b95326f3b911967fba61a04fe612793ccd404f1d541597c9",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "77cb0eb74919232f428dfcd03603af28ef79bb5c5e21bb30bbb7eac6c6c51067",
+      "replay_cases_sha256": "16b53278ee9dc45b03f0b9d8498fefe5c66bca3b3ac04fcc77da50872a08fca9",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_output_error_v": 1.2253309478182928e-11,
+        "expected_samples": 500,
+        "bus_bit_errors": 0,
+        "observed_clock_edges": 500,
+        "saved_waveform_points": 9996
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "979b6a4f49823f07689a81e9848467ce58c59f27d0823b1f71f2da1cc190459e",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 9995,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.453228,
+          "elapsed_s": 0.227196
+        },
+        "total_tran": {
+          "cpu_s": 0.455068,
+          "elapsed_s": 0.22803800000000002
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-sampled-dac-baseline-v2",
+      "case": "binary-counter-throughput",
+      "archive_sha256": "36576060af7fbd7e2e07e1bd2a23f4bb78b8cb09b7aa34d1cf38afd17bf15cfb",
+      "waveform_sha256": "dafb4c17a9a0305d9cbc52e3282b585f4cd1672e660ca0d845a6e6164d36f23f",
+      "candidate_sha256": "a2978eafe48850c9b95326f3b911967fba61a04fe612793ccd404f1d541597c9",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "77cb0eb74919232f428dfcd03603af28ef79bb5c5e21bb30bbb7eac6c6c51067",
+      "replay_cases_sha256": "16b53278ee9dc45b03f0b9d8498fefe5c66bca3b3ac04fcc77da50872a08fca9",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_output_error_v": 8.609352530886127e-08,
+        "expected_samples": 10000,
+        "bus_bit_errors": 0,
+        "observed_clock_edges": 10000,
+        "saved_waveform_points": 199996
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "c6181bb5c22e28897b807d3c68c9a01b92f1f3694d4c0c9d9d0355b7cc774a3c",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 199995,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 5.97698,
+          "elapsed_s": 4.4758
+        },
+        "total_tran": {
+          "cpu_s": 5.9777,
+          "elapsed_s": 4.47651
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-sampled-dac-baseline-v2",
+      "case": "bipolar-output-range",
+      "archive_sha256": "f446731a16bb8d5fbf16530bf4ba9e148ee1e6331261eade5cec45da35c1421a",
+      "waveform_sha256": "2be9a82f6cea5e2c93ba714d6c971c2850db1a613eb0d557073ad05359e1f31a",
+      "candidate_sha256": "a2978eafe48850c9b95326f3b911967fba61a04fe612793ccd404f1d541597c9",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "77cb0eb74919232f428dfcd03603af28ef79bb5c5e21bb30bbb7eac6c6c51067",
+      "replay_cases_sha256": "16b53278ee9dc45b03f0b9d8498fefe5c66bca3b3ac04fcc77da50872a08fca9",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_output_error_v": 3.8291370074716724e-11,
+        "expected_samples": 500,
+        "bus_bit_errors": 0,
+        "observed_clock_edges": 500,
+        "saved_waveform_points": 9996
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "7ec31af931beb04a094d8cabb78e3846e387c1b8928b64f37660e93afa5ff88b",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 9995,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.442716,
+          "elapsed_s": 0.221869
+        },
+        "total_tran": {
+          "cpu_s": 0.44341600000000003,
+          "elapsed_s": 0.222561
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-sampled-dac-reference-v2",
+      "case": "bipolar-output-range",
+      "archive_sha256": "82b062fc986bb0bb125726130e343a47d7bf3027ec7afcb4ec8be55805e54f25",
+      "waveform_sha256": "c8f267a953c9bb83d42cbe489ed62a03bba4ab23bb5506286ca1abf79b37d904",
+      "candidate_sha256": "380ac52028a040629cbdfff83114206e48f366e8b3b0afcf1f33ea56bddc489b",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "77cb0eb74919232f428dfcd03603af28ef79bb5c5e21bb30bbb7eac6c6c51067",
+      "replay_cases_sha256": "16b53278ee9dc45b03f0b9d8498fefe5c66bca3b3ac04fcc77da50872a08fca9",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_output_error_v": 3.8291370074716724e-11,
+        "expected_samples": 500,
+        "bus_bit_errors": 0,
+        "observed_clock_edges": 500,
+        "saved_waveform_points": 9996
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "37fcd7f796416aa9a6dd1f3e5bb2b770055f5c487e2773040d8346f0bef8789b",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 9995,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.457257,
+          "elapsed_s": 0.229332
+        },
+        "total_tran": {
+          "cpu_s": 0.459094,
+          "elapsed_s": 0.23017400000000002
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-sampled-dac-reference-v2",
+      "case": "lower-supply-domain",
+      "archive_sha256": "6ef4931a10c67a025bbc094eef68b8bdd4e7da76dd68604bf6be2704c7039dde",
+      "waveform_sha256": "5d459a324555ee81dbc19d5b59cee31faaf60ab8849c8fdfe51151970d4849d9",
+      "candidate_sha256": "380ac52028a040629cbdfff83114206e48f366e8b3b0afcf1f33ea56bddc489b",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "77cb0eb74919232f428dfcd03603af28ef79bb5c5e21bb30bbb7eac6c6c51067",
+      "replay_cases_sha256": "16b53278ee9dc45b03f0b9d8498fefe5c66bca3b3ac04fcc77da50872a08fca9",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_output_error_v": 1.2253309478182928e-11,
+        "expected_samples": 500,
+        "bus_bit_errors": 0,
+        "observed_clock_edges": 500,
+        "saved_waveform_points": 9996
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "517202bacb77f5cf849505b87526b8c57e6d6d35f5921e8b25aa4bdb6dae4d52",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 9995,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.452443,
+          "elapsed_s": 0.22670900000000002
+        },
+        "total_tran": {
+          "cpu_s": 0.454171,
+          "elapsed_s": 0.22744
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-sampled-dac-reference-v2",
+      "case": "binary-counter-throughput",
+      "archive_sha256": "832ff1af9f11dbcd9744445fc9421b5011af573e17ae60db30c20bb23c83fc63",
+      "waveform_sha256": "ee8d4d818ff2737c666d1453075e94f2cb5c1a10ed25bb751f61ce2c8aa93b7f",
+      "candidate_sha256": "380ac52028a040629cbdfff83114206e48f366e8b3b0afcf1f33ea56bddc489b",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "77cb0eb74919232f428dfcd03603af28ef79bb5c5e21bb30bbb7eac6c6c51067",
+      "replay_cases_sha256": "16b53278ee9dc45b03f0b9d8498fefe5c66bca3b3ac04fcc77da50872a08fca9",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_output_error_v": 8.609352530886127e-08,
+        "expected_samples": 10000,
+        "bus_bit_errors": 0,
+        "observed_clock_edges": 10000,
+        "saved_waveform_points": 199996
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "a052f80bfd03b622700f6c63e0992e30b88b4ee7a80bee5162c508fe703942d6",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 199995,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 6.05513,
+          "elapsed_s": 4.48533
+        },
+        "total_tran": {
+          "cpu_s": 6.05595,
+          "elapsed_s": 4.48615
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-sc-coefficients-baseline-v2",
+      "case": "slow-input",
+      "archive_sha256": "cb83bba78b1d0288218bcd7d215e3dbf6415895d27ef8639fd6e88c418144ff7",
+      "waveform_sha256": "18960b66cb7a39efdae82af4427d98450d4e5e5975992be8c1b7f00389e4536c",
+      "candidate_sha256": "b014b01257937917f77a8226fbe87653979dad5f5248bed182c01483f336322c",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "dab69b96b6a18ffcaaf06ecab5a1864136c3ed81cb2992c9e0d6d75e64fd0386",
+      "replay_cases_sha256": "b1316abccae8c6dbcad21b717e558884460e50d0eeb48d8c7ae89362ac8d403a",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_output_error_v": 1.3071865534453053e-09,
+        "max_stimulus_error_v": 4.440892098500626e-16,
+        "expected_samples": 150,
+        "observed_clock_edges": 150,
+        "saved_waveform_points": 2826
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "fd21a1c945e3b00cffd7d526ce5a06b33f7bd899ea324ace824d05b19b33665e",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 2825,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.081055,
+          "elapsed_s": 0.040302
+        },
+        "total_tran": {
+          "cpu_s": 0.081712,
+          "elapsed_s": 0.0409541
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-sc-coefficients-baseline-v2",
+      "case": "different-settling",
+      "archive_sha256": "5c400b3a6f2b74d324fec46f22b7f55b37d224d9aff2bdf6c43ecb6ed7b6e9cc",
+      "waveform_sha256": "f15a78a797ac62f4b5689d0e26c190c49bd1628fbca909f79f0573fdb0c1f3aa",
+      "candidate_sha256": "b014b01257937917f77a8226fbe87653979dad5f5248bed182c01483f336322c",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "dab69b96b6a18ffcaaf06ecab5a1864136c3ed81cb2992c9e0d6d75e64fd0386",
+      "replay_cases_sha256": "b1316abccae8c6dbcad21b717e558884460e50d0eeb48d8c7ae89362ac8d403a",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_output_error_v": 2.899996909278002e-09,
+        "max_stimulus_error_v": 8.126832540256146e-14,
+        "expected_samples": 250,
+        "observed_clock_edges": 250,
+        "saved_waveform_points": 3996
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "c5df548a81a7b17f98be8a5d9de50a5fff43af6d641d7d53d4c56a0bde4b3ed8",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 3995,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.111511,
+          "elapsed_s": 0.055809
+        },
+        "total_tran": {
+          "cpu_s": 0.113262,
+          "elapsed_s": 0.0565631
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-sc-coefficients-baseline-v2",
+      "case": "filter-throughput",
+      "archive_sha256": "1a58f8978eae1a0e21de6efd7afc32495f543d4a703b3254d1ec0f42ba2df79f",
+      "waveform_sha256": "d8748c66a09fb590249253a6f457dd1835c5274009887a0ce10fd4f6a42bc124",
+      "candidate_sha256": "b014b01257937917f77a8226fbe87653979dad5f5248bed182c01483f336322c",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "dab69b96b6a18ffcaaf06ecab5a1864136c3ed81cb2992c9e0d6d75e64fd0386",
+      "replay_cases_sha256": "b1316abccae8c6dbcad21b717e558884460e50d0eeb48d8c7ae89362ac8d403a",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_output_error_v": 1.5944870424000612e-09,
+        "max_stimulus_error_v": 9.603429163007604e-14,
+        "expected_samples": 10000,
+        "observed_clock_edges": 10000,
+        "saved_waveform_points": 159996
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "3784bef34a4833f5cc620615eb916a5219d361d4570af917247db5c3fa259ab6",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 159995,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 3.68074,
+          "elapsed_s": 2.10226
+        },
+        "total_tran": {
+          "cpu_s": 3.68252,
+          "elapsed_s": 2.10304
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-sc-coefficients-reference-v2",
+      "case": "different-settling",
+      "archive_sha256": "a3013cb84a406d7ee70678ccc73296900407788dda2f5d4ae9049947c2385f01",
+      "waveform_sha256": "231845ff7d43a4f8a2ac7fd3d400eb8ebbe545efd2a8a54a5ae06e1773272fb6",
+      "candidate_sha256": "2af2e1ed7ca0d1f6700835a14f6040850e0db64edc784bbea35b7e88c23132b2",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "dab69b96b6a18ffcaaf06ecab5a1864136c3ed81cb2992c9e0d6d75e64fd0386",
+      "replay_cases_sha256": "b1316abccae8c6dbcad21b717e558884460e50d0eeb48d8c7ae89362ac8d403a",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_output_error_v": 2.899996909278002e-09,
+        "max_stimulus_error_v": 8.126832540256146e-14,
+        "expected_samples": 250,
+        "observed_clock_edges": 250,
+        "saved_waveform_points": 3996
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "1a686414ed90ade6e9a17ad8e3e43ffeef94570532ff0343b58e0af8eb065299",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 3995,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.10739900000000001,
+          "elapsed_s": 0.0537021
+        },
+        "total_tran": {
+          "cpu_s": 0.108075,
+          "elapsed_s": 0.05437210000000001
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-sc-coefficients-reference-v2",
+      "case": "filter-throughput",
+      "archive_sha256": "475633603f09035da3142e2e343c583462036038175099081932d2d3fdb6e1b7",
+      "waveform_sha256": "444bd0b371021af1b94546d1379703b1df607886289290a95fb9691d1f445b1d",
+      "candidate_sha256": "2af2e1ed7ca0d1f6700835a14f6040850e0db64edc784bbea35b7e88c23132b2",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "dab69b96b6a18ffcaaf06ecab5a1864136c3ed81cb2992c9e0d6d75e64fd0386",
+      "replay_cases_sha256": "b1316abccae8c6dbcad21b717e558884460e50d0eeb48d8c7ae89362ac8d403a",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_output_error_v": 1.5944870424000612e-09,
+        "max_stimulus_error_v": 9.603429163007604e-14,
+        "expected_samples": 10000,
+        "observed_clock_edges": 10000,
+        "saved_waveform_points": 159996
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "7ceb864b2092f3858109f928d172b159c2bf37ea66a187e708e835746c6e94a6",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 159995,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 3.59383,
+          "elapsed_s": 2.04667
+        },
+        "total_tran": {
+          "cpu_s": 3.5955,
+          "elapsed_s": 2.04736
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    },
+    {
+      "run_name": "optimize-sc-coefficients-reference-v2",
+      "case": "slow-input",
+      "archive_sha256": "86b49fb498d7e1e77bcd17103d78b4181a22eeadf5a9be8bde713a3c480b9440",
+      "waveform_sha256": "82acfb8889ff1eb8b78a3c72975cbde93c9f21e8e729b0b6de4d1ac2fc3f9512",
+      "candidate_sha256": "2af2e1ed7ca0d1f6700835a14f6040850e0db64edc784bbea35b7e88c23132b2",
+      "executed_checker_sha256": "09b01c6b3d39273db6e27a3946e6f0e57af070deb6b4e9899f6d3943d85f877c",
+      "replay_checker_sha256": "dab69b96b6a18ffcaaf06ecab5a1864136c3ed81cb2992c9e0d6d75e64fd0386",
+      "replay_cases_sha256": "b1316abccae8c6dbcad21b717e558884460e50d0eeb48d8c7ae89362ac8d403a",
+      "executed_passed": true,
+      "replay": {
+        "passed": true,
+        "failures": [],
+        "max_output_error_v": 1.3071865534453053e-09,
+        "max_stimulus_error_v": 4.440892098500626e-16,
+        "expected_samples": 150,
+        "observed_clock_edges": 150,
+        "saved_waveform_points": 2826
+      },
+      "native_statistics": {
+        "version": "optimization-native-stats-v1",
+        "native_log_sha256": "ee7d82fbc4620360d927939e808fbc5ed40270b91975465ee0db562e0b4b0beb",
+        "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+        "accepted_steps": 2825,
+        "rejected_steps": null,
+        "intrinsic_tran": {
+          "cpu_s": 0.079072,
+          "elapsed_s": 0.039346200000000005
+        },
+        "total_tran": {
+          "cpu_s": 0.07972499999999999,
+          "elapsed_s": 0.039994
+        },
+        "native_errors": 0,
+        "native_warnings": 1,
+        "native_notices": 3,
+        "aggregate_elapsed_used": false
+      }
+    }
+  ]
+}

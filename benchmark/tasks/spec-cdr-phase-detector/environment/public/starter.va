@@ -1,0 +1,7 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module cdr_phase_detector(data,clk,retimed,up,down);
+input data,clk,retimed;output up,down;electrical data,clk,retimed,up,down;
+parameter real vth=0.5,tr=50p;
+// Implement the public behavior here.
+endmodule

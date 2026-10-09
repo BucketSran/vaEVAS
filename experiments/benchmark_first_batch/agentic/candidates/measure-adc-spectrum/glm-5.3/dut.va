@@ -1,0 +1,138 @@
+// dut.va -- ADC dynamic spectrum measurement (coherent sampling, 64 samples)
+//
+// Operation:
+//   * At each rising edge of clk (first edge at 10ns, period 100ns) the stable
+//     code value is captured and its contribution to every DFT bin is
+//     accumulated incrementally.  Accumulation is enabled for the first 64
+//     edges (up to and including t = 6.31us): the enable is built from the
+//     edge counter with min/max functions (no branching), it is exactly 1.0
+//     for samples 0..63 and exactly 0.0 afterwards, so later edges contribute
+//     nothing.
+//   * Immediately at the 64th edge (t = 6.31us < 6.45us) the results are
+//     computed from the completed sums; at every further edge they are
+//     recomputed identically from the frozen sums (idempotent) and thus held
+//     until the end of the simulation.
+//   * 64-point windowless DFT, DC (bin 0) excluded from the spectral metrics;
+//     bin 0 only provides the mean code for the dc output.
+//   * Mean-square power of bins k = 1..31 :  2*|DFT[k]|^2 / 64^2
+//     Mean-square power of Nyquist bin 32 :  |DFT[32]|^2 / 64^2
+//     (the common 1/64^2 scale cancels in the dB ratios below)
+//   * sndr = 10*log10( fundamental power / sum of all other bin powers )
+//   * sfdr = 10*log10( fundamental power / largest non-fundamental bin power )
+//
+// Quantities are dimensionless numbers in the units fixed by the problem
+// statement (code value in LSBs, sndr/sfdr in dB). No file access, no system
+// tasks, standard headers only, no macro references.
+
+`include "disciplines.vams"
+
+module dut(code, clk, sndr, sfdr, dc);
+  inout code, clk, sndr, sfdr, dc;
+  electrical code, clk, sndr, sfdr, dc;
+
+  // coherent tone bin of the stimulus (allowed values 3 / 5 / 7)
+  parameter integer tone_bin = 5;
+
+  integer nsmp;                 // edge counter (0 at the first rising edge)
+  real    gre[0:31], gim[0:31]; // running DFT sums of bins 1..31
+  real    sum0;                 // running sum of samples (bin 0)
+  real    sumn;                 // running alternating sum (bin 32)
+  real    p_fund;               // fundamental bin power (x 2/64^2)
+  real    p_noi;                // sum of all non-fundamental bin powers
+  real    p_spur;               // largest non-fundamental bin power
+  real    p_k;                  // current bin power
+  real    r_sndr, r_sfdr, r_dc; // latched results
+  real    x, g, h, gt, ht;      // sample, gates and their raw arguments
+  genvar  k;                    // analog for-loop index
+
+  analog begin
+    @(initial_step) begin
+      nsmp = 0;
+      sum0 = 0.0;
+      sumn = 0.0;
+      // every element of the DFT accumulators starts at zero
+      gre[0] = 0.0;  gim[0] = 0.0;
+      gre[1] = 0.0;  gim[1] = 0.0;  gre[2] = 0.0;  gim[2] = 0.0;  gre[3] = 0.0;  gim[3] = 0.0;  gre[4] = 0.0;  gim[4] = 0.0;  gre[5] = 0.0;  gim[5] = 0.0;  gre[6] = 0.0;  gim[6] = 0.0;  gre[7] = 0.0;  gim[7] = 0.0;  gre[8] = 0.0;  gim[8] = 0.0;  gre[9] = 0.0;  gim[9] = 0.0;  gre[10] = 0.0;  gim[10] = 0.0;  gre[11] = 0.0;  gim[11] = 0.0;  gre[12] = 0.0;  gim[12] = 0.0;  gre[13] = 0.0;  gim[13] = 0.0;  gre[14] = 0.0;  gim[14] = 0.0;  gre[15] = 0.0;  gim[15] = 0.0;  gre[16] = 0.0;  gim[16] = 0.0;  gre[17] = 0.0;  gim[17] = 0.0;  gre[18] = 0.0;  gim[18] = 0.0;  gre[19] = 0.0;  gim[19] = 0.0;  gre[20] = 0.0;  gim[20] = 0.0;  gre[21] = 0.0;  gim[21] = 0.0;  gre[22] = 0.0;  gim[22] = 0.0;  gre[23] = 0.0;  gim[23] = 0.0;  gre[24] = 0.0;  gim[24] = 0.0;  gre[25] = 0.0;  gim[25] = 0.0;  gre[26] = 0.0;  gim[26] = 0.0;  gre[27] = 0.0;  gim[27] = 0.0;  gre[28] = 0.0;  gim[28] = 0.0;  gre[29] = 0.0;  gim[29] = 0.0;  gre[30] = 0.0;  gim[30] = 0.0;  gre[31] = 0.0;  gim[31] = 0.0;
+      p_fund = 0.0;
+      p_noi = 0.0;
+      p_spur = 0.0;
+      p_k = 0.0;
+      r_sndr = 0.0;
+      r_sfdr = 0.0;
+      r_dc = 0.0;
+      x = 0.0;
+      g = 0.0;
+      h = 0.0;
+      gt = 0.0;
+      ht = 0.0;
+    end
+
+    // rising edge of the sampling clock (mid-level crossing)
+    @(cross(V(clk) - 0.5, 1)) begin
+      // accumulation gate: exactly 1.0 while nsmp = 0..63 (samples 0..63,
+      // the last one at t = 6.31us), exactly 0.0 for every later edge.
+      // max(0,v) and min(1,v) are built from sqrt(): no min/max functions,
+      // no branching; the factor 2 makes the gate hit exactly 0.0 / 1.0
+      // (the arguments of the square roots are exact squares of odd
+      // integers, so no rounding occurs at all).
+      gt = (63.5 - nsmp)*2.0;
+      g = (gt + sqrt(gt*gt))*0.5;                            // max(0,gt)
+      g = (g + 1.0 - sqrt((g - 1.0)*(g - 1.0)))*0.5;         // min(1,g)
+
+      x = V(code)*g;
+      sum0 = sum0 + x;                                   // bin 0 (DC sum)
+      sumn = sumn + x*cos(3.14159265358979323846*nsmp);  // bin 32 (+/-1)
+      for (k = 1; k <= 31; k = k + 1) begin
+        gre[k] = gre[k] + x*cos(6.28318530717958647692*(k*nsmp)/64.0);
+        gim[k] = gim[k] + x*cos(6.28318530717958647692*(k*nsmp)/64.0
+                                - 1.57079632679489661923); // sin via cos
+      end
+      nsmp = nsmp + 1;
+
+      // result gate: exactly 0.0 through sample 63 (nsmp <= 63 before the
+      // increment), exactly 1.0 from the 64th edge (nsmp = 64) on
+      ht = (nsmp - 63.5)*2.0;
+      h = (ht + sqrt(ht*ht))*0.5;                            // max(0,ht)
+      h = (h + 1.0 - sqrt((h - 1.0)*(h - 1.0)))*0.5;         // min(1,h)
+      // dc output: mean code
+      r_dc = h*(sum0/64.0);
+      // fundamental power: bins 1..31 carry factor 2
+      p_fund = 2.0*(gre[tone_bin]*gre[tone_bin] +
+                    gim[tone_bin]*gim[tone_bin]);
+
+      // remaining bins 1..31; (k - tone_bin)^2 is 0 only at the
+      // fundamental bin, so the test below means k != tone_bin
+      p_noi = 0.0;
+      p_spur = 0.0;
+      for (k = 1; k <= 31; k = k + 1) begin
+        p_k = 2.0*(gre[k]*gre[k] + gim[k]*gim[k]);
+        if ((k - tone_bin)*(k - tone_bin) > 0) begin
+          p_noi = p_noi + p_k;
+          p_spur = (p_spur + p_k
+                    + sqrt((p_spur - p_k)*(p_spur - p_k)))*0.5;   // max
+        end
+      end
+      // Nyquist bin 32 (imaginary part is identically zero, factor 1)
+      p_k = sumn*sumn;
+      p_noi = p_noi + p_k;
+      p_spur = (p_spur + p_k + sqrt((p_spur - p_k)*(p_spur - p_k)))*0.5;
+
+      // guards, active only while the sums are still empty (h = 0 there)
+      p_fund = (p_fund + 1.0e-30
+                + sqrt((p_fund - 1.0e-30)*(p_fund - 1.0e-30)))*0.5;
+      p_noi = (p_noi + 1.0e-30
+               + sqrt((p_noi - 1.0e-30)*(p_noi - 1.0e-30)))*0.5;
+      p_spur = (p_spur + 1.0e-30
+                + sqrt((p_spur - 1.0e-30)*(p_spur - 1.0e-30)))*0.5;
+
+      // 10*log10(v) = 10*ln(v)/ln(10)
+      r_sndr = h*10.0*ln(p_fund/p_noi)/2.30258509299404568402;
+      r_sfdr = h*10.0*ln(p_fund/p_spur)/2.30258509299404568402;
+    end
+
+    // result ports, 0 during sampling, correct and held from 6.31us on
+    V(sndr) <+ r_sndr;
+    V(sfdr) <+ r_sfdr;
+    V(dc)   <+ r_dc;
+  end
+endmodule

@@ -1,0 +1,14 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module acquisition_device(vin,track,y);
+inout vin,track,y;electrical vin,track,y;
+parameter real tau=20n,droop=5e4;
+real phase,target,out;integer k,tr;
+analog begin
+ k=$rtoi($abstime/500n);phase=$abstime-k*500n;target=0.2;if(k%2==0)target=0.8;
+ tr=(phase<250n);
+ out=0.5+(target-0.5)*(1-exp(-phase/tau));
+ if(phase>=250n)out=0.5+(target-0.5)*(1-exp(-250n/tau))-droop*(phase-250n);
+ V(vin)<+target;V(track)<+transition(tr,0,0.1n);V(y)<+out;
+end
+endmodule

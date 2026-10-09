@@ -1,0 +1,234 @@
+{
+  "schema_version": 1,
+  "scope": "five original dynamic identification tasks",
+  "completed_backend_calibrated_count": 5,
+  "task_count": 5,
+  "tasks": [
+    {
+      "task_id": "identify-sh-acquisition",
+      "engineering_action": "from-data-modeling",
+      "task_path": "benchmark/tasks/identify-sh-acquisition",
+      "source_group": "original-sh-identification",
+      "provenance": "original-engineering-requirement",
+      "context_level": "bounded-work-unit",
+      "public_experiments": 4,
+      "hidden_experiments": 4,
+      "reference_method": "estimate observable parameters only from public CSV",
+      "semantic_negative_variants": [
+        "no-droop",
+        "no-hold-step",
+        "wrong-polarity-step",
+        "fast-acquisition"
+      ],
+      "release_set": "spectre-extension-candidate",
+      "status": {
+        "harbor_materials": "implemented",
+        "public_data": "implemented",
+        "reference_fitting": "executed locally",
+        "row_criteria": "13 tests passed across family suite; not VA execution",
+        "spectre_reference": "all current numerical conditions covered by audited actual evidence",
+        "spectre_semantic_negatives": "all selected semantic negative variants have actual graded rejection",
+        "agentic": "pending",
+        "open_source_regrading": "not validated"
+      },
+      "checks": {
+        "row_tests": "python3 -B -m unittest discover -s experiments/benchmark_first_batch/identification -p 'test_*.py' -v",
+        "candidate_generation": "python3 -B experiments/benchmark_first_batch/identification/prepare_candidates.py"
+      },
+      "sources": "benchmark/tasks/identify-sh-acquisition/SOURCE.md",
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 4,
+        "semantic_negative_variants": 4,
+        "semantic_negative_conditions": 16,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 15,
+          "graded_pass": 1
+        }
+      }
+    },
+    {
+      "task_id": "identify-sc-clocked-filter",
+      "engineering_action": "from-data-modeling",
+      "task_path": "benchmark/tasks/identify-sc-clocked-filter",
+      "source_group": "original-identified_sc-identification",
+      "provenance": "original-engineering-requirement",
+      "context_level": "bounded-work-unit",
+      "public_experiments": 4,
+      "hidden_experiments": 4,
+      "reference_method": "estimate observable parameters only from public CSV",
+      "semantic_negative_variants": [
+        "single-pole",
+        "wrong-clock-edge",
+        "no-history",
+        "wrong-gain",
+        "low-phase-reset"
+      ],
+      "release_set": "spectre-extension-candidate",
+      "status": {
+        "harbor_materials": "implemented",
+        "public_data": "implemented",
+        "reference_fitting": "executed locally",
+        "row_criteria": "13 tests passed across family suite; not VA execution",
+        "spectre_reference": "all current numerical conditions covered by audited actual evidence",
+        "spectre_semantic_negatives": "all selected semantic negative variants have actual graded rejection",
+        "agentic": "pending",
+        "open_source_regrading": "not validated"
+      },
+      "checks": {
+        "row_tests": "python3 -B -m unittest discover -s experiments/benchmark_first_batch/identification -p 'test_*.py' -v",
+        "candidate_generation": "python3 -B experiments/benchmark_first_batch/identification/prepare_candidates.py"
+      },
+      "sources": "benchmark/tasks/identify-sc-clocked-filter/SOURCE.md",
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 4,
+        "semantic_negative_variants": 5,
+        "semantic_negative_conditions": 20,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 20
+        }
+      }
+    },
+    {
+      "task_id": "identify-adc-driver-settling",
+      "engineering_action": "from-data-modeling",
+      "task_path": "benchmark/tasks/identify-adc-driver-settling",
+      "source_group": "original-identified_driver-identification",
+      "provenance": "original-engineering-requirement",
+      "context_level": "bounded-work-unit",
+      "public_experiments": 6,
+      "hidden_experiments": 4,
+      "reference_method": "estimate observable parameters only from public CSV",
+      "semantic_negative_variants": [
+        "no-slew",
+        "wrong-bandwidth",
+        "no-rails",
+        "restart-on-input"
+      ],
+      "release_set": "spectre-extension-candidate",
+      "status": {
+        "harbor_materials": "implemented",
+        "public_data": "implemented",
+        "reference_fitting": "executed locally",
+        "row_criteria": "13 tests passed across family suite; not VA execution",
+        "spectre_reference": "all current numerical conditions covered by audited actual evidence",
+        "spectre_semantic_negatives": "all selected semantic negative variants have actual graded rejection",
+        "agentic": "pending",
+        "open_source_regrading": "not validated"
+      },
+      "checks": {
+        "row_tests": "python3 -B -m unittest discover -s experiments/benchmark_first_batch/identification -p 'test_*.py' -v",
+        "candidate_generation": "python3 -B experiments/benchmark_first_batch/identification/prepare_candidates.py"
+      },
+      "sources": "benchmark/tasks/identify-adc-driver-settling/SOURCE.md",
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 4,
+        "semantic_negative_variants": 4,
+        "semantic_negative_conditions": 16,
+        "semantic_negative_condition_outcomes": {
+          "graded_pass": 4,
+          "graded_rejection": 12
+        }
+      }
+    },
+    {
+      "task_id": "identify-comparator-overdrive",
+      "engineering_action": "from-data-modeling",
+      "task_path": "benchmark/tasks/identify-comparator-overdrive",
+      "source_group": "original-identified_comparator-identification",
+      "provenance": "original-engineering-requirement",
+      "context_level": "bounded-work-unit",
+      "public_experiments": 4,
+      "hidden_experiments": 4,
+      "reference_method": "estimate observable parameters only from public CSV",
+      "semantic_negative_variants": [
+        "constant-delay",
+        "symmetric-delay",
+        "late-after-reset",
+        "wrong-dispersion"
+      ],
+      "release_set": "spectre-extension-candidate",
+      "status": {
+        "harbor_materials": "implemented",
+        "public_data": "implemented",
+        "reference_fitting": "executed locally",
+        "row_criteria": "13 tests passed across family suite; not VA execution",
+        "spectre_reference": "all current numerical conditions covered by audited actual evidence",
+        "spectre_semantic_negatives": "all selected semantic negative variants have actual graded rejection",
+        "agentic": "pending",
+        "open_source_regrading": "not validated"
+      },
+      "checks": {
+        "row_tests": "python3 -B -m unittest discover -s experiments/benchmark_first_batch/identification -p 'test_*.py' -v",
+        "candidate_generation": "python3 -B experiments/benchmark_first_batch/identification/prepare_candidates.py"
+      },
+      "sources": "benchmark/tasks/identify-comparator-overdrive/SOURCE.md",
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 4,
+        "semantic_negative_variants": 4,
+        "semantic_negative_conditions": 16,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 11,
+          "graded_pass": 5
+        }
+      }
+    },
+    {
+      "task_id": "identify-pll-hop-dynamics",
+      "engineering_action": "from-data-modeling",
+      "task_path": "benchmark/tasks/identify-pll-hop-dynamics",
+      "source_group": "original-identified_pll-identification",
+      "provenance": "original-engineering-requirement",
+      "context_level": "bounded-work-unit",
+      "public_experiments": 4,
+      "hidden_experiments": 4,
+      "reference_method": "estimate observable parameters only from public CSV",
+      "semantic_negative_variants": [
+        "wrong-damping",
+        "no-integral",
+        "wrong-loop-rate",
+        "wrong-clock-phase",
+        "grid-alias-ripple",
+        "early-tune-ripple"
+      ],
+      "release_set": "spectre-extension-candidate",
+      "status": {
+        "harbor_materials": "implemented",
+        "public_data": "implemented",
+        "reference_fitting": "executed locally",
+        "row_criteria": "13 tests passed across family suite; not VA execution",
+        "spectre_reference": "all current numerical conditions covered by audited actual evidence",
+        "spectre_semantic_negatives": "all selected semantic negative variants have actual graded rejection",
+        "agentic": "pending",
+        "open_source_regrading": "not validated"
+      },
+      "checks": {
+        "row_tests": "python3 -B -m unittest discover -s experiments/benchmark_first_batch/identification -p 'test_*.py' -v",
+        "candidate_generation": "python3 -B experiments/benchmark_first_batch/identification/prepare_candidates.py"
+      },
+      "sources": "benchmark/tasks/identify-pll-hop-dynamics/SOURCE.md",
+      "data_provenance": "behavioral_synthetic",
+      "calibration": {
+        "receipt": "experiments/benchmark_first_batch/calibration_receipt.json",
+        "scope": "current numerical conditions; protocol identity deltas disclosed in receipt",
+        "reference_conditions": 4,
+        "semantic_negative_variants": 6,
+        "semantic_negative_conditions": 24,
+        "semantic_negative_condition_outcomes": {
+          "graded_rejection": 24
+        }
+      }
+    }
+  ]
+}

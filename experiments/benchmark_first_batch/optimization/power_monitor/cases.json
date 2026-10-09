@@ -1,0 +1,155 @@
+[
+  {
+    "name": "slow-rail-end-to-end",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nVIN (supply 0) vsource type=pwl wave=[0 0.7 2e-05 0.7 2.000001e-05 1.1 6e-05 1.1 6.000001e-05 0.9 8e-05 0.9 8.000001e-05 0.7 0.0001 0.7]\nDUT (supply enable) supply_supervisor qualification=5e-06\nsimulatorOptions options reltol=1e-6 vabstol=1e-9 iabstol=1e-14\ntran tran stop=0.0001 errpreset=conservative\nsave supply enable\n",
+    "stop": 0.0001,
+    "signals": [
+      "supply",
+      "enable"
+    ],
+    "controls": [
+      [
+        0,
+        0.7
+      ],
+      [
+        2e-05,
+        0.7
+      ],
+      [
+        2.000001e-05,
+        1.1
+      ],
+      [
+        6e-05,
+        1.1
+      ],
+      [
+        6.000001e-05,
+        0.9
+      ],
+      [
+        8e-05,
+        0.9
+      ],
+      [
+        8.000001e-05,
+        0.7
+      ],
+      [
+        0.0001,
+        0.7
+      ]
+    ],
+    "on_voltage": 1.0,
+    "off_voltage": 0.85,
+    "qualification": 5e-06,
+    "edge_atol": 2e-09,
+    "voltage_atol": 0.001,
+    "performance": true,
+    "delay": 0.0,
+    "rise": 5e-10
+  },
+  {
+    "name": "short-glitch-and-recovery",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nVIN (supply 0) vsource type=pwl wave=[0 0.7 1e-06 0.7 1.0001e-06 1.1 5.8e-06 1.1 5.8001e-06 0.7 8e-06 0.7 8.0001e-06 1.1 1.6e-05 1.1 1.60001e-05 0.7 2e-05 0.7]\nDUT (supply enable) supply_supervisor qualification=5e-06\nsimulatorOptions options reltol=1e-6 vabstol=1e-9 iabstol=1e-14\ntran tran stop=2e-05 errpreset=conservative\nsave supply enable\n",
+    "stop": 2e-05,
+    "signals": [
+      "supply",
+      "enable"
+    ],
+    "controls": [
+      [
+        0,
+        0.7
+      ],
+      [
+        1e-06,
+        0.7
+      ],
+      [
+        1.0001e-06,
+        1.1
+      ],
+      [
+        5.8e-06,
+        1.1
+      ],
+      [
+        5.8001e-06,
+        0.7
+      ],
+      [
+        8e-06,
+        0.7
+      ],
+      [
+        8.0001e-06,
+        1.1
+      ],
+      [
+        1.6e-05,
+        1.1
+      ],
+      [
+        1.60001e-05,
+        0.7
+      ],
+      [
+        2e-05,
+        0.7
+      ]
+    ],
+    "on_voltage": 1.0,
+    "off_voltage": 0.85,
+    "qualification": 5e-06,
+    "edge_atol": 2e-09,
+    "voltage_atol": 0.001,
+    "performance": false,
+    "delay": 0.0,
+    "rise": 5e-10
+  },
+  {
+    "name": "initial-high-hysteresis",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nVIN (supply 0) vsource type=pwl wave=[0 1.1 7e-06 1.1 7.0001e-06 0.9 1e-05 0.9 1.00001e-05 0.8 1.5e-05 0.8]\nDUT (supply enable) supply_supervisor qualification=3e-06\nsimulatorOptions options reltol=1e-6 vabstol=1e-9 iabstol=1e-14\ntran tran stop=1.5e-05 errpreset=conservative\nsave supply enable\n",
+    "stop": 1.5e-05,
+    "signals": [
+      "supply",
+      "enable"
+    ],
+    "controls": [
+      [
+        0,
+        1.1
+      ],
+      [
+        7e-06,
+        1.1
+      ],
+      [
+        7.0001e-06,
+        0.9
+      ],
+      [
+        1e-05,
+        0.9
+      ],
+      [
+        1.00001e-05,
+        0.8
+      ],
+      [
+        1.5e-05,
+        0.8
+      ]
+    ],
+    "on_voltage": 1.0,
+    "off_voltage": 0.85,
+    "qualification": 3e-06,
+    "edge_atol": 2e-09,
+    "voltage_atol": 0.001,
+    "performance": false,
+    "delay": 0.0,
+    "rise": 5e-10
+  }
+]

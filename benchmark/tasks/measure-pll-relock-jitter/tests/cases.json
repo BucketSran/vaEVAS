@@ -1,0 +1,53 @@
+[
+  {
+    "name": "settle5-jitter1",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXmeasure (ref clk relock_ns jitter_ns) dut\nXpll (ref clk) relock_device settle_cycles=5 jitter=1e-09\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=4.5u maxstep=0.5n\nsaveOptions options save=allpub\n",
+    "stop": 4.5e-06,
+    "signals": [
+      "ref",
+      "clk",
+      "relock_ns",
+      "jitter_ns"
+    ],
+    "settle_cycles": 5,
+    "jitter": 1e-09,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule relock_device(ref,clk);\ninout ref,clk;electrical ref,clk;\nparameter integer settle_cycles=5;parameter real jitter=1n;\nreal phase,offset,phase_r;integer k,r,c;\nanalog begin\n k=$rtoi($abstime/100n);phase=$abstime-k*100n;offset=0;\n if(k>=10 && k<10+settle_cycles)offset=(10+settle_cycles-k)*5n;\n if(k>=22)begin if(k%2==0)offset=2n+jitter;else offset=2n-jitter;end\n c=(phase>=offset && phase<50n+offset);\n if(offset<0)c=(phase<50n+offset || phase>=100n+offset);\n r=(phase<50n);\n V(ref)<+transition(r,0,0.1n);V(clk)<+transition(c,0,0.1n);\nend\nendmodule\n"
+    },
+    "task": "measure-pll-relock-jitter"
+  },
+  {
+    "name": "settle3-jitter0.5",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXmeasure (ref clk relock_ns jitter_ns) dut\nXpll (ref clk) relock_device settle_cycles=3 jitter=5e-10\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=4.5u maxstep=0.5n\nsaveOptions options save=allpub\n",
+    "stop": 4.5e-06,
+    "signals": [
+      "ref",
+      "clk",
+      "relock_ns",
+      "jitter_ns"
+    ],
+    "settle_cycles": 3,
+    "jitter": 5e-10,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule relock_device(ref,clk);\ninout ref,clk;electrical ref,clk;\nparameter integer settle_cycles=5;parameter real jitter=1n;\nreal phase,offset,phase_r;integer k,r,c;\nanalog begin\n k=$rtoi($abstime/100n);phase=$abstime-k*100n;offset=0;\n if(k>=10 && k<10+settle_cycles)offset=(10+settle_cycles-k)*5n;\n if(k>=22)begin if(k%2==0)offset=2n+jitter;else offset=2n-jitter;end\n c=(phase>=offset && phase<50n+offset);\n if(offset<0)c=(phase<50n+offset || phase>=100n+offset);\n r=(phase<50n);\n V(ref)<+transition(r,0,0.1n);V(clk)<+transition(c,0,0.1n);\nend\nendmodule\n"
+    },
+    "task": "measure-pll-relock-jitter"
+  },
+  {
+    "name": "settle7-jitter1.5",
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nahdl_include \"device.va\"\nXmeasure (ref clk relock_ns jitter_ns) dut\nXpll (ref clk) relock_device settle_cycles=7 jitter=1.5e-09\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=4.5u maxstep=0.5n\nsaveOptions options save=allpub\n",
+    "stop": 4.5e-06,
+    "signals": [
+      "ref",
+      "clk",
+      "relock_ns",
+      "jitter_ns"
+    ],
+    "settle_cycles": 7,
+    "jitter": 1.5e-09,
+    "support": {
+      "device.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule relock_device(ref,clk);\ninout ref,clk;electrical ref,clk;\nparameter integer settle_cycles=5;parameter real jitter=1n;\nreal phase,offset,phase_r;integer k,r,c;\nanalog begin\n k=$rtoi($abstime/100n);phase=$abstime-k*100n;offset=0;\n if(k>=10 && k<10+settle_cycles)offset=(10+settle_cycles-k)*5n;\n if(k>=22)begin if(k%2==0)offset=2n+jitter;else offset=2n-jitter;end\n c=(phase>=offset && phase<50n+offset);\n if(offset<0)c=(phase<50n+offset || phase>=100n+offset);\n r=(phase<50n);\n V(ref)<+transition(r,0,0.1n);V(clk)<+transition(c,0,0.1n);\nend\nendmodule\n"
+    },
+    "task": "measure-pll-relock-jitter"
+  }
+]

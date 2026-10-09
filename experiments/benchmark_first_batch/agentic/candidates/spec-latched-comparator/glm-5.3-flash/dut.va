@@ -1,0 +1,102 @@
+// Latched comparator: decision latency and reset cancel
+`include "constants.vams"
+`include "disciplines.vams"
+
+module latched_comparator(clk, rst, vinp, vinn, outp, outn, ready);
+  input  clk, rst, vinp, vinn;
+  output outp, outn, ready;
+  electrical clk, rst, vinp, vinn, outp, outn, ready;
+
+  parameter real vth     = 0.5;    // logic threshold [V]
+  parameter real voffset = 0.002;  // input offset [V]
+  parameter real tbase   = 0.2n;   // base decision latency [s]
+  parameter real tau     = 0.25n;  // regeneration time constant [s]
+  parameter real vscale  = 0.05;   // overdrive scale [V]
+  parameter real vfloor  = 0.001;  // overdrive floor [V]
+  parameter real tr      = 50p;    // output transition time [s]
+
+  real outp_val, outn_val, ready_val;
+  real d, t_done;
+  integer pending, sgn;
+
+  analog begin
+    @(initial_step) begin
+      outp_val  = 0.0;
+      outn_val  = 0.0;
+      ready_val = 0.0;
+      pending   = 0;
+      sgn       = 0;
+      t_done    = -1.0;
+    end
+
+    // clk rising edge: clear outputs first, then latch decision if rst low
+    @(cross(V(clk) - vth, +1)) begin
+      outp_val  = 0.0;
+      outn_val  = 0.0;
+      ready_val = 0.0;
+      pending   = 0;
+      if (V(rst) < vth) begin
+        d = V(vinp) - V(vinn) - voffset;
+        if (fabs(d) > 0.0) begin
+          if (d > 0.0) begin
+            sgn = 1;
+          end else begin
+            sgn = -1;
+          end
+          t_done = $abstime + tbase + tau * log(1.0 + vscale / (fabs(d) + vfloor));
+          pending = 1;
+        end
+      end
+    end
+
+    // clk falling edge: clear outputs and cancel pending decision
+    @(cross(V(clk) - vth, -1)) begin
+      pending   = 0;
+      outp_val  = 0.0;
+      outn_val  = 0.0;
+      ready_val = 0.0;
+    end
+
+    // rst rising edge: clear outputs and cancel pending decision
+    @(cross(V(rst) - vth, +1)) begin
+      pending   = 0;
+      outp_val  = 0.0;
+      outn_val  = 0.0;
+      ready_val = 0.0;
+    end
+
+    // decision completion at the scheduled regeneration time
+    @(timer(t_done)) begin
+      if (pending > 0) begin
+        if (sgn > 0) begin
+          outp_val = 1.0;
+          outn_val = 0.0;
+        end else begin
+          outp_val = 0.0;
+          outn_val = 1.0;
+        end
+        ready_val = 1.0;
+        pending = 0;
+      end
+    end
+
+    // safeguard: complete at first evaluation at/after the scheduled time
+    if (pending > 0) begin
+      if ($abstime >= t_done) begin
+        if (sgn > 0) begin
+          outp_val = 1.0;
+          outn_val = 0.0;
+        end else begin
+          outp_val = 0.0;
+          outn_val = 1.0;
+        end
+        ready_val = 1.0;
+        pending = 0;
+      end
+    end
+
+    V(outp)  <+ transition(outp_val,  0.0, tr);
+    V(outn)  <+ transition(outn_val,  0.0, tr);
+    V(ready) <+ transition(ready_val, 0.0, tr);
+  end
+endmodule

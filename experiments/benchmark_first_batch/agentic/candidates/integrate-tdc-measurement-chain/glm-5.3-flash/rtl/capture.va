@@ -1,0 +1,43 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module tdc_capture(start,stop,reset,width,done,pending,expired);
+input start,stop,reset; output width,done,pending,expired;
+electrical start,stop,reset,width,done,pending,expired;
+parameter real timeout_ns=12.0;
+real tstart,measured,deadline;
+integer active,complete,timed_out;
+analog begin
+  @(initial_step) begin tstart=0; measured=0; deadline=1e30; active=0; complete=0; timed_out=0; end
+  @(cross(V(reset)-0.5,+1)) begin
+    measured=0; active=0; complete=0; timed_out=0;
+  end
+  @(cross(V(start)-0.5,+1)) begin
+    if (V(reset)<0.5) begin
+      if (active<0.5) begin
+        tstart=$abstime; deadline=$abstime+timeout_ns*1e-9;
+        active=1; complete=0; timed_out=0;
+      end
+    end
+  end
+  @(cross(V(stop)-0.5,+1)) begin
+    if (V(reset)<0.5) begin
+      if (active>0.5) begin
+        if ($abstime<deadline) begin
+          measured=($abstime-tstart)/1e-9; active=0; complete=1;
+        end
+      end
+    end
+  end
+  @(timer(0,5e-11)) begin
+    if (active>0.5) begin
+      if ($abstime>=deadline) begin
+        active=0; complete=0; timed_out=1;
+      end
+    end
+  end
+  V(width)<+transition(measured,0,2e-11);
+  V(done)<+transition(complete,0,2e-11);
+  V(pending)<+transition(active,0,2e-11);
+  V(expired)<+transition(timed_out,0,2e-11);
+end
+endmodule

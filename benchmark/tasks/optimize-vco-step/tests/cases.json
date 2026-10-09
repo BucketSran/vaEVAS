@@ -1,0 +1,103 @@
+[
+  {
+    "name": "low-band-end-to-end",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nVC (control 0) vsource type=pwl wave=[0 0.01 2e-05 0.01]\nDUT (control out) tuning_vco\nsimulatorOptions options reltol=1e-6 vabstol=1e-9 iabstol=1e-14\ntran tran stop=2e-05 errpreset=conservative\nsave control out\n",
+    "stop": 2e-05,
+    "signals": [
+      "control",
+      "out"
+    ],
+    "controls": [
+      [
+        0,
+        0.01
+      ],
+      [
+        2e-05,
+        0.01
+      ]
+    ],
+    "fmin": 4000000.0,
+    "fmax": 400000000.0,
+    "amplitude": 0.5,
+    "offset": 0.6,
+    "waveform_atol": 0.003,
+    "performance": true,
+    "max_phase_advance": 0.0156250001
+  },
+  {
+    "name": "slew-and-clamps",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nVC (control 0) vsource type=pwl wave=[0 -0.2 2e-07 -0.2 3e-07 0.1 8e-07 0.1 1.2e-06 1.2 1.4e-06 1.2 1.6e-06 0.02 2e-06 0.02]\nDUT (control out) tuning_vco\nsimulatorOptions options reltol=1e-6 vabstol=1e-9 iabstol=1e-14\ntran tran stop=2e-06 errpreset=conservative\nsave control out\n",
+    "stop": 2e-06,
+    "signals": [
+      "control",
+      "out"
+    ],
+    "controls": [
+      [
+        0,
+        -0.2
+      ],
+      [
+        2e-07,
+        -0.2
+      ],
+      [
+        3e-07,
+        0.1
+      ],
+      [
+        8e-07,
+        0.1
+      ],
+      [
+        1.2e-06,
+        1.2
+      ],
+      [
+        1.4e-06,
+        1.2
+      ],
+      [
+        1.6e-06,
+        0.02
+      ],
+      [
+        2e-06,
+        0.02
+      ]
+    ],
+    "fmin": 4000000.0,
+    "fmax": 400000000.0,
+    "amplitude": 0.5,
+    "offset": 0.6,
+    "waveform_atol": 0.003,
+    "performance": false
+  },
+  {
+    "name": "high-band",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nVC (control 0) vsource type=pwl wave=[0 0.97 2e-07 0.97]\nDUT (control out) tuning_vco\nsimulatorOptions options reltol=1e-6 vabstol=1e-9 iabstol=1e-14\ntran tran stop=2e-07 errpreset=conservative\nsave control out\n",
+    "stop": 2e-07,
+    "signals": [
+      "control",
+      "out"
+    ],
+    "controls": [
+      [
+        0,
+        0.97
+      ],
+      [
+        2e-07,
+        0.97
+      ]
+    ],
+    "fmin": 4000000.0,
+    "fmax": 400000000.0,
+    "amplitude": 0.5,
+    "offset": 0.6,
+    "waveform_atol": 0.003,
+    "performance": false,
+    "max_phase_advance": 0.0156250001
+  }
+]

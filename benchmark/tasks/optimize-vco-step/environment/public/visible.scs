@@ -1,0 +1,8 @@
+simulator lang=spectre
+global 0
+ahdl_include "/work/dut.va"
+VC (control 0) vsource type=pwl wave=[0 0.01 2e-05 0.01]
+DUT (control out) tuning_vco
+simulatorOptions options reltol=1e-6 vabstol=1e-9 iabstol=1e-14
+tran tran stop=2e-05 errpreset=conservative
+save control out

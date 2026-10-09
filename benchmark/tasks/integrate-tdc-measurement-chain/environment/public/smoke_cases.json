@@ -1,0 +1,218 @@
+[
+  {
+    "name": "public-basic",
+    "stop": 1.8000000000000002e-08,
+    "signals": [
+      "start",
+      "stop",
+      "reset",
+      "result",
+      "valid",
+      "busy",
+      "overflow"
+    ],
+    "netlist": "simulator lang=spectre\nahdl_include \"dut.va\"\nV_start (start 0) vsource type=pwl wave=[0n 0 2.995n 0 3.005n 1 3.295n 1 3.305n 0 11.995n 0 12.005n 1 12.295n 1 12.305n 0 18n 0]\nV_stop (stop 0) vsource type=pwl wave=[0n 0 5.255n 0 5.265n 1 5.555n 1 5.565n 0 14.195n 0 14.205n 1 14.495n 1 14.505n 0 18n 0]\nV_reset (reset 0) vsource type=pwl wave=[0n 0 0.995n 0 1.005n 1 1.295n 1 1.305n 0 18n 0]\nDUT (start stop reset result valid busy overflow) tdc_chain lsb_ns=0.5 timeout_ns=12\nsimulatorOptions options reltol=1e-6 vabstol=1e-9\ntran tran stop=18n maxstep=0.02n\nsave start stop reset result valid busy overflow\n",
+    "windows": [
+      {
+        "node": "result",
+        "start": 1.5e-10,
+        "end": 9.6e-10,
+        "value": 0.0,
+        "atol": 0.002
+      },
+      {
+        "node": "valid",
+        "start": 1.5e-10,
+        "end": 9.6e-10,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "busy",
+        "start": 1.5e-10,
+        "end": 9.6e-10,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "overflow",
+        "start": 1.5e-10,
+        "end": 9.6e-10,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "result",
+        "start": 1.15e-09,
+        "end": 2.96e-09,
+        "value": 0.0,
+        "atol": 0.002
+      },
+      {
+        "node": "valid",
+        "start": 1.15e-09,
+        "end": 2.96e-09,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "busy",
+        "start": 1.15e-09,
+        "end": 2.96e-09,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "overflow",
+        "start": 1.15e-09,
+        "end": 2.96e-09,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "result",
+        "start": 3.15e-09,
+        "end": 5.22e-09,
+        "value": 0.0,
+        "atol": 0.002
+      },
+      {
+        "node": "valid",
+        "start": 3.15e-09,
+        "end": 5.22e-09,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "busy",
+        "start": 3.15e-09,
+        "end": 5.22e-09,
+        "value": 1.0,
+        "atol": 0.01
+      },
+      {
+        "node": "overflow",
+        "start": 3.15e-09,
+        "end": 5.22e-09,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "result",
+        "start": 5.41e-09,
+        "end": 1.1960000000000001e-08,
+        "value": 0.1,
+        "atol": 0.002
+      },
+      {
+        "node": "valid",
+        "start": 5.41e-09,
+        "end": 1.1960000000000001e-08,
+        "value": 1.0,
+        "atol": 0.01
+      },
+      {
+        "node": "busy",
+        "start": 5.41e-09,
+        "end": 1.1960000000000001e-08,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "overflow",
+        "start": 5.41e-09,
+        "end": 1.1960000000000001e-08,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "result",
+        "start": 1.2150000000000001e-08,
+        "end": 1.416e-08,
+        "value": 0.1,
+        "atol": 0.002
+      },
+      {
+        "node": "valid",
+        "start": 1.2150000000000001e-08,
+        "end": 1.416e-08,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "busy",
+        "start": 1.2150000000000001e-08,
+        "end": 1.416e-08,
+        "value": 1.0,
+        "atol": 0.01
+      },
+      {
+        "node": "overflow",
+        "start": 1.2150000000000001e-08,
+        "end": 1.416e-08,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "result",
+        "start": 1.4350000000000001e-08,
+        "end": 1.7960000000000003e-08,
+        "value": 0.08,
+        "atol": 0.002
+      },
+      {
+        "node": "valid",
+        "start": 1.4350000000000001e-08,
+        "end": 1.7960000000000003e-08,
+        "value": 1.0,
+        "atol": 0.01
+      },
+      {
+        "node": "busy",
+        "start": 1.4350000000000001e-08,
+        "end": 1.7960000000000003e-08,
+        "value": 0.0,
+        "atol": 0.01
+      },
+      {
+        "node": "overflow",
+        "start": 1.4350000000000001e-08,
+        "end": 1.7960000000000003e-08,
+        "value": 0.0,
+        "atol": 0.01
+      }
+    ],
+    "edges": [
+      {
+        "node": "valid",
+        "threshold": 0.5,
+        "times": [
+          5.27e-09,
+          1.2010000000000001e-08,
+          1.421e-08
+        ],
+        "atol": 9e-11,
+        "start": 1e-10
+      },
+      {
+        "node": "busy",
+        "threshold": 0.5,
+        "times": [
+          3.01e-09,
+          5.27e-09,
+          1.2010000000000001e-08,
+          1.421e-08
+        ],
+        "atol": 9e-11,
+        "start": 1e-10
+      },
+      {
+        "node": "overflow",
+        "threshold": 0.5,
+        "times": [],
+        "atol": 9e-11,
+        "start": 1e-10
+      }
+    ]
+  }
+]

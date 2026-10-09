@@ -1,0 +1,19 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module uvlo_monitor(vin,rst,pgood,fault);
+input vin,rst;output pgood,fault;electrical vin,rst,pgood,fault;
+parameter real upper=0.65,lower=0.55,tgood=2n,tbad=1n,vth=0.5,tr=50p;
+real good,up_at,down_at;
+analog begin
+ @(initial_step) begin good=0;up_at=1e30;down_at=1e30;if(V(rst)<vth && V(vin)>upper)up_at=$abstime+tgood;end
+ @(cross(V(vin)-upper,+1)) if(V(rst)<vth && good<0.5)up_at=$abstime+tgood;
+ @(cross(V(vin)-upper,-1)) up_at=1e30;
+ @(cross(V(vin)-lower,-1)) if(V(rst)<vth && good>0.5)down_at=$abstime+tbad;
+ @(cross(V(vin)-lower,+1)) down_at=1e30;
+ @(cross(V(rst)-vth,+1)) begin good=0;up_at=1e30;down_at=1e30;end
+ @(cross(V(rst)-vth,-1)) if(V(vin)>upper)up_at=$abstime+tgood;
+ @(timer(up_at)) if(V(rst)<vth && V(vin)>upper)begin good=1;up_at=1e30;end
+ @(timer(down_at)) if(V(rst)<vth && V(vin)<lower)begin good=0;down_at=1e30;end
+ V(pgood)<+transition(good,0,tr,tr);V(fault)<+transition(1-good,0,tr,tr);
+end
+endmodule

@@ -1,0 +1,8 @@
+simulator lang=spectre
+ahdl_include "dut.va"
+ahdl_include "device.va"
+Xtb (vp vn clk) dut cm=0.3
+Xcmp (vp vn clk q) comparator_device
+simulatorOptions options reltol=1e-6 vabstol=1e-9
+tran tran stop=1.2u maxstep=0.2n
+saveOptions options save=allpub

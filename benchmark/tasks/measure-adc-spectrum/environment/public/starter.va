@@ -1,0 +1,6 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module dut(code,clk,sndr,sfdr,dc);
+inout code,clk,sndr,sfdr,dc; electrical code,clk,sndr,sfdr,dc;
+// TODO: implement the required experiment and result ports.
+endmodule

@@ -1,0 +1,26 @@
+`include "disciplines.vams"
+// Original sampled 8-bit flash ADC behavioral model with a deterministic
+// monotonic threshold bank. The thresholds represent fixed comparator offsets.
+module offset_flash(vin, clock, code);
+ input vin, clock;
+ output code;
+ electrical vin, clock, code;
+ parameter real vref=1.0 from (0:inf);
+ parameter real skew=0.15 from [-0.3:0.3];
+ parameter real delay=0.2n from [0:inf);
+ parameter real rise=0.3n from (0:inf);
+ integer k, live_code, held_code;
+ real threshold;
+ analog begin
+  @(initial_step) held_code=0;
+  @(cross(V(clock)-0.5,+1)) begin
+  live_code=0;
+  for(k=1;k<256;k=k+1) begin
+   threshold=vref*(k/256.0+skew*(k/256.0)*(1.0-k/256.0));
+   if(V(vin)>=threshold) live_code=k;
+  end
+   held_code=live_code;
+  end
+  V(code) <+ transition(held_code/255.0,delay,rise);
+ end
+endmodule

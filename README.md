@@ -35,12 +35,17 @@ EVAS 的支持范围和后端对照证据决定当前可以复现哪些行为，
 benchmark 以实际 Verilog-A 使用场景组织工程任务，检查交付物是否满足任务要求。
 建设内容包括题目、运行环境、参考解和验收材料，采用 Harbor 任务格式。
 
-**当前状态：**[benchmark/](benchmark/README.md) 包含六个 Harbor 格式的内部初筛任务，
-覆盖逻辑、SAR 握手、时序、校准、VCO 和带负载运放。任务、环境与评分入口见模块说明；
-[首轮结果](experiments/va_screen/RESULTS.md)记录模型提交、失败原因和验证边界。
+**当前状态：**[首批七类工程任务](benchmark/first_batch/README.md)已完成每类 5 题，
+共 35 题的参考解与代表负例 Spectre 校准。真实模型试跑及其反馈限制见
+[Agentic 实验](experiments/benchmark_first_batch/agentic/README.md)；校准通过不代表模型通过，
+当前任务仍依赖商业后端验收。
+
+原六个内部初筛任务作为独立历史基线保留，覆盖逻辑、SAR 握手、时序、校准、VCO 和带负载运放。
+[首轮结果](experiments/va_screen/RESULTS.md)记录当时的模型提交、失败原因和验证边界。
 [历史参考资料](benchmark/reference/README.md)包含 vaBench v1/v4 与原始模型来源。
-这批任务作为基线保留，尚未作为正式 benchmark 发布；部分第三方资料仅限内部保存。
-另有独立校准的[三角波振荡器修复候选题](benchmark/tasks/va07-triangle-repair/instruction.md)，用于检查事件方向与模型可移植性。
+这些历史任务尚未作为正式 benchmark 发布；部分第三方资料仅限内部保存。
+新批次复用独立校准的三角波振荡器修复与 ADC DNL/INL 测量两题，不并入旧六题成绩。
+任务来源、独立判据、实际后端校准和模型试跑分别记录，不以题目目录数量代替可用性。
 
 ## EVAS 仿真器
 
@@ -98,7 +103,8 @@ PYTHONPATH=evas/src python3 -m evas solve evas/examples/01-static-gain/sim.json 
 `0.225 V`、`1.825 V` 和 `-0.325 V`。
 
 更多非线性与瞬态示例见 [EVAS 使用说明](evas/README.md#构建与运行)。
-benchmark 的校准、身份复核与运行步骤见[初筛说明](experiments/va_screen/README.md)。
+benchmark 的校准、身份复核与运行步骤见[首批执行入口](experiments/benchmark_first_batch/README.md)
+和[历史初筛说明](experiments/va_screen/README.md)。
 运行需要 Harbor 和已配置的 Spectre 环境；身份复核无需商业仿真器。
 
 ## 验证与实验
