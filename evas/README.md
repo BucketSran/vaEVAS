@@ -149,6 +149,14 @@ manifest 声明源文件、实例参数和端口到全局网络的映射。
 | [absdelay.json](validation/smoke/absdelay.json) | 延迟历史查询 |
 | [idt.json](validation/smoke/idt.json) | 连续输入积分 |
 
+当前准入下，冻结的 `absdelay`、`timer_counter` 原 VA 缺少 discipline 声明，
+`cross_counter` 原 VA 含非法小数拼写，直接按这些 manifest 重编译会拒绝。
+原文件与历史结果保留；可运行的显式版本见
+[smoke-admission-v1 successors](tests/fixtures/smoke-admission-v1/README.md)。
+`idt`、`transition_pulse` 和 `static_nonlinear` 的原 manifest 仍可编译。
+CLI 的 `solve`/`transient` 会读取 manifest 的 VA 并重新编译；
+API 运行已有 `Program` 不重复源码准入，但仍须满足当前 IR/内核版本契约。
+
 ## 精度与结果解释
 
 `solve`、`transient` 和 manifest 的 `tolerances` 接受 `vabstol`（默认 `1e-12 V`）
@@ -498,6 +506,13 @@ IR1–17 必须从原始 VA/manifest 重新编译，不原地改写历史 IR 或
 ```sh
 python3 scripts/recompile_evas_manifests.py --output runs/recompile-ir18
 python3 scripts/recompile_evas_manifests.py --output runs/recompile-selected evas/validation/smoke/idt.json
+```
+
+默认六项当前会有上述三项准入拒绝，命令返回非零并保留另三项成功输出。
+需要演示修正后的三条路径时，显式选择版本化 successor：
+
+```sh
+python3 scripts/recompile_evas_manifests.py --output runs/recompile-smoke-admission-v1 evas/tests/fixtures/smoke-admission-v1
 ```
 
 输出目录必须不存在；部分失败返回非零，成功项仍保留。没有原始 VA/manifest 的旧 IR 无法凭改版本号迁移。

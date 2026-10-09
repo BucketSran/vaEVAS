@@ -19,10 +19,12 @@ import sys
 
 EVAS = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(EVAS / 'src'))
-from evas import Instance, compile_sources, solve, transient
+from evas import CompileError, Instance, compile_sources, solve, transient
 from evas.ir import Affine, Binary, Power
 from evas.manifest import parse_manifest
 
+
+TIMER_SOURCE = '`include "disciplines.vams"\nmodule timer_count(y,r); output y; inout r; electrical y,r; integer n; analog begin @(initial_step) n=0; @(timer(0.25,0.25,1e-12)) n=n+1; V(y,r)<+n; end endmodule'
 
 class Unsupported(ValueError):
     """The exporter has no established equivalence for this input."""
@@ -132,7 +134,7 @@ def generated(size, seed):
         rhs = f'({bias:.17g})+({1-sum(g for _,g in terms):.17g})*V(u,r)'
         rhs += ''.join(f'+({g:.17g})*V(y{j},r)' for j, g in terms)
         equations.append(f'V(y{i},r)<+{rhs};')
-    source = f'module m({",".join(ports)}); input u; output {",".join(ports[1:-1])}; inout r; electrical {",".join(ports)}; analog begin {"".join(equations)} end endmodule'
+    source = '`include "disciplines.vams"\n'+f'module m({",".join(ports)}); input u; output {",".join(ports[1:-1])}; inout r; electrical {",".join(ports)}; analog begin {"".join(equations)} end endmodule'
     program = compile_sources({'generated.va': source}, [Instance('dut', 'm', {n: '0' if n == 'r' else n for n in ports})])
     return program, roots, source
 
@@ -176,7 +178,16 @@ def run_suite(kernel, ngspice, out):
     for path in sorted((EVAS/'validation/smoke').glob('*.json')):
         manifest = parse_manifest(path.read_text())
         sources = {str((path.parent/p).resolve()):(path.parent/p).read_text() for p in manifest['models']}
-        program = compile_sources(sources, [Instance(**i) for i in manifest['instances']])
+        try:
+            program = compile_sources(sources, [Instance(**i) for i in manifest['instances']])
+        except CompileError as exc:
+            # Frozen invalid sources remain visible; do not normalize them or
+            # let their expected admission refusal hide the remaining cases.
+            records.append(dict(case=path.name,status='compile_refused',reason=str(exc),
+                                diagnostic=exc.diagnostic,
+                                manifest_sha256=sha256(path.read_bytes()).hexdigest(),
+                                source_sha256={name:sha256(text.encode()).hexdigest() for name,text in sources.items()}))
+            continue
         try:
             relations(program, manifest.get('driven', []))
         except Unsupported as exc:
@@ -189,7 +200,7 @@ def run_suite(kernel, ngspice, out):
             ratios.append(compare(solution['voltages'], [0.0, *rows[0][1:]]))
         records.append(dict(case=path.name,status='pass' if max(ratios) <= 1 else 'fail',max_error_ratio=max(ratios),static_samples=len(ratios)))
 
-    source = 'module timer_count(y,r); output y; inout r; electrical y,r; integer n; analog begin @(initial_step) n=0; @(timer(.25,.25,1e-12)) n=n+1; V(y,r)<+n; end endmodule'
+    source = TIMER_SOURCE
     program = compile_sources({'timer-reference.va': source}, [Instance('dut','timer_count',dict(y='y',r='0'))])
     times = [0, .125, .375, .625, .875]
     result = transient(program, {}, times, stop=1, max_step=.1, kernel=kernel)
