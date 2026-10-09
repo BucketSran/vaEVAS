@@ -35,6 +35,7 @@ class ObservationEvidence(unittest.TestCase):
         for change in (lambda e:e.update(schema_version=2), lambda e:e.update(nodes=list(reversed(result['nodes']))),
                        lambda e:e.update(sample_origins=['accepted_controller_frame']),
                        lambda e:e.update(initial_settled='true'),
+                       lambda e:e.update(initial_settled=False),
                        lambda e:e['effective_controls'].update(max_step_applied=1),
                        lambda e:e['effective_controls'].update(absolute_V=-1)):
             bad=copy.deepcopy(result);change(bad['observation_evidence']);mutants.append(bad)
@@ -44,6 +45,8 @@ class ObservationEvidence(unittest.TestCase):
         for bad in mutants:
             with self.subTest(evidence=bad['observation_evidence']),self.assertRaisesRegex(KernelError,'invalid_response'):
                 validate_response(bad,program,2,[0,1])
+        unknown=copy.deepcopy(result);unknown['observation_evidence']['initial_settled']=None
+        self.assertEqual(validate_response(unknown,program,2,[0,1]),unknown)
         # A broad genuine enclosure is valid transport, but cannot certify a
         # 50 uV observation. The protocol must not silently tighten it.
         broad=copy.deepcopy(result)
@@ -88,7 +91,7 @@ class ObservationEvidence(unittest.TestCase):
         self.assertEqual(result['transient']['events'],sparse['transient']['events'])
         self.assertEqual(result['solutions'][-1],sparse['solutions'][-1])
 
-    def test_implicit_history_returns_existing_enclosure_without_claiming_max_step(self):
+    def test_implicit_history_returns_existing_enclosure_and_applies_max_step(self):
         # y+y^2=z, z'=1+2y, z(0)=0 implies y=t on the initial y=0 branch.
         program=compile_sources({'test.va':model('V(y,r)<+idt(1+2*V(y,r),0)-pow(V(y,r),2);')},[instance()])
         times=[0,0.125,0.5,1]
@@ -96,10 +99,17 @@ class ObservationEvidence(unittest.TestCase):
                          vabstol=1e-9,reltol=0,kernel=KERNEL)
         evidence=result['observation_evidence']
         self.assertEqual(evidence['sample_origins'],['implicit_history_evaluation']*4)
-        self.assertFalse(evidence['effective_controls']['max_step_applied'])
+        self.assertTrue(evidence['effective_controls']['max_step_applied'])
         for expected,row in zip(times,evidence['voltage_bounds_V']):
             lo,hi=row[result['nodes'].index('y')]
             self.assertLessEqual(lo,expected);self.assertGreaterEqual(hi,expected)
+
+        smaller=transient(program,{'u':[[0,0],[1,0]]},times,stop=1,max_step=0.03125,
+                          vabstol=1e-9,reltol=0,kernel=KERNEL)
+        self.assertTrue(smaller['observation_evidence']['effective_controls']['max_step_applied'])
+        self.assertGreater(smaller['transient']['accepted_steps'],result['transient']['accepted_steps'])
+        self.assertEqual([row['voltages'] for row in smaller['solutions']],
+                         [row['voltages'] for row in result['solutions']])
 
     def test_near_zero_output_keeps_the_actual_absolute_error_enclosure(self):
         program=compile_sources({'test.va':model('V(y,r)<+1e6*(V(u,r)-0.5);')},[instance()])

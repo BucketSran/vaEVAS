@@ -12,9 +12,9 @@
 | `nodes` | 必须与响应的 `nodes` 完全相同，绑定区间列顺序 |
 | `effective_controls.absolute_V`、`relative` | 本次求解路径实际使用的已解析、已验证电压绝对容差和相对容差 |
 | `effective_controls.stop_s`、`max_step_s` | 实际 Trajectory 配置中的终止时间和最大步长设置 |
-| `effective_controls.max_step_applied` | 此路径是否实际把 max_step 用作事件控制器推进上限。无动态的逐点工作点及当前隐式历史路径为 false；读到该设置不代表它限制了这些路径的积分步骤 |
+| `effective_controls.max_step_applied` | 此路径是否实际把 max_step 用作推进或积分步骤的上限。事件控制器推进与隐式 Picard/Taylor 历史积分为 true；无动态的逐点工作点为 false。隐式积分候选步使用 min(0.125, max_step)，实际接受步还可由验证缩小；true 不表示每个步长都等于 max_step |
 | `sample_origins` | 与 `solutions` 和 `transient.times` 等长，逐行说明产生记录的路径 |
-| `initial_settled` | 仅在首个请求时刻是 t=0 且该路径完成初始化/求解后提供 true；缺失或 null 表示没有此项证据 |
+| `initial_settled` | 仅在首个请求时刻是 t=0 且该路径完成初始化/求解后提供 true；缺失或 null 表示没有此项证据；false 没有定义且拒绝接收 |
 | `voltage_bounds_V` | 与 `solutions` 等长。每行是按 `nodes` 排列的 `[lo,hi]` 数组，或 null，表示此路径没有导出该行区间 |
 
 时间直接使用 `transient.times`，证据中不重复保存。`initial_settled` 只描述已返回的 t=0 首行。事件控制器会在收集该行前处理 t=0 应触发的事件，因此这个字段不保证该行在首次 timer/cross 回调之前。需要这种初态的外部合同仍须检查实际事件顺序。请求不含 t=0 时不提供此字段。

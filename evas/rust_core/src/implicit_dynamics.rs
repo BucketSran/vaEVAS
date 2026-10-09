@@ -674,7 +674,7 @@ pub(crate) fn run(
         &trajectory.config,
         &tolerances,
         vec!["implicit_history_evaluation"; solutions.len()],
-        false,
+        true,
         (trace.times.first() == Some(&0.0)).then_some(true),
     );
     Ok(Response {
