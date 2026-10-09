@@ -14,7 +14,7 @@ from summarize import ROOT, load, sha, verify
 
 sys.path.insert(0, str(ROOT/'experiments/backends/paper'))
 sys.path.insert(0, str(ROOT/'evas/validation/paper'))
-from actual_observation import adapt
+from actual_observation import adapt, production_dependencies
 from criteria import assess_observation
 from inputs import verify as verify_inputs
 from observations import read_native, normalize_observation
@@ -89,6 +89,14 @@ def summarize(evas, spectre, original, source_review, output):
     lane, records, operator = lane_records(evas, 'evas', ids)
     build_path = evas/'collected/evas/build/BUILD.json'
     build = load(build_path)
+    before_sources = load(original/'SOURCE_MANIFEST.json')
+    after_sources = load(evas/'SOURCE_MANIFEST.json')
+    assert before_sources == after_sources
+    for run in (original, evas):
+        for name, digest in after_sources.items():
+            assert sha(run/'repo'/name) == digest
+    production = production_dependencies(evas/'repo')
+    assert production == production_dependencies(original/'repo')
     result = []
     for card in data['cards']:
         cid = card['id']; work = lane/'runs'/cid
@@ -130,6 +138,11 @@ def summarize(evas, spectre, original, source_review, output):
         'claim': 'New EVAS execution assessed by unchanged finite core-v1 criteria; Spectre format preflight is separate and remains I. No full-domain or cross-backend equivalence claim.',
         'previous_receipt': {'path': str(prior.relative_to(ROOT)), 'sha256': sha(prior)},
         'source_revision': build['source_revision'], 'source_manifest': reference(evas/'SOURCE_MANIFEST.json'),
+        'source_reuse': {'original_manifest': reference(original/'SOURCE_MANIFEST.json'),
+            'new_manifest': reference(evas/'SOURCE_MANIFEST.json'),
+            'same_file_set_and_hashes': True, 'files_verified_in_each_snapshot': len(after_sources),
+            'production_files_verified_in_each_snapshot': len(production),
+            'basis': 'Compare both complete manifests and rehash every listed file in both retained execution source snapshots; production closure independently enumerated in both snapshots.'},
         'source_review': {'path': str(source_review.relative_to(ROOT)), 'sha256': sha(source_review), 'availability': 'repository-contained'},
         'build_record': reference(build_path), 'kernel_sha256': build['kernel_sha256'],
         'cargo_lock_sha256': build['cargo_lock_sha256'],

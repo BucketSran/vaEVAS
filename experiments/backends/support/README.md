@@ -15,7 +15,8 @@ EVAS 为 main `6ee1ebaaea827dc52b506984d732aa74a74bc6e8`、0.14.0 / IR18。
 本轮从 main `5d357251` 新建隔离目录，记录实际 cargo/rustc 路径、哈希、版本和 Cargo.lock，
 以 `--offline --locked --release -j 1` 重新构建，再运行原 12 条核心条件。新内核 SHA256 为
 `ae6fcaf25770ebefe0fac8e226aeec952068f84a69e7d4c5aa1977b6e8b5caf5`。
-运行时源码与首轮相同；新执行的全部数值记录与首轮逐项相同。新身份链用于新执行，原收据不回填。
+两轮保留源码的 138 个文件逐一核验哈希相同，其中生产依赖为 106 个文件。
+12 份归一化观察的时间与节点电压 rows 逐项相同。新身份链用于新执行，原收据不回填。
 专项和 Gnucap 补测仍使用各自原身份。
 
 | 后端 | 实际身份 |
@@ -72,7 +73,7 @@ OpenVAF-R/ngspice 的 5 个 R 是瞬态工作点失败，日志提示 timestep t
 首轮 Spectre 和 EVAS 都停在 `Missing source/units/uncertainty qualification`，尚未正式判行为对错。
 本轮 EVAS 的新构建、新执行、完整源码依赖、实际编译器和内核哈希已连通；
 [独立源码审查](core-source-review.json)来自 `support_publication_review` 审查 agent，
-逐项阅读固定源码并从方程重算 119 个解析锚点，覆盖全部 12 份模型；不是由输出吻合自动生成的证书。
+逐项阅读固定源码并从方程核对声明的解析锚点，覆盖全部 12 份模型；不是由输出吻合自动生成的证书。
 现有 `actual_observation.py` 从实际响应推导时间序列化、输入 PWL 表示差、输出区间半径及原生记录来源，
 再交给未修改的 core-v1 检查器。12 项的规定计分性质均通过，基础观察资格项齐全，原模型、网格、误差目标和分母未变。
 **CP-02、CO-VCO-01 的精确模端点语义仍单列 I**，未纳入这个 P。新报告完整保留

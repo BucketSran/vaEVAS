@@ -11,6 +11,22 @@
     "sha256": "75971199bc1e96e4384b2b5a27207ae4674dd5fb833f9b65c9c7f8b7b2578469",
     "availability": "local-only"
   },
+  "source_reuse": {
+    "original_manifest": {
+      "path": "runs/support-comparison-20261009/SOURCE_MANIFEST.json",
+      "sha256": "75971199bc1e96e4384b2b5a27207ae4674dd5fb833f9b65c9c7f8b7b2578469",
+      "availability": "local-only"
+    },
+    "new_manifest": {
+      "path": "runs/core-evidence-20261009/SOURCE_MANIFEST.json",
+      "sha256": "75971199bc1e96e4384b2b5a27207ae4674dd5fb833f9b65c9c7f8b7b2578469",
+      "availability": "local-only"
+    },
+    "same_file_set_and_hashes": true,
+    "files_verified_in_each_snapshot": 138,
+    "production_files_verified_in_each_snapshot": 106,
+    "basis": "Compare both complete manifests and rehash every listed file in both retained execution source snapshots; production closure independently enumerated in both snapshots."
+  },
   "source_review": {
     "path": "experiments/backends/support/core-source-review.json",
     "sha256": "7529300b147d99da2248ad5aa7247c85878fb127a032096bc87aeed7cccd7111",
@@ -125,13 +141,13 @@
         "availability": "local-only"
       },
       "evidence": {
-        "path": "runs/core-evidence-20261009/replay-v2/VR-01/evidence.json",
-        "sha256": "34b1b976cede28abc9e3685435d91157d329412a40b3545b5efc85302e119d78",
+        "path": "runs/core-evidence-20261009/replay-v3/VR-01/evidence.json",
+        "sha256": "81fa2096989bbffcd017b4c1cf1a5b42e600e143809256624e4d86a78cf704d3",
         "availability": "local-only"
       },
       "assessment": {
-        "path": "runs/core-evidence-20261009/replay-v2/VR-01/assessment.json",
-        "sha256": "7faacf22050e6fb9c9efee5d59b68b56403ef8846e63e50ef85850142c4334ed",
+        "path": "runs/core-evidence-20261009/replay-v3/VR-01/assessment.json",
+        "sha256": "0a792f3cd3c8ac497ad10817a33db1289873a74054d51fd08a9d20780b11537d",
         "availability": "local-only"
       },
       "effective_controls": {
@@ -205,13 +221,13 @@
         "availability": "local-only"
       },
       "evidence": {
-        "path": "runs/core-evidence-20261009/replay-v2/EX-01/evidence.json",
-        "sha256": "bf6c522b51df90f49c996edf6e49f7df788f178949d983a46713492f640f2582",
+        "path": "runs/core-evidence-20261009/replay-v3/EX-01/evidence.json",
+        "sha256": "a81662841e09a772b2a047006d4fc86cbc986e22d0b72d502ba649662b6b78ac",
         "availability": "local-only"
       },
       "assessment": {
-        "path": "runs/core-evidence-20261009/replay-v2/EX-01/assessment.json",
-        "sha256": "c5662b48dc048a97994933cde030a029d8cc4d8c14283f9eb578e7d1842ba0c7",
+        "path": "runs/core-evidence-20261009/replay-v3/EX-01/assessment.json",
+        "sha256": "06bc09f02afdccacf4fa04694244f62e7bf9f058a9679fa4f9f0f7bfc00e7fb3",
         "availability": "local-only"
       },
       "effective_controls": {
@@ -480,13 +496,13 @@
         "availability": "local-only"
       },
       "evidence": {
-        "path": "runs/core-evidence-20261009/replay-v2/EV-SH-01/evidence.json",
-        "sha256": "0afa9b50feb093a73840fb1426d25ce181f371eabc90b1b1ba8d34f0b670d4e4",
+        "path": "runs/core-evidence-20261009/replay-v3/EV-SH-01/evidence.json",
+        "sha256": "a5e21d03fe73d63f5343adfd837e14b23848242251de2388d04087f570a12315",
         "availability": "local-only"
       },
       "assessment": {
-        "path": "runs/core-evidence-20261009/replay-v2/EV-SH-01/assessment.json",
-        "sha256": "38e6aa488664a12b22e5eae13e292f134636eb282ee9710493af87f6ce5bb3d4",
+        "path": "runs/core-evidence-20261009/replay-v3/EV-SH-01/assessment.json",
+        "sha256": "e62b05626a820e5147ac273680565c72e52210e2d867e27834eeac25719dd0d5",
         "availability": "local-only"
       },
       "effective_controls": {
@@ -675,13 +691,13 @@
         "availability": "local-only"
       },
       "evidence": {
-        "path": "runs/core-evidence-20261009/replay-v2/EV-HC-01/evidence.json",
-        "sha256": "fa518ce9a3d466ce971367dba975e96c2cc54a4e493349c7d40542fccea16b29",
+        "path": "runs/core-evidence-20261009/replay-v3/EV-HC-01/evidence.json",
+        "sha256": "2a2a2d9cd58be2d17eaba086390b6e45336385bfd58b7dd5231d1ba2bca6d913",
         "availability": "local-only"
       },
       "assessment": {
-        "path": "runs/core-evidence-20261009/replay-v2/EV-HC-01/assessment.json",
-        "sha256": "83c34c65026d63cc858da58c1dc9644d6c1374bfcbdb75adea23cae8eb054fe8",
+        "path": "runs/core-evidence-20261009/replay-v3/EV-HC-01/assessment.json",
+        "sha256": "ac1b39a27a0a7b063aea443c89d5e238db04b7579888ea557cd417f59f4b593b",
         "availability": "local-only"
       },
       "effective_controls": {
@@ -870,13 +886,13 @@
         "availability": "local-only"
       },
       "evidence": {
-        "path": "runs/core-evidence-20261009/replay-v2/EV-HC-02/evidence.json",
-        "sha256": "216e2c0debd11c103c0c9877a75bd5a1291c8fc81d5a78d50e4aa476f41e100c",
+        "path": "runs/core-evidence-20261009/replay-v3/EV-HC-02/evidence.json",
+        "sha256": "e5e2e7d5cb8b7f746fa7d51c21868d9f78c98d797ec7d9af3bcfc1f9ecaf60e4",
         "availability": "local-only"
       },
       "assessment": {
-        "path": "runs/core-evidence-20261009/replay-v2/EV-HC-02/assessment.json",
-        "sha256": "33b048ebe96d51db6920a224e33ebb29ea5529a89a95c76c75e447cce0881aa2",
+        "path": "runs/core-evidence-20261009/replay-v3/EV-HC-02/assessment.json",
+        "sha256": "0da56762c895b6f68d8a4d9aa51d59d0257a28d314e0fa20d2b543778305d4e2",
         "availability": "local-only"
       },
       "effective_controls": {
@@ -1067,13 +1083,13 @@
         "availability": "local-only"
       },
       "evidence": {
-        "path": "runs/core-evidence-20261009/replay-v2/TM-01/evidence.json",
-        "sha256": "e95bae16b89cdd8cca0420cb52ec4b1474e6c7cfaabb85a9b9443c9baf9504b2",
+        "path": "runs/core-evidence-20261009/replay-v3/TM-01/evidence.json",
+        "sha256": "a8f7c424e85b5b7d740681c9928e0714611ac570b4d648c1903b01d0ab2ab888",
         "availability": "local-only"
       },
       "assessment": {
-        "path": "runs/core-evidence-20261009/replay-v2/TM-01/assessment.json",
-        "sha256": "4c7211ba0ee81cff285727945713d4531be5600420229a98462109efc5e3129d",
+        "path": "runs/core-evidence-20261009/replay-v3/TM-01/assessment.json",
+        "sha256": "fe84c4af2d02600e86ecb6c8b65b2d5a79f8985e1132e966e833b53eaab0dc90",
         "availability": "local-only"
       },
       "effective_controls": {
@@ -1147,13 +1163,13 @@
         "availability": "local-only"
       },
       "evidence": {
-        "path": "runs/core-evidence-20261009/replay-v2/CP-01/evidence.json",
-        "sha256": "76e21662929f3a9c1b2be8cd2edd15d9e75163eb22c3a8dd5ce34ae9ded19408",
+        "path": "runs/core-evidence-20261009/replay-v3/CP-01/evidence.json",
+        "sha256": "5cb6841f0af8e7a5d77a0aa1755899a79c631eeb1e0cbd5fa7991f5248b760a6",
         "availability": "local-only"
       },
       "assessment": {
-        "path": "runs/core-evidence-20261009/replay-v2/CP-01/assessment.json",
-        "sha256": "f6dda5b26190f5516e6fdcf302337123b5b896d152c1caa51929f71f974c40ed",
+        "path": "runs/core-evidence-20261009/replay-v3/CP-01/assessment.json",
+        "sha256": "77e9875b71afa9d9422159c38ba1cda510005c57b9143a0d5295fcb92fc9ba69",
         "availability": "local-only"
       },
       "effective_controls": {
@@ -1350,13 +1366,13 @@
         "availability": "local-only"
       },
       "evidence": {
-        "path": "runs/core-evidence-20261009/replay-v2/CP-02/evidence.json",
-        "sha256": "39a45a42cdd7d68121617360739b3fdc9bdc249abd76db3ad5036b31a9cbe779",
+        "path": "runs/core-evidence-20261009/replay-v3/CP-02/evidence.json",
+        "sha256": "dc8c8986cc8ba1dccaf866b652acd64be3b59bef9c5477df22b9e6822c9a1561",
         "availability": "local-only"
       },
       "assessment": {
-        "path": "runs/core-evidence-20261009/replay-v2/CP-02/assessment.json",
-        "sha256": "1ed920d1a6e1003f1aa9c4a6e3f0d5f2c9cef69c26497e49671b26055a33620c",
+        "path": "runs/core-evidence-20261009/replay-v3/CP-02/assessment.json",
+        "sha256": "d1d4eaa48b42c415f6211c7b3a7837c7dd128fea177c87e184ecfca08bd7de8c",
         "availability": "local-only"
       },
       "effective_controls": {
@@ -1724,13 +1740,13 @@
         "availability": "local-only"
       },
       "evidence": {
-        "path": "runs/core-evidence-20261009/replay-v2/SI-01/evidence.json",
-        "sha256": "f4f9d0ec96c4e5593121d485f199d61c56d8446c4f6275335e1acf88020e3c99",
+        "path": "runs/core-evidence-20261009/replay-v3/SI-01/evidence.json",
+        "sha256": "8903e5536e063203a6057284ab8a0cd7c2e8b4793f5e9ab722d03bea50feaa41",
         "availability": "local-only"
       },
       "assessment": {
-        "path": "runs/core-evidence-20261009/replay-v2/SI-01/assessment.json",
-        "sha256": "e6b116345350e53ecdee239a6875092d34039431599a3389b1364e4caa2555b4",
+        "path": "runs/core-evidence-20261009/replay-v3/SI-01/assessment.json",
+        "sha256": "12d2e70785660d8fc03a80f35c58b885beaf88d2b9f2f92ea9f0b740a5450593",
         "availability": "local-only"
       },
       "effective_controls": {
@@ -2083,13 +2099,13 @@
         "availability": "local-only"
       },
       "evidence": {
-        "path": "runs/core-evidence-20261009/replay-v2/CO-SH-01/evidence.json",
-        "sha256": "b59e25c367bcdff80d6d588c209f0e3bb2bbfc9386f51faf68c37703ef37052d",
+        "path": "runs/core-evidence-20261009/replay-v3/CO-SH-01/evidence.json",
+        "sha256": "86c080c52876243430cce82616b06d138c163cc6b7b0221af261be8c3aab3446",
         "availability": "local-only"
       },
       "assessment": {
-        "path": "runs/core-evidence-20261009/replay-v2/CO-SH-01/assessment.json",
-        "sha256": "5d8637b0bffa8134d6335e095680a0095d61f9e5a4132f0283204b7bef704b0f",
+        "path": "runs/core-evidence-20261009/replay-v3/CO-SH-01/assessment.json",
+        "sha256": "9283b04a072f7537c20189c0ed002dee86cfe24696d3d3e1e26987aa987bf8d8",
         "availability": "local-only"
       },
       "effective_controls": {
@@ -2291,13 +2307,13 @@
         "availability": "local-only"
       },
       "evidence": {
-        "path": "runs/core-evidence-20261009/replay-v2/CO-HC-01/evidence.json",
-        "sha256": "4d4ab8e8db40f879a61cb75489eb8153d0de32c8a0a2e218fe9c60d7e6b2b904",
+        "path": "runs/core-evidence-20261009/replay-v3/CO-HC-01/evidence.json",
+        "sha256": "a9b706a69c5543b813286afcdb2951f47458261904a91781836b8c94d8ff8374",
         "availability": "local-only"
       },
       "assessment": {
-        "path": "runs/core-evidence-20261009/replay-v2/CO-HC-01/assessment.json",
-        "sha256": "d3a3975c14fee923e7c8235a71b6186a9319ea5323b0899a6e5c8b5226b4e13e",
+        "path": "runs/core-evidence-20261009/replay-v3/CO-HC-01/assessment.json",
+        "sha256": "f380071a2e8193cceec79b76291bcc419799b685d73144d6940435316f6f9d0f",
         "availability": "local-only"
       },
       "effective_controls": {
@@ -2514,13 +2530,13 @@
         "availability": "local-only"
       },
       "evidence": {
-        "path": "runs/core-evidence-20261009/replay-v2/CO-VCO-01/evidence.json",
-        "sha256": "79f0e4f0723cc640d7f86c4b8ff119ec2322986ce101f2d3276445bd3d0d1b78",
+        "path": "runs/core-evidence-20261009/replay-v3/CO-VCO-01/evidence.json",
+        "sha256": "9cee84a97ea707dc1b61a25dcd18f19ec067b74e93af307fa766c208405c11f0",
         "availability": "local-only"
       },
       "assessment": {
-        "path": "runs/core-evidence-20261009/replay-v2/CO-VCO-01/assessment.json",
-        "sha256": "28cd6874d9b186262fa3a8419837d8e35f9db1415c110aeaaa9b927d58151746",
+        "path": "runs/core-evidence-20261009/replay-v3/CO-VCO-01/assessment.json",
+        "sha256": "bc93e0eede13d0d3bde5729f6ef9e676b2388630dcf2f7af20a4ac1e6ce6fce4",
         "availability": "local-only"
       },
       "effective_controls": {
@@ -3462,7 +3478,7 @@
   "primary_slots": 108,
   "selection": "Replace 12 EVAS core slots with this new execution; reuse other 36 original core slots and all 60 selected supplemental slots. Spectre 2-format preflights are diagnostics. Original I/X and all attempts remain retained.",
   "checked_in_analysis": {
-    "experiments/backends/support/core_report.py": "c751243a9880b25124459744df93b171ed051096c24ee73b0b3b90310a5f942f",
+    "experiments/backends/support/core_report.py": "9eac4aba48d09731f90e018e1fff82b2cea9651a6f93274b0e44ec1e60181d39",
     "experiments/backends/paper/actual_observation.py": "ae933f27295d47b4a983fd55029d9159fc68070d8ac9a36846b84ac30b39b55d",
     "experiments/backends/paper/observations.py": "0aff2f248d63b9e81b1fcf5bab5722df13bdcf42fd7edffe4fe65f45b79b845c",
     "evas/validation/paper/criteria.py": "ecdabb0c187d968400e8ee8c23f6f99a7552b3533962917539557436b8a95c1c",
