@@ -46,7 +46,8 @@ Rust 的版本化类型与解码位于 [evas-ir](rust_core/ir/README.md)，数�
 这些能力有输入依赖、初值、参数和组合限制，不能由单个算子支持推导任意组合都支持。
 [能力表](docs/CAPABILITIES.md)列出具体支持与缺口；
 [连续动态手册](docs/math/continuous.md)说明反馈、DAE 和事件组合边界。
-当前实现为 **EVAS 0.14.0 / IR v18**；改动摘要见[更新记录](docs/UPDATE.md)，尚未发布版本 tag。
+当前实现为 **EVAS 0.14.0 / IR v18**；本次开发基线、已集成架构和保留差异见[版本说明](docs/UPDATE.md#baseline-20261009)。
+论文最终验收及完整 Spectre 兼容性仍未完成，历史实验各自绑定原版本。
 
 <a id="model-handoff"></a>
 
@@ -187,7 +188,7 @@ API 为 `evas.scs.load_scs(path)`（检查测试台并返回 manifest 和模型�
 | 模型与连接 | `ahdl_include "file.va"`；按 VA 声明顺序展开静态向量后逐位连接的标量节点列表；常量参数覆盖；`global 0` |
 | 数字 | 有限十进制、科学计数和单字母 SI 后缀 `T G M k K m u n p f a`；可引用先前 `parameters` 语句的常量 |
 | `vsource` | 一端接地；`dc`；从零开始、时间严格递增的 `wave=[time value ...]`；显式 `delay/rise/width/fall/period/val0/val1` 的线性 pulse |
-| 瞬态 | 一条 `tran tran stop=... maxstep=...`，两项必须显式指定且为正；观察点取 `0`、小于 stop 的 `k*maxstep` 和 stop |
+| 瞬态 | 一条 `tran tran stop=... maxstep=...`，两项必须显式指定且为正；观察点取 `0`、小于 stop 的 `k*maxstep` 和 stop；可另给 [strobe 五项控制](docs/strobe.md)，不改变常规观察网格 |
 | 精度 | `options reltol=... vabstol=...`，映射到现有 EVAS 设置；未指定项使用 EVAS 默认值，不采用 Spectre 默认值 |
 | 输出 | `save` 选择标量端口节点；`saved` 输出所选列，原 `solutions` 保留完整求解响应 |
 

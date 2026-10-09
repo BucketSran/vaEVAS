@@ -17,6 +17,7 @@ from .parameters import bind_parameters
 from .runtime import DEFAULT_TIMEOUT, transient
 from .scs_sources import POINT_BUDGET, voltage_points
 from .syntax import Token, _SUFFIX
+from .strobe import FIELDS as STROBE_FIELDS, expand as expand_strobe
 
 _LEX = re.compile(r'(?P<space>[ \t\r]+)|(?P<continuation>\\[ \t]*\n)|(?P<comment>//[^\n]*)'
                   r'|(?P<newline>\n)|(?P<string>"[^"\n]*")'
@@ -203,17 +204,17 @@ def load_scs(path: str | Path) -> ScsTestbench:
         elif s.index<len(s.tokens) and s.token.text in ('options','tran'):
             kind=s.take().text
             settings=s.settings()
-            allowed={'vabstol','reltol'} if kind=='options' else {'stop','maxstep'}
+            allowed={'vabstol','reltol'} if kind=='options' else {'stop','maxstep'} | STROBE_FIELDS
             if set(settings)-allowed:
                 s.fail(f'unsupported {kind} settings: {sorted(set(settings)-allowed)}',unsupported=True)
-            if any(not isinstance(v,float) for v in settings.values()):
+            if any(not isinstance(v,list if k=='strobetimes' else float) for k,v in settings.items()):
                 s.fail('analysis settings must be scalar numbers')
             if kind=='options':
                 if set(settings)&tolerances.keys():
                     s.fail('duplicate tolerance setting')
                 tolerances.update(settings)
             else:
-                if transient_spec is not None or set(settings)!=allowed:
+                if transient_spec is not None or not {'stop','maxstep'} <= settings.keys():
                     s.fail('exactly one tran with explicit stop and maxstep is required')
                 transient_spec=settings
         else:
@@ -227,6 +228,11 @@ def load_scs(path: str | Path) -> ScsTestbench:
     stop,step=transient_spec['stop'],transient_spec['maxstep']
     if stop<=0 or step<=0 or any(v<0 for v in tolerances.values()):
         fail('stop/maxstep must be positive; tolerances must be nonnegative')
+    strobe={k:v for k,v in transient_spec.items() if k in STROBE_FIELDS}
+    try:
+        forced=expand_strobe(stop,**strobe) if strobe else []
+    except ValueError as exc:
+        fail(str(exc))
     count=int(Q(stop)//Q(step))
     if count+2>POINT_BUDGET:
         fail('output point budget (100000) exceeded; increase maxstep')
@@ -268,11 +274,14 @@ def load_scs(path: str | Path) -> ScsTestbench:
     effective=dict(vabstol=1e-12,reltol=1e-10)
     effective.update(tolerances)
     manifest=dict(models=list(sources),instances=instances,tolerances=effective,
-                  transient=dict(sources=waveforms,output_times=times,stop=stop,max_step=step))
+                  transient=dict(sources=waveforms,output_times=times,stop=stop,max_step=step,**strobe))
     metadata=dict(input_format='spectre-voltage-subset',path=str(path),sha256=hashlib.sha256(text.encode()).hexdigest(),
                   model_sha256={p:hashlib.sha256(t.encode()).hexdigest() for p,t in sources.items()},
                   effective_tolerances=effective,output_grid='0, k*maxstep below stop, stop',
                   pulse_corner_rounding_seconds=rounding)
+    if strobe:
+        metadata['strobe_controls']=strobe
+        metadata['forced_times']=forced
     return ScsTestbench(sources,manifest,saved,metadata)
 
 
