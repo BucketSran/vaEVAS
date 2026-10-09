@@ -76,7 +76,7 @@ def analyze(frozen, records):
         raise ValueError('stale source/input/initial/observation/budget identity')
     gaps = []
     versions = {r.get('spectre_version') for r in records}
-    if len(versions) != 1 or None in versions:
+    if len(versions) != 1 or any(not isinstance(v,str) or not v.strip() for v in versions):
         gaps.append('missing or differing simulator version')
     for r in records:
         if r['settings_status'] != 'P' or r['execution_status'] != 'success':
@@ -106,6 +106,8 @@ def analyze(frozen, records):
                       'not_converged' if 'F' in statuses else
                       'incomplete' if gaps or 'I' in statuses else 'finite_reference_stability')
     return dict(classification=classification,formal_qualification='I',
+                finite_reference_stability_status='I' if gaps or 'I' in statuses else
+                    'F' if unstable or 'F' in statuses else 'P',
                 event_count_status='unstable' if unstable else 'unknown' if not counts else
                     'incomplete' if any(set(sample)!=required for samples in counts.values() for sample in samples)
                     or any(p['comparison']['duplicate_times'][engine] for p in pairs for engine in ['evas','spectre'])
@@ -117,12 +119,15 @@ def analyze(frozen, records):
 
 
 def attest(frozen, profile_id, folder, psf_path, log_path, spectre_version, execution_status):
+    if not isinstance(spectre_version,str) or not spectre_version.strip():
+        raise ValueError('nonempty simulator version required')
     profile = next(p for p in frozen['ladder']['levels'] if p['id']==profile_id)
     if file_hash(folder/'dut.va') != frozen['model_sha256'] or file_hash(folder/'tb.scs') != frozen['deck_sha256'][profile_id]:
         raise ValueError('executed model/deck differs from frozen inputs')
     result = dict(profile_id=profile_id,frozen_sha256=digest(frozen),
                   execution_status=execution_status,spectre_version=spectre_version,
-                  requested_settings=profile,settings_status='I',rows=[],identities={},gaps=[])
+                  requested_settings=profile,settings_status='I',observation_status='I',
+                  rows=[],identities={},gaps=[],settings_gaps=[],observation_gaps=[])
     for name,path in [('model',folder/'dut.va'),('deck',folder/'tb.scs'),('psf',psf_path),('log',log_path)]:
         if path.exists():
             result['identities'][name] = dict(path=str(path.resolve()),sha256=file_hash(path))
@@ -142,10 +147,17 @@ def attest(frozen, profile_id, folder, psf_path, log_path, spectre_version, exec
                         math.isclose(target,fact['value'],rel_tol=1e-12,abs_tol=0.)):
                     raise ValueError('requested/effective mismatch: '+scope+'/'+key)
         result['settings_status'] = 'P'
-        observations = normalize(psf_path,frozen['case'])
-        result.update(observations)
     except (OSError,ValueError) as error:
-        result['gaps'].append(str(error))
+        result['settings_gaps'].append(str(error))
+        result['gaps'].append('settings: '+str(error))
+    # Available observations remain evidence even when control readback fails.
+    # Their known discrepancies cannot certify the requested reference profile.
+    try:
+        result.update(normalize(psf_path,frozen['case']))
+        result['observation_status'] = 'P'
+    except (OSError,ValueError) as error:
+        result['observation_gaps'].append(str(error))
+        result['gaps'].append('observations: '+str(error))
     return result
 
 
