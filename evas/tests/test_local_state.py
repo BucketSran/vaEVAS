@@ -85,7 +85,7 @@ class LocalStateContracts(unittest.TestCase):
             diagnostic=failure.exception.diagnostic
             self.assertEqual(diagnostic['code'],'unsupported_local_event')
             self.assertEqual(diagnostic['location']['source'],'local-state.va')
-            self.assertEqual(diagnostic['location']['line'],3)
+            self.assertEqual(diagnostic['location']['line'],4)
             self.assertGreater(diagnostic['location']['column'],0)
 
     def test_state_predicate_and_constant_setting_dependency_are_explicit(self):
@@ -97,7 +97,7 @@ class LocalStateContracts(unittest.TestCase):
             self.assertEqual(diagnostic['code'],'unsupported_event_state_dependency')
             self.assertEqual(diagnostic['category'],'unsupported')
             self.assertIn('persistent state',str(failure.exception))
-            self.assertEqual(diagnostic['location']['line'],2)
+            self.assertEqual(diagnostic['location']['line'],3)
 
     def test_ordinary_input_if_compiles_but_event_transient_stays_unsupported(self):
         program=compile_local("""@(initial_step) q=1; @(timer(0.5)) q=2;
