@@ -34,3 +34,90 @@ The original settings reader rejected Spectre's `ms`, `pV`, and `fA` display uni
 The frozen checker’s `failures` array records diagnostics and coverage problems; it does not list every numerical threshold violation. Read its numeric status and maximum errors together. The public receipt adds `numeric_failure_reasons` derived from the unchanged 1 µV threshold, preserving all original fields.
 
 Compact identities and outcomes are in [receipt.json](receipt.json). Frozen shared models, input plans and the unchanged checker are [repository-contained](../../../evas/validation/event_acceptance/README.md). Complete raw outputs and execution logs remain local-only under `current/runs/event-closure-20261008/`; checksums alone do not establish public reproducibility.
+
+## Single-batch preparation checkpoint
+
+The small refactor from `bb89c830` to `cacc8550` gives the first event and each
+subsequent microevent one `prepare_changed_batch` entry. It preserves static
+calendar truncation, causal-loop budgets, phase queries and atomic publication.
+It changes no root policy, numerical budget, supported model or checker.
+
+[The checkpoint receipt](batch-refactor.json) binds the two binaries, tests and
+frozen reference reuse. The selected 251 Python tests retain their original
+assertions. Their 706 captured model requests compare return codes and complete
+stdout/stderr text without numerical tolerances, including rejected requests.
+This is a finite same-host numerical preservation check, not proof for every
+possible input or subprocess entry point. Diagnostic timings are not compared.
+Existing Rust production-entry tests retain same-Controller rollback/retry
+coverage; final-stage helper tests remain a separate obligation.
+
+To repeat the response check, build the baseline and candidate separately with
+the same Rust toolchain/profile, preserve the baseline binary, then run from the
+candidate checkout:
+
+```sh
+python3 -B experiments/backends/event-acceptance/check_batch_refactor.py \
+  /path/to/baseline/evas-kernel evas/rust_core/target/debug/evas-kernel \
+  runs/batch-refactor-recheck --expected-requests 706
+```
+
+The output directory must be new. The 706 count is for the pinned test revision.
+The verifier isolates diagnostic files and fails on a request-count mismatch,
+response difference or timeout. All existing test assertions still run.
+
+Seven frozen engineering models and twelve Spec B requests were also executed
+on both binaries. The engineering responses were compared with the same actual
+Spectre 21.1.0.509.isr12 records in both EVAS runs. All fourteen base/tight paired
+analyses are unchanged. Exact time-key pairing still has missing observations;
+M1-base still fails its original independent check. C1, #79 and VCO strict
+differences and observation-qualification limits remain open. This checkpoint
+does not constitute new Spectre execution or broader compatibility acceptance.
+
+Raw requests, responses, failed verifier attempts and independent reviews are
+local-only in the visible `worktrees/spectre-event-alignment/runs/event-candidate-step-20261009/`
+entry. The repository retains the comparator and compact receipt, not a public
+Spectre waveform archive. The user accepted this stage; the following section records the wider refactor.
+
+
+## Whole event-cluster transaction checkpoint
+
+The next structural checkpoint is runtime commit `7f091d3d`, based on the accepted
+small checkpoint `521a4a57`. Its [receipt](cluster-refactor.json) records identities
+and results. It changes ownership, with no new event or numerical policy.
+
+```text
+accept_changed_events
+  PreparedEvents::prepare, immutable Controller and calendar
+    prepare_changed_batch for each connected event batch
+    check microevent budgets and prepare physical-phase outputs
+    return frame, records, outputs and typed calendar update
+  PreparedEvents::publish, consume the completed result
+    publish frame, cursor, records, outputs and calendar without fallible work
+```
+
+Static calendars keep their storage and advance their cursor. Held/history
+calendars are replaced and restart at cursor zero. The existing batch arithmetic,
+root certificates, history algorithms, budget checks and error order are retained.
+An added production-entrance regression samples a held timer from `.1*.3` and
+requests an uncertifiable `.03` output. It verifies that two failed attempts keep
+previously stored outputs and accepted state intact, then retries the same
+Controller after removing that query. The clean run and retry agree. This test
+passes on the original implementation too; it protects existing rollback behavior.
+
+The candidate passes 218 Rust tests with one ignored. The fixed event test set
+passes 251 tests; all 706 baseline/candidate responses agree exactly, including
+140 rejections. The two captured diagnostic sidecars also match in a separate
+post-analysis; only `stages.*.nanos` is excluded. Records, their order, counters
+and errors are compared. Other requests did not enable sidecar capture.
+Twelve frozen Spec B responses and seven engineering-model
+responses are also byte-identical. The same fourteen actual Spectre base/tight
+comparisons retain their original results. The original archive's 371 files and
+fourteen PSF traces were rebound and checked. No new remote Spectre run was made;
+models, stimuli, settings, checker and reference data are unchanged.
+
+These finite preservation checks do not resolve C1, #79, VCO, M1 or incomplete
+observation qualification. The change stays in PR117 pending user review. Raw
+runs, the scope and complete independent reports remain local-only under the
+visible `worktrees/spectre-event-alignment/runs/event-cluster-transaction-20261009/`
+entry. The diagnostic inventory was regenerated because code movement changed
+its source-function references; the preceding checkpoint's CI failed that freshness check.
