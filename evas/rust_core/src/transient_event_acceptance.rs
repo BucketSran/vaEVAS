@@ -9,6 +9,21 @@ pub(super) enum Strategy {
     History,
 }
 
+// Only the first static batch sees the complete calendar. Later batches
+// consume the connected cluster and next deadline already selected from it.
+#[derive(Clone, Copy)]
+enum CalendarScope {
+    Complete,
+    Bounded,
+}
+
+struct PreparedBatch {
+    frame: Frame,
+    records: Vec<EventRecord>,
+    end: usize,
+    future: Vec<ScheduledEvent>,
+}
+
 // Held roots already have their final certificates. History roots need the
 // extended candidate trajectory, bounded first by independent deadlines.
 pub(super) enum CalendarPlan {
@@ -66,65 +81,19 @@ impl Controller {
         // Close old-flow observation/reset before predicting changed flow.
         // All subsequent work owns a candidate; the accepted frame, event
         // cursor, records and old calendar remain intact on every error.
-        let time = calendar[self.event].time;
-        let (mut next, records, end) =
-            self.prepare_events_until(model, trajectory, calendar, Some(time))?;
-        let plan = match strategy {
-            Strategy::Static => {
-                // The immutable static calendar keeps its original cursor.
-                // Copy only the connected observation cluster and its next
-                // deadline; cloning every remaining occurrence is quadratic.
-                let mut cluster_end = end;
-                let mut boundary = next.time;
-                let mut steps = 0;
-                while cluster_end < calendar.len() && calendar[cluster_end].bounds().lo <= boundary
-                {
-                    if calendar[cluster_end].time > boundary {
-                        if steps >= crate::schedule::CAUSAL_MICROEVENT_BUDGET {
-                            return Err(Error::new(
-                                "event_budget",
-                                "bounded static event closure exceeds 64 microevents",
-                            ));
-                        }
-                        steps += 1;
-                        boundary = calendar[cluster_end].time;
-                    }
-                    cluster_end += 1;
-                }
-                let future = calendar[end..(cluster_end + 1).min(calendar.len())].to_vec();
-                self.prepare_physical_history(
-                    model,
-                    trajectory,
-                    &mut next,
-                    &calendar[self.event..end],
-                    &future,
-                )?;
-                CalendarPlan::Held(future)
-            }
-            Strategy::Held => {
-                let future =
-                    self.prepare_held_future(model, trajectory, &next, &records, &calendar[end..])?;
-                self.prepare_physical_history(
-                    model,
-                    trajectory,
-                    &mut next,
-                    &calendar[self.event..end],
-                    &future,
-                )?;
-                CalendarPlan::Held(future)
-            }
-            Strategy::History => self.prepare_history_future(
-                model,
-                trajectory,
-                &mut next,
-                &calendar[self.event..end],
-                &calendar[end..],
-            )?,
-        };
+        let PreparedBatch {
+            frame: mut next,
+            mut records,
+            end,
+            mut future,
+        } = self.prepare_changed_batch(
+            model,
+            trajectory,
+            calendar,
+            strategy,
+            CalendarScope::Complete,
+        )?;
         {
-            let (mut next, mut future) =
-                Self::prepare_final_history(model, trajectory, next, plan)?;
-            let mut records = records;
             let mut phases = vec![
                 (self.accepted.clone(), Vec::new()),
                 (next.clone(), calendar[self.event..end].to_vec()),
@@ -146,50 +115,18 @@ impl Controller {
                     records: Vec::new(),
                     outputs: Vec::new(),
                 };
-                let time = future[0].time;
-                let (mut following, new_records, end) =
-                    candidate.prepare_events_until(model, trajectory, &future, Some(time))?;
-                let physical_batch = future[..end].to_vec();
-                static_cursor += end;
-                let plan = match strategy {
-                    Strategy::Static => {
-                        let pending = future[end..].to_vec();
-                        candidate.prepare_physical_history(
-                            model,
-                            trajectory,
-                            &mut following,
-                            &future[..end],
-                            &pending,
-                        )?;
-                        CalendarPlan::Held(pending)
-                    }
-                    Strategy::Held => {
-                        let pending = candidate.prepare_held_future(
-                            model,
-                            trajectory,
-                            &following,
-                            &new_records,
-                            &future[end..],
-                        )?;
-                        candidate.prepare_physical_history(
-                            model,
-                            trajectory,
-                            &mut following,
-                            &future[..end],
-                            &pending,
-                        )?;
-                        CalendarPlan::Held(pending)
-                    }
-                    Strategy::History => candidate.prepare_history_future(
-                        model,
-                        trajectory,
-                        &mut following,
-                        &future[..end],
-                        &future[end..],
-                    )?,
-                };
-                (next, future) = Self::prepare_final_history(model, trajectory, following, plan)?;
-                records.extend(new_records);
+                let batch = candidate.prepare_changed_batch(
+                    model,
+                    trajectory,
+                    &future,
+                    strategy,
+                    CalendarScope::Bounded,
+                )?;
+                let physical_batch = future[..batch.end].to_vec();
+                static_cursor += batch.end;
+                next = batch.frame;
+                future = batch.future;
+                records.extend(batch.records);
                 phases.push((next.clone(), physical_batch));
                 microevents += 1;
             }
@@ -248,6 +185,86 @@ impl Controller {
             }
             Ok(())
         }
+    }
+
+    // Own one candidate batch through observation, history and calendar
+    // certification. The caller alone owns causal closure and publication.
+    fn prepare_changed_batch(
+        &self,
+        model: &EventModel,
+        trajectory: &Trajectory,
+        calendar: &[ScheduledEvent],
+        strategy: Strategy,
+        scope: CalendarScope,
+    ) -> Result<PreparedBatch, Error> {
+        let time = calendar[self.event].time;
+        let (mut next, records, end) =
+            self.prepare_events_until(model, trajectory, calendar, Some(time))?;
+        let plan = match strategy {
+            Strategy::Static => {
+                // The immutable static calendar keeps its original cursor.
+                // Copy only the connected observation cluster and its next
+                // deadline; cloning every remaining occurrence is quadratic.
+                let future = match scope {
+                    CalendarScope::Complete => {
+                        let mut cluster_end = end;
+                        let mut boundary = next.time;
+                        let mut steps = 0;
+                        while cluster_end < calendar.len()
+                            && calendar[cluster_end].bounds().lo <= boundary
+                        {
+                            if calendar[cluster_end].time > boundary {
+                                if steps >= crate::schedule::CAUSAL_MICROEVENT_BUDGET {
+                                    return Err(Error::new(
+                                        "event_budget",
+                                        "bounded static event closure exceeds 64 microevents",
+                                    ));
+                                }
+                                steps += 1;
+                                boundary = calendar[cluster_end].time;
+                            }
+                            cluster_end += 1;
+                        }
+                        calendar[end..(cluster_end + 1).min(calendar.len())].to_vec()
+                    }
+                    CalendarScope::Bounded => calendar[end..].to_vec(),
+                };
+                self.prepare_physical_history(
+                    model,
+                    trajectory,
+                    &mut next,
+                    &calendar[self.event..end],
+                    &future,
+                )?;
+                CalendarPlan::Held(future)
+            }
+            Strategy::Held => {
+                let future =
+                    self.prepare_held_future(model, trajectory, &next, &records, &calendar[end..])?;
+                self.prepare_physical_history(
+                    model,
+                    trajectory,
+                    &mut next,
+                    &calendar[self.event..end],
+                    &future,
+                )?;
+                CalendarPlan::Held(future)
+            }
+            Strategy::History => self.prepare_history_future(
+                model,
+                trajectory,
+                &mut next,
+                &calendar[self.event..end],
+                &calendar[end..],
+            )?,
+        };
+        let (frame, future) = Self::prepare_final_history(model, trajectory, next, plan)?;
+        Ok(PreparedBatch {
+            frame,
+            records,
+            end,
+            future,
+        })
     }
 
     #[cfg(test)]
