@@ -294,11 +294,12 @@ class TableControls(unittest.TestCase):
                 with self.assertRaises(ValueError): table.render([record], allow_pending=True)
 
     def test_checker_reanalysis_rejects_changes_to_execution_or_observation_fields(self):
-        for name in ('execution', 'identity', 'prior_attempts', 'condition_id', 'backend'):
+        for name in ('execution', 'identity', 'prior_attempts', 'condition_id', 'backend', 'undeclared_null_field'):
             with self.subTest(name=name):
                 record = self.checker_reanalysis_record()
                 if name in ('condition_id', 'backend'): record[name] = 'unrelated'
                 elif name == 'prior_attempts': record[name] = []
+                elif name == 'undeclared_null_field': record[name] = None
                 else: record[name] = {**record[name], 'extra': 'changed'}
                 with self.assertRaises(ValueError): table.validate(record)
 

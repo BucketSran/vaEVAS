@@ -343,7 +343,7 @@ def checker_analysis(record, assessment, checker):
     if not isinstance(original, dict):
         raise ValueError('Checker reanalysis requires original record')
     for key in set(original) | set(record):
-        if key not in ('assessment', 'checker_reanalysis') and original.get(key) != record.get(key):
+        if key not in ('assessment', 'checker_reanalysis') and ((key in original) != (key in record) or original.get(key) != record.get(key)):
             raise ValueError('Checker reanalysis changed original record: ' + key)
     if original.get('assessment') == record.get('assessment'):
         raise ValueError('Checker reanalysis must preserve a separate original assessment')
