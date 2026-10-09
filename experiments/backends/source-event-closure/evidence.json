@@ -1,0 +1,616 @@
+{
+  "scope": "Finite source-driven local event closure, newly executed actual Spectre; original F/I unchanged",
+  "base": "c2ca32ee91e6e0db707c9d927e5257695dd4e44a",
+  "kernel_sha256": "7af9a1df5aa778dc2cf8311319ce165975124b0fc7a66fdcceeb2eafc193e493",
+  "rust_version": "rustc 1.95.0 (59807616e 2026-04-14)",
+  "cargo_version": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)",
+  "python_version": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+  "source_files": {
+    "evas/rust_core/src/absdelay.rs": "e0f6144590856b3a95d03a59af58e9032309fa1e316a41c063a40ec9f73109c7",
+    "evas/rust_core/src/affine_bounds.rs": "b0faf6ee361cac3ab3a7b8a2d80992bece76a3457d4a08a48be81755cfe01c6b",
+    "evas/rust_core/src/analog.rs": "d4105a0e850f98d4c10ded8c7deacdcc45c960ed2a2a3c1547ea2cf2a5a687c0",
+    "evas/rust_core/src/assembly.rs": "52b5a1a7411b846c2c07d0c26c0fabca0641c3980b4b34a6bcd302e84401d9cb",
+    "evas/rust_core/src/batch.rs": "a41166d5cd9a6fab300d48197bc4093145885d19044b398e48095fdb35473688",
+    "evas/rust_core/src/continuous.rs": "4fe7ff77aaf71412657b4da43b24eb5660776f593ba16519c39391f74ed51fa1",
+    "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+    "evas/rust_core/src/continuous_history.rs": "bca5d985d7ceda334ddebc6a2d26829ddb4efc5b54cd757ca3aef264f8a77d38",
+    "evas/rust_core/src/continuous_initialization.rs": "5145a36a517b9ba3ace0fb6241ebbd615fef6004b50aeb5dc99d76ff295874a8",
+    "evas/rust_core/src/continuous_runtime.rs": "7a36aa1616c18aef80d26d92d432112ce01c510f47e29a062297851dd7f0d3ec",
+    "evas/rust_core/src/diagnostics.rs": "0a5deae544550e34379582625632cf5c45f21c7f8d1f60178e9cf26ae2a4d65f",
+    "evas/rust_core/src/dynamic_roots.rs": "8408c016498f8994f98ef26598a048a7948c79c186d1192de5324723975a8575",
+    "evas/rust_core/src/event_accuracy.rs": "d2b621cb23080ee219b5272fc489010dfc6a4ba15930fd8e6d94f0428e253dd6",
+    "evas/rust_core/src/event_conditions.rs": "8b0c00b449cf1b27326972a95b97a5f5c911b4f56cd6d30dec7f8905312ab30f",
+    "evas/rust_core/src/events.rs": "c30446f5becb7ca185645837592a868121df5d4aaee6aa2adacdd5aac8f30e28",
+    "evas/rust_core/src/exact_affine_history.rs": "768c7509b3d76e901e12b166291d0bb8ae7f282791fa513a72f087b07100f161",
+    "evas/rust_core/src/exact_source.rs": "bee5abfc22ebb00510d4010885b3550034d50d114a6aabde77d90631b8df71e6",
+    "evas/rust_core/src/exact_time.rs": "ced433121bf498fea2abaabb80016e3313d561e09e4b5b98385bf9388f78d6b6",
+    "evas/rust_core/src/expression.rs": "99024d0b32c2348b6d32db2dc7a27122ff16728c3d4dc476bde6d9f8cb766ffb",
+    "evas/rust_core/src/guard_trajectory.rs": "c919578fe553f2e87ded91d054780e8e66d505db688894875a8506ae826ec84c",
+    "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+    "evas/rust_core/src/idtmod.rs": "c57464703c5332f4a5ea827e8a6f85799f57c7d9a6655351475684b3fdeda190",
+    "evas/rust_core/src/implicit_dynamics.rs": "663f81fd0b60f8634f1ec1b55ac322bc0f09cb69c32ed4cf47f56253ed425e95",
+    "evas/rust_core/src/initialization.rs": "7a0bf9345d0cb264ea766c9ff3c801d781948f1683474eb1e1a53f6abd1af365",
+    "evas/rust_core/src/input_clamp.rs": "4fc823c7de00e10fd49a45422d3c807d25095f0d4b095500f7de06780341521d",
+    "evas/rust_core/src/interval.rs": "89a83ce96dbf6cdc217a046c9885ca0cf580c6e6f932c36f0195120d49e53f56",
+    "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
+    "evas/rust_core/src/ir.rs": "cc687fdd3d78e908644537aa8194d3a3ccb3dcb5b88c11a78d7b3e640ad97ea0",
+    "evas/rust_core/src/laplace.rs": "4efcad4da1934849c90985c908aaf750f5bd823392deae3ad555515f8bf71a23",
+    "evas/rust_core/src/lib.rs": "beed3ae8020fe75cc9373a3e332d56513214a080e423af20d19ef0295b8f9e26",
+    "evas/rust_core/src/linear.rs": "e0280cfcaaebd2449ab5e4474daf5cd19e6a9fbda5db53e14e5229fc81a4eb36",
+    "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+    "evas/rust_core/src/linear/dense.rs": "00a1d9e1a9c5f933f765dd586ab9a8982073d270fed73ed7e602af858e732cad",
+    "evas/rust_core/src/linear/properties.rs": "d1a8b5ec069fef4f621b99290b532f7563cb8f55a1ba2178a77877f60192ab7f",
+    "evas/rust_core/src/linear/refinement.rs": "8476ad2ea3f3698e3c4552f8ff785c00ff878caab584b157dbb80b9c282f32a8",
+    "evas/rust_core/src/linear/sparse.rs": "3914adce2368b027027c06240f160864af0f53de934c0b3285515114fe7aa869",
+    "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+    "evas/rust_core/src/main.rs": "70626c73fa421340afcc53c025a220720b208657273ba3f5e20bc1e4c6e01c3c",
+    "evas/rust_core/src/nonlinear.rs": "1e535704fb6dc14a577496ed47315ddf6e5f887d6dfa2b62b78d9b7b3a275863",
+    "evas/rust_core/src/nonlinear/continuation.rs": "6d0aabe1bb6563a32d4e920fabdefde881777a54b8dc2b4658de432347f6448a",
+    "evas/rust_core/src/nonlinear_dynamics.rs": "83c4ef41a0933aac7ae60ed320ac1fb76e45ebcccebfb18fc879b7dd3911c928",
+    "evas/rust_core/src/observation.rs": "a4bddbd4b5f336883909fe66fd5a5cf3e636fb6da265d8c7be05e48107fcee32",
+    "evas/rust_core/src/operators.rs": "04bda979a13af4a340344fe001b8c0d52445ae28c0623ea0c76bbbcff71322a8",
+    "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+    "evas/rust_core/src/portability.rs": "8a807dd498a87b7680c8c2dd605908a6a8a933bab2aa6f1b57844d0285a7229a",
+    "evas/rust_core/src/pwl.rs": "c2cd911edcd247ed1a6de99bf1ab988d643b39cbec48002a6070b5ecf20eda52",
+    "evas/rust_core/src/reset_dependencies.rs": "d2adaba2e28d70511e0977c223ea7922b627c832e633b7f94360c951a6f0e3fa",
+    "evas/rust_core/src/schedule.rs": "05c95a27c9a0ee3ab0853f9463312191c2dc98bcae35f87968c7a5db7740b11c",
+    "evas/rust_core/src/settlement.rs": "2936275c2ccd13d1e28563307253ae629174236656364b86b5ad61a66fcc1e13",
+    "evas/rust_core/src/settlement_bounds.rs": "fa118d682b0078b987982eb47eb29a9c88981db50193ab32d0dc88bb0dda6ccc",
+    "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+    "evas/rust_core/src/solver.rs": "b2ba26829db2d0fc94e329b375ed13b803510456b3131371ec4688a4dfcd0eba",
+    "evas/rust_core/src/solver_cache_tests.rs": "727acd4fc9084bb6e546a8aa70e2f1e5bd476d27265f5198c5cdd08b0a7fd3fa",
+    "evas/rust_core/src/state_space.rs": "c7e8ff82302cb87c6ba150e5def9d1cf9eba15e23657e2f2686eb067ce4ef74c",
+    "evas/rust_core/src/strobe.rs": "2cb7db0c54f6cf4656186343f764399132a9704f8b65552b00e737c9108c16af",
+    "evas/rust_core/src/transient.rs": "473b69cf6b4dcf0ab90f400815c7907ba0326af9181eb41ee66d64fdbd838eb8",
+    "evas/rust_core/src/transient_condition_tests.rs": "9b041e9ae55b4094f115e215ac5bea81782c23f6ca29aabdf2acfa80167e69d0",
+    "evas/rust_core/src/transient_event_acceptance.rs": "6a0a688dab3c1c358de500d906b209a7905a4acf1ac454bb850eb38eb66b36cd",
+    "evas/rust_core/src/transient_history_calendar.rs": "ee914bd940d94ffab3d397ca3069d849d5c895ca122edc35c2a3ca4339e7e585",
+    "evas/rust_core/src/transient_idt_tests.rs": "dfd640a90830437089e8389eedf7e354bd20253b47e3dcc7d3226dd1a496ee33",
+    "evas/rust_core/src/transient_lifecycle_tests.rs": "33866d0884186752921336a77c03a1d187242b523cec0a141bc8daad9c29fc5e",
+    "evas/rust_core/src/transient_window_tests.rs": "08285e435c4e7df5b2a31ac259347840e72a63ef7941953ee850655fdc1a7909",
+    "evas/rust_core/src/transition.rs": "1d1c3e709e983a53d0616d0fda1ff2183d2a2dc33b0b65e0aff122162ba72a3c",
+    "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+    "evas/src/evas/__main__.py": "f98567eedc0052dddf00fd13f5380e996409f72aed9fbf09702d5bf173fae1d5",
+    "evas/src/evas/array_elaboration.py": "4faf4543a735ad19c89bbbc760d39f6860089d854b7f24922edaa390cf20df0b",
+    "evas/src/evas/diagnostics.py": "e787f6c1b0ab3939fa37c15ec6da550f59520c6f99edf29e9c53784f31e3308f",
+    "evas/src/evas/elaboration.py": "ff4ffb36428b7a5fd26a646b31788e2699de050c0a2ec6935d807ed79286fbd8",
+    "evas/src/evas/errors.py": "1a361344eb6678f6d82a91f3c356513025146bf468e9d3f5d4b593a9c04b3c08",
+    "evas/src/evas/frontend.py": "55d6f9724c71ffb3938d4e6eb8ff425d1c85d66808e6bbc6492593640e30ae19",
+    "evas/src/evas/hierarchy.py": "c277bc21cbe987f7cb427a2955b6b20588d5c42ae09bbc62853dab7bdba4138f",
+    "evas/src/evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+    "evas/src/evas/instance_compiler.py": "030b7172416a21a273eefe18e03ea2ce19bbc3ebd95fa27c143459f898cc0e6a",
+    "evas/src/evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+    "evas/src/evas/ir.py": "ec167d9f02ddde4bff1dbf7b24b903d4a178822cfc0a2749638e753b1398f8cf",
+    "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+    "evas/src/evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+    "evas/src/evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+    "evas/src/evas/lowering.py": "3df0c3f873285e45aa9de85863ca7d42b4c1cffc205a24164700b953b1874c71",
+    "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+    "evas/src/evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+    "evas/src/evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+    "evas/src/evas/node_elaboration.py": "2b68adb511d792c349e40f98fa71933402f1569467c8e2cb6e6e9125773e7658",
+    "evas/src/evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+    "evas/src/evas/preprocessor.py": "83d54364c2cbc993da5d749bb3582f4ef5de110deff5f23a41ad9af4d928478c",
+    "evas/src/evas/protocol.py": "9dacd13cfd98a803e3e45a927c98035944a736a0930da5a33d6d202a8ebbe3bb",
+    "evas/src/evas/query.py": "2fda97253f88c236d308d795aeae52a00ff5cfbb458f87a4bcfdc3751fae4f64",
+    "evas/src/evas/results.py": "91bc585e4ee9a871fce7da38beebebe71218f0b59c7dda57fec904a9994810bd",
+    "evas/src/evas/runtime.py": "e467f9de3635dcd23813771ea528e57fa35dd98c36dce893b35f920f278c7c0f",
+    "evas/src/evas/scs.py": "6258b0b03294d399ad7cd0ad42e6513a19948d216e25333512a5b9b2695c6d6d",
+    "evas/src/evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
+    "evas/src/evas/standard_headers.py": "9f190d1b17d6a341cecdba14f8a43771f7754d2e0de1403d59e4432849ec7e30",
+    "evas/src/evas/strobe.py": "18d6b1911436459a7a19ee100d309636f5d0d75acd927b228219367098f19c80",
+    "evas/src/evas/syntax.py": "0808529711ffc52e04557d0adfad8452f12e3073132699c5afe8a59b6f602605",
+    "evas/rust_core/src/pwl_local.rs": "61f72f52b02f0557f752411c58d2d202cb309b6101214f4fbe3b0cf44e473208"
+  },
+  "source_sha256": "3eec21bc178e47a65d008c0a35c208fc43e17c6bb0861959fb898a92e9bae7a5",
+  "contract_sha256": "cf1b20889b45e12b4eb569b4765040a3751064ee0f7408ed8bba8d5a5ed7ad00",
+  "checker_sha256": "f7ddea35716125f04e1d4a73c0be6f44a8da33f41b21731363082c3332f9a5c1",
+  "analyzer_sha256": "bec0d624dcce278373edb202b3fecd365a2884e20ec8c7fb9bf165144de4cc1b",
+  "normalizer_sha256": "831bd269678251f61addebbd313d21b3b1a6f312c145be33e169ebb962c24fc8",
+  "spectre": {
+    "version": "sub-version  21.1.0.509.isr12",
+    "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f"
+  },
+  "new_spectre_simulations": 4,
+  "records": [
+    {
+      "condition": "ramp-positive-base",
+      "native_rows": 3139,
+      "query_count": 3146,
+      "execution": "completed",
+      "reference_numerical": "F",
+      "reference_coverage": "I",
+      "missing_times": [
+        0.15,
+        0.29,
+        0.30000000000000004,
+        0.3000000000000001,
+        0.305,
+        0.308,
+        0.31
+      ],
+      "reference_voltage_error_V": 2.013843077148386e-06,
+      "reference_failures_by_type": {
+        "flag": 1,
+        "voltage": 186
+      },
+      "evas_numerical": "P",
+      "evas_voltage_error_V": 1.1102230246251565e-16,
+      "direct_numerical": "F",
+      "direct_voltage_error_V": 2.013843077148386e-06,
+      "direct_failure_count": 187,
+      "boundary_difference_count": 2,
+      "effective_settings": {
+        "status": "I",
+        "reason": "[Errno 2] No such file or directory: '/tmp/chips-jinzhihong/event-source-closure-20261009-reference/spectre-output/runs/ramp-positive-base/requested_settings.json'"
+      },
+      "psf_sha256": "236e8cbc803f3a9ec6e05e0ee386a610ff168f66296fd02462e69bfcf4d9b3ab",
+      "deck_sha256": "b1d17c3e5264cb1ebf6c1c9de01814844de8d3f718505321c666c52715f16857",
+      "cross_first_saved_high_time": 0.3015372285374923,
+      "analytic_cross_time": 0.30153755228191553,
+      "first_saved_high_offset_s": -3.2374442321403407e-07,
+      "reference_failure_count": 187
+    },
+    {
+      "condition": "ramp-positive-tight",
+      "native_rows": 31038,
+      "query_count": 31044,
+      "execution": "completed",
+      "reference_numerical": "F",
+      "reference_coverage": "I",
+      "missing_times": [
+        0.15,
+        0.29,
+        0.30000000000000004,
+        0.3000000000000001,
+        0.305,
+        0.308,
+        0.31
+      ],
+      "reference_voltage_error_V": 6.495612419298025e-07,
+      "reference_failures_by_type": {
+        "flag": 1,
+        "outside requested time domain": 1
+      },
+      "evas_numerical": "P",
+      "evas_voltage_error_V": 1.1102230246251565e-16,
+      "direct_numerical": "F",
+      "direct_voltage_error_V": 6.495612419332719e-07,
+      "direct_failure_count": 2,
+      "boundary_difference_count": 2,
+      "effective_settings": {
+        "status": "I",
+        "reason": "[Errno 2] No such file or directory: '/tmp/chips-jinzhihong/event-source-closure-20261009-reference/spectre-output/runs/ramp-positive-tight/requested_settings.json'"
+      },
+      "psf_sha256": "dc1c56f3233a8fd530c5235c5482f5f315c8f7e16cd9073623917684e8dd543c",
+      "deck_sha256": "be3061e1e4d0420260e48206d7b95889377519ecc2b2dcdb13af7fb0840d00e8",
+      "cross_first_saved_high_time": 0.3015375202496203,
+      "analytic_cross_time": 0.30153755228191553,
+      "first_saved_high_offset_s": -3.203229520520878e-08,
+      "reference_failure_count": 2
+    },
+    {
+      "condition": "corner-negative-base",
+      "native_rows": 3154,
+      "query_count": 3160,
+      "execution": "completed",
+      "reference_numerical": "F",
+      "reference_coverage": "I",
+      "missing_times": [
+        0.15,
+        0.29,
+        0.30000000000000004,
+        0.3000000000000001,
+        0.305,
+        0.31
+      ],
+      "reference_voltage_error_V": 2.3436478759908397e-06,
+      "reference_failures_by_type": {
+        "flag": 1,
+        "voltage": 216
+      },
+      "evas_numerical": "P",
+      "evas_voltage_error_V": 1.1102230246251565e-16,
+      "direct_numerical": "F",
+      "direct_voltage_error_V": 2.3436478759353285e-06,
+      "direct_failure_count": 217,
+      "boundary_difference_count": 2,
+      "effective_settings": {
+        "status": "I",
+        "reason": "[Errno 2] No such file or directory: '/tmp/chips-jinzhihong/event-source-closure-20261009-reference/spectre-output/runs/corner-negative-base/requested_settings.json'"
+      },
+      "psf_sha256": "a7f853f7d562d37b28aadb024d58f3e18113d4f8f394a3f82010c8be08e096e3",
+      "deck_sha256": "70c6290097af0e14e9eb5b37435abcf73205a662cd69ed5b96dc9c4bdad4254d",
+      "cross_first_saved_high_time": 0.3015372285374923,
+      "analytic_cross_time": 0.30153755228191553,
+      "first_saved_high_offset_s": -3.2374442321403407e-07,
+      "reference_failure_count": 217
+    },
+    {
+      "condition": "corner-negative-tight",
+      "native_rows": 31053,
+      "query_count": 31058,
+      "execution": "completed",
+      "reference_numerical": "F",
+      "reference_coverage": "I",
+      "missing_times": [
+        0.15,
+        0.29,
+        0.30000000000000004,
+        0.3000000000000001,
+        0.305,
+        0.31
+      ],
+      "reference_voltage_error_V": 6.820912027971637e-07,
+      "reference_failures_by_type": {
+        "flag": 1,
+        "outside requested time domain": 1
+      },
+      "evas_numerical": "P",
+      "evas_voltage_error_V": 1.1102230246251565e-16,
+      "direct_numerical": "F",
+      "direct_voltage_error_V": 6.820912027971637e-07,
+      "direct_failure_count": 2,
+      "boundary_difference_count": 2,
+      "effective_settings": {
+        "status": "I",
+        "reason": "[Errno 2] No such file or directory: '/tmp/chips-jinzhihong/event-source-closure-20261009-reference/spectre-output/runs/corner-negative-tight/requested_settings.json'"
+      },
+      "psf_sha256": "1ce643efd43566945e0be48d7f6b3151e808496cda63d81d33fa8881ec1108b6",
+      "deck_sha256": "d2dec1870204d7d182c222c361ef9dff52b3df070b637b4ec3787a232d9ec46a",
+      "cross_first_saved_high_time": 0.3015375202496203,
+      "analytic_cross_time": 0.30153755228191553,
+      "first_saved_high_offset_s": -3.203229520520878e-08,
+      "reference_failure_count": 2
+    }
+  ],
+  "stability": [
+    {
+      "case": "ramp-positive",
+      "coverage": "I",
+      "ambiguous_or_missing": [
+        0.15,
+        0.29,
+        0.30000000000000004,
+        0.3000000000000001,
+        0.305,
+        0.308,
+        0.31
+      ],
+      "compared_values": 9,
+      "max_voltage_error_V": 1.3642818352328952e-06,
+      "numerical": "F",
+      "failures": [
+        {
+          "time": 0.302,
+          "node": "y",
+          "error": 1.0670069965357243e-06
+        },
+        {
+          "time": 0.302,
+          "node": "z",
+          "error": 1.3642818352328952e-06
+        }
+      ]
+    },
+    {
+      "case": "corner-negative",
+      "coverage": "I",
+      "ambiguous_or_missing": [
+        0.15,
+        0.29,
+        0.30000000000000004,
+        0.3000000000000001,
+        0.305,
+        0.31
+      ],
+      "compared_values": 12,
+      "max_voltage_error_V": 1.661556673915321e-06,
+      "numerical": "F",
+      "failures": [
+        {
+          "time": 0.302,
+          "node": "y",
+          "error": 1.661556673915321e-06
+        },
+        {
+          "time": 0.302,
+          "node": "z",
+          "error": 1.3642818352328952e-06
+        },
+        {
+          "time": 0.308,
+          "node": "y",
+          "error": 1.6615566733602094e-06
+        },
+        {
+          "time": 0.308,
+          "node": "z",
+          "error": 1.3642818355204256e-06
+        }
+      ]
+    }
+  ],
+  "raw_archive": {
+    "availability": "local-only, visible task checkout retained",
+    "location": "runs/event-source-closure-20261009/reference/collected/spectre/raw.tar.gz",
+    "sha256": "05dedcde6ad72b744b453907255321a75c30a98eee6dfe99ee975eb20adac825",
+    "manifest_sha256": "9d298220ecd8772f425d3b47abab13113698881bbf1783287b360c7ace98a7e6"
+  },
+  "final_analysis": {
+    "location": "runs/event-source-closure-20261009/paired-reviewed",
+    "summary_sha256": "7de92f3111bf72925b3fe601a8f07217101967557a4b88f7756ae1059b4f34fd"
+  },
+  "replays": {
+    "spec_b": {
+      "kernel_sha256": "7af9a1df5aa778dc2cf8311319ce165975124b0fc7a66fdcceeb2eafc193e493",
+      "records": [
+        {
+          "case": "E1-base",
+          "returncode": 0,
+          "equal": true,
+          "request_sha256": "ec83d9b3aa51433916894bf96211ea8e353f848a3ff3b4bb3867b560af2759a7",
+          "response_sha256": "cd57e4a36d58e0fdbee38cbab73dcb394c7f27f832b8b523706d1238bf261caa"
+        },
+        {
+          "case": "E1-fine",
+          "returncode": 0,
+          "equal": true,
+          "request_sha256": "7b1f2411d3fe227ab07bcec813e39304baa7a9542e6a1ce3fb536c09f6482f7c",
+          "response_sha256": "4ee9f320aded971f8291b2ac033ca278696f0ff8f57d9d2be5d555a5c422ca82"
+        },
+        {
+          "case": "E2-base",
+          "returncode": 0,
+          "equal": true,
+          "request_sha256": "9b69cfcfddad0bcb1565a0739e8bfa08237e9d01401cae5fc1906e2a07d5a5fd",
+          "response_sha256": "8049647f743687775277ba8b0364614f5f3683f6ae071864096a084396b5123c"
+        },
+        {
+          "case": "E2-fine",
+          "returncode": 0,
+          "equal": true,
+          "request_sha256": "6234dd7f749b30e6a5cd9f330395224dad9b01978061802a5e0bb7337a69f6aa",
+          "response_sha256": "e01fc2c89dbb6d70c18aa99ac91322f5e7fb7b0759f72c980e3690f4d508f715"
+        },
+        {
+          "case": "E3-base",
+          "returncode": 0,
+          "equal": true,
+          "request_sha256": "d4fd002c796fb569c3024de7b5155aca34872514ac8cbd08f1586da8b1613ae4",
+          "response_sha256": "83cda5654a19cc1479d79407f3ceaf479f21d61d765f327ab630d7d5cc5c6421"
+        },
+        {
+          "case": "E3-fine",
+          "returncode": 0,
+          "equal": true,
+          "request_sha256": "1281b1eea9a9262c5c69814212e4955d78e0869a07df37f001204c6d9dbf7f80",
+          "response_sha256": "28ebd484ce7995793ef4d2ad94026b2e2f4ee0958b48cbd2c9ac747e3cd8d1f2"
+        },
+        {
+          "case": "E4-base",
+          "returncode": 0,
+          "equal": true,
+          "request_sha256": "9f5a589546086a7c32bfb09005180dfa53c3daaae2e19355b6acee1eac74f2d5",
+          "response_sha256": "877ef6ad3bbd3cca0f0aa04dfbdee1c8119a2070597b154b71412a2032c79800"
+        },
+        {
+          "case": "E4-fine",
+          "returncode": 0,
+          "equal": true,
+          "request_sha256": "214fc1d25fd2cd36c6eb3c1be391be4ab0c9e646e7d339913f35dc4609485cf4",
+          "response_sha256": "2a27e3e5ece5ea311b00f1b64f72dca274e2d62f3d4a9eef98ef08a81a31dce8"
+        },
+        {
+          "case": "E5-base",
+          "returncode": 0,
+          "equal": true,
+          "request_sha256": "114d2801b1d2af6613044d3da210aec4c0e197489d17aafb9c07ad238d56cd6f",
+          "response_sha256": "11e5b22160c184946245bfff31781623ed8f2d7d90cf54412bfe199869fc2131"
+        },
+        {
+          "case": "E5-fine",
+          "returncode": 0,
+          "equal": true,
+          "request_sha256": "5bb054f9d78daec2132b0e3297a51c17eee018d06335b7de32929f2631f2f19f",
+          "response_sha256": "98a2d543b71105c56d4f0d084adc3824449109f620ac7288eda155a53dfd51ec"
+        },
+        {
+          "case": "E6-base",
+          "returncode": 0,
+          "equal": true,
+          "request_sha256": "3af0c7f37770af3adbce801f2dabb9b57609ac8c5ec6ceba37ed2254d65f24c1",
+          "response_sha256": "e20ea19349e4dd8a5d5dece30434b0f908336ad3eeb851c5014abbe5d6a75b7f"
+        },
+        {
+          "case": "E6-fine",
+          "returncode": 0,
+          "equal": true,
+          "request_sha256": "b1fdaa898604b5f78bf0611bddb035002d57df1c9ff1df3b311ada6ae5a1542e",
+          "response_sha256": "8baacd621d287aa4e588bd879a9128cdfd561808ea27f6b922fe423a3765d1fd"
+        }
+      ],
+      "scope": "Same exact archived Spec B requests and byte-identical prior merged-refactor responses; no new Spectre qualification."
+    },
+    "prior_engineering": {
+      "kernel_sha256": "7af9a1df5aa778dc2cf8311319ce165975124b0fc7a66fdcceeb2eafc193e493",
+      "records": [
+        {
+          "case": "C1",
+          "returncode": 0,
+          "equal": true,
+          "request_sha256": "244febe1451fb529a662d4a0f050b9b69765d177ea42d987602a90979bde92af",
+          "response_sha256": "8f3578267f7cffb0d8d6fdc4fd026a1b24b281485abd93e81852d7cbd9345880"
+        },
+        {
+          "case": "C2",
+          "returncode": 0,
+          "equal": true,
+          "request_sha256": "8a867582eac2d9db247f556fcaf83b8da490c7be7d036ac873df034ef96b8fd3",
+          "response_sha256": "3dadf156f8d3e1b4c5868bd656ab178483b228cc35388d2f03d92311d5e20826"
+        },
+        {
+          "case": "H1",
+          "returncode": 0,
+          "equal": true,
+          "request_sha256": "c5bb2dee129aa94203e838cbeac4f8e28051d864e2a33be5259eb4f0ef4fad73",
+          "response_sha256": "1e6793ce35333270d1e1d5731b0c5bc623609a800a79c1e5f59a95bab6f29be9"
+        },
+        {
+          "case": "M1",
+          "returncode": 0,
+          "equal": true,
+          "request_sha256": "267de8d107343f061d7dfce7acc65b282faf945b5972115ac8a72908930fce4a",
+          "response_sha256": "c6cf59fa5f27ead73d4fa0f61bdbd11b0b1e630bca53929462b2bff35738c297"
+        },
+        {
+          "case": "N1",
+          "returncode": 0,
+          "equal": true,
+          "request_sha256": "056d131c5c3a26b7ef559f8a155c40df207802d77f4379fc91d0e98c905a59af",
+          "response_sha256": "7eb435f812f305af766ef8d0b0741a210e8163362d62b845307c8fba7019cb1e"
+        },
+        {
+          "case": "T1",
+          "returncode": 0,
+          "equal": true,
+          "request_sha256": "852235a3872277d58ee36cd2183ce1fbbd588baf93cf1187adcd783cd05cae5d",
+          "response_sha256": "dc656939dbd1830455e25e7a5af8bf75412e9cef3406afc1503582d441555ee7"
+        },
+        {
+          "case": "T2",
+          "returncode": 0,
+          "equal": true,
+          "request_sha256": "fdeae6d32b492f077c4d0d6dd71e5dab0b4d08f18d0ee73b8d4d59fa50fb72ff",
+          "response_sha256": "1f6163c49858792bdb2b77650983fe378d5b8a340c20485892052e6d8500f158"
+        }
+      ],
+      "scope": "New final reviewed EVAS executions; 7 unchanged responses, corresponding14actual Spectre reference profiles and original F/I retained."
+    },
+    "scs_strobe": {
+      "kernel_sha256": "7af9a1df5aa778dc2cf8311319ce165975124b0fc7a66fdcceeb2eafc193e493",
+      "reference_analysis_sha256": "23ee0331390bb10aec063dac0bdbcf7eda048dd5eaddca517fbbc4f7fb1159e9",
+      "cases": [
+        {
+          "case": "static-irregular",
+          "deck_sha256": "d866176e439662e48b2171b4af8f6f66fb36974c7741f22713936acdd15c61fd",
+          "source_sha256": "acb8643bfa8449d65b634030b5ace388e00afcd0baa616f05794d8b4be069c32",
+          "result_sha256": "f080ac4e48518e62b4d2d319ef829a9b03be88e13f57fc9fcf45a62d59991720",
+          "forced_rows": [
+            {
+              "time": 0.2,
+              "direct_max_V": 0.0,
+              "analytic_error_V": 0.0
+            },
+            {
+              "time": 0.7,
+              "direct_max_V": 0.0,
+              "analytic_error_V": 0.0
+            }
+          ],
+          "output_times": [
+            0.0,
+            0.5,
+            1.0
+          ]
+        },
+        {
+          "case": "continuous-periodic",
+          "deck_sha256": "fcdf4190b837e7764a1ab96bd47f18c5f51a94e340340e0525297bd7d604d474",
+          "source_sha256": "93782f6da2331f0003ebd94dff5af8b094ac49aaf3f713362f21b81ac189844a",
+          "result_sha256": "ba85ac56d3456ea8414ac515e726034259917d18806b517812b24df61c9a6b78",
+          "forced_rows": [
+            {
+              "time": 0.125,
+              "direct_max_V": 1.2540482582923396e-08,
+              "analytic_error_V": 1.3877787807814457e-17
+            },
+            {
+              "time": 0.375,
+              "direct_max_V": 2.317413816399494e-08,
+              "analytic_error_V": 5.551115123125783e-17
+            },
+            {
+              "time": 0.625,
+              "direct_max_V": 3.697495132293227e-08,
+              "analytic_error_V": 2.220446049250313e-16
+            },
+            {
+              "time": 0.875,
+              "direct_max_V": 4.0997121697472494e-08,
+              "analytic_error_V": 4.440892098500626e-16
+            }
+          ],
+          "output_times": [
+            0.0,
+            0.5,
+            1.0
+          ]
+        },
+        {
+          "case": "implicit-irregular",
+          "deck_sha256": "d866176e439662e48b2171b4af8f6f66fb36974c7741f22713936acdd15c61fd",
+          "source_sha256": "7b79276df98e22eb5e167c3b0893e32ce2c1c41c4713b389a598d2d4fbd1a007",
+          "result_sha256": "f25583a2423afb0a065ff8559ddc6942c8fd04e1b4757e6a9dd5f7b04295af9f",
+          "forced_rows": [
+            {
+              "time": 0.2,
+              "direct_max_V": 4.735822844992299e-12,
+              "analytic_error_V": 2.7755575615628914e-17
+            },
+            {
+              "time": 0.7,
+              "direct_max_V": 4.743094805803594e-12,
+              "analytic_error_V": 0.0
+            }
+          ],
+          "output_times": [
+            0.0,
+            0.5,
+            1.0
+          ]
+        },
+        {
+          "case": "timer-periodic",
+          "deck_sha256": "fcdf4190b837e7764a1ab96bd47f18c5f51a94e340340e0525297bd7d604d474",
+          "source_sha256": "e99855a1a997fdf04f9d4e55912dbb1cd5d7fe9ff29cafcf83ebd438d0df059a",
+          "result_sha256": "887a44ed082da834aed2fab8430fd893808670bad00faaa03a18941a01dc35cd",
+          "forced_rows": [
+            {
+              "time": 0.125,
+              "direct_max_V": 0.0,
+              "analytic_error_V": 0.0
+            },
+            {
+              "time": 0.375,
+              "direct_max_V": 0.0,
+              "analytic_error_V": 0.0
+            },
+            {
+              "time": 0.625,
+              "direct_max_V": 0.0,
+              "analytic_error_V": 0.0
+            },
+            {
+              "time": 0.875,
+              "direct_max_V": 0.0,
+              "analytic_error_V": 0.0
+            }
+          ],
+          "output_times": [
+            0.0,
+            0.5,
+            1.0
+          ]
+        }
+      ],
+      "scope": "New .scs adapter executions, reuse frozen four-case Spectre native observations. Unsupported Spectre-only options omitted explicitly in local deck; no equal settings or exact boundary qualification claim. 12 internal forced points, original missing t=0 and settings I preserved."
+    }
+  },
+  "limits": [
+    "Reference setting readback I: requested_settings.json absent; native printed settings retained separately, not retroactively certified.",
+    "All original finite comparison failures retained. Two tightened analog errors <1uV do not imply event timing alignment.",
+    "Saved first-high observation is not a certificate for hidden actual callback time.",
+    "Raw evidence is not publicly downloadable; development cases are not unseen evaluation."
+  ]
+}

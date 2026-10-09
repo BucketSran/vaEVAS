@@ -2,7 +2,11 @@
 use super::*;
 
 impl LinearContinuous {
-    pub(super) fn local_from_seed(&self, horizon: f64) -> Result<Self, Error> {
+    pub(super) fn local_from_seed(
+        &self,
+        clock: crate::exact_time::Clock,
+        horizon: f64,
+    ) -> Result<Self, Error> {
         let (_, state) = self.event_seed.as_ref().ok_or_else(|| {
             Error::new("event_resolution", "local event flow lacks a physical seed")
         })?;
@@ -13,17 +17,15 @@ impl LinearContinuous {
                 .iter()
                 .all(|c| c.zero())
         };
-        if self
+        let source_driven = self
             .segments
             .iter()
-            .any(|s| !s.matrix[..count].iter().all(autonomous) || !s.values.iter().all(autonomous))
-        {
-            return Err(Error::new(
-                "event_resolution",
-                "local causal closure requires autonomous continuous flow and outputs",
-            ));
-        }
-        let context = local_context(&self.context, horizon);
+            .any(|s| !s.matrix[..count].iter().all(autonomous) || !s.values.iter().all(autonomous));
+        let context = if source_driven {
+            forced_local_context(&self.context, clock, horizon)?
+        } else {
+            local_context(&self.context, horizon)
+        };
         let mut next = Self::build(context, self.parameters.clone(), 0., Some(state.clone()))?
             .ok_or_else(|| Error::new("invalid_ir", "local continuous flow disappeared"))?;
         next.exact_affine = self.exact_seed.as_ref().and_then(|seed| {

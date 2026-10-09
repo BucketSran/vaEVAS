@@ -33,6 +33,27 @@ class ScsContracts(unittest.TestCase):
         self.assertEqual(actual['saved']['values'],[[0,0],[1.5,.5],[3,1],[1.5,.5],[0,0]])
         self.assertEqual(actual['testbench']['effective_tolerances'],dict(vabstol=1e-9,reltol=0))
 
+    def test_strobe_controls_reach_kernel_without_changing_output_grid(self):
+        self.deck(tran='tran tran stop=1 maxstep=.25 strobetimes=[.125 .625] strobeperiod=.25 strobedelay=.0625 skipstart=.25 skipstop=.75')
+        actual=simulate_scs(self.path,kernel=KERNEL)
+        program=compile_sources({str(self.root/'m.va'):self.va},[Instance('DUT','m',dict(u='u',y='y',r='0'),dict(gain=3))])
+        expected=transient(program,{'u':[[0,0],[.5,1],[1,0]]},[0,.25,.5,.75,1],stop=1,max_step=.25,kernel=KERNEL,
+            strobetimes=[.125,.625],strobeperiod=.25,strobedelay=.0625,skipstart=.25,skipstop=.75)
+        self.assertEqual(actual['strobe_evidence'],expected['strobe_evidence'])
+        self.assertEqual(actual['strobe_evidence']['times'],[.125,.3125,.5625,.625])
+        self.assertEqual(actual['saved']['times'],[0,.25,.5,.75,1])
+        self.assertEqual(actual['solutions'],expected['solutions'])
+
+    def test_invalid_strobe_settings_fail_in_netlist_with_location(self):
+        for controls in ['strobetimes=.1','strobetimes=[.2 .1]','strobetimes=[1.1]',
+                         'strobeperiod=0','strobeperiod=[.1]', 'skipstop=.5',
+                         'strobeperiod=.1 strobedelay=.1','strobeperiod=1e-20',
+                         'strobeoutput=all']:
+            with self.subTest(controls=controls),self.assertRaises(CompileError) as caught:
+                load_scs(self.deck(tran='tran tran stop=1 maxstep=.25 '+controls))
+            self.assertEqual(caught.exception.diagnostic['stage'],'netlist')
+            self.assertIn('location',caught.exception.diagnostic)
+
     def test_dc_units_parameters_reverse_ground_and_cli(self):
         self.deck('parameters level=250m\nVin (0 u) vsource type=dc dc=level',tran='tran tran stop=1u maxstep=250n')
         result=simulate_scs(self.path,kernel=KERNEL)

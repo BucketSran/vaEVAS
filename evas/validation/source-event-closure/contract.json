@@ -1,0 +1,84 @@
+{
+  "base": "c2ca32ee91e6e0db707c9d927e5257695dd4e44a",
+  "scope": "PWL-driven local causal history: clock changes flow, input corner, later crossing changes flow again, unrelated history preservation",
+  "stop": 0.31,
+  "times": [
+    0,
+    0.15,
+    0.29,
+    0.3,
+    0.30000000000000004,
+    0.3000000000000001,
+    0.302,
+    0.305,
+    0.308,
+    0.31
+  ],
+  "voltage_nodes": [
+    "u",
+    "y",
+    "z",
+    "w",
+    "count",
+    "flag",
+    "mark"
+  ],
+  "profiles": {
+    "base": {
+      "reltol": 1e-08,
+      "vabstol": 1e-10,
+      "iabstol": 1e-14,
+      "maxstep": 0.0001
+    },
+    "tight": {
+      "reltol": 1e-09,
+      "vabstol": 1e-11,
+      "iabstol": 1e-15,
+      "maxstep": 1e-05
+    }
+  },
+  "acceptance": {
+    "voltage_absolute_V": 1e-06,
+    "event_window_s": 2e-09,
+    "discrete": "exact expected integer outside fixed windows; every native row inside a window retained separately",
+    "coverage": "requested binary64 times must exist exactly; missing remains I",
+    "reference_stability_absolute_V": 1e-06
+  },
+  "cases": {
+    "ramp-positive": {
+      "polarity": 1,
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0.31,
+          1.31
+        ]
+      ]
+    },
+    "corner-negative": {
+      "polarity": -1,
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0.305,
+          1.305
+        ],
+        [
+          0.31,
+          1.1
+        ]
+      ]
+    }
+  },
+  "limits": [
+    "original C1/#79/VCO/M1 contracts unchanged",
+    "native timing and semantic boundary differences stay separately visible",
+    "no strobe in EVAS local closure; output queries do not claim forced solves"
+  ]
+}

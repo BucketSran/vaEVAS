@@ -118,6 +118,18 @@ fn local_context(context: &Arc<Context>, horizon: f64) -> Arc<Context> {
     })
 }
 
+fn forced_local_context(
+    context: &Arc<Context>,
+    clock: crate::exact_time::Clock,
+    horizon: f64,
+) -> Result<Arc<Context>, Error> {
+    Ok(Arc::new(Context {
+        program: context.program.clone(),
+        driven: context.driven.clone(),
+        trajectory: context.trajectory.at_clock(clock, horizon)?,
+    }))
+}
+
 #[derive(Clone)]
 struct Segment {
     start: f64,

@@ -198,6 +198,9 @@ pub(crate) struct Trajectory {
     source_errors: Vec<f64>,
     pub(crate) exact_sources: Vec<Option<crate::exact_source::Curve>>,
     original_source_count: usize,
+    // Only local-time copies use enclosed vertices. Their times are exact
+    // binary64 differences from the physical clock, not rounded absolute times.
+    local_vertices: Option<Vec<Vec<I>>>,
 }
 
 impl Trajectory {
@@ -214,24 +217,22 @@ impl Trajectory {
         let mut derivatives = Vec::new();
         for (k, source) in self.config.pwl.iter().enumerate() {
             let mut slope = None;
-            for pair in source.windows(2) {
+            for (i, pair) in source.windows(2).enumerate() {
                 if pair[0][0] < time.hi && pair[1][0] > time.lo
                     || time.lo == time.hi && pair[0][0] <= time.lo && time.lo <= pair[1][0]
                 {
-                    let d = (I::point(pair[1][1]) - I::point(pair[0][1]))
-                        / (I::point(pair[1][0]) - I::point(pair[0][0]));
+                    let difference = if self.local_vertices.is_some() {
+                        self.vertex(k, i + 1) - self.vertex(k, i)
+                    } else {
+                        I::point(pair[1][1]) - I::point(pair[0][1])
+                    };
+                    let d = difference / (I::point(pair[1][0]) - I::point(pair[0][0]));
                     slope = Some(slope.map_or(d, |previous: I| previous.hull(d)));
                 }
             }
-            for &[t, v] in source {
+            for (i, &[t, _]) in source.iter().enumerate() {
                 if t > time.lo && t < time.hi {
-                    values[k] = values[k].hull(
-                        I::point(v)
-                            + I {
-                                lo: -self.source_errors[k],
-                                hi: self.source_errors[k],
-                            },
-                    );
+                    values[k] = values[k].hull(self.vertex(k, i));
                 }
             }
             derivatives.push(slope.unwrap_or(I::ZERO));
@@ -293,6 +294,7 @@ impl Trajectory {
             config,
             knots,
             source_errors,
+            local_vertices: None,
         })
     }
 
@@ -301,7 +303,8 @@ impl Trajectory {
         points: Vec<[f64; 2]>,
         error: f64,
     ) -> Result<(), Error> {
-        if !error.is_finite()
+        if self.local_vertices.is_some()
+            || !error.is_finite()
             || error < 0.0
             || points.len() < 2
             || points[0][0] != 0.0
@@ -389,6 +392,9 @@ impl Trajectory {
         values: &[I],
         direction: i8,
     ) -> Result<Vec<Root>, Error> {
+        if self.local_vertices.is_some() {
+            return Err(unresolved("local PWL inputs cannot establish absolute event times"));
+        }
         let mut result = Vec::new();
         if values.iter().any(|v| !v.finite() || v.sign().is_none()) {
             return Err(unresolved(
@@ -447,30 +453,48 @@ impl Trajectory {
         self.config
             .pwl
             .iter()
-            .zip(&self.source_errors)
-            .map(|(source, &error)| {
+            .enumerate()
+            .map(|(k, source)| {
                 let index = source.partition_point(|p| p[0] < time);
                 if source[index][0] == time {
-                    return I::point(source[index][1])
-                        + I {
-                            lo: -error,
-                            hi: error,
-                        };
+                    return self.vertex(k, index);
                 }
-                let [start, a] = source[index - 1];
-                let [end, b] = source[index];
+                let [start, _] = source[index - 1];
+                let [end, _] = source[index];
                 let fraction =
                     (I::point(time) - I::point(start)) / (I::point(end) - I::point(start));
-                I::point(a)
-                    + (I::point(b) - I::point(a)) * fraction
-                    + I {
-                        lo: -error,
-                        hi: error,
-                    }
+                if self.local_vertices.is_some() {
+                    self.vertex(k, index - 1) * (I::ONE - fraction)
+                        + self.vertex(k, index) * fraction
+                } else {
+                    // Preserve the established arithmetic for ordinary inputs.
+                    I::point(source[index - 1][1])
+                        + (I::point(source[index][1]) - I::point(source[index - 1][1])) * fraction
+                        + I {
+                            lo: -self.source_errors[k],
+                            hi: self.source_errors[k],
+                        }
+                }
             })
             .collect()
     }
+
+    fn vertex(&self, source: usize, point: usize) -> I {
+        self.local_vertices.as_ref().map_or_else(
+            || {
+                I::point(self.config.pwl[source][point][1])
+                    + I {
+                        lo: -self.source_errors[source],
+                        hi: self.source_errors[source],
+                    }
+            },
+            |vertices| vertices[source][point],
+        )
+    }
 }
+
+#[path = "pwl_local.rs"]
+mod local;
 
 #[cfg(test)]
 mod tests {

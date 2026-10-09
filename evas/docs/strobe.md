@@ -1,8 +1,9 @@
 # 强制求解时刻
 
-当前开发候选在 Python `transient` 和 JSON manifest 中增加 strobe 控制。
+当前实现通过 Python `transient`、JSON manifest 和受限 `.scs` 入口提供 strobe 控制。
 它与 `output_times` 分开：后者请求输出，前者要求计算在指定时刻落点。
-`.scs` 导入器暂不接受这些选项；Spectre 的 `strobeoutput` 保存策略和别名也尚未实现。
+`.scs` 的 `tran` 接受下表五项控制，使用相同展开规则；`stop` 和 `maxstep` 仍须显式指定。
+Spectre 的 `strobeoutput` 保存策略和别名尚未实现，未知选项明确拒绝。
 这是一项有限控制能力，不代表已复制 Spectre 的内部积分或浮点运算顺序。
 
 ```python
@@ -50,3 +51,10 @@ EVAS 对输入 binary64 值作精确有理数运算，再将每个时刻舍入�
 验证入口为 [公共控制测试](../tests/test_strobe.py)、
 [独立模型与冻结预算](../validation/strobe/README.md)。
 原 C1、#79 和 VCO 的严格边界缺口继续保留，不因新增控制或提示转为通过。
+
+`.scs` 示例：`tran tran stop=1 maxstep=0.5 strobeperiod=0.25 strobedelay=0.125`。
+常规观察网格仍为 `[0,0.5,1]`，四个强制点单独保存在 `strobe_evidence`；
+它们不改写源 PWL。`load_scs` 在编译前检查时间表类型、范围和资源上限，
+`simulate_scs` 将原控制交给已有 API。适配元数据同时记录控制参数和展开时间表。
+[入口测试](../tests/test_scs.py)与[本轮配对说明](../../experiments/backends/source-event-closure/README.md)
+覆盖该入口；沿用既有实际 Spectre 观测，原缺失时间与设置资格 I 保留。
