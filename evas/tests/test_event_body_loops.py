@@ -113,7 +113,7 @@ class EventBodyLoops(unittest.TestCase):
     def test_supported_input_conditional_keeps_existing_selected_writer_behavior(self):
         program = compile_loop('''@(initial_step) n=0;
           @(timer(1)) for(i=0;i<3;i=i+1)
-            if(V(u,r)>.5) n=10*n+i+1; else n=10*n+3-i;
+            if(V(u,r)>0.5) n=10*n+i+1; else n=10*n+3-i;
           V(y,r)<+n;''')
         self.assertEqual(values(run(program)), [0, 0, 321, 321])
         self.assertEqual(values(run(program, sources={'u': [[0, 1], [2.5, 1]]})), [0, 0, 123, 123])
@@ -127,7 +127,7 @@ class EventBodyLoops(unittest.TestCase):
             ('for(k=0;k<2;k=k+1) n=k;', 'declared genvar'),
             ('for(i=0;i<2;i=i+1) for(i=0;i<2;i=i+1) n=i;', 'unshadowed'),
             ('for(i=0;i<2;i=i+1) i=1;', 'for control'),
-            ('for(i=0;i<2;i=i+.5) n=i;', 'signed 32-bit'),
+            ('for(i=0;i<2;i=i+0.5) n=i;', 'signed 32-bit'),
             ('for(i=2147483647;i<=2147483647;i=i+1) n=0;', 'signed 32-bit'),
             ('for(i=0;i<4096;i=i+1) for(j=0;j<2;j=j+1) begin end', 'total static iteration budget'),
             ('for(i=0;i<4096;i=i+1) n=i;', 'statement budget'),
@@ -160,7 +160,7 @@ class EventBodyLoops(unittest.TestCase):
             'if(V(u,r)*V(u,r)>0) n=1;',
             'if(V(y,r)>0) n=1;',
             'for(j=0;j<2;j=V(u,r)) n=1;',
-            'for(j=0;j<2;j=j+.5) n=1;',
+            'for(j=0;j<2;j=j+0.5) n=1;',
         ):
             for count in (0, 1):
                 with self.subTest(body=body, count=count), self.assertRaises((CompileError, KernelError)):
@@ -172,7 +172,7 @@ class EventBodyLoops(unittest.TestCase):
         for predicate in ('2*V(u,r)-1', 'V(y,r)'):
             for count in (0, 1):
                 program = compile_loop(f'''@(initial_step) n=0;
-                  @(timer(1)) for(i=0;i<{count};i=i+1) if({predicate}>.5) n=n+1;
+                  @(timer(1)) for(i=0;i<{count};i=i+1) if({predicate}>0.5) n=n+1;
                   V(y,r)<+V(u,r);''')
                 result = run(program, sources={'u': [[0, 1], [2.5, 1]]})
                 self.assertEqual(result['transient']['states'][-1], [count])
@@ -180,7 +180,7 @@ class EventBodyLoops(unittest.TestCase):
     def test_vector_predicate_dependencies_keep_stateless_bits_separate(self):
         for count in (0, 1):
             program = compile_loop(f'''@(initial_step) n=0;
-              @(timer(1)) for(i=0;i<{count};i=i+1) if(V(bus[1],r)>.5) n=1;
+              @(timer(1)) for(i=0;i<{count};i=i+1) if(V(bus[1],r)>0.5) n=1;
               V(bus[0],r)<+n; V(bus[1],r)<+V(u,r); V(y,r)<+n;''',
                                    'genvar i; integer n; electrical [0:1] bus;')
             result = run(program, sources={'u': [[0, 1], [2.5, 1]]})
@@ -205,7 +205,7 @@ class EventBodyLoops(unittest.TestCase):
 
     def test_loop_does_not_enable_reads_from_another_event_writer(self):
         program = compile_loop('''@(initial_step) n=0;
-          @(timer(.5)) n=7;
+          @(timer(0.5)) n=7;
           @(timer(1)) for(i=0;i<2;i=i+1) n=10*n+i;
           V(y,r)<+n;''')
         with self.assertRaisesRegex(KernelError, 'unsupported_cross'):

@@ -18,10 +18,10 @@ class MixedDynamicsContracts(unittest.TestCase):
         # hence y=.75+.25*exp(-(t-e)); restarting DC would jump to .75.
         # Only z is reset, held at its explicit IC until release at .5.
         program=compile_model(
-            '@(initial_step) begin q=.25; rst=0; end '
-            '@(timer(.25,0,1e-12)) begin q=0; rst=1; end '
-            '@(timer(.5,0,1e-12)) rst=0; '
-            "V(y,r)<+laplace_nd(.75+q*pow(V(y,r),2),'{1},'{1,1}); "
+            '@(initial_step) begin q=0.25; rst=0; end '
+            '@(timer(0.25,0,1e-12)) begin q=0; rst=1; end '
+            '@(timer(0.5,0,1e-12)) rst=0; '
+            "V(y,r)<+laplace_nd(0.75+q*pow(V(y,r),2),'{1},'{1,1}); "
             'V(z,r)<+idt(1,2,rst);','real q; integer rst; electrical z;')
         sparse=[0,.125,.25,.375,.5,.75,1]
         first=run(program,times=sparse,max_step=.0625,vabstol=1e-9,reltol=0)
@@ -35,13 +35,13 @@ class MixedDynamicsContracts(unittest.TestCase):
             assert_close(self,row['dut:z'],z,delta=1e-9)
 
     def test_nonlinear_filter_cold_root_cannot_skip_voltage_accuracy(self):
-        program=compile_model("V(y,r)<+laplace_nd(.75+.25*pow(V(y,r),2),'{1},'{1,1});")
+        program=compile_model("V(y,r)<+laplace_nd(0.75+0.25*pow(V(y,r),2),'{1},'{1,1});")
         with self.assertRaisesRegex(KernelError,'waveform_accuracy'):
             run(program,times=[0,.5,1],vabstol=1e-20,reltol=0)
 
     def test_singular_nonlinear_filter_cold_root_is_rejected(self):
         # DC implies (y-.5)^2=0, so no regular isolated-root proof.
-        program=compile_model("V(y,r)<+laplace_nd(.25+pow(V(y,r),2),'{1},'{1,1});")
+        program=compile_model("V(y,r)<+laplace_nd(0.25+pow(V(y,r),2),'{1},'{1,1});")
         with self.assertRaises(KernelError):
             run(program,times=[0,.5,1],vabstol=1e-9,reltol=0)
 
@@ -78,7 +78,7 @@ class MixedDynamicsContracts(unittest.TestCase):
         # Initial q=0 gives the unique DC state z=y=1. After tau=1/4,
         # y'=(y-2)^2/4 with y(tau)=1, hence y=2-4/(4+t-tau).
         program = compile_model(
-            "@(initial_step) q=0; @(timer(.25,0,1e-12)) q=.5; "
+            "@(initial_step) q=0; @(timer(0.25,0,1e-12)) q=0.5; "
             "V(z,r)<+idt(pow(V(u,r),2),1); "
             "V(y,r)<+laplace_nd(pow(q*V(y,r),2)+V(z,r),'{1},'{1,1});",
             "real q; electrical z;")
@@ -146,7 +146,7 @@ class MixedDynamicsContracts(unittest.TestCase):
         # z'=1 while not reset. Include a genuinely nonlinear (zero-valued)
         # separate integrator so the common network uses polynomial propagation.
         program = compile_model(
-            "@(initial_step) rst=0; @(timer(.5,0,1e-12)) rst=1; "
+            "@(initial_step) rst=0; @(timer(0.5,0,1e-12)) rst=1; "
             "V(z,r)<+idt(1,0,rst); V(n,r)<+idt(pow(V(u,r),2),0); "
             "V(y,r)<+laplace_nd(V(z,r),'{1},'{1,1});", "integer rst; electrical z,n;")
         times = [0,.25,.5,.75,1]

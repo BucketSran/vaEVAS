@@ -15,7 +15,7 @@ class LifecycleClosureContracts(unittest.TestCase):
         # A timer starts a four-second ramp at 1/4. Sampling at sqrt(2)
         # gives (sqrt(2)-1/4)/4, independent of output sampling density.
         body = ('@(initial_step) begin q=0; target=0; end '
-            '@(timer(.25,0,1e-12)) target=1; '
+            '@(timer(0.25,0,1e-12)) target=1; '
             '@(cross(pow(V(u,r),2)-2,1,TTOL,ETOL)) q=V(z,r); '
             'V(z,r)<+transition(target,0,4,4); V(y,r)<+q;')
         for ttol, etol, accepted in [('1e-5','1e-4',False), ('1e-10','1e-9',True)]:
@@ -41,7 +41,7 @@ class LifecycleClosureContracts(unittest.TestCase):
         assert_close(self, rows(result)[-1]['dut:z'], 4, delta=2e-7)
 
     def test_uncertified_history_window_is_explicitly_rejected(self):
-        for history in ['absdelay(V(u,r),.25)', 'slew(V(u,r),2,-2)',
+        for history in ['absdelay(V(u,r),0.25)', 'slew(V(u,r),2,-2)',
                         'idtmod(V(u,r),0,8,0)']:
             with self.subTest(history=history):
                 body = ('@(initial_step) q=0; @(TRIGGER) q=V(z,r); '
@@ -96,14 +96,14 @@ class LifecycleClosureContracts(unittest.TestCase):
         for body in bodies:
             with self.subTest(body=body):
                 program = compile_model('@(initial_step) q=1; '
-                    '@(timer(.5,0,1e-12)) q=V(y,r); '+body, 'real q; electrical z;'
+                    '@(timer(0.5,0,1e-12)) q=V(y,r); '+body, 'real q; electrical z;'
                     if 'V(z,r)' in body else 'real q;')
                 with self.assertRaisesRegex(KernelError, 'unsupported_operator.*instantaneous'):
                     run(program, times=[0,.25,.5,1], stop=1, vabstol=1e-7, reltol=1e-7)
 
     def test_derivative_without_event_feedback_accepts_input_updates(self):
         program = compile_model('@(initial_step) q=1; '
-            '@(timer(.5,0,1e-12)) q=q+1; V(y,r)<+ddt(idt(q,0));', 'real q;')
+            '@(timer(0.5,0,1e-12)) q=q+1; V(y,r)<+ddt(idt(q,0));', 'real q;')
         result = run(program, times=[0,.25,.5,1], stop=1, vabstol=1e-8, reltol=1e-8)
         for row, expected in zip(rows(result), [0,1,2,2]):
             assert_close(self, row['y'], expected, delta=1e-8)
@@ -111,14 +111,14 @@ class LifecycleClosureContracts(unittest.TestCase):
     def test_derivative_preserves_remaining_dynamic_state(self):
         # ddt removes one integration, not every state on its input path.
         program = compile_model('@(initial_step) q=1; '
-            '@(timer(.5,0,1e-12)) begin q=V(y,r); q=q+1; end '
+            '@(timer(0.5,0,1e-12)) begin q=V(y,r); q=q+1; end '
             'V(y,r)<+ddt(idt(idt(q,0),0));', 'real q;')
         result = run(program, times=[0,.5,1], stop=1, vabstol=1e-8, reltol=1e-8)
         assert_close(self, rows(result)[-1]['y'], 1.25, delta=1e-8)
         # H=1/(1+s)^2 has relative degree 2: its first derivative remains
         # continuous. A 2->1 step at .5 gives y'=-h*exp(-h).
         program = compile_model('@(initial_step) q=2; '
-            '@(timer(.5,0,1e-12)) q=V(y,r)+1; '
+            '@(timer(0.5,0,1e-12)) q=V(y,r)+1; '
             "V(y,r)<+ddt(laplace_nd(q,'{1},'{1,2,1}));", 'real q;')
         result = run(program, times=[0,.5,1], stop=1, vabstol=1e-8, reltol=1e-8)
         assert_close(self, rows(result)[-1]['y'], -.5*math.exp(-.5), delta=1e-8)
@@ -126,14 +126,14 @@ class LifecycleClosureContracts(unittest.TestCase):
     def test_direct_filter_event_fixed_point_is_explicitly_rejected(self):
         # H(s)=1: q+=y+=q+ admits every q, not a unique event solution.
         program=compile_model('@(initial_step) q=1; '
-            "@(timer(.5,0,1e-12)) q=V(y,r); V(y,r)<+laplace_nd(q,'{1,1},'{1,1});",
+            "@(timer(0.5,0,1e-12)) q=V(y,r); V(y,r)<+laplace_nd(q,'{1,1},'{1,1});",
             'real q;')
         with self.assertRaisesRegex(KernelError,'unsupported_operator.*instantaneous'):
             run(program,times=[0,.5,1],stop=1)
 
     def test_direct_filter_without_event_voltage_feedback_keeps_order(self):
         program=compile_model('@(initial_step) q=1; '
-            "@(timer(.5,0,1e-12)) q=q+1; V(y,r)<+laplace_nd(q,'{1,1},'{1,1});",
+            "@(timer(0.5,0,1e-12)) q=q+1; V(y,r)<+laplace_nd(q,'{1,1},'{1,1});",
             'real q;')
         result=run(program,times=[0,.5,1],stop=1)
         for row,expected in zip(rows(result),[1,2,2]):
@@ -141,7 +141,7 @@ class LifecycleClosureContracts(unittest.TestCase):
 
     def test_strictly_proper_filter_cuts_instantaneous_event_feedback(self):
         program=compile_model('@(initial_step) q=1; '
-            "@(timer(.5,0,1e-12)) begin q=V(z,r); q=q+1; end "
+            "@(timer(0.5,0,1e-12)) begin q=V(z,r); q=q+1; end "
             "V(y,r)<+laplace_nd(q,'{1,1},'{1,1}); "
             "V(z,r)<+laplace_nd(V(y,r),'{1},'{1,1});",'real q; electrical z;')
         result=run(program,times=[0,.5,1],stop=1)
@@ -153,11 +153,11 @@ class LifecycleClosureContracts(unittest.TestCase):
             for reverse in [False, True]:
                 for cross in [False, True]:
                     with self.subTest(nonlinear=nonlinear, reverse=reverse, cross=cross):
-                        trigger = 'cross(V(u,r)-.5,1,1e-8,1e-8)' if cross else 'timer(.5,0,1e-12)'
+                        trigger = 'cross(V(u,r)-0.5,1,1e-8,1e-8)' if cross else 'timer(0.5,0,1e-12)'
                         assignments = 'q=V(z,r); rst=1;' if reverse else 'rst=1; q=V(z,r);'
                         body = (f'@(initial_step) begin q=1; rst=0; end '
                             f'@({trigger}) begin {assignments} end '
-                            '@(timer(.75,0,1e-12)) rst=0; '
+                            '@(timer(0.75,0,1e-12)) rst=0; '
                             "V(z,r)<+idt(q,1,rst); V(y,r)<+laplace_nd(V(z,r),'{1},'{1,1}); "
                             'V(held,r)<+q;')
                         declarations = 'real q; integer rst; electrical z;'
@@ -184,8 +184,8 @@ class LifecycleClosureContracts(unittest.TestCase):
     def test_reset_sample_keeps_local_assignment_order(self):
         # Local q=q+1 follows the post-reset q=z+=1, hence future slope 2.
         program=compile_model('@(initial_step) begin q=1; rst=0; end '
-            '@(timer(.5,0,1e-12)) begin rst=1; q=V(y,r); q=q+1; end '
-            '@(timer(.75,0,1e-12)) rst=0; V(y,r)<+idt(q,1,rst);',
+            '@(timer(0.5,0,1e-12)) begin rst=1; q=V(y,r); q=q+1; end '
+            '@(timer(0.75,0,1e-12)) rst=0; V(y,r)<+idt(q,1,rst);',
             'real q; integer rst;')
         result=run(program,times=[0,.5,.75,1],stop=1,vabstol=1e-9,reltol=1e-9)
         assert_close(self,rows(result)[-1]['y'],1.5,delta=1e-9)
@@ -196,9 +196,9 @@ class LifecycleClosureContracts(unittest.TestCase):
         root = (Q(.5)-Q(.2))/(Q(.8)-Q(.2))
         program = compile_model(
             '@(initial_step) begin q=1; rst=0; h=0; end '
-            '@(cross(V(u,r)-.5,1,1e-9,1e-8)) begin '
+            '@(cross(V(u,r)-0.5,1,1e-9,1e-8)) begin '
             'rst=1; q=V(z,r); h=V(clock,r); end '
-            '@(timer(.75,0,1e-12)) rst=0; '
+            '@(timer(0.75,0,1e-12)) rst=0; '
             'V(z,r)<+idt(q,1,rst); V(y,r)<+q; V(stamp,r)<+h;',
             'real q,h; integer rst; electrical z;', ports='u,clock,y,stamp,r',
             directions='input u,clock; output y,stamp; inout r;')

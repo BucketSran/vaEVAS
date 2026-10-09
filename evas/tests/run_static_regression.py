@@ -18,7 +18,7 @@ from run_suite import T, PROFILES, conditions, v1
 from check_results import check
 
 from evas import CompileError, Instance, compile_sources, solve
-from evas.syntax import Parser
+from evas.frontend import parse_sources
 
 
 def digest(path):
@@ -37,7 +37,7 @@ def main():
                    (ROOT / "evas/validation/cases" / card / "dut.va").read_text()
                    for card in case["source_cards"]}
         try:
-            models = [Parser(text, path).parse() for path, text in sources.items()]
+            models = list(parse_sources(sources).values())
             ports = {m.name: m.ports for m in models}
             instances = []
             for inst in case["instances"]:

@@ -8,9 +8,9 @@ from test_affine import KERNEL, instance, model
 class BoundedEventClosure(unittest.TestCase):
     def test_mixed_source_root_and_two_exact_clocks(self):
         source=model("""@(initial_step) begin n=0;k=0;j=0;end
-@(timer(.1,.2,1e-6)) n=n+1;
+@(timer(0.1,0.2,1e-6)) n=n+1;
 @(cross(V(u,r),1,1e-6,1e-6)) k=k+1;
-@(timer(.30000000000000004,0,1e-6)) j=j+1;
+@(timer(0.30000000000000004,0,1e-6)) j=j+1;
 V(y,r)<+n+k+j;""", "integer n,k,j;")
         root=Q(.4)*Q(.3)/(Q(.3)+Q(.1))
         physical=sorted([(Q(.1),0),(Q(.1)+Q(.2),0),(root,1),(Q(.30000000000000004),2)])
@@ -28,9 +28,9 @@ V(y,r)<+n+k+j;""", "integer n,k,j;")
             baseline=events
 
     def test_point_certified_held_timer_preserves_exact_order(self):
-        source=model("""@(initial_step) begin a=.1;p=.2;n=0;k=0;j=0;end
+        source=model("""@(initial_step) begin a=0.1;p=0.2;n=0;k=0;j=0;end
 @(timer(a,p,1e-6)) n=n+1;
-@(timer(.30000000000000004,0,1e-6)) k=k+1;
+@(timer(0.30000000000000004,0,1e-6)) k=k+1;
 V(y,r)<+n+k+j;""", "real a,p;integer n,k,j;")
         result=transient(compile_sources({"held.va":source},[instance()]),{"u":[[0,0],[.31,0]]},[0,.31],stop=.31,max_step=.31,kernel=KERNEL)
         self.assertEqual(result["transient"]["states"][-1],[.1,.2,2,1,0])
@@ -39,8 +39,8 @@ V(y,r)<+n+k+j;""", "real a,p;integer n,k,j;")
     def hidden(self, polynomial=False, chain=False, tight=False):
         from evas import KernelError
         source=model("""@(initial_step) begin n=0;q=0;h=0;m=0;j=0;end
-@(timer(.1,.2,1e-6)) begin n=n+1;q=n-1;end
-@(timer(.30000000000000004,0,1e-6)) m=m+1;
+@(timer(0.1,0.2,1e-6)) begin n=n+1;q=n-1;end
+@(timer(0.30000000000000004,0,1e-6)) m=m+1;
 V(z,r)<+idt(FLOW,0);
 @(cross(V(z,r)-1e-18,1,TTOL,1e-6)) h=h+1;
 EXTRA V(y,r)<+h+j;""", "integer n,q,h,m,j;electrical z;")
@@ -82,15 +82,15 @@ EXTRA V(y,r)<+h+j;""", "integer n,q,h,m,j;electrical z;")
         from evas import KernelError
         guards="".join(f"@(cross(V(z,r)-{k*1e-20!r},1,1e-6,1e-6)) begin end\n" for k in range(1,67))
         source=model("""@(initial_step) begin n=0;q=0;end
-@(timer(.1,.2,1e-6)) begin n=n+1;q=n-1;end
-@(timer(.30000000000000004,0,1e-6)) begin end
+@(timer(0.1,0.2,1e-6)) begin n=n+1;q=n-1;end
+@(timer(0.30000000000000004,0,1e-6)) begin end
 V(z,r)<+idt(q,0);"""+guards+"V(y,r)<+V(z,r);","integer n,q;electrical z;")
         with self.assertRaisesRegex(KernelError,"event_budget.*64 microevents"):
             transient(compile_sources({"resource.va":source},[instance()]),{"u":[[0,0],[.31,.31]]},[0,.31],stop=.31,max_step=.31,vabstol=1.,reltol=0.,kernel=KERNEL)
 
     def test_local_or_deduplicates_only_the_same_physical_root(self):
         source=model("""@(initial_step) begin n=0;q=0;h=0;end
-@(timer(.1,.2,1e-6)) begin n=n+1;q=n-1;end
+@(timer(0.1,0.2,1e-6)) begin n=n+1;q=n-1;end
 V(z,r)<+idt(q,0);
 @(cross(V(z,r)-1e-18,1,1e-6,1e-6) or cross(V(z,r)-1e-18,0,1e-6,1e-6) or cross(V(z,r)-3e-18,1,1e-6,1e-6)) h=h+1;
 V(y,r)<+h;""", "integer n,q,h;electrical z;")
@@ -107,7 +107,7 @@ V(y,r)<+h;""", "integer n,q,h;electrical z;")
     def test_local_closure_rejects_nonautonomous_coupled_state(self):
         from evas import KernelError
         source=model("""@(initial_step) begin n=0;q=0;h=0;end
-@(timer(.1,.2,1e-6)) begin n=n+1;q=n-1;end
+@(timer(0.1,0.2,1e-6)) begin n=n+1;q=n-1;end
 V(z,r)<+idt(q+1e-30*V(u,r),0); V(w,r)<+idt(V(u,r),0);
 @(cross(V(z,r)-1e-18,1,1e-6,1e-6)) h=h+1;
 V(y,r)<+h+V(w,r);""", "integer n,q,h;electrical z,w;")
@@ -116,8 +116,8 @@ V(y,r)<+h+V(w,r);""", "integer n,q,h;electrical z,w;")
 
     def test_physical_phase_without_a_cross_trigger(self):
         source=model("""@(initial_step) begin n=0;q=0;m=0;end
-@(timer(.1,.2,1e-6)) begin n=n+1;q=n-1;end
-@(timer(.30000000000000004,0,1e-6)) m=m+1;
+@(timer(0.1,0.2,1e-6)) begin n=n+1;q=n-1;end
+@(timer(0.30000000000000004,0,1e-6)) m=m+1;
 V(z,r)<+idt(q,0); V(y,r)<+q+10*m;""", "integer n,q,m;electrical z;")
         baseline=None
         for times,step in [([0,.31],.31),([0,.3,.3000000000000001,.31],.31),([0,.3,.30000000000000004,.3000000000000001,.31],.012)]:
@@ -132,7 +132,7 @@ V(z,r)<+idt(q,0); V(y,r)<+q+10*m;""", "integer n,q,m;electrical z;")
 
     def test_isolated_timer_representative_query_keeps_forced_history_supported(self):
         source=model("""@(initial_step) begin n=0;q=0;end
-@(timer(.1,.2,1e-6)) begin n=n+1;q=n-1;end
+@(timer(0.1,0.2,1e-6)) begin n=n+1;q=n-1;end
 V(z,r)<+idt(q*V(u,r),0);V(y,r)<+V(z,r);""", "integer n,q;electrical z;")
         program=compile_sources({"forced-no-closure.va":source},[instance()])
         baseline=None
@@ -148,8 +148,8 @@ V(z,r)<+idt(q*V(u,r),0);V(y,r)<+V(z,r);""", "integer n,q;electrical z;")
 
     def test_overlap_with_physically_later_timer_does_not_force_local_history(self):
         source=model("""@(initial_step) begin n=0;q=0;end
-@(timer(.1,.2,1e-6)) begin n=n+1;q=n-1;end
-@(timer(.10000000000000006,.20000000000000007,1e-6)) begin end
+@(timer(0.1,0.2,1e-6)) begin n=n+1;q=n-1;end
+@(timer(0.10000000000000006,0.20000000000000007,1e-6)) begin end
 V(z,r)<+idt(q*V(u,r),0);V(y,r)<+V(z,r);""", "integer n,q;electrical z;")
         query=.3000000000000001
         # The successor enclosure overlaps the representative query, but
@@ -167,10 +167,10 @@ V(z,r)<+idt(q*V(u,r),0);V(y,r)<+V(z,r);""", "integer n,q;electrical z;")
             baseline=events
 
     def test_rebuilt_held_deadline_does_not_use_stale_phase_permission(self):
-        for action,trigger in [("next=.30000000000000004+.1*q;", "next,0,1e-6"), ("en=1-q;", "next,0,1e-6,en")]:
+        for action,trigger in [("next=0.30000000000000004+0.1*q;", "next,0,1e-6"), ("en=1-q;", "next,0,1e-6,en")]:
             for history_guard in ["", "@(cross(V(z,r)-1,1,1e-6,1e-6)) h=h+1;"]:
-                source=model("""@(initial_step) begin n=0;q=0;m=0;h=0;en=1;next=.30000000000000004;end
-@(timer(.1,.2,1e-6)) begin n=n+1;q=n-1;ACTION end
+                source=model("""@(initial_step) begin n=0;q=0;m=0;h=0;en=1;next=0.30000000000000004;end
+@(timer(0.1,0.2,1e-6)) begin n=n+1;q=n-1;ACTION end
 @(timer(TRIGGER)) m=m+1;
 V(z,r)<+idt(q*V(u,r),0);V(y,r)<+V(z,r);GUARD""", "integer n,q,m,h,en;real next;electrical z;").replace("ACTION",action).replace("TRIGGER",trigger).replace("GUARD",history_guard)
                 program=compile_sources({"replanned-held.va":source},[instance()])
@@ -187,8 +187,8 @@ V(z,r)<+idt(q*V(u,r),0);V(y,r)<+V(z,r);GUARD""", "integer n,q,m,h,en;real next;e
 
     def test_query_inside_uncertified_held_clock_interval_is_refused(self):
         from evas import KernelError
-        source=model("""@(initial_step) begin next=.4;n=0;end
-@(timer(.01,0,1e-6)) next=.1*V(u,r);
+        source=model("""@(initial_step) begin next=0.4;n=0;end
+@(timer(0.01,0,1e-6)) next=0.1*V(u,r);
 @(timer(next,0,1e-6)) n=n+1; V(y,r)<+n;""", "real next;integer n;")
         program=compile_sources({"ambiguous.va":source},[instance()])
         # The product Q(.1)*Q(.3) needs a non-point retained state interval.

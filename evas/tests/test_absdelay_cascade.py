@@ -108,12 +108,12 @@ class CascadeContracts(unittest.TestCase):
             ('V(y,r)<+absdelay(absdelay(absdelay(V(u,r),1),1),1);',''),
             ('V(y,r)<+absdelay(slew(V(u,r),1,-1),1);',''),
             ('V(z,r)<+absdelay(V(u,r),1); V(y,r)<+absdelay(2*V(z,r),1);','electrical z;'),
-            ('V(z,r)<+absdelay(V(u,r),1); V(y,r)<+absdelay(V(z,r)+.1,1);','electrical z;'),
+            ('V(z,r)<+absdelay(V(u,r),1); V(y,r)<+absdelay(V(z,r)+0.1,1);','electrical z;'),
             ('V(z,r)<+absdelay(V(u,r),1); V(y,r)<+absdelay(V(z,r)+0*q,1);','electrical z; real q;'),
             ('V(z,r)<+slew(V(u,r),1,-1); V(y,r)<+absdelay(0*V(z,r)+V(u,r),1);','electrical z;'),
             ('V(z,r)<+absdelay(V(y,r),1); V(y,r)<+absdelay(V(z,r),1);','electrical z;'),
             ('V(y,r)<+absdelay(absdelay(V(u,r),1),V(u,r));',''),
-            ('@(initial_step) n=0; V(y,r)<+absdelay(absdelay(V(u,r),1),1); @(cross(V(y,r)-.5,1)) n=n+1;','integer n;'),
+            ('@(initial_step) n=0; V(y,r)<+absdelay(absdelay(V(u,r),1),1); @(cross(V(y,r)-0.5,1)) n=n+1;','integer n;'),
         ]
         for body,declarations in bodies:
             with self.subTest(body=body), self.assertRaises((CompileError,KernelError)):

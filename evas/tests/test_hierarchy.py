@@ -4,12 +4,13 @@ import unittest
 from evas import CompileError, compile_sources, solve, transient
 from test_affine import KERNEL, instance
 
-LEAF = '''module gain(u,y,r); input u; output y; inout r; electrical u,y,r;
+LEAF = '''`include "disciplines.vams"
+module gain(u,y,r); input u; output y; inout r; electrical u,y,r;
 parameter real g=2; analog begin V(y,r)<+g*V(u,r); end endmodule'''
 
 
 def top(items, declarations=''):
-    return f'module top(u,y,r); input u; output y; inout r; electrical u,y,r; {declarations} {items} endmodule'
+    return f'`include "disciplines.vams"\nmodule top(u,y,r); input u; output y; inout r; electrical u,y,r; {declarations} {items} endmodule'
 
 
 class Hierarchy(unittest.TestCase):
@@ -30,15 +31,17 @@ class Hierarchy(unittest.TestCase):
         self.assertIn('dut:z',p.nodes)
 
     def test_nested_parameter_overrides_and_internal_nets(self):
-        middle='''module middle(u,y,r); input u; output y; inout r; electrical u,y,r,z;
-        parameter real g=1; gain #(.g(g)) a(u,z,r); gain #(.g(.5)) b(z,y,r); endmodule'''
+        middle='''`include "disciplines.vams"
+module middle(u,y,r); input u; output y; inout r; electrical u,y,r,z;
+        parameter real g=1; gain #(.g(g)) a(u,z,r); gain #(.g(0.5)) b(z,y,r); endmodule'''
         p=self.compile(top('middle #(.g(4)) m(u,y,r);'),{'middle.va':middle})
         r=solve(p,['u'],[[2]],kernel=KERNEL)
         self.assertEqual(r['solutions'][0]['voltages'][p.nodes.index('y')],4)
         self.assertEqual({c.origin.instance for c in p.contributions},{'dut/m/a','dut/m/b'})
 
     def test_hierarchical_histories_and_state_are_private(self):
-        integral='''module integral(u,y,r); input u; output y; inout r; electrical u,y,r;
+        integral='''`include "disciplines.vams"
+module integral(u,y,r); input u; output y; inout r; electrical u,y,r;
         parameter real g=1; parameter real ic=0; analog begin V(y,r)<+idt(g*V(u,r),ic); end endmodule'''
         p=self.compile(top('integral #(.g(1),.ic(2)) a(u,za,r); integral #(.g(3),.ic(4)) b(u,zb,r); '
                            'analog begin V(y,r)<+V(za,r)+V(zb,r); end','electrical za,zb;'), {'integral.va':integral})
@@ -73,9 +76,10 @@ class Hierarchy(unittest.TestCase):
         self.assertEqual(r['solutions'][0]['voltages'][p.nodes.index('y')],3)
 
     def test_hierarchical_event_states_settle_in_one_atomic_batch(self):
-        counter='''module counter(u,y,r); input u; output y; inout r; electrical u,y,r;
+        counter='''`include "disciplines.vams"
+module counter(u,y,r); input u; output y; inout r; electrical u,y,r;
         parameter real ic=1; integer n;
-        analog begin @(initial_step) n=ic; @(timer(.25,.25,1e-9)) n=n+1; V(y,r)<+n; end endmodule'''
+        analog begin @(initial_step) n=ic; @(timer(0.25,0.25,1e-9)) n=n+1; V(y,r)<+n; end endmodule'''
         p=self.compile(top('counter #(.ic(1)) a(u,za,r); counter #(.ic(5)) b(u,zb,r); '
                            'analog begin V(y,r)<+V(za,r)+V(zb,r); end','electrical za,zb;'),{'counter.va':counter})
         for grid in ([0,.5,1],[0,.125,.25,.5,.75,1]):

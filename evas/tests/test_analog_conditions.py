@@ -217,9 +217,9 @@ class OrdinaryAnalogConditionContracts(unittest.TestCase):
         self.assertAlmostEqual(row["y"], 3.25, places=12)
 
     def test_independent_contributions_still_accumulate_when_reordered(self):
-        a = model("tmp=V(u,r); if (tmp>.5) tmp=1; V(y,r)<+tmp; V(y,r)<+2;",
+        a = model("tmp=V(u,r); if (tmp>0.5) tmp=1; V(y,r)<+tmp; V(y,r)<+2;",
                   declarations="real tmp;")
-        b = model("tmp=V(u,r); if (tmp>.5) tmp=1; V(y,r)<+2; V(y,r)<+tmp;",
+        b = model("tmp=V(u,r); if (tmp>0.5) tmp=1; V(y,r)<+2; V(y,r)<+tmp;",
                   declarations="real tmp;")
         for source in (a, b):
             rows = execute(source, samples=[[0.25], [0.75]])
@@ -477,13 +477,13 @@ class OrdinaryAnalogConditionContracts(unittest.TestCase):
                 compile_sources({"bad.va": source}, [instance()])
 
     def test_rejects_unsupported_feedback_predicate(self):
-        source = model("tmp=V(y,r); if (tmp>.5) tmp=1; V(y,r)<+tmp;",
+        source = model("tmp=V(y,r); if (tmp>0.5) tmp=1; V(y,r)<+tmp;",
                        declarations="real tmp;")
         with self.assertRaisesRegex(CompileError, "ordinary analog if"):
             execute(source)
 
     def test_rejects_conditional_dynamic_call_site(self):
-        source = model("tmp=0; if(V(u,r)>.5) tmp=idt(V(u,r),0); V(y,r)<+tmp;", declarations="real tmp;")
+        source = model("tmp=0; if(V(u,r)>0.5) tmp=idt(V(u,r),0); V(y,r)<+tmp;", declarations="real tmp;")
         with self.assertRaisesRegex(CompileError, "waveform call sites must be unconditional"):
             compile_sources({"bad.va": source}, [instance()])
 

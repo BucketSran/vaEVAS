@@ -18,13 +18,13 @@ class InitializedEventComposition(unittest.TestCase):
         self.assertLess(roots[0], Fraction(fixed))
         self.assertLess(Fraction(fixed), roots[1])
         body = (
-            '@(initial_step) begin n=0; m=0; k=0; h=0; due=.9; end '
-            '@(cross(V(u,r)-.5,1,1e-12,1e-9)) begin n=n+1; due=.75; end '
+            '@(initial_step) begin n=0; m=0; k=0; h=0; due=0.9; end '
+            '@(cross(V(u,r)-0.5,1,1e-12,1e-9)) begin n=n+1; due=0.75; end '
             f'@(timer({fixed!r},0,1e-12)) k=k+1; '
-            '@(cross(V(u,r)-.5000000000000001,1,1e-12,1e-9)) m=m+1; '
+            '@(cross(V(u,r)-0.5000000000000001,1,1e-12,1e-9)) m=m+1; '
             '@(timer(due,0,1e-12)) h=h+1; '
             'V(y,r)<+n+10*k+100*m+1000*h; '
-            'V(z,r)<+transition(n,0,.125,.125);')
+            'V(z,r)<+transition(n,0,0.125,0.125);')
         declarations = 'integer n,m,k,h; real due; electrical z;'
         program = compile_model(body, declarations)
         previous = None
@@ -47,7 +47,7 @@ class InitializedEventComposition(unittest.TestCase):
         # The first cluster's delayed timer representative reaches the second
         # root's enclosure. Exact proofs must extend the connected cluster,
         # preserving distinct callbacks and physical output phases.
-        crowded = compile_model(body.replace(f'timer({fixed!r},', 'timer(.5,'), declarations)
+        crowded = compile_model(body.replace(f'timer({fixed!r},', 'timer(0.5,'), declarations)
         previous = None
         for times in [[0, 1], [0, .5, fixed, math.nextafter(fixed, math.inf), .625, .75, 1]]:
             result = run(crowded, {'u': [[0,.1],[1,.9]]}, times, stop=1)
@@ -90,8 +90,8 @@ class InitializedEventComposition(unittest.TestCase):
                 (.5000000000000003, 'cannot certify exact ordering of the next event while extending the connected cluster')]:
             program = compile_model(
                 '@(initial_step) begin n=0; m=0; k=0; end '
-                '@(cross(V(u,r)-.5,1,1e-12,1e-9)) n=n+1; '
-                '@(timer(.5,0,1e-12)) k=k+1; '
+                '@(cross(V(u,r)-0.5,1,1e-12,1e-9)) n=n+1; '
+                '@(timer(0.5,0,1e-12)) k=k+1; '
                 'V(z,r)<+V(u,r); '
                 f'@(cross(V(z,r)-{threshold!r},1,1e-12,1e-9)) m=m+1; '
                 'V(y,r)<+n+m+k;', 'integer n,m,k; electrical z;')
@@ -112,7 +112,7 @@ class InitializedEventComposition(unittest.TestCase):
                 nominal.append(time)
                 time = math.nextafter(time, math.inf)
             body = ('@(initial_step) n=0; '
-                    '@(cross(V(u,r)-.5,1,1e-9,1e-9)) n=n+1; ' +
+                    '@(cross(V(u,r)-0.5,1,1e-9,1e-9)) n=n+1; ' +
                     ''.join(f'@(timer({time!r},0,1e-9)) n=n+1; ' for time in nominal) +
                     'V(y,r)<+n;')
             program = compile_model(body, 'integer n;')
@@ -138,9 +138,9 @@ class InitializedEventComposition(unittest.TestCase):
     def test_simultaneous_clock_leaves_share_one_microevent_budget_group(self):
         names = [f'n{i}' for i in range(72)]
         body = ('@(initial_step) begin ' + ''.join(f'{name}=0;' for name in names) +
-                ' end @(cross(V(u,r)-.5,1,1e-9,1e-9)) n0=n0+1; '
-                '@(timer(.5,0,1e-9)) n1=n1+1; ' +
-                ''.join(f'@(timer(.5000000000000001,0,1e-9)) {name}={name}+1; ' for name in names[2:]) +
+                ' end @(cross(V(u,r)-0.5,1,1e-9,1e-9)) n0=n0+1; '
+                '@(timer(0.5,0,1e-9)) n1=n1+1; ' +
+                ''.join(f'@(timer(0.5000000000000001,0,1e-9)) {name}={name}+1; ' for name in names[2:]) +
                 'V(y,r)<+' + '+'.join(names) + ';')
         result = run(compile_model(body, 'integer ' + ','.join(names) + ';'),
                      {'u': [[0,.1],[1,.9]]}, [0,.5,.5000000000000001,1], stop=1)

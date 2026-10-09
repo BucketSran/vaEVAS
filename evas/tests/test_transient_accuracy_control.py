@@ -52,7 +52,7 @@ class TransientAccuracyControl(unittest.TestCase):
                 self.assertLessEqual(record['end']-record['start'], 1/32)
 
     def test_amplified_initial_enclosure_has_explicit_precision_refusal(self):
-        program = compile_model('V(z,r)<+idt(-pow(V(z,r),2),.3); '
+        program = compile_model('V(z,r)<+idt(-pow(V(z,r),2),0.3); '
                                 'V(y,r)<+1e4*(V(z,r)-0.5);', 'electrical z;')
         # .3 is a binary64 point, but 10000*(.3-.5) is not representable.
         # Its initial rounding error exceeds the unchanged 1e-20 V budget.
@@ -63,7 +63,7 @@ class TransientAccuracyControl(unittest.TestCase):
                          r'^cannot certify same-time forward error at y: bound .*?, budget 1e-20$')
 
     def test_supported_event_continuation_preserves_history_and_grid(self):
-        program = compile_model('@(initial_step) a=1; @(timer(.5,0,1e-12)) a=2; '
+        program = compile_model('@(initial_step) a=1; @(timer(0.5,0,1e-12)) a=2; '
                                 'V(z,r)<+idt(-a*pow(V(z,r),2),1); '
                                 'V(y,r)<+1e4*(V(z,r)-0.5);',
                                 'integer a; electrical z;')
@@ -77,7 +77,7 @@ class TransientAccuracyControl(unittest.TestCase):
             self.assertAlmostEqual(row['y'], 1e4*(expected-.5), delta=1e-8)
 
     def test_relative_event_budget_preserves_precision_before_later_cancellation(self):
-        program = compile_model('@(initial_step) a=1; @(timer(.5,0,1e-12)) a=2; '
+        program = compile_model('@(initial_step) a=1; @(timer(0.5,0,1e-12)) a=2; '
                                 'V(z,r)<+idt(-a*pow(V(z,r),2),1); '
                                 'V(y,r)<+1e4*(V(z,r)-0.5);',
                                 'integer a; electrical z;')
@@ -97,9 +97,9 @@ class TransientAccuracyControl(unittest.TestCase):
             with self.subTest(event=event):
                 body = '@(initial_step) begin a=1; n=0; end '
                 if event:
-                    body += '@(timer(.5,0,1e-12)) begin a=2; n=n+1; end '
-                body += ('V(z)<+idt(-a*pow(V(z),2),1); V(low)<+V(z)-.5; '
-                         'V(amp)<+10000*(V(z)-.5); V(count)<+n;')
+                    body += '@(timer(0.5,0,1e-12)) begin a=2; n=n+1; end '
+                body += ('V(z)<+idt(-a*pow(V(z),2),1); V(low)<+V(z)-0.5; '
+                         'V(amp)<+10000*(V(z)-0.5); V(count)<+n;')
                 program = compile_model(body,'real a; integer n;',
                                         ports='z,low,amp,count',
                                         directions='inout z,low,amp,count;')
@@ -123,7 +123,7 @@ class TransientAccuracyControl(unittest.TestCase):
             (True, True, 'y', 1e3),
         ]:
             with self.subTest(event=event, coupled=coupled, output=output, gain=gain):
-                body = ('@(initial_step) factor=1; @(timer(.5,0,1e-12)) factor=2; '
+                body = ('@(initial_step) factor=1; @(timer(0.5,0,1e-12)) factor=2; '
                         if event else '')
                 factor = 'factor*' if event else ''
                 body += 'V(z,r)<+idt(-'+factor+'pow(V(z,r),2),1); '

@@ -1,6 +1,6 @@
 """Held-threshold roots from piecewise equations, not an EVAS snapshot.
 
-u=t, threshold=.75 before .25 and .5 afterward: the only cross is .5.
+u=t, threshold=0.75 before 0.25 and 0.5 afterward: the only cross is 0.5.
 The timer changes both future guards and state-dependent voltage projections.
 """
 GUARDS = ["CROSS", "TIMER", "EVENT-ORDER", "EVENT-CONDITIONS", "case:event_relocalization"]
@@ -10,7 +10,7 @@ import unittest
 from evas import KernelError, compile_sources, transient
 from test_affine import KERNEL, instance, model
 
-DUT = (Path(__file__).resolve().parents[1] / "validation/cases/event_relocalization/dut.va").read_text()
+DUT = (Path(__file__).with_name("fixtures") / "event_relocalization.va").read_text()
 
 
 def run(source=DUT, *, module="event_relocalization", times=None, step=1):
@@ -28,9 +28,9 @@ class EventRelocalization(unittest.TestCase):
 
     def test_internal_voltage_projection_is_relocalized(self):
         source = model('''
-          @(initial_step) q=.75;
+          @(initial_step) q=0.75;
           @(initial_step) n=0;
-          @(timer(.25,0,1e-12)) q=.5;
+          @(timer(0.25,0,1e-12)) q=0.5;
           @(cross(V(z,r),1,1e-9,1e-8)) n=n+1;
           V(z,r)<+V(u,r)-q;
           V(y,r)<+n;
@@ -44,7 +44,7 @@ class EventRelocalization(unittest.TestCase):
         self.assertEqual(b["transient"]["states"][-1][-1], 1)
 
     def test_removed_future_root_does_not_fire(self):
-        source = DUT.replace('threshold=.5;', 'threshold=2;')
+        source = DUT.replace('threshold=0.5;', 'threshold=2;')
         result = run(source)
         self.assertEqual([e["time"] for e in result["transient"]["events"]], [.25])
         self.assertEqual(result["transient"]["states"][-1][-1], 0)
@@ -57,7 +57,7 @@ class EventRelocalization(unittest.TestCase):
         self.assertEqual(result['transient']['states'][-1], [0])
 
     def test_nonrepresentable_root_is_consumed_once(self):
-        source = DUT.replace('threshold=.5;', 'threshold=1.0/3.0;')
+        source = DUT.replace('threshold=0.5;', 'threshold=1.0/3.0;')
         result = run(source)
         hits = result['transient']['events']
         self.assertEqual(len(hits), 2)
@@ -65,14 +65,14 @@ class EventRelocalization(unittest.TestCase):
         self.assertEqual(result['transient']['states'][-1][-1], 1)
 
     def test_moved_later_root_and_stop_arrival(self):
-        for threshold in ('.875', '1'):
+        for threshold in ('0.875', '1'):
             with self.subTest(threshold=threshold):
-                result = run(DUT.replace('threshold=.5;', f'threshold={threshold};'))
+                result = run(DUT.replace('threshold=0.5;', f'threshold={threshold};'))
                 self.assertEqual([e['time'] for e in result['transient']['events']],
                                  [.25, float(threshold)])
 
     def test_jump_across_zero_requires_separate_same_time_event_contract(self):
-        source = DUT.replace('threshold=.5;', 'threshold=.125;')
+        source = DUT.replace('threshold=0.5;', 'threshold=0.125;')
         with self.assertRaisesRegex(KernelError, "unsupported_cross"):
             run(source)
 
@@ -84,8 +84,8 @@ class EventRelocalization(unittest.TestCase):
     def test_relocalization_with_unrelated_history_preserves_joint_frames(self):
         from test_continuous_dynamics import compile_model, run as run_history, values
         for guard, root in (('V(u,r)-q', .5), ('pow(V(u,r),2)-q', 2**-.5)):
-            program=compile_model('''@(initial_step) begin q=.75; n=0; end
-              @(timer(.25,0,1e-12)) q=.5;
+            program=compile_model('''@(initial_step) begin q=0.75; n=0; end
+              @(timer(0.25,0,1e-12)) q=0.5;
               @(cross('''+guard+''',1,1e-9,1e-8)) n=n+1;
               V(y,r)<+n; V(z,r)<+idt(-pow(V(z,r),2),1);''',
               'real q; integer n;',ports='u,y,z,r',directions='input u; output y,z; inout r;')
@@ -108,8 +108,8 @@ class EventRelocalization(unittest.TestCase):
         self.assertEqual(a['transient']['states'][-1][-1],1)
 
     def test_polynomial_relocalization_follows_internal_voltage_projection(self):
-        source=model('''@(initial_step) begin q=.75; n=0; end
-          @(timer(.125,0,1e-12)) q=.5;
+        source=model('''@(initial_step) begin q=0.75; n=0; end
+          @(timer(0.125,0,1e-12)) q=0.5;
           @(cross(pow(V(z,r),2)-1,1,1e-9,1e-8)) n=n+1;
           V(z,r)<+V(u,r)+q; V(y,r)<+n;''', 'real q; integer n; electrical z;')
         # u+q reaches 1 at .25 in the initial epoch; q changes at .125,

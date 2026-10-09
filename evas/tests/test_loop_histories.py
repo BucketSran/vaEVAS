@@ -35,7 +35,7 @@ class LoopHistories(unittest.TestCase):
 
     def test_implicit_integral_feedback_uses_the_same_expanded_identity(self):
         # y+y^2=z0+z1, z0'=z1'=.5+y => y'=1, y(0)=0.
-        source=model('for(i=0;i<2;i=i+1) V(y,r)<+idt(.5+V(y,r),0); V(y,r)<+-pow(V(y,r),2);', 'genvar i;')
+        source=model('for(i=0;i<2;i=i+1) V(y,r)<+idt(0.5+V(y,r),0); V(y,r)<+-pow(V(y,r),2);', 'genvar i;')
         p=compile_sources({'loop-history.va':source},[instance()])
         r=transient(p,{'u':[[0,0],[1,0]]},[0,.25,.5,1],stop=1,max_step=1,kernel=KERNEL,vabstol=1e-10,reltol=0)
         for t,row in zip([0,.25,.5,1],r['solutions']):

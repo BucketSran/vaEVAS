@@ -1,3 +1,4 @@
+`include "disciplines.vams"
 module cross_counter(vin, count, vref);
   input vin;
   output count;
@@ -6,8 +7,8 @@ module cross_counter(vin, count, vref);
   integer rising, falling;
   analog begin
     @(initial_step) begin rising=0; falling=0; end
-    @(cross(V(vin,vref)-.5, +1, 100p, 100u)) rising=rising+1;
-    @(cross(V(vin,vref)-.5, -1, 100p, 100u)) falling=falling+1;
-    V(count,vref) <+ .1*rising + .01*falling;
+    @(cross(V(vin,vref)-0.5, +1, 100p, 100u)) rising=rising+1;
+    @(cross(V(vin,vref)-0.5, -1, 100p, 100u)) falling=falling+1;
+    V(count,vref) <+ 0.1*rising + 0.01*falling;
   end
 endmodule

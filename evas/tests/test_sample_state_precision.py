@@ -24,8 +24,8 @@ class SampleStatePrecision(unittest.TestCase):
         # z=t until .25, then z=2*t-.25. Its z=.75 root is exactly .5.
         # x=3+t and DC f=2 are unrelated live physical states, not guards.
         body = ('@(initial_step) begin q=1; n=0; end '
-                '@(timer(.25,0,1e-12)) q=2; '
-                '@(cross(V(z,r)-.75,1,1e-10,1e-10)) n=n+1; '
+                '@(timer(0.25,0,1e-12)) q=2; '
+                '@(cross(V(z,r)-0.75,1,1e-10,1e-10)) n=n+1; '
                 'V(z,r)<+idt(q,0); V(y,r)<+n;')
         sparse = [0, .499999, .5, .500001, .75, 1]
         dense = [0, .125, .25, .375, .499999, .5, .500001, .625, .75, 1]
@@ -52,10 +52,10 @@ class SampleStatePrecision(unittest.TestCase):
 
     def test_exact_affine_roots_keep_gain_direction_and_instance_identity(self):
         program = compile_model(
-            '@(initial_step) begin q=1; n=0; end @(timer(.25,0,1e-12)) q=2; '
+            '@(initial_step) begin q=1; n=0; end @(timer(0.25,0,1e-12)) q=2; '
             '@(cross(gain*(V(z,r)-threshold),direction,1e-10,1e-10)) n=n+1; '
             "V(z,r)<+idt(q,0); V(f,r)<+laplace_nd(2,'{1},'{1,1}); V(y,r)<+n;",
-            'parameter real threshold=.75; parameter real gain=1; '
+            'parameter real threshold=0.75; parameter real gain=1; '
             'parameter integer direction=1; real q; integer n; electrical z,f;',
             instances=[
                 Instance('left', 'm', {'u':'u', 'y':'left', 'r':'0'},
@@ -75,18 +75,18 @@ class SampleStatePrecision(unittest.TestCase):
         # z+f=.75 has a transcendental root, not the affine z=.75 root .5.
         with localcontext() as context:
             context.prec = 100
-            low, high = Decimal('.25'), Decimal('.5')
+            low, high = Decimal('0.25'), Decimal('0.5')
             for _ in range(160):
                 middle = (low+high)/2
                 filtered = (2*middle-Decimal('2.25')
-                            +(1+Decimal('-.25').exp())*(Decimal('.25')-middle).exp())
-                if 2*middle-Decimal('.25')+filtered < Decimal('.75'):
+                            +(1+Decimal('-0.25').exp())*(Decimal('0.25')-middle).exp())
+                if 2*middle-Decimal('0.25')+filtered < Decimal('0.75'):
                     low = middle
                 else:
                     high = middle
             program = compile_model(
-                '@(initial_step) begin q=1; n=0; end @(timer(.25,0,1e-12)) q=2; '
-                '@(cross(V(z,r)+V(f,r)-.75,1,1e-10,1e-10)) n=n+1; '
+                '@(initial_step) begin q=1; n=0; end @(timer(0.25,0,1e-12)) q=2; '
+                '@(cross(V(z,r)+V(f,r)-0.75,1,1e-10,1e-10)) n=n+1; '
                 "V(z,r)<+idt(q,0); V(f,r)<+laplace_nd(V(z,r),'{1},'{1,1}); V(y,r)<+n;",
                 'real q; integer n; electrical z,f;')
             result = run(program, times=[0, .375, .5, 1], vabstol=1e-8, reltol=0)

@@ -59,8 +59,8 @@ class TimerOrdering(unittest.TestCase):
         # .1 + 2*.1 == .1 + .2 exactly, but the rounded interval is non-point.
         self.assertEqual(Q(.1)+2*Q(.1), Q(.1)+Q(.2))
         source = model('''@(initial_step) begin n=0; held=0; end
-          @(timer(.1,.2,1e-6)) held=V(y,r);
-          @(timer(.1,.1,1e-6)) n=n+1;
+          @(timer(0.1,0.2,1e-6)) held=V(y,r);
+          @(timer(0.1,0.1,1e-6)) n=n+1;
           V(y,r)<+n;''', 'integer n; real held;')
         result = run_timer(source, stop=.35, times=[0, .35])
         events = result['transient']['events']
@@ -75,12 +75,12 @@ class TimerOrdering(unittest.TestCase):
 
     def test_exact_equal_writers_still_fail_same_batch_ownership(self):
         source = model('''@(initial_step) n=0;
-          @(timer(.1,.1,1e-6)) n=n+1;
-          @(timer(.3,0,1e-6)) n=n+2;
+          @(timer(0.1,0.1,1e-6)) n=n+1;
+          @(timer(0.3,0,1e-6)) n=n+2;
           V(y,r)<+n;''', 'integer n;')
         # Use the same exact decomposition so a literal .3 rounding difference
         # cannot accidentally turn the ownership obligation into ordering.
-        source = source.replace('timer(.3,0,', 'timer(.1,.2,')
+        source = source.replace('timer(0.3,0,', 'timer(0.1,0.2,')
         with self.assertRaises(KernelError) as caught:
             run_timer(source, stop=.35, times=[0, .35])
         # PR102 alone rejects cross-block shared reads while preparing the
@@ -93,8 +93,8 @@ class TimerOrdering(unittest.TestCase):
         # the timer's outward interval includes the representable cross root.
         self.assertLess(Q(.3), 3*Q(.1))
         source = model("""@(initial_step) begin n=0; m=0; end
-          @(timer(.1,.1,1e-6)) n=n+1;
-          @(cross(V(u,r)-.3,1,1e-9,1e-8)) m=m+1;
+          @(timer(0.1,0.1,1e-6)) n=n+1;
+          @(cross(V(u,r)-0.3,1,1e-9,1e-8)) m=m+1;
           V(y,r)<+n+10*m;""", 'integer n,m;')
         baseline = None
         for times, step in [([0,.35],.35), ([0,.15,.25,.3,.35],.012)]:
@@ -111,8 +111,8 @@ class TimerOrdering(unittest.TestCase):
         # Point-certified held parameters preserve the same exact clock
         # decomposition, even when the absolute time enclosure is non-point.
         self.assertEqual(Q(.1)+Q(.2), 3*Q(.1))
-        source = model("""@(initial_step) begin q=.1; n=0; m=0; end
-          @(timer(.1,.2,1e-6)) n=n+1;
+        source = model("""@(initial_step) begin q=0.1; n=0; m=0; end
+          @(timer(0.1,0.2,1e-6)) n=n+1;
           @(timer(q,q,1e-6)) m=m+1;
           V(y,r)<+n+10*m;""", 'real q; integer n,m;')
         baseline = None

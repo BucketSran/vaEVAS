@@ -8,8 +8,9 @@ from evas import CompileError, KernelError, compile_sources, solve, transient
 from test_affine import KERNEL, instance
 
 
-PREFIX = '''module m(u,y,r); input u; output y; inout r; electrical u,y,r;
-parameter real vss=0, vdd=.9;
+PREFIX = '''`include "disciplines.vams"
+module m(u,y,r); input u; output y; inout r; electrical u,y,r;
+parameter real vss=0, vdd=0.9;
 analog function real clip;
 input x; real x;
 begin if(x<vss) clip=vss; else if(x>vdd) clip=vdd; else clip=x; end

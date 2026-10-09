@@ -92,7 +92,7 @@ class TimerHistoryOrder(unittest.TestCase):
         self.assertLess(root,Q(math.nextafter(.3,math.inf)))
         for extra in ['', '@(timer(0.30000000000000004,0,1e-6)) m=m+1;']:
             source = model(f'''@(initial_step) begin n=0; q=0; h=0; m=0; end
-              @(timer(.1,.2,1e-6)) begin n=n+1; q=n-1; end
+              @(timer(0.1,0.2,1e-6)) begin n=n+1; q=n-1; end
               {extra}
               V(z,r)<+idt(q,0);
               @(cross(V(z,r)-1e-18,1,1e-20,1e-20)) h=h+1;

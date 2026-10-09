@@ -18,9 +18,9 @@ from test_affine import KERNEL, instance, model
 
 
 CONTRIBUTIONS = (
-    "V(mid,r)<+transition(n,0,.5,1);",
-    "V(mid,r)<+transition(-n,.25,1,.5);",
-    "V(mid,r)<+.25*V(u,r);",
+    "V(mid,r)<+transition(n,0,0.5,1);",
+    "V(mid,r)<+transition(-n,0.25,1,0.5);",
+    "V(mid,r)<+0.25*V(u,r);",
 )
 SPARSE = tuple(map(F, (0, 1, 1.25, 1.5, 1.75, 2, 3, 3.5, 4, 5, 5.25, 5.75, 6)))
 DENSE = tuple(F(k, 8) for k in range(49))

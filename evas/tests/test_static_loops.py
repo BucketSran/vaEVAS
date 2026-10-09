@@ -21,10 +21,10 @@ class StaticLoops(unittest.TestCase):
         p=compiled('''@(initial_step) n=0;
           for(i=0;i<count;i=i+1) for(j=0;j<2;j=j+1)
             @(timer(at(4*i+j))) n=10*i+j+1;
-          @(timer(.875)) n=99; V(y,r)<+n;''',
+          @(timer(0.875)) n=99; V(y,r)<+n;''',
           '''genvar i,j; parameter integer count=2; integer n;
           analog function real at; input x; real x;
-            begin at=.125+.125*x; end endfunction''',
+            begin at=0.125+0.125*x; end endfunction''',
           [instance('a',connections={'u':'u','y':'a','r':'0'},parameters={'count':1}),
            instance('b',connections={'u':'u','y':'b','r':'0'})])
         times=[0,.125,.25,.625,.75,.875,1]
@@ -40,7 +40,7 @@ class StaticLoops(unittest.TestCase):
         p=compiled('''@(initial_step) begin n[0]=0; n[1]=0; end
           for(i=0;i<2;i=i+1) begin
             V(bus[i],r)<+V(u,r);
-            @(cross(V(bus[i],r)-(i+1)*.25,1,1e-12,1e-9) or timer((i+1)*.25)) n[i]=i+1;
+            @(cross(V(bus[i],r)-(i+1)*0.25,1,1e-12,1e-9) or timer((i+1)*0.25)) n[i]=i+1;
           end V(y,r)<+n[0]+10*n[1];''',
           'genvar i; electrical [0:1] bus; integer n[0:1];')
         result=transient(p,{'u':[[0,0],[1,1]]},[0,.25,.5,1],stop=1,max_step=1,kernel=KERNEL)
@@ -51,7 +51,7 @@ class StaticLoops(unittest.TestCase):
     def test_loop_guard_operators_have_distinct_call_sites(self):
         p=compiled('''@(initial_step) begin n[0]=0; n[1]=0; end
           for(i=0;i<2;i=i+1)
-            @(cross(idt(V(u,r),0)-(i+1)*.25,1,1e-9,1e-8)) n[i]=i+1;
+            @(cross(idt(V(u,r),0)-(i+1)*0.25,1,1e-9,1e-8)) n[i]=i+1;
           V(y,r)<+n[0]+10*n[1];''','genvar i; integer n[0:1];')
         self.assertEqual([op.origin.expansion for op in p.operators],[(('i',0),),(('i',1),)])
         result=transient(p,{'u':[[0,1],[1,1]]},[0,.4,1],stop=1,max_step=1,kernel=KERNEL)
@@ -61,8 +61,8 @@ class StaticLoops(unittest.TestCase):
 
     def test_event_body_conditions_keep_their_existing_semantics(self):
         p=compiled('''@(initial_step) n=0;
-          for(i=0;i<2;i=i+1) @(timer(.25+.5*i))
-            if(V(u,r)>.5) n=i+10; else n=i+1;
+          for(i=0;i<2;i=i+1) @(timer(0.25+0.5*i))
+            if(V(u,r)>0.5) n=i+10; else n=i+1;
           V(y,r)<+n;''','genvar i; integer n;')
         result=transient(p,{'u':[[0,0],[1,1]]},[0,.5,1],stop=1,max_step=1,kernel=KERNEL)
         self.assertEqual([r['voltages'][p.nodes.index('y')] for r in result['solutions']],[0,1,11])
@@ -70,7 +70,7 @@ class StaticLoops(unittest.TestCase):
 
     def test_loop_unrolling_does_not_prioritize_conflicting_writers(self):
         p=compiled('''@(initial_step) n=0;
-          for(i=0;i<2;i=i+1) @(timer(.25)) n=i; V(y,r)<+n;''','genvar i; integer n;')
+          for(i=0;i<2;i=i+1) @(timer(0.25)) n=i; V(y,r)<+n;''','genvar i; integer n;')
         with self.assertRaisesRegex(KernelError,'event_conflict'):
             transient(p,{'u':[[0,0],[1,1]]},[0,1],stop=1,max_step=1,kernel=KERNEL)
 
@@ -137,7 +137,7 @@ class StaticLoops(unittest.TestCase):
             'for(i=0;i<V(u,r);i=i+1) V(y,r)<+1;',
             'for(i=0;i<2;i=i+1) for(i=0;i<2;i=i+1) V(y,r)<+1;',
             'for(i=0;i<2;i=i+1) i=1; V(y,r)<+1;',
-            'for(i=0;i<2;i=i+.5) V(y,r)<+1;',
+            'for(i=0;i<2;i=i+0.5) V(y,r)<+1;',
             'for(i=0;i<100000;i=i+1) V(y,r)<+1;',
         ):
             with self.subTest(body=body), self.assertRaises(CompileError):

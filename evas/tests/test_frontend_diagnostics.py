@@ -24,7 +24,7 @@ class FrontendDiagnostics(unittest.TestCase):
 
     def test_implicit_event_reports_actual_combination_boundary(self):
         program = compile_sources({'dae.va': model('''@(initial_step) q=1;
-            @(timer(.5,0,1e-12)) q=2;
+            @(timer(0.5,0,1e-12)) q=2;
             V(y,r)<+idt(q+2*V(y,r),0)-pow(V(y,r),2);''', 'real q;')}, [instance()])
         with self.assertRaises(KernelError) as caught:
             run(program, times=[0,1])
@@ -35,7 +35,7 @@ class FrontendDiagnostics(unittest.TestCase):
         self.assertEqual(error.diagnostic['capability'], 'DYNAMICS')
 
     def test_vector_boundary_reports_declaration_not_identifier(self):
-        source = 'module m(y); output [1:0][1:0] y; electrical y; analog begin V(y)<+1; end endmodule'
+        source = '`include "disciplines.vams"\nmodule m(y); output [1:0][1:0] y; electrical y; analog begin V(y)<+1; end endmodule'
         with self.assertRaises(CompileError) as caught:
             compile_sources({'vectors.va': source}, [instance(connections=dict(y='y'))])
         error = caught.exception.diagnostic

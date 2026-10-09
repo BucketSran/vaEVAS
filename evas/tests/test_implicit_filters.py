@@ -26,8 +26,8 @@ class ImplicitFilterContracts(unittest.TestCase):
     def test_nonzero_filter_dc_does_not_replace_the_integral_ic(self):
         # u=1+t, f=t+exp(-t); y(0)=1/2 on the selected branch.
         program=compile_model(
-            'V(z,r)<+idt(1+2*V(y,r)-V(u,r)+V(f,r),.25); '
-            'V(y,r)<+V(z,r)+V(f,r)-.5-pow(V(y,r),2); '
+            'V(z,r)<+idt(1+2*V(y,r)-V(u,r)+V(f,r),0.25); '
+            'V(y,r)<+V(z,r)+V(f,r)-0.5-pow(V(y,r),2); '
             'V(f,r)<+laplace_nd(V(u,r),\'{1},\'{1,1});', 'electrical f,z;')
         times=[0,.25,.5,1]
         result=run(program,{'u':[[0,1],[1,2]]},times,vabstol=1e-9,reltol=0)
@@ -68,7 +68,7 @@ class ImplicitFilterContracts(unittest.TestCase):
         # The selected root is y(0)=.5, hence y=.5+t and
         # f=.75+1.5*(t-1+exp(-t)). Neither IC can be set independently.
         program=compile_model(
-            'V(f,r)<+laplace_nd(V(u,r)+.5*V(y,r),\'{1},\'{1,1}); '
+            'V(f,r)<+laplace_nd(V(u,r)+0.5*V(y,r),\'{1},\'{1,1}); '
             'V(z,r)<+idt(1+1.5*V(y,r)-V(u,r)+V(f,r),0); '
             'V(y,r)<+V(z,r)+V(f,r)-pow(V(y,r),2);','electrical f,z;')
         times=[0,.125,.5,1]
@@ -81,7 +81,7 @@ class ImplicitFilterContracts(unittest.TestCase):
 
     def test_internal_relay_and_contribution_order_keep_joint_initialization(self):
         pieces=[
-            'V(a,r)<+V(u,r)+.5*V(y,r);',
+            'V(a,r)<+V(u,r)+0.5*V(y,r);',
             'V(f,r)<+laplace_nd(V(a,r),\'{1},\'{1,1});',
             'V(z,r)<+idt(1+2*V(y,r)-V(a,r)+V(f,r),0);',
             'V(y,r)<+V(z,r)+V(f,r)-pow(V(y,r),2);',
@@ -106,7 +106,7 @@ class ImplicitFilterContracts(unittest.TestCase):
         # y^2 only in the joint system, not within either block alone.
         program=compile_model(
             'V(f,r)<+laplace_nd(pow(V(y,r),2),\'{1},\'{1,1}); '
-            'V(y,r)<+idt(1+2*V(y,r)-pow(V(y,r),2)+V(f,r),.5)'
+            'V(y,r)<+idt(1+2*V(y,r)-pow(V(y,r),2)+V(f,r),0.5)'
             '+V(f,r)-pow(V(y,r),2);','electrical f;')
         times=[0,.125,.5,1]
         result=run(program,times=times,vabstol=1e-9,reltol=0)
@@ -119,7 +119,7 @@ class ImplicitFilterContracts(unittest.TestCase):
         # f=a/(1+s)=.5+t-t*exp(-t). y+y^2=f chooses the
         # branch starting at (-1+sqrt(3))/2.
         program=compile_model(
-            'V(y,r)<+laplace_nd(laplace_nd(idt(1,.5),\'{1,2},\'{1,1}),'
+            'V(y,r)<+laplace_nd(laplace_nd(idt(1,0.5),\'{1,2},\'{1,1}),'
             '\'{1},\'{1,1})-pow(V(y,r),2);')
         sparse=[0,.25,.5,1]
         first=values(run(program,times=sparse,max_step=.0625,vabstol=1e-9,reltol=0))
@@ -146,7 +146,7 @@ class ImplicitFilterContracts(unittest.TestCase):
 
     def test_call_order_preserves_each_high_order_state_and_integral_ic(self):
         filter_body='V(y,r)<+laplace_nd(V(u,r),\'{1},\'{1,2,1})-pow(V(y,r),2); '
-        integral_body='V(z,r)<+idt(1,.25)+idt(2,-.5); '
+        integral_body='V(z,r)<+idt(1,0.25)+idt(2,-0.5); '
         times=[0,.25,.5,1]
         answers=[]
         for body in (filter_body+integral_body,integral_body+filter_body):

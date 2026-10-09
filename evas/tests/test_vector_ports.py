@@ -7,7 +7,8 @@ from test_affine import KERNEL
 
 
 def bus_model(bounds='1:0', body='V(y[0])<+V(u[0])+1; V(y[1])<+2*V(u[1]);'):
-    return f'''module bus(u,y); input [{bounds}] u; output [{bounds}] y;
+    return f'''`include "disciplines.vams"
+module bus(u,y); input [{bounds}] u; output [{bounds}] y;
         electrical [{bounds}] u,y; analog begin {body} end endmodule'''
 
 
@@ -30,7 +31,8 @@ class VectorPorts(unittest.TestCase):
             self.assertEqual((row['c'],row['d']),(4,10))
 
     def test_parameterized_internal_nodes_genvar_and_separate_instances(self):
-        source = '''module bus(y); output [N-1:0] y; electrical [N-1:0] y;
+        source = '''`include "disciplines.vams"
+module bus(y); output [N-1:0] y; electrical [N-1:0] y;
           parameter integer N=2 from [1:4]; genvar i;
           analog begin for(i=0;i<N;i=i+1) begin V(y[i])<+i+1; V(y[i])<+1; end end endmodule'''
         program = compile_sources({'bus.va':source},[
@@ -42,7 +44,8 @@ class VectorPorts(unittest.TestCase):
 
     def test_vector_child_connection_uses_declared_order(self):
         leaf = bus_model('0:1')
-        parent = '''module top(u,y); input [1:0] u; output [1:0] y;
+        parent = '''`include "disciplines.vams"
+module top(u,y); input [1:0] u; output [1:0] y;
           electrical [1:0] u,y; bus child(u,y); endmodule'''
         program = compile_sources({'hier.va':leaf+'\n'+parent},[Instance('dut','top',
             {'u[0]':'a','u[1]':'b','y[0]':'c','y[1]':'d'})])

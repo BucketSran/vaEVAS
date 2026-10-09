@@ -194,7 +194,7 @@ class IdtContracts(unittest.TestCase):
     def test_reset_expression_is_certified_from_original_structure(self):
         body = """
           @(initial_step) q=1;
-          @(timer(2,0,.001)) q=0;
+          @(timer(2,0,0.001)) q=0;
           V(y,r)<+idt(V(u,r),0.25,1e16*q+q-1e16*q);
         """
         program = compiled(body, 'integer q;')
@@ -204,7 +204,7 @@ class IdtContracts(unittest.TestCase):
     def test_inexact_nested_reset_coefficient_is_rejected(self):
         body = """
           @(initial_step) q=1;
-          @(timer(2,0,.001)) q=0;
+          @(timer(2,0,0.001)) q=0;
           V(y,r)<+idt(V(u,r),0.25,(0.1*q)*0.1-0.010000000000000002*q);
         """
         with self.assertRaisesRegex(KernelError, 'unsupported_operator'):

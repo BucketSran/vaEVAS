@@ -51,7 +51,7 @@ class ConsumerContracts(unittest.TestCase):
         self.assertEqual(caught.exception.diagnostic['category'], 'infrastructure')
 
     def test_capture_cli_keeps_compile_location_and_instance(self):
-        self.source.write_text('module m(y); output y; electrical y; analog begin V(y)<+V(missing); end endmodule')
+        self.source.write_text('`include "disciplines.vams"\nmodule m(y); output y; electrical y; analog begin V(y)<+V(missing); end endmodule')
         # capture records the kernel identity before compiling; existing file is sufficient here.
         result = self.cli('evas.diagnostics', 'capture', self.path, '--kernel', sys.executable,
                           '--out', self.root / 'session.json')
@@ -103,7 +103,7 @@ class ConsumerContracts(unittest.TestCase):
                               repr(json.dumps(detail)) + ')\nraise SystemExit(2)\n')
         executable.chmod(0o755)
         with self.assertRaises(KernelError) as caught:
-            program = compile_sources({'m.va': 'module m(y); output y; electrical y; analog begin V(y)<+1; end endmodule'},
+            program = compile_sources({'m.va': '`include "disciplines.vams"\nmodule m(y); output y; electrical y; analog begin V(y)<+1; end endmodule'},
                                       [Instance('dut', 'm', dict(y='y'))])
             solve(program, [], [[]], kernel=executable)
         self.assertEqual(caught.exception.detail, detail)
@@ -120,7 +120,7 @@ class ConsumerContracts(unittest.TestCase):
     def test_failed_session_status_exposes_category_and_retains_raw_kernel_error(self):
         from evas.diagnostics import capture, Session
         kernel = ROOT / 'rust_core/target/debug/evas-kernel'
-        self.source.write_text('module m(y); output y; electrical y; analog begin V(y)<+1; end endmodule')
+        self.source.write_text('`include "disciplines.vams"\nmodule m(y); output y; electrical y; analog begin V(y)<+1; end endmodule')
         data = json.loads(self.path.read_text())
         data.update(driven=['missing'], samples=[[0]])
         self.path.write_text(json.dumps(data))

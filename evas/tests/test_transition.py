@@ -36,14 +36,15 @@ class TransitionContracts(unittest.TestCase):
             self.assertLessEqual(row['max_residual_ratio'], 1)
 
     def test_same_time_voltage_read_supplies_new_transition_target(self):
-        blocks = ['@(timer(.5,0,.001)) n=n+1;',
-                  '@(timer(.5,0,.001)) s=V(y,r);']
+        blocks = ['@(timer(0.5,0,0.001)) n=n+1;',
+                  '@(timer(0.5,0,0.001)) s=V(y,r);']
         for reverse in [False, True]:
-            source = """module m(u,y,z,w,r); input u; output y,z,w; inout r;
+            source = """`include "disciplines.vams"
+module m(u,y,z,w,r); input u; output y,z,w; inout r;
               electrical u,y,z,w,r; integer n; real s;
               analog begin @(initial_step) begin n=0; s=0; end
               """ + '\n'.join(blocks[::-1] if reverse else blocks) + """
-              V(y,r)<+n; V(z,r)<+s; V(w,r)<+transition(s,0,.25,.25);
+              V(y,r)<+n; V(z,r)<+s; V(w,r)<+transition(s,0,0.25,0.25);
               end endmodule"""
             program = compile_sources({'same.va': source}, [Instance('dut','m',
                 connections={p:p for p in ['u','y','z','w']} | {'r':'0'})])
@@ -59,9 +60,9 @@ class TransitionContracts(unittest.TestCase):
         # At t=1 and t=2 the frozen ramp is .5 and 1. Solving a=y+1,
         # y=.5*a+z gives a=3,4. An old-voltage read or cached z gives wrong states.
         body = """@(initial_step) begin a=0; b=0; end
-          @(timer(0,0,.001)) b=1;
-          @(timer(1,1,.001)) a=V(y,r)+1;
-          V(y,r)<+.5*a+transition(b,0,2,2);"""
+          @(timer(0,0,0.001)) b=1;
+          @(timer(1,1,0.001)) a=V(y,r)+1;
+          V(y,r)<+0.5*a+transition(b,0,2,2);"""
         for step in [2.5, .125]:
             result=run_transition(body,[0,1,1.5,2,2.5],2.5,step)
             self.assert_waveform(result,[0,2,2.25,3,3])
@@ -69,9 +70,9 @@ class TransitionContracts(unittest.TestCase):
 
     def test_edge_nonzero_initial_delay_and_asymmetric_times(self):
         body = '''@(initial_step) begin a=0; b=0; end
-          @(timer(1n,0,1p)) a=.6;
-          @(timer(12n,0,1p)) b=-.8;
-          V(y,r)<+transition(.2+a+b,2n,4n,8n);'''
+          @(timer(1n,0,1p)) a=0.6;
+          @(timer(12n,0,1p)) b=-0.8;
+          V(y,r)<+transition(0.2+a+b,2n,4n,8n);'''
         times = [0, 1e-9, 3e-9, 5e-9, 7e-9, 14e-9, 18e-9, 22e-9, 24e-9]
         for step in [24e-9, .37e-9]:
             self.assert_waveform(run_transition(body, times, 24e-9, step),
@@ -91,8 +92,8 @@ class TransitionContracts(unittest.TestCase):
 
     def test_exact_current_target_ends_edge(self):
         body = """@(initial_step) begin a=0; b=0; end
-          @(timer(2,0,.001)) a=1;
-          @(timer(6,0,.001)) b=-.5;
+          @(timer(2,0,0.001)) a=1;
+          @(timer(6,0,0.001)) b=-0.5;
           V(y,r)<+transition(a+b,0,8,8);"""
         self.assert_waveform(run_transition(body,[0,6,8,10,12],12),[0,.5,.5,.5,.5])
 
@@ -130,9 +131,9 @@ class TransitionContracts(unittest.TestCase):
         self.assertEqual(sparse['solutions'][1], coarse['solutions'][4])
 
     def test_timer_zero_and_target_at_previous_edge_endpoint(self):
-        body = '''@(initial_step) begin a=.2; b=0; end
-          @(timer(0,0,1p)) a=.8;
-          @(timer(4n,0,1p)) b=-.8;
+        body = '''@(initial_step) begin a=0.2; b=0; end
+          @(timer(0,0,1p)) a=0.8;
+          @(timer(4n,0,1p)) b=-0.8;
           V(y,r)<+transition(a+b,0,4n,8n);'''
         result = run_transition(body, [0,2e-9,4e-9,8e-9,12e-9], 12e-9)
         self.assert_waveform(result,[.2,.5,.8,.4,0])
@@ -141,7 +142,7 @@ class TransitionContracts(unittest.TestCase):
     def test_same_instant_state_changes_have_one_common_input(self):
         body = '''@(initial_step) begin a=0; b=0; end
           @(timer(2n,0,1p)) a=1;
-          @(timer(2n,0,1p)) b=-.5;
+          @(timer(2n,0,1p)) b=-0.5;
           V(y,r)<+transition(a+b,0,2n,2n);'''
         self.assert_waveform(run_transition(body,[0,2e-9,3e-9,4e-9],4e-9),[0,0,.25,.5])
 
@@ -181,11 +182,11 @@ class TransitionRejections(unittest.TestCase):
     def test_cross_through_operator_output_rejected(self):
         body='''@(initial_step) begin a=0; b=0; end
           @(timer(0,0,1p)) a=1;
-          @(cross(V(y,r)-.5,1,1p,1u)) b=b+1;
+          @(cross(V(y,r)-0.5,1,1p,1u)) b=b+1;
           V(y,r)<+transition(a,0,2n,2n);'''
-        for guard in ['V(y,r)-.5', '0*V(y,r)+V(u,r)-.5', 'V(y,r)/1e308/1e308', 'V(y,y)+V(u,r)-.5']:
+        for guard in ['V(y,r)-0.5', '0*V(y,r)+V(u,r)-0.5', 'V(y,r)/1e308/1e308', 'V(y,y)+V(u,r)-0.5']:
             with self.subTest(guard=guard), self.assertRaisesRegex(KernelError,'unsupported_cross'):
-                run_transition(body.replace('V(y,r)-.5',guard),[0,3e-9],3e-9)
+                run_transition(body.replace('V(y,r)-0.5',guard),[0,3e-9],3e-9)
 
     def test_hidden_network_dependencies_across_contributions_and_instances_reject(self):
         from evas import Instance
@@ -193,7 +194,7 @@ class TransitionRejections(unittest.TestCase):
                            'V(y,r)/1e308/1e308', '0*V(y,r)']:
             body=f"""@(initial_step) begin a=0; n=0; end
               @(timer(0,0,1p)) a=1;
-              @(cross(V(z,r)-.5,1,1p,1u)) n=n+1;
+              @(cross(V(z,r)-0.5,1,1p,1u)) n=n+1;
               V(y,r)<+transition(a,0,1n,1n); V(z,r)<+{expression};"""
             with self.subTest(expression=expression), self.assertRaisesRegex(KernelError,'unsupported_cross'):
                 run_transition(body,[0,2e-9],2e-9,declarations='real a; integer n; electrical z;')
@@ -201,7 +202,7 @@ class TransitionRejections(unittest.TestCase):
             V(y,r)<+transition(a,0,1n,1n);""",'real a;').replace('module m(', 'module edge(')
         bridge=model('V(y,r)<+V(u,r)+1e16*V(u,r)-1e16*V(u,r);').replace('module m(', 'module bridge(')
         counter=model("""@(initial_step) n=0;
-            @(cross(V(u,r)-.5,1,1p,1u)) n=n+1; V(y,r)<+n;""",'integer n;').replace('module m(', 'module counter(')
+            @(cross(V(u,r)-0.5,1,1p,1u)) n=n+1; V(y,r)<+n;""",'integer n;').replace('module m(', 'module counter(')
         for order in [False,True]:
             instances=[Instance('edge','edge',{'u':'in','y':'x','r':'0'}),
                        Instance('bridge','bridge',{'u':'x','y':'z','r':'0'}),
@@ -224,22 +225,22 @@ class TransitionRejections(unittest.TestCase):
         # Exact binary64 1 + .1 differs from binary64 1.1. Rounding both
         # deadlines to one timestamp is not a proof that they coincide.
         body = """@(initial_step) begin a=0; b=0; end
-          @(timer(1,0,.001)) a=1;
-          @(timer(1.1,0,.001)) b=1;
-          V(y,r)<+transition(a,.1,.5,.5)+b;"""
+          @(timer(1,0,0.001)) a=1;
+          @(timer(1.1,0,0.001)) b=1;
+          V(y,r)<+transition(a,0.1,0.5,0.5)+b;"""
         with self.assertRaisesRegex(KernelError,'deadline ordering'):
             run_transition(body,[0,2],2)
         close = math.nextafter(.1, math.inf)
         body = f"""@(initial_step) a=0;
-          @(timer(1,0,.001)) a=1;
-          V(y,r)<+transition(a,.1,.5,.5)+transition(a,{close!r},.5,.5);"""
+          @(timer(1,0,0.001)) a=1;
+          V(y,r)<+transition(a,0.1,0.5,0.5)+transition(a,{close!r},0.5,0.5);"""
         with self.assertRaisesRegex(KernelError,'ordering of operator deadlines'):
             run_transition(body,[0,2],2,declarations='real a;')
         # Equal symbolic start+delay is a proven same deadline even when the
         # sum needs rounding; independent call-site histories remain distinct.
         body = """@(initial_step) a=0;
-          @(timer(1,0,.001)) a=1;
-          V(y,r)<+transition(a,.1,.5,.5)+transition(a,.1,.5,.5);"""
+          @(timer(1,0,0.001)) a=1;
+          V(y,r)<+transition(a,0.1,0.5,0.5)+transition(a,0.1,0.5,0.5);"""
         TransitionContracts.assert_waveform(self,run_transition(body,[0,1.35,2],2,declarations='real a;'),[0,1,2])
 
     def test_static_and_raw_ir_validation(self):

@@ -67,7 +67,7 @@ class InputInitialization(unittest.TestCase):
                 self.assertEqual(result['transient']['states'][0],[q,0])
 
     def test_affine_parameter_comparison_and_ground_are_allowed(self):
-        source=model('@(initial_step) q=(2*V(u,r)-V(u,r)>=H); V(y,r)<+q;', 'parameter real H=.65; real q;')
+        source=model('@(initial_step) q=(2*V(u,r)-V(u,r)>=H); V(y,r)<+q;', 'parameter real H=0.65; real q;')
         p=compile_sources({'affine-initial.va':source},[instance()])
         result=transient(p,{'u':[[0,.65],[1,.65]]},[0],stop=1,max_step=1,kernel=KERNEL)
         self.assertEqual(result['transient']['states'],[[1]])
@@ -78,7 +78,8 @@ class InputInitialization(unittest.TestCase):
             self.assertEqual(result['transient']['states'],[[expected]])
 
     def test_real_distinct_instances_resolve_bound_inputs(self):
-        wrapper='''module pair(a,b,oa,ob,na,nb); inout a,b,oa,ob,na,nb;
+        wrapper='''`include "disciplines.vams"
+module pair(a,b,oa,ob,na,nb); inout a,b,oa,ob,na,nb;
         electrical a,b,oa,ob,na,nb;
         paper_hc_start A(a,oa,na); paper_hc_start B(b,ob,nb); endmodule'''
         program=compile_sources({'initialization.va':SOURCE+wrapper},
@@ -88,7 +89,7 @@ class InputInitialization(unittest.TestCase):
         self.assertEqual(result['transient']['states'],[[1,0,0,0],[1,0,0,0]])
 
     def test_t0_timer_reads_resolved_initial_before_first_output(self):
-        source=model('@(initial_step) q=(V(u,r)>.65); @(timer(0)) q=q+2; V(y,r)<+q;', 'real q;')
+        source=model('@(initial_step) q=(V(u,r)>0.65); @(timer(0)) q=q+2; V(y,r)<+q;', 'real q;')
         p=compile_sources({'timer-initial.va':source},[instance()])
         for value, expected in [(.9,3),(.1,2)]:
             result=transient(p,{'u':[[0,value],[1,value]]},[0,1],stop=1,max_step=1,kernel=KERNEL)
@@ -96,14 +97,14 @@ class InputInitialization(unittest.TestCase):
             self.assertEqual([(e['time'],e['kind']) for e in result['transient']['events']],[(0,'timer')])
 
     def test_resolved_initial_is_used_by_operator_history_and_held_timer_guard(self):
-        for op, expected in [('transition(q,0,.1,.1)', [1,1]), ('idt(q,0)', [0,1])]:
-            source=model(f'@(initial_step) q=(V(u,r)>.65); V(y,r)<+{op};', 'real q;')
+        for op, expected in [('transition(q,0,0.1,0.1)', [1,1]), ('idt(q,0)', [0,1])]:
+            source=model(f'@(initial_step) q=(V(u,r)>0.65); V(y,r)<+{op};', 'real q;')
             p=compile_sources({'history-initial.va':source},[instance()])
             result=transient(p,{'u':[[0,.9],[1,.9]]},[0,1],stop=1,max_step=.1,kernel=KERNEL)
             self.assertEqual(result['transient']['states'], [[1],[1]])
             for row, value in zip(result['solutions'], expected):
                 self.assertAlmostEqual(row['voltages'][result['nodes'].index('y')],value,delta=1e-12)
-        source=model('@(initial_step) q=(V(u,r)>.65); @(timer(q,0)) q=q+2; V(y,r)<+q;', 'real q;')
+        source=model('@(initial_step) q=(V(u,r)>0.65); @(timer(q,0)) q=q+2; V(y,r)<+q;', 'real q;')
         p=compile_sources({'guard-initial.va':source},[instance()])
         result=transient(p,{'u':[[0,.9],[1,.9]]},[0,.5,1],stop=1,max_step=1,kernel=KERNEL)
         self.assertEqual(result['transient']['states'],[[1],[1],[3]])
@@ -111,7 +112,7 @@ class InputInitialization(unittest.TestCase):
 
     def test_kernel_rejects_malformed_and_structurally_hidden_initial_payloads(self):
         import copy
-        p=compile_sources({'initial.va':model('@(initial_step) q=(V(u,r)>.65); V(y,r)<+q;', 'real q;')},[instance()])
+        p=compile_sources({'initial.va':model('@(initial_step) q=(V(u,r)>0.65); V(y,r)<+q;', 'real q;')},[instance()])
         payload=p.to_dict()
         mutations = [
             ('unknown', lambda initial: initial.update(extra=0)),
@@ -134,13 +135,13 @@ class InputInitialization(unittest.TestCase):
                 self.assertIn(json.loads(proc.stderr)['kind'],['invalid_request','invalid_ir','unsupported_initialization'])
 
     def test_frontend_rejects_broader_initialization_structurally(self):
-        for rhs in ['V(u,r)', '(V(y,r)>.65)', '(0*V(y,r)>.65)',
-                    '(V(y,y)>.65)', '(q>.65)', '(idt(V(u,r),0)>.65)',
-                    '(V(u,r)>.65)?1:(V(y,r)>.65)', '(V(u,r)*V(u,r)>.65)']:
+        for rhs in ['V(u,r)', '(V(y,r)>0.65)', '(0*V(y,r)>0.65)',
+                    '(V(y,y)>0.65)', '(q>0.65)', '(idt(V(u,r),0)>0.65)',
+                    '(V(u,r)>0.65)?1:(V(y,r)>0.65)', '(V(u,r)*V(u,r)>0.65)']:
             with self.subTest(rhs=rhs), self.assertRaises(CompileError):
                 compile_sources({'bad.va':model(f'@(initial_step) q={rhs}; V(y,r)<+q;', 'real q;')},[instance()])
         with self.assertRaises(CompileError):
-            compile_sources({'integer.va':model('@(initial_step) q=(V(u,r)>.65); V(y,r)<+q;', 'integer q;')},[instance()])
+            compile_sources({'integer.va':model('@(initial_step) q=(V(u,r)>0.65); V(y,r)<+q;', 'integer q;')},[instance()])
 
     def test_undriven_inout_rejected_by_kernel(self):
         p=original_program(SOURCE.replace('V(in)>0.65','V(out)>0.65'))
@@ -149,7 +150,8 @@ class InputInitialization(unittest.TestCase):
         self.assertEqual(caught.exception.detail['kind'],'unsupported_initialization')
 
     def test_cross_instance_output_input_is_not_an_external_driven_source(self):
-        wrapper="""module cascade(a,oa,ob,na,nb); inout a,oa,ob,na,nb;
+        wrapper="""`include "disciplines.vams"
+module cascade(a,oa,ob,na,nb); inout a,oa,ob,na,nb;
         electrical a,oa,ob,na,nb; paper_hc_start A(a,oa,na); paper_hc_start B(oa,ob,nb); endmodule"""
         p=compile_sources({'cascade.va':SOURCE+wrapper},
             [Instance('dut','cascade',{n:n for n in ('a','oa','ob','na','nb')})])

@@ -11,7 +11,7 @@ from test_affine import KERNEL, instance, model
 
 class SparseContracts(unittest.TestCase):
     def test_coupled_ring_reference_voltage_and_repeated_rhs(self):
-        source = model('V(y,r)<+bias+V(v,r)+.25*V(u,r);',
+        source = model('V(y,r)<+bias+V(v,r)+0.25*V(u,r);',
                        'parameter real bias=0;', ports='u,v,y,r',
                        directions='input u,v; output y; inout r;')
         count = 64
@@ -33,7 +33,7 @@ class SparseContracts(unittest.TestCase):
 
     def test_nonlinear_jacobian_gains_new_nonzeros_after_zero_start(self):
         # Off-diagonal dF_i/dy_(i+1) is zero initially and becomes nonzero.
-        source = model('V(y,r)<+bias-pow(V(y,r),3)-.125*pow(V(u,r),2);',
+        source = model('V(y,r)<+bias-pow(V(y,r),3)-0.125*pow(V(u,r),2);',
                        'parameter real bias=0;')
         count = 40
         roots = [.125+.0625*(i % 5) for i in range(count)]
@@ -88,7 +88,7 @@ class SparseOrderingContracts(unittest.TestCase):
         # Jacobians form a star, so ordering must change and restore node IDs.
         count = 64
         roots = [.125+.0625*(i % 5) for i in range(count)]
-        leaf = model('V(y,r)<+bias-pow(V(y,r),3)-.125*pow(V(u,r),2);',
+        leaf = model('V(y,r)<+bias-pow(V(y,r),3)-0.125*pow(V(u,r),2);',
                      'parameter real bias=0;')
         ports = [f'x{i}' for i in range(1, count)] + ['y', 'r']
         expression = '+'.join(f'pow(V(x{i},r),2)' for i in range(1, count))

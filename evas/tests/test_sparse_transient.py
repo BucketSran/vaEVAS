@@ -15,7 +15,7 @@ class SparseTransientContracts(unittest.TestCase):
     def test_idt_sparse_chain_matches_exact_integrals_and_preserves_sampling(self):
         # 40 unknowns / 79 coefficients select sparse LU. Each call has its own
         # input gain, offset and IC; the integral input remains directly driven.
-        source = model('V(y,r)<+idt(g*V(u,r)+b,ic)+.25*V(v,r);',
+        source = model('V(y,r)<+idt(g*V(u,r)+b,ic)+0.25*V(v,r);',
                        'parameter real g=1; parameter real b=0; parameter real ic=0;',
                        ports='u,v,y,r', directions='input u,v; output y; inout r;')
         cells = [instance(f'cell{i:02}', connections=dict(u='u',
@@ -55,7 +55,7 @@ class SparseTransientContracts(unittest.TestCase):
 
     def test_internal_cross_chain_preserves_root_and_original_relations(self):
         count = 40
-        cell = model('V(y,r)<+V(u,r)+.25*V(v,r);', ports='u,v,y,r',
+        cell = model('V(y,r)<+V(u,r)+0.25*V(v,r);', ports='u,v,y,r',
                      directions='input u,v; output y; inout r;')
         # y_i = g_i*u with g_i = 1+g_(i-1)/4. The last guard has root 1/2.
         gains = []
@@ -88,7 +88,7 @@ class SparseTransientContracts(unittest.TestCase):
         count = 40
         roots = [F(i % 7 - 3, 8) for i in range(count)]
         source = model('''@(initial_step) s=0;
-            @(timer(.5,.5,1e-9)) begin s=V(u,r); s=.25*s+bias+V(v,r); end
+            @(timer(0.5,0.5,1e-9)) begin s=V(u,r); s=0.25*s+bias+V(v,r); end
             V(y,r)<+s;''', 'real s; parameter real bias=0;', ports='u,v,y,r',
             directions='input u,v; output y; inout r;')
         cells = [instance(f'cell{i:02}', connections=dict(u=f'y{(i+1)%count}',
@@ -138,7 +138,7 @@ class SparseTransientContracts(unittest.TestCase):
         cell = model('V(y,r)<+V(u,r);')
         for expression in ['n', 'n-n', '1e-300*(1e-300*n)']:
             driver = model(f'''@(initial_step) n=0;
-                @(cross(V(u,r)-.5,+1)) n=n+1; V(y,r)<+{expression};''', 'integer n;')
+                @(cross(V(u,r)-0.5,+1)) n=n+1; V(y,r)<+{expression};''', 'integer n;')
             driver = driver.replace('module m(', 'module driver(')
             cells = [instance(f'cell{i:02}', connections=dict(u=f'y{i-1}', y=f'y{i}', r='0'))
                      for i in range(1,40)]
@@ -153,7 +153,7 @@ class SparseTransientContracts(unittest.TestCase):
             # A history relay remains outside the relocalization contract even
             # when its input cancels or underflows numerically.
             driver = driver.replace(f'V(y,r)<+{expression};',
-                                    f'V(y,r)<+transition({expression},0,.1,.1);')
+                                    f'V(y,r)<+transition({expression},0,0.1,0.1);')
             program = compile_sources({'cell.va': cell, 'driver.va': driver}, cells)
             with self.assertRaises(KernelError) as caught:
                 transient(program, {}, [0,1], stop=1, max_step=1, kernel=KERNEL)

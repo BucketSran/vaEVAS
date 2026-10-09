@@ -12,7 +12,7 @@ from test_affine import KERNEL, instance, model
 class RepeatedSolves(unittest.TestCase):
     def test_coupled_batch_matches_individual_solves_and_hand_answers(self):
         source = model('V(y,r)<+gain*V(u,r)+bias;',
-                       'parameter real gain=.5; parameter real bias=0;')
+                       'parameter real gain=0.5; parameter real bias=0;')
         instances = [
             instance('a', connections=dict(u='b', y='a', r='u')),
             instance('b', connections=dict(u='a', y='b', r='u'),

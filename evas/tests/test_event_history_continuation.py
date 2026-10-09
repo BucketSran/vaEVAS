@@ -5,8 +5,8 @@ import math
 import unittest
 from evas import KernelError, compile_sources, transient
 from test_affine import KERNEL, instance, model
-NONLINEAR = 'module m(u,y,r); input u; output y; inout r; electrical u,y,r; integer n,m,h;real s;electrical z; analog begin @(initial_step) begin n=0;m=0;h=0;s=1;end\n@(timer(2e-6,2e-6,1e-9)) n=n+1;\n@(timer(3e-6,3e-6,1e-9)) begin m=m+1;s=V(z,r);end\nV(z,r)<+idt(-1e6*(n+10*m)*V(z,r)*V(z,r),1);\n@(cross(V(z,r)-100,1,1e-12,1e-7)) h=h+1; V(y,r)<+s; end endmodule'
-LINEAR_PWL = 'module m(u,y,r); input u; output y; inout r; electrical u,y,r; integer n,m,h;real s;electrical z; analog begin @(initial_step) begin n=0;m=0;h=0;s=1;end\n@(timer(2e-6,2e-6,1e-9)) n=n+1;\n@(timer(3e-6,3e-6,1e-9)) begin m=m+1;s=V(z,r);end\nV(z,r)<+idt(1e6*(n+10*m+V(u,r)),0);\n@(cross(V(z,r)-1000,1,1e-12,1e-7)) h=h+1;V(y,r)<+s; end endmodule'
+NONLINEAR = '`include "disciplines.vams"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; integer n,m,h;real s;electrical z; analog begin @(initial_step) begin n=0;m=0;h=0;s=1;end\n@(timer(2e-6,2e-6,1e-9)) n=n+1;\n@(timer(3e-6,3e-6,1e-9)) begin m=m+1;s=V(z,r);end\nV(z,r)<+idt(-1e6*(n+10*m)*V(z,r)*V(z,r),1);\n@(cross(V(z,r)-100,1,1e-12,1e-7)) h=h+1; V(y,r)<+s; end endmodule'
+LINEAR_PWL = '`include "disciplines.vams"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; integer n,m,h;real s;electrical z; analog begin @(initial_step) begin n=0;m=0;h=0;s=1;end\n@(timer(2e-6,2e-6,1e-9)) n=n+1;\n@(timer(3e-6,3e-6,1e-9)) begin m=m+1;s=V(z,r);end\nV(z,r)<+idt(1e6*(n+10*m+V(u,r)),0);\n@(cross(V(z,r)-1000,1,1e-12,1e-7)) h=h+1;V(y,r)<+s; end endmodule'
 
 class EventHistoryContinuation(unittest.TestCase):
     def check_case(self, source, pwl, nonlinear):
@@ -129,7 +129,7 @@ class EventHistoryContinuation(unittest.TestCase):
                 }
                 flow = '1+pow(V(u,r),2)' if quadratic_source else '1+V(u,r)'
                 source = model(f'''@(initial_step) begin n=0;rst=0;h=0;end
-                    @(timer(.1,.2,1e-6)) begin n=n+1;rst=n-1;end
+                    @(timer(0.1,0.2,1e-6)) begin n=n+1;rst=n-1;end
                     @(timer({float(rho)!r},0,1e-6)) rst=0;
                     V(z,r)<+idt({flow},2,rst);
                     V(y,r)<+laplace_nd(V(z,r),'{{1}},'{{1,1}});

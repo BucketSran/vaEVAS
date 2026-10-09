@@ -23,7 +23,8 @@ class ParameterConstraints(unittest.TestCase):
         self.assertEqual(execute(model('V(y)<+n;','parameter integer n=3/2.0*2;'))[0]['y'],3)
         for value in (-2147483648,2147483647):
             self.assertEqual(execute(model('V(y)<+n;',f'parameter integer n={value};'))[0]['y'],value)
-        source='''module child(y); output y; electrical y;
+        source='''`include "disciplines.vams"
+module child(y); output y; electrical y;
             parameter integer n=1; analog begin V(y)<+n; end endmodule
             module parent(y); output y; electrical y;
             child #(.n(3/2*2)) c(y); endmodule'''
@@ -32,7 +33,8 @@ class ParameterConstraints(unittest.TestCase):
         self.assertEqual(caught.exception.diagnostic['code'],'unsupported_integer_arithmetic')
 
     def test_integer_semantics_survive_genvar_substitution_in_node_indices(self):
-        source = '''module m(y); output y; electrical y; electrical [3:0] x;
+        source = '''`include "disciplines.vams"
+module m(y); output y; electrical y; electrical [3:0] x;
             parameter integer n=3; genvar i;
             analog begin
                 for(i=1;i<2;i=i+1) V(x[n/(i+1)*2])<+1;
@@ -73,7 +75,7 @@ class ParameterConstraints(unittest.TestCase):
             self.assertEqual(caught.exception.diagnostic['code'], 'parameter_type')
 
     def test_interval_union_exclusions_and_effective_overrides(self):
-        source = model('V(y,r)<+p;', 'parameter real p=-1 from [0:1] from (2:4) exclude .5 exclude [3:3.5);')
+        source = model('V(y,r)<+p;', 'parameter real p=-1 from [0:1] from (2:4) exclude 0.5 exclude [3:3.5);')
         for good in (0,1,2.25,3.5):
             self.assertEqual(execute(source, [instance(parameters=dict(p=good))])[0]['y'], good)
         for bad in (-1,.5,2,3,3.25,4):

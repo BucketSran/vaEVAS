@@ -34,7 +34,7 @@ class InternalDerivativeContracts(unittest.TestCase):
                 assert_close(self, actual, 0 if t == 0 else 2+t, delta=1e-10)
 
     def test_derivative_of_feedback_integral_uses_joint_state_equation(self):
-        program = compile_model("V(z,r)<+idt(1-V(z,r),.25); V(y,r)<+ddt(V(z,r));", "electrical z;")
+        program = compile_model("V(z,r)<+idt(1-V(z,r),0.25); V(y,r)<+ddt(V(z,r));", "electrical z;")
         times = [0, 0.125, 0.5, 1, 2]
         for step in [2, 0.125]:
             result = run(program, times=times, stop=2, max_step=step, vabstol=1e-10, reltol=0)
@@ -60,7 +60,7 @@ class InternalDerivativeContracts(unittest.TestCase):
 
     def test_derivative_feedback_is_solved_as_algebraic_mass_relation(self):
         # z'=1-d, d=.5*z' => z'=2/3, d=1/3; DC derivative is 0.
-        program = compile_model("V(z,r)<+idt(1-V(y,r),0); V(y,r)<+ddt(.5*V(z,r));", "electrical z;")
+        program = compile_model("V(z,r)<+idt(1-V(y,r),0); V(y,r)<+ddt(0.5*V(z,r));", "electrical z;")
         times = [0, .25, .5, 1]
         result = run(program, times=times, stop=1)
         for t, row in zip(times, rows(result)):
@@ -108,7 +108,7 @@ class JointEventDynamicsContracts(unittest.TestCase):
 
     def test_event_input_change_preserves_integral_state_and_rebuilds_future(self):
         program = compile_model(
-            "@(initial_step) q=0; @(timer(.5,0,1e-12)) q=2; "
+            "@(initial_step) q=0; @(timer(0.5,0,1e-12)) q=2; "
             "V(y,r)<+idt(q-V(y,r),0);", "real q;")
         sparse = [0, .25, .5, .75, 1, 2]
         for times, step in [(sparse, 2), ([i/16 for i in range(33)], .125)]:
@@ -119,8 +119,8 @@ class JointEventDynamicsContracts(unittest.TestCase):
 
     def test_joint_reset_holds_ic_then_resumes_feedback(self):
         program = compile_model(
-            "@(initial_step) rst=0; @(timer(.5,0,1e-12)) rst=1; "
-            "@(timer(1,0,1e-12)) rst=0; V(y,r)<+idt(1-V(y,r),.25,rst);", "integer rst;")
+            "@(initial_step) rst=0; @(timer(0.5,0,1e-12)) rst=1; "
+            "@(timer(1,0,1e-12)) rst=0; V(y,r)<+idt(1-V(y,r),0.25,rst);", "integer rst;")
         times = [0, .25, .5, .75, 1, 1.25, 2]
         result = run(program, times=times, stop=2, vabstol=1e-10, reltol=0)
         for t, actual in zip(times, values(result)):
@@ -143,7 +143,7 @@ class JointEventDynamicsContracts(unittest.TestCase):
 
     def test_event_sampling_can_change_future_integrand_without_reset_loop(self):
         program = compile_model(
-            "@(initial_step) q=1; @(timer(.5,0,1e-12)) q=V(y,r); "
+            "@(initial_step) q=1; @(timer(0.5,0,1e-12)) q=V(y,r); "
             "V(y,r)<+idt(q,0);", "real q;")
         times = [0, .25, .5, .75, 1]
         result = run(program, times=times, stop=1, vabstol=1e-10, reltol=1e-10)
@@ -152,7 +152,7 @@ class JointEventDynamicsContracts(unittest.TestCase):
 
     def test_event_dependent_derivative_input_does_not_drop_impulses(self):
         program = compile_model(
-            "@(initial_step) q=0; @(timer(.5,0,1e-12)) q=1; "
+            "@(initial_step) q=0; @(timer(0.5,0,1e-12)) q=1; "
             "V(z,r)<+V(u,r)+q; V(y,r)<+ddt(V(z,r));", "real q; electrical z;")
         with self.assertRaisesRegex(KernelError, "unsupported_operator"):
             run(program, times=[0, .5, 1], stop=1)
@@ -160,8 +160,8 @@ class JointEventDynamicsContracts(unittest.TestCase):
     def test_structural_cancelled_state_input_keeps_zero_integral(self):
         for expression in ["q-q", "0*q"]:
             program = compile_model(
-                "@(initial_step) q=1; @(timer(.5,0,1e-12)) q=2; "
-                f"V(y,r)<+idt({expression},.25);", "integer q;")
+                "@(initial_step) q=1; @(timer(0.5,0,1e-12)) q=2; "
+                f"V(y,r)<+idt({expression},0.25);", "integer q;")
             result = run(program, times=[0, .25, .5, 1], stop=1)
             for actual in values(result):
                 assert_close(self, actual, .25, delta=1e-10)
@@ -177,7 +177,7 @@ class NonlinearIntegralContracts(unittest.TestCase):
             assert_close(self, actual, 1/(1+t), delta=1e-10)
 
     def test_logistic_feedback_has_closed_form(self):
-        program = compile_model("V(y,r)<+idt(V(y,r)*(1-V(y,r)),.25);")
+        program = compile_model("V(y,r)<+idt(V(y,r)*(1-V(y,r)),0.25);")
         times = [0, .25, .5, 1, 2, 4]
         result = run(program, times=times, stop=4, vabstol=1e-10, reltol=0)
         for t, actual in zip(times, values(result)):
@@ -205,7 +205,7 @@ class NonlinearIntegralContracts(unittest.TestCase):
     def test_nonlinear_input_source_and_relay_have_exact_integral(self):
         for expression, decl, prefix in [("pow(V(u,r),2)", "", ""),
                                         ("pow(V(z,r),2)", "electrical z;", "V(z,r)<+V(u,r);")]:
-            program = compile_model(prefix+f"V(y,r)<+idt({expression},.25);", decl)
+            program = compile_model(prefix+f"V(y,r)<+idt({expression},0.25);", decl)
             times = [0, .25, .5, 1, 2]
             result = run(program, {"u": [[0, 0], [2, 2]]}, times, stop=2, vabstol=1e-10, reltol=0)
             for t, actual in zip(times, values(result)):
@@ -227,7 +227,7 @@ class NonlinearIntegralContracts(unittest.TestCase):
 
     def test_event_changes_nonlinear_coefficient_without_reinitializing_state(self):
         program = compile_model(
-            "@(initial_step) q=1; @(timer(.5,0,1e-12)) q=2; "
+            "@(initial_step) q=1; @(timer(0.5,0,1e-12)) q=2; "
             "V(y,r)<+idt(-q*pow(V(y,r),2),1);", "integer q;")
         times=[0,.25,.5,.75,1,2]
         result=run(program,times=times,stop=2,vabstol=1e-10,reltol=0)
@@ -237,7 +237,7 @@ class NonlinearIntegralContracts(unittest.TestCase):
 
     def test_nonlinear_joint_reset_clamps_then_resumes_with_original_ic(self):
         program=compile_model(
-            "@(initial_step) rst=0; @(timer(.5,0,1e-12)) rst=1; "
+            "@(initial_step) rst=0; @(timer(0.5,0,1e-12)) rst=1; "
             "@(timer(1,0,1e-12)) rst=0; V(y,r)<+idt(-pow(V(y,r),2),1,rst);", "integer rst;")
         times=[0,.25,.5,.75,1,1.25,2]
         result=run(program,times=times,stop=2,vabstol=1e-10,reltol=0)
@@ -253,8 +253,8 @@ class NonlinearIntegralContracts(unittest.TestCase):
         assert_close(self,values(result)[0],5e7,delta=1e-4)
 
     def test_nonlinear_contribution_permutations_preserve_the_model(self):
-        bodies=["V(y,r)<+.25; V(y,r)<+idt(-pow(V(y,r),2),.75);",
-                "V(y,r)<+idt(-pow(V(y,r),2),.75); V(y,r)<+.25;"]
+        bodies=["V(y,r)<+0.25; V(y,r)<+idt(-pow(V(y,r),2),0.75);",
+                "V(y,r)<+idt(-pow(V(y,r),2),0.75); V(y,r)<+0.25;"]
         baseline=None
         for body in bodies:
             result=run(compile_model(body),times=[0,.25,.5,1],stop=1,vabstol=1e-10,reltol=0)
@@ -265,7 +265,7 @@ class NonlinearIntegralContracts(unittest.TestCase):
 
     def test_nonlinear_integral_guard_uses_certified_trajectory(self):
         program=compile_model(
-            "@(initial_step) n=0; @(cross(V(z,r)-.5,-1,1e-9,1e-8)) n=n+1; "
+            "@(initial_step) n=0; @(cross(V(z,r)-0.5,-1,1e-9,1e-8)) n=n+1; "
             "V(z,r)<+idt(-pow(V(z,r),2),1); V(y,r)<+n;", "integer n; electrical z;")
         result=run(program,times=[0,2],stop=2,vabstol=1e-8,reltol=1e-8)
         self.assertEqual(values(result),[0,1])
@@ -300,7 +300,7 @@ class NonlinearIntegralContracts(unittest.TestCase):
 
     def test_uncertain_nonlinear_restart_does_not_discard_event_time_error(self):
         program = compile_model(
-            "@(initial_step) q=1; @(cross(V(u,r)-.1,1,1e-9,1e-8)) q=2; "
+            "@(initial_step) q=1; @(cross(V(u,r)-0.1,1,1e-9,1e-8)) q=2; "
             "V(y,r)<+idt(-q*pow(V(y,r),2),1);", "integer q;")
         sparse = [0, .125, .5, 1]
         baseline = None
@@ -373,7 +373,7 @@ class NonlinearIntegralContracts(unittest.TestCase):
     def test_exact_nonlinear_sampling_keeps_the_certified_event_contract(self):
         program = compile_model(
             "@(initial_step) q=1; @(cross(V(u,r)-1,1,1e-9,1e-8)) q=2; "
-            "@(timer(.5,0,1e-12)) q=V(y,r); "
+            "@(timer(0.5,0,1e-12)) q=V(y,r); "
             "V(y,r)<+idt(-q*pow(V(y,r),2),1);", "real q;")
         times = [0, .125, .375, .5, .75, 1]
         result = run(program, {"u": [[0, 0], [1, 3]]}, times=times, stop=1,
