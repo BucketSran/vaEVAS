@@ -241,6 +241,9 @@ pub struct Request {
 
 #[derive(Debug, Clone, Serialize)]
 pub struct Solution {
+    /// Internal certificate transport; exposed only by ObservationEvidence.
+    #[serde(skip)]
+    pub certified_voltage_bounds: Option<Vec<[f64; 2]>>,
     /// Same node order as Program.nodes; ground is always exactly zero.
     pub voltages: Vec<f64>,
     pub max_residual_v: f64,
@@ -256,12 +259,38 @@ pub struct Solution {
 
 #[derive(Debug, Serialize)]
 pub struct Response {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub observation_evidence: Option<ObservationEvidence>,
     pub engine: String,
     pub schema_version: u32,
     pub nodes: Vec<String>,
     pub solutions: Vec<Solution>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub transient: Option<TransientTrace>,
+}
+
+/// Optional, versioned evidence for the returned transient observation rows.
+/// Bounds and origins index solutions/transient.times; nodes binds column order.
+#[derive(Debug, Serialize)]
+pub struct ObservationEvidence {
+    pub schema_version: u32,
+    pub nodes: Vec<String>,
+    pub effective_controls: EffectiveObservationControls,
+    pub sample_origins: Vec<&'static str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub initial_settled: Option<bool>,
+    #[serde(rename = "voltage_bounds_V")]
+    pub voltage_bounds_v: Vec<Option<Vec<[f64; 2]>>>,
+}
+
+#[derive(Debug, Serialize)]
+pub struct EffectiveObservationControls {
+    #[serde(rename = "absolute_V")]
+    pub absolute_v: f64,
+    pub relative: f64,
+    pub stop_s: f64,
+    pub max_step_s: f64,
+    pub max_step_applied: bool,
 }
 
 #[derive(Debug, Serialize)]

@@ -285,7 +285,7 @@ impl Controller {
         // Nonlinear extension can widen the endpoint enclosure. Certify the
         // stored observation against the final history, not just reset closure.
         let inputs = trajectory.value_bounds(next.time);
-        model.certify(
+        let (_, nodes) = model.certify_observation(
             &model.conditions.select(&[], &inputs)?,
             &inputs,
             &next.state_bounds,
@@ -293,6 +293,7 @@ impl Controller {
             &next.solution.voltages,
             &next.states,
         )?;
+        crate::observation::retain_bounds(&mut next.solution, nodes);
         // No fallible operation may split state and matching calendar publication.
         Ok((next, future))
     }

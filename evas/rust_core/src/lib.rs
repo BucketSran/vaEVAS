@@ -23,6 +23,7 @@ pub mod ir;
 mod laplace;
 mod linear;
 mod nonlinear;
+mod observation;
 mod operators;
 mod pwl;
 mod reset_dependencies;
@@ -76,6 +77,7 @@ pub fn run_with_threads(request: Request, static_threads: usize) -> Result<Respo
     let circuit = Circuit::new(request.program, &request.driven, request.tolerances)?;
     let solutions = batch::solve(&circuit, &request.samples, static_threads)?;
     Ok(Response {
+        observation_evidence: None,
         engine: concat!("evas-static-", env!("CARGO_PKG_VERSION")).into(),
         schema_version: SCHEMA_VERSION,
         nodes: circuit.nodes,

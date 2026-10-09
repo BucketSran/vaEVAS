@@ -602,6 +602,7 @@ fn observe(
     }
     let mut solution = circuit.solve_with_initial(&point_inputs, Some(&guess))?;
     solution.voltages.truncate(program.nodes.len());
+    let mut observation_bounds = Vec::new();
     for (node, &actual) in solution.voltages.iter().enumerate() {
         let exact = if node == 0 {
             I::ZERO
@@ -613,6 +614,7 @@ fn observe(
                 .position(|name| *name == program.nodes[node])
                 .unwrap()]
         };
+        observation_bounds.push(exact);
         let budget =
             I::point(tolerances.absolute) + I::point(tolerances.relative) * I::point(actual.abs());
         let error = I::point(actual) - exact;
@@ -631,6 +633,7 @@ fn observe(
     // Recheck the original simultaneous relations against full histories and
     // coefficient enclosures, independently of the approximate point solve.
     coordinates.check_original_relations(program, state, input_bounds, &solution, tolerances)?;
+    crate::observation::retain_bounds(&mut solution, observation_bounds);
     Ok(solution)
 }
 
@@ -665,7 +668,17 @@ pub(crate) fn run(
         accepted_steps: flow.steps.len(),
         discarded_trials: 0,
     };
+    let observation_evidence = crate::observation::evidence(
+        &program.nodes,
+        &solutions,
+        &trajectory.config,
+        &tolerances,
+        vec!["implicit_history_evaluation"; solutions.len()],
+        false,
+        (trace.times.first() == Some(&0.0)).then_some(true),
+    );
     Ok(Response {
+        observation_evidence: Some(observation_evidence),
         engine: concat!("evas-implicit-", env!("CARGO_PKG_VERSION")).into(),
         schema_version: crate::ir::SCHEMA_VERSION,
         nodes: program.nodes,

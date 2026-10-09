@@ -678,6 +678,7 @@ impl Circuit {
 
     fn affine_solution(values: Vec<f64>, absolute: f64, ratio: f64) -> Solution {
         Solution {
+            certified_voltage_bounds: None,
             voltages: values,
             max_residual_v: absolute,
             max_residual_ratio: ratio,

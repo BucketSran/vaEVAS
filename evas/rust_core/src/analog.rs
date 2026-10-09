@@ -113,10 +113,10 @@ impl Analog {
             });
         }
         let prepared = self.prepared.as_ref().unwrap();
-        let solution = prepared.circuit.solve_with_initial(inputs, initial)?;
+        let mut solution = prepared.circuit.solve_with_initial(inputs, initial)?;
         if let Some(model) = &prepared.model {
-            model
-                .certify(
+            let (_, bounds) = model
+                .certify_observation(
                     &Selection::default(),
                     input_bounds,
                     &[],
@@ -130,6 +130,7 @@ impl Analog {
                     }
                     error
                 })?;
+            crate::observation::retain_bounds(&mut solution, bounds);
         } else {
             prepared
                 .circuit
