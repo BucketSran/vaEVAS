@@ -1,4 +1,5 @@
 """Nonblocking diagnostics for observations adjacent to committed cross certificates."""
+GUARDS = ["CROSS", "DEV:boundary-portability"]
 import copy
 import json
 import math

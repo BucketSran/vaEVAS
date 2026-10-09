@@ -74,3 +74,20 @@ Spectre 不一致等）保留在对应历史段落，修复不删除。
 语言算子、精度资格、性能测量）按[共同生命周期契约](../validation/DYNAMICS_CONTRACTS.md#shared-lifecycle-contract)
 分批推进。每项先固定数学契约和接受/拒绝边界，再做独立答案、不变性和失败后
 完整性检查。实际范围、依赖、负责人和预算写在对应 Issue/PR。
+
+
+### 当前对齐优先级
+
+本轮先交付可移植性提示和限定 strobe 控制。它们不关闭旧兼容性门禁。
+下列为现有 Issue 的推进顺序，完整支持范围仍以上方各能力行为准。
+
+| 后续问题 | 缺口性质 | 现有入口与处理依据 |
+| --- | --- | --- |
+| `.scs` strobe 控制与保存策略、强制点进入局部因果闭包 | 未实现 | [#63](https://github.com/BucketSran/vaEVAS/issues/63)、[控制契约](strobe.md)；分别验证输入适配与求解落点，不能把输出插值算作已求解 |
+| C1、#79 的事件前后态与 stop 计数 | 严格兼容差异 | [#70](https://github.com/BucketSran/vaEVAS/issues/70)、[#108](https://github.com/BucketSran/vaEVAS/pull/108)；原 F/I 和数学根契约保留，提示不豁免差异 |
+| VCO 环回左邻点与采样、状态、历史消费者 | 严格兼容差异及组合缺口 | [#96](https://github.com/BucketSran/vaEVAS/issues/96)；保留原22点条件，新14点结果不能替代它 |
+| 非自治/输出/历史 guard 的一般事件闭包，DAE 与事件、reset、ddt 组合 | 未实现或不可认证 | [#96](https://github.com/BucketSran/vaEVAS/issues/96)、[#66](https://github.com/BucketSran/vaEVAS/issues/66)；按真实电路一次确定一个可验收组合 |
+| M1 稳定参考及精确观测资格 | 参考证据不足 | [参考跟进](../../experiments/backends/event-alignment/admission-observation-followup.md)；原69值超差和3缺点保留，先查有效设置和原生观测 |
+| 事件读取普通局部量、运行时控制、其他分析事件；更多历史算子组合 | 未实现 | [#65](https://github.com/BucketSran/vaEVAS/issues/65)、[#66](https://github.com/BucketSran/vaEVAS/issues/66)；由模型阻塞决定顺序，不仅扩展语法准入 |
+| 诊断外部消费、第二 Spectre 版本复核 | 集成或外部证据不足 | [#64](https://github.com/BucketSran/vaEVAS/issues/64)、[#16](https://github.com/BucketSran/vaEVAS/issues/16)；库内测试和同版本重复运行不能代替对应证据 |
+| Spec B 与论文表同一最终版本验收、main 整合 | 交付门禁 | [#97](https://github.com/BucketSran/vaEVAS/issues/97)、[#96](https://github.com/BucketSran/vaEVAS/issues/96)；候选实现与历史有限通过不能算 main 已交付 |

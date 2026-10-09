@@ -12,7 +12,11 @@ pub(crate) fn run(mut request: Request) -> Result<Response, Error> {
     let outputs = config.output_times.clone();
     let strobes = config.strobetimes.clone();
     config.output_times.extend(&strobes);
-    config.output_times.sort_by(f64::total_cmp);
+    // All times are finite. Numeric equality must also govern sorting and
+    // lookup: +0 and -0 denote the same physical time, as in dedup().
+    config
+        .output_times
+        .sort_by(|a, b| a.partial_cmp(b).unwrap());
     config.output_times.dedup();
     let combined = config.output_times.clone();
     let mut result = crate::transient::run_inner(request)?;
@@ -29,7 +33,9 @@ pub(crate) fn run(mut request: Request) -> Result<Response, Error> {
         voltages_v: Vec::new(),
     };
     for &time in &strobes {
-        let index = combined.binary_search_by(|t| t.total_cmp(&time)).unwrap();
+        let index = combined
+            .binary_search_by(|t| t.partial_cmp(&time).unwrap())
+            .unwrap();
         let origin = evidence.sample_origins[index];
         if origin == "certified_causal_frame" {
             // That is a certified query through an atomic event cluster, not
@@ -54,7 +60,11 @@ pub(crate) fn run(mut request: Request) -> Result<Response, Error> {
     }
     let keep: Vec<bool> = combined
         .iter()
-        .map(|t| outputs.binary_search_by(|x| x.total_cmp(t)).is_ok())
+        .map(|t| {
+            outputs
+                .binary_search_by(|x| x.partial_cmp(t).unwrap())
+                .is_ok()
+        })
         .collect();
     fn select<T>(values: &mut Vec<T>, keep: &[bool]) {
         let mut index = 0;

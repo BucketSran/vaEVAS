@@ -27,6 +27,19 @@ class StrobeControl(unittest.TestCase):
         self.assertEqual(receipt['times'], [0.2,0.7])
         self.assertEqual(receipt['sample_origins'], ['stateless_working_point']*2)
 
+    def test_signed_zero_is_one_physical_time_at_both_entry_points(self):
+        program = compile_sources({'strobe.va': model('V(y,r)<+V(u,r);')}, [instance()])
+        for output_zero, forced_zero in [(-0.0, 0.0), (0.0, -0.0)]:
+            with self.subTest(output_zero=output_zero, forced_zero=forced_zero):
+                response = transient(program, {'u':[[0,0],[1,1]]}, [output_zero,1],
+                                     stop=1,max_step=1,strobetimes=[forced_zero],kernel=KERNEL)
+                self.assertEqual(response['transient']['times'],[output_zero,1])
+                self.assertEqual(response['strobe_evidence']['times'],[forced_zero])
+                raw=_invoke(dict(program=program.to_dict(),driven=['u'],samples=[],
+                                 transient=dict(pwl=[[[0,0],[1,1]]],output_times=[output_zero,1],
+                                                stop=1,max_step=1,strobetimes=[forced_zero])),KERNEL)
+                validate_response(raw,program,2,[output_zero,1],strobetimes=[forced_zero])
+
     def test_periodic_strobes_use_declared_window_and_phase(self):
         program = compile_sources({'strobe.va': model('V(y,r)<+idt(1,0);')}, [instance()])
         result = transient(program, {'u': [[0,0],[1,0]]}, [0,1], stop=1,
