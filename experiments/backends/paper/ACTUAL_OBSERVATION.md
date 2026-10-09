@@ -19,7 +19,13 @@ files use compact JSON. The executing adapter copies its exact bytes to `analysi
 new packet directory. `evidence.analysis_adapter` records that retained absolute
 path and SHA256; downstream packet adapter identity uses this same field. A
 later checkout update does not invalidate old analysis, while changing the
-retained snapshot fails its recorded hash. `evidence.json` binds every consumed artifact; hashes
+retained snapshot fails its recorded hash. This snapshot is the adapter entry
+point, not a self-contained executable bundle: it still imports the observation
+qualifier and native-reader dependencies. The full execution/source chain below
+binds those dependencies to the audited producer repository. Legacy packets
+without that chain do not have a complete tool-dependency identity and cannot
+establish independent reproducibility from the entry snapshot alone.
+`evidence.json` binds every consumed artifact; hashes
 bind bytes and do not independently prove mathematical or execution semantics.
 `observation.json` calls the unchanged qualifier with precisely the old rows.
 
@@ -43,7 +49,9 @@ that repository independently of manifest entries: all evas/src Python files,
 Rust src and IR src modules, Cargo/build metadata, plus the actual runner, inputs,
 process, settings, observations and native-reader Python entries. Both set and
 hashes are checked; missing, changed or extra production dependencies prevent
-verification. Unrelated docs, tests, benches and fuzz projects are excluded. Missing chain inputs keep native unknown;
+verification. Docs and separate tests, benches and fuzz directories are excluded;
+test modules located inside the enumerated production source directories remain
+included. Missing chain inputs keep native unknown;
 stale or conflicting supplied identities fail closed. A kernel's absent
 self-reported build revision is not repaired: the separate actual build receipt
 supplies the source/build/binary chain.
