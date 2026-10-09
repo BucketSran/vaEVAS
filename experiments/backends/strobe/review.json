@@ -21,7 +21,6 @@
     "stop_reason": "end_turn",
     "elapsed_seconds": 385.575,
     "review_valid": true,
-    "total_cost_usd": null,
     "model_usage": {
       "glm-5.3": {
         "inputTokens": 133246,
@@ -37,7 +36,8 @@
         "provider": "firstParty",
         "costBasis": "unknown"
       }
-    }
+    },
+    "reported_cost_usd": 1.34028
   },
   "glm_scope": "actual supplied-text static review through5911; later fixes covered by Astra, not claimed as second GLM review",
   "glm_initial_failure": "prompt-too-long, 0 tokens/0USD; preserved first attempt; reduced duplicate context before real review",
