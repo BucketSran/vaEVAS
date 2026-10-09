@@ -22,6 +22,16 @@ VACOMP-2259/1814. If every module explicitly includes the same guarded header,
 the simulation completes. EVAS previously accepted the first order; commit
 `1c3708e5` removes this order dependence. Existing frozen models remain unchanged.
 
+Active package and differential-test sources now use explicit headers and legal
+decimal literals. The six frozen smoke sources are unchanged: recompilation
+accepts three and refuses three. The default eleven-condition differential lane
+retains those three as `compile_refused` and continues the remaining conditions.
+Separately named successor fixtures retain the original manifests and change
+only the headers/literal spelling needed for admission. A local ngspice 47 run
+completed six conditions, retained three compile refusals and two unsupported
+conditions. That run used the worker's older debug kernel and is a CI-consumer
+check, not a comparison of the current integrated runtime.
+
 ## Reference precision is an observed result
 
 The [reference workflow](reference-precision.md) freezes the model, requested
@@ -90,6 +100,13 @@ twelve requests; only the optional evidence is added. All twelve original VA
 sources compile, and their JSON-normalized IR equals the frozen requests.
 This preservation result does not close B's remaining Spectre boundary or
 main-integration obligations.
+
+The integrated runtime passed the full 1,016-test Python suite and 211 Rust
+tests, with one existing opt-in test ignored. Clippy and formatting checks also
+passed. Subsequent changes are fixtures, checkers, analysis tools and
+documentation; `evas/src`, kernel source and IR source remain byte-identical to
+the tested runtime. Targeted admission, differential and maintenance checks
+cover those later changes. These local checks do not replace the Spectre gates.
 
 ## Evidence availability and remaining decision
 
