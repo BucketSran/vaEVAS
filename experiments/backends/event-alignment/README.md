@@ -174,3 +174,5 @@ python3 -B experiments/backends/event-alignment/prepare_spectre.py \
 原 Spec B E3/E5 查询阶段拒绝的有界精确历史证书增量见
 [常数积分历史重放](exact-history.md)。原严格 Spectre 差异与 stop 覆盖 I 继续保留；
 此增量没有解决 C1、VCO 环回或 va07 stop=3 计数，PR #108 继续 draft。
+
+当前未合并的[编译准入、参考精度与观测跟进](admission-observation-followup.md)保留原 C1/#79/VCO 门禁，区分新执行、保持性回归和仍待决定的语义。

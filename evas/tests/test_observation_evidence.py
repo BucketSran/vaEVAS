@@ -1,4 +1,6 @@
 """Actual kernel observation evidence; transport validation does not grant qualification."""
+GUARDS = ["QUALIFICATION", "DEV:observation-evidence"]
+
 import copy
 import math
 import unittest
