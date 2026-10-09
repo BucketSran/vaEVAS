@@ -81,3 +81,29 @@ class CompileAdmission(unittest.TestCase):
                 compile_sources({str(original):original.read_text()}, [binding])
             successor = root/'tests/fixtures'/f'{case}.va'
             compile_sources({str(successor):successor.read_text()}, [binding])
+
+    def test_independent_roots_do_not_share_disciplines_or_macros(self):
+        a = '`include "disciplines.vams"\n`define ROOT_VALUE 1\n'+BODY.replace('module m(', 'module A(').replace('VALUE','1')
+        b = BODY.replace('module m(', 'module B(').replace('VALUE','2')
+        bindings = [Instance('a','A',{'y':'a'}), Instance('b','B',{'y':'b'})]
+        for roots in ({'a.va':a,'b.va':b}, {'b.va':b,'a.va':a}):
+            with self.subTest(order=list(roots)), self.assertRaisesRegex(CompileError, r'b.va:1:.*electrical.*not declared'):
+                compile_sources(roots, bindings)
+        b = '`include "disciplines.vams"\n'+b.replace('<+2', '<+`ROOT_VALUE')
+        for roots in ({'a.va':a,'b.va':b}, {'b.va':b,'a.va':a}):
+            with self.subTest(order=list(roots)), self.assertRaisesRegex(CompileError, r'b.va:2:.*undefined or unsupported macro'):
+                compile_sources(roots, bindings)
+
+    def test_each_root_keeps_its_include_graph_and_standard_guards(self):
+        a = '`include "disciplines.vams"\n'+BODY.replace('module m(', 'module A(').replace('VALUE','1')
+        b = '`include "disciplines.vams"\n`include "disciplines.vams"\n'+BODY.replace('module m(', 'module B(').replace('VALUE','2')
+        bindings = [Instance('a','A',{'y':'a'}), Instance('b','B',{'y':'b'})]
+        for roots in ({'a.va':a,'b.va':b}, {'b.va':b,'a.va':a}):
+            with self.subTest(order=list(roots)):
+                program = compile_sources(roots, bindings)
+                from evas.query import static_index
+                self.assertEqual({m['name'] for m in static_index(program, bindings, roots)['modules']}, {'A','B'})
+        self.compile('`HEADER_VALUE', prefix='`include "custom.vams"\n', headers={
+            'custom.vams':'`include "disciplines.vams"\n`define HEADER_VALUE 3\n'})
+        # Two module definitions in one textual include graph share its environment.
+        compile_sources({'top.va':a+'\n`include "child.vams"\n', 'child.vams':b.split('\n',2)[2]}, bindings)

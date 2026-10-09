@@ -20,10 +20,10 @@ class Instance:
 
 
 def parse_sources(sources: Mapping[str, str]):
-    """Shared parsed module inventory, including preprocessing and pure functions."""
-    models, declarations = {}, {}
+    """Collect modules from independent compilation units and their include graphs."""
+    models = {}
     for path, tokens in preprocess_sources(sources):
-        for parsed in Parser('', path, tokens=tokens, declarations=declarations).parse_all():
+        for parsed in Parser('', path, tokens=tokens).parse_all():
             model = inline_functions(parsed)
             if model.name in models:
                 raise CompileError(f"duplicate module {model.name!r}", code="duplicate_module",

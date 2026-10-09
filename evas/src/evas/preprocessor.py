@@ -25,7 +25,7 @@ def preprocess_sources(sources):
         if key in files:
             raise CompileError(f'duplicate normalized source path {key!r}')
         files[key] = _tokens(text, key, tolerant=True)[:-1]
-    macros = {'__VAMS_ENABLE__':Macro(None,()), '__LINE__':Macro(None,()), '__FILE__':Macro(None,())}
+    predefined = {'__VAMS_ENABLE__':Macro(None,()), '__LINE__':Macro(None,()), '__FILE__':Macro(None,())}
     count = 0
 
     def fail(message, token, *, code="compile_error"):
@@ -225,6 +225,9 @@ def preprocess_sources(sources):
 
     result = []
     for name in roots:
+        # Independent roots are separate compilation units; include expansion
+        # within each root shares this fresh macro and header-guard environment.
+        macros = predefined.copy()
         tokens=file_tokens(name)
         # Validate only tokens retained by preprocessing. An unused macro
         # argument or inactive branch is not part of the compiled program.
