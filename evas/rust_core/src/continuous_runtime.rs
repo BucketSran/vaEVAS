@@ -91,8 +91,8 @@ impl Continuous {
             .ok_or_else(|| Error::new("event_resolution", "local clock horizon is uncertifiable"))?
             .hi;
         let inner = match self {
-            Self::Linear(v) => Self::Linear(Box::new(v.local_from_seed(clock, end)?)),
-            Self::Nonlinear(v) => Self::Nonlinear(Box::new(v.local_from_seed(clock, end)?)),
+            Self::Linear(v) => Self::Linear(Box::new(v.local_from_seed(end)?)),
+            Self::Nonlinear(v) => Self::Nonlinear(Box::new(v.local_from_seed(end)?)),
             Self::Anchored(_) => unreachable!(),
         };
         Ok(Self::Anchored(Box::new(Anchored {

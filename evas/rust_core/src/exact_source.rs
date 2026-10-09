@@ -20,7 +20,7 @@ pub(crate) struct Budget(pub(crate) usize);
 #[derive(Clone)]
 pub(crate) struct RootTime(R);
 
-pub(crate) fn enclosure(value: &R) -> Option<I> {
+fn enclosure(value: &R) -> Option<I> {
     let nearest = value.to_f64()?;
     if !nearest.is_finite() {
         return None;

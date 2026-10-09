@@ -998,14 +998,10 @@ fn timer_window_hidden_root_refusal_rolls_back_and_retries_same_controller() {
     );
 }
 
-fn check_later_microevent_rollback(source_driven: bool) {
+#[test]
+fn later_microevent_failure_rolls_back_entire_sequence_and_same_controller_retry() {
     let (base, trajectory, _, _) = delayed_timer_root_fixture(1e-18);
     let mut program = serde_json::to_value(base.program).unwrap();
-    if source_driven {
-        program["operators"][0]["input"] = json!({"op":"add",
-            "left":{"op":"state","state":0},
-            "right":{"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1e-30}]}});
-    }
     let origin = program["events"][0]["origin"].clone();
     program["states"]
         .as_array_mut()
@@ -1694,14 +1690,4 @@ fn extended_source_timer_cluster_later_failure_rolls_back_then_same_controller_r
             .collect::<Vec<_>>(),
         [0, 1, 2, 3]
     );
-}
-
-#[test]
-fn later_microevent_failure_rolls_back_entire_sequence_and_same_controller_retry() {
-    check_later_microevent_rollback(false);
-}
-
-#[test]
-fn source_driven_microevent_failure_preserves_history_and_same_controller_retry() {
-    check_later_microevent_rollback(true);
 }

@@ -116,7 +116,9 @@ fourteen PSF traces were rebound and checked. No new remote Spectre run was made
 models, stimuli, settings, checker and reference data are unchanged.
 
 These finite preservation checks do not resolve C1, #79, VCO, M1 or incomplete
-observation qualification. The change stays in PR117 pending user review. Raw
+observation qualification. PR117 was merged into main `c2ca32ee` on 2026-10-09 after user approval.
+The remaining strict Spec B reference obligations continue in [Issue96](https://github.com/BucketSran/vaEVAS/issues/96);
+integration does not upgrade the original F/I. Raw
 runs, the scope and complete independent reports remain local-only under the
 visible `worktrees/spectre-event-alignment/runs/event-cluster-transaction-20261009/`
 entry. The diagnostic inventory was regenerated because code movement changed

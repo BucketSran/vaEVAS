@@ -56,5 +56,5 @@ EVAS 对输入 binary64 值作精确有理数运算，再将每个时刻舍入�
 常规观察网格仍为 `[0,0.5,1]`，四个强制点单独保存在 `strobe_evidence`；
 它们不改写源 PWL。`load_scs` 在编译前检查时间表类型、范围和资源上限，
 `simulate_scs` 将原控制交给已有 API。适配元数据同时记录控制参数和展开时间表。
-[入口测试](../tests/test_scs.py)与[本轮配对说明](../../experiments/backends/source-event-closure/README.md)
+[入口测试](../tests/test_scs.py)与[接入配对说明](../../experiments/backends/strobe/README.md#scs-adapter-checkpoint)
 覆盖该入口；沿用既有实际 Spectre 观测，原缺失时间与设置资格 I 保留。

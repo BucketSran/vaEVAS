@@ -46,7 +46,8 @@ Rust 的版本化类型与解码位于 [evas-ir](rust_core/ir/README.md)，数�
 这些能力有输入依赖、初值、参数和组合限制，不能由单个算子支持推导任意组合都支持。
 [能力表](docs/CAPABILITIES.md)列出具体支持与缺口；
 [连续动态手册](docs/math/continuous.md)说明反馈、DAE 和事件组合边界。
-当前实现为 **EVAS 0.14.0 / IR v18**；改动摘要见[更新记录](docs/UPDATE.md)，尚未发布版本 tag。
+当前实现为 **EVAS 0.14.0 / IR v18**；本次开发基线、已集成架构和保留差异见[版本说明](docs/UPDATE.md#baseline-20261009)。
+论文最终验收及完整 Spectre 兼容性仍未完成，历史实验各自绑定原版本。
 
 <a id="model-handoff"></a>
 

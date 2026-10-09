@@ -104,55 +104,15 @@ V(y,r)<+h;""", "integer n,q,h;electrical z;")
             if baseline is not None:self.assertEqual(events,baseline)
             baseline=events
 
-    def test_local_closure_preserves_source_driven_coupled_state(self):
+    def test_local_closure_rejects_nonautonomous_coupled_state(self):
+        from evas import KernelError
         source=model("""@(initial_step) begin n=0;q=0;h=0;end
 @(timer(0.1,0.2,1e-6)) begin n=n+1;q=n-1;end
-V(z,r)<+idt(q+1e-30*V(u,r),0); V(w,r)<+idt(q+V(u,r),0);
+V(z,r)<+idt(q+1e-30*V(u,r),0); V(w,r)<+idt(V(u,r),0);
 @(cross(V(z,r)-1e-18,1,1e-6,1e-6)) h=h+1;
 V(y,r)<+h+V(w,r);""", "integer n,q,h;electrical z,w;")
-        program=compile_sources({"nonautonomous.va":source},[instance()])
-        baseline=None
-        for times,step in [([0,.31],.31),([0,.3,.30000000000000004,.305,.31],.012)]:
-            result=transient(program,{"u":[[0,0],[.31,.31]]},times,stop=.31,max_step=step,vabstol=1e-7,reltol=0.,kernel=KERNEL)
-            self.assertEqual(result["transient"]["states"][-1],[2,1,1])
-            events=result["transient"]["events"]
-            self.assertEqual([e["event"] for e in events],[0,0,1])
-            if baseline is not None:self.assertEqual(events,baseline)
-            baseline=events
-            for time,row in zip(times,result["solutions"]):
-                self.assertAlmostEqual(row["voltages"][result["nodes"].index("dut:w")],time*time/2+float(max(Q(0),Q(time)-Q(.1)-Q(.2))),delta=1e-7)
-            self.assertAlmostEqual(result["solutions"][-1]["voltages"][result["nodes"].index("y")],1+.31*.31/2+float(Q(.31)-Q(.1)-Q(.2)),delta=1e-7)
-
-    def test_source_driven_local_closure_crosses_input_corner_and_restarts(self):
-        source=model("""@(initial_step) begin n=0;q=0;h=0;m=0;end
-@(timer(0.1,0.2,1e-6)) begin n=n+1;q=n-1;end
-@(timer(0.30000000000000004,0,1e-6)) m=m+1;
-V(z,r)<+idt((q+h)*V(u,r),0); V(w,r)<+idt(V(u,r),0);
-@(cross(V(z,r)-0.002,1,1e-9,1e-9)) h=h+1;
-V(y,r)<+V(z,r)+V(w,r);""", "integer n,q,h,m;electrical z,w;")
-        program=compile_sources({"forced-chain.va":source},[instance()])
-        inputs=[[0,1],[.305,1.305],[.31,1.1]]
-        tau=Q(.1)+Q(.2)
-        # Independent piecewise trapezoid integration of the supplied PWL.
-        def area(t):
-            t=Q(t); total=Q(0)
-            for (a,u),(b,v) in zip(inputs,inputs[1:]):
-                a,b,u,v=map(Q,(a,b,u,v)); end=min(t,b)
-                if end>a: total+=(end-a)*(u+(u+(v-u)*(end-a)/(b-a)))/2
-            return total
-        events=None
-        for times,step in [([0,.3,.30000000000000004,.31],.31),([0,.3,.30000000000000004,.3000000000000001,.302,.305,.308,.31],.005)]:
-            result=transient(program,{'u':inputs},times,stop=.31,max_step=step,vabstol=1e-7,reltol=0,kernel=KERNEL)
-            self.assertEqual(result['transient']['states'][-1],[2,1,1,1])
-            observed=result['transient']['events']
-            self.assertEqual([e['event'] for e in observed],[0,0,1,2])
-            if events is not None:self.assertEqual(events,observed)
-            events=observed
-            for t,row in zip(times,result['solutions']):
-                integral=max(Q(0),area(t)-area(tau))
-                z=integral if integral<Q(.002) else 2*integral-Q(.002)
-                self.assertAlmostEqual(row['voltages'][result['nodes'].index('dut:w')],float(area(t)),delta=1e-7)
-                self.assertAlmostEqual(row['voltages'][result['nodes'].index('dut:z')],float(z),delta=1e-7)
+        with self.assertRaisesRegex(KernelError,"autonomous"):
+            transient(compile_sources({"nonautonomous.va":source},[instance()]),{"u":[[0,0],[.31,.31]]},[0,.31],stop=.31,max_step=.31,vabstol=1.,reltol=0.,kernel=KERNEL)
 
     def test_physical_phase_without_a_cross_trigger(self):
         source=model("""@(initial_step) begin n=0;q=0;m=0;end

@@ -4,6 +4,33 @@
 不在此重复——见 [CAPABILITIES 检查点身份](CAPABILITIES.md#检查点身份)与
 [追溯矩阵](TRACEABILITY.md)。单 PR 的细节以 PR/commit 描述为准，本页只留摘要。
 
+<a id="baseline-20261009"></a>
+
+## 2026-10-09：EVAS 0.14.0 开发基线整理
+
+以已合入的 main `c2ca32ee` 为求解器基线，保留 IR18。本次仅把既有五项 strobe 控制
+接入受限 `.scs`，没有改变 Rust 求解器、数学根执行约定或精度预算。
+这是有明确支持边界的开发版本，不是完整 Spectre 电压域替代或论文最终验收声明。
+
+- **架构已集成。** #108 集成共同事件验收；#117 将每批候选准备、完整事件簇准备与一次发布分开。
+  历史、状态、输出和日程经检查后一起提交，失败不污染已接受状态。
+  [责任与保持性证据](../../experiments/backends/event-acceptance/README.md)绑定原重构版本，
+  不能推导 Spectre 兼容范围扩大。
+- **输入接入。** `.scs` 的 tran 支持 `strobetimes`、`strobeperiod`、`strobedelay`、
+  `skipstart`、`skipstop`；常规输出网格保持不变。见[控制合同](strobe.md)
+  和[实际参考复用](../../experiments/backends/strobe/README.md#scs-adapter-checkpoint)。
+- **已知差异。** C1 精确边界前后态、#79 stop=3 计数、VCO 环回及 M1 参考资格继续保留原 F/I。
+  Spec B 的原十二槽严格参考义务由 [#96](https://github.com/BucketSran/vaEVAS/issues/96)
+  继续跟踪；架构集成与完整对齐分别验收。
+- **保留候选。** #79 的 [e981ebd9](https://github.com/BucketSran/vaEVAS/commit/e981ebd9f0e0967c8f8842c31d1198458c9e19e9)
+  是未合入的另一种端点根收缩实现。#118 原 [f3618c49](https://github.com/BucketSran/vaEVAS/commit/f3618c4930b360651080e7e5d2dbdaa2c97abe7c)
+  的源驱动局部历史扩展未纳入本次基线，其代码、模型与失败证据留在固定历史，不能因接入部分合并而宣称该扩展通过。
+- **后续需求。** 输入、诊断、语言、算子扩展分别在 #63/#64/#65/#66；双向自换向在 #70；
+  Spectre 版本调查在 #16；精度控制优化在 #119。未实现范围保留明确拒绝，不随版本整理解除。
+
+下方“候选”“未合并”等措辞描述各自历史检查点。当前源码支持查[能力表](CAPABILITIES.md)，
+版本身份以固定提交为准；旧实验不重新标记为本次执行。
+
 ## 2026-10-07：输入比较初值与迟滞计数候选
 
 - EVAS 0.14.0 / IR18 新增 real 状态由实际 driven/ground 仿射比较决定 0/1 初值。

@@ -1,0 +1,228 @@
+{
+  "kernel_sha256": "64198480a2729adc0f3b49e058c84f3e6fd32a1828e831a939a50ffee9123703",
+  "reference_analysis_sha256": "23ee0331390bb10aec063dac0bdbcf7eda048dd5eaddca517fbbc4f7fb1159e9",
+  "cases": [
+    {
+      "case": "static-irregular",
+      "deck_sha256": "d866176e439662e48b2171b4af8f6f66fb36974c7741f22713936acdd15c61fd",
+      "source_sha256": "acb8643bfa8449d65b634030b5ace388e00afcd0baa616f05794d8b4be069c32",
+      "result_sha256": "db268b7b85dcd6f81ab44b689d1649a8246f1a3af461ffe7f38e6ae2b0f3eff6",
+      "forced_rows": [
+        {
+          "time": 0.2,
+          "direct_max_V": 0.0,
+          "analytic_error_V": 0.0
+        },
+        {
+          "time": 0.7,
+          "direct_max_V": 0.0,
+          "analytic_error_V": 0.0
+        }
+      ],
+      "output_times": [
+        0.0,
+        0.5,
+        1.0
+      ]
+    },
+    {
+      "case": "continuous-periodic",
+      "deck_sha256": "fcdf4190b837e7764a1ab96bd47f18c5f51a94e340340e0525297bd7d604d474",
+      "source_sha256": "93782f6da2331f0003ebd94dff5af8b094ac49aaf3f713362f21b81ac189844a",
+      "result_sha256": "ffc7ac4cdc740c0fa954fb6d4eef4bf590d201d81c36bd712bd340028f5731c4",
+      "forced_rows": [
+        {
+          "time": 0.125,
+          "direct_max_V": 1.2540482582923396e-08,
+          "analytic_error_V": 1.3877787807814457e-17
+        },
+        {
+          "time": 0.375,
+          "direct_max_V": 2.317413816399494e-08,
+          "analytic_error_V": 5.551115123125783e-17
+        },
+        {
+          "time": 0.625,
+          "direct_max_V": 3.697495132293227e-08,
+          "analytic_error_V": 2.220446049250313e-16
+        },
+        {
+          "time": 0.875,
+          "direct_max_V": 4.0997121697472494e-08,
+          "analytic_error_V": 4.440892098500626e-16
+        }
+      ],
+      "output_times": [
+        0.0,
+        0.5,
+        1.0
+      ]
+    },
+    {
+      "case": "implicit-irregular",
+      "deck_sha256": "d866176e439662e48b2171b4af8f6f66fb36974c7741f22713936acdd15c61fd",
+      "source_sha256": "7b79276df98e22eb5e167c3b0893e32ce2c1c41c4713b389a598d2d4fbd1a007",
+      "result_sha256": "c8db33e55f67497a22cbcf102e13f5b171e3b217afe6fe0a84e4cd9900e1fa97",
+      "forced_rows": [
+        {
+          "time": 0.2,
+          "direct_max_V": 4.735822844992299e-12,
+          "analytic_error_V": 2.7755575615628914e-17
+        },
+        {
+          "time": 0.7,
+          "direct_max_V": 4.743094805803594e-12,
+          "analytic_error_V": 0.0
+        }
+      ],
+      "output_times": [
+        0.0,
+        0.5,
+        1.0
+      ]
+    },
+    {
+      "case": "timer-periodic",
+      "deck_sha256": "fcdf4190b837e7764a1ab96bd47f18c5f51a94e340340e0525297bd7d604d474",
+      "source_sha256": "e99855a1a997fdf04f9d4e55912dbb1cd5d7fe9ff29cafcf83ebd438d0df059a",
+      "result_sha256": "5789e6d90fbcb9285d6795c929469f077a52ace6bc6ae7bec2def1983a12f0d8",
+      "forced_rows": [
+        {
+          "time": 0.125,
+          "direct_max_V": 0.0,
+          "analytic_error_V": 0.0
+        },
+        {
+          "time": 0.375,
+          "direct_max_V": 0.0,
+          "analytic_error_V": 0.0
+        },
+        {
+          "time": 0.625,
+          "direct_max_V": 0.0,
+          "analytic_error_V": 0.0
+        },
+        {
+          "time": 0.875,
+          "direct_max_V": 0.0,
+          "analytic_error_V": 0.0
+        }
+      ],
+      "output_times": [
+        0.0,
+        0.5,
+        1.0
+      ]
+    }
+  ],
+  "scope": "New .scs adapter executions, reuse frozen four-case Spectre native observations. Unsupported Spectre-only options omitted explicitly in local deck; no equal settings or exact boundary qualification claim. 12 internal forced points, original missing t=0 and settings I preserved.",
+  "rust_source_revision": "c2ca32ee91e6e0db707c9d927e5257695dd4e44a",
+  "rust_tree": "d7fa36559462190dfb364b80e82e41a7fc1db505",
+  "adapter_source_sha256": "6258b0b03294d399ad7cd0ad42e6513a19948d216e25333512a5b9b2695c6d6d",
+  "adapter_test_sha256": "b6e0775d2f1e17c7d58b8ff70607740c43dee759e60f9dc31bfb2825badc561a",
+  "original_candidate_revision": "f3618c4930b360651080e7e5d2dbdaa2c97abe7c",
+  "scope_identity": "SCS adapter bytes retained from original candidate; all Rust files restored to stated main tree. This receipt does not execute or validate the original source-history candidate.",
+  "reference_identity": "reference-identity.json",
+  "api_reference_replay_sha256": "bd50708d7efe4ac667636f821ef4d0b46999a4986f17d1ce700bd84d1ac542c0",
+  "api_replay_identity_limit": "The local API replay source_commit reports historical HEAD f3618c49, not the working tree. The explicit Rust tree and adapter source hashes above identify the actual restored source.",
+  "local_replay_script_sha256": "96ccdaaccce11e65c3f32babbd94863af9f95d9768c60bc7c391f52804de4059",
+  "preservation": {
+    "kernel_sha256": "64198480a2729adc0f3b49e058c84f3e6fd32a1828e831a939a50ffee9123703",
+    "records": [
+      {
+        "case": "E1-base",
+        "returncode": 0,
+        "equal": true,
+        "request_sha256": "ec83d9b3aa51433916894bf96211ea8e353f848a3ff3b4bb3867b560af2759a7",
+        "response_sha256": "cd57e4a36d58e0fdbee38cbab73dcb394c7f27f832b8b523706d1238bf261caa"
+      },
+      {
+        "case": "E1-fine",
+        "returncode": 0,
+        "equal": true,
+        "request_sha256": "7b1f2411d3fe227ab07bcec813e39304baa7a9542e6a1ce3fb536c09f6482f7c",
+        "response_sha256": "4ee9f320aded971f8291b2ac033ca278696f0ff8f57d9d2be5d555a5c422ca82"
+      },
+      {
+        "case": "E2-base",
+        "returncode": 0,
+        "equal": true,
+        "request_sha256": "9b69cfcfddad0bcb1565a0739e8bfa08237e9d01401cae5fc1906e2a07d5a5fd",
+        "response_sha256": "8049647f743687775277ba8b0364614f5f3683f6ae071864096a084396b5123c"
+      },
+      {
+        "case": "E2-fine",
+        "returncode": 0,
+        "equal": true,
+        "request_sha256": "6234dd7f749b30e6a5cd9f330395224dad9b01978061802a5e0bb7337a69f6aa",
+        "response_sha256": "e01fc2c89dbb6d70c18aa99ac91322f5e7fb7b0759f72c980e3690f4d508f715"
+      },
+      {
+        "case": "E3-base",
+        "returncode": 0,
+        "equal": true,
+        "request_sha256": "d4fd002c796fb569c3024de7b5155aca34872514ac8cbd08f1586da8b1613ae4",
+        "response_sha256": "83cda5654a19cc1479d79407f3ceaf479f21d61d765f327ab630d7d5cc5c6421"
+      },
+      {
+        "case": "E3-fine",
+        "returncode": 0,
+        "equal": true,
+        "request_sha256": "1281b1eea9a9262c5c69814212e4955d78e0869a07df37f001204c6d9dbf7f80",
+        "response_sha256": "28ebd484ce7995793ef4d2ad94026b2e2f4ee0958b48cbd2c9ac747e3cd8d1f2"
+      },
+      {
+        "case": "E4-base",
+        "returncode": 0,
+        "equal": true,
+        "request_sha256": "9f5a589546086a7c32bfb09005180dfa53c3daaae2e19355b6acee1eac74f2d5",
+        "response_sha256": "877ef6ad3bbd3cca0f0aa04dfbdee1c8119a2070597b154b71412a2032c79800"
+      },
+      {
+        "case": "E4-fine",
+        "returncode": 0,
+        "equal": true,
+        "request_sha256": "214fc1d25fd2cd36c6eb3c1be391be4ab0c9e646e7d339913f35dc4609485cf4",
+        "response_sha256": "2a27e3e5ece5ea311b00f1b64f72dca274e2d62f3d4a9eef98ef08a81a31dce8"
+      },
+      {
+        "case": "E5-base",
+        "returncode": 0,
+        "equal": true,
+        "request_sha256": "114d2801b1d2af6613044d3da210aec4c0e197489d17aafb9c07ad238d56cd6f",
+        "response_sha256": "11e5b22160c184946245bfff31781623ed8f2d7d90cf54412bfe199869fc2131"
+      },
+      {
+        "case": "E5-fine",
+        "returncode": 0,
+        "equal": true,
+        "request_sha256": "5bb054f9d78daec2132b0e3297a51c17eee018d06335b7de32929f2631f2f19f",
+        "response_sha256": "98a2d543b71105c56d4f0d084adc3824449109f620ac7288eda155a53dfd51ec"
+      },
+      {
+        "case": "E6-base",
+        "returncode": 0,
+        "equal": true,
+        "request_sha256": "3af0c7f37770af3adbce801f2dabb9b57609ac8c5ec6ceba37ed2254d65f24c1",
+        "response_sha256": "e20ea19349e4dd8a5d5dece30434b0f908336ad3eeb851c5014abbe5d6a75b7f"
+      },
+      {
+        "case": "E6-fine",
+        "returncode": 0,
+        "equal": true,
+        "request_sha256": "b1fdaa898604b5f78bf0611bddb035002d57df1c9ff1df3b311ada6ae5a1542e",
+        "response_sha256": "8baacd621d287aa4e588bd879a9128cdfd561808ea27f6b922fe423a3765d1fd"
+      }
+    ],
+    "scope": "Same exact archived Spec B requests and byte-identical prior merged-refactor responses; no new Spectre qualification."
+  },
+  "tests": {
+    "modules": [
+      "test_scs",
+      "test_strobe"
+    ],
+    "count": 18,
+    "result": "pass",
+    "log_sha256": "8f7cfd09a8467496b9abaeb3b288d76b96001f95acbc4d347703fefacdbdee30"
+  }
+}

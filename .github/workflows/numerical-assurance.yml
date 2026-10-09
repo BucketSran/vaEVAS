@@ -54,7 +54,6 @@ jobs:
           python3 -B -m unittest discover -s experiments/backends/spectre-alignment -p 'test_*.py' -v
           python3 -B -m unittest discover -s evas/validation/event_alignment -p 'test_checker.py' -v
           python3 -B -m unittest discover -s experiments/backends/event-alignment -p 'test_*.py' -v
-          PYTHONPATH=evas/src python3 -B -m unittest discover -s experiments/backends/source-event-closure -v
       - name: Paper contracts, observable criteria and table provenance
         run: |
           python3 -B evas/validation/paper/check_design.py
