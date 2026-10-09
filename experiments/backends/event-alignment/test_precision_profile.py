@@ -86,7 +86,15 @@ class PrecisionProfileTests(unittest.TestCase):
                 return precision.attest(frozen,'base',root,root/'tran.psf',root/'spectre.log','21.1','success')
             self.assertEqual(attest()['settings_status'],'P')
             (root/'spectre.log').write_text(log.replace('reltol = 1e-8','reltol = 2e-8'))
-            self.assertEqual(attest()['settings_status'],'I')
+            (root/'tran.psf').write_text(psf.replace('"y" 1\n','"y" 1.00001\n'))
+            record=attest()
+            self.assertEqual(record['settings_status'],'I')
+            self.assertEqual(len(record['rows']),2)
+            frozen, records=self.fixture()
+            records[1].update(rows=record['rows'],settings_status=record['settings_status'])
+            result=precision.analyze(frozen,records)
+            self.assertEqual(result['acceptance_pair']['comparison']['finite_pair_status'],'F')
+            self.assertEqual(result['finite_reference_stability_status'],'I')
             (root/'dut.va').write_text('different model')
             with self.assertRaises(ValueError): attest()
 
@@ -121,6 +129,16 @@ class PrecisionProfileTests(unittest.TestCase):
         frozen, records = self.fixture()
         records[2]['rows'].pop()
         self.assertEqual(precision.analyze(frozen,records)['classification'],'incomplete')
+
+    def test_empty_or_whitespace_backend_version_cannot_attest_or_qualify(self):
+        frozen, records = self.fixture()
+        for version in ['', '   ', '\t']:
+            for record in records: record['spectre_version']=version
+            result=precision.analyze(frozen,records)
+            self.assertEqual(result['classification'],'incomplete')
+            with tempfile.TemporaryDirectory() as directory:
+                with self.assertRaises(ValueError):
+                    precision.attest(frozen,'base',Path(directory),Path(directory)/'psf',Path(directory)/'log',version,'success')
 
 
 if __name__ == '__main__':

@@ -53,9 +53,12 @@ python3 -B experiments/backends/event-alignment/precision_profile.py attest \
   --spectre-version 21.1.0.509.isr12 --execution-status success
 ```
 
-version 参数必须出现于日志，具体版本身份仍需原执行收据绑定。读回器分别保留
+version 参数拒绝空串或空白，且必须出现于日志；分析器也把缺失/空白版本列为 I。
+具体版本身份仍需原执行收据绑定。读回器分别保留
 请求设置、transient 有效设置、global user 设置、PSF header 与原始行号。
-缺失/冲突/调整设置不回填请求值；不能稳定验收。规范化保留全部原生行、重复
+缺失/冲突/调整设置不回填请求值；不能稳定验收。设置读回与观察规范化分别处理，
+有效 PSF 即使读回失败也保留 rows/token，并分别记录 settings_gaps 和
+observation_gaps。规范化保留全部原生行、重复
 时刻和十进制 token，既不插值也不替换最近点。失败/超时档位也应调用 attest，
 保存缺失证据，不从计划分母移除。
 
@@ -83,6 +86,10 @@ binary64 时刻；逐档原生行留在报告中，但网格外 native 行不冒
 全部相邻档位比较仍保留。baseline→target 的 F 不会因 target→confirmation
 稳定而消失，但也不强制 baseline 差异阻止预先声明的 tail 稳定判定。原独立
 数学失败继续由原 checker 保留，不由这个稳定判定升级。
+
+`finite_reference_stability_status` 单独给出 P/F/I：有设置、版本或观察缺证时
+为 I。诊断 classification 和有限配对中的已知 F 仍保留；设置失败不能清空
+已有波形，也不能让配对差异替代设置资格。
 
 上述状态只表示当前固定计划结果。不能在看见结果后选择通过的一对子计划，
 也不能将 reference 稳定直接称为数学准确或与 EVAS 对齐。
