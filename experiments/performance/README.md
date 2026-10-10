@@ -2,7 +2,8 @@
 
 本目录测量静态求解、瞬态推进及构建成本。测量用于选择优化；不增加原 31 条件的分母，也不证明相对 Spectre 更快。
 
-长期候选及优先级由 [issue #138](https://github.com/BucketSran/vaEVAS/issues/138) 维护。
+长期候选由 [issue #138](https://github.com/BucketSran/vaEVAS/issues/138) 保留。
+本次输入共享优化交付后，速度优化阶段收尾；待功能正确性完善后再考虑其余候选。
 
 <a id="direct-input-sharing"></a>
 
@@ -10,7 +11,8 @@
 
 `DirectInput` 将不可变点列和误差区间改为共享数组，减少候选与回放中的复制。
 数值运算、认证、事件推进及历史验收保持原样。[本次收据](direct-input-sharing.json)
-对应 main `040df8ed` 上的本地改动，尚未合入。
+对应 main `040df8ed` 上的[已审查源码检查点](https://github.com/BucketSran/vaEVAS/commit/4dafbbb1108d4d485248c1e2cb426e8c64ea72ab)。
+收据保留测量时的本地身份；发布前核对了源码与检查器哈希，原测量证据继续适用。
 
 合成案例含 4097 个三角波拐点和 8193 个观察点，每个半段都有观察，覆盖非零积分值。
 两批均交替运行基线与候选各五次，正式时间关闭诊断：

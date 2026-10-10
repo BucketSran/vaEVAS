@@ -571,5 +571,15 @@
     "candidate": {
       "sha256": "13aeb306cf98f06f492ce53ca7bf8d0cfb187421aa1478aaf7d0b31c400dd2d2"
     }
+  },
+  "publication": {
+    "reviewed_implementation_commit": "4dafbbb1108d4d485248c1e2cb426e8c64ea72ab",
+    "integration_base": "97b512470127bbd79d924601e81c0459cfdab913",
+    "identity_check": "All 103 measured source/checker manifest hashes still match after merging the newer main. Execution-time identity and all original results above are preserved. Publication adds documentation and CI calibration selection only.",
+    "independent_review": {
+      "spec": "no actionable findings; 160 responses and both Spectre pairs independently rechecked",
+      "standards": "no actionable findings; source/receipt hashes and 160 responses independently rechecked"
+    },
+    "scope_after_delivery": "Performance work paused at user request; retain issue138 candidates until functional correctness is improved."
   }
 }

@@ -56,6 +56,7 @@ jobs:
           python3 -B -m unittest discover -s experiments/backends/event-alignment -p 'test_*.py' -v
           python3 -B -m unittest discover -s evas/validation/sample_edge_filter -p 'test_*.py' -v
           python3 -B -m unittest discover -s experiments/backends/sample-edge-filter -p 'test_*.py' -v
+          python3 -B -m unittest discover -s experiments/performance -p 'test_*.py' -v
       - name: Paper contracts, observable criteria and table provenance
         run: |
           python3 -B evas/validation/paper/check_design.py
