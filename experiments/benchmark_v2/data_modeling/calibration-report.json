@@ -20,12 +20,12 @@
     "test.sh": {
       "archived_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
       "current_sha256": "4c465235f2bbd890363d2d40473f55320a494c2f194cbcb0f07928ad3c356e0f",
-      "note": "Entrypoint changed to Harbor path invocation."
+      "note": "prepare() always replaces this source entrypoint with the archived Python 3.12 -B entrypoint. Normalized bytes match r4 exactly."
     },
     "circuit_task.py": {
       "archived_sha256": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
       "current_sha256": null,
-      "note": "Unused legacy transport file removed from current task. Archived r4 package retains it."
+      "note": "prepare() always supplies coordinator-owned circuit_task.py and adc_linearity.py. Supplied bytes match the archived r4 identity exactly."
     }
   },
   "current_runs": [
@@ -3511,5 +3511,26 @@
       "v2_data.py": "9a8537d5e999dcbf4fe2bed179757bfa0c39c5676e0661c579eef3762de4ab60",
       "instruction.md": "29481af05ce4a325914f2dde15a644ae3bb13208a7f176b0576775e3d299159f"
     }
+  },
+  "package_normalization": {
+    "normalizer": "experiments/benchmark_first_batch/runtime.py:prepare",
+    "normalizer_sha256": "7e012962eccb9027693192d9f237ed6c421f988d022a58d572b862843ee2b3d7",
+    "criteria_sha256": "a69402b8450a88069b64f2a8fe60ef081de63ec987e4599c2eb50f59e7efdc0f",
+    "effective_source_identity": {
+      "selftest.json": "97affd0b0f4916bf81c478f9f16151fb50bc9f2dd9f64b7091290388cccc3194",
+      "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "cases.json": "750f5ad59a29a7bd0e1df2e77507cb2504e84a28c192b6b40faf3cd477067e08",
+      "v2_data.py": "bd9a91b04acbdc6cdc7ec583529e29c24c8665e97206b061adc3766e3583d0cf",
+      "verify.py": "1d0d0f2c279fb926cc47285d78ea030fccb9a01f05b42b18f8cdb0cb41ad2ad7",
+      "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+      "v2_runtime.py": "e68c2da4e680aae078a2edc9db37ef58baed2742f1b268690d8fd7548887a693",
+      "contract.json": "003bf2000580dac0bc3641cd4b42f67d8a4863fa3a8f98fd637fba281ca020ad",
+      "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "instruction.md": "29481af05ce4a325914f2dde15a644ae3bb13208a7f176b0576775e3d299159f"
+    },
+    "matched_variants": 8,
+    "matched_conditions": 48,
+    "result": "exact template identity and full per-condition payload inventories match r4 after normalization",
+    "limits": "Source task bytes differ. This verifies normalized author calibration packages only, not Harbor invocation or model Agent isolation."
   }
 }
