@@ -71,6 +71,16 @@ fn deadline(bounds: I, scale: f64, sum: Option<[f64; 3]>) -> Result<Deadline, Er
 }
 
 impl Transition {
+    /// A budget for one future edge is valid only before any active or queued
+    /// edge. Return the retained plateau, never a point replacement for it.
+    pub(crate) fn idle_level(&self) -> Option<(f64, I, f64)> {
+        (self.edge.is_none() && self.pending.is_empty()).then_some((
+            self.settled,
+            self.settled_bounds,
+            self.rise.min(self.fall),
+        ))
+    }
+
     pub(crate) fn input_changed_from(&self, old: &Self) -> bool {
         self.input != old.input
     }

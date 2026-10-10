@@ -52,3 +52,9 @@
 补充 TIMER、EVENT-ORDER、TRANSITION、DYNAMICS、COMPOSE、QUALIFICATION。
 原 12 配置在对应修复的运行快照中重新通过；以强制点回执验收，不把普通查询提升为接受帧。
 旧拒绝及 Spectre 请求/原生时间偏差仍保留，完整原始数据为 local-only。
+
+2026-10-11 的[单次滤波链预算分配](../../../experiments/backends/sample-edge-filter/BOUNDARY.md#filter-budget)
+补充 CROSS、EVENT-ORDER、TRANSITION、DYNAMICS、COMPOSE 与 DEV:precision-chain 的开发验证证据。
+[数学与准入](../math/events.md#filter-root-budget)区分全响应灵敏度提案和最终数值认证；
+新增测试台观测事件补齐原生点后，单案例按原规则选中 `tol`；旧失败和新未达标档位保留。
+具体后端覆盖以该记录为准，不扩展一般多事件或历史重放支持。

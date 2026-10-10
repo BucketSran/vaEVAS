@@ -8,6 +8,10 @@ use crate::interval::Interval as I;
 use crate::ir::{Error, StateKind};
 use std::collections::BTreeMap;
 
+#[path = "filter_budget.rs"]
+mod filter_budget;
+pub(crate) use filter_budget::FilterBudget;
+
 fn dot(row: &[I], values: &[I]) -> I {
     row.iter()
         .zip(values)
