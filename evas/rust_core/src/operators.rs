@@ -141,15 +141,33 @@ fn projected_points(
     Ok((points, bounds))
 }
 
-/// Find structural history dependencies before numerical projection. This is
-/// local to absdelay: ordinary PWL projection and every other operator retain
-/// their existing history rejection. Zero weights/cancellation do not erase
-/// state or another operator from this closure.
-fn delay_parent(
+/// Find one same-kind, same-instance unit-alias history dependency. Structural
+/// checks precede numerical projection, so cancellation cannot hide feedback.
+#[derive(Clone, Copy)]
+enum FeedforwardKind {
+    Delay,
+    Slew,
+}
+impl FeedforwardKind {
+    fn name(self) -> &'static str {
+        match self {
+            Self::Delay => "absdelay",
+            Self::Slew => "slew",
+        }
+    }
+    fn matches(self, spec: &OperatorSpec) -> bool {
+        matches!(
+            (self, spec),
+            (Self::Delay, OperatorSpec::AbsDelay { .. }) | (Self::Slew, OperatorSpec::Slew { .. })
+        )
+    }
+}
+fn history_parent(
     input: &Expression,
     program: &Program,
     driven: &[String],
     origin: &Origin,
+    kind: FeedforwardKind,
 ) -> Result<Option<usize>, Error> {
     let driven_nodes: BTreeSet<_> = driven
         .iter()
@@ -159,7 +177,7 @@ fn delay_parent(
     if !initial.state_dependencies.is_empty() {
         return Err(Error::new(
             "unsupported_operator",
-            "absdelay cannot depend on event state",
+            format!("{} cannot depend on event state", kind.name()),
         ));
     }
     let mut pending: Vec<_> = initial.node_dependencies.into_iter().collect();
@@ -175,7 +193,7 @@ fn delay_parent(
                 if !bound.state_dependencies.is_empty() {
                     return Err(Error::new(
                         "unsupported_operator",
-                        "absdelay cannot depend on event state",
+                        format!("{} cannot depend on event state", kind.name()),
                     ));
                 }
                 operators.extend(bound.operator_dependencies);
@@ -190,16 +208,20 @@ fn delay_parent(
     if operators.len() != 1 {
         return Err(Error::new(
             "unsupported_operator",
-            "absdelay requires exactly one first-stage history",
+            format!("{} requires exactly one first-stage history", kind.name()),
         ));
     }
     let parent = *operators.iter().next().unwrap();
     if program.operators[parent].origin().instance != origin.instance
-        || !matches!(program.operators[parent], OperatorSpec::AbsDelay { .. })
+        || !kind.matches(&program.operators[parent])
     {
         return Err(Error::new(
             "unsupported_operator",
-            "absdelay history must be a same-instance absdelay",
+            format!(
+                "{} history must be a same-instance {}",
+                kind.name(),
+                kind.name()
+            ),
         ));
     }
     let map = crate::affine_bounds::node_map(program, driven)?;
@@ -219,7 +241,10 @@ fn delay_parent(
         if coefficient != if k == slot { I::ONE } else { I::ZERO } {
             return Err(Error::new(
                 "unsupported_operator",
-                "second absdelay input must be a certified unit, zero-offset first-stage alias",
+                format!(
+                    "second {} input must be a certified unit, zero-offset first-stage alias",
+                    kind.name()
+                ),
             ));
         }
     }
@@ -252,7 +277,9 @@ fn build_delay(
             "absdelay parent is not a fixed delay",
         ));
     };
-    let (points, bounds) = if let Some(parent) = delay_parent(input, program, driven, origin)? {
+    let (points, bounds) = if let Some(parent) =
+        history_parent(input, program, driven, origin, FeedforwardKind::Delay)?
+    {
         build_delay(parent, program, trajectory, driven, depth + 1)?.shifted_tube()?
     } else {
         projected_points(input, program, trajectory, driven, origin)?
@@ -384,6 +411,7 @@ enum Runtime {
         history: Box<Transition>,
     },
     Slew(Slew),
+    SlewCascade(crate::slew_cascade::Cascade),
 }
 
 const SIN_MAX_MAGNITUDE: f64 = 128.0;
@@ -1360,9 +1388,38 @@ impl Operators {
                     fall,
                     origin,
                 } => {
-                    let (points, bounds) =
-                        projected_points(input, program, trajectory, driven, origin)?;
-                    entries.push(Runtime::Slew(Slew::enclosed(points, bounds, *rise, *fall)?));
+                    if let Some(parent) =
+                        history_parent(input, program, driven, origin, FeedforwardKind::Slew)?
+                    {
+                        let OperatorSpec::Slew {
+                            input,
+                            rise: first_rise,
+                            fall: first_fall,
+                            origin,
+                        } = &program.operators[parent]
+                        else {
+                            unreachable!()
+                        };
+                        if history_parent(input, program, driven, origin, FeedforwardKind::Slew)?
+                            .is_some()
+                        {
+                            return Err(Error::new(
+                                "unsupported_operator",
+                                "slew composition is limited to two stages; cycles are unsupported",
+                            ));
+                        }
+                        let (points, bounds) =
+                            projected_points(input, program, trajectory, driven, origin)?;
+                        entries.push(Runtime::SlewCascade(crate::slew_cascade::Cascade::new(
+                            points,
+                            bounds,
+                            [(*first_rise, *first_fall), (*rise, *fall)],
+                        )?));
+                    } else {
+                        let (points, bounds) =
+                            projected_points(input, program, trajectory, driven, origin)?;
+                        entries.push(Runtime::Slew(Slew::enclosed(points, bounds, *rise, *fall)?));
+                    }
                 }
             }
         }
@@ -1379,7 +1436,8 @@ impl Operators {
                 | Runtime::Sin(SinInput::Direct(_))
                 | Runtime::AbsDelay(_)
                 | Runtime::LaplaceNd(_)
-                | Runtime::Slew(_) => false,
+                | Runtime::Slew(_)
+                | Runtime::SlewCascade(_) => false,
             };
             changes_on_advance.push(changes);
         }
@@ -1559,6 +1617,7 @@ impl Operators {
                     Runtime::AbsDelay(history) => history.value(time)?,
                     Runtime::Transition { history, .. } => history.value(time)?,
                     Runtime::Slew(history) => history.value(time)?,
+                    Runtime::SlewCascade(history) => history.value(time)?,
                 };
                 if !value.is_finite() {
                     return Err(Error::new("numerical_failure", "nonfinite operator value"));
@@ -1583,6 +1642,7 @@ impl Operators {
                 Runtime::TransitionFilter { .. } => None,
                 Runtime::Transition { history, .. } => history.next_breakpoint(after),
                 Runtime::Slew(history) => history.next_breakpoint(after),
+                Runtime::SlewCascade(history) => history.next_breakpoint(after),
             })
             .min_by(f64::total_cmp)
     }
@@ -1650,6 +1710,7 @@ impl Operators {
                         }
                     },
                     Runtime::Slew(history) => history.value_bounds(time),
+                    Runtime::SlewCascade(history) => history.value_bounds(time)?,
                     Runtime::AbsDelay(history) => history.value_bounds(time),
                     Runtime::Transition { history, .. } => history.value_bounds(time)?,
                 };
@@ -1676,7 +1737,7 @@ impl Operators {
                 Runtime::LaplaceNd(_) => Vec::new(),
                 Runtime::TransitionFilter { .. } => Vec::new(),
                 Runtime::Transition { history, .. } => history.deadlines(after),
-                Runtime::Slew(_) => Vec::new(),
+                Runtime::Slew(_) | Runtime::SlewCascade(_) => Vec::new(),
             })
             .collect();
         for (index, deadline) in deadlines.iter().enumerate() {
@@ -1808,7 +1869,7 @@ impl Operators {
                         may_change,
                     )?
                 }
-                Runtime::Slew(_) => {}
+                Runtime::Slew(_) | Runtime::SlewCascade(_) => {}
             }
         }
         Ok(())
