@@ -7,24 +7,24 @@ real ref_time,fb_time,delta,q;
 integer have_ref,have_fb,valid_state;
 analog begin
  @(initial_step)begin have_ref=0;have_fb=0;q=0;valid_state=0;end
- @(cross(V(rst)-.45,+1))begin have_ref=0;have_fb=0;q=0;valid_state=0;end
- @(cross(V(ref)-.45,+1))begin
-  if(V(rst)<.45)begin
+ @(cross(V(rst)-0.45,+1))begin have_ref=0;have_fb=0;q=0;valid_state=0;end
+ @(cross(V(ref)-0.45,+1))begin
+  if(V(rst)<0.45)begin
    ref_time=$abstime;have_ref=1;valid_state=0;
    if(have_fb)begin
     delta=fb_time-ref_time;
-    if(delta>=0)q=floor(delta/lsb+.500001);else q=-floor(-delta/lsb+.500001);
+    if(delta>=0)q=floor(delta/lsb+0.500001);else q=-floor(-delta/lsb+0.500001);
     if(q>31)q=31;if(q< -31)q=-31;
     valid_state=1;have_ref=0;have_fb=0;
    end
   end
  end
- @(cross(V(fb)-.45,+1))begin
-  if(V(rst)<.45)begin
+ @(cross(V(fb)-0.45,+1))begin
+  if(V(rst)<0.45)begin
    fb_time=$abstime;have_fb=1;valid_state=0;
    if(have_ref)begin
     delta=fb_time-ref_time;
-    if(delta>=0)q=floor(delta/lsb+.500001);else q=-floor(-delta/lsb+.500001);
+    if(delta>=0)q=floor(delta/lsb+0.500001);else q=-floor(-delta/lsb+0.500001);
     if(q>31)q=31;if(q< -31)q=-31;
     valid_state=1;have_ref=0;have_fb=0;
    end
@@ -35,7 +35,7 @@ analog begin
    have_ref=0;have_fb=0;q=0;valid_state=0;
   end
  end
- V(code)<+transition(q,0,100p);V(valid)<+transition(valid_state*.9,0,100p);
+ V(code)<+transition(q,0,100p);V(valid)<+transition(valid_state*0.9,0,100p);
 end
 endmodule
 module fine_control(ref,rst,target,fine_enable,ready,code,valid,fine,lock);
@@ -45,25 +45,25 @@ real integral,fine_value,phase_error;
 integer previous_n,n,qualified;
 analog begin
  @(initial_step)begin integral=0;fine_value=0;qualified=0;previous_n=3;end
- @(cross(V(rst)-.45,+1))begin integral=0;fine_value=0;qualified=0;end
- @(cross(V(fine_enable)-.45,-1))begin integral=0;fine_value=0;qualified=0;end
+ @(cross(V(rst)-0.45,+1))begin integral=0;fine_value=0;qualified=0;end
+ @(cross(V(fine_enable)-0.45,-1))begin integral=0;fine_value=0;qualified=0;end
  @(cross(V(target)-3.5,0))begin integral=0;fine_value=0;qualified=0;end
  @(timer(99n,100n))begin
-  n=$rtoi(V(target)+.5);
-  if(V(rst)>.45 || V(fine_enable)<.45 || V(ready)<.45 || n!=previous_n)begin
+  n=$rtoi(V(target)+0.5);
+  if(V(rst)>0.45 || V(fine_enable)<0.45 || V(ready)<0.45 || n!=previous_n)begin
    integral=0;fine_value=0;qualified=0;
-  end else if(V(valid)>.45)begin
-   phase_error=V(code)*.25;
-   integral=integral+.02*phase_error;
+  end else if(V(valid)>0.45)begin
+   phase_error=V(code)*0.25;
+   integral=integral+0.02*phase_error;
    if(integral>24)integral=24;if(integral< -24)integral=-24;
-   fine_value=integral+.5*phase_error;
+   fine_value=integral+0.5*phase_error;
    if(fine_value>31)fine_value=31;if(fine_value< -31)fine_value=-31;
    if(abs(phase_error)<=1)qualified=qualified+1;else qualified=0;
   end else qualified=0;
   previous_n=n;
  end
  V(fine)<+transition(fine_value,0,100p);
- V(lock)<+transition((qualified>=20)*.9,0,100p);
+ V(lock)<+transition((qualified>=20)*0.9,0,100p);
 end
 endmodule
 module adpll_top(ref,rst,target,fine_enable,dco,fb,coarse,fine,tdc_code,tdc_valid,lock);
@@ -74,5 +74,5 @@ healthy_divider divider(ref,rst,target,fb);
 healthy_coarse coarse_loop(ref,dco,rst,target,fine_enable,coarse,ready);
 fine_tdc measurement(ref,fb,rst,tdc_code,tdc_valid);
 fine_control tracking(ref,rst,target,fine_enable,ready,tdc_code,tdc_valid,fine,lock);
-analog V(en)<+.9;
+analog V(en)<+0.9;
 endmodule

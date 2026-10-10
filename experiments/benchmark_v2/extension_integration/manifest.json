@@ -123,5 +123,11 @@
       "expected": "fail",
       "semantic_behavior": "tdc-sign-inverted"
     }
-  ]
+  ],
+  "author_source_revision": {
+    "previous_checkpoint": "c01de75aa86fed1e3b8f426289811088028da696",
+    "reason": "Actual Spectre compiler rejected author leading-dot real literals and reserved ground node. All author VA/netlist/support assets use explicit zero and gnd now.",
+    "prior_outcome": "unscored author source compilation failure; no semantic mutant rejection or completed acceptance",
+    "recalibration": "pending"
+  }
 }
