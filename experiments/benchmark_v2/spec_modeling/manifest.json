@@ -156,9 +156,9 @@
           "id": "alternative",
           "expected": "pass",
           "status": "pending",
-          "semantic_behavior": "logical complement of comparator bit",
+          "semantic_behavior": "packed-word bitmask SAR decision publisher instead of unpacked arrays",
           "files": {
-            "dut.va": "1fde941ad48d6b70b2be21c5a8ebd4c1954abfd376949b1b9abc513c33ff8855"
+            "dut.va": "326e8d89524988a9bf4ad35f052b27eac4166494404050f21c20b1754f12afcb"
           }
         },
         {
@@ -258,9 +258,9 @@
           "id": "alternative",
           "expected": "pass",
           "status": "pending",
-          "semantic_behavior": "affine rail coding",
+          "semantic_behavior": "complement retained outside-history state",
           "files": {
-            "dut.va": "cf901f02c52661a61ccc6500d95eda323d071deaeae79c8182ba4fa5681c6538"
+            "dut.va": "d999ad444509cc9606fe5632578a9171e496d3b56aa1f7e5972b9837d6c4db46"
           }
         },
         {
@@ -591,9 +591,9 @@
           "id": "alternative",
           "expected": "pass",
           "status": "pending",
-          "semantic_behavior": "phase-index boolean encoding",
+          "semantic_behavior": "one-hot rotating ring instead of binary phase counter",
           "files": {
-            "dut.va": "d47c7e5b2f6e9adaa60382e87144c782d009d452eaaa348e723658a48c613971"
+            "dut.va": "294c156eaa0f8aed6f98473b40f0c0dbbf33ee38beefd9e8f816c0921966108a"
           }
         },
         {
@@ -693,9 +693,9 @@
           "id": "alternative",
           "expected": "pass",
           "status": "pending",
-          "semantic_behavior": "signed gain correction",
+          "semantic_behavior": "normalized bounded control state with gain decoded each update",
           "files": {
-            "dut.va": "46e4bef937f598068b990f4fad66fe8164f698aee946b909a5c4f21911ace364"
+            "dut.va": "6765396a751345e1c9e3242df15ecd47d94e485b8e4077aa726567d45f8a6c1e"
           }
         },
         {

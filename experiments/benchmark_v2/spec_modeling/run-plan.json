@@ -265,7 +265,7 @@
     "variant": "alternative",
     "candidate_directory": "/Users/bucketsran/.codex/worktrees/bench-spec-modeling/current/experiments/benchmark_v2/spec_modeling/candidates/v2-spec-082-agc-receiver-leveling-loop/alternative",
     "expected": "pass",
-    "semantic_behavior": "signed gain correction",
+    "semantic_behavior": "normalized bounded control state with gain decoded each update",
     "certification": "pending-live-execution"
   },
   {
@@ -313,7 +313,7 @@
     "variant": "alternative",
     "candidate_directory": "/Users/bucketsran/.codex/worktrees/bench-spec-modeling/current/experiments/benchmark_v2/spec_modeling/candidates/v2-spec-186-sarfend-logic-4b/alternative",
     "expected": "pass",
-    "semantic_behavior": "logical complement of comparator bit",
+    "semantic_behavior": "packed-word bitmask SAR decision publisher instead of unpacked arrays",
     "certification": "pending-live-execution"
   },
   {
@@ -361,7 +361,7 @@
     "variant": "alternative",
     "candidate_directory": "/Users/bucketsran/.codex/worktrees/bench-spec-modeling/current/experiments/benchmark_v2/spec_modeling/candidates/v2-spec-314-hysteretic-window-comparator/alternative",
     "expected": "pass",
-    "semantic_behavior": "affine rail coding",
+    "semantic_behavior": "complement retained outside-history state",
     "certification": "pending-live-execution"
   },
   {
@@ -425,7 +425,7 @@
     "variant": "alternative",
     "candidate_directory": "/Users/bucketsran/.codex/worktrees/bench-spec-modeling/current/experiments/benchmark_v2/spec_modeling/candidates/v2-spec-396-quadrature-lo-generator-divided-clock/alternative",
     "expected": "pass",
-    "semantic_behavior": "phase-index boolean encoding",
+    "semantic_behavior": "one-hot rotating ring instead of binary phase counter",
     "certification": "pending-live-execution"
   },
   {
