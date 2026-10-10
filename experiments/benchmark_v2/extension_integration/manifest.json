@@ -122,6 +122,27 @@
       "candidate_directory": "experiments/benchmark_v2/extension_integration/candidates/v2-integrate-case0007-adpll-fine-tdc/tdc-sign-inverted",
       "expected": "fail",
       "semantic_behavior": "tdc-sign-inverted"
+    },
+    {
+      "task": "benchmark/tasks/v2-integrate-349-multichannel-readout",
+      "variant": "reset-clock-high-bank-stale",
+      "candidate_directory": "experiments/benchmark_v2/extension_integration/candidates/v2-integrate-349-multichannel-readout/reset-clock-high-bank-stale",
+      "expected": "fail",
+      "semantic_behavior": "reset-clock-high-bank-stale"
+    },
+    {
+      "task": "benchmark/tasks/v2-integrate-case0007-adpll-fine-tdc",
+      "variant": "lock-never-asserted",
+      "candidate_directory": "experiments/benchmark_v2/extension_integration/candidates/v2-integrate-case0007-adpll-fine-tdc/lock-never-asserted",
+      "expected": "fail",
+      "semantic_behavior": "lock-never-asserted"
+    },
+    {
+      "task": "benchmark/tasks/v2-integrate-case0007-adpll-fine-tdc",
+      "variant": "tdc-late-pair-accepted",
+      "candidate_directory": "experiments/benchmark_v2/extension_integration/candidates/v2-integrate-case0007-adpll-fine-tdc/tdc-late-pair-accepted",
+      "expected": "fail",
+      "semantic_behavior": "accept expired counterpart arriving between periodic timeout ticks"
     }
   ],
   "author_source_revision": {
@@ -129,5 +150,16 @@
     "reason": "Actual Spectre compiler rejected author leading-dot real literals and reserved ground node. All author VA/netlist/support assets use explicit zero and gnd now.",
     "prior_outcome": "unscored author source compilation failure; no semantic mutant rejection or completed acceptance",
     "recalibration": "pending"
+  },
+  "review_revalidation": {
+    "reviewed_checkpoint": "10bd6480273398b14417a552cab5b0022c29c411",
+    "defects": [
+      "reset during sampling high left held frame stale",
+      "feedback submultiple accepted without divider relation",
+      "constant low lock accepted and stale pair could be consumed repeatedly",
+      "expired counterpart could be accepted between timeout ticks"
+    ],
+    "status": "source/checker fixed; new actual reference/alternative/mutant calibration pending",
+    "historical_reference_pass": "old checker only, cannot support strict revised acceptance"
   }
 }

@@ -10,8 +10,8 @@ DCO接口 `healthy_dco(coarse,fine,rst,en,dco)`，频率为20MHz+coarse*1MHz+fin
 
 TDC以.ref与.fb上升穿.45V的时刻为边沿。每对由两种边沿各一次组成；先到保存，后到输出；重复同种边沿覆盖该种最新时刻并撤销valid。误差为fb_time-ref_time，反馈滞后为正。lsb=250ps，四舍五入到最近整数，半LSB向远离0的方向舍入，饱和-31..31。code电压直接编码整数，不是伏特物理相差。第二沿后1ns内valid=.9V。下一第一沿撤销valid。两沿同刻code=0有效；缺另一沿45ns后1ns内code=0、valid=0并丢弃该不完整对。rst高时丢弃测量、code=valid=0。
 
-控制必须由有效TDC经控制器更新fine实际影响DCO。fine关闭时fine=0并保留粗调闭环；reset、retune、关闭fine立即撤销旧lock，fine控制状态清零。lock只表示连续20个有效相差不超过1ns的配对，并需健康coarse ready。失效配对撤销资格。
+控制必须由有效TDC经控制器更新fine实际影响DCO。fine关闭时fine=0并保留粗调闭环；reset、retune、关闭fine立即撤销旧lock，fine控制状态清零。lock只表示健康coarse ready后的连续20个有效配对，资格相差为真实边沿误差按公开250ps量化后不超过1ns。每个新配对只计一次，取得或失去资格后2ns内更新lock。重复同种边沿、45ns缺另一沿、或150ns没有新配对须撤销资格；reset、retune或fine关闭清旧计数。
 
-系统必须通过真实输出与反馈边沿达标。稳定观察窗口DCO频率误差不超过200kHz；fine开启稳定相差不超过3ns；关闭模式不要求相位锁定。受控参考相位扰动后重新达标，fine路径实际活动。内部lock不能替代输出验收。禁止读固定激励或预计算结果来旁路TDC和控制器。
+系统必须通过真实输出与反馈边沿达标。稳定观察窗口DCO频率误差不超过200kHz；fine开启稳定相差不超过3ns；关闭模式不要求相位锁定。受控参考相位扰动后重新达标，fine路径实际活动。内部lock不能替代输出验收。checker另从真实DCO边沿验证每N沿产生反馈、fb与ref同频，并从实际ref/fb配对独立重算lock正资格和失格。禁止读固定激励或预计算结果来旁路TDC和控制器。
 
 公开参数及阈值来自本题作者行为合同，未承诺相噪、抖动或锁定时间改善。健康资产与数值容差需实际校准后冻结；当前包不是发布资格证明。

@@ -91,7 +91,7 @@ analog begin
   previous_n=n;
  end
  V(fine)<+transition(fine_value,0,100p);
- V(lock)<+transition(0.9,0,100p);
+ V(lock)<+0;
 end
 endmodule
 module adpll_top(ref,rst,target,fine_enable,dco,fb,coarse,fine,tdc_code,tdc_valid,lock);

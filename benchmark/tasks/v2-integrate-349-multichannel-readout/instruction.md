@@ -7,7 +7,7 @@
 
 固定部件接口 `sample_hold(VDD,VSS,IN,CLK,OUT)`。OUT初值为VSS；CLK相对VSS上升越过vth时保存IN相对VSS，tedge=100ps单调过渡；停钟保持，无下垂。四实例VSS接0，VDD接vdd。输入在采样沿前后至少1ns稳定，允许采样适配延迟不超过50ps。
 
-rst为高时禁止采样。rst上升沿及rst为高的clk上升沿清读指针、out、sel和valid。同时清四通道帧。固定保持部件没有reset，集成适配应在reset时将四输入切换为0并产生一次有效采样；恢复正常模式后仍使用同一部件。
+rst为高时禁止采样。rst上升沿及rst为高的clk上升沿清读指针、out、sel和valid。同时清四通道帧，包含采样适配时钟仍高时的reset；清零在reset上升后1ns内完成。固定保持部件没有reset，集成适配应在reset时将四输入切换为0并产生一次有效采样；恢复正常模式后仍使用同一部件。
 
 每个clk上升沿，sample高时同时采集四通道。read高时按0、1、2、3循环读出，out保存该帧该通道，sel为当前out通道，valid置高。sample与read同时为高时读出上一帧，然后采集新帧。read低时保持out与sel，valid置低且不推进指针。sample只更新帧，不能改变正在保持的out。后续read才读到新帧。
 
