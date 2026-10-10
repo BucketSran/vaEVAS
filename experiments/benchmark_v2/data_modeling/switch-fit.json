@@ -1,0 +1,76 @@
+{
+  "fit_public_samples": 2952,
+  "parameters": [
+    8.689507686761136,
+    0.3428393801195485,
+    0.8999999999999999,
+    0.20000000000000004,
+    5.745259756820028e-20,
+    1.4688448288607427,
+    1.9082042181532448e-22,
+    0.04136353879590816,
+    2.1581547456543424,
+    1.0809354719615159e-19
+  ],
+  "parameter_order": [
+    "kn",
+    "kp",
+    "vtn",
+    "vtp",
+    "body_n",
+    "body_p",
+    "lambda_n",
+    "lambda_p",
+    "theta_n",
+    "theta_p"
+  ],
+  "tau_ns": [
+    0.09,
+    0.08
+  ],
+  "kernel_scale_V": 0.2,
+  "kernel_regularization": 0.01,
+  "correction_bounds": [
+    0.7,
+    1.3
+  ],
+  "steady_derivative_rms_V_per_ns": 0.012036333158922375,
+  "training_sha256": {
+    "train-0-0": "87c3e3aff830060dd87029c8491d664569f7abd097aa9f486fd310183f92487d",
+    "train-0-1": "eff04643057d845a66442c02eff02023f5a3a3222eae530a643c134da5251ae8",
+    "train-1-0": "5d28eae0d33cefb0264dba848e5b699ac384f7350a5407e7eff5df339e5c9a52",
+    "train-1-1": "34b74ab39f5a9c416813e4b485f2f523732a8ee7bafd1e96dc47e65f3df3cdc7",
+    "train-2-0": "9612d41ca582f66ac38f79645bd11e22c9d722087b345d38cce37885c299a436",
+    "train-2-1": "5ffd1b0453a42285f9ff0d383fbd813e64e9d2be5479f2ab75c2fb3c69c1d4c5",
+    "train-3-0": "126e0e5a9eebddb2331d2a726a1ef8770598258fdd58967776184f5fa0910991",
+    "train-3-1": "62e96ab11a6bb4eb58e6f3b58b68fa84ee56456d1279b2e4d61d2bfcc0198d5f",
+    "train-mid-0": "91683c7ccc6b2c6bd81173837a98af93b0472a2277531910e9f850ef24047cf7",
+    "train-mid-1": "aad74dfa53ffb5a8ddd02427afc33fd3bf3d415549e936e64fae51bd121bc500",
+    "train-mid-2": "6c067aebf46f1817f2935f36b73113fa7cff56f69f006a3f2de1eaa02bac1b40",
+    "train-mid-3": "6fe6c12c4da9bb7aed447f8ec9b07415b5188f48bc123398bdd8651639a1fdec",
+    "train-sweep-0-0": "e6e64ab74a066da8f18aafb9225a1517dbaea2a649eff67c19efce5c41012623",
+    "train-sweep-0-1": "ab7c50de4addbd253ffd506ba3bea622fbee14e3f50fa6c543bbfeef0e024189",
+    "train-sweep-1-0": "b2272fb78bded8d5f047f784a22e4c584474bc3ed66e0dd26c6a2fda9d43a393",
+    "train-sweep-1-1": "6bc1cb58683c462d818733b42ddc41b3619ad26781443126321795a77fd2104e",
+    "train-sweep-2-0": "2d6924bee0e06fd2ed331d0f8da8c216a0432e65c90db4278901634f75a08397",
+    "train-sweep-2-1": "1fc3c28674592c7ca30e111bd3deafafbc3f36fcf28ebf00ebf2ac7922827755",
+    "train-sweep-3-0": "9f1b06afba3ea627355634ce0494884de6b7240ef213b672b23905e98797afce",
+    "train-sweep-3-1": "a740e3c8b65f185009dcc90e15116c1b681567a2de36334d9e46429784031361",
+    "train-sweep-4-0": "cca02a2969837920dee0b925bf346f440e7fe0233c1bf307662ada56eee50af0",
+    "train-sweep-4-1": "9e6c5d913f3eb9d5febbebc9202aa2fbf8f5ce17dc0ea4a4d7c236452c8252bc",
+    "train-sweep-5-0": "19e263c1925842cbbb4519867dd26ffc89431ce234e388bb9381ebad46b11465",
+    "train-sweep-5-1": "4fbd8207bf50b653a4b04a0be3b6bc812ff83a14ca394e28e58116e900453d86",
+    "train-sweep-6-0": "70a6822bf6b46225104f3231e6371d574040c86cad60b0e2e8d02db2197c98aa",
+    "train-sweep-6-1": "0a2c2761ef8ba468fd27c120333ac5dbc94162c4624de9594955a66e57abbabe",
+    "train-sweep-7-0": "7626b70f681ed7347c739f9d641106b4ccc2a44aa0048370b047da5f06e8cc50",
+    "train-sweep-7-1": "e2ccb67bf6422188b861841c8a9e990cdf0c5430c449ae84b139d136b95c3b72",
+    "train-sweep-8-0": "50908e8d7e43c26035b7cf8457f810eb241bd3af689e74483e67bdd35fddf5ab",
+    "train-sweep-8-1": "14e8aa1ae36309ef5b706fbaf987b76b9fa479a9b5c083f7f9ef4078defd0d93",
+    "train-sweep-9-0": "d40152f5edeb36d7ac312470fb865f8fb7d66cf954556e20bda1be597e4faa49",
+    "train-sweep-9-1": "0a801c31e09a89dab07c27f66945edae459f7ae8507ae6f82a1c7a121fb389f1"
+  },
+  "fit_library_versions": {
+    "numpy": "2.5.3",
+    "scipy": "1.18.1"
+  }
+}

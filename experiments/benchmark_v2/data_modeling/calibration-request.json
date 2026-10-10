@@ -5,13 +5,13 @@
       "variant": "reference",
       "candidate_dir": "benchmark/tasks/v2-data-sampling-identification/solution",
       "expected_pass": true,
-      "behavior": "29-knot positive rate table with integrated retained state"
+      "behavior": "split-channel law, 29-knot positive public correction and integrated inverter/held state"
     },
     {
       "variant": "alternative",
       "candidate_dir": "experiments/benchmark_v2/data_modeling/candidates/v2-data-sampling-identification/alternative",
       "expected_pass": true,
-      "behavior": "15-knot model as capacitor + nonlinear conductance; different approximation and state equations"
+      "behavior": "15-knot public correction with capacitor states and split nonlinear conductance; different approximation and state equations"
     },
     {
       "variant": "wrong_phase",
