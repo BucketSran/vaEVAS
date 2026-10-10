@@ -1,0 +1,3536 @@
+{
+  "scope": "Author D3 calibration for spec #134; D4 model pilots and full spec acceptance remain pending. Historical attempts remain visible and do not substitute for current identities.",
+  "revision": "98391cb74691e5982d37450371ba1d18d60878fb",
+  "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+  "isolation": "Trusted author candidates; no Agent sandbox claim.",
+  "archive_access": "Local-only ignored runs. Reports and hashes are retained here; original archives are not publicly downloadable.",
+  "evidence_root": "runs/benchmark-spec-20261011",
+  "source_identity": {
+    "experiments/benchmark_v2/data_modeling/dataset-manifest.json": "5972984b6bd57e3d98c708101ee409fee1b6564fb87854dbb546f9263916e66e",
+    "experiments/benchmark_v2/data_modeling/frozen-identities.json": "61587013cb7cc78d5d36b13564684a7fd1bde233e52d13a3d50148b18b8bbb45",
+    "experiments/benchmark_v2/data_modeling/source-transcription.json": "e2cfb7f804e2762f6396341ec972b436ff29e7abd46ac321fe8007491bd68d7a",
+    "experiments/benchmark_v2/data_modeling/source-convergence.json": "204b2b9548c972befbac1e34479b845d94d683b470138967e2dca89f8d026d3b",
+    "experiments/benchmark_v2/data_modeling/export-errors.json": "bd15aa0bf8252a46581fe89f8b706afa72816d1eec9a1d2668c0e110a848a45a",
+    "experiments/benchmark_v2/data_modeling/switch-fit.json": "9e4b9eec6194deed0ad40a411d5a96c282bd8fd811277064e0782243d80485bc",
+    "experiments/benchmark_v2/data_modeling/public-fit-study.json": "1209bb2363ceae0ea7a1475e1572ea99402e69ee8317d9335eb779a97af4c576",
+    "experiments/benchmark_v2/data_modeling/calibration-request.json": "eac1667fbe176c3cbff168062079b84d323dc73b7f6804261984aa66ebb57da9"
+  },
+  "current_task_revision": "3c94117f59259ff56137371cce78a3bca73327f7",
+  "current_task_identity_differences": {
+    "test.sh": {
+      "archived_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+      "current_sha256": "4c465235f2bbd890363d2d40473f55320a494c2f194cbcb0f07928ad3c356e0f",
+      "note": "prepare() always replaces this source entrypoint with the archived Python 3.12 -B entrypoint. Normalized bytes match r4 exactly."
+    },
+    "circuit_task.py": {
+      "archived_sha256": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "current_sha256": null,
+      "note": "prepare() always supplies coordinator-owned circuit_task.py and adc_linearity.py. Supplied bytes match the archived r4 identity exactly."
+    }
+  },
+  "current_runs": [
+    {
+      "variant": "reference",
+      "expected_pass": true,
+      "behavior": "split-channel law, 29-knot positive public correction and integrated inverter/held state",
+      "run": "v2-data-sampling-identification-reference-isolated-r4",
+      "candidate_sha256": "2616e12696016992d72841dff6e7f8b9c7703cbcc309e330133ce4af8ecc6102",
+      "candidate_files": {
+        "dut.va": {
+          "sha256": "61cd42da4a0a83e60b67e7d481388d8ad2ce4feadaa683ade461f127cda8b94f",
+          "bytes": 67023
+        }
+      },
+      "criteria_sha256": "a69402b8450a88069b64f2a8fe60ef081de63ec987e4599c2eb50f59e7efdc0f",
+      "expected_conditions": 6,
+      "all_conditions_graded": true,
+      "conditions": [
+        {
+          "condition_id": "selftest-0",
+          "job_id": "bf-f6d23225b5e14cb4b72c-selftest-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "26049c09c8eb0c5821f6c8fa31d516088cdcebffcdc267fb7bc9aab3aa54422a",
+          "package_sha256": "5ec3983078b9915a6355bc80a15c535c9b7da8901aaba3be033ae6fe32ce7fb9",
+          "cases": [
+            {
+              "name": "selftest-0",
+              "netlist_sha256": "2b9dd5db806c6336322a2e198980a19b44acf40354384408b6b3af1ea268a0b8",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": true,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.008065613552084945,
+                "sample_max": 0.00985903301054103,
+                "hold_max": 0.009859113810541387
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "debcf1c4e17dc1d2f03e35f81448afa3ae3fdcb75b4ee8d6bbaa274a7dbeda51",
+              "waveform_rows": 32553
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "631a0f18174dbe0dc76411c4594a1ff6e290a704bb05cbe2b5d59c8e26de71ea"
+        },
+        {
+          "condition_id": "selftest-1",
+          "job_id": "bf-2f55437a78ff429eb7ce-selftest-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "cf329d688a12b5dfc5581fd7831508e2c45ae137aa0ea7769506f5ad53a8220e",
+          "package_sha256": "33f09afd263321a151b69d9f1aa20a6d8759102f14ba0f06ccc7c556f6a21da8",
+          "cases": [
+            {
+              "name": "selftest-1",
+              "netlist_sha256": "a1ef655c8cee1c34d6f5fd97c1d0de876df451fc62d24d4dfbac271de0109d17",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": true,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.022736537667385117,
+                "sample_max": 0.028993139444013105,
+                "hold_max": 0.02899315854401313
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "9f18d1539058fed019cb35a42e211b03d52f9c6f96c7b6f3aaea6d3ef80f4be5",
+              "waveform_rows": 32550
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "be31977d2a8e2ecee8c6b319e1df51747561a19e49c2580eb1d7f219755685ed"
+        },
+        {
+          "condition_id": "heldout-0",
+          "job_id": "bf-9df312b07ca14f44842b-heldout-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "c3e9a88f08c020107b8cda1ca3de62944ef9eb1144ada1f3b826d0d778a48836",
+          "package_sha256": "0eb7ef9e713005fc0d6c2ce9295a4c706e94976fc2a16f158b317c501c2852fa",
+          "cases": [
+            {
+              "name": "heldout-0",
+              "netlist_sha256": "a1371e0a9242443aefce24627f7c25634cc6a448dc579d567b730ccd5e663b0e",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": true,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.00979805080739041,
+                "sample_max": 0.017097388655028634,
+                "hold_max": 0.017097396355028605
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "93b382a9900b00203d3ae889b0ee0e87564b826e072e4a834b2beaa932111239",
+              "waveform_rows": 32553
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "e006d435df1236fd70ec0a7a3360e2db9b9aca5175f7022a03b24c238296bef7"
+        },
+        {
+          "condition_id": "heldout-1",
+          "job_id": "bf-043b13a0f22d4cad8196-heldout-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "0c87be0abc4209cc96c0ef996cfd19f1fc2bdf4274669afa30be1a791e49fa09",
+          "package_sha256": "071af76f751e666db23bd29e9891707e6429b3d0c89b60b1d5db85bb9c63091f",
+          "cases": [
+            {
+              "name": "heldout-1",
+              "netlist_sha256": "61fdc9871fea08489725882a3d12598e99f24a21d17d0112c7739c0cb7ad578b",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": true,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.005332389716445566,
+                "sample_max": 0.012407881441588886,
+                "hold_max": 0.012407891541588945
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "a59dee9416192fc56a01656adec72f8a0e9ca23aad737ee9b11ca6d62d7e03f2",
+              "waveform_rows": 32564
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "dfe2e29d3fac233c37a1205ec1ca9c88008ab2f7af18eb46eee2717943164c61"
+        },
+        {
+          "condition_id": "heldout-2",
+          "job_id": "bf-7b00c28bee9249c79d95-heldout-2",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "111ba42131afb1433a502d5092095cf05aa1cd2197f20799bba2ed4b61580adc",
+          "package_sha256": "d2b5e9fe9cef542e59297d5c2efb87c4d3288780187bfbc25c0d75442a211924",
+          "cases": [
+            {
+              "name": "heldout-2",
+              "netlist_sha256": "009d2c3d8a3a484932238916477f3d917c890055ba2817f55abf58aba1dc4189",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": true,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.011255989778887162,
+                "sample_max": 0.01241261781006986,
+                "hold_max": 0.012429085510069826
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "f369bbe68bdf1a99824590dd835ae87cc1cd3eb8bd74418faad54340d279cfab",
+              "waveform_rows": 44786
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "7b7d85c5a6ddaba6a06e23812534eea8c38bf16caf9621fcc88349881e120d4d"
+        },
+        {
+          "condition_id": "heldout-3",
+          "job_id": "bf-a924662867c648f99cb8-heldout-3",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "288ce6386c9e87795c8f8537c989c370ca049e81f27d7866798cda251b2ff486",
+          "package_sha256": "d5cb571a6fa474937b0baa24d895a252399411f4a292af4253d7d2f444ce5c22",
+          "cases": [
+            {
+              "name": "heldout-3",
+              "netlist_sha256": "ba4993cecaf40d969c7d11653b02478a3610e99dbad3cbb9991018b44d7cf824",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": true,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.01129436215335799,
+                "sample_max": 0.01614101568088777,
+                "hold_max": 0.016141030880887808
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "308f80149c5b5f57547af8de7cc6b7b1ea0c1aca0777be7112a053cad4d7968f",
+              "waveform_rows": 44815
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "f6deb5c1360626a61be56d71aee53500b860d12182da82af4633a508f7dc0148"
+        }
+      ],
+      "preparation_sha256": "a69fa43a802fc72de8c30d387e237ff74425d48e6db07ea4a6d1ec3fa44dec44",
+      "results_sha256": "b0aa4ae720d3ac8751af5e6ef295dd7b63b47ad399f759647931967f2a2a8daa",
+      "summary_sha256": "98a61771cfc6e3579d0d621e6179554bb580df785d55b9175ca06dc497735dd5",
+      "passed_conditions": 6,
+      "failed_conditions": 0,
+      "calibration_valid": true
+    },
+    {
+      "variant": "alternative",
+      "expected_pass": true,
+      "behavior": "15-knot public correction with capacitor states and split nonlinear conductance; different approximation and state equations",
+      "run": "v2-data-sampling-identification-alternative-isolated-r4",
+      "candidate_sha256": "90d9cc5cfb32056b4ff21cf316ce890f3e44f2f2da62ea747fb361cbb7d610d3",
+      "candidate_files": {
+        "dut.va": {
+          "sha256": "f268e15b70fa4b2eded511dfcd567b744fe86fdaa09837e2dffdd612aaa1debf",
+          "bytes": 19662
+        }
+      },
+      "criteria_sha256": "a69402b8450a88069b64f2a8fe60ef081de63ec987e4599c2eb50f59e7efdc0f",
+      "expected_conditions": 6,
+      "all_conditions_graded": true,
+      "conditions": [
+        {
+          "condition_id": "selftest-0",
+          "job_id": "bf-6afe0b1542e744da8cfe-selftest-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "9d9b4c9b8e9e926097fd703ab1885156bf49fb528bc6e8ee52f08377b866f8d4",
+          "package_sha256": "5ec3983078b9915a6355bc80a15c535c9b7da8901aaba3be033ae6fe32ce7fb9",
+          "cases": [
+            {
+              "name": "selftest-0",
+              "netlist_sha256": "2b9dd5db806c6336322a2e198980a19b44acf40354384408b6b3af1ea268a0b8",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": true,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.008229977420376258,
+                "sample_max": 0.009905043669390934,
+                "hold_max": 0.009905124469390958
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "d453e3ef01f9cb972b8e6994808a0bc66403fef28aa2af569cdc15364a2d9b1e",
+              "waveform_rows": 32553
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "b5082036d98a1b73ed30d6147b25fe199f8b2394196a0286f61c81004ff5603e"
+        },
+        {
+          "condition_id": "selftest-1",
+          "job_id": "bf-f34950d6d40c4e3d8482-selftest-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "c35db019f808556aed8bca8d4304127860902a96ed251b27463bb25ccf582ab7",
+          "package_sha256": "33f09afd263321a151b69d9f1aa20a6d8759102f14ba0f06ccc7c556f6a21da8",
+          "cases": [
+            {
+              "name": "selftest-1",
+              "netlist_sha256": "a1ef655c8cee1c34d6f5fd97c1d0de876df451fc62d24d4dfbac271de0109d17",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": true,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.022626120932043893,
+                "sample_max": 0.028987895717543677,
+                "hold_max": 0.028987914817543703
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "b6379bb0eaf48a8d991011713021084a095e0d04a327914477a1e382990f1965",
+              "waveform_rows": 32550
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "7f2b3281704d1cdb0aa3792a9c535af22b0e7f6942bafba4e98264d922c40fc2"
+        },
+        {
+          "condition_id": "heldout-0",
+          "job_id": "bf-98ec376e23064079a403-heldout-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "e098da83246a434e829e21229f64c748d82b52538eb2b57a47c03d94b94ee22f",
+          "package_sha256": "0eb7ef9e713005fc0d6c2ce9295a4c706e94976fc2a16f158b317c501c2852fa",
+          "cases": [
+            {
+              "name": "heldout-0",
+              "netlist_sha256": "a1371e0a9242443aefce24627f7c25634cc6a448dc579d567b730ccd5e663b0e",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": true,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.011941238326897278,
+                "sample_max": 0.018774096188961642,
+                "hold_max": 0.018774103888961613
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "18701486ecbe56d9d1338516d2924c3cad0265b04add56f8b417c03f53c6c301",
+              "waveform_rows": 32553
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "99d263b80c4ed9a03a95240e01e261703e61f1d1489f4c3d9fd066db827d55fd"
+        },
+        {
+          "condition_id": "heldout-1",
+          "job_id": "bf-cdfb3cf73dc64e5d9f71-heldout-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "a91914afde73572fd33eb5a968505be7f2eea387ade6b6d56c997b4da7a5fb0c",
+          "package_sha256": "071af76f751e666db23bd29e9891707e6429b3d0c89b60b1d5db85bb9c63091f",
+          "cases": [
+            {
+              "name": "heldout-1",
+              "netlist_sha256": "61fdc9871fea08489725882a3d12598e99f24a21d17d0112c7739c0cb7ad578b",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": true,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.005825019952400421,
+                "sample_max": 0.01272059868345532,
+                "hold_max": 0.012720608783455378
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "f8d8e2914db0497b852f70b5697d284e92e68a21ef16b598ed5ad9349536a28d",
+              "waveform_rows": 32564
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "840efcf0e71eba6ef0640b42d3b1a276322d4b491b4c54eb83289a186b3d2207"
+        },
+        {
+          "condition_id": "heldout-2",
+          "job_id": "bf-2cce083e924f4afd9977-heldout-2",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "c7361143637ca0dc56c1ad9a3bc8ca5ad80ccdd95d30dff7b638261bbf09a3c9",
+          "package_sha256": "d2b5e9fe9cef542e59297d5c2efb87c4d3288780187bfbc25c0d75442a211924",
+          "cases": [
+            {
+              "name": "heldout-2",
+              "netlist_sha256": "009d2c3d8a3a484932238916477f3d917c890055ba2817f55abf58aba1dc4189",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": true,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.010873630460405537,
+                "sample_max": 0.011782736166276786,
+                "hold_max": 0.011799203866276864
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "4ea4f4a16a5c88d14c7dafec91fdee340e47a735822805cb8ecefab1c1989d32",
+              "waveform_rows": 44786
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "0f425e70e035ae892dcccfee8a30c4738d788c6713c928759bb9b62685a37a29"
+        },
+        {
+          "condition_id": "heldout-3",
+          "job_id": "bf-4062135cdbdc42b7a7dd-heldout-3",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "4c8e5a7aca10acbce529b000bb2161119418641dd981d9c913e641bf48cdc970",
+          "package_sha256": "d5cb571a6fa474937b0baa24d895a252399411f4a292af4253d7d2f444ce5c22",
+          "cases": [
+            {
+              "name": "heldout-3",
+              "netlist_sha256": "ba4993cecaf40d969c7d11653b02478a3610e99dbad3cbb9991018b44d7cf824",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": true,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.011340875425669158,
+                "sample_max": 0.016393290300801278,
+                "hold_max": 0.016393305500801314
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "0d67561da08d2ecfa9c779eec32153b78576dd6daa92f04a04197cf55fa100bc",
+              "waveform_rows": 44814
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "6d0d001a314eaa6728432f1a3d86ae17facca1859d5bbbee2276d76a502157c3"
+        }
+      ],
+      "preparation_sha256": "e9987688aaee408f7ac312c7f8e31d1e20c740d9b00eced7243d0fdfd6d54708",
+      "results_sha256": "1f34e7ce197735dbe8b5934e1add38e124b9b23cf4efa7002ff828d7cfbc7d14",
+      "summary_sha256": "1d9760a751ccb7fac91b78bf9d068ed58df03beda488991648d934d48df99c14",
+      "passed_conditions": 6,
+      "failed_conditions": 0,
+      "calibration_valid": true
+    },
+    {
+      "variant": "wrong_phase",
+      "expected_pass": false,
+      "behavior": "track/hold phase inverted",
+      "run": "v2-data-sampling-identification-wrong_phase-isolated-r4",
+      "candidate_sha256": "fe08e96e607d0f353011d7c47533218eb109a2d70abd7528f06b1ddf82e7e7b2",
+      "candidate_files": {
+        "dut.va": {
+          "sha256": "52de8ff2553c339eadc04d3caa2d9ab023852d20b1c51602d0614e229609c5c2",
+          "bytes": 67041
+        }
+      },
+      "criteria_sha256": "a69402b8450a88069b64f2a8fe60ef081de63ec987e4599c2eb50f59e7efdc0f",
+      "expected_conditions": 6,
+      "all_conditions_graded": true,
+      "conditions": [
+        {
+          "condition_id": "selftest-0",
+          "job_id": "bf-c1ce63e69c3e4ff19e72-selftest-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "8fcb65a2cb49ddffd298f9a9c48bc53e8a6a8fc3747fff4907b5828356fb6562",
+          "package_sha256": "5ec3983078b9915a6355bc80a15c535c9b7da8901aaba3be033ae6fe32ce7fb9",
+          "cases": [
+            {
+              "name": "selftest-0",
+              "netlist_sha256": "2b9dd5db806c6336322a2e198980a19b44acf40354384408b6b3af1ea268a0b8",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.43207297684661,
+                "sample_max": 0.3070386573686251,
+                "hold_max": 0.695498130933353
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "e10181db53940003e6b3025db26bab8bd1c4502a6ce324ef3ac3117226868b53",
+              "waveform_rows": 32571
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "6d156c3e48245d934c0f5bb0620f3c9c77bb8020db7f3f0304ebc4abe2ac049b"
+        },
+        {
+          "condition_id": "selftest-1",
+          "job_id": "bf-4e1f2b4b7df3444495df-selftest-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "4f466b8bf9412049a2d8d4dcafbbb1a6777f14aa383053775ee8352061edaca0",
+          "package_sha256": "33f09afd263321a151b69d9f1aa20a6d8759102f14ba0f06ccc7c556f6a21da8",
+          "cases": [
+            {
+              "name": "selftest-1",
+              "netlist_sha256": "a1ef655c8cee1c34d6f5fd97c1d0de876df451fc62d24d4dfbac271de0109d17",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.5374436577367181,
+                "sample_max": 0.7904738716832892,
+                "hold_max": 0.7736753524073587
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "bfae5f1647a132962985788e998771ec5c577ed964567745d995e1936cb4fb40",
+              "waveform_rows": 32529
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "caeddd9d5ec1a4e40bba2ea694e40bf500d48d47ec48b834ebb08c496225089e"
+        },
+        {
+          "condition_id": "heldout-0",
+          "job_id": "bf-be311911823a4ddf843b-heldout-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "09208dec77573b35071c54a1c4362678d83863bde95f2ac493614bfc2a7bf155",
+          "package_sha256": "0eb7ef9e713005fc0d6c2ce9295a4c706e94976fc2a16f158b317c501c2852fa",
+          "cases": [
+            {
+              "name": "heldout-0",
+              "netlist_sha256": "a1371e0a9242443aefce24627f7c25634cc6a448dc579d567b730ccd5e663b0e",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.41380897577261583,
+                "sample_max": 0.2880814414983045,
+                "hold_max": 0.6720093238030941
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "3a732d2a567e184c21ae82e9c24dee2220480aadfa427fa8b32551d428390d7e",
+              "waveform_rows": 32570
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "3f2227087a7ffa977439b755455d3279c42111b6dacf773b7c44084340ca7c9c"
+        },
+        {
+          "condition_id": "heldout-1",
+          "job_id": "bf-f648616ee4f8400f9ab3-heldout-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "d08d615f8e692cb58e2e9211ecd5e273c0a7064b658e1fadac97de0a84d05b2f",
+          "package_sha256": "071af76f751e666db23bd29e9891707e6429b3d0c89b60b1d5db85bb9c63091f",
+          "cases": [
+            {
+              "name": "heldout-1",
+              "netlist_sha256": "61fdc9871fea08489725882a3d12598e99f24a21d17d0112c7739c0cb7ad578b",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.6326962757100008,
+                "sample_max": 0.5297599111363964,
+                "hold_max": 1.1000584299670324
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "df1561b167dfcf14a6a16bdd3d17d8d874c4a1d3b61b134765c0872aafa58af1",
+              "waveform_rows": 32548
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "5b3e0176667d39b7917de303d5baf1af65f87d8a9e2fd120b2e1402e9e02c5f0"
+        },
+        {
+          "condition_id": "heldout-2",
+          "job_id": "bf-98825ea978e94609aed7-heldout-2",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "af12a154a6b9ec8514dc8af0d7479ae93271b18e4db104dbac516d7b255a3a7b",
+          "package_sha256": "d2b5e9fe9cef542e59297d5c2efb87c4d3288780187bfbc25c0d75442a211924",
+          "cases": [
+            {
+              "name": "heldout-2",
+              "netlist_sha256": "009d2c3d8a3a484932238916477f3d917c890055ba2817f55abf58aba1dc4189",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.3009444470924381,
+                "sample_max": 0.2686106243548366,
+                "hold_max": 0.586792659687204
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "60a3a6b085340a0f89d525a1b65e547ce494e13bf06c0cfeb40de2d5b9eda571",
+              "waveform_rows": 44811
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "f91076f5d134e347dc81d08465a731f18e7a7c7348ab26475491c8845adbea63"
+        },
+        {
+          "condition_id": "heldout-3",
+          "job_id": "bf-76d498420baa412c841d-heldout-3",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "5a7f9355c182bc606964274482114de257da6ed0c40d844f54db291458def3fa",
+          "package_sha256": "d5cb571a6fa474937b0baa24d895a252399411f4a292af4253d7d2f444ce5c22",
+          "cases": [
+            {
+              "name": "heldout-3",
+              "netlist_sha256": "ba4993cecaf40d969c7d11653b02478a3610e99dbad3cbb9991018b44d7cf824",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.8099075289557226,
+                "sample_max": 0.7854792070726919,
+                "hold_max": 0.7958881174713516
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "d328b127d79026ad4c423f6a1c2b829233eb29576e6e6d42edf16f3b26bb3a0e",
+              "waveform_rows": 44784
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "6601658d1924867c04a30d941a420861c8edf768072eaa70e4adc47e7bb55478"
+        }
+      ],
+      "preparation_sha256": "f938267655801ca641eea8da0975d57737d1b802fc9038e22220f3f35d34b427",
+      "results_sha256": "31bd3d43ab863bcdf97a7a3ba6e2611cebfc03e63c105bbd2d711ae25c0a11d6",
+      "summary_sha256": "95d298096507ebcb15aef29dbd976568ceb0c8184d987f80bb014f88c4214809",
+      "passed_conditions": 0,
+      "failed_conditions": 6,
+      "calibration_valid": true
+    },
+    {
+      "variant": "missing_acquisition",
+      "expected_pass": false,
+      "behavior": "acquisition 1000x too fast",
+      "run": "v2-data-sampling-identification-missing_acquisition-isolated-r4",
+      "candidate_sha256": "97cf3e17ce9411c15e073df4234ffea25d4548d1c874c679bf81c303f6278b3f",
+      "candidate_files": {
+        "dut.va": {
+          "sha256": "c6cae0833818f54de6749ae2459708fedd4d651af01ffcf3255472ffe7675506",
+          "bytes": 67024
+        }
+      },
+      "criteria_sha256": "a69402b8450a88069b64f2a8fe60ef081de63ec987e4599c2eb50f59e7efdc0f",
+      "expected_conditions": 6,
+      "all_conditions_graded": true,
+      "conditions": [
+        {
+          "condition_id": "selftest-0",
+          "job_id": "bf-9d5c55e72a1d4c9495c8-selftest-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "9d1557d0a1135a85ce5d7ff83e8dfa7e7892e406f9a661563fb6df7fa7e4d4de",
+          "package_sha256": "5ec3983078b9915a6355bc80a15c535c9b7da8901aaba3be033ae6fe32ce7fb9",
+          "cases": [
+            {
+              "name": "selftest-0",
+              "netlist_sha256": "2b9dd5db806c6336322a2e198980a19b44acf40354384408b6b3af1ea268a0b8",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.8443893040810078,
+                "sample_max": 0.6955562228000011,
+                "hold_max": 0.6957030899999999
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "a435438a87c7045726c58a9db8c40ae2c24121f6c745a9480e5a9cf157a3f1c9",
+              "waveform_rows": 32978
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "71903394caa7bffabb76b7e34cce23b5423242ef363fcfd7fda54cf1d7407e30"
+        },
+        {
+          "condition_id": "selftest-1",
+          "job_id": "bf-3bed520e4c7643f48d2e-selftest-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "b3ec9f0bf763c9ccf8b2b8b870ee99a05962569e487fe5f50b81de6b0130eba3",
+          "package_sha256": "33f09afd263321a151b69d9f1aa20a6d8759102f14ba0f06ccc7c556f6a21da8",
+          "cases": [
+            {
+              "name": "selftest-1",
+              "netlist_sha256": "a1ef655c8cee1c34d6f5fd97c1d0de876df451fc62d24d4dfbac271de0109d17",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.42176057635086944,
+                "sample_max": 0.384161980046635,
+                "hold_max": 0.38416199594663486
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "3529b4ecf6065bf94bc7d1d190bbe7e93fe784326b48ef0f32b828fb567dea5c",
+              "waveform_rows": 32984
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "014fd81e2b85f89cfa76a0b127573af0da03fc470a4342014e344fbcd95fb0f2"
+        },
+        {
+          "condition_id": "heldout-0",
+          "job_id": "bf-b3c7e670bcc8448fafc5-heldout-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "1c83c08396431ef7334c87afd47fce1774068ac5423e71c1777a38645e945ff0",
+          "package_sha256": "0eb7ef9e713005fc0d6c2ce9295a4c706e94976fc2a16f158b317c501c2852fa",
+          "cases": [
+            {
+              "name": "heldout-0",
+              "netlist_sha256": "a1371e0a9242443aefce24627f7c25634cc6a448dc579d567b730ccd5e663b0e",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.8256466446713415,
+                "sample_max": 0.6720271043000011,
+                "hold_max": 0.672058692100001
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "a3f0d66bd146bd15293be737150a059e80ac71dcf40c3ccc58b50afa789e235e",
+              "waveform_rows": 33020
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "63b9b6ae90983ec69663b089ed1b8765a80d01704348dbc9056021a5975aa779"
+        },
+        {
+          "condition_id": "heldout-1",
+          "job_id": "bf-eab10ab540da4d42af76-heldout-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "8c657988a0ed9801ead4e5ac508aebc6205a283fc8b9f6ded2cbd56b7bbf2546",
+          "package_sha256": "071af76f751e666db23bd29e9891707e6429b3d0c89b60b1d5db85bb9c63091f",
+          "cases": [
+            {
+              "name": "heldout-1",
+              "netlist_sha256": "61fdc9871fea08489725882a3d12598e99f24a21d17d0112c7739c0cb7ad578b",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.3612729165284225,
+                "sample_max": 0.8286618271,
+                "hold_max": 0.828661832
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "9aca3318fbe6aca65cab168a09222ae08f7d7c396070325f0f4abfdacc1cf787",
+              "waveform_rows": 33051
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "97afb6bb55d86355c08cdc7b1e9dd43f4dd8add0ef99bafc51cff86b06d44f71"
+        },
+        {
+          "condition_id": "heldout-2",
+          "job_id": "bf-21c92454a38547348766-heldout-2",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "a7a4fee0ac0755e7ab38da9eb869b93b657a2901299103fdbb732ce624a103e8",
+          "package_sha256": "d2b5e9fe9cef542e59297d5c2efb87c4d3288780187bfbc25c0d75442a211924",
+          "cases": [
+            {
+              "name": "heldout-2",
+              "netlist_sha256": "009d2c3d8a3a484932238916477f3d917c890055ba2817f55abf58aba1dc4189",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.626922637879815,
+                "sample_max": 0.5370966178000011,
+                "hold_max": 0.5371866715000011
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "30757c0092c834048ac079d1cbbdb6315cbe71c1b76eb8293f5202f04b83f695",
+              "waveform_rows": 45355
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "2323ad94e20a8ae8540e49ed6ff8863dcb951c9ebce8aee7f788c3b7bfbfde11"
+        },
+        {
+          "condition_id": "heldout-3",
+          "job_id": "bf-d2dfae14515d4591accb-heldout-3",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "0c45641cd28e0adeb2b140246e8306e13f143706651b105a79f84891d8a43a61",
+          "package_sha256": "d5cb571a6fa474937b0baa24d895a252399411f4a292af4253d7d2f444ce5c22",
+          "cases": [
+            {
+              "name": "heldout-3",
+              "netlist_sha256": "ba4993cecaf40d969c7d11653b02478a3610e99dbad3cbb9991018b44d7cf824",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.6598111878727833,
+                "sample_max": 0.7959685841999999,
+                "hold_max": 0.7959685889999999
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "9257ea834ad10ad08973742ec248460bbc8f38dccbae9f2722c1e0f8b35b2db6",
+              "waveform_rows": 45431
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "db072b93fb8b039d0e8e3551e183c37600eefed8ba934059a81d40cd51bb422c"
+        }
+      ],
+      "preparation_sha256": "dff8f14081ba1880a4d53a210eceb0cc1f50005b5a876a5a544c1ec37d5bf3d0",
+      "results_sha256": "8f7340ebb449c40a896d90776696dd596cd21b827472a95f77ece449d5064e07",
+      "summary_sha256": "7cdb7001c42831f8d01fdec4eb4849f635217d4564e92982aeb6a786afab2055",
+      "passed_conditions": 0,
+      "failed_conditions": 6,
+      "calibration_valid": true
+    },
+    {
+      "variant": "fixed_rc",
+      "expected_pass": false,
+      "behavior": "input/state-dependent rate replaced by fixed rate",
+      "run": "v2-data-sampling-identification-fixed_rc-isolated-r4",
+      "candidate_sha256": "d399ca848b5c26fc0e4ffdb1dc7bf29163dbd14b9700705b8fe3a610096ab278",
+      "candidate_files": {
+        "dut.va": {
+          "sha256": "2043052df498d3dd1be97bdb020f8cdd5f2404f0a92afaca1395f134a548107a",
+          "bytes": 67043
+        }
+      },
+      "criteria_sha256": "a69402b8450a88069b64f2a8fe60ef081de63ec987e4599c2eb50f59e7efdc0f",
+      "expected_conditions": 6,
+      "all_conditions_graded": true,
+      "conditions": [
+        {
+          "condition_id": "selftest-0",
+          "job_id": "bf-5ca554d32e9a47d6b254-selftest-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "44081260e1bf537f498c0a68c41c1f30c2e42f716983ec3cac3773ea83797311",
+          "package_sha256": "5ec3983078b9915a6355bc80a15c535c9b7da8901aaba3be033ae6fe32ce7fb9",
+          "cases": [
+            {
+              "name": "selftest-0",
+              "netlist_sha256": "2b9dd5db806c6336322a2e198980a19b44acf40354384408b6b3af1ea268a0b8",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.09502294156311311,
+                "sample_max": 0.10988094898468415,
+                "hold_max": 0.10988095708468415
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "f6706bbe73ca464c1d80e5b20eaa24fb8ffade982d60b971b384abff9e770ab5",
+              "waveform_rows": 32566
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "d293a24a1a84a158e54bdc5c819126b94ffba575fd67bcc0ef5c3f25e91f8840"
+        },
+        {
+          "condition_id": "selftest-1",
+          "job_id": "bf-1e67fbb3b4d94189ad18-selftest-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "8e1cc6ef90add29f08546d59d030f7cebecbb8c547a6b7fa8ba60e95f7519114",
+          "package_sha256": "33f09afd263321a151b69d9f1aa20a6d8759102f14ba0f06ccc7c556f6a21da8",
+          "cases": [
+            {
+              "name": "selftest-1",
+              "netlist_sha256": "a1ef655c8cee1c34d6f5fd97c1d0de876df451fc62d24d4dfbac271de0109d17",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.4011571304739973,
+                "sample_max": 0.43673148334807377,
+                "hold_max": 0.43673149244807374
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "d63eb0922a7f303c33a5233836ca82f28df33667d784868b6210e1ea62bae429",
+              "waveform_rows": 32543
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "ee39c15ec3d97b69b2aa6fc1a507fcefd24fdbe1449029c53e654ded485353a2"
+        },
+        {
+          "condition_id": "heldout-0",
+          "job_id": "bf-5394d73784fa4bd8b246-heldout-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "ebf5a14f88e715aabb322fdfada749f3148d74470029c8975a70b021706e5ad5",
+          "package_sha256": "0eb7ef9e713005fc0d6c2ce9295a4c706e94976fc2a16f158b317c501c2852fa",
+          "cases": [
+            {
+              "name": "heldout-0",
+              "netlist_sha256": "a1371e0a9242443aefce24627f7c25634cc6a448dc579d567b730ccd5e663b0e",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.2120829478949393,
+                "sample_max": 0.29319206749744686,
+                "hold_max": 0.29319207519744683
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "90062031528d4f0ae96b0926cdf607664906605dabdfe8d63cfd2185960d7164",
+              "waveform_rows": 32567
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "6ca9b88d57c80a9004afa4f1002f0d0597a4f28befd2654b3d7234fe1aa4e606"
+        },
+        {
+          "condition_id": "heldout-1",
+          "job_id": "bf-8cc844b6f5174d9ba444-heldout-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "3fdfaf764506a02d9f5c461096c4a9ece91f331c477e0783f89a74c516156c22",
+          "package_sha256": "071af76f751e666db23bd29e9891707e6429b3d0c89b60b1d5db85bb9c63091f",
+          "cases": [
+            {
+              "name": "heldout-1",
+              "netlist_sha256": "61fdc9871fea08489725882a3d12598e99f24a21d17d0112c7739c0cb7ad578b",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.16838813319912788,
+                "sample_max": 0.1993766908433242,
+                "hold_max": 0.19937669674332426
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "bfa1bd04e7dac51fc4c5fa5d2f0a21b4b105e82a433b8be283bcd933cc27b650",
+              "waveform_rows": 32567
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "0d7b68133b3b37b4e0bd0af5747c7b0f5b5add3f9815b7ed686f93ddebd22c65"
+        },
+        {
+          "condition_id": "heldout-2",
+          "job_id": "bf-f5b5bb218fcb4d479b6c-heldout-2",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "a4c5ddfeb19a0367befee140513fa47943c270994780a2ae645d271d83694d19",
+          "package_sha256": "d2b5e9fe9cef542e59297d5c2efb87c4d3288780187bfbc25c0d75442a211924",
+          "cases": [
+            {
+              "name": "heldout-2",
+              "netlist_sha256": "009d2c3d8a3a484932238916477f3d917c890055ba2817f55abf58aba1dc4189",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.22873534145269095,
+                "sample_max": 0.1449451205206138,
+                "hold_max": 0.14494529952061397
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "7ab671ef5eee42259df721e0693acc3e82a3f0823a02c6d0626368d2fb4b883c",
+              "waveform_rows": 44809
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "5e68062d562ea06697ac0a683f8b1e376191ff4fea61498f97c02d37253d791d"
+        },
+        {
+          "condition_id": "heldout-3",
+          "job_id": "bf-3825d2df58d34bec998d-heldout-3",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "99e5cba9e41b209b2f14c7779c205898d15b5fd2e80cf9d9e3062e9a50b23e4a",
+          "package_sha256": "d5cb571a6fa474937b0baa24d895a252399411f4a292af4253d7d2f444ce5c22",
+          "cases": [
+            {
+              "name": "heldout-3",
+              "netlist_sha256": "ba4993cecaf40d969c7d11653b02478a3610e99dbad3cbb9991018b44d7cf824",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.24046155667362393,
+                "sample_max": 0.13628052898799115,
+                "hold_max": 0.13628053768799114
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "dcece75534b132db32fb0dbc7da4edb853e3240dd7b18c943bedaf144273b6fc",
+              "waveform_rows": 44797
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "06188259337a6245dc62478cff7f3919ad9b2babda2d2abc86c1cff75c357b36"
+        }
+      ],
+      "preparation_sha256": "644b5d321f4f72a30f1c6fb528639cf01a370e34a6033cba9894a48e360037e5",
+      "results_sha256": "48b6edaa546e2f06ce1269a796d4a316ca956fe6145546399b08d98a52f1f47b",
+      "summary_sha256": "16f098ad1a8a330378f55532bd79743a5c0a0f05213b1f42e3fc1e78f1abb8a8",
+      "passed_conditions": 0,
+      "failed_conditions": 6,
+      "calibration_valid": true
+    },
+    {
+      "variant": "reset_history",
+      "expected_pass": false,
+      "behavior": "held state zeroed every hold",
+      "run": "v2-data-sampling-identification-reset_history-isolated-r4",
+      "candidate_sha256": "a94a1ffc32f859f97e012028c7fcffd8296ef36eee08ba17dd5040fe88cffda8",
+      "candidate_files": {
+        "dut.va": {
+          "sha256": "f42d7c9739173672042a10c48549a163bcae71960c2e5316d77570cf461d2fe4",
+          "bytes": 67042
+        }
+      },
+      "criteria_sha256": "a69402b8450a88069b64f2a8fe60ef081de63ec987e4599c2eb50f59e7efdc0f",
+      "expected_conditions": 6,
+      "all_conditions_graded": true,
+      "conditions": [
+        {
+          "condition_id": "selftest-0",
+          "job_id": "bf-f87bc28a657b41fe9389-selftest-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "df94657c6714af0d42683fb1430a503d3a533b5dff41d47000cb2dce340038c1",
+          "package_sha256": "5ec3983078b9915a6355bc80a15c535c9b7da8901aaba3be033ae6fe32ce7fb9",
+          "cases": [
+            {
+              "name": "selftest-0",
+              "netlist_sha256": "2b9dd5db806c6336322a2e198980a19b44acf40354384408b6b3af1ea268a0b8",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.22080464490036344,
+                "sample_max": 0.8795686546,
+                "hold_max": 0.879568646
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "e4f1ae8c5d8e5f8f750a7ccd63ebe22b92593c93bf6b3253bbc3e19fc7c3385e",
+              "waveform_rows": 36092
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "18edb764093455b877289e016e391c96d8e527e312a2cf5969570fbfd09b0897"
+        },
+        {
+          "condition_id": "selftest-1",
+          "job_id": "bf-43f11ab487b342ca8539-selftest-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "987dd3710b116d5f46982e79770a3b121a6e84e50541722e80048283463b04f2",
+          "package_sha256": "33f09afd263321a151b69d9f1aa20a6d8759102f14ba0f06ccc7c556f6a21da8",
+          "cases": [
+            {
+              "name": "selftest-1",
+              "netlist_sha256": "a1ef655c8cee1c34d6f5fd97c1d0de876df451fc62d24d4dfbac271de0109d17",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.5916532657084945,
+                "sample_max": 0.9531093977,
+                "hold_max": 0.9531093626
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "f8877476904b151844d3eeb7662232df7f44974f24a09533472ea467e65ec965",
+              "waveform_rows": 36088
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "dcc2b358e300ab05e867d54c4779a6695cd326eb977def4acea84970a9236cd6"
+        },
+        {
+          "condition_id": "heldout-0",
+          "job_id": "bf-daded88d40324fdbbfa3-heldout-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "58a2dc74fc52c86a751413c0e22c8fd0d23af270e00344b97f522d0d98a62768",
+          "package_sha256": "0eb7ef9e713005fc0d6c2ce9295a4c706e94976fc2a16f158b317c501c2852fa",
+          "cases": [
+            {
+              "name": "heldout-0",
+              "netlist_sha256": "a1371e0a9242443aefce24627f7c25634cc6a448dc579d567b730ccd5e663b0e",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.5802705057601646,
+                "sample_max": 0.9808115638,
+                "hold_max": 0.980811569
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "9cbae39a90563f67f6baf12faf08b3ea02e4039a4c1991a9529aac412a8ebcd8",
+              "waveform_rows": 36092
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "1d00e33f8d13a7a2a0e18b1de1d025dfb5459de2f98a80398d14ebd0fcee3972"
+        },
+        {
+          "condition_id": "heldout-1",
+          "job_id": "bf-2dba255850c74dcca09e-heldout-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "239bf8dc3d3dc7463cf78ca61c3dab0947eb607bb173f08c4d20d0fe08dea47a",
+          "package_sha256": "071af76f751e666db23bd29e9891707e6429b3d0c89b60b1d5db85bb9c63091f",
+          "cases": [
+            {
+              "name": "heldout-1",
+              "netlist_sha256": "61fdc9871fea08489725882a3d12598e99f24a21d17d0112c7739c0cb7ad578b",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 1.0767499614846312,
+                "sample_max": 1.45005864,
+                "hold_max": 1.450058473
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "64708cef56ae9fea5864dc5b852034bf1b3b3d14b7318e80d2ec38114f920105",
+              "waveform_rows": 36102
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "101c6acbf665ebb53fa8cc1002923a942896d2cdaf249699a78ef62805279177"
+        },
+        {
+          "condition_id": "heldout-2",
+          "job_id": "bf-b382dff13ebd4c628e49-heldout-2",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "d6c565b533793d03f1367e05fc0664fa9dc1341a255c1c3b904467298cad9721",
+          "package_sha256": "d2b5e9fe9cef542e59297d5c2efb87c4d3288780187bfbc25c0d75442a211924",
+          "cases": [
+            {
+              "name": "heldout-2",
+              "netlist_sha256": "009d2c3d8a3a484932238916477f3d917c890055ba2817f55abf58aba1dc4189",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.46322439830727796,
+                "sample_max": 1.132515179,
+                "hold_max": 1.132515043
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "9c1ce4a5bebd98f62740b215572f4ced6442750016ec9eb3ac59b72de6ecaca8",
+              "waveform_rows": 49756
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "75883487715688572c16a6b3ee6f722d7d0e740087af94e2ec386f127c664e4c"
+        },
+        {
+          "condition_id": "heldout-3",
+          "job_id": "bf-79a744c625574b3184ad-heldout-3",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "3ec2de8f198a544333db56648ff5a62e86cbd9329d47ea6e32ffd7961027c162",
+          "package_sha256": "d5cb571a6fa474937b0baa24d895a252399411f4a292af4253d7d2f444ce5c22",
+          "cases": [
+            {
+              "name": "heldout-3",
+              "netlist_sha256": "ba4993cecaf40d969c7d11653b02478a3610e99dbad3cbb9991018b44d7cf824",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.30089479809648817,
+                "sample_max": 0.8633214096,
+                "hold_max": 0.863321397
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "8ebf5a4f8d572cf0a93d962b5e70aaa8a708a1458843da4df47f1a7b608dd79d",
+              "waveform_rows": 49793
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "68abcf1708b52a32304004a50e6b772d973cf29f5dd9b4b1d39a2eb2a0f78fc7"
+        }
+      ],
+      "preparation_sha256": "7929d4749b3eaa5f919fac5381075f220d7eb53388c39b3e54a6dc7398f22b0c",
+      "results_sha256": "bd3a3e98e218664b57eaf9accfca816f10044ef6821ab1206863c24ffe24a697",
+      "summary_sha256": "29238353fb4a3d1617074f0f94ef555ff9ec993f2f3a95fde9501f81de6f6535",
+      "passed_conditions": 0,
+      "failed_conditions": 6,
+      "calibration_valid": true
+    },
+    {
+      "variant": "ideal_sampling",
+      "expected_pass": false,
+      "behavior": "instantaneous track and edge sample",
+      "run": "v2-data-sampling-identification-ideal_sampling-isolated-r4",
+      "candidate_sha256": "700a61abb3de35bcd7a928b2860caf2ef4c5d821616d40b45576b6d5cc73adfb",
+      "candidate_files": {
+        "dut.va": {
+          "sha256": "2ad57de61ac617c0c0e801e6f96a5b81eb17ce6f67ef7c2eaecac12397e300fb",
+          "bytes": 313
+        }
+      },
+      "criteria_sha256": "a69402b8450a88069b64f2a8fe60ef081de63ec987e4599c2eb50f59e7efdc0f",
+      "expected_conditions": 6,
+      "all_conditions_graded": true,
+      "conditions": [
+        {
+          "condition_id": "selftest-0",
+          "job_id": "bf-66a84f62fced4742b9d3-selftest-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "2c0d986baa70ca79cf28627f8ee8a230d21d885f0f05813f870a86f7d5113d6a",
+          "package_sha256": "5ec3983078b9915a6355bc80a15c535c9b7da8901aaba3be033ae6fe32ce7fb9",
+          "cases": [
+            {
+              "name": "selftest-0",
+              "netlist_sha256": "2b9dd5db806c6336322a2e198980a19b44acf40354384408b6b3af1ea268a0b8",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.8443893040810078,
+                "sample_max": 0.6955562228,
+                "hold_max": 0.6957030899999999
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "c3e278d7a7eb8c273798a16361670b1d8badff623b35f7d939c0bddf904149bd",
+              "waveform_rows": 16266
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "0c85411c0e5b421fcd5029e9cfcf3491d3bfddd2651b0af94b93235dd299ab07"
+        },
+        {
+          "condition_id": "selftest-1",
+          "job_id": "bf-3aed280ed2a241fdb26e-selftest-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "abab419230aaa2471ac4851afcbd3e82e78af21e2485646fffaabedf9871ca0a",
+          "package_sha256": "33f09afd263321a151b69d9f1aa20a6d8759102f14ba0f06ccc7c556f6a21da8",
+          "cases": [
+            {
+              "name": "selftest-1",
+              "netlist_sha256": "a1ef655c8cee1c34d6f5fd97c1d0de876df451fc62d24d4dfbac271de0109d17",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.4242597764950582,
+                "sample_max": 0.3468906023,
+                "hold_max": 0.346890645
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "a9a0f51722bd7e3d8c64b0b43e11154ba71fa9da66091f9b691f75b726c211c3",
+              "waveform_rows": 16283
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "6f956bf6bdb8d64dd38cb6684b1244f565aae02254cd4b1d1af73e5f7a795365"
+        },
+        {
+          "condition_id": "heldout-0",
+          "job_id": "bf-9365fec51a21474f8935-heldout-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "7aeeba4eb55dab105b3c219fd36ccf4ecf4438cd7911b0af235cdec8ad5b11e9",
+          "package_sha256": "0eb7ef9e713005fc0d6c2ce9295a4c706e94976fc2a16f158b317c501c2852fa",
+          "cases": [
+            {
+              "name": "heldout-0",
+              "netlist_sha256": "a1371e0a9242443aefce24627f7c25634cc6a448dc579d567b730ccd5e663b0e",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.8256466446713415,
+                "sample_max": 0.6720271043,
+                "hold_max": 0.6720586920999999
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "114fe3f1b27b5d20a37ac8f13b81af3d3dc6d5e55905526fb94482f4b5fc02bb",
+              "waveform_rows": 16266
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "507e3deba5bc837e9949e0ce125cb98f1c5939890715e9f99060d62dc97de69f"
+        },
+        {
+          "condition_id": "heldout-1",
+          "job_id": "bf-07507806b4f24beab610-heldout-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "a0de3692b65de241f42e53d7604745213fe596477634e76af982a26f3cf77bae",
+          "package_sha256": "071af76f751e666db23bd29e9891707e6429b3d0c89b60b1d5db85bb9c63091f",
+          "cases": [
+            {
+              "name": "heldout-1",
+              "netlist_sha256": "61fdc9871fea08489725882a3d12598e99f24a21d17d0112c7739c0cb7ad578b",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.3612729458690288,
+                "sample_max": 0.8286618271,
+                "hold_max": 0.828661832
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "6dd4bebafefafe1a3d438dadcdac1ad39d86d267820e62228bf521ac07fb4f78",
+              "waveform_rows": 16283
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "176873c619878f3206cef50aad75dd8fca2fcc927441500978d22e8270729b74"
+        },
+        {
+          "condition_id": "heldout-2",
+          "job_id": "bf-0580fad27be048a29719-heldout-2",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "0800c19762df582eab2dad7e21ff69e446da38d56e9d6fbfb2e7cd307ae7ac8c",
+          "package_sha256": "d2b5e9fe9cef542e59297d5c2efb87c4d3288780187bfbc25c0d75442a211924",
+          "cases": [
+            {
+              "name": "heldout-2",
+              "netlist_sha256": "009d2c3d8a3a484932238916477f3d917c890055ba2817f55abf58aba1dc4189",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.626922637879815,
+                "sample_max": 0.5370966178,
+                "hold_max": 0.5371866715
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "6dae88e1fe710d2ce1f33821fc3efb73e30152a90c8a7411348c3af4038cbc83",
+              "waveform_rows": 22369
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "976e312264d5f3583195c6d7aa9b1ed4294aa9f2d0e921b7c04664706acbca35"
+        },
+        {
+          "condition_id": "heldout-3",
+          "job_id": "bf-6ad0fddf76d3421db6fe-heldout-3",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "25023a490f46375612dcb11406cd1fbd2f31d9e9fe0f4ca86e7fb245c58353bc",
+          "package_sha256": "d5cb571a6fa474937b0baa24d895a252399411f4a292af4253d7d2f444ce5c22",
+          "cases": [
+            {
+              "name": "heldout-3",
+              "netlist_sha256": "ba4993cecaf40d969c7d11653b02478a3610e99dbad3cbb9991018b44d7cf824",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.6598120214147043,
+                "sample_max": 0.7959685841999999,
+                "hold_max": 0.7959685889999999
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "8ff5b021b259098605235bf26499baa145d24efd6a781d5a68609634544c8fb4",
+              "waveform_rows": 22369
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "c79abd9b6c34db3d1c186d51fb08abe2be0e275d2b51c79bb0882ee8b0a2c874"
+        }
+      ],
+      "preparation_sha256": "2c4d4ddd0d3442a05fea5b790153f2b32b121ccce77baa686a42835c4e77a553",
+      "results_sha256": "a3c4056c0394bb1e27f0753fc695a2c0872b7bf525e15a390137ee0c273777c1",
+      "summary_sha256": "f0e98ea083744a70e0f1f5f9599757eb251f1d5898bdbb2ca9d41c8d726b881c",
+      "passed_conditions": 0,
+      "failed_conditions": 6,
+      "calibration_valid": true
+    },
+    {
+      "variant": "public_replay",
+      "expected_pass": false,
+      "behavior": "replays only public selftest-0 history regardless of new vin/clock",
+      "run": "v2-data-sampling-identification-public_replay-isolated-r4",
+      "candidate_sha256": "bb635415dc59abba85f4fb8398caa74737ad4939e780ed08d8359b02a2fdda4d",
+      "candidate_files": {
+        "dut.va": {
+          "sha256": "6050ae862b185ab61d357e1c80ae04bd3533edd4c467bd29609b791306fbe5f7",
+          "bytes": 2312
+        }
+      },
+      "criteria_sha256": "a69402b8450a88069b64f2a8fe60ef081de63ec987e4599c2eb50f59e7efdc0f",
+      "expected_conditions": 6,
+      "all_conditions_graded": true,
+      "conditions": [
+        {
+          "condition_id": "selftest-0",
+          "job_id": "bf-4ba95c2bb7fd46089450-selftest-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "771ddc626f6fe9f2f06fbcd38b97b3227d6949ed5ccea110ae574cc61d90e5ac",
+          "package_sha256": "5ec3983078b9915a6355bc80a15c535c9b7da8901aaba3be033ae6fe32ce7fb9",
+          "cases": [
+            {
+              "name": "selftest-0",
+              "netlist_sha256": "2b9dd5db806c6336322a2e198980a19b44acf40354384408b6b3af1ea268a0b8",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": true,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.02334763722814604,
+                "sample_max": 0.002637155083371312,
+                "hold_max": 0.009111229903225826
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "751cd63e11e675d13589353b5dfd406dbf9a1e37ad04960f377ebcb3aa9f50c9",
+              "waveform_rows": 16261
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "3c65733f8c0f730bb59b10f9576634734f3a910f997761b88d415e807bfc1fbb"
+        },
+        {
+          "condition_id": "selftest-1",
+          "job_id": "bf-792a54640a40430ab5c6-selftest-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "98bfd1b7d12d1f66ec98476531811a51d157533822186506622146fae9c36bbd",
+          "package_sha256": "33f09afd263321a151b69d9f1aa20a6d8759102f14ba0f06ccc7c556f6a21da8",
+          "cases": [
+            {
+              "name": "selftest-1",
+              "netlist_sha256": "a1ef655c8cee1c34d6f5fd97c1d0de876df451fc62d24d4dfbac271de0109d17",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.5135306454253346,
+                "sample_max": 0.54258748696082,
+                "hold_max": 0.5449754222930344
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "7fe9c4030bff4536ee23ff1fa9f476100da6aa8bd2385721f7adb52ef32006de",
+              "waveform_rows": 16241
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "cd41307160b5eb72de43545b2438b6544301a646a67bdc3fd7fa9051a47df86d"
+        },
+        {
+          "condition_id": "heldout-0",
+          "job_id": "bf-f6be4edf194f48ad8781-heldout-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "bac2ba65d1b2845bb4a6e0cdf893cf74e4fa78939dc607704e882226a9b611b6",
+          "package_sha256": "0eb7ef9e713005fc0d6c2ce9295a4c706e94976fc2a16f158b317c501c2852fa",
+          "cases": [
+            {
+              "name": "heldout-0",
+              "netlist_sha256": "a1371e0a9242443aefce24627f7c25634cc6a448dc579d567b730ccd5e663b0e",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.2237842754553947,
+                "sample_max": 0.2492140853776766,
+                "hold_max": 0.25178478029303414
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "c2c13b7b65a7a118c8cdfff6fcf5140a79fd3007a1ea7919001dc26133f0a2b5",
+              "waveform_rows": 16261
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "935c4dfc7f0e041681b9f2fd24689ecc6358a523ac5c5796133b3b8aa915f9f2"
+        },
+        {
+          "condition_id": "heldout-1",
+          "job_id": "bf-dc7269413ea544e5acb7-heldout-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "cd20a946332e85419ad63afa073066f152e96781a7bb6a4468d101b28714d0dc",
+          "package_sha256": "071af76f751e666db23bd29e9891707e6429b3d0c89b60b1d5db85bb9c63091f",
+          "cases": [
+            {
+              "name": "heldout-1",
+              "netlist_sha256": "61fdc9871fea08489725882a3d12598e99f24a21d17d0112c7739c0cb7ad578b",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.9340018053689849,
+                "sample_max": 0.744616890743941,
+                "hold_max": 0.7469246344950495
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "7a5f24bb77268cd4cdea45a5a9d678aefb9741a5dd92c9ab268eded7ff2cca91",
+              "waveform_rows": 16261
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "8fb0142927afd4d6b6ad2f243ab21f0e75c4a07aa40193d4770a8acadd74f9d3"
+        },
+        {
+          "condition_id": "heldout-2",
+          "job_id": "bf-b4f20470134b49d48e1e-heldout-2",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "1b930c60f64ffec08c8760fbadf0c49e7aefacef9332ff8d80fccf6ba9375341",
+          "package_sha256": "d2b5e9fe9cef542e59297d5c2efb87c4d3288780187bfbc25c0d75442a211924",
+          "cases": [
+            {
+              "name": "heldout-2",
+              "netlist_sha256": "009d2c3d8a3a484932238916477f3d917c890055ba2817f55abf58aba1dc4189",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.3452277910844273,
+                "sample_max": 0.4302614360000001,
+                "hold_max": 0.43026129999999996
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "96cc2ccd3faeac4264a0dfd975a557be517a2cc22f1d788e55d77db38369ecb2",
+              "waveform_rows": 22343
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "e6a1c9f0c390b4e5ac22e646e25d890c99f3e69a09f271e1549f9bad3baa86b7"
+        },
+        {
+          "condition_id": "heldout-3",
+          "job_id": "bf-500c33168e65495ea268-heldout-3",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "reason": null,
+          "report_sha256": "dc8333647a6fe1db15462b3863c493d47ed9f49d7829742067a677d1aaf590f7",
+          "package_sha256": "d5cb571a6fa474937b0baa24d895a252399411f4a292af4253d7d2f444ce5c22",
+          "cases": [
+            {
+              "name": "heldout-3",
+              "netlist_sha256": "ba4993cecaf40d969c7d11653b02478a3610e99dbad3cbb9991018b44d7cf824",
+              "support_sha256": {},
+              "returncode": 0,
+              "passed": false,
+              "status": "graded",
+              "metrics_V": {
+                "track_rms": 0.35078220955591927,
+                "sample_max": 0.40259166279999997,
+                "hold_max": 0.402591675
+              },
+              "limits_V": {
+                "track_rms": 0.025,
+                "sample_max": 0.05,
+                "hold_max": 0.05
+              },
+              "waveform_sha256": "e41de903e9fc2952f69b240021bf5827df06f69914cb9a3306d4967f46dfac2e",
+              "waveform_rows": 22343
+            }
+          ],
+          "spectre_version": "21.1.0.509.isr12 64bit -- 24 Sep 2022",
+          "profile_sha256": "4f54fad38cf7d18fffb005455d308d7241f35e653e2d5145a18306037e79d781",
+          "preflight_receipt_sha256": "eecf40ad3dedfa00ca78ab3a617b49dfb6ce494827d2c10974b17665652f8b1a"
+        }
+      ],
+      "preparation_sha256": "7a006b0007586b5e715dac7bcaf9853cf76e5b13300496a38e806447d4c2dc16",
+      "results_sha256": "feed704fe3c49325113548fac7a3c9b887e02ec4043153e139b6e8c1f7a38ccf",
+      "summary_sha256": "c63395c1e1cda853060cb88023937395815e0c790893a6d60e50f2130697406c",
+      "passed_conditions": 1,
+      "failed_conditions": 5,
+      "calibration_valid": true
+    }
+  ],
+  "historical_runs": [
+    {
+      "variant": "reference",
+      "expected_pass": true,
+      "run": "v2-data-sampling-identification-reference-full-r1",
+      "candidate_sha256": "adc00f35912da11c13d94296468ace46bb536c1df17931a9b1514d2e52cb687a",
+      "candidate_files": {
+        "dut.va": {
+          "sha256": "2f72aa0684801407a3502b4af284a96c43097ea3262b509dd4269fc503c0d1a3",
+          "bytes": 21379
+        }
+      },
+      "criteria_sha256": "51b55e532f9d29976b0f4c3612695979e1d610eb50d4f68e0fbabcf868ea220b",
+      "expected_conditions": 6,
+      "all_conditions_graded": true,
+      "conditions": [
+        {
+          "condition_id": "selftest-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "selftest-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-2",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-3",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        }
+      ],
+      "preparation_sha256": "678d3eeaffd7e06fb8aacc8432007143d3ff12e4d874cdeaf43ea29d6591a578",
+      "results_sha256": "59196c48bc425df4d09c08289c67c2bce63dd09b1c90f75d7d0a0aa80a0f18e8",
+      "summary_sha256": "fb36ceb34b3f1cd2c92b461e012a59581d6bd6c7c7617b9460cdfcd6581bed47",
+      "passed_conditions": 0,
+      "failed_conditions": 6,
+      "evidence_note": "Legacy recorded graded zero with missing frozen truth; not a valid semantic rejection."
+    },
+    {
+      "variant": "reference",
+      "expected_pass": true,
+      "run": "v2-data-sampling-identification-reference-isolated-r2",
+      "candidate_sha256": "8d3e508d88f73d2a606de2531d24f6b7dbe4e95e13d6e8e900b233c871a06f00",
+      "candidate_files": {
+        "dut.va": {
+          "sha256": "452cdfa86f95349a2414b0450d08f0ef39dd6a0f643b7d3e81d5807a56f3bbd3",
+          "bytes": 21381
+        }
+      },
+      "criteria_sha256": "4cc1ae5518112fd0d57d3a35ff5e413a5dbe7ffaae5829e14026a648787e4042",
+      "expected_conditions": 6,
+      "all_conditions_graded": true,
+      "conditions": [
+        {
+          "condition_id": "selftest-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.02461524716985942,
+            "sample_max": 0.031097002254218964,
+            "hold_max": 0.031243869454218864
+          }
+        },
+        {
+          "condition_id": "selftest-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.022989481934093964,
+            "sample_max": 0.02722174783731529,
+            "hold_max": 0.0272217667373153
+          }
+        },
+        {
+          "condition_id": "heldout-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.036315220758849305,
+            "sample_max": 0.044402662844831964,
+            "hold_max": 0.04440267314483204
+          }
+        },
+        {
+          "condition_id": "heldout-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.035665212236853594,
+            "sample_max": 0.013606366780576251,
+            "hold_max": 0.013606371680576212
+          }
+        },
+        {
+          "condition_id": "heldout-2",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.022776402283701227,
+            "sample_max": 0.01988113147773196,
+            "hold_max": 0.019881136477732153
+          }
+        },
+        {
+          "condition_id": "heldout-3",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.014797890836270824,
+            "sample_max": 0.015075319040597446,
+            "hold_max": 0.015075323840597399
+          }
+        }
+      ],
+      "preparation_sha256": "3c516fd598d65f2cd445b3b292e0f96ecb822bdca458924c7660474d5179bd5c",
+      "results_sha256": "10ef0c961c255eb5d7ccaa2d713085fb89f97fe48303fb6a1780cfdd885a2faa",
+      "summary_sha256": "a71c13371f30ea989be0a67d5502375dc35859776892f4e477f8ccfc4f54d014",
+      "passed_conditions": 4,
+      "failed_conditions": 2,
+      "evidence_note": "Historical original solve; superseded candidate/criteria identity."
+    },
+    {
+      "variant": "alternative",
+      "expected_pass": true,
+      "run": "v2-data-sampling-identification-alternative-full-r1",
+      "candidate_sha256": "a76821b94fbfdfc52a67edee69d612b2d692376d3da0711daa7cc5afad6e1028",
+      "candidate_files": {
+        "dut.va": {
+          "sha256": "aec53a8f5137ba8ed08f222e15ebf61d47ef234360eaab0700c0e93263de92ff",
+          "bytes": 11756
+        }
+      },
+      "criteria_sha256": "51b55e532f9d29976b0f4c3612695979e1d610eb50d4f68e0fbabcf868ea220b",
+      "expected_conditions": 6,
+      "all_conditions_graded": true,
+      "conditions": [
+        {
+          "condition_id": "selftest-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "selftest-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-2",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-3",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        }
+      ],
+      "preparation_sha256": "2245705e0b4e129a68fd78c99788aee4a631a0a03170acd02f09e90a7471d8f2",
+      "results_sha256": "847b99bad9335d7ccc5cc2f57f2850376e1d32f773b22286d238e2f85f18ecad",
+      "summary_sha256": "89479a3868f459699daec68fd4123e23b9306aaac914e118a15f232227d53cce",
+      "passed_conditions": 0,
+      "failed_conditions": 6,
+      "evidence_note": "Legacy recorded graded zero with missing frozen truth; not a valid semantic rejection."
+    },
+    {
+      "variant": "alternative",
+      "expected_pass": true,
+      "run": "v2-data-sampling-identification-alternative-isolated-r2",
+      "candidate_sha256": "d9685f145add4096d05dfb93eef412e4208f7d19a3e15e8fde4f994257f73638",
+      "candidate_files": {
+        "dut.va": {
+          "sha256": "8ba12b9afc54257a66e66593c1744700f19f30a9d144418c061366e9f51ccc80",
+          "bytes": 11761
+        }
+      },
+      "criteria_sha256": "4cc1ae5518112fd0d57d3a35ff5e413a5dbe7ffaae5829e14026a648787e4042",
+      "expected_conditions": 6,
+      "all_conditions_graded": true,
+      "conditions": [
+        {
+          "condition_id": "selftest-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.023540937863205432,
+            "sample_max": 0.03050197631219409,
+            "hold_max": 0.03064884351219399
+          }
+        },
+        {
+          "condition_id": "selftest-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.02241836601581058,
+            "sample_max": 0.02582644815539037,
+            "hold_max": 0.02582646705539038
+          }
+        },
+        {
+          "condition_id": "heldout-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.03203336421274857,
+            "sample_max": 0.041490513750241265,
+            "hold_max": 0.04149052405024134
+          }
+        },
+        {
+          "condition_id": "heldout-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.036060686839025864,
+            "sample_max": 0.013610653606458967,
+            "hold_max": 0.013610658506458928
+          }
+        },
+        {
+          "condition_id": "heldout-2",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.022226165290707138,
+            "sample_max": 0.019692862502427078,
+            "hold_max": 0.019692867502427158
+          }
+        },
+        {
+          "condition_id": "heldout-3",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.014474804464271037,
+            "sample_max": 0.01394852010818004,
+            "hold_max": 0.013948524908179993
+          }
+        }
+      ],
+      "preparation_sha256": "3ad350b949b7c684fa3fde240b31823ee8b2176a2f930afe5af2c79d4798be01",
+      "results_sha256": "c4076bd7b820fff05cbdbf65a95516d91dd363b67f7fbba36e857cde7dd163eb",
+      "summary_sha256": "69b633661d1197cf229cd41baa19885d4d8c23728144973eceabc62df55fe9f6",
+      "passed_conditions": 4,
+      "failed_conditions": 2,
+      "evidence_note": "Historical original solve; superseded candidate/criteria identity."
+    },
+    {
+      "variant": "wrong_phase",
+      "expected_pass": false,
+      "run": "v2-data-sampling-identification-wrong_phase-full-r1",
+      "candidate_sha256": "5af99b578e51a914b4fb59012e47ffc5e9807ff5f90fd147d1f279d238d39766",
+      "candidate_files": {
+        "dut.va": {
+          "sha256": "68a2991af3d2a24d025003215eb0bc8717562334454d56de4394c4c22afaf82b",
+          "bytes": 21379
+        }
+      },
+      "criteria_sha256": "51b55e532f9d29976b0f4c3612695979e1d610eb50d4f68e0fbabcf868ea220b",
+      "expected_conditions": 6,
+      "all_conditions_graded": true,
+      "conditions": [
+        {
+          "condition_id": "selftest-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "selftest-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-2",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-3",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        }
+      ],
+      "preparation_sha256": "0bc6a2387b90666a637406057806314d105845ab9ebe9cbf180846dd76beb0ee",
+      "results_sha256": "052a6250b9cc7268341827083b9a25e253b5023c02e9cc2ff587d63b54134659",
+      "summary_sha256": "a191a7edbc961be9855720d6ea0b06df4500e2ae06c5667cfee3300880ad6d9f",
+      "passed_conditions": 0,
+      "failed_conditions": 6,
+      "evidence_note": "Legacy recorded graded zero with missing frozen truth; not a valid semantic rejection."
+    },
+    {
+      "variant": "wrong_phase",
+      "expected_pass": false,
+      "run": "v2-data-sampling-identification-wrong_phase-isolated-r2",
+      "candidate_sha256": "737735b4302dd3221c4b63f21350d2dc6d3d5054c0c9f263275f70f40ec8486e",
+      "candidate_files": {
+        "dut.va": {
+          "sha256": "45c8e099d2e9141ab277e145ca75106d3c3793fd7b7eac577719b33d3d462250",
+          "bytes": 21381
+        }
+      },
+      "criteria_sha256": "4cc1ae5518112fd0d57d3a35ff5e413a5dbe7ffaae5829e14026a648787e4042",
+      "expected_conditions": 6,
+      "all_conditions_graded": true,
+      "conditions": [
+        {
+          "condition_id": "selftest-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.43871364204231855,
+            "sample_max": 0.3067145399798591,
+            "hold_max": 0.695504630042755
+          }
+        },
+        {
+          "condition_id": "selftest-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.5374436577367181,
+            "sample_max": 0.7669271573808029,
+            "hold_max": 0.7487775710295419
+          }
+        },
+        {
+          "condition_id": "heldout-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.4216885979490655,
+            "sample_max": 0.2876891157718383,
+            "hold_max": 0.672011791025538
+          }
+        },
+        {
+          "condition_id": "heldout-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.6326962757100023,
+            "sample_max": 0.4703767925640119,
+            "hold_max": 1.1000584299451992
+          }
+        },
+        {
+          "condition_id": "heldout-2",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.30989053082163015,
+            "sample_max": 0.26954788760642623,
+            "hold_max": 0.5886450176552517
+          }
+        },
+        {
+          "condition_id": "heldout-3",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.8164712724000596,
+            "sample_max": 0.7176140082863047,
+            "hold_max": 0.7958994527710771
+          }
+        }
+      ],
+      "preparation_sha256": "ce3ab50505b1af40b2b0607a05ea1307f1bc79b96dd40572ccf1b04e2439ac88",
+      "results_sha256": "bb7cca1e07f450b56a6cf2267fbd262102c3334785bced119b0d6e68c4de375c",
+      "summary_sha256": "2be2faeeb6bc887f1e850e1ef33a13faebafb6de223ef43b6969400b6b779ccf",
+      "passed_conditions": 0,
+      "failed_conditions": 6,
+      "evidence_note": "Historical original solve; superseded candidate/criteria identity."
+    },
+    {
+      "variant": "missing_acquisition",
+      "expected_pass": false,
+      "run": "v2-data-sampling-identification-missing_acquisition-full-r1",
+      "candidate_sha256": "63178a48738184ce0c955921d409c722fb5236e9e9027a04bef6e10ef589fced",
+      "candidate_files": {
+        "dut.va": {
+          "sha256": "f4482b7447a443d78064e5ea5940cc584061760edf7debc589a2a3f2d8697d26",
+          "bytes": 21380
+        }
+      },
+      "criteria_sha256": "51b55e532f9d29976b0f4c3612695979e1d610eb50d4f68e0fbabcf868ea220b",
+      "expected_conditions": 6,
+      "all_conditions_graded": true,
+      "conditions": [
+        {
+          "condition_id": "selftest-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "selftest-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-2",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-3",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        }
+      ],
+      "preparation_sha256": "58e09fb957c90f8e96185a56824a2915d15101b8a276c2c32c972810a9ac883a",
+      "results_sha256": "ff44bf17bf72b8e9441cb44d59ed7dae5489c58f2d1dba3d1bdd7e5dc7e3f59e",
+      "summary_sha256": "d7dabed14c1283406342e23f7fc5a3dc1e59a9bc726cc7a9fd388de49863e834",
+      "passed_conditions": 0,
+      "failed_conditions": 6,
+      "evidence_note": "Legacy recorded graded zero with missing frozen truth; not a valid semantic rejection."
+    },
+    {
+      "variant": "missing_acquisition",
+      "expected_pass": false,
+      "run": "v2-data-sampling-identification-missing_acquisition-isolated-r2",
+      "candidate_sha256": "bdc18663d855e8e11c797bc65a5a65f8a208268c75510b936a6b9874750ea031",
+      "candidate_files": {
+        "dut.va": {
+          "sha256": "05010dfb543c3a25b1fe456fc0981a348087ab4bb4f27758ca636d330d7b06c0",
+          "bytes": 21382
+        }
+      },
+      "criteria_sha256": "4cc1ae5518112fd0d57d3a35ff5e413a5dbe7ffaae5829e14026a648787e4042",
+      "expected_conditions": 6,
+      "all_conditions_graded": true,
+      "conditions": [
+        {
+          "condition_id": "selftest-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.8443893040810078,
+            "sample_max": 0.6955562227999991,
+            "hold_max": 0.6957030899999999
+          }
+        },
+        {
+          "condition_id": "selftest-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.42220524120101827,
+            "sample_max": 0.639909212881955,
+            "hold_max": 0.639909228781955
+          }
+        },
+        {
+          "condition_id": "heldout-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.8256466446713415,
+            "sample_max": 0.6720271043,
+            "hold_max": 0.6720586920999999
+          }
+        },
+        {
+          "condition_id": "heldout-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.36127292389832766,
+            "sample_max": 0.8286618271,
+            "hold_max": 0.828661832
+          }
+        },
+        {
+          "condition_id": "heldout-2",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.626922637879815,
+            "sample_max": 0.5370966178,
+            "hold_max": 0.5371866715
+          }
+        },
+        {
+          "condition_id": "heldout-3",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.659811398415558,
+            "sample_max": 0.7959685841999999,
+            "hold_max": 0.7959685889999999
+          }
+        }
+      ],
+      "preparation_sha256": "d9d76c218c16ccc761f0c404eebbd7c7d103a2f7c7fd0c33146ed6b52b0c590f",
+      "results_sha256": "560b97aa6098c029738c9455501704802e6e077ac8e0aa9bd6beb05168ce86ae",
+      "summary_sha256": "3d72ae4fa81f36545f5a71f6a154f6b66ea2c08f4bfbc1097bf9dbc8f5b53faa",
+      "passed_conditions": 0,
+      "failed_conditions": 6,
+      "evidence_note": "Historical original solve; superseded candidate/criteria identity."
+    },
+    {
+      "variant": "fixed_rc",
+      "expected_pass": false,
+      "run": "v2-data-sampling-identification-fixed_rc-full-r1",
+      "candidate_sha256": "783d0a21d56b41ae43d5e26dc1f90885014b97c9bf1d361541882f2ae646a81b",
+      "candidate_files": {
+        "dut.va": {
+          "sha256": "5d37174177e3c9df9d3fd7ac8312cc58ca2fb598242ccda54c0aaa2650a7b461",
+          "bytes": 21376
+        }
+      },
+      "criteria_sha256": "51b55e532f9d29976b0f4c3612695979e1d610eb50d4f68e0fbabcf868ea220b",
+      "expected_conditions": 6,
+      "all_conditions_graded": true,
+      "conditions": [
+        {
+          "condition_id": "selftest-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "selftest-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-2",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-3",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        }
+      ],
+      "preparation_sha256": "b814803f5d027034a3820be30556cfc482d7275f3a09c4368e377e03d0f27c80",
+      "results_sha256": "8b95cbab4160a67abeec68dc5befff866a0d5433e8f1c2bf98cc1a7861263a85",
+      "summary_sha256": "1e2f6da99b335389db0256c86a1a73481eebaeee68ea32a08c73f1b3342bee69",
+      "passed_conditions": 0,
+      "failed_conditions": 6,
+      "evidence_note": "Legacy recorded graded zero with missing frozen truth; not a valid semantic rejection."
+    },
+    {
+      "variant": "fixed_rc",
+      "expected_pass": false,
+      "run": "v2-data-sampling-identification-fixed_rc-isolated-r2",
+      "candidate_sha256": "bee35bf833ddb1fed8d6dd1283726cef47b4987dd65d48fb0337e65eb20d7c5b",
+      "candidate_files": {
+        "dut.va": {
+          "sha256": "a68d45b0447cbbdc7a438912891677dd63bc3c0a3b732a826bfde4d59c0acd4c",
+          "bytes": 21378
+        }
+      },
+      "criteria_sha256": "4cc1ae5518112fd0d57d3a35ff5e413a5dbe7ffaae5829e14026a648787e4042",
+      "expected_conditions": 6,
+      "all_conditions_graded": true,
+      "conditions": [
+        {
+          "condition_id": "selftest-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.1001905508922127,
+            "sample_max": 0.10988992419023424,
+            "hold_max": 0.10988993229023425
+          }
+        },
+        {
+          "condition_id": "selftest-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.40112108023480075,
+            "sample_max": 0.4160439033621094,
+            "hold_max": 0.41604391246210937
+          }
+        },
+        {
+          "condition_id": "heldout-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.2334247390701954,
+            "sample_max": 0.2931611503895716,
+            "hold_max": 0.29316115808957155
+          }
+        },
+        {
+          "condition_id": "heldout-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.17016875074108653,
+            "sample_max": 0.1919592715318884,
+            "hold_max": 0.19195927743188845
+          }
+        },
+        {
+          "condition_id": "heldout-2",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.23883560145275196,
+            "sample_max": 0.14495379940844288,
+            "hold_max": 0.14495397840844304
+          }
+        },
+        {
+          "condition_id": "heldout-3",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.24048426757709715,
+            "sample_max": 0.13175768103838914,
+            "hold_max": 0.13175768973838914
+          }
+        }
+      ],
+      "preparation_sha256": "97fbffc833ff5c31503a8d86948fa806bbbd67272a48333e06f60461aeed37ca",
+      "results_sha256": "a673ae16ab22b6f9f4b14ae6ea8191db1ba385a999f09c32205ad1eb3792d905",
+      "summary_sha256": "2ecd703af8825572e7d93951c6365fd9543527a84e3b703f5f3df54290724023",
+      "passed_conditions": 0,
+      "failed_conditions": 6,
+      "evidence_note": "Historical original solve; superseded candidate/criteria identity."
+    },
+    {
+      "variant": "reset_history",
+      "expected_pass": false,
+      "run": "v2-data-sampling-identification-reset_history-full-r1",
+      "candidate_sha256": "a48625bef1c027ba940f33831aa0e4b99d62cf00abd775280828301a804d47ad",
+      "candidate_files": {
+        "dut.va": {
+          "sha256": "f024d912a7a2069f04f92dde2e0c0802af70d24aa0cf3d1f6982b91d4414a51d",
+          "bytes": 21398
+        }
+      },
+      "criteria_sha256": "51b55e532f9d29976b0f4c3612695979e1d610eb50d4f68e0fbabcf868ea220b",
+      "expected_conditions": 6,
+      "all_conditions_graded": true,
+      "conditions": [
+        {
+          "condition_id": "selftest-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "selftest-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-2",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-3",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        }
+      ],
+      "preparation_sha256": "fd3faf6bc69dbee5b568a89c64644477ddff0246e5319fe250550e75d990ccf5",
+      "results_sha256": "a024dafb4e277bf7c32c5fde7c06acdf9ae4b55d613da70d6280081592a48849",
+      "summary_sha256": "0865dde64a03b150854a5c789ee38773748ad4c9b7bbb40b220e07a3efca2d71",
+      "passed_conditions": 0,
+      "failed_conditions": 6,
+      "evidence_note": "Legacy recorded graded zero with missing frozen truth; not a valid semantic rejection."
+    },
+    {
+      "variant": "reset_history",
+      "expected_pass": false,
+      "run": "v2-data-sampling-identification-reset_history-isolated-r2",
+      "candidate_sha256": "c5539d82ba47568ebad7cb61960b95d711543b034add1fc4599a8c7116ce9221",
+      "candidate_files": {
+        "dut.va": {
+          "sha256": "01090b352c1e75724153ec0f254d4bb9b91dca46364daa81c75dfbb182b13e1c",
+          "bytes": 21400
+        }
+      },
+      "criteria_sha256": "4cc1ae5518112fd0d57d3a35ff5e413a5dbe7ffaae5829e14026a648787e4042",
+      "expected_conditions": 6,
+      "all_conditions_graded": true,
+      "conditions": [
+        {
+          "condition_id": "selftest-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.20897264110133887,
+            "sample_max": 0.8795686546,
+            "hold_max": 0.879568646
+          }
+        },
+        {
+          "condition_id": "selftest-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.6001933707698937,
+            "sample_max": 0.9531093977,
+            "hold_max": 0.9531093626
+          }
+        },
+        {
+          "condition_id": "heldout-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.5604934922206228,
+            "sample_max": 0.9808115638,
+            "hold_max": 0.980811569
+          }
+        },
+        {
+          "condition_id": "heldout-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 1.0901481523067116,
+            "sample_max": 1.45005864,
+            "hold_max": 1.450058473
+          }
+        },
+        {
+          "condition_id": "heldout-2",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.47782137626101506,
+            "sample_max": 1.132515179,
+            "hold_max": 1.132515043
+          }
+        },
+        {
+          "condition_id": "heldout-3",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.29454969992455193,
+            "sample_max": 0.8633214096,
+            "hold_max": 0.863321397
+          }
+        }
+      ],
+      "preparation_sha256": "0dd3e0631bab8392f120a1f3a881a75da18a860f7eb8c1adb118691fc8592e78",
+      "results_sha256": "0ad888c45a7cc3c2ecac690c8e3f336b2548f782ea3afe35de31e4804c742e45",
+      "summary_sha256": "e0bb6c98d3259de842f9b505592804084e227e165909ea5dee999afe77ccc487",
+      "passed_conditions": 0,
+      "failed_conditions": 6,
+      "evidence_note": "Historical original solve; superseded candidate/criteria identity."
+    },
+    {
+      "variant": "ideal_sampling",
+      "expected_pass": false,
+      "run": "v2-data-sampling-identification-ideal_sampling-full-r1",
+      "candidate_sha256": "700a61abb3de35bcd7a928b2860caf2ef4c5d821616d40b45576b6d5cc73adfb",
+      "candidate_files": {
+        "dut.va": {
+          "sha256": "2ad57de61ac617c0c0e801e6f96a5b81eb17ce6f67ef7c2eaecac12397e300fb",
+          "bytes": 313
+        }
+      },
+      "criteria_sha256": "51b55e532f9d29976b0f4c3612695979e1d610eb50d4f68e0fbabcf868ea220b",
+      "expected_conditions": 6,
+      "all_conditions_graded": true,
+      "conditions": [
+        {
+          "condition_id": "selftest-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "selftest-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-2",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-3",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        }
+      ],
+      "preparation_sha256": "189d5f5803aed7c787c8bc1d8191ade71bdb13f49e1ec80fae9990836a010cc6",
+      "results_sha256": "8133eb5cf8912d3025e5ebdab061c5c7369effb058d2fbc5f7ad3f0320bbcef2",
+      "summary_sha256": "09d842e6a0dbd4ea862629ad7c26e6983b247748a22eccca6445aa1f876d2521",
+      "passed_conditions": 0,
+      "failed_conditions": 6,
+      "evidence_note": "Legacy recorded graded zero with missing frozen truth; not a valid semantic rejection."
+    },
+    {
+      "variant": "ideal_sampling",
+      "expected_pass": false,
+      "run": "v2-data-sampling-identification-ideal_sampling-isolated-r2",
+      "candidate_sha256": "700a61abb3de35bcd7a928b2860caf2ef4c5d821616d40b45576b6d5cc73adfb",
+      "candidate_files": {
+        "dut.va": {
+          "sha256": "2ad57de61ac617c0c0e801e6f96a5b81eb17ce6f67ef7c2eaecac12397e300fb",
+          "bytes": 313
+        }
+      },
+      "criteria_sha256": "4cc1ae5518112fd0d57d3a35ff5e413a5dbe7ffaae5829e14026a648787e4042",
+      "expected_conditions": 6,
+      "all_conditions_graded": true,
+      "conditions": [
+        {
+          "condition_id": "selftest-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.8443893040810078,
+            "sample_max": 0.6955562228,
+            "hold_max": 0.6957030899999999
+          }
+        },
+        {
+          "condition_id": "selftest-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.4242597764950582,
+            "sample_max": 0.3468906023,
+            "hold_max": 0.346890645
+          }
+        },
+        {
+          "condition_id": "heldout-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.8256466446713415,
+            "sample_max": 0.6720271043,
+            "hold_max": 0.6720586920999999
+          }
+        },
+        {
+          "condition_id": "heldout-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.3612729458690288,
+            "sample_max": 0.8286618271,
+            "hold_max": 0.828661832
+          }
+        },
+        {
+          "condition_id": "heldout-2",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.626922637879815,
+            "sample_max": 0.5370966178,
+            "hold_max": 0.5371866715
+          }
+        },
+        {
+          "condition_id": "heldout-3",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.6598120214147043,
+            "sample_max": 0.7959685841999999,
+            "hold_max": 0.7959685889999999
+          }
+        }
+      ],
+      "preparation_sha256": "599074b1eb84e162d3935c54ce05322b7b3cb82afdbbabb38911ad5abd277f53",
+      "results_sha256": "2cac5054d1dcf17fa04cc67a43816233f21ab5d38176200971d8ef70a21ff643",
+      "summary_sha256": "aa363bec0f5d9c4183378f8796400a48c60a4475d230b2c3d03404043779457a",
+      "passed_conditions": 0,
+      "failed_conditions": 6,
+      "evidence_note": "Historical original solve; superseded candidate/criteria identity."
+    },
+    {
+      "variant": "public_replay",
+      "expected_pass": false,
+      "run": "v2-data-sampling-identification-public_replay-full-r1",
+      "candidate_sha256": "75f46a89e90b2349f00d555771b4aaf578853fcfc07f2714274f865c53239d8b",
+      "candidate_files": {
+        "dut.va": {
+          "sha256": "2912d3f457b637ccbb491039820771d738598cd05f8e2765fba6934d0b998754",
+          "bytes": 2266
+        }
+      },
+      "criteria_sha256": "51b55e532f9d29976b0f4c3612695979e1d610eb50d4f68e0fbabcf868ea220b",
+      "expected_conditions": 6,
+      "all_conditions_graded": true,
+      "conditions": [
+        {
+          "condition_id": "selftest-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "selftest-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-2",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        },
+        {
+          "condition_id": "heldout-3",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "reason": "sample missing from frozen truth"
+        }
+      ],
+      "preparation_sha256": "2d22dcd118c3849756411e4a8eb733ee9af0baa9cbd5a107a84ca2a2428cebe9",
+      "results_sha256": "ab7e88d9fd7b2dee4d5dd2548b0058314903d0879de26790b41ebdbfb328f00f",
+      "summary_sha256": "56f1f34c4177d3aa4ee58591e44b822f287690720bb0358c14bd4158ce199b97",
+      "passed_conditions": 0,
+      "failed_conditions": 6,
+      "evidence_note": "Legacy recorded graded zero with missing frozen truth; not a valid semantic rejection."
+    },
+    {
+      "variant": "public_replay",
+      "expected_pass": false,
+      "run": "v2-data-sampling-identification-public_replay-isolated-r2",
+      "candidate_sha256": "bb635415dc59abba85f4fb8398caa74737ad4939e780ed08d8359b02a2fdda4d",
+      "candidate_files": {
+        "dut.va": {
+          "sha256": "6050ae862b185ab61d357e1c80ae04bd3533edd4c467bd29609b791306fbe5f7",
+          "bytes": 2312
+        }
+      },
+      "criteria_sha256": "4cc1ae5518112fd0d57d3a35ff5e413a5dbe7ffaae5829e14026a648787e4042",
+      "expected_conditions": 6,
+      "all_conditions_graded": true,
+      "conditions": [
+        {
+          "condition_id": "selftest-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.02334763722814604,
+            "sample_max": 0.002637155083371312,
+            "hold_max": 0.009111229903225826
+          }
+        },
+        {
+          "condition_id": "selftest-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.5135306454253346,
+            "sample_max": 0.54258748696082,
+            "hold_max": 0.5449754222930344
+          }
+        },
+        {
+          "condition_id": "heldout-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.2237842754553947,
+            "sample_max": 0.2492140853776766,
+            "hold_max": 0.25178478029303414
+          }
+        },
+        {
+          "condition_id": "heldout-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.9340018053689849,
+            "sample_max": 0.744616890743941,
+            "hold_max": 0.7469246344950495
+          }
+        },
+        {
+          "condition_id": "heldout-2",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.3452277910844273,
+            "sample_max": 0.4302614360000001,
+            "hold_max": 0.43026129999999996
+          }
+        },
+        {
+          "condition_id": "heldout-3",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "status": "graded",
+          "returncode": 0,
+          "metrics_V": {
+            "track_rms": 0.35078220955591927,
+            "sample_max": 0.40259166279999997,
+            "hold_max": 0.402591675
+          }
+        }
+      ],
+      "preparation_sha256": "223a4944e777d29264052bcdc79deebd11ee3561ea784d454dcdc77f78d42ad9",
+      "results_sha256": "ee7b3d04cadc24d3c7094d1875d2ac796443c50ec9e21b872dcf1c3a4a9766b9",
+      "summary_sha256": "c68388af0785fc141e00371d601ae234c3bf3454d2449631178f62cd396158b9",
+      "passed_conditions": 1,
+      "failed_conditions": 5,
+      "evidence_note": "Historical original solve; superseded candidate/criteria identity."
+    }
+  ],
+  "audit_snapshot": {
+    "snapshot_utc": "2026-10-10T20:03:28.733964+00:00",
+    "sha256": "39a662ffa9b7fef4675f207e4abda0a2958ba5fe9dc95644e82f871705bc719b",
+    "variants": [
+      {
+        "task_id": "v2-data-sampling-identification",
+        "category": "data_modeling",
+        "variant": "alternative",
+        "expected_pass": true,
+        "evidence_run": "v2-data-sampling-identification-alternative-isolated-r4",
+        "latest_exact_run": "v2-data-sampling-identification-alternative-isolated-r4",
+        "latest_exact_status": "positive_pass",
+        "historical_runs": [
+          "v2-data-sampling-identification-alternative-full-r1",
+          "v2-data-sampling-identification-alternative-isolated-r2",
+          "v2-data-sampling-identification-alternative-isolated-r4"
+        ],
+        "evidence_kind": "original-solve-current-identities",
+        "calibration_valid": true
+      },
+      {
+        "task_id": "v2-data-sampling-identification",
+        "category": "data_modeling",
+        "variant": "fixed_rc",
+        "expected_pass": false,
+        "evidence_run": "v2-data-sampling-identification-fixed_rc-isolated-r4",
+        "latest_exact_run": "v2-data-sampling-identification-fixed_rc-isolated-r4",
+        "latest_exact_status": "negative_rejected",
+        "historical_runs": [
+          "v2-data-sampling-identification-fixed_rc-full-r1",
+          "v2-data-sampling-identification-fixed_rc-isolated-r2",
+          "v2-data-sampling-identification-fixed_rc-isolated-r4"
+        ],
+        "evidence_kind": "original-solve-current-identities",
+        "calibration_valid": true
+      },
+      {
+        "task_id": "v2-data-sampling-identification",
+        "category": "data_modeling",
+        "variant": "ideal_sampling",
+        "expected_pass": false,
+        "evidence_run": null,
+        "latest_exact_run": "v2-data-sampling-identification-ideal_sampling-isolated-r4",
+        "latest_exact_status": "pending_or_partial",
+        "historical_runs": [
+          "v2-data-sampling-identification-ideal_sampling-full-r1",
+          "v2-data-sampling-identification-ideal_sampling-isolated-r2",
+          "v2-data-sampling-identification-ideal_sampling-isolated-r4"
+        ],
+        "evidence_kind": null,
+        "calibration_valid": false
+      },
+      {
+        "task_id": "v2-data-sampling-identification",
+        "category": "data_modeling",
+        "variant": "missing_acquisition",
+        "expected_pass": false,
+        "evidence_run": "v2-data-sampling-identification-missing_acquisition-isolated-r4",
+        "latest_exact_run": "v2-data-sampling-identification-missing_acquisition-isolated-r4",
+        "latest_exact_status": "negative_rejected",
+        "historical_runs": [
+          "v2-data-sampling-identification-missing_acquisition-full-r1",
+          "v2-data-sampling-identification-missing_acquisition-isolated-r2",
+          "v2-data-sampling-identification-missing_acquisition-isolated-r4"
+        ],
+        "evidence_kind": "original-solve-current-identities",
+        "calibration_valid": true
+      },
+      {
+        "task_id": "v2-data-sampling-identification",
+        "category": "data_modeling",
+        "variant": "public_replay",
+        "expected_pass": false,
+        "evidence_run": null,
+        "latest_exact_run": "v2-data-sampling-identification-public_replay-isolated-r4",
+        "latest_exact_status": "pending_or_partial",
+        "historical_runs": [
+          "v2-data-sampling-identification-public_replay-full-r1",
+          "v2-data-sampling-identification-public_replay-isolated-r2",
+          "v2-data-sampling-identification-public_replay-isolated-r4"
+        ],
+        "evidence_kind": null,
+        "calibration_valid": false
+      },
+      {
+        "task_id": "v2-data-sampling-identification",
+        "category": "data_modeling",
+        "variant": "reference",
+        "expected_pass": true,
+        "evidence_run": "v2-data-sampling-identification-reference-isolated-r4",
+        "latest_exact_run": "v2-data-sampling-identification-reference-isolated-r4",
+        "latest_exact_status": "positive_pass",
+        "historical_runs": [
+          "v2-data-sampling-identification-reference-full-r1",
+          "v2-data-sampling-identification-reference-isolated-r2",
+          "v2-data-sampling-identification-reference-isolated-r4"
+        ],
+        "evidence_kind": "original-solve-current-identities",
+        "calibration_valid": true
+      },
+      {
+        "task_id": "v2-data-sampling-identification",
+        "category": "data_modeling",
+        "variant": "reset_history",
+        "expected_pass": false,
+        "evidence_run": null,
+        "latest_exact_run": "v2-data-sampling-identification-reset_history-isolated-r4",
+        "latest_exact_status": "pending_or_partial",
+        "historical_runs": [
+          "v2-data-sampling-identification-reset_history-full-r1",
+          "v2-data-sampling-identification-reset_history-isolated-r2",
+          "v2-data-sampling-identification-reset_history-isolated-r4"
+        ],
+        "evidence_kind": null,
+        "calibration_valid": false
+      },
+      {
+        "task_id": "v2-data-sampling-identification",
+        "category": "data_modeling",
+        "variant": "wrong_phase",
+        "expected_pass": false,
+        "evidence_run": "v2-data-sampling-identification-wrong_phase-isolated-r4",
+        "latest_exact_run": "v2-data-sampling-identification-wrong_phase-isolated-r4",
+        "latest_exact_status": "negative_rejected",
+        "historical_runs": [
+          "v2-data-sampling-identification-wrong_phase-full-r1",
+          "v2-data-sampling-identification-wrong_phase-isolated-r2",
+          "v2-data-sampling-identification-wrong_phase-isolated-r4"
+        ],
+        "evidence_kind": "original-solve-current-identities",
+        "calibration_valid": true
+      }
+    ],
+    "note": "Fixed earlier audit snapshot, retained unchanged. Current r4 summaries below are complete, including three variants marked pending in this older snapshot."
+  },
+  "counts": {
+    "current_variants": 8,
+    "current_conditions": 48,
+    "current_graded_conditions": 48,
+    "positive_variants_passed": 2,
+    "negative_variants_rejected": 6,
+    "historical_variants": 16,
+    "historical_conditions": 96
+  },
+  "model_pilots": "in-progress; not included in author calibration",
+  "release_group": "spectre-extension",
+  "criteria_source_identities": {
+    "a69402b8450a88069b64f2a8fe60ef081de63ec987e4599c2eb50f59e7efdc0f": {
+      "selftest.json": "97affd0b0f4916bf81c478f9f16151fb50bc9f2dd9f64b7091290388cccc3194",
+      "cases.json": "750f5ad59a29a7bd0e1df2e77507cb2504e84a28c192b6b40faf3cd477067e08",
+      "verify.py": "1d0d0f2c279fb926cc47285d78ea030fccb9a01f05b42b18f8cdb0cb41ad2ad7",
+      "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+      "contract.json": "003bf2000580dac0bc3641cd4b42f67d8a4863fa3a8f98fd637fba281ca020ad",
+      "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "v2_data.py": "bd9a91b04acbdc6cdc7ec583529e29c24c8665e97206b061adc3766e3583d0cf",
+      "v2_runtime.py": "e68c2da4e680aae078a2edc9db37ef58baed2742f1b268690d8fd7548887a693",
+      "instruction.md": "29481af05ce4a325914f2dde15a644ae3bb13208a7f176b0576775e3d299159f"
+    },
+    "51b55e532f9d29976b0f4c3612695979e1d610eb50d4f68e0fbabcf868ea220b": {
+      "selftest.json": "3396e9461f72738aae186fd24902cc7251b458a37aa81e7639ce1918cd96a345",
+      "cases.json": "d646c32e8cd5dd133f959f10bbe8411ffb1dc15e973ae2e2811e08e9262db5ed",
+      "verify.py": "1d0d0f2c279fb926cc47285d78ea030fccb9a01f05b42b18f8cdb0cb41ad2ad7",
+      "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+      "contract.json": "003bf2000580dac0bc3641cd4b42f67d8a4863fa3a8f98fd637fba281ca020ad",
+      "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "v2_data.py": "b0c13ea13a951efb14d29c6a3e88d46f2b9cced8a67e3b4c103e4872071ed139",
+      "v2_runtime.py": "e68c2da4e680aae078a2edc9db37ef58baed2742f1b268690d8fd7548887a693",
+      "instruction.md": "29481af05ce4a325914f2dde15a644ae3bb13208a7f176b0576775e3d299159f"
+    },
+    "4cc1ae5518112fd0d57d3a35ff5e413a5dbe7ffaae5829e14026a648787e4042": {
+      "selftest.json": "97affd0b0f4916bf81c478f9f16151fb50bc9f2dd9f64b7091290388cccc3194",
+      "cases.json": "750f5ad59a29a7bd0e1df2e77507cb2504e84a28c192b6b40faf3cd477067e08",
+      "verify.py": "1d0d0f2c279fb926cc47285d78ea030fccb9a01f05b42b18f8cdb0cb41ad2ad7",
+      "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+      "contract.json": "003bf2000580dac0bc3641cd4b42f67d8a4863fa3a8f98fd637fba281ca020ad",
+      "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "v2_runtime.py": "e68c2da4e680aae078a2edc9db37ef58baed2742f1b268690d8fd7548887a693",
+      "v2_data.py": "9a8537d5e999dcbf4fe2bed179757bfa0c39c5676e0661c579eef3762de4ab60",
+      "instruction.md": "29481af05ce4a325914f2dde15a644ae3bb13208a7f176b0576775e3d299159f"
+    }
+  },
+  "package_normalization": {
+    "normalizer": "experiments/benchmark_first_batch/runtime.py:prepare",
+    "normalizer_sha256": "7e012962eccb9027693192d9f237ed6c421f988d022a58d572b862843ee2b3d7",
+    "criteria_sha256": "a69402b8450a88069b64f2a8fe60ef081de63ec987e4599c2eb50f59e7efdc0f",
+    "effective_source_identity": {
+      "selftest.json": "97affd0b0f4916bf81c478f9f16151fb50bc9f2dd9f64b7091290388cccc3194",
+      "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "cases.json": "750f5ad59a29a7bd0e1df2e77507cb2504e84a28c192b6b40faf3cd477067e08",
+      "v2_data.py": "bd9a91b04acbdc6cdc7ec583529e29c24c8665e97206b061adc3766e3583d0cf",
+      "verify.py": "1d0d0f2c279fb926cc47285d78ea030fccb9a01f05b42b18f8cdb0cb41ad2ad7",
+      "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+      "v2_runtime.py": "e68c2da4e680aae078a2edc9db37ef58baed2742f1b268690d8fd7548887a693",
+      "contract.json": "003bf2000580dac0bc3641cd4b42f67d8a4863fa3a8f98fd637fba281ca020ad",
+      "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "instruction.md": "29481af05ce4a325914f2dde15a644ae3bb13208a7f176b0576775e3d299159f"
+    },
+    "matched_variants": 8,
+    "matched_conditions": 48,
+    "result": "exact template identity and full per-condition payload inventories match r4 after normalization",
+    "limits": "Source task bytes differ. This verifies normalized author calibration packages only, not Harbor invocation or model Agent isolation."
+  }
+}

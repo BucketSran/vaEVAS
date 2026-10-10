@@ -1,0 +1,53 @@
+{
+  "task": "benchmark/tasks/v2-data-sampling-identification",
+  "variants": [
+    {
+      "variant": "reference",
+      "candidate_dir": "benchmark/tasks/v2-data-sampling-identification/solution",
+      "expected_pass": true,
+      "behavior": "split-channel law, 29-knot positive public correction and integrated inverter/held state"
+    },
+    {
+      "variant": "alternative",
+      "candidate_dir": "experiments/benchmark_v2/data_modeling/candidates/v2-data-sampling-identification/alternative",
+      "expected_pass": true,
+      "behavior": "15-knot public correction with capacitor states and split nonlinear conductance; different approximation and state equations"
+    },
+    {
+      "variant": "wrong_phase",
+      "candidate_dir": "experiments/benchmark_v2/data_modeling/candidates/v2-data-sampling-identification/wrong_phase",
+      "expected_pass": false,
+      "behavior": "track/hold phase inverted"
+    },
+    {
+      "variant": "missing_acquisition",
+      "candidate_dir": "experiments/benchmark_v2/data_modeling/candidates/v2-data-sampling-identification/missing_acquisition",
+      "expected_pass": false,
+      "behavior": "acquisition 1000x too fast"
+    },
+    {
+      "variant": "fixed_rc",
+      "candidate_dir": "experiments/benchmark_v2/data_modeling/candidates/v2-data-sampling-identification/fixed_rc",
+      "expected_pass": false,
+      "behavior": "input/state-dependent rate replaced by fixed rate"
+    },
+    {
+      "variant": "reset_history",
+      "candidate_dir": "experiments/benchmark_v2/data_modeling/candidates/v2-data-sampling-identification/reset_history",
+      "expected_pass": false,
+      "behavior": "held state zeroed every hold"
+    },
+    {
+      "variant": "ideal_sampling",
+      "candidate_dir": "experiments/benchmark_v2/data_modeling/candidates/v2-data-sampling-identification/ideal_sampling",
+      "expected_pass": false,
+      "behavior": "instantaneous track and edge sample"
+    },
+    {
+      "variant": "public_replay",
+      "candidate_dir": "experiments/benchmark_v2/data_modeling/candidates/v2-data-sampling-identification/public_replay",
+      "expected_pass": false,
+      "behavior": "replays only public selftest-0 history regardless of new vin/clock"
+    }
+  ]
+}

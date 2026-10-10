@@ -1,0 +1,11 @@
+`include "disciplines.vams"
+module sampling_model(vin,clock,vhold);
+input vin,clock; output vhold; electrical vin,clock,vhold;
+real held;
+analog begin
+@(initial_step) held=V(vin);
+@(cross(V(clock)-0.9,+1)) held=V(vin);
+V(vhold)<+transition(V(clock)<0.9 ? V(vin) : held,0,10p,10p);
+$bound_step(10p);
+end
+endmodule
