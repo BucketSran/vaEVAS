@@ -635,7 +635,7 @@ fn prepare_calendar_batch(
                 lo: sum.lo.min(bounds.lo),
                 hi: sum.hi.max(bounds.hi),
             });
-    let (next, mut records) = prepare_batch_until(
+    let (mut next, mut records) = prepare_batch_until(
         model,
         trajectory,
         accepted,
@@ -646,6 +646,13 @@ fn prepare_calendar_batch(
             prediction_end,
         },
     )?;
+    next.operators.retain_filter_provenance(
+        &accepted.operators,
+        model,
+        trajectory,
+        scheduled,
+        &next.state_bounds,
+    );
     for record in &mut records {
         for fired in &mut record.fired_triggers {
             let event = scheduled
@@ -897,7 +904,13 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                 event.time > time
                     && event.bounds().lo <= time
                     && event
-                        .physical_order_for_query(time, &model, &trajectory)
+                        .physical_order_for_query(
+                            time,
+                            &model,
+                            &trajectory,
+                            &controller.accepted.operators,
+                            &controller.accepted.state_bounds,
+                        )
                         .is_none()
             })
         {
@@ -908,7 +921,13 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
         }
         let physically_due = crossings.get(controller.event).is_some_and(|event| {
             matches!(
-                event.physical_order_for_query(time, &model, &trajectory),
+                event.physical_order_for_query(
+                    time,
+                    &model,
+                    &trajectory,
+                    &controller.accepted.operators,
+                    &controller.accepted.state_bounds
+                ),
                 Some(std::cmp::Ordering::Less | std::cmp::Ordering::Equal)
             )
         });
@@ -2009,5 +2028,79 @@ mod tests {
             assert_eq!(before.states, [0.0]);
             assert_eq!(before.solution.voltages[2], 0.0);
         }
+    }
+}
+
+#[cfg(test)]
+mod query_refinement_tests {
+    use super::*;
+    use crate::ir::{Program, Tolerances, TransientInputs};
+    use serde_json::json;
+
+    #[test]
+    fn reset_sample_refinement_keeps_post_reset_semantics() {
+        let origin =
+            |line| json!({"instance":"dut","source":"reset-refinement.va","line":line,"column":1});
+        let constant = |x: f64| json!({"op":"affine","constant":x,"terms":[]});
+        let state = |i| json!({"op":"state","state":i});
+        let operator = |i| json!({"op":"operator","operator":i});
+        let program:Program=serde_json::from_value(json!({
+ "schema_version":SCHEMA_VERSION,"nodes":["0","u","y","z"],
+ "states":[{"instance":"dut","name":"r","kind":"integer","initial":0},{"instance":"dut","name":"q","kind":"real","initial":0}],
+ "operators":[
+  {"kind":"idt","input":constant(1e-17),"ic":0,"reset":state(0),"origin":origin(1)},
+  {"kind":"transition","input":state(1),"delay":0,"rise":1,"fall":1,"origin":origin(2)},
+  {"kind":"laplace_nd","input":operator(1),"numerator":[1],"denominator":[1,1],"origin":origin(3)}],
+ "contributions":[
+  {"branch":{"instance":"dut","local_positive":"y","local_negative":"zz","kind":"voltage"},"positive":2,"negative":0,"rhs":operator(2),"origin":origin(4)},
+  {"branch":{"instance":"dut","local_positive":"z","local_negative":"zz","kind":"voltage"},"positive":3,"negative":0,"rhs":operator(0),"origin":origin(5)}],
+ "events":[{"origin":origin(6),"trigger":{"kind":"timer","start":1,"period":0,"time_tolerance":1e-6,"enabled":true},"body":[
+ {"kind":"assign","state":0,"rhs":constant(1.)},
+ {"kind":"assign","state":1,"rhs":{"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1},{"node":3,"coefficient":1}]}}]}]
+ })).unwrap();
+        let model = EventModel::new(
+            program,
+            vec!["u".into()],
+            Tolerances {
+                absolute: 1e-4,
+                relative: 0.,
+            },
+        )
+        .unwrap();
+        let trajectory = Trajectory::new(
+            TransientInputs {
+                pwl: vec![vec![[0., 0.], [3., 1.]]],
+                output_times: vec![0., 1., 3.],
+                strobetimes: vec![],
+                stop: 3.,
+                max_step: 3.,
+            },
+            1,
+        )
+        .unwrap();
+        let states = model.initial();
+        let operators =
+            Operators::new(&model.program, &trajectory, &model.driven, &states).unwrap();
+        let circuit = model
+            .circuit_with(&states, &operators.values(0.).unwrap())
+            .unwrap();
+        let initial = Frame {
+            time: 0.,
+            solution: circuit.solve(&trajectory.values(0.)).unwrap(),
+            state_bounds: states.iter().copied().map(I::point).collect(),
+            states,
+            circuit,
+            operators,
+        };
+        let events = schedule(&model, &trajectory, &initial.operators).unwrap();
+        let (next, _) =
+            prepare_calendar_batch(&model, &trajectory, &initial, 1., &events[..1], 3.).unwrap();
+        assert_eq!(next.operators.values(1.).unwrap()[0], 0.);
+        let refined = next.operators.refinement_states().unwrap();
+        let exact = num_rational::BigRational::new(1.into(), 3.into());
+        assert!(
+            refined[1].lo <= exact && refined[1].hi >= exact,
+            "refined state excludes true post-reset q=1/3"
+        );
     }
 }

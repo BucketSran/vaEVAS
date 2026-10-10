@@ -171,7 +171,7 @@ class SampleEdgeFilter(unittest.TestCase):
         with self.assertRaisesRegex(KernelError,'waveform_accuracy'):
             run(p,times=[0,1,1.5,3],stop=3,vabstol=1e-20,reltol=0)
 
-    def test_continuous_and_guard_consumers_remain_explicitly_unsupported(self):
+    def test_continuous_and_feedback_guard_consumers_remain_explicitly_unsupported(self):
         common=('@(initial_step) q=0.25; @(timer(1,0,1e-12)) q=1.25; '
                 "V(e,r)<+transition(q,0.25,0.5,0.5); V(y,r)<+laplace_nd(V(e,r),'{1},'{1,0.25});")
         for extra in ["V(z,r)<+idt(V(y,r),0);",'@(cross(V(y,r)-0.5,1,1e-8,1e-8)) q=2;']:

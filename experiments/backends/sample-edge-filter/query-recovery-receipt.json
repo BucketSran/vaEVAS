@@ -1,0 +1,1193 @@
+{
+  "schema_version": 1,
+  "scope": "PR131: local precision recovery for ordinary queries near transition-filter roots; original engineering contract unchanged",
+  "publication": {
+    "branch": "codex/filter-cross",
+    "pull_request": 131,
+    "merged": false,
+    "baseline": "4ee0959698e217372f3b69d8d9316431edc4f0d8",
+    "runtime_identity": {
+      "kernel_sha256": "6ce02dbfacc9d61eab905efa9e19aa11813366aac74eb4bb143ced2198e01dad",
+      "kernel_identity": {
+        "build_revision": null,
+        "identity_version": 1,
+        "ir_schema_version": 18,
+        "name": "evas-kernel",
+        "platform": {
+          "arch": "aarch64",
+          "os": "macos"
+        },
+        "request_protocol_version": null,
+        "version": "0.14.0"
+      },
+      "source_revision": "4ee0959698e217372f3b69d8d9316431edc4f0d8",
+      "runtime_sources": {
+        "evas/rust_core/Cargo.lock": "4ac34a67969cbd69004115347a99e1d1ad71b577ca98d5dacdadd707aedadd01",
+        "evas/rust_core/Cargo.toml": "68fbb7ba79e5964b59a4e00cf36c4f42f7311dba99e3fed6943366f599bf7e3f",
+        "evas/rust_core/ir/Cargo.toml": "ee626ead9fe9620b9b48c956bef41d283578683d25bc879b20f25730adf325f0",
+        "evas/rust_core/ir/src/lib.rs": "70ebd262d884abbda78c4625b7edc26b5b1e04f29568937c05618c127c9f7006",
+        "evas/rust_core/ir/tests/transport.rs": "4199c2369bf3ed486612d8bbe1fbc46ee64e75409eb834abc6e15cfa74078cf1",
+        "evas/rust_core/src/absdelay.rs": "e0f6144590856b3a95d03a59af58e9032309fa1e316a41c063a40ec9f73109c7",
+        "evas/rust_core/src/accuracy.rs": "03fd769af88f73072a1964a942b9b9d1503196c56c5c4cb48cec7f21ee084d35",
+        "evas/rust_core/src/affine_bounds.rs": "b0faf6ee361cac3ab3a7b8a2d80992bece76a3457d4a08a48be81755cfe01c6b",
+        "evas/rust_core/src/analog.rs": "d4105a0e850f98d4c10ded8c7deacdcc45c960ed2a2a3c1547ea2cf2a5a687c0",
+        "evas/rust_core/src/assembly.rs": "52b5a1a7411b846c2c07d0c26c0fabca0641c3980b4b34a6bcd302e84401d9cb",
+        "evas/rust_core/src/batch.rs": "a41166d5cd9a6fab300d48197bc4093145885d19044b398e48095fdb35473688",
+        "evas/rust_core/src/continuous.rs": "95170f879a3652be0e9a430fc93ffd3fefa7696412bf7025415586f17f7d5787",
+        "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+        "evas/rust_core/src/continuous_history.rs": "ec6f68c45c3c6c40e4c674ed8c47302c2b47f498f6e678d7105c9a83c06fda35",
+        "evas/rust_core/src/continuous_initialization.rs": "5145a36a517b9ba3ace0fb6241ebbd615fef6004b50aeb5dc99d76ff295874a8",
+        "evas/rust_core/src/continuous_runtime.rs": "70f93a4f9b046b53c3d0abb1a4b92ad66a3645e7f4272f6f9a21a66e87e49fcc",
+        "evas/rust_core/src/diagnostics.rs": "bd0feac3399c8b43bf14de204677d58a160d3648416242a76d3eae46e0dea699",
+        "evas/rust_core/src/dynamic_roots.rs": "30146ae2e527e12c6596aff3b0dad3cd172def2af80d27e3b92131032cb6a827",
+        "evas/rust_core/src/event_accuracy.rs": "d2b621cb23080ee219b5272fc489010dfc6a4ba15930fd8e6d94f0428e253dd6",
+        "evas/rust_core/src/event_conditions.rs": "8b0c00b449cf1b27326972a95b97a5f5c911b4f56cd6d30dec7f8905312ab30f",
+        "evas/rust_core/src/events.rs": "c30446f5becb7ca185645837592a868121df5d4aaee6aa2adacdd5aac8f30e28",
+        "evas/rust_core/src/exact_affine_history.rs": "768c7509b3d76e901e12b166291d0bb8ae7f282791fa513a72f087b07100f161",
+        "evas/rust_core/src/exact_source.rs": "e053bfe48102c80dcf7806d45e5cbe1b472eb4cce7b94e040e7c9cc7c220d15a",
+        "evas/rust_core/src/exact_time.rs": "68e8415109ff7138b27195fe8d32f686441c61d4b012e774e31ede58e5eef824",
+        "evas/rust_core/src/expression.rs": "99024d0b32c2348b6d32db2dc7a27122ff16728c3d4dc476bde6d9f8cb766ffb",
+        "evas/rust_core/src/filter_refinement.rs": "f562725839a5222b3d60c3fb17ac417824d11a6ae95e2fbe763104e5ef813659",
+        "evas/rust_core/src/guard_trajectory.rs": "a84062cc4cf713d60911cc3f4d9339de5960e3f2c1243c91839a2eb05ad3b49f",
+        "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+        "evas/rust_core/src/idtmod.rs": "c57464703c5332f4a5ea827e8a6f85799f57c7d9a6655351475684b3fdeda190",
+        "evas/rust_core/src/implicit_dynamics.rs": "663f81fd0b60f8634f1ec1b55ac322bc0f09cb69c32ed4cf47f56253ed425e95",
+        "evas/rust_core/src/initialization.rs": "7a0bf9345d0cb264ea766c9ff3c801d781948f1683474eb1e1a53f6abd1af365",
+        "evas/rust_core/src/input_clamp.rs": "4fc823c7de00e10fd49a45422d3c807d25095f0d4b095500f7de06780341521d",
+        "evas/rust_core/src/interval.rs": "89a83ce96dbf6cdc217a046c9885ca0cf580c6e6f932c36f0195120d49e53f56",
+        "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
+        "evas/rust_core/src/ir.rs": "cc687fdd3d78e908644537aa8194d3a3ccb3dcb5b88c11a78d7b3e640ad97ea0",
+        "evas/rust_core/src/laplace.rs": "04d0bd3fb6e3517174bdb9e3ddb93ee9d448a83ff46b8112ab98410d68b9848e",
+        "evas/rust_core/src/lib.rs": "21f8a576f428b217f89d98ab9b061de1b1af97a218f35672b49ca9baedbdfa20",
+        "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+        "evas/rust_core/src/linear/dense.rs": "00a1d9e1a9c5f933f765dd586ab9a8982073d270fed73ed7e602af858e732cad",
+        "evas/rust_core/src/linear/properties.rs": "d1a8b5ec069fef4f621b99290b532f7563cb8f55a1ba2178a77877f60192ab7f",
+        "evas/rust_core/src/linear/refinement.rs": "8476ad2ea3f3698e3c4552f8ff785c00ff878caab584b157dbb80b9c282f32a8",
+        "evas/rust_core/src/linear/sparse.rs": "3914adce2368b027027c06240f160864af0f53de934c0b3285515114fe7aa869",
+        "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+        "evas/rust_core/src/linear.rs": "e0280cfcaaebd2449ab5e4474daf5cd19e6a9fbda5db53e14e5229fc81a4eb36",
+        "evas/rust_core/src/main.rs": "70626c73fa421340afcc53c025a220720b208657273ba3f5e20bc1e4c6e01c3c",
+        "evas/rust_core/src/nonlinear/continuation.rs": "6d0aabe1bb6563a32d4e920fabdefde881777a54b8dc2b4658de432347f6448a",
+        "evas/rust_core/src/nonlinear.rs": "1e535704fb6dc14a577496ed47315ddf6e5f887d6dfa2b62b78d9b7b3a275863",
+        "evas/rust_core/src/nonlinear_dynamics.rs": "78182dc3731e8ad7fa50f767948291e69720cabce5027e6d811d8d32e8b8954e",
+        "evas/rust_core/src/observation.rs": "a4bddbd4b5f336883909fe66fd5a5cf3e636fb6da265d8c7be05e48107fcee32",
+        "evas/rust_core/src/operators.rs": "22eecc0f054622d4be1b85fca78a6f7b27c5f185be9bec382b93163dd1b91b3b",
+        "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+        "evas/rust_core/src/portability.rs": "8a807dd498a87b7680c8c2dd605908a6a8a933bab2aa6f1b57844d0285a7229a",
+        "evas/rust_core/src/pwl.rs": "e14b98fc39bd719e1a7994630aad71a0ae8de2cb72e4433222d0bf92ca6e6d3a",
+        "evas/rust_core/src/refined_interval.rs": "4318428e2162b8154a825ae9680b397151f0e1ef9bd57206ef8bd6fdf898facf",
+        "evas/rust_core/src/reset_dependencies.rs": "d2adaba2e28d70511e0977c223ea7922b627c832e633b7f94360c951a6f0e3fa",
+        "evas/rust_core/src/schedule.rs": "92551e9747733743f179c594758831f5188f8d40ea8e96cdde6f3bf20e6e7fc7",
+        "evas/rust_core/src/settlement.rs": "2936275c2ccd13d1e28563307253ae629174236656364b86b5ad61a66fcc1e13",
+        "evas/rust_core/src/settlement_bounds.rs": "bfe60ee404fb45461a4ebd6bfd6b8048d8fc6559718e98020055ee1b33b1aa42",
+        "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+        "evas/rust_core/src/solver.rs": "b2ba26829db2d0fc94e329b375ed13b803510456b3131371ec4688a4dfcd0eba",
+        "evas/rust_core/src/solver_cache_tests.rs": "727acd4fc9084bb6e546a8aa70e2f1e5bd476d27265f5198c5cdd08b0a7fd3fa",
+        "evas/rust_core/src/state_space.rs": "c7e8ff82302cb87c6ba150e5def9d1cf9eba15e23657e2f2686eb067ce4ef74c",
+        "evas/rust_core/src/strobe.rs": "2cb7db0c54f6cf4656186343f764399132a9704f8b65552b00e737c9108c16af",
+        "evas/rust_core/src/transient.rs": "3d7fbe5b70ff53569a232926f276dd0bbccbe1846e7aba69d77117c146458a01",
+        "evas/rust_core/src/transient_condition_tests.rs": "9b041e9ae55b4094f115e215ac5bea81782c23f6ca29aabdf2acfa80167e69d0",
+        "evas/rust_core/src/transient_event_acceptance.rs": "33001015b722680f1dfb03119a9fdcc46807b32cc129068f8a74346fc84382f8",
+        "evas/rust_core/src/transient_history_calendar.rs": "ee914bd940d94ffab3d397ca3069d849d5c895ca122edc35c2a3ca4339e7e585",
+        "evas/rust_core/src/transient_idt_tests.rs": "dfd640a90830437089e8389eedf7e354bd20253b47e3dcc7d3226dd1a496ee33",
+        "evas/rust_core/src/transient_lifecycle_tests.rs": "74af82b4c2156266f53b044700a5ce8129acd962d8510cfd4279d8ca01958a36",
+        "evas/rust_core/src/transient_root_refinement.rs": "f7797fb958808892e6b2474ff1d94497183fa32ddb85ea866687e13cfbb751a3",
+        "evas/rust_core/src/transient_window_tests.rs": "08285e435c4e7df5b2a31ac259347840e72a63ef7941953ee850655fdc1a7909",
+        "evas/rust_core/src/transition.rs": "844fa6057f7286f58323b42131c8054abae833194cbcc04c4ed79ea6e50f0958",
+        "evas/rust_core/src/transition_filter.rs": "93aca7d6f0661884bb66e1ede8d8579c9b4754874cf06bb71131e9c2d30e46c4",
+        "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+        "evas/src/evas/__main__.py": "f98567eedc0052dddf00fd13f5380e996409f72aed9fbf09702d5bf173fae1d5",
+        "evas/src/evas/array_elaboration.py": "4faf4543a735ad19c89bbbc760d39f6860089d854b7f24922edaa390cf20df0b",
+        "evas/src/evas/diagnostics.py": "e787f6c1b0ab3939fa37c15ec6da550f59520c6f99edf29e9c53784f31e3308f",
+        "evas/src/evas/elaboration.py": "ff4ffb36428b7a5fd26a646b31788e2699de050c0a2ec6935d807ed79286fbd8",
+        "evas/src/evas/errors.py": "1a361344eb6678f6d82a91f3c356513025146bf468e9d3f5d4b593a9c04b3c08",
+        "evas/src/evas/frontend.py": "55d6f9724c71ffb3938d4e6eb8ff425d1c85d66808e6bbc6492593640e30ae19",
+        "evas/src/evas/hierarchy.py": "c277bc21cbe987f7cb427a2955b6b20588d5c42ae09bbc62853dab7bdba4138f",
+        "evas/src/evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+        "evas/src/evas/instance_compiler.py": "030b7172416a21a273eefe18e03ea2ce19bbc3ebd95fa27c143459f898cc0e6a",
+        "evas/src/evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+        "evas/src/evas/ir.py": "ec167d9f02ddde4bff1dbf7b24b903d4a178822cfc0a2749638e753b1398f8cf",
+        "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+        "evas/src/evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+        "evas/src/evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+        "evas/src/evas/lowering.py": "3df0c3f873285e45aa9de85863ca7d42b4c1cffc205a24164700b953b1874c71",
+        "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+        "evas/src/evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+        "evas/src/evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+        "evas/src/evas/node_elaboration.py": "2b68adb511d792c349e40f98fa71933402f1569467c8e2cb6e6e9125773e7658",
+        "evas/src/evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+        "evas/src/evas/preprocessor.py": "83d54364c2cbc993da5d749bb3582f4ef5de110deff5f23a41ad9af4d928478c",
+        "evas/src/evas/protocol.py": "9dacd13cfd98a803e3e45a927c98035944a736a0930da5a33d6d202a8ebbe3bb",
+        "evas/src/evas/query.py": "2fda97253f88c236d308d795aeae52a00ff5cfbb458f87a4bcfdc3751fae4f64",
+        "evas/src/evas/results.py": "91bc585e4ee9a871fce7da38beebebe71218f0b59c7dda57fec904a9994810bd",
+        "evas/src/evas/runtime.py": "e467f9de3635dcd23813771ea528e57fa35dd98c36dce893b35f920f278c7c0f",
+        "evas/src/evas/scs.py": "6258b0b03294d399ad7cd0ad42e6513a19948d216e25333512a5b9b2695c6d6d",
+        "evas/src/evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
+        "evas/src/evas/standard_headers.py": "9f190d1b17d6a341cecdba14f8a43771f7754d2e0de1403d59e4432849ec7e30",
+        "evas/src/evas/strobe.py": "18d6b1911436459a7a19ee100d309636f5d0d75acd927b228219367098f19c80",
+        "evas/src/evas/syntax.py": "0808529711ffc52e04557d0adfad8452f12e3073132699c5afe8a59b6f602605"
+      },
+      "driver_sha256": "0c12627ccaf206335a7db615f48feb57dda5172aab9e24a855655079ec53763b",
+      "reference_manifest_sha256": "0c73d0287007d6ea3268cf588f0ecf63cd381d5a31ea5d75395be724bed6d8ac",
+      "selection": "first qualified engineering pass per case in frozen profile order; strict timestamp-coverage status retained separately"
+    },
+    "note": "Working-tree build is identified by source hashes; baseline is not the modified runtime commit."
+  },
+  "acceptance": {
+    "voltage_budget_V": 0.0001,
+    "input_budget_V": 1e-08,
+    "time_budget_s": 5e-12,
+    "checker": {
+      "evas/validation/sample_edge_filter/filter_cross.py": "47f5de9e980b257308c49b3c00233961a17fe29b195df90fac7dbb4c41310f4c",
+      "evas/validation/sample_edge_filter/contract.py": "b34319644d00238316a4a898ba125f7a6ada2f88656a14a8966ecfc8d8eabb90"
+    },
+    "boundary_policy": "Each backend is checked against the unchanged independent engineering contract. Counter-side differences inside its event window are retained, not fitted away. Nominal binary64 root centers are not exact transcendental roots."
+  },
+  "before": {
+    "ordinary_center_requests": "4/4 rejected at baseline; see recovery-red.log",
+    "spectre_native_grid_requests": "4/4 rejected in original PR checkpoint",
+    "published_record": "filter-cross-receipt.json",
+    "red_log": {
+      "path": "runs/filter-cross-20261010/recovery-red.log",
+      "sha256": "7e222a51e48636cc2d97b01289f61b30e4419c13afd95096b85fba4ea1e515e5",
+      "availability": "local-only"
+    }
+  },
+  "ordinary_query_phase": {
+    "cases": 4,
+    "nominal_roots": 14,
+    "center_and_adjacent_float_checks": 42,
+    "oracle": "Fraction stimulus/transition polygon plus sequential Decimal ODE propagation at 80 and 110 decimal digits; independent of EVAS Taylor and slope-change sum",
+    "oracle_source_sha256": "21913df117080a2790d7db51c542e18a610472976ed577abb1ffdc7fab38f95d",
+    "requirements": [
+      "correct counter side",
+      "identical old solutions",
+      "identical event records"
+    ],
+    "independent_review": {
+      "path": "runs/filter-cross-20261010/review/recovery-spec.md",
+      "sha256": "63d9267f5c9162ff6efee4d6e1b8c25e426d07bd195d40f44b1343ef6c70950d",
+      "availability": "local-only"
+    },
+    "diagnostic_probe": {
+      "path": "runs/filter-cross-20261010/recovery-final-diagnostic.json",
+      "sha256": "87b45a259f14657b12d614a03788918c91b5ac54aaca46b8e0f5fa543211585f",
+      "availability": "local-only"
+    }
+  },
+  "new_spectre_execution": {
+    "cases": 4,
+    "profile": "tol",
+    "version": "21.1.0.509.isr12",
+    "new_observations": "Original engineering grid plus nominal root centers",
+    "requested": {
+      "reltol": 1e-08,
+      "vabstol": 1e-12,
+      "iabstol": 1e-15,
+      "maxstep_s": 3.125e-08,
+      "method": "traponly",
+      "errpreset": "conservative"
+    },
+    "effective": {
+      "reltol": 1e-09,
+      "vabstol": 1e-12,
+      "iabstol": 1e-15,
+      "maxstep_s": 3.1250000000000005e-08,
+      "method": "traponly"
+    },
+    "engineering_passed": 4,
+    "strict_observation_passed": 3,
+    "strict_observation_limit": "RESET missing 5 requested times at 16 ULP allowance; ~1.25e-16 s shifts retained",
+    "collection": {
+      "archive_sha256": "9ad2d00032fef5bfb67c6c7231d824b36c9c8219e315f5f7b98a6c7318e60a4d",
+      "verified_files": 139,
+      "remote_original_retained": true,
+      "availability": "local-only",
+      "returncode": 0
+    },
+    "raw_manifest": {
+      "path": "runs/filter-cross-recovery-20261011/collected/filter-cross-spectre/outputs/filter-cross-spectre/FILE_MANIFEST.json",
+      "sha256": "0c73d0287007d6ea3268cf588f0ecf63cd381d5a31ea5d75395be724bed6d8ac",
+      "availability": "local-only"
+    },
+    "execution_receipt": {
+      "path": "runs/filter-cross-recovery-20261011/collected/filter-cross-spectre/outputs/filter-cross-spectre/EXECUTION.json",
+      "sha256": "b7de9abbd0d9159b1e9a2e94e2cdfc55bab3aef3b7f2f7b52acc5af529ac149d",
+      "availability": "local-only"
+    },
+    "tool_identity": {
+      "path": "runs/filter-cross-recovery-20261011/collected/filter-cross-spectre/outputs/filter-cross-spectre/TOOL_IDENTITY.json",
+      "sha256": "abafc50cc20a1a65cb4e4e97a269e64bd6b820259975042dc7b0245a324c77a3",
+      "availability": "local-only"
+    },
+    "initial_infrastructure_failure": {
+      "path": "runs/filter-cross-recovery-20261011/spectre-dispatch.log",
+      "sha256": "f94802cd3e53190bbf07a29f2fb46f092cd359bfaf3ecf1c3db2f00efa661a6f",
+      "availability": "local-only"
+    },
+    "snapshot_repair": {
+      "returncode": 0,
+      "stdout": "2a49b047c8ec108924b2dab7f2a61262d80e32167189d61fa77506268af579cd\n",
+      "stderr": "",
+      "old_manifest_sha256": "00e1118533ca7ff4847370dff2bc0cc9ad827aff99781d379f66aaa43b0e48a9",
+      "new_manifest_sha256": "2a49b047c8ec108924b2dab7f2a61262d80e32167189d61fa77506268af579cd",
+      "reason": "Include transitive timer_report import dependencies; initial dispatch failed before simulator invocation."
+    },
+    "limits": {
+      "remote_serial": true,
+      "stage_timeout_s": 90,
+      "threads": 1,
+      "memory_bytes": 4294967296,
+      "output_file_bytes": 33554432,
+      "case_bytes": 268435456
+    },
+    "notes": "Initial missing Python dependency failed before simulator invocation; retry executed four Spectre cases. Remote source snapshot is an execution-tool snapshot, not a claim that its EVAS kernel was executed."
+  },
+  "paired_native_queries": {
+    "requests": 4,
+    "completed": 4,
+    "engineering_passed": 4,
+    "native_points": 14043,
+    "maximum_filter_pair_error_V": 4.566077223544518e-07,
+    "counter_side_differences": 5,
+    "all_counter_differences_within_original_window": true,
+    "records": [
+      {
+        "case": "SFC-TIMER",
+        "profile": "tol",
+        "reference_waveform_sha256": "e8fad699a22e04c19d935e769233be09eeef66e527b312a88e5b874eb5d33d7e",
+        "source_sha256": "804f51dc19ebc957803a8e4562a359a9985a795f0daafddd03c739e6152adbdb",
+        "times_sha256": "fa72b9984dc75db45a8baefaf5cc42a800aa628571227c6b7e151ccdf19a506f",
+        "points": 2964,
+        "reference_assessment": {
+          "status": "PASS",
+          "failures": [],
+          "maximum_errors_V": {
+            "u": 6.661338147750939e-16,
+            "clk": 4.912736883966318e-15,
+            "rst": 3.885780586188048e-15,
+            "ah": 2.7755575615628914e-17,
+            "ae": 2.1094237467877974e-15,
+            "af": 4.564562963715879e-07,
+            "as": 1.8314822874954118e-07
+          },
+          "event_brackets": [
+            {
+              "instance": "a",
+              "index": 1,
+              "lo_s": 9.999980000000001e-07,
+              "hi_s": 1e-06,
+              "nominal_s": 1e-06
+            },
+            {
+              "instance": "a",
+              "index": 2,
+              "lo_s": 2.999998e-06,
+              "hi_s": 3e-06,
+              "nominal_s": 3e-06
+            },
+            {
+              "instance": "a",
+              "index": 3,
+              "lo_s": 4.999998e-06,
+              "hi_s": 4.9999999999999996e-06,
+              "nominal_s": 4.9999999999999996e-06
+            },
+            {
+              "instance": "a",
+              "index": 4,
+              "lo_s": 6.999998e-06,
+              "hi_s": 7e-06,
+              "nominal_s": 7e-06
+            }
+          ],
+          "rows": 2964,
+          "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+          "cross_brackets": {
+            "a": [
+              {
+                "lo_s": 1.6510752391894544e-06,
+                "hi_s": 1.6510755209559602e-06,
+                "nominal_s": 1.6510752391894544e-06
+              },
+              {
+                "lo_s": 7.596128058938788e-06,
+                "hi_s": 7.596128500059086e-06,
+                "nominal_s": 7.596128058938788e-06
+              }
+            ]
+          }
+        },
+        "reference_strict_time_coverage": {
+          "status": "covered",
+          "missing_requested_times_s": [],
+          "reused_native_record": false,
+          "exact_float_mismatches": 10,
+          "allowance_s": 2.710505431213761e-20,
+          "maximum_nearest_distance_s": 1.6940658945086007e-21,
+          "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps"
+        },
+        "status": "waveform_available",
+        "assessment": {
+          "status": "PASS",
+          "failures": [],
+          "maximum_errors_V": {
+            "u": 7.216449660063518e-16,
+            "clk": 4.912736883966318e-15,
+            "rst": 3.885780586188048e-15,
+            "ah": 5.551115123125783e-16,
+            "ae": 3.2439329000766293e-15,
+            "af": 4.884981308350689e-15,
+            "as": 2.3052393327560594e-13
+          },
+          "event_brackets": [
+            {
+              "instance": "a",
+              "index": 1,
+              "lo_s": 9.999980000000001e-07,
+              "hi_s": 1e-06,
+              "nominal_s": 1e-06
+            },
+            {
+              "instance": "a",
+              "index": 2,
+              "lo_s": 2.999998e-06,
+              "hi_s": 3e-06,
+              "nominal_s": 3e-06
+            },
+            {
+              "instance": "a",
+              "index": 3,
+              "lo_s": 4.9999999999999996e-06,
+              "hi_s": 5.000000062506944e-06,
+              "nominal_s": 4.9999999999999996e-06
+            },
+            {
+              "instance": "a",
+              "index": 4,
+              "lo_s": 6.999998e-06,
+              "hi_s": 7e-06,
+              "nominal_s": 7e-06
+            }
+          ],
+          "rows": 2964,
+          "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+          "cross_brackets": {
+            "a": [
+              {
+                "lo_s": 1.6510732391894543e-06,
+                "hi_s": 1.6510752391894544e-06,
+                "nominal_s": 1.6510752391894544e-06
+              },
+              {
+                "lo_s": 7.596128058938788e-06,
+                "hi_s": 7.596128500059086e-06,
+                "nominal_s": 7.596128058938788e-06
+              }
+            ]
+          }
+        },
+        "response_sha256": "3a9d07b3101a3483b62fa7ecb7e2a098c30f45ee359af547777fcad6b464909f",
+        "maximum_pair_errors_V": {
+          "ah": 0.2999999999999995,
+          "ae": 3.9968028886505635e-15,
+          "af": 4.5645629725976633e-07,
+          "as": 0.3268010945267632
+        },
+        "cross_counter_disagreements": 1,
+        "cross_counter_differences": [
+          {
+            "time_s": 1.6510752391894544e-06,
+            "instance": "a",
+            "evas": 1.0,
+            "spectre": 0.0,
+            "within_original_time_budget": true
+          }
+        ]
+      },
+      {
+        "case": "SFC-RESET",
+        "profile": "tol",
+        "reference_waveform_sha256": "3f246945cd95d20f5776d6793180fac4189419b59242fdf2b94354bcb3999086",
+        "source_sha256": "4af1a184c0dd72c0421350610746f1bf52af13c6d65a719e3e5233e8ed85be2d",
+        "times_sha256": "355faecfc9b0c4715149d82d058f2facd921c01abe43149f0e1a2a2db7004865",
+        "points": 3304,
+        "reference_assessment": {
+          "status": "PASS",
+          "failures": [],
+          "maximum_errors_V": {
+            "u": 7.216449660063518e-16,
+            "clk": 4.85722573273506e-15,
+            "rst": 3.497202527569243e-15,
+            "ah": 8.125000672265514e-11,
+            "ae": 8.125033978956253e-11,
+            "af": 4.5660772091116186e-07,
+            "as": 5.930415036825565e-07
+          },
+          "event_brackets": [
+            {
+              "instance": "a",
+              "index": 1,
+              "lo_s": 9.99998e-07,
+              "hi_s": 1.000000000125e-06,
+              "nominal_s": 1e-06
+            },
+            {
+              "instance": "a",
+              "index": 2,
+              "lo_s": 2.249998e-06,
+              "hi_s": 2.250000000125e-06,
+              "nominal_s": 2.25e-06
+            },
+            {
+              "instance": "a",
+              "index": 3,
+              "lo_s": 2.999998e-06,
+              "hi_s": 3.000000000125e-06,
+              "nominal_s": 3e-06
+            },
+            {
+              "instance": "a",
+              "index": 4,
+              "lo_s": 4.999998e-06,
+              "hi_s": 5.0000000001250004e-06,
+              "nominal_s": 4.9999999999999996e-06
+            },
+            {
+              "instance": "a",
+              "index": 5,
+              "lo_s": 6.999998e-06,
+              "hi_s": 7.000000000125e-06,
+              "nominal_s": 7e-06
+            }
+          ],
+          "rows": 3304,
+          "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+          "cross_brackets": {
+            "a": [
+              {
+                "lo_s": 1.6510752391894544e-06,
+                "hi_s": 1.651075521010129e-06,
+                "nominal_s": 1.6510752391894544e-06
+              },
+              {
+                "lo_s": 3.222826355683216e-06,
+                "hi_s": 3.22282687137148e-06,
+                "nominal_s": 3.222826355683216e-06
+              },
+              {
+                "lo_s": 5.815593917333378e-06,
+                "hi_s": 5.8155943266732055e-06,
+                "nominal_s": 5.815593917333378e-06
+              },
+              {
+                "lo_s": 7.579552372490187e-06,
+                "hi_s": 7.579552981345419e-06,
+                "nominal_s": 7.579552372490187e-06
+              }
+            ]
+          }
+        },
+        "reference_strict_time_coverage": {
+          "status": "evidence_insufficient",
+          "missing_requested_times_s": [
+            1e-06,
+            2.25e-06,
+            3e-06,
+            4.9999999999999996e-06,
+            7e-06
+          ],
+          "reused_native_record": false,
+          "exact_float_mismatches": 9,
+          "allowance_s": 2.710505431213761e-20,
+          "maximum_nearest_distance_s": 1.2500088719105337e-16,
+          "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps"
+        },
+        "status": "waveform_available",
+        "assessment": {
+          "status": "PASS",
+          "failures": [],
+          "maximum_errors_V": {
+            "u": 7.216449660063518e-16,
+            "clk": 4.85722573273506e-15,
+            "rst": 3.497202527569243e-15,
+            "ah": 3.3306690738754696e-16,
+            "ae": 1.6653345369377348e-15,
+            "af": 2.886579864025407e-15,
+            "as": 1.4158674233044621e-12
+          },
+          "event_brackets": [
+            {
+              "instance": "a",
+              "index": 1,
+              "lo_s": 9.99998e-07,
+              "hi_s": 1.000000000125e-06,
+              "nominal_s": 1e-06
+            },
+            {
+              "instance": "a",
+              "index": 2,
+              "lo_s": 2.249998e-06,
+              "hi_s": 2.250000000125e-06,
+              "nominal_s": 2.25e-06
+            },
+            {
+              "instance": "a",
+              "index": 3,
+              "lo_s": 2.999998e-06,
+              "hi_s": 3.000000000125e-06,
+              "nominal_s": 3e-06
+            },
+            {
+              "instance": "a",
+              "index": 4,
+              "lo_s": 4.999998e-06,
+              "hi_s": 5.0000000001250004e-06,
+              "nominal_s": 4.9999999999999996e-06
+            },
+            {
+              "instance": "a",
+              "index": 5,
+              "lo_s": 6.999998e-06,
+              "hi_s": 7.000000000125e-06,
+              "nominal_s": 7e-06
+            }
+          ],
+          "rows": 3304,
+          "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+          "cross_brackets": {
+            "a": [
+              {
+                "lo_s": 1.6510752391894544e-06,
+                "hi_s": 1.651075521010129e-06,
+                "nominal_s": 1.6510752391894544e-06
+              },
+              {
+                "lo_s": 3.222826355683216e-06,
+                "hi_s": 3.22282687137148e-06,
+                "nominal_s": 3.222826355683216e-06
+              },
+              {
+                "lo_s": 5.815591917333379e-06,
+                "hi_s": 5.815593917333378e-06,
+                "nominal_s": 5.815593917333378e-06
+              },
+              {
+                "lo_s": 7.579552372490187e-06,
+                "hi_s": 7.579552981345419e-06,
+                "nominal_s": 7.579552372490187e-06
+              }
+            ]
+          }
+        },
+        "response_sha256": "e2ef3ec6357ec7a549431a4d1fad7ba5159b885c97718076e0a85e6fb33a18c0",
+        "maximum_pair_errors_V": {
+          "ah": 8.124978467805022e-11,
+          "ae": 8.125033978956253e-11,
+          "af": 4.566077223544518e-07,
+          "as": 0.32920696898966295
+        },
+        "cross_counter_disagreements": 1,
+        "cross_counter_differences": [
+          {
+            "time_s": 5.815593917333378e-06,
+            "instance": "a",
+            "evas": 3.0,
+            "spectre": 2.0,
+            "within_original_time_budget": true
+          }
+        ]
+      },
+      {
+        "case": "SFC-INTERRUPT",
+        "profile": "tol",
+        "reference_waveform_sha256": "00698ef4986021bed043c0f2b11c8496af80814e4b6a52fef27cc4c793bf8702",
+        "source_sha256": "0d93abff5ba5f099496694eacd7a10f3512b88a0a6d0c12c1ff4657d52845c41",
+        "times_sha256": "988f6aab0f4769472b85898bd71cb8b96365bb17d8bfaeb36d99567dc3bd6ab8",
+        "points": 3748,
+        "reference_assessment": {
+          "status": "PASS",
+          "failures": [],
+          "maximum_errors_V": {
+            "u": 7.771561172376096e-16,
+            "clk": 4.107825191113079e-15,
+            "rst": 4.218847493575595e-15,
+            "ah": 4.440892098500626e-16,
+            "ae": 8.881784197001252e-16,
+            "af": 3.3050125443356837e-07,
+            "as": 6.441906909016026e-07
+          },
+          "event_brackets": [
+            {
+              "instance": "a",
+              "index": 1,
+              "lo_s": 9.999980000000001e-07,
+              "hi_s": 1e-06,
+              "nominal_s": 1e-06
+            },
+            {
+              "instance": "a",
+              "index": 2,
+              "lo_s": 1.999998e-06,
+              "hi_s": 2e-06,
+              "nominal_s": 2e-06
+            },
+            {
+              "instance": "a",
+              "index": 3,
+              "lo_s": 2.999998e-06,
+              "hi_s": 3e-06,
+              "nominal_s": 3e-06
+            },
+            {
+              "instance": "a",
+              "index": 4,
+              "lo_s": 3.999998000000001e-06,
+              "hi_s": 4e-06,
+              "nominal_s": 4e-06
+            },
+            {
+              "instance": "a",
+              "index": 5,
+              "lo_s": 4.999998000000001e-06,
+              "hi_s": 4.9999999999999996e-06,
+              "nominal_s": 4.9999999999999996e-06
+            },
+            {
+              "instance": "a",
+              "index": 6,
+              "lo_s": 5.9999980000000005e-06,
+              "hi_s": 5.999999999999999e-06,
+              "nominal_s": 6e-06
+            },
+            {
+              "instance": "a",
+              "index": 7,
+              "lo_s": 6.999998e-06,
+              "hi_s": 7e-06,
+              "nominal_s": 7e-06
+            },
+            {
+              "instance": "a",
+              "index": 8,
+              "lo_s": 7.999998e-06,
+              "hi_s": 8e-06,
+              "nominal_s": 8e-06
+            }
+          ],
+          "rows": 3748,
+          "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+          "cross_brackets": {
+            "a": [
+              {
+                "lo_s": 2.167263580791722e-06,
+                "hi_s": 2.1672639729596097e-06,
+                "nominal_s": 2.167263580791722e-06
+              },
+              {
+                "lo_s": 2.5477577706120884e-06,
+                "hi_s": 2.547758575850452e-06,
+                "nominal_s": 2.5477577706120884e-06
+              },
+              {
+                "lo_s": 4.200526942202902e-06,
+                "hi_s": 4.200527411999982e-06,
+                "nominal_s": 4.200526942202902e-06
+              },
+              {
+                "lo_s": 4.430462183172663e-06,
+                "hi_s": 4.430462632007792e-06,
+                "nominal_s": 4.430462183172663e-06
+              }
+            ]
+          }
+        },
+        "reference_strict_time_coverage": {
+          "status": "covered",
+          "missing_requested_times_s": [],
+          "reused_native_record": false,
+          "exact_float_mismatches": 15,
+          "allowance_s": 2.710505431213761e-20,
+          "maximum_nearest_distance_s": 2.541098841762901e-21,
+          "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps"
+        },
+        "status": "waveform_available",
+        "assessment": {
+          "status": "PASS",
+          "failures": [],
+          "maximum_errors_V": {
+            "u": 8.049116928532385e-16,
+            "clk": 4.107825191113079e-15,
+            "rst": 4.218847493575595e-15,
+            "ah": 1.4432899320127035e-15,
+            "ae": 4.107825191113079e-15,
+            "af": 3.9968028886505635e-15,
+            "as": 5.3469451088972164e-12
+          },
+          "event_brackets": [
+            {
+              "instance": "a",
+              "index": 1,
+              "lo_s": 9.999980000000001e-07,
+              "hi_s": 1e-06,
+              "nominal_s": 1e-06
+            },
+            {
+              "instance": "a",
+              "index": 2,
+              "lo_s": 1.999998e-06,
+              "hi_s": 2e-06,
+              "nominal_s": 2e-06
+            },
+            {
+              "instance": "a",
+              "index": 3,
+              "lo_s": 2.999998e-06,
+              "hi_s": 3e-06,
+              "nominal_s": 3e-06
+            },
+            {
+              "instance": "a",
+              "index": 4,
+              "lo_s": 3.999998000000001e-06,
+              "hi_s": 4e-06,
+              "nominal_s": 4e-06
+            },
+            {
+              "instance": "a",
+              "index": 5,
+              "lo_s": 4.9999999999999996e-06,
+              "hi_s": 5.000000062506944e-06,
+              "nominal_s": 4.9999999999999996e-06
+            },
+            {
+              "instance": "a",
+              "index": 6,
+              "lo_s": 5.999999999999999e-06,
+              "hi_s": 6.000002e-06,
+              "nominal_s": 6e-06
+            },
+            {
+              "instance": "a",
+              "index": 7,
+              "lo_s": 6.999998e-06,
+              "hi_s": 7e-06,
+              "nominal_s": 7e-06
+            },
+            {
+              "instance": "a",
+              "index": 8,
+              "lo_s": 7.999998e-06,
+              "hi_s": 8e-06,
+              "nominal_s": 8e-06
+            }
+          ],
+          "rows": 3748,
+          "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+          "cross_brackets": {
+            "a": [
+              {
+                "lo_s": 2.167263580791722e-06,
+                "hi_s": 2.1672639729596097e-06,
+                "nominal_s": 2.167263580791722e-06
+              },
+              {
+                "lo_s": 2.5477577706120884e-06,
+                "hi_s": 2.547758575850452e-06,
+                "nominal_s": 2.5477577706120884e-06
+              },
+              {
+                "lo_s": 4.200524942202902e-06,
+                "hi_s": 4.200526942202902e-06,
+                "nominal_s": 4.200526942202902e-06
+              },
+              {
+                "lo_s": 4.430460183172664e-06,
+                "hi_s": 4.430462183172663e-06,
+                "nominal_s": 4.430462183172663e-06
+              }
+            ]
+          }
+        },
+        "response_sha256": "c456ad22aea37107c3fb3eeef1e90632058bba7f4a578b38858a230bc8bcd103",
+        "maximum_pair_errors_V": {
+          "ah": 0.8499999999999984,
+          "ae": 3.4416913763379853e-15,
+          "af": 3.305012548360242e-07,
+          "as": 0.6177589598067034
+        },
+        "cross_counter_disagreements": 2,
+        "cross_counter_differences": [
+          {
+            "time_s": 4.200526942202902e-06,
+            "instance": "a",
+            "evas": 3.0,
+            "spectre": 2.0,
+            "within_original_time_budget": true
+          },
+          {
+            "time_s": 4.430462183172663e-06,
+            "instance": "a",
+            "evas": 4.0,
+            "spectre": 3.0,
+            "within_original_time_budget": true
+          }
+        ]
+      },
+      {
+        "case": "SFC-ISOLATION",
+        "profile": "tol",
+        "reference_waveform_sha256": "c6db1c9518b70b098e576c1b3b936704eb09fce20130a6c839846b44f08de672",
+        "source_sha256": "c1db668ce11fa5f6cc577e8815d67522e89a735790a2a03c1643538ef92fddcc",
+        "times_sha256": "46c6149220ea2dee5aba9135695cbc870ce73888e34ec4f825262e977d4ffab5",
+        "points": 4027,
+        "reference_assessment": {
+          "status": "PASS",
+          "failures": [],
+          "maximum_errors_V": {
+            "u": 8.326672684688674e-16,
+            "clk": 4.052314039881821e-15,
+            "rst": 3.4416913763379853e-15,
+            "ah": 2.7755575615628914e-17,
+            "ae": 1.0798653637955624e-15,
+            "af": 2.991125320761512e-07,
+            "bh": 1.5612511283791264e-16,
+            "be": 3.608224830031759e-16,
+            "bf": 4.1874913758732646e-08,
+            "as": 1.8275046931304217e-07,
+            "bs": 1.3078364624607985e-07
+          },
+          "event_brackets": [
+            {
+              "instance": "a",
+              "index": 1,
+              "lo_s": 9.999980000000001e-07,
+              "hi_s": 1e-06,
+              "nominal_s": 1e-06
+            },
+            {
+              "instance": "a",
+              "index": 2,
+              "lo_s": 2.999998e-06,
+              "hi_s": 3e-06,
+              "nominal_s": 3e-06
+            },
+            {
+              "instance": "a",
+              "index": 3,
+              "lo_s": 4.999998e-06,
+              "hi_s": 4.9999999999999996e-06,
+              "nominal_s": 4.9999999999999996e-06
+            },
+            {
+              "instance": "a",
+              "index": 4,
+              "lo_s": 6.999998e-06,
+              "hi_s": 7e-06,
+              "nominal_s": 7e-06
+            },
+            {
+              "instance": "b",
+              "index": 1,
+              "lo_s": 1.499998e-06,
+              "hi_s": 1.5e-06,
+              "nominal_s": 1.5e-06
+            },
+            {
+              "instance": "b",
+              "index": 2,
+              "lo_s": 4.4999980000000005e-06,
+              "hi_s": 4.5e-06,
+              "nominal_s": 4.5e-06
+            },
+            {
+              "instance": "b",
+              "index": 3,
+              "lo_s": 7.499998e-06,
+              "hi_s": 7.499999999999999e-06,
+              "nominal_s": 7.499999999999999e-06
+            }
+          ],
+          "rows": 4027,
+          "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+          "cross_brackets": {
+            "a": [
+              {
+                "lo_s": 1.6510752391894544e-06,
+                "hi_s": 1.6510755203440225e-06,
+                "nominal_s": 1.6510752391894544e-06
+              },
+              {
+                "lo_s": 7.596128058938788e-06,
+                "hi_s": 7.596128497247974e-06,
+                "nominal_s": 7.596128058938788e-06
+              }
+            ],
+            "b": [
+              {
+                "lo_s": 2.1494057509901896e-06,
+                "hi_s": 2.1494059144697477e-06,
+                "nominal_s": 2.1494057509901896e-06
+              },
+              {
+                "lo_s": 5.285662979475345e-06,
+                "hi_s": 5.28566325401143e-06,
+                "nominal_s": 5.285662979475345e-06
+              }
+            ]
+          }
+        },
+        "reference_strict_time_coverage": {
+          "status": "covered",
+          "missing_requested_times_s": [],
+          "reused_native_record": false,
+          "exact_float_mismatches": 12,
+          "allowance_s": 2.710505431213761e-20,
+          "maximum_nearest_distance_s": 1.6940658945086007e-21,
+          "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps"
+        },
+        "status": "waveform_available",
+        "assessment": {
+          "status": "PASS",
+          "failures": [],
+          "maximum_errors_V": {
+            "u": 8.326672684688674e-16,
+            "clk": 4.052314039881821e-15,
+            "rst": 3.4416913763379853e-15,
+            "ah": 5.551115123125783e-16,
+            "ae": 3.3558225642771333e-15,
+            "af": 4.884981308350689e-15,
+            "bh": 1.8388068845354155e-16,
+            "be": 5.620504062164855e-16,
+            "bf": 5.967448757360216e-16,
+            "as": 2.3052393327560594e-13,
+            "bs": 1.2224943279903755e-12
+          },
+          "event_brackets": [
+            {
+              "instance": "a",
+              "index": 1,
+              "lo_s": 9.999980000000001e-07,
+              "hi_s": 1e-06,
+              "nominal_s": 1e-06
+            },
+            {
+              "instance": "a",
+              "index": 2,
+              "lo_s": 2.999998e-06,
+              "hi_s": 3e-06,
+              "nominal_s": 3e-06
+            },
+            {
+              "instance": "a",
+              "index": 3,
+              "lo_s": 4.9999999999999996e-06,
+              "hi_s": 5.000000062506944e-06,
+              "nominal_s": 4.9999999999999996e-06
+            },
+            {
+              "instance": "a",
+              "index": 4,
+              "lo_s": 6.999998e-06,
+              "hi_s": 7e-06,
+              "nominal_s": 7e-06
+            },
+            {
+              "instance": "b",
+              "index": 1,
+              "lo_s": 1.499998e-06,
+              "hi_s": 1.5e-06,
+              "nominal_s": 1.5e-06
+            },
+            {
+              "instance": "b",
+              "index": 2,
+              "lo_s": 4.4999980000000005e-06,
+              "hi_s": 4.5e-06,
+              "nominal_s": 4.5e-06
+            },
+            {
+              "instance": "b",
+              "index": 3,
+              "lo_s": 7.499999999999999e-06,
+              "hi_s": 7.500000049999999e-06,
+              "nominal_s": 7.499999999999999e-06
+            }
+          ],
+          "rows": 4027,
+          "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+          "cross_brackets": {
+            "a": [
+              {
+                "lo_s": 1.6510732391894543e-06,
+                "hi_s": 1.6510752391894544e-06,
+                "nominal_s": 1.6510752391894544e-06
+              },
+              {
+                "lo_s": 7.596128058938788e-06,
+                "hi_s": 7.596128497247974e-06,
+                "nominal_s": 7.596128058938788e-06
+              }
+            ],
+            "b": [
+              {
+                "lo_s": 2.1494057509901896e-06,
+                "hi_s": 2.1494059144697477e-06,
+                "nominal_s": 2.1494057509901896e-06
+              },
+              {
+                "lo_s": 5.285662979475345e-06,
+                "hi_s": 5.28566325401143e-06,
+                "nominal_s": 5.285662979475345e-06
+              }
+            ]
+          }
+        },
+        "response_sha256": "e18f1aec78ffa1fe92abf38ee4d6c87f33a3c178ac0daa7dca69f13aa3fc4e69",
+        "maximum_pair_errors_V": {
+          "ah": 0.2999999999999995,
+          "ae": 2.4147350785597155e-15,
+          "af": 2.991125329643296e-07,
+          "as": 0.3268010945267632,
+          "bh": 0.08750000000000024,
+          "be": 5.273559366969494e-16,
+          "bf": 4.1874913883632736e-08,
+          "bs": 1.3078242375175186e-07
+        },
+        "cross_counter_disagreements": 1,
+        "cross_counter_differences": [
+          {
+            "time_s": 1.6510752391894544e-06,
+            "instance": "a",
+            "evas": 1.0,
+            "spectre": 0.0,
+            "within_original_time_budget": true
+          }
+        ]
+      }
+    ],
+    "material_manifest": {
+      "path": "runs/filter-cross-20261010/native-pairs-recovery-final2/FILE_MANIFEST.json",
+      "sha256": "be7c1974b3edd8c2c37e71d9dca7ccbc92fa1e05b1fb4a99744130947841712e",
+      "availability": "local-only"
+    },
+    "raw_availability": "local-only",
+    "interpretation": "Same unmodified Spectre native timestamps; EVAS ordinary queries, not strobe receipts. Discontinuous held/sampled nodes retain large raw pair errors inside event windows."
+  },
+  "original_fixed_grid_replay": {
+    "requests": 16,
+    "engineering_passed": 16,
+    "identical_full_responses": 16,
+    "results": {
+      "path": "runs/filter-cross-20261010/recovery-fixed-replay-final/RESULTS.json",
+      "sha256": "35247d8768b3820ace90ad30a732995cd63bfa043083e6cba4c214113ebad082",
+      "availability": "local-only"
+    },
+    "source_identity": {
+      "path": "runs/filter-cross-20261010/recovery-fixed-replay-final/IDENTITY.json",
+      "sha256": "967c74d4eaa764da0101de6eb60955692e4565d7fdd6e27bda6f99546912d033",
+      "availability": "local-only"
+    },
+    "reference_reuse": "All original model/stimulus/settings/observations unchanged; historical Spectre 8/16 engineering and 4/16 strict combined verdicts remain unchanged."
+  },
+  "checks": {
+    "rust": {
+      "path": "runs/filter-cross-20261010/recovery-rust-final.log",
+      "sha256": "2c0143e60e07e5eaf9f82ea71bf1dbcc3929f9d9c1e8177064a0f14ceb42f16e",
+      "availability": "local-only",
+      "passed": 237,
+      "ignored": 1
+    },
+    "mapped_python": {
+      "path": "runs/filter-cross-20261010/recovery-mapped-final.log",
+      "sha256": "16b2cb4c0e1e05084d699ffa576b1c5d0a9da3f28be0991e9c9f19fbfefa298d",
+      "availability": "local-only",
+      "passed": 178,
+      "note": "Completed on unchanged production code; binary was rebuilt during suite after moving only a cfg(test) helper. Fixed-grid and native replay above both use final binary. Final CI must rebuild and run complete regression at published head."
+    },
+    "clippy": {
+      "path": "runs/filter-cross-20261010/recovery-clippy-r2.log",
+      "sha256": "858948ed83236449e69c9ca509ffd16a0b684215e386b9082de299ff4691153f",
+      "availability": "local-only"
+    },
+    "checker_calibration": {
+      "path": "runs/filter-cross-20261010/recovery-calibration.log",
+      "sha256": "87be0e17bd2f6d37614f11427b351391aa73318410aa1947a8e89a88166c32e3",
+      "availability": "local-only",
+      "passed": 6
+    },
+    "experiment_tools": {
+      "path": "runs/filter-cross-20261010/recovery-runner-tests.log",
+      "sha256": "9ee3bd69aa4eb1e85c79d01a723ce33dcd4c6bf5271ea9797054c8b7248d3082",
+      "availability": "local-only",
+      "passed": 31
+    },
+    "workspace": {
+      "path": "runs/filter-cross-20261010/workspace-recovery-final.log",
+      "sha256": "6168c034df0ae8eab28d955ea370e3491b997a2d5cee0777f8ba56958e70a878",
+      "availability": "local-only"
+    },
+    "validation_version": {
+      "path": "runs/filter-cross-20261010/recovery-version-check.log",
+      "sha256": "9242b9c11dec33bf3663414e007b31c02350ea1ae9ea5101ca6daf1d318409b2",
+      "availability": "local-only"
+    }
+  },
+  "reviews": {
+    "astra": {
+      "path": "runs/filter-cross-20261010/review/recovery-astra.md",
+      "sha256": "49327a735e72b086dd7fad7716b5942fb37afe9ebf4229f8755817b71b45b972",
+      "availability": "local-only"
+    },
+    "standards": {
+      "path": "runs/filter-cross-20261010/review/recovery-standards.md",
+      "sha256": "c37b3004a3f0f09f9f1cd7798d28e5635eb1a2e56d0dbc3eda8c2a206b7a8c23",
+      "availability": "local-only"
+    },
+    "spec": {
+      "path": "runs/filter-cross-20261010/review/recovery-spec.md",
+      "sha256": "63d9267f5c9162ff6efee4d6e1b8c25e426d07bd195d40f44b1343ef6c70950d",
+      "availability": "local-only"
+    },
+    "glm": {
+      "report": {
+        "path": "runs/filter-cross-20261010/glm-recovery/review.md",
+        "sha256": "70e37ea904c95aa1ec61b98e948f93bc7a6fc1cfd47eb2a898ed199134f4682d",
+        "availability": "local-only"
+      },
+      "receipt": {
+        "path": "runs/filter-cross-20261010/glm-recovery/receipt.json",
+        "sha256": "993ad63a5dcc6d0648be8bfced318a44692cfd06e508230b5416ebb6fa9f0205",
+        "availability": "local-only"
+      },
+      "actual_model": [
+        "glm-5.3"
+      ],
+      "actual_turns": 2,
+      "completed": true,
+      "scope": "Static code review; not simulator execution.",
+      "disposition": {
+        "path": "runs/filter-cross-20261010/glm-recovery/disposition.md",
+        "sha256": "aef3b5b9b6bded6e129771fe5eccca7be18b687d9936b6e3e775a6e86f7d1430",
+        "availability": "local-only"
+      },
+      "unresolved_scope": "Optional source proof loss and per-cause diagnostics remain limited; no wrong accepted phase demonstrated."
+    },
+    "resolved_findings": [
+      "Stop ramp when new target equals current ramp value",
+      "Keep final ordinary enclosure for assignments that read same-time reset operators"
+    ],
+    "final_notes": "Test-only helper placement changed after numerical review; original strobe engineering grid retained and a rejection regression added. Numerical production behavior unchanged."
+  },
+  "remaining_limits": [
+    "Atomic causal-cluster strobe remains unsupported even when ordinary phase queries can succeed.",
+    "Missing source provenance, preserved physical uncertainty, unproved ordering, precision/resource limits may still prevent a unique phase proof.",
+    "No feedback that changes filter input, high-order cascade, nested sine or universal exact-root support claimed.",
+    "Full-time error proof and full boundary-side equality with Spectre not claimed."
+  ],
+  "canonical_trail": {
+    "path": "runs/filter-cross-20261010/decisions.tsv",
+    "sha256": "5ee69921adbc0fb745863d1b79a9c3620a9826f2728d28c4510ac3a82c706846",
+    "availability": "local-only"
+  }
+}

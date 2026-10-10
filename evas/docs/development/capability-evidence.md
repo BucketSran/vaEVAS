@@ -52,3 +52,10 @@
 补充 TIMER、EVENT-ORDER、TRANSITION、DYNAMICS、COMPOSE、QUALIFICATION。
 原 12 配置在对应修复的运行快照中重新通过；以强制点回执验收，不把普通查询提升为接受帧。
 旧拒绝及 Spectre 请求/原生时间偏差仍保留，完整原始数据为 local-only。
+
+2026-10-11 的[滤波输出触发 cross](../../../experiments/backends/sample-edge-filter/CROSS.md)
+补充 TIMER、CROSS、EVENT-ORDER、TRANSITION、DYNAMICS、COMPOSE、QUALIFICATION 的有限工程证据。
+旧四个中心点和原生网格拒绝保留为修复前证据；[局部查询精度恢复](../../../experiments/backends/sample-edge-filter/CROSS.md#query-recovery)
+以独立 80/110 位参考验证 42 个近根点，并用四组新 Spectre 实测的 14,043 个原生时刻查询验证。
+原预算不变，事件簇内 strobe 拒绝和 Spectre 严格观测缺口仍保留；不宣称任意超越根可精确判侧。
+源码、实际设置和所有配置由报告收据绑定；该扩展随本分支交付，尚未合入 main。

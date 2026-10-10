@@ -346,6 +346,99 @@ impl Filter {
             hi: hull.hi.min(local.hi),
         })
     }
+    /// A positive-time-constant filter remains continuous when its forcing
+    /// changes. Bound its derivative with the original differential equation,
+    /// including every possible parent activation in the queried interval.
+    pub(crate) fn guard_range(&self, parent: &Transition, time: I) -> Result<(I, I), Error> {
+        // Past observations must use the parent snapshot that generated that
+        // history, including uncertain activation prefixes. The current parent
+        // only describes the current/future epoch.
+        if let Some(prefix) = &self.prefix {
+            if time.lo <= prefix.end && time.hi >= prefix.start {
+                let span = I {
+                    lo: time.lo.max(prefix.start),
+                    hi: time.hi.min(prefix.end),
+                };
+                let value = prefix.bounds(span, self.tau)?;
+                let mut result = (value, (prefix.forcing - value) / self.tau);
+                if time.lo < prefix.start {
+                    let prior = self.prior.as_ref().ok_or_else(|| {
+                        Error::new("event_resolution", "activation prefix has no prior history")
+                    })?;
+                    let old = prior.0.guard_range(
+                        &prior.1,
+                        I {
+                            lo: time.lo,
+                            hi: prefix.start,
+                        },
+                    )?;
+                    result = (result.0.hull(old.0), result.1.hull(old.1));
+                }
+                if time.hi > prefix.end {
+                    let mut after = self.clone();
+                    after.prefix = None;
+                    let new = after.guard_range(
+                        parent,
+                        I {
+                            lo: prefix.end,
+                            hi: time.hi,
+                        },
+                    )?;
+                    result = (result.0.hull(new.0), result.1.hull(new.1));
+                }
+                return Ok(result);
+            }
+        }
+        if time.lo < self.time {
+            let prior = self.prior.as_ref().ok_or_else(|| {
+                Error::new(
+                    "event_resolution",
+                    "filter observation precedes retained history",
+                )
+            })?;
+            let old = prior.0.guard_range(
+                &prior.1,
+                I {
+                    lo: time.lo,
+                    hi: time.hi.min(self.time),
+                },
+            )?;
+            return if time.hi <= self.time {
+                Ok(old)
+            } else {
+                let new = self.guard_range(
+                    parent,
+                    I {
+                        lo: self.time,
+                        hi: time.hi,
+                    },
+                )?;
+                Ok((old.0.hull(new.0), old.1.hull(new.1)))
+            };
+        }
+        let output = self.range(parent, time)?;
+        let mut forcing = parent.clone();
+        forcing.advance_time(time.lo)?;
+        let input = self.gain
+            * (self.projection.coefficient * forcing.forcing_range(time)
+                + self.projection.constant);
+        Ok((output, (input - output) / self.tau))
+    }
+    pub(super) fn refined_from(
+        &self,
+        proof: &super::filter_refinement::Provenance,
+        parent: usize,
+        time: f64,
+    ) -> Option<crate::refined_interval::Bounds> {
+        proof.filter(
+            parent,
+            time,
+            self.gain,
+            self.tau,
+            self.projection.coefficient,
+            self.projection.constant,
+        )
+    }
     pub(crate) fn same_history(&self, other: &Self) -> bool {
         self.time == other.time
             && self.output == other.output
@@ -364,6 +457,62 @@ impl Filter {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn guard_derivative_encloses_delayed_signed_ramp_without_mutating_history() {
+        for gain in [-2., 1.] {
+            let mut parent = Transition::new(0.25, 0.125, 0.5, 0.5).unwrap();
+            let initial = Filter::new(
+                Projection {
+                    parent: 0,
+                    coefficient: I::ONE,
+                    constant: I::ZERO,
+                },
+                &parent,
+                &[gain],
+                &[1., 0.5],
+            )
+            .unwrap();
+            let history = initial.committed(&parent, 1.).unwrap();
+            parent.advance(1., 0.75).unwrap();
+            let before = parent.clone();
+            let accepted = history.clone();
+            for t in [1., 1.125, 1.25, 1.625, 2.] {
+                let (value, derivative) = history.guard_range(&parent, I::point(t)).unwrap();
+                let h: f64 = (t - 1.125).max(0.);
+                let (y, dy) = if h <= 0.5 {
+                    (0.25 + h + 0.5 * (-h / 0.5).exp_m1(), -(-h / 0.5).exp_m1())
+                } else {
+                    let tail = (-(h - 0.5) / 0.5).exp();
+                    (
+                        0.75 + (-0.5 + 0.5 * (-1_f64).exp()) * tail,
+                        (1. - (-1_f64).exp()) * tail,
+                    )
+                };
+                assert!(
+                    value.lo <= gain * y && gain * y <= value.hi,
+                    "{t}: {value:?}"
+                );
+                assert!(
+                    derivative.lo <= gain * dy && gain * dy <= derivative.hi,
+                    "{t}: {derivative:?}, expected {}",
+                    gain * dy
+                );
+            }
+            assert!(history.same_history(&accepted));
+            assert!(parent == before);
+            // Invalid prediction must also leave the same accepted history reusable.
+            assert!(history
+                .guard_range(&parent, I::point(f64::INFINITY))
+                .is_err());
+            assert!(history.same_history(&accepted));
+            assert!(parent == before);
+            assert_eq!(
+                history.guard_range(&parent, I::point(2.)).unwrap(),
+                accepted.guard_range(&before, I::point(2.)).unwrap()
+            );
+        }
+    }
 
     #[test]
     fn zero_delay_event_retains_filter_integral_before_execution_representative() {
@@ -548,5 +697,99 @@ mod tests {
             b.bounds(&parent, 0.).unwrap()
         );
         assert!(a.same_history(&initial.committed(&parent, 1.).unwrap()));
+    }
+    #[test]
+    fn historical_guard_derivative_uses_historical_parent() {
+        let mut old = Transition::new(0., 0., 0.25, 0.25).unwrap();
+        let initial = Filter::new(
+            Projection {
+                parent: 0,
+                coefficient: I::ONE,
+                constant: I::ZERO,
+            },
+            &old,
+            &[1.],
+            &[1., 0.25],
+        )
+        .unwrap();
+        let at_half = initial.committed(&old, 0.5).unwrap();
+        old.advance(0.5, 1.).unwrap();
+        let mut new = old.clone();
+        new.advance(1., 0.).unwrap();
+        let accepted = at_half
+            .committed_change(&old, &new, 1., I::point(1.))
+            .unwrap();
+        let (value, derivative) = accepted.guard_range(&new, I::point(0.25)).unwrap();
+        assert!(value.lo <= 0. && value.hi >= 0., "value {value:?}");
+        assert!(
+            derivative.lo <= 0. && derivative.hi >= 0.,
+            "historical derivative excludes zero: {derivative:?}"
+        );
+    }
+    #[test]
+    fn signed_prefix_and_multi_epoch_derivatives_enclose_analytic_flows() {
+        for coefficient in [-2., 0.5] {
+            for gain in [-1., 1.] {
+                let mut old = Transition::new(0., 0., 2., 2.).unwrap();
+                let initial = Filter::new(
+                    Projection {
+                        parent: 0,
+                        coefficient: I::point(coefficient),
+                        constant: I::point(0.125),
+                    },
+                    &old,
+                    &[gain],
+                    &[1., 0.25],
+                )
+                .unwrap();
+                let at_half = initial.committed(&old, 0.5).unwrap();
+                old.advance(0.5, 0.8).unwrap();
+                let window = I { lo: 1., hi: 1.001 };
+                let b = 1.002;
+                let mut changed = old.clone();
+                changed
+                    .advance_at(b, window, -0.5, I::point(-0.5), true)
+                    .unwrap();
+                let accepted = at_half.committed_change(&old, &changed, b, window).unwrap();
+                let later = accepted.committed(&changed, 1.25).unwrap();
+                for (lo, hi) in [
+                    (0.25, 0.4),
+                    (0.25, 1.3),
+                    (0.75, 1.0025),
+                    (1., 1.002),
+                    (1.0005, 1.0015),
+                    (1.0015, 1.01),
+                    (1.002, 1.3),
+                ] {
+                    let span = I { lo, hi };
+                    let (value, derivative) = later.guard_range(&changed, span).unwrap();
+                    for tau in [window.lo, (window.lo + window.hi) / 2., window.hi] {
+                        for k in 0..=100 {
+                            let t = lo + (hi - lo) * k as f64 / 100.;
+                            let before = (t.min(tau) - 0.5).max(0.);
+                            let y0 = 0.4 * (before + 0.25 * (-before / 0.25).exp_m1());
+                            let h = (t - tau).max(0.);
+                            let g = -(-h / 0.25).exp_m1();
+                            let y = y0 * (1. - g) + 0.4 * (tau - 0.5) * g - 0.65 * (h - 0.25 * g);
+                            let u = if t <= tau {
+                                0.4 * (t - 0.5).max(0.)
+                            } else {
+                                0.4 * (tau - 0.5) - 0.65 * h
+                            };
+                            let expected = gain * (coefficient * y + 0.125);
+                            let dy = gain * coefficient * (u - y) / 0.25;
+                            assert!(
+                                value.lo <= expected && expected <= value.hi,
+                                "value {span:?} t={t} root={tau}: {value:?} vs {expected}"
+                            );
+                            assert!(
+                                derivative.lo <= dy && dy <= derivative.hi,
+                                "derivative {span:?} t={t} root={tau}: {derivative:?} vs {dy}"
+                            );
+                        }
+                    }
+                }
+            }
+        }
     }
 }

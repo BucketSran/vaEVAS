@@ -28,6 +28,7 @@ mod observation;
 mod operators;
 mod portability;
 mod pwl;
+mod refined_interval;
 mod reset_dependencies;
 mod schedule;
 mod settlement;

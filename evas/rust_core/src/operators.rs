@@ -809,8 +809,12 @@ fn reset_interval(expr: &Expression, states: &[I]) -> Result<I, Error> {
     }
 }
 
+#[path = "filter_refinement.rs"]
+mod filter_refinement;
+
 #[derive(Clone, Default)]
 pub(crate) struct Operators {
+    refinement: Option<Arc<filter_refinement::Provenance>>,
     entries: Vec<Runtime>,
     changes_on_advance: Vec<bool>,
     direct: Vec<Option<DirectInput>>,
@@ -1379,7 +1383,10 @@ impl Operators {
             };
             changes_on_advance.push(changes);
         }
+        let refinement =
+            filter_refinement::Provenance::new(&entries, states, program).map(Arc::new);
         Ok(Self {
+            refinement,
             entries,
             changes_on_advance,
             direct,
@@ -1388,12 +1395,24 @@ impl Operators {
         })
     }
 
+    pub(crate) fn is_transition_filter(&self, index: usize) -> bool {
+        matches!(
+            self.entries.get(index),
+            Some(Runtime::TransitionFilter { .. })
+        )
+    }
+
     pub(crate) fn check_guard(&self, index: usize) -> Result<(), Error> {
         let entry = self
             .entries
             .get(index)
             .ok_or_else(|| Error::new("invalid_ir", "guard operator index out of range"))?;
-        if self.changes_on_advance[index] && !matches!(entry, Runtime::Continuous(_)) {
+        if self.changes_on_advance[index]
+            && !matches!(
+                entry,
+                Runtime::Continuous(_) | Runtime::TransitionFilter { .. }
+            )
+        {
             return Err(Error::new("unsupported_cross",
                 "cross requires a continuous epoch history; reset/transition history is unsupported"));
         }
@@ -1405,6 +1424,7 @@ impl Operators {
         }
         match entry {
             Runtime::Continuous(_)
+            | Runtime::TransitionFilter { .. }
             | Runtime::Idt { .. }
             | Runtime::LaplaceNd(_)
             | Runtime::Sin(SinInput::Direct(_)) => {}
@@ -1422,6 +1442,9 @@ impl Operators {
     pub(crate) fn keeps_guard_value(&self, index: usize) -> Result<bool, Error> {
         self.check_guard(index)?;
         match &self.entries[index] {
+            // Installing a new transition target changes future forcing, not
+            // the filter's value at that event. The calendar must be rebuilt.
+            Runtime::TransitionFilter { .. } => Ok(true),
             Runtime::Continuous(slot) => self
                 .continuous
                 .as_ref()
@@ -1431,10 +1454,43 @@ impl Operators {
         }
     }
 
+    pub(crate) fn retain_filter_provenance(
+        &mut self,
+        before: &Self,
+        model: &crate::events::EventModel,
+        trajectory: &Trajectory,
+        batch: &[crate::schedule::ScheduledEvent],
+        states: &[I],
+    ) {
+        self.refinement = before
+            .refinement
+            .as_ref()
+            .and_then(|proof| proof.updated(model, trajectory, before, self, batch, states))
+            .map(Arc::new);
+    }
+    pub(crate) fn refined_query_value(
+        &self,
+        index: usize,
+        time: f64,
+    ) -> Option<crate::refined_interval::Bounds> {
+        let ordinary = crate::refined_interval::Bounds::from_interval(
+            self.range(index, I::point(time)).ok()?.0,
+        )?;
+        match &self.entries[index] {
+            Runtime::TransitionFilter { parent, history } => history
+                .refined_from(self.refinement.as_ref()?, *parent, time)?
+                .intersection(&ordinary),
+            _ => Some(ordinary),
+        }
+    }
+
     pub(crate) fn range(&self, index: usize, time: I) -> Result<(I, I), Error> {
         self.check_guard(index)?;
         let entry = &self.entries[index];
         let result = match entry {
+            Runtime::TransitionFilter { parent, history } => {
+                history.guard_range(self.transition(*parent)?, time)?
+            }
             Runtime::Continuous(slot) => {
                 let c = self.continuous.as_ref().unwrap();
                 if !c.is_continuous(*slot) {
@@ -1705,6 +1761,11 @@ impl Operators {
         changed: &[usize],
     ) -> Result<(), Error> {
         let _timing = crate::diagnostics::span("history.advance");
+        // A raw advance has no original event/sample provenance. Only the
+        // calendar transaction can reattach a checked refinement proof.
+        if !changed.is_empty() {
+            self.refinement = None;
+        }
 
         // Consume the OLD edge before any candidate target/queue mutation.
         // Compute all predictions first so a failure cannot partially update
@@ -1811,7 +1872,7 @@ impl Operators {
     }
 
     pub(crate) fn same_reset_history(&self, other: &Self) -> bool {
-        if self.horizon != other.horizon {
+        if self.horizon != other.horizon || self.refinement != other.refinement {
             return false;
         }
         match (&self.continuous, &other.continuous) {
@@ -2169,5 +2230,12 @@ mod reset_operator_tests {
         ));
         let rejected = inexact_product.active(&[I::ONE]).err().unwrap();
         assert_eq!(rejected.kind, "unsupported_operator");
+    }
+}
+
+#[cfg(test)]
+impl Operators {
+    pub(crate) fn refinement_states(&self) -> Option<Vec<crate::refined_interval::Bounds>> {
+        Some(self.refinement.as_ref()?.test_states())
     }
 }

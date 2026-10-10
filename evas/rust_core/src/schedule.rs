@@ -91,6 +91,22 @@ impl ScheduledEvent {
     pub(crate) fn clock(&self) -> Option<Clock> {
         self.moment.clock()
     }
+    pub(crate) fn rational_time(&self) -> Option<num_rational::BigRational> {
+        use crate::exact_source::{binary, Budget};
+        if let Some(clock) = self.clock() {
+            return Budget(0).check(
+                binary(clock.start)?
+                    + binary(clock.period)?
+                        * num_rational::BigRational::from_integer(clock.index.into()),
+            );
+        }
+        if let Moment::Cross(root) = &self.moment {
+            return Some(root.rational_time()?.rational().clone());
+        }
+        self.moment
+            .exact_history_root()
+            .map(|r| r.rational().clone())
+    }
     pub(crate) fn local_bounds(&self, clock: Clock) -> Option<I> {
         if let Some(root) = self.moment.exact_history_root() {
             return root.local_bounds(clock);
@@ -141,32 +157,51 @@ impl ScheduledEvent {
             })
     }
 
-    /// A voltage-sized root enclosure need not resolve a nearby query's phase.
-    /// Prove that phase from the original transverse input guard without
-    /// changing the sampling enclosure, representative, or accepted history.
+    /// Prove a query's phase without changing the root, execution representative
+    /// or accepted history. History guards must be evaluated with the frame
+    /// immediately before this physical batch, never its post-event state.
     pub(crate) fn physical_order_for_query(
         &self,
         time: f64,
         model: &EventModel,
         trajectory: &Trajectory,
+        operators: &Operators,
+        states: &[I],
     ) -> Option<std::cmp::Ordering> {
         if let Some(order) = self.physical_order_at(time) {
             return Some(order);
         }
-        if !model.program.operators.is_empty() || !self.can_refine_input_root(model) {
+        let input_root = model.program.operators.is_empty() && self.can_refine_input_root(model);
+        let filter_root = self.fixed_predecessor.is_none()
+            && matches!(self.moment, Moment::Dynamic { exact: None, .. })
+            && model.guard_operators[self.event]
+                .iter()
+                .any(|&i| operators.is_transition_filter(i));
+        if !input_root && !filter_root {
             return None;
         }
         let EventTrigger::Cross { guard, .. } = &model.triggers[self.event].trigger else {
             return None;
         };
-        let operators = Operators::default();
-        let source =
-            crate::guard_trajectory::GuardTrajectory::new(model, trajectory, &operators).ok()?;
+        let source = crate::guard_trajectory::GuardTrajectory::new_held(
+            model,
+            trajectory,
+            Some(operators),
+            Some(states),
+        )
+        .ok()?;
         let owner = &model.program.events[model.triggers[self.event].event]
             .origin
             .instance;
         crate::diagnostics::counter("root_query_phase_checks", 1);
-        let sign = source.range(guard, I::point(time), owner).ok()?.0.sign()?;
+        let ordinary = source.range(guard, I::point(time), owner).ok()?.0;
+        let sign = ordinary.sign().or_else(|| {
+            if !filter_root {
+                return None;
+            }
+            crate::diagnostics::counter("root_query_precision_retries", 1);
+            source.refined_query_sign(guard, time, owner)
+        })?;
         Some(match sign * self.dynamic_direction()? {
             -1 => std::cmp::Ordering::Greater,
             0 => std::cmp::Ordering::Equal,
