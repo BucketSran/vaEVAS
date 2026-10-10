@@ -4,6 +4,8 @@
 
 模块 tdc_meter(start,stop,clk,rst,code_0,...,code_7,valid,overflow)。门限0.5V，逻辑输出0V与1V，code_0最低位。start上升清旧结果、valid和overflow并重新武装，取消先前区间。武装后每clk上升计数一次；stop上升锁存计数并解除武装、valid=1。未武装stop忽略，结果保持；第256个clk触发饱和值255、overflow=1、valid=1，并解除武装。rst上升异步清所有状态，rst高时不测量。固定场景没有同时间的输入边沿；同时间语义不属本题。输出在事件后40ps内可平滑，之后2mV误差。
 
+code是结果寄存器的输出。start后至stop或溢出之前，code_0..code_7全部保持0，valid=0、overflow=0；内部累加计数不直接驱动code。stop或第256个clk发布结果后，code、valid和overflow保持到下一次start或rst。初始状态与rst清零后的状态相同，尚未武装。
+
 ## 公开自测与终评范围
 
 clk周期90至130ps，输入start/stop边沿20ps；可变测量起止、重武装、未武装stop及reset时刻。终评包含正常锁存、取消区间和超过256边沿的区间；输入门限交点不重合，至少隔开5ps。计数边界与报告电平固定。

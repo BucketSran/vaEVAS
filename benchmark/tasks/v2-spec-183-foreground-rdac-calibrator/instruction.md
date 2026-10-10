@@ -44,3 +44,5 @@ Return exactly one complete Verilog-A source file named `dut.va`. Do not generat
 ## 本轮冻结的数值合同
 
 完成7次上升决策后保持最终码，后续时钟不再改变；初态code=64,en=vdd,enb=0。
+
+数字输出dc0..dc6、en和enb在初始化或相应ck上升沿后20ps内到达新目标电平，此后保持到下次规定更新。允许在这20ps内平滑，不要求特定过渡函数。cvinp和cvinn连续转发对应参考电压，不按ck采样。

@@ -57,3 +57,5 @@ Return exactly one complete source artifact named `dut.va`. Do not include expla
 ## 本轮冻结的数值合同
 
 初始VRES=vdd/2、两个D=0。门限相对对地VDD/2，边界等于±VREF/4归middle。PHI1与PHI2非重叠。
+
+在PHI2上升沿，令 `cm=V(VDD)/2`、`x=此前PHI1采到的VIN-cm`，并读取该时刻的 `ref=V(VREF)`。当 `x>ref/4` 时 `region=1`；当 `x<-ref/4` 时 `region=-1`；其余为 `region=0`。残差目标为 `VRES=clamp(cm+2*x-region*ref/2, V(VSS), V(VDD))`，其中clamp把电压限制在给定上下界。两个决策输出在同一PHI2沿更新，D1仅在region=1时高，D0仅在region=0时高；高低电平分别为V(VDD)与V(VSS)。输出保持到下一PHI2上升沿，过渡时间使用tedge。

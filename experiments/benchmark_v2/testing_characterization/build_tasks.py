@@ -100,6 +100,8 @@ def package(slug,source,title,contract,reference,alternate,mutants,cases,public_
     public_dut={name:normalize(text) for name,text in public_dut.items()}
     for case in cases+public_cases:
         case['support']={name:normalize(text) for name,text in case.get('support',{}).items()}
+    if slug == 'time-protocol':
+        contract += ('\n\ncode是结果寄存器的输出。start后至stop或溢出之前，code_0..code_7全部保持0，valid=0、overflow=0；内部累加计数不直接驱动code。stop或第256个clk发布结果后，code、valid和overflow保持到下一次start或rst。初始状态与rst清零后的状态相同，尚未武装。')
     contract += ('\n\n## 公开自测与终评范围\n\n'+INSTANCE_RANGES[slug]) if slug in INSTANCE_RANGES else ''
     task_id='v2-test-'+slug
     task=ROOT/'benchmark/tasks'/task_id

@@ -35,7 +35,7 @@ Provide these overrideable public parameters on the top module and propagate com
 - `lo_i` and `lo_q` must have the same divided frequency and a deterministic quadrature phase relationship.
 - `div_metric` must expose the state index `k` for the currently driven pair as
   `vss + (vdd - vss) * k / 3`, where the sequence above uses `k = 0..3`.
-- Assert `quad_ok` after two complete quadrature output cycles with the expected state sequence.
+- Assert `quad_ok` on the eighth qualified rising `clk_in` edge after reset or disable, when the second traversal of `10, 11, 01, 00` enters `00`. Keep it asserted until reset or disable.
 
 ## 实现与修改边界
 
@@ -56,3 +56,5 @@ Return exactly these complete source artifacts:
 ## 本轮冻结的数值合同
 
 初态所有输出vss。每次reset/disable异步清相位；释放控制不推进，首次新clk输出10。
+
+合格上升沿指rst低且enable高时的clk_in上升沿。重新使能后从第1个合格沿重新计数，quad_ok在第1至第7沿保持vss，在第8沿更新为vdd；该资格表示完成两遍四状态序列，不另等待第9沿回到10。资格输出也使用tr过渡。

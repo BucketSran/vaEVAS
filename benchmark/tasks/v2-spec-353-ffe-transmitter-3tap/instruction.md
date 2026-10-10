@@ -52,3 +52,5 @@ Return exactly one complete source artifact named `dut.va`.
 ## 本轮冻结的数值合同
 
 reset在clk上升读取，三个符号初值0。main=main_amp*当前符号，pre=tap_step*precode*上一符号，post=-tap_step*postcode*上上符号。debug=vcm+各贡献，vout=clamp(vcm+main+pre+post)。
+
+每次非reset的clk上升沿同时采样data、pre_1:pre_0和post_1:post_0。tap码按vth判高低，分别解码为0至3，并与该沿更新后的符号历史一起计算贡献。两次clk上升沿之间，tap输入改变不更新输出目标；输出在tr过渡后保持。clk上升沿采到reset有效时，将历史及所有输出目标清到上述初态。
