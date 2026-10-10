@@ -191,6 +191,7 @@ def prepare(args):
          'model_configuration': args.model_config, 'protocol': args.protocol,
          'mode': 'agentic-stock-harbor-pi', 'attempts': 1, 'automatic_retry': False,
          'public_files_sha256': file_hashes(exported), 'candidate_selection': 'last-submitted-candidate',
+         'agent_instruction_sha256': hashlib.sha256((public_task / 'instruction.md').read_bytes()).hexdigest(),
          'public_backend': 'remote_spectre', 'final_backend': 'remote_spectre'})
     compile_dir = args.output / 'compile'
     compile_dir.mkdir()
@@ -227,6 +228,7 @@ def one_shot(args):
     save(args.output / 'request.json', request_body)
     save(args.output / 'started.json', {'started_epoch': time.time(), 'automatic_retry': False,
          'mode': 'one-shot-no-tools-no-feedback', 'requested_model': args.model,
+         'prompt_sha256': hashlib.sha256(prompt.encode('utf-8')).hexdigest(),
          'public_files_sha256': file_hashes(exported)})
     request = urllib.request.Request(args.base_url.rstrip('/') + '/chat/completions',
         data=json.dumps(request_body).encode(), headers={'Authorization': 'Bearer ' + key,
