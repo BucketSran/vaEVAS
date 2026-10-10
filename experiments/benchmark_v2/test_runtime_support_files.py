@@ -2,7 +2,6 @@
 import hashlib,json,os
 from pathlib import Path
 import unittest
-from unittest.mock import patch
 from experiments.benchmark_v2 import test_runtime as protocol
 
 class SupportReferences(unittest.TestCase):
