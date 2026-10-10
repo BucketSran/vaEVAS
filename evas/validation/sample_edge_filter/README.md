@@ -62,3 +62,19 @@ python3 -B -m unittest discover -s evas/validation/sample_edge_filter -v
 ```
 
 运行入口和实际证据见[对照报告](../../../experiments/backends/sample-edge-filter/README.md)。
+
+<a id="filter-cross"></a>
+
+## 滤波输出触发 cross
+
+[filter_cross.py](filter_cross.py)在原四类 SEF 条件上增加 SFC 条件。滤波阈值穿越时递增整数计数，
+并采样外部输入。原保持、边沿、滤波检查及 100 µV / 5 ps / 10 nV 预算全部保留。
+解析卷积的每个仿射输入段至多有一个导数零点，先在该点分段，再对单调区间求阈值根。
+该答案不调用 EVAS。根恰在分段端点时明确拒绝该用例，避免漏根；当前固定用例没有这种情形。
+
+每个新增根两侧增加 ±2 ps、±4 ps 观测，保留旧 SEF 的全部点。新增计数必须连续、单调，
+每次跳变的相邻记录都在原 5 ps 窗口内；事件采样值也受原 100 µV 约束。
+精确中心点另存为诊断请求，其拒绝不算通过；不得把 SEF-TIMER-18 的已知差异直接套给新增模型。
+
+本扩展使用 precision-v1 的四档顺序 base、tol、step、both，实际设置和结果见[对照报告](../../../experiments/backends/sample-edge-filter/CROSS.md)。
+模型、刺激、判据和预算在运行前冻结；增加端点拒绝检查后重新分析原记录，保留旧判分。

@@ -1,0 +1,3471 @@
+{
+  "schema_version": 1,
+  "run_id": "filter-cross-20261011",
+  "purpose": "Finite engineering support for sampling/hold/transition/one-pole filter/cross, preserving SEF budgets; root-center and exact-observation limitations retained",
+  "base_main": "99bf7d7cccf4b6b99dd955d2fd4b7d4ecb765ed7",
+  "implementation_commit": "4a1e10108448a64a1490cff074aed62f80079624",
+  "server_evas_commit": "dd2803feef1e953ec045b5f8f0d4d0966644ec40",
+  "cases": [
+    "SFC-TIMER",
+    "SFC-RESET",
+    "SFC-INTERRUPT",
+    "SFC-ISOLATION"
+  ],
+  "budgets": {
+    "output_V": 0.0001,
+    "input_V": 1e-08,
+    "event_bracket_s": 5e-12,
+    "kind": "fixed finite observations; neither full-time error proof nor exact phase equivalence"
+  },
+  "inputs": {
+    "manifest_sha256": "75dcbf3d59741f88d853822dbde5432338909446eba08602e256df8566fbe8c4",
+    "cards_sha256": "b34721574a45af9bc6ce1760e8529a056374099d3d816b9ae9ad238b9a67fdc8",
+    "profiles": [
+      {
+        "id": "base",
+        "reltol": 1e-05,
+        "vabstol_V": 1e-09,
+        "iabstol_A": 1e-13,
+        "step_units": 0.03125
+      },
+      {
+        "id": "tol",
+        "reltol": 1e-08,
+        "vabstol_V": 1e-12,
+        "iabstol_A": 1e-15,
+        "step_units": 0.03125
+      },
+      {
+        "id": "step",
+        "reltol": 1e-05,
+        "vabstol_V": 1e-09,
+        "iabstol_A": 1e-13,
+        "step_units": 0.00390625
+      },
+      {
+        "id": "both",
+        "reltol": 1e-08,
+        "vabstol_V": 1e-12,
+        "iabstol_A": 1e-15,
+        "step_units": 0.00390625
+      }
+    ]
+  },
+  "capabilities": [
+    "TIMER",
+    "CROSS",
+    "EVENT-ORDER",
+    "TRANSITION",
+    "DYNAMICS",
+    "COMPOSE",
+    "QUALIFICATION"
+  ],
+  "execution_limits": {
+    "remote_serial": true,
+    "main_stage_timeout_s": 90,
+    "threads": 1,
+    "memory_bytes": 4294967296,
+    "file_bytes": 33554432,
+    "automatic_retry": false
+  },
+  "availability": {
+    "classification": "local-only",
+    "root": "runs/filter-cross-20261010",
+    "note": "Public repository contains generators/contracts and this compact receipt, not the raw waveforms or local configuration. Hashes are not a public archive."
+  },
+  "runtime_source_hashes": {
+    "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+    "evas/src/evas/__main__.py": "f98567eedc0052dddf00fd13f5380e996409f72aed9fbf09702d5bf173fae1d5",
+    "evas/src/evas/array_elaboration.py": "4faf4543a735ad19c89bbbc760d39f6860089d854b7f24922edaa390cf20df0b",
+    "evas/src/evas/diagnostics.py": "e787f6c1b0ab3939fa37c15ec6da550f59520c6f99edf29e9c53784f31e3308f",
+    "evas/src/evas/elaboration.py": "ff4ffb36428b7a5fd26a646b31788e2699de050c0a2ec6935d807ed79286fbd8",
+    "evas/src/evas/errors.py": "1a361344eb6678f6d82a91f3c356513025146bf468e9d3f5d4b593a9c04b3c08",
+    "evas/src/evas/frontend.py": "55d6f9724c71ffb3938d4e6eb8ff425d1c85d66808e6bbc6492593640e30ae19",
+    "evas/src/evas/hierarchy.py": "c277bc21cbe987f7cb427a2955b6b20588d5c42ae09bbc62853dab7bdba4138f",
+    "evas/src/evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+    "evas/src/evas/instance_compiler.py": "030b7172416a21a273eefe18e03ea2ce19bbc3ebd95fa27c143459f898cc0e6a",
+    "evas/src/evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+    "evas/src/evas/ir.py": "ec167d9f02ddde4bff1dbf7b24b903d4a178822cfc0a2749638e753b1398f8cf",
+    "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+    "evas/src/evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+    "evas/src/evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+    "evas/src/evas/lowering.py": "3df0c3f873285e45aa9de85863ca7d42b4c1cffc205a24164700b953b1874c71",
+    "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+    "evas/src/evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+    "evas/src/evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+    "evas/src/evas/node_elaboration.py": "2b68adb511d792c349e40f98fa71933402f1569467c8e2cb6e6e9125773e7658",
+    "evas/src/evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+    "evas/src/evas/preprocessor.py": "83d54364c2cbc993da5d749bb3582f4ef5de110deff5f23a41ad9af4d928478c",
+    "evas/src/evas/protocol.py": "9dacd13cfd98a803e3e45a927c98035944a736a0930da5a33d6d202a8ebbe3bb",
+    "evas/src/evas/query.py": "2fda97253f88c236d308d795aeae52a00ff5cfbb458f87a4bcfdc3751fae4f64",
+    "evas/src/evas/results.py": "91bc585e4ee9a871fce7da38beebebe71218f0b59c7dda57fec904a9994810bd",
+    "evas/src/evas/runtime.py": "e467f9de3635dcd23813771ea528e57fa35dd98c36dce893b35f920f278c7c0f",
+    "evas/src/evas/scs.py": "6258b0b03294d399ad7cd0ad42e6513a19948d216e25333512a5b9b2695c6d6d",
+    "evas/src/evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
+    "evas/src/evas/standard_headers.py": "9f190d1b17d6a341cecdba14f8a43771f7754d2e0de1403d59e4432849ec7e30",
+    "evas/src/evas/strobe.py": "18d6b1911436459a7a19ee100d309636f5d0d75acd927b228219367098f19c80",
+    "evas/src/evas/syntax.py": "0808529711ffc52e04557d0adfad8452f12e3073132699c5afe8a59b6f602605",
+    "evas/rust_core/src/absdelay.rs": "e0f6144590856b3a95d03a59af58e9032309fa1e316a41c063a40ec9f73109c7",
+    "evas/rust_core/src/accuracy.rs": "03fd769af88f73072a1964a942b9b9d1503196c56c5c4cb48cec7f21ee084d35",
+    "evas/rust_core/src/affine_bounds.rs": "b0faf6ee361cac3ab3a7b8a2d80992bece76a3457d4a08a48be81755cfe01c6b",
+    "evas/rust_core/src/analog.rs": "d4105a0e850f98d4c10ded8c7deacdcc45c960ed2a2a3c1547ea2cf2a5a687c0",
+    "evas/rust_core/src/assembly.rs": "52b5a1a7411b846c2c07d0c26c0fabca0641c3980b4b34a6bcd302e84401d9cb",
+    "evas/rust_core/src/batch.rs": "a41166d5cd9a6fab300d48197bc4093145885d19044b398e48095fdb35473688",
+    "evas/rust_core/src/continuous.rs": "95170f879a3652be0e9a430fc93ffd3fefa7696412bf7025415586f17f7d5787",
+    "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+    "evas/rust_core/src/continuous_history.rs": "ec6f68c45c3c6c40e4c674ed8c47302c2b47f498f6e678d7105c9a83c06fda35",
+    "evas/rust_core/src/continuous_initialization.rs": "5145a36a517b9ba3ace0fb6241ebbd615fef6004b50aeb5dc99d76ff295874a8",
+    "evas/rust_core/src/continuous_runtime.rs": "70f93a4f9b046b53c3d0abb1a4b92ad66a3645e7f4272f6f9a21a66e87e49fcc",
+    "evas/rust_core/src/diagnostics.rs": "bd0feac3399c8b43bf14de204677d58a160d3648416242a76d3eae46e0dea699",
+    "evas/rust_core/src/dynamic_roots.rs": "30146ae2e527e12c6596aff3b0dad3cd172def2af80d27e3b92131032cb6a827",
+    "evas/rust_core/src/event_accuracy.rs": "d2b621cb23080ee219b5272fc489010dfc6a4ba15930fd8e6d94f0428e253dd6",
+    "evas/rust_core/src/event_conditions.rs": "8b0c00b449cf1b27326972a95b97a5f5c911b4f56cd6d30dec7f8905312ab30f",
+    "evas/rust_core/src/events.rs": "c30446f5becb7ca185645837592a868121df5d4aaee6aa2adacdd5aac8f30e28",
+    "evas/rust_core/src/exact_affine_history.rs": "768c7509b3d76e901e12b166291d0bb8ae7f282791fa513a72f087b07100f161",
+    "evas/rust_core/src/exact_source.rs": "0e272ee6f342ccceb9eb5b58842dfb30f0ef85b9a19caeac5cb984c6e53c504c",
+    "evas/rust_core/src/exact_time.rs": "68e8415109ff7138b27195fe8d32f686441c61d4b012e774e31ede58e5eef824",
+    "evas/rust_core/src/expression.rs": "99024d0b32c2348b6d32db2dc7a27122ff16728c3d4dc476bde6d9f8cb766ffb",
+    "evas/rust_core/src/guard_trajectory.rs": "c919578fe553f2e87ded91d054780e8e66d505db688894875a8506ae826ec84c",
+    "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+    "evas/rust_core/src/idtmod.rs": "c57464703c5332f4a5ea827e8a6f85799f57c7d9a6655351475684b3fdeda190",
+    "evas/rust_core/src/implicit_dynamics.rs": "663f81fd0b60f8634f1ec1b55ac322bc0f09cb69c32ed4cf47f56253ed425e95",
+    "evas/rust_core/src/initialization.rs": "7a0bf9345d0cb264ea766c9ff3c801d781948f1683474eb1e1a53f6abd1af365",
+    "evas/rust_core/src/input_clamp.rs": "4fc823c7de00e10fd49a45422d3c807d25095f0d4b095500f7de06780341521d",
+    "evas/rust_core/src/interval.rs": "89a83ce96dbf6cdc217a046c9885ca0cf580c6e6f932c36f0195120d49e53f56",
+    "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
+    "evas/rust_core/src/ir.rs": "cc687fdd3d78e908644537aa8194d3a3ccb3dcb5b88c11a78d7b3e640ad97ea0",
+    "evas/rust_core/src/laplace.rs": "04d0bd3fb6e3517174bdb9e3ddb93ee9d448a83ff46b8112ab98410d68b9848e",
+    "evas/rust_core/src/lib.rs": "782d61d3f96f8df3242fbe754cb689d762236bcfb637007ff5270bb330993e8a",
+    "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+    "evas/rust_core/src/linear/dense.rs": "00a1d9e1a9c5f933f765dd586ab9a8982073d270fed73ed7e602af858e732cad",
+    "evas/rust_core/src/linear/properties.rs": "d1a8b5ec069fef4f621b99290b532f7563cb8f55a1ba2178a77877f60192ab7f",
+    "evas/rust_core/src/linear/refinement.rs": "8476ad2ea3f3698e3c4552f8ff785c00ff878caab584b157dbb80b9c282f32a8",
+    "evas/rust_core/src/linear/sparse.rs": "3914adce2368b027027c06240f160864af0f53de934c0b3285515114fe7aa869",
+    "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+    "evas/rust_core/src/linear.rs": "e0280cfcaaebd2449ab5e4474daf5cd19e6a9fbda5db53e14e5229fc81a4eb36",
+    "evas/rust_core/src/main.rs": "70626c73fa421340afcc53c025a220720b208657273ba3f5e20bc1e4c6e01c3c",
+    "evas/rust_core/src/nonlinear/continuation.rs": "6d0aabe1bb6563a32d4e920fabdefde881777a54b8dc2b4658de432347f6448a",
+    "evas/rust_core/src/nonlinear.rs": "1e535704fb6dc14a577496ed47315ddf6e5f887d6dfa2b62b78d9b7b3a275863",
+    "evas/rust_core/src/nonlinear_dynamics.rs": "78182dc3731e8ad7fa50f767948291e69720cabce5027e6d811d8d32e8b8954e",
+    "evas/rust_core/src/observation.rs": "a4bddbd4b5f336883909fe66fd5a5cf3e636fb6da265d8c7be05e48107fcee32",
+    "evas/rust_core/src/operators.rs": "113b4087ed22de65b5fbb4eb32f92377e7290611a6830cf312935179db66a8a8",
+    "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+    "evas/rust_core/src/portability.rs": "8a807dd498a87b7680c8c2dd605908a6a8a933bab2aa6f1b57844d0285a7229a",
+    "evas/rust_core/src/pwl.rs": "e14b98fc39bd719e1a7994630aad71a0ae8de2cb72e4433222d0bf92ca6e6d3a",
+    "evas/rust_core/src/reset_dependencies.rs": "d2adaba2e28d70511e0977c223ea7922b627c832e633b7f94360c951a6f0e3fa",
+    "evas/rust_core/src/schedule.rs": "e9fa28b8fa3dcf07317c9293a1a4efdb1c7fda4402c81c1e3b6facf7f75dc994",
+    "evas/rust_core/src/settlement.rs": "2936275c2ccd13d1e28563307253ae629174236656364b86b5ad61a66fcc1e13",
+    "evas/rust_core/src/settlement_bounds.rs": "9fb5158098aca5efe7d3f2fc8ef50b08e24366c8242b12eb230b4f2c47333666",
+    "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+    "evas/rust_core/src/solver.rs": "b2ba26829db2d0fc94e329b375ed13b803510456b3131371ec4688a4dfcd0eba",
+    "evas/rust_core/src/solver_cache_tests.rs": "727acd4fc9084bb6e546a8aa70e2f1e5bd476d27265f5198c5cdd08b0a7fd3fa",
+    "evas/rust_core/src/state_space.rs": "c7e8ff82302cb87c6ba150e5def9d1cf9eba15e23657e2f2686eb067ce4ef74c",
+    "evas/rust_core/src/strobe.rs": "2cb7db0c54f6cf4656186343f764399132a9704f8b65552b00e737c9108c16af",
+    "evas/rust_core/src/transient.rs": "6495e3cf9ebe220b20ee05b1bf1505271da9cab012ea99be4b7cff024c9746d6",
+    "evas/rust_core/src/transient_condition_tests.rs": "9b041e9ae55b4094f115e215ac5bea81782c23f6ca29aabdf2acfa80167e69d0",
+    "evas/rust_core/src/transient_event_acceptance.rs": "33001015b722680f1dfb03119a9fdcc46807b32cc129068f8a74346fc84382f8",
+    "evas/rust_core/src/transient_history_calendar.rs": "ee914bd940d94ffab3d397ca3069d849d5c895ca122edc35c2a3ca4339e7e585",
+    "evas/rust_core/src/transient_idt_tests.rs": "dfd640a90830437089e8389eedf7e354bd20253b47e3dcc7d3226dd1a496ee33",
+    "evas/rust_core/src/transient_lifecycle_tests.rs": "74af82b4c2156266f53b044700a5ce8129acd962d8510cfd4279d8ca01958a36",
+    "evas/rust_core/src/transient_root_refinement.rs": "f7797fb958808892e6b2474ff1d94497183fa32ddb85ea866687e13cfbb751a3",
+    "evas/rust_core/src/transient_window_tests.rs": "08285e435c4e7df5b2a31ac259347840e72a63ef7941953ee850655fdc1a7909",
+    "evas/rust_core/src/transition.rs": "844fa6057f7286f58323b42131c8054abae833194cbcc04c4ed79ea6e50f0958",
+    "evas/rust_core/src/transition_filter.rs": "4951271040d18962251e866af4d44a595906bafca78ccfa5df00d86c743dbb10",
+    "evas/validation/sample_edge_filter/contract.py": "b34319644d00238316a4a898ba125f7a6ada2f88656a14a8966ecfc8d8eabb90",
+    "evas/validation/sample_edge_filter/filter_cross.py": "47f5de9e980b257308c49b3c00233961a17fe29b195df90fac7dbb4c41310f4c",
+    "evas/validation/sample_edge_filter/test_contract.py": "da25a68bfa605d92b1e1796899170c1246e5084659b9feecde777599ed9bb656",
+    "evas/validation/sample_edge_filter/test_filter_cross_contract.py": "3b06b013000f26eb657b2234a14a4352561928afb334f29a5b017d4f55c3c1f7",
+    "evas/rust_core/Cargo.lock": "4ac34a67969cbd69004115347a99e1d1ad71b577ca98d5dacdadd707aedadd01",
+    "evas/rust_core/Cargo.toml": "68fbb7ba79e5964b59a4e00cf36c4f42f7311dba99e3fed6943366f599bf7e3f",
+    "evas/rust_core/benches/static_solver.rs": "cb7e8f046aa8cde417b94e6e52bf3cd59c714dba19de48ab2c0050a70cefaaa8",
+    "evas/rust_core/benches/transient_solver.rs": "d4521e1df0a5e4ae6a25af65ee63d65884f5fc5d16ddc8a6ede08dc79f67e642",
+    "evas/rust_core/fuzz/Cargo.lock": "73066eeca7edc897b74437b0270c407eb1b0f5b1182b4246cb46be6a865ea42b",
+    "evas/rust_core/fuzz/Cargo.toml": "d21f7d8969051ba0c5dbdfaf7bfb510c6a3d8e073a7947b413a0077a7c775e12",
+    "evas/rust_core/fuzz/README.md": "116892fb8a1c638bb709f37726b039b67a1ba41e2254c685af02b2790ff8fc80",
+    "evas/rust_core/fuzz/fuzz_targets/parse_request.rs": "ab9d99942c6e7c7079ad3d78646ea2657277997b67686208d9398cf5548987d5",
+    "evas/rust_core/fuzz/fuzz_targets/run.rs": "6dba9b211200fce17a36129ecbebf4332b50964abd63b829893a8940d0ac33bb",
+    "evas/rust_core/fuzz/seeds/static.json": "499a1b0f49d462b5e684bc4ab3c25c21c056f54f29262f0b13cf6944a3c19c5f",
+    "evas/rust_core/ir/Cargo.toml": "ee626ead9fe9620b9b48c956bef41d283578683d25bc879b20f25730adf325f0",
+    "evas/rust_core/ir/README.md": "fd759dcf9182456001306a0daa5fd08a3226c547fcbfc5b99bb3f086b6e39eab",
+    "evas/rust_core/ir/src/lib.rs": "70ebd262d884abbda78c4625b7edc26b5b1e04f29568937c05618c127c9f7006",
+    "evas/rust_core/ir/tests/transport.rs": "4199c2369bf3ed486612d8bbe1fbc46ee64e75409eb834abc6e15cfa74078cf1"
+  },
+  "backend_results": {
+    "spectre": {
+      "execution_count": 16,
+      "engineering_passes": 8,
+      "original_strict_passes": 4,
+      "identity": {
+        "version": "sub-version  21.1.0.509.isr12",
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "unknowns": []
+      },
+      "execution_sha256": "374088bda65c788a8673a84f33c3c8cc3e76f056d1ba73602e6ec1841d0cc6f4",
+      "file_manifest_sha256": "fa44fee3924078c3e59d561078f597168754e319c19ba03d3154c4a14ff258e4",
+      "collection": {
+        "archive_sha256": "90e153ef4c6248b86f9cb4ad74ddcf1d62f5367a7beedaa80e1197b683432e80",
+        "verified_files": 535,
+        "remote_original_retained": true,
+        "availability": "local-only",
+        "returncode": 0
+      },
+      "records": [
+        {
+          "condition": "SFC-TIMER",
+          "profile": "base",
+          "label": "SFC-TIMER--base",
+          "status": "waveform_available",
+          "verdict": "fail",
+          "assessment": {
+            "status": "FAIL",
+            "failures": [
+              "cross count/time a",
+              "cross bracket a"
+            ],
+            "maximum_errors_V": {
+              "u": 7.771561172376096e-16,
+              "clk": 3.774758283725532e-15,
+              "rst": 2.9976021664879227e-15,
+              "ah": 1.3877787807814457e-16,
+              "ae": 2.0816681711721685e-15,
+              "af": 9.166686527839474e-06,
+              "as": 9.398163773988166e-06
+            },
+            "rows": 1228,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 1.6510832391894548e-06,
+                  "hi_s": 1.6510896979029527e-06,
+                  "nominal_s": 1.6510752391894544e-06
+                },
+                {
+                  "lo_s": 7.596131715091094e-06,
+                  "hi_s": 7.596131808675625e-06,
+                  "nominal_s": 7.596128058938788e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [
+              "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+            ],
+            "actual": {
+              "reltol": 1e-06,
+              "vabstol": 1e-09,
+              "iabstol": 1e-13,
+              "stop": 8.5e-06,
+              "maxstep": 3.1250000000000005e-08,
+              "method": "traponly"
+            },
+            "requested": {
+              "reltol": 1e-05,
+              "vabstol": 1e-09,
+              "iabstol": 1e-13,
+              "stop": 8.5e-06,
+              "maxstep": 3.125e-08
+            },
+            "additional_controls": {},
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "covered",
+            "reused_native_record": false,
+            "exact_float_mismatches": 66,
+            "allowance_s": 2.710505431213761e-20,
+            "maximum_nearest_distance_s": 3.3881317890172014e-21,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 0,
+            "missing_requested_times_json_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "source_sha256": "804f51dc19ebc957803a8e4562a359a9985a795f0daafddd03c739e6152adbdb",
+          "requested_times_sha256": "c32f9ac38c8de8e54c98f45bde3649590f46e05aaf39596f876e6ebc5cb6da02",
+          "waveform_sha256": "82f272a5978ce2de08f911ef22bfd21e012db05d85ba353eb983aeca2157808e",
+          "result_sha256": "a5a00512b8f9c4774e611c13df987df4adaf9b0ca678f62b5c63e1eba8f9031f"
+        },
+        {
+          "condition": "SFC-TIMER",
+          "profile": "tol",
+          "label": "SFC-TIMER--tol",
+          "status": "waveform_available",
+          "verdict": "pass",
+          "assessment": {
+            "status": "PASS",
+            "failures": [],
+            "maximum_errors_V": {
+              "u": 6.661338147750939e-16,
+              "clk": 4.829470157119431e-15,
+              "rst": 3.4416913763379853e-15,
+              "ah": 2.7755575615628914e-17,
+              "ae": 1.0269562977782698e-15,
+              "af": 4.5645629725976633e-07,
+              "as": 1.8314526256668628e-07
+            },
+            "rows": 2959,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 1.6510732391894543e-06,
+                  "hi_s": 1.6510755209513968e-06,
+                  "nominal_s": 1.6510752391894544e-06
+                },
+                {
+                  "lo_s": 7.596128058938788e-06,
+                  "hi_s": 7.596128500059086e-06,
+                  "nominal_s": 7.596128058938788e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [
+              "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+            ],
+            "actual": {
+              "reltol": 1e-09,
+              "vabstol": 1e-12,
+              "iabstol": 1e-15,
+              "stop": 8.5e-06,
+              "maxstep": 3.1250000000000005e-08,
+              "method": "traponly"
+            },
+            "requested": {
+              "reltol": 1e-08,
+              "vabstol": 1e-12,
+              "iabstol": 1e-15,
+              "stop": 8.5e-06,
+              "maxstep": 3.125e-08
+            },
+            "additional_controls": {},
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "covered",
+            "reused_native_record": false,
+            "exact_float_mismatches": 9,
+            "allowance_s": 2.710505431213761e-20,
+            "maximum_nearest_distance_s": 8.470329472543003e-22,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 0,
+            "missing_requested_times_json_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "source_sha256": "804f51dc19ebc957803a8e4562a359a9985a795f0daafddd03c739e6152adbdb",
+          "requested_times_sha256": "c32f9ac38c8de8e54c98f45bde3649590f46e05aaf39596f876e6ebc5cb6da02",
+          "waveform_sha256": "1a28d8f2103a30b6c9fbe96d12c3d9ee14d09adcbc8fa72c35e1f467e2b186e4",
+          "result_sha256": "d8622313c7267748fdf9393b624e4eb75f2ba17c45ae6f949f46c39952e86e93"
+        },
+        {
+          "condition": "SFC-TIMER",
+          "profile": "step",
+          "label": "SFC-TIMER--step",
+          "status": "waveform_available",
+          "verdict": "fail",
+          "assessment": {
+            "status": "FAIL",
+            "failures": [
+              "cross count/time a",
+              "cross bracket a"
+            ],
+            "maximum_errors_V": {
+              "u": 7.771561172376096e-16,
+              "clk": 4.163336342344337e-15,
+              "rst": 4.218847493575595e-15,
+              "ah": 1.3877787807814457e-16,
+              "ae": 9.992007221626409e-15,
+              "af": 1.1884466628586665e-05,
+              "as": 1.0756700493996796e-05
+            },
+            "rows": 2426,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 1.6510832391894548e-06,
+                  "hi_s": 1.6510917879594451e-06,
+                  "nominal_s": 1.6510752391894544e-06
+                },
+                {
+                  "lo_s": 7.596129858994676e-06,
+                  "hi_s": 7.596129899056371e-06,
+                  "nominal_s": 7.596128058938788e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [
+              "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+            ],
+            "actual": {
+              "reltol": 1e-06,
+              "vabstol": 1e-09,
+              "iabstol": 1e-13,
+              "stop": 8.5e-06,
+              "maxstep": 3.906250000000001e-09,
+              "method": "traponly"
+            },
+            "requested": {
+              "reltol": 1e-05,
+              "vabstol": 1e-09,
+              "iabstol": 1e-13,
+              "stop": 8.5e-06,
+              "maxstep": 3.90625e-09
+            },
+            "additional_controls": {},
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "evidence_insufficient",
+            "reused_native_record": false,
+            "exact_float_mismatches": 503,
+            "allowance_s": 2.710505431213761e-20,
+            "maximum_nearest_distance_s": 9.656175598699024e-20,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 100,
+            "missing_requested_times_json_sha256": "6dcdbcf0cfc281960bc4e93bc801f27f359a900e888d9d77042e6000a3526178"
+          },
+          "source_sha256": "804f51dc19ebc957803a8e4562a359a9985a795f0daafddd03c739e6152adbdb",
+          "requested_times_sha256": "c32f9ac38c8de8e54c98f45bde3649590f46e05aaf39596f876e6ebc5cb6da02",
+          "waveform_sha256": "d3604d963e68bcd46f5ac70e6efb1c3bd24aab57bd5456c50148d192afb6a79c",
+          "result_sha256": "b2c2e47f564effd1dfbdeca5b73cbb9983384e1149a35aa2ca106ae031b1bff4"
+        },
+        {
+          "condition": "SFC-TIMER",
+          "profile": "both",
+          "label": "SFC-TIMER--both",
+          "status": "waveform_available",
+          "verdict": "fail",
+          "assessment": {
+            "status": "PASS",
+            "failures": [],
+            "maximum_errors_V": {
+              "u": 7.771561172376096e-16,
+              "clk": 4.454769886308441e-15,
+              "rst": 4.218847493575595e-15,
+              "ah": 2.7755575615628914e-17,
+              "ae": 9.992007221626409e-15,
+              "af": 4.6793945190914954e-07,
+              "as": 1.8314526462059888e-07
+            },
+            "rows": 3270,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 1.6510732391894543e-06,
+                  "hi_s": 1.6510755209514e-06,
+                  "nominal_s": 1.6510752391894544e-06
+                },
+                {
+                  "lo_s": 7.596128058938788e-06,
+                  "hi_s": 7.596128534705469e-06,
+                  "nominal_s": 7.596128058938788e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [
+              "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+            ],
+            "actual": {
+              "reltol": 1e-09,
+              "vabstol": 1e-12,
+              "iabstol": 1e-15,
+              "stop": 8.5e-06,
+              "maxstep": 3.906250000000001e-09,
+              "method": "traponly"
+            },
+            "requested": {
+              "reltol": 1e-08,
+              "vabstol": 1e-12,
+              "iabstol": 1e-15,
+              "stop": 8.5e-06,
+              "maxstep": 3.90625e-09
+            },
+            "additional_controls": {},
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "evidence_insufficient",
+            "reused_native_record": false,
+            "exact_float_mismatches": 248,
+            "allowance_s": 2.710505431213761e-20,
+            "maximum_nearest_distance_s": 4.828087799349512e-20,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 27,
+            "missing_requested_times_json_sha256": "f34df25c7a4c2080e01682481eb28e74ba972493d994e949ce9910fcc334197a"
+          },
+          "source_sha256": "804f51dc19ebc957803a8e4562a359a9985a795f0daafddd03c739e6152adbdb",
+          "requested_times_sha256": "c32f9ac38c8de8e54c98f45bde3649590f46e05aaf39596f876e6ebc5cb6da02",
+          "waveform_sha256": "7f63d5bdb89a5531ac1fe01a21f006bc94ca7955acf61c1178807190882e8b30",
+          "result_sha256": "1b306c8e412afb3bb1df5d55f5e82fae0e0675deec405cf4aba77db9568fe7ea"
+        },
+        {
+          "condition": "SFC-RESET",
+          "profile": "base",
+          "label": "SFC-RESET--base",
+          "status": "waveform_available",
+          "verdict": "fail",
+          "assessment": {
+            "status": "FAIL",
+            "failures": [
+              "cross count/time a",
+              "cross bracket a"
+            ],
+            "maximum_errors_V": {
+              "u": 7.771561172376096e-16,
+              "clk": 4.69416172599324e-15,
+              "rst": 2.9976021664879227e-15,
+              "ah": 8.12501177449576e-11,
+              "ae": 8.125022876726007e-11,
+              "af": 1.3330757174023766e-05,
+              "as": 9.630123216752828e-06
+            },
+            "rows": 1340,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 1.6510832391894548e-06,
+                  "hi_s": 1.6510896979571197e-06,
+                  "nominal_s": 1.6510752391894544e-06
+                },
+                {
+                  "lo_s": 3.2228293556832157e-06,
+                  "hi_s": 3.2228298225442774e-06,
+                  "nominal_s": 3.222826355683216e-06
+                },
+                {
+                  "lo_s": 5.815609917333371e-06,
+                  "hi_s": 5.815621431971141e-06,
+                  "nominal_s": 5.815593917333378e-06
+                },
+                {
+                  "lo_s": 7.579556372490187e-06,
+                  "hi_s": 7.579557215966329e-06,
+                  "nominal_s": 7.579552372490187e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [
+              "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+            ],
+            "actual": {
+              "reltol": 1e-06,
+              "vabstol": 1e-09,
+              "iabstol": 1e-13,
+              "stop": 8.5e-06,
+              "maxstep": 3.1250000000000005e-08,
+              "method": "traponly"
+            },
+            "requested": {
+              "reltol": 1e-05,
+              "vabstol": 1e-09,
+              "iabstol": 1e-13,
+              "stop": 8.5e-06,
+              "maxstep": 3.125e-08
+            },
+            "additional_controls": {},
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "evidence_insufficient",
+            "reused_native_record": false,
+            "exact_float_mismatches": 43,
+            "allowance_s": 2.710505431213761e-20,
+            "maximum_nearest_distance_s": 1.2500088719105337e-16,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 6,
+            "missing_requested_times_json_sha256": "dca4331cdb429f1ad42db2af67757eeb399dca6cbdcf8e841e3948e6bb1f7cfb"
+          },
+          "source_sha256": "4af1a184c0dd72c0421350610746f1bf52af13c6d65a719e3e5233e8ed85be2d",
+          "requested_times_sha256": "230841100663e148db59ad37e02c1d571a9c5f92bd4eabd4e7dd7c69bb1d8f36",
+          "waveform_sha256": "3eaf34d4826e4da6164ab85a499dacf40064b18f7de0d96c448e6df1f798245d",
+          "result_sha256": "95de3e7e75242ba1090d08f6bc748064c8f4495a8d480d9bd42426e5b7337509"
+        },
+        {
+          "condition": "SFC-RESET",
+          "profile": "tol",
+          "label": "SFC-RESET--tol",
+          "status": "waveform_available",
+          "verdict": "fail",
+          "assessment": {
+            "status": "PASS",
+            "failures": [],
+            "maximum_errors_V": {
+              "u": 7.771561172376096e-16,
+              "clk": 5.6343818499726694e-15,
+              "rst": 3.552713678800501e-15,
+              "ah": 8.125000672265514e-11,
+              "ae": 8.125033978956253e-11,
+              "af": 4.566077200784946e-07,
+              "as": 5.929868802656557e-07
+            },
+            "rows": 3299,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 1.6510732391894543e-06,
+                  "hi_s": 1.6510755210055654e-06,
+                  "nominal_s": 1.6510752391894544e-06
+                },
+                {
+                  "lo_s": 3.222826355683216e-06,
+                  "hi_s": 3.2228268713239813e-06,
+                  "nominal_s": 3.222826355683216e-06
+                },
+                {
+                  "lo_s": 5.815593917333378e-06,
+                  "hi_s": 5.81559432667356e-06,
+                  "nominal_s": 5.815593917333378e-06
+                },
+                {
+                  "lo_s": 7.579552372490187e-06,
+                  "hi_s": 7.579552981345414e-06,
+                  "nominal_s": 7.579552372490187e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [
+              "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+            ],
+            "actual": {
+              "reltol": 1e-09,
+              "vabstol": 1e-12,
+              "iabstol": 1e-15,
+              "stop": 8.5e-06,
+              "maxstep": 3.1250000000000005e-08,
+              "method": "traponly"
+            },
+            "requested": {
+              "reltol": 1e-08,
+              "vabstol": 1e-12,
+              "iabstol": 1e-15,
+              "stop": 8.5e-06,
+              "maxstep": 3.125e-08
+            },
+            "additional_controls": {},
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "evidence_insufficient",
+            "reused_native_record": false,
+            "exact_float_mismatches": 9,
+            "allowance_s": 2.710505431213761e-20,
+            "maximum_nearest_distance_s": 1.2500088719105337e-16,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 5,
+            "missing_requested_times_json_sha256": "edc0db31a012125df897b45e7a0e3ac4cd95c85333cf09c4a3186e63f19b0c9d"
+          },
+          "source_sha256": "4af1a184c0dd72c0421350610746f1bf52af13c6d65a719e3e5233e8ed85be2d",
+          "requested_times_sha256": "230841100663e148db59ad37e02c1d571a9c5f92bd4eabd4e7dd7c69bb1d8f36",
+          "waveform_sha256": "4a55659a8659885c1a564e7a619d569bb7966bb34877342ff655a5dbbbf0cde6",
+          "result_sha256": "b3624619104efcf34f0880c9458ad70ceb336b3ecd74de059f2dd64ceb9340c8"
+        },
+        {
+          "condition": "SFC-RESET",
+          "profile": "step",
+          "label": "SFC-RESET--step",
+          "status": "waveform_available",
+          "verdict": "fail",
+          "assessment": {
+            "status": "FAIL",
+            "failures": [
+              "cross count/time a",
+              "cross bracket a"
+            ],
+            "maximum_errors_V": {
+              "u": 7.771561172376096e-16,
+              "clk": 4.586608870482678e-15,
+              "rst": 4.218847493575595e-15,
+              "ah": 8.12501177449576e-11,
+              "ae": 8.125000672265514e-11,
+              "af": 1.1507907000163353e-05,
+              "as": 1.0756735702499576e-05
+            },
+            "rows": 2462,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 1.6510832391894548e-06,
+                  "hi_s": 1.651091788013612e-06,
+                  "nominal_s": 1.6510752391894544e-06
+                },
+                {
+                  "lo_s": 3.2228243556832157e-06,
+                  "hi_s": 3.22282644647147e-06,
+                  "nominal_s": 3.222826355683216e-06
+                },
+                {
+                  "lo_s": 5.815601917333376e-06,
+                  "hi_s": 5.815609742674903e-06,
+                  "nominal_s": 5.815593917333378e-06
+                },
+                {
+                  "lo_s": 7.579553167914201e-06,
+                  "hi_s": 7.5795535541795745e-06,
+                  "nominal_s": 7.579552372490187e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [
+              "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+            ],
+            "actual": {
+              "reltol": 1e-06,
+              "vabstol": 1e-09,
+              "iabstol": 1e-13,
+              "stop": 8.5e-06,
+              "maxstep": 3.906250000000001e-09,
+              "method": "traponly"
+            },
+            "requested": {
+              "reltol": 1e-05,
+              "vabstol": 1e-09,
+              "iabstol": 1e-13,
+              "stop": 8.5e-06,
+              "maxstep": 3.90625e-09
+            },
+            "additional_controls": {},
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "evidence_insufficient",
+            "reused_native_record": false,
+            "exact_float_mismatches": 505,
+            "allowance_s": 2.710505431213761e-20,
+            "maximum_nearest_distance_s": 1.2500088719105337e-16,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 101,
+            "missing_requested_times_json_sha256": "4f55ed72f7175a19cfa35bfe447806c03a311d5ce458923ad5845c5f158c8b94"
+          },
+          "source_sha256": "4af1a184c0dd72c0421350610746f1bf52af13c6d65a719e3e5233e8ed85be2d",
+          "requested_times_sha256": "230841100663e148db59ad37e02c1d571a9c5f92bd4eabd4e7dd7c69bb1d8f36",
+          "waveform_sha256": "6e9b89e88c98c80a14169380bb7d006e9d706fc7913c97ede0391380be1875f9",
+          "result_sha256": "f5f667535b5b6743b3302e3a8a18c227651dce93ffc7b46b7485db240091a4ba"
+        },
+        {
+          "condition": "SFC-RESET",
+          "profile": "both",
+          "label": "SFC-RESET--both",
+          "status": "waveform_available",
+          "verdict": "fail",
+          "assessment": {
+            "status": "PASS",
+            "failures": [],
+            "maximum_errors_V": {
+              "u": 7.771561172376096e-16,
+              "clk": 4.739264536368637e-15,
+              "rst": 4.218847493575595e-15,
+              "ah": 8.125000672265514e-11,
+              "ae": 8.125278228021671e-11,
+              "af": 4.475871095976913e-07,
+              "as": 5.929868802656557e-07
+            },
+            "rows": 3585,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 1.6510732391894543e-06,
+                  "hi_s": 1.6510755210055654e-06,
+                  "nominal_s": 1.6510752391894544e-06
+                },
+                {
+                  "lo_s": 3.222826355683216e-06,
+                  "hi_s": 3.2228268713239813e-06,
+                  "nominal_s": 3.222826355683216e-06
+                },
+                {
+                  "lo_s": 5.815591917333379e-06,
+                  "hi_s": 5.815594286429729e-06,
+                  "nominal_s": 5.815593917333378e-06
+                },
+                {
+                  "lo_s": 7.579552372490187e-06,
+                  "hi_s": 7.57955295162653e-06,
+                  "nominal_s": 7.579552372490187e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [
+              "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+            ],
+            "actual": {
+              "reltol": 1e-09,
+              "vabstol": 1e-12,
+              "iabstol": 1e-15,
+              "stop": 8.5e-06,
+              "maxstep": 3.906250000000001e-09,
+              "method": "traponly"
+            },
+            "requested": {
+              "reltol": 1e-08,
+              "vabstol": 1e-12,
+              "iabstol": 1e-15,
+              "stop": 8.5e-06,
+              "maxstep": 3.90625e-09
+            },
+            "additional_controls": {},
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "evidence_insufficient",
+            "reused_native_record": false,
+            "exact_float_mismatches": 192,
+            "allowance_s": 2.710505431213761e-20,
+            "maximum_nearest_distance_s": 1.2500088719105337e-16,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 28,
+            "missing_requested_times_json_sha256": "5136fe9e65fabc455012814b7e424bc58c726c2f4f0ca1895b97c8e0e40a9516"
+          },
+          "source_sha256": "4af1a184c0dd72c0421350610746f1bf52af13c6d65a719e3e5233e8ed85be2d",
+          "requested_times_sha256": "230841100663e148db59ad37e02c1d571a9c5f92bd4eabd4e7dd7c69bb1d8f36",
+          "waveform_sha256": "ad46b6d8f33907a6730169f0f10572963e9249ab681e7f764d3f4815fe0c12e3",
+          "result_sha256": "67e358f7342f76a07b71864872ea1aa061555e004c52d4fb6fd02eb1500d242f"
+        },
+        {
+          "condition": "SFC-INTERRUPT",
+          "profile": "base",
+          "label": "SFC-INTERRUPT--base",
+          "status": "waveform_available",
+          "verdict": "fail",
+          "assessment": {
+            "status": "FAIL",
+            "failures": [
+              "cross count/time a",
+              "cross bracket a"
+            ],
+            "maximum_errors_V": {
+              "u": 7.771561172376096e-16,
+              "clk": 5.224987109642143e-15,
+              "rst": 3.7192471324942744e-15,
+              "ah": 4.440892098500626e-16,
+              "ae": 2.1094237467877974e-15,
+              "af": 7.035187590709313e-06,
+              "as": 1.1145097486675581e-05
+            },
+            "rows": 1479,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 2.167265580791722e-06,
+                  "hi_s": 2.1672661558082186e-06,
+                  "nominal_s": 2.167263580791722e-06
+                },
+                {
+                  "lo_s": 2.5477657706120886e-06,
+                  "hi_s": 2.5477670627654083e-06,
+                  "nominal_s": 2.5477577706120884e-06
+                },
+                {
+                  "lo_s": 4.200524942202902e-06,
+                  "hi_s": 4.200526139421042e-06,
+                  "nominal_s": 4.200526942202902e-06
+                },
+                {
+                  "lo_s": 4.430470183172661e-06,
+                  "hi_s": 4.430475295052059e-06,
+                  "nominal_s": 4.430462183172663e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [
+              "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+            ],
+            "actual": {
+              "reltol": 1e-06,
+              "vabstol": 1e-09,
+              "iabstol": 1e-13,
+              "stop": 8.5e-06,
+              "maxstep": 3.1250000000000005e-08,
+              "method": "traponly"
+            },
+            "requested": {
+              "reltol": 1e-05,
+              "vabstol": 1e-09,
+              "iabstol": 1e-13,
+              "stop": 8.5e-06,
+              "maxstep": 3.125e-08
+            },
+            "additional_controls": {},
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "covered",
+            "reused_native_record": false,
+            "exact_float_mismatches": 28,
+            "allowance_s": 2.710505431213761e-20,
+            "maximum_nearest_distance_s": 4.235164736271502e-21,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 0,
+            "missing_requested_times_json_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "source_sha256": "0d93abff5ba5f099496694eacd7a10f3512b88a0a6d0c12c1ff4657d52845c41",
+          "requested_times_sha256": "0afa87a087fb02cd6a4b962f1f3b2290faff5e2d3b24b7f29ff5af92249411c8",
+          "waveform_sha256": "2590508652e0ee25b1902e649f0b3bc7112e4550ab68b25d7394a052c40c7573",
+          "result_sha256": "44115e455911aca4a4efa31d26c2bd7a0b4568714310180e80e69d581381e095"
+        },
+        {
+          "condition": "SFC-INTERRUPT",
+          "profile": "tol",
+          "label": "SFC-INTERRUPT--tol",
+          "status": "waveform_available",
+          "verdict": "pass",
+          "assessment": {
+            "status": "PASS",
+            "failures": [],
+            "maximum_errors_V": {
+              "u": 8.881784197001252e-16,
+              "clk": 5.828670879282072e-15,
+              "rst": 4.6629367034256575e-15,
+              "ah": 9.992007221626409e-16,
+              "ae": 2.6922908347160046e-15,
+              "af": 3.305012601095836e-07,
+              "as": 6.441961349912262e-07
+            },
+            "rows": 3744,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 2.167261580791722e-06,
+                  "hi_s": 2.1672639729436546e-06,
+                  "nominal_s": 2.167263580791722e-06
+                },
+                {
+                  "lo_s": 2.5477577706120884e-06,
+                  "hi_s": 2.5477585758572572e-06,
+                  "nominal_s": 2.5477577706120884e-06
+                },
+                {
+                  "lo_s": 4.200526942202902e-06,
+                  "hi_s": 4.200527411999801e-06,
+                  "nominal_s": 4.200526942202902e-06
+                },
+                {
+                  "lo_s": 4.430462183172663e-06,
+                  "hi_s": 4.430462632007928e-06,
+                  "nominal_s": 4.430462183172663e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [
+              "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+            ],
+            "actual": {
+              "reltol": 1e-09,
+              "vabstol": 1e-12,
+              "iabstol": 1e-15,
+              "stop": 8.5e-06,
+              "maxstep": 3.1250000000000005e-08,
+              "method": "traponly"
+            },
+            "requested": {
+              "reltol": 1e-08,
+              "vabstol": 1e-12,
+              "iabstol": 1e-15,
+              "stop": 8.5e-06,
+              "maxstep": 3.125e-08
+            },
+            "additional_controls": {},
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "covered",
+            "reused_native_record": false,
+            "exact_float_mismatches": 17,
+            "allowance_s": 2.710505431213761e-20,
+            "maximum_nearest_distance_s": 2.541098841762901e-21,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 0,
+            "missing_requested_times_json_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "source_sha256": "0d93abff5ba5f099496694eacd7a10f3512b88a0a6d0c12c1ff4657d52845c41",
+          "requested_times_sha256": "0afa87a087fb02cd6a4b962f1f3b2290faff5e2d3b24b7f29ff5af92249411c8",
+          "waveform_sha256": "bfd5a3223ae6e828828f41e475a58ac0c962db084b89a1b1a6b24461b0af244a",
+          "result_sha256": "e3a3a38d576de6a080c139b6cf8936ffe6ce28f8c7afa3cd00bb171fd189f9fb"
+        },
+        {
+          "condition": "SFC-INTERRUPT",
+          "profile": "step",
+          "label": "SFC-INTERRUPT--step",
+          "status": "waveform_available",
+          "verdict": "fail",
+          "assessment": {
+            "status": "FAIL",
+            "failures": [
+              "cross bracket a"
+            ],
+            "maximum_errors_V": {
+              "u": 7.771561172376096e-16,
+              "clk": 4.163336342344337e-15,
+              "rst": 4.218847493575595e-15,
+              "ah": 4.440892098500626e-16,
+              "ae": 1.3933298959045715e-14,
+              "af": 1.0380750202890199e-05,
+              "as": 4.873852407660806e-06
+            },
+            "rows": 2502,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 2.167261580791722e-06,
+                  "hi_s": 2.167263961199822e-06,
+                  "nominal_s": 2.167263580791722e-06
+                },
+                {
+                  "lo_s": 2.5477607706120882e-06,
+                  "hi_s": 2.547761265703587e-06,
+                  "nominal_s": 2.5477577706120884e-06
+                },
+                {
+                  "lo_s": 4.200524369682516e-06,
+                  "hi_s": 4.2005246551900005e-06,
+                  "nominal_s": 4.200526942202902e-06
+                },
+                {
+                  "lo_s": 4.4304661831726634e-06,
+                  "hi_s": 4.430467917116672e-06,
+                  "nominal_s": 4.430462183172663e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [
+              "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+            ],
+            "actual": {
+              "reltol": 1e-06,
+              "vabstol": 1e-09,
+              "iabstol": 1e-13,
+              "stop": 8.5e-06,
+              "maxstep": 3.906250000000001e-09,
+              "method": "traponly"
+            },
+            "requested": {
+              "reltol": 1e-05,
+              "vabstol": 1e-09,
+              "iabstol": 1e-13,
+              "stop": 8.5e-06,
+              "maxstep": 3.90625e-09
+            },
+            "additional_controls": {},
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "evidence_insufficient",
+            "reused_native_record": false,
+            "exact_float_mismatches": 494,
+            "allowance_s": 2.710505431213761e-20,
+            "maximum_nearest_distance_s": 6.437450399132683e-20,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 43,
+            "missing_requested_times_json_sha256": "334c9430a32dd63cdf8dd5ac7443f4104652e25718cc2ffa5091fd07e32bffe8"
+          },
+          "source_sha256": "0d93abff5ba5f099496694eacd7a10f3512b88a0a6d0c12c1ff4657d52845c41",
+          "requested_times_sha256": "0afa87a087fb02cd6a4b962f1f3b2290faff5e2d3b24b7f29ff5af92249411c8",
+          "waveform_sha256": "9018b94090ba034fecf63587abf6f7331e883b26998decf72c424fc3beb50a56",
+          "result_sha256": "f7f95d367655c21ae55ba798977029cbf302a322ce46952af17db9d560f2b218"
+        },
+        {
+          "condition": "SFC-INTERRUPT",
+          "profile": "both",
+          "label": "SFC-INTERRUPT--both",
+          "status": "waveform_available",
+          "verdict": "pass",
+          "assessment": {
+            "status": "PASS",
+            "failures": [],
+            "maximum_errors_V": {
+              "u": 8.881784197001252e-16,
+              "clk": 4.8433479449272454e-15,
+              "rst": 4.440892098500626e-15,
+              "ah": 4.440892098500626e-16,
+              "ae": 8.93209117780458e-15,
+              "af": 3.305070251230502e-07,
+              "as": 6.484613451762655e-07
+            },
+            "rows": 3955,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 2.167261580791722e-06,
+                  "hi_s": 2.167263964079415e-06,
+                  "nominal_s": 2.167263580791722e-06
+                },
+                {
+                  "lo_s": 2.5477577706120884e-06,
+                  "hi_s": 2.54775858118877e-06,
+                  "nominal_s": 2.5477577706120884e-06
+                },
+                {
+                  "lo_s": 4.200526942202902e-06,
+                  "hi_s": 4.200527411851217e-06,
+                  "nominal_s": 4.200526942202902e-06
+                },
+                {
+                  "lo_s": 4.430462183172663e-06,
+                  "hi_s": 4.430462632117257e-06,
+                  "nominal_s": 4.430462183172663e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [
+              "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+            ],
+            "actual": {
+              "reltol": 1e-09,
+              "vabstol": 1e-12,
+              "iabstol": 1e-15,
+              "stop": 8.5e-06,
+              "maxstep": 3.906250000000001e-09,
+              "method": "traponly"
+            },
+            "requested": {
+              "reltol": 1e-08,
+              "vabstol": 1e-12,
+              "iabstol": 1e-15,
+              "stop": 8.5e-06,
+              "maxstep": 3.90625e-09
+            },
+            "additional_controls": {},
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "covered",
+            "reused_native_record": false,
+            "exact_float_mismatches": 117,
+            "allowance_s": 2.710505431213761e-20,
+            "maximum_nearest_distance_s": 1.6940658945086007e-20,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 0,
+            "missing_requested_times_json_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "source_sha256": "0d93abff5ba5f099496694eacd7a10f3512b88a0a6d0c12c1ff4657d52845c41",
+          "requested_times_sha256": "0afa87a087fb02cd6a4b962f1f3b2290faff5e2d3b24b7f29ff5af92249411c8",
+          "waveform_sha256": "79311fbc01c31116547db78eaaddeccb24e06869cf03860f360b6158a2e36755",
+          "result_sha256": "efe3e4c22e6ca28a710a841db700862b18274ce408c659449eb27d2ac7018dad"
+        },
+        {
+          "condition": "SFC-ISOLATION",
+          "profile": "base",
+          "label": "SFC-ISOLATION--base",
+          "status": "waveform_available",
+          "verdict": "fail",
+          "assessment": {
+            "status": "FAIL",
+            "failures": [
+              "cross count/time a",
+              "cross bracket a",
+              "cross bracket b"
+            ],
+            "maximum_errors_V": {
+              "u": 7.771561172376096e-16,
+              "clk": 4.326834029955151e-15,
+              "rst": 2.9976021664879227e-15,
+              "ah": 1.3877787807814457e-16,
+              "ae": 1.9984014443252818e-15,
+              "af": 9.190096027955619e-06,
+              "bh": 1.5612511283791264e-16,
+              "be": 3.0531133177191805e-16,
+              "bf": 1.8389514951505648e-06,
+              "as": 9.422385718216297e-06,
+              "bs": 4.912351350555566e-06
+            },
+            "rows": 1366,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 1.6510832391894548e-06,
+                  "hi_s": 1.6510897351674824e-06,
+                  "nominal_s": 1.6510752391894544e-06
+                },
+                {
+                  "lo_s": 7.596131483777313e-06,
+                  "hi_s": 7.596131758287114e-06,
+                  "nominal_s": 7.596128058938788e-06
+                }
+              ],
+              "b": [
+                {
+                  "lo_s": 2.1494097509901897e-06,
+                  "hi_s": 2.149411891429378e-06,
+                  "nominal_s": 2.1494057509901896e-06
+                },
+                {
+                  "lo_s": 5.2856666244626775e-06,
+                  "hi_s": 5.285666699440438e-06,
+                  "nominal_s": 5.285662979475345e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [
+              "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+            ],
+            "actual": {
+              "reltol": 1e-06,
+              "vabstol": 1e-09,
+              "iabstol": 1e-13,
+              "stop": 8.5e-06,
+              "maxstep": 3.1250000000000005e-08,
+              "method": "traponly"
+            },
+            "requested": {
+              "reltol": 1e-05,
+              "vabstol": 1e-09,
+              "iabstol": 1e-13,
+              "stop": 8.5e-06,
+              "maxstep": 3.125e-08
+            },
+            "additional_controls": {},
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "covered",
+            "reused_native_record": false,
+            "exact_float_mismatches": 52,
+            "allowance_s": 2.710505431213761e-20,
+            "maximum_nearest_distance_s": 3.3881317890172014e-21,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 0,
+            "missing_requested_times_json_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "source_sha256": "c1db668ce11fa5f6cc577e8815d67522e89a735790a2a03c1643538ef92fddcc",
+          "requested_times_sha256": "ace896749d04382df4a8957582a9bba48d0d1ec0c0bced51ed9eefb6f23fa485",
+          "waveform_sha256": "c87eef7e4a805a05f34bb0ceb7122191d3c338f08da9d6c76a82ff2500f3a097",
+          "result_sha256": "9231d4e199eb83e63f6b03704896b5af0bf93c22f1ff686989e466017ea80489"
+        },
+        {
+          "condition": "SFC-ISOLATION",
+          "profile": "tol",
+          "label": "SFC-ISOLATION--tol",
+          "status": "waveform_available",
+          "verdict": "pass",
+          "assessment": {
+            "status": "PASS",
+            "failures": [],
+            "maximum_errors_V": {
+              "u": 8.881784197001252e-16,
+              "clk": 5.005544589931077e-15,
+              "rst": 4.052314039881821e-15,
+              "ah": 2.7755575615628914e-17,
+              "ae": 2.0816681711721685e-15,
+              "af": 2.9911964083417786e-07,
+              "bh": 1.5612511283791264e-16,
+              "be": 5.273559366969494e-16,
+              "bf": 4.187491373097707e-08,
+              "as": 1.8274750385183225e-07,
+              "bs": 1.307854026466604e-07
+            },
+            "rows": 4011,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 1.6510732391894543e-06,
+                  "hi_s": 1.6510755203394604e-06,
+                  "nominal_s": 1.6510752391894544e-06
+                },
+                {
+                  "lo_s": 7.596128058938788e-06,
+                  "hi_s": 7.596128497264577e-06,
+                  "nominal_s": 7.596128058938788e-06
+                }
+              ],
+              "b": [
+                {
+                  "lo_s": 2.1494037509901895e-06,
+                  "hi_s": 2.1494059144719432e-06,
+                  "nominal_s": 2.1494057509901896e-06
+                },
+                {
+                  "lo_s": 5.285660979475346e-06,
+                  "hi_s": 5.2856632540126385e-06,
+                  "nominal_s": 5.285662979475345e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [
+              "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+            ],
+            "actual": {
+              "reltol": 1e-09,
+              "vabstol": 1e-12,
+              "iabstol": 1e-15,
+              "stop": 8.5e-06,
+              "maxstep": 3.1250000000000005e-08,
+              "method": "traponly"
+            },
+            "requested": {
+              "reltol": 1e-08,
+              "vabstol": 1e-12,
+              "iabstol": 1e-15,
+              "stop": 8.5e-06,
+              "maxstep": 3.125e-08
+            },
+            "additional_controls": {},
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "covered",
+            "reused_native_record": false,
+            "exact_float_mismatches": 16,
+            "allowance_s": 2.710505431213761e-20,
+            "maximum_nearest_distance_s": 3.3881317890172014e-21,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 0,
+            "missing_requested_times_json_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "source_sha256": "c1db668ce11fa5f6cc577e8815d67522e89a735790a2a03c1643538ef92fddcc",
+          "requested_times_sha256": "ace896749d04382df4a8957582a9bba48d0d1ec0c0bced51ed9eefb6f23fa485",
+          "waveform_sha256": "ed0a723de7f80b4199830e42d084f1e34246a66560ad3e012c236a8068aac7dc",
+          "result_sha256": "7b820dd3149bce7f3ed8e4cabdd50866edc8d10104570f4e0001a9c3771042bc"
+        },
+        {
+          "condition": "SFC-ISOLATION",
+          "profile": "step",
+          "label": "SFC-ISOLATION--step",
+          "status": "waveform_available",
+          "verdict": "fail",
+          "assessment": {
+            "status": "FAIL",
+            "failures": [
+              "cross count/time a",
+              "cross bracket a"
+            ],
+            "maximum_errors_V": {
+              "u": 7.771561172376096e-16,
+              "clk": 4.163336342344337e-15,
+              "rst": 4.218847493575595e-15,
+              "ah": 1.3877787807814457e-16,
+              "ae": 9.992007221626409e-15,
+              "af": 1.0430804574967922e-05,
+              "bh": 1.5612511283791264e-16,
+              "be": 9.506284648352903e-15,
+              "bf": 1.1158070001016096e-06,
+              "as": 1.0760978112256403e-05,
+              "bs": 1.5585347639957003e-06
+            },
+            "rows": 2498,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 1.6510832391894548e-06,
+                  "hi_s": 1.651091794540396e-06,
+                  "nominal_s": 1.6510752391894544e-06
+                },
+                {
+                  "lo_s": 7.596129861934375e-06,
+                  "hi_s": 7.596129905327725e-06,
+                  "nominal_s": 7.596128058938788e-06
+                }
+              ],
+              "b": [
+                {
+                  "lo_s": 2.1494076633846394e-06,
+                  "hi_s": 2.149407699158645e-06,
+                  "nominal_s": 2.1494057509901896e-06
+                },
+                {
+                  "lo_s": 5.285662979475345e-06,
+                  "hi_s": 5.285663469553267e-06,
+                  "nominal_s": 5.285662979475345e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [
+              "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+            ],
+            "actual": {
+              "reltol": 1e-06,
+              "vabstol": 1e-09,
+              "iabstol": 1e-13,
+              "stop": 8.5e-06,
+              "maxstep": 3.906250000000001e-09,
+              "method": "traponly"
+            },
+            "requested": {
+              "reltol": 1e-05,
+              "vabstol": 1e-09,
+              "iabstol": 1e-13,
+              "stop": 8.5e-06,
+              "maxstep": 3.90625e-09
+            },
+            "additional_controls": {},
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "evidence_insufficient",
+            "reused_native_record": false,
+            "exact_float_mismatches": 494,
+            "allowance_s": 2.710505431213761e-20,
+            "maximum_nearest_distance_s": 9.317362419797304e-20,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 78,
+            "missing_requested_times_json_sha256": "84b1da6188d2941c4f10ddd464f3a92c058b41be367511eafd362c671da77157"
+          },
+          "source_sha256": "c1db668ce11fa5f6cc577e8815d67522e89a735790a2a03c1643538ef92fddcc",
+          "requested_times_sha256": "ace896749d04382df4a8957582a9bba48d0d1ec0c0bced51ed9eefb6f23fa485",
+          "waveform_sha256": "0825a4ae339c926f83e826fcfd54a958c21103e23d2c732cab2910c32cd5e7d1",
+          "result_sha256": "3c302397c9e84bf4cc4b3c29139bbbb79967c5ae96f892f377b31efc558e8548"
+        },
+        {
+          "condition": "SFC-ISOLATION",
+          "profile": "both",
+          "label": "SFC-ISOLATION--both",
+          "status": "waveform_available",
+          "verdict": "fail",
+          "assessment": {
+            "status": "PASS",
+            "failures": [],
+            "maximum_errors_V": {
+              "u": 7.771561172376096e-16,
+              "clk": 5.467848396278896e-15,
+              "rst": 4.218847493575595e-15,
+              "ah": 2.7755575615628914e-17,
+              "ae": 9.978129433818594e-15,
+              "af": 3.144620763229078e-07,
+              "bh": 1.5612511283791264e-16,
+              "be": 3.552713678800501e-15,
+              "bf": 4.1699254715865663e-08,
+              "as": 1.8274750634983405e-07,
+              "bs": 1.307854026466604e-07
+            },
+            "rows": 4283,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 1.6510732391894543e-06,
+                  "hi_s": 1.6510755203394642e-06,
+                  "nominal_s": 1.6510752391894544e-06
+                },
+                {
+                  "lo_s": 7.596128058938788e-06,
+                  "hi_s": 7.596128533095614e-06,
+                  "nominal_s": 7.596128058938788e-06
+                }
+              ],
+              "b": [
+                {
+                  "lo_s": 2.1494037509901895e-06,
+                  "hi_s": 2.1494059144719432e-06,
+                  "nominal_s": 2.1494057509901896e-06
+                },
+                {
+                  "lo_s": 5.285660979475346e-06,
+                  "hi_s": 5.285663253389677e-06,
+                  "nominal_s": 5.285662979475345e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [
+              "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+            ],
+            "actual": {
+              "reltol": 1e-09,
+              "vabstol": 1e-12,
+              "iabstol": 1e-15,
+              "stop": 8.5e-06,
+              "maxstep": 3.906250000000001e-09,
+              "method": "traponly"
+            },
+            "requested": {
+              "reltol": 1e-08,
+              "vabstol": 1e-12,
+              "iabstol": 1e-15,
+              "stop": 8.5e-06,
+              "maxstep": 3.90625e-09
+            },
+            "additional_controls": {},
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "evidence_insufficient",
+            "reused_native_record": false,
+            "exact_float_mismatches": 177,
+            "allowance_s": 2.710505431213761e-20,
+            "maximum_nearest_distance_s": 3.8963515573697816e-20,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 9,
+            "missing_requested_times_json_sha256": "967c58bd99c217bf170f893f3c2ef5bce7754590eb26d8c2001b73800456426c"
+          },
+          "source_sha256": "c1db668ce11fa5f6cc577e8815d67522e89a735790a2a03c1643538ef92fddcc",
+          "requested_times_sha256": "ace896749d04382df4a8957582a9bba48d0d1ec0c0bced51ed9eefb6f23fa485",
+          "waveform_sha256": "beba92183fc443ad9198e64d99b432065e0c9b4073549e05c7a222a2c7ff20c1",
+          "result_sha256": "9195821247174392886295c001883d923becf433efc138cdbd466b9d353e7dba"
+        }
+      ],
+      "selected_engineering_profiles": {
+        "SFC-TIMER": "tol",
+        "SFC-RESET": "tol",
+        "SFC-INTERRUPT": "tol",
+        "SFC-ISOLATION": "tol"
+      }
+    },
+    "evas": {
+      "execution_count": 16,
+      "engineering_passes": 16,
+      "original_strict_passes": 16,
+      "identity": {
+        "kernel_sha256": "75ea735391b2ad7f6754509106b04dd476c1be6d2f5f1780d5a8d5db50212f2c",
+        "unknowns": [
+          "kernel build revision not reported; source identity alone does not prove binary provenance"
+        ]
+      },
+      "execution_sha256": "b408964689bbad4758eaf64122387289091cc31910f017159dc3df766efc7c94",
+      "file_manifest_sha256": "f4cbb51b0c8b76e413c38fe84e1c9b675e040d247a0cc8e3da1f1db298d04164",
+      "collection": {
+        "archive_sha256": "e86afcd7ea40117418b7292d6edbbf58d43000c1fbab0508f97fd3439b63d91e",
+        "verified_files": 246,
+        "remote_original_retained": true,
+        "availability": "local-only",
+        "returncode": 0
+      },
+      "records": [
+        {
+          "condition": "SFC-TIMER",
+          "profile": "base",
+          "label": "SFC-TIMER--base",
+          "status": "waveform_available",
+          "verdict": "pass",
+          "assessment": {
+            "status": "PASS",
+            "failures": [],
+            "maximum_errors_V": {
+              "u": 4.440892098500626e-16,
+              "clk": 3.552713678800501e-15,
+              "rst": 2.9976021664879227e-15,
+              "ah": 3.3306690738754696e-16,
+              "ae": 1.1934897514720433e-15,
+              "af": 2.6645352591003757e-15,
+              "as": 2.3052393327560594e-13
+            },
+            "rows": 569,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 1.6510732391894543e-06,
+                  "hi_s": 1.6510772391894545e-06,
+                  "nominal_s": 1.6510752391894544e-06
+                },
+                {
+                  "lo_s": 7.596126058938788e-06,
+                  "hi_s": 7.596130058938787e-06,
+                  "nominal_s": 7.596128058938788e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [],
+            "actual": {
+              "reltol": 1e-05,
+              "vabstol": 1e-09,
+              "iabstol": "unknown",
+              "stop": 8.5e-06,
+              "maxstep": 3.125e-08,
+              "method": "unknown; unsupported integration_method control"
+            },
+            "requested": {
+              "reltol": 1e-05,
+              "vabstol": 1e-09,
+              "iabstol": 1e-13,
+              "stop": 8.5e-06,
+              "maxstep": 3.125e-08
+            },
+            "additional_controls": {
+              "observation_mode": "forced solver observation",
+              "origins": [
+                "accepted_controller_frame"
+              ],
+              "max_step_applied": true,
+              "engine": "evas-events-0.14.0",
+              "accepted_steps": 579,
+              "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred"
+            },
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "covered",
+            "reused_native_record": false,
+            "exact_float_mismatches": 0,
+            "allowance_s": 0.0,
+            "maximum_nearest_distance_s": 0.0,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 0,
+            "missing_requested_times_json_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "source_sha256": "804f51dc19ebc957803a8e4562a359a9985a795f0daafddd03c739e6152adbdb",
+          "requested_times_sha256": "c32f9ac38c8de8e54c98f45bde3649590f46e05aaf39596f876e6ebc5cb6da02",
+          "waveform_sha256": "619d687383a3b84a05d55bc98f12454ea361694125ec442dcacc9b7ab1995ce7",
+          "result_sha256": "308538ca53f37a3cfead3cfd63e0d2c1b099df9525ec28454788a7b6577ad61a"
+        },
+        {
+          "condition": "SFC-TIMER",
+          "profile": "tol",
+          "label": "SFC-TIMER--tol",
+          "status": "waveform_available",
+          "verdict": "pass",
+          "assessment": {
+            "status": "PASS",
+            "failures": [],
+            "maximum_errors_V": {
+              "u": 4.440892098500626e-16,
+              "clk": 3.552713678800501e-15,
+              "rst": 2.9976021664879227e-15,
+              "ah": 3.3306690738754696e-16,
+              "ae": 1.1934897514720433e-15,
+              "af": 2.6645352591003757e-15,
+              "as": 2.3052393327560594e-13
+            },
+            "rows": 569,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 1.6510732391894543e-06,
+                  "hi_s": 1.6510772391894545e-06,
+                  "nominal_s": 1.6510752391894544e-06
+                },
+                {
+                  "lo_s": 7.596126058938788e-06,
+                  "hi_s": 7.596130058938787e-06,
+                  "nominal_s": 7.596128058938788e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [],
+            "actual": {
+              "reltol": 1e-08,
+              "vabstol": 1e-12,
+              "iabstol": "unknown",
+              "stop": 8.5e-06,
+              "maxstep": 3.125e-08,
+              "method": "unknown; unsupported integration_method control"
+            },
+            "requested": {
+              "reltol": 1e-08,
+              "vabstol": 1e-12,
+              "iabstol": 1e-15,
+              "stop": 8.5e-06,
+              "maxstep": 3.125e-08
+            },
+            "additional_controls": {
+              "observation_mode": "forced solver observation",
+              "origins": [
+                "accepted_controller_frame"
+              ],
+              "max_step_applied": true,
+              "engine": "evas-events-0.14.0",
+              "accepted_steps": 579,
+              "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred"
+            },
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "covered",
+            "reused_native_record": false,
+            "exact_float_mismatches": 0,
+            "allowance_s": 0.0,
+            "maximum_nearest_distance_s": 0.0,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 0,
+            "missing_requested_times_json_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "source_sha256": "804f51dc19ebc957803a8e4562a359a9985a795f0daafddd03c739e6152adbdb",
+          "requested_times_sha256": "c32f9ac38c8de8e54c98f45bde3649590f46e05aaf39596f876e6ebc5cb6da02",
+          "waveform_sha256": "619d687383a3b84a05d55bc98f12454ea361694125ec442dcacc9b7ab1995ce7",
+          "result_sha256": "d48e77424dbb7ad8e20298379d43b8654f62e2aa854b31a6f158a4207310565a"
+        },
+        {
+          "condition": "SFC-TIMER",
+          "profile": "step",
+          "label": "SFC-TIMER--step",
+          "status": "waveform_available",
+          "verdict": "pass",
+          "assessment": {
+            "status": "PASS",
+            "failures": [],
+            "maximum_errors_V": {
+              "u": 4.440892098500626e-16,
+              "clk": 3.552713678800501e-15,
+              "rst": 2.9976021664879227e-15,
+              "ah": 3.3306690738754696e-16,
+              "ae": 1.1934897514720433e-15,
+              "af": 2.6645352591003757e-15,
+              "as": 2.3052393327560594e-13
+            },
+            "rows": 569,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 1.6510732391894543e-06,
+                  "hi_s": 1.6510772391894545e-06,
+                  "nominal_s": 1.6510752391894544e-06
+                },
+                {
+                  "lo_s": 7.596126058938788e-06,
+                  "hi_s": 7.596130058938787e-06,
+                  "nominal_s": 7.596128058938788e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [],
+            "actual": {
+              "reltol": 1e-05,
+              "vabstol": 1e-09,
+              "iabstol": "unknown",
+              "stop": 8.5e-06,
+              "maxstep": 3.90625e-09,
+              "method": "unknown; unsupported integration_method control"
+            },
+            "requested": {
+              "reltol": 1e-05,
+              "vabstol": 1e-09,
+              "iabstol": 1e-13,
+              "stop": 8.5e-06,
+              "maxstep": 3.90625e-09
+            },
+            "additional_controls": {
+              "observation_mode": "forced solver observation",
+              "origins": [
+                "accepted_controller_frame"
+              ],
+              "max_step_applied": true,
+              "engine": "evas-events-0.14.0",
+              "accepted_steps": 2480,
+              "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred"
+            },
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "covered",
+            "reused_native_record": false,
+            "exact_float_mismatches": 0,
+            "allowance_s": 0.0,
+            "maximum_nearest_distance_s": 0.0,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 0,
+            "missing_requested_times_json_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "source_sha256": "804f51dc19ebc957803a8e4562a359a9985a795f0daafddd03c739e6152adbdb",
+          "requested_times_sha256": "c32f9ac38c8de8e54c98f45bde3649590f46e05aaf39596f876e6ebc5cb6da02",
+          "waveform_sha256": "619d687383a3b84a05d55bc98f12454ea361694125ec442dcacc9b7ab1995ce7",
+          "result_sha256": "9ec53c3579bacdfd2e45b9d214df77593cd0e04be166bd55e7ba5307f5614dda"
+        },
+        {
+          "condition": "SFC-TIMER",
+          "profile": "both",
+          "label": "SFC-TIMER--both",
+          "status": "waveform_available",
+          "verdict": "pass",
+          "assessment": {
+            "status": "PASS",
+            "failures": [],
+            "maximum_errors_V": {
+              "u": 4.440892098500626e-16,
+              "clk": 3.552713678800501e-15,
+              "rst": 2.9976021664879227e-15,
+              "ah": 3.3306690738754696e-16,
+              "ae": 1.1934897514720433e-15,
+              "af": 2.6645352591003757e-15,
+              "as": 2.3052393327560594e-13
+            },
+            "rows": 569,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 1.6510732391894543e-06,
+                  "hi_s": 1.6510772391894545e-06,
+                  "nominal_s": 1.6510752391894544e-06
+                },
+                {
+                  "lo_s": 7.596126058938788e-06,
+                  "hi_s": 7.596130058938787e-06,
+                  "nominal_s": 7.596128058938788e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [],
+            "actual": {
+              "reltol": 1e-08,
+              "vabstol": 1e-12,
+              "iabstol": "unknown",
+              "stop": 8.5e-06,
+              "maxstep": 3.90625e-09,
+              "method": "unknown; unsupported integration_method control"
+            },
+            "requested": {
+              "reltol": 1e-08,
+              "vabstol": 1e-12,
+              "iabstol": 1e-15,
+              "stop": 8.5e-06,
+              "maxstep": 3.90625e-09
+            },
+            "additional_controls": {
+              "observation_mode": "forced solver observation",
+              "origins": [
+                "accepted_controller_frame"
+              ],
+              "max_step_applied": true,
+              "engine": "evas-events-0.14.0",
+              "accepted_steps": 2480,
+              "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred"
+            },
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "covered",
+            "reused_native_record": false,
+            "exact_float_mismatches": 0,
+            "allowance_s": 0.0,
+            "maximum_nearest_distance_s": 0.0,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 0,
+            "missing_requested_times_json_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "source_sha256": "804f51dc19ebc957803a8e4562a359a9985a795f0daafddd03c739e6152adbdb",
+          "requested_times_sha256": "c32f9ac38c8de8e54c98f45bde3649590f46e05aaf39596f876e6ebc5cb6da02",
+          "waveform_sha256": "619d687383a3b84a05d55bc98f12454ea361694125ec442dcacc9b7ab1995ce7",
+          "result_sha256": "c051050f619d2eea2ce4d99c5295d7bfebaa5add029d81939a7e9b3f06765b02"
+        },
+        {
+          "condition": "SFC-RESET",
+          "profile": "base",
+          "label": "SFC-RESET--base",
+          "status": "waveform_available",
+          "verdict": "pass",
+          "assessment": {
+            "status": "PASS",
+            "failures": [],
+            "maximum_errors_V": {
+              "u": 4.440892098500626e-16,
+              "clk": 3.552713678800501e-15,
+              "rst": 2.9976021664879227e-15,
+              "ah": 3.3306690738754696e-16,
+              "ae": 1.3322676295501878e-15,
+              "af": 2.7755575615628914e-15,
+              "as": 1.4158674233044621e-12
+            },
+            "rows": 581,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 1.6510732391894543e-06,
+                  "hi_s": 1.6510772391894545e-06,
+                  "nominal_s": 1.6510752391894544e-06
+                },
+                {
+                  "lo_s": 3.2228243556832157e-06,
+                  "hi_s": 3.222828355683216e-06,
+                  "nominal_s": 3.222826355683216e-06
+                },
+                {
+                  "lo_s": 5.815591917333379e-06,
+                  "hi_s": 5.815595917333378e-06,
+                  "nominal_s": 5.815593917333378e-06
+                },
+                {
+                  "lo_s": 7.5795503724901875e-06,
+                  "hi_s": 7.579554372490187e-06,
+                  "nominal_s": 7.579552372490187e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [],
+            "actual": {
+              "reltol": 1e-05,
+              "vabstol": 1e-09,
+              "iabstol": "unknown",
+              "stop": 8.5e-06,
+              "maxstep": 3.125e-08,
+              "method": "unknown; unsupported integration_method control"
+            },
+            "requested": {
+              "reltol": 1e-05,
+              "vabstol": 1e-09,
+              "iabstol": 1e-13,
+              "stop": 8.5e-06,
+              "maxstep": 3.125e-08
+            },
+            "additional_controls": {
+              "observation_mode": "forced solver observation",
+              "origins": [
+                "accepted_controller_frame"
+              ],
+              "max_step_applied": true,
+              "engine": "evas-events-0.14.0",
+              "accepted_steps": 594,
+              "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred"
+            },
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "covered",
+            "reused_native_record": false,
+            "exact_float_mismatches": 0,
+            "allowance_s": 0.0,
+            "maximum_nearest_distance_s": 0.0,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 0,
+            "missing_requested_times_json_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "source_sha256": "4af1a184c0dd72c0421350610746f1bf52af13c6d65a719e3e5233e8ed85be2d",
+          "requested_times_sha256": "230841100663e148db59ad37e02c1d571a9c5f92bd4eabd4e7dd7c69bb1d8f36",
+          "waveform_sha256": "158884620b3f1068bf1993da4ec40bcd655909f8bcd1233c65b9e23fe8e39230",
+          "result_sha256": "00b20650b65a2cdf298820e0789c5009e50810f1f56e2ef85ced176a51377d62"
+        },
+        {
+          "condition": "SFC-RESET",
+          "profile": "tol",
+          "label": "SFC-RESET--tol",
+          "status": "waveform_available",
+          "verdict": "pass",
+          "assessment": {
+            "status": "PASS",
+            "failures": [],
+            "maximum_errors_V": {
+              "u": 4.440892098500626e-16,
+              "clk": 3.552713678800501e-15,
+              "rst": 2.9976021664879227e-15,
+              "ah": 3.3306690738754696e-16,
+              "ae": 1.3322676295501878e-15,
+              "af": 2.7755575615628914e-15,
+              "as": 1.4158674233044621e-12
+            },
+            "rows": 581,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 1.6510732391894543e-06,
+                  "hi_s": 1.6510772391894545e-06,
+                  "nominal_s": 1.6510752391894544e-06
+                },
+                {
+                  "lo_s": 3.2228243556832157e-06,
+                  "hi_s": 3.222828355683216e-06,
+                  "nominal_s": 3.222826355683216e-06
+                },
+                {
+                  "lo_s": 5.815591917333379e-06,
+                  "hi_s": 5.815595917333378e-06,
+                  "nominal_s": 5.815593917333378e-06
+                },
+                {
+                  "lo_s": 7.5795503724901875e-06,
+                  "hi_s": 7.579554372490187e-06,
+                  "nominal_s": 7.579552372490187e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [],
+            "actual": {
+              "reltol": 1e-08,
+              "vabstol": 1e-12,
+              "iabstol": "unknown",
+              "stop": 8.5e-06,
+              "maxstep": 3.125e-08,
+              "method": "unknown; unsupported integration_method control"
+            },
+            "requested": {
+              "reltol": 1e-08,
+              "vabstol": 1e-12,
+              "iabstol": 1e-15,
+              "stop": 8.5e-06,
+              "maxstep": 3.125e-08
+            },
+            "additional_controls": {
+              "observation_mode": "forced solver observation",
+              "origins": [
+                "accepted_controller_frame"
+              ],
+              "max_step_applied": true,
+              "engine": "evas-events-0.14.0",
+              "accepted_steps": 594,
+              "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred"
+            },
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "covered",
+            "reused_native_record": false,
+            "exact_float_mismatches": 0,
+            "allowance_s": 0.0,
+            "maximum_nearest_distance_s": 0.0,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 0,
+            "missing_requested_times_json_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "source_sha256": "4af1a184c0dd72c0421350610746f1bf52af13c6d65a719e3e5233e8ed85be2d",
+          "requested_times_sha256": "230841100663e148db59ad37e02c1d571a9c5f92bd4eabd4e7dd7c69bb1d8f36",
+          "waveform_sha256": "158884620b3f1068bf1993da4ec40bcd655909f8bcd1233c65b9e23fe8e39230",
+          "result_sha256": "31a6f37309126c828b9aa8bdd93ea5d45886269b428dd8557c299b98e3a97284"
+        },
+        {
+          "condition": "SFC-RESET",
+          "profile": "step",
+          "label": "SFC-RESET--step",
+          "status": "waveform_available",
+          "verdict": "pass",
+          "assessment": {
+            "status": "PASS",
+            "failures": [],
+            "maximum_errors_V": {
+              "u": 4.440892098500626e-16,
+              "clk": 3.552713678800501e-15,
+              "rst": 2.9976021664879227e-15,
+              "ah": 3.3306690738754696e-16,
+              "ae": 1.3322676295501878e-15,
+              "af": 2.7755575615628914e-15,
+              "as": 1.4158674233044621e-12
+            },
+            "rows": 581,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 1.6510732391894543e-06,
+                  "hi_s": 1.6510772391894545e-06,
+                  "nominal_s": 1.6510752391894544e-06
+                },
+                {
+                  "lo_s": 3.2228243556832157e-06,
+                  "hi_s": 3.222828355683216e-06,
+                  "nominal_s": 3.222826355683216e-06
+                },
+                {
+                  "lo_s": 5.815591917333379e-06,
+                  "hi_s": 5.815595917333378e-06,
+                  "nominal_s": 5.815593917333378e-06
+                },
+                {
+                  "lo_s": 7.5795503724901875e-06,
+                  "hi_s": 7.579554372490187e-06,
+                  "nominal_s": 7.579552372490187e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [],
+            "actual": {
+              "reltol": 1e-05,
+              "vabstol": 1e-09,
+              "iabstol": "unknown",
+              "stop": 8.5e-06,
+              "maxstep": 3.90625e-09,
+              "method": "unknown; unsupported integration_method control"
+            },
+            "requested": {
+              "reltol": 1e-05,
+              "vabstol": 1e-09,
+              "iabstol": 1e-13,
+              "stop": 8.5e-06,
+              "maxstep": 3.90625e-09
+            },
+            "additional_controls": {
+              "observation_mode": "forced solver observation",
+              "origins": [
+                "accepted_controller_frame"
+              ],
+              "max_step_applied": true,
+              "engine": "evas-events-0.14.0",
+              "accepted_steps": 2494,
+              "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred"
+            },
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "covered",
+            "reused_native_record": false,
+            "exact_float_mismatches": 0,
+            "allowance_s": 0.0,
+            "maximum_nearest_distance_s": 0.0,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 0,
+            "missing_requested_times_json_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "source_sha256": "4af1a184c0dd72c0421350610746f1bf52af13c6d65a719e3e5233e8ed85be2d",
+          "requested_times_sha256": "230841100663e148db59ad37e02c1d571a9c5f92bd4eabd4e7dd7c69bb1d8f36",
+          "waveform_sha256": "158884620b3f1068bf1993da4ec40bcd655909f8bcd1233c65b9e23fe8e39230",
+          "result_sha256": "298395156a1fab40fe03050602749d176d13c5bc4f2a1594c51aa032da9494b2"
+        },
+        {
+          "condition": "SFC-RESET",
+          "profile": "both",
+          "label": "SFC-RESET--both",
+          "status": "waveform_available",
+          "verdict": "pass",
+          "assessment": {
+            "status": "PASS",
+            "failures": [],
+            "maximum_errors_V": {
+              "u": 4.440892098500626e-16,
+              "clk": 3.552713678800501e-15,
+              "rst": 2.9976021664879227e-15,
+              "ah": 3.3306690738754696e-16,
+              "ae": 1.3322676295501878e-15,
+              "af": 2.7755575615628914e-15,
+              "as": 1.4158674233044621e-12
+            },
+            "rows": 581,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 1.6510732391894543e-06,
+                  "hi_s": 1.6510772391894545e-06,
+                  "nominal_s": 1.6510752391894544e-06
+                },
+                {
+                  "lo_s": 3.2228243556832157e-06,
+                  "hi_s": 3.222828355683216e-06,
+                  "nominal_s": 3.222826355683216e-06
+                },
+                {
+                  "lo_s": 5.815591917333379e-06,
+                  "hi_s": 5.815595917333378e-06,
+                  "nominal_s": 5.815593917333378e-06
+                },
+                {
+                  "lo_s": 7.5795503724901875e-06,
+                  "hi_s": 7.579554372490187e-06,
+                  "nominal_s": 7.579552372490187e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [],
+            "actual": {
+              "reltol": 1e-08,
+              "vabstol": 1e-12,
+              "iabstol": "unknown",
+              "stop": 8.5e-06,
+              "maxstep": 3.90625e-09,
+              "method": "unknown; unsupported integration_method control"
+            },
+            "requested": {
+              "reltol": 1e-08,
+              "vabstol": 1e-12,
+              "iabstol": 1e-15,
+              "stop": 8.5e-06,
+              "maxstep": 3.90625e-09
+            },
+            "additional_controls": {
+              "observation_mode": "forced solver observation",
+              "origins": [
+                "accepted_controller_frame"
+              ],
+              "max_step_applied": true,
+              "engine": "evas-events-0.14.0",
+              "accepted_steps": 2494,
+              "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred"
+            },
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "covered",
+            "reused_native_record": false,
+            "exact_float_mismatches": 0,
+            "allowance_s": 0.0,
+            "maximum_nearest_distance_s": 0.0,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 0,
+            "missing_requested_times_json_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "source_sha256": "4af1a184c0dd72c0421350610746f1bf52af13c6d65a719e3e5233e8ed85be2d",
+          "requested_times_sha256": "230841100663e148db59ad37e02c1d571a9c5f92bd4eabd4e7dd7c69bb1d8f36",
+          "waveform_sha256": "158884620b3f1068bf1993da4ec40bcd655909f8bcd1233c65b9e23fe8e39230",
+          "result_sha256": "7c939ce22c34a4875c1826a27894efd3b351c536cff738c494d91e6754630434"
+        },
+        {
+          "condition": "SFC-INTERRUPT",
+          "profile": "base",
+          "label": "SFC-INTERRUPT--base",
+          "status": "waveform_available",
+          "verdict": "pass",
+          "assessment": {
+            "status": "PASS",
+            "failures": [],
+            "maximum_errors_V": {
+              "u": 5.551115123125783e-16,
+              "clk": 3.552713678800501e-15,
+              "rst": 2.9976021664879227e-15,
+              "ah": 3.3306690738754696e-16,
+              "ae": 1.0824674490095276e-15,
+              "af": 1.942890293094024e-15,
+              "as": 5.3469451088972164e-12
+            },
+            "rows": 596,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 2.167261580791722e-06,
+                  "hi_s": 2.167265580791722e-06,
+                  "nominal_s": 2.167263580791722e-06
+                },
+                {
+                  "lo_s": 2.5477557706120883e-06,
+                  "hi_s": 2.5477597706120884e-06,
+                  "nominal_s": 2.5477577706120884e-06
+                },
+                {
+                  "lo_s": 4.200524942202902e-06,
+                  "hi_s": 4.200528942202902e-06,
+                  "nominal_s": 4.200526942202902e-06
+                },
+                {
+                  "lo_s": 4.430460183172664e-06,
+                  "hi_s": 4.430464183172663e-06,
+                  "nominal_s": 4.430462183172663e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [],
+            "actual": {
+              "reltol": 1e-05,
+              "vabstol": 1e-09,
+              "iabstol": "unknown",
+              "stop": 8.5e-06,
+              "maxstep": 3.125e-08,
+              "method": "unknown; unsupported integration_method control"
+            },
+            "requested": {
+              "reltol": 1e-05,
+              "vabstol": 1e-09,
+              "iabstol": 1e-13,
+              "stop": 8.5e-06,
+              "maxstep": 3.125e-08
+            },
+            "additional_controls": {
+              "observation_mode": "forced solver observation",
+              "origins": [
+                "accepted_controller_frame"
+              ],
+              "max_step_applied": true,
+              "engine": "evas-events-0.14.0",
+              "accepted_steps": 611,
+              "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred"
+            },
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "covered",
+            "reused_native_record": false,
+            "exact_float_mismatches": 0,
+            "allowance_s": 0.0,
+            "maximum_nearest_distance_s": 0.0,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 0,
+            "missing_requested_times_json_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "source_sha256": "0d93abff5ba5f099496694eacd7a10f3512b88a0a6d0c12c1ff4657d52845c41",
+          "requested_times_sha256": "0afa87a087fb02cd6a4b962f1f3b2290faff5e2d3b24b7f29ff5af92249411c8",
+          "waveform_sha256": "f3b72004d6316c9a614aed96c4290b32a5d1d62fc9bea9421982697e74008c5c",
+          "result_sha256": "3c6baf234df9b0d81b9db31603226fcba1a3bf2879fdd4cd374b5684416f289c"
+        },
+        {
+          "condition": "SFC-INTERRUPT",
+          "profile": "tol",
+          "label": "SFC-INTERRUPT--tol",
+          "status": "waveform_available",
+          "verdict": "pass",
+          "assessment": {
+            "status": "PASS",
+            "failures": [],
+            "maximum_errors_V": {
+              "u": 5.551115123125783e-16,
+              "clk": 3.552713678800501e-15,
+              "rst": 2.9976021664879227e-15,
+              "ah": 3.3306690738754696e-16,
+              "ae": 1.0824674490095276e-15,
+              "af": 1.942890293094024e-15,
+              "as": 5.3469451088972164e-12
+            },
+            "rows": 596,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 2.167261580791722e-06,
+                  "hi_s": 2.167265580791722e-06,
+                  "nominal_s": 2.167263580791722e-06
+                },
+                {
+                  "lo_s": 2.5477557706120883e-06,
+                  "hi_s": 2.5477597706120884e-06,
+                  "nominal_s": 2.5477577706120884e-06
+                },
+                {
+                  "lo_s": 4.200524942202902e-06,
+                  "hi_s": 4.200528942202902e-06,
+                  "nominal_s": 4.200526942202902e-06
+                },
+                {
+                  "lo_s": 4.430460183172664e-06,
+                  "hi_s": 4.430464183172663e-06,
+                  "nominal_s": 4.430462183172663e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [],
+            "actual": {
+              "reltol": 1e-08,
+              "vabstol": 1e-12,
+              "iabstol": "unknown",
+              "stop": 8.5e-06,
+              "maxstep": 3.125e-08,
+              "method": "unknown; unsupported integration_method control"
+            },
+            "requested": {
+              "reltol": 1e-08,
+              "vabstol": 1e-12,
+              "iabstol": 1e-15,
+              "stop": 8.5e-06,
+              "maxstep": 3.125e-08
+            },
+            "additional_controls": {
+              "observation_mode": "forced solver observation",
+              "origins": [
+                "accepted_controller_frame"
+              ],
+              "max_step_applied": true,
+              "engine": "evas-events-0.14.0",
+              "accepted_steps": 611,
+              "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred"
+            },
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "covered",
+            "reused_native_record": false,
+            "exact_float_mismatches": 0,
+            "allowance_s": 0.0,
+            "maximum_nearest_distance_s": 0.0,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 0,
+            "missing_requested_times_json_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "source_sha256": "0d93abff5ba5f099496694eacd7a10f3512b88a0a6d0c12c1ff4657d52845c41",
+          "requested_times_sha256": "0afa87a087fb02cd6a4b962f1f3b2290faff5e2d3b24b7f29ff5af92249411c8",
+          "waveform_sha256": "f3b72004d6316c9a614aed96c4290b32a5d1d62fc9bea9421982697e74008c5c",
+          "result_sha256": "f7d921904af4d8f7749c1558e21082233260d061154af247f34594ff3c61cbf0"
+        },
+        {
+          "condition": "SFC-INTERRUPT",
+          "profile": "step",
+          "label": "SFC-INTERRUPT--step",
+          "status": "waveform_available",
+          "verdict": "pass",
+          "assessment": {
+            "status": "PASS",
+            "failures": [],
+            "maximum_errors_V": {
+              "u": 5.551115123125783e-16,
+              "clk": 3.552713678800501e-15,
+              "rst": 2.9976021664879227e-15,
+              "ah": 3.3306690738754696e-16,
+              "ae": 1.0824674490095276e-15,
+              "af": 1.942890293094024e-15,
+              "as": 5.3469451088972164e-12
+            },
+            "rows": 596,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 2.167261580791722e-06,
+                  "hi_s": 2.167265580791722e-06,
+                  "nominal_s": 2.167263580791722e-06
+                },
+                {
+                  "lo_s": 2.5477557706120883e-06,
+                  "hi_s": 2.5477597706120884e-06,
+                  "nominal_s": 2.5477577706120884e-06
+                },
+                {
+                  "lo_s": 4.200524942202902e-06,
+                  "hi_s": 4.200528942202902e-06,
+                  "nominal_s": 4.200526942202902e-06
+                },
+                {
+                  "lo_s": 4.430460183172664e-06,
+                  "hi_s": 4.430464183172663e-06,
+                  "nominal_s": 4.430462183172663e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [],
+            "actual": {
+              "reltol": 1e-05,
+              "vabstol": 1e-09,
+              "iabstol": "unknown",
+              "stop": 8.5e-06,
+              "maxstep": 3.90625e-09,
+              "method": "unknown; unsupported integration_method control"
+            },
+            "requested": {
+              "reltol": 1e-05,
+              "vabstol": 1e-09,
+              "iabstol": 1e-13,
+              "stop": 8.5e-06,
+              "maxstep": 3.90625e-09
+            },
+            "additional_controls": {
+              "observation_mode": "forced solver observation",
+              "origins": [
+                "accepted_controller_frame"
+              ],
+              "max_step_applied": true,
+              "engine": "evas-events-0.14.0",
+              "accepted_steps": 2505,
+              "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred"
+            },
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "covered",
+            "reused_native_record": false,
+            "exact_float_mismatches": 0,
+            "allowance_s": 0.0,
+            "maximum_nearest_distance_s": 0.0,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 0,
+            "missing_requested_times_json_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "source_sha256": "0d93abff5ba5f099496694eacd7a10f3512b88a0a6d0c12c1ff4657d52845c41",
+          "requested_times_sha256": "0afa87a087fb02cd6a4b962f1f3b2290faff5e2d3b24b7f29ff5af92249411c8",
+          "waveform_sha256": "f3b72004d6316c9a614aed96c4290b32a5d1d62fc9bea9421982697e74008c5c",
+          "result_sha256": "378e67f683f0575277d7babddf88ec11539361c68f1687b7ece486d5aa310f8f"
+        },
+        {
+          "condition": "SFC-INTERRUPT",
+          "profile": "both",
+          "label": "SFC-INTERRUPT--both",
+          "status": "waveform_available",
+          "verdict": "pass",
+          "assessment": {
+            "status": "PASS",
+            "failures": [],
+            "maximum_errors_V": {
+              "u": 5.551115123125783e-16,
+              "clk": 3.552713678800501e-15,
+              "rst": 2.9976021664879227e-15,
+              "ah": 3.3306690738754696e-16,
+              "ae": 1.0824674490095276e-15,
+              "af": 1.942890293094024e-15,
+              "as": 5.3469451088972164e-12
+            },
+            "rows": 596,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 2.167261580791722e-06,
+                  "hi_s": 2.167265580791722e-06,
+                  "nominal_s": 2.167263580791722e-06
+                },
+                {
+                  "lo_s": 2.5477557706120883e-06,
+                  "hi_s": 2.5477597706120884e-06,
+                  "nominal_s": 2.5477577706120884e-06
+                },
+                {
+                  "lo_s": 4.200524942202902e-06,
+                  "hi_s": 4.200528942202902e-06,
+                  "nominal_s": 4.200526942202902e-06
+                },
+                {
+                  "lo_s": 4.430460183172664e-06,
+                  "hi_s": 4.430464183172663e-06,
+                  "nominal_s": 4.430462183172663e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [],
+            "actual": {
+              "reltol": 1e-08,
+              "vabstol": 1e-12,
+              "iabstol": "unknown",
+              "stop": 8.5e-06,
+              "maxstep": 3.90625e-09,
+              "method": "unknown; unsupported integration_method control"
+            },
+            "requested": {
+              "reltol": 1e-08,
+              "vabstol": 1e-12,
+              "iabstol": 1e-15,
+              "stop": 8.5e-06,
+              "maxstep": 3.90625e-09
+            },
+            "additional_controls": {
+              "observation_mode": "forced solver observation",
+              "origins": [
+                "accepted_controller_frame"
+              ],
+              "max_step_applied": true,
+              "engine": "evas-events-0.14.0",
+              "accepted_steps": 2505,
+              "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred"
+            },
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "covered",
+            "reused_native_record": false,
+            "exact_float_mismatches": 0,
+            "allowance_s": 0.0,
+            "maximum_nearest_distance_s": 0.0,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 0,
+            "missing_requested_times_json_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "source_sha256": "0d93abff5ba5f099496694eacd7a10f3512b88a0a6d0c12c1ff4657d52845c41",
+          "requested_times_sha256": "0afa87a087fb02cd6a4b962f1f3b2290faff5e2d3b24b7f29ff5af92249411c8",
+          "waveform_sha256": "f3b72004d6316c9a614aed96c4290b32a5d1d62fc9bea9421982697e74008c5c",
+          "result_sha256": "ca44bf9c30646e11b4024aacba180bd381ba143a8492c0c921b7e96d1b82f95f"
+        },
+        {
+          "condition": "SFC-ISOLATION",
+          "profile": "base",
+          "label": "SFC-ISOLATION--base",
+          "status": "waveform_available",
+          "verdict": "pass",
+          "assessment": {
+            "status": "PASS",
+            "failures": [],
+            "maximum_errors_V": {
+              "u": 4.718447854656915e-16,
+              "clk": 3.552713678800501e-15,
+              "rst": 2.9976021664879227e-15,
+              "ah": 3.3306690738754696e-16,
+              "ae": 1.1934897514720433e-15,
+              "af": 2.6645352591003757e-15,
+              "bh": 1.8388068845354155e-16,
+              "be": 5.065392549852277e-16,
+              "bf": 5.065392549852277e-16,
+              "as": 2.3052393327560594e-13,
+              "bs": 1.2224943279903755e-12
+            },
+            "rows": 589,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 1.6510732391894543e-06,
+                  "hi_s": 1.6510772391894545e-06,
+                  "nominal_s": 1.6510752391894544e-06
+                },
+                {
+                  "lo_s": 7.596126058938788e-06,
+                  "hi_s": 7.596130058938787e-06,
+                  "nominal_s": 7.596128058938788e-06
+                }
+              ],
+              "b": [
+                {
+                  "lo_s": 2.1494037509901895e-06,
+                  "hi_s": 2.1494077509901896e-06,
+                  "nominal_s": 2.1494057509901896e-06
+                },
+                {
+                  "lo_s": 5.285660979475346e-06,
+                  "hi_s": 5.285664979475345e-06,
+                  "nominal_s": 5.285662979475345e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [],
+            "actual": {
+              "reltol": 1e-05,
+              "vabstol": 1e-09,
+              "iabstol": "unknown",
+              "stop": 8.5e-06,
+              "maxstep": 3.125e-08,
+              "method": "unknown; unsupported integration_method control"
+            },
+            "requested": {
+              "reltol": 1e-05,
+              "vabstol": 1e-09,
+              "iabstol": 1e-13,
+              "stop": 8.5e-06,
+              "maxstep": 3.125e-08
+            },
+            "additional_controls": {
+              "observation_mode": "forced solver observation",
+              "origins": [
+                "accepted_controller_frame"
+              ],
+              "max_step_applied": true,
+              "engine": "evas-events-0.14.0",
+              "accepted_steps": 607,
+              "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred"
+            },
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "covered",
+            "reused_native_record": false,
+            "exact_float_mismatches": 0,
+            "allowance_s": 0.0,
+            "maximum_nearest_distance_s": 0.0,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 0,
+            "missing_requested_times_json_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "source_sha256": "c1db668ce11fa5f6cc577e8815d67522e89a735790a2a03c1643538ef92fddcc",
+          "requested_times_sha256": "ace896749d04382df4a8957582a9bba48d0d1ec0c0bced51ed9eefb6f23fa485",
+          "waveform_sha256": "18eaad8d545377079757d2bc374cc58af2b1635000dc20445f0dba83caa269d1",
+          "result_sha256": "a477a41403079dff335cf8c4204178b667c445e61a394fe116df6c1640b5ad8d"
+        },
+        {
+          "condition": "SFC-ISOLATION",
+          "profile": "tol",
+          "label": "SFC-ISOLATION--tol",
+          "status": "waveform_available",
+          "verdict": "pass",
+          "assessment": {
+            "status": "PASS",
+            "failures": [],
+            "maximum_errors_V": {
+              "u": 4.718447854656915e-16,
+              "clk": 3.552713678800501e-15,
+              "rst": 2.9976021664879227e-15,
+              "ah": 3.3306690738754696e-16,
+              "ae": 1.1934897514720433e-15,
+              "af": 2.6645352591003757e-15,
+              "bh": 1.8388068845354155e-16,
+              "be": 5.065392549852277e-16,
+              "bf": 5.065392549852277e-16,
+              "as": 2.3052393327560594e-13,
+              "bs": 1.2224943279903755e-12
+            },
+            "rows": 589,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 1.6510732391894543e-06,
+                  "hi_s": 1.6510772391894545e-06,
+                  "nominal_s": 1.6510752391894544e-06
+                },
+                {
+                  "lo_s": 7.596126058938788e-06,
+                  "hi_s": 7.596130058938787e-06,
+                  "nominal_s": 7.596128058938788e-06
+                }
+              ],
+              "b": [
+                {
+                  "lo_s": 2.1494037509901895e-06,
+                  "hi_s": 2.1494077509901896e-06,
+                  "nominal_s": 2.1494057509901896e-06
+                },
+                {
+                  "lo_s": 5.285660979475346e-06,
+                  "hi_s": 5.285664979475345e-06,
+                  "nominal_s": 5.285662979475345e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [],
+            "actual": {
+              "reltol": 1e-08,
+              "vabstol": 1e-12,
+              "iabstol": "unknown",
+              "stop": 8.5e-06,
+              "maxstep": 3.125e-08,
+              "method": "unknown; unsupported integration_method control"
+            },
+            "requested": {
+              "reltol": 1e-08,
+              "vabstol": 1e-12,
+              "iabstol": 1e-15,
+              "stop": 8.5e-06,
+              "maxstep": 3.125e-08
+            },
+            "additional_controls": {
+              "observation_mode": "forced solver observation",
+              "origins": [
+                "accepted_controller_frame"
+              ],
+              "max_step_applied": true,
+              "engine": "evas-events-0.14.0",
+              "accepted_steps": 607,
+              "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred"
+            },
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "covered",
+            "reused_native_record": false,
+            "exact_float_mismatches": 0,
+            "allowance_s": 0.0,
+            "maximum_nearest_distance_s": 0.0,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 0,
+            "missing_requested_times_json_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "source_sha256": "c1db668ce11fa5f6cc577e8815d67522e89a735790a2a03c1643538ef92fddcc",
+          "requested_times_sha256": "ace896749d04382df4a8957582a9bba48d0d1ec0c0bced51ed9eefb6f23fa485",
+          "waveform_sha256": "18eaad8d545377079757d2bc374cc58af2b1635000dc20445f0dba83caa269d1",
+          "result_sha256": "e4942757041e1119505ef3142ae9fd6f07b2179063aea51e8a7f46d9e53497c6"
+        },
+        {
+          "condition": "SFC-ISOLATION",
+          "profile": "step",
+          "label": "SFC-ISOLATION--step",
+          "status": "waveform_available",
+          "verdict": "pass",
+          "assessment": {
+            "status": "PASS",
+            "failures": [],
+            "maximum_errors_V": {
+              "u": 4.718447854656915e-16,
+              "clk": 3.552713678800501e-15,
+              "rst": 2.9976021664879227e-15,
+              "ah": 3.3306690738754696e-16,
+              "ae": 1.1934897514720433e-15,
+              "af": 2.6645352591003757e-15,
+              "bh": 1.8388068845354155e-16,
+              "be": 5.065392549852277e-16,
+              "bf": 5.065392549852277e-16,
+              "as": 2.3052393327560594e-13,
+              "bs": 1.2224943279903755e-12
+            },
+            "rows": 589,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 1.6510732391894543e-06,
+                  "hi_s": 1.6510772391894545e-06,
+                  "nominal_s": 1.6510752391894544e-06
+                },
+                {
+                  "lo_s": 7.596126058938788e-06,
+                  "hi_s": 7.596130058938787e-06,
+                  "nominal_s": 7.596128058938788e-06
+                }
+              ],
+              "b": [
+                {
+                  "lo_s": 2.1494037509901895e-06,
+                  "hi_s": 2.1494077509901896e-06,
+                  "nominal_s": 2.1494057509901896e-06
+                },
+                {
+                  "lo_s": 5.285660979475346e-06,
+                  "hi_s": 5.285664979475345e-06,
+                  "nominal_s": 5.285662979475345e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [],
+            "actual": {
+              "reltol": 1e-05,
+              "vabstol": 1e-09,
+              "iabstol": "unknown",
+              "stop": 8.5e-06,
+              "maxstep": 3.90625e-09,
+              "method": "unknown; unsupported integration_method control"
+            },
+            "requested": {
+              "reltol": 1e-05,
+              "vabstol": 1e-09,
+              "iabstol": 1e-13,
+              "stop": 8.5e-06,
+              "maxstep": 3.90625e-09
+            },
+            "additional_controls": {
+              "observation_mode": "forced solver observation",
+              "origins": [
+                "accepted_controller_frame"
+              ],
+              "max_step_applied": true,
+              "engine": "evas-events-0.14.0",
+              "accepted_steps": 2501,
+              "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred"
+            },
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "covered",
+            "reused_native_record": false,
+            "exact_float_mismatches": 0,
+            "allowance_s": 0.0,
+            "maximum_nearest_distance_s": 0.0,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 0,
+            "missing_requested_times_json_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "source_sha256": "c1db668ce11fa5f6cc577e8815d67522e89a735790a2a03c1643538ef92fddcc",
+          "requested_times_sha256": "ace896749d04382df4a8957582a9bba48d0d1ec0c0bced51ed9eefb6f23fa485",
+          "waveform_sha256": "18eaad8d545377079757d2bc374cc58af2b1635000dc20445f0dba83caa269d1",
+          "result_sha256": "72e1a870bfd01fedd1e3898e0f53fc40e2e0584935aab34a466a9dcd3e5a5f4e"
+        },
+        {
+          "condition": "SFC-ISOLATION",
+          "profile": "both",
+          "label": "SFC-ISOLATION--both",
+          "status": "waveform_available",
+          "verdict": "pass",
+          "assessment": {
+            "status": "PASS",
+            "failures": [],
+            "maximum_errors_V": {
+              "u": 4.718447854656915e-16,
+              "clk": 3.552713678800501e-15,
+              "rst": 2.9976021664879227e-15,
+              "ah": 3.3306690738754696e-16,
+              "ae": 1.1934897514720433e-15,
+              "af": 2.6645352591003757e-15,
+              "bh": 1.8388068845354155e-16,
+              "be": 5.065392549852277e-16,
+              "bf": 5.065392549852277e-16,
+              "as": 2.3052393327560594e-13,
+              "bs": 1.2224943279903755e-12
+            },
+            "rows": 589,
+            "scope": "finite native observations and observed counter brackets; no exact-boundary or continuous-time qualification",
+            "cross_brackets": {
+              "a": [
+                {
+                  "lo_s": 1.6510732391894543e-06,
+                  "hi_s": 1.6510772391894545e-06,
+                  "nominal_s": 1.6510752391894544e-06
+                },
+                {
+                  "lo_s": 7.596126058938788e-06,
+                  "hi_s": 7.596130058938787e-06,
+                  "nominal_s": 7.596128058938788e-06
+                }
+              ],
+              "b": [
+                {
+                  "lo_s": 2.1494037509901895e-06,
+                  "hi_s": 2.1494077509901896e-06,
+                  "nominal_s": 2.1494057509901896e-06
+                },
+                {
+                  "lo_s": 5.285660979475346e-06,
+                  "hi_s": 5.285664979475345e-06,
+                  "nominal_s": 5.285662979475345e-06
+                }
+              ]
+            }
+          },
+          "qualification": {
+            "status": "qualified",
+            "issues": [],
+            "notes": [],
+            "actual": {
+              "reltol": 1e-08,
+              "vabstol": 1e-12,
+              "iabstol": "unknown",
+              "stop": 8.5e-06,
+              "maxstep": 3.90625e-09,
+              "method": "unknown; unsupported integration_method control"
+            },
+            "requested": {
+              "reltol": 1e-08,
+              "vabstol": 1e-12,
+              "iabstol": 1e-15,
+              "stop": 8.5e-06,
+              "maxstep": 3.90625e-09
+            },
+            "additional_controls": {
+              "observation_mode": "forced solver observation",
+              "origins": [
+                "accepted_controller_frame"
+              ],
+              "max_step_applied": true,
+              "engine": "evas-events-0.14.0",
+              "accepted_steps": 2501,
+              "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred"
+            },
+            "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+          },
+          "time_coverage": {
+            "status": "covered",
+            "reused_native_record": false,
+            "exact_float_mismatches": 0,
+            "allowance_s": 0.0,
+            "maximum_nearest_distance_s": 0.0,
+            "claim": "native time coverage; all values are assessed at their unmodified actual times, not proof of hidden callback timestamps",
+            "missing_requested_times_count": 0,
+            "missing_requested_times_json_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+          },
+          "source_sha256": "c1db668ce11fa5f6cc577e8815d67522e89a735790a2a03c1643538ef92fddcc",
+          "requested_times_sha256": "ace896749d04382df4a8957582a9bba48d0d1ec0c0bced51ed9eefb6f23fa485",
+          "waveform_sha256": "18eaad8d545377079757d2bc374cc58af2b1635000dc20445f0dba83caa269d1",
+          "result_sha256": "688163c083efcfa6ba7635830a26eb98553e10ae3b698557998ed8c21f8f59d1"
+        }
+      ],
+      "selected_engineering_profiles": {
+        "SFC-TIMER": "base",
+        "SFC-RESET": "base",
+        "SFC-INTERRUPT": "base",
+        "SFC-ISOLATION": "base"
+      }
+    }
+  },
+  "failed_attempts": [
+    {
+      "scope": "remote dispatch",
+      "attempts": 2,
+      "scientific_invocations": 0,
+      "causes": [
+        "controller imported wrong freeze verifier",
+        "missing transitive strobe checker import"
+      ],
+      "records": [
+        "dispatch-spectre.log",
+        "dispatch-spectre-r2.log",
+        "controller-repair.json",
+        "snapshot-repair.json"
+      ]
+    },
+    {
+      "scope": "local native replay driver",
+      "cause": "Instance constructor received wrong keyword names before kernel invocation",
+      "record": "native-pairs/",
+      "recovery": "positional public API binding; preserved failed driver output"
+    },
+    {
+      "scope": "checker reanalysis assertion",
+      "cause": "full dictionary equality differed by 5.55e-17 V in a reported maximum due to local analytical evaluation; no changed status or failure reason",
+      "record": "final-replay.log",
+      "recovery": "retain both old and new assessments; compare verdicts and reasons explicitly, no threshold change"
+    }
+  ],
+  "server_build": {
+    "argv": [
+      "taskset",
+      "-c",
+      "0",
+      "prlimit",
+      "--as=4294967296",
+      "--fsize=268435456",
+      "--",
+      "/home/jinzhihong/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+      "build",
+      "--offline",
+      "--locked",
+      "--release",
+      "--manifest-path",
+      "/tmp/chips-jinzhihong/filter-cross-20261011/repo/evas/rust_core/Cargo.toml",
+      "-j",
+      "1"
+    ],
+    "stage": {
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "prlimit",
+        "--as=4294967296",
+        "--fsize=268435456",
+        "--",
+        "/home/jinzhihong/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+        "build",
+        "--offline",
+        "--locked",
+        "--release",
+        "--manifest-path",
+        "/tmp/chips-jinzhihong/filter-cross-20261011/repo/evas/rust_core/Cargo.toml",
+        "-j",
+        "1"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "status": "completed",
+      "cleanup": {
+        "signals": [
+          "SIGTERM",
+          "SIGKILL"
+        ],
+        "errors": [],
+        "complete": true
+      },
+      "elapsed_seconds": 65.240234375,
+      "completed_utc": "2026-10-10T16:24:37Z",
+      "log": "build.log",
+      "log_sha256": "02534a245bc9b0376b6ee893f7e780738a47657b9e2931955cd5e74ff993caa0"
+    },
+    "returncode": 0,
+    "toolchain": {
+      "cargo": "cargo 1.96.0 (30a34c682 2026-05-25)",
+      "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25)"
+    },
+    "profile": "release",
+    "source_manifest_sha256": "934c06d05d376254d3df129b4bbce46edacf7bbf83aaab169db3e4d84dd3b9c5",
+    "source_revision": "dd2803feef1e953ec045b5f8f0d4d0966644ec40",
+    "cache_origin": "/tmp/chips-jinzhihong/four-backend-round-20261007/cargo-home",
+    "cache_mode": "copied into isolated task Cargo home",
+    "started": 1791649412.6153948,
+    "finished": 1791649477.8564863,
+    "compiler_identity": {
+      "cargo": {
+        "actual_binary_path": "/home/jinzhihong/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+        "actual_binary_sha256": "f30f9fd1b1d0b8fd10dc33219eb4cd4bec3543f40e434ac71f5a03fd0359063f",
+        "version": "cargo 1.96.0 (30a34c682 2026-05-25)",
+        "resolution_argv": [
+          "/home/jinzhihong/.cargo/bin/rustup",
+          "which",
+          "cargo"
+        ]
+      },
+      "rustc": {
+        "actual_binary_path": "/home/jinzhihong/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc",
+        "actual_binary_sha256": "ba4b837efb6612dfa8d941c5a72b8a50d1d03a0f36216743b173949aa8d9eb75",
+        "version": "rustc 1.96.0 (ac68faa20 2026-05-25)",
+        "resolution_argv": [
+          "/home/jinzhihong/.cargo/bin/rustup",
+          "which",
+          "rustc"
+        ]
+      }
+    },
+    "cargo_lock_sha256": "4ac34a67969cbd69004115347a99e1d1ad71b577ca98d5dacdadd707aedadd01",
+    "build_driver_sha256": "802797452052d7b61ded81b44cd9c9ac1de9c4349b5c9b023429e192f6fa0723",
+    "compiler_env": {
+      "RUSTC": "/home/jinzhihong/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc"
+    },
+    "kernel_sha256": "75ea735391b2ad7f6754509106b04dd476c1be6d2f5f1780d5a8d5db50212f2c"
+  },
+  "final_local_replay": {
+    "identity": {
+      "kernel_sha256": "1ebbd52e9366343343bad26e6d046dc62b68fc5dbc945235920567a3d8ab7ad9",
+      "kernel_identity": {
+        "build_revision": null,
+        "identity_version": 1,
+        "ir_schema_version": 18,
+        "name": "evas-kernel",
+        "platform": {
+          "arch": "aarch64",
+          "os": "macos"
+        },
+        "request_protocol_version": null,
+        "version": "0.14.0"
+      },
+      "source_revision": "dd2803feef1e953ec045b5f8f0d4d0966644ec40",
+      "driver_sha256": "045fda3f1a58c5b64f27274ed8c6cd39cc5ccfba8450e2858144c458087c9410",
+      "scope": "fixed strobe replay of all 16 requests; unchanged actual Spectre data reused; separate checker reanalysis preserves old verdicts"
+    },
+    "identity_note": "Recorded precommit revision plus file hashes is resolved above to published implementation_commit; source bytes verified individually against Git. Only Rust phase proof and endpoint-oracle rejection changed since the server EVAS run. Spectre sources/settings remain identical.",
+    "requests": 16,
+    "engineering_passes": 16,
+    "complete_response_equal_to_server": 16,
+    "records": [
+      {
+        "label": "SFC-TIMER--base",
+        "model_sha256": "804f51dc19ebc957803a8e4562a359a9985a795f0daafddd03c739e6152adbdb",
+        "times_sha256": "c32f9ac38c8de8e54c98f45bde3649590f46e05aaf39596f876e6ebc5cb6da02",
+        "status": "waveform_available",
+        "same_full_response_as_remote": true,
+        "response_sha256": "c46bf006c5525c9b99e51ee14e4d7d4ab52ce6e6f01f85fcdc86ef92939f6efc",
+        "assessment_status": "PASS"
+      },
+      {
+        "label": "SFC-TIMER--tol",
+        "model_sha256": "804f51dc19ebc957803a8e4562a359a9985a795f0daafddd03c739e6152adbdb",
+        "times_sha256": "c32f9ac38c8de8e54c98f45bde3649590f46e05aaf39596f876e6ebc5cb6da02",
+        "status": "waveform_available",
+        "same_full_response_as_remote": true,
+        "response_sha256": "9dcf22c3725f4a964fd1f24ca7aa82cb8d0a8fde50758ebb9df6cb593e261bc9",
+        "assessment_status": "PASS"
+      },
+      {
+        "label": "SFC-TIMER--step",
+        "model_sha256": "804f51dc19ebc957803a8e4562a359a9985a795f0daafddd03c739e6152adbdb",
+        "times_sha256": "c32f9ac38c8de8e54c98f45bde3649590f46e05aaf39596f876e6ebc5cb6da02",
+        "status": "waveform_available",
+        "same_full_response_as_remote": true,
+        "response_sha256": "a0a1a74c260323844f1558087b602c48e0b6d8cb625fcfc3fe0fb28d9ae84066",
+        "assessment_status": "PASS"
+      },
+      {
+        "label": "SFC-TIMER--both",
+        "model_sha256": "804f51dc19ebc957803a8e4562a359a9985a795f0daafddd03c739e6152adbdb",
+        "times_sha256": "c32f9ac38c8de8e54c98f45bde3649590f46e05aaf39596f876e6ebc5cb6da02",
+        "status": "waveform_available",
+        "same_full_response_as_remote": true,
+        "response_sha256": "3e47d91a51565cca5ff6620a21d9dc9b290bd82635089799e2721feff3f90f0d",
+        "assessment_status": "PASS"
+      },
+      {
+        "label": "SFC-RESET--base",
+        "model_sha256": "4af1a184c0dd72c0421350610746f1bf52af13c6d65a719e3e5233e8ed85be2d",
+        "times_sha256": "230841100663e148db59ad37e02c1d571a9c5f92bd4eabd4e7dd7c69bb1d8f36",
+        "status": "waveform_available",
+        "same_full_response_as_remote": true,
+        "response_sha256": "3c16cdc04fe6a48b5259d7a53e756dd97ad2cc03543b7db182c6619ff5cf7e27",
+        "assessment_status": "PASS"
+      },
+      {
+        "label": "SFC-RESET--tol",
+        "model_sha256": "4af1a184c0dd72c0421350610746f1bf52af13c6d65a719e3e5233e8ed85be2d",
+        "times_sha256": "230841100663e148db59ad37e02c1d571a9c5f92bd4eabd4e7dd7c69bb1d8f36",
+        "status": "waveform_available",
+        "same_full_response_as_remote": true,
+        "response_sha256": "ea3bba6fcb384214dc0ffeb3817665ec515126d5c304ef50c8191c5ea7577ea8",
+        "assessment_status": "PASS"
+      },
+      {
+        "label": "SFC-RESET--step",
+        "model_sha256": "4af1a184c0dd72c0421350610746f1bf52af13c6d65a719e3e5233e8ed85be2d",
+        "times_sha256": "230841100663e148db59ad37e02c1d571a9c5f92bd4eabd4e7dd7c69bb1d8f36",
+        "status": "waveform_available",
+        "same_full_response_as_remote": true,
+        "response_sha256": "fa84ec4915dbcb5fd52559963a2ab07920a9aeec9f6405927b33da3f86e00d67",
+        "assessment_status": "PASS"
+      },
+      {
+        "label": "SFC-RESET--both",
+        "model_sha256": "4af1a184c0dd72c0421350610746f1bf52af13c6d65a719e3e5233e8ed85be2d",
+        "times_sha256": "230841100663e148db59ad37e02c1d571a9c5f92bd4eabd4e7dd7c69bb1d8f36",
+        "status": "waveform_available",
+        "same_full_response_as_remote": true,
+        "response_sha256": "b445d2472ef4a8548aea12845254410aa13c7e65d94c4a3d9659994ad1a4a5d3",
+        "assessment_status": "PASS"
+      },
+      {
+        "label": "SFC-INTERRUPT--base",
+        "model_sha256": "0d93abff5ba5f099496694eacd7a10f3512b88a0a6d0c12c1ff4657d52845c41",
+        "times_sha256": "0afa87a087fb02cd6a4b962f1f3b2290faff5e2d3b24b7f29ff5af92249411c8",
+        "status": "waveform_available",
+        "same_full_response_as_remote": true,
+        "response_sha256": "4172d6e9d51e515aaf9578d3932de397a43cdb95db6929f2a0a758dc9b6cfc44",
+        "assessment_status": "PASS"
+      },
+      {
+        "label": "SFC-INTERRUPT--tol",
+        "model_sha256": "0d93abff5ba5f099496694eacd7a10f3512b88a0a6d0c12c1ff4657d52845c41",
+        "times_sha256": "0afa87a087fb02cd6a4b962f1f3b2290faff5e2d3b24b7f29ff5af92249411c8",
+        "status": "waveform_available",
+        "same_full_response_as_remote": true,
+        "response_sha256": "ff0f0a2d99c184b6f15241701d2dc47bea1de116781f2cf442d68f9e43e80774",
+        "assessment_status": "PASS"
+      },
+      {
+        "label": "SFC-INTERRUPT--step",
+        "model_sha256": "0d93abff5ba5f099496694eacd7a10f3512b88a0a6d0c12c1ff4657d52845c41",
+        "times_sha256": "0afa87a087fb02cd6a4b962f1f3b2290faff5e2d3b24b7f29ff5af92249411c8",
+        "status": "waveform_available",
+        "same_full_response_as_remote": true,
+        "response_sha256": "33f55880f25d99207e5625cbb96a44fd2e43b9982454115d73ce1a5243d43fd0",
+        "assessment_status": "PASS"
+      },
+      {
+        "label": "SFC-INTERRUPT--both",
+        "model_sha256": "0d93abff5ba5f099496694eacd7a10f3512b88a0a6d0c12c1ff4657d52845c41",
+        "times_sha256": "0afa87a087fb02cd6a4b962f1f3b2290faff5e2d3b24b7f29ff5af92249411c8",
+        "status": "waveform_available",
+        "same_full_response_as_remote": true,
+        "response_sha256": "98e78283628224ce540e9b6f596941383c9b8a356a1a9d12e1c7a4ea836191dd",
+        "assessment_status": "PASS"
+      },
+      {
+        "label": "SFC-ISOLATION--base",
+        "model_sha256": "c1db668ce11fa5f6cc577e8815d67522e89a735790a2a03c1643538ef92fddcc",
+        "times_sha256": "ace896749d04382df4a8957582a9bba48d0d1ec0c0bced51ed9eefb6f23fa485",
+        "status": "waveform_available",
+        "same_full_response_as_remote": true,
+        "response_sha256": "ac9f3690cc89bb24b7219b39b4c41c44e4ad29658365c42d4c36504021369602",
+        "assessment_status": "PASS"
+      },
+      {
+        "label": "SFC-ISOLATION--tol",
+        "model_sha256": "c1db668ce11fa5f6cc577e8815d67522e89a735790a2a03c1643538ef92fddcc",
+        "times_sha256": "ace896749d04382df4a8957582a9bba48d0d1ec0c0bced51ed9eefb6f23fa485",
+        "status": "waveform_available",
+        "same_full_response_as_remote": true,
+        "response_sha256": "0ddc83742c5c576a09effd6cd605966d53e29c645a0b81582d03e3c9f3953b94",
+        "assessment_status": "PASS"
+      },
+      {
+        "label": "SFC-ISOLATION--step",
+        "model_sha256": "c1db668ce11fa5f6cc577e8815d67522e89a735790a2a03c1643538ef92fddcc",
+        "times_sha256": "ace896749d04382df4a8957582a9bba48d0d1ec0c0bced51ed9eefb6f23fa485",
+        "status": "waveform_available",
+        "same_full_response_as_remote": true,
+        "response_sha256": "c5d1d46855a735a9594f1081ffc7bde9dad86e60560d059b3979d5167632c640",
+        "assessment_status": "PASS"
+      },
+      {
+        "label": "SFC-ISOLATION--both",
+        "model_sha256": "c1db668ce11fa5f6cc577e8815d67522e89a735790a2a03c1643538ef92fddcc",
+        "times_sha256": "ace896749d04382df4a8957582a9bba48d0d1ec0c0bced51ed9eefb6f23fa485",
+        "status": "waveform_available",
+        "same_full_response_as_remote": true,
+        "response_sha256": "c7340c631133799467e6490ca3c4934b0ff05c26f874e84a84e2568d113a4c6b",
+        "assessment_status": "PASS"
+      }
+    ],
+    "manifest_sha256": "6b65b47370e9a88076f1075e979a2cbcb4f221c10259c48c09c225868df5eac6"
+  },
+  "checker_reanalysis": {
+    "spectre_configurations": 16,
+    "evas_configurations": 16,
+    "all_verdicts_and_failure_reasons_unchanged": true,
+    "raw_record_sha256": "d359ca4ba1d46c708c9d4f6348a87a64c14257d503e4681e6199009fabedc2ad",
+    "nonidentical_assessment_dicts": [
+      {
+        "backend": "spectre",
+        "label": "SFC-TIMER--both",
+        "maximum_error_reporting_delta_V": 5.551115123125783e-17
+      },
+      {
+        "backend": "spectre",
+        "label": "SFC-RESET--tol",
+        "maximum_error_reporting_delta_V": 5.551115123125783e-17
+      }
+    ],
+    "cause": "same independent convolution evaluated on local platform; old raw numerical assessments remain unchanged"
+  },
+  "strict_phase_diagnostics": {
+    "center_requests": 4,
+    "center_rejections": 4,
+    "native_grid_requests": 4,
+    "native_grid_waveforms": 0,
+    "native_grid_records": [
+      {
+        "case": "SFC-TIMER",
+        "profile": "tol",
+        "reference_waveform_sha256": "1a28d8f2103a30b6c9fbe96d12c3d9ee14d09adcbc8fa72c35e1f467e2b186e4",
+        "source_sha256": "804f51dc19ebc957803a8e4562a359a9985a795f0daafddd03c739e6152adbdb",
+        "times_sha256": "c0716ce3811fce1638da7710f7df742522e074ab68e79b06b71f404348f7124d",
+        "points": 2959,
+        "status": "rejected",
+        "reason": "event_resolution: output query cannot certify its physical event phase"
+      },
+      {
+        "case": "SFC-RESET",
+        "profile": "tol",
+        "reference_waveform_sha256": "4a55659a8659885c1a564e7a619d569bb7966bb34877342ff655a5dbbbf0cde6",
+        "source_sha256": "4af1a184c0dd72c0421350610746f1bf52af13c6d65a719e3e5233e8ed85be2d",
+        "times_sha256": "b69d9747ba135bb8f67702054482cd64ae66b5f9c1b433a61144e80bb9b3e9a9",
+        "points": 3299,
+        "status": "rejected",
+        "reason": "event_resolution: output query cannot certify its physical event phase"
+      },
+      {
+        "case": "SFC-INTERRUPT",
+        "profile": "tol",
+        "reference_waveform_sha256": "bfd5a3223ae6e828828f41e475a58ac0c962db084b89a1b1a6b24461b0af244a",
+        "source_sha256": "0d93abff5ba5f099496694eacd7a10f3512b88a0a6d0c12c1ff4657d52845c41",
+        "times_sha256": "ef14ffe96a6b7bb32698e49fc4cfdc52d3a698dd1c9cc508bf663b048548ea5d",
+        "points": 3744,
+        "status": "rejected",
+        "reason": "event_resolution: output query cannot certify its physical event phase"
+      },
+      {
+        "case": "SFC-ISOLATION",
+        "profile": "tol",
+        "reference_waveform_sha256": "ed0a723de7f80b4199830e42d084f1e34246a66560ad3e012c236a8068aac7dc",
+        "source_sha256": "c1db668ce11fa5f6cc577e8815d67522e89a735790a2a03c1643538ef92fddcc",
+        "times_sha256": "cf7cbed0fe4209fdd210a4e106820895f145b7b488f53a66356d6a41990f4a70",
+        "points": 4011,
+        "status": "rejected",
+        "reason": "event_resolution: output query cannot certify its physical event phase"
+      }
+    ],
+    "native_identity": {
+      "kernel_sha256": "1ebbd52e9366343343bad26e6d046dc62b68fc5dbc945235920567a3d8ab7ad9",
+      "kernel_identity": {
+        "build_revision": null,
+        "identity_version": 1,
+        "ir_schema_version": 18,
+        "name": "evas-kernel",
+        "platform": {
+          "arch": "aarch64",
+          "os": "macos"
+        },
+        "request_protocol_version": null,
+        "version": "0.14.0"
+      },
+      "source_revision": "dd2803feef1e953ec045b5f8f0d4d0966644ec40",
+      "driver_sha256": "9aa14c1db3df1ad833a505f576934bd1faaa8808fac96a6b76e0f42cbc195811",
+      "reference_manifest_sha256": "fa44fee3924078c3e59d561078f597168754e319c19ba03d3154c4a14ff258e4",
+      "selection": "first qualified engineering pass per case in frozen profile order; strict timestamp-coverage status retained separately"
+    },
+    "strict_side_queries": 28,
+    "strict_side_passes": 28,
+    "example": {
+      "time_s": 7.596128058938788e-06,
+      "guard_interval_V": [
+        -1.915134717478395e-14,
+        1.787459069646502e-14
+      ],
+      "root_interval_s": [
+        7.596128058938121e-06,
+        7.5961280589399405e-06
+      ],
+      "spectre_native_filter_V": 0.4500002555522366,
+      "threshold_V": 0.45,
+      "claim": "nondegenerate zero-containing interval does not certify before/after; no borrowed Spectre phase"
+    }
+  },
+  "checks": {
+    "mapped_python": {
+      "tests": 124,
+      "result": "pass",
+      "log_sha256": "e94a3f933804d6fa6fdf515f23b2429809be96718df0db9e6bd68b61b04a9780"
+    },
+    "rust": {
+      "passed": 231,
+      "ignored": 1,
+      "log_sha256": "c32d3dea870cb4ea30446742b8bd74e9a10b6f4151da2edf4aa326286ea062dd"
+    },
+    "checker_calibration": {
+      "tests": 6,
+      "result": "pass",
+      "log_sha256": "bf3347714a1923d8f7a928af1e16ef67f53516f819610b6e80cb93626131a43b"
+    },
+    "query_side_independent": {
+      "points": 28,
+      "log_sha256": "6acb3dd94fa62d6129ea787f07125e9496ee87305b8b43ace84b2ee1a3e82fc3"
+    },
+    "full_native_replay": "rejected 4/4; retained as capability/accuracy-recovery limit"
+  },
+  "not_claimed": [
+    "arbitrary exact-root queries",
+    "full native-grid pointwise agreement",
+    "all-time error bound",
+    "filter feedback or arbitrary higher-order cascade",
+    "sin wrapping this filter",
+    "other two open-source backends",
+    "merged new feature",
+    "unseen paper evaluation set"
+  ]
+}
