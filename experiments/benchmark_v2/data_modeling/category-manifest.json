@@ -13,11 +13,16 @@
       "candidate_backend": "spectre",
       "release_group": "spectre-extension",
       "d1_source_characterization": "completed-with-explicit-numerical-limits",
-      "d2_dataset_contract": "frozen-pending-live-calibration",
-      "d3_reference_alternative_mutants_checker": "implemented-live-calibration-pending",
-      "d4_model_pilot": "pending",
-      "closure": "pending-live-acceptance"
+      "d2_dataset_contract": "frozen-author-calibration-completed",
+      "d3_reference_alternative_mutants_checker": "completed-actual-spectre-author-calibration",
+      "d4_model_pilot": "in-progress",
+      "closure": "pending-model-pilots-and-full-task-acceptance"
     }
   ],
-  "future_scope": ["long-hold-leakage-if-observable", "edge-effects-if-identifiable", "bounded-active-characterization-contract", "other-real-transistor-circuit-families"]
+  "future_scope": [
+    "long-hold-leakage-if-observable",
+    "edge-effects-if-identifiable",
+    "bounded-active-characterization-contract",
+    "other-real-transistor-circuit-families"
+  ]
 }
