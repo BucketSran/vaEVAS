@@ -8,6 +8,12 @@ use crate::interval::Interval as I;
 use crate::ir::{Error, StateKind};
 use std::collections::BTreeMap;
 
+fn dot(row: &[I], values: &[I]) -> I {
+    row.iter()
+        .zip(values)
+        .fold(I::ZERO, |sum, (&a, &b)| sum + a * b)
+}
+
 fn substitute(row: &[I], updates: &[Vec<I>], nodes: usize) -> Vec<I> {
     let mut result = vec![I::ZERO; row.len()];
     result[..nodes].copy_from_slice(&row[..nodes]);
@@ -29,6 +35,104 @@ pub(crate) struct Bounds {
 }
 
 impl Bounds {
+    /// Separate sampling time from the later voltage read. Combining these
+    /// two affine maps first would incorrectly cancel q(tau)-u(b).
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) fn input_root_demand(
+        &self,
+        observation: &Self,
+        model: &EventModel,
+        time: f64,
+        point_inputs: &[I],
+        input_slopes: &[I],
+        before: &[I],
+        before_values: &[f64],
+        sampled: &[I],
+        voltages: &[f64],
+    ) -> Option<crate::accuracy::Demand> {
+        if !model.program.operators.is_empty() {
+            return None;
+        }
+        let parameters: Vec<_> = point_inputs
+            .iter()
+            .chain(before)
+            .copied()
+            .chain([I::ONE])
+            .collect();
+        let fixed_states: Vec<_> = self
+            .states
+            .iter()
+            .map(|row| dot(row, &parameters))
+            .collect();
+        let fixed: Vec<_> = point_inputs
+            .iter()
+            .chain(&fixed_states)
+            .copied()
+            .chain([I::ONE])
+            .collect();
+        let observed: Vec<_> = point_inputs
+            .iter()
+            .chain(sampled)
+            .copied()
+            .chain([I::ONE])
+            .collect();
+        let n = point_inputs.len();
+        // Input feedthrough can change a sampled consumer's relative budget
+        // and rounding enclosure later, even without another physical event.
+        let future_input_coupling = observation.nodes.iter().any(|row| {
+            row[..n].iter().any(|c| !c.zero()) && row[n..n + before.len()].iter().any(|c| !c.zero())
+        });
+        for (k, (row, &value)) in observation.nodes.iter().zip(voltages).enumerate() {
+            let assessment = crate::accuracy::Assessment::new(
+                model.program.nodes[k].clone(),
+                value,
+                dot(row, &observed),
+                model.tolerances.absolute,
+                model.tolerances.relative,
+            );
+            if assessment.finite() && assessment.error_bound <= assessment.budget {
+                continue;
+            }
+            let mut sensitivity = I::ZERO;
+            let mut inherited = I::ZERO;
+            let mut independent = row[..n].iter().all(|c| c.zero());
+            for (&a, state) in row[n..n + before.len()].iter().zip(&self.states) {
+                if a.zero() {
+                    continue;
+                }
+                independent &= state[..n].iter().all(|c| c.zero());
+                // Sum magnitudes: different PWL inputs need not have the same
+                // knot or the same slope at every point of this root interval.
+                for (&c, &slope) in state[..n].iter().zip(input_slopes) {
+                    sensitivity = sensitivity
+                        + I::point(a.magnitude())
+                            * I::point(c.magnitude())
+                            * I::point(slope.magnitude());
+                }
+                for ((&c, &bound), &nominal) in state[n..n + before.len()]
+                    .iter()
+                    .zip(before)
+                    .zip(before_values)
+                {
+                    inherited = inherited
+                        + I::point(a.magnitude())
+                            * I::point(c.magnitude())
+                            * I::point((I::point(nominal) - bound).magnitude());
+                }
+            }
+            return crate::accuracy::Demand::new(
+                assessment,
+                time,
+                (I::point(value) - dot(row, &fixed)).magnitude(),
+                inherited.hi,
+                sensitivity.hi,
+                independent,
+                future_input_coupling,
+            );
+        }
+        None
+    }
+
     pub(crate) fn new(model: &EventModel, selection: &Selection) -> Result<Self, Error> {
         let p = &model.program;
         let count = p.nodes.len();
@@ -222,6 +326,18 @@ impl Bounds {
                     } else {
                         "waveform_accuracy"
                     };
+                    crate::diagnostics::detail(
+                        "accuracy_failure",
+                        "rejected",
+                        None,
+                        &crate::accuracy::Assessment::new(
+                            name.clone(),
+                            value,
+                            exact,
+                            absolute,
+                            relative,
+                        ),
+                    );
                     return Err(Error::new(kind,format!(
                         "cannot certify same-time forward error at {name}: bound {:e}, budget {:e}",error.magnitude(),budget.lo)));
                 }

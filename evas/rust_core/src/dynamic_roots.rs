@@ -9,6 +9,7 @@ use crate::ir::Error;
 
 const MAX_BOXES: usize = 4096;
 const MAX_BISECTIONS: usize = 256;
+pub(crate) const REFINEMENT_WORK: usize = MAX_BISECTIONS;
 const MAX_DEPTH: usize = 128;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -17,44 +18,73 @@ pub(crate) struct CertifiedRoot {
     pub(crate) derivative: I,
 }
 
-/// Contract an already proved unique, transverse root. Unlike isolation this
-/// does not need new signed endpoints: the incoming enclosure retains the
-/// existence proof when interval evaluation straddles zero at an endpoint.
-/// Return the best enclosure at the arithmetic floor, never a guessed point.
+#[derive(Clone, Copy, Debug, PartialEq, serde::Serialize)]
+#[serde(rename_all = "snake_case")]
+pub(crate) enum RefinementStop {
+    TargetReached,
+    Exact,
+    ArithmeticFloor,
+    Stalled,
+    WorkLimit,
+}
+
+#[derive(Debug)]
+pub(crate) struct Refinement {
+    pub root: CertifiedRoot,
+    pub iterations: usize,
+    pub stop: RefinementStop,
+}
+
+/// Contract the same certified root. A target is only a stopping request;
+/// the consumer must still certify its output at the new representative.
 pub(crate) fn refine(
     mut root: CertifiedRoot,
+    target_width: Option<f64>,
+    work_limit: usize,
     range: &mut impl FnMut(I) -> Result<I, Error>,
     derivative: &mut impl FnMut(I) -> Result<I, Error>,
-) -> Result<CertifiedRoot, Error> {
+) -> Result<Refinement, Error> {
+    if target_width.is_some_and(|w| !w.is_finite() || w <= 0.) {
+        return Err(unresolved("invalid root refinement target"));
+    }
     let direction = root
         .derivative
         .sign()
         .filter(|s| *s != 0)
         .ok_or_else(|| unresolved("root refinement requires a transverse certificate"))?;
-    for _ in 0..MAX_BISECTIONS {
+    let mut iterations = 0;
+    let stop = loop {
         let bounds = root.bounds;
         if bounds.lo == bounds.hi {
-            break;
+            break RefinementStop::Exact;
         }
+        let width = (I::point(bounds.hi) - I::point(bounds.lo)).hi;
+        if target_width.is_some_and(|target| width <= target) {
+            break RefinementStop::TargetReached;
+        }
+        if iterations >= work_limit.min(REFINEMENT_WORK) {
+            break RefinementStop::WorkLimit;
+        }
+        let mid = bounds.lo + (bounds.hi - bounds.lo) * 0.5;
+        if mid <= bounds.lo || mid >= bounds.hi {
+            break RefinementStop::ArithmeticFloor;
+        }
+        iterations += 1;
+        crate::diagnostics::counter("root_refinement_iterations", 1);
         let slope = derivative_bounds(bounds, derivative)?;
         if slope.sign() != Some(direction) {
             return Err(unresolved(
                 "root refinement lost the transverse certificate",
             ));
         }
-        let mid = bounds.lo + (bounds.hi - bounds.lo) * 0.5;
-        if mid <= bounds.lo || mid >= bounds.hi {
-            break;
-        }
         let value = endpoint_value(mid, range)?;
         if value.zero() {
-            return Ok(CertifiedRoot {
+            root = CertifiedRoot {
                 bounds: I::point(mid),
                 derivative: slope,
-            });
+            };
+            break RefinementStop::Exact;
         }
-        // Interval Newton preserves the same root. A signed midpoint also
-        // provides a bisection bound, even when dependency limits Newton.
         let enclosure = I::point(mid) - value / slope;
         if !enclosure.finite() {
             return Err(unresolved("nonfinite root refinement enclosure"));
@@ -77,11 +107,15 @@ pub(crate) fn refine(
         }
         root.derivative = slope;
         if next == bounds {
-            break;
+            break RefinementStop::Stalled;
         }
         root.bounds = next;
-    }
-    Ok(root)
+    };
+    Ok(Refinement {
+        root,
+        iterations,
+        stop,
+    })
 }
 
 fn unresolved(message: &str) -> Error {
@@ -582,12 +616,54 @@ mod tests {
     use super::*;
 
     #[test]
+    fn demanded_width_work_limit_and_stall_preserve_the_certificate() {
+        for sign in [1., -1.] {
+            let mut range = |t: I| Ok(I::point(sign) * (t * t - I::point(2.)));
+            let mut derivative = |t: I| Ok(I::point(2. * sign) * t);
+            let original = isolate(1., 2., &mut range, &mut derivative, 0, 1e-3, 1e-3).unwrap()[0];
+            let untouched = refine(original, Some(1e-6), 0, &mut range, &mut derivative).unwrap();
+            assert_eq!(untouched.root, original);
+            assert_eq!(untouched.stop, RefinementStop::WorkLimit);
+            let bounded = refine(
+                original,
+                Some(1e-6),
+                REFINEMENT_WORK,
+                &mut range,
+                &mut derivative,
+            )
+            .unwrap();
+            assert_eq!(bounded.stop, RefinementStop::TargetReached);
+            assert!(
+                (I::point(bounded.root.bounds.hi) - I::point(bounded.root.bounds.lo)).hi <= 1e-6
+            );
+            assert!((I::point(bounded.root.bounds.lo) * I::point(bounded.root.bounds.lo)).hi <= 2.);
+            assert!((I::point(bounded.root.bounds.hi) * I::point(bounded.root.bounds.hi)).lo >= 2.);
+        }
+        let original = CertifiedRoot {
+            bounds: iv(0.49, 0.51),
+            derivative: I::ONE,
+        };
+        let stopped = refine(
+            original,
+            Some(1e-12),
+            REFINEMENT_WORK,
+            &mut |t| Ok(t - iv(0.499999, 0.500001)),
+            &mut |_| Ok(I::ONE),
+        )
+        .unwrap();
+        assert_eq!(stopped.stop, RefinementStop::Stalled);
+        assert!(stopped.root.bounds.lo <= 0.499999 && stopped.root.bounds.hi >= 0.500001);
+    }
+
+    #[test]
     fn refinement_preserves_irrational_root_and_uncertainty_floor() {
         for sign in [1.0, -1.0] {
             let mut range = |t: I| Ok(I::point(sign) * (t * t - I::point(2.)));
             let mut derivative = |t: I| Ok(I::point(2. * sign) * t);
             let original = isolate(1., 2., &mut range, &mut derivative, 0, 1e-3, 1e-3).unwrap()[0];
-            let refined = refine(original, &mut range, &mut derivative).unwrap();
+            let refined = refine(original, None, REFINEMENT_WORK, &mut range, &mut derivative)
+                .unwrap()
+                .root;
             assert!(refined.bounds.lo >= original.bounds.lo);
             assert!(refined.bounds.hi <= original.bounds.hi);
             assert!(refined.bounds.hi - refined.bounds.lo < 1e-14);
@@ -604,7 +680,9 @@ mod tests {
         };
         let mut derivative = |_| Ok(I::ONE);
         let original = isolate(0., 1., &mut range, &mut derivative, 1, 1e-3, 1e-3).unwrap()[0];
-        let refined = refine(original, &mut range, &mut derivative).unwrap();
+        let refined = refine(original, None, REFINEMENT_WORK, &mut range, &mut derivative)
+            .unwrap()
+            .root;
         assert!(refined.bounds.lo <= 0.499999 && refined.bounds.hi >= 0.500001);
         assert_ne!(refined.bounds.lo, refined.bounds.hi);
     }
