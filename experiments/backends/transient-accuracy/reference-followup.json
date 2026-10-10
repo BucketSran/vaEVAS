@@ -913,5 +913,20 @@
       "full_analysis_sha256": "ce32a449015de300b28e3fb7d38143baaa5ac1ce1bee84cfaf843d0fdce76ba5",
       "settings_readback_sha256": "5f636cdce14ee6eb401de074e1db879a5036c6097dd9cc22e6cd3b070feac886"
     }
-  ]
+  ],
+  "post_review_audit": {
+    "mode": "Retained-artifact reanalysis, zero new simulator invocations; all8 case verdicts unchanged.",
+    "checks": [
+      "Old checker equals frozen SHA and execution identity.",
+      "All collected manifest hashes verified, including PSF/log.",
+      "Combined VA is unchanged; deck differs only in maxstep.",
+      "Actual Spectre tolerance/preset and EVAS requested-control mapping checked explicitly.",
+      "All16 actual response time arrays equal requests; rows rebuilt using response times and independently regraded.",
+      "Original fixed voltage/event budgets retained."
+    ],
+    "local_audit": "runs/precision-closure-20261010/reference-followup/glm-findings-audit.json",
+    "audit_sha256": "db75402be8b491594758351ca6f58f24db367cd49b21f1af35b644134b94812b",
+    "audit_script_sha256": "cc83f78cdc0fd8018934a8c9da23f08c1129dbd7b033b0600c5202cac1e2a652",
+    "limitation": "Historic task-local executor is not a supported reusable runner; its malformed-record/timeout failure handling was not exercised by these complete cases."
+  }
 }
