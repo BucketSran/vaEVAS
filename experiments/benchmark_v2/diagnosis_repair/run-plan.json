@@ -222,5 +222,12 @@
     "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-uvlo-reset-chain/no-hysteresis",
     "expected_pass": false,
     "behavior": "迟滞区撤销资格"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-pfd-reset",
+    "variant": "stale-reset-timer",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-pfd-reset/stale-reset-timer",
+    "expected_pass": false,
+    "behavior": "异步复位清输出但保留旧deadline，提前清除新周期UP"
   }
 ]

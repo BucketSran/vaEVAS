@@ -15,8 +15,8 @@ def pwl(name,initial,changes,stop):
  for t,v in changes: points.extend([(t-0.001,prev),(t,v)]);prev=v
  points.append((stop,prev))
  return f'V{name} ({name} 0) vsource type=pwl wave=['+' '.join(f'{t*1e-9:.12g} {v}' for t,v in points)+']\n'
-def clock(stop): return [(t,v) for k in range(1,int(stop)) for t,v in [(k,.9),(k+.4,0)]]
-def deck(module,ports,inputs,stop,params='',includes=None,step=.05):
+def clock(stop): return [(t,v) for k in range(1,int(stop)) for t,v in [(k,0.9),(k+0.4,0)]]
+def deck(module,ports,inputs,stop,params='',includes=None,step=0.05):
  text='simulator lang=spectre\n'
  for f in includes or ['dut.va']:text+=f'ahdl_include "{f}"\n'
  for name,(initial,changes) in inputs.items():text+=pwl(name,initial,changes,stop)
@@ -25,18 +25,18 @@ def deck(module,ports,inputs,stop,params='',includes=None,step=.05):
  return text
 
 DESIGNS=[
- ('005','debounce-latch','debounce_latch',['sig','rst_n','out'],'debounce','输入上升沿启动12ns连续高资格。sig回落或低有效rst_n立即取消并清零。复位释放时sig已高不启动资格，须等待下一上升沿。初态out=0。',{'stable':12e-9,'guard':.6e-9},[
-  {'sig':(0,[(2,.9),(8,0),(12,.9),(30,0),(34,.9)]),'rst_n':(.9,[(20,0),(22,.9)])},
-  {'sig':(0,[(1,.9),(14,0),(15,.9),(25,0),(27,.9),(44,0),(45,.9)]),'rst_n':(.9,[(5,0),(7,.9),(41,0),(43,.9)])}],62),
- ('046','uvlo-brownout','uvlo_brownout_detector',['clk','rst','vin','out','metric'],'uvlo','仅在clk上升沿更新。rst高清零；out低且vin>0.65V置高，out高且vin<0.55V清零，在两阈值之间及等号处保持。out=0/0.9V；metric对应0.9/0.1V，初态out=0、metric=0.9V。',{'guard':.15e-9},[
-  {'clk':(0,clock(20)),'rst':(0,[(11.6,.9),(12.4,0)]),'vin':(.5,[(2.6,.7),(5.6,.6),(8.6,.5),(10.6,.7),(15.6,.6),(17.6,.5)])},
-  {'clk':(0,clock(20)),'rst':(0,[(7.6,.9),(8.4,0)]),'vin':(.65,[(2.6,.66),(4.6,.55),(6.6,.54),(9.6,.65),(11.6,.66),(13.6,.6),(16.6,.54)])}],20),
- ('272','reset-sequencer','reset_release_sequencer',['clk','rst','supply_ok','bias_ok','stage1','stage2','ready','progress'],'sequencer','仅在clk上升沿更新。rst高或supply_ok/bias_ok不高时stage=0；否则stage递增并在final_stage饱和。stage1在stage>=1为0.9V，stage2在stage>=2为0.9V，ready在stage>=final_stage为0.9V，progress=0.9*stage/final_stage。其余输出0。初态stage=0。停钟期间rst变化不更新状态。final_stage只允许整数3..5。',{'final_stage':3,'guard':.12e-9},[
-  {'clk':(0,clock(20)),'rst':(0,[(6.6,.9),(8.4,0)]),'supply_ok':(.9,[(12.6,0),(14.4,.9)]),'bias_ok':(.9,[])},
-  {'clk':(0,clock(20)),'rst':(0,[(10.6,.9),(11.4,0)]),'supply_ok':(.9,[]),'bias_ok':(.9,[(3.6,0),(5.4,.9),(15.6,0),(16.4,.9)])}],20),
+ ('005','debounce-latch','debounce_latch',['sig','rst_n','out'],'debounce','输入上升沿启动12ns连续高资格。sig回落或低有效rst_n立即取消并清零。复位释放时sig已高不启动资格，须等待下一上升沿。初态out=0。',{'stable':12e-9,'guard':0.6e-9},[
+  {'sig':(0,[(2,0.9),(8,0),(12,0.9),(30,0),(34,0.9)]),'rst_n':(0.9,[(20,0),(22,0.9)])},
+  {'sig':(0,[(1,0.9),(14,0),(15,0.9),(25,0),(27,0.9),(44,0),(45,0.9)]),'rst_n':(0.9,[(5,0),(7,0.9),(41,0),(43,0.9)])}],62),
+ ('046','uvlo-brownout','uvlo_brownout_detector',['clk','rst','vin','out','metric'],'uvlo','仅在clk上升沿更新。rst高清零；out低且vin>0.65V置高，out高且vin<0.55V清零，在两阈值之间及等号处保持。out=0/0.9V；metric对应0.9/0.1V，初态out=0、metric=0.9V。',{'guard':0.15e-9},[
+  {'clk':(0,clock(20)),'rst':(0,[(11.6,0.9),(12.4,0)]),'vin':(0.5,[(2.6,0.7),(5.6,0.6),(8.6,0.5),(10.6,0.7),(15.6,0.6),(17.6,0.5)])},
+  {'clk':(0,clock(20)),'rst':(0,[(7.6,0.9),(8.4,0)]),'vin':(0.65,[(2.6,0.66),(4.6,0.55),(6.6,0.54),(9.6,0.65),(11.6,0.66),(13.6,0.6),(16.6,0.54)])}],20),
+ ('272','reset-sequencer','reset_release_sequencer',['clk','rst','supply_ok','bias_ok','stage1','stage2','ready','progress'],'sequencer','仅在clk上升沿更新。rst高或supply_ok/bias_ok不高时stage=0；否则stage递增并在final_stage饱和。stage1在stage>=1为0.9V，stage2在stage>=2为0.9V，ready在stage>=final_stage为0.9V，progress=0.9*stage/final_stage。其余输出0。初态stage=0。停钟期间rst变化不更新状态。final_stage只允许整数3..5，验收会覆盖该范围。clk阈值交点前后0.2ns内，rst和资格输入保持稳定，不评分输入阈值跳变恰与clk重合的情况。若有效复位与阶段推进在同一采样拍发生，清零优先，不输出ready。',{'final_stage':3,'guard':0.12e-9},[
+  {'clk':(0,clock(20)),'rst':(0,[(6.6,0.9),(8.4,0)]),'supply_ok':(0.9,[(12.6,0),(14.4,0.9)]),'bias_ok':(0.9,[])},
+  {'clk':(0,clock(20)),'rst':(0,[(10.6,0.9),(11.4,0)]),'supply_ok':(0.9,[]),'bias_ok':(0.9,[(3.6,0),(5.4,0.9),(15.6,0),(16.4,0.9)])}],20),
  ('249','pfd-reset','pfd_active_low_reset',['ref','fb','rstb','up','down'],'pfd','rstb低立即清零并取消挂起复位；有效时ref上升置up，fb上升置down。两者都高后80ps清零；下降沿不置位。复位有效期间输入边沿不记忆，重新释放后只采纳新边沿。初态两输出0；高电平0.9V、tr=10ps。',{'reset_delay':80e-12,'guard':20e-12},[
-  {'ref':(0,[(1,.9),(1.4,0),(3,.9),(3.4,0),(5,.9),(5.4,0),(7,.9),(7.4,0)]),'fb':(0,[(1.2,.9),(1.6,0),(3.2,.9),(3.6,0),(5.2,.9),(5.6,0),(7.2,.9),(7.6,0)]),'rstb':(.9,[(3.05,0),(4,.9),(6,0),(6.5,.9)])},
-  {'ref':(0,[(1.2,.9),(1.6,0),(3.2,.9),(3.6,0),(5,.9),(5.4,0),(7.2,.9),(7.6,0)]),'fb':(0,[(1,.9),(1.4,0),(3,.9),(3.4,0),(5.05,.9),(5.45,0),(7,.9),(7.4,0)]),'rstb':(.9,[(5.08,0),(5.1,.9)])}],9)]
+  {'ref':(0,[(1,0.9),(1.4,0),(3,0.9),(3.4,0),(5,0.9),(5.4,0),(7,0.9),(7.4,0)]),'fb':(0,[(1.2,0.9),(1.6,0),(3.2,0.9),(3.6,0),(5.2,0.9),(5.6,0),(7.2,0.9),(7.6,0)]),'rstb':(0.9,[(3.05,0),(4,0.9),(6,0),(6.5,0.9)])},
+  {'ref':(0,[(1.2,0.9),(1.6,0),(3.2,0.9),(3.6,0),(5,0.9),(5.09,0),(5.11,0.9),(5.5,0),(7.2,0.9),(7.6,0)]),'fb':(0,[(1,0.9),(1.4,0),(3,0.9),(3.4,0),(5.05,0.9),(5.09,0),(5.3,0.9),(5.7,0),(7,0.9),(7.4,0)]),'rstb':(0.9,[(5.08,0),(5.1,0.9)])}],9)]
 
 def package(task,files,cases,instruction,source):
  path=ROOT/'benchmark/tasks'/task
@@ -66,14 +66,14 @@ def build():
   for i,inputs in enumerate(patterns):
    case=dict(name='public-reproduction' if i==0 else 'reentry-boundaries',kind=kind,signals=ports,stop=stop*1e-9,**settings)
    if sid=='272' and i==1:case['final_stage']=5
-   case['netlist']=deck(module,ports,inputs,stop,'final_stage=5' if sid=='272' and i==1 else params,step=.005 if sid=='249' else .05)
-   case['maxstep']=5e-12 if sid=='249' else .05e-9
+   case['netlist']=deck(module,ports,inputs,stop,'final_stage=5' if sid=='272' and i==1 else params,step=0.005 if sid=='249' else 0.05)
+   case['maxstep']=5e-12 if sid=='249' else 0.05e-9
    cases.append(case)
-  path=package(task,{'dut.va':buggy},cases,words+'\n\n固定参数为源码默认值；最终测试会覆盖两种不同激励。',f'v4-family-{sid}')
+  path=package(task,{'dut.va':buggy},cases,words+('\n\nfinal_stage采用整数3和5；其他参数固定为源码默认值。' if sid=='272' else '\n\n固定参数为源码默认值；最终测试会覆盖两种不同激励。'),f'v4-family-{sid}')
   write(path/'solution/files/dut.va',healthy)
   variants={'healthy':(healthy,True,'原健康资产'),'reference':(healthy,True,'按健康合同恢复原故障'),'starter':(buggy,False,'原人工注错资产')}
   if sid=='272':
-   alternative='`include "disciplines.vams"\nmodule reset_release_sequencer(clk,rst,supply_ok,bias_ok,stage1,stage2,ready,progress);\ninput clk,rst,supply_ok,bias_ok; output stage1,stage2,ready,progress; electrical clk,rst,supply_ok,bias_ok,stage1,stage2,ready,progress;\nparameter real vth=.45,vhi=.9,tr=60p; parameter integer final_stage=3; integer cycles;\nanalog begin\n@(initial_step) cycles=0;\n@(cross(V(clk)-vth,1)) begin\nif(V(rst)>vth || V(supply_ok)<=vth || V(bias_ok)<=vth) cycles=0; else cycles=min(cycles+1,final_stage);\nend\nV(stage1)<+transition(vhi*(cycles>0),0,tr); V(stage2)<+transition(vhi*(cycles>1),0,tr); V(ready)<+transition(vhi*(cycles==final_stage),0,tr); V(progress)<+transition(vhi*cycles/final_stage,0,tr);\nend\nendmodule\n'
+   alternative='`include "disciplines.vams"\nmodule reset_release_sequencer(clk,rst,supply_ok,bias_ok,stage1,stage2,ready,progress);\ninput clk,rst,supply_ok,bias_ok; output stage1,stage2,ready,progress; electrical clk,rst,supply_ok,bias_ok,stage1,stage2,ready,progress;\nparameter real vth=0.45,vhi=0.9,tr=60p; parameter integer final_stage=3; integer cycles;\nanalog begin\n@(initial_step) cycles=0;\n@(cross(V(clk)-vth,1)) begin\nif(V(rst)>vth || V(supply_ok)<=vth || V(bias_ok)<=vth) cycles=0; else cycles=min(cycles+1,final_stage);\nend\nV(stage1)<+transition(vhi*(cycles>0),0,tr); V(stage2)<+transition(vhi*(cycles>1),0,tr); V(ready)<+transition(vhi*(cycles==final_stage),0,tr); V(progress)<+transition(vhi*cycles/final_stage,0,tr);\nend\nendmodule\n'
    variants['alternative']=(alternative,True,'整体重写输出方程与计数状态')
    variants['never-ready']=(healthy.replace('ready_v = (stage_q >= final_stage) ? vhi : 0.0;','ready_v = 0.0;'),False,'永不启动')
    variants['ignore-bias']=(healthy.replace(' || (V(bias_ok) <= vth)',''),False,'旁路偏置资格')
@@ -101,6 +101,8 @@ def build():
    # A different time mechanism permits a whole rewrite and avoids source checks.
    alternative=alternative.replace('@(timer(trst)) begin','@(timer(0,1p)) begin\n        if (trst>=0 && $abstime>=trst) begin').replace('    if (V(rstb) <= vth) begin','    end\n    if (V(rstb) <= vth) begin')
    variants['alternative']=(alternative,True,'周期复位调度而非动态timer')
+   stale=healthy.replace('        trst = -1.0;\n    end\n    @(cross(V(ref)', '    end\n    @(cross(V(ref)').replace('        trst = -1.0;\n    end\n    V(up)', '    end\n    V(up)')
+   variants['stale-reset-timer']=(stale,False,'异步复位清输出但保留旧deadline，提前清除新周期UP')
    variants['wrong-edge']=(healthy.replace('V(ref) - vth, +1','V(ref) - vth, -1'),False,'ref下降沿置位')
    variants['never-start']=(healthy.replace('up_state = 1;','up_state = 0;'),False,'丢失UP动作')
   for v,(text,passed,why) in variants.items():

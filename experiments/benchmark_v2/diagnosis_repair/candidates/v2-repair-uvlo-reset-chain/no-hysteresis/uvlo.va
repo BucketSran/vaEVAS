@@ -1,11 +1,11 @@
 `include "disciplines.vams"
 module chain_uvlo(vin,pgood);
 input vin; output pgood; electrical vin,pgood;
-parameter real high=.65, low=.65, tr=10p; integer valid;
+parameter real high=0.65, low=0.65, tr=10p; integer valid;
 analog begin
 @(initial_step) valid=(V(vin)>high);
 @(cross(V(vin)-high,1)) valid=1;
 @(cross(V(vin)-low,-1)) valid=0;
-V(pgood)<+transition(.9*valid,0,tr);
+V(pgood)<+transition(0.9*valid,0,tr);
 end
 endmodule
