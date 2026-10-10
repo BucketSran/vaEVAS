@@ -56,7 +56,7 @@ module nonoverlap_clock_generator(clk_in, rst, enable, phi1, phi2, deadtime_metr
             end
         end
 
-        
+
 
  @(timer(0, tick)) begin
             if (V(rst) > vth || V(enable) <= vth) begin

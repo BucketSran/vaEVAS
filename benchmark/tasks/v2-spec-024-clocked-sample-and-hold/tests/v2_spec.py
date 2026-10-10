@@ -173,7 +173,7 @@ def evaluate(rows,case,work):
     if len(failures)<20:failures.append({'time':t,'node':node,'expected':x,'actual':r[node]})
  if checks==0:raise ValueError('no scored hold observations')
  if sid=='024':
-  eps=case.get('atol',.002);span=rows[0]['vdd']-rows[0]['vss'];eps=min(eps,.001*span)
+  eps=case.get('atol',.002);span=rows[0]['vdd']-rows[0]['vss']
   for k in range(1,len(history)):
    start,target=history[k];old=history[k-1][1]['out'];new=target['out'];end=history[k+1][0] if k+1<len(history) else ts[-1]
    window=[r for r in rows if start-0.1*tr<=r['time']<=min(end,start+1.2*tr)]

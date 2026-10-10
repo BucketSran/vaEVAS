@@ -109,4 +109,4 @@ for sid,variants in extra.items():
 (OUT/'run-plan.json').write_text(json.dumps(plan,indent=2)+'\n')
 # Spectre VACOMP requires an integer digit before the fractional point in authored VA.
 for p in (OUT/'candidates').rglob('*.va'):
- p.write_text(re.sub(r'(?<![\w.])\.(\d)',r'0.\1',p.read_text()))
+ p.write_text('\n'.join(x.rstrip() for x in re.sub(r'(?<![\w.])\.(\d)',r'0.\1',p.read_text()).splitlines())+'\n')
