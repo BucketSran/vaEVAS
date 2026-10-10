@@ -56,6 +56,16 @@ def producer_probe(source, sid):
 
 def build_cases(task, sid):
     cases = json.loads((task / 'tests/cases.json').read_text())[:2]
+    if sid == '308':
+        # Keep the same private condition, but sample twice against one held
+        # reset value. The second legal signal edge must update the result.
+        stretched = next(c for c in cases if c['name'] == 'contract-stretched-input')
+        old = '19.68n 0.9 19.803n 0'
+        new = '25.83n 0.9 25.953n 0'
+        if new not in stretched['netlist']:
+            if old not in stretched['netlist']:
+                raise ValueError('308: missing stretched signal-window boundary')
+            stretched['netlist'] = stretched['netlist'].replace(old, new)
     producer, consumer = CONFIG[sid]
     sources = {p.stem: p.read_text() for p in (task / 'solution').glob('*.va')}
     base = cases[0]

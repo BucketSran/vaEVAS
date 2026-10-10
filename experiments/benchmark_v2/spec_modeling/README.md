@@ -1,6 +1,6 @@
 # 按规格建模的P1任务
 
-当前作者校准为68/68个登记变体有效，见[作者校准最终报告](../author-calibration-final.md)。模型 Agentic 与适用 one-shot 试做及完整 spec 验收尚未完成。计划和生成清单中的 pending 保留生成时状态，当前作者结论以该报告为准。
+固定a5科学版本的作者校准为68/68个登记变体有效，见[作者校准最终报告](../author-calibration-final.md)。模型 Agentic 与适用 one-shot 试做及完整 spec 验收尚未完成。计划和生成清单中的 pending 保留生成时状态，当前作者结论以该报告为准。
 
 本目录维护#133归口的19个来源，每个来源对应一个正式Harbor任务目录。
 所有参考、替代实现和语义错误版本都已保存；当前作者Spectre校准已完成，模型试做仍未完成。
@@ -102,3 +102,9 @@ python3 -B -m unittest discover -s experiments/benchmark_v2/spec_modeling -p 'te
 | 186 | packed SAR words already differ from reference | packed SAR masks and bit updates instead of four-element arrays |
 
 有限表达式回归覆盖Alexander完整真值表、SAR四决策组合与位序、三次连续资格、离散增益控制，以及采集、低通、饱和积分的公开算例。它们执行实际候选表达式，但不是Verilog-A仿真；候选生成时全部标为待Spectre校准；当前新版的有效证据见最终报告，原实际结果仍绑定旧候选SHA，不能继承为新版通过。生成身份检查也不证明行为通过。
+
+## 模型试做后的308覆盖修正
+
+308的实际one-shot候选在首次signal采样后清除内部资格，导致同一reset样本后的第二个合法signal边沿不更新输出。旧六条件均未覆盖该分支。现仅延长私有`contract-stretched-input`的首个signal窗口，在21.432ns产生第二次有效采样；两次vin不同，正确输出均不触及钳位。其余五个条件、公开题面和材料、checker、容差、参考候选不变。
+
+`test_cds_repeated_signal.py`以独立字面差分0.55V/0.65V检验重复采样判据，并检查实际台架覆盖及生成结果。它不替代实际Spectre。五个登记作者变体和同一冻结模型提交的增量校准尚待完成；旧六条件通过记录保留，不用于宣称新条件通过。公开解题反馈不变，模型不重新生成答案。
