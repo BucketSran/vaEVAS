@@ -10,6 +10,22 @@ import json
 
 
 class ReplacementContractTests(unittest.TestCase):
+    def test_authored_consumer_probes_use_legal_complete_decimal_literals(self):
+        # Regression for actual VACOMP-1795 on 307 V(valid) <+ 0.;.
+        import re
+        from experiments.benchmark_v2.spec_modeling.build_structure import consumer_probe,CONFIG
+        for sid,(_,consumer) in CONFIG.items():
+            task=next((ROOT/'benchmark/tasks').glob('v2-spec-'+sid+'-*'))
+            source=consumer_probe((task/'solution'/f'{consumer}.va').read_text(),sid)
+            assignments=re.findall(r'V\([^)]*\)\s*<\+\s*([^;]+);',source)
+            self.assertTrue(assignments)
+            for literal in assignments:
+                self.assertRegex(literal,r'^\d+(?:\.\d+)?$')
+            case=next(c for c in json.loads((task/'tests/cases.json').read_text()) if c['name']=='architecture-consumer')
+            self.assertEqual(case['support']['architecture_replacement.va'],source)
+        self.assertIn('V(valid) <+ 0.0;',consumer_probe('module fixture;\nanalog begin\nend\nendmodule\n','307'))
+
+
     def test_active_top_bypassing_consumer_is_rejected(self):
         case = {'source_id': '308', 'structure_probe': 'consumer',
                 'signals': ['vin', 'clk', 'rst', 'sample_reset', 'sample_signal',
