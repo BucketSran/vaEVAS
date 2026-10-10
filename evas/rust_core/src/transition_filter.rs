@@ -115,6 +115,56 @@ struct ActivationPrefix {
     initial: I,
     forcing: I,
 }
+
+/// Local history data for a single held sample -> edge -> stable filter.
+/// The controller separately excludes earlier/later events and input coupling.
+pub(crate) struct BudgetPath {
+    pub transition: usize,
+    pub filter: usize,
+    pub gain: I,
+    pub initial: I,
+    pub edge_error: I,
+    pub filter_error: I,
+    pub duration: f64,
+}
+
+impl super::Operators {
+    pub(crate) fn single_filter_budget(&self, time: f64) -> Option<BudgetPath> {
+        if self.entries.len() != 2 || self.continuous.is_some() {
+            return None;
+        }
+        for (filter, entry) in self.entries.iter().enumerate() {
+            let super::Runtime::TransitionFilter { parent, history } = entry else {
+                continue;
+            };
+            let super::Runtime::Transition {
+                input_bounds,
+                history: edge,
+                ..
+            } = &self.entries[*parent]
+            else {
+                return None;
+            };
+            // This first slice has one held state and a unit transition input.
+            if input_bounds.as_slice() != [I::ONE, I::ZERO] || history.prefix.is_some() {
+                return None;
+            }
+            let (nominal, initial, duration) = edge.idle_level()?;
+            let bounds = history.bounds(edge, time).ok()?;
+            let value = history.value(edge, time).ok()?;
+            return Some(BudgetPath {
+                transition: *parent,
+                filter,
+                gain: history.gain * history.projection.coefficient,
+                initial,
+                edge_error: I::point((I::point(nominal) - initial).magnitude()),
+                filter_error: I::point((I::point(value) - bounds).magnitude()),
+                duration,
+            });
+        }
+        None
+    }
+}
 impl ActivationPrefix {
     fn bounds(&self, times: I, tau: I) -> Result<I, Error> {
         let h = times - I::point(self.start);

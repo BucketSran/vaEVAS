@@ -153,7 +153,10 @@ impl ScheduledEvent {
         if let Some(order) = self.physical_order_at(time) {
             return Some(order);
         }
-        if !model.program.operators.is_empty() || !self.can_refine_input_root(model) {
+        // The guard's dependency proof, not unrelated downstream operators,
+        // determines whether its sign can resolve a query. History-dependent
+        // roots remain excluded and every selected history is still certified.
+        if !self.can_refine_input_root(model) {
             return None;
         }
         let EventTrigger::Cross { guard, .. } = &model.triggers[self.event].trigger else {

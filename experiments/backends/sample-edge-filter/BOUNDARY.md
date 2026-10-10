@@ -360,3 +360,83 @@ python3 -B -m unittest discover -s experiments/backends/sample-edge-filter -p te
 原始日志、已验证哈希的参考和对话契约快照为 local-only，位于
 `runs/accuracy-directed-refinement/`、`runs/accuracy-directed-spectre-20261010/` 及收据指明的旧运行目录。
 历史重放、复杂事件簇和滤波链的目标预算分配仍未完成。
+
+<a id="filter-budget"></a>
+
+## 单次采样滤波链的预算反推
+
+实现与实测基于已审 main `99bf7d7c`；收据保留实测时的源码与构建身份。
+原案例 `u(t)=t`、`cross(u²−2)` 时采样 `q=u`，经 0.5 s 固定边沿和
+`1/(1+0.25s)` 后，已能靠完整根收缩达标。本轮让它按输出需求提前停止，
+保留原电压验收、过严预算拒绝、候选回退和历史不确定度。
+[数学与准入](../../../evas/docs/math/events.md#filter-root-budget)说明采样与边沿时间误差如何相加。
+
+解析回归固定 delay=0、0.125，gain=1、−2，观察时刻 `[0,1,1.75,2.5,3]`。
+严格预算沿用 1e-10 V；工程预算沿用 2.01e-6 V，reltol=0，max_step=1，stop=3。
+后者对应既有 `10 nV + 1 ppm × 2 V`；负增益变体也用这个更紧的固定预算，不放宽阈值。
+各四个配置的根细化由 3 次分别减为 2 次、1 次，全部输出仍达标。
+最大滤波误差分别约 1.84e-15 V、4.79e-10 V。
+另保留原宽预算 1e-3 V 的四配置，其中一个由 0 次变为 1 次：全响应提案比局部预检保守，
+会触发额外细化。因此这些数字只描述根工作量，不是完整请求加速证据。
+
+稀疏/密集查询的事件和公共输出完全一致，密集组包括根前后 1 ps 的点。
+这要求相位判断复用输入 guard 的符号证明，而不能因存在下游算子就直接拒绝。
+1e-30 V 的不可达预算仍失败。后续事件、混合输入馈通和其他历史算子回到原策略；
+同控制器的失败、改预算重试与干净执行比较状态、包围、历史和日历。
+
+### 同源码实际对照与保留的失败
+
+新增仅记录时间的测试台 `timer` 后，这个案例已按原选档规则通过实际 Spectre 对照，选中 `tol`。
+观测事件请求缺失的原生计算点，没有电气贡献或 DUT 状态写入，但会改变数值步进。
+因此这是新的观测控制身份，不能把旧批次的失败改记为通过。
+
+对照仅取上述 delay=0.125、gain=1 的一个物理案例，沿用
+[precision-engineering-v1](../../../evas/validation/paper/precision-v1.json) 的四档设置、原电压预算和原选档规则。
+`filter_budget_compare.py` 在全部 Spectre 原生点运行 EVAS，不插值。
+两端先分别检查独立闭式答案，再检查同刻差；EVAS 另外保留原 1e-10 V 严格请求。
+输入误差、全程观测间隔，以及根、边沿起止前后的观测点均独立检查。
+
+前两批请求的边沿结束后近邻点没有被导出，四档均为 `evidence_insufficient`，不能算通过。
+首批请求前后 1 ps，第二批请求前后 2 ps，checker 始终要求原 2.1 ps 范围。
+第三批统一指定 `transres=1e-13 s`，其余四档容差、步长和外部预算不变。
+日志显示 Spectre 先将该值上调到 1 ps，再上调到 10 ps，不能称请求值已生效；
+当前有效设置解析器也不认证 `transres`。第三批仍缺边沿结束后近邻点，且同刻差达到
+边沿约 0.50 mV、滤波输出约 0.33 mV，超过原 2.01 µV 预算。
+三批共 12 次实际执行均完成，当时没有一档通过完整验收；失败证据完整保留。
+
+随后 14 个最小探针中，纯 PWL 模型也遗漏同一个点，定位到原生观测调度问题。
+原始波形和解析后的时刻一致，排除了导出解析器漏点。具体内部抑制机制仍未证实。
+两个周期 strobe 参数冲突的失败也保留；独立 `timer` 能补齐点，排除了该时刻根本无法表示的解释。
+最终恢复第二批的默认 `transres`，仅在测试台增加观测模块，原 DUT 源码和输入不变。
+新四档均满足原 2.1 ps 边界覆盖，数值判定如下，预算仍为 2.01 µV。
+
+| 档位 | 原生点数 | Spectre 滤波误差上界 | 完整配对 |
+| --- | ---: | ---: | --- |
+| base | 623 | 3.204585 µV | 超差，保留 |
+| tol | 1761 | 0.488621 µV | 通过，按原顺序选中 |
+| step | 1023 | 2.458992 µV | 超差，保留 |
+| both | 2098 | 0.488621 µV | 通过 |
+
+八个 EVAS 请求各自满足原预算，工程及严格请求分别只需 1 次、2 次根细化。
+原生点上的滤波误差上界分别约 5.59e-10 V、2.56e-14 V。
+`tol` 的两种请求与 Spectre 同刻差均小于 0.489 µV，满足原工程配对预算。
+检查器继续独立检查原生波形覆盖，不能用 timer 日志代替波形；36 项校准通过。
+本次未修改 EVAS 内核，沿用身份一致的 180 项 Python、229 项 Rust 回归及 1 项 ignored。
+实际结果、旧失败、源码与构建身份见[紧凑收据](filter-budget-receipt.json)。
+
+新实测只覆盖正增益、一个延迟的一次采样，其他符号与延迟有解析回归。
+旧 q=1 的四份真实 Spectre 参考另用新内核复验八个 EVAS 请求，保留其原严格预算下的 Spectre 差异。
+本轮没有历史重放，也没有把灵敏度提案升级成全时域数值误差证明。
+
+复验命令复用已有串行后端 runner，每档 90 s、4 GiB、32 MiB 文件上限、单线程，无自动重试：
+
+```sh
+python3 -B experiments/backends/sample-edge-filter/filter_budget_compare.py freeze NEW_INPUTS evas/validation/paper/precision-v1.json
+python3 -B experiments/backends/sample-edge-filter/callback_probe.py run NEW_INPUTS NEW_SPECTRE --profile EXISTING_PROFILE
+python3 -B experiments/backends/sample-edge-filter/filter_budget_compare.py compare NEW_INPUTS NEW_SPECTRE NEW_COMPARISON evas/rust_core/target/debug/evas-kernel
+python3 -B -m unittest discover -s experiments/backends/sample-edge-filter -p 'test_*.py' -v
+```
+
+完整原始证据留在可见任务工作区的 `runs/filter-budget-20261011/`，为 local-only。
+此目录保留基线内核/请求、旧三批失败、14 个探针、新观测四档运行、校准、回归和审查记录。
+仓库只保存实现、测试、复验工具及紧凑收据，不声称原始波形已经公开。

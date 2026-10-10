@@ -419,7 +419,9 @@ V(filtered) <+ laplace_nd(V(edge), '{1}, '{1, tau});
 
 宽事件容差不保证严格输出精度。宽根窗口经过边沿和滤波放大后，若超过 `vabstol/reltol` 预算，
 请求返回 `waveform_accuracy`。本分支新增[受限自动根细化](events.md#voltage-demand-root-refinement)：
-输入驱动的孤立非线性根可在候选电压验收失败后细化一次，再重新验收。
+输入驱动的孤立非线性根可在候选电压验收失败后细化，再重新验收。
+[单次采样链](events.md#filter-root-budget)另将采样与边沿时间的灵敏度传到滤波输出，
+由最紧消费者提出提前停止目标；一般历史仍沿用原策略。
 未覆盖的历史根、复杂事件簇及后续预算失败仍明确拒绝；用户也可收紧 `cross` 容差后重新申请。
 这些包围相对于 EVAS 物理事件契约成立，不等于复现 Spectre 的数值回调时刻。
 实际 `$abstime` 探针已显示 Spectre 个别 timer 回调随下游动态和 strobe 设置变化；

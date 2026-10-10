@@ -148,7 +148,7 @@ class RootRecovery(unittest.TestCase):
         for t, actual in zip([2, 3], values(result)[2:]):
             self.assertLessEqual(abs(actual-(math.sqrt(2)-t)), 2.01e-6)
 
-    def test_filter_unknown_uses_existing_recovery_and_old_error_is_retained(self):
+    def test_filter_gets_time_budget_and_old_error_is_retained(self):
         request = request_for(
             '@(initial_step) q=0; '
             '@(cross(pow(V(u,r),2)-2,1,1e-3,1e-3)) q=1; '
@@ -157,7 +157,9 @@ class RootRecovery(unittest.TestCase):
             budget=1.01e-6)
         result, error, report = observe(request)
         self.assertIsNone(error)
-        self.assertEqual(details(report, 'root_demand')[0]['source'], 'unknown')
+        demand = details(report, 'filter_root_budget')[0]
+        self.assertEqual(demand['sample_sensitivity'], 0)
+        self.assertGreater(demand['edge_sensitivity'], 0)
         from test_sample_edge_filter import ramp_filter
         for t, actual in zip([0, 1, 2, 3], values(result)):
             self.assertLessEqual(abs(actual-ramp_filter(t, start=math.sqrt(2))), 1.01e-6)
