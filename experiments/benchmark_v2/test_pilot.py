@@ -1,5 +1,9 @@
 """Public pilot boundaries: materials, candidate bytes, and attempt identity."""
+import hashlib
 import json
+import os
+import subprocess
+import sys
 from pathlib import Path
 import tempfile
 import unittest
@@ -80,6 +84,109 @@ class PilotTests(unittest.TestCase):
             manifest = json.loads((package / 'manifest.json').read_text())
             self.assertEqual(manifest['purpose'], 'public')
             self.assertEqual(manifest['feedback_fields'], ['diagnostics', 'observations'])
+
+
+class PublicDeploymentTests(unittest.TestCase):
+    def deploy(self, root, files, *, netlist='visible.scs', spec=None):
+        task = root / 'task'
+        public = task / 'environment/public'
+        public.mkdir(parents=True)
+        for name, content in files.items():
+            target = public / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(content)
+        (task / 'instruction.md').write_text('Public fixture')
+        package = root / 'package'
+        pilot.public_package(task, package, ['dut.va', 'rtl/helper.va'], netlist)
+        candidates = root / 'candidate'
+        (candidates / 'rtl').mkdir(parents=True)
+        (candidates / 'dut.va').write_bytes(b'module dut;\r\nendmodule\r\n')
+        (candidates / 'rtl/helper.va').write_bytes(b'module helper; endmodule\n')
+        if spec is not None:
+            (candidates / '.public-testbench.json').write_text(json.dumps(spec))
+        fake = root / 'fake-spectre'
+        fake.write_text('#!' + sys.executable + '\n' + r'''import pathlib,re,sys
+pathlib.Path('fake-called').write_text('called')
+def visit(path):
+    assert path.is_file(), str(path)
+    if path.suffix in {'.scs', '.inc'}:
+        for name in re.findall(r'(?:ahdl_include|include)\s+"([^\"]+)"', path.read_text()):
+            visit(path.parent / name)
+visit(pathlib.Path(sys.argv[2]))
+psf=pathlib.Path('psf');psf.mkdir()
+(psf/'fixture.tran.tran').write_text('VALUE\n"time" 0\n"out" 1\nEND\n')
+''')
+        fake.chmod(0o700)
+        output = root / 'output'
+        result = subprocess.run([sys.executable, str(package / 'public_feedback.py')],
+            env={**os.environ, 'CANDIDATE': str(candidates / 'dut.va'),
+                 'VERIFY_OUTPUT': str(output), 'SPECTRE': str(fake)},
+            capture_output=True, timeout=10)
+        return result, package, candidates, output
+
+    def test_fixed_work_includes_deploy_with_unchanged_source_bytes(self):
+        files = {
+            'visible.scs': b'ahdl_include "/work/dut.va"\r\nahdl_include "/work/rtl/helper.va"\r\ninclude "/work/public/decks/nested.scs"\r\n',
+            'decks/nested.scs': b'include "/work/public/decks/extra.inc"\n',
+            'decks/extra.inc': b'ahdl_include "/work/public/support.va"\n',
+            'support.va': b'module support; endmodule\r\n',
+        }
+        with tempfile.TemporaryDirectory() as folder:
+            result, package, candidates, output = self.deploy(Path(folder), files)
+            self.assertEqual(result.returncode, 0, result.stderr.decode())
+            report = json.loads((output / 'report.json').read_text())
+            self.assertEqual(report['diagnostics']['spectre_returncode'], 0)
+            self.assertEqual(report['observations'], [{'time': 0.0, 'out': 1.0}])
+            for name, content in files.items():
+                self.assertEqual((package / 'public' / name).read_bytes(), content)
+            self.assertEqual((output / 'condition/dut.va').read_bytes(), (candidates / 'dut.va').read_bytes())
+            receipt = json.loads((output / 'netlist-identity.json').read_text())
+            self.assertEqual(receipt['decks']['visible.scs']['original_sha256'], hashlib.sha256(files['visible.scs']).hexdigest())
+            effective = (output / 'condition/visible.scs').read_bytes()
+            self.assertEqual(receipt['decks']['visible.scs']['effective_sha256'], hashlib.sha256(effective).hexdigest())
+            self.assertNotEqual(effective, files['visible.scs'])
+
+
+    def test_relative_and_agent_testbench_inputs_use_declared_files(self):
+        files = {'visible.scs': b'ahdl_include "./dut.va"\r\ninclude "./decks/nested.scs"\r\n',
+                 'decks/nested.scs': b'ahdl_include "helper.va"\n',
+                 'decks/helper.va': b'module public_helper; endmodule\n'}
+        with tempfile.TemporaryDirectory() as folder:
+            result, _, _, output = self.deploy(Path(folder), files)
+            self.assertEqual(result.returncode, 0, result.stderr.decode())
+            self.assertEqual(json.loads((output / 'report.json').read_text())['diagnostics']['spectre_returncode'], 0)
+            self.assertEqual((output / 'condition/visible.scs').read_bytes(), files['visible.scs'])
+        spec = {'netlist': 'ahdl_include "/work/dut.va"\ninclude "/work/public/decks/nested.scs"\nahdl_include "temporary/helper.va"\n',
+                'support_files': {'temporary/helper.va': 'module temp; endmodule\n'}}
+        with tempfile.TemporaryDirectory() as folder:
+            result, _, candidates, output = self.deploy(Path(folder), files, spec=spec)
+            self.assertEqual(result.returncode, 0, result.stderr.decode())
+            self.assertEqual(json.loads((output / 'report.json').read_text())['diagnostics']['spectre_returncode'], 0)
+            self.assertEqual((output / 'condition/dut.va').read_bytes(), (candidates / 'dut.va').read_bytes())
+            receipt = json.loads((output / 'netlist-identity.json').read_text())
+            self.assertEqual(receipt['netlist'], '.harness-public-testbench.scs')
+            self.assertEqual(receipt['decks'][receipt['netlist']]['original_sha256'], hashlib.sha256(spec['netlist'].encode()).hexdigest())
+
+    def test_unsafe_include_paths_are_rejected_before_spectre(self):
+        for include in ['/etc/passwd', '/work/undeclared.va', '/work/public/secret.va',
+                        '/work/public/../dut.va', '../dut.va', 'missing.va']:
+            with self.subTest(include=include), tempfile.TemporaryDirectory() as folder:
+                files = {'visible.scs': ('ahdl_include "' + include + '"\n').encode()}
+                result, _, _, output = self.deploy(Path(folder), files)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertFalse((output / 'condition/fake-called').exists())
+                self.assertFalse((output / 'report.json').exists())
+        with tempfile.TemporaryDirectory() as folder:
+            files = {'visible.scs': b'include "decks/nested.scs"\n',
+                     'decks/nested.scs': b'ahdl_include "/etc/passwd"\n'}
+            result, _, _, output = self.deploy(Path(folder), files)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertFalse((output / 'condition/fake-called').exists())
+        with tempfile.TemporaryDirectory() as folder:
+            spec = {'netlist': 'ahdl_include "/work/dut.va"\nahdl_include "/etc/passwd"\n', 'support_files': {}}
+            result, _, _, output = self.deploy(Path(folder), {'visible.scs': b''}, spec=spec)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertFalse((output / 'condition/fake-called').exists())
 
 
 if __name__ == '__main__':

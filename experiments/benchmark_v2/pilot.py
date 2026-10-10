@@ -257,7 +257,7 @@ def one_shot(args):
 
 
 PUBLIC_CHECKER = r'''import hashlib, json, os, re, shutil, subprocess
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 root = Path(__file__).resolve().parent
 contract = json.loads((root / 'contract.json').read_text())
 output = Path(os.environ['VERIFY_OUTPUT'])
@@ -269,16 +269,19 @@ for name in contract['candidate_files']:
     target = work / name
     target.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(candidate.parent / name, target)
-for source in (root / 'public').rglob('*'):
-    if source.is_file():
-        target = work / source.relative_to(root / 'public')
-        target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(source, target)
+for name in contract['public_files']:
+    source = root / 'public' / name
+    target = work / name
+    target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(source, target)
 netlist = contract['netlist']
+temporary = []
 payload = candidate.parent / '.public-testbench.json'
 if payload.is_file():
     spec = json.loads(payload.read_text())
     netlist = '.harness-public-testbench.scs'
+    if (work / netlist).exists():
+        raise ValueError('temporary netlist collides with public inputs')
     (work / netlist).write_text(spec['netlist'])
     for name, content in spec['support_files'].items():
         target = work / name
@@ -286,6 +289,54 @@ if payload.is_file():
             raise ValueError('temporary model path collides with condition inputs')
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(content)
+        temporary.append(name)
+# Resolve the task's virtual /work names only against declared inputs. The
+# original package and candidate bytes remain untouched; effective decks are
+# written only inside this job's private condition directory.
+allowed = set(contract['candidate_files']) | set(contract['public_files']) | set(temporary)
+aliases = {'/work/' + name: name for name in contract['candidate_files']}
+aliases.update({'/work/public/' + name: name for name in contract['public_files']})
+include = re.compile(r'(?m)^([ \t]*(?:ahdl_include|include)[ \t]+)(["\'])([^\r\n]*?)\2')
+decks = sorted({name for name in contract['public_files'] if name.endswith('.scs')} | {netlist})
+identities = {}
+while decks:
+    name = decks.pop(0)
+    if name in identities:
+        continue
+    path = work / name
+    original = path.read_bytes()
+    text = original.decode('utf-8')
+    def relocate(match):
+        source = match[3]
+        logical = PurePosixPath(source)
+        if not source or '..' in logical.parts or '\\' in source or '\x00' in source:
+            raise ValueError('unsafe public include path')
+        if logical.is_absolute():
+            if source not in aliases:
+                raise ValueError('undeclared absolute public include path')
+            target = aliases[source]
+        else:
+            target = str(PurePosixPath(name).parent / logical)
+        if target not in allowed or not (work / target).is_file():
+            raise ValueError('undeclared public include path')
+        if re.match(r'include\b', match[1].lstrip()) and target in contract['public_files']:
+            decks.append(target)
+        if not logical.is_absolute():
+            return match[0]
+        relative = os.path.relpath(work / target, path.parent)
+        return match[1] + match[2] + relative + match[2]
+    effective = include.sub(relocate, text)
+    # Reject unquoted include syntax rather than passing an unchecked path to
+    # Spectre. Options after a quoted include remain byte-identical.
+    for line in text.splitlines():
+        if re.match(r'^\s*(?:ahdl_include|include)\b', line) and not include.match(line):
+            raise ValueError('unsupported public include syntax')
+    data = effective.encode('utf-8')
+    path.write_bytes(data)
+    identities[name] = {'original_sha256': hashlib.sha256(original).hexdigest(),
+                        'effective_sha256': hashlib.sha256(data).hexdigest()}
+(output / 'netlist-identity.json').write_text(json.dumps(
+    {'netlist': netlist, 'path_mapping': 'declared-work-aliases-v1', 'decks': identities}) + '\n')
 argv = [os.environ['SPECTRE'], '-64', netlist, '+log', 'spectre.log',
         '-format', 'psfascii', '-raw', 'psf', '+lqtimeout', '5', '+mt=1']
 result = subprocess.run(argv, cwd=work, capture_output=True, timeout=120)
@@ -337,7 +388,8 @@ def public_package(task, destination, paths, netlist):
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(source, target)
     (destination / 'public_feedback.py').write_text(PUBLIC_CHECKER)
-    save(destination / 'contract.json', {'candidate_files': paths, 'netlist': netlist})
+    save(destination / 'contract.json', {'candidate_files': paths, 'netlist': netlist,
+         'public_files': sorted(file_hashes(materials))})
     (destination / 'test.sh').write_text('#!/bin/sh\nset -eu\nexec python3.12 -B "$(dirname "$0")/public_feedback.py"\n')
     inventory = {name: {'sha256': digest, 'bytes': (destination / name).stat().st_size}
                  for name, digest in file_hashes(destination).items()}
