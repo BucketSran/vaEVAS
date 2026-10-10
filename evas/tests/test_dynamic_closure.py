@@ -6,6 +6,7 @@ GUARDS = ["DYNAMICS"]
 import math
 import unittest
 from fractions import Fraction
+from decimal import Decimal, localcontext
 
 from evas.runtime import KernelError
 from test_continuous_dynamics import compile_model, run, rows, values, assert_close
@@ -95,16 +96,22 @@ class JointEventDynamicsContracts(unittest.TestCase):
         with self.assertRaisesRegex(KernelError, "event_condition"):
             run(program, {"u": [[0, 0], [2, 2]]}, [0, 2], stop=2, vabstol=1e-4, reltol=0)
 
-    def test_uncertain_linear_restart_rejects_uncertified_sampling(self):
-        # q=sqrt(2) at the ideal root; y(10)=10*sqrt(2)-2.
-        # The representative sample can miss by >7e-5 V while the old
-        # linear restart accepts the requested 2e-5 V budget.
+    def test_uncertain_linear_restart_refines_sampling_and_retains_output_budget(self):
+        # At tau=sqrt(2), q=tau and y(10)=10*tau-2. The old coarse
+        # representative missed by >7e-5 V; refinement must meet the same budget.
         program = compile_model(
             "@(initial_step) q=0; @(cross(pow(V(u,r),2)-2,1,1e-5,1e-4)) "
             "q=V(u,r); V(y,r)<+idt(q,0);", "real q;")
-        with self.assertRaisesRegex(KernelError, "waveform_accuracy"):
-            run(program, {"u": [[0, 0], [10, 10]]}, [0, 10], stop=10,
-                vabstol=2e-5, reltol=1e-10)
+        sources = {"u": [[0, 0], [10, 10]]}
+        grids = [[0, 10], [0, 1, 1.4142, 1.41423, 2, 5, 10]]
+        answers = [run(program, sources, grid, stop=10, vabstol=2e-5, reltol=1e-10)
+                   for grid in grids]
+        assert_close(self, values(answers[0])[-1], 10*math.sqrt(2)-2, delta=2e-5)
+        self.assertEqual(answers[0]['solutions'],
+                         [answers[1]['solutions'][grids[1].index(t)] for t in grids[0]])
+        self.assertEqual(answers[0]['transient']['events'], answers[1]['transient']['events'])
+        with self.assertRaisesRegex(KernelError, "waveform_accuracy.*at y:"):
+            run(program, sources, grids[0], stop=10, vabstol=1e-13, reltol=0)
 
     def test_event_input_change_preserves_integral_state_and_rebuilds_future(self):
         program = compile_model(
@@ -320,25 +327,32 @@ class NonlinearIntegralContracts(unittest.TestCase):
             # Changing the internal step ceiling may change rounding; each
             # trajectory above still obeys the unchanged analytic budget.
 
-    def test_nonlinear_root_window_is_rejected_when_voltage_budget_is_tighter(self):
-        program = compile_model(
-            "@(initial_step) q=1; @(cross(pow(V(u,r),2)-2,1,1e-5,1e-4)) q=2; "
-            "V(y,r)<+idt(-q*pow(V(y,r),2),1);", "integer q;")
+    def test_nonlinear_root_window_refines_for_voltage_and_amplified_consumers(self):
+        body = "@(initial_step) q=1; @(cross(pow(V(u,r),2)-2,1,1e-5,1e-4)) q=2; "
+        program = compile_model(body+"V(y,r)<+idt(-q*pow(V(y,r),2),1);", "integer q;")
+        amplified = compile_model(
+            body+"V(z,r)<+idt(-q*pow(V(z,r),2),1); V(y,r)<+1e6*V(z,r);",
+            "integer q; electrical z;")
         sources = {"u": [[0, 0], [2, 2]]}
         times = [0, .5, 1, 1.75, 2]
+        dense = sorted(set(times+[i/16 for i in range(33)]))
+        # y'=-q*y^2 has the independent reciprocal solution below.
+        # Preserve both original voltage budgets and the amplified model.
+        for model, gain, budget in [(program, 1, 1e-10), (program, 1, 1e-4),
+                                    (amplified, 1e6, 1e-4)]:
+            with self.subTest(gain=gain, budget=budget):
+                result = run(model, sources, times, stop=2, vabstol=budget, reltol=0)
+                for t, actual in zip(times, values(result)):
+                    expected = gain/(1+t) if t <= math.sqrt(2) else gain/(1+2*t-math.sqrt(2))
+                    assert_close(self, actual, expected, delta=budget)
+                if budget == 1e-10 or gain == 1e6:
+                    queried = run(model, sources, dense, stop=2, vabstol=budget, reltol=0)
+                    self.assertEqual(result['solutions'],
+                                     [queried['solutions'][dense.index(t)] for t in times])
+                    self.assertEqual(result['transient']['events'], queried['transient']['events'])
+        # Even a refined root cannot certify this amplified output budget.
         with self.assertRaisesRegex(KernelError, "waveform_accuracy"):
-            run(program, sources, times, stop=2, vabstol=1e-10, reltol=0)
-        result = run(program, sources, times, stop=2, vabstol=1e-4, reltol=0)
-        tau = math.sqrt(2)
-        for t, actual in zip(times, values(result)):
-            expected = 1/(1+t) if t <= tau else 1/(1+2*t-tau)
-            assert_close(self, actual, expected, delta=1e-4)
-        amplified = compile_model(
-            "@(initial_step) q=1; @(cross(pow(V(u,r),2)-2,1,1e-5,1e-4)) q=2; "
-            "V(z,r)<+idt(-q*pow(V(z,r),2),1); V(y,r)<+1e6*V(z,r);",
-            "integer q; electrical z;")
-        with self.assertRaisesRegex(KernelError, "waveform_accuracy"):
-            run(amplified, sources, times, stop=2, vabstol=1e-4, reltol=0)
+            run(amplified, sources, times, stop=2, vabstol=1e-10, reltol=0)
 
     def test_uncertain_nonlinear_reset_preserves_the_other_integral(self):
         program = compile_model(
@@ -355,20 +369,31 @@ class NonlinearIntegralContracts(unittest.TestCase):
             assert_close(self, row["dut:z"], first, delta=1e-10)
             assert_close(self, row["y"], second, delta=1e-10)
 
-    def test_uncertain_nonlinear_restart_does_not_accept_uncertified_sampling(self):
-        # At the exact root u=sqrt(2), q^2=2e12, so y(10)=2e12*(10-sqrt(2)).
-        # Sampling q at the representative root's upper endpoint can instead
-        # miss this answer by >2e8 V while accepting a 2e7 V budget. Until
-        # sampling includes the full event-time box this combination must fail.
+    def test_uncertain_nonlinear_restart_refines_sampling_without_losing_old_integral(self):
+        sources = {"u": [[0, 0], [10, 10]]}
+        grids = [[0, 10], [0, 1, 1.4142, 1.41423, 2, 5, 10]]
         for initial in [0, 1414222.7172851562]:
-            # The second initial value equals the sampled representative:
-            # equality of representative values must not bypass admission.
+            # The second initial value matched the OLD coarse representative.
+            # Its root-preceding initial^2 integral must survive refinement.
             program = compile_model(
                 f"@(initial_step) q={initial}; @(cross(pow(V(u,r),2)-2,1,1e-5,1e-4)) q=1e6*V(u,r); "
                 "V(y,r)<+idt(pow(q,2),0);", "real q;")
-            with self.subTest(initial=initial), self.assertRaisesRegex(KernelError, "waveform_accuracy"):
-                run(program, {"u": [[0, 0], [10, 10]]}, [0, 10], stop=10,
-                    vabstol=2e7, reltol=0)
+            with self.subTest(initial=initial):
+                answers = [run(program, sources, grid, stop=10, vabstol=2e7, reltol=0)
+                           for grid in grids]
+                # Independent closed form: initial^2*tau + 2e12*(10-tau).
+                # Decimal retains the large baseline and the binary64 initial.
+                with localcontext() as context:
+                    context.prec = 70
+                    tau = Decimal(2).sqrt()
+                    expected = Decimal.from_float(initial)**2*tau + Decimal('2e12')*(10-tau)
+                    error = abs(Decimal.from_float(values(answers[0])[-1])-expected)
+                    self.assertLessEqual(error, Decimal('2e7'))
+                self.assertEqual(answers[0]['solutions'],
+                                 [answers[1]['solutions'][grids[1].index(t)] for t in grids[0]])
+                self.assertEqual(answers[0]['transient']['events'], answers[1]['transient']['events'])
+                with self.assertRaisesRegex(KernelError, "waveform_accuracy"):
+                    run(program, sources, grids[0], stop=10, vabstol=1e-6, reltol=0)
 
     def test_exact_nonlinear_sampling_keeps_the_certified_event_contract(self):
         program = compile_model(

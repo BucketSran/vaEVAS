@@ -1,0 +1,98 @@
+{
+  "purpose": "Bind published runtime to retained actual Spectre comparisons; record fixed-denominator checker repair.",
+  "pull_request": "https://github.com/BucketSran/vaEVAS/pull/123",
+  "runtime_commit": "04d38dcd92d9d1e83ef0076e3aee5e69f60d0b0f",
+  "reference_receipt": "adaptive-root-receipt.json",
+  "reference_receipt_sha256": "5e911251c5a2f2e8ebec5abf4ebf7d0f11567eb87017523622d428d931698c5a",
+  "identity": {
+    "original_source_manifest_files": 115,
+    "runtime_and_build_files": 99,
+    "runtime_and_build_all_unchanged": true,
+    "unchanged_source_manifest_files": 113,
+    "changed_checker_files": [
+      {
+        "path": "experiments/backends/sample-edge-filter/root_compare.py",
+        "before_sha256": "401d2c470803805a2e5c1ac2e11404938869516228c721a193e91cbead9fbadf",
+        "after_sha256": "078cdfedc18b0d0f17921527f76396f57da0f04f0a9a18aad46252c440d3742a"
+      },
+      {
+        "path": "experiments/backends/sample-edge-filter/test_root_compare.py",
+        "before_sha256": "b659760ffa1ed7e4df03ed89022f813ad44b64a4f30ac644a0dfca1d91ab1667",
+        "after_sha256": "cd2a1eb3c8f1950c77ad480faed60ee144956a76de929535ec3de2f6f811ddde"
+      }
+    ],
+    "original_source_manifest_sha256": "3c1f621836c9753286e9b273797668ed46224f3c363f8d5d42ddb9b1f3c04332",
+    "kernel_sha256": "4e8b28638a923fff212cdfa7f07965f386317a215be5be4c8a50fe5bc72611dd"
+  },
+  "scope": "Remote main c81b8c7c changes benchmark assets only. No runtime, build, input, tolerance or simulator version changed during integration. Retained actual Spectre 12 chain and 4 root executions remain applicable. No new Spectre execution in this review.",
+  "checker_repair": {
+    "before": "Empty reference MANIFEST={} could exit successfully with RESULTS=[].",
+    "after": "Require four fixed model IDs, two unchanged voltage budgets per model, the fixed case contract and manifest coverage of every consumed case/source/rows file before execution.",
+    "calibration_methods_passed": 25,
+    "fresh_evas_requests": 8,
+    "reused_spectre_executions": 4,
+    "result_records_equal_to_prior_eight": true,
+    "execution_identity": {
+      "kernel_sha256": "4e8b28638a923fff212cdfa7f07965f386317a215be5be4c8a50fe5bc72611dd",
+      "acceptance_policy": "adaptive-root",
+      "checker_sha256": "078cdfedc18b0d0f17921527f76396f57da0f04f0a9a18aad46252c440d3742a",
+      "kernel_identity": {
+        "build_revision": null,
+        "identity_version": 1,
+        "ir_schema_version": 18,
+        "name": "evas-kernel",
+        "platform": {
+          "arch": "aarch64",
+          "os": "macos"
+        },
+        "request_protocol_version": null,
+        "version": "0.14.0"
+      },
+      "reference_manifest_sha256": "5cd0f963d9ba0e66c372adc95e2886601223e42719b3833c2828af17f23da72c"
+    }
+  },
+  "acceptance": "Only SEF-TIMER-18 is accepted. Retain strict FAIL, all 18 records, original engineering budgets and other outstanding case obligations.",
+  "availability": "Compact receipt and implementation are repository-contained. Detailed regression/review logs and raw simulator evidence are local-only; GitHub checks belong to the PR head they execute.",
+  "artifacts": [
+    {
+      "path": "runs/sample-edge-filter-20261010/merge-review/root-denominator-red.log",
+      "sha256": "90f28abf48328b17effef2915c92c554444e5727cabcd94a0d009812ce57e788"
+    },
+    {
+      "path": "runs/sample-edge-filter-20261010/merge-review/checkers-fixed.log",
+      "sha256": "b6df38d16cd0cd06b8cd01599bf128c34f0c7854eca69606488c99b54e82d3cb"
+    },
+    {
+      "path": "runs/sample-edge-filter-20261010/merge-review/root-evas/RESULTS.json",
+      "sha256": "32948c567fb5a943255230e0bad0bb2c49c70557f8e14f29eb7c4eb545782724"
+    },
+    {
+      "path": "runs/sample-edge-filter-20261010/merge-review/root-evas/IDENTITY.json",
+      "sha256": "b6c8b05228063e930e08ffbac35f07628b543b0eb78398d914a4355db0543ea5"
+    },
+    {
+      "path": "runs/sample-edge-filter-20261010/merge-review/rust.log",
+      "sha256": "da7abec121733068448d03b3be71d6345f4060d22fb2debf9cbf260002c04f95"
+    },
+    {
+      "path": "runs/sample-edge-filter-20261010/merge-review/clippy.log",
+      "sha256": "f01b52d114710669ef1246ee28f71e3e7afdabf8bc69e842454b8bd09988a1a0"
+    },
+    {
+      "path": "runs/sample-edge-filter-20261010/merge-review/fmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "runs/sample-edge-filter-20261010/merge-review/contract.log",
+      "sha256": "9a09ec8768a1a9eea75c2fbad4327e0128450a29ca25b060458f0c15aa0ad72c"
+    },
+    {
+      "path": "runs/sample-edge-filter-20261010/merge-review/scripts.log",
+      "sha256": "91d99b3095405abeb1792e18fec8b8cd3e7f3055529ac7eae09c6249a3c7749a"
+    },
+    {
+      "path": "runs/sample-edge-filter-20261010/merge-review/dynamic-sampling-review.md",
+      "sha256": "26cc292c3fd40ef7374ca8988c7a8b4e5b50972d0d4da5f1cdcee998780ef46e"
+    }
+  ]
+}
