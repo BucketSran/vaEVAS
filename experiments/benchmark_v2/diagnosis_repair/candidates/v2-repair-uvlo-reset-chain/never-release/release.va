@@ -1,0 +1,15 @@
+`include "disciplines.vams"
+module chain_release(pgood,resetb);
+input pgood; output resetb; electrical pgood,resetb;
+parameter real delay=10n, tr=10p; integer released; real deadline;
+analog begin
+@(initial_step) begin released=0; deadline=-1; end
+@(cross(V(pgood)-0.45,1)) deadline=$abstime+delay;
+@(cross(V(pgood)-0.45,-1)) begin released=0; deadline=-1; end
+@(timer(deadline)) begin
+if(deadline>=0 && $abstime>=deadline && V(pgood)>0.45) released=0;
+deadline=-1;
+end
+V(resetb)<+transition(0.9*released,0,tr);
+end
+endmodule
