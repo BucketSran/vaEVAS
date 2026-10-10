@@ -1,0 +1,135 @@
+{
+  "status": "DIAGNOSIS_COMPLETE_ALIGNMENT_INCOMPLETE",
+  "scope": "Finite-point reanalysis of the original four sample/hold/transition/filter cases across three settings; not a new runtime fix or support upgrade.",
+  "base": "ad6f3577da261aedf51d33f13768c2b887f3bfa9",
+  "branch": "codex/sample-edge-filter",
+  "dirty": true,
+  "new_remote_executions": 0,
+  "runtime_source_reuse": {
+    "source_manifest_sha256": "bf300f8f3f2c2cffc6e4bf2d024bd0181252a3f53233e86087d16d66d9f1dff1",
+    "runtime_source_file_count": 95,
+    "changed_files": [],
+    "new_remote_executions": 0,
+    "reason": "Analysis-only increment; archived source, models, settings and original acceptance remain unchanged."
+  },
+  "reference": {
+    "identity": "S-E = (S-Rs) + (Rs-R0) - (E-R0); signed terms, not difference of maxima",
+    "nominal": "Exact rational times from frozen binary64 VA parameters and PWL stimulus.",
+    "conditioned": "First native counter-change row times; not hidden callback instants. Sample voltage is recomputed from the original stimulus.",
+    "arithmetic": "Exact rational edge polygon and 60-digit Decimal analytical filter convolution.",
+    "status": "Finite-point approximation, not interval or whole-trajectory proof."
+  },
+  "fixed_configurations": 12,
+  "analysis_failures": 0,
+  "paired_rows": 52200,
+  "instance_lanes": 15,
+  "instance_rows": 66221,
+  "phase_differences": {
+    "spectre_vs_nominal": 18,
+    "evas_vs_nominal": 0,
+    "spectre_vs_evas": 18
+  },
+  "original_strict_status": "FAIL",
+  "original_strict_counter_difference_records": 18,
+  "strict_difference_direction": "All 18 Spectre counters are one event ahead of EVAS; EVAS counters match the nominal reference at these points.",
+  "maximum_absolute_terms_V": {
+    "h": {
+      "reference_residual": "1.47627678311057691222518937280799920884413242E-16",
+      "callback_shift": "1.14999999999999887870998169919742858866704785187239723058663",
+      "candidate_residual": "1.44328993201270350255072116851806640625E-15",
+      "direct_difference": "1.14999999999999846789222601728397421538829803466796875",
+      "reconstruction_error": "0.00"
+    },
+    "e": {
+      "reference_residual": "1.25000358140325886728483719556727292278478916303873E-10",
+      "callback_shift": "2.06249978890289900779020737847496650171042775683536E-10",
+      "candidate_residual": "3.693615589918416060417988676208225164216768291E-15",
+      "direct_difference": "8.12507838787723812856711447238922119140625E-11",
+      "reconstruction_error": "0.00"
+    },
+    "f": {
+      "reference_residual": "0.000006836982656914235776113649035575523252082599419173960688",
+      "callback_shift": "1.08905263294420072145353899552362771605558433162375E-10",
+      "candidate_residual": "4.029438884287799727962582921556348832392427772E-15",
+      "direct_difference": "0.00000683698265691035089730576146394014358520507812500",
+      "reconstruction_error": "0E-60"
+    }
+  },
+  "spectre_conditioned_filter_residual_by_setting_V": {
+    "base": "0.000006836982656914235776113649035575523252082599419173960688",
+    "tight": "1.03026765326909782743821164875421758669202505822861725E-7",
+    "fine": "1.02571566599876715389366713269933609075020581364212871E-7"
+  },
+  "nominal_reference_outside_evas_reported_bounds": {
+    "h": 0,
+    "e": 0,
+    "f": 0
+  },
+  "retained_receipt_sha256": {
+    "receipt.json": "acf9a7bd1a5920bc7962c137a61b1158c425bee19e17e2e9b1a59209f9201927",
+    "boundary-receipt.json": "97e7b98c1629c648442bc1d559e928dde9543b145972330d47871766f4d39831"
+  },
+  "spectre": {
+    "version": "21.1.0.509.isr12",
+    "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "file_manifest_sha256": "5870c2f983efc29b09e4818fe3c49fc150465b226c8ece4f2bf719a9789172de"
+  },
+  "evas": {
+    "kernel_sha256": "69679c0b1c67d6392432a8bbbd3ecd31278d498155fad51e8d632cd1ae606830",
+    "version": {
+      "build_revision": null,
+      "identity_version": 1,
+      "ir_schema_version": 18,
+      "name": "evas-kernel",
+      "platform": {
+        "arch": "aarch64",
+        "os": "macos"
+      },
+      "request_protocol_version": null,
+      "version": "0.14.0"
+    },
+    "identity_limit": "Historical batch identity and response index; old runner did not embed kernel identity in every response."
+  },
+  "source_sha256": {
+    "experiments/backends/sample-edge-filter/error_decomposition.py": "d7cf2611af79edc0ccce8af8dcc873c87258a7824ac70df0ff68aca8b6c043e3",
+    "experiments/backends/sample-edge-filter/test_error_decomposition.py": "df98115f8903a12926e98a6ebac168954f4e265ea1089617dfa374a763784bb0",
+    "evas/validation/sample_edge_filter/contract.py": "b34319644d00238316a4a898ba125f7a6ada2f88656a14a8966ecfc8d8eabb90"
+  },
+  "checks": {
+    "analyzer_tests": {
+      "passed": 21,
+      "includes_error_decomposition_tests": 6
+    },
+    "reference_contract_tests": {
+      "passed": 3
+    },
+    "original_strict_checker": "FAIL, unchanged from strict-before.json",
+    "independent_numerical_review": {
+      "method": "85-digit piecewise ODE recurrence, distinct from global slope-change convolution",
+      "points": 3787,
+      "maximum_difference_V": "3.677220162081705764410724209e-59",
+      "rational_knot_continuity_checks": 252
+    },
+    "independent_standards_review": "Original receipt identity and raw/response consistency; mutation rejection checked in temporary copies."
+  },
+  "evidence_availability": "local-only: runs/sample-edge-filter-20261010/error-decomposition; original runtime snapshots and waveforms remain in the owning run directory.",
+  "artifacts": {
+    "runs/sample-edge-filter-20261010/error-decomposition/analysis-v3.json": "605f6ec18c3cf6af99abe588626f94469fb6ad757b46d125d361cb8852c4d891",
+    "runs/sample-edge-filter-20261010/error-decomposition/strict-before.json": "864e2e6629043d77db3ab6fcd7301a04e854a503c47deaf1aee0cbe2c99ffda4",
+    "runs/sample-edge-filter-20261010/error-decomposition/reuse-check.json": "2f3fd54c3244c85c1835942506ebf179e6ca3177d362dc1b73b6661e855893c2",
+    "runs/sample-edge-filter-20261010/error-decomposition/analyzer-tests-final.log": "f45fe88f6a31c2fdedc86eda80bcf842773167613a52361dc71b5218b752e453",
+    "runs/sample-edge-filter-20261010/error-decomposition/contract-tests-final.log": "fda36653d9f72e47fbe291ba6c76eda2e3273d2ddb0212648fb351bacdaab8b2",
+    "runs/sample-edge-filter-20261010/error-decomposition/review-spec.md": "ae9a53ffb06bd2cf0af9bd42a84745e0627566a79e5a265f217aa552393a9dad",
+    "runs/sample-edge-filter-20261010/error-decomposition/review-standards.md": "c9f2a8cad471dfcda4b25bbe3b54a94b6361b90513c6ea2e433cc73d24a8611f"
+  },
+  "limits": [
+    "Reanalysis of archived actual runs; no new simulations.",
+    "Callback-conditioned answer diagnoses observed timing, not correct scheduling.",
+    "Residual includes source evaluation, arithmetic, operator implementation and integration; not pure LTE.",
+    "60-digit analytical point evaluation is not an interval proof or full-trajectory certificate.",
+    "All original models, thresholds, failures and exact-phase obligations remain unchanged.",
+    "Spectre residual is conditioned on observed native counter changes; it is not a measurement of pure integration LTE.",
+    "No full-grid generator or numerical callback policy was added.",
+    "No merge recommendation, paper qualification or whole-trajectory accuracy claim."
+  ]
+}

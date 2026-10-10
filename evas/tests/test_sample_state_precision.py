@@ -242,11 +242,27 @@ class SampleStatePrecision(unittest.TestCase):
         # observations change. This path must not feed queries into history.
         self.assertEqual(sparse['transient']['events'], dense['transient']['events'])
         self.assertEqual(values(sparse), [values(dense)[dense_times.index(t)] for t in times])
-        # A wider root window must not discard uncertainty before squaring q.
+        # A wider root window now refines before sampling and squaring q.
+        # Preserve the source and budget, checking the old integral and IC.
         wide = compile_model(template.replace('TTOL', '1e-5').replace('ETOL', '1e-4'),
                              'real q,a;')
-        with self.assertRaisesRegex(KernelError, 'waveform_accuracy'):
-            run(wide, sources, times, vabstol=1e-7, reltol=0)
+        wide_dense_times = sorted(set(dense_times+[1.4142, 1.41423]))
+        wide_sparse = run(wide, sources, times, vabstol=1e-7, reltol=0)
+        wide_dense = run(wide, sources, wide_dense_times, vabstol=1e-7, reltol=0)
+        with localcontext() as context:
+            context.prec = 70
+            tau = Decimal(2).sqrt()
+            for result, grid in [(wide_sparse, times), (wide_dense, wide_dense_times)]:
+                for actual, t in zip(values(result), grid, strict=True):
+                    t = Decimal.from_float(t)
+                    expected = 5+4*t if t <= tau else 5+4*tau+(2*tau+1)**2*(t-tau)
+                    self.assertLessEqual(abs(Decimal.from_float(actual)-expected), Decimal('1e-7'))
+        self.assertEqual(wide_sparse['solutions'],
+                         [wide_dense['solutions'][wide_dense_times.index(t)] for t in times])
+        self.assertEqual(wide_sparse['transient']['events'], wide_dense['transient']['events'])
+        # Root recovery does not bypass the nonlinear output certificate.
+        with self.assertRaisesRegex(KernelError, 'waveform_accuracy.*nonlinear accumulated history'):
+            run(wide, sources, times, vabstol=1e-14, reltol=0)
 
     def test_reset_sample_keeps_unrelated_nonlinear_integral(self):
         root = math.sqrt(2)

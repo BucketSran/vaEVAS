@@ -1,0 +1,343 @@
+{
+  "id": "SEF-TIMER-18",
+  "decision_date": "2026-10-10",
+  "classification": "accepted_known_difference",
+  "decision_basis": "User explicitly accepted recording these 18 differences as acceptable known differences, updating acceptance/table/issues, and removing them from the EVAS defect queue.",
+  "owner_issue": "https://github.com/BucketSran/vaEVAS/issues/96",
+  "scope": "Only the 18 retained records below, from the four sample-edge-filter development cases at base/tight/fine. Not a general waiver for timer, cross, C1, issue79, VCO, Spec B, or other versions/consumers.",
+  "engineering_verdict": "PASS_WITH_KNOWN_DIFFERENCE",
+  "strict_verdict": "FAIL",
+  "paired_time_rows": 52200,
+  "mismatched_instance_records": 18,
+  "engineering_configurations_passed": 12,
+  "fixed_budgets": {
+    "output_V": 0.0001,
+    "input_V": 1e-08,
+    "event_observation_s": 5e-12,
+    "explicit_timer_tolerance_s": 1e-12
+  },
+  "spectre_version": "21.1.0.509.isr12",
+  "evas_implementation": {
+    "base": "ad6f3577da261aedf51d33f13768c2b887f3bfa9",
+    "branch": "codex/sample-edge-filter",
+    "dirty": true,
+    "command": "cargo build --locked --manifest-path evas/rust_core/Cargo.toml",
+    "source_manifest_sha256": "3c1f621836c9753286e9b273797668ed46224f3c363f8d5d42ddb9b1f3c04332",
+    "kernel_sha256": "4e8b28638a923fff212cdfa7f07965f386317a215be5be4c8a50fe5bc72611dd",
+    "kernel_identity": {
+      "build_revision": null,
+      "identity_version": 1,
+      "ir_schema_version": 18,
+      "name": "evas-kernel",
+      "platform": {
+        "arch": "aarch64",
+        "os": "macos"
+      },
+      "request_protocol_version": null,
+      "version": "0.14.0"
+    },
+    "build_log_sha256": "178f6ad48245c6f44c27b747211500509f37bdce6c367558fcb4ffed9fe9eab0"
+  },
+  "evidence": [
+    {
+      "path": "runs/sample-edge-filter-20261010/adaptive-root/strict-boundary.json",
+      "sha256": "864e2e6629043d77db3ab6fcd7301a04e854a503c47deaf1aee0cbe2c99ffda4"
+    },
+    {
+      "path": "runs/sample-edge-filter-20261010/adaptive-root/chain-analysis.json",
+      "sha256": "5caf17fd977a69ecbfe1629e0b25ad1738b597b1ed329dc72210ab1d934283de"
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/adaptive-root-receipt.json",
+      "sha256": "5e911251c5a2f2e8ebec5abf4ebf7d0f11567eb87017523622d428d931698c5a"
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/callback-rules-receipt.json",
+      "sha256": "3377668c0c53ee8d2903949a0627fad36b301f1428d839dfa3dcc1c1fc755b36"
+    },
+    {
+      "path": "experiments/backends/sample-edge-filter/error-decomposition-receipt.json",
+      "sha256": "a79688575a6959fc6e92982ceebf1df30807129895aff0ad94909baf2d3a396f"
+    }
+  ],
+  "reopen_if": [
+    "A new or changed difference appears after model, source, settings, backend or consumer changes; reclassify affected evidence, do not inherit this decision automatically.",
+    "Independent VA/mathematical requirements or error enclosures fail.",
+    "An event is missing/duplicated/misordered or outside its allowed time window.",
+    "Sampling or downstream state/output error exceeds the unchanged engineering budget, or ordinary observations alter history."
+  ],
+  "not_a_reopen_reason": "The identical 18 same-time phase mismatches remain in a strict diagnostic; reproducing the Spectre accepted grid is not a default EVAS repair requirement.",
+  "availability": "Compact decision and all 18 records are retained here. Raw runs remain local-only. Candidate is uncommitted and unmerged; this decision does not qualify main, universal alignment or a new independent paper evaluation set.",
+  "records": [
+    {
+      "case": "SEF-TIMER",
+      "setting": "base",
+      "row": 657,
+      "instance": "a",
+      "time": 4.9999999999999996e-06,
+      "spectre": {
+        "h": 0.6,
+        "n": 3.0
+      },
+      "evas": {
+        "h": 0.8999999999999995,
+        "n": 2.0
+      }
+    },
+    {
+      "case": "SEF-TIMER",
+      "setting": "tight",
+      "row": 2684,
+      "instance": "a",
+      "time": 4.999999999999999e-06,
+      "spectre": {
+        "h": 0.5999999999999993,
+        "n": 3.0
+      },
+      "evas": {
+        "h": 0.8999999999999995,
+        "n": 2.0
+      }
+    },
+    {
+      "case": "SEF-TIMER",
+      "setting": "fine",
+      "row": 2893,
+      "instance": "a",
+      "time": 4.9999999999999996e-06,
+      "spectre": {
+        "h": 0.6,
+        "n": 3.0
+      },
+      "evas": {
+        "h": 0.8999999999999995,
+        "n": 2.0
+      }
+    },
+    {
+      "case": "SEF-INTERRUPT",
+      "setting": "base",
+      "row": 851,
+      "instance": "a",
+      "time": 4.9999999999999996e-06,
+      "spectre": {
+        "h": 0.6,
+        "n": 5.0
+      },
+      "evas": {
+        "h": -0.24999999999999856,
+        "n": 4.0
+      }
+    },
+    {
+      "case": "SEF-INTERRUPT",
+      "setting": "base",
+      "row": 1063,
+      "instance": "a",
+      "time": 5.999999999999999e-06,
+      "spectre": {
+        "h": 0.25000000000000033,
+        "n": 6.0
+      },
+      "evas": {
+        "h": 0.5999999999999996,
+        "n": 5.0
+      }
+    },
+    {
+      "case": "SEF-INTERRUPT",
+      "setting": "tight",
+      "row": 809,
+      "instance": "a",
+      "time": 1.9999999999999995e-06,
+      "spectre": {
+        "h": 0.10000000000000031,
+        "n": 2.0
+      },
+      "evas": {
+        "h": 0.75,
+        "n": 1.0
+      }
+    },
+    {
+      "case": "SEF-INTERRUPT",
+      "setting": "tight",
+      "row": 2609,
+      "instance": "a",
+      "time": 3.999999999999999e-06,
+      "spectre": {
+        "h": -0.249999999999999,
+        "n": 4.0
+      },
+      "evas": {
+        "h": 0.8999999999999995,
+        "n": 3.0
+      }
+    },
+    {
+      "case": "SEF-INTERRUPT",
+      "setting": "tight",
+      "row": 3632,
+      "instance": "a",
+      "time": 4.9999999999999996e-06,
+      "spectre": {
+        "h": 0.6,
+        "n": 5.0
+      },
+      "evas": {
+        "h": -0.24999999999999856,
+        "n": 4.0
+      }
+    },
+    {
+      "case": "SEF-INTERRUPT",
+      "setting": "tight",
+      "row": 4658,
+      "instance": "a",
+      "time": 5.999999999999999e-06,
+      "spectre": {
+        "h": 0.25000000000000033,
+        "n": 6.0
+      },
+      "evas": {
+        "h": 0.5999999999999996,
+        "n": 5.0
+      }
+    },
+    {
+      "case": "SEF-INTERRUPT",
+      "setting": "fine",
+      "row": 1019,
+      "instance": "a",
+      "time": 1.9999999999999995e-06,
+      "spectre": {
+        "h": 0.10000000000000031,
+        "n": 2.0
+      },
+      "evas": {
+        "h": 0.75,
+        "n": 1.0
+      }
+    },
+    {
+      "case": "SEF-INTERRUPT",
+      "setting": "fine",
+      "row": 3842,
+      "instance": "a",
+      "time": 4.9999999999999996e-06,
+      "spectre": {
+        "h": 0.6,
+        "n": 5.0
+      },
+      "evas": {
+        "h": -0.24999999999999856,
+        "n": 4.0
+      }
+    },
+    {
+      "case": "SEF-INTERRUPT",
+      "setting": "fine",
+      "row": 4868,
+      "instance": "a",
+      "time": 5.999999999999999e-06,
+      "spectre": {
+        "h": 0.25000000000000033,
+        "n": 6.0
+      },
+      "evas": {
+        "h": 0.5999999999999996,
+        "n": 5.0
+      }
+    },
+    {
+      "case": "SEF-ISOLATION",
+      "setting": "base",
+      "row": 761,
+      "instance": "a",
+      "time": 4.9999999999999996e-06,
+      "spectre": {
+        "h": 0.6,
+        "n": 3.0
+      },
+      "evas": {
+        "h": 0.8999999999999995,
+        "n": 2.0
+      }
+    },
+    {
+      "case": "SEF-ISOLATION",
+      "setting": "base",
+      "row": 1129,
+      "instance": "b",
+      "time": 7.499999999999999e-06,
+      "spectre": {
+        "h": 0.10000000000000006,
+        "n": 3.0
+      },
+      "evas": {
+        "h": 0.012499999999999817,
+        "n": 2.0
+      }
+    },
+    {
+      "case": "SEF-ISOLATION",
+      "setting": "tight",
+      "row": 3539,
+      "instance": "a",
+      "time": 4.9999999999999996e-06,
+      "spectre": {
+        "h": 0.6,
+        "n": 3.0
+      },
+      "evas": {
+        "h": 0.8999999999999995,
+        "n": 2.0
+      }
+    },
+    {
+      "case": "SEF-ISOLATION",
+      "setting": "tight",
+      "row": 5406,
+      "instance": "b",
+      "time": 7.499999999999999e-06,
+      "spectre": {
+        "h": 0.10000000000000006,
+        "n": 3.0
+      },
+      "evas": {
+        "h": 0.012499999999999817,
+        "n": 2.0
+      }
+    },
+    {
+      "case": "SEF-ISOLATION",
+      "setting": "fine",
+      "row": 3749,
+      "instance": "a",
+      "time": 4.9999999999999996e-06,
+      "spectre": {
+        "h": 0.6,
+        "n": 3.0
+      },
+      "evas": {
+        "h": 0.8999999999999995,
+        "n": 2.0
+      }
+    },
+    {
+      "case": "SEF-ISOLATION",
+      "setting": "fine",
+      "row": 5616,
+      "instance": "b",
+      "time": 7.499999999999999e-06,
+      "spectre": {
+        "h": 0.10000000000000006,
+        "n": 3.0
+      },
+      "evas": {
+        "h": 0.012499999999999817,
+        "n": 2.0
+      }
+    }
+  ]
+}

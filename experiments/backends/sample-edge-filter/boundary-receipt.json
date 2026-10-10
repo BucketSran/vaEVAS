@@ -1,0 +1,1064 @@
+{
+  "status": "INCOMPLETE_ALIGNMENT",
+  "implementation": {
+    "base": "ad6f3577da261aedf51d33f13768c2b887f3bfa9",
+    "branch": "codex/sample-edge-filter",
+    "dirty": true,
+    "source_manifest_sha256": "bf300f8f3f2c2cffc6e4bf2d024bd0181252a3f53233e86087d16d66d9f1dff1",
+    "kernel_sha256": "69679c0b1c67d6392432a8bbbd3ecd31278d498155fad51e8d632cd1ae606830",
+    "identity": {
+      "build_revision": null,
+      "identity_version": 1,
+      "ir_schema_version": 18,
+      "name": "evas-kernel",
+      "platform": {
+        "arch": "aarch64",
+        "os": "macos"
+      },
+      "request_protocol_version": null,
+      "version": "0.14.0"
+    }
+  },
+  "evidence_availability": "local-only: runs/sample-edge-filter-20261010/boundary",
+  "strict_boundary": {
+    "status": "FAIL",
+    "compared_rows": 52200,
+    "counter_difference_records": 18,
+    "differences": [
+      {
+        "case": "SEF-TIMER",
+        "setting": "base",
+        "row": 657,
+        "instance": "a",
+        "time": 4.9999999999999996e-06,
+        "spectre": {
+          "h": 0.6,
+          "n": 3.0
+        },
+        "evas": {
+          "h": 0.8999999999999995,
+          "n": 2.0
+        }
+      },
+      {
+        "case": "SEF-TIMER",
+        "setting": "tight",
+        "row": 2684,
+        "instance": "a",
+        "time": 4.999999999999999e-06,
+        "spectre": {
+          "h": 0.5999999999999993,
+          "n": 3.0
+        },
+        "evas": {
+          "h": 0.8999999999999995,
+          "n": 2.0
+        }
+      },
+      {
+        "case": "SEF-TIMER",
+        "setting": "fine",
+        "row": 2893,
+        "instance": "a",
+        "time": 4.9999999999999996e-06,
+        "spectre": {
+          "h": 0.6,
+          "n": 3.0
+        },
+        "evas": {
+          "h": 0.8999999999999995,
+          "n": 2.0
+        }
+      },
+      {
+        "case": "SEF-INTERRUPT",
+        "setting": "base",
+        "row": 851,
+        "instance": "a",
+        "time": 4.9999999999999996e-06,
+        "spectre": {
+          "h": 0.6,
+          "n": 5.0
+        },
+        "evas": {
+          "h": -0.24999999999999856,
+          "n": 4.0
+        }
+      },
+      {
+        "case": "SEF-INTERRUPT",
+        "setting": "base",
+        "row": 1063,
+        "instance": "a",
+        "time": 5.999999999999999e-06,
+        "spectre": {
+          "h": 0.25000000000000033,
+          "n": 6.0
+        },
+        "evas": {
+          "h": 0.5999999999999996,
+          "n": 5.0
+        }
+      },
+      {
+        "case": "SEF-INTERRUPT",
+        "setting": "tight",
+        "row": 809,
+        "instance": "a",
+        "time": 1.9999999999999995e-06,
+        "spectre": {
+          "h": 0.10000000000000031,
+          "n": 2.0
+        },
+        "evas": {
+          "h": 0.75,
+          "n": 1.0
+        }
+      },
+      {
+        "case": "SEF-INTERRUPT",
+        "setting": "tight",
+        "row": 2609,
+        "instance": "a",
+        "time": 3.999999999999999e-06,
+        "spectre": {
+          "h": -0.249999999999999,
+          "n": 4.0
+        },
+        "evas": {
+          "h": 0.8999999999999995,
+          "n": 3.0
+        }
+      },
+      {
+        "case": "SEF-INTERRUPT",
+        "setting": "tight",
+        "row": 3632,
+        "instance": "a",
+        "time": 4.9999999999999996e-06,
+        "spectre": {
+          "h": 0.6,
+          "n": 5.0
+        },
+        "evas": {
+          "h": -0.24999999999999856,
+          "n": 4.0
+        }
+      },
+      {
+        "case": "SEF-INTERRUPT",
+        "setting": "tight",
+        "row": 4658,
+        "instance": "a",
+        "time": 5.999999999999999e-06,
+        "spectre": {
+          "h": 0.25000000000000033,
+          "n": 6.0
+        },
+        "evas": {
+          "h": 0.5999999999999996,
+          "n": 5.0
+        }
+      },
+      {
+        "case": "SEF-INTERRUPT",
+        "setting": "fine",
+        "row": 1019,
+        "instance": "a",
+        "time": 1.9999999999999995e-06,
+        "spectre": {
+          "h": 0.10000000000000031,
+          "n": 2.0
+        },
+        "evas": {
+          "h": 0.75,
+          "n": 1.0
+        }
+      },
+      {
+        "case": "SEF-INTERRUPT",
+        "setting": "fine",
+        "row": 3842,
+        "instance": "a",
+        "time": 4.9999999999999996e-06,
+        "spectre": {
+          "h": 0.6,
+          "n": 5.0
+        },
+        "evas": {
+          "h": -0.24999999999999856,
+          "n": 4.0
+        }
+      },
+      {
+        "case": "SEF-INTERRUPT",
+        "setting": "fine",
+        "row": 4868,
+        "instance": "a",
+        "time": 5.999999999999999e-06,
+        "spectre": {
+          "h": 0.25000000000000033,
+          "n": 6.0
+        },
+        "evas": {
+          "h": 0.5999999999999996,
+          "n": 5.0
+        }
+      },
+      {
+        "case": "SEF-ISOLATION",
+        "setting": "base",
+        "row": 761,
+        "instance": "a",
+        "time": 4.9999999999999996e-06,
+        "spectre": {
+          "h": 0.6,
+          "n": 3.0
+        },
+        "evas": {
+          "h": 0.8999999999999995,
+          "n": 2.0
+        }
+      },
+      {
+        "case": "SEF-ISOLATION",
+        "setting": "base",
+        "row": 1129,
+        "instance": "b",
+        "time": 7.499999999999999e-06,
+        "spectre": {
+          "h": 0.10000000000000006,
+          "n": 3.0
+        },
+        "evas": {
+          "h": 0.012499999999999817,
+          "n": 2.0
+        }
+      },
+      {
+        "case": "SEF-ISOLATION",
+        "setting": "tight",
+        "row": 3539,
+        "instance": "a",
+        "time": 4.9999999999999996e-06,
+        "spectre": {
+          "h": 0.6,
+          "n": 3.0
+        },
+        "evas": {
+          "h": 0.8999999999999995,
+          "n": 2.0
+        }
+      },
+      {
+        "case": "SEF-ISOLATION",
+        "setting": "tight",
+        "row": 5406,
+        "instance": "b",
+        "time": 7.499999999999999e-06,
+        "spectre": {
+          "h": 0.10000000000000006,
+          "n": 3.0
+        },
+        "evas": {
+          "h": 0.012499999999999817,
+          "n": 2.0
+        }
+      },
+      {
+        "case": "SEF-ISOLATION",
+        "setting": "fine",
+        "row": 3749,
+        "instance": "a",
+        "time": 4.9999999999999996e-06,
+        "spectre": {
+          "h": 0.6,
+          "n": 3.0
+        },
+        "evas": {
+          "h": 0.8999999999999995,
+          "n": 2.0
+        }
+      },
+      {
+        "case": "SEF-ISOLATION",
+        "setting": "fine",
+        "row": 5616,
+        "instance": "b",
+        "time": 7.499999999999999e-06,
+        "spectre": {
+          "h": 0.10000000000000006,
+          "n": 3.0
+        },
+        "evas": {
+          "h": 0.012499999999999817,
+          "n": 2.0
+        }
+      }
+    ],
+    "claim": "Exact same-time held-state phase only; engineering waveform acceptance is separate"
+  },
+  "callback_diagnosis": {
+    "original_replay_all_rows_identical": true,
+    "instrumented_original_core_all_rows_identical": true,
+    "records": [
+      {
+        "variant": "instrumented",
+        "source_sha256": "6de4392118e7fab563f1ef50315c45b9248831db4ce117a8d7c43e858bf56b77",
+        "deck_sha256": "2ae42df9786528c14b9bb84be6184beba669c151ca677f814bb62f10ba21b91a",
+        "log_sha256": "dab25fb1e890ee630443f3cac8b3b57c23c9e532395309903a79ee60dad3e1a1",
+        "callbacks": [
+          {
+            "count": 1,
+            "time_s": 1e-06,
+            "time_hex": "0x1.0c6f7a0b5ed8dp-20",
+            "nominal_offset_s": 0.0,
+            "held": 0.75,
+            "first_export_s": 1e-06,
+            "persisted_callback_s": 1e-06,
+            "export_matches_callback": true
+          },
+          {
+            "count": 2,
+            "time_s": 1.9999999999999995e-06,
+            "time_hex": "0x1.0c6f7a0b5ed8cp-19",
+            "nominal_offset_s": -4.235164736271502e-22,
+            "held": 0.10000000000000031,
+            "first_export_s": 1.9999999999999995e-06,
+            "persisted_callback_s": 1.9999999999999995e-06,
+            "export_matches_callback": true
+          },
+          {
+            "count": 3,
+            "time_s": 3e-06,
+            "time_hex": "0x1.92a737110e454p-19",
+            "nominal_offset_s": 2.117582368135751e-22,
+            "held": 0.9,
+            "first_export_s": 3e-06,
+            "persisted_callback_s": 3e-06,
+            "export_matches_callback": true
+          },
+          {
+            "count": 4,
+            "time_s": 3.999999999999999e-06,
+            "time_hex": "0x1.0c6f7a0b5ed8cp-18",
+            "nominal_offset_s": -8.470329472543003e-22,
+            "held": -0.249999999999999,
+            "first_export_s": 3.999999999999999e-06,
+            "persisted_callback_s": 3.999999999999999e-06,
+            "export_matches_callback": true
+          },
+          {
+            "count": 5,
+            "time_s": 4.9999999999999996e-06,
+            "time_hex": "0x1.4f8b588e368f0p-18",
+            "nominal_offset_s": -2.117582368135751e-22,
+            "held": 0.6,
+            "first_export_s": 4.9999999999999996e-06,
+            "persisted_callback_s": 4.9999999999999996e-06,
+            "export_matches_callback": true
+          },
+          {
+            "count": 6,
+            "time_s": 5.999999999999999e-06,
+            "time_hex": "0x1.92a737110e453p-18",
+            "nominal_offset_s": -4.235164736271502e-22,
+            "held": 0.25000000000000033,
+            "first_export_s": 5.999999999999999e-06,
+            "persisted_callback_s": 5.999999999999999e-06,
+            "export_matches_callback": true
+          },
+          {
+            "count": 7,
+            "time_s": 7e-06,
+            "time_hex": "0x1.d5c31593e5fb7p-18",
+            "nominal_offset_s": 2.117582368135751e-22,
+            "held": -0.1,
+            "first_export_s": 7e-06,
+            "persisted_callback_s": 7e-06,
+            "export_matches_callback": true
+          },
+          {
+            "count": 8,
+            "time_s": 8e-06,
+            "time_hex": "0x1.0c6f7a0b5ed8dp-17",
+            "nominal_offset_s": 0.0,
+            "held": 0.09999999999999998,
+            "first_export_s": 8e-06,
+            "persisted_callback_s": 8e-06,
+            "export_matches_callback": true
+          }
+        ]
+      },
+      {
+        "variant": "minimal",
+        "source_sha256": "ecda75a6f60b2f9471714c37ac2129ecdbbd89206b5c942d49e1617f6c263d23",
+        "deck_sha256": "2ae42df9786528c14b9bb84be6184beba669c151ca677f814bb62f10ba21b91a",
+        "log_sha256": "a13623b9893c3202bf0a451b5c0bf39b76c076df5a91d579d1a6437d998db47f",
+        "callbacks": [
+          {
+            "count": 1,
+            "time_s": 1e-06,
+            "time_hex": "0x1.0c6f7a0b5ed8dp-20",
+            "nominal_offset_s": 0.0,
+            "held": 0.75,
+            "first_export_s": 1e-06,
+            "persisted_callback_s": 1e-06,
+            "export_matches_callback": true
+          },
+          {
+            "count": 2,
+            "time_s": 1.9999999999999995e-06,
+            "time_hex": "0x1.0c6f7a0b5ed8cp-19",
+            "nominal_offset_s": -4.235164736271502e-22,
+            "held": 0.10000000000000031,
+            "first_export_s": 1.9999999999999995e-06,
+            "persisted_callback_s": 1.9999999999999995e-06,
+            "export_matches_callback": true
+          },
+          {
+            "count": 3,
+            "time_s": 3e-06,
+            "time_hex": "0x1.92a737110e454p-19",
+            "nominal_offset_s": 2.117582368135751e-22,
+            "held": 0.9,
+            "first_export_s": 3e-06,
+            "persisted_callback_s": 3e-06,
+            "export_matches_callback": true
+          },
+          {
+            "count": 4,
+            "time_s": 4e-06,
+            "time_hex": "0x1.0c6f7a0b5ed8dp-18",
+            "nominal_offset_s": 0.0,
+            "held": -0.25,
+            "first_export_s": 4e-06,
+            "persisted_callback_s": 4e-06,
+            "export_matches_callback": true
+          },
+          {
+            "count": 5,
+            "time_s": 4.9999999999999996e-06,
+            "time_hex": "0x1.4f8b588e368f0p-18",
+            "nominal_offset_s": -2.117582368135751e-22,
+            "held": 0.6,
+            "first_export_s": 4.9999999999999996e-06,
+            "persisted_callback_s": 4.9999999999999996e-06,
+            "export_matches_callback": true
+          },
+          {
+            "count": 6,
+            "time_s": 5.999999999999999e-06,
+            "time_hex": "0x1.92a737110e453p-18",
+            "nominal_offset_s": -4.235164736271502e-22,
+            "held": 0.25000000000000033,
+            "first_export_s": 5.999999999999999e-06,
+            "persisted_callback_s": 5.999999999999999e-06,
+            "export_matches_callback": true
+          },
+          {
+            "count": 7,
+            "time_s": 7e-06,
+            "time_hex": "0x1.d5c31593e5fb7p-18",
+            "nominal_offset_s": 2.117582368135751e-22,
+            "held": -0.1,
+            "first_export_s": 7e-06,
+            "persisted_callback_s": 7e-06,
+            "export_matches_callback": true
+          },
+          {
+            "count": 8,
+            "time_s": 8e-06,
+            "time_hex": "0x1.0c6f7a0b5ed8dp-17",
+            "nominal_offset_s": 0.0,
+            "held": 0.09999999999999998,
+            "first_export_s": 8e-06,
+            "persisted_callback_s": 8e-06,
+            "export_matches_callback": true
+          }
+        ]
+      },
+      {
+        "variant": "minimal-no-strobetimes",
+        "source_sha256": "ecda75a6f60b2f9471714c37ac2129ecdbbd89206b5c942d49e1617f6c263d23",
+        "deck_sha256": "cdb533e90524b87abd2a81cdf45b73a1531f5874846ca6abbefce5534d219b37",
+        "log_sha256": "c6451cc8c213b45502eeb2441d8397ea0cfe25ac6902a008f9fd36edd706488d",
+        "callbacks": [
+          {
+            "count": 1,
+            "time_s": 1e-06,
+            "time_hex": "0x1.0c6f7a0b5ed8dp-20",
+            "nominal_offset_s": 0.0,
+            "held": 0.75,
+            "first_export_s": 1e-06,
+            "persisted_callback_s": 1e-06,
+            "export_matches_callback": true
+          },
+          {
+            "count": 2,
+            "time_s": 2e-06,
+            "time_hex": "0x1.0c6f7a0b5ed8dp-19",
+            "nominal_offset_s": 0.0,
+            "held": 0.1,
+            "first_export_s": 2e-06,
+            "persisted_callback_s": 2e-06,
+            "export_matches_callback": true
+          },
+          {
+            "count": 3,
+            "time_s": 3e-06,
+            "time_hex": "0x1.92a737110e454p-19",
+            "nominal_offset_s": 2.117582368135751e-22,
+            "held": 0.9,
+            "first_export_s": 3e-06,
+            "persisted_callback_s": 3e-06,
+            "export_matches_callback": true
+          },
+          {
+            "count": 4,
+            "time_s": 3.999999999999999e-06,
+            "time_hex": "0x1.0c6f7a0b5ed8cp-18",
+            "nominal_offset_s": -8.470329472543003e-22,
+            "held": -0.249999999999999,
+            "first_export_s": 3.999999999999999e-06,
+            "persisted_callback_s": 3.999999999999999e-06,
+            "export_matches_callback": true
+          },
+          {
+            "count": 5,
+            "time_s": 4.9999999999999996e-06,
+            "time_hex": "0x1.4f8b588e368f0p-18",
+            "nominal_offset_s": -2.117582368135751e-22,
+            "held": 0.6,
+            "first_export_s": 4.9999999999999996e-06,
+            "persisted_callback_s": 4.9999999999999996e-06,
+            "export_matches_callback": true
+          },
+          {
+            "count": 6,
+            "time_s": 5.999999999999999e-06,
+            "time_hex": "0x1.92a737110e453p-18",
+            "nominal_offset_s": -4.235164736271502e-22,
+            "held": 0.25000000000000033,
+            "first_export_s": 5.999999999999999e-06,
+            "persisted_callback_s": 5.999999999999999e-06,
+            "export_matches_callback": true
+          },
+          {
+            "count": 7,
+            "time_s": 7e-06,
+            "time_hex": "0x1.d5c31593e5fb7p-18",
+            "nominal_offset_s": 2.117582368135751e-22,
+            "held": -0.1,
+            "first_export_s": 7e-06,
+            "persisted_callback_s": 7e-06,
+            "export_matches_callback": true
+          },
+          {
+            "count": 8,
+            "time_s": 8e-06,
+            "time_hex": "0x1.0c6f7a0b5ed8dp-17",
+            "nominal_offset_s": 0.0,
+            "held": 0.09999999999999998,
+            "first_export_s": 8e-06,
+            "persisted_callback_s": 8e-06,
+            "export_matches_callback": true
+          }
+        ]
+      }
+    ],
+    "claim": "Callback actual $abstime equals first exported post-event record; changes with forcing consumers and strobe settings. Internal Spectre algorithm not identified."
+  },
+  "root_precision_results": [
+    {
+      "case": "delay-0.0-loose",
+      "voltage_budget_V": 1e-10,
+      "source_sha256": "4386650676d5e5aeca35415eb665b2234975737bd847196beb9b7958a00f41a2",
+      "spectre_maximum_filter_error_V": 0.0002619807483835168,
+      "status": "REJECTED",
+      "reason": "waveform_accuracy: cannot certify same-time forward error at e: bound 3.662109375e-4, budget 1e-10",
+      "expected_acceptance_observed": true
+    },
+    {
+      "case": "delay-0.0-loose",
+      "voltage_budget_V": 0.001,
+      "source_sha256": "4386650676d5e5aeca35415eb665b2234975737bd847196beb9b7958a00f41a2",
+      "spectre_maximum_filter_error_V": 0.0002619807483835168,
+      "status": "ACCEPTED",
+      "filter_error_V": 2.22838902252942e-06,
+      "within_requested_voltage_budget": true,
+      "maximum_same_time_filter_difference_V": 0.0002597523593609874,
+      "expected_acceptance_observed": true
+    },
+    {
+      "case": "delay-0.0-tight",
+      "voltage_budget_V": 1e-10,
+      "source_sha256": "7d716c88970203ad467e82c08fec5cec5307aa7a219a8a3746be65e576c60cc3",
+      "spectre_maximum_filter_error_V": 8.038159682310919e-08,
+      "status": "ACCEPTED",
+      "filter_error_V": 1.0064171718227044e-13,
+      "within_requested_voltage_budget": true,
+      "maximum_same_time_filter_difference_V": 8.038160814738404e-08,
+      "expected_acceptance_observed": true
+    },
+    {
+      "case": "delay-0.0-tight",
+      "voltage_budget_V": 0.001,
+      "source_sha256": "7d716c88970203ad467e82c08fec5cec5307aa7a219a8a3746be65e576c60cc3",
+      "spectre_maximum_filter_error_V": 8.038159682310919e-08,
+      "status": "ACCEPTED",
+      "filter_error_V": 1.0064171718227044e-13,
+      "within_requested_voltage_budget": true,
+      "maximum_same_time_filter_difference_V": 8.038160814738404e-08,
+      "expected_acceptance_observed": true
+    },
+    {
+      "case": "delay-0.125-loose",
+      "voltage_budget_V": 1e-10,
+      "source_sha256": "9b6845bb9d48a24e46e32fd7a9a4cd8f4021753e0261dadc8f7130b37897575c",
+      "spectre_maximum_filter_error_V": 0.00020191572971239857,
+      "status": "REJECTED",
+      "reason": "waveform_accuracy: cannot certify same-time forward error at e: bound 3.662109375e-4, budget 1e-10",
+      "expected_acceptance_observed": true
+    },
+    {
+      "case": "delay-0.125-loose",
+      "voltage_budget_V": 0.001,
+      "source_sha256": "9b6845bb9d48a24e46e32fd7a9a4cd8f4021753e0261dadc8f7130b37897575c",
+      "spectre_maximum_filter_error_V": 0.00020191572971239857,
+      "status": "ACCEPTED",
+      "filter_error_V": 0.00015584909162885685,
+      "within_requested_voltage_budget": true,
+      "maximum_same_time_filter_difference_V": 0.0003577648213412554,
+      "expected_acceptance_observed": true
+    },
+    {
+      "case": "delay-0.125-tight",
+      "voltage_budget_V": 1e-10,
+      "source_sha256": "4d1b5fce83e71a5db73166fba61215a8e39747f4911645461fb86c8dcad90dfa",
+      "spectre_maximum_filter_error_V": 8.015176566900095e-08,
+      "status": "ACCEPTED",
+      "filter_error_V": 2.158828671383617e-13,
+      "within_requested_voltage_budget": true,
+      "maximum_same_time_filter_difference_V": 8.015176966580384e-08,
+      "expected_acceptance_observed": true
+    },
+    {
+      "case": "delay-0.125-tight",
+      "voltage_budget_V": 0.001,
+      "source_sha256": "4d1b5fce83e71a5db73166fba61215a8e39747f4911645461fb86c8dcad90dfa",
+      "spectre_maximum_filter_error_V": 8.015176566900095e-08,
+      "status": "ACCEPTED",
+      "filter_error_V": 2.158828671383617e-13,
+      "within_requested_voltage_budget": true,
+      "maximum_same_time_filter_difference_V": 8.015176966580384e-08,
+      "expected_acceptance_observed": true
+    }
+  ],
+  "engineering_queries": [
+    {
+      "case": "SEF-TIMER",
+      "grid": "sparse",
+      "status": "PASS",
+      "rows": 153,
+      "maximum_errors_V": {
+        "u": 4.440892098500626e-16,
+        "clk": 2.55351295663786e-15,
+        "rst": 2.55351295663786e-15,
+        "ah": 5.551115123125783e-16,
+        "ae": 3.0808688933348094e-15,
+        "af": 3.774758283725532e-15
+      },
+      "response_sha256": "645e7c2fede87480541034f7dcf45c71717380d86f653402fe6cde5b13201790"
+    },
+    {
+      "case": "SEF-TIMER",
+      "grid": "dense",
+      "status": "PASS",
+      "rows": 561,
+      "maximum_errors_V": {
+        "u": 4.440892098500626e-16,
+        "clk": 3.552713678800501e-15,
+        "rst": 2.9976021664879227e-15,
+        "ah": 5.551115123125783e-16,
+        "ae": 3.0808688933348094e-15,
+        "af": 4.440892098500626e-15
+      },
+      "response_sha256": "340b2282923f6ee9d194d8f3fb2803194fae29ef8100f1731182cf97383d4a48"
+    },
+    {
+      "case": "SEF-TIMER",
+      "grid": "native-base",
+      "status": "PASS",
+      "rows": 1141,
+      "maximum_errors_V": {
+        "u": 7.771561172376096e-16,
+        "clk": 4.586608870482678e-15,
+        "rst": 2.886579864025407e-15,
+        "ah": 5.551115123125783e-16,
+        "ae": 3.361894096443052e-15,
+        "af": 4.773959005888173e-15
+      },
+      "response_sha256": "b157e6292cbccc0ead13b27ef92eb7504f66abd83869a4b104b49fd4c65a0dec"
+    },
+    {
+      "case": "SEF-TIMER",
+      "grid": "native-tight",
+      "status": "PASS",
+      "rows": 4929,
+      "maximum_errors_V": {
+        "u": 8.881784197001252e-16,
+        "clk": 5.079270337660091e-15,
+        "rst": 4.551914400963142e-15,
+        "ah": 5.551115123125783e-16,
+        "ae": 3.3133218391157016e-15,
+        "af": 4.884981308350689e-15
+      },
+      "response_sha256": "905309b699a8e098af5166c86a317cac36fc1ac4c6c092c5e4263f98e63282ed"
+    },
+    {
+      "case": "SEF-TIMER",
+      "grid": "native-fine",
+      "status": "PASS",
+      "rows": 5140,
+      "maximum_errors_V": {
+        "u": 7.771561172376096e-16,
+        "clk": 5.339478859056612e-15,
+        "rst": 4.551914400963142e-15,
+        "ah": 5.551115123125783e-16,
+        "ae": 3.316791286067655e-15,
+        "af": 4.884981308350689e-15
+      },
+      "response_sha256": "bce5398ad76e887e82332e799ae0939e0062eaf9cd858e4d14f78ba7367e6cb4"
+    },
+    {
+      "case": "SEF-RESET",
+      "grid": "sparse",
+      "status": "PASS",
+      "rows": 157,
+      "maximum_errors_V": {
+        "u": 4.440892098500626e-16,
+        "clk": 2.55351295663786e-15,
+        "rst": 2.55351295663786e-15,
+        "ah": 3.3306690738754696e-16,
+        "ae": 1.3322676295501878e-15,
+        "af": 1.9984014443252818e-15
+      },
+      "response_sha256": "4cd98ff0f07dbbab52dca93bad1a05e835eaedb00beec1c609e93bc382a21210"
+    },
+    {
+      "case": "SEF-RESET",
+      "grid": "dense",
+      "status": "PASS",
+      "rows": 565,
+      "maximum_errors_V": {
+        "u": 4.440892098500626e-16,
+        "clk": 3.552713678800501e-15,
+        "rst": 2.9976021664879227e-15,
+        "ah": 3.3306690738754696e-16,
+        "ae": 1.3322676295501878e-15,
+        "af": 2.7755575615628914e-15
+      },
+      "response_sha256": "f824e32c4a71b0cc40db1e981dfdcbf6b2a7c3a8274ac752a4c4fe1b68b7ccf7"
+    },
+    {
+      "case": "SEF-RESET",
+      "grid": "native-base",
+      "status": "PASS",
+      "rows": 1286,
+      "maximum_errors_V": {
+        "u": 7.771561172376096e-16,
+        "clk": 4.440892098500626e-15,
+        "rst": 3.6637359812630166e-15,
+        "ah": 3.3306690738754696e-16,
+        "ae": 1.6653345369377348e-15,
+        "af": 2.886579864025407e-15
+      },
+      "response_sha256": "fc49e5717b0a04af216684f07f5a48f92804d824f5c201fe24e11e8df95d6b94"
+    },
+    {
+      "case": "SEF-RESET",
+      "grid": "native-tight",
+      "status": "PASS",
+      "rows": 5545,
+      "maximum_errors_V": {
+        "u": 7.771561172376096e-16,
+        "clk": 5.329070518200751e-15,
+        "rst": 4.440892098500626e-15,
+        "ah": 3.3306690738754696e-16,
+        "ae": 1.7763568394002505e-15,
+        "af": 3.1086244689504383e-15
+      },
+      "response_sha256": "f82fae1266cb9781291f39209f7ae30b127210b63864494d74699a27d06d5367"
+    },
+    {
+      "case": "SEF-RESET",
+      "grid": "native-fine",
+      "status": "PASS",
+      "rows": 5757,
+      "maximum_errors_V": {
+        "u": 7.771561172376096e-16,
+        "clk": 5.7592819402429996e-15,
+        "rst": 4.440892098500626e-15,
+        "ah": 3.3306690738754696e-16,
+        "ae": 1.6653345369377348e-15,
+        "af": 3.1086244689504383e-15
+      },
+      "response_sha256": "eebd2d10c2b6969326248aba54aa5fd580ff4c29a7ffdc64d0e25cb95769d5e6"
+    },
+    {
+      "case": "SEF-INTERRUPT",
+      "grid": "sparse",
+      "status": "PASS",
+      "rows": 172,
+      "maximum_errors_V": {
+        "u": 5.551115123125783e-16,
+        "clk": 2.55351295663786e-15,
+        "rst": 2.55351295663786e-15,
+        "ah": 1.4432899320127035e-15,
+        "ae": 3.913536161803677e-15,
+        "af": 3.219646771412954e-15
+      },
+      "response_sha256": "f61a33b4ad788dee2ee23c0545dd3213410e6cb9509b39eb9503739dc9058f77"
+    },
+    {
+      "case": "SEF-INTERRUPT",
+      "grid": "dense",
+      "status": "PASS",
+      "rows": 580,
+      "maximum_errors_V": {
+        "u": 5.551115123125783e-16,
+        "clk": 3.552713678800501e-15,
+        "rst": 2.9976021664879227e-15,
+        "ah": 1.4432899320127035e-15,
+        "ae": 3.913536161803677e-15,
+        "af": 3.6637359812630166e-15
+      },
+      "response_sha256": "4a2bee45ecd8eb69e3706ecdef923a1c59995b1b751c744485df651df7009fe0"
+    },
+    {
+      "case": "SEF-INTERRUPT",
+      "grid": "native-base",
+      "status": "PASS",
+      "rows": 1439,
+      "maximum_errors_V": {
+        "u": 7.771561172376096e-16,
+        "clk": 3.885780586188048e-15,
+        "rst": 3.885780586188048e-15,
+        "ah": 1.4432899320127035e-15,
+        "ae": 4.107825191113079e-15,
+        "af": 3.83026943495679e-15
+      },
+      "response_sha256": "d6e19eed483d33b53f7bf497c6c8ee168ec49f72f9232c9057f7dcd2be6cc0ea"
+    },
+    {
+      "case": "SEF-INTERRUPT",
+      "grid": "native-tight",
+      "status": "PASS",
+      "rows": 6366,
+      "maximum_errors_V": {
+        "u": 8.326672684688674e-16,
+        "clk": 5.287437154777308e-15,
+        "rst": 4.107825191113079e-15,
+        "ah": 1.4432899320127035e-15,
+        "ae": 4.163336342344337e-15,
+        "af": 3.9968028886505635e-15
+      },
+      "response_sha256": "76086d6741ad07e550dc92c7496620265409fa7ba4c597c6bd62c0ee0f60034f"
+    },
+    {
+      "case": "SEF-INTERRUPT",
+      "grid": "native-fine",
+      "status": "PASS",
+      "rows": 6576,
+      "maximum_errors_V": {
+        "u": 8.881784197001252e-16,
+        "clk": 5.384581669432009e-15,
+        "rst": 4.440892098500626e-15,
+        "ah": 1.4432899320127035e-15,
+        "ae": 4.191091917959966e-15,
+        "af": 3.941291737419306e-15
+      },
+      "response_sha256": "edfc62cabdab8e55b6944b537aeaded5415e1d0230bf945b6e4008ebfd0f483a"
+    },
+    {
+      "case": "SEF-ISOLATION",
+      "grid": "sparse",
+      "status": "PASS",
+      "rows": 165,
+      "maximum_errors_V": {
+        "u": 4.718447854656915e-16,
+        "clk": 2.55351295663786e-15,
+        "rst": 2.55351295663786e-15,
+        "ah": 5.551115123125783e-16,
+        "ae": 3.0808688933348094e-15,
+        "af": 3.774758283725532e-15,
+        "bh": 1.8388068845354155e-16,
+        "be": 5.065392549852277e-16,
+        "bf": 5.065392549852277e-16
+      },
+      "response_sha256": "523d1afe2239ce7af263f55ef90779d06eedc7464e81a54cde71144a71cc9e88"
+    },
+    {
+      "case": "SEF-ISOLATION",
+      "grid": "dense",
+      "status": "PASS",
+      "rows": 573,
+      "maximum_errors_V": {
+        "u": 4.718447854656915e-16,
+        "clk": 3.552713678800501e-15,
+        "rst": 2.9976021664879227e-15,
+        "ah": 5.551115123125783e-16,
+        "ae": 3.0808688933348094e-15,
+        "af": 4.440892098500626e-15,
+        "bh": 1.8388068845354155e-16,
+        "be": 5.065392549852277e-16,
+        "bf": 5.065392549852277e-16
+      },
+      "response_sha256": "72f78616206e320f5f7bc77a4324fa8d82e9e421e3ddf87f479f0fda81bdd6de"
+    },
+    {
+      "case": "SEF-ISOLATION",
+      "grid": "native-base",
+      "status": "PASS",
+      "rows": 1295,
+      "maximum_errors_V": {
+        "u": 7.771561172376096e-16,
+        "clk": 4.551914400963142e-15,
+        "rst": 3.4416913763379853e-15,
+        "ah": 5.551115123125783e-16,
+        "ae": 3.164135620181696e-15,
+        "af": 4.773959005888173e-15,
+        "bh": 1.8388068845354155e-16,
+        "be": 5.152128723651117e-16,
+        "bf": 6.349087922075114e-16
+      },
+      "response_sha256": "b64fc7209c707dd18dace993a6bd224872c73c5481f17da58510e4582209db71"
+    },
+    {
+      "case": "SEF-ISOLATION",
+      "grid": "native-tight",
+      "status": "PASS",
+      "rows": 6258,
+      "maximum_errors_V": {
+        "u": 7.771561172376096e-16,
+        "clk": 5.287437154777308e-15,
+        "rst": 4.3298697960381105e-15,
+        "ah": 5.551115123125783e-16,
+        "ae": 3.378373969464832e-15,
+        "af": 4.884981308350689e-15,
+        "bh": 1.8388068845354155e-16,
+        "be": 5.689893001203927e-16,
+        "bf": 5.741934705483231e-16
+      },
+      "response_sha256": "ca11cc087887f97e8941ddc7ec89ce134d41af017dbb939496a7c60283c39ea2"
+    },
+    {
+      "case": "SEF-ISOLATION",
+      "grid": "native-fine",
+      "status": "PASS",
+      "rows": 6468,
+      "maximum_errors_V": {
+        "u": 8.881784197001252e-16,
+        "clk": 5.578870698741412e-15,
+        "rst": 4.135580766728708e-15,
+        "ah": 5.551115123125783e-16,
+        "ae": 3.3861802251067274e-15,
+        "af": 4.884981308350689e-15,
+        "bh": 1.8388068845354155e-16,
+        "be": 5.620504062164855e-16,
+        "bf": 6.140921104957897e-16
+      },
+      "response_sha256": "fb9c9c5bb65de2a7fd698b8e71129db73a65a5cba259ea26424ba3a309a8ccde"
+    }
+  ],
+  "query_invariance": [
+    {
+      "case": "SEF-TIMER",
+      "common_query_mismatches": 0,
+      "identical_events": true
+    },
+    {
+      "case": "SEF-RESET",
+      "common_query_mismatches": 0,
+      "identical_events": true
+    },
+    {
+      "case": "SEF-INTERRUPT",
+      "common_query_mismatches": 0,
+      "identical_events": true
+    },
+    {
+      "case": "SEF-ISOLATION",
+      "common_query_mismatches": 0,
+      "identical_events": true
+    }
+  ],
+  "artifacts": {
+    "runs/sample-edge-filter-20261010/boundary/analysis.json": "294dd10b39e94afb25323a4941b6ff1e4b437e3a6d8952b903f2bea990fef0e1",
+    "runs/sample-edge-filter-20261010/boundary/strict-final.json": "864e2e6629043d77db3ab6fcd7301a04e854a503c47deaf1aee0cbe2c99ffda4",
+    "runs/sample-edge-filter-20261010/boundary/SOURCE_MANIFEST.json": "bf300f8f3f2c2cffc6e4bf2d024bd0181252a3f53233e86087d16d66d9f1dff1",
+    "runs/sample-edge-filter-20261010/boundary/root-spectre/MANIFEST.json": "5cd0f963d9ba0e66c372adc95e2886601223e42719b3833c2828af17f23da72c",
+    "runs/sample-edge-filter-20261010/boundary/root-spectre/TOOL_IDENTITY.json": "fe62bbc4850c11b0a821f2f9dacd88f9402636bcb74ab9ef65c7fa49574ba948",
+    "runs/sample-edge-filter-20261010/boundary/results-v3/MANIFEST.json": "aed47b177c8146e0b7fb5e34f824d9eaacd0dc52ac40d4e73abc236fad73d1d1",
+    "runs/sample-edge-filter-20261010/boundary/callback-analysis.json": "c8550cc562a1c87e98e1d6c431464a8426f8a2706abce979d7d896dd07876f08",
+    "runs/sample-edge-filter-20261010/boundary/root-evas-checked/RESULTS.json": "c6e88773e8dd582c7d3f829f6ebc5adb08def0ffd23ad7524412832956c7fe84",
+    "runs/sample-edge-filter-20261010/boundary/root-window-red.log": "302ab34aa4b0c9c8e266689b4a60ad1e520d79470fddb90d520056266131c2be",
+    "runs/sample-edge-filter-20261010/boundary/prefix-red.log": "3b18eb608a15ef9f039321c5d3c89cad9813a86660ed89fc80237c692c0a79b5",
+    "runs/sample-edge-filter-20261010/boundary/rust-regression.log": "9c0fe3771338aa7f2bb6162cda35e9d94572f7833356ae5de6d8a30340f20f42",
+    "runs/sample-edge-filter-20261010/boundary/python-regression.log": "22e7e04bdf070612db442bf7b965870fd49761ce4d5d2add59f5ada6cdb723f3",
+    "runs/sample-edge-filter-20261010/boundary/additional-regression.log": "ae8edaf38546750a561935576bb20b0f35fa3c1ae96ad6102e77ecbcd73f286c",
+    "runs/sample-edge-filter-20261010/boundary/probe-exit-red.log": "90031912af2e6f4daead063d9bbce52dd938dbc1d21f10dc29899e30308ceaed",
+    "runs/sample-edge-filter-20261010/boundary/probe-exit-green.log": "ea054f87c95c3ca95c3b28845467057b28dbae671669b6104bb9a0da1beda9ae",
+    "runs/sample-edge-filter-20261010/boundary/checker-regression.log": "136aeb711f13bf91b42cfd518e91026770fece610dcce8bcde572fa79bb8f117",
+    "runs/sample-edge-filter-20261010/boundary/evas/RESULTS.json": "d01061a86b7f0fab45d4ba6353a46aa5a31b6f49e551a5c87b2a06d4b86287c2",
+    "runs/sample-edge-filter-20261010/boundary/review/numerical.md": "cc7d2bae31f77599e96854b4a09f71d08029db69d3e5e5243349323b03613553",
+    "runs/sample-edge-filter-20261010/boundary/review/evidence.md": "6dcce1e970dc14f21b91314a27c065fab90239efc37033b26a37bdfec4d6dcfd",
+    "runs/sample-edge-filter-20261010/boundary/consumer-regression.log": "40d0758b19c8114b6e962405eef634470f27efeeec327c380f2771ec8490477f"
+  },
+  "checks": {
+    "rust": "223 passed, 1 existing ignored",
+    "python_primary": "136 passed",
+    "python_additional": "30 passed; includes 9 sample chain tests overlapping primary selection",
+    "strict_phase": "18 failures retained; no event window filtering",
+    "python_consumers": "58 passed: precision_chain, timed_composition, dynamic_closure, mixed_dynamics"
+  },
+  "failed_analysis_attempts": [
+    {
+      "path": "runs/sample-edge-filter-20261010/boundary/results-v1",
+      "reason": "Missing archived native-parser dependency after first binary timer simulation"
+    },
+    {
+      "path": "runs/sample-edge-filter-20261010/boundary/results-v2",
+      "reason": "Missing requested_settings.json after second binary timer simulation"
+    }
+  ],
+  "remote_executions": {
+    "callback_diagnostics_complete": 4,
+    "root_diagnostics_complete": 4,
+    "analysis_interrupted_after_simulation": 2,
+    "total_actual_simulations": 10
+  },
+  "limitations": [
+    "Spectre callback scheduling internal algorithm remains unknown",
+    "Exact same-time state alignment remains FAIL",
+    "No automatic root refinement from downstream voltage budget",
+    "Activation overlapping committed filter history is rejected",
+    "Original Spectre four-case reference reused unchanged; original tight interrupt replay bit identical",
+    "Not merged or published"
+  ],
+  "spectre_identity": {
+    "version": "sub-version  21.1.0.509.isr12",
+    "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "setup_sha256": {
+      "/home/cshrc/.cshrc.cadence.sui": "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+      "/home/cshrc/.cshrc.mentor25.sui": "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+    }
+  },
+  "run_driver_followup": "After these successful executions, failure exit handling and roots CLI were corrected; physical inputs and numerical parsing unchanged. Failure-path red/green checks retained.",
+  "review": {
+    "numerical": "No unaddressed numerical findings; near-timer follow-up and documentation verified",
+    "evidence": "No unaddressed findings; false-success driver exit fixed and independently tested",
+    "scope": "Local source increment; not full Spectre alignment approval"
+  }
+}

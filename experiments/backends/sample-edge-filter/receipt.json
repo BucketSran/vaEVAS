@@ -1,0 +1,1079 @@
+{
+  "analysis_id": "sample-edge-filter-20261010-final",
+  "scope": "Four finite engineering composition conditions; no exact-boundary or continuous-time qualification",
+  "implementation": {
+    "base": "ad6f3577da261aedf51d33f13768c2b887f3bfa9",
+    "dirty": true,
+    "branch": "codex/sample-edge-filter",
+    "snapshot": "snapshot-final",
+    "source_manifest_sha256": "05d34ddd8a2d5db944c6fd9d0e6db2bcd02eabbc240a1e73a8c5fcf85ab540c1",
+    "build_command": [
+      "cargo",
+      "build",
+      "--locked",
+      "--manifest-path",
+      "evas/rust_core/Cargo.toml"
+    ],
+    "toolchain": {
+      "rustc": "rustc 1.95.0 (59807616e 2026-04-14)\nbinary: rustc\ncommit-hash: 59807616e1fa2540724bfbac14d7976d7e4a3860\ncommit-date: 2026-04-14\nhost: aarch64-apple-darwin\nrelease: 1.95.0\nLLVM version: 22.1.2",
+      "cargo": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)",
+      "python": "Python 3.14.6"
+    },
+    "status": "completed",
+    "build_log_sha256": "3ab0c5b8d523f0e4160db46ea3ca2e333c6c73e4a16551532ec8edfd22786409",
+    "kernel_sha256": "53cc6df9a040c8e7b18831a8be8c60b457f8bca9a3f4f7959d7a75b88ae9e0ef",
+    "kernel_identity": {
+      "build_revision": null,
+      "identity_version": 1,
+      "ir_schema_version": 18,
+      "name": "evas-kernel",
+      "platform": {
+        "arch": "aarch64",
+        "os": "macos"
+      },
+      "request_protocol_version": null,
+      "version": "0.14.0"
+    },
+    "source_snapshot_availability": "local-only: runs/sample-edge-filter-20261010/snapshot-final",
+    "source_manifest_path": "runs/sample-edge-filter-20261010/SOURCE_MANIFEST-final.json",
+    "source_manifest_entries": 112,
+    "post_build_change": {
+      "path": "evas/rust_core/src/operators.rs",
+      "scope": "rustfmt line wrapping of one assert inside cfg(test); all non-test source unchanged",
+      "patch_path": "runs/sample-edge-filter-20261010/post-build-test-formatting.patch",
+      "patch_sha256": "2143da4072dee1254d67016555afc5ddaec3ff7212fca61adcf2b377ccba0875",
+      "revalidation": "No behavior or numerical change; reuse actual frozen build executions"
+    }
+  },
+  "spectre": {
+    "version": "sub-version  21.1.0.509.isr12",
+    "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "profile_identity_sha256": "4d05474e15dc181d4f8f99bf749e8190c872d621288b1aa3bc6ffa000370fa4f",
+    "invocation": "spectre -64 tb.scs +log spectre.log -format psfascii -raw psf +lqtimeout 30 +mt=1",
+    "execution_source_manifest_sha256": "0d60fcc13d887ca4aed670c2f3e7e2aa6e15fd59d255cc70fc5ae214bab18ca3",
+    "input_manifest_sha256": "6412f245fd2b1b6ddeddbb5053faab5254ff1ea4e12a268564e7b9d6895bb5d9",
+    "verified_artifact_count": 403,
+    "file_manifest_sha256": "5870c2f983efc29b09e4818fe3c49fc150465b226c8ece4f2bf719a9789172de",
+    "limits": {
+      "stage_timeout_s": 90,
+      "license_timeout_s": 30,
+      "memory_limit_bytes": 4294967296,
+      "file_limit_bytes": 33554432,
+      "threads": 1
+    }
+  },
+  "judgment": {
+    "contract": "evas/validation/sample_edge_filter/README.md",
+    "checker_sha256": {
+      "experiments/backends/sample-edge-filter/analyze.py": "f39778231542d9e1f6e233fd32c7d1da668f8d65d4e5c9a38b3b6289740efb99",
+      "evas/validation/sample_edge_filter/contract.py": "b34319644d00238316a4a898ba125f7a6ada2f88656a14a8966ecfc8d8eabb90"
+    },
+    "original_checker_sha256": "ee78e544ce63aff72a87e01ac69d95ad06ad6cff1fdaaa9f976b5131f64b4f29",
+    "change": "Additional fail-closed checks for missing/nonfinite input/time observations; identical thresholds and numerical oracle; original receipts retained",
+    "budgets": {
+      "voltage_V": 0.0001,
+      "input_V": 1e-08,
+      "event_window_s": 5e-12
+    },
+    "evas_requested_settings": {
+      "vabstol_V": 1e-07,
+      "reltol": 0,
+      "maxstep_s": 1.5625e-08
+    }
+  },
+  "counts": {
+    "conditions": 4,
+    "spectre_configurations": 12,
+    "spectre_finite_pass": 12,
+    "evas_requests": 20,
+    "evas_finite_pass": 20,
+    "paired_native_grids": 12,
+    "paired_native_rows": 52200
+  },
+  "query_invariance": [
+    {
+      "case": "SEF-TIMER",
+      "common_query_mismatches": 0,
+      "identical_events": true
+    },
+    {
+      "case": "SEF-RESET",
+      "common_query_mismatches": 0,
+      "identical_events": true
+    },
+    {
+      "case": "SEF-INTERRUPT",
+      "common_query_mismatches": 0,
+      "identical_events": true
+    },
+    {
+      "case": "SEF-ISOLATION",
+      "common_query_mismatches": 0,
+      "identical_events": true
+    }
+  ],
+  "records": [
+    {
+      "case": "SEF-TIMER",
+      "setting": "base",
+      "spectre_status": "PASS",
+      "evas_status": "PASS",
+      "source_sha256": "2d08e034782a108b2f1c02799337c4815dd3e62ab62e08d7c6b8de13e17d1ba4",
+      "deck_sha256": "8ad6a15c6335254d5abfd939d29cbf4b47208237c29dd1c52b6027b71a9db8cc",
+      "rows": 1141,
+      "effective_settings": {
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-07,
+          "iabstol": 1e-11,
+          "stop": 8.5e-06,
+          "maxstep": 1.5625e-08
+        },
+        "actual": {
+          "reltol": 1e-06,
+          "vabstol": 1.0000000000000001e-07,
+          "iabstol": 1e-11,
+          "stop": 8.5e-06,
+          "maxstep": 1.5625000000000003e-08,
+          "method": "traponly"
+        },
+        "mismatches": [
+          "reltol"
+        ],
+        "original_readback_status": "I"
+      },
+      "spectre_error_to_independent_answer_V": {
+        "u": 8.881784197001252e-16,
+        "clk": 4.586608870482678e-15,
+        "rst": 2.886579864025407e-15,
+        "ah": 1.3877787807814457e-16,
+        "ae": 2.654126918244515e-15,
+        "af": 4.237820703301143e-06
+      },
+      "evas_error_to_independent_answer_V": {
+        "u": 7.771561172376096e-16,
+        "clk": 4.586608870482678e-15,
+        "rst": 2.886579864025407e-15,
+        "ah": 5.551115123125783e-16,
+        "ae": 3.361894096443052e-15,
+        "af": 2.55351295663786e-15
+      },
+      "same_native_time_comparison": {
+        "a": {
+          "maximum_difference_V_all_rows": {
+            "h": 0.2999999999999995,
+            "e": 9.992007221626409e-16,
+            "f": 4.237820702968076e-06
+          },
+          "held_difference_V_same_callback_count": 5.551115123125783e-16,
+          "held_difference_V_outside_event_windows": 5.551115123125783e-16,
+          "counter_disagreements_all_rows": 1,
+          "counter_disagreements_outside_event_windows": 0,
+          "final_counts": [
+            4.0,
+            4.0
+          ]
+        }
+      },
+      "spectre_result_sha256": "210c79b9308010c284ebcac7f4aef1d94403ba3ac696f97c70855964e2df15d6",
+      "observation_sha256": {
+        "spectre": "9198e14644d231f3c663a20b0915c857d62b0d8c6a0fd9c6cbebd7eff49778c8",
+        "evas": "631dd8a7e651931f7da9998d88ef15e51c978c9f668a68231feb8018e040a38b"
+      }
+    },
+    {
+      "case": "SEF-TIMER",
+      "setting": "tight",
+      "spectre_status": "PASS",
+      "evas_status": "PASS",
+      "source_sha256": "2d08e034782a108b2f1c02799337c4815dd3e62ab62e08d7c6b8de13e17d1ba4",
+      "deck_sha256": "289b901559cd16976a1ccd4e87bb9160bc27a58bb13b4e4a0e38d7ccc829b081",
+      "rows": 4929,
+      "effective_settings": {
+        "requested": {
+          "reltol": 1e-09,
+          "vabstol": 1e-11,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 1.5625e-08
+        },
+        "actual": {
+          "reltol": 1e-10,
+          "vabstol": 1e-11,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 1.5625000000000003e-08,
+          "method": "traponly"
+        },
+        "mismatches": [
+          "reltol"
+        ],
+        "original_readback_status": "I"
+      },
+      "spectre_error_to_independent_answer_V": {
+        "u": 8.881784197001252e-16,
+        "clk": 5.079270337660091e-15,
+        "rst": 4.551914400963142e-15,
+        "ah": 6.661338147750939e-16,
+        "ae": 1.3322676295501878e-15,
+        "af": 1.0302676456408477e-07
+      },
+      "evas_error_to_independent_answer_V": {
+        "u": 8.881784197001252e-16,
+        "clk": 5.079270337660091e-15,
+        "rst": 4.551914400963142e-15,
+        "ah": 5.551115123125783e-16,
+        "ae": 3.3133218391157016e-15,
+        "af": 2.6645352591003757e-15
+      },
+      "same_native_time_comparison": {
+        "a": {
+          "maximum_difference_V_all_rows": {
+            "h": 0.30000000000000016,
+            "e": 2.4424906541753444e-15,
+            "f": 1.0302676500817398e-07
+          },
+          "held_difference_V_same_callback_count": 5.551115123125783e-16,
+          "held_difference_V_outside_event_windows": 5.551115123125783e-16,
+          "counter_disagreements_all_rows": 1,
+          "counter_disagreements_outside_event_windows": 0,
+          "final_counts": [
+            4.0,
+            4.0
+          ]
+        }
+      },
+      "spectre_result_sha256": "5eac1318631b1f249444dddbddb9381831fd6ffb7c3030f4dc174d9d7857b0d5",
+      "observation_sha256": {
+        "spectre": "ffa5e7ef64a426055a8c434c37725f1db68d4a25c7d4a5561e40e87257391fab",
+        "evas": "80ccc470612f83029832078a2b0700ec5665d8e5d482dbd9ec70f09d82f43a85"
+      }
+    },
+    {
+      "case": "SEF-TIMER",
+      "setting": "fine",
+      "spectre_status": "PASS",
+      "evas_status": "PASS",
+      "source_sha256": "2d08e034782a108b2f1c02799337c4815dd3e62ab62e08d7c6b8de13e17d1ba4",
+      "deck_sha256": "67c31da2cf7e6ab2e46bf1127d5a65aea217a2c51cd7197f921b48be76b2269f",
+      "rows": 5140,
+      "effective_settings": {
+        "requested": {
+          "reltol": 1e-09,
+          "vabstol": 1e-11,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "actual": {
+          "reltol": 1e-10,
+          "vabstol": 1e-11,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 3.906250000000001e-09,
+          "method": "traponly"
+        },
+        "mismatches": [
+          "reltol"
+        ],
+        "original_readback_status": "I"
+      },
+      "spectre_error_to_independent_answer_V": {
+        "u": 7.771561172376096e-16,
+        "clk": 5.339478859056612e-15,
+        "rst": 4.551914400963142e-15,
+        "ah": 2.7755575615628914e-17,
+        "ae": 2.7755575615628914e-15,
+        "af": 1.0257156690673952e-07
+      },
+      "evas_error_to_independent_answer_V": {
+        "u": 7.771561172376096e-16,
+        "clk": 5.339478859056612e-15,
+        "rst": 4.551914400963142e-15,
+        "ah": 5.551115123125783e-16,
+        "ae": 3.316791286067655e-15,
+        "af": 2.6645352591003757e-15
+      },
+      "same_native_time_comparison": {
+        "a": {
+          "maximum_difference_V_all_rows": {
+            "h": 0.2999999999999995,
+            "e": 2.55351295663786e-15,
+            "f": 1.0257156701776182e-07
+          },
+          "held_difference_V_same_callback_count": 5.551115123125783e-16,
+          "held_difference_V_outside_event_windows": 5.551115123125783e-16,
+          "counter_disagreements_all_rows": 1,
+          "counter_disagreements_outside_event_windows": 0,
+          "final_counts": [
+            4.0,
+            4.0
+          ]
+        }
+      },
+      "spectre_result_sha256": "7576d180a28e9ebe3c6342d79f220b1668558e29db1d9c361eaf0e4b5f128e4d",
+      "observation_sha256": {
+        "spectre": "82d227c3682b38b173793bd48dfa2dbe1c3154500b729d8cdad7ad7b16744a2f",
+        "evas": "a88bad508a334785c7e5c55b49fdb42b170d58d2b43cb071a0912873902864b2"
+      }
+    },
+    {
+      "case": "SEF-RESET",
+      "setting": "base",
+      "spectre_status": "PASS",
+      "evas_status": "PASS",
+      "source_sha256": "17ea904db16555ff554d1baf9f68a26a8e00ee2e8702aa767485239acd2ae36c",
+      "deck_sha256": "c77254b5e439226a8698f48cf3f6aaab8f417b98da1f21da1ac883cec0f50571",
+      "rows": 1286,
+      "effective_settings": {
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-07,
+          "iabstol": 1e-11,
+          "stop": 8.5e-06,
+          "maxstep": 1.5625e-08
+        },
+        "actual": {
+          "reltol": 1e-06,
+          "vabstol": 1.0000000000000001e-07,
+          "iabstol": 1e-11,
+          "stop": 8.5e-06,
+          "maxstep": 1.5625000000000003e-08,
+          "method": "traponly"
+        },
+        "mismatches": [
+          "reltol"
+        ],
+        "original_readback_status": "I"
+      },
+      "spectre_error_to_independent_answer_V": {
+        "u": 8.881784197001252e-16,
+        "clk": 4.440892098500626e-15,
+        "rst": 3.6637359812630166e-15,
+        "ah": 8.12501177449576e-11,
+        "ae": 8.125000672265514e-11,
+        "af": 3.7771139820286237e-06
+      },
+      "evas_error_to_independent_answer_V": {
+        "u": 7.771561172376096e-16,
+        "clk": 4.440892098500626e-15,
+        "rst": 3.6637359812630166e-15,
+        "ah": 3.3306690738754696e-16,
+        "ae": 1.6653345369377348e-15,
+        "af": 2.3314683517128287e-15
+      },
+      "same_native_time_comparison": {
+        "a": {
+          "maximum_difference_V_all_rows": {
+            "h": 8.124989570035268e-11,
+            "e": 8.124978467805022e-11,
+            "f": 3.7771139822506683e-06
+          },
+          "held_difference_V_same_callback_count": 8.124989570035268e-11,
+          "held_difference_V_outside_event_windows": 8.124989570035268e-11,
+          "counter_disagreements_all_rows": 0,
+          "counter_disagreements_outside_event_windows": 0,
+          "final_counts": [
+            5.0,
+            5.0
+          ]
+        }
+      },
+      "spectre_result_sha256": "205b601965499c44292bfd3a22a689fd1b2ffc03085c792373961d3f19392064",
+      "observation_sha256": {
+        "spectre": "af6a9a399ac8575f2e57056ec973dc22535e40862515bffdf71c46222065d71e",
+        "evas": "e0c5ad493ba50c35e79173295739d44ac5c966efb0ae810355cd25b9b456b8a5"
+      }
+    },
+    {
+      "case": "SEF-RESET",
+      "setting": "tight",
+      "spectre_status": "PASS",
+      "evas_status": "PASS",
+      "source_sha256": "17ea904db16555ff554d1baf9f68a26a8e00ee2e8702aa767485239acd2ae36c",
+      "deck_sha256": "27c8065b90c648a620c177b0ae40ea9c2f2d6e546c6bd064d97a609a1c57b187",
+      "rows": 5545,
+      "effective_settings": {
+        "requested": {
+          "reltol": 1e-09,
+          "vabstol": 1e-11,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 1.5625e-08
+        },
+        "actual": {
+          "reltol": 1e-10,
+          "vabstol": 1e-11,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 1.5625000000000003e-08,
+          "method": "traponly"
+        },
+        "mismatches": [
+          "reltol"
+        ],
+        "original_readback_status": "I"
+      },
+      "spectre_error_to_independent_answer_V": {
+        "u": 7.771561172376096e-16,
+        "clk": 5.329070518200751e-15,
+        "rst": 4.440892098500626e-15,
+        "ah": 8.125000672265514e-11,
+        "ae": 8.125033978956253e-11,
+        "af": 9.573899351078552e-08
+      },
+      "evas_error_to_independent_answer_V": {
+        "u": 7.771561172376096e-16,
+        "clk": 5.329070518200751e-15,
+        "rst": 4.440892098500626e-15,
+        "ah": 3.3306690738754696e-16,
+        "ae": 1.7763568394002505e-15,
+        "af": 2.55351295663786e-15
+      },
+      "same_native_time_comparison": {
+        "a": {
+          "maximum_difference_V_all_rows": {
+            "h": 8.124978467805022e-11,
+            "e": 8.125033978956253e-11,
+            "f": 9.573899389936358e-08
+          },
+          "held_difference_V_same_callback_count": 8.124978467805022e-11,
+          "held_difference_V_outside_event_windows": 8.124978467805022e-11,
+          "counter_disagreements_all_rows": 0,
+          "counter_disagreements_outside_event_windows": 0,
+          "final_counts": [
+            5.0,
+            5.0
+          ]
+        }
+      },
+      "spectre_result_sha256": "580f786150ced0ab52d2c278470ea082cfeb1ed8fe009e9b89702aef4ca21c9a",
+      "observation_sha256": {
+        "spectre": "ca056cb8a73a4d5b9a6961f166d53b3c590915b692245e1e84d17774b3b0bbd2",
+        "evas": "6ebc015e21e8ba888ad7635991689516b05f9e772a0e76e63689f39c81bbfbad"
+      }
+    },
+    {
+      "case": "SEF-RESET",
+      "setting": "fine",
+      "spectre_status": "PASS",
+      "evas_status": "PASS",
+      "source_sha256": "17ea904db16555ff554d1baf9f68a26a8e00ee2e8702aa767485239acd2ae36c",
+      "deck_sha256": "ae89a7118867ff7b87c2c34343c049320b37550ef2199f54770e7eae57584250",
+      "rows": 5757,
+      "effective_settings": {
+        "requested": {
+          "reltol": 1e-09,
+          "vabstol": 1e-11,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "actual": {
+          "reltol": 1e-10,
+          "vabstol": 1e-11,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 3.906250000000001e-09,
+          "method": "traponly"
+        },
+        "mismatches": [
+          "reltol"
+        ],
+        "original_readback_status": "I"
+      },
+      "spectre_error_to_independent_answer_V": {
+        "u": 7.771561172376096e-16,
+        "clk": 5.7592819402429996e-15,
+        "rst": 4.440892098500626e-15,
+        "ah": 8.125000672265514e-11,
+        "ae": 8.125145001258716e-11,
+        "af": 9.574328657668829e-08
+      },
+      "evas_error_to_independent_answer_V": {
+        "u": 7.771561172376096e-16,
+        "clk": 5.7592819402429996e-15,
+        "rst": 4.440892098500626e-15,
+        "ah": 3.3306690738754696e-16,
+        "ae": 1.6653345369377348e-15,
+        "af": 2.55351295663786e-15
+      },
+      "same_native_time_comparison": {
+        "a": {
+          "maximum_difference_V_all_rows": {
+            "h": 8.124978467805022e-11,
+            "e": 8.125078387877238e-11,
+            "f": 9.574328763140016e-08
+          },
+          "held_difference_V_same_callback_count": 8.124978467805022e-11,
+          "held_difference_V_outside_event_windows": 8.124978467805022e-11,
+          "counter_disagreements_all_rows": 0,
+          "counter_disagreements_outside_event_windows": 0,
+          "final_counts": [
+            5.0,
+            5.0
+          ]
+        }
+      },
+      "spectre_result_sha256": "f982b505cb3e8da7032db6cbdc3d5aadeed864fe1a624354d4ed56a7c566a2d8",
+      "observation_sha256": {
+        "spectre": "c2c7f8faeed01313b2a3573241861fd76f31174ceb37bcea0f2f4fbf40f33bb2",
+        "evas": "ab6a9112ce39e1434c613adcab48fbb9e3c953db53e1395eaf5b87f71b2f5d58"
+      }
+    },
+    {
+      "case": "SEF-INTERRUPT",
+      "setting": "base",
+      "spectre_status": "PASS",
+      "evas_status": "PASS",
+      "source_sha256": "8210ec9608d7f9e18e8745aff4c07640429cddf6bce73fa4beff0524a67d9b7e",
+      "deck_sha256": "c0bf80943710539d8819c5a40bb6215c2743129c25c29ae16c81f4c5a47f1c67",
+      "rows": 1439,
+      "effective_settings": {
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-07,
+          "iabstol": 1e-11,
+          "stop": 8.5e-06,
+          "maxstep": 1.5625e-08
+        },
+        "actual": {
+          "reltol": 1e-06,
+          "vabstol": 1.0000000000000001e-07,
+          "iabstol": 1e-11,
+          "stop": 8.5e-06,
+          "maxstep": 1.5625000000000003e-08,
+          "method": "traponly"
+        },
+        "mismatches": [
+          "reltol"
+        ],
+        "original_readback_status": "I"
+      },
+      "spectre_error_to_independent_answer_V": {
+        "u": 8.326672684688674e-16,
+        "clk": 3.885780586188048e-15,
+        "rst": 3.885780586188048e-15,
+        "ah": 4.440892098500626e-16,
+        "ae": 1.4432899320127035e-15,
+        "af": 6.836982656910351e-06
+      },
+      "evas_error_to_independent_answer_V": {
+        "u": 7.771561172376096e-16,
+        "clk": 3.885780586188048e-15,
+        "rst": 3.885780586188048e-15,
+        "ah": 1.4432899320127035e-15,
+        "ae": 4.107825191113079e-15,
+        "af": 3.101685575046531e-15
+      },
+      "same_native_time_comparison": {
+        "a": {
+          "maximum_difference_V_all_rows": {
+            "h": 0.8499999999999985,
+            "e": 4.218847493575595e-15,
+            "f": 6.836982656910351e-06
+          },
+          "held_difference_V_same_callback_count": 1.5543122344752192e-15,
+          "held_difference_V_outside_event_windows": 1.4432899320127035e-15,
+          "counter_disagreements_all_rows": 2,
+          "counter_disagreements_outside_event_windows": 0,
+          "final_counts": [
+            8.0,
+            8.0
+          ]
+        }
+      },
+      "spectre_result_sha256": "43458eae44c107d8b55ef747339d93f5000e85cd8dda2f57fd53bf3b6b0812aa",
+      "observation_sha256": {
+        "spectre": "f7a88fee5f89ccd1c971d95ce887f8db28f7c33fe80cda2b4ba28505aae7c83f",
+        "evas": "78a95764e6a88000c23d1d92f4a082a18a7886699271ac38ae530aea9aa4a734"
+      }
+    },
+    {
+      "case": "SEF-INTERRUPT",
+      "setting": "tight",
+      "spectre_status": "PASS",
+      "evas_status": "PASS",
+      "source_sha256": "8210ec9608d7f9e18e8745aff4c07640429cddf6bce73fa4beff0524a67d9b7e",
+      "deck_sha256": "c3e321ae21bda4ffc2cbdf483feb86ba3376874a6f1c05bd607d4269b098e7d6",
+      "rows": 6366,
+      "effective_settings": {
+        "requested": {
+          "reltol": 1e-09,
+          "vabstol": 1e-11,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 1.5625e-08
+        },
+        "actual": {
+          "reltol": 1e-10,
+          "vabstol": 1e-11,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 1.5625000000000003e-08,
+          "method": "traponly"
+        },
+        "mismatches": [
+          "reltol"
+        ],
+        "original_readback_status": "I"
+      },
+      "spectre_error_to_independent_answer_V": {
+        "u": 8.326672684688674e-16,
+        "clk": 5.287437154777308e-15,
+        "rst": 4.107825191113079e-15,
+        "ah": 9.992007221626409e-16,
+        "ae": 2.6645352591003757e-15,
+        "af": 8.749018770570771e-08
+      },
+      "evas_error_to_independent_answer_V": {
+        "u": 8.326672684688674e-16,
+        "clk": 5.287437154777308e-15,
+        "rst": 4.107825191113079e-15,
+        "ah": 1.4432899320127035e-15,
+        "ae": 4.163336342344337e-15,
+        "af": 3.344546861683284e-15
+      },
+      "same_native_time_comparison": {
+        "a": {
+          "maximum_difference_V_all_rows": {
+            "h": 1.1499999999999986,
+            "e": 4.801714581503802e-15,
+            "f": 8.749018645670681e-08
+          },
+          "held_difference_V_same_callback_count": 7.494005416219807e-16,
+          "held_difference_V_outside_event_windows": 7.494005416219807e-16,
+          "counter_disagreements_all_rows": 4,
+          "counter_disagreements_outside_event_windows": 0,
+          "final_counts": [
+            8.0,
+            8.0
+          ]
+        }
+      },
+      "spectre_result_sha256": "0a55c1d72730d2463ceff3362999c38c64b533c57c89a7cf56e7ca68c2a65936",
+      "observation_sha256": {
+        "spectre": "e1ac68a7b0ea3fba4ad9501f2ed354eedbc3498c5c6ab4a8e667601710fc41ff",
+        "evas": "23f7965db64bf196cd3506e002b8fa520118225f5a4ed89f791f731fb46d9778"
+      }
+    },
+    {
+      "case": "SEF-INTERRUPT",
+      "setting": "fine",
+      "spectre_status": "PASS",
+      "evas_status": "PASS",
+      "source_sha256": "8210ec9608d7f9e18e8745aff4c07640429cddf6bce73fa4beff0524a67d9b7e",
+      "deck_sha256": "6998fec819c5b332a91ae1f4a60222be8fb94547fe9ee7a9ddae18ae09b4ee3e",
+      "rows": 6576,
+      "effective_settings": {
+        "requested": {
+          "reltol": 1e-09,
+          "vabstol": 1e-11,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "actual": {
+          "reltol": 1e-10,
+          "vabstol": 1e-11,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 3.906250000000001e-09,
+          "method": "traponly"
+        },
+        "mismatches": [
+          "reltol"
+        ],
+        "original_readback_status": "I"
+      },
+      "spectre_error_to_independent_answer_V": {
+        "u": 8.881784197001252e-16,
+        "clk": 5.384581669432009e-15,
+        "rst": 4.440892098500626e-15,
+        "ah": 4.440892098500626e-16,
+        "ae": 2.3314683517128287e-15,
+        "af": 8.749018778897444e-08
+      },
+      "evas_error_to_independent_answer_V": {
+        "u": 8.881784197001252e-16,
+        "clk": 5.384581669432009e-15,
+        "rst": 4.440892098500626e-15,
+        "ah": 1.4432899320127035e-15,
+        "ae": 4.191091917959966e-15,
+        "af": 3.2335245592207684e-15
+      },
+      "same_native_time_comparison": {
+        "a": {
+          "maximum_difference_V_all_rows": {
+            "h": 0.8499999999999985,
+            "e": 5.023759186428833e-15,
+            "f": 8.749018651221796e-08
+          },
+          "held_difference_V_same_callback_count": 1.5543122344752192e-15,
+          "held_difference_V_outside_event_windows": 1.4432899320127035e-15,
+          "counter_disagreements_all_rows": 3,
+          "counter_disagreements_outside_event_windows": 0,
+          "final_counts": [
+            8.0,
+            8.0
+          ]
+        }
+      },
+      "spectre_result_sha256": "3bdf6de15539edc050ad73f4ba2c58cb1aae339589be7dd3b77a8b52238dd64e",
+      "observation_sha256": {
+        "spectre": "a76ccbbe328e23b4c52071111be1d911121b1ae078aa49e503fe724bd576dc38",
+        "evas": "45750bc15aa23c3d2b7d4cf1dd8c4fce4c64a325cb763de8e4f9610b519da3a2"
+      }
+    },
+    {
+      "case": "SEF-ISOLATION",
+      "setting": "base",
+      "spectre_status": "PASS",
+      "evas_status": "PASS",
+      "source_sha256": "0adacb485581cc488f981e349e7def75cd7faa40f91dc9c1a3ea9c490b825cc5",
+      "deck_sha256": "5e42d6bc1dd6210c6a0436ed5b0b0f95ba8ef5a42243912cd1121afb35837c76",
+      "rows": 1295,
+      "effective_settings": {
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-07,
+          "iabstol": 1e-11,
+          "stop": 8.5e-06,
+          "maxstep": 1.5625e-08
+        },
+        "actual": {
+          "reltol": 1e-06,
+          "vabstol": 1.0000000000000001e-07,
+          "iabstol": 1e-11,
+          "stop": 8.5e-06,
+          "maxstep": 1.5625000000000003e-08,
+          "method": "traponly"
+        },
+        "mismatches": [
+          "reltol"
+        ],
+        "original_readback_status": "I"
+      },
+      "spectre_error_to_independent_answer_V": {
+        "u": 7.771561172376096e-16,
+        "clk": 4.551914400963142e-15,
+        "rst": 3.4416913763379853e-15,
+        "ah": 1.3877787807814457e-16,
+        "ae": 2.609024107869118e-15,
+        "af": 3.4839166056510606e-06,
+        "bh": 1.5612511283791264e-16,
+        "be": 1.1171619185290638e-15,
+        "bf": 1.2523425103744268e-06
+      },
+      "evas_error_to_independent_answer_V": {
+        "u": 7.771561172376096e-16,
+        "clk": 4.551914400963142e-15,
+        "rst": 3.4416913763379853e-15,
+        "ah": 5.551115123125783e-16,
+        "ae": 3.164135620181696e-15,
+        "af": 2.55351295663786e-15,
+        "bh": 1.8388068845354155e-16,
+        "be": 5.152128723651117e-16,
+        "bf": 6.349087922075114e-16
+      },
+      "same_native_time_comparison": {
+        "a": {
+          "maximum_difference_V_all_rows": {
+            "h": 0.2999999999999995,
+            "e": 9.992007221626409e-16,
+            "f": 3.483916604984927e-06
+          },
+          "held_difference_V_same_callback_count": 5.551115123125783e-16,
+          "held_difference_V_outside_event_windows": 5.551115123125783e-16,
+          "counter_disagreements_all_rows": 1,
+          "counter_disagreements_outside_event_windows": 0,
+          "final_counts": [
+            4.0,
+            4.0
+          ]
+        },
+        "b": {
+          "maximum_difference_V_all_rows": {
+            "h": 0.08750000000000024,
+            "e": 6.38378239159465e-16,
+            "f": 1.252342509902582e-06
+          },
+          "held_difference_V_same_callback_count": 1.1102230246251565e-16,
+          "held_difference_V_outside_event_windows": 1.1102230246251565e-16,
+          "counter_disagreements_all_rows": 1,
+          "counter_disagreements_outside_event_windows": 0,
+          "final_counts": [
+            3.0,
+            3.0
+          ]
+        }
+      },
+      "spectre_result_sha256": "ef65519217cce1977d492352390d1a86ed09f18c115c3c53f4e472ce54bd624b",
+      "observation_sha256": {
+        "spectre": "09e401af306c450f50e3e5f9598241d54de32e8914fe9c25ffc46c5b78546e6c",
+        "evas": "56bb04d2838322eaef32718660b8374480516fe96bfb4149029aab9a08a23a51"
+      }
+    },
+    {
+      "case": "SEF-ISOLATION",
+      "setting": "tight",
+      "spectre_status": "PASS",
+      "evas_status": "PASS",
+      "source_sha256": "0adacb485581cc488f981e349e7def75cd7faa40f91dc9c1a3ea9c490b825cc5",
+      "deck_sha256": "eb90195cb5570596751cce1dafdbdd227863b78f2508c09f039183c983da3b81",
+      "rows": 6258,
+      "effective_settings": {
+        "requested": {
+          "reltol": 1e-09,
+          "vabstol": 1e-11,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 1.5625e-08
+        },
+        "actual": {
+          "reltol": 1e-10,
+          "vabstol": 1e-11,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 1.5625000000000003e-08,
+          "method": "traponly"
+        },
+        "mismatches": [
+          "reltol"
+        ],
+        "original_readback_status": "I"
+      },
+      "spectre_error_to_independent_answer_V": {
+        "u": 7.771561172376096e-16,
+        "clk": 5.287437154777308e-15,
+        "rst": 4.3298697960381105e-15,
+        "ah": 2.7755575615628914e-17,
+        "ae": 1.0885389811754465e-15,
+        "af": 7.462706347327597e-08,
+        "bh": 1.5612511283791264e-16,
+        "be": 3.469446951953614e-16,
+        "bf": 1.4711614024220943e-08
+      },
+      "evas_error_to_independent_answer_V": {
+        "u": 7.771561172376096e-16,
+        "clk": 5.287437154777308e-15,
+        "rst": 4.3298697960381105e-15,
+        "ah": 5.551115123125783e-16,
+        "ae": 3.378373969464832e-15,
+        "af": 2.6645352591003757e-15,
+        "bh": 1.8388068845354155e-16,
+        "be": 5.689893001203927e-16,
+        "bf": 5.741934705483231e-16
+      },
+      "same_native_time_comparison": {
+        "a": {
+          "maximum_difference_V_all_rows": {
+            "h": 0.2999999999999995,
+            "e": 2.400857290751901e-15,
+            "f": 7.462706363980942e-08
+          },
+          "held_difference_V_same_callback_count": 5.551115123125783e-16,
+          "held_difference_V_outside_event_windows": 5.551115123125783e-16,
+          "counter_disagreements_all_rows": 1,
+          "counter_disagreements_outside_event_windows": 0,
+          "final_counts": [
+            4.0,
+            4.0
+          ]
+        },
+        "b": {
+          "maximum_difference_V_all_rows": {
+            "h": 0.08750000000000024,
+            "e": 5.412337245047638e-16,
+            "f": 1.4711614024220943e-08
+          },
+          "held_difference_V_same_callback_count": 8.326672684688674e-17,
+          "held_difference_V_outside_event_windows": 8.326672684688674e-17,
+          "counter_disagreements_all_rows": 1,
+          "counter_disagreements_outside_event_windows": 0,
+          "final_counts": [
+            3.0,
+            3.0
+          ]
+        }
+      },
+      "spectre_result_sha256": "3e0559f390c6c49d715e291b43327de983cc8a8581ceeca3a3f8aef3f53d6245",
+      "observation_sha256": {
+        "spectre": "0e8d9b89c4a9c6b0e347deb63ef134438e6db7cdbbc2e9e8eb1a2e26b6de1a5c",
+        "evas": "43ec981e6f0d6a2f5e9d8ad143775073f2d39c83fbe5f452aed81ffe6eba0e00"
+      }
+    },
+    {
+      "case": "SEF-ISOLATION",
+      "setting": "fine",
+      "spectre_status": "PASS",
+      "evas_status": "PASS",
+      "source_sha256": "0adacb485581cc488f981e349e7def75cd7faa40f91dc9c1a3ea9c490b825cc5",
+      "deck_sha256": "9d15c32569daf6ddef0a83906b2569c29db3aac149f55a9e3e2425e860ac3e78",
+      "rows": 6468,
+      "effective_settings": {
+        "requested": {
+          "reltol": 1e-09,
+          "vabstol": 1e-11,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "actual": {
+          "reltol": 1e-10,
+          "vabstol": 1e-11,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 3.906250000000001e-09,
+          "method": "traponly"
+        },
+        "mismatches": [
+          "reltol"
+        ],
+        "original_readback_status": "I"
+      },
+      "spectre_error_to_independent_answer_V": {
+        "u": 9.43689570931383e-16,
+        "clk": 5.578870698741412e-15,
+        "rst": 4.135580766728708e-15,
+        "ah": 2.7755575615628914e-17,
+        "ae": 1.6653345369377348e-15,
+        "af": 7.462706397287633e-08,
+        "bh": 1.5612511283791264e-16,
+        "be": 3.469446951953614e-16,
+        "bf": 1.4711613940954216e-08
+      },
+      "evas_error_to_independent_answer_V": {
+        "u": 8.881784197001252e-16,
+        "clk": 5.578870698741412e-15,
+        "rst": 4.135580766728708e-15,
+        "ah": 5.551115123125783e-16,
+        "ae": 3.3861802251067274e-15,
+        "af": 2.6645352591003757e-15,
+        "bh": 1.8388068845354155e-16,
+        "be": 5.620504062164855e-16,
+        "bf": 6.140921104957897e-16
+      },
+      "same_native_time_comparison": {
+        "a": {
+          "maximum_difference_V_all_rows": {
+            "h": 0.2999999999999995,
+            "e": 2.4147350785597155e-15,
+            "f": 7.462706363980942e-08
+          },
+          "held_difference_V_same_callback_count": 5.551115123125783e-16,
+          "held_difference_V_outside_event_windows": 5.551115123125783e-16,
+          "counter_disagreements_all_rows": 1,
+          "counter_disagreements_outside_event_windows": 0,
+          "final_counts": [
+            4.0,
+            4.0
+          ]
+        },
+        "b": {
+          "maximum_difference_V_all_rows": {
+            "h": 0.08750000000000024,
+            "e": 5.412337245047638e-16,
+            "f": 1.4711613899320852e-08
+          },
+          "held_difference_V_same_callback_count": 8.326672684688674e-17,
+          "held_difference_V_outside_event_windows": 8.326672684688674e-17,
+          "counter_disagreements_all_rows": 1,
+          "counter_disagreements_outside_event_windows": 0,
+          "final_counts": [
+            3.0,
+            3.0
+          ]
+        }
+      },
+      "spectre_result_sha256": "6028aad9f7900990a45249dcfcd185565d0f98f6896886dd2ce90e8daa2b1d41",
+      "observation_sha256": {
+        "spectre": "e35f8ca4a8ea99684b58761214342e85a85f76f880ced85c819a4e7c79be8dd6",
+        "evas": "c3967bcc037dd9c5398eec9e9a0bc6483b23306811a4bedfa5404d5552eb5466"
+      }
+    }
+  ],
+  "checks": [
+    {
+      "log": "runs/sample-edge-filter-20261010/python-regressions.log",
+      "sha256": "2410d9a5106eb65cc3e4b74a291e3bb89a2571563195d7c64a9191ced303b5e7",
+      "result": "176 methods PASS; shared dynamics, histories, precision, event sampling and new composition"
+    },
+    {
+      "log": "runs/sample-edge-filter-20261010/rust-all.log",
+      "sha256": "effa441ab890ab8cf6d15763d05ea2e9c345a7ec4f178e0e2c6679f76ffbdf4f",
+      "result": "221 passed, 1 pre-existing ignored"
+    },
+    {
+      "log": "runs/sample-edge-filter-20261010/calibration-final.log",
+      "sha256": "88599d4686a33f00e403916d21d6c1f42e8681dc0416f72ec07bf46cf7e19107",
+      "result": "3 methods PASS; 4 positive case histories and 9 rejection controls"
+    },
+    {
+      "log": "runs/sample-edge-filter-20261010/pairing-calibration.log",
+      "sha256": "44072fdf29f84733682332436430d6f88b80d3c502a5e7b847dfd1680c4f03de",
+      "result": "2 methods PASS; full boundary jump retained and nearby times rejected"
+    },
+    {
+      "log": "runs/sample-edge-filter-20261010/rustfmt-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": "PASS"
+    },
+    {
+      "log": "runs/sample-edge-filter-20261010/workspaces-handoff.txt",
+      "sha256": "dc98b58346f76ebe4c38d9737b2f874ff66868870869bcc8c483f52999550793",
+      "result": "PASS"
+    }
+  ],
+  "retained_failures": [
+    {
+      "log": "probe-baseline.log",
+      "kind": "stale IR17 binary; preflight identity failure, not product behavior"
+    },
+    {
+      "log": "probe-rebuilt.log",
+      "kind": "timer stop=4us exact endpoint remains rejected; excluded from new interior-stop scope"
+    },
+    {
+      "log": "probe-interior.log",
+      "kind": "fresh baseline rejects transition dependency in continuous network"
+    },
+    {
+      "log": "red.log",
+      "kind": "new public regression fails before filter implementation"
+    },
+    {
+      "log": "evas-first.log",
+      "kind": "v1 input-expression initializer rejected; v2 explicitly changes to constant initial state, no repair claim"
+    },
+    {
+      "log": "second-test.log",
+      "kind": "intermediate output-grid bit mismatch; final candidate fixed physical-only commit"
+    },
+    {
+      "log": "evas-v2/RESULTS.json",
+      "kind": "intermediate past-history observation rejection; final candidate retains history"
+    },
+    {
+      "log": "rust-filter.log",
+      "kind": "new test compared intervals at different times; corrected to compare the same past time"
+    }
+  ],
+  "availability": {
+    "summary_and_tools": "repository-contained after publication; current branch is uncommitted",
+    "raw": "local-only",
+    "raw_root": "runs/sample-edge-filter-20261010",
+    "final_analysis": "analysis-final.json",
+    "final_analysis_sha256": "17c2d0a10d0dadfec561825d5f6f116c8fb8204b83057bc3341f566bd98df3bf",
+    "final_evas_inventory": "EVAS-final-files.json",
+    "final_evas_inventory_sha256": "63c182367466d9d5a28ceeea14e0dfe7a157c753981a571970a3c4414f8679aa",
+    "public_raw_download": null
+  },
+  "limitations": [
+    "Instantaneous held-node differences up to 1.15 V remain inside predefined event windows; all-row values retained.",
+    "Root-window timing is not fully propagated to transition activation; finite checks do not prove full time-domain envelopes.",
+    "Feedback, multiple history inputs, higher-order consumers and filtered cross guards remain unsupported.",
+    "Four development cases do not replace the original 27 conditions or constitute an unseen paper evaluation set.",
+    "No open-backend runs or performance claims in this batch."
+  ]
+}

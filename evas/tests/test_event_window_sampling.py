@@ -68,12 +68,22 @@ class EventWindowSamplingContracts(unittest.TestCase):
         with self.assertRaisesRegex(KernelError, "event_condition"):
             run(ambiguous, {"u": [[0,0],[2,2]]}, [0,2], stop=2, vabstol=1e-4, reltol=0)
 
-    def test_loose_root_cannot_accept_amplified_sample_with_tight_budget(self):
+    def test_loose_root_is_refined_before_accepting_amplified_sample(self):
         program = compile_model(
             "@(initial_step) q=0; @(cross(pow(V(u,r),2)-2,1,1e-5,1e-4)) q=1e6*V(u,r); "
             "V(y,r)<+idt(q*q,0);", "real q;")
-        with self.assertRaisesRegex(KernelError, "waveform_accuracy"):
-            run(program, {"u": [[0,0],[10,10]]}, [0,10], stop=10, vabstol=2e7, reltol=1e-10)
+        # This originally rejected the coarse root. Preserve the source and
+        # voltage budget, and require refinement plus the independent q^2 IVP.
+        result = run(program, {"u": [[0,0],[10,10]]}, [0,10], stop=10,
+                     vabstol=2e7, reltol=1e-10)
+        assert_close(self, values(result)[-1], 2e12*(10-math.sqrt(2)), delta=2e7)
+        lo, hi = result['transient']['events'][0]['observation_time_bounds']
+        self.assertLessEqual(lo, math.sqrt(2))
+        self.assertGreaterEqual(hi, math.sqrt(2))
+        self.assertLess(hi-lo, 1e-12)
+        # Input rounding fits this budget; the amplified integral does not.
+        with self.assertRaisesRegex(KernelError, "waveform_accuracy.*at y:"):
+            run(program, {"u": [[0,0],[10,10]]}, [0,10], stop=10, vabstol=1e-6, reltol=0)
 
     def test_integral_history_sample_uses_event_instant_not_post_event_flow(self):
         # z(t)=t; q=z(sqrt(2)); y'=q^2 after that event. Resampling

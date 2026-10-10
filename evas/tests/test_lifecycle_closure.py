@@ -18,18 +18,21 @@ class LifecycleClosureContracts(unittest.TestCase):
             '@(timer(0.25,0,1e-12)) target=1; '
             '@(cross(pow(V(u,r),2)-2,1,TTOL,ETOL)) q=V(z,r); '
             'V(z,r)<+transition(target,0,4,4); V(y,r)<+q;')
-        for ttol, etol, accepted in [('1e-5','1e-4',False), ('1e-10','1e-9',True)]:
+        for ttol, etol in [('1e-5','1e-4'), ('1e-10','1e-9')]:
             program = compile_model(body.replace('TTOL',ttol).replace('ETOL',etol),
                                     'real q; integer target; electrical z;')
-            with self.subTest(accepted=accepted):
-                if not accepted:
+            with self.subTest(ttol=ttol):
+                result = run(program, {'u': [[0,0],[2,2]]}, [0,2], stop=2,
+                             vabstol=1e-7, reltol=1e-7)
+                assert_close(self, rows(result)[-1]['y'], (math.sqrt(2)-.25)/4, delta=2e-7)
+                if ttol == '1e-5':
+                    lo, hi = result['transient']['events'][-1]['observation_time_bounds']
+                    self.assertLessEqual(lo, math.sqrt(2))
+                    self.assertGreaterEqual(hi, math.sqrt(2))
+                    self.assertLess(hi-lo, 1e-12)
                     with self.assertRaisesRegex(KernelError, 'waveform_accuracy'):
                         run(program, {'u': [[0,0],[2,2]]}, [0,2], stop=2,
-                            vabstol=1e-7, reltol=1e-7)
-                else:
-                    result = run(program, {'u': [[0,0],[2,2]]}, [0,2], stop=2,
-                                 vabstol=1e-7, reltol=1e-7)
-                    assert_close(self, rows(result)[-1]['y'], (math.sqrt(2)-.25)/4, delta=2e-7)
+                            vabstol=1e-20, reltol=0)
 
     def test_direct_integral_release_keeps_the_same_event_sample(self):
         program = compile_model('@(initial_step) begin rst=1; q=0; end '
@@ -75,9 +78,17 @@ class LifecycleClosureContracts(unittest.TestCase):
                             body += 'V(aux,r)<+idt(0*q,0);'
                             declarations += 'electrical aux;'
                         wide = compile_model(body.replace('TTOL', '1e-5').replace('ETOL', '1e-4'), declarations)
+                        result = run(wide, {'u': [[0,0],[2,2]]}, [0,1.75,2], stop=2,
+                                     vabstol=1e-7, reltol=1e-7)
+                        expected = 2*math.sqrt(2)/3 if nonlinear else 1
+                        assert_close(self, rows(result)[-1]['y'], expected, delta=2e-7)
+                        lo, hi = result['transient']['events'][0]['observation_time_bounds']
+                        self.assertLessEqual(lo, math.sqrt(2))
+                        self.assertGreaterEqual(hi, math.sqrt(2))
+                        self.assertLess(hi-lo, 1e-12)
                         with self.assertRaisesRegex(KernelError, 'waveform_accuracy'):
                             run(wide, {'u': [[0,0],[2,2]]}, [0,1.75,2], stop=2,
-                                vabstol=1e-7, reltol=1e-7)
+                                vabstol=1e-20, reltol=0)
                         narrow = compile_model(body.replace('TTOL', '1e-10').replace('ETOL', '1e-9'), declarations)
                         result = run(narrow, {'u': [[0,0],[2,2]]}, [0,1.75,2], stop=2,
                                      vabstol=1e-7, reltol=1e-7)

@@ -81,6 +81,45 @@ These are acceptance requirements, not additional resource authorization. Prepar
 cases and commands using existing tools, and run within the current task's server/time/case
 budget. An expired run's unused allocation does not authorize a fresh remote experiment.
 
+### Classify differences before selecting a repair
+
+The engineering target is correct VA behavior within declared voltage, event-time, count,
+ordering and downstream-output requirements, verified against actual Spectre runs.
+Bitwise equality or the same internal accepted time grid is not the default target.
+Independent mathematics must describe the actual source and language semantics, including
+permitted event tolerances; an idealized replacement circuit is not an oracle.
+
+| Finding | Disposition |
+| --- | --- |
+| Different event points within the permitted window, with correct samples, counts/order and downstream outputs within fixed budgets | May be accepted as a scoped known difference with evidence and the applicable scope decision. |
+| Different continuous values satisfying independent and paired engineering budgets | Engineering pass; do not require the same numerical algorithm. |
+| Wrong initialization, lost/duplicated events, violated ordering, stale reads/history, observation-dependent trajectories, or events outside permitted windows | EVAS defect when attributable to EVAS; preserve a failing case and repair the responsible rule. |
+| Accepted output exceeds its requested error, or a claimed enclosure excludes the correct result | EVAS correctness defect; do not widen the checker or suppress uncertainty. |
+| Unsupported legal composition or unnecessarily conservative refusal | Capability/accuracy-recovery gap, distinct from a wrong accepted result. |
+| Small time shifts change final codes, event sequences or feedback trajectories; or evidence is missing | Investigate model sensitivity, semantics and each backend. Not automatically acceptable and not automatically an EVAS defect. |
+
+Keep separate verdicts for independent correctness, engineering comparison, strict same-time
+diagnostics and evidence availability. Do not delete event-window rows, shift waveforms to
+fit, or relax a budget after seeing a failure. In a window, still check event timing/counts,
+sample values and effects on all affected downstream consumers. Exact-boundary obligations
+explicitly required by an existing contract remain until individually reclassified.
+
+A known-difference record names its inputs/settings, backend and candidate identities,
+original observations/verdicts, unchanged budgets, reason, authorization, and reopening
+conditions. Retain old F/I results. The current acceptance decision can supersede their
+blocking role without pretending the old strict test passed or that a candidate is merged.
+
+The accepted **SEF-TIMER-18** record is owned by
+[#96](https://github.com/BucketSran/vaEVAS/issues/96) and the
+[sample-edge-filter decision](../../experiments/backends/sample-edge-filter/BOUNDARY.md#accepted-timer-18).
+Its unchanged 18 strict phase mismatches are not an EVAS repair target. Reopen on new evidence
+of invalid timing, lost/reordered events, incorrect state/history, failed error bounds or
+downstream budget failures. Changed models, settings, consumers or versions require affected
+revalidation, not automatic inheritance. C1, original #79, VCO, Spec B and zero-tolerance
+timer probes are outside this decision. Do not add an epsilon or imitate a Spectre grid merely
+to clear the diagnostic. Future tasks must name the failed engineering or semantic property
+before changing a solver rule.
+
 ## Development failures as benchmark candidates
 
 <a id="development-bench-candidates"></a>
