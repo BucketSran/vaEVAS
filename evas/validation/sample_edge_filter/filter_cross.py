@@ -34,6 +34,11 @@ def roots(p):
         for left,right in zip(cuts,cuts[1:]):
             fl=sef.filter_value(p,left)-threshold
             fr=sef.filter_value(p,right)-threshold
+            # These fixed cases have transverse roots strictly inside arcs.
+            # Do not silently miss a boundary root if a future case changes
+            # its threshold; that case needs a separate endpoint oracle.
+            if fl == 0 or fr == 0:
+                raise ValueError('filter-cross oracle needs a boundary-root contract')
             if fl*fr>=0:continue
             direction=1 if fl<fr else -1
             if p['direction'] not in (0,direction):continue

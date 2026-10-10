@@ -141,27 +141,39 @@ impl ScheduledEvent {
             })
     }
 
-    /// A voltage-sized root enclosure need not resolve a nearby query's phase.
-    /// Prove that phase from the original transverse input guard without
-    /// changing the sampling enclosure, representative, or accepted history.
+    /// Prove a query's phase without changing the root, execution representative
+    /// or accepted history. History guards must be evaluated with the frame
+    /// immediately before this physical batch, never its post-event state.
     pub(crate) fn physical_order_for_query(
         &self,
         time: f64,
         model: &EventModel,
         trajectory: &Trajectory,
+        operators: &Operators,
+        states: &[I],
     ) -> Option<std::cmp::Ordering> {
         if let Some(order) = self.physical_order_at(time) {
             return Some(order);
         }
-        if !model.program.operators.is_empty() || !self.can_refine_input_root(model) {
+        let input_root = model.program.operators.is_empty() && self.can_refine_input_root(model);
+        let filter_root = self.fixed_predecessor.is_none()
+            && matches!(self.moment, Moment::Dynamic { exact: None, .. })
+            && model.guard_operators[self.event]
+                .iter()
+                .any(|&i| operators.is_transition_filter(i));
+        if !input_root && !filter_root {
             return None;
         }
         let EventTrigger::Cross { guard, .. } = &model.triggers[self.event].trigger else {
             return None;
         };
-        let operators = Operators::default();
-        let source =
-            crate::guard_trajectory::GuardTrajectory::new(model, trajectory, &operators).ok()?;
+        let source = crate::guard_trajectory::GuardTrajectory::new_held(
+            model,
+            trajectory,
+            Some(operators),
+            Some(states),
+        )
+        .ok()?;
         let owner = &model.program.events[model.triggers[self.event].event]
             .origin
             .instance;

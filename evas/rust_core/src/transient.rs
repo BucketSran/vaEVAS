@@ -897,7 +897,13 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                 event.time > time
                     && event.bounds().lo <= time
                     && event
-                        .physical_order_for_query(time, &model, &trajectory)
+                        .physical_order_for_query(
+                            time,
+                            &model,
+                            &trajectory,
+                            &controller.accepted.operators,
+                            &controller.accepted.state_bounds,
+                        )
                         .is_none()
             })
         {
@@ -908,7 +914,13 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
         }
         let physically_due = crossings.get(controller.event).is_some_and(|event| {
             matches!(
-                event.physical_order_for_query(time, &model, &trajectory),
+                event.physical_order_for_query(
+                    time,
+                    &model,
+                    &trajectory,
+                    &controller.accepted.operators,
+                    &controller.accepted.state_bounds
+                ),
                 Some(std::cmp::Ordering::Less | std::cmp::Ordering::Equal)
             )
         });

@@ -26,6 +26,14 @@ def analytical_rows(case):
 
 
 class FilterCrossCalibration(unittest.TestCase):
+    def test_refuses_unqualified_boundary_root_instead_of_undercounting(self):
+        p = copy.deepcopy(contract.CASES[0]['instances'][0])
+        p['threshold'] = contract.sef.filter_value(p, 1.625)
+        self.assertLess(contract.sef.filter_value(p, 1.625-1e-5), p['threshold'])
+        self.assertGreater(contract.sef.filter_value(p, 1.625+1e-5), p['threshold'])
+        with self.assertRaisesRegex(ValueError, 'boundary-root contract'):
+            contract.roots(p)
+
     def test_accepts_analytical_histories_and_both_root_directions(self):
         for case in contract.CASES:
             with self.subTest(case=case['id']):

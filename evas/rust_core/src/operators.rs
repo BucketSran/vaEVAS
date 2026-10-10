@@ -1388,6 +1388,13 @@ impl Operators {
         })
     }
 
+    pub(crate) fn is_transition_filter(&self, index: usize) -> bool {
+        matches!(
+            self.entries.get(index),
+            Some(Runtime::TransitionFilter { .. })
+        )
+    }
+
     pub(crate) fn check_guard(&self, index: usize) -> Result<(), Error> {
         let entry = self
             .entries

@@ -58,3 +58,26 @@ class FilterCross(unittest.TestCase):
             with self.subTest(case=case['id']):
                 with self.assertRaisesRegex(KernelError, 'physical event phase'):
                     self.run_case(case,contract.times(case))
+
+    def test_sub_femtosecond_queries_use_old_filter_history_without_rescheduling(self):
+        for case in contract.CASES:
+            with self.subTest(case=case['id']):
+                coarse=contract.times(case,root_centers=False)
+                extra=[t*contract.sef.T+d for p in case['instances']
+                       for t,_ in contract.roots(p) for d in (-1e-19,1e-19)]
+                fine=sorted(set(coarse+extra))
+                a=self.run_case(case,coarse)
+                b=self.run_case(case,fine)
+                self.assertEqual(a['transient']['events'],b['transient']['events'])
+                self.assertEqual(a['solutions'],[b['solutions'][fine.index(t)] for t in coarse])
+                rows=[dict(time=t,**dict(zip(b['nodes'],s['voltages']))) for t,s in zip(fine,b['solutions'],strict=True)]
+                self.assertEqual(contract.assess(case,rows)['status'],'PASS')
+                # The engineering time window permits either side here. Check
+                # the phase itself so a reversed sign proof cannot pass it.
+                for p in case['instances']:
+                    roots=[t*contract.sef.T for t,_ in contract.roots(p)]
+                    for root in roots:
+                        for delta in (-1e-19,1e-19):
+                            t=root+delta
+                            self.assertEqual(rows[fine.index(t)][p['name']+'c'],
+                                             sum(r<=t for r in roots))
