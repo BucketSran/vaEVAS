@@ -31,6 +31,7 @@
 | `absdelay` 固定延迟 | ✓ | 编译器崩溃 | ✓ | ✓ |
 | `slew` 固定速率 | 细步长通过 | 编译失败 | ✓ | ✓ |
 | `idt` 连续积分 | 运行成功 | 运行成功 | 运行成功 | ✓ |
+| 非线性积分与事件后续算，2 个模型 | ✓ 收紧容差后² | 未测 | 未测 | ✓² |
 | `idtmod` 相位环回 | 运行成功 | 运行成功 | 编译失败 | ✓；环回有差异 |
 | `laplace_nd` 单极点 | ✓ | ✓ | 输出超差 | ✓ |
 | `laplace_np` 单极点 | ✓ | 编译失败 | 输出超差 | ✓ |
@@ -44,6 +45,12 @@
 ¹ [SEF-TIMER-18](../../experiments/backends/sample-edge-filter/BOUNDARY.md#accepted-timer-18)：18 条记录在允许事件时间内处于不同跳变侧，已接受为已知差异；原逐点比较仍不一致。
 本行通过范围为原四条件、三档设置和固定工程预算。运行时源码身份见紧凑收据，实现与验收标准同批交付。它不豁免其他行、C1、#79、VCO 或 Spec B。
 滤波输出同刻最大差由 6.84 µV 降至 0.103 µV。[宽 cross 容差的自动细化](../../experiments/backends/sample-edge-filter/BOUNDARY.md#adaptive-root)另改善高精度请求的可执行性。
+
+² 新增两模型采用原 1 mV 放大输出预算。Spectre 收紧容差后最大误差分别为 0.306、0.504 mV；
+EVAS 在全部 12,243 个共同点及另查精确锚点达标。本批未修改 EVAS 内核。
+新增证据随 [PR #124](https://github.com/BucketSran/vaEVAS/pull/124) 待合入，数值实现与当前 main 相同。
+八档设置中工程对照 5/8 通过，三个基础／仅缩步配置仍因 Spectre 超差而失败；
+原严格精确时刻失败另行保留。[实际设置、时间偏差及完整分母](../../experiments/backends/transient-accuracy/README.md#2026-10-10-四组失败的实际补测)。
 
 ## 已知差异与待办
 
@@ -78,6 +85,7 @@ EVAS 的[模型编译范围](reference/frontend-admission.md#模型编译)与[�
 - [采样到滤波组合](../../experiments/backends/sample-edge-filter/README.md)：新增 4 条件 × 3 档 Spectre，同源 EVAS 配对与查询不变性；源码候选身份及 local-only 原始材料在收据中列明。
 - [回调落点诊断](../../experiments/backends/sample-edge-filter/BOUNDARY.md#回调规则的后续实测)：30 个 Spectre 探针支持正容差内接受点触发的解释；18 条记录见[接受决定](../../experiments/backends/sample-edge-filter/accepted-differences.json)，旧严格失败保留。
 - [误差分解](../../experiments/backends/sample-edge-filter/BOUNDARY.md#数学精度与回调时移的分开验收)：原 12 对运行分别检查数学精度与事件时移；本批 EVAS 名义滤波偏差最大约 4.03×10⁻¹⁵ V，有限点结果不代表全轨迹证明。
+- [非线性积分与事件续算精度](../../experiments/backends/transient-accuracy/reference-followup.json)：两模型 × 四档新 Spectre，实际设置读回、同点 EVAS 及精确锚点补查；原参考超差和严格时间失败保留。
 - [核心运行取证](../../experiments/backends/support/20261009-core-evidence.json)：新构建 EVAS 12 项通过，Spectre 两项输出预检及原 12 项观察审计。
 - [本次时间分辨率补测](../../experiments/backends/support/20261009-timegrid.json)：新增 16 次 Gnucap 配置，原始收据不覆盖。
 - [初版比较表](../../experiments/backends/comparison/TABLE.md)：历史 V1–V7 开发集与 CMP8；[历史 12 条件表](../../experiments/backends/paper/candidate-table.md)：旧候选结果。

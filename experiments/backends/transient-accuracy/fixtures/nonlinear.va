@@ -1,0 +1,14 @@
+`include "disciplines.vams"
+module accuracy_flow(z, low, amp, count);
+ inout z, low, amp, count;
+ electrical z, low, amp, count;
+ real a;
+ integer n;
+ analog begin
+  @(initial_step) begin a=1; n=0; end
+  V(z)<+idt(-a*pow(V(z),2),1);
+  V(low)<+V(z)-0.5;
+  V(amp)<+10000*(V(z)-0.5);
+  V(count)<+n;
+ end
+endmodule
