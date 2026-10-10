@@ -36,7 +36,7 @@ def harness_modules(checkout):
     return modules
 
 
-def prepare(task, candidate, output, harness_checkout, *, case_names=None):
+def prepare(task, candidate, output, harness_checkout, *, case_names=None, task_version=VERSION):
     if Path(candidate).is_symlink():
         raise ValueError("candidate must not be a symlink")
     task, candidate, output = map(lambda p: Path(p).resolve(), (task, candidate, output))
@@ -56,7 +56,7 @@ def prepare(task, candidate, output, harness_checkout, *, case_names=None):
             raise ValueError("missing or linked candidate file")
         shutil.copyfile(src, dst)
     frozen = output / "frozen"
-    freeze.freeze_candidate(source, frozen, files, task_id=task.name, task_version=VERSION, reason="first batch calibration")
+    freeze.freeze_candidate(source, frozen, files, task_id=task.name, task_version=task_version, reason="first batch calibration")
     templates = {p.name: p.read_bytes() for p in (task / "tests").iterdir() if p.is_file()}
     # The actual portable runtime is coordinator-owned. Task graders are owned
     # by the task's checkout and snapshotted with the task.
@@ -67,7 +67,7 @@ def prepare(task, candidate, output, harness_checkout, *, case_names=None):
     if "first_batch_triangle" in modules:
         templates["triangle_oscillator.py"] = (ROOT / "benchmark/checkers/triangle_oscillator.py").read_bytes()
     for name in modules:
-        if name.startswith("first_batch_"):
+        if name.startswith(("first_batch_", "v2_")):
             templates[name + ".py"] = (task.parents[1] / "checkers" / (name + ".py")).read_bytes()
     # Bytecode output is excluded by the existing job archive inventory, while
     # benchmark artifacts are complete. Keep checker execution bytecode-free.
@@ -94,7 +94,7 @@ def prepare(task, candidate, output, harness_checkout, *, case_names=None):
         (package / "tests/cases.json").write_text(json.dumps([case], indent=2) + "\n")
         inventory = {str(p.relative_to(package)): {"sha256": sha(p), "bytes": p.stat().st_size}
                      for p in package.rglob("*") if p.is_file()}
-        manifest = {"schema_version": 1, "task_id": task.name, "task_version": VERSION,
+        manifest = {"schema_version": 1, "task_id": task.name, "task_version": task_version,
                     "criteria_sha256": criteria, "condition_id": case["name"], "task_set": "extension",
                     "purpose": "final", "entrypoint": "tests/test.sh", "candidate_file": "dut.va",
                     "report_path": "verifier/report.json", "files": inventory, "feedback_fields": []}

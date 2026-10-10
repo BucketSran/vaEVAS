@@ -1,0 +1,27 @@
+{
+  "design_revision": 1,
+  "review_status": "pending",
+  "reviewed_revision": null,
+  "backend": null,
+  "task_path": null,
+  "evidence_paths": [],
+  "case_id": "case-0005",
+  "title": "为固定 SC 滤波工程建立运放模型",
+  "engineering_action": "spec-modeling",
+  "circuit_family": "filters",
+  "subtypes": [
+    "工程内补模块",
+    "指定非理想行为"
+  ],
+  "context_level": "bounded-project",
+  "source_ids": [
+    "sc-filter-bmas2000"
+  ],
+  "circuit_ids": [],
+  "source_groups": [],
+  "related_cases": [],
+  "stage": "source-screening",
+  "review_focus": "电压域抽象能否保留本题需要的 SC 建立与过载恢复行为",
+  "proposed_form": "固定 SC 采样结构；提交含指定增益、带宽、压摆率及限幅的 VA 运放",
+  "public_test_mode": "undecided"
+}

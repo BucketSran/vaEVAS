@@ -3,4 +3,8 @@
 
 [工作区总览](../../README.md)
 
-尚未登记候选。
+| Case | 题目 | 工程动作 / 电路家族 | 阶段 / 设计 review | 本轮关注 |
+| --- | --- | --- | --- | --- |
+| [case-0007](pll/case-0007-adpll-fine-tdc/README.md) | 为粗调 ADPLL 接入 fine TDC 路径 | 扩展与集成 / PLL 与时钟 | 材料筛选 / 待 review（r1） | 先具备健康粗调闭环与有效细调执行能力，再界定新增集成范围 |
+
+[PLL 与时钟](pll/README.md)

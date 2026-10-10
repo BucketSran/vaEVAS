@@ -1,0 +1,34 @@
+{
+  "design_revision": 2,
+  "engineering_action": "spec-modeling",
+  "related_cases": [],
+  "review_status": "pending",
+  "reviewed_revision": null,
+  "backend": null,
+  "task_path": null,
+  "evidence_paths": [],
+  "case_id": "case-0012",
+  "title": "按规格建立内部采样的 Alexander BBPD",
+  "circuit_family": "pll",
+  "subtypes": [
+    "基础单模块",
+    "Alexander 三点采样与历史对齐"
+  ],
+  "context_level": "bounded-work-unit",
+  "source_ids": [
+    "v4-single-module-migration",
+    "vaevas-behavioral-seeds",
+    "alexander-bbpd-primary"
+  ],
+  "circuit_ids": [
+    "v4-bbpd"
+  ],
+  "source_groups": [
+    "v4-family-001",
+    "cdr-phase-original"
+  ],
+  "stage": "design-draft",
+  "review_focus": "Alexander 内部采样方向已确认；r2 初始化、发布、重合窗口与 checker 待 review",
+  "proposed_form": "给采样及输出合同，提交内部采样和历史对齐的单个 VA Alexander BBPD",
+  "public_test_mode": "fixed-public-tests"
+}

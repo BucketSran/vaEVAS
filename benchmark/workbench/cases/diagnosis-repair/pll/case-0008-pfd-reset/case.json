@@ -1,0 +1,31 @@
+{
+  "design_revision": 1,
+  "review_status": "pending",
+  "reviewed_revision": null,
+  "backend": null,
+  "task_path": null,
+  "evidence_paths": [],
+  "case_id": "case-0008",
+  "title": "PFD 外部复位与挂起事件修复",
+  "engineering_action": "diagnosis-repair",
+  "circuit_family": "pll",
+  "subtypes": [
+    "单模块修复",
+    "事件取消与状态恢复"
+  ],
+  "context_level": "bounded-work-unit",
+  "source_ids": [
+    "v4-pfd-reset"
+  ],
+  "circuit_ids": [
+    "v4-pfd-reset"
+  ],
+  "source_groups": [
+    "v4-family-249"
+  ],
+  "related_cases": [],
+  "stage": "source-screening",
+  "review_focus": "先校正 v4 starter 来源与复位合同，再评估整体重写下的区分度",
+  "proposed_form": "给定有故障的 PFD；允许整体重写该 VA 模块以满足公开时序规格",
+  "public_test_mode": "fixed-public-tests"
+}

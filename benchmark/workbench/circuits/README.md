@@ -4,4 +4,17 @@
 | 记录 | 关联 Case |
 | --- | --- |
 | [Analog Design Bench：OTA5 LDO 电路资产](adb-ldo-ota5.md) | [case-0002](../cases/testing-characterization/power/case-0002-ldo-startup/README.md) |
+| [既有 ADC 频谱合成观测资产](first-batch-adc-spectrum.md) | [case-0010](../cases/testing-characterization/adc/case-0010-adc-spectrum-records/README.md) |
+| [JKU SKY130 SAR ADC 采样级](jku-sampling-stage.md) | [case-0006](../cases/data-modeling/adc/case-0006-sampling-identification/README.md) |
 | [SKY130 AJC POR 电路资产](sky130-ajc-por.md) | [case-0001](../cases/testing-characterization/power/case-0001-por-sequence/README.md) |
+| [Tiny Tapeout ADPLL 架构资产](tiny-tapeout-adpll.md) | [case-0004](../cases/spec-modeling/pll/case-0004-adpll-dco/README.md)、[case-0007](../cases/extension-integration/pll/case-0007-adpll-fine-tdc/README.md) |
+| [原创 UVLO 及拟建复位控制链](uvlo-monitor-original.md) | [case-0009](../cases/diagnosis-repair/power/case-0009-uvlo-reset-chain/README.md) |
+| [v4 放大器表征的被测模型与仪表素材](v4-amplifier-characterization-fixtures.md) | [case-0018](../cases/testing-characterization/amplifiers/case-0018-amplifier-gain-settling/README.md) |
+| [v4  BBPD 鉴相模块](v4-bbpd.md) | [case-0012](../cases/spec-modeling/pll/case-0012-bbpd/README.md) |
+| [v4 边沿采样保持模块](v4-clocked-sample-hold.md) | [case-0011](../cases/spec-modeling/adc/case-0011-clocked-sample-hold/README.md) |
+| [v4 控制输入的去抖资格计时](v4-debounce-latch.md) | [case-0014](../cases/diagnosis-repair/power/case-0014-debounce-qualification/README.md) |
+| [v4 行为级滞回比较器](v4-hysteretic-comparator.md) | [case-0016](../cases/testing-characterization/comparators/case-0016-hysteresis-characterizer/README.md) |
+| [v4 非重叠时钟行为资产](v4-nonoverlap-clock.md) | [case-0017](../cases/spec-modeling/pll/case-0017-nonoverlap-clock/README.md) |
+| [v4 PFD 复位模块](v4-pfd-reset.md) | [case-0008](../cases/diagnosis-repair/pll/case-0008-pfd-reset/README.md) |
+| [v4 电源与偏置就绪后的复位释放序列](v4-reset-release-sequencer.md) | [case-0015](../cases/diagnosis-repair/power/case-0015-reset-release-sequencer/README.md) |
+| [v4 四位 SAR 前端握手模块](v4-sarfend-logic.md) | [case-0013](../cases/spec-modeling/adc/case-0013-sar-handshake/README.md) |

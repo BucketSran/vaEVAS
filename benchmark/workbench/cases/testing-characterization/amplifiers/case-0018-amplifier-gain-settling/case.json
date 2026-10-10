@@ -1,0 +1,38 @@
+{
+  "case_id": "case-0018",
+  "title": "固定放大模型的增益与建立表征",
+  "engineering_action": "testing-characterization",
+  "circuit_family": "amplifiers",
+  "subtypes": [
+    "VA在线测量模块",
+    "增益与有限建立"
+  ],
+  "source_ids": [
+    "v4-amplifier-characterization"
+  ],
+  "circuit_ids": [
+    "v4-amplifier-characterization-fixtures"
+  ],
+  "source_groups": [
+    "v4-family-038",
+    "v4-family-093",
+    "v4-family-370"
+  ],
+  "related_cases": [
+    {
+      "case_id": "case-0003",
+      "relation": "related"
+    }
+  ],
+  "review_focus": "首批放大器入口；连接被测VA模型，先定增益窗口，再定有限建立的目标与资格",
+  "proposed_form": "给固定可读放大模型与实验，提交直接报告增益、建立和有效性的VA仪表",
+  "design_revision": 1,
+  "review_status": "pending",
+  "reviewed_revision": null,
+  "backend": null,
+  "task_path": null,
+  "evidence_paths": [],
+  "stage": "source-screening",
+  "context_level": "bounded-work-unit",
+  "public_test_mode": "fixed-public-tests"
+}

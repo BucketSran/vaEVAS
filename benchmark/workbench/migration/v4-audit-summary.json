@@ -1,0 +1,138 @@
+{
+  "availability": "repository-contained summary; underlying GLM responses local-only",
+  "audit": {
+    "all_attempt_execution_receipts": 459,
+    "all_attempts_reported_turns": 465,
+    "attempts_without_reported_turns": 0,
+    "verified_utc": "2026-10-10T14:08:36.257327+00:00",
+    "families": 400,
+    "packages": 1200,
+    "report_schema": "pass",
+    "raw_response_matches_normalized_report": "pass",
+    "model_identity_counts": {
+      "glm-5.3": 400
+    },
+    "selected_attempt_counts": {
+      "1": 341,
+      "2": 59
+    },
+    "selected_response_turn_counts": {
+      "1": 396,
+      "2": 4
+    },
+    "unobserved_os_exit_families": [
+      "049"
+    ],
+    "input_source_files_verified": 27994,
+    "path_spelling_corrections": 11,
+    "source_snapshot": "7b5616dc52195ec275ec6d21c71d7763613702cd",
+    "repository_source_commit": "c81b8c7c17535bd5267f5bc1d7abe80b3087a9a9",
+    "prompt_template_sha256": "4624577e9d4cacb5a217a2d255ee2d6d85a9f84bc85daa079838247905d13437",
+    "report_set_sha256": "c4b28b57896aa3373aeef2346756ec43cbe113d7b4a814c82ff64958d9cd4ed6",
+    "path_only_recovery_families": [
+      "261"
+    ],
+    "original_attempts_and_accepted_reports_preserved": true,
+    "raw_report_availability": "local-only",
+    "simulation_run": false
+  },
+  "selection": {
+    "created_utc": "2026-10-10T14:12:26.134194+00:00",
+    "final": true,
+    "family_total": 400,
+    "old_package_total": 1200,
+    "report_counts": {
+      "accepted_draft": 400
+    },
+    "disposition_counts": {
+      "priority_seed": 39,
+      "reserve_candidate": 236,
+      "support_component": 109,
+      "rebuild_topic": 16
+    },
+    "priority_stage_counts": {
+      "first": 24,
+      "not_selected": 361,
+      "engineering_prerequisites": 15
+    },
+    "source_spot_checked": 76,
+    "function_counts": {
+      "转换器与采样": {
+        "priority_seed": 9,
+        "reserve_candidate": 72,
+        "support_component": 10,
+        "rebuild_topic": 2
+      },
+      "比较器与判决": {
+        "priority_seed": 4,
+        "reserve_candidate": 17,
+        "support_component": 2,
+        "rebuild_topic": 1
+      },
+      "时钟与PLL": {
+        "priority_seed": 3,
+        "reserve_candidate": 48,
+        "support_component": 11,
+        "rebuild_topic": 3
+      },
+      "电源、基准与保护": {
+        "reserve_candidate": 19,
+        "priority_seed": 5,
+        "support_component": 13
+      },
+      "校准与修调": {
+        "reserve_candidate": 16,
+        "priority_seed": 1,
+        "support_component": 10
+      },
+      "放大、滤波与基带调理": {
+        "reserve_candidate": 19,
+        "priority_seed": 4,
+        "support_component": 7,
+        "rebuild_topic": 1
+      },
+      "RF与I/Q": {
+        "reserve_candidate": 14,
+        "priority_seed": 4,
+        "rebuild_topic": 4
+      },
+      "SerDes数据通路与均衡": {
+        "rebuild_topic": 4,
+        "support_component": 2,
+        "priority_seed": 7
+      },
+      "测量与测试激励": {
+        "support_component": 25,
+        "reserve_candidate": 15,
+        "priority_seed": 2,
+        "rebuild_topic": 1
+      },
+      "混合信号基础辅助": {
+        "support_component": 29,
+        "reserve_candidate": 16
+      }
+    },
+    "missing_reports": [],
+    "pending_selection": [],
+    "input_part_hashes": {
+      "part-001-200.json": "656db039b5ba06d89147d0be7d76fbd9d64be861fc0ad5c0116d0d8b73429363",
+      "part-201-400.json": "ca4d5be7fce142d7ff70694beabe73229111326f98f5b64218f2bf1538735605"
+    },
+    "index_path": "benchmark/workbench/migration/v4-migration-index.tsv",
+    "index_sha256": "18e71de2c3ae9a6e44cbb85331addd46b4d498b84577e2aa98face9f39c74ddd",
+    "source_snapshot": "7b5616dc52195ec275ec6d21c71d7763613702cd",
+    "repository_source_commit": "c81b8c7c17535bd5267f5bc1d7abe80b3087a9a9",
+    "raw_report_availability": "local-only",
+    "scope": "GLM static audit drafts plus functional selection; no new simulation or scored task admission"
+  },
+  "limits": [
+    "accepted_draft denotes structural validity, not circuit correctness",
+    "76 source spot checks include all 39 representative source families",
+    "No compilation, simulation, checker calibration or agent solving was run for this migration selection"
+  ],
+  "local_evidence_roots": [
+    "runs/v4-audit-20261010-r3/",
+    "runs/v4-priority-20261010/",
+    "runs/v4-audit-20261010/decisions.tsv"
+  ]
+}

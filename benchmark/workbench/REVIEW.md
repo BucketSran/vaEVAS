@@ -10,6 +10,21 @@
 | [case-0001](cases/testing-characterization/power/case-0001-por-sequence/README.md) | POR 上电、欠压与恢复测试台 | 电路测试与表征 / 电源与复位 | 题目草案 / 待 review（r1） | 延迟起点及复位合同；首版只含上电、欠压、恢复 |
 | [case-0002](cases/testing-characterization/power/case-0002-ldo-startup/README.md) | 固定 LDO 的启动指标测量 | 电路测试与表征 / 电源与复位 | 题目草案 / 待 review（r1） | 有限窗口定义、取样/事件语义及未建立状态 |
 | [case-0003](cases/testing-characterization/amplifiers/case-0003-opamp-slew/README.md) | 运放压摆率激励与测量 | 电路测试与表征 / 放大器 | 材料筛选 / 待 review（r1） | 先选公开 DUT，再决定单向或双向测量 |
+| [case-0004](cases/spec-modeling/pll/case-0004-adpll-dco/README.md) | 固定 ADPLL 工程内补齐 DCO | 按规格构建模型 / PLL 与时钟 | 题目草案 / 待 review（r1） | 先定粗调码频合同与换码相位语义，再建立健康 VA 闭环 |
+| [case-0005](cases/spec-modeling/filters/case-0005-sc-opamp/README.md) | 为固定 SC 滤波工程建立运放模型 | 按规格构建模型 / 滤波与均衡 | 材料筛选 / 待 review（r1） | 电压域抽象能否保留本题需要的 SC 建立与过载恢复行为 |
+| [case-0006](cases/data-modeling/adc/case-0006-sampling-identification/README.md) | 采样级固定数据包动态建模 | 从数据建立模型 / ADC 与采样 | 题目草案 / 待 review（r1） | 先确认可观测动态及数据覆盖，再冻结输入格式与验收误差 |
+| [case-0007](cases/extension-integration/pll/case-0007-adpll-fine-tdc/README.md) | 为粗调 ADPLL 接入 fine TDC 路径 | 扩展与集成 / PLL 与时钟 | 材料筛选 / 待 review（r1） | 先具备健康粗调闭环与有效细调执行能力，再界定新增集成范围 |
+| [case-0008](cases/diagnosis-repair/pll/case-0008-pfd-reset/README.md) | PFD 外部复位与挂起事件修复 | 诊断与修复 / PLL 与时钟 | 材料筛选 / 待 review（r1） | 先校正 v4 starter 来源与复位合同，再评估整体重写下的区分度 |
+| [case-0009](cases/diagnosis-repair/power/case-0009-uvlo-reset-chain/README.md) | UVLO、复位释放与使能链的系统修复 | 诊断与修复 / 电源与复位 | 题目草案 / 待 review（r1） | 建立有真实模块依赖的健康电源控制链，再选择跨模块故障 |
+| [case-0010](cases/testing-characterization/adc/case-0010-adc-spectrum-records/README.md) | 从 ADC 观测记录提取动态指标 | 电路测试与表征 / ADC 与采样 | 题目草案 / 待 review（r1） | 先冻结采样、频点与谱功率定义，再决定是否引入非相干窗口 |
+| [case-0011](cases/spec-modeling/adc/case-0011-clocked-sample-hold/README.md) | 按规格建立边沿采样保持模块 | 按规格构建模型 / ADC 与采样 | 题目草案 / 待 review（r2） | 首批采样基线；沿用r2，先建设健康实现与独立边沿checker，再校准过渡容差 |
+| [case-0012](cases/spec-modeling/pll/case-0012-bbpd/README.md) | 按规格建立内部采样的 Alexander BBPD | 按规格构建模型 / PLL 与时钟 | 题目草案 / 待 review（r2） | Alexander 内部采样方向已确认；r2 初始化、发布、重合窗口与 checker 待 review |
+| [case-0013](cases/spec-modeling/adc/case-0013-sar-handshake/README.md) | 按规格建立四位 SAR 前端握手模块 | 按规格构建模型 / ADC 与采样 | 材料筛选 / 待 review（r1） | 与既有 va02 的取舍；比较器合法事件、发布时刻与原工程来源 |
+| [case-0014](cases/diagnosis-repair/power/case-0014-debounce-qualification/README.md) | 修复控制输入的去抖资格计时 | 诊断与修复 / 电源与复位 | 材料筛选 / 待 review（r1） | 完整重写后是否值得作为基础修复题；复位释放及初态边界 |
+| [case-0015](cases/diagnosis-repair/power/case-0015-reset-release-sequencer/README.md) | 修复电源与偏置就绪后的复位释放序列 | 诊断与修复 / 电源与复位 | 材料筛选 / 待 review（r1） | 首批电源修复入口；固定starter与同步状态表，校准复位和重新释放轨迹 |
+| [case-0016](cases/testing-characterization/comparators/case-0016-hysteresis-characterizer/README.md) | 比较器翻转电压与表观滞回测量 | 电路测试与表征 / 比较器与门限检测 | 题目草案 / 待 review（r1） | 首批比较器表征入口；固定扫描工程，核对实际翻转、双向更新与不完整报告 |
+| [case-0017](cases/spec-modeling/pll/case-0017-nonoverlap-clock/README.md) | 按规格建立两相非重叠时钟发生器 | 按规格构建模型 / PLL 与时钟 | 材料筛选 / 待 review（r1） | 首批时钟入口；先定tick调度与死区含义，再补取消、重启和独立边沿验收 |
+| [case-0018](cases/testing-characterization/amplifiers/case-0018-amplifier-gain-settling/README.md) | 固定放大模型的增益与建立表征 | 电路测试与表征 / 放大器 | 材料筛选 / 待 review（r1） | 首批放大器入口；连接被测VA模型，先定增益窗口，再定有限建立的目标与资格 |
 
 ## 待修改
 

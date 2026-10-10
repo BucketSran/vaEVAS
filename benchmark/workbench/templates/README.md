@@ -11,6 +11,8 @@
 
 修改公开合同后递增设计版本并重新提交 review。待 review 不是实现失败；设计已认可也不是后端或 checker 已验证。接受本版设计时，填写对应 `reviewed_revision` 并在正文记下真实 reviewer、日期、范围及可用的提交引用。
 
+如果用户只认可选题方向，在正文 Review 记录中写明认可范围，具体设计仍保持 `pending`，不填写 `reviewed_revision`。记录方向反馈本身不改变公开合同，无需递增设计版本。
+
 阶段可用值：`source-screening`、`design-draft`、`implementation`、`calibration`、`model-trials`、`frozen`、`deferred`。设计 review 可用值：`pending`、`changes-requested`、`accepted`、`not-requested`。
 
 上下文可用值：`bounded-work-unit`、`bounded-project`、`full-repository`。公开自测方式：`undecided`、`fixed-public-tests`、`fixed-connections-custom-probes`。即使尚未选自测形式，也应在正文写清拟交付物与终评边界。
