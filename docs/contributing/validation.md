@@ -81,6 +81,33 @@ These are acceptance requirements, not additional resource authorization. Prepar
 cases and commands using existing tools, and run within the current task's server/time/case
 budget. An expired run's unused allocation does not authorize a fresh remote experiment.
 
+### Qualify Spectre reference precision
+
+Before attributing a discrepancy to EVAS, check whether the Spectre record meets the
+case's independent voltage, event and observation requirements. Record the relevant
+requested and effective tolerances, integration method, step limits and strobe settings.
+A preset name or matching EVAS parameter values does not establish reference accuracy.
+
+If reference accuracy is insufficient or uncertain, retain the baseline and compare a
+tighter-tolerance run with a step-only refinement at fixed model, stimulus, initial state
+and external budgets. Change one control group at a time; investigate integration-method
+sensitivity when the trajectory or event sequence remains unstable. Reuse matching
+qualified records rather than repeating a sweep for every code change. Report measured
+errors against an independent answer, or the available invariants and refinement limits
+when no such answer exists. Stable successive runs alone do not prove an error bound.
+
+Keep reference precision, EVAS correctness, paired agreement and observation completeness
+as separate results. A coarse Spectre run that exceeds the engineering budget remains a
+failed configuration, not evidence that the feature is unsupported or EVAS is defective.
+A reference with unbounded uncertainty remains explicitly unqualified for claims needing
+that bound, even if it agrees with EVAS.
+
+Verify required observation times against original output before reporting missing data.
+Distinguish an absent observation, an output-time representation mismatch and a solver
+failure to return a requested point. Exact-time obligations remain in force until a
+reviewed matching rule accounts for timing error, waveform sensitivity and event sides;
+changing that rule requires calibrated reanalysis with the old verdict retained.
+
 ### Classify differences before selecting a repair
 
 The engineering target is correct VA behavior within declared voltage, event-time, count,

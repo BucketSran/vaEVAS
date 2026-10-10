@@ -212,6 +212,9 @@ EVAS 也有本章的残差和 Newton 局部收敛检查，不能概括为所有�
 因此两后端使用相同参数名和值不表示等精度。比较先固定外部电压、圆周相位、事件
 次数及时间预算，再记录各自 requested/effective 设置，以独立答案和实际观察验收。
 进一步的容差/步长细化是数值稳定性证据，不是普遍误差上界。执行和导出资格仍分别记录。
+对照时先检查 Spectre 是否达到当前用例的精度要求。若参考仍超差，先分别收紧容差、减小步长并
+比较独立答案；不能仅凭差异要求 EVAS 追随该档结果。没有独立答案时，保留不变量、细化趋势与
+尚不能确定的误差。具体流程见[参考精度验收](../../../docs/contributing/validation.md#qualify-spectre-reference-precision)。
 [VCO 对照](../../../experiments/backends/input-clamp/README.md)保留一个实际例子：
 Spectre 的 requested reltol 为 1e-5，conservative 瞬态 effective 为 1e-6，
 EVAS 使用 1e-5；不能将该记录标为实际容差完全相同。实际 deck 显式设置 `method=traponly`，

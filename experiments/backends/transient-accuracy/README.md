@@ -12,6 +12,22 @@ Spectre 数据与共同预算保持；用当前前端重新编译到 IR18，未�
 step-only 缺 exact anchors 等原失败仍在。没有新增 Spectre 执行，没有新增支持范围。
 控制含义、自动细化与拒绝边界统一在[数值手册](../../../evas/docs/math/solving.md#当前精度控制怎么用)维护。
 
+本批的 2/6 是两个模型各三档设置的完整验收数，不是六种功能的支持率。四个未通过配置的原因如下；
+`amp` 的独立误差预算为 1 mV，当前 EVAS 已查询点均满足原请求预算。
+
+| 配置 | Spectre 的最大 amp 误差 | 完整验收未通过的原因 |
+| --- | ---: | --- |
+| nonlinear baseline | 9.488 mV | Spectre 超差；EVAS 独立检查通过 |
+| event-continuation baseline | 11.689 mV | Spectre 超差；EVAS 独立检查通过 |
+| nonlinear step-only | 0.606 mV | 双方同点波形达标，缺精确检查时刻 |
+| event-continuation step-only | 1.165 mV | Spectre 超差，同时缺精确检查时刻 |
+
+两个 step-only 的 Spectre 原始 PSF 将 0.125、0.25、0.75 s 附近记录为
+0.1250000000000001、0.2500000000000002、0.7500000000000002 s。EVAS 请求沿用这些原生时刻，
+没有漏掉已请求点。当前 checker 要求时间值完全相等，所以双方仍报 `missing_anchor`。
+这定位到观测时间与验收的差异，尚未确定来自内部步进还是输出表示；不构成 EVAS 数值缺陷证据。
+原 exact-anchor 判据和失败保持，未进行近邻替代、插值或重新判分。
+
 ## 近零采样状态与独立固定时钟
 
 四端首轮中，EV-SH-01、CO-SH-01 因近零 real 状态的相对误差预算趋零而拒绝，
