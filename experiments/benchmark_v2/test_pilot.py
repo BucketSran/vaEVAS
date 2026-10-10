@@ -87,7 +87,7 @@ class PilotTests(unittest.TestCase):
 
 
 class PublicDeploymentTests(unittest.TestCase):
-    def deploy(self, root, files, *, netlist='visible.scs', spec=None):
+    def deploy(self, root, files, *, netlist='visible.scs', spec=None, candidate_helper=None):
         task = root / 'task'
         public = task / 'environment/public'
         public.mkdir(parents=True)
@@ -101,17 +101,17 @@ class PublicDeploymentTests(unittest.TestCase):
         candidates = root / 'candidate'
         (candidates / 'rtl').mkdir(parents=True)
         (candidates / 'dut.va').write_bytes(b'module dut;\r\nendmodule\r\n')
-        (candidates / 'rtl/helper.va').write_bytes(b'module helper; endmodule\n')
+        (candidates / 'rtl/helper.va').write_bytes(candidate_helper if candidate_helper is not None else b'module helper; endmodule\n')
         if spec is not None:
             (candidates / '.public-testbench.json').write_text(json.dumps(spec))
         fake = root / 'fake-spectre'
         fake.write_text('#!' + sys.executable + '\n' + r'''import pathlib,re,sys
 pathlib.Path('fake-called').write_text('called')
-def visit(path):
+def visit(path, deck=True):
     assert path.is_file(), str(path)
-    if path.suffix in {'.scs', '.inc'}:
-        for name in re.findall(r"(?:ahdl_include|include)\s+[\"']([^\"']+)[\"']", path.read_text()):
-            visit(path.parent / name)
+    if deck:
+        for kind, name in re.findall(r"(ahdl_include|include)\s+[\"']([^\"']+)[\"']", path.read_text()):
+            visit(path.parent / name, deck=kind == 'include')
 visit(pathlib.Path(sys.argv[2]))
 psf=pathlib.Path('psf');psf.mkdir()
 (psf/'fixture.tran.tran').write_text('VALUE\n"time" 0\n"out" 1\nEND\n')
@@ -187,6 +187,52 @@ psf=pathlib.Path('psf');psf.mkdir()
             result, _, _, output = self.deploy(Path(folder), {'visible.scs': b''}, spec=spec)
             self.assertNotEqual(result.returncode, 0)
             self.assertFalse((output / 'condition/fake-called').exists())
+
+
+    def test_temporary_text_deck_rejects_nested_absolute_include(self):
+        spec = {'netlist': 'ahdl_include "/work/dut.va"\ninclude "temporary/nested.va"\n',
+                'support_files': {'temporary/nested.va': 'include "/etc/passwd"\n'}}
+        with tempfile.TemporaryDirectory() as folder:
+            result, _, _, output = self.deploy(Path(folder), {'visible.scs': b''}, spec=spec)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertFalse((output / 'condition/fake-called').exists())
+            self.assertFalse((output / 'report.json').exists())
+
+
+    def test_temporary_text_deck_maps_declared_includes_and_records_both_hashes(self):
+        nested = 'include "/work/public/decks/helper.inc"\n'
+        # This model's source is deliberately opaque to the deck path adapter.
+        model = 'module temp; // include "/vendor/private"\r\nendmodule\r\n'
+        spec = {'netlist': 'include "temporary/nested.va"\nahdl_include "temporary/model.va"\n',
+                'support_files': {'temporary/nested.va': nested, 'temporary/model.va': model}}
+        with tempfile.TemporaryDirectory() as folder:
+            result, _, _, output = self.deploy(Path(folder),
+                {'visible.scs': b'', 'decks/helper.inc': b'ahdl_include "/work/dut.va"\n'}, spec=spec)
+            self.assertEqual(result.returncode, 0, result.stderr.decode())
+            self.assertEqual(json.loads((output / 'report.json').read_text())['diagnostics']['spectre_returncode'], 0)
+            receipt = json.loads((output / 'netlist-identity.json').read_text())['decks']
+            self.assertEqual(receipt['temporary/nested.va']['original_sha256'], hashlib.sha256(nested.encode()).hexdigest())
+            effective = (output / 'condition/temporary/nested.va').read_bytes()
+            self.assertEqual(receipt['temporary/nested.va']['effective_sha256'], hashlib.sha256(effective).hexdigest())
+            self.assertIn('decks/helper.inc', receipt)
+            self.assertNotIn('temporary/model.va', receipt)
+            self.assertEqual((output / 'condition/temporary/model.va').read_bytes(), model.encode())
+
+    def test_candidate_used_as_text_deck_is_checked_and_recorded(self):
+        files = {'visible.scs': b'include "/work/rtl/helper.va"\n'}
+        with tempfile.TemporaryDirectory() as folder:
+            result, _, _, output = self.deploy(Path(folder), files,
+                candidate_helper=b'include "/etc/passwd"\n')
+            self.assertNotEqual(result.returncode, 0)
+            self.assertFalse((output / 'condition/fake-called').exists())
+        with tempfile.TemporaryDirectory() as folder:
+            raw = b'// declared candidate text deck\r\n'
+            result, _, candidates, output = self.deploy(Path(folder), files, candidate_helper=raw)
+            self.assertEqual(result.returncode, 0, result.stderr.decode())
+            receipt = json.loads((output / 'netlist-identity.json').read_text())['decks']
+            digest = hashlib.sha256(raw).hexdigest()
+            self.assertEqual(receipt['rtl/helper.va'], {'original_sha256': digest, 'effective_sha256': digest})
+            self.assertEqual((candidates / 'rtl/helper.va').read_bytes(), raw)
 
 
 if __name__ == '__main__':

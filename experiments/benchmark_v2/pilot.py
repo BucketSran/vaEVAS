@@ -319,7 +319,7 @@ while decks:
             target = str(PurePosixPath(name).parent / logical)
         if target not in allowed or not (work / target).is_file():
             raise ValueError('undeclared public include path')
-        if re.match(r'include\b', match[1].lstrip()) and target in contract['public_files']:
+        if re.match(r'include\b', match[1].lstrip()):
             decks.append(target)
         if not logical.is_absolute():
             return match[0]
