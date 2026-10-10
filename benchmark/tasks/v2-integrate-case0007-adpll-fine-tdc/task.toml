@@ -1,0 +1,18 @@
+schema_version = "1.4"
+[metadata]
+name = "v2-integrate-case0007-adpll-fine-tdc"
+category = "verilog-a"
+engineering_action = "extension-integration"
+source_group = "tiny-tapeout-adpll"
+context_level = "bounded-engineering-project"
+provenance = "adapted-engineering-requirement"
+data_provenance = "behavioral_synthetic"
+[agent]
+timeout_sec = 3600
+[verifier]
+timeout_sec = 1800
+[environment]
+build_timeout_sec = 600
+cpus = 1
+memory_mb = 2048
+storage_mb = 4096

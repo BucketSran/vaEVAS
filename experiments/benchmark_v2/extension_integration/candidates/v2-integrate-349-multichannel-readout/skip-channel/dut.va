@@ -1,0 +1,46 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module sample_mux_readout_top(ch0,ch1,ch2,ch3,clk,rst,sample,read,out,ch_sel_1,ch_sel_0,valid);
+input ch0,ch1,ch2,ch3,clk,rst,sample,read; output out,ch_sel_1,ch_sel_0,valid;
+electrical ch0,ch1,ch2,ch3,clk,rst,sample,read,out,ch_sel_1,ch_sel_0,valid;
+parameter real vdd=.9,vth=.45,tr=100p;
+electrical supply,ground,sclk,h0,h1,h2,h3,a0,a1,a2,a3;
+integer gate,pointer,selected,valid_state;
+real value;
+sample_hold s0(supply,ground,a0,sclk,h0);
+sample_hold s1(supply,ground,a1,sclk,h1);
+sample_hold s2(supply,ground,a2,sclk,h2);
+sample_hold s3(supply,ground,a3,sclk,h3);
+analog begin
+ @(initial_step) begin gate=0;pointer=0;selected=0;valid_state=0;value=0;end
+ @(cross(V(rst)-vth,+1)) begin gate=1;pointer=0;selected=0;valid_state=0;value=0;end
+ @(cross(V(clk)-vth,+1)) begin
+  gate=0;
+  if(V(rst)>vth) begin gate=1;pointer=0;selected=0;valid_state=0;value=0;end
+  else begin
+   valid_state=0;
+   if(V(read)>vth) begin
+    selected=pointer;
+    if(pointer==0) value=V(h0);
+    else if(pointer==1) value=V(h1);
+    else if(pointer==2) value=V(h2);
+    else value=V(h3);
+    pointer=(pointer+2)%4;
+    valid_state=1;
+   end
+   if(V(sample)>vth) gate=1;
+  end
+ end
+ @(cross(V(clk)-vth,-1)) gate=0;
+ V(supply)<+vdd;V(ground)<+0;
+ V(a0)<+(V(rst)>vth ? 0 : V(ch0));
+ V(a1)<+(V(rst)>vth ? 0 : V(ch1));
+ V(a2)<+(V(rst)>vth ? 0 : V(ch2));
+ V(a3)<+(V(rst)>vth ? 0 : V(ch3));
+ V(sclk)<+transition(gate*vdd,0,10p);
+ V(out)<+transition(value,0,tr);
+ V(ch_sel_1)<+transition(((selected/2)%2)*vdd,0,tr);
+ V(ch_sel_0)<+transition((selected%2)*vdd,0,tr);
+ V(valid)<+transition(valid_state*vdd,0,tr);
+end
+endmodule

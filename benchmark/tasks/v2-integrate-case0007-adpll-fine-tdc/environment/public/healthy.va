@@ -1,0 +1,59 @@
+`include "constants.vams"
+`include "disciplines.vams"
+// Author-supplied healthy VA environment, not original Tiny Tapeout RTL.
+module healthy_dco(coarse,fine,rst,en,dco);
+input coarse,fine,rst,en;output dco;electrical coarse,fine,rst,en,dco;
+real freq,phase;
+analog begin
+ freq=20e6+1e6*V(coarse)+250e3*V(fine);
+ if(freq<1e6)freq=1e6;if(freq>70e6)freq=70e6;
+ phase=idt(freq,0,V(rst)>.45);
+ if(V(en)>.45 && V(rst)<.45) V(dco)<+.45+.45*tanh(20*sin(2*`M_PI*phase));
+ else V(dco)<+0;
+ $bound_step(1/(40*freq));
+end
+endmodule
+module healthy_divider(dco,rst,target,fb);
+input dco,rst,target;output fb;electrical dco,rst,target,fb;
+integer count,state,n;
+analog begin
+ @(initial_step)begin count=0;state=0;end
+ @(cross(V(rst)-.45,+1))begin count=0;state=0;end
+ @(cross(V(dco)-.45,+1))begin
+  n=$rtoi(V(target)+.5);if(n<1)n=1;
+  if(V(rst)>.45)begin count=0;state=0;end
+  else if(count>=n-1)begin count=0;state=1;end
+  else begin count=count+1;state=0;end
+ end
+ V(fb)<+transition(state*.9,0,100p);
+end
+endmodule
+module healthy_coarse(ref,dco,rst,target,fine_enable,coarse,ready);
+input ref,dco,rst,target,fine_enable;output coarse,ready;
+electrical ref,dco,rst,target,fine_enable,coarse,ready;
+integer cycles,refs,n,previous_n,good,qualified;
+real tune,error;
+analog begin
+ @(initial_step)begin cycles=0;refs=0;tune=8;good=0;qualified=0;previous_n=3;end
+ @(cross(V(rst)-.45,+1))begin cycles=0;refs=0;tune=8;good=0;qualified=0;end
+ @(cross(V(dco)-.45,+1))cycles=cycles+1;
+ @(cross(V(ref)-.45,+1))begin
+  n=$rtoi(V(target)+.5);if(n<1)n=1;
+  if(V(rst)>.45 || n!=previous_n)begin cycles=0;refs=0;tune=8;good=0;qualified=0;previous_n=n;end
+  else begin
+   refs=refs+1;
+   if(refs>=16)begin
+    error=16*n-cycles;
+    if(!(V(fine_enable)>.45 && qualified))begin
+     tune=tune+error/1.6;if(tune<0)tune=0;if(tune>31)tune=31;
+    end
+    if(abs(error)<=1)good=good+1;else good=0;
+    if(good>=3)qualified=1;
+    refs=0;cycles=0;
+   end
+  end
+ end
+ V(coarse)<+transition(tune,0,100p);
+ V(ready)<+transition(qualified*.9,0,100p);
+end
+endmodule
