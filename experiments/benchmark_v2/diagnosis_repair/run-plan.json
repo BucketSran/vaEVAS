@@ -1,0 +1,226 @@
+[
+  {
+    "task": "benchmark/tasks/v2-repair-debounce-latch",
+    "variant": "healthy",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-debounce-latch/healthy",
+    "expected_pass": true,
+    "behavior": "原健康资产"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-debounce-latch",
+    "variant": "reference",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-debounce-latch/reference",
+    "expected_pass": true,
+    "behavior": "按健康合同恢复原故障"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-debounce-latch",
+    "variant": "starter",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-debounce-latch/starter",
+    "expected_pass": false,
+    "behavior": "原人工注错资产"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-debounce-latch",
+    "variant": "alternative",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-debounce-latch/alternative",
+    "expected_pass": true,
+    "behavior": "独立周期计时替代动态deadline事件"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-debounce-latch",
+    "variant": "no-recount",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-debounce-latch/no-recount",
+    "expected_pass": false,
+    "behavior": "资格取消后保留旧deadline"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-debounce-latch",
+    "variant": "never-start",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-debounce-latch/never-start",
+    "expected_pass": false,
+    "behavior": "永不启动"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-uvlo-brownout",
+    "variant": "healthy",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-uvlo-brownout/healthy",
+    "expected_pass": true,
+    "behavior": "原健康资产"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-uvlo-brownout",
+    "variant": "reference",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-uvlo-brownout/reference",
+    "expected_pass": true,
+    "behavior": "按健康合同恢复原故障"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-uvlo-brownout",
+    "variant": "starter",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-uvlo-brownout/starter",
+    "expected_pass": false,
+    "behavior": "原人工注错资产"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-uvlo-brownout",
+    "variant": "alternative",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-uvlo-brownout/alternative",
+    "expected_pass": true,
+    "behavior": "整体重写整数迟滞状态"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-uvlo-brownout",
+    "variant": "no-hysteresis",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-uvlo-brownout/no-hysteresis",
+    "expected_pass": false,
+    "behavior": "迟滞区错误清零"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-uvlo-brownout",
+    "variant": "wrong-polarity",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-uvlo-brownout/wrong-polarity",
+    "expected_pass": false,
+    "behavior": "故障指标极性"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-reset-sequencer",
+    "variant": "healthy",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-reset-sequencer/healthy",
+    "expected_pass": true,
+    "behavior": "原健康资产"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-reset-sequencer",
+    "variant": "reference",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-reset-sequencer/reference",
+    "expected_pass": true,
+    "behavior": "按健康合同恢复原故障"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-reset-sequencer",
+    "variant": "starter",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-reset-sequencer/starter",
+    "expected_pass": false,
+    "behavior": "原人工注错资产"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-reset-sequencer",
+    "variant": "alternative",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-reset-sequencer/alternative",
+    "expected_pass": true,
+    "behavior": "整体重写输出方程与计数状态"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-reset-sequencer",
+    "variant": "never-ready",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-reset-sequencer/never-ready",
+    "expected_pass": false,
+    "behavior": "永不启动"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-reset-sequencer",
+    "variant": "ignore-bias",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-reset-sequencer/ignore-bias",
+    "expected_pass": false,
+    "behavior": "旁路偏置资格"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-pfd-reset",
+    "variant": "healthy",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-pfd-reset/healthy",
+    "expected_pass": true,
+    "behavior": "原健康资产"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-pfd-reset",
+    "variant": "reference",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-pfd-reset/reference",
+    "expected_pass": true,
+    "behavior": "按健康合同恢复原故障"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-pfd-reset",
+    "variant": "starter",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-pfd-reset/starter",
+    "expected_pass": false,
+    "behavior": "原人工注错资产"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-pfd-reset",
+    "variant": "alternative",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-pfd-reset/alternative",
+    "expected_pass": true,
+    "behavior": "周期复位调度而非动态timer"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-pfd-reset",
+    "variant": "wrong-edge",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-pfd-reset/wrong-edge",
+    "expected_pass": false,
+    "behavior": "ref下降沿置位"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-pfd-reset",
+    "variant": "never-start",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-pfd-reset/never-start",
+    "expected_pass": false,
+    "behavior": "丢失UP动作"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-uvlo-reset-chain",
+    "variant": "healthy",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-uvlo-reset-chain/healthy",
+    "expected_pass": true,
+    "behavior": "健康四职责系统与真实计数下游"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-uvlo-reset-chain",
+    "variant": "reference",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-uvlo-reset-chain/reference",
+    "expected_pass": true,
+    "behavior": "取消旧deadline并每次恢复重新资格"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-uvlo-reset-chain",
+    "variant": "alternative",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-uvlo-reset-chain/alternative",
+    "expected_pass": true,
+    "behavior": "周期调度的释放整体重写"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-uvlo-reset-chain",
+    "variant": "starter",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-uvlo-reset-chain/starter",
+    "expected_pass": false,
+    "behavior": "短暂恢复旧deadline在新周期提前释放"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-uvlo-reset-chain",
+    "variant": "bypass-enable",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-uvlo-reset-chain/bypass-enable",
+    "expected_pass": false,
+    "behavior": "使能旁路复位资格"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-uvlo-reset-chain",
+    "variant": "never-release",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-uvlo-reset-chain/never-release",
+    "expected_pass": false,
+    "behavior": "永不释放/下游永无动作"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-uvlo-reset-chain",
+    "variant": "wrong-polarity",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-uvlo-reset-chain/wrong-polarity",
+    "expected_pass": false,
+    "behavior": "UVLO极性反转"
+  },
+  {
+    "task": "benchmark/tasks/v2-repair-uvlo-reset-chain",
+    "variant": "no-hysteresis",
+    "candidate_dir": "experiments/benchmark_v2/diagnosis_repair/candidates/v2-repair-uvlo-reset-chain/no-hysteresis",
+    "expected_pass": false,
+    "behavior": "迟滞区撤销资格"
+  }
+]
