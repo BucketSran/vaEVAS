@@ -1,0 +1,23 @@
+{
+  "spec_issue": 134,
+  "category": "data-modeling",
+  "required_sources": [
+    {
+      "source_id": "jku-sampling-stage",
+      "source_revision": "892272208df28b6c7620101e129a9d8dd95ebab7",
+      "case_id": "case-0006",
+      "task_id": "v2-data-sampling-identification",
+      "p1_source_count": false,
+      "data_provenance": "transistor_simulation",
+      "truth_backend": "ngspice-47",
+      "candidate_backend": "spectre",
+      "release_group": "spectre-extension",
+      "d1_source_characterization": "completed-with-explicit-numerical-limits",
+      "d2_dataset_contract": "frozen-pending-live-calibration",
+      "d3_reference_alternative_mutants_checker": "implemented-live-calibration-pending",
+      "d4_model_pilot": "pending",
+      "closure": "pending-live-acceptance"
+    }
+  ],
+  "future_scope": ["long-hold-leakage-if-observable", "edge-effects-if-identifiable", "bounded-active-characterization-contract", "other-real-transistor-circuit-families"]
+}
