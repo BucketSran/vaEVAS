@@ -27,7 +27,7 @@ build_tasks.py 生成 Harbor 任务、正确参考、另一种实现和三种行
 
 POR 使用真实模拟晶体管源和可读数字边界，候选通过观察 POR 完成与 power 欠压事件推进供电。报告 response_us 从各轮首次 osc 上升到 POR 上升计时。周期保留原脚本的第3至第9个振荡器上升平均值。性质判断只观察实际端口，第6/第13个时钟对应断言与释放；不读取内部计数结束标志。正常、慢振荡器、漏恢复脉冲和过早释放都属于公开条件。
 
-prepare_por_source.py 固定原电路与 PDK 版本，build_por_task.py 生成完整任务。两电平转换单元采用同版本官方 CDL 源视图，原抽取 SPICE 的独立单元测试存在悬空连接。prepare_por_spectre.py 只适配数学等值的表达式分隔符和数值后缀，未调整器件阈值。原源17位导出实跑指标见 por_source_ngspice.json，数字实际 Spectre 边界见 por_digital_spectre_r2.json，全量语法等值核验见 por_spectre_translation_r3.json。这些证据不替代尚待执行的完整候选校准。
+prepare_por_source.py 固定原电路与 PDK 版本，build_por_task.py 生成完整任务。两电平转换单元采用同版本官方 CDL 源视图，原抽取 SPICE 的独立单元测试存在悬空连接。prepare_por_spectre.py 只适配数学等值的表达式分隔符和数值后缀，未调整器件阈值。原源17位导出实跑指标见 por_source_ngspice.json，数字实际 Spectre 边界见 por_digital_spectre_r2.json，全量语法等值核验见 por_spectre_translation_r3.json；r3 解析时发现12个电阻公式使用重复引号，r4只删除冗余引号，等值核验见 por_spectre_translation_r4.json。这些证据不替代尚待执行的完整候选校准。
 
 POR 归属 Spectre 扩展。整个 POR 的纯 VA 开源替代仍未校准，不作为本轮真实闭环的替代验收。原模型公开材料约6.9MB，Agentic 能完整读取文件；one-shot 只有能原样提供同一完整材料时才是等价对照，否则记录不适用，不删减真实电路来适配上下文。
 

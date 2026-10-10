@@ -1,0 +1,31 @@
+{
+  "status": "passed",
+  "parent_cases_sha256": "c086f9940fc876650dfc5faf2bcb8906800fc448bb38e00553ce1e043d1e00aa",
+  "assets": [
+    {
+      "asset": "models.spice",
+      "redundant_delimiter_pairs": 12,
+      "formulas": "byte-identical",
+      "source_sha256": "63a2c86a7d7d03b83a308d4cf475b002c473637ffaf83f2fe88428df1a306954",
+      "translated_sha256": "d5c5cab215731a1c44138ba38be4e73bb294815c32f186d7858f101ab3e35916"
+    },
+    {
+      "asset": "cells.spice",
+      "redundant_delimiter_pairs": 0,
+      "formulas": "byte-identical",
+      "source_sha256": "cf4ef0acbb0b911bca6ff2f9643df940799215c796ace37e4ee153f08fe663e4",
+      "translated_sha256": "cf4ef0acbb0b911bca6ff2f9643df940799215c796ace37e4ee153f08fe663e4"
+    },
+    {
+      "asset": "analog.spice",
+      "redundant_delimiter_pairs": 0,
+      "formulas": "byte-identical",
+      "source_sha256": "d35293893afe78f4d6e4b127c8e1329807ebe79dfa16dacb3afb0347ce3f0869",
+      "translated_sha256": "d35293893afe78f4d6e4b127c8e1329807ebe79dfa16dacb3afb0347ce3f0869"
+    }
+  ],
+  "backend_execution": "pending",
+  "parent_backend_status": "r3 execution_error before waveform",
+  "diagnosis": "SFE-874: twelve resistor DW formulas used redundant double delimiters inside SPICE single quotes",
+  "raw_snapshot": "runs/por-source/mixed-r4"
+}

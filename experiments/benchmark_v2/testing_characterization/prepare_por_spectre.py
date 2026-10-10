@@ -18,7 +18,14 @@ def active_blocks(text, convert):
     return ''.join(lines)
 
 def expressions(text):
-    return active_blocks(text,lambda block: re.sub(r'\{([^{}]*)\}',lambda m:"'"+m[1]+"'",block))
+    def quoted(match):
+        formula=match[1]
+        # Upstream resistor DW uses {"formula"}; one quote delimiter is
+        # sufficient in SPICE and keeps the exact mathematical expression.
+        if formula.strip().startswith('"') and formula.strip().endswith('"'):
+            formula=formula.strip()[1:-1]
+        return "'"+formula+"'"
+    return active_blocks(text,lambda block: re.sub(r'\{([^{}]*)\}',quoted,block))
 
 def geometry(text):
     # Spectre ignores suffix after exponent; raw SKY130 cell view expresses
