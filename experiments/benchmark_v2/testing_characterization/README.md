@@ -29,7 +29,7 @@ POR 使用真实模拟晶体管源和可读数字边界，候选通过观察 POR
 
 prepare_por_source.py 固定原电路与 PDK 版本，build_por_task.py 生成完整任务。两电平转换单元采用同版本官方 CDL 源视图，原抽取 SPICE 的独立单元测试存在悬空连接。prepare_por_spectre.py 只适配数学等值的表达式分隔符和数值后缀，未调整器件阈值。原源17位导出实跑指标见 por_source_ngspice.json，数字实际 Spectre 边界见 por_digital_spectre_r2.json，全量语法等值核验见 por_spectre_translation_r3.json；r3 解析时发现12个电阻公式使用重复引号，r4只删除冗余引号，等值核验见 por_spectre_translation_r4.json。这些证据不替代尚待执行的完整候选校准。
 
-POR 归属 Spectre 扩展。整个 POR 的纯 VA 开源替代仍未校准，不作为本轮真实闭环的替代验收。原模型公开材料约6.9MB，Agentic 能完整读取文件；one-shot 只有能原样提供同一完整材料时才是等价对照，否则记录不适用，不删减真实电路来适配上下文。
+POR 归属 Spectre 扩展。整个 POR 的纯 VA 开源替代仍未校准，不作为本轮真实闭环的替代验收。原模型公开材料约6.9MB，Agentic 能完整读取文件；one-shot 适用性仍待实际接口核查。当前适配器把全部公开文件串成一次文本输入，实际公开文件共38,124,949字节；模型配置的32k max_tokens是输出上限，不能据此推断输入窗口。须保留全部材料并核对模型输入限制或实际接口拒绝证据，不能按文件体积主观排除。
 
 POR checker 的独立行为测试：
 
@@ -38,3 +38,5 @@ POR checker 的独立行为测试：
 POR 超时分支按公开半开窗口处理。test_por_timeout.py 对实际发货源码的 timer 条件执行有限控制流回归，覆盖截止前50us、截止时刻、截止之后及缺事件；test_por_checker.py 使用独立端口波形拒绝提前欠压。该源条件回归不等同VA仿真，完整Spectre校准仍待运行。
 
 r5 处理实际Spectre解析出的重复参数与实例作用域差异。282个重复全局参数等值，保留定义并显式报告warning；原实例几何值展开后，12个顶层和870个模拟子电路表达式由独立AST算术与Decimal逐项核对。模型文件与cells文件SHA未变。核验见 por_spectre_translation_r5.json，实际r5仿真仍待执行。
+
+实际 mixed Spectre r5已完成来源校准，原源刺激下两轮各13个振荡器上升沿、POR第6/13沿断言/释放均成立；实测指标与原ngspice源的描述性差值见 por_source_mixed_spectre_r5.json。完整闭环候选尚待20条件校准，来源校准不计模型分数。qualify_por_source.py 从原始PSF及17位ngspice数据重建上述事实，未读取自报指标或内部计数flags。

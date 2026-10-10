@@ -1,0 +1,157 @@
+{
+  "status": "actual mixed source qualified; formal closed-loop benchmark not yet run",
+  "scope": "original 4ms ramp, fast undervoltage and recovery with original analog/CDL cells and faithful VA digital boundary",
+  "spectre": {
+    "rows": 12138,
+    "source_properties_passed": true,
+    "metrics": [
+      {
+        "response_us": 145.58343933473603,
+        "period_us": 29.114943880157487,
+        "width_us": 203.7972531890018,
+        "rise_count": 6,
+        "fall_count": 13,
+        "first_clock": 0.0015420467016022624,
+        "power_detected": 0.0015140171168725825,
+        "por_rise": 0.0016876301409369985,
+        "por_fall": 0.0018914273941260003
+      },
+      {
+        "response_us": 145.5826379268524,
+        "period_us": 29.114903639223854,
+        "width_us": 203.79661547130456,
+        "rise_count": 6,
+        "fall_count": 13,
+        "first_clock": 0.0032410371798325707,
+        "power_detected": 0.0032130076440314882,
+        "por_rise": 0.003386619817759423,
+        "por_fall": 0.0035904164332307277
+      }
+    ],
+    "power_lost": 0.0030279842085419698,
+    "supply_pwl_max_error_v": 8.341327628613726e-12,
+    "voltage_bounds": {
+      "avdd": {
+        "minimum": 0.0,
+        "maximum": 3.3
+      },
+      "por": {
+        "minimum": -0.0005343839314523252,
+        "maximum": 1.800521588685237
+      },
+      "osc_ck": {
+        "minimum": -0.05721173741392147,
+        "maximum": 1.913376376657198
+      },
+      "pwup_filt": {
+        "minimum": -0.03993182106447514,
+        "maximum": 1.863740348553908
+      }
+    }
+  },
+  "ngspice": {
+    "rows": 11610,
+    "source_properties_passed": true,
+    "metrics": [
+      {
+        "response_us": 145.60150249158065,
+        "period_us": 29.114442710964212,
+        "width_us": 203.783647453989,
+        "rise_count": 6,
+        "fall_count": 13,
+        "first_clock": 0.00154201506576897,
+        "power_detected": 0.0015139724616372685,
+        "por_rise": 0.0016876165682605507,
+        "por_fall": 0.0018914002157145397
+      },
+      {
+        "response_us": 145.71013547207525,
+        "period_us": 29.13307705360646,
+        "width_us": 203.79500662709611,
+        "rise_count": 6,
+        "fall_count": 13,
+        "first_clock": 0.0032410497367165994,
+        "power_detected": 0.0032130070283670252,
+        "por_rise": 0.0033867598721886746,
+        "por_fall": 0.0035905548788157707
+      }
+    ],
+    "power_lost": 0.003027972138547797,
+    "supply_pwl_max_error_v": 2.0823343049869436e-12,
+    "voltage_bounds": {
+      "avdd": {
+        "minimum": 0.0,
+        "maximum": 3.3000000000000003
+      },
+      "por": {
+        "minimum": -0.00042854188722056156,
+        "maximum": 1.800477196768788
+      },
+      "osc_ck": {
+        "minimum": -0.0567150601817932,
+        "maximum": 1.9045627538386591
+      },
+      "pwup_filt": {
+        "minimum": -0.02613630180278237,
+        "maximum": 1.8540773436492763
+      }
+    }
+  },
+  "spectre_minus_ngspice_metrics": [
+    {
+      "response_us": -0.01806315684461879,
+      "period_us": 0.0005011691932743645,
+      "width_us": 0.0136057350127885
+    },
+    {
+      "response_us": -0.12749754522283752,
+      "period_us": -0.018173414382605557,
+      "width_us": 0.0016088442084480903
+    }
+  ],
+  "max_matched_edge_difference_us": {
+    "por_rise": 0.14005442925150643,
+    "por_fall": 0.13844558504304272,
+    "osc_ck_rise": 0.12034445159240376,
+    "osc_ck_fall": 0.13741613185931992,
+    "pwup_filt_rise": 0.04465523531396558,
+    "pwup_filt_fall": 0.01206999417297308
+  },
+  "supply_waveform_max_difference_v": 9.92406157251935e-12,
+  "limitations": "Numeric backend differences are descriptive, not a new calibrated tolerance. Internal analog bias/current waveforms are not saved. Discovery is intentionally unscored.",
+  "waveforms_sha256": {
+    "spectre": "b831487371dcfc2cea8552423ba6261a284d064833a885d8f4fce629e450cf29",
+    "ngspice": "d6882be4c0eee3f8d97abe36c7d32fd94fe8f6010efd934db22333f45cccdb3f"
+  },
+  "spectre_version": "21.1.0.509.isr12",
+  "source_identity": {
+    "por": "db8745ef4d7d85a1852fc60c251ba34c6cebe497",
+    "fd_pr": "f62031a1be9aefe902d6d54cddd6f59b57627436",
+    "fd_sc_hvl": "4fd4f858d16c558a6a488b200649e909bb4dd800",
+    "fd_sc_hd": "ac7fb61f06e6470b94e8afdf7c25268f62fbd7b1",
+    "deck_sha256": "c75569af75bbd4c6e2dd7997b56414671c104258fd8fdb34ba46e596dac8d722",
+    "cell_view": "cdl-level-shifters",
+    "mode": "short one-shots, force_short_oneshot=1, no sleep",
+    "processing": [
+      "recursive include flatten",
+      "CACE configuration substitution",
+      "ngspice W/NF bin selection wnflag=1",
+      "obsolete non-SPICE include omitted",
+      "unused upstream varactor dev/gauss annotations retained; nominal source deck does not instantiate these devices"
+    ]
+  },
+  "execution_identity": {
+    "runtime_sha256": "e68c2da4e680aae078a2edc9db37ef58baed2742f1b268690d8fd7548887a693",
+    "parser_sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+    "cases_sha256": "0b1012c8899c3163b2384c7786c8c4122e844dac7d887c60c0446dab3bf035cf",
+    "checker_sha256": "45a0c51df1eb892dae216d407843298b3318f6301a9fcfcfadbfcfdc973a881d",
+    "job_id": "bf-18a80c31256242619845-cdl-source-ramp-recovery",
+    "archive_sha256": "bc263ca6c3b53e5a95df0dc6d8dbed8614a94e94cefc7bccebedb7851541c7bb",
+    "report_sha256": "4fd7e042f142eb269d88785051448230a080585ed0bd7c6bf8effeb3a66bd7f5",
+    "transport_candidate_sha256": "8131478dd3618a106d32fd3ff21dddbbbaede9a6982e3837acb1c3547721aeea",
+    "criteria_sha256": "d8bffb2e51def403d9d69fbfdd6e6b3e4c7129f7faf5eba5bda347e10979b4dc",
+    "source_conditions": 1,
+    "returncode": 0
+  },
+  "raw_evidence": "runs/benchmark-spec-20261011/calibration/por-mixed-reference-isolated-r5"
+}
