@@ -1,9 +1,9 @@
 [
   {
-    "name": "normal",
+    "name": "terminal-normal",
     "kind": "settling",
     "input_span_uncertainty": 1e-12,
-    "stop": 5.6e-08,
+    "stop": 5.7e-08,
     "sample_period": 2.5e-10,
     "samples": 80,
     "tail_samples": 8,
@@ -15,7 +15,7 @@
       "gain": 0.02,
       "settling_ns": 0.03
     },
-    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"static_amp.va\"\nahdl_include \"dynamic_amp.va\"\nVclk (clk 0) vsource type=pulse val0=0 val1=.9 delay=.1n period=.5n width=.2n rise=10p fall=10p\nVen (enable 0) vsource dc=.9\nVvin (vin 0) vsource type=pwl wave=[0 .44 2.2n .44 2.25n 0.47 32.2n 0.47 32.25n 0.43 56n 0.43]\nVlaunch (launch 0) vsource type=pwl wave=[0 0 2n 0 2.02n 1 2.1n 1 2.12n 0 32n 0 32.02n 1 32.1n 1 32.12n 0 56n 0]\nXA (clk 0 enable vin static_out clipping) programmable_gain_amplifier gain_low=2.5 gain_high=2.5\nXD (vin clk 0 enable 0 enable enable dynamic_out error_internal settled_internal) opamp_feedback_settling alpha=0.3 tick=50p tr=100p\nXM (vin static_out dynamic_out launch gain gain_valid settling_ns settled status) gain_settling_meter\ntran tran stop=56n maxstep=5p\nsave vin static_out dynamic_out launch gain gain_valid settling_ns settled status\n",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"static_amp.va\"\nahdl_include \"dynamic_amp.va\"\nVclk (clk 0) vsource type=pulse val0=0 val1=.9 delay=.1n period=.5n width=.2n rise=10p fall=10p\nVen (enable 0) vsource dc=.9\nVvin (vin 0) vsource type=pwl wave=[0 .44 3.2n .44 3.25n 0.478 33.2n 0.478 33.25n 0.437 57n 0.437]\nVlaunch (launch 0) vsource type=pwl wave=[0 0 3n 0 3.02n 1 3.1n 1 3.12n 0 33n 0 33.02n 1 33.1n 1 33.12n 0 57n 0]\nXA (clk 0 enable vin static_out clipping) programmable_gain_amplifier gain_low=2.5 gain_high=2.5\nXD (vin clk 0 enable 0 enable enable dynamic_out error_internal settled_internal) opamp_feedback_settling alpha=0.24 tick=50p tr=100p\nXM (vin static_out dynamic_out launch gain gain_valid settling_ns settled status) gain_settling_meter\ntran tran stop=57n maxstep=5p\nsave vin static_out dynamic_out launch gain gain_valid settling_ns settled status\n",
     "signals": [
       "vin",
       "static_out",
@@ -33,10 +33,10 @@
     }
   },
   {
-    "name": "unsettled-dut",
+    "name": "terminal-unsettled-dut",
     "kind": "settling",
     "input_span_uncertainty": 1e-12,
-    "stop": 5.6e-08,
+    "stop": 5.7e-08,
     "sample_period": 2.5e-10,
     "samples": 80,
     "tail_samples": 8,
@@ -48,7 +48,7 @@
       "gain": 0.02,
       "settling_ns": 0.03
     },
-    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"static_amp.va\"\nahdl_include \"dynamic_amp.va\"\nVclk (clk 0) vsource type=pulse val0=0 val1=.9 delay=.1n period=.5n width=.2n rise=10p fall=10p\nVen (enable 0) vsource dc=.9\nVvin (vin 0) vsource type=pwl wave=[0 .44 2.2n .44 2.25n 0.47 32.2n 0.47 32.25n 0.43 56n 0.43]\nVlaunch (launch 0) vsource type=pwl wave=[0 0 2n 0 2.02n 1 2.1n 1 2.12n 0 32n 0 32.02n 1 32.1n 1 32.12n 0 56n 0]\nXA (clk 0 enable vin static_out clipping) programmable_gain_amplifier gain_low=2.5 gain_high=2.5\nXD (vin clk 0 enable 0 enable enable dynamic_out error_internal settled_internal) opamp_feedback_settling alpha=0.01 tick=50p tr=100p\nXM (vin static_out dynamic_out launch gain gain_valid settling_ns settled status) gain_settling_meter\ntran tran stop=56n maxstep=5p\nsave vin static_out dynamic_out launch gain gain_valid settling_ns settled status\n",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"static_amp.va\"\nahdl_include \"dynamic_amp.va\"\nVclk (clk 0) vsource type=pulse val0=0 val1=.9 delay=.1n period=.5n width=.2n rise=10p fall=10p\nVen (enable 0) vsource dc=.9\nVvin (vin 0) vsource type=pwl wave=[0 .44 3.2n .44 3.25n 0.478 33.2n 0.478 33.25n 0.437 57n 0.437]\nVlaunch (launch 0) vsource type=pwl wave=[0 0 3n 0 3.02n 1 3.1n 1 3.12n 0 33n 0 33.02n 1 33.1n 1 33.12n 0 57n 0]\nXA (clk 0 enable vin static_out clipping) programmable_gain_amplifier gain_low=2.5 gain_high=2.5\nXD (vin clk 0 enable 0 enable enable dynamic_out error_internal settled_internal) opamp_feedback_settling alpha=0.014 tick=50p tr=100p\nXM (vin static_out dynamic_out launch gain gain_valid settling_ns settled status) gain_settling_meter\ntran tran stop=57n maxstep=5p\nsave vin static_out dynamic_out launch gain gain_valid settling_ns settled status\n",
     "signals": [
       "vin",
       "static_out",
@@ -66,10 +66,10 @@
     }
   },
   {
-    "name": "invalid-input-span",
+    "name": "terminal-invalid-input-span",
     "kind": "settling",
     "input_span_uncertainty": 1e-12,
-    "stop": 5.6e-08,
+    "stop": 5.7e-08,
     "sample_period": 2.5e-10,
     "samples": 80,
     "tail_samples": 8,
@@ -81,7 +81,7 @@
       "gain": 0.02,
       "settling_ns": 0.03
     },
-    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"static_amp.va\"\nahdl_include \"dynamic_amp.va\"\nVclk (clk 0) vsource type=pulse val0=0 val1=.9 delay=.1n period=.5n width=.2n rise=10p fall=10p\nVen (enable 0) vsource dc=.9\nVvin (vin 0) vsource type=pwl wave=[0 .44 2.2n .44 2.25n 0.445 32.2n 0.445 32.25n 0.442 56n 0.442]\nVlaunch (launch 0) vsource type=pwl wave=[0 0 2n 0 2.02n 1 2.1n 1 2.12n 0 32n 0 32.02n 1 32.1n 1 32.12n 0 56n 0]\nXA (clk 0 enable vin static_out clipping) programmable_gain_amplifier gain_low=2.5 gain_high=2.5\nXD (vin clk 0 enable 0 enable enable dynamic_out error_internal settled_internal) opamp_feedback_settling alpha=0.3 tick=50p tr=100p\nXM (vin static_out dynamic_out launch gain gain_valid settling_ns settled status) gain_settling_meter\ntran tran stop=56n maxstep=5p\nsave vin static_out dynamic_out launch gain gain_valid settling_ns settled status\n",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"static_amp.va\"\nahdl_include \"dynamic_amp.va\"\nVclk (clk 0) vsource type=pulse val0=0 val1=.9 delay=.1n period=.5n width=.2n rise=10p fall=10p\nVen (enable 0) vsource dc=.9\nVvin (vin 0) vsource type=pwl wave=[0 .44 3.2n .44 3.25n 0.447 33.2n 0.447 33.25n 0.444 57n 0.444]\nVlaunch (launch 0) vsource type=pwl wave=[0 0 3n 0 3.02n 1 3.1n 1 3.12n 0 33n 0 33.02n 1 33.1n 1 33.12n 0 57n 0]\nXA (clk 0 enable vin static_out clipping) programmable_gain_amplifier gain_low=2.5 gain_high=2.5\nXD (vin clk 0 enable 0 enable enable dynamic_out error_internal settled_internal) opamp_feedback_settling alpha=0.24 tick=50p tr=100p\nXM (vin static_out dynamic_out launch gain gain_valid settling_ns settled status) gain_settling_meter\ntran tran stop=57n maxstep=5p\nsave vin static_out dynamic_out launch gain gain_valid settling_ns settled status\n",
     "signals": [
       "vin",
       "static_out",

@@ -1,11 +1,11 @@
 [
   {
-    "name": "normal",
+    "name": "terminal-normal",
     "kind": "hysteresis",
     "stop": 4.4e-08,
     "guard": 1e-10,
     "atol": 0.002,
-    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"support_cmp.va\"\nVdd (vdd 0) vsource dc=1\nVref (vref 0) vsource dc=.5\nVin (vin 0) vsource type=pwl wave=[0 .42 10n .59 20n .42 30n .60 40n .41 44n .41]\nVbegin (begin_round 0) vsource type=pwl wave=[0 0 21n 0 21.02n 1 21.2n 1 21.22n 0 44n 0]\nXC (vdd 0 vin vref cmp_out) support_hysteretic_comparator offset=0.005 vhys=0.05 td=120p tr=30p\nXM (vin cmp_out begin_round up down width valid) hysteresis_meter\ntran tran stop=44n maxstep=20p\nsave vin cmp_out begin_round up down width valid\n",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"support_cmp.va\"\nVdd (vdd 0) vsource dc=1\nVref (vref 0) vsource dc=.5\nVin (vin 0) vsource type=pwl wave=[0 .42 10.4n 0.598 20.4n .42 30.4n 0.607 40.4n .41 44.4n .41]\nVbegin (begin_round 0) vsource type=pwl wave=[0 0 21.4n 0 21.42n 1 21.6n 1 21.62n 0 44.4n 0]\nXC (vdd 0 vin vref cmp_out) support_hysteretic_comparator offset=0.013 vhys=0.064 td=180p tr=30p\nXM (vin cmp_out begin_round up down width valid) hysteresis_meter\ntran tran stop=44n maxstep=20p\nsave vin cmp_out begin_round up down width valid\n",
     "signals": [
       "vin",
       "cmp_out",
@@ -20,12 +20,12 @@
     }
   },
   {
-    "name": "bad-dut-wide",
+    "name": "terminal-bad-dut-wide",
     "kind": "hysteresis",
     "stop": 4.4e-08,
     "guard": 1e-10,
     "atol": 0.002,
-    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"support_cmp.va\"\nVdd (vdd 0) vsource dc=1\nVref (vref 0) vsource dc=.5\nVin (vin 0) vsource type=pwl wave=[0 .40 10n .62 20n .40 30n .63 40n .39 44n .39]\nVbegin (begin_round 0) vsource type=pwl wave=[0 0 21n 0 21.02n 1 21.2n 1 21.22n 0 44n 0]\nXC (vdd 0 vin vref cmp_out) support_hysteretic_comparator offset=-0.01 vhys=0.12 td=400p tr=30p\nXM (vin cmp_out begin_round up down width valid) hysteresis_meter\ntran tran stop=44n maxstep=20p\nsave vin cmp_out begin_round up down width valid\n",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"support_cmp.va\"\nVdd (vdd 0) vsource dc=1\nVref (vref 0) vsource dc=.5\nVin (vin 0) vsource type=pwl wave=[0 .40 10.4n .62 20.4n .40 30.4n .63 40.4n .39 44.4n .39]\nVbegin (begin_round 0) vsource type=pwl wave=[0 0 21.4n 0 21.42n 1 21.6n 1 21.62n 0 44.4n 0]\nXC (vdd 0 vin vref cmp_out) support_hysteretic_comparator offset=-0.017 vhys=0.108 td=330p tr=30p\nXM (vin cmp_out begin_round up down width valid) hysteresis_meter\ntran tran stop=44n maxstep=20p\nsave vin cmp_out begin_round up down width valid\n",
     "signals": [
       "vin",
       "cmp_out",
@@ -40,12 +40,12 @@
     }
   },
   {
-    "name": "incomplete-second-round",
+    "name": "terminal-incomplete-second-round",
     "kind": "hysteresis",
     "stop": 4.4e-08,
     "guard": 1e-10,
     "atol": 0.002,
-    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"support_cmp.va\"\nVdd (vdd 0) vsource dc=1\nVref (vref 0) vsource dc=.5\nVin (vin 0) vsource type=pwl wave=[0 .42 10n .59 20n .42 22n .42 32n .59 44n .59]\nVbegin (begin_round 0) vsource type=pwl wave=[0 0 21n 0 21.02n 1 21.2n 1 21.22n 0 44n 0]\nXC (vdd 0 vin vref cmp_out) support_hysteretic_comparator offset=0.005 vhys=0.05 td=120p tr=30p\nXM (vin cmp_out begin_round up down width valid) hysteresis_meter\ntran tran stop=44n maxstep=20p\nsave vin cmp_out begin_round up down width valid\n",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"support_cmp.va\"\nVdd (vdd 0) vsource dc=1\nVref (vref 0) vsource dc=.5\nVin (vin 0) vsource type=pwl wave=[0 .42 10.4n 0.598 20.4n .42 22.4n .42 32.4n 0.598 44.4n 0.598]\nVbegin (begin_round 0) vsource type=pwl wave=[0 0 21.4n 0 21.42n 1 21.6n 1 21.62n 0 44.4n 0]\nXC (vdd 0 vin vref cmp_out) support_hysteretic_comparator offset=0.013 vhys=0.064 td=180p tr=30p\nXM (vin cmp_out begin_round up down width valid) hysteresis_meter\ntran tran stop=44n maxstep=20p\nsave vin cmp_out begin_round up down width valid\n",
     "signals": [
       "vin",
       "cmp_out",

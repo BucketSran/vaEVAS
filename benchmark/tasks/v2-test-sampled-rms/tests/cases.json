@@ -1,13 +1,13 @@
 [
   {
-    "name": "normal-reset-disable",
+    "name": "terminal-normal-reset-disable",
     "kind": "rms",
     "stop": 1.1e-07,
     "threshold": 0.45,
     "vhigh": 0.9,
     "guard": 3.2e-10,
     "atol": 0.002,
-    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 delay=1.5n period=5n width=2.1n rise=80p fall=80p\nVreset (reset 0) vsource type=pwl wave=[0 0.9 4n 0.9 4.2n 0 58n 0 58.2n 0.9 63n 0.9 63.2n 0 110n 0]\nVenable (enable 0) vsource type=pwl wave=[0 0 5n 0 5.2n 0.9 31n 0.9 31.2n 0 41n 0 41.2n 0.9 110n 0.9]\nVinp (vinp 0) vsource type=sine sinedc=0.40 ampl=0.31 freq=29Meg\nVinn (vinn 0) vsource type=sine sinedc=0.46 ampl=0.09 freq=13Meg\nXDUT (vinp vinn clk reset enable rms_out valid) sampled_true_rms_to_dc tr=80p\n\ntran tran stop=110n maxstep=40p\nsave vinp vinn clk reset enable rms_out valid\n",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 delay=1.8n period=4.7n width=2.1n rise=80p fall=80p\nVreset (reset 0) vsource type=pwl wave=[0 0.9 4.37n 0.9 4.57n 0 58.37n 0 58.57n 0.9 63.37n 0.9 63.57n 0 110.37n 0]\nVenable (enable 0) vsource type=pwl wave=[0 0 5.37n 0 5.57n 0.9 31.37n 0.9 31.57n 0 41.37n 0 41.57n 0.9 110.37n 0.9]\nVinp (vinp 0) vsource type=sine sinedc=0.37 ampl=0.27 freq=23Meg\nVinn (vinn 0) vsource type=sine sinedc=0.46 ampl=0.12 freq=19Meg\nXDUT (vinp vinn clk reset enable rms_out valid) sampled_true_rms_to_dc tr=80p\n\ntran tran stop=110n maxstep=40p\nsave vinp vinn clk reset enable rms_out valid\n",
     "signals": [
       "vinp",
       "vinn",
@@ -20,14 +20,14 @@
     "support": {}
   },
   {
-    "name": "dc-input",
+    "name": "terminal-dc-input",
     "kind": "rms",
     "stop": 1.1e-07,
     "threshold": 0.45,
     "vhigh": 0.9,
     "guard": 3.2e-10,
     "atol": 0.002,
-    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 delay=1.5n period=5n width=2.1n rise=80p fall=80p\nVreset (reset 0) vsource type=pwl wave=[0 0.9 4n 0.9 4.2n 0 58n 0 58.2n 0.9 63n 0.9 63.2n 0 110n 0]\nVenable (enable 0) vsource type=pwl wave=[0 0 5n 0 5.2n 0.9 31n 0.9 31.2n 0 41n 0 41.2n 0.9 110n 0.9]\nVinp (vinp 0) vsource dc=.70\nVinn (vinn 0) vsource dc=.40\nXDUT (vinp vinn clk reset enable rms_out valid) sampled_true_rms_to_dc tr=80p\n\ntran tran stop=110n maxstep=40p\nsave vinp vinn clk reset enable rms_out valid\n",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 delay=1.8n period=4.7n width=2.1n rise=80p fall=80p\nVreset (reset 0) vsource type=pwl wave=[0 0.9 4.37n 0.9 4.57n 0 58.37n 0 58.57n 0.9 63.37n 0.9 63.57n 0 110.37n 0]\nVenable (enable 0) vsource type=pwl wave=[0 0 5.37n 0 5.57n 0.9 31.37n 0.9 31.57n 0 41.37n 0 41.57n 0.9 110.37n 0.9]\nVinp (vinp 0) vsource dc=.66\nVinn (vinn 0) vsource dc=.37\nXDUT (vinp vinn clk reset enable rms_out valid) sampled_true_rms_to_dc tr=80p\n\ntran tran stop=110n maxstep=40p\nsave vinp vinn clk reset enable rms_out valid\n",
     "signals": [
       "vinp",
       "vinn",
@@ -40,14 +40,14 @@
     "support": {}
   },
   {
-    "name": "different-waveform",
+    "name": "terminal-different-waveform",
     "kind": "rms",
     "stop": 1.1e-07,
     "threshold": 0.45,
     "vhigh": 0.9,
     "guard": 3.2e-10,
     "atol": 0.002,
-    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 delay=1.5n period=5n width=2.1n rise=80p fall=80p\nVreset (reset 0) vsource type=pwl wave=[0 0.9 4n 0.9 4.2n 0 58n 0 58.2n 0.9 63n 0.9 63.2n 0 110n 0]\nVenable (enable 0) vsource type=pwl wave=[0 0 5n 0 5.2n 0.9 31n 0.9 31.2n 0 41n 0 41.2n 0.9 110n 0.9]\nVinp (vinp 0) vsource type=sine sinedc=0.40 ampl=.21 freq=17Meg\nVinn (vinn 0) vsource type=sine sinedc=0.46 ampl=.19 freq=31Meg\nXDUT (vinp vinn clk reset enable rms_out valid) sampled_true_rms_to_dc tr=80p\n\ntran tran stop=110n maxstep=40p\nsave vinp vinn clk reset enable rms_out valid\n",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 delay=1.8n period=4.7n width=2.1n rise=80p fall=80p\nVreset (reset 0) vsource type=pwl wave=[0 0.9 4.37n 0.9 4.57n 0 58.37n 0 58.57n 0.9 63.37n 0.9 63.57n 0 110.37n 0]\nVenable (enable 0) vsource type=pwl wave=[0 0 5.37n 0 5.57n 0.9 31.37n 0.9 31.57n 0 41.37n 0 41.57n 0.9 110.37n 0.9]\nVinp (vinp 0) vsource type=sine sinedc=0.37 ampl=.18 freq=21Meg\nVinn (vinn 0) vsource type=sine sinedc=0.46 ampl=.16 freq=27Meg\nXDUT (vinp vinn clk reset enable rms_out valid) sampled_true_rms_to_dc tr=80p\n\ntran tran stop=110n maxstep=40p\nsave vinp vinn clk reset enable rms_out valid\n",
     "signals": [
       "vinp",
       "vinn",

@@ -1,13 +1,13 @@
 [
   {
-    "name": "rearm-stop-overflow",
+    "name": "terminal-rearm-stop-overflow",
     "kind": "tdc",
     "stop": 3.5e-08,
     "threshold": 0.5,
     "vhigh": 1,
     "guard": 4e-11,
     "atol": 0.002,
-    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nVclk (clk 0) vsource type=pulse val0=0 val1=1 delay=.08n period=.1n width=.04n rise=5p fall=5p\nVrst (rst 0) vsource type=pwl wave=[0 1 .1n 1 .12n 0 35n 0]\nVstart (start 0) vsource type=pwl wave=[0 0 .64n 0 .66n 1 .72n 1 .74n 0 3.04n 0 3.06n 1 3.12n 1 3.14n 0 6.04n 0 6.06n 1 6.12n 1 6.14n 0 35n 0]\nVstop (stop 0) vsource type=pwl wave=[0 0 1.83n 0 1.85n 1 1.91n 1 1.93n 0 5.43n 0 5.45n 1 5.51n 1 5.53n 0 35n 0]\nXM (start stop clk rst code_0 code_1 code_2 code_3 code_4 code_5 code_6 code_7 valid overflow) tdc_meter\ntran tran stop=35n maxstep=2p\nsave start stop clk rst code_0 code_1 code_2 code_3 code_4 code_5 code_6 code_7 valid overflow\n",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nVclk (clk 0) vsource type=pulse val0=0 val1=1 delay=.08n period=.11n width=.04n rise=5p fall=5p\nVrst (rst 0) vsource type=pwl wave=[0 1 0.47n 1 0.49n 0 35.37n 0]\nVstart (start 0) vsource type=pwl wave=[0 0 1.01n 0 1.03n 1 1.09n 1 1.11n 0 3.41n 0 3.43n 1 3.49n 1 3.51n 0 6.41n 0 6.43n 1 6.49n 1 6.51n 0 35.37n 0]\nVstop (stop 0) vsource type=pwl wave=[0 0 2.2n 0 2.22n 1 2.28n 1 2.3n 0 5.8n 0 5.82n 1 5.88n 1 5.9n 0 35.37n 0]\nXM (start stop clk rst code_0 code_1 code_2 code_3 code_4 code_5 code_6 code_7 valid overflow) tdc_meter\ntran tran stop=35n maxstep=2p\nsave start stop clk rst code_0 code_1 code_2 code_3 code_4 code_5 code_6 code_7 valid overflow\n",
     "signals": [
       "start",
       "stop",
@@ -27,14 +27,14 @@
     "support": {}
   },
   {
-    "name": "reset-abort",
+    "name": "terminal-reset-abort",
     "kind": "tdc",
     "stop": 3.5e-08,
     "threshold": 0.5,
     "vhigh": 1,
     "guard": 4e-11,
     "atol": 0.002,
-    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nVclk (clk 0) vsource type=pulse val0=0 val1=1 delay=.08n period=.1n width=.04n rise=5p fall=5p\nVrst (rst 0) vsource type=pwl wave=[0 1 .1n 1 .12n 0 10n 0 10.02n 1 12n 1 12.02n 0 35n 0]\nVstart (start 0) vsource type=pwl wave=[0 0 .64n 0 .66n 1 .72n 1 .74n 0 3.04n 0 3.06n 1 3.12n 1 3.14n 0 6.04n 0 6.06n 1 6.12n 1 6.14n 0 35n 0]\nVstop (stop 0) vsource type=pwl wave=[0 0 1.83n 0 1.85n 1 1.91n 1 1.93n 0 5.43n 0 5.45n 1 5.51n 1 5.53n 0 35n 0]\nXM (start stop clk rst code_0 code_1 code_2 code_3 code_4 code_5 code_6 code_7 valid overflow) tdc_meter\ntran tran stop=35n maxstep=2p\nsave start stop clk rst code_0 code_1 code_2 code_3 code_4 code_5 code_6 code_7 valid overflow\n",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nVclk (clk 0) vsource type=pulse val0=0 val1=1 delay=.08n period=.11n width=.04n rise=5p fall=5p\nVrst (rst 0) vsource type=pwl wave=[0 1 0.47n 1 0.49n 0 10.37n 0 10.39n 1 12.37n 1 12.39n 0 35.37n 0]\nVstart (start 0) vsource type=pwl wave=[0 0 1.01n 0 1.03n 1 1.09n 1 1.11n 0 3.41n 0 3.43n 1 3.49n 1 3.51n 0 6.41n 0 6.43n 1 6.49n 1 6.51n 0 35.37n 0]\nVstop (stop 0) vsource type=pwl wave=[0 0 2.2n 0 2.22n 1 2.28n 1 2.3n 0 5.8n 0 5.82n 1 5.88n 1 5.9n 0 35.37n 0]\nXM (start stop clk rst code_0 code_1 code_2 code_3 code_4 code_5 code_6 code_7 valid overflow) tdc_meter\ntran tran stop=35n maxstep=2p\nsave start stop clk rst code_0 code_1 code_2 code_3 code_4 code_5 code_6 code_7 valid overflow\n",
     "signals": [
       "start",
       "stop",
@@ -54,14 +54,14 @@
     "support": {}
   },
   {
-    "name": "extra-stop",
+    "name": "terminal-extra-stop",
     "kind": "tdc",
     "stop": 3.5e-08,
     "threshold": 0.5,
     "vhigh": 1,
     "guard": 4e-11,
     "atol": 0.002,
-    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nVclk (clk 0) vsource type=pulse val0=0 val1=1 delay=.08n period=.1n width=.04n rise=5p fall=5p\nVrst (rst 0) vsource type=pwl wave=[0 1 .1n 1 .12n 0 35n 0]\nVstart (start 0) vsource type=pwl wave=[0 0 .64n 0 .66n 1 .72n 1 .74n 0 3.04n 0 3.06n 1 3.12n 1 3.14n 0 6.04n 0 6.06n 1 6.12n 1 6.14n 0 35n 0]\nVstop (stop 0) vsource type=pwl wave=[0 0 1.83n 0 1.85n 1 1.91n 1 1.93n 0 5.43n 0 5.45n 1 5.51n 1 5.53n 0 33n 0 33.02n 1 33.12n 1 33.14n 0 35n 0]\nXM (start stop clk rst code_0 code_1 code_2 code_3 code_4 code_5 code_6 code_7 valid overflow) tdc_meter\ntran tran stop=35n maxstep=2p\nsave start stop clk rst code_0 code_1 code_2 code_3 code_4 code_5 code_6 code_7 valid overflow\n",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nVclk (clk 0) vsource type=pulse val0=0 val1=1 delay=.08n period=.11n width=.04n rise=5p fall=5p\nVrst (rst 0) vsource type=pwl wave=[0 1 0.47n 1 0.49n 0 35.37n 0]\nVstart (start 0) vsource type=pwl wave=[0 0 1.01n 0 1.03n 1 1.09n 1 1.11n 0 3.41n 0 3.43n 1 3.49n 1 3.51n 0 6.41n 0 6.43n 1 6.49n 1 6.51n 0 35.37n 0]\nVstop (stop 0) vsource type=pwl wave=[0 0 2.2n 0 2.22n 1 2.28n 1 2.3n 0 5.8n 0 5.82n 1 5.88n 1 5.9n 0 33.37n 0 33.39n 1 33.49n 1 33.51n 0 35.37n 0]\nXM (start stop clk rst code_0 code_1 code_2 code_3 code_4 code_5 code_6 code_7 valid overflow) tdc_meter\ntran tran stop=35n maxstep=2p\nsave start stop clk rst code_0 code_1 code_2 code_3 code_4 code_5 code_6 code_7 valid overflow\n",
     "signals": [
       "start",
       "stop",

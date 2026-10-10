@@ -1,6 +1,6 @@
 [
   {
-    "name": "normal",
+    "name": "terminal-normal",
     "kind": "gain",
     "stop": 2.4e-07,
     "start_time": 2e-08,
@@ -10,7 +10,7 @@
     "vhigh": 0.9,
     "guard": 3.5e-10,
     "atol": 0.002,
-    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"amplifier.va\"\nVdd (vdd 0) vsource dc=.9\nVinp (vinp 0) vsource type=sine sinedc=.45 ampl=0.06 freq=20Meg\nVinn (vinn 0) vsource dc=.45\nVoutn (voutn 0) vsource dc=.45\nVclk (clk 0) vsource type=pulse val0=0 val1=.9 delay=1n period=8n width=3n rise=60p fall=60p\nVsel (sel 0) vsource type=pwl wave=[0 0 100n 0 100.1n .9 240n .9]\nVbegin (begin_round 0) vsource type=pwl wave=[0 0 104n 0 104.1n 1 105n 1 105.1n 0 240n 0]\nXA (clk 0 sel vinp voutp clipping) programmable_gain_amplifier gain_low=0.8 gain_high=2.4\nXM (vdd 0 vinp vinn voutp voutn gain_out valid begin_round) gain_estimator sample_period=1n start_time=20n gain_scale=10 min_input_span=.02 tedge=200p\ntran tran stop=240n maxstep=100p errpreset=conservative\nsave vinp vinn voutp voutn begin_round gain_out valid\n",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"amplifier.va\"\nVdd (vdd 0) vsource dc=.9\nVinp (vinp 0) vsource type=sine sinedc=.45 ampl=0.055 freq=23Meg\nVinn (vinn 0) vsource dc=.45\nVoutn (voutn 0) vsource dc=.45\nVclk (clk 0) vsource type=pulse val0=0 val1=.9 delay=1n period=8n width=3n rise=60p fall=60p\nVsel (sel 0) vsource type=pwl wave=[0 0 93.35n 0 93.45n .9 240n .9]\nVbegin (begin_round 0) vsource type=pwl wave=[0 0 97.35n 0 97.45n 1 98.35n 1 98.45n 0 240n 0]\nXA (clk 0 sel vinp voutp clipping) programmable_gain_amplifier gain_low=1.05 gain_high=2.15\nXM (vdd 0 vinp vinn voutp voutn gain_out valid begin_round) gain_estimator sample_period=1n start_time=20n gain_scale=10 min_input_span=.02 tedge=200p\ntran tran stop=240n maxstep=100p errpreset=conservative\nsave vinp vinn voutp voutn begin_round gain_out valid\n",
     "signals": [
       "vinp",
       "vinn",
@@ -25,7 +25,7 @@
     }
   },
   {
-    "name": "low-performance-dut",
+    "name": "terminal-low-performance-dut",
     "kind": "gain",
     "stop": 2.4e-07,
     "start_time": 2e-08,
@@ -35,7 +35,7 @@
     "vhigh": 0.9,
     "guard": 3.5e-10,
     "atol": 0.002,
-    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"amplifier.va\"\nVdd (vdd 0) vsource dc=.9\nVinp (vinp 0) vsource type=sine sinedc=.45 ampl=0.06 freq=20Meg\nVinn (vinn 0) vsource dc=.45\nVoutn (voutn 0) vsource dc=.45\nVclk (clk 0) vsource type=pulse val0=0 val1=.9 delay=1n period=8n width=3n rise=60p fall=60p\nVsel (sel 0) vsource type=pwl wave=[0 0 100n 0 100.1n .9 240n .9]\nVbegin (begin_round 0) vsource type=pwl wave=[0 0 104n 0 104.1n 1 105n 1 105.1n 0 240n 0]\nXA (clk 0 sel vinp voutp clipping) programmable_gain_amplifier gain_low=0.3 gain_high=1.1\nXM (vdd 0 vinp vinn voutp voutn gain_out valid begin_round) gain_estimator sample_period=1n start_time=20n gain_scale=10 min_input_span=.02 tedge=200p\ntran tran stop=240n maxstep=100p errpreset=conservative\nsave vinp vinn voutp voutn begin_round gain_out valid\n",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"amplifier.va\"\nVdd (vdd 0) vsource dc=.9\nVinp (vinp 0) vsource type=sine sinedc=.45 ampl=0.055 freq=23Meg\nVinn (vinn 0) vsource dc=.45\nVoutn (voutn 0) vsource dc=.45\nVclk (clk 0) vsource type=pulse val0=0 val1=.9 delay=1n period=8n width=3n rise=60p fall=60p\nVsel (sel 0) vsource type=pwl wave=[0 0 93.35n 0 93.45n .9 240n .9]\nVbegin (begin_round 0) vsource type=pwl wave=[0 0 97.35n 0 97.45n 1 98.35n 1 98.45n 0 240n 0]\nXA (clk 0 sel vinp voutp clipping) programmable_gain_amplifier gain_low=0.42 gain_high=1.25\nXM (vdd 0 vinp vinn voutp voutn gain_out valid begin_round) gain_estimator sample_period=1n start_time=20n gain_scale=10 min_input_span=.02 tedge=200p\ntran tran stop=240n maxstep=100p errpreset=conservative\nsave vinp vinn voutp voutn begin_round gain_out valid\n",
     "signals": [
       "vinp",
       "vinn",
@@ -50,7 +50,7 @@
     }
   },
   {
-    "name": "invalid-final-span",
+    "name": "terminal-invalid-final-span",
     "kind": "gain",
     "stop": 2.4e-07,
     "start_time": 2e-08,
@@ -60,7 +60,7 @@
     "vhigh": 0.9,
     "guard": 3.5e-10,
     "atol": 0.002,
-    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"amplifier.va\"\nVdd (vdd 0) vsource dc=.9\nVinp (vinp 0) vsource type=sine sinedc=.45 ampl=0.001 freq=20Meg\nVinn (vinn 0) vsource dc=.45\nVoutn (voutn 0) vsource dc=.45\nVclk (clk 0) vsource type=pulse val0=0 val1=.9 delay=1n period=8n width=3n rise=60p fall=60p\nVsel (sel 0) vsource type=pwl wave=[0 0 100n 0 100.1n .9 240n .9]\nVbegin (begin_round 0) vsource type=pwl wave=[0 0 104n 0 104.1n 1 105n 1 105.1n 0 240n 0]\nXA (clk 0 sel vinp voutp clipping) programmable_gain_amplifier gain_low=0.8 gain_high=2.4\nXM (vdd 0 vinp vinn voutp voutn gain_out valid begin_round) gain_estimator sample_period=1n start_time=20n gain_scale=10 min_input_span=.02 tedge=200p\ntran tran stop=240n maxstep=100p errpreset=conservative\nsave vinp vinn voutp voutn begin_round gain_out valid\n",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"amplifier.va\"\nVdd (vdd 0) vsource dc=.9\nVinp (vinp 0) vsource type=sine sinedc=.45 ampl=0.002 freq=23Meg\nVinn (vinn 0) vsource dc=.45\nVoutn (voutn 0) vsource dc=.45\nVclk (clk 0) vsource type=pulse val0=0 val1=.9 delay=1n period=8n width=3n rise=60p fall=60p\nVsel (sel 0) vsource type=pwl wave=[0 0 93.35n 0 93.45n .9 240n .9]\nVbegin (begin_round 0) vsource type=pwl wave=[0 0 97.35n 0 97.45n 1 98.35n 1 98.45n 0 240n 0]\nXA (clk 0 sel vinp voutp clipping) programmable_gain_amplifier gain_low=1.05 gain_high=2.15\nXM (vdd 0 vinp vinn voutp voutn gain_out valid begin_round) gain_estimator sample_period=1n start_time=20n gain_scale=10 min_input_span=.02 tedge=200p\ntran tran stop=240n maxstep=100p errpreset=conservative\nsave vinp vinn voutp voutn begin_round gain_out valid\n",
     "signals": [
       "vinp",
       "vinn",

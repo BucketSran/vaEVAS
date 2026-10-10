@@ -5,13 +5,30 @@ shifters. This builder never launches a simulator. Publication still requires
 actual Spectre source/candidate/mutant calibration.
 """
 from pathlib import Path
-import argparse,json,re,shutil
+import argparse,json,re,shutil,hashlib,copy
 import build_tasks as packages
 from prepare_por_spectre import expressions,geometry,instance_parameters,configure_netlist
 
 def public_spice(text):
     converted=instance_parameters(geometry(expressions(text)))
     return '\n'.join(line.rstrip() for line in converted.rstrip().splitlines())+'\n'
+
+def export_public_case(task,case):
+    case=copy.deepcopy(case)
+    public=task/'environment/public'
+    sources={}
+    for name,text in case.pop('support').items():
+        text=re.sub(r'(?<![\w])\.(\d)',r'0.\1',text)
+        path=public/'dut'/name
+        path.write_text(text)
+        sources[name]=dict(path='dut/'+name,sha256=hashlib.sha256(text.encode()).hexdigest())
+    case['support_files']=sources
+    (public/'cases.json').write_text(json.dumps([case],indent=2)+'\n')
+    net=case['netlist']
+    for name in sources:
+        net=net.replace('\"'+name+'\"','\"/work/public/dut/'+name+'\"')
+    (public/'public-default.scs').write_text(net)
+    shutil.copyfile(Path(__file__).with_name('por_public_case.py'),public/'materialize_case.py')
 
 def build(prepared,source):
     text=(prepared/'por.cir').read_text()
@@ -41,16 +58,17 @@ endmodule
     base={'models.spice':(prepared/'models.spice').read_text(),'cells.spice':(prepared/'cells.spice').read_text(),'analog.spice':analog,'por_digital.va':Path(__file__).with_name('por_digital.va').read_text(),'por_observe.va':fault}
     reports=['first_response_us','first_period_us','first_width_us','first_valid','first_ok','recovery_response_us','recovery_period_us','recovery_width_us','recovery_valid','recovery_ok','done']
     cases=[]
-    for name,mode,slow in [('normal',0,False),('slower-oscillator',0,True),('missing-recovery-pulse',1,False),('early-pulse-release',2,False)]:
+    for name,mode,mf in [('public-healthy',0,6),('normal',0,7),('slower-oscillator',0,14),('missing-recovery-pulse',1,9),('early-pulse-release',2,11)]:
         support=base.copy()
-        if slow:
-            # Public DUT loading variant doubles only the original RC capacitor.
-            support['analog.spice']=analog.replace('XC1 in dvss sky130_fd_pr__cap_mim_m3_2 W=30 L=30 MF=6 m=6','XC1 in dvss sky130_fd_pr__cap_mim_m3_2 W=30 L=30 MF=12 m=6')
+        # Public original load and independent final load instances. Nominal
+        # device geometry/model is preserved; only this RC capacitor varies.
+        support['analog.spice']=analog.replace('XC1 in dvss sky130_fd_pr__cap_mim_m3_2 W=30 L=30 MF=6 m=6','XC1 in dvss sky130_fd_pr__cap_mim_m3_2 W=30 L=30 MF='+str(mf)+' m=6')
         net='simulator lang=spectre\nglobal 0\nahdl_include "dut.va"\nahdl_include "por_digital.va"\nahdl_include "por_observe.va"\nsimulator lang=spice\n.option scale=1u\n.param dlc_rotweak=0\n.include "models.spice"\n.include "cells.spice"\n.include "analog.spice"\nVgnd GND 0 0\n'+head+'\nsimulator lang=spectre\nXO (por_raw pwup_filt osc_ck por) por_observe mode='+str(mode)+'\nXM (avdd por pwup_filt osc_ck '+' '.join(reports)+') por_bench\ntran tran stop=6m maxstep=500n\nsave avdd por pwup_filt osc_ck '+' '.join(reports)+'\n'
         # Public port names match the immutable top-level engineering connection.
         support={k:public_spice(v) if k.endswith('.spice') else v for k,v in support.items()}
         net=configure_netlist(net)
         cases.append(dict(name=name,kind='por_bench',stop=.006,tick=1e-6,ramp=.002,dip_ramp=.0001,hold=.0001,recovery_ramp=.0001,timeout=.001,guard=5e-6,atol=.15,supply_atol=.03,signals=['avdd','por','power','osc']+reports,netlist=net.replace('pwup_filt','power').replace('osc_ck','osc'),support=support))
+    public_case=cases.pop(0)
     alt=ref.replace('tick=1u','tick=500n').replace('t3[0:1],t9[0:1]','t3[0:1],t9[0:1],previous[0:1],sum_period[0:1]')
     alt=alt.replace('t0[i]=0;t3[i]=0;t9[i]=0;','t0[i]=0;t3[i]=0;t9[i]=0;previous[i]=0;sum_period[i]=0;')
     alt=alt.replace('if(n[cycle]==3) t3[cycle]=$abstime;','if(n[cycle]>3 && n[cycle]<=9) sum_period[cycle]=sum_period[cycle]+$abstime-previous[cycle];previous[cycle]=$abstime;')
@@ -62,9 +80,10 @@ endmodule
 
 每轮 response_us 严格等于该轮首个实际osc上升至首个POR上升的时间，不能改成从供电门限计时。period_us=(第9个osc上升-第3个osc上升)/6；width_us=实际POR下降-上升。单位都是微秒。两POR事件及至少9个osc事件齐全时valid=1，报告实测值；缺事件则该轮valid及全部三个指标为0。ok=1仅当POR上升发生于第6个osc之后且第7个之前、下降发生于第13个之后且第14个之前，且真实power欠压下降已发生。性质判断基于实际端口，不读取内部计数结束flags。逻辑报告高为1V，低为0。done最终为1，指标误差≤0.15us，输出更新宽限5us。故障DUT正确报告ok=0可以通过。
 
-只读DUT含原晶体管电源检测/滤波/RC振荡器/输出缓冲、忠实原数字状态的可读VA边界。公开条件包括原RC、加倍RC电容、漏掉恢复POR的接口故障及提前释放POR的接口故障。不得把固定预期时间当实测结果。'''
-    packages.package('por-sequence','case-0001-sky130-ajc-por','POR真实上电、欠压与恢复闭环测试台',contract,ref,alt,mutants,cases,{k:public_spice(v) if k.endswith('.spice') else v for k,v in base.items()})
+只读DUT含原晶体管电源检测/滤波/RC振荡器/输出缓冲、忠实原数字状态的可读VA边界。公开健康自测使用原RC；终评使用独立固定的RC负载实例，性质覆盖健康、较慢振荡器、漏掉恢复POR的接口故障及提前释放POR的接口故障，具体终评负载不进入公开包。不得把固定预期时间当实测结果。公开默认台架为 `/work/public/public-default.scs`，只引用原RC健康资产并加载候选dut.va。`python /work/public/materialize_case.py --output visible-cases.json` 可核对独立资产SHA并重建该公开自测的完整材料。'''
+    packages.package('por-sequence','case-0001-sky130-ajc-por','POR真实上电、欠压与恢复闭环测试台',contract,ref,alt,mutants,cases,{k:public_spice(v) if k.endswith('.spice') else v for k,v in base.items()},public_cases=[public_case])
     task=packages.ROOT/'benchmark/tasks/v2-test-por-sequence'
+    export_public_case(task,public_case)
     identity=json.loads((prepared/'identity.json').read_text())
     if 'dev/gauss' in base['models.spice']:
         identity['processing']=[x for x in identity['processing'] if 'dev/gauss' not in x]

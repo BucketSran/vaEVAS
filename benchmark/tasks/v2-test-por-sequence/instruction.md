@@ -8,6 +8,6 @@
 
 每轮 response_us 严格等于该轮首个实际osc上升至首个POR上升的时间，不能改成从供电门限计时。period_us=(第9个osc上升-第3个osc上升)/6；width_us=实际POR下降-上升。单位都是微秒。两POR事件及至少9个osc事件齐全时valid=1，报告实测值；缺事件则该轮valid及全部三个指标为0。ok=1仅当POR上升发生于第6个osc之后且第7个之前、下降发生于第13个之后且第14个之前，且真实power欠压下降已发生。性质判断基于实际端口，不读取内部计数结束flags。逻辑报告高为1V，低为0。done最终为1，指标误差≤0.15us，输出更新宽限5us。故障DUT正确报告ok=0可以通过。
 
-只读DUT含原晶体管电源检测/滤波/RC振荡器/输出缓冲、忠实原数字状态的可读VA边界。公开条件包括原RC、加倍RC电容、漏掉恢复POR的接口故障及提前释放POR的接口故障。不得把固定预期时间当实测结果。
+只读DUT含原晶体管电源检测/滤波/RC振荡器/输出缓冲、忠实原数字状态的可读VA边界。公开健康自测使用原RC；终评使用独立固定的RC负载实例，性质覆盖健康、较慢振荡器、漏掉恢复POR的接口故障及提前释放POR的接口故障，具体终评负载不进入公开包。不得把固定预期时间当实测结果。公开默认台架为 `/work/public/public-default.scs`，只引用原RC健康资产并加载候选dut.va。`python /work/public/materialize_case.py --output visible-cases.json` 可核对独立资产SHA并重建该公开自测的完整材料。
 
-固定后端为 Spectre；语法遵循该后端的 Verilog-A。源码按原字节运行。工具链故障单独诊断，不作为候选零分。运行 `python /tests/verify.py --candidate /work/dut.va --output /logs/verifier --tests /tests` 自测，正式条件和数值容差公开于 public/cases.json。
+固定后端为 Spectre；语法遵循该后端的 Verilog-A。源码按原字节运行。工具链故障单独诊断，不作为候选零分。公开自测实例位于 `/work/public/cases.json`，固定DUT实现位于 `/work/public/dut/`，可据此运行自己的Spectre自测。终评在提交后使用合同范围内不同的参数、事件及故障实例；终评台架和checker不进入解题材料。判定目标与数值容差以本题公开合同为准。

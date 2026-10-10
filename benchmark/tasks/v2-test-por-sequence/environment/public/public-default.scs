@@ -1,0 +1,53 @@
+simulator lang=spectre
+global 0
+sourceCompat options redefinedparams=warning
+ahdl_include "dut.va"
+ahdl_include "/work/public/dut/por_digital.va"
+ahdl_include "/work/public/dut/por_observe.va"
+simulator lang=spice
+.option scale=1u
+.param dlc_rotweak=0
+.include "/work/public/dut/models.spice"
+.include "/work/public/dut/cells.spice"
+.include "/work/public/dut/analog.spice"
+Vgnd GND 0 0
+** sch_path: /home/rtsang/chipalooza/sky130_ajc_ip__por/cace/transient.sch
+**.subckt transient
+Ibias vbp GND 200n
+XM1 ibg_200n vbp avdd_bg avdd_bg sky130_fd_pr__pfet_g5v0d10v5 L=4 W=1 nf=1 ad='int(((1)+1)/2) * (1)/(1) * 0.29' as='int(((1)+2)/2) * (1)/(1) * 0.29' pd='2*int(((1)+1)/2) * ((1)/(1) + 0.29)' ps='2*int(((1)+2)/2) * ((1)/(1) + 0.29)' nrd='0.29 / (1)' nrs='0.29 / (1)' sa=0 sb=0 sd=0 mult=1 m=1
+XM0 vbp vbp avdd_bg avdd_bg sky130_fd_pr__pfet_g5v0d10v5 L=4 W=1 nf=1 ad='int(((1)+1)/2) * (1)/(1) * 0.29' as='int(((1)+2)/2) * (1)/(1) * 0.29' pd='2*int(((1)+1)/2) * ((1)/(1) + 0.29)' ps='2*int(((1)+2)/2) * ((1)/(1) + 0.29)' nrd='0.29 / (1)' nrs='0.29 / (1)' sa=0 sb=0 sd=0 mult=1 m=1
+R1 itest GND 1e6 m=1
+Vavss avss GND DC 0
+Vforce_pdn force_pdn GND pwl(0 0 1u '0*1.8')
+
+
+Vbg1v2 vbg_1v2 GND DC 1.2
+Vdvss dvss GND DC 0
+Vdvdd dvdd GND DC 1.8
+
+Vvotrip0 otrip[0] GND DC '0*1.8'
+
+Vvotrip1 otrip[1] GND DC '0*1.8'
+
+Vvotrip2 otrip[2] GND DC '0*1.8'
+
+Vvotrip3 otrip[3] GND DC '0*1.8'
+
+Visrc_sel isrc_sel GND DC '0*1.8'
+Vavdd_bg avdd_bg GND DC 3.3
+Vforce_dis_rc_osc force_dis_rc_osc GND DC '0*1.8'
+Vforce_short_oneshot force_short_oneshot GND DC '1*1.8'
+Vforce_ena_rc_osc force_ena_rc_osc GND DC '0*1.8'
+xIpor avdd porb_h porb avss dvdd por_raw dvss osc vbg_1v2 dcomp otrip[2] otrip[1] otrip[0] itest force_pdn power vin
++ force_ena_rc_osc force_dis_rc_osc startup_timed_out por_timed_out force_short_oneshot isrc_sel ibg_200n sky130_ajc_ip__por
+C1 porb_h GND 20p m=1
+C2 porb GND 20p m=1
+C3 por_raw GND 20p m=1
+
+
+
+simulator lang=spectre
+XO (por_raw power osc por) por_observe mode=0
+XM (avdd por power osc first_response_us first_period_us first_width_us first_valid first_ok recovery_response_us recovery_period_us recovery_width_us recovery_valid recovery_ok done) por_bench
+tran tran stop=6m maxstep=500n
+save avdd por power osc first_response_us first_period_us first_width_us first_valid first_ok recovery_response_us recovery_period_us recovery_width_us recovery_valid recovery_ok done
