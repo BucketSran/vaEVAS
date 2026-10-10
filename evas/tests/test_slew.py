@@ -158,7 +158,8 @@ class SlewContracts(unittest.TestCase):
 
     def test_unsupported_inputs_and_operator_uses_are_rejected(self):
         bodies = [
-            'V(y,r)<+slew(slew(V(u,r),1,-2),1,-2);',
+            # Fixed two-stage nesting is covered by test_slew_cascade.
+            'V(y,r)<+slew(slew(slew(V(u,r),1,-2),1,-2),1,-2);',
             'V(y,r)<+slew(V(u,r)*V(u,r),1,-2);',
             'V(y,r)<+slew(V(u,r),1,-2)*V(u,r);',
             'V(y,r)<+slew(V(u,r),1,-2)*slew(V(u,r),1,-2);',
