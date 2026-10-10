@@ -14,7 +14,7 @@
 | 材料 | 内容 |
 | --- | --- |
 | tests/contract.json | `candidate_files`，首项 `dut.va`，以及报告文件清单 |
-| tests/cases.json | 唯一 `name`、`netlist`、`stop`、`signals`，可选不可修改 `support` 文本 |
+| tests/cases.json | 唯一 `name`、`netlist`、`stop`、`signals`，可选不可修改 `support` 文本或 `support_files` 路径/SHA引用 |
 | verifier 回调 | 接收实际时间/电压行、case合同和本条件的目录；返回布尔 `passed` 与测量细节 |
 | report.json | 条件状态、候选/台架/checker/波形身份、后端版本、诊断和可评分时的reward |
 
@@ -52,6 +52,8 @@ Spectre全局最多4并发，包括参考校准和模型终评。由同一协调
 记录绑定`6ec29fa0`的runtime、冻结候选、判据和返回报告身份，检验了实际
 Spectre到既有harness的评分消费路径。它不代表五类规格已完成，也不替代
 任务修正后的重新校准、模型试做或隔离验收。
+
+`support_files` 将模拟文件名映射到 `{"path": "dut/model.spice", "sha256": "…"}`。路径以私有 `tests/` 为根；runtime 在启动后端前核对普通文件类型、根目录约束与原字节SHA，再按原UTF-8内容写入隔离运行目录。引用不能覆盖候选，也不能与内联support重名。多个条件可共享同一文件，材料去重不改变实际仿真输入。
 
 ## 模型试做
 
