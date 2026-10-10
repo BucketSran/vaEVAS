@@ -23,6 +23,35 @@ def ramp_filter(t, start=1.25, duration=.5, tau=.25):
 
 
 class SampleEdgeFilter(unittest.TestCase):
+    def test_periodic_sample_at_stop_preserves_transition_and_filter_history(self):
+        # The original issue #96 probe ends at the fourth exact timer tick.
+        # A new endpoint sample changes the held state immediately, while the
+        # delayed transition and filter retain the earlier samples' history.
+        p = compile_model(
+            '@(initial_step) begin q=0.2; n=0; end '
+            '@(timer(1e-6,1e-6,1e-12)) begin q=V(u,r); n=n+1; end '
+            'V(h,r)<+q; V(nc,r)<+n; '
+            'V(e,r)<+transition(q,1e-7,2e-7,3e-7); '
+            "V(y,r)<+laplace_nd(V(e,r),'{1},'{1,4e-7});",
+            'real q; integer n; electrical h,e,nc;')
+        sparse = [0,.5e-6,1e-6,1.2e-6,1.5e-6,2e-6,2.5e-6,3e-6,3.5e-6,4e-6]
+        dense = sorted(set(sparse + [i*1e-7 for i in range(40)]))
+        answers = [run(p, {'u': [[0,.2],[4e-6,1.0]]}, ts, stop=4e-6,
+                       max_step=1e-7, vabstol=1e-7, reltol=0)
+                   for ts in (sparse, dense, [0])]
+        self.assertEqual(answers[0]['solutions'],
+                         [answers[1]['solutions'][dense.index(t)] for t in sparse])
+        for answer in answers:
+            self.assertEqual(answer['transient']['events'], answers[0]['transient']['events'])
+            self.assertEqual(answer['transient']['events'][-1]['after'], [1.,4.])
+            self.assertEqual(len(answer['transient']['events']), 4)
+        for t, row in zip(sparse, rows(answers[0])):
+            expected = .2 + .2*sum(ramp_filter(t, k*1e-6+1e-7, 2e-7, 4e-7)
+                                     for k in range(1,5))
+            self.assertAlmostEqual(row['y'], expected, delta=1e-7)
+        self.assertEqual(rows(answers[0])[-1]['dut:h'], 1.)
+        self.assertEqual(rows(answers[0])[-1]['dut:nc'], 4.)
+
     def test_timer_chain_forced_points_preserve_interruption_and_instance_history(self):
         for c in contract.CASES:
             if c['id']=='SEF-RESET':continue

@@ -688,7 +688,7 @@ fn add_timer(
         // enclosure covers both product and sum. Choosing its upper endpoint
         // cannot fire early, including when the source omitted time_tol. The
         // clock remains start + index * period, never prior accepted time + T.
-        let bounds = if forced_points && !held {
+        let mut bounds = if forced_points && !held {
             // A forced solve point must not be crossed only because interval
             // arithmetic widened an otherwise exactly ordered source clock.
             // Keep ordinary-query and uncertain held-timer paths unchanged.
@@ -704,6 +704,30 @@ fn add_timer(
         } else {
             start + I::point(index as f64) * period
         };
+        if !held && bounds.finite() && bounds.lo <= stop && bounds.hi > stop {
+            // Padding from interval multiply/add must not make a fixed clock
+            // ambiguous at stop. Prove the side before contracting its bounds:
+            // an exact clock just above stop can have a lower bound equal to it.
+            let clock = Clock {
+                start: start.lo,
+                period: period.lo,
+                index,
+            };
+            let endpoint = Clock {
+                start: stop,
+                period: 0.,
+                index: 0,
+            };
+            match clock.order(endpoint) {
+                Some(std::cmp::Ordering::Greater) => break,
+                Some(_) => {
+                    if let Some(tight) = clock.bounds() {
+                        bounds = tight;
+                    }
+                }
+                None => {}
+            }
+        }
         let time = bounds.hi;
         if (index as f64).mul_add(period.lo, start.lo) == f64::INFINITY {
             // The rounded lower-operand sum overflowing proves every possible
