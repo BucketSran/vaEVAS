@@ -46,6 +46,24 @@ class PilotTests(unittest.TestCase):
                 pilot.save_one_shot_candidate('{"files":{"../escape":"bad"}}', root, ['dut.va'])
             self.assertFalse((root.parent / 'escape').exists())
 
+    def test_one_outer_json_fence_preserves_exact_candidate_contents(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            contents = 'module x;\r\n// ``` inside source\r\nendmodule\r\n'
+            response = '```json\n' + json.dumps({'files': {'dut.va': contents}}) + '\n```'
+            pilot.save_one_shot_candidate(response, root, ['dut.va'])
+            self.assertEqual((root / 'candidate/dut.va').read_bytes(), contents.encode())
+            self.assertEqual((root / 'raw-response.txt').read_text(), response)
+
+    def test_explanatory_text_is_not_silently_removed(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            with self.assertRaises(ValueError):
+                pilot.save_one_shot_candidate(
+                    'Here is the answer:\n```json\n{"files":{"dut.va":"model"}}\n```',
+                    root, ['dut.va'])
+            self.assertFalse((root / 'candidate').exists())
+
     def test_public_package_uses_only_declared_input_netlist(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)

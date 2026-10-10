@@ -14,6 +14,7 @@ import hashlib
 import json
 import os
 from pathlib import Path, PurePosixPath
+import re
 import shutil
 import signal
 import subprocess
@@ -87,7 +88,10 @@ def save_one_shot_candidate(response: str, destination: Path, paths):
     # Preserve malformed responses too. They remain a submission-contract failure.
     with (destination / 'raw-response.txt').open('x', newline='') as stream:
         stream.write(response)
-    data = json.loads(response)
+    # Markdown is a response envelope, not part of a submitted VA file. Accept
+    # one complete outer JSON fence without selecting among proposed solutions.
+    envelope = re.fullmatch(r'```(?:json)?\s*\n(.*)\n```', response.strip(), re.DOTALL)
+    data = json.loads(envelope[1] if envelope else response)
     if set(data) != {'files'} or not isinstance(data['files'], dict) or set(data['files']) != set(paths):
         raise ValueError('response must submit exactly the declared candidate files')
     if any(not isinstance(content, str) for content in data['files'].values()):
@@ -99,6 +103,8 @@ def save_one_shot_candidate(response: str, destination: Path, paths):
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(data['files'][name].encode('utf-8'))
     save(destination / 'candidate-identity.json', {'selection': 'only-response-no-best-of',
+         'extraction_version': 'json-files-v2-optional-outer-fence',
+         'raw_response_sha256': hashlib.sha256(response.encode('utf-8')).hexdigest(),
          'files_sha256': file_hashes(candidate), 'candidate_files': paths})
 
 
