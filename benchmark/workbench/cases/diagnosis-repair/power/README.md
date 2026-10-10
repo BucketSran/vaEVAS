@@ -7,4 +7,4 @@
 | --- | --- | --- | --- | --- |
 | [case-0009](case-0009-uvlo-reset-chain/README.md) | UVLO、复位释放与使能链的系统修复 | 诊断与修复 / 电源与复位 | 题目草案 / 待 review（r1） | 建立有真实模块依赖的健康电源控制链，再选择跨模块故障 |
 | [case-0014](case-0014-debounce-qualification/README.md) | 修复控制输入的去抖资格计时 | 诊断与修复 / 电源与复位 | 材料筛选 / 待 review（r1） | 完整重写后是否值得作为基础修复题；复位释放及初态边界 |
-| [case-0015](case-0015-reset-release-sequencer/README.md) | 修复电源与偏置就绪后的复位释放序列 | 诊断与修复 / 电源与复位 | 材料筛选 / 待 review（r1） | 同步行为与合法阶段范围；纠正旧故障标签并评估重写难度 |
+| [case-0015](case-0015-reset-release-sequencer/README.md) | 修复电源与偏置就绪后的复位释放序列 | 诊断与修复 / 电源与复位 | 材料筛选 / 待 review（r1） | 首批电源修复入口；固定starter与同步状态表，校准复位和重新释放轨迹 |

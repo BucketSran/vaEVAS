@@ -9,7 +9,8 @@
 | [case-0002](power/case-0002-ldo-startup/README.md) | 固定 LDO 的启动指标测量 | 电路测试与表征 / 电源与复位 | 题目草案 / 待 review（r1） | 有限窗口定义、取样/事件语义及未建立状态 |
 | [case-0003](amplifiers/case-0003-opamp-slew/README.md) | 运放压摆率激励与测量 | 电路测试与表征 / 放大器 | 材料筛选 / 待 review（r1） | 先选公开 DUT，再决定单向或双向测量 |
 | [case-0010](adc/case-0010-adc-spectrum-records/README.md) | 从 ADC 观测记录提取动态指标 | 电路测试与表征 / ADC 与采样 | 题目草案 / 待 review（r1） | 先冻结采样、频点与谱功率定义，再决定是否引入非相干窗口 |
-| [case-0016](comparators/case-0016-hysteresis-characterizer/README.md) | 比较器翻转电压与表观滞回测量 | 电路测试与表征 / 比较器与门限检测 | 题目草案 / 待 review（r1） | 测量定义、最近双向捕获语义与独立事件验收；数值容差待校准 |
+| [case-0016](comparators/case-0016-hysteresis-characterizer/README.md) | 比较器翻转电压与表观滞回测量 | 电路测试与表征 / 比较器与门限检测 | 题目草案 / 待 review（r1） | 首批比较器表征入口；固定扫描工程，核对实际翻转、双向更新与不完整报告 |
+| [case-0018](amplifiers/case-0018-amplifier-gain-settling/README.md) | 固定放大模型的增益与建立表征 | 电路测试与表征 / 放大器 | 材料筛选 / 待 review（r1） | 首批放大器入口；连接被测VA模型，先定增益窗口，再定有限建立的目标与资格 |
 
 [ADC 与采样](adc/README.md)
 

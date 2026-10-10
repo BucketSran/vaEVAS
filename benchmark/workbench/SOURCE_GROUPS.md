@@ -62,13 +62,25 @@
 
 | Case | 题目 | 工程动作 / 电路家族 | 阶段 / 设计 review | 本轮关注 |
 | --- | --- | --- | --- | --- |
-| [case-0011](cases/spec-modeling/adc/case-0011-clocked-sample-hold/README.md) | 按规格建立边沿采样保持模块 | 按规格构建模型 / ADC 与采样 | 题目草案 / 待 review（r2） | 基础题已确认保留；r2 公开语义已补齐，过渡容差与 checker 待校准 |
+| [case-0011](cases/spec-modeling/adc/case-0011-clocked-sample-hold/README.md) | 按规格建立边沿采样保持模块 | 按规格构建模型 / ADC 与采样 | 题目草案 / 待 review（r2） | 首批采样基线；沿用r2，先建设健康实现与独立边沿checker，再校准过渡容差 |
+
+## v4-family-038
+
+| Case | 题目 | 工程动作 / 电路家族 | 阶段 / 设计 review | 本轮关注 |
+| --- | --- | --- | --- | --- |
+| [case-0018](cases/testing-characterization/amplifiers/case-0018-amplifier-gain-settling/README.md) | 固定放大模型的增益与建立表征 | 电路测试与表征 / 放大器 | 材料筛选 / 待 review（r1） | 首批放大器入口；连接被测VA模型，先定增益窗口，再定有限建立的目标与资格 |
+
+## v4-family-093
+
+| Case | 题目 | 工程动作 / 电路家族 | 阶段 / 设计 review | 本轮关注 |
+| --- | --- | --- | --- | --- |
+| [case-0018](cases/testing-characterization/amplifiers/case-0018-amplifier-gain-settling/README.md) | 固定放大模型的增益与建立表征 | 电路测试与表征 / 放大器 | 材料筛选 / 待 review（r1） | 首批放大器入口；连接被测VA模型，先定增益窗口，再定有限建立的目标与资格 |
 
 ## v4-family-111
 
 | Case | 题目 | 工程动作 / 电路家族 | 阶段 / 设计 review | 本轮关注 |
 | --- | --- | --- | --- | --- |
-| [case-0016](cases/testing-characterization/comparators/case-0016-hysteresis-characterizer/README.md) | 比较器翻转电压与表观滞回测量 | 电路测试与表征 / 比较器与门限检测 | 题目草案 / 待 review（r1） | 测量定义、最近双向捕获语义与独立事件验收；数值容差待校准 |
+| [case-0016](cases/testing-characterization/comparators/case-0016-hysteresis-characterizer/README.md) | 比较器翻转电压与表观滞回测量 | 电路测试与表征 / 比较器与门限检测 | 题目草案 / 待 review（r1） | 首批比较器表征入口；固定扫描工程，核对实际翻转、双向更新与不完整报告 |
 
 ## v4-family-186
 
@@ -86,7 +98,19 @@
 
 | Case | 题目 | 工程动作 / 电路家族 | 阶段 / 设计 review | 本轮关注 |
 | --- | --- | --- | --- | --- |
-| [case-0015](cases/diagnosis-repair/power/case-0015-reset-release-sequencer/README.md) | 修复电源与偏置就绪后的复位释放序列 | 诊断与修复 / 电源与复位 | 材料筛选 / 待 review（r1） | 同步行为与合法阶段范围；纠正旧故障标签并评估重写难度 |
+| [case-0015](cases/diagnosis-repair/power/case-0015-reset-release-sequencer/README.md) | 修复电源与偏置就绪后的复位释放序列 | 诊断与修复 / 电源与复位 | 材料筛选 / 待 review（r1） | 首批电源修复入口；固定starter与同步状态表，校准复位和重新释放轨迹 |
+
+## v4-family-370
+
+| Case | 题目 | 工程动作 / 电路家族 | 阶段 / 设计 review | 本轮关注 |
+| --- | --- | --- | --- | --- |
+| [case-0018](cases/testing-characterization/amplifiers/case-0018-amplifier-gain-settling/README.md) | 固定放大模型的增益与建立表征 | 电路测试与表征 / 放大器 | 材料筛选 / 待 review（r1） | 首批放大器入口；连接被测VA模型，先定增益窗口，再定有限建立的目标与资格 |
+
+## v4-family-375
+
+| Case | 题目 | 工程动作 / 电路家族 | 阶段 / 设计 review | 本轮关注 |
+| --- | --- | --- | --- | --- |
+| [case-0017](cases/spec-modeling/pll/case-0017-nonoverlap-clock/README.md) | 按规格建立两相非重叠时钟发生器 | 按规格构建模型 / PLL 与时钟 | 材料筛选 / 待 review（r1） | 首批时钟入口；先定tick调度与死区含义，再补取消、重启和独立边沿验收 |
 
 ## 尚未确定来源组
 

@@ -4,6 +4,8 @@
 
 当前先看[按电路功能组织的迁移总览](migration/README.md#当前先按电路功能看迁移方向)，宏观判断主要迁移内容与工程用途。逐题细节按需从[设计 review 队列](REVIEW.md)查阅，不要求用户逐题审核完整规格和checker。每张题卡说明：材料本来有什么、拟让 Agent 做什么、如何独立验收、还有哪些问题未确定。当前候选仅到材料筛选和设计草案，尚无本轮仿真、配套 VA 模型校准或模型试做结果。
 
+2026-10-11，按已认可的五条路线推进[首批建设顺序](migration/v4-migration-priorities.md#首批建设顺序)：复用采样case-0011、比较器表征case-0016和电源修复case-0015，补入非重叠时钟case-0017与放大器表征case-0018。统一清单说明先建代表、首个交付和后续依赖；这些安排尚不代表具体设计或运行验收通过。
+
 2026-10-10，用户已认可 case-0001 至 case-0010 的选题思路。现阶段先理清工程需求与任务边界，准备与领域同行讨论；入口为 [选题思路与专家讨论](DISCUSSION.md)。这些题卡的“待 review”针对具体设计，不要求现在逐项冻结数值和 checker。
 
 旧 benchmark 的优先移植见[迁移筛选入口](migration/README.md)。新增 case-0011 至 case-0015 来自 v4 单模块素材。case-0011 已确认作为基础题保留，并补写[r2 规格](cases/spec-modeling/adc/case-0011-clocked-sample-hold/instruction.md)；case-0012已确认完整Alexander内部采样方向，其余三卡继续讨论。各卡具体设计和校准仍需 review，不沿用旧认证。
@@ -14,15 +16,15 @@
 
 <!-- workbench:begin -->
 
-登记 **16 张候选设计卡**，不代表已发布或已通过验收的题目。
+登记 **18 张候选设计卡**，不代表已发布或已通过验收的题目。
 
 | 工程动作 | 候选数 |
 | --- | --- |
-| [按规格构建模型](cases/spec-modeling/README.md) | 5 |
+| [按规格构建模型](cases/spec-modeling/README.md) | 6 |
 | [从数据建立模型](cases/data-modeling/README.md) | 1 |
 | [扩展与集成](cases/extension-integration/README.md) | 1 |
 | [诊断与修复](cases/diagnosis-repair/README.md) | 4 |
-| [电路测试与表征](cases/testing-characterization/README.md) | 5 |
+| [电路测试与表征](cases/testing-characterization/README.md) | 6 |
 
 | Case | 题目 | 工程动作 / 电路家族 | 阶段 / 设计 review | 本轮关注 |
 | --- | --- | --- | --- | --- |
@@ -36,16 +38,18 @@
 | [case-0008](cases/diagnosis-repair/pll/case-0008-pfd-reset/README.md) | PFD 外部复位与挂起事件修复 | 诊断与修复 / PLL 与时钟 | 材料筛选 / 待 review（r1） | 先校正 v4 starter 来源与复位合同，再评估整体重写下的区分度 |
 | [case-0009](cases/diagnosis-repair/power/case-0009-uvlo-reset-chain/README.md) | UVLO、复位释放与使能链的系统修复 | 诊断与修复 / 电源与复位 | 题目草案 / 待 review（r1） | 建立有真实模块依赖的健康电源控制链，再选择跨模块故障 |
 | [case-0010](cases/testing-characterization/adc/case-0010-adc-spectrum-records/README.md) | 从 ADC 观测记录提取动态指标 | 电路测试与表征 / ADC 与采样 | 题目草案 / 待 review（r1） | 先冻结采样、频点与谱功率定义，再决定是否引入非相干窗口 |
-| [case-0011](cases/spec-modeling/adc/case-0011-clocked-sample-hold/README.md) | 按规格建立边沿采样保持模块 | 按规格构建模型 / ADC 与采样 | 题目草案 / 待 review（r2） | 基础题已确认保留；r2 公开语义已补齐，过渡容差与 checker 待校准 |
+| [case-0011](cases/spec-modeling/adc/case-0011-clocked-sample-hold/README.md) | 按规格建立边沿采样保持模块 | 按规格构建模型 / ADC 与采样 | 题目草案 / 待 review（r2） | 首批采样基线；沿用r2，先建设健康实现与独立边沿checker，再校准过渡容差 |
 | [case-0012](cases/spec-modeling/pll/case-0012-bbpd/README.md) | 按规格建立内部采样的 Alexander BBPD | 按规格构建模型 / PLL 与时钟 | 题目草案 / 待 review（r2） | Alexander 内部采样方向已确认；r2 初始化、发布、重合窗口与 checker 待 review |
 | [case-0013](cases/spec-modeling/adc/case-0013-sar-handshake/README.md) | 按规格建立四位 SAR 前端握手模块 | 按规格构建模型 / ADC 与采样 | 材料筛选 / 待 review（r1） | 与既有 va02 的取舍；比较器合法事件、发布时刻与原工程来源 |
 | [case-0014](cases/diagnosis-repair/power/case-0014-debounce-qualification/README.md) | 修复控制输入的去抖资格计时 | 诊断与修复 / 电源与复位 | 材料筛选 / 待 review（r1） | 完整重写后是否值得作为基础修复题；复位释放及初态边界 |
-| [case-0015](cases/diagnosis-repair/power/case-0015-reset-release-sequencer/README.md) | 修复电源与偏置就绪后的复位释放序列 | 诊断与修复 / 电源与复位 | 材料筛选 / 待 review（r1） | 同步行为与合法阶段范围；纠正旧故障标签并评估重写难度 |
-| [case-0016](cases/testing-characterization/comparators/case-0016-hysteresis-characterizer/README.md) | 比较器翻转电压与表观滞回测量 | 电路测试与表征 / 比较器与门限检测 | 题目草案 / 待 review（r1） | 测量定义、最近双向捕获语义与独立事件验收；数值容差待校准 |
+| [case-0015](cases/diagnosis-repair/power/case-0015-reset-release-sequencer/README.md) | 修复电源与偏置就绪后的复位释放序列 | 诊断与修复 / 电源与复位 | 材料筛选 / 待 review（r1） | 首批电源修复入口；固定starter与同步状态表，校准复位和重新释放轨迹 |
+| [case-0016](cases/testing-characterization/comparators/case-0016-hysteresis-characterizer/README.md) | 比较器翻转电压与表观滞回测量 | 电路测试与表征 / 比较器与门限检测 | 题目草案 / 待 review（r1） | 首批比较器表征入口；固定扫描工程，核对实际翻转、双向更新与不完整报告 |
+| [case-0017](cases/spec-modeling/pll/case-0017-nonoverlap-clock/README.md) | 按规格建立两相非重叠时钟发生器 | 按规格构建模型 / PLL 与时钟 | 材料筛选 / 待 review（r1） | 首批时钟入口；先定tick调度与死区含义，再补取消、重启和独立边沿验收 |
+| [case-0018](cases/testing-characterization/amplifiers/case-0018-amplifier-gain-settling/README.md) | 固定放大模型的增益与建立表征 | 电路测试与表征 / 放大器 | 材料筛选 / 待 review（r1） | 首批放大器入口；连接被测VA模型，先定增益窗口，再定有限建立的目标与资格 |
 
 <!-- workbench:end -->
 
-23个变体已纳入统一清单，其[行为差异与保留依据](migration/v4-variant-expansion.md)另页保存。上面的16张设计卡与62个来源候选是不同统计，不相加为题量；后续按统一功能清单建设与校准。
+23个变体已纳入统一清单，其[行为差异与保留依据](migration/v4-variant-expansion.md)另页保存。设计卡与62个来源候选是不同统计，不相加为题量；后续按统一功能清单建设与校准。
 
 ## 如何 review
 

@@ -12,7 +12,9 @@
 | [ajcci：SKY130 可编程 POR](sky130-ajc-por.md) | [case-0001](../cases/testing-characterization/power/case-0001-por-sequence/README.md) |
 | [TI 2011：模拟电路自检查](ti-2011.md) | [case-0001](../cases/testing-characterization/power/case-0001-por-sequence/README.md) |
 | [Tiny Tapeout ADPLL：数字架构与 fine TDC 方法来源](tiny-tapeout-adpll.md) | [case-0004](../cases/spec-modeling/pll/case-0004-adpll-dco/README.md)、[case-0007](../cases/extension-integration/pll/case-0007-adpll-fine-tdc/README.md) |
+| [v4 增益与有限建立表征来源](v4-amplifier-characterization.md) | [case-0018](../cases/testing-characterization/amplifiers/case-0018-amplifier-gain-settling/README.md) |
 | [v4 滞回比较器表征来源](v4-hysteresis-characterizer.md) | [case-0016](../cases/testing-characterization/comparators/case-0016-hysteresis-characterizer/README.md) |
+| [v4 两相非重叠时钟来源](v4-nonoverlap-clock.md) | [case-0017](../cases/spec-modeling/pll/case-0017-nonoverlap-clock/README.md) |
 | [benchmark v4：PFD 低有效复位修复素材](v4-pfd-reset.md) | [case-0008](../cases/diagnosis-repair/pll/case-0008-pfd-reset/README.md) |
 | [v4 单模块建模与修复来源](v4-single-module-migration.md) | [case-0011](../cases/spec-modeling/adc/case-0011-clocked-sample-hold/README.md)、[case-0012](../cases/spec-modeling/pll/case-0012-bbpd/README.md)、[case-0013](../cases/spec-modeling/adc/case-0013-sar-handshake/README.md)、[case-0014](../cases/diagnosis-repair/power/case-0014-debounce-qualification/README.md)、[case-0015](../cases/diagnosis-repair/power/case-0015-reset-release-sequencer/README.md) |
 | [vaEVAS 既有行为任务：UVLO 与 ADC 频谱](vaevas-behavioral-seeds.md) | [case-0009](../cases/diagnosis-repair/power/case-0009-uvlo-reset-chain/README.md)、[case-0010](../cases/testing-characterization/adc/case-0010-adc-spectrum-records/README.md)、[case-0012](../cases/spec-modeling/pll/case-0012-bbpd/README.md) |
