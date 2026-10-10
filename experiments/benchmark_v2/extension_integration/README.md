@@ -15,3 +15,5 @@
 公开诊断入口 `environment/public/public-default.scs` 已作为固定附件保存。它只使用原有公开材料；Spectre 实际执行返回 0，身份见 [public-diagnostic-calibration.json](public-diagnostic-calibration.json)。该结果验证默认诊断可运行，不提供隐藏指标或模型得分。新增成对模型试做应从含此附件的版本同时冻结。
 
 ADPLL 也已保存固定 `public-default.scs`。诊断运行保留60us、1ns最大步长，以1ns strobe记录9个实际接口信号；完整10.7MB报告通过新版harness，Agent取得摘要及分页入口。身份见 [adpll-public-diagnostic-calibration.json](adpll-public-diagnostic-calibration.json)，这不是隐藏checker或模型成绩。
+
+349 的 `sample-hold-causal-v2` 在原两个健康条件之外增加两档公开增益诊断，验四通道读出是否实际使用保持部件；新增在线整体重写和活跃旁路负例。独立在线轨迹能检出两档旁路，VA reference、alternative及新增负例的实际 Spectre 校准仍待运行。旧版模型试做保留原题面与材料身份，新版须成对重新冻结。

@@ -143,6 +143,22 @@
       "candidate_directory": "experiments/benchmark_v2/extension_integration/candidates/v2-integrate-case0007-adpll-fine-tdc/tdc-late-pair-accepted",
       "expected": "fail",
       "semantic_behavior": "accept expired counterpart arriving between periodic timeout ticks"
+    },
+    {
+      "task": "benchmark/tasks/v2-integrate-349-multichannel-readout",
+      "variant": "architecture-rewrite",
+      "candidate_directory": "experiments/benchmark_v2/extension_integration/candidates/v2-integrate-349-multichannel-readout/architecture-rewrite",
+      "expected": "fail",
+      "semantic_behavior": "online four-frame state machine without sample_hold",
+      "certification": "pending-live-execution"
+    },
+    {
+      "task": "benchmark/tasks/v2-integrate-349-multichannel-readout",
+      "variant": "architecture-bypass",
+      "candidate_directory": "experiments/benchmark_v2/extension_integration/candidates/v2-integrate-349-multichannel-readout/architecture-bypass",
+      "expected": "fail",
+      "semantic_behavior": "four active baseline instances sunk; independent frame state drives outputs",
+      "certification": "pending-live-execution"
     }
   ],
   "author_source_revision": {
@@ -180,5 +196,16 @@
       "public_update_deadline": 2e-09,
       "numerical_margin": 5e-11
     }
+  },
+  "architecture_349": {
+    "version": "sample-hold-causal-v2",
+    "healthy_conditions": 2,
+    "diagnostic_conditions": 2,
+    "gains": [
+      0.75,
+      0.6
+    ],
+    "calibration": "pending-live-execution",
+    "cases_sha256": "c8d729d5ee5bc3c344fa66e56258997501f0f818fc710e18c44bd687f78fae56"
   }
 }
