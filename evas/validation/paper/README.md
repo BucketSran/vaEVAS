@@ -279,10 +279,13 @@ python3 -B -m unittest discover -s evas/validation/paper -p 'test_criteria.py' -
 ## 下一版外部工程验收测试范围
 
 2026-10-10 已确认下列基础行、工程组合行和推进顺序。
-本节是测试规划，不是已经冻结或执行的条件卡，也不是另一份支持结果表。
+本节给出完整测试规划，不是另一份支持结果表。其中采样保持与一阶滤波的首批
+[8 个条件](precision-v1.json)已经冻结并[实际执行](../../../experiments/backends/support/README.md#precision-pilot)。
+`precision_checker.py` 检查本批误差预算与关键边界，`test_precision.py` 提供正负校准。
+其余范围仍待形成和执行条件卡。
 共同的外部工程验收、整行通过门槛和配置选择原则见
 [四后端评测标准](../../docs/COMPARISON-METHODOLOGY.md)。
-具体源码、刺激、初态、独立答案、关键观测、误差目标、配置数值及检查器校准仍须形成新卡。
+后续扩展仍须固定源码、刺激、初态、独立答案、关键观测、误差目标、配置数值及检查器校准。
 原 `core-v1.json`、专项排除窗和历史 P/F/I 均保持原身份，不把旧通过直接换成新范围的通过。
 
 ### 基础特性与必测行为

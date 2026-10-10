@@ -580,6 +580,7 @@ fn add_timer(
     model: &EventModel,
     states: Option<&[I]>,
     after: Option<f64>,
+    forced_points: bool,
 ) -> Result<(), Error> {
     let (start, period, enabled, held) = match trigger {
         EventTrigger::Timer {
@@ -645,7 +646,18 @@ fn add_timer(
         // enclosure covers both product and sum. Choosing its upper endpoint
         // cannot fire early, including when the source omitted time_tol. The
         // clock remains start + index * period, never prior accepted time + T.
-        let bounds = if index == 0 {
+        let bounds = if forced_points && !held {
+            // A forced solve point must not be crossed only because interval
+            // arithmetic widened an otherwise exactly ordered source clock.
+            // Keep ordinary-query and uncertain held-timer paths unchanged.
+            crate::exact_time::Clock {
+                start: start.lo,
+                period: period.lo,
+                index,
+            }
+            .bounds()
+            .unwrap_or_else(|| start + I::point(index as f64) * period)
+        } else if index == 0 {
             start
         } else {
             start + I::point(index as f64) * period
@@ -1272,6 +1284,7 @@ fn schedule_with_history(
             model,
             held.as_ref().map(|h| h.states),
             held.as_ref().and_then(|h| h.after),
+            !trajectory.config.strobetimes.is_empty(),
         )?;
     }
     if let Some(after) = held.as_ref().and_then(|h| h.after) {

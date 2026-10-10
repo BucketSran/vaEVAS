@@ -1,0 +1,2053 @@
+{
+  "schema_version": 1,
+  "run_id": "ngspice-openvaf-diagnosis-20261010",
+  "claim": "Actual compiled-event diagnosis, not a new capability-suite score or a general simulator ranking",
+  "project_reference_revision": "6d23108d636514e7c8b296ad106b7652127f19ed",
+  "simulator_source_changed": false,
+  "configuration_count": 39,
+  "compile_count": 39,
+  "simulation_count": 39,
+  "original_suite_denominator_unchanged": true,
+  "raw_availability": "local-only; runs/ngspice-openvaf-diagnosis/raw.tar.gz",
+  "raw_directory": "ngspice-openvaf-diagnosis-20261010",
+  "round_manifests": [
+    {
+      "path": "baseline/FILE_MANIFEST.json",
+      "sha256": "bf8f7c717b7203a8176d2d9897581bab32aa537aec1150ae04077b0ee7814ad7"
+    },
+    {
+      "path": "minimize/FILE_MANIFEST.json",
+      "sha256": "830b4f836efd13ecb00c784adac37a901d85e66f0a1c0f43247c5951606942bc"
+    },
+    {
+      "path": "lowering/FILE_MANIFEST.json",
+      "sha256": "496a6b225b305ea7f45252a3b5c78af5e77cc297295865eb77f1e58acfdb32c2"
+    },
+    {
+      "path": "settings/FILE_MANIFEST.json",
+      "sha256": "79feb90e6a9fd0f828bf5e223b80c4d83d79f0061701288c059ec39b746822e4"
+    },
+    {
+      "path": "settings-readback/FILE_MANIFEST.json",
+      "sha256": "c7bfb196560388d45c92e2936b427c785574e8f5893408c2e75298c65395bd54"
+    },
+    {
+      "path": "original-mir/FILE_MANIFEST.json",
+      "sha256": "8412988b58d32545b455ff18602cf600d7f0d72734f49fa9d02fc4e2c28728da"
+    }
+  ],
+  "execution_provenance": [
+    {
+      "path": "baseline/PROVENANCE.json",
+      "sha256": "a6d90d3fac6411f4e24acd156a3e63f5e051eb9b8f91728c8ed77629ab73878f"
+    },
+    {
+      "path": "minimize/PROVENANCE.json",
+      "sha256": "9356acd85f1b51bc941e2fbbbbf99ba19aaa8bd25a82deb7104566ed59a8c555"
+    },
+    {
+      "path": "lowering/PROVENANCE.json",
+      "sha256": "91727567bed05b90be79ffc7d2cfb3399331d87a95a2e298566d416c0fb0887e"
+    },
+    {
+      "path": "settings/PROVENANCE.json",
+      "sha256": "0091d7d569828ee78a31c5fdfe55ed6c6f2654fa72b874a313de7830962ab459"
+    },
+    {
+      "path": "settings-readback/PROVENANCE.json",
+      "sha256": "948973deafa35a56742d6c3d936242b83ddb02f3189262328948c2e97fcfc96e"
+    },
+    {
+      "path": "original-mir/PROVENANCE.json",
+      "sha256": "285c467ef6be0315862ad87be5bd336ef51db241e2bb409b7bd77ef0a970e72f"
+    }
+  ],
+  "execution_driver": {
+    "path": "remote_probe.py",
+    "sha256": "dd9d0d91dccc1357dd9a09d80153a23aae3a0c5ed4ed216ec8e82adb6b12bf1b"
+  },
+  "operator_receipts": [
+    {
+      "path": "baseline-operator.json",
+      "sha256": "a53a9cda9bbcb694dfa30198b9cb5ebf7ec2b9d7404c0802c25dbc8b151f399c"
+    },
+    {
+      "path": "minimize-operator.json",
+      "sha256": "e954d1731a0a4dcef565c7c9e7fbc43c15690f1af532c0abce75e27a54388a74"
+    },
+    {
+      "path": "lowering-operator.json",
+      "sha256": "38b51eae9290c946f9047c99fc83a9602233fb20df7fc172a73073c4f9036e20"
+    },
+    {
+      "path": "settings-operator.json",
+      "sha256": "8fc93bc2b5f4e4d67ee54e7ff70d5097e01530c3ec2ca17118af167512bd2a14"
+    },
+    {
+      "path": "settings-readback-operator.json",
+      "sha256": "c3d45fd92b7ecd845215f920d77f8c52f2b0e4ff0d73987ea6c986431b7d457e"
+    },
+    {
+      "path": "original-mir-operator.json",
+      "sha256": "73661b8c96aeab0cdd89afd82bf37884078a2d5d76377f75723b9d5eb4d632b6"
+    }
+  ],
+  "tool": {
+    "compiler_sha256": "ca1037be094cbfecb1249a1f220c9c390bc265015dd177ec27800ed365d6ef3a",
+    "images": {
+      "openvaf_runtime": "sha256:069ae46add7bed372258a47697ee211761db85cce726db86e18e1d77bad64832",
+      "ngspice": "sha256:233b15bcc2bdfd40c915dbf6ed41d731306f64083885d1255ae1bdd37cdcb555"
+    }
+  },
+  "compiler_source_commit": "unknown; directory v24.0.2mob does not prove build provenance",
+  "ngspice_self_report": "46",
+  "analyzer": {
+    "path": "experiments/backends/support/ngspice_event_report.py",
+    "sha256": "5beecf1ef95945851713fe96d4754be63be8944f6a2bf17097a71dc7924c6688"
+  },
+  "analysis_dependencies": [
+    {
+      "path": "experiments/backends/paper/observations.py",
+      "sha256": "0aff2f248d63b9e81b1fcf5bab5722df13bdcf42fd7edffe4fe65f45b79b845c"
+    },
+    {
+      "path": "experiments/backends/paper/settings_readback.py",
+      "sha256": "875be764ac89c6f6d6e219871e65ef43fe14b10d664ae2ecd131b65f46568da8"
+    },
+    {
+      "path": "experiments/archive/dvs2-starter-pilot/analyze.py",
+      "sha256": "e10acac779cb8c8e627358832689506f4f366de9241155e9daf512d8bcb01680"
+    },
+    {
+      "path": "experiments/archive/dvs2-starter-pilot/suite.py",
+      "sha256": "7c4e686253688d575b32f9aec89e6e741da201c1411436b765f5f7e2f12e49ff"
+    }
+  ],
+  "facts": {
+    "original_cases": 5,
+    "original_timestep_failures": 5,
+    "settings_configurations": 8,
+    "settings_waveforms": 0,
+    "timer_expected_at_t0_V": 0,
+    "timer_observed_at_t0_V": 1.0,
+    "cross_expected_at_t0_V": 0,
+    "cross_observed_at_t0_V": 1.0,
+    "timer_time_and_initial_changes_produce_identical_artifact": true,
+    "sampler_pre_first_event": {
+      "row": {
+        "time": 1.0279999999999998e-07,
+        "inp": 0.10279999999999999,
+        "count": 0.10279999999999999
+      },
+      "expected_count_V": 0,
+      "first_event_s": 2e-07
+    },
+    "sampler_max_output_minus_input_V": 0.0,
+    "no_event_controls": {
+      "remove-timer": {
+        "first": {
+          "time": 0.0,
+          "count": 0.0
+        },
+        "last": {
+          "time": 1e-06,
+          "count": 0.0
+        }
+      },
+      "initial-only-five": {
+        "first": {
+          "time": 0.0,
+          "count": 5.0
+        },
+        "last": {
+          "time": 1e-06,
+          "count": 5.0
+        }
+      }
+    }
+  },
+  "records": [
+    {
+      "round": "baseline",
+      "case": "EV-SH-01",
+      "compiled": true,
+      "source_sha256": "8efd7eebe977db0e3069f58b22db33c94799e65ebab6e9e13a9986cdccbdfca8",
+      "deck_sha256": "44822e61c0ac716325f0650bd689f42cb1e531d9ceaa55e7343d68d8e4d5fc5f",
+      "osdi_sha256": "e00e2de7e3db5231c72ca530b9e41863a3cae3028f9d1cf296474d4eaeee6e9d",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(in)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "baseline/runs/EV-SH-01/RESULT.json",
+        "sha256": "abbabb26ba58887ada5ed8c26fe4ada3775e7ff55e719832800a227198366fc6"
+      },
+      "compile_log": {
+        "path": "baseline/runs/EV-SH-01/compile.log",
+        "sha256": "35b8e25eb281e3f4a913ce1c42f2df523192cb4de665f4609aa9eff1910c055c"
+      },
+      "simulate_log": {
+        "path": "baseline/runs/EV-SH-01/simulate.log",
+        "sha256": "f6bde3da9be48143f65c494b7b4d6d9b348c0d4cf9afaef690afdb5b570c2f34"
+      }
+    },
+    {
+      "round": "baseline",
+      "case": "EV-HC-01",
+      "compiled": true,
+      "source_sha256": "ed4a653c2b7bdf28d080a51b7e05134c17d93972ff88d122da0aaa34bfc2b29c",
+      "deck_sha256": "dbfa4e3c65893380c2d67e4ae2d0857fcd1147d8fe16799fcb9a54fa94591492",
+      "osdi_sha256": "7eeea07226582e02d603d665b4fe67cdcded5f547d4124dc0d9f206002ebaf40",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(in)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "baseline/runs/EV-HC-01/RESULT.json",
+        "sha256": "4ddacdd90885ea6c683cf6aedcde33c9b59523dcf5ec7ef22cfca30b12e750a5"
+      },
+      "compile_log": {
+        "path": "baseline/runs/EV-HC-01/compile.log",
+        "sha256": "35b8e25eb281e3f4a913ce1c42f2df523192cb4de665f4609aa9eff1910c055c"
+      },
+      "simulate_log": {
+        "path": "baseline/runs/EV-HC-01/simulate.log",
+        "sha256": "ce9523c9a7862ccbcef271394dc35245eef2153a12271fe44dd5608a9175d5bd"
+      }
+    },
+    {
+      "round": "baseline",
+      "case": "EV-HC-02",
+      "compiled": true,
+      "source_sha256": "02734a00e6a7502fb22f01a8f39f5628ae806af838d06c85f533d3bce762525b",
+      "deck_sha256": "c50fd8ba1033064218abb4a1b7e64bac9fa2834070155aa06d8e3e6d05ffca75",
+      "osdi_sha256": "ae88867dd6056939c92c7d2a4df2a93a85f991c5da6ce87b25456e35a42a160c",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(in)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "baseline/runs/EV-HC-02/RESULT.json",
+        "sha256": "662992b4cf778d8106724b767bc649adea8732de016c4998166d6eb42efd0d99"
+      },
+      "compile_log": {
+        "path": "baseline/runs/EV-HC-02/compile.log",
+        "sha256": "35b8e25eb281e3f4a913ce1c42f2df523192cb4de665f4609aa9eff1910c055c"
+      },
+      "simulate_log": {
+        "path": "baseline/runs/EV-HC-02/simulate.log",
+        "sha256": "f6d4f177f6a99930af6eb9b18abfc6eb26d2a6efbe6d2a68a4fe74ced62d47f1"
+      }
+    },
+    {
+      "round": "baseline",
+      "case": "TM-01",
+      "compiled": true,
+      "source_sha256": "54f762933e7d62a27258daf55d2049484b4add854e2953f5442b3d4a79432586",
+      "deck_sha256": "5649c89dacddfbb139c2b4f756b38ae8d439df62d5fb6d229205b4d9dfee524f",
+      "osdi_sha256": "733bc9c7d2b25912bd0d86eca234f8060ec3851c79093a97416add1d0fc5b9fd",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"state\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(out)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "baseline/runs/TM-01/RESULT.json",
+        "sha256": "7ad634a0005dea2c276be3790c51d3dbae9b26c6f23c24c66eaa216efe04250f"
+      },
+      "compile_log": {
+        "path": "baseline/runs/TM-01/compile.log",
+        "sha256": "05c34b8385ec2910c4ce8ce5588ba971819cdb5948195f8a797b7bfa97e3545a"
+      },
+      "simulate_log": {
+        "path": "baseline/runs/TM-01/simulate.log",
+        "sha256": "ca35d2a552abee9e98360957cc13feea1da043f93643897604809ed522de968d"
+      }
+    },
+    {
+      "round": "baseline",
+      "case": "CO-HC-01",
+      "compiled": true,
+      "source_sha256": "e28c95cc6b37d4154c90daebca207af538d9b707016c5043b3954df65f03c0c1",
+      "deck_sha256": "a213b2de70fe678eacb14a72eaaa3ea047a6afe44a879aad6e6ab370a2064d17",
+      "osdi_sha256": "e80ad10aafbe5583855d16d2596d1f2631df15c102f9126269086adb888f4470",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(in)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "baseline/runs/CO-HC-01/RESULT.json",
+        "sha256": "7abaeac5bd9494540984bd45dfb71b3ee57f03002f90c52dc094728c1228d56d"
+      },
+      "compile_log": {
+        "path": "baseline/runs/CO-HC-01/compile.log",
+        "sha256": "35b8e25eb281e3f4a913ce1c42f2df523192cb4de665f4609aa9eff1910c055c"
+      },
+      "simulate_log": {
+        "path": "baseline/runs/CO-HC-01/simulate.log",
+        "sha256": "bcfe304f66b446f2acfd0cf4645fdb219760926e93ef3aa06cf7a7f6eee78ecd"
+      }
+    },
+    {
+      "round": "minimize",
+      "case": "remove-observer",
+      "compiled": true,
+      "source_sha256": "8efd7eebe977db0e3069f58b22db33c94799e65ebab6e9e13a9986cdccbdfca8",
+      "deck_sha256": "d829db74075e78e34a1091eaed0d97e22797e1184c7d37cf9a90f08821b2b595",
+      "osdi_sha256": "e00e2de7e3db5231c72ca530b9e41863a3cae3028f9d1cf296474d4eaeee6e9d",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(in)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "minimize/runs/remove-observer/RESULT.json",
+        "sha256": "fe3b1fa268d9e5272e44430e15de79af6114bf7b846cc71850f2b7d4fe8a9ac4"
+      },
+      "compile_log": {
+        "path": "minimize/runs/remove-observer/compile.log",
+        "sha256": "35b8e25eb281e3f4a913ce1c42f2df523192cb4de665f4609aa9eff1910c055c"
+      },
+      "simulate_log": {
+        "path": "minimize/runs/remove-observer/simulate.log",
+        "sha256": "0e9833566a475a63e697ae11f8ec997062baf2ed2c4e3c6e3b84dfd2b415f5e9"
+      },
+      "source": "`include \"disciplines.vams\"\n`include \"constants.vams\"\nmodule paper_sh_timer(in, out, count);\n inout in, out, count;\n electrical in, out, count;\n real q,n;\n analog begin\n  @(initial_step) begin q=-0.25; n=0; end\n  @(timer(2e-6,2e-6,1e-9)) begin q=V(in); n=n+1; end\n  V(out)<+q;\n  V(count)<+n;\n end\nendmodule\n",
+      "deck": "Paper EV-SH-01\nVin in 0 PWL(0 -0.40000000000000002 6.0000000000000002e-06 0.80000000000000004 9.0000000000000002e-06 -0.10000000000000001)\nN0 in out count model0\n.model model0 paper_sh_timer \n.options reltol=1.0000000000000001e-05 vntol=9.9999999999999995e-08 abstol=9.9999999999999998e-13 method=trap\n.control\npre_osdi dut.osdi\nset filetype=ascii\nset wr_singlescale\nset wr_vecnames\nset numdgt=17\noption\ntran 2.0000000000000001e-10 9.0000000000000002e-06 0 2.0000000000000001e-10\nwrdata waveform.txt v(in) v(out) v(count)\noption\nquit\n.endc\n.end\n"
+    },
+    {
+      "round": "minimize",
+      "case": "count-path",
+      "compiled": true,
+      "source_sha256": "2417904d61d3a29e2cc0a7d39ac563d9a0005e4e943cb6e5f02063d53f50b6ca",
+      "deck_sha256": "aa0734900b3764c4845c15bf21715d4bb160e833e94b62bb9bc03701accc33f5",
+      "osdi_sha256": "54ca944673ae287be4c3bb21854e50501af93f5be0618b860b104c97ffa50889",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(inp)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "minimize/runs/count-path/RESULT.json",
+        "sha256": "d112b30a7c91259224fefa986845ec30ca327b270eeb6d5a046bf1b510db042f"
+      },
+      "compile_log": {
+        "path": "minimize/runs/count-path/compile.log",
+        "sha256": "35b8e25eb281e3f4a913ce1c42f2df523192cb4de665f4609aa9eff1910c055c"
+      },
+      "simulate_log": {
+        "path": "minimize/runs/count-path/simulate.log",
+        "sha256": "19392faa59a9fa4928dfa343cbe8338079e99a237b99f8e50e14563a4cda7363"
+      },
+      "source": "`include \"disciplines.vams\"\nmodule probe(inp,count);\ninout inp,count; electrical inp,count;\nreal q,n;\nanalog begin\n@(initial_step) n=0;\n@(timer(2e-6,2e-6,1e-9)) n=n+1;\nV(count)<+n;\n@(initial_step) q=-0.25;\n@(timer(2e-6,2e-6,1e-9)) q=V(inp);\nend\nendmodule\n",
+      "deck": "diagnostic probe\nVinput inp 0 0.4\nN0 inp count model0\n.model model0 probe\n.options reltol=1e-5 vntol=1e-7 abstol=1e-12 method=trap\n.control\npre_osdi dut.osdi\nset wr_singlescale\nset wr_vecnames\nset numdgt=17\noption\ntran 1e-8 1e-6 0 1e-8\nwrdata waveform.txt v(inp) v(count)\nquit\n.endc\n.end\n"
+    },
+    {
+      "round": "minimize",
+      "case": "timer-count-only",
+      "compiled": true,
+      "source_sha256": "560992c1557db9b357fef7f9c25be6aeb0c876d760549c0e8eb6b0dad27f9560",
+      "deck_sha256": "972599ae9dce71955aaa1301d1530f63bd72b7b0f5c6d978827b3c23c7ad723a",
+      "osdi_sha256": "55128d5d12a6234bffda5d33dff86fe55d1832ea95a002244279554741bb0f5a",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(count)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "minimize/runs/timer-count-only/RESULT.json",
+        "sha256": "e0768ef69fce110e29bea9e24b3816eaf6fd49f143fa43c77e4773716919ae4b"
+      },
+      "compile_log": {
+        "path": "minimize/runs/timer-count-only/compile.log",
+        "sha256": "35b8e25eb281e3f4a913ce1c42f2df523192cb4de665f4609aa9eff1910c055c"
+      },
+      "simulate_log": {
+        "path": "minimize/runs/timer-count-only/simulate.log",
+        "sha256": "de8f46c1ce792057fa479499ad43ac0ff89686de735200c443d83fa78cb82e91"
+      },
+      "source": "`include \"disciplines.vams\"\nmodule probe(count);\ninout count; electrical count;\nreal n;\nanalog begin\n@(initial_step) n=0;\n@(timer(2e-6,2e-6,1e-9)) n=n+1;\nV(count)<+n;\nend\nendmodule\n",
+      "deck": "diagnostic probe\n\nN0 count model0\n.model model0 probe\n.options reltol=1e-5 vntol=1e-7 abstol=1e-12 method=trap\n.control\npre_osdi dut.osdi\nset wr_singlescale\nset wr_vecnames\nset numdgt=17\noption\ntran 1e-8 1e-6 0 1e-8\nwrdata waveform.txt v(count)\nquit\n.endc\n.end\n"
+    },
+    {
+      "round": "minimize",
+      "case": "remove-timer",
+      "compiled": true,
+      "source_sha256": "3c3b17b0db92e5923ff7dc00162cfd5b103794750a03c25360c9655085c78db1",
+      "deck_sha256": "972599ae9dce71955aaa1301d1530f63bd72b7b0f5c6d978827b3c23c7ad723a",
+      "osdi_sha256": "f8763cb5c0647b04ef9d61cfac78d78a31679356ca712bbe04e5d5361eab0c4b",
+      "waveform_available": true,
+      "diagnostics": [
+        "No. of Data Rows : 108"
+      ],
+      "result": {
+        "path": "minimize/runs/remove-timer/RESULT.json",
+        "sha256": "38c5f4d22be12a12d6b0e38aa6ba04fe4d300d08fd6d1e29ef6a60b843548986"
+      },
+      "compile_log": {
+        "path": "minimize/runs/remove-timer/compile.log",
+        "sha256": "e39ba731389a5c1a539f2e9ec7b9f267637e302afab4f080f0caa594de072730"
+      },
+      "simulate_log": {
+        "path": "minimize/runs/remove-timer/simulate.log",
+        "sha256": "6463a4fe77ded74339530213bc1b58d05a11c3577c041fa097e8b12a11809236"
+      },
+      "row_count": 108,
+      "first": {
+        "time": 0.0,
+        "count": 0.0
+      },
+      "last": {
+        "time": 1e-06,
+        "count": 0.0
+      },
+      "waveform": {
+        "path": "minimize/runs/remove-timer/waveform.txt",
+        "sha256": "cc702f285e6f474d187e65f8ea03f68fe8915a8cc34bef2316e9e757d4c84ea7"
+      },
+      "source": "`include \"disciplines.vams\"\nmodule probe(count);\ninout count; electrical count;\nreal n;\nanalog begin\n@(initial_step) n=0;\nV(count)<+n;\nend\nendmodule\n",
+      "deck": "diagnostic probe\n\nN0 count model0\n.model model0 probe\n.options reltol=1e-5 vntol=1e-7 abstol=1e-12 method=trap\n.control\npre_osdi dut.osdi\nset wr_singlescale\nset wr_vecnames\nset numdgt=17\noption\ntran 1e-8 1e-6 0 1e-8\nwrdata waveform.txt v(count)\nquit\n.endc\n.end\n"
+    },
+    {
+      "round": "minimize",
+      "case": "timer-constant-assignment",
+      "compiled": true,
+      "source_sha256": "0f5f378c88fea652f163487941c5dde878d5249107e710c9f09b760f0d6dfdeb",
+      "deck_sha256": "c9a12f2d2e3cd4dee1953fb489ff1e7f00e59ff628e55714f96390ef4e33fcd0",
+      "osdi_sha256": "3e651004def76315a4cbb4fa9d051e39735325571b42668af4dd58bf4c4ac70e",
+      "waveform_available": true,
+      "diagnostics": [
+        "No. of Data Rows : 508"
+      ],
+      "result": {
+        "path": "minimize/runs/timer-constant-assignment/RESULT.json",
+        "sha256": "ab2f7517fe0e774e01ace93bfd69d254e065474bac92f1b888b4b60b48b24417"
+      },
+      "compile_log": {
+        "path": "minimize/runs/timer-constant-assignment/compile.log",
+        "sha256": "35b8e25eb281e3f4a913ce1c42f2df523192cb4de665f4609aa9eff1910c055c"
+      },
+      "simulate_log": {
+        "path": "minimize/runs/timer-constant-assignment/simulate.log",
+        "sha256": "1c0bcf6d446601f308a1f41a826ca0f74521150d13782f6709e57479ed9c0eac"
+      },
+      "row_count": 508,
+      "first": {
+        "time": 0.0,
+        "count": 1.0
+      },
+      "last": {
+        "time": 4.9999999999999996e-06,
+        "count": 1.0
+      },
+      "waveform": {
+        "path": "minimize/runs/timer-constant-assignment/waveform.txt",
+        "sha256": "8d2e3cca443a79785002b4ef8eda83ca7274fcebf8cef5304f18d9e0a8a97d5b"
+      },
+      "source": "`include \"disciplines.vams\"\nmodule probe(count);\ninout count; electrical count;\nreal n;\nanalog begin\n@(initial_step) n=0;\n@(timer(2e-6,2e-6,1e-9)) n=1;\nV(count)<+n;\nend\nendmodule\n",
+      "deck": "diagnostic probe\n\nN0 count model0\n.model model0 probe\n.options reltol=1e-5 vntol=1e-7 abstol=1e-12 method=trap\n.control\npre_osdi dut.osdi\nset wr_singlescale\nset wr_vecnames\nset numdgt=17\noption\ntran 1e-8 5e-6 0 1e-8\nwrdata waveform.txt v(count)\nquit\n.endc\n.end\n"
+    },
+    {
+      "round": "minimize",
+      "case": "cross-count-only",
+      "compiled": true,
+      "source_sha256": "eabd6a10c6f420a94d88181edd995ed5e560427c427a244aad65a485634f45e1",
+      "deck_sha256": "809e019aab2bd73d3dc4cf53f33ae1270b0291f284254232a85d0fb8d4cf0c85",
+      "osdi_sha256": "23ebe846f00e1b449aefccc64c4e229b16dc084cf5c3044ab364707bfda33434",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(inp)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "minimize/runs/cross-count-only/RESULT.json",
+        "sha256": "8724ce2619bc4e1b10a25afe7b1adbf2f04133f1df6a848a65f0e6cb55467cfa"
+      },
+      "compile_log": {
+        "path": "minimize/runs/cross-count-only/compile.log",
+        "sha256": "35b8e25eb281e3f4a913ce1c42f2df523192cb4de665f4609aa9eff1910c055c"
+      },
+      "simulate_log": {
+        "path": "minimize/runs/cross-count-only/simulate.log",
+        "sha256": "0c83b8f32463b8acdb990850fd7ea45303cd106ff431c35b05116538a8b3dddf"
+      },
+      "source": "`include \"disciplines.vams\"\nmodule probe(inp,count);\ninout inp,count; electrical inp,count;\nreal n;\nanalog begin\n@(initial_step) n=0;\n@(cross(V(inp)-0.5,+1,1e-9,2e-4)) n=n+1;\nV(count)<+n;\nend\nendmodule\n",
+      "deck": "diagnostic probe\nVinput inp 0 PWL(0 0 1e-6 1)\nN0 inp count model0\n.model model0 probe\n.options reltol=1e-5 vntol=1e-7 abstol=1e-12 method=trap\n.control\npre_osdi dut.osdi\nset wr_singlescale\nset wr_vecnames\nset numdgt=17\noption\ntran 1e-8 1e-6 0 1e-8\nwrdata waveform.txt v(inp) v(count)\nquit\n.endc\n.end\n"
+    },
+    {
+      "round": "lowering",
+      "case": "timer-assignment",
+      "compiled": true,
+      "source_sha256": "0f5f378c88fea652f163487941c5dde878d5249107e710c9f09b760f0d6dfdeb",
+      "deck_sha256": "972599ae9dce71955aaa1301d1530f63bd72b7b0f5c6d978827b3c23c7ad723a",
+      "osdi_sha256": "3e651004def76315a4cbb4fa9d051e39735325571b42668af4dd58bf4c4ac70e",
+      "waveform_available": true,
+      "diagnostics": [
+        "No. of Data Rows : 108"
+      ],
+      "result": {
+        "path": "lowering/runs/timer-assignment/RESULT.json",
+        "sha256": "855ba7d54883d1e32fd5a15143ae7770aa36c460daa4da17634101ba31391ee5"
+      },
+      "compile_log": {
+        "path": "lowering/runs/timer-assignment/compile.log",
+        "sha256": "836baf88def7ba1adec6fd9d21a1ff50ad8096d0cc1f4e0aa0b3f6cfa20b6077"
+      },
+      "simulate_log": {
+        "path": "lowering/runs/timer-assignment/simulate.log",
+        "sha256": "3113d008642d07432bbca6f093164ed2557063a5a80a57959f2430498dcbed7b"
+      },
+      "row_count": 108,
+      "first": {
+        "time": 0.0,
+        "count": 1.0
+      },
+      "last": {
+        "time": 1e-06,
+        "count": 1.0
+      },
+      "waveform": {
+        "path": "lowering/runs/timer-assignment/waveform.txt",
+        "sha256": "81c3ded57528ab93594289f6df9e57160ccaa1d7ee8650574a2e8caad1e85787"
+      },
+      "source": "`include \"disciplines.vams\"\nmodule probe(count);\ninout count; electrical count;\nreal n;\nanalog begin\n@(initial_step) n=0;\n@(timer(2e-6,2e-6,1e-9)) n=1;\nV(count)<+n;\nend\nendmodule\n",
+      "deck": "diagnostic probe\n\nN0 count model0\n.model model0 probe\n.options reltol=1e-5 vntol=1e-7 abstol=1e-12 method=trap\n.control\npre_osdi dut.osdi\nset wr_singlescale\nset wr_vecnames\nset numdgt=17\noption\ntran 1e-8 1e-6 0 1e-8\nwrdata waveform.txt v(count)\nquit\n.endc\n.end\n"
+    },
+    {
+      "round": "lowering",
+      "case": "unconditional-assignment",
+      "compiled": true,
+      "source_sha256": "33f3ffe55855363d5bd6c110ec849f4befabc27c1a333bb12def935fa188bd35",
+      "deck_sha256": "972599ae9dce71955aaa1301d1530f63bd72b7b0f5c6d978827b3c23c7ad723a",
+      "osdi_sha256": "557f7795f20fa74c7726fce080297e0db35237287ee6420973f321ef7aec3950",
+      "waveform_available": true,
+      "diagnostics": [
+        "No. of Data Rows : 108"
+      ],
+      "result": {
+        "path": "lowering/runs/unconditional-assignment/RESULT.json",
+        "sha256": "12bac86545f5483c0f29041d920a31a210e153b7596f3abffcbde276a553edd1"
+      },
+      "compile_log": {
+        "path": "lowering/runs/unconditional-assignment/compile.log",
+        "sha256": "b39712ebe7d37ef6e1b359221163aabbaa7488da8a5743bcaf39c910e7a3f455"
+      },
+      "simulate_log": {
+        "path": "lowering/runs/unconditional-assignment/simulate.log",
+        "sha256": "3113d008642d07432bbca6f093164ed2557063a5a80a57959f2430498dcbed7b"
+      },
+      "row_count": 108,
+      "first": {
+        "time": 0.0,
+        "count": 1.0
+      },
+      "last": {
+        "time": 1e-06,
+        "count": 1.0
+      },
+      "waveform": {
+        "path": "lowering/runs/unconditional-assignment/waveform.txt",
+        "sha256": "81c3ded57528ab93594289f6df9e57160ccaa1d7ee8650574a2e8caad1e85787"
+      },
+      "source": "`include \"disciplines.vams\"\nmodule probe(count);\ninout count; electrical count;\nreal n;\nanalog begin\n@(initial_step) n=0;\nn=1;\nV(count)<+n;\nend\nendmodule\n",
+      "deck": "diagnostic probe\n\nN0 count model0\n.model model0 probe\n.options reltol=1e-5 vntol=1e-7 abstol=1e-12 method=trap\n.control\npre_osdi dut.osdi\nset wr_singlescale\nset wr_vecnames\nset numdgt=17\noption\ntran 1e-8 1e-6 0 1e-8\nwrdata waveform.txt v(count)\nquit\n.endc\n.end\n"
+    },
+    {
+      "round": "lowering",
+      "case": "timer-different-time",
+      "compiled": true,
+      "source_sha256": "4a19646df2c455816de8eb1362c176cbd7967adc9d896acd16f8c6a6460dbd7a",
+      "deck_sha256": "972599ae9dce71955aaa1301d1530f63bd72b7b0f5c6d978827b3c23c7ad723a",
+      "osdi_sha256": "3e651004def76315a4cbb4fa9d051e39735325571b42668af4dd58bf4c4ac70e",
+      "waveform_available": true,
+      "diagnostics": [
+        "No. of Data Rows : 108"
+      ],
+      "result": {
+        "path": "lowering/runs/timer-different-time/RESULT.json",
+        "sha256": "6f99b28ff250622baf77c96f2e35e1de6a5419f883a612d6dbc9e1824c13093a"
+      },
+      "compile_log": {
+        "path": "lowering/runs/timer-different-time/compile.log",
+        "sha256": "31031e38b533a620d14491985f97ab92dbfb3d4231c0142a941834ae088b765b"
+      },
+      "simulate_log": {
+        "path": "lowering/runs/timer-different-time/simulate.log",
+        "sha256": "3113d008642d07432bbca6f093164ed2557063a5a80a57959f2430498dcbed7b"
+      },
+      "row_count": 108,
+      "first": {
+        "time": 0.0,
+        "count": 1.0
+      },
+      "last": {
+        "time": 1e-06,
+        "count": 1.0
+      },
+      "waveform": {
+        "path": "lowering/runs/timer-different-time/waveform.txt",
+        "sha256": "81c3ded57528ab93594289f6df9e57160ccaa1d7ee8650574a2e8caad1e85787"
+      },
+      "source": "`include \"disciplines.vams\"\nmodule probe(count);\ninout count; electrical count;\nreal n;\nanalog begin\n@(initial_step) n=0;\n@(timer(20e-6,20e-6,1e-9)) n=1;\nV(count)<+n;\nend\nendmodule\n",
+      "deck": "diagnostic probe\n\nN0 count model0\n.model model0 probe\n.options reltol=1e-5 vntol=1e-7 abstol=1e-12 method=trap\n.control\npre_osdi dut.osdi\nset wr_singlescale\nset wr_vecnames\nset numdgt=17\noption\ntran 1e-8 1e-6 0 1e-8\nwrdata waveform.txt v(count)\nquit\n.endc\n.end\n"
+    },
+    {
+      "round": "lowering",
+      "case": "timer-different-initial",
+      "compiled": true,
+      "source_sha256": "d8c9ce4480e204de37d9e597624e1261528db74ee6a33165ef9627f4c72c4528",
+      "deck_sha256": "972599ae9dce71955aaa1301d1530f63bd72b7b0f5c6d978827b3c23c7ad723a",
+      "osdi_sha256": "3e651004def76315a4cbb4fa9d051e39735325571b42668af4dd58bf4c4ac70e",
+      "waveform_available": true,
+      "diagnostics": [
+        "No. of Data Rows : 108"
+      ],
+      "result": {
+        "path": "lowering/runs/timer-different-initial/RESULT.json",
+        "sha256": "a0094a15e5488ed00ba0f7210f4e8ce8cf678af83ec25e48781da0109f3dff26"
+      },
+      "compile_log": {
+        "path": "lowering/runs/timer-different-initial/compile.log",
+        "sha256": "31031e38b533a620d14491985f97ab92dbfb3d4231c0142a941834ae088b765b"
+      },
+      "simulate_log": {
+        "path": "lowering/runs/timer-different-initial/simulate.log",
+        "sha256": "3113d008642d07432bbca6f093164ed2557063a5a80a57959f2430498dcbed7b"
+      },
+      "row_count": 108,
+      "first": {
+        "time": 0.0,
+        "count": 1.0
+      },
+      "last": {
+        "time": 1e-06,
+        "count": 1.0
+      },
+      "waveform": {
+        "path": "lowering/runs/timer-different-initial/waveform.txt",
+        "sha256": "81c3ded57528ab93594289f6df9e57160ccaa1d7ee8650574a2e8caad1e85787"
+      },
+      "source": "`include \"disciplines.vams\"\nmodule probe(count);\ninout count; electrical count;\nreal n;\nanalog begin\n@(initial_step) n=5;\n@(timer(2e-6,2e-6,1e-9)) n=1;\nV(count)<+n;\nend\nendmodule\n",
+      "deck": "diagnostic probe\n\nN0 count model0\n.model model0 probe\n.options reltol=1e-5 vntol=1e-7 abstol=1e-12 method=trap\n.control\npre_osdi dut.osdi\nset wr_singlescale\nset wr_vecnames\nset numdgt=17\noption\ntran 1e-8 1e-6 0 1e-8\nwrdata waveform.txt v(count)\nquit\n.endc\n.end\n"
+    },
+    {
+      "round": "lowering",
+      "case": "initial-only-five",
+      "compiled": true,
+      "source_sha256": "733d5281b8e0962a3ac08f20f8734dd8967b9cff8cec2ca5abbc50ffdecd085b",
+      "deck_sha256": "972599ae9dce71955aaa1301d1530f63bd72b7b0f5c6d978827b3c23c7ad723a",
+      "osdi_sha256": "0e94a8751da95488bb228985af42edb3a055955063848cb09f92003dbc74e875",
+      "waveform_available": true,
+      "diagnostics": [
+        "No. of Data Rows : 108"
+      ],
+      "result": {
+        "path": "lowering/runs/initial-only-five/RESULT.json",
+        "sha256": "54dca0d0f71d435e3dac970d4d768b4a959aa33e940171c832a99e82d3ac7a6c"
+      },
+      "compile_log": {
+        "path": "lowering/runs/initial-only-five/compile.log",
+        "sha256": "679d4b39af8441c498d2eebcff04f322b594350aca58eb92cb0aebe6dbcee281"
+      },
+      "simulate_log": {
+        "path": "lowering/runs/initial-only-five/simulate.log",
+        "sha256": "c2dd0e1b48381b388fb15bbb034735ca8d5fd1979598137d0cc9741194d8afa9"
+      },
+      "row_count": 108,
+      "first": {
+        "time": 0.0,
+        "count": 5.0
+      },
+      "last": {
+        "time": 1e-06,
+        "count": 5.0
+      },
+      "waveform": {
+        "path": "lowering/runs/initial-only-five/waveform.txt",
+        "sha256": "743bc24291fd878d98fac1c874ab50fdda6dfcd8652221d8833f86d6efb614c2"
+      },
+      "source": "`include \"disciplines.vams\"\nmodule probe(count);\ninout count; electrical count;\nreal n;\nanalog begin\n@(initial_step) n=5;\n\nV(count)<+n;\nend\nendmodule\n",
+      "deck": "diagnostic probe\n\nN0 count model0\n.model model0 probe\n.options reltol=1e-5 vntol=1e-7 abstol=1e-12 method=trap\n.control\npre_osdi dut.osdi\nset wr_singlescale\nset wr_vecnames\nset numdgt=17\noption\ntran 1e-8 1e-6 0 1e-8\nwrdata waveform.txt v(count)\nquit\n.endc\n.end\n"
+    },
+    {
+      "round": "lowering",
+      "case": "cross-assignment",
+      "compiled": true,
+      "source_sha256": "3b6b4814a8931dfc09640ba1335d9f068ce131bdcf8f55fa526608ea5f797619",
+      "deck_sha256": "809e019aab2bd73d3dc4cf53f33ae1270b0291f284254232a85d0fb8d4cf0c85",
+      "osdi_sha256": "469f8782c08d538d0a3b0af505adf288eafbb4223da63c64c90936fc1819672b",
+      "waveform_available": true,
+      "diagnostics": [
+        "No. of Data Rows : 108"
+      ],
+      "result": {
+        "path": "lowering/runs/cross-assignment/RESULT.json",
+        "sha256": "dd20d2b4be35a9f0a95c2e71f2c38ea12970efc8642f91f354b9049b913306bf"
+      },
+      "compile_log": {
+        "path": "lowering/runs/cross-assignment/compile.log",
+        "sha256": "f82a641ef2675edc716734bed55ede216fa7673684d5100d88c05a6acdfb28c3"
+      },
+      "simulate_log": {
+        "path": "lowering/runs/cross-assignment/simulate.log",
+        "sha256": "8e9b7ddbecd9519ebc1757b866e95169a3ae88fa20d66c2cef7f9a16ff9d4b67"
+      },
+      "row_count": 108,
+      "first": {
+        "time": 0.0,
+        "inp": 0.0,
+        "count": 1.0
+      },
+      "last": {
+        "time": 1e-06,
+        "inp": 1.0,
+        "count": 1.0
+      },
+      "waveform": {
+        "path": "lowering/runs/cross-assignment/waveform.txt",
+        "sha256": "c5999002ea14813162203e3325a02f72eb4d132a312e493ac18e42e1afd565c5"
+      },
+      "source": "`include \"disciplines.vams\"\nmodule probe(inp,count);\ninout inp,count; electrical inp,count;\nreal n;\nanalog begin\n@(initial_step) n=0;\n@(cross(V(inp)-0.5,+1,1e-9,2e-4)) n=1;\nV(count)<+n;\nend\nendmodule\n",
+      "deck": "diagnostic probe\nVinput inp 0 PWL(0 0 1e-6 1)\nN0 inp count model0\n.model model0 probe\n.options reltol=1e-5 vntol=1e-7 abstol=1e-12 method=trap\n.control\npre_osdi dut.osdi\nset wr_singlescale\nset wr_vecnames\nset numdgt=17\noption\ntran 1e-8 1e-6 0 1e-8\nwrdata waveform.txt v(inp) v(count)\nquit\n.endc\n.end\n"
+    },
+    {
+      "round": "lowering",
+      "case": "timer-sampler",
+      "compiled": true,
+      "source_sha256": "71309b2255802e7951eb772a53990066d811e53e84d32df81943fead5cdba2d5",
+      "deck_sha256": "809e019aab2bd73d3dc4cf53f33ae1270b0291f284254232a85d0fb8d4cf0c85",
+      "osdi_sha256": "63509d02047272b1ba79270483e3575ed0e412a89e7f6eb8fd490fe5b9907ef3",
+      "waveform_available": true,
+      "diagnostics": [
+        "No. of Data Rows : 108"
+      ],
+      "result": {
+        "path": "lowering/runs/timer-sampler/RESULT.json",
+        "sha256": "e5fd5c2b60035d403c93bbb8641d577fb41a26ed04fcc6c3ef809d34521ed145"
+      },
+      "compile_log": {
+        "path": "lowering/runs/timer-sampler/compile.log",
+        "sha256": "15df03327bcc2c48608e97dab579a34b1e6bc6162c34e9e4e2d7d3165c6ca29b"
+      },
+      "simulate_log": {
+        "path": "lowering/runs/timer-sampler/simulate.log",
+        "sha256": "a10a7aa551d05c9efd6dfc3377a099fef653ea0c82ec6d1b530683d0a351bcdd"
+      },
+      "row_count": 108,
+      "first": {
+        "time": 0.0,
+        "inp": 0.0,
+        "count": 0.0
+      },
+      "last": {
+        "time": 1e-06,
+        "inp": 1.0,
+        "count": 1.0
+      },
+      "waveform": {
+        "path": "lowering/runs/timer-sampler/waveform.txt",
+        "sha256": "789671e4da2c02029e5a82743835bc0bad6f5d6d0fc7dc9b13811e40a05cbb65"
+      },
+      "source": "`include \"disciplines.vams\"\nmodule probe(inp,count);\ninout inp,count; electrical inp,count;\nreal n;\nanalog begin\n@(initial_step) n=0;\n@(timer(0.2e-6,0.2e-6,1e-9)) n=V(inp);\nV(count)<+n;\nend\nendmodule\n",
+      "deck": "diagnostic probe\nVinput inp 0 PWL(0 0 1e-6 1)\nN0 inp count model0\n.model model0 probe\n.options reltol=1e-5 vntol=1e-7 abstol=1e-12 method=trap\n.control\npre_osdi dut.osdi\nset wr_singlescale\nset wr_vecnames\nset numdgt=17\noption\ntran 1e-8 1e-6 0 1e-8\nwrdata waveform.txt v(inp) v(count)\nquit\n.endc\n.end\n"
+    },
+    {
+      "round": "settings",
+      "case": "repeat",
+      "compiled": true,
+      "source_sha256": "560992c1557db9b357fef7f9c25be6aeb0c876d760549c0e8eb6b0dad27f9560",
+      "deck_sha256": "972599ae9dce71955aaa1301d1530f63bd72b7b0f5c6d978827b3c23c7ad723a",
+      "osdi_sha256": "55128d5d12a6234bffda5d33dff86fe55d1832ea95a002244279554741bb0f5a",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(count)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "settings/runs/repeat/RESULT.json",
+        "sha256": "2fe8c04cc21f853a0eafe0faeba570213c4de22b240b06b30905eb2a096b3ee5"
+      },
+      "compile_log": {
+        "path": "settings/runs/repeat/compile.log",
+        "sha256": "35b8e25eb281e3f4a913ce1c42f2df523192cb4de665f4609aa9eff1910c055c"
+      },
+      "simulate_log": {
+        "path": "settings/runs/repeat/simulate.log",
+        "sha256": "de8f46c1ce792057fa479499ad43ac0ff89686de735200c443d83fa78cb82e91"
+      }
+    },
+    {
+      "round": "settings",
+      "case": "gear",
+      "compiled": true,
+      "source_sha256": "560992c1557db9b357fef7f9c25be6aeb0c876d760549c0e8eb6b0dad27f9560",
+      "deck_sha256": "f7a8fa0716ff2081659ef71531ec3dbca9b1b86ff5a3b997614bd109f3ee93db",
+      "osdi_sha256": "55128d5d12a6234bffda5d33dff86fe55d1832ea95a002244279554741bb0f5a",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(count)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "settings/runs/gear/RESULT.json",
+        "sha256": "8ed34f0c69c8de1c91b80499004aac02cfaf6cd699ff510ca7ca28d7db3c106d"
+      },
+      "compile_log": {
+        "path": "settings/runs/gear/compile.log",
+        "sha256": "35b8e25eb281e3f4a913ce1c42f2df523192cb4de665f4609aa9eff1910c055c"
+      },
+      "simulate_log": {
+        "path": "settings/runs/gear/simulate.log",
+        "sha256": "de8f46c1ce792057fa479499ad43ac0ff89686de735200c443d83fa78cb82e91"
+      }
+    },
+    {
+      "round": "settings",
+      "case": "iterations",
+      "compiled": true,
+      "source_sha256": "560992c1557db9b357fef7f9c25be6aeb0c876d760549c0e8eb6b0dad27f9560",
+      "deck_sha256": "8075cfb45506f267f6cb053d49ebc2983c878924498fb1bb45d4fd3a8c424670",
+      "osdi_sha256": "55128d5d12a6234bffda5d33dff86fe55d1832ea95a002244279554741bb0f5a",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(count)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "settings/runs/iterations/RESULT.json",
+        "sha256": "83888a91b89587802ceb501106656dd835a7c25a836bd2960d83a03b15af923c"
+      },
+      "compile_log": {
+        "path": "settings/runs/iterations/compile.log",
+        "sha256": "35b8e25eb281e3f4a913ce1c42f2df523192cb4de665f4609aa9eff1910c055c"
+      },
+      "simulate_log": {
+        "path": "settings/runs/iterations/simulate.log",
+        "sha256": "de8f46c1ce792057fa479499ad43ac0ff89686de735200c443d83fa78cb82e91"
+      }
+    },
+    {
+      "round": "settings",
+      "case": "tight",
+      "compiled": true,
+      "source_sha256": "560992c1557db9b357fef7f9c25be6aeb0c876d760549c0e8eb6b0dad27f9560",
+      "deck_sha256": "32092a8bf67f95d1f6f575408b3ec42af59dc014c2a7a0c1a3133546a1ea4930",
+      "osdi_sha256": "55128d5d12a6234bffda5d33dff86fe55d1832ea95a002244279554741bb0f5a",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(count)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "settings/runs/tight/RESULT.json",
+        "sha256": "50d68214b511bb3adaf9c571c33ec853df49e074647a609ba227dc265f817b6f"
+      },
+      "compile_log": {
+        "path": "settings/runs/tight/compile.log",
+        "sha256": "35b8e25eb281e3f4a913ce1c42f2df523192cb4de665f4609aa9eff1910c055c"
+      },
+      "simulate_log": {
+        "path": "settings/runs/tight/simulate.log",
+        "sha256": "de8f46c1ce792057fa479499ad43ac0ff89686de735200c443d83fa78cb82e91"
+      }
+    },
+    {
+      "round": "settings",
+      "case": "loose",
+      "compiled": true,
+      "source_sha256": "560992c1557db9b357fef7f9c25be6aeb0c876d760549c0e8eb6b0dad27f9560",
+      "deck_sha256": "c6c8aec952839d1c800d254873d2e59974755b2605867990f309573cf9370985",
+      "osdi_sha256": "55128d5d12a6234bffda5d33dff86fe55d1832ea95a002244279554741bb0f5a",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(count)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "settings/runs/loose/RESULT.json",
+        "sha256": "63828cd40b30590d81bcf9fa4afeeeab39c84217227f152f8f87b9c8c57e0ce5"
+      },
+      "compile_log": {
+        "path": "settings/runs/loose/compile.log",
+        "sha256": "35b8e25eb281e3f4a913ce1c42f2df523192cb4de665f4609aa9eff1910c055c"
+      },
+      "simulate_log": {
+        "path": "settings/runs/loose/simulate.log",
+        "sha256": "b0964224460222a0e1e8f3b16e2754c988c61f6df6a8c25dd0b8036098010ac9"
+      }
+    },
+    {
+      "round": "settings",
+      "case": "small-step",
+      "compiled": true,
+      "source_sha256": "560992c1557db9b357fef7f9c25be6aeb0c876d760549c0e8eb6b0dad27f9560",
+      "deck_sha256": "4e64ecd625bc8eee1c30c2a8bd392da30bd324d13d05e6d744ff2df581666b33",
+      "osdi_sha256": "55128d5d12a6234bffda5d33dff86fe55d1832ea95a002244279554741bb0f5a",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(count)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "settings/runs/small-step/RESULT.json",
+        "sha256": "bc863f70aa87bc7db8db7a386e3ee052373165bd1b6fb51904ad4db183fbd822"
+      },
+      "compile_log": {
+        "path": "settings/runs/small-step/compile.log",
+        "sha256": "35b8e25eb281e3f4a913ce1c42f2df523192cb4de665f4609aa9eff1910c055c"
+      },
+      "simulate_log": {
+        "path": "settings/runs/small-step/simulate.log",
+        "sha256": "cd56deead7d4368844e1be28616106a2e200396a4da64bd5b14cfeb955df5397"
+      }
+    },
+    {
+      "round": "settings",
+      "case": "uic-diagnostic",
+      "compiled": true,
+      "source_sha256": "560992c1557db9b357fef7f9c25be6aeb0c876d760549c0e8eb6b0dad27f9560",
+      "deck_sha256": "61a4870cf7e7f9450fe11b066804de2a1a358034d9817d0908b7abb5edef9928",
+      "osdi_sha256": "55128d5d12a6234bffda5d33dff86fe55d1832ea95a002244279554741bb0f5a",
+      "waveform_available": false,
+      "diagnostics": [
+        "No. of Data Rows : 0",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(count)"
+      ],
+      "result": {
+        "path": "settings/runs/uic-diagnostic/RESULT.json",
+        "sha256": "5b44cc3bce5e3cfe56d2e567357a2b3a309b109903ee84417aad0029ee569fb6"
+      },
+      "compile_log": {
+        "path": "settings/runs/uic-diagnostic/compile.log",
+        "sha256": "35b8e25eb281e3f4a913ce1c42f2df523192cb4de665f4609aa9eff1910c055c"
+      },
+      "simulate_log": {
+        "path": "settings/runs/uic-diagnostic/simulate.log",
+        "sha256": "c792e8584250f63f8f65332995a4579446f964ff61d60530c9859c2a3e5edcb8"
+      }
+    },
+    {
+      "round": "settings",
+      "case": "no-optimization",
+      "compiled": true,
+      "source_sha256": "560992c1557db9b357fef7f9c25be6aeb0c876d760549c0e8eb6b0dad27f9560",
+      "deck_sha256": "972599ae9dce71955aaa1301d1530f63bd72b7b0f5c6d978827b3c23c7ad723a",
+      "osdi_sha256": "dfa9d3dd71a7b0c56162b750744e90937169fc1cd34253d126af87d02599f62e",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(count)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "settings/runs/no-optimization/RESULT.json",
+        "sha256": "c9df96bd5c8ffaec37af6bfaaa1c7a09cc21fd8670d298cf25fadbed4085e4b5"
+      },
+      "compile_log": {
+        "path": "settings/runs/no-optimization/compile.log",
+        "sha256": "4cd4703efb515c0586534a26b6678c456d1d86f5e73a81814abae81d515caeec"
+      },
+      "simulate_log": {
+        "path": "settings/runs/no-optimization/simulate.log",
+        "sha256": "de8f46c1ce792057fa479499ad43ac0ff89686de735200c443d83fa78cb82e91"
+      }
+    },
+    {
+      "round": "settings-readback",
+      "case": "repeat",
+      "compiled": true,
+      "source_sha256": "560992c1557db9b357fef7f9c25be6aeb0c876d760549c0e8eb6b0dad27f9560",
+      "deck_sha256": "7de3e7dfbc2fe610ec9f73fa76806b494f3d9dc2d3911930e427624b703053f3",
+      "osdi_sha256": "55128d5d12a6234bffda5d33dff86fe55d1832ea95a002244279554741bb0f5a",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(count)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "settings-readback/runs/repeat/RESULT.json",
+        "sha256": "3a7af44774f27e7de9bd81dd630e4f808a3aaafd87fc21dd7ba74a90e760a3a7"
+      },
+      "compile_log": {
+        "path": "settings-readback/runs/repeat/compile.log",
+        "sha256": "35b8e25eb281e3f4a913ce1c42f2df523192cb4de665f4609aa9eff1910c055c"
+      },
+      "simulate_log": {
+        "path": "settings-readback/runs/repeat/simulate.log",
+        "sha256": "d489067e639d929c17d7614ce116cfba0e3ffb9598ac084ebdea4099942bacc5"
+      },
+      "settings_readback": {
+        "effective": {
+          "method": {
+            "value": "trap",
+            "line": 101,
+            "raw": "Integration Method = TRAPEZOIDAL",
+            "scope": "post_analysis_loaded_circuit"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 111,
+            "raw": "abstol      (current) = 1e-12",
+            "scope": "post_analysis_loaded_circuit"
+          },
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 113,
+            "raw": "vntol       (voltage) = 1e-07",
+            "scope": "post_analysis_loaded_circuit"
+          },
+          "reltol": {
+            "value": 1e-05,
+            "line": 117,
+            "raw": "reltol      (current) = 1e-05",
+            "scope": "post_analysis_loaded_circuit"
+          }
+        },
+        "initial_snapshot": {
+          "method": {
+            "value": "trap",
+            "line": 37,
+            "raw": "Integration Method = TRAPEZOIDAL",
+            "scope": "pre_analysis_initial_snapshot"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 47,
+            "raw": "abstol      (current) = 1e-12",
+            "scope": "pre_analysis_initial_snapshot"
+          },
+          "vabstol_V": {
+            "value": 1e-06,
+            "line": 49,
+            "raw": "vntol       (voltage) = 1e-06",
+            "scope": "pre_analysis_initial_snapshot"
+          },
+          "reltol": {
+            "value": 0.001,
+            "line": 53,
+            "raw": "reltol      (current) = 0.001",
+            "scope": "pre_analysis_initial_snapshot"
+          }
+        },
+        "invocation_controls": {
+          "stop_s": {
+            "value": 1e-06,
+            "line": 12,
+            "raw": "tran 1e-8 1e-6 0 1e-8",
+            "scope": "deck_invocation_only"
+          },
+          "maxstep_s": {
+            "value": 1e-08,
+            "line": 12,
+            "raw": "tran 1e-8 1e-6 0 1e-8",
+            "scope": "deck_invocation_only"
+          }
+        },
+        "limit": "maxstep/stop are deck invocation, not runtime readback; post snapshot alone does not prove successful run"
+      },
+      "iteration_readback_lines": [
+        "itl1 (DC iterations) = 100",
+        "itl4 (transient iterations) = 10"
+      ],
+      "source": "`include \"disciplines.vams\"\nmodule probe(count);\ninout count; electrical count;\nreal n;\nanalog begin\n@(initial_step) n=0;\n@(timer(2e-6,2e-6,1e-9)) n=n+1;\nV(count)<+n;\nend\nendmodule\n",
+      "deck": "diagnostic probe\n\nN0 count model0\n.model model0 probe\n.options reltol=1e-5 vntol=1e-7 abstol=1e-12 method=trap\n.control\npre_osdi dut.osdi\nset wr_singlescale\nset wr_vecnames\nset numdgt=17\noption\ntran 1e-8 1e-6 0 1e-8\nwrdata waveform.txt v(count)\noption\nquit\n.endc\n.end\n"
+    },
+    {
+      "round": "settings-readback",
+      "case": "gear",
+      "compiled": true,
+      "source_sha256": "560992c1557db9b357fef7f9c25be6aeb0c876d760549c0e8eb6b0dad27f9560",
+      "deck_sha256": "6cc761397bc335a2edadec0a3f0d67d1733900febf43e577bb81bb996bfa684b",
+      "osdi_sha256": "55128d5d12a6234bffda5d33dff86fe55d1832ea95a002244279554741bb0f5a",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(count)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "settings-readback/runs/gear/RESULT.json",
+        "sha256": "bc1085f875b032a7da852413c0cd695fa94e753e7ee32901b96e26c5298a892e"
+      },
+      "compile_log": {
+        "path": "settings-readback/runs/gear/compile.log",
+        "sha256": "35b8e25eb281e3f4a913ce1c42f2df523192cb4de665f4609aa9eff1910c055c"
+      },
+      "simulate_log": {
+        "path": "settings-readback/runs/gear/simulate.log",
+        "sha256": "dbf136b9a2d3b26287c4b527a722650c997974fa354b1c86927591378ae0bf05"
+      },
+      "settings_readback": {
+        "effective": {
+          "method": {
+            "value": "gear",
+            "line": 101,
+            "raw": "Integration Method = GEAR",
+            "scope": "post_analysis_loaded_circuit"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 111,
+            "raw": "abstol      (current) = 1e-12",
+            "scope": "post_analysis_loaded_circuit"
+          },
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 113,
+            "raw": "vntol       (voltage) = 1e-07",
+            "scope": "post_analysis_loaded_circuit"
+          },
+          "reltol": {
+            "value": 1e-05,
+            "line": 117,
+            "raw": "reltol      (current) = 1e-05",
+            "scope": "post_analysis_loaded_circuit"
+          }
+        },
+        "initial_snapshot": {
+          "method": {
+            "value": "trap",
+            "line": 37,
+            "raw": "Integration Method = TRAPEZOIDAL",
+            "scope": "pre_analysis_initial_snapshot"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 47,
+            "raw": "abstol      (current) = 1e-12",
+            "scope": "pre_analysis_initial_snapshot"
+          },
+          "vabstol_V": {
+            "value": 1e-06,
+            "line": 49,
+            "raw": "vntol       (voltage) = 1e-06",
+            "scope": "pre_analysis_initial_snapshot"
+          },
+          "reltol": {
+            "value": 0.001,
+            "line": 53,
+            "raw": "reltol      (current) = 0.001",
+            "scope": "pre_analysis_initial_snapshot"
+          }
+        },
+        "invocation_controls": {
+          "stop_s": {
+            "value": 1e-06,
+            "line": 12,
+            "raw": "tran 1e-8 1e-6 0 1e-8",
+            "scope": "deck_invocation_only"
+          },
+          "maxstep_s": {
+            "value": 1e-08,
+            "line": 12,
+            "raw": "tran 1e-8 1e-6 0 1e-8",
+            "scope": "deck_invocation_only"
+          }
+        },
+        "limit": "maxstep/stop are deck invocation, not runtime readback; post snapshot alone does not prove successful run"
+      },
+      "iteration_readback_lines": [
+        "itl1 (DC iterations) = 100",
+        "itl4 (transient iterations) = 10"
+      ],
+      "source": "`include \"disciplines.vams\"\nmodule probe(count);\ninout count; electrical count;\nreal n;\nanalog begin\n@(initial_step) n=0;\n@(timer(2e-6,2e-6,1e-9)) n=n+1;\nV(count)<+n;\nend\nendmodule\n",
+      "deck": "diagnostic probe\n\nN0 count model0\n.model model0 probe\n.options reltol=1e-5 vntol=1e-7 abstol=1e-12 method=gear\n.control\npre_osdi dut.osdi\nset wr_singlescale\nset wr_vecnames\nset numdgt=17\noption\ntran 1e-8 1e-6 0 1e-8\nwrdata waveform.txt v(count)\noption\nquit\n.endc\n.end\n"
+    },
+    {
+      "round": "settings-readback",
+      "case": "iterations",
+      "compiled": true,
+      "source_sha256": "560992c1557db9b357fef7f9c25be6aeb0c876d760549c0e8eb6b0dad27f9560",
+      "deck_sha256": "bbf4f5220ebda05293c3a82182c7e96568ec57f959d795cc8bfa2fd151355186",
+      "osdi_sha256": "55128d5d12a6234bffda5d33dff86fe55d1832ea95a002244279554741bb0f5a",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(count)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "settings-readback/runs/iterations/RESULT.json",
+        "sha256": "f86bd10c19dc93dd22cf6ac3304b847d665ad214e344250c3bffff2dc29e4552"
+      },
+      "compile_log": {
+        "path": "settings-readback/runs/iterations/compile.log",
+        "sha256": "35b8e25eb281e3f4a913ce1c42f2df523192cb4de665f4609aa9eff1910c055c"
+      },
+      "simulate_log": {
+        "path": "settings-readback/runs/iterations/simulate.log",
+        "sha256": "2b2456944fe71b991ffdbbaa522b33a2802d54e6512441af5236ecbb361f8ffd"
+      },
+      "settings_readback": {
+        "effective": {
+          "method": {
+            "value": "trap",
+            "line": 101,
+            "raw": "Integration Method = TRAPEZOIDAL",
+            "scope": "post_analysis_loaded_circuit"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 111,
+            "raw": "abstol      (current) = 1e-12",
+            "scope": "post_analysis_loaded_circuit"
+          },
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 113,
+            "raw": "vntol       (voltage) = 1e-07",
+            "scope": "post_analysis_loaded_circuit"
+          },
+          "reltol": {
+            "value": 1e-05,
+            "line": 117,
+            "raw": "reltol      (current) = 1e-05",
+            "scope": "post_analysis_loaded_circuit"
+          }
+        },
+        "initial_snapshot": {
+          "method": {
+            "value": "trap",
+            "line": 37,
+            "raw": "Integration Method = TRAPEZOIDAL",
+            "scope": "pre_analysis_initial_snapshot"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 47,
+            "raw": "abstol      (current) = 1e-12",
+            "scope": "pre_analysis_initial_snapshot"
+          },
+          "vabstol_V": {
+            "value": 1e-06,
+            "line": 49,
+            "raw": "vntol       (voltage) = 1e-06",
+            "scope": "pre_analysis_initial_snapshot"
+          },
+          "reltol": {
+            "value": 0.001,
+            "line": 53,
+            "raw": "reltol      (current) = 0.001",
+            "scope": "pre_analysis_initial_snapshot"
+          }
+        },
+        "invocation_controls": {
+          "stop_s": {
+            "value": 1e-06,
+            "line": 12,
+            "raw": "tran 1e-8 1e-6 0 1e-8",
+            "scope": "deck_invocation_only"
+          },
+          "maxstep_s": {
+            "value": 1e-08,
+            "line": 12,
+            "raw": "tran 1e-8 1e-6 0 1e-8",
+            "scope": "deck_invocation_only"
+          }
+        },
+        "limit": "maxstep/stop are deck invocation, not runtime readback; post snapshot alone does not prove successful run"
+      },
+      "iteration_readback_lines": [
+        "itl1 (DC iterations) = 1000",
+        "itl4 (transient iterations) = 100"
+      ],
+      "source": "`include \"disciplines.vams\"\nmodule probe(count);\ninout count; electrical count;\nreal n;\nanalog begin\n@(initial_step) n=0;\n@(timer(2e-6,2e-6,1e-9)) n=n+1;\nV(count)<+n;\nend\nendmodule\n",
+      "deck": "diagnostic probe\n\nN0 count model0\n.model model0 probe\n.options reltol=1e-5 vntol=1e-7 abstol=1e-12 method=trap itl1=1000 itl4=100\n.control\npre_osdi dut.osdi\nset wr_singlescale\nset wr_vecnames\nset numdgt=17\noption\ntran 1e-8 1e-6 0 1e-8\nwrdata waveform.txt v(count)\noption\nquit\n.endc\n.end\n"
+    },
+    {
+      "round": "settings-readback",
+      "case": "tight",
+      "compiled": true,
+      "source_sha256": "560992c1557db9b357fef7f9c25be6aeb0c876d760549c0e8eb6b0dad27f9560",
+      "deck_sha256": "92f7c3186bad93e7160b511f7760e3dd85e0554b6278f5d9eb612316184f4b68",
+      "osdi_sha256": "55128d5d12a6234bffda5d33dff86fe55d1832ea95a002244279554741bb0f5a",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(count)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "settings-readback/runs/tight/RESULT.json",
+        "sha256": "097adef13796a428b085ebab13dff759e5c29ee1cbc2daca12d7184b524d5061"
+      },
+      "compile_log": {
+        "path": "settings-readback/runs/tight/compile.log",
+        "sha256": "35b8e25eb281e3f4a913ce1c42f2df523192cb4de665f4609aa9eff1910c055c"
+      },
+      "simulate_log": {
+        "path": "settings-readback/runs/tight/simulate.log",
+        "sha256": "33c321b6e654d5e0096aa033cfad2ee4da83bf633ecfd4fc8236d1430667cb59"
+      },
+      "settings_readback": {
+        "effective": {
+          "method": {
+            "value": "trap",
+            "line": 101,
+            "raw": "Integration Method = TRAPEZOIDAL",
+            "scope": "post_analysis_loaded_circuit"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 111,
+            "raw": "abstol      (current) = 1e-12",
+            "scope": "post_analysis_loaded_circuit"
+          },
+          "vabstol_V": {
+            "value": 1e-09,
+            "line": 113,
+            "raw": "vntol       (voltage) = 1e-09",
+            "scope": "post_analysis_loaded_circuit"
+          },
+          "reltol": {
+            "value": 1e-07,
+            "line": 117,
+            "raw": "reltol      (current) = 1e-07",
+            "scope": "post_analysis_loaded_circuit"
+          }
+        },
+        "initial_snapshot": {
+          "method": {
+            "value": "trap",
+            "line": 37,
+            "raw": "Integration Method = TRAPEZOIDAL",
+            "scope": "pre_analysis_initial_snapshot"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 47,
+            "raw": "abstol      (current) = 1e-12",
+            "scope": "pre_analysis_initial_snapshot"
+          },
+          "vabstol_V": {
+            "value": 1e-06,
+            "line": 49,
+            "raw": "vntol       (voltage) = 1e-06",
+            "scope": "pre_analysis_initial_snapshot"
+          },
+          "reltol": {
+            "value": 0.001,
+            "line": 53,
+            "raw": "reltol      (current) = 0.001",
+            "scope": "pre_analysis_initial_snapshot"
+          }
+        },
+        "invocation_controls": {
+          "stop_s": {
+            "value": 1e-06,
+            "line": 12,
+            "raw": "tran 1e-8 1e-6 0 1e-8",
+            "scope": "deck_invocation_only"
+          },
+          "maxstep_s": {
+            "value": 1e-08,
+            "line": 12,
+            "raw": "tran 1e-8 1e-6 0 1e-8",
+            "scope": "deck_invocation_only"
+          }
+        },
+        "limit": "maxstep/stop are deck invocation, not runtime readback; post snapshot alone does not prove successful run"
+      },
+      "iteration_readback_lines": [
+        "itl1 (DC iterations) = 100",
+        "itl4 (transient iterations) = 10"
+      ],
+      "source": "`include \"disciplines.vams\"\nmodule probe(count);\ninout count; electrical count;\nreal n;\nanalog begin\n@(initial_step) n=0;\n@(timer(2e-6,2e-6,1e-9)) n=n+1;\nV(count)<+n;\nend\nendmodule\n",
+      "deck": "diagnostic probe\n\nN0 count model0\n.model model0 probe\n.options reltol=1e-7 vntol=1e-9 abstol=1e-12 method=trap\n.control\npre_osdi dut.osdi\nset wr_singlescale\nset wr_vecnames\nset numdgt=17\noption\ntran 1e-8 1e-6 0 1e-8\nwrdata waveform.txt v(count)\noption\nquit\n.endc\n.end\n"
+    },
+    {
+      "round": "settings-readback",
+      "case": "loose",
+      "compiled": true,
+      "source_sha256": "560992c1557db9b357fef7f9c25be6aeb0c876d760549c0e8eb6b0dad27f9560",
+      "deck_sha256": "24117383b533501df8d6b1431e6632c1c5e59a262c0f7432cf49d31e732f16ab",
+      "osdi_sha256": "55128d5d12a6234bffda5d33dff86fe55d1832ea95a002244279554741bb0f5a",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(count)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "settings-readback/runs/loose/RESULT.json",
+        "sha256": "dd7dcd7e7ba79679c2a27c56b12dbcf41defd2b255ff70b7d6f65d1e9534dfbb"
+      },
+      "compile_log": {
+        "path": "settings-readback/runs/loose/compile.log",
+        "sha256": "35b8e25eb281e3f4a913ce1c42f2df523192cb4de665f4609aa9eff1910c055c"
+      },
+      "simulate_log": {
+        "path": "settings-readback/runs/loose/simulate.log",
+        "sha256": "d50afa7ae7bb323f0e337e8d2790ae2db0d5ef5d6537e8d46817b07f618dae0c"
+      },
+      "settings_readback": {
+        "effective": {
+          "method": {
+            "value": "trap",
+            "line": 101,
+            "raw": "Integration Method = TRAPEZOIDAL",
+            "scope": "post_analysis_loaded_circuit"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 111,
+            "raw": "abstol      (current) = 1e-12",
+            "scope": "post_analysis_loaded_circuit"
+          },
+          "vabstol_V": {
+            "value": 1e-06,
+            "line": 113,
+            "raw": "vntol       (voltage) = 1e-06",
+            "scope": "post_analysis_loaded_circuit"
+          },
+          "reltol": {
+            "value": 0.001,
+            "line": 117,
+            "raw": "reltol      (current) = 0.001",
+            "scope": "post_analysis_loaded_circuit"
+          }
+        },
+        "initial_snapshot": {
+          "method": {
+            "value": "trap",
+            "line": 37,
+            "raw": "Integration Method = TRAPEZOIDAL",
+            "scope": "pre_analysis_initial_snapshot"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 47,
+            "raw": "abstol      (current) = 1e-12",
+            "scope": "pre_analysis_initial_snapshot"
+          },
+          "vabstol_V": {
+            "value": 1e-06,
+            "line": 49,
+            "raw": "vntol       (voltage) = 1e-06",
+            "scope": "pre_analysis_initial_snapshot"
+          },
+          "reltol": {
+            "value": 0.001,
+            "line": 53,
+            "raw": "reltol      (current) = 0.001",
+            "scope": "pre_analysis_initial_snapshot"
+          }
+        },
+        "invocation_controls": {
+          "stop_s": {
+            "value": 1e-06,
+            "line": 12,
+            "raw": "tran 1e-8 1e-6 0 1e-8",
+            "scope": "deck_invocation_only"
+          },
+          "maxstep_s": {
+            "value": 1e-08,
+            "line": 12,
+            "raw": "tran 1e-8 1e-6 0 1e-8",
+            "scope": "deck_invocation_only"
+          }
+        },
+        "limit": "maxstep/stop are deck invocation, not runtime readback; post snapshot alone does not prove successful run"
+      },
+      "iteration_readback_lines": [
+        "itl1 (DC iterations) = 100",
+        "itl4 (transient iterations) = 10"
+      ],
+      "source": "`include \"disciplines.vams\"\nmodule probe(count);\ninout count; electrical count;\nreal n;\nanalog begin\n@(initial_step) n=0;\n@(timer(2e-6,2e-6,1e-9)) n=n+1;\nV(count)<+n;\nend\nendmodule\n",
+      "deck": "diagnostic probe\n\nN0 count model0\n.model model0 probe\n.options reltol=1e-3 vntol=1e-6 abstol=1e-12 method=trap\n.control\npre_osdi dut.osdi\nset wr_singlescale\nset wr_vecnames\nset numdgt=17\noption\ntran 1e-8 1e-6 0 1e-8\nwrdata waveform.txt v(count)\noption\nquit\n.endc\n.end\n"
+    },
+    {
+      "round": "settings-readback",
+      "case": "small-step",
+      "compiled": true,
+      "source_sha256": "560992c1557db9b357fef7f9c25be6aeb0c876d760549c0e8eb6b0dad27f9560",
+      "deck_sha256": "10846304e1fcb8961a967cabbd6b66f407d28d9486ed185e82f9d8b71693c2a8",
+      "osdi_sha256": "55128d5d12a6234bffda5d33dff86fe55d1832ea95a002244279554741bb0f5a",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(count)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "settings-readback/runs/small-step/RESULT.json",
+        "sha256": "a3898919200771abefa7dfb7483086644b2ab8a202b7e671b9d1670be732e4b4"
+      },
+      "compile_log": {
+        "path": "settings-readback/runs/small-step/compile.log",
+        "sha256": "35b8e25eb281e3f4a913ce1c42f2df523192cb4de665f4609aa9eff1910c055c"
+      },
+      "simulate_log": {
+        "path": "settings-readback/runs/small-step/simulate.log",
+        "sha256": "26a745cdbf4c15edf87cf389b8a6a2c02e4f708ea9bb5806fcff8bece4e982d9"
+      },
+      "settings_readback": {
+        "effective": {
+          "method": {
+            "value": "trap",
+            "line": 101,
+            "raw": "Integration Method = TRAPEZOIDAL",
+            "scope": "post_analysis_loaded_circuit"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 111,
+            "raw": "abstol      (current) = 1e-12",
+            "scope": "post_analysis_loaded_circuit"
+          },
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 113,
+            "raw": "vntol       (voltage) = 1e-07",
+            "scope": "post_analysis_loaded_circuit"
+          },
+          "reltol": {
+            "value": 1e-05,
+            "line": 117,
+            "raw": "reltol      (current) = 1e-05",
+            "scope": "post_analysis_loaded_circuit"
+          }
+        },
+        "initial_snapshot": {
+          "method": {
+            "value": "trap",
+            "line": 37,
+            "raw": "Integration Method = TRAPEZOIDAL",
+            "scope": "pre_analysis_initial_snapshot"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 47,
+            "raw": "abstol      (current) = 1e-12",
+            "scope": "pre_analysis_initial_snapshot"
+          },
+          "vabstol_V": {
+            "value": 1e-06,
+            "line": 49,
+            "raw": "vntol       (voltage) = 1e-06",
+            "scope": "pre_analysis_initial_snapshot"
+          },
+          "reltol": {
+            "value": 0.001,
+            "line": 53,
+            "raw": "reltol      (current) = 0.001",
+            "scope": "pre_analysis_initial_snapshot"
+          }
+        },
+        "invocation_controls": {
+          "stop_s": {
+            "value": 1e-06,
+            "line": 12,
+            "raw": "tran 1e-9 1e-6 0 1e-9",
+            "scope": "deck_invocation_only"
+          },
+          "maxstep_s": {
+            "value": 1e-09,
+            "line": 12,
+            "raw": "tran 1e-9 1e-6 0 1e-9",
+            "scope": "deck_invocation_only"
+          }
+        },
+        "limit": "maxstep/stop are deck invocation, not runtime readback; post snapshot alone does not prove successful run"
+      },
+      "iteration_readback_lines": [
+        "itl1 (DC iterations) = 100",
+        "itl4 (transient iterations) = 10"
+      ],
+      "source": "`include \"disciplines.vams\"\nmodule probe(count);\ninout count; electrical count;\nreal n;\nanalog begin\n@(initial_step) n=0;\n@(timer(2e-6,2e-6,1e-9)) n=n+1;\nV(count)<+n;\nend\nendmodule\n",
+      "deck": "diagnostic probe\n\nN0 count model0\n.model model0 probe\n.options reltol=1e-5 vntol=1e-7 abstol=1e-12 method=trap\n.control\npre_osdi dut.osdi\nset wr_singlescale\nset wr_vecnames\nset numdgt=17\noption\ntran 1e-9 1e-6 0 1e-9\nwrdata waveform.txt v(count)\noption\nquit\n.endc\n.end\n"
+    },
+    {
+      "round": "settings-readback",
+      "case": "uic-diagnostic",
+      "compiled": true,
+      "source_sha256": "560992c1557db9b357fef7f9c25be6aeb0c876d760549c0e8eb6b0dad27f9560",
+      "deck_sha256": "59159d44bcd9755c62cc3e21dd555fbbb8a9d4944bf923f4e67cb0d7a9b1ac3d",
+      "osdi_sha256": "55128d5d12a6234bffda5d33dff86fe55d1832ea95a002244279554741bb0f5a",
+      "waveform_available": false,
+      "diagnostics": [
+        "No. of Data Rows : 0",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(count)"
+      ],
+      "result": {
+        "path": "settings-readback/runs/uic-diagnostic/RESULT.json",
+        "sha256": "156b4c091812066df5393e3cfaaaa19c34f965028b8947559ef9d37f30a6c28b"
+      },
+      "compile_log": {
+        "path": "settings-readback/runs/uic-diagnostic/compile.log",
+        "sha256": "35b8e25eb281e3f4a913ce1c42f2df523192cb4de665f4609aa9eff1910c055c"
+      },
+      "simulate_log": {
+        "path": "settings-readback/runs/uic-diagnostic/simulate.log",
+        "sha256": "bf579bb5198a0ed79b1add18bf1ab4bdc9292537c84dea6680c287063ebe3758"
+      },
+      "settings_readback": {
+        "status": "not_qualified",
+        "reason": "unsupported tran command shape"
+      },
+      "iteration_readback_lines": [
+        "itl1 (DC iterations) = 100",
+        "itl4 (transient iterations) = 10"
+      ],
+      "source": "`include \"disciplines.vams\"\nmodule probe(count);\ninout count; electrical count;\nreal n;\nanalog begin\n@(initial_step) n=0;\n@(timer(2e-6,2e-6,1e-9)) n=n+1;\nV(count)<+n;\nend\nendmodule\n",
+      "deck": "diagnostic probe\n\nN0 count model0\n.model model0 probe\n.options reltol=1e-5 vntol=1e-7 abstol=1e-12 method=trap\n.control\npre_osdi dut.osdi\nset wr_singlescale\nset wr_vecnames\nset numdgt=17\noption\ntran 1e-8 1e-6 0 1e-8 uic\nwrdata waveform.txt v(count)\noption\nquit\n.endc\n.end\n"
+    },
+    {
+      "round": "settings-readback",
+      "case": "no-optimization",
+      "compiled": true,
+      "source_sha256": "560992c1557db9b357fef7f9c25be6aeb0c876d760549c0e8eb6b0dad27f9560",
+      "deck_sha256": "7de3e7dfbc2fe610ec9f73fa76806b494f3d9dc2d3911930e427624b703053f3",
+      "osdi_sha256": "dfa9d3dd71a7b0c56162b750744e90937169fc1cd34253d126af87d02599f62e",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(count)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "settings-readback/runs/no-optimization/RESULT.json",
+        "sha256": "bfde8954f5ce0aea2295a3987c6b6e347f4fc5edc52a094aa25618f6e26724e0"
+      },
+      "compile_log": {
+        "path": "settings-readback/runs/no-optimization/compile.log",
+        "sha256": "4cd4703efb515c0586534a26b6678c456d1d86f5e73a81814abae81d515caeec"
+      },
+      "simulate_log": {
+        "path": "settings-readback/runs/no-optimization/simulate.log",
+        "sha256": "d489067e639d929c17d7614ce116cfba0e3ffb9598ac084ebdea4099942bacc5"
+      },
+      "settings_readback": {
+        "effective": {
+          "method": {
+            "value": "trap",
+            "line": 101,
+            "raw": "Integration Method = TRAPEZOIDAL",
+            "scope": "post_analysis_loaded_circuit"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 111,
+            "raw": "abstol      (current) = 1e-12",
+            "scope": "post_analysis_loaded_circuit"
+          },
+          "vabstol_V": {
+            "value": 1e-07,
+            "line": 113,
+            "raw": "vntol       (voltage) = 1e-07",
+            "scope": "post_analysis_loaded_circuit"
+          },
+          "reltol": {
+            "value": 1e-05,
+            "line": 117,
+            "raw": "reltol      (current) = 1e-05",
+            "scope": "post_analysis_loaded_circuit"
+          }
+        },
+        "initial_snapshot": {
+          "method": {
+            "value": "trap",
+            "line": 37,
+            "raw": "Integration Method = TRAPEZOIDAL",
+            "scope": "pre_analysis_initial_snapshot"
+          },
+          "iabstol_A": {
+            "value": 1e-12,
+            "line": 47,
+            "raw": "abstol      (current) = 1e-12",
+            "scope": "pre_analysis_initial_snapshot"
+          },
+          "vabstol_V": {
+            "value": 1e-06,
+            "line": 49,
+            "raw": "vntol       (voltage) = 1e-06",
+            "scope": "pre_analysis_initial_snapshot"
+          },
+          "reltol": {
+            "value": 0.001,
+            "line": 53,
+            "raw": "reltol      (current) = 0.001",
+            "scope": "pre_analysis_initial_snapshot"
+          }
+        },
+        "invocation_controls": {
+          "stop_s": {
+            "value": 1e-06,
+            "line": 12,
+            "raw": "tran 1e-8 1e-6 0 1e-8",
+            "scope": "deck_invocation_only"
+          },
+          "maxstep_s": {
+            "value": 1e-08,
+            "line": 12,
+            "raw": "tran 1e-8 1e-6 0 1e-8",
+            "scope": "deck_invocation_only"
+          }
+        },
+        "limit": "maxstep/stop are deck invocation, not runtime readback; post snapshot alone does not prove successful run"
+      },
+      "iteration_readback_lines": [
+        "itl1 (DC iterations) = 100",
+        "itl4 (transient iterations) = 10"
+      ],
+      "source": "`include \"disciplines.vams\"\nmodule probe(count);\ninout count; electrical count;\nreal n;\nanalog begin\n@(initial_step) n=0;\n@(timer(2e-6,2e-6,1e-9)) n=n+1;\nV(count)<+n;\nend\nendmodule\n",
+      "deck": "diagnostic probe\n\nN0 count model0\n.model model0 probe\n.options reltol=1e-5 vntol=1e-7 abstol=1e-12 method=trap\n.control\npre_osdi dut.osdi\nset wr_singlescale\nset wr_vecnames\nset numdgt=17\noption\ntran 1e-8 1e-6 0 1e-8\nwrdata waveform.txt v(count)\noption\nquit\n.endc\n.end\n",
+      "unoptimized_mir": "Unoptimized MIR (no DAE) of probe\nfunction %(v17, v18) {\n    inst0 = fn %$store[lim_state0](1) -> 1\n    v5 = iconst 1\n\n                                block2:\n                                    jmp block0\n\n                                block0:\n@0009                               v19 = ifcast v5\n@000a                               v20 = fadd v17, v19\n                                    v21 = call inst0(v20)\n                                    v22 = optbarrier v20\n                                    jmp block1\n\n                                block1:\n}\n\n"
+    },
+    {
+      "round": "original-mir",
+      "case": "EV-SH-01",
+      "compiled": true,
+      "source_sha256": "8efd7eebe977db0e3069f58b22db33c94799e65ebab6e9e13a9986cdccbdfca8",
+      "deck_sha256": "44822e61c0ac716325f0650bd689f42cb1e531d9ceaa55e7343d68d8e4d5fc5f",
+      "osdi_sha256": "e00e2de7e3db5231c72ca530b9e41863a3cae3028f9d1cf296474d4eaeee6e9d",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(in)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "original-mir/runs/EV-SH-01/RESULT.json",
+        "sha256": "dab3d7adb74eec0d2db27d1fb23d2301992204328a802850941010dad1b115da"
+      },
+      "compile_log": {
+        "path": "original-mir/runs/EV-SH-01/compile.log",
+        "sha256": "822868531ec97db8992686d3fa4679950f65acbd4fe86f2d3c442950cdaba336"
+      },
+      "simulate_log": {
+        "path": "original-mir/runs/EV-SH-01/simulate.log",
+        "sha256": "f6bde3da9be48143f65c494b7b4d6d9b348c0d4cf9afaef690afdb5b570c2f34"
+      },
+      "unoptimized_mir": "Unoptimized MIR (no DAE) of paper_sh_timer\nfunction %(v17, v18, v20, v21, v22) {\n    inst0 = fn %$store[lim_state0](1) -> 1\n    inst1 = fn %$store[lim_state1](1) -> 1\n    v5 = iconst 1\n\n                                block2:\n                                    jmp block0\n\n                                block0:\n@000f                               v23 = ifcast v5\n@0010                               v24 = fadd v20, v23\n                                    v25 = call inst0(v22)\n                                    v26 = call inst1(v24)\n                                    v27 = optbarrier v22\n                                    v28 = optbarrier v24\n                                    jmp block1\n\n                                block1:\n}\n\n"
+    },
+    {
+      "round": "original-mir",
+      "case": "EV-HC-01",
+      "compiled": true,
+      "source_sha256": "ed4a653c2b7bdf28d080a51b7e05134c17d93972ff88d122da0aaa34bfc2b29c",
+      "deck_sha256": "dbfa4e3c65893380c2d67e4ae2d0857fcd1147d8fe16799fcb9a54fa94591492",
+      "osdi_sha256": "7eeea07226582e02d603d665b4fe67cdcded5f547d4124dc0d9f206002ebaf40",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(in)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "original-mir/runs/EV-HC-01/RESULT.json",
+        "sha256": "29f1cc4c4dd9136a43c7aad32883ea04a630408217d526aaa157db01d9947a8c"
+      },
+      "compile_log": {
+        "path": "original-mir/runs/EV-HC-01/compile.log",
+        "sha256": "7d7129e98a7ced77d4a3412953b4a8fbe467ed9c2940b75462197ba663334601"
+      },
+      "simulate_log": {
+        "path": "original-mir/runs/EV-HC-01/simulate.log",
+        "sha256": "ce9523c9a7862ccbcef271394dc35245eef2153a12271fe44dd5608a9175d5bd"
+      },
+      "unoptimized_mir": "Unoptimized MIR (no DAE) of paper_hc\nfunction %(v17, v18, v20, v21) {\n    inst0 = fn %$store[lim_state0](1) -> 1\n    inst1 = fn %$store[lim_state1](1) -> 1\n    v4 = iconst 0\n    v5 = iconst 1\n    v28 = fconst 0x1.999999999999ap-4\n    v29 = fconst 0x1.999999999999ap-1\n\n                                block2:\n                                    jmp block0\n\n                                block0:\n@000f                               v22 = ifcast v5\n@0012                               v23 = ifcast v5\n@0013                               v24 = fadd v20, v23\n@001e                               v25 = ifcast v4\n@0021                               v26 = ifcast v5\n@0022                               v27 = fadd v24, v26\n@0028                               v30 = fmul v29, v25\n@0029                               v31 = fadd v28, v30\n                                    v32 = call inst0(v25)\n                                    v33 = call inst1(v27)\n                                    v34 = optbarrier v31\n                                    v35 = optbarrier v27\n                                    jmp block1\n\n                                block1:\n}\n\n"
+    },
+    {
+      "round": "original-mir",
+      "case": "EV-HC-02",
+      "compiled": true,
+      "source_sha256": "02734a00e6a7502fb22f01a8f39f5628ae806af838d06c85f533d3bce762525b",
+      "deck_sha256": "c50fd8ba1033064218abb4a1b7e64bac9fa2834070155aa06d8e3e6d05ffca75",
+      "osdi_sha256": "ae88867dd6056939c92c7d2a4df2a93a85f991c5da6ce87b25456e35a42a160c",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(in)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "original-mir/runs/EV-HC-02/RESULT.json",
+        "sha256": "e7fe20fca4c38a6c9c99a6dcdfe3d8b7e2e6b48555dbb602c7c9e115e1f829c5"
+      },
+      "compile_log": {
+        "path": "original-mir/runs/EV-HC-02/compile.log",
+        "sha256": "03f3fe335e54aa8a4eba3fa567fbb188685f09ed7ca7fed7290718a64d0e360e"
+      },
+      "simulate_log": {
+        "path": "original-mir/runs/EV-HC-02/simulate.log",
+        "sha256": "f6d4f177f6a99930af6eb9b18abfc6eb26d2a6efbe6d2a68a4fe74ced62d47f1"
+      },
+      "unoptimized_mir": "Unoptimized MIR (no DAE) of paper_hc_start\nfunction %(v17, v18, v20, v21) {\n    inst0 = fn %$store[lim_state0](1) -> 1\n    inst1 = fn %$store[lim_state1](1) -> 1\n    v4 = iconst 0\n    v5 = iconst 1\n    v28 = fconst 0x1.999999999999ap-4\n    v29 = fconst 0x1.999999999999ap-1\n\n                                block2:\n                                    jmp block0\n\n                                block0:\n@0012                               v22 = ifcast v5\n@0015                               v23 = ifcast v5\n@0016                               v24 = fadd v20, v23\n@0021                               v25 = ifcast v4\n@0024                               v26 = ifcast v5\n@0025                               v27 = fadd v24, v26\n@002b                               v30 = fmul v29, v25\n@002c                               v31 = fadd v28, v30\n                                    v32 = call inst0(v25)\n                                    v33 = call inst1(v27)\n                                    v34 = optbarrier v31\n                                    v35 = optbarrier v27\n                                    jmp block1\n\n                                block1:\n}\n\n"
+    },
+    {
+      "round": "original-mir",
+      "case": "TM-01",
+      "compiled": true,
+      "source_sha256": "54f762933e7d62a27258daf55d2049484b4add854e2953f5442b3d4a79432586",
+      "deck_sha256": "5649c89dacddfbb139c2b4f756b38ae8d439df62d5fb6d229205b4d9dfee524f",
+      "osdi_sha256": "733bc9c7d2b25912bd0d86eca234f8060ec3851c79093a97416add1d0fc5b9fd",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"state\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(out)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "original-mir/runs/TM-01/RESULT.json",
+        "sha256": "b0fef3c0a139bb2142319071dd913673c3c5099fa771b08cdbe4a9e4e85ca70f"
+      },
+      "compile_log": {
+        "path": "original-mir/runs/TM-01/compile.log",
+        "sha256": "8d8c1edf17448e4f551244e1fa1c6e1244c185f00108ecbb8234abf43f028302"
+      },
+      "simulate_log": {
+        "path": "original-mir/runs/TM-01/simulate.log",
+        "sha256": "ca35d2a552abee9e98360957cc13feea1da043f93643897604809ed522de968d"
+      },
+      "unoptimized_mir": "Unoptimized MIR (no DAE) of paper_edge\nfunction %(v17, v18, v20, v21, v29) {\n    inst0 = fn %$store[lim_state0](1) -> 1\n    inst1 = fn %$store[lim_state1](1) -> 1\n    v5 = iconst 1\n    v26 = fconst 0x1.19799812dea11p-40\n    v27 = fconst 0x1.0c6f7a0b5ed8dp-21\n    v28 = fconst 0x1.0c6f7a0b5ed8dp-20\n\n                                block8:\n                                    jmp block0\n\n                                block0:\n@000a                               v22 = ifcast v5\n@000c                               v23 = fsub v22, v17\n@000f                               v24 = ifcast v5\n@0010                               v25 = fadd v20, v24\n@0017                               v30 = fge v23, v29\n@0017                               br v30, block2, block3\n\n                                block2:\n@0017                               jmp block4\n\n                                block3:\n@0017                               jmp block4\n\n                                block4:\n@0017                               v31 = phi [v27, block2], [v28, block3]\n@0017                               v32 = fge v31, v26\n@0017                               br v32, block5, block6\n\n                                block5:\n@0017                               jmp block7\n\n                                block6:\n@0017                               jmp block7\n\n                                block7:\n@0017                               v33 = phi [v31, block5], [v26, block6]\n@0017                               v34 = fsub v29, v23\n@0017                               v35 = fdiv v34, v33\n                                    v66 = call inst0(v23)\n                                    v67 = call inst1(v25)\n                                    v86 = optbarrier v35\n                                    v87 = optbarrier v29\n                                    v88 = optbarrier v29\n                                    v89 = optbarrier v23\n                                    v90 = optbarrier v25\n                                    jmp block1\n\n                                block1:\n}\n\n"
+    },
+    {
+      "round": "original-mir",
+      "case": "CO-HC-01",
+      "compiled": true,
+      "source_sha256": "e28c95cc6b37d4154c90daebca207af538d9b707016c5043b3954df65f03c0c1",
+      "deck_sha256": "a213b2de70fe678eacb14a72eaaa3ea047a6afe44a879aad6e6ab370a2064d17",
+      "osdi_sha256": "e80ad10aafbe5583855d16d2596d1f2631df15c102f9126269086adb888f4470",
+      "waveform_available": false,
+      "diagnostics": [
+        "Warning: Dynamic gmin stepping failed",
+        "Warning: True gmin stepping failed",
+        "Warning: source stepping failed",
+        "Error: Transient op failed, timestep too small",
+        "Error: The operating point could not be simulated successfully.",
+        "Error: Finding the operating point for transient simulation failed ",
+        "doAnalyses: TRAN:  Timestep too small; initial timepoint: trouble with node \"count\"",
+        "tran simulation(s) aborted",
+        "Error: no such vector v(in)",
+        "No. of Data Rows : 0"
+      ],
+      "result": {
+        "path": "original-mir/runs/CO-HC-01/RESULT.json",
+        "sha256": "38f92666302e5f45be0e728ef376f4c763d02bbbcc0c172c809adb2f219ddb60"
+      },
+      "compile_log": {
+        "path": "original-mir/runs/CO-HC-01/compile.log",
+        "sha256": "282573be1a09da23a165a7798cfe4f3b62efb057fe95ccec3cec85a5e75a009c"
+      },
+      "simulate_log": {
+        "path": "original-mir/runs/CO-HC-01/simulate.log",
+        "sha256": "bcfe304f66b446f2acfd0cf4645fdb219760926e93ef3aa06cf7a7f6eee78ecd"
+      },
+      "unoptimized_mir": "Unoptimized MIR (no DAE) of paper_hc_edge\nfunction %(v17, v18, v20, v21, v33) {\n    inst0 = fn %$store[lim_state0](1) -> 1\n    inst1 = fn %$store[lim_state1](1) -> 1\n    v4 = iconst 0\n    v5 = iconst 1\n    v28 = fconst 0x1.999999999999ap-4\n    v29 = fconst 0x1.999999999999ap-1\n    v30 = fconst 0x1.19799812dea11p-40\n    v31 = fconst 0x1.0c6f7a0b5ed8dp-22\n    v32 = fconst 0x1.0c6f7a0b5ed8dp-21\n\n                                block8:\n                                    jmp block0\n\n                                block0:\n@000f                               v22 = ifcast v5\n@0012                               v23 = ifcast v5\n@0013                               v24 = fadd v20, v23\n@001e                               v25 = ifcast v4\n@0021                               v26 = ifcast v5\n@0022                               v27 = fadd v24, v26\n@0031                               v34 = fge v25, v33\n@0031                               br v34, block2, block3\n\n                                block2:\n@0031                               jmp block4\n\n                                block3:\n@0031                               jmp block4\n\n                                block4:\n@0031                               v35 = phi [v31, block2], [v32, block3]\n@0031                               v36 = fge v35, v30\n@0031                               br v36, block5, block6\n\n                                block5:\n@0031                               jmp block7\n\n                                block6:\n@0031                               jmp block7\n\n                                block7:\n@0031                               v37 = phi [v35, block5], [v30, block6]\n@0031                               v38 = fsub v33, v25\n@0031                               v39 = fdiv v38, v37\n@0032                               v40 = fmul v29, v33\n@0033                               v41 = fadd v28, v40\n                                    v54 = call inst0(v25)\n                                    v61 = call inst1(v27)\n                                    v80 = optbarrier v25\n                                    v99 = optbarrier v27\n                                    v118 = optbarrier v39\n                                    v119 = optbarrier v33\n                                    v120 = optbarrier v41\n                                    jmp block1\n\n                                block1:\n}\n\n"
+    }
+  ]
+}
