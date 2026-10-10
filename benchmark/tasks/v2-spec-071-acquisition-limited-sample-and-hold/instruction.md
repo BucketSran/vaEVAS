@@ -20,7 +20,8 @@ with scalar electrical voltage-domain ports.
 - `vin`: analog input voltage.
 - `vout`: acquired and held output voltage.
 - `metric`: voltage-coded monitor that is high while the model is actively
-  acquiring and low while it is holding or reset.
+  acquiring and low while it is holding or reset. Its high level is 0.9 V and
+  its low level is 0 V.
 
 ## Public Parameter Contract
 

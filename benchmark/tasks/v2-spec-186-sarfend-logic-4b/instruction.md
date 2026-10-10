@@ -21,7 +21,7 @@ module sarfend_logic_4b(clks, dcomp, dcompb, test, dtest0, dtest1, dtest2, dtest
 
 ## Public Parameter Contract
 
-No overrideable public parameters are required. Use 0.45 V thresholds and 0/1 V voltage-coded controls.
+No overrideable public parameters are required. Use 0.45 V thresholds and 0/1 V voltage-coded controls. All digital output changes must complete within 200 ps of the triggering control or comparator event; choose output smoothing within this limit. This limit applies to the controller outputs, separately from the fixed comparator response delay.
 
 ## Required Behavior
 

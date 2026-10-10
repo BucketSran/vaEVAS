@@ -13,7 +13,7 @@ Declare module `programmable_gain_amplifier` with positional ports `clk, rst, ga
 - `clk`, `rst`, and `gain_sel` are voltage-coded control inputs.
 - `vin` is the analog input around the common-mode level.
 - `out` is the gain-scaled and bounded output.
-- `metric` indicates output clipping.
+- `metric` indicates output clipping. Its low level is 0 V and its high level is 0.9 V, independent of the output clamp parameters.
 
 ## Public Parameter Contract
 
