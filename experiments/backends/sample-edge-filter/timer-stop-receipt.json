@@ -1,0 +1,790 @@
+{
+  "purpose": "#96 original timer-stop-chain refusal recovery; TIMER/EVENT-ORDER/TRANSITION/DYNAMICS/COMPOSE",
+  "execution": "new Spectre execution and new local EVAS replay at every native Spectre time",
+  "identity": {
+    "base": "08e000d9fd483b3b77afbc7f57c09334da81b0ef",
+    "patch_sha256": "4157cefb31ce0040d64cadf24514a934284f0d21ce893b40309713b5ee088bb6",
+    "kernel_sha256": "19d28bc2d5d73f27cc3bfcf90cda3d344d4a65b3438e1c6d56156daa0f6f8799",
+    "inputs_manifest_sha256": "a5a478c98dd35095d8c3ad1abf624df28bb05943f0c2d0518e454528b77b041e",
+    "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+    "rustc": "rustc 1.95.0 (59807616e 2026-04-14)",
+    "cargo": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)",
+    "source_files": {
+      "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/src/evas/__main__.py": "f98567eedc0052dddf00fd13f5380e996409f72aed9fbf09702d5bf173fae1d5",
+      "evas/src/evas/array_elaboration.py": "4faf4543a735ad19c89bbbc760d39f6860089d854b7f24922edaa390cf20df0b",
+      "evas/src/evas/diagnostics.py": "e787f6c1b0ab3939fa37c15ec6da550f59520c6f99edf29e9c53784f31e3308f",
+      "evas/src/evas/elaboration.py": "ff4ffb36428b7a5fd26a646b31788e2699de050c0a2ec6935d807ed79286fbd8",
+      "evas/src/evas/errors.py": "1a361344eb6678f6d82a91f3c356513025146bf468e9d3f5d4b593a9c04b3c08",
+      "evas/src/evas/frontend.py": "55d6f9724c71ffb3938d4e6eb8ff425d1c85d66808e6bbc6492593640e30ae19",
+      "evas/src/evas/hierarchy.py": "c277bc21cbe987f7cb427a2955b6b20588d5c42ae09bbc62853dab7bdba4138f",
+      "evas/src/evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+      "evas/src/evas/instance_compiler.py": "030b7172416a21a273eefe18e03ea2ce19bbc3ebd95fa27c143459f898cc0e6a",
+      "evas/src/evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+      "evas/src/evas/ir.py": "ec167d9f02ddde4bff1dbf7b24b903d4a178822cfc0a2749638e753b1398f8cf",
+      "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+      "evas/src/evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+      "evas/src/evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+      "evas/src/evas/lowering.py": "3df0c3f873285e45aa9de85863ca7d42b4c1cffc205a24164700b953b1874c71",
+      "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+      "evas/src/evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+      "evas/src/evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+      "evas/src/evas/node_elaboration.py": "2b68adb511d792c349e40f98fa71933402f1569467c8e2cb6e6e9125773e7658",
+      "evas/src/evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+      "evas/src/evas/preprocessor.py": "83d54364c2cbc993da5d749bb3582f4ef5de110deff5f23a41ad9af4d928478c",
+      "evas/src/evas/protocol.py": "9dacd13cfd98a803e3e45a927c98035944a736a0930da5a33d6d202a8ebbe3bb",
+      "evas/src/evas/query.py": "2fda97253f88c236d308d795aeae52a00ff5cfbb458f87a4bcfdc3751fae4f64",
+      "evas/src/evas/results.py": "91bc585e4ee9a871fce7da38beebebe71218f0b59c7dda57fec904a9994810bd",
+      "evas/src/evas/runtime.py": "e467f9de3635dcd23813771ea528e57fa35dd98c36dce893b35f920f278c7c0f",
+      "evas/src/evas/scs.py": "6258b0b03294d399ad7cd0ad42e6513a19948d216e25333512a5b9b2695c6d6d",
+      "evas/src/evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
+      "evas/src/evas/standard_headers.py": "9f190d1b17d6a341cecdba14f8a43771f7754d2e0de1403d59e4432849ec7e30",
+      "evas/src/evas/strobe.py": "18d6b1911436459a7a19ee100d309636f5d0d75acd927b228219367098f19c80",
+      "evas/src/evas/syntax.py": "0808529711ffc52e04557d0adfad8452f12e3073132699c5afe8a59b6f602605"
+    }
+  },
+  "source_patch": {
+    "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-backlog-20261011/timer-stop-source.patch",
+    "availability": "local-only",
+    "sha256": "4157cefb31ce0040d64cadf24514a934284f0d21ce893b40309713b5ee088bb6"
+  },
+  "changed_runtime_files": {
+    "evas/rust_core/src/schedule.rs": "86c0086412a558f1581014b4bbc1df542d4986aed496ba2dcbecba72e8ac59ea"
+  },
+  "input_manifest": {
+    "base/case.json": "940d2d074479c855d7e441f1e643224f0320a15dca0f184466d08505eabd7737",
+    "base/dut.va": "bf1ef4965c9f23820a7d2884bb8eb7c3950a90abd519eeb6f52974d17e4dc005",
+    "base/requested_settings.json": "e29588b3d29f478c8ffbd1f144f4f2a7638177ba0a4b26e178ac26098104ea2d",
+    "base/tb.scs": "6fa329c8b68175d554bc30c55d367ea83139073016129d6986ce15b1848b169c",
+    "tight/case.json": "940d2d074479c855d7e441f1e643224f0320a15dca0f184466d08505eabd7737",
+    "tight/dut.va": "bf1ef4965c9f23820a7d2884bb8eb7c3950a90abd519eeb6f52974d17e4dc005",
+    "tight/requested_settings.json": "1cb5fb7d14dcde7f8b965efc6c09d5f9b66cee9054d201588f7963aa00647431",
+    "tight/tb.scs": "5592c1e2e3f1054b02f3226a221adfa95f0790537ac0147235192eb0f693dc95"
+  },
+  "source_text": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; real q; integer n; electrical h,e,nc; analog begin @(initial_step) begin q=0.2; n=0; end\n@(timer(1e-6,1e-6,1e-12)) begin q=V(u,r); n=n+1; end\nV(h,r)<+q; V(nc,r)<+n;\nV(e,r)<+transition(q,1e-7,2e-7,3e-7);\nV(y,r)<+laplace_nd(V(e,r),'{1},'{1,4e-7}); end endmodule",
+  "contracts": {
+    "id": "timer-stop-chain",
+    "source_identity": "unchanged original probe body and test_affine.model wrapper",
+    "initial_q": 0.2,
+    "inputs": {
+      "u": [
+        [
+          0,
+          0.2
+        ],
+        [
+          4e-06,
+          1.0
+        ]
+      ]
+    },
+    "stop": 4e-06,
+    "timer_start": 1e-06,
+    "timer_period": 1e-06,
+    "timer_tolerance_s": 1e-12,
+    "evas_vabstol_V": 1e-07,
+    "evas_reltol": 0,
+    "evas_max_step_s": 1e-07,
+    "oracle": "y=0.2+0.2*sum(ramp_filter(t,k*1e-6+1e-7,2e-7,4e-7),k=1..4)",
+    "strict_observed_voltage_budget_V": 1e-07,
+    "comparison": "Original strict nominal errors retained. Additional timing envelope is a separate diagnostic, not a replacement verdict.",
+    "timing_diagnostic": {
+      "sample_voltage_V": 2e-07,
+      "edge_and_filter_V": 1.2e-06,
+      "derivation": "PWL slope S=2e5 V/s; nonoverlapping 0.2 V ramps have slope 1e6 V/s; stable unit-gain first-order filter has L1 norm 1. Add 1e-7 numerical budget to these event-time envelopes. Count may select either side only within original 1 ps window."
+    },
+    "observations": "all native points, no added VA observer or strobes; endpoint required; no continuous-time certification"
+  },
+  "spectre_tool": {
+    "profile_identity": "4d05474e15dc181d4f8f99bf749e8190c872d621288b1aa3bc6ffa000370fa4f",
+    "unknowns": [],
+    "binary": "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre",
+    "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "setup_sha256": {
+      "/home/cshrc/.cshrc.cadence.sui": "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+      "/home/cshrc/.cshrc.mentor25.sui": "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+    },
+    "version": "sub-version  21.1.0.509.isr12",
+    "probe": {
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "prlimit",
+        "--as=4294967296",
+        "--fsize=33554432",
+        "--",
+        "/bin/csh",
+        "-f",
+        "version.csh"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "status": "completed",
+      "cleanup": {
+        "signals": [
+          "SIGTERM",
+          "SIGKILL"
+        ],
+        "errors": [],
+        "complete": true
+      },
+      "elapsed_seconds": 1.3239001967012882,
+      "completed_utc": "2026-10-10T19:04:36Z",
+      "log": "version.log",
+      "log_sha256": "d0e6c83a98026a294bfc4b9754c4e294d322b60b1872a28e38f84caccbdf7f81",
+      "stage": "version",
+      "resource_caps": {
+        "memory_limit_bytes": 4294967296,
+        "file_limit_bytes": 33554432,
+        "threads": 1
+      }
+    },
+    "setup": "source /home/cshrc/.cshrc.cadence.sui\nsource /home/cshrc/.cshrc.mentor25.sui\n"
+  },
+  "raw_collection": {
+    "archive_sha256": "b2764693c2de69e41747c6f2c9f5e3b769b2ebc002c49071723ee7ce6b264552",
+    "files_verified": 50,
+    "availability": "local-only",
+    "remote": "/tmp/chips-jinzhihong/evas-timer-stop-20261011",
+    "original_retained": true
+  },
+  "local_run_root": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-backlog-20261011",
+  "availability": "local-only raw waveforms, checker and runner bundle; this compact report and developer regressions are repository-contained",
+  "checker": {
+    "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-backlog-20261011/analyze_timer_stop.py",
+    "sha256": "630c54eb8a40086b7a9299ad6a00366c9d3f76356c6da3d0b6fe9d2b1759c807",
+    "calibration": {
+      "positive": "pass",
+      "negative_controls": [
+        "output +10uV",
+        "missed event away from root",
+        "missing final output"
+      ],
+      "result": "all rejected"
+    }
+  },
+  "cases": [
+    {
+      "profile": "base",
+      "rows": 1813,
+      "spectre": {
+        "strict_nominal_pass": false,
+        "timing_envelope_pass": true,
+        "maximum_error_V": {
+          "y": 7.513375946954781e-07,
+          "e": 4.440892098500626e-16,
+          "h": 1.1102230246251565e-16,
+          "u": 0.0
+        },
+        "count_phase_records": [],
+        "failures": [],
+        "terminal": {
+          "time": 4e-06,
+          "u": 1.0,
+          "y": 0.7702208416213125,
+          "h": 1.0,
+          "e": 0.8,
+          "n": 4.0
+        }
+      },
+      "evas": {
+        "strict_nominal_pass": true,
+        "timing_envelope_pass": true,
+        "maximum_error_V": {
+          "y": 6.661338147750939e-16,
+          "e": 9.992007221626409e-16,
+          "h": 1.1102230246251565e-16,
+          "u": 2.220446049250313e-16
+        },
+        "count_phase_records": [],
+        "failures": [],
+        "terminal": {
+          "time": 4e-06,
+          "u": 1.0,
+          "y": 0.7702208148694369,
+          "h": 1.0,
+          "e": 0.8,
+          "n": 4.0
+        }
+      },
+      "same_time_max_difference": {
+        "h": 1.1102230246251565e-16,
+        "e": 1.2212453270876722e-15,
+        "y": 7.513375947509893e-07,
+        "n": 0.0,
+        "u": 2.220446049250313e-16
+      },
+      "evas_events": [
+        {
+          "time": 1e-06,
+          "event": 0,
+          "origin": "dut.va:3:1 (dut)",
+          "kind": "timer",
+          "before": [
+            0.2,
+            0.0
+          ],
+          "after": [
+            0.4,
+            1.0
+          ]
+        },
+        {
+          "time": 2e-06,
+          "event": 0,
+          "origin": "dut.va:3:1 (dut)",
+          "kind": "timer",
+          "before": [
+            0.4,
+            1.0
+          ],
+          "after": [
+            0.6,
+            2.0
+          ]
+        },
+        {
+          "time": 3.0000000000000005e-06,
+          "observation_time_bounds": [
+            2.9999999999999997e-06,
+            3.0000000000000005e-06
+          ],
+          "event": 0,
+          "origin": "dut.va:3:1 (dut)",
+          "kind": "timer",
+          "before": [
+            0.6,
+            2.0
+          ],
+          "after": [
+            0.8,
+            3.0
+          ]
+        },
+        {
+          "time": 4e-06,
+          "event": 0,
+          "origin": "dut.va:3:1 (dut)",
+          "kind": "timer",
+          "before": [
+            0.8,
+            3.0
+          ],
+          "after": [
+            1.0,
+            4.0
+          ]
+        }
+      ],
+      "effective_settings": {
+        "reltol": 1e-08,
+        "vabstol": 1e-09,
+        "iabstol": 1e-15,
+        "stop": 4e-06,
+        "maxstep": 1e-08,
+        "method": "traponly"
+      },
+      "source_sha256": "bf1ef4965c9f23820a7d2884bb8eb7c3950a90abd519eeb6f52974d17e4dc005",
+      "spectre_rows_sha256": "97448b4cf8aa64143cf91740e46ce1351ea42ffe81e5d7f009ac1cd46e887217",
+      "evas_response_sha256": "75e8505c5031a88b5b8e0b2a0facc9278926f7f810b645c7e85555690161c072",
+      "requested_settings": {
+        "stop_s": 4e-06,
+        "maxstep_s": 1e-08,
+        "reltol": 1e-07,
+        "vabstol_V": 1e-09,
+        "iabstol_A": 1e-15,
+        "errpreset": "conservative",
+        "method": "traponly",
+        "strobe": "none"
+      },
+      "execution_receipt": {
+        "probe": "base",
+        "execution": {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "prlimit",
+            "--as=4294967296",
+            "--fsize=33554432",
+            "--",
+            "/bin/csh",
+            "-f",
+            "run.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "status": "completed",
+          "cleanup": {
+            "signals": [
+              "SIGTERM",
+              "SIGKILL"
+            ],
+            "errors": [],
+            "complete": true
+          },
+          "elapsed_seconds": 15.238265851512551,
+          "completed_utc": "2026-10-10T19:04:51Z",
+          "log": "simulate.log",
+          "log_sha256": "bf0f26c9493924a7172674b86fefe2dd53e921e9254276487c33ec8743fb8024",
+          "stage": "simulate",
+          "resource_caps": {
+            "memory_limit_bytes": 4294967296,
+            "file_limit_bytes": 33554432,
+            "threads": 1
+          }
+        },
+        "source_sha256": "bf1ef4965c9f23820a7d2884bb8eb7c3950a90abd519eeb6f52974d17e4dc005",
+        "deck_sha256": "6fa329c8b68175d554bc30c55d367ea83139073016129d6986ce15b1848b169c",
+        "raw_sha256": "b1fcf4f99df4203da1bca2e80834e8e168ee71d1d6bb01adc4071f9e36cd32b7",
+        "effective_settings": {
+          "actual": {
+            "reltol": 1e-08,
+            "vabstol": 1e-09,
+            "iabstol": 1e-15,
+            "stop": 4e-06,
+            "maxstep": 1e-08,
+            "method": "traponly"
+          },
+          "requested": {
+            "reltol": 1e-07,
+            "vabstol": 1e-09,
+            "iabstol": 1e-15,
+            "stop": 4e-06,
+            "maxstep": 1e-08
+          },
+          "mismatches": [
+            "reltol"
+          ],
+          "scoped_readback": {
+            "effective": {
+              "stop_s": {
+                "value": 4e-06,
+                "line": 120,
+                "raw": "    stop = 4 us",
+                "scope": "transient:tran"
+              },
+              "maxstep_s": {
+                "value": 1e-08,
+                "line": 122,
+                "raw": "    maxstep = 10 ns",
+                "scope": "transient:tran"
+              },
+              "reltol": {
+                "value": 1e-08,
+                "line": 126,
+                "raw": "    reltol = 10e-09",
+                "scope": "transient:tran"
+              },
+              "vabstol_V": {
+                "value": 1e-09,
+                "line": 127,
+                "raw": "    abstol(V) = 1 nV",
+                "scope": "transient:tran"
+              },
+              "iabstol_A": {
+                "value": 1e-15,
+                "line": 128,
+                "raw": "    abstol(I) = 1 fA",
+                "scope": "transient:tran"
+              },
+              "method": {
+                "value": "traponly",
+                "line": 133,
+                "raw": "    method = traponly",
+                "scope": "transient:tran"
+              }
+            },
+            "global_user": {
+              "vabstol_V": {
+                "value": 1e-09,
+                "line": 83,
+                "raw": "            vabstol = 1e-09",
+                "scope": "global_user"
+              },
+              "iabstol_A": {
+                "value": 1e-15,
+                "line": 84,
+                "raw": "            iabstol = 1e-15",
+                "scope": "global_user"
+              },
+              "reltol": {
+                "value": 1e-07,
+                "line": 85,
+                "raw": "             reltol = 1e-07",
+                "scope": "global_user"
+              }
+            },
+            "psf_effective": {
+              "stop_s": {
+                "value": 4e-06,
+                "line": 14,
+                "raw": "\"stop\" 4.00000e-06",
+                "scope": "psf_transient:tran"
+              },
+              "maxstep_s": {
+                "value": 1e-08,
+                "line": 17,
+                "raw": "\"maxstep\" 1.00000e-08",
+                "scope": "psf_transient:tran"
+              },
+              "reltol": {
+                "value": 1e-08,
+                "line": 21,
+                "raw": "\"reltol\" 1.00000e-08",
+                "scope": "psf_transient:tran"
+              },
+              "vabstol_V": {
+                "value": 1e-09,
+                "line": 22,
+                "raw": "\"abstol(V)\" 1.00000e-09",
+                "scope": "psf_transient:tran"
+              },
+              "iabstol_A": {
+                "value": 1e-15,
+                "line": 23,
+                "raw": "\"abstol(I)\" 1.00000e-15",
+                "scope": "psf_transient:tran"
+              },
+              "method": {
+                "value": "traponly",
+                "line": 28,
+                "raw": "\"method\" \"traponly\"",
+                "scope": "psf_transient:tran"
+              }
+            },
+            "psf_relative_metadata": {
+              "tolerance.relative": {
+                "value": 1e-07,
+                "line": 11,
+                "raw": "\"tolerance.relative\" 1.00000e-07",
+                "scope": "psf_header"
+              }
+            }
+          },
+          "status": "I",
+          "claim": "scoped controls do not establish mathematical or native provenance qualification; actual/requested differences remain"
+        }
+      },
+      "native_raw_sha256": "b1fcf4f99df4203da1bca2e80834e8e168ee71d1d6bb01adc4071f9e36cd32b7"
+    },
+    {
+      "profile": "tight",
+      "rows": 4289,
+      "spectre": {
+        "strict_nominal_pass": true,
+        "timing_envelope_pass": true,
+        "maximum_error_V": {
+          "y": 3.068698151142968e-08,
+          "e": 7.438494264988549e-15,
+          "h": 0.0,
+          "u": 0.0
+        },
+        "count_phase_records": [],
+        "failures": [],
+        "terminal": {
+          "time": 4e-06,
+          "u": 1.0,
+          "y": 0.7702208366127532,
+          "h": 1.0,
+          "e": 0.8,
+          "n": 4.0
+        }
+      },
+      "evas": {
+        "strict_nominal_pass": true,
+        "timing_envelope_pass": true,
+        "maximum_error_V": {
+          "y": 6.661338147750939e-16,
+          "e": 9.992007221626409e-16,
+          "h": 1.1102230246251565e-16,
+          "u": 2.220446049250313e-16
+        },
+        "count_phase_records": [],
+        "failures": [],
+        "terminal": {
+          "time": 4e-06,
+          "u": 1.0,
+          "y": 0.7702208148694369,
+          "h": 1.0,
+          "e": 0.8,
+          "n": 4.0
+        }
+      },
+      "same_time_max_difference": {
+        "h": 1.1102230246251565e-16,
+        "e": 7.216449660063518e-15,
+        "y": 3.0686981844496586e-08,
+        "n": 0.0,
+        "u": 2.220446049250313e-16
+      },
+      "evas_events": [
+        {
+          "time": 1e-06,
+          "event": 0,
+          "origin": "dut.va:3:1 (dut)",
+          "kind": "timer",
+          "before": [
+            0.2,
+            0.0
+          ],
+          "after": [
+            0.4,
+            1.0
+          ]
+        },
+        {
+          "time": 2e-06,
+          "event": 0,
+          "origin": "dut.va:3:1 (dut)",
+          "kind": "timer",
+          "before": [
+            0.4,
+            1.0
+          ],
+          "after": [
+            0.6,
+            2.0
+          ]
+        },
+        {
+          "time": 3.0000000000000005e-06,
+          "observation_time_bounds": [
+            2.9999999999999997e-06,
+            3.0000000000000005e-06
+          ],
+          "event": 0,
+          "origin": "dut.va:3:1 (dut)",
+          "kind": "timer",
+          "before": [
+            0.6,
+            2.0
+          ],
+          "after": [
+            0.8,
+            3.0
+          ]
+        },
+        {
+          "time": 4e-06,
+          "event": 0,
+          "origin": "dut.va:3:1 (dut)",
+          "kind": "timer",
+          "before": [
+            0.8,
+            3.0
+          ],
+          "after": [
+            1.0,
+            4.0
+          ]
+        }
+      ],
+      "effective_settings": {
+        "reltol": 1e-10,
+        "vabstol": 1e-11,
+        "iabstol": 1e-15,
+        "stop": 4e-06,
+        "maxstep": 1e-09,
+        "method": "traponly"
+      },
+      "source_sha256": "bf1ef4965c9f23820a7d2884bb8eb7c3950a90abd519eeb6f52974d17e4dc005",
+      "spectre_rows_sha256": "e2c5031a05f76a5e68d0bd8de9e47d117007847cb830ca547c4dac0550fff1b5",
+      "evas_response_sha256": "a3d16fb5d7b3d7a8d30b36eb5ec4c98a2e318faed232656b8cc285bc370a1664",
+      "requested_settings": {
+        "stop_s": 4e-06,
+        "maxstep_s": 1e-09,
+        "reltol": 1e-09,
+        "vabstol_V": 1e-11,
+        "iabstol_A": 1e-15,
+        "errpreset": "conservative",
+        "method": "traponly",
+        "strobe": "none"
+      },
+      "execution_receipt": {
+        "probe": "tight",
+        "execution": {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "prlimit",
+            "--as=4294967296",
+            "--fsize=33554432",
+            "--",
+            "/bin/csh",
+            "-f",
+            "run.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "status": "completed",
+          "cleanup": {
+            "signals": [
+              "SIGTERM",
+              "SIGKILL"
+            ],
+            "errors": [],
+            "complete": true
+          },
+          "elapsed_seconds": 14.920346725732088,
+          "completed_utc": "2026-10-10T19:05:06Z",
+          "log": "simulate.log",
+          "log_sha256": "f04b7e4a273969413dc7a613fc86127d05d0514f859f15fe0b9257de43c62a76",
+          "stage": "simulate",
+          "resource_caps": {
+            "memory_limit_bytes": 4294967296,
+            "file_limit_bytes": 33554432,
+            "threads": 1
+          }
+        },
+        "source_sha256": "bf1ef4965c9f23820a7d2884bb8eb7c3950a90abd519eeb6f52974d17e4dc005",
+        "deck_sha256": "5592c1e2e3f1054b02f3226a221adfa95f0790537ac0147235192eb0f693dc95",
+        "raw_sha256": "64ede336439b89f3e9e5337a0719870af2e82418275dd78f26ba3957e5afb4ad",
+        "effective_settings": {
+          "actual": {
+            "reltol": 1e-10,
+            "vabstol": 1e-11,
+            "iabstol": 1e-15,
+            "stop": 4e-06,
+            "maxstep": 1e-09,
+            "method": "traponly"
+          },
+          "requested": {
+            "reltol": 1e-09,
+            "vabstol": 1e-11,
+            "iabstol": 1e-15,
+            "stop": 4e-06,
+            "maxstep": 1e-09
+          },
+          "mismatches": [
+            "reltol"
+          ],
+          "scoped_readback": {
+            "effective": {
+              "stop_s": {
+                "value": 4e-06,
+                "line": 120,
+                "raw": "    stop = 4 us",
+                "scope": "transient:tran"
+              },
+              "maxstep_s": {
+                "value": 1e-09,
+                "line": 122,
+                "raw": "    maxstep = 1 ns",
+                "scope": "transient:tran"
+              },
+              "reltol": {
+                "value": 1e-10,
+                "line": 126,
+                "raw": "    reltol = 100e-12",
+                "scope": "transient:tran"
+              },
+              "vabstol_V": {
+                "value": 1e-11,
+                "line": 127,
+                "raw": "    abstol(V) = 10 pV",
+                "scope": "transient:tran"
+              },
+              "iabstol_A": {
+                "value": 1e-15,
+                "line": 128,
+                "raw": "    abstol(I) = 1 fA",
+                "scope": "transient:tran"
+              },
+              "method": {
+                "value": "traponly",
+                "line": 133,
+                "raw": "    method = traponly",
+                "scope": "transient:tran"
+              }
+            },
+            "global_user": {
+              "vabstol_V": {
+                "value": 1e-11,
+                "line": 83,
+                "raw": "            vabstol = 1e-11",
+                "scope": "global_user"
+              },
+              "iabstol_A": {
+                "value": 1e-15,
+                "line": 84,
+                "raw": "            iabstol = 1e-15",
+                "scope": "global_user"
+              },
+              "reltol": {
+                "value": 1e-09,
+                "line": 85,
+                "raw": "             reltol = 1e-09",
+                "scope": "global_user"
+              }
+            },
+            "psf_effective": {
+              "stop_s": {
+                "value": 4e-06,
+                "line": 14,
+                "raw": "\"stop\" 4.00000e-06",
+                "scope": "psf_transient:tran"
+              },
+              "maxstep_s": {
+                "value": 1e-09,
+                "line": 17,
+                "raw": "\"maxstep\" 1.00000e-09",
+                "scope": "psf_transient:tran"
+              },
+              "reltol": {
+                "value": 1e-10,
+                "line": 21,
+                "raw": "\"reltol\" 1.00000e-10",
+                "scope": "psf_transient:tran"
+              },
+              "vabstol_V": {
+                "value": 1e-11,
+                "line": 22,
+                "raw": "\"abstol(V)\" 1.00000e-11",
+                "scope": "psf_transient:tran"
+              },
+              "iabstol_A": {
+                "value": 1e-15,
+                "line": 23,
+                "raw": "\"abstol(I)\" 1.00000e-15",
+                "scope": "psf_transient:tran"
+              },
+              "method": {
+                "value": "traponly",
+                "line": 28,
+                "raw": "\"method\" \"traponly\"",
+                "scope": "psf_transient:tran"
+              }
+            },
+            "psf_relative_metadata": {
+              "tolerance.relative": {
+                "value": 1e-09,
+                "line": 11,
+                "raw": "\"tolerance.relative\" 1.00000e-09",
+                "scope": "psf_header"
+              }
+            }
+          },
+          "status": "I",
+          "claim": "scoped controls do not establish mathematical or native provenance qualification; actual/requested differences remain"
+        }
+      },
+      "native_raw_sha256": "64ede336439b89f3e9e5337a0719870af2e82418275dd78f26ba3957e5afb4ad"
+    }
+  ],
+  "limitations": [
+    "Finite native observations only; no whole-time mathematical certification",
+    "Supplementary timer-envelope pass does not replace the original 100nV strict verdict",
+    "No event timing difference was observed in this run; base filter failure is not attributed to timer jitter",
+    "No ngspice or Gnucap execution in this focused comparison",
+    "Other #96/#119 requirements and PR131 remain open"
+  ],
+  "tests": {
+    "python_focused": 95,
+    "rust_passed": 229,
+    "rust_ignored": 1,
+    "independent_fraction_probes": 150
+  }
+}
