@@ -3,7 +3,7 @@ import hashlib,json,os
 from pathlib import Path
 import unittest
 from unittest.mock import patch
-import test_runtime as protocol
+from experiments.benchmark_v2 import test_runtime as protocol
 
 class SupportReferences(unittest.TestCase):
     setUp=protocol.RuntimeProtocolTest.setUp
