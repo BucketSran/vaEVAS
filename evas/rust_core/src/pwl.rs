@@ -201,6 +201,13 @@ pub(crate) struct Trajectory {
 }
 
 impl Trajectory {
+    // Root-demand slopes apply only to physical PWL inputs, not generated
+    // sources whose enclosures may include an independent time-varying error.
+    pub(crate) fn has_only_physical_inputs(&self) -> bool {
+        self.original_source_count == self.config.pwl.len()
+            && self.source_errors.iter().all(|e| *e == 0.)
+    }
+
     pub(crate) fn range(&self, time: I) -> Result<(Vec<I>, Vec<I>), Error> {
         if !time.finite() || time.lo < 0.0 || time.hi > self.config.stop || time.lo > time.hi {
             return Err(Error::new(

@@ -171,6 +171,26 @@ pub(crate) fn record(
     });
 }
 
+/// Structured detail inside the existing bounded, optional record format.
+/// Recovery never reads this report; disabling or truncating it changes no work.
+pub(crate) fn detail(
+    kind: &'static str,
+    outcome: &'static str,
+    time: Option<f64>,
+    value: &impl Serialize,
+) {
+    if ACTIVE.with(|slot| slot.borrow().is_some()) {
+        record(
+            kind,
+            outcome,
+            time,
+            time,
+            1,
+            Some(&serde_json::to_string(value).unwrap()),
+        );
+    }
+}
+
 /// Observe a candidate result without modifying or translating it.
 pub(crate) fn outcome<T>(
     kind: &'static str,
