@@ -20,7 +20,7 @@ analog begin
    index=index+1; observed[index]=V(dynamic_out);
    if(index>=samples) begin
     active=0; next_sample=1e99; span=V(vin)-base_in;
-    if(abs(span)<=min_input_span) state=2;
+    if(abs(span)<=min_input_span+1e-12) state=2;
     else begin
      g=(V(static_out)-base_out)/span; gv=1; target=V(static_out); last_bad=-1;
      for(j=0;j<=samples;j=j+1) if(abs(observed[j]-target)>settle_tol) if(last_bad<0) last_bad=j;

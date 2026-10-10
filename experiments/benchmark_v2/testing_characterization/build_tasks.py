@@ -383,7 +383,7 @@ analog begin
    index=index+1; observed[index]=V(dynamic_out);
    if(index>=samples) begin
     active=0; next_sample=1e99; span=V(vin)-base_in;
-    if(abs(span)<=min_input_span) state=2;
+    if(abs(span)<=min_input_span+1e-12) state=2;
     else begin
      g=(V(static_out)-base_out)/span; gv=1; target=V(static_out); last_bad=-1;
      for(j=0;j<=samples;j=j+1) if(abs(observed[j]-target)>settle_tol) last_bad=j;
@@ -410,7 +410,7 @@ endmodule
     static=(LEGACY/'038-programmable-gain-amplifier/evaluator/solution/programmable_gain_amplifier.va').read_text()
     dynamic=(LEGACY/'370-opamp-feedback-settling-monitor/evaluator/solution/opamp_feedback_settling.va').read_text()
     cases=[]
-    for name,alpha,step1,step2 in [('normal',.3,.46,.43),('unsettled-dut',.01,.46,.43),('invalid-input-span',.3,.445,.442)]:
+    for name,alpha,step1,step2 in [('normal',.3,.47,.43),('unsettled-dut',.01,.47,.43),('invalid-input-span',.3,.445,.442)]:
         net=f'''simulator lang=spectre
 global 0
 ahdl_include "dut.va"
@@ -426,8 +426,8 @@ XM (vin static_out dynamic_out launch gain gain_valid settling_ns settled status
 tran tran stop=56n maxstep=5p
 save vin static_out dynamic_out launch gain gain_valid settling_ns settled status
 '''
-        cases.append(dict(name=name,kind='settling',stop=56e-9,sample_period=250e-12,samples=80,tail_samples=8,min_input_span=.02,settle_tol=.002,guard=80e-12,atol=.003,tolerances={'gain':.02,'settling_ns':.03},netlist=net,signals=['vin','static_out','dynamic_out','launch','gain','gain_valid','settling_ns','settled','status'],support={'static_amp.va':static,'dynamic_amp.va':dynamic}))
-    package('gain-settling','case-0018+v4-038+v4-370','实际放大器静态增益和有限建立','模块 gain_settling_meter(vin,static_out,dynamic_out,launch,gain,gain_valid,settling_ns,settled,status)。固定台分别实例化静态038和动态370，二者并联观测相同输入，不是级联；只读端口没有内部settled标志。launch上升捕获输入和静态输出基线，清报告，随后每250ps采样动态输出80次，观察窗口20ns；输入在第一个采样前改变后保持，第二轮重新捕获全部状态。窗口末输入与基线跨度绝对值≤0.02V时status=2、其余报告0；否则gain=实际静态输出变化/实际输入变化、gain_valid=1。最终static_out定义观测目标。所有81个动态样本包括基线中，最后一个误差大于2mV的样本之后第一个样本定义settling_ns；完全无超差为0。末8个样本都在2mV内才settled=1、status=1并报告建立时间，否则settled=0、status=3、settling_ns=0，仍报告实际静态gain。收集中status=0。只证明公开有限观察窗口，不能宣称无限时间稳定；不达标动态也可被正确仪表测量并通过。tr20ps、guard80ps，gain误差0.02，建立时间0.03ns，其余3mV。',ref,alt,{'first-entry':(ref.replace('last_bad=j;','if(last_bad<0) last_bad=j;'),'reports first entry rather than last excursion'),'always-settled':(ref.replace('last_bad<=samples-tail_samples','1'),'reports settled even for slow DUT'),'no-window-reset':(ref.replace('base_in=V(vin); base_out=V(static_out); observed[0]=V(dynamic_out);','if($abstime<10n) begin base_in=V(vin); base_out=V(static_out); observed[0]=V(dynamic_out); end'),'keeps first baseline in second window')},cases,{'static_amp.va':static,'dynamic_amp.va':dynamic})
+        cases.append(dict(name=name,kind='settling',input_span_uncertainty=1e-12,stop=56e-9,sample_period=250e-12,samples=80,tail_samples=8,min_input_span=.02,settle_tol=.002,guard=80e-12,atol=.003,tolerances={'gain':.02,'settling_ns':.03},netlist=net,signals=['vin','static_out','dynamic_out','launch','gain','gain_valid','settling_ns','settled','status'],support={'static_amp.va':static,'dynamic_amp.va':dynamic}))
+    package('gain-settling','case-0018+v4-038+v4-370','实际放大器静态增益和有限建立','模块 gain_settling_meter(vin,static_out,dynamic_out,launch,gain,gain_valid,settling_ns,settled,status)。固定台分别实例化静态038和动态370，二者并联观测相同输入，不是级联；只读端口没有内部settled标志。launch上升捕获输入和静态输出基线，清报告，随后每250ps采样动态输出80次，观察窗口20ns；输入在第一个采样前改变后保持，第二轮重新捕获全部状态。跨度边界按1pV数值比较容差验收（abs(span)≤0.02V+1pV为无效），正常与慢DUT激励均离开该边界。窗口末输入与基线跨度无效时status=2、其余报告0；否则gain=实际静态输出变化/实际输入变化、gain_valid=1。最终static_out定义观测目标。所有81个动态样本包括基线中，最后一个误差大于2mV的样本之后第一个样本定义settling_ns；完全无超差为0。末8个样本都在2mV内才settled=1、status=1并报告建立时间，否则settled=0、status=3、settling_ns=0，仍报告实际静态gain。收集中status=0。只证明公开有限观察窗口，不能宣称无限时间稳定；不达标动态也可被正确仪表测量并通过。tr20ps、guard80ps，gain误差0.02，建立时间0.03ns，其余3mV。',ref,alt,{'first-entry':(ref.replace('last_bad=j;','if(last_bad<0) last_bad=j;'),'reports first entry rather than last excursion'),'always-settled':(ref.replace('last_bad<=samples-tail_samples','1'),'reports settled even for slow DUT'),'no-window-reset':(ref.replace('base_in=V(vin); base_out=V(static_out); observed[0]=V(dynamic_out);','if($abstime<10n) begin base_in=V(vin); base_out=V(static_out); observed[0]=V(dynamic_out); end'),'keeps first baseline in second window')},cases,{'static_amp.va':static,'dynamic_amp.va':dynamic})
 
 if __name__=='__main__':
     hysteresis_task()

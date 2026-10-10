@@ -22,7 +22,7 @@ analog begin
    if(abs(V(dynamic_out)-target)>settle_tol) last_bad=index;
    if(index>=samples) begin
     active=0; next_sample=1e99; span=V(vin)-base_in;
-    if(abs(span)<=min_input_span) state=2;
+    if(abs(span)<=min_input_span+1e-12) state=2;
     else begin
      g=(V(static_out)-base_out)/span; gv=1; target=V(static_out);
      if(last_bad<=samples-tail_samples) begin sv=1; state=1; st=(last_bad+1)*sample_period*1e9; end

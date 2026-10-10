@@ -311,7 +311,7 @@ def settling(w,case):
         state=dict(gain=0.,gain_valid=0.,settling_ns=0.,settled=0.,status=0.)
         states.append((start,state.copy()))
         dx=w.value(end,'vin')-w.value(start,'vin')
-        if abs(dx)<=case['min_input_span']:
+        if abs(dx)<=case['min_input_span']+case.get('input_span_uncertainty',0.):
             state['status']=2.
         else:
             static=w.value(end,'static_out')

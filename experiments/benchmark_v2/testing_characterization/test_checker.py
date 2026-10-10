@@ -117,4 +117,12 @@ class DutyQuantizationBoundary(unittest.TestCase):
         for code in [41,44,255]:
             self.assertFalse(m.evaluate(self.trace(code),case)['passed'])
 
+class SettlingSpanBoundary(unittest.TestCase):
+    def test_mathematical_twenty_mv_span_is_invalid(self):
+        rows=[]
+        for t,x,launch,status in [(0,.44,0,0),(.98,.44,0,0),(1.02,.44,1,0),(1.1,.46,0,0),(4.99,.46,0,0),(5.05,.46,0,2),(6,.46,0,2)]:
+            rows.append(dict(time=t,vin=x,static_out=2.5*x,dynamic_out=2.5*x,launch=launch,gain=0,gain_valid=0,settling_ns=0,settled=0,status=status))
+        result=m.evaluate(rows,dict(kind='settling',stop=6,sample_period=1,samples=4,tail_samples=2,settle_tol=.002,min_input_span=.02,input_span_uncertainty=1e-12,time_scale=1,guard=.07,atol=.01))
+        self.assertTrue(result['passed'],result)
+
 if __name__=='__main__': unittest.main()
