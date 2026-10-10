@@ -1,0 +1,25 @@
+{
+  "task_id": "v2-test-por-digital-calibration",
+  "candidate_sha256": "c6ae432a4cfc525eda70c2add6188d73f5268e4ea247ad92e9589c7363cda3bf",
+  "criteria_sha256": "94f3b51f6e8824c0874d58652dd3f283b0411e8eb0974aad2897c4d80a4d4d75",
+  "expected_conditions": 2,
+  "all_conditions_graded": true,
+  "reference_passed": true,
+  "conditions": [
+    {
+      "condition_id": "short",
+      "job_id": "bf-3e59f877cc974997abf1-short",
+      "execution": "ok",
+      "score": 1,
+      "report_sha256": "553f9666b9718d7839c6d5a6443e547fd4f472e10a1a3413dea4015313c6efb0"
+    },
+    {
+      "condition_id": "long",
+      "job_id": "bf-e768b8477a1e4f5f97ce-long",
+      "execution": "ok",
+      "score": 1,
+      "report_sha256": "8d4da02e26572487961a6015f247796a0963beca6c72853362070da070b97df5"
+    }
+  ],
+  "scope": "digital boundary only; not full analog POR closed-loop benchmark"
+}

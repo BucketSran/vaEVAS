@@ -1,0 +1,74 @@
+{
+  "status": "original-source qualification; full closed-loop benchmark and Spectre alignment remain pending",
+  "backend": "ngspice 47 KLU",
+  "source_identity": {
+    "por": "db8745ef4d7d85a1852fc60c251ba34c6cebe497",
+    "fd_pr": "f62031a1be9aefe902d6d54cddd6f59b57627436",
+    "fd_sc_hvl": "4fd4f858d16c558a6a488b200649e909bb4dd800",
+    "fd_sc_hd": "ac7fb61f06e6470b94e8afdf7c25268f62fbd7b1",
+    "deck_sha256": "c75569af75bbd4c6e2dd7997b56414671c104258fd8fdb34ba46e596dac8d722",
+    "cell_view": "cdl-level-shifters",
+    "mode": "short one-shots, force_short_oneshot=1, no sleep",
+    "processing": [
+      "recursive include flatten",
+      "CACE configuration substitution",
+      "ngspice W/NF bin selection wnflag=1",
+      "obsolete non-SPICE include omitted",
+      "unused upstream varactor dev/gauss annotations retained; nominal source deck does not instantiate these devices"
+    ]
+  },
+  "original_level_shifter_view": "cells/lsbuflv2hv/sky130_fd_sc_hvl__lsbuflv2hv_1.cdl,cells/lsbufhv2lv/sky130_fd_sc_hvl__lsbufhv2lv_1.cdl",
+  "level_shifter_qualification": {
+    "status": "level-shifter source view qualification only; full POR remains pending",
+    "backend": "ngspice 47 KLU",
+    "fd_pr": "f62031a1be9aefe902d6d54cddd6f59b57627436",
+    "hvl": "4fd4f858d16c558a6a488b200649e909bb4dd800",
+    "geometry": "micron CDL w/l preserved, .option scale=1u wnflag=1",
+    "source_view": "official pinned cell CDL, MOS model prefix and instance syntax translated; no nominal geometry/model edits",
+    "source_files": {
+      "cells/lsbuflv2hv/sky130_fd_sc_hvl__lsbuflv2hv_1.cdl": "bb6eed20a6aa9e1e777d6a0765226cc719c31e5627b797f9c7c5a21893a369e9",
+      "cells/lsbufhv2lv/sky130_fd_sc_hvl__lsbufhv2lv_1.cdl": "d944b73220615c19b1ac025e98837655ead0d5bdd11190b2e86b8182672e7363"
+    },
+    "raw_spice": {
+      "rows": 10038,
+      "lv2hv_max": 1.12451323e-05
+    },
+    "cdl": {
+      "rows": 10040,
+      "at_150ns": [
+        1.4995e-07,
+        1.8,
+        3.29998155,
+        1.7999926
+      ],
+      "at_350ns": [
+        3.50040128e-07,
+        0.0,
+        6.27845826e-05,
+        2.08192608e-06
+      ]
+    }
+  },
+  "nominal_short_mode_metrics": [
+    {
+      "response_us": 145.60150249158065,
+      "period_us": 29.114442710964212,
+      "width_us": 203.783647453989,
+      "rise_count": 6,
+      "fall_count": 13
+    },
+    {
+      "response_us": 145.71013547207525,
+      "period_us": 29.13307705360646,
+      "width_us": 203.79500662709611,
+      "rise_count": 6,
+      "fall_count": 13
+    }
+  ],
+  "rows": 11610,
+  "timestamps": "strictly increasing; no deduplication",
+  "deck_sha256": "5021f5cdb034be95e32c84d0a3152aac94c3d972e0d940472a89694aae4d1515",
+  "waveform_sha256": "d6882be4c0eee3f8d97abe36c7d32fd94fe8f6010efd934db22333f45cccdb3f",
+  "raw_run": "runs/por-source/cdl-full",
+  "digital_boundary": "actual original XSPICE source on ngspice; faithful VA independently passed original-source old-state oracle and actual Spectre digital calibration"
+}
