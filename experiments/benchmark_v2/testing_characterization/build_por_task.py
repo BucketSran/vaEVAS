@@ -7,10 +7,10 @@ actual Spectre source/candidate/mutant calibration.
 from pathlib import Path
 import argparse,json,re,shutil
 import build_tasks as packages
-from prepare_por_spectre import expressions,geometry
+from prepare_por_spectre import expressions,geometry,instance_parameters,configure_netlist
 
 def public_spice(text):
-    converted=geometry(expressions(text))
+    converted=instance_parameters(geometry(expressions(text)))
     return '\n'.join(line.rstrip() for line in converted.rstrip().splitlines())+'\n'
 
 def build(prepared,source):
@@ -49,7 +49,7 @@ endmodule
         net='simulator lang=spectre\nglobal 0\nahdl_include "dut.va"\nahdl_include "por_digital.va"\nahdl_include "por_observe.va"\nsimulator lang=spice\n.option scale=1u\n.param dlc_rotweak=0\n.include "models.spice"\n.include "cells.spice"\n.include "analog.spice"\nVgnd GND 0 0\n'+head+'\nsimulator lang=spectre\nXO (por_raw pwup_filt osc_ck por) por_observe mode='+str(mode)+'\nXM (avdd por pwup_filt osc_ck '+' '.join(reports)+') por_bench\ntran tran stop=6m maxstep=500n\nsave avdd por pwup_filt osc_ck '+' '.join(reports)+'\n'
         # Public port names match the immutable top-level engineering connection.
         support={k:public_spice(v) if k.endswith('.spice') else v for k,v in support.items()}
-        net=expressions(net)
+        net=configure_netlist(net)
         cases.append(dict(name=name,kind='por_bench',stop=.006,tick=1e-6,ramp=.002,dip_ramp=.0001,hold=.0001,recovery_ramp=.0001,timeout=.001,guard=5e-6,atol=.15,supply_atol=.03,signals=['avdd','por','power','osc']+reports,netlist=net.replace('pwup_filt','power').replace('osc_ck','osc'),support=support))
     alt=ref.replace('tick=1u','tick=500n').replace('t3[0:1],t9[0:1]','t3[0:1],t9[0:1],previous[0:1],sum_period[0:1]')
     alt=alt.replace('t0[i]=0;t3[i]=0;t9[i]=0;','t0[i]=0;t3[i]=0;t9[i]=0;previous[i]=0;sum_period[i]=0;')
@@ -69,7 +69,7 @@ endmodule
     if 'dev/gauss' in base['models.spice']:
         identity['processing']=[x for x in identity['processing'] if 'dev/gauss' not in x]
         identity['processing'].append('unused upstream varactor dev/gauss annotations retained; nominal source deck does not instantiate these devices')
-    (task/'SOURCE.md').write_text('# 原始电路来源\n\nAjacci sky130_ajc_ip__por 固定commit '+identity['por']+'。保留真实analog源；仅por_dig使用按原Verilog旧状态语义转写的VA，数字边界已经原XSPICE独立oracle与实际Spectre校准，两项short/long均通过，证据位于experiments/benchmark_v2/testing_characterization/por_digital_spectre_r2.json。两个电平转换单元选择同版本官方CDL源视图，PDK SPICE brace表达式改为等值单引号并移除公式外重复双引号、指数加u改为Decimal精确值以避免Spectre忽略后缀。原抽取SPICE含悬空节点，独立实际测试不合格；未修改器件模型或阈值。公开生成文件清理行尾空白，不改变表达式。\n\n'+json.dumps(identity,indent=2)+'\n\n完整Spectre闭环及正负例校准仍待实际执行，不能据资产存在宣布发布资格。\n')
+    (task/'SOURCE.md').write_text('# 原始电路来源\n\nAjacci sky130_ajc_ip__por 固定commit '+identity['por']+'。保留真实analog源；仅por_dig使用按原Verilog旧状态语义转写的VA，数字边界已经原XSPICE独立oracle与实际Spectre校准，两项short/long均通过，证据位于experiments/benchmark_v2/testing_characterization/por_digital_spectre_r2.json。两个电平转换单元选择同版本官方CDL源视图，PDK SPICE brace表达式改为等值单引号并移除公式外重复双引号、指数加u改为Decimal精确值以避免Spectre忽略后缀。原抽取SPICE含悬空节点，独立实际测试不合格；未修改器件模型或阈值。公开生成文件清理行尾空白；实例AD/AS/PD/PS/NRD/NRS中W/nf引用按原调用的几何值作括号展开，保持原算术。282个重复全局参数逐项等值，Spectre显式redefinedparams=warning保留原ngspice后定义覆盖语义。\n\n'+json.dumps(identity,indent=2)+'\n\n完整Spectre闭环及正负例校准仍待实际执行，不能据资产存在宣布发布资格。\n')
     for license_name in ['LICENSE','NOTICE']: shutil.copyfile(source/license_name,task/'environment/public'/license_name)
     (packages.OUT/'por-calibration.json').write_text(json.dumps(packages.CAL,indent=2)+'\n')
 

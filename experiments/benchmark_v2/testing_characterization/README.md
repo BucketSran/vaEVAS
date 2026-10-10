@@ -36,3 +36,5 @@ POR checker 的独立行为测试：
     python3 -B experiments/benchmark_v2/testing_characterization/test_por_checker.py
 
 POR 超时分支按公开半开窗口处理。test_por_timeout.py 对实际发货源码的 timer 条件执行有限控制流回归，覆盖截止前50us、截止时刻、截止之后及缺事件；test_por_checker.py 使用独立端口波形拒绝提前欠压。该源条件回归不等同VA仿真，完整Spectre校准仍待运行。
+
+r5 处理实际Spectre解析出的重复参数与实例作用域差异。282个重复全局参数等值，保留定义并显式报告warning；原实例几何值展开后，12个顶层和870个模拟子电路表达式由独立AST算术与Decimal逐项核对。模型文件与cells文件SHA未变。核验见 por_spectre_translation_r5.json，实际r5仿真仍待执行。
