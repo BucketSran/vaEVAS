@@ -138,6 +138,14 @@ Spectre 有 bug。本分支修复前的离根检查缺少进入方向，不能�
 连续电压最大差或最终计数都不足以证明行为正确；不能把某个内核的 binary64 排序算法
 直接变成题目答案。还需设计漏采、旧值读取、复位顺序错误和实例串扰的负控，并独立校准。
 
+[OpenVAF-R 的事件诊断](../experiments/backends/support/README.md#ngspice-events)又给出一个后端负控：
+采样保持模型能运行，但输出一直跟随输入。后续 checker 应能检出事件之前的提前更新与两次事件之间的
+保持丢失；应先校准执行后端，不能把后端错误计成模型作答错误。本例是已知开发证据，不增加正式题目。
+
+[固定 timer 与 strobe 修复](../experiments/backends/strobe/README.md#timer-fix)补充了观察接口的反例：
+同刻普通查询可正确返回采样值，但强制求解因时间包围过宽而拒绝。候选评分须分开检查
+事件状态和所需观察接口，不能用成功的普通查询替代强制点回执，也不能把该引擎拒绝计成 VA 模型错误。
+
 近邻时钟后续还暴露了积分历史与未来cross重建的组合缺口，见
 [独立答案及新Spectre容差对照](../experiments/backends/transient-accuracy/near-clock-history.md)。
 可把采样时刻偏移对累计积分的影响加入候选判据；仍需独立设计留出输入，不能把

@@ -2,7 +2,8 @@
 
 本目录把论文、作者技术资料、公开工程和已有 benchmark 资产连接到具体工程任务。
 当前采用五类：按规格构建模型、从数据建立模型、扩展与集成、诊断与修复、电路测试与表征。
-定义和决策保存在 [Issue #107](https://github.com/BucketSran/vaEVAS/issues/107)，这里维护学习材料及其适用范围。
+当前定义见[五类工程任务](../docs/task-types.md)，设计判断见[核心文档](../docs/README.md)。
+[Issue #107](https://github.com/BucketSran/vaEVAS/issues/107)跟进定义与代表题设计，这里维护学习材料及其适用范围。
 
 具体候选的资产来源、改编形式和设计 review 进入 [逐题工作区](../workbench/README.md)。
 本目录继续维护跨题材料研究；逐题状态以工作区为准，不在两处重复登记。

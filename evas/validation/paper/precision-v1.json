@@ -1,0 +1,645 @@
+{
+  "schema_version": 1,
+  "id": "precision-engineering-v1",
+  "claim": "Finite external engineering acceptance of four sample-hold and four first-order conditions; not all-domain support or a held-out publication suite",
+  "denominator": 8,
+  "budgets": {
+    "absolute_V": 1e-08,
+    "relative": 1e-06,
+    "input_absolute_V": 1e-10,
+    "input_relative": 1e-08,
+    "count_V": 1e-06,
+    "global_gap_units": 0.0625,
+    "time_serialization_ulps": 16,
+    "voltage_serialization_ulps": 8,
+    "boundary_distance_s": 2.1e-12
+  },
+  "budget_basis": "Numerical quality target: one part per million of each fixed signal scale, with a 10 nV absolute floor; not ADC bit depth, LRM mandate, or backend tolerance. Inputs are checked 100 times more tightly to expose a faulty testbench. Event freedom is independent of numerical error.",
+  "profiles": [
+    {
+      "id": "base",
+      "reltol": 1e-05,
+      "vabstol_V": 1e-09,
+      "iabstol_A": 1e-13,
+      "step_units": 0.03125
+    },
+    {
+      "id": "tol",
+      "reltol": 1e-08,
+      "vabstol_V": 1e-12,
+      "iabstol_A": 1e-15,
+      "step_units": 0.03125
+    },
+    {
+      "id": "step",
+      "reltol": 1e-05,
+      "vabstol_V": 1e-09,
+      "iabstol_A": 1e-13,
+      "step_units": 0.00390625
+    },
+    {
+      "id": "both",
+      "reltol": 1e-08,
+      "vabstol_V": 1e-12,
+      "iabstol_A": 1e-15,
+      "step_units": 0.00390625
+    }
+  ],
+  "profile_selection": "Run all four profiles once; select the first fully passing profile in listed order. Preserve every attempt; do not combine points from different runs.",
+  "native_export": "17 significant digits, original time columns; no resampling or interpolation across events. Named observation forcing is fixed across profiles.",
+  "cards": [
+    {
+      "id": "SH-T-RAMP",
+      "family": "sample_hold",
+      "clock": "timer",
+      "source": "`include \"disciplines.vams\"\nmodule probe(u,y,count);\ninout u,y,count; electrical u,y,count;\nparameter real T=1e-6, TT=1e-10, Q0=0.125;\nreal q; integer n;\nanalog begin\n@(initial_step) begin q=Q0; n=0; end\n@(timer(T,T,TT)) begin q=V(u); n=n+1; end\nV(y)<+q; V(count)<+n;\nend\nendmodule\n",
+      "top": "probe",
+      "ports": [
+        "u",
+        "y",
+        "count"
+      ],
+      "parameters": {
+        "T": 1e-06,
+        "TT": 1e-10,
+        "Q0": 0.125
+      },
+      "inputs": {
+        "u": [
+          [
+            0.0,
+            -0.4
+          ],
+          [
+            4e-06,
+            0.4
+          ],
+          [
+            8e-06,
+            -0.4
+          ],
+          [
+            8.5e-06,
+            -0.3
+          ]
+        ]
+      },
+      "outputs": [
+        "y",
+        "count"
+      ],
+      "scale_V": 1.0,
+      "unit_s": 1e-06,
+      "stop_s": 8.5e-06,
+      "events_s": [
+        1e-06,
+        2e-06,
+        3e-06,
+        4e-06,
+        4.9999999999999996e-06,
+        6e-06,
+        7e-06,
+        8e-06
+      ],
+      "event_late_s": 1e-10,
+      "event_bracket_max_s": 2.1e-12,
+      "initial_V": 0.125,
+      "expected_events": 8,
+      "event_early_s": 1e-10
+    },
+    {
+      "id": "SH-X-RAMP",
+      "family": "sample_hold",
+      "clock": "cross",
+      "source": "`include \"disciplines.vams\"\nmodule probe(u,clk,y,count);\ninout u,clk,y,count; electrical u,clk,y,count;\nparameter real T=1e-6, TT=1e-10, Q0=0.125;\nreal q; integer n;\nanalog begin\n@(initial_step) begin q=Q0; n=0; end\n@(cross(V(clk)-0.5,+1,TT,5e-4)) begin q=V(u); n=n+1; end\nV(y)<+q; V(count)<+n;\nend\nendmodule\n",
+      "top": "probe",
+      "ports": [
+        "u",
+        "clk",
+        "y",
+        "count"
+      ],
+      "parameters": {
+        "T": 1e-06,
+        "TT": 1e-10,
+        "Q0": 0.125
+      },
+      "inputs": {
+        "u": [
+          [
+            0.0,
+            -0.4
+          ],
+          [
+            4e-06,
+            0.4
+          ],
+          [
+            8e-06,
+            -0.4
+          ],
+          [
+            8.5e-06,
+            -0.3
+          ]
+        ],
+        "clk": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            9e-07,
+            0.0
+          ],
+          [
+            1.1e-06,
+            1.0
+          ],
+          [
+            1.4e-06,
+            1.0
+          ],
+          [
+            1.5e-06,
+            0.0
+          ],
+          [
+            1.8999999999999998e-06,
+            0.0
+          ],
+          [
+            2.1e-06,
+            1.0
+          ],
+          [
+            2.4e-06,
+            1.0
+          ],
+          [
+            2.4999999999999998e-06,
+            0.0
+          ],
+          [
+            2.8999999999999998e-06,
+            0.0
+          ],
+          [
+            3.1e-06,
+            1.0
+          ],
+          [
+            3.3999999999999996e-06,
+            1.0
+          ],
+          [
+            3.5e-06,
+            0.0
+          ],
+          [
+            3.9e-06,
+            0.0
+          ],
+          [
+            4.1e-06,
+            1.0
+          ],
+          [
+            4.4e-06,
+            1.0
+          ],
+          [
+            4.5e-06,
+            0.0
+          ],
+          [
+            4.9000000000000005e-06,
+            0.0
+          ],
+          [
+            5.0999999999999995e-06,
+            1.0
+          ],
+          [
+            5.4e-06,
+            1.0
+          ],
+          [
+            5.5e-06,
+            0.0
+          ],
+          [
+            5.9e-06,
+            0.0
+          ],
+          [
+            6.099999999999999e-06,
+            1.0
+          ],
+          [
+            6.4e-06,
+            1.0
+          ],
+          [
+            6.5e-06,
+            0.0
+          ],
+          [
+            6.9e-06,
+            0.0
+          ],
+          [
+            7.099999999999999e-06,
+            1.0
+          ],
+          [
+            7.4e-06,
+            1.0
+          ],
+          [
+            7.499999999999999e-06,
+            0.0
+          ],
+          [
+            7.9e-06,
+            0.0
+          ],
+          [
+            8.099999999999999e-06,
+            1.0
+          ],
+          [
+            8.4e-06,
+            1.0
+          ],
+          [
+            8.5e-06,
+            0.0
+          ]
+        ]
+      },
+      "outputs": [
+        "y",
+        "count"
+      ],
+      "scale_V": 1.0,
+      "unit_s": 1e-06,
+      "stop_s": 8.5e-06,
+      "events_s": [
+        1e-06,
+        2e-06,
+        3e-06,
+        4e-06,
+        4.9999999999999996e-06,
+        6e-06,
+        7e-06,
+        8e-06
+      ],
+      "event_late_s": 1e-10,
+      "event_bracket_max_s": 2.1e-12,
+      "initial_V": 0.125,
+      "expected_events": 8,
+      "event_early_s": 0.0,
+      "cross_expression_tolerance_V": 0.0005,
+      "clock_slope_V_s": 5000000.0
+    },
+    {
+      "id": "SH-T-SMALL",
+      "family": "sample_hold",
+      "clock": "timer",
+      "source": "`include \"disciplines.vams\"\nmodule probe(u,y,count);\ninout u,y,count; electrical u,y,count;\nparameter real T=1e-6, TT=1e-10, Q0=0.125;\nreal q; integer n;\nanalog begin\n@(initial_step) begin q=Q0; n=0; end\n@(timer(T,T,TT)) begin q=V(u); n=n+1; end\nV(y)<+q; V(count)<+n;\nend\nendmodule\n",
+      "top": "probe",
+      "ports": [
+        "u",
+        "y",
+        "count"
+      ],
+      "parameters": {
+        "T": 1e-06,
+        "TT": 1e-10,
+        "Q0": 0.000125
+      },
+      "inputs": {
+        "u": [
+          [
+            0.0,
+            -0.0004
+          ],
+          [
+            4e-06,
+            0.0004
+          ],
+          [
+            8e-06,
+            -0.0004
+          ],
+          [
+            8.5e-06,
+            -0.0003
+          ]
+        ]
+      },
+      "outputs": [
+        "y",
+        "count"
+      ],
+      "scale_V": 0.001,
+      "unit_s": 1e-06,
+      "stop_s": 8.5e-06,
+      "events_s": [
+        1e-06,
+        2e-06,
+        3e-06,
+        4e-06,
+        4.9999999999999996e-06,
+        6e-06,
+        7e-06,
+        8e-06
+      ],
+      "event_late_s": 1e-10,
+      "event_bracket_max_s": 2.1e-12,
+      "initial_V": 0.000125,
+      "expected_events": 8,
+      "event_early_s": 1e-10
+    },
+    {
+      "id": "SH-T-LONG",
+      "family": "sample_hold",
+      "clock": "timer",
+      "source": "`include \"disciplines.vams\"\nmodule probe(u,y,count);\ninout u,y,count; electrical u,y,count;\nparameter real T=1e-6, TT=1e-10, Q0=0.125;\nreal q; integer n;\nanalog begin\n@(initial_step) begin q=Q0; n=0; end\n@(timer(T,T,TT)) begin q=V(u); n=n+1; end\nV(y)<+q; V(count)<+n;\nend\nendmodule\n",
+      "top": "probe",
+      "ports": [
+        "u",
+        "y",
+        "count"
+      ],
+      "parameters": {
+        "T": 1e-06,
+        "TT": 1e-10,
+        "Q0": 0.125
+      },
+      "inputs": {
+        "u": [
+          [
+            0.0,
+            0.2
+          ],
+          [
+            3.25e-05,
+            0.2
+          ]
+        ]
+      },
+      "outputs": [
+        "y",
+        "count"
+      ],
+      "scale_V": 1.0,
+      "unit_s": 1e-06,
+      "stop_s": 3.25e-05,
+      "events_s": [
+        1e-06,
+        2e-06,
+        3e-06,
+        4e-06,
+        4.9999999999999996e-06,
+        6e-06,
+        7e-06,
+        8e-06,
+        9e-06,
+        9.999999999999999e-06,
+        1.1e-05,
+        1.2e-05,
+        1.3e-05,
+        1.4e-05,
+        1.4999999999999999e-05,
+        1.6e-05,
+        1.7e-05,
+        1.8e-05,
+        1.8999999999999998e-05,
+        1.9999999999999998e-05,
+        2.1e-05,
+        2.2e-05,
+        2.3e-05,
+        2.4e-05,
+        2.4999999999999998e-05,
+        2.6e-05,
+        2.7e-05,
+        2.8e-05,
+        2.9e-05,
+        2.9999999999999997e-05,
+        3.1e-05,
+        3.2e-05
+      ],
+      "event_late_s": 1e-10,
+      "event_bracket_max_s": 2.1e-12,
+      "initial_V": 0.125,
+      "expected_events": 32,
+      "event_early_s": 1e-10
+    },
+    {
+      "id": "LP-RAMP",
+      "family": "first_order",
+      "form": "laplace_nd",
+      "source": "`include \"disciplines.vams\"\nmodule probe(u,y);\ninout u,y; electrical u,y;\nparameter real TAU=1e-6, U0=0;\nanalog begin\nV(y)<+laplace_nd(V(u),'{1.0},'{1.0,TAU});\nend\nendmodule\n",
+      "top": "probe",
+      "ports": [
+        "u",
+        "y"
+      ],
+      "parameters": {
+        "TAU": 1e-06,
+        "U0": 0.0
+      },
+      "inputs": {
+        "u": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            1e-06,
+            0.0
+          ],
+          [
+            2e-06,
+            1.0
+          ],
+          [
+            4e-06,
+            -0.5
+          ],
+          [
+            4.9999999999999996e-06,
+            0.25
+          ],
+          [
+            8e-06,
+            0.25
+          ]
+        ]
+      },
+      "outputs": [
+        "y"
+      ],
+      "scale_V": 1.0,
+      "unit_s": 1e-06,
+      "stop_s": 8e-06,
+      "tau_s": 1e-06,
+      "initial_V": 0.0
+    },
+    {
+      "id": "LP-NONZERO",
+      "family": "first_order",
+      "form": "laplace_nd",
+      "source": "`include \"disciplines.vams\"\nmodule probe(u,y);\ninout u,y; electrical u,y;\nparameter real TAU=1e-6, U0=0;\nanalog begin\nV(y)<+laplace_nd(V(u),'{1.0},'{1.0,TAU});\nend\nendmodule\n",
+      "top": "probe",
+      "ports": [
+        "u",
+        "y"
+      ],
+      "parameters": {
+        "TAU": 1e-06,
+        "U0": 0.25
+      },
+      "inputs": {
+        "u": [
+          [
+            0.0,
+            0.25
+          ],
+          [
+            1e-06,
+            0.25
+          ],
+          [
+            2e-06,
+            1.0
+          ],
+          [
+            4e-06,
+            -0.5
+          ],
+          [
+            4.9999999999999996e-06,
+            0.25
+          ],
+          [
+            8e-06,
+            0.25
+          ]
+        ]
+      },
+      "outputs": [
+        "y"
+      ],
+      "scale_V": 1.0,
+      "unit_s": 1e-06,
+      "stop_s": 8e-06,
+      "tau_s": 1e-06,
+      "initial_V": 0.25
+    },
+    {
+      "id": "LP-SMALL",
+      "family": "first_order",
+      "form": "laplace_nd",
+      "source": "`include \"disciplines.vams\"\nmodule probe(u,y);\ninout u,y; electrical u,y;\nparameter real TAU=1e-6, U0=0;\nanalog begin\nV(y)<+laplace_nd(V(u),'{1.0},'{1.0,TAU});\nend\nendmodule\n",
+      "top": "probe",
+      "ports": [
+        "u",
+        "y"
+      ],
+      "parameters": {
+        "TAU": 1e-06,
+        "U0": 0.0
+      },
+      "inputs": {
+        "u": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            1e-06,
+            0.0
+          ],
+          [
+            2e-06,
+            0.001
+          ],
+          [
+            4e-06,
+            -0.0005
+          ],
+          [
+            4.9999999999999996e-06,
+            0.00025
+          ],
+          [
+            8e-06,
+            0.00025
+          ]
+        ]
+      },
+      "outputs": [
+        "y"
+      ],
+      "scale_V": 0.001,
+      "unit_s": 1e-06,
+      "stop_s": 8e-06,
+      "tau_s": 1e-06,
+      "initial_V": 0.0
+    },
+    {
+      "id": "LP-IDT",
+      "family": "first_order",
+      "form": "idt_feedback",
+      "source": "`include \"disciplines.vams\"\nmodule probe(u,y);\ninout u,y; electrical u,y;\nparameter real TAU=1e-6, U0=0;\nanalog begin\nV(y)<+idt((V(u)-V(y))/TAU,U0);\nend\nendmodule\n",
+      "top": "probe",
+      "ports": [
+        "u",
+        "y"
+      ],
+      "parameters": {
+        "TAU": 1e-06,
+        "U0": 0.0
+      },
+      "inputs": {
+        "u": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            1e-06,
+            0.0
+          ],
+          [
+            2e-06,
+            1.0
+          ],
+          [
+            4e-06,
+            -0.5
+          ],
+          [
+            4.9999999999999996e-06,
+            0.25
+          ],
+          [
+            8e-06,
+            0.25
+          ]
+        ]
+      },
+      "outputs": [
+        "y"
+      ],
+      "scale_V": 1.0,
+      "unit_s": 1e-06,
+      "stop_s": 8e-06,
+      "tau_s": 1e-06,
+      "initial_V": 0.0
+    }
+  ]
+}

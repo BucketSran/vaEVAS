@@ -1,4 +1,4 @@
-# Tests and benchmark candidates
+# Validation and optimization acceptance
 
 For behavior changes, read the test rules below and select checks with the owning
 component skill. Read candidate capture or migration rules only when that work applies.
@@ -39,6 +39,73 @@ This adapts the behavioral and independent-oracle guidance in
 Its mandatory interface confirmations, blanket ban on internal tests and review-only
 refactoring are not repository rules. Existing authorization, numerical evidence and
 independent validation contracts govern those choices here.
+
+## Accuracy recovery and performance acceptance
+
+For EVAS accuracy or speed work, state the final observable requirement before choosing
+an algorithm. Reuse the existing Issue/PR to name the model, affected consumers, voltage
+and event budgets, observation scope, current failure or measured cost, and expected
+improvement. Separate an incorrect accepted result from a conservative refusal.
+
+### Carry accuracy through the consumer chain
+
+Follow uncertainty through event time, sampled state, edge generation, filtering or
+integration, and final voltage acceptance. Preserve inherited uncertainty across each
+handoff. A precise new root does not erase an uncertain earlier sample or history.
+Keep the external budget fixed; justify internal allocations by the affected consumer's
+sensitivity and remaining budget. Do not assume equal shares or add/subtract interval
+widths as if they were independent error contributions.
+
+Choose a recovery action from evidence about the failing request:
+
+| Dominant cause | Candidate action and required evidence |
+| --- | --- |
+| Current event-time uncertainty | Refine the current root and recompute its consumers from the same accepted state. Show that the downstream error bound decreases enough to meet the original request. |
+| Inherited sample or accepted-history uncertainty | Retain and propagate it. Recovery needs a justified tighter source bound or supported replay; otherwise report the limit. Refining only the current root cannot remove it. |
+| Error introduced by the new continuous segment | Use the applicable local step/order control. Show improvement after propagation to the required output, including earlier history. |
+| Rounding, input uncertainty, or enclosure conservatism | Establish what can change and what limits recovery. Use a justified reformulation/control or report the unresolved limit; repeated shrinking alone is not evidence. |
+
+Mixed or unknown causes remain explicit. An error code or a failed downstream filter
+alone does not identify the source. Bound retries and preserve accepted state on failure;
+strategy changes must pass the same final certification before committing.
+
+An accuracy-recovery slice must demonstrate a recoverable case and a relevant case where
+the selected action cannot help. Record the affected bound before/after, the unchanged
+budget, independent output error, acceptance/refusal and work used. Reuse query-invariance
+and same-controller failed-trial retry checks when those paths change. Check the declared
+downstream scope beyond the event itself; finite observations do not prove a whole-trajectory
+bound. Follow [Spectre alignment acceptance](#spectre-alignment-acceptance) separately.
+
+The [sample-edge-filter root case](../../experiments/backends/sample-edge-filter/BOUNDARY.md#adaptive-root)
+is an existing example. Its limited automatic input-root refinement already checks the
+event and first physical history deadline. Later consumers, state/history-dependent roots
+and general budget allocation are not established by that result. Reuse
+[#119](https://github.com/BucketSran/vaEVAS/issues/119) for accuracy recovery and
+[#96](https://github.com/BucketSran/vaEVAS/issues/96) for composition/alignment obligations.
+
+### Compare speed at fixed accuracy
+
+Profile a representative, validated workload before selecting matrix, history, certification,
+memory or parallel-execution work. Freeze the model, final budgets and observation obligations
+for the comparison. Record each algorithm's actual controls; identical parameter names alone
+do not establish equal accuracy.
+
+Select strategies from measured structural/numerical conditions, with declared applicability
+and failure/fallback behavior. Every path must retain the same equations, event semantics,
+history and acceptance rules. Compare complete requests, including preparation, certification,
+retries and output costs. Report repeated timings, resource usage and regressions alongside
+correctness, refusals and timeouts; fewer factorizations alone do not establish a speedup.
+Use the existing [performance tools and measurement boundaries](../../experiments/performance/README.md).
+
+The deferred [#57](https://github.com/BucketSran/vaEVAS/issues/57),
+[#58](https://github.com/BucketSran/vaEVAS/issues/58) and
+[#59](https://github.com/BucketSran/vaEVAS/issues/59) retain their measured-bottleneck reopening
+conditions. These rules do not start those projects or require a new solver family.
+
+This direction draws on the [ALPS product description](https://www.empyrean-tech.com/products/eda/analog-design-solution/spice-simulator.html)
+of full-equation simulation, matrix-solving strategies and parallel execution. The error
+accounting and recovery requirements above are EVAS design choices. The public description
+does not disclose ALPS CS's internal error budgets or prove a speedup for EVAS.
 
 ## Spectre alignment acceptance
 

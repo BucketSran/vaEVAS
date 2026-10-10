@@ -34,6 +34,11 @@ validation contract. Preserve the original model and verdict when proposing a
 corrected model; a correction answers a different compatibility question.
 Resolve only material ambiguities; use existing contracts for routine choices.
 
+For accuracy recovery or speed optimization, follow the
+[accuracy and performance acceptance rules](../../../docs/contributing/validation.md#accuracy-recovery-and-performance-acceptance).
+Identify the error source or measured bottleneck and the observable evidence that the
+chosen action improves it. Reuse existing recovery mechanisms before extending them.
+
 Before changing behavior, follow the [behavior-first test rules](../../../docs/contributing/validation.md#behavior-first-tests).
 Use an independent failing case, reusing an existing regression when it exposes
 the fault. Trace the affected public entry through its actual compiler/kernel path;

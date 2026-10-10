@@ -1,7 +1,8 @@
 """Forced solve points are independent of saved output samples."""
-GUARDS = ["DYNAMICS", "EVENT-ORDER"]
+GUARDS = ["DYNAMICS", "EVENT-ORDER", "TIMER", "TRANSITION", "COMPOSE"]
 
 import copy
+from fractions import Fraction
 import json
 import math
 from pathlib import Path
@@ -99,6 +100,83 @@ class StrobeControl(unittest.TestCase):
             transient(program, {'u':[[0,0],[1,0]]}, [0,1], stop=1, max_step=1,
                       strobetimes=[0.3], kernel=KERNEL)
         self.assertEqual(caught.exception.detail['kind'], 'unsupported_strobe')
+
+    def test_periodic_timer_forced_points_have_committed_state(self):
+        source=model('@(initial_step) q=0.125; @(timer(T,T,1e-10)) q=V(u,r); V(y,r)<+q;',
+                     'parameter real T=1e-6; real q;')
+        program=compile_sources({'strobe.va':source}, [instance()])
+        times=[0., 1e-6, 2e-6, 3e-6, 4e-6, 6e-6, 7e-6, 8e-6, 8.5e-6]
+        result=transient(program, {'u':[[0,0],[8.5e-6,.85]]}, [0,8.5e-6],
+                         stop=8.5e-6,max_step=1e-6,strobetimes=times,
+                         vabstol=1e-9,reltol=0,kernel=KERNEL)
+        receipt=result['strobe_evidence'];column=result['nodes'].index('y')
+        self.assertEqual(receipt['sample_origins'],['accepted_controller_frame']*len(times))
+        self.assertEqual(len(result['transient']['events']),8)
+        period=Fraction.from_float(1e-6)
+        for time,row in zip(times,receipt['voltages_V']):
+            due=[k for k in range(1,9) if k*period<=Fraction.from_float(time)]
+            expected=float(due[-1]*period)*1e5 if due else .125
+            self.assertAlmostEqual(row[column],expected,delta=1e-9)
+        # The last forced point is also the state used to continue/finish, not
+        # a relabeled historical query returned by the strobe wrapper.
+        self.assertEqual(receipt['voltages_V'][-1],result['solutions'][-1]['voltages'])
+
+    def test_periodic_timer_forced_points_preserve_operator_history(self):
+        body='@(initial_step) q=0.125; @(timer(T,T,1e-10)) q=V(u,r); '
+        declarations='parameter real T=1e-6; real q;'
+        # Constant sampled input isolates continuity at repeated callbacks.
+        cases=[('V(y,r)<+transition(q,0,0.2*T);',lambda t:.125),
+               ('V(y,r)<+idt(q/T,0.05);',lambda t:.05+.125*t/1e-6),
+               ("V(y,r)<+laplace_nd(q,'{1},'{1,T});",lambda t:.125)]
+        times=[0.,1e-6,3e-6,4e-6,6e-6,8e-6,8.5e-6]
+        for contribution,answer in cases:
+            with self.subTest(contribution=contribution):
+                program=compile_sources({'strobe.va':model(body+contribution,declarations)},[instance()])
+                result=transient(program,{'u':[[0,.125],[8.5e-6,.125]]},[0,8.5e-6],
+                                 stop=8.5e-6,max_step=1e-6,strobetimes=times,
+                                 vabstol=1e-8,reltol=0,kernel=KERNEL)
+                column=result['nodes'].index('y')
+                self.assertEqual(result['strobe_evidence']['sample_origins'],['accepted_controller_frame']*len(times))
+                for t,row in zip(times,result['strobe_evidence']['voltages_V']):
+                    self.assertAlmostEqual(row[column],answer(t),delta=1e-8)
+
+    def test_forced_points_bracket_the_exact_clock_without_firing_early(self):
+        source=model('@(initial_step) n=0; @(timer(0.1,0.1,1e-6)) n=n+1; V(y,r)<+n;',
+                     'integer n;')
+        program=compile_sources({'strobe.va':source},[instance()])
+        times=[.3,math.nextafter(.3,math.inf)]
+        result=transient(program,{'u':[[0,0],[.35,0]]},[0,.35],stop=.35,max_step=.35,
+                         strobetimes=times,kernel=KERNEL)
+        receipt=result['strobe_evidence'];column=result['nodes'].index('y')
+        self.assertEqual([r[column] for r in receipt['voltages_V']],[2,3])
+        self.assertEqual(receipt['sample_origins'],['accepted_controller_frame']*2)
+
+    def test_sampled_changes_reach_each_history_and_continue_after_last_strobe(self):
+        prefix='@(initial_step) q=0.125; @(timer(T,T,1e-10)) q=V(u,r); '
+        # Each timer raises q by .1. Independent superposition of steps, ramps
+        # and exponential responses detects stale slopes and history resets.
+        cases=[('V(y,r)<+transition(q,0,0.2*T);',
+                lambda x:.125+sum(.1*min(1,max(0,(x-k)/.2)) for k in range(1,9))),
+               ('V(y,r)<+idt(q/T,0.05);',
+                lambda x:.05+.125*x+sum(.1*max(0,x-k) for k in range(1,9))),
+               ("V(y,r)<+laplace_nd(q,'{1},'{1,T});",
+                lambda x:.125+sum(.1*(-math.expm1(-max(0,x-k))) for k in range(1,9)))]
+        sparse=[0.,1e-6,1.1e-6,1.2e-6,3e-6,3.1e-6,4e-6,6e-6,8e-6,8.2e-6]
+        dense=sorted(set(sparse+[k*1e-6/4 for k in range(33)]))
+        for body,answer in cases:
+            with self.subTest(body=body):
+                program=compile_sources({'strobe.va':model(prefix+body,'parameter real T=1e-6; real q;')},[instance()])
+                results=[]
+                for ts in (sparse,dense):
+                    r=transient(program,{'u':[[0,.125],[8.5e-6,.975]]},[0,8.5e-6],
+                                stop=8.5e-6,max_step=1e-6,strobetimes=ts,vabstol=1e-8,reltol=0,kernel=KERNEL)
+                    column=r['nodes'].index('y');s=r['strobe_evidence']
+                    self.assertEqual(s['sample_origins'],['accepted_controller_frame']*len(ts))
+                    values={t:v[column] for t,v in zip(ts,s['voltages_V'])}
+                    for t,v in values.items():self.assertAlmostEqual(v,answer(t/1e-6),delta=1e-8)
+                    self.assertAlmostEqual(r['solutions'][-1]['voltages'][column],answer(8.5),delta=1e-8)
+                    results.append(values)
+                for t in sparse:self.assertAlmostEqual(results[0][t],results[1][t],delta=1e-12)
 
     def test_manifest_capture_and_saved_bundle_retain_forced_points(self):
         with tempfile.TemporaryDirectory() as directory:
