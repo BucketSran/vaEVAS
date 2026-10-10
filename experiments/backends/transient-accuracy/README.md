@@ -59,6 +59,18 @@ python3 -B experiments/backends/transient-accuracy/analyze.py observation.json \
 python3 -B -m unittest discover -s experiments/backends/transient-accuracy -p 'test_*.py' -v
 ```
 
+<a id="integration-20261010"></a>
+
+### 主分支整合复验
+
+整合 PR #130 的 timer/strobe 和 PR #129 的输入根细化后，以 `4cf15adc` 重建内核，
+重新编译上述两份原 VA，重放全部 16 个请求。12,243 个共同点和 68 个精确锚点仍满足原预算，
+每个请求的完整 JSON 响应与原记录一致。新身份及逐请求哈希见[整合收据](integration-20261010.json)。
+
+这次新执行的是 EVAS。Spectre 源码、刺激、设置及原生记录未变，复用原八次实测。
+原 4/8 严格时刻、5/8 连续观测结论和三个参考超差保留，没有更新旧收据的内核身份。
+原始请求、响应及执行日志仍为 local-only。
+
 ## 2026-10-10 精度复核
 
 [精度控制收据](precision-audit.json)绑定 main `ab0df35b` 的当前内核。原 VA、刺激、初值、
