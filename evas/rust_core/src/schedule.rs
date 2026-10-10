@@ -4,7 +4,7 @@ use crate::event_accuracy::{unresolved, GuardBounds};
 use crate::events::EventModel;
 use crate::exact_time::Clock;
 use crate::interval::Interval as I;
-use crate::ir::{Error, EventTrigger};
+use crate::ir::{Error, EventTrigger, TransientInputs};
 use crate::operators::Operators;
 use crate::pwl::{Root, Trajectory};
 use std::sync::Arc;
@@ -576,12 +576,13 @@ fn add_timer(
     events: &mut Vec<ScheduledEvent>,
     event: usize,
     trigger: &EventTrigger,
-    stop: f64,
+    config: &TransientInputs,
     model: &EventModel,
     states: Option<&[I]>,
     after: Option<f64>,
-    forced_points: bool,
 ) -> Result<(), Error> {
+    let stop = config.stop;
+    let forced_points = !config.strobetimes.is_empty();
     let (start, period, enabled, held) = match trigger {
         EventTrigger::Timer {
             start,
@@ -1280,11 +1281,10 @@ fn schedule_with_history(
             &mut events,
             index,
             &leaf.trigger,
-            trajectory.config.stop,
+            &trajectory.config,
             model,
             held.as_ref().map(|h| h.states),
             held.as_ref().and_then(|h| h.after),
-            !trajectory.config.strobetimes.is_empty(),
         )?;
     }
     if let Some(after) = held.as_ref().and_then(|h| h.after) {

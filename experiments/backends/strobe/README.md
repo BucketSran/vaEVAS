@@ -52,6 +52,11 @@ Spectre 的实际导出时刻未全部逐位命中 strobe 请求，部分偏差�
 四档请求与实际设置见[评测标准](../../../evas/docs/COMPARISON-METHODOLOGY.md#backend-controls)：
 Spectre 固定 `traponly`，实际相对容差为 10⁻⁶ 或 10⁻⁹；没有把同名参数当作同一种精度保证。
 
+合并前为通过 Clippy，仅将调度函数的两个参数改为读取同一个配置引用，未改数值算法。
+重建后，12 个基础档条件的新旧内核完整响应、波形和编译结果逐字节相同；
+新增 73 项相关回归、227 项 Rust 测试通过。
+[整合收据](20261010-timer-integration.json)记录新内核身份及对照复用依据；没有重跑 Spectre。
+
 原 80 配置为 76 通过、4 个 Spectre 名义积分超差，追加 4 配置通过。
 源码、完整原生输出、执行日志及独立审查位于可见工作区
 `runs/strobe-timer-fix-20261010/`，为 local-only；本目录只保留紧凑收据与维护脚本。
