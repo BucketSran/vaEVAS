@@ -2,7 +2,7 @@
 
 2026-10-10。本轮实读 v4-749 PFD 与 v4-875 非重叠时钟的公开题面、机器合同、评分策略和 checker profile，并读派生 runner 的运行与结果判定代码。来源身份与全量规模见[迁移入口](README.md)。没有运行两个测试台，也没有逐个审计它们的语义负例。
 
-本页保留早期两包筛选范围。GLM 全量审核启动后的进度、更多候选与按最新测量价值标准的复核，见[阶段移植建议](v4-testbench-glm-triage.md)。后续建议包括复用旧 DUT 形态中的现成 VA 仪表，不受旧 Testbench 标签限制。
+本页保留早期两包筛选范围。GLM 全量审核启动后的进度、更多候选与按最新测量价值标准的复核，见[阶段移植建议](https://github.com/BucketSran/vaEVAS/blob/83ddca7b9ede6d4211b172827f26064eca5577b3/benchmark/workbench/migration/v4-testbench-glm-triage.md)。后续建议包括复用旧 DUT 形态中的现成 VA 仪表，不受旧 Testbench 标签限制。
 
 ## 旧题实际要求什么
 

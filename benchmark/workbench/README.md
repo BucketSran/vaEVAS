@@ -10,7 +10,7 @@
 
 继续细看family111后，新增 [case-0016 比较器翻转电压与表观滞回测量](cases/testing-characterization/comparators/case-0016-hysteresis-characterizer/README.md)。r1记录原电路、测量合同和独立checker方案，尚待讨论与校准。
 
-全部 v4 的GLM静态审核已完成400/400家族。当前先看[优先迁移清单](migration/v4-migration-priorities.md)，按电路功能查看五类对应、可复用资产、需重做部分和未选理由；[全库取舍索引](migration/v4-migration-index.tsv)用于追溯。[阶段功能汇总](migration/v4-functional-summary.md)保留历史快照，本轮未批量新建题卡。
+全部 v4 的GLM静态审核已完成400/400家族。当前先看[优先迁移清单](migration/v4-migration-priorities.md)，按电路功能查看五类对应、可复用资产、需重做部分和未选理由；[全库取舍索引](migration/v4-migration-index.tsv)用于追溯。[阶段功能汇总](https://github.com/BucketSran/vaEVAS/blob/83ddca7b9ede6d4211b172827f26064eca5577b3/benchmark/workbench/migration/v4-functional-summary.md)保留历史快照，本轮未批量新建题卡。
 
 <!-- workbench:begin -->
 
@@ -44,6 +44,8 @@
 | [case-0016](cases/testing-characterization/comparators/case-0016-hysteresis-characterizer/README.md) | 比较器翻转电压与表观滞回测量 | 电路测试与表征 / 比较器与门限检测 | 题目草案 / 待 review（r1） | 测量定义、最近双向捕获语义与独立事件验收；数值容差待校准 |
 
 <!-- workbench:end -->
+
+相近变体如何补充覆盖，见[变体扩充方案](migration/v4-variant-expansion.md)；原迁移清单保持可追溯，扩充建议待后续建设与校准。
 
 ## 如何 review
 

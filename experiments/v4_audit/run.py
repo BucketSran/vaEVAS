@@ -113,8 +113,12 @@ def json_fields(contents):
 def represent_json(path, contents, semantic_bases):
     """Reuse equal JSON values, including when object-key order differs."""
     lines = contents.splitlines()
+    fields = json_fields(contents)
+    # Replacing a whole line must not hide a neighboring field on that line.
+    if any(left[3] >= right[2] for left, right in zip(fields, fields[1:])):
+        return '\n'.join(f'{n}: {line}' for n, line in enumerate(lines, 1)), []
     refs, parts, cursor = [], [], 1
-    for key, value, start, end in json_fields(contents):
+    for key, value, start, end in fields:
         canonical = json.dumps(value, sort_keys=True, separators=(',',':'), ensure_ascii=False)
         identity = digest(canonical.encode())
         prior = semantic_bases.get(identity)

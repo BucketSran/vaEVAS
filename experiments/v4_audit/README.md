@@ -9,6 +9,7 @@
 以及相应 provenance 的 derivation、mutation、认证和任务记录。每家族一请求。
 任务包全部文本入包，完全相同的文件按 SHA256 合并展示，同时列出全部原路径和原行号。
 重复网表行用已展示的原行引用；重复JSON字段值用已展示的相同值引用，允许对象键顺序不同。
+顶层字段共用一行时保留全文，避免按行省略误删相邻字段。
 原位置及哈希仍保留，VA源码完整展开。另按实际 VA 字节比较 Bugfix starter 与同家族 TB 负例，
 将实际匹配和旧 manifest 所称 seed 分开保存。
 
@@ -59,3 +60,9 @@ run 目录的 `INDEX.md` 按400个家族展示 pending、running、failed、acce
 
 本轮运行与审核结论入口见[迁移讨论记录](../../benchmark/workbench/migration/README.md)。
 大体积输入和原响应仅保留在 ignored `runs/`，进入仓库的结论应经过复核并保留来源身份。
+
+工具的离线回归不调用模型或仿真器：
+
+```bash
+python3 -B -m unittest discover -s experiments/v4_audit -p 'test_*.py'
+```
