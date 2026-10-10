@@ -43,3 +43,12 @@
 既有路径复用实际 Spectre 数据，新直接非线性采样另完成正向、负向和小幅值三条件的同源码对照。
 [12 配置均满足原预算](../../../experiments/backends/sample-edge-filter/direct-sample-receipt.json)，
 每个条件均实际触发目标细化。四档只改变 Spectre，有限观测不授予普遍精度或历史重放能力。
+
+2026-10-10 的[采样保持与一阶滤波精度实测](../../../experiments/backends/support/README.md#precision-pilot)
+补充 TIMER、CROSS、DYNAMICS、COMPOSE、QUALIFICATION。冻结 8 个条件和四档设置，
+保留定时采样的 strobe 拒绝及普通查询补测；不改变 EVAS 生产行为或旧批次验收结论。
+
+后续[固定 timer 强制点修复](../../../experiments/backends/strobe/README.md#timer-fix)
+补充 TIMER、EVENT-ORDER、TRANSITION、DYNAMICS、COMPOSE、QUALIFICATION。
+原 12 配置在对应修复的运行快照中重新通过；以强制点回执验收，不把普通查询提升为接受帧。
+旧拒绝及 Spectre 请求/原生时间偏差仍保留，完整原始数据为 local-only。

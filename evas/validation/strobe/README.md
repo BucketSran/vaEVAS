@@ -1,5 +1,40 @@
 # Strobe control fixtures
 
+## Fixed timer history consumers
+
+`timer_composition.py` reuses SEF-TIMER, SEF-INTERRUPT and SEF-ISOLATION without
+changing their models or checker. All output records, including event boundaries,
+retain the original 100 µV output, 10 nV input and ±5 ps event budgets.
+The new STROBE-TIMER-IDT case checks changing sampled input followed by `idt`,
+with a nonzero .05 V integral initial condition. Its independent answer is the
+sum of held-value rectangle areas at nominal event times. It uses the same 100 µV output budget and the
+precision pilot's input checks, 100 ps timer window and 2.1 ps counter brackets.
+This extra case does not replace or relax the original 12 precision configurations.
+Unlike the hold-value check, its nominal integral error includes the effect of
+legal timer shifts. A permitted callback shift can therefore still fail this
+total-error budget. The separate `--timer-diagnostic` freeze tightens only the
+TT binding to 10 ps and 1 ps in the both profile, retaining source, stimulus,
+observation grid and the original numerical checks. It never replaces the four
+100 ps results. `timer_report.py` verifies these controlled differences.
+
+The runner applies all four precision-pilot profiles to both EVAS and Spectre,
+retains failures and reads back actual settings. EVAS requires exact requested
+times with accepted-frame receipts. Spectre requested/native time coverage is
+reported separately, including deviations beyond 16 ULP(stop). It is not an
+additional engineering gate. All voltages are checked at their actual exported
+times under the unchanged contract; no resampling supplies a missing strobe and
+engineering passes do not prove exact Spectre forced-point identity.
+Existing SEF cases use the dense contract grid; the new
+integral uses the precision grid with both sides of every timer and source corner.
+Ordinary waveform queries cannot satisfy the EVAS forced-point obligation.
+
+Calibration rejects missing events, resets, a stale integral slope, incomplete
+coverage and nonfinite outputs. Run `python3 -B -m unittest discover -s
+evas/validation/strobe -v`. Execution and receipt tools live in
+`experiments/backends/strobe/composition_run.py` and `timer_report.py`.
+
+## Original control fixtures
+
 Four small models exercise independent forced-solve controls. The committed VA,
 Spectre decks and EVAS manifests share each model and stimulus. Each `case.json`
 fixes requested times, analytic values and a 1e-6 V absolute comparison budget.

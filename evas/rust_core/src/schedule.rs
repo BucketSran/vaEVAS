@@ -4,7 +4,7 @@ use crate::event_accuracy::{unresolved, GuardBounds};
 use crate::events::EventModel;
 use crate::exact_time::Clock;
 use crate::interval::Interval as I;
-use crate::ir::{Error, EventTrigger};
+use crate::ir::{Error, EventTrigger, TransientInputs};
 use crate::operators::Operators;
 use crate::pwl::{Root, Trajectory};
 use std::sync::Arc;
@@ -614,11 +614,13 @@ fn add_timer(
     events: &mut Vec<ScheduledEvent>,
     event: usize,
     trigger: &EventTrigger,
-    stop: f64,
+    config: &TransientInputs,
     model: &EventModel,
     states: Option<&[I]>,
     after: Option<f64>,
 ) -> Result<(), Error> {
+    let stop = config.stop;
+    let forced_points = !config.strobetimes.is_empty();
     let (start, period, enabled, held) = match trigger {
         EventTrigger::Timer {
             start,
@@ -683,7 +685,18 @@ fn add_timer(
         // enclosure covers both product and sum. Choosing its upper endpoint
         // cannot fire early, including when the source omitted time_tol. The
         // clock remains start + index * period, never prior accepted time + T.
-        let bounds = if index == 0 {
+        let bounds = if forced_points && !held {
+            // A forced solve point must not be crossed only because interval
+            // arithmetic widened an otherwise exactly ordered source clock.
+            // Keep ordinary-query and uncertain held-timer paths unchanged.
+            crate::exact_time::Clock {
+                start: start.lo,
+                period: period.lo,
+                index,
+            }
+            .bounds()
+            .unwrap_or_else(|| start + I::point(index as f64) * period)
+        } else if index == 0 {
             start
         } else {
             start + I::point(index as f64) * period
@@ -1306,7 +1319,7 @@ fn schedule_with_history(
             &mut events,
             index,
             &leaf.trigger,
-            trajectory.config.stop,
+            &trajectory.config,
             model,
             held.as_ref().map(|h| h.states),
             held.as_ref().and_then(|h| h.after),

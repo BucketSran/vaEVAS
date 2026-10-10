@@ -23,6 +23,22 @@ def ramp_filter(t, start=1.25, duration=.5, tau=.25):
 
 
 class SampleEdgeFilter(unittest.TestCase):
+    def test_timer_chain_forced_points_preserve_interruption_and_instance_history(self):
+        for c in contract.CASES:
+            if c['id']=='SEF-RESET':continue
+            with self.subTest(case=c['id']):
+                ports=['u','clk','rst',*[p['name']+x for p in c['instances'] for x in 'hefn']]
+                p=compile_sources({'chain.va':contract.source(c)},[Instance('dut','dut',{n:n for n in ports})])
+                inputs={n:[[t*contract.T,v] for t,v in pts] for n,pts in [('u',contract.INPUT),('clk',contract.CLOCK),('rst',contract.RESET)]}
+                ts=contract.times(c,True)
+                answer=transient(p,inputs,[0,contract.STOP],stop=contract.STOP,max_step=contract.T/64,
+                                 strobetimes=ts,vabstol=1e-7,reltol=0,kernel=KERNEL)
+                receipt=answer['strobe_evidence']
+                self.assertEqual(receipt['sample_origins'],['accepted_controller_frame']*len(ts))
+                output=[dict(time=t,**dict(zip(answer['nodes'],v))) for t,v in zip(receipt['times'],receipt['voltages_V'])]
+                verdict=contract.assess(c,output)
+                self.assertEqual(verdict['status'],'PASS',verdict)
+
     def test_tight_root_window_meets_voltage_budget_through_both_histories(self):
         for delay in (0, .125):
             with self.subTest(delay=delay):

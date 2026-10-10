@@ -1,0 +1,247 @@
+{
+  "purpose": "argument-only add_timer refactor preservation",
+  "kernels": {
+    "before": "1b9ad3e1f1f62871c344c5a6272c38688f7582914b101c08fb2d991e6eed3ffc",
+    "after": "9a3eacfd72fc8f3916197553cd47ac69901f4c0b25e391ee552dc76517d01061"
+  },
+  "source_sha256": "8b9f33b908fe8249b117ecbc844d0f730957315b303747fd0ea1b5f570d603cd",
+  "base": "de54b3eb7697f446f1c05321e8de195081c82851",
+  "records": [
+    {
+      "condition": "SH-T-RAMP",
+      "frozen_input": "runs/strobe-timer-fix-20261010/inputs/runs/evas/SH-T-RAMP--base",
+      "observations": {
+        "before": {
+          "raw-response.json": "64b5ad01f0956c37200be2174fd5226021ed259ca675b2d9cce12954c3564122",
+          "waveform.csv": "05ebb067d4ec841d55d4e28961eff8babf18c06496ee17a255523616f455a017",
+          "program.json": "d7fb9587ae0f9bfa062569e5f44c30494648aa0a2a0a8946f03c878288f57812"
+        },
+        "after": {
+          "raw-response.json": "64b5ad01f0956c37200be2174fd5226021ed259ca675b2d9cce12954c3564122",
+          "waveform.csv": "05ebb067d4ec841d55d4e28961eff8babf18c06496ee17a255523616f455a017",
+          "program.json": "d7fb9587ae0f9bfa062569e5f44c30494648aa0a2a0a8946f03c878288f57812"
+        }
+      },
+      "byte_equal": true
+    },
+    {
+      "condition": "SH-X-RAMP",
+      "frozen_input": "runs/strobe-timer-fix-20261010/inputs/runs/evas/SH-X-RAMP--base",
+      "observations": {
+        "before": {
+          "raw-response.json": "ae4f8364db1b49935e507710bb7f8499478c4d872f16e273f262771ff4e87cfa",
+          "waveform.csv": "e29ab348a28e0f1a9634c504aa2efeb30a7b52ca43a6e3f0244c138445f37148",
+          "program.json": "c6e16d8c4084c515ea9b918d09b26ea8c8644a2d7037b5eb7fd188c4548133c9"
+        },
+        "after": {
+          "raw-response.json": "ae4f8364db1b49935e507710bb7f8499478c4d872f16e273f262771ff4e87cfa",
+          "waveform.csv": "e29ab348a28e0f1a9634c504aa2efeb30a7b52ca43a6e3f0244c138445f37148",
+          "program.json": "c6e16d8c4084c515ea9b918d09b26ea8c8644a2d7037b5eb7fd188c4548133c9"
+        }
+      },
+      "byte_equal": true
+    },
+    {
+      "condition": "SH-T-SMALL",
+      "frozen_input": "runs/strobe-timer-fix-20261010/inputs/runs/evas/SH-T-SMALL--base",
+      "observations": {
+        "before": {
+          "raw-response.json": "8bae09a462c70b9c024f13f8c8985c3bb3017186e4b0d8a1435f4420ca421a1a",
+          "waveform.csv": "aed202aeb86c1a5c208a456bd7037e6a565b3c500b7d25f8ad3e646681b550d1",
+          "program.json": "3b9d47f2ce59442647547631b54f62b550eb5ebd080220cfa5980eeb8ee68aa6"
+        },
+        "after": {
+          "raw-response.json": "8bae09a462c70b9c024f13f8c8985c3bb3017186e4b0d8a1435f4420ca421a1a",
+          "waveform.csv": "aed202aeb86c1a5c208a456bd7037e6a565b3c500b7d25f8ad3e646681b550d1",
+          "program.json": "3b9d47f2ce59442647547631b54f62b550eb5ebd080220cfa5980eeb8ee68aa6"
+        }
+      },
+      "byte_equal": true
+    },
+    {
+      "condition": "SH-T-LONG",
+      "frozen_input": "runs/strobe-timer-fix-20261010/inputs/runs/evas/SH-T-LONG--base",
+      "observations": {
+        "before": {
+          "raw-response.json": "31c122f37cb2e4c99abd59ce51467dd121991a25c43ce073b692e68891f79a9f",
+          "waveform.csv": "07f55ab3dda2545c3f9a815b71cf7dfe4dafb2732f384aa998b98cad3e979a58",
+          "program.json": "d7fb9587ae0f9bfa062569e5f44c30494648aa0a2a0a8946f03c878288f57812"
+        },
+        "after": {
+          "raw-response.json": "31c122f37cb2e4c99abd59ce51467dd121991a25c43ce073b692e68891f79a9f",
+          "waveform.csv": "07f55ab3dda2545c3f9a815b71cf7dfe4dafb2732f384aa998b98cad3e979a58",
+          "program.json": "d7fb9587ae0f9bfa062569e5f44c30494648aa0a2a0a8946f03c878288f57812"
+        }
+      },
+      "byte_equal": true
+    },
+    {
+      "condition": "LP-RAMP",
+      "frozen_input": "runs/strobe-timer-fix-20261010/inputs/runs/evas/LP-RAMP--base",
+      "observations": {
+        "before": {
+          "raw-response.json": "d679a13a3c97429c7cce6989ae0f19008a947f308c110a7b435326b873e4e7cb",
+          "waveform.csv": "07777babb7df9996dc17c05d8066bb8a930059dc2d48f59a91dbabdf60f71aac",
+          "program.json": "ca5fcb619feda938dfead534887ae828b71070795772113ddcb75757ff1192cd"
+        },
+        "after": {
+          "raw-response.json": "d679a13a3c97429c7cce6989ae0f19008a947f308c110a7b435326b873e4e7cb",
+          "waveform.csv": "07777babb7df9996dc17c05d8066bb8a930059dc2d48f59a91dbabdf60f71aac",
+          "program.json": "ca5fcb619feda938dfead534887ae828b71070795772113ddcb75757ff1192cd"
+        }
+      },
+      "byte_equal": true
+    },
+    {
+      "condition": "LP-NONZERO",
+      "frozen_input": "runs/strobe-timer-fix-20261010/inputs/runs/evas/LP-NONZERO--base",
+      "observations": {
+        "before": {
+          "raw-response.json": "8f855afc31c4ed53d38be731de862d1d377f2e26d2466481ecf8751e7955c666",
+          "waveform.csv": "356c969b67e14dc70e979863d93e3d9e862b113b637c0fa0e4cb24a4d667b49c",
+          "program.json": "ca5fcb619feda938dfead534887ae828b71070795772113ddcb75757ff1192cd"
+        },
+        "after": {
+          "raw-response.json": "8f855afc31c4ed53d38be731de862d1d377f2e26d2466481ecf8751e7955c666",
+          "waveform.csv": "356c969b67e14dc70e979863d93e3d9e862b113b637c0fa0e4cb24a4d667b49c",
+          "program.json": "ca5fcb619feda938dfead534887ae828b71070795772113ddcb75757ff1192cd"
+        }
+      },
+      "byte_equal": true
+    },
+    {
+      "condition": "LP-SMALL",
+      "frozen_input": "runs/strobe-timer-fix-20261010/inputs/runs/evas/LP-SMALL--base",
+      "observations": {
+        "before": {
+          "raw-response.json": "fc4f123dbc2986b933412964e94110c2331fdd1527ae68c9e894b6674d95591b",
+          "waveform.csv": "236c559a2ff843a5236e94b74cefd35525257342d4e14f97339e42ce5a4080c5",
+          "program.json": "ca5fcb619feda938dfead534887ae828b71070795772113ddcb75757ff1192cd"
+        },
+        "after": {
+          "raw-response.json": "fc4f123dbc2986b933412964e94110c2331fdd1527ae68c9e894b6674d95591b",
+          "waveform.csv": "236c559a2ff843a5236e94b74cefd35525257342d4e14f97339e42ce5a4080c5",
+          "program.json": "ca5fcb619feda938dfead534887ae828b71070795772113ddcb75757ff1192cd"
+        }
+      },
+      "byte_equal": true
+    },
+    {
+      "condition": "LP-IDT",
+      "frozen_input": "runs/strobe-timer-fix-20261010/inputs/runs/evas/LP-IDT--base",
+      "observations": {
+        "before": {
+          "raw-response.json": "8e4720e5e9a819cae58680626e6b8b692b0964c7bcf1cabe399a60d353640226",
+          "waveform.csv": "b12060e22df44097b854fe2f907ccc447ea81930bcbc0b9655293591949b34df",
+          "program.json": "1760b7c9f9a05c071bacc0dfa8fdf6577dbcfdae37a8dc3fdd233ccd4ea60f57"
+        },
+        "after": {
+          "raw-response.json": "8e4720e5e9a819cae58680626e6b8b692b0964c7bcf1cabe399a60d353640226",
+          "waveform.csv": "b12060e22df44097b854fe2f907ccc447ea81930bcbc0b9655293591949b34df",
+          "program.json": "1760b7c9f9a05c071bacc0dfa8fdf6577dbcfdae37a8dc3fdd233ccd4ea60f57"
+        }
+      },
+      "byte_equal": true
+    },
+    {
+      "condition": "SEF-TIMER",
+      "frozen_input": "runs/strobe-timer-fix-20261010/composition-inputs/runs/evas/SEF-TIMER--base",
+      "observations": {
+        "before": {
+          "raw-response.json": "338d24ff1dcd3fc9b7178f714c3b6f2c4b1aca7dd38e831fad357fc08fba4e8f",
+          "waveform.csv": "a381fda707dc6ca58a5cb860e4a91673f0bf1215b0b85c1e90c48de325af88df",
+          "program.json": "d8f62b3cd65b2860e93cadbe8c2387e982aed8f80ea484f308d3fc8adbb7d2aa"
+        },
+        "after": {
+          "raw-response.json": "338d24ff1dcd3fc9b7178f714c3b6f2c4b1aca7dd38e831fad357fc08fba4e8f",
+          "waveform.csv": "a381fda707dc6ca58a5cb860e4a91673f0bf1215b0b85c1e90c48de325af88df",
+          "program.json": "d8f62b3cd65b2860e93cadbe8c2387e982aed8f80ea484f308d3fc8adbb7d2aa"
+        }
+      },
+      "byte_equal": true
+    },
+    {
+      "condition": "SEF-INTERRUPT",
+      "frozen_input": "runs/strobe-timer-fix-20261010/composition-inputs/runs/evas/SEF-INTERRUPT--base",
+      "observations": {
+        "before": {
+          "raw-response.json": "269dc5c97ef50a6f5a7d37b5aa1c622bda09a665c62829c0e2c5c3cdfc8f49fb",
+          "waveform.csv": "fdccaba99757d071a2ccc5432c055c2b9d9b3a1be5b9b210e0565a683142fb5e",
+          "program.json": "3933648a0d63816de0ae52b4b15292b5d857dcde88376f939bc73738c617a96e"
+        },
+        "after": {
+          "raw-response.json": "269dc5c97ef50a6f5a7d37b5aa1c622bda09a665c62829c0e2c5c3cdfc8f49fb",
+          "waveform.csv": "fdccaba99757d071a2ccc5432c055c2b9d9b3a1be5b9b210e0565a683142fb5e",
+          "program.json": "3933648a0d63816de0ae52b4b15292b5d857dcde88376f939bc73738c617a96e"
+        }
+      },
+      "byte_equal": true
+    },
+    {
+      "condition": "SEF-ISOLATION",
+      "frozen_input": "runs/strobe-timer-fix-20261010/composition-inputs/runs/evas/SEF-ISOLATION--base",
+      "observations": {
+        "before": {
+          "raw-response.json": "37bcc9430d22947d601ce642b13e6e3e49c96d769a6a032e15dd932fb76870c9",
+          "waveform.csv": "c4b6e11d69e1b36bd0d974383817205f1430931da852724f803e750a48695107",
+          "program.json": "c0650c40afeb70f1c0afb4d54e73844b6d9de05b7e7a9f4aff7703b2f64c4430"
+        },
+        "after": {
+          "raw-response.json": "37bcc9430d22947d601ce642b13e6e3e49c96d769a6a032e15dd932fb76870c9",
+          "waveform.csv": "c4b6e11d69e1b36bd0d974383817205f1430931da852724f803e750a48695107",
+          "program.json": "c0650c40afeb70f1c0afb4d54e73844b6d9de05b7e7a9f4aff7703b2f64c4430"
+        }
+      },
+      "byte_equal": true
+    },
+    {
+      "condition": "STROBE-TIMER-IDT",
+      "frozen_input": "runs/strobe-timer-fix-20261010/composition-inputs/runs/evas/STROBE-TIMER-IDT--base",
+      "observations": {
+        "before": {
+          "raw-response.json": "b890e3b216deefd2f4ee906894f24eb6968ec410c330671dd8a3b158a9a3baa0",
+          "waveform.csv": "9f9e275f66e85e83901177c87f0371da2a5d5733f775c317be775e1e1d60b99f",
+          "program.json": "0c464b91e07668a690dfb003c5aa544667fbf9ca6a9abf6a8e8751aae7a1a612"
+        },
+        "after": {
+          "raw-response.json": "b890e3b216deefd2f4ee906894f24eb6968ec410c330671dd8a3b158a9a3baa0",
+          "waveform.csv": "9f9e275f66e85e83901177c87f0371da2a5d5733f775c317be775e1e1d60b99f",
+          "program.json": "0c464b91e07668a690dfb003c5aa544667fbf9ca6a9abf6a8e8751aae7a1a612"
+        }
+      },
+      "byte_equal": true
+    }
+  ],
+  "all_byte_equal": true,
+  "raw_availability": "local-only",
+  "limits": "Twelve base-profile frozen conditions; actual Spectre rows reused, no new remote execution",
+  "source_path": "evas/rust_core/src/schedule.rs",
+  "base_source_sha256": "53bea4845fe88cd514ce80af577ce5a41c26600e20490e00360d94300a4b3d78",
+  "reuse": {
+    "actual_receipt": "experiments/backends/strobe/20261010-timer-fix.json",
+    "actual_receipt_sha256": "e320a0a251af68eece5e12fafd5f6cfab046ec1a3590ea368006d414a3a9be6c",
+    "reason": "Only immutable config argument packaging changed; stop and strobe flag read the same fields. Timer arithmetic, checker, models, settings and budgets unchanged. The original four Spectre failures remain failures."
+  },
+  "replay": {
+    "command": "python3 -B runs/strobe-timer-fix-20261010/compare-lint-refactor.py",
+    "script_sha256": "9dc6b0b4291dfed317f4c7bb1bc57340ea0da5e3d6d1e60843722023c7f65ed4",
+    "worker": "experiments/backends/support/precision_run.py",
+    "worker_sha256": "c4ccb3cd0215bd0540f28c13ff7eb5ab2056a3e16b3e4bc0dd7adf82b2fcef3e",
+    "timeout_seconds_per_execution": 90,
+    "profiles": [
+      "base"
+    ],
+    "new_evas_executions": 24,
+    "new_spectre_executions": 0,
+    "criterion": "raw-response.json, waveform.csv and program.json byte equal for every condition",
+    "raw_directory": "runs/strobe-timer-fix-20261010/lint-refactor-replay"
+  },
+  "checks": {
+    "python_regression_passed": 73,
+    "rust_passed": 227,
+    "rust_ignored": 1,
+    "clippy": "passed with -D warnings",
+    "fmt": "passed",
+    "independent_delta_review_sha256": "bb1ee25950e01e3c86ac3aa5bbf3e70940d7dd4d76e98467b61c4d878bebdffa"
+  }
+}
