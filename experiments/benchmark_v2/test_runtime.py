@@ -1,5 +1,6 @@
 """Verifier protocol tests using a process fixture, never simulator evidence."""
 import json
+import hashlib
 import os
 from pathlib import Path
 import sys
@@ -48,6 +49,7 @@ pathlib.Path("psf/tran.tran.tran").write_text('VALUE\\n"time" 0\\n"out" 0\\n"tim
         self.assertEqual(report["reward"], 1)
         self.assertEqual((self.root / "result/probe/executed.va").read_bytes(), self.source)
         self.assertEqual(report["cases"][0]["status"], "graded")
+        self.assertEqual(report["candidate_sha256"], hashlib.sha256(self.source).hexdigest())
 
     def test_backend_failure_is_unscored_even_if_log_claims_a_verdict(self):
         self.binary.write_text(self.binary.read_text().split('pathlib.Path("executed.va")')[0]

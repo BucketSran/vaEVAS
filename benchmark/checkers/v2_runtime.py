@@ -99,7 +99,11 @@ def verify(candidate, output, tests, evaluate, case_name=None):
         report.update(status="submission_contract_violation", reward=0, reason=str(exc))
         return write_report(output, report)
     report["candidate_files"] = {name: hashlib.sha256(data).hexdigest() for name, data in sources.items()}
+    # Existing Harness validates this primary-file field before projecting scores.
+    report["candidate_sha256"] = report["candidate_files"]["dut.va"]
     report["checker_files"] = {p.name: digest(p) for p in tests.glob("*.py")}
+    if (tests / "verify.py").is_file():
+        report["checker_sha256"] = digest(tests / "verify.py")
     binary = os.environ.get("SPECTRE", "spectre")
     if not shutil.which(binary):
         report["reason"] = "fixed Spectre backend is unavailable"
