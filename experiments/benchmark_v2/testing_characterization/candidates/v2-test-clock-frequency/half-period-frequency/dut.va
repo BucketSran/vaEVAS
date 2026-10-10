@@ -1,0 +1,30 @@
+`include "disciplines.vams"
+module frequency_meter(dco_clk,div_clk,enable,reset,freq_mhz,divider_ratio,valid);
+input dco_clk,div_clk,enable,reset;
+output freq_mhz,divider_ratio,valid;
+electrical dco_clk,div_clk,enable,reset,freq_mhz,divider_ratio,valid;
+parameter real tr=20p;
+real td,tv,pd,pv,f,r;
+integer hd,hv,vd,vv;
+analog begin
+ @(initial_step) begin td=0; tv=0; pd=0; pv=0; f=0; r=0; hd=0; hv=0; vd=0; vv=0; end
+ @(cross(V(reset)-0.45,+1) or cross(V(enable)-0.45,-1)) begin pd=0; pv=0; f=0; r=0; hd=0; hv=0; vd=0; vv=0; end
+ @(cross(V(dco_clk)-0.45,+1)) begin
+  if(V(reset)<=0.45 && V(enable)>0.45) begin
+   if(hd) begin pd=$abstime-td; vd=1; f=0.5e-6/pd; end
+   td=$abstime; hd=1;
+   if(vd && vv) r=pv/pd;
+  end
+ end
+ @(cross(V(div_clk)-0.45,+1)) begin
+  if(V(reset)<=0.45 && V(enable)>0.45) begin
+   if(hv) begin pv=$abstime-tv; vv=1; end
+   tv=$abstime; hv=1;
+   if(vd && vv) r=pv/pd;
+  end
+ end
+ V(freq_mhz)<+transition(f,0,tr,tr);
+ V(divider_ratio)<+transition(r,0,tr,tr);
+ V(valid)<+transition((vd && vv)?1.0:0.0,0,tr,tr);
+end
+endmodule

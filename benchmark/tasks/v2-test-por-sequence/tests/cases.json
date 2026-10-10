@@ -1,0 +1,272 @@
+[
+  {
+    "name": "normal",
+    "kind": "por_bench",
+    "stop": 0.006,
+    "tick": 1e-06,
+    "ramp": 0.002,
+    "dip_ramp": 0.0001,
+    "hold": 0.0001,
+    "recovery_ramp": 0.0001,
+    "timeout": 0.001,
+    "guard": 5e-06,
+    "atol": 0.15,
+    "supply_atol": 0.03,
+    "signals": [
+      "avdd",
+      "por",
+      "power",
+      "osc",
+      "first_response_us",
+      "first_period_us",
+      "first_width_us",
+      "first_valid",
+      "first_ok",
+      "recovery_response_us",
+      "recovery_period_us",
+      "recovery_width_us",
+      "recovery_valid",
+      "recovery_ok",
+      "done"
+    ],
+    "netlist": "simulator lang=spectre\nglobal 0\nsourceCompat options redefinedparams=warning\nahdl_include \"dut.va\"\nahdl_include \"por_digital.va\"\nahdl_include \"por_observe.va\"\nsimulator lang=spice\n.option scale=1u\n.param dlc_rotweak=0\n.include \"models.spice\"\n.include \"cells.spice\"\n.include \"analog.spice\"\nVgnd GND 0 0\n** sch_path: /home/rtsang/chipalooza/sky130_ajc_ip__por/cace/transient.sch\n**.subckt transient\nIbias vbp GND 200n\nXM1 ibg_200n vbp avdd_bg avdd_bg sky130_fd_pr__pfet_g5v0d10v5 L=4 W=1 nf=1 ad='int(((1)+1)/2) * (1)/(1) * 0.29' as='int(((1)+2)/2) * (1)/(1) * 0.29' pd='2*int(((1)+1)/2) * ((1)/(1) + 0.29)' ps='2*int(((1)+2)/2) * ((1)/(1) + 0.29)' nrd='0.29 / (1)' nrs='0.29 / (1)' sa=0 sb=0 sd=0 mult=1 m=1\nXM0 vbp vbp avdd_bg avdd_bg sky130_fd_pr__pfet_g5v0d10v5 L=4 W=1 nf=1 ad='int(((1)+1)/2) * (1)/(1) * 0.29' as='int(((1)+2)/2) * (1)/(1) * 0.29' pd='2*int(((1)+1)/2) * ((1)/(1) + 0.29)' ps='2*int(((1)+2)/2) * ((1)/(1) + 0.29)' nrd='0.29 / (1)' nrs='0.29 / (1)' sa=0 sb=0 sd=0 mult=1 m=1\nR1 itest GND 1e6 m=1\nVavss avss GND DC 0\nVforce_pdn force_pdn GND pwl(0 0 1u '0*1.8')\n\n\nVbg1v2 vbg_1v2 GND DC 1.2\nVdvss dvss GND DC 0\nVdvdd dvdd GND DC 1.8\n\nVvotrip0 otrip[0] GND DC '0*1.8'\n\nVvotrip1 otrip[1] GND DC '0*1.8'\n\nVvotrip2 otrip[2] GND DC '0*1.8'\n\nVvotrip3 otrip[3] GND DC '0*1.8'\n\nVisrc_sel isrc_sel GND DC '0*1.8'\nVavdd_bg avdd_bg GND DC 3.3\nVforce_dis_rc_osc force_dis_rc_osc GND DC '0*1.8'\nVforce_short_oneshot force_short_oneshot GND DC '1*1.8'\nVforce_ena_rc_osc force_ena_rc_osc GND DC '0*1.8'\nxIpor avdd porb_h porb avss dvdd por_raw dvss osc vbg_1v2 dcomp otrip[2] otrip[1] otrip[0] itest force_pdn power vin\n+ force_ena_rc_osc force_dis_rc_osc startup_timed_out por_timed_out force_short_oneshot isrc_sel ibg_200n sky130_ajc_ip__por\nC1 porb_h GND 20p m=1\nC2 porb GND 20p m=1\nC3 por_raw GND 20p m=1\n\n\n\nsimulator lang=spectre\nXO (por_raw power osc por) por_observe mode=0\nXM (avdd por power osc first_response_us first_period_us first_width_us first_valid first_ok recovery_response_us recovery_period_us recovery_width_us recovery_valid recovery_ok done) por_bench\ntran tran stop=6m maxstep=500n\nsave avdd por power osc first_response_us first_period_us first_width_us first_valid first_ok recovery_response_us recovery_period_us recovery_width_us recovery_valid recovery_ok done\n",
+    "support_files": {
+      "models.spice": {
+        "path": "dut/d61cfa1b7321e7614b57f15d11749bbf69f6ae8ba3e14f04fd0ce340433d1365-models.spice",
+        "sha256": "d61cfa1b7321e7614b57f15d11749bbf69f6ae8ba3e14f04fd0ce340433d1365"
+      },
+      "cells.spice": {
+        "path": "dut/cf4ef0acbb0b911bca6ff2f9643df940799215c796ace37e4ee153f08fe663e4-cells.spice",
+        "sha256": "cf4ef0acbb0b911bca6ff2f9643df940799215c796ace37e4ee153f08fe663e4"
+      },
+      "analog.spice": {
+        "path": "dut/a72bc28679f596f6c6b288b24e4b98624b220d406db1e3cc360083eaa92382ae-analog.spice",
+        "sha256": "a72bc28679f596f6c6b288b24e4b98624b220d406db1e3cc360083eaa92382ae"
+      },
+      "por_digital.va": {
+        "path": "dut/c8b671a93f794d5d9f3dce82c646e9f34a2966ddc2669985193def57d2f33871-por_digital.va",
+        "sha256": "c8b671a93f794d5d9f3dce82c646e9f34a2966ddc2669985193def57d2f33871"
+      },
+      "por_observe.va": {
+        "path": "dut/62df4913ef009b7e581e8e07b68fe9f86047cade430e70729251f0f79aa94f8b-por_observe.va",
+        "sha256": "62df4913ef009b7e581e8e07b68fe9f86047cade430e70729251f0f79aa94f8b"
+      }
+    }
+  },
+  {
+    "name": "slower-oscillator",
+    "kind": "por_bench",
+    "stop": 0.006,
+    "tick": 1e-06,
+    "ramp": 0.002,
+    "dip_ramp": 0.0001,
+    "hold": 0.0001,
+    "recovery_ramp": 0.0001,
+    "timeout": 0.001,
+    "guard": 5e-06,
+    "atol": 0.15,
+    "supply_atol": 0.03,
+    "signals": [
+      "avdd",
+      "por",
+      "power",
+      "osc",
+      "first_response_us",
+      "first_period_us",
+      "first_width_us",
+      "first_valid",
+      "first_ok",
+      "recovery_response_us",
+      "recovery_period_us",
+      "recovery_width_us",
+      "recovery_valid",
+      "recovery_ok",
+      "done"
+    ],
+    "netlist": "simulator lang=spectre\nglobal 0\nsourceCompat options redefinedparams=warning\nahdl_include \"dut.va\"\nahdl_include \"por_digital.va\"\nahdl_include \"por_observe.va\"\nsimulator lang=spice\n.option scale=1u\n.param dlc_rotweak=0\n.include \"models.spice\"\n.include \"cells.spice\"\n.include \"analog.spice\"\nVgnd GND 0 0\n** sch_path: /home/rtsang/chipalooza/sky130_ajc_ip__por/cace/transient.sch\n**.subckt transient\nIbias vbp GND 200n\nXM1 ibg_200n vbp avdd_bg avdd_bg sky130_fd_pr__pfet_g5v0d10v5 L=4 W=1 nf=1 ad='int(((1)+1)/2) * (1)/(1) * 0.29' as='int(((1)+2)/2) * (1)/(1) * 0.29' pd='2*int(((1)+1)/2) * ((1)/(1) + 0.29)' ps='2*int(((1)+2)/2) * ((1)/(1) + 0.29)' nrd='0.29 / (1)' nrs='0.29 / (1)' sa=0 sb=0 sd=0 mult=1 m=1\nXM0 vbp vbp avdd_bg avdd_bg sky130_fd_pr__pfet_g5v0d10v5 L=4 W=1 nf=1 ad='int(((1)+1)/2) * (1)/(1) * 0.29' as='int(((1)+2)/2) * (1)/(1) * 0.29' pd='2*int(((1)+1)/2) * ((1)/(1) + 0.29)' ps='2*int(((1)+2)/2) * ((1)/(1) + 0.29)' nrd='0.29 / (1)' nrs='0.29 / (1)' sa=0 sb=0 sd=0 mult=1 m=1\nR1 itest GND 1e6 m=1\nVavss avss GND DC 0\nVforce_pdn force_pdn GND pwl(0 0 1u '0*1.8')\n\n\nVbg1v2 vbg_1v2 GND DC 1.2\nVdvss dvss GND DC 0\nVdvdd dvdd GND DC 1.8\n\nVvotrip0 otrip[0] GND DC '0*1.8'\n\nVvotrip1 otrip[1] GND DC '0*1.8'\n\nVvotrip2 otrip[2] GND DC '0*1.8'\n\nVvotrip3 otrip[3] GND DC '0*1.8'\n\nVisrc_sel isrc_sel GND DC '0*1.8'\nVavdd_bg avdd_bg GND DC 3.3\nVforce_dis_rc_osc force_dis_rc_osc GND DC '0*1.8'\nVforce_short_oneshot force_short_oneshot GND DC '1*1.8'\nVforce_ena_rc_osc force_ena_rc_osc GND DC '0*1.8'\nxIpor avdd porb_h porb avss dvdd por_raw dvss osc vbg_1v2 dcomp otrip[2] otrip[1] otrip[0] itest force_pdn power vin\n+ force_ena_rc_osc force_dis_rc_osc startup_timed_out por_timed_out force_short_oneshot isrc_sel ibg_200n sky130_ajc_ip__por\nC1 porb_h GND 20p m=1\nC2 porb GND 20p m=1\nC3 por_raw GND 20p m=1\n\n\n\nsimulator lang=spectre\nXO (por_raw power osc por) por_observe mode=0\nXM (avdd por power osc first_response_us first_period_us first_width_us first_valid first_ok recovery_response_us recovery_period_us recovery_width_us recovery_valid recovery_ok done) por_bench\ntran tran stop=6m maxstep=500n\nsave avdd por power osc first_response_us first_period_us first_width_us first_valid first_ok recovery_response_us recovery_period_us recovery_width_us recovery_valid recovery_ok done\n",
+    "support_files": {
+      "models.spice": {
+        "path": "dut/d61cfa1b7321e7614b57f15d11749bbf69f6ae8ba3e14f04fd0ce340433d1365-models.spice",
+        "sha256": "d61cfa1b7321e7614b57f15d11749bbf69f6ae8ba3e14f04fd0ce340433d1365"
+      },
+      "cells.spice": {
+        "path": "dut/cf4ef0acbb0b911bca6ff2f9643df940799215c796ace37e4ee153f08fe663e4-cells.spice",
+        "sha256": "cf4ef0acbb0b911bca6ff2f9643df940799215c796ace37e4ee153f08fe663e4"
+      },
+      "analog.spice": {
+        "path": "dut/8ea2ffe5f549f2bb2efaf4f2579342ad30ed3ef45d14b9a6a981638c88806063-analog.spice",
+        "sha256": "8ea2ffe5f549f2bb2efaf4f2579342ad30ed3ef45d14b9a6a981638c88806063"
+      },
+      "por_digital.va": {
+        "path": "dut/c8b671a93f794d5d9f3dce82c646e9f34a2966ddc2669985193def57d2f33871-por_digital.va",
+        "sha256": "c8b671a93f794d5d9f3dce82c646e9f34a2966ddc2669985193def57d2f33871"
+      },
+      "por_observe.va": {
+        "path": "dut/62df4913ef009b7e581e8e07b68fe9f86047cade430e70729251f0f79aa94f8b-por_observe.va",
+        "sha256": "62df4913ef009b7e581e8e07b68fe9f86047cade430e70729251f0f79aa94f8b"
+      }
+    }
+  },
+  {
+    "name": "missing-recovery-pulse",
+    "kind": "por_bench",
+    "stop": 0.006,
+    "tick": 1e-06,
+    "ramp": 0.002,
+    "dip_ramp": 0.0001,
+    "hold": 0.0001,
+    "recovery_ramp": 0.0001,
+    "timeout": 0.001,
+    "guard": 5e-06,
+    "atol": 0.15,
+    "supply_atol": 0.03,
+    "signals": [
+      "avdd",
+      "por",
+      "power",
+      "osc",
+      "first_response_us",
+      "first_period_us",
+      "first_width_us",
+      "first_valid",
+      "first_ok",
+      "recovery_response_us",
+      "recovery_period_us",
+      "recovery_width_us",
+      "recovery_valid",
+      "recovery_ok",
+      "done"
+    ],
+    "netlist": "simulator lang=spectre\nglobal 0\nsourceCompat options redefinedparams=warning\nahdl_include \"dut.va\"\nahdl_include \"por_digital.va\"\nahdl_include \"por_observe.va\"\nsimulator lang=spice\n.option scale=1u\n.param dlc_rotweak=0\n.include \"models.spice\"\n.include \"cells.spice\"\n.include \"analog.spice\"\nVgnd GND 0 0\n** sch_path: /home/rtsang/chipalooza/sky130_ajc_ip__por/cace/transient.sch\n**.subckt transient\nIbias vbp GND 200n\nXM1 ibg_200n vbp avdd_bg avdd_bg sky130_fd_pr__pfet_g5v0d10v5 L=4 W=1 nf=1 ad='int(((1)+1)/2) * (1)/(1) * 0.29' as='int(((1)+2)/2) * (1)/(1) * 0.29' pd='2*int(((1)+1)/2) * ((1)/(1) + 0.29)' ps='2*int(((1)+2)/2) * ((1)/(1) + 0.29)' nrd='0.29 / (1)' nrs='0.29 / (1)' sa=0 sb=0 sd=0 mult=1 m=1\nXM0 vbp vbp avdd_bg avdd_bg sky130_fd_pr__pfet_g5v0d10v5 L=4 W=1 nf=1 ad='int(((1)+1)/2) * (1)/(1) * 0.29' as='int(((1)+2)/2) * (1)/(1) * 0.29' pd='2*int(((1)+1)/2) * ((1)/(1) + 0.29)' ps='2*int(((1)+2)/2) * ((1)/(1) + 0.29)' nrd='0.29 / (1)' nrs='0.29 / (1)' sa=0 sb=0 sd=0 mult=1 m=1\nR1 itest GND 1e6 m=1\nVavss avss GND DC 0\nVforce_pdn force_pdn GND pwl(0 0 1u '0*1.8')\n\n\nVbg1v2 vbg_1v2 GND DC 1.2\nVdvss dvss GND DC 0\nVdvdd dvdd GND DC 1.8\n\nVvotrip0 otrip[0] GND DC '0*1.8'\n\nVvotrip1 otrip[1] GND DC '0*1.8'\n\nVvotrip2 otrip[2] GND DC '0*1.8'\n\nVvotrip3 otrip[3] GND DC '0*1.8'\n\nVisrc_sel isrc_sel GND DC '0*1.8'\nVavdd_bg avdd_bg GND DC 3.3\nVforce_dis_rc_osc force_dis_rc_osc GND DC '0*1.8'\nVforce_short_oneshot force_short_oneshot GND DC '1*1.8'\nVforce_ena_rc_osc force_ena_rc_osc GND DC '0*1.8'\nxIpor avdd porb_h porb avss dvdd por_raw dvss osc vbg_1v2 dcomp otrip[2] otrip[1] otrip[0] itest force_pdn power vin\n+ force_ena_rc_osc force_dis_rc_osc startup_timed_out por_timed_out force_short_oneshot isrc_sel ibg_200n sky130_ajc_ip__por\nC1 porb_h GND 20p m=1\nC2 porb GND 20p m=1\nC3 por_raw GND 20p m=1\n\n\n\nsimulator lang=spectre\nXO (por_raw power osc por) por_observe mode=1\nXM (avdd por power osc first_response_us first_period_us first_width_us first_valid first_ok recovery_response_us recovery_period_us recovery_width_us recovery_valid recovery_ok done) por_bench\ntran tran stop=6m maxstep=500n\nsave avdd por power osc first_response_us first_period_us first_width_us first_valid first_ok recovery_response_us recovery_period_us recovery_width_us recovery_valid recovery_ok done\n",
+    "support_files": {
+      "models.spice": {
+        "path": "dut/d61cfa1b7321e7614b57f15d11749bbf69f6ae8ba3e14f04fd0ce340433d1365-models.spice",
+        "sha256": "d61cfa1b7321e7614b57f15d11749bbf69f6ae8ba3e14f04fd0ce340433d1365"
+      },
+      "cells.spice": {
+        "path": "dut/cf4ef0acbb0b911bca6ff2f9643df940799215c796ace37e4ee153f08fe663e4-cells.spice",
+        "sha256": "cf4ef0acbb0b911bca6ff2f9643df940799215c796ace37e4ee153f08fe663e4"
+      },
+      "analog.spice": {
+        "path": "dut/3280c9b8028e8d0e72119101e6cc00d6f1815de44403352bf7e9453e6e05438d-analog.spice",
+        "sha256": "3280c9b8028e8d0e72119101e6cc00d6f1815de44403352bf7e9453e6e05438d"
+      },
+      "por_digital.va": {
+        "path": "dut/c8b671a93f794d5d9f3dce82c646e9f34a2966ddc2669985193def57d2f33871-por_digital.va",
+        "sha256": "c8b671a93f794d5d9f3dce82c646e9f34a2966ddc2669985193def57d2f33871"
+      },
+      "por_observe.va": {
+        "path": "dut/62df4913ef009b7e581e8e07b68fe9f86047cade430e70729251f0f79aa94f8b-por_observe.va",
+        "sha256": "62df4913ef009b7e581e8e07b68fe9f86047cade430e70729251f0f79aa94f8b"
+      }
+    }
+  },
+  {
+    "name": "early-pulse-release",
+    "kind": "por_bench",
+    "stop": 0.006,
+    "tick": 1e-06,
+    "ramp": 0.002,
+    "dip_ramp": 0.0001,
+    "hold": 0.0001,
+    "recovery_ramp": 0.0001,
+    "timeout": 0.001,
+    "guard": 5e-06,
+    "atol": 0.15,
+    "supply_atol": 0.03,
+    "signals": [
+      "avdd",
+      "por",
+      "power",
+      "osc",
+      "first_response_us",
+      "first_period_us",
+      "first_width_us",
+      "first_valid",
+      "first_ok",
+      "recovery_response_us",
+      "recovery_period_us",
+      "recovery_width_us",
+      "recovery_valid",
+      "recovery_ok",
+      "done"
+    ],
+    "netlist": "simulator lang=spectre\nglobal 0\nsourceCompat options redefinedparams=warning\nahdl_include \"dut.va\"\nahdl_include \"por_digital.va\"\nahdl_include \"por_observe.va\"\nsimulator lang=spice\n.option scale=1u\n.param dlc_rotweak=0\n.include \"models.spice\"\n.include \"cells.spice\"\n.include \"analog.spice\"\nVgnd GND 0 0\n** sch_path: /home/rtsang/chipalooza/sky130_ajc_ip__por/cace/transient.sch\n**.subckt transient\nIbias vbp GND 200n\nXM1 ibg_200n vbp avdd_bg avdd_bg sky130_fd_pr__pfet_g5v0d10v5 L=4 W=1 nf=1 ad='int(((1)+1)/2) * (1)/(1) * 0.29' as='int(((1)+2)/2) * (1)/(1) * 0.29' pd='2*int(((1)+1)/2) * ((1)/(1) + 0.29)' ps='2*int(((1)+2)/2) * ((1)/(1) + 0.29)' nrd='0.29 / (1)' nrs='0.29 / (1)' sa=0 sb=0 sd=0 mult=1 m=1\nXM0 vbp vbp avdd_bg avdd_bg sky130_fd_pr__pfet_g5v0d10v5 L=4 W=1 nf=1 ad='int(((1)+1)/2) * (1)/(1) * 0.29' as='int(((1)+2)/2) * (1)/(1) * 0.29' pd='2*int(((1)+1)/2) * ((1)/(1) + 0.29)' ps='2*int(((1)+2)/2) * ((1)/(1) + 0.29)' nrd='0.29 / (1)' nrs='0.29 / (1)' sa=0 sb=0 sd=0 mult=1 m=1\nR1 itest GND 1e6 m=1\nVavss avss GND DC 0\nVforce_pdn force_pdn GND pwl(0 0 1u '0*1.8')\n\n\nVbg1v2 vbg_1v2 GND DC 1.2\nVdvss dvss GND DC 0\nVdvdd dvdd GND DC 1.8\n\nVvotrip0 otrip[0] GND DC '0*1.8'\n\nVvotrip1 otrip[1] GND DC '0*1.8'\n\nVvotrip2 otrip[2] GND DC '0*1.8'\n\nVvotrip3 otrip[3] GND DC '0*1.8'\n\nVisrc_sel isrc_sel GND DC '0*1.8'\nVavdd_bg avdd_bg GND DC 3.3\nVforce_dis_rc_osc force_dis_rc_osc GND DC '0*1.8'\nVforce_short_oneshot force_short_oneshot GND DC '1*1.8'\nVforce_ena_rc_osc force_ena_rc_osc GND DC '0*1.8'\nxIpor avdd porb_h porb avss dvdd por_raw dvss osc vbg_1v2 dcomp otrip[2] otrip[1] otrip[0] itest force_pdn power vin\n+ force_ena_rc_osc force_dis_rc_osc startup_timed_out por_timed_out force_short_oneshot isrc_sel ibg_200n sky130_ajc_ip__por\nC1 porb_h GND 20p m=1\nC2 porb GND 20p m=1\nC3 por_raw GND 20p m=1\n\n\n\nsimulator lang=spectre\nXO (por_raw power osc por) por_observe mode=2\nXM (avdd por power osc first_response_us first_period_us first_width_us first_valid first_ok recovery_response_us recovery_period_us recovery_width_us recovery_valid recovery_ok done) por_bench\ntran tran stop=6m maxstep=500n\nsave avdd por power osc first_response_us first_period_us first_width_us first_valid first_ok recovery_response_us recovery_period_us recovery_width_us recovery_valid recovery_ok done\n",
+    "support_files": {
+      "models.spice": {
+        "path": "dut/d61cfa1b7321e7614b57f15d11749bbf69f6ae8ba3e14f04fd0ce340433d1365-models.spice",
+        "sha256": "d61cfa1b7321e7614b57f15d11749bbf69f6ae8ba3e14f04fd0ce340433d1365"
+      },
+      "cells.spice": {
+        "path": "dut/cf4ef0acbb0b911bca6ff2f9643df940799215c796ace37e4ee153f08fe663e4-cells.spice",
+        "sha256": "cf4ef0acbb0b911bca6ff2f9643df940799215c796ace37e4ee153f08fe663e4"
+      },
+      "analog.spice": {
+        "path": "dut/5c6cc48d62b39913f0d5184ebc97144129219a4ddc4e7d1df68c74d76ec5f941-analog.spice",
+        "sha256": "5c6cc48d62b39913f0d5184ebc97144129219a4ddc4e7d1df68c74d76ec5f941"
+      },
+      "por_digital.va": {
+        "path": "dut/c8b671a93f794d5d9f3dce82c646e9f34a2966ddc2669985193def57d2f33871-por_digital.va",
+        "sha256": "c8b671a93f794d5d9f3dce82c646e9f34a2966ddc2669985193def57d2f33871"
+      },
+      "por_observe.va": {
+        "path": "dut/62df4913ef009b7e581e8e07b68fe9f86047cade430e70729251f0f79aa94f8b-por_observe.va",
+        "sha256": "62df4913ef009b7e581e8e07b68fe9f86047cade430e70729251f0f79aa94f8b"
+      }
+    }
+  },
+  {
+    "name": "missing-first-fall",
+    "kind": "por_bench",
+    "stop": 0.006,
+    "tick": 1e-06,
+    "ramp": 0.002,
+    "dip_ramp": 0.0001,
+    "hold": 0.0001,
+    "recovery_ramp": 0.0001,
+    "timeout": 0.001,
+    "guard": 5e-06,
+    "atol": 0.15,
+    "supply_atol": 0.03,
+    "signals": [
+      "avdd",
+      "por",
+      "power",
+      "osc",
+      "first_response_us",
+      "first_period_us",
+      "first_width_us",
+      "first_valid",
+      "first_ok",
+      "recovery_response_us",
+      "recovery_period_us",
+      "recovery_width_us",
+      "recovery_valid",
+      "recovery_ok",
+      "done"
+    ],
+    "netlist": "simulator lang=spectre\nglobal 0\nsourceCompat options redefinedparams=warning\nahdl_include \"dut.va\"\nahdl_include \"por_digital.va\"\nahdl_include \"por_observe.va\"\nsimulator lang=spice\n.option scale=1u\n.param dlc_rotweak=0\n.include \"models.spice\"\n.include \"cells.spice\"\n.include \"analog.spice\"\nVgnd GND 0 0\n** sch_path: /home/rtsang/chipalooza/sky130_ajc_ip__por/cace/transient.sch\n**.subckt transient\nIbias vbp GND 200n\nXM1 ibg_200n vbp avdd_bg avdd_bg sky130_fd_pr__pfet_g5v0d10v5 L=4 W=1 nf=1 ad='int(((1)+1)/2) * (1)/(1) * 0.29' as='int(((1)+2)/2) * (1)/(1) * 0.29' pd='2*int(((1)+1)/2) * ((1)/(1) + 0.29)' ps='2*int(((1)+2)/2) * ((1)/(1) + 0.29)' nrd='0.29 / (1)' nrs='0.29 / (1)' sa=0 sb=0 sd=0 mult=1 m=1\nXM0 vbp vbp avdd_bg avdd_bg sky130_fd_pr__pfet_g5v0d10v5 L=4 W=1 nf=1 ad='int(((1)+1)/2) * (1)/(1) * 0.29' as='int(((1)+2)/2) * (1)/(1) * 0.29' pd='2*int(((1)+1)/2) * ((1)/(1) + 0.29)' ps='2*int(((1)+2)/2) * ((1)/(1) + 0.29)' nrd='0.29 / (1)' nrs='0.29 / (1)' sa=0 sb=0 sd=0 mult=1 m=1\nR1 itest GND 1e6 m=1\nVavss avss GND DC 0\nVforce_pdn force_pdn GND pwl(0 0 1u '0*1.8')\n\n\nVbg1v2 vbg_1v2 GND DC 1.2\nVdvss dvss GND DC 0\nVdvdd dvdd GND DC 1.8\n\nVvotrip0 otrip[0] GND DC '0*1.8'\n\nVvotrip1 otrip[1] GND DC '0*1.8'\n\nVvotrip2 otrip[2] GND DC '0*1.8'\n\nVvotrip3 otrip[3] GND DC '0*1.8'\n\nVisrc_sel isrc_sel GND DC '0*1.8'\nVavdd_bg avdd_bg GND DC 3.3\nVforce_dis_rc_osc force_dis_rc_osc GND DC '0*1.8'\nVforce_short_oneshot force_short_oneshot GND DC '1*1.8'\nVforce_ena_rc_osc force_ena_rc_osc GND DC '0*1.8'\nxIpor avdd porb_h porb avss dvdd por_raw dvss osc vbg_1v2 dcomp otrip[2] otrip[1] otrip[0] itest force_pdn power vin\n+ force_ena_rc_osc force_dis_rc_osc startup_timed_out por_timed_out force_short_oneshot isrc_sel ibg_200n sky130_ajc_ip__por\nC1 porb_h GND 20p m=1\nC2 porb GND 20p m=1\nC3 por_raw GND 20p m=1\n\n\n\nsimulator lang=spectre\nXO (por_raw power osc por) por_observe mode=3\nXM (avdd por power osc first_response_us first_period_us first_width_us first_valid first_ok recovery_response_us recovery_period_us recovery_width_us recovery_valid recovery_ok done) por_bench\ntran tran stop=6m maxstep=500n\nsave avdd por power osc first_response_us first_period_us first_width_us first_valid first_ok recovery_response_us recovery_period_us recovery_width_us recovery_valid recovery_ok done\n",
+    "support_files": {
+      "models.spice": {
+        "path": "dut/d61cfa1b7321e7614b57f15d11749bbf69f6ae8ba3e14f04fd0ce340433d1365-models.spice",
+        "sha256": "d61cfa1b7321e7614b57f15d11749bbf69f6ae8ba3e14f04fd0ce340433d1365"
+      },
+      "cells.spice": {
+        "path": "dut/cf4ef0acbb0b911bca6ff2f9643df940799215c796ace37e4ee153f08fe663e4-cells.spice",
+        "sha256": "cf4ef0acbb0b911bca6ff2f9643df940799215c796ace37e4ee153f08fe663e4"
+      },
+      "analog.spice": {
+        "path": "dut/c41ed26e111f89d1b91fe42257f9449f24962eedd341bce9b9eb03bffa2e01ac-analog.spice",
+        "sha256": "c41ed26e111f89d1b91fe42257f9449f24962eedd341bce9b9eb03bffa2e01ac"
+      },
+      "por_digital.va": {
+        "path": "dut/c8b671a93f794d5d9f3dce82c646e9f34a2966ddc2669985193def57d2f33871-por_digital.va",
+        "sha256": "c8b671a93f794d5d9f3dce82c646e9f34a2966ddc2669985193def57d2f33871"
+      },
+      "por_observe.va": {
+        "path": "dut/62df4913ef009b7e581e8e07b68fe9f86047cade430e70729251f0f79aa94f8b-por_observe.va",
+        "sha256": "62df4913ef009b7e581e8e07b68fe9f86047cade430e70729251f0f79aa94f8b"
+      }
+    }
+  }
+]

@@ -1,0 +1,12 @@
+`include "disciplines.vams"
+module frequency_meter(dco_clk,div_clk,enable,reset,freq_mhz,divider_ratio,valid);
+input dco_clk,div_clk,enable,reset;
+output freq_mhz,divider_ratio,valid;
+electrical dco_clk,div_clk,enable,reset,freq_mhz,divider_ratio,valid;
+parameter real tr=20p;
+real td,tv,pd,pv,f,r;
+integer hd,hv,vd,vv;
+analog begin
+// Implement the public contract.
+end
+endmodule

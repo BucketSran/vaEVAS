@@ -1,0 +1,44 @@
+{
+  "status": "passed",
+  "parent_cases_sha256": "15456a87c272397bd84296ae24d5bd369282259a84995bf6fa27bd543fe9cb0a",
+  "duplicate_parameters": {
+    "duplicated_names": 282,
+    "extra_definitions": 282,
+    "different_values": {},
+    "identical_values": true,
+    "comparison": "byte-identical symbolic formulas or exact Decimal numeric products; inline $ comments excluded"
+  },
+  "assets": [
+    {
+      "asset": "netlist",
+      "expanded_expressions": 12,
+      "equivalence": "independent AST arithmetic with Decimal and original instance symbol environment",
+      "source_sha256": "1043b24de75970d84c36b05dc09b1e1608367cbc9ce11cea883f2bd9820c5fd9",
+      "translated_sha256": "6629530f2590ebf5ce54ca218d1d6cd0577cef4ae885b69558a8f55c3d280c99"
+    },
+    {
+      "asset": "models.spice",
+      "expanded_expressions": 0,
+      "equivalence": "independent AST arithmetic with Decimal and original instance symbol environment",
+      "source_sha256": "d5c5cab215731a1c44138ba38be4e73bb294815c32f186d7858f101ab3e35916",
+      "translated_sha256": "d5c5cab215731a1c44138ba38be4e73bb294815c32f186d7858f101ab3e35916"
+    },
+    {
+      "asset": "cells.spice",
+      "expanded_expressions": 0,
+      "equivalence": "independent AST arithmetic with Decimal and original instance symbol environment",
+      "source_sha256": "cf4ef0acbb0b911bca6ff2f9643df940799215c796ace37e4ee153f08fe663e4",
+      "translated_sha256": "cf4ef0acbb0b911bca6ff2f9643df940799215c796ace37e4ee153f08fe663e4"
+    },
+    {
+      "asset": "analog.spice",
+      "expanded_expressions": 870,
+      "equivalence": "independent AST arithmetic with Decimal and original instance symbol environment",
+      "source_sha256": "d35293893afe78f4d6e4b127c8e1329807ebe79dfa16dacb3afb0347ce3f0869",
+      "translated_sha256": "5dfc7b02bab61940db14b2e9094c138515791b5f349d1c394e291cab177a34d4"
+    }
+  ],
+  "backend_execution": "pending",
+  "raw_snapshot": "runs/por-source/mixed-r5",
+  "parent_backend_status": "r4 execution_error SFE-59 and SFE-1997 before waveform"
+}

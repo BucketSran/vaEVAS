@@ -1,0 +1,62 @@
+[
+  {
+    "name": "terminal-normal",
+    "kind": "hysteresis",
+    "stop": 4.4e-08,
+    "guard": 1e-10,
+    "atol": 0.002,
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"support_cmp.va\"\nVdd (vdd 0) vsource dc=1\nVref (vref 0) vsource dc=.5\nVin (vin 0) vsource type=pwl wave=[0 .42 10.4n 0.598 20.4n .42 30.4n 0.607 40.4n .41 44.4n .41]\nVbegin (begin_round 0) vsource type=pwl wave=[0 0 21.4n 0 21.42n 1 21.6n 1 21.62n 0 44.4n 0]\nXC (vdd 0 vin vref cmp_out) support_hysteretic_comparator offset=0.013 vhys=0.064 td=180p tr=30p\nXM (vin cmp_out begin_round up down width valid) hysteresis_meter\ntran tran stop=44n maxstep=20p\nsave vin cmp_out begin_round up down width valid\n",
+    "signals": [
+      "vin",
+      "cmp_out",
+      "begin_round",
+      "up",
+      "down",
+      "width",
+      "valid"
+    ],
+    "support": {
+      "support_cmp.va": "// Public hysteretic comparator used as the device being characterized.\n`include \"disciplines.vams\"\n\nmodule support_hysteretic_comparator(vdd, vss, inp, inm, out);\ninput vdd, vss, inp, inm;\noutput out;\nelectrical vdd, vss, inp, inm, out;\n\nparameter real offset = 0.0;\nparameter real vhys = 50m;\nparameter real td = 120p;\nparameter real tr = 30p;\n\nreal upper_th;\nreal lower_th;\ninteger state;\n\nanalog begin\n    upper_th = offset + 0.5 * vhys;\n    lower_th = offset - 0.5 * vhys;\n\n    @(initial_step) begin\n        state = (V(inp, inm) >= upper_th);\n    end\n\n    @(cross(V(inp, inm) - upper_th, +1)) begin\n        state = 1;\n    end\n\n    @(cross(V(inp, inm) - lower_th, -1)) begin\n        state = 0;\n    end\n\n    V(out, vss) <+ transition(state ? 1.0 : 0.0, td, tr, tr) * V(vdd, vss);\nend\n\nendmodule\n"
+    }
+  },
+  {
+    "name": "terminal-bad-dut-wide",
+    "kind": "hysteresis",
+    "stop": 4.4e-08,
+    "guard": 1e-10,
+    "atol": 0.002,
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"support_cmp.va\"\nVdd (vdd 0) vsource dc=1\nVref (vref 0) vsource dc=.5\nVin (vin 0) vsource type=pwl wave=[0 .40 10.4n .62 20.4n .40 30.4n .63 40.4n .39 44.4n .39]\nVbegin (begin_round 0) vsource type=pwl wave=[0 0 21.4n 0 21.42n 1 21.6n 1 21.62n 0 44.4n 0]\nXC (vdd 0 vin vref cmp_out) support_hysteretic_comparator offset=-0.017 vhys=0.108 td=330p tr=30p\nXM (vin cmp_out begin_round up down width valid) hysteresis_meter\ntran tran stop=44n maxstep=20p\nsave vin cmp_out begin_round up down width valid\n",
+    "signals": [
+      "vin",
+      "cmp_out",
+      "begin_round",
+      "up",
+      "down",
+      "width",
+      "valid"
+    ],
+    "support": {
+      "support_cmp.va": "// Public hysteretic comparator used as the device being characterized.\n`include \"disciplines.vams\"\n\nmodule support_hysteretic_comparator(vdd, vss, inp, inm, out);\ninput vdd, vss, inp, inm;\noutput out;\nelectrical vdd, vss, inp, inm, out;\n\nparameter real offset = 0.0;\nparameter real vhys = 50m;\nparameter real td = 120p;\nparameter real tr = 30p;\n\nreal upper_th;\nreal lower_th;\ninteger state;\n\nanalog begin\n    upper_th = offset + 0.5 * vhys;\n    lower_th = offset - 0.5 * vhys;\n\n    @(initial_step) begin\n        state = (V(inp, inm) >= upper_th);\n    end\n\n    @(cross(V(inp, inm) - upper_th, +1)) begin\n        state = 1;\n    end\n\n    @(cross(V(inp, inm) - lower_th, -1)) begin\n        state = 0;\n    end\n\n    V(out, vss) <+ transition(state ? 1.0 : 0.0, td, tr, tr) * V(vdd, vss);\nend\n\nendmodule\n"
+    }
+  },
+  {
+    "name": "terminal-incomplete-second-round",
+    "kind": "hysteresis",
+    "stop": 4.4e-08,
+    "guard": 1e-10,
+    "atol": 0.002,
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"support_cmp.va\"\nVdd (vdd 0) vsource dc=1\nVref (vref 0) vsource dc=.5\nVin (vin 0) vsource type=pwl wave=[0 .42 10.4n 0.598 20.4n .42 22.4n .42 32.4n 0.598 44.4n 0.598]\nVbegin (begin_round 0) vsource type=pwl wave=[0 0 21.4n 0 21.42n 1 21.6n 1 21.62n 0 44.4n 0]\nXC (vdd 0 vin vref cmp_out) support_hysteretic_comparator offset=0.013 vhys=0.064 td=180p tr=30p\nXM (vin cmp_out begin_round up down width valid) hysteresis_meter\ntran tran stop=44n maxstep=20p\nsave vin cmp_out begin_round up down width valid\n",
+    "signals": [
+      "vin",
+      "cmp_out",
+      "begin_round",
+      "up",
+      "down",
+      "width",
+      "valid"
+    ],
+    "support": {
+      "support_cmp.va": "// Public hysteretic comparator used as the device being characterized.\n`include \"disciplines.vams\"\n\nmodule support_hysteretic_comparator(vdd, vss, inp, inm, out);\ninput vdd, vss, inp, inm;\noutput out;\nelectrical vdd, vss, inp, inm, out;\n\nparameter real offset = 0.0;\nparameter real vhys = 50m;\nparameter real td = 120p;\nparameter real tr = 30p;\n\nreal upper_th;\nreal lower_th;\ninteger state;\n\nanalog begin\n    upper_th = offset + 0.5 * vhys;\n    lower_th = offset - 0.5 * vhys;\n\n    @(initial_step) begin\n        state = (V(inp, inm) >= upper_th);\n    end\n\n    @(cross(V(inp, inm) - upper_th, +1)) begin\n        state = 1;\n    end\n\n    @(cross(V(inp, inm) - lower_th, -1)) begin\n        state = 0;\n    end\n\n    V(out, vss) <+ transition(state ? 1.0 : 0.0, td, tr, tr) * V(vdd, vss);\nend\n\nendmodule\n"
+    }
+  }
+]

@@ -1,0 +1,35 @@
+`include "disciplines.vams"
+module tdc_meter(start,stop,clk,rst,code_0,code_1,code_2,code_3,code_4,code_5,code_6,code_7,valid,overflow);
+input start,stop,clk,rst;
+output code_0,code_1,code_2,code_3,code_4,code_5,code_6,code_7,valid,overflow;
+electrical start,stop,clk,rst,code_0,code_1,code_2,code_3,code_4,code_5,code_6,code_7,valid,overflow;
+parameter real tr=20p;
+integer armed,count,code,ok,ov;
+analog begin
+ @(initial_step) begin armed=0; count=256; code=0; ok=0; ov=0; end
+ @(cross(V(rst)-0.5,+1)) begin armed=0; count=256; code=0; ok=0; ov=0; end
+ @(cross(V(start)-0.5,+1)) begin
+  if(V(rst)<=0.5) begin armed=1; count=256; code=0; ok=0; ov=0; end
+ end
+ @(cross(V(stop)-0.5,+1)) begin
+  if(V(rst)<=0.5 && armed) begin code=256-count; armed=0; ok=1; end
+ end
+ @(cross(V(clk)-0.5,+1)) begin
+  if(V(rst)>0.5) begin armed=0; count=256; code=0; ok=0; ov=0; end
+  else if(armed) begin
+   count=count-1;
+   if(count<=0) begin code=255; ov=1; ok=1; armed=0; end
+  end
+ end
+ V(code_0)<+transition(((code >> 0) & 1)?1.0:0.0,0,tr,tr);
+ V(code_1)<+transition(((code >> 1) & 1)?1.0:0.0,0,tr,tr);
+ V(code_2)<+transition(((code >> 2) & 1)?1.0:0.0,0,tr,tr);
+ V(code_3)<+transition(((code >> 3) & 1)?1.0:0.0,0,tr,tr);
+ V(code_4)<+transition(((code >> 4) & 1)?1.0:0.0,0,tr,tr);
+ V(code_5)<+transition(((code >> 5) & 1)?1.0:0.0,0,tr,tr);
+ V(code_6)<+transition(((code >> 6) & 1)?1.0:0.0,0,tr,tr);
+ V(code_7)<+transition(((code >> 7) & 1)?1.0:0.0,0,tr,tr);
+ V(valid)<+transition(ok,0,tr,tr);
+ V(overflow)<+transition(ov,0,tr,tr);
+end
+endmodule
