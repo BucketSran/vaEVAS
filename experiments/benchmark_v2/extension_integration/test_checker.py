@@ -5,6 +5,35 @@ P=Path(__file__).resolve().parents[3]/"benchmark/checkers/v2_integration.py"
 spec=importlib.util.spec_from_file_location("checker",P)
 checker=importlib.util.module_from_spec(spec);spec.loader.exec_module(checker)
 
+class RuntimeScoringContract(unittest.TestCase):
+    def run_case(self, case):
+        import json
+        from experiments.benchmark_v2 import test_runtime as protocol
+        fixture = protocol.RuntimeProtocolTest()
+        fixture.setUp()
+        self.addCleanup(fixture.temp.cleanup)
+        cases = json.loads((fixture.tests / 'cases.json').read_text())
+        cases[0].update(case)
+        (fixture.tests / 'cases.json').write_text(json.dumps(cases))
+        return fixture.run_verifier(checker.evaluate)
+
+    def test_insufficient_coverage_is_unscored(self):
+        report = self.run_case({'kind': 'tdc', 'checks': [{'time': 2e-9, 'out': 1}]})
+        self.assertIsNone(report['reward'])
+        self.assertEqual(report['cases'][0]['status'], 'evidence_error')
+
+    def test_invalid_checker_contract_is_unscored(self):
+        report = self.run_case({'kind': 'unknown'})
+        self.assertIsNone(report['reward'])
+        self.assertEqual(report['cases'][0]['status'], 'evidence_error')
+
+    def test_observed_candidate_error_is_graded_zero(self):
+        report = self.run_case({'kind': 'tdc', 'checks': [{'time': 1e-9, 'out': 0}]})
+        self.assertEqual(report['reward'], 0)
+        self.assertEqual(report['status'], 'completed')
+        self.assertEqual(report['cases'][0]['status'], 'graded')
+
+
 class ContractTests(unittest.TestCase):
     def test_tdc_signed_lag_and_missing_pair(self):
         case={"kind":"tdc", "checks":[{"time":12e-9,"code":4,"valid":.9},{"time":25e-9,"code":0,"valid":0}],"code_tol":0.01}

@@ -175,4 +175,4 @@ def evaluate(rows,case,work):
         else:raise ValueError('unknown integration case kind')
         return {'passed':bool(metrics) and all(m['passed'] for m in metrics),'metrics':metrics}
     except (KeyError,TypeError,ValueError,OverflowError,ZeroDivisionError) as e:
-        return {'passed':False,'evidence_error':str(e)}
+        return {'passed':False,'status':'evidence_error','evidence_error':str(e)}
