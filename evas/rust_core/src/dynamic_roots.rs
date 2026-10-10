@@ -17,6 +17,73 @@ pub(crate) struct CertifiedRoot {
     pub(crate) derivative: I,
 }
 
+/// Contract an already proved unique, transverse root. Unlike isolation this
+/// does not need new signed endpoints: the incoming enclosure retains the
+/// existence proof when interval evaluation straddles zero at an endpoint.
+/// Return the best enclosure at the arithmetic floor, never a guessed point.
+pub(crate) fn refine(
+    mut root: CertifiedRoot,
+    range: &mut impl FnMut(I) -> Result<I, Error>,
+    derivative: &mut impl FnMut(I) -> Result<I, Error>,
+) -> Result<CertifiedRoot, Error> {
+    let direction = root
+        .derivative
+        .sign()
+        .filter(|s| *s != 0)
+        .ok_or_else(|| unresolved("root refinement requires a transverse certificate"))?;
+    for _ in 0..MAX_BISECTIONS {
+        let bounds = root.bounds;
+        if bounds.lo == bounds.hi {
+            break;
+        }
+        let slope = derivative_bounds(bounds, derivative)?;
+        if slope.sign() != Some(direction) {
+            return Err(unresolved(
+                "root refinement lost the transverse certificate",
+            ));
+        }
+        let mid = bounds.lo + (bounds.hi - bounds.lo) * 0.5;
+        if mid <= bounds.lo || mid >= bounds.hi {
+            break;
+        }
+        let value = endpoint_value(mid, range)?;
+        if value.zero() {
+            return Ok(CertifiedRoot {
+                bounds: I::point(mid),
+                derivative: slope,
+            });
+        }
+        // Interval Newton preserves the same root. A signed midpoint also
+        // provides a bisection bound, even when dependency limits Newton.
+        let enclosure = I::point(mid) - value / slope;
+        if !enclosure.finite() {
+            return Err(unresolved("nonfinite root refinement enclosure"));
+        }
+        let mut next = I {
+            lo: bounds.lo.max(enclosure.lo),
+            hi: bounds.hi.min(enclosure.hi),
+        };
+        if let Some(sign) = value.sign().filter(|s| *s != 0) {
+            if sign == direction {
+                next.hi = next.hi.min(mid);
+            } else {
+                next.lo = next.lo.max(mid);
+            }
+        }
+        if next.lo > next.hi {
+            return Err(unresolved(
+                "root refinement contradicts the existing certificate",
+            ));
+        }
+        root.derivative = slope;
+        if next == bounds {
+            break;
+        }
+        root.bounds = next;
+    }
+    Ok(root)
+}
+
 fn unresolved(message: &str) -> Error {
     Error::new("event_resolution", message)
 }
@@ -513,6 +580,34 @@ fn isolate_with_reserve(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn refinement_preserves_irrational_root_and_uncertainty_floor() {
+        for sign in [1.0, -1.0] {
+            let mut range = |t: I| Ok(I::point(sign) * (t * t - I::point(2.)));
+            let mut derivative = |t: I| Ok(I::point(2. * sign) * t);
+            let original = isolate(1., 2., &mut range, &mut derivative, 0, 1e-3, 1e-3).unwrap()[0];
+            let refined = refine(original, &mut range, &mut derivative).unwrap();
+            assert!(refined.bounds.lo >= original.bounds.lo);
+            assert!(refined.bounds.hi <= original.bounds.hi);
+            assert!(refined.bounds.hi - refined.bounds.lo < 1e-14);
+            // Squaring these positive endpoints verifies the enclosure without
+            // relying on a rounded sqrt as the complete reference.
+            assert!((I::point(refined.bounds.lo) * I::point(refined.bounds.lo)).hi <= 2.);
+            assert!((I::point(refined.bounds.hi) * I::point(refined.bounds.hi)).lo >= 2.);
+        }
+        let mut range = |t: I| {
+            Ok(t - I {
+                lo: 0.499999,
+                hi: 0.500001,
+            })
+        };
+        let mut derivative = |_| Ok(I::ONE);
+        let original = isolate(0., 1., &mut range, &mut derivative, 1, 1e-3, 1e-3).unwrap()[0];
+        let refined = refine(original, &mut range, &mut derivative).unwrap();
+        assert!(refined.bounds.lo <= 0.499999 && refined.bounds.hi >= 0.500001);
+        assert_ne!(refined.bounds.lo, refined.bounds.hi);
+    }
 
     #[test]
     fn exact_point_refinement_requires_zero_not_zero_containment() {

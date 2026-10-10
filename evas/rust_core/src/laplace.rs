@@ -260,7 +260,7 @@ fn lag_term(h: f64, tau: f64) -> f64 {
     }
 }
 
-fn laplace_weights(h: I, tau: I) -> Result<(I, I), Error> {
+pub(crate) fn laplace_weights(h: I, tau: I) -> Result<(I, I), Error> {
     if h.zero() {
         return Ok((I::ZERO, I::ZERO));
     }

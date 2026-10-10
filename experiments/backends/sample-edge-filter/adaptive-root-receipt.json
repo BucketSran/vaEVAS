@@ -1,0 +1,274 @@
+{
+  "analysis_id": "sample-edge-filter-adaptive-input-root-20261010",
+  "status": "IMPLEMENTED_INCREMENT_ALIGNMENT_INCOMPLETE",
+  "scope": "One query-independent pre-publication retry of a disjoint source-driven nonlinear cross after event or first physical history deadline fails a voltage certificate. No uniform future sensitivity allocation.",
+  "implementation": {
+    "base": "ad6f3577da261aedf51d33f13768c2b887f3bfa9",
+    "branch": "codex/sample-edge-filter",
+    "dirty": true,
+    "command": "cargo build --locked --manifest-path evas/rust_core/Cargo.toml",
+    "source_manifest_sha256": "3c1f621836c9753286e9b273797668ed46224f3c363f8d5d42ddb9b1f3c04332",
+    "kernel_sha256": "4e8b28638a923fff212cdfa7f07965f386317a215be5be4c8a50fe5bc72611dd",
+    "kernel_identity": {
+      "build_revision": null,
+      "identity_version": 1,
+      "ir_schema_version": 18,
+      "name": "evas-kernel",
+      "platform": {
+        "arch": "aarch64",
+        "os": "macos"
+      },
+      "request_protocol_version": null,
+      "version": "0.14.0"
+    },
+    "build_log_sha256": "178f6ad48245c6f44c27b747211500509f37bdce6c367558fcb4ffed9fe9eab0"
+  },
+  "new_executions": {
+    "evas_root_requests": 8,
+    "evas_chain_requests": 20,
+    "remote_spectre": 0
+  },
+  "reference_reuse": {
+    "reason": "Only EVAS implementation changed. Original VA, stimulus, observation times and Spectre requested/effective settings are unchanged; manifests anchored to earlier receipts and verified.",
+    "root": {
+      "actual_spectre_executions": 4,
+      "receipt": "experiments/backends/sample-edge-filter/boundary-receipt.json",
+      "receipt_sha256": "97e7b98c1629c648442bc1d559e928dde9543b145972330d47871766f4d39831",
+      "archive": "runs/sample-edge-filter-20261010/boundary/root-spectre",
+      "manifest_sha256": "5cd0f963d9ba0e66c372adc95e2886601223e42719b3833c2828af17f23da72c",
+      "verified_files": 94
+    },
+    "chain": {
+      "actual_spectre_executions": 12,
+      "receipt": "experiments/backends/sample-edge-filter/receipt.json",
+      "receipt_sha256": "acf9a7bd1a5920bc7962c137a61b1158c425bee19e17e2e9b1a59209f9201927",
+      "archive": "runs/sample-edge-filter-20261010/spectre",
+      "manifest_sha256": "5870c2f983efc29b09e4818fe3c49fc150465b226c8ece4f2bf719a9789172de",
+      "verified_files": 403
+    },
+    "spectre_version": "sub-version  21.1.0.509.isr12",
+    "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f"
+  },
+  "judgment": {
+    "root_policy": "adaptive-root; historical retained-window policy preserved separately",
+    "root_observation_times_s": [
+      0,
+      1,
+      1.75,
+      2.5,
+      3
+    ],
+    "root_voltage_budgets_V": [
+      1e-10,
+      0.001
+    ],
+    "root_reltol": 0,
+    "root_reference": "Independent closed-form response to a ramp beginning at sqrt(2)+delay; finite-point double evaluation, not global proof.",
+    "chain": "Unchanged independent rational piecewise/analytic convolution contract; same original all-row strict boundary checker."
+  },
+  "root_results": [
+    {
+      "case": "delay-0.0-loose",
+      "voltage_budget_V": 1e-10,
+      "source_sha256": "4386650676d5e5aeca35415eb665b2234975737bd847196beb9b7958a00f41a2",
+      "spectre_maximum_filter_error_V": 0.0002619807483835168,
+      "status": "ACCEPTED",
+      "filter_error_V": 2.7755575615628914e-16,
+      "within_requested_voltage_budget": true,
+      "maximum_same_time_filter_difference_V": 0.00026198074838379437,
+      "expected_acceptance_observed": true
+    },
+    {
+      "case": "delay-0.0-loose",
+      "voltage_budget_V": 0.001,
+      "source_sha256": "4386650676d5e5aeca35415eb665b2234975737bd847196beb9b7958a00f41a2",
+      "spectre_maximum_filter_error_V": 0.0002619807483835168,
+      "status": "ACCEPTED",
+      "filter_error_V": 2.22838902252942e-06,
+      "within_requested_voltage_budget": true,
+      "maximum_same_time_filter_difference_V": 0.0002597523593609874,
+      "expected_acceptance_observed": true
+    },
+    {
+      "case": "delay-0.0-tight",
+      "voltage_budget_V": 1e-10,
+      "source_sha256": "7d716c88970203ad467e82c08fec5cec5307aa7a219a8a3746be65e576c60cc3",
+      "spectre_maximum_filter_error_V": 8.038159682310919e-08,
+      "status": "ACCEPTED",
+      "filter_error_V": 1.0064171718227044e-13,
+      "within_requested_voltage_budget": true,
+      "maximum_same_time_filter_difference_V": 8.038160814738404e-08,
+      "expected_acceptance_observed": true
+    },
+    {
+      "case": "delay-0.0-tight",
+      "voltage_budget_V": 0.001,
+      "source_sha256": "7d716c88970203ad467e82c08fec5cec5307aa7a219a8a3746be65e576c60cc3",
+      "spectre_maximum_filter_error_V": 8.038159682310919e-08,
+      "status": "ACCEPTED",
+      "filter_error_V": 1.0064171718227044e-13,
+      "within_requested_voltage_budget": true,
+      "maximum_same_time_filter_difference_V": 8.038160814738404e-08,
+      "expected_acceptance_observed": true
+    },
+    {
+      "case": "delay-0.125-loose",
+      "voltage_budget_V": 1e-10,
+      "source_sha256": "9b6845bb9d48a24e46e32fd7a9a4cd8f4021753e0261dadc8f7130b37897575c",
+      "spectre_maximum_filter_error_V": 0.00020191572971239857,
+      "status": "ACCEPTED",
+      "filter_error_V": 6.661338147750939e-16,
+      "within_requested_voltage_budget": true,
+      "maximum_same_time_filter_difference_V": 0.0002019157297130647,
+      "expected_acceptance_observed": true
+    },
+    {
+      "case": "delay-0.125-loose",
+      "voltage_budget_V": 0.001,
+      "source_sha256": "9b6845bb9d48a24e46e32fd7a9a4cd8f4021753e0261dadc8f7130b37897575c",
+      "spectre_maximum_filter_error_V": 0.00020191572971239857,
+      "status": "ACCEPTED",
+      "filter_error_V": 0.00015584909162885685,
+      "within_requested_voltage_budget": true,
+      "maximum_same_time_filter_difference_V": 0.0003577648213412554,
+      "expected_acceptance_observed": true
+    },
+    {
+      "case": "delay-0.125-tight",
+      "voltage_budget_V": 1e-10,
+      "source_sha256": "4d1b5fce83e71a5db73166fba61215a8e39747f4911645461fb86c8dcad90dfa",
+      "spectre_maximum_filter_error_V": 8.015176566900095e-08,
+      "status": "ACCEPTED",
+      "filter_error_V": 2.158828671383617e-13,
+      "within_requested_voltage_budget": true,
+      "maximum_same_time_filter_difference_V": 8.015176966580384e-08,
+      "expected_acceptance_observed": true
+    },
+    {
+      "case": "delay-0.125-tight",
+      "voltage_budget_V": 0.001,
+      "source_sha256": "4d1b5fce83e71a5db73166fba61215a8e39747f4911645461fb86c8dcad90dfa",
+      "spectre_maximum_filter_error_V": 8.015176566900095e-08,
+      "status": "ACCEPTED",
+      "filter_error_V": 2.158828671383617e-13,
+      "within_requested_voltage_budget": true,
+      "maximum_same_time_filter_difference_V": 8.015176966580384e-08,
+      "expected_acceptance_observed": true
+    }
+  ],
+  "chain": {
+    "engineering_configs_passed": 12,
+    "paired_rows": 52200,
+    "query_invariance": [
+      {
+        "case": "SEF-TIMER",
+        "common_query_mismatches": 0,
+        "identical_events": true
+      },
+      {
+        "case": "SEF-RESET",
+        "common_query_mismatches": 0,
+        "identical_events": true
+      },
+      {
+        "case": "SEF-INTERRUPT",
+        "common_query_mismatches": 0,
+        "identical_events": true
+      },
+      {
+        "case": "SEF-ISOLATION",
+        "common_query_mismatches": 0,
+        "identical_events": true
+      }
+    ],
+    "strict_status": "FAIL",
+    "strict_differences": 18,
+    "strict_records_identical_to_previous": true
+  },
+  "checks": {
+    "rust": {
+      "passed": 225,
+      "ignored": 1,
+      "failed": 0
+    },
+    "python_mapped": {
+      "methods": 124,
+      "initial_result": "3 methods / 10 subcase rejection expectations failed because refinement recovered them; no other failures",
+      "changed_modules_rerun": 20,
+      "changed_modules_result": "PASS; original models and positive budgets retained, analytic/root-enclosure checks and negative controls added",
+      "final_amplified_consumer_control": "PASS at 1e-6 V budget, specifically rejects y bound 1.3322676295501898e-3 V"
+    },
+    "root_checker_calibration": {
+      "passed": 2,
+      "covers": [
+        "legacy/new policy distinction",
+        "corrupted output",
+        "nonfinite output",
+        "missing observations"
+      ]
+    },
+    "independent_spec_review": "runs/sample-edge-filter-20261010/adaptive-root/review-spec.md",
+    "independent_standards_review": "runs/sample-edge-filter-20261010/adaptive-root/review-standards.md",
+    "traceability": "PASS: 100 test files; tags, targets and matrix freshness",
+    "documentation": "Local file targets resolve; git diff --check PASS",
+    "workspace_visibility": "Final PASS; initial check had an external stale navigation entry. This task did not change or retire worktrees."
+  },
+  "commands": {
+    "roots": "python3 -B experiments/backends/sample-edge-filter/root_compare.py runs/sample-edge-filter-20261010/boundary/root-spectre runs/sample-edge-filter-20261010/adaptive-root/root-evas evas/rust_core/target/debug/evas-kernel --policy adaptive-root",
+    "chain": "python3 -B experiments/backends/sample-edge-filter/run.py evas runs/sample-edge-filter-20261010/inputs-v2 --output runs/sample-edge-filter-20261010/adaptive-root/chain-evas --kernel evas/rust_core/target/debug/evas-kernel --spectre-root runs/sample-edge-filter-20261010/spectre",
+    "rust": "cargo test --locked --manifest-path evas/rust_core/Cargo.toml"
+  },
+  "toolchain": {
+    "rustc": "rustc 1.95.0 (59807616e 2026-04-14)",
+    "cargo": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)",
+    "python": "Python 3.14.6"
+  },
+  "changed_source_sha256": {
+    "evas/rust_core/src/dynamic_roots.rs": "d8a823048a17d00bc7f95b924082f4bcb5d0cd834b84116a355ee8dcb7c77ac0",
+    "evas/rust_core/src/schedule.rs": "890d81ae6c6f688a48f293033b52443edf05e944eb503c100e590b0a2d2bc5a1",
+    "evas/rust_core/src/transient.rs": "9ea65967787fa5436b4403277c51d26a06c156a176e8548c02e65643179f87e1",
+    "evas/rust_core/src/transient_root_refinement.rs": "c0b170cdf9bc78559ab979ef3d2cd6a930a5aa7919373fe0e5f22473fd7b9cca",
+    "evas/tests/test_sample_edge_filter.py": "1628279019b5713b11e85cf90c06389c2626c144fbe55258d495e4ae5f1f6640",
+    "evas/tests/test_event_window_sampling.py": "9ae6f3c0ef4d459e870dffa4c05576cc4b57fb461c3b9db828f2cd3e15cb116a",
+    "evas/tests/test_lifecycle_closure.py": "b16ceac47edf8dc95e57e22cca1d74c9d593362ab53f5db3e1964328a4ac7ce8",
+    "experiments/backends/sample-edge-filter/root_compare.py": "401d2c470803805a2e5c1ac2e11404938869516228c721a193e91cbead9fbadf",
+    "experiments/backends/sample-edge-filter/test_root_compare.py": "b659760ffa1ed7e4df03ed89022f813ad44b64a4f30ac644a0dfca1d91ab1667"
+  },
+  "artifacts": {
+    "runs/sample-edge-filter-20261010/adaptive-root/BEFORE-MANIFEST.json": "f7f270ab491bc851968a778a24dfaeee5d11bce401cc913a507a79d010bcadfa",
+    "runs/sample-edge-filter-20261010/adaptive-root/SOURCE_MANIFEST.json": "3c1f621836c9753286e9b273797668ed46224f3c363f8d5d42ddb9b1f3c04332",
+    "runs/sample-edge-filter-20261010/adaptive-root/BUILD.json": "844bdff6c8b7bb94d5b7bc0279fe6eecfa2c4b6bfa814a7c70cc67c4a5ba92e3",
+    "runs/sample-edge-filter-20261010/adaptive-root/root-evas/IDENTITY.json": "7601a715310030a9b2bf9b29c964452b8567872db4896b34b97db04be3fd3c7a",
+    "runs/sample-edge-filter-20261010/adaptive-root/root-evas/RESULTS.json": "32948c567fb5a943255230e0bad0bb2c49c70557f8e14f29eb7c4eb545782724",
+    "runs/sample-edge-filter-20261010/adaptive-root/chain-evas/IDENTITY.json": "9470055e9c7a2b68d1a524c1f274bfc7c23d04425331c1a32f84b3cfb110c6f1",
+    "runs/sample-edge-filter-20261010/adaptive-root/chain-evas/RESULTS.json": "d01061a86b7f0fab45d4ba6353a46aa5a31b6f49e551a5c87b2a06d4b86287c2",
+    "runs/sample-edge-filter-20261010/adaptive-root/chain-analysis.json": "5caf17fd977a69ecbfe1629e0b25ad1738b597b1ed329dc72210ab1d934283de",
+    "runs/sample-edge-filter-20261010/adaptive-root/strict-boundary.json": "864e2e6629043d77db3ab6fcd7301a04e854a503c47deaf1aee0cbe2c99ffda4",
+    "runs/sample-edge-filter-20261010/adaptive-root/red.log": "59ae89214c1f6a9c14934d3042eeaac978e4237264529b77e6741de3090a8946",
+    "runs/sample-edge-filter-20261010/adaptive-root/focused-v1.log": "a042e60778f557b71861b5ebe7bf62f58500aed71f9b67f8111e566cfe000706",
+    "runs/sample-edge-filter-20261010/adaptive-root/focused-v2.log": "85e80209bc072f54048dd4bef0fba93be3658cc8b9245a5806f7e7a3e6ddda77",
+    "runs/sample-edge-filter-20261010/adaptive-root/rust-v1.log": "d991b09e409e34883db2f49650e023ac2e82ddf8fc62cf5dc9644392ec48898f",
+    "runs/sample-edge-filter-20261010/adaptive-root/mapped-tests.log": "62002b34ce8523f7ef6683f3166da3915673d482c0e8d38007a0e94b41a54f04",
+    "runs/sample-edge-filter-20261010/adaptive-root/changed-expectations.log": "03f40dacea5ca54964eaaba6f965f37c198a84d57a30d486e00c18629f56788b",
+    "runs/sample-edge-filter-20261010/adaptive-root/consumer-floor.log": "676c198bdc3784371d9bcd0ca66ce2f906148c44230d6e1b26ef11fe44826660",
+    "runs/sample-edge-filter-20261010/adaptive-root/checker.log": "70c2c0cb36a259dfbf8c02d2b5e72ee8db4582b912863f2ee564402007a85d0c",
+    "runs/sample-edge-filter-20261010/adaptive-root/review-spec.md": "664b82fa60f74886142e8de9c584bd37144346042de01052d453d124b8b09724",
+    "runs/sample-edge-filter-20261010/spectre/FILE_MANIFEST.json": "5870c2f983efc29b09e4818fe3c49fc150465b226c8ece4f2bf719a9789172de",
+    "runs/sample-edge-filter-20261010/boundary/root-spectre/MANIFEST.json": "5cd0f963d9ba0e66c372adc95e2886601223e42719b3833c2828af17f23da72c",
+    "runs/sample-edge-filter-20261010/adaptive-root/review-standards.md": "c4682b8f8996045f154c7e5d214375499ee8ab3077feab5173bc96f09b0a1f64"
+  },
+  "availability": {
+    "source_and_checker": "repository-contained working tree; not yet committed or merged",
+    "bulk_runs": "local-only: runs/sample-edge-filter-20261010/adaptive-root",
+    "source_snapshot": "runs/sample-edge-filter-20261010/adaptive-root/snapshot",
+    "comparison_baseline": "runs/sample-edge-filter-20261010/adaptive-root/before"
+  },
+  "limits": [
+    "18 original strict Spectre phase differences remain; no full-alignment or merge-readiness claim",
+    "Original loose/tight Spectre errors remain visible; EVAS mathematical improvement is not reproduction of Spectre callback rounding",
+    "Only disjoint singleton input roots; connected clusters, exact timers and held/history-dependent roots are unchanged",
+    "First-deadline probe is best effort; future consumers can still fail their unchanged voltage/history certificates",
+    "No continuous-time whole-trajectory proof or performance claim; development cases are not an untouched holdout"
+  ],
+  "review_scope": "Numerical implementation and executable tests compared with the saved before snapshot; selected documentation assessed for current claims. Independent reviews found no blocking/actionable defects. Final receipt review-status fields and final audit log row were added after review."
+}

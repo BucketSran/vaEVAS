@@ -3,7 +3,7 @@ use crate::interval::Interval as I;
 use crate::ir::Error;
 use std::collections::VecDeque;
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub(crate) struct Deadline {
     pub(crate) bounds: I,
     // Exact symbolic sum when available; equal enclosures alone do not prove
@@ -20,7 +20,7 @@ impl Deadline {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 struct Edge {
     start: f64,
     start_bounds: I,
@@ -35,7 +35,7 @@ struct Edge {
     end: Deadline,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub(crate) struct Transition {
     delay: f64,
     rise: f64,
@@ -71,6 +71,55 @@ fn deadline(bounds: I, scale: f64, sum: Option<[f64; 3]>) -> Result<Deadline, Er
 }
 
 impl Transition {
+    pub(crate) fn input_changed_from(&self, old: &Self) -> bool {
+        self.input != old.input
+    }
+
+    /// Advance a private prediction through queued targets, without changing
+    /// the accepted input. Consumers must clone before calling this method.
+    pub(crate) fn advance_time(&mut self, time: f64) -> Result<(), Error> {
+        self.advance_enclosed(time, self.input, self.input_bounds, false)
+    }
+
+    /// Partition forcing at both sides of uncertain activation/end boxes.
+    pub(crate) fn forcing_boundary(&self, after: f64) -> Option<f64> {
+        self.deadlines(after)
+            .iter()
+            .flat_map(|d| [d.bounds.lo, d.bounds.hi])
+            .filter(|&t| t > after)
+            .min_by(f64::total_cmp)
+    }
+
+    pub(crate) fn forcing_uncertain(&self, time: f64) -> bool {
+        self.deadlines(time)
+            .iter()
+            .any(|d| d.bounds.lo <= time && time < d.bounds.hi)
+    }
+
+    /// A conservative range also covering delayed activations. Used only for
+    /// integration over uncertainty boxes, not to localize cross events.
+    pub(crate) fn forcing_range(&self, time: I) -> I {
+        let mut result = self.bounds_at(time);
+        for (deadline, _, target) in &self.pending {
+            if deadline.bounds.lo <= time.hi {
+                result = result.hull(*target);
+            }
+        }
+        result
+    }
+
+    /// Affine forcing before the next deadline's lower bound. The caller
+    /// partitions uncertainty boxes separately, so clipping is not smoothed.
+    pub(crate) fn forcing_line(&self, time: f64) -> (I, I) {
+        match &self.edge {
+            Some(edge) if time < edge.end.bounds.lo => (
+                edge.value_bounds + edge.slope_bounds * (I::point(time) - edge.start_bounds),
+                edge.slope_bounds,
+            ),
+            Some(edge) => (edge.target_bounds, I::ZERO),
+            None => (self.settled_bounds, I::ZERO),
+        }
+    }
     #[cfg(test)]
     pub(crate) fn new(initial: f64, delay: f64, rise: f64, fall: f64) -> Result<Self, Error> {
         Self::enclosed(initial, I::point(initial), delay, rise, fall)
@@ -307,6 +356,22 @@ impl Transition {
         bounds: I,
         may_change: bool,
     ) -> Result<(), Error> {
+        self.advance_at(time, I::point(time), input, bounds, may_change)
+    }
+
+    /// The event's physical-time enclosure is distinct from its execution
+    /// representative. Retain it in every downstream activation and edge.
+    pub(crate) fn advance_at(
+        &mut self,
+        time: f64,
+        time_bounds: I,
+        input: f64,
+        bounds: I,
+        may_change: bool,
+    ) -> Result<(), Error> {
+        if !time_bounds.finite() || time_bounds.lo > time_bounds.hi || time_bounds.hi > time {
+            return Err(invalid("invalid transition event-time enclosure"));
+        }
         // Called only on a cloned candidate runtime. A failed pop/edge rebuild
         // discards the whole candidate, including all prior queue mutations.
         while self
@@ -340,17 +405,21 @@ impl Transition {
             if self.delay == 0.0 {
                 self.target(
                     Deadline {
-                        bounds: I::point(time),
-                        sum: Some([time, 0.0, 0.0]),
+                        bounds: time_bounds,
+                        sum: (time_bounds.lo == time_bounds.hi).then_some([
+                            time_bounds.lo,
+                            0.0,
+                            0.0,
+                        ]),
                     },
                     input,
                     bounds,
                 )?;
             } else {
                 let next = deadline(
-                    I::point(time) + I::point(self.delay),
+                    time_bounds + I::point(self.delay),
                     self.delay,
-                    Some([time, self.delay, 0.0]),
+                    (time_bounds.lo == time_bounds.hi).then_some([time_bounds.lo, self.delay, 0.0]),
                 )?;
                 if next.bounds.lo <= time {
                     return Err(invalid(

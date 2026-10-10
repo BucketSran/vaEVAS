@@ -25,3 +25,14 @@
 检查点身份见 [版本记录](../UPDATE.md#检查点身份)。旧 #79、#97 的未完成验收统一由 [#96](https://github.com/BucketSran/vaEVAS/issues/96) 跟踪；关闭入口不表示原差异通过。
 
 2026-10-09 的[当前 main 四后端复验](../../../experiments/backends/support/README.md)补充 LANG、LIN、NONLINEAR、CROSS、TIMER、EVENT-ORDER、TRANSITION、ABSDELAY、SLEW、DYNAMICS、COMPOSE、QUALIFICATION 的有限证据；原边界失败和资格限制保留。
+
+2026-10-10 的[采样到滤波组合](../../../experiments/backends/sample-edge-filter/README.md)补充 TIMER、CROSS、TRANSITION、DYNAMICS、COMPOSE。
+同分支的[输入根自动细化](../../../experiments/backends/sample-edge-filter/BOUNDARY.md#adaptive-root)
+补充 CROSS、EVENT-ORDER、TRANSITION、DYNAMICS、COMPOSE；属于有限范围的误差恢复，不改变 timer 的数学日程。
+契约见[独立工程条件](../../validation/sample_edge_filter/README.md)，实现数学见[前馈滤波历史](../math/operators.md#transition-filter)，
+回归见[公开链路测试](../../tests/test_sample_edge_filter.py)。[后续根窗口修复](../../../experiments/backends/sample-edge-filter/BOUNDARY.md)
+保留事件时间到边沿、滤波的包围；4 个新增同源码 Spectre 实验验证容差影响，严格同刻阶段仍有 18 条差异。
+18 条记录已于 2026-10-10 按用户决定接受为 [SEF-TIMER-18](../../../experiments/backends/sample-edge-filter/BOUNDARY.md#accepted-timer-18)，
+工程对照通过与原严格 FAIL 分开保留；运行身份见收据，实现与本次契约同批交付。任意重叠窗口和其他用例的边界资格未获豁免。
+另有 [30 条件回调诊断](../../../experiments/backends/sample-edge-filter/BOUNDARY.md#回调规则的后续实测)，
+验证显式正容差下的接受点触发规则；只读回放支持差异归因，不证明 EVAS 独立生成了同一网格，也不需要为本批复制该网格。

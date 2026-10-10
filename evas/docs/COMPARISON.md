@@ -1,12 +1,13 @@
 # 四后端支持范围
 
-**EVAS 的 12 个核心条件和 15 个专项测试均通过各自的有限观测判据。精确边界验收和 Spectre 对齐尚未完成。**
+**EVAS 的 12 个核心条件和 15 个专项测试通过各自的有限观测判据；新增四类组合通过工程对照，保留已接受的 18 条边界差异。其余边界和参考资料缺口另列。**
 这是项目唯一的支持总表，也是论文取表入口。2026-10-09 服务器实测，EVAS 为 0.14.0 / IR18；核心补测基于 main `5d357251`，运行时源码与首轮 `6ee1ebaa` 相同。
+2026-10-10 另补四类采样到滤波组合，实测源码基于 `ad6f3577`，实现与本表同批交付，独立列行，不改写原 27 条件结论。
 
 ## 支持矩阵
 
 **✓ 表示通过对应条件的独立有限观测检查，不表示与 Spectre 逐点相同。** “运行成功”表示已完成仿真，尚未进入正式行为判分。
-“边界有差异”等标记表示 EVAS 已能运行，但与 Spectre 的相应观测不同。失败均写明发生在哪一阶段。
+“边界有差异”表示对应观察仍待分类；“已知差异”表示已具名接受，不再作为该范围的修复目标。失败均写明发生在哪一阶段。
 每格对应所列测试范围，不代表整类语言特性的所有写法。✓ 不包含单列待核的精确事件和环回边界。
 
 | 特性／测试范围 | Spectre | ngspice + OpenVAF-R | Gnucap + modelgen-verilog | EVAS |
@@ -32,17 +33,23 @@
 | `idtmod` 相位环回 | 运行成功 | 运行成功 | 编译失败 | ✓；环回有差异 |
 | `laplace_nd` 单极点 | ✓ | ✓ | 输出超差 | ✓ |
 | `laplace_np` 单极点 | ✓ | 编译失败 | 输出超差 | ✓ |
+| 采样→保持→边沿→一阶滤波，4 类组合 | ✓ | 未测 | 未测 | ✓；已知差异¹ |
 | `ddt` 分段线性输入 | ✓ 段内 | ✓ 段内 | 输出超差 | ✓ 段内 |
 
 测试范围包含采样保持、迟滞和 VCO。✓ 不覆盖预先排除的函数阈值、微分拐点及数组事件边界。
 “组合执行失败”包含事件 OR 编译失败或瞬态失败，不能单独归咎于 `initial_step`、`transition`。
 各行对应模型和原始结果见[逐项实测报告](../../experiments/backends/support/README.md)。
+新增组合行包含周期采样、时钟与复位、中断边沿、双实例；Spectre 三档共 12 配置通过。
+¹ [SEF-TIMER-18](../../experiments/backends/sample-edge-filter/BOUNDARY.md#accepted-timer-18)：18 条记录在允许事件时间内处于不同跳变侧，已接受为已知差异；原逐点比较仍不一致。
+本行通过范围为原四条件、三档设置和固定工程预算。运行时源码身份见紧凑收据，实现与验收标准同批交付。它不豁免其他行、C1、#79、VCO 或 Spec B。
+滤波输出同刻最大差由 6.84 µV 降至 0.103 µV。[宽 cross 容差的自动细化](../../experiments/backends/sample-edge-filter/BOUNDARY.md#adaptive-root)另改善高精度请求的可执行性。
 
-## 已确认的问题
+## 已知差异与待办
 
 | 问题 | 实际观察 | 当前结论 |
 | --- | --- | --- |
 | EVAS 与 Spectre 的事件组合 | 采样保持窗外最大差 0.300 mV，含边界达 0.5997 V；部分边界计数差 1 | 已运行，尚未全面对齐；需要分清事件时移与状态错误 |
+| 新增采样到滤波组合 | 18 条瞬时跳变侧差异；最大保持差 1.15 V，窗外计数一致 | 已接受 SEF-TIMER-18；不再追求清零。滤波反馈和高阶级联仍是能力缺口 |
 | EVAS 与 Spectre 的 VCO 环回 | 普通相位节点在环回边界差接近 1 | 需核对实际时刻和跳变侧，不能仅凭圆周相位接近判通过 |
 | Spectre `slew` | 基础档误差 4.69 mV，步长缩小 16 倍后 0.293 mV | 可达到原 1 mV 目标，需要更细步长 |
 | Gnucap 两种 Laplace、`ddt` | Laplace 误差约 0.405 V，`ddt` 约 6 V；步长缩小 16 倍仍超差 | 所测模型在两档设置下均未达到原 1 mV 目标 |
@@ -57,7 +64,7 @@ Gnucap 原先的 13 项端点检查阻塞已通过时间分辨率补测消除；
 | 顺序 | 工作 | 完成后本表应怎样变化 |
 | --- | --- | --- |
 | 补齐其余后端的核心验收 | EVAS 规定计分项已完成，精确边界继续待核；Spectre 和两个开源后端仍有观察资料缺口 | 逐格替换“运行成功”；不把取证缺口写成语言不支持 |
-| 按实测差异修 EVAS | 集中检查采样／事件状态／transition 的组合规则，以及 `idtmod` 环回消费者 | 对应“有差异”格子须经实际 Spectre 复测后更新 |
+| 按具体失败修 EVAS | 优先错误状态/历史、误差保证与不支持组合；VCO、旧 C1/#79 按原模型继续归因，排除已接受 SEF-TIMER-18 | 给出独立错误依据和实际 Spectre 对照，再更新对应格子；详见 [#96 待办](https://github.com/BucketSran/vaEVAS/issues/96) |
 | 扩大表格覆盖 | 增加动态参数、中断、级联和多实例场景，并建设新的独立验证集 | 从单项模型扩展到更广的工程支持范围 |
 
 本轮没有专项比较 `.scs`、strobe 和诊断接口，已实现接口见[接口参考](README.md#接口参考)。
@@ -67,6 +74,9 @@ EVAS 的[模型编译范围](reference/frontend-admission.md#模型编译)与[�
 ## 证据与维护
 
 - [当前实测报告](../../experiments/backends/support/README.md)：27 条件 × 4 后端，含设置复核及全部历史失败。
+- [采样到滤波组合](../../experiments/backends/sample-edge-filter/README.md)：新增 4 条件 × 3 档 Spectre，同源 EVAS 配对与查询不变性；源码候选身份及 local-only 原始材料在收据中列明。
+- [回调落点诊断](../../experiments/backends/sample-edge-filter/BOUNDARY.md#回调规则的后续实测)：30 个 Spectre 探针支持正容差内接受点触发的解释；18 条记录见[接受决定](../../experiments/backends/sample-edge-filter/accepted-differences.json)，旧严格失败保留。
+- [误差分解](../../experiments/backends/sample-edge-filter/BOUNDARY.md#数学精度与回调时移的分开验收)：原 12 对运行分别检查数学精度与事件时移；本批 EVAS 名义滤波偏差最大约 4.03×10⁻¹⁵ V，有限点结果不代表全轨迹证明。
 - [核心运行取证](../../experiments/backends/support/20261009-core-evidence.json)：新构建 EVAS 12 项通过，Spectre 两项输出预检及原 12 项观察审计。
 - [本次时间分辨率补测](../../experiments/backends/support/20261009-timegrid.json)：新增 16 次 Gnucap 配置，原始收据不覆盖。
 - [初版比较表](../../experiments/backends/comparison/TABLE.md)：历史 V1–V7 开发集与 CMP8；[历史 12 条件表](../../experiments/backends/paper/candidate-table.md)：旧候选结果。

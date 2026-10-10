@@ -18,6 +18,9 @@ mod event_acceptance;
 #[path = "transient_history_calendar.rs"]
 mod history_calendar;
 
+#[path = "transient_root_refinement.rs"]
+mod root_refinement;
+
 #[derive(Clone)]
 struct Frame {
     time: f64,
@@ -798,7 +801,12 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
         records: Vec::new(),
         outputs: Vec::new(),
     };
+    let mut preflighted_event = None;
     loop {
+        if !history_calendar && !relocalize && preflighted_event != Some(controller.event) {
+            controller.refine_pending_input_root(&model, &trajectory, &mut crossings)?;
+            preflighted_event = Some(controller.event);
+        }
         controller.accepted.operators.check_deadline_order(
             controller.accepted.time,
             crossings.get(controller.event).map(|e| e.bounds()),
@@ -820,6 +828,10 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                     event_acceptance::Strategy::Static,
                 )?;
             }
+        }
+        if !history_calendar && !relocalize && preflighted_event != Some(controller.event) {
+            controller.refine_pending_input_root(&model, &trajectory, &mut crossings)?;
+            preflighted_event = Some(controller.event);
         }
         controller.accepted.operators.check_deadline_order(
             controller.accepted.time,
@@ -1635,6 +1647,74 @@ mod tests {
         let next = prepare_event(&model, &trajectory, &accepted, 1.5, &[0]).unwrap();
         assert_eq!(next.states, [2.0]);
         assert_eq!(next.solution.voltages[2], 2.0);
+    }
+
+    #[test]
+    fn root_refinement_failure_and_retry_preserve_controller_and_calendar() {
+        let (original, trajectory, _) = fixture(false);
+        let mut value = serde_json::to_value(original.program).unwrap();
+        value["states"][0]["kind"] = "real".into();
+        let input =
+            serde_json::json!({"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]});
+        value["events"][0]["trigger"] = serde_json::json!({
+            "kind":"cross", "guard":{"op":"add",
+                "left":{"op":"multiply","left":input,"right":input},
+                "right":{"op":"affine","constant":-0.5,"terms":[]}},
+            "direction":1,"time_tolerance":1e-3,"expression_tolerance":1e-3});
+        value["events"][0]["body"][0]["rhs"] = input;
+        let mut model = EventModel::new(
+            serde_json::from_value(value).unwrap(),
+            vec!["u".into()],
+            Tolerances {
+                absolute: 1e-30,
+                relative: 0.,
+            },
+        )
+        .unwrap();
+        let operators = Operators::default();
+        let circuit = model.circuit(&model.initial()).unwrap();
+        let before = Frame {
+            time: 0.,
+            state_bounds: vec![I::ZERO],
+            states: model.initial(),
+            solution: circuit.solve(&trajectory.values(0.)).unwrap(),
+            circuit,
+            operators,
+        };
+        let mut crossings = schedule(&model, &trajectory, &before.operators).unwrap();
+        let old_bounds = crossings[0].bounds();
+        let old_time = crossings[0].time;
+        let mut controller = Controller {
+            accepted: before,
+            event: 0,
+            records: Vec::new(),
+            outputs: Vec::new(),
+        };
+        assert!(controller
+            .refine_pending_input_root(&model, &trajectory, &mut crossings)
+            .is_err());
+        assert_eq!(crossings[0].bounds(), old_bounds);
+        assert_eq!(crossings[0].time, old_time);
+        assert_eq!(controller.event, 0);
+        assert!(controller.records.is_empty() && controller.outputs.is_empty());
+        assert_eq!(controller.accepted.time, 0.);
+        assert_eq!(controller.accepted.states, [0.]);
+        assert_eq!(controller.accepted.state_bounds, [I::ZERO]);
+        model.tolerances.absolute = 1e-9;
+        controller
+            .refine_pending_input_root(&model, &trajectory, &mut crossings)
+            .unwrap();
+        assert!(crossings[0].bounds().hi - crossings[0].bounds().lo < 1e-14);
+        assert_eq!(controller.event, 0);
+        assert!(controller.records.is_empty() && controller.outputs.is_empty());
+        assert_eq!(controller.accepted.time, 0.);
+        assert_eq!(controller.accepted.states, [0.]);
+        controller
+            .accept_events(&model, &trajectory, &crossings)
+            .unwrap();
+        assert_eq!(controller.records.len(), 1);
+        assert_eq!(controller.event, 1);
+        assert!((controller.accepted.states[0] - 0.5_f64.sqrt()).abs() < 1e-9);
     }
 
     #[test]

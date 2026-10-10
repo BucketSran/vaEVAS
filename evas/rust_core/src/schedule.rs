@@ -23,6 +23,61 @@ pub(crate) struct ScheduledEvent {
 }
 
 impl ScheduledEvent {
+    pub(crate) fn can_refine_input_root(&self, model: &EventModel) -> bool {
+        model.guard_operators[self.event].is_empty()
+            && !model.relocalized_guards[self.event]
+            && self.fixed_predecessor.is_none()
+            && matches!(self.moment, Moment::Dynamic { exact: None, bounds, .. }
+                if bounds.lo < bounds.hi && self.time == bounds.hi)
+    }
+
+    /// Refine only a source-driven root, using its original proof and guard.
+    /// Timers, exact roots and roots tied to a mutable history epoch are outside
+    /// this policy. The public cross tolerances are never rewritten.
+    pub(crate) fn refine_input_root(
+        &self,
+        model: &EventModel,
+        trajectory: &Trajectory,
+        operators: &Operators,
+    ) -> Result<Self, Error> {
+        if !self.can_refine_input_root(model) {
+            return Err(unresolved("event is outside input-root refinement scope"));
+        }
+        let leaf = &model.triggers[self.event];
+        let EventTrigger::Cross { guard, .. } = &leaf.trigger else {
+            unreachable!()
+        };
+        let origin = &model.program.events[leaf.event].origin;
+        let guards = crate::guard_trajectory::GuardTrajectory::new(model, trajectory, operators)?;
+        let Moment::Dynamic {
+            bounds, derivative, ..
+        } = self.moment
+        else {
+            unreachable!()
+        };
+        let root = crate::dynamic_roots::refine(
+            crate::dynamic_roots::CertifiedRoot { bounds, derivative },
+            &mut |t| Ok(guards.range(guard, t, &origin.instance)?.0),
+            &mut |t| Ok(guards.range(guard, t, &origin.instance)?.1),
+        )?;
+        let mut candidate = self.clone();
+        let Moment::Dynamic {
+            bounds, derivative, ..
+        } = &mut candidate.moment
+        else {
+            unreachable!()
+        };
+        *bounds = root.bounds;
+        *derivative = root.derivative;
+        candidate.time = root.bounds.hi;
+        if !candidate.moment.accepts(candidate.time, &leaf.trigger) {
+            return Err(unresolved(
+                "refined root exceeds the original cross tolerances",
+            ));
+        }
+        Ok(candidate)
+    }
+
     pub(crate) fn is_fixed_timer(&self) -> bool {
         self.moment.clock().is_some()
     }

@@ -765,7 +765,14 @@ fn select_network_operators(
     driven_nodes: &[usize],
 ) -> Result<Vec<usize>, Error> {
     let mut selected = BTreeSet::new();
+    let driven: Vec<_> = driven_nodes
+        .iter()
+        .map(|&n| program.nodes[n].clone())
+        .collect();
     for (index, spec) in program.operators.iter().enumerate() {
+        if crate::operators::transition_filter::projection(program, &driven, index).is_some() {
+            continue;
+        }
         match spec {
             OperatorSpec::Idt {
                 input,
