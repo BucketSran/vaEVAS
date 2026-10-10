@@ -58,3 +58,8 @@
 [数学与准入](../math/events.md#filter-root-budget)区分全响应灵敏度提案和最终数值认证；
 新增测试台观测事件补齐原生点后，单案例按原规则选中 `tol`；旧失败和新未达标档位保留。
 具体后端覆盖以该记录为准，不扩展一般多事件或历史重放支持。
+
+固定外部多项式输入的滤波直接通路补充 DYNAMICS、COMPOSE：
+[数学与准入](../math/continuous.md#固定外部多项式输入的直接通路)、
+[开发回归](../../tests/test_filter_direct.py)、[实际 Spectre 有限对照](../../../experiments/backends/filter-direct/README.md)。
+这仅交付 #66/C4 的前馈切片，内部非线性反馈与事件仍未纳入。
