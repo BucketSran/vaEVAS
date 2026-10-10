@@ -8,6 +8,7 @@
 | 你想知道什么 | 阅读入口 |
 | --- | --- |
 | 能做什么，与 Spectre 对齐到什么程度？ | [四后端支持范围](COMPARISON.md) |
+| 表中“通过”依据什么，精度怎样判定？ | [四后端评测标准](COMPARISON-METHODOLOGY.md) |
 | 当前版本包含哪些改动？ | [版本记录](UPDATE.md#baseline-20261009) |
 | 如何安装、设置观测或读取结果？ | 下方[接口参考](#接口参考) |
 | 电压、积分和事件怎样计算？ | [数学原理](math/README.md) |
@@ -32,6 +33,7 @@
 docs/
 ├── README.md          阅读入口
 ├── COMPARISON.md      唯一的支持范围总表、四后端对比与证据入口
+├── COMPARISON-METHODOLOGY.md  配套评测标准、精度定义与判分方法
 ├── UPDATE.md          版本变化与历史执行身份
 ├── reference/         输入、控制与输出接口
 ├── math/              数学方法、假设与组合边界
@@ -48,6 +50,7 @@ docs/
 ## 文档维护约定
 
 - 支持范围总表只在 `COMPARISON.md` 维护。README、接口和开发文档链接该表，具体语法、算法与验收规则保留在各自契约中。
+- `COMPARISON-METHODOLOGY.md` 向读者解释评测内容、通过条件和精度依据。检查器公式、参数记录和复验流程放在 `development/COMPARISON.md`，条件卡记录每项测试定稿的数值。
 - `reference/` 维护接口；`math/` 维护行为、假设、数学方法、状态与误差、代码入口和拒绝边界。
 - `development/capability-evidence.md` 维护稳定能力 ID 与证据链接，供追溯工具读取。
 - 新能力同步更新契约、支持范围总表和证据索引。完整实验保留在 `experiments/`，临时推进记录放在 Issue/PR。

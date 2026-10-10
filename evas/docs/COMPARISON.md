@@ -4,11 +4,17 @@
 这是项目唯一的支持总表，也是论文取表入口。2026-10-09 服务器实测，EVAS 为 0.14.0 / IR18；核心补测基于 main `5d357251`，运行时源码与首轮 `6ee1ebaa` 相同。
 2026-10-10 另补四类采样到滤波组合，实测源码基于 `ad6f3577`，实现与本表同批交付，独立列行，不改写原 27 条件结论。
 
-## 支持矩阵
+## 如何读表
 
 **✓ 表示通过对应条件的独立有限观测检查，不表示与 Spectre 逐点相同。** “运行成功”表示已完成仿真，尚未进入正式行为判分。
 “边界有差异”表示对应观察仍待分类；“已知差异”表示已具名接受，不再作为该范围的修复目标。失败均写明发生在哪一阶段。
 每格对应所列测试范围，不代表整类语言特性的所有写法。✓ 不包含单列待核的精确事件和环回边界。
+
+配套[评测标准](COMPARISON-METHODOLOGY.md)解释测什么、允许多大误差，以及怎样判断与 Spectre 的差异。
+下一版将基础特性与工程组合分组，整行全部必测用例通过才标 ✓，否则显示 p/N 及原因。
+下表仍保留原批次的成绩和“窗外”等限制；新测试的误差上限尚未定稿，未按新标准重新评测。
+
+## 支持矩阵
 
 | 特性／测试范围 | Spectre | ngspice + OpenVAF-R | Gnucap + modelgen-verilog | EVAS |
 | --- | --- | --- | --- | --- |
@@ -80,6 +86,7 @@ EVAS 的[模型编译范围](reference/frontend-admission.md#模型编译)与[�
 - [核心运行取证](../../experiments/backends/support/20261009-core-evidence.json)：新构建 EVAS 12 项通过，Spectre 两项输出预检及原 12 项观察审计。
 - [本次时间分辨率补测](../../experiments/backends/support/20261009-timegrid.json)：新增 16 次 Gnucap 配置，原始收据不覆盖。
 - [初版比较表](../../experiments/backends/comparison/TABLE.md)：历史 V1–V7 开发集与 CMP8；[历史 12 条件表](../../experiments/backends/paper/candidate-table.md)：旧候选结果。
-- [验证设计](../validation/paper/README.md)与[维护契约](development/COMPARISON.md)：定义、版本和复验规则；[开发证据索引](development/capability-evidence.md)供实现追溯。
+- [评测标准](COMPARISON-METHODOLOGY.md)：通过条件、精度依据，以及采样保持的判断示例。
+- [验证设计](../validation/paper/README.md)与[维护契约](development/COMPARISON.md)：用例、版本和复验规则；[开发证据索引](development/capability-evidence.md)供实现追溯。
 
 当前材料是开发与支持范围证据，尚不是冻结的独立论文评价集。源码变更后复验受影响格子，论文定稿时固定表格、工具、验证集和证据版本。

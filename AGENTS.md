@@ -54,6 +54,17 @@ local regressions, analytical answers and model reviews do not replace this evid
 Follow [Spectre alignment acceptance](docs/contributing/validation.md#spectre-alignment-acceptance)
 for scope, tolerances, version identity and exceptions.
 
+## Documentation audience
+
+README files, comparison tables and evaluation standards are for human readers, even when agents also consume them.
+When editing them, use `technical-writing`: lead with the reader's question, the conclusion and its limits;
+explain necessary terms and use a concrete example for precision or event behavior.
+Keep pass criteria and their rationale readable in the main text. Put checker formulas, receipt fields
+and execution procedures in the existing developer or validation reference, with links; preserve requirements when moving them.
+Before handoff, read the text without relying on conversation history: a reader must be able to explain
+what is tested, what “pass” means and what remains unknown. Check readability separately from links and formatting.
+Use `writing-for-agents` for agent instructions; reuse the owning document instead of adding parallel rule lists.
+
 ## Ownership
 
 - `evas/`: simulator code, build and developer tests.
