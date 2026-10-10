@@ -10,6 +10,7 @@ import math
 import os
 from pathlib import Path
 import shutil
+import stat
 import subprocess
 import time
 
@@ -25,6 +26,34 @@ def relative_name(value):
             or Path(value).is_absolute() or any(p in {"", ".", ".."} for p in value.split("/"))):
         raise ValueError("invalid relative asset path")
     return value
+
+
+def resolve_support_files(cases, tests):
+    """Resolve immutable UTF-8 assets once, confined to the private tests root."""
+    root = Path(tests).resolve()
+    for case in cases:
+        support = dict(case.get("support", {}))
+        references = case.get("support_files", {})
+        if not isinstance(references, dict):
+            raise ValueError("support_files must map asset names to references")
+        for name, item in references.items():
+            relative_name(name)
+            if name in support:
+                raise ValueError("duplicate inline and referenced support asset")
+            relative = Path(relative_name(item["path"]))
+            path = root / relative
+            if any((root / Path(*relative.parts[:i])).is_symlink()
+                   for i in range(1, len(relative.parts) + 1)):
+                raise ValueError("support source is a symlink")
+            if not path.resolve().is_relative_to(root) or not stat.S_ISREG(path.stat().st_mode):
+                raise ValueError("support source must be a regular file inside tests")
+            data = path.read_bytes()
+            if hashlib.sha256(data).hexdigest() != item["sha256"]:
+                raise ValueError("support source identity mismatch")
+            support[name] = data.decode("utf-8")
+        if support:
+            case["support"] = support
+    return cases
 
 
 def validate_rows(rows, case):
@@ -59,7 +88,7 @@ def verify(candidate, output, tests, evaluate, case_name=None):
               "parser_sha256": digest(Path(__file__).with_name("adc_linearity.py"))}
     try:
         cases_path, contract_path = tests / "cases.json", tests / "contract.json"
-        cases = json.loads(cases_path.read_text())
+        cases = resolve_support_files(json.loads(cases_path.read_text()), tests)
         contract = json.loads(contract_path.read_text())
         report.update(cases_sha256=digest(cases_path), contract_sha256=digest(contract_path))
         files = contract["candidate_files"]
