@@ -424,6 +424,21 @@ impl Filter {
                 + self.projection.constant);
         Ok((output, (input - output) / self.tau))
     }
+    pub(super) fn refined_from(
+        &self,
+        proof: &super::filter_refinement::Provenance,
+        parent: usize,
+        time: f64,
+    ) -> Option<crate::refined_interval::Bounds> {
+        proof.filter(
+            parent,
+            time,
+            self.gain,
+            self.tau,
+            self.projection.coefficient,
+            self.projection.constant,
+        )
+    }
     pub(crate) fn same_history(&self, other: &Self) -> bool {
         self.time == other.time
             && self.output == other.output

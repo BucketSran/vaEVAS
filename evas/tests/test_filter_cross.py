@@ -1,14 +1,15 @@
 """Filter-root consumers must use physical history, independent of query grids."""
 GUARDS = ["TIMER", "CROSS", "EVENT-ORDER", "TRANSITION", "DYNAMICS", "COMPOSE"]
 import copy
+import math
 from pathlib import Path
 import sys
 import unittest
-from evas import Instance, compile_sources, transient
-from evas.errors import KernelError
+from evas import Instance, KernelError, compile_sources, transient
 from test_affine import KERNEL
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'validation/sample_edge_filter'))
 import filter_cross as contract
+import precision_oracle
 
 
 class FilterCross(unittest.TestCase):
@@ -51,13 +52,36 @@ class FilterCross(unittest.TestCase):
                 verdict=contract.assess(case,rows)
                 self.assertEqual(verdict['status'],'PASS',verdict)
 
-    def test_unresolved_root_centers_remain_explicit_rejections(self):
-        # Retain the original four center-query failures. The engineering
-        # ±2/4 ps brackets above do not establish exact-root phase support.
+    def test_root_centers_and_adjacent_floats_recover_without_changing_history(self):
         for case in contract.CASES:
             with self.subTest(case=case['id']):
-                with self.assertRaisesRegex(KernelError, 'physical event phase'):
-                    self.run_case(case,contract.times(case))
+                coarse=contract.times(case,root_centers=False)
+                probes=[t for p in case['instances'] for r,_ in contract.roots(p)
+                        for t in (math.nextafter(r*contract.sef.T,-math.inf),r*contract.sef.T,
+                                  math.nextafter(r*contract.sef.T,math.inf))]
+                grid=sorted(set(coarse+probes))
+                base=self.run_case(case,coarse)
+                answer=self.run_case(case,grid)
+                self.assertEqual(base['transient']['events'],answer['transient']['events'])
+                self.assertEqual(base['solutions'],[answer['solutions'][grid.index(t)] for t in coarse])
+                rows=[dict(time=t,**dict(zip(answer['nodes'],s['voltages']))) for t,s in zip(grid,answer['solutions'],strict=True)]
+                self.assertEqual(contract.assess(case,rows)['status'],'PASS')
+                for p in case['instances']:
+                    for index,(root,direction) in enumerate(contract.roots(p)):
+                        center=root*contract.sef.T
+                        for t in (math.nextafter(center,-math.inf),center,math.nextafter(center,math.inf)):
+                            expected=index+int(precision_oracle.side(p,t)==direction)
+                            self.assertEqual(rows[grid.index(t)][p['name']+'c'],expected,(p['name'],t))
+
+    def test_query_proof_does_not_claim_forced_step_inside_event_cluster(self):
+        # A proved phase query is not a committed continuous solver step.
+        # Keep strobe's stronger contract while ordinary center queries recover.
+        case=contract.CASES[0]
+        center=contract.roots(case['instances'][0])[0][0]*contract.sef.T
+        probes=[math.nextafter(center,-math.inf),center,math.nextafter(center,math.inf)]
+        grid=sorted(set(contract.times(case,True,root_centers=False)+probes))
+        with self.assertRaisesRegex(KernelError,'forced solve point falls inside an atomic causal event cluster'):
+            self.run_case(case,[0,contract.sef.STOP],grid)
 
     def test_sub_femtosecond_queries_use_old_filter_history_without_rescheduling(self):
         for case in contract.CASES:

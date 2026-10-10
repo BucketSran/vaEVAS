@@ -91,6 +91,22 @@ impl ScheduledEvent {
     pub(crate) fn clock(&self) -> Option<Clock> {
         self.moment.clock()
     }
+    pub(crate) fn rational_time(&self) -> Option<num_rational::BigRational> {
+        use crate::exact_source::{binary, Budget};
+        if let Some(clock) = self.clock() {
+            return Budget(0).check(
+                binary(clock.start)?
+                    + binary(clock.period)?
+                        * num_rational::BigRational::from_integer(clock.index.into()),
+            );
+        }
+        if let Moment::Cross(root) = &self.moment {
+            return Some(root.rational_time()?.rational().clone());
+        }
+        self.moment
+            .exact_history_root()
+            .map(|r| r.rational().clone())
+    }
     pub(crate) fn local_bounds(&self, clock: Clock) -> Option<I> {
         if let Some(root) = self.moment.exact_history_root() {
             return root.local_bounds(clock);
@@ -178,7 +194,14 @@ impl ScheduledEvent {
             .origin
             .instance;
         crate::diagnostics::counter("root_query_phase_checks", 1);
-        let sign = source.range(guard, I::point(time), owner).ok()?.0.sign()?;
+        let ordinary = source.range(guard, I::point(time), owner).ok()?.0;
+        let sign = ordinary.sign().or_else(|| {
+            if !filter_root {
+                return None;
+            }
+            crate::diagnostics::counter("root_query_precision_retries", 1);
+            source.refined_query_sign(guard, time, owner)
+        })?;
         Some(match sign * self.dynamic_direction()? {
             -1 => std::cmp::Ordering::Greater,
             0 => std::cmp::Ordering::Equal,

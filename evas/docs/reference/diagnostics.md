@@ -167,6 +167,11 @@ sidecar 报告有效预算、`record_bytes`、`dropped_records` 与 `truncated`�
 但不能据此声称完整观察了事件和试算。默认不启用诊断。
 实际开销见[测量协议与结果](../../../experiments/performance/README.md)。
 
+近根查询的 `root_query_precision_retries` 统计普通包围不能判侧后尝试高精度恢复的次数。
+`query_refinement` 记录 `certified` 或 `unresolved`、判定符号和 160 位小数精度。
+其中 `approximate_lo/hi` 仅为诊断展示而转成 binary64，不是可重新用于证明的外向区间。
+精度预算、来源缺失而提前返回时可能只有计数，没有细项；不能将细项缺失解释为恢复成功。
+
 ## 静态与运行查询
 
 ```sh

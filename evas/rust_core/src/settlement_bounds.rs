@@ -232,6 +232,47 @@ impl Bounds {
         })
     }
 
+    /// Refine only source/old-state affine updates. Operator-dependent rows
+    /// keep the final ordinary enclosure: same-time reset closure may observe
+    /// a different operator frame, which this source proof does not reproduce.
+    pub(crate) fn refined_states(
+        &self,
+        inputs: &[crate::refined_interval::Bounds],
+        before: &[crate::refined_interval::Bounds],
+        operator_count: usize,
+        ordinary: &[I],
+    ) -> Option<Vec<crate::refined_interval::Bounds>> {
+        use crate::refined_interval::Bounds as B;
+        let start = inputs.len() + before.len();
+        let values: Vec<_> = inputs
+            .iter()
+            .chain(before)
+            .cloned()
+            .chain(vec![B::point(0.)?; operator_count])
+            .chain([B::point(1.)?])
+            .collect();
+        if values.len() > 512 || self.states.len() > 512 || self.states.len() != ordinary.len() {
+            return None;
+        }
+        self.states
+            .iter()
+            .zip(ordinary)
+            .map(|(row, &fallback)| {
+                if row.len() != values.len() {
+                    return None;
+                }
+                if row[start..start + operator_count].iter().any(|c| !c.zero()) {
+                    return B::from_interval(fallback);
+                }
+                row.iter()
+                    .zip(&values)
+                    .try_fold(B::point(0.)?, |s, (&c, v)| {
+                        Some(s.add(&B::from_interval(c)?.mul(v)))
+                    })
+            })
+            .collect()
+    }
+
     pub(crate) fn check_states(
         &self,
         model: &EventModel,

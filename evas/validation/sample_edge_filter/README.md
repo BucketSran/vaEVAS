@@ -74,7 +74,11 @@ python3 -B -m unittest discover -s evas/validation/sample_edge_filter -v
 
 每个新增根两侧增加 ±2 ps、±4 ps 观测，保留旧 SEF 的全部点。新增计数必须连续、单调，
 每次跳变的相邻记录都在原 5 ps 窗口内；事件采样值也受原 100 µV 约束。
-精确中心点另存为诊断请求，其拒绝不算通过；不得把 SEF-TIMER-18 的已知差异直接套给新增模型。
+名义根中心及其相邻浮点时刻另作普通查询验收，拒绝不算通过；不得把 SEF-TIMER-18 的已知差异直接套给新增模型。
+这些中心来自 binary64 参考，并非数学上精确的超越根。新增 [precision_oracle.py](precision_oracle.py)
+从原始输入构造 Fraction 分段，用 Decimal 在 80/110 位下独立传播，检查近根计数侧。
+不要求它复制 Spectre 的跳变侧；两端各自按原工程预算验收。
+原 strobe 工程网格保持；原子事件簇内部的强制点仍明确拒绝，不能用普通查询结果冒充已接受步骤。
 
 本扩展使用 precision-v1 的四档顺序 base、tol、step、both，实际设置和结果见[对照报告](../../../experiments/backends/sample-edge-filter/CROSS.md)。
 模型、刺激、判据和预算在运行前冻结；增加端点拒绝检查后重新分析原记录，保留旧判分。

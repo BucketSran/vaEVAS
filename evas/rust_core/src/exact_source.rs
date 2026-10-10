@@ -49,6 +49,9 @@ fn contains(bounds: I, value: &R) -> bool {
 }
 
 impl RootTime {
+    pub(crate) fn rational(&self) -> &R {
+        &self.0
+    }
     pub(crate) fn affine(value: R, slope: R, bounds: I) -> Option<Self> {
         if slope.is_zero() {
             return None;
@@ -243,7 +246,7 @@ impl Curve {
                 .collect::<Option<Vec<_>>>()?,
         ))
     }
-    fn value(&self, time: &R, budget: &mut Budget) -> Option<R> {
+    pub(crate) fn value(&self, time: &R, budget: &mut Budget) -> Option<R> {
         let index = self.0.partition_point(|p| p.0 < *time);
         let (end, b) = self.0.get(index)?;
         if end == time {

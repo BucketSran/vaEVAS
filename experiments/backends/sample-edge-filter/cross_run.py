@@ -16,21 +16,25 @@ save=run.save
 sha=run.sha
 
 
-def freeze(output):
+def freeze(output, *, root_centers=False, selected_profile=None):
     output.mkdir(parents=True, exist_ok=False)
     plan = []
     profiles = load(ROOT/'evas/validation/paper/precision-v1.json')['profiles']
+    if selected_profile is not None:
+        profiles=[p for p in profiles if p['id']==selected_profile]
+        if not profiles: raise ValueError('unknown profile')
     save(output/'cards.json', {
         'cases': CASES, 'profiles': profiles,
         'voltage_budget_V': sef.VOLTAGE_BUDGET,
         'time_budget_s': sef.TIME_BUDGET,
         'input_budget_V': sef.INPUT_BUDGET,
-        'scope': 'finite engineering checks; exact transcendental-root phase probes retained separately',
+        'root_center_queries': root_centers,
+        'scope': 'finite engineering checks; boundary-side agreement is not required inside the unchanged time budget',
     })
     for case in CASES:
         stimulus = {n: [[t*sef.T, v] for t, v in pts]
                     for n, pts in [('u', sef.INPUT), ('clk', sef.CLOCK), ('rst', sef.RESET)]}
-        observation_times = times(case, True, root_centers=False)
+        observation_times = times(case, True, root_centers=root_centers)
         binding = {'ports': ports(case), 'top_module': 'dut', 'parameters': {}}
         for profile in profiles:
             settings = {**profile, 'stop_s': sef.STOP,
@@ -104,8 +108,9 @@ def execute(inputs,output,backend,profile_path):
 if __name__=='__main__':
     p=argparse.ArgumentParser();s=p.add_subparsers(dest='mode',required=True)
     f=s.add_parser('freeze');f.add_argument('output',type=Path)
+    f.add_argument('--root-centers',action='store_true');f.add_argument('--profile',choices=('base','tol','step','both'))
     e=s.add_parser('run');e.add_argument('inputs',type=Path);e.add_argument('output',type=Path)
     e.add_argument('--backend',choices=('evas','spectre'),required=True);e.add_argument('--profile',type=Path,required=True)
     a=p.parse_args()
-    if a.mode=='freeze':freeze(a.output.resolve())
+    if a.mode=='freeze':freeze(a.output.resolve(),root_centers=a.root_centers,selected_profile=a.profile)
     else:execute(a.inputs.resolve(),a.output.resolve(),a.backend,a.profile.resolve())

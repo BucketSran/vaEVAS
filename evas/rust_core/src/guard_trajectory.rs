@@ -239,6 +239,82 @@ impl<'a> GuardTrajectory<'a> {
         crate::exact_source::RootTime::affine(result.0, result.1, bounds)
     }
 
+    /// A second, higher-precision evaluation only when the ordinary enclosure
+    /// cannot decide a query's phase. It reads the same immutable history.
+    pub(crate) fn refined_query_sign(
+        &self,
+        expression: &Expression,
+        time: f64,
+        owner: &str,
+    ) -> Option<i8> {
+        use crate::refined_interval::Bounds as B;
+        let p = &self.model.program;
+        let (nodes, mut ops) = dependencies(expression, p, owner).ok()?;
+        let op_start = self.model.driven.len() + p.states.len();
+        for node in nodes {
+            for (i, c) in self.nodes[node][op_start..op_start + p.operators.len()]
+                .iter()
+                .enumerate()
+            {
+                if !c.zero() {
+                    ops.insert(i);
+                }
+            }
+        }
+        if p.nodes.len() + p.states.len() + p.operators.len() > 512 {
+            return None;
+        }
+        let mut values = self
+            .trajectory
+            .range(I::point(time))
+            .ok()?
+            .0
+            .into_iter()
+            .map(B::from_interval)
+            .collect::<Option<Vec<_>>>()?;
+        let initial: Vec<_> = self.model.initial().into_iter().map(I::point).collect();
+        let states = self
+            .states
+            .unwrap_or(&initial)
+            .iter()
+            .copied()
+            .map(B::from_interval)
+            .collect::<Option<Vec<_>>>()?;
+        values.extend(states.clone());
+        let mut operators = vec![B::point(0.)?; p.operators.len()];
+        for i in ops {
+            operators[i] = self.operators?.refined_query_value(i, time)?;
+        }
+        values.extend(operators.clone());
+        values.push(B::point(1.)?);
+        let nodes = self.nodes[..p.nodes.len()]
+            .iter()
+            .map(|row| {
+                row.iter()
+                    .zip(&values)
+                    .try_fold(B::point(0.)?, |s, (&a, b)| {
+                        Some(s.add(&B::from_interval(a)?.mul(b)))
+                    })
+            })
+            .collect::<Option<Vec<_>>>()?;
+        {
+            use num_traits::ToPrimitive;
+            let result = refined_evaluate(expression, &nodes, &operators, &states, &mut 0, 0)?;
+            crate::diagnostics::detail(
+                "query_refinement",
+                if result.sign().is_some() {
+                    "certified"
+                } else {
+                    "unresolved"
+                },
+                Some(time),
+                &serde_json::json!({"sign":result.sign(), "fractional_bits":160,
+                    "approximate_lo":result.lo.to_f64(),"approximate_hi":result.hi.to_f64()}),
+            );
+            result.sign()
+        }
+    }
+
     pub(crate) fn changed_by(
         &self,
         expression: &Expression,
@@ -472,4 +548,53 @@ pub(crate) fn state_dependencies(expression: &Expression) -> BTreeSet<usize> {
         Expression::Power { base, .. } => state_dependencies(base),
         _ => BTreeSet::new(),
     }
+}
+
+fn refined_evaluate(
+    e: &Expression,
+    nodes: &[crate::refined_interval::Bounds],
+    operators: &[crate::refined_interval::Bounds],
+    states: &[crate::refined_interval::Bounds],
+    count: &mut usize,
+    depth: usize,
+) -> Option<crate::refined_interval::Bounds> {
+    use crate::refined_interval::Bounds as B;
+    *count += 1;
+    if *count > 512 || depth > 64 {
+        return None;
+    }
+    let result = match e {
+        Expression::Affine { constant, terms } => {
+            terms.iter().try_fold(B::point(*constant)?, |s, t| {
+                Some(s.add(&B::point(t.coefficient)?.mul(&nodes[t.node])))
+            })?
+        }
+        Expression::Operator { operator } => operators[*operator].clone(),
+        Expression::State { state } => states[*state].clone(),
+        Expression::Add { left, right } | Expression::Multiply { left, right } => {
+            let a = refined_evaluate(left, nodes, operators, states, count, depth + 1)?;
+            let b = refined_evaluate(right, nodes, operators, states, count, depth + 1)?;
+            if matches!(e, Expression::Add { .. }) {
+                a.add(&b)
+            } else {
+                a.mul(&b)
+            }
+        }
+        Expression::Power { base, exponent } => {
+            if !(1..=32).contains(exponent) {
+                return None;
+            }
+            let b = refined_evaluate(base, nodes, operators, states, count, depth + 1)?;
+            let mut a = B::point(1.)?;
+            for _ in 0..*exponent {
+                a = a.mul(&b);
+                if a.lo.numer().bits() > 4096 || a.hi.numer().bits() > 4096 {
+                    return None;
+                }
+            }
+            a
+        }
+        Expression::Select { .. } => return None,
+    };
+    (result.lo.numer().bits() <= 4096 && result.hi.numer().bits() <= 4096).then_some(result)
 }
