@@ -1,0 +1,32 @@
+[
+  {
+    "name": "contract-base",
+    "source_id": "047",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nV_VDD (VDD 0) vsource dc=0.9\nV_VSS (VSS 0) vsource dc=0\nV_vin (vin 0) vsource type=pwl wave=[0 0 2.5n 0.9 5n 0]\nXDUT (VDD VSS vin out) window_comparator_ref\n\ntran tran stop=5n maxstep=2p errpreset=conservative strobeperiod=2p\nsave VDD VSS vin out\n",
+    "signals": [
+      "VDD",
+      "VSS",
+      "vin",
+      "out"
+    ],
+    "stop": 5e-09,
+    "resolution": 2e-12,
+    "atol": 0.002,
+    "params": {}
+  },
+  {
+    "name": "contract-stretched-input",
+    "source_id": "047",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nV_VDD (VDD 0) vsource dc=0.9\nV_VSS (VSS 0) vsource dc=0\nV_vin (vin 0) vsource type=pwl wave=[0 0 3.075n 0.9 6.15n 0]\nXDUT (VDD VSS vin out) window_comparator_ref\n\ntran tran stop=6.15n maxstep=2p errpreset=conservative strobeperiod=2p\nsave VDD VSS vin out\n",
+    "signals": [
+      "VDD",
+      "VSS",
+      "vin",
+      "out"
+    ],
+    "stop": 6.15e-09,
+    "resolution": 2e-12,
+    "atol": 0.002,
+    "params": {}
+  }
+]

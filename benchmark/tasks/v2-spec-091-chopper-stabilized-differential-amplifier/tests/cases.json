@@ -1,0 +1,44 @@
+[
+  {
+    "name": "contract-base",
+    "source_id": "091",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\nahdl_include \"chopper_gain_core.va\"\nahdl_include \"synchronous_lp_state.va\"\n\nVinp (vinp 0) vsource type=pwl wave=[0 0.47 24n 0.47 24.1n 0.435 42n 0.435 42.1n 0.46 70n 0.46]\nVinn (vinn 0) vsource type=pwl wave=[0 0.43 24n 0.43 24.1n 0.465 42n 0.465 42.1n 0.44 70n 0.44]\nVchop (chop_clk 0) vsource type=pulse val0=0 val1=0.9 delay=2n period=2n width=0.9n rise=50p fall=50p\nVrst (rst 0) vsource type=pwl wave=[0 0.9 1.5n 0.9 1.6n 0 70n 0]\nVen (enable 0) vsource type=pwl wave=[0 0 3n 0 3.1n 0.9 55n 0.9 55.1n 0 58n 0 58.1n 0.9 70n 0.9]\nVhold (hold 0) vsource type=pwl wave=[0 0 18n 0 18.1n 0.9 22n 0.9 22.1n 0 48n 0 48.1n 0.9 52n 0.9 52.1n 0 70n 0]\n\nIDUT (vinp vinn chop_clk rst enable hold voutp voutn settled offset_residual) chopper_stabilized_differential_amplifier\n\ntran tran stop=70n maxstep=2p errpreset=conservative strobeperiod=2p\nsave vinp vinn chop_clk rst enable hold voutp voutn settled offset_residual\n",
+    "signals": [
+      "vinp",
+      "vinn",
+      "chop_clk",
+      "rst",
+      "enable",
+      "hold",
+      "voutp",
+      "voutn",
+      "settled",
+      "offset_residual"
+    ],
+    "stop": 7e-08,
+    "resolution": 2e-12,
+    "atol": 0.002,
+    "params": {}
+  },
+  {
+    "name": "contract-stretched-input",
+    "source_id": "091",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\nahdl_include \"chopper_gain_core.va\"\nahdl_include \"synchronous_lp_state.va\"\n\nVinp (vinp 0) vsource type=pwl wave=[0 0.47 29.52n 0.47 29.643n 0.435 51.66n 0.435 51.783n 0.46 86.1n 0.46]\nVinn (vinn 0) vsource type=pwl wave=[0 0.43 29.52n 0.43 29.643n 0.465 51.66n 0.465 51.783n 0.44 86.1n 0.44]\nVchop (chop_clk 0) vsource type=pulse val0=0 val1=0.9 delay=2.46n period=2.46n width=1.107n rise=50p fall=50p\nVrst (rst 0) vsource type=pwl wave=[0 0.9 1.845n 0.9 1.968n 0 86.1n 0]\nVen (enable 0) vsource type=pwl wave=[0 0 3.69n 0 3.813n 0.9 67.65n 0.9 67.773n 0 71.34n 0 71.463n 0.9 86.1n 0.9]\nVhold (hold 0) vsource type=pwl wave=[0 0 22.14n 0 22.263n 0.9 27.06n 0.9 27.183n 0 59.04n 0 59.163n 0.9 63.96n 0.9 64.083n 0 86.1n 0]\n\nIDUT (vinp vinn chop_clk rst enable hold voutp voutn settled offset_residual) chopper_stabilized_differential_amplifier\n\ntran tran stop=86.1n maxstep=2p errpreset=conservative strobeperiod=2p\nsave vinp vinn chop_clk rst enable hold voutp voutn settled offset_residual\n",
+    "signals": [
+      "vinp",
+      "vinn",
+      "chop_clk",
+      "rst",
+      "enable",
+      "hold",
+      "voutp",
+      "voutn",
+      "settled",
+      "offset_residual"
+    ],
+    "stop": 8.610000000000001e-08,
+    "resolution": 2e-12,
+    "atol": 0.002,
+    "params": {}
+  }
+]
