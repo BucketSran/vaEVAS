@@ -1,0 +1,30 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+
+module sample_hold(
+    inout  electrical VDD,
+    inout  electrical VSS,
+    input  electrical IN,
+    input  electrical CLK,
+    output electrical OUT
+);
+
+parameter real vth  = 0.45;   // logic threshold (V)
+parameter real tedge = 100p;  // output transition time (s)
+
+real held;
+
+analog begin
+    @(initial_step) begin
+        held = 0.45;
+    end
+
+    @(cross(V(CLK, VSS) - vth, +1)) begin
+        held = V(IN, VSS);
+    end
+
+    V(OUT, VSS) <+ transition(held, 0, tedge, tedge);
+end
+
+endmodule

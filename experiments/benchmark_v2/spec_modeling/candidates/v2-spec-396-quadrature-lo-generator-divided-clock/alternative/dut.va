@@ -1,0 +1,18 @@
+`include "disciplines.vams"
+module quadrature_lo_generator_divided_clock(clk_in,rst,enable,lo_i,lo_q,div_metric,quad_ok);
+input clk_in,rst,enable;output lo_i,lo_q,div_metric,quad_ok;electrical clk_in,rst,enable,lo_i,lo_q,div_metric,quad_ok;
+parameter real vdd=0.9,vss=0,vth=0.45,tr=200p;
+integer ring,count,driven,i,q,k;
+analog begin
+ @(initial_step)begin ring=1;driven=0;count=0;i=0;q=0;k=0;end
+ @(cross(V(clk_in)-vth,+1) or cross(V(rst)-vth,+1) or cross(V(enable)-vth,-1))begin
+ if(V(rst)>vth || V(enable)<=vth)begin ring=1;driven=0;count=0;i=0;q=0;k=0;end
+ else begin
+ driven=ring;i=(driven&3)!=0;q=(driven&6)!=0;
+ k=(driven==1)?0:(driven==2)?1:(driven==4)?2:3;
+ ring=(ring==8)?1:ring<<1;count=count+1;
+ end end
+ V(lo_i)<+transition(i?vdd:vss,0,tr,tr);V(lo_q)<+transition(q?vdd:vss,0,tr,tr);
+ V(div_metric)<+transition(vss+(vdd-vss)*k/3.0,0,tr,tr);V(quad_ok)<+transition(count>=8?vdd:vss,0,tr,tr);
+end
+endmodule

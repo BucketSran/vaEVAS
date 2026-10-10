@@ -1,0 +1,1159 @@
+{
+  "spec_issue": 133,
+  "sources": [
+    {
+      "source_id": "024",
+      "task_id": "v2-spec-024-clocked-sample-and-hold",
+      "source_path": "benchmark/reference/v4/release/benchmarkv4-r53/tasks/024-clocked-sample-and-hold",
+      "source_instruction_sha256": "058b90f97895c679e7039dfd1e7f0fbda6e693404c1070d7699c4999f5d11882",
+      "contract_review": "implemented-pending-independent-review",
+      "reference_calibration": "pending",
+      "alternative_calibration": "pending",
+      "semantic_mutants": "pending",
+      "agentic": "pending",
+      "one_shot": "pending",
+      "publication": "pending-spectre-extension",
+      "assets": {
+        "task": "benchmark/tasks/v2-spec-024-clocked-sample-and-hold",
+        "contract_sha256": "84c2765cb83e4b9619e812434b619987a76794946da1818fca4de2a168028344",
+        "cases_sha256": "bd7e3e8575b7bcb0039b88219ab70e80116224f294edfca3a73242c521244a62",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
+        "reference": {
+          "dut.va": "e58e5baa42c0ec8a82b194da6f63370bf8f08dd819821a7d7f7d25d3abe27e69"
+        },
+        "instruction_sha256": "e485a8df661cfb781a08904393ecdc654ad0f48b6f1253523e1dd6af4652d080"
+      },
+      "variants": [
+        {
+          "id": "reference",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "public contract",
+          "files": {
+            "dut.va": "e58e5baa42c0ec8a82b194da6f63370bf8f08dd819821a7d7f7d25d3abe27e69"
+          }
+        },
+        {
+          "id": "alternative",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "explicit elapsed-time linear interpolation, rather than transition operator",
+          "files": {
+            "dut.va": "03456d7a1f338b6570ebfc71410957b33193721acccd88590f48077783850e3d"
+          }
+        },
+        {
+          "id": "semantic-mutant",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "samples falling edge",
+          "files": {
+            "dut.va": "cadc13209187908a3536b7a28d5aec6cdc46d931df3eecd72c9a13324ddeb0d8"
+          }
+        },
+        {
+          "id": "tracking",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "continuously tracks input",
+          "files": {
+            "dut.va": "1ba6716148aaa4467cc725c69fc6ce70e483d25c645be4037619ae6800c698cd"
+          }
+        },
+        {
+          "id": "wrong-initial",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "wrong initial held value",
+          "files": {
+            "dut.va": "84b5cd132c8767f973b761b46734c56e015b56c1f37fb9cc3e5c8e3246758ef8"
+          }
+        }
+      ]
+    },
+    {
+      "source_id": "071",
+      "task_id": "v2-spec-071-acquisition-limited-sample-and-hold",
+      "source_path": "benchmark/reference/v4/release/benchmarkv4-r53/tasks/071-acquisition-limited-sample-and-hold",
+      "source_instruction_sha256": "aa137424aa0268c8b28c2af56478e1b4aa04f6f5cf320cfd31eb960611432faf",
+      "contract_review": "implemented-pending-independent-review",
+      "reference_calibration": "pending",
+      "alternative_calibration": "pending",
+      "semantic_mutants": "pending",
+      "agentic": "pending",
+      "one_shot": "pending",
+      "publication": "pending-spectre-extension",
+      "assets": {
+        "task": "benchmark/tasks/v2-spec-071-acquisition-limited-sample-and-hold",
+        "contract_sha256": "c0779a4587cf247eeeb11814ee92164d1d6a0e88cc2662a0778127429b868440",
+        "cases_sha256": "fb6d7461b7c0efa0238842ecec892336fa5bfaa8a03c1950048677d31edd313f",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
+        "reference": {
+          "dut.va": "4482266e8bef4f54761e3b0e547efe28e37460aea448eba731d208f9eba9fa30"
+        },
+        "instruction_sha256": "f9b155990c241b8e0ca2537f70bc5d6e9e1e2cc59d9371b6e7c852efff98ccd0"
+      },
+      "variants": [
+        {
+          "id": "reference",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "public contract",
+          "files": {
+            "dut.va": "4482266e8bef4f54761e3b0e547efe28e37460aea448eba731d208f9eba9fa30"
+          }
+        },
+        {
+          "id": "alternative",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "convex combination acquisition state",
+          "files": {
+            "dut.va": "494402e8fa3136de96f267846c7a5f71117ee6897000734a69487d03c99ff5a4"
+          }
+        },
+        {
+          "id": "semantic-mutant",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "instantaneous acquisition",
+          "files": {
+            "dut.va": "a30f96a7764d9331ff4f4edd9cd950df808c94aa9920d10dad6ec6a938e52f29"
+          }
+        }
+      ]
+    },
+    {
+      "source_id": "186",
+      "task_id": "v2-spec-186-sarfend-logic-4b",
+      "source_path": "benchmark/reference/v4/release/benchmarkv4-r53/tasks/186-sarfend-logic-4b",
+      "source_instruction_sha256": "23681bfac9dd5623601cb029091ade2a2a4c47a7dc150922a9e5e84f84a4eac6",
+      "contract_review": "implemented-pending-independent-review",
+      "reference_calibration": "pending",
+      "alternative_calibration": "pending",
+      "semantic_mutants": "pending",
+      "agentic": "pending",
+      "one_shot": "pending",
+      "publication": "pending-spectre-extension",
+      "assets": {
+        "task": "benchmark/tasks/v2-spec-186-sarfend-logic-4b",
+        "contract_sha256": "0dcc7ec6c35aa51ec9fce088a4d8fe55fdf19fd352119fe3c266cf184fe8277b",
+        "cases_sha256": "8e3f3b9c7f12560539a76d974f7aec408e94867ff02e757571b737286673fcae",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
+        "reference": {
+          "dut.va": "983b21c79bc6ca24f5ffacd3ef9d6e61726eb96a8a4d4758f241df3c05941161"
+        },
+        "instruction_sha256": "98b39da039540e4ba4ad51950ccc6dc8182e44eb086e4236919be0d9b257bb67"
+      },
+      "variants": [
+        {
+          "id": "reference",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "public contract",
+          "files": {
+            "dut.va": "983b21c79bc6ca24f5ffacd3ef9d6e61726eb96a8a4d4758f241df3c05941161"
+          }
+        },
+        {
+          "id": "alternative",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "packed-word bitmask SAR decision publisher instead of unpacked arrays",
+          "files": {
+            "dut.va": "326e8d89524988a9bf4ad35f052b27eac4166494404050f21c20b1754f12afcb"
+          }
+        },
+        {
+          "id": "semantic-mutant",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "inverts comparator decision",
+          "files": {
+            "dut.va": "3c5d8ec739c91a5242e0f5ef6a66ad688371867b807f76ca2c3b2684a42eedb6"
+          }
+        }
+      ]
+    },
+    {
+      "source_id": "047",
+      "task_id": "v2-spec-047-window-comparator-detector",
+      "source_path": "benchmark/reference/v4/release/benchmarkv4-r53/tasks/047-window-comparator-detector",
+      "source_instruction_sha256": "9196ca9c4560929c4232d3e2c70329e1119120f0f1cbbf7fab7420b2ac7d8a6f",
+      "contract_review": "implemented-pending-independent-review",
+      "reference_calibration": "pending",
+      "alternative_calibration": "pending",
+      "semantic_mutants": "pending",
+      "agentic": "pending",
+      "one_shot": "pending",
+      "publication": "pending-spectre-extension",
+      "assets": {
+        "task": "benchmark/tasks/v2-spec-047-window-comparator-detector",
+        "contract_sha256": "344c66d6059996622f4551e0193add2a90b918da09d297bd51149d9c3513b2f7",
+        "cases_sha256": "072f5d1a0f98f3448823a551f012684400a8d3383681bcf9cdf165cbc3b59680",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
+        "reference": {
+          "dut.va": "9483ffdab4266d0e23cb57c8ff621a506f1bfa433ecffa811ad0e066434daaa6"
+        },
+        "instruction_sha256": "4fc57ef661f0798c584afb8443d3ad8ba675497332de67208a10911d266dff28"
+      },
+      "variants": [
+        {
+          "id": "reference",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "public contract",
+          "files": {
+            "dut.va": "9483ffdab4266d0e23cb57c8ff621a506f1bfa433ecffa811ad0e066434daaa6"
+          }
+        },
+        {
+          "id": "alternative",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "complement of two out-of-window predicates",
+          "files": {
+            "dut.va": "0e53f91ad997426b0d7c4f6617366e39bab75e17b7d3eced447c082afb784b65"
+          }
+        },
+        {
+          "id": "semantic-mutant",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "wrong upper boundary",
+          "files": {
+            "dut.va": "30662ee857466b920842d4c89213feca979041bad166dc5482a47b5aa141da79"
+          }
+        }
+      ]
+    },
+    {
+      "source_id": "314",
+      "task_id": "v2-spec-314-hysteretic-window-comparator",
+      "source_path": "benchmark/reference/v4/release/benchmarkv4-r53/tasks/314-hysteretic-window-comparator",
+      "source_instruction_sha256": "f23be5e37bebcce2ad492a120c474705cbb8dcd1d5a954ed2124af30f3a30d48",
+      "contract_review": "implemented-pending-independent-review",
+      "reference_calibration": "pending",
+      "alternative_calibration": "pending",
+      "semantic_mutants": "pending",
+      "agentic": "pending",
+      "one_shot": "pending",
+      "publication": "pending-spectre-extension",
+      "assets": {
+        "task": "benchmark/tasks/v2-spec-314-hysteretic-window-comparator",
+        "contract_sha256": "2e3e9f22ad5d3a1e92a08564676689e014df505e432d5cd04a9380770ad37d2f",
+        "cases_sha256": "ed716d1945127a5e9f97c9fdb58f7152cf89497b474f9a3501497da68939244a",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
+        "reference": {
+          "dut.va": "da892869caf39897dc4711d7608bd59e6fefd48afb20eae38db5dc4b2c84f80c"
+        },
+        "instruction_sha256": "8578574b4d2fa1102efcd37f4d93c7a6a150387626476fef788d46b676a32d6e"
+      },
+      "variants": [
+        {
+          "id": "reference",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "public contract",
+          "files": {
+            "dut.va": "da892869caf39897dc4711d7608bd59e6fefd48afb20eae38db5dc4b2c84f80c"
+          }
+        },
+        {
+          "id": "alternative",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "complement retained outside-history state",
+          "files": {
+            "dut.va": "37b763ea74faf44a2a3ed76e6a239c8e578019bba06ab45853a1b7dcd7bf4eae"
+          }
+        },
+        {
+          "id": "semantic-mutant",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "exits without outer hysteresis",
+          "files": {
+            "dut.va": "7ec04f48fa1333550d9366bd45411d7a11260a7fc941c19ced3d1e7aeedf41f0"
+          }
+        }
+      ]
+    },
+    {
+      "source_id": "002",
+      "task_id": "v2-spec-002-capacitive-sar-feedback-dac",
+      "source_path": "benchmark/reference/v4/release/benchmarkv4-r53/tasks/002-capacitive-sar-feedback-dac",
+      "source_instruction_sha256": "6e329846167b39a94a48288a515e91c025feb131b6e1b1e5931e6b411ba7757d",
+      "contract_review": "implemented-pending-independent-review",
+      "reference_calibration": "pending",
+      "alternative_calibration": "pending",
+      "semantic_mutants": "pending",
+      "agentic": "pending",
+      "one_shot": "pending",
+      "publication": "pending-spectre-extension",
+      "assets": {
+        "task": "benchmark/tasks/v2-spec-002-capacitive-sar-feedback-dac",
+        "contract_sha256": "08d1f1925a3351dbcf063bbd80e490ceb123192003574cae25771c6e1ab7e824",
+        "cases_sha256": "ac74695d2bd27b4d1911871f6475d0225400838985c50db3b7dc0bbb310569ff",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
+        "reference": {
+          "dut.va": "c7414e3ed6628fe36b697e4ff68c8b9b4c1122c6efeb734b6dabc54a56b96ff7"
+        },
+        "instruction_sha256": "6d34b04da94737b3df80b4aba536cc04826aefbcb8092518edd6fa0aa4c52d73"
+      },
+      "variants": [
+        {
+          "id": "reference",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "public contract",
+          "files": {
+            "dut.va": "c7414e3ed6628fe36b697e4ff68c8b9b4c1122c6efeb734b6dabc54a56b96ff7"
+          }
+        },
+        {
+          "id": "alternative",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "centered integer DAC arithmetic",
+          "files": {
+            "dut.va": "72273775204d8fb4bf756b2d184e276c25bb82281584e6071e005a4572425c14"
+          }
+        },
+        {
+          "id": "semantic-mutant",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "half calibration weight",
+          "files": {
+            "dut.va": "9322a2050736018cc9c681b1280524fa13218c1fef215bf488d5a301432adbb0"
+          }
+        }
+      ]
+    },
+    {
+      "source_id": "003",
+      "task_id": "v2-spec-003-pipeline-adc-stage",
+      "source_path": "benchmark/reference/v4/release/benchmarkv4-r53/tasks/003-pipeline-adc-stage",
+      "source_instruction_sha256": "31f33f111e069f01d185399fabed90131b112f6d24aa6cfabb8bd88a3db5ff8a",
+      "contract_review": "implemented-pending-independent-review",
+      "reference_calibration": "pending",
+      "alternative_calibration": "pending",
+      "semantic_mutants": "pending",
+      "agentic": "pending",
+      "one_shot": "pending",
+      "publication": "pending-spectre-extension",
+      "assets": {
+        "task": "benchmark/tasks/v2-spec-003-pipeline-adc-stage",
+        "contract_sha256": "16bc6ee0e08ae8ae7efcb90115862337c5734725e3861478122cdc1ea2b5ce44",
+        "cases_sha256": "96a6242ca7aebf93eeaba948c6168091abc0baef18f36efc39cb64fcdf3aea20",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
+        "reference": {
+          "dut.va": "027c1b3b2679e6cbd1a86aefb60ec86d0ff34e6dbd24bea95b646c9020e218ee"
+        },
+        "instruction_sha256": "0c5f6c8eb5f008b9822d54deaae4b6a319b5f5f4e392e8f68160fc3bce6b4c65"
+      },
+      "variants": [
+        {
+          "id": "reference",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "public contract",
+          "files": {
+            "dut.va": "027c1b3b2679e6cbd1a86aefb60ec86d0ff34e6dbd24bea95b646c9020e218ee"
+          }
+        },
+        {
+          "id": "alternative",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "direct sampled-voltage middle residue",
+          "files": {
+            "dut.va": "fb967b0969a49c7071ac3d4817204e2cc6170728247db6c1613249ede5a2dc1f"
+          }
+        },
+        {
+          "id": "semantic-mutant",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "unity residue gain",
+          "files": {
+            "dut.va": "fafaa2d4d6007da9074603d8f08f45f7a83788bc415fd893ee7ba5d804583791"
+          }
+        }
+      ]
+    },
+    {
+      "source_id": "055",
+      "task_id": "v2-spec-055-first-order-sigma-delta-modulator",
+      "source_path": "benchmark/reference/v4/release/benchmarkv4-r53/tasks/055-first-order-sigma-delta-modulator",
+      "source_instruction_sha256": "88bfbec2e6d9af1118ab11a364fec18fb5bc2e5b2da76e9e33531a94fe5fcdfd",
+      "contract_review": "implemented-pending-independent-review",
+      "reference_calibration": "pending",
+      "alternative_calibration": "pending",
+      "semantic_mutants": "pending",
+      "agentic": "pending",
+      "one_shot": "pending",
+      "publication": "pending-spectre-extension",
+      "assets": {
+        "task": "benchmark/tasks/v2-spec-055-first-order-sigma-delta-modulator",
+        "contract_sha256": "9e98a535ca49065834d0518cf4f671144b399407ef98a275918e65bea87654cb",
+        "cases_sha256": "6a06436e89a3f9b1b525817b7d84ec172f1cc19e25e2e4de5029d5043ea416e9",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
+        "reference": {
+          "dut.va": "d2257c0b8402fd9662d25214eb3b59db62369e413d3a220dcaeebbf50258b511"
+        },
+        "instruction_sha256": "0f224da3488d2a81b1f7fa578b8a732f4a8e83b1299dc49f6430c2e4244ec7cd"
+      },
+      "variants": [
+        {
+          "id": "reference",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "public contract",
+          "files": {
+            "dut.va": "d2257c0b8402fd9662d25214eb3b59db62369e413d3a220dcaeebbf50258b511"
+          }
+        },
+        {
+          "id": "alternative",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "feedback-first accumulation",
+          "files": {
+            "dut.va": "9154fa9fe08fbf5dddc5a1cf4eee5ebd3c0ab1157730072afd6a4076b5be5585"
+          }
+        },
+        {
+          "id": "semantic-mutant",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "positive feedback",
+          "files": {
+            "dut.va": "d3853556fa32636d1acc5b227a64060ed1e744d6324e272d396ec037b76a138d"
+          }
+        }
+      ]
+    },
+    {
+      "source_id": "001",
+      "task_id": "v2-spec-001-bang-bang-phase-detector",
+      "source_path": "benchmark/reference/v4/release/benchmarkv4-r53/tasks/001-bang-bang-phase-detector",
+      "source_instruction_sha256": "9be58adfb1d7bf7e59337cb5e3a2982253be4899757d02e6e5e124072fd1796e",
+      "contract_review": "implemented-pending-independent-review",
+      "reference_calibration": "pending",
+      "alternative_calibration": "pending",
+      "semantic_mutants": "pending",
+      "agentic": "pending",
+      "one_shot": "pending",
+      "publication": "pending-spectre-extension",
+      "assets": {
+        "task": "benchmark/tasks/v2-spec-001-bang-bang-phase-detector",
+        "contract_sha256": "b962b0e8a9d4b61ef85074052c7a29feddda8e200b8deb2fe160465fbcb313c0",
+        "cases_sha256": "8403bc7b58b0c3a4991e6932ae2cb957a067e5e328944ff27339aa743a489e8c",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
+        "reference": {
+          "dut.va": "ac4e7229361ace9416faaca2436fa0f0fbee1cfad25553bf3c54d314632de250"
+        },
+        "instruction_sha256": "4e1cb8a48ec80ddc5175103539ad48b1c538ecfa8c7162888ca58241fac975ed"
+      },
+      "variants": [
+        {
+          "id": "reference",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "public contract",
+          "files": {
+            "dut.va": "ac4e7229361ace9416faaca2436fa0f0fbee1cfad25553bf3c54d314632de250"
+          }
+        },
+        {
+          "id": "alternative",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "XOR Alexander decision network",
+          "files": {
+            "dut.va": "2189e66b99780a77b846cc241485e337dcea07f3992866a9e11a340b5426fce5"
+          }
+        },
+        {
+          "id": "semantic-mutant",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "swaps Alexander up direction",
+          "files": {
+            "dut.va": "7c6fc856bc956ab353f02f22364976902bcada1ea54caa83fd8179d25f0cfb7f"
+          }
+        }
+      ]
+    },
+    {
+      "source_id": "375",
+      "task_id": "v2-spec-375-nonoverlap-clock-generator",
+      "source_path": "benchmark/reference/v4/release/benchmarkv4-r53/tasks/375-nonoverlap-clock-generator",
+      "source_instruction_sha256": "b7578f886e6fa2b699b02d4bfb9be8c24e860ac3a574db472af648f10c124a3b",
+      "contract_review": "implemented-pending-independent-review",
+      "reference_calibration": "pending",
+      "alternative_calibration": "pending",
+      "semantic_mutants": "pending",
+      "agentic": "pending",
+      "one_shot": "pending",
+      "publication": "pending-spectre-extension",
+      "assets": {
+        "task": "benchmark/tasks/v2-spec-375-nonoverlap-clock-generator",
+        "contract_sha256": "119a657731291e1653b760e2752fc506ee6e24da14dcb219d167ba95cb9c9ab7",
+        "cases_sha256": "ded20ec928529e14aba8bdfa6029a03c82e161ff0cce061ae377bb1d59599dc7",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
+        "reference": {
+          "dut.va": "d16bb84528c779cf4543f3576e381453e74ef2cb44fd120e544f23629a421768"
+        },
+        "instruction_sha256": "1fe451f67a671c8ae35f9e7c62becc0a8dbc8fe9e00bfe00e9c9abe02e6117ba"
+      },
+      "variants": [
+        {
+          "id": "reference",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "public contract",
+          "files": {
+            "dut.va": "d16bb84528c779cf4543f3576e381453e74ef2cb44fd120e544f23629a421768"
+          }
+        },
+        {
+          "id": "alternative",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "absolute global tick deadline instead of countdown",
+          "files": {
+            "dut.va": "8c9f343a752dfa5bae5c0f572f3aff46d944c6fba9df39eb70018bc7a72880d4"
+          }
+        },
+        {
+          "id": "semantic-mutant",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "removes deadtime",
+          "files": {
+            "dut.va": "824b8759cf1dfcb59a7dd92ae0826cdd3f93837f020fa30b21e0688a6d9c7b6c"
+          }
+        },
+        {
+          "id": "overlap",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "both phases high during phase2",
+          "files": {
+            "dut.va": "28340f9e2119ffee0b87d1bf896276da3b0c34cf8ed129d786221b77ba0ed545"
+          }
+        },
+        {
+          "id": "cancel-missed",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "short disable pulse fails to cancel pending phase",
+          "files": {
+            "dut.va": "86a0a947f0429262c830412963d0ada769afdd6b26e08c3edb362f1c75db50c2"
+          }
+        },
+        {
+          "id": "restart-deadlock",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "never completes first handoff after restart",
+          "files": {
+            "dut.va": "9ccbe6fc68dae0dc410d0249e442284be403be9511e4489a8a3faa025ab45d24"
+          }
+        }
+      ]
+    },
+    {
+      "source_id": "396",
+      "task_id": "v2-spec-396-quadrature-lo-generator-divided-clock",
+      "source_path": "benchmark/reference/v4/release/benchmarkv4-r53/tasks/396-quadrature-lo-generator-divided-clock",
+      "source_instruction_sha256": "ed7907dc6f0a26d919ed6d751114823cd72aa12f13a6425890e9a06b96532d77",
+      "contract_review": "implemented-pending-independent-review",
+      "reference_calibration": "pending",
+      "alternative_calibration": "pending",
+      "semantic_mutants": "pending",
+      "agentic": "pending",
+      "one_shot": "pending",
+      "publication": "pending-spectre-extension",
+      "assets": {
+        "task": "benchmark/tasks/v2-spec-396-quadrature-lo-generator-divided-clock",
+        "contract_sha256": "dd2f1f1c6bc41ba0237a352490d50e9d241618deff28496cef7112a60a3e062d",
+        "cases_sha256": "bc675b627254878c9c9a7d79d55a90911f1f8a57a7a3b478514018dd270d1ed8",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
+        "reference": {
+          "dut.va": "726bf95d791813096ed0a3b606823ef34e030516f17ba89dab9749a6ca505a07"
+        },
+        "instruction_sha256": "86b7d13bc18b1ef955daaab9574a9941cf807bb566a7845196fd6775e5fdefc0"
+      },
+      "variants": [
+        {
+          "id": "reference",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "public contract",
+          "files": {
+            "dut.va": "726bf95d791813096ed0a3b606823ef34e030516f17ba89dab9749a6ca505a07"
+          }
+        },
+        {
+          "id": "alternative",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "one-hot rotating ring instead of binary phase counter",
+          "files": {
+            "dut.va": "294c156eaa0f8aed6f98473b40f0c0dbbf33ee38beefd9e8f816c0921966108a"
+          }
+        },
+        {
+          "id": "semantic-mutant",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "skips quadrature states",
+          "files": {
+            "dut.va": "8fccbeb88cd5194d462ee84ce38f6c1f4434926bf4917bd77a90192c87f3f8d8"
+          }
+        }
+      ]
+    },
+    {
+      "source_id": "038",
+      "task_id": "v2-spec-038-programmable-gain-amplifier",
+      "source_path": "benchmark/reference/v4/release/benchmarkv4-r53/tasks/038-programmable-gain-amplifier",
+      "source_instruction_sha256": "08658a3684389017f5fd0710a235986b55e27b94dc81c54719850cf644c49015",
+      "contract_review": "implemented-pending-independent-review",
+      "reference_calibration": "pending",
+      "alternative_calibration": "pending",
+      "semantic_mutants": "pending",
+      "agentic": "pending",
+      "one_shot": "pending",
+      "publication": "pending-spectre-extension",
+      "assets": {
+        "task": "benchmark/tasks/v2-spec-038-programmable-gain-amplifier",
+        "contract_sha256": "bf62085ac8596b6c61af8b6de71a81486db790b68a322aced64fb1583d172c78",
+        "cases_sha256": "9646f11abbc2c46750d765a20c2d2a08aef166dcecbcadf5eca58b2e2645d14e",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
+        "reference": {
+          "dut.va": "19f89f91658be46809f3cee8fa247a0ab17bf3585816420481ad91542a810055"
+        },
+        "instruction_sha256": "a618576eb35be5d4990278483ee146f5830cba94fd08dc4c93b213ca45c5c354"
+      },
+      "variants": [
+        {
+          "id": "reference",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "public contract",
+          "files": {
+            "dut.va": "19f89f91658be46809f3cee8fa247a0ab17bf3585816420481ad91542a810055"
+          }
+        },
+        {
+          "id": "alternative",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "affine gain form",
+          "files": {
+            "dut.va": "5c1899df39be3abc9d87e32e066154ef277f366b952c5859a6a4fc42fe824b2d"
+          }
+        },
+        {
+          "id": "semantic-mutant",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "ignores high gain",
+          "files": {
+            "dut.va": "e88a9295f74befc829f11de5326e8a3dfb6d0013cd468ee2cceddab2773de7ff"
+          }
+        }
+      ]
+    },
+    {
+      "source_id": "082",
+      "task_id": "v2-spec-082-agc-receiver-leveling-loop",
+      "source_path": "benchmark/reference/v4/release/benchmarkv4-r53/tasks/082-agc-receiver-leveling-loop",
+      "source_instruction_sha256": "c9feb2b61a07138a54f095279f4bf546b0a1bef4ad25c4b0fdc4ffcd5747d516",
+      "contract_review": "implemented-pending-independent-review",
+      "reference_calibration": "pending",
+      "alternative_calibration": "pending",
+      "semantic_mutants": "pending",
+      "agentic": "pending",
+      "one_shot": "pending",
+      "publication": "pending-spectre-extension",
+      "assets": {
+        "task": "benchmark/tasks/v2-spec-082-agc-receiver-leveling-loop",
+        "contract_sha256": "329c9320be765f88f8b73d30af9d6fe7424d1abd38fd6b8d588bad025b50d794",
+        "cases_sha256": "7c82103af90b252a74d2681be2b66483e4539b066c23b1422c08970f90a1fe9b",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
+        "reference": {
+          "dut.va": "6496caf8b8feb4c6cd6872fb115db2cf20b856c603328ccc824f3ee90d401391"
+        },
+        "instruction_sha256": "8517f3655b87c69069e28a9f3c5f75f6d8169e825a76580852ef4fa3fb530d86"
+      },
+      "variants": [
+        {
+          "id": "reference",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "public contract",
+          "files": {
+            "dut.va": "6496caf8b8feb4c6cd6872fb115db2cf20b856c603328ccc824f3ee90d401391"
+          }
+        },
+        {
+          "id": "alternative",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "normalized bounded control state with gain decoded each update",
+          "files": {
+            "dut.va": "6765396a751345e1c9e3242df15ecd47d94e485b8e4077aa726567d45f8a6c1e"
+          }
+        },
+        {
+          "id": "semantic-mutant",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "overload increases gain",
+          "files": {
+            "dut.va": "da9de060c64cfcd7fbe0a9e777ffea9c94ebcdd5d7fc6f1808d75f65bcfe2969"
+          }
+        }
+      ]
+    },
+    {
+      "source_id": "091",
+      "task_id": "v2-spec-091-chopper-stabilized-differential-amplifier",
+      "source_path": "benchmark/reference/v4/release/benchmarkv4-r53/tasks/091-chopper-stabilized-differential-amplifier",
+      "source_instruction_sha256": "a9285c9ed3e13ed633a450ec36e74c1b74e46c74e4dc80f0634b6a03795a8721",
+      "contract_review": "implemented-pending-independent-review",
+      "reference_calibration": "pending",
+      "alternative_calibration": "pending",
+      "semantic_mutants": "pending",
+      "agentic": "pending",
+      "one_shot": "pending",
+      "publication": "pending-spectre-extension",
+      "assets": {
+        "task": "benchmark/tasks/v2-spec-091-chopper-stabilized-differential-amplifier",
+        "contract_sha256": "2a67c1185318adda132e676d04633c2f7e39a5db22f3091dea10712aada698b3",
+        "cases_sha256": "3fc69dfe61153f3bc7422c9cdb5316e3760133738c9ae5aff14c8ddc649b331c",
+        "checker_sha256": "249761f2916b452bdea71a61896e2edbb686dfcb0d691a466ae8c9b3e52bcea7",
+        "reference": {
+          "chopper_gain_core.va": "52b69b90aaef760532d993237c75279e9668c92931daf40734c7278307748c2b",
+          "dut.va": "725291d0216bcdddd2413d809699be51e5a8cd38e04579ecada7d3986bb4cefb",
+          "synchronous_lp_state.va": "73863b2313e1b959bebb84be44a4f5bda974edd1b0e9299f5319f42b5402ece8"
+        },
+        "instruction_sha256": "5a1f66b48cdd682e6163a8f0147247be6a84e1c759c4c03232c6e6891cb0a4a2",
+        "structure_checker_sha256": "ba882616fde45874186b1ffe1a08b1f3dfbf986a639cc67fdc9d9e6861e0a6d0"
+      },
+      "variants": [
+        {
+          "id": "reference",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "public contract",
+          "files": {
+            "chopper_gain_core.va": "52b69b90aaef760532d993237c75279e9668c92931daf40734c7278307748c2b",
+            "dut.va": "725291d0216bcdddd2413d809699be51e5a8cd38e04579ecada7d3986bb4cefb",
+            "synchronous_lp_state.va": "73863b2313e1b959bebb84be44a4f5bda974edd1b0e9299f5319f42b5402ece8"
+          }
+        },
+        {
+          "id": "alternative",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "weighted low-pass recurrence",
+          "files": {
+            "chopper_gain_core.va": "52b69b90aaef760532d993237c75279e9668c92931daf40734c7278307748c2b",
+            "dut.va": "725291d0216bcdddd2413d809699be51e5a8cd38e04579ecada7d3986bb4cefb",
+            "synchronous_lp_state.va": "4007e2efeb0ec0ff0db87b98a1e3026711ab550daab0b341f383762a9daca906"
+          }
+        },
+        {
+          "id": "semantic-mutant",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "omits demodulation",
+          "files": {
+            "chopper_gain_core.va": "32002cd28df4f4622f6b7fe8012e899e4b834d893406707bd2ed9f65060d32b3",
+            "dut.va": "725291d0216bcdddd2413d809699be51e5a8cd38e04579ecada7d3986bb4cefb",
+            "synchronous_lp_state.va": "73863b2313e1b959bebb84be44a4f5bda974edd1b0e9299f5319f42b5402ece8"
+          }
+        },
+        {
+          "id": "architecture-empty",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "state-free producer shell, fixed reset-value outputs",
+          "files": {
+            "chopper_gain_core.va": "aa12502b73eb29a4a7135fda646e41496476628e404c39f2c5dc593108214236",
+            "dut.va": "725291d0216bcdddd2413d809699be51e5a8cd38e04579ecada7d3986bb4cefb",
+            "synchronous_lp_state.va": "73863b2313e1b959bebb84be44a4f5bda974edd1b0e9299f5319f42b5402ece8"
+          }
+        },
+        {
+          "id": "architecture-bypass",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "active required helpers bypassed by private correct chain",
+          "files": {
+            "chopper_gain_core.va": "52b69b90aaef760532d993237c75279e9668c92931daf40734c7278307748c2b",
+            "dut.va": "c60a7482e243e83dea4bc162258db0e61a9b82fe7da31805d73758e8c7e19326",
+            "synchronous_lp_state.va": "73863b2313e1b959bebb84be44a4f5bda974edd1b0e9299f5319f42b5402ece8"
+          }
+        }
+      ],
+      "architecture_version": "system-interfaces-v2",
+      "conditions": [
+        "contract-base",
+        "contract-stretched-input",
+        "architecture-component-producer",
+        "architecture-component-consumer",
+        "architecture-producer",
+        "architecture-consumer"
+      ]
+    },
+    {
+      "source_id": "308",
+      "task_id": "v2-spec-308-correlated-double-sampler-offset-cancel",
+      "source_path": "benchmark/reference/v4/release/benchmarkv4-r53/tasks/308-correlated-double-sampler-offset-cancel",
+      "source_instruction_sha256": "a3705d86faf7ec22b628212d19bcf85cb01a2e10d64eab2dce3086c6e7a72549",
+      "contract_review": "implemented-pending-independent-review",
+      "reference_calibration": "pending",
+      "alternative_calibration": "pending",
+      "semantic_mutants": "pending",
+      "agentic": "pending",
+      "one_shot": "pending",
+      "publication": "pending-spectre-extension",
+      "assets": {
+        "task": "benchmark/tasks/v2-spec-308-correlated-double-sampler-offset-cancel",
+        "contract_sha256": "92b6a444301c6925f468d04273bb211ec240bd86804df5e1823fbee3c6317691",
+        "cases_sha256": "ab95f77f73b15f78198a130cc7084dc6a25fd4a095a095b9b78fc4e489770916",
+        "checker_sha256": "249761f2916b452bdea71a61896e2edbb686dfcb0d691a466ae8c9b3e52bcea7",
+        "reference": {
+          "dut.va": "e5c0f4d0f5dac147b0d97c59fcb69af54b299d62902704bc5a2ebb148b4cef96",
+          "reset_sample_latch.va": "b8346080b152e078d05d79828e97d5715d2dee55a36c6d30e73faf8b20a00427",
+          "signal_sample_latch.va": "c541abc846718d808532fe9bd59a9cb75316e0ed55a5570e2da7414043093dc0"
+        },
+        "instruction_sha256": "e195e4fe3c24ce7a2f8536915810e492f614db574972cf5ca5603039f3c69680",
+        "structure_checker_sha256": "ba882616fde45874186b1ffe1a08b1f3dfbf986a639cc67fdc9d9e6861e0a6d0"
+      },
+      "variants": [
+        {
+          "id": "reference",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "public contract",
+          "files": {
+            "dut.va": "e5c0f4d0f5dac147b0d97c59fcb69af54b299d62902704bc5a2ebb148b4cef96",
+            "reset_sample_latch.va": "b8346080b152e078d05d79828e97d5715d2dee55a36c6d30e73faf8b20a00427",
+            "signal_sample_latch.va": "c541abc846718d808532fe9bd59a9cb75316e0ed55a5570e2da7414043093dc0"
+          }
+        },
+        {
+          "id": "alternative",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "CDS affine difference",
+          "files": {
+            "dut.va": "e5c0f4d0f5dac147b0d97c59fcb69af54b299d62902704bc5a2ebb148b4cef96",
+            "reset_sample_latch.va": "b8346080b152e078d05d79828e97d5715d2dee55a36c6d30e73faf8b20a00427",
+            "signal_sample_latch.va": "3571a00b5afb22ccb26cd92f6862d69b0c77d8682ee6848011e23cbb70b82559"
+          }
+        },
+        {
+          "id": "semantic-mutant",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "reverses correlated difference",
+          "files": {
+            "dut.va": "e5c0f4d0f5dac147b0d97c59fcb69af54b299d62902704bc5a2ebb148b4cef96",
+            "reset_sample_latch.va": "b8346080b152e078d05d79828e97d5715d2dee55a36c6d30e73faf8b20a00427",
+            "signal_sample_latch.va": "d4f0ecfc876bfaaad137255479197312c73eac93eab50c6a32b697fab25ac9d4"
+          }
+        },
+        {
+          "id": "architecture-empty",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "state-free producer shell, fixed reset-value outputs",
+          "files": {
+            "dut.va": "e5c0f4d0f5dac147b0d97c59fcb69af54b299d62902704bc5a2ebb148b4cef96",
+            "reset_sample_latch.va": "a92f91e9da20b52a557791cde1ad13a8d00c94a6bddd99b024c73189bde93f5e",
+            "signal_sample_latch.va": "c541abc846718d808532fe9bd59a9cb75316e0ed55a5570e2da7414043093dc0"
+          }
+        },
+        {
+          "id": "architecture-bypass",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "active required helpers bypassed by private correct chain",
+          "files": {
+            "dut.va": "6927090a6bd7eefb2cb94730e640175a2d601e04d8537c96de38fbf7ef5566d5",
+            "reset_sample_latch.va": "b8346080b152e078d05d79828e97d5715d2dee55a36c6d30e73faf8b20a00427",
+            "signal_sample_latch.va": "c541abc846718d808532fe9bd59a9cb75316e0ed55a5570e2da7414043093dc0"
+          }
+        }
+      ],
+      "architecture_version": "system-interfaces-v2",
+      "conditions": [
+        "contract-base",
+        "contract-stretched-input",
+        "architecture-component-producer",
+        "architecture-component-consumer",
+        "architecture-producer",
+        "architecture-consumer"
+      ]
+    },
+    {
+      "source_id": "370",
+      "task_id": "v2-spec-370-opamp-feedback-settling-monitor",
+      "source_path": "benchmark/reference/v4/release/benchmarkv4-r53/tasks/370-opamp-feedback-settling-monitor",
+      "source_instruction_sha256": "a326e93bbfef1ec0a2c346e44e966e7af75fc5f4073c1f08b9a774a99da1aee9",
+      "contract_review": "implemented-pending-independent-review",
+      "reference_calibration": "pending",
+      "alternative_calibration": "pending",
+      "semantic_mutants": "pending",
+      "agentic": "pending",
+      "one_shot": "pending",
+      "publication": "pending-spectre-extension",
+      "assets": {
+        "task": "benchmark/tasks/v2-spec-370-opamp-feedback-settling-monitor",
+        "contract_sha256": "64f94635fdcdee0a1980addffd30d48be86e25e46bb23c78e413bdfeedf42262",
+        "cases_sha256": "993ec59dc79c58f9965b2745c8ebb36b2f561ed8bbda55660551bdcf68f7eec0",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
+        "reference": {
+          "dut.va": "7b4b354ff35d8c791ea26597ef556be745f5923ce65012816bcef0c8bca20bf6"
+        },
+        "instruction_sha256": "cd128e3c68418dbfb88294d2c0e5e2d38e9df41b5413d5bf61e7c0e3b11fa5f3"
+      },
+      "variants": [
+        {
+          "id": "reference",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "public contract",
+          "files": {
+            "dut.va": "7b4b354ff35d8c791ea26597ef556be745f5923ce65012816bcef0c8bca20bf6"
+          }
+        },
+        {
+          "id": "alternative",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "weighted settling recurrence",
+          "files": {
+            "dut.va": "74660e2a30cf363a2a8d6f64bd943300e0dd189ce4615dc885728d79174e5592"
+          }
+        },
+        {
+          "id": "semantic-mutant",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "diverges from target",
+          "files": {
+            "dut.va": "e07d6f5c0d79d2ff7b312f8c66bd7c119cd1074fdc3a265ae6df685d57dd7681"
+          }
+        }
+      ]
+    },
+    {
+      "source_id": "307",
+      "task_id": "v2-spec-307-switched-capacitor-integrator-phase-pair",
+      "source_path": "benchmark/reference/v4/release/benchmarkv4-r53/tasks/307-switched-capacitor-integrator-phase-pair",
+      "source_instruction_sha256": "73b5a2d1bfe631165d3d503fe110972a99e1345a942075d12f3c2c83d4a9122b",
+      "contract_review": "implemented-pending-independent-review",
+      "reference_calibration": "pending",
+      "alternative_calibration": "pending",
+      "semantic_mutants": "pending",
+      "agentic": "pending",
+      "one_shot": "pending",
+      "publication": "pending-spectre-extension",
+      "assets": {
+        "task": "benchmark/tasks/v2-spec-307-switched-capacitor-integrator-phase-pair",
+        "contract_sha256": "2de6377e34c279c94976d7536ef356429edc59dd9b72710902f1615ba76e1f20",
+        "cases_sha256": "cf74fe0d376b1a077bf0351f57597ce8854786a823ddf0fe95e1547e0b5ed5bd",
+        "checker_sha256": "249761f2916b452bdea71a61896e2edbb686dfcb0d691a466ae8c9b3e52bcea7",
+        "reference": {
+          "dut.va": "dd1b37c1c4675eda2b92a6de9ce02b2724b5987fc01fc30113a96d446fa8f30c",
+          "integrator_state_cell.va": "b5341b90cf756bfc7e5c8537250adc451df12196d4f5fa9e5c01f6462539909c",
+          "sample_phase_cell.va": "e7265b884b4b602a644739bc50bc6cb734e42494a106aa10973be4807a206df2"
+        },
+        "instruction_sha256": "6d9ecfb8d0b258549a2775aadee33299daa73d2a8813fa363cebf20a55b863f9",
+        "structure_checker_sha256": "ba882616fde45874186b1ffe1a08b1f3dfbf986a639cc67fdc9d9e6861e0a6d0"
+      },
+      "variants": [
+        {
+          "id": "reference",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "public contract",
+          "files": {
+            "dut.va": "dd1b37c1c4675eda2b92a6de9ce02b2724b5987fc01fc30113a96d446fa8f30c",
+            "integrator_state_cell.va": "b5341b90cf756bfc7e5c8537250adc451df12196d4f5fa9e5c01f6462539909c",
+            "sample_phase_cell.va": "e7265b884b4b602a644739bc50bc6cb734e42494a106aa10973be4807a206df2"
+          }
+        },
+        {
+          "id": "alternative",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "integrator deviation state form",
+          "files": {
+            "dut.va": "dd1b37c1c4675eda2b92a6de9ce02b2724b5987fc01fc30113a96d446fa8f30c",
+            "integrator_state_cell.va": "de20ccbaad26a976fca2228f25c011c1786f395ec5a4fa74d8de1453823061b0",
+            "sample_phase_cell.va": "e7265b884b4b602a644739bc50bc6cb734e42494a106aa10973be4807a206df2"
+          }
+        },
+        {
+          "id": "semantic-mutant",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "integrates reversed sign",
+          "files": {
+            "dut.va": "dd1b37c1c4675eda2b92a6de9ce02b2724b5987fc01fc30113a96d446fa8f30c",
+            "integrator_state_cell.va": "079cfd723dc27253ed88eb7f0ff7ebf9c8f485cb1416457d83f73368e6977aaa",
+            "sample_phase_cell.va": "e7265b884b4b602a644739bc50bc6cb734e42494a106aa10973be4807a206df2"
+          }
+        },
+        {
+          "id": "architecture-empty",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "state-free producer shell, fixed reset-value outputs",
+          "files": {
+            "dut.va": "dd1b37c1c4675eda2b92a6de9ce02b2724b5987fc01fc30113a96d446fa8f30c",
+            "integrator_state_cell.va": "b5341b90cf756bfc7e5c8537250adc451df12196d4f5fa9e5c01f6462539909c",
+            "sample_phase_cell.va": "9e72362bd483b5ebbbbc8c3fab11dfce4f80f96152cd6478ec69ce44347dab0d"
+          }
+        },
+        {
+          "id": "architecture-bypass",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "active required helpers bypassed by private correct chain",
+          "files": {
+            "dut.va": "fd0d686a999d1aa058726c72d198596672e0fc2b2f67b600b4da2d568b1f1e87",
+            "integrator_state_cell.va": "b5341b90cf756bfc7e5c8537250adc451df12196d4f5fa9e5c01f6462539909c",
+            "sample_phase_cell.va": "e7265b884b4b602a644739bc50bc6cb734e42494a106aa10973be4807a206df2"
+          }
+        }
+      ],
+      "architecture_version": "system-interfaces-v2",
+      "conditions": [
+        "contract-base",
+        "contract-stretched-input",
+        "architecture-component-producer",
+        "architecture-component-consumer",
+        "architecture-producer",
+        "architecture-consumer"
+      ]
+    },
+    {
+      "source_id": "183",
+      "task_id": "v2-spec-183-foreground-rdac-calibrator",
+      "source_path": "benchmark/reference/v4/release/benchmarkv4-r53/tasks/183-foreground-rdac-calibrator",
+      "source_instruction_sha256": "aaa2aac8bf7198995eb83ff7a34ec89b61a3e79caa1ff676c9b5e82b67c0fee1",
+      "contract_review": "implemented-pending-independent-review",
+      "reference_calibration": "pending",
+      "alternative_calibration": "pending",
+      "semantic_mutants": "pending",
+      "agentic": "pending",
+      "one_shot": "pending",
+      "publication": "pending-spectre-extension",
+      "assets": {
+        "task": "benchmark/tasks/v2-spec-183-foreground-rdac-calibrator",
+        "contract_sha256": "ddd5db209903a6ee37e63eb851d0c0dbf19ecbc3e807ef332166c6a43b7d54fd",
+        "cases_sha256": "ef744542ccca42c500b329a6666fa97afe21f3793276ece3af3cc796eb448380",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
+        "reference": {
+          "dut.va": "8f0aaad2eeed7188890cafbd8ba2567b72ebbe3d6168e4afb5ae1aeb7dfec10c"
+        },
+        "instruction_sha256": "ee9601737f1ea7b9891e9487d2de537ac6ff973b2f2aebd16f21df6d8313764b"
+      },
+      "variants": [
+        {
+          "id": "reference",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "public contract",
+          "files": {
+            "dut.va": "8f0aaad2eeed7188890cafbd8ba2567b72ebbe3d6168e4afb5ae1aeb7dfec10c"
+          }
+        },
+        {
+          "id": "alternative",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "packed word and bitmask search instead of seven unrolled code variables",
+          "files": {
+            "dut.va": "5863d027513b1a2fd09b69690a5126db14ed9636fe17bffbbc2f563c75f00372"
+          }
+        },
+        {
+          "id": "semantic-mutant",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "inverts keep decision",
+          "files": {
+            "dut.va": "b9534b959da266e3ea82b83d8be27ebdbd70707409c395d4d487d669cf87b360"
+          }
+        }
+      ]
+    },
+    {
+      "source_id": "353",
+      "task_id": "v2-spec-353-ffe-transmitter-3tap",
+      "source_path": "benchmark/reference/v4/release/benchmarkv4-r53/tasks/353-ffe-transmitter-3tap",
+      "source_instruction_sha256": "683872cb2c205eac7c7c7f5ea76dc1d66a1db56092fcb4ce51c00dc9f70bdea8",
+      "contract_review": "implemented-pending-independent-review",
+      "reference_calibration": "pending",
+      "alternative_calibration": "pending",
+      "semantic_mutants": "pending",
+      "agentic": "pending",
+      "one_shot": "pending",
+      "publication": "pending-spectre-extension",
+      "assets": {
+        "task": "benchmark/tasks/v2-spec-353-ffe-transmitter-3tap",
+        "contract_sha256": "2edd551c3b84e1f7412a1292b8ec86b276e00377504d595da5b9d822b0afaace",
+        "cases_sha256": "ea59ac104ef17655d538deefb32b326173cd94ceece73e6bad208f25c757746a",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
+        "reference": {
+          "dut.va": "345a1a24f8e6f785a0b951de381cb99ea04c37b1df8980b01e3b96d15d5e45b6"
+        },
+        "instruction_sha256": "ae73728d3384dbe9462f5d091463a8ea76b64ab1871cc7c5063e14a4e01d6137"
+      },
+      "variants": [
+        {
+          "id": "reference",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "public contract",
+          "files": {
+            "dut.va": "345a1a24f8e6f785a0b951de381cb99ea04c37b1df8980b01e3b96d15d5e45b6"
+          }
+        },
+        {
+          "id": "alternative",
+          "expected": "pass",
+          "status": "pending",
+          "semantic_behavior": "sum independently computed cursor voltages",
+          "files": {
+            "dut.va": "c4602e9e936b6e155894d12254903990fbcc006266014ae1b7ed537a382d551c"
+          }
+        },
+        {
+          "id": "semantic-mutant",
+          "expected": "fail",
+          "status": "pending",
+          "semantic_behavior": "uses wrong history tap",
+          "files": {
+            "dut.va": "76eab26a528c6f1b67761d5b70f8b00fbc392e8841ddaf94a91e39814d14d5c0"
+          }
+        }
+      ]
+    }
+  ],
+  "scope": "19 P1 sources; no duplicate disposition"
+}

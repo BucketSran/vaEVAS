@@ -1,0 +1,18 @@
+`include "disciplines.vams"
+module agc_receiver_leveling_loop(clk,rst,vin,out,metric,gain_mon,rssi_mon);
+input clk,rst,vin;output out,metric,gain_mon,rssi_mon;electrical clk,rst,vin,out,metric,gain_mon,rssi_mon;
+parameter real tr=100p,vth=0.45,target_amp=0.18,deadband=0.025;
+real control,g,level,envelope,score,rssi;
+analog begin
+ @(initial_step)begin control=(2.2-0.45)/2.55;level=0.45;score=0;rssi=0;end
+ @(cross(V(clk)-vth,+1))begin
+ if(V(rst)>vth)begin control=(2.2-0.45)/2.55;level=0.45;score=0;rssi=0;end
+ else begin
+ g=0.45+2.55*control;level=min(0.88,max(0.02,0.45+g*(V(vin)-0.45)));envelope=abs(level-0.45);
+ if(envelope>target_amp+deadband)control=control-0.18/2.55;
+ if(envelope<target_amp-deadband)control=control+0.10/2.55;
+ control=min(1.0,max(0.0,control));score=min(0.9,max(0.0,0.9-4*abs(envelope-target_amp)));rssi=0.9*envelope/0.43;
+ end end
+ V(out)<+transition(level,0,tr,tr);V(metric)<+transition(score,0,tr,tr);V(gain_mon)<+transition(0.9*control,0,tr,tr);V(rssi_mon)<+transition(rssi,0,tr,tr);
+end
+endmodule

@@ -1,0 +1,30 @@
+[
+  {
+    "name": "contract-base",
+    "source_id": "055",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVin (vin 0) vsource type=pwl wave=[0 0.25 20n 0.25 20.02n 0.75 48n 0.75]\nVclk (vclk 0) vsource type=pulse val0=0 val1=0.9 delay=0.25n period=1n width=0.35n rise=20p fall=20p\nXDUT (vin vclk bitout) first_order_sigma_delta_modulator\n\ntran tran stop=48n maxstep=2p strobeperiod=2p\nsave vin vclk bitout\n",
+    "signals": [
+      "vin",
+      "vclk",
+      "bitout"
+    ],
+    "stop": 4.8000000000000006e-08,
+    "resolution": 2e-12,
+    "atol": 0.002,
+    "params": {}
+  },
+  {
+    "name": "contract-stretched-input",
+    "source_id": "055",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVin (vin 0) vsource type=pwl wave=[0 0.25 24.6n 0.25 24.6246n 0.75 59.04n 0.75]\nVclk (vclk 0) vsource type=pulse val0=0 val1=0.9 delay=0.3075n period=1.23n width=0.4305n rise=20p fall=20p\nXDUT (vin vclk bitout) first_order_sigma_delta_modulator\n\ntran tran stop=59.04n maxstep=2p strobeperiod=2p\nsave vin vclk bitout\n",
+    "signals": [
+      "vin",
+      "vclk",
+      "bitout"
+    ],
+    "stop": 5.9040000000000005e-08,
+    "resolution": 2e-12,
+    "atol": 0.002,
+    "params": {}
+  }
+]

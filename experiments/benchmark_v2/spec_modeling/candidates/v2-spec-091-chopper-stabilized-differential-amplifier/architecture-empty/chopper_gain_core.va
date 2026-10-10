@@ -1,0 +1,13 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module chopper_gain_core(vinp,vinn,chop_clk,rst,enable,hold,demod_sample,baseband_ref,event_strobe);
+input vinp,vinn,chop_clk,rst,enable,hold; output demod_sample,baseband_ref,event_strobe;
+electrical vinp,vinn,chop_clk,rst,enable,hold,demod_sample,baseband_ref,event_strobe;
+parameter real vdd=0.9,vss=0.0,vth=0.45,gain=3.0,vos_amp=20m,tr=100p;
+real sample_q,ref_q,strobe_q,input_diff,chopped,amplified; integer polarity;
+analog begin
+ V(demod_sample) <+ 0.0;
+ V(baseband_ref) <+ 0.0;
+ V(event_strobe) <+ 0.0;
+end
+endmodule
