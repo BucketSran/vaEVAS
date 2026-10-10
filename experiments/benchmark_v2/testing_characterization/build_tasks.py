@@ -74,6 +74,9 @@ def terminal_cases(slug, public_cases):
         elif slug=='clock-frequency':
             net=pwl_shift(net,.4)
             net=net.replace('frequency_word_dco\n','frequency_word_dco f_min=95Meg f_step=4.5Meg divide_ratio=5\n').replace('divide_ratio=3','f_min=95Meg f_step=4.5Meg divide_ratio=6').replace('f_min=110Meg f_step=3Meg','f_min=125Meg f_step=2.6Meg divide_ratio=7')
+            if i==2:
+                # Leave an observable complete divided period before disabling.
+                net=net.replace('118.4n 0.9 118.5n 0','125.4n 0.9 125.5n 0')
         elif slug=='offset-search':
             for a,b in [('offset=0.023 td=200p','offset=0.031 td=350p'),('offset=-0.041 td=600p','offset=-0.036 td=450p'),('offset=0.018 td=200p drop_after=2','offset=-0.012 td=350p drop_after=3')]:net=net.replace(a,b)
         elif slug=='time-protocol':
