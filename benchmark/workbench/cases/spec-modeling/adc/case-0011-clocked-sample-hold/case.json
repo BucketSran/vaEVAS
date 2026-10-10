@@ -1,0 +1,31 @@
+{
+  "design_revision": 2,
+  "engineering_action": "spec-modeling",
+  "related_cases": [],
+  "review_status": "pending",
+  "reviewed_revision": null,
+  "backend": null,
+  "task_path": null,
+  "evidence_paths": [],
+  "case_id": "case-0011",
+  "title": "按规格建立边沿采样保持模块",
+  "circuit_family": "adc",
+  "subtypes": [
+    "基础单模块",
+    "理想采样与保持"
+  ],
+  "context_level": "bounded-work-unit",
+  "source_ids": [
+    "v4-single-module-migration"
+  ],
+  "circuit_ids": [
+    "v4-clocked-sample-hold"
+  ],
+  "source_groups": [
+    "v4-family-024"
+  ],
+  "stage": "design-draft",
+  "review_focus": "首批采样基线；沿用r2，先建设健康实现与独立边沿checker，再校准过渡容差",
+  "proposed_form": "给详细规格与固定示例连接，提交一个 VA 采样保持模块",
+  "public_test_mode": "fixed-public-tests"
+}

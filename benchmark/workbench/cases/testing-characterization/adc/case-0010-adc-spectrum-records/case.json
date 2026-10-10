@@ -1,0 +1,32 @@
+{
+  "design_revision": 1,
+  "review_status": "pending",
+  "reviewed_revision": null,
+  "backend": null,
+  "task_path": null,
+  "evidence_paths": [],
+  "case_id": "case-0010",
+  "title": "从 ADC 观测记录提取动态指标",
+  "engineering_action": "testing-characterization",
+  "circuit_family": "adc",
+  "subtypes": [
+    "已有观测提取指标",
+    "VA 测量模块"
+  ],
+  "context_level": "bounded-work-unit",
+  "source_ids": [
+    "adctoolbox-spectrum",
+    "vaevas-behavioral-seeds"
+  ],
+  "circuit_ids": [
+    "first-batch-adc-spectrum"
+  ],
+  "source_groups": [
+    "first-batch-measure-adc-spectrum"
+  ],
+  "related_cases": [],
+  "stage": "design-draft",
+  "review_focus": "先冻结采样、频点与谱功率定义，再决定是否引入非相干窗口",
+  "proposed_form": "读取固定 ADC 码流与采样时钟；提交计算并报告 SNDR、SFDR 等指标的 VA 模块",
+  "public_test_mode": "fixed-public-tests"
+}

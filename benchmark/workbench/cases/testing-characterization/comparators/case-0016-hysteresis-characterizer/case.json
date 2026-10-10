@@ -1,0 +1,22 @@
+{
+  "design_revision": 1,
+  "engineering_action": "testing-characterization",
+  "related_cases": [],
+  "review_status": "pending",
+  "reviewed_revision": null,
+  "backend": null,
+  "task_path": null,
+  "evidence_paths": [],
+  "case_id": "case-0016",
+  "title": "比较器翻转电压与表观滞回测量",
+  "circuit_family": "comparators",
+  "subtypes": ["VA 在线测量模块", "双向门限表征"],
+  "context_level": "bounded-work-unit",
+  "source_ids": ["v4-hysteresis-characterizer"],
+  "circuit_ids": ["v4-hysteretic-comparator"],
+  "source_groups": ["v4-family-111"],
+  "stage": "design-draft",
+  "review_focus": "首批比较器表征入口；固定扫描工程，核对实际翻转、双向更新与不完整报告",
+  "proposed_form": "给定可读比较器及固定扫描环境，提交捕获翻转电压、更新宽度并报告有效状态的 VA 模块",
+  "public_test_mode": "fixed-public-tests"
+}

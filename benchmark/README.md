@@ -25,9 +25,9 @@
 [五类任务材料研究](research/README.md)。
 
 新的逐题设计记录集中在 [Benchmark 工作区](workbench/README.md)，按工程动作、电路家族和
-稳定 Case ID 组织。[Review 队列](workbench/REVIEW.md)汇总待讨论事项，来源与电路记录单独维护。
-首批登记 POR 测试台、LDO 启动测量和运放压摆率三个候选，均未进入正式评分；
-既有任务与历史成绩没有迁移或重新计数。
+稳定 Case ID 组织。旧题优先复用的本轮结果见[迁移筛选](workbench/migration/README.md)。[Review 队列](workbench/REVIEW.md)汇总待讨论事项，来源与电路记录单独维护。
+首批从 POR 测试台、LDO 启动测量和运放压摆率开始，后续候选扩展到五类工程动作；
+具体数量与阶段以工作区索引为准。设计卡不等于正式评分题，既有任务与历史成绩没有迁移或重新计数。
 
 ## 目标与边界
 

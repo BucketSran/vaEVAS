@@ -3,4 +3,8 @@
 
 [工作区总览](../../README.md)
 
-尚未登记候选。
+| Case | 题目 | 工程动作 / 电路家族 | 阶段 / 设计 review | 本轮关注 |
+| --- | --- | --- | --- | --- |
+| [case-0006](adc/case-0006-sampling-identification/README.md) | 采样级固定数据包动态建模 | 从数据建立模型 / ADC 与采样 | 题目草案 / 待 review（r1） | 先确认可观测动态及数据覆盖，再冻结输入格式与验收误差 |
+
+[ADC 与采样](adc/README.md)

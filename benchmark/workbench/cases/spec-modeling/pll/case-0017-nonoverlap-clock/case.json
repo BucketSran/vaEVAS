@@ -1,0 +1,31 @@
+{
+  "case_id": "case-0017",
+  "title": "按规格建立两相非重叠时钟发生器",
+  "engineering_action": "spec-modeling",
+  "circuit_family": "pll",
+  "subtypes": [
+    "两相时钟生成",
+    "死区与挂起请求"
+  ],
+  "source_ids": [
+    "v4-nonoverlap-clock"
+  ],
+  "circuit_ids": [
+    "v4-nonoverlap-clock"
+  ],
+  "source_groups": [
+    "v4-family-375"
+  ],
+  "related_cases": [],
+  "review_focus": "首批时钟入口；先定tick调度与死区含义，再补取消、重启和独立边沿验收",
+  "proposed_form": "给公开时序和固定驱动工程，提交产生两相非重叠输出的VA模块",
+  "design_revision": 1,
+  "review_status": "pending",
+  "reviewed_revision": null,
+  "backend": null,
+  "task_path": null,
+  "evidence_paths": [],
+  "stage": "source-screening",
+  "context_level": "bounded-work-unit",
+  "public_test_mode": "fixed-public-tests"
+}
