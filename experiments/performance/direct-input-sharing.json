@@ -1,0 +1,575 @@
+{
+  "schema_version": 1,
+  "issue": "https://github.com/BucketSran/vaEVAS/issues/138",
+  "baseline_revision": "040df8ed247514ce2e69e5933a76e0107610db92",
+  "candidate_identity": {
+    "status": "local uncommitted work on codex/performance-history-reuse; not merged",
+    "runtime_patch": {
+      "path": "runs/performance-reuse-20261011/runtime.patch",
+      "sha256": "fa85a04d3c90d603a986e939a5f41fc8217b464490216a956fdf6c3da3b61805",
+      "availability": "local-only"
+    },
+    "source_manifest": {
+      "path": "runs/performance-reuse-20261011/source-manifest.json",
+      "sha256": "d55e45de09ab548064ce58fa95ca7d21064975bd67acd6b7be741a80847defbf",
+      "availability": "local-only"
+    },
+    "operators_sha256": "5168aa0286dd4864d6dd6872c0263195d768f83e7ad46bec22a22c4dbce6d727"
+  },
+  "method": {
+    "host": "Apple M5, 10 logical CPUs, macOS; shared host, observed git/npm/UI/system activity; no own builds/tests overlapped timing",
+    "environment": {
+      "path": "runs/performance-reuse-20261011/environment.json",
+      "sha256": "e6661ed8642768dfcd0b8718f32ac50c4b4f8e44eeeff80b2a1c3c1d6bbb3449",
+      "availability": "local-only"
+    },
+    "contention": "Load rose from 8.09 to 26.11 during first batch. Preserve all outliers. Target-only second batch checks repeatability; no universal speed ratio.",
+    "boundary": "Python JSON serialization + process spawn + kernel read/decode/run/encode + Python response parse; excludes VA compilation, file archival and correctness checks",
+    "configuration": "Both release --locked; unchanged request tolerances, inputs, output grid and max_step; diagnostic on/off measured separately; five alternating repetitions per side and case",
+    "rss": "macOS time -l child peak RSS; process highwater, not bytes copied or simultaneous Python+kernel usage",
+    "correctness": "Every baseline/candidate and diagnostic on/off response is byte-identical per case, including observation enclosures and events. Original analytic oracle maintained. Triangle additionally uses exact Fraction integrals and original requested voltage budget."
+  },
+  "batches": [
+    {
+      "name": "paired",
+      "receipt": {
+        "path": "runs/performance-reuse-20261011/paired/receipt.json",
+        "sha256": "2074cd33821b97d23a85c8c705d7323d6ce9b737d83a170524569d1d0dc9115e",
+        "availability": "local-only"
+      },
+      "successful_configurations": 140,
+      "failed_configurations": 0,
+      "cases": [
+        {
+          "case": "cross-8193",
+          "input_sha256": "d5ffdbe64512fa3138000ef4905da3fcbc79ddef98b2f78b46eaaf7d5a8aecf0",
+          "output_sha256": "8bb4891317c64b2ed9bf476683e809dac851ef5939d57e2d904561c79997cb2d",
+          "outputs": 8193,
+          "results": {
+            "baseline": {
+              "repeats": 5,
+              "end_to_end_ms": {
+                "median": 66.87829201109707,
+                "min": 66.36108295060694,
+                "max": 69.02479194104671
+              },
+              "peak_kernel_rss_bytes": {
+                "median": 7962624,
+                "min": 7929856,
+                "max": 8011776
+              }
+            },
+            "candidate": {
+              "repeats": 5,
+              "end_to_end_ms": {
+                "median": 67.3677499871701,
+                "min": 66.57612510025501,
+                "max": 622.1788330003619
+              },
+              "peak_kernel_rss_bytes": {
+                "median": 7979008,
+                "min": 7667712,
+                "max": 7995392
+              }
+            }
+          }
+        },
+        {
+          "case": "idt-8193",
+          "input_sha256": "d5dff708a0ab7a36b146cb915040a90245f9c6012e441a403118e0cedbd43ba8",
+          "output_sha256": "723e33703ab359bf2a546e717c75288eba2408eab0a9a6c4e5f663def8d66c6f",
+          "outputs": 8193,
+          "results": {
+            "baseline": {
+              "repeats": 5,
+              "end_to_end_ms": {
+                "median": 140.34266606904566,
+                "min": 137.75066705420613,
+                "max": 142.20479200594127
+              },
+              "peak_kernel_rss_bytes": {
+                "median": 7716864,
+                "min": 7684096,
+                "max": 7766016
+              }
+            },
+            "candidate": {
+              "repeats": 5,
+              "end_to_end_ms": {
+                "median": 141.0076660104096,
+                "min": 140.65012498758733,
+                "max": 143.31666682846844
+              },
+              "peak_kernel_rss_bytes": {
+                "median": 7749632,
+                "min": 7716864,
+                "max": 7929856
+              }
+            }
+          }
+        },
+        {
+          "case": "nonlinear_idt-8193",
+          "input_sha256": "2fd16e0c1be2fad4600260dedcb867431ee8a7d6604dfa9d98ea588d07a89932",
+          "output_sha256": "38a26900877447fa5c61b8f0fb5f204e9aac9730387f04f006277aa9ab9e8600",
+          "outputs": 8193,
+          "results": {
+            "baseline": {
+              "repeats": 5,
+              "end_to_end_ms": {
+                "median": 431.4349580090493,
+                "min": 425.692250020802,
+                "max": 5964.603916974738
+              },
+              "peak_kernel_rss_bytes": {
+                "median": 8339456,
+                "min": 7340032,
+                "max": 8486912
+              }
+            },
+            "candidate": {
+              "repeats": 5,
+              "end_to_end_ms": {
+                "median": 434.8924169316888,
+                "min": 427.17191693373024,
+                "max": 946.649624966085
+              },
+              "peak_kernel_rss_bytes": {
+                "median": 8404992,
+                "min": 7815168,
+                "max": 8912896
+              }
+            }
+          }
+        },
+        {
+          "case": "pwl-8193",
+          "input_sha256": "7fb02ff46c1e18f8e6411b2c7e84229a08a3c1ee2b06338ca4cd0c314570b6d0",
+          "output_sha256": "bbd292f7e289320b262635f7b4dbf0a7ccc7e972bb05de88f07cdefc73dcee82",
+          "outputs": 8193,
+          "results": {
+            "baseline": {
+              "repeats": 5,
+              "end_to_end_ms": {
+                "median": 73.4504999127239,
+                "min": 48.63720899447799,
+                "max": 90.74695804156363
+              },
+              "peak_kernel_rss_bytes": {
+                "median": 6209536,
+                "min": 6193152,
+                "max": 6225920
+              }
+            },
+            "candidate": {
+              "repeats": 5,
+              "end_to_end_ms": {
+                "median": 60.995667008683085,
+                "min": 48.665916081517935,
+                "max": 89.73920810967684
+              },
+              "peak_kernel_rss_bytes": {
+                "median": 6193152,
+                "min": 6160384,
+                "max": 6225920
+              }
+            }
+          }
+        },
+        {
+          "case": "pwl_idt-129",
+          "input_sha256": "85f8e25412633d533c1e95cc775673bbdede95710390517ab245826bcfa26ef4",
+          "output_sha256": "5e83ae7cf4b8205764f5a18c9d294d1c4b0ddda385bf3360d7c89700b05a21d6",
+          "outputs": 129,
+          "results": {
+            "baseline": {
+              "repeats": 5,
+              "end_to_end_ms": {
+                "median": 18.888209015130997,
+                "min": 17.611582996323705,
+                "max": 20.122000016272068
+              },
+              "peak_kernel_rss_bytes": {
+                "median": 3702784,
+                "min": 3686400,
+                "max": 3719168
+              }
+            },
+            "candidate": {
+              "repeats": 5,
+              "end_to_end_ms": {
+                "median": 15.856208046898246,
+                "min": 14.149416936561465,
+                "max": 23.83141592144966
+              },
+              "peak_kernel_rss_bytes": {
+                "median": 3686400,
+                "min": 3653632,
+                "max": 3719168
+              }
+            }
+          }
+        },
+        {
+          "case": "pwl_idt-8193",
+          "input_sha256": "273cbc72ac0b44fe7bb464ec3abe9206cc9900219a1fb93995993210f8b18a1c",
+          "output_sha256": "a34141ceedb01d8799613974f4039885d1796ec6a1d1f2e21aff895f75489e5d",
+          "outputs": 8193,
+          "results": {
+            "baseline": {
+              "repeats": 5,
+              "end_to_end_ms": {
+                "median": 548.3695000875741,
+                "min": 426.1205841321498,
+                "max": 1063.2497081533074
+              },
+              "peak_kernel_rss_bytes": {
+                "median": 9109504,
+                "min": 8650752,
+                "max": 9699328
+              },
+              "diagnostic_stage_ms": {
+                "kernel.run": {
+                  "median": 518.396583,
+                  "min": 392.949958,
+                  "max": 1355.840125
+                },
+                "controller.prepare_candidate": {
+                  "median": 488.2288,
+                  "min": 370.70188,
+                  "max": 1302.935685
+                },
+                "history.clone": {
+                  "median": 146.48397,
+                  "min": 108.195867,
+                  "max": 409.204125
+                },
+                "history.advance_candidate": {
+                  "median": 88.483513,
+                  "min": 62.425524,
+                  "max": 261.922454
+                },
+                "circuit.prepare": {
+                  "median": 63.366419,
+                  "min": 46.310579,
+                  "max": 194.618737
+                }
+              },
+              "counters": {
+                "affine_cache_links": 32768,
+                "circuit_solve_calls": 32769,
+                "factorizations": 1,
+                "history_clone_calls": 24576,
+                "history_clone_operator_slots": 24576,
+                "linear_rhs_solves": 32769,
+                "matrix_columns": 1,
+                "matrix_input_nnz": 1,
+                "matrix_rows": 1,
+                "output_json_bytes": 1526341
+              }
+            },
+            "candidate": {
+              "repeats": 5,
+              "end_to_end_ms": {
+                "median": 225.63829203136265,
+                "min": 212.68287487328053,
+                "max": 312.37074988894165
+              },
+              "peak_kernel_rss_bytes": {
+                "median": 8765440,
+                "min": 8552448,
+                "max": 8929280
+              },
+              "diagnostic_stage_ms": {
+                "kernel.run": {
+                  "median": 225.515292,
+                  "min": 173.860792,
+                  "max": 370.028917
+                },
+                "controller.prepare_candidate": {
+                  "median": 212.031902,
+                  "min": 164.299238,
+                  "max": 352.596336
+                },
+                "history.clone": {
+                  "median": 2.79655,
+                  "min": 2.051756,
+                  "max": 5.700276
+                },
+                "history.advance_candidate": {
+                  "median": 5.856346,
+                  "min": 4.552328,
+                  "max": 10.948733
+                },
+                "circuit.prepare": {
+                  "median": 58.740457,
+                  "min": 45.251412,
+                  "max": 121.285353
+                }
+              },
+              "counters": {
+                "affine_cache_links": 32768,
+                "circuit_solve_calls": 32769,
+                "factorizations": 1,
+                "history_clone_calls": 24576,
+                "history_clone_operator_slots": 24576,
+                "linear_rhs_solves": 32769,
+                "matrix_columns": 1,
+                "matrix_input_nnz": 1,
+                "matrix_rows": 1,
+                "output_json_bytes": 1526341
+              }
+            }
+          }
+        },
+        {
+          "case": "timer-8193",
+          "input_sha256": "58f17bfb4935a47eafc8e0d596b659353525e88cb95e613b8ee606ed62f15c55",
+          "output_sha256": "054cc0884156e25953ee9ba20b80c3e25e166268a2f8d02aa52369abc87afdc8",
+          "outputs": 8193,
+          "results": {
+            "baseline": {
+              "repeats": 5,
+              "end_to_end_ms": {
+                "median": 74.10229207016528,
+                "min": 49.51949999667704,
+                "max": 96.89658414572477
+              },
+              "peak_kernel_rss_bytes": {
+                "median": 8060928,
+                "min": 7487488,
+                "max": 8306688
+              }
+            },
+            "candidate": {
+              "repeats": 5,
+              "end_to_end_ms": {
+                "median": 56.8683750461787,
+                "min": 49.15416706353426,
+                "max": 88.87904090806842
+              },
+              "peak_kernel_rss_bytes": {
+                "median": 8093696,
+                "min": 8011776,
+                "max": 8192000
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "paired-triangle-confirm",
+      "receipt": {
+        "path": "runs/performance-reuse-20261011/paired-triangle-confirm/receipt.json",
+        "sha256": "0ac5bbaf29a94531a0118f44dd96747db9873c037677fa4963c4050909db4080",
+        "availability": "local-only"
+      },
+      "successful_configurations": 20,
+      "failed_configurations": 0,
+      "cases": [
+        {
+          "case": "pwl_idt-8193",
+          "input_sha256": "273cbc72ac0b44fe7bb464ec3abe9206cc9900219a1fb93995993210f8b18a1c",
+          "output_sha256": "a34141ceedb01d8799613974f4039885d1796ec6a1d1f2e21aff895f75489e5d",
+          "outputs": 8193,
+          "results": {
+            "baseline": {
+              "repeats": 5,
+              "end_to_end_ms": {
+                "median": 508.84141703136265,
+                "min": 450.8990829344839,
+                "max": 578.8991248700768
+              },
+              "peak_kernel_rss_bytes": {
+                "median": 9043968,
+                "min": 8814592,
+                "max": 9699328
+              },
+              "diagnostic_stage_ms": {
+                "kernel.run": {
+                  "median": 571.40175,
+                  "min": 438.197625,
+                  "max": 806.783458
+                },
+                "controller.prepare_candidate": {
+                  "median": 541.392534,
+                  "min": 413.655338,
+                  "max": 768.121691
+                },
+                "history.clone": {
+                  "median": 173.337823,
+                  "min": 122.256694,
+                  "max": 260.72177
+                },
+                "history.advance_candidate": {
+                  "median": 106.56047,
+                  "min": 71.561424,
+                  "max": 151.700413
+                },
+                "circuit.prepare": {
+                  "median": 71.419101,
+                  "min": 51.200078,
+                  "max": 102.963662
+                }
+              },
+              "counters": {
+                "affine_cache_links": 32768,
+                "circuit_solve_calls": 32769,
+                "factorizations": 1,
+                "history_clone_calls": 24576,
+                "history_clone_operator_slots": 24576,
+                "linear_rhs_solves": 32769,
+                "matrix_columns": 1,
+                "matrix_input_nnz": 1,
+                "matrix_rows": 1,
+                "output_json_bytes": 1526341
+              }
+            },
+            "candidate": {
+              "repeats": 5,
+              "end_to_end_ms": {
+                "median": 281.16129199042916,
+                "min": 218.4217080939561,
+                "max": 374.53837506473064
+              },
+              "peak_kernel_rss_bytes": {
+                "median": 8617984,
+                "min": 7897088,
+                "max": 8765440
+              },
+              "diagnostic_stage_ms": {
+                "kernel.run": {
+                  "median": 274.527542,
+                  "min": 205.218792,
+                  "max": 398.95125
+                },
+                "controller.prepare_candidate": {
+                  "median": 258.917664,
+                  "min": 193.663402,
+                  "max": 380.123263
+                },
+                "history.clone": {
+                  "median": 3.446898,
+                  "min": 2.545827,
+                  "max": 7.453161
+                },
+                "history.advance_candidate": {
+                  "median": 7.411124,
+                  "min": 5.424822,
+                  "max": 11.036829
+                },
+                "circuit.prepare": {
+                  "median": 73.459927,
+                  "min": 52.512934,
+                  "max": 115.93962
+                }
+              },
+              "counters": {
+                "affine_cache_links": 32768,
+                "circuit_solve_calls": 32769,
+                "factorizations": 1,
+                "history_clone_calls": 24576,
+                "history_clone_operator_slots": 24576,
+                "linear_rhs_solves": 32769,
+                "matrix_columns": 1,
+                "matrix_input_nnz": 1,
+                "matrix_rows": 1,
+                "output_json_bytes": 1526341
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "spectre_reuse": {
+    "report": {
+      "path": "runs/performance-reuse-20261011/spectre-reuse/report.json",
+      "sha256": "97e6121635e768815563711af9107dd02c7621a27f623bf3dfc8f28d182479ac",
+      "availability": "local-only"
+    },
+    "replay_script": {
+      "path": "runs/performance-reuse-20261011/replay_reference.py",
+      "sha256": "e18666fb7b93bbfa44e7d1fbaec914345e7c3453b6800dd6066057391f85b032",
+      "availability": "local-only"
+    },
+    "reference_receipt": "../backends/support/20261009.json",
+    "cases": [
+      {
+        "case": "LP-nd",
+        "target_V": 0.001,
+        "spectre_max_error_V": 4.8943044450577844e-08,
+        "evas_max_error_V": 0.0,
+        "exact_time_pairs": 20,
+        "max_paired_difference_V": 3.763862332917256e-08,
+        "baseline_candidate_response_bytes_identical": true
+      },
+      {
+        "case": "LP-np",
+        "target_V": 0.001,
+        "spectre_max_error_V": 4.8943044450577844e-08,
+        "evas_max_error_V": 0.0,
+        "exact_time_pairs": 20,
+        "max_paired_difference_V": 3.763862332917256e-08,
+        "baseline_candidate_response_bytes_identical": true
+      }
+    ]
+  },
+  "checks": {
+    "rust": {
+      "outcome": "229 passed; 1 ignored; 0 failed",
+      "log": {
+        "path": "runs/performance-reuse-20261011/rust-tests.log",
+        "sha256": "ef334b936109f918d62f5421761c3661b03194b9f3a6ca01f959a576fa678c78",
+        "availability": "local-only"
+      }
+    },
+    "python": {
+      "outcome": "157 passed",
+      "log": {
+        "path": "runs/performance-reuse-20261011/python-tests.log",
+        "sha256": "29669a11c00dc2ecc03909b804045b675ba915ee31dc5445d84cd309e3622a38",
+        "availability": "local-only"
+      }
+    },
+    "checker": {
+      "outcome": "5 passed; false and over-budget enclosures rejected",
+      "log": {
+        "path": "runs/performance-reuse-20261011/checker-tests.log",
+        "sha256": "ca848de97b056ed2514ecd2e9a53f034595e429adb9a984bad9831b4c46d291b",
+        "availability": "local-only"
+      }
+    },
+    "clippy": {
+      "outcome": "passed -D warnings",
+      "log": {
+        "path": "runs/performance-reuse-20261011/clippy.log",
+        "sha256": "da97276ea8578af42e775965cdd40c92650f7673ef7dded05b28ce0d480cde5d",
+        "availability": "local-only"
+      }
+    },
+    "release_build": {
+      "outcome": "passed --release --locked",
+      "log": {
+        "path": "runs/performance-reuse-20261011/build-release.log",
+        "sha256": "6537962752fc28105af335e77a82c7097f42a80446196238c54046c796b97a50",
+        "availability": "local-only"
+      }
+    }
+  },
+  "limits": [
+    "Synthetic work magnifies long immutable input-copy costs. Other cases have overlapping timing ranges; no measurable general speedup.",
+    "RSS ranges overlap. Fewer copies does not establish lower peak memory.",
+    "Certification algorithm, floating-point order, event schedule, historical replay and original refusals are unchanged. This is not certification acceleration.",
+    "Finite Spectre comparison covers existing LP-nd/LP-np direct-input cases only; original 1 mV finite-observation contract is unchanged, not whole-waveform qualification or a Spectre speed comparison."
+  ],
+  "kernels": {
+    "baseline": {
+      "sha256": "7acb1c36705fecf7572b44bfc378910eb9ca8b5bcbde2cfeec7d2ca76c57fbfa"
+    },
+    "candidate": {
+      "sha256": "13aeb306cf98f06f492ce53ca7bf8d0cfb187421aa1478aaf7d0b31c400dd2d2"
+    }
+  }
+}
