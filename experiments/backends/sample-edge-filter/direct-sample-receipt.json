@@ -891,5 +891,140 @@
     "This direct path has no transition/filter consumer. Prior edge/filter fallback evidence and its failed Spectre settings remain in directed-root-receipt.json.",
     "No historical replay, connected event-cluster support, or end-to-end speedup claim.",
     "Raw output, frozen source/contract snapshots and review logs are local-only; source/checker and this compact receipt are repository-contained."
-  ]
+  ],
+  "integration_revalidation": {
+    "analysis_id": "direct-sample-main-integration-20261010",
+    "runtime_revision": "0623475cab33acbf79064e44c08a0420732aca45",
+    "parents": [
+      "6bafc14dd8d5c270ae649aa5da5e6cbfaa1ffbd3",
+      "f2844cdfb853e958780ad2ed4792dc7cca0d15ea"
+    ],
+    "reason": "Main PR130 changes fixed timer scheduling under strobes. Merge preserves both mechanisms; only documentation conflicts required resolution. Rebuild and affected tests/replays required.",
+    "kernel_sha256": "0e8b50d96de63eb0833a1106094136bc9f7c0233c7703243d88da3d6ba08892a",
+    "build_log": {
+      "path": "runs/accuracy-directed-spectre-20261010/integration-build.log",
+      "sha256": "52b05f4ddffbd400d25ff064e8e52d52513f3ad93b9d068b31827cddc57d6902",
+      "availability": "local-only"
+    },
+    "runtime_source_sha256": {
+      "evas/rust_core/src/schedule.rs": "162bb66f501cc67860f75fbb80e5122b4bfa9b67c9078dfeb45222e60fc1edd4",
+      "evas/rust_core/src/exact_time.rs": "68e8415109ff7138b27195fe8d32f686441c61d4b012e774e31ede58e5eef824"
+    },
+    "direct_pairing": {
+      "new_evas_executions": 12,
+      "new_spectre_executions": 0,
+      "pass_count": 12,
+      "total": 12,
+      "common_points": 1188,
+      "maximum_pair_difference_V": 9.85744819104184e-11,
+      "unchanged_response_count": 12,
+      "reason": "Same VA, stimulus, initial conditions, settings, observations and checker. Every complete EVAS response equals paired-v2; each still takes one target-directed iteration. Reuse the original 12 actual Spectre executions.",
+      "identity": {
+        "path": "runs/accuracy-directed-spectre-20261010/paired-integrated/IDENTITY.json",
+        "sha256": "69829e2dbe06bea28476cb277f3816bed71599e503f9432fcf28128c4125b1b5",
+        "availability": "local-only"
+      },
+      "results": {
+        "path": "runs/accuracy-directed-spectre-20261010/paired-integrated/RESULTS.json",
+        "sha256": "87797f7f2a367ac8672ab6d30847e36b00f99d2721f92c397b38af75ae2e6912",
+        "availability": "local-only"
+      }
+    },
+    "precision_replay": {
+      "counts": {
+        "evas-forced-observation": {
+          "total": 32,
+          "passed": 32
+        },
+        "evas-ordinary-query": {
+          "total": 12,
+          "passed": 12
+        },
+        "spectre-None": {
+          "total": 32,
+          "passed": 29
+        }
+      },
+      "report": {
+        "path": "runs/accuracy-directed-spectre-20261010/precision-integrated/report.json",
+        "sha256": "0bb3ff5cc69b7690815a1895ef2b36c6d1dc9636754559f210d1044b666c9feb",
+        "availability": "local-only"
+      },
+      "driver": {
+        "path": "runs/accuracy-directed-spectre-20261010/replay_precision_integrated.py",
+        "sha256": "cc7de9ec4fbeaea5f0785dc33c6f7918b618dd7c16eb6a5a4c742c8e0de181b8",
+        "availability": "local-only"
+      },
+      "preserved_history": "Original 12 EVAS forced-point refusals remain in directed-root-receipt.json; integrated fixed timer now passes all32. Original three Spectre base-profile numerical failures remain. No thresholds or denominator changed.",
+      "merged_contract": "evas/validation/paper/precision-v1.json",
+      "contract_sha256": "66f861ec83d75ec996a6fdc0b84263567b4a123b98a5f8e0cf920aeb734f328b"
+    },
+    "root_filter_replay": {
+      "new_evas_executions": 8,
+      "reused_spectre_executions": 4,
+      "pass_count": 8,
+      "total": 8,
+      "results": {
+        "path": "runs/accuracy-directed-spectre-20261010/root-filter-integrated.log",
+        "sha256": "32948c567fb5a943255230e0bad0bb2c49c70557f8e14f29eb7c4eb545782724",
+        "availability": "local-only"
+      },
+      "identity": {
+        "path": "runs/accuracy-directed-spectre-20261010/root-filter-integrated/IDENTITY.json",
+        "sha256": "b0f5612566613d07e61c6c5f5db57926f08e69b09361afc2503e43c88c491bd4",
+        "availability": "local-only"
+      }
+    },
+    "checks": {
+      "python": {
+        "passed": 187,
+        "log": {
+          "path": "runs/accuracy-directed-spectre-20261010/integration-python.log",
+          "sha256": "1e396ec012390b62bcb1c1be375284d69431dd8752f9e4d34002fa766da9acc7",
+          "availability": "local-only"
+        },
+        "scope": "Original recovery/event/sampling/history modules plus strobe, dynamic_timer and timer_ordering; run before new mixed timer/root/strobe test."
+      },
+      "recovery": {
+        "passed": 10,
+        "log": {
+          "path": "runs/accuracy-directed-spectre-20261010/integration-recovery.log",
+          "sha256": "43dfec2b84f3724223f8d1641f4b0db05e1ca53faa56bbe2dd22331a5bf2b6c8",
+          "availability": "local-only"
+        },
+        "scope": "Nine prior recovery tests plus new mixed timer/root/strobe regression; overlaps the187, not additive coverage."
+      },
+      "rust": {
+        "passed": 228,
+        "ignored": 1,
+        "log": {
+          "path": "runs/accuracy-directed-spectre-20261010/integration-rust.log",
+          "sha256": "406fe76565d22ccf6a4f96e4044df0a92bf3aeb501bb7380e8771b0b0904787c",
+          "availability": "local-only"
+        }
+      },
+      "clippy": {
+        "path": "runs/accuracy-directed-spectre-20261010/integration-clippy.log",
+        "sha256": "95cb1bd2c5b46e021500c679af585c7fd4074c78baeab889c51e9a4164526f4a",
+        "availability": "local-only"
+      },
+      "fmt": "passed",
+      "traceability": "regenerated and checked",
+      "diagnostic_inventory": "passed"
+    },
+    "new_test": {
+      "path": "evas/tests/test_root_recovery.py",
+      "sha256": "7cb305c0c4ab00a38c106439c81798dd670a6c97b30e5fc7b021552acb0ef120",
+      "behavior": "A timer before a nonlinear root preserves ordinary/forced output and accepted frames; a root-window phase query still rejects when requested as a forced frame."
+    },
+    "review": {
+      "spec": {
+        "path": "runs/accuracy-directed-spectre-20261010/review-integration-spec.txt",
+        "sha256": "c20d58369bf97e2efc91d5434cf9ba9f0f9848ca2268169915f1f46c0474fff9",
+        "availability": "local-only"
+      },
+      "scope": "Incremental integration review plus independent execution of the new mixed regression; prior core and direct-pair checker reviews reused."
+    },
+    "limits": "No additional physical models or Spectre settings executed. Original finite alignment and local-only raw-data limits remain. No new performance claim."
+  }
 }

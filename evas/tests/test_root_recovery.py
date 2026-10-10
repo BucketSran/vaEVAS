@@ -3,7 +3,7 @@
 The 10 nV + 1 ppm fixed-scale rule is precision-engineering-v1's external
 acceptance, not a claim that equal backend tolerance names mean equal accuracy.
 """
-GUARDS = ["CROSS", "EVENT-ORDER", "COMPOSE", "DEV:precision-chain"]
+GUARDS = ["CROSS", "TIMER", "EVENT-ORDER", "COMPOSE", "DEV:precision-chain"]
 
 import json
 import math
@@ -94,6 +94,34 @@ class RootRecovery(unittest.TestCase):
         self.assertGreater(demand['inherited_state_bound'], demand['budget'])
         self.assertEqual(report['counters'].get('root_refinement_iterations', 0), 0)
         self.assertFalse(details(report, 'root_refinement'))
+
+    def test_timer_and_root_queries_do_not_become_false_strobe_frames(self):
+        body = ('@(initial_step) q=0; @(timer(1,0,1e-12)) q=-1; '
+                '@(cross(pow(V(u,r),2)-2,1,1e-3,1e-3)) q=V(u,r); V(y,r)<+q;')
+        near_root = math.sqrt(2)+1e-12
+        request = request_for(body, times=[0, 1, near_root, 2, 3])
+        ordinary, error, _ = observe(request)
+        self.assertIsNone(error)
+        self.assertEqual(values(ordinary)[:2], [0, -1])
+        for actual in values(ordinary)[2:]:
+            self.assertLessEqual(abs(actual-math.sqrt(2)), 2.01e-6)
+        request['transient']['strobetimes'] = [0, 1, 2, 3]
+        forced, error, report = observe(request)
+        self.assertIsNone(error)
+        self.assertEqual(forced['transient']['events'], ordinary['transient']['events'])
+        self.assertEqual(forced['solutions'], ordinary['solutions'])
+        self.assertEqual(details(report, 'root_refinement')[-1]['stop'], 'target_reached')
+        receipt = forced['strobe_evidence']
+        self.assertEqual(receipt['times'], [0, 1, 2, 3])
+        self.assertEqual(receipt['sample_origins'], ['accepted_controller_frame']*4)
+        self.assertEqual(receipt['voltages_V'],
+                         [forced['solutions'][i]['voltages'] for i in [0, 1, 3, 4]])
+        # A legal phase query inside the retained root window is still not an
+        # accepted controller frame. Tight timer bounds do not change that rule.
+        request['transient']['strobetimes'] = [near_root]
+        result, error, _ = observe(request)
+        self.assertIsNone(result)
+        self.assertEqual(error['kind'], 'unsupported_strobe')
 
     def test_second_consumer_can_require_a_bounded_fallback(self):
         request = request_for(
