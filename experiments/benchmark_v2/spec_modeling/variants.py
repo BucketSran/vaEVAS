@@ -63,7 +63,15 @@ end
 endmodule
 ''');applied=1;description='explicit elapsed-time linear interpolation, rather than transition operator'
   elif variant=='alternative' and sid=='375':
-   p=d/'dut.va';s=p.read_text().replace('wait_ticks = dead_ticks;','wait_ticks = $rtoi(ceil($abstime/tick)) + dead_ticks - 1;');s=s.replace('if (wait_ticks > 0)\n                    wait_ticks = wait_ticks - 1;\n                if (wait_ticks <= 0)', 'if ($abstime >= wait_ticks*tick)');p.write_text(s);applied=1;description='absolute global tick deadline instead of countdown'
+   p=d/'dut.va';s=p.read_text()
+   # Compare absolute integer tick ordinals. A timer callback's real time can
+   # round below k*tick even though the kth scheduled event has arrived.
+   s=s.replace('integer wait_ticks;', 'integer wait_ticks;\n    integer global_tick_index;')
+   s=s.replace('@(initial_step) begin', '@(initial_step) begin\n            global_tick_index = -1;')
+   s=s.replace('@(timer(0, tick)) begin', '@(timer(0, tick)) begin\n            global_tick_index = global_tick_index + 1;')
+   s=s.replace('wait_ticks = dead_ticks;', 'wait_ticks = global_tick_index + dead_ticks;')
+   s=s.replace('if (wait_ticks > 0)\n                    wait_ticks = wait_ticks - 1;\n                if (wait_ticks <= 0)', 'if (global_tick_index >= wait_ticks)')
+   p.write_text(s);applied=1;description='absolute global tick deadline instead of countdown'
   elif variant=='alternative' and sid=='183':
    p=d/'dut.va';p.write_text('''`include "disciplines.vams"
 module foreground_rdac_calibrator(ck,d,vrefp,vrefn,dc0,dc1,dc2,dc3,dc4,dc5,dc6,cvinp,cvinn,en,enb);

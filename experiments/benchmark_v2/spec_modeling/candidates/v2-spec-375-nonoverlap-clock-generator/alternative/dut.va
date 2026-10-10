@@ -16,6 +16,7 @@ module nonoverlap_clock_generator(clk_in, rst, enable, phi1, phi2, deadtime_metr
     integer active_phase;
     integer pending_phase;
     integer wait_ticks;
+    integer global_tick_index;
     integer valid_state;
     real phi1_v;
     real phi2_v;
@@ -24,6 +25,7 @@ module nonoverlap_clock_generator(clk_in, rst, enable, phi1, phi2, deadtime_metr
 
     analog begin
         @(initial_step) begin
+            global_tick_index = -1;
             active_phase = 0;
             pending_phase = 0;
             wait_ticks = 0;
@@ -39,7 +41,7 @@ module nonoverlap_clock_generator(clk_in, rst, enable, phi1, phi2, deadtime_metr
             end else begin
                 active_phase = 0;
                 pending_phase = 1;
-                wait_ticks = $rtoi(ceil($abstime/tick)) + dead_ticks - 1;
+                wait_ticks = global_tick_index + dead_ticks;
             end
         end
 
@@ -52,7 +54,7 @@ module nonoverlap_clock_generator(clk_in, rst, enable, phi1, phi2, deadtime_metr
             end else begin
                 active_phase = 0;
                 pending_phase = 2;
-                wait_ticks = $rtoi(ceil($abstime/tick)) + dead_ticks - 1;
+                wait_ticks = global_tick_index + dead_ticks;
             end
         end
 
@@ -61,13 +63,14 @@ module nonoverlap_clock_generator(clk_in, rst, enable, phi1, phi2, deadtime_metr
  end
 
  @(timer(0, tick)) begin
+            global_tick_index = global_tick_index + 1;
             if (V(rst) > vth || V(enable) <= vth) begin
                 active_phase = 0;
                 pending_phase = 0;
                 wait_ticks = 0;
                 valid_state = 0;
             end else if (pending_phase != 0) begin
-                if ($abstime >= wait_ticks*tick) begin
+                if (global_tick_index >= wait_ticks) begin
                     active_phase = pending_phase;
                     pending_phase = 0;
                     valid_state = 1;
