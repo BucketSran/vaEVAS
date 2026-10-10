@@ -1,0 +1,33 @@
+{
+  "design_revision": 1,
+  "engineering_action": "testing-characterization",
+  "related_cases": [],
+  "review_status": "pending",
+  "reviewed_revision": null,
+  "backend": null,
+  "task_path": null,
+  "evidence_paths": [],
+  "case_id": "case-0001",
+  "title": "POR 上电、欠压与恢复测试台",
+  "circuit_family": "power",
+  "subtypes": [
+    "完整测试台",
+    "激励生成",
+    "运行时性质检查"
+  ],
+  "context_level": "bounded-project",
+  "source_ids": [
+    "sky130-ajc-por",
+    "ti-2011"
+  ],
+  "circuit_ids": [
+    "sky130-ajc-por"
+  ],
+  "source_groups": [
+    "sky130-ajc-por"
+  ],
+  "stage": "design-draft",
+  "review_focus": "延迟起点及复位合同；首版只含上电、欠压、恢复",
+  "proposed_form": "固定 POR；提交 VA 激励、监控与逐场景报告",
+  "public_test_mode": "fixed-connections-custom-probes"
+}

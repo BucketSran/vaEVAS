@@ -1,0 +1,30 @@
+{
+  "design_revision": 1,
+  "engineering_action": "testing-characterization",
+  "related_cases": [],
+  "review_status": "pending",
+  "reviewed_revision": null,
+  "backend": null,
+  "task_path": null,
+  "evidence_paths": [],
+  "case_id": "case-0002",
+  "title": "固定 LDO 的启动指标测量",
+  "circuit_family": "power",
+  "subtypes": [
+    "指标测量"
+  ],
+  "context_level": "bounded-work-unit",
+  "source_ids": [
+    "analog-design-bench-ldo"
+  ],
+  "circuit_ids": [
+    "adb-ldo-ota5"
+  ],
+  "source_groups": [
+    "adb-ldo-ota5"
+  ],
+  "stage": "design-draft",
+  "review_focus": "有限窗口定义、取样/事件语义及未建立状态",
+  "proposed_form": "固定 DUT 和启动激励；提交 VA 测量模块",
+  "public_test_mode": "fixed-public-tests"
+}
