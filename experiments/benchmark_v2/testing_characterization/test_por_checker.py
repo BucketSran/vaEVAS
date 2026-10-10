@@ -6,10 +6,10 @@ spec=importlib.util.spec_from_file_location('testing',Path(__file__).resolve().p
 m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
 
 class FullPorWave(unittest.TestCase):
-    def fixture(self,missing_recovery=False,slow=False):
+    def fixture(self,missing_recovery=False,slow=False,late_first=False):
         period=60e-6 if slow else 30e-6
-        dip=.00234 if slow else .0021;low=dip+.0001;rec=low+.0001;high=rec+.0001
-        first=[.00152+i*period for i in range(13)]
+        dip=.00305 if late_first else .00234 if slow else .0021;low=dip+.0001;rec=low+.0001;high=rec+.0001
+        first=[(.00258999 if late_first else .00152)+i*period for i in range(13)]
         second=[rec+.00008+i*period for i in range(13)]
         rise=[first[5]+1e-8]+([] if missing_recovery else [second[5]+1e-8])
         fall=[first[12]+1e-8]+([] if missing_recovery else [second[12]+1e-8])
@@ -51,6 +51,16 @@ class FullPorWave(unittest.TestCase):
             elif .0022<=t<.0023: r['avdd']=2.
             elif .0023<=t<.0024: r['avdd']=2+1.3*(t-.0023)/.0001
             elif t>=.0024: r['avdd']=3.3
+        self.assertFalse(m.evaluate(rows,case)['passed'])
+    def test_near_timeout_first_fall_requires_full_hold(self):
+        rows,case=self.fixture(late_first=True)
+        self.assertTrue(m.evaluate(rows,case)['passed'])
+        for r in rows:
+            t=r['time']
+            if .003<=t<.0031: r['avdd']=3.3-1.3*(t-.003)/.0001
+            elif .0031<=t<.0032: r['avdd']=2.
+            elif .0032<=t<.0033: r['avdd']=2+1.3*(t-.0032)/.0001
+            elif t>=.0033: r['avdd']=3.3
         self.assertFalse(m.evaluate(rows,case)['passed'])
     def test_success_report_cannot_hide_missing_recovery(self):
         rows,case=self.fixture(True)

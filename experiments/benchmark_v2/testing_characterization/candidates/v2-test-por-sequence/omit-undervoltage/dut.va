@@ -31,11 +31,11 @@ analog begin
   if(saw_rise[cycle] && !saw_fall[cycle]) begin saw_fall[cycle]=1;pf[cycle]=$abstime;falling_count[cycle]=n[cycle];end
  end
  @(timer(0,tick)) begin
-  if(state==0 && $abstime+1f>=ramp+hold && ((saw_fall[0] && $abstime+1f>=pf[0]+hold) || $abstime+1f>=ramp+timeout)) begin state=1;phase_time=$abstime;end
+  if(state==0 && $abstime+1f>=ramp+hold && ((saw_fall[0] && pf[0]<ramp+timeout && $abstime+1f>=pf[0]+hold) || ((!saw_fall[0] || pf[0]>=ramp+timeout) && $abstime+1f>=ramp+timeout))) begin state=1;phase_time=$abstime;end
   else if(state==1 && $abstime+1f>=phase_time+dip_ramp) begin state=2;phase_time=$abstime;end
-  else if(state==2 && ((lost && $abstime+1f>=phase_time+hold && $abstime+1f>=lost_time+hold) || $abstime+1f>=phase_time+timeout)) begin state=3;phase_time=$abstime;cycle=1;end
+  else if(state==2 && ((lost && lost_time<phase_time+timeout && $abstime+1f>=phase_time+hold && $abstime+1f>=lost_time+hold) || ((!lost || lost_time>=phase_time+timeout) && $abstime+1f>=phase_time+timeout))) begin state=3;phase_time=$abstime;cycle=1;end
   else if(state==3 && $abstime+1f>=phase_time+recovery_ramp) begin state=4;phase_time=$abstime;end
-  else if(state==4 && ((saw_fall[1] && $abstime+1f>=pf[1]+hold) || $abstime+1f>=phase_time+timeout)) begin
+  else if(state==4 && ((saw_fall[1] && pf[1]<phase_time+timeout && $abstime+1f>=pf[1]+hold) || ((!saw_fall[1] || pf[1]>=phase_time+timeout) && $abstime+1f>=phase_time+timeout))) begin
    state=5;finished=1;
    for(i=0;i<2;i=i+1) begin
     v[i]=saw_rise[i] && saw_fall[i] && n[i]>=9;

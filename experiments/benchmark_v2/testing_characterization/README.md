@@ -34,3 +34,5 @@ POR 归属 Spectre 扩展。整个 POR 的纯 VA 开源替代仍未校准，不�
 POR checker 的独立行为测试：
 
     python3 -B experiments/benchmark_v2/testing_characterization/test_por_checker.py
+
+POR 超时分支按公开半开窗口处理。test_por_timeout.py 对实际发货源码的 timer 条件执行有限控制流回归，覆盖截止前50us、截止时刻、截止之后及缺事件；test_por_checker.py 使用独立端口波形拒绝提前欠压。该源条件回归不等同VA仿真，完整Spectre校准仍待运行。
