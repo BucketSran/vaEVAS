@@ -3,6 +3,15 @@
 近邻固定时钟与线性历史的后续修复、新Spectre容差对照及保留失败，见
 [近时钟历史证据](near-clock-history.md)。以下各节保留其原检查点身份。
 
+## 2026-10-10 精度复核
+
+[精度控制收据](precision-audit.json)绑定 main `ab0df35b` 的当前内核。原 VA、刺激、初值、
+Spectre 数据与共同预算保持；用当前前端重新编译到 IR18，未修改旧请求的版本号来冒充迁移。
+六次 EVAS 请求全部完成，共配对 7,045 个原生时刻。每点另用 `Fraction` 计算独立有理数答案，
+六档均满足原电压请求预算。两档 tolerance-only 仍通过完整有限对照；baseline 参考超差和
+step-only 缺 exact anchors 等原失败仍在。没有新增 Spectre 执行，没有新增支持范围。
+控制含义、自动细化与拒绝边界统一在[数值手册](../../../evas/docs/math/solving.md#当前精度控制怎么用)维护。
+
 ## 近零采样状态与独立固定时钟
 
 四端首轮中，EV-SH-01、CO-SH-01 因近零 real 状态的相对误差预算趋零而拒绝，

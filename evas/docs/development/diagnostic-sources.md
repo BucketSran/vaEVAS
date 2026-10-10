@@ -216,12 +216,28 @@ lint_passed 仍只表示既有静态检查通过；支持范围与精度资格�
 
 ## 外部诊断消费移交
 
-本节记录 #64 尚未完成的 Circuit Harness 依赖，不代表已实现外部适配。
+本节记录 #64 的 Circuit Harness 依赖及已验证的交付范围。
 本库版本化协议为 [诊断合同](../reference/diagnostics.md)，实际触发用例为
 [test_diagnostic_sources.py](../../tests/test_diagnostic_sources.py)；源码观察数量由
 [机器清单](diagnostic-inventory.json) 提供，不能充当错误种类数或执行覆盖率。
 
-### 已检查的消费点
+### 当前适配候选
+
+[Circuit Harness PR #6](https://github.com/BucketSran/circuit-harness/pull/6) 在独立仓库实现消费，
+尚未合并。执行层读取完整 stderr，显式验证 v1；公开 EVAS session 仅在任务选择 `diagnostic`
+后投影 version、code、category、stage、capability。新字段不包含 message、位置或嵌套载荷，
+旧文本反馈和完整私有日志保留。远端 Spectre 不能选择此 EVAS 字段。
+
+候选 `e151dbb` 已用当前 EVAS `ab0df35b` / IR18 实际执行下表前四项和成功对照，分别经过
+可信执行层和 macOS 隔离会话。四类失败均保留 `backend_error`，成功项没有失败元数据；
+重复读取同一 action 复用已存结果。未来版本、缺失/损坏载荷及超长原始日志另有构造负控。
+固定内核身份和可重跑测试见[消费端验收说明](https://github.com/BucketSran/circuit-harness/blob/e151dbb/docs/reference/CURRENT_EVAS_PUBLIC_SESSION.md#evidence-and-limits)。
+原始运行资料为 local-only，不是公开数据集。
+
+这是执行层与公开会话验收。真实基础设施失败、Docker benchmark replay 和完整 receipt
+汇总仍待完成，不能据此关闭 #64 或宣布全部外部消费验收通过。
+
+### 历史消费点
 
 2026-10-08 只读检查 Circuit Harness 的 `demo/chips`，固定源码身份
 `66c451ff2ce3642df4436e73fccc2bc5a9579a18`。实际本地项目来自 Codex 配置的 Circuit Harness。
@@ -243,9 +259,8 @@ lint_passed 仍只表示既有静态检查通过；支持范围与精度资格�
 
 ### 拥有者与待交付验收
 
-责任组件是 Circuit Harness 的当前 EVAS 执行与 benchmark/replay 适配。下一次独立任务在其
-项目中实现，不在 vaEVAS 的 benchmark 定义或 Rust 数值内核中复制执行编排。
-尚无新建的外部 Issue/PR 身份，本入口保留 #64 依赖；创建外部任务后应补入其固定链接。
+责任组件是 Circuit Harness 的当前 EVAS 执行与 benchmark/replay 适配。
+后续在上述 PR 或其交付后的任务继续实现，不在 vaEVAS 的 benchmark 定义或 Rust 数值内核中复制执行编排。
 
 适配必须显式处理 `diagnostic_version=1`。非 v1、无诊断或损坏/截断载荷的类别保持 unknown，
 保留原版本与原载荷；不能用已知 kind 或文字反套当前规则。协议字段缺失不代表执行成功。
