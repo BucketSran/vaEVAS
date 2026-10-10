@@ -149,8 +149,24 @@ def prepare(args):
     public_task = args.output / 'task'
     public_task.mkdir()
     instruction = (exported / 'instruction.md').read_text()
-    instruction += '\nRuntime: use harness-public info to inspect the public session. Public tool names retain evas_ prefixes but the actual backend is Spectre. Read starter files using evas_read (project/dut.va when present); write the complete final candidate using evas_write, path dut.va. Local /work edits alone do not submit a candidate. The historical /tests/test.sh path is replaced by harness-public action with evas_simulate. Each action needs a unique stable action_id; never retry uncertain actions. The fixed netlist is available through evas_simulate; evas_testbench accepts a JSON string spec with netlist text and support_files mapping of temporary VA models. Temporary files do not change the submitted candidate.\n'
-    instruction += 'Example action JSON: {"action_id":"read-1","tool":"evas_read","arguments":{"path":"project/dut.va"}}. Pipe the object into harness-public action. For simulation use {"action_id":"simulate-1","tool":"evas_simulate","arguments":{}}; submit with evas_submit.\n'
+    instruction += (
+        '\nRuntime: use harness-public info to inspect the public session. Public tool names '
+        'retain evas_ prefixes but the actual backend is Spectre. Use evas_read with an empty '
+        'path to list public materials and candidate files. Write the complete contents of '
+        'every final candidate file using evas_write. Required submission paths: '
+        + json.dumps(names) + '. Local /work edits alone do not submit a candidate. '
+        'The historical /tests/test.sh path is replaced by harness-public action with '
+        'evas_simulate. Each new action needs a unique stable action_id. An uncertain '
+        'action may only be queried using exactly its original action_id and arguments; '
+        'do not resubmit it under another ID. The fixed netlist is available through '
+        'evas_simulate. evas_testbench accepts a JSON string spec with netlist text and '
+        'support_files mapping of temporary VA models. Temporary files do not change '
+        'the submitted candidate.\n'
+        'Example action JSON: {"action_id":"list-1","tool":"evas_read",'
+        '"arguments":{"path":""}}. Pipe the object into harness-public action. '
+        'For simulation use {"action_id":"simulate-1","tool":"evas_simulate",'
+        '"arguments":{}}; submit with evas_submit.\n'
+    )
     (public_task / 'instruction.md').write_text(instruction)
     shutil.copytree(exported / 'public', public_task / 'environment/public')
     (public_task / 'tests').mkdir()
