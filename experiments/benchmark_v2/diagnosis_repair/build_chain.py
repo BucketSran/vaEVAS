@@ -63,7 +63,7 @@ def build():
  ports=['vin','clk','pgood','resetb','enable','activity']
  for i,p in enumerate(patterns):
   cases.append(dict(name='public-old-event' if i==0 else 'repeated-recovery',kind='chain',signals=ports,stop=78e-9,guard=0.15e-9,release_delay=10e-9,maxstep=0.05e-9,netlist=deck('power_chain',ports,{'vin':(0.5,[(t+0.2,v) for t,v in p]),'clk':(0,clock(78))},78,includes=list(files))))
- words='修复UVLO、复位释放、使能与有状态下游链。vin上穿0.65V产生pgood，下穿0.55V撤销，迟滞区保持。pgood连续高10ns后resetb释放；任何失效均立即断言并取消旧计时，再次有效必须重计完整10ns。enable为pgood与resetb同时有效。下游activity初始0，enable且resetb有效时每个clk上升沿加0.1V，否则清零；保护撤销时清零。正常供电必须出现下游递增动作。\n\n可修改dut.va顶层连接、uvlo.va、release.va、enable.va、downstream.va及设计参数，或整体重建满足接口与合同的系统。验收电源/时钟激励固定；逻辑高0.9V，传播与平滑须在0.15ns内完成，10ns资格允许0.15ns传播容差。公开参数范围：上阈值0.64.0.0.66V，下阈值0.54.0.0.56V，release delay=9.9.0.10.1ns；即使调参仍须满足公开外部合同。此系统为原创行为控制工程，未声称晶体管POR等价。'
+ words='修复UVLO、复位释放、使能与有状态下游链。vin上穿0.65V产生pgood，下穿0.55V撤销，迟滞区保持。pgood连续高10ns后resetb释放；任何失效均立即断言并取消旧计时，再次有效必须重计完整10ns。enable为pgood与resetb同时有效。下游activity初始0，enable且resetb有效时每个clk上升沿加0.1V，否则清零；保护撤销时清零。正常供电必须出现下游递增动作。\n\n可修改dut.va顶层连接、uvlo.va、release.va、enable.va、downstream.va及设计参数，或整体重建满足接口与合同的系统。验收电源/时钟激励固定；逻辑高0.9V，传播与平滑须在0.15ns内完成，10ns资格允许0.15ns传播容差。公开参数范围：上阈值0.64至0.66V，下阈值0.54至0.56V，release delay为9.9至10.1ns；即使调参仍须满足公开外部合同。此系统为原创行为控制工程，未声称晶体管POR等价。'
  path=package(task,buggy,cases,words,'original-uvlo-chain-case0009')
  for name,text in files.items():write(path/'solution/files'/name,text)
  alt=RELEASE.replace('@(timer(deadline)) begin','@(timer(0,20p)) begin\nif(deadline>=0 && $abstime>=deadline) begin').replace('deadline=-1;\nend\nV(resetb)','deadline=-1;\nend\nend\nV(resetb)')
