@@ -1,5 +1,7 @@
 # spec #134 真实采样级数据建模
 
+当前作者校准为8/8个登记变体有效，见[作者校准最终报告](../author-calibration-final.md)。模型 Agentic 与适用 one-shot 试做及完整 spec 验收尚未完成。计划和生成清单中的 pending 保留生成时状态，当前作者结论以该报告为准。
+
 本目录已建立来自JKU SKY130晶体管采样级的真实数据、完整实验划分、Harbor任务和独立评分程序。来源真实性、初始化和误差预算见[任务来源](../../../benchmark/tasks/v2-data-sampling-identification/SOURCE.md)。参考、合法替代和六类语义负例已完成实际Spectre作者校准，D3通过。D4模型试做仍在进行，spec #134与发布资格尚未完成。
 
 [category-manifest.json](category-manifest.json)将本类唯一必做来源映射至任务。该采样级不是32个P1来源的新增计数。固定32条训练、2条公开自测与4条隐藏实验的身份在[dataset-manifest.json](dataset-manifest.json)，公开与隐藏不共享完整序列。

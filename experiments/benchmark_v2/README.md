@@ -1,5 +1,7 @@
 # 五类工程任务的实施与校准
 
+当前37题、179个登记变体的作者正负校准全部齐全，覆盖584个当前条件位置，无剩余作者校准缺口，见[最终报告](author-calibration-final.md)和[固定机器摘要](author-calibration-final.json)。模型 Agentic 与适用 one-shot 试做、完整 spec 验收及发布资格尚未完成。计划及生成清单中的 pending 是生成时状态，当前作者结论统一以最终报告为准。
+
 本目录支撑规格 #133–#137 的完整 v2 实施。当前任务和证据分别归属
 `spec_modeling/`、`data_modeling/`、`extension_integration/`、
 `diagnosis_repair/`、`testing_characterization/`。

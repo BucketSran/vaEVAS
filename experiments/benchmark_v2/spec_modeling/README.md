@@ -1,7 +1,9 @@
 # 按规格建模的P1任务
 
+当前作者校准为68/68个登记变体有效，见[作者校准最终报告](../author-calibration-final.md)。模型 Agentic 与适用 one-shot 试做及完整 spec 验收尚未完成。计划和生成清单中的 pending 保留生成时状态，当前作者结论以该报告为准。
+
 本目录维护#133归口的19个来源，每个来源对应一个正式Harbor任务目录。
-所有参考、替代实现和语义错误版本都已保存；实际Spectre校准与模型试做仍待执行。
+所有参考、替代实现和语义错误版本都已保存；当前作者Spectre校准已完成，模型试做仍未完成。
 因此当前不能关闭#133，也不能把这些任务计入已发布评分题数。
 
 `manifest.json`逐来源保存建设归口和验收状态。`run-plan.json`列出每个实际候选目录、
@@ -25,9 +27,9 @@
 其判据仍从公开合同独立推导。替身条件保留真实顶层，检查它使用实际 helper 输出。
 091 的组件条件还保存固定测试台内的 core 边界，检查样本及通知时序。
 活动但无关的 public helper 配上私有正确电路，以及只驱动复位值的空壳，
-均作为待实际校准的架构负例；其中旁路包的两个 public helper 本身仍正确。
+均已纳入当前作者校准的架构负例；其中旁路包的两个 public helper 本身仍正确。
 
-新合同、checker 和负例未做实际 Spectre 校准，不能据此关闭 #133。
+新合同、checker 和负例的作者 Spectre 校准已完成；模型试做及完整验收尚未完成，不能据此关闭 #133。
 旧版参考/alternative 外部行为校准及三个任务的六个 one-shot 配置结果保留旧身份，
 不能升级为新版通过证据；三题的 one-shot/Agentic prompt 均需重新冻结运行。
 其余16题公开要求及 checker 未变。`build_structure.py` 可重建六条件及架构负例，
@@ -35,7 +37,7 @@
 
 #133 的运行计划由62个候选包、138条件增至68个候选包、210条件。
 新增6个架构负例包；三题每题5个候选包×6条件，共90个新版实际校准条件。
-全37题原171个候选变体的口径相应增至177，完整条件总数由根运行清单另行计算，
+当时全37题的候选变体由171增至177；当前最终清单为179个变体、584个条件位置，
 不能把变体数当作条件数。历史结果的分母及失败保持不变。
 
 三题的 `verify.py` 顶层显式导入 `v2_runtime`、`v2_spec` 和新增的
@@ -53,8 +55,7 @@
 python3 -B -m unittest discover -s experiments/benchmark_v2/spec_modeling -p 'test_*.py' -v
 ```
 
-校准完成后，将原始运行保存于ignored runs，提取带候选、checker、激励和实际工具链身份的
-紧凑证据到本目录。模型Agentic与适用one-shot须用同一固定环境，至少两个实际模型配置。
+原始运行保存于 ignored runs；本目录的最终报告保存带候选、checker、激励和实际工具链身份的紧凑证据。模型Agentic与适用one-shot须用同一固定环境，至少两个实际模型配置。
 
 ## 审查后的判据修正
 
@@ -65,17 +66,17 @@ python3 -B -m unittest discover -s experiments/benchmark_v2/spec_modeling -p 'te
 没有放宽电压容差。186公开上电P/M、dout、clkc、MSB指针及首帧发布0111；
 375合法范围明确为`0<tr<=tick/2`，包含既有默认值。
 
-038、375的判据行为已变，需用新版本重新评分冻结的真实波形，旧结果保留。
+开发时038、375的判据行为改变，要求用新版本重新评分冻结的真实波形，旧结果保留。当前有效证据见最终报告。
 186公开材料改变，需冻结新题面身份。其他16题判据行为未改，但共享checker及19份副本
 的文件身份都已更新，运行身份也须记录新SHA。
 
 实际首轮314的stretched-input在17.466ns以后仍保持toggled高。参考和替代使用timer事件
 后又严格比较$abstime与pulse_end，可能因回调时间舍入而丢弃已经到达的定时事件。
 候选现由timer(pulse_end)直接清除脉冲，不再重复时间判定。相同调度修正用于其语义mutant；
-314的候选身份需重冻并实际重跑，此处没有宣称修复已通过Spectre。独立checker回归以
+当时314的候选身份需重冻并实际重跑；当前该修复的作者Spectre证据已纳入最终报告。独立checker回归以
 16.236ns进入、17.236ns结束的手算脉冲验证健康波形通过及持续高电平失败。
 091、307的contract将dut.va列为首项，保持允许修改文件集合不变；它们此前未进入仿真，
-新contract身份需冻结后重跑。激励未改。
+当时新contract身份需冻结后重跑，激励未改；当前结果见最终报告。
 
 ## 替代实现的形态与限制
 
@@ -100,4 +101,4 @@ python3 -B -m unittest discover -s experiments/benchmark_v2/spec_modeling -p 'te
 | 396 | one-hot ring already differs from reference | rotating two-bit quadrature state instead of modulo phase counter |
 | 186 | packed SAR words already differ from reference | packed SAR masks and bit updates instead of four-element arrays |
 
-有限表达式回归覆盖Alexander完整真值表、SAR四决策组合与位序、三次连续资格、离散增益控制，以及采集、低通、饱和积分的公开算例。它们执行实际候选表达式，但不是Verilog-A仿真；新候选全部标为待Spectre校准，原实际结果仍绑定旧候选SHA，不能继承为新版通过。生成身份检查也不证明行为通过。
+有限表达式回归覆盖Alexander完整真值表、SAR四决策组合与位序、三次连续资格、离散增益控制，以及采集、低通、饱和积分的公开算例。它们执行实际候选表达式，但不是Verilog-A仿真；候选生成时全部标为待Spectre校准；当前新版的有效证据见最终报告，原实际结果仍绑定旧候选SHA，不能继承为新版通过。生成身份检查也不证明行为通过。

@@ -19,4 +19,6 @@ Ajacci sky130_ajc_ip__por 固定commit db8745ef4d7d85a1852fc60c251ba34c6cebe497�
   ]
 }
 
-原始刺激下mixed Spectre来源校准已实际完成，第6/13沿及两轮实测指标见experiments/benchmark_v2/testing_characterization/por_source_mixed_spectre_r5.json。完整Spectre闭环及正负例校准仍待实际执行，来源校准不计模型分数。
+原始刺激下mixed Spectre来源校准已实际完成，第6/13沿及两轮实测指标见experiments/benchmark_v2/testing_characterization/por_source_mixed_spectre_r5.json。完整Spectre闭环及正负例作者校准已完成，来源校准不计模型分数。
+
+当前作者正负校准的固定身份与完整分母见[作者校准最终报告](../../../experiments/benchmark_v2/author-calibration-final.md)。该结论不代表模型试做或完整 spec 验收完成；历史来源与旧运行仍保留原版本。
