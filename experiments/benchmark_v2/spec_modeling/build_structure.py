@@ -21,7 +21,7 @@ CONFIG = {
 }
 SENTINELS = {
     '091': {'voutp': '.22', 'voutn': '.67', 'settled': '.9', 'offset_residual': '.14'},
-    '307': {'vout': '.63', 'phase_metric': '.22', 'valid': '0.'},
+    '307': {'vout': '.63', 'phase_metric': '.22', 'valid': '0.0'},
     '308': {'vout': '.61', 'offset_dbg': '.23', 'valid': '.9'},
 }
 EMPTY_OUTPUTS = {
