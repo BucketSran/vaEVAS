@@ -51,3 +51,5 @@ python3 -B experiments/benchmark_v2/data_modeling/test_checker.py
 开发中先试的低阶多项式在公开新中间电平轨迹出现较大误差，高阶拟合还出现速率外推不稳，未用于发布参考。为此补公开完整阶跃轨迹，改用正值速率表。[旧参考实际校准](isolated-r2-diagnosis.json)随后4/6通过，未过两条的采集RMS约35–36 mV。公开开通波形表明，单一导通沿不能表示直接PMOS与反相器驱动NMOS的差异。因此当前候选拆开两种导通函数和反相器状态，并从已冻结公开训练拟合正修正表；没有修改源数据或阈值，也不从隐藏输出拟合参数。r4校准采用该冻结候选，任何后续修改须重新冻结和校准。
 
 后续扩充需要新增且可辨识的工程目标。长保持泄漏、沿附近pedestal/feedthrough和主动查询均未进入本题独立目标。当前短保持指标测量保留状态；已有数据不能证明这些后续效应可稳定评分。
+
+公开诊断入口 `environment/public/public-default.scs` 已作为固定附件保存。它只使用原有公开材料；Spectre 实际执行返回 0，身份见 [public-diagnostic-calibration.json](public-diagnostic-calibration.json)。该结果验证默认诊断可运行，不提供隐藏指标或模型得分。新增成对模型试做应从含此附件的版本同时冻结。
