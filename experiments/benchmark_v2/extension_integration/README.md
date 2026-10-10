@@ -13,3 +13,5 @@
 缺钟case在52us至54us验证lock撤销，稳定窗口移至恢复后的57us至59us，原200kHz频率和3ns相位阈值保持不变；该恢复窗还必须出现独立重算的正lock资格。公开lock更新期限为2ns，观测增加50ps数值裕量。本地合成轨迹覆盖2ns合法更新、3ns超期更新与缺钟后的重新取得资格。
 
 公开诊断入口 `environment/public/public-default.scs` 已作为固定附件保存。它只使用原有公开材料；Spectre 实际执行返回 0，身份见 [public-diagnostic-calibration.json](public-diagnostic-calibration.json)。该结果验证默认诊断可运行，不提供隐藏指标或模型得分。新增成对模型试做应从含此附件的版本同时冻结。
+
+ADPLL 也已保存固定 `public-default.scs`。诊断运行保留60us、1ns最大步长，以1ns strobe记录9个实际接口信号；完整10.7MB报告通过新版harness，Agent取得摘要及分页入口。身份见 [adpll-public-diagnostic-calibration.json](adpll-public-diagnostic-calibration.json)，这不是隐藏checker或模型成绩。
