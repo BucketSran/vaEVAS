@@ -3,7 +3,16 @@
 
 | 记录 | 关联 Case |
 | --- | --- |
+| [ADCToolbox：ADC 频谱指标的计算合同](adctoolbox-spectrum.md) | [case-0010](../cases/testing-characterization/adc/case-0010-adc-spectrum-records/README.md) |
+| [Alexander BBPD 的结构与模型边界主源](alexander-bbpd-primary.md) | [case-0012](../cases/spec-modeling/pll/case-0012-bbpd/README.md) |
 | [Analog Design Bench：LDO 启动测量](analog-design-bench-ldo.md) | [case-0002](../cases/testing-characterization/power/case-0002-ldo-startup/README.md) |
 | [Cadence 安装库：VA 测量与激励示例](cadence-measurement.md) | [case-0003](../cases/testing-characterization/amplifiers/case-0003-opamp-slew/README.md) |
+| [JKU：SKY130 transmission-gate 采样级](jku-sampling-stage.md) | [case-0006](../cases/data-modeling/adc/case-0006-sampling-identification/README.md) |
+| [BMAS 2000：SC 滤波器中的运放规格](sc-filter-bmas2000.md) | [case-0005](../cases/spec-modeling/filters/case-0005-sc-opamp/README.md) |
 | [ajcci：SKY130 可编程 POR](sky130-ajc-por.md) | [case-0001](../cases/testing-characterization/power/case-0001-por-sequence/README.md) |
 | [TI 2011：模拟电路自检查](ti-2011.md) | [case-0001](../cases/testing-characterization/power/case-0001-por-sequence/README.md) |
+| [Tiny Tapeout ADPLL：数字架构与 fine TDC 方法来源](tiny-tapeout-adpll.md) | [case-0004](../cases/spec-modeling/pll/case-0004-adpll-dco/README.md)、[case-0007](../cases/extension-integration/pll/case-0007-adpll-fine-tdc/README.md) |
+| [v4 滞回比较器表征来源](v4-hysteresis-characterizer.md) | [case-0016](../cases/testing-characterization/comparators/case-0016-hysteresis-characterizer/README.md) |
+| [benchmark v4：PFD 低有效复位修复素材](v4-pfd-reset.md) | [case-0008](../cases/diagnosis-repair/pll/case-0008-pfd-reset/README.md) |
+| [v4 单模块建模与修复来源](v4-single-module-migration.md) | [case-0011](../cases/spec-modeling/adc/case-0011-clocked-sample-hold/README.md)、[case-0012](../cases/spec-modeling/pll/case-0012-bbpd/README.md)、[case-0013](../cases/spec-modeling/adc/case-0013-sar-handshake/README.md)、[case-0014](../cases/diagnosis-repair/power/case-0014-debounce-qualification/README.md)、[case-0015](../cases/diagnosis-repair/power/case-0015-reset-release-sequencer/README.md) |
+| [vaEVAS 既有行为任务：UVLO 与 ADC 频谱](vaevas-behavioral-seeds.md) | [case-0009](../cases/diagnosis-repair/power/case-0009-uvlo-reset-chain/README.md)、[case-0010](../cases/testing-characterization/adc/case-0010-adc-spectrum-records/README.md)、[case-0012](../cases/spec-modeling/pll/case-0012-bbpd/README.md) |

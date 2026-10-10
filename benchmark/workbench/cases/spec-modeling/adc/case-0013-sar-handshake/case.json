@@ -1,0 +1,31 @@
+{
+  "design_revision": 1,
+  "engineering_action": "spec-modeling",
+  "related_cases": [],
+  "review_status": "pending",
+  "reviewed_revision": null,
+  "backend": null,
+  "task_path": null,
+  "evidence_paths": [],
+  "case_id": "case-0013",
+  "title": "按规格建立四位 SAR 前端握手模块",
+  "circuit_family": "adc",
+  "subtypes": [
+    "单模块控制建模",
+    "比较器握手与DAC控制"
+  ],
+  "context_level": "bounded-work-unit",
+  "source_ids": [
+    "v4-single-module-migration"
+  ],
+  "circuit_ids": [
+    "v4-sarfend-logic"
+  ],
+  "source_groups": [
+    "v4-family-186"
+  ],
+  "stage": "source-screening",
+  "review_focus": "与既有 va02 的取舍；比较器合法事件、发布时刻与原工程来源",
+  "proposed_form": "给握手和开关状态表，提交一个 VA SAR 前端逻辑模块",
+  "public_test_mode": "fixed-public-tests"
+}

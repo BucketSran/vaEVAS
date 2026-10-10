@@ -1,0 +1,31 @@
+{
+  "design_revision": 1,
+  "review_status": "pending",
+  "reviewed_revision": null,
+  "backend": null,
+  "task_path": null,
+  "evidence_paths": [],
+  "case_id": "case-0009",
+  "title": "UVLO、复位释放与使能链的系统修复",
+  "engineering_action": "diagnosis-repair",
+  "circuit_family": "power",
+  "subtypes": [
+    "多 VA 模块修复",
+    "系统连接与设计参数"
+  ],
+  "context_level": "bounded-project",
+  "source_ids": [
+    "vaevas-behavioral-seeds"
+  ],
+  "circuit_ids": [
+    "uvlo-monitor-original"
+  ],
+  "source_groups": [
+    "uvlo-monitor-original"
+  ],
+  "related_cases": [],
+  "stage": "design-draft",
+  "review_focus": "建立有真实模块依赖的健康电源控制链，再选择跨模块故障",
+  "proposed_form": "修复指定 UVLO、复位释放和使能模块及连接，恢复电源序列行为",
+  "public_test_mode": "fixed-connections-custom-probes"
+}

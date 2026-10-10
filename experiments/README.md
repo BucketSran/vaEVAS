@@ -46,6 +46,7 @@
 | 目录 | 职责 | 内容 |
 | --- | --- | --- |
 | [va_screen/](va_screen/README.md) | Benchmark 初筛 | 六题构建、校准与模型评测工具，冻结输入身份和首轮精简结果 |
+| [v4_audit/](v4_audit/README.md) | 旧题静态审核 | 按家族给 GLM 提供完整 v4 三形态材料，保留输入身份、失败与待复核意见；不执行仿真或评分 |
 | [benchmark_first_batch/](benchmark_first_batch/README.md) | 七类工程任务 | 公共评分边界、冻结与校准工具、来源元数据、实际归档重判及交替性能测量；资格与结果逐项记录 |
 | [adc_linearity/](adc_linearity/REMOTE_PLAN.md) | ADC 测量首题 | 原创测量器、冻结输入与[实际 Spectre 校准](adc_linearity/calibration-20261007.json)；不并入原六题初筛分母 |
 | [performance/](performance/README.md) | 成本测量 | 固定请求配对、构建基线、紧凑收据；数学与支持范围仍归 EVAS 手册 |

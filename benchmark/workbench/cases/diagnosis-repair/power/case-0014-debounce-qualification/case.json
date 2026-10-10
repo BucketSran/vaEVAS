@@ -1,0 +1,31 @@
+{
+  "design_revision": 1,
+  "engineering_action": "diagnosis-repair",
+  "related_cases": [],
+  "review_status": "pending",
+  "reviewed_revision": null,
+  "backend": null,
+  "task_path": null,
+  "evidence_paths": [],
+  "case_id": "case-0014",
+  "title": "修复控制输入的去抖资格计时",
+  "circuit_family": "power",
+  "subtypes": [
+    "单模块修复",
+    "抗毛刺与计时取消"
+  ],
+  "context_level": "bounded-work-unit",
+  "source_ids": [
+    "v4-single-module-migration"
+  ],
+  "circuit_ids": [
+    "v4-debounce-latch"
+  ],
+  "source_groups": [
+    "v4-family-005"
+  ],
+  "stage": "source-screening",
+  "review_focus": "完整重写后是否值得作为基础修复题；复位释放及初态边界",
+  "proposed_form": "给故障 VA、公开行为和毛刺复现，提交修复模块，允许整体重写",
+  "public_test_mode": "fixed-public-tests"
+}

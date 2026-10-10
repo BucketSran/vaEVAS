@@ -1,0 +1,31 @@
+{
+  "design_revision": 1,
+  "review_status": "pending",
+  "reviewed_revision": null,
+  "backend": null,
+  "task_path": null,
+  "evidence_paths": [],
+  "case_id": "case-0006",
+  "title": "采样级固定数据包动态建模",
+  "engineering_action": "data-modeling",
+  "circuit_family": "adc",
+  "subtypes": [
+    "固定数据包辨识",
+    "有限采集与历史状态"
+  ],
+  "context_level": "bounded-work-unit",
+  "source_ids": [
+    "jku-sampling-stage"
+  ],
+  "circuit_ids": [
+    "jku-sampling-stage"
+  ],
+  "source_groups": [
+    "jku-sampling-stage"
+  ],
+  "related_cases": [],
+  "stage": "design-draft",
+  "review_focus": "先确认可观测动态及数据覆盖，再冻结输入格式与验收误差",
+  "proposed_form": "给定真实采样级表征记录；提交预测动态波形的 VA 模型",
+  "public_test_mode": "fixed-public-tests"
+}

@@ -1,0 +1,31 @@
+{
+  "design_revision": 1,
+  "engineering_action": "diagnosis-repair",
+  "related_cases": [],
+  "review_status": "pending",
+  "reviewed_revision": null,
+  "backend": null,
+  "task_path": null,
+  "evidence_paths": [],
+  "case_id": "case-0015",
+  "title": "修复电源与偏置就绪后的复位释放序列",
+  "circuit_family": "power",
+  "subtypes": [
+    "单模块修复",
+    "同步复位与阶段控制"
+  ],
+  "context_level": "bounded-work-unit",
+  "source_ids": [
+    "v4-single-module-migration"
+  ],
+  "circuit_ids": [
+    "v4-reset-release-sequencer"
+  ],
+  "source_groups": [
+    "v4-family-272"
+  ],
+  "stage": "source-screening",
+  "review_focus": "同步行为与合法阶段范围；纠正旧故障标签并评估重写难度",
+  "proposed_form": "给阶段控制故障 VA 与公开协议，提交修复模块，允许整体重写",
+  "public_test_mode": "fixed-public-tests"
+}

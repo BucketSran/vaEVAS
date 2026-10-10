@@ -3,4 +3,16 @@
 
 [工作区总览](../../README.md)
 
-尚未登记候选。
+| Case | 题目 | 工程动作 / 电路家族 | 阶段 / 设计 review | 本轮关注 |
+| --- | --- | --- | --- | --- |
+| [case-0004](pll/case-0004-adpll-dco/README.md) | 固定 ADPLL 工程内补齐 DCO | 按规格构建模型 / PLL 与时钟 | 题目草案 / 待 review（r1） | 先定粗调码频合同与换码相位语义，再建立健康 VA 闭环 |
+| [case-0005](filters/case-0005-sc-opamp/README.md) | 为固定 SC 滤波工程建立运放模型 | 按规格构建模型 / 滤波与均衡 | 材料筛选 / 待 review（r1） | 电压域抽象能否保留本题需要的 SC 建立与过载恢复行为 |
+| [case-0011](adc/case-0011-clocked-sample-hold/README.md) | 按规格建立边沿采样保持模块 | 按规格构建模型 / ADC 与采样 | 题目草案 / 待 review（r2） | 基础题已确认保留；r2 公开语义已补齐，过渡容差与 checker 待校准 |
+| [case-0012](pll/case-0012-bbpd/README.md) | 按规格建立内部采样的 Alexander BBPD | 按规格构建模型 / PLL 与时钟 | 题目草案 / 待 review（r2） | Alexander 内部采样方向已确认；r2 初始化、发布、重合窗口与 checker 待 review |
+| [case-0013](adc/case-0013-sar-handshake/README.md) | 按规格建立四位 SAR 前端握手模块 | 按规格构建模型 / ADC 与采样 | 材料筛选 / 待 review（r1） | 与既有 va02 的取舍；比较器合法事件、发布时刻与原工程来源 |
+
+[ADC 与采样](adc/README.md)
+
+[滤波与均衡](filters/README.md)
+
+[PLL 与时钟](pll/README.md)

@@ -1,0 +1,36 @@
+{
+  "design_revision": 1,
+  "review_status": "pending",
+  "reviewed_revision": null,
+  "backend": null,
+  "task_path": null,
+  "evidence_paths": [],
+  "case_id": "case-0004",
+  "title": "固定 ADPLL 工程内补齐 DCO",
+  "engineering_action": "spec-modeling",
+  "circuit_family": "pll",
+  "subtypes": [
+    "工程内补模块",
+    "码频与相位行为"
+  ],
+  "context_level": "bounded-project",
+  "source_ids": [
+    "tiny-tapeout-adpll"
+  ],
+  "circuit_ids": [
+    "tiny-tapeout-adpll"
+  ],
+  "source_groups": [
+    "tiny-tapeout-adpll"
+  ],
+  "related_cases": [
+    {
+      "case_id": "case-0007",
+      "relation": "related"
+    }
+  ],
+  "stage": "design-draft",
+  "review_focus": "先定粗调码频合同与换码相位语义，再建立健康 VA 闭环",
+  "proposed_form": "固定 ADPLL 架构；提交缺失的 VA DCO 模块",
+  "public_test_mode": "fixed-connections-custom-probes"
+}

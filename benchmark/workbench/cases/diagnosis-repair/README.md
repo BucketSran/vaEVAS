@@ -3,4 +3,13 @@
 
 [工作区总览](../../README.md)
 
-尚未登记候选。
+| Case | 题目 | 工程动作 / 电路家族 | 阶段 / 设计 review | 本轮关注 |
+| --- | --- | --- | --- | --- |
+| [case-0008](pll/case-0008-pfd-reset/README.md) | PFD 外部复位与挂起事件修复 | 诊断与修复 / PLL 与时钟 | 材料筛选 / 待 review（r1） | 先校正 v4 starter 来源与复位合同，再评估整体重写下的区分度 |
+| [case-0009](power/case-0009-uvlo-reset-chain/README.md) | UVLO、复位释放与使能链的系统修复 | 诊断与修复 / 电源与复位 | 题目草案 / 待 review（r1） | 建立有真实模块依赖的健康电源控制链，再选择跨模块故障 |
+| [case-0014](power/case-0014-debounce-qualification/README.md) | 修复控制输入的去抖资格计时 | 诊断与修复 / 电源与复位 | 材料筛选 / 待 review（r1） | 完整重写后是否值得作为基础修复题；复位释放及初态边界 |
+| [case-0015](power/case-0015-reset-release-sequencer/README.md) | 修复电源与偏置就绪后的复位释放序列 | 诊断与修复 / 电源与复位 | 材料筛选 / 待 review（r1） | 同步行为与合法阶段范围；纠正旧故障标签并评估重写难度 |
+
+[PLL 与时钟](pll/README.md)
+
+[电源与复位](power/README.md)
