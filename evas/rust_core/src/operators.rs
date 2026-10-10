@@ -1393,7 +1393,12 @@ impl Operators {
             .entries
             .get(index)
             .ok_or_else(|| Error::new("invalid_ir", "guard operator index out of range"))?;
-        if self.changes_on_advance[index] && !matches!(entry, Runtime::Continuous(_)) {
+        if self.changes_on_advance[index]
+            && !matches!(
+                entry,
+                Runtime::Continuous(_) | Runtime::TransitionFilter { .. }
+            )
+        {
             return Err(Error::new("unsupported_cross",
                 "cross requires a continuous epoch history; reset/transition history is unsupported"));
         }
@@ -1405,6 +1410,7 @@ impl Operators {
         }
         match entry {
             Runtime::Continuous(_)
+            | Runtime::TransitionFilter { .. }
             | Runtime::Idt { .. }
             | Runtime::LaplaceNd(_)
             | Runtime::Sin(SinInput::Direct(_)) => {}
@@ -1422,6 +1428,9 @@ impl Operators {
     pub(crate) fn keeps_guard_value(&self, index: usize) -> Result<bool, Error> {
         self.check_guard(index)?;
         match &self.entries[index] {
+            // Installing a new transition target changes future forcing, not
+            // the filter's value at that event. The calendar must be rebuilt.
+            Runtime::TransitionFilter { .. } => Ok(true),
             Runtime::Continuous(slot) => self
                 .continuous
                 .as_ref()
@@ -1435,6 +1444,9 @@ impl Operators {
         self.check_guard(index)?;
         let entry = &self.entries[index];
         let result = match entry {
+            Runtime::TransitionFilter { parent, history } => {
+                history.guard_range(self.transition(*parent)?, time)?
+            }
             Runtime::Continuous(slot) => {
                 let c = self.continuous.as_ref().unwrap();
                 if !c.is_continuous(*slot) {
