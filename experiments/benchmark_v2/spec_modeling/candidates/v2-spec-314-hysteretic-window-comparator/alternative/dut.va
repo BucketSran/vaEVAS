@@ -15,7 +15,7 @@ analog begin
    if(outside!=oldstate)begin pulse_level=vdd;pulse_end=$abstime+pulse;end
   end
  end
- @(timer(pulse_end))begin if($abstime>=pulse_end)pulse_level=vss;end
+ @(timer(pulse_end))begin pulse_level=vss;end
  V(inside_flag)<+transition(outside?vss:vdd,0,tr,tr);V(state_metric)<+transition(outside?vss:vdd,0,tr,tr);V(toggled)<+transition(pulse_level,0,tr,tr);
 end
 endmodule

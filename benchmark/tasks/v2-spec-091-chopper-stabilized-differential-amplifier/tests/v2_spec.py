@@ -150,22 +150,57 @@ def evaluate(rows,case,work):
     elif not a:out['clkc']=1
   if dict(out)!=history[-1][1]:history.append((t,dict(out)))
  failures=[];checks=0;change_times=[x[0] for x in history]
+ # PGA output is continuous; only its clipping monitor has a smoothed target.
+ pga_gain=[(0.,1.)];pga_metric_changes=[]
+ if sid=='038':
+  for et,en,ed in events:
+   if en=='clk' and ed>0:
+    gain=1. if bit(min(et+1e-16,ts[-1]),'rst') else p.get('gain_high',2.4) if bit(et,'gain_sel') else p.get('gain_low',.8)
+    pga_gain.append((et,gain))
+  gain_times=[x[0] for x in pga_gain]
+  def pga_raw(t,gain=None):
+   if gain is None:gain=pga_gain[bisect.bisect_right(gain_times,t)-1][1]
+   return cm+gain*(val(t,'vin')-cm)
+  def pga_metric(t):
+   raw=pga_raw(t)
+   return 0. if bit(t,'rst') else .9*int(raw<p.get('vmin',0) or raw>p.get('vmax',.9))
+  if pga_metric(ts[0])!=0.:pga_metric_changes.append(ts[0])
+  controls=[et for et,en,ed in events if en=='rst']+gain_times
+  breaks=sorted(set(ts+controls))
+  def record_metric_change(t):
+   before=pga_metric(max(ts[0],t-1e-16));after=pga_metric(min(ts[-1],t+1e-16))
+   if before!=after:pga_metric_changes.append(t)
+  for t in controls:record_metric_change(t)
+  for a,b in zip(breaks,breaks[1:]):
+   mid=(a+b)/2
+   if bit(mid,'rst'):continue
+   gain=pga_gain[bisect.bisect_right(gain_times,mid)-1][1]
+   x=pga_raw(a,gain);y=pga_raw(b,gain)
+   for level in (p.get('vmin',0),p.get('vmax',.9)):
+    if x<level<=y or x>level>=y:record_metric_change(a+(b-a)*(level-x)/(y-x))
+  pga_metric_changes.sort()
  for r in rows:
   t=r['time'];j=bisect.bisect_right(change_times,t)-1;start,expected=history[j]
-  if t<start+tr*(4.1 if sid=='091' else 1.15):continue
+  if sid=='375':
+   checks+=1
+   if r['phi1']>(hi+lo)/2 and r['phi2']>(hi+lo)/2:
+    if len(failures)<20:failures.append({'kind':'phase_overlap','time':t,'phi1':r['phi1'],'phi2':r['phi2']})
+  if sid!='038' and t<start+tr*(4.1 if sid=='091' else 1.15):continue
   expected=dict(expected)
   if sid=='314':
    width=p.get('pulse',1e-9);last=max((x for x in toggles if x<=t),default=-1.)
    if abs(t-last-width)<tr*1.15:continue
    expected['toggled']=hi if last<=t<last+width and last>=0 and not bit(t,'rst') and bit(t,'enable') else lo
   if sid=='038':
-   raw=cm+s['gain']*(r['vin']-cm) # replaced below by gain history when needed
-   # gain is inferred only from known public gain-selection events, not output.
-   g=1.
-   for et,en,ed in events:
-    if et>t:break
-    if en=='clk' and ed>0:g=1 if bit(et+1e-16,'rst') else p.get('gain_high',2.4) if bit(et,'gain_sel') else p.get('gain_low',.8)
-   raw=cm+g*(r['vin']-cm);expected.update(out=cm if bit(t,'rst') else clip(raw,p.get('vmin',0),p.get('vmax',.9)),metric=0 if bit(t,'rst') else .9*int(raw<p.get('vmin',0) or raw>p.get('vmax',.9)))
+   raw=pga_raw(t)
+   expected.update(out=cm if bit(t,'rst') else clip(raw,p.get('vmin',0),p.get('vmax',.9)),metric=pga_metric(t))
+   k=bisect.bisect_right(pga_metric_changes,t)-1
+   if k>=0 and t<pga_metric_changes[k]+tr*1.15:
+    # This exception is local to metric; the continuous output remains scored.
+    del expected['metric']
+    checks+=1
+    if r['metric'] < -case.get('atol',.002) or r['metric']>.9+case.get('atol',.002):
+     if len(failures)<20:failures.append({'kind':'metric_overshoot','time':t,'actual':r['metric']})
   if sid=='183':expected.update(cvinp=r['vrefp'],cvinn=r['vrefn'])
   for node,x in expected.items():
    checks+=1

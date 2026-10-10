@@ -88,7 +88,7 @@ endmodule
     s=f.read_text()
     if old in s:f.write_text(s.replace(old,new));applied+=1
   if not applied:raise ValueError(f'{sid} {variant}: no semantic transformation')
-  requests.append({'task':str(t),'variant':variant,'candidate_directory':str(d),'expected':'pass' if variant=='alternative' else 'fail','semantic_behavior':description,'certification':'pending-live-execution'})
+  requests.append({'task':str(t.relative_to(ROOT)),'variant':variant,'candidate_directory':str(d.relative_to(ROOT)),'expected':'pass' if variant=='alternative' else 'fail','semantic_behavior':description,'certification':'pending-live-execution'})
 plan=json.loads((OUT/'run-plan.json').read_text());plan=[x for x in plan if x['variant']=='reference']+requests;(OUT/'run-plan.json').write_text(json.dumps(plan,indent=2)+'\n')
 # Representative failure mechanisms are separate candidates, not syntax errors.
 extra={'024':{
@@ -105,7 +105,7 @@ for sid,variants in extra.items():
  for name,(old,new,reason) in variants.items():
   d=OUT/'candidates'/t.name/name;d.mkdir(parents=True,exist_ok=True);s=(t/'solution/dut.va').read_text()
   if old not in s:raise ValueError(name)
-  (d/'dut.va').write_text(s.replace(old,new));plan.append({'task':str(t),'variant':name,'candidate_directory':str(d),'expected':'fail','semantic_behavior':reason,'certification':'pending-live-execution'})
+  (d/'dut.va').write_text(s.replace(old,new));plan.append({'task':str(t.relative_to(ROOT)),'variant':name,'candidate_directory':str(d.relative_to(ROOT)),'expected':'fail','semantic_behavior':reason,'certification':'pending-live-execution'})
 (OUT/'run-plan.json').write_text(json.dumps(plan,indent=2)+'\n')
 # Spectre VACOMP requires an integer digit before the fractional point in authored VA.
 for p in (OUT/'candidates').rglob('*.va'):

@@ -70,4 +70,85 @@ class InitialStateTests(unittest.TestCase):
     for row in rows:row[node]+=0.1
     self.assertFalse(mod.evaluate(rows,{'source_id':sid,'stop':2e-9,'signals':list(rows[0].keys()-{'time'}),'resolution':2e-12},Path('.'))['passed'])
 
+
+class ReviewTransitionTests(unittest.TestCase):
+ def load(self):
+  mod=importlib.util.module_from_spec(SPEC);SPEC.loader.exec_module(mod);return mod
+ @staticmethod
+ def ramp(t,start,a,b,width=1e-10):return a+(b-a)*max(0,min(1,(t-start)/width))
+ def clock_rows(self):
+  rows=[]
+  for i in range(3001):
+   t=i*2e-12;clk=self.ramp(t,1e-9,0,.9) if t<4e-9 else self.ramp(t,4e-9,.9,0)
+   phi1=self.ramp(t,2e-9,0,.9) if t<4.05e-9 else self.ramp(t,4.05e-9,.9,0)
+   metric=0
+   for start,a,b in [(1.05e-9,0,.9),(2e-9,.9,0),(4.05e-9,0,.9),(5e-9,.9,0)]:
+    if t>=start:metric=self.ramp(t,start,a,b)
+   rows.append(dict(time=t,clk_in=clk,rst=0.,enable=.9,phi1=phi1,phi2=self.ramp(t,5e-9,0,.9),deadtime_metric=metric,valid=self.ramp(t,2e-9,0,.9)))
+  return rows,dict(source_id='375',stop=6e-9,signals=list(rows[0].keys()-{'time'}),resolution=2e-12)
+ def test_clock_handoff_never_exempts_short_overlap(self):
+  rows,case=self.clock_rows();m=self.load()
+  self.assertTrue(m.evaluate(rows,case,Path('.'))['passed'])
+  for row in rows:
+   if 4.06e-9<=row['time']<=4.10e-9:row['phi2']=.9
+  result=m.evaluate(rows,case,Path('.'));self.assertFalse(result['passed'])
+  self.assertTrue(any(x.get('kind')=='phase_overlap' for x in result['failures']))
+ def pga_rows(self):
+  rows=[]
+  for i in range(2001):
+   t=i*2e-12;vin=.85+max(0,min(.10,(t-1e-9)*1e8))
+   rows.append(dict(time=t,clk=0.,rst=0.,gain_sel=0.,vin=vin,out=min(.9,vin),metric=self.ramp(t,1.5e-9,0,.9,2e-10)))
+  return rows,dict(source_id='038',stop=4e-9,signals=list(rows[0].keys()-{'time'}),resolution=2e-12)
+ def test_pga_clipping_metric_may_smooth_at_analog_boundary(self):
+  rows,case=self.pga_rows();m=self.load()
+  self.assertTrue(m.evaluate(rows,case,Path('.'))['passed'])
+  for row in rows:row['metric']=0.
+  self.assertFalse(m.evaluate(rows,case,Path('.'))['passed'])
+ def test_pga_continuous_output_is_checked_during_metric_transition(self):
+  rows,case=self.pga_rows()
+  for row in rows:
+   if 1.52e-9<=row['time']<=1.56e-9:row['out']=.7
+  result=self.load().evaluate(rows,case,Path('.'))
+  self.assertFalse(result['passed']);self.assertTrue(any(x.get('node')=='out' for x in result['failures']))
+
+
+class PgaBoundaryHistoryTests(unittest.TestCase):
+ load=ReviewTransitionTests.load
+ ramp=staticmethod(ReviewTransitionTests.ramp)
+ def test_initial_clipping_monitor_may_smooth_then_must_hold(self):
+  rows=[]
+  for i in range(1001):
+   t=i*2e-12
+   rows.append(dict(time=t,clk=0.,rst=0.,gain_sel=0.,vin=.95,out=.9,metric=self.ramp(t,0,0,.9,2e-10)))
+  case=dict(source_id='038',stop=2e-9,signals=list(rows[0].keys()-{'time'}),resolution=2e-12)
+  self.assertTrue(self.load().evaluate(rows,case,Path('.'))['passed'])
+  for row in rows:
+   if row['time']>2.3e-10:row['metric']=0.
+  self.assertFalse(self.load().evaluate(rows,case,Path('.'))['passed'])
+ def test_leaving_clip_region_has_its_own_metric_fall_window(self):
+  rows=[]
+  for i in range(2001):
+   t=i*2e-12;vin=.95-max(0,min(.10,(t-1e-9)*1e8))
+   metric=self.ramp(t,0,0,.9,2e-10) if t<1.5e-9 else self.ramp(t,1.5e-9,.9,0,2e-10)
+   rows.append(dict(time=t,clk=0.,rst=0.,gain_sel=0.,vin=vin,out=min(.9,vin),metric=metric))
+  case=dict(source_id='038',stop=4e-9,signals=list(rows[0].keys()-{'time'}),resolution=2e-12)
+  self.assertTrue(self.load().evaluate(rows,case,Path('.'))['passed'])
+
+class HystereticPulseTests(unittest.TestCase):
+ def test_stretched_input_pulse_returns_low_after_one_nanosecond(self):
+  # Independent PWL arithmetic: 9.84ns + (.41-.28)/(.43-.28)*7.38ns = 16.236ns.
+  rows=[]
+  for i in range(15001):
+   t=i*2e-12;vin=.28+.15*max(0,min(1,(t-9.84e-9)/7.38e-9))
+   inside=ReviewTransitionTests.ramp(t,16.236e-9,0,.9,2e-10)
+   pulse=inside if t<17.236e-9 else ReviewTransitionTests.ramp(t,17.236e-9,.9,0,2e-10)
+   rows.append(dict(time=t,vin=vin,rst=0.,enable=.9,low_trip=.40,high_trip=.62,inside_flag=inside,state_metric=inside,toggled=pulse))
+  case=dict(source_id='314',stop=30e-9,signals=list(rows[0].keys()-{'time'}),resolution=2e-12)
+  mod=importlib.util.module_from_spec(SPEC);SPEC.loader.exec_module(mod)
+  self.assertTrue(mod.evaluate(rows,case,Path('.'))['passed'])
+  for row in rows:
+   if row['time']>=17.236e-9:row['toggled']=.9
+  result=mod.evaluate(rows,case,Path('.'))
+  self.assertFalse(result['passed']);self.assertTrue(any(f.get('node')=='toggled' for f in result['failures']))
+
 if __name__=='__main__':unittest.main()

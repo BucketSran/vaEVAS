@@ -17,10 +17,11 @@
         "task": "benchmark/tasks/v2-spec-024-clocked-sample-and-hold",
         "contract_sha256": "84c2765cb83e4b9619e812434b619987a76794946da1818fca4de2a168028344",
         "cases_sha256": "bd7e3e8575b7bcb0039b88219ab70e80116224f294edfca3a73242c521244a62",
-        "checker_sha256": "f79b66450e49cafc01352b223aec1e7183db713ef7a4b15e4a10cb794d1c9167",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
         "reference": {
           "dut.va": "e58e5baa42c0ec8a82b194da6f63370bf8f08dd819821a7d7f7d25d3abe27e69"
-        }
+        },
+        "instruction_sha256": "e485a8df661cfb781a08904393ecdc654ad0f48b6f1253523e1dd6af4652d080"
       },
       "variants": [
         {
@@ -86,10 +87,11 @@
         "task": "benchmark/tasks/v2-spec-071-acquisition-limited-sample-and-hold",
         "contract_sha256": "c0779a4587cf247eeeb11814ee92164d1d6a0e88cc2662a0778127429b868440",
         "cases_sha256": "fb6d7461b7c0efa0238842ecec892336fa5bfaa8a03c1950048677d31edd313f",
-        "checker_sha256": "f79b66450e49cafc01352b223aec1e7183db713ef7a4b15e4a10cb794d1c9167",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
         "reference": {
           "dut.va": "4482266e8bef4f54761e3b0e547efe28e37460aea448eba731d208f9eba9fa30"
-        }
+        },
+        "instruction_sha256": "f9b155990c241b8e0ca2537f70bc5d6e9e1e2cc59d9371b6e7c852efff98ccd0"
       },
       "variants": [
         {
@@ -137,10 +139,11 @@
         "task": "benchmark/tasks/v2-spec-186-sarfend-logic-4b",
         "contract_sha256": "0dcc7ec6c35aa51ec9fce088a4d8fe55fdf19fd352119fe3c266cf184fe8277b",
         "cases_sha256": "8e3f3b9c7f12560539a76d974f7aec408e94867ff02e757571b737286673fcae",
-        "checker_sha256": "f79b66450e49cafc01352b223aec1e7183db713ef7a4b15e4a10cb794d1c9167",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
         "reference": {
           "dut.va": "983b21c79bc6ca24f5ffacd3ef9d6e61726eb96a8a4d4758f241df3c05941161"
-        }
+        },
+        "instruction_sha256": "98b39da039540e4ba4ad51950ccc6dc8182e44eb086e4236919be0d9b257bb67"
       },
       "variants": [
         {
@@ -188,10 +191,11 @@
         "task": "benchmark/tasks/v2-spec-047-window-comparator-detector",
         "contract_sha256": "344c66d6059996622f4551e0193add2a90b918da09d297bd51149d9c3513b2f7",
         "cases_sha256": "072f5d1a0f98f3448823a551f012684400a8d3383681bcf9cdf165cbc3b59680",
-        "checker_sha256": "f79b66450e49cafc01352b223aec1e7183db713ef7a4b15e4a10cb794d1c9167",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
         "reference": {
           "dut.va": "9483ffdab4266d0e23cb57c8ff621a506f1bfa433ecffa811ad0e066434daaa6"
-        }
+        },
+        "instruction_sha256": "4fc57ef661f0798c584afb8443d3ad8ba675497332de67208a10911d266dff28"
       },
       "variants": [
         {
@@ -239,10 +243,11 @@
         "task": "benchmark/tasks/v2-spec-314-hysteretic-window-comparator",
         "contract_sha256": "2e3e9f22ad5d3a1e92a08564676689e014df505e432d5cd04a9380770ad37d2f",
         "cases_sha256": "ed716d1945127a5e9f97c9fdb58f7152cf89497b474f9a3501497da68939244a",
-        "checker_sha256": "f79b66450e49cafc01352b223aec1e7183db713ef7a4b15e4a10cb794d1c9167",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
         "reference": {
-          "dut.va": "c776d1703316884c2dd22f7b83ede821ae6e2d72feada574ed17bafea265c89d"
-        }
+          "dut.va": "da892869caf39897dc4711d7608bd59e6fefd48afb20eae38db5dc4b2c84f80c"
+        },
+        "instruction_sha256": "8578574b4d2fa1102efcd37f4d93c7a6a150387626476fef788d46b676a32d6e"
       },
       "variants": [
         {
@@ -251,7 +256,7 @@
           "status": "pending",
           "semantic_behavior": "public contract",
           "files": {
-            "dut.va": "c776d1703316884c2dd22f7b83ede821ae6e2d72feada574ed17bafea265c89d"
+            "dut.va": "da892869caf39897dc4711d7608bd59e6fefd48afb20eae38db5dc4b2c84f80c"
           }
         },
         {
@@ -260,7 +265,7 @@
           "status": "pending",
           "semantic_behavior": "complement retained outside-history state",
           "files": {
-            "dut.va": "d999ad444509cc9606fe5632578a9171e496d3b56aa1f7e5972b9837d6c4db46"
+            "dut.va": "37b763ea74faf44a2a3ed76e6a239c8e578019bba06ab45853a1b7dcd7bf4eae"
           }
         },
         {
@@ -269,7 +274,7 @@
           "status": "pending",
           "semantic_behavior": "exits without outer hysteresis",
           "files": {
-            "dut.va": "2c44889661c6c35eaae1bc73037a73e1a4971d99516aacc6a40950ee8b202282"
+            "dut.va": "7ec04f48fa1333550d9366bd45411d7a11260a7fc941c19ced3d1e7aeedf41f0"
           }
         }
       ]
@@ -290,10 +295,11 @@
         "task": "benchmark/tasks/v2-spec-002-capacitive-sar-feedback-dac",
         "contract_sha256": "08d1f1925a3351dbcf063bbd80e490ceb123192003574cae25771c6e1ab7e824",
         "cases_sha256": "ac74695d2bd27b4d1911871f6475d0225400838985c50db3b7dc0bbb310569ff",
-        "checker_sha256": "f79b66450e49cafc01352b223aec1e7183db713ef7a4b15e4a10cb794d1c9167",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
         "reference": {
           "dut.va": "c7414e3ed6628fe36b697e4ff68c8b9b4c1122c6efeb734b6dabc54a56b96ff7"
-        }
+        },
+        "instruction_sha256": "6d34b04da94737b3df80b4aba536cc04826aefbcb8092518edd6fa0aa4c52d73"
       },
       "variants": [
         {
@@ -341,10 +347,11 @@
         "task": "benchmark/tasks/v2-spec-003-pipeline-adc-stage",
         "contract_sha256": "16bc6ee0e08ae8ae7efcb90115862337c5734725e3861478122cdc1ea2b5ce44",
         "cases_sha256": "96a6242ca7aebf93eeaba948c6168091abc0baef18f36efc39cb64fcdf3aea20",
-        "checker_sha256": "f79b66450e49cafc01352b223aec1e7183db713ef7a4b15e4a10cb794d1c9167",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
         "reference": {
           "dut.va": "027c1b3b2679e6cbd1a86aefb60ec86d0ff34e6dbd24bea95b646c9020e218ee"
-        }
+        },
+        "instruction_sha256": "0c5f6c8eb5f008b9822d54deaae4b6a319b5f5f4e392e8f68160fc3bce6b4c65"
       },
       "variants": [
         {
@@ -392,10 +399,11 @@
         "task": "benchmark/tasks/v2-spec-055-first-order-sigma-delta-modulator",
         "contract_sha256": "9e98a535ca49065834d0518cf4f671144b399407ef98a275918e65bea87654cb",
         "cases_sha256": "6a06436e89a3f9b1b525817b7d84ec172f1cc19e25e2e4de5029d5043ea416e9",
-        "checker_sha256": "f79b66450e49cafc01352b223aec1e7183db713ef7a4b15e4a10cb794d1c9167",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
         "reference": {
           "dut.va": "d2257c0b8402fd9662d25214eb3b59db62369e413d3a220dcaeebbf50258b511"
-        }
+        },
+        "instruction_sha256": "0f224da3488d2a81b1f7fa578b8a732f4a8e83b1299dc49f6430c2e4244ec7cd"
       },
       "variants": [
         {
@@ -443,10 +451,11 @@
         "task": "benchmark/tasks/v2-spec-001-bang-bang-phase-detector",
         "contract_sha256": "b962b0e8a9d4b61ef85074052c7a29feddda8e200b8deb2fe160465fbcb313c0",
         "cases_sha256": "8403bc7b58b0c3a4991e6932ae2cb957a067e5e328944ff27339aa743a489e8c",
-        "checker_sha256": "f79b66450e49cafc01352b223aec1e7183db713ef7a4b15e4a10cb794d1c9167",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
         "reference": {
           "dut.va": "ac4e7229361ace9416faaca2436fa0f0fbee1cfad25553bf3c54d314632de250"
-        }
+        },
+        "instruction_sha256": "4e1cb8a48ec80ddc5175103539ad48b1c538ecfa8c7162888ca58241fac975ed"
       },
       "variants": [
         {
@@ -494,10 +503,11 @@
         "task": "benchmark/tasks/v2-spec-375-nonoverlap-clock-generator",
         "contract_sha256": "119a657731291e1653b760e2752fc506ee6e24da14dcb219d167ba95cb9c9ab7",
         "cases_sha256": "ded20ec928529e14aba8bdfa6029a03c82e161ff0cce061ae377bb1d59599dc7",
-        "checker_sha256": "f79b66450e49cafc01352b223aec1e7183db713ef7a4b15e4a10cb794d1c9167",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
         "reference": {
           "dut.va": "d16bb84528c779cf4543f3576e381453e74ef2cb44fd120e544f23629a421768"
-        }
+        },
+        "instruction_sha256": "1fe451f67a671c8ae35f9e7c62becc0a8dbc8fe9e00bfe00e9c9abe02e6117ba"
       },
       "variants": [
         {
@@ -572,10 +582,11 @@
         "task": "benchmark/tasks/v2-spec-396-quadrature-lo-generator-divided-clock",
         "contract_sha256": "dd2f1f1c6bc41ba0237a352490d50e9d241618deff28496cef7112a60a3e062d",
         "cases_sha256": "bc675b627254878c9c9a7d79d55a90911f1f8a57a7a3b478514018dd270d1ed8",
-        "checker_sha256": "f79b66450e49cafc01352b223aec1e7183db713ef7a4b15e4a10cb794d1c9167",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
         "reference": {
           "dut.va": "726bf95d791813096ed0a3b606823ef34e030516f17ba89dab9749a6ca505a07"
-        }
+        },
+        "instruction_sha256": "86b7d13bc18b1ef955daaab9574a9941cf807bb566a7845196fd6775e5fdefc0"
       },
       "variants": [
         {
@@ -623,10 +634,11 @@
         "task": "benchmark/tasks/v2-spec-038-programmable-gain-amplifier",
         "contract_sha256": "bf62085ac8596b6c61af8b6de71a81486db790b68a322aced64fb1583d172c78",
         "cases_sha256": "9646f11abbc2c46750d765a20c2d2a08aef166dcecbcadf5eca58b2e2645d14e",
-        "checker_sha256": "f79b66450e49cafc01352b223aec1e7183db713ef7a4b15e4a10cb794d1c9167",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
         "reference": {
           "dut.va": "19f89f91658be46809f3cee8fa247a0ab17bf3585816420481ad91542a810055"
-        }
+        },
+        "instruction_sha256": "a618576eb35be5d4990278483ee146f5830cba94fd08dc4c93b213ca45c5c354"
       },
       "variants": [
         {
@@ -674,10 +686,11 @@
         "task": "benchmark/tasks/v2-spec-082-agc-receiver-leveling-loop",
         "contract_sha256": "329c9320be765f88f8b73d30af9d6fe7424d1abd38fd6b8d588bad025b50d794",
         "cases_sha256": "7c82103af90b252a74d2681be2b66483e4539b066c23b1422c08970f90a1fe9b",
-        "checker_sha256": "f79b66450e49cafc01352b223aec1e7183db713ef7a4b15e4a10cb794d1c9167",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
         "reference": {
           "dut.va": "6496caf8b8feb4c6cd6872fb115db2cf20b856c603328ccc824f3ee90d401391"
-        }
+        },
+        "instruction_sha256": "8517f3655b87c69069e28a9f3c5f75f6d8169e825a76580852ef4fa3fb530d86"
       },
       "variants": [
         {
@@ -723,14 +736,15 @@
       "publication": "pending-spectre-extension",
       "assets": {
         "task": "benchmark/tasks/v2-spec-091-chopper-stabilized-differential-amplifier",
-        "contract_sha256": "6f481dda60500ccfb7560178bd6d0ffa82678be1737c1438d56682c22bd73614",
+        "contract_sha256": "28658855feeb1c692ca2e181f773977499eb645e9599d4c2e0231a12e6003a48",
         "cases_sha256": "9271b87d3933c4054e43d8d52e5bfb5b7afbbf8404f52a2daee9241ceaff0c6a",
-        "checker_sha256": "f79b66450e49cafc01352b223aec1e7183db713ef7a4b15e4a10cb794d1c9167",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
         "reference": {
-          "dut.va": "725291d0216bcdddd2413d809699be51e5a8cd38e04579ecada7d3986bb4cefb",
           "chopper_gain_core.va": "52b69b90aaef760532d993237c75279e9668c92931daf40734c7278307748c2b",
+          "dut.va": "725291d0216bcdddd2413d809699be51e5a8cd38e04579ecada7d3986bb4cefb",
           "synchronous_lp_state.va": "73863b2313e1b959bebb84be44a4f5bda974edd1b0e9299f5319f42b5402ece8"
-        }
+        },
+        "instruction_sha256": "91612b6e3d9c085ed575d29ebc309d4a5e97bb59712e3400e28db15c141984ed"
       },
       "variants": [
         {
@@ -739,8 +753,8 @@
           "status": "pending",
           "semantic_behavior": "public contract",
           "files": {
-            "dut.va": "725291d0216bcdddd2413d809699be51e5a8cd38e04579ecada7d3986bb4cefb",
             "chopper_gain_core.va": "52b69b90aaef760532d993237c75279e9668c92931daf40734c7278307748c2b",
+            "dut.va": "725291d0216bcdddd2413d809699be51e5a8cd38e04579ecada7d3986bb4cefb",
             "synchronous_lp_state.va": "73863b2313e1b959bebb84be44a4f5bda974edd1b0e9299f5319f42b5402ece8"
           }
         },
@@ -750,8 +764,8 @@
           "status": "pending",
           "semantic_behavior": "weighted low-pass recurrence",
           "files": {
-            "dut.va": "725291d0216bcdddd2413d809699be51e5a8cd38e04579ecada7d3986bb4cefb",
             "chopper_gain_core.va": "52b69b90aaef760532d993237c75279e9668c92931daf40734c7278307748c2b",
+            "dut.va": "725291d0216bcdddd2413d809699be51e5a8cd38e04579ecada7d3986bb4cefb",
             "synchronous_lp_state.va": "4007e2efeb0ec0ff0db87b98a1e3026711ab550daab0b341f383762a9daca906"
           }
         },
@@ -761,8 +775,8 @@
           "status": "pending",
           "semantic_behavior": "omits demodulation",
           "files": {
-            "dut.va": "725291d0216bcdddd2413d809699be51e5a8cd38e04579ecada7d3986bb4cefb",
             "chopper_gain_core.va": "32002cd28df4f4622f6b7fe8012e899e4b834d893406707bd2ed9f65060d32b3",
+            "dut.va": "725291d0216bcdddd2413d809699be51e5a8cd38e04579ecada7d3986bb4cefb",
             "synchronous_lp_state.va": "73863b2313e1b959bebb84be44a4f5bda974edd1b0e9299f5319f42b5402ece8"
           }
         }
@@ -784,12 +798,13 @@
         "task": "benchmark/tasks/v2-spec-308-correlated-double-sampler-offset-cancel",
         "contract_sha256": "c515c1b90a7880f4dc5268b6337dfd394fea7023660f1a92c9f43535a5bb7355",
         "cases_sha256": "588f28b53c3e0d5d4ad7c14da30b7069d652f97fc1935148b66ad9a3643d6410",
-        "checker_sha256": "f79b66450e49cafc01352b223aec1e7183db713ef7a4b15e4a10cb794d1c9167",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
         "reference": {
           "dut.va": "e5c0f4d0f5dac147b0d97c59fcb69af54b299d62902704bc5a2ebb148b4cef96",
           "reset_sample_latch.va": "b8346080b152e078d05d79828e97d5715d2dee55a36c6d30e73faf8b20a00427",
           "signal_sample_latch.va": "c541abc846718d808532fe9bd59a9cb75316e0ed55a5570e2da7414043093dc0"
-        }
+        },
+        "instruction_sha256": "d8d17c2611ce3e91d65d7ec2b603a67d62522902b383ec5338eeef08e8ed0a63"
       },
       "variants": [
         {
@@ -843,10 +858,11 @@
         "task": "benchmark/tasks/v2-spec-370-opamp-feedback-settling-monitor",
         "contract_sha256": "64f94635fdcdee0a1980addffd30d48be86e25e46bb23c78e413bdfeedf42262",
         "cases_sha256": "993ec59dc79c58f9965b2745c8ebb36b2f561ed8bbda55660551bdcf68f7eec0",
-        "checker_sha256": "f79b66450e49cafc01352b223aec1e7183db713ef7a4b15e4a10cb794d1c9167",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
         "reference": {
           "dut.va": "7b4b354ff35d8c791ea26597ef556be745f5923ce65012816bcef0c8bca20bf6"
-        }
+        },
+        "instruction_sha256": "cd128e3c68418dbfb88294d2c0e5e2d38e9df41b5413d5bf61e7c0e3b11fa5f3"
       },
       "variants": [
         {
@@ -892,14 +908,15 @@
       "publication": "pending-spectre-extension",
       "assets": {
         "task": "benchmark/tasks/v2-spec-307-switched-capacitor-integrator-phase-pair",
-        "contract_sha256": "15d072372172a10ea9087327264d1c5b62be0495c33d296f4d35d7636b17d933",
+        "contract_sha256": "8796ef7b5e030750b0016922c5e3c65caeb06a237aeb54c7100e5a8608904846",
         "cases_sha256": "b91dc7f745c30609fc61a043c474994b4e73235909b7453ab9822289c0d2262a",
-        "checker_sha256": "f79b66450e49cafc01352b223aec1e7183db713ef7a4b15e4a10cb794d1c9167",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
         "reference": {
           "dut.va": "dd1b37c1c4675eda2b92a6de9ce02b2724b5987fc01fc30113a96d446fa8f30c",
           "integrator_state_cell.va": "b5341b90cf756bfc7e5c8537250adc451df12196d4f5fa9e5c01f6462539909c",
           "sample_phase_cell.va": "e7265b884b4b602a644739bc50bc6cb734e42494a106aa10973be4807a206df2"
-        }
+        },
+        "instruction_sha256": "caa4df66fefba19ae83b922f9f1e7490af1504c1e614b93ce3ac0022d3277caf"
       },
       "variants": [
         {
@@ -953,10 +970,11 @@
         "task": "benchmark/tasks/v2-spec-183-foreground-rdac-calibrator",
         "contract_sha256": "ddd5db209903a6ee37e63eb851d0c0dbf19ecbc3e807ef332166c6a43b7d54fd",
         "cases_sha256": "ef744542ccca42c500b329a6666fa97afe21f3793276ece3af3cc796eb448380",
-        "checker_sha256": "f79b66450e49cafc01352b223aec1e7183db713ef7a4b15e4a10cb794d1c9167",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
         "reference": {
           "dut.va": "8f0aaad2eeed7188890cafbd8ba2567b72ebbe3d6168e4afb5ae1aeb7dfec10c"
-        }
+        },
+        "instruction_sha256": "ee9601737f1ea7b9891e9487d2de537ac6ff973b2f2aebd16f21df6d8313764b"
       },
       "variants": [
         {
@@ -1004,10 +1022,11 @@
         "task": "benchmark/tasks/v2-spec-353-ffe-transmitter-3tap",
         "contract_sha256": "2edd551c3b84e1f7412a1292b8ec86b276e00377504d595da5b9d822b0afaace",
         "cases_sha256": "ea59ac104ef17655d538deefb32b326173cd94ceece73e6bad208f25c757746a",
-        "checker_sha256": "f79b66450e49cafc01352b223aec1e7183db713ef7a4b15e4a10cb794d1c9167",
+        "checker_sha256": "6c3187d1c824a18de7264e8d98e7cdd4eafa0d78b91e73ba00fbd625b020d2ac",
         "reference": {
           "dut.va": "345a1a24f8e6f785a0b951de381cb99ea04c37b1df8980b01e3b96d15d5e45b6"
-        }
+        },
+        "instruction_sha256": "ae73728d3384dbe9462f5d091463a8ea76b64ab1871cc7c5063e14a4e01d6137"
       },
       "variants": [
         {

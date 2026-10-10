@@ -51,4 +51,6 @@ Return exactly one complete source artifact named `dut.va`.
 
 ## 全局tick的准确死区与取消
 
-边沿在t请求相位后，未来第dead_ticks个全局k*tick事件才启用新相位，死区在((dead_ticks-1)*tick,dead_ticks*tick]。边沿不与tick同时发生。每次新边沿取消旧请求，重新计数。rst上升或enable下降立即清除active、pending、counter、valid，包括短于tick的控制脉冲。释放控制不自动请求，等下次clk边沿再启动。输出用tr过渡，tr<tick/2。相邻clk边沿至少dead_ticks*tick+4*tr。
+边沿在t请求相位后，未来第dead_ticks个全局k*tick事件才启用新相位，死区在((dead_ticks-1)*tick,dead_ticks*tick]。边沿不与tick同时发生。每次新边沿取消旧请求，重新计数。rst上升或enable下降立即清除active、pending、counter、valid，包括短于tick的控制脉冲。释放控制不自动请求，等下次clk边沿再启动。输出用tr过渡，0<tr<=tick/2。相邻clk边沿至少dead_ticks*tick+4*tr。
+
+互斥检查贯穿所有输出过渡和保持阶段。两相“高”按(vdd+vss)/2判定，不允许同时高于该门限。默认tr=100ps、tick=200ps满足包含等号的合法范围。

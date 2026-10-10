@@ -62,3 +62,7 @@ Return exactly one complete Verilog-A source file named `dut.va`. Do not generat
 ## 固定SAR工程内补逻辑
 
 除局部公开时序外，system_test.scs将你的控制器与固定4-bit加权trial DAC和比较器连接。只能补控制逻辑，不能改固定系统模块。每次clkc上升，系统按已决定的dp高位构造下一个trial电平并比较vin，经过100ps延迟返回互补比较决定；clkc下降使比较器复位，恢复双低后控制器请求下一判决。必须四次依次协作，下一clks上升发布已保存的整码。固定环境源码公开，测试可改变vin和帧周期。局部测试保留test override与异常第五判决保护。
+
+## 上电初态与首帧
+
+从初始时刻起，dp4=dm4=0V，dp3=dm3=dp2=dm2=dp1=dm1=1V，dout0至dout3和clkc均为0V。转换指针等待MSB的dp4/dm4判决，共四位尚未完成。首个clks上升沿仍按一般发布规则发布上电P字，因此dout3:dout0首次变为0111，再初始化新转换并捕获dtest3至dtest0。clks初始为低；首个clks上升沿之前比较器双低，不提供有效决定，test override的捕获从该上升沿开始。
