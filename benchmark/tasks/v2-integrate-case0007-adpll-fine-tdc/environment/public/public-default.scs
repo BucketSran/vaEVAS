@@ -1,0 +1,11 @@
+simulator lang=spectre
+global 0
+ahdl_include "healthy.va"
+ahdl_include "dut.va"
+Vref (ref 0) vsource type=pulse val0=0 val1=.9 delay=50n period=100n width=40n rise=100p fall=100p
+Vrst (rst 0) vsource type=pwl wave=[0 .9 1u .9 1.0001u 0 60u 0]
+Vtarget (target 0) vsource dc=3
+Vfine (fine_enable 0) vsource dc=.9
+XDUT (ref rst target fine_enable dco fb coarse fine tdc_code tdc_valid lock) adpll_top
+tran tran stop=60u maxstep=1n strobeperiod=1n strobedelay=0 strobeoutput=strobeonly
+save ref rst dco fb coarse fine tdc_code tdc_valid lock

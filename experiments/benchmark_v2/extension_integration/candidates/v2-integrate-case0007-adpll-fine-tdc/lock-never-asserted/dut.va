@@ -1,0 +1,106 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module fine_tdc(ref,fb,rst,code,valid);
+input ref,fb,rst;output code,valid;electrical ref,fb,rst,code,valid;
+parameter real lsb=250p,timeout=45n;
+real ref_time,fb_time,delta,q;
+integer have_ref,have_fb,valid_state;
+analog begin
+ @(initial_step)begin have_ref=0;have_fb=0;q=0;valid_state=0;end
+ @(cross(V(rst)-0.45,+1))begin have_ref=0;have_fb=0;q=0;valid_state=0;end
+ @(cross(V(ref)-0.45,+1))begin
+  if(V(rst)<0.45)begin
+   if(have_fb && $abstime-fb_time>=timeout)begin have_fb=0;q=0;end
+   ref_time=$abstime;have_ref=1;valid_state=0;
+   if(have_fb)begin
+    delta=fb_time-ref_time;
+    if(delta>=0)q=floor(delta/lsb+0.500001);else q=-floor(-delta/lsb+0.500001);
+    if(q>31)q=31;if(q< -31)q=-31;
+    valid_state=1;have_ref=0;have_fb=0;
+   end
+  end
+ end
+ @(cross(V(fb)-0.45,+1))begin
+  if(V(rst)<0.45)begin
+   if(have_ref && $abstime-ref_time>=timeout)begin have_ref=0;q=0;end
+   fb_time=$abstime;have_fb=1;valid_state=0;
+   if(have_ref)begin
+    delta=fb_time-ref_time;
+    if(delta>=0)q=floor(delta/lsb+0.500001);else q=-floor(-delta/lsb+0.500001);
+    if(q>31)q=31;if(q< -31)q=-31;
+    valid_state=1;have_ref=0;have_fb=0;
+   end
+  end
+ end
+ @(timer(0,1n))begin
+  if((have_ref && $abstime-ref_time>=timeout) || (have_fb && $abstime-fb_time>=timeout))begin
+   have_ref=0;have_fb=0;q=0;valid_state=0;
+  end
+ end
+ V(code)<+transition(q,0,100p);V(valid)<+transition(valid_state*0.9,0,100p);
+end
+endmodule
+module fine_control(ref,fb,rst,target,fine_enable,ready,code,valid,fine,lock);
+input ref,fb,rst,target,fine_enable,ready,code,valid;output fine,lock;
+electrical ref,fb,rst,target,fine_enable,ready,code,valid,fine,lock;
+real integral,fine_value,phase_error,ref_time,fb_time,pair_at,last_pair;
+integer previous_n,n,qualified,have_ref,have_fb,new_pair;
+analog begin
+ @(initial_step)begin integral=0;fine_value=0;qualified=0;previous_n=3;have_ref=0;have_fb=0;new_pair=0;last_pair=-1;end
+ @(cross(V(rst)-0.45,+1) or cross(V(fine_enable)-0.45,0) or cross(V(target)-3.5,0))begin
+  integral=0;fine_value=0;qualified=0;have_ref=0;have_fb=0;new_pair=0;last_pair=-1;
+ end
+ @(cross(V(ref)-0.45,+1))begin
+  if(V(rst)<0.45)begin
+   if(have_ref)qualified=0;
+   if(have_fb && $abstime-fb_time>=45n)begin have_fb=0;qualified=0;end
+   have_ref=1;ref_time=$abstime;
+   if(have_fb)begin pair_at=$abstime;last_pair=$abstime;new_pair=1;have_ref=0;have_fb=0;end
+  end
+ end
+ @(cross(V(fb)-0.45,+1))begin
+  if(V(rst)<0.45)begin
+   if(have_fb)qualified=0;
+   if(have_ref && $abstime-ref_time>=45n)begin have_ref=0;qualified=0;end
+   have_fb=1;fb_time=$abstime;
+   if(have_ref)begin pair_at=$abstime;last_pair=$abstime;new_pair=1;have_ref=0;have_fb=0;end
+  end
+ end
+ @(timer(0,1n))begin
+  n=$rtoi(V(target)+0.5);
+  if(V(rst)>0.45 || V(fine_enable)<0.45 || n!=previous_n)begin
+   integral=0;fine_value=0;qualified=0;have_ref=0;have_fb=0;new_pair=0;last_pair=-1;
+  end else begin
+   if((have_ref && $abstime-ref_time>=45n) || (have_fb && $abstime-fb_time>=45n))begin
+    have_ref=0;have_fb=0;qualified=0;
+   end
+   if(last_pair>=0 && $abstime-last_pair>=150n)qualified=0;
+   if(V(ready)<0.45)begin integral=0;fine_value=0;qualified=0;end
+   if(new_pair && $abstime-pair_at>=200p)begin
+    new_pair=0;
+    if(V(ready)>0.45 && V(valid)>0.45)begin
+     phase_error=V(code)*0.25;
+     integral=integral+0.02*phase_error;
+     if(integral>24)integral=24;if(integral< -24)integral=-24;
+     fine_value=integral+0.5*phase_error;
+     if(fine_value>31)fine_value=31;if(fine_value< -31)fine_value=-31;
+     if(abs(phase_error)<=1)qualified=qualified+1;else qualified=0;
+    end else qualified=0;
+   end
+  end
+  previous_n=n;
+ end
+ V(fine)<+transition(fine_value,0,100p);
+ V(lock)<+0;
+end
+endmodule
+module adpll_top(ref,rst,target,fine_enable,dco,fb,coarse,fine,tdc_code,tdc_valid,lock);
+input ref,rst,target,fine_enable;output dco,fb,coarse,fine,tdc_code,tdc_valid,lock;
+electrical ref,rst,target,fine_enable,dco,fb,coarse,fine,tdc_code,tdc_valid,lock,en,ready;
+healthy_dco oscillator(coarse,fine,rst,en,dco);
+healthy_divider divider(dco,rst,target,fb);
+healthy_coarse coarse_loop(ref,dco,rst,target,fine_enable,coarse,ready);
+fine_tdc measurement(ref,fb,rst,tdc_code,tdc_valid);
+fine_control tracking(ref,fb,rst,target,fine_enable,ready,tdc_code,tdc_valid,fine,lock);
+analog V(en)<+0.9;
+endmodule

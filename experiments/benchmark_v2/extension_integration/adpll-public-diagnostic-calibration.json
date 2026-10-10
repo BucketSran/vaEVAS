@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "task_id": "v2-integrate-case0007-adpll-fine-tdc",
+  "purpose": "author public diagnostic smoke; not model score",
+  "public_file": "environment/public/public-default.scs",
+  "sha256": "beee8f53f491e1551376e8012087309885a5647b040ebc959ba171b9459641e7",
+  "bytes": 538,
+  "generation": "public diagnostic ADPLL tran retainsstop60u/maxstep1n; add strobeperiod1n strobedelay0 strobeoutputstrobeonly; save ref rst dco fb coarse fine tdc_code tdc_valid lock; no checker change",
+  "execution": "ok",
+  "spectre_returncode": 0,
+  "report_bytes": 10726227,
+  "public_response_bytes": 10520,
+  "raw_response_sha256": "1cad636dd17b89595fc5cfa18a698bd19583af7fb3ec627c9375e83bb7bd473a",
+  "bounded_reader_proof_sha256": "2e0b6fec04464659b0b393294623dcd99c0a552bffbb40795101662fb3542137",
+  "adapter_revision": "fcc996ff839573092e1d8a0a7cec7ff4dd3b342a",
+  "harness_revision": "075051b048e59976bf00a7c803ce0442e1aeea13",
+  "harness_bundle_sha256": "6e969ad68667fde0ebeeda008c01c8de637da02de3314972ba91713ec2adefa9",
+  "public_package_sha256": "2582bcf05cda78ca4f01a89867d655061d733e5100d29dd4f8aba2476f0238bf",
+  "candidate_source": [
+    {
+      "path": "benchmark/tasks/v2-integrate-case0007-adpll-fine-tdc/solution/dut.va",
+      "revision": "5cb6a87aa1a0a9c3cef217bdd820ae95b143bde0",
+      "sha256": "1970e07c05d56c72cb4cad9cd01b52e8a59b2a5c4906c2ff1d93475ac15d52a9",
+      "bytes": 4355
+    }
+  ],
+  "raw_evidence_storage": "local ignored archive; not published",
+  "model_trials_started_at_freeze": 0
+}

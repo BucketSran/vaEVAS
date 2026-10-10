@@ -1,0 +1,184 @@
+{
+  "spec_issue": 135,
+  "category": "extension-integration",
+  "status": "implementation_and_calibration_pending",
+  "sources": [
+    {
+      "id": "349",
+      "task": "v2-integrate-349-multichannel-readout",
+      "dependency": "#133 healthy 024 sample_hold",
+      "status": "built_not_live_calibrated"
+    },
+    {
+      "id": "case-0007",
+      "task": "v2-integrate-case0007-adpll-fine-tdc",
+      "dependency": "author healthy coarse and fine actuator",
+      "status": "built_not_live_calibrated"
+    }
+  ],
+  "runs": [],
+  "calibration_requests": [
+    {
+      "task": "benchmark/tasks/v2-integrate-349-multichannel-readout",
+      "variant": "reference",
+      "candidate_directory": "benchmark/tasks/v2-integrate-349-multichannel-readout/solution",
+      "expected": "pass",
+      "semantic_behavior": "public extension contract"
+    },
+    {
+      "task": "benchmark/tasks/v2-integrate-349-multichannel-readout",
+      "variant": "alternative",
+      "candidate_directory": "experiments/benchmark_v2/extension_integration/candidates/v2-integrate-349-multichannel-readout/alternative",
+      "expected": "pass",
+      "semantic_behavior": "alternative"
+    },
+    {
+      "task": "benchmark/tasks/v2-integrate-349-multichannel-readout",
+      "variant": "channel0-only",
+      "candidate_directory": "experiments/benchmark_v2/extension_integration/candidates/v2-integrate-349-multichannel-readout/channel0-only",
+      "expected": "fail",
+      "semantic_behavior": "channel0-only"
+    },
+    {
+      "task": "benchmark/tasks/v2-integrate-349-multichannel-readout",
+      "variant": "read-pause-advance",
+      "candidate_directory": "experiments/benchmark_v2/extension_integration/candidates/v2-integrate-349-multichannel-readout/read-pause-advance",
+      "expected": "fail",
+      "semantic_behavior": "read-pause-advance"
+    },
+    {
+      "task": "benchmark/tasks/v2-integrate-349-multichannel-readout",
+      "variant": "reset-output-stale",
+      "candidate_directory": "experiments/benchmark_v2/extension_integration/candidates/v2-integrate-349-multichannel-readout/reset-output-stale",
+      "expected": "fail",
+      "semantic_behavior": "reset-output-stale"
+    },
+    {
+      "task": "benchmark/tasks/v2-integrate-349-multichannel-readout",
+      "variant": "skip-channel",
+      "candidate_directory": "experiments/benchmark_v2/extension_integration/candidates/v2-integrate-349-multichannel-readout/skip-channel",
+      "expected": "fail",
+      "semantic_behavior": "skip-channel"
+    },
+    {
+      "task": "benchmark/tasks/v2-integrate-349-multichannel-readout",
+      "variant": "valid-low",
+      "candidate_directory": "experiments/benchmark_v2/extension_integration/candidates/v2-integrate-349-multichannel-readout/valid-low",
+      "expected": "fail",
+      "semantic_behavior": "valid-low"
+    },
+    {
+      "task": "benchmark/tasks/v2-integrate-case0007-adpll-fine-tdc",
+      "variant": "reference",
+      "candidate_directory": "benchmark/tasks/v2-integrate-case0007-adpll-fine-tdc/solution",
+      "expected": "pass",
+      "semantic_behavior": "public extension contract"
+    },
+    {
+      "task": "benchmark/tasks/v2-integrate-case0007-adpll-fine-tdc",
+      "variant": "alternative",
+      "candidate_directory": "experiments/benchmark_v2/extension_integration/candidates/v2-integrate-case0007-adpll-fine-tdc/alternative",
+      "expected": "pass",
+      "semantic_behavior": "alternative"
+    },
+    {
+      "task": "benchmark/tasks/v2-integrate-case0007-adpll-fine-tdc",
+      "variant": "fb-bypass-dco",
+      "candidate_directory": "experiments/benchmark_v2/extension_integration/candidates/v2-integrate-case0007-adpll-fine-tdc/fb-bypass-dco",
+      "expected": "fail",
+      "semantic_behavior": "fb-bypass-dco"
+    },
+    {
+      "task": "benchmark/tasks/v2-integrate-case0007-adpll-fine-tdc",
+      "variant": "fine-disconnected",
+      "candidate_directory": "experiments/benchmark_v2/extension_integration/candidates/v2-integrate-case0007-adpll-fine-tdc/fine-disconnected",
+      "expected": "fail",
+      "semantic_behavior": "fine-disconnected"
+    },
+    {
+      "task": "benchmark/tasks/v2-integrate-case0007-adpll-fine-tdc",
+      "variant": "lock-stale",
+      "candidate_directory": "experiments/benchmark_v2/extension_integration/candidates/v2-integrate-case0007-adpll-fine-tdc/lock-stale",
+      "expected": "fail",
+      "semantic_behavior": "lock-stale"
+    },
+    {
+      "task": "benchmark/tasks/v2-integrate-case0007-adpll-fine-tdc",
+      "variant": "mode-off-active",
+      "candidate_directory": "experiments/benchmark_v2/extension_integration/candidates/v2-integrate-case0007-adpll-fine-tdc/mode-off-active",
+      "expected": "fail",
+      "semantic_behavior": "mode-off-active"
+    },
+    {
+      "task": "benchmark/tasks/v2-integrate-case0007-adpll-fine-tdc",
+      "variant": "tdc-no-timeout",
+      "candidate_directory": "experiments/benchmark_v2/extension_integration/candidates/v2-integrate-case0007-adpll-fine-tdc/tdc-no-timeout",
+      "expected": "fail",
+      "semantic_behavior": "tdc-no-timeout"
+    },
+    {
+      "task": "benchmark/tasks/v2-integrate-case0007-adpll-fine-tdc",
+      "variant": "tdc-sign-inverted",
+      "candidate_directory": "experiments/benchmark_v2/extension_integration/candidates/v2-integrate-case0007-adpll-fine-tdc/tdc-sign-inverted",
+      "expected": "fail",
+      "semantic_behavior": "tdc-sign-inverted"
+    },
+    {
+      "task": "benchmark/tasks/v2-integrate-349-multichannel-readout",
+      "variant": "reset-clock-high-bank-stale",
+      "candidate_directory": "experiments/benchmark_v2/extension_integration/candidates/v2-integrate-349-multichannel-readout/reset-clock-high-bank-stale",
+      "expected": "fail",
+      "semantic_behavior": "reset-clock-high-bank-stale"
+    },
+    {
+      "task": "benchmark/tasks/v2-integrate-case0007-adpll-fine-tdc",
+      "variant": "lock-never-asserted",
+      "candidate_directory": "experiments/benchmark_v2/extension_integration/candidates/v2-integrate-case0007-adpll-fine-tdc/lock-never-asserted",
+      "expected": "fail",
+      "semantic_behavior": "lock-never-asserted"
+    },
+    {
+      "task": "benchmark/tasks/v2-integrate-case0007-adpll-fine-tdc",
+      "variant": "tdc-late-pair-accepted",
+      "candidate_directory": "experiments/benchmark_v2/extension_integration/candidates/v2-integrate-case0007-adpll-fine-tdc/tdc-late-pair-accepted",
+      "expected": "fail",
+      "semantic_behavior": "accept expired counterpart arriving between periodic timeout ticks"
+    }
+  ],
+  "author_source_revision": {
+    "previous_checkpoint": "c01de75aa86fed1e3b8f426289811088028da696",
+    "reason": "Actual Spectre compiler rejected author leading-dot real literals and reserved ground node. All author VA/netlist/support assets use explicit zero and gnd now.",
+    "prior_outcome": "unscored author source compilation failure; no semantic mutant rejection or completed acceptance",
+    "recalibration": "pending"
+  },
+  "review_revalidation": {
+    "reviewed_checkpoint": "10bd6480273398b14417a552cab5b0022c29c411",
+    "defects": [
+      "reset during sampling high left held frame stale",
+      "feedback submultiple accepted without divider relation",
+      "constant low lock accepted and stale pair could be consumed repeatedly",
+      "expired counterpart could be accepted between timeout ticks",
+      "intentional reference outage overlapped inherited stable window",
+      "lock observation preceded public two nanosecond update deadline"
+    ],
+    "status": "source/checker fixed; new actual reference/alternative/mutant calibration pending",
+    "historical_reference_pass": "old checker only, cannot support strict revised acceptance",
+    "outage_recovery": {
+      "outage": [
+        5.2e-05,
+        5.4e-05
+      ],
+      "stable_window": [
+        5.7e-05,
+        5.9e-05
+      ],
+      "frequency_tolerance": 200000.0,
+      "phase_tolerance": 3e-09,
+      "positive_lock_eligibility_required": true
+    },
+    "lock_observation": {
+      "public_update_deadline": 2e-09,
+      "numerical_margin": 5e-11
+    }
+  }
+}
