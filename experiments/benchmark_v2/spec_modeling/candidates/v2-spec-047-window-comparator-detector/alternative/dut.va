@@ -2,10 +2,10 @@
 module window_comparator_ref(VDD,VSS,vin,out);
 inout VDD,VSS;input vin;output out;electrical VDD,VSS,vin,out;
 parameter real vlow=0.3,vhigh=0.6,tedge=200p,tick=500p;
-integer state;
+integer lower_ok,upper_ok;
 analog begin
- @(initial_step)state=!(V(vin,VSS)<=vlow || V(vin,VSS)>=vhigh);
- @(timer(0,tick))state=!(V(vin,VSS)<=vlow || V(vin,VSS)>=vhigh);
- V(out,VSS)<+transition(state,0,tedge,tedge)*V(VDD,VSS);
+ @(initial_step)begin lower_ok=(V(vin,VSS)>vlow);upper_ok=(V(vin,VSS)<vhigh);end
+ @(timer(0,tick))begin lower_ok=(V(vin,VSS)>vlow);upper_ok=(V(vin,VSS)<vhigh);end
+ V(out,VSS)<+transition(lower_ok && upper_ok,0,tedge,tedge)*V(VDD,VSS);
 end
 endmodule

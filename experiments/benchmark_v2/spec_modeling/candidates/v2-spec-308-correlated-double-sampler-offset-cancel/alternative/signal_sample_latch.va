@@ -36,7 +36,7 @@ module signal_sample_latch(vin, clk, rst, sample_signal, sample_reset, reset_nod
                 offset_dbg_v = vss;
                 valid_v = vss;
             end else if (V(sample_signal) > vth && has_reset) begin
-                vout_v = clip01(cds_gain*V(vin) + (vcm-cds_gain*reset_sample));
+                vout_v = clip01(vcm + cds_gain * (V(vin) - reset_sample));
                 offset_dbg_v = clip01(reset_sample);
                 valid_v = vdd;
             end

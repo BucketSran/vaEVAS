@@ -11,7 +11,7 @@ module reset_sample_latch(vin, clk, rst, sample_reset, reset_node);
     parameter real vcm = 0.45;
     parameter real vth = 0.45;
     parameter real tr = 200p from (0:inf);
-    real reset_sample;
+    real reset_delta;
 
     analog function real clip01;
         input x;
@@ -24,12 +24,12 @@ module reset_sample_latch(vin, clk, rst, sample_reset, reset_node);
     endfunction
 
     analog begin
-        @(initial_step) reset_sample = vcm;
- @(cross(V(rst)-vth,+1)) reset_sample=vcm;
+        @(initial_step) reset_delta = 0;
+ @(cross(V(rst)-vth,+1)) reset_delta=0;
         @(cross(V(clk) - vth, +1)) begin
-            if (V(rst) > vth) reset_sample = vcm;
-            else if (V(sample_reset) > vth) reset_sample = V(vin);
+            if (V(rst) > vth) reset_delta = 0;
+            else if (V(sample_reset) > vth) reset_delta = V(vin)-vcm;
         end
-        V(reset_node) <+ transition(clip01(reset_sample), 0, tr, tr);
+        V(reset_node) <+ transition(clip01(vcm+reset_delta), 0, tr, tr);
     end
 endmodule

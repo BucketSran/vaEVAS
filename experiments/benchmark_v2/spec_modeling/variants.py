@@ -2,24 +2,7 @@
 from pathlib import Path
 import json,re,shutil
 ROOT=Path(__file__).resolve().parents[3];BASE=ROOT/'benchmark/tasks';OUT=ROOT/'experiments/benchmark_v2/spec_modeling';requests=[]
-changes={
-'071':('held = held + alpha * (V(vin) - held);','held = (1.0-alpha)*held + alpha*V(vin);','convex combination acquisition state'),
-'038':('raw = vcm + gain_value * (V(vin) - vcm);','raw = gain_value*V(vin)+(1.0-gain_value)*vcm;','affine gain form'),
-'082':('gainv = gainv - 0.18;','gainv = gainv + (-0.18);','signed gain correction'),
-'091':('baseband_q=baseband_q+lp_alpha*(V(demod_sample)-baseband_q);','baseband_q=(1-lp_alpha)*baseband_q+lp_alpha*V(demod_sample);','weighted low-pass recurrence'),
-'307':('state_v + 1.0 * k_int * (V(sample_node) - vcm)','vcm + ((state_v-vcm) + k_int*(V(sample_node)-vcm))','integrator deviation state form'),
-'308':('vcm + cds_gain * (V(vin) - reset_sample)','cds_gain*V(vin) + (vcm-cds_gain*reset_sample)','CDS affine difference'),
-'370':('vout_v + alpha * (target - vout_v)','(1.0-alpha)*vout_v + alpha*target','weighted settling recurrence'),
-'353':('vcm + main_amp * sym0 + tap_step * pre_code * sym1 - tap_step * post_code * sym2','main_value + pre_value + post_value - 2.0*vcm','sum independently computed cursor voltages'),
-'055':('acc = acc + V(vin) / vref - bit_state;','acc = (acc - bit_state) + V(vin)/vref;','feedback-first accumulation'),
-'002':('vdac_p_level = vcm + swing * (((code + 32 * cal) / 1023.0) - 0.5) * 0.5;','vdac_p_level = vcm + swing*(code+32*cal-511.5)/2046.0;','centered integer DAC arithmetic'),
-'003':('vres_level = vcm + 2.0 * vin_rel;','vres_level = 2.0*vin_s - vcm;','direct sampled-voltage middle residue'),
-'047':('state=(V(vin,VSS)>vlow && V(vin,VSS)<vhigh);','state=!(V(vin,VSS)<=vlow || V(vin,VSS)>=vhigh);','complement of two out-of-window predicates'),
-'314':('state?vdd:vss','vss+(vdd-vss)*state','affine rail coding'),
-'001':('u=(a!=b && b==c);d=(a==b && b!=c);','u=(a^b)&(!(b^c));d=(!(a^b))&(b^c);','XOR Alexander decision network'),
-'396':('lo_i_state = 1;\n                    lo_q_state = 0;','lo_i_state = (phase_state < 2);\n                    lo_q_state = (phase_state == 1 || phase_state == 2);','phase-index boolean encoding'),
-'186':('m[pointer]=1-dcmp;','m[pointer]=!dcmp;','logical complement of comparator bit'),
-}
+from alternative_forms import alternative, REASONS
 mutations={
 '024':('cross(V(CLK, VSS) - vth, +1)','cross(V(CLK, VSS) - vth, -1)','samples falling edge'),
 '071':('held + alpha * (V(vin) - held)','V(vin)','instantaneous acquisition'),
@@ -90,8 +73,13 @@ analog begin
 end
 endmodule
 ''');applied=1;description='packed word and bitmask search instead of seven unrolled code variables'
+  elif variant=='alternative' and sid in REASONS:
+   description=REASONS[sid]
+   for f in d.glob('*.va'):
+    original=f.read_text();revised=alternative(original,sid,f.name)
+    if revised!=original:f.write_text(revised);applied+=1
   else:
-   old,new,description=(changes if variant=='alternative' else mutations)[sid]
+   old,new,description=mutations[sid]
    for f in d.glob('*.va'):
     s=f.read_text()
     if old in s:f.write_text(s.replace(old,new));applied+=1

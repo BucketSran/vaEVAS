@@ -16,15 +16,14 @@ module cdac_cal(
     parameter real swing = 0.6;
     parameter real tt = 20p;
 
-    integer code;
+    integer sampled; integer code;
     integer cal;
     real vdac_p_level;
     real vdac_n_level;
 
     analog begin
         @(initial_step) begin
-            vdac_p_level = vcm;
-            vdac_n_level = vcm;
+            sampled=0;code=0;cal=0;
         end
 
         @(cross(V(CLK, VSS) - 0.45, +1)) begin
@@ -44,9 +43,10 @@ module cdac_cal(
             if (V(CAL0, VSS) > 0.45) cal = cal + 1;
             if (V(CAL1, VSS) > 0.45) cal = cal + 2;
 
-            vdac_p_level = vcm + swing*(code+32*cal-511.5)/2046.0;
-            vdac_n_level = vcm - swing * (((code + 32 * cal) / 1023.0) - 0.5) * 0.5;
+            sampled=1;
         end
+        vdac_p_level=sampled ? vcm+swing*(((code+32*cal)/1023.0)-0.5)*0.5 : vcm;
+        vdac_n_level=sampled ? vcm-swing*(((code+32*cal)/1023.0)-0.5)*0.5 : vcm;
 
         V(VDAC_P, VSS) <+ transition(vdac_p_level, 0, tt, tt);
         V(VDAC_N, VSS) <+ transition(vdac_n_level, 0, tt, tt);

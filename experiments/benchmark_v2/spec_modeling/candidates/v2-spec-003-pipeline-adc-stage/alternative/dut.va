@@ -25,7 +25,7 @@ parameter real vth = 0.45;
 parameter real vdd = 0.9;
 parameter real tedge = 200p;
 
-real vin_s;
+integer decision; real vin_s;
 real vcm;
 real vin_rel;
 real vref_qtr;
@@ -56,19 +56,12 @@ analog begin
         vref_qtr = V(VREF) / 4.0;
         vin_rel = vin_s - vcm;
 
-        if (vin_rel > vref_qtr) begin
-            d1_level = V(VDD);
-            d0_level = V(VSS);
-            vres_level = vcm + 2.0 * vin_rel - V(VREF) / 2.0;
-        end else if (vin_rel < -vref_qtr) begin
-            d1_level = V(VSS);
-            d0_level = V(VSS);
-            vres_level = vcm + 2.0 * vin_rel + V(VREF) / 2.0;
-        end else begin
-            d1_level = V(VSS);
-            d0_level = V(VDD);
-            vres_level = 2.0*vin_s - vcm;
-        end
+        decision=0;
+        if(vin_rel>vref_qtr)decision=1;
+        else if(vin_rel < -vref_qtr)decision=-1;
+        d1_level=decision==1 ? V(VDD) : V(VSS);
+        d0_level=decision==0 ? V(VDD) : V(VSS);
+        vres_level=vcm+2.0*vin_rel-decision*V(VREF)/2.0;
 
         if (vres_level > V(VDD)) vres_level = V(VDD);
         if (vres_level < V(VSS)) vres_level = V(VSS);

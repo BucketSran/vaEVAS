@@ -12,18 +12,18 @@ module acquisition_limited_sample_hold(sample, rst, vin, vout, metric);
     parameter real tick = 1n from (0:inf);
     parameter real tr = 200p from (0:inf);
 
-    real held;
+    real deficit;
     real tracking;
 
     analog begin
         @(initial_step) begin
-            held = vinit;
+            deficit = 0;
             tracking = 0.0;
         end
 
         @(cross(V(sample) - vth, +1)) begin
             if (V(rst) > vth) begin
-                held = vinit;
+                deficit = 0;
                 tracking = 0.0;
             end else begin
                 tracking = 1.0;
@@ -36,14 +36,14 @@ module acquisition_limited_sample_hold(sample, rst, vin, vout, metric);
 
         @(timer(0, tick)) begin
             if (V(rst) > vth) begin
-                held = vinit;
+                deficit = 0;
                 tracking = 0.0;
             end else if (tracking > 0.5) begin
-                held = (1.0-alpha)*held + alpha*V(vin);
+                deficit = (1-alpha)*deficit + alpha*(vinit-V(vin));
             end
         end
 
-        V(vout) <+ transition(held, 0, tr, tr);
+        V(vout) <+ transition(vinit-deficit, 0, tr, tr);
         V(metric) <+ transition((tracking > 0.5) ? 0.9 : 0.0, 0, tr, tr);
     end
 endmodule

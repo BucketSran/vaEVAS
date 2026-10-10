@@ -10,18 +10,19 @@ parameter real vh = 0.9;
 parameter real vref = 1.0;
 parameter real tr = 20p;
 
-real acc;
+real residual; real acc;
 integer bit_state;
 
 analog begin
     @(initial_step) begin
-        acc = 0.0;
+        residual = 0.0; acc = 0.0;
         bit_state = 0;
     end
 
     @(cross(V(vclk) - vth_clk, +1)) begin
-        acc = (acc - bit_state) + V(vin)/vref;
+        acc = residual + V(vin)/vref;
         bit_state = (acc >= 0.0) ? 1 : 0;
+        residual=acc-bit_state;
     end
 
     V(bitout) <+ transition(bit_state ? vh : 0.0, 0, tr, tr);

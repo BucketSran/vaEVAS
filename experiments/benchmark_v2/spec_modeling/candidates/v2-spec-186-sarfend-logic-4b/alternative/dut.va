@@ -1,25 +1,38 @@
 `include "disciplines.vams"
-module sarfend_logic_4b(clks,dcomp,dcompb,test,dtest0,dtest1,dtest2,dtest3,clkc,dp1,dp2,dp3,dp4,dm1,dm2,dm3,dm4,dout0,dout1,dout2,dout3);
-input clks,dcomp,dcompb,test,dtest0,dtest1,dtest2,dtest3;output clkc,dp1,dp2,dp3,dp4,dm1,dm2,dm3,dm4,dout0,dout1,dout2,dout3;
-electrical clks,dcomp,dcompb,test,dtest0,dtest1,dtest2,dtest3,clkc,dp1,dp2,dp3,dp4,dm1,dm2,dm3,dm4,dout0,dout1,dout2,dout3;
-integer pword,mword,published,override,k,request,decision,mask;
+module sarfend_logic_4b(clks, dcomp, dcompb, test, dtest0, dtest1, dtest2, dtest3, clkc, dp1, dp2, dp3, dp4, dm1, dm2, dm3, dm4, dout0, dout1, dout2, dout3);
+input clks, dcomp, dcompb, test, dtest0, dtest1, dtest2, dtest3;
+output clkc, dp1, dp2, dp3, dp4, dm1, dm2, dm3, dm4, dout0, dout1, dout2, dout3;
+electrical clks, dcomp, dcompb, test, dtest0, dtest1, dtest2, dtest3, clkc, dp1, dp2, dp3, dp4, dm1, dm2, dm3, dm4, dout0, dout1, dout2, dout3;
+integer clkcval, pointer, dcmp;
+integer pword,mword,outword,testword;
 analog begin
- @(initial_step)begin pword=7;mword=7;published=0;override=0;k=3;request=0;end
- @(cross(V(clks)-0.45,+1))begin
- published=pword;pword=7;mword=7;k=3;request=0;
- override=(V(dtest0)>0.45)+2*(V(dtest1)>0.45)+4*(V(dtest2)>0.45)+8*(V(dtest3)>0.45);
- end
- @(cross(V(clks)-0.45,-1))request=1;
- @(cross(V(dcomp)+V(dcompb)-0.45,-1))if(V(clks)<0.45 && k>=0)request=1;
- @(cross(V(dcomp)+V(dcompb)-0.45,+1))begin
- if(V(clks)<0.45 && k>=0)begin
- mask=1<<k;decision=(V(test)>0.45)?((override&mask)!=0):(V(dcomp)>V(dcompb));
- pword=(pword & ~mask) | (decision?mask:0);mword=(mword & ~mask) | (decision?0:mask);
- k=k-1;request=0;
- end end
- V(dp1)<+transition((pword&1)?1:0,20p,10p,10p);V(dp2)<+transition((pword&2)?1:0,20p,10p,10p);V(dp3)<+transition((pword&4)?1:0,20p,10p,10p);V(dp4)<+transition((pword&8)?1:0,20p,10p,10p);
- V(dm1)<+transition((mword&1)?1:0,20p,10p,10p);V(dm2)<+transition((mword&2)?1:0,20p,10p,10p);V(dm3)<+transition((mword&4)?1:0,20p,10p,10p);V(dm4)<+transition((mword&8)?1:0,20p,10p,10p);
- V(dout0)<+transition((published&1)?1:0,0,10p,10p);V(dout1)<+transition((published&2)?1:0,0,10p,10p);V(dout2)<+transition((published&4)?1:0,0,10p,10p);V(dout3)<+transition((published&8)?1:0,0,10p,10p);
- V(clkc)<+transition(request,30p,10p,10p);
+    @(initial_step) begin
+        clkcval = 0; pointer = 0; pword=14;mword=14;
+        outword=0;
+    end
+    @(cross(V(clks) - 0.45, +1)) begin
+        outword=((pword&1)<<3) | ((pword&2)<<1) | ((pword&4)>>1) | ((pword&8)>>3);
+        pointer=0; pword=14;mword=14;
+        testword=(V(dtest3)>0.45) | ((V(dtest2)>0.45)<<1) | ((V(dtest1)>0.45)<<2) | ((V(dtest0)>0.45)<<3);
+        dcmp=0; clkcval=0;
+    end
+    @(cross(V(clks) - 0.45, -1)) clkcval=1;
+    @(cross(V(dcomp)+V(dcompb)-0.45, -1)) if ((V(clks)<0.45) && (pointer<4)) clkcval=1;
+    @(cross(V(dcomp)+V(dcompb)-0.45, +1)) begin
+        if ((V(clks)<0.45) && (pointer<4)) begin
+            dcmp = V(dcomp)>V(dcompb);
+            if(V(test)>=0.45)dcmp=(testword>>pointer)&1;
+            pword=(pword & ~(1<<pointer)) | (dcmp<<pointer);
+            mword=(mword & ~(1<<pointer)) | ((1-dcmp)<<pointer);
+            clkcval=0;
+            pointer=pointer+1;
+        end
+    end
+    V(dp4)<+transition(((pword>>0)&1)?1.0:0.0,20p,10p,10p); V(dm4)<+transition(((mword>>0)&1)?1.0:0.0,20p,10p,10p);
+    V(dp3)<+transition(((pword>>1)&1)?1.0:0.0,20p,10p,10p); V(dm3)<+transition(((mword>>1)&1)?1.0:0.0,20p,10p,10p);
+    V(dp2)<+transition(((pword>>2)&1)?1.0:0.0,20p,10p,10p); V(dm2)<+transition(((mword>>2)&1)?1.0:0.0,20p,10p,10p);
+    V(dp1)<+transition(((pword>>3)&1)?1.0:0.0,20p,10p,10p); V(dm1)<+transition(((mword>>3)&1)?1.0:0.0,20p,10p,10p);
+    V(dout0)<+transition(((outword>>0)&1)?1.0:0.0,0,10p,10p); V(dout1)<+transition(((outword>>1)&1)?1.0:0.0,0,10p,10p); V(dout2)<+transition(((outword>>2)&1)?1.0:0.0,0,10p,10p); V(dout3)<+transition(((outword>>3)&1)?1.0:0.0,0,10p,10p);
+    V(clkc)<+transition(clkcval?1.0:0.0,30p,10p,10p);
 end
 endmodule

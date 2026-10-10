@@ -13,7 +13,7 @@ module integrator_state_cell(phi1, phi2, rst, enable, sample_node, sample_valid,
     parameter real tr = 200p from (0:inf);
     parameter real k_int = 0.2;
     integer consumed;
- real state_v, phase_metric_v, valid_v;
+ real deviation, phase_metric_v, valid_v;
 
     analog function real clip01;
         input x;
@@ -26,23 +26,23 @@ module integrator_state_cell(phi1, phi2, rst, enable, sample_node, sample_valid,
     endfunction
 
     analog begin
-        @(initial_step) begin consumed=1;state_v = vcm; phase_metric_v = vcm; valid_v = vss; end
- @(cross(V(rst)-vth,+1) or cross(V(enable)-vth,-1)) begin consumed=1;state_v = vcm; phase_metric_v = vcm; valid_v = vss; end
+        @(initial_step) begin consumed=1;deviation = 0; phase_metric_v = vcm; valid_v = vss; end
+ @(cross(V(rst)-vth,+1) or cross(V(enable)-vth,-1)) begin consumed=1;deviation = 0; phase_metric_v = vcm; valid_v = vss; end
         @(cross(V(phi1)-vth,+1))consumed=0;
  @(cross(V(phi2) - vth, +1)) begin
             if ((V(rst) > vth || V(enable) <= vth)) begin
-                state_v = vcm;
+                deviation = 0;
                 phase_metric_v = vcm;
                 valid_v = vss;
             end else if ((V(phi1) <= vth || 0) && V(sample_valid) > vth && !consumed) begin
-                consumed=1;state_v = clip01(vcm + ((state_v-vcm) + k_int*(V(sample_node)-vcm)));
+                consumed=1;deviation = clip01(vcm + deviation + k_int*(V(sample_node)-vcm))-vcm;
                 phase_metric_v = V(sample_node);
                 valid_v = vdd;
             end else begin
                 valid_v = vss;
             end
         end
-        V(vout) <+ transition(clip01(state_v), 0, tr, tr);
+        V(vout) <+ transition(clip01(vcm+deviation), 0, tr, tr);
         V(phase_metric) <+ transition(clip01(phase_metric_v), 0, tr, tr);
         V(valid) <+ transition(valid_v, 0, tr, tr);
     end

@@ -137,7 +137,7 @@
     "variant": "alternative",
     "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-001-bang-bang-phase-detector/alternative",
     "expected": "pass",
-    "semantic_behavior": "XOR Alexander decision network",
+    "semantic_behavior": "packed three-sample history with decision lookup instead of separate latches",
     "certification": "pending-live-execution"
   },
   {
@@ -153,7 +153,7 @@
     "variant": "alternative",
     "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-002-capacitive-sar-feedback-dac/alternative",
     "expected": "pass",
-    "semantic_behavior": "centered integer DAC arithmetic",
+    "semantic_behavior": "latched digital code/calibration word instead of two latched analog levels",
     "certification": "pending-live-execution"
   },
   {
@@ -169,7 +169,7 @@
     "variant": "alternative",
     "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-003-pipeline-adc-stage/alternative",
     "expected": "pass",
-    "semantic_behavior": "direct sampled-voltage middle residue",
+    "semantic_behavior": "ternary sub-ADC decision state drives residue and bit decoding",
     "certification": "pending-live-execution"
   },
   {
@@ -201,7 +201,7 @@
     "variant": "alternative",
     "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-038-programmable-gain-amplifier/alternative",
     "expected": "pass",
-    "semantic_behavior": "affine gain form",
+    "semantic_behavior": "latched discrete gain mode; gain voltage computed continuously",
     "certification": "pending-live-execution"
   },
   {
@@ -217,7 +217,7 @@
     "variant": "alternative",
     "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-047-window-comparator-detector/alternative",
     "expected": "pass",
-    "semantic_behavior": "complement of two out-of-window predicates",
+    "semantic_behavior": "two sampled comparator states feed combinational window AND",
     "certification": "pending-live-execution"
   },
   {
@@ -233,7 +233,7 @@
     "variant": "alternative",
     "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-055-first-order-sigma-delta-modulator/alternative",
     "expected": "pass",
-    "semantic_behavior": "feedback-first accumulation",
+    "semantic_behavior": "post-feedback residual is stored; next quantizer input is temporary",
     "certification": "pending-live-execution"
   },
   {
@@ -249,7 +249,7 @@
     "variant": "alternative",
     "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-071-acquisition-limited-sample-and-hold/alternative",
     "expected": "pass",
-    "semantic_behavior": "convex combination acquisition state",
+    "semantic_behavior": "voltage deficit relative to vinit is the acquisition state",
     "certification": "pending-live-execution"
   },
   {
@@ -265,7 +265,7 @@
     "variant": "alternative",
     "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-082-agc-receiver-leveling-loop/alternative",
     "expected": "pass",
-    "semantic_behavior": "normalized bounded control state with gain decoded each update",
+    "semantic_behavior": "integer hundredths gain controller instead of real gain accumulator",
     "certification": "pending-live-execution"
   },
   {
@@ -281,7 +281,7 @@
     "variant": "alternative",
     "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-091-chopper-stabilized-differential-amplifier/alternative",
     "expected": "pass",
-    "semantic_behavior": "weighted low-pass recurrence",
+    "semantic_behavior": "LP accumulator in unscaled input units; derived baseband voltage",
     "certification": "pending-live-execution"
   },
   {
@@ -313,7 +313,7 @@
     "variant": "alternative",
     "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-186-sarfend-logic-4b/alternative",
     "expected": "pass",
-    "semantic_behavior": "packed-word bitmask SAR decision publisher instead of unpacked arrays",
+    "semantic_behavior": "packed SAR masks and bit updates instead of four-element arrays",
     "certification": "pending-live-execution"
   },
   {
@@ -329,7 +329,7 @@
     "variant": "alternative",
     "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-307-switched-capacitor-integrator-phase-pair/alternative",
     "expected": "pass",
-    "semantic_behavior": "integrator deviation state form",
+    "semantic_behavior": "saturated integrator deviation relative to vcm is the stored state",
     "certification": "pending-live-execution"
   },
   {
@@ -345,7 +345,7 @@
     "variant": "alternative",
     "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-308-correlated-double-sampler-offset-cancel/alternative",
     "expected": "pass",
-    "semantic_behavior": "CDS affine difference",
+    "semantic_behavior": "reset latch stores signed deviation, derives absolute boundary voltage",
     "certification": "pending-live-execution"
   },
   {
@@ -361,7 +361,7 @@
     "variant": "alternative",
     "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-314-hysteretic-window-comparator/alternative",
     "expected": "pass",
-    "semantic_behavior": "complement retained outside-history state",
+    "semantic_behavior": "inside rail voltage is the hysteresis memory instead of a boolean",
     "certification": "pending-live-execution"
   },
   {
@@ -377,7 +377,7 @@
     "variant": "alternative",
     "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-353-ffe-transmitter-3tap/alternative",
     "expected": "pass",
-    "semantic_behavior": "sum independently computed cursor voltages",
+    "semantic_behavior": "circular three-symbol buffer instead of shifting three registers",
     "certification": "pending-live-execution"
   },
   {
@@ -393,7 +393,7 @@
     "variant": "alternative",
     "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-370-opamp-feedback-settling-monitor/alternative",
     "expected": "pass",
-    "semantic_behavior": "weighted settling recurrence",
+    "semantic_behavior": "three-bit history of qualifying errors instead of convergence counter",
     "certification": "pending-live-execution"
   },
   {
@@ -425,7 +425,7 @@
     "variant": "alternative",
     "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-396-quadrature-lo-generator-divided-clock/alternative",
     "expected": "pass",
-    "semantic_behavior": "one-hot rotating ring instead of binary phase counter",
+    "semantic_behavior": "rotating two-bit quadrature state instead of modulo phase counter",
     "certification": "pending-live-execution"
   },
   {

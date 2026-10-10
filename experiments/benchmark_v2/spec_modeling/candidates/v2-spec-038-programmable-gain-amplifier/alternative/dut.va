@@ -14,6 +14,7 @@ module programmable_gain_amplifier(clk, rst, gain_sel, vin, out, metric);
     parameter real vmax = 0.9;
     parameter real tr = 200p from (0:inf);
 
+    integer gain_mode;
     real gain_value;
     real raw;
     real bounded;
@@ -21,19 +22,20 @@ module programmable_gain_amplifier(clk, rst, gain_sel, vin, out, metric);
 
     analog begin
         @(initial_step) begin
-            gain_value = 1.0;
+            gain_mode = 0;
         end
 
         @(cross(V(clk) - vth, +1)) begin
             if (V(rst) > vth)
-                gain_value = 1.0;
+                gain_mode = 0;
             else if (V(gain_sel) > vth)
-                gain_value = gain_high;
+                gain_mode = 2;
             else
-                gain_value = gain_low;
+                gain_mode = 1;
         end
 
-        raw = gain_value*V(vin)+(1.0-gain_value)*vcm;
+        gain_value = gain_mode==0 ? 1.0 : (gain_mode==1 ? gain_low : gain_high);
+        raw = vcm + gain_value * (V(vin) - vcm);
         bounded = raw;
         clipped = 0.0;
         if (bounded > vmax) begin

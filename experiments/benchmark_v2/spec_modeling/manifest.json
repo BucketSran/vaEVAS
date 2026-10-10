@@ -107,9 +107,9 @@
           "id": "alternative",
           "expected": "pass",
           "status": "pending",
-          "semantic_behavior": "convex combination acquisition state",
+          "semantic_behavior": "voltage deficit relative to vinit is the acquisition state",
           "files": {
-            "dut.va": "494402e8fa3136de96f267846c7a5f71117ee6897000734a69487d03c99ff5a4"
+            "dut.va": "54bca4fbf149d6118c1ba2228c8d9148ccdf78c14d32fe307e3e3d8f45c1479b"
           }
         },
         {
@@ -159,9 +159,9 @@
           "id": "alternative",
           "expected": "pass",
           "status": "pending",
-          "semantic_behavior": "packed-word bitmask SAR decision publisher instead of unpacked arrays",
+          "semantic_behavior": "packed SAR masks and bit updates instead of four-element arrays",
           "files": {
-            "dut.va": "326e8d89524988a9bf4ad35f052b27eac4166494404050f21c20b1754f12afcb"
+            "dut.va": "7215a17e7340a6fde9d179ed0cedde136c2d01a2f3f98a8f4f3254d8d6a98a5e"
           }
         },
         {
@@ -211,9 +211,9 @@
           "id": "alternative",
           "expected": "pass",
           "status": "pending",
-          "semantic_behavior": "complement of two out-of-window predicates",
+          "semantic_behavior": "two sampled comparator states feed combinational window AND",
           "files": {
-            "dut.va": "0e53f91ad997426b0d7c4f6617366e39bab75e17b7d3eced447c082afb784b65"
+            "dut.va": "105bcff07a1485775408bcd554efe49d387c26dbd2376e405e28d7f1bdbceff5"
           }
         },
         {
@@ -263,9 +263,9 @@
           "id": "alternative",
           "expected": "pass",
           "status": "pending",
-          "semantic_behavior": "complement retained outside-history state",
+          "semantic_behavior": "inside rail voltage is the hysteresis memory instead of a boolean",
           "files": {
-            "dut.va": "37b763ea74faf44a2a3ed76e6a239c8e578019bba06ab45853a1b7dcd7bf4eae"
+            "dut.va": "6001d757c4d89510a2eaab28630e04bf3988ca5ced3e85c3e4b381750de0ddf7"
           }
         },
         {
@@ -315,9 +315,9 @@
           "id": "alternative",
           "expected": "pass",
           "status": "pending",
-          "semantic_behavior": "centered integer DAC arithmetic",
+          "semantic_behavior": "latched digital code/calibration word instead of two latched analog levels",
           "files": {
-            "dut.va": "72273775204d8fb4bf756b2d184e276c25bb82281584e6071e005a4572425c14"
+            "dut.va": "c801fc73e580ba0b3c849593ff7bb07dea0f7ab5e9c443f2c99062ba5498d59f"
           }
         },
         {
@@ -367,9 +367,9 @@
           "id": "alternative",
           "expected": "pass",
           "status": "pending",
-          "semantic_behavior": "direct sampled-voltage middle residue",
+          "semantic_behavior": "ternary sub-ADC decision state drives residue and bit decoding",
           "files": {
-            "dut.va": "fb967b0969a49c7071ac3d4817204e2cc6170728247db6c1613249ede5a2dc1f"
+            "dut.va": "3b852c6eb0a7e5862e11b3c213c32ab821b30a173c5a143df2bf3521bed5644c"
           }
         },
         {
@@ -419,9 +419,9 @@
           "id": "alternative",
           "expected": "pass",
           "status": "pending",
-          "semantic_behavior": "feedback-first accumulation",
+          "semantic_behavior": "post-feedback residual is stored; next quantizer input is temporary",
           "files": {
-            "dut.va": "9154fa9fe08fbf5dddc5a1cf4eee5ebd3c0ab1157730072afd6a4076b5be5585"
+            "dut.va": "59942ddf6b0cdeb1aba90d58fbddff76cea66fc3b0e26861c549cd60f5ee9f4e"
           }
         },
         {
@@ -471,9 +471,9 @@
           "id": "alternative",
           "expected": "pass",
           "status": "pending",
-          "semantic_behavior": "XOR Alexander decision network",
+          "semantic_behavior": "packed three-sample history with decision lookup instead of separate latches",
           "files": {
-            "dut.va": "2189e66b99780a77b846cc241485e337dcea07f3992866a9e11a340b5426fce5"
+            "dut.va": "8bb4051e2c4c0e9a1ac3ee32f6a6cf2bd9bd1e6d2fa6a475f1c831339887c6e8"
           }
         },
         {
@@ -602,9 +602,9 @@
           "id": "alternative",
           "expected": "pass",
           "status": "pending",
-          "semantic_behavior": "one-hot rotating ring instead of binary phase counter",
+          "semantic_behavior": "rotating two-bit quadrature state instead of modulo phase counter",
           "files": {
-            "dut.va": "294c156eaa0f8aed6f98473b40f0c0dbbf33ee38beefd9e8f816c0921966108a"
+            "dut.va": "f0cc299ab8117c404d60baa06f9c09763fc7f431be8c3eadb801f3dfcee91ea1"
           }
         },
         {
@@ -654,9 +654,9 @@
           "id": "alternative",
           "expected": "pass",
           "status": "pending",
-          "semantic_behavior": "affine gain form",
+          "semantic_behavior": "latched discrete gain mode; gain voltage computed continuously",
           "files": {
-            "dut.va": "5c1899df39be3abc9d87e32e066154ef277f366b952c5859a6a4fc42fe824b2d"
+            "dut.va": "579de909613dda630b0367b5fe514049dae02a4b6fd0ec7d28bc31b00cf6b385"
           }
         },
         {
@@ -706,9 +706,9 @@
           "id": "alternative",
           "expected": "pass",
           "status": "pending",
-          "semantic_behavior": "normalized bounded control state with gain decoded each update",
+          "semantic_behavior": "integer hundredths gain controller instead of real gain accumulator",
           "files": {
-            "dut.va": "6765396a751345e1c9e3242df15ecd47d94e485b8e4077aa726567d45f8a6c1e"
+            "dut.va": "ddf691074eb5f13c2c514f651f84feacf6c9c92c56db0f87b0f1c2a47ff1729a"
           }
         },
         {
@@ -763,11 +763,11 @@
           "id": "alternative",
           "expected": "pass",
           "status": "pending",
-          "semantic_behavior": "weighted low-pass recurrence",
+          "semantic_behavior": "LP accumulator in unscaled input units; derived baseband voltage",
           "files": {
-            "chopper_gain_core.va": "52b69b90aaef760532d993237c75279e9668c92931daf40734c7278307748c2b",
             "dut.va": "725291d0216bcdddd2413d809699be51e5a8cd38e04579ecada7d3986bb4cefb",
-            "synchronous_lp_state.va": "4007e2efeb0ec0ff0db87b98a1e3026711ab550daab0b341f383762a9daca906"
+            "chopper_gain_core.va": "52b69b90aaef760532d993237c75279e9668c92931daf40734c7278307748c2b",
+            "synchronous_lp_state.va": "771e02a43da1df126fa1a321b3c3bda480fc1746978a937fd4a31408f7be9697"
           }
         },
         {
@@ -855,11 +855,11 @@
           "id": "alternative",
           "expected": "pass",
           "status": "pending",
-          "semantic_behavior": "CDS affine difference",
+          "semantic_behavior": "reset latch stores signed deviation, derives absolute boundary voltage",
           "files": {
             "dut.va": "e5c0f4d0f5dac147b0d97c59fcb69af54b299d62902704bc5a2ebb148b4cef96",
-            "reset_sample_latch.va": "b8346080b152e078d05d79828e97d5715d2dee55a36c6d30e73faf8b20a00427",
-            "signal_sample_latch.va": "3571a00b5afb22ccb26cd92f6862d69b0c77d8682ee6848011e23cbb70b82559"
+            "reset_sample_latch.va": "4450fb2a22872742036f621734fe9baf00e637f044275909c23b0a20e3512548",
+            "signal_sample_latch.va": "c541abc846718d808532fe9bd59a9cb75316e0ed55a5570e2da7414043093dc0"
           }
         },
         {
@@ -942,9 +942,9 @@
           "id": "alternative",
           "expected": "pass",
           "status": "pending",
-          "semantic_behavior": "weighted settling recurrence",
+          "semantic_behavior": "three-bit history of qualifying errors instead of convergence counter",
           "files": {
-            "dut.va": "74660e2a30cf363a2a8d6f64bd943300e0dd189ce4615dc885728d79174e5592"
+            "dut.va": "f3ae9373b9a9c4f6de7e9e12e6437e994b244d5c421d52e64d2d68c67b3d700f"
           }
         },
         {
@@ -999,10 +999,10 @@
           "id": "alternative",
           "expected": "pass",
           "status": "pending",
-          "semantic_behavior": "integrator deviation state form",
+          "semantic_behavior": "saturated integrator deviation relative to vcm is the stored state",
           "files": {
             "dut.va": "dd1b37c1c4675eda2b92a6de9ce02b2724b5987fc01fc30113a96d446fa8f30c",
-            "integrator_state_cell.va": "de20ccbaad26a976fca2228f25c011c1786f395ec5a4fa74d8de1453823061b0",
+            "integrator_state_cell.va": "e17f0929aa862526ed598a43742d5d2b7692dce8cefbac079a61b077799c51b6",
             "sample_phase_cell.va": "e7265b884b4b602a644739bc50bc6cb734e42494a106aa10973be4807a206df2"
           }
         },
@@ -1138,9 +1138,9 @@
           "id": "alternative",
           "expected": "pass",
           "status": "pending",
-          "semantic_behavior": "sum independently computed cursor voltages",
+          "semantic_behavior": "circular three-symbol buffer instead of shifting three registers",
           "files": {
-            "dut.va": "c4602e9e936b6e155894d12254903990fbcc006266014ae1b7ed537a382d551c"
+            "dut.va": "0fc7d34c1ba23bddf072a84a38ddfe00fd00f8e199120930d46f66829bbaa438"
           }
         },
         {

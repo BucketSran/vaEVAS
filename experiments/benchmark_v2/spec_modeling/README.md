@@ -11,7 +11,7 @@
 每题环境公开接口和固定自测，solution和tests不进入解题镜像。checker只使用实际输入输出和
 公开数学、采样或状态合同，不读取参考源码、评分私有状态或要求源码相似。
 分辨率不足、缺失波形和非有限数据抛出环境错误，不能按候选零分处理。
-不同合法实现的预期通过须经真实仿真确认；部分替代采用等价数学表达，不能据此声称已覆盖任意VA语言特性。
+不同合法实现的预期通过须经真实仿真确认；16题替代现采用独立状态表示或建模方式，生成路径与候选一致；这不能据此声称已覆盖任意VA语言特性。
 
 024从实际CLK交点计算采样值，检查初态、保持、上升沿取样、高相与停钟、单调过渡及起止时长。
 375采用公开的全局tick死区，检查两相和取消历史，包括短于tick的disable脉冲及下一边沿重启。
@@ -76,3 +76,28 @@ python3 -B -m unittest discover -s experiments/benchmark_v2/spec_modeling -p 'te
 16.236ns进入、17.236ns结束的手算脉冲验证健康波形通过及持续高电平失败。
 091、307的contract将dut.va列为首项，保持允许修改文件集合不变；它们此前未进入仿真，
 新contract身份需冻结后重跑。激励未改。
+
+## 替代实现的形态与限制
+
+`alternative_forms.py` 为下面16题生成固定候选，`variants.py` 复用同一入口。024、375、183已有不同实现形态，保持原候选。所有公开题面、source材料、科学条件和checker阈值不变。下表区分旧候选已有的形态与本轮生成结果，避免把已有packed或归一化状态误称为纯表达式改写。
+
+| 来源 | 旧候选 | 本轮权威状态或建模方式 |
+| --- | --- | --- |
+| 071 | same held voltage; convex expression | voltage deficit relative to vinit is the acquisition state |
+| 038 | same gain voltage latch; affine expression | latched discrete gain mode; gain voltage computed continuously |
+| 082 | normalized control voltage already differs from reference | integer hundredths gain controller instead of real gain accumulator |
+| 091 | same baseband state; weighted expression | LP accumulator in unscaled input units; derived baseband voltage |
+| 307 | same absolute integrator voltage; shifted expression | saturated integrator deviation relative to vcm is the stored state |
+| 308 | same reset and signal states; affine expression | reset latch stores signed deviation, derives absolute boundary voltage |
+| 370 | same convergence counter; weighted expression | three-bit history of qualifying errors instead of convergence counter |
+| 353 | same shifting history; voltage sum expression | circular three-symbol buffer instead of shifting three registers |
+| 055 | same accumulator; operation order expression | post-feedback residual is stored; next quantizer input is temporary |
+| 002 | same two analog output latches; centered expression | latched digital code/calibration word instead of two latched analog levels |
+| 003 | same branch outputs; middle-region expression | ternary sub-ADC decision state drives residue and bit decoding |
+| 047 | same window boolean; complemented predicates | two sampled comparator states feed combinational window AND |
+| 314 | outside-state encoding already differs from reference | inside rail voltage is the hysteresis memory instead of a boolean |
+| 001 | same three latches; XOR decisions | packed three-sample history with decision lookup instead of separate latches |
+| 396 | one-hot ring already differs from reference | rotating two-bit quadrature state instead of modulo phase counter |
+| 186 | packed SAR words already differ from reference | packed SAR masks and bit updates instead of four-element arrays |
+
+有限表达式回归覆盖Alexander完整真值表、SAR四决策组合与位序、三次连续资格、离散增益控制，以及采集、低通、饱和积分的公开算例。它们执行实际候选表达式，但不是Verilog-A仿真；新候选全部标为待Spectre校准，原实际结果仍绑定旧候选SHA，不能继承为新版通过。生成身份检查也不证明行为通过。
