@@ -7,7 +7,8 @@ benchmark 评估模型与智能体能否用 Verilog-A 完成工程任务；EVAS 
 评分可信度及对模型能力的区分；EVAS 的首要目标是让使用者不依赖商业仿真器也能运行与验证
 目标范围内的模型，为 benchmark 提供开源复现环境。运行速度在保持语义与精度的前提下优化。
 
-Spectre 保留为 benchmark 的最终验收后端，正确性要求来自题目规格与独立判据。
+Benchmark 按题目能力需求固定验收后端，正确性要求来自题目规格与独立判据。
+具备完整运行与 checker 校准证据的 ngspice 题可独立评分；Spectre 用于需要它的题目及按需对照。
 EVAS 的支持范围和后端对照证据决定当前可以复现哪些行为，不以开源目标代替已经完成的验证。
 两条工作线的配合与范围见 [benchmark 目标](benchmark/README.md#目标与边界)、
 [EVAS 说明](evas/README.md)；共同术语见[术语表](GLOSSARY.md)。
@@ -34,6 +35,10 @@ EVAS 的支持范围和后端对照证据决定当前可以复现哪些行为，
 
 benchmark 以实际 Verilog-A 使用场景组织工程任务，检查交付物是否满足任务要求。
 建设内容包括题目、运行环境、参考解和验收材料，采用 Harbor 任务格式。
+
+当前五类方案的逐题设计入口为 [Benchmark 工作区](benchmark/workbench/README.md)，
+按工程动作、电路家族和稳定 Case ID 记录来源、改编形式与 review 状态。
+POR、LDO 和运放压摆率三个候选仍是草案；下述七类资产保留为历史批次。
 
 **当前状态：**[首批七类工程任务](benchmark/first_batch/README.md)已完成每类 5 题，
 共 35 题的参考解与代表负例 Spectre 校准。真实模型试跑及其反馈限制见
