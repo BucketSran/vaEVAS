@@ -66,6 +66,40 @@ pub(crate) struct Clock {
     pub(crate) index: usize,
 }
 impl Clock {
+    /// Smallest binary64 enclosure of the exact source clock. FMA proposes a
+    /// rounded point; the exact predicate decides which neighbour is needed.
+    pub(crate) fn bounds(self) -> Option<I> {
+        if self.index > crate::schedule::EVENT_BUDGET {
+            return None;
+        }
+        let rounded = (self.index as f64).mul_add(self.period, self.start);
+        if !rounded.is_finite() {
+            return None;
+        }
+        let point = |start| Self {
+            start,
+            period: 0.,
+            index: 0,
+        };
+        let bounds = match self.order(point(rounded))? {
+            std::cmp::Ordering::Less => I {
+                lo: rounded.next_down(),
+                hi: rounded,
+            },
+            std::cmp::Ordering::Equal => I::point(rounded),
+            std::cmp::Ordering::Greater => I {
+                lo: rounded,
+                hi: rounded.next_up(),
+            },
+        };
+        if !bounds.finite()
+            || self.order(point(bounds.lo))? == std::cmp::Ordering::Less
+            || self.order(point(bounds.hi))? == std::cmp::Ordering::Greater
+        {
+            return None;
+        }
+        Some(bounds)
+    }
     pub(crate) fn order(self, other: Self) -> Option<std::cmp::Ordering> {
         if self.index > crate::schedule::EVENT_BUDGET || other.index > crate::schedule::EVENT_BUDGET
         {
@@ -188,6 +222,16 @@ mod tests {
                 prop_assert!(exact < q(-f64::MAX) || exact > q(f64::MAX));
             }
         }
+        #[test]
+        fn clock_bounds_are_tight(a in finite(), p in finite(), index in 0usize..1_000_000) {
+            let exact = q(a)+q(p)*q(index as f64);
+            if let Some(bound) = (Clock {start:a,period:p,index}).bounds() {
+                prop_assert!(q(bound.lo)<=exact && exact<=q(bound.hi));
+                prop_assert!(bound.lo==bound.hi || bound.lo.next_up()==bound.hi);
+            } else {
+                prop_assert!(exact<q(-f64::MAX) || exact>q(f64::MAX));
+            }
+        }
     }
     #[test]
     fn near_clock_delta_keeps_sub_ulp_coordinate() {
@@ -208,5 +252,26 @@ mod tests {
             Some(0)
         );
         assert_eq!(sum_triples_sign(&[(1., 1., 1.); 9]), None);
+    }
+    #[test]
+    fn timer_bounds_do_not_add_an_extra_rounding_step() {
+        let bound = Clock {
+            start: 1e-6,
+            period: 1e-6,
+            index: 2,
+        }
+        .bounds()
+        .unwrap();
+        assert_eq!(bound.hi, 3e-6);
+        assert_eq!(bound.lo.next_up(), bound.hi);
+        assert_eq!(
+            Clock {
+                start: 0.,
+                period: 1.,
+                index: crate::schedule::EVENT_BUDGET + 1
+            }
+            .bounds(),
+            None
+        );
     }
 }

@@ -1,4 +1,7 @@
-# 四后端支持范围实测（2026-10-09）
+# 四后端支持范围实测
+
+最新的[采样保持与一阶滤波精度测试](#precision-pilot)于 2026-10-10 完成。
+下方先保留旧批次身份和结果，两个批次不合并计数。
 
 本轮使用服务器实际执行。结论更新在唯一的[支持总表](../../../evas/docs/COMPARISON.md)，
 本页保存逐条件结果、判据和证据边界；首轮收据为 [20261009.json](20261009.json)，
@@ -67,6 +70,8 @@ EVAS 采用新执行与完整身份链，**12 项 P**；其余后端保留首轮
 OpenVAF-R/ngspice 的 5 个 R 是瞬态工作点失败，日志提示 timestep too small；SI-01 的层次语法
 和 CO-SH-01 的事件 OR 在编译阶段失败。Gnucap 的 CP-02、CO-VCO-01 在 modelgen 编译阶段失败。
 这些是所测输入和固定工具组合的结果，不是对所有等价写法的“不支持证明”。
+这 5 个运行失败已通过[后续事件诊断](#ngspice-events)定位到实际编译产物中的事件条件丢失。
+原 R 和 27 条件分母保留，诊断探针不替代原条件。
 
 ### 本轮补齐的取证与剩余缺口
 
@@ -113,6 +118,102 @@ EVAS 与 Spectre 还做了严格相同数值时间的波形交集比较，不做
 - TM-01：输出最大差 0.800 mV，边界状态与计数差 1。
 - CP-02 与 CO-VCO-01：普通相位节点在环回边界的差接近 1；圆周相位接近不能抵消该普通电压差异。
 - CO-SH-01、CO-HC-01 的共同点输出差分别约 0.050 mV、0.032 mV；这仍不补足正式资格。
+
+<a id="ngspice-events"></a>
+
+## OpenVAF-R 事件体被无条件执行
+
+**本批 5 个 ngspice 运行失败的共同主因是编译后的事件语义错误。调整容差、步长和求解方法没有修复最小反例。**
+2026-10-10 使用上表同一编译器哈希和两个镜像重跑，ngspice 仍自报 46。
+未修改第三方工具、EVAS 内核或原验收门槛，也没有新增 Spectre 或 EVAS 仿真。
+[诊断收据](20261010-ngspice-events.json)保存输入、设置回显、日志身份、原模型 MIR 摘录和观察事实。
+MIR 是编译器生成机器码之前的中间表示。
+
+原 EV-SH-01、EV-HC-01、EV-HC-02、TM-01、CO-HC-01 五份 VA 和网表全部复现初始工作点失败。
+删去不连接被测模型的观测辅助源，失败仍然存在。继续缩减后，只保留下列三句就能复现：
+
+```verilog
+@(initial_step) n = 0;
+@(timer(2e-6, 2e-6, 1e-9)) n = n + 1;
+V(count) <+ n;
+```
+
+仿真在 1 µs 结束，早于第一次 2 µs 事件，本应始终输出 0。
+实际在初始工作点就失败。删除 timer 句后，同一测试台输出全零；单独把初值改成 5 也能正确保持 5。
+因此，不能把这次组合失败写成 `initial_step` 单独不受支持。
+
+### 能跑完的反例进一步确认了原因
+
+| 探针 | 应有行为 | 实际观察 |
+| --- | --- | --- |
+| timer 到时执行 `n=1` | 首个事件之前为 0 | t=0 就为 1 |
+| 将 timer 从 2 µs 移到 20 µs | 改变事件日程 | 生成的模型库字节完全相同 |
+| 将上述模型初值从 0 改成 5 | 首个事件之前为 5 | 模型库仍完全相同，t=0 仍为 1 |
+| cross 越过 0.5 V 后执行 `n=1` | 初始输入为 0 V，应输出 0 | t=0 就为 1 |
+| 每 0.2 µs 采样并保持斜坡输入 | 首次采样前为 0，采样之间保持 | 输出连续跟随输入；0.1028 µs 时已为 0.1028 V |
+
+实际二进制导出的未优化 MIR 已经没有这些 timer/cross 条件。
+常量赋值变成无条件存入 1，自增变成无条件读取状态、加 1、写回。
+原五个模型的 MIR 复核得到同样结论；开启 MIR 导出前后，它们的模型库哈希完全一致。
+两个迟滞模型甚至把上下阈值的两段更新接连执行，计数每次评估加 2。
+TM-01 则无条件翻转状态。这些更新破坏了工作点迭代所需的稳定关系，解释了后续不收敛。
+`timestep too small` 是运行阶段的表现，不能据此认定只是精度设置不当。
+
+### 设置、接口和编译器分别排查
+
+最小计数模型使用以下设置对照，均未生成波形。每项相对基线改变所列因素：
+
+| 设置 | 具体变化 | 生效依据 |
+| --- | --- | --- |
+| 基线 | reltol=1e-5，vntol=1e-7 V，abstol=1e-12 A，trap | 分析后 option 回显 |
+| 积分方法 | trap 改为 Gear，最高阶数仍为 2 | 分析后回显 |
+| 迭代次数 | itl1 从 100 改为 1000，itl4 从 10 改为 100 | 分析后回显 |
+| 紧容差 | reltol=1e-7，vntol=1e-9 V | 分析后回显 |
+| 松容差 | reltol=1e-3，vntol=1e-6 V | 分析后回显 |
+| 小步长 | 最大步长由 10 ns 改为 1 ns | 实际 tran 命令；初始化即失败，没有接受步可供核验 |
+| UIC 诊断 | 跳过工作点 | 实际命令和跳过工作点日志；仅作诊断，不作为等价验收设置 |
+| 关闭编译优化 | `-O 0` | 实际编译命令和仍无事件条件的未优化 MIR |
+
+因此，**编译器缺口有直接证据；求解设置不是恢复这些丢失事件条件的方法。**
+OSDI 接口仍需单独看待：ngspice 46 能加载 0.4 模型库，但使用的是 0.3 的功能。
+这不等于它不支持动态状态，也不能解释已经在 MIR 阶段丢失的条件。
+本次没有建立“另有一个接口缺陷导致这五例失败”的独立证据。
+公开 ngspice 46 源码把 prev_state 和 next_state 指向同一当前状态数组，
+与重复模型评估时自增或翻转状态的失败机制相符。
+
+公开 OpenVAF-R `v24.0.2mob` 的
+[事件 lowering](https://github.com/OpenVAF/OpenVAF-Reloaded/blob/fdf2522b70f42793f64b1c72f0195c96dea0cc19/openvaf/hir_lower/src/stmt.rs#L21)
+和 [retained 状态](https://github.com/OpenVAF/OpenVAF-Reloaded/blob/fdf2522b70f42793f64b1c72f0195c96dea0cc19/openvaf/hir_lower/src/body.rs#L17)
+也支持此解释；宿主处理见
+[ngspice 46 load](https://github.com/imr/ngspice/blob/ebdaf58ec76a06ffaac7e0f138360dd1cf5ee4b6/src/osdi/osdiload.c#L137)。
+接口版本说明见 [Reloaded README](https://github.com/OpenVAF/OpenVAF-Reloaded/blob/fdf2522b70f42793f64b1c72f0195c96dea0cc19/README.md)。
+编译器自报版本仍是 unknown，不能由安装目录反推它一定来自该公开提交。
+本结论依赖本批实际二进制及其产物，不外推到所有 OpenVAF 版本。
+
+这轮只给原表的失败补充原因，不增加通过数。特别是 transition 所在组合已经在事件状态阶段失败，
+不能用这些失败证明 transition 单独不可用；层次、事件 OR 和专项编译失败也没有因此解决。
+EVAS 的优势与后续范围见 [EVAS 定位](../../../evas/README.md)：应以电压域模型的正确状态和历史行为证明价值，
+不能由其他工具的一个缺口推出全面精度或性能优势。Gnucap 已有行为能力，仍需按相同要求完成比较。
+
+### 诊断材料与复核
+
+共 39 个诊断配置，各执行一次编译和一次 ngspice 仿真调用，另有工具身份查询。
+其中原模型重跑 5 个、缩减与控制 6 个、代码生成探针 7 个、首轮设置 8 个、
+带分析后参数回显的设置复核 8 个、原模型 MIR 复核 5 个。首轮设置缺少分析后的回显，
+因此另行复核；两轮结果都保留，不把重复执行计入能力表分母。全部配置的容器与进程清理均已确认。
+沿用串行锁、单阶段 90 s、4 GiB 内存、32 MiB 单文件和 256 MiB 条件目录监控。
+
+原始材料是 **local-only**，归档在 `runs/ngspice-openvaf-diagnosis/raw.tar.gz`，
+SHA256 为 `e389ae362bea84a0f7690c2aed92c4d7a7c03d6d98e41e17f8ed4d19406050e5`。
+内含模型、网表、实际编译产物、MIR、波形、运行驱动、执行命令和逐文件清单。
+服务器原目录保留。收据不是公开下载地址，也不代表已交付公共复现包。
+已解压材料可用下列命令复核；脚本验证各轮清单、输入与产物身份，再读取事实，不重新运行仿真：
+
+```sh
+python3 -B experiments/backends/support/ngspice_event_report.py \
+  runs/ngspice-openvaf-diagnosis/raw/ngspice-openvaf-diagnosis-20261010 \
+  runs/ngspice-openvaf-diagnosis/reanalysis.json
+```
 
 ## 专项 15 条件
 
@@ -236,3 +337,91 @@ python3 -B experiments/backends/support/core_report.py \
 `runs/core-spectre-evidence-20261009/`，服务器原目录也保留。`core_report.py` 复核原始清单，
 用现有适配器和原检查器重算，并另存新报告。哈希不是公开下载地址。
 本轮可支持开发文档的实测说明，尚不能宣称独立论文评价、全面 Spectre 对齐或完整公开复现已完成。
+
+<a id="precision-pilot"></a>
+
+## 2026-10-10 采样保持与一阶滤波精度测试
+
+本批固定 8 个条件、4 个后端、4 档设置，完成 128 组配置。
+EVAS 的 3 个定时采样条件另跑四档普通查询，追加 12 组，总计 140 组。
+所有原始尝试均保留，没有用补测覆盖 strobe 拒绝。结果只在[支持总表](../../../evas/docs/COMPARISON.md#新精度测试)汇总，
+[精简收据](20261010-precision.json)记录每次状态、实际设置、误差范围、选中配置与原始文件哈希。
+
+### 测试范围与身份
+
+采样保持的 SH-T-RAMP、SH-X-RAMP、SH-T-SMALL、SH-T-LONG 分别检查定时采样、
+阈值采样、1 mV 刻度和 32 次连续采样。滤波的 LP-RAMP、LP-NONZERO、LP-SMALL、LP-IDT
+分别检查变斜率、非零 DC 初态、小信号和等价 `idt` 反馈。
+源码、输入、预算和配置写在 [precision-v1.json](../../../evas/validation/paper/precision-v1.json)。
+它们来自开发需求，尚不是独立留出的论文测试集。
+
+EVAS 生产源码取自 `6d23108d636514e7c8b296ad106b7652127f19ed`，没有行为修改。
+服务器使用锁定依赖离线构建，release 内核 SHA256 为
+`541836836a70ffeb12caf19904fab00c5d1a9b3223b5de9b2ad040f92c965024`。
+收据保留源码清单、Cargo.lock、实际 rustc/cargo 版本和二进制哈希。
+内核自报 build_revision 仍为空，构建记录另作来源证明，不补造自报字段。
+Spectre 使用 21.1.0.509.isr12；OpenVAF-R、ngspice 46 和 Gnucap 沿用本页所列镜像，
+本批重新核验工具身份。无法取得的版本号仍写 unknown。
+
+### 精度设置实际改变了什么
+
+采样保持把允许的事件时移与额外数值误差分开。一阶滤波逐段使用 80 位 Decimal 计算解析解。
+预算推导、四档数值与实际生效差异见[评测标准](../../../evas/docs/COMPARISON-METHODOLOGY.md)。
+Spectre conservative 预设使瞬态 reltol 为请求值的十分之一，日志和 PSF 元数据相符。
+Gnucap 的实际 method=trap 与地参考经过核验；ngspice 保留分析后的积分控制读回。
+此前执行收据的初步 verdict 保留，最终报告按这些资格重新判读，没有更改波形或数值门槛。
+
+以 LP-RAMP 为例，下表是各档全部实际观察点的最大误差上界，单位 µV，目标为 1.01 µV。
+不同后端的原生步数不同，均覆盖同一组必需边界和最大观察间隔；没有插值成共同网格。
+
+| 后端 | 基础 | 只收紧容差 | 只减小步长 | 同时收紧 |
+| --- | ---: | ---: | ---: | ---: |
+| Spectre | 1.467706 | 0.367300 | 0.494824 | 0.354625 |
+| ngspice + OpenVAF-R | 19.733028 | 2.837244 | 0.563426 | 0.653434 |
+| Gnucap + modelgen-verilog | 32.790222 | 2.817119 | 0.497813 | 0.494399 |
+| EVAS | < 0.000001 | < 0.000001 | < 0.000001 | < 0.000001 |
+
+EVAS 四档输出在本例相同，误差上界约 5.63×10⁻¹⁴ V，已经包含保守的读写与时刻不确定度。
+这是有限观察结果，不能写成精确解或所有动态路径的误差保证。
+本例说明 Spectre 收紧容差后达标，ngspice 与 Gnucap 还需要减小步长。
+同时收紧不保证误差逐次单调下降，最终仍按独立答案判断。
+
+### 必须保留的限制与失败
+
+- EVAS 的三个 timer 条件在四档强制 strobe 下均报 `unsupported_strobe`，原因是请求落在原子因果事件簇内。
+  追加普通查询后，12 次均通过采样次数、时刻、读值和保持检查。原始响应注明
+  `accepted_controller_frame` 或 `certified_causal_frame`，时间和值与 CSV 逐项核对。
+  [物理事件次序](../../../evas/rust_core/src/schedule.rs)和
+  [查询阶段选择](../../../evas/rust_core/src/transient_event_acceptance.rs)用于核验来源，
+  没有对旧波形重采样，也不把查询宣称为强制求解接受点。该运行时的 strobe 组合仍有缺口。
+  [后续固定 timer 修复](../strobe/README.md#timer-fix)用新内核重新运行并关闭这 12 组拒绝，原记录不变。
+- ngspice + OpenVAF-R 的 16 个采样配置编译完成后均未取得波形，日志报初始瞬态工作点失败、步长过小。
+  [先前最小反例](#ngspice-events)已确认这个编译器工件会丢失事件条件；本批复现组合失败，
+  没有重新对这四个模型逐一审计编译中间代码。不能仅凭本批报错指定内部原因。
+- Gnucap 阈值采样的基础档通过，预期 8 次事件；后三档仅有 4、7、3 次。
+  固定选档规则保留基础档通过，但这些退化也是行为缺陷的实测证据，原因尚未定位。
+- Gnucap LP-NONZERO 在四档均从 0 V 开始，输入和独立 DC 答案为 0.25 V。
+  最大误差约 0.25 V。其他三个滤波条件能达标，因此不能把它写成一般 `laplace_nd` 不支持。
+  旧短时常数滤波失败也仍保留，不被本批通过覆盖。
+
+### 复验与材料位置
+
+本轮沿用服务器串行锁，阶段超时 90 s、许可等待 30 s、进程内存 4 GiB、单文件 32 MiB。
+外层轮询每条件 256 MiB 输出上限，所有进程与容器均确认清理。
+原始数据留在项目入口 `runs/precision-pilot-20261010/collected/` 及现有服务器，属于 local-only。
+精简收据校验全部归档与逐文件哈希，并保存分析依赖身份；哈希不等于公开下载地址。
+
+```sh
+python3 -B -m unittest discover -s evas/validation/paper -p 'test_precision.py' -v
+python3 -B -m unittest discover -s experiments/backends/support -p 'test_precision_reporting.py' -v
+python3 -B experiments/backends/support/precision_run.py freeze runs/new-precision-inputs
+python3 -B experiments/backends/support/precision_report.py \
+  runs/precision-pilot-20261010 /tmp/new-precision-report.json
+```
+
+冻结操作生成模型和网表，不启动仿真。实际执行入口为
+`precision_run.py run INPUTS OUTPUT --backend BACKEND --profile PROFILE --family FAMILY`。
+它仍需要本页所述串行锁、外层输出监控和本机工具配置。
+`precision_query.py` 是三个 timer 用例的独立追加入口，保留原输入和普通查询执行身份。
+本批执行时的冻结源码和追加查询脚本随原始归档保存；之后统一了执行与分析的设置资格检查，
+重算报告不会改写旧执行收据。每次分析写新文件，不覆盖历史报告。

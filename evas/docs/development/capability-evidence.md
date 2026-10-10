@@ -36,3 +36,12 @@
 工程对照通过与原严格 FAIL 分开保留；运行身份见收据，实现与本次契约同批交付。任意重叠窗口和其他用例的边界资格未获豁免。
 另有 [30 条件回调诊断](../../../experiments/backends/sample-edge-filter/BOUNDARY.md#回调规则的后续实测)，
 验证显式正容差下的接受点触发规则；只读回放支持差异归因，不证明 EVAS 独立生成了同一网格，也不需要为本批复制该网格。
+
+2026-10-10 的[采样保持与一阶滤波精度实测](../../../experiments/backends/support/README.md#precision-pilot)
+补充 TIMER、CROSS、DYNAMICS、COMPOSE、QUALIFICATION。冻结 8 个条件和四档设置，
+保留定时采样的 strobe 拒绝及普通查询补测；不改变 EVAS 生产行为或旧批次验收结论。
+
+后续[固定 timer 强制点修复](../../../experiments/backends/strobe/README.md#timer-fix)
+补充 TIMER、EVENT-ORDER、TRANSITION、DYNAMICS、COMPOSE、QUALIFICATION。
+原 12 配置在对应修复的运行快照中重新通过；以强制点回执验收，不把普通查询提升为接受帧。
+旧拒绝及 Spectre 请求/原生时间偏差仍保留，完整原始数据为 local-only。
