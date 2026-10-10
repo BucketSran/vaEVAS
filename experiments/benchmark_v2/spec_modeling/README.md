@@ -1,9 +1,9 @@
 # 按规格建模的P1任务
 
-固定a5科学版本的作者校准为68/68个登记变体有效，见[作者校准最终报告](../author-calibration-final.md)。模型 Agentic 与适用 one-shot 试做及完整 spec 验收尚未完成。计划和生成清单中的 pending 保留生成时状态，当前作者结论以该报告为准。
+固定a5科学版本的作者校准为68/68个登记变体有效，见[作者校准最终报告](../author-calibration-final.md)。其后308的私有采样条件修订已完成[补充校准](../author-calibration-private-overlays.md)。模型Agentic与适用one-shot试做及完整spec验收尚未完成。计划和生成清单中的pending保留生成时状态。
 
 本目录维护#133归口的19个来源，每个来源对应一个正式Harbor任务目录。
-所有参考、替代实现和语义错误版本都已保存；当前作者Spectre校准已完成，模型试做仍未完成。
+所有参考、替代实现和语义错误版本都已保存；固定a5版本的作者Spectre校准已完成。308新增私有采样条件的补充校准也已完成，见下方覆盖修正；全部模型试做仍未完成。
 因此当前不能关闭#133，也不能把这些任务计入已发布评分题数。
 
 `manifest.json`逐来源保存建设归口和验收状态。`run-plan.json`列出每个实际候选目录、
@@ -29,7 +29,7 @@
 活动但无关的 public helper 配上私有正确电路，以及只驱动复位值的空壳，
 均已纳入当前作者校准的架构负例；其中旁路包的两个 public helper 本身仍正确。
 
-新合同、checker 和负例的作者 Spectre 校准已完成；模型试做及完整验收尚未完成，不能据此关闭 #133。
+a5版本的系统合同、checker和负例已完成作者Spectre校准；其后308新增私有采样条件的补充校准已完成，模型试做及完整验收尚未完成，不能据此关闭 #133。
 旧版参考/alternative 外部行为校准及三个任务的六个 one-shot 配置结果保留旧身份，
 不能升级为新版通过证据；三题的 one-shot/Agentic prompt 均需重新冻结运行。
 其余16题公开要求及 checker 未变。`build_structure.py` 可重建六条件及架构负例，
@@ -107,4 +107,4 @@ python3 -B -m unittest discover -s experiments/benchmark_v2/spec_modeling -p 'te
 
 308的实际one-shot候选在首次signal采样后清除内部资格，导致同一reset样本后的第二个合法signal边沿不更新输出。旧六条件均未覆盖该分支。现仅延长私有`contract-stretched-input`的首个signal窗口，在21.432ns产生第二次有效采样；两次vin不同，正确输出均不触及钳位。其余五个条件、公开题面和材料、checker、容差、参考候选不变。
 
-`test_cds_repeated_signal.py`以独立字面差分0.55V/0.65V检验重复采样判据，并检查实际台架覆盖及生成结果。它不替代实际Spectre。五个登记作者变体和同一冻结模型提交的增量校准尚待完成；旧六条件通过记录保留，不用于宣称新条件通过。公开解题反馈不变，模型不重新生成答案。
+`test_cds_repeated_signal.py`以独立字面差分0.55V/0.65V检验重复采样判据，并检查实际台架覆盖及生成结果。它不替代实际Spectre。五个登记作者变体的30条实际条件已全部完成，两个正确实现通过，三个语义错版被拒绝；同一冻结Flash提交在新条件下失败。旧六条件通过记录保留原身份。公开解题反馈不变，模型不重新生成答案。
