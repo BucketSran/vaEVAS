@@ -703,10 +703,11 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
             .contributions
             .iter()
             .all(|c| !crate::analog::has_select(&c.rhs))
-        && request.program.contributions.iter().any(|c| {
-            crate::events::affine(&c.rhs, &request.program, &c.origin.instance)
-                .is_err_and(|error| error.kind == "unsupported_transient")
-        })
+        && (crate::continuous::needs_polynomial_feedthrough(&request.program)
+            || request.program.contributions.iter().any(|c| {
+                crate::events::affine(&c.rhs, &request.program, &c.origin.instance)
+                    .is_err_and(|error| error.kind == "unsupported_transient")
+            }))
     {
         return crate::continuous::run_implicit(
             request.program,

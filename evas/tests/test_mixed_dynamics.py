@@ -185,14 +185,24 @@ class MixedDynamicsContracts(unittest.TestCase):
         for t,actual in zip(times,values(result)):
             assert_close(self,actual,(1+t)**2+2*math.exp(-t),delta=1e-10)
 
-    def test_no_real_filter_dc_root_and_nonlinear_feedthrough_are_rejected(self):
+    def test_no_real_filter_dc_root_and_internal_nonlinear_feedthrough_are_rejected(self):
         for body,reason in [
             # y^2-y+1 has discriminant -3: support for nonlinear DC
             # must not manufacture a real initial root for this model.
             ("V(y,r)<+laplace_nd(pow(V(y,r),2)+1,'{1},'{1,1});",
              "continuous DC initialization"),
-            ("V(y,r)<+laplace_nd(pow(V(u,r),2),'{1,1},'{1,2});",
+            ("V(y,r)<+laplace_nd(pow(V(y,r),2),'{1,1},'{1,2});",
              "strictly proper"),
         ]:
             with self.subTest(body=body),self.assertRaisesRegex(KernelError,reason):
                 run(compile_model(body),times=[0,.5,1],stop=1)
+
+    def test_former_external_direct_rejection_has_independent_ramp_answer(self):
+        # Preserve the former rejected model as a positive contract. Its
+        # nonzero ramp response is t²-2t+4*(1-exp(-t/2)); zero input stays zero.
+        program=compile_model("V(y,r)<+laplace_nd(pow(V(u,r),2),'{1,1},'{1,2});")
+        times=[0,.125,.5,1]
+        self.assertEqual(values(run(program,times=times)),[0.0]*len(times))
+        result=run(program,{'u':[[0,0],[1,1]]},times,vabstol=1e-9,reltol=0)
+        for t,actual in zip(times,values(result)):
+            assert_close(self,actual,t*t-2*t+4*(1-math.exp(-t/2)),delta=1e-9)

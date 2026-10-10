@@ -20,6 +20,24 @@ mod nonlinear;
 
 pub(crate) use nonlinear::run_implicit;
 
+// Polynomial direct terms need the original algebraic voltage constraints,
+// even when the contribution itself contains only an operator reference.
+pub(crate) fn needs_polynomial_feedthrough(program: &Program) -> bool {
+    program.operators.iter().any(|op| {
+        let OperatorSpec::LaplaceNd {
+            input,
+            numerator,
+            denominator,
+            origin,
+        } = op
+        else {
+            return false;
+        };
+        laplace_system(numerator, denominator, origin).is_ok_and(|filter| !filter.d.zero())
+            && affine_for_operator_input(input, program, origin).is_err()
+    })
+}
+
 pub(crate) fn validate_integral_input(
     expr: &Expression,
     program: &Program,

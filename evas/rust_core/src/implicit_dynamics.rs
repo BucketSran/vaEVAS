@@ -75,6 +75,41 @@ impl ImplicitField {
 }
 
 impl Polynomial {
+    fn point_expression(&self, variables: &[Expression]) -> Result<Expression, Error> {
+        Ok(match self {
+            Self::Linear(row) => {
+                let mut terms = Vec::new();
+                for (variable, &coefficient) in variables.iter().zip(row) {
+                    let Expression::Affine { terms: nodes, .. } = variable else {
+                        unreachable!()
+                    };
+                    for node in nodes {
+                        terms.push(crate::ir::Term {
+                            node: node.node,
+                            coefficient: point_value(coefficient)? * node.coefficient,
+                        });
+                    }
+                }
+                Expression::Affine {
+                    constant: point_value(*row.last().unwrap())?,
+                    terms,
+                }
+            }
+            Self::Add(a, b) => Expression::Add {
+                left: Box::new(a.point_expression(variables)?),
+                right: Box::new(b.point_expression(variables)?),
+            },
+            Self::Multiply(a, b) => Expression::Multiply {
+                left: Box::new(a.point_expression(variables)?),
+                right: Box::new(b.point_expression(variables)?),
+            },
+            Self::Power(a, exponent) => Expression::Power {
+                base: Box::new(a.point_expression(variables)?),
+                exponent: *exponent,
+            },
+        })
+    }
+
     fn derivative(&self, variable: usize) -> Self {
         match self {
             Self::Linear(row) => {
@@ -138,7 +173,7 @@ struct Coordinates {
     physical: usize,
     nodes: Vec<Option<usize>>,
     sources: Vec<Option<usize>>,
-    outputs: Vec<Vec<I>>,
+    outputs: Vec<Polynomial>,
     width: usize,
 }
 impl Coordinates {
@@ -167,29 +202,37 @@ impl Coordinates {
             frozen.nodes.push(name);
             inputs.push(point_value(value)?);
         }
-        let mut outputs = Vec::new();
-        for row in &self.outputs {
-            let mut terms = Vec::new();
-            for (&node, &coefficient) in history.iter().zip(row) {
-                terms.push(crate::ir::Term {
+        let mut variables = vec![
+            Expression::Affine {
+                constant: 0.,
+                terms: vec![]
+            };
+            self.width - 1
+        ];
+        for (i, &node) in history.iter().enumerate() {
+            variables[i] = Expression::Affine {
+                constant: 0.,
+                terms: vec![crate::ir::Term {
                     node,
-                    coefficient: point_value(coefficient)?,
-                });
-            }
-            for (node, (&voltage, &source)) in
-                self.nodes.iter().zip(&self.sources).enumerate().skip(1)
-            {
-                let index = voltage.or(source).unwrap();
-                terms.push(crate::ir::Term {
-                    node,
-                    coefficient: point_value(row[index])?,
-                });
-            }
-            outputs.push(Expression::Affine {
-                constant: point_value(*row.last().unwrap())?,
-                terms,
-            });
+                    coefficient: 1.,
+                }],
+            };
         }
+        for (node, (&voltage, &source)) in self.nodes.iter().zip(&self.sources).enumerate().skip(1)
+        {
+            variables[voltage.or(source).unwrap()] = Expression::Affine {
+                constant: 0.,
+                terms: vec![crate::ir::Term {
+                    node,
+                    coefficient: 1.,
+                }],
+            };
+        }
+        let outputs = self
+            .outputs
+            .iter()
+            .map(|p| p.point_expression(&variables))
+            .collect::<Result<Vec<_>, _>>()?;
         for c in &mut frozen.contributions {
             c.rhs = bind(&c.rhs, &outputs, &[])?;
         }
@@ -257,11 +300,31 @@ impl Coordinates {
         &self,
         program: &Program,
         operators: &[NetworkOperator],
-    ) -> Result<Vec<Vec<I>>, Error> {
+    ) -> Result<Vec<Polynomial>, Error> {
         let n = operators.len();
+        // Nonlinear feedthrough inputs are validated to depend only on driven
+        // sources. Treat each as a formal RHS column during linear operator
+        // elimination, then substitute its interval polynomial. This keeps
+        // affine operator coupling without recursively freezing an output.
+        let mut direct = Vec::new();
+        for op in operators {
+            if let Some(filter) = &op.laplace {
+                if let OperatorSpec::LaplaceNd { input, .. } = &program.operators[op.operator] {
+                    if !filter.d.zero()
+                        && affine_for_operator_input(input, program, &op.origin).is_err()
+                    {
+                        direct.push((
+                            op.operator,
+                            self.expression(input, program, &op.origin.instance)?,
+                        ));
+                    }
+                }
+            }
+        }
+        let width = self.width + direct.len();
         let mut rows = Vec::new();
         for op in operators {
-            let mut row = vec![I::ZERO; n + self.width];
+            let mut row = vec![I::ZERO; n + width];
             row[op.operator] = I::ONE;
             if let Some(filter) = &op.laplace {
                 for (&state, &coefficient) in op.states.iter().zip(&filter.c) {
@@ -272,24 +335,53 @@ impl Coordinates {
                     else {
                         unreachable!()
                     };
-                    let input = affine_for_operator_input(input, program, &op.origin)?;
-                    for (node, &coefficient) in
-                        input.iter().take(program.nodes.len()).enumerate().skip(1)
+                    if let Some(index) = direct
+                        .iter()
+                        .position(|(operator, _)| *operator == op.operator)
                     {
-                        let index = self.nodes[node].or(self.sources[node]).unwrap();
-                        row[n + index] = row[n + index] + filter.d * coefficient;
+                        row[n + self.width - 1 + index] = filter.d;
+                    } else {
+                        let input = affine_for_operator_input(input, program, &op.origin)?;
+                        for (node, &coefficient) in
+                            input.iter().take(program.nodes.len()).enumerate().skip(1)
+                        {
+                            let index = self.nodes[node].or(self.sources[node]).unwrap();
+                            row[n + index] = row[n + index] + filter.d * coefficient;
+                        }
+                        for other in 0..n {
+                            row[other] = row[other] - filter.d * input[program.nodes.len() + other];
+                        }
+                        *row.last_mut().unwrap() = filter.d * *input.last().unwrap();
                     }
-                    for other in 0..n {
-                        row[other] = row[other] - filter.d * input[program.nodes.len() + other];
-                    }
-                    *row.last_mut().unwrap() = filter.d * *input.last().unwrap();
                 }
             } else {
                 row[n + op.states[0]] = I::ONE;
             }
             rows.push(row);
         }
-        solve_output_rows(rows, n, self.width)
+        Ok(solve_output_rows(rows, n, width)?
+            .into_iter()
+            .map(|row| {
+                let mut base = row[..self.width - 1].to_vec();
+                base.push(*row.last().unwrap());
+                let mut result = Polynomial::Linear(base);
+                for (index, (_, input)) in direct.iter().enumerate() {
+                    let coefficient = row[self.width - 1 + index];
+                    if !coefficient.zero() {
+                        let mut gain = vec![I::ZERO; self.width];
+                        *gain.last_mut().unwrap() = coefficient;
+                        result = Polynomial::Add(
+                            Box::new(result),
+                            Box::new(Polynomial::Multiply(
+                                Box::new(Polynomial::Linear(gain)),
+                                Box::new(input.clone()),
+                            )),
+                        );
+                    }
+                }
+                result
+            })
+            .collect())
     }
 
     fn expression(
@@ -311,9 +403,7 @@ impl Coordinates {
             Expression::Power { base, exponent } => {
                 Polynomial::Power(Box::new(self.expression(base, program, owner)?), *exponent)
             }
-            Expression::Operator { operator } => {
-                Polynomial::Linear(self.outputs[*operator].clone())
-            }
+            Expression::Operator { operator } => self.outputs[*operator].clone(),
             Expression::Affine { constant, terms } => {
                 let mut row = vec![I::ZERO; self.width];
                 *row.last_mut().unwrap() = I::point(*constant);
@@ -413,8 +503,17 @@ fn initialize(
                 validate(input, program, &origin.instance)?;
                 let filter = laplace_system(numerator, denominator, origin)?;
                 if !filter.d.zero() && affine_for_operator_input(input, program, origin).is_err() {
-                    return Err(unsupported(origin,
-                        "implicit polynomial filter input requires a strictly proper transfer function"));
+                    let (nodes, states, dependencies) =
+                        integral_dependency_edges(input, program, &origin.instance)?;
+                    if !states.is_empty()
+                        || !dependencies.is_empty()
+                        || nodes
+                            .iter()
+                            .any(|node| *node != 0 && !input_nodes.contains(node))
+                    {
+                        return Err(unsupported(origin,
+                            "implicit polynomial filter input requires a strictly proper transfer function unless it depends only on driven sources"));
+                    }
                 }
                 // Allocate call-site states first; their joint DC values are
                 // filled only after certifying the complete initial root.
@@ -453,7 +552,7 @@ fn initialize(
         physical,
         nodes: vec![None; program.nodes.len()],
         sources: vec![None; program.nodes.len()],
-        outputs: vec![vec![]; operators.len()],
+        outputs: vec![],
         width: count + input_nodes.len() + 1,
     };
     for (i, &node) in unknown.iter().enumerate() {
@@ -536,16 +635,6 @@ fn initialize(
             _ => unreachable!(),
         }
     }
-    let values = coordinates
-        .outputs
-        .iter()
-        .map(|row| {
-            let mut extended = row[..row.len() - 1].to_vec();
-            extended.extend(vec![I::ZERO; input_nodes.len()]);
-            extended.push(*row.last().unwrap());
-            extended
-        })
-        .collect();
     let mut flow = NonlinearContinuous {
         context: Arc::new(Context {
             program: program.clone(),
@@ -559,7 +648,9 @@ fn initialize(
             gradients,
         }),
         operators,
-        values,
+        // This private DAE flow exposes only physical/voltage state bounds.
+        // Operator observations are polynomial and owned by Coordinates.
+        values: vec![],
         accuracy_rows: coordinates
             .nodes
             .iter()
@@ -728,8 +819,8 @@ mod tests {
             sources: vec![None, None],
             width: 4,
             outputs: vec![
-                vec![I::ONE, I::ZERO, I::ZERO, I::ZERO],
-                vec![I::ZERO, I::ONE, I::point(1000.0), I::point(-500.0)],
+                Polynomial::Linear(vec![I::ONE, I::ZERO, I::ZERO, I::ZERO]),
+                Polynomial::Linear(vec![I::ZERO, I::ONE, I::point(1000.0), I::point(-500.0)]),
             ],
         };
         let solution = observe(
@@ -866,7 +957,15 @@ mod tests {
         let voltage = coordinates.nodes[2].unwrap();
         let initial = flow.state_bounds(I::ZERO).unwrap();
         assert!(initial[voltage].lo <= 0.5 && initial[voltage].hi >= 0.5);
-        let output = flow.range_bounds(I::ZERO).unwrap()[0];
+        // Operator outputs now belong to Coordinates, including nonlinear
+        // direct terms. Keep the same DC enclosure obligation at that owner.
+        let variables = initial
+            .iter()
+            .copied()
+            .chain(trajectory.value_bounds(0.0))
+            .map(|v| vec![v])
+            .collect::<Vec<_>>();
+        let output = coordinates.outputs[0].jet(&variables, 0)[0];
         assert!(output.lo <= 0.75 && output.hi >= 0.75);
         let original = flow.state_bounds(I::ONE).unwrap();
         assert!(flow.state_bounds(I::point(2.0)).is_err());

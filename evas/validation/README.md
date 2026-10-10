@@ -58,6 +58,9 @@
 | 运行新增功能组合的有限确认 | [确认集及冻结检查器](confirmation/README.md) |
 | 核验历史输入没有被改写 | [冻结 v1](versions/v1/README.md) |
 
+固定外部多项式滤波的直接通路见 [C4 同源码检查器](filter_direct/compare.py)，
+[判据、命令与实测](../../experiments/backends/filter-direct/README.md)保留全部配置。
+
 ## 当前结果与历史比较
 
 <a id="latest-evas-checkpoint"></a>
