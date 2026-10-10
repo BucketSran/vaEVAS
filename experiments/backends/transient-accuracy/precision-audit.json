@@ -1,0 +1,212 @@
+{
+  "schema_version": 1,
+  "scope": "Existing precision-control contract audit; no numerical algorithm change or new compatibility exception",
+  "evas_base": "ab0df35b40a3a539e7c84a6547799cda2808871b",
+  "kernel_sha256": "0de37e97dca3e52b871a8895872a39994bd012b51c9d5d5086f8bc26ead6667b",
+  "kernel_version": {
+    "build_revision": null,
+    "identity_version": 1,
+    "ir_schema_version": 18,
+    "name": "evas-kernel",
+    "platform": {
+      "arch": "aarch64",
+      "os": "macos"
+    },
+    "request_protocol_version": null,
+    "version": "0.14.0"
+  },
+  "source_identity_sha256": "41ce53aee8f69a1c04a14ed28fc11412c04da7f7e5de3b8e57fabb13c51672bd",
+  "checker_sha256": "a9da685e47733c10ea5630bc53b5ade3bec9f1c43d0240b914988fea241d5402",
+  "analysis_script_sha256": "02125b061bfb266f0ac61b1b36f9f5a91264ae4f434966c4115f027ab380a12d",
+  "reference": "Reused original Spectre 21.1.0.509.isr12 outputs and effective settings from evidence.json; unchanged VA, stimuli, IC and physical budgets. Current frontend recompiles VA to IR18. No IR version relabeling.",
+  "availability": "compact receipt in repository; raw inputs, logs, compiled requests, identities and output are local-only under runs/precision-closure-20261010/precision",
+  "counts": {
+    "new_evas_requests": 6,
+    "paired_rows": 7045,
+    "new_spectre_requests": 0,
+    "full_finite_pair_passes": 2
+  },
+  "cases": [
+    {
+      "id": "nonlinear--baseline",
+      "returncode": 0,
+      "rows": 298,
+      "va_sha256": "c70e7e7d54c949851cca53bb586a9352b6872e00330d1df69e6f1c9911c48c57",
+      "request_sha256": "6cae4b7962f5e396fb496dd660ee042e3f9c82a7ecbad175a352282c2ad535ae",
+      "response_sha256": "c9016fbe78acb1e31140ef44bf8d83222bc8589822ab105b37d540ac67ece088",
+      "spectre_observation_sha256": "8be00fe39936cde4c58d4e035f055ce36ef09700ca89ce6f210cc519b2fd8c81",
+      "exact_rational_max_error": {
+        "z": 6.669530377402994e-15,
+        "low": 6.669530377402994e-15,
+        "amp": 6.670951462874515e-11
+      },
+      "max_request_budget_ratio": 0.00638378239159465,
+      "paired_max_error": {
+        "z": 9.487862753232434e-07,
+        "low": 9.487862753718157e-07,
+        "amp": 0.009487862753758236
+      },
+      "evas": {
+        "finite_check_pass": true,
+        "failure_kinds": []
+      },
+      "spectre": {
+        "finite_check_pass": false,
+        "failure_kinds": [
+          "waveform_error"
+        ]
+      }
+    },
+    {
+      "id": "nonlinear--tolerance-only",
+      "returncode": 0,
+      "rows": 2116,
+      "va_sha256": "c70e7e7d54c949851cca53bb586a9352b6872e00330d1df69e6f1c9911c48c57",
+      "request_sha256": "714889977d4c02ad7d52413334706d706def3c694417415594fc0b7c474537d2",
+      "response_sha256": "e9f2573305a26ba61b823ecfc84f72be813c331306b02a2792623086074ffe77",
+      "spectre_observation_sha256": "c8f85dc5001ade59946b316a9bf26d36e00428fff7e294ad862a206c23c908da",
+      "exact_rational_max_error": {
+        "z": 8.630325490428913e-17,
+        "low": 8.630325490428913e-17,
+        "amp": 1.1563709016293335e-12
+      },
+      "max_request_budget_ratio": 2.5198309115081647e-05,
+      "paired_max_error": {
+        "z": 3.061149533856167e-08,
+        "low": 3.061149536631724e-08,
+        "amp": 0.0003061149534460128
+      },
+      "evas": {
+        "finite_check_pass": true,
+        "failure_kinds": []
+      },
+      "spectre": {
+        "finite_check_pass": true,
+        "failure_kinds": []
+      }
+    },
+    {
+      "id": "nonlinear--step-only",
+      "returncode": 0,
+      "rows": 1029,
+      "va_sha256": "c70e7e7d54c949851cca53bb586a9352b6872e00330d1df69e6f1c9911c48c57",
+      "request_sha256": "354ed2e24f8f4d0c6cc591640dcde12643a417409855e06cea0a5e8d7d66f898",
+      "response_sha256": "79c3cd1fad3fc8394b9c025b0e41d92ddfa9177308492abcc046882fa575885c",
+      "spectre_observation_sha256": "998bfce04c53b85adc2688f46a7863ca16980c6c98cf779923df13f1e147d100",
+      "exact_rational_max_error": {
+        "z": 7.487690341554495e-17,
+        "low": 7.487690341554495e-17,
+        "amp": 9.988919978478458e-13
+      },
+      "max_request_budget_ratio": 2.9320403336708044e-08,
+      "paired_max_error": {
+        "z": 6.058750467996532e-08,
+        "low": 6.05875047077209e-08,
+        "amp": 0.0006058750470856467
+      },
+      "evas": {
+        "finite_check_pass": false,
+        "failure_kinds": [
+          "missing_anchor"
+        ]
+      },
+      "spectre": {
+        "finite_check_pass": false,
+        "failure_kinds": [
+          "missing_anchor"
+        ]
+      }
+    },
+    {
+      "id": "event-continuation--baseline",
+      "returncode": 0,
+      "rows": 359,
+      "va_sha256": "6d3bc83a9d33814ee6ac6f26e9ae5d54c3a9336e240f843bb1454d8117aa0b39",
+      "request_sha256": "ec84df0e70fcc0200ba57a42c959f7bc2196586005718f6ece59e5f01b82e91b",
+      "response_sha256": "7495eae2095c8845bfb1b29c0b5ffd2a6ca4b7211fc1940361f972d9e3a0faa3",
+      "spectre_observation_sha256": "675b580cdb680613f09f405e97cfbc5e7570ece2df4fd529735d1778b237ac64",
+      "exact_rational_max_error": {
+        "z": 1.0126443826294604e-16,
+        "low": 1.0126443826294604e-16,
+        "amp": 1.1256920408336174e-12
+      },
+      "max_request_budget_ratio": 1.6510289090757443e-09,
+      "paired_max_error": {
+        "z": 1.1688914766105896e-06,
+        "low": 1.1688914766244674e-06,
+        "amp": 0.011688914766182279
+      },
+      "evas": {
+        "finite_check_pass": true,
+        "failure_kinds": []
+      },
+      "spectre": {
+        "finite_check_pass": false,
+        "failure_kinds": [
+          "waveform_error"
+        ]
+      }
+    },
+    {
+      "id": "event-continuation--tolerance-only",
+      "returncode": 0,
+      "rows": 2213,
+      "va_sha256": "6d3bc83a9d33814ee6ac6f26e9ae5d54c3a9336e240f843bb1454d8117aa0b39",
+      "request_sha256": "be5f11e70f85704abe16d70f47a89c1ffa62e62e77a7ab5e270d880b1954ab9a",
+      "response_sha256": "e19d22014938a20d9d81db038a1c32c09ccac4efa4bfab4678dab8a497942ec9",
+      "spectre_observation_sha256": "0cdb1da295f7339315cd987e37c737fcea3455673f88f42045e02d849efc0021",
+      "exact_rational_max_error": {
+        "z": 1.1526196767391394e-16,
+        "low": 1.1526196767391394e-16,
+        "amp": 1.1563709016293335e-12
+      },
+      "max_request_budget_ratio": 1.1135541033995907e-05,
+      "paired_max_error": {
+        "z": 5.0443202170846746e-08,
+        "low": 5.04432021083967e-08,
+        "amp": 0.0005044320210458864
+      },
+      "evas": {
+        "finite_check_pass": true,
+        "failure_kinds": []
+      },
+      "spectre": {
+        "finite_check_pass": true,
+        "failure_kinds": []
+      }
+    },
+    {
+      "id": "event-continuation--step-only",
+      "returncode": 0,
+      "rows": 1030,
+      "va_sha256": "6d3bc83a9d33814ee6ac6f26e9ae5d54c3a9336e240f843bb1454d8117aa0b39",
+      "request_sha256": "81d158413f9868bcad8d09ff369ff37d079b7bde0be8581617f469a6b6edb50f",
+      "response_sha256": "6f2da42a0308120fc77e14e86d383b9da4d9e355e3a07a720f52f68f612b8607",
+      "spectre_observation_sha256": "a69ff75044b3923991ef837b0c56c596aa5f5eb22d958bf5c0ae5b0e86b95126",
+      "exact_rational_max_error": {
+        "z": 1.1197040224423594e-16,
+        "low": 1.1197040224423594e-16,
+        "amp": 1.1232567361211597e-12
+      },
+      "max_request_budget_ratio": 1.3386681698040626e-08,
+      "paired_max_error": {
+        "z": 1.1649393016899268e-07,
+        "low": 1.1649393018980936e-07,
+        "amp": 0.0011649393018871024
+      },
+      "evas": {
+        "finite_check_pass": false,
+        "failure_kinds": [
+          "missing_anchor"
+        ]
+      },
+      "spectre": {
+        "finite_check_pass": false,
+        "failure_kinds": [
+          "missing_anchor",
+          "waveform_error"
+        ]
+      }
+    }
+  ]
+}

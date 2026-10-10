@@ -3,6 +3,99 @@
 近邻固定时钟与线性历史的后续修复、新Spectre容差对照及保留失败，见
 [近时钟历史证据](near-clock-history.md)。以下各节保留其原检查点身份。
 
+## 2026-10-10 四组失败的实际补测
+
+**两类模型都能在原预算内完成 EVAS/Spectre 工程对照。三个原配置是 Spectre 参考超差，
+另一配置是连续观测点的时间偏差；本批没有发现需要修改 EVAS 内核的证据。**
+[新收据](reference-followup.json)绑定 8 次新 Spectre 仿真、8 次同点 EVAS 和 8 次精确锚点 EVAS 请求。
+两份 [非线性积分](fixtures/nonlinear.va)／[事件续算](fixtures/event-continuation.va)源码与旧实验逐字相同。
+内核仍为 main `ab0df35b` 的实现，0.14.0 / IR18，源码候选 `b4f8c8a3`；本轮未改数值算法。
+
+模型为 `z'=-a*z², z(0)=1`。第一例 `a=1`；第二例在名义 `t=0.5 s` 把 `a` 从 1 改成 2。
+名义答案分别为 `z=1/(1+t)`、事件后 `z=1/(0.5+2t)`；放大输出为 `10000*(z-0.5)`。
+固定预算为 z/low 各 0.1 µV、amp 为 1 mV，事件一次且位于原 100 ps 观察窗。
+
+Spectre 21.1.0.509.isr12，`traponly`、`conservative`、stop=1 s 和原 `strobetimes`／`strobeoutput=all` 保持。
+实际 log 与 PSF 读回的设置及最大 amp 名义误差如下。误差统计覆盖每档全部原生记录，不只看指定锚点。
+
+| 配置 | 实际 reltol / vabstol | maxstep | 非线性积分 | 事件续算 |
+| --- | --- | --- | ---: | ---: |
+| 原基础档 | 1e-6 / 1e-8 V | 1 s | 9.488 mV，超差 | 11.689 mV，超差 |
+| 只收紧容差 | 1e-9 / 1e-11 V | 1 s | 0.306 mV，通过 | 0.504 mV，通过 |
+| 只缩小步长 | 1e-6 / 1e-8 V | 1 ms | 0.606 mV，通过连续观测验收 | 1.165 mV，超差 |
+| 收紧容差并缩小步长 | 1e-9 / 1e-11 V | 1 ms | 0.236 mV，通过 | 0.289 mV，通过 |
+
+基础与收紧档请求 reltol 分别是 1e-5、1e-8，实际值均小一档；实际 iabstol 分别为 1e-12、1e-15 A。
+仅缩步不能保证本例达标。它与收紧容差分别改变一组控制，combined 是另列的新配置。
+两例收紧容差后的结果足以满足本批目标，无需猜测或复刻 Spectre 内部接受网格。
+
+两个 step-only 的原始 PSF 仍在 0.125、0.25、0.75 s 附近记录约 1.11e-16～2.22e-16 s 偏差。
+这不是 EVAS 漏读，EVAS 原请求使用的就是这些实际时刻。新增 [qualify.py](qualify.py) 只为这两条有理数轨迹
+补充连续观测验收：邻近点最多偏离 1 ps，不能越过事件侧；用精确有理数计算
+`|记录值−名义答案(实际时刻)| + |名义答案(实际时刻)−名义答案(目标时刻)|`，仍须满足原电压预算。
+最大 amp 时间项只有 1.43e-12 V。时间和值均未改写，没有插值；0、0.5、1 s 仍要求精确时刻。
+这个规则不适用于 VCO、跳变侧或其他模型。
+
+原 [check.py](check.py) 未修改，旧 **2/6** 结论不改。
+新八档按严格精确时间判据为 **4/8**，按补充连续观测规则且双方独立、同点均达标为 **5/8**；
+其余三档仍是参考超差。不能把“原四个失败已经查明”写成“四个原配置全部通过”。
+
+EVAS 在 12,243 个共同点和另外 68 个精确锚点观测均达标。
+共同点最大 amp 名义误差为 6.68e-11 V，八档最大自身请求预算占用为 0.00639；不是全轨迹误差证明。
+事件模型的 EVAS native 记录均为 0.5 s 一次、`[a,n]=[1,0]→[2,1]`。
+Spectre 的 count 跳变括在 `[0.4999999999, 0.5] s`，不能据此断言其内部回调恰好为 0.5 s；
+因此上表报告相对名义轨迹的工程误差，不声称知道 Spectre 的内部误差估计。
+实际 strobe 列表没有独立有效值读回，观测时刻由原 PSF 证明；尚不能区分内部步进与输出表示的贡献。
+
+八次远端执行均完成并确认清理自有进程。远端解析包装漏带历史 reader 依赖，原 `observation_error` 保留；
+收回未改写的 PSF 后用维护中的 reader 本地解析，没有重跑仿真。原始波形和完整执行材料仍为 local-only，
+收据、模型与 checker 可随仓库审查，哈希不等于公开原始材料。
+
+复算某份已解析原生观测，输出同时保留旧 verdict：
+
+```sh
+python3 -B experiments/backends/transient-accuracy/analyze.py observation.json \
+  --model nonlinear --qualify-reference --output qualification.json
+python3 -B -m unittest discover -s experiments/backends/transient-accuracy -p 'test_*.py' -v
+```
+
+<a id="integration-20261010"></a>
+
+### 主分支整合复验
+
+整合 PR #130 的 timer/strobe 和 PR #129 的输入根细化后，以 `4cf15adc` 重建内核，
+重新编译上述两份原 VA，重放全部 16 个请求。12,243 个共同点和 68 个精确锚点仍满足原预算，
+每个请求的完整 JSON 响应与原记录一致。新身份及逐请求哈希见[整合收据](integration-20261010.json)。
+
+这次新执行的是 EVAS。Spectre 源码、刺激、设置及原生记录未变，复用原八次实测。
+原 4/8 严格时刻、5/8 连续观测结论和三个参考超差保留，没有更新旧收据的内核身份。
+原始请求、响应及执行日志仍为 local-only。
+
+## 2026-10-10 精度复核
+
+[精度控制收据](precision-audit.json)绑定 main `ab0df35b` 的当前内核。原 VA、刺激、初值、
+Spectre 数据与共同预算保持；用当前前端重新编译到 IR18，未修改旧请求的版本号来冒充迁移。
+六次 EVAS 请求全部完成，共配对 7,045 个原生时刻。每点另用 `Fraction` 计算独立有理数答案，
+六档均满足原电压请求预算。两档 tolerance-only 仍通过完整有限对照；baseline 参考超差和
+step-only 缺 exact anchors 等原失败仍在。没有新增 Spectre 执行，没有新增支持范围。
+控制含义、自动细化与拒绝边界统一在[数值手册](../../../evas/docs/math/solving.md#当前精度控制怎么用)维护。
+
+本批的 2/6 是两个模型各三档设置的完整验收数，不是六种功能的支持率。四个未通过配置的原因如下；
+`amp` 的独立误差预算为 1 mV，当前 EVAS 已查询点均满足原请求预算。
+
+| 配置 | Spectre 的最大 amp 误差 | 完整验收未通过的原因 |
+| --- | ---: | --- |
+| nonlinear baseline | 9.488 mV | Spectre 超差；EVAS 独立检查通过 |
+| event-continuation baseline | 11.689 mV | Spectre 超差；EVAS 独立检查通过 |
+| nonlinear step-only | 0.606 mV | 双方同点波形达标，缺精确检查时刻 |
+| event-continuation step-only | 1.165 mV | Spectre 超差，同时缺精确检查时刻 |
+
+两个 step-only 的 Spectre 原始 PSF 将 0.125、0.25、0.75 s 附近记录为
+0.1250000000000001、0.2500000000000002、0.7500000000000002 s。EVAS 请求沿用这些原生时刻，
+没有漏掉已请求点。当前 checker 要求时间值完全相等，所以双方仍报 `missing_anchor`。
+这定位到观测时间与验收的差异，尚未确定来自内部步进还是输出表示；不构成 EVAS 数值缺陷证据。
+原 exact-anchor 判据和失败保持，未进行近邻替代、插值或重新判分。
+
 ## 近零采样状态与独立固定时钟
 
 四端首轮中，EV-SH-01、CO-SH-01 因近零 real 状态的相对误差预算趋零而拒绝，

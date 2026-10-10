@@ -145,12 +145,12 @@ API 运行已有 `Program` 不重复源码准入，但仍须满足当前 IR/内�
 
 ## 精度与结果解释
 
-当前开发候选支持独立于输出网格的 `strobetimes` 和周期 strobe 控制，见[强制求解时刻](docs/reference/strobe.md)。
+支持独立于输出网格的 `strobetimes` 和周期 strobe 控制，见[强制求解时刻](docs/reference/strobe.md)。
 `solve`、`transient` 和 manifest 的 `tolerances` 接受 `vabstol`（默认 `1e-12 V`）
 与 `reltol`（默认 `1e-10`，无量纲）。这两个数字是求解/验收设置，
 不能直接解释为所有输出都具有同样的全时域精度。
 静态 Newton 检查原方程残差；瞬态还要考虑输入、历史、采样及事件时刻的误差和网络放大。
-具体判据、保守拒绝和数值方法见[数值手册](docs/math/solving.md)。
+各控制项和失败处理见[精度控制](docs/math/solving.md#当前精度控制怎么用)，具体数值方法见同章。
 瞬态响应可选保存实际控制值、逐行来源和已有节点认证区间，见[观察证据接口](docs/reference/observation-evidence.md)。缺失区间保持未知，这些字段不自动授予外部观察资格。
 
 <a id="spectre-testbench"></a>
@@ -282,7 +282,7 @@ CLI 的内核失败在 stderr 输出 JSON，保留 `kind`、`message` 和存在�
 Python 的编译与求解接口：`compile_sources(sources, instances) -> Program`，
 `solve(program, driven, samples, kernel=...) -> result`，以及
 `transient(program, sources, output_times, stop=..., max_step=..., kernel=...) -> result`。
-当前开发候选支持独立于输出网格的 `strobetimes` 和周期 strobe 控制，见[强制求解时刻](docs/reference/strobe.md)。
+支持独立于输出网格的 `strobetimes` 和周期 strobe 控制，见[强制求解时刻](docs/reference/strobe.md)。
 `solve`、`transient` 和 manifest 的 `tolerances` 接受 `vabstol`（伏特，默认 `1e-12`）与
 `reltol`（无量纲，默认 `1e-10`），例如 `solve(..., vabstol=1e-9, reltol=1e-6)`。
 保留 `absolute` / `relative` 作为对应旧名称；同一容差不能同时提供新旧名称。
@@ -430,8 +430,8 @@ python3 scripts/recompile_evas_manifests.py --output runs/recompile-smoke-admiss
 输出目录必须不存在；部分失败返回非零，成功项仍保留。没有原始 VA/manifest 的旧 IR 无法凭改版本号迁移。
 
 更严格的瞬态认证会改变部分接受范围：多项式非方阵在点输入也拒绝；仿射冗余关系必须
-在误差映射的参数域上成立，不能只在某个状态点碰巧一致。通用 `real` 状态目前使用相对误差预算，
-接近零的非点状态可能保守拒绝。静态 `solve` 仍是局部 Newton 验收，没有同等根前向误差证书。
+在误差映射的参数域上成立，不能只在某个状态点碰巧一致。通用 `real` 状态保留误差区间，交给电压、事件和历史消费者验收；
+近零状态不再单独受纯相对预算限制，但后续放大仍可能使请求无法认证。静态 `solve` 仍是局部 Newton 验收，没有同等根前向误差证书。
 这些是明确实现边界，详见[精度链与兼容性](../experiments/runs/parallel-gap-integration/REVIEW.md#precision-chain)。
 旧归档使用对应提交的前端和内核复现；[历史 v9 迁移说明](https://github.com/BucketSran/vaEVAS/blob/8f9c9ee84593778b1fcb52e264af6d3546466a8b/evas/README.md#ir-v8-migration)保留原身份。
 
