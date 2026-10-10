@@ -18,13 +18,39 @@
 001重建三次内部采样的完整Alexander结构；旧外部retimed输入关系未沿用。
 047冻结为全局tick轮询双边界，314为异步迟滞进入退出历史，两者有独立目标。
 186包含固定trial DAC和比较器协作场景；091、307、308保留各自多模块职责。
-多模块结构的实际职责还须在校准后独立审查，外部波形通过本身不能证明结构符合要求。
+091、307、308 现采用 `system-interfaces-v2`，公开固定 helper 接口、职责及可替换性。
+每题六个条件分别验收端到端行为、两个独立组件及两个顶层替身响应；
+实例名、内部节点名和合法 VA 写法不受限制，评分不解析或比对候选源码。
+组件条件只载入被测 helper，固定兼容的另一组件及顶层作为刺激适配；
+其判据仍从公开合同独立推导。替身条件保留真实顶层，检查它使用实际 helper 输出。
+091 的组件条件还保存固定测试台内的 core 边界，检查样本及通知时序。
+活动但无关的 public helper 配上私有正确电路，以及只驱动复位值的空壳，
+均作为待实际校准的架构负例；其中旁路包的两个 public helper 本身仍正确。
+
+新合同、checker 和负例未做实际 Spectre 校准，不能据此关闭 #133。
+旧版参考/alternative 外部行为校准及三个任务的六个 one-shot 配置结果保留旧身份，
+不能升级为新版通过证据；三题的 one-shot/Agentic prompt 均需重新冻结运行。
+其余16题公开要求及 checker 未变。`build_structure.py` 可重建六条件及架构负例，
+`variants.py` 在生成常规变体后也调用它，不运行仿真。
+
+#133 的运行计划由62个候选包、138条件增至68个候选包、210条件。
+新增6个架构负例包；三题每题5个候选包×6条件，共90个新版实际校准条件。
+全37题原171个候选变体的口径相应增至177，完整条件总数由根运行清单另行计算，
+不能把变体数当作条件数。历史结果的分母及失败保持不变。
+
+三题的 `verify.py` 顶层显式导入 `v2_runtime`、`v2_spec` 和新增的
+`v2_structure`，任务 tests 保存三者副本。author prepare 与 `sync_runtime.py`
+按这些顶层导入复制共享 checker，因此依赖不依赖仓库路径。新增复制规则只涉及
+这三题的 `v2_structure.py`；共享 `v2_spec.py`、`v2_runtime.py` 及其余16题未改。
+本地已用实际 author prepare 和兼容 harness `8bd212a300f01942091570cffed028216c350a06`
+生成18个独立条件包，在隔离目录通过18次导入及三个消费替身评分入口检查。
+这些检查使用主机 Python，未执行容器内 Python 3.12 或 Spectre。
 
 独立checker合同回归使用手工推导的电平与反馈序列，检查正确波形、错误反馈、持续跟踪、
 互补输出错误及环境证据不足。目前这些回归不替代真实VA校准，也不提供难度结论。
 
 ```sh
-python3 -B -m unittest discover -s experiments/benchmark_v2/spec_modeling -p test_checker.py -v
+python3 -B -m unittest discover -s experiments/benchmark_v2/spec_modeling -p 'test_*.py' -v
 ```
 
 校准完成后，将原始运行保存于ignored runs，提取带候选、checker、激励和实际工具链身份的

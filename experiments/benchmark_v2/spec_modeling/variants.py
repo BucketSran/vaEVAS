@@ -118,3 +118,7 @@ for sid,variants in extra.items():
 # Spectre VACOMP requires an integer digit before the fractional point in authored VA.
 for p in (OUT/'candidates').rglob('*.va'):
  p.write_text('\n'.join(x.rstrip() for x in re.sub(r'(?<![\w.])\.(\d)',r'0.\1',p.read_text()).splitlines())+'\n')
+# Keep the fixed-system architecture conditions and negatives in regenerated
+# plans. This does not execute or certify any candidate.
+from build_structure import main as build_structure
+build_structure()

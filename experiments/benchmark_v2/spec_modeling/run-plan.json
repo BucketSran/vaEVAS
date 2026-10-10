@@ -475,5 +475,53 @@
     "expected": "fail",
     "semantic_behavior": "never completes first handoff after restart",
     "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-091-chopper-stabilized-differential-amplifier",
+    "variant": "architecture-empty",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-091-chopper-stabilized-differential-amplifier/architecture-empty",
+    "expected": "fail",
+    "semantic_behavior": "state-free producer shell, fixed reset-value outputs",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-091-chopper-stabilized-differential-amplifier",
+    "variant": "architecture-bypass",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-091-chopper-stabilized-differential-amplifier/architecture-bypass",
+    "expected": "fail",
+    "semantic_behavior": "active required helpers bypassed by private correct chain",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-307-switched-capacitor-integrator-phase-pair",
+    "variant": "architecture-empty",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-307-switched-capacitor-integrator-phase-pair/architecture-empty",
+    "expected": "fail",
+    "semantic_behavior": "state-free producer shell, fixed reset-value outputs",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-307-switched-capacitor-integrator-phase-pair",
+    "variant": "architecture-bypass",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-307-switched-capacitor-integrator-phase-pair/architecture-bypass",
+    "expected": "fail",
+    "semantic_behavior": "active required helpers bypassed by private correct chain",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-308-correlated-double-sampler-offset-cancel",
+    "variant": "architecture-empty",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-308-correlated-double-sampler-offset-cancel/architecture-empty",
+    "expected": "fail",
+    "semantic_behavior": "state-free producer shell, fixed reset-value outputs",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-308-correlated-double-sampler-offset-cancel",
+    "variant": "architecture-bypass",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-308-correlated-double-sampler-offset-cancel/architecture-bypass",
+    "expected": "fail",
+    "semantic_behavior": "active required helpers bypassed by private correct chain",
+    "certification": "pending-live-execution"
   }
 ]

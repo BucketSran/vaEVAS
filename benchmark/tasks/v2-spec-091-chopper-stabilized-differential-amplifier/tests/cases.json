@@ -40,5 +40,114 @@
     "resolution": 2e-12,
     "atol": 0.002,
     "params": {}
+  },
+  {
+    "name": "architecture-component-producer",
+    "source_id": "091",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"architecture_top.va\"\nahdl_include \"chopper_gain_core.va\"\nahdl_include \"architecture_partner.va\"\n\nVinp (vinp 0) vsource type=pwl wave=[0 0.47 24n 0.47 24.1n 0.435 42n 0.435 42.1n 0.46 70n 0.46]\nVinn (vinn 0) vsource type=pwl wave=[0 0.43 24n 0.43 24.1n 0.465 42n 0.465 42.1n 0.44 70n 0.44]\nVchop (chop_clk 0) vsource type=pulse val0=0 val1=0.9 delay=2n period=2n width=0.9n rise=50p fall=50p\nVrst (rst 0) vsource type=pwl wave=[0 0.9 1.5n 0.9 1.6n 0 70n 0]\nVen (enable 0) vsource type=pwl wave=[0 0 3n 0 3.1n 0.9 55n 0.9 55.1n 0 58n 0 58.1n 0.9 70n 0.9]\nVhold (hold 0) vsource type=pwl wave=[0 0 18n 0 18.1n 0.9 22n 0.9 22.1n 0 48n 0 48.1n 0.9 52n 0.9 52.1n 0 70n 0]\n\nIDUT (vinp vinn chop_clk rst enable hold voutp voutn settled offset_residual) chopper_stabilized_differential_amplifier\n\ntran tran stop=70n maxstep=2p errpreset=conservative strobeperiod=2p\nsave vinp vinn chop_clk rst enable hold voutp voutn settled offset_residual\nsave IDUT.demod_sample_i IDUT.baseband_ref_i IDUT.event_strobe_i\n",
+    "signals": [
+      "vinp",
+      "vinn",
+      "chop_clk",
+      "rst",
+      "enable",
+      "hold",
+      "voutp",
+      "voutn",
+      "settled",
+      "offset_residual",
+      "IDUT.demod_sample_i",
+      "IDUT.baseband_ref_i",
+      "IDUT.event_strobe_i"
+    ],
+    "stop": 7e-08,
+    "resolution": 2e-12,
+    "atol": 0.002,
+    "params": {},
+    "structure_probe": "component-producer",
+    "architecture_version": "system-interfaces-v2",
+    "support": {
+      "architecture_top.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\n\nmodule chopper_stabilized_differential_amplifier(\n    vinp, vinn, chop_clk, rst, enable, hold,\n    voutp, voutn, settled, offset_residual\n);\ninput vinp, vinn, chop_clk, rst, enable, hold;\noutput voutp, voutn, settled, offset_residual;\nelectrical vinp, vinn, chop_clk, rst, enable, hold;\nelectrical voutp, voutn, settled, offset_residual;\nelectrical demod_sample_i, baseband_ref_i, event_strobe_i;\n\nparameter real vdd=0.9, vss=0.0, vcm=0.45, vth=0.45;\nparameter real gain=3.0, vos_amp=20m, lp_alpha=0.25;\nparameter real settle_tol=20m, tr=100p;\nparameter integer settle_cycles=3;\n\nchopper_gain_core #(.vdd(vdd), .vss(vss), .vth(vth), .gain(gain), .vos_amp(vos_amp), .tr(tr))\n    ICHOP (vinp, vinn, chop_clk, rst, enable, hold, demod_sample_i, baseband_ref_i, event_strobe_i);\nsynchronous_lp_state #(.vdd(vdd), .vss(vss), .vcm(vcm), .vth(vth), .gain(gain), .lp_alpha(lp_alpha), .settle_tol(settle_tol), .settle_cycles(settle_cycles), .tr(tr))\n    ILP (demod_sample_i, baseband_ref_i, event_strobe_i, rst, enable, hold, voutp, voutn, settled, offset_residual);\nendmodule\n",
+      "architecture_partner.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule synchronous_lp_state(demod_sample,baseband_ref,event_strobe,rst,enable,hold,voutp,voutn,settled,offset_residual);\ninput demod_sample,baseband_ref,event_strobe,rst,enable,hold; output voutp,voutn,settled,offset_residual;\nelectrical demod_sample,baseband_ref,event_strobe,rst,enable,hold,voutp,voutn,settled,offset_residual;\nparameter real vdd=0.9,vss=0.0,vcm=0.45,vth=0.45,gain=3.0,lp_alpha=0.25,settle_tol=20m,tr=100p;\nparameter integer settle_cycles=3;\nreal baseband_q,residual_q,outp_q,outn_q,settled_q; integer converged_q;\nanalog begin\n @(initial_step) begin baseband_q=0; residual_q=0; outp_q=vcm; outn_q=vcm; settled_q=vss; converged_q=0; end\n @(cross(V(event_strobe)-vth,+1) or cross(V(event_strobe)-vth,-1)) begin\n  if((V(rst)>vth)||(V(enable)<=vth)) begin baseband_q=0; residual_q=0; outp_q=vcm; outn_q=vcm; settled_q=vss; converged_q=0; end\n  else begin\n   baseband_q=baseband_q+lp_alpha*(V(demod_sample)-baseband_q); residual_q=baseband_q-V(baseband_ref);\n   if(abs(residual_q)<=settle_tol) converged_q=converged_q+1; else converged_q=0; settled_q=(converged_q>=settle_cycles)?vdd:vss;\n   outp_q=vcm+0.5*baseband_q; outn_q=vcm-0.5*baseband_q;\n   if(outp_q>vdd)outp_q=vdd; if(outp_q<vss)outp_q=vss; if(outn_q>vdd)outn_q=vdd; if(outn_q<vss)outn_q=vss;\n  end\n end\n @(cross(V(rst)-vth,+1) or cross(V(enable)-vth,-1)) begin baseband_q=0; residual_q=0; outp_q=vcm; outn_q=vcm; settled_q=vss; converged_q=0; end\n V(voutp)<+transition(outp_q,0,tr,tr); V(voutn)<+transition(outn_q,0,tr,tr); V(settled)<+transition(settled_q,0,tr,tr); V(offset_residual)<+transition(residual_q,0,tr,tr);\nend\nendmodule\n"
+    }
+  },
+  {
+    "name": "architecture-component-consumer",
+    "source_id": "091",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"architecture_top.va\"\nahdl_include \"architecture_partner.va\"\nahdl_include \"synchronous_lp_state.va\"\n\nVinp (vinp 0) vsource type=pwl wave=[0 0.47 24n 0.47 24.1n 0.435 42n 0.435 42.1n 0.46 70n 0.46]\nVinn (vinn 0) vsource type=pwl wave=[0 0.43 24n 0.43 24.1n 0.465 42n 0.465 42.1n 0.44 70n 0.44]\nVchop (chop_clk 0) vsource type=pulse val0=0 val1=0.9 delay=2n period=2n width=0.9n rise=50p fall=50p\nVrst (rst 0) vsource type=pwl wave=[0 0.9 1.5n 0.9 1.6n 0 70n 0]\nVen (enable 0) vsource type=pwl wave=[0 0 3n 0 3.1n 0.9 55n 0.9 55.1n 0 58n 0 58.1n 0.9 70n 0.9]\nVhold (hold 0) vsource type=pwl wave=[0 0 18n 0 18.1n 0.9 22n 0.9 22.1n 0 48n 0 48.1n 0.9 52n 0.9 52.1n 0 70n 0]\n\nIDUT (vinp vinn chop_clk rst enable hold voutp voutn settled offset_residual) chopper_stabilized_differential_amplifier\n\ntran tran stop=70n maxstep=2p errpreset=conservative strobeperiod=2p\nsave vinp vinn chop_clk rst enable hold voutp voutn settled offset_residual\n",
+    "signals": [
+      "vinp",
+      "vinn",
+      "chop_clk",
+      "rst",
+      "enable",
+      "hold",
+      "voutp",
+      "voutn",
+      "settled",
+      "offset_residual"
+    ],
+    "stop": 7e-08,
+    "resolution": 2e-12,
+    "atol": 0.002,
+    "params": {},
+    "structure_probe": "component-consumer",
+    "architecture_version": "system-interfaces-v2",
+    "support": {
+      "architecture_top.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\n\nmodule chopper_stabilized_differential_amplifier(\n    vinp, vinn, chop_clk, rst, enable, hold,\n    voutp, voutn, settled, offset_residual\n);\ninput vinp, vinn, chop_clk, rst, enable, hold;\noutput voutp, voutn, settled, offset_residual;\nelectrical vinp, vinn, chop_clk, rst, enable, hold;\nelectrical voutp, voutn, settled, offset_residual;\nelectrical demod_sample_i, baseband_ref_i, event_strobe_i;\n\nparameter real vdd=0.9, vss=0.0, vcm=0.45, vth=0.45;\nparameter real gain=3.0, vos_amp=20m, lp_alpha=0.25;\nparameter real settle_tol=20m, tr=100p;\nparameter integer settle_cycles=3;\n\nchopper_gain_core #(.vdd(vdd), .vss(vss), .vth(vth), .gain(gain), .vos_amp(vos_amp), .tr(tr))\n    ICHOP (vinp, vinn, chop_clk, rst, enable, hold, demod_sample_i, baseband_ref_i, event_strobe_i);\nsynchronous_lp_state #(.vdd(vdd), .vss(vss), .vcm(vcm), .vth(vth), .gain(gain), .lp_alpha(lp_alpha), .settle_tol(settle_tol), .settle_cycles(settle_cycles), .tr(tr))\n    ILP (demod_sample_i, baseband_ref_i, event_strobe_i, rst, enable, hold, voutp, voutn, settled, offset_residual);\nendmodule\n",
+      "architecture_partner.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule chopper_gain_core(vinp,vinn,chop_clk,rst,enable,hold,demod_sample,baseband_ref,event_strobe);\ninput vinp,vinn,chop_clk,rst,enable,hold; output demod_sample,baseband_ref,event_strobe;\nelectrical vinp,vinn,chop_clk,rst,enable,hold,demod_sample,baseband_ref,event_strobe;\nparameter real vdd=0.9,vss=0.0,vth=0.45,gain=3.0,vos_amp=20m,tr=100p;\nreal sample_q,ref_q,strobe_q,input_diff,chopped,amplified; integer polarity;\nanalog begin\n @(initial_step) begin sample_q=0.0; ref_q=0.0; strobe_q=vss; end\n @(cross(V(chop_clk)-vth,+1) or cross(V(chop_clk)-vth,-1)) begin\n  if((V(rst)>vth)||(V(enable)<=vth)) sample_q=0.0;\n  else if(V(hold)<=vth) begin polarity=(V(chop_clk)>vth)?1:-1; input_diff=V(vinp)-V(vinn); chopped=polarity*input_diff; amplified=gain*(chopped+vos_amp); sample_q=polarity*amplified; ref_q=gain*input_diff; strobe_q=(strobe_q>vth)?vss:vdd; end\n end\n @(cross(V(rst)-vth,+1) or cross(V(enable)-vth,-1)) begin sample_q=0.0; ref_q=0.0; strobe_q=vss; end\n V(demod_sample)<+sample_q; V(baseband_ref)<+ref_q; V(event_strobe)<+transition(strobe_q,2.0*tr,tr,tr);\nend\nendmodule\n"
+    }
+  },
+  {
+    "name": "architecture-producer",
+    "source_id": "091",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\nahdl_include \"architecture_replacement.va\"\nahdl_include \"synchronous_lp_state.va\"\n\nVinp (vinp 0) vsource type=pwl wave=[0 0.47 24n 0.47 24.1n 0.435 42n 0.435 42.1n 0.46 70n 0.46]\nVinn (vinn 0) vsource type=pwl wave=[0 0.43 24n 0.43 24.1n 0.465 42n 0.465 42.1n 0.44 70n 0.44]\nVchop (chop_clk 0) vsource type=pulse val0=0 val1=0.9 delay=2n period=2n width=0.9n rise=50p fall=50p\nVrst (rst 0) vsource type=pwl wave=[0 0.9 1.5n 0.9 1.6n 0 70n 0]\nVen (enable 0) vsource type=pwl wave=[0 0 3n 0 3.1n 0.9 55n 0.9 55.1n 0 58n 0 58.1n 0.9 70n 0.9]\nVhold (hold 0) vsource type=pwl wave=[0 0 18n 0 18.1n 0.9 22n 0.9 22.1n 0 48n 0 48.1n 0.9 52n 0.9 52.1n 0 70n 0]\n\nIDUT (vinp vinn chop_clk rst enable hold voutp voutn settled offset_residual) chopper_stabilized_differential_amplifier\n\ntran tran stop=70n maxstep=2p errpreset=conservative strobeperiod=2p\nsave vinp vinn chop_clk rst enable hold voutp voutn settled offset_residual\n",
+    "signals": [
+      "vinp",
+      "vinn",
+      "chop_clk",
+      "rst",
+      "enable",
+      "hold",
+      "voutp",
+      "voutn",
+      "settled",
+      "offset_residual"
+    ],
+    "stop": 7e-08,
+    "resolution": 2e-12,
+    "atol": 0.002,
+    "params": {},
+    "structure_probe": "producer",
+    "architecture_version": "system-interfaces-v2",
+    "support": {
+      "architecture_replacement.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule chopper_gain_core(vinp,vinn,chop_clk,rst,enable,hold,demod_sample,baseband_ref,event_strobe);\ninput vinp,vinn,chop_clk,rst,enable,hold; output demod_sample,baseband_ref,event_strobe;\nelectrical vinp,vinn,chop_clk,rst,enable,hold,demod_sample,baseband_ref,event_strobe;\nparameter real vdd=0.9,vss=0.0,vth=0.45,gain=3.0,vos_amp=20m,tr=100p;\nreal sample_q,ref_q,strobe_q,input_diff,chopped,amplified; integer polarity;\nanalog begin\n @(initial_step) begin sample_q=0.0; ref_q=0.0; strobe_q=vss; end\n @(cross(V(chop_clk)-vth,+1) or cross(V(chop_clk)-vth,-1)) begin\n  if((V(rst)>vth)||(V(enable)<=vth)) sample_q=0.0;\n  else if(V(hold)<=vth) begin polarity=(V(chop_clk)>vth)?1:-1; input_diff=V(vinp)-V(vinn); chopped=polarity*input_diff; amplified=gain*(chopped+vos_amp); sample_q=0.16; ref_q=0.16; strobe_q=(strobe_q>vth)?vss:vdd; end\n end\n @(cross(V(rst)-vth,+1) or cross(V(enable)-vth,-1)) begin sample_q=0.0; ref_q=0.0; strobe_q=vss; end\n V(demod_sample)<+sample_q; V(baseband_ref)<+ref_q; V(event_strobe)<+transition(strobe_q,2.0*tr,tr,tr);\nend\nendmodule\n"
+    }
+  },
+  {
+    "name": "architecture-consumer",
+    "source_id": "091",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\nahdl_include \"chopper_gain_core.va\"\nahdl_include \"architecture_replacement.va\"\n\nVinp (vinp 0) vsource type=pwl wave=[0 0.47 24n 0.47 24.1n 0.435 42n 0.435 42.1n 0.46 70n 0.46]\nVinn (vinn 0) vsource type=pwl wave=[0 0.43 24n 0.43 24.1n 0.465 42n 0.465 42.1n 0.44 70n 0.44]\nVchop (chop_clk 0) vsource type=pulse val0=0 val1=0.9 delay=2n period=2n width=0.9n rise=50p fall=50p\nVrst (rst 0) vsource type=pwl wave=[0 0.9 1.5n 0.9 1.6n 0 70n 0]\nVen (enable 0) vsource type=pwl wave=[0 0 3n 0 3.1n 0.9 55n 0.9 55.1n 0 58n 0 58.1n 0.9 70n 0.9]\nVhold (hold 0) vsource type=pwl wave=[0 0 18n 0 18.1n 0.9 22n 0.9 22.1n 0 48n 0 48.1n 0.9 52n 0.9 52.1n 0 70n 0]\n\nIDUT (vinp vinn chop_clk rst enable hold voutp voutn settled offset_residual) chopper_stabilized_differential_amplifier\n\ntran tran stop=70n maxstep=2p errpreset=conservative strobeperiod=2p\nsave vinp vinn chop_clk rst enable hold voutp voutn settled offset_residual\n",
+    "signals": [
+      "vinp",
+      "vinn",
+      "chop_clk",
+      "rst",
+      "enable",
+      "hold",
+      "voutp",
+      "voutn",
+      "settled",
+      "offset_residual"
+    ],
+    "stop": 7e-08,
+    "resolution": 2e-12,
+    "atol": 0.002,
+    "params": {},
+    "structure_probe": "consumer",
+    "architecture_version": "system-interfaces-v2",
+    "support": {
+      "architecture_replacement.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule synchronous_lp_state(demod_sample,baseband_ref,event_strobe,rst,enable,hold,voutp,voutn,settled,offset_residual);\ninput demod_sample,baseband_ref,event_strobe,rst,enable,hold; output voutp,voutn,settled,offset_residual;\nelectrical demod_sample,baseband_ref,event_strobe,rst,enable,hold,voutp,voutn,settled,offset_residual;\nparameter real vdd=0.9,vss=0.0,vcm=0.45,vth=0.45,gain=3.0,lp_alpha=0.25,settle_tol=20m,tr=100p;\nparameter integer settle_cycles=3;\nreal baseband_q,residual_q,outp_q,outn_q,settled_q; integer converged_q;\nanalog begin\n V(voutp) <+ 0.22;\n V(voutn) <+ 0.67;\n V(settled) <+ 0.9;\n V(offset_residual) <+ 0.14;\nend\nendmodule\n"
+    }
   }
 ]
