@@ -8,4 +8,6 @@
 
 本地checker seam测试：`python3 -B -m unittest discover -s experiments/benchmark_v2/extension_integration -p test_checker.py -v`。其合成波形只验证checker合同，不能代替VA或Spectre运行。远端资源由root调度，总Spectre并发不超过4。
 
-修订checker另验证实际fb频率与每N个DCO边沿关系，并以独立配对重算20次lock资格、缺边沿与无新配对撤销。11项本地seam tests通过；这不替代修订包reference、alternative和全部语义mutants的实际运行。
+修订checker另验证实际fb频率与每N个DCO边沿关系，并以独立配对重算20次lock资格、缺边沿与无新配对撤销。15项本地seam tests通过；这不替代修订包reference、alternative和全部语义mutants的实际运行。
+
+缺钟case在52us至54us验证lock撤销，稳定窗口移至恢复后的57us至59us，原200kHz频率和3ns相位阈值保持不变；该恢复窗还必须出现独立重算的正lock资格。公开lock更新期限为2ns，观测增加50ps数值裕量。本地合成轨迹覆盖2ns合法更新、3ns超期更新与缺钟后的重新取得资格。

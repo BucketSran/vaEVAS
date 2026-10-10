@@ -75,7 +75,7 @@ def lock_metrics(rows, contract):
     lsb=contract['pair_lsb'];timeout=contract['timeout'];settle=contract['settle']
     def check(t,expected,reason):
         nonlocal positive,negative
-        observe=t+settle
+        observe=t+settle+contract.get('observation_margin',0)
         if observe<=last:
             observed=sample('lock',observe);ok=abs(observed-(.9 if expected else 0))<=.01
             positive+=int(expected);negative+=int(not expected)
@@ -122,7 +122,11 @@ def lock_metrics(rows, contract):
         else:push(t+timeout,'timeout',(kind,t))
     ok=bool(checks) and all(c['passed'] for c in checks)
     if contract.get('require_positive',True):ok=ok and positive>0
-    return {'lock_qualification':checks,'positive_checks':positive,'negative_checks':negative,'passed':ok}
+    recovery=[any(c['expected']>.45 and lo<=c['time']<=hi for c in checks)
+              for lo,hi in contract.get('positive_windows',[])]
+    ok=ok and all(recovery)
+    return {'lock_qualification':checks,'positive_checks':positive,'negative_checks':negative,
+            'positive_windows':recovery,'passed':ok}
 
 
 def evaluate(rows,case,work):

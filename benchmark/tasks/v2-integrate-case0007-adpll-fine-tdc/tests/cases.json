@@ -304,9 +304,10 @@
       "phase_limit": 1e-09,
       "consecutive": 20,
       "timeout": 4.5e-08,
-      "settle": 1.5e-09,
+      "settle": 2e-09,
       "fresh_pair_timeout": 1.5e-07,
-      "require_positive": true
+      "require_positive": true,
+      "observation_margin": 5e-11
     }
   },
   {
@@ -343,8 +344,8 @@
       },
       {
         "window": [
-          4.9999999999999996e-05,
-          5.4999999999999995e-05
+          5.7e-05,
+          5.9e-05
         ],
         "frequency": 30000000.0,
         "frequency_tolerance": 200000.0,
@@ -406,9 +407,16 @@
       "phase_limit": 1e-09,
       "consecutive": 20,
       "timeout": 4.5e-08,
-      "settle": 1.5e-09,
+      "settle": 2e-09,
       "fresh_pair_timeout": 1.5e-07,
-      "require_positive": true
+      "require_positive": true,
+      "observation_margin": 5e-11,
+      "positive_windows": [
+        [
+          5.7e-05,
+          5.9e-05
+        ]
+      ]
     }
   }
 ]

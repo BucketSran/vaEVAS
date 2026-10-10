@@ -157,9 +157,28 @@
       "reset during sampling high left held frame stale",
       "feedback submultiple accepted without divider relation",
       "constant low lock accepted and stale pair could be consumed repeatedly",
-      "expired counterpart could be accepted between timeout ticks"
+      "expired counterpart could be accepted between timeout ticks",
+      "intentional reference outage overlapped inherited stable window",
+      "lock observation preceded public two nanosecond update deadline"
     ],
     "status": "source/checker fixed; new actual reference/alternative/mutant calibration pending",
-    "historical_reference_pass": "old checker only, cannot support strict revised acceptance"
+    "historical_reference_pass": "old checker only, cannot support strict revised acceptance",
+    "outage_recovery": {
+      "outage": [
+        5.2e-05,
+        5.4e-05
+      ],
+      "stable_window": [
+        5.7e-05,
+        5.9e-05
+      ],
+      "frequency_tolerance": 200000.0,
+      "phase_tolerance": 3e-09,
+      "positive_lock_eligibility_required": true
+    },
+    "lock_observation": {
+      "public_update_deadline": 2e-09,
+      "numerical_margin": 5e-11
+    }
   }
 }
