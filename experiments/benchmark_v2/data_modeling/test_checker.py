@@ -1,5 +1,5 @@
 """Checker seam: a full waveform must satisfy independent recorded truth."""
-import importlib.util, tempfile, unittest
+import importlib.util, math, tempfile, unittest
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[3]
 spec=importlib.util.spec_from_file_location('v2_data',ROOT/'benchmark/checkers/v2_data.py')
@@ -14,6 +14,10 @@ class CheckerTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             rows=[{'time':t,'vhold':v} for t,v in case['truth']]
             self.assertTrue(mod.evaluate(rows,case,Path(d))['passed'])
-            self.assertFalse(mod.evaluate(rows[:-1],case,Path(d))['passed'])
-            rows[1]['vhold']=float('nan');self.assertFalse(mod.evaluate(rows,case,Path(d))['passed'])
+            case['samples']=[math.nextafter(1.0,2.0)]
+            self.assertTrue(mod.evaluate(rows,case,Path(d))['passed'])
+            self.assertEqual(mod.evaluate(rows[:-1],case,Path(d))['status'],'checker_error')
+            rows[1]['vhold']=float('nan');self.assertEqual(mod.evaluate(rows,case,Path(d))['status'],'checker_error')
+            rows[1]={'time':1};self.assertEqual(mod.evaluate(rows,case,Path(d))['status'],'checker_error')
+            case['truth']=[[0,0],[1,float('nan')],[2,1]];self.assertEqual(mod.evaluate(rows,case,Path(d))['status'],'checker_error')
 if __name__=='__main__':unittest.main()

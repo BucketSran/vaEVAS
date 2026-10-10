@@ -1,0 +1,108 @@
+{
+  "source_revision": "892272208df28b6c7620101e129a9d8dd95ebab7",
+  "clock": "external nsample is clock; inverter output is sample",
+  "main_pfet": {
+    "schematic_instance": "M1",
+    "symbol": "pfet_01v8",
+    "origin": [
+      690,
+      -630
+    ],
+    "rotation": 1,
+    "symbol_pins": {
+      "D": [
+        20,
+        30
+      ],
+      "G": [
+        -20,
+        0
+      ],
+      "S": [
+        20,
+        -30
+      ],
+      "B": [
+        20,
+        0
+      ]
+    },
+    "resolved_terminals": [
+      "vin",
+      "clock",
+      "out",
+      "vdd"
+    ],
+    "width_um": 7.6,
+    "length_um": 0.22,
+    "fingers": 4
+  },
+  "main_nfet": {
+    "schematic_instance": "M3",
+    "symbol": "nfet_01v8",
+    "origin": [
+      690,
+      -440
+    ],
+    "rotation": 3,
+    "symbol_pins": {
+      "D": [
+        20,
+        -30
+      ],
+      "G": [
+        -20,
+        0
+      ],
+      "S": [
+        20,
+        30
+      ],
+      "B": [
+        20,
+        0
+      ]
+    },
+    "resolved_terminals": [
+      "vin",
+      "sample",
+      "out",
+      "0"
+    ],
+    "width_um": 7.6,
+    "length_um": 0.22,
+    "fingers": 4
+  },
+  "dummy_pfet": [
+    "out",
+    "sample",
+    "out",
+    "vdd"
+  ],
+  "dummy_nfet": [
+    "out",
+    "clock",
+    "out",
+    "0"
+  ],
+  "inverter_pfet": [
+    "sample",
+    "clock",
+    "vdd",
+    "vdd"
+  ],
+  "inverter_nfet": [
+    "sample",
+    "clock",
+    "0",
+    "0"
+  ],
+  "hold_capacitance_F": 2.44e-12,
+  "superseded_attempt": "936a6a74 main-MOS D/S swapped; not evidence of specified-source acceptance",
+  "symbol_revision": "fef70fad3804d1c298c70f78de769825d7dfea19",
+  "symbol_repository": "https://github.com/StefanSchippers/xschem_sky130",
+  "symbol_paths": [
+    "sky130_fd_pr/pfet_01v8.sym",
+    "sky130_fd_pr/nfet_01v8.sym"
+  ]
+}

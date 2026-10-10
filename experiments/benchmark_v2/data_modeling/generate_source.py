@@ -22,7 +22,7 @@ def models(pdk):
 
 def circuit():
     s='* Copyright 2022 Manuel Moser; Apache-2.0. Manual schematic transcription.\n'
-    for name,d,g,src,b,typ,w,l,nf in [('p','out','clock','vin','vdd','p',7.6,.22,4),('n','out','sample','vin','0','n',7.6,.22,4),('pd','out','sample','out','vdd','p',3.8,.22,2),('nd','out','clock','out','0','n',3.8,.22,2),('ip','sample','clock','vdd','vdd','p',.84,.15,2),('in','sample','clock','0','0','n',.42,.15,1)]:
+    for name,d,g,src,b,typ,w,l,nf in [('p','vin','clock','out','vdd','p',7.6,.22,4),('n','vin','sample','out','0','n',7.6,.22,4),('pd','out','sample','out','vdd','p',3.8,.22,2),('nd','out','clock','out','0','n',3.8,.22,2),('ip','sample','clock','vdd','vdd','p',.84,.15,2),('in','sample','clock','0','0','n',.42,.15,1)]:
         a=int((nf+1)/2)*w/nf*.29; ass=int((nf+2)/2)*w/nf*.29
         s+=f'X{name} {d} {g} {src} {b} sky130_fd_pr__{typ}fet_01v8 w={w} l={l} nf={nf} ad={a} as={ass} pd={2*int((nf+1)/2)*(w/nf+.29)} ps={2*int((nf+2)/2)*(w/nf+.29)} nrd={.29/w} nrs={.29/w} mult=1 m=1\n'
     return s+'C1 out 0 2.44p\nVDD vdd 0 1.8\n.temp 25\n'
@@ -86,10 +86,10 @@ def main():
             if group!='heldout':
                 times=[t for t in times if round(t/50e-12)%40==0 or any(a-.35e-9<=t<=b+.55e-9 for a,b in exp['tracks']) or any(abs(t-x)<.25e-9 for x,v in exp['vin'])]
                 times += [t for t,v in exp['vin']+exp['clock']]
-            times=sorted(set(times+exp['samples']+[exp['stop']]))
+            times=sorted(set(round(t,15) for t in times+exp['samples']+[exp['stop']]))
             path=dest/(exp['name']+'.csv')
             with path.open('w') as f:
-                writer=csv.writer(f);writer.writerow(['time_s','vin_V','clock_V','vhold_V'])
+                writer=csv.writer(f,lineterminator='\n');writer.writerow(['time_s','vin_V','clock_V','vhold_V'])
                 for t in times:writer.writerow([f'{t:.12g}',f'{interp(rows,t,1):.10g}',f'{interp(rows,t,2):.10g}',f'{interp(rows,t,4):.10g}'])
             manifest['records'][exp['name']]={'group':group,'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'deck_sha256':hashlib.sha256((work/'source.cir').read_bytes()).hexdigest()}
     (Path(__file__).parent/'dataset-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')

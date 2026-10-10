@@ -2,9 +2,14 @@
 import bisect, math
 
 def evaluate(rows,case,work):
-    limits=case['limits'];truth=case['truth']
-    if not rows or len(rows)<2:return {'passed':False,'reason':'missing waveform'}
     try:
+        limits=case['limits'];truth=case['truth']
+        if not rows or len(rows)<2:raise ValueError('missing waveform')
+        if not truth or len(truth)<2:raise ValueError('missing truth')
+        if any(len(r)!=2 or not all(math.isfinite(float(x)) for x in r) for r in truth):raise ValueError('invalid truth')
+        if any(b[0]<=a[0] for a,b in zip(truth,truth[1:])):raise ValueError('nonmonotonic truth')
+        if not math.isfinite(case['stop']) or case['stop']<=0:raise ValueError('invalid stop')
+        if any(not math.isfinite(v) or v<=0 for v in limits.values()):raise ValueError('invalid limits')
         times=[float(r['time']) for r in rows];volts=[float(r['vhold']) for r in rows]
         if any(not math.isfinite(x) for x in times+volts):raise ValueError('nonfinite waveform')
         if any(b<=a for a,b in zip(times,times[1:])):raise ValueError('nonmonotonic waveform')
@@ -30,9 +35,11 @@ def evaluate(rows,case,work):
         samples=[]
         tt=[t for t,v in truth]
         for t in case['samples']:
-            i=bisect.bisect_left(tt,t)
-            if i==len(tt) or abs(tt[i]-t)>1e-15:raise ValueError('sample missing from frozen truth')
+            insertion=bisect.bisect_left(tt,t)
+            choices=[i for i in [insertion-1,insertion] if 0<=i<len(tt)]
+            i=min(choices,key=lambda i:abs(tt[i]-t))
+            if abs(tt[i]-t)>1e-15:raise ValueError('sample missing from frozen truth')
             samples.append(abs(at(t)-truth[i][1]))
         metrics={'track_rms':max(track),'sample_max':max(samples),'hold_max':max(hold)}
         return {'passed':all(metrics[k]<=limits[k] for k in metrics),'metrics_V':metrics,'per_track_rms_V':track,'per_sample_abs_V':samples,'per_hold_max_V':hold,'limits_V':limits}
-    except (ValueError,KeyError,TypeError,ZeroDivisionError) as exc:return {'passed':False,'reason':str(exc)}
+    except (ValueError,KeyError,TypeError,ZeroDivisionError) as exc:return {'passed':False,'status':'checker_error','reason':str(exc)}
