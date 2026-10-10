@@ -1,0 +1,77 @@
+[
+  {
+    "name": "normal",
+    "kind": "gain",
+    "stop": 2.4e-07,
+    "start_time": 2e-08,
+    "sample_period": 1e-09,
+    "gain_scale": 10,
+    "min_input_span": 0.02,
+    "vhigh": 0.9,
+    "guard": 3.5e-10,
+    "atol": 0.002,
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"amplifier.va\"\nVdd (vdd 0) vsource dc=.9\nVinp (vinp 0) vsource type=sine sinedc=.45 ampl=0.06 freq=20Meg\nVinn (vinn 0) vsource dc=.45\nVoutn (voutn 0) vsource dc=.45\nVclk (clk 0) vsource type=pulse val0=0 val1=.9 delay=1n period=8n width=3n rise=60p fall=60p\nVsel (sel 0) vsource type=pwl wave=[0 0 100n 0 100.1n .9 240n .9]\nVbegin (begin_round 0) vsource type=pwl wave=[0 0 104n 0 104.1n 1 105n 1 105.1n 0 240n 0]\nXA (clk 0 sel vinp voutp clipping) programmable_gain_amplifier gain_low=0.8 gain_high=2.4\nXM (vdd 0 vinp vinn voutp voutn gain_out valid begin_round) gain_estimator sample_period=1n start_time=20n gain_scale=10 min_input_span=.02 tedge=200p\ntran tran stop=240n maxstep=100p errpreset=conservative\nsave vinp vinn voutp voutn begin_round gain_out valid\n",
+    "signals": [
+      "vinp",
+      "vinn",
+      "voutp",
+      "voutn",
+      "begin_round",
+      "gain_out",
+      "valid"
+    ],
+    "support": {
+      "amplifier.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\n\nmodule programmable_gain_amplifier(clk, rst, gain_sel, vin, out, metric);\n    input clk, rst, gain_sel, vin;\n    output out, metric;\n    electrical clk, rst, gain_sel, vin, out, metric;\n\n    parameter real vth = 0.45;\n    parameter real vcm = 0.45;\n    parameter real gain_low = 0.8;\n    parameter real gain_high = 2.4;\n    parameter real vmin = 0.0;\n    parameter real vmax = 0.9;\n    parameter real tr = 200p from (0:inf);\n\n    real gain_value;\n    real raw;\n    real bounded;\n    real clipped;\n\n    analog begin\n        @(initial_step) begin\n            gain_value = 1.0;\n        end\n\n        @(cross(V(clk) - vth, +1)) begin\n            if (V(rst) > vth)\n                gain_value = 1.0;\n            else if (V(gain_sel) > vth)\n                gain_value = gain_high;\n            else\n                gain_value = gain_low;\n        end\n\n        raw = vcm + gain_value * (V(vin) - vcm);\n        bounded = raw;\n        clipped = 0.0;\n        if (bounded > vmax) begin\n            bounded = vmax;\n            clipped = 1.0;\n        end\n        if (bounded < vmin) begin\n            bounded = vmin;\n            clipped = 1.0;\n        end\n        if (V(rst) > vth) begin\n            bounded = vcm;\n            clipped = 0.0;\n        end\n\n        V(out) <+ bounded;\n        V(metric) <+ transition((clipped > 0.5) ? 0.9 : 0.0, 0, tr, tr);\n    end\nendmodule\n"
+    }
+  },
+  {
+    "name": "low-performance-dut",
+    "kind": "gain",
+    "stop": 2.4e-07,
+    "start_time": 2e-08,
+    "sample_period": 1e-09,
+    "gain_scale": 10,
+    "min_input_span": 0.02,
+    "vhigh": 0.9,
+    "guard": 3.5e-10,
+    "atol": 0.002,
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"amplifier.va\"\nVdd (vdd 0) vsource dc=.9\nVinp (vinp 0) vsource type=sine sinedc=.45 ampl=0.06 freq=20Meg\nVinn (vinn 0) vsource dc=.45\nVoutn (voutn 0) vsource dc=.45\nVclk (clk 0) vsource type=pulse val0=0 val1=.9 delay=1n period=8n width=3n rise=60p fall=60p\nVsel (sel 0) vsource type=pwl wave=[0 0 100n 0 100.1n .9 240n .9]\nVbegin (begin_round 0) vsource type=pwl wave=[0 0 104n 0 104.1n 1 105n 1 105.1n 0 240n 0]\nXA (clk 0 sel vinp voutp clipping) programmable_gain_amplifier gain_low=0.3 gain_high=1.1\nXM (vdd 0 vinp vinn voutp voutn gain_out valid begin_round) gain_estimator sample_period=1n start_time=20n gain_scale=10 min_input_span=.02 tedge=200p\ntran tran stop=240n maxstep=100p errpreset=conservative\nsave vinp vinn voutp voutn begin_round gain_out valid\n",
+    "signals": [
+      "vinp",
+      "vinn",
+      "voutp",
+      "voutn",
+      "begin_round",
+      "gain_out",
+      "valid"
+    ],
+    "support": {
+      "amplifier.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\n\nmodule programmable_gain_amplifier(clk, rst, gain_sel, vin, out, metric);\n    input clk, rst, gain_sel, vin;\n    output out, metric;\n    electrical clk, rst, gain_sel, vin, out, metric;\n\n    parameter real vth = 0.45;\n    parameter real vcm = 0.45;\n    parameter real gain_low = 0.8;\n    parameter real gain_high = 2.4;\n    parameter real vmin = 0.0;\n    parameter real vmax = 0.9;\n    parameter real tr = 200p from (0:inf);\n\n    real gain_value;\n    real raw;\n    real bounded;\n    real clipped;\n\n    analog begin\n        @(initial_step) begin\n            gain_value = 1.0;\n        end\n\n        @(cross(V(clk) - vth, +1)) begin\n            if (V(rst) > vth)\n                gain_value = 1.0;\n            else if (V(gain_sel) > vth)\n                gain_value = gain_high;\n            else\n                gain_value = gain_low;\n        end\n\n        raw = vcm + gain_value * (V(vin) - vcm);\n        bounded = raw;\n        clipped = 0.0;\n        if (bounded > vmax) begin\n            bounded = vmax;\n            clipped = 1.0;\n        end\n        if (bounded < vmin) begin\n            bounded = vmin;\n            clipped = 1.0;\n        end\n        if (V(rst) > vth) begin\n            bounded = vcm;\n            clipped = 0.0;\n        end\n\n        V(out) <+ bounded;\n        V(metric) <+ transition((clipped > 0.5) ? 0.9 : 0.0, 0, tr, tr);\n    end\nendmodule\n"
+    }
+  },
+  {
+    "name": "invalid-final-span",
+    "kind": "gain",
+    "stop": 2.4e-07,
+    "start_time": 2e-08,
+    "sample_period": 1e-09,
+    "gain_scale": 10,
+    "min_input_span": 0.02,
+    "vhigh": 0.9,
+    "guard": 3.5e-10,
+    "atol": 0.002,
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"amplifier.va\"\nVdd (vdd 0) vsource dc=.9\nVinp (vinp 0) vsource type=sine sinedc=.45 ampl=0.001 freq=20Meg\nVinn (vinn 0) vsource dc=.45\nVoutn (voutn 0) vsource dc=.45\nVclk (clk 0) vsource type=pulse val0=0 val1=.9 delay=1n period=8n width=3n rise=60p fall=60p\nVsel (sel 0) vsource type=pwl wave=[0 0 100n 0 100.1n .9 240n .9]\nVbegin (begin_round 0) vsource type=pwl wave=[0 0 104n 0 104.1n 1 105n 1 105.1n 0 240n 0]\nXA (clk 0 sel vinp voutp clipping) programmable_gain_amplifier gain_low=0.8 gain_high=2.4\nXM (vdd 0 vinp vinn voutp voutn gain_out valid begin_round) gain_estimator sample_period=1n start_time=20n gain_scale=10 min_input_span=.02 tedge=200p\ntran tran stop=240n maxstep=100p errpreset=conservative\nsave vinp vinn voutp voutn begin_round gain_out valid\n",
+    "signals": [
+      "vinp",
+      "vinn",
+      "voutp",
+      "voutn",
+      "begin_round",
+      "gain_out",
+      "valid"
+    ],
+    "support": {
+      "amplifier.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\n\nmodule programmable_gain_amplifier(clk, rst, gain_sel, vin, out, metric);\n    input clk, rst, gain_sel, vin;\n    output out, metric;\n    electrical clk, rst, gain_sel, vin, out, metric;\n\n    parameter real vth = 0.45;\n    parameter real vcm = 0.45;\n    parameter real gain_low = 0.8;\n    parameter real gain_high = 2.4;\n    parameter real vmin = 0.0;\n    parameter real vmax = 0.9;\n    parameter real tr = 200p from (0:inf);\n\n    real gain_value;\n    real raw;\n    real bounded;\n    real clipped;\n\n    analog begin\n        @(initial_step) begin\n            gain_value = 1.0;\n        end\n\n        @(cross(V(clk) - vth, +1)) begin\n            if (V(rst) > vth)\n                gain_value = 1.0;\n            else if (V(gain_sel) > vth)\n                gain_value = gain_high;\n            else\n                gain_value = gain_low;\n        end\n\n        raw = vcm + gain_value * (V(vin) - vcm);\n        bounded = raw;\n        clipped = 0.0;\n        if (bounded > vmax) begin\n            bounded = vmax;\n            clipped = 1.0;\n        end\n        if (bounded < vmin) begin\n            bounded = vmin;\n            clipped = 1.0;\n        end\n        if (V(rst) > vth) begin\n            bounded = vcm;\n            clipped = 0.0;\n        end\n\n        V(out) <+ bounded;\n        V(metric) <+ transition((clipped > 0.5) ? 0.9 : 0.0, 0, tr, tr);\n    end\nendmodule\n"
+    }
+  }
+]

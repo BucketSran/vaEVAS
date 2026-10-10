@@ -1,0 +1,39 @@
+`include "disciplines.vams"
+module gain_settling_meter(vin,static_out,dynamic_out,launch,gain,gain_valid,settling_ns,settled,status);
+input vin,static_out,dynamic_out,launch;
+output gain,gain_valid,settling_ns,settled,status;
+electrical vin,static_out,dynamic_out,launch,gain,gain_valid,settling_ns,settled,status;
+parameter real sample_period=250p, min_input_span=0.02, settle_tol=0.002, tr=20p;
+parameter integer samples=80,tail_samples=8;
+real observed[0:80];
+real base_in,base_out,next_sample,target,span,g,st;
+integer active,index,j,last_bad,gv,sv,state;
+analog begin
+ @(initial_step) begin active=0; index=0; g=0; st=0; gv=0; sv=0; state=0; next_sample=1e99; end
+ @(cross(V(launch)-0.5,+1)) begin
+  active=1; index=0; g=0; st=0; gv=0; sv=0; state=0;
+  base_in=V(vin); base_out=V(static_out); observed[0]=V(dynamic_out);
+  next_sample=$abstime+sample_period;
+ end
+ @(timer(next_sample)) begin
+  if(active) begin
+   index=index+1; observed[index]=V(dynamic_out);
+   if(index>=samples) begin
+    active=0; next_sample=1e99; span=V(vin)-base_in;
+    if(abs(span)<=min_input_span) state=2;
+    else begin
+     g=(V(static_out)-base_out)/span; gv=1; target=V(static_out); last_bad=-1;
+     for(j=0;j<=samples;j=j+1) if(abs(observed[j]-target)>settle_tol) last_bad=j;
+     if(1) begin sv=1; state=1; st=(last_bad+1)*sample_period*1e9; end
+     else begin sv=0; state=3; st=0; end
+    end
+   end else next_sample=$abstime+sample_period;
+  end
+ end
+ V(gain)<+transition(g,0,tr,tr);
+ V(gain_valid)<+transition(gv,0,tr,tr);
+ V(settling_ns)<+transition(st,0,tr,tr);
+ V(settled)<+transition(sv,0,tr,tr);
+ V(status)<+transition(state,0,tr,tr);
+end
+endmodule

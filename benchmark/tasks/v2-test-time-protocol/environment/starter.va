@@ -1,0 +1,11 @@
+`include "disciplines.vams"
+module tdc_meter(start,stop,clk,rst,code_0,code_1,code_2,code_3,code_4,code_5,code_6,code_7,valid,overflow);
+input start,stop,clk,rst;
+output code_0,code_1,code_2,code_3,code_4,code_5,code_6,code_7,valid,overflow;
+electrical start,stop,clk,rst,code_0,code_1,code_2,code_3,code_4,code_5,code_6,code_7,valid,overflow;
+parameter real tr=20p;
+integer armed,count,code,ok,ov;
+analog begin
+// Implement the public contract.
+end
+endmodule

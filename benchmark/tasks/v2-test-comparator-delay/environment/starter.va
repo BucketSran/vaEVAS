@@ -1,0 +1,21 @@
+`include "disciplines.vams"
+
+module delay_meter(vdd, vss, clk, vinp, vinn, outp, outn, delay_ps, overdrive_mv, polarity, valid);
+input vdd, vss, clk, vinp, vinn, outp, outn;
+output delay_ps, overdrive_mv, polarity, valid;
+electrical vdd, vss, clk, vinp, vinn, outp, outn, delay_ps, overdrive_mv, polarity, valid;
+
+parameter real tr = 20p;
+
+real t_clk;
+real sampled_overdrive_v;
+real measured_delay_s;
+integer armed;
+integer valid_state;
+integer polarity_state;
+real diff;
+
+analog begin
+// Implement the public contract.
+end
+endmodule
