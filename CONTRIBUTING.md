@@ -12,6 +12,7 @@ not a requirement to load every document. Component READMEs own technical contra
 | Assigning parallel writers or changing both vaEVAS and the harness | [Parallel ownership](docs/contributing/workspaces.md#parallel-work), [cross-repository work](docs/contributing/workspaces.md#cross-repository-work) |
 | Retiring a checkout or deleting a branch | [Preservation checklist](docs/contributing/workspaces.md#retiring-work) |
 | Changing behavior or selecting tests | [Behavior-first tests](docs/contributing/validation.md#behavior-first-tests) and the owning component skill |
+| Planning EVAS accuracy recovery or speed optimization | [Error propagation, effective refinement and fixed-accuracy measurement](docs/contributing/validation.md#accuracy-recovery-and-performance-acceptance) |
 | Capturing a reusable development failure or importing legacy work | [Benchmark candidates](docs/contributing/validation.md#development-bench-candidates), [migration](docs/contributing/validation.md#migration) |
 | Changing support claims or selecting retained files | [Evidence ownership](docs/contributing/evidence.md#evidence-and-assets), [main branch contents](docs/contributing/evidence.md#main-branch-contents) |
 | Running, reanalyzing or reporting experiments | [Execution receipts](docs/contributing/evidence.md#execution-receipts) |

@@ -51,6 +51,11 @@ the [behavior-first test order](../../../docs/contributing/validation.md#behavio
 this mapping selects coverage, not when to write the failing case. It is a
 starting set, not proof of complete coverage or a requirement to run every row.
 
+For accuracy-recovery or performance claims, apply the
+[cause-specific recovery and fixed-accuracy checks](../../../docs/contributing/validation.md#accuracy-recovery-and-performance-acceptance)
+in addition to the affected rows. A narrower root or faster local solve alone does not
+establish the downstream result or complete-request improvement.
+
 When executing, run commands from the repository root. Before simulator tests,
 rebuild the debug kernel using the [build command](../../../evas/README.md#构建与运行);
 those tests use that binary. Checks that do not invoke the kernel need no build.

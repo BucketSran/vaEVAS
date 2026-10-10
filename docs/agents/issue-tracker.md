@@ -9,6 +9,11 @@ Reuse it for the same outcome, dependencies, acceptance criteria and handoff.
 One-turn work can stay in the conversation under the
 [scope policy](../../CONTRIBUTING.md#scope-and-authorization).
 
+For EVAS accuracy or performance tasks, use the
+[accuracy-recovery and performance acceptance rules](../contributing/validation.md#accuracy-recovery-and-performance-acceptance)
+when defining the outcome and checks. Inspect existing mechanisms and the current task
+status before proposing missing work or reopening a deferred optimization.
+
 ## Shared planning skills
 
 `to-spec` and `to-tickets` use this tracker when publication is covered by the
