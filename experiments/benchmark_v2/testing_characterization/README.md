@@ -25,20 +25,22 @@ build_tasks.py 生成 Harbor 任务、正确参考、另一种实现和三种行
 
 统一执行依赖父分支的 v2_runtime.py 和 PSF 读取器，不另行实现评分路径。工具链失败应记录为环境错误，不据此给候选零分。实际校准、Harbor reference、模型试跑和审查通过后，才能完成发布资格与证据记录。
 
-POR 使用真实模拟晶体管源和可读数字边界，候选通过观察 POR 完成与 power 欠压事件推进供电。报告 response_us 从各轮首次 osc 上升到 POR 上升计时。周期保留原脚本的第3至第9个振荡器上升平均值。性质判断只观察实际端口，第6/第13个时钟对应断言与释放；不读取内部计数结束标志。健康、慢振荡器、漏恢复脉冲和过早释放的性质与计量合同公开，具体终评实例隐藏。公开自测仅含原RC健康实例。
+POR 使用真实模拟晶体管源和可读数字边界，候选通过观察 POR 完成与 power 欠压事件推进供电。报告 response_us 从各轮首次 osc 上升到 POR 上升计时。周期保留原脚本的第3至第9个振荡器上升平均值。性质判断只观察实际端口，第6/第13个时钟对应断言与释放；不读取内部计数结束标志。健康、慢振荡器、漏恢复脉冲、过早释放和缺首轮下降沿的性质与计量合同公开，具体终评实例隐藏。公开自测仅含原RC健康实例。
 
 prepare_por_source.py 固定原电路与 PDK 版本，build_por_task.py 生成完整任务。两电平转换单元采用同版本官方 CDL 源视图，原抽取 SPICE 的独立单元测试存在悬空连接。prepare_por_spectre.py 只适配数学等值的表达式分隔符和数值后缀，未调整器件阈值。原源17位导出实跑指标见 por_source_ngspice.json，数字实际 Spectre 边界见 por_digital_spectre_r2.json，全量语法等值核验见 por_spectre_translation_r3.json；r3 解析时发现12个电阻公式使用重复引号，r4只删除冗余引号，等值核验见 por_spectre_translation_r4.json。这些证据不替代尚待执行的完整候选校准。
 
-POR 归属 Spectre 扩展。整个 POR 的纯 VA 开源替代仍未校准，不作为本轮真实闭环的替代验收。原模型文件约7.26MB，Agentic 按文件读取完整资产；公开cases用路径和SHA引用独立文件，不复制模型内容。one-shot 适用性仍待实际接口核查。当前适配器把全部公开文件串成一次文本输入，去重后的公开文件共7,450,253字节；模型配置的32k max_tokens是输出上限，不能据此推断输入窗口。须保留全部材料并核对模型输入限制或实际接口拒绝证据，不能按文件体积主观排除。
+POR 归属 Spectre 扩展。整个 POR 的纯 VA 开源替代仍未校准，不作为本轮真实闭环的替代验收。原模型文件约7.26MB，Agentic 按文件读取完整资产；公开cases用路径和SHA引用独立文件，不复制模型内容。one-shot 适用性仍待实际接口核查。当前适配器把全部公开文件串成一次文本输入，去重后的公开文件共7,450,283字节；模型配置的32k max_tokens是输出上限，不能据此推断输入窗口。须保留全部材料并核对模型输入限制或实际接口拒绝证据，不能按文件体积主观排除。
 
 POR checker 的独立行为测试：
 
     python3 -B experiments/benchmark_v2/testing_characterization/test_por_checker.py
 
-POR 超时分支按公开半开窗口处理。test_por_timeout.py 对实际发货源码的 timer 条件执行有限控制流回归，覆盖截止前50us、截止时刻、截止之后及缺事件；test_por_checker.py 使用独立端口波形拒绝提前欠压。该源条件回归不等同VA仿真，完整Spectre校准仍待运行。
+POR 超时分支按公开半开窗口处理。test_por_timeout.py 对实际发货源码的 timer 条件执行有限控制流回归，覆盖截止前50us、截止时刻、截止之后及缺事件；test_por_checker.py 使用独立端口波形拒绝提前欠压。首轮仅观察[启动,开始欠压)，到欠压边界冻结；边界同刻事件一律排除，欠压后下降沿不能补齐首轮。新增缺首轮下降沿的真实接口故障，保留首POR高电平直到实际power欠压下降。test_por_timeout.py还覆盖同刻cross/timer次序；独立波形回归拒绝将欠压诱发的下降沿计入首轮。该源条件回归不等同VA仿真，完整Spectre校准仍待运行。
 
-r5 处理实际Spectre解析出的重复参数与实例作用域差异。282个重复全局参数等值，保留定义并显式报告warning；原实例几何值展开后，12个顶层和870个模拟子电路表达式由独立AST算术与Decimal逐项核对。模型文件与cells文件SHA未变。核验见 por_spectre_translation_r5.json，实际r5仿真仍待执行。
+r5 处理实际Spectre解析出的重复参数与实例作用域差异。282个重复全局参数等值，保留定义并显式报告warning；原实例几何值展开后，12个顶层和870个模拟子电路表达式由独立AST算术与Decimal逐项核对。模型文件与cells文件SHA未变。核验见 por_spectre_translation_r5.json，实际r5来源仿真已经完成，完整候选仍待执行。
 
-实际 mixed Spectre r5已完成来源校准，原源刺激下两轮各13个振荡器上升沿、POR第6/13沿断言/释放均成立；实测指标与原ngspice源的描述性差值见 por_source_mixed_spectre_r5.json。完整闭环候选尚待20条件校准，来源校准不计模型分数。qualify_por_source.py 从原始PSF及17位ngspice数据重建上述事实，未读取自报指标或内部计数flags。
+实际 mixed Spectre r5已完成来源校准，原源刺激下两轮各13个振荡器上升沿、POR第6/13沿断言/释放均成立；实测指标与原ngspice源的描述性差值见 por_source_mixed_spectre_r5.json。完整闭环候选尚待25条件校准，来源校准不计模型分数。qualify_por_source.py 从原始PSF及17位ngspice数据重建上述事实，未读取自报指标或内部计数flags。
 
-POR 公开包只含原始MF6健康自测及完整资产引用，materialize_case.py可核对SHA并重建它。独立终评的4个固定负载实例保留在tests，公开包不含参考解、checker或终评参数；公开/终评材料不是同一组。test_por_public.py校验该边界及资产身份。
+POR 公开包只含原始MF6健康自测及完整资产引用，materialize_case.py可核对SHA并重建它。独立终评的5个固定负载实例保留在tests，公开包不含参考解、checker或终评参数；公开/终评材料不是同一组。test_por_public.py校验该边界及资产身份。
+
+私有终评同样用tests内路径/SHA引用去重原模型；五种条件保留各自RC与故障参数，模型字节不变。完整任务材料为15,160,726字节，小于16MiB包上限。test_por_public.py通过runtime进程fixture准备全部五条件并逐项核对运行目录原bytes/SHA；此项只检验包适配，不是电路仿真。

@@ -6,32 +6,38 @@ input por,power,osc;
 electrical avdd,por,power,osc,first_response_us,first_period_us,first_width_us,first_valid,first_ok,recovery_response_us,recovery_period_us,recovery_width_us,recovery_valid,recovery_ok,done;
 parameter real tick=1u, ramp=2m, dip_ramp=100u, hold=100u, recovery_ramp=100u, timeout=1m, tr=100p;
 integer state,cycle,n[0:1],rising_count[0:1],falling_count[0:1],saw_rise[0:1],saw_fall[0:1],lost,finished,v[0:1],ok[0:1],i;
-real t0[0:1],t3[0:1],t9[0:1],pr[0:1],pf[0:1],response[0:1],period[0:1],width[0:1],phase_time,lost_time,supply;
+real t0[0:1],t3[0:1],t9[0:1],pr[0:1],pf[0:1],response[0:1],period[0:1],width[0:1],phase_time,lost_time,supply,last_clock[0:1];
 analog begin
  @(initial_step) begin
   state=0;cycle=0;lost=0;finished=0;phase_time=0;lost_time=0;
-  for(i=0;i<2;i=i+1) begin n[i]=0;rising_count[i]=0;falling_count[i]=0;saw_rise[i]=0;saw_fall[i]=0;t0[i]=0;t3[i]=0;t9[i]=0;pr[i]=0;pf[i]=0;response[i]=0;period[i]=0;width[i]=0;v[i]=0;ok[i]=0;end
+  for(i=0;i<2;i=i+1) begin n[i]=0;rising_count[i]=0;falling_count[i]=0;saw_rise[i]=0;saw_fall[i]=0;t0[i]=0;t3[i]=0;t9[i]=0;last_clock[i]=0;pr[i]=0;pf[i]=0;response[i]=0;period[i]=0;width[i]=0;v[i]=0;ok[i]=0;end
  end
  @(cross(V(power)-0.9,-1)) begin lost=1;lost_time=$abstime;end
  @(cross(V(power)-0.9,+1)) begin
   if(state>=3) cycle=1;
  end
  @(cross(V(osc)-0.9,+1)) begin
-  if(V(power)>0.9) begin
-   n[cycle]=n[cycle]+1;
+  if((cycle==1 || state==0) && V(power)>0.9) begin
+   n[cycle]=n[cycle]+1;last_clock[cycle]=$abstime;
    if(n[cycle]==1) t0[cycle]=$abstime;
    if(n[cycle]==3) t3[cycle]=$abstime;
    if(n[cycle]==9) t9[cycle]=$abstime;
   end
  end
  @(cross(V(por)-0.9,+1)) begin
-  if(!saw_rise[cycle]) begin saw_rise[cycle]=1;pr[cycle]=$abstime;rising_count[cycle]=n[cycle];end
+  if((cycle==1 || state==0) && !saw_rise[cycle]) begin saw_rise[cycle]=1;pr[cycle]=$abstime;rising_count[cycle]=n[cycle];end
  end
  @(cross(V(por)-0.9,-1)) begin
-  if(saw_rise[cycle] && !saw_fall[cycle]) begin saw_fall[cycle]=1;pf[cycle]=$abstime;falling_count[cycle]=n[cycle];end
+  if((cycle==1 || state==0) && saw_rise[cycle] && !saw_fall[cycle]) begin saw_fall[cycle]=1;pf[cycle]=$abstime;falling_count[cycle]=n[cycle];end
  end
  @(timer(0,tick)) begin
-  if(state==0 && $abstime+1f>=ramp+hold && ((saw_fall[0] && pf[0]<ramp+timeout && $abstime+1f>=pf[0]+hold) || ((!saw_fall[0] || pf[0]>=ramp+timeout) && $abstime+1f>=ramp+timeout))) begin state=1;phase_time=$abstime;end
+  if(state==0 && $abstime+1f>=ramp+hold && ((saw_fall[0] && pf[0]<ramp+timeout && $abstime+1f>=pf[0]+hold) || ((!saw_fall[0] || pf[0]>=ramp+timeout) && $abstime+1f>=ramp+timeout))) begin
+   state=1;phase_time=$abstime;
+   // Exclude an event at dip even if its cross callback ran before this timer.
+   if(saw_rise[0] && pr[0]>=phase_time) saw_rise[0]=0;
+   if(saw_fall[0] && pf[0]>=phase_time) saw_fall[0]=0;
+   if(n[0]>0 && last_clock[0]>=phase_time) n[0]=n[0]-1;
+  end
   else if(state==1 && $abstime+1f>=phase_time+dip_ramp) begin state=2;phase_time=$abstime;end
   else if(state==2 && ((lost && lost_time<phase_time+timeout && $abstime+1f>=phase_time+hold && $abstime+1f>=lost_time+hold) || ((!lost || lost_time>=phase_time+timeout) && $abstime+1f>=phase_time+timeout))) begin state=3;phase_time=$abstime;cycle=1;end
   else if(state==3 && $abstime+1f>=phase_time+recovery_ramp) begin state=4;phase_time=$abstime;end

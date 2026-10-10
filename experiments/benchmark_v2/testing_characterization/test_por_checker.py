@@ -6,13 +6,13 @@ spec=importlib.util.spec_from_file_location('testing',Path(__file__).resolve().p
 m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
 
 class FullPorWave(unittest.TestCase):
-    def fixture(self,missing_recovery=False,slow=False,late_first=False):
+    def fixture(self,missing_recovery=False,slow=False,late_first=False,missing_first_fall=False):
         period=60e-6 if slow else 30e-6
-        dip=.00305 if late_first else .00234 if slow else .0021;low=dip+.0001;rec=low+.0001;high=rec+.0001
+        dip=.003 if missing_first_fall else .00305 if late_first else .00234 if slow else .0021;low=dip+.0001;rec=low+.0001;high=rec+.0001
         first=[(.00258999 if late_first else .00152)+i*period for i in range(13)]
         second=[rec+.00008+i*period for i in range(13)]
         rise=[first[5]+1e-8]+([] if missing_recovery else [second[5]+1e-8])
-        fall=[first[12]+1e-8]+([] if missing_recovery else [second[12]+1e-8])
+        fall=[dip+.00005 if missing_first_fall else first[12]+1e-8]+([] if missing_recovery else [second[12]+1e-8])
         finish=high+.001 if missing_recovery else round((fall[1]+.0001)/1e-6+.499999)*1e-6
         events=first+second+rise+fall+[.0015,dip+.00005,rec+.00006,finish]
         times={0.,.004,*[i*1e-6 for i in range(4001)]}
@@ -27,7 +27,7 @@ class FullPorWave(unittest.TestCase):
             else: avdd=3.3
             r=dict(time=t,avdd=avdd,power=pulse(t,[.0015,rec+.00006],[dip+.00005,.0041]),osc=pulse(t,first+second,[x+5e-6 for x in first+second]),por=pulse(t,rise,fall),done=float(t>=finish))
             for prefix in ['first','recovery']:
-                active=t>=finish and (prefix=='first' or not missing_recovery)
+                active=t>=finish and ((prefix=='first' and not missing_first_fall) or (prefix=='recovery' and not missing_recovery))
                 r.update({prefix+'_response_us':(5*period*1e6+.01) if active else 0.,prefix+'_period_us':period*1e6 if active else 0.,prefix+'_width_us':7*period*1e6 if active else 0.,prefix+'_valid':float(active),prefix+'_ok':float(active)})
             rows.append(r)
         return rows,dict(kind='por_bench',stop=.004,guard=5e-6,atol=.1,supply_atol=.03)
@@ -36,6 +36,16 @@ class FullPorWave(unittest.TestCase):
             rows,case=self.fixture(missing)
             result=m.evaluate(rows,case)
             self.assertTrue(result['passed'],result)
+    def test_brownout_fall_cannot_complete_missing_first_fall(self):
+        rows,case=self.fixture(missing_first_fall=True)
+        self.assertTrue(m.evaluate(rows,case)['passed'])
+        # A later real fall has a measurable width, but lies outside [0,dip).
+        for r in rows:
+            if r['done']:
+                r.update(first_valid=1.,first_ok=1.,first_response_us=150.01,
+                         first_period_us=30.,first_width_us=1379.99)
+        self.assertFalse(m.evaluate(rows,case)['passed'])
+
     def test_omitting_actual_undervoltage_fails(self):
         rows,case=self.fixture()
         for r in rows:

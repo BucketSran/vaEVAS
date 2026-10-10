@@ -6,7 +6,7 @@ input por,power,osc;
 electrical avdd,por,power,osc,first_response_us,first_period_us,first_width_us,first_valid,first_ok,recovery_response_us,recovery_period_us,recovery_width_us,recovery_valid,recovery_ok,done;
 parameter real tick=1u, ramp=2m, dip_ramp=100u, hold=100u, recovery_ramp=100u, timeout=1m, tr=100p;
 integer state,cycle,n[0:1],rising_count[0:1],falling_count[0:1],saw_rise[0:1],saw_fall[0:1],lost,finished,v[0:1],ok[0:1],i;
-real t0[0:1],t3[0:1],t9[0:1],pr[0:1],pf[0:1],response[0:1],period[0:1],width[0:1],phase_time,lost_time,supply;
+real t0[0:1],t3[0:1],t9[0:1],pr[0:1],pf[0:1],response[0:1],period[0:1],width[0:1],phase_time,lost_time,supply,last_clock[0:1];
 analog begin
 // Implement the public contract.
 end

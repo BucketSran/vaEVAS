@@ -1,0 +1,43 @@
+{
+  "status": "prepared_only",
+  "simulator_executed": false,
+  "harness_revision": "8bd212a300f01942091570cffed028216c350a06",
+  "preparation_tool": "experiments/benchmark_first_batch/runtime.py",
+  "criteria_sha256": "bc66e6ef49083be09c82198c9bc93018d68a3fc7943a1a5ef38e341b937af6db",
+  "cases_sha256": "c91dc5bfb481fc96d2d16ab02b3c7a9598a4ada2f5fe81d550e7a860b09a2b3a",
+  "conditions": [
+    {
+      "condition": "normal",
+      "package_sha256": "793dc68138369c199d7a50da54ced1f0991c0503d89f09e8098f5489b25536c1",
+      "inventory_bytes": 7695867,
+      "referenced_asset_count": 5
+    },
+    {
+      "condition": "slower-oscillator",
+      "package_sha256": "d8c32f55e1ab3825a1a521f560862a62e7162c672451ab8d9f84f7d665fb6248",
+      "inventory_bytes": 7695878,
+      "referenced_asset_count": 5
+    },
+    {
+      "condition": "missing-recovery-pulse",
+      "package_sha256": "5d9b6c8567dd1bc6603f19e4e58c861a27fe87eafd8e8610b702297a41837c03",
+      "inventory_bytes": 7695883,
+      "referenced_asset_count": 5
+    },
+    {
+      "condition": "early-pulse-release",
+      "package_sha256": "d0591e1dbbe679f769a9b3954a38843c055e0a1540778378108f9a83bdf363e2",
+      "inventory_bytes": 7695880,
+      "referenced_asset_count": 5
+    },
+    {
+      "condition": "missing-first-fall",
+      "package_sha256": "46dfb307f38031c5f7dc0aa847a51809b62edbcf6df785b13517645669c2cb83",
+      "inventory_bytes": 7695879,
+      "referenced_asset_count": 5
+    }
+  ],
+  "verification": "actual harness package_identity accepted all five final packages; every referenced source hash matches package inventory and original bytes",
+  "evidence_directory": "runs/por-source/formal-first-window-prepare",
+  "limit_bytes": 16777216
+}
