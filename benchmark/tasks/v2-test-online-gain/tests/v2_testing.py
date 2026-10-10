@@ -357,11 +357,60 @@ def por_digital(w,case):
         states.append((t,state))
     return pieces(w,case,states)
 
+def por_bench(w,case):
+    """Rebuild supply closed loop and POR results from actual public ports."""
+    tick=case.get('tick',1e-6);ramp=case.get('ramp',.002);hold=case.get('hold',.0001)
+    dr=case.get('dip_ramp',.0001);rr=case.get('recovery_ramp',.0001);timeout=case.get('timeout',.001)
+    def ceil_tick(t): return math.ceil(t/tick-1e-9)*tick
+    por_r=w.edges('por',threshold=.9);por_f=w.edges('por',-1,threshold=.9)
+    clocks=w.edges('osc',threshold=.9);power_r=w.edges('power',threshold=.9);power_f=w.edges('power',-1,threshold=.9)
+    first_f=next((t for t in por_f if por_r and t>por_r[0]),None)
+    dip=ceil_tick(max(ramp+hold,first_f+hold)) if first_f is not None and first_f<ramp+timeout else ceil_tick(ramp+timeout)
+    low=ceil_tick(dip+dr)
+    lost=next((t for t in power_f if t>=dip),None)
+    rec=ceil_tick(max(low+hold,lost+hold)) if lost is not None and lost<low+timeout else ceil_tick(low+timeout)
+    high=ceil_tick(rec+rr)
+    second_f=next((t for t in por_f if t>rec and any(rec<x<t for x in por_r)),None)
+    finish=ceil_tick(max(high,second_f+hold)) if second_f is not None and second_f<high+timeout else ceil_tick(high+timeout)
+    failures=[]
+    def supply(t):
+        if t<dip: return 3.3*min(t/ramp,1)
+        if t<low: return 3.3-1.3*min((t-dip)/dr,1)
+        if t<rec: return 2.
+        if t<high: return 2.+1.3*min((t-rec)/rr,1)
+        return 3.3
+    # All saved supply samples matter, including the difficult undervoltage.
+    for t in w.ts:
+        if abs(w.value(t,'avdd')-supply(t))>case.get('supply_atol',.03):
+            failures.append(dict(time=t,node='avdd',expected=supply(t),actual=w.value(t,'avdd')))
+            if len(failures)>=20: break
+    state={n:0. for n in ['first_response_us','first_period_us','first_width_us','first_valid','first_ok','recovery_response_us','recovery_period_us','recovery_width_us','recovery_valid','recovery_ok','done']}
+    result=state.copy();result['done']=1.
+    for prefix,start,end in [('first',0.,dip),('recovery',rec,case['stop'])]:
+        cs=[t for t in clocks if start<=t<end and w.value(t+1e-12,'power')>.9]
+        rises=[t for t in por_r if start<=t<end];falls=[t for t in por_f if rises and rises[0]<t<end]
+        valid=bool(cs and len(cs)>=9 and rises and falls)
+        result[prefix+'_valid']=float(valid)
+        if valid:
+            pr,pf=rises[0],falls[0]
+            result[prefix+'_response_us']=(pr-cs[0])*1e6
+            result[prefix+'_period_us']=(cs[8]-cs[2])*1e6/6
+            result[prefix+'_width_us']=(pf-pr)*1e6
+            rise_count=sum(t<=pr for t in cs);fall_count=sum(t<=pf for t in cs)
+            result[prefix+'_ok']=float(rise_count==6 and fall_count==13 and lost is not None)
+    report=pieces(w,case,[(0.,state),(finish,result)])
+    report['failures']=failures+report.get('failures',[])
+    report['passed']=not report['failures']
+    report['stimulus_events']=dict(dip=dip,low=low,recovery=rec,high=high,finish=finish)
+    return report
+
 def evaluate(rows, case, work=None):
     try:
         w = Wave(rows)
         if abs(w.ts[0]) > 1e-15 or abs(w.ts[-1]-case['stop']) > max(1e-15,case['stop']*1e-8):
             return dict(passed=False,status='environment_error',reason='incomplete transient')
+        if case['kind'] == 'por_bench':
+            return por_bench(w,case)
         if case['kind'] == 'por_digital':
             return por_digital(w,case)
         if case['kind'] == 'settling':
