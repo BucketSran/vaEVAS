@@ -1,0 +1,895 @@
+{
+  "analysis_id": "direct-sample-spectre-20261010",
+  "status": "PASS_FINITE_SAME_SOURCE_ALIGNMENT",
+  "purpose": "Close the actual Spectre pairing gap for the direct nonlinear-root sampling target path. Original finite engineering budget, plus ideal-root check; no whole-trajectory or general simulator qualification.",
+  "execution": {
+    "new_spectre_configurations": 12,
+    "physical_conditions": 3,
+    "unique_evas_requests": 3,
+    "evas_executions": 24,
+    "final_paired_evas_executions": 12,
+    "failed_configurations": 0,
+    "analysis_history": "paired preserved first12 EVAS requests. paired-v2 repeats12 after checker adds execution/raw/readback identity, fixed-denominator and explicit event representative checks; no new Spectre execution or budget/input change.",
+    "profiles": "Four original profiles vary Spectre only. EVAS repeats the same request for each matching reference; do not count this as an EVAS settings sweep.",
+    "controls": "Spectre native strobetimes are fixed across profiles. EVAS uses ordinary queries, max_step=3, absolute=B, relative=0 to exercise a coarse root and demand-directed recovery. Equal tolerance names are not claimed equivalent.",
+    "resource_caps": {
+      "concurrency": 1,
+      "threads": 1,
+      "stage_timeout_s": 90,
+      "license_timeout_s": 30,
+      "memory_bytes": 4294967296,
+      "file_bytes": 33554432
+    },
+    "supervisor": {
+      "path": "runs/accuracy-directed-spectre-20261010/dispatch-log.txt",
+      "sha256": "21d2786383dca57fdac2d9bcc8620aa7ee238cd3c84c934d50aac73a4c749689",
+      "availability": "local-only"
+    },
+    "archive_manifest": {
+      "path": "runs/accuracy-directed-spectre-20261010/collected/COLLECTION.json",
+      "sha256": "7c07f13c589d3ae874efeb5d79bead243883cb403db94646c8d1749e612f6cf5",
+      "availability": "local-only"
+    }
+  },
+  "implementation": {
+    "base_revision": "b3db3a180c88b49efd7547e09da8059e2bdb847b",
+    "branch": "codex/accuracy-directed-refinement",
+    "dirty_at_execution": true,
+    "source_manifest": {
+      "path": "runs/accuracy-directed-spectre-20261010/validated-source-manifest-v2.json",
+      "sha256": "24ec74f1e7f35f3b526862706b8679a4fe3c1d654aece1942ac3ca0868f0bc9c",
+      "availability": "local-only"
+    },
+    "source_patch": {
+      "path": "runs/accuracy-directed-spectre-20261010/validated-source-v2.patch",
+      "sha256": "8c2a97b046df7889a8f08f2d0e0c3b5d3286fcc7ef2de73d5e57c2caf644040e",
+      "availability": "local-only"
+    },
+    "snapshot_directory": "/Users/bucketsran/.codex/worktrees/accuracy-performance-workflow/current/runs/accuracy-directed-spectre-20261010/validated-source-v2",
+    "kernel_sha256": "609e504285421d9917cb673bda689f0559ed3b873d3ce0d6ac5de4cba0826883",
+    "kernel_identity": {
+      "build_revision": null,
+      "identity_version": 1,
+      "ir_schema_version": 18,
+      "name": "evas-kernel",
+      "platform": {
+        "arch": "aarch64",
+        "os": "macos"
+      },
+      "request_protocol_version": null,
+      "version": "0.14.0"
+    },
+    "build_log": {
+      "path": "runs/accuracy-directed-spectre-20261010/build.log",
+      "sha256": "c2ea84eb2473f82efde1ab0a95de2a7ab2667489f75296c6b4ff9471d8192534",
+      "availability": "local-only"
+    },
+    "build_command": "cargo build --locked --manifest-path evas/rust_core/Cargo.toml",
+    "toolchain": {
+      "rustc": "rustc 1.95.0 (59807616e 2026-04-14)",
+      "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]"
+    },
+    "reused_regressions": "directed-root-receipt.json: 157 Python, 226 Rust pass / 1 ignored, 12 external-checker calibrations, prior pairings and request-cost measurements. Only settlement_bounds.rs formatting differs from those validated runtime sources; current binary rebuilt and nine recovery tests rerun."
+  },
+  "contract": {
+    "id": "precision-engineering-v1",
+    "budgets": {
+      "absolute_V": 1e-08,
+      "relative": 1e-06,
+      "input_absolute_V": 1e-10,
+      "input_relative": 1e-08,
+      "count_V": 1e-06,
+      "global_gap_units": 0.0625,
+      "time_serialization_ulps": 16,
+      "voltage_serialization_ulps": 8,
+      "boundary_distance_s": 2.1e-12
+    },
+    "profiles": [
+      {
+        "id": "base",
+        "reltol": 1e-05,
+        "vabstol_V": 1e-09,
+        "iabstol_A": 1e-13,
+        "step_units": 0.03125
+      },
+      {
+        "id": "tol",
+        "reltol": 1e-08,
+        "vabstol_V": 1e-12,
+        "iabstol_A": 1e-15,
+        "step_units": 0.03125
+      },
+      {
+        "id": "step",
+        "reltol": 1e-05,
+        "vabstol_V": 1e-09,
+        "iabstol_A": 1e-13,
+        "step_units": 0.00390625
+      },
+      {
+        "id": "both",
+        "reltol": 1e-08,
+        "vabstol_V": 1e-12,
+        "iabstol_A": 1e-15,
+        "step_units": 0.00390625
+      }
+    ],
+    "source_contract_sha256": "66f861ec83d75ec996a6fdc0b84263567b4a123b98a5f8e0cf920aeb734f328b",
+    "source_contract_availability": "local-only adjacent snapshot",
+    "checker_sha256": "8975d3d22c8a864b9c595d35e4e363fe40c701952c7ed7d5207f26a5a268f32c"
+  },
+  "checker_identity_note": "CONTRACT preserves the checker at input freeze. paired_identity records the stricter v2 analysis checker; prior result remains in paired/.",
+  "spectre": {
+    "version": "sub-version  21.1.0.509.isr12",
+    "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "identity": {
+      "path": "runs/accuracy-directed-spectre-20261010/collected/outputs/runs/TOOL_IDENTITY.json",
+      "sha256": "54d010e38e3b3638a852a38fb8af9a32b97c98a401b7ad25c42951c562efe266",
+      "availability": "local-only"
+    },
+    "settings": {
+      "base": {
+        "requested": {
+          "id": "base",
+          "reltol": 1e-05,
+          "vabstol_V": 1e-09,
+          "iabstol_A": 1e-13,
+          "step_units": 0.03125
+        },
+        "actual": {
+          "reltol": 1e-06,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 3.0,
+          "maxstep": 0.03125,
+          "method": "traponly"
+        },
+        "mismatches": [
+          "reltol"
+        ]
+      },
+      "tol": {
+        "requested": {
+          "id": "tol",
+          "reltol": 1e-08,
+          "vabstol_V": 1e-12,
+          "iabstol_A": 1e-15,
+          "step_units": 0.03125
+        },
+        "actual": {
+          "reltol": 1e-09,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 3.0,
+          "maxstep": 0.03125,
+          "method": "traponly"
+        },
+        "mismatches": [
+          "reltol"
+        ]
+      },
+      "step": {
+        "requested": {
+          "id": "step",
+          "reltol": 1e-05,
+          "vabstol_V": 1e-09,
+          "iabstol_A": 1e-13,
+          "step_units": 0.00390625
+        },
+        "actual": {
+          "reltol": 1e-06,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 3.0,
+          "maxstep": 0.00390625,
+          "method": "traponly"
+        },
+        "mismatches": [
+          "reltol"
+        ]
+      },
+      "both": {
+        "requested": {
+          "id": "both",
+          "reltol": 1e-08,
+          "vabstol_V": 1e-12,
+          "iabstol_A": 1e-15,
+          "step_units": 0.00390625
+        },
+        "actual": {
+          "reltol": 1e-09,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 3.0,
+          "maxstep": 0.00390625,
+          "method": "traponly"
+        },
+        "mismatches": [
+          "reltol"
+        ]
+      }
+    },
+    "effective_note": "errpreset=conservative sets transient reltol to 0.1 times the requested global reltol. Recorded actual values, not the requested values, describe these executions."
+  },
+  "inputs": {
+    "manifest": {
+      "path": "runs/accuracy-directed-spectre-20261010/inputs-v2/MANIFEST.json",
+      "sha256": "93ffcdcd47f3cefadeeb45b5a0299f288de43750533819ae21a7298bbf7a8e56",
+      "availability": "local-only"
+    },
+    "model": "cross(pow(V(clk),2)-2,1,1e-3,1e-3): q=V(u), n=n+1; outputs q and n; initial q=n=0",
+    "stimuli": "clk(t)=t; u(t)=t, -t, or 0.001*t; stop=3 s; same VA bytes and physical stimuli for both backends",
+    "observations": "99 predetermined times: 0..3 s in 1/32 s increments and sqrt(2) ± 1 ps; all Spectre native rows additionally checked",
+    "scales_V": {
+      "positive": 2,
+      "negative": 2,
+      "small": 0.002
+    },
+    "oracle": "Independent Decimal80 sqrt(2) and PWL. Each backend checks initial output, one legal observed phase-change bracket, sampled output, hold drift and ideal-root error; pair checks same-time output and records every phase difference."
+  },
+  "commands": {
+    "freeze": "python3 -B experiments/backends/sample-edge-filter/direct_sample.py freeze NEW_INPUTS PRECISION_CONTRACT",
+    "spectre": "python3 -B experiments/backends/sample-edge-filter/callback_probe.py run FROZEN_INPUTS NEW_RESULTS --profile EXISTING_PROFILE",
+    "compare": "python3 -B experiments/backends/sample-edge-filter/direct_sample.py compare FROZEN_INPUTS SPECTRE_RESULTS NEW_PAIRED_RESULTS evas/rust_core/target/debug/evas-kernel",
+    "calibration": "python3 -B -m unittest discover -s experiments/backends/sample-edge-filter -p test_direct_sample.py -v"
+  },
+  "checks": {
+    "checker_calibration": {
+      "pass_count": 6,
+      "log": {
+        "path": "runs/accuracy-directed-spectre-20261010/checker-tests-v2.log",
+        "sha256": "9d760e2e0ad160b57d543d3554c8a3ab278b8c99dbaa847f513802194f12b2b0",
+        "availability": "local-only"
+      }
+    },
+    "recovery_regression": {
+      "pass_count": 9,
+      "log": {
+        "path": "runs/accuracy-directed-spectre-20261010/root-recovery.log",
+        "sha256": "912de36946339ad7bb366eda3467377344eda8f6f666fc604c458c19f93be3f8",
+        "availability": "local-only"
+      }
+    },
+    "paired_identity": {
+      "path": "runs/accuracy-directed-spectre-20261010/paired-v2/IDENTITY.json",
+      "sha256": "5bc75f306617cb033bb05b66b0264173f4dfa42914d4406cdfc2227bc8f6f474",
+      "availability": "local-only"
+    },
+    "paired_results": {
+      "path": "runs/accuracy-directed-spectre-20261010/paired-v2/RESULTS.json",
+      "sha256": "87797f7f2a367ac8672ab6d30847e36b00f99d2721f92c397b38af75ae2e6912",
+      "availability": "local-only"
+    },
+    "native_manifest": {
+      "path": "runs/accuracy-directed-spectre-20261010/collected/outputs/runs/MANIFEST.json",
+      "sha256": "eba85d9f4a925cd40d17ce907a7ffd745287f2ec96f407b00fc82f3137e71cde",
+      "availability": "local-only"
+    }
+  },
+  "results": [
+    {
+      "case": "negative--base",
+      "pass_original_budget": true,
+      "voltage_budget_V": 2.01e-06,
+      "evas_ideal_root_error_upper_V": 9.957812352467954e-11,
+      "spectre_ideal_root_error_upper_V": 1.0043077480759166e-12,
+      "paired_voltage_error_V": 9.85744819104184e-11,
+      "phase_differences_s": [],
+      "paired_points": 99,
+      "evas_event_representative_s": 1.4142135624726697,
+      "spectre_native_rows": 139,
+      "source_sha256": "8b3245338428d444e975c564e3b31dc138d97dd66c871a0346b88e5dc3bf1626",
+      "deck_sha256": "9bc9b7d851be9cea17a3e16a415e826323e2b45005baeba8846ff4955ee366b2",
+      "raw_sha256": "48bd5c087c34460f5d37d19036e9b40d007897b76310836e2fd216254a43b50c",
+      "pair_result": {
+        "path": "runs/accuracy-directed-spectre-20261010/paired-v2/negative--base/RESULT.json",
+        "sha256": "2d0fd48c809cf1a3582062653abb887f2c67a14e668a5056b6ccdd87792633bb",
+        "availability": "local-only"
+      },
+      "root_demand": {
+        "consumer": "y",
+        "representative": -1.414306640625,
+        "enclosure": [
+          -1.414306640625,
+          -1.41412353515625
+        ],
+        "error_bound": 0.00018310546875,
+        "budget": 2.01e-06,
+        "time": 1.414306640625,
+        "source": "current_root",
+        "retained_bound": 0.0,
+        "inherited_state_bound": 0.0,
+        "time_sensitivity": 1.0,
+        "target_width": 2.01e-06,
+        "future_input_coupling": false
+      },
+      "refinement": {
+        "attempt": 1,
+        "bounds_after": [
+          1.414213562275153,
+          1.4142135624726697
+        ],
+        "iterations": 1,
+        "remaining_work": 255,
+        "stop": "target_reached",
+        "target_width": 2.01e-06,
+        "width_after": 1.9751666968659265e-10,
+        "width_before": 0.00018310546875
+      }
+    },
+    {
+      "case": "negative--both",
+      "pass_original_budget": true,
+      "voltage_budget_V": 2.01e-06,
+      "evas_ideal_root_error_upper_V": 9.957812352467954e-11,
+      "spectre_ideal_root_error_upper_V": 1.0043077480759166e-12,
+      "paired_voltage_error_V": 9.85744819104184e-11,
+      "phase_differences_s": [],
+      "paired_points": 99,
+      "evas_event_representative_s": 1.4142135624726697,
+      "spectre_native_rows": 813,
+      "source_sha256": "8b3245338428d444e975c564e3b31dc138d97dd66c871a0346b88e5dc3bf1626",
+      "deck_sha256": "80bf50113e8b5979a02e8821c6f098d8fe09b00f3b035fec54e5a0e0fec6c694",
+      "raw_sha256": "589ec1d4492b84bc98661be8f8e964eedc0c8a9dd9499691c05eaed18a1f7c88",
+      "pair_result": {
+        "path": "runs/accuracy-directed-spectre-20261010/paired-v2/negative--both/RESULT.json",
+        "sha256": "c36c7189c38e675bf9fc48d2aeabc4f269ee15fdd1326594876eaf1f8ce0acfe",
+        "availability": "local-only"
+      },
+      "root_demand": {
+        "consumer": "y",
+        "representative": -1.414306640625,
+        "enclosure": [
+          -1.414306640625,
+          -1.41412353515625
+        ],
+        "error_bound": 0.00018310546875,
+        "budget": 2.01e-06,
+        "time": 1.414306640625,
+        "source": "current_root",
+        "retained_bound": 0.0,
+        "inherited_state_bound": 0.0,
+        "time_sensitivity": 1.0,
+        "target_width": 2.01e-06,
+        "future_input_coupling": false
+      },
+      "refinement": {
+        "attempt": 1,
+        "bounds_after": [
+          1.414213562275153,
+          1.4142135624726697
+        ],
+        "iterations": 1,
+        "remaining_work": 255,
+        "stop": "target_reached",
+        "target_width": 2.01e-06,
+        "width_after": 1.9751666968659265e-10,
+        "width_before": 0.00018310546875
+      }
+    },
+    {
+      "case": "negative--step",
+      "pass_original_budget": true,
+      "voltage_budget_V": 2.01e-06,
+      "evas_ideal_root_error_upper_V": 9.957812352467954e-11,
+      "spectre_ideal_root_error_upper_V": 1.0043077480759166e-12,
+      "paired_voltage_error_V": 9.85744819104184e-11,
+      "phase_differences_s": [],
+      "paired_points": 99,
+      "evas_event_representative_s": 1.4142135624726697,
+      "spectre_native_rows": 804,
+      "source_sha256": "8b3245338428d444e975c564e3b31dc138d97dd66c871a0346b88e5dc3bf1626",
+      "deck_sha256": "05afcbcd37c88df12efe741fada4484d90115bf51ca23dc54f6278b4253aa65a",
+      "raw_sha256": "031785202456f595ee7de7d34563995dba27f0a09d35c79ad4a52a6c3b6c72cf",
+      "pair_result": {
+        "path": "runs/accuracy-directed-spectre-20261010/paired-v2/negative--step/RESULT.json",
+        "sha256": "766b811e302f1127a3161598ec1869f7ee5dbe1e11532c271ca446be26ecedd5",
+        "availability": "local-only"
+      },
+      "root_demand": {
+        "consumer": "y",
+        "representative": -1.414306640625,
+        "enclosure": [
+          -1.414306640625,
+          -1.41412353515625
+        ],
+        "error_bound": 0.00018310546875,
+        "budget": 2.01e-06,
+        "time": 1.414306640625,
+        "source": "current_root",
+        "retained_bound": 0.0,
+        "inherited_state_bound": 0.0,
+        "time_sensitivity": 1.0,
+        "target_width": 2.01e-06,
+        "future_input_coupling": false
+      },
+      "refinement": {
+        "attempt": 1,
+        "bounds_after": [
+          1.414213562275153,
+          1.4142135624726697
+        ],
+        "iterations": 1,
+        "remaining_work": 255,
+        "stop": "target_reached",
+        "target_width": 2.01e-06,
+        "width_after": 1.9751666968659265e-10,
+        "width_before": 0.00018310546875
+      }
+    },
+    {
+      "case": "negative--tol",
+      "pass_original_budget": true,
+      "voltage_budget_V": 2.01e-06,
+      "evas_ideal_root_error_upper_V": 9.957812352467954e-11,
+      "spectre_ideal_root_error_upper_V": 1.0043077480759166e-12,
+      "paired_voltage_error_V": 9.85744819104184e-11,
+      "phase_differences_s": [],
+      "paired_points": 99,
+      "evas_event_representative_s": 1.4142135624726697,
+      "spectre_native_rows": 149,
+      "source_sha256": "8b3245338428d444e975c564e3b31dc138d97dd66c871a0346b88e5dc3bf1626",
+      "deck_sha256": "e6a3c7c0dff41437bfbdc32a33f30c211d2cef171531f903eab591bba54f5fc2",
+      "raw_sha256": "b7be16dbff5ca3c9f354c8a60919a07c0eb6edc9c6ac340512871a2239cf87d3",
+      "pair_result": {
+        "path": "runs/accuracy-directed-spectre-20261010/paired-v2/negative--tol/RESULT.json",
+        "sha256": "d1d3e34541dd04b6ea0601abed91b6516ce2b2bf461ffbb45407ca07cd1cb399",
+        "availability": "local-only"
+      },
+      "root_demand": {
+        "consumer": "y",
+        "representative": -1.414306640625,
+        "enclosure": [
+          -1.414306640625,
+          -1.41412353515625
+        ],
+        "error_bound": 0.00018310546875,
+        "budget": 2.01e-06,
+        "time": 1.414306640625,
+        "source": "current_root",
+        "retained_bound": 0.0,
+        "inherited_state_bound": 0.0,
+        "time_sensitivity": 1.0,
+        "target_width": 2.01e-06,
+        "future_input_coupling": false
+      },
+      "refinement": {
+        "attempt": 1,
+        "bounds_after": [
+          1.414213562275153,
+          1.4142135624726697
+        ],
+        "iterations": 1,
+        "remaining_work": 255,
+        "stop": "target_reached",
+        "target_width": 2.01e-06,
+        "width_after": 1.9751666968659265e-10,
+        "width_before": 0.00018310546875
+      }
+    },
+    {
+      "case": "positive--base",
+      "pass_original_budget": true,
+      "voltage_budget_V": 2.01e-06,
+      "evas_ideal_root_error_upper_V": 9.957812352467954e-11,
+      "spectre_ideal_root_error_upper_V": 1.0043077480759166e-12,
+      "paired_voltage_error_V": 9.85744819104184e-11,
+      "phase_differences_s": [],
+      "paired_points": 99,
+      "evas_event_representative_s": 1.4142135624726697,
+      "spectre_native_rows": 139,
+      "source_sha256": "8b3245338428d444e975c564e3b31dc138d97dd66c871a0346b88e5dc3bf1626",
+      "deck_sha256": "220835fe1c327b4164594415c69bc2dac068e5426aa0092e7e0ac53604dc9e0e",
+      "raw_sha256": "964e96d10f0833db6eec2f341a2f98634a4f05d1bcafa0ab7ecf6ab3603920a1",
+      "pair_result": {
+        "path": "runs/accuracy-directed-spectre-20261010/paired-v2/positive--base/RESULT.json",
+        "sha256": "f076765efaf82a47e6faad6b07bdc9364cb5831fe7b6937b5e5c1770d4318447",
+        "availability": "local-only"
+      },
+      "root_demand": {
+        "consumer": "y",
+        "representative": 1.414306640625,
+        "enclosure": [
+          1.41412353515625,
+          1.414306640625
+        ],
+        "error_bound": 0.00018310546875,
+        "budget": 2.01e-06,
+        "time": 1.414306640625,
+        "source": "current_root",
+        "retained_bound": 0.0,
+        "inherited_state_bound": 0.0,
+        "time_sensitivity": 1.0,
+        "target_width": 2.01e-06,
+        "future_input_coupling": false
+      },
+      "refinement": {
+        "attempt": 1,
+        "bounds_after": [
+          1.414213562275153,
+          1.4142135624726697
+        ],
+        "iterations": 1,
+        "remaining_work": 255,
+        "stop": "target_reached",
+        "target_width": 2.01e-06,
+        "width_after": 1.9751666968659265e-10,
+        "width_before": 0.00018310546875
+      }
+    },
+    {
+      "case": "positive--both",
+      "pass_original_budget": true,
+      "voltage_budget_V": 2.01e-06,
+      "evas_ideal_root_error_upper_V": 9.957812352467954e-11,
+      "spectre_ideal_root_error_upper_V": 1.0043077480759166e-12,
+      "paired_voltage_error_V": 9.85744819104184e-11,
+      "phase_differences_s": [],
+      "paired_points": 99,
+      "evas_event_representative_s": 1.4142135624726697,
+      "spectre_native_rows": 813,
+      "source_sha256": "8b3245338428d444e975c564e3b31dc138d97dd66c871a0346b88e5dc3bf1626",
+      "deck_sha256": "d649daad406358e7b6f095f446573134008443522ff1979fba28ed0d3834e4f7",
+      "raw_sha256": "e79c5ab573b271a7e2cfc2624e296367a14e94446bf6d90e00ae9f731e41f332",
+      "pair_result": {
+        "path": "runs/accuracy-directed-spectre-20261010/paired-v2/positive--both/RESULT.json",
+        "sha256": "d507cbfae941b4bd89c7445cda45255598ef5baa225c46bbcdac66eea2a6b85b",
+        "availability": "local-only"
+      },
+      "root_demand": {
+        "consumer": "y",
+        "representative": 1.414306640625,
+        "enclosure": [
+          1.41412353515625,
+          1.414306640625
+        ],
+        "error_bound": 0.00018310546875,
+        "budget": 2.01e-06,
+        "time": 1.414306640625,
+        "source": "current_root",
+        "retained_bound": 0.0,
+        "inherited_state_bound": 0.0,
+        "time_sensitivity": 1.0,
+        "target_width": 2.01e-06,
+        "future_input_coupling": false
+      },
+      "refinement": {
+        "attempt": 1,
+        "bounds_after": [
+          1.414213562275153,
+          1.4142135624726697
+        ],
+        "iterations": 1,
+        "remaining_work": 255,
+        "stop": "target_reached",
+        "target_width": 2.01e-06,
+        "width_after": 1.9751666968659265e-10,
+        "width_before": 0.00018310546875
+      }
+    },
+    {
+      "case": "positive--step",
+      "pass_original_budget": true,
+      "voltage_budget_V": 2.01e-06,
+      "evas_ideal_root_error_upper_V": 9.957812352467954e-11,
+      "spectre_ideal_root_error_upper_V": 1.0043077480759166e-12,
+      "paired_voltage_error_V": 9.85744819104184e-11,
+      "phase_differences_s": [],
+      "paired_points": 99,
+      "evas_event_representative_s": 1.4142135624726697,
+      "spectre_native_rows": 804,
+      "source_sha256": "8b3245338428d444e975c564e3b31dc138d97dd66c871a0346b88e5dc3bf1626",
+      "deck_sha256": "4e0e1e3b4b9cec68443f715c22f510f364bf24c197ffce014be0d168733509fb",
+      "raw_sha256": "f2aa7e13361c2901e195abf3627735e4c50b179b7e0672ee70d069812b2d4623",
+      "pair_result": {
+        "path": "runs/accuracy-directed-spectre-20261010/paired-v2/positive--step/RESULT.json",
+        "sha256": "3205703e1a924418585b40537e511a7818f59e8231706c6ced93ac820961bc45",
+        "availability": "local-only"
+      },
+      "root_demand": {
+        "consumer": "y",
+        "representative": 1.414306640625,
+        "enclosure": [
+          1.41412353515625,
+          1.414306640625
+        ],
+        "error_bound": 0.00018310546875,
+        "budget": 2.01e-06,
+        "time": 1.414306640625,
+        "source": "current_root",
+        "retained_bound": 0.0,
+        "inherited_state_bound": 0.0,
+        "time_sensitivity": 1.0,
+        "target_width": 2.01e-06,
+        "future_input_coupling": false
+      },
+      "refinement": {
+        "attempt": 1,
+        "bounds_after": [
+          1.414213562275153,
+          1.4142135624726697
+        ],
+        "iterations": 1,
+        "remaining_work": 255,
+        "stop": "target_reached",
+        "target_width": 2.01e-06,
+        "width_after": 1.9751666968659265e-10,
+        "width_before": 0.00018310546875
+      }
+    },
+    {
+      "case": "positive--tol",
+      "pass_original_budget": true,
+      "voltage_budget_V": 2.01e-06,
+      "evas_ideal_root_error_upper_V": 9.957812352467954e-11,
+      "spectre_ideal_root_error_upper_V": 1.0043077480759166e-12,
+      "paired_voltage_error_V": 9.85744819104184e-11,
+      "phase_differences_s": [],
+      "paired_points": 99,
+      "evas_event_representative_s": 1.4142135624726697,
+      "spectre_native_rows": 149,
+      "source_sha256": "8b3245338428d444e975c564e3b31dc138d97dd66c871a0346b88e5dc3bf1626",
+      "deck_sha256": "736c8df10c548040347940910cdcaffbe0df4da2cf998c51d4c6c84cf9e6e5c8",
+      "raw_sha256": "6c78f647a80f3bf1f505e2d789494ab84c4166b869095dd3a58c3121da50ca29",
+      "pair_result": {
+        "path": "runs/accuracy-directed-spectre-20261010/paired-v2/positive--tol/RESULT.json",
+        "sha256": "d7ca471404e85a33c945323c7ecc2226c66cb2373d306662d3c1ced16fbf7aea",
+        "availability": "local-only"
+      },
+      "root_demand": {
+        "consumer": "y",
+        "representative": 1.414306640625,
+        "enclosure": [
+          1.41412353515625,
+          1.414306640625
+        ],
+        "error_bound": 0.00018310546875,
+        "budget": 2.01e-06,
+        "time": 1.414306640625,
+        "source": "current_root",
+        "retained_bound": 0.0,
+        "inherited_state_bound": 0.0,
+        "time_sensitivity": 1.0,
+        "target_width": 2.01e-06,
+        "future_input_coupling": false
+      },
+      "refinement": {
+        "attempt": 1,
+        "bounds_after": [
+          1.414213562275153,
+          1.4142135624726697
+        ],
+        "iterations": 1,
+        "remaining_work": 255,
+        "stop": "target_reached",
+        "target_width": 2.01e-06,
+        "width_after": 1.9751666968659265e-10,
+        "width_before": 0.00018310546875
+      }
+    },
+    {
+      "case": "small--base",
+      "pass_original_budget": true,
+      "voltage_budget_V": 1.2e-08,
+      "evas_ideal_root_error_upper_V": 1.0135100224351046e-13,
+      "spectre_ideal_root_error_upper_V": 2.7775091254733653e-15,
+      "paired_voltage_error_V": 9.857436047977508e-14,
+      "phase_differences_s": [],
+      "paired_points": 99,
+      "evas_event_representative_s": 1.4142135624726697,
+      "spectre_native_rows": 139,
+      "source_sha256": "8b3245338428d444e975c564e3b31dc138d97dd66c871a0346b88e5dc3bf1626",
+      "deck_sha256": "2c4a119f1f48977765d7107927e7c3bb3a641e217e047891417abf82326ca6e2",
+      "raw_sha256": "59ff707472b43b3b3eee2bcb3ae4685e5239a2489aee63d2a2070210d3db7057",
+      "pair_result": {
+        "path": "runs/accuracy-directed-spectre-20261010/paired-v2/small--base/RESULT.json",
+        "sha256": "40c0ef86b0bbba90c04569fcd027e666fc7e69ca65995cf38d5a834fd6c8b4d1",
+        "availability": "local-only"
+      },
+      "root_demand": {
+        "consumer": "y",
+        "representative": 0.001414306640625,
+        "enclosure": [
+          0.0014141235351562498,
+          0.0014143066406250003
+        ],
+        "error_bound": 1.8310546875022378e-07,
+        "budget": 1.2e-08,
+        "time": 1.414306640625,
+        "source": "current_root",
+        "retained_bound": 2.168404344971009e-19,
+        "inherited_state_bound": 0.0,
+        "time_sensitivity": 0.001,
+        "target_width": 1.1999999999783158e-05,
+        "future_input_coupling": false
+      },
+      "refinement": {
+        "attempt": 1,
+        "bounds_after": [
+          1.414213562275153,
+          1.4142135624726697
+        ],
+        "iterations": 1,
+        "remaining_work": 255,
+        "stop": "target_reached",
+        "target_width": 1.1999999999783158e-05,
+        "width_after": 1.9751666968659265e-10,
+        "width_before": 0.00018310546875
+      }
+    },
+    {
+      "case": "small--both",
+      "pass_original_budget": true,
+      "voltage_budget_V": 1.2e-08,
+      "evas_ideal_root_error_upper_V": 1.0135100224351046e-13,
+      "spectre_ideal_root_error_upper_V": 2.7775091254733653e-15,
+      "paired_voltage_error_V": 9.857436047977508e-14,
+      "phase_differences_s": [],
+      "paired_points": 99,
+      "evas_event_representative_s": 1.4142135624726697,
+      "spectre_native_rows": 813,
+      "source_sha256": "8b3245338428d444e975c564e3b31dc138d97dd66c871a0346b88e5dc3bf1626",
+      "deck_sha256": "21d5709af6dc6e315ac67e08a72ba4a69cc7dfe10105901162880e1849116b30",
+      "raw_sha256": "aa3435da28580b76fa577b0b152b37acd5a3c7b557da2f46e77e389ed8ed369e",
+      "pair_result": {
+        "path": "runs/accuracy-directed-spectre-20261010/paired-v2/small--both/RESULT.json",
+        "sha256": "52f925f85fcd7150c7ba9352d5a23bd54f9fbf25c50f4b9c918438b9afcf7848",
+        "availability": "local-only"
+      },
+      "root_demand": {
+        "consumer": "y",
+        "representative": 0.001414306640625,
+        "enclosure": [
+          0.0014141235351562498,
+          0.0014143066406250003
+        ],
+        "error_bound": 1.8310546875022378e-07,
+        "budget": 1.2e-08,
+        "time": 1.414306640625,
+        "source": "current_root",
+        "retained_bound": 2.168404344971009e-19,
+        "inherited_state_bound": 0.0,
+        "time_sensitivity": 0.001,
+        "target_width": 1.1999999999783158e-05,
+        "future_input_coupling": false
+      },
+      "refinement": {
+        "attempt": 1,
+        "bounds_after": [
+          1.414213562275153,
+          1.4142135624726697
+        ],
+        "iterations": 1,
+        "remaining_work": 255,
+        "stop": "target_reached",
+        "target_width": 1.1999999999783158e-05,
+        "width_after": 1.9751666968659265e-10,
+        "width_before": 0.00018310546875
+      }
+    },
+    {
+      "case": "small--step",
+      "pass_original_budget": true,
+      "voltage_budget_V": 1.2e-08,
+      "evas_ideal_root_error_upper_V": 1.0135100224351046e-13,
+      "spectre_ideal_root_error_upper_V": 2.7775091254733653e-15,
+      "paired_voltage_error_V": 9.857436047977508e-14,
+      "phase_differences_s": [],
+      "paired_points": 99,
+      "evas_event_representative_s": 1.4142135624726697,
+      "spectre_native_rows": 804,
+      "source_sha256": "8b3245338428d444e975c564e3b31dc138d97dd66c871a0346b88e5dc3bf1626",
+      "deck_sha256": "361be7869b9be4c306a4db850958a19af056bf19ee20f8b8c11315c99fb09e0a",
+      "raw_sha256": "6faa53616b1d61fa2ea794993ed107dfbd54afc68698d0fee9582c676b1ef238",
+      "pair_result": {
+        "path": "runs/accuracy-directed-spectre-20261010/paired-v2/small--step/RESULT.json",
+        "sha256": "409eadbd105877438f9231ca42763522e72dc92d9d0379600893a33fe94403fd",
+        "availability": "local-only"
+      },
+      "root_demand": {
+        "consumer": "y",
+        "representative": 0.001414306640625,
+        "enclosure": [
+          0.0014141235351562498,
+          0.0014143066406250003
+        ],
+        "error_bound": 1.8310546875022378e-07,
+        "budget": 1.2e-08,
+        "time": 1.414306640625,
+        "source": "current_root",
+        "retained_bound": 2.168404344971009e-19,
+        "inherited_state_bound": 0.0,
+        "time_sensitivity": 0.001,
+        "target_width": 1.1999999999783158e-05,
+        "future_input_coupling": false
+      },
+      "refinement": {
+        "attempt": 1,
+        "bounds_after": [
+          1.414213562275153,
+          1.4142135624726697
+        ],
+        "iterations": 1,
+        "remaining_work": 255,
+        "stop": "target_reached",
+        "target_width": 1.1999999999783158e-05,
+        "width_after": 1.9751666968659265e-10,
+        "width_before": 0.00018310546875
+      }
+    },
+    {
+      "case": "small--tol",
+      "pass_original_budget": true,
+      "voltage_budget_V": 1.2e-08,
+      "evas_ideal_root_error_upper_V": 1.0135100224351046e-13,
+      "spectre_ideal_root_error_upper_V": 2.7775091254733653e-15,
+      "paired_voltage_error_V": 9.857436047977508e-14,
+      "phase_differences_s": [],
+      "paired_points": 99,
+      "evas_event_representative_s": 1.4142135624726697,
+      "spectre_native_rows": 149,
+      "source_sha256": "8b3245338428d444e975c564e3b31dc138d97dd66c871a0346b88e5dc3bf1626",
+      "deck_sha256": "8d20cc1ee4dbdf4fd83593dbb752f388e5629f47acdd94b2e163ec29fb76008c",
+      "raw_sha256": "9e98797456b1209a8b4e360b4b2103065b215b4cdde17f3a073d419ecb3acb4e",
+      "pair_result": {
+        "path": "runs/accuracy-directed-spectre-20261010/paired-v2/small--tol/RESULT.json",
+        "sha256": "d4726582ba987b60c4d677b73d43dc62099d79f0901f660a78a77b0e36e1c49c",
+        "availability": "local-only"
+      },
+      "root_demand": {
+        "consumer": "y",
+        "representative": 0.001414306640625,
+        "enclosure": [
+          0.0014141235351562498,
+          0.0014143066406250003
+        ],
+        "error_bound": 1.8310546875022378e-07,
+        "budget": 1.2e-08,
+        "time": 1.414306640625,
+        "source": "current_root",
+        "retained_bound": 2.168404344971009e-19,
+        "inherited_state_bound": 0.0,
+        "time_sensitivity": 0.001,
+        "target_width": 1.1999999999783158e-05,
+        "future_input_coupling": false
+      },
+      "refinement": {
+        "attempt": 1,
+        "bounds_after": [
+          1.414213562275153,
+          1.4142135624726697
+        ],
+        "iterations": 1,
+        "remaining_work": 255,
+        "stop": "target_reached",
+        "target_width": 1.1999999999783158e-05,
+        "width_after": 1.9751666968659265e-10,
+        "width_before": 0.00018310546875
+      }
+    }
+  ],
+  "review": {
+    "status": "complete, no remaining actionable finding",
+    "reports": [
+      {
+        "path": "runs/accuracy-directed-spectre-20261010/review-pairing.txt",
+        "sha256": "2a36d650d39bf060f813e58cb33d274eae9b175bfdaccbf5d0c4789299e602ea",
+        "availability": "local-only"
+      },
+      {
+        "path": "runs/accuracy-directed-spectre-20261010/review-standards.txt",
+        "sha256": "96c2b14739e4a140610634748e17974c32a5dcb3f40fb320e4c48f9ca2e86c81",
+        "availability": "local-only"
+      }
+    ],
+    "scope": "Fresh independent direct-path review plus reused core spec/standards review with incremental evidence/trail audit. No reviewer ran a new remote simulation."
+  },
+  "limitations": [
+    "Three development fixtures, not unseen holdouts or a general SPICE precision guarantee.",
+    "Observed count-transition brackets describe output phase and do not measure the EVAS internal execution representative. Its explicit event time is checked separately against the original legal window.",
+    "Native strobes intentionally provide narrow before/after observations; no claim of grid-independent Spectre callback timing.",
+    "This direct path has no transition/filter consumer. Prior edge/filter fallback evidence and its failed Spectre settings remain in directed-root-receipt.json.",
+    "No historical replay, connected event-cluster support, or end-to-end speedup claim.",
+    "Raw output, frozen source/contract snapshots and review logs are local-only; source/checker and this compact receipt are repository-contained."
+  ]
+}

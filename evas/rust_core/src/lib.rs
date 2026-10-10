@@ -1,4 +1,5 @@
 mod absdelay;
+mod accuracy;
 mod affine_bounds;
 mod analog;
 mod assembly;

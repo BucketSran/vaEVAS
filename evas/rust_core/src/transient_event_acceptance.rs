@@ -156,7 +156,7 @@ impl PreparedEvents {
             for (frame, physical_batch) in &phases[1..] {
                 let mut occurred = true;
                 for event in physical_batch {
-                    occurred &= match event.physical_order_at(time) {
+                    occurred &= match event.physical_order_for_query(time, model, trajectory) {
                         Some(std::cmp::Ordering::Less | std::cmp::Ordering::Equal) => true,
                         Some(std::cmp::Ordering::Greater) => false,
                         None => {

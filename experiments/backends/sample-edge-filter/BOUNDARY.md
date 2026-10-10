@@ -278,3 +278,80 @@ python3 -B experiments/backends/sample-edge-filter/root_compare.py runs/sample-e
 新内核的 20 个工程请求均通过原工程判据，52,200 行严格检查仍保留完全相同的 18 条阶段差异。
 [本轮收据](adaptive-root-receipt.json)记录新构建、复用来源、独立复核和全部失败历史。
 原始材料在 `runs/sample-edge-filter-20261010/adaptive-root/`，为 local-only。
+
+<a id="directed-root-recovery"></a>
+
+## 按失败原因选择根细化
+
+本增量基于 main `b3db3a18` 实现有限的按需恢复。
+电压失败保留消费者、包围和原预算。直接采样可以分出当前根的影响、已有状态影响和固定
+代表时刻后仍保留的误差，并提出根宽度目标。达到目标后仍需通过原预算验收。
+已有误差与当前根无关时直接保留失败；无法可信归因时沿用完整细化。
+[事件手册](../../../evas/docs/math/events.md#voltage-demand-root-refinement)说明目标推导及保守回退条件。
+
+直接采样 `u(t)=t`、`cross(u²−2)` 的例子使用 `2.01e-6 V` 固定预算。
+本候选一次迭代将根宽从 `1.83e-4 s` 收至 `1.98e-10 s`，随后通过原电压验收，
+不再继续收至算术下限。继承误差经 `1e16` 放大的反例保留拒绝，根细化迭代数为零。
+低于算术误差下限的请求仍拒绝，不放宽预算。近根查询不会改变已接受根和采样值。
+开发回归还覆盖第二消费者要求更严、滤波继承误差、后续事件放大及输出过零后相对预算收紧。
+
+外部验收复用 EVAS 对话的 `precision-engineering-v1` 冻结快照。电压标准为
+`10 nV + 1 ppm × 用例固定尺度`，输入、事件计数及事件窗口仍独立验收。
+三类 timer 的强制观测在本基线仍有 12/32 请求拒绝，普通查询补充运行的 12 个请求通过。
+其余 20/32 强制观测请求通过。模式分开记录，不用普通查询覆盖强制观测失败。
+复用的 32 次实际 Spectre 运行中 29 次通过，三项一阶模型的 base 设置仍超预算。
+另复验既有非线性根到边沿、滤波的八个 EVAS 请求，均满足原解析误差要求；对应四次实际
+Spectre 参考和原差异保留。这些数据支持既有路径未回退；新直接采样路径另由下述同源码对照验收。
+两组有限观察都不证明连续时间全局精度。
+
+### 新直接采样路径的同源码对照
+
+三个模型分别采样 `u(t)=t`、`−t`、`0.001t`，统一由 `cross(clk²−2)` 触发，`clk(t)=t`。
+两侧使用相同 VA 源码、刺激和零初值。每例在四档 Spectre 设置下均通过原工程预算，
+共 12/12 配对通过，1,188 个共同观察点没有事件阶段差异。
+
+| 采样条件 | 固定电压预算 | 最大 EVAS–Spectre 差 |
+| --- | ---: | ---: |
+| 正向、负向 | 2.01 µV | 0.099 nV |
+| 小幅值 | 12 nV | 0.000099 nV |
+
+独立检查还验证初值、输入、事件次数、允许事件窗口、采样值和保持漂移。
+四档只改变 Spectre；EVAS 的三个独立请求固定 `max_step=3 s`、绝对预算为表中数值、相对容差为零，
+逐档重复配对。三个条件均触发新的目标细化，一次迭代后通过原预算，不是四档 EVAS 敏感性实验。
+Spectre 21.1.0.509.isr12 的 `conservative` 设置将 transient `reltol` 降为请求值的十分之一，
+[配对收据](direct-sample-receipt.json)保留请求值、原生日志读回值及全部身份。
+
+固定网格包含根前后 1 ps 的原生观测点。计数跳变括号表示可观察阶段，不能当成内部执行时刻；
+EVAS 的执行代表约在根后 99.6 ps，另行检查其仍在原合法事件窗口内。
+本组同时满足独立解析检查与两后端比较，不证明 Spectre 在其他网格下采用相同回调落点。
+源码和检查器在仓库中，完整波形、冻结输入和构建快照仍为 local-only。
+
+```sh
+python3 -B experiments/backends/sample-edge-filter/direct_sample.py freeze NEW_INPUTS PRECISION_CONTRACT
+python3 -B experiments/backends/sample-edge-filter/callback_probe.py run NEW_INPUTS NEW_SPECTRE_RESULTS --profile EXISTING_PROFILE
+python3 -B experiments/backends/sample-edge-filter/direct_sample.py compare NEW_INPUTS NEW_SPECTRE_RESULTS NEW_PAIRED_RESULTS evas/rust_core/target/debug/evas-kernel
+python3 -B -m unittest discover -s experiments/backends/sample-edge-filter -p test_direct_sample.py -v
+```
+
+`PRECISION_CONTRACT` 使用配对收据中保留的原 `precision-engineering-v1` 预算与四档设置。
+检查器校验冻结分母、源码、原生数据到行记录的对应关系及有效设置，再判定数值结果。
+
+### 完整请求成本与限制
+
+完整请求测量含模型编译、传输、内核验收和重试、结果解码。基线和候选均为 release 构建，
+每例每侧交替运行 11 次；失败请求按原预期拒绝计时。单位为毫秒，括号内为范围。
+
+| 请求 | 基线中位数 | 候选中位数 |
+| --- | ---: | ---: |
+| 直接采样通过 | 5.99 (5.49–6.87) | 6.03 (5.45–9.91) |
+| 继承误差拒绝 | 6.53 (5.82–11.53) | 6.53 (5.74–9.23) |
+| 算术下限拒绝 | 5.99 (5.30–7.07) | 5.59 (5.10–6.77) |
+
+范围重叠，本轮不宣称端到端加速。独立 profile 显示这些小请求主要耗在 Python 编译与
+子进程等待，不能用局部迭代减少推断大型电路收益。测量时机器有其他进程负载，未停止它们。
+
+[原增量收据](directed-root-receipt.json)记录当时的源快照、构建、原预算、全部尝试、性能边界及审查。
+其中的新路径配对缺口由后续[配对收据](direct-sample-receipt.json)补齐，原历史快照不改写。
+原始日志、已验证哈希的参考和对话契约快照为 local-only，位于
+`runs/accuracy-directed-refinement/`、`runs/accuracy-directed-spectre-20261010/` 及收据指明的旧运行目录。
+历史重放、复杂事件簇和滤波链的目标预算分配仍未完成。

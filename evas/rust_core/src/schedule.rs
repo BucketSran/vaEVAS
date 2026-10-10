@@ -39,7 +39,9 @@ impl ScheduledEvent {
         model: &EventModel,
         trajectory: &Trajectory,
         operators: &Operators,
-    ) -> Result<Self, Error> {
+        target_width: Option<f64>,
+        work_limit: usize,
+    ) -> Result<(Self, crate::dynamic_roots::Refinement), Error> {
         if !self.can_refine_input_root(model) {
             return Err(unresolved("event is outside input-root refinement scope"));
         }
@@ -57,6 +59,8 @@ impl ScheduledEvent {
         };
         let root = crate::dynamic_roots::refine(
             crate::dynamic_roots::CertifiedRoot { bounds, derivative },
+            target_width,
+            work_limit,
             &mut |t| Ok(guards.range(guard, t, &origin.instance)?.0),
             &mut |t| Ok(guards.range(guard, t, &origin.instance)?.1),
         )?;
@@ -67,15 +71,15 @@ impl ScheduledEvent {
         else {
             unreachable!()
         };
-        *bounds = root.bounds;
-        *derivative = root.derivative;
-        candidate.time = root.bounds.hi;
+        *bounds = root.root.bounds;
+        *derivative = root.root.derivative;
+        candidate.time = root.root.bounds.hi;
         if !candidate.moment.accepts(candidate.time, &leaf.trigger) {
             return Err(unresolved(
                 "refined root exceeds the original cross tolerances",
             ));
         }
-        Ok(candidate)
+        Ok((candidate, root))
     }
 
     pub(crate) fn is_fixed_timer(&self) -> bool {
@@ -135,6 +139,40 @@ impl ScheduledEvent {
                     None
                 }
             })
+    }
+
+    /// A voltage-sized root enclosure need not resolve a nearby query's phase.
+    /// Prove that phase from the original transverse input guard without
+    /// changing the sampling enclosure, representative, or accepted history.
+    pub(crate) fn physical_order_for_query(
+        &self,
+        time: f64,
+        model: &EventModel,
+        trajectory: &Trajectory,
+    ) -> Option<std::cmp::Ordering> {
+        if let Some(order) = self.physical_order_at(time) {
+            return Some(order);
+        }
+        if !model.program.operators.is_empty() || !self.can_refine_input_root(model) {
+            return None;
+        }
+        let EventTrigger::Cross { guard, .. } = &model.triggers[self.event].trigger else {
+            return None;
+        };
+        let operators = Operators::default();
+        let source =
+            crate::guard_trajectory::GuardTrajectory::new(model, trajectory, &operators).ok()?;
+        let owner = &model.program.events[model.triggers[self.event].event]
+            .origin
+            .instance;
+        crate::diagnostics::counter("root_query_phase_checks", 1);
+        let sign = source.range(guard, I::point(time), owner).ok()?.0.sign()?;
+        Some(match sign * self.dynamic_direction()? {
+            -1 => std::cmp::Ordering::Greater,
+            0 => std::cmp::Ordering::Equal,
+            1 => std::cmp::Ordering::Less,
+            _ => unreachable!(),
+        })
     }
 
     pub(crate) fn retain_after(&mut self, prior: &Self, model: &EventModel) -> Result<bool, Error> {

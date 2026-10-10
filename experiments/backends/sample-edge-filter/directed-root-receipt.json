@@ -1,0 +1,491 @@
+{
+  "analysis_id": "directed-root-recovery-20261010",
+  "status": "VERIFIED_LOCAL_INCREMENT_WITH_ALIGNMENT_GAP",
+  "scope": "Credible attribution and provisional target width for isolated source-driven affine sampling; original-budget recertification, bounded fallback and inherited-error retention. No global history replay or operator budget allocation.",
+  "implementation": {
+    "base_revision": "b3db3a180c88b49efd7547e09da8059e2bdb847b",
+    "branch": "codex/accuracy-directed-refinement",
+    "dirty": true,
+    "delivery": "local uncommitted changes, no PR or merge",
+    "validated_source_manifest": {
+      "path": "runs/accuracy-directed-refinement/validated-source-manifest.json",
+      "sha256": "db3bab09ea986810072700aa1e81799e7ed91b0ba8931fe67b4d2aa2dc1594ca",
+      "availability": "local-only"
+    },
+    "validated_source_patch": {
+      "path": "runs/accuracy-directed-refinement/validated-source.patch",
+      "sha256": "6cafa9dda1b3addc8b50a2ac3b18e7ae42b0a3cf0ec53b6663adb854e619ad03",
+      "availability": "local-only"
+    },
+    "source_snapshot_directory": "/Users/bucketsran/.codex/worktrees/accuracy-performance-workflow/current/runs/accuracy-directed-refinement/validated-source",
+    "final_source_difference": "rustfmt joined one boolean expression in settlement_bounds.rs; no other source/test difference. Validated binaries and all reported runs use the retained pre-format snapshot; evidence is reused only for this whitespace-only difference.",
+    "format_only_files": [
+      "evas/rust_core/src/settlement_bounds.rs"
+    ],
+    "kernel_identity": {
+      "build_revision": null,
+      "identity_version": 1,
+      "ir_schema_version": 18,
+      "name": "evas-kernel",
+      "platform": {
+        "arch": "aarch64",
+        "os": "macos"
+      },
+      "request_protocol_version": null,
+      "version": "0.14.0"
+    },
+    "debug_kernel_sha256": "108457bab743b2fa04279e36a552ac3e968ce1dcb9108390ba157723829f258a",
+    "release_kernel_sha256": "bb29f3093ae7210f70aba83252d545e3f44b6941efe1fe100d817c57d183cc92",
+    "build_commands": [
+      "cargo build --locked --manifest-path evas/rust_core/Cargo.toml",
+      "cargo build --release --locked --manifest-path evas/rust_core/Cargo.toml"
+    ],
+    "build_logs": [
+      {
+        "path": "runs/accuracy-directed-refinement/build-future-budget.log",
+        "sha256": "c6acb55b6b91f96f8810a7153df4c85099d6be80c7cd4d8facca7fd9b9a4cfc8",
+        "availability": "local-only"
+      },
+      {
+        "path": "runs/accuracy-directed-refinement/build-release-final.log",
+        "sha256": "800d8ca3f6b58329bd65a4ae3133fd82041954c53d1bf2d13468b6bfa5c7cd1e",
+        "availability": "local-only"
+      }
+    ],
+    "toolchain": {
+      "rustc": "rustc 1.95.0 (59807616e 2026-04-14)",
+      "cargo": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)",
+      "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]"
+    }
+  },
+  "acceptance": {
+    "adjacent_thread": "codex://threads/01a10c29-964a-7892-9d51-df764602ccde",
+    "snapshot": {
+      "path": "runs/accuracy-directed-refinement/adjacent-contract/identity.json",
+      "sha256": "f7aa7e342ed30e9c143cc042eda5466e9e756d29891e5b61c68cf9a2e802537b",
+      "availability": "local-only"
+    },
+    "contract_sha256": "66f861ec83d75ec996a6fdc0b84263567b4a123b98a5f8e0cf920aeb734f328b",
+    "checker_sha256": "534b50f237b17032eb0979589ab7ba4c1d5cf97def631fed57e4b50de16adbd7",
+    "contract_status": "frozen copy of adjacent uncommitted work, not merged or owned by this change",
+    "voltage": "10e-9 V + 1e-6 * fixed case scale_V",
+    "inputs": "1e-10 V + 1e-8 * fixed scale_V",
+    "other_requirements": "event counts, legal event windows and observation evidence remain separate requirements",
+    "internal_tests": "test_root_recovery.py uses 2 V output scale -> 2.01e-6 V absolute budget, relative=0 for direct sample; tighter deliberate failure and future relative-budget controls are stated in each test. Equal tolerance names are not backend-equivalent acceptance."
+  },
+  "checks": [
+    {
+      "command": "PYTHONPATH=evas/src:evas/tests python3 -B -m unittest -v test_root_recovery test_sample_edge_filter test_sample_state_precision test_event_window_sampling test_event_accuracy test_dynamic_cross test_events test_timer test_event_horizons test_precision_chain test_lifecycle_closure test_semantic_invariants test_diagnostics",
+      "passed": 157,
+      "failed": 0,
+      "log": {
+        "path": "runs/accuracy-directed-refinement/public-final.log",
+        "sha256": "bacdd22632d9a25aa92312678d1df9ca30c2f4ea08fc967c22cae56eb3c3964b",
+        "availability": "local-only"
+      }
+    },
+    {
+      "command": "cargo test --locked --manifest-path evas/rust_core/Cargo.toml",
+      "passed": 226,
+      "failed": 0,
+      "ignored": 1,
+      "log": {
+        "path": "runs/accuracy-directed-refinement/rust-final.log",
+        "sha256": "e15496ca9ac44d9686797c9e2b5c8ab7a2048a03b81a586e9b3f5459fe38daf4",
+        "availability": "local-only"
+      }
+    },
+    {
+      "command": "PYTHONPATH=runs/accuracy-directed-refinement/adjacent-contract python3 -B -m unittest discover -s runs/accuracy-directed-refinement/adjacent-contract -p test_precision.py -v",
+      "passed": 12,
+      "failed": 0,
+      "log": {
+        "path": "runs/accuracy-directed-refinement/checker-calibration.log",
+        "sha256": "902e83f9286ed1dbabd760fdb1f9efc80955f79a9526be959e664f1a1778589c",
+        "availability": "local-only"
+      },
+      "calibration_source_sha256": "cd0090276b5c1c6cf501b11cde530a83012c5311e14fe8875212f4974ab12858"
+    },
+    {
+      "command": "python3 -B scripts/traceability.py --check",
+      "log": {
+        "path": "runs/accuracy-directed-refinement/traceability-check.log",
+        "sha256": "134260f2c5601779333d36be8c87aa558408d2447b5fd4625fb19c9829676375",
+        "availability": "local-only"
+      }
+    },
+    {
+      "command": "cargo fmt --manifest-path evas/rust_core/Cargo.toml -- --check",
+      "log": {
+        "path": "runs/accuracy-directed-refinement/format-final.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "availability": "local-only"
+      }
+    },
+    {
+      "command": "git diff --check",
+      "log": {
+        "path": "runs/accuracy-directed-refinement/diff-check.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "availability": "local-only"
+      }
+    },
+    {
+      "command": "python3 -B scripts/check_workspaces.py",
+      "log": {
+        "path": "runs/accuracy-directed-refinement/workspace-handoff.log",
+        "sha256": "d508bc83eff67bba5e50b8b5c82222c40432631b532632fb95550be11e337fd9",
+        "availability": "local-only"
+      },
+      "status": "pass"
+    }
+  ],
+  "external_acceptance_replay": {
+    "execution": "44 new local EVAS requests; reanalysis of 32 prior actual Spectre executions, no new remote run",
+    "report": {
+      "path": "runs/accuracy-directed-refinement/precision-replay/report.json",
+      "sha256": "79e550b2fb0c69367a1923182efe35b5bbbcad43ec77e88046f9deb7988ae67c",
+      "availability": "local-only"
+    },
+    "driver": {
+      "path": "runs/accuracy-directed-refinement/replay_precision.py",
+      "sha256": "75d25677bc28806183c97a1ad6bfa2210825de5817f9e08aa49d6dcec5f35312",
+      "availability": "local-only"
+    },
+    "input_identity": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/precision-pilot-20261010/inputs",
+      "manifest_sha256": "2dc0750c5b530695110034063aec830d9c43f843a01894c93ffb566fb3b6fb84",
+      "verified_files": 643
+    },
+    "evas_forced_observation": {
+      "total": 32,
+      "pass": 20,
+      "rejected": 12,
+      "failure": "unsupported_strobe: 3 timer cards x 4 settings"
+    },
+    "evas_ordinary_query": {
+      "total": 12,
+      "pass": 12,
+      "scope": "same 3 timer cards x 4 settings, separate from forced-observation denominator"
+    },
+    "spectre": {
+      "total": 32,
+      "pass": 29,
+      "numerical_error": 3,
+      "retained_failures": [
+        "LP-RAMP--base",
+        "LP-NONZERO--base",
+        "LP-IDT--base"
+      ]
+    },
+    "actual_reference_sources": [
+      {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/precision-pilot-20261010/collected/sample_hold-spectre/outputs/sample_hold-spectre",
+        "manifest_sha256": "d9759bc8cfaebd8576f4eb73e6a72fcc78b35e3d41b0a3d152623a1e1c61f453",
+        "verified_files": 375,
+        "version": "sub-version  21.1.0.509.isr12",
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f"
+      },
+      {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/precision-pilot-20261010/collected/first_order-spectre/outputs/first_order-spectre",
+        "manifest_sha256": "13bb0f883058579c2d37d7d494b750b231863b0fc64c7ab13370c121eabaac65",
+        "verified_files": 375,
+        "version": "sub-version  21.1.0.509.isr12",
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f"
+      }
+    ],
+    "reuse_limit": "Frozen checker and original settings. These affine sampling / first-order filter cards are compatibility evidence, not a direct nonlinear target-width pairing."
+  },
+  "root_filter_replay": {
+    "execution": "8 new EVAS requests against 4 reused actual Spectre references; current debug hash verified against precision replay",
+    "command": "python3 -B experiments/backends/sample-edge-filter/root_compare.py /Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/sample-edge-filter-20261010/boundary/root-spectre runs/accuracy-directed-refinement/root-spectre-final evas/rust_core/target/debug/evas-kernel --policy adaptive-root",
+    "identity": {
+      "kernel_sha256": "108457bab743b2fa04279e36a552ac3e968ce1dcb9108390ba157723829f258a",
+      "acceptance_policy": "adaptive-root",
+      "checker_sha256": "078cdfedc18b0d0f17921527f76396f57da0f04f0a9a18aad46252c440d3742a",
+      "kernel_identity": {
+        "build_revision": null,
+        "identity_version": 1,
+        "ir_schema_version": 18,
+        "name": "evas-kernel",
+        "platform": {
+          "arch": "aarch64",
+          "os": "macos"
+        },
+        "request_protocol_version": null,
+        "version": "0.14.0"
+      },
+      "reference_manifest_sha256": "5cd0f963d9ba0e66c372adc95e2886601223e42719b3833c2828af17f23da72c"
+    },
+    "results": [
+      {
+        "case": "delay-0.0-loose",
+        "voltage_budget_V": 1e-10,
+        "source_sha256": "4386650676d5e5aeca35415eb665b2234975737bd847196beb9b7958a00f41a2",
+        "spectre_maximum_filter_error_V": 0.0002619807483835168,
+        "status": "ACCEPTED",
+        "filter_error_V": 2.7755575615628914e-16,
+        "within_requested_voltage_budget": true,
+        "maximum_same_time_filter_difference_V": 0.00026198074838379437,
+        "expected_acceptance_observed": true
+      },
+      {
+        "case": "delay-0.0-loose",
+        "voltage_budget_V": 0.001,
+        "source_sha256": "4386650676d5e5aeca35415eb665b2234975737bd847196beb9b7958a00f41a2",
+        "spectre_maximum_filter_error_V": 0.0002619807483835168,
+        "status": "ACCEPTED",
+        "filter_error_V": 2.22838902252942e-06,
+        "within_requested_voltage_budget": true,
+        "maximum_same_time_filter_difference_V": 0.0002597523593609874,
+        "expected_acceptance_observed": true
+      },
+      {
+        "case": "delay-0.0-tight",
+        "voltage_budget_V": 1e-10,
+        "source_sha256": "7d716c88970203ad467e82c08fec5cec5307aa7a219a8a3746be65e576c60cc3",
+        "spectre_maximum_filter_error_V": 8.038159682310919e-08,
+        "status": "ACCEPTED",
+        "filter_error_V": 1.0064171718227044e-13,
+        "within_requested_voltage_budget": true,
+        "maximum_same_time_filter_difference_V": 8.038160814738404e-08,
+        "expected_acceptance_observed": true
+      },
+      {
+        "case": "delay-0.0-tight",
+        "voltage_budget_V": 0.001,
+        "source_sha256": "7d716c88970203ad467e82c08fec5cec5307aa7a219a8a3746be65e576c60cc3",
+        "spectre_maximum_filter_error_V": 8.038159682310919e-08,
+        "status": "ACCEPTED",
+        "filter_error_V": 1.0064171718227044e-13,
+        "within_requested_voltage_budget": true,
+        "maximum_same_time_filter_difference_V": 8.038160814738404e-08,
+        "expected_acceptance_observed": true
+      },
+      {
+        "case": "delay-0.125-loose",
+        "voltage_budget_V": 1e-10,
+        "source_sha256": "9b6845bb9d48a24e46e32fd7a9a4cd8f4021753e0261dadc8f7130b37897575c",
+        "spectre_maximum_filter_error_V": 0.00020191572971239857,
+        "status": "ACCEPTED",
+        "filter_error_V": 6.661338147750939e-16,
+        "within_requested_voltage_budget": true,
+        "maximum_same_time_filter_difference_V": 0.0002019157297130647,
+        "expected_acceptance_observed": true
+      },
+      {
+        "case": "delay-0.125-loose",
+        "voltage_budget_V": 0.001,
+        "source_sha256": "9b6845bb9d48a24e46e32fd7a9a4cd8f4021753e0261dadc8f7130b37897575c",
+        "spectre_maximum_filter_error_V": 0.00020191572971239857,
+        "status": "ACCEPTED",
+        "filter_error_V": 0.00015584909162885685,
+        "within_requested_voltage_budget": true,
+        "maximum_same_time_filter_difference_V": 0.0003577648213412554,
+        "expected_acceptance_observed": true
+      },
+      {
+        "case": "delay-0.125-tight",
+        "voltage_budget_V": 1e-10,
+        "source_sha256": "4d1b5fce83e71a5db73166fba61215a8e39747f4911645461fb86c8dcad90dfa",
+        "spectre_maximum_filter_error_V": 8.015176566900095e-08,
+        "status": "ACCEPTED",
+        "filter_error_V": 2.158828671383617e-13,
+        "within_requested_voltage_budget": true,
+        "maximum_same_time_filter_difference_V": 8.015176966580384e-08,
+        "expected_acceptance_observed": true
+      },
+      {
+        "case": "delay-0.125-tight",
+        "voltage_budget_V": 0.001,
+        "source_sha256": "4d1b5fce83e71a5db73166fba61215a8e39747f4911645461fb86c8dcad90dfa",
+        "spectre_maximum_filter_error_V": 8.015176566900095e-08,
+        "status": "ACCEPTED",
+        "filter_error_V": 2.158828671383617e-13,
+        "within_requested_voltage_budget": true,
+        "maximum_same_time_filter_difference_V": 8.015176966580384e-08,
+        "expected_acceptance_observed": true
+      }
+    ],
+    "log": {
+      "path": "runs/accuracy-directed-refinement/root-spectre-final.log",
+      "sha256": "32948c567fb5a943255230e0bad0bb2c49c70557f8e14f29eb7c4eb545782724",
+      "availability": "local-only"
+    },
+    "reference_receipt": "experiments/backends/sample-edge-filter/boundary-receipt.json",
+    "reuse_limit": "Original q=1 event edge/filter models use legacy fallback. Not the new q=u direct nonlinear sampling model. Prior Spectre errors remain visible.",
+    "superseded_local_replay": "root-spectre-replay used older kernel834dbc; retained locally but not final acceptance"
+  },
+  "performance": {
+    "verdict": "No measurable end-to-end speedup on these fixtures; overlapping ranges and concurrent system load",
+    "report": {
+      "path": "runs/accuracy-directed-refinement/request-cost.json",
+      "sha256": "1f7bfcfdf61afce6953c43bc3d4c71bd20c819791fd32257516e3da52b8a7541",
+      "availability": "local-only"
+    },
+    "driver": {
+      "path": "runs/accuracy-directed-refinement/measure_requests.py",
+      "sha256": "2a19437b62b46fda56bc75fa3f56d6f5b3ad921b190ad29f582544f3aca7a51d",
+      "availability": "local-only"
+    },
+    "profile": {
+      "path": "runs/accuracy-directed-refinement/cost-profile.txt",
+      "sha256": "09457651119615ca8bc1fa63c68c8a93c5a95ae7ab6c4adb185de3e349b90d33",
+      "availability": "local-only"
+    },
+    "timing_boundary": "compile_model/request construction, transport, full kernel including certification/recovery, response decode; correctness checked after timing",
+    "repetitions": 11,
+    "concurrency": 1,
+    "build": "cargo build --release --locked; identical base Cargo.lock",
+    "kernel_sha256": {
+      "baseline": "8b50b493e53f3b4f0cbac10317777409173cfd4ceb44f9db27da332f1eb4dfe7",
+      "candidate": "bb29f3093ae7210f70aba83252d545e3f44b6941efe1fe100d817c57d183cc92"
+    },
+    "summary": [
+      {
+        "case": "direct_sample",
+        "side": "baseline",
+        "count": 11,
+        "median_ms": 5.988458,
+        "range_ms": [
+          5.490334,
+          6.87
+        ],
+        "statuses": {
+          "accepted": 11
+        }
+      },
+      {
+        "case": "direct_sample",
+        "side": "candidate",
+        "count": 11,
+        "median_ms": 6.029417,
+        "range_ms": [
+          5.450209,
+          9.905333
+        ],
+        "statuses": {
+          "accepted": 11
+        }
+      },
+      {
+        "case": "inherited_rejection",
+        "side": "baseline",
+        "count": 11,
+        "median_ms": 6.533917,
+        "range_ms": [
+          5.815666,
+          11.525291
+        ],
+        "statuses": {
+          "event_accuracy": 11
+        }
+      },
+      {
+        "case": "inherited_rejection",
+        "side": "candidate",
+        "count": 11,
+        "median_ms": 6.527583,
+        "range_ms": [
+          5.743417,
+          9.231
+        ],
+        "statuses": {
+          "event_accuracy": 11
+        }
+      },
+      {
+        "case": "arithmetic_floor",
+        "side": "baseline",
+        "count": 11,
+        "median_ms": 5.986167,
+        "range_ms": [
+          5.300208,
+          7.070625
+        ],
+        "statuses": {
+          "event_accuracy": 11
+        }
+      },
+      {
+        "case": "arithmetic_floor",
+        "side": "candidate",
+        "count": 11,
+        "median_ms": 5.593,
+        "range_ms": [
+          5.099333,
+          6.774166
+        ],
+        "statuses": {
+          "event_accuracy": 11
+        }
+      }
+    ],
+    "environment": {
+      "platform": "macOS-26.3.2-arm64-arm-64bit-Mach-O",
+      "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "load": "22:40  up 17 days, 11:05, 6 users, load averages: 4.31 10.65 10.35",
+      "logical_cpus": 10,
+      "competing_processes": [
+        "  PID  %CPU COMM",
+        "82524 123.1 npm exec ccstatusline@latest",
+        "82530  26.1 /opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python",
+        "  169  13.4 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer",
+        "  373   8.6 /Library/CorpLink/CorpLink System Extension.app/Contents/MacOS/CorpLinkExtension",
+        "97872   7.8 /Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Versions/155.0.8059.40/Helpers/Codex (Service).app/Contents/MacOS/Codex (Service)",
+        "98248   6.1 /Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Versions/155.0.8059.40/Helpers/Codex (Renderer).app/Contents/MacOS/Codex (Renderer)",
+        "98252   5.4 /Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex",
+        "40679   4.3 /System/Library/DriverExtensions/AppleCentauriAlpha.dext/AppleCentauriAlpha",
+        "98148   3.0 /Applications/aTrust.app/Contents/Frameworks/aTrust Helper (Renderer).app/Contents/MacOS/aTrust Helper (Renderer)",
+        "  225   2.8 /usr/libexec/syspolicyd",
+        "  369   2.7 /Library/CorpLink/CorpLink System Extension.app/Contents/MacOS/CorpLinkExtension"
+      ]
+    },
+    "limiter_evidence": "Untimed cProfile: compilation and subprocess waiting dominate full request. Direct-case diagnostic kernel.run about0.49ms versus full request median6.03ms. Diagnostic timing is not included in timing samples.",
+    "scope_limit": "Tiny development fixtures, warmed processes/binaries, no production circuit speedup extrapolation; expected rejects retained."
+  },
+  "new_recovery_observations": {
+    "direct_sample": {
+      "artifact": {
+        "path": "runs/accuracy-directed-refinement/direct_sample-diagnostics.json",
+        "sha256": "16b28f4b820df42e0b7a13860ca116d6fa074a3b84fa802f295b2df449f29594",
+        "availability": "local-only"
+      },
+      "root_iterations": 1
+    },
+    "inherited_rejection": {
+      "artifact": {
+        "path": "runs/accuracy-directed-refinement/inherited_rejection-diagnostics.json",
+        "sha256": "498d68a05426438d6379b168874ac10d0601cfe6471edb0861d071a8f679563e",
+        "availability": "local-only"
+      },
+      "root_iterations": 0
+    },
+    "arithmetic_floor": {
+      "artifact": {
+        "path": "runs/accuracy-directed-refinement/arithmetic_floor-diagnostics.json",
+        "sha256": "024a5ee42c98418dcbfbbc545799cdc269c139488c1a78658f3ec9e4cb26a20c",
+        "availability": "local-only"
+      },
+      "root_iterations": 4
+    }
+  },
+  "reviews": {
+    "spec": "Independent gpt-6.1-sol medium fresh review found future zero-crossing relative-budget regression; red reproduction retained, conservative feedthrough fallback fixed; reviewer rechecked code and nine tests passed. No remaining finding.",
+    "standards_and_evidence": "Independent fresh-context gpt-6.1-sol medium review completed: no remaining actionable finding. Verified20 receipt pointers/hashes,230 source snapshot files, debug/release identities, final8 root-filter results, preserved failures and final trail checkpoint. Read-only, no rebuild or simulator rerun.",
+    "trail": "runs/accuracy-directed-refinement/decisions.tsv; accessible evidence audited, reviewer does not have complete pre-compaction transcript",
+    "record": {
+      "path": "runs/accuracy-directed-refinement/review-summary.txt",
+      "sha256": "34c274f4a8cd09219192d55cb21249e6b1e1b4957f3fc29f998ae5112749ed5a",
+      "availability": "local-only"
+    }
+  },
+  "limitations": [
+    "New direct nonlinear sample target path has analytical regression evidence but lacks a matched same-source actual Spectre run; no claim of full behavioral alignment or merge readiness.",
+    "C is a current-representative bound, not uniform future floor; target is advisory and recertification mandatory.",
+    "Operators, future events, relocalized guards, mixed input/state consumers retain full refinement; no general recovery of historical uncertainty.",
+    "Strong strobe timer rejection is an existing separate-thread issue; 12 failures retained.",
+    "Diagnostics are opt-in, bounded detail inside existing reason field, may truncate; control never depends on diagnostic output.",
+    "Raw evidence and source snapshots are local-only; hashes are not public retrieval URLs."
+  ]
+}

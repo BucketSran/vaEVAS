@@ -36,3 +36,10 @@
 工程对照通过与原严格 FAIL 分开保留；运行身份见收据，实现与本次契约同批交付。任意重叠窗口和其他用例的边界资格未获豁免。
 另有 [30 条件回调诊断](../../../experiments/backends/sample-edge-filter/BOUNDARY.md#回调规则的后续实测)，
 验证显式正容差下的接受点触发规则；只读回放支持差异归因，不证明 EVAS 独立生成了同一网格，也不需要为本批复制该网格。
+
+2026-10-10 增加[按失败原因选择根细化](../../../experiments/backends/sample-edge-filter/BOUNDARY.md#directed-root-recovery)，
+补充 CROSS、EVENT-ORDER、COMPOSE 及 DEV:precision-chain 的开发证据。
+[恢复测试](../../tests/test_root_recovery.py)检查原预算重验和继承误差保留；
+既有路径复用实际 Spectre 数据，新直接非线性采样另完成正向、负向和小幅值三条件的同源码对照。
+[12 配置均满足原预算](../../../experiments/backends/sample-edge-filter/direct-sample-receipt.json)，
+每个条件均实际触发目标细化。四档只改变 Spectre，有限观测不授予普遍精度或历史重放能力。
