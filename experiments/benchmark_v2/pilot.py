@@ -296,7 +296,10 @@ if payload.is_file():
 allowed = set(contract['candidate_files']) | set(contract['public_files']) | set(temporary)
 aliases = {'/work/' + name: name for name in contract['candidate_files']}
 aliases.update({'/work/public/' + name: name for name in contract['public_files']})
-include = re.compile(r'(?m)^([ \t]*(?:ahdl_include|include)[ \t]+)(["\'])([^\r\n]*?)\2')
+directive = re.compile(r'^[ \t]*(ahdl_include|include|\.include|\.inc|\.lib)\b', re.IGNORECASE)
+include = re.compile(r"^[ \t]*(?P<kind>ahdl_include|include|\.include|\.inc|\.lib)[ \t]+"
+                     r"(?:(?P<quote>[\"'])(?P<quoted>[^\r\n]*?)(?P=quote)|(?P<bare>[^\s\"']+))"
+                     r"(?P<tail>[^\r\n]*)", re.IGNORECASE)
 decks = sorted({name for name in contract['public_files'] if name.endswith('.scs')} | {netlist})
 identities = {}
 while decks:
@@ -306,9 +309,24 @@ while decks:
     path = work / name
     original = path.read_bytes()
     text = original.decode('utf-8')
-    def relocate(match):
-        source = match[3]
+    def relocate(line):
+        if not directive.match(line):
+            return line
+        match = include.match(line)
+        if match is None:
+            raise ValueError('unsupported public include syntax')
+        field = 'quoted' if match['quote'] else 'bare'
+        source = match[field]
         logical = PurePosixPath(source)
+        kind = match['kind'].lower()
+        tail = match['tail'].strip()
+        # SPICE .lib SECTION opens a library section. File references use
+        # .lib FILE SECTION, or an explicitly quoted file path. Never treat a
+        # section marker as a filename, or accept an ambiguous absolute marker.
+        if kind == '.lib' and not match['quote'] and (not tail or tail.startswith(('$', ';', '//'))):
+            if '/' in source or '\\' in source or source in {'.', '..'}:
+                raise ValueError('ambiguous public library path')
+            return line
         if not source or '..' in logical.parts or '\\' in source or '\x00' in source:
             raise ValueError('unsafe public include path')
         if logical.is_absolute():
@@ -319,18 +337,13 @@ while decks:
             target = str(PurePosixPath(name).parent / logical)
         if target not in allowed or not (work / target).is_file():
             raise ValueError('undeclared public include path')
-        if re.match(r'include\b', match[1].lstrip()):
+        if kind != 'ahdl_include':
             decks.append(target)
         if not logical.is_absolute():
-            return match[0]
+            return line
         relative = os.path.relpath(work / target, path.parent)
-        return match[1] + match[2] + relative + match[2]
-    effective = include.sub(relocate, text)
-    # Reject unquoted include syntax rather than passing an unchecked path to
-    # Spectre. Options after a quoted include remain byte-identical.
-    for line in text.splitlines():
-        if re.match(r'^\s*(?:ahdl_include|include)\b', line) and not include.match(line):
-            raise ValueError('unsupported public include syntax')
+        return line[:match.start(field)] + relative + line[match.end(field):]
+    effective = ''.join(relocate(line) for line in text.splitlines(keepends=True))
     data = effective.encode('utf-8')
     path.write_bytes(data)
     identities[name] = {'original_sha256': hashlib.sha256(original).hexdigest(),

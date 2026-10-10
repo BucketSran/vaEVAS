@@ -105,13 +105,18 @@ class PublicDeploymentTests(unittest.TestCase):
         if spec is not None:
             (candidates / '.public-testbench.json').write_text(json.dumps(spec))
         fake = root / 'fake-spectre'
-        fake.write_text('#!' + sys.executable + '\n' + r'''import pathlib,re,sys
+        fake.write_text('#!' + sys.executable + '\n' + r'''import pathlib,shlex,sys
 pathlib.Path('fake-called').write_text('called')
 def visit(path, deck=True):
     assert path.is_file(), str(path)
     if deck:
-        for kind, name in re.findall(r"(ahdl_include|include)\s+[\"']([^\"']+)[\"']", path.read_text()):
-            visit(path.parent / name, deck=kind == 'include')
+        for line in path.read_text().splitlines():
+            tokens = shlex.split(line)
+            if not tokens:
+                continue
+            kind = tokens[0].lower()
+            if kind in {'ahdl_include', 'include', '.include', '.inc'} or (kind == '.lib' and len(tokens) >= 3):
+                visit(path.parent / tokens[1], deck=kind != 'ahdl_include')
 visit(pathlib.Path(sys.argv[2]))
 psf=pathlib.Path('psf');psf.mkdir()
 (psf/'fixture.tran.tran').write_text('VALUE\n"time" 0\n"out" 1\nEND\n')
@@ -233,6 +238,59 @@ psf=pathlib.Path('psf');psf.mkdir()
             digest = hashlib.sha256(raw).hexdigest()
             self.assertEqual(receipt['rtl/helper.va'], {'original_sha256': digest, 'effective_sha256': digest})
             self.assertEqual((candidates / 'rtl/helper.va').read_bytes(), raw)
+
+
+    def test_spice_include_aliases_deploy_and_recurse(self):
+        files = {'visible.scs': b'simulator lang=spice\r\n.INCLUDE "/work/public/dut/models.spice"\r\n',
+                 'dut/models.spice': b'.inc cells.spice\n',
+                 'dut/cells.spice': b".InC '/work/public/dut/analog.spice'\n",
+                 'dut/analog.spice': b'.model fixture diode\n'}
+        with tempfile.TemporaryDirectory() as folder:
+            result, package, _, output = self.deploy(Path(folder), files)
+            self.assertEqual(result.returncode, 0, result.stderr.decode())
+            self.assertEqual(json.loads((output / 'report.json').read_text())['diagnostics']['spectre_returncode'], 0)
+            receipts = json.loads((output / 'netlist-identity.json').read_text())['decks']
+            for name, raw in files.items():
+                self.assertEqual((package / 'public' / name).read_bytes(), raw)
+                self.assertEqual(receipts[name]['original_sha256'], hashlib.sha256(raw).hexdigest())
+                self.assertEqual(receipts[name]['effective_sha256'], hashlib.sha256((output / 'condition' / name).read_bytes()).hexdigest())
+            self.assertEqual((output / 'condition/dut/models.spice').read_bytes(), files['dut/models.spice'])
+
+
+    def test_spice_library_file_and_section_marker_are_distinct(self):
+        files = {'visible.scs': b'simulator lang=spice\n.lib /work/public/dut/library.lib TT\n',
+                 'dut/library.lib': b'.LIB TT\r\n.INC local.spice\r\n.endl TT\r\n',
+                 'dut/local.spice': b'.model fixture diode\n'}
+        with tempfile.TemporaryDirectory() as folder:
+            result, _, _, output = self.deploy(Path(folder), files)
+            self.assertEqual(result.returncode, 0, result.stderr.decode())
+            self.assertEqual(json.loads((output / 'report.json').read_text())['diagnostics']['spectre_returncode'], 0)
+            self.assertEqual((output / 'condition/dut/library.lib').read_bytes(), files['dut/library.lib'])
+            receipts = json.loads((output / 'netlist-identity.json').read_text())['decks']
+            self.assertIn('dut/local.spice', receipts)
+
+    def test_spice_paths_are_checked_in_custom_and_nested_decks(self):
+        for command in ['.include /etc/passwd', '.INC ../dut.va',
+                        '.InClUdE "/work/public/missing.spice"', '.lib /etc/passwd TT',
+                        '.lib /work/public/missing.lib', '.inc "unterminated']:
+            with self.subTest(command=command), tempfile.TemporaryDirectory() as folder:
+                result, _, _, output = self.deploy(Path(folder),
+                    {'visible.scs': ('simulator lang=spice\n' + command + '\n').encode()})
+                self.assertNotEqual(result.returncode, 0)
+                self.assertFalse((output / 'condition/fake-called').exists())
+        for nested in ['.include /etc/passwd\n', '.inc /work/public/helper.spice\n']:
+            with self.subTest(nested=nested), tempfile.TemporaryDirectory() as folder:
+                spec = {'netlist': 'simulator lang=spice\n.INC temporary/deck.va\n',
+                        'support_files': {'temporary/deck.va': nested}}
+                result, _, _, output = self.deploy(Path(folder),
+                    {'visible.scs': b'', 'helper.spice': b'.model fixture diode\n'}, spec=spec)
+                if '/etc/passwd' in nested:
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertFalse((output / 'condition/fake-called').exists())
+                else:
+                    self.assertEqual(result.returncode, 0, result.stderr.decode())
+                    self.assertEqual(json.loads((output / 'report.json').read_text())['diagnostics']['spectre_returncode'], 0)
+                    self.assertIn('temporary/deck.va', json.loads((output / 'netlist-identity.json').read_text())['decks'])
 
 
 if __name__ == '__main__':
