@@ -110,7 +110,7 @@ pathlib.Path('fake-called').write_text('called')
 def visit(path):
     assert path.is_file(), str(path)
     if path.suffix in {'.scs', '.inc'}:
-        for name in re.findall(r'(?:ahdl_include|include)\s+"([^\"]+)"', path.read_text()):
+        for name in re.findall(r"(?:ahdl_include|include)\s+[\"']([^\"']+)[\"']", path.read_text()):
             visit(path.parent / name)
 visit(pathlib.Path(sys.argv[2]))
 psf=pathlib.Path('psf');psf.mkdir()
@@ -128,7 +128,7 @@ psf=pathlib.Path('psf');psf.mkdir()
         files = {
             'visible.scs': b'ahdl_include "/work/dut.va"\r\nahdl_include "/work/rtl/helper.va"\r\ninclude "/work/public/decks/nested.scs"\r\n',
             'decks/nested.scs': b'include "/work/public/decks/extra.inc"\n',
-            'decks/extra.inc': b'ahdl_include "/work/public/support.va"\n',
+            'decks/extra.inc': b"ahdl_include '/work/public/support.va'\n",
             'support.va': b'module support; endmodule\r\n',
         }
         with tempfile.TemporaryDirectory() as folder:
