@@ -25,7 +25,7 @@ class CompositionReferences(unittest.TestCase):
         self.assertGreaterEqual(answer['b'][1], .75)
 
     def test_joint_feedback_and_reset_area_hand_anchors(self):
-        m=load(); cs={c['group_id']:c for c in m.cards()}
+        m=load(); cs={c['group_id']:c for c in m.cards() if c['id'].endswith('-v1')}
         checks=[('EC07',1.,{'z':.5,'y':.53125}),('EC09',1.5,{'z':1.5,'y':2.25}),
                 ('EC15',3.,{'a':1.,'b':1.5}),('EC18',1.,{'phase':-.125})]
         for group,x,expected in checks:
@@ -81,8 +81,9 @@ class CompositionReferences(unittest.TestCase):
 
     def test_independent_instance_histories_are_actual_submodule_instances(self):
         m=load(); cards={c['group_id']:c for c in m.cards()}
-        self.assertIn('reset_cell acell',cards['EC06']['source'])
-        self.assertIn('fixed_cell bcell',cards['EC06']['source'])
+        self.assertEqual(cards['EC06']['source'].count('integral_cell #'),2)
+        self.assertIn('acell(a,n)',cards['EC06']['source'])
+        self.assertIn('bcell(b,nb)',cards['EC06']['source'])
         self.assertIn('phase_cell #',cards['EC19']['source'])
 
     def test_missing_illegal_and_reordered_history_are_rejected(self):
@@ -101,7 +102,7 @@ class CompositionReferences(unittest.TestCase):
             with self.assertRaises(NotImplementedError):m.reference(c,0.,{})
 
     def test_all_ready_groups_have_independent_handwritten_anchors(self):
-        m=load();cs={c['group_id']:c for c in m.cards()}
+        m=load();cs={c['group_id']:c for c in m.cards() if c['id'].endswith('-v1')}
         # Values were derived from state tables, rectangle/trapezoid areas,
         # modulo arithmetic and the specified closed-form ODE solutions.
         anchors=[
@@ -227,10 +228,33 @@ class CompositionReferences(unittest.TestCase):
                 self.assertGreaterEqual(whole[1],point[1])
 
     def test_input_gains_cover_composed_consumers_and_unbounded_obligations(self):
-        m=load();cs={c['group_id']:c for c in m.cards()}
+        m=load();cs={c['group_id']:c for c in m.cards() if c['id'].endswith('-v1')}
         self.assertGreaterEqual(cs['EC03']['input_gain_bound'],4)
         self.assertGreaterEqual(cs['EC04']['input_gain_bound'],16)
         self.assertGreaterEqual(cs['EC12']['input_gain_bound'],13.502)
         self.assertGreaterEqual(cs['EC17']['input_gain_bound']['out'],2*__import__('math').pi)
         self.assertEqual(set(cs['EC16']['input_gain_evidence_required']),{'d','y'})
         self.assertEqual(set(cs['EC17']['input_gain_evidence_required']),{'phase'})
+
+    def test_internal_input_corner_variants_preserve_states_and_direct_terms(self):
+        m=load();cs={c['id']:c for c in m.cards()}
+        self.assertEqual(len(cs),27)
+        self.assertEqual(cs['EC06-v1']['source'].count('integral_cell #'),2)
+        self.assertNotEqual(cs['EC06-v1']['source'],cs['EC06-v2']['source'])
+        import math
+        e2=math.exp(-2);r=1.
+        anchors={'EC11-v2':{'y':2+(4*e2-2+(-1+e2)*r)*math.exp(-r),
+                            'd':(1-3*e2-(-1+e2)*r)*math.exp(-r)},
+                 'EC12-v2':{'h':3.125+math.exp(-2)}}
+        for id,channels in anchors.items():
+            c=cs[id];self.assertIn([2*m.UNIT,c['inputs']['u'][1][1]],c['inputs']['u'])
+            out=m.reference(c,3*m.UNIT,{})['outputs']
+            for channel,value in channels.items():
+                lo,hi=out[channel];self.assertLessEqual(lo,value);self.assertGreaterEqual(hi,value)
+                self.assertLess(hi-lo,1e-10)
+                self.assertFalse(lo<=value+.01<=hi)
+            at=m.reference(c,2*m.UNIT,{})['outputs']
+            base=m.reference(cs[id.replace('-v2','-v1')],2*m.UNIT,{})['outputs']
+            for channel in at:
+                self.assertLessEqual(at[channel][0],base[channel][1])
+                self.assertGreaterEqual(at[channel][1],base[channel][0])

@@ -8,6 +8,7 @@ from __future__ import annotations
 from decimal import Decimal, localcontext
 import math
 from fractions import Fraction
+from copy import deepcopy
 
 UNIT = 2.0 ** -20
 TIME_TOL = 1e-10
@@ -108,15 +109,16 @@ def cards():
         'V(a)<+idt(1/T,0.125,r); V(b)<+idt(1/T,-0.25); V(sum)<+V(a)+V(b); V(n)<+n0;',
         'integer r,n0;',stop=2,critical=(.5,.75))
     _event(c,'assert',.5,1);_event(c,'release',.75,2)
-    reset_source=_model(['a','n'],
+    cell_source=_model(['a','n'],
         '@(initial_step) begin r=0; n0=0; end\n'
-        '@(timer(0.5*T,0,TT)) begin r=1; n0=n0+1; end\n'
+        '@(timer(0.5*T,0,TT)) begin r=RESET_ENABLED; n0=n0+1; end\n'
         '@(timer(0.75*T,0,TT)) begin r=0; n0=n0+1; end\n'
-        'V(a)<+idt(1/T,0.125,r); V(n)<+n0;',
-        'integer r,n0;').replace('module breadth(', 'module reset_cell(')
-    fixed_source=_model(['b'],'V(b)<+idt(1/T,-0.25);').replace('module breadth(', 'module fixed_cell(')
-    c['source']=reset_source+fixed_source+_model(c['ports'],
-        'V(sum)<+V(a)+V(b);','reset_cell acell(a,n); fixed_cell bcell(b);')
+        'V(a)<+idt(1/T,IC,r); V(n)<+n0;',
+        'parameter real IC=0.125; parameter integer RESET_ENABLED=1; integer r,n0;').replace('module breadth(', 'module integral_cell(')
+    c['source']=cell_source+_model(c['ports'],
+        'V(sum)<+V(a)+V(b);',
+        'electrical nb; integral_cell #(.IC(0.125),.RESET_ENABLED(1)) acell(a,n); '
+        'integral_cell #(.IC(-0.25),.RESET_ENABLED(0)) bcell(b,nb);')
 
     c=setcase(7,'Reset upstream integral preserves downstream accumulated area','z y n',
         '@(initial_step) begin r=0; n0=0; end\n'
@@ -281,6 +283,20 @@ def cards():
     sensitivities={1:12,2:12,3:5,4:12,6:1,7:2,8:2,10:1,13:2,20:12,21:20}
     for index,multiple in sensitivities.items():
         result[index-1]['event_sensitivity_bound_V_s']=multiple/UNIT
+    # Mandatory variants preserve the 24 group denominator while exposing
+    # instance/contribution order and internal stimulus-corner obligations.
+    swapped=deepcopy(result[5]);swapped['id']='EC06-v2'
+    swapped['variant']='instance-and-contribution-order'
+    left='integral_cell #(.IC(0.125),.RESET_ENABLED(1)) acell(a,n); '
+    right='integral_cell #(.IC(-0.25),.RESET_ENABLED(0)) bcell(b,nb);'
+    swapped['source']=swapped['source'].replace(left+right,right+' '+left).replace('V(a)+V(b)','V(b)+V(a)')
+    for event in swapped['events']:event['id']=event['id'].replace('EC06-v1','EC06-v2')
+    result.append(swapped)
+    for index,initial,peak in ((11,0.,2.),(12,.5,2.5)):
+        corner=deepcopy(result[index-1]);corner['id']=f'EC{index:02d}-v2'
+        corner['variant']='internal-ramp-corner';corner['reference_parameters']['input_corner_units']=2.
+        corner['inputs']['u']=[[0.,initial],[2*UNIT,peak],[4*UNIT,peak]]
+        corner['critical_times_s'].append(2*UNIT);result.append(corner)
     for c in result:
         c['reference_time_uncertainty_s']=16*math.ulp(c['stop_s'])
         c['critical_times_s']=sorted(set(t for t in c['critical_times_s'] if 0<=t<=c['stop_s']))
@@ -604,10 +620,22 @@ def reference(card, time_s, event_bounds):
             out={'y':_switch(x,history[0],lambda t:_i(1),lambda t,r:2-4/(4+_positive(t-r)),None if stages is None else stages[0])}
         elif group==11:
             ex=(-x).exp();out={'y':x-2+(x+2)*ex,'d':1-(x+1)*ex}
+            if card['reference_parameters'].get('input_corner_units'):
+                e2=_i(-2).exp();y2=4*e2;d2=1-3*e2
+                def after_y(t,r):
+                    dt=_positive(t-r);return 2+(y2-2+(d2+y2-2)*dt)*(-dt).exp()
+                def after_d(t,r):
+                    dt=_positive(t-r);return (d2-(d2+y2-2)*dt)*(-dt).exp()
+                out={'y':_switch(x,_i(2),lambda t:t-2+(t+2)*(-t).exp(),after_y),
+                     'd':_switch(x,_i(2),lambda t:1-(t+1)*(-t).exp(),after_d)}
         elif group==12:
             # w=(x+.5)^2; X'=w-2X, X0=.125. A polynomial
             # particular X=x²/2+1/8 leaves no linear coefficient.
             out={'h':(x+.5)**2-(x**2/2+.125)}
+            if card['reference_parameters'].get('input_corner_units'):
+                # X(2)=2.125; plateau w=6.25 gives X=3.125-exp(-2dt).
+                out={'h':_switch(x,_i(2),lambda t:(t+.5)**2-(t**2/2+.125),
+                                 lambda t,r:3.125+(-2*_positive(t-r)).exp())}
         elif group==13:
             gain=1/(_i(1)-.2);z=gain*_pwl(card,'u',ts)
             delayed=gain*_pwl(card,'u',_positive(ts-_i(.125)*T))
