@@ -374,3 +374,43 @@ class CompositionReferences(unittest.TestCase):
                 # The incomplete-edge target value .5 is a wrong-state
                 # control. Enclosing both branches must not accept it.
                 self.assertFalse(lo<=.5<=hi)
+
+    def test_completed_transition_encloses_uncertain_targets_in_both_directions(self):
+        from decimal import localcontext
+        m=load()
+        with localcontext() as ctx:
+            ctx.prec=80
+            for initial,target in ((0,m._I(1,2)),(3,m._I(1,2))):
+                lo,hi=m._transition(m._I(10),[m._I(0)],[target],initial,0,
+                                    m._I(1),m._I(1)).floats()
+                # Ten rise/fall durations later, each coherent target is
+                # exactly its final voltage, regardless of direction.
+                self.assertLessEqual(lo,1.);self.assertGreaterEqual(hi,2.)
+                self.assertGreater(lo,.999999);self.assertLess(hi,2.000001)
+                self.assertFalse(lo<=.9<=hi);self.assertFalse(lo<=2.1<=hi)
+            # At a quarter duration, exact coherent targets give these
+            # scalar ranges. Interval correlations may over-enclose them.
+            for initial,expected in ((0,(.25,.5)),(3,(2.5,2.75))):
+                lo,hi=m._transition(m._I(.25),[m._I(0)],[m._I(1,2)],initial,0,
+                                    m._I(1),m._I(1)).floats()
+                self.assertLessEqual(lo,expected[0]);self.assertGreaterEqual(hi,expected[1])
+                self.assertFalse(lo<=expected[0]-.1<=hi)
+                self.assertFalse(lo<=expected[1]+.1<=hi)
+
+    def test_sample_transition_completed_stop_retains_nominal_callback_history(self):
+        from fractions import Fraction as F
+        m=load();c=next(c for c in m.cards() if c['group_id']=='EC01')
+        boxes={e['id']:[e['nominal_s'],e['nominal_s']+e['late_s']] for e in c['events']}
+        answer=m.reference(c,c['stop_s'],boxes)['outputs']
+        # Final sample is u(8T), on the original two-endpoint affine ramp.
+        # By stop=9T, the .125T edge is complete for every legal callback.
+        a,b=c['inputs']['u'];nominal=c['events'][-1]['nominal_s']
+        correct=F(a[1])+(F(b[1])-F(a[1]))*(F(nominal)-F(a[0]))/(F(b[0])-F(a[0]))
+        for output in ('q','out'):
+            lo,hi=answer[output]
+            self.assertLessEqual(F(lo),correct);self.assertGreaterEqual(F(hi),correct)
+            self.assertFalse(lo<=1.19<=hi);self.assertFalse(lo<=1.21<=hi)
+        for weight in (0.,.5,1.):
+            sampled=nominal+weight*c['events'][-1]['late_s']
+            value=F(a[1])+(F(b[1])-F(a[1]))*(F(sampled)-F(a[0]))/(F(b[0])-F(a[0]))
+            lo,hi=answer['out'];self.assertLessEqual(F(lo),value);self.assertGreaterEqual(F(hi),value)

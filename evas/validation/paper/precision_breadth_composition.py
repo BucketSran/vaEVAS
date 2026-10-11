@@ -433,8 +433,11 @@ def _transition(t,events,targets,initial,delay,rise,fall,stages=None):
         origin,start,target,slope,when=s
         progress=_positive(x-when)
         v=start+slope*progress
-        return _I(max(min(start.lo,target.lo),min(max(start.hi,target.hi),v.lo)),
-                  max(min(start.lo,target.lo),min(max(start.hi,target.hi),v.hi)))
+        # clamp(v,min(start,target),max(start,target)) is monotone in
+        # each argument. Evaluate its lower and upper endpoint expressions
+        # separately; the completed target remains an interval, not its hi.
+        return _I(max(min(start.lo,target.lo),min(max(start.lo,target.lo),v.lo)),
+                  max(min(start.hi,target.hi),min(max(start.hi,target.hi),v.hi)))
     for k,(event,target) in enumerate(zip(events,targets)):
         if stages is not None and not stages[k]:return answer
         target=_i(target);when=event+delay
