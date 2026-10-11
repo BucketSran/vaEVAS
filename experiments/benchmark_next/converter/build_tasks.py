@@ -37,7 +37,8 @@ def package(slug,source,contract,ref,alt,wrong,cases,public):
  put(t/'tests/cases.json',json.dumps(cases,indent=2)+'\n');put(t/'tests/contract.json',json.dumps(dict(candidate_files=['dut.va'],output_files=[],task_id=tid)))
  put(t/'tests/test.sh','#!/bin/sh\nset -eu\ncd "$(dirname "$0")"\nexec python3 verify.py --candidate "${CANDIDATE:-/work/dut.va}" --output "${VERIFY_OUTPUT:-/logs/verifier}" --tests . "$@"\n')
  put(t/'tests/verify.py','from v2_runtime import main\nfrom v2_next_converter import evaluate\nif __name__ == "__main__": main(evaluate)\n')
- shutil.copyfile(ROOT/'benchmark/checkers/v2_next_converter.py',t/'tests/v2_next_converter.py')
+ for name in ['v2_next_converter.py','v2_runtime.py','adc_linearity.py']:
+  shutil.copyfile(ROOT/'benchmark/checkers'/name,t/'tests'/name)
  for p in [t/'tests/test.sh',t/'solution/solve.sh']:p.chmod(0o755)
  for name,text,expected in [('reference',ref,True),('alternative',alt,True)]+[(n,s,False) for n,s in wrong.items()]:
   p=OUT/'candidates'/tid/name/'dut.va';put(p,text)

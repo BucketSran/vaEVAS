@@ -3,10 +3,11 @@ import argparse,json,sys,subprocess,os
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[3];sys.path.insert(0,str(ROOT))
 from experiments.benchmark_first_batch.runtime import prepare
-p=argparse.ArgumentParser();p.add_argument('--operator',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--variants',choices=['reference','others'],required=True);a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--operator',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--variants',choices=['reference','others'],required=True);p.add_argument('--tasks',nargs='+');a=p.parse_args()
 config=json.loads(a.operator.read_text());manifest=json.loads((Path(__file__).parent/'manifest.json').read_text());plan=[]
 for row in manifest['calibrations']:
  if (row['variant']=='reference')!=(a.variants=='reference'):continue
+ if a.tasks and Path(row['task']).name not in a.tasks:continue
  task=ROOT/row['task'];candidate=ROOT/row['candidate']/'dut.va'
  output=a.output/row['task'].split('/')[-1]/row['variant']
  output.parent.mkdir(parents=True,exist_ok=True)

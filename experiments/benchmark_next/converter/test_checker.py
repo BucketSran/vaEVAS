@@ -31,3 +31,17 @@ class WaveformSeam(unittest.TestCase):
  def test_transparent_dac_rejected_before_capture(self):
   case=dict(kind='dac',maxstep=50e-12,guard=.5e-9,initial=0,inputs=['b0'],weights=[1],lo=0,hi=1,tolerances={'aout':.001})
   self.assertFalse(evaluate(self.waveform(True),case,None)['passed'])
+
+class PackagedVerifier(unittest.TestCase):
+ def test_original_test_sh_starts_without_repository_imports(self):
+  import os, shutil, subprocess, tempfile
+  root=Path(__file__).resolve().parents[3]
+  for task in sorted((root/'benchmark/tasks').glob('v3-converter-*')):
+   with self.subTest(task=task.name), tempfile.TemporaryDirectory() as tmp:
+    tests=Path(tmp)/'tests';shutil.copytree(task/'tests',tests,ignore=shutil.ignore_patterns('__pycache__'))
+    env={k:v for k,v in os.environ.items() if k not in ('PYTHONPATH','PYTHONHOME')}
+    env['PYTHONDONTWRITEBYTECODE']='1'
+    proc=subprocess.run(['/bin/sh',str(tests/'test.sh'),'--help'],cwd=tmp,env=env,capture_output=True,text=True)
+    self.assertEqual(proc.returncode,0,proc.stderr)
+    self.assertIn('--candidate',proc.stdout)
+    self.assertIn('--tests',proc.stdout)

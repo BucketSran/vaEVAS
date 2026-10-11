@@ -1,0 +1,931 @@
+{
+  "schema_version": 1,
+  "analysis_kind": "offline delivery reuse audit",
+  "analysis_source_sha256": "273bdf57888f3f3abbb420c535733076e3d5a74205450d9c96fa7ec19228ae02",
+  "checkpoint": "6d58982006c215ff02842ac83deae4e78f22f42b",
+  "task_source_archive_sha256": "4fa907ce904302f157d36f2742e84eec732f444b05bbd0822518b621f6831e6b",
+  "snapshot_archive_verified": true,
+  "tasks": [
+    {
+      "task": "v3-converter-adc-spectrum",
+      "instruction_versions": [
+        {
+          "old_sha256": "69e7c79e75364b004a55a421cc7ac2f2a9dff5a20d0d8abb2b8e84c7ed405e5e",
+          "new_sha256": "37a75a87491af8fdce62752f08057835bfd8a2f2db266b24cfad320b2d89e5e7",
+          "preparations": [
+            {
+              "variant": "reference",
+              "prepared": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/reference",
+              "preparation_sha256": "75051cf9972fe27509965ceca92f07fc7b4f658a18a08a5d375db783aac709bc"
+            },
+            {
+              "variant": "alternative",
+              "prepared": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/alternative",
+              "preparation_sha256": "cc7aa49ebd40e271a517ca0b52906da81b10aa35e9bf7ea8e8f7d37c5aabe1a6"
+            },
+            {
+              "variant": "amplitude-db",
+              "prepared": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/amplitude-db",
+              "preparation_sha256": "d54af27a7c4d1d599ab500ca3dbfd61c2f2e7e5843bee253d641d8bdabc020ee"
+            },
+            {
+              "variant": "nyquist-double",
+              "prepared": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/nyquist-double",
+              "preparation_sha256": "0d312fa6ffb14b15e72c576384c6dfbc6ce16653e19c1171e9f3ca764a4ea47c"
+            },
+            {
+              "variant": "harmonics-as-fundamental",
+              "prepared": "runs/benchmark-next-converter-r7/v3-converter-adc-spectrum/harmonics-as-fundamental",
+              "preparation_sha256": "0c9fea056b56bae8ea0e8d8473bab9849f9c8cec42cc6d7ae389e34dd464aae2"
+            },
+            {
+              "variant": "ignore-invalid",
+              "prepared": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/ignore-invalid",
+              "preparation_sha256": "5685ad4f54d3af76c2c5fb24c66ab1c31cb125a03f5b7cc31ac0a7f1b98e22a3"
+            },
+            {
+              "variant": "stale-reset",
+              "prepared": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/stale-reset",
+              "preparation_sha256": "68760b748a7e782fcb3d58de6d6ff336131425cfc17340616933596add27f216"
+            }
+          ],
+          "old_text_recovered": true,
+          "exact_difference": {
+            "added_sentence": "测量题各电气报告端口的电压数值就是指标数值，例如0.5LSB用0.5V、20dB用20V，valid用0或1V。",
+            "other_text_identical": true
+          },
+          "old_text_limit": null,
+          "intermediate_checkpoint_sha256": "69e7c79e75364b004a55a421cc7ac2f2a9dff5a20d0d8abb2b8e84c7ed405e5e",
+          "delivered_scoring_assets_unchanged": true,
+          "reuse_reason": "Author calibration used no model or instruction interpretation. All six executable scoring assets match the immutable preparation byte for byte. The delivered metric-voltage sentence explains the numerical representation already used by the calibrated reference, independent checker and waveform outputs. Packaging supplies the same runtime and PSF reader bytes; it changes no circuit contract or formal condition. No interpretation or executable behavior changed."
+        }
+      ],
+      "scoring_comparisons": [
+        {
+          "variant": "reference",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "d0b143e4b71dd7810bbb98666ae3f0e86ea65fce13cfdc0e7860e4179e76619e",
+            "contract.json": "9ed4ad9ca022b7a10bb10363af12ce14f7088b4d6e882ed5b514b900f4043069",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "alternative",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "d0b143e4b71dd7810bbb98666ae3f0e86ea65fce13cfdc0e7860e4179e76619e",
+            "contract.json": "9ed4ad9ca022b7a10bb10363af12ce14f7088b4d6e882ed5b514b900f4043069",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "amplitude-db",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "d0b143e4b71dd7810bbb98666ae3f0e86ea65fce13cfdc0e7860e4179e76619e",
+            "contract.json": "9ed4ad9ca022b7a10bb10363af12ce14f7088b4d6e882ed5b514b900f4043069",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "nyquist-double",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "d0b143e4b71dd7810bbb98666ae3f0e86ea65fce13cfdc0e7860e4179e76619e",
+            "contract.json": "9ed4ad9ca022b7a10bb10363af12ce14f7088b4d6e882ed5b514b900f4043069",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "harmonics-as-fundamental",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "d0b143e4b71dd7810bbb98666ae3f0e86ea65fce13cfdc0e7860e4179e76619e",
+            "contract.json": "9ed4ad9ca022b7a10bb10363af12ce14f7088b4d6e882ed5b514b900f4043069",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "ignore-invalid",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "d0b143e4b71dd7810bbb98666ae3f0e86ea65fce13cfdc0e7860e4179e76619e",
+            "contract.json": "9ed4ad9ca022b7a10bb10363af12ce14f7088b4d6e882ed5b514b900f4043069",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "stale-reset",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "d0b143e4b71dd7810bbb98666ae3f0e86ea65fce13cfdc0e7860e4179e76619e",
+            "contract.json": "9ed4ad9ca022b7a10bb10363af12ce14f7088b4d6e882ed5b514b900f4043069",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        }
+      ],
+      "original_entrypoint_check": {
+        "entrypoint": "tests/test.sh --help",
+        "isolated_tests_directory": true,
+        "repository_pythonpath": false,
+        "returncode": 0,
+        "stdout_sha256": "256417c4b7da6fcfab13353be61ccaeb15c1d25bf02e5cc0d231b853923f0291",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9"
+      },
+      "runtime_bundle_additions": {
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+      }
+    },
+    {
+      "task": "v3-converter-dac-linearity",
+      "instruction_versions": [
+        {
+          "old_sha256": "d7686a81bc827b8cb168ef3e3fa3154af878baf2088707d3bd9d66245a598667",
+          "new_sha256": "eb94a6856568b673bb70945cf95d6eec48a4ddffb041b98956c32ac2c7c34d77",
+          "preparations": [
+            {
+              "variant": "reference",
+              "prepared": "runs/benchmark-next-converter-r3/v3-converter-dac-linearity/reference",
+              "preparation_sha256": "c3c7d2c683e636e006c32a471a22ac6a243689f67d355ef062a38943d15a34d6"
+            },
+            {
+              "variant": "alternative",
+              "prepared": "runs/benchmark-next-converter-r4/v3-converter-dac-linearity/alternative",
+              "preparation_sha256": "2be67cd450260b9a578a187151b8d25a0b08fe1f02640ae529c1a7fd314664ae"
+            },
+            {
+              "variant": "ideal-report",
+              "prepared": "runs/benchmark-next-converter-r4/v3-converter-dac-linearity/ideal-report",
+              "preparation_sha256": "dc8ab4974ba9e51bcff3a74e895e2de78e5d6d70d609ced070f29dcd4f2c6453"
+            },
+            {
+              "variant": "wrong-step",
+              "prepared": "runs/benchmark-next-converter-r4/v3-converter-dac-linearity/wrong-step",
+              "preparation_sha256": "5b901015a89d8a7a8767800b5526ed7fd82143182461e924127ddfad31362699"
+            },
+            {
+              "variant": "ignore-order",
+              "prepared": "runs/benchmark-next-converter-r6/v3-converter-dac-linearity/ignore-order",
+              "preparation_sha256": "fd7e6a063f3e39115a1eda601a19a3c38818e571b761150a5fa4b0a84c1e8877"
+            },
+            {
+              "variant": "stale-reset",
+              "prepared": "runs/benchmark-next-converter-r4/v3-converter-dac-linearity/stale-reset",
+              "preparation_sha256": "385bcbaa312403707eb2e7683fc8dc9f61eaba149cac9e1ef118784e3170b165"
+            }
+          ],
+          "old_text_recovered": true,
+          "exact_difference": {
+            "added_sentence": "测量题各电气报告端口的电压数值就是指标数值，例如0.5LSB用0.5V、20dB用20V，valid用0或1V。",
+            "other_text_identical": true
+          },
+          "old_text_limit": null,
+          "intermediate_checkpoint_sha256": "d7686a81bc827b8cb168ef3e3fa3154af878baf2088707d3bd9d66245a598667",
+          "delivered_scoring_assets_unchanged": true,
+          "reuse_reason": "Author calibration used no model or instruction interpretation. All six executable scoring assets match the immutable preparation byte for byte. The delivered metric-voltage sentence explains the numerical representation already used by the calibrated reference, independent checker and waveform outputs. Packaging supplies the same runtime and PSF reader bytes; it changes no circuit contract or formal condition. No interpretation or executable behavior changed."
+        }
+      ],
+      "scoring_comparisons": [
+        {
+          "variant": "reference",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "7bb12d9be6e854d62ce33daa94e8566bb5e060847f40760589b0dbe4b73b6763",
+            "contract.json": "a5f305a3eb6df7b8f1304e53cd7ebacbed5bc3a62ed703c2d954982c43ed9c5e",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "alternative",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "7bb12d9be6e854d62ce33daa94e8566bb5e060847f40760589b0dbe4b73b6763",
+            "contract.json": "a5f305a3eb6df7b8f1304e53cd7ebacbed5bc3a62ed703c2d954982c43ed9c5e",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "ideal-report",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "7bb12d9be6e854d62ce33daa94e8566bb5e060847f40760589b0dbe4b73b6763",
+            "contract.json": "a5f305a3eb6df7b8f1304e53cd7ebacbed5bc3a62ed703c2d954982c43ed9c5e",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "wrong-step",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "7bb12d9be6e854d62ce33daa94e8566bb5e060847f40760589b0dbe4b73b6763",
+            "contract.json": "a5f305a3eb6df7b8f1304e53cd7ebacbed5bc3a62ed703c2d954982c43ed9c5e",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "ignore-order",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "7bb12d9be6e854d62ce33daa94e8566bb5e060847f40760589b0dbe4b73b6763",
+            "contract.json": "a5f305a3eb6df7b8f1304e53cd7ebacbed5bc3a62ed703c2d954982c43ed9c5e",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "stale-reset",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "7bb12d9be6e854d62ce33daa94e8566bb5e060847f40760589b0dbe4b73b6763",
+            "contract.json": "a5f305a3eb6df7b8f1304e53cd7ebacbed5bc3a62ed703c2d954982c43ed9c5e",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        }
+      ],
+      "original_entrypoint_check": {
+        "entrypoint": "tests/test.sh --help",
+        "isolated_tests_directory": true,
+        "repository_pythonpath": false,
+        "returncode": 0,
+        "stdout_sha256": "256417c4b7da6fcfab13353be61ccaeb15c1d25bf02e5cc0d231b853923f0291",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9"
+      },
+      "runtime_bundle_additions": {
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+      }
+    },
+    {
+      "task": "v3-converter-nonideal",
+      "instruction_versions": [
+        {
+          "old_sha256": "3acaac35352e1f258e12384d2cf88bc1b11a37e724d1925d384ee14e87317151",
+          "new_sha256": "3acaac35352e1f258e12384d2cf88bc1b11a37e724d1925d384ee14e87317151",
+          "preparations": [
+            {
+              "variant": "reference",
+              "prepared": "runs/benchmark-next-converter-r8/v3-converter-nonideal/reference",
+              "preparation_sha256": "89e862feb042681fcec2c271e184b84b56ccbc5a814fee14afdf8155a501c1eb"
+            }
+          ],
+          "old_text_recovered": true,
+          "exact_difference": {
+            "text_identical": true
+          },
+          "old_text_limit": null,
+          "intermediate_checkpoint_sha256": "84eeace3856c0db2872647d3c95533a946cc3f642190d1a80c052fc8e52f194d",
+          "delivered_scoring_assets_unchanged": true,
+          "reuse_reason": "Current complete task-source snapshot was retained and the reference executed all formal conditions under this exact instruction identity."
+        },
+        {
+          "old_sha256": "84eeace3856c0db2872647d3c95533a946cc3f642190d1a80c052fc8e52f194d",
+          "new_sha256": "3acaac35352e1f258e12384d2cf88bc1b11a37e724d1925d384ee14e87317151",
+          "preparations": [
+            {
+              "variant": "alternative",
+              "prepared": "runs/benchmark-next-converter-r4/v3-converter-nonideal/alternative",
+              "preparation_sha256": "b1be9c9ce084a26defd71b01cbadf1cbb5273df28d0967d529f228338d28a5c4"
+            },
+            {
+              "variant": "omit-last",
+              "prepared": "runs/benchmark-next-converter-r4/v3-converter-nonideal/omit-last",
+              "preparation_sha256": "9bfc6d56b466c3f53cefd3b69f6c99810c5204c917e39c0a45af6172e33611a4"
+            },
+            {
+              "variant": "transparent",
+              "prepared": "runs/benchmark-next-converter-r4/v3-converter-nonideal/transparent",
+              "preparation_sha256": "9f736255269ff21d19ff6b20159adc1665ad0043d5704a1de12c65f25fffe39e"
+            },
+            {
+              "variant": "ideal-binary",
+              "prepared": "runs/benchmark-next-converter-r4/v3-converter-nonideal/ideal-binary",
+              "preparation_sha256": "f2ef213358707e8b9b3f7ce521d3abe8dc4ec36e54301b16b94499c60f7803c1"
+            }
+          ],
+          "old_text_recovered": true,
+          "exact_difference": {
+            "added_sentence": "测量题各电气报告端口的电压数值就是指标数值，例如0.5LSB用0.5V、20dB用20V，valid用0或1V。",
+            "other_text_identical": true
+          },
+          "old_text_limit": null,
+          "intermediate_checkpoint_sha256": "84eeace3856c0db2872647d3c95533a946cc3f642190d1a80c052fc8e52f194d",
+          "delivered_scoring_assets_unchanged": true,
+          "reuse_reason": "Author calibration used no model or instruction interpretation. All six executable scoring assets match the immutable preparation byte for byte. The delivered metric-voltage sentence explains the numerical representation already used by the calibrated reference, independent checker and waveform outputs. Packaging supplies the same runtime and PSF reader bytes; it changes no circuit contract or formal condition. No interpretation or executable behavior changed."
+        }
+      ],
+      "scoring_comparisons": [
+        {
+          "variant": "reference",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "3fd017cb82b6ca2884f4de89cc9aaf502f1589b183f691d5f713c2fcb19c7ac5",
+            "contract.json": "caca1f1b49387d25cb62d891698c57dd23eb60bd6c525edf12cde358c3d42237",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "alternative",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "3fd017cb82b6ca2884f4de89cc9aaf502f1589b183f691d5f713c2fcb19c7ac5",
+            "contract.json": "caca1f1b49387d25cb62d891698c57dd23eb60bd6c525edf12cde358c3d42237",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "omit-last",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "3fd017cb82b6ca2884f4de89cc9aaf502f1589b183f691d5f713c2fcb19c7ac5",
+            "contract.json": "caca1f1b49387d25cb62d891698c57dd23eb60bd6c525edf12cde358c3d42237",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "transparent",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "3fd017cb82b6ca2884f4de89cc9aaf502f1589b183f691d5f713c2fcb19c7ac5",
+            "contract.json": "caca1f1b49387d25cb62d891698c57dd23eb60bd6c525edf12cde358c3d42237",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "ideal-binary",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "3fd017cb82b6ca2884f4de89cc9aaf502f1589b183f691d5f713c2fcb19c7ac5",
+            "contract.json": "caca1f1b49387d25cb62d891698c57dd23eb60bd6c525edf12cde358c3d42237",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        }
+      ],
+      "original_entrypoint_check": {
+        "entrypoint": "tests/test.sh --help",
+        "isolated_tests_directory": true,
+        "repository_pythonpath": false,
+        "returncode": 0,
+        "stdout_sha256": "256417c4b7da6fcfab13353be61ccaeb15c1d25bf02e5cc0d231b853923f0291",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9"
+      },
+      "runtime_bundle_additions": {
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+      }
+    },
+    {
+      "task": "v3-converter-segmented",
+      "instruction_versions": [
+        {
+          "old_sha256": "0b3752be70dd45a75c4ea236c9ab28fa4680230515a4869bb8faa21f9ba86b80",
+          "new_sha256": "0b3752be70dd45a75c4ea236c9ab28fa4680230515a4869bb8faa21f9ba86b80",
+          "preparations": [
+            {
+              "variant": "reference",
+              "prepared": "runs/benchmark-next-converter-r8/v3-converter-segmented/reference",
+              "preparation_sha256": "4ec3ad47b17052badc67d6f5a30bd15dc2d300f5a05e5027462ddaaa828b4fd0"
+            }
+          ],
+          "old_text_recovered": true,
+          "exact_difference": {
+            "text_identical": true
+          },
+          "old_text_limit": null,
+          "intermediate_checkpoint_sha256": "114134dcdbb9dddc5452a742a7a8fdef390fb1e180f0471bd731ca3da4c69365",
+          "delivered_scoring_assets_unchanged": true,
+          "reuse_reason": "Current complete task-source snapshot was retained and the reference executed all formal conditions under this exact instruction identity."
+        },
+        {
+          "old_sha256": "114134dcdbb9dddc5452a742a7a8fdef390fb1e180f0471bd731ca3da4c69365",
+          "new_sha256": "0b3752be70dd45a75c4ea236c9ab28fa4680230515a4869bb8faa21f9ba86b80",
+          "preparations": [
+            {
+              "variant": "alternative",
+              "prepared": "runs/benchmark-next-converter-r4/v3-converter-segmented/alternative",
+              "preparation_sha256": "d3f6e779a5524e580b7d1c4f862c1b7e5790659ba575d48862a20edb8e3d5a2a"
+            },
+            {
+              "variant": "omit-last",
+              "prepared": "runs/benchmark-next-converter-r4/v3-converter-segmented/omit-last",
+              "preparation_sha256": "272f22ef3913665cc5580e164d185d090b7b0ad0349cca75a8484b0059919188"
+            },
+            {
+              "variant": "transparent",
+              "prepared": "runs/benchmark-next-converter-r4/v3-converter-segmented/transparent",
+              "preparation_sha256": "976f4a959617665c2e1462a44bb50481a06e0ca55aeb0aae3496ebda0c902b1f"
+            },
+            {
+              "variant": "wrong-scale",
+              "prepared": "runs/benchmark-next-converter-r4/v3-converter-segmented/wrong-scale",
+              "preparation_sha256": "0e4994e68212871946864057dedffc571af4feded6bdd918c4f2aa16a95122fe"
+            },
+            {
+              "variant": "bit-order",
+              "prepared": "runs/benchmark-next-converter-r7/v3-converter-segmented/bit-order",
+              "preparation_sha256": "53be3c559e53b16c638be48d625a526b0fa82636a13d7d4c711611e98960f7bf"
+            }
+          ],
+          "old_text_recovered": true,
+          "exact_difference": {
+            "added_sentence": "测量题各电气报告端口的电压数值就是指标数值，例如0.5LSB用0.5V、20dB用20V，valid用0或1V。",
+            "other_text_identical": true
+          },
+          "old_text_limit": null,
+          "intermediate_checkpoint_sha256": "114134dcdbb9dddc5452a742a7a8fdef390fb1e180f0471bd731ca3da4c69365",
+          "delivered_scoring_assets_unchanged": true,
+          "reuse_reason": "Author calibration used no model or instruction interpretation. All six executable scoring assets match the immutable preparation byte for byte. The delivered metric-voltage sentence explains the numerical representation already used by the calibrated reference, independent checker and waveform outputs. Packaging supplies the same runtime and PSF reader bytes; it changes no circuit contract or formal condition. No interpretation or executable behavior changed."
+        }
+      ],
+      "scoring_comparisons": [
+        {
+          "variant": "reference",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "b54494794d4a1c2ec2aee3db7df2ab248c426655383b88d724e6516753a61b3a",
+            "contract.json": "70fb3b5b4558e66329e9eb133ed8e10d57b18ca46cc95c19e88bd6bc652314c2",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "alternative",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "b54494794d4a1c2ec2aee3db7df2ab248c426655383b88d724e6516753a61b3a",
+            "contract.json": "70fb3b5b4558e66329e9eb133ed8e10d57b18ca46cc95c19e88bd6bc652314c2",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "omit-last",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "b54494794d4a1c2ec2aee3db7df2ab248c426655383b88d724e6516753a61b3a",
+            "contract.json": "70fb3b5b4558e66329e9eb133ed8e10d57b18ca46cc95c19e88bd6bc652314c2",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "transparent",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "b54494794d4a1c2ec2aee3db7df2ab248c426655383b88d724e6516753a61b3a",
+            "contract.json": "70fb3b5b4558e66329e9eb133ed8e10d57b18ca46cc95c19e88bd6bc652314c2",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "wrong-scale",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "b54494794d4a1c2ec2aee3db7df2ab248c426655383b88d724e6516753a61b3a",
+            "contract.json": "70fb3b5b4558e66329e9eb133ed8e10d57b18ca46cc95c19e88bd6bc652314c2",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "bit-order",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "b54494794d4a1c2ec2aee3db7df2ab248c426655383b88d724e6516753a61b3a",
+            "contract.json": "70fb3b5b4558e66329e9eb133ed8e10d57b18ca46cc95c19e88bd6bc652314c2",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        }
+      ],
+      "original_entrypoint_check": {
+        "entrypoint": "tests/test.sh --help",
+        "isolated_tests_directory": true,
+        "repository_pythonpath": false,
+        "returncode": 0,
+        "stdout_sha256": "256417c4b7da6fcfab13353be61ccaeb15c1d25bf02e5cc0d231b853923f0291",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9"
+      },
+      "runtime_bundle_additions": {
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+      }
+    },
+    {
+      "task": "v3-converter-subradix",
+      "instruction_versions": [
+        {
+          "old_sha256": "00377144cf448742f9c8c194d19b1bbdc54ad4d506ec78db53a1f45d9cae790d",
+          "new_sha256": "00377144cf448742f9c8c194d19b1bbdc54ad4d506ec78db53a1f45d9cae790d",
+          "preparations": [
+            {
+              "variant": "reference",
+              "prepared": "runs/benchmark-next-converter-r8/v3-converter-subradix/reference",
+              "preparation_sha256": "430e387d2dbd255046de87e75ce27406317ec642064e869bac7799300f14915b"
+            }
+          ],
+          "old_text_recovered": true,
+          "exact_difference": {
+            "text_identical": true
+          },
+          "old_text_limit": null,
+          "intermediate_checkpoint_sha256": "f7165c00bfe79b5035cc8ae7dc2bf4626df1f1ec7c14bade33187c4815bd5376",
+          "delivered_scoring_assets_unchanged": true,
+          "reuse_reason": "Current complete task-source snapshot was retained and the reference executed all formal conditions under this exact instruction identity."
+        },
+        {
+          "old_sha256": "f7165c00bfe79b5035cc8ae7dc2bf4626df1f1ec7c14bade33187c4815bd5376",
+          "new_sha256": "00377144cf448742f9c8c194d19b1bbdc54ad4d506ec78db53a1f45d9cae790d",
+          "preparations": [
+            {
+              "variant": "alternative",
+              "prepared": "runs/benchmark-next-converter-r4/v3-converter-subradix/alternative",
+              "preparation_sha256": "5ea755f3a632035e7f15383e75523895d1c1b705fcf9c13debd84c7fe63a9a3d"
+            },
+            {
+              "variant": "omit-last",
+              "prepared": "runs/benchmark-next-converter-r4/v3-converter-subradix/omit-last",
+              "preparation_sha256": "36118494af005fa2efde319757d9ea363ae226b68e2b9a2e3bbf1ca103b995ca"
+            },
+            {
+              "variant": "transparent",
+              "prepared": "runs/benchmark-next-converter-r4/v3-converter-subradix/transparent",
+              "preparation_sha256": "3bdc1cb272c391d13cdffb946798f9726e1c1a1cc3eac834a517f6e5d454e79d"
+            },
+            {
+              "variant": "ideal-binary",
+              "prepared": "runs/benchmark-next-converter-r4/v3-converter-subradix/ideal-binary",
+              "preparation_sha256": "c9ef6beb0f576abc1e81c9954a09bed5ba7e0b9024123cde10a6feacb5856d56"
+            }
+          ],
+          "old_text_recovered": true,
+          "exact_difference": {
+            "added_sentence": "测量题各电气报告端口的电压数值就是指标数值，例如0.5LSB用0.5V、20dB用20V，valid用0或1V。",
+            "other_text_identical": true
+          },
+          "old_text_limit": null,
+          "intermediate_checkpoint_sha256": "f7165c00bfe79b5035cc8ae7dc2bf4626df1f1ec7c14bade33187c4815bd5376",
+          "delivered_scoring_assets_unchanged": true,
+          "reuse_reason": "Author calibration used no model or instruction interpretation. All six executable scoring assets match the immutable preparation byte for byte. The delivered metric-voltage sentence explains the numerical representation already used by the calibrated reference, independent checker and waveform outputs. Packaging supplies the same runtime and PSF reader bytes; it changes no circuit contract or formal condition. No interpretation or executable behavior changed."
+        }
+      ],
+      "scoring_comparisons": [
+        {
+          "variant": "reference",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "96fd674ce68edcb2d6cd4b4560d90b7a924dddbbdae0c21a74a5a84e7cca038b",
+            "contract.json": "c50de16e0445fd788e7c7cd7049d435553c9819ee3b64b11349e238ba68711f2",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "alternative",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "96fd674ce68edcb2d6cd4b4560d90b7a924dddbbdae0c21a74a5a84e7cca038b",
+            "contract.json": "c50de16e0445fd788e7c7cd7049d435553c9819ee3b64b11349e238ba68711f2",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "omit-last",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "96fd674ce68edcb2d6cd4b4560d90b7a924dddbbdae0c21a74a5a84e7cca038b",
+            "contract.json": "c50de16e0445fd788e7c7cd7049d435553c9819ee3b64b11349e238ba68711f2",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "transparent",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "96fd674ce68edcb2d6cd4b4560d90b7a924dddbbdae0c21a74a5a84e7cca038b",
+            "contract.json": "c50de16e0445fd788e7c7cd7049d435553c9819ee3b64b11349e238ba68711f2",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "ideal-binary",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "96fd674ce68edcb2d6cd4b4560d90b7a924dddbbdae0c21a74a5a84e7cca038b",
+            "contract.json": "c50de16e0445fd788e7c7cd7049d435553c9819ee3b64b11349e238ba68711f2",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        }
+      ],
+      "original_entrypoint_check": {
+        "entrypoint": "tests/test.sh --help",
+        "isolated_tests_directory": true,
+        "repository_pythonpath": false,
+        "returncode": 0,
+        "stdout_sha256": "256417c4b7da6fcfab13353be61ccaeb15c1d25bf02e5cc0d231b853923f0291",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9"
+      },
+      "runtime_bundle_additions": {
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+      }
+    },
+    {
+      "task": "v3-converter-thermometer",
+      "instruction_versions": [
+        {
+          "old_sha256": "7df6dbc9029a500e6eb46ada46dd4953a2baa5ab3f7658a2bc096ebde604b594",
+          "new_sha256": "7df6dbc9029a500e6eb46ada46dd4953a2baa5ab3f7658a2bc096ebde604b594",
+          "preparations": [
+            {
+              "variant": "reference",
+              "prepared": "runs/benchmark-next-converter-r8/v3-converter-thermometer/reference",
+              "preparation_sha256": "1d53e97eb79166e3d05b0daa99399e45144f807b485e5b8821bfbca869767e95"
+            }
+          ],
+          "old_text_recovered": true,
+          "exact_difference": {
+            "text_identical": true
+          },
+          "old_text_limit": null,
+          "intermediate_checkpoint_sha256": "ab00f9f405d97220a4aaefe7568bec1f75e0e032d70534a78933322fede1eb54",
+          "delivered_scoring_assets_unchanged": true,
+          "reuse_reason": "Current complete task-source snapshot was retained and the reference executed all formal conditions under this exact instruction identity."
+        },
+        {
+          "old_sha256": "ab00f9f405d97220a4aaefe7568bec1f75e0e032d70534a78933322fede1eb54",
+          "new_sha256": "7df6dbc9029a500e6eb46ada46dd4953a2baa5ab3f7658a2bc096ebde604b594",
+          "preparations": [
+            {
+              "variant": "alternative",
+              "prepared": "runs/benchmark-next-converter-r4/v3-converter-thermometer/alternative",
+              "preparation_sha256": "aca86879c22d8a0b4ef1f26e8e18800795ef4ff02b02515470077ce8fd5c2288"
+            },
+            {
+              "variant": "omit-last",
+              "prepared": "runs/benchmark-next-converter-r4/v3-converter-thermometer/omit-last",
+              "preparation_sha256": "d6d1f942ec081126b86e52a0747c5242a9035b592a68270519cdd3ef5861745a"
+            },
+            {
+              "variant": "transparent",
+              "prepared": "runs/benchmark-next-converter-r4/v3-converter-thermometer/transparent",
+              "preparation_sha256": "8284f46dc0427f52058e7001995bac56e95006dfb910f94c5cf6738093ef0878"
+            },
+            {
+              "variant": "wrong-scale",
+              "prepared": "runs/benchmark-next-converter-r4/v3-converter-thermometer/wrong-scale",
+              "preparation_sha256": "81dbb0d470f6e9e49c894c270eea16fee1e35e0f09fe8c1c3262d3e016daeab4"
+            }
+          ],
+          "old_text_recovered": true,
+          "exact_difference": {
+            "added_sentence": "测量题各电气报告端口的电压数值就是指标数值，例如0.5LSB用0.5V、20dB用20V，valid用0或1V。",
+            "other_text_identical": true
+          },
+          "old_text_limit": null,
+          "intermediate_checkpoint_sha256": "ab00f9f405d97220a4aaefe7568bec1f75e0e032d70534a78933322fede1eb54",
+          "delivered_scoring_assets_unchanged": true,
+          "reuse_reason": "Author calibration used no model or instruction interpretation. All six executable scoring assets match the immutable preparation byte for byte. The delivered metric-voltage sentence explains the numerical representation already used by the calibrated reference, independent checker and waveform outputs. Packaging supplies the same runtime and PSF reader bytes; it changes no circuit contract or formal condition. No interpretation or executable behavior changed."
+        }
+      ],
+      "scoring_comparisons": [
+        {
+          "variant": "reference",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "1f459adfd397bef0b17cac23a710babf92230b087bd3cfb02345b63c0250a604",
+            "contract.json": "5f81c0a23b1e33b59f165406dedfa92f393606151ffe271a4279bbfa1ea08f63",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "alternative",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "1f459adfd397bef0b17cac23a710babf92230b087bd3cfb02345b63c0250a604",
+            "contract.json": "5f81c0a23b1e33b59f165406dedfa92f393606151ffe271a4279bbfa1ea08f63",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "omit-last",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "1f459adfd397bef0b17cac23a710babf92230b087bd3cfb02345b63c0250a604",
+            "contract.json": "5f81c0a23b1e33b59f165406dedfa92f393606151ffe271a4279bbfa1ea08f63",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "transparent",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "1f459adfd397bef0b17cac23a710babf92230b087bd3cfb02345b63c0250a604",
+            "contract.json": "5f81c0a23b1e33b59f165406dedfa92f393606151ffe271a4279bbfa1ea08f63",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        },
+        {
+          "variant": "wrong-scale",
+          "matched_scoring_assets": {
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "cases.json": "1f459adfd397bef0b17cac23a710babf92230b087bd3cfb02345b63c0250a604",
+            "contract.json": "5f81c0a23b1e33b59f165406dedfa92f393606151ffe271a4279bbfa1ea08f63",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+          },
+          "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+          "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+          "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+        }
+      ],
+      "original_entrypoint_check": {
+        "entrypoint": "tests/test.sh --help",
+        "isolated_tests_directory": true,
+        "repository_pythonpath": false,
+        "returncode": 0,
+        "stdout_sha256": "256417c4b7da6fcfab13353be61ccaeb15c1d25bf02e5cc0d231b853923f0291",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9"
+      },
+      "runtime_bundle_additions": {
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+      }
+    }
+  ],
+  "preparation_count": 34,
+  "executable_asset_comparisons": 204,
+  "no_simulator_execution": true,
+  "no_model_experiments": true,
+  "limits": [
+    "test.sh --help proves isolated import and argument entry only; it does not prove a full Harbor container Trial",
+    "Targeted negative calibration is not a full formal-condition matrix"
+  ],
+  "analysis_identity": "4351d186560bf5190e1f0c8b4fa64acdac808a24d44dfa62d6fff8b38ceae947"
+}

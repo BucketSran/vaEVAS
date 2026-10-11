@@ -8,23 +8,35 @@
   "no_model_experiments": true,
   "final": [
     {
-      "prepared": "runs/benchmark-next-converter-r2/v3-converter-segmented/reference",
+      "prepared": "runs/benchmark-next-converter-r8/v3-converter-segmented/reference",
+      "preparation_sha256": "4ec3ad47b17052badc67d6f5a30bd15dc2d300f5a05e5027462ddaaa828b4fd0",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "cases.json": "b54494794d4a1c2ec2aee3db7df2ab248c426655383b88d724e6516753a61b3a",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "contract.json": "70fb3b5b4558e66329e9eb133ed8e10d57b18ca46cc95c19e88bd6bc652314c2",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "instruction.md": "0b3752be70dd45a75c4ea236c9ab28fa4680230515a4869bb8faa21f9ba86b80"
+      },
       "task": "v3-converter-segmented",
       "candidate_sha256": "eb9f2b156e8c9f93796e96152ff9bbd8f70ad4252dc890922791e922465502b9",
-      "criteria_sha256": "889a82fa5a38a823e48e23b88a044153f5fddd82ed5e27b230795304b9b7db1c",
+      "criteria_sha256": "b555e2011daf9c96d0df467ab5a73975a82f48fa79f6541360d13209319429de",
       "all_selected_conditions_graded": true,
       "all_selected_conditions_passed": true,
       "has_selected_graded_failure": false,
       "conditions": [
         {
           "condition": "private-0",
-          "job_id": "bf-6d979411ff524a48a62d-private-0",
+          "job_id": "bf-01e03945cec549b8b702-private-0",
           "execution": "ok",
           "score": 1,
           "report_status": "completed",
-          "report_sha256": "09f1f5823833203af92f53e70740e02eac6fa28288f1404474f257dda7a75a29",
-          "archive_sha256": "ed14503709d51498b88c652bb7e01beb405da8d632500ef0d84a3638b1092cfa",
-          "archive": "runs/benchmark-next-converter-r2/v3-converter-segmented/reference/remote/bf-6d979411ff524a48a62d-private-0/archive/job.tar.gz",
+          "report_sha256": "e404735e20fa83d8c947ede60bcc34c89030463760e858f556eb613a6400cbfd",
+          "archive_sha256": "bbc22fccc355562f9408f07392b071d1ef72c0f2c3b6a6d47bd9f27e8affca85",
+          "archive": "runs/benchmark-next-converter-r8/v3-converter-segmented/reference/remote/bf-01e03945cec549b8b702-private-0/archive/job.tar.gz",
           "spectre_version": "21.1.0.509.isr12",
           "candidate_sha256": "bcf187344caf2b4a8a605b3e0dd2337e97e21f039eaba10f421fdae5ffd6c554",
           "checker_files": {
@@ -40,7 +52,7 @@
               "netlist_sha256": "c3cd8eeab1f1c1e713f6043c2688227d58a34717a04056ab5cf6554523cf1d8f",
               "support_sha256": {},
               "returncode": 0,
-              "elapsed_s": 1.2663387041538954,
+              "elapsed_s": 1.4673821087926626,
               "passed": true,
               "errors": {
                 "aout": 5.551115123125783e-17
@@ -49,20 +61,20 @@
               "records": 0,
               "invalid": false,
               "status": "graded",
-              "waveform_sha256": "7e5cf8a8b4cdce1d272415966209e31841cb403a925e7fbf6c8b2dd1185b8fb1",
+              "waveform_sha256": "bc705df91d572e9dda3f2ff07420071bd20feca90889c89ebcb8e327b0c45d4d",
               "waveform_rows": 3665
             }
           ]
         },
         {
           "condition": "private-1",
-          "job_id": "bf-8be77ddf261d4a3e8e49-private-1",
+          "job_id": "bf-4bd89053530d420bbd9a-private-1",
           "execution": "ok",
           "score": 1,
           "report_status": "completed",
-          "report_sha256": "f67cfb66ca4d47b59320133fdd6fc602060f1ed9cb2b831b58eee8f3ec497083",
-          "archive_sha256": "27432c94b7981bdb7322a9b822294c9cec911b8e131ec870aa9b6b513777a32a",
-          "archive": "runs/benchmark-next-converter-r2/v3-converter-segmented/reference/remote/bf-8be77ddf261d4a3e8e49-private-1/archive/job.tar.gz",
+          "report_sha256": "f209c29f5650eb090e40caf3a710c4b08743b18f21fcbd77cce8ebb0af1158af",
+          "archive_sha256": "a864bafee6791e192fa6f2e609ae748d63133953747c5087d0395d294d960f98",
+          "archive": "runs/benchmark-next-converter-r8/v3-converter-segmented/reference/remote/bf-4bd89053530d420bbd9a-private-1/archive/job.tar.gz",
           "spectre_version": "21.1.0.509.isr12",
           "candidate_sha256": "bcf187344caf2b4a8a605b3e0dd2337e97e21f039eaba10f421fdae5ffd6c554",
           "checker_files": {
@@ -78,7 +90,7 @@
               "netlist_sha256": "2887885dcc94f09d723d0fe2fc07441b843c21343bf2fc5d950ed3507817b1a2",
               "support_sha256": {},
               "returncode": 0,
-              "elapsed_s": 1.2666438929736614,
+              "elapsed_s": 1.3672368358820677,
               "passed": true,
               "errors": {
                 "aout": 5.551115123125783e-17
@@ -87,7 +99,7 @@
               "records": 0,
               "invalid": false,
               "status": "graded",
-              "waveform_sha256": "ac5796303663580ea9bdb6a57eeb5d62e44ce8c5e83222707b17b38c2538fdba",
+              "waveform_sha256": "ba32779568021d2ce84502f45185ccbaa79289585c0dfb109d83db4fafb91c40",
               "waveform_rows": 3666
             }
           ]
@@ -104,6 +116,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r4/v3-converter-segmented/alternative",
+      "preparation_sha256": "d3f6e779a5524e580b7d1c4f862c1b7e5790659ba575d48862a20edb8e3d5a2a",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "b54494794d4a1c2ec2aee3db7df2ab248c426655383b88d724e6516753a61b3a",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "70fb3b5b4558e66329e9eb133ed8e10d57b18ca46cc95c19e88bd6bc652314c2",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "114134dcdbb9dddc5452a742a7a8fdef390fb1e180f0471bd731ca3da4c69365"
+      },
       "task": "v3-converter-segmented",
       "candidate_sha256": "7e5e6f2e9425598924653700ba312e016ef6b1fc75f4d06b79d97ceb98510f33",
       "criteria_sha256": "9b3c6dc183a034b565251264087bd2fcf92c20a6b1b1abe5e6e6bf1f57cfc01a",
@@ -199,6 +223,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r4/v3-converter-segmented/omit-last",
+      "preparation_sha256": "272f22ef3913665cc5580e164d185d090b7b0ad0349cca75a8484b0059919188",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "b54494794d4a1c2ec2aee3db7df2ab248c426655383b88d724e6516753a61b3a",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "70fb3b5b4558e66329e9eb133ed8e10d57b18ca46cc95c19e88bd6bc652314c2",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "114134dcdbb9dddc5452a742a7a8fdef390fb1e180f0471bd731ca3da4c69365"
+      },
       "task": "v3-converter-segmented",
       "candidate_sha256": "394998ebc5ff4c76e9e017110c2a25876aec2d7421c180575cf2a1d92ca69533",
       "criteria_sha256": "9b3c6dc183a034b565251264087bd2fcf92c20a6b1b1abe5e6e6bf1f57cfc01a",
@@ -255,6 +291,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r4/v3-converter-segmented/transparent",
+      "preparation_sha256": "976f4a959617665c2e1462a44bb50481a06e0ca55aeb0aae3496ebda0c902b1f",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "b54494794d4a1c2ec2aee3db7df2ab248c426655383b88d724e6516753a61b3a",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "70fb3b5b4558e66329e9eb133ed8e10d57b18ca46cc95c19e88bd6bc652314c2",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "114134dcdbb9dddc5452a742a7a8fdef390fb1e180f0471bd731ca3da4c69365"
+      },
       "task": "v3-converter-segmented",
       "candidate_sha256": "cb4669d1624cc56b25688fa8146a6b1b6f80c57e9f2cb0dcca1094263d0c6921",
       "criteria_sha256": "9b3c6dc183a034b565251264087bd2fcf92c20a6b1b1abe5e6e6bf1f57cfc01a",
@@ -311,6 +359,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r4/v3-converter-segmented/wrong-scale",
+      "preparation_sha256": "0e4994e68212871946864057dedffc571af4feded6bdd918c4f2aa16a95122fe",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "b54494794d4a1c2ec2aee3db7df2ab248c426655383b88d724e6516753a61b3a",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "70fb3b5b4558e66329e9eb133ed8e10d57b18ca46cc95c19e88bd6bc652314c2",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "114134dcdbb9dddc5452a742a7a8fdef390fb1e180f0471bd731ca3da4c69365"
+      },
       "task": "v3-converter-segmented",
       "candidate_sha256": "bd09ed6a647b64d579794cefc8069f4713833ef140723d3ee73795096b056fd7",
       "criteria_sha256": "9b3c6dc183a034b565251264087bd2fcf92c20a6b1b1abe5e6e6bf1f57cfc01a",
@@ -367,6 +427,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r7/v3-converter-segmented/bit-order",
+      "preparation_sha256": "53be3c559e53b16c638be48d625a526b0fa82636a13d7d4c711611e98960f7bf",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "b54494794d4a1c2ec2aee3db7df2ab248c426655383b88d724e6516753a61b3a",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "70fb3b5b4558e66329e9eb133ed8e10d57b18ca46cc95c19e88bd6bc652314c2",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "114134dcdbb9dddc5452a742a7a8fdef390fb1e180f0471bd731ca3da4c69365"
+      },
       "task": "v3-converter-segmented",
       "candidate_sha256": "509f3faa0ac476b81c8f227bf99ec3248f62db3c9007b692d51144c3df4da2bf",
       "criteria_sha256": "9b3c6dc183a034b565251264087bd2fcf92c20a6b1b1abe5e6e6bf1f57cfc01a",
@@ -422,23 +494,35 @@
       "calibration_met": true
     },
     {
-      "prepared": "runs/benchmark-next-converter-r2/v3-converter-thermometer/reference",
+      "prepared": "runs/benchmark-next-converter-r8/v3-converter-thermometer/reference",
+      "preparation_sha256": "1d53e97eb79166e3d05b0daa99399e45144f807b485e5b8821bfbca869767e95",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "cases.json": "1f459adfd397bef0b17cac23a710babf92230b087bd3cfb02345b63c0250a604",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "contract.json": "5f81c0a23b1e33b59f165406dedfa92f393606151ffe271a4279bbfa1ea08f63",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "instruction.md": "7df6dbc9029a500e6eb46ada46dd4953a2baa5ab3f7658a2bc096ebde604b594"
+      },
       "task": "v3-converter-thermometer",
       "candidate_sha256": "45e039bc6a7ca47550d22dd3e8084be22cfeb57f9411a8bdfe712e5341eb28b1",
-      "criteria_sha256": "133b74dabc597832f6f2bf4c8110b7952c1c72d8cdca848f8b8152cda42898df",
+      "criteria_sha256": "32a651ca5f36076120a1cadc4ef5f663c811e9af9d89ab18aaeb0ab709da612a",
       "all_selected_conditions_graded": true,
       "all_selected_conditions_passed": true,
       "has_selected_graded_failure": false,
       "conditions": [
         {
           "condition": "private-0",
-          "job_id": "bf-341a5e19d54242969304-private-0",
+          "job_id": "bf-a9ed644563e14cb8ba63-private-0",
           "execution": "ok",
           "score": 1,
           "report_status": "completed",
-          "report_sha256": "439e3a61f8dde9ff3c93df1fa86566d7db62f5e229b52c9c65be69e65f8b2f9c",
-          "archive_sha256": "58c08716191fd55d821cb53d67ccf6fea151024392ffd4a35dccb42710c7c193",
-          "archive": "runs/benchmark-next-converter-r2/v3-converter-thermometer/reference/remote/bf-341a5e19d54242969304-private-0/archive/job.tar.gz",
+          "report_sha256": "e7de8535d5aa39491526f9606ec0ab86cebb35236c7173af92fff491495f333b",
+          "archive_sha256": "cdb553b91b0bf2ce648968101daa6490a0bfaa89d9082e3a49130457ebb341f3",
+          "archive": "runs/benchmark-next-converter-r8/v3-converter-thermometer/reference/remote/bf-a9ed644563e14cb8ba63-private-0/archive/job.tar.gz",
           "spectre_version": "21.1.0.509.isr12",
           "candidate_sha256": "b9d6b2d1bd034f3d3396312870c0a7e43215a92c599cfc888b415c9c087eab35",
           "checker_files": {
@@ -454,7 +538,7 @@
               "netlist_sha256": "7d71c94b54991e494708e262b77bd8b4c129a9e48a4622fb6872f09eec8c8e65",
               "support_sha256": {},
               "returncode": 0,
-              "elapsed_s": 1.3169136848300695,
+              "elapsed_s": 1.36686160415411,
               "passed": true,
               "errors": {
                 "aout": 5.551115123125783e-17
@@ -463,20 +547,20 @@
               "records": 0,
               "invalid": false,
               "status": "graded",
-              "waveform_sha256": "18ed0125786895ee57acdd5309ac1b6ce6c15af9f2162ca4a1fbadb9ac6f9b1f",
+              "waveform_sha256": "3835f440ead08e9c445030ec839f8f6c3d449592069edf0409dfad0388d15ec1",
               "waveform_rows": 3651
             }
           ]
         },
         {
           "condition": "private-1",
-          "job_id": "bf-6155b968cecb4ff38870-private-1",
+          "job_id": "bf-c03eae45fc80462d98c3-private-1",
           "execution": "ok",
           "score": 1,
           "report_status": "completed",
-          "report_sha256": "df3c1ec20845d0239c1b771a604877fa1a736dbe6991e0c466fefcffe17ef974",
-          "archive_sha256": "466b8b6c5a05626c416bc3826826b862e0dbeeddf8d7e9a96efcdd78b78abda8",
-          "archive": "runs/benchmark-next-converter-r2/v3-converter-thermometer/reference/remote/bf-6155b968cecb4ff38870-private-1/archive/job.tar.gz",
+          "report_sha256": "a5cc2ebc5742e823f126a5e3a7730ae6b176df0fd339d6350d81620071c6cd98",
+          "archive_sha256": "c8ab03954d917a65bbecf4acd04f6c948e4b9cbebfa523516da48a648d62700e",
+          "archive": "runs/benchmark-next-converter-r8/v3-converter-thermometer/reference/remote/bf-c03eae45fc80462d98c3-private-1/archive/job.tar.gz",
           "spectre_version": "21.1.0.509.isr12",
           "candidate_sha256": "b9d6b2d1bd034f3d3396312870c0a7e43215a92c599cfc888b415c9c087eab35",
           "checker_files": {
@@ -492,7 +576,7 @@
               "netlist_sha256": "40e5b05f68f9478553bd70c1e424fc8010e08529bcbb41654112be3ab679d9cb",
               "support_sha256": {},
               "returncode": 0,
-              "elapsed_s": 1.6678143683820963,
+              "elapsed_s": 1.416320575401187,
               "passed": true,
               "errors": {
                 "aout": 5.551115123125783e-17
@@ -501,7 +585,7 @@
               "records": 0,
               "invalid": false,
               "status": "graded",
-              "waveform_sha256": "2b37a162cdae0c5c786a38ce89bb1b86f1d0491970163f85f625f59774fc5740",
+              "waveform_sha256": "1f943b23bbf5676c3a8329f3d52ccaf638f5d4c897f3c3760a4a8788ff31c6d8",
               "waveform_rows": 3652
             }
           ]
@@ -518,6 +602,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r4/v3-converter-thermometer/alternative",
+      "preparation_sha256": "aca86879c22d8a0b4ef1f26e8e18800795ef4ff02b02515470077ce8fd5c2288",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "1f459adfd397bef0b17cac23a710babf92230b087bd3cfb02345b63c0250a604",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "5f81c0a23b1e33b59f165406dedfa92f393606151ffe271a4279bbfa1ea08f63",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "ab00f9f405d97220a4aaefe7568bec1f75e0e032d70534a78933322fede1eb54"
+      },
       "task": "v3-converter-thermometer",
       "candidate_sha256": "4ae99fc0f2dbb0d8837e39093eade65f0469f5c12f9ddbac723a0d2760c30f93",
       "criteria_sha256": "ccd121020fb02bc8354d6bdc9ad892b2c45b360f2c72c3a6849bedaf42714f89",
@@ -613,6 +709,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r4/v3-converter-thermometer/omit-last",
+      "preparation_sha256": "d6d1f942ec081126b86e52a0747c5242a9035b592a68270519cdd3ef5861745a",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "1f459adfd397bef0b17cac23a710babf92230b087bd3cfb02345b63c0250a604",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "5f81c0a23b1e33b59f165406dedfa92f393606151ffe271a4279bbfa1ea08f63",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "ab00f9f405d97220a4aaefe7568bec1f75e0e032d70534a78933322fede1eb54"
+      },
       "task": "v3-converter-thermometer",
       "candidate_sha256": "faaeca6935b19d040eaece55d9f2c43a674b7c2fceb85cc805f29fc495e91490",
       "criteria_sha256": "ccd121020fb02bc8354d6bdc9ad892b2c45b360f2c72c3a6849bedaf42714f89",
@@ -669,6 +777,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r4/v3-converter-thermometer/transparent",
+      "preparation_sha256": "8284f46dc0427f52058e7001995bac56e95006dfb910f94c5cf6738093ef0878",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "1f459adfd397bef0b17cac23a710babf92230b087bd3cfb02345b63c0250a604",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "5f81c0a23b1e33b59f165406dedfa92f393606151ffe271a4279bbfa1ea08f63",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "ab00f9f405d97220a4aaefe7568bec1f75e0e032d70534a78933322fede1eb54"
+      },
       "task": "v3-converter-thermometer",
       "candidate_sha256": "46a038b3dd78b91d2c6a1f5d08a3a90f8a18c200ad73b29c5ef7fa679a154c78",
       "criteria_sha256": "ccd121020fb02bc8354d6bdc9ad892b2c45b360f2c72c3a6849bedaf42714f89",
@@ -725,6 +845,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r4/v3-converter-thermometer/wrong-scale",
+      "preparation_sha256": "81dbb0d470f6e9e49c894c270eea16fee1e35e0f09fe8c1c3262d3e016daeab4",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "1f459adfd397bef0b17cac23a710babf92230b087bd3cfb02345b63c0250a604",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "5f81c0a23b1e33b59f165406dedfa92f393606151ffe271a4279bbfa1ea08f63",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "ab00f9f405d97220a4aaefe7568bec1f75e0e032d70534a78933322fede1eb54"
+      },
       "task": "v3-converter-thermometer",
       "candidate_sha256": "337e7b3475d1bdd85a567cf429f9689eebfdb83326e695c001cb60d38faa39f3",
       "criteria_sha256": "ccd121020fb02bc8354d6bdc9ad892b2c45b360f2c72c3a6849bedaf42714f89",
@@ -780,23 +912,35 @@
       "calibration_met": true
     },
     {
-      "prepared": "runs/benchmark-next-converter-r2/v3-converter-nonideal/reference",
+      "prepared": "runs/benchmark-next-converter-r8/v3-converter-nonideal/reference",
+      "preparation_sha256": "89e862feb042681fcec2c271e184b84b56ccbc5a814fee14afdf8155a501c1eb",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "cases.json": "3fd017cb82b6ca2884f4de89cc9aaf502f1589b183f691d5f713c2fcb19c7ac5",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "contract.json": "caca1f1b49387d25cb62d891698c57dd23eb60bd6c525edf12cde358c3d42237",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "instruction.md": "3acaac35352e1f258e12384d2cf88bc1b11a37e724d1925d384ee14e87317151"
+      },
       "task": "v3-converter-nonideal",
       "candidate_sha256": "f46952fc7a42c7e4ad4ce61b8f4ad31dbefdc52cc5aa38be0ea1b98cd984feac",
-      "criteria_sha256": "f05e75d742fa4695ffaa01717cc1700deaba67d5b07d6d1894e55fa6244fd5f1",
+      "criteria_sha256": "a5463cb67ecf9f6195ccae8d075ad21613e4b7704262d466ea5ad2c798e548c4",
       "all_selected_conditions_graded": true,
       "all_selected_conditions_passed": true,
       "has_selected_graded_failure": false,
       "conditions": [
         {
           "condition": "private-0",
-          "job_id": "bf-394d910925624548b6a3-private-0",
+          "job_id": "bf-60800d58f7a14bde8709-private-0",
           "execution": "ok",
           "score": 1,
           "report_status": "completed",
-          "report_sha256": "60d9346dd97cb0b2be7739a6243967c2161772df7b34927a3f1794ccd2bada45",
-          "archive_sha256": "4a347bdde48b4eeed18b54341c5d236e370cf48db9c99ea7a7a02edaa1e80db4",
-          "archive": "runs/benchmark-next-converter-r2/v3-converter-nonideal/reference/remote/bf-394d910925624548b6a3-private-0/archive/job.tar.gz",
+          "report_sha256": "341a6ec32497e81ae9cab0ce4886201b720f6c64bcd367e924956f6c5a6a1c84",
+          "archive_sha256": "16e5ee1f9fddb1e8e30ba78d3644df058b48ad8358b34261e374cb6a96a3df98",
+          "archive": "runs/benchmark-next-converter-r8/v3-converter-nonideal/reference/remote/bf-60800d58f7a14bde8709-private-0/archive/job.tar.gz",
           "spectre_version": "21.1.0.509.isr12",
           "candidate_sha256": "5688c37838ffe363f08d2ab3c5ffb1680a8bcebc8012befa5f97011bdb5fe54b",
           "checker_files": {
@@ -812,7 +956,7 @@
               "netlist_sha256": "cf785a7954fba3f52d7c635e7f6d34d3304b9cf01a3904522693ed6e41073422",
               "support_sha256": {},
               "returncode": 0,
-              "elapsed_s": 1.2164564579725266,
+              "elapsed_s": 1.417501961812377,
               "passed": true,
               "errors": {
                 "aout": 5.551115123125783e-17
@@ -821,20 +965,20 @@
               "records": 0,
               "invalid": false,
               "status": "graded",
-              "waveform_sha256": "149940a421be8401aed189a719a886a88f36ff6e4ba26500d0a38196eb77e9bb",
+              "waveform_sha256": "052fce4da8886890dd6f5248236f9c0bc03e73d1f373d12d6bff478e9296a630",
               "waveform_rows": 1825
             }
           ]
         },
         {
           "condition": "private-1",
-          "job_id": "bf-4478252885634ed689b2-private-1",
+          "job_id": "bf-2a02d77c87c943428a81-private-1",
           "execution": "ok",
           "score": 1,
           "report_status": "completed",
-          "report_sha256": "65a16ab83fc343075c856ed43ad0eed57b2acf0e963cea9a1928403d17a9381f",
-          "archive_sha256": "f63cee9fba1ae71e289cde3bd980ed4dbcf8e84b6ee429344cafcdfbfadac0df",
-          "archive": "runs/benchmark-next-converter-r2/v3-converter-nonideal/reference/remote/bf-4478252885634ed689b2-private-1/archive/job.tar.gz",
+          "report_sha256": "18eab6ee13b6327698546e936d50ff45d59871e791b8f9e34c74077e995ba91e",
+          "archive_sha256": "039f93198a2b2466cef1bdb9de7fb108be0a43b429e8d4586c249e4d5ef8d74b",
+          "archive": "runs/benchmark-next-converter-r8/v3-converter-nonideal/reference/remote/bf-2a02d77c87c943428a81-private-1/archive/job.tar.gz",
           "spectre_version": "21.1.0.509.isr12",
           "candidate_sha256": "5688c37838ffe363f08d2ab3c5ffb1680a8bcebc8012befa5f97011bdb5fe54b",
           "checker_files": {
@@ -850,7 +994,7 @@
               "netlist_sha256": "1058fcac87d8442acb535e30f8654414b5347c962f51e67fa6d993439c49633a",
               "support_sha256": {},
               "returncode": 0,
-              "elapsed_s": 1.2161386515945196,
+              "elapsed_s": 1.216577349230647,
               "passed": true,
               "errors": {
                 "aout": 5.551115123125783e-17
@@ -859,7 +1003,7 @@
               "records": 0,
               "invalid": false,
               "status": "graded",
-              "waveform_sha256": "b60201c3b96b34e9abe7a91147497445d3d21cf939855e435470084756e674d8",
+              "waveform_sha256": "fab592e1be98904d8eac04b073dbae63109515f339a9e2abb8e6bc5cefab67a1",
               "waveform_rows": 1826
             }
           ]
@@ -876,6 +1020,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r4/v3-converter-nonideal/alternative",
+      "preparation_sha256": "b1be9c9ce084a26defd71b01cbadf1cbb5273df28d0967d529f228338d28a5c4",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "3fd017cb82b6ca2884f4de89cc9aaf502f1589b183f691d5f713c2fcb19c7ac5",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "caca1f1b49387d25cb62d891698c57dd23eb60bd6c525edf12cde358c3d42237",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "84eeace3856c0db2872647d3c95533a946cc3f642190d1a80c052fc8e52f194d"
+      },
       "task": "v3-converter-nonideal",
       "candidate_sha256": "73847b8ccf6610232fb5ad2da8312576ee1ebaced5d17382174cb54e0be685d2",
       "criteria_sha256": "f3e680df02bb756ec69081f572ce87eff3ec383cc4207fba6899c4c13b398146",
@@ -971,6 +1127,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r4/v3-converter-nonideal/omit-last",
+      "preparation_sha256": "9bfc6d56b466c3f53cefd3b69f6c99810c5204c917e39c0a45af6172e33611a4",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "3fd017cb82b6ca2884f4de89cc9aaf502f1589b183f691d5f713c2fcb19c7ac5",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "caca1f1b49387d25cb62d891698c57dd23eb60bd6c525edf12cde358c3d42237",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "84eeace3856c0db2872647d3c95533a946cc3f642190d1a80c052fc8e52f194d"
+      },
       "task": "v3-converter-nonideal",
       "candidate_sha256": "4ffba1dababb57f88bc096d665a02d4e438ccb4001653e39c82819de11946641",
       "criteria_sha256": "f3e680df02bb756ec69081f572ce87eff3ec383cc4207fba6899c4c13b398146",
@@ -1027,6 +1195,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r4/v3-converter-nonideal/transparent",
+      "preparation_sha256": "9f736255269ff21d19ff6b20159adc1665ad0043d5704a1de12c65f25fffe39e",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "3fd017cb82b6ca2884f4de89cc9aaf502f1589b183f691d5f713c2fcb19c7ac5",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "caca1f1b49387d25cb62d891698c57dd23eb60bd6c525edf12cde358c3d42237",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "84eeace3856c0db2872647d3c95533a946cc3f642190d1a80c052fc8e52f194d"
+      },
       "task": "v3-converter-nonideal",
       "candidate_sha256": "ab073b5ca656a19e4cb7f8bcad38dab7f33153a76e68049f46695275e4463364",
       "criteria_sha256": "f3e680df02bb756ec69081f572ce87eff3ec383cc4207fba6899c4c13b398146",
@@ -1083,6 +1263,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r4/v3-converter-nonideal/ideal-binary",
+      "preparation_sha256": "f2ef213358707e8b9b3f7ce521d3abe8dc4ec36e54301b16b94499c60f7803c1",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "3fd017cb82b6ca2884f4de89cc9aaf502f1589b183f691d5f713c2fcb19c7ac5",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "caca1f1b49387d25cb62d891698c57dd23eb60bd6c525edf12cde358c3d42237",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "84eeace3856c0db2872647d3c95533a946cc3f642190d1a80c052fc8e52f194d"
+      },
       "task": "v3-converter-nonideal",
       "candidate_sha256": "49d3706877e7340fc4026548c86747679e1b97b932cacfe066eb8f5f22fd880e",
       "criteria_sha256": "f3e680df02bb756ec69081f572ce87eff3ec383cc4207fba6899c4c13b398146",
@@ -1138,23 +1330,35 @@
       "calibration_met": true
     },
     {
-      "prepared": "runs/benchmark-next-converter-r2/v3-converter-subradix/reference",
+      "prepared": "runs/benchmark-next-converter-r8/v3-converter-subradix/reference",
+      "preparation_sha256": "430e387d2dbd255046de87e75ce27406317ec642064e869bac7799300f14915b",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "cases.json": "96fd674ce68edcb2d6cd4b4560d90b7a924dddbbdae0c21a74a5a84e7cca038b",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "contract.json": "c50de16e0445fd788e7c7cd7049d435553c9819ee3b64b11349e238ba68711f2",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "instruction.md": "00377144cf448742f9c8c194d19b1bbdc54ad4d506ec78db53a1f45d9cae790d"
+      },
       "task": "v3-converter-subradix",
       "candidate_sha256": "22acb21ef290c84645ff2515749afb4ad5e5c04faf2824474f30a1f3a4d0a756",
-      "criteria_sha256": "857377c22a7a1f550464381509bf9c2f9238730dff87bda7d3e3b5c648d876b9",
+      "criteria_sha256": "d385e648f38978a976472c0f3aac2b345ba1e493f2df3ada475e3c24af802f99",
       "all_selected_conditions_graded": true,
       "all_selected_conditions_passed": true,
       "has_selected_graded_failure": false,
       "conditions": [
         {
           "condition": "private-0",
-          "job_id": "bf-51a59da3f7cb4e1d860d-private-0",
+          "job_id": "bf-6eeac3a45bd94da9b13d-private-0",
           "execution": "ok",
           "score": 1,
           "report_status": "completed",
-          "report_sha256": "46631664143e0b8d44d4f56793dfdcad1cd2d6907898be2525bdca9c1b30a9ed",
-          "archive_sha256": "e0ea1f141b346c9273feeadb5de1bcbdd3e0da13ba976f23a25e1e6568ab3834",
-          "archive": "runs/benchmark-next-converter-r2/v3-converter-subradix/reference/remote/bf-51a59da3f7cb4e1d860d-private-0/archive/job.tar.gz",
+          "report_sha256": "0026bf8f7ed82dce20ac60c0baf24e40739ce280cb1b6847080b19f9a34453a0",
+          "archive_sha256": "ae4d27b76dfe2f5bf21f78666b328fe916801db26caeccc63d3c6eebe770217f",
+          "archive": "runs/benchmark-next-converter-r8/v3-converter-subradix/reference/remote/bf-6eeac3a45bd94da9b13d-private-0/archive/job.tar.gz",
           "spectre_version": "21.1.0.509.isr12",
           "candidate_sha256": "d5da80be34cbebf5b60af0550e19c65f274420637534e72e5930176d1226e174",
           "checker_files": {
@@ -1170,7 +1374,7 @@
               "netlist_sha256": "9979bff508db43a8e9ee463cf74f7b08a2fa6f0052f50ffbd86014f2dc871cab",
               "support_sha256": {},
               "returncode": 0,
-              "elapsed_s": 1.8174177389591932,
+              "elapsed_s": 1.566647995263338,
               "passed": true,
               "errors": {
                 "aout": 1.1102230246251565e-16
@@ -1179,20 +1383,20 @@
               "records": 0,
               "invalid": false,
               "status": "graded",
-              "waveform_sha256": "3d3a0248bb1fbd042b02afefeb267e8fead584bd003e57f67058f37645ca4461",
+              "waveform_sha256": "292ed0883b7ea4e4eb9aa922f20dc8584eb83d945199bf711e5c25791e6b41fb",
               "waveform_rows": 2745
             }
           ]
         },
         {
           "condition": "private-1",
-          "job_id": "bf-ad6a6df086c64266b334-private-1",
+          "job_id": "bf-0cac1be28cdc4e028662-private-1",
           "execution": "ok",
           "score": 1,
           "report_status": "completed",
-          "report_sha256": "5c8c0355fe352ea8d58cf99982f8ebbb2e3df283829438269c1ceefa5c2013bf",
-          "archive_sha256": "2700b02d441b490b8b8d24fad3989c2f462d7bab19eadfd787f4f47e67aa9f66",
-          "archive": "runs/benchmark-next-converter-r2/v3-converter-subradix/reference/remote/bf-ad6a6df086c64266b334-private-1/archive/job.tar.gz",
+          "report_sha256": "9b2f82a0d79ee5786e1e971b07e264cfc9d32efe458cace7011ed4ebae31a3c7",
+          "archive_sha256": "b9e57e06b1b3ddc03856b7c8adcf9a7b275aeb72f965e229c958a09908372ef1",
+          "archive": "runs/benchmark-next-converter-r8/v3-converter-subradix/reference/remote/bf-0cac1be28cdc4e028662-private-1/archive/job.tar.gz",
           "spectre_version": "21.1.0.509.isr12",
           "candidate_sha256": "d5da80be34cbebf5b60af0550e19c65f274420637534e72e5930176d1226e174",
           "checker_files": {
@@ -1208,7 +1412,7 @@
               "netlist_sha256": "f282d3e4d491a83dc14a516aea8e6700706cbfe18fe95a835fce58e600924b43",
               "support_sha256": {},
               "returncode": 0,
-              "elapsed_s": 1.7180637661367655,
+              "elapsed_s": 1.8181331176310778,
               "passed": true,
               "errors": {
                 "aout": 1.1102230246251565e-16
@@ -1217,7 +1421,7 @@
               "records": 0,
               "invalid": false,
               "status": "graded",
-              "waveform_sha256": "877d4aa9dfecae30a688c41f74f79c44773387d45c282ef1ccf511c4f1712e31",
+              "waveform_sha256": "a922e6cd2ec8abbdacd6461a6001b42a2efcefb35fe5b8b725d65dac6b2ce43f",
               "waveform_rows": 2746
             }
           ]
@@ -1234,6 +1438,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r4/v3-converter-subradix/alternative",
+      "preparation_sha256": "5ea755f3a632035e7f15383e75523895d1c1b705fcf9c13debd84c7fe63a9a3d",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "96fd674ce68edcb2d6cd4b4560d90b7a924dddbbdae0c21a74a5a84e7cca038b",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "c50de16e0445fd788e7c7cd7049d435553c9819ee3b64b11349e238ba68711f2",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "f7165c00bfe79b5035cc8ae7dc2bf4626df1f1ec7c14bade33187c4815bd5376"
+      },
       "task": "v3-converter-subradix",
       "candidate_sha256": "70d63fcae2ba9ab6a8c0809d5cfb952716ee895825300ecf89ae17aa9114c678",
       "criteria_sha256": "abc4ee2fff08b87feba00507e72056d0c8375369702ef8d33d015d1bad06cad4",
@@ -1329,6 +1545,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r4/v3-converter-subradix/omit-last",
+      "preparation_sha256": "36118494af005fa2efde319757d9ea363ae226b68e2b9a2e3bbf1ca103b995ca",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "96fd674ce68edcb2d6cd4b4560d90b7a924dddbbdae0c21a74a5a84e7cca038b",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "c50de16e0445fd788e7c7cd7049d435553c9819ee3b64b11349e238ba68711f2",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "f7165c00bfe79b5035cc8ae7dc2bf4626df1f1ec7c14bade33187c4815bd5376"
+      },
       "task": "v3-converter-subradix",
       "candidate_sha256": "68696c62b69d01c8fafcc8330570b50affcb8191a0d8fbba21e274be51accb49",
       "criteria_sha256": "abc4ee2fff08b87feba00507e72056d0c8375369702ef8d33d015d1bad06cad4",
@@ -1385,6 +1613,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r4/v3-converter-subradix/transparent",
+      "preparation_sha256": "3bdc1cb272c391d13cdffb946798f9726e1c1a1cc3eac834a517f6e5d454e79d",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "96fd674ce68edcb2d6cd4b4560d90b7a924dddbbdae0c21a74a5a84e7cca038b",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "c50de16e0445fd788e7c7cd7049d435553c9819ee3b64b11349e238ba68711f2",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "f7165c00bfe79b5035cc8ae7dc2bf4626df1f1ec7c14bade33187c4815bd5376"
+      },
       "task": "v3-converter-subradix",
       "candidate_sha256": "d58daeebd9bfb4ef658dd47bb1f0970197779be845c8de9bb90bd6250a9caddb",
       "criteria_sha256": "abc4ee2fff08b87feba00507e72056d0c8375369702ef8d33d015d1bad06cad4",
@@ -1441,6 +1681,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r4/v3-converter-subradix/ideal-binary",
+      "preparation_sha256": "c9ef6beb0f576abc1e81c9954a09bed5ba7e0b9024123cde10a6feacb5856d56",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "96fd674ce68edcb2d6cd4b4560d90b7a924dddbbdae0c21a74a5a84e7cca038b",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "c50de16e0445fd788e7c7cd7049d435553c9819ee3b64b11349e238ba68711f2",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "f7165c00bfe79b5035cc8ae7dc2bf4626df1f1ec7c14bade33187c4815bd5376"
+      },
       "task": "v3-converter-subradix",
       "candidate_sha256": "c348fb2cd8af7156c08ff7350b63aa14c4ae9178a7b35d1ae7131eee2de5f7d4",
       "criteria_sha256": "abc4ee2fff08b87feba00507e72056d0c8375369702ef8d33d015d1bad06cad4",
@@ -1497,6 +1749,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r3/v3-converter-dac-linearity/reference",
+      "preparation_sha256": "c3c7d2c683e636e006c32a471a22ac6a243689f67d355ef062a38943d15a34d6",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "7bb12d9be6e854d62ce33daa94e8566bb5e060847f40760589b0dbe4b73b6763",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "a5f305a3eb6df7b8f1304e53cd7ebacbed5bc3a62ed703c2d954982c43ed9c5e",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "d7686a81bc827b8cb168ef3e3fa3154af878baf2088707d3bd9d66245a598667"
+      },
       "task": "v3-converter-dac-linearity",
       "candidate_sha256": "34e12cc9da3dfc7f860a97bb704fefc5a4c8d01d6288c4d2b9e379a16a91818f",
       "criteria_sha256": "8360cc6f397c940f6c5ca23ee9ef4957156e3c02005405ac735de5b59fd6ff51",
@@ -1686,6 +1950,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r4/v3-converter-dac-linearity/alternative",
+      "preparation_sha256": "2be67cd450260b9a578a187151b8d25a0b08fe1f02640ae529c1a7fd314664ae",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "7bb12d9be6e854d62ce33daa94e8566bb5e060847f40760589b0dbe4b73b6763",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "a5f305a3eb6df7b8f1304e53cd7ebacbed5bc3a62ed703c2d954982c43ed9c5e",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "d7686a81bc827b8cb168ef3e3fa3154af878baf2088707d3bd9d66245a598667"
+      },
       "task": "v3-converter-dac-linearity",
       "candidate_sha256": "80a020184b06ef9cf15b712dd07daf57a5e7f143f8fd2ccf2cb522a28934ba3b",
       "criteria_sha256": "8360cc6f397c940f6c5ca23ee9ef4957156e3c02005405ac735de5b59fd6ff51",
@@ -1875,6 +2151,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r4/v3-converter-dac-linearity/ideal-report",
+      "preparation_sha256": "dc8ab4974ba9e51bcff3a74e895e2de78e5d6d70d609ced070f29dcd4f2c6453",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "7bb12d9be6e854d62ce33daa94e8566bb5e060847f40760589b0dbe4b73b6763",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "a5f305a3eb6df7b8f1304e53cd7ebacbed5bc3a62ed703c2d954982c43ed9c5e",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "d7686a81bc827b8cb168ef3e3fa3154af878baf2088707d3bd9d66245a598667"
+      },
       "task": "v3-converter-dac-linearity",
       "candidate_sha256": "1dcd7e50fde282e6fe46799f98b2617e8ccab2869bd3599c16dfbe9ed1c2a474",
       "criteria_sha256": "8360cc6f397c940f6c5ca23ee9ef4957156e3c02005405ac735de5b59fd6ff51",
@@ -1935,6 +2223,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r4/v3-converter-dac-linearity/wrong-step",
+      "preparation_sha256": "5b901015a89d8a7a8767800b5526ed7fd82143182461e924127ddfad31362699",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "7bb12d9be6e854d62ce33daa94e8566bb5e060847f40760589b0dbe4b73b6763",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "a5f305a3eb6df7b8f1304e53cd7ebacbed5bc3a62ed703c2d954982c43ed9c5e",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "d7686a81bc827b8cb168ef3e3fa3154af878baf2088707d3bd9d66245a598667"
+      },
       "task": "v3-converter-dac-linearity",
       "candidate_sha256": "79c61fae8903a413524821bef6477d19c01a0c691d30228fec6b0fa39d5cc6d7",
       "criteria_sha256": "8360cc6f397c940f6c5ca23ee9ef4957156e3c02005405ac735de5b59fd6ff51",
@@ -1995,6 +2295,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r6/v3-converter-dac-linearity/ignore-order",
+      "preparation_sha256": "fd7e6a063f3e39115a1eda601a19a3c38818e571b761150a5fa4b0a84c1e8877",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "7bb12d9be6e854d62ce33daa94e8566bb5e060847f40760589b0dbe4b73b6763",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "a5f305a3eb6df7b8f1304e53cd7ebacbed5bc3a62ed703c2d954982c43ed9c5e",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "d7686a81bc827b8cb168ef3e3fa3154af878baf2088707d3bd9d66245a598667"
+      },
       "task": "v3-converter-dac-linearity",
       "candidate_sha256": "57996e1a39abbb32b9348fd6225c66bb42e011d0bf351c3f7d24f4b9cf21ea63",
       "criteria_sha256": "8360cc6f397c940f6c5ca23ee9ef4957156e3c02005405ac735de5b59fd6ff51",
@@ -2055,6 +2367,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r4/v3-converter-dac-linearity/stale-reset",
+      "preparation_sha256": "385bcbaa312403707eb2e7683fc8dc9f61eaba149cac9e1ef118784e3170b165",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "7bb12d9be6e854d62ce33daa94e8566bb5e060847f40760589b0dbe4b73b6763",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "a5f305a3eb6df7b8f1304e53cd7ebacbed5bc3a62ed703c2d954982c43ed9c5e",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "d7686a81bc827b8cb168ef3e3fa3154af878baf2088707d3bd9d66245a598667"
+      },
       "task": "v3-converter-dac-linearity",
       "candidate_sha256": "8f64f60bb3ec6f5ab1263727ea7659c2a400045ca46081c2455c28e253785480",
       "criteria_sha256": "8360cc6f397c940f6c5ca23ee9ef4957156e3c02005405ac735de5b59fd6ff51",
@@ -2115,6 +2439,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/reference",
+      "preparation_sha256": "75051cf9972fe27509965ceca92f07fc7b4f658a18a08a5d375db783aac709bc",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "d0b143e4b71dd7810bbb98666ae3f0e86ea65fce13cfdc0e7860e4179e76619e",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "9ed4ad9ca022b7a10bb10363af12ce14f7088b4d6e882ed5b514b900f4043069",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "69e7c79e75364b004a55a421cc7ac2f2a9dff5a20d0d8abb2b8e84c7ed405e5e"
+      },
       "task": "v3-converter-adc-spectrum",
       "candidate_sha256": "ca02a99573045170fa5bfbb90edbd45e4b3afc2b9e1d130c477837f00d95f92b",
       "criteria_sha256": "4da2e2cf23d5aa51016646fcdfa87c1b8711a8fac8b42a6d87678b148b975c94",
@@ -2347,6 +2683,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/alternative",
+      "preparation_sha256": "cc7aa49ebd40e271a517ca0b52906da81b10aa35e9bf7ea8e8f7d37c5aabe1a6",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "d0b143e4b71dd7810bbb98666ae3f0e86ea65fce13cfdc0e7860e4179e76619e",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "9ed4ad9ca022b7a10bb10363af12ce14f7088b4d6e882ed5b514b900f4043069",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "69e7c79e75364b004a55a421cc7ac2f2a9dff5a20d0d8abb2b8e84c7ed405e5e"
+      },
       "task": "v3-converter-adc-spectrum",
       "candidate_sha256": "c2409a2540b0814aad28af57d44db2f2ac7c85e2822f70d8cec3620e7556f800",
       "criteria_sha256": "4da2e2cf23d5aa51016646fcdfa87c1b8711a8fac8b42a6d87678b148b975c94",
@@ -2579,6 +2927,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/amplitude-db",
+      "preparation_sha256": "d54af27a7c4d1d599ab500ca3dbfd61c2f2e7e5843bee253d641d8bdabc020ee",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "d0b143e4b71dd7810bbb98666ae3f0e86ea65fce13cfdc0e7860e4179e76619e",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "9ed4ad9ca022b7a10bb10363af12ce14f7088b4d6e882ed5b514b900f4043069",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "69e7c79e75364b004a55a421cc7ac2f2a9dff5a20d0d8abb2b8e84c7ed405e5e"
+      },
       "task": "v3-converter-adc-spectrum",
       "candidate_sha256": "c5276d035333951c57f7bc671774e5793e5bbe332169c942a156bf2f8b2f0d49",
       "criteria_sha256": "4da2e2cf23d5aa51016646fcdfa87c1b8711a8fac8b42a6d87678b148b975c94",
@@ -2639,6 +2999,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/nyquist-double",
+      "preparation_sha256": "0d312fa6ffb14b15e72c576384c6dfbc6ce16653e19c1171e9f3ca764a4ea47c",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "d0b143e4b71dd7810bbb98666ae3f0e86ea65fce13cfdc0e7860e4179e76619e",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "9ed4ad9ca022b7a10bb10363af12ce14f7088b4d6e882ed5b514b900f4043069",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "69e7c79e75364b004a55a421cc7ac2f2a9dff5a20d0d8abb2b8e84c7ed405e5e"
+      },
       "task": "v3-converter-adc-spectrum",
       "candidate_sha256": "798588be7b5af487a124a1a161de2d954ee5aed0ef31bbd1aa10153d5f53253e",
       "criteria_sha256": "4da2e2cf23d5aa51016646fcdfa87c1b8711a8fac8b42a6d87678b148b975c94",
@@ -2699,6 +3071,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r7/v3-converter-adc-spectrum/harmonics-as-fundamental",
+      "preparation_sha256": "0c9fea056b56bae8ea0e8d8473bab9849f9c8cec42cc6d7ae389e34dd464aae2",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "d0b143e4b71dd7810bbb98666ae3f0e86ea65fce13cfdc0e7860e4179e76619e",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "9ed4ad9ca022b7a10bb10363af12ce14f7088b4d6e882ed5b514b900f4043069",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "69e7c79e75364b004a55a421cc7ac2f2a9dff5a20d0d8abb2b8e84c7ed405e5e"
+      },
       "task": "v3-converter-adc-spectrum",
       "candidate_sha256": "489613fdffe9d72b034fad803fbbf0f1ffe10908c417beb5ec9ba38ab7180f7e",
       "criteria_sha256": "4da2e2cf23d5aa51016646fcdfa87c1b8711a8fac8b42a6d87678b148b975c94",
@@ -2759,6 +3143,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/ignore-invalid",
+      "preparation_sha256": "5685ad4f54d3af76c2c5fb24c66ab1c31cb125a03f5b7cc31ac0a7f1b98e22a3",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "d0b143e4b71dd7810bbb98666ae3f0e86ea65fce13cfdc0e7860e4179e76619e",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "9ed4ad9ca022b7a10bb10363af12ce14f7088b4d6e882ed5b514b900f4043069",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "69e7c79e75364b004a55a421cc7ac2f2a9dff5a20d0d8abb2b8e84c7ed405e5e"
+      },
       "task": "v3-converter-adc-spectrum",
       "candidate_sha256": "7d5c30bcecb34f74a9db4dc00079ced843d9eba30ed626facb3d739f3cadfde8",
       "criteria_sha256": "4da2e2cf23d5aa51016646fcdfa87c1b8711a8fac8b42a6d87678b148b975c94",
@@ -2819,6 +3215,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/stale-reset",
+      "preparation_sha256": "68760b748a7e782fcb3d58de6d6ff336131425cfc17340616933596add27f216",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "d0b143e4b71dd7810bbb98666ae3f0e86ea65fce13cfdc0e7860e4179e76619e",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "9ed4ad9ca022b7a10bb10363af12ce14f7088b4d6e882ed5b514b900f4043069",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "69e7c79e75364b004a55a421cc7ac2f2a9dff5a20d0d8abb2b8e84c7ed405e5e"
+      },
       "task": "v3-converter-adc-spectrum",
       "candidate_sha256": "620f4fa4548aae97ab8237a80f65d95a5022cd775c4fdc39caa7586e5438e0a6",
       "criteria_sha256": "4da2e2cf23d5aa51016646fcdfa87c1b8711a8fac8b42a6d87678b148b975c94",
@@ -2880,7 +3288,419 @@
   ],
   "historical_attempts": [
     {
+      "prepared": "runs/benchmark-next-converter-r2/v3-converter-segmented/reference",
+      "preparation_sha256": "18dc8555cd73b1d2b0ff4041d1ea8e024b4497aabc1350797cb58f0b77f80458",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "b54494794d4a1c2ec2aee3db7df2ab248c426655383b88d724e6516753a61b3a",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "70fb3b5b4558e66329e9eb133ed8e10d57b18ca46cc95c19e88bd6bc652314c2",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "05f3dd8d92d30867c4993f8cc977869f41f56fed4296a6b297bc0760093fc3f1"
+      },
+      "task": "v3-converter-segmented",
+      "candidate_sha256": "eb9f2b156e8c9f93796e96152ff9bbd8f70ad4252dc890922791e922465502b9",
+      "criteria_sha256": "889a82fa5a38a823e48e23b88a044153f5fddd82ed5e27b230795304b9b7db1c",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": true,
+      "has_selected_graded_failure": false,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-6d979411ff524a48a62d-private-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "09f1f5823833203af92f53e70740e02eac6fa28288f1404474f257dda7a75a29",
+          "archive_sha256": "ed14503709d51498b88c652bb7e01beb405da8d632500ef0d84a3638b1092cfa",
+          "archive": "runs/benchmark-next-converter-r2/v3-converter-segmented/reference/remote/bf-6d979411ff524a48a62d-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "bcf187344caf2b4a8a605b3e0dd2337e97e21f039eaba10f421fdae5ffd6c554",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "c3cd8eeab1f1c1e713f6043c2688227d58a34717a04056ab5cf6554523cf1d8f",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.2663387041538954,
+              "passed": true,
+              "errors": {
+                "aout": 5.551115123125783e-17
+              },
+              "settled_points": 2910,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "7e5cf8a8b4cdce1d272415966209e31841cb403a925e7fbf6c8b2dd1185b8fb1",
+              "waveform_rows": 3665
+            }
+          ]
+        },
+        {
+          "condition": "private-1",
+          "job_id": "bf-8be77ddf261d4a3e8e49-private-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "f67cfb66ca4d47b59320133fdd6fc602060f1ed9cb2b831b58eee8f3ec497083",
+          "archive_sha256": "27432c94b7981bdb7322a9b822294c9cec911b8e131ec870aa9b6b513777a32a",
+          "archive": "runs/benchmark-next-converter-r2/v3-converter-segmented/reference/remote/bf-8be77ddf261d4a3e8e49-private-1/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "bcf187344caf2b4a8a605b3e0dd2337e97e21f039eaba10f421fdae5ffd6c554",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-1",
+              "netlist_sha256": "2887885dcc94f09d723d0fe2fc07441b843c21343bf2fc5d950ed3507817b1a2",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.2666438929736614,
+              "passed": true,
+              "errors": {
+                "aout": 5.551115123125783e-17
+              },
+              "settled_points": 2910,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "ac5796303663580ea9bdb6a57eeb5d62e44ce8c5e83222707b17b38c2538fdba",
+              "waveform_rows": 3666
+            }
+          ]
+        }
+      ],
+      "disposition": "early DAC instruction bytes were not retained; superseded by full current-source snapshot and r8 calibration"
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r2/v3-converter-thermometer/reference",
+      "preparation_sha256": "a40f7f1f29c69a1464763e3709122db7406ab34e9d627314660515d4c5105649",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "1f459adfd397bef0b17cac23a710babf92230b087bd3cfb02345b63c0250a604",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "5f81c0a23b1e33b59f165406dedfa92f393606151ffe271a4279bbfa1ea08f63",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "5b1c66c9a2e8e140e07ee66da9ba5b1cfb7b4095289d4dbd5478893c9e3a6c97"
+      },
+      "task": "v3-converter-thermometer",
+      "candidate_sha256": "45e039bc6a7ca47550d22dd3e8084be22cfeb57f9411a8bdfe712e5341eb28b1",
+      "criteria_sha256": "133b74dabc597832f6f2bf4c8110b7952c1c72d8cdca848f8b8152cda42898df",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": true,
+      "has_selected_graded_failure": false,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-341a5e19d54242969304-private-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "439e3a61f8dde9ff3c93df1fa86566d7db62f5e229b52c9c65be69e65f8b2f9c",
+          "archive_sha256": "58c08716191fd55d821cb53d67ccf6fea151024392ffd4a35dccb42710c7c193",
+          "archive": "runs/benchmark-next-converter-r2/v3-converter-thermometer/reference/remote/bf-341a5e19d54242969304-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "b9d6b2d1bd034f3d3396312870c0a7e43215a92c599cfc888b415c9c087eab35",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "7d71c94b54991e494708e262b77bd8b4c129a9e48a4622fb6872f09eec8c8e65",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.3169136848300695,
+              "passed": true,
+              "errors": {
+                "aout": 5.551115123125783e-17
+              },
+              "settled_points": 2910,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "18ed0125786895ee57acdd5309ac1b6ce6c15af9f2162ca4a1fbadb9ac6f9b1f",
+              "waveform_rows": 3651
+            }
+          ]
+        },
+        {
+          "condition": "private-1",
+          "job_id": "bf-6155b968cecb4ff38870-private-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "df3c1ec20845d0239c1b771a604877fa1a736dbe6991e0c466fefcffe17ef974",
+          "archive_sha256": "466b8b6c5a05626c416bc3826826b862e0dbeeddf8d7e9a96efcdd78b78abda8",
+          "archive": "runs/benchmark-next-converter-r2/v3-converter-thermometer/reference/remote/bf-6155b968cecb4ff38870-private-1/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "b9d6b2d1bd034f3d3396312870c0a7e43215a92c599cfc888b415c9c087eab35",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-1",
+              "netlist_sha256": "40e5b05f68f9478553bd70c1e424fc8010e08529bcbb41654112be3ab679d9cb",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.6678143683820963,
+              "passed": true,
+              "errors": {
+                "aout": 5.551115123125783e-17
+              },
+              "settled_points": 2910,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "2b37a162cdae0c5c786a38ce89bb1b86f1d0491970163f85f625f59774fc5740",
+              "waveform_rows": 3652
+            }
+          ]
+        }
+      ],
+      "disposition": "early DAC instruction bytes were not retained; superseded by full current-source snapshot and r8 calibration"
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r2/v3-converter-nonideal/reference",
+      "preparation_sha256": "3c1186a0307912df7a148f79e26e868d623a0ddc9ed5681e7cbe8e54d27610bf",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "3fd017cb82b6ca2884f4de89cc9aaf502f1589b183f691d5f713c2fcb19c7ac5",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "caca1f1b49387d25cb62d891698c57dd23eb60bd6c525edf12cde358c3d42237",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "def6d21bc203ca00103d996d9ad7b66d9fd4433245efdcd393bb68f061e6502f"
+      },
+      "task": "v3-converter-nonideal",
+      "candidate_sha256": "f46952fc7a42c7e4ad4ce61b8f4ad31dbefdc52cc5aa38be0ea1b98cd984feac",
+      "criteria_sha256": "f05e75d742fa4695ffaa01717cc1700deaba67d5b07d6d1894e55fa6244fd5f1",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": true,
+      "has_selected_graded_failure": false,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-394d910925624548b6a3-private-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "60d9346dd97cb0b2be7739a6243967c2161772df7b34927a3f1794ccd2bada45",
+          "archive_sha256": "4a347bdde48b4eeed18b54341c5d236e370cf48db9c99ea7a7a02edaa1e80db4",
+          "archive": "runs/benchmark-next-converter-r2/v3-converter-nonideal/reference/remote/bf-394d910925624548b6a3-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "5688c37838ffe363f08d2ab3c5ffb1680a8bcebc8012befa5f97011bdb5fe54b",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "cf785a7954fba3f52d7c635e7f6d34d3304b9cf01a3904522693ed6e41073422",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.2164564579725266,
+              "passed": true,
+              "errors": {
+                "aout": 5.551115123125783e-17
+              },
+              "settled_points": 1438,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "149940a421be8401aed189a719a886a88f36ff6e4ba26500d0a38196eb77e9bb",
+              "waveform_rows": 1825
+            }
+          ]
+        },
+        {
+          "condition": "private-1",
+          "job_id": "bf-4478252885634ed689b2-private-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "65a16ab83fc343075c856ed43ad0eed57b2acf0e963cea9a1928403d17a9381f",
+          "archive_sha256": "f63cee9fba1ae71e289cde3bd980ed4dbcf8e84b6ee429344cafcdfbfadac0df",
+          "archive": "runs/benchmark-next-converter-r2/v3-converter-nonideal/reference/remote/bf-4478252885634ed689b2-private-1/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "5688c37838ffe363f08d2ab3c5ffb1680a8bcebc8012befa5f97011bdb5fe54b",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-1",
+              "netlist_sha256": "1058fcac87d8442acb535e30f8654414b5347c962f51e67fa6d993439c49633a",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.2161386515945196,
+              "passed": true,
+              "errors": {
+                "aout": 5.551115123125783e-17
+              },
+              "settled_points": 1438,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "b60201c3b96b34e9abe7a91147497445d3d21cf939855e435470084756e674d8",
+              "waveform_rows": 1826
+            }
+          ]
+        }
+      ],
+      "disposition": "early DAC instruction bytes were not retained; superseded by full current-source snapshot and r8 calibration"
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r2/v3-converter-subradix/reference",
+      "preparation_sha256": "307448842a2d72f562dbb1c28d7c723e09d7765f6dcf69e21da89e87a925bc13",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "96fd674ce68edcb2d6cd4b4560d90b7a924dddbbdae0c21a74a5a84e7cca038b",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "c50de16e0445fd788e7c7cd7049d435553c9819ee3b64b11349e238ba68711f2",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "aa2b5c2d5114395fa347b56c9ae16ac0a00eca0b06bd5a9d92e8242ba6f9cde2"
+      },
+      "task": "v3-converter-subradix",
+      "candidate_sha256": "22acb21ef290c84645ff2515749afb4ad5e5c04faf2824474f30a1f3a4d0a756",
+      "criteria_sha256": "857377c22a7a1f550464381509bf9c2f9238730dff87bda7d3e3b5c648d876b9",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": true,
+      "has_selected_graded_failure": false,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-51a59da3f7cb4e1d860d-private-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "46631664143e0b8d44d4f56793dfdcad1cd2d6907898be2525bdca9c1b30a9ed",
+          "archive_sha256": "e0ea1f141b346c9273feeadb5de1bcbdd3e0da13ba976f23a25e1e6568ab3834",
+          "archive": "runs/benchmark-next-converter-r2/v3-converter-subradix/reference/remote/bf-51a59da3f7cb4e1d860d-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "d5da80be34cbebf5b60af0550e19c65f274420637534e72e5930176d1226e174",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "9979bff508db43a8e9ee463cf74f7b08a2fa6f0052f50ffbd86014f2dc871cab",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.8174177389591932,
+              "passed": true,
+              "errors": {
+                "aout": 1.1102230246251565e-16
+              },
+              "settled_points": 2174,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "3d3a0248bb1fbd042b02afefeb267e8fead584bd003e57f67058f37645ca4461",
+              "waveform_rows": 2745
+            }
+          ]
+        },
+        {
+          "condition": "private-1",
+          "job_id": "bf-ad6a6df086c64266b334-private-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "5c8c0355fe352ea8d58cf99982f8ebbb2e3df283829438269c1ceefa5c2013bf",
+          "archive_sha256": "2700b02d441b490b8b8d24fad3989c2f462d7bab19eadfd787f4f47e67aa9f66",
+          "archive": "runs/benchmark-next-converter-r2/v3-converter-subradix/reference/remote/bf-ad6a6df086c64266b334-private-1/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "d5da80be34cbebf5b60af0550e19c65f274420637534e72e5930176d1226e174",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-1",
+              "netlist_sha256": "f282d3e4d491a83dc14a516aea8e6700706cbfe18fe95a835fce58e600924b43",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.7180637661367655,
+              "passed": true,
+              "errors": {
+                "aout": 1.1102230246251565e-16
+              },
+              "settled_points": 2174,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "877d4aa9dfecae30a688c41f74f79c44773387d45c282ef1ccf511c4f1712e31",
+              "waveform_rows": 2746
+            }
+          ]
+        }
+      ],
+      "disposition": "early DAC instruction bytes were not retained; superseded by full current-source snapshot and r8 calibration"
+    },
+    {
       "prepared": "runs/benchmark-next-converter-r2/v3-converter-dac-linearity/reference",
+      "preparation_sha256": "235c96e293001f5b05c7ac59a6e20423a9c1a897de4ba74ad253dff340ccd604",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "90cf6ae725d168dfbc0793f3834532f65881295d55484c543c8cc517c3a123ad",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "a5f305a3eb6df7b8f1304e53cd7ebacbed5bc3a62ed703c2d954982c43ed9c5e",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "d7686a81bc827b8cb168ef3e3fa3154af878baf2088707d3bd9d66245a598667"
+      },
       "task": "v3-converter-dac-linearity",
       "candidate_sha256": "34e12cc9da3dfc7f860a97bb704fefc5a4c8d01d6288c4d2b9e379a16a91818f",
       "criteria_sha256": "4db647edef679c20764e9cfcdbb1ad1614d439457781e1df24922282b06a5994",
@@ -3019,6 +3839,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r2/v3-converter-adc-spectrum/reference",
+      "preparation_sha256": "64f653a3c82add89a59b774ae3ebc95ed6779536c35156dd8e309fb46231bc77",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "890bbd2c08b5cdd9df9f77369d8162c4ef9656ba3910470035b7b8a4c054985e",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "9ed4ad9ca022b7a10bb10363af12ce14f7088b4d6e882ed5b514b900f4043069",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "69e7c79e75364b004a55a421cc7ac2f2a9dff5a20d0d8abb2b8e84c7ed405e5e"
+      },
       "task": "v3-converter-adc-spectrum",
       "candidate_sha256": "ca02a99573045170fa5bfbb90edbd45e4b3afc2b9e1d130c477837f00d95f92b",
       "criteria_sha256": "6ff76dc456a6b6f1ad3793a12619e36ba49bf8095fab2e787d6e97c581e1d074",
@@ -3241,6 +4073,18 @@
     },
     {
       "prepared": "runs/benchmark-next-converter-r4/v3-converter-dac-linearity/ignore-order",
+      "preparation_sha256": "ecee3327228af729764809192bab511b1e69ecd834346ee450ed589bd5eb5c91",
+      "source_identity": {
+        "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "cases.json": "7bb12d9be6e854d62ce33daa94e8566bb5e060847f40760589b0dbe4b73b6763",
+        "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "test.sh": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+        "contract.json": "a5f305a3eb6df7b8f1304e53cd7ebacbed5bc3a62ed703c2d954982c43ed9c5e",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "instruction.md": "d7686a81bc827b8cb168ef3e3fa3154af878baf2088707d3bd9d66245a598667"
+      },
       "task": "v3-converter-dac-linearity",
       "candidate_sha256": "8ce67a44c1eaddeaab5539bec77a971ffc9fcc31baaaeea45949617e008723c7",
       "criteria_sha256": "8360cc6f397c940f6c5ca23ee9ef4957156e3c02005405ac735de5b59fd6ff51",
@@ -3417,6 +4261,1313 @@
         "completed",
         "completed"
       ]
+    },
+    {
+      "path": "runs/benchmark-next-converter-r8/reference-plan.json.results.json",
+      "sha256": "394f34a7375f30d0dcae148a2e711149e9bb2dc5b34a0a65c2a4910f045b94e4",
+      "statuses": [
+        "completed",
+        "completed",
+        "completed",
+        "completed"
+      ]
     }
-  ]
+  ],
+  "delivery_reuse_analysis": {
+    "path": "experiments/benchmark_next/converter/delivery-reuse.json",
+    "sha256": "84b410372260fba115a1dca0596a241533aed07f57b3606b084e6b920d51108f",
+    "analysis_identity": "4351d186560bf5190e1f0c8b4fa64acdac808a24d44dfa62d6fff8b38ceae947",
+    "tasks": [
+      {
+        "task": "v3-converter-adc-spectrum",
+        "instruction_versions": [
+          {
+            "old_sha256": "69e7c79e75364b004a55a421cc7ac2f2a9dff5a20d0d8abb2b8e84c7ed405e5e",
+            "new_sha256": "37a75a87491af8fdce62752f08057835bfd8a2f2db266b24cfad320b2d89e5e7",
+            "preparations": [
+              {
+                "variant": "reference",
+                "prepared": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/reference",
+                "preparation_sha256": "75051cf9972fe27509965ceca92f07fc7b4f658a18a08a5d375db783aac709bc"
+              },
+              {
+                "variant": "alternative",
+                "prepared": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/alternative",
+                "preparation_sha256": "cc7aa49ebd40e271a517ca0b52906da81b10aa35e9bf7ea8e8f7d37c5aabe1a6"
+              },
+              {
+                "variant": "amplitude-db",
+                "prepared": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/amplitude-db",
+                "preparation_sha256": "d54af27a7c4d1d599ab500ca3dbfd61c2f2e7e5843bee253d641d8bdabc020ee"
+              },
+              {
+                "variant": "nyquist-double",
+                "prepared": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/nyquist-double",
+                "preparation_sha256": "0d312fa6ffb14b15e72c576384c6dfbc6ce16653e19c1171e9f3ca764a4ea47c"
+              },
+              {
+                "variant": "harmonics-as-fundamental",
+                "prepared": "runs/benchmark-next-converter-r7/v3-converter-adc-spectrum/harmonics-as-fundamental",
+                "preparation_sha256": "0c9fea056b56bae8ea0e8d8473bab9849f9c8cec42cc6d7ae389e34dd464aae2"
+              },
+              {
+                "variant": "ignore-invalid",
+                "prepared": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/ignore-invalid",
+                "preparation_sha256": "5685ad4f54d3af76c2c5fb24c66ab1c31cb125a03f5b7cc31ac0a7f1b98e22a3"
+              },
+              {
+                "variant": "stale-reset",
+                "prepared": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/stale-reset",
+                "preparation_sha256": "68760b748a7e782fcb3d58de6d6ff336131425cfc17340616933596add27f216"
+              }
+            ],
+            "old_text_recovered": true,
+            "exact_difference": {
+              "added_sentence": "\u6d4b\u91cf\u9898\u5404\u7535\u6c14\u62a5\u544a\u7aef\u53e3\u7684\u7535\u538b\u6570\u503c\u5c31\u662f\u6307\u6807\u6570\u503c\uff0c\u4f8b\u59820.5LSB\u75280.5V\u300120dB\u752820V\uff0cvalid\u75280\u62161V\u3002",
+              "other_text_identical": true
+            },
+            "old_text_limit": null,
+            "intermediate_checkpoint_sha256": "69e7c79e75364b004a55a421cc7ac2f2a9dff5a20d0d8abb2b8e84c7ed405e5e",
+            "delivered_scoring_assets_unchanged": true,
+            "reuse_reason": "Author calibration used no model or instruction interpretation. All six executable scoring assets match the immutable preparation byte for byte. The delivered metric-voltage sentence explains the numerical representation already used by the calibrated reference, independent checker and waveform outputs. Packaging supplies the same runtime and PSF reader bytes; it changes no circuit contract or formal condition. No interpretation or executable behavior changed."
+          }
+        ],
+        "scoring_comparisons": [
+          {
+            "variant": "reference",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "d0b143e4b71dd7810bbb98666ae3f0e86ea65fce13cfdc0e7860e4179e76619e",
+              "contract.json": "9ed4ad9ca022b7a10bb10363af12ce14f7088b4d6e882ed5b514b900f4043069",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "alternative",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "d0b143e4b71dd7810bbb98666ae3f0e86ea65fce13cfdc0e7860e4179e76619e",
+              "contract.json": "9ed4ad9ca022b7a10bb10363af12ce14f7088b4d6e882ed5b514b900f4043069",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "amplitude-db",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "d0b143e4b71dd7810bbb98666ae3f0e86ea65fce13cfdc0e7860e4179e76619e",
+              "contract.json": "9ed4ad9ca022b7a10bb10363af12ce14f7088b4d6e882ed5b514b900f4043069",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "nyquist-double",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "d0b143e4b71dd7810bbb98666ae3f0e86ea65fce13cfdc0e7860e4179e76619e",
+              "contract.json": "9ed4ad9ca022b7a10bb10363af12ce14f7088b4d6e882ed5b514b900f4043069",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "harmonics-as-fundamental",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "d0b143e4b71dd7810bbb98666ae3f0e86ea65fce13cfdc0e7860e4179e76619e",
+              "contract.json": "9ed4ad9ca022b7a10bb10363af12ce14f7088b4d6e882ed5b514b900f4043069",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "ignore-invalid",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "d0b143e4b71dd7810bbb98666ae3f0e86ea65fce13cfdc0e7860e4179e76619e",
+              "contract.json": "9ed4ad9ca022b7a10bb10363af12ce14f7088b4d6e882ed5b514b900f4043069",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "stale-reset",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "d0b143e4b71dd7810bbb98666ae3f0e86ea65fce13cfdc0e7860e4179e76619e",
+              "contract.json": "9ed4ad9ca022b7a10bb10363af12ce14f7088b4d6e882ed5b514b900f4043069",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          }
+        ],
+        "original_entrypoint_check": {
+          "entrypoint": "tests/test.sh --help",
+          "isolated_tests_directory": true,
+          "repository_pythonpath": false,
+          "returncode": 0,
+          "stdout_sha256": "256417c4b7da6fcfab13353be61ccaeb15c1d25bf02e5cc0d231b853923f0291",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9"
+        },
+        "runtime_bundle_additions": {
+          "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+          "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+        }
+      },
+      {
+        "task": "v3-converter-dac-linearity",
+        "instruction_versions": [
+          {
+            "old_sha256": "d7686a81bc827b8cb168ef3e3fa3154af878baf2088707d3bd9d66245a598667",
+            "new_sha256": "eb94a6856568b673bb70945cf95d6eec48a4ddffb041b98956c32ac2c7c34d77",
+            "preparations": [
+              {
+                "variant": "reference",
+                "prepared": "runs/benchmark-next-converter-r3/v3-converter-dac-linearity/reference",
+                "preparation_sha256": "c3c7d2c683e636e006c32a471a22ac6a243689f67d355ef062a38943d15a34d6"
+              },
+              {
+                "variant": "alternative",
+                "prepared": "runs/benchmark-next-converter-r4/v3-converter-dac-linearity/alternative",
+                "preparation_sha256": "2be67cd450260b9a578a187151b8d25a0b08fe1f02640ae529c1a7fd314664ae"
+              },
+              {
+                "variant": "ideal-report",
+                "prepared": "runs/benchmark-next-converter-r4/v3-converter-dac-linearity/ideal-report",
+                "preparation_sha256": "dc8ab4974ba9e51bcff3a74e895e2de78e5d6d70d609ced070f29dcd4f2c6453"
+              },
+              {
+                "variant": "wrong-step",
+                "prepared": "runs/benchmark-next-converter-r4/v3-converter-dac-linearity/wrong-step",
+                "preparation_sha256": "5b901015a89d8a7a8767800b5526ed7fd82143182461e924127ddfad31362699"
+              },
+              {
+                "variant": "ignore-order",
+                "prepared": "runs/benchmark-next-converter-r6/v3-converter-dac-linearity/ignore-order",
+                "preparation_sha256": "fd7e6a063f3e39115a1eda601a19a3c38818e571b761150a5fa4b0a84c1e8877"
+              },
+              {
+                "variant": "stale-reset",
+                "prepared": "runs/benchmark-next-converter-r4/v3-converter-dac-linearity/stale-reset",
+                "preparation_sha256": "385bcbaa312403707eb2e7683fc8dc9f61eaba149cac9e1ef118784e3170b165"
+              }
+            ],
+            "old_text_recovered": true,
+            "exact_difference": {
+              "added_sentence": "\u6d4b\u91cf\u9898\u5404\u7535\u6c14\u62a5\u544a\u7aef\u53e3\u7684\u7535\u538b\u6570\u503c\u5c31\u662f\u6307\u6807\u6570\u503c\uff0c\u4f8b\u59820.5LSB\u75280.5V\u300120dB\u752820V\uff0cvalid\u75280\u62161V\u3002",
+              "other_text_identical": true
+            },
+            "old_text_limit": null,
+            "intermediate_checkpoint_sha256": "d7686a81bc827b8cb168ef3e3fa3154af878baf2088707d3bd9d66245a598667",
+            "delivered_scoring_assets_unchanged": true,
+            "reuse_reason": "Author calibration used no model or instruction interpretation. All six executable scoring assets match the immutable preparation byte for byte. The delivered metric-voltage sentence explains the numerical representation already used by the calibrated reference, independent checker and waveform outputs. Packaging supplies the same runtime and PSF reader bytes; it changes no circuit contract or formal condition. No interpretation or executable behavior changed."
+          }
+        ],
+        "scoring_comparisons": [
+          {
+            "variant": "reference",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "7bb12d9be6e854d62ce33daa94e8566bb5e060847f40760589b0dbe4b73b6763",
+              "contract.json": "a5f305a3eb6df7b8f1304e53cd7ebacbed5bc3a62ed703c2d954982c43ed9c5e",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "alternative",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "7bb12d9be6e854d62ce33daa94e8566bb5e060847f40760589b0dbe4b73b6763",
+              "contract.json": "a5f305a3eb6df7b8f1304e53cd7ebacbed5bc3a62ed703c2d954982c43ed9c5e",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "ideal-report",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "7bb12d9be6e854d62ce33daa94e8566bb5e060847f40760589b0dbe4b73b6763",
+              "contract.json": "a5f305a3eb6df7b8f1304e53cd7ebacbed5bc3a62ed703c2d954982c43ed9c5e",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "wrong-step",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "7bb12d9be6e854d62ce33daa94e8566bb5e060847f40760589b0dbe4b73b6763",
+              "contract.json": "a5f305a3eb6df7b8f1304e53cd7ebacbed5bc3a62ed703c2d954982c43ed9c5e",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "ignore-order",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "7bb12d9be6e854d62ce33daa94e8566bb5e060847f40760589b0dbe4b73b6763",
+              "contract.json": "a5f305a3eb6df7b8f1304e53cd7ebacbed5bc3a62ed703c2d954982c43ed9c5e",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "stale-reset",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "7bb12d9be6e854d62ce33daa94e8566bb5e060847f40760589b0dbe4b73b6763",
+              "contract.json": "a5f305a3eb6df7b8f1304e53cd7ebacbed5bc3a62ed703c2d954982c43ed9c5e",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          }
+        ],
+        "original_entrypoint_check": {
+          "entrypoint": "tests/test.sh --help",
+          "isolated_tests_directory": true,
+          "repository_pythonpath": false,
+          "returncode": 0,
+          "stdout_sha256": "256417c4b7da6fcfab13353be61ccaeb15c1d25bf02e5cc0d231b853923f0291",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9"
+        },
+        "runtime_bundle_additions": {
+          "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+          "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+        }
+      },
+      {
+        "task": "v3-converter-nonideal",
+        "instruction_versions": [
+          {
+            "old_sha256": "3acaac35352e1f258e12384d2cf88bc1b11a37e724d1925d384ee14e87317151",
+            "new_sha256": "3acaac35352e1f258e12384d2cf88bc1b11a37e724d1925d384ee14e87317151",
+            "preparations": [
+              {
+                "variant": "reference",
+                "prepared": "runs/benchmark-next-converter-r8/v3-converter-nonideal/reference",
+                "preparation_sha256": "89e862feb042681fcec2c271e184b84b56ccbc5a814fee14afdf8155a501c1eb"
+              }
+            ],
+            "old_text_recovered": true,
+            "exact_difference": {
+              "text_identical": true
+            },
+            "old_text_limit": null,
+            "intermediate_checkpoint_sha256": "84eeace3856c0db2872647d3c95533a946cc3f642190d1a80c052fc8e52f194d",
+            "delivered_scoring_assets_unchanged": true,
+            "reuse_reason": "Current complete task-source snapshot was retained and the reference executed all formal conditions under this exact instruction identity."
+          },
+          {
+            "old_sha256": "84eeace3856c0db2872647d3c95533a946cc3f642190d1a80c052fc8e52f194d",
+            "new_sha256": "3acaac35352e1f258e12384d2cf88bc1b11a37e724d1925d384ee14e87317151",
+            "preparations": [
+              {
+                "variant": "alternative",
+                "prepared": "runs/benchmark-next-converter-r4/v3-converter-nonideal/alternative",
+                "preparation_sha256": "b1be9c9ce084a26defd71b01cbadf1cbb5273df28d0967d529f228338d28a5c4"
+              },
+              {
+                "variant": "omit-last",
+                "prepared": "runs/benchmark-next-converter-r4/v3-converter-nonideal/omit-last",
+                "preparation_sha256": "9bfc6d56b466c3f53cefd3b69f6c99810c5204c917e39c0a45af6172e33611a4"
+              },
+              {
+                "variant": "transparent",
+                "prepared": "runs/benchmark-next-converter-r4/v3-converter-nonideal/transparent",
+                "preparation_sha256": "9f736255269ff21d19ff6b20159adc1665ad0043d5704a1de12c65f25fffe39e"
+              },
+              {
+                "variant": "ideal-binary",
+                "prepared": "runs/benchmark-next-converter-r4/v3-converter-nonideal/ideal-binary",
+                "preparation_sha256": "f2ef213358707e8b9b3f7ce521d3abe8dc4ec36e54301b16b94499c60f7803c1"
+              }
+            ],
+            "old_text_recovered": true,
+            "exact_difference": {
+              "added_sentence": "\u6d4b\u91cf\u9898\u5404\u7535\u6c14\u62a5\u544a\u7aef\u53e3\u7684\u7535\u538b\u6570\u503c\u5c31\u662f\u6307\u6807\u6570\u503c\uff0c\u4f8b\u59820.5LSB\u75280.5V\u300120dB\u752820V\uff0cvalid\u75280\u62161V\u3002",
+              "other_text_identical": true
+            },
+            "old_text_limit": null,
+            "intermediate_checkpoint_sha256": "84eeace3856c0db2872647d3c95533a946cc3f642190d1a80c052fc8e52f194d",
+            "delivered_scoring_assets_unchanged": true,
+            "reuse_reason": "Author calibration used no model or instruction interpretation. All six executable scoring assets match the immutable preparation byte for byte. The delivered metric-voltage sentence explains the numerical representation already used by the calibrated reference, independent checker and waveform outputs. Packaging supplies the same runtime and PSF reader bytes; it changes no circuit contract or formal condition. No interpretation or executable behavior changed."
+          }
+        ],
+        "scoring_comparisons": [
+          {
+            "variant": "reference",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "3fd017cb82b6ca2884f4de89cc9aaf502f1589b183f691d5f713c2fcb19c7ac5",
+              "contract.json": "caca1f1b49387d25cb62d891698c57dd23eb60bd6c525edf12cde358c3d42237",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "alternative",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "3fd017cb82b6ca2884f4de89cc9aaf502f1589b183f691d5f713c2fcb19c7ac5",
+              "contract.json": "caca1f1b49387d25cb62d891698c57dd23eb60bd6c525edf12cde358c3d42237",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "omit-last",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "3fd017cb82b6ca2884f4de89cc9aaf502f1589b183f691d5f713c2fcb19c7ac5",
+              "contract.json": "caca1f1b49387d25cb62d891698c57dd23eb60bd6c525edf12cde358c3d42237",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "transparent",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "3fd017cb82b6ca2884f4de89cc9aaf502f1589b183f691d5f713c2fcb19c7ac5",
+              "contract.json": "caca1f1b49387d25cb62d891698c57dd23eb60bd6c525edf12cde358c3d42237",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "ideal-binary",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "3fd017cb82b6ca2884f4de89cc9aaf502f1589b183f691d5f713c2fcb19c7ac5",
+              "contract.json": "caca1f1b49387d25cb62d891698c57dd23eb60bd6c525edf12cde358c3d42237",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          }
+        ],
+        "original_entrypoint_check": {
+          "entrypoint": "tests/test.sh --help",
+          "isolated_tests_directory": true,
+          "repository_pythonpath": false,
+          "returncode": 0,
+          "stdout_sha256": "256417c4b7da6fcfab13353be61ccaeb15c1d25bf02e5cc0d231b853923f0291",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9"
+        },
+        "runtime_bundle_additions": {
+          "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+          "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+        }
+      },
+      {
+        "task": "v3-converter-segmented",
+        "instruction_versions": [
+          {
+            "old_sha256": "0b3752be70dd45a75c4ea236c9ab28fa4680230515a4869bb8faa21f9ba86b80",
+            "new_sha256": "0b3752be70dd45a75c4ea236c9ab28fa4680230515a4869bb8faa21f9ba86b80",
+            "preparations": [
+              {
+                "variant": "reference",
+                "prepared": "runs/benchmark-next-converter-r8/v3-converter-segmented/reference",
+                "preparation_sha256": "4ec3ad47b17052badc67d6f5a30bd15dc2d300f5a05e5027462ddaaa828b4fd0"
+              }
+            ],
+            "old_text_recovered": true,
+            "exact_difference": {
+              "text_identical": true
+            },
+            "old_text_limit": null,
+            "intermediate_checkpoint_sha256": "114134dcdbb9dddc5452a742a7a8fdef390fb1e180f0471bd731ca3da4c69365",
+            "delivered_scoring_assets_unchanged": true,
+            "reuse_reason": "Current complete task-source snapshot was retained and the reference executed all formal conditions under this exact instruction identity."
+          },
+          {
+            "old_sha256": "114134dcdbb9dddc5452a742a7a8fdef390fb1e180f0471bd731ca3da4c69365",
+            "new_sha256": "0b3752be70dd45a75c4ea236c9ab28fa4680230515a4869bb8faa21f9ba86b80",
+            "preparations": [
+              {
+                "variant": "alternative",
+                "prepared": "runs/benchmark-next-converter-r4/v3-converter-segmented/alternative",
+                "preparation_sha256": "d3f6e779a5524e580b7d1c4f862c1b7e5790659ba575d48862a20edb8e3d5a2a"
+              },
+              {
+                "variant": "omit-last",
+                "prepared": "runs/benchmark-next-converter-r4/v3-converter-segmented/omit-last",
+                "preparation_sha256": "272f22ef3913665cc5580e164d185d090b7b0ad0349cca75a8484b0059919188"
+              },
+              {
+                "variant": "transparent",
+                "prepared": "runs/benchmark-next-converter-r4/v3-converter-segmented/transparent",
+                "preparation_sha256": "976f4a959617665c2e1462a44bb50481a06e0ca55aeb0aae3496ebda0c902b1f"
+              },
+              {
+                "variant": "wrong-scale",
+                "prepared": "runs/benchmark-next-converter-r4/v3-converter-segmented/wrong-scale",
+                "preparation_sha256": "0e4994e68212871946864057dedffc571af4feded6bdd918c4f2aa16a95122fe"
+              },
+              {
+                "variant": "bit-order",
+                "prepared": "runs/benchmark-next-converter-r7/v3-converter-segmented/bit-order",
+                "preparation_sha256": "53be3c559e53b16c638be48d625a526b0fa82636a13d7d4c711611e98960f7bf"
+              }
+            ],
+            "old_text_recovered": true,
+            "exact_difference": {
+              "added_sentence": "\u6d4b\u91cf\u9898\u5404\u7535\u6c14\u62a5\u544a\u7aef\u53e3\u7684\u7535\u538b\u6570\u503c\u5c31\u662f\u6307\u6807\u6570\u503c\uff0c\u4f8b\u59820.5LSB\u75280.5V\u300120dB\u752820V\uff0cvalid\u75280\u62161V\u3002",
+              "other_text_identical": true
+            },
+            "old_text_limit": null,
+            "intermediate_checkpoint_sha256": "114134dcdbb9dddc5452a742a7a8fdef390fb1e180f0471bd731ca3da4c69365",
+            "delivered_scoring_assets_unchanged": true,
+            "reuse_reason": "Author calibration used no model or instruction interpretation. All six executable scoring assets match the immutable preparation byte for byte. The delivered metric-voltage sentence explains the numerical representation already used by the calibrated reference, independent checker and waveform outputs. Packaging supplies the same runtime and PSF reader bytes; it changes no circuit contract or formal condition. No interpretation or executable behavior changed."
+          }
+        ],
+        "scoring_comparisons": [
+          {
+            "variant": "reference",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "b54494794d4a1c2ec2aee3db7df2ab248c426655383b88d724e6516753a61b3a",
+              "contract.json": "70fb3b5b4558e66329e9eb133ed8e10d57b18ca46cc95c19e88bd6bc652314c2",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "alternative",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "b54494794d4a1c2ec2aee3db7df2ab248c426655383b88d724e6516753a61b3a",
+              "contract.json": "70fb3b5b4558e66329e9eb133ed8e10d57b18ca46cc95c19e88bd6bc652314c2",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "omit-last",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "b54494794d4a1c2ec2aee3db7df2ab248c426655383b88d724e6516753a61b3a",
+              "contract.json": "70fb3b5b4558e66329e9eb133ed8e10d57b18ca46cc95c19e88bd6bc652314c2",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "transparent",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "b54494794d4a1c2ec2aee3db7df2ab248c426655383b88d724e6516753a61b3a",
+              "contract.json": "70fb3b5b4558e66329e9eb133ed8e10d57b18ca46cc95c19e88bd6bc652314c2",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "wrong-scale",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "b54494794d4a1c2ec2aee3db7df2ab248c426655383b88d724e6516753a61b3a",
+              "contract.json": "70fb3b5b4558e66329e9eb133ed8e10d57b18ca46cc95c19e88bd6bc652314c2",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "bit-order",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "b54494794d4a1c2ec2aee3db7df2ab248c426655383b88d724e6516753a61b3a",
+              "contract.json": "70fb3b5b4558e66329e9eb133ed8e10d57b18ca46cc95c19e88bd6bc652314c2",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          }
+        ],
+        "original_entrypoint_check": {
+          "entrypoint": "tests/test.sh --help",
+          "isolated_tests_directory": true,
+          "repository_pythonpath": false,
+          "returncode": 0,
+          "stdout_sha256": "256417c4b7da6fcfab13353be61ccaeb15c1d25bf02e5cc0d231b853923f0291",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9"
+        },
+        "runtime_bundle_additions": {
+          "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+          "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+        }
+      },
+      {
+        "task": "v3-converter-subradix",
+        "instruction_versions": [
+          {
+            "old_sha256": "00377144cf448742f9c8c194d19b1bbdc54ad4d506ec78db53a1f45d9cae790d",
+            "new_sha256": "00377144cf448742f9c8c194d19b1bbdc54ad4d506ec78db53a1f45d9cae790d",
+            "preparations": [
+              {
+                "variant": "reference",
+                "prepared": "runs/benchmark-next-converter-r8/v3-converter-subradix/reference",
+                "preparation_sha256": "430e387d2dbd255046de87e75ce27406317ec642064e869bac7799300f14915b"
+              }
+            ],
+            "old_text_recovered": true,
+            "exact_difference": {
+              "text_identical": true
+            },
+            "old_text_limit": null,
+            "intermediate_checkpoint_sha256": "f7165c00bfe79b5035cc8ae7dc2bf4626df1f1ec7c14bade33187c4815bd5376",
+            "delivered_scoring_assets_unchanged": true,
+            "reuse_reason": "Current complete task-source snapshot was retained and the reference executed all formal conditions under this exact instruction identity."
+          },
+          {
+            "old_sha256": "f7165c00bfe79b5035cc8ae7dc2bf4626df1f1ec7c14bade33187c4815bd5376",
+            "new_sha256": "00377144cf448742f9c8c194d19b1bbdc54ad4d506ec78db53a1f45d9cae790d",
+            "preparations": [
+              {
+                "variant": "alternative",
+                "prepared": "runs/benchmark-next-converter-r4/v3-converter-subradix/alternative",
+                "preparation_sha256": "5ea755f3a632035e7f15383e75523895d1c1b705fcf9c13debd84c7fe63a9a3d"
+              },
+              {
+                "variant": "omit-last",
+                "prepared": "runs/benchmark-next-converter-r4/v3-converter-subradix/omit-last",
+                "preparation_sha256": "36118494af005fa2efde319757d9ea363ae226b68e2b9a2e3bbf1ca103b995ca"
+              },
+              {
+                "variant": "transparent",
+                "prepared": "runs/benchmark-next-converter-r4/v3-converter-subradix/transparent",
+                "preparation_sha256": "3bdc1cb272c391d13cdffb946798f9726e1c1a1cc3eac834a517f6e5d454e79d"
+              },
+              {
+                "variant": "ideal-binary",
+                "prepared": "runs/benchmark-next-converter-r4/v3-converter-subradix/ideal-binary",
+                "preparation_sha256": "c9ef6beb0f576abc1e81c9954a09bed5ba7e0b9024123cde10a6feacb5856d56"
+              }
+            ],
+            "old_text_recovered": true,
+            "exact_difference": {
+              "added_sentence": "\u6d4b\u91cf\u9898\u5404\u7535\u6c14\u62a5\u544a\u7aef\u53e3\u7684\u7535\u538b\u6570\u503c\u5c31\u662f\u6307\u6807\u6570\u503c\uff0c\u4f8b\u59820.5LSB\u75280.5V\u300120dB\u752820V\uff0cvalid\u75280\u62161V\u3002",
+              "other_text_identical": true
+            },
+            "old_text_limit": null,
+            "intermediate_checkpoint_sha256": "f7165c00bfe79b5035cc8ae7dc2bf4626df1f1ec7c14bade33187c4815bd5376",
+            "delivered_scoring_assets_unchanged": true,
+            "reuse_reason": "Author calibration used no model or instruction interpretation. All six executable scoring assets match the immutable preparation byte for byte. The delivered metric-voltage sentence explains the numerical representation already used by the calibrated reference, independent checker and waveform outputs. Packaging supplies the same runtime and PSF reader bytes; it changes no circuit contract or formal condition. No interpretation or executable behavior changed."
+          }
+        ],
+        "scoring_comparisons": [
+          {
+            "variant": "reference",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "96fd674ce68edcb2d6cd4b4560d90b7a924dddbbdae0c21a74a5a84e7cca038b",
+              "contract.json": "c50de16e0445fd788e7c7cd7049d435553c9819ee3b64b11349e238ba68711f2",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "alternative",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "96fd674ce68edcb2d6cd4b4560d90b7a924dddbbdae0c21a74a5a84e7cca038b",
+              "contract.json": "c50de16e0445fd788e7c7cd7049d435553c9819ee3b64b11349e238ba68711f2",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "omit-last",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "96fd674ce68edcb2d6cd4b4560d90b7a924dddbbdae0c21a74a5a84e7cca038b",
+              "contract.json": "c50de16e0445fd788e7c7cd7049d435553c9819ee3b64b11349e238ba68711f2",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "transparent",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "96fd674ce68edcb2d6cd4b4560d90b7a924dddbbdae0c21a74a5a84e7cca038b",
+              "contract.json": "c50de16e0445fd788e7c7cd7049d435553c9819ee3b64b11349e238ba68711f2",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "ideal-binary",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "96fd674ce68edcb2d6cd4b4560d90b7a924dddbbdae0c21a74a5a84e7cca038b",
+              "contract.json": "c50de16e0445fd788e7c7cd7049d435553c9819ee3b64b11349e238ba68711f2",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          }
+        ],
+        "original_entrypoint_check": {
+          "entrypoint": "tests/test.sh --help",
+          "isolated_tests_directory": true,
+          "repository_pythonpath": false,
+          "returncode": 0,
+          "stdout_sha256": "256417c4b7da6fcfab13353be61ccaeb15c1d25bf02e5cc0d231b853923f0291",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9"
+        },
+        "runtime_bundle_additions": {
+          "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+          "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+        }
+      },
+      {
+        "task": "v3-converter-thermometer",
+        "instruction_versions": [
+          {
+            "old_sha256": "7df6dbc9029a500e6eb46ada46dd4953a2baa5ab3f7658a2bc096ebde604b594",
+            "new_sha256": "7df6dbc9029a500e6eb46ada46dd4953a2baa5ab3f7658a2bc096ebde604b594",
+            "preparations": [
+              {
+                "variant": "reference",
+                "prepared": "runs/benchmark-next-converter-r8/v3-converter-thermometer/reference",
+                "preparation_sha256": "1d53e97eb79166e3d05b0daa99399e45144f807b485e5b8821bfbca869767e95"
+              }
+            ],
+            "old_text_recovered": true,
+            "exact_difference": {
+              "text_identical": true
+            },
+            "old_text_limit": null,
+            "intermediate_checkpoint_sha256": "ab00f9f405d97220a4aaefe7568bec1f75e0e032d70534a78933322fede1eb54",
+            "delivered_scoring_assets_unchanged": true,
+            "reuse_reason": "Current complete task-source snapshot was retained and the reference executed all formal conditions under this exact instruction identity."
+          },
+          {
+            "old_sha256": "ab00f9f405d97220a4aaefe7568bec1f75e0e032d70534a78933322fede1eb54",
+            "new_sha256": "7df6dbc9029a500e6eb46ada46dd4953a2baa5ab3f7658a2bc096ebde604b594",
+            "preparations": [
+              {
+                "variant": "alternative",
+                "prepared": "runs/benchmark-next-converter-r4/v3-converter-thermometer/alternative",
+                "preparation_sha256": "aca86879c22d8a0b4ef1f26e8e18800795ef4ff02b02515470077ce8fd5c2288"
+              },
+              {
+                "variant": "omit-last",
+                "prepared": "runs/benchmark-next-converter-r4/v3-converter-thermometer/omit-last",
+                "preparation_sha256": "d6d1f942ec081126b86e52a0747c5242a9035b592a68270519cdd3ef5861745a"
+              },
+              {
+                "variant": "transparent",
+                "prepared": "runs/benchmark-next-converter-r4/v3-converter-thermometer/transparent",
+                "preparation_sha256": "8284f46dc0427f52058e7001995bac56e95006dfb910f94c5cf6738093ef0878"
+              },
+              {
+                "variant": "wrong-scale",
+                "prepared": "runs/benchmark-next-converter-r4/v3-converter-thermometer/wrong-scale",
+                "preparation_sha256": "81dbb0d470f6e9e49c894c270eea16fee1e35e0f09fe8c1c3262d3e016daeab4"
+              }
+            ],
+            "old_text_recovered": true,
+            "exact_difference": {
+              "added_sentence": "\u6d4b\u91cf\u9898\u5404\u7535\u6c14\u62a5\u544a\u7aef\u53e3\u7684\u7535\u538b\u6570\u503c\u5c31\u662f\u6307\u6807\u6570\u503c\uff0c\u4f8b\u59820.5LSB\u75280.5V\u300120dB\u752820V\uff0cvalid\u75280\u62161V\u3002",
+              "other_text_identical": true
+            },
+            "old_text_limit": null,
+            "intermediate_checkpoint_sha256": "ab00f9f405d97220a4aaefe7568bec1f75e0e032d70534a78933322fede1eb54",
+            "delivered_scoring_assets_unchanged": true,
+            "reuse_reason": "Author calibration used no model or instruction interpretation. All six executable scoring assets match the immutable preparation byte for byte. The delivered metric-voltage sentence explains the numerical representation already used by the calibrated reference, independent checker and waveform outputs. Packaging supplies the same runtime and PSF reader bytes; it changes no circuit contract or formal condition. No interpretation or executable behavior changed."
+          }
+        ],
+        "scoring_comparisons": [
+          {
+            "variant": "reference",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "1f459adfd397bef0b17cac23a710babf92230b087bd3cfb02345b63c0250a604",
+              "contract.json": "5f81c0a23b1e33b59f165406dedfa92f393606151ffe271a4279bbfa1ea08f63",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "alternative",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "1f459adfd397bef0b17cac23a710babf92230b087bd3cfb02345b63c0250a604",
+              "contract.json": "5f81c0a23b1e33b59f165406dedfa92f393606151ffe271a4279bbfa1ea08f63",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "omit-last",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "1f459adfd397bef0b17cac23a710babf92230b087bd3cfb02345b63c0250a604",
+              "contract.json": "5f81c0a23b1e33b59f165406dedfa92f393606151ffe271a4279bbfa1ea08f63",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "transparent",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "1f459adfd397bef0b17cac23a710babf92230b087bd3cfb02345b63c0250a604",
+              "contract.json": "5f81c0a23b1e33b59f165406dedfa92f393606151ffe271a4279bbfa1ea08f63",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          },
+          {
+            "variant": "wrong-scale",
+            "matched_scoring_assets": {
+              "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+              "cases.json": "1f459adfd397bef0b17cac23a710babf92230b087bd3cfb02345b63c0250a604",
+              "contract.json": "5f81c0a23b1e33b59f165406dedfa92f393606151ffe271a4279bbfa1ea08f63",
+              "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+              "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+              "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+            },
+            "prepared_test_sh_sha256": "ade33707ac7226f74780fe679cc971818232b3c456dbfe66abedf64fbe1754ed",
+            "delivered_test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+            "entrypoint_difference": "The harness froze a python3.12 -B wrapper with candidate/output environment variables. The delivered shell invokes the same verify.py with explicit candidate/output/tests arguments and defaults. The isolated check executes the delivered original shell, without the prepare wrapper."
+          }
+        ],
+        "original_entrypoint_check": {
+          "entrypoint": "tests/test.sh --help",
+          "isolated_tests_directory": true,
+          "repository_pythonpath": false,
+          "returncode": 0,
+          "stdout_sha256": "256417c4b7da6fcfab13353be61ccaeb15c1d25bf02e5cc0d231b853923f0291",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "test_sh_sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9"
+        },
+        "runtime_bundle_additions": {
+          "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+          "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361"
+        }
+      }
+    ],
+    "preparation_count": 34,
+    "executable_asset_comparisons": 204,
+    "limits": [
+      "test.sh --help proves isolated import and argument entry only; it does not prove a full Harbor container Trial",
+      "Targeted negative calibration is not a full formal-condition matrix"
+    ]
+  },
+  "task_source_snapshot": {
+    "schema_version": 1,
+    "scope": "complete six converter task source trees",
+    "archive": "runs/benchmark-next-converter-r8/task-source/task-source.tar.gz",
+    "archive_sha256": "4fa907ce904302f157d36f2742e84eec732f444b05bbd0822518b621f6831e6b",
+    "files": {
+      "benchmark/tasks/v3-converter-adc-spectrum/SOURCE.md": {
+        "sha256": "a356c8d3b7629239a384e8133762fe2b57c8373cec10f2af0eb5fd1e43cfd6ea",
+        "bytes": 570
+      },
+      "benchmark/tasks/v3-converter-adc-spectrum/environment/Dockerfile": {
+        "sha256": "ad4b50a762513f687ce43b51fced9937b03330757d631fad4e6a12fac86cbbe8",
+        "bytes": 176
+      },
+      "benchmark/tasks/v3-converter-adc-spectrum/environment/public/cases.json": {
+        "sha256": "637af8b534c6b3fe6a59e0d9c7ea5ece3c3f0b3448119b9f17d3e23ee0daf6a7",
+        "bytes": 3286
+      },
+      "benchmark/tasks/v3-converter-adc-spectrum/environment/starter.va": {
+        "sha256": "333268d1b8a49204b67410f020b335dabc2c802846c2412bf2ab91c69793a4bc",
+        "bytes": 414
+      },
+      "benchmark/tasks/v3-converter-adc-spectrum/instruction.md": {
+        "sha256": "37a75a87491af8fdce62752f08057835bfd8a2f2db266b24cfad320b2d89e5e7",
+        "bytes": 1771
+      },
+      "benchmark/tasks/v3-converter-adc-spectrum/solution/dut.va": {
+        "sha256": "2fb7da7b0a9b8a5416ae3940d8eb6ea0cbfd30e90b3f196ef7e9366084b1f9c3",
+        "bytes": 1509
+      },
+      "benchmark/tasks/v3-converter-adc-spectrum/solution/solve.sh": {
+        "sha256": "644dc4df795627a25ad82bec407f3639cb7e64438cf70eb89889d6c136fc20f0",
+        "bytes": 51
+      },
+      "benchmark/tasks/v3-converter-adc-spectrum/task.toml": {
+        "sha256": "9225e9dc3b2da10c9c03c98252fb19a8edd7dbcad613db78caae07c23ccd36b7",
+        "bytes": 338
+      },
+      "benchmark/tasks/v3-converter-adc-spectrum/tests/adc_linearity.py": {
+        "sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "bytes": 18824
+      },
+      "benchmark/tasks/v3-converter-adc-spectrum/tests/cases.json": {
+        "sha256": "d0b143e4b71dd7810bbb98666ae3f0e86ea65fce13cfdc0e7860e4179e76619e",
+        "bytes": 18923
+      },
+      "benchmark/tasks/v3-converter-adc-spectrum/tests/contract.json": {
+        "sha256": "9ed4ad9ca022b7a10bb10363af12ce14f7088b4d6e882ed5b514b900f4043069",
+        "bytes": 91
+      },
+      "benchmark/tasks/v3-converter-adc-spectrum/tests/test.sh": {
+        "sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+        "bytes": 162
+      },
+      "benchmark/tasks/v3-converter-adc-spectrum/tests/v2_next_converter.py": {
+        "sha256": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "bytes": 3008
+      },
+      "benchmark/tasks/v3-converter-adc-spectrum/tests/v2_runtime.py": {
+        "sha256": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "bytes": 11210
+      },
+      "benchmark/tasks/v3-converter-adc-spectrum/tests/verify.py": {
+        "sha256": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "bytes": 109
+      },
+      "benchmark/tasks/v3-converter-dac-linearity/SOURCE.md": {
+        "sha256": "d2127331a22e699d1cfa1af1812cdcabd201a78da8eb0526e73db1af4aac1c29",
+        "bytes": 545
+      },
+      "benchmark/tasks/v3-converter-dac-linearity/environment/Dockerfile": {
+        "sha256": "ad4b50a762513f687ce43b51fced9937b03330757d631fad4e6a12fac86cbbe8",
+        "bytes": 176
+      },
+      "benchmark/tasks/v3-converter-dac-linearity/environment/public/cases.json": {
+        "sha256": "e8f82195f4b105165f473539a388af81fabf4c69fd13e547e38bd84250cf0529",
+        "bytes": 1376
+      },
+      "benchmark/tasks/v3-converter-dac-linearity/environment/public/dut/fixed.va": {
+        "sha256": "7591b45a2910bd83041fcf7406839b488d3d545c65e9a5b73fd78e30429416e1",
+        "bytes": 279
+      },
+      "benchmark/tasks/v3-converter-dac-linearity/environment/starter.va": {
+        "sha256": "f2bd75458b919a6dfb1b74c598f01792c2e11863a539afdcef2627f2808a6b82",
+        "bytes": 273
+      },
+      "benchmark/tasks/v3-converter-dac-linearity/instruction.md": {
+        "sha256": "eb94a6856568b673bb70945cf95d6eec48a4ddffb041b98956c32ac2c7c34d77",
+        "bytes": 1443
+      },
+      "benchmark/tasks/v3-converter-dac-linearity/solution/dut.va": {
+        "sha256": "29ed702ccb84f1e6c489c06d000ee17176fb4d85a2ec00eb1d31b97e49a53e1f",
+        "bytes": 749
+      },
+      "benchmark/tasks/v3-converter-dac-linearity/solution/solve.sh": {
+        "sha256": "644dc4df795627a25ad82bec407f3639cb7e64438cf70eb89889d6c136fc20f0",
+        "bytes": 51
+      },
+      "benchmark/tasks/v3-converter-dac-linearity/task.toml": {
+        "sha256": "269604edf97c818c2a694bb7ac94e95c69e3d40438e8f03961ea484e4b3c938d",
+        "bytes": 332
+      },
+      "benchmark/tasks/v3-converter-dac-linearity/tests/adc_linearity.py": {
+        "sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "bytes": 18824
+      },
+      "benchmark/tasks/v3-converter-dac-linearity/tests/cases.json": {
+        "sha256": "7bb12d9be6e854d62ce33daa94e8566bb5e060847f40760589b0dbe4b73b6763",
+        "bytes": 5710
+      },
+      "benchmark/tasks/v3-converter-dac-linearity/tests/contract.json": {
+        "sha256": "a5f305a3eb6df7b8f1304e53cd7ebacbed5bc3a62ed703c2d954982c43ed9c5e",
+        "bytes": 92
+      },
+      "benchmark/tasks/v3-converter-dac-linearity/tests/test.sh": {
+        "sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+        "bytes": 162
+      },
+      "benchmark/tasks/v3-converter-dac-linearity/tests/v2_next_converter.py": {
+        "sha256": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "bytes": 3008
+      },
+      "benchmark/tasks/v3-converter-dac-linearity/tests/v2_runtime.py": {
+        "sha256": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "bytes": 11210
+      },
+      "benchmark/tasks/v3-converter-dac-linearity/tests/verify.py": {
+        "sha256": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "bytes": 109
+      },
+      "benchmark/tasks/v3-converter-nonideal/SOURCE.md": {
+        "sha256": "6d2f1f6bde14a67970eb34276c72aa87fa0b4e164fde8e5cb9230a4abf256772",
+        "bytes": 523
+      },
+      "benchmark/tasks/v3-converter-nonideal/environment/Dockerfile": {
+        "sha256": "ad4b50a762513f687ce43b51fced9937b03330757d631fad4e6a12fac86cbbe8",
+        "bytes": 176
+      },
+      "benchmark/tasks/v3-converter-nonideal/environment/public/cases.json": {
+        "sha256": "abc89cc0647dfa638848dd7715a16dba37ab3b95ed92211c705297000cf26456",
+        "bytes": 1327
+      },
+      "benchmark/tasks/v3-converter-nonideal/environment/starter.va": {
+        "sha256": "643f09b471da134ba21c218c542c75e571dc05312ac2b0efd882db35aeb975ca",
+        "bytes": 248
+      },
+      "benchmark/tasks/v3-converter-nonideal/instruction.md": {
+        "sha256": "3acaac35352e1f258e12384d2cf88bc1b11a37e724d1925d384ee14e87317151",
+        "bytes": 1280
+      },
+      "benchmark/tasks/v3-converter-nonideal/solution/dut.va": {
+        "sha256": "5688c37838ffe363f08d2ab3c5ffb1680a8bcebc8012befa5f97011bdb5fe54b",
+        "bytes": 418
+      },
+      "benchmark/tasks/v3-converter-nonideal/solution/solve.sh": {
+        "sha256": "644dc4df795627a25ad82bec407f3639cb7e64438cf70eb89889d6c136fc20f0",
+        "bytes": 51
+      },
+      "benchmark/tasks/v3-converter-nonideal/task.toml": {
+        "sha256": "82eefe68ad197caf44691f9eb38c6f8d61595dd8ca26200e0839a68983eaa33d",
+        "bytes": 297
+      },
+      "benchmark/tasks/v3-converter-nonideal/tests/adc_linearity.py": {
+        "sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "bytes": 18824
+      },
+      "benchmark/tasks/v3-converter-nonideal/tests/cases.json": {
+        "sha256": "3fd017cb82b6ca2884f4de89cc9aaf502f1589b183f691d5f713c2fcb19c7ac5",
+        "bytes": 3586
+      },
+      "benchmark/tasks/v3-converter-nonideal/tests/contract.json": {
+        "sha256": "caca1f1b49387d25cb62d891698c57dd23eb60bd6c525edf12cde358c3d42237",
+        "bytes": 87
+      },
+      "benchmark/tasks/v3-converter-nonideal/tests/test.sh": {
+        "sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+        "bytes": 162
+      },
+      "benchmark/tasks/v3-converter-nonideal/tests/v2_next_converter.py": {
+        "sha256": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "bytes": 3008
+      },
+      "benchmark/tasks/v3-converter-nonideal/tests/v2_runtime.py": {
+        "sha256": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "bytes": 11210
+      },
+      "benchmark/tasks/v3-converter-nonideal/tests/verify.py": {
+        "sha256": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "bytes": 109
+      },
+      "benchmark/tasks/v3-converter-segmented/SOURCE.md": {
+        "sha256": "e35fed08d44d830f1dc45e776aff09494351ad9bde7f3a8a5875ecf25d20164c",
+        "bytes": 523
+      },
+      "benchmark/tasks/v3-converter-segmented/environment/Dockerfile": {
+        "sha256": "ad4b50a762513f687ce43b51fced9937b03330757d631fad4e6a12fac86cbbe8",
+        "bytes": 176
+      },
+      "benchmark/tasks/v3-converter-segmented/environment/public/cases.json": {
+        "sha256": "627b3f0b114d8f993fd4f57a94dbd5390f6f81d078518124873420315f703b93",
+        "bytes": 2052
+      },
+      "benchmark/tasks/v3-converter-segmented/environment/starter.va": {
+        "sha256": "ca9e25d1b348ecb080189e29734afdfb70ecda3d554f491062a132c5a087b44d",
+        "bytes": 257
+      },
+      "benchmark/tasks/v3-converter-segmented/instruction.md": {
+        "sha256": "0b3752be70dd45a75c4ea236c9ab28fa4680230515a4869bb8faa21f9ba86b80",
+        "bytes": 1278
+      },
+      "benchmark/tasks/v3-converter-segmented/solution/dut.va": {
+        "sha256": "bcf187344caf2b4a8a605b3e0dd2337e97e21f039eaba10f421fdae5ffd6c554",
+        "bytes": 430
+      },
+      "benchmark/tasks/v3-converter-segmented/solution/solve.sh": {
+        "sha256": "644dc4df795627a25ad82bec407f3639cb7e64438cf70eb89889d6c136fc20f0",
+        "bytes": 51
+      },
+      "benchmark/tasks/v3-converter-segmented/task.toml": {
+        "sha256": "8870a5cb7a24a09a60fc6f42f3f81b8d241a4fc7b3870048e506fbb999c7df66",
+        "bytes": 298
+      },
+      "benchmark/tasks/v3-converter-segmented/tests/adc_linearity.py": {
+        "sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "bytes": 18824
+      },
+      "benchmark/tasks/v3-converter-segmented/tests/cases.json": {
+        "sha256": "b54494794d4a1c2ec2aee3db7df2ab248c426655383b88d724e6516753a61b3a",
+        "bytes": 6616
+      },
+      "benchmark/tasks/v3-converter-segmented/tests/contract.json": {
+        "sha256": "70fb3b5b4558e66329e9eb133ed8e10d57b18ca46cc95c19e88bd6bc652314c2",
+        "bytes": 88
+      },
+      "benchmark/tasks/v3-converter-segmented/tests/test.sh": {
+        "sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+        "bytes": 162
+      },
+      "benchmark/tasks/v3-converter-segmented/tests/v2_next_converter.py": {
+        "sha256": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "bytes": 3008
+      },
+      "benchmark/tasks/v3-converter-segmented/tests/v2_runtime.py": {
+        "sha256": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "bytes": 11210
+      },
+      "benchmark/tasks/v3-converter-segmented/tests/verify.py": {
+        "sha256": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "bytes": 109
+      },
+      "benchmark/tasks/v3-converter-subradix/SOURCE.md": {
+        "sha256": "b16ecc40a41ece565399d18251009a985f9e2d7f38ec0df310bda9912dc162f6",
+        "bytes": 523
+      },
+      "benchmark/tasks/v3-converter-subradix/environment/Dockerfile": {
+        "sha256": "ad4b50a762513f687ce43b51fced9937b03330757d631fad4e6a12fac86cbbe8",
+        "bytes": 176
+      },
+      "benchmark/tasks/v3-converter-subradix/environment/public/cases.json": {
+        "sha256": "283deef28f95eba6da7f53e42e6b4b74892d2234dd09f7bf0d64b2751fa89119",
+        "bytes": 3102
+      },
+      "benchmark/tasks/v3-converter-subradix/environment/starter.va": {
+        "sha256": "8b6718f435d59122fd936e089cc741c16503c976a37a6f25f9e7111ee3919cdc",
+        "bytes": 332
+      },
+      "benchmark/tasks/v3-converter-subradix/instruction.md": {
+        "sha256": "00377144cf448742f9c8c194d19b1bbdc54ad4d506ec78db53a1f45d9cae790d",
+        "bytes": 1421
+      },
+      "benchmark/tasks/v3-converter-subradix/solution/dut.va": {
+        "sha256": "d5da80be34cbebf5b60af0550e19c65f274420637534e72e5930176d1226e174",
+        "bytes": 663
+      },
+      "benchmark/tasks/v3-converter-subradix/solution/solve.sh": {
+        "sha256": "644dc4df795627a25ad82bec407f3639cb7e64438cf70eb89889d6c136fc20f0",
+        "bytes": 51
+      },
+      "benchmark/tasks/v3-converter-subradix/task.toml": {
+        "sha256": "8d12af2c67d6a755125c7f2a8640b8a3587f87ab0a485ea47a5506e5170c28d4",
+        "bytes": 297
+      },
+      "benchmark/tasks/v3-converter-subradix/tests/adc_linearity.py": {
+        "sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "bytes": 18824
+      },
+      "benchmark/tasks/v3-converter-subradix/tests/cases.json": {
+        "sha256": "96fd674ce68edcb2d6cd4b4560d90b7a924dddbbdae0c21a74a5a84e7cca038b",
+        "bytes": 9744
+      },
+      "benchmark/tasks/v3-converter-subradix/tests/contract.json": {
+        "sha256": "c50de16e0445fd788e7c7cd7049d435553c9819ee3b64b11349e238ba68711f2",
+        "bytes": 87
+      },
+      "benchmark/tasks/v3-converter-subradix/tests/test.sh": {
+        "sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+        "bytes": 162
+      },
+      "benchmark/tasks/v3-converter-subradix/tests/v2_next_converter.py": {
+        "sha256": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "bytes": 3008
+      },
+      "benchmark/tasks/v3-converter-subradix/tests/v2_runtime.py": {
+        "sha256": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "bytes": 11210
+      },
+      "benchmark/tasks/v3-converter-subradix/tests/verify.py": {
+        "sha256": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "bytes": 109
+      },
+      "benchmark/tasks/v3-converter-thermometer/SOURCE.md": {
+        "sha256": "b700091adbee3ed8d4a7a425db7ceff9fd1c0b21cbc5edae63674885e6b0b190",
+        "bytes": 523
+      },
+      "benchmark/tasks/v3-converter-thermometer/environment/Dockerfile": {
+        "sha256": "ad4b50a762513f687ce43b51fced9937b03330757d631fad4e6a12fac86cbbe8",
+        "bytes": 176
+      },
+      "benchmark/tasks/v3-converter-thermometer/environment/public/cases.json": {
+        "sha256": "d556371fefbf066a6bf0a3788d4751ad531e3d869774939b50e745232d2d47b8",
+        "bytes": 5122
+      },
+      "benchmark/tasks/v3-converter-thermometer/environment/starter.va": {
+        "sha256": "673148a2f9868d78cfe1b084b40754aeca6958dd8063898652444dcbb532b5f8",
+        "bytes": 452
+      },
+      "benchmark/tasks/v3-converter-thermometer/instruction.md": {
+        "sha256": "7df6dbc9029a500e6eb46ada46dd4953a2baa5ab3f7658a2bc096ebde604b594",
+        "bytes": 1375
+      },
+      "benchmark/tasks/v3-converter-thermometer/solution/dut.va": {
+        "sha256": "b9d6b2d1bd034f3d3396312870c0a7e43215a92c599cfc888b415c9c087eab35",
+        "bytes": 810
+      },
+      "benchmark/tasks/v3-converter-thermometer/solution/solve.sh": {
+        "sha256": "644dc4df795627a25ad82bec407f3639cb7e64438cf70eb89889d6c136fc20f0",
+        "bytes": 51
+      },
+      "benchmark/tasks/v3-converter-thermometer/task.toml": {
+        "sha256": "cdaba88061d32afbd0978c461ef1dcbc963ea8aff6d8eeb2c69d4d49e96fa933",
+        "bytes": 300
+      },
+      "benchmark/tasks/v3-converter-thermometer/tests/adc_linearity.py": {
+        "sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "bytes": 18824
+      },
+      "benchmark/tasks/v3-converter-thermometer/tests/cases.json": {
+        "sha256": "1f459adfd397bef0b17cac23a710babf92230b087bd3cfb02345b63c0250a604",
+        "bytes": 17696
+      },
+      "benchmark/tasks/v3-converter-thermometer/tests/contract.json": {
+        "sha256": "5f81c0a23b1e33b59f165406dedfa92f393606151ffe271a4279bbfa1ea08f63",
+        "bytes": 90
+      },
+      "benchmark/tasks/v3-converter-thermometer/tests/test.sh": {
+        "sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+        "bytes": 162
+      },
+      "benchmark/tasks/v3-converter-thermometer/tests/v2_next_converter.py": {
+        "sha256": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+        "bytes": 3008
+      },
+      "benchmark/tasks/v3-converter-thermometer/tests/v2_runtime.py": {
+        "sha256": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "bytes": 11210
+      },
+      "benchmark/tasks/v3-converter-thermometer/tests/verify.py": {
+        "sha256": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+        "bytes": 109
+      }
+    }
+  }
 }
