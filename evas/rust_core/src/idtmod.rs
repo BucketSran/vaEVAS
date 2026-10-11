@@ -10,6 +10,7 @@ pub(crate) struct IdtMod {
     modulus: f64,
     offset: f64,
     exact_source: Option<crate::exact_source::Curve>,
+    refine_ordinary: bool,
 }
 
 fn wrap(value: f64, modulus: f64, offset: f64) -> f64 {
@@ -55,12 +56,17 @@ impl IdtMod {
             modulus,
             offset,
             exact_source: None,
+            refine_ordinary: false,
         })
     }
 
     pub(crate) fn with_exact_source(mut self, source: Option<crate::exact_source::Curve>) -> Self {
         self.exact_source = source;
         self
+    }
+
+    pub(crate) fn refine_ordinary(&mut self, enabled: bool) {
+        self.refine_ordinary = enabled;
     }
 
     fn certificate(&self, time: f64, raw: I) -> Option<(f64, I)> {
@@ -71,7 +77,9 @@ impl IdtMod {
         // enclosure width through a sine consumer near zero. Reuse the same
         // original-source proof used at wraps; absent provenance/budget keeps
         // the interval path, including any inherited input uncertainty.
-        if raw.lo == raw.hi && normalized.finite() && normalized.lo.floor() == normalized.hi.floor()
+        if (!self.refine_ordinary || raw.lo == raw.hi)
+            && normalized.finite()
+            && normalized.lo.floor() == normalized.hi.floor()
         {
             return None;
         }
@@ -209,6 +217,32 @@ mod tests {
     }
 
     #[test]
+    fn ordinary_refinement_is_disposable_and_restores_the_interval_path() {
+        let original = IdtMod::enclosed(
+            vec![(0.0, 0.25), (1.0, 0.25)],
+            vec![I { lo: 0.24, hi: 0.26 }; 2],
+            0.125,
+            1.0,
+            0.0,
+        )
+        .unwrap()
+        .with_exact_source(crate::exact_source::Curve::source(&[
+            [0.0, 0.25],
+            [1.0, 0.25],
+        ]));
+        let ordinary = original.value_bounds(0.5).unwrap();
+        let mut trial = original.clone();
+        trial.refine_ordinary(true);
+        assert_eq!(trial.value(0.5).unwrap(), 0.25);
+        let refined = trial.value_bounds(0.5).unwrap();
+        assert!(refined.lo <= 0.25 && refined.hi >= 0.25);
+        assert!(refined.hi - refined.lo < ordinary.hi - ordinary.lo);
+        assert_eq!(original.value_bounds(0.5).unwrap(), ordinary);
+        trial.refine_ordinary(false);
+        assert_eq!(trial.value_bounds(0.5).unwrap(), ordinary);
+    }
+
+    #[test]
     fn generated_source_error_cannot_supply_an_exact_ordinary_phase() {
         use crate::ir::{Expression, Term, TransientInputs};
         let mut trajectory = crate::pwl::Trajectory::new(
@@ -239,7 +273,7 @@ mod tests {
             trajectory.value_bounds(0.0)[0],
             trajectory.value_bounds(1.0)[0],
         ];
-        let history = IdtMod::enclosed(
+        let mut history = IdtMod::enclosed(
             vec![(0.0, 0.25), (1.0, 0.25)],
             bounds.to_vec(),
             0.125,
@@ -248,6 +282,7 @@ mod tests {
         )
         .unwrap()
         .with_exact_source(exact);
+        history.refine_ordinary(true);
         let interval = history.value_bounds(0.5).unwrap();
         assert!(interval.lo <= 0.245 && interval.hi >= 0.255);
         assert!(interval.hi - interval.lo >= 0.01);

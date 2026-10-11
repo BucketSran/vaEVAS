@@ -230,6 +230,7 @@ impl Controller {
 // Current policy chooses the certified mathematical root as the actual cross
 // observation. Its enclosure and fired-root constraints travel together; b is
 // only a representative. No late-trigger policy is silently substituted.
+#[derive(Clone, Copy)]
 struct EventMoment<'a> {
     representative: f64,
     observation: I,
@@ -291,6 +292,34 @@ fn prepare_root_window(
     moment: EventMoment<'_>,
     events: &[usize],
 ) -> Result<Frame, Error> {
+    let ordinary = prepare_root_window_impl(model, trajectory, accepted, moment, events, false);
+    match ordinary {
+        Err(error)
+            if error.kind == "waveform_accuracy"
+                && error
+                    .message
+                    .starts_with("cannot certify same-time forward error at ")
+                && moment.observation.lo == moment.observation.hi
+                && events.is_empty()
+                && moment.fired_roots.is_empty() =>
+        {
+            // Retry the entire disposable settlement from accepted history.
+            // The proof refines representatives and every downstream bound;
+            // neither an event/root window nor its timing is changed.
+            prepare_root_window_impl(model, trajectory, accepted, moment, events, true)
+        }
+        result => result,
+    }
+}
+
+fn prepare_root_window_impl(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    accepted: &Frame,
+    moment: EventMoment<'_>,
+    events: &[usize],
+    refine_ordinary_phase: bool,
+) -> Result<Frame, Error> {
     let _timing = crate::diagnostics::span("controller.prepare_candidate");
 
     let EventMoment {
@@ -301,6 +330,7 @@ fn prepare_root_window(
     } = moment;
     let copying = crate::diagnostics::span("history.clone");
     let mut operators = accepted.operators.clone();
+    operators.refine_ordinary_phase(refine_ordinary_phase);
     drop(copying);
     crate::diagnostics::counter("history_clone_calls", 1);
     crate::diagnostics::counter(
@@ -378,7 +408,7 @@ fn prepare_root_window(
         .copied()
         .filter(|&s| old_bounds[s] != prepared.bounds[s] || old_bounds[s].lo != old_bounds[s].hi)
         .collect();
-    let operators = frozen.advanced_until(
+    let mut operators = frozen.advanced_until(
         time_bounds,
         &prepared.states,
         &prepared.bounds,
@@ -417,6 +447,8 @@ fn prepare_root_window(
         )?;
         crate::observation::retain_bounds(&mut prepared.solution, nodes);
     }
+    // Refinement belongs to this observation, never future root predictions.
+    operators.refine_ordinary_phase(false);
     Ok(Frame {
         time,
         states: prepared.states,

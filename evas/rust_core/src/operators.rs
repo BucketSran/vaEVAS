@@ -1040,6 +1040,14 @@ impl Operators {
         Ok((values[slot], derivatives[slot]))
     }
 
+    pub(crate) fn refine_ordinary_phase(&mut self, enabled: bool) {
+        for entry in &mut self.entries {
+            if let Runtime::IdtMod(history) = entry {
+                history.refine_ordinary(enabled);
+            }
+        }
+    }
+
     pub(crate) fn event_bounds(&self, time: f64, window: I) -> Result<Vec<I>, Error> {
         if window.lo == window.hi {
             return self.bounds(time);
