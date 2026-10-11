@@ -57,6 +57,15 @@ class FoundationReferences(unittest.TestCase):
             else:
                 self.contains(out,'y',3 if u in (0,1) else 7 if u==2 else 9)
 
+    def test_logical_expression_uses_spectre_compatible_port_name(self):
+        # Actual VACOMP-2259 located the unescaped `logic` port declaration.
+        for c in (c for c in f.cards() if c['group_id']=='F03'):
+            self.assertIn('logic_out',c['ports'])
+            self.assertNotIn('logic',c['ports'])
+            self.assertIn('V(logic_out)<+',c['source'])
+            a,b,d=(c['inputs'][n][0][1]!=0 for n in ('a','b','c'))
+            self.contains(f.reference(c,0,{}),'logic_out',int(a or b and d))
+
     def test_functions_include_threshold_and_both_branches(self):
         for variant, expected in [('F05-dc-0',0),('F05-dc-1',.5),('F05-dc-2',.75)]:
             out=f.reference(self.card('F05',variant),0,{})
