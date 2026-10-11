@@ -202,3 +202,35 @@ class CompositionReferences(unittest.TestCase):
         with self.assertRaises(ValueError):
             m.reference({**c,'reference_counter_stages':{'n':1},
                          'reference_event_stages':flags},m.UNIT,history)
+
+    def test_completed_transition_starts_fresh_same_direction_edge(self):
+        m=load();c=next(c for c in m.cards() if c['group_id']=='EC01')
+        history={e['id']:[e['nominal_s']]*2 for e in c['events']}
+        # 6T edge has reached .8. The 8T edge rises .8->1.2 in .125T.
+        for x,correct,stale in ((8.03125,.9,1.1625),(8.0625,1.,1.2)):
+            lo,hi=m.reference(c,x*m.UNIT,history)['outputs']['out']
+            self.assertLessEqual(lo,correct)
+            self.assertGreaterEqual(hi,correct)
+            self.assertLess(hi-lo,1e-9)
+            self.assertFalse(lo<=stale<=hi)
+
+    def test_transition_completion_uncertainty_contains_both_history_branches(self):
+        m=load()
+        from decimal import localcontext
+        with localcontext() as ctx:
+            ctx.prec=80
+            t=m._I(.15);first=m._I(0);second=m._I(.115,.135)
+            whole=m._transition(t,[first,second],[1,2],0,0,m._I(.125),m._I(.125)).floats()
+            for e in (.115,.125,.135):
+                point=m._transition(t,[first,m._I(e)],[1,2],0,0,m._I(.125),m._I(.125)).floats()
+                self.assertLessEqual(whole[0],point[0])
+                self.assertGreaterEqual(whole[1],point[1])
+
+    def test_input_gains_cover_composed_consumers_and_unbounded_obligations(self):
+        m=load();cs={c['group_id']:c for c in m.cards()}
+        self.assertGreaterEqual(cs['EC03']['input_gain_bound'],4)
+        self.assertGreaterEqual(cs['EC04']['input_gain_bound'],16)
+        self.assertGreaterEqual(cs['EC12']['input_gain_bound'],13.502)
+        self.assertGreaterEqual(cs['EC17']['input_gain_bound']['out'],2*__import__('math').pi)
+        self.assertEqual(set(cs['EC16']['input_gain_evidence_required']),{'d','y'})
+        self.assertEqual(set(cs['EC17']['input_gain_evidence_required']),{'phase'})
