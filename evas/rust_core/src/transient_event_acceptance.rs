@@ -119,6 +119,16 @@ impl PreparedEvents {
             .first()
             .is_some_and(|event| event.bounds().lo <= next.time)
         {
+            // A forced point is a controller boundary, not a historical
+            // query through the completed cluster. Stop at this accepted
+            // phase only when the next event is proved physically later.
+            // Overlapping rounded enclosures alone must not consume it.
+            if trajectory.config.strobetimes.contains(&next.time)
+                && future[0].physical_order_for_query(next.time, model, trajectory)
+                    == Some(std::cmp::Ordering::Greater)
+            {
+                break;
+            }
             if microevents >= crate::schedule::CAUSAL_MICROEVENT_BUDGET
                 || controller.records.len() + records.len() >= crate::schedule::EVENT_BUDGET
             {
@@ -507,6 +517,119 @@ mod tests {
         assert_eq!(controller.accepted.states, [1., 3.]);
         assert_eq!(controller.records.len(), calendar.len());
         assert_eq!(controller.event, calendar.len());
+    }
+
+    #[test]
+    fn strobe_prefix_commits_and_failed_successor_retries_without_losing_it() {
+        let (base, mut trajectory, _, _) = super::super::lifecycle_controller_tests::fixture();
+        trajectory.config.output_times = vec![0., 0.3, 1.];
+        trajectory.config.strobetimes = vec![0.3];
+        let mut value = serde_json::to_value(&base.program).unwrap();
+        value["operators"] = serde_json::json!([]);
+        for contribution in value["contributions"].as_array_mut().unwrap() {
+            contribution["rhs"] = serde_json::json!({"op":"state","state":0});
+        }
+        for state in value["states"].as_array_mut().unwrap() {
+            state["initial"] = serde_json::json!(0);
+        }
+        let origin = value["events"][0]["origin"].clone();
+        let event = |start, period, state, constant| {
+            serde_json::json!({
+                "origin":origin,
+                "trigger":{"kind":"timer","start":start,"period":period,"time_tolerance":1e-6,"enabled":true},
+                "body":[{"kind":"assign","state":state,"rhs":{"op":"affine","constant":constant,"terms":[]}}]
+            })
+        };
+        value["events"] = serde_json::json!([
+            event(0.1, 0.2, 1, 1.),
+            event(0.3, 0., 0, 1.),
+            event(0.30000000000000004, 0., 1, 2.),
+            event(0.30000000000000004, 0., 1, 3.)
+        ]);
+        let model = EventModel::new(
+            serde_json::from_value(value.clone()).unwrap(),
+            base.driven.clone(),
+            base.tolerances.clone(),
+        )
+        .unwrap();
+        let states = model.initial();
+        let operators =
+            Operators::new(&model.program, &trajectory, &model.driven, &states).unwrap();
+        let circuit = model
+            .circuit_with(&states, &operators.values(0.).unwrap())
+            .unwrap();
+        let mut controller = Controller {
+            accepted: Frame {
+                time: 0.,
+                solution: circuit.solve(&[0.]).unwrap(),
+                circuit,
+                operators,
+                state_bounds: states.iter().copied().map(I::point).collect(),
+                states,
+            },
+            event: 0,
+            records: vec![],
+            outputs: vec![],
+        };
+        let mut calendar = independent_schedule(&model, &trajectory).unwrap();
+        for _ in 0..2 {
+            controller
+                .accept_changed_events(&model, &trajectory, &mut calendar, Strategy::Static)
+                .unwrap();
+        }
+        assert_eq!(controller.accepted.time, 0.3);
+        assert_eq!(controller.accepted.states, [1., 1.]);
+        assert_eq!(controller.event, 2);
+        assert!(controller.outputs.is_empty());
+        let before = controller.accepted.clone();
+        let records = serde_json::to_value(&controller.records).unwrap();
+        let pending: Vec<_> = calendar
+            .iter()
+            .map(|e| (e.event, e.time, e.bounds()))
+            .collect();
+        for _ in 0..2 {
+            assert_eq!(
+                controller
+                    .accept_changed_events(&model, &trajectory, &mut calendar, Strategy::Static)
+                    .unwrap_err()
+                    .kind,
+                "event_conflict"
+            );
+            assert_eq!(controller.accepted.time, before.time);
+            assert_eq!(controller.accepted.states, before.states);
+            assert_eq!(controller.accepted.state_bounds, before.state_bounds);
+            assert_eq!(
+                controller.accepted.solution.voltages,
+                before.solution.voltages
+            );
+            assert!(controller
+                .accepted
+                .operators
+                .same_reset_history(&before.operators));
+            assert_eq!(controller.event, 2);
+            assert_eq!(serde_json::to_value(&controller.records).unwrap(), records);
+            assert_eq!(
+                calendar
+                    .iter()
+                    .map(|e| (e.event, e.time, e.bounds()))
+                    .collect::<Vec<_>>(),
+                pending
+            );
+        }
+        value["events"][3]["body"] = serde_json::json!([]);
+        let good = EventModel::new(
+            serde_json::from_value(value).unwrap(),
+            base.driven,
+            base.tolerances,
+        )
+        .unwrap();
+        while controller.event < calendar.len() {
+            controller
+                .accept_changed_events(&good, &trajectory, &mut calendar, Strategy::Static)
+                .unwrap();
+        }
+        assert_eq!(controller.records.len(), calendar.len());
+        assert_eq!(controller.accepted.states, [1., 1.]);
     }
 
     #[test]

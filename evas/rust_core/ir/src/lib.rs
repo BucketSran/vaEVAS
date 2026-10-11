@@ -529,6 +529,7 @@ pub struct PortabilityAdvisories {
     pub schema_version: u32,
     pub record_limit: usize,
     pub records: Vec<PortabilityAdvisory>,
+    pub model_records: Vec<ModelPortabilityAdvisory>,
     pub dropped_records: usize,
     pub truncated: bool,
 }
@@ -542,7 +543,18 @@ pub struct PortabilityAdvisory {
     pub event: usize,
     pub trigger: usize,
     pub origin: String,
+    pub query_source: &'static str,
     pub query_index: usize,
     pub query_time_s: f64,
-    pub root_time_bounds_s: [f64; 2],
+    pub time_bounds_s: [f64; 2],
+}
+
+/// A source-level risk notice, not an observed wrap or a time certificate.
+#[derive(Debug, Serialize)]
+pub struct ModelPortabilityAdvisory {
+    pub code: &'static str,
+    pub nonblocking: bool,
+    pub message: &'static str,
+    pub operator: usize,
+    pub origin: String,
 }

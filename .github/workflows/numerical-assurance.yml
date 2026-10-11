@@ -53,6 +53,7 @@ jobs:
           python3 -B -m unittest discover -s experiments/backends/dvs2-spectre-validation -p 'test_*.py' -v
           python3 -B -m unittest discover -s experiments/backends/spectre-alignment -p 'test_*.py' -v
           python3 -B -m unittest discover -s evas/validation/event_alignment -p 'test_checker.py' -v
+          python3 -B -m unittest discover -s evas/validation/strobe -p 'test_*.py' -v
           python3 -B -m unittest discover -s experiments/backends/event-alignment -p 'test_*.py' -v
           python3 -B -m unittest discover -s evas/validation/sample_edge_filter -p 'test_*.py' -v
           python3 -B -m unittest discover -s experiments/backends/sample-edge-filter -p 'test_*.py' -v

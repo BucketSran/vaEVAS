@@ -6,6 +6,27 @@
 “实际触发”指经过公开编译/执行入口得到该失败；“源码审计”只确认构造分支的条件与类别。
 后者不计为实际执行覆盖。没有可靠归因的出口仍为 `unknown`。
 
+<a id="diagnostic-closure"></a>
+
+## 2026-10-11 诊断收尾
+
+本库已补 timer、额外 strobe 和 `idtmod` 写法的非阻断提示，见[提示协议](../reference/diagnostics.md)。
+新增字段属于提示 v2；原错误诊断 v1 与 unknown 回退保持。连续/事件求解算法未因提示改变。
+在同一主机比较新旧内核：原 Spec B 12 请求、近邻 timer 12 请求、原 C1、一个 modulo 模型及原 VCO，
+共 **27 个完整响应除提示字段外完全相同**。VCO 保留四次环回及两侧 binary64 邻点，
+源码提示不宣称定位到了每次环回，也不升级原严格 F/I。据此复用近邻 timer 的实际 Spectre 对照，
+不把诊断改动宣称为新的数值对齐。保存的源码、内核和响应身份见
+[保持性收据](diagnostic-closure.json)。原始运行、首次请求准备错误及 held_timer 适配失败均为本地保留证据。
+
+`worker_failure` 已用真实测试线程 panic 经过生产 join 函数验证，包含后续线程回收和首个错误顺序。
+故障只在测试中注入，没有生产 panic 开关，也未声称找到用户模型可触发的 panic。
+`worker_start` 的 OS 拒绝由外部隔离容器验证，固定版本与限额见下方移交段。
+未知或有多个原因的出口继续返回 unknown，源码登记总数仍不等于全部出口已执行。
+
+外部消费由 [Circuit Harness PR #6](https://github.com/BucketSran/circuit-harness/pull/6)承担。
+固定版本的真实 Docker 回放已完成，六项完整分母与版本身份见下方移交段。
+两库候选尚未合并；实施与具名验收已完成，整合前不提前关闭 #64。
+
 ## 输入和来源
 
 | 来源身份 | 条件与出口 | 分类、阶段、能力 | 来源及验收 |
@@ -69,7 +90,7 @@ code 仍为 `kernel.<kind>`，stage 为 kernel，未有特定能力归因时 cap
 | `schedule.calendar` / `event_budget` | 实际日程或重算日程超过事件预算；resource | 实际周期 timer 到日程预算出口。CROSS 日程与调度重算来源为源码审计 |
 | `main.stdin` / `input_io` | Rust stdin 读入 I/O/编码失败；infrastructure | 非 UTF-8 字节经真实内核 stdin 到 input_io；经适配保留原载荷 |
 | `main.sidecar` / `diagnostic_io` | 原求解成功，但 sidecar 无法新建/写出；infrastructure | 真正执行 solve，sidecar 指向已存在目录。CLI 返回 2 且不输出成功 stdout；原内核 exit 3 经既有适配保留错误 |
-| `batch.spawn` / `worker_start` | OS 拒绝 spawn_scoped；infrastructure | 源码审计与载荷保真测试，未强制真实 OS 线程创建失败，不算实际出口覆盖 |
+| `batch.spawn` / `worker_start` | OS 拒绝 spawn_scoped；infrastructure | 隔离 Docker 中内核作为 PID1，以线程额度 1 触发真实 OS error 11；额度 8 下同请求成功。原错误经 Python 适配保留，见外部移交 |
 
 `invalid_state_space`、`state_space_limit`、
 `event_condition`、`event_accuracy`、`event_consistency`、`event_conflict`、
@@ -86,7 +107,7 @@ code、stage、category 和原 message；solve 还断言 sample 身份。
 | --- | --- | --- |
 | 多项式求值 / `nonfinite_arithmetic` | `V(y,r)<+pow(V(u,r),3)`，有限输入 `u=1e200`；numerical | 实际 solve 与 CLI 溢出。其他同 kind 的矩阵、区间和事件算术分支只经源码审计；不推断模型缺陷或实现 bug |
 | events.check_state / `state_range` | integer n 初值 2147483647，t=0 timer 执行 `n=n+1`；unsupported | 实际 transient 与 CLI 到 32 位状态边界。有限运行结果超出实现范围，不归因为资源不足或数值收敛失败 |
-| batch worker join / `worker_failure` | 工作线程 panic；internal | 唯一生产构造为 join 的 panic 分支。仅源码审计与原载荷/未来版本负控，未强制触发真实 panic，不计执行覆盖 |
+| batch worker join / `worker_failure` | 工作线程 panic；internal | 测试线程实际 panic，经生产 `join_workers` 返回并序列化；验证后续 panic 也被回收且首个输入错误不变。Python 原载荷/未来版本负控另验收运输。没有通过用户模型制造生产 panic |
 
 未来非 v1 载荷仍按 unknown 处理。`state_space_limit` 含维度预算、缩放预算和认证失败，
 `invalid_state_space` 由内核生成的内部状态空间校验产生；本轮不把它们统一猜成输入错误或资源。
@@ -183,9 +204,9 @@ capture 保留 payload.error 原内核载荷，新增 error_diagnostic，status 
 
 ## 剩余范围与证据复用
 
-#64 外部 benchmark/harness 的分类读取与评分分母验收仍待 Circuit Harness 拥有者交付，
-具体消费点、版本身份和验收输入见[外部消费移交](diagnostic-sources.md#external-consumer)。不能据本库清单
-关闭总 Issue。PR87/88 是并行用户工作，本批未改其文件或接口。旧 Python API 的普通
+#64 的外部分类读取、完整失败分母和真实 Docker 回放已完成固定集合验收，
+具体消费点与版本见[外部消费移交](#external-consumer)。本库清单本身不能替代该证据；
+两库合并状态另行管理。PR87/88 是并行用户工作，本批未改其文件或接口。旧 Python API 的普通
 ValueError/OSError（如 query 校验、输出目录所有权、数值请求参数校验）继续保留原异常类别；
 调用者可选择现有 CLI 取得结构化边界诊断。完整源码清单不把这些异常猜成新的 CompileError
 原因，也不声称所有出口已做实际执行覆盖或所有 unknown 已细分类。
@@ -228,14 +249,29 @@ lint_passed 仍只表示既有静态检查通过；支持范围与精度资格�
 后投影 version、code、category、stage、capability。新字段不包含 message、位置或嵌套载荷，
 旧文本反馈和完整私有日志保留。远端 Spectre 不能选择此 EVAS 字段。
 
-候选 `e151dbb` 已用当前 EVAS `ab0df35b` / IR18 实际执行下表前四项和成功对照，分别经过
-可信执行层和 macOS 隔离会话。四类失败均保留 `backend_error`，成功项没有失败元数据；
-重复读取同一 action 复用已存结果。未来版本、缺失/损坏载荷及超长原始日志另有构造负控。
-固定内核身份和可重跑测试见[消费端验收说明](https://github.com/BucketSran/circuit-harness/blob/e151dbb/docs/reference/CURRENT_EVAS_PUBLIC_SESSION.md#evidence-and-limits)。
-原始运行资料为 local-only，不是公开数据集。
+2026-10-11 候选 `294bc50e` 使用固定 EVAS `989e7f53` / IR18 / 错误诊断 v1，
+完成真实执行层、公开 session 和密封 benchmark replay 六项验收：
 
-这是执行层与公开会话验收。真实基础设施失败、Docker benchmark replay 和完整 receipt
-汇总仍待完成，不能据此关闭 #64 或宣布全部外部消费验收通过。
+| 固定输入 | 保留的结果 | 汇总分类 |
+| --- | --- | --- |
+| timer 连续参数、DAE 加事件、整数范围 | backend_error，三项 unsupported | 三条 unevaluable |
+| 有限输入溢出 | backend_error，numerical | 一条 unevaluable |
+| 模拟器／本地镜像无法启动 | infrastructure_error，无虚构 EVAS 原因 | 一条 infra |
+| 成功对照 | 没有失败诊断 | 一条 not_compared |
+
+六份 receipt 全部通过校验，汇总为 **6 records / 6 candidates**。成功对照没有独立电路评分，
+不写成 benchmark 正确；失败不从分母删除。非 v1、损坏、缺失载荷由既有构造负控验收，
+不假装当前 EVAS 会真实产生未来版本。原始日志、来源位置和 sample 在私有记录中保留。
+
+另在同一 Linux 内核执行真实 OS 线程创建失败：容器 PID 上限 1 时 exit 2 / worker_start / OS error 11，
+上限 8 时同一静态请求成功、输出 2 和 4。实际网络禁用、只读根、512 MiB 和 1 CPU 已核对，
+两个容器均确认清理。这只验证内核出口与 Python 适配，不是另一份公开 session/replay 验收，
+也不替代上述六项中的基础设施失败。
+
+[固定消费端说明](https://github.com/BucketSran/circuit-harness/blob/294bc50efe5ec1c3ebc9a3339be381c7db97c279/docs/reference/CURRENT_EVAS_PUBLIC_SESSION.md#evidence-and-limits)
+保留镜像、native/Linux 内核、107 文件构建清单身份及可重跑测试。本库
+[收据](diagnostic-closure.json)链接同一结果。完整原始运行仍为 local-only，未宣称公开数据集。
+本库数值行为、所有诊断出口或真实 benchmark 电路得分不由这些消费测试证明。
 
 ### 历史消费点
 
@@ -257,10 +293,10 @@ lint_passed 仍只表示既有静态检查通过；支持范围与精度资格�
 解释为候选模型失败。机器解析应使用未截断的完整 stderr 或版本化错误文件，原日志继续保留。
 脱敏需作用于公开字段，内部原始诊断与有效设置保留在原记录中。
 
-### 拥有者与待交付验收
+### 拥有者与固定验收要求
 
 责任组件是 Circuit Harness 的当前 EVAS 执行与 benchmark/replay 适配。
-后续在上述 PR 或其交付后的任务继续实现，不在 vaEVAS 的 benchmark 定义或 Rust 数值内核中复制执行编排。
+上述 PR 拥有消费实现，不在 vaEVAS 的 benchmark 定义或 Rust 数值内核中复制执行编排。
 
 适配必须显式处理 `diagnostic_version=1`。非 v1、无诊断或损坏/截断载荷的类别保持 unknown，
 保留原版本与原载荷；不能用已知 kind 或文字反套当前规则。协议字段缺失不代表执行成功。
@@ -281,4 +317,4 @@ category 是失败原因，不是支持认证等级或自动缺陷判断。`exec
 先校准构造载荷的接受/拒绝边界，再至少运行真实当前 EVAS 的上述编译与内核失败，通过
 执行层、公开 session 和 replay receipt 汇总路径。构造 CLI/Docker 夹具不替代真实 EVAS 消费验收。
 记录实际 EVAS 源码、内核 SHA-256、IR 与诊断版本及 harness revision，报告该固定集合的
-全部执行结果。此依赖完成前，#64 外部消费验收继续待办。
+全部执行结果。上方固定集合已完成这些验收；两库整合完成前，#64 仍保持开放。

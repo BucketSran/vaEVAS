@@ -63,3 +63,8 @@
 [数学与准入](../math/continuous.md#固定外部多项式输入的直接通路)、
 [开发回归](../../tests/test_filter_direct.py)、[实际 Spectre 有限对照](../../../experiments/backends/filter-direct/README.md)。
 这仅交付 #66/C4 的前馈切片，内部非线性反馈与事件仍未纳入。
+
+2026-10-11 的[近邻 timer 强制点](../../../experiments/backends/strobe/README.md#near-timer)
+补充 TIMER、EVENT-ORDER、TRANSITION、DYNAMICS、COMPOSE、QUALIFICATION。
+固定／精确保持时钟及连续组合共 12 个 EVAS 配置通过；Spectre 10/12，通过范围按固定顺序选档。
+连续组合的两个原预算失败和更广局部历史闭包限制保留，不关闭 #96/#119。

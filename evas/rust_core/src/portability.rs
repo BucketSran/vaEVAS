@@ -1,5 +1,8 @@
 //! Read-only notices derived solely from committed event certificates and queries.
-use crate::ir::{PortabilityAdvisories, PortabilityAdvisory, TransientTrace};
+use crate::ir::{
+    ModelPortabilityAdvisory, OperatorSpec, PortabilityAdvisories, PortabilityAdvisory, Program,
+    TransientTrace,
+};
 const LIMIT: usize = 128;
 const MESSAGE: &str = "Observation is within one binary64 neighbor of a committed cross root certificate. Boundary samples may depend on backend event/observation ordering; inspect nearby samples before portability comparisons. This nonblocking notice does not establish an actual backend mismatch or the exact root side.";
 
@@ -17,15 +20,29 @@ fn next_down(x: f64) -> f64 {
     -next_up(-x)
 }
 
-pub(crate) fn collect(trace: Option<&TransientTrace>) -> Option<PortabilityAdvisories> {
+pub(crate) fn modulo_sources(program: &Program) -> Vec<(usize, String)> {
+    program
+        .operators
+        .iter()
+        .enumerate()
+        .filter(|(_, op)| matches!(op, OperatorSpec::IdtMod { .. }))
+        .map(|(index, op)| (index, op.origin().label()))
+        .collect()
+}
+
+pub(crate) fn collect(
+    trace: Option<&TransientTrace>,
+    strobes: Option<&[f64]>,
+    modulo: &[(usize, String)],
+) -> Option<PortabilityAdvisories> {
     let trace = trace?;
     let mut records = Vec::new();
     let mut dropped_records = 0;
     for (event_record, event) in trace.events.iter().enumerate() {
-        // Ordinary cross records omit fired_triggers. OR groups retain leaf certificates.
-        let roots: Vec<_> = if event.kind == "cross" {
+        let certificates: Vec<_> = if event.kind == "cross" || event.kind == "timer" {
             vec![(
                 0,
+                event.kind,
                 event
                     .observation_time_bounds
                     .unwrap_or([event.time, event.time]),
@@ -34,46 +51,70 @@ pub(crate) fn collect(trace: Option<&TransientTrace>) -> Option<PortabilityAdvis
             event
                 .fired_triggers
                 .iter()
-                .filter(|f| f.kind == "cross")
-                .filter_map(|f| f.time_bounds.map(|b| (f.trigger, b)))
+                .filter(|f| f.kind == "cross" || f.kind == "timer")
+                .filter_map(|f| f.time_bounds.map(|b| (f.trigger, f.kind, b)))
                 .collect()
         };
-        for (trigger, bounds) in roots {
+        for (trigger, kind, bounds) in certificates {
             let [lo, hi] = bounds;
-            // A broad certificate cannot establish proximity to the root itself.
-            if !lo.is_finite() || !hi.is_finite() || lo < 0.0 || lo > hi || hi > next_up(lo) {
+            // A broad cross certificate cannot establish root proximity. A
+            // timer notice names its committed deadline enclosure, not a root.
+            if !lo.is_finite()
+                || !hi.is_finite()
+                || lo < 0.0
+                || lo > hi
+                || (kind == "cross" && hi > next_up(lo))
+            {
                 continue;
             }
-            let lower = next_down(lo);
-            let upper = next_up(hi);
-            let start = trace.times.partition_point(|t| *t < lower);
-            let end = trace.times.partition_point(|t| *t <= upper);
-            // Count the entire matching range even after storage is exhausted.
-            let retain = (LIMIT - records.len()).min(end - start);
-            dropped_records += end - start - retain;
-            for query_index in start..start + retain {
-                records.push(PortabilityAdvisory {
-                    code: "cross_observation_boundary",
-                    nonblocking: true,
-                    message: MESSAGE,
-                    event_record,
-                    event: event.event,
-                    trigger,
-                    origin: event.origin.clone(),
-                    query_index,
-                    query_time_s: trace.times[query_index],
-                    root_time_bounds_s: bounds,
-                });
+            let (code, message) = if kind == "cross" {
+                ("cross_observation_boundary", MESSAGE)
+            } else {
+                ("timer_observation_boundary", "Observation is inside or within one binary64 neighbor of a committed timer deadline enclosure. A backend may trigger elsewhere within the model's timing tolerance. Check samples and downstream history against their budgets; this notice neither proves a mismatch nor accepts a changed final result.")
+            };
+            for (query_source, times) in [
+                ("output_times", trace.times.as_slice()),
+                ("strobetimes", strobes.unwrap_or(&[])),
+            ] {
+                let start = times.partition_point(|t| *t < next_down(lo));
+                let end = times.partition_point(|t| *t <= next_up(hi));
+                let retain = (LIMIT - records.len()).min(end - start);
+                dropped_records += end - start - retain;
+                for (query_index, &query_time_s) in
+                    times.iter().enumerate().skip(start).take(retain)
+                {
+                    records.push(PortabilityAdvisory {
+                        code,
+                        nonblocking: true,
+                        message,
+                        event_record,
+                        event: event.event,
+                        trigger,
+                        origin: event.origin.clone(),
+                        query_source,
+                        query_index,
+                        query_time_s,
+                        time_bounds_s: bounds,
+                    });
+                }
             }
         }
     }
-    if records.is_empty() {
+    let retain = (LIMIT - records.len()).min(modulo.len());
+    dropped_records += modulo.len() - retain;
+    let model_records: Vec<_> = modulo.iter().take(retain).map(|(operator, origin)| ModelPortabilityAdvisory {
+        code: "modulo_phase_sensitive", nonblocking: true,
+        message: "This model uses idtmod. Small integration or observation-time differences near a wrap can change the reported phase side or downstream decisions. Check circular phase, ordinary output and event counts separately. This source-level notice does not establish an observed wrap, a mismatch or an accepted difference.",
+        operator: *operator, origin: origin.clone(),
+    }).collect();
+    if records.is_empty() && model_records.is_empty() {
         return None;
     }
     Some(PortabilityAdvisories {
-        schema_version: 1,
+        schema_version: 2,
         record_limit: LIMIT,
         records,
+        model_records,
         dropped_records,
         truncated: dropped_records != 0,
     })
@@ -83,6 +124,9 @@ pub(crate) fn collect(trace: Option<&TransientTrace>) -> Option<PortabilityAdvis
 mod tests {
     use super::*;
     use crate::ir::{EventRecord, FiredTrigger};
+    fn collect(trace: Option<&TransientTrace>) -> Option<PortabilityAdvisories> {
+        super::collect(trace, None, &[])
+    }
     fn trace(bounds: [f64; 2], times: Vec<f64>) -> TransientTrace {
         TransientTrace {
             times,
@@ -120,7 +164,7 @@ mod tests {
         assert_eq!(result.records[1].query_time_s, f64::from_bits(1));
     }
     #[test]
-    fn or_group_requires_a_cross_leaf_certificate() {
+    fn or_group_requires_each_fired_leaf_certificate() {
         let mut trace = trace([0.0, 1.0], vec![0.0, 0.5, 1.0]);
         trace.events[0].kind = "or";
         trace.events[0].fired_triggers = vec![
@@ -144,9 +188,10 @@ mod tests {
             },
         ];
         let result = collect(Some(&trace)).unwrap();
-        assert_eq!(result.records.len(), 1);
-        assert_eq!(result.records[0].trigger, 1);
-        assert_eq!(result.records[0].root_time_bounds_s, [0.5, 0.5]);
+        assert_eq!(result.records.len(), 2);
+        assert_eq!(result.records[0].trigger, 0);
+        assert_eq!(result.records[1].trigger, 1);
+        assert_eq!(result.records[1].time_bounds_s, [0.5, 0.5]);
     }
     #[test]
     fn bounded_records_count_all_dropped_matches() {
@@ -159,6 +204,19 @@ mod tests {
         let result = collect(Some(&data)).unwrap();
         assert_eq!(result.records.len(), 128);
         assert_eq!(result.dropped_records, 12);
+        assert!(result.truncated);
+    }
+
+    #[test]
+    fn observation_grids_and_model_notices_share_the_budget() {
+        let data = trace([0.5, 0.5], vec![0.5]);
+        let modulo: Vec<_> = (0..130).map(|i| (i, format!("test:{i}"))).collect();
+        let result = super::collect(Some(&data), Some(&[0.5]), &modulo).unwrap();
+        assert_eq!(result.records.len(), 2);
+        assert_eq!(result.records[0].query_source, "output_times");
+        assert_eq!(result.records[1].query_source, "strobetimes");
+        assert_eq!(result.model_records.len(), 126);
+        assert_eq!(result.dropped_records, 4);
         assert!(result.truncated);
     }
 }

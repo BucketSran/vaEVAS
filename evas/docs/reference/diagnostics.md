@@ -6,32 +6,35 @@
 
 ## 事件边界观察的可移植性提示
 
-成功的瞬态响应可选包含 `portability_advisories`，其 `schema_version=1` 独立于 IR
-版本。当前唯一 code 为 `cross_observation_boundary`。它表示某个请求观察点位于已提交
-`cross` 根证书端点的一位 binary64 邻点以内。普通 cross 使用事件提交记录的
-`observation_time_bounds`，点证书使用记录时间；OR 事件使用已触发 cross 叶子的
-`time_bounds`。证书端点最多相隔一个 binary64 邻点，跨度更大的证书不生成提示。
-内核在成功求解后用已排序观察网格查找邻点，不重新求根、不调用模型，也不修改历史。
+成功的瞬态响应可选包含 `portability_advisories`。它只提示比较时需要留意的地方，
+不修改波形、事件、历史或成功/失败判决，也不表示已经发现 Spectre 不一致。
 
-每条记录提供 `event_record`、`event`、`trigger`、源码位置标签 `origin`、`query_index`、
-`query_time_s` 和 `root_time_bounds_s`，索引绑定本次响应与编译 IR。
-`nonblocking=true` 和消息说明边界样本可能依赖后端的事件与观察顺序，建议对比附近
-样本。该提示只报告本次 EVAS 运行的局部风险，不能由证书推断根的精确前后关系，
-不能证明实际 Spectre 差异、模型非法或函数不稳定。没有近邻观察请求的普通 cross
-不生成提示；timer 本身不触发此提示。当前只检查常规 `output_times`，
-不检查仅出现在 `strobe_evidence` 中的额外强制点，也不覆盖 VCO 的隐式环回。
+| 提示 | 依据 | 使用时注意 |
+| --- | --- | --- |
+| `cross_observation_boundary` | 查询靠近已提交的窄根证书 | 不同后端可能返回跳变的不同侧；仍须验收采样值和后续输出 |
+| `timer_observation_boundary` | 查询落在已提交定时证书内或其一位 binary64 邻点 | 不覆盖整个允许触发窗口；提示不豁免漏事件、错误计数或超差 |
+| `modulo_phase_sensitive` | 模型含 `idtmod` 调用 | 这是源码风险提醒，没有声称本次观察到环回；普通相位、圆周相位和下游事件须分别检查 |
 
-`record_limit=128` 限制存储条数，`dropped_records` 保留超限匹配数，
-`truncated` 与是否存在超限匹配一致。缺少此可选字段表示没有保存提示，旧内核响应
-继续接受。Python 协议验证记录的版本、预算、观察身份和提交证书绑定；诊断 capture
-与结果目录的 `result.json` 保留完整响应字段。提示不改变成功/失败、已有波形、残差、
-事件和状态，截断也不影响模拟。
+当前提示协议为 **v2**，独立于 IR18；Python 同时接受旧 v1 cross 响应和完全无提示的旧响应。
+只支持 v1 的外部消费者需要更新后才能解析 v2，不能将未知提示版本当作模拟失败原因。
+原错误诊断协议 `diagnostic_version=1` 不变。
 
-公共回归见 [test_boundary_portability.py](../../tests/test_boundary_portability.py)，包含原始
-[C1](../../validation/event_alignment/C1/dut.va)、binary64 邻点、远离边界与 timer 负例、OR
-触发身份、预算和响应保存。C1 的[既有实际 Spectre 证据](../../../experiments/backends/event-alignment/c1-shared-callback.md)
-只作为该原模型的背景，原严格 C1 仍为 F，指定查询覆盖仍为 I；本提示不产生新的
-后端对照结论。仅增加诊断且保持模拟行为不变时，不需要新的 Spectre 运行。
+`records` 保存事件观察提示：`event_record`、`event`、`trigger`、`origin` 绑定已提交事件；
+`query_source` 区分 `output_times` 和 `strobetimes`，`query_index`/`query_time_s` 绑定各自网格，
+`time_bounds_s` 保存原证书。仅有实际已触发的 OR 叶子可生成提示。
+普通 cross 的证书最多跨一个 binary64 邻点；宽根包围不生成近根提示。
+保持参数 timer 按已提交定时事件验证，不重新计算参数。
+
+`model_records` 单独保存 `idtmod` 的 operator 索引、源码 `origin` 和非阻断说明，
+不包含查询时刻或虚构的环回证书。没有提示不代表模型已获普遍兼容证明。
+两组记录共用 128 条存储预算；`dropped_records` 与 `truncated` 记录未保存的匹配数。
+索引和证书由 Python 协议逐项检查，capture 与结果目录保留整个响应。
+
+[原边界回归](../../tests/test_boundary_portability.py)验证 C1、邻点、OR、预算、旧 v1 兼容及保存；
+[新增覆盖](../../tests/test_portability_coverage.py)验证额外 strobe、timer 和未发生环回时的源码提醒，
+并拒绝错网格、错 operator 和伪造来源。诊断收尾的数值保持记录见
+[来源登记](../development/diagnostic-sources.md#diagnostic-closure)。
+这些只读提示复用原 C1、timer 和 VCO 的参考背景，不升级其原严格 F/I。
 
 ## 编译和执行失败
 
