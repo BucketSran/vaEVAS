@@ -1,8 +1,8 @@
 # 扩展与集成 #135
 
-当前作者校准为20/20个登记变体有效，见[作者校准最终报告](../author-calibration-final.md)。模型 Agentic 与适用 one-shot 试做及完整 spec 验收尚未完成。计划和生成清单中的 pending 保留生成时状态，当前作者结论以该报告为准。
+当前作者校准为20/20个登记变体有效，见[作者校准最终报告](../author-calibration-final.md)。两种模型的Agentic与one-shot试做已结束，完整分母和有限质量结论见[模型结果](../model_pilots/model-pilot-results.md)及[规格验收](../spec-delivery.md)。计划和生成清单中的 pending 保留生成时状态，当前作者结论以该报告为准。
 
-必须完成来源349和case0007，两题已建立Harbor材料、参考、其他合法实现及语义mutants。旧包已有实际Spectre运行，严格审查发现reset、分频关系和lock资格覆盖缺口；修订包的作者校准现已完成，模型试做和完整发布资格尚未完成。
+必须完成来源349和case0007，两题已建立Harbor材料、参考、其他合法实现及语义mutants。旧包已有实际Spectre运行，严格审查发现reset、分频关系和lock资格覆盖缺口；修订包的作者校准与八个模型试做单元已完成。模型均未形成可评分候选，功能、兼容与部件作用的模型能力仍未知；参考入口通过不代替模型能力。
 
 349复用#133健康单通道024四实例，检验同时采样、顺序读出与保持；case0007由出题方提供健康粗调、实际DCO反馈和有效fine执行器，候选完成TDC、控制与模式集成。行为输出统一由 `benchmark/checkers/v2_integration.py` 独立评分，不以内部lock替代真实输出边沿。
 
@@ -18,4 +18,4 @@
 
 ADPLL 也已保存固定 `public-default.scs`。诊断运行保留60us、1ns最大步长，以1ns strobe记录9个实际接口信号；完整10.7MB报告通过新版harness，Agent取得摘要及分页入口。身份见 [adpll-public-diagnostic-calibration.json](adpll-public-diagnostic-calibration.json)，这不是隐藏checker或模型成绩。
 
-349 的 `sample-hold-causal-v2` 在原两个健康条件之外增加两档公开增益诊断，验四通道读出是否实际使用保持部件；新增在线整体重写和活跃旁路负例。独立在线轨迹能检出两档旁路，VA reference、alternative及新增负例的实际 Spectre 作者校准已完成。旧版模型试做保留原题面与材料身份，新版须成对重新冻结。
+349 的 `sample-hold-causal-v2` 在原两个健康条件之外增加两档公开增益诊断，验四通道读出是否实际使用保持部件；新增在线整体重写和活跃旁路负例。独立在线轨迹能检出两档旁路，VA reference、alternative及新增负例的实际 Spectre 作者校准已完成。旧版模型试做保留原题面与材料身份，新版已成对冻结并完成试做。

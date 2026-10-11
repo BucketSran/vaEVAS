@@ -1,10 +1,10 @@
 # 电路测试与表征任务
 
-固定a5版本的作者校准为50/50个登记变体有效，见[作者校准最终报告](../author-calibration-final.md)。其后频率题的私有观察窗口修订已完成[补充校准](../author-calibration-private-overlays.md)。模型Agentic与适用one-shot试做及完整spec验收尚未完成。计划和生成清单中的pending保留生成时状态。
+固定a5版本的作者校准为50/50个登记变体有效，见[作者校准最终报告](../author-calibration-final.md)。其后频率题的私有观察窗口修订已完成[补充校准](../author-calibration-private-overlays.md)。两种模型的Agentic与one-shot试做已结束，完整分母和有限质量结论见[模型结果](../model_pilots/model-pilot-results.md)及[规格验收](../spec-delivery.md)。计划和生成清单中的pending保留生成时状态。
 
 候选实现可读 Verilog-A 仪表或测试台。固定电路产生实际响应，独立 checker 从保存的波形重算结果。正确测出坏电路也能通过，例如比较器延迟变大、DCO 分频比错误或放大器在公开窗口内没有建立；输出目标常量不能替代观测。
 
-九题公开各3例保留原材料，终评已改成独立实例并完成a5版本作者校准。模型候选抽查后延长了clock-frequency第三私有例的有效观察窗口，当前补充校准见下文。POR 原晶体管电路在 ngspice 完成上电、欠压和恢复，数字边界与真实 mixed 源也已实际通过 Spectre 来源校准。完整闭环候选已完成作者实跑校准，模型试做尚未完成。目录及本地测试不代表发布资格。
+九题公开各3例保留原材料，终评已改成独立实例并完成a5版本作者校准。模型候选抽查后延长了clock-frequency第三私有例的有效观察窗口，当前补充校准见下文。POR 原晶体管电路在 ngspice 完成上电、欠压和恢复，数字边界与真实 mixed 源也已实际通过 Spectre 来源校准。完整闭环候选已完成作者实跑校准，10题40个模型单元已结束。POR试做未取得可评分候选，其完整流程能力未知；实际测量、有限窗口性质与响应驱动实验的模型证据见[质量分析](../model_pilots/model-quality.md)。目录及本地测试本身不代表发布资格。
 
 | 任务 | 来源 | 实际测量 |
 | --- | --- | --- |
@@ -25,7 +25,7 @@ build_tasks.py 生成 Harbor 任务、正确参考、另一种实现和三种行
 
     python3 -B -m unittest discover -s experiments/benchmark_v2/testing_characterization -p test_checker.py -v
 
-统一执行依赖父分支的 v2_runtime.py 和 PSF 读取器，不另行实现评分路径。编译或工具链失败先保留未评分，再根据源码、日志和语言规则区分非法候选与环境缺陷，不据此伪造电路零分。实际作者校准与十题的[Harbor参考入口](../harbor_reference/harbor-reference-acceptance.md)已通过；完整模型试跑和审查完成后，才能完成发布资格与证据记录。
+统一执行依赖父分支的 v2_runtime.py 和 PSF 读取器，不另行实现评分路径。编译或工具链失败先保留未评分，再根据源码、日志和语言规则区分非法候选与环境缺陷，不据此伪造电路零分。实际作者校准与十题的[Harbor参考入口](../harbor_reference/harbor-reference-acceptance.md)已通过；模型试做及其质量证据也已完成，统一发布验收见[规格报告](../spec-delivery.md)。
 
 POR 使用真实模拟晶体管源和可读数字边界，候选通过观察 POR 完成与 power 欠压事件推进供电。报告 response_us 从各轮首次 osc 上升到 POR 上升计时。周期保留原脚本的第3至第9个振荡器上升平均值。性质判断只观察实际端口，第6/第13个时钟对应断言与释放；不读取内部计数结束标志。健康、慢振荡器、漏恢复脉冲、过早释放和缺首轮下降沿的性质与计量合同公开，具体终评实例隐藏。公开自测仅含原RC健康实例。
 

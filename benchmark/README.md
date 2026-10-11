@@ -22,7 +22,7 @@
 [执行与检查入口](../experiments/benchmark_first_batch/README.md)区分实际校准、归档重判、
 模型试跑和发布资格；[来源元数据](first_batch/METADATA.md)记录同源关联与上下文层次。
 当前采用[五类方案](docs/task-types.md)，旧分类与历史结果不改写。
-[v2五类工程任务](../experiments/benchmark_v2/README.md)已建立37题。179个登记变体的作者校准及两项私有激励修订的补充校准已齐全；模型试做和完整spec验收尚未完成。旧版本身份与完整分母见[作者校准固定报告](../experiments/benchmark_v2/author-calibration-final.md)，当前证据见[增量报告](../experiments/benchmark_v2/author-calibration-private-overlays.md)。
+[v2五类工程任务](../experiments/benchmark_v2/README.md)已建立37题。179个登记变体的作者校准及两项私有激励修订的补充校准已齐全；148个模型试做单元和五份spec的义务核对已完成，见[交付验收](../experiments/benchmark_v2/spec-delivery.md)。旧版本身份与完整分母见[作者校准固定报告](../experiments/benchmark_v2/author-calibration-final.md)，当前证据见[增量报告](../experiments/benchmark_v2/author-calibration-private-overlays.md)。
 选题材料与学习入口见
 [五类任务材料研究](research/README.md)。
 

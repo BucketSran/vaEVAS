@@ -1,6 +1,6 @@
 # 五类工程任务的实施与校准
 
-固定a5科学版本的37题、179个登记变体的作者正负校准全部齐全，覆盖584个当前条件位置，无剩余作者校准缺口，见[最终报告](author-calibration-final.md)和[固定机器摘要](author-calibration-final.json)。模型 Agentic 与适用 one-shot 试做、完整 spec 验收及发布资格尚未完成。计划及生成清单中的 pending 是生成时状态，该版本作者结论以最终报告为准。
+固定a5科学版本的37题、179个登记变体的作者正负校准全部齐全，覆盖584个当前条件位置，无剩余作者校准缺口，见[最终报告](author-calibration-final.md)和[固定机器摘要](author-calibration-final.json)。两种模型、两种模式的148个试做单元已全部结束，见[模型结果](model_pilots/model-pilot-results.md)和[五规格验收](spec-delivery.md)。本轮作为Spectre扩展集交付，模型无提交时保留能力未知。计划及生成清单中的 pending 是生成时状态，该版本作者结论以最终报告为准。
 
 实际模型审查发现308缺少同一reset样本后的重复signal采样，频率题第三例的观察窗口也不足。这两项私有激励修订现已完成真实校准，公开材料、checker和容差保持不变。当前179个登记变体、584个条件位置由169个原变体的539个条件和10个变体的45个新条件组成，详见[增量校准报告](author-calibration-private-overlays.md)。旧成绩保留原身份，同一冻结模型候选另用新激励补判。
 
@@ -65,7 +65,7 @@ Spectre到既有harness的评分消费路径。它不代表五类规格已完成
 
 ## 模型试做
 
-[本轮试做协议](model-pilot-protocol.md)记录两种模式的实际材料、预算、异常重试和统计分母。[One-shot结果](model_pilots/one-shot-results.md)已完成74个单元并通过独立证据审核；Agentic仍在执行，尚不代表完整五规格验收。
+[本轮试做协议](model-pilot-protocol.md)记录两种模式的实际材料、预算、异常重试和统计分母。[完整模型结果](model_pilots/model-pilot-results.md)覆盖Agentic与one-shot各74个单元；[质量分析](model_pilots/model-quality.md)区分实际行为、交付障碍与未知能力。
 
 `pilot.py` 负责封存公开材料、生成 stock Harbor/Pi 配置和一次性模型请求。
 Agent 循环、公开工具、作业恢复及独立终评继续由 circuit harness 提供。

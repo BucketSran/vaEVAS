@@ -1,8 +1,8 @@
 # spec #134 真实采样级数据建模
 
-当前作者校准为8/8个登记变体有效，见[作者校准最终报告](../author-calibration-final.md)。模型 Agentic 与适用 one-shot 试做及完整 spec 验收尚未完成。计划和生成清单中的 pending 保留生成时状态，当前作者结论以该报告为准。
+当前作者校准为8/8个登记变体有效，见[作者校准最终报告](../author-calibration-final.md)。两种模型的Agentic与one-shot试做已结束，完整分母和有限质量结论见[模型结果](../model_pilots/model-pilot-results.md)及[规格验收](../spec-delivery.md)。计划和生成清单中的 pending 保留生成时状态，当前作者结论以该报告为准。
 
-本目录已建立来自JKU SKY130晶体管采样级的真实数据、完整实验划分、Harbor任务和独立评分程序。来源真实性、初始化和误差预算见[任务来源](../../../benchmark/tasks/v2-data-sampling-identification/SOURCE.md)。参考、合法替代和六类语义负例已完成实际Spectre作者校准，D3通过。D4模型试做仍在进行，spec #134与发布资格尚未完成。
+本目录已建立来自JKU SKY130晶体管采样级的真实数据、完整实验划分、Harbor任务和独立评分程序。来源真实性、初始化和误差预算见[任务来源](../../../benchmark/tasks/v2-data-sampling-identification/SOURCE.md)。参考、合法替代和六类语义负例已完成实际Spectre作者校准，D3通过。D4四个试做单元均已终态，均未产生可评分候选；公开数据的实际使用已有分析，留出泛化能力仍未知，详见[质量分析](../model_pilots/model-quality.md)。
 
 [category-manifest.json](category-manifest.json)将本类唯一必做来源映射至任务。该采样级不是32个P1来源的新增计数。固定32条训练、2条公开自测与4条隐藏实验的身份在[dataset-manifest.json](dataset-manifest.json)，公开与隐藏不共享完整序列。
 
@@ -48,7 +48,7 @@ python3 -B experiments/benchmark_v2/data_modeling/test_checker.py
 
 原始归档仅保存在本地ignored `runs/benchmark-spec-20261011/calibration/`，没有公开下载承诺。当前源任务的入口是Harbor固定路径，也不含旧`circuit_task.py`副本。[作者运行器的prepare()](../../benchmark_first_batch/runtime.py)会固定改写`test.sh`为Python 3.12的`-B`入口，并补入协调者的`circuit_task.py`和`adc_linearity.py`。这完整解释了源任务与r4有效包的两处身份差异。
 
-按当前prepare规则只在内存重建后，8组有效模板的完整身份、criteria SHA和全部48个条件的文件SHA及字节数均与r4归档一致。候选和数据身份也一致，因此可在相同规范化作者校准路径下复用r4的D3证据。这个核对不代表源任务全文相同，也不验收Harbor固定路径调用或模型Agent隔离。其后独立执行的[Harbor参考入口](../harbor_reference/harbor-reference-acceptance.md)已完成本题六个条件，覆盖实际固定路径、提交与冻结；D4模型试做和完整任务验收仍待完成。
+按当前prepare规则只在内存重建后，8组有效模板的完整身份、criteria SHA和全部48个条件的文件SHA及字节数均与r4归档一致。候选和数据身份也一致，因此可在相同规范化作者校准路径下复用r4的D3证据。这个核对不代表源任务全文相同，也不验收Harbor固定路径调用或模型Agent隔离。其后独立执行的[Harbor参考入口](../harbor_reference/harbor-reference-acceptance.md)已完成本题六个条件，覆盖实际固定路径、提交与冻结；D4模型试做及其材料使用、预算和交付限制已纳入[规格验收](../spec-delivery.md)。
 
 开发中先试的低阶多项式在公开新中间电平轨迹出现较大误差，高阶拟合还出现速率外推不稳，未用于发布参考。为此补公开完整阶跃轨迹，改用正值速率表。[旧参考实际校准](isolated-r2-diagnosis.json)随后4/6通过，未过两条的采集RMS约35–36 mV。公开开通波形表明，单一导通沿不能表示直接PMOS与反相器驱动NMOS的差异。因此当前候选拆开两种导通函数和反相器状态，并从已冻结公开训练拟合正修正表；没有修改源数据或阈值，也不从隐藏输出拟合参数。r4校准采用该冻结候选，任何后续修改须重新冻结和校准。
 

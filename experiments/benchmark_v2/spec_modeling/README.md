@@ -1,10 +1,10 @@
 # 按规格建模的P1任务
 
-固定a5科学版本的作者校准为68/68个登记变体有效，见[作者校准最终报告](../author-calibration-final.md)。其后308的私有采样条件修订已完成[补充校准](../author-calibration-private-overlays.md)。模型Agentic与适用one-shot试做及完整spec验收尚未完成。计划和生成清单中的pending保留生成时状态。
+固定a5科学版本的作者校准为68/68个登记变体有效，见[作者校准最终报告](../author-calibration-final.md)。其后308的私有采样条件修订已完成[补充校准](../author-calibration-private-overlays.md)。两种模型的Agentic与one-shot试做已结束，完整分母和有限质量结论见[模型结果](../model_pilots/model-pilot-results.md)及[规格验收](../spec-delivery.md)。计划和生成清单中的pending保留生成时状态。
 
 本目录维护#133归口的19个来源，每个来源对应一个正式Harbor任务目录。
-所有参考、替代实现和语义错误版本都已保存；固定a5版本的作者Spectre校准已完成。308新增私有采样条件的补充校准也已完成，见下方覆盖修正；全部模型试做仍未完成。
-因此当前不能关闭#133，也不能把这些任务计入已发布评分题数。
+所有参考、替代实现和语义错误版本都已保存；固定a5版本的作者Spectre校准已完成。308新增私有采样条件的补充校准也已完成，见下方覆盖修正；全部76个模型试做单元已结束。
+#133的建设、当前校准、参考入口和试做对应见[完整验收](../spec-delivery.md)，未评分候选仍保留null。
 
 `manifest.json`逐来源保存建设归口和验收状态。`run-plan.json`列出每个实际候选目录、
 预期判定以及改动的语义，交给统一运行器冻结身份后执行。`variants.py`只生成候选，
@@ -29,9 +29,9 @@
 活动但无关的 public helper 配上私有正确电路，以及只驱动复位值的空壳，
 均已纳入当前作者校准的架构负例；其中旁路包的两个 public helper 本身仍正确。
 
-a5版本的系统合同、checker和负例已完成作者Spectre校准；其后308新增私有采样条件的补充校准已完成，模型试做及完整验收尚未完成，不能据此关闭 #133。
+a5版本的系统合同、checker和负例已完成作者Spectre校准；其后308新增私有采样条件的补充校准已完成，19题的76个模型单元及质量分析已经完成，完整义务对应见[规格验收](../spec-delivery.md)。
 旧版参考/alternative 外部行为校准及三个任务的六个 one-shot 配置结果保留旧身份，
-不能升级为新版通过证据；三题的 one-shot/Agentic prompt 均需重新冻结运行。
+不能升级为新版通过证据；三题的 one-shot/Agentic 试做均绑定当前冻结材料，旧结果不升级。
 其余16题公开要求及 checker 未变。`build_structure.py` 可重建六条件及架构负例，
 `variants.py` 在生成常规变体后也调用它，不运行仿真。
 
