@@ -202,6 +202,12 @@ V(total,r)<+count;
             expected = decimal_sin(Decimal(angle.numerator)/Decimal(angle.denominator))
             budget = Decimal.from_float(1e-14) + Decimal.from_float(1e-10)*abs(expected)
             self.assertLessEqual(abs(Decimal.from_float(actual)-expected), budget)
+        with self.assertRaisesRegex(KernelError, "waveform_accuracy"):
+            transient(compile_phase(body.replace("0.625", "0.589824"),
+                                    "real phase_v; integer count;"),
+                      {"f": [[0,0],[end,1]]}, times, stop=times[-1],
+                      max_step=end, strobetimes=times, kernel=KERNEL,
+                      vabstol=1e-14, reltol=1e-10)
         for guard in ["V(phase,r)-0.5", "V(out,r)", "V(f,r)+V(phase,r)-V(phase,r)-0.625"]:
             guarded = body.replace("V(f,r)-0.625", guard)
             with self.assertRaisesRegex(KernelError, "unsupported_cross"):
