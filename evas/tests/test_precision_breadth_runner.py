@@ -115,6 +115,19 @@ class BreadthRunner(unittest.TestCase):
             'tran: time = 500 ns (50 %), step = 500 ns\nNumber of accepted tran steps = 2\n')
         self.assertEqual(runner.native_observation_evidence(work,'spectre',{'status':'qualified'},rows,tool=tool)['status'],'unknown')
 
+    def test_runtime_control_evidence_requires_actual_applied_step(self):
+        settings={'actual':{'stop':1e-6,'maxstep':1e-9},
+                  'requested':{'stop':1e-6,'maxstep':1e-9},'max_step_applied':False}
+        self.assertEqual(runner.runtime_control_evidence('evas',settings)['status'],'unknown')
+        settings.update(sample_origin_summary={'stateless_working_point':3},observed_response={'accepted_steps':0})
+        evidence=runner.runtime_control_evidence('evas',settings)
+        self.assertEqual(evidence['status'],'qualified')
+        self.assertEqual(evidence['maxstep_application'],'not_applicable')
+        settings['max_step_applied']=True
+        self.assertEqual(runner.runtime_control_evidence('evas',settings)['status'],'qualified')
+        settings['actual']['maxstep']='unknown'
+        self.assertEqual(runner.runtime_control_evidence('spectre',settings)['status'],'unknown')
+
     def test_current_source_drift_rejected(self):
         self.freeze()
         identities=runner.load(self.inputs/'SOURCE_IDENTITY.json')
