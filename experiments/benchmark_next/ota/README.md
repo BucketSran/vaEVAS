@@ -26,11 +26,17 @@
 
 `build_tasks.py` 生成 Harbor 任务、公开材料和正负变体；`calibration-plan.json` 登记完整分母。参考与不同正确实现都必须在固定 Spectre 后端通过，错误版本必须实际编译执行后由语义判据拒绝。编译故障和缺波形保持未评分，不能计为拒绝负例。
 
-原 `solve.sh` 经 Harbor Docker 执行后产生原候选字节，A1/A3 的六个留出参考条件与 A2 的三个留出参考条件已实际 Spectre 通过。首次编译故障（`Meg` 后缀、`slew`/`current` 保留字）保留为未评分证据。最终全变体校准仍待完成，不能从参考通过推出负例识别能力。
+原 `solve.sh` 经 Harbor Docker 执行后产生原候选字节，A1/A3 的六个留出参考条件与 A2 的三个留出参考条件已实际 Spectre 通过。首次编译故障（`Meg` 后缀、`slew`/`current` 保留字）保留为未评分证据。随后已完成最终全变体实际校准，结果和身份见 [final-calibration.json](final-calibration.json)。
 
 连续模型用 `idt`，合法替代用电容电流方程 `ddt`。数据模型从完整训练轨迹辨识静态曲线、非线性二阶响应与偏置启动状态；替代模型使用 `ddt` 实现同一已拟合自由运行状态。测量模块的参考实现保存数组后计算指标，替代实现在线累积压摆而后扫描末窗。负例覆盖静态跟随、错误单极点、正负压摆混同、关闭错误清状态、漏启动、恢复清状态、单向测量、first-entry、沿用旧 valid、参数冒充测量和 pulse-only 刺激。
 
-误差容差按公开用途固定，小阶跃使用较小绝对误差，大阶跃和启动允许近似模型误差。独立 checker 对每一动态窗口单独计算 RMS 和峰值，静态段不能稀释错误。数据真值身份固定在 checker 中；修改真值记录会成为环境错误。A3 的启动、每轮刺激全段、报告清零与完成后保持也独立检查。
+最终选定 19 个变体、57 个条件全部实际成功评分：6 个正确实现的 18 条件全通过；13 个语义负变体均在可区分条件被检出，39 个负例条件中 38 个拒绝。A3 old-valid 在慢 DUT 上通过，因为前五轮 valid 都为 0，第六轮首次为 1 后没有下一次 launch；该通过保留，不计拒绝。
+
+初版恢复负例只把状态从约 1.34 V 推到 1.3 V，其三个条件仍符合公开近似误差预算，不能算 checker 失败或负例检出。该候选字节和完整通过结果保留于 `candidates-superseded/`、[initial-calibration.json](initial-calibration.json)。最终负例在退出高端区时错误地把输出与速度清到初态；它造成公开恢复窗口的输出误差，追加三条件全部实际拒绝。包含初版的实际作者校准总分母为 60，没有删除其通过结果或扩大误差限。
+
+A1 判据的 25 ps 与 12.5 ps 网格对照最大差 3.08 µV，见 [checker-convergence.json](checker-convergence.json)。误差容差按公开用途固定，小阶跃使用较小绝对误差，大阶跃和启动允许近似模型误差。独立 checker 对每一动态窗口单独计算 RMS 和峰值，静态段不能稀释错误。数据真值身份固定在 checker 中；修改真值记录会成为环境错误。A3 的启动、每轮刺激全段、报告清零与完成后保持也独立检查。
+
+A1 原题面写 −0.2 至 1.8 V，而固定留出含 −0.213/1.813 V。交付题面已纠正为 −0.22 至 1.82 V。规格身份因此改变，已有执行身份保留；方程、实现、实际台架和 checker 均未改变。另将解题包的 source README 限定为来源说明，移除作者校准叙述。原、新 instruction SHA-256、精确 diff 与执行复用映射见 [criteria-update.json](criteria-update.json)。`calibration-material-manifest.json` 与 `replacement-material-manifest.json` 保存两次实际执行准备版本；`material-manifest.json` 是最终交付版本，不能混称同一个包。
 
 本路线不运行模型解题实验。作者校准、Harbor 原参考脚本入口和正式发布分别记录，不以目录存在表示完成。当前候选固定 Spectre；原源电路能在 ngspice 运行，不等于候选 VA 已获得同题开源复验资格。
 
@@ -52,8 +58,10 @@ python3 -B experiments/benchmark_next/ota/test_contract.py
 ```sh
 python3 -B experiments/benchmark_next/ota/calibrate.py \
   --operator /absolute/private/operator.json --harness /absolute/circuit-harness \
-  --revision final-r1
+  --revision new-calibration
 ```
+
+历史 final-r1 与 final-r2 的合并分析可用 `collect_calibration.py --revision final-r1 --replacement-revision final-r2 --output /absolute/report.json` 重建。最终 manifest 绑定当前交付字节，新校准直接运行当前 19 个变体。
 
 该入口顺序执行，每次最多一个在途；没有资源授权时不要运行。`--slug` 与 `--variant` 可限制单组，失败必须保留并按原 job ID 恢复，编译修复才生成新的候选身份。
 

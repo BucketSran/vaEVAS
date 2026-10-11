@@ -67,7 +67,7 @@ def continuous():
  vals=[(10e-9,.79),(200e-9,.73),(400e-9,1.3),(600e-9,.15),(750e-9,1.8),(1000e-9,.75),(1150e-9,-.2),(1250e-9,.78)]
  public=[model_case('public',*seq(vals))]
  cases=[model_case('heldout-'+str(i),*seq([(t,v+(i-1)*.013) for t,v in vals],i*3e-9)) for i in range(3)]
- contract='''实现 `ota(vin,enable,vout)`。固定供电 1.5 V、50 fF 用途，端口是对地电压，候选无需端口电流或可变负载耦合。输入 -0.2 至 1.8 V，enable为0或1.5 V，1 ns线性沿。
+ contract='''实现 `ota(vin,enable,vout)`。固定供电 1.5 V、50 fF 用途，端口是对地电压，候选无需端口电流或可变负载耦合。输入 -0.22 至 1.82 V，enable为0或1.5 V，1 ns线性沿。
 
 连续状态 y(0)=0。enable<0.75时 dy/dt=-y/(50 ns)，否则目标 T=clip(0.75+0.98*(vin-0.75),0.1,1.4)，dy/dt=clip((T-y)/(20 ns),-0.006,+0.010) V/ns；vout=y。小信号是指数建立，大信号进入正负不同压摆区。只有目标限幅，状态不清零且不积累目标之外的过载。解除限幅后继续从当前状态恢复。启动、输入与enable同时变化时直接按瞬时电压应用此方程。所有输出观察点绝对误差不超过4 mV，最大step 250 ps。外围固定，模型内部实现自由。'''
  wrong={'static':(AMP.replace('V(vout)<+V(q);','V(vout)<+target;'),False,'static follower loses continuous history'),'symmetric-slew':(AMP.replace('negative=6e6','negative=10e6'),False,'negative slew_metric incorrectly equals positive'),'single-tau':(AMP.replace('if(rate>positive) rate=positive;','').replace('if(rate< -negative) rate= -negative;',''),False,'all amplitudes use linear pole'),'reset-on-disable':(AMP.replace('rate=(target-V(q))/50n','rate=(target-V(q))/.1n'),False,'disable incorrectly clears continuous state')}
@@ -118,7 +118,7 @@ def data_task():
 公开完整记录 `/work/public/observations/*.json` 的列为秒、输入V、enable V、输出V。`input` 和 `enable` 字段精确给出线性重构激励；密集动态段与稀疏静态段均保留原时间。训练实验与独立新完整留出实验分开，不随机拆点。公开自测三个完整训练记录可用。
 
 误差分别在每个窗口检查，安静段不能稀释动态误差。初始数值冲击的前10 ns不评分，其完整原始观察仍提供。启动与重启400 ns窗口RMS<=20 mV、峰值<=100 mV；两个小阶跃40 ns窗口RMS<=2 mV、峰值<=8 mV；大阶跃、进入高端限幅与恢复40 ns窗口RMS<=20 mV、峰值<=75 mV；每次变化后200 ns至下一变化前100 ns（13 µs恢复的窗口在14.5 µs关断开始时结束）的稳态，以及最后1.5 µs长尾RMS<=6 mV、峰值<=12 mV；shutdown200 ns窗口RMS<=30 mV、峰值<=100 mV；初始关闭段RMS<=2 mV、峰值<=10 mV。各窗口实际观察时间不平移。误差是本用途的近似模型合同，不声称晶体管精确等价。'''
- wrong={'static':(ref.replace('V(vout)<+V(q);','V(vout)<+((V(enable)>0.9)?dc_curve(V(vin)):0);'),False,'static curve loses startup and dynamic response'),'single-pole':(ref.replace('dq=V(d)*1e9;dd=', 'dq=err/20n;dd='),False,'one fixed time constant does not explain amplitude dynamics'),'no-startup':(ref.replace('bias_drive=(V(enable)>0.9)?bias:0;', 'bias_drive=(V(enable)>0.9)?1:0;').replace('if(V(b)<0.95)', 'if(V(b)<0)'),False,'omits startup bias behavior'),'clear-recovery':(ref.replace('V(b)<+idt(db,0);','if(V(vin)<1.3 && V(q)>1.3) dq=err/0.01n;\n V(b)<+idt(db,0);'),False,'clears rail history on recovery')}
+ wrong={'static':(ref.replace('V(vout)<+V(q);','V(vout)<+((V(enable)>0.9)?dc_curve(V(vin)):0);'),False,'static curve loses startup and dynamic response'),'single-pole':(ref.replace('dq=V(d)*1e9;dd=', 'dq=err/20n;dd='),False,'one fixed time constant does not explain amplitude dynamics'),'no-startup':(ref.replace('bias_drive=(V(enable)>0.9)?bias:0;', 'bias_drive=(V(enable)>0.9)?1:0;').replace('if(V(b)<0.95)', 'if(V(b)<0)'),False,'omits startup bias behavior'),'clear-recovery':(ref.replace('analog begin','real recovery_end;\nanalog begin\n @(initial_step) recovery_end=0;\n @(cross(V(vin)-1.3,-1)) recovery_end=$abstime+1n;').replace('V(b)<+idt(db,0);','if($abstime<recovery_end) begin dq=-V(q)/0.1n;dd=-V(d)/0.1n;end\n V(b)<+idt(db,0);'),False,'clears continuous output and velocity to initial state on rail recovery')}
  package('data-model','data-modeling','从真实 OTA 完整轨迹建立连续模型',contract,ref,alt,cases,public,wrong)
  task=ROOT/'benchmark/tasks/v3-ota-data-model'
  (task/'environment/public/observations').mkdir(parents=True,exist_ok=True)
@@ -126,7 +126,8 @@ def data_task():
  (task/'environment/public/source').mkdir(parents=True,exist_ok=True)
  for p in (OUT/'source').glob('*'):
   if p.suffix in ['.sch','.spice'] or p.name.startswith('LICENSE'):shutil.copyfile(p,task/'environment/public/source'/p.name)
- put(task/'environment/public/source/README.md', (OUT/'README.md').read_text())
+ source_notes=(OUT/'README.md').read_text().split('## 真实源电路与适用条件',1)[1].split('## 作者实现与校准',1)[0]
+ put(task/'environment/public/source/README.md',('# 真实源电路与适用条件'+source_notes).rstrip()+'\n')
 
 if __name__=='__main__':
  CAL.clear();continuous();measurement();data_task();put(OUT/'calibration-plan.json',json.dumps(CAL,indent=2)+'\n')

@@ -4,6 +4,9 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[3];sys.path.insert(0,str(ROOT))
 from experiments.benchmark_first_batch.runtime import prepare,execute
 p=argparse.ArgumentParser();p.add_argument('--operator',type=Path,required=True);p.add_argument('--harness',type=Path,required=True);p.add_argument('--slug');p.add_argument('--variant');p.add_argument('--revision',required=True);args=p.parse_args()
+from experiments.benchmark_next.ota.seal import materials
+if materials()!=json.loads((ROOT/'experiments/benchmark_next/ota/material-manifest.json').read_text()):
+ raise ValueError('task/scoring materials differ from frozen manifest')
 plan=json.loads((ROOT/'experiments/benchmark_next/ota/calibration-plan.json').read_text())
 for item in plan:
  if args.slug and item['task'].split('/')[-1]!='v3-ota-'+args.slug:continue
