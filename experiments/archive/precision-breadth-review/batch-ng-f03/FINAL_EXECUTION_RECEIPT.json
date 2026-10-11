@@ -1,0 +1,44 @@
+{
+  "remote_batch": "/tmp/chips-jinzhihong/evas-overnight-20261012/batch-ng-f03",
+  "ledger": {
+    "spectre": 347,
+    "open": 463,
+    "evas": 519,
+    "seed_identity_sha256": "27f20d79faabb5e3b01d3a7bf0942262144b8786c67f6721d21b2dc08d772188",
+    "lanes": [
+      {
+        "lane": "continued-final-v3-and-probes",
+        "note": "previous snapshot and immutable seed retain complete prior counts"
+      },
+      {
+        "lane": "foundation-openvaf_r_ngspice-f03-quoted",
+        "backend": "openvaf_r_ngspice",
+        "reserved": 36,
+        "note": "conservative reservation; actual attempts recorded separately"
+      }
+    ]
+  },
+  "controller_identity_sha256": "c35f39e2900b323570ca5058db95022e497e162b003e1541a3a2fc2de0a0e555",
+  "operator_cleanup_confirmed": true,
+  "operator_receipt_sha256": "7d0d07e6fe9c11c99569b133674ac61de529f1d3decc5f805a30ecedcc5d1927",
+  "shared_lock": "nonblocking exclusive lock acquired for final read-only snapshot, released when this process exits",
+  "scientific_calls_in_this_snapshot": 0,
+  "local_collection_sha256": "a6ba8ab47eba2b5b3a830dfdf8e2ca7932bd01275a5d1335f924f3662d394e22",
+  "local_file_manifest_sha256": "c9a8192292aca8c66bd5a4d0eb23e28e574e6852bbbccd4d72f0e2f5baffaefc",
+  "actual_new_adapter_invocations": 36,
+  "actual_new_compile_stages": 36,
+  "actual_new_simulator_stages": 36,
+  "remote_command": [
+    "ssh",
+    "-o",
+    "ConnectTimeout=10",
+    "thu-sui",
+    "/usr/local/bin/python3.12 -X utf8 -B -c 'import base64;exec(base64.b64decode('\"'\"'ZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCmltcG9ydCBmY250bCxoYXNobGliLGpzb24KYj1QYXRoKCcvdG1wL2NoaXBzLWppbnpoaWhvbmcvZXZhcy1vdmVybmlnaHQtMjAyNjEwMTIvYmF0Y2gtbmctZjAzJykKZj0oYi5wYXJlbnQucGFyZW50Lydmb3VyLWJhY2tlbmQtcm91bmQubG9jaycpLm9wZW4oJ2EnKTtmY250bC5mbG9jayhmLGZjbnRsLkxPQ0tfRVh8ZmNudGwuTE9DS19OQikKbGVkZ2VyPWpzb24ubG9hZHMoKGIvJ0FUVEVNUFRfUkVTRVJWQVRJT05TLmpzb24nKS5yZWFkX3RleHQoKSk7Y29udHJvbGxlcj1qc29uLmxvYWRzKChiLydDT05UUk9MTEVSX0lERU5USVRZLmpzb24nKS5yZWFkX3RleHQoKSkKZm9yIG5hbWUsZGlnZXN0IGluIGNvbnRyb2xsZXJbJ2RlcGxveWVkX2ZpbGVzJ10uaXRlbXMoKTphc3NlcnQgaGFzaGxpYi5zaGEyNTYoKGIvbmFtZSkucmVhZF9ieXRlcygpKS5oZXhkaWdlc3QoKT09ZGlnZXN0LG5hbWUKbGFuZT0nZm91bmRhdGlvbi1vcGVudmFmX3JfbmdzcGljZS1mMDMtcXVvdGVkJztvcGVyYXRvcj1qc29uLmxvYWRzKChiLydvcGVyYXRvci1yZWNlaXB0cycvKGxhbmUrJy5qc29uJykpLnJlYWRfdGV4dCgpKQphc3NlcnQgb3BlcmF0b3JbJ2NsZWFudXBfY29uZmlybWVkJ10gaXMgVHJ1ZSBhbmQgJ2ZpbmlzaGVkX3VuaXhfbnMnIGluIG9wZXJhdG9yCnByaW50KGpzb24uZHVtcHMoeydyZW1vdGVfYmF0Y2gnOnN0cihiKSwnbGVkZ2VyJzpsZWRnZXIsJ2NvbnRyb2xsZXJfaWRlbnRpdHlfc2hhMjU2JzpoYXNobGliLnNoYTI1NigoYi8nQ09OVFJPTExFUl9JREVOVElUWS5qc29uJykucmVhZF9ieXRlcygpKS5oZXhkaWdlc3QoKSwnb3BlcmF0b3JfY2xlYW51cF9jb25maXJtZWQnOm9wZXJhdG9yWydjbGVhbnVwX2NvbmZpcm1lZCddLCdvcGVyYXRvcl9yZWNlaXB0X3NoYTI1Nic6aGFzaGxpYi5zaGEyNTYoKGIvJ29wZXJhdG9yLXJlY2VpcHRzJy8obGFuZSsnLmpzb24nKSkucmVhZF9ieXRlcygpKS5oZXhkaWdlc3QoKSwnc2hhcmVkX2xvY2snOidub25ibG9ja2luZyBleGNsdXNpdmUgbG9jayBhY3F1aXJlZCBmb3IgZmluYWwgcmVhZC1vbmx5IHNuYXBzaG90LCByZWxlYXNlZCB3aGVuIHRoaXMgcHJvY2VzcyBleGl0cycsJ3NjaWVudGlmaWNfY2FsbHNfaW5fdGhpc19zbmFwc2hvdCc6MH0pKQo='\"'\"'))'"
+  ],
+  "returncode": 0,
+  "started": 1791755303.803487,
+  "finished": 1791755304.4124951,
+  "stdout_sha256": "f7e27ffa0311b6e36579f9f331ee534e2e8f309ab6b1a03fc4e5b9cb075e1305",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "claim": "final shared conservative counts; prior seeds retain all old calls/probes; no further remote execution authorized; lock observation is bounded to this snapshot"
+}

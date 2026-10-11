@@ -1,0 +1,1285 @@
+{
+  "source_revision": "d6ac5ae34c228ac49dd381817b2d8e721f324cd3",
+  "source_files_git_verified": 149,
+  "input_manifest_files": 5117,
+  "archive_sha256": "aea811f2a437590748c86c654345e15d09a2e620cf84345c9f85b910f56b2edd",
+  "tar_members_verified": 1123,
+  "raw_manifest_files": 1110,
+  "analysis_manifest_files": 168,
+  "analysis_manifest_sha256": "f5874d9b0e32e41b0f33d6a8c489a3a60f6ffd56d7b9f3ae927857a02b669a90",
+  "analysis_revision": "aa7cb13d2c9a08c95aca24d10250060249f5c4fc",
+  "analysis_reanalyzer_sha256": "280842f911dd46cb769017b73254f6ab1819441f609994222320d1479fc57896",
+  "diagnostics_sha256": "a30f9eff87665fd79c9faf0283a6d07663a3521538b86d816064b1ca764867cc",
+  "diagnostic_pointers_verified": 20,
+  "slots": [
+    {
+      "label": "F03-dc-0--Q1",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 186,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 0.0,
+        "v(b)": 0.0,
+        "v(c)": 0.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 0.0,
+        "v(tern)": 3.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "ed0b60e7e03761aac6654720b6f1638278ca73ae00f2d33c24961fd12453a041"
+    },
+    {
+      "label": "F03-dc-0--Q2",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 376,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 0.0,
+        "v(b)": 0.0,
+        "v(c)": 0.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 0.0,
+        "v(tern)": 3.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "30b2ae77317e5e4206880f42a9fc569a4d01893b0cf6793b3d02300bc58fc453"
+    },
+    {
+      "label": "F03-dc-0--Q3",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 2165,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 0.0,
+        "v(b)": 0.0,
+        "v(c)": 0.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 0.0,
+        "v(tern)": 3.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "e329bccf4a356a1677a01f679b7be7360ba02bcc235ddc76822955894451b360"
+    },
+    {
+      "label": "F03-dc-1--Q1",
+      "requested_u": 0.49999999999999994,
+      "requested_u_hex": "0x1.fffffffffffffp-2",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 186,
+      "u_mismatch_rows": 186,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": -1.0,
+        "v(b)": 0.0,
+        "v(c)": 0.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 1.0,
+        "v(tern)": 1.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "7189d6028ff908fe77ddaba6b401bdc4a4b477009999d870cb917c1246766080"
+    },
+    {
+      "label": "F03-dc-1--Q2",
+      "requested_u": 0.49999999999999994,
+      "requested_u_hex": "0x1.fffffffffffffp-2",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 376,
+      "u_mismatch_rows": 376,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": -1.0,
+        "v(b)": 0.0,
+        "v(c)": 0.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 1.0,
+        "v(tern)": 1.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "5973fe890c7d5fb56c7110c1f821c7f5188c7f583862ddec12567d447b55d3df"
+    },
+    {
+      "label": "F03-dc-1--Q3",
+      "requested_u": 0.49999999999999994,
+      "requested_u_hex": "0x1.fffffffffffffp-2",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 2165,
+      "u_mismatch_rows": 2165,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": -1.0,
+        "v(b)": 0.0,
+        "v(c)": 0.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 1.0,
+        "v(tern)": 1.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "8e4ad933dde584a0a8d23c59490cb472c7e5288ec469c1276cef278fc4563107"
+    },
+    {
+      "label": "F03-dc-10--Q1",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 186,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 1.0,
+        "v(b)": 1.0,
+        "v(c)": 0.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 1.0,
+        "v(tern)": 1.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "d5c684b9b0216001086629388b2b7a4cda437664012b1de6589c7120046db811"
+    },
+    {
+      "label": "F03-dc-10--Q2",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 376,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 1.0,
+        "v(b)": 1.0,
+        "v(c)": 0.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 1.0,
+        "v(tern)": 1.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "8e244f6a20bf316e55426dc36052af0d0611db9a18c45ec192e3ba89f6a0ae7a"
+    },
+    {
+      "label": "F03-dc-10--Q3",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 2165,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 1.0,
+        "v(b)": 1.0,
+        "v(c)": 0.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 1.0,
+        "v(tern)": 1.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "f9849567ede2cd4fde94fb34e603745c30d7bfcc59e97136b920d6ba08ff2ea5"
+    },
+    {
+      "label": "F03-dc-11--Q1",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 186,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 1.0,
+        "v(b)": 1.0,
+        "v(c)": 1.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 1.0,
+        "v(tern)": 1.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "70bf98abcbf06e138c0be9dc1cd861524e731d64c7ba8ce13c88efa770b76156"
+    },
+    {
+      "label": "F03-dc-11--Q2",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 376,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 1.0,
+        "v(b)": 1.0,
+        "v(c)": 1.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 1.0,
+        "v(tern)": 1.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "003d0d73fa8a974cf9de1e13b83b5c071bfbbc15e729440e89471a1f202f7bc6"
+    },
+    {
+      "label": "F03-dc-11--Q3",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 2165,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 1.0,
+        "v(b)": 1.0,
+        "v(c)": 1.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 1.0,
+        "v(tern)": 1.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "e02a4898564971b3c0d4c66174146a01d12507d0df4c80a351c2b28adb83f49f"
+    },
+    {
+      "label": "F03-dc-2--Q1",
+      "requested_u": 0.5000000000000001,
+      "requested_u_hex": "0x1.0000000000001p-1",
+      "actual_u": [
+        0.5000000000000001
+      ],
+      "rows": 186,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5000000000000001,
+        "v(a)": 0.0,
+        "v(b)": -1.0,
+        "v(c)": 1.0,
+        "v(lt)": 0.0,
+        "v(le)": 0.0,
+        "v(gt)": 1.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 1.0,
+        "v(tern)": 2.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "2b5f54c60e8b8191df0fd7f16936a27b9347de02e28bf1ff5f13d5601d0761c2"
+    },
+    {
+      "label": "F03-dc-2--Q2",
+      "requested_u": 0.5000000000000001,
+      "requested_u_hex": "0x1.0000000000001p-1",
+      "actual_u": [
+        0.5000000000000001
+      ],
+      "rows": 376,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5000000000000001,
+        "v(a)": 0.0,
+        "v(b)": -1.0,
+        "v(c)": 1.0,
+        "v(lt)": 0.0,
+        "v(le)": 0.0,
+        "v(gt)": 1.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 1.0,
+        "v(tern)": 2.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "8a231123953ea3c5dd8917f1fecf4161d913e94e55a4aa2ce733b7956064a837"
+    },
+    {
+      "label": "F03-dc-2--Q3",
+      "requested_u": 0.5000000000000001,
+      "requested_u_hex": "0x1.0000000000001p-1",
+      "actual_u": [
+        0.5000000000000001
+      ],
+      "rows": 2165,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5000000000000001,
+        "v(a)": 0.0,
+        "v(b)": -1.0,
+        "v(c)": 1.0,
+        "v(lt)": 0.0,
+        "v(le)": 0.0,
+        "v(gt)": 1.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 1.0,
+        "v(tern)": 2.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "d8471ed79f73d0664806b5457de8771586687cdf46732af7a96fe8a4cfe9c4dd"
+    },
+    {
+      "label": "F03-dc-3--Q1",
+      "requested_u": -0.25,
+      "requested_u_hex": "-0x1.0000000000000p-2",
+      "actual_u": [
+        -0.25
+      ],
+      "rows": 186,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": -0.25,
+        "v(a)": 0.0,
+        "v(b)": 1.0,
+        "v(c)": 0.0,
+        "v(lt)": 1.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 0.0,
+        "v(logic_out)": 0.0,
+        "v(tern)": 2.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "6a4db1517d65606aee4c0fa26b6e94665d8df4d3b0dba5169601119285140932"
+    },
+    {
+      "label": "F03-dc-3--Q2",
+      "requested_u": -0.25,
+      "requested_u_hex": "-0x1.0000000000000p-2",
+      "actual_u": [
+        -0.25
+      ],
+      "rows": 376,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": -0.25,
+        "v(a)": 0.0,
+        "v(b)": 1.0,
+        "v(c)": 0.0,
+        "v(lt)": 1.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 0.0,
+        "v(logic_out)": 0.0,
+        "v(tern)": 2.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "5e8549f2a806c65bcfdb87e7e01fdf900934c80d7e55033be86d0a30be01e2e6"
+    },
+    {
+      "label": "F03-dc-3--Q3",
+      "requested_u": -0.25,
+      "requested_u_hex": "-0x1.0000000000000p-2",
+      "actual_u": [
+        -0.25
+      ],
+      "rows": 2165,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": -0.25,
+        "v(a)": 0.0,
+        "v(b)": 1.0,
+        "v(c)": 0.0,
+        "v(lt)": 1.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 0.0,
+        "v(logic_out)": 0.0,
+        "v(tern)": 2.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "88c946ad124266584f5442e230d4c63b5a7aad888499a21e24f303bee4c3ebed"
+    },
+    {
+      "label": "F03-dc-4--Q1",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 186,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 0.0,
+        "v(b)": 0.0,
+        "v(c)": 0.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 0.0,
+        "v(tern)": 3.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "987aa8586e9c3e5ac3291dfb107cbf4ac437306597769eea3030720029251d4f"
+    },
+    {
+      "label": "F03-dc-4--Q2",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 376,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 0.0,
+        "v(b)": 0.0,
+        "v(c)": 0.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 0.0,
+        "v(tern)": 3.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "21b27bd599d8e4c34a85ef894462ad542df19bb8687bdee21cc7b1a543811276"
+    },
+    {
+      "label": "F03-dc-4--Q3",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 2165,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 0.0,
+        "v(b)": 0.0,
+        "v(c)": 0.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 0.0,
+        "v(tern)": 3.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "1cf10772d191c8533140642bc192d6ecaab74294e24ef9662ab30961529bb6bb"
+    },
+    {
+      "label": "F03-dc-5--Q1",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 186,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 0.0,
+        "v(b)": 0.0,
+        "v(c)": 1.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 0.0,
+        "v(tern)": 3.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "fb2c4cbe6676820073cbee1e3c60f623ce159aa578aa2b6bfdcae4b0f66ee275"
+    },
+    {
+      "label": "F03-dc-5--Q2",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 376,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 0.0,
+        "v(b)": 0.0,
+        "v(c)": 1.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 0.0,
+        "v(tern)": 3.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "bb26e463e27006f069f415f2689cf9c29f25141b2f77970d7439156f7a6140cb"
+    },
+    {
+      "label": "F03-dc-5--Q3",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 2165,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 0.0,
+        "v(b)": 0.0,
+        "v(c)": 1.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 0.0,
+        "v(tern)": 3.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "0fcc84683e5cd5ea96490ba54ce6c10eb5fc56ae2d47bf2a9b536fbf5c0c4783"
+    },
+    {
+      "label": "F03-dc-6--Q1",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 186,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 0.0,
+        "v(b)": 1.0,
+        "v(c)": 0.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 0.0,
+        "v(tern)": 2.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "703ac77db4c1a6ddfe202446ce6ea4d55880945376ee47634a146703c67bbd10"
+    },
+    {
+      "label": "F03-dc-6--Q2",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 376,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 0.0,
+        "v(b)": 1.0,
+        "v(c)": 0.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 0.0,
+        "v(tern)": 2.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "828fa620ee719f4445d2ab91a04d414bf4838d9b4e681359b82da90615efd66e"
+    },
+    {
+      "label": "F03-dc-6--Q3",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 2165,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 0.0,
+        "v(b)": 1.0,
+        "v(c)": 0.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 0.0,
+        "v(tern)": 2.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "c71532b8911575b41d9826135e0dd0396690225894b97289dcaef6291ae57ce0"
+    },
+    {
+      "label": "F03-dc-7--Q1",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 186,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 0.0,
+        "v(b)": 1.0,
+        "v(c)": 1.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 1.0,
+        "v(tern)": 2.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "5dbb00d0e03fdb26137491c96e63fd26d6031f11366b61e256a6e67caa9656a3"
+    },
+    {
+      "label": "F03-dc-7--Q2",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 376,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 0.0,
+        "v(b)": 1.0,
+        "v(c)": 1.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 1.0,
+        "v(tern)": 2.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "b441c67c21270442416febe41aaea73f58ef443db525dc6226b03a1ecfd4ae57"
+    },
+    {
+      "label": "F03-dc-7--Q3",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 2165,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 0.0,
+        "v(b)": 1.0,
+        "v(c)": 1.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 1.0,
+        "v(tern)": 2.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "16bb59d84480986da2ffe12d5bf822558cc7f6da044edf73f022672a611cec10"
+    },
+    {
+      "label": "F03-dc-8--Q1",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 186,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 1.0,
+        "v(b)": 0.0,
+        "v(c)": 0.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 1.0,
+        "v(tern)": 1.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "85a7e13c9084062706109acbfbfdad19431515b3bf9f6fd2ba821e409bff1e5d"
+    },
+    {
+      "label": "F03-dc-8--Q2",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 376,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 1.0,
+        "v(b)": 0.0,
+        "v(c)": 0.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 1.0,
+        "v(tern)": 1.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "c2a62fb6a66c15ccc96b513a307fa76db64a1b4226966ababebc61853c80c4d3"
+    },
+    {
+      "label": "F03-dc-8--Q3",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 2165,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 1.0,
+        "v(b)": 0.0,
+        "v(c)": 0.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 1.0,
+        "v(tern)": 1.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "d43a5471aecb13ca63c082f6f03bd11f8979c98bb8177fd0cc23a820f5dd0139"
+    },
+    {
+      "label": "F03-dc-9--Q1",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 186,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 1.0,
+        "v(b)": 0.0,
+        "v(c)": 1.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 1.0,
+        "v(tern)": 1.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "e77e0f92707e9e3fcc12ccf7f3c9906acb7aeac4ed4502b226bc2d541c258391"
+    },
+    {
+      "label": "F03-dc-9--Q2",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 376,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 1.0,
+        "v(b)": 0.0,
+        "v(c)": 1.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 1.0,
+        "v(tern)": 1.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "b95f7bdfc6df99880f5563b787a0cb66c6579e6999a3c15652c530c57608f69c"
+    },
+    {
+      "label": "F03-dc-9--Q3",
+      "requested_u": 0.5,
+      "requested_u_hex": "0x1.0000000000000p-1",
+      "actual_u": [
+        0.5
+      ],
+      "rows": 2165,
+      "u_mismatch_rows": 0,
+      "t0": {
+        "time": 0.0,
+        "v(u)": 0.5,
+        "v(a)": 1.0,
+        "v(b)": 0.0,
+        "v(c)": 1.0,
+        "v(lt)": 0.0,
+        "v(le)": 1.0,
+        "v(gt)": 0.0,
+        "v(ge)": 1.0,
+        "v(logic_out)": 1.0,
+        "v(tern)": 1.0
+      },
+      "final": "evidence_insufficient",
+      "analysis_error": "ReadbackError('unsupported/mutable control command: wrdata waveform.txt v(u) v(a) v(b) v(c) v(\"lt\") v(\"le\") v(\"gt\") v(\"ge\") v(logic_out) v(tern)')",
+      "numerical": {
+        "error_lower_V": 0.0,
+        "error_upper_V": 0.0,
+        "status": "unknown"
+      },
+      "input_exact": {
+        "status": "unknown"
+      },
+      "old_result_status": "missing_waveform",
+      "result_sha256": "50a4b945fec6d8ac1e696d9e2dfed1c94b5f3c3c451750cc3e857fd8a94adafb"
+    }
+  ],
+  "counts": {
+    "execution": {
+      "waveform_available": 36
+    },
+    "final": {
+      "evidence_insufficient": 36
+    }
+  },
+  "failures": []
+}

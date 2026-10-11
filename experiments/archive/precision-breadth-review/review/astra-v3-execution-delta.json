@@ -1,0 +1,319 @@
+{
+  "compared_slots": 213,
+  "execution_changes": [
+    {
+      "label": "EC17-v1--Q3",
+      "v2_status": "execution_failed",
+      "v3_status": "waveform_available",
+      "v3_final": "evidence_insufficient"
+    },
+    {
+      "label": "EC18-v1--Q3",
+      "v2_status": "execution_failed",
+      "v3_status": "waveform_available",
+      "v3_final": "evidence_insufficient"
+    },
+    {
+      "label": "EC19-v1--Q3",
+      "v2_status": "execution_failed",
+      "v3_status": "waveform_available",
+      "v3_final": "evidence_insufficient"
+    },
+    {
+      "label": "EC21-v1--Q3",
+      "v2_status": "waveform_available",
+      "v3_status": "runtime_timeout",
+      "v3_final": "execution_failed"
+    },
+    {
+      "label": "F14-base--Q3",
+      "v2_status": "execution_failed",
+      "v3_status": "waveform_available",
+      "v3_final": "evidence_insufficient"
+    },
+    {
+      "label": "F20-base--Q3",
+      "v2_status": "execution_failed",
+      "v3_status": "waveform_available",
+      "v3_final": "evidence_insufficient"
+    }
+  ],
+  "EC21_runtime_records": [
+    {
+      "batch": "v2",
+      "label": "EC21-v1--Q1",
+      "result_sha256": "f1d62f8a42ac2222fbc463f260683efd3375c969060d6229cb37de13bed94016",
+      "status": "waveform_available",
+      "stages": [
+        {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "prlimit",
+            "--as=4294967296",
+            "--fsize=33554432",
+            "--",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "/tmp/chips-jinzhihong/evas-overnight-20261012/batch-v2/repo/experiments/backends/support/precision_run.py",
+            "worker",
+            "/tmp/chips-jinzhihong/evas-overnight-20261012/batch-v2/outputs/composition-evas-part2/runs/EC21-v1--Q1",
+            "/tmp/chips-jinzhihong/evas-overnight-20261012/batch-v2/build/target/release/evas-kernel"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "status": "completed",
+          "cleanup": {
+            "signals": [
+              "SIGTERM",
+              "SIGKILL"
+            ],
+            "errors": [],
+            "complete": true
+          },
+          "elapsed_seconds": 77.64654913172126,
+          "completed_utc": "2026-10-11T19:42:39Z",
+          "log": "simulate.log",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stage": "simulate",
+          "resource_caps": {
+            "memory_limit_bytes": 4294967296,
+            "file_limit_bytes": 33554432,
+            "threads": 1
+          }
+        }
+      ]
+    },
+    {
+      "batch": "v3",
+      "label": "EC21-v1--Q1",
+      "result_sha256": "79b03b13636ddabf9add434241bdc4ec2b837ff2db87a0d1831d01843cb3abd5",
+      "status": "waveform_available",
+      "stages": [
+        {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "prlimit",
+            "--as=4294967296",
+            "--fsize=33554432",
+            "--",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "/tmp/chips-jinzhihong/evas-overnight-20261012/batch-v3/repo/experiments/backends/support/precision_run.py",
+            "worker",
+            "/tmp/chips-jinzhihong/evas-overnight-20261012/batch-v3/outputs/composition-evas-part2/runs/EC21-v1--Q1",
+            "/tmp/chips-jinzhihong/evas-overnight-20261012/batch-v3/build/target/release/evas-kernel"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "status": "completed",
+          "cleanup": {
+            "signals": [
+              "SIGTERM",
+              "SIGKILL"
+            ],
+            "errors": [],
+            "complete": true
+          },
+          "elapsed_seconds": 82.92018240131438,
+          "completed_utc": "2026-10-11T21:30:55Z",
+          "log": "simulate.log",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stage": "simulate",
+          "resource_caps": {
+            "memory_limit_bytes": 4294967296,
+            "file_limit_bytes": 33554432,
+            "threads": 1
+          }
+        }
+      ]
+    },
+    {
+      "batch": "v2",
+      "label": "EC21-v1--Q2",
+      "result_sha256": "1d5c8c85307b103ed67f020286d97087c05d0e39cbb737abac8d349cbddc8214",
+      "status": "waveform_available",
+      "stages": [
+        {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "prlimit",
+            "--as=4294967296",
+            "--fsize=33554432",
+            "--",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "/tmp/chips-jinzhihong/evas-overnight-20261012/batch-v2/repo/experiments/backends/support/precision_run.py",
+            "worker",
+            "/tmp/chips-jinzhihong/evas-overnight-20261012/batch-v2/outputs/composition-evas-part2/runs/EC21-v1--Q2",
+            "/tmp/chips-jinzhihong/evas-overnight-20261012/batch-v2/build/target/release/evas-kernel"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "status": "completed",
+          "cleanup": {
+            "signals": [
+              "SIGTERM",
+              "SIGKILL"
+            ],
+            "errors": [],
+            "complete": true
+          },
+          "elapsed_seconds": 77.82855626381934,
+          "completed_utc": "2026-10-11T19:43:58Z",
+          "log": "simulate.log",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stage": "simulate",
+          "resource_caps": {
+            "memory_limit_bytes": 4294967296,
+            "file_limit_bytes": 33554432,
+            "threads": 1
+          }
+        }
+      ]
+    },
+    {
+      "batch": "v3",
+      "label": "EC21-v1--Q2",
+      "result_sha256": "9c6b9e98bd6c800bf2bd767f1495a75b3aaac2b6307e5e3af7211c6534be796c",
+      "status": "waveform_available",
+      "stages": [
+        {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "prlimit",
+            "--as=4294967296",
+            "--fsize=33554432",
+            "--",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "/tmp/chips-jinzhihong/evas-overnight-20261012/batch-v3/repo/experiments/backends/support/precision_run.py",
+            "worker",
+            "/tmp/chips-jinzhihong/evas-overnight-20261012/batch-v3/outputs/composition-evas-part2/runs/EC21-v1--Q2",
+            "/tmp/chips-jinzhihong/evas-overnight-20261012/batch-v3/build/target/release/evas-kernel"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "status": "completed",
+          "cleanup": {
+            "signals": [
+              "SIGTERM",
+              "SIGKILL"
+            ],
+            "errors": [],
+            "complete": true
+          },
+          "elapsed_seconds": 81.7656090632081,
+          "completed_utc": "2026-10-11T21:32:17Z",
+          "log": "simulate.log",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stage": "simulate",
+          "resource_caps": {
+            "memory_limit_bytes": 4294967296,
+            "file_limit_bytes": 33554432,
+            "threads": 1
+          }
+        }
+      ]
+    },
+    {
+      "batch": "v2",
+      "label": "EC21-v1--Q3",
+      "result_sha256": "61ba3eecdd321a3841c867d3614ca1211af85518afaa0f8a4eaa5b992c1d21a4",
+      "status": "waveform_available",
+      "stages": [
+        {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "prlimit",
+            "--as=4294967296",
+            "--fsize=33554432",
+            "--",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "/tmp/chips-jinzhihong/evas-overnight-20261012/batch-v2/repo/experiments/backends/support/precision_run.py",
+            "worker",
+            "/tmp/chips-jinzhihong/evas-overnight-20261012/batch-v2/outputs/composition-evas-part2/runs/EC21-v1--Q3",
+            "/tmp/chips-jinzhihong/evas-overnight-20261012/batch-v2/build/target/release/evas-kernel"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "status": "completed",
+          "cleanup": {
+            "signals": [
+              "SIGTERM",
+              "SIGKILL"
+            ],
+            "errors": [],
+            "complete": true
+          },
+          "elapsed_seconds": 89.84979362413287,
+          "completed_utc": "2026-10-11T19:45:29Z",
+          "log": "simulate.log",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stage": "simulate",
+          "resource_caps": {
+            "memory_limit_bytes": 4294967296,
+            "file_limit_bytes": 33554432,
+            "threads": 1
+          }
+        }
+      ]
+    },
+    {
+      "batch": "v3",
+      "label": "EC21-v1--Q3",
+      "result_sha256": "4e1d494f396eb76a31beb112c2086b3a70894615c959c6aa575d15a8f329281a",
+      "status": "runtime_timeout",
+      "stages": [
+        {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "prlimit",
+            "--as=4294967296",
+            "--fsize=33554432",
+            "--",
+            "/usr/local/bin/python3.12",
+            "-B",
+            "/tmp/chips-jinzhihong/evas-overnight-20261012/batch-v3/repo/experiments/backends/support/precision_run.py",
+            "worker",
+            "/tmp/chips-jinzhihong/evas-overnight-20261012/batch-v3/outputs/composition-evas-part2/runs/EC21-v1--Q3",
+            "/tmp/chips-jinzhihong/evas-overnight-20261012/batch-v3/build/target/release/evas-kernel"
+          ],
+          "returncode": -15,
+          "timeout": true,
+          "status": "timeout",
+          "cleanup": {
+            "signals": [
+              "SIGTERM",
+              "SIGKILL"
+            ],
+            "errors": [],
+            "complete": true
+          },
+          "elapsed_seconds": 90.01653360016644,
+          "completed_utc": "2026-10-11T21:33:48Z",
+          "log": "simulate.log",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stage": "simulate",
+          "resource_caps": {
+            "memory_limit_bytes": 4294967296,
+            "file_limit_bytes": 33554432,
+            "threads": 1
+          }
+        }
+      ]
+    }
+  ]
+}

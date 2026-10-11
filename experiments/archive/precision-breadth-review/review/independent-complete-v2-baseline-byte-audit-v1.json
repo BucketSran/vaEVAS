@@ -1,0 +1,329 @@
+{
+  "schema": "independent-fixed-baseline-byte-audit-v1",
+  "script_sha256": "8d7e89c88df9d3b05528730d85b1788531596ea8a7218deb9e1f3fe35b88171f",
+  "aggregate": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/official-draft-complete-v2-baseline-guarded-v1",
+  "aggregate_payload_sha256": "0f480d944991fa9a4c36943af95d47b430e24c04af3299bda44fe82ba1756cf1",
+  "failure_payload_sha256": "6365bb904c42e4b996df1772966f23690c2ba41faa2827868763a05198ad627a",
+  "aggregate_manifest": {
+    "manifest_sha256": "c87751de3006f855b6151183636b5b67fc8d4cae7552935af5a70e0f0251448a",
+    "files": 6,
+    "bytes": 7381378
+  },
+  "failure_manifest": {
+    "manifest_sha256": "ae3f16f71f75e15fd12472347cb72929b62db9f8bbca63d23a896fbbad4a6195",
+    "files": 1,
+    "bytes": 1673489
+  },
+  "selection_sha256": "c45b518dead0630e810bba801026c0a509e8446a56f57b573210d89752f54e86",
+  "selected_slots": 852,
+  "unique_slots": 852,
+  "all_selected_original_results_and_execution_statuses_matched": true,
+  "all_selected_qualification_statuses_matched_sealed_analysis": true,
+  "analyses": [
+    {
+      "analysis": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/analysis-foundation-openvaf_r_ngspice-part2-final-v1",
+      "raw_lane": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch/collected/foundation-openvaf_r_ngspice-part2/outputs/foundation-openvaf_r_ngspice-part2",
+      "raw": {
+        "manifest_sha256": "3efbb9a7ba0f14e31170f92c1b8d2b8f66640b929ef0911976af031887a526d0",
+        "files": 1149,
+        "bytes": 15297886
+      },
+      "analysis_artifacts": {
+        "manifest_sha256": "16d7ed1cbbc9111d49e824c375fc4f557ae541838997d75259dfdce5e89e2754",
+        "files": 152,
+        "bytes": 9001715
+      },
+      "archive_sha256": "05da90d59edd71efd746dfb27fce028e5711b8f9e75d265097806c566ebf3e05",
+      "archive_bytes": 3063802,
+      "reanalyzer_sha256": "2b6a5a294a82ab0398c5a1c0f6711c62958b64a6a85730ab889108abfc86a298",
+      "scientific_sources_matched": 65,
+      "slot_records": 39
+    },
+    {
+      "analysis": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/analysis-foundation-gnucap_modelgen-part2-final-v1",
+      "raw_lane": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch/collected/foundation-gnucap_modelgen-part2/outputs/foundation-gnucap_modelgen-part2",
+      "raw": {
+        "manifest_sha256": "498f6d97a50b3893943ed0cd8c0c31062b29f0844b203217561a91109698e55a",
+        "files": 1226,
+        "bytes": 39857307
+      },
+      "analysis_artifacts": {
+        "manifest_sha256": "00510e8201bd232111734f9a495505eaca0250fbba21506cc1624ebd36463b71",
+        "files": 152,
+        "bytes": 8602254
+      },
+      "archive_sha256": "b1a4fc56a7cb21a2f7d802b2eae3771237b873f2500a598ba9c4ce9ef56b4d59",
+      "archive_bytes": 6806170,
+      "reanalyzer_sha256": "2b6a5a294a82ab0398c5a1c0f6711c62958b64a6a85730ab889108abfc86a298",
+      "scientific_sources_matched": 65,
+      "slot_records": 39
+    },
+    {
+      "analysis": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/analysis-foundation-evas-part1-final-v2",
+      "raw_lane": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-v2/collected/foundation-evas-part1/outputs/foundation-evas-part1",
+      "raw": {
+        "manifest_sha256": "28352b9a6c8f983f9f870946aab83014b789d6bd75385caf5322134129041539",
+        "files": 1495,
+        "bytes": 6728408
+      },
+      "analysis_artifacts": {
+        "manifest_sha256": "fc36cde0b2b51b5f861c1a0e8b57552684055a72bf2bfee50075fdfbea0fa148",
+        "files": 206,
+        "bytes": 10141411
+      },
+      "archive_sha256": "39198338003741c819783558dbce9c5a3f376906a63f7e655eb239dd8d1c3347",
+      "archive_bytes": 852382,
+      "reanalyzer_sha256": "2b6a5a294a82ab0398c5a1c0f6711c62958b64a6a85730ab889108abfc86a298",
+      "scientific_sources_matched": 65,
+      "slot_records": 93
+    },
+    {
+      "analysis": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/analysis-foundation-evas-part2-final-v2",
+      "raw_lane": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-v2/collected/foundation-evas-part2/outputs/foundation-evas-part2",
+      "raw": {
+        "manifest_sha256": "0ed436b2e3216238fc1348107508dc684b30106b6a2ecb1a4f529eaeafb1c2b4",
+        "files": 625,
+        "bytes": 23069050
+      },
+      "analysis_artifacts": {
+        "manifest_sha256": "4c8f75ffa13bd681b6f5c3691187b79ac030408586780257c7058bf4613a0de3",
+        "files": 152,
+        "bytes": 6020934
+      },
+      "archive_sha256": "b13405ca0cce1d9509407c6082ceca95c9fe141eb4121e2be435fcb20eb91fb1",
+      "archive_bytes": 1834618,
+      "reanalyzer_sha256": "2b6a5a294a82ab0398c5a1c0f6711c62958b64a6a85730ab889108abfc86a298",
+      "scientific_sources_matched": 65,
+      "slot_records": 39
+    },
+    {
+      "analysis": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/analysis-guarded-composition-evas-part1-v1",
+      "raw_lane": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-v2/collected/composition-evas-part1/outputs/composition-evas-part1",
+      "raw": {
+        "manifest_sha256": "2fe7d1af316fa900477d52fab1020d4db1319685880e7aba9172401cc878ce02",
+        "files": 667,
+        "bytes": 179583196
+      },
+      "analysis_artifacts": {
+        "manifest_sha256": "fb8c6361f34a4731ef5921e0c22804cb2dcacb0aabfce5e7bf54ee9985d863d3",
+        "files": 165,
+        "bytes": 6302299
+      },
+      "archive_sha256": "b38684fca08b436c66013cd3245ff4962fff6e639dd2f0d60e39b16aaa54ae30",
+      "archive_bytes": 33065671,
+      "reanalyzer_sha256": "280842f911dd46cb769017b73254f6ab1819441f609994222320d1479fc57896",
+      "scientific_sources_matched": 65,
+      "slot_records": 45
+    },
+    {
+      "analysis": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/analysis-composition-evas-part2-guarded-v1",
+      "raw_lane": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-v2/collected/composition-evas-part2/outputs/composition-evas-part2",
+      "raw": {
+        "manifest_sha256": "4a330906d397dbc297cfce39065b716f2f4896c21d8073bed6d01314930d33e4",
+        "files": 547,
+        "bytes": 76481622
+      },
+      "analysis_artifacts": {
+        "manifest_sha256": "7df771eabaeab1f48d9d19055ff80bc0bc0ff4edd14db59080562616f76acd13",
+        "files": 156,
+        "bytes": 6522753
+      },
+      "archive_sha256": "56b6b6475e76cf678f90c8622981566521c59201409a399864e1ef1c7e7aefa8",
+      "archive_bytes": 13831593,
+      "reanalyzer_sha256": "280842f911dd46cb769017b73254f6ab1819441f609994222320d1479fc57896",
+      "scientific_sources_matched": 65,
+      "slot_records": 36
+    },
+    {
+      "analysis": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/analysis-foundation-spectre-part1-guarded-v1",
+      "raw_lane": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-v2/collected/foundation-spectre-part1/outputs/foundation-spectre-part1",
+      "raw": {
+        "manifest_sha256": "94d24c80cdd3b834a9e1c9f391192d645cdaea753da04699f4bb6ed76fd11a98",
+        "files": 2312,
+        "bytes": 62572434
+      },
+      "analysis_artifacts": {
+        "manifest_sha256": "438510681d8a3ffba41828e29a00d25c2e5c7a74970eed5087f36cf5b817a1a8",
+        "files": 213,
+        "bytes": 84647906
+      },
+      "archive_sha256": "787b00d34a9ff6fed21e50415bd4c6fefa6b6ac6f4a1e722c343b667edac3560",
+      "archive_bytes": 8775380,
+      "reanalyzer_sha256": "280842f911dd46cb769017b73254f6ab1819441f609994222320d1479fc57896",
+      "scientific_sources_matched": 65,
+      "slot_records": 93
+    },
+    {
+      "analysis": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/analysis-foundation-spectre-part2-guarded-v1",
+      "raw_lane": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-v2/collected/foundation-spectre-part2/outputs/foundation-spectre-part2",
+      "raw": {
+        "manifest_sha256": "8ec61fa826c4788819ae6a5ea9e18962bc3b0fccb21fee40bc57b346b4140044",
+        "files": 944,
+        "bytes": 50489272
+      },
+      "analysis_artifacts": {
+        "manifest_sha256": "191287833c24070d7d46600e5a097592c551ed9f8a7b56496256439369ac6b1f",
+        "files": 159,
+        "bytes": 9537105
+      },
+      "archive_sha256": "1604fec25bfe2efd932e9c07058dd439ec1fcd5eb046c47d37cd04b91e24ae12",
+      "archive_bytes": 6893272,
+      "reanalyzer_sha256": "280842f911dd46cb769017b73254f6ab1819441f609994222320d1479fc57896",
+      "scientific_sources_matched": 65,
+      "slot_records": 39
+    },
+    {
+      "analysis": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/analysis-composition-spectre-part1-guarded-v1",
+      "raw_lane": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-v2/collected/composition-spectre-part1/outputs/composition-spectre-part1",
+      "raw": {
+        "manifest_sha256": "090cba21cc11d66cae069c3fbf1a7f168d5673c6c2ff59d6cb1b6c5221465ff7",
+        "files": 1136,
+        "bytes": 244069227
+      },
+      "analysis_artifacts": {
+        "manifest_sha256": "fda48b0a5d215938c14af9165ceb95d600167886e172c57b095bfb1943d8bc45",
+        "files": 165,
+        "bytes": 6999630
+      },
+      "archive_sha256": "e21f92cc9a82f4df521cc704b90f92f3972f54f0916b86de346a4b6efe0e4d2d",
+      "archive_bytes": 43889776,
+      "reanalyzer_sha256": "280842f911dd46cb769017b73254f6ab1819441f609994222320d1479fc57896",
+      "scientific_sources_matched": 65,
+      "slot_records": 45
+    },
+    {
+      "analysis": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/analysis-composition-spectre-part2-guarded-v1",
+      "raw_lane": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-v2/collected/composition-spectre-part2/outputs/composition-spectre-part2",
+      "raw": {
+        "manifest_sha256": "0b5bd9d467993438f5a4c2b790106f049b0bc52c7dd99a045937cf78fea70df6",
+        "files": 896,
+        "bytes": 120703740
+      },
+      "analysis_artifacts": {
+        "manifest_sha256": "aa907c9550130594e02446e449acafc30f29669856dfa6b404bb65f2c3d75d2d",
+        "files": 156,
+        "bytes": 19260670
+      },
+      "archive_sha256": "dcf74db69f2a067380e115acf41704eebb53a1db3d18fbe5e0f3acbef3b591f5",
+      "archive_bytes": 21911582,
+      "reanalyzer_sha256": "280842f911dd46cb769017b73254f6ab1819441f609994222320d1479fc57896",
+      "scientific_sources_matched": 65,
+      "slot_records": 36
+    },
+    {
+      "analysis": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/analysis-foundation-openvaf_r_ngspice-part1-guarded-v1",
+      "raw_lane": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-v2/collected/foundation-openvaf_r_ngspice-part1/outputs/foundation-openvaf_r_ngspice-part1",
+      "raw": {
+        "manifest_sha256": "0a6deec08aafa29fde8fa864673df00b2099768bec40c52a0d9707ee5da8c439",
+        "files": 2673,
+        "bytes": 21654929
+      },
+      "analysis_artifacts": {
+        "manifest_sha256": "347525e78cb0c86fb5d192714951e1b02a33919282051e46ac80faa450f5c0e5",
+        "files": 213,
+        "bytes": 12140478
+      },
+      "archive_sha256": "65eece9179a198af79e408a5b3b4167b6bc63f3c4e49f7a6287245e1cd72234c",
+      "archive_bytes": 3699651,
+      "reanalyzer_sha256": "280842f911dd46cb769017b73254f6ab1819441f609994222320d1479fc57896",
+      "scientific_sources_matched": 65,
+      "slot_records": 93
+    },
+    {
+      "analysis": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/analysis-foundation-gnucap_modelgen-part1-guarded-v1",
+      "raw_lane": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-v2/collected/foundation-gnucap_modelgen-part1/outputs/foundation-gnucap_modelgen-part1",
+      "raw": {
+        "manifest_sha256": "9baff880768969f9a7aa7b6fb773a03e29b5f582e3313751e1aa4bc0b09e49a5",
+        "files": 2792,
+        "bytes": 67147431
+      },
+      "analysis_artifacts": {
+        "manifest_sha256": "9fd17c897ee2e4c9441927493c57f6a13d901d6c31578c939049b6067794ab8f",
+        "files": 213,
+        "bytes": 68871130
+      },
+      "archive_sha256": "f0d927c4667bfd9c177b5f94aba39cf2707225e51620d5828a29e47d512cae32",
+      "archive_bytes": 12315693,
+      "reanalyzer_sha256": "280842f911dd46cb769017b73254f6ab1819441f609994222320d1479fc57896",
+      "scientific_sources_matched": 65,
+      "slot_records": 93
+    },
+    {
+      "analysis": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/analysis-composition-openvaf_r_ngspice-part1-guarded-v1",
+      "raw_lane": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-v2/collected/composition-openvaf_r_ngspice-part1/outputs/composition-openvaf_r_ngspice-part1",
+      "raw": {
+        "manifest_sha256": "7cb3f2c1f6c5f6089393a777f4849deca9c0e1dc31ea03b7bd2f7b98c403af65",
+        "files": 1251,
+        "bytes": 56231173
+      },
+      "analysis_artifacts": {
+        "manifest_sha256": "d37a41255ebb2a68f8674c998b37563d6044fec6b15b9db7e972bd0e33f9a98a",
+        "files": 165,
+        "bytes": 6301745
+      },
+      "archive_sha256": "bf1360e0f95f9f5a5dc1961559df3cc8f9e62a3385c9ed1729350569cd963353",
+      "archive_bytes": 14964817,
+      "reanalyzer_sha256": "280842f911dd46cb769017b73254f6ab1819441f609994222320d1479fc57896",
+      "scientific_sources_matched": 65,
+      "slot_records": 45
+    },
+    {
+      "analysis": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/analysis-composition-gnucap_modelgen-part1-guarded-v1",
+      "raw_lane": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-v2/collected/composition-gnucap_modelgen-part1/outputs/composition-gnucap_modelgen-part1",
+      "raw": {
+        "manifest_sha256": "2a7117c98c7487160c251011ef4b4fdfb9d7d474acc814ec6ec8eb9bd8896151",
+        "files": 1412,
+        "bytes": 171383247
+      },
+      "analysis_artifacts": {
+        "manifest_sha256": "fff18261b42ed4733dc876d7c18b048b72335ebc020f8cef6566fa1f2aef02f9",
+        "files": 165,
+        "bytes": 6732198
+      },
+      "archive_sha256": "02885800fc73f642277242a51f254144642fb9aab0643ae2f69f85847de37c53",
+      "archive_bytes": 33791626,
+      "reanalyzer_sha256": "280842f911dd46cb769017b73254f6ab1819441f609994222320d1479fc57896",
+      "scientific_sources_matched": 65,
+      "slot_records": 45
+    },
+    {
+      "analysis": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/analysis-composition-openvaf_r_ngspice-part2-guarded-v1",
+      "raw_lane": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-v2/collected/composition-openvaf_r_ngspice-part2/outputs/composition-openvaf_r_ngspice-part2",
+      "raw": {
+        "manifest_sha256": "377d8298dfd53094a1ad32866a62b5729610ad97a01f1d4523242024b7ad87a6",
+        "files": 942,
+        "bytes": 29113784
+      },
+      "analysis_artifacts": {
+        "manifest_sha256": "f1ea2e6212b9c34a343c83af954d798807b511f7cf3e6e86150f27c07789bef4",
+        "files": 156,
+        "bytes": 17379635
+      },
+      "archive_sha256": "03020cc0ee2c19b6d3a41e8701593e9120ee4e19114a67506cdacd58059b2a7d",
+      "archive_bytes": 7254219,
+      "reanalyzer_sha256": "280842f911dd46cb769017b73254f6ab1819441f609994222320d1479fc57896",
+      "scientific_sources_matched": 65,
+      "slot_records": 36
+    },
+    {
+      "analysis": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/analysis-composition-gnucap_modelgen-part2-guarded-v1",
+      "raw_lane": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-v2/collected/composition-gnucap_modelgen-part2/outputs/composition-gnucap_modelgen-part2",
+      "raw": {
+        "manifest_sha256": "a2efbc828392827c5aa3920d588fa565da883a27b5c918161e0743554bb1f219",
+        "files": 1025,
+        "bytes": 90458329
+      },
+      "analysis_artifacts": {
+        "manifest_sha256": "a788b8ca90333e939b1f8e4292b391801db29c5e45668677451a954cfe780d9c",
+        "files": 156,
+        "bytes": 12728493
+      },
+      "archive_sha256": "3a4cf522fdcb09d7df3b4293a2c9c75d478c672bd9ee2f6cb8fe65228ff01e73",
+      "archive_bytes": 16721303,
+      "reanalyzer_sha256": "280842f911dd46cb769017b73254f6ab1819441f609994222320d1479fc57896",
+      "scientific_sources_matched": 65,
+      "slot_records": 36
+    }
+  ],
+  "claim": "Actual local byte/hash/size and fixed identity checks; no simulator or model review substituted for these checks."
+}

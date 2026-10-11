@@ -1,0 +1,9 @@
+# 固定d844最终实际GLM裁决
+
+候选d844b79584b8a42d361e340ce918658f3609d9a9，仅schema最终窄delta。实际Claude CLI2.1.284/canonicalglm-5.3，35.002s/1turn/USD0.173470，single session/result；response SHA3d1fa63e0a20a99ea85c5a98e317b233a556b57a9e752c098828b5075b413738。完整源码、tests、readback、全部9bf3→d844diff、原finding与实际新负控已供审，raw报告和完整stream保留。
+
+最终模型确认 argv_sha256 非空小写64hex字符串列表校验和 malformed JSON syntax→EvidenceSchemaError，全七轴unknown、原因保留，N1闭合。没有当前可行动的新finding。D1仅invalidUTF8分类对称性信息项，不要求修改；UnicodeDecodeError为ValueError，外层仍拒绝，不是科学falsequalified或崩溃。
+
+本agent独立固定gitshow源码重跑9类synthetic负控：RESULT列表、simulate列表、proof列表、错误scope、缺approval、argv None/int/string/dict均安全返回拒绝/unknown，无异常。原1e825/9bf3错误报告及代码固定证据不覆盖。56adapter/78support为owner报告，此agent没有重跑整套；GLM未运行测试。
+
+本轮实现独立审查已闭合，固定最终candidate仍需root整合；无productioncaller、真实finalproof审批或科学资格升级。外部approved exactSHA、manifest来源验证、逐run全argv/env/6frozeninputs/compiled绑定、数值config/profile合取和原失败全部保留。NG真实startup/AddReal/ft_evaluate、GN安装可信构建/实际integrator及完整机制批准包仍pending，不由schema审查替代。

@@ -1,0 +1,182 @@
+{
+  "aggregate_sha256": "5d75a8fed454c44885e097d854b5deec1adcca93a757b8c96a14cbe8081da3a3",
+  "compact_sha256": "762a6a6bfe754ea773b28f6b511206d1a14c3dfe9bd7361260de4e66a90ca2ab",
+  "compact_bytes": 1544534,
+  "failure_inventory_sha256": "a126da4e813397279125c26c22402735ccaa1658b24b2934679b75c8c5f448a3",
+  "selection_sha256": "f06b7ecdc4af2acf7fcb06f32af8f64160046f8e5ec25883f30cdbea4dfd39b1",
+  "slots": 852,
+  "groups": 528,
+  "unchanged_scientific_slots": 603,
+  "new_selected_slots": 249,
+  "reasons_checked": 4748,
+  "counts": {
+    "spectre": {
+      "final": {
+        "pass": 49,
+        "evidence_insufficient": 160,
+        "execution_failed": 3,
+        "numerical_error": 1
+      },
+      "numeric": {
+        "pass": 95,
+        "unknown": 108,
+        "evidence_insufficient": 9,
+        "numerical_error": 1
+      },
+      "behavior": {
+        "pass": 159,
+        "unknown": 54
+      },
+      "evidence": {
+        "complete": 90,
+        "evidence_insufficient": 123
+      },
+      "config": {
+        "qualified": 126,
+        "evidence_insufficient": 84,
+        "unknown": 3
+      },
+      "native": {
+        "qualified": 148,
+        "unknown": 65
+      },
+      "runtime": {
+        "qualified": 126,
+        "unknown": 87
+      },
+      "integrator": {
+        "not_applicable": 213
+      },
+      "original_execution": {
+        "waveform_available": 210,
+        "execution_failed": 3
+      }
+    },
+    "evas": {
+      "final": {
+        "pass": 105,
+        "evidence_insufficient": 81,
+        "execution_failed": 27
+      },
+      "numeric": {
+        "pass": 108,
+        "unknown": 96,
+        "evidence_insufficient": 9
+      },
+      "behavior": {
+        "pass": 174,
+        "unknown": 39
+      },
+      "evidence": {
+        "complete": 105,
+        "evidence_insufficient": 108
+      },
+      "config": {
+        "qualified": 186,
+        "unknown": 27
+      },
+      "native": {
+        "qualified": 186,
+        "unknown": 27
+      },
+      "runtime": {
+        "qualified": 186,
+        "unknown": 27
+      },
+      "integrator": {
+        "not_applicable": 213
+      },
+      "original_execution": {
+        "waveform_available": 186,
+        "runtime_timeout": 10,
+        "execution_failed": 17
+      }
+    },
+    "gnucap_modelgen": {
+      "final": {
+        "evidence_insufficient": 151,
+        "execution_failed": 21,
+        "numerical_error": 35,
+        "behavior_error": 6
+      },
+      "numeric": {
+        "pass": 79,
+        "unknown": 99,
+        "numerical_error": 35
+      },
+      "behavior": {
+        "pass": 180,
+        "unknown": 27,
+        "behavior_error": 6
+      },
+      "evidence": {
+        "complete": 60,
+        "evidence_insufficient": 153
+      },
+      "config": {
+        "qualified": 192,
+        "unknown": 21
+      },
+      "native": {
+        "unknown": 213
+      },
+      "runtime": {
+        "unknown": 213
+      },
+      "integrator": {
+        "unknown": 213
+      },
+      "original_execution": {
+        "waveform_available": 192,
+        "compile_failed": 21
+      }
+    },
+    "openvaf_r_ngspice": {
+      "final": {
+        "execution_failed": 81,
+        "evidence_insufficient": 118,
+        "numerical_error": 14
+      },
+      "numeric": {
+        "unknown": 141,
+        "pass": 55,
+        "numerical_error": 14,
+        "evidence_insufficient": 3
+      },
+      "behavior": {
+        "unknown": 81,
+        "pass": 132
+      },
+      "evidence": {
+        "evidence_insufficient": 147,
+        "complete": 66
+      },
+      "config": {
+        "unknown": 117,
+        "qualified": 96
+      },
+      "native": {
+        "unknown": 213
+      },
+      "runtime": {
+        "unknown": 213
+      },
+      "integrator": {
+        "unknown": 213
+      },
+      "original_execution": {
+        "compile_failed": 39,
+        "waveform_available": 132,
+        "missing_waveform": 42
+      }
+    }
+  },
+  "overall_final": {
+    "pass": 154,
+    "evidence_insufficient": 510,
+    "execution_failed": 132,
+    "numerical_error": 50,
+    "behavior_error": 6
+  },
+  "failures": []
+}
