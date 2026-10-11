@@ -28,6 +28,8 @@
 
 原 `solve.sh` 经 Harbor Docker 执行后产生原候选字节，A1/A3 的六个留出参考条件与 A2 的三个留出参考条件已实际 Spectre 通过。首次编译故障（`Meg` 后缀、`slew`/`current` 保留字）保留为未评分证据。随后已完成最终全变体实际校准，结果和身份见 [final-calibration.json](final-calibration.json)。
 
+早期原脚本入口使用 Python 镜像 tag，未保存实际镜像 receipt，因此当时的镜像身份未知。补充入口验证使用三题 Dockerfile 固定 digest、关闭容器网络，重新执行原 `solve.sh`。三份产物与最终实际 Spectre 参考候选字节完全一致，见 [reference-entry-receipt.json](reference-entry-receipt.json)，其中记录实际 image ID、RepoDigest、命令、脚本与产物 SHA-256 和时间。该验证是后续补充执行，不倒填旧校准的执行身份，也没有重新运行科学矩阵。`verify_reference_entries.py` 可重复此检查；`calibrate.py` 后续参考入口使用同一固定镜像与 receipt 路径。
+
 连续模型用 `idt`，合法替代用电容电流方程 `ddt`。数据模型从完整训练轨迹辨识静态曲线、非线性二阶响应与偏置启动状态；替代模型使用 `ddt` 实现同一已拟合自由运行状态。测量模块的参考实现保存数组后计算指标，替代实现在线累积压摆而后扫描末窗。负例覆盖静态跟随、错误单极点、正负压摆混同、关闭错误清状态、漏启动、恢复清状态、单向测量、first-entry、沿用旧 valid、参数冒充测量和 pulse-only 刺激。
 
 最终选定 19 个变体、57 个条件全部实际成功评分：6 个正确实现的 18 条件全通过；13 个语义负变体均在可区分条件被检出，39 个负例条件中 38 个拒绝。A3 old-valid 在慢 DUT 上通过，因为前五轮 valid 都为 0，第六轮首次为 1 后没有下一次 launch；该通过保留，不计拒绝。

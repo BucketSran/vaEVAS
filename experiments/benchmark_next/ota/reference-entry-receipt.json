@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "purpose": "Supplemental reference-entry execution; does not reconstruct earlier image identity",
+  "earlier_entry_image_identity": "unknown: historical tag-based invocation retained no Docker image receipt",
+  "command_path_notation": "${CHECKOUT} denotes repository root; raw absolute command receipts remain in ignored runs",
+  "entry_tool_sha256": "b8c64c881f46041b926a2b9aec94d1a963867941e4471a23b2ee8dedefec4e42",
+  "final_calibration_sha256": "4e42994b5dfa32bb9d9c49400107b23506383f46f868e2d758126d10e8152fb4",
+  "delivery_material_manifest_sha256": "830b1110628a3f327e62c28de240b95a88f2e4450fc6e1b9b52d13168d1dbd12",
+  "records": [
+    {
+      "task": "v3-ota-continuous",
+      "requested_image": "python:3.12.12-slim-bookworm@sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c",
+      "actual_image_id": "sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c",
+      "repo_digests": [
+        "python@sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c"
+      ],
+      "architecture": "arm64",
+      "container_id": "3ca3541fd0d7cb22652f35a275ee516a896aa8e26e5a2dc7577eb9d412bb8f5b",
+      "network_mode": "none",
+      "command": [
+        "docker",
+        "create",
+        "--network",
+        "none",
+        "-v",
+        "${CHECKOUT}/benchmark/tasks/v3-ota-continuous/solution:/solution:ro",
+        "-v",
+        "${CHECKOUT}/runs/ota-reference-entry-pinned/v3-ota-continuous:/work",
+        "--entrypoint",
+        "sh",
+        "python:3.12.12-slim-bookworm@sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c",
+        "/solution/solve.sh"
+      ],
+      "start_command": [
+        "docker",
+        "start",
+        "-a",
+        "3ca3541fd0d7cb22652f35a275ee516a896aa8e26e5a2dc7577eb9d412bb8f5b"
+      ],
+      "started_at_utc": "2026-10-11T07:55:52.517046+00:00",
+      "finished_at_utc": "2026-10-11T07:55:53.316780+00:00",
+      "container_started_at": "2026-10-11T07:55:53.09192601Z",
+      "container_finished_at": "2026-10-11T07:55:53.312562186Z",
+      "exit_code": 0,
+      "script_sha256": "644dc4df795627a25ad82bec407f3639cb7e64438cf70eb89889d6c136fc20f0",
+      "solution_sha256": "73453a7046a2105d6e59973273233102ce6471855ca7470d365da69a01c1c27c",
+      "output_sha256": "73453a7046a2105d6e59973273233102ce6471855ca7470d365da69a01c1c27c",
+      "stdout": "",
+      "stderr": "",
+      "spectre_reference_jobs": [
+        "bf-56b04741c6354d56a3c2-heldout-0",
+        "bf-d969e2d0f0804915a2bb-heldout-1",
+        "bf-3e18e33890d744218df6-heldout-2"
+      ],
+      "matches_final_spectre_candidate": true
+    },
+    {
+      "task": "v3-ota-data-model",
+      "requested_image": "python:3.12.12-slim-bookworm@sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c",
+      "actual_image_id": "sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c",
+      "repo_digests": [
+        "python@sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c"
+      ],
+      "architecture": "arm64",
+      "container_id": "87afa53a2fbc35fca9f582714893827a60f05f68819c86787f37b50acfdd2cac",
+      "network_mode": "none",
+      "command": [
+        "docker",
+        "create",
+        "--network",
+        "none",
+        "-v",
+        "${CHECKOUT}/benchmark/tasks/v3-ota-data-model/solution:/solution:ro",
+        "-v",
+        "${CHECKOUT}/runs/ota-reference-entry-pinned/v3-ota-data-model:/work",
+        "--entrypoint",
+        "sh",
+        "python:3.12.12-slim-bookworm@sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c",
+        "/solution/solve.sh"
+      ],
+      "start_command": [
+        "docker",
+        "start",
+        "-a",
+        "87afa53a2fbc35fca9f582714893827a60f05f68819c86787f37b50acfdd2cac"
+      ],
+      "started_at_utc": "2026-10-11T07:55:53.409373+00:00",
+      "finished_at_utc": "2026-10-11T07:55:54.353219+00:00",
+      "container_started_at": "2026-10-11T07:55:53.846413965Z",
+      "container_finished_at": "2026-10-11T07:55:54.304155354Z",
+      "exit_code": 0,
+      "script_sha256": "644dc4df795627a25ad82bec407f3639cb7e64438cf70eb89889d6c136fc20f0",
+      "solution_sha256": "4804f079155d80103876f82c7ad6979d029e345fd793b87933d2e90f46ae6816",
+      "output_sha256": "4804f079155d80103876f82c7ad6979d029e345fd793b87933d2e90f46ae6816",
+      "stdout": "",
+      "stderr": "",
+      "spectre_reference_jobs": [
+        "bf-82c72ad05d52432fa003-test-0",
+        "bf-207ecd8a42fc4889a9b6-test-1",
+        "bf-95a864c2cebd470c89ea-test-2"
+      ],
+      "matches_final_spectre_candidate": true
+    },
+    {
+      "task": "v3-ota-step-measurement",
+      "requested_image": "python:3.12.12-slim-bookworm@sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c",
+      "actual_image_id": "sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c",
+      "repo_digests": [
+        "python@sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c"
+      ],
+      "architecture": "arm64",
+      "container_id": "1f1adc3039a3cbf71a7d5ffc67fda7bab71b8754924daec26e0d3e05f378f60f",
+      "network_mode": "none",
+      "command": [
+        "docker",
+        "create",
+        "--network",
+        "none",
+        "-v",
+        "${CHECKOUT}/benchmark/tasks/v3-ota-step-measurement/solution:/solution:ro",
+        "-v",
+        "${CHECKOUT}/runs/ota-reference-entry-pinned/v3-ota-step-measurement:/work",
+        "--entrypoint",
+        "sh",
+        "python:3.12.12-slim-bookworm@sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c",
+        "/solution/solve.sh"
+      ],
+      "start_command": [
+        "docker",
+        "start",
+        "-a",
+        "1f1adc3039a3cbf71a7d5ffc67fda7bab71b8754924daec26e0d3e05f378f60f"
+      ],
+      "started_at_utc": "2026-10-11T07:55:54.408139+00:00",
+      "finished_at_utc": "2026-10-11T07:55:54.929264+00:00",
+      "container_started_at": "2026-10-11T07:55:54.790059296Z",
+      "container_finished_at": "2026-10-11T07:55:54.923581391Z",
+      "exit_code": 0,
+      "script_sha256": "644dc4df795627a25ad82bec407f3639cb7e64438cf70eb89889d6c136fc20f0",
+      "solution_sha256": "abc9d1effa7471ab7a64afd2759c3df10b5cb480bb6a7b090639d376bcb4e1a2",
+      "output_sha256": "abc9d1effa7471ab7a64afd2759c3df10b5cb480bb6a7b090639d376bcb4e1a2",
+      "stdout": "",
+      "stderr": "",
+      "spectre_reference_jobs": [
+        "bf-c659284d2abc4ced9268-heldout-healthy",
+        "bf-89a823395fcb4e5fac6c-heldout-slow",
+        "bf-712b5f4e207840f2be68-heldout-asymmetric"
+      ],
+      "matches_final_spectre_candidate": true
+    }
+  ]
+}
