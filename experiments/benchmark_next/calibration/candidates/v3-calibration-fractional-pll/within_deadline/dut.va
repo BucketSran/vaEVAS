@@ -1,0 +1,41 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module fractional_pll(ref,rst,n,frac,dco,fb,tune,lock);
+input ref,rst,n,frac,dco;output fb,tune,lock;electrical ref,rst,n,frac,dco,fb,tune,lock;
+integer count,divide,state,up,dn,good,last_n;
+real acc,last_frac,control,filtered,epoch;
+analog begin
+ @(initial_step)begin count=0;divide=3;state=0;up=0;dn=0;good=0;last_n=3;last_frac=0;acc=0;control=1;filtered=0;epoch=0;end
+ @(cross(V(rst)-0.45,+1))begin count=0;divide=$rtoi(V(n)+0.5);state=0;up=0;dn=0;good=0;acc=0;control=1;filtered=0;epoch=$abstime;end
+ @(cross(V(ref)-0.45,+1))begin
+  if(V(rst)<0.45)begin up=1;if(dn)begin up=0;dn=0;end end
+ end
+ @(cross(V(fb)-0.45,+1))begin
+  if(V(rst)<0.45)begin dn=1;if(up)begin up=0;dn=0;end end
+ end
+ @(cross(V(dco)-0.45,+1))begin
+  if(V(rst)<0.45)begin
+   count=count+1;
+   if(count>=divide)begin
+    count=0;state=1;acc=acc+V(frac);divide=$rtoi(V(n)+0.5);
+    if(acc>=1)begin divide=divide+1;acc=acc-1;end
+   end else state=0;
+  end else begin count=0;state=0;end
+ end
+ @(timer(0,2n))begin
+  if(V(rst)>0.45 || $rtoi(V(n)+0.5)!=last_n || abs(V(frac)-last_frac)>0.001)begin
+   count=0;divide=$rtoi(V(n)+0.5);state=0;up=0;dn=0;good=0;acc=0;control=1;filtered=0;epoch=$abstime;
+  end else begin
+   control=control+0.0004*(up-dn);if(control<0)control=0;if(control>4)control=4;
+   filtered=filtered+0.01*((up-dn)-filtered);
+   if($abstime-epoch>5u && abs(filtered)<0.2)good=good+1;else good=0;
+  end
+  last_n=$rtoi(V(n)+0.5);last_frac=V(frac);
+ end
+ @(timer(150u))begin epoch=$abstime;good=0;end
+ @(timer(175u))begin epoch=$abstime;good=0;end
+ V(tune)<+control+0.5*(up-dn);
+ V(fb)<+transition(state*0.9,0,100p);
+ V(lock)<+transition((good>=250 && $abstime-epoch>=14u)*0.9,0,100p);
+end
+endmodule

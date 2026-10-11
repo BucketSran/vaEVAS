@@ -1,0 +1,16 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module healthy_front(inp,inn,offset,cmoffset,code,outp,outn);
+input inp,inn,offset,cmoffset,code;output outp,outn;electrical inp,inn,offset,cmoffset,code,outp,outn;
+parameter real mode=0,actuator=1,gain=2,static_trim=-0.02;
+real differential,common,p,m;
+analog begin
+ differential=gain*V(inp,inn)+V(offset)+static_trim;
+ common=0.5+V(cmoffset);
+ if(mode<0.5)differential=differential+0.002*actuator*V(code);
+ else common=common+0.002*actuator*V(code);
+ p=common+0.5*differential;m=common-0.5*differential;
+ if(p<0.05)p=0.05;if(p>0.95)p=0.95;if(m<0.05)m=0.05;if(m>0.95)m=0.95;
+ V(outp)<+p;V(outn)<+m;
+end
+endmodule

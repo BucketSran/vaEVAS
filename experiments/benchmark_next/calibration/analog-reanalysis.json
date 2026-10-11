@@ -1,0 +1,3022 @@
+{
+  "kind": "archived-real-waveform-reanalysis",
+  "analysis_tool_sha256": "6011e19a530bc74e710c5352cae64f17a49406af4a309994c4fb79e8ffe1ffce",
+  "new_simulations": 0,
+  "reanalyzed_conditions": 24,
+  "baseline_report_sha256": "d4bbed558b1c9662f23df4b96ce4294642b70da90ac7a1006a3e567408c9d241",
+  "unchanged_material_assets": {
+    "benchmark/tasks/v3-calibration-common-mode-servo/SOURCE.md": "d2bad4b95fbf647aec4ac169048a6c39a0e050337aae73e1b12fa9daaa75ee18",
+    "benchmark/tasks/v3-calibration-common-mode-servo/environment/Dockerfile": "f7a9a369169cb06752f90bbfe0411bc9e8fe1f6940790f61701b43d4bae0bead",
+    "benchmark/tasks/v3-calibration-common-mode-servo/environment/public/acceptance-windows.json": "1854794e5a40cff32e006e6b2ad2cc17eb496dce5751d7cb9c14d2b843300bad",
+    "benchmark/tasks/v3-calibration-common-mode-servo/environment/public/dut.va": "f144ec11c2f4915d0aa37c235daa624c13cd557ff1abc50da7d76ddbb2e9506b",
+    "benchmark/tasks/v3-calibration-common-mode-servo/environment/public/healthy.va": "78a8c943a1b77968aceb3c886c6eac71ca069ec2c7aaa676a8dd6a62ba8b3e58",
+    "benchmark/tasks/v3-calibration-common-mode-servo/environment/public/interface.json": "459c6ecdc2a72bee8ef2c7eb20533354781b8d420c66d7b6a50a14ebc273d31f",
+    "benchmark/tasks/v3-calibration-common-mode-servo/environment/public/public-default.scs": "08c2e5f8aec7e4e409c0f5093ee3b3c5f4703f8a7c1dbd7fe5297de557668f66",
+    "benchmark/tasks/v3-calibration-common-mode-servo/instruction.md": "5a4e0f86ecc963d040b7841edcf871947dc63edc923a22af612304d1425d4ee7",
+    "benchmark/tasks/v3-calibration-common-mode-servo/solution/dut.va": "5bde679b1b97d6a2fa4dc7e63fa9d645796f604391e03376bd37925ecf463ea7",
+    "benchmark/tasks/v3-calibration-common-mode-servo/solution/solve.sh": "644dc4df795627a25ad82bec407f3639cb7e64438cf70eb89889d6c136fc20f0",
+    "benchmark/tasks/v3-calibration-common-mode-servo/task.toml": "1196dae408cdcce9e3c8c638dc538fffa195aea7cd73c6c55c24b0025999530d",
+    "benchmark/tasks/v3-calibration-common-mode-servo/tests/adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+    "benchmark/tasks/v3-calibration-common-mode-servo/tests/cases.json": "f13b2f1e882611e670b18acb292179172ee98400c84d5ceddb3ac52cc0a832d5",
+    "benchmark/tasks/v3-calibration-common-mode-servo/tests/contract.json": "5f0a29d73839d9f6760dd5fc700674c002d2deccf194469362175bc1a9404135",
+    "benchmark/tasks/v3-calibration-common-mode-servo/tests/test.sh": "14f42b9d09a4e88d7b1f75d7e168e550c6418a8a9571dba0856b865edab4ed48",
+    "benchmark/tasks/v3-calibration-common-mode-servo/tests/v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+    "benchmark/tasks/v3-calibration-common-mode-servo/tests/verify.py": "cb1f84f00ab5cc678af137db3ce66605a85c060965d2f6991537a7f9394180b9",
+    "benchmark/tasks/v3-calibration-continuous-offset/SOURCE.md": "2b0d06273c4186eccd32824ccabb168a8f0d65531d61a2481d95bacc62986583",
+    "benchmark/tasks/v3-calibration-continuous-offset/environment/Dockerfile": "f7a9a369169cb06752f90bbfe0411bc9e8fe1f6940790f61701b43d4bae0bead",
+    "benchmark/tasks/v3-calibration-continuous-offset/environment/public/acceptance-windows.json": "1854794e5a40cff32e006e6b2ad2cc17eb496dce5751d7cb9c14d2b843300bad",
+    "benchmark/tasks/v3-calibration-continuous-offset/environment/public/dut.va": "f144ec11c2f4915d0aa37c235daa624c13cd557ff1abc50da7d76ddbb2e9506b",
+    "benchmark/tasks/v3-calibration-continuous-offset/environment/public/healthy.va": "78a8c943a1b77968aceb3c886c6eac71ca069ec2c7aaa676a8dd6a62ba8b3e58",
+    "benchmark/tasks/v3-calibration-continuous-offset/environment/public/interface.json": "4ae52ff32e3b6dea876a79793eecee5a055926daefd45348aff65e0d4783323e",
+    "benchmark/tasks/v3-calibration-continuous-offset/environment/public/public-default.scs": "495016b41ee4cbd399d7a7d148c301bfb420ac0383aee0c9c0b5ab9eff67ad47",
+    "benchmark/tasks/v3-calibration-continuous-offset/instruction.md": "c35702ca2d62d9519bdb0a898ce89a67fe510a690514d32ce3f5dcef5ebc835d",
+    "benchmark/tasks/v3-calibration-continuous-offset/solution/dut.va": "5bde679b1b97d6a2fa4dc7e63fa9d645796f604391e03376bd37925ecf463ea7",
+    "benchmark/tasks/v3-calibration-continuous-offset/solution/solve.sh": "644dc4df795627a25ad82bec407f3639cb7e64438cf70eb89889d6c136fc20f0",
+    "benchmark/tasks/v3-calibration-continuous-offset/task.toml": "fe741190d56eb56677a68e3ff8ceb7dac09832a33b7685bb9d4d73f4c04a58dc",
+    "benchmark/tasks/v3-calibration-continuous-offset/tests/adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+    "benchmark/tasks/v3-calibration-continuous-offset/tests/cases.json": "332a73b97d5faaf4c53220cb04954d660d342907a79d242cd5e81e299ae1b2fb",
+    "benchmark/tasks/v3-calibration-continuous-offset/tests/contract.json": "81b55a41296ddda9fca5ef87467ff942ae76b8339997b978e3a0ee7452845d49",
+    "benchmark/tasks/v3-calibration-continuous-offset/tests/test.sh": "14f42b9d09a4e88d7b1f75d7e168e550c6418a8a9571dba0856b865edab4ed48",
+    "benchmark/tasks/v3-calibration-continuous-offset/tests/v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+    "benchmark/tasks/v3-calibration-continuous-offset/tests/verify.py": "cb1f84f00ab5cc678af137db3ce66605a85c060965d2f6991537a7f9394180b9"
+  },
+  "reason": "Only shared checker source changed in D2/D3; circuits, stimuli, candidate, parser and physical acceptance contracts unchanged. Preserve execution identity and add a new analysis identity.",
+  "conditions": [
+    {
+      "task_id": "v3-calibration-continuous-offset",
+      "variant": "reference",
+      "condition_id": "continuous-offset-actuator-0.8",
+      "job_id": "bf-191b907ddf034074ac83-continuous-offset-actuato",
+      "execution_candidate_sha256": "ba66111f5556419557fc17873c9784af11369bfa69604413a334b1f845c700e4",
+      "execution_criteria_sha256": "2105305d87a6352b4034b9b56f9ed6b69c0dcd2fcd4705b73802228ad67233fb",
+      "execution_report_sha256": "5246e1b1dc537b605c0d6d4689d29025a65ac6e7d71afaeb4bb0ca5d23c3db52",
+      "archive_sha256": "6159dd9b558eb7391002689f1b9d9f41c56d24330e9501824fc278d33a8caf7c",
+      "analysis_sources": {
+        "v2_next_calibration.py": "7efea5c0bbd65a0f644bd702d6e4b0540f867768a102ce3748a8489ee2c32f96",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "cases.json": "332a73b97d5faaf4c53220cb04954d660d342907a79d242cd5e81e299ae1b2fb",
+        "contract.json": "81b55a41296ddda9fca5ef87467ff942ae76b8339997b978e3a0ee7452845d49",
+        "instruction.md": "c35702ca2d62d9519bdb0a898ce89a67fe510a690514d32ce3f5dcef5ebc835d"
+      },
+      "score": 1,
+      "cases": [
+        {
+          "name": "continuous-offset-actuator-0.8",
+          "waveform_sha256": "f711ed9deac5b7985e92250990c50143e941efad382c7a6e098e974b1b6e3378",
+          "waveform_rows": 2536,
+          "netlist_sha256": "495016b41ee4cbd399d7a7d148c301bfb420ac0383aee0c9c0b5ab9eff67ad47",
+          "support_sha256": {
+            "healthy.va": "78a8c943a1b77968aceb3c886c6eac71ca069ec2c7aaa676a8dd6a62ba8b3e58"
+          },
+          "passed": true,
+          "checks": [
+            {
+              "name": "0:signal-plus-residual",
+              "actual": 0.00901250000000002,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "1:signal-plus-residual",
+              "actual": 0.0008000000000001097,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "2:signal-plus-residual",
+              "actual": 0.005363636363636348,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "3:signal-plus-residual",
+              "actual": 0.004149999999999807,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "4:signal-plus-residual",
+              "actual": 0.0035999999999999782,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "5:signal-plus-residual",
+              "actual": 0.004699999999999996,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "disabled-code-hold",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "reset-code-clear",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "integer-code-after-transition",
+              "actual": 5.0055555555952175e-08,
+              "limit": 1.5e-07,
+              "passed": true
+            },
+            {
+              "name": "actuator-code-bound",
+              "actual": 64.0,
+              "limit": 64.01,
+              "passed": true
+            },
+            {
+              "name": "output-rail-low",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            },
+            {
+              "name": "output-rail-high",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "analysis_identity_sha256": "8a12ae0f3c00ee25b18b61491331c4d892b7c321183c283be799e7d5dcb93d80"
+    },
+    {
+      "task_id": "v3-calibration-continuous-offset",
+      "variant": "reference",
+      "condition_id": "continuous-offset-actuator-1.2",
+      "job_id": "bf-3fde94b54d544cdf9fd1-continuous-offset-actuato",
+      "execution_candidate_sha256": "ba66111f5556419557fc17873c9784af11369bfa69604413a334b1f845c700e4",
+      "execution_criteria_sha256": "2105305d87a6352b4034b9b56f9ed6b69c0dcd2fcd4705b73802228ad67233fb",
+      "execution_report_sha256": "7a41ba7c708bbaeda431aa1238fdc2bfcdca1e398db887f347136e89161c56df",
+      "archive_sha256": "d889ebd763510861699b5e3568d1a431d35a1778ea33fc173951a88f0b2ccf08",
+      "analysis_sources": {
+        "v2_next_calibration.py": "7efea5c0bbd65a0f644bd702d6e4b0540f867768a102ce3748a8489ee2c32f96",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "cases.json": "332a73b97d5faaf4c53220cb04954d660d342907a79d242cd5e81e299ae1b2fb",
+        "contract.json": "81b55a41296ddda9fca5ef87467ff942ae76b8339997b978e3a0ee7452845d49",
+        "instruction.md": "c35702ca2d62d9519bdb0a898ce89a67fe510a690514d32ce3f5dcef5ebc835d"
+      },
+      "score": 1,
+      "cases": [
+        {
+          "name": "continuous-offset-actuator-1.2",
+          "waveform_sha256": "d6d4475662f3f7c63b9647f79083aaff3300ebb44ab4ec1335b121e9b1d02f78",
+          "waveform_rows": 2487,
+          "netlist_sha256": "237afece44a1f8ffa2e851bdfb7cd57f12683d3f978157be02eb0a5485378d7c",
+          "support_sha256": {
+            "healthy.va": "78a8c943a1b77968aceb3c886c6eac71ca069ec2c7aaa676a8dd6a62ba8b3e58"
+          },
+          "passed": true,
+          "checks": [
+            {
+              "name": "0:signal-plus-residual",
+              "actual": 0.005930000000000088,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "1:signal-plus-residual",
+              "actual": 0.0016000000000001152,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "2:signal-plus-residual",
+              "actual": 0.00509090909090909,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "3:signal-plus-residual",
+              "actual": 0.0037999999999999007,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "4:signal-plus-residual",
+              "actual": 0.0032000000000000223,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "5:signal-plus-residual",
+              "actual": 0.004400000000000029,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "disabled-code-hold",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "reset-code-clear",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "integer-code-after-transition",
+              "actual": 0,
+              "limit": 1.5e-07,
+              "passed": true
+            },
+            {
+              "name": "actuator-code-bound",
+              "actual": 64.0,
+              "limit": 64.01,
+              "passed": true
+            },
+            {
+              "name": "output-rail-low",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            },
+            {
+              "name": "output-rail-high",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "analysis_identity_sha256": "18771575f297c9d75231822d2ba3ce28c63d6ef6f0bd1e9e9326660fea6fff31"
+    },
+    {
+      "task_id": "v3-calibration-continuous-offset",
+      "variant": "alternative",
+      "condition_id": "continuous-offset-actuator-0.8",
+      "job_id": "bf-3d24aefbfc6b4dfbbbd2-continuous-offset-actuato",
+      "execution_candidate_sha256": "3fcfd5977dc0a06bb893a1a27c9950a9c5b4a0ad99565a22a29568600e734f70",
+      "execution_criteria_sha256": "2105305d87a6352b4034b9b56f9ed6b69c0dcd2fcd4705b73802228ad67233fb",
+      "execution_report_sha256": "a29e7703ffe5ee9520f036eef628bffca7c3c64fc03d281284cac6d290ae0435",
+      "archive_sha256": "50f02d1c25e17c9fa13efc382cc95da36eda620dcfb01e7b6b1a5660509a7115",
+      "analysis_sources": {
+        "v2_next_calibration.py": "7efea5c0bbd65a0f644bd702d6e4b0540f867768a102ce3748a8489ee2c32f96",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "cases.json": "332a73b97d5faaf4c53220cb04954d660d342907a79d242cd5e81e299ae1b2fb",
+        "contract.json": "81b55a41296ddda9fca5ef87467ff942ae76b8339997b978e3a0ee7452845d49",
+        "instruction.md": "c35702ca2d62d9519bdb0a898ce89a67fe510a690514d32ce3f5dcef5ebc835d"
+      },
+      "score": 1,
+      "cases": [
+        {
+          "name": "continuous-offset-actuator-0.8",
+          "waveform_sha256": "29b2fffcdfe6d435e9bc2654e2f7d34184d645d07f753796bc1fa72ce54f1a65",
+          "waveform_rows": 2514,
+          "netlist_sha256": "495016b41ee4cbd399d7a7d148c301bfb420ac0383aee0c9c0b5ab9eff67ad47",
+          "support_sha256": {
+            "healthy.va": "78a8c943a1b77968aceb3c886c6eac71ca069ec2c7aaa676a8dd6a62ba8b3e58"
+          },
+          "passed": true,
+          "checks": [
+            {
+              "name": "0:signal-plus-residual",
+              "actual": 0.005812500000000095,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "1:signal-plus-residual",
+              "actual": 0.0008000000000001097,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "2:signal-plus-residual",
+              "actual": 0.005363636363636348,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "3:signal-plus-residual",
+              "actual": 0.0025499999999998163,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "4:signal-plus-residual",
+              "actual": 0.001999999999999988,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "5:signal-plus-residual",
+              "actual": 0.00309999999999995,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "disabled-code-hold",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "reset-code-clear",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "integer-code-after-transition",
+              "actual": 5.0055555556602696e-08,
+              "limit": 1.5e-07,
+              "passed": true
+            },
+            {
+              "name": "actuator-code-bound",
+              "actual": 64.0,
+              "limit": 64.01,
+              "passed": true
+            },
+            {
+              "name": "output-rail-low",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            },
+            {
+              "name": "output-rail-high",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "analysis_identity_sha256": "33b36a2ea79b1ba000dc9bd7f60a0b93ac5ae0217937a6674a6d62527443094d"
+    },
+    {
+      "task_id": "v3-calibration-continuous-offset",
+      "variant": "alternative",
+      "condition_id": "continuous-offset-actuator-1.2",
+      "job_id": "bf-a12dbca89b9b4ab6ad53-continuous-offset-actuato",
+      "execution_candidate_sha256": "3fcfd5977dc0a06bb893a1a27c9950a9c5b4a0ad99565a22a29568600e734f70",
+      "execution_criteria_sha256": "2105305d87a6352b4034b9b56f9ed6b69c0dcd2fcd4705b73802228ad67233fb",
+      "execution_report_sha256": "40622456e05b256a0ad029fc28ea020c988a2bf8d3cb082c0222378840d1c0ae",
+      "archive_sha256": "d1b6aea96fdab19f53d495381eeab18b690e1ef6052ab39fb4797d8647eff345",
+      "analysis_sources": {
+        "v2_next_calibration.py": "7efea5c0bbd65a0f644bd702d6e4b0540f867768a102ce3748a8489ee2c32f96",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "cases.json": "332a73b97d5faaf4c53220cb04954d660d342907a79d242cd5e81e299ae1b2fb",
+        "contract.json": "81b55a41296ddda9fca5ef87467ff942ae76b8339997b978e3a0ee7452845d49",
+        "instruction.md": "c35702ca2d62d9519bdb0a898ce89a67fe510a690514d32ce3f5dcef5ebc835d"
+      },
+      "score": 1,
+      "cases": [
+        {
+          "name": "continuous-offset-actuator-1.2",
+          "waveform_sha256": "54ee2e1b0c890ea4ba3080878b9c172c8b32e82ef4e260dc70c716dc6114d62e",
+          "waveform_rows": 2582,
+          "netlist_sha256": "237afece44a1f8ffa2e851bdfb7cd57f12683d3f978157be02eb0a5485378d7c",
+          "support_sha256": {
+            "healthy.va": "78a8c943a1b77968aceb3c886c6eac71ca069ec2c7aaa676a8dd6a62ba8b3e58"
+          },
+          "passed": true,
+          "checks": [
+            {
+              "name": "0:signal-plus-residual",
+              "actual": 0.005930000000000088,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "1:signal-plus-residual",
+              "actual": 0.003200000000000036,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "2:signal-plus-residual",
+              "actual": 0.003490909090909211,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "3:signal-plus-residual",
+              "actual": 0.0035600000000000076,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "4:signal-plus-residual",
+              "actual": 0.0032000000000000223,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "5:signal-plus-residual",
+              "actual": 0.004400000000000029,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "disabled-code-hold",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "reset-code-clear",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "integer-code-after-transition",
+              "actual": 5.005555555559981e-08,
+              "limit": 1.5e-07,
+              "passed": true
+            },
+            {
+              "name": "actuator-code-bound",
+              "actual": 64.0,
+              "limit": 64.01,
+              "passed": true
+            },
+            {
+              "name": "output-rail-low",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            },
+            {
+              "name": "output-rail-high",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "analysis_identity_sha256": "89db0a91626156bac6086abed58e6151d24092bba0dba9dc1dd98eed07aa8131"
+    },
+    {
+      "task_id": "v3-calibration-continuous-offset",
+      "variant": "fixed_code",
+      "condition_id": "continuous-offset-actuator-0.8",
+      "job_id": "bf-f14ea25030a34f06a233-continuous-offset-actuato",
+      "execution_candidate_sha256": "a069373854271109c6a773ce188386ff10beb1d7ea0ecc07c297859b2f7784d2",
+      "execution_criteria_sha256": "2105305d87a6352b4034b9b56f9ed6b69c0dcd2fcd4705b73802228ad67233fb",
+      "execution_report_sha256": "b941fd11e0f553b1c1308dd53ac23a61b34b5adca7a3619b77efa304cadf3f51",
+      "archive_sha256": "12374bb3ad69e78ed56ee1334c04353f20c4a2a8c61bb8dedecd4e47ae21dfe0",
+      "analysis_sources": {
+        "v2_next_calibration.py": "7efea5c0bbd65a0f644bd702d6e4b0540f867768a102ce3748a8489ee2c32f96",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "cases.json": "332a73b97d5faaf4c53220cb04954d660d342907a79d242cd5e81e299ae1b2fb",
+        "contract.json": "81b55a41296ddda9fca5ef87467ff942ae76b8339997b978e3a0ee7452845d49",
+        "instruction.md": "c35702ca2d62d9519bdb0a898ce89a67fe510a690514d32ce3f5dcef5ebc835d"
+      },
+      "score": 0,
+      "cases": [
+        {
+          "name": "continuous-offset-actuator-0.8",
+          "waveform_sha256": "343defa36b4d12ce2fb40ed66ed823860e40226dbe89117daad7a122cb918979",
+          "waveform_rows": 2395,
+          "netlist_sha256": "495016b41ee4cbd399d7a7d148c301bfb420ac0383aee0c9c0b5ab9eff67ad47",
+          "support_sha256": {
+            "healthy.va": "78a8c943a1b77968aceb3c886c6eac71ca069ec2c7aaa676a8dd6a62ba8b3e58"
+          },
+          "passed": false,
+          "checks": [
+            {
+              "name": "0:signal-plus-residual",
+              "actual": 0.031412499999999996,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "1:signal-plus-residual",
+              "actual": 0.0200000000000001,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "2:signal-plus-residual",
+              "actual": 0.021363636363636362,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "3:signal-plus-residual",
+              "actual": 0.018225000000001323,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "4:signal-plus-residual",
+              "actual": 0.017712500000000242,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "5:signal-plus-residual",
+              "actual": 0.01021250000000018,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "disabled-code-hold",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "reset-code-clear",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "integer-code-after-transition",
+              "actual": 0,
+              "limit": 1.5e-07,
+              "passed": true
+            },
+            {
+              "name": "actuator-code-bound",
+              "actual": 0.0,
+              "limit": 64.01,
+              "passed": true
+            },
+            {
+              "name": "output-rail-low",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            },
+            {
+              "name": "output-rail-high",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "analysis_identity_sha256": "81331892a9684dda53e32b84ad213fd436c264a82506795413ebc7402bfca877"
+    },
+    {
+      "task_id": "v3-calibration-continuous-offset",
+      "variant": "fixed_code",
+      "condition_id": "continuous-offset-actuator-1.2",
+      "job_id": "bf-2fb857083e024608a189-continuous-offset-actuato",
+      "execution_candidate_sha256": "a069373854271109c6a773ce188386ff10beb1d7ea0ecc07c297859b2f7784d2",
+      "execution_criteria_sha256": "2105305d87a6352b4034b9b56f9ed6b69c0dcd2fcd4705b73802228ad67233fb",
+      "execution_report_sha256": "aecf69884e055d80e69c27b3a1cd7887b2dadb7bc8fb6c491cb370e3057719a5",
+      "archive_sha256": "c9179aa599e5d51175ed15abd7403533cc0e344516d0fabfe069ffac3ce8fe0d",
+      "analysis_sources": {
+        "v2_next_calibration.py": "7efea5c0bbd65a0f644bd702d6e4b0540f867768a102ce3748a8489ee2c32f96",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "cases.json": "332a73b97d5faaf4c53220cb04954d660d342907a79d242cd5e81e299ae1b2fb",
+        "contract.json": "81b55a41296ddda9fca5ef87467ff942ae76b8339997b978e3a0ee7452845d49",
+        "instruction.md": "c35702ca2d62d9519bdb0a898ce89a67fe510a690514d32ce3f5dcef5ebc835d"
+      },
+      "score": 0,
+      "cases": [
+        {
+          "name": "continuous-offset-actuator-1.2",
+          "waveform_sha256": "0c32230303ef16b5d1d4cc75c4f083b90a8dc454bd1a4ab99a05efaae78682d8",
+          "waveform_rows": 2395,
+          "netlist_sha256": "237afece44a1f8ffa2e851bdfb7cd57f12683d3f978157be02eb0a5485378d7c",
+          "support_sha256": {
+            "healthy.va": "78a8c943a1b77968aceb3c886c6eac71ca069ec2c7aaa676a8dd6a62ba8b3e58"
+          },
+          "passed": false,
+          "checks": [
+            {
+              "name": "0:signal-plus-residual",
+              "actual": 0.025130000000000027,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "1:signal-plus-residual",
+              "actual": 0.016000000000000097,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "2:signal-plus-residual",
+              "actual": 0.0170909090909091,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "3:signal-plus-residual",
+              "actual": 0.014580000000001092,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "4:signal-plus-residual",
+              "actual": 0.014170000000000238,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "5:signal-plus-residual",
+              "actual": 0.008170000000000233,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "disabled-code-hold",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "reset-code-clear",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "integer-code-after-transition",
+              "actual": 0,
+              "limit": 1.5e-07,
+              "passed": true
+            },
+            {
+              "name": "actuator-code-bound",
+              "actual": 0.0,
+              "limit": 64.01,
+              "passed": true
+            },
+            {
+              "name": "output-rail-low",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            },
+            {
+              "name": "output-rail-high",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "analysis_identity_sha256": "bb60645ccff14c546212904e52dcf7c418428dfd7c931e621d3e6b3cad782f26"
+    },
+    {
+      "task_id": "v3-calibration-continuous-offset",
+      "variant": "wrong_direction",
+      "condition_id": "continuous-offset-actuator-0.8",
+      "job_id": "bf-ad08138cb0a946b7a388-continuous-offset-actuato",
+      "execution_candidate_sha256": "670575ed81ec34e84bb05a44c057285fbdcdb381a2869a29cf9257b726c72a8b",
+      "execution_criteria_sha256": "2105305d87a6352b4034b9b56f9ed6b69c0dcd2fcd4705b73802228ad67233fb",
+      "execution_report_sha256": "cb61bb50bd54dcaa2f48dc1ecfbf0820a68cadf4b6d218ce9de690761e95117a",
+      "archive_sha256": "1446753bf0df46a07c54097bd005e420f9ca1936a15b5bf91c3d1a77b6ade333",
+      "analysis_sources": {
+        "v2_next_calibration.py": "7efea5c0bbd65a0f644bd702d6e4b0540f867768a102ce3748a8489ee2c32f96",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "cases.json": "332a73b97d5faaf4c53220cb04954d660d342907a79d242cd5e81e299ae1b2fb",
+        "contract.json": "81b55a41296ddda9fca5ef87467ff942ae76b8339997b978e3a0ee7452845d49",
+        "instruction.md": "c35702ca2d62d9519bdb0a898ce89a67fe510a690514d32ce3f5dcef5ebc835d"
+      },
+      "score": 0,
+      "cases": [
+        {
+          "name": "continuous-offset-actuator-0.8",
+          "waveform_sha256": "a45c73d65fff2ce00de5a9e1a7c7dadd9851f245e248668fa114f9dbd28b4751",
+          "waveform_rows": 2448,
+          "netlist_sha256": "495016b41ee4cbd399d7a7d148c301bfb420ac0383aee0c9c0b5ab9eff67ad47",
+          "support_sha256": {
+            "healthy.va": "78a8c943a1b77968aceb3c886c6eac71ca069ec2c7aaa676a8dd6a62ba8b3e58"
+          },
+          "passed": false,
+          "checks": [
+            {
+              "name": "0:signal-plus-residual",
+              "actual": 0.13381250000000006,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "1:signal-plus-residual",
+              "actual": 0.08240000000000013,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "2:signal-plus-residual",
+              "actual": 0.08899090909091023,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "3:signal-plus-residual",
+              "actual": 0.09214999999999983,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "4:signal-plus-residual",
+              "actual": 0.12011250000000001,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "5:signal-plus-residual",
+              "actual": 0.11261250000000023,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "disabled-code-hold",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "reset-code-clear",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "integer-code-after-transition",
+              "actual": 5.0055555555626914e-08,
+              "limit": 1.5e-07,
+              "passed": true
+            },
+            {
+              "name": "actuator-code-bound",
+              "actual": 64.0,
+              "limit": 64.01,
+              "passed": true
+            },
+            {
+              "name": "output-rail-low",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            },
+            {
+              "name": "output-rail-high",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "analysis_identity_sha256": "f77788b42b682d6bf964be34cf730f238a0ee5c24d4f3e681a6f242b51b9ef63"
+    },
+    {
+      "task_id": "v3-calibration-continuous-offset",
+      "variant": "wrong_direction",
+      "condition_id": "continuous-offset-actuator-1.2",
+      "job_id": "bf-c12ce1f336a548daa8c8-continuous-offset-actuato",
+      "execution_candidate_sha256": "670575ed81ec34e84bb05a44c057285fbdcdb381a2869a29cf9257b726c72a8b",
+      "execution_criteria_sha256": "2105305d87a6352b4034b9b56f9ed6b69c0dcd2fcd4705b73802228ad67233fb",
+      "execution_report_sha256": "41f316b77f45ec92f4eef446641679d3e925d811ea46e297fbc5714262c43803",
+      "archive_sha256": "923fc5d03e8b1a8caab8b10dbf9ee4a63ac698de083ac9148df8fbcf1e3298f3",
+      "analysis_sources": {
+        "v2_next_calibration.py": "7efea5c0bbd65a0f644bd702d6e4b0540f867768a102ce3748a8489ee2c32f96",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "cases.json": "332a73b97d5faaf4c53220cb04954d660d342907a79d242cd5e81e299ae1b2fb",
+        "contract.json": "81b55a41296ddda9fca5ef87467ff942ae76b8339997b978e3a0ee7452845d49",
+        "instruction.md": "c35702ca2d62d9519bdb0a898ce89a67fe510a690514d32ce3f5dcef5ebc835d"
+      },
+      "score": 0,
+      "cases": [
+        {
+          "name": "continuous-offset-actuator-1.2",
+          "waveform_sha256": "f522813238befff6d242cec440efc31c4c21cfaa72ff0a39f0a85fad54d18c7b",
+          "waveform_rows": 2440,
+          "netlist_sha256": "237afece44a1f8ffa2e851bdfb7cd57f12683d3f978157be02eb0a5485378d7c",
+          "support_sha256": {
+            "healthy.va": "78a8c943a1b77968aceb3c886c6eac71ca069ec2c7aaa676a8dd6a62ba8b3e58"
+          },
+          "passed": false,
+          "checks": [
+            {
+              "name": "0:signal-plus-residual",
+              "actual": 0.17873,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "1:signal-plus-residual",
+              "actual": 0.13760000000000014,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "2:signal-plus-residual",
+              "actual": 0.14287272727272815,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "3:signal-plus-residual",
+              "actual": 0.14539999999999986,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "4:signal-plus-residual",
+              "actual": 0.16776999999999997,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "5:signal-plus-residual",
+              "actual": 0.1617700000000002,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "disabled-code-hold",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "reset-code-clear",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "integer-code-after-transition",
+              "actual": 5.0055555555626914e-08,
+              "limit": 1.5e-07,
+              "passed": true
+            },
+            {
+              "name": "actuator-code-bound",
+              "actual": 64.0,
+              "limit": 64.01,
+              "passed": true
+            },
+            {
+              "name": "output-rail-low",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            },
+            {
+              "name": "output-rail-high",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "analysis_identity_sha256": "98240faca4f0360f8f075566bea74a8491f7391a8d35ed55693a68e3723f6d2b"
+    },
+    {
+      "task_id": "v3-calibration-continuous-offset",
+      "variant": "cancel_signal",
+      "condition_id": "continuous-offset-actuator-0.8",
+      "job_id": "bf-e3be9e26278b4bbfaa86-continuous-offset-actuato",
+      "execution_candidate_sha256": "e7e2b68c7599a8a004f34753ff1f7d415de3103cdc60d78fb8bfadf65fa2a2c5",
+      "execution_criteria_sha256": "2105305d87a6352b4034b9b56f9ed6b69c0dcd2fcd4705b73802228ad67233fb",
+      "execution_report_sha256": "7f91d86e4d0eddbaa0e3832d980f0504f5270efca1c6a1d2f5e4cf23ba5bf4ea",
+      "archive_sha256": "0a6354d753ce9e95f5534e9f890fd27f4e97cbd2b3ebbc45454f421a82cd3cbb",
+      "analysis_sources": {
+        "v2_next_calibration.py": "7efea5c0bbd65a0f644bd702d6e4b0540f867768a102ce3748a8489ee2c32f96",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "cases.json": "332a73b97d5faaf4c53220cb04954d660d342907a79d242cd5e81e299ae1b2fb",
+        "contract.json": "81b55a41296ddda9fca5ef87467ff942ae76b8339997b978e3a0ee7452845d49",
+        "instruction.md": "c35702ca2d62d9519bdb0a898ce89a67fe510a690514d32ce3f5dcef5ebc835d"
+      },
+      "score": 0,
+      "cases": [
+        {
+          "name": "continuous-offset-actuator-0.8",
+          "waveform_sha256": "bee6fbaec93db9d8ea08287dd7e767caa6b5e731f84c0f31688a5ed07fdfa8f7",
+          "waveform_rows": 2881,
+          "netlist_sha256": "495016b41ee4cbd399d7a7d148c301bfb420ac0383aee0c9c0b5ab9eff67ad47",
+          "support_sha256": {
+            "healthy.va": "78a8c943a1b77968aceb3c886c6eac71ca069ec2c7aaa676a8dd6a62ba8b3e58"
+          },
+          "passed": false,
+          "checks": [
+            {
+              "name": "0:signal-plus-residual",
+              "actual": 0.07665749999999999,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "1:signal-plus-residual",
+              "actual": 0.11920000000000003,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "2:signal-plus-residual",
+              "actual": 0.09002727272727257,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "3:signal-plus-residual",
+              "actual": 0.032095,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "4:signal-plus-residual",
+              "actual": 0.11811749999999999,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "5:signal-plus-residual",
+              "actual": 0.09492500000000004,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "disabled-code-hold",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "reset-code-clear",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "integer-code-after-transition",
+              "actual": 5.0055555555952175e-08,
+              "limit": 1.5e-07,
+              "passed": true
+            },
+            {
+              "name": "actuator-code-bound",
+              "actual": 64.0,
+              "limit": 64.01,
+              "passed": true
+            },
+            {
+              "name": "output-rail-low",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            },
+            {
+              "name": "output-rail-high",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "analysis_identity_sha256": "2501c52b221cbc137cdfddded6932f400b105883523e628c34068388ca94f9bf"
+    },
+    {
+      "task_id": "v3-calibration-continuous-offset",
+      "variant": "cancel_signal",
+      "condition_id": "continuous-offset-actuator-1.2",
+      "job_id": "bf-c7549e8bc7ed4a69b384-continuous-offset-actuato",
+      "execution_candidate_sha256": "e7e2b68c7599a8a004f34753ff1f7d415de3103cdc60d78fb8bfadf65fa2a2c5",
+      "execution_criteria_sha256": "2105305d87a6352b4034b9b56f9ed6b69c0dcd2fcd4705b73802228ad67233fb",
+      "execution_report_sha256": "486d75b3038caa5649108cf5257758e319d6e6fe7cf60656e98ccbce248efc7b",
+      "archive_sha256": "ed878d3ae45a5e24e6899c7b25384bc01c19147edaf6e0c8b1f1c408787fbb18",
+      "analysis_sources": {
+        "v2_next_calibration.py": "7efea5c0bbd65a0f644bd702d6e4b0540f867768a102ce3748a8489ee2c32f96",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "cases.json": "332a73b97d5faaf4c53220cb04954d660d342907a79d242cd5e81e299ae1b2fb",
+        "contract.json": "81b55a41296ddda9fca5ef87467ff942ae76b8339997b978e3a0ee7452845d49",
+        "instruction.md": "c35702ca2d62d9519bdb0a898ce89a67fe510a690514d32ce3f5dcef5ebc835d"
+      },
+      "score": 0,
+      "cases": [
+        {
+          "name": "continuous-offset-actuator-1.2",
+          "waveform_sha256": "06446beef200caa9dd2f998a77c58d2ac16a726a9d3b8168ff5e590d5ba210c5",
+          "waveform_rows": 2773,
+          "netlist_sha256": "237afece44a1f8ffa2e851bdfb7cd57f12683d3f978157be02eb0a5485378d7c",
+          "support_sha256": {
+            "healthy.va": "78a8c943a1b77968aceb3c886c6eac71ca069ec2c7aaa676a8dd6a62ba8b3e58"
+          },
+          "passed": false,
+          "checks": [
+            {
+              "name": "0:signal-plus-residual",
+              "actual": 0.12016599999999983,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "1:signal-plus-residual",
+              "actual": 0.11920000000000006,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "2:signal-plus-residual",
+              "actual": 0.11058181818181811,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "3:signal-plus-residual",
+              "actual": 0.049836000000000116,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "4:signal-plus-residual",
+              "actual": 0.120334,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "5:signal-plus-residual",
+              "actual": 0.12122,
+              "limit": 0.012,
+              "passed": false
+            },
+            {
+              "name": "disabled-code-hold",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "reset-code-clear",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "integer-code-after-transition",
+              "actual": 5.0055555555952175e-08,
+              "limit": 1.5e-07,
+              "passed": true
+            },
+            {
+              "name": "actuator-code-bound",
+              "actual": 64.0,
+              "limit": 64.01,
+              "passed": true
+            },
+            {
+              "name": "output-rail-low",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            },
+            {
+              "name": "output-rail-high",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "analysis_identity_sha256": "825e55e50d41a03a95b019380f477dc7f9cca504b943035c446b823f1ff3d0c8"
+    },
+    {
+      "task_id": "v3-calibration-continuous-offset",
+      "variant": "fractional_code",
+      "condition_id": "continuous-offset-actuator-0.8",
+      "job_id": "bf-485e853510c341eb9a34-continuous-offset-actuato",
+      "execution_candidate_sha256": "e77783aaabed999e268781356a5fbfa013e8df1d5a2126b2234ab383ebfdc3fc",
+      "execution_criteria_sha256": "2105305d87a6352b4034b9b56f9ed6b69c0dcd2fcd4705b73802228ad67233fb",
+      "execution_report_sha256": "9fa95e9c04719765f54c6b925b06169867c98210d32670e61441be37df3b6856",
+      "archive_sha256": "52761add14a08467fb5a09d252f6c378759faab8b8e6364c2554a4f10cd86f94",
+      "analysis_sources": {
+        "v2_next_calibration.py": "7efea5c0bbd65a0f644bd702d6e4b0540f867768a102ce3748a8489ee2c32f96",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "cases.json": "332a73b97d5faaf4c53220cb04954d660d342907a79d242cd5e81e299ae1b2fb",
+        "contract.json": "81b55a41296ddda9fca5ef87467ff942ae76b8339997b978e3a0ee7452845d49",
+        "instruction.md": "c35702ca2d62d9519bdb0a898ce89a67fe510a690514d32ce3f5dcef5ebc835d"
+      },
+      "score": 0,
+      "cases": [
+        {
+          "name": "continuous-offset-actuator-0.8",
+          "waveform_sha256": "a1c5a63b022b2f491640b8135bcd1a319a256806ba77d1ff660287e1303737ad",
+          "waveform_rows": 2545,
+          "netlist_sha256": "495016b41ee4cbd399d7a7d148c301bfb420ac0383aee0c9c0b5ab9eff67ad47",
+          "support_sha256": {
+            "healthy.va": "78a8c943a1b77968aceb3c886c6eac71ca069ec2c7aaa676a8dd6a62ba8b3e58"
+          },
+          "passed": false,
+          "checks": [
+            {
+              "name": "0:signal-plus-residual",
+              "actual": 0.008212500000000053,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "1:signal-plus-residual",
+              "actual": 0.0016000000000001152,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "2:signal-plus-residual",
+              "actual": 0.004563636363636436,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "3:signal-plus-residual",
+              "actual": 0.004949999999999774,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "4:signal-plus-residual",
+              "actual": 0.004399999999999835,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "5:signal-plus-residual",
+              "actual": 0.0039000000000000284,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "disabled-code-hold",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "reset-code-clear",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "integer-code-after-transition",
+              "actual": 0.0007505002500005556,
+              "limit": 1.5e-07,
+              "passed": false
+            },
+            {
+              "name": "actuator-code-bound",
+              "actual": 62.5,
+              "limit": 64.01,
+              "passed": true
+            },
+            {
+              "name": "output-rail-low",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            },
+            {
+              "name": "output-rail-high",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "analysis_identity_sha256": "9521256682126b020a97a88fd02e57f7a9e8676b14a2550f88c7a6234d1776ee"
+    },
+    {
+      "task_id": "v3-calibration-continuous-offset",
+      "variant": "fractional_code",
+      "condition_id": "continuous-offset-actuator-1.2",
+      "job_id": "bf-bcc80416b0b14b1e861c-continuous-offset-actuato",
+      "execution_candidate_sha256": "e77783aaabed999e268781356a5fbfa013e8df1d5a2126b2234ab383ebfdc3fc",
+      "execution_criteria_sha256": "2105305d87a6352b4034b9b56f9ed6b69c0dcd2fcd4705b73802228ad67233fb",
+      "execution_report_sha256": "689d760ad5a18f93217eebfa6b2bff0d8ffb3606c8098100faaf9b0c03da8073",
+      "archive_sha256": "ade6ed24e4e9f004b869d0c23528cfc098000985b2bfd87058805d70c27eb5c4",
+      "analysis_sources": {
+        "v2_next_calibration.py": "7efea5c0bbd65a0f644bd702d6e4b0540f867768a102ce3748a8489ee2c32f96",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "cases.json": "332a73b97d5faaf4c53220cb04954d660d342907a79d242cd5e81e299ae1b2fb",
+        "contract.json": "81b55a41296ddda9fca5ef87467ff942ae76b8339997b978e3a0ee7452845d49",
+        "instruction.md": "c35702ca2d62d9519bdb0a898ce89a67fe510a690514d32ce3f5dcef5ebc835d"
+      },
+      "score": 0,
+      "cases": [
+        {
+          "name": "continuous-offset-actuator-1.2",
+          "waveform_sha256": "11e5c8fed00ea2bf51b78227b8c5986dbe0ae404a023f10d91da1dff2caf7254",
+          "waveform_rows": 2486,
+          "netlist_sha256": "237afece44a1f8ffa2e851bdfb7cd57f12683d3f978157be02eb0a5485378d7c",
+          "support_sha256": {
+            "healthy.va": "78a8c943a1b77968aceb3c886c6eac71ca069ec2c7aaa676a8dd6a62ba8b3e58"
+          },
+          "passed": false,
+          "checks": [
+            {
+              "name": "0:signal-plus-residual",
+              "actual": 0.007130000000000011,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "1:signal-plus-residual",
+              "actual": 0.0004000000000000947,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "2:signal-plus-residual",
+              "actual": 0.0038909090909090005,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "3:signal-plus-residual",
+              "actual": 0.0025999999999998663,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "4:signal-plus-residual",
+              "actual": 0.004399999999999946,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "5:signal-plus-residual",
+              "actual": 0.0031999999999999945,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "disabled-code-hold",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "reset-code-clear",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "integer-code-after-transition",
+              "actual": 0.0007505002500005556,
+              "limit": 1.5e-07,
+              "passed": false
+            },
+            {
+              "name": "actuator-code-bound",
+              "actual": 62.5,
+              "limit": 64.01,
+              "passed": true
+            },
+            {
+              "name": "output-rail-low",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            },
+            {
+              "name": "output-rail-high",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "analysis_identity_sha256": "d14ce38ac04f96eeed19605103f9625f16dc7584682f428784178ef7b79c048a"
+    },
+    {
+      "task_id": "v3-calibration-common-mode-servo",
+      "variant": "reference",
+      "condition_id": "common-mode-actuator-0.8",
+      "job_id": "bf-5f95e94eba1e48d1bb28-common-mode-actuator-0_8",
+      "execution_candidate_sha256": "8dfbe463eb9cf3fdc651dfe41fb8504b17d8836607919c984d7926c061fe89b5",
+      "execution_criteria_sha256": "99abb26ba7200c51631303eabfebfb1988f11161e02add0129df34bd90e3bf1a",
+      "execution_report_sha256": "56ce302a13062645a11b343911ac02374dd9eb2066c1da3a15ad543a944b7149",
+      "archive_sha256": "5cfb54fef73a9985e1b76b1d5d313642a0cc603382ae4d61bea61fd23f285a8f",
+      "analysis_sources": {
+        "v2_next_calibration.py": "7efea5c0bbd65a0f644bd702d6e4b0540f867768a102ce3748a8489ee2c32f96",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "cases.json": "f13b2f1e882611e670b18acb292179172ee98400c84d5ceddb3ac52cc0a832d5",
+        "contract.json": "5f0a29d73839d9f6760dd5fc700674c002d2deccf194469362175bc1a9404135",
+        "instruction.md": "5a4e0f86ecc963d040b7841edcf871947dc63edc923a22af612304d1425d4ee7"
+      },
+      "score": 1,
+      "cases": [
+        {
+          "name": "common-mode-actuator-0.8",
+          "waveform_sha256": "b6ec4e694f83d455aeb67ced8333b9d73c47d7209c97740486b59923bfa1a0f9",
+          "waveform_rows": 2801,
+          "netlist_sha256": "08c2e5f8aec7e4e409c0f5093ee3b3c5f4703f8a7c1dbd7fe5297de557668f66",
+          "support_sha256": {
+            "healthy.va": "78a8c943a1b77968aceb3c886c6eac71ca069ec2c7aaa676a8dd6a62ba8b3e58"
+          },
+          "passed": true,
+          "checks": [
+            {
+              "name": "0:differential-transfer",
+              "actual": 1.249000902703301e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "0:actual-output-common-mode",
+              "actual": 0.0024500000000000632,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "1:differential-transfer",
+              "actual": 1.6653345369377348e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "1:actual-output-common-mode",
+              "actual": 0.0012000000000000899,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "2:differential-transfer",
+              "actual": 1.1102230246251565e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "2:actual-output-common-mode",
+              "actual": 0.0060272727272728255,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "3:differential-transfer",
+              "actual": 1.5265566588595902e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "3:actual-output-common-mode",
+              "actual": 0.006749999999999923,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "4:differential-transfer",
+              "actual": 1.6653345369377348e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "4:actual-output-common-mode",
+              "actual": 0.0024249999999998995,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "5:differential-transfer",
+              "actual": 1.249000902703301e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "5:actual-output-common-mode",
+              "actual": 0.0024249999999997884,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "disabled-code-hold",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "reset-code-clear",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "integer-code-after-transition",
+              "actual": 5.005555555559981e-08,
+              "limit": 1.5e-07,
+              "passed": true
+            },
+            {
+              "name": "actuator-code-bound",
+              "actual": 64.0,
+              "limit": 64.01,
+              "passed": true
+            },
+            {
+              "name": "output-rail-low",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            },
+            {
+              "name": "output-rail-high",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "analysis_identity_sha256": "7fcf7643136c039da2a134f822dc6597dee2b67587f9d204424fb7008d29c1cc"
+    },
+    {
+      "task_id": "v3-calibration-common-mode-servo",
+      "variant": "reference",
+      "condition_id": "common-mode-actuator-1.2",
+      "job_id": "bf-ffa10e0ec4014ae2947f-common-mode-actuator-1_2",
+      "execution_candidate_sha256": "8dfbe463eb9cf3fdc651dfe41fb8504b17d8836607919c984d7926c061fe89b5",
+      "execution_criteria_sha256": "99abb26ba7200c51631303eabfebfb1988f11161e02add0129df34bd90e3bf1a",
+      "execution_report_sha256": "9408e99d46ed03c2e985f3b6f4eee90534adb4eb52137c9752d35e720402524a",
+      "archive_sha256": "7a9db5977d75efcc996709044df35d3349f03dab79903c368607743b14825452",
+      "analysis_sources": {
+        "v2_next_calibration.py": "7efea5c0bbd65a0f644bd702d6e4b0540f867768a102ce3748a8489ee2c32f96",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "cases.json": "f13b2f1e882611e670b18acb292179172ee98400c84d5ceddb3ac52cc0a832d5",
+        "contract.json": "5f0a29d73839d9f6760dd5fc700674c002d2deccf194469362175bc1a9404135",
+        "instruction.md": "5a4e0f86ecc963d040b7841edcf871947dc63edc923a22af612304d1425d4ee7"
+      },
+      "score": 1,
+      "cases": [
+        {
+          "name": "common-mode-actuator-1.2",
+          "waveform_sha256": "179fd6a7418887c4ae7d8e5719df27599ce657f66850ddd875950dbacdfe6430",
+          "waveform_rows": 2690,
+          "netlist_sha256": "57c6afdf0d5f5a469d8a65c867e6f57399cca0110814ddcc09fafd46eda51258",
+          "support_sha256": {
+            "healthy.va": "78a8c943a1b77968aceb3c886c6eac71ca069ec2c7aaa676a8dd6a62ba8b3e58"
+          },
+          "passed": true,
+          "checks": [
+            {
+              "name": "0:differential-transfer",
+              "actual": 1.1102230246251565e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "0:actual-output-common-mode",
+              "actual": 0.0022000000000000908,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "1:differential-transfer",
+              "actual": 1.1102230246251565e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "1:actual-output-common-mode",
+              "actual": 0.0008000000000001339,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "2:differential-transfer",
+              "actual": 1.5265566588595902e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "2:actual-output-common-mode",
+              "actual": 0.003236363636363704,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "3:differential-transfer",
+              "actual": 1.0408340855860843e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "3:actual-output-common-mode",
+              "actual": 0.0037999999999999146,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "4:differential-transfer",
+              "actual": 1.5612511283791264e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "4:actual-output-common-mode",
+              "actual": 0.0022599999999998177,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "5:differential-transfer",
+              "actual": 1.1145598333150986e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "5:actual-output-common-mode",
+              "actual": 0.0022599999999999287,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "disabled-code-hold",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "reset-code-clear",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "integer-code-after-transition",
+              "actual": 5.005555555562014e-08,
+              "limit": 1.5e-07,
+              "passed": true
+            },
+            {
+              "name": "actuator-code-bound",
+              "actual": 64.0,
+              "limit": 64.01,
+              "passed": true
+            },
+            {
+              "name": "output-rail-low",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            },
+            {
+              "name": "output-rail-high",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "analysis_identity_sha256": "cd2c1df2ed6fe127e9476404b4d9f43ed9e42b389382a306e848d599563085c1"
+    },
+    {
+      "task_id": "v3-calibration-common-mode-servo",
+      "variant": "alternative",
+      "condition_id": "common-mode-actuator-0.8",
+      "job_id": "bf-4e8b9d5909ed441c88e4-common-mode-actuator-0_8",
+      "execution_candidate_sha256": "3f6dd29654c8547e57b6b092e9082f97a395fb8fe5580db8ae4cd650717d4e54",
+      "execution_criteria_sha256": "99abb26ba7200c51631303eabfebfb1988f11161e02add0129df34bd90e3bf1a",
+      "execution_report_sha256": "2a1b78bbc0613805bd2c079bff36e3aa822beffc4f16f2c4d8bcbff2c1536099",
+      "archive_sha256": "eaaad96d76436355da443075006920b206c80aeee18d4ceaf27430fe0477e672",
+      "analysis_sources": {
+        "v2_next_calibration.py": "7efea5c0bbd65a0f644bd702d6e4b0540f867768a102ce3748a8489ee2c32f96",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "cases.json": "f13b2f1e882611e670b18acb292179172ee98400c84d5ceddb3ac52cc0a832d5",
+        "contract.json": "5f0a29d73839d9f6760dd5fc700674c002d2deccf194469362175bc1a9404135",
+        "instruction.md": "5a4e0f86ecc963d040b7841edcf871947dc63edc923a22af612304d1425d4ee7"
+      },
+      "score": 1,
+      "cases": [
+        {
+          "name": "common-mode-actuator-0.8",
+          "waveform_sha256": "3cf8ff595c102a97ed3c40e401ac6b5084adf830b8caa57e95dfeb7f32260f3a",
+          "waveform_rows": 2703,
+          "netlist_sha256": "08c2e5f8aec7e4e409c0f5093ee3b3c5f4703f8a7c1dbd7fe5297de557668f66",
+          "support_sha256": {
+            "healthy.va": "78a8c943a1b77968aceb3c886c6eac71ca069ec2c7aaa676a8dd6a62ba8b3e58"
+          },
+          "passed": true,
+          "checks": [
+            {
+              "name": "0:differential-transfer",
+              "actual": 1.6653345369377348e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "0:actual-output-common-mode",
+              "actual": 0.0019500000000000073,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "1:differential-transfer",
+              "actual": 1.1102230246251565e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "1:actual-output-common-mode",
+              "actual": 0.00040000000000006697,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "2:differential-transfer",
+              "actual": 1.249000902703301e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "2:actual-output-common-mode",
+              "actual": 0.0028272727272726783,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "3:differential-transfer",
+              "actual": 1.5959455978986625e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "3:actual-output-common-mode",
+              "actual": 0.003349999999999853,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "4:differential-transfer",
+              "actual": 1.6653345369377348e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "4:actual-output-common-mode",
+              "actual": 0.0018749999999997935,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "5:differential-transfer",
+              "actual": 1.1102230246251565e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "5:actual-output-common-mode",
+              "actual": 0.00192500000000001,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "disabled-code-hold",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "reset-code-clear",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "integer-code-after-transition",
+              "actual": 5.0055555555952175e-08,
+              "limit": 1.5e-07,
+              "passed": true
+            },
+            {
+              "name": "actuator-code-bound",
+              "actual": 64.0,
+              "limit": 64.01,
+              "passed": true
+            },
+            {
+              "name": "output-rail-low",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            },
+            {
+              "name": "output-rail-high",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "analysis_identity_sha256": "da200d4b6539bdcba1931e83f5f32030c92c64b3e3e209d8019192d197155937"
+    },
+    {
+      "task_id": "v3-calibration-common-mode-servo",
+      "variant": "alternative",
+      "condition_id": "common-mode-actuator-1.2",
+      "job_id": "bf-201bdc597f7a4f8780ca-common-mode-actuator-1_2",
+      "execution_candidate_sha256": "3f6dd29654c8547e57b6b092e9082f97a395fb8fe5580db8ae4cd650717d4e54",
+      "execution_criteria_sha256": "99abb26ba7200c51631303eabfebfb1988f11161e02add0129df34bd90e3bf1a",
+      "execution_report_sha256": "1cb3e8ce451ffbc85b75d562adcc06e4e5a2f0becc81f7eeef708db3e4acdeef",
+      "archive_sha256": "54fc574c03f5dd7aa8e0300ae187a9a2c948826b54918d5ceb95d58eed63644b",
+      "analysis_sources": {
+        "v2_next_calibration.py": "7efea5c0bbd65a0f644bd702d6e4b0540f867768a102ce3748a8489ee2c32f96",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "cases.json": "f13b2f1e882611e670b18acb292179172ee98400c84d5ceddb3ac52cc0a832d5",
+        "contract.json": "5f0a29d73839d9f6760dd5fc700674c002d2deccf194469362175bc1a9404135",
+        "instruction.md": "5a4e0f86ecc963d040b7841edcf871947dc63edc923a22af612304d1425d4ee7"
+      },
+      "score": 1,
+      "cases": [
+        {
+          "name": "common-mode-actuator-1.2",
+          "waveform_sha256": "3050df7b688885e8027c509db4d775f8b04011d7aced79f2de39b49b7fbdf4ec",
+          "waveform_rows": 2818,
+          "netlist_sha256": "57c6afdf0d5f5a469d8a65c867e6f57399cca0110814ddcc09fafd46eda51258",
+          "support_sha256": {
+            "healthy.va": "78a8c943a1b77968aceb3c886c6eac71ca069ec2c7aaa676a8dd6a62ba8b3e58"
+          },
+          "passed": true,
+          "checks": [
+            {
+              "name": "0:differential-transfer",
+              "actual": 1.6653345369377348e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "0:actual-output-common-mode",
+              "actual": 0.003400000000000014,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "1:differential-transfer",
+              "actual": 1.249000902703301e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "1:actual-output-common-mode",
+              "actual": 0.0032000000000000917,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "2:differential-transfer",
+              "actual": 1.4409046872332354e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "2:actual-output-common-mode",
+              "actual": 0.004618181818181855,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "3:differential-transfer",
+              "actual": 1.0345999230942926e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "3:actual-output-common-mode",
+              "actual": 0.003399999999999681,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "4:differential-transfer",
+              "actual": 1.6653345369377348e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "4:actual-output-common-mode",
+              "actual": 0.003242000000000078,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "5:differential-transfer",
+              "actual": 1.457167719820518e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "5:actual-output-common-mode",
+              "actual": 0.0032420000000003,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "disabled-code-hold",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "reset-code-clear",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "integer-code-after-transition",
+              "actual": 5.0055555556602696e-08,
+              "limit": 1.5e-07,
+              "passed": true
+            },
+            {
+              "name": "actuator-code-bound",
+              "actual": 64.0,
+              "limit": 64.01,
+              "passed": true
+            },
+            {
+              "name": "output-rail-low",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            },
+            {
+              "name": "output-rail-high",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "analysis_identity_sha256": "2c9e88aae0539553c09bd531d97d80c7e596a5322e1be26bc59e1d97cb35cf24"
+    },
+    {
+      "task_id": "v3-calibration-common-mode-servo",
+      "variant": "fixed_code",
+      "condition_id": "common-mode-actuator-0.8",
+      "job_id": "bf-489a5fbb722f4797bd10-common-mode-actuator-0_8",
+      "execution_candidate_sha256": "57f48e4949a86a154d1528d48d09efa482578485e8c3d608bf5aa91926d64040",
+      "execution_criteria_sha256": "99abb26ba7200c51631303eabfebfb1988f11161e02add0129df34bd90e3bf1a",
+      "execution_report_sha256": "91f93da194ce6bf56cd3bbf26712a0706f70e11d23b310401bb55ea984eec769",
+      "archive_sha256": "7046278d316aa2254119e62e0b734fa9ee06a9049458cfae40a427c704107fbe",
+      "analysis_sources": {
+        "v2_next_calibration.py": "7efea5c0bbd65a0f644bd702d6e4b0540f867768a102ce3748a8489ee2c32f96",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "cases.json": "f13b2f1e882611e670b18acb292179172ee98400c84d5ceddb3ac52cc0a832d5",
+        "contract.json": "5f0a29d73839d9f6760dd5fc700674c002d2deccf194469362175bc1a9404135",
+        "instruction.md": "5a4e0f86ecc963d040b7841edcf871947dc63edc923a22af612304d1425d4ee7"
+      },
+      "score": 0,
+      "cases": [
+        {
+          "name": "common-mode-actuator-0.8",
+          "waveform_sha256": "f0b901c379a43b77016959dd6ef60f6a4c10098be28d66e257662b502818509b",
+          "waveform_rows": 2392,
+          "netlist_sha256": "08c2e5f8aec7e4e409c0f5093ee3b3c5f4703f8a7c1dbd7fe5297de557668f66",
+          "support_sha256": {
+            "healthy.va": "78a8c943a1b77968aceb3c886c6eac71ca069ec2c7aaa676a8dd6a62ba8b3e58"
+          },
+          "passed": false,
+          "checks": [
+            {
+              "name": "0:differential-transfer",
+              "actual": 1.1102230246251565e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "0:actual-output-common-mode",
+              "actual": 0.06487500000000002,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "1:differential-transfer",
+              "actual": 1.734723475976807e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "1:actual-output-common-mode",
+              "actual": 0.07000000000000006,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "2:differential-transfer",
+              "actual": 1.1102230246251565e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "2:actual-output-common-mode",
+              "actual": 0.01009090909090904,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "3:differential-transfer",
+              "actual": 1.1058862159352145e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "3:actual-output-common-mode",
+              "actual": 0.016875000000003082,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "4:differential-transfer",
+              "actual": 1.1102230246251565e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "4:actual-output-common-mode",
+              "actual": 0.06313750000000062,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "5:differential-transfer",
+              "actual": 1.1102230246251565e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "5:actual-output-common-mode",
+              "actual": 0.04063750000000055,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "disabled-code-hold",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "reset-code-clear",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "integer-code-after-transition",
+              "actual": 0,
+              "limit": 1.5e-07,
+              "passed": true
+            },
+            {
+              "name": "actuator-code-bound",
+              "actual": 0.0,
+              "limit": 64.01,
+              "passed": true
+            },
+            {
+              "name": "output-rail-low",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            },
+            {
+              "name": "output-rail-high",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "analysis_identity_sha256": "060ac143286a5f8002a2bf066514f30ad99ff61c14b83945badd99394a8bce13"
+    },
+    {
+      "task_id": "v3-calibration-common-mode-servo",
+      "variant": "fixed_code",
+      "condition_id": "common-mode-actuator-1.2",
+      "job_id": "bf-66a0a9bb4e574e27b0af-common-mode-actuator-1_2",
+      "execution_candidate_sha256": "57f48e4949a86a154d1528d48d09efa482578485e8c3d608bf5aa91926d64040",
+      "execution_criteria_sha256": "99abb26ba7200c51631303eabfebfb1988f11161e02add0129df34bd90e3bf1a",
+      "execution_report_sha256": "bbde625a8bee7eb52383dedf0e21374c065a634175b49d9c3feffe3074643422",
+      "archive_sha256": "2b4615b8913add0dececf8df926f47ba010e16bc4be3888e83e09dae545521d7",
+      "analysis_sources": {
+        "v2_next_calibration.py": "7efea5c0bbd65a0f644bd702d6e4b0540f867768a102ce3748a8489ee2c32f96",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "cases.json": "f13b2f1e882611e670b18acb292179172ee98400c84d5ceddb3ac52cc0a832d5",
+        "contract.json": "5f0a29d73839d9f6760dd5fc700674c002d2deccf194469362175bc1a9404135",
+        "instruction.md": "5a4e0f86ecc963d040b7841edcf871947dc63edc923a22af612304d1425d4ee7"
+      },
+      "score": 0,
+      "cases": [
+        {
+          "name": "common-mode-actuator-1.2",
+          "waveform_sha256": "35553713cb3a778d5fd147b632ed3bcca3908e30133175b89310c17a99c70998",
+          "waveform_rows": 2392,
+          "netlist_sha256": "57c6afdf0d5f5a469d8a65c867e6f57399cca0110814ddcc09fafd46eda51258",
+          "support_sha256": {
+            "healthy.va": "78a8c943a1b77968aceb3c886c6eac71ca069ec2c7aaa676a8dd6a62ba8b3e58"
+          },
+          "passed": false,
+          "checks": [
+            {
+              "name": "0:differential-transfer",
+              "actual": 1.2790875129897739e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "0:actual-output-common-mode",
+              "actual": 0.05190000000000006,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "1:differential-transfer",
+              "actual": 1.1102230246251565e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "1:actual-output-common-mode",
+              "actual": 0.05600000000000005,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "2:differential-transfer",
+              "actual": 1.1102230246251565e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "2:actual-output-common-mode",
+              "actual": 0.008072727272727231,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "3:differential-transfer",
+              "actual": 1.1102230246251565e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "3:actual-output-common-mode",
+              "actual": 0.01350000000000251,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "4:differential-transfer",
+              "actual": 1.5265566588595902e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "4:actual-output-common-mode",
+              "actual": 0.05051000000000039,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "5:differential-transfer",
+              "actual": 1.1102230246251565e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "5:actual-output-common-mode",
+              "actual": 0.03251000000000043,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "disabled-code-hold",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "reset-code-clear",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "integer-code-after-transition",
+              "actual": 0,
+              "limit": 1.5e-07,
+              "passed": true
+            },
+            {
+              "name": "actuator-code-bound",
+              "actual": 0.0,
+              "limit": 64.01,
+              "passed": true
+            },
+            {
+              "name": "output-rail-low",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            },
+            {
+              "name": "output-rail-high",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "analysis_identity_sha256": "f2aced369c51c291fce791dd340b88093bcbcb5a0849ad3e44950cc7bfac51a5"
+    },
+    {
+      "task_id": "v3-calibration-common-mode-servo",
+      "variant": "wrong_direction",
+      "condition_id": "common-mode-actuator-0.8",
+      "job_id": "bf-986a01e4062249e89b14-common-mode-actuator-0_8",
+      "execution_candidate_sha256": "9cf3c7f9a2ad92cc65c08963f9745947f20378df67be44498984743be5de360c",
+      "execution_criteria_sha256": "99abb26ba7200c51631303eabfebfb1988f11161e02add0129df34bd90e3bf1a",
+      "execution_report_sha256": "7f73d3e358fa10cce2c8d20a472d4ca6467c7f7a06230e0c6e99bc8674f46be0",
+      "archive_sha256": "0200595ab42e1754107a53deadebcaa64660c326c02c3243d2c20fecc0d92ac8",
+      "analysis_sources": {
+        "v2_next_calibration.py": "7efea5c0bbd65a0f644bd702d6e4b0540f867768a102ce3748a8489ee2c32f96",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "cases.json": "f13b2f1e882611e670b18acb292179172ee98400c84d5ceddb3ac52cc0a832d5",
+        "contract.json": "5f0a29d73839d9f6760dd5fc700674c002d2deccf194469362175bc1a9404135",
+        "instruction.md": "5a4e0f86ecc963d040b7841edcf871947dc63edc923a22af612304d1425d4ee7"
+      },
+      "score": 0,
+      "cases": [
+        {
+          "name": "common-mode-actuator-0.8",
+          "waveform_sha256": "fd64c48d38596f28be0ee86df48c2fcb81567160a8c741eb6d230a87d58c0605",
+          "waveform_rows": 2430,
+          "netlist_sha256": "08c2e5f8aec7e4e409c0f5093ee3b3c5f4703f8a7c1dbd7fe5297de557668f66",
+          "support_sha256": {
+            "healthy.va": "78a8c943a1b77968aceb3c886c6eac71ca069ec2c7aaa676a8dd6a62ba8b3e58"
+          },
+          "passed": false,
+          "checks": [
+            {
+              "name": "0:differential-transfer",
+              "actual": 1.1102230246251565e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "0:actual-output-common-mode",
+              "actual": 0.16727500000000006,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "1:differential-transfer",
+              "actual": 1.1102230246251565e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "1:actual-output-common-mode",
+              "actual": 0.032400000000000095,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "2:differential-transfer",
+              "actual": 1.1102230246251565e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "2:actual-output-common-mode",
+              "actual": 0.10742272727272939,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "3:differential-transfer",
+              "actual": 1.1102230246251565e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "3:actual-output-common-mode",
+              "actual": 0.10364999999999958,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "4:differential-transfer",
+              "actual": 1.1796119636642288e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "4:actual-output-common-mode",
+              "actual": 0.16553750000000067,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "5:differential-transfer",
+              "actual": 1.1796119636642288e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "5:actual-output-common-mode",
+              "actual": 0.1430375000000006,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "disabled-code-hold",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "reset-code-clear",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "integer-code-after-transition",
+              "actual": 5.0055555555301653e-08,
+              "limit": 1.5e-07,
+              "passed": true
+            },
+            {
+              "name": "actuator-code-bound",
+              "actual": 64.0,
+              "limit": 64.01,
+              "passed": true
+            },
+            {
+              "name": "output-rail-low",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            },
+            {
+              "name": "output-rail-high",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "analysis_identity_sha256": "f53d236c97b3e6e1b629e4294861d4de8723a1bf07a121e75b284d0abe4b958e"
+    },
+    {
+      "task_id": "v3-calibration-common-mode-servo",
+      "variant": "wrong_direction",
+      "condition_id": "common-mode-actuator-1.2",
+      "job_id": "bf-6ad3f4094a60442fa4f9-common-mode-actuator-1_2",
+      "execution_candidate_sha256": "9cf3c7f9a2ad92cc65c08963f9745947f20378df67be44498984743be5de360c",
+      "execution_criteria_sha256": "99abb26ba7200c51631303eabfebfb1988f11161e02add0129df34bd90e3bf1a",
+      "execution_report_sha256": "634cb256b809826d6d309b8d3e8d6583aa2619b3c4d33b08b784042e722505fd",
+      "archive_sha256": "574b8955df8fd65b7bfa32887f775262297329f54db6c8402632fbed4c535fd7",
+      "analysis_sources": {
+        "v2_next_calibration.py": "7efea5c0bbd65a0f644bd702d6e4b0540f867768a102ce3748a8489ee2c32f96",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "cases.json": "f13b2f1e882611e670b18acb292179172ee98400c84d5ceddb3ac52cc0a832d5",
+        "contract.json": "5f0a29d73839d9f6760dd5fc700674c002d2deccf194469362175bc1a9404135",
+        "instruction.md": "5a4e0f86ecc963d040b7841edcf871947dc63edc923a22af612304d1425d4ee7"
+      },
+      "score": 0,
+      "cases": [
+        {
+          "name": "common-mode-actuator-1.2",
+          "waveform_sha256": "50a6ce78c6095dbc2f6c782ead7e5d3e3942f3af0e21cd5a8ccf9d3a47ec17b3",
+          "waveform_rows": 2428,
+          "netlist_sha256": "57c6afdf0d5f5a469d8a65c867e6f57399cca0110814ddcc09fafd46eda51258",
+          "support_sha256": {
+            "healthy.va": "78a8c943a1b77968aceb3c886c6eac71ca069ec2c7aaa676a8dd6a62ba8b3e58"
+          },
+          "passed": false,
+          "checks": [
+            {
+              "name": "0:differential-transfer",
+              "actual": 1.5265566588595902e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "0:actual-output-common-mode",
+              "actual": 0.20550000000000002,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "1:differential-transfer",
+              "actual": 1.5265566588595902e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "1:actual-output-common-mode",
+              "actual": 0.09760000000000002,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "2:differential-transfer",
+              "actual": 1.249000902703301e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "2:actual-output-common-mode",
+              "actual": 0.15761818181818338,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "3:differential-transfer",
+              "actual": 1.1102230246251565e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "3:actual-output-common-mode",
+              "actual": 0.15459999999999963,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "4:differential-transfer",
+              "actual": 1.5265566588595902e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "4:actual-output-common-mode",
+              "actual": 0.2041100000000005,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "5:differential-transfer",
+              "actual": 1.6653345369377348e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "5:actual-output-common-mode",
+              "actual": 0.1861100000000004,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "disabled-code-hold",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "reset-code-clear",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "integer-code-after-transition",
+              "actual": 5.0055555555301653e-08,
+              "limit": 1.5e-07,
+              "passed": true
+            },
+            {
+              "name": "actuator-code-bound",
+              "actual": 64.0,
+              "limit": 64.01,
+              "passed": true
+            },
+            {
+              "name": "output-rail-low",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            },
+            {
+              "name": "output-rail-high",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "analysis_identity_sha256": "db6cd980a64795f50a0755bb388da5bad9fc0376406df080e06e628d6765fad3"
+    },
+    {
+      "task_id": "v3-calibration-common-mode-servo",
+      "variant": "measure_differential",
+      "condition_id": "common-mode-actuator-0.8",
+      "job_id": "bf-eb3c33a9128443f08eac-common-mode-actuator-0_8",
+      "execution_candidate_sha256": "9bc0c861b7f763ee33476d7badd35457edc70cfe2afebafeac2a07bfcde1d401",
+      "execution_criteria_sha256": "99abb26ba7200c51631303eabfebfb1988f11161e02add0129df34bd90e3bf1a",
+      "execution_report_sha256": "1a87d4d0158f4cf9cda5c2348d9e2da01850f1c1fd5c5e5d43471e5b9b0d6f57",
+      "archive_sha256": "9a4ee29362dcf4d53e0547bb7c635af13bdea56b1a6891318b76264440055aa7",
+      "analysis_sources": {
+        "v2_next_calibration.py": "7efea5c0bbd65a0f644bd702d6e4b0540f867768a102ce3748a8489ee2c32f96",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "cases.json": "f13b2f1e882611e670b18acb292179172ee98400c84d5ceddb3ac52cc0a832d5",
+        "contract.json": "5f0a29d73839d9f6760dd5fc700674c002d2deccf194469362175bc1a9404135",
+        "instruction.md": "5a4e0f86ecc963d040b7841edcf871947dc63edc923a22af612304d1425d4ee7"
+      },
+      "score": 0,
+      "cases": [
+        {
+          "name": "common-mode-actuator-0.8",
+          "waveform_sha256": "e8249445863fe79048fb0b61eeaaf4da7659074b58c87118958fd5b50ab7c57f",
+          "waveform_rows": 2549,
+          "netlist_sha256": "08c2e5f8aec7e4e409c0f5093ee3b3c5f4703f8a7c1dbd7fe5297de557668f66",
+          "support_sha256": {
+            "healthy.va": "78a8c943a1b77968aceb3c886c6eac71ca069ec2c7aaa676a8dd6a62ba8b3e58"
+          },
+          "passed": false,
+          "checks": [
+            {
+              "name": "0:differential-transfer",
+              "actual": 1.8041124150158794e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "0:actual-output-common-mode",
+              "actual": 0.138525,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "1:differential-transfer",
+              "actual": 1.5265566588595902e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "1:actual-output-common-mode",
+              "actual": 0.1724000000000001,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "2:differential-transfer",
+              "actual": 1.734723475976807e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "2:actual-output-common-mode",
+              "actual": 0.11249090909090897,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "3:differential-transfer",
+              "actual": 1.1145598333150986e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "3:actual-output-common-mode",
+              "actual": 0.11927500000000307,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "4:differential-transfer",
+              "actual": 1.1796119636642288e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "4:actual-output-common-mode",
+              "actual": 0.16553750000000067,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "5:differential-transfer",
+              "actual": 1.8041124150158794e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "5:actual-output-common-mode",
+              "actual": 0.10330250000000007,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "disabled-code-hold",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "reset-code-clear",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "integer-code-after-transition",
+              "actual": 5.0055555555301653e-08,
+              "limit": 1.5e-07,
+              "passed": true
+            },
+            {
+              "name": "actuator-code-bound",
+              "actual": 64.0,
+              "limit": 64.01,
+              "passed": true
+            },
+            {
+              "name": "output-rail-low",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            },
+            {
+              "name": "output-rail-high",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "analysis_identity_sha256": "52dc498b7fb03a49eddcc0f831e2ee2feb804f90e2d37a6226a623aab5beb91c"
+    },
+    {
+      "task_id": "v3-calibration-common-mode-servo",
+      "variant": "measure_differential",
+      "condition_id": "common-mode-actuator-1.2",
+      "job_id": "bf-ca85123994b049deb8ca-common-mode-actuator-1_2",
+      "execution_candidate_sha256": "9bc0c861b7f763ee33476d7badd35457edc70cfe2afebafeac2a07bfcde1d401",
+      "execution_criteria_sha256": "99abb26ba7200c51631303eabfebfb1988f11161e02add0129df34bd90e3bf1a",
+      "execution_report_sha256": "fc591fff5b2be5b9e31d077f85a9a69e77c5e1a1f4074ad016e03bb58a7bf356",
+      "archive_sha256": "874f9a9ecc20149e82605450693889951a7bef2d9cc6d9268aff42718bede76f",
+      "analysis_sources": {
+        "v2_next_calibration.py": "7efea5c0bbd65a0f644bd702d6e4b0540f867768a102ce3748a8489ee2c32f96",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "cases.json": "f13b2f1e882611e670b18acb292179172ee98400c84d5ceddb3ac52cc0a832d5",
+        "contract.json": "5f0a29d73839d9f6760dd5fc700674c002d2deccf194469362175bc1a9404135",
+        "instruction.md": "5a4e0f86ecc963d040b7841edcf871947dc63edc923a22af612304d1425d4ee7"
+      },
+      "score": 0,
+      "cases": [
+        {
+          "name": "common-mode-actuator-1.2",
+          "waveform_sha256": "f8106e984ade0a1eb224475c0550233d8148ce5a0d810c7a6896277c3667523b",
+          "waveform_rows": 2580,
+          "netlist_sha256": "57c6afdf0d5f5a469d8a65c867e6f57399cca0110814ddcc09fafd46eda51258",
+          "support_sha256": {
+            "healthy.va": "78a8c943a1b77968aceb3c886c6eac71ca069ec2c7aaa676a8dd6a62ba8b3e58"
+          },
+          "passed": false,
+          "checks": [
+            {
+              "name": "0:differential-transfer",
+              "actual": 1.249000902703301e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "0:actual-output-common-mode",
+              "actual": 0.20340000000000003,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "1:differential-transfer",
+              "actual": 1.5265566588595902e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "1:actual-output-common-mode",
+              "actual": 0.20960000000000012,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "2:differential-transfer",
+              "actual": 1.249000902703301e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "2:actual-output-common-mode",
+              "actual": 0.15761818181818338,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "3:differential-transfer",
+              "actual": 1.1102230246251565e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "3:actual-output-common-mode",
+              "actual": 0.15459999999999963,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "4:differential-transfer",
+              "actual": 1.5265566588595902e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "4:actual-output-common-mode",
+              "actual": 0.15216200000000002,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "5:differential-transfer",
+              "actual": 1.249000902703301e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "5:actual-output-common-mode",
+              "actual": 0.1861100000000004,
+              "limit": 0.008,
+              "passed": false
+            },
+            {
+              "name": "disabled-code-hold",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "reset-code-clear",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "integer-code-after-transition",
+              "actual": 5.0055555555301653e-08,
+              "limit": 1.5e-07,
+              "passed": true
+            },
+            {
+              "name": "actuator-code-bound",
+              "actual": 64.0,
+              "limit": 64.01,
+              "passed": true
+            },
+            {
+              "name": "output-rail-low",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            },
+            {
+              "name": "output-rail-high",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "analysis_identity_sha256": "998c428fb9f84b03c78e8a5bc193c8a2028cc561072fd7acf91766744e886c5e"
+    },
+    {
+      "task_id": "v3-calibration-common-mode-servo",
+      "variant": "fractional_code",
+      "condition_id": "common-mode-actuator-0.8",
+      "job_id": "bf-7f4fc2c87adb41f6b05b-common-mode-actuator-0_8",
+      "execution_candidate_sha256": "5307debe5e30b596bc0ad0f8380f07c43ed0826321c1289b4bd3407fd985c085",
+      "execution_criteria_sha256": "99abb26ba7200c51631303eabfebfb1988f11161e02add0129df34bd90e3bf1a",
+      "execution_report_sha256": "e681b60b92019ad81bad0a51557fa8ccf0f09282538e30c9916b4cec89583827",
+      "archive_sha256": "1497080f88e266c1755338b888267eb83d5dad6c02507938dc2286e319d0159f",
+      "analysis_sources": {
+        "v2_next_calibration.py": "7efea5c0bbd65a0f644bd702d6e4b0540f867768a102ce3748a8489ee2c32f96",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "cases.json": "f13b2f1e882611e670b18acb292179172ee98400c84d5ceddb3ac52cc0a832d5",
+        "contract.json": "5f0a29d73839d9f6760dd5fc700674c002d2deccf194469362175bc1a9404135",
+        "instruction.md": "5a4e0f86ecc963d040b7841edcf871947dc63edc923a22af612304d1425d4ee7"
+      },
+      "score": 0,
+      "cases": [
+        {
+          "name": "common-mode-actuator-0.8",
+          "waveform_sha256": "cac57ac76c3493b8ad95f35703f874037610644fa26f84a841e75e78aedffcc9",
+          "waveform_rows": 2798,
+          "netlist_sha256": "08c2e5f8aec7e4e409c0f5093ee3b3c5f4703f8a7c1dbd7fe5297de557668f66",
+          "support_sha256": {
+            "healthy.va": "78a8c943a1b77968aceb3c886c6eac71ca069ec2c7aaa676a8dd6a62ba8b3e58"
+          },
+          "passed": false,
+          "checks": [
+            {
+              "name": "0:differential-transfer",
+              "actual": 1.1102230246251565e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "0:actual-output-common-mode",
+              "actual": 0.0024500000000000632,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "1:differential-transfer",
+              "actual": 1.1796119636642288e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "1:actual-output-common-mode",
+              "actual": 0.00040000000000006697,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "2:differential-transfer",
+              "actual": 1.6653345369377348e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "2:actual-output-common-mode",
+              "actual": 0.006063636363636382,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "3:differential-transfer",
+              "actual": 1.5959455978986625e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "3:actual-output-common-mode",
+              "actual": 0.006850000000000023,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "4:differential-transfer",
+              "actual": 1.6653345369377348e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "4:actual-output-common-mode",
+              "actual": 0.002424999999999955,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "5:differential-transfer",
+              "actual": 1.249000902703301e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "5:actual-output-common-mode",
+              "actual": 0.0024249999999998995,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "disabled-code-hold",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "reset-code-clear",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "integer-code-after-transition",
+              "actual": 0.0004514418518524074,
+              "limit": 1.5e-07,
+              "passed": false
+            },
+            {
+              "name": "actuator-code-bound",
+              "actual": 62.5,
+              "limit": 64.01,
+              "passed": true
+            },
+            {
+              "name": "output-rail-low",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            },
+            {
+              "name": "output-rail-high",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "analysis_identity_sha256": "01325496eb90168c4e2e2974c139dbbad54a6021ae83de6a4a29826fb57a2442"
+    },
+    {
+      "task_id": "v3-calibration-common-mode-servo",
+      "variant": "fractional_code",
+      "condition_id": "common-mode-actuator-1.2",
+      "job_id": "bf-a24631a399b74f0596ef-common-mode-actuator-1_2",
+      "execution_candidate_sha256": "5307debe5e30b596bc0ad0f8380f07c43ed0826321c1289b4bd3407fd985c085",
+      "execution_criteria_sha256": "99abb26ba7200c51631303eabfebfb1988f11161e02add0129df34bd90e3bf1a",
+      "execution_report_sha256": "ed63da1e4b1a9642d43c1f15b70dc9e845c38cdb31f1c86693e3aed13bc6f08d",
+      "archive_sha256": "af6cc10a60bd32c445419440318e2d6321d0b13dff503478c8445b89b0b68a5e",
+      "analysis_sources": {
+        "v2_next_calibration.py": "7efea5c0bbd65a0f644bd702d6e4b0540f867768a102ce3748a8489ee2c32f96",
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "cases.json": "f13b2f1e882611e670b18acb292179172ee98400c84d5ceddb3ac52cc0a832d5",
+        "contract.json": "5f0a29d73839d9f6760dd5fc700674c002d2deccf194469362175bc1a9404135",
+        "instruction.md": "5a4e0f86ecc963d040b7841edcf871947dc63edc923a22af612304d1425d4ee7"
+      },
+      "score": 0,
+      "cases": [
+        {
+          "name": "common-mode-actuator-1.2",
+          "waveform_sha256": "74e86c54a209043b7fcf4edd73f2d55ce441c058e78517c14a4d5e30091d0c6a",
+          "waveform_rows": 2691,
+          "netlist_sha256": "57c6afdf0d5f5a469d8a65c867e6f57399cca0110814ddcc09fafd46eda51258",
+          "support_sha256": {
+            "healthy.va": "78a8c943a1b77968aceb3c886c6eac71ca069ec2c7aaa676a8dd6a62ba8b3e58"
+          },
+          "passed": false,
+          "checks": [
+            {
+              "name": "0:differential-transfer",
+              "actual": 1.4051260155412137e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "0:actual-output-common-mode",
+              "actual": 0.0022000000000000353,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "1:differential-transfer",
+              "actual": 1.5265566588595902e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "1:actual-output-common-mode",
+              "actual": 0.00040000000000001146,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "2:differential-transfer",
+              "actual": 1.1102230246251565e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "2:actual-output-common-mode",
+              "actual": 0.00305454545454531,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "3:differential-transfer",
+              "actual": 1.1145598333150986e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "3:actual-output-common-mode",
+              "actual": 0.0037999999999996925,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "4:differential-transfer",
+              "actual": 1.1102230246251565e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "4:actual-output-common-mode",
+              "actual": 0.0022599999999999287,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "5:differential-transfer",
+              "actual": 1.6653345369377348e-16,
+              "limit": 0.012,
+              "passed": true
+            },
+            {
+              "name": "5:actual-output-common-mode",
+              "actual": 0.0022599999999998177,
+              "limit": 0.008,
+              "passed": true
+            },
+            {
+              "name": "disabled-code-hold",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "reset-code-clear",
+              "actual": 0.0,
+              "limit": 0.01,
+              "passed": true
+            },
+            {
+              "name": "integer-code-after-transition",
+              "actual": 0.0004554002500005556,
+              "limit": 1.5e-07,
+              "passed": false
+            },
+            {
+              "name": "actuator-code-bound",
+              "actual": 63.5,
+              "limit": 64.01,
+              "passed": true
+            },
+            {
+              "name": "output-rail-low",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            },
+            {
+              "name": "output-rail-high",
+              "actual": 0,
+              "limit": 0.001,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "analysis_identity_sha256": "9b9fddc124dc2c4ca944764a3612d8c326aebd1c248315d5ba70655f9af94bfe"
+    }
+  ]
+}
