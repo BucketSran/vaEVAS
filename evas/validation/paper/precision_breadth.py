@@ -271,7 +271,15 @@ def assess(card, rows, contract, *, reference=None):
     result['undefined_observations'] = []
     try:
         for row in rows:
-            answer = reference(reference_card, row['time'], deepcopy(result['event_bounds_s']))
+            # Only validated counters condition the current discrete phase.
+            # Full callback boxes remain unchanged for all continuous history.
+            stages = ({name: round(row[name]) for name in card.get('counter_channels', {})}
+                      if not behavior['errors'] else {})
+            current_card = deepcopy(reference_card)
+            current_card['reference_counter_stages'] = stages
+            current_card['reference_event_stages'] = {e['id']: stages[e['counter']] >= e['index']
+                                                       for e in card.get('events', []) if e.get('counter') in stages}
+            answer = reference(current_card, row['time'], deepcopy(result['event_bounds_s']))
             rounding = answer['numerical_uncertainty_V']
             if type(rounding) not in (int, float) or not math.isfinite(rounding) or rounding < 0:
                 raise ValueError('invalid numerical reference uncertainty')
