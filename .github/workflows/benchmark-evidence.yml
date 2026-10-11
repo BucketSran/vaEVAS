@@ -2,10 +2,10 @@ name: Benchmark evidence
 
 on:
   pull_request:
-    paths: ['benchmark/tasks/**', 'benchmark/checkers/**', 'benchmark/first_batch/**', 'experiments/va_screen/**', 'experiments/benchmark_first_batch/**', 'experiments/benchmark_v2/**', '.github/workflows/benchmark-evidence.yml']
+    paths: ['benchmark/tasks/**', 'benchmark/checkers/**', 'benchmark/first_batch/**', 'experiments/va_screen/**', 'experiments/benchmark_first_batch/**', 'experiments/benchmark_v2/**', 'experiments/benchmark_next/**', '.github/workflows/benchmark-evidence.yml']
   push:
     branches: [main]
-    paths: ['benchmark/tasks/**', 'benchmark/checkers/**', 'benchmark/first_batch/**', 'experiments/va_screen/**', 'experiments/benchmark_first_batch/**', 'experiments/benchmark_v2/**', '.github/workflows/benchmark-evidence.yml']
+    paths: ['benchmark/tasks/**', 'benchmark/checkers/**', 'benchmark/first_batch/**', 'experiments/va_screen/**', 'experiments/benchmark_first_batch/**', 'experiments/benchmark_v2/**', 'experiments/benchmark_next/**', '.github/workflows/benchmark-evidence.yml']
   workflow_dispatch:
 
 permissions:
@@ -45,3 +45,10 @@ jobs:
           for directory in experiments/benchmark_v2 experiments/benchmark_first_batch experiments/benchmark_first_batch/model_repair experiments/benchmark_first_batch/identification experiments/benchmark_first_batch/integration experiments/benchmark_first_batch/verification_measurement experiments/benchmark_first_batch/optimization experiments/benchmark_first_batch/legacy_va07 experiments/benchmark_first_batch/agentic; do
             python3 -B -m unittest discover -s "$directory" -p 'test_*.py' -v || exit $?
           done
+          if [ -d experiments/benchmark_next ]; then
+            for directory in experiments/benchmark_next/*; do
+              if [ -d "$directory" ]; then
+                python3 -B -m unittest discover -s "$directory" -p 'test_*.py' -v || exit $?
+              fi
+            done
+          fi

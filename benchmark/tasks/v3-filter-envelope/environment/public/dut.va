@@ -1,0 +1,11 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module envelope(i,q,en,reset,env);
+inout i,q,en,reset,env;
+electrical i,q,en,reset,env;
+parameter real bandwidth=200, initval=0; real power;
+electrical e;
+analog begin
+V(env)<+0;
+end
+endmodule

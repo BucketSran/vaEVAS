@@ -1,0 +1,13 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module envelope(i,q,en,reset,env);
+inout i,q,en,reset,env;
+electrical i,q,en,reset,env;
+parameter real bandwidth=200, initval=0; real power;
+electrical e;
+analog begin
+power=(V(en)>0.5)?V(i)*V(i)+V(q)*V(q):V(e);
+V(e) <+ idt(2*`M_PI*bandwidth*(power-V(e)),initval,V(reset)>0.5);
+V(env) <+ sqrt(max(V(e),0));
+end
+endmodule

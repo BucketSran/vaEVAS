@@ -1,0 +1,14 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module programmable_lp(u,code,reset,y);
+inout u,code,reset,y;
+electrical u,code,reset,y;
+parameter real base=1000, initval=0; integer c; real rate;
+electrical z;
+analog begin
+c=min(3,max(0,floor(V(code)+0.5))); rate=base;
+if(c==1) rate=2*base; else if(c==2) rate=4*base; else if(c==3) rate=8*base;
+V(z) <+ idt(2*`M_PI*rate*(V(u)-initval-V(z)),0,V(reset)>0.5);
+V(y) <+ initval+V(z);
+end
+endmodule

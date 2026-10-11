@@ -1,0 +1,11 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module programmable_lp(u,code,reset,y);
+inout u,code,reset,y;
+electrical u,code,reset,y;
+parameter real base=1000, initval=0; integer c;
+
+analog begin
+V(y)<+0;
+end
+endmodule

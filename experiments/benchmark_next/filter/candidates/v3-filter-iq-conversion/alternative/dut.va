@@ -1,0 +1,15 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module iq_mixer(i,q,lc,ls,rf,en,up,di,dq);
+inout i,q,lc,ls,rf,en,up,di,dq;
+electrical i,q,lc,ls,rf,en,up,di,dq;
+parameter real gain=1, fbw=2000;
+electrical s,d;
+analog begin
+V(s) <+ idt(2*`M_PI*fbw*(2*V(rf)*(V(lc)-V(ls))-V(s)),0);
+V(d) <+ idt(2*`M_PI*fbw*(2*V(rf)*(V(lc)+V(ls))-V(d)),0);
+V(up) <+ (V(en)>0.5) ? gain*((V(i)-V(q))*(V(lc)+V(ls))+(V(i)+V(q))*(V(lc)-V(ls)))/2 : 0;
+V(di) <+ (V(en)>0.5) ? (V(s)+V(d))/2 : 0;
+V(dq) <+ (V(en)>0.5) ? (V(s)-V(d))/2 : 0;
+end
+endmodule
