@@ -1,0 +1,97 @@
+"""Public freeze/run receipts using a tiny independent constant card."""
+import json
+from pathlib import Path
+import tempfile
+import unittest
+from unittest.mock import patch
+
+ROOT = Path(__file__).resolve().parents[2]
+SUPPORT = ROOT / 'experiments/backends/support'
+import sys
+sys.path.insert(0, str(SUPPORT))
+import precision_breadth_run as runner
+
+
+def fixture():
+    return {'cards': [{'id':'F01_constant','group_id':'F01','family':'foundation',
+        'title':'constant','source':'module dut(u,y); inout u,y; electrical u,y; analog V(y)<+V(u); endmodule',
+        'top':'dut','ports':['u','y'],'parameters':{},'inputs':{'u':[[0,1],[1e-6,1]]},
+        'outputs':['y'],'scale_V':1,'unit_s':1e-6,'stop_s':1e-6}],
+        'profiles':[{'id':n,'reltol':r,'vabstol_V':1e-9,'iabstol_A':1e-12,'step_units':1/32}
+                    for n,r in [('base',1e-3),('both',1e-6),('deep',1e-8)]],
+        'tiers':[{'id':q,'factor':f} for q,f in [('Q1',10),('Q2',1),('Q3',.1)]],
+        'budgets':{'absolute_V':1e-8,'relative':1e-6}}
+
+
+class BreadthRunner(unittest.TestCase):
+    def setUp(self):
+        self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
+        self.base=Path(self.temp.name);self.inputs=self.base/'inputs'
+        self.patches=[patch.object(runner,'load_contract',return_value=fixture()),
+                      patch.object(runner,'observation_plan',return_value={'times_s':[0,5e-7,1e-6]}),
+                      patch.object(runner,'source_files',return_value=[Path(runner.__file__)])]
+        for p in self.patches:p.start();self.addCleanup(p.stop)
+
+    def freeze(self):runner.freeze(self.inputs)
+
+    def test_freeze_binds_allfour_same_source_and_tier_settings(self):
+        self.freeze();plan=runner.load(self.inputs/'PLAN.json')
+        self.assertEqual(len(plan),12)
+        self.assertEqual({r['tier']:r['profile'] for r in plan},{'Q1':'base','Q2':'both','Q3':'deep'})
+        self.assertEqual(len({r['source_sha256'] for r in plan}),1)
+        runner.verify(self.inputs)
+        self.assertIn('SOURCE_IDENTITY.json',runner.load(self.inputs/'MANIFEST.json'))
+        with self.assertRaises(FileExistsError):runner.freeze(self.inputs)
+
+    def test_drift_rejected_and_fixed_plan_retained(self):
+        self.freeze();(self.inputs/'cards.json').write_text('{}')
+        profile=self.base/'profile.json';profile.write_text('{}')
+        with self.assertRaises(ValueError):runner.run(self.inputs,self.base/'out','evas',profile,'foundation')
+        records=runner.load(self.base/'out/EXECUTION.json')
+        self.assertEqual(len(records),3)
+        self.assertTrue(all(r['status']=='not_run' for r in records))
+        self.assertTrue((self.base/'out/FILE_MANIFEST.json').exists())
+
+    def test_failed_invocation_has_attempt_and_unrun_slots(self):
+        self.freeze();profile=self.base/'profile.json';profile.write_text('{}')
+        with patch.object(runner,'preflight',return_value=({},{})), patch.object(runner,'verify_tool'), \
+             patch.object(runner,'execute_one',side_effect=RuntimeError('adapter failed')):
+            with self.assertRaises(RuntimeError):runner.run(self.inputs,self.base/'out','evas',profile,'foundation')
+        records=runner.load(self.base/'out/EXECUTION.json')
+        self.assertEqual([r['status'] for r in records],['execution_failed','not_run','not_run'])
+        receipt=runner.load(self.base/'out/ATTEMPTS.json')
+        self.assertEqual(receipt['backend_invocations'],1)
+        self.assertEqual(receipt['stage_invocations'],0)
+        self.assertEqual(receipt['attempts'][0]['status'],'adapter_error')
+
+    def test_numerical_pass_cannot_qualify_without_actual_settings(self):
+        self.freeze();profile=self.base/'profile.json';profile.write_text('{}')
+        outcome={'status':'waveform_available','waveform':'fake.csv','stages':[{'command':['fake']}],'abort_batch':False}
+        with patch.object(runner,'preflight',return_value=({},{})), patch.object(runner,'verify_tool'), \
+             patch.object(runner,'execute_one',return_value=outcome), patch.object(runner,'read_native',return_value=[]), \
+             patch.object(runner,'assess',return_value={'tiers':{'Q1':{'status':'pass'}}}), \
+             patch.object(runner,'effective_settings',side_effect=ValueError('absent actual controls')):
+            records=runner.run(self.inputs,self.base/'out','evas',profile,'foundation',tiers=['Q1'])
+        self.assertEqual(records[0]['assessment']['tiers']['Q1']['status'],'pass')
+        self.assertEqual(records[0]['qualified_tiers']['Q1']['status'],'evidence_insufficient')
+        self.assertEqual(runner.load(self.base/'out/ATTEMPTS.json')['stage_invocations'],1)
+
+    def test_current_source_drift_rejected(self):
+        self.freeze()
+        identities=runner.load(self.inputs/'SOURCE_IDENTITY.json')
+        identities['experiments/backends/support/precision_breadth_run.py']='0'*64
+        runner.checkpoint(self.inputs/'SOURCE_IDENTITY.json',identities)
+        manifest=runner.load(self.inputs/'MANIFEST.json')
+        manifest['SOURCE_IDENTITY.json']=runner.sha(self.inputs/'SOURCE_IDENTITY.json')
+        runner.checkpoint(self.inputs/'MANIFEST.json',manifest)
+        with self.assertRaisesRegex(ValueError,'source drift'):runner.verify(self.inputs)
+
+    def test_subset_keeps_tier_binding(self):
+        self.freeze();profile=self.base/'profile.json';profile.write_text('{}')
+        with patch.object(runner,'preflight',side_effect=RuntimeError('unavailable')):
+            with self.assertRaises(RuntimeError):runner.run(self.inputs,self.base/'out','evas',profile,'foundation',tiers=['Q2'])
+        records=runner.load(self.base/'out/EXECUTION.json')
+        self.assertEqual([(r['tier'],r['profile'],r['status']) for r in records],[('Q2','both','not_run')])
+
+
+if __name__=='__main__':unittest.main()
