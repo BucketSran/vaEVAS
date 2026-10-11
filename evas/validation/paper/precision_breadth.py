@@ -43,17 +43,31 @@ def _validate_card(card):
     indexes = [(e.get('counter'), e['index']) for e in events if e.get('counter')]
     if len(set(indexes)) != len(indexes):
         raise ValueError('duplicate counter event index')
+    channels = card.get('counter_channels', {})
+    for states in channels.values():
+        if any(type(states[k]) is not int for k in ('initial', 'final')) or states['final'] < states['initial']:
+            raise ValueError('invalid counter initial/final state')
     for e in events:
         if type(e['index']) is not int:
             raise ValueError('event index must be an integer')
         for field in ('nominal_s', 'early_s', 'late_s'):
             if type(e[field]) not in (float, int) or not math.isfinite(e[field]) or e[field] < 0:
                 raise ValueError('invalid event time/tolerance: ' + field)
-        if e['nominal_s'] > card['stop_s']:
+        if e['nominal_s'] > card['stop_s'] or e['nominal_s'] - e['early_s'] < 0:
             raise ValueError('event outside run extent')
-    for states in card.get('counter_channels', {}).values():
-        if any(type(states[k]) is not int for k in ('initial', 'final')) or states['final'] < states['initial']:
-            raise ValueError('invalid counter initial/final state')
+        if e.get('counter'):
+            if e['counter'] not in channels:
+                raise ValueError('undeclared counter channel: ' + e['counter'])
+            states = channels[e['counter']]
+            if not states['initial'] < e['index'] <= states['final']:
+                raise ValueError('event index outside declared counter extent')
+    for p in card.get('undefined_points', []):
+        if any(type(p[k]) not in (float, int) or not math.isfinite(p[k]) for k in ('time_s', 'left_s', 'right_s')):
+            raise ValueError('invalid undefined-point time')
+        if not 0 <= p['left_s'] < p['time_s'] < p['right_s'] <= card['stop_s']:
+            raise ValueError('invalid one-sided undefined-point obligations')
+        if not p['outputs'] or len(set(p['outputs'])) != len(p['outputs']) or any(name not in outputs for name in p['outputs']):
+            raise ValueError('invalid undefined-point output obligation')
 
 
 def load_contract(*, cards=None):
@@ -191,6 +205,10 @@ def _event_history(card, rows, ut, count_tolerance):
     # Same-channel increments establish order even when their brackets touch.
     # Different channels require disjoint observed brackets to prove strict order.
     for previous, current in zip(events, events[1:]):
+        if previous.get('counter') not in channels or current.get('counter') not in channels:
+            # Declared legal windows cannot establish observed callback order.
+            # Missing-counter issues above already keep this history unknown.
+            continue
         if previous.get('counter') == current.get('counter') and previous.get('counter') in channels:
             if current['index'] <= previous['index']:
                 errors.append('declared same-channel event order is reversed')
