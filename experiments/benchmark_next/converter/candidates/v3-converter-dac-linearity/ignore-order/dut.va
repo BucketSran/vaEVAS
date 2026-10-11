@@ -1,0 +1,24 @@
+`include "disciplines.vams"
+module dut(code,observe,clk,rst,dnl,inl,valid);
+inout code,observe,clk,rst,dnl,inl,valid;electrical code,observe,clk,rst,dnl,inl,valid;
+real x[0:15],step,a,b,od,oi;integer n,k,bad,ok;
+analog begin
+ @(initial_step) begin n=0;bad=0;ok=0;od=0;oi=0;end
+ @(cross(V(rst)-0.5,+1)) begin n=0;bad=0;ok=0;od=0;oi=0;end
+ @(cross(V(clk)-0.5,+1)) if(V(rst)<0.5 && n<16) begin
+  // Deliberately omit code-order validation.
+  x[n]=V(observe);n=n+1;
+  if(n==16 && !bad) begin
+   step=(x[15]-x[0])/15;
+   if(step>0) begin
+    for(k=0;k<16;k=k+1) begin
+     a=abs((x[k]-x[0])/step-k);if(a>oi) oi=a;
+     if(k>0) begin b=abs((x[k]-x[k-1])/step-1);if(b>od) od=b;end
+    end
+    ok=1;
+   end
+  end
+ end
+ V(dnl)<+od;V(inl)<+oi;V(valid)<+ok;
+end
+endmodule

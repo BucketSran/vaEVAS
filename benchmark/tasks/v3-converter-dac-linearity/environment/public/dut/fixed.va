@@ -1,0 +1,11 @@
+`include "disciplines.vams"
+module fixed_dac(code,observe);
+inout code,observe;electrical code,observe;
+parameter real offset=0.1,scale=0.7,delta=0.02;
+integer c;real v;
+analog begin
+ c=floor(V(code)+0.5);
+ v=offset+scale*c/15.0+((c==7)?delta:0.0);
+ V(observe)<+v;
+end
+endmodule

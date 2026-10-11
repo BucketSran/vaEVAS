@@ -1,0 +1,287 @@
+{
+  "spec": 151,
+  "calibrations": [
+    {
+      "task": "benchmark/tasks/v3-converter-segmented",
+      "variant": "reference",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-segmented/reference",
+      "expected_pass": true,
+      "case_names": null
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-segmented",
+      "variant": "alternative",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-segmented/alternative",
+      "expected_pass": true,
+      "case_names": null
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-segmented",
+      "variant": "omit-last",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-segmented/omit-last",
+      "expected_pass": false,
+      "case_names": [
+        "private-0"
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-segmented",
+      "variant": "transparent",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-segmented/transparent",
+      "expected_pass": false,
+      "case_names": [
+        "private-0"
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-segmented",
+      "variant": "wrong-scale",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-segmented/wrong-scale",
+      "expected_pass": false,
+      "case_names": [
+        "private-0"
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-segmented",
+      "variant": "bit-order",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-segmented/bit-order",
+      "expected_pass": false,
+      "case_names": [
+        "private-0"
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-thermometer",
+      "variant": "reference",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-thermometer/reference",
+      "expected_pass": true,
+      "case_names": null
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-thermometer",
+      "variant": "alternative",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-thermometer/alternative",
+      "expected_pass": true,
+      "case_names": null
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-thermometer",
+      "variant": "omit-last",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-thermometer/omit-last",
+      "expected_pass": false,
+      "case_names": [
+        "private-0"
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-thermometer",
+      "variant": "transparent",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-thermometer/transparent",
+      "expected_pass": false,
+      "case_names": [
+        "private-0"
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-thermometer",
+      "variant": "wrong-scale",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-thermometer/wrong-scale",
+      "expected_pass": false,
+      "case_names": [
+        "private-0"
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-nonideal",
+      "variant": "reference",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-nonideal/reference",
+      "expected_pass": true,
+      "case_names": null
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-nonideal",
+      "variant": "alternative",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-nonideal/alternative",
+      "expected_pass": true,
+      "case_names": null
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-nonideal",
+      "variant": "omit-last",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-nonideal/omit-last",
+      "expected_pass": false,
+      "case_names": [
+        "private-0"
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-nonideal",
+      "variant": "transparent",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-nonideal/transparent",
+      "expected_pass": false,
+      "case_names": [
+        "private-0"
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-nonideal",
+      "variant": "ideal-binary",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-nonideal/ideal-binary",
+      "expected_pass": false,
+      "case_names": [
+        "private-0"
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-subradix",
+      "variant": "reference",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-subradix/reference",
+      "expected_pass": true,
+      "case_names": null
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-subradix",
+      "variant": "alternative",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-subradix/alternative",
+      "expected_pass": true,
+      "case_names": null
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-subradix",
+      "variant": "omit-last",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-subradix/omit-last",
+      "expected_pass": false,
+      "case_names": [
+        "private-0"
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-subradix",
+      "variant": "transparent",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-subradix/transparent",
+      "expected_pass": false,
+      "case_names": [
+        "private-0"
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-subradix",
+      "variant": "ideal-binary",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-subradix/ideal-binary",
+      "expected_pass": false,
+      "case_names": [
+        "private-0"
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-dac-linearity",
+      "variant": "reference",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-dac-linearity/reference",
+      "expected_pass": true,
+      "case_names": null
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-dac-linearity",
+      "variant": "alternative",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-dac-linearity/alternative",
+      "expected_pass": true,
+      "case_names": null
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-dac-linearity",
+      "variant": "ideal-report",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-dac-linearity/ideal-report",
+      "expected_pass": false,
+      "case_names": [
+        "private-0"
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-dac-linearity",
+      "variant": "wrong-step",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-dac-linearity/wrong-step",
+      "expected_pass": false,
+      "case_names": [
+        "private-0"
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-dac-linearity",
+      "variant": "ignore-order",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-dac-linearity/ignore-order",
+      "expected_pass": false,
+      "case_names": [
+        "repeat-code"
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-dac-linearity",
+      "variant": "stale-reset",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-dac-linearity/stale-reset",
+      "expected_pass": false,
+      "case_names": [
+        "reset-truncated"
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-adc-spectrum",
+      "variant": "reference",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-adc-spectrum/reference",
+      "expected_pass": true,
+      "case_names": null
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-adc-spectrum",
+      "variant": "alternative",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-adc-spectrum/alternative",
+      "expected_pass": true,
+      "case_names": null
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-adc-spectrum",
+      "variant": "amplitude-db",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-adc-spectrum/amplitude-db",
+      "expected_pass": false,
+      "case_names": [
+        "private-0"
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-adc-spectrum",
+      "variant": "nyquist-double",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-adc-spectrum/nyquist-double",
+      "expected_pass": false,
+      "case_names": [
+        "private-0"
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-adc-spectrum",
+      "variant": "harmonics-as-fundamental",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-adc-spectrum/harmonics-as-fundamental",
+      "expected_pass": false,
+      "case_names": [
+        "private-0"
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-adc-spectrum",
+      "variant": "ignore-invalid",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-adc-spectrum/ignore-invalid",
+      "expected_pass": false,
+      "case_names": [
+        "private-2"
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-adc-spectrum",
+      "variant": "stale-reset",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-adc-spectrum/stale-reset",
+      "expected_pass": false,
+      "case_names": [
+        "private-3"
+      ]
+    }
+  ]
+}

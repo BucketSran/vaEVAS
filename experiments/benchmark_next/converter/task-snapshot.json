@@ -1,0 +1,372 @@
+{
+  "schema_version": 1,
+  "scope": "complete six converter task source trees",
+  "archive": "runs/benchmark-next-converter-r8/task-source/task-source.tar.gz",
+  "archive_sha256": "4fa907ce904302f157d36f2742e84eec732f444b05bbd0822518b621f6831e6b",
+  "files": {
+    "benchmark/tasks/v3-converter-adc-spectrum/SOURCE.md": {
+      "sha256": "a356c8d3b7629239a384e8133762fe2b57c8373cec10f2af0eb5fd1e43cfd6ea",
+      "bytes": 570
+    },
+    "benchmark/tasks/v3-converter-adc-spectrum/environment/Dockerfile": {
+      "sha256": "ad4b50a762513f687ce43b51fced9937b03330757d631fad4e6a12fac86cbbe8",
+      "bytes": 176
+    },
+    "benchmark/tasks/v3-converter-adc-spectrum/environment/public/cases.json": {
+      "sha256": "637af8b534c6b3fe6a59e0d9c7ea5ece3c3f0b3448119b9f17d3e23ee0daf6a7",
+      "bytes": 3286
+    },
+    "benchmark/tasks/v3-converter-adc-spectrum/environment/starter.va": {
+      "sha256": "333268d1b8a49204b67410f020b335dabc2c802846c2412bf2ab91c69793a4bc",
+      "bytes": 414
+    },
+    "benchmark/tasks/v3-converter-adc-spectrum/instruction.md": {
+      "sha256": "37a75a87491af8fdce62752f08057835bfd8a2f2db266b24cfad320b2d89e5e7",
+      "bytes": 1771
+    },
+    "benchmark/tasks/v3-converter-adc-spectrum/solution/dut.va": {
+      "sha256": "2fb7da7b0a9b8a5416ae3940d8eb6ea0cbfd30e90b3f196ef7e9366084b1f9c3",
+      "bytes": 1509
+    },
+    "benchmark/tasks/v3-converter-adc-spectrum/solution/solve.sh": {
+      "sha256": "644dc4df795627a25ad82bec407f3639cb7e64438cf70eb89889d6c136fc20f0",
+      "bytes": 51
+    },
+    "benchmark/tasks/v3-converter-adc-spectrum/task.toml": {
+      "sha256": "9225e9dc3b2da10c9c03c98252fb19a8edd7dbcad613db78caae07c23ccd36b7",
+      "bytes": 338
+    },
+    "benchmark/tasks/v3-converter-adc-spectrum/tests/adc_linearity.py": {
+      "sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "bytes": 18824
+    },
+    "benchmark/tasks/v3-converter-adc-spectrum/tests/cases.json": {
+      "sha256": "d0b143e4b71dd7810bbb98666ae3f0e86ea65fce13cfdc0e7860e4179e76619e",
+      "bytes": 18923
+    },
+    "benchmark/tasks/v3-converter-adc-spectrum/tests/contract.json": {
+      "sha256": "9ed4ad9ca022b7a10bb10363af12ce14f7088b4d6e882ed5b514b900f4043069",
+      "bytes": 91
+    },
+    "benchmark/tasks/v3-converter-adc-spectrum/tests/test.sh": {
+      "sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+      "bytes": 162
+    },
+    "benchmark/tasks/v3-converter-adc-spectrum/tests/v2_next_converter.py": {
+      "sha256": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+      "bytes": 3008
+    },
+    "benchmark/tasks/v3-converter-adc-spectrum/tests/v2_runtime.py": {
+      "sha256": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "bytes": 11210
+    },
+    "benchmark/tasks/v3-converter-adc-spectrum/tests/verify.py": {
+      "sha256": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+      "bytes": 109
+    },
+    "benchmark/tasks/v3-converter-dac-linearity/SOURCE.md": {
+      "sha256": "d2127331a22e699d1cfa1af1812cdcabd201a78da8eb0526e73db1af4aac1c29",
+      "bytes": 545
+    },
+    "benchmark/tasks/v3-converter-dac-linearity/environment/Dockerfile": {
+      "sha256": "ad4b50a762513f687ce43b51fced9937b03330757d631fad4e6a12fac86cbbe8",
+      "bytes": 176
+    },
+    "benchmark/tasks/v3-converter-dac-linearity/environment/public/cases.json": {
+      "sha256": "e8f82195f4b105165f473539a388af81fabf4c69fd13e547e38bd84250cf0529",
+      "bytes": 1376
+    },
+    "benchmark/tasks/v3-converter-dac-linearity/environment/public/dut/fixed.va": {
+      "sha256": "7591b45a2910bd83041fcf7406839b488d3d545c65e9a5b73fd78e30429416e1",
+      "bytes": 279
+    },
+    "benchmark/tasks/v3-converter-dac-linearity/environment/starter.va": {
+      "sha256": "f2bd75458b919a6dfb1b74c598f01792c2e11863a539afdcef2627f2808a6b82",
+      "bytes": 273
+    },
+    "benchmark/tasks/v3-converter-dac-linearity/instruction.md": {
+      "sha256": "eb94a6856568b673bb70945cf95d6eec48a4ddffb041b98956c32ac2c7c34d77",
+      "bytes": 1443
+    },
+    "benchmark/tasks/v3-converter-dac-linearity/solution/dut.va": {
+      "sha256": "29ed702ccb84f1e6c489c06d000ee17176fb4d85a2ec00eb1d31b97e49a53e1f",
+      "bytes": 749
+    },
+    "benchmark/tasks/v3-converter-dac-linearity/solution/solve.sh": {
+      "sha256": "644dc4df795627a25ad82bec407f3639cb7e64438cf70eb89889d6c136fc20f0",
+      "bytes": 51
+    },
+    "benchmark/tasks/v3-converter-dac-linearity/task.toml": {
+      "sha256": "269604edf97c818c2a694bb7ac94e95c69e3d40438e8f03961ea484e4b3c938d",
+      "bytes": 332
+    },
+    "benchmark/tasks/v3-converter-dac-linearity/tests/adc_linearity.py": {
+      "sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "bytes": 18824
+    },
+    "benchmark/tasks/v3-converter-dac-linearity/tests/cases.json": {
+      "sha256": "7bb12d9be6e854d62ce33daa94e8566bb5e060847f40760589b0dbe4b73b6763",
+      "bytes": 5710
+    },
+    "benchmark/tasks/v3-converter-dac-linearity/tests/contract.json": {
+      "sha256": "a5f305a3eb6df7b8f1304e53cd7ebacbed5bc3a62ed703c2d954982c43ed9c5e",
+      "bytes": 92
+    },
+    "benchmark/tasks/v3-converter-dac-linearity/tests/test.sh": {
+      "sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+      "bytes": 162
+    },
+    "benchmark/tasks/v3-converter-dac-linearity/tests/v2_next_converter.py": {
+      "sha256": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+      "bytes": 3008
+    },
+    "benchmark/tasks/v3-converter-dac-linearity/tests/v2_runtime.py": {
+      "sha256": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "bytes": 11210
+    },
+    "benchmark/tasks/v3-converter-dac-linearity/tests/verify.py": {
+      "sha256": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+      "bytes": 109
+    },
+    "benchmark/tasks/v3-converter-nonideal/SOURCE.md": {
+      "sha256": "6d2f1f6bde14a67970eb34276c72aa87fa0b4e164fde8e5cb9230a4abf256772",
+      "bytes": 523
+    },
+    "benchmark/tasks/v3-converter-nonideal/environment/Dockerfile": {
+      "sha256": "ad4b50a762513f687ce43b51fced9937b03330757d631fad4e6a12fac86cbbe8",
+      "bytes": 176
+    },
+    "benchmark/tasks/v3-converter-nonideal/environment/public/cases.json": {
+      "sha256": "abc89cc0647dfa638848dd7715a16dba37ab3b95ed92211c705297000cf26456",
+      "bytes": 1327
+    },
+    "benchmark/tasks/v3-converter-nonideal/environment/starter.va": {
+      "sha256": "643f09b471da134ba21c218c542c75e571dc05312ac2b0efd882db35aeb975ca",
+      "bytes": 248
+    },
+    "benchmark/tasks/v3-converter-nonideal/instruction.md": {
+      "sha256": "3acaac35352e1f258e12384d2cf88bc1b11a37e724d1925d384ee14e87317151",
+      "bytes": 1280
+    },
+    "benchmark/tasks/v3-converter-nonideal/solution/dut.va": {
+      "sha256": "5688c37838ffe363f08d2ab3c5ffb1680a8bcebc8012befa5f97011bdb5fe54b",
+      "bytes": 418
+    },
+    "benchmark/tasks/v3-converter-nonideal/solution/solve.sh": {
+      "sha256": "644dc4df795627a25ad82bec407f3639cb7e64438cf70eb89889d6c136fc20f0",
+      "bytes": 51
+    },
+    "benchmark/tasks/v3-converter-nonideal/task.toml": {
+      "sha256": "82eefe68ad197caf44691f9eb38c6f8d61595dd8ca26200e0839a68983eaa33d",
+      "bytes": 297
+    },
+    "benchmark/tasks/v3-converter-nonideal/tests/adc_linearity.py": {
+      "sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "bytes": 18824
+    },
+    "benchmark/tasks/v3-converter-nonideal/tests/cases.json": {
+      "sha256": "3fd017cb82b6ca2884f4de89cc9aaf502f1589b183f691d5f713c2fcb19c7ac5",
+      "bytes": 3586
+    },
+    "benchmark/tasks/v3-converter-nonideal/tests/contract.json": {
+      "sha256": "caca1f1b49387d25cb62d891698c57dd23eb60bd6c525edf12cde358c3d42237",
+      "bytes": 87
+    },
+    "benchmark/tasks/v3-converter-nonideal/tests/test.sh": {
+      "sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+      "bytes": 162
+    },
+    "benchmark/tasks/v3-converter-nonideal/tests/v2_next_converter.py": {
+      "sha256": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+      "bytes": 3008
+    },
+    "benchmark/tasks/v3-converter-nonideal/tests/v2_runtime.py": {
+      "sha256": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "bytes": 11210
+    },
+    "benchmark/tasks/v3-converter-nonideal/tests/verify.py": {
+      "sha256": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+      "bytes": 109
+    },
+    "benchmark/tasks/v3-converter-segmented/SOURCE.md": {
+      "sha256": "e35fed08d44d830f1dc45e776aff09494351ad9bde7f3a8a5875ecf25d20164c",
+      "bytes": 523
+    },
+    "benchmark/tasks/v3-converter-segmented/environment/Dockerfile": {
+      "sha256": "ad4b50a762513f687ce43b51fced9937b03330757d631fad4e6a12fac86cbbe8",
+      "bytes": 176
+    },
+    "benchmark/tasks/v3-converter-segmented/environment/public/cases.json": {
+      "sha256": "627b3f0b114d8f993fd4f57a94dbd5390f6f81d078518124873420315f703b93",
+      "bytes": 2052
+    },
+    "benchmark/tasks/v3-converter-segmented/environment/starter.va": {
+      "sha256": "ca9e25d1b348ecb080189e29734afdfb70ecda3d554f491062a132c5a087b44d",
+      "bytes": 257
+    },
+    "benchmark/tasks/v3-converter-segmented/instruction.md": {
+      "sha256": "0b3752be70dd45a75c4ea236c9ab28fa4680230515a4869bb8faa21f9ba86b80",
+      "bytes": 1278
+    },
+    "benchmark/tasks/v3-converter-segmented/solution/dut.va": {
+      "sha256": "bcf187344caf2b4a8a605b3e0dd2337e97e21f039eaba10f421fdae5ffd6c554",
+      "bytes": 430
+    },
+    "benchmark/tasks/v3-converter-segmented/solution/solve.sh": {
+      "sha256": "644dc4df795627a25ad82bec407f3639cb7e64438cf70eb89889d6c136fc20f0",
+      "bytes": 51
+    },
+    "benchmark/tasks/v3-converter-segmented/task.toml": {
+      "sha256": "8870a5cb7a24a09a60fc6f42f3f81b8d241a4fc7b3870048e506fbb999c7df66",
+      "bytes": 298
+    },
+    "benchmark/tasks/v3-converter-segmented/tests/adc_linearity.py": {
+      "sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "bytes": 18824
+    },
+    "benchmark/tasks/v3-converter-segmented/tests/cases.json": {
+      "sha256": "b54494794d4a1c2ec2aee3db7df2ab248c426655383b88d724e6516753a61b3a",
+      "bytes": 6616
+    },
+    "benchmark/tasks/v3-converter-segmented/tests/contract.json": {
+      "sha256": "70fb3b5b4558e66329e9eb133ed8e10d57b18ca46cc95c19e88bd6bc652314c2",
+      "bytes": 88
+    },
+    "benchmark/tasks/v3-converter-segmented/tests/test.sh": {
+      "sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+      "bytes": 162
+    },
+    "benchmark/tasks/v3-converter-segmented/tests/v2_next_converter.py": {
+      "sha256": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+      "bytes": 3008
+    },
+    "benchmark/tasks/v3-converter-segmented/tests/v2_runtime.py": {
+      "sha256": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "bytes": 11210
+    },
+    "benchmark/tasks/v3-converter-segmented/tests/verify.py": {
+      "sha256": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+      "bytes": 109
+    },
+    "benchmark/tasks/v3-converter-subradix/SOURCE.md": {
+      "sha256": "b16ecc40a41ece565399d18251009a985f9e2d7f38ec0df310bda9912dc162f6",
+      "bytes": 523
+    },
+    "benchmark/tasks/v3-converter-subradix/environment/Dockerfile": {
+      "sha256": "ad4b50a762513f687ce43b51fced9937b03330757d631fad4e6a12fac86cbbe8",
+      "bytes": 176
+    },
+    "benchmark/tasks/v3-converter-subradix/environment/public/cases.json": {
+      "sha256": "283deef28f95eba6da7f53e42e6b4b74892d2234dd09f7bf0d64b2751fa89119",
+      "bytes": 3102
+    },
+    "benchmark/tasks/v3-converter-subradix/environment/starter.va": {
+      "sha256": "8b6718f435d59122fd936e089cc741c16503c976a37a6f25f9e7111ee3919cdc",
+      "bytes": 332
+    },
+    "benchmark/tasks/v3-converter-subradix/instruction.md": {
+      "sha256": "00377144cf448742f9c8c194d19b1bbdc54ad4d506ec78db53a1f45d9cae790d",
+      "bytes": 1421
+    },
+    "benchmark/tasks/v3-converter-subradix/solution/dut.va": {
+      "sha256": "d5da80be34cbebf5b60af0550e19c65f274420637534e72e5930176d1226e174",
+      "bytes": 663
+    },
+    "benchmark/tasks/v3-converter-subradix/solution/solve.sh": {
+      "sha256": "644dc4df795627a25ad82bec407f3639cb7e64438cf70eb89889d6c136fc20f0",
+      "bytes": 51
+    },
+    "benchmark/tasks/v3-converter-subradix/task.toml": {
+      "sha256": "8d12af2c67d6a755125c7f2a8640b8a3587f87ab0a485ea47a5506e5170c28d4",
+      "bytes": 297
+    },
+    "benchmark/tasks/v3-converter-subradix/tests/adc_linearity.py": {
+      "sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "bytes": 18824
+    },
+    "benchmark/tasks/v3-converter-subradix/tests/cases.json": {
+      "sha256": "96fd674ce68edcb2d6cd4b4560d90b7a924dddbbdae0c21a74a5a84e7cca038b",
+      "bytes": 9744
+    },
+    "benchmark/tasks/v3-converter-subradix/tests/contract.json": {
+      "sha256": "c50de16e0445fd788e7c7cd7049d435553c9819ee3b64b11349e238ba68711f2",
+      "bytes": 87
+    },
+    "benchmark/tasks/v3-converter-subradix/tests/test.sh": {
+      "sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+      "bytes": 162
+    },
+    "benchmark/tasks/v3-converter-subradix/tests/v2_next_converter.py": {
+      "sha256": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+      "bytes": 3008
+    },
+    "benchmark/tasks/v3-converter-subradix/tests/v2_runtime.py": {
+      "sha256": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "bytes": 11210
+    },
+    "benchmark/tasks/v3-converter-subradix/tests/verify.py": {
+      "sha256": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+      "bytes": 109
+    },
+    "benchmark/tasks/v3-converter-thermometer/SOURCE.md": {
+      "sha256": "b700091adbee3ed8d4a7a425db7ceff9fd1c0b21cbc5edae63674885e6b0b190",
+      "bytes": 523
+    },
+    "benchmark/tasks/v3-converter-thermometer/environment/Dockerfile": {
+      "sha256": "ad4b50a762513f687ce43b51fced9937b03330757d631fad4e6a12fac86cbbe8",
+      "bytes": 176
+    },
+    "benchmark/tasks/v3-converter-thermometer/environment/public/cases.json": {
+      "sha256": "d556371fefbf066a6bf0a3788d4751ad531e3d869774939b50e745232d2d47b8",
+      "bytes": 5122
+    },
+    "benchmark/tasks/v3-converter-thermometer/environment/starter.va": {
+      "sha256": "673148a2f9868d78cfe1b084b40754aeca6958dd8063898652444dcbb532b5f8",
+      "bytes": 452
+    },
+    "benchmark/tasks/v3-converter-thermometer/instruction.md": {
+      "sha256": "7df6dbc9029a500e6eb46ada46dd4953a2baa5ab3f7658a2bc096ebde604b594",
+      "bytes": 1375
+    },
+    "benchmark/tasks/v3-converter-thermometer/solution/dut.va": {
+      "sha256": "b9d6b2d1bd034f3d3396312870c0a7e43215a92c599cfc888b415c9c087eab35",
+      "bytes": 810
+    },
+    "benchmark/tasks/v3-converter-thermometer/solution/solve.sh": {
+      "sha256": "644dc4df795627a25ad82bec407f3639cb7e64438cf70eb89889d6c136fc20f0",
+      "bytes": 51
+    },
+    "benchmark/tasks/v3-converter-thermometer/task.toml": {
+      "sha256": "cdaba88061d32afbd0978c461ef1dcbc963ea8aff6d8eeb2c69d4d49e96fa933",
+      "bytes": 300
+    },
+    "benchmark/tasks/v3-converter-thermometer/tests/adc_linearity.py": {
+      "sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "bytes": 18824
+    },
+    "benchmark/tasks/v3-converter-thermometer/tests/cases.json": {
+      "sha256": "1f459adfd397bef0b17cac23a710babf92230b087bd3cfb02345b63c0250a604",
+      "bytes": 17696
+    },
+    "benchmark/tasks/v3-converter-thermometer/tests/contract.json": {
+      "sha256": "5f81c0a23b1e33b59f165406dedfa92f393606151ffe271a4279bbfa1ea08f63",
+      "bytes": 90
+    },
+    "benchmark/tasks/v3-converter-thermometer/tests/test.sh": {
+      "sha256": "096707524aa3abdb98f64174f362489870bfc233e52cff2badb7588e62f60ae9",
+      "bytes": 162
+    },
+    "benchmark/tasks/v3-converter-thermometer/tests/v2_next_converter.py": {
+      "sha256": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+      "bytes": 3008
+    },
+    "benchmark/tasks/v3-converter-thermometer/tests/v2_runtime.py": {
+      "sha256": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "bytes": 11210
+    },
+    "benchmark/tasks/v3-converter-thermometer/tests/verify.py": {
+      "sha256": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6",
+      "bytes": 109
+    }
+  }
+}

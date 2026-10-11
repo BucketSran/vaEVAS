@@ -1,0 +1,74 @@
+{
+  "base_revision": "81eb66258b59b0a0cd48cd3decaa767be02cdd58",
+  "data_provenance": "behavioral_synthetic",
+  "license_boundary": "No commercial installation source redistributed. Oldv4 licensing beyond repository access not independently verified; publish newly authored adaptations and source links only. ADCToolbox MIT methods referenced, no copied code.",
+  "assets": [
+    {
+      "source_id": "014",
+      "path": "benchmark/reference/v4/release/benchmarkv4-r53/tasks/014-segmented-dac/public/instruction.md",
+      "sha256": "066b3543563bae5821c9c889490be5bb23df09160ab32792a7d67a22596c80db",
+      "disposition": "independent mixed binary/unary DAC task",
+      "transcription": "contract concepts and numeric weights only; new independently authored VA, original file untouched"
+    },
+    {
+      "source_id": "018",
+      "path": "benchmark/reference/v4/release/benchmarkv4-r53/tasks/018-unit-element-thermometer-dac/public/instruction.md",
+      "sha256": "4564e3935090231827a03b1e8bfec81fb1ede4ae9a9d7a7aa1b0866f069c52c9",
+      "disposition": "independent15-pin arbitrary unit mask DAC task",
+      "transcription": "contract concepts and numeric weights only; new independently authored VA, original file untouched"
+    },
+    {
+      "source_id": "025",
+      "path": "benchmark/reference/v4/release/benchmarkv4-r53/tasks/025-dac-mismatch-unit-weighting-model/public/instruction.md",
+      "sha256": "9b6d384b2d7c0781dee185b9901cd0872a2841310879db6da78e76b817c543b9",
+      "disposition": "independent mismatch weights task",
+      "transcription": "contract concepts and numeric weights only; new independently authored VA, original file untouched"
+    },
+    {
+      "source_id": "243",
+      "path": "benchmark/reference/v4/release/benchmarkv4-r53/tasks/243-subradix-dac10/public/instruction.md",
+      "sha256": "aedb97d3e8d0c0cbca055f925c963b69beb611010d19e89677eaaeb686cd9fbf",
+      "disposition": "independent radix1.8 task",
+      "transcription": "contract concepts and numeric weights only; new independently authored VA, original file untouched"
+    },
+    {
+      "source_id": "344",
+      "path": "benchmark/reference/v4/release/benchmarkv4-r53/tasks/344-segmented-dac-dem-system/public/instruction.md",
+      "sha256": "199bb4f7b7e6988770a0cf37cd4981dcbdecddef6fb2a1a0f0252182ec5d932d",
+      "disposition": "preparation only: DEM requires healthy mismatched cells and physical selector path",
+      "transcription": "contract concepts and numeric weights only; new independently authored VA, original file untouched"
+    },
+    {
+      "source_id": "190",
+      "path": "benchmark/reference/v4/release/benchmarkv4-r53/tasks/190-linearity-rdac-offset-sweep/public/instruction.md",
+      "sha256": "b4a3d0de4f5d81f85c1930ffcd0916c79e1308c2491c14d9ee0111538691b929",
+      "disposition": "preparation only: comparator/RDAC scan not represented by DAC static scan",
+      "transcription": "contract concepts and numeric weights only; new independently authored VA, original file untouched"
+    },
+    {
+      "path": "benchmark/tasks/va08-adc-linearity/SOURCE.md",
+      "sha256": "d04eb0065e8e50865040900d04630c2078694342a10f9cf90c5479c35ae0c288",
+      "disposition": "reuse audit: ADC transition/histogram DNL/INL already covered; new task measures actual DAC endpoint line scan"
+    },
+    {
+      "path": "benchmark/tasks/measure-adc-spectrum/solution/dut.va",
+      "sha256": "eadc778c27073150fa25983c47fb9c39eec52c3cebf834122ccdd1f51415e0b5",
+      "disposition": "migration reuse: original coherent64 DFT VA modified for validity/reset/ENOB; same-source group retained"
+    },
+    {
+      "path": "benchmark/workbench/sources/adctoolbox-spectrum.md",
+      "sha256": "295f3df406c3dd7f792e27abbe41be676aea8c07c2fdaa223ceaa31969ae5ce5",
+      "disposition": "algorithm method reference only; no library invocation/copy; independent checker uses cosine autocorrelation"
+    },
+    {
+      "path": "benchmark/tasks/va08-adc-linearity/instruction.md",
+      "sha256": "10302ee9cf9f874fe0e6cffe06c8d908eaab5729e6400274a14903643e76a4d3",
+      "disposition": "contract audit, unchanged historical task"
+    },
+    {
+      "path": "benchmark/tasks/measure-adc-spectrum/instruction.md",
+      "sha256": "fa03227882ebfe99872ba951264aca0390d774e78786bdee3be6ceeb534e38d3",
+      "disposition": "contract audit, unchanged historical task"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+`include "disciplines.vams"
+module dut(b0,b1,b2,b3,clk,rst,aout);
+inout b0,b1,b2,b3,clk,rst,aout;electrical b0,b1,b2,b3,clk,rst,aout;
+parameter real lo=0, hi=1, tr=100p;
+real q,weighted;
+analog begin
+// Implement the public contract.
+end
+endmodule
