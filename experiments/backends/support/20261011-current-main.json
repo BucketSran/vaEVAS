@@ -1,0 +1,3778 @@
+{
+  "schema_version": 1,
+  "purpose": "Current-main EVAS rerun of fixed precision and engineering-composition conditions; no new support or changed grading",
+  "date_utc": "2026-10-11T07:53:40.779767+00:00",
+  "source_revision": "fc7e57fd3b92e76b15f5c3dc8c2359d25c6b1313",
+  "production_source_clean": true,
+  "package_version": "0.14.0",
+  "ir_schema_version": 18,
+  "kernel_sha256": "78610b9afd1affa5811c4339abfbbd1306af0d61f80295d650a56becc34889f8",
+  "kernel_reported": {
+    "build_revision": null,
+    "identity_version": 1,
+    "ir_schema_version": 18,
+    "name": "evas-kernel",
+    "platform": {
+      "arch": "aarch64",
+      "os": "macos"
+    },
+    "request_protocol_version": null,
+    "version": "0.14.0"
+  },
+  "build_command": "cargo build --locked --manifest-path evas/rust_core/Cargo.toml",
+  "build_log_sha256": "f459cd647f2285246f3f91a4973c978bc6b0c7fa4c312fb852cc58f908477944",
+  "source_manifest_sha256": "916ce6f14afb5688c7da72da072430d293d8865047f0ff5c103532e10b6ea301",
+  "checker_sha256": {
+    "evas/validation/paper/precision_checker.py": "534b50f237b17032eb0979589ab7ba4c1d5cf97def631fed57e4b50de16adbd7",
+    "evas/validation/paper/precision-v1.json": "66f861ec83d75ec996a6fdc0b84263567b4a123b98a5f8e0cf920aeb734f328b",
+    "evas/validation/strobe/timer_composition.py": "cfdff70e41ed31b7d2874cfa4d3b89fba60d76c855263823bccb7c8ae08949f3",
+    "evas/validation/sample_edge_filter/contract.py": "b34319644d00238316a4a898ba125f7a6ada2f88656a14a8966ecfc8d8eabb90",
+    "evas/validation/strobe/near_timer.py": "46178578a9fcb7baca94c0a7d95f3ca99d1cf47380677b1274123c431577628b",
+    "evas/validation/slew_cascade/compare.py": "9309178b26730c7bcb48c611fcb8981a8eafcfa8b762e3439fca768f25084b6a",
+    "evas/validation/filter_direct/compare.py": "6fdf14f23ed411fa4ab58f79b61af055a5ea8791e0b8caa5fb7bfc1cb8517ed6",
+    "experiments/backends/support/precision_report.py": "a29510352963d004b94cedadb21b00573e2b6679721c551fcb6e361d4b7ce624",
+    "experiments/backends/support/precision_run.py": "c4ccb3cd0215bd0540f28c13ff7eb5ab2056a3e16b3e4bc0dd7adf82b2fcef3e",
+    "experiments/backends/strobe/timer_report.py": "724882dd9b935460872131f0c9aa35e3ca74d3fbd6a46006961b5a1921654617",
+    "experiments/backends/strobe/near_timer_run.py": "61714ced3de2a6fa64e4e04654c4be16531d00536513c264f2cea051caddc138",
+    "experiments/backends/paper/observations.py": "0aff2f248d63b9e81b1fcf5bab5722df13bdcf42fd7edffe4fe65f45b79b845c"
+  },
+  "capabilities": [
+    "TIMER",
+    "CROSS",
+    "SLEW",
+    "DYNAMICS",
+    "COMPOSE",
+    "QUALIFICATION"
+  ],
+  "counts": {
+    "evas_configurations": 74,
+    "evas_pass": 74,
+    "unique_conditions": 21,
+    "new_remote_simulator_calls": 0,
+    "by_group": {
+      "composition": 16,
+      "filter": 6,
+      "near-timer": 12,
+      "precision": 32,
+      "slew": 6,
+      "slew-local": 2
+    }
+  },
+  "reused_references": {
+    "support/20261010-precision.json": "345775576ac4691e2ae6a200ff9ec547379a5b98e912aa7931a23b2c8c1496e1",
+    "strobe/20261010-timer-fix.json": "e320a0a251af68eece5e12fafd5f6cfab046ec1a3590ea368006d414a3a9be6c",
+    "strobe/20261011-near-timer.json": "31871602011109fe7d31c1ffd96ff1c78d5fadc19abd54f2e82c23d30fb2b165",
+    "slew-cascade/receipt.json": "04f3a66c85c8fe3f95890e611a3576347b053a3bd3233e693eea4a35eb900195",
+    "filter-direct/receipt.json": "628c54b90c5f425ccb2a6e4ba552b39e2d8eb6d8551668b3deb9a35e1152b37f"
+  },
+  "reuse_basis": "Same original VA, stimuli, requested points/settings, independent checkers and budgets. Existing Spectre/ngspice/Gnucap measurements retain original versions and failures. Slew/filter native raw manifests were verified and regraded; other backend conclusions reused from immutable receipts, not newly executed.",
+  "limits": {
+    "host": "macOS local debug build",
+    "remote_calls": 0,
+    "precision_and_composition_worker_timeout_s": 90,
+    "linux_resource_limits": "not applied; portable local replay",
+    "performance_claim": false
+  },
+  "preparation_failures": {
+    "logs": [
+      "replay.log",
+      "replay-local.log"
+    ],
+    "reason": "Linux taskset/prlimit wrapper rejected macOS; POSIX waitid cleanup then failed on macOS. Two preliminary worker attempts were excluded from the qualified rerun, preserved separately, and not relabeled as simulator behavior failures.",
+    "qualified_score_replaces_old_failures": false
+  },
+  "availability": {
+    "raw": "local-only",
+    "root": "runs/comparison-current-20261011",
+    "manifest_sha256": "fef7180a5599a9248e8201bbc05f34037b7f3b7c1767a052d0a8b38f86ceff46",
+    "replay_driver_sha256": "7c20af3be5eae139fa0472e93388b3796eb360a27dec27aaef9afab1586da226"
+  },
+  "scope_limits": [
+    "Finite observed-point acceptance, not full-trajectory proof",
+    "Prior basic-language/operator rows not reexecuted in this refresh",
+    "PR #131 unchanged and excluded",
+    "Old strict boundary F/I and accepted SEF-TIMER-18 remain unchanged"
+  ],
+  "results": [
+    {
+      "group": "precision",
+      "condition": "SH-T-RAMP",
+      "profile": "base",
+      "passed": true,
+      "points": 1107,
+      "model_sha256": "69485b9da8f12911ca5cb3b750c0d4051d22b30da057b4fdaa9ca906703a94fb",
+      "request_sha256": "e67c605d260476d8e3befc071e2bef7f3c529fbe50d0e2e5d8afbdad46f56aa8",
+      "response_sha256": "b5e277d00a0527cebc4a81995959d0c18784d509caa5f13659a02bee0b5089e8",
+      "result_sha256": "00d58987b488b24e938bf57d90d01b9976ea8af0a3368b6a404101d76d1c4fd0",
+      "assessment": {
+        "voltage_budget_V": 1.0099999999999999e-06,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 7.419412306752804e-15
+        },
+        "initial_error_upper_V": 1.7763568394002505e-15,
+        "error_lower_V": 0.0,
+        "error_upper_V": 4.000000073944854e-07
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 1144
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 1107
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "SH-T-RAMP",
+      "profile": "tol",
+      "passed": true,
+      "points": 1107,
+      "model_sha256": "69485b9da8f12911ca5cb3b750c0d4051d22b30da057b4fdaa9ca906703a94fb",
+      "request_sha256": "4cf36d057c9674e32c4ecdac01c803aee0999c1ee0365c558ef194aec988c81b",
+      "response_sha256": "09e8de2a295c13ef5bd2583346a23e141454995a06dd6308c56738cd6f26cc84",
+      "result_sha256": "8859036d295ccab71ed76d40b0913f756c94a19d5b03f6b793fd24e52209c6ea",
+      "assessment": {
+        "voltage_budget_V": 1.0099999999999999e-06,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 7.419412306752804e-15
+        },
+        "initial_error_upper_V": 1.7763568394002505e-15,
+        "error_lower_V": 0.0,
+        "error_upper_V": 4.000000073944854e-07
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 1144
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 1107
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "SH-T-RAMP",
+      "profile": "step",
+      "passed": true,
+      "points": 1107,
+      "model_sha256": "69485b9da8f12911ca5cb3b750c0d4051d22b30da057b4fdaa9ca906703a94fb",
+      "request_sha256": "caf1bf6652803c924567672856d6ee507dfa8327f7253bffd016b90fcc2d23a0",
+      "response_sha256": "699fabcffa3b1513071d44f65a9e20e6ceb12ea383752a3af2a29313b1f33483",
+      "result_sha256": "ed322a18567992c638eb6243a621e9f4859fbc37dffdd99ee7fb0bef6e43f460",
+      "assessment": {
+        "voltage_budget_V": 1.0099999999999999e-06,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 7.419412306752804e-15
+        },
+        "initial_error_upper_V": 1.7763568394002505e-15,
+        "error_lower_V": 0.0,
+        "error_upper_V": 4.000000073944854e-07
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 3148
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 1107
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "SH-T-RAMP",
+      "profile": "both",
+      "passed": true,
+      "points": 1107,
+      "model_sha256": "69485b9da8f12911ca5cb3b750c0d4051d22b30da057b4fdaa9ca906703a94fb",
+      "request_sha256": "491f07d0a9ca330b92ecd84857e9d40196dab6a23045af3443de7ab8a561b86d",
+      "response_sha256": "76a1c06b2b2b48f43702fc84628d9442da46793a4f6bb4e02760ce50aee312c7",
+      "result_sha256": "a27415f5b9932d08a9e96029c9a8c68338d3e3dbcd0bb947ed4a554f912a6c6d",
+      "assessment": {
+        "voltage_budget_V": 1.0099999999999999e-06,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 7.419412306752804e-15
+        },
+        "initial_error_upper_V": 1.7763568394002505e-15,
+        "error_lower_V": 0.0,
+        "error_upper_V": 4.000000073944854e-07
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 3148
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 1107
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "SH-X-RAMP",
+      "profile": "base",
+      "passed": true,
+      "points": 1193,
+      "model_sha256": "c1e5bbb9eaf6c73ebb968f05dc2bc78a3f68a2d39c6fc9fdebf5059d572c6bd6",
+      "request_sha256": "5064f8c84ef2cddf922d4537938cefa256276c8ae617004ced862a031b9f2b38",
+      "response_sha256": "05749c21d1e4ec1adda52188519efe9eb2dca43a1c6ea180a108fad47c31522c",
+      "result_sha256": "c100e512fd95ebdc01ce4c04c9628668991d37612aa12e15d9f130a2d4fc71dd",
+      "assessment": {
+        "voltage_budget_V": 1.0099999999999999e-06,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 7.419412306752804e-15,
+          "clk": 2.798213050159174e-13
+        },
+        "initial_error_upper_V": 1.7763568394002505e-15,
+        "error_lower_V": 0.0,
+        "error_upper_V": 4.0000000720019635e-07
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 1226
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 1193
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "SH-X-RAMP",
+      "profile": "tol",
+      "passed": true,
+      "points": 1193,
+      "model_sha256": "c1e5bbb9eaf6c73ebb968f05dc2bc78a3f68a2d39c6fc9fdebf5059d572c6bd6",
+      "request_sha256": "dda1ea6d3baeda786b35e797f66d1ac4f75ad43bd27e2a29c7c3bc52f3a233bf",
+      "response_sha256": "b185d8be6c5ec3c59d25b723e9a9b321efebe78ac07d7424061d454bc4f2f1f3",
+      "result_sha256": "807517b7f8a873f25c0e13b5ade193e41349400f75f588bd371bcf1738bd0a53",
+      "assessment": {
+        "voltage_budget_V": 1.0099999999999999e-06,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 7.419412306752804e-15,
+          "clk": 2.798213050159174e-13
+        },
+        "initial_error_upper_V": 1.7763568394002505e-15,
+        "error_lower_V": 0.0,
+        "error_upper_V": 4.0000000720019635e-07
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 1226
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 1193
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "SH-X-RAMP",
+      "profile": "step",
+      "passed": true,
+      "points": 1193,
+      "model_sha256": "c1e5bbb9eaf6c73ebb968f05dc2bc78a3f68a2d39c6fc9fdebf5059d572c6bd6",
+      "request_sha256": "64ff2086cfb687c6c0dac600cc0965f6fb3a62e4ae1e7904e7fbc7402c2136c8",
+      "response_sha256": "02db4e8bf726ef5b6b965037c5610fbea91a18fa0f319b382567a7a6a728de00",
+      "result_sha256": "39b2e145d18640bb2cf95b1d192308db492657c2a14b02080546c38b9e46a497",
+      "assessment": {
+        "voltage_budget_V": 1.0099999999999999e-06,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 7.419412306752804e-15,
+          "clk": 2.798213050159174e-13
+        },
+        "initial_error_upper_V": 1.7763568394002505e-15,
+        "error_lower_V": 0.0,
+        "error_upper_V": 4.0000000720019635e-07
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 3214
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 1193
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "SH-X-RAMP",
+      "profile": "both",
+      "passed": true,
+      "points": 1193,
+      "model_sha256": "c1e5bbb9eaf6c73ebb968f05dc2bc78a3f68a2d39c6fc9fdebf5059d572c6bd6",
+      "request_sha256": "0baf9914167094736502ba0737f253e4bcb41790384d3204b739139ae3349e16",
+      "response_sha256": "f0da9d3c85ee1d909bc36cbadb02095250bd2ea41d9fb918e6aea0e960a781db",
+      "result_sha256": "d3f7c87a1b99f1f1c31d52a05a6c3ba673befb2b2a34a0c0f84dd4df73d532db",
+      "assessment": {
+        "voltage_budget_V": 1.0099999999999999e-06,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 7.419412306752804e-15,
+          "clk": 2.798213050159174e-13
+        },
+        "initial_error_upper_V": 1.7763568394002505e-15,
+        "error_lower_V": 0.0,
+        "error_upper_V": 4.0000000720019635e-07
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 3214
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 1193
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "SH-T-SMALL",
+      "profile": "base",
+      "passed": true,
+      "points": 1107,
+      "model_sha256": "69485b9da8f12911ca5cb3b750c0d4051d22b30da057b4fdaa9ca906703a94fb",
+      "request_sha256": "2cef11ee6be306a61be1160bb397fe1577e9c70d39db1b3cab032f7ffb4a4ce7",
+      "response_sha256": "c0106ae5cc4cd86b9a9a6ef50025440992b57c21246651f88c3daeab53536df3",
+      "result_sha256": "9da7eef3c0af3771df347a8312abed5c9d5a006c138161f77367890f354008ce",
+      "assessment": {
+        "voltage_budget_V": 1.1000000000000001e-08,
+        "input_budget_V": 1.1000000000000001e-10,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 7.37257477290143e-18
+        },
+        "initial_error_upper_V": 1.734723475976807e-18,
+        "error_lower_V": 0.0,
+        "error_upper_V": 4.000000073463468e-10
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 1144
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 1107
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "SH-T-SMALL",
+      "profile": "tol",
+      "passed": true,
+      "points": 1107,
+      "model_sha256": "69485b9da8f12911ca5cb3b750c0d4051d22b30da057b4fdaa9ca906703a94fb",
+      "request_sha256": "c455bd25478e37e31bcef652ce1d8cb8bac0744fb6093cf5512511394524d3bf",
+      "response_sha256": "936e70324af5fd8a8b1e09a1d762c3e731965839e80430d4ca18f95ae2d95105",
+      "result_sha256": "0e5efec75c27ba29a2198bb5194829fd09c68293b864751399e721266db7cc55",
+      "assessment": {
+        "voltage_budget_V": 1.1000000000000001e-08,
+        "input_budget_V": 1.1000000000000001e-10,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 7.37257477290143e-18
+        },
+        "initial_error_upper_V": 1.734723475976807e-18,
+        "error_lower_V": 0.0,
+        "error_upper_V": 4.000000073463468e-10
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 1144
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 1107
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "SH-T-SMALL",
+      "profile": "step",
+      "passed": true,
+      "points": 1107,
+      "model_sha256": "69485b9da8f12911ca5cb3b750c0d4051d22b30da057b4fdaa9ca906703a94fb",
+      "request_sha256": "82685a5a805a573eb5cb42d64286afaedb1c9c5225cf9c27487cdae66b2c8b34",
+      "response_sha256": "0abd2009957f9df5898c27c0c184e02f721a2327c3d904a1448efe7d038d984b",
+      "result_sha256": "5071e89bbbf0f31884570531490913fd6dfa171014ccefd773eee1b2382d9593",
+      "assessment": {
+        "voltage_budget_V": 1.1000000000000001e-08,
+        "input_budget_V": 1.1000000000000001e-10,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 7.37257477290143e-18
+        },
+        "initial_error_upper_V": 1.734723475976807e-18,
+        "error_lower_V": 0.0,
+        "error_upper_V": 4.000000073463468e-10
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 3148
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 1107
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "SH-T-SMALL",
+      "profile": "both",
+      "passed": true,
+      "points": 1107,
+      "model_sha256": "69485b9da8f12911ca5cb3b750c0d4051d22b30da057b4fdaa9ca906703a94fb",
+      "request_sha256": "bb4a21d9dbd251c89981aa584571fd92c3fcfa5465adde314b41891054953933",
+      "response_sha256": "340c91a12f4cfeda085729afb4b9372d3c10e8d455d85e40f772c35daf08b7da",
+      "result_sha256": "0adaf72d9c548849dad1b484815b300fa39f7dc7af1bf34b73f291ea3f3ba55b",
+      "assessment": {
+        "voltage_budget_V": 1.1000000000000001e-08,
+        "input_budget_V": 1.1000000000000001e-10,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 7.37257477290143e-18
+        },
+        "initial_error_upper_V": 1.734723475976807e-18,
+        "error_lower_V": 0.0,
+        "error_upper_V": 4.000000073463468e-10
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 3148
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 1107
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "SH-T-LONG",
+      "profile": "base",
+      "passed": true,
+      "points": 4371,
+      "model_sha256": "69485b9da8f12911ca5cb3b750c0d4051d22b30da057b4fdaa9ca906703a94fb",
+      "request_sha256": "86695dd9cff064cb13cdbe7417e36b47678ee4ad9ff569f74dbad6cfd25b3b68",
+      "response_sha256": "2cd1b4c59030e552c7903c89011da721a388084b98016eb9f86487959371c09a",
+      "result_sha256": "3a9f0692928a8ebc9aace71b59807bd50defbbd447584111629784de5967a8d8",
+      "assessment": {
+        "voltage_budget_V": 1.0099999999999999e-06,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 1.8041124150158794e-15
+        },
+        "initial_error_upper_V": 1.7763568394002505e-15,
+        "error_lower_V": 0.0,
+        "error_upper_V": 1.7763568394002505e-15
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": "unknown",
+          "stop": 3.25e-05,
+          "maxstep": 3.125e-08,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 3.25e-05,
+          "maxstep": 3.125e-08
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "stop": 3.25e-05,
+          "maxstep": 3.125e-08
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 4440
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 4371
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "SH-T-LONG",
+      "profile": "tol",
+      "passed": true,
+      "points": 4371,
+      "model_sha256": "69485b9da8f12911ca5cb3b750c0d4051d22b30da057b4fdaa9ca906703a94fb",
+      "request_sha256": "7c3c06b8681b67553579dfb9ae5ecfea81fb704e38a323999520e5438317cbc9",
+      "response_sha256": "6e0f8532fee9f47ef993f5ef555e31ca91939cb2a5a325219aaf7ddae3bbc7e3",
+      "result_sha256": "c8ca8a2e3e6367198735fdc12b4c006fc6459d3c2f88739106035d61109e313e",
+      "assessment": {
+        "voltage_budget_V": 1.0099999999999999e-06,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 1.8041124150158794e-15
+        },
+        "initial_error_upper_V": 1.7763568394002505e-15,
+        "error_lower_V": 0.0,
+        "error_upper_V": 1.7763568394002505e-15
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": "unknown",
+          "stop": 3.25e-05,
+          "maxstep": 3.125e-08,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 3.25e-05,
+          "maxstep": 3.125e-08
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "stop": 3.25e-05,
+          "maxstep": 3.125e-08
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 4440
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 4371
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "SH-T-LONG",
+      "profile": "step",
+      "passed": true,
+      "points": 4371,
+      "model_sha256": "69485b9da8f12911ca5cb3b750c0d4051d22b30da057b4fdaa9ca906703a94fb",
+      "request_sha256": "87bda5c5a071f6e0ce0482548f646d55a5c9f50c80aa92c10f1b6537dc1dbb97",
+      "response_sha256": "d67d2f412b53b9f8d7b14ca5dd43b8d7ab96637273edbcb713654de6b4edf60b",
+      "result_sha256": "e01e33a750b5b233910a26c9f5f1bc0ca044c712fa47672b3eb064ae05392a08",
+      "assessment": {
+        "voltage_budget_V": 1.0099999999999999e-06,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 1.8041124150158794e-15
+        },
+        "initial_error_upper_V": 1.7763568394002505e-15,
+        "error_lower_V": 0.0,
+        "error_upper_V": 1.7763568394002505e-15
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": "unknown",
+          "stop": 3.25e-05,
+          "maxstep": 3.90625e-09,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 3.25e-05,
+          "maxstep": 3.90625e-09
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "stop": 3.25e-05,
+          "maxstep": 3.90625e-09
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 11856
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 4371
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "SH-T-LONG",
+      "profile": "both",
+      "passed": true,
+      "points": 4371,
+      "model_sha256": "69485b9da8f12911ca5cb3b750c0d4051d22b30da057b4fdaa9ca906703a94fb",
+      "request_sha256": "2edad74855c7867efb5f345bdbe8cb1e068b198fb7402b54a298f5b4133d97c2",
+      "response_sha256": "feef63ccd8a1f105d2935ec781e8d481a089327b0d343be79d3a50c6acfb3759",
+      "result_sha256": "20a1ad95902b6a67707c96b0e2cd115d71473217b3d12ffd0303ef3bd3583bf8",
+      "assessment": {
+        "voltage_budget_V": 1.0099999999999999e-06,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 1.8041124150158794e-15
+        },
+        "initial_error_upper_V": 1.7763568394002505e-15,
+        "error_lower_V": 0.0,
+        "error_upper_V": 1.7763568394002505e-15
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": "unknown",
+          "stop": 3.25e-05,
+          "maxstep": 3.90625e-09,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 3.25e-05,
+          "maxstep": 3.90625e-09
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "stop": 3.25e-05,
+          "maxstep": 3.90625e-09
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 11856
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 4371
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "LP-RAMP",
+      "profile": "base",
+      "passed": true,
+      "points": 267,
+      "model_sha256": "747c09cc841a07d6a51491ee2124f750451c82b8dd0034e1cc682059db3175b9",
+      "request_sha256": "c67c2deeb0d55d004657c767686288b0d6f068445244bbcadb3b3cadc642ce9c",
+      "response_sha256": "d679a13a3c97429c7cce6989ae0f19008a947f308c110a7b435326b873e4e7cb",
+      "result_sha256": "987f577dd0d2b969785a3e5103cef8e33933348a6d06a227ac2b4e27b992bf6c",
+      "assessment": {
+        "voltage_budget_V": 1.0099999999999999e-06,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 2.9325500361387924e-14
+        },
+        "error_lower_V": 0.0,
+        "error_upper_V": 5.637504352229428e-14
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": "unknown",
+          "stop": 8e-06,
+          "maxstep": 3.125e-08,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 8e-06,
+          "maxstep": 3.125e-08
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "stop": 8e-06,
+          "maxstep": 3.125e-08
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 305
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 267
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "LP-RAMP",
+      "profile": "tol",
+      "passed": true,
+      "points": 267,
+      "model_sha256": "747c09cc841a07d6a51491ee2124f750451c82b8dd0034e1cc682059db3175b9",
+      "request_sha256": "d7220f64481241c982f8578275b7b2d76803d00f263a5d496cac7ce7b1810a44",
+      "response_sha256": "52705fdf5eaacbf604e9eb6a2ae9f1d207d233edc723a805c2c1e7fbc8ec8501",
+      "result_sha256": "0b31aecbee5e4259b9bc53463dfd39ee74130b747933569e19a165efbb60fcfd",
+      "assessment": {
+        "voltage_budget_V": 1.0099999999999999e-06,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 2.9325500361387924e-14
+        },
+        "error_lower_V": 0.0,
+        "error_upper_V": 5.637504352229428e-14
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": "unknown",
+          "stop": 8e-06,
+          "maxstep": 3.125e-08,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 8e-06,
+          "maxstep": 3.125e-08
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "stop": 8e-06,
+          "maxstep": 3.125e-08
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 305
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 267
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "LP-RAMP",
+      "profile": "step",
+      "passed": true,
+      "points": 267,
+      "model_sha256": "747c09cc841a07d6a51491ee2124f750451c82b8dd0034e1cc682059db3175b9",
+      "request_sha256": "d5be85bf67c61b1e5c4e04a32ce373ec12d2c525f4490cdde45354784abfe21b",
+      "response_sha256": "3428f93d1648e82d6c41f53f7c3906ae3fe481f16009d84969dba239f73873d6",
+      "result_sha256": "22ac77926efc03b88727709baf34bf19b8afa8a7723d5f3fe6d4993e55e3379b",
+      "assessment": {
+        "voltage_budget_V": 1.0099999999999999e-06,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 2.9325500361387924e-14
+        },
+        "error_lower_V": 0.0,
+        "error_upper_V": 5.637504352229428e-14
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": "unknown",
+          "stop": 8e-06,
+          "maxstep": 3.90625e-09,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 8e-06,
+          "maxstep": 3.90625e-09
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "stop": 8e-06,
+          "maxstep": 3.90625e-09
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 2199
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 267
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "LP-RAMP",
+      "profile": "both",
+      "passed": true,
+      "points": 267,
+      "model_sha256": "747c09cc841a07d6a51491ee2124f750451c82b8dd0034e1cc682059db3175b9",
+      "request_sha256": "17fa9aaf2db742228ea772e04805c786b07b99d399edfdf0533f6f7db2088da0",
+      "response_sha256": "61fb16ba53f0112df805d18c1455c5546d94c41b8f15b2ff216c199f214df73a",
+      "result_sha256": "f4ec435c074634bdc88a1b74b463e960ec9898d988315b0461fbc0e97a65df94",
+      "assessment": {
+        "voltage_budget_V": 1.0099999999999999e-06,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 2.9325500361387924e-14
+        },
+        "error_lower_V": 0.0,
+        "error_upper_V": 5.637504352229428e-14
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": "unknown",
+          "stop": 8e-06,
+          "maxstep": 3.90625e-09,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 8e-06,
+          "maxstep": 3.90625e-09
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "stop": 8e-06,
+          "maxstep": 3.90625e-09
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 2199
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 267
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "LP-NONZERO",
+      "profile": "base",
+      "passed": true,
+      "points": 267,
+      "model_sha256": "747c09cc841a07d6a51491ee2124f750451c82b8dd0034e1cc682059db3175b9",
+      "request_sha256": "c95d1e6a28208142fb6d1245d8d18616d8241b1d79f599a9cb7318017e1fb4be",
+      "response_sha256": "8f855afc31c4ed53d38be731de862d1d377f2e26d2466481ecf8751e7955c666",
+      "result_sha256": "e014f5cf1150ee5756e36bd993c53e23ec383cdf55c3028751d5d6e89a3807f9",
+      "assessment": {
+        "voltage_budget_V": 1.0099999999999999e-06,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 2.2549236783353528e-14
+        },
+        "error_lower_V": 0.0,
+        "error_upper_V": 5.637504352229428e-14
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": "unknown",
+          "stop": 8e-06,
+          "maxstep": 3.125e-08,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 8e-06,
+          "maxstep": 3.125e-08
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "stop": 8e-06,
+          "maxstep": 3.125e-08
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 305
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 267
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "LP-NONZERO",
+      "profile": "tol",
+      "passed": true,
+      "points": 267,
+      "model_sha256": "747c09cc841a07d6a51491ee2124f750451c82b8dd0034e1cc682059db3175b9",
+      "request_sha256": "fe3d93bf860346da6ea1740cac1f40f4d82da6e11c764a829e52703710272d8e",
+      "response_sha256": "a44f1deece9f6c616353613c3fabc3b2d7ffff643304272ec1357bfb5f0303a1",
+      "result_sha256": "407fe942896a8550cccce57d06b3aa7ec58f0b822af8eca04b85a650c3d8d5d0",
+      "assessment": {
+        "voltage_budget_V": 1.0099999999999999e-06,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 2.2549236783353528e-14
+        },
+        "error_lower_V": 0.0,
+        "error_upper_V": 5.637504352229428e-14
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": "unknown",
+          "stop": 8e-06,
+          "maxstep": 3.125e-08,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 8e-06,
+          "maxstep": 3.125e-08
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "stop": 8e-06,
+          "maxstep": 3.125e-08
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 305
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 267
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "LP-NONZERO",
+      "profile": "step",
+      "passed": true,
+      "points": 267,
+      "model_sha256": "747c09cc841a07d6a51491ee2124f750451c82b8dd0034e1cc682059db3175b9",
+      "request_sha256": "e9a317cca204d380b2e1c6c772c76b73048daddec8484a47b2590a8ffe994f46",
+      "response_sha256": "95f23ced42463cc7d40ebdd280d30dd2c0fdcacc5902cc025e526dd9b2da7392",
+      "result_sha256": "17588fc5fbccc2aacd156ccf723666037fc3ca0cf78474852407b80786a89f0f",
+      "assessment": {
+        "voltage_budget_V": 1.0099999999999999e-06,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 2.2549236783353528e-14
+        },
+        "error_lower_V": 0.0,
+        "error_upper_V": 5.637504352229428e-14
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": "unknown",
+          "stop": 8e-06,
+          "maxstep": 3.90625e-09,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 8e-06,
+          "maxstep": 3.90625e-09
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "stop": 8e-06,
+          "maxstep": 3.90625e-09
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 2199
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 267
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "LP-NONZERO",
+      "profile": "both",
+      "passed": true,
+      "points": 267,
+      "model_sha256": "747c09cc841a07d6a51491ee2124f750451c82b8dd0034e1cc682059db3175b9",
+      "request_sha256": "332a3f881ef2b865dd1228ebcb3cda6f710408d084a0e34340212fa63c767f86",
+      "response_sha256": "185c6c147885044bdb194133d5a7239ce53a1ff0abfb59b73f54efd78d08b470",
+      "result_sha256": "2e5eb08616487ad606dca127210505dec2251d3e52d1c0c0c61e5e6d8dde72ea",
+      "assessment": {
+        "voltage_budget_V": 1.0099999999999999e-06,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 2.2549236783353528e-14
+        },
+        "error_lower_V": 0.0,
+        "error_upper_V": 5.637504352229428e-14
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": "unknown",
+          "stop": 8e-06,
+          "maxstep": 3.90625e-09,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 8e-06,
+          "maxstep": 3.90625e-09
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "stop": 8e-06,
+          "maxstep": 3.90625e-09
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 2199
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 267
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "LP-SMALL",
+      "profile": "base",
+      "passed": true,
+      "points": 267,
+      "model_sha256": "747c09cc841a07d6a51491ee2124f750451c82b8dd0034e1cc682059db3175b9",
+      "request_sha256": "4959222f8b9bda92d3a8d21459c1ef8705257c2f144c53d1c23db3d132f3d995",
+      "response_sha256": "fc4f123dbc2986b933412964e94110c2331fdd1527ae68c9e894b6674d95591b",
+      "result_sha256": "441340d55b6ca307ce2dabbec5ec36718ab676b8ec8cf5760ac54937a6eb7d4a",
+      "assessment": {
+        "voltage_budget_V": 1.1000000000000001e-08,
+        "input_budget_V": 1.1000000000000001e-10,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 2.927345865710862e-17
+        },
+        "error_lower_V": 0.0,
+        "error_upper_V": 5.632430286062196e-17
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": "unknown",
+          "stop": 8e-06,
+          "maxstep": 3.125e-08,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 8e-06,
+          "maxstep": 3.125e-08
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "stop": 8e-06,
+          "maxstep": 3.125e-08
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 305
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 267
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "LP-SMALL",
+      "profile": "tol",
+      "passed": true,
+      "points": 267,
+      "model_sha256": "747c09cc841a07d6a51491ee2124f750451c82b8dd0034e1cc682059db3175b9",
+      "request_sha256": "bd5597e12765e0e8837fa5b21d990780bdbbaf06aad8f59ad5708404dca9dc84",
+      "response_sha256": "69cfee758b4475d91d19553ecf1672dc04016537d3b567ee0175aa615ab18887",
+      "result_sha256": "1ab1ce39229a4d6f21fc5be76e022233415ecd18d752470fc44326431c1010aa",
+      "assessment": {
+        "voltage_budget_V": 1.1000000000000001e-08,
+        "input_budget_V": 1.1000000000000001e-10,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 2.927345865710862e-17
+        },
+        "error_lower_V": 0.0,
+        "error_upper_V": 5.632430286062196e-17
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": "unknown",
+          "stop": 8e-06,
+          "maxstep": 3.125e-08,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 8e-06,
+          "maxstep": 3.125e-08
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "stop": 8e-06,
+          "maxstep": 3.125e-08
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 305
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 267
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "LP-SMALL",
+      "profile": "step",
+      "passed": true,
+      "points": 267,
+      "model_sha256": "747c09cc841a07d6a51491ee2124f750451c82b8dd0034e1cc682059db3175b9",
+      "request_sha256": "6db5bc0939c602a5d3db91554d33916ba218b41e6b0bb49a6ac0cd3fc170a0f8",
+      "response_sha256": "6a36233ddb6d78fc7a31243f908c37a63cfc340fd1e26217ef963013e392333f",
+      "result_sha256": "94d5ce7b757bc9c6bb14a2b8677171cf4ade15cf13d56366003904a455f7fc94",
+      "assessment": {
+        "voltage_budget_V": 1.1000000000000001e-08,
+        "input_budget_V": 1.1000000000000001e-10,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 2.927345865710862e-17
+        },
+        "error_lower_V": 0.0,
+        "error_upper_V": 5.632430286062196e-17
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": "unknown",
+          "stop": 8e-06,
+          "maxstep": 3.90625e-09,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 8e-06,
+          "maxstep": 3.90625e-09
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "stop": 8e-06,
+          "maxstep": 3.90625e-09
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 2199
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 267
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "LP-SMALL",
+      "profile": "both",
+      "passed": true,
+      "points": 267,
+      "model_sha256": "747c09cc841a07d6a51491ee2124f750451c82b8dd0034e1cc682059db3175b9",
+      "request_sha256": "02dba6c1d7d8577e0503c1f6bd7311e09096703f708a6ca36a9db8f84ba6367e",
+      "response_sha256": "688718a1949b6f86c9b63755a50d30d2fac6605ce82b431d6f8a0e2538ae95fd",
+      "result_sha256": "e7122118a5484ee2078052f4e553fe1c551327b4d7afb268dc33c28948f18810",
+      "assessment": {
+        "voltage_budget_V": 1.1000000000000001e-08,
+        "input_budget_V": 1.1000000000000001e-10,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 2.927345865710862e-17
+        },
+        "error_lower_V": 0.0,
+        "error_upper_V": 5.632430286062196e-17
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": "unknown",
+          "stop": 8e-06,
+          "maxstep": 3.90625e-09,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 8e-06,
+          "maxstep": 3.90625e-09
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "stop": 8e-06,
+          "maxstep": 3.90625e-09
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 2199
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 267
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "LP-IDT",
+      "profile": "base",
+      "passed": true,
+      "points": 267,
+      "model_sha256": "f377a2b9f55b9e5d083bd0ba7526583b0a3a3f90b6f38af0c953395746507236",
+      "request_sha256": "c67c2deeb0d55d004657c767686288b0d6f068445244bbcadb3b3cadc642ce9c",
+      "response_sha256": "8e4720e5e9a819cae58680626e6b8b692b0964c7bcf1cabe399a60d353640226",
+      "result_sha256": "cbf7f88cf57c8d16ab5ffc883370be11314b6ff3694a08240b8d817045cfe4d3",
+      "assessment": {
+        "voltage_budget_V": 1.0099999999999999e-06,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 2.9325500361387924e-14
+        },
+        "error_lower_V": 0.0,
+        "error_upper_V": 5.676362158091308e-14
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": "unknown",
+          "stop": 8e-06,
+          "maxstep": 3.125e-08,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 8e-06,
+          "maxstep": 3.125e-08
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "stop": 8e-06,
+          "maxstep": 3.125e-08
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 305
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 267
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "LP-IDT",
+      "profile": "tol",
+      "passed": true,
+      "points": 267,
+      "model_sha256": "f377a2b9f55b9e5d083bd0ba7526583b0a3a3f90b6f38af0c953395746507236",
+      "request_sha256": "d7220f64481241c982f8578275b7b2d76803d00f263a5d496cac7ce7b1810a44",
+      "response_sha256": "cfc41e4df9b27b34c7240ec7dd69f039dd41be7f37162f1cee91086a51683f41",
+      "result_sha256": "0beec0c94927e71b5db8a19227a913d333fe079810cf5ab511cbf7593a4df0b4",
+      "assessment": {
+        "voltage_budget_V": 1.0099999999999999e-06,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 2.9325500361387924e-14
+        },
+        "error_lower_V": 0.0,
+        "error_upper_V": 5.676362158091308e-14
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": "unknown",
+          "stop": 8e-06,
+          "maxstep": 3.125e-08,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 8e-06,
+          "maxstep": 3.125e-08
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "stop": 8e-06,
+          "maxstep": 3.125e-08
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 305
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 267
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "LP-IDT",
+      "profile": "step",
+      "passed": true,
+      "points": 267,
+      "model_sha256": "f377a2b9f55b9e5d083bd0ba7526583b0a3a3f90b6f38af0c953395746507236",
+      "request_sha256": "d5be85bf67c61b1e5c4e04a32ce373ec12d2c525f4490cdde45354784abfe21b",
+      "response_sha256": "fa497f97148873d063b51241ffe4e5b2214966138e487651e33db08522ebc9e8",
+      "result_sha256": "3b8832caf8c139879c4272e30ea651b27917c8e03aa8b3ad6f61fbec329d9a85",
+      "assessment": {
+        "voltage_budget_V": 1.0099999999999999e-06,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 2.9325500361387924e-14
+        },
+        "error_lower_V": 0.0,
+        "error_upper_V": 5.676362158091308e-14
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": "unknown",
+          "stop": 8e-06,
+          "maxstep": 3.90625e-09,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 8e-06,
+          "maxstep": 3.90625e-09
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "stop": 8e-06,
+          "maxstep": 3.90625e-09
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 2199
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 267
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "precision",
+      "condition": "LP-IDT",
+      "profile": "both",
+      "passed": true,
+      "points": 267,
+      "model_sha256": "f377a2b9f55b9e5d083bd0ba7526583b0a3a3f90b6f38af0c953395746507236",
+      "request_sha256": "17fa9aaf2db742228ea772e04805c786b07b99d399edfdf0533f6f7db2088da0",
+      "response_sha256": "574ebb54572ac07bd52b801c3e1a1b53b5fd4088feb7e340585156096128628c",
+      "result_sha256": "7424b6e7599845f9ca20d478b1d62ed2bba29e348171d65e95ea361b94fd78f8",
+      "assessment": {
+        "voltage_budget_V": 1.0099999999999999e-06,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 2.9325500361387924e-14
+        },
+        "error_lower_V": 0.0,
+        "error_upper_V": 5.676362158091308e-14
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": "unknown",
+          "stop": 8e-06,
+          "maxstep": 3.90625e-09,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 8e-06,
+          "maxstep": 3.90625e-09
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "stop": 8e-06,
+          "maxstep": 3.90625e-09
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 2199
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 267
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "composition",
+      "condition": "SEF-TIMER",
+      "profile": "base",
+      "passed": true,
+      "points": 561,
+      "model_sha256": "2d08e034782a108b2f1c02799337c4815dd3e62ab62e08d7c6b8de13e17d1ba4",
+      "request_sha256": "6348f75ae9497ca029b6406a3bfabc1938668d4599990f01517da348e63d0540",
+      "response_sha256": "e1d7b13e507ecccbae87e9eab4a7c726cdba90d2334b41bb5c6af284dc670e46",
+      "result_sha256": "593ea6f9d4f4986c33c9286a45a903c8c385a1aa2eee037129503cf418429d73",
+      "assessment": {
+        "status": "pass",
+        "maximum_errors_V": {
+          "u": 4.440892098500626e-16,
+          "clk": 3.552713678800501e-15,
+          "rst": 2.9976021664879227e-15,
+          "ah": 3.3306690738754696e-16,
+          "ae": 1.1934897514720433e-15,
+          "af": 2.6645352591003757e-15
+        }
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 569
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 561
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "composition",
+      "condition": "SEF-TIMER",
+      "profile": "tol",
+      "passed": true,
+      "points": 561,
+      "model_sha256": "2d08e034782a108b2f1c02799337c4815dd3e62ab62e08d7c6b8de13e17d1ba4",
+      "request_sha256": "1a009469cdefdfa0cdd457dd4dfe96876349c5aadf6f7efd8d896f74982c0d00",
+      "response_sha256": "a1d1ada0a2cfef41dcc9f94c94a6f0bbf7aef7b420d6dff90878ece0576dc2aa",
+      "result_sha256": "0e16d04d6355a378152fb94bd34fbb3bfca9e10ad2864694a9dd71055def3108",
+      "assessment": {
+        "status": "pass",
+        "maximum_errors_V": {
+          "u": 4.440892098500626e-16,
+          "clk": 3.552713678800501e-15,
+          "rst": 2.9976021664879227e-15,
+          "ah": 3.3306690738754696e-16,
+          "ae": 1.1934897514720433e-15,
+          "af": 2.6645352591003757e-15
+        }
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 569
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 561
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "composition",
+      "condition": "SEF-TIMER",
+      "profile": "step",
+      "passed": true,
+      "points": 561,
+      "model_sha256": "2d08e034782a108b2f1c02799337c4815dd3e62ab62e08d7c6b8de13e17d1ba4",
+      "request_sha256": "8f44347fcc1ca8e9ecb8dd059bea92cc5d9a8479cc954f4582ad0224bc5e18a7",
+      "response_sha256": "87fb56de14774868334beefee8ed09f2be26c30e1d85d0b9bfbb34f978e03e40",
+      "result_sha256": "43744ffa36be14818298054cd3ba024bfc300776672380c367c3007306a269ce",
+      "assessment": {
+        "status": "pass",
+        "maximum_errors_V": {
+          "u": 4.440892098500626e-16,
+          "clk": 3.552713678800501e-15,
+          "rst": 2.9976021664879227e-15,
+          "ah": 3.3306690738754696e-16,
+          "ae": 1.1934897514720433e-15,
+          "af": 2.6645352591003757e-15
+        }
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 2471
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 561
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "composition",
+      "condition": "SEF-TIMER",
+      "profile": "both",
+      "passed": true,
+      "points": 561,
+      "model_sha256": "2d08e034782a108b2f1c02799337c4815dd3e62ab62e08d7c6b8de13e17d1ba4",
+      "request_sha256": "ebdfb7860d9ba68f8807446ef6853de2e5acae5cc321ad2bbeb754616422c656",
+      "response_sha256": "169cfa7562cc16593256ba139a347cfc12a9490d90ff4aeca90c77b4624d294a",
+      "result_sha256": "e94377dc1a9bff0ee369c72b463994900f6cb3004531e956122fa001ab8f6a4f",
+      "assessment": {
+        "status": "pass",
+        "maximum_errors_V": {
+          "u": 4.440892098500626e-16,
+          "clk": 3.552713678800501e-15,
+          "rst": 2.9976021664879227e-15,
+          "ah": 3.3306690738754696e-16,
+          "ae": 1.1934897514720433e-15,
+          "af": 2.6645352591003757e-15
+        }
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 2471
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 561
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "composition",
+      "condition": "SEF-INTERRUPT",
+      "profile": "base",
+      "passed": true,
+      "points": 580,
+      "model_sha256": "8210ec9608d7f9e18e8745aff4c07640429cddf6bce73fa4beff0524a67d9b7e",
+      "request_sha256": "6348f75ae9497ca029b6406a3bfabc1938668d4599990f01517da348e63d0540",
+      "response_sha256": "a5e72d1b0225d87e92441626f017476e35deca0d50a1edf89ad351a5f92ce92c",
+      "result_sha256": "677a952574c4c91c795a1d902743d8374f4d9488d835461f0de45abbb540b977",
+      "assessment": {
+        "status": "pass",
+        "maximum_errors_V": {
+          "u": 5.551115123125783e-16,
+          "clk": 3.552713678800501e-15,
+          "rst": 2.9976021664879227e-15,
+          "ah": 3.3306690738754696e-16,
+          "ae": 1.0824674490095276e-15,
+          "af": 1.942890293094024e-15
+        }
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 591
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 580
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "composition",
+      "condition": "SEF-INTERRUPT",
+      "profile": "tol",
+      "passed": true,
+      "points": 580,
+      "model_sha256": "8210ec9608d7f9e18e8745aff4c07640429cddf6bce73fa4beff0524a67d9b7e",
+      "request_sha256": "1a009469cdefdfa0cdd457dd4dfe96876349c5aadf6f7efd8d896f74982c0d00",
+      "response_sha256": "c8a7dd91c8bd07c3e0d36ad2b5fc48541727a54ff0ee4bdb0ce5df6c8a555883",
+      "result_sha256": "6692b00cc33e1c40179540c874916c32e1170b51e2d18aa3372925c27ce2f635",
+      "assessment": {
+        "status": "pass",
+        "maximum_errors_V": {
+          "u": 5.551115123125783e-16,
+          "clk": 3.552713678800501e-15,
+          "rst": 2.9976021664879227e-15,
+          "ah": 3.3306690738754696e-16,
+          "ae": 1.0824674490095276e-15,
+          "af": 1.942890293094024e-15
+        }
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 591
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 580
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "composition",
+      "condition": "SEF-INTERRUPT",
+      "profile": "step",
+      "passed": true,
+      "points": 580,
+      "model_sha256": "8210ec9608d7f9e18e8745aff4c07640429cddf6bce73fa4beff0524a67d9b7e",
+      "request_sha256": "8f44347fcc1ca8e9ecb8dd059bea92cc5d9a8479cc954f4582ad0224bc5e18a7",
+      "response_sha256": "a72c74fc5238cc9bfb38670e5bcb7ea64f9376534f97b0dfb6769dc986c67d5f",
+      "result_sha256": "1a95bf99a10a5755db056060e1d304c22ec1da5bea50e95fcb66bc15f5ca502f",
+      "assessment": {
+        "status": "pass",
+        "maximum_errors_V": {
+          "u": 5.551115123125783e-16,
+          "clk": 3.552713678800501e-15,
+          "rst": 2.9976021664879227e-15,
+          "ah": 3.3306690738754696e-16,
+          "ae": 1.0824674490095276e-15,
+          "af": 1.942890293094024e-15
+        }
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 2487
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 580
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "composition",
+      "condition": "SEF-INTERRUPT",
+      "profile": "both",
+      "passed": true,
+      "points": 580,
+      "model_sha256": "8210ec9608d7f9e18e8745aff4c07640429cddf6bce73fa4beff0524a67d9b7e",
+      "request_sha256": "ebdfb7860d9ba68f8807446ef6853de2e5acae5cc321ad2bbeb754616422c656",
+      "response_sha256": "90fc3e50cd2b4b3d749deca74ef5620188b13fc03816aae64eb56b143aa88c7b",
+      "result_sha256": "1e6e8aaf92a7edb74febb7a3110a41f348b266748322bfad98c9ded53c9dbbc0",
+      "assessment": {
+        "status": "pass",
+        "maximum_errors_V": {
+          "u": 5.551115123125783e-16,
+          "clk": 3.552713678800501e-15,
+          "rst": 2.9976021664879227e-15,
+          "ah": 3.3306690738754696e-16,
+          "ae": 1.0824674490095276e-15,
+          "af": 1.942890293094024e-15
+        }
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 2487
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 580
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "composition",
+      "condition": "SEF-ISOLATION",
+      "profile": "base",
+      "passed": true,
+      "points": 573,
+      "model_sha256": "0adacb485581cc488f981e349e7def75cd7faa40f91dc9c1a3ea9c490b825cc5",
+      "request_sha256": "84d48b959897ac88d581d28b437acb3c7f7165ea6f2b2efd3d799c2f11fd1823",
+      "response_sha256": "3fbdbdc6a79debcc3b51460a792da729a86cfed7819aceac920b7e2b5cbe1b7f",
+      "result_sha256": "99d9fc80cb29c6239c2056eccb90bb2335958d31a92c63e498a6b79abac0d797",
+      "assessment": {
+        "status": "pass",
+        "maximum_errors_V": {
+          "u": 4.718447854656915e-16,
+          "clk": 3.552713678800501e-15,
+          "rst": 2.9976021664879227e-15,
+          "ah": 3.3306690738754696e-16,
+          "ae": 1.1934897514720433e-15,
+          "af": 2.6645352591003757e-15,
+          "bh": 1.8388068845354155e-16,
+          "be": 5.065392549852277e-16,
+          "bf": 5.065392549852277e-16
+        }
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 587
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 573
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "composition",
+      "condition": "SEF-ISOLATION",
+      "profile": "tol",
+      "passed": true,
+      "points": 573,
+      "model_sha256": "0adacb485581cc488f981e349e7def75cd7faa40f91dc9c1a3ea9c490b825cc5",
+      "request_sha256": "3561db5e31560708fc0f4c5e90ff3809eb782ab89c1922dc8c3284fd4c28270e",
+      "response_sha256": "69e1f0865831cfcfe02171a3e0db7a9350a4ddd54cb5777343ec5c7c6d29d13c",
+      "result_sha256": "baa87020f34cd651083b6f45fbf04290430717fad46a2f527e6d5c724eb755bc",
+      "assessment": {
+        "status": "pass",
+        "maximum_errors_V": {
+          "u": 4.718447854656915e-16,
+          "clk": 3.552713678800501e-15,
+          "rst": 2.9976021664879227e-15,
+          "ah": 3.3306690738754696e-16,
+          "ae": 1.1934897514720433e-15,
+          "af": 2.6645352591003757e-15,
+          "bh": 1.8388068845354155e-16,
+          "be": 5.065392549852277e-16,
+          "bf": 5.065392549852277e-16
+        }
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 587
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 573
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "composition",
+      "condition": "SEF-ISOLATION",
+      "profile": "step",
+      "passed": true,
+      "points": 573,
+      "model_sha256": "0adacb485581cc488f981e349e7def75cd7faa40f91dc9c1a3ea9c490b825cc5",
+      "request_sha256": "1d64e71c710540cb5af13d4e279c4c316f629e1f8a27c42c4dcb7955d936a015",
+      "response_sha256": "32ad940f52305d6cb6c5470863b9402817f1a9dbc9cc6f4b0d883d38117c5ebf",
+      "result_sha256": "c2719a8cccc21a9c4f1a3b25ee3f11c07d82ec36c4f4f818f8975a2683e195cd",
+      "assessment": {
+        "status": "pass",
+        "maximum_errors_V": {
+          "u": 4.718447854656915e-16,
+          "clk": 3.552713678800501e-15,
+          "rst": 2.9976021664879227e-15,
+          "ah": 3.3306690738754696e-16,
+          "ae": 1.1934897514720433e-15,
+          "af": 2.6645352591003757e-15,
+          "bh": 1.8388068845354155e-16,
+          "be": 5.065392549852277e-16,
+          "bf": 5.065392549852277e-16
+        }
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 2483
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 573
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "composition",
+      "condition": "SEF-ISOLATION",
+      "profile": "both",
+      "passed": true,
+      "points": 573,
+      "model_sha256": "0adacb485581cc488f981e349e7def75cd7faa40f91dc9c1a3ea9c490b825cc5",
+      "request_sha256": "5cf8041e648b38a8394564e99eb103030a32a65470466d3cebd6060580cda65b",
+      "response_sha256": "c8c1fdd9f64c493f1f5697b722ceb40644e6f4701b7ac1d06055b36d12fe1454",
+      "result_sha256": "96664e6ab38a86efff905d61a85e7516e774d847a5b56f460fb66cc57de808a5",
+      "assessment": {
+        "status": "pass",
+        "maximum_errors_V": {
+          "u": 4.718447854656915e-16,
+          "clk": 3.552713678800501e-15,
+          "rst": 2.9976021664879227e-15,
+          "ah": 3.3306690738754696e-16,
+          "ae": 1.1934897514720433e-15,
+          "af": 2.6645352591003757e-15,
+          "bh": 1.8388068845354155e-16,
+          "be": 5.065392549852277e-16,
+          "bf": 5.065392549852277e-16
+        }
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 2483
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 573
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "composition",
+      "condition": "STROBE-TIMER-IDT",
+      "profile": "base",
+      "passed": true,
+      "points": 1107,
+      "model_sha256": "ed56a26ed4d95ac5d5529450803734ddec24ec3ea9a089aff41789ad3ef3c416",
+      "request_sha256": "8f54c30754c37c9bf694478702c91175b10dbf1c43df5035b3b167e9aa17c345",
+      "response_sha256": "d1ab7c8c6b0474263b444c44a2a71d5c2552a6f490324c9933b7ce4f6ac0acfc",
+      "result_sha256": "e7183bd61bbd39010fcd7d8171c2fe2ee6ea67539e75a6cbfb5db35a4e8dbef5",
+      "assessment": {
+        "voltage_budget_V": 0.0001,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 3.364105868874923e-14
+        },
+        "initial_error_upper_V": 1.7763568394002505e-15,
+        "error_lower_V": 0.0,
+        "error_upper_V": 2.3000000328177173e-06
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 1144
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 1107
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "composition",
+      "condition": "STROBE-TIMER-IDT",
+      "profile": "tol",
+      "passed": true,
+      "points": 1107,
+      "model_sha256": "ed56a26ed4d95ac5d5529450803734ddec24ec3ea9a089aff41789ad3ef3c416",
+      "request_sha256": "52e99d9ea67a7af4da7ed33917e41786ef0eb1b5d67625ac83484a25d927ed7a",
+      "response_sha256": "543088e35535f9440397b77e630b78b730fc7dea513ca8af5ba5b78532dfba00",
+      "result_sha256": "bccf06366638fc45c0223337ec68194a151e483b340095214e64052d3906d344",
+      "assessment": {
+        "voltage_budget_V": 0.0001,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 3.364105868874923e-14
+        },
+        "initial_error_upper_V": 1.7763568394002505e-15,
+        "error_lower_V": 0.0,
+        "error_upper_V": 2.3000000328177173e-06
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 1144
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 1107
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "composition",
+      "condition": "STROBE-TIMER-IDT",
+      "profile": "step",
+      "passed": true,
+      "points": 1107,
+      "model_sha256": "ed56a26ed4d95ac5d5529450803734ddec24ec3ea9a089aff41789ad3ef3c416",
+      "request_sha256": "c98514b5e92c20f5363c24fba1b0777eb26f2aa4ac8153b2948e38cb5c528e4d",
+      "response_sha256": "aacabc1134eebf8e83180355fc4449b7032a350e1d27fc419935c8bf402797dd",
+      "result_sha256": "55dd694ea191db0c0ad421d75dd7cb5e68d42785361144e36f1ae72d19d28eeb",
+      "assessment": {
+        "voltage_budget_V": 0.0001,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 3.364105868874923e-14
+        },
+        "initial_error_upper_V": 1.7763568394002505e-15,
+        "error_lower_V": 0.0,
+        "error_upper_V": 2.3000000328177173e-06
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 3148
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 1107
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "composition",
+      "condition": "STROBE-TIMER-IDT",
+      "profile": "both",
+      "passed": true,
+      "points": 1107,
+      "model_sha256": "ed56a26ed4d95ac5d5529450803734ddec24ec3ea9a089aff41789ad3ef3c416",
+      "request_sha256": "b9632bc5fe118779117b5adc4fe33ef32fde954d614d0696163fa95a86e7fde4",
+      "response_sha256": "866041c550b4902ed944cd6f32541866128cdd9653f1d9283ddec488be63afa6",
+      "result_sha256": "00f52891621f8a30b5dcb8221ba5f397e56a42f20fcadc72e1e3a3984a7d00c9",
+      "assessment": {
+        "voltage_budget_V": 0.0001,
+        "input_budget_V": 1.01e-08,
+        "status": "pass",
+        "input_error_upper_V": {
+          "u": 3.364105868874923e-14
+        },
+        "initial_error_upper_V": 1.7763568394002505e-15,
+        "error_lower_V": 0.0,
+        "error_upper_V": 2.3000000328177173e-06
+      },
+      "settings": {
+        "status": "I",
+        "actual": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "mismatches": [],
+        "max_step_applied": true,
+        "request_echo": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "stop": 8.5e-06,
+          "maxstep": 3.90625e-09
+        },
+        "observed_response": {
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 3148
+        },
+        "sample_origin_summary": {
+          "accepted_controller_frame": 1107
+        },
+        "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification"
+      },
+      "observation_qualification": "qualified",
+      "time_coverage": "covered"
+    },
+    {
+      "group": "near-timer",
+      "condition": "chain",
+      "profile": "base",
+      "passed": true,
+      "points": 16,
+      "response_sha256": "d93249cbb54d755651f4ca466b446850a5c28e68418a25a528e8d30668b9b1a2",
+      "assessment": {
+        "status": "pass",
+        "points": 16,
+        "maximum_nominal_error_V": {
+          "e": 5.551115123125783e-17,
+          "f": 5.551115123125783e-17,
+          "i": 3.3306690738754696e-16
+        },
+        "failures": [],
+        "failure_count": 0,
+        "exact_requested_hits": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.29999999999999993,
+          0.3,
+          0.30000000000000004,
+          0.325,
+          0.35,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "tolerances": null
+    },
+    {
+      "group": "near-timer",
+      "condition": "chain",
+      "profile": "both",
+      "passed": true,
+      "points": 16,
+      "response_sha256": "ba140d999bdfff64b3582fceca523633ec83ac7941868172951d3bc37b1b5d9c",
+      "assessment": {
+        "status": "pass",
+        "points": 16,
+        "maximum_nominal_error_V": {
+          "e": 5.551115123125783e-17,
+          "f": 5.551115123125783e-17,
+          "i": 3.3306690738754696e-16
+        },
+        "failures": [],
+        "failure_count": 0,
+        "exact_requested_hits": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.29999999999999993,
+          0.3,
+          0.30000000000000004,
+          0.325,
+          0.35,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "tolerances": null
+    },
+    {
+      "group": "near-timer",
+      "condition": "chain",
+      "profile": "step",
+      "passed": true,
+      "points": 16,
+      "response_sha256": "56c3f9a2c8b0c0ce25980c1593565571999ff9aeb6a9e0bbfa273452dc4ede10",
+      "assessment": {
+        "status": "pass",
+        "points": 16,
+        "maximum_nominal_error_V": {
+          "e": 5.551115123125783e-17,
+          "f": 5.551115123125783e-17,
+          "i": 3.3306690738754696e-16
+        },
+        "failures": [],
+        "failure_count": 0,
+        "exact_requested_hits": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.29999999999999993,
+          0.3,
+          0.30000000000000004,
+          0.325,
+          0.35,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "tolerances": null
+    },
+    {
+      "group": "near-timer",
+      "condition": "chain",
+      "profile": "tol",
+      "passed": true,
+      "points": 16,
+      "response_sha256": "4c33349a9deb4bff6315c9c51e79ee86a8b03dd903622ccdefcea0d71d987f71",
+      "assessment": {
+        "status": "pass",
+        "points": 16,
+        "maximum_nominal_error_V": {
+          "e": 5.551115123125783e-17,
+          "f": 5.551115123125783e-17,
+          "i": 3.3306690738754696e-16
+        },
+        "failures": [],
+        "failure_count": 0,
+        "exact_requested_hits": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.29999999999999993,
+          0.3,
+          0.30000000000000004,
+          0.325,
+          0.35,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "tolerances": null
+    },
+    {
+      "group": "near-timer",
+      "condition": "fixed",
+      "profile": "base",
+      "passed": true,
+      "points": 16,
+      "response_sha256": "fd7b10e8234a144ffb8b1d2ed4a8dcdc18c32dd226d153b7ee651b1ba56babb5",
+      "assessment": {
+        "status": "pass",
+        "points": 16,
+        "maximum_nominal_error_V": {},
+        "failures": [],
+        "failure_count": 0,
+        "exact_requested_hits": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.29999999999999993,
+          0.3,
+          0.30000000000000004,
+          0.325,
+          0.35,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "tolerances": null
+    },
+    {
+      "group": "near-timer",
+      "condition": "fixed",
+      "profile": "both",
+      "passed": true,
+      "points": 16,
+      "response_sha256": "3afca9d985ae70069aee193299126a2d07693283743f02177d3a681939d1a1c8",
+      "assessment": {
+        "status": "pass",
+        "points": 16,
+        "maximum_nominal_error_V": {},
+        "failures": [],
+        "failure_count": 0,
+        "exact_requested_hits": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.29999999999999993,
+          0.3,
+          0.30000000000000004,
+          0.325,
+          0.35,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "tolerances": null
+    },
+    {
+      "group": "near-timer",
+      "condition": "fixed",
+      "profile": "step",
+      "passed": true,
+      "points": 16,
+      "response_sha256": "8294947d0bac5888cfc5f7b4b626ed20a0a81ee02c906a5e1570211ca69a3703",
+      "assessment": {
+        "status": "pass",
+        "points": 16,
+        "maximum_nominal_error_V": {},
+        "failures": [],
+        "failure_count": 0,
+        "exact_requested_hits": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.29999999999999993,
+          0.3,
+          0.30000000000000004,
+          0.325,
+          0.35,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "tolerances": null
+    },
+    {
+      "group": "near-timer",
+      "condition": "fixed",
+      "profile": "tol",
+      "passed": true,
+      "points": 16,
+      "response_sha256": "0237dee8f98fa681df466d4ab65421564051e89d59d0cdf1f05096d2919ffe3e",
+      "assessment": {
+        "status": "pass",
+        "points": 16,
+        "maximum_nominal_error_V": {},
+        "failures": [],
+        "failure_count": 0,
+        "exact_requested_hits": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.29999999999999993,
+          0.3,
+          0.30000000000000004,
+          0.325,
+          0.35,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "tolerances": null
+    },
+    {
+      "group": "near-timer",
+      "condition": "held",
+      "profile": "base",
+      "passed": true,
+      "points": 16,
+      "response_sha256": "425644d124994fb6a1139b00ae8a5c48538ad3f3831a0573ab0b1be332d5bdec",
+      "assessment": {
+        "status": "pass",
+        "points": 16,
+        "maximum_nominal_error_V": {},
+        "failures": [],
+        "failure_count": 0,
+        "exact_requested_hits": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.29999999999999993,
+          0.3,
+          0.30000000000000004,
+          0.325,
+          0.35,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "tolerances": null
+    },
+    {
+      "group": "near-timer",
+      "condition": "held",
+      "profile": "both",
+      "passed": true,
+      "points": 16,
+      "response_sha256": "a7cbdb6a480812a2f237cc0142d1af17633d087c901054c826646b8b768e4aec",
+      "assessment": {
+        "status": "pass",
+        "points": 16,
+        "maximum_nominal_error_V": {},
+        "failures": [],
+        "failure_count": 0,
+        "exact_requested_hits": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.29999999999999993,
+          0.3,
+          0.30000000000000004,
+          0.325,
+          0.35,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "tolerances": null
+    },
+    {
+      "group": "near-timer",
+      "condition": "held",
+      "profile": "step",
+      "passed": true,
+      "points": 16,
+      "response_sha256": "13ec1aa22d287a1233811f65d1256a3249a8d44a69101bfbda842254c1eddc73",
+      "assessment": {
+        "status": "pass",
+        "points": 16,
+        "maximum_nominal_error_V": {},
+        "failures": [],
+        "failure_count": 0,
+        "exact_requested_hits": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.29999999999999993,
+          0.3,
+          0.30000000000000004,
+          0.325,
+          0.35,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "tolerances": null
+    },
+    {
+      "group": "near-timer",
+      "condition": "held",
+      "profile": "tol",
+      "passed": true,
+      "points": 16,
+      "response_sha256": "d26d137897f1e099bce2d4c6073351c3bc0f14c37931b3f61ce1f769eb6db0f1",
+      "assessment": {
+        "status": "pass",
+        "points": 16,
+        "maximum_nominal_error_V": {},
+        "failures": [],
+        "failure_count": 0,
+        "exact_requested_hits": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.29999999999999993,
+          0.3,
+          0.30000000000000004,
+          0.325,
+          0.35,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "tolerances": null
+    },
+    {
+      "group": "slew",
+      "condition": "catch",
+      "profile": "base",
+      "passed": true,
+      "points": 2031,
+      "response_sha256": "ddba492fbf7cfdf8b6774b631813fed9cd7d52c2787b36b361cb2c24737279d2",
+      "model_sha256": "98f295318fab37076d6095f8d1a8052ba1d47e657b319f0b6f1cce8d196d04c3",
+      "native_reference_sha256": "b979994a79b0df9aed564a635054c10cf67220dfe1bbf2de99f5b355bf3df744",
+      "assessment": {
+        "passed": true,
+        "maximum_error_V": {
+          "u": 0.0,
+          "h": 0.0,
+          "y": 0.0
+        },
+        "failures": [],
+        "rows": 2031
+      },
+      "reused_spectre_assessment": {
+        "passed": true,
+        "maximum_error_V": {
+          "u": 0.0,
+          "h": 0.0,
+          "y": 0.0
+        },
+        "failures": [],
+        "rows": 2031
+      },
+      "same_time_maximum_difference_V": {
+        "u": 0.0,
+        "h": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "group": "slew",
+      "condition": "catch",
+      "profile": "tight",
+      "passed": true,
+      "points": 40035,
+      "response_sha256": "373573c2b0689c2e1ecb0bc4233a3b1baa6fbae9372b6735470f0e80966e3da8",
+      "model_sha256": "98f295318fab37076d6095f8d1a8052ba1d47e657b319f0b6f1cce8d196d04c3",
+      "native_reference_sha256": "28bd7ef36ca5469c9b1c1cab89eb9f23d8d9fd60e38d769abac51403e46e63a0",
+      "assessment": {
+        "passed": true,
+        "maximum_error_V": {
+          "u": 0.0,
+          "h": 0.0,
+          "y": 0.0
+        },
+        "failures": [],
+        "rows": 40035
+      },
+      "reused_spectre_assessment": {
+        "passed": true,
+        "maximum_error_V": {
+          "u": 0.0,
+          "h": 0.0,
+          "y": 0.0
+        },
+        "failures": [],
+        "rows": 40035
+      },
+      "same_time_maximum_difference_V": {
+        "u": 0.0,
+        "h": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "group": "slew",
+      "condition": "ramp",
+      "profile": "base",
+      "passed": true,
+      "points": 420,
+      "response_sha256": "e3c9326eae1807e486ffeca65e4b8ddb3efa9bcc716bbb6186cd38e6f85d6718",
+      "model_sha256": "98f295318fab37076d6095f8d1a8052ba1d47e657b319f0b6f1cce8d196d04c3",
+      "native_reference_sha256": "31552bda2dafab04cb649b4457556916d87bcec20ce0d52daf700a441e64571a",
+      "assessment": {
+        "passed": true,
+        "maximum_error_V": {
+          "u": 0.0,
+          "h": 0.0,
+          "y": 0.0
+        },
+        "failures": [],
+        "rows": 420
+      },
+      "reused_spectre_assessment": {
+        "passed": true,
+        "maximum_error_V": {
+          "u": 0.0,
+          "h": 0.0,
+          "y": 0.0
+        },
+        "failures": [],
+        "rows": 420
+      },
+      "same_time_maximum_difference_V": {
+        "u": 0.0,
+        "h": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "group": "slew",
+      "condition": "ramp",
+      "profile": "tight",
+      "passed": true,
+      "points": 8022,
+      "response_sha256": "c8cfd24c391c040ed84cbb57f396a67064100539d5414e116d22ff737ae9ae24",
+      "model_sha256": "98f295318fab37076d6095f8d1a8052ba1d47e657b319f0b6f1cce8d196d04c3",
+      "native_reference_sha256": "51836005021a3c9a7dca3945aa3aa87b59cb516eb905cc139b57eb7178829f92",
+      "assessment": {
+        "passed": true,
+        "maximum_error_V": {
+          "u": 0.0,
+          "h": 0.0,
+          "y": 0.0
+        },
+        "failures": [],
+        "rows": 8022
+      },
+      "reused_spectre_assessment": {
+        "passed": true,
+        "maximum_error_V": {
+          "u": 0.0,
+          "h": 0.0,
+          "y": 0.0
+        },
+        "failures": [],
+        "rows": 8022
+      },
+      "same_time_maximum_difference_V": {
+        "u": 0.0,
+        "h": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "group": "slew",
+      "condition": "reverse",
+      "profile": "base",
+      "passed": true,
+      "points": 2446,
+      "response_sha256": "8fe4a6dcf560a88994b820e8a62a04210a0da09f8869ff1d3fd13fdfaae38d0a",
+      "model_sha256": "98f295318fab37076d6095f8d1a8052ba1d47e657b319f0b6f1cce8d196d04c3",
+      "native_reference_sha256": "f57c3cdb5443b8245c7ed7355a907e620d3166994d39139847d759b761d46017",
+      "assessment": {
+        "passed": true,
+        "maximum_error_V": {
+          "u": 0.0,
+          "h": 2.9605947323337506e-16,
+          "y": 9.868649107779169e-17
+        },
+        "failures": [],
+        "rows": 2446
+      },
+      "reused_spectre_assessment": {
+        "passed": false,
+        "maximum_error_V": {
+          "u": 0.0,
+          "h": 0.005539561793638607,
+          "y": 0.003713022556671596
+        },
+        "failures": [],
+        "rows": 2446
+      },
+      "same_time_maximum_difference_V": {
+        "u": 0.0,
+        "h": 0.005539561793638903,
+        "y": 0.003713022556671608
+      }
+    },
+    {
+      "group": "slew",
+      "condition": "reverse",
+      "profile": "tight",
+      "passed": true,
+      "points": 48052,
+      "response_sha256": "377c57247428c7b16d3f8df27c1f9e3301e0344e713d727dfbca803ee453452b",
+      "model_sha256": "98f295318fab37076d6095f8d1a8052ba1d47e657b319f0b6f1cce8d196d04c3",
+      "native_reference_sha256": "9aa97fcf743626cb5576967e2f430f3d29f769cbab37e87f1a81016796e1d7da",
+      "assessment": {
+        "passed": true,
+        "maximum_error_V": {
+          "u": 0.0,
+          "h": 2.9605947323337506e-16,
+          "y": 9.868649107779169e-17
+        },
+        "failures": [],
+        "rows": 48052
+      },
+      "reused_spectre_assessment": {
+        "passed": false,
+        "maximum_error_V": {
+          "u": 0.0,
+          "h": 0.0002216409598415995,
+          "y": 0.00016278145003299925
+        },
+        "failures": [],
+        "rows": 48052
+      },
+      "same_time_maximum_difference_V": {
+        "u": 0.0,
+        "h": 0.00022164095984189558,
+        "y": 0.0001627814500330116
+      }
+    },
+    {
+      "group": "slew-local",
+      "condition": "reverse",
+      "profile": "local",
+      "passed": true,
+      "points": 82527,
+      "response_sha256": "2e72b3e2f7dc385d1febcba6b5ba168d779f70fa8bbbd02694e6b637b3386a7f",
+      "model_sha256": "98f295318fab37076d6095f8d1a8052ba1d47e657b319f0b6f1cce8d196d04c3",
+      "native_reference_sha256": "eb33d3ee1b82945931faea2c469c31504ecfe0893e13e292e5cf81387be2ebda",
+      "assessment": {
+        "passed": true,
+        "maximum_error_V": {
+          "u": 0.0,
+          "h": 2.9605947323337506e-16,
+          "y": 9.868649107779169e-17
+        },
+        "failures": [],
+        "rows": 82527
+      },
+      "reused_spectre_assessment": {
+        "passed": true,
+        "maximum_error_V": {
+          "u": 0.0,
+          "h": 1.6366167680340975e-12,
+          "y": 1.2275612625166508e-12
+        },
+        "failures": [],
+        "rows": 82527
+      },
+      "same_time_maximum_difference_V": {
+        "u": 0.0,
+        "h": 1.6369128275073308e-12,
+        "y": 1.227462576025573e-12
+      }
+    },
+    {
+      "group": "slew-local",
+      "condition": "reverse",
+      "profile": "tolerance",
+      "passed": true,
+      "points": 2466,
+      "response_sha256": "6ee37ac715b479d703377b6aef8d963b6ec3405f6ed5bcc12f7b5d56dff0b092",
+      "model_sha256": "98f295318fab37076d6095f8d1a8052ba1d47e657b319f0b6f1cce8d196d04c3",
+      "native_reference_sha256": "b4c1ba56eeb43340578db9c79d1a4911530f631028dfb65cc5ebce22d04245c3",
+      "assessment": {
+        "passed": true,
+        "maximum_error_V": {
+          "u": 0.0,
+          "h": 2.9605947323337506e-16,
+          "y": 9.868649107779169e-17
+        },
+        "failures": [],
+        "rows": 2466
+      },
+      "reused_spectre_assessment": {
+        "passed": false,
+        "maximum_error_V": {
+          "u": 0.0,
+          "h": 0.004986700645486823,
+          "y": 0.004017803261888152
+        },
+        "failures": [],
+        "rows": 2466
+      },
+      "same_time_maximum_difference_V": {
+        "u": 0.0,
+        "h": 0.004986700645487119,
+        "y": 0.004017803261888164
+      }
+    },
+    {
+      "group": "filter",
+      "condition": "nondyadic",
+      "profile": "base",
+      "passed": true,
+      "points": 2141,
+      "response_sha256": "d6695ee6943955b1d4b00a14898aa05a255069c911331036465896d025516ed6",
+      "model_sha256": "121712dca436d18c0a4828c522c974249d9889c1c9d282737e4819f9c5b9a83d",
+      "native_reference_sha256": "0934db65ac83bbd7db4fc6cc484cba198177d2037d1ed1daf8a74545b565ee4a",
+      "assessment": {
+        "passed": true,
+        "maximum_error_V": {
+          "u": 2.5e-64,
+          "y": 3.966348885214249e-16
+        },
+        "failures": [],
+        "rows": 2141
+      },
+      "reused_spectre_assessment": {
+        "passed": true,
+        "maximum_error_V": {
+          "u": 2.5e-64,
+          "y": 1.6794676758453003e-08
+        },
+        "failures": [],
+        "rows": 2141
+      },
+      "same_time_maximum_difference_V": {
+        "u": 0.0,
+        "y": 1.6794676649389828e-08
+      }
+    },
+    {
+      "group": "filter",
+      "condition": "nondyadic",
+      "profile": "tight",
+      "passed": true,
+      "points": 2235,
+      "response_sha256": "89f7c66f1ada80a84d126bf307e5d7a6cac209d02bd6777cb9cc55b61feca48a",
+      "model_sha256": "121712dca436d18c0a4828c522c974249d9889c1c9d282737e4819f9c5b9a83d",
+      "native_reference_sha256": "833df91b719f1554fdde72176acae1b590718285013fb8881286d0fe95c3e901",
+      "assessment": {
+        "passed": true,
+        "maximum_error_V": {
+          "u": 5e-64,
+          "y": 3.75541044087761e-16
+        },
+        "failures": [],
+        "rows": 2235
+      },
+      "reused_spectre_assessment": {
+        "passed": true,
+        "maximum_error_V": {
+          "u": 5e-64,
+          "y": 8.449807476904728e-09
+        },
+        "failures": [],
+        "rows": 2235
+      },
+      "same_time_maximum_difference_V": {
+        "u": 0.0,
+        "y": 8.449807298305245e-09
+      }
+    },
+    {
+      "group": "filter",
+      "condition": "ramp",
+      "profile": "base",
+      "passed": true,
+      "points": 2297,
+      "response_sha256": "abef90b559ae6def5da7a5f5923563f1b9fa52c784eb66404a0f02413088ae7c",
+      "model_sha256": "ccaabdfab6b5c37992dcead8d2fe65c8f986c9ff7680bf27a25190815e2c7a9f",
+      "native_reference_sha256": "b233efa2f5221ecd44a9e15692d9fe16e54dff689abd71fcafba4fc96615e5cd",
+      "assessment": {
+        "passed": true,
+        "maximum_error_V": {
+          "u": 2.5e-64,
+          "y": 7.859125390901682e-16
+        },
+        "failures": [],
+        "rows": 2297
+      },
+      "reused_spectre_assessment": {
+        "passed": true,
+        "maximum_error_V": {
+          "u": 2.5e-64,
+          "y": 2.7367628137905796e-08
+        },
+        "failures": [],
+        "rows": 2297
+      },
+      "same_time_maximum_difference_V": {
+        "u": 0.0,
+        "y": 2.7367628274710398e-08
+      }
+    },
+    {
+      "group": "filter",
+      "condition": "ramp",
+      "profile": "tight",
+      "passed": true,
+      "points": 2410,
+      "response_sha256": "af7f1584c6d5d5d8b52c54536c6fff58a8e33a9c3396cfd9f9d9931ac38ff42d",
+      "model_sha256": "ccaabdfab6b5c37992dcead8d2fe65c8f986c9ff7680bf27a25190815e2c7a9f",
+      "native_reference_sha256": "42931f1e1fa751bcb54b9d8c5906c7b9ef6740e463753053c8dbb2f5104fdd28",
+      "assessment": {
+        "passed": true,
+        "maximum_error_V": {
+          "u": 5e-64,
+          "y": 7.584930280503873e-16
+        },
+        "failures": [],
+        "rows": 2410
+      },
+      "reused_spectre_assessment": {
+        "passed": true,
+        "maximum_error_V": {
+          "u": 5e-64,
+          "y": 1.4838070427440285e-08
+        },
+        "failures": [],
+        "rows": 2410
+      },
+      "same_time_maximum_difference_V": {
+        "u": 0.0,
+        "y": 1.483807043900498e-08
+      }
+    },
+    {
+      "group": "filter",
+      "condition": "reverse",
+      "profile": "base",
+      "passed": true,
+      "points": 1961,
+      "response_sha256": "4773987ab897a9176be3eb911d8df148933b831b9fde6ec1cb172502fce3d9e5",
+      "model_sha256": "ccaabdfab6b5c37992dcead8d2fe65c8f986c9ff7680bf27a25190815e2c7a9f",
+      "native_reference_sha256": "3fd3a6d6e2d7c6183f0c861d660ee29190b82f93eb8cee46ed86ba652cfd8030",
+      "assessment": {
+        "passed": true,
+        "maximum_error_V": {
+          "u": 1.6653345369377348e-16,
+          "y": 8.6659442490954195e-16
+        },
+        "failures": [],
+        "rows": 1961
+      },
+      "reused_spectre_assessment": {
+        "passed": false,
+        "maximum_error_V": {
+          "u": 2.220446049250313e-16,
+          "y": 5.96156631982362e-06
+        },
+        "failures": [],
+        "rows": 1961
+      },
+      "same_time_maximum_difference_V": {
+        "u": 2.220446049250313e-16,
+        "y": 5.9615663197676305e-06
+      }
+    },
+    {
+      "group": "filter",
+      "condition": "reverse",
+      "profile": "tight",
+      "passed": true,
+      "points": 2970,
+      "response_sha256": "5a43eb719cb12850b1f14ae941a303c5a78f92625c04dd14c175763decc77ee8",
+      "model_sha256": "ccaabdfab6b5c37992dcead8d2fe65c8f986c9ff7680bf27a25190815e2c7a9f",
+      "native_reference_sha256": "79cab68521b3656fe9b5e753eebe71775ee09272286b1177787b8d4eebe5be31",
+      "assessment": {
+        "passed": true,
+        "maximum_error_V": {
+          "u": 1.6653345369377348e-16,
+          "y": 8.958506561795319e-16
+        },
+        "failures": [],
+        "rows": 2970
+      },
+      "reused_spectre_assessment": {
+        "passed": true,
+        "maximum_error_V": {
+          "u": 2.220446049250313e-16,
+          "y": 3.0520139746870795e-07
+        },
+        "failures": [],
+        "rows": 2970
+      },
+      "same_time_maximum_difference_V": {
+        "u": 2.220446049250313e-16,
+        "y": 3.0520139737699736e-07
+      }
+    }
+  ]
+}
