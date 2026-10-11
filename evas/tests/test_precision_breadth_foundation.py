@@ -178,5 +178,58 @@ class FoundationReferences(unittest.TestCase):
         self.assertTrue(self.card('F14')['phase_obligations']['requires_actual_phase_evidence'])
 
 
+    def test_stop_scaled_serialization_uncertainty_is_not_a_wrap_slope_patch(self):
+        import math
+        c=self.card('F20');root=c['wrap_times_s'][0]
+        # One ULP away is inside the 16*ulp(stop) serialization cell.
+        for t in (math.nextafter(root,-math.inf),math.nextafter(root,math.inf)):
+            out=f.reference(c,t,{})
+            self.assertGreater(out['outputs']['phase'][1]-out['outputs']['phase'][0],.9)
+            self.assertFalse(out['undefined'])
+
+
+    def test_verified_counter_stage_conditions_discrete_values_without_clipping_history(self):
+        import copy
+        c=copy.deepcopy(self.card('F07'));c['reference_counter_stages']={'count':1}
+        e=c['events'][0];out=f.reference(c,e['nominal_s'],{})
+        self.contains(out,'y',13)
+        self.contains(out,'count',1)
+        c=copy.deepcopy(self.card('F19'));c['reference_counter_stages']={'count':1}
+        e=c['events'][0];out=f.reference(c,e['nominal_s'],{})
+        self.contains(out,'state',.5)
+        # Later edge value still includes the full legal event-time range.
+        out=f.reference(c,1.5e-6,{})
+        self.assertGreater(out['outputs']['y'][1]-out['outputs']['y'][0],.00019)
+        c['reference_counter_stages']={'count':3}
+        with self.assertRaises(ValueError):f.reference(c,0,{})
+
+    def test_event_metadata_offsets_bind_to_source_nominal_times(self):
+        for group in ('F07','F19'):
+            c=self.card(group)
+            for e in c['events']:
+                self.assertEqual(e['late_s'],1e-10)
+                self.assertEqual(e['early_s'],0 if e['kind']=='cross' else 1e-10)
+
+
+    def test_mandatory_declaration_and_contribution_order_variants(self):
+        for group,variant in [('F09','F09-reordered'),('F10','F10-reordered')]:
+            base=self.card(group,group+'-base');other=self.card(group,variant)
+            self.assertNotEqual(base['source'],other['source'])
+            for t in (0,base['stop_s']/2,base['stop_s']):
+                self.assertEqual(f.reference(base,t,{}),f.reference(other,t,{}))
+
+
+    def test_derivative_undefined_points_match_shared_card_obligations(self):
+        import math
+        c=self.card('F14')
+        self.assertEqual([p['time_s'] for p in c['undefined_points']],[1e-6,2e-6])
+        # A nearby serialized row has uncertain sided values, not a fabricated
+        # mathematically undefined point at a different physical time.
+        out=f.reference(c,math.nextafter(1e-6,math.inf),{})
+        self.assertFalse(out['undefined'])
+        self.assertLessEqual(out['outputs']['y'][0],-1)
+        self.assertGreaterEqual(out['outputs']['y'][1],.5)
+
+
 if __name__ == '__main__':
     unittest.main()
