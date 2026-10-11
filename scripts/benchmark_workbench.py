@@ -167,7 +167,7 @@ def render(root, catalog, cases):
     """Build all expected contents before writing anything, including marker validation."""
     outputs = {}
     page = root / "README.md"
-    summary = f"登记 **{len(cases)} 张候选设计卡**，不代表已发布或已通过验收的题目。\n\n"
+    summary = f"登记 **{len(cases)} 张历史候选设计卡**；设计卡状态与已建设任务分开维护，当前任务见 [已建设任务总览](TASKS.md)。\n\n"
     summary += table(["工程动作", "候选数"], [
         [link(label, root / "cases" / category / "README.md", page),
          str(sum(d["engineering_action"] == category for d in cases))]
@@ -207,11 +207,11 @@ def render(root, catalog, cases):
         rows.append(["运行 / 校准证据", "、".join(link(v, root.parent.parent / v, page) for v in data["evidence_paths"]) or "无；当前仅有材料阅读与题目草案"])
         outputs[page] = replace_block(page, table(["项目", "当前记录"], rows))
     page = root / "REVIEW.md"
-    outputs[page] = GENERATED + "# 设计 Review\n\n设计认可与实现、校准、任务冻结分别记录。这里只汇总设计 review。\n"
+    outputs[page] = GENERATED + "# 设计 Review\n\n设计认可与实现、校准、任务冻结分别记录。这里只汇总历史设计卡的 review 状态；已建设任务与当前宏观 review 入口见 [已建设任务总览](TASKS.md)。旧卡尚未逐一回填实现映射，pending 不等于没有正式任务。\n"
     for status, label in REVIEWS.items():
         outputs[page] += f"\n## {label}\n\n" + case_table([d for d in cases if d["review_status"] == status], page, catalog)
     page = root / "SOURCE_GROUPS.md"
-    outputs[page] = GENERATED + "# 同源任务\n\n同一来源组中的题目保留独立 Case ID；分析成绩时考虑共享电路、数据或衍生关系。引用同一篇方法论文不自动归为同源。\n"
+    outputs[page] = GENERATED + "# 同源任务\n\n同一来源组中的题目保留独立 Case ID；分析成绩时考虑共享电路、数据或衍生关系。引用同一篇方法论文不自动归为同源。本页仅覆盖历史设计卡，已建设任务的同源变体见 [已建设任务总览](TASKS.md#同源变体与跨题关联)。\n"
     for group in sorted({v for d in cases for v in d["source_groups"]}):
         outputs[page] += f"\n## {group}\n\n" + case_table([d for d in cases if group in d["source_groups"]], page, catalog)
     outputs[page] += "\n## 尚未确定来源组\n\n以下各项不视为同一组。\n\n"
