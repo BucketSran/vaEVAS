@@ -6,7 +6,7 @@ analog begin
  @(initial_step) begin n=0;bad=0;ok=0;od=0;oi=0;end
  @(cross(V(rst)-0.5,+1)) begin n=0;bad=0;ok=0;od=0;oi=0;end
  @(cross(V(clk)-0.5,+1)) if(V(rst)<0.5 && n<16) begin
-  
+  // Deliberately omit code-order validation.
   x[n]=V(observe);n=n+1;
   if(n==16 && !bad) begin
    step=(x[15]-x[0])/15;

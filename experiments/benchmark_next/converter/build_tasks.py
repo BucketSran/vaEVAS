@@ -25,8 +25,8 @@ def case(kind,inputs,values,params='',support=None,outputs=None,**kw):
  return dict(name='normal',kind=kind,stop=stop,maxstep=50e-12,guard=1e-9,signals=inputs+['clk','rst']+outputs+(['observe'] if support else []),outputs=outputs,tolerances={n:(.03 if n in ['sndr','sfdr'] else .006 if n=='enob' else .001) for n in outputs},netlist=net,**({'support':{'fixed.va':support}} if support else {}),**kw)
 def package(slug,source,contract,ref,alt,wrong,cases,public):
  tid='v3-converter-'+slug;t=ROOT/'benchmark/tasks'/tid
- put(t/'instruction.md','# '+slug+'\n\n实现 `/work/dut.va`。'+contract+'\n\n固定后端 Spectre，候选源码按原字节运行，不作语言子集限制。仅 dut.va 可修改；输入及固定器件只读。初态及事件后允许1ns建立，之后输出绝对误差1mV，频谱dB误差0.03dB、ENOB误差0.006bit。输出可用 transition(...,0,100p,100p)；无需复制参考结构。公开台架见 `/work/public/cases.json`，终评改变合同内输入、端点、样本和控制时刻。测量 DUT 性能差仍可通过，评分只看报告正确。源代码、reference与私有checker不进入公开包。\n')
- put(t/'SOURCE.md',f'# 来源与覆盖\n\n{source}\n\n来源固定在 reviewed main 81eb66258b59b0a0cd48cd3decaa767be02cdd58。本题为独立编写的 VA 改编，未复制商业库源码。固定 Spectre 扩展集；开源等价尚未验证。真实校准记录见 experiments/benchmark_next/converter/。不开展模型试跑。\n')
+ put(t/'instruction.md','# '+slug+'\n\n实现 `/work/dut.va`。'+contract+'\n\n固定后端 Spectre，候选源码按原字节运行，不作语言子集限制。仅 dut.va 可修改；输入及固定器件只读。测量题各电气报告端口的电压数值就是指标数值，例如0.5LSB用0.5V、20dB用20V，valid用0或1V。初态及事件后允许1ns建立，之后输出绝对误差1mV，频谱dB误差0.03dB、ENOB误差0.006bit。输出可用 transition(...,0,100p,100p)；无需复制参考结构。公开台架见 `/work/public/cases.json`，终评改变合同内输入、端点、样本和控制时刻。测量 DUT 性能差仍可通过，评分只看报告正确。源代码、reference与私有checker不进入公开包。\n')
+ put(t/'SOURCE.md',f'# 来源与覆盖\n\n{source}\n\n来源固定在 reviewed main 81eb66258b59b0a0cd48cd3decaa767be02cdd58。本题为独立编写的 VA 改编，未复制商业库源码。固定 Spectre 扩展集；开源等价尚未验证。真实校准及已执行分母见[作者校准](../../../experiments/benchmark_next/converter/author-calibration.md)，旧资产关系见[资产审计](../../../experiments/benchmark_next/converter/asset-audit.md)。不开展模型试跑。\n')
  action='spec-modeling' if cases[0]['kind']=='dac' else 'testing-characterization'
  put(t/'task.toml',f'schema_version = "1.4"\n[metadata]\nname = "{tid}"\ncategory = "verilog-a"\nengineering_action = "{action}"\nsource_group = "{source.split()[0]}"\nweight = 1\n[agent]\ntimeout_sec = 900\n[verifier]\ntimeout_sec = 600\n[environment]\nbuild_timeout_sec = 600\ncpus = 1\nmemory_mb = 1024\nstorage_mb = 2048\n')
  put(t/'environment/Dockerfile',f'FROM {IMAGE}\nWORKDIR /work\nCOPY public/ /work/public/\nCOPY starter.va /work/dut.va\n')
@@ -79,6 +79,7 @@ endmodule
  if sid in ['025','243']:
   ideal='+'.join(f'{2**i}*(V({n})>0.45)' for i,n in enumerate(names));wrong['ideal-binary']=ref.replace(expr,ideal).replace(f'weighted/{sum(weights):.15g}',f'weighted/{2**len(names)-1}')
  else:wrong['wrong-scale']=ref.replace(f'weighted/{sum(weights):.15g}',f'weighted/{sum(weights)+1:.15g}')
+ if sid=='014':wrong['bit-order']=ref.replace(expr,'+'.join(f'{w:.15g}*(V({n})>0.45)' for n,w in zip(names,[2,1,4,4,4])))
  cases=[]
  for j,(lo,hi) in enumerate([(0,1),(.17,.93)]):
   vals=values if j==0 else list(reversed(values))
@@ -139,7 +140,7 @@ endmodule
  c['name']='reset-truncated';cases.append(c)
  public=case('scan',['code'],[[i] for i in range(16)],support=fixed,outputs=['dnl','inl','valid'],count=16)
  contract='模块 dut(code,observe,clk,rst,dnl,inl,valid)。code为整数电压0至15，observe为只读固定DAC实际模拟输出。clk上升沿采集，码必须从0到15每码一次。初始与rst上升沿清空输出和历史；rst高时不采集。16次后仅当码序完整且末值大于首值，valid=1；其他记录valid=0、dnl=inl=0，不返回旧结果。step=(实际末值-实际首值)/15，DNL是相邻实际电压差除step减1的最大绝对值，INL是实际电压相对端点直线偏离除step的最大绝对值，单位LSB。不做最佳拟合，不假设性能合格。完成后保持直到rst，允许完整、缺码、重复码记录。固定DUT offset在0至0.2V、scale在0.5至0.9V、delta在-0.03至0.03V，均只读。'
- package('dac-linearity','repository-owned-dac-scan va08 ADC histogram已复用审计，新增DAC端点静态扫描。',contract,ref,alt,{'ideal-report':ref.replace('x[n]=V(observe)','x[n]=V(code)/15.0'),'wrong-step':ref.replace('/15;','/16;'),'ignore-order':ref.replace('if(abs(V(code)-n)>0.001) bad=1;',''),'stale-reset':ref.replace(' @(cross(V(rst)-0.5,+1)) begin n=0;bad=0;ok=0;od=0;oi=0;end\n','')},cases,public)
+ package('dac-linearity','repository-owned-dac-scan va08 ADC histogram已复用审计，新增DAC端点静态扫描。',contract,ref,alt,{'ideal-report':ref.replace('x[n]=V(observe)','x[n]=V(code)/15.0'),'wrong-step':ref.replace('/15;','/16;'),'ignore-order':ref.replace('if(abs(V(code)-n)>0.001) bad=1;','// Deliberately omit code-order validation.'),'stale-reset':ref.replace(' @(cross(V(rst)-0.5,+1)) begin n=0;bad=0;ok=0;od=0;oi=0;end\n','')},cases,public)
 
 def spectrum():
  old=(ROOT/'benchmark/tasks/measure-adc-spectrum/solution/dut.va').read_text()
@@ -154,7 +155,6 @@ def spectrum():
   return c
  cases=[make(3,720,24),make(7,520,41),make(5,620,32,True)]
  # Complete first round, reset, then invalid second round. A stale valid report fails.
- a=make(5,620,32);b=make(5,420,17,True)
  vals=[]
  for tone,ampl,harm,broken in [(5,620,32,False),(5,420,17,True)]:
   vals.extend([[round(2048+ampl*math.sin(2*math.pi*tone*n/64)+harm*math.sin(2*math.pi*2*tone*n/64)+7*math.cos(math.pi*n)),0 if broken and n==23 else 1] for n in range(64)])
@@ -165,7 +165,7 @@ def spectrum():
  c=make(4,620,25);c['stop']=160e-9;c['netlist']=c['netlist'].replace('stop=320n','stop=160n');cases.append(c)
  for j,c in enumerate(cases):c['name']=f'private-{j}'
  contract='模块 dut(code,clk,rst,sample_ok,sndr,sfdr,dc,enob,valid)，tone_bin可覆盖整数3至7。记录是带明确来源的行为合成12bit unsigned码值，code以1V/码表示0至4095整数，sample_ok为对应样本完整标志。采样率200MHz，64次clk上升沿为一条相干记录，矩形窗，不加窗或拟合。rst上升清空历史与输出，rst高不采样；初始零。64样本前输出全零valid=0；完成后保持直到rst。任何sample_ok低、越界或非整数码使整记录无效，所有指标清零valid=0。DFT归一化单边功率：1至31号bin为2*(C²+S²)/64²，Nyquist32号为(C²+S²)/64²，DC排除；基波为tone_bin唯一bin。SNDR=10log10(基波功率/其他1至32号bin总功率)，SFDR=10log10(基波/最大非基波单bin)，谐波计入失真，ENOB=(SNDR-1.76)/6.02，dc为原码均值。基波、总残差或最大杂散功率<=1e-8时无效，指标零。频谱全部核心计算必须由候选VA完成。公共及终评可改变tone、幅度、谐波、Nyquist和完整标志；不含噪声统计或非相干窗口。'
- package('adc-spectrum','first-batch-measure-adc-spectrum 固定64点合成观测迁移，新增ENOB和有效状态，非新增独立来源。',contract,ref,alt,{'amplitude-db':ref.replace('10*ln','20*ln'),'nyquist-double':ref.replace('if(k==32)p=p/2;',''),'ignore-invalid':ref.replace('if(!bad &&','if('),'stale-reset':ref.replace(' @(cross(V(rst)-0.5,+1))begin n=0;sum=0;out_sndr=0;out_sfdr=0;out_dc=0;bad=0;ok=0;for(k=0;k<=32;k=k+1)begin cs[k]=0;ss[k]=0;end end\n','')},cases,make(5,600,30))
+ package('adc-spectrum','first-batch-measure-adc-spectrum 固定64点合成观测迁移，新增ENOB和有效状态，非新增独立来源。',contract,ref,alt,{'amplitude-db':ref.replace('10*ln','20*ln'),'nyquist-double':ref.replace('if(k==32)p=p/2;',''),'harmonics-as-fundamental':ref.replace('if(k!=tone_bin)','if(k!=tone_bin && k!=2*tone_bin)').replace('fund=2*(cs[tone_bin]*cs[tone_bin]+ss[tone_bin]*ss[tone_bin])/4096;','fund=2*(cs[tone_bin]*cs[tone_bin]+ss[tone_bin]*ss[tone_bin]+cs[2*tone_bin]*cs[2*tone_bin]+ss[2*tone_bin]*ss[2*tone_bin])/4096;'),'ignore-invalid':ref.replace('if(!bad &&','if('),'stale-reset':ref.replace(' @(cross(V(rst)-0.5,+1))begin n=0;sum=0;out_sndr=0;out_sfdr=0;out_dc=0;bad=0;ok=0;for(k=0;k<=32;k=k+1)begin cs[k]=0;ss[k]=0;end end\n','')},cases,make(5,600,30))
 
 def main():
  dac('014','segmented',['b0','b1','t0','t1','t2'],[1,2,4,4,4])

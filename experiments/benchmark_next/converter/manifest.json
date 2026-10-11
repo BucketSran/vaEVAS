@@ -43,6 +43,15 @@
       ]
     },
     {
+      "task": "benchmark/tasks/v3-converter-segmented",
+      "variant": "bit-order",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-segmented/bit-order",
+      "expected_pass": false,
+      "case_names": [
+        "private-0"
+      ]
+    },
+    {
       "task": "benchmark/tasks/v3-converter-thermometer",
       "variant": "reference",
       "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-thermometer/reference",
@@ -242,6 +251,15 @@
       "task": "benchmark/tasks/v3-converter-adc-spectrum",
       "variant": "nyquist-double",
       "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-adc-spectrum/nyquist-double",
+      "expected_pass": false,
+      "case_names": [
+        "private-0"
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-converter-adc-spectrum",
+      "variant": "harmonics-as-fundamental",
+      "candidate": "experiments/benchmark_next/converter/candidates/v3-converter-adc-spectrum/harmonics-as-fundamental",
       "expected_pass": false,
       "case_names": [
         "private-0"

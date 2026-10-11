@@ -1,0 +1,3422 @@
+{
+  "spec": 151,
+  "task_count": 6,
+  "formal_conditions": 17,
+  "variant_count": 34,
+  "final_executed_positions": 56,
+  "all_registered_calibrations_met": true,
+  "no_model_experiments": true,
+  "final": [
+    {
+      "prepared": "runs/benchmark-next-converter-r2/v3-converter-segmented/reference",
+      "task": "v3-converter-segmented",
+      "candidate_sha256": "eb9f2b156e8c9f93796e96152ff9bbd8f70ad4252dc890922791e922465502b9",
+      "criteria_sha256": "889a82fa5a38a823e48e23b88a044153f5fddd82ed5e27b230795304b9b7db1c",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": true,
+      "has_selected_graded_failure": false,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-6d979411ff524a48a62d-private-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "09f1f5823833203af92f53e70740e02eac6fa28288f1404474f257dda7a75a29",
+          "archive_sha256": "ed14503709d51498b88c652bb7e01beb405da8d632500ef0d84a3638b1092cfa",
+          "archive": "runs/benchmark-next-converter-r2/v3-converter-segmented/reference/remote/bf-6d979411ff524a48a62d-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "bcf187344caf2b4a8a605b3e0dd2337e97e21f039eaba10f421fdae5ffd6c554",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "c3cd8eeab1f1c1e713f6043c2688227d58a34717a04056ab5cf6554523cf1d8f",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.2663387041538954,
+              "passed": true,
+              "errors": {
+                "aout": 5.551115123125783e-17
+              },
+              "settled_points": 2910,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "7e5cf8a8b4cdce1d272415966209e31841cb403a925e7fbf6c8b2dd1185b8fb1",
+              "waveform_rows": 3665
+            }
+          ]
+        },
+        {
+          "condition": "private-1",
+          "job_id": "bf-8be77ddf261d4a3e8e49-private-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "f67cfb66ca4d47b59320133fdd6fc602060f1ed9cb2b831b58eee8f3ec497083",
+          "archive_sha256": "27432c94b7981bdb7322a9b822294c9cec911b8e131ec870aa9b6b513777a32a",
+          "archive": "runs/benchmark-next-converter-r2/v3-converter-segmented/reference/remote/bf-8be77ddf261d4a3e8e49-private-1/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "bcf187344caf2b4a8a605b3e0dd2337e97e21f039eaba10f421fdae5ffd6c554",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-1",
+              "netlist_sha256": "2887885dcc94f09d723d0fe2fc07441b843c21343bf2fc5d950ed3507817b1a2",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.2666438929736614,
+              "passed": true,
+              "errors": {
+                "aout": 5.551115123125783e-17
+              },
+              "settled_points": 2910,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "ac5796303663580ea9bdb6a57eeb5d62e44ce8c5e83222707b17b38c2538fdba",
+              "waveform_rows": 3666
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "bcf187344caf2b4a8a605b3e0dd2337e97e21f039eaba10f421fdae5ffd6c554",
+      "variant": "reference",
+      "expected_pass": true,
+      "selected_case_names": [
+        "private-0",
+        "private-1"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r4/v3-converter-segmented/alternative",
+      "task": "v3-converter-segmented",
+      "candidate_sha256": "7e5e6f2e9425598924653700ba312e016ef6b1fc75f4d06b79d97ceb98510f33",
+      "criteria_sha256": "9b3c6dc183a034b565251264087bd2fcf92c20a6b1b1abe5e6e6bf1f57cfc01a",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": true,
+      "has_selected_graded_failure": false,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-f81581db78544c158385-private-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "08d63c697bbbec3907a54d8c6cf0ae40eea0aa0c67c232a2187b8df9911d57d7",
+          "archive_sha256": "f8dc794adb5614a4beb1da4c361a0da60334a83db1278b964c687e28b6174b21",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-segmented/alternative/remote/bf-f81581db78544c158385-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "4adeec6f271f29f2301c1061a8822e78a082237a3bf8e0b9fe0211de21683e37",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "c3cd8eeab1f1c1e713f6043c2688227d58a34717a04056ab5cf6554523cf1d8f",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.2667649071663618,
+              "passed": true,
+              "errors": {
+                "aout": 1.1102230246251565e-16
+              },
+              "settled_points": 2910,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "84ab0764d8a82c6f932f7c8242f3d6ebf5025f01c9c66711e5682a9bd51c30c5",
+              "waveform_rows": 3665
+            }
+          ]
+        },
+        {
+          "condition": "private-1",
+          "job_id": "bf-21d76f73f94a4ed3b1e5-private-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "12a510d21ecafa0b54806f663c6a46acde4a45e3ad42498c4bd10f7dda37531d",
+          "archive_sha256": "f251fca72de0505e73646a0972c7f0b7e1004f9e8e29dac11d0a706d8b4eb1e0",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-segmented/alternative/remote/bf-21d76f73f94a4ed3b1e5-private-1/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "4adeec6f271f29f2301c1061a8822e78a082237a3bf8e0b9fe0211de21683e37",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-1",
+              "netlist_sha256": "2887885dcc94f09d723d0fe2fc07441b843c21343bf2fc5d950ed3507817b1a2",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.6667952425777912,
+              "passed": true,
+              "errors": {
+                "aout": 1.1102230246251565e-16
+              },
+              "settled_points": 2910,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "4e5c9ef31e1020e02d921fd0230462e6972791921457a2d6483b59d036701bdd",
+              "waveform_rows": 3666
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "4adeec6f271f29f2301c1061a8822e78a082237a3bf8e0b9fe0211de21683e37",
+      "variant": "alternative",
+      "expected_pass": true,
+      "selected_case_names": [
+        "private-0",
+        "private-1"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r4/v3-converter-segmented/omit-last",
+      "task": "v3-converter-segmented",
+      "candidate_sha256": "394998ebc5ff4c76e9e017110c2a25876aec2d7421c180575cf2a1d92ca69533",
+      "criteria_sha256": "9b3c6dc183a034b565251264087bd2fcf92c20a6b1b1abe5e6e6bf1f57cfc01a",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": false,
+      "has_selected_graded_failure": true,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-0416f7aa46da48848b79-private-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "report_sha256": "af36909f9a23b4104c6bf2709230b0bffbb3778224a6bd160b05222c89244bee",
+          "archive_sha256": "f358253493270242d5f7aaa1b6003dc9d2ff6bbe611e1a6f374b89c186c242b9",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-segmented/omit-last/remote/bf-0416f7aa46da48848b79-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "ede5f71c374063d0e47c6cfcbec0835ed58da6b76c63657d0e971d0f7f390ed6",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "c3cd8eeab1f1c1e713f6043c2688227d58a34717a04056ab5cf6554523cf1d8f",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.2668795585632324,
+              "passed": false,
+              "errors": {
+                "aout": 0.2666666666666667
+              },
+              "settled_points": 2910,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "5f94be516dabafa1018fc46556e94fcb0346b4da9344429aeb30b2a99691cd68",
+              "waveform_rows": 3665
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "ede5f71c374063d0e47c6cfcbec0835ed58da6b76c63657d0e971d0f7f390ed6",
+      "variant": "omit-last",
+      "expected_pass": false,
+      "selected_case_names": [
+        "private-0"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r4/v3-converter-segmented/transparent",
+      "task": "v3-converter-segmented",
+      "candidate_sha256": "cb4669d1624cc56b25688fa8146a6b1b6f80c57e9f2cb0dcca1094263d0c6921",
+      "criteria_sha256": "9b3c6dc183a034b565251264087bd2fcf92c20a6b1b1abe5e6e6bf1f57cfc01a",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": false,
+      "has_selected_graded_failure": true,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-063a2535db9949c286b2-private-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "report_sha256": "3e0343cc91cb7ee63b42bc8a9dda7f4bf861e897619da143547932e8da0330dc",
+          "archive_sha256": "a13465b9049b116fbd8274a11f06b403693bed9d35d8551264a685dcf9d35a30",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-segmented/transparent/remote/bf-063a2535db9949c286b2-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "fe83ab252b9ae22fdd2077681affa2656515a332085d14a35f2f239484c169cc",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "c3cd8eeab1f1c1e713f6043c2688227d58a34717a04056ab5cf6554523cf1d8f",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.7177525628358126,
+              "passed": false,
+              "errors": {
+                "aout": 0.46666666666666656
+              },
+              "settled_points": 2930,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "73f750c8ba1e74f03f4965b5b7df21a3b78adcac72f5a0f2185d75080b39c978",
+              "waveform_rows": 3622
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "fe83ab252b9ae22fdd2077681affa2656515a332085d14a35f2f239484c169cc",
+      "variant": "transparent",
+      "expected_pass": false,
+      "selected_case_names": [
+        "private-0"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r4/v3-converter-segmented/wrong-scale",
+      "task": "v3-converter-segmented",
+      "candidate_sha256": "bd09ed6a647b64d579794cefc8069f4713833ef140723d3ee73795096b056fd7",
+      "criteria_sha256": "9b3c6dc183a034b565251264087bd2fcf92c20a6b1b1abe5e6e6bf1f57cfc01a",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": false,
+      "has_selected_graded_failure": true,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-d30b367ab014441c94d1-private-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "report_sha256": "a713d0fca5e120a7dfdc56181a368b7868d821c3b14de4dd6d54365b1d804646",
+          "archive_sha256": "359cc566138c9d98bbe60616d4d08dff4a1da9d18d5d4c77711d92ed3eae36ab",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-segmented/wrong-scale/remote/bf-d30b367ab014441c94d1-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "0f1e68f42dc178671abf64b056e395c105db88530968c89fc3397aa9a2d7a78e",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "c3cd8eeab1f1c1e713f6043c2688227d58a34717a04056ab5cf6554523cf1d8f",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.7680196315050125,
+              "passed": false,
+              "errors": {
+                "aout": 0.0625
+              },
+              "settled_points": 2910,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "bdbf0f40a7d227d76b420a396783c33f05086d074c58be2a2c90d5996796cbe9",
+              "waveform_rows": 3665
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "0f1e68f42dc178671abf64b056e395c105db88530968c89fc3397aa9a2d7a78e",
+      "variant": "wrong-scale",
+      "expected_pass": false,
+      "selected_case_names": [
+        "private-0"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r7/v3-converter-segmented/bit-order",
+      "task": "v3-converter-segmented",
+      "candidate_sha256": "509f3faa0ac476b81c8f227bf99ec3248f62db3c9007b692d51144c3df4da2bf",
+      "criteria_sha256": "9b3c6dc183a034b565251264087bd2fcf92c20a6b1b1abe5e6e6bf1f57cfc01a",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": false,
+      "has_selected_graded_failure": true,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-eb81de37296a4a29bf75-private-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "report_sha256": "8c41ccd108b962355022ec33c14770eb71421ae0f610ed677572722d48e55fe7",
+          "archive_sha256": "b24f7551785c824ce4523967775c31abf72713bbc5c41022b023f5cba4b150bd",
+          "archive": "runs/benchmark-next-converter-r7/v3-converter-segmented/bit-order/remote/bf-eb81de37296a4a29bf75-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "96fd64d6b536edf6dc573fe1753e1792577b5fc82e3cf5e0e42ac67609147d6a",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "c3cd8eeab1f1c1e713f6043c2688227d58a34717a04056ab5cf6554523cf1d8f",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.3670145981013775,
+              "passed": false,
+              "errors": {
+                "aout": 0.06666666666666671
+              },
+              "settled_points": 2910,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "6c46f8299269d5ac1390d9276a4a1426d2ace90b2daad73f4b3b2d56abecca37",
+              "waveform_rows": 3665
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "96fd64d6b536edf6dc573fe1753e1792577b5fc82e3cf5e0e42ac67609147d6a",
+      "variant": "bit-order",
+      "expected_pass": false,
+      "selected_case_names": [
+        "private-0"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r2/v3-converter-thermometer/reference",
+      "task": "v3-converter-thermometer",
+      "candidate_sha256": "45e039bc6a7ca47550d22dd3e8084be22cfeb57f9411a8bdfe712e5341eb28b1",
+      "criteria_sha256": "133b74dabc597832f6f2bf4c8110b7952c1c72d8cdca848f8b8152cda42898df",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": true,
+      "has_selected_graded_failure": false,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-341a5e19d54242969304-private-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "439e3a61f8dde9ff3c93df1fa86566d7db62f5e229b52c9c65be69e65f8b2f9c",
+          "archive_sha256": "58c08716191fd55d821cb53d67ccf6fea151024392ffd4a35dccb42710c7c193",
+          "archive": "runs/benchmark-next-converter-r2/v3-converter-thermometer/reference/remote/bf-341a5e19d54242969304-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "b9d6b2d1bd034f3d3396312870c0a7e43215a92c599cfc888b415c9c087eab35",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "7d71c94b54991e494708e262b77bd8b4c129a9e48a4622fb6872f09eec8c8e65",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.3169136848300695,
+              "passed": true,
+              "errors": {
+                "aout": 5.551115123125783e-17
+              },
+              "settled_points": 2910,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "18ed0125786895ee57acdd5309ac1b6ce6c15af9f2162ca4a1fbadb9ac6f9b1f",
+              "waveform_rows": 3651
+            }
+          ]
+        },
+        {
+          "condition": "private-1",
+          "job_id": "bf-6155b968cecb4ff38870-private-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "df3c1ec20845d0239c1b771a604877fa1a736dbe6991e0c466fefcffe17ef974",
+          "archive_sha256": "466b8b6c5a05626c416bc3826826b862e0dbeeddf8d7e9a96efcdd78b78abda8",
+          "archive": "runs/benchmark-next-converter-r2/v3-converter-thermometer/reference/remote/bf-6155b968cecb4ff38870-private-1/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "b9d6b2d1bd034f3d3396312870c0a7e43215a92c599cfc888b415c9c087eab35",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-1",
+              "netlist_sha256": "40e5b05f68f9478553bd70c1e424fc8010e08529bcbb41654112be3ab679d9cb",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.6678143683820963,
+              "passed": true,
+              "errors": {
+                "aout": 5.551115123125783e-17
+              },
+              "settled_points": 2910,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "2b37a162cdae0c5c786a38ce89bb1b86f1d0491970163f85f625f59774fc5740",
+              "waveform_rows": 3652
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "b9d6b2d1bd034f3d3396312870c0a7e43215a92c599cfc888b415c9c087eab35",
+      "variant": "reference",
+      "expected_pass": true,
+      "selected_case_names": [
+        "private-0",
+        "private-1"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r4/v3-converter-thermometer/alternative",
+      "task": "v3-converter-thermometer",
+      "candidate_sha256": "4ae99fc0f2dbb0d8837e39093eade65f0469f5c12f9ddbac723a0d2760c30f93",
+      "criteria_sha256": "ccd121020fb02bc8354d6bdc9ad892b2c45b360f2c72c3a6849bedaf42714f89",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": true,
+      "has_selected_graded_failure": false,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-e21ce1127a0548aabbd3-private-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "3de144794eb8d367c350149bdfd49ee4bc5b941cdeefdfdc7fe61799f80e1d8a",
+          "archive_sha256": "8ae04d029ffda73abe35e38a65e9f092c80f60fca8763237695ae6c3a68da486",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-thermometer/alternative/remote/bf-e21ce1127a0548aabbd3-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "e56d02f7b84cb6e974f5d873096de1dc9db0d07e90e138d100950a9a6e720862",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "7d71c94b54991e494708e262b77bd8b4c129a9e48a4622fb6872f09eec8c8e65",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 2.1690140292048454,
+              "passed": true,
+              "errors": {
+                "aout": 1.1102230246251565e-16
+              },
+              "settled_points": 2910,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "32fdccf9e08328041024d1497d28a7d7dee1105a88ec511b274c032af369c610",
+              "waveform_rows": 3651
+            }
+          ]
+        },
+        {
+          "condition": "private-1",
+          "job_id": "bf-caaafb2848124f91a848-private-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "58c3c844b06402cf42829a8a892f6bd84fa572c426121ca9109f6879ba70d1c3",
+          "archive_sha256": "efa8bd63d31ac9dcee5cc388c710300d3641cd7eb9765dab085decef463e47bd",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-thermometer/alternative/remote/bf-caaafb2848124f91a848-private-1/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "e56d02f7b84cb6e974f5d873096de1dc9db0d07e90e138d100950a9a6e720862",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-1",
+              "netlist_sha256": "40e5b05f68f9478553bd70c1e424fc8010e08529bcbb41654112be3ab679d9cb",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.8174599092453718,
+              "passed": true,
+              "errors": {
+                "aout": 1.1102230246251565e-16
+              },
+              "settled_points": 2910,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "8741c9c68abbc316a6f99f52154ba6843c4d24dd64911b931c7bd9c101529669",
+              "waveform_rows": 3652
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "e56d02f7b84cb6e974f5d873096de1dc9db0d07e90e138d100950a9a6e720862",
+      "variant": "alternative",
+      "expected_pass": true,
+      "selected_case_names": [
+        "private-0",
+        "private-1"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r4/v3-converter-thermometer/omit-last",
+      "task": "v3-converter-thermometer",
+      "candidate_sha256": "faaeca6935b19d040eaece55d9f2c43a674b7c2fceb85cc805f29fc495e91490",
+      "criteria_sha256": "ccd121020fb02bc8354d6bdc9ad892b2c45b360f2c72c3a6849bedaf42714f89",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": false,
+      "has_selected_graded_failure": true,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-d881ad31117c4acda9cb-private-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "report_sha256": "7be05fd006e9cdad6457fac2ede1e130f19419a19b0b749827bd982d96ea2cff",
+          "archive_sha256": "07200d1c000692cd0bb34219ab3b0dd2c89fe900eb0b4c8f209bfe71630d1b60",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-thermometer/omit-last/remote/bf-d881ad31117c4acda9cb-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "fba40d6d2c01773233247e4d3f38d93adf108f56d87a993e93fa73dc5419a97a",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "7d71c94b54991e494708e262b77bd8b4c129a9e48a4622fb6872f09eec8c8e65",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.7673869915306568,
+              "passed": false,
+              "errors": {
+                "aout": 0.06666666666666667
+              },
+              "settled_points": 2910,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "da301cf3c9bca681a9937c0ec1a4743f0a1c2492c20f130fabae8c7580c97a10",
+              "waveform_rows": 3651
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "fba40d6d2c01773233247e4d3f38d93adf108f56d87a993e93fa73dc5419a97a",
+      "variant": "omit-last",
+      "expected_pass": false,
+      "selected_case_names": [
+        "private-0"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r4/v3-converter-thermometer/transparent",
+      "task": "v3-converter-thermometer",
+      "candidate_sha256": "46a038b3dd78b91d2c6a1f5d08a3a90f8a18c200ad73b29c5ef7fa679a154c78",
+      "criteria_sha256": "ccd121020fb02bc8354d6bdc9ad892b2c45b360f2c72c3a6849bedaf42714f89",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": false,
+      "has_selected_graded_failure": true,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-bfa0d5e12d794c608d9d-private-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "report_sha256": "814cafa26c0699e9ad0df4e1e25c43d931c90f40130fd247f3db1e96ac20acd5",
+          "archive_sha256": "06d7024e6e3fa80fe6e9f1f5d767a4641e457861ddd9ff40a5d530d1944c6c34",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-thermometer/transparent/remote/bf-bfa0d5e12d794c608d9d-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "71ae73cab4821ee7646d391e9550dc78f59db5ba2c5d5e3c5a5d900b01da5b5c",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "7d71c94b54991e494708e262b77bd8b4c129a9e48a4622fb6872f09eec8c8e65",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.7680109329521656,
+              "passed": false,
+              "errors": {
+                "aout": 0.9333333333333333
+              },
+              "settled_points": 2925,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "8066731301903e69f3bb1576c0096944f18006b634d14410e17c6b151754a0c7",
+              "waveform_rows": 3617
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "71ae73cab4821ee7646d391e9550dc78f59db5ba2c5d5e3c5a5d900b01da5b5c",
+      "variant": "transparent",
+      "expected_pass": false,
+      "selected_case_names": [
+        "private-0"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r4/v3-converter-thermometer/wrong-scale",
+      "task": "v3-converter-thermometer",
+      "candidate_sha256": "337e7b3475d1bdd85a567cf429f9689eebfdb83326e695c001cb60d38faa39f3",
+      "criteria_sha256": "ccd121020fb02bc8354d6bdc9ad892b2c45b360f2c72c3a6849bedaf42714f89",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": false,
+      "has_selected_graded_failure": true,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-912307ca417d43809da0-private-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "report_sha256": "d4606b78a7604ed2c11b09a2f26b7f37fa5bd5d938eaedf3ef5091afb685f0c6",
+          "archive_sha256": "9657cb8a9d802200b2864d28502d5507531af3e751445463fcb14ce7dae8c000",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-thermometer/wrong-scale/remote/bf-912307ca417d43809da0-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "8476d0eafb3882f4f9c4721f7046d3bcea5d5075f63ee5c979895d2132eea677",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "7d71c94b54991e494708e262b77bd8b4c129a9e48a4622fb6872f09eec8c8e65",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.4672672804445028,
+              "passed": false,
+              "errors": {
+                "aout": 0.0625
+              },
+              "settled_points": 2910,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "8483db199c209fb91233080411dd15978b8077b5703cdc3e29b595aa5c9cd850",
+              "waveform_rows": 3651
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "8476d0eafb3882f4f9c4721f7046d3bcea5d5075f63ee5c979895d2132eea677",
+      "variant": "wrong-scale",
+      "expected_pass": false,
+      "selected_case_names": [
+        "private-0"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r2/v3-converter-nonideal/reference",
+      "task": "v3-converter-nonideal",
+      "candidate_sha256": "f46952fc7a42c7e4ad4ce61b8f4ad31dbefdc52cc5aa38be0ea1b98cd984feac",
+      "criteria_sha256": "f05e75d742fa4695ffaa01717cc1700deaba67d5b07d6d1894e55fa6244fd5f1",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": true,
+      "has_selected_graded_failure": false,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-394d910925624548b6a3-private-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "60d9346dd97cb0b2be7739a6243967c2161772df7b34927a3f1794ccd2bada45",
+          "archive_sha256": "4a347bdde48b4eeed18b54341c5d236e370cf48db9c99ea7a7a02edaa1e80db4",
+          "archive": "runs/benchmark-next-converter-r2/v3-converter-nonideal/reference/remote/bf-394d910925624548b6a3-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "5688c37838ffe363f08d2ab3c5ffb1680a8bcebc8012befa5f97011bdb5fe54b",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "cf785a7954fba3f52d7c635e7f6d34d3304b9cf01a3904522693ed6e41073422",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.2164564579725266,
+              "passed": true,
+              "errors": {
+                "aout": 5.551115123125783e-17
+              },
+              "settled_points": 1438,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "149940a421be8401aed189a719a886a88f36ff6e4ba26500d0a38196eb77e9bb",
+              "waveform_rows": 1825
+            }
+          ]
+        },
+        {
+          "condition": "private-1",
+          "job_id": "bf-4478252885634ed689b2-private-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "65a16ab83fc343075c856ed43ad0eed57b2acf0e963cea9a1928403d17a9381f",
+          "archive_sha256": "f63cee9fba1ae71e289cde3bd980ed4dbcf8e84b6ee429344cafcdfbfadac0df",
+          "archive": "runs/benchmark-next-converter-r2/v3-converter-nonideal/reference/remote/bf-4478252885634ed689b2-private-1/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "5688c37838ffe363f08d2ab3c5ffb1680a8bcebc8012befa5f97011bdb5fe54b",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-1",
+              "netlist_sha256": "1058fcac87d8442acb535e30f8654414b5347c962f51e67fa6d993439c49633a",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.2161386515945196,
+              "passed": true,
+              "errors": {
+                "aout": 5.551115123125783e-17
+              },
+              "settled_points": 1438,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "b60201c3b96b34e9abe7a91147497445d3d21cf939855e435470084756e674d8",
+              "waveform_rows": 1826
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "5688c37838ffe363f08d2ab3c5ffb1680a8bcebc8012befa5f97011bdb5fe54b",
+      "variant": "reference",
+      "expected_pass": true,
+      "selected_case_names": [
+        "private-0",
+        "private-1"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r4/v3-converter-nonideal/alternative",
+      "task": "v3-converter-nonideal",
+      "candidate_sha256": "73847b8ccf6610232fb5ad2da8312576ee1ebaced5d17382174cb54e0be685d2",
+      "criteria_sha256": "f3e680df02bb756ec69081f572ce87eff3ec383cc4207fba6899c4c13b398146",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": true,
+      "has_selected_graded_failure": false,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-91ce25263ba9446ebb11-private-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "8ef4b7cb58e9a584e39fe03225d1a65d12fb303791a41dc19ecc7b1409302697",
+          "archive_sha256": "4f42e7e8ba829ff038c1f91f8108d55fa1bc056d66e7a3b2b8acb773d326d265",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-nonideal/alternative/remote/bf-91ce25263ba9446ebb11-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "a2fe51e0f8fafa548de1fb4d16ed71a9814ad0c7afbc80b5158e92c4ed29328f",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "cf785a7954fba3f52d7c635e7f6d34d3304b9cf01a3904522693ed6e41073422",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.2659924943000078,
+              "passed": true,
+              "errors": {
+                "aout": 1.1102230246251565e-16
+              },
+              "settled_points": 1438,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "8ddfca36babf2632c49d0ef36d19f881cbde6169d7a6008731e92a43396f88a9",
+              "waveform_rows": 1825
+            }
+          ]
+        },
+        {
+          "condition": "private-1",
+          "job_id": "bf-b5407ddbb1444f8c9196-private-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "2e0ce07eb0eea5766d8f73449ff64d6fe15c8144adbbcec1362450e7af8ac726",
+          "archive_sha256": "3a12368a3c5b3a7a2db8ce05a438c11396b78f28ebadbe3647f2c571f1ed00e2",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-nonideal/alternative/remote/bf-b5407ddbb1444f8c9196-private-1/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "a2fe51e0f8fafa548de1fb4d16ed71a9814ad0c7afbc80b5158e92c4ed29328f",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-1",
+              "netlist_sha256": "1058fcac87d8442acb535e30f8654414b5347c962f51e67fa6d993439c49633a",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.3667256478220224,
+              "passed": true,
+              "errors": {
+                "aout": 1.1102230246251565e-16
+              },
+              "settled_points": 1438,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "2052ed24441843a83ee0684d6d5b6ed0961ff43d6e5f5a4da69e5ac17ef7dc83",
+              "waveform_rows": 1826
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "a2fe51e0f8fafa548de1fb4d16ed71a9814ad0c7afbc80b5158e92c4ed29328f",
+      "variant": "alternative",
+      "expected_pass": true,
+      "selected_case_names": [
+        "private-0",
+        "private-1"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r4/v3-converter-nonideal/omit-last",
+      "task": "v3-converter-nonideal",
+      "candidate_sha256": "4ffba1dababb57f88bc096d665a02d4e438ccb4001653e39c82819de11946641",
+      "criteria_sha256": "f3e680df02bb756ec69081f572ce87eff3ec383cc4207fba6899c4c13b398146",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": false,
+      "has_selected_graded_failure": true,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-a2074b56842447d780a9-private-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "report_sha256": "f78af40c548b6147f36994340aa76282fa6310d1d0f574ccdf9a6e0cc731bdbf",
+          "archive_sha256": "ccc03d3f7128d3dbdd07f45f62216f9171e1a493f93ff26d88b4b8131f09c1a3",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-nonideal/omit-last/remote/bf-a2074b56842447d780a9-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "742393b35569e7ef9c958e7a8811c52c709694aef9b8bea0f5879623cdceaa2b",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "cf785a7954fba3f52d7c635e7f6d34d3304b9cf01a3904522693ed6e41073422",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.2166231237351894,
+              "passed": false,
+              "errors": {
+                "aout": 0.5365205843293492
+              },
+              "settled_points": 1438,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "1977ca45b8fde4e71b0f19e6f54f4e831e7a817800c6b6e0ead77869a138bba3",
+              "waveform_rows": 1825
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "742393b35569e7ef9c958e7a8811c52c709694aef9b8bea0f5879623cdceaa2b",
+      "variant": "omit-last",
+      "expected_pass": false,
+      "selected_case_names": [
+        "private-0"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r4/v3-converter-nonideal/transparent",
+      "task": "v3-converter-nonideal",
+      "candidate_sha256": "ab073b5ca656a19e4cb7f8bcad38dab7f33153a76e68049f46695275e4463364",
+      "criteria_sha256": "f3e680df02bb756ec69081f572ce87eff3ec383cc4207fba6899c4c13b398146",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": false,
+      "has_selected_graded_failure": true,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-21794b177c34471da4fb-private-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "report_sha256": "e3b4e0432e5dac113e71d56837f94e00f101a457ea033b5ff69b18567f96717e",
+          "archive_sha256": "a98f465e132d757e572b95bce55b82b5a0750cc261840b6d68b5e6c9e371a81e",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-nonideal/transparent/remote/bf-21794b177c34471da4fb-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "75ba4bf5fb00fdae5e58491955867a619b1cefdd06aad1776fc1d7818160e63c",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "cf785a7954fba3f52d7c635e7f6d34d3304b9cf01a3904522693ed6e41073422",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.7171688862144947,
+              "passed": false,
+              "errors": {
+                "aout": 0.2545656042505635
+              },
+              "settled_points": 1452,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "f1cb07db7b2367bc9f76feccd75c10bb9aaed02be6b5605215bd22460e9b32f7",
+              "waveform_rows": 1808
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "75ba4bf5fb00fdae5e58491955867a619b1cefdd06aad1776fc1d7818160e63c",
+      "variant": "transparent",
+      "expected_pass": false,
+      "selected_case_names": [
+        "private-0"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r4/v3-converter-nonideal/ideal-binary",
+      "task": "v3-converter-nonideal",
+      "candidate_sha256": "49d3706877e7340fc4026548c86747679e1b97b932cacfe066eb8f5f22fd880e",
+      "criteria_sha256": "f3e680df02bb756ec69081f572ce87eff3ec383cc4207fba6899c4c13b398146",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": false,
+      "has_selected_graded_failure": true,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-058ff2d62b254fe285d1-private-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "report_sha256": "180147ed665e90a2a37022c3974066e5f0f693e379bc04e86e0bb0052ef8a9f2",
+          "archive_sha256": "3b2a6fef9cf6c38b5e05eb18cb402422c93bc24ad8af856979c4d9f2774eaa9a",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-nonideal/ideal-binary/remote/bf-058ff2d62b254fe285d1-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "cfde966b11a9d34a0b29d091b006f00f4bcff8d389eb3dcdc0bed188ebdad650",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "cf785a7954fba3f52d7c635e7f6d34d3304b9cf01a3904522693ed6e41073422",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.6676427274942398,
+              "passed": false,
+              "errors": {
+                "aout": 0.003984063745019917
+              },
+              "settled_points": 1438,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "2495b8c5ef6dfbe1b6da83502c381cc038c957bdaeddf02de887709e5c4b66ee",
+              "waveform_rows": 1825
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "cfde966b11a9d34a0b29d091b006f00f4bcff8d389eb3dcdc0bed188ebdad650",
+      "variant": "ideal-binary",
+      "expected_pass": false,
+      "selected_case_names": [
+        "private-0"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r2/v3-converter-subradix/reference",
+      "task": "v3-converter-subradix",
+      "candidate_sha256": "22acb21ef290c84645ff2515749afb4ad5e5c04faf2824474f30a1f3a4d0a756",
+      "criteria_sha256": "857377c22a7a1f550464381509bf9c2f9238730dff87bda7d3e3b5c648d876b9",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": true,
+      "has_selected_graded_failure": false,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-51a59da3f7cb4e1d860d-private-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "46631664143e0b8d44d4f56793dfdcad1cd2d6907898be2525bdca9c1b30a9ed",
+          "archive_sha256": "e0ea1f141b346c9273feeadb5de1bcbdd3e0da13ba976f23a25e1e6568ab3834",
+          "archive": "runs/benchmark-next-converter-r2/v3-converter-subradix/reference/remote/bf-51a59da3f7cb4e1d860d-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "d5da80be34cbebf5b60af0550e19c65f274420637534e72e5930176d1226e174",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "9979bff508db43a8e9ee463cf74f7b08a2fa6f0052f50ffbd86014f2dc871cab",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.8174177389591932,
+              "passed": true,
+              "errors": {
+                "aout": 1.1102230246251565e-16
+              },
+              "settled_points": 2174,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "3d3a0248bb1fbd042b02afefeb267e8fead584bd003e57f67058f37645ca4461",
+              "waveform_rows": 2745
+            }
+          ]
+        },
+        {
+          "condition": "private-1",
+          "job_id": "bf-ad6a6df086c64266b334-private-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "5c8c0355fe352ea8d58cf99982f8ebbb2e3df283829438269c1ceefa5c2013bf",
+          "archive_sha256": "2700b02d441b490b8b8d24fad3989c2f462d7bab19eadfd787f4f47e67aa9f66",
+          "archive": "runs/benchmark-next-converter-r2/v3-converter-subradix/reference/remote/bf-ad6a6df086c64266b334-private-1/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "d5da80be34cbebf5b60af0550e19c65f274420637534e72e5930176d1226e174",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-1",
+              "netlist_sha256": "f282d3e4d491a83dc14a516aea8e6700706cbfe18fe95a835fce58e600924b43",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.7180637661367655,
+              "passed": true,
+              "errors": {
+                "aout": 1.1102230246251565e-16
+              },
+              "settled_points": 2174,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "877d4aa9dfecae30a688c41f74f79c44773387d45c282ef1ccf511c4f1712e31",
+              "waveform_rows": 2746
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "d5da80be34cbebf5b60af0550e19c65f274420637534e72e5930176d1226e174",
+      "variant": "reference",
+      "expected_pass": true,
+      "selected_case_names": [
+        "private-0",
+        "private-1"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r4/v3-converter-subradix/alternative",
+      "task": "v3-converter-subradix",
+      "candidate_sha256": "70d63fcae2ba9ab6a8c0809d5cfb952716ee895825300ecf89ae17aa9114c678",
+      "criteria_sha256": "abc4ee2fff08b87feba00507e72056d0c8375369702ef8d33d015d1bad06cad4",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": true,
+      "has_selected_graded_failure": false,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-8e559d3ba86b487f9479-private-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "2125ee60feff961377ea45e51e1f6b1a28d58b54fd79f7480beb670829dab20c",
+          "archive_sha256": "b707416dfd1720082259e27fe79d7942b04d98a777d41697381a227c7e9eec28",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-subradix/alternative/remote/bf-8e559d3ba86b487f9479-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "ac8d79a6bccc92e780c565cf02a6845029126045ecc34f1866107824d863c260",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "9979bff508db43a8e9ee463cf74f7b08a2fa6f0052f50ffbd86014f2dc871cab",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.6676022503525019,
+              "passed": true,
+              "errors": {
+                "aout": 1.1102230246251565e-16
+              },
+              "settled_points": 2174,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "6a97492170665b7b86125a8f685efbe64da5de4077dfe6cc215bb8c8c46eb991",
+              "waveform_rows": 2745
+            }
+          ]
+        },
+        {
+          "condition": "private-1",
+          "job_id": "bf-d2d62382a0e04b16a10d-private-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "700b226a233136dcdaf97d01c83113015704ec916d444fc445625bec3d9f3d8e",
+          "archive_sha256": "b25811953370ca86883399a667027532e0d4c473696e7de3695cf7952a8327f6",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-subradix/alternative/remote/bf-d2d62382a0e04b16a10d-private-1/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "ac8d79a6bccc92e780c565cf02a6845029126045ecc34f1866107824d863c260",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-1",
+              "netlist_sha256": "f282d3e4d491a83dc14a516aea8e6700706cbfe18fe95a835fce58e600924b43",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 2.0682616159319878,
+              "passed": true,
+              "errors": {
+                "aout": 1.3877787807814457e-16
+              },
+              "settled_points": 2174,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "26f80c2d58d82e79df6535bca9a3a1cc8d04837fc243dfb4c0fab23cd94276b8",
+              "waveform_rows": 2746
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "ac8d79a6bccc92e780c565cf02a6845029126045ecc34f1866107824d863c260",
+      "variant": "alternative",
+      "expected_pass": true,
+      "selected_case_names": [
+        "private-0",
+        "private-1"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r4/v3-converter-subradix/omit-last",
+      "task": "v3-converter-subradix",
+      "candidate_sha256": "68696c62b69d01c8fafcc8330570b50affcb8191a0d8fbba21e274be51accb49",
+      "criteria_sha256": "abc4ee2fff08b87feba00507e72056d0c8375369702ef8d33d015d1bad06cad4",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": false,
+      "has_selected_graded_failure": true,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-ce55095133b04916988d-private-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "report_sha256": "95c62824b1648805dd1cdfb96457ecdd96d57e40612e8778b8b3f00b81481d74",
+          "archive_sha256": "37d478e94e1e01c0b4853101a75cc090a940e8f42c48ee47798d9be63f149fd6",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-subradix/omit-last/remote/bf-ce55095133b04916988d-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "58452a05afcc2023da064695d242118abf69530c3056c790702d217090a1c4e6",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "9979bff508db43a8e9ee463cf74f7b08a2fa6f0052f50ffbd86014f2dc871cab",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.6173901502043009,
+              "passed": false,
+              "errors": {
+                "aout": 0.4456927200671522
+              },
+              "settled_points": 2174,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "96c8fce3817c8ee705f2d1fde00bd20296394c0b1173decc920954a30cd152bb",
+              "waveform_rows": 2745
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "58452a05afcc2023da064695d242118abf69530c3056c790702d217090a1c4e6",
+      "variant": "omit-last",
+      "expected_pass": false,
+      "selected_case_names": [
+        "private-0"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r4/v3-converter-subradix/transparent",
+      "task": "v3-converter-subradix",
+      "candidate_sha256": "d58daeebd9bfb4ef658dd47bb1f0970197779be845c8de9bb90bd6250a9caddb",
+      "criteria_sha256": "abc4ee2fff08b87feba00507e72056d0c8375369702ef8d33d015d1bad06cad4",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": false,
+      "has_selected_graded_failure": true,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-76501b7e683a4176a8eb-private-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "report_sha256": "7ef816170e11c579000ef6f5b3286830325ba77c32d75f15951d5feed64d37a1",
+          "archive_sha256": "fa7ef7473828bcb8c73b688dac54940b091cd706d7cc756b2a765f8e21cd5e8a",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-subradix/transparent/remote/bf-76501b7e683a4176a8eb-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "6762379d4486e2c42b80eef0273dfdf58a38a04ad2f3d0ff0585f005d9df52d8",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "9979bff508db43a8e9ee463cf74f7b08a2fa6f0052f50ffbd86014f2dc871cab",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.2666811477392912,
+              "passed": false,
+              "errors": {
+                "aout": 0.9999999999999999
+              },
+              "settled_points": 2199,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "ff0beb3e96b819ded5697e4019af9028310991730abc132a72e9c25e777057d1",
+              "waveform_rows": 2723
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "6762379d4486e2c42b80eef0273dfdf58a38a04ad2f3d0ff0585f005d9df52d8",
+      "variant": "transparent",
+      "expected_pass": false,
+      "selected_case_names": [
+        "private-0"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r4/v3-converter-subradix/ideal-binary",
+      "task": "v3-converter-subradix",
+      "candidate_sha256": "c348fb2cd8af7156c08ff7350b63aa14c4ae9178a7b35d1ae7131eee2de5f7d4",
+      "criteria_sha256": "abc4ee2fff08b87feba00507e72056d0c8375369702ef8d33d015d1bad06cad4",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": false,
+      "has_selected_graded_failure": true,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-0f4e7969fad44575b2e7-private-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "report_sha256": "a8c08456b4a11314427cf4c50c70351ed32d9c352013f4f7e7c1fc1214dd2afb",
+          "archive_sha256": "6debac16c46d6e7ba8d9e16db186b5f91328db0e4b80676f5c8115f0b78e805b",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-subradix/ideal-binary/remote/bf-0f4e7969fad44575b2e7-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "05d769a64c308faed2f5208701ce8d41d999087223abc0422dbd6f24ad97cb62",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "9979bff508db43a8e9ee463cf74f7b08a2fa6f0052f50ffbd86014f2dc871cab",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.8179248366504908,
+              "passed": false,
+              "errors": {
+                "aout": 0.05743335105878636
+              },
+              "settled_points": 2174,
+              "records": 0,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "bc94eae9531f490d00e87342dbffbb2e8f231ad7803abb3d176bf8675581c993",
+              "waveform_rows": 2745
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "05d769a64c308faed2f5208701ce8d41d999087223abc0422dbd6f24ad97cb62",
+      "variant": "ideal-binary",
+      "expected_pass": false,
+      "selected_case_names": [
+        "private-0"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r3/v3-converter-dac-linearity/reference",
+      "task": "v3-converter-dac-linearity",
+      "candidate_sha256": "34e12cc9da3dfc7f860a97bb704fefc5a4c8d01d6288c4d2b9e379a16a91818f",
+      "criteria_sha256": "8360cc6f397c940f6c5ca23ee9ef4957156e3c02005405ac735de5b59fd6ff51",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": true,
+      "has_selected_graded_failure": false,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-24c536d600b848e8bd3d-private-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "16005f515e2adcc4b2478944e1b7bb833fdf6c8759483db10da90364ce27e6d8",
+          "archive_sha256": "893b3a1f07a59d66221b9c93240e5a3b2784325a0d650b46cb2ea89a8296a5b6",
+          "archive": "runs/benchmark-next-converter-r3/v3-converter-dac-linearity/reference/remote/bf-24c536d600b848e8bd3d-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "29ed702ccb84f1e6c489c06d000ee17176fb4d85a2ec00eb1d31b97e49a53e1f",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "c5797ecb06eee734bb69b7ebff0cb14c72fa8d3b5a57c91b7c0839052b3bfc48",
+              "support_sha256": {
+                "fixed.va": "c39a0168d091dfb2d1601d1544365f7e4474335b4abd6a78e9f538fcc27cd11e"
+              },
+              "returncode": 0,
+              "elapsed_s": 2.368193270638585,
+              "passed": true,
+              "errors": {
+                "dnl": 1.2212453270876722e-15,
+                "inl": 2.6645352591003757e-15,
+                "valid": 0
+              },
+              "settled_points": 1367,
+              "records": 16,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "d3b39616a5bd37cd3eb5b8b6c397252b6cd71947acd85627b8f2d66c7e9bcca4",
+              "waveform_rows": 1739
+            }
+          ]
+        },
+        {
+          "condition": "private-1",
+          "job_id": "bf-ff62c6e8d2df4e6481f5-private-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "81a7ff0f23202590ca5ca991a0c9f45facc9dff6ed3345f4048d9da90f6846c8",
+          "archive_sha256": "41b5ec2584c765367fb8bb1e30bac57728384892d2457a9d9579583db3618605",
+          "archive": "runs/benchmark-next-converter-r3/v3-converter-dac-linearity/reference/remote/bf-ff62c6e8d2df4e6481f5-private-1/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "29ed702ccb84f1e6c489c06d000ee17176fb4d85a2ec00eb1d31b97e49a53e1f",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-1",
+              "netlist_sha256": "c5797ecb06eee734bb69b7ebff0cb14c72fa8d3b5a57c91b7c0839052b3bfc48",
+              "support_sha256": {
+                "fixed.va": "16e1d745b5784d279c94fc965df85eb39ca420d8014ee38a08842d70504efe56"
+              },
+              "returncode": 0,
+              "elapsed_s": 2.368243446573615,
+              "passed": true,
+              "errors": {
+                "dnl": 0,
+                "inl": 0,
+                "valid": 0
+              },
+              "settled_points": 1367,
+              "records": 16,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "112fdcd163268ba5d405d7cb7b22f6d11ecc37942f109c112dbab1f900171119",
+              "waveform_rows": 1739
+            }
+          ]
+        },
+        {
+          "condition": "repeat-code",
+          "job_id": "bf-35f8b120aa8c4b3ca907-repeat-code",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "4e5c7d87bd12480b830d6e02019a7a382e83bfa42afc89180cf43b5a28bd9a59",
+          "archive_sha256": "19924a5cf0977cd4e2464c01188cda4069e9a3e0a2127708c03d80caa0f5ca53",
+          "archive": "runs/benchmark-next-converter-r3/v3-converter-dac-linearity/reference/remote/bf-35f8b120aa8c4b3ca907-repeat-code/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "29ed702ccb84f1e6c489c06d000ee17176fb4d85a2ec00eb1d31b97e49a53e1f",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "repeat-code",
+              "netlist_sha256": "a6ce9c5298c95b5e3f2bde736d03572e9b58347bb86064f49fd9ef298d7b7bdf",
+              "support_sha256": {
+                "fixed.va": "7591b45a2910bd83041fcf7406839b488d3d545c65e9a5b73fd78e30429416e1"
+              },
+              "returncode": 0,
+              "elapsed_s": 2.368786059319973,
+              "passed": true,
+              "errors": {
+                "dnl": 0,
+                "inl": 0,
+                "valid": 0
+              },
+              "settled_points": 1363,
+              "records": 16,
+              "invalid": true,
+              "status": "graded",
+              "waveform_sha256": "b4af9d75f8626d503f8b41ecad789bdcd96240626dafc0eef30f10d6dbc2577a",
+              "waveform_rows": 1735
+            }
+          ]
+        },
+        {
+          "condition": "reset-truncated",
+          "job_id": "bf-c9cfc41e7c6144d2be1a-reset-truncated",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "974620a30463198cae2d71e4ef3906890f4aab8244229bebf058d17b911741e0",
+          "archive_sha256": "2ebccde1f8a170e4a1e94463cec8a86f6910ffca8b0fd7ab3ddf1307398281bd",
+          "archive": "runs/benchmark-next-converter-r3/v3-converter-dac-linearity/reference/remote/bf-c9cfc41e7c6144d2be1a-reset-truncated/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "29ed702ccb84f1e6c489c06d000ee17176fb4d85a2ec00eb1d31b97e49a53e1f",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "reset-truncated",
+              "netlist_sha256": "9eee18e82ada67edfaadd5951cee950c285f2a514f0a660e4f9a6938ea0bdd24",
+              "support_sha256": {
+                "fixed.va": "7591b45a2910bd83041fcf7406839b488d3d545c65e9a5b73fd78e30429416e1"
+              },
+              "returncode": 0,
+              "elapsed_s": 2.3685337863862514,
+              "passed": true,
+              "errors": {
+                "dnl": 1.2212453270876722e-15,
+                "inl": 0,
+                "valid": 0
+              },
+              "settled_points": 2048,
+              "records": 8,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "307eb8e6920f2fcd8f9f068048802b49f616ffc517083b44f64f829beb5100e4",
+              "waveform_rows": 2642
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "29ed702ccb84f1e6c489c06d000ee17176fb4d85a2ec00eb1d31b97e49a53e1f",
+      "variant": "reference",
+      "expected_pass": true,
+      "selected_case_names": [
+        "private-0",
+        "private-1",
+        "repeat-code",
+        "reset-truncated"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r4/v3-converter-dac-linearity/alternative",
+      "task": "v3-converter-dac-linearity",
+      "candidate_sha256": "80a020184b06ef9cf15b712dd07daf57a5e7f143f8fd2ccf2cb522a28934ba3b",
+      "criteria_sha256": "8360cc6f397c940f6c5ca23ee9ef4957156e3c02005405ac735de5b59fd6ff51",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": true,
+      "has_selected_graded_failure": false,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-c59a60d771e24cc8bc08-private-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "65224de78729480a34e0915b311bf8850b370e2b640f2e5c17688b40115c74e9",
+          "archive_sha256": "2d9b4671a8f8dfe6c7291946bdbee2d98247a2b3d611eed6166e7724f664cfa5",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-dac-linearity/alternative/remote/bf-c59a60d771e24cc8bc08-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "86a60b019064290e0fe989635d0942a4e04972da624cd5a9ceb52e475b7792e4",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "c5797ecb06eee734bb69b7ebff0cb14c72fa8d3b5a57c91b7c0839052b3bfc48",
+              "support_sha256": {
+                "fixed.va": "c39a0168d091dfb2d1601d1544365f7e4474335b4abd6a78e9f538fcc27cd11e"
+              },
+              "returncode": 0,
+              "elapsed_s": 2.870391031727195,
+              "passed": true,
+              "errors": {
+                "dnl": 1.2212453270876722e-15,
+                "inl": 2.275957200481571e-15,
+                "valid": 0
+              },
+              "settled_points": 1367,
+              "records": 16,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "75f574532ae42bc112fa0e58f076c4a396e26a82af05e62aa7a211c7ea59811a",
+              "waveform_rows": 1739
+            }
+          ]
+        },
+        {
+          "condition": "private-1",
+          "job_id": "bf-800806b6099646419eec-private-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "71f7470b1ab6e03a75ccd664266fab6bb0b3b8f764c73e7f4ef9837926371951",
+          "archive_sha256": "77f318e147835c054653fd49ece30e8f4e55d3486732ca12483e0dcb3a985522",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-dac-linearity/alternative/remote/bf-800806b6099646419eec-private-1/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "86a60b019064290e0fe989635d0942a4e04972da624cd5a9ceb52e475b7792e4",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-1",
+              "netlist_sha256": "c5797ecb06eee734bb69b7ebff0cb14c72fa8d3b5a57c91b7c0839052b3bfc48",
+              "support_sha256": {
+                "fixed.va": "16e1d745b5784d279c94fc965df85eb39ca420d8014ee38a08842d70504efe56"
+              },
+              "returncode": 0,
+              "elapsed_s": 2.318968988955021,
+              "passed": true,
+              "errors": {
+                "dnl": 0,
+                "inl": 7.771561172376096e-16,
+                "valid": 0
+              },
+              "settled_points": 1367,
+              "records": 16,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "1800ac2c242b11d05257eca90b5cf70831c3b79bcb05e977fc09cfe99e2a6b10",
+              "waveform_rows": 1739
+            }
+          ]
+        },
+        {
+          "condition": "repeat-code",
+          "job_id": "bf-4fa9e6d189d946b086d0-repeat-code",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "898efd52c00cb791ef84f7881191d5c9b220f559b280a94d72b1794b4170ee65",
+          "archive_sha256": "9a2b8a285dba4ad6c63aa2c23be03c94cbae12091c89feaea6087f0041ba4c5e",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-dac-linearity/alternative/remote/bf-4fa9e6d189d946b086d0-repeat-code/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "86a60b019064290e0fe989635d0942a4e04972da624cd5a9ceb52e475b7792e4",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "repeat-code",
+              "netlist_sha256": "a6ce9c5298c95b5e3f2bde736d03572e9b58347bb86064f49fd9ef298d7b7bdf",
+              "support_sha256": {
+                "fixed.va": "7591b45a2910bd83041fcf7406839b488d3d545c65e9a5b73fd78e30429416e1"
+              },
+              "returncode": 0,
+              "elapsed_s": 2.7194140404462814,
+              "passed": true,
+              "errors": {
+                "dnl": 0,
+                "inl": 0,
+                "valid": 0
+              },
+              "settled_points": 1363,
+              "records": 16,
+              "invalid": true,
+              "status": "graded",
+              "waveform_sha256": "afe303e256ef6aa5644c3fe1a18d1d63623114f5b4f261f7ba976369e7e11cc4",
+              "waveform_rows": 1735
+            }
+          ]
+        },
+        {
+          "condition": "reset-truncated",
+          "job_id": "bf-115992f4984c4ed7a52e-reset-truncated",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "254a3214ae3f12b1748111dcd2b7481c4092451dfc0a6765d0c9ab59b347d943",
+          "archive_sha256": "7249f55d08f43090f3c2ec32cc6fb8bbd3907153ac307a4c149522ee1439a505",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-dac-linearity/alternative/remote/bf-115992f4984c4ed7a52e-reset-truncated/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "86a60b019064290e0fe989635d0942a4e04972da624cd5a9ceb52e475b7792e4",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "reset-truncated",
+              "netlist_sha256": "9eee18e82ada67edfaadd5951cee950c285f2a514f0a660e4f9a6938ea0bdd24",
+              "support_sha256": {
+                "fixed.va": "7591b45a2910bd83041fcf7406839b488d3d545c65e9a5b73fd78e30429416e1"
+              },
+              "returncode": 0,
+              "elapsed_s": 2.668834948912263,
+              "passed": true,
+              "errors": {
+                "dnl": 1.2212453270876722e-15,
+                "inl": 7.216449660063518e-16,
+                "valid": 0
+              },
+              "settled_points": 2048,
+              "records": 8,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "bdc111394cbae8fa81c54ee4a4eee1235d4b9646d609852d348a002bb90d27b6",
+              "waveform_rows": 2642
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "86a60b019064290e0fe989635d0942a4e04972da624cd5a9ceb52e475b7792e4",
+      "variant": "alternative",
+      "expected_pass": true,
+      "selected_case_names": [
+        "private-0",
+        "private-1",
+        "repeat-code",
+        "reset-truncated"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r4/v3-converter-dac-linearity/ideal-report",
+      "task": "v3-converter-dac-linearity",
+      "candidate_sha256": "1dcd7e50fde282e6fe46799f98b2617e8ccab2869bd3599c16dfbe9ed1c2a474",
+      "criteria_sha256": "8360cc6f397c940f6c5ca23ee9ef4957156e3c02005405ac735de5b59fd6ff51",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": false,
+      "has_selected_graded_failure": true,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-51fd7fd40e384715b3ed-private-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "report_sha256": "e5d025049ba3677d0d07151751b112faf97fe01615e0cabd1f7834e7157a1bda",
+          "archive_sha256": "a351326e02b44a76a9c2f84e02526a90c07b6a1ee586a3fb810ff0777489db7e",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-dac-linearity/ideal-report/remote/bf-51fd7fd40e384715b3ed-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "c4d7caa2001d8294bd806d10bf3513ddc10af8a64cf579c56bd0dbe81b1d3f00",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "c5797ecb06eee734bb69b7ebff0cb14c72fa8d3b5a57c91b7c0839052b3bfc48",
+              "support_sha256": {
+                "fixed.va": "c39a0168d091dfb2d1601d1544365f7e4474335b4abd6a78e9f538fcc27cd11e"
+              },
+              "returncode": 0,
+              "elapsed_s": 2.7699388042092323,
+              "passed": false,
+              "errors": {
+                "dnl": 0.25714285714285523,
+                "inl": 0.25714285714285534,
+                "valid": 0
+              },
+              "settled_points": 1367,
+              "records": 16,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "f425fd8ae367b7807a99c9d59f5792e4971049a99e26172c099be1ef90ea47e6",
+              "waveform_rows": 1739
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "c4d7caa2001d8294bd806d10bf3513ddc10af8a64cf579c56bd0dbe81b1d3f00",
+      "variant": "ideal-report",
+      "expected_pass": false,
+      "selected_case_names": [
+        "private-0"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r4/v3-converter-dac-linearity/wrong-step",
+      "task": "v3-converter-dac-linearity",
+      "candidate_sha256": "79c61fae8903a413524821bef6477d19c01a0c691d30228fec6b0fa39d5cc6d7",
+      "criteria_sha256": "8360cc6f397c940f6c5ca23ee9ef4957156e3c02005405ac735de5b59fd6ff51",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": false,
+      "has_selected_graded_failure": true,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-902c84fdf9174f94966b-private-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "report_sha256": "9dea73ccf8b4457e492f995297865d1f85f9d95f549845781e1c8d60a919560c",
+          "archive_sha256": "d2cea835c1ee5e561cf80992ba64a6c3e69636ca8207e766aa2b10777318c0ce",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-dac-linearity/wrong-step/remote/bf-902c84fdf9174f94966b-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "e9eaf7c15724caf1f0c72f3574488686fcb7651d278b125bb0e3b4efeac26ca3",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "c5797ecb06eee734bb69b7ebff0cb14c72fa8d3b5a57c91b7c0839052b3bfc48",
+              "support_sha256": {
+                "fixed.va": "c39a0168d091dfb2d1601d1544365f7e4474335b4abd6a78e9f538fcc27cd11e"
+              },
+              "returncode": 0,
+              "elapsed_s": 2.819520341232419,
+              "passed": false,
+              "errors": {
+                "dnl": 0.08380952380952372,
+                "inl": 0.7428571428571447,
+                "valid": 0
+              },
+              "settled_points": 1367,
+              "records": 16,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "2f6ae44e1433ad61f0b0624b4bab4cfe2ed7f6f1940e83601488e40c3292bb45",
+              "waveform_rows": 1739
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "e9eaf7c15724caf1f0c72f3574488686fcb7651d278b125bb0e3b4efeac26ca3",
+      "variant": "wrong-step",
+      "expected_pass": false,
+      "selected_case_names": [
+        "private-0"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r6/v3-converter-dac-linearity/ignore-order",
+      "task": "v3-converter-dac-linearity",
+      "candidate_sha256": "57996e1a39abbb32b9348fd6225c66bb42e011d0bf351c3f7d24f4b9cf21ea63",
+      "criteria_sha256": "8360cc6f397c940f6c5ca23ee9ef4957156e3c02005405ac735de5b59fd6ff51",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": false,
+      "has_selected_graded_failure": true,
+      "conditions": [
+        {
+          "condition": "repeat-code",
+          "job_id": "bf-7f05001b4db64d2c9323-repeat-code",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "report_sha256": "1e78f36984c5d7068bccc33db1e1942cb257ed339f528bb91a0845b4fbffddf7",
+          "archive_sha256": "2d87e4661441bad32c54396bd9cd1e4b09c20fc072b78bbabcc29a67f73df7db",
+          "archive": "runs/benchmark-next-converter-r6/v3-converter-dac-linearity/ignore-order/remote/bf-7f05001b4db64d2c9323-repeat-code/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "3173c4e333ddc8d1f97c7d3fc8f6403a9845204ec54e4a4b252d4d5b3c4f9a52",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "repeat-code",
+              "netlist_sha256": "a6ce9c5298c95b5e3f2bde736d03572e9b58347bb86064f49fd9ef298d7b7bdf",
+              "support_sha256": {
+                "fixed.va": "7591b45a2910bd83041fcf7406839b488d3d545c65e9a5b73fd78e30429416e1"
+              },
+              "returncode": 0,
+              "elapsed_s": 2.8697787914425135,
+              "passed": false,
+              "errors": {
+                "dnl": 1.0,
+                "inl": 0.5714285714285703,
+                "valid": 1.0
+              },
+              "settled_points": 1363,
+              "records": 16,
+              "invalid": true,
+              "status": "graded",
+              "waveform_sha256": "7232a3cdc75139e5e7eba74944c1a29dc867f850bad8dd9533e79f82ae9c7aba",
+              "waveform_rows": 1735
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "3173c4e333ddc8d1f97c7d3fc8f6403a9845204ec54e4a4b252d4d5b3c4f9a52",
+      "variant": "ignore-order",
+      "expected_pass": false,
+      "selected_case_names": [
+        "repeat-code"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r4/v3-converter-dac-linearity/stale-reset",
+      "task": "v3-converter-dac-linearity",
+      "candidate_sha256": "8f64f60bb3ec6f5ab1263727ea7659c2a400045ca46081c2455c28e253785480",
+      "criteria_sha256": "8360cc6f397c940f6c5ca23ee9ef4957156e3c02005405ac735de5b59fd6ff51",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": false,
+      "has_selected_graded_failure": true,
+      "conditions": [
+        {
+          "condition": "reset-truncated",
+          "job_id": "bf-c9c3ae13e87c42b0a658-reset-truncated",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "report_sha256": "948258c596a35704c35a6b033258eea0479a8783807797ff9b687719df8af96f",
+          "archive_sha256": "2d7a2916b543480e0b70932889da6e6424fb0b5432a9b69314fb6832d54936a7",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-dac-linearity/stale-reset/remote/bf-c9c3ae13e87c42b0a658-reset-truncated/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "2cd5fb324ab92d5793ad0c69438438872411280aafa18c51283c3cce7e0cc5ad",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "reset-truncated",
+              "netlist_sha256": "9eee18e82ada67edfaadd5951cee950c285f2a514f0a660e4f9a6938ea0bdd24",
+              "support_sha256": {
+                "fixed.va": "7591b45a2910bd83041fcf7406839b488d3d545c65e9a5b73fd78e30429416e1"
+              },
+              "returncode": 0,
+              "elapsed_s": 2.870997529476881,
+              "passed": false,
+              "errors": {
+                "dnl": 0.4285714285714296,
+                "inl": 0.4285714285714297,
+                "valid": 1.0
+              },
+              "settled_points": 2048,
+              "records": 8,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "a3f654a053c6659d892e056426d2b0c778f179c8395be53cdd1a6aedb3ee7415",
+              "waveform_rows": 2643
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "2cd5fb324ab92d5793ad0c69438438872411280aafa18c51283c3cce7e0cc5ad",
+      "variant": "stale-reset",
+      "expected_pass": false,
+      "selected_case_names": [
+        "reset-truncated"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/reference",
+      "task": "v3-converter-adc-spectrum",
+      "candidate_sha256": "ca02a99573045170fa5bfbb90edbd45e4b3afc2b9e1d130c477837f00d95f92b",
+      "criteria_sha256": "4da2e2cf23d5aa51016646fcdfa87c1b8711a8fac8b42a6d87678b148b975c94",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": true,
+      "has_selected_graded_failure": false,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-64245e71f9724259a0c4-private-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "a9f502b6f78b707dc5803d4d044b995623628e8c4a6dcca50c1e5028b8364d8d",
+          "archive_sha256": "29258a3e8bd0bff2d769cd24838fdc4ee83b055418b2b34922c12da9604eac93",
+          "archive": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/reference/remote/bf-64245e71f9724259a0c4-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "2fb7da7b0a9b8a5416ae3940d8eb6ea0cbfd30e90b3f196ef7e9366084b1f9c3",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "51c72553fe925c32129a710965f9065fb2f1c239694a1437c9eb4975bdf410fc",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 2.4192290361970663,
+              "passed": true,
+              "errors": {
+                "sndr": 1.1180389947185176e-11,
+                "sfdr": 3.907985046680551e-14,
+                "dc": 0,
+                "enob": 1.857181075592962e-12,
+                "valid": 0
+              },
+              "settled_points": 5496,
+              "records": 64,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "a77ab0f65918b287f51be07f56bdaf152245270a89576b299534da14ec305161",
+              "waveform_rows": 6936
+            }
+          ]
+        },
+        {
+          "condition": "private-1",
+          "job_id": "bf-952119d548f94ba2bdbd-private-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "e0b254edabaafcbc3697b175f8c8c9894126dc24015dddcf14eff843eacfb751",
+          "archive_sha256": "9d505777bfe528c3ca21f204520cfc16ddc1d92c8998ee8b155f5abd12e59c96",
+          "archive": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/reference/remote/bf-952119d548f94ba2bdbd-private-1/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "2fb7da7b0a9b8a5416ae3940d8eb6ea0cbfd30e90b3f196ef7e9366084b1f9c3",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-1",
+              "netlist_sha256": "0db3c857d7b9f5bfccc00f2b0ebdbe7dc73e39a6e13a4a371f876c863540fbc0",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 2.319264456629753,
+              "passed": true,
+              "errors": {
+                "sndr": 2.4797941478027496e-12,
+                "sfdr": 3.019806626980426e-13,
+                "dc": 0,
+                "enob": 4.1255887595070817e-13,
+                "valid": 0
+              },
+              "settled_points": 5562,
+              "records": 64,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "7a510cc797e48661d674524725d2f5085064ea37cd3d28b9f7dc8125aaaef61b",
+              "waveform_rows": 7002
+            }
+          ]
+        },
+        {
+          "condition": "private-2",
+          "job_id": "bf-b8e125e8a31943f6a148-private-2",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "6fccb017a6e837dfd49773f0dab32d10709937a529bb7463ce7be403010b908e",
+          "archive_sha256": "ce993370454bdfc923b0b4fca5c46973c806522a3b4b98249ec35e0a64cb213f",
+          "archive": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/reference/remote/bf-b8e125e8a31943f6a148-private-2/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "2fb7da7b0a9b8a5416ae3940d8eb6ea0cbfd30e90b3f196ef7e9366084b1f9c3",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-2",
+              "netlist_sha256": "7a2f0b62a23a08a3b29ff70d6658f4f5d2be1c5441c685cc13c80a2dd9cb4d0f",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 2.0179856922477484,
+              "passed": true,
+              "errors": {
+                "sndr": 0,
+                "sfdr": 0,
+                "dc": 0,
+                "enob": 0,
+                "valid": 0
+              },
+              "settled_points": 5548,
+              "records": 64,
+              "invalid": true,
+              "status": "graded",
+              "waveform_sha256": "159488ed1a48e06fa543f94c6e6ea4fa5213952ebce19a0d7e6407aa97bd3cf0",
+              "waveform_rows": 6976
+            }
+          ]
+        },
+        {
+          "condition": "private-3",
+          "job_id": "bf-92c8c12dccf94dcca312-private-3",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "b8bd3723ccb62fb245e6c31ab8fdeb2810bec8510f7501b8b019014f0ab287da",
+          "archive_sha256": "af421dda7419ad2e9eb2dcfe7968123f6d1b15d13b02e79b07435a36c50ffaf6",
+          "archive": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/reference/remote/bf-92c8c12dccf94dcca312-private-3/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "2fb7da7b0a9b8a5416ae3940d8eb6ea0cbfd30e90b3f196ef7e9366084b1f9c3",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-3",
+              "netlist_sha256": "1ddbabe489956be28e34aea70303483cbd1655c073f91eded0ed28a00a1374ef",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 2.2177635598927736,
+              "passed": true,
+              "errors": {
+                "sndr": 3.730349362740526e-13,
+                "sfdr": 6.394884621840902e-14,
+                "dc": 0,
+                "enob": 6.261657858885883e-14,
+                "valid": 0
+              },
+              "settled_points": 11056,
+              "records": 64,
+              "invalid": true,
+              "status": "graded",
+              "waveform_sha256": "8ffa47b6410e286cc4a582e92f788318fbb8a6b7eb1e69eb05ae569c4257098c",
+              "waveform_rows": 13950
+            }
+          ]
+        },
+        {
+          "condition": "private-4",
+          "job_id": "bf-1e6018927dfe4e5e852a-private-4",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "f31d966ede1a07da6013d1501d292b5ed03efd810a869b80bbf1ee501de52437",
+          "archive_sha256": "2d5681be10e37838af1f0bf910d4192974913fb92d1b23abf3613be5c266efe7",
+          "archive": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/reference/remote/bf-1e6018927dfe4e5e852a-private-4/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "2fb7da7b0a9b8a5416ae3940d8eb6ea0cbfd30e90b3f196ef7e9366084b1f9c3",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-4",
+              "netlist_sha256": "54dc6f92c643e02b3b0f854e0f6cc824a5e9a591569313e9bee560d31c34cc27",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 2.219145368784666,
+              "passed": true,
+              "errors": {
+                "sndr": 0,
+                "sfdr": 0,
+                "dc": 0,
+                "enob": 0,
+                "valid": 0
+              },
+              "settled_points": 2746,
+              "records": 32,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "434245360220d34d28bbf8f082c6a3047b846b1ae8c276fe075b2a9dcc2f6dd8",
+              "waveform_rows": 3470
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "2fb7da7b0a9b8a5416ae3940d8eb6ea0cbfd30e90b3f196ef7e9366084b1f9c3",
+      "variant": "reference",
+      "expected_pass": true,
+      "selected_case_names": [
+        "private-0",
+        "private-1",
+        "private-2",
+        "private-3",
+        "private-4"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/alternative",
+      "task": "v3-converter-adc-spectrum",
+      "candidate_sha256": "c2409a2540b0814aad28af57d44db2f2ac7c85e2822f70d8cec3620e7556f800",
+      "criteria_sha256": "4da2e2cf23d5aa51016646fcdfa87c1b8711a8fac8b42a6d87678b148b975c94",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": true,
+      "has_selected_graded_failure": false,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-44fa13551f25461f9115-private-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "b624d2c8cbf9e764abecc12eaac6146949bd8f34c936129b1996e13526dddcca",
+          "archive_sha256": "968b5fe37827d743c0c92fd734f6649c9fe995e397f7bc954886f1391c71624a",
+          "archive": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/alternative/remote/bf-44fa13551f25461f9115-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "7fb52c8b27a4234d65823e2043dbf6e7a5d71dee1a934059801a44c7f17702c5",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "51c72553fe925c32129a710965f9065fb2f1c239694a1437c9eb4975bdf410fc",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 2.4198246486485004,
+              "passed": true,
+              "errors": {
+                "sndr": 1.1180389947185176e-11,
+                "sfdr": 3.907985046680551e-14,
+                "dc": 0,
+                "enob": 1.857181075592962e-12,
+                "valid": 0
+              },
+              "settled_points": 5496,
+              "records": 64,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "e9df625d700ce0e83c0db81676c886d1821d8f317a17e65a471a6dfb0d9d6d90",
+              "waveform_rows": 6936
+            }
+          ]
+        },
+        {
+          "condition": "private-1",
+          "job_id": "bf-7bd6c83ed08d4525a4cc-private-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "66e3e324395e540e64921872f3b0b28e17b8a75f1e042a0fe9b33de57427f160",
+          "archive_sha256": "a9d492fd3dbd15a8cbbaa3b509aceaf84a3626380882b4a60de569dc17c307c3",
+          "archive": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/alternative/remote/bf-7bd6c83ed08d4525a4cc-private-1/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "7fb52c8b27a4234d65823e2043dbf6e7a5d71dee1a934059801a44c7f17702c5",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-1",
+              "netlist_sha256": "0db3c857d7b9f5bfccc00f2b0ebdbe7dc73e39a6e13a4a371f876c863540fbc0",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.9182380065321922,
+              "passed": true,
+              "errors": {
+                "sndr": 2.4797941478027496e-12,
+                "sfdr": 3.019806626980426e-13,
+                "dc": 0,
+                "enob": 4.1255887595070817e-13,
+                "valid": 0
+              },
+              "settled_points": 5562,
+              "records": 64,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "f88ab9b7cc92ce2437892826713eef7c0397892212f46433e73b80a8b4b375f0",
+              "waveform_rows": 7002
+            }
+          ]
+        },
+        {
+          "condition": "private-2",
+          "job_id": "bf-059c2d40483342ca8abe-private-2",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "0b758dc2386a25afc197c91331cf72cdbed310501bba08f5f4357fb3bc6c603a",
+          "archive_sha256": "2284ee68dc6c60f16f2d5d0c65b2230cd41c2035d617cb3b5c5017f9b82a0fb0",
+          "archive": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/alternative/remote/bf-059c2d40483342ca8abe-private-2/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "7fb52c8b27a4234d65823e2043dbf6e7a5d71dee1a934059801a44c7f17702c5",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-2",
+              "netlist_sha256": "7a2f0b62a23a08a3b29ff70d6658f4f5d2be1c5441c685cc13c80a2dd9cb4d0f",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.9182257056236267,
+              "passed": true,
+              "errors": {
+                "sndr": 0,
+                "sfdr": 0,
+                "dc": 0,
+                "enob": 0,
+                "valid": 0
+              },
+              "settled_points": 5548,
+              "records": 64,
+              "invalid": true,
+              "status": "graded",
+              "waveform_sha256": "e6ede46e16036dc3bd902d143c35f11e40009e844daeb3873a5130605d1afa9a",
+              "waveform_rows": 6976
+            }
+          ]
+        },
+        {
+          "condition": "private-3",
+          "job_id": "bf-c8ac4d498b5b4802bf58-private-3",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "4ebaff127e9f4fbc14524981607aef333f63f13c2e876a3feea564bad2d5b64d",
+          "archive_sha256": "357c2110dc1b8d39176703a6c982c97a9d1156b2a936f7db028f585a15587728",
+          "archive": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/alternative/remote/bf-c8ac4d498b5b4802bf58-private-3/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "7fb52c8b27a4234d65823e2043dbf6e7a5d71dee1a934059801a44c7f17702c5",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-3",
+              "netlist_sha256": "1ddbabe489956be28e34aea70303483cbd1655c073f91eded0ed28a00a1374ef",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 2.5695814415812492,
+              "passed": true,
+              "errors": {
+                "sndr": 3.730349362740526e-13,
+                "sfdr": 6.394884621840902e-14,
+                "dc": 0,
+                "enob": 6.261657858885883e-14,
+                "valid": 0
+              },
+              "settled_points": 11056,
+              "records": 64,
+              "invalid": true,
+              "status": "graded",
+              "waveform_sha256": "96d7c03a6015d00d6f8aac5c5240abd2038e6e5d98094103bd494ca4d5bf3d79",
+              "waveform_rows": 13950
+            }
+          ]
+        },
+        {
+          "condition": "private-4",
+          "job_id": "bf-9157292a07db4a5ebb60-private-4",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "1e18d4fd8e76106754a4bb8cdabb3d9bc562f562ce8ad9d04178646b97fc1b41",
+          "archive_sha256": "01aa2e5bd02f82beb2d7e32b672cdb48642f60dd0de865a781d4930567fe1281",
+          "archive": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/alternative/remote/bf-9157292a07db4a5ebb60-private-4/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "7fb52c8b27a4234d65823e2043dbf6e7a5d71dee1a934059801a44c7f17702c5",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-4",
+              "netlist_sha256": "54dc6f92c643e02b3b0f854e0f6cc824a5e9a591569313e9bee560d31c34cc27",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 2.168802810832858,
+              "passed": true,
+              "errors": {
+                "sndr": 0,
+                "sfdr": 0,
+                "dc": 0,
+                "enob": 0,
+                "valid": 0
+              },
+              "settled_points": 2746,
+              "records": 32,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "ae2ab85ce2459ff99fcc107ef2343d5657819eef3f89ec26a45e1076cd73c225",
+              "waveform_rows": 3470
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "7fb52c8b27a4234d65823e2043dbf6e7a5d71dee1a934059801a44c7f17702c5",
+      "variant": "alternative",
+      "expected_pass": true,
+      "selected_case_names": [
+        "private-0",
+        "private-1",
+        "private-2",
+        "private-3",
+        "private-4"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/amplitude-db",
+      "task": "v3-converter-adc-spectrum",
+      "candidate_sha256": "c5276d035333951c57f7bc671774e5793e5bbe332169c942a156bf2f8b2f0d49",
+      "criteria_sha256": "4da2e2cf23d5aa51016646fcdfa87c1b8711a8fac8b42a6d87678b148b975c94",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": false,
+      "has_selected_graded_failure": true,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-0654cfece8164072b518-private-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "report_sha256": "8366060d9a43488d58963b22d91db881d7e9d496128188b1b2a04f9ef8670e7b",
+          "archive_sha256": "633e9e9e6452b9f89b16c267fea8d8d228af9a077e18ebf7b3d544caf76f5a3a",
+          "archive": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/amplitude-db/remote/bf-0654cfece8164072b518-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "b3166abbcf0f74ae405aafe8b55b3700ba2e6e339ebb704ad0ebb269d1dbcbfb",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "51c72553fe925c32129a710965f9065fb2f1c239694a1437c9eb4975bdf410fc",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 2.418582020327449,
+              "passed": false,
+              "errors": {
+                "sndr": 28.866096472399413,
+                "sfdr": 29.55069925022726,
+                "dc": 0,
+                "enob": 4.795032636611198,
+                "valid": 0
+              },
+              "settled_points": 5496,
+              "records": 64,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "be5b6e7e027876dca0b8a9a05c55756410ba7ec6645b30821f83c6b03ec24841",
+              "waveform_rows": 6936
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "b3166abbcf0f74ae405aafe8b55b3700ba2e6e339ebb704ad0ebb269d1dbcbfb",
+      "variant": "amplitude-db",
+      "expected_pass": false,
+      "selected_case_names": [
+        "private-0"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/nyquist-double",
+      "task": "v3-converter-adc-spectrum",
+      "candidate_sha256": "798588be7b5af487a124a1a161de2d954ee5aed0ef31bbd1aa10153d5f53253e",
+      "criteria_sha256": "4da2e2cf23d5aa51016646fcdfa87c1b8711a8fac8b42a6d87678b148b975c94",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": false,
+      "has_selected_graded_failure": true,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-668fd5cd78134fc8af34-private-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "report_sha256": "2346c59f196ab376dd8c064de28c8b5b6842aadf02d0ec59600e83f0edf187bf",
+          "archive_sha256": "2601ae7cdb22e7e757db13569110ea723ef650d5a029e9dd8a62609dd873432b",
+          "archive": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/nyquist-double/remote/bf-668fd5cd78134fc8af34-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "3ca15ebf663fb42242270053f23995064596ce62384afae51792318447a0ec79",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "51c72553fe925c32129a710965f9065fb2f1c239694a1437c9eb4975bdf410fc",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.9177628550678492,
+              "passed": false,
+              "errors": {
+                "sndr": 0.5904970357859689,
+                "sfdr": 3.907985046680551e-14,
+                "dc": 0,
+                "enob": 0.09808920860232107,
+                "valid": 0
+              },
+              "settled_points": 5496,
+              "records": 64,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "f491a0ad4ca171ecae1d682db0f8d43f51c23d034d7bc05cb7e79b6d03b29302",
+              "waveform_rows": 6936
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "3ca15ebf663fb42242270053f23995064596ce62384afae51792318447a0ec79",
+      "variant": "nyquist-double",
+      "expected_pass": false,
+      "selected_case_names": [
+        "private-0"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r7/v3-converter-adc-spectrum/harmonics-as-fundamental",
+      "task": "v3-converter-adc-spectrum",
+      "candidate_sha256": "489613fdffe9d72b034fad803fbbf0f1ffe10908c417beb5ec9ba38ab7180f7e",
+      "criteria_sha256": "4da2e2cf23d5aa51016646fcdfa87c1b8711a8fac8b42a6d87678b148b975c94",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": false,
+      "has_selected_graded_failure": true,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-7e7fe3a6078b4cc481cb-private-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "report_sha256": "122ec68b98ccf6e1ddca88a4ba2fbf21d1b236baee83e5392a6a95bcb9d7da40",
+          "archive_sha256": "f8c0b8b545e7276db929d380e91da2d0ac9b044032db6976a36e72aaa1e4acc1",
+          "archive": "runs/benchmark-next-converter-r7/v3-converter-adc-spectrum/harmonics-as-fundamental/remote/bf-7e7fe3a6078b4cc481cb-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "83a726bf6140540a3751301300186ada6eb0f84ca843e779ea2936dd35856f82",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "51c72553fe925c32129a710965f9065fb2f1c239694a1437c9eb4975bdf410fc",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 2.218389756977558,
+              "passed": false,
+              "errors": {
+                "sndr": 8.366075929403813,
+                "sfdr": 7.6872834175464035,
+                "dc": 0,
+                "enob": 1.3897136095355176,
+                "valid": 0
+              },
+              "settled_points": 5496,
+              "records": 64,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "9647015ae5b3379ba5ada3e89d2709afc5b1360d2d3526bed77aaafc7958c764",
+              "waveform_rows": 6936
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "83a726bf6140540a3751301300186ada6eb0f84ca843e779ea2936dd35856f82",
+      "variant": "harmonics-as-fundamental",
+      "expected_pass": false,
+      "selected_case_names": [
+        "private-0"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/ignore-invalid",
+      "task": "v3-converter-adc-spectrum",
+      "candidate_sha256": "7d5c30bcecb34f74a9db4dc00079ced843d9eba30ed626facb3d739f3cadfde8",
+      "criteria_sha256": "4da2e2cf23d5aa51016646fcdfa87c1b8711a8fac8b42a6d87678b148b975c94",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": false,
+      "has_selected_graded_failure": true,
+      "conditions": [
+        {
+          "condition": "private-2",
+          "job_id": "bf-eb6ee13154264ca9a927-private-2",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "report_sha256": "5e933a9ebe76db0dbd83ca2a2fb788cc66b966cc01b38706337109aeaa440398",
+          "archive_sha256": "8a30c23668a17d449bce14b61bbf549687bfd2d075d6b3e449a5403a68b2f38a",
+          "archive": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/ignore-invalid/remote/bf-eb6ee13154264ca9a927-private-2/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "5f0b8a2566b15da3bcf3b2b347485bf663c8611d5d0ba5577330d8fd4b7945a6",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-2",
+              "netlist_sha256": "7a2f0b62a23a08a3b29ff70d6658f4f5d2be1c5441c685cc13c80a2dd9cb4d0f",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 2.3692898880690336,
+              "passed": false,
+              "errors": {
+                "sndr": 25.36459438105885,
+                "sfdr": 25.7637171694684,
+                "dc": 2048.0,
+                "enob": 3.921028966953298,
+                "valid": 1.0
+              },
+              "settled_points": 5560,
+              "records": 64,
+              "invalid": true,
+              "status": "graded",
+              "waveform_sha256": "7cadcd32790b30215344e857eed15cef9e6a4782cd1a879e44e20b4e393ad511",
+              "waveform_rows": 7000
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "5f0b8a2566b15da3bcf3b2b347485bf663c8611d5d0ba5577330d8fd4b7945a6",
+      "variant": "ignore-invalid",
+      "expected_pass": false,
+      "selected_case_names": [
+        "private-2"
+      ],
+      "calibration_met": true
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/stale-reset",
+      "task": "v3-converter-adc-spectrum",
+      "candidate_sha256": "620f4fa4548aae97ab8237a80f65d95a5022cd775c4fdc39caa7586e5438e0a6",
+      "criteria_sha256": "4da2e2cf23d5aa51016646fcdfa87c1b8711a8fac8b42a6d87678b148b975c94",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": false,
+      "has_selected_graded_failure": true,
+      "conditions": [
+        {
+          "condition": "private-3",
+          "job_id": "bf-9ca039c3445943c9af1d-private-3",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "report_sha256": "fe5dd8be2f9ca56fcc1378e4994e6b099b9c073de3b1bf6359b7edb7b58c0e03",
+          "archive_sha256": "c1828be3c65f146c5cf8812b45c900c9f570d2da0354525bd43e1b72a1d39aec",
+          "archive": "runs/benchmark-next-converter-r5/v3-converter-adc-spectrum/stale-reset/remote/bf-9ca039c3445943c9af1d-private-3/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "33b8e3449e94201f792ddc7bed4c79a53dfef9680c6d3c4bc443862f7936ede6",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-3",
+              "netlist_sha256": "1ddbabe489956be28e34aea70303483cbd1655c073f91eded0ed28a00a1374ef",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 2.3190771155059338,
+              "passed": false,
+              "errors": {
+                "sndr": 25.36459438105885,
+                "sfdr": 25.7637171694684,
+                "dc": 2048.0,
+                "enob": 3.921028966953298,
+                "valid": 1.0
+              },
+              "settled_points": 11056,
+              "records": 64,
+              "invalid": true,
+              "status": "graded",
+              "waveform_sha256": "28f6b7d4f09cdd4686d6740ed581288affc88d1f1d153451b6bc77aaf860cc9b",
+              "waveform_rows": 13951
+            }
+          ]
+        }
+      ],
+      "dut_file_sha256": "33b8e3449e94201f792ddc7bed4c79a53dfef9680c6d3c4bc443862f7936ede6",
+      "variant": "stale-reset",
+      "expected_pass": false,
+      "selected_case_names": [
+        "private-3"
+      ],
+      "calibration_met": true
+    }
+  ],
+  "historical_attempts": [
+    {
+      "prepared": "runs/benchmark-next-converter-r2/v3-converter-dac-linearity/reference",
+      "task": "v3-converter-dac-linearity",
+      "candidate_sha256": "34e12cc9da3dfc7f860a97bb704fefc5a4c8d01d6288c4d2b9e379a16a91818f",
+      "criteria_sha256": "4db647edef679c20764e9cfcdbb1ad1614d439457781e1df24922282b06a5994",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": true,
+      "has_selected_graded_failure": false,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-3e5da686645847d88ff6-private-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "47e2b42b46a1d0aae24b680e6462ced442a094715d82e8ee0df8a43bab6c9cd6",
+          "archive_sha256": "46c96646ddceb1e1c7fa2ae75b793298b1751188d643bb321676568666dcf91e",
+          "archive": "runs/benchmark-next-converter-r2/v3-converter-dac-linearity/reference/remote/bf-3e5da686645847d88ff6-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "29ed702ccb84f1e6c489c06d000ee17176fb4d85a2ec00eb1d31b97e49a53e1f",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "c5797ecb06eee734bb69b7ebff0cb14c72fa8d3b5a57c91b7c0839052b3bfc48",
+              "support_sha256": {
+                "fixed.va": "c39a0168d091dfb2d1601d1544365f7e4474335b4abd6a78e9f538fcc27cd11e"
+              },
+              "returncode": 0,
+              "elapsed_s": 2.92056448943913,
+              "passed": true,
+              "errors": {
+                "dnl": 1.2212453270876722e-15,
+                "inl": 2.6645352591003757e-15,
+                "valid": 0
+              },
+              "settled_points": 1367,
+              "records": 16,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "0d4e14b3601abd0fcd68a4a9cb828a636ae7c6b105caa6c0c6478c44f5cce94e",
+              "waveform_rows": 1739
+            }
+          ]
+        },
+        {
+          "condition": "private-1",
+          "job_id": "bf-f343471695a34f18a3ad-private-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "bf45dd67808d8698faa04f6ebe51081620e123da2be596c25427cc245edf694f",
+          "archive_sha256": "94d2951cea8be918e97f82265651145ad214985e2efe274fc21c421a0c9a4b2b",
+          "archive": "runs/benchmark-next-converter-r2/v3-converter-dac-linearity/reference/remote/bf-f343471695a34f18a3ad-private-1/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "29ed702ccb84f1e6c489c06d000ee17176fb4d85a2ec00eb1d31b97e49a53e1f",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-1",
+              "netlist_sha256": "c5797ecb06eee734bb69b7ebff0cb14c72fa8d3b5a57c91b7c0839052b3bfc48",
+              "support_sha256": {
+                "fixed.va": "16e1d745b5784d279c94fc965df85eb39ca420d8014ee38a08842d70504efe56"
+              },
+              "returncode": 0,
+              "elapsed_s": 2.7702529206871986,
+              "passed": true,
+              "errors": {
+                "dnl": 0,
+                "inl": 0,
+                "valid": 0
+              },
+              "settled_points": 1367,
+              "records": 16,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "3cf6db307defec5f0eb0b4c925de60ffb15b5b33c9181464d06ae6602880a801",
+              "waveform_rows": 1739
+            }
+          ]
+        },
+        {
+          "condition": "repeat-code",
+          "job_id": "bf-d320b147432843ebb987-repeat-code",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "663238078721a0de30eba2cfa03e4afda97783a38acb8134a6e8cae06e1cc20c",
+          "archive_sha256": "638f0c9c22ba4994a58220bb3846c69ba7014c852400204b0be52ef0d54979db",
+          "archive": "runs/benchmark-next-converter-r2/v3-converter-dac-linearity/reference/remote/bf-d320b147432843ebb987-repeat-code/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "29ed702ccb84f1e6c489c06d000ee17176fb4d85a2ec00eb1d31b97e49a53e1f",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "repeat-code",
+              "netlist_sha256": "a6ce9c5298c95b5e3f2bde736d03572e9b58347bb86064f49fd9ef298d7b7bdf",
+              "support_sha256": {
+                "fixed.va": "7591b45a2910bd83041fcf7406839b488d3d545c65e9a5b73fd78e30429416e1"
+              },
+              "returncode": 0,
+              "elapsed_s": 2.8199378438293934,
+              "passed": true,
+              "errors": {
+                "dnl": 0,
+                "inl": 0,
+                "valid": 0
+              },
+              "settled_points": 1363,
+              "records": 16,
+              "invalid": true,
+              "status": "graded",
+              "waveform_sha256": "ae22f71aee820de7248e81118c6a56cecb5434179fc8c3ab520afb8fd0fc425a",
+              "waveform_rows": 1735
+            }
+          ]
+        }
+      ],
+      "disposition": "predecessor3-condition contract, before reset-truncated condition added"
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r2/v3-converter-adc-spectrum/reference",
+      "task": "v3-converter-adc-spectrum",
+      "candidate_sha256": "ca02a99573045170fa5bfbb90edbd45e4b3afc2b9e1d130c477837f00d95f92b",
+      "criteria_sha256": "6ff76dc456a6b6f1ad3793a12619e36ba49bf8095fab2e787d6e97c581e1d074",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": false,
+      "has_selected_graded_failure": true,
+      "conditions": [
+        {
+          "condition": "private-0",
+          "job_id": "bf-7df24d8c367642ebbe57-private-0",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "report_sha256": "899cccca56c8a9d579ae062ef89a078ad21b659c1dc4cbf9b02f5ebcbb0606ea",
+          "archive_sha256": "eee0663d46fe2bc00066a4476b36383b53225cd42a8e15886c19d57b2a20ad6c",
+          "archive": "runs/benchmark-next-converter-r2/v3-converter-adc-spectrum/reference/remote/bf-7df24d8c367642ebbe57-private-0/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "2fb7da7b0a9b8a5416ae3940d8eb6ea0cbfd30e90b3f196ef7e9366084b1f9c3",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-0",
+              "netlist_sha256": "a56d156a4763a3516d0a3bcd459b592e87f360a5653ecc841f77deb6d4f7746e",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 2.4190818443894386,
+              "passed": false,
+              "errors": {
+                "sndr": 28.86609647237706,
+                "sfdr": 29.55069925022734,
+                "dc": 2048.0,
+                "enob": 4.502673832620774,
+                "valid": 1.0
+              },
+              "settled_points": 5484,
+              "records": 64,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "33e036bd939eb9f2ba54ed85f970c922946a596b4d4e2f97afd9d62a0c4fae05",
+              "waveform_rows": 6912
+            }
+          ]
+        },
+        {
+          "condition": "private-1",
+          "job_id": "bf-e11790fccedd433596ea-private-1",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "report_sha256": "f89154eec5eaad71708f08808552df8edc273bed04af6325ae1d3ff4c66eb697",
+          "archive_sha256": "a7586481e828bd346f9c33e5966df671fd81710f23d5b795b7433154ca63db4d",
+          "archive": "runs/benchmark-next-converter-r2/v3-converter-adc-spectrum/reference/remote/bf-e11790fccedd433596ea-private-1/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "2fb7da7b0a9b8a5416ae3940d8eb6ea0cbfd30e90b3f196ef7e9366084b1f9c3",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-1",
+              "netlist_sha256": "e65d0b81bd20cf630cd61b98216dd6cc130f5c0187b1e1d3ecb571dcbdb01f43",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 2.3694588094949722,
+              "passed": false,
+              "errors": {
+                "sndr": 21.82459712280471,
+                "sfdr": 22.071508672454417,
+                "dc": 2048.0,
+                "enob": 3.3329895552831745,
+                "valid": 1.0
+              },
+              "settled_points": 5550,
+              "records": 64,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "04f9e4c14459b2464f3f5c5b2cbda6264a2356ff07f5140af03328f679411a87",
+              "waveform_rows": 6978
+            }
+          ]
+        },
+        {
+          "condition": "private-2",
+          "job_id": "bf-3e474a357b6a4c3fbad8-private-2",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "9999a3ceddce94c0a6473fd8765d0dfad71b1920d23448669ec192502f899bdd",
+          "archive_sha256": "dc906c19cf853be1b6402338f01eef0ddbd39c9666107d0ec03602331c42f6db",
+          "archive": "runs/benchmark-next-converter-r2/v3-converter-adc-spectrum/reference/remote/bf-3e474a357b6a4c3fbad8-private-2/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "2fb7da7b0a9b8a5416ae3940d8eb6ea0cbfd30e90b3f196ef7e9366084b1f9c3",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-2",
+              "netlist_sha256": "ece0b8a55ad46ce89574cc832a014dfd1332c4ee2604e9d8989d518cd1ead005",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 2.318280028179288,
+              "passed": true,
+              "errors": {
+                "sndr": 0,
+                "sfdr": 0,
+                "dc": 0,
+                "enob": 0,
+                "valid": 0
+              },
+              "settled_points": 5550,
+              "records": 64,
+              "invalid": true,
+              "status": "graded",
+              "waveform_sha256": "edd5e3c2d571129c2ad56211be359b698627387467115d222f3bb9603d10d1d3",
+              "waveform_rows": 6978
+            }
+          ]
+        },
+        {
+          "condition": "private-3",
+          "job_id": "bf-4868be4ceb314c4fb6e4-private-3",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "report_sha256": "f0fa9df88e85e38fc3252017b488124ef9f7970cea2d32079833021ec08f0dfd",
+          "archive_sha256": "ccc0b4d349aaa8b42a83f041c66919e87f02409a8141b3f70360092167f7327c",
+          "archive": "runs/benchmark-next-converter-r2/v3-converter-adc-spectrum/reference/remote/bf-4868be4ceb314c4fb6e4-private-3/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "2fb7da7b0a9b8a5416ae3940d8eb6ea0cbfd30e90b3f196ef7e9366084b1f9c3",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-3",
+              "netlist_sha256": "ef0a9b86b606c9871b117d1dd22af453b5451254e1cfed43d24af7d117c4a643",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 2.4686018712818623,
+              "passed": false,
+              "errors": {
+                "sndr": 25.364594381058478,
+                "sfdr": 25.763717169468464,
+                "dc": 2048.0,
+                "enob": 3.9210289669532354,
+                "valid": 1.0
+              },
+              "settled_points": 11046,
+              "records": 64,
+              "invalid": true,
+              "status": "graded",
+              "waveform_sha256": "306b22dba41f3a0248d5a4636a65e475f0f3ad22e92ff51d48ff44c971e917f0",
+              "waveform_rows": 13929
+            }
+          ]
+        },
+        {
+          "condition": "private-4",
+          "job_id": "bf-85549b9f626747eba984-private-4",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "report_sha256": "77d5fd5ad1822748577a0664869c009b3b47d26209ef6ed94003c2a7e8aedce7",
+          "archive_sha256": "eb75481ab1f02484940b2727560e63c0eeb7f254fa8898f2adf28c4e7f70a919",
+          "archive": "runs/benchmark-next-converter-r2/v3-converter-adc-spectrum/reference/remote/bf-85549b9f626747eba984-private-4/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "2fb7da7b0a9b8a5416ae3940d8eb6ea0cbfd30e90b3f196ef7e9366084b1f9c3",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "private-4",
+              "netlist_sha256": "0cc79e6d5b5810b100d93afd46c1bc81e6dd3a96fbcc112486878b1d94b993b7",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 2.318805545568466,
+              "passed": true,
+              "errors": {
+                "sndr": 0,
+                "sfdr": 0,
+                "dc": 0,
+                "enob": 0,
+                "valid": 0
+              },
+              "settled_points": 2746,
+              "records": 32,
+              "invalid": false,
+              "status": "graded",
+              "waveform_sha256": "43d54de55df3a4e691df78f39de1c7b0fd3636f3f78b3fbcf71e277f7b2dfef6",
+              "waveform_rows": 3470
+            }
+          ]
+        }
+      ],
+      "disposition": "fixture port ordering defect, retained failures"
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-r4/v3-converter-dac-linearity/ignore-order",
+      "task": "v3-converter-dac-linearity",
+      "candidate_sha256": "8ce67a44c1eaddeaab5539bec77a971ffc9fcc31baaaeea45949617e008723c7",
+      "criteria_sha256": "8360cc6f397c940f6c5ca23ee9ef4957156e3c02005405ac735de5b59fd6ff51",
+      "all_selected_conditions_graded": true,
+      "all_selected_conditions_passed": false,
+      "has_selected_graded_failure": true,
+      "conditions": [
+        {
+          "condition": "repeat-code",
+          "job_id": "bf-7a09b994dfa94d519457-repeat-code",
+          "execution": "ok",
+          "score": 0,
+          "report_status": "completed",
+          "report_sha256": "f63f065322328aa473150c8962a728bcb14eeaaedc21c4203d307462d1fa16ba",
+          "archive_sha256": "19946d64540eb9e0d9e5cea71e83a89495e4230a60cfcbb0aaee56810e2ef0e7",
+          "archive": "runs/benchmark-next-converter-r4/v3-converter-dac-linearity/ignore-order/remote/bf-7a09b994dfa94d519457-repeat-code/archive/job.tar.gz",
+          "spectre_version": "21.1.0.509.isr12",
+          "candidate_sha256": "00b7181c8281fa0171fda02f2adc359b449244bd96133a0ea4c0fe4efa9b2f22",
+          "checker_files": {
+            "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+            "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+            "v2_next_converter.py": "b390ea0bd715c2018030f2b79582a4c22b35b45b28d577565585315563b61dd9",
+            "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+            "verify.py": "d0ee4f500a8e899cb827df4325449b649f907d3d1413f1a9191f98336c1d22d6"
+          },
+          "cases": [
+            {
+              "name": "repeat-code",
+              "netlist_sha256": "a6ce9c5298c95b5e3f2bde736d03572e9b58347bb86064f49fd9ef298d7b7bdf",
+              "support_sha256": {
+                "fixed.va": "7591b45a2910bd83041fcf7406839b488d3d545c65e9a5b73fd78e30429416e1"
+              },
+              "returncode": 0,
+              "elapsed_s": 2.319374615326524,
+              "passed": false,
+              "errors": {
+                "dnl": 1.0,
+                "inl": 0.5714285714285703,
+                "valid": 1.0
+              },
+              "settled_points": 1363,
+              "records": 16,
+              "invalid": true,
+              "status": "graded",
+              "waveform_sha256": "7a133fefb72b4c470ced55f4d3e7a8f94833bb3537f3d270e33a9087d6902866",
+              "waveform_rows": 1735
+            }
+          ]
+        }
+      ],
+      "disposition": "semantically identical predecessor candidate with trailing whitespace"
+    },
+    {
+      "prepared": "runs/benchmark-next-converter-calibration/v3-converter-segmented/reference",
+      "job_id": "bf-4d22ac50911a491aa8e8-private-0",
+      "execution": "dependency_unavailable",
+      "score": null,
+      "candidate_sha256": "dd82746d84a0d689a50002601ed38c169481f46692e72167191cf0cf00ec0380",
+      "criteria_sha256": "889a82fa5a38a823e48e23b88a044153f5fddd82ed5e27b230795304b9b7db1c",
+      "archive_sha256": "eb3c707656c06d9e3ea488e23958099a8ed5120d4b973235a14d785b5fd67290",
+      "preflight_sha256": "048e3fb825d4704490b5a6274136a81b7b565d705de0080987d1aa7610b8cb73",
+      "preflight": {
+        "schema_version": 1,
+        "checks": [
+          {
+            "kind": "license",
+            "name": "V2 development Spectre solve license",
+            "status": "unknown",
+            "detail": "Probe not started."
+          },
+          {
+            "kind": "dependency",
+            "name": "V2 development inputs and standard disciplines",
+            "status": "failed",
+            "detail": "Task outside approved v2 development scope"
+          }
+        ]
+      },
+      "disposition": "old deployment approved task-scope gate stopped before simulation"
+    }
+  ],
+  "limits": [
+    "Spectre extension set only, open-source equivalent not verified",
+    "Synthetic ADC record, no actual measured ADC source",
+    "Negative candidates run selected targeted conditions only, unrun conditions remain unknown",
+    "Actual raw archives kept in ignored runs; compact source and report identities published"
+  ],
+  "transport_interruptions": [
+    {
+      "job_id": "bf-7a09b994dfa94d519457-repeat-code",
+      "operation": "job-status",
+      "timeout_seconds": 30,
+      "recovery": "same prepared directory and same job ID; no duplicate submission",
+      "operator_log_sha256": "66480776b89011a88b41715a6f029dfd2ca4f030e0e0aa07488c598ee3a9af01"
+    }
+  ],
+  "queue_attempts": [
+    {
+      "path": "runs/benchmark-next-converter-calibration/reference-plan.json.results.json",
+      "sha256": "17bc7fa39c09bb9e685a47f5789864711ab95c1c1c6b87f9570f6b80b91199c6",
+      "statuses": [
+        "summary_failed",
+        "not_started",
+        "not_started",
+        "not_started",
+        "not_started",
+        "not_started"
+      ]
+    },
+    {
+      "path": "runs/benchmark-next-converter-r2/reference-plan.json.results.json",
+      "sha256": "9971c358db2710b02be060eedaf2ecd9d4da4a760dae0736d6436246ea2379df",
+      "statuses": [
+        "completed",
+        "completed",
+        "completed",
+        "completed",
+        "completed",
+        "completed"
+      ]
+    },
+    {
+      "path": "runs/benchmark-next-converter-r5/final-plan.json.results.json",
+      "sha256": "152ad40f54ffd6a4a35fa8e62fcd476d73c5410b38c0d2921a806cf366c09465",
+      "statuses": [
+        "completed",
+        "completed",
+        "completed",
+        "completed",
+        "completed",
+        "completed",
+        "completed",
+        "completed",
+        "completed",
+        "completed",
+        "completed",
+        "completed",
+        "completed",
+        "completed",
+        "completed",
+        "completed",
+        "completed",
+        "completed",
+        "completed",
+        "completed",
+        "completed",
+        "runtime_failed",
+        "not_started",
+        "not_started",
+        "not_started",
+        "not_started",
+        "not_started",
+        "not_started"
+      ]
+    },
+    {
+      "path": "runs/benchmark-next-converter-r5/resume-plan.json.results.json",
+      "sha256": "be33d46a5529d5ee31f290ef24a5ac92457d9a71f8656fe0a55711acaf41ecb0",
+      "statuses": [
+        "completed",
+        "completed",
+        "completed",
+        "completed",
+        "completed",
+        "completed",
+        "completed"
+      ]
+    },
+    {
+      "path": "runs/benchmark-next-converter-r7/plan.json.results.json",
+      "sha256": "38bd5fd8a1185dc89bc00133db0a7543a7b078992ad975281a5dd0722c53fedd",
+      "statuses": [
+        "completed",
+        "completed",
+        "completed"
+      ]
+    }
+  ]
+}
