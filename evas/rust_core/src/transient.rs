@@ -1585,6 +1585,135 @@ mod tests {
     }
 
     #[test]
+    fn ordinary_phase_retry_preserves_frames_and_does_not_refine_events_or_roots() {
+        let (original, _, _) = fixture(false);
+        let mut program = original.program;
+        program.operators = serde_json::from_value(serde_json::json!([
+            {"kind":"idt_mod", "input":{"op":"affine","constant":750000,"terms":[]},
+             "ic":0.125,"modulus":1,"offset":0,
+             "origin":{"source":"phase.va","line":1,"column":1,"instance":"dut"}},
+            {"kind":"sin", "input":{"op":"multiply",
+             "left":{"op":"affine","constant":std::f64::consts::TAU,"terms":[]},
+             "right":{"op":"operator","operator":0}},
+             "origin":{"source":"phase.va","line":1,"column":2,"instance":"dut"}}
+        ]))
+        .unwrap();
+        program.contributions[0].rhs = serde_json::from_value(serde_json::json!({
+            "op":"multiply","left":{"op":"affine","constant":-1,"terms":[]},
+            "right":{"op":"operator","operator":1}
+        }))
+        .unwrap();
+        let mut model = EventModel::new(
+            program,
+            vec!["u".into()],
+            Tolerances {
+                absolute: 1e-14,
+                relative: 1e-10,
+            },
+        )
+        .unwrap();
+        let trajectory = Trajectory::new(
+            TransientInputs {
+                pwl: vec![vec![[0., 0.], [5e-6, 0.]]],
+                output_times: vec![0., 0.5e-6, 4.5e-6],
+                strobetimes: vec![0., 0.5e-6, 4.5e-6],
+                stop: 5e-6,
+                max_step: 5e-6,
+            },
+            1,
+        )
+        .unwrap();
+        let states = vec![0.];
+        let operators =
+            Operators::new(&model.program, &trajectory, &model.driven, &states).unwrap();
+        let circuit = model
+            .circuit_with(&states, &operators.values(0.).unwrap())
+            .unwrap();
+        let before = Frame {
+            time: 0.,
+            state_bounds: vec![I::ZERO],
+            states,
+            solution: circuit.solve(&trajectory.values(0.)).unwrap(),
+            circuit,
+            operators,
+        };
+        let time = 4.5e-6;
+        let moment = EventMoment {
+            representative: time,
+            observation: I::point(time),
+            fired_roots: &[],
+            prediction_end: trajectory.config.stop,
+        };
+        let ordinary_bounds = before.operators.bounds(time).unwrap();
+        assert_eq!(
+            prepare_root_window_impl(&model, &trajectory, &before, moment, &[], false)
+                .err()
+                .unwrap()
+                .kind,
+            "waveform_accuracy"
+        );
+        let clean = prepare_root_window(&model, &trajectory, &before, moment, &[]).unwrap();
+        assert_eq!(clean.operators.bounds(time).unwrap(), ordinary_bounds);
+        assert_eq!(before.time, 0.);
+        assert_eq!(before.states, [0.]);
+        assert_eq!(before.state_bounds, [I::ZERO]);
+        assert_eq!(
+            prepare_root_window(&model, &trajectory, &before, moment, &[0])
+                .err()
+                .unwrap()
+                .kind,
+            "waveform_accuracy"
+        );
+        let root_moment = EventMoment {
+            fired_roots: &[0],
+            ..moment
+        };
+        assert_eq!(
+            prepare_root_window(&model, &trajectory, &before, root_moment, &[])
+                .err()
+                .unwrap()
+                .kind,
+            "waveform_accuracy"
+        );
+        let window_moment = EventMoment {
+            observation: I {
+                lo: time - 2e-12,
+                hi: time + 2e-12,
+            },
+            ..moment
+        };
+        assert_eq!(
+            prepare_root_window(&model, &trajectory, &before, window_moment, &[])
+                .err()
+                .unwrap()
+                .kind,
+            "event_resolution"
+        );
+        model.tolerances.absolute = 1e-20;
+        model.tolerances.relative = 0.;
+        assert_eq!(
+            prepare_root_window(&model, &trajectory, &before, moment, &[])
+                .err()
+                .unwrap()
+                .kind,
+            "waveform_accuracy"
+        );
+        assert_eq!(before.operators.bounds(time).unwrap(), ordinary_bounds);
+        model.tolerances.absolute = 1e-14;
+        model.tolerances.relative = 1e-10;
+        let retried = prepare_root_window(&model, &trajectory, &before, moment, &[]).unwrap();
+        assert_eq!(retried.solution.voltages, clean.solution.voltages);
+        assert_eq!(retried.state_bounds, clean.state_bounds);
+        assert_eq!(retried.operators.bounds(time).unwrap(), ordinary_bounds);
+        let later = EventMoment {
+            representative: 4.500002e-6,
+            observation: I::point(4.500002e-6),
+            ..moment
+        };
+        assert!(prepare_root_window(&model, &trajectory, &retried, later, &[]).is_ok());
+    }
+
+    #[test]
     fn history_accuracy_failure_and_retry_leave_all_bounds_uncommitted() {
         let (original, trajectory, _) = fixture(false);
         let mut program = original.program;
