@@ -1,7 +1,7 @@
 """Development-informed foundation cards and simulator-independent bounds.
 
 Fractions describe the actual binary64 tokens. Returned ranges include callback
-and half-ULP time serialization uncertainty. They are not DUT error allowances.
+and 16*ULP(stop) time serialization uncertainty. They are not DUT error allowances.
 """
 from fractions import Fraction as F
 import math
@@ -110,7 +110,7 @@ def cards():
     c=add('F14',f'V(y)<+{T:.17g}*ddt(V(u));',['y'],
           inputs={'u':[[0,0],[T,.5],[2*T,-.5],[3*T,-.5]]},stop=3*T)
     c['reference_parameters']={'derivative_scale':T}
-    c['undefined_point_obligations']={'y':[T,2*T]}
+    c['undefined_points']=[{'time_s':t,'left_s':t-2e-12,'right_s':t+2e-12,'outputs':['y']} for t in (T,2*T)]
     tau=2**-20
     filt_inputs={'u':[[0,.25],[tau,.75],[2*tau,-.25],[3*tau,-.25]]}
     for group,body in [('F15',f"V(y)<+laplace_nd(V(u),'{{1}},'{{1,{tau:.17g}}});"),
@@ -141,6 +141,15 @@ def cards():
     c['wrap_times_s']=c['critical_times_s'][1:-1]
     c['qualification_note']='Raw phase uses ordinary voltage error; circular phase is diagnostic only. Full wrap-side observations required.'
     c['output_slope_bound_V_s']=2*math.pi*750000
+    import copy
+    for group,before,after in [
+        ('F09','child #(.G(2)) a(u,z,r); child #(.G(-0.5)) b(z,y,r);',
+         'child #(.G(-0.5)) b(z,y,r); child #(.G(2)) a(u,z,r);'),
+        ('F10','V(y,r)<+2*V(u,r); V(y,r)<+0.125;',
+         'V(y,r)<+0.125; V(y,r)<+2*V(u,r);')]:
+        variant=copy.deepcopy(next(c for c in result if c['id']==group+'-base'))
+        variant['id']=group+'-reordered';variant['source']=variant['source'].replace(before,after)
+        result.append(variant)
     gains={'F01':5.,'F02':5.,'F03':1.,'F04':1.,'F05':1.,'F06':11.,'F07':0.,'F08':5.,'F09':3.,'F10':3.,'F11':1.,'F12':1.,'F13':3.,'F14':2.,'F15':1.,'F16':1.,'F17':1.,'F18':1.,'F19':0.,'F20':0.}
     for c in result:
         c['input_gain_bound']=gains[c['group_id']]
@@ -156,15 +165,15 @@ def cards():
         if c['group_id']=='F07':c['event_sensitivity_bound_V_s']=0.
         if c['group_id']=='F19':c['event_sensitivity_bound_V_s']=1e6
         if c['events']:
-            for e in c['events']:c['critical_times_s'] += [e['early_s'],e['late_s']]
+            for e in c['events']:c['critical_times_s'] += [e['nominal_s']-e['early_s'],e['nominal_s']+e['late_s']]
         c['critical_times_s']=sorted(set(c['critical_times_s']))
     return sorted(result,key=lambda c:(c['group_id'],c['id']))
 
 
 def _event(name,nominal,index,kind):
-    early=nominal-1e-10 if kind=='timer' else nominal
+    early=1e-10 if kind=='timer' else 0.
     return dict(id=name,counter='count',index=index,nominal_s=nominal,
-                early_s=early,late_s=nominal+1e-10,kind=kind)
+                early_s=early,late_s=1e-10,kind=kind)
 
 
 def _pure(card,t):
@@ -271,7 +280,7 @@ def _callback_ranges(card,event_bounds):
     if set(event_bounds)-known:raise ValueError('unknown event id')
     ranges=[]
     for e in card['events']:
-        pair=event_bounds.get(e['id'],[e['early_s'],e['late_s']])
+        pair=event_bounds.get(e['id'],[e['nominal_s']-e['early_s'],e['nominal_s']+e['late_s']])
         if len(pair)!=2 or not all(math.isfinite(x) for x in pair) or pair[0]>pair[1]:
             raise ValueError('invalid callback interval')
         # Never clip a caller's interval to the legal window. Shared grader checks legality.
@@ -284,7 +293,9 @@ def _callback_ranges(card,event_bounds):
 def _dynamic(card,t,callback_ranges):
     g=card['group_id'];p=card['reference_parameters']
     if g=='F07':
+        stage=card.get('reference_counter_stages',{}).get('count')
         lower=sum(t>=hi for lo,hi in callback_ranges);upper=sum(t>=lo for lo,hi in callback_ranges)
+        if stage is not None:lower=upper=stage
         states=[(0,1),(1,12),(11,122)]
         return {name:(min(vals),max(vals)) for name,vals in
                 [('first',[states[n][0] for n in range(lower,upper+1)]),
@@ -304,6 +315,8 @@ def _dynamic(card,t,callback_ranges):
             y=F(1,2)*_clip((t-e1-F(p['delay_s']))/F(p['rise_s']))
             y-=F(1,2)*_clip((t-e2-F(p['delay_s']))/F(p['fall_s']))
             n=int(t>=e1)+int(t>=e2);q=F(1,2) if e1<=t<e2 else F(0)
+            stage=card.get('reference_counter_stages',{}).get('count')
+            if stage is not None:n=stage;q=F(1,2) if stage==1 else F(0)
             candidates.append({'y':y,'state':q,'count':F(n)})
         return {n:(min(v[n] for v in candidates),max(v[n] for v in candidates)) for n in candidates[0]}
     if g=='F20':
@@ -315,15 +328,21 @@ def _dynamic(card,t,callback_ranges):
 def reference(card, time_s, event_bounds):
     if not isinstance(time_s,(int,float)) or not math.isfinite(time_s):raise ValueError('nonfinite time')
     if time_s<0 or time_s>card['stop_s']:raise ValueError('time outside card extent')
-    time=F(time_s);half=F(math.ulp(time_s))/2
+    ut=card.get('reference_time_uncertainty_s',16*math.ulp(card['stop_s']))
+    if not math.isfinite(ut) or ut<0:raise ValueError('invalid time serialization uncertainty')
+    time=F(time_s);half=F(ut)
     low=max(F(0),time-half);high=min(F(card['stop_s']),time+half)
     times=[low,high]
     times += [F(t) for t in card['critical_times_s'] if low<=F(t)<=high]
     callback_ranges=_callback_ranges(card,event_bounds)
+    for counter,stage in card.get('reference_counter_stages',{}).items():
+        channel=card['counter_channels'].get(counter)
+        if channel is None or type(stage) is not int or not channel['initial']<=stage<=channel['final']:
+            raise ValueError('invalid verified counter stage')
     g=card['group_id'];undefined={}
     if g=='F14':
         if time_s==0:values=[{'y':F(0)}]
-        elif any(low<=F(t)<=high for t in card['undefined_point_obligations']['y']):
+        elif any(time_s==p['time_s'] for p in card['undefined_points']):
             values=[{}];undefined={'y':'PWL derivative undefined at corner; both one-sided critical observations required'}
         else:
             values=[]
@@ -358,4 +377,5 @@ def reference(card, time_s, event_bounds):
     # 120 bisections, 90-digit exp, and the rational Taylor tail contribute
     # less than 1e-30 V here; four binary64 ULPs bound outward export conversion.
     arithmetic=max((4*math.ulp(max(abs(lo),abs(hi))) for lo,hi in ranges.values()),default=0.)+1e-30
-    return dict(outputs=ranges,numerical_uncertainty_V=arithmetic,undefined=undefined)
+    return dict(outputs=ranges,numerical_uncertainty_V=arithmetic,undefined=undefined,
+                time_uncertainty_included=True)
