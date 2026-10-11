@@ -1,0 +1,527 @@
+[
+  {
+    "task": "benchmark/tasks/v2-spec-024-clocked-sample-and-hold",
+    "variant": "reference",
+    "candidate_directory": "benchmark/tasks/v2-spec-024-clocked-sample-and-hold/solution",
+    "expected": "pass",
+    "semantic_behavior": "public contract"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-071-acquisition-limited-sample-and-hold",
+    "variant": "reference",
+    "candidate_directory": "benchmark/tasks/v2-spec-071-acquisition-limited-sample-and-hold/solution",
+    "expected": "pass",
+    "semantic_behavior": "public contract"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-186-sarfend-logic-4b",
+    "variant": "reference",
+    "candidate_directory": "benchmark/tasks/v2-spec-186-sarfend-logic-4b/solution",
+    "expected": "pass",
+    "semantic_behavior": "public contract"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-047-window-comparator-detector",
+    "variant": "reference",
+    "candidate_directory": "benchmark/tasks/v2-spec-047-window-comparator-detector/solution",
+    "expected": "pass",
+    "semantic_behavior": "public contract"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-314-hysteretic-window-comparator",
+    "variant": "reference",
+    "candidate_directory": "benchmark/tasks/v2-spec-314-hysteretic-window-comparator/solution",
+    "expected": "pass",
+    "semantic_behavior": "public contract"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-002-capacitive-sar-feedback-dac",
+    "variant": "reference",
+    "candidate_directory": "benchmark/tasks/v2-spec-002-capacitive-sar-feedback-dac/solution",
+    "expected": "pass",
+    "semantic_behavior": "public contract"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-003-pipeline-adc-stage",
+    "variant": "reference",
+    "candidate_directory": "benchmark/tasks/v2-spec-003-pipeline-adc-stage/solution",
+    "expected": "pass",
+    "semantic_behavior": "public contract"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-055-first-order-sigma-delta-modulator",
+    "variant": "reference",
+    "candidate_directory": "benchmark/tasks/v2-spec-055-first-order-sigma-delta-modulator/solution",
+    "expected": "pass",
+    "semantic_behavior": "public contract"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-001-bang-bang-phase-detector",
+    "variant": "reference",
+    "candidate_directory": "benchmark/tasks/v2-spec-001-bang-bang-phase-detector/solution",
+    "expected": "pass",
+    "semantic_behavior": "public contract"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-375-nonoverlap-clock-generator",
+    "variant": "reference",
+    "candidate_directory": "benchmark/tasks/v2-spec-375-nonoverlap-clock-generator/solution",
+    "expected": "pass",
+    "semantic_behavior": "public contract"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-396-quadrature-lo-generator-divided-clock",
+    "variant": "reference",
+    "candidate_directory": "benchmark/tasks/v2-spec-396-quadrature-lo-generator-divided-clock/solution",
+    "expected": "pass",
+    "semantic_behavior": "public contract"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-038-programmable-gain-amplifier",
+    "variant": "reference",
+    "candidate_directory": "benchmark/tasks/v2-spec-038-programmable-gain-amplifier/solution",
+    "expected": "pass",
+    "semantic_behavior": "public contract"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-082-agc-receiver-leveling-loop",
+    "variant": "reference",
+    "candidate_directory": "benchmark/tasks/v2-spec-082-agc-receiver-leveling-loop/solution",
+    "expected": "pass",
+    "semantic_behavior": "public contract"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-091-chopper-stabilized-differential-amplifier",
+    "variant": "reference",
+    "candidate_directory": "benchmark/tasks/v2-spec-091-chopper-stabilized-differential-amplifier/solution",
+    "expected": "pass",
+    "semantic_behavior": "public contract"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-308-correlated-double-sampler-offset-cancel",
+    "variant": "reference",
+    "candidate_directory": "benchmark/tasks/v2-spec-308-correlated-double-sampler-offset-cancel/solution",
+    "expected": "pass",
+    "semantic_behavior": "public contract"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-370-opamp-feedback-settling-monitor",
+    "variant": "reference",
+    "candidate_directory": "benchmark/tasks/v2-spec-370-opamp-feedback-settling-monitor/solution",
+    "expected": "pass",
+    "semantic_behavior": "public contract"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-307-switched-capacitor-integrator-phase-pair",
+    "variant": "reference",
+    "candidate_directory": "benchmark/tasks/v2-spec-307-switched-capacitor-integrator-phase-pair/solution",
+    "expected": "pass",
+    "semantic_behavior": "public contract"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-183-foreground-rdac-calibrator",
+    "variant": "reference",
+    "candidate_directory": "benchmark/tasks/v2-spec-183-foreground-rdac-calibrator/solution",
+    "expected": "pass",
+    "semantic_behavior": "public contract"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-353-ffe-transmitter-3tap",
+    "variant": "reference",
+    "candidate_directory": "benchmark/tasks/v2-spec-353-ffe-transmitter-3tap/solution",
+    "expected": "pass",
+    "semantic_behavior": "public contract"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-001-bang-bang-phase-detector",
+    "variant": "alternative",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-001-bang-bang-phase-detector/alternative",
+    "expected": "pass",
+    "semantic_behavior": "packed three-sample history with decision lookup instead of separate latches",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-001-bang-bang-phase-detector",
+    "variant": "semantic-mutant",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-001-bang-bang-phase-detector/semantic-mutant",
+    "expected": "fail",
+    "semantic_behavior": "swaps Alexander up direction",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-002-capacitive-sar-feedback-dac",
+    "variant": "alternative",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-002-capacitive-sar-feedback-dac/alternative",
+    "expected": "pass",
+    "semantic_behavior": "latched digital code/calibration word instead of two latched analog levels",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-002-capacitive-sar-feedback-dac",
+    "variant": "semantic-mutant",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-002-capacitive-sar-feedback-dac/semantic-mutant",
+    "expected": "fail",
+    "semantic_behavior": "half calibration weight",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-003-pipeline-adc-stage",
+    "variant": "alternative",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-003-pipeline-adc-stage/alternative",
+    "expected": "pass",
+    "semantic_behavior": "ternary sub-ADC decision state drives residue and bit decoding",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-003-pipeline-adc-stage",
+    "variant": "semantic-mutant",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-003-pipeline-adc-stage/semantic-mutant",
+    "expected": "fail",
+    "semantic_behavior": "unity residue gain",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-024-clocked-sample-and-hold",
+    "variant": "alternative",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-024-clocked-sample-and-hold/alternative",
+    "expected": "pass",
+    "semantic_behavior": "explicit elapsed-time linear interpolation, rather than transition operator",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-024-clocked-sample-and-hold",
+    "variant": "semantic-mutant",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-024-clocked-sample-and-hold/semantic-mutant",
+    "expected": "fail",
+    "semantic_behavior": "samples falling edge",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-038-programmable-gain-amplifier",
+    "variant": "alternative",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-038-programmable-gain-amplifier/alternative",
+    "expected": "pass",
+    "semantic_behavior": "latched discrete gain mode; gain voltage computed continuously",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-038-programmable-gain-amplifier",
+    "variant": "semantic-mutant",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-038-programmable-gain-amplifier/semantic-mutant",
+    "expected": "fail",
+    "semantic_behavior": "ignores high gain",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-047-window-comparator-detector",
+    "variant": "alternative",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-047-window-comparator-detector/alternative",
+    "expected": "pass",
+    "semantic_behavior": "two sampled comparator states feed combinational window AND",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-047-window-comparator-detector",
+    "variant": "semantic-mutant",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-047-window-comparator-detector/semantic-mutant",
+    "expected": "fail",
+    "semantic_behavior": "wrong upper boundary",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-055-first-order-sigma-delta-modulator",
+    "variant": "alternative",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-055-first-order-sigma-delta-modulator/alternative",
+    "expected": "pass",
+    "semantic_behavior": "post-feedback residual is stored; next quantizer input is temporary",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-055-first-order-sigma-delta-modulator",
+    "variant": "semantic-mutant",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-055-first-order-sigma-delta-modulator/semantic-mutant",
+    "expected": "fail",
+    "semantic_behavior": "positive feedback",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-071-acquisition-limited-sample-and-hold",
+    "variant": "alternative",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-071-acquisition-limited-sample-and-hold/alternative",
+    "expected": "pass",
+    "semantic_behavior": "voltage deficit relative to vinit is the acquisition state",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-071-acquisition-limited-sample-and-hold",
+    "variant": "semantic-mutant",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-071-acquisition-limited-sample-and-hold/semantic-mutant",
+    "expected": "fail",
+    "semantic_behavior": "instantaneous acquisition",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-082-agc-receiver-leveling-loop",
+    "variant": "alternative",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-082-agc-receiver-leveling-loop/alternative",
+    "expected": "pass",
+    "semantic_behavior": "integer hundredths gain controller instead of real gain accumulator",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-082-agc-receiver-leveling-loop",
+    "variant": "semantic-mutant",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-082-agc-receiver-leveling-loop/semantic-mutant",
+    "expected": "fail",
+    "semantic_behavior": "overload increases gain",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-091-chopper-stabilized-differential-amplifier",
+    "variant": "alternative",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-091-chopper-stabilized-differential-amplifier/alternative",
+    "expected": "pass",
+    "semantic_behavior": "LP accumulator in unscaled input units; derived baseband voltage",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-091-chopper-stabilized-differential-amplifier",
+    "variant": "semantic-mutant",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-091-chopper-stabilized-differential-amplifier/semantic-mutant",
+    "expected": "fail",
+    "semantic_behavior": "omits demodulation",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-183-foreground-rdac-calibrator",
+    "variant": "alternative",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-183-foreground-rdac-calibrator/alternative",
+    "expected": "pass",
+    "semantic_behavior": "packed word and bitmask search instead of seven unrolled code variables",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-183-foreground-rdac-calibrator",
+    "variant": "semantic-mutant",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-183-foreground-rdac-calibrator/semantic-mutant",
+    "expected": "fail",
+    "semantic_behavior": "inverts keep decision",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-186-sarfend-logic-4b",
+    "variant": "alternative",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-186-sarfend-logic-4b/alternative",
+    "expected": "pass",
+    "semantic_behavior": "packed SAR masks and bit updates instead of four-element arrays",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-186-sarfend-logic-4b",
+    "variant": "semantic-mutant",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-186-sarfend-logic-4b/semantic-mutant",
+    "expected": "fail",
+    "semantic_behavior": "inverts comparator decision",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-307-switched-capacitor-integrator-phase-pair",
+    "variant": "alternative",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-307-switched-capacitor-integrator-phase-pair/alternative",
+    "expected": "pass",
+    "semantic_behavior": "saturated integrator deviation relative to vcm is the stored state",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-307-switched-capacitor-integrator-phase-pair",
+    "variant": "semantic-mutant",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-307-switched-capacitor-integrator-phase-pair/semantic-mutant",
+    "expected": "fail",
+    "semantic_behavior": "integrates reversed sign",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-308-correlated-double-sampler-offset-cancel",
+    "variant": "alternative",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-308-correlated-double-sampler-offset-cancel/alternative",
+    "expected": "pass",
+    "semantic_behavior": "reset latch stores signed deviation, derives absolute boundary voltage",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-308-correlated-double-sampler-offset-cancel",
+    "variant": "semantic-mutant",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-308-correlated-double-sampler-offset-cancel/semantic-mutant",
+    "expected": "fail",
+    "semantic_behavior": "reverses correlated difference",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-314-hysteretic-window-comparator",
+    "variant": "alternative",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-314-hysteretic-window-comparator/alternative",
+    "expected": "pass",
+    "semantic_behavior": "inside rail voltage is the hysteresis memory instead of a boolean",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-314-hysteretic-window-comparator",
+    "variant": "semantic-mutant",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-314-hysteretic-window-comparator/semantic-mutant",
+    "expected": "fail",
+    "semantic_behavior": "exits without outer hysteresis",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-353-ffe-transmitter-3tap",
+    "variant": "alternative",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-353-ffe-transmitter-3tap/alternative",
+    "expected": "pass",
+    "semantic_behavior": "circular three-symbol buffer instead of shifting three registers",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-353-ffe-transmitter-3tap",
+    "variant": "semantic-mutant",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-353-ffe-transmitter-3tap/semantic-mutant",
+    "expected": "fail",
+    "semantic_behavior": "uses wrong history tap",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-370-opamp-feedback-settling-monitor",
+    "variant": "alternative",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-370-opamp-feedback-settling-monitor/alternative",
+    "expected": "pass",
+    "semantic_behavior": "three-bit history of qualifying errors instead of convergence counter",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-370-opamp-feedback-settling-monitor",
+    "variant": "semantic-mutant",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-370-opamp-feedback-settling-monitor/semantic-mutant",
+    "expected": "fail",
+    "semantic_behavior": "diverges from target",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-375-nonoverlap-clock-generator",
+    "variant": "alternative",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-375-nonoverlap-clock-generator/alternative",
+    "expected": "pass",
+    "semantic_behavior": "absolute global tick deadline instead of countdown",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-375-nonoverlap-clock-generator",
+    "variant": "semantic-mutant",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-375-nonoverlap-clock-generator/semantic-mutant",
+    "expected": "fail",
+    "semantic_behavior": "removes deadtime",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-396-quadrature-lo-generator-divided-clock",
+    "variant": "alternative",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-396-quadrature-lo-generator-divided-clock/alternative",
+    "expected": "pass",
+    "semantic_behavior": "rotating two-bit quadrature state instead of modulo phase counter",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-396-quadrature-lo-generator-divided-clock",
+    "variant": "semantic-mutant",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-396-quadrature-lo-generator-divided-clock/semantic-mutant",
+    "expected": "fail",
+    "semantic_behavior": "skips quadrature states",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-024-clocked-sample-and-hold",
+    "variant": "tracking",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-024-clocked-sample-and-hold/tracking",
+    "expected": "fail",
+    "semantic_behavior": "continuously tracks input",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-024-clocked-sample-and-hold",
+    "variant": "wrong-initial",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-024-clocked-sample-and-hold/wrong-initial",
+    "expected": "fail",
+    "semantic_behavior": "wrong initial held value",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-375-nonoverlap-clock-generator",
+    "variant": "overlap",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-375-nonoverlap-clock-generator/overlap",
+    "expected": "fail",
+    "semantic_behavior": "both phases high during phase2",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-375-nonoverlap-clock-generator",
+    "variant": "cancel-missed",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-375-nonoverlap-clock-generator/cancel-missed",
+    "expected": "fail",
+    "semantic_behavior": "short disable pulse fails to cancel pending phase",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-375-nonoverlap-clock-generator",
+    "variant": "restart-deadlock",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-375-nonoverlap-clock-generator/restart-deadlock",
+    "expected": "fail",
+    "semantic_behavior": "never completes first handoff after restart",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-091-chopper-stabilized-differential-amplifier",
+    "variant": "architecture-empty",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-091-chopper-stabilized-differential-amplifier/architecture-empty",
+    "expected": "fail",
+    "semantic_behavior": "state-free producer shell, fixed reset-value outputs",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-091-chopper-stabilized-differential-amplifier",
+    "variant": "architecture-bypass",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-091-chopper-stabilized-differential-amplifier/architecture-bypass",
+    "expected": "fail",
+    "semantic_behavior": "active required helpers bypassed by private correct chain",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-307-switched-capacitor-integrator-phase-pair",
+    "variant": "architecture-empty",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-307-switched-capacitor-integrator-phase-pair/architecture-empty",
+    "expected": "fail",
+    "semantic_behavior": "state-free producer shell, fixed reset-value outputs",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-307-switched-capacitor-integrator-phase-pair",
+    "variant": "architecture-bypass",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-307-switched-capacitor-integrator-phase-pair/architecture-bypass",
+    "expected": "fail",
+    "semantic_behavior": "active required helpers bypassed by private correct chain",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-308-correlated-double-sampler-offset-cancel",
+    "variant": "architecture-empty",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-308-correlated-double-sampler-offset-cancel/architecture-empty",
+    "expected": "fail",
+    "semantic_behavior": "state-free producer shell, fixed reset-value outputs",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v2-spec-308-correlated-double-sampler-offset-cancel",
+    "variant": "architecture-bypass",
+    "candidate_directory": "experiments/benchmark_v2/spec_modeling/candidates/v2-spec-308-correlated-double-sampler-offset-cancel/architecture-bypass",
+    "expected": "fail",
+    "semantic_behavior": "active required helpers bypassed by private correct chain",
+    "certification": "pending-live-execution"
+  }
+]

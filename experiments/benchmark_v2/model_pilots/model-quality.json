@@ -1,0 +1,1016 @@
+{
+  "scientific_conclusions": [
+    {
+      "spec": 133,
+      "criterion": "M3",
+      "assessment": "024两模式实际采样/保持与轨参考行为通过；071 one-shot轮询功能FAIL而Agentic边沿版PASS；308 one-shot当前5/6区分重复signal工程错误，Agentic保留reset资格的冻结候选实际6/6通过；375双模型Agentic输出预算耗尽无提交，四格均无候选、功能能力未知",
+      "remaining_evidence": []
+    },
+    {
+      "spec": 134,
+      "criterion": "D4",
+      "assessment": "两模型Agentic实际使用公开34实验做辨识，均原生1200s无VA提交，材料传递正常；one-shot两模型实际length32000无提交，四格均无可评分候选，真实留出泛化能力未知",
+      "remaining_evidence": []
+    },
+    {
+      "spec": 135,
+      "criterion": "E3",
+      "assessment": "两集成题八格均终态无可评分候选：Agentic双模型各length16384；one-shot GLM length32000、Flash无响应归因未知，功能/兼容/部件因果能力未知，已保留来源与预算差异",
+      "remaining_evidence": []
+    },
+    {
+      "spec": 136,
+      "criterion": "R4",
+      "assessment": "五个one-shot完整重写真实PASS、保留资格/复位/取消/恢复/下游协作，不能按参考形状判错",
+      "remaining_evidence": []
+    },
+    {
+      "spec": 137,
+      "criterion": "T4",
+      "assessment": "实际测量、响应驱动实验和gain-settling有限窗口性质区分均有真实PASS源码/raw支撑；POR无候选能力未知，gainGLM恢复后length无候选；不能推无限稳定或总体难度",
+      "remaining_evidence": []
+    }
+  ],
+  "records": [
+    {
+      "task": "v2-spec-024-clocked-sample-and-hold",
+      "model": "glm-5.3-flash",
+      "mode": "one-shot",
+      "candidate": {
+        "dut.va": "27103f8cd38d6122a2c6e5a689649985d109eaa85739bc927a66707df157b478"
+      },
+      "trajectory": null,
+      "report": {
+        "sha256": "ce64c4b0fc7cc39221b0cd975f59d28218b9fac08a3325dd9bb32e052cb30559"
+      },
+      "hashes": {
+        "independent_review": "8a43dbcad4f547f97915cd87e21daf7e3ad9ee2efa462545fdef7eb394ba8db5"
+      },
+      "scientific_conclusion": {
+        "status": "reviewed-actual-pass",
+        "scope": "Specified frozen contract and conditions only; no general difficulty ranking."
+      }
+    },
+    {
+      "task": "v2-repair-debounce-latch",
+      "model": "glm-5.3-flash",
+      "mode": "one-shot",
+      "candidate": {
+        "dut.va": "d44b4fb66f6889c08478f9fda7e70c63ac09660131819a67434376f46894f556"
+      },
+      "trajectory": null,
+      "report": {
+        "sha256": "dd496a2c759431eb79324dd7fad95e9f8dce2bbacc979fc687345883057732e4"
+      },
+      "hashes": {
+        "independent_review": "8a43dbcad4f547f97915cd87e21daf7e3ad9ee2efa462545fdef7eb394ba8db5"
+      },
+      "scientific_conclusion": {
+        "status": "reviewed-actual-pass",
+        "scope": "Specified frozen contract and conditions only; no general difficulty ranking."
+      }
+    },
+    {
+      "task": "v2-repair-pfd-reset",
+      "model": "glm-5.3",
+      "mode": "one-shot",
+      "candidate": {
+        "dut.va": "c3a0c0475bfe3caa1f6bf8e72445c41ac6e7e6c7ab5f6a01437e309559881b91"
+      },
+      "trajectory": null,
+      "report": {
+        "sha256": "f8bf1ac755f1794a1e8d2178f2a1f94855717aefc1760569f8a8954f2170c900"
+      },
+      "hashes": {
+        "independent_review": "8a43dbcad4f547f97915cd87e21daf7e3ad9ee2efa462545fdef7eb394ba8db5"
+      },
+      "scientific_conclusion": {
+        "status": "reviewed-actual-pass",
+        "scope": "Specified frozen contract and conditions only; no general difficulty ranking."
+      }
+    },
+    {
+      "task": "v2-repair-reset-sequencer",
+      "model": "glm-5.3-flash",
+      "mode": "one-shot",
+      "candidate": {
+        "dut.va": "6e0cb9a76cf332aaef623aa7e6692e5eb2569af71cd425596062647ce67f3274"
+      },
+      "trajectory": null,
+      "report": {
+        "sha256": "f2d93c55ed437b6bacac40521846ceb409c621353313a417adf4166d27c61bc2"
+      },
+      "hashes": {
+        "independent_review": "8a43dbcad4f547f97915cd87e21daf7e3ad9ee2efa462545fdef7eb394ba8db5"
+      },
+      "scientific_conclusion": {
+        "status": "reviewed-actual-pass",
+        "scope": "Specified frozen contract and conditions only; no general difficulty ranking."
+      }
+    },
+    {
+      "task": "v2-repair-uvlo-brownout",
+      "model": "glm-5.3-flash",
+      "mode": "one-shot",
+      "candidate": {
+        "dut.va": "a526c951b419f7d6c1140f1fd67713bcf2a48d23d7c92589472635bfaf8a55bf"
+      },
+      "trajectory": null,
+      "report": {
+        "sha256": "1ce8364c0c5778d8f763042011fd4ac7188551652f3dd62f205b0a6fbafa98b1"
+      },
+      "hashes": {
+        "independent_review": "8a43dbcad4f547f97915cd87e21daf7e3ad9ee2efa462545fdef7eb394ba8db5"
+      },
+      "scientific_conclusion": {
+        "status": "reviewed-actual-pass",
+        "scope": "Specified frozen contract and conditions only; no general difficulty ranking."
+      }
+    },
+    {
+      "task": "v2-repair-uvlo-reset-chain",
+      "model": "glm-5.3-flash",
+      "mode": "one-shot",
+      "candidate": {
+        "dut.va": "68d9b34ad59d6a59dff675bee06e7915cd8110a43851b6775ac0b8510a514c4b",
+        "release.va": "d8dd416fa6c1f9a12d16cf78a43c84cf681e916c66a7dd15f0a316ed9d7cf192",
+        "uvlo.va": "c09e33e3ff2d3b1b6de540b06f0d0fe00b866da3c7580e79b49ddb0143ec00da",
+        "enable.va": "672b2b1408e7119523226573bfe8650a22b55fab9b6ffad3d5235c8605b6a4c9",
+        "downstream.va": "9d8f8214614c4e010870f459f027b48a9d3b5c495ae6582e1d0ac900abfee2b5"
+      },
+      "trajectory": null,
+      "report": {
+        "sha256": "17bd9c326b886e170b54bf4168e2fa6efd04752e84c93afbab1133e980460072"
+      },
+      "hashes": {
+        "independent_review": "8a43dbcad4f547f97915cd87e21daf7e3ad9ee2efa462545fdef7eb394ba8db5"
+      },
+      "scientific_conclusion": {
+        "status": "reviewed-actual-pass",
+        "scope": "Specified frozen contract and conditions only; no general difficulty ranking."
+      }
+    },
+    {
+      "task": "v2-test-online-gain",
+      "model": "glm-5.3-flash",
+      "mode": "one-shot",
+      "candidate": {
+        "dut.va": "782feef040301cf15478ab337ccfc249bdf517ef1a51a350769df3b16a11343b"
+      },
+      "trajectory": null,
+      "report": {
+        "sha256": "b920b2f3174c6dad045e81fa6307ed5a0470beff80fafb7736d2b17949fc2af6"
+      },
+      "hashes": {
+        "independent_review": "8a43dbcad4f547f97915cd87e21daf7e3ad9ee2efa462545fdef7eb394ba8db5"
+      },
+      "scientific_conclusion": {
+        "status": "reviewed-actual-pass",
+        "scope": "Specified frozen contract and conditions only; no general difficulty ranking."
+      }
+    },
+    {
+      "task": "v2-test-sampled-rms",
+      "model": "glm-5.3-flash",
+      "mode": "one-shot",
+      "candidate": {
+        "dut.va": "e53491ca966822ba6eb0390e6eff12ba91ece037bd5de0cadfe8a357fb58bd9a"
+      },
+      "trajectory": null,
+      "report": {
+        "sha256": "184cc44ccf81f2d7a1dfbedaedf6d041e8936546bfbb33947a40ffdf4de40e19"
+      },
+      "hashes": {
+        "independent_review": "8a43dbcad4f547f97915cd87e21daf7e3ad9ee2efa462545fdef7eb394ba8db5"
+      },
+      "scientific_conclusion": {
+        "status": "reviewed-actual-pass",
+        "scope": "Specified frozen contract and conditions only; no general difficulty ranking."
+      }
+    },
+    {
+      "task": "v2-test-offset-search",
+      "model": "glm-5.3-flash",
+      "mode": "one-shot",
+      "candidate": {
+        "dut.va": "1d1f3f07ecdb8f6bfa6e9216372c478e4fec6606371d9d0c3e1b4b100a9688cf"
+      },
+      "trajectory": null,
+      "report": {
+        "sha256": "a22a615c8c1f0d50600603101d938b3d9958397551d306a182379ffe7e982135"
+      },
+      "hashes": {
+        "independent_review": "8a43dbcad4f547f97915cd87e21daf7e3ad9ee2efa462545fdef7eb394ba8db5"
+      },
+      "scientific_conclusion": {
+        "status": "reviewed-actual-pass",
+        "scope": "Specified frozen contract and conditions only; no general difficulty ranking."
+      }
+    },
+    {
+      "task": "v2-test-clock-frequency",
+      "model": "glm-5.3",
+      "mode": "agentic",
+      "candidate": {
+        "file_sha256": "0c99631eea309331c7ef1c3368301b9302a36a8832a8d0b7e1c4f4d37b564a56",
+        "aggregate_sha256": "6df300022943283b07890b911d97c233bb180c32b17f420a9f398a9a5355d311"
+      },
+      "trajectory": null,
+      "report": {
+        "sha256": "375f9a0346bef407c0dd10a2ac5f572b643c2c4a2b8d0c42731dde3682abb685"
+      },
+      "hashes": {
+        "independent_review": "fa5ab23d0aa076384d5c3f029e00df62387994789d1256eacc4f0cab54ac6606"
+      },
+      "scientific_conclusion": {
+        "status": "reviewed-actual-pass",
+        "scope": "Original reviewed case identity; clock current overlay is separately bound by the overlay review."
+      }
+    },
+    {
+      "task": "v2-spec-024-clocked-sample-and-hold",
+      "model": "glm-5.3-flash",
+      "mode": "agentic",
+      "candidate": {
+        "file_sha256": "778c8f9d56ae1358df4d7558f59499846a34e346517a3eab5b972a31c9720ae6",
+        "aggregate_sha256": "b357ac984dd1001cd1fd2fc3dda4c7ce557779a1f07d6bee0c128e0f1016c501"
+      },
+      "trajectory": null,
+      "report": {
+        "sha256": "04ee1d78389f5a7cc0a82cbe2c6d447857461bc3d36871f8ca3dc64d3cc14d44"
+      },
+      "hashes": {
+        "independent_review": "fa5ab23d0aa076384d5c3f029e00df62387994789d1256eacc4f0cab54ac6606"
+      },
+      "scientific_conclusion": {
+        "status": "reviewed-actual-pass",
+        "scope": "Original reviewed case identity; clock current overlay is separately bound by the overlay review."
+      }
+    },
+    {
+      "task": "v2-spec-082-agc-receiver-leveling-loop",
+      "model": "glm-5.3",
+      "mode": "agentic",
+      "candidate": {
+        "file_sha256": "fabc6e6b0401bcf257a1e2256119f3c2572d66943a608e0c80afdaddafbfca3b",
+        "aggregate_sha256": "bae9989651553e3c1f214ed59b5f5deabe983d70bbcec45105eb0d43a609e15d"
+      },
+      "trajectory": null,
+      "report": {
+        "sha256": "de25c19515b8027081d2adc98abf3ad92005d5620dd697fddf1837ceeccec75b"
+      },
+      "hashes": {
+        "independent_review": "fa5ab23d0aa076384d5c3f029e00df62387994789d1256eacc4f0cab54ac6606"
+      },
+      "scientific_conclusion": {
+        "status": "reviewed-actual-pass",
+        "scope": "Original reviewed case identity; clock current overlay is separately bound by the overlay review."
+      }
+    },
+    {
+      "task": "v2-spec-375-nonoverlap-clock-generator",
+      "model": "glm-5.3",
+      "mode": "agentic",
+      "candidate": null,
+      "trajectory": [
+        {
+          "sha256": "0281397902122dcb046af861d6288dc3714f97f5a2c4f1576eafe97784cb3732"
+        }
+      ],
+      "report": {
+        "sha256": "247fbdd5e702190e4e2cf490397381da1de08f738ad2d3b2c4db101e8af013cb"
+      },
+      "hashes": {
+        "protocol": "bcf3b9d73de11a1dc1532d1c25ba0995c21a27c9984ccba62939c6dd954edbc0"
+      },
+      "scientific_conclusion": {
+        "status": "model-output-budget-exhaustion-no-submission",
+        "electrical_score": null,
+        "functional_capability": "unknown",
+        "output_cap": 16384,
+        "spectre_calls": 0
+      }
+    },
+    {
+      "task": "v2-integrate-349-multichannel-readout",
+      "model": "glm-5.3",
+      "mode": "agentic",
+      "candidate": null,
+      "trajectory": [
+        {
+          "sha256": "e815d8a372ed8d46c05402b94c85ee62e74c954d6f6622397b6f00eb5100fc1b"
+        }
+      ],
+      "report": {
+        "sha256": "eac65f02c716765d65b84b05dbaaef0a842e61061be2738a50bd60d09fbc433a"
+      },
+      "hashes": {
+        "protocol": "faf576633d0d17772007c367c25a0cefe3fbe6c502d4f3b24e9083654c47ffdf"
+      },
+      "scientific_conclusion": {
+        "status": "model-output-budget-exhaustion-no-submission",
+        "electrical_score": null,
+        "functional_capability": "unknown",
+        "output_cap": 16384,
+        "spectre_calls": 0
+      }
+    },
+    {
+      "task": "v2-integrate-349-multichannel-readout",
+      "model": "glm-5.3-flash",
+      "mode": "agentic",
+      "candidate": null,
+      "trajectory": [
+        {
+          "sha256": "5bc06898df01b8fa263f2b37426e8d7b711ca362c35ada94a3ee7d4d21404149"
+        }
+      ],
+      "report": {
+        "sha256": "af643c86a4d072cffd97f3da3a493462eebc491818df365a7ffaf5891ebdb75a"
+      },
+      "hashes": {
+        "protocol": "495ccdf3575780b777991c0c95d430cb9fc8a6d95aafae16130ad5a1e83d7b26"
+      },
+      "scientific_conclusion": {
+        "status": "model-output-budget-exhaustion-no-submission",
+        "electrical_score": null,
+        "functional_capability": "unknown",
+        "output_cap": 16384,
+        "spectre_calls": 0
+      }
+    },
+    {
+      "task": "v2-integrate-case0007-adpll-fine-tdc",
+      "model": "glm-5.3-flash",
+      "mode": "agentic",
+      "candidate": null,
+      "trajectory": [
+        {
+          "sha256": "1b29a8b110bdca252712a73f24416f2fcc40bec8e8bfaff9424fee9fe059bd3d"
+        }
+      ],
+      "report": {
+        "sha256": "41d4946c41f5fc34748cd8bb83807cec61a567fffd124d66452601ba54f7e53b"
+      },
+      "hashes": {
+        "protocol": "c674901e53486e1f02c109f368392c41451ebff0faf82ed7b8b0b6a52bfddb38"
+      },
+      "scientific_conclusion": {
+        "status": "model-output-budget-exhaustion-no-submission",
+        "electrical_score": null,
+        "functional_capability": "unknown",
+        "output_cap": 16384,
+        "spectre_calls": 0
+      }
+    },
+    {
+      "task": "v2-integrate-case0007-adpll-fine-tdc",
+      "model": "glm-5.3",
+      "mode": "agentic",
+      "candidate": null,
+      "trajectory": [
+        {
+          "sha256": "a1a099769fb19ff5cc0b02cc3de93cc6a119e9d2df1408e4b8e40be970648894"
+        }
+      ],
+      "report": {
+        "sha256": "ac95e725041d4ceb4862695afa40155a6a74552adcac7cc6442fa07e1810edd6"
+      },
+      "hashes": {
+        "protocol": "3a8479c063a62068f532d662b75144d7cb72358d157df1ddb5cde17be19d9077"
+      },
+      "scientific_conclusion": {
+        "status": "model-output-budget-exhaustion-no-submission",
+        "electrical_score": null,
+        "functional_capability": "unknown",
+        "output_cap": 16384,
+        "spectre_calls": 0
+      }
+    },
+    {
+      "task": "v2-test-por-sequence",
+      "model": "glm-5.3-flash",
+      "mode": "agentic",
+      "candidate": null,
+      "trajectory": [
+        {
+          "sha256": "c73c7412bcf7fa9656489b68de574558c2570e085b659c0d7699fe0cbdaf9aac"
+        }
+      ],
+      "report": {
+        "sha256": "580ead373ed8f9090f13453080750e42c932a1fb499b6d0bd2f79b33c34a06fc"
+      },
+      "hashes": {
+        "protocol": "a456d04aca568ff8dc9d0d9058c0fac2d54257d8d57faba3e85c481af5651160"
+      },
+      "scientific_conclusion": {
+        "status": "model-output-budget-exhaustion-no-submission",
+        "electrical_score": null,
+        "functional_capability": "unknown",
+        "output_cap": 16384,
+        "spectre_calls": 0
+      }
+    },
+    {
+      "task": "v2-test-por-sequence",
+      "model": "glm-5.3",
+      "mode": "agentic",
+      "candidate": null,
+      "trajectory": [
+        {
+          "sha256": "3735b776608d5511eaf6d2c8a03e2fafa19873e6af98480eef6946ed11ea2bac"
+        }
+      ],
+      "report": {
+        "sha256": "8d04df293db607027a26419f4894c15b6f2b783904a14db12b73c5c5854ff71d"
+      },
+      "hashes": {
+        "protocol": "068823906e0e2deae025d6bc1cde107b9963439394eabf7185de71a3df7e5c73"
+      },
+      "scientific_conclusion": {
+        "status": "model-output-budget-exhaustion-no-submission",
+        "electrical_score": null,
+        "functional_capability": "unknown",
+        "output_cap": 16384,
+        "spectre_calls": 0
+      }
+    },
+    {
+      "task": "v2-spec-375-nonoverlap-clock-generator",
+      "model": "glm-5.3-flash",
+      "mode": "agentic",
+      "candidate": null,
+      "trajectory": [
+        {
+          "sha256": "b41f3f6874034bd638fe1aff96175d9f982ef94691757fecf8cc99ada60dfdb0"
+        }
+      ],
+      "report": {
+        "sha256": "bdd72a44e398cdd3dc5197fdd9ec2a01013ea320753516bcf74fc0ae3928f8cc"
+      },
+      "hashes": {
+        "protocol": "d54690eecf4fbd92d57c1ed7489b80d569572ce7db6e6bce1000c7ab79f9144e"
+      },
+      "scientific_conclusion": {
+        "status": "model-output-budget-exhaustion-no-submission",
+        "electrical_score": null,
+        "functional_capability": "unknown",
+        "output_cap": 16384,
+        "spectre_calls": 0
+      }
+    },
+    {
+      "task": "v2-data-sampling-identification",
+      "model": "glm-5.3",
+      "mode": "agentic",
+      "candidate": null,
+      "trajectory": [
+        {
+          "sha256": "ac7f32aa1c007717b981129d317eede7e0b1e02d816d9379db57c02f44266a16"
+        }
+      ],
+      "report": {
+        "sha256": "9b98b21375b3e1b14d48f2c9d5a3bb74113a6f6e346b201f04a5bb9651037dfb"
+      },
+      "hashes": {
+        "independent_identity_review": "60cb0a18392e9ed32c037b160cf834baab49e373ea9d2b43692b1eb627c23c1c"
+      },
+      "scientific_conclusion": {
+        "status": "wall-time-budget-exhausted-no-submission",
+        "electrical_score": null,
+        "functional_capability": "unknown",
+        "actual_public_data_use": "All 34 records loaded; dynamic current/state identification attempted; no submitted VA or heldout validation."
+      }
+    },
+    {
+      "task": "v2-data-sampling-identification",
+      "model": "glm-5.3-flash",
+      "mode": "agentic",
+      "candidate": null,
+      "trajectory": [
+        {
+          "sha256": "4981b2536a2decf1a379b5b9ff2cd1f5b066cb78673ee29252fb3d802f3ab9aa"
+        }
+      ],
+      "report": {
+        "sha256": "78b5f07c89a46ba839d777f2efb7b162918a8db631d2953a9b7cd226daf65f25"
+      },
+      "hashes": {
+        "independent_review": "46b35e17b4cdc669ed6caeb74acec35a20d730600ccaedaaf36a23d1e36976a2"
+      },
+      "scientific_conclusion": {
+        "status": "wall-time-budget-exhausted-no-submission",
+        "electrical_score": null,
+        "functional_capability": "unknown",
+        "actual_public_data_use": "Materials reached and were used for genuine local identification; strategy spent original wall budget on analysis without VA/submit. No graded electrical failure or generalization verdict. Public selftest in fitting is legal but cannot be independent heldout evidence. No private-material access observed in this trajectory; not training-contamination proof."
+      }
+    },
+    {
+      "task": "v2-test-gain-settling",
+      "model": "glm-5.3",
+      "mode": "agentic",
+      "candidate": null,
+      "trajectory": [
+        {
+          "sha256": "72a7a081624db18e146b3829d6163d12ae5f25c1c448d4b1c26e26081aa1b2ab"
+        }
+      ],
+      "report": {
+        "sha256": "51f24909a1025c115382f966d37a11d17c34574be52937fdf3059fec6fe02141"
+      },
+      "hashes": {
+        "typed_receipt": "c344ddcfd38ef6c7e88d4e1dcd165f95b63d9e8967bc55faccec5e2203a67cf7",
+        "protocol": "c81b2d9ce01d50b07517d90607282d4fb421aed4f5af2308f8627abd2ff1025f"
+      },
+      "scientific_conclusion": {
+        "status": "model-output-budget-exhaustion-no-submission-after-successful-native-transport-recovery",
+        "electrical_score": null,
+        "functional_capability": "unknown",
+        "native_error_frames": 1,
+        "native_retry_success": true,
+        "scope": "Materials correctly exposed and read; no submitted property measurement implementation, no graded electrical result. Functional capability unknown; transport error and successful internal recovery retained separately."
+      }
+    },
+    {
+      "task": "v2-test-gain-settling",
+      "model": "glm-5.3-flash",
+      "mode": "agentic",
+      "candidate": {
+        "file_sha256": "32d851a9ef807adc26976090527b6dcc2a8862d25519f0a91c281f1889b7c225",
+        "aggregate_sha256": "54ddbc22a14d7102091a6d3126fe4a3571f96d1982fcc17d98c2b6c76d2723fd"
+      },
+      "trajectory": [
+        {
+          "sha256": "1cd0c3e6ae4a631b6d790b103c23711186c4ca626d8b45ee02a7aa0ebcf801a9"
+        }
+      ],
+      "report": {
+        "sha256": "1eaa8743401c7b787a440e6253024e5639304d50c15e0d076f4df557681ee49b"
+      },
+      "hashes": {
+        "independent_actual_review": "48ad0f4b6521c2822117e0c8d64e4074c947ad3a7072ca955a38da4b1e76a454",
+        "waveforms": [
+          "ab790f958be30308f4c23b30c00106542cf7cc5a90f4aaeb23daecd007c8b81c",
+          "b77fb3aad6fb1bb69789233ffac6546f59c314963aaec4d759ea53f09cc77d82",
+          "3e41d21ab9ad19b40b9fea61e8f6e3c125aae941d4a764bdebcbd1dd1ed5270e"
+        ]
+      },
+      "scientific_conclusion": {
+        "status": "model-budget-exhaustion",
+        "electrical_score": 1,
+        "scope": "Actual observed outputs support finite-window normal/unsettled/invalid-span measurement: 3 conditions, two windows each PASS. Reads true static/dynamic/input samples, no direct settled read or observer drive; no observed private answer access. Budget/late public transport failures retained; last frozen complete debug candidate selected, not later unacknowledged local edit."
+      }
+    },
+    {
+      "task": "v2-spec-375-nonoverlap-clock-generator",
+      "model": "glm-5.3",
+      "mode": "one-shot",
+      "candidate": null,
+      "trajectory": null,
+      "report": {
+        "sha256": "5731ea755936d92887268f224d6ced6f5877150bf3ca75a8b383027e739b1fc0"
+      },
+      "hashes": {
+        "classification_evidence": [
+          "3ca4985c0dd7cba0c65afcf32b329db789850cd0e236193d2f1401fc57805912",
+          "537b1e6c3af158eff3ce06f923676ed166fe29c5bbcd5f61554dfe6feb6b0cba",
+          "b01033105fac856c8f1b79dc32f532ffbdad382f0531fc7d403341d342092866"
+        ]
+      },
+      "scientific_conclusion": {
+        "status": "output_budget_exhausted_no_submission",
+        "electrical_score": null,
+        "functional_capability": "unknown",
+        "original_extraction_terminal": "invalid_submission_format",
+        "provider_finish_reason": "length",
+        "actual_completion_tokens": 32000
+      }
+    },
+    {
+      "task": "v2-spec-375-nonoverlap-clock-generator",
+      "model": "glm-5.3-flash",
+      "mode": "one-shot",
+      "candidate": null,
+      "trajectory": null,
+      "report": {
+        "sha256": "5731ea755936d92887268f224d6ced6f5877150bf3ca75a8b383027e739b1fc0"
+      },
+      "hashes": {
+        "classification_evidence": [
+          "91a99bcb8af138e4a5ef2f927859f076ff8cb9eab3ceb393fc28e4068385a285"
+        ]
+      },
+      "scientific_conclusion": {
+        "status": "provider_no_response_attribution_unknown",
+        "electrical_score": null,
+        "functional_capability": "unknown",
+        "original_extraction_terminal": "api_timeout_no_response",
+        "provider_finish_reason": null,
+        "actual_completion_tokens": null
+      }
+    },
+    {
+      "task": "v2-data-sampling-identification",
+      "model": "glm-5.3",
+      "mode": "one-shot",
+      "candidate": null,
+      "trajectory": null,
+      "report": {
+        "sha256": "5731ea755936d92887268f224d6ced6f5877150bf3ca75a8b383027e739b1fc0"
+      },
+      "hashes": {
+        "classification_evidence": [
+          "53a68f9652ce3fd00875ffa33016a8888cb83a832366e5e86f76574c1387718a",
+          "56a4c8a5a98097d7b7b792a7b04ac74e64f11c0e5965c9765bfc1e6c40b94aa9",
+          "7f73fcd7633738f75223a247637b1adfc6874a0a9752f56dd6a4c2e9837f3ab7"
+        ]
+      },
+      "scientific_conclusion": {
+        "status": "output_budget_exhausted_no_submission",
+        "electrical_score": null,
+        "functional_capability": "unknown",
+        "original_extraction_terminal": "invalid_submission_format",
+        "provider_finish_reason": "length",
+        "actual_completion_tokens": 32000
+      }
+    },
+    {
+      "task": "v2-data-sampling-identification",
+      "model": "glm-5.3-flash",
+      "mode": "one-shot",
+      "candidate": null,
+      "trajectory": null,
+      "report": {
+        "sha256": "5731ea755936d92887268f224d6ced6f5877150bf3ca75a8b383027e739b1fc0"
+      },
+      "hashes": {
+        "classification_evidence": [
+          "07c74ca313ce3954cdb18cc07d9a46710c64154f99a5bc32c71dd3756493f9a8",
+          "562ff06e80c5fd16ebc761ebd2cdcdb822a05eff625cc180e0e6ec82163290e6",
+          "f3bfdcc7f76f043ba6e6f92a83b3ad6004d48e7030c0efdb6e43ced21472dc78"
+        ]
+      },
+      "scientific_conclusion": {
+        "status": "output_budget_exhausted_no_submission",
+        "electrical_score": null,
+        "functional_capability": "unknown",
+        "original_extraction_terminal": "invalid_submission_format",
+        "provider_finish_reason": "length",
+        "actual_completion_tokens": 32000
+      }
+    },
+    {
+      "task": "v2-integrate-case0007-adpll-fine-tdc",
+      "model": "glm-5.3",
+      "mode": "one-shot",
+      "candidate": null,
+      "trajectory": null,
+      "report": {
+        "sha256": "5731ea755936d92887268f224d6ced6f5877150bf3ca75a8b383027e739b1fc0"
+      },
+      "hashes": {
+        "classification_evidence": [
+          "7d985d43a412b842820eb19727229494cd3162b7782307d27edf2813b350c566",
+          "c89c67e692e07b18c2160d0eefa12ebd7006ce1603d836644e2ea5aa182cd87a",
+          "eabe3d1b3a9e3991c49b5bf761e815813f19e573d6db28391a72ebd8d72aeea3"
+        ]
+      },
+      "scientific_conclusion": {
+        "status": "output_budget_exhausted_no_submission",
+        "electrical_score": null,
+        "functional_capability": "unknown",
+        "original_extraction_terminal": "invalid_submission_format",
+        "provider_finish_reason": "length",
+        "actual_completion_tokens": 32000
+      }
+    },
+    {
+      "task": "v2-integrate-case0007-adpll-fine-tdc",
+      "model": "glm-5.3-flash",
+      "mode": "one-shot",
+      "candidate": null,
+      "trajectory": null,
+      "report": {
+        "sha256": "5731ea755936d92887268f224d6ced6f5877150bf3ca75a8b383027e739b1fc0"
+      },
+      "hashes": {
+        "classification_evidence": [
+          "ca7d00b228ed67de50715e5730580a5d5e99895feeb4d153288a38b02b9b2ec6"
+        ]
+      },
+      "scientific_conclusion": {
+        "status": "provider_no_response_attribution_unknown",
+        "electrical_score": null,
+        "functional_capability": "unknown",
+        "original_extraction_terminal": "api_timeout_no_response",
+        "provider_finish_reason": null,
+        "actual_completion_tokens": null
+      }
+    },
+    {
+      "task": "v2-test-gain-settling",
+      "model": "glm-5.3",
+      "mode": "one-shot",
+      "candidate": null,
+      "trajectory": null,
+      "report": {
+        "sha256": "5731ea755936d92887268f224d6ced6f5877150bf3ca75a8b383027e739b1fc0"
+      },
+      "hashes": {
+        "classification_evidence": [
+          "4f58602e36eee6054c9c2727d32d0d7f131852de7fe30e920bd72bde747d6214",
+          "988596d21a258acd3f818454e3cbb8a528a914e14bc962debb03363e68bbd064",
+          "e1d7e6661d034db05e928192d04b99e52d2d2c4814e21ce7b87df071eaa9e7d2"
+        ]
+      },
+      "scientific_conclusion": {
+        "status": "output_budget_exhausted_no_submission",
+        "electrical_score": null,
+        "functional_capability": "unknown",
+        "original_extraction_terminal": "invalid_submission_format",
+        "provider_finish_reason": "length",
+        "actual_completion_tokens": 32000
+      }
+    },
+    {
+      "task": "v2-test-gain-settling",
+      "model": "glm-5.3-flash",
+      "mode": "one-shot",
+      "candidate": null,
+      "trajectory": null,
+      "report": {
+        "sha256": "5731ea755936d92887268f224d6ced6f5877150bf3ca75a8b383027e739b1fc0"
+      },
+      "hashes": {
+        "classification_evidence": [
+          "67a4ce29afef945b88edbf8a1ca862d141702c6e627c064ad9a382404373f56d"
+        ]
+      },
+      "scientific_conclusion": {
+        "status": "provider_no_response_attribution_unknown",
+        "electrical_score": null,
+        "functional_capability": "unknown",
+        "original_extraction_terminal": "api_timeout_no_response",
+        "provider_finish_reason": null,
+        "actual_completion_tokens": null
+      }
+    },
+    {
+      "task": "v2-test-por-sequence",
+      "model": "glm-5.3",
+      "mode": "one-shot",
+      "candidate": null,
+      "trajectory": null,
+      "report": {
+        "sha256": "5731ea755936d92887268f224d6ced6f5877150bf3ca75a8b383027e739b1fc0"
+      },
+      "hashes": {
+        "classification_evidence": [
+          "02cfbf72247d3146e1a19b0d38637c4d5f8401e76cfc80cb8d83a2e78c146b11",
+          "4b69f08a3f81111c4ac2ad8a8c03dedef2e5b8f2a6e3fe6613f75b38547b9877",
+          "aaec4dca8aa719fa8f44c4b3b1f7f111f3c9220e617cc4eed825e9b9fec7f425"
+        ]
+      },
+      "scientific_conclusion": {
+        "status": "provider_context_limit_rejection",
+        "electrical_score": null,
+        "functional_capability": "unknown",
+        "original_extraction_terminal": "provider_context_limit_rejection",
+        "provider_finish_reason": null,
+        "actual_completion_tokens": null
+      }
+    },
+    {
+      "task": "v2-test-por-sequence",
+      "model": "glm-5.3-flash",
+      "mode": "one-shot",
+      "candidate": null,
+      "trajectory": null,
+      "report": {
+        "sha256": "5731ea755936d92887268f224d6ced6f5877150bf3ca75a8b383027e739b1fc0"
+      },
+      "hashes": {
+        "classification_evidence": [
+          "1cd535b4e0c3f2a6616224f3fcbfbab47f11b631d016da9da1513292a10f3519",
+          "4b96463b4ce8615d5408b4bc0968c8933eb5e169bcf1d969cca9de251e72edeb",
+          "aaec4dca8aa719fa8f44c4b3b1f7f111f3c9220e617cc4eed825e9b9fec7f425"
+        ]
+      },
+      "scientific_conclusion": {
+        "status": "provider_context_limit_rejection",
+        "electrical_score": null,
+        "functional_capability": "unknown",
+        "original_extraction_terminal": "provider_context_limit_rejection",
+        "provider_finish_reason": null,
+        "actual_completion_tokens": null
+      }
+    },
+    {
+      "task": "v2-integrate-349-multichannel-readout",
+      "model": "glm-5.3",
+      "mode": "one-shot",
+      "candidate": null,
+      "trajectory": null,
+      "report": {
+        "sha256": "5731ea755936d92887268f224d6ced6f5877150bf3ca75a8b383027e739b1fc0"
+      },
+      "hashes": {
+        "classification_evidence": [
+          "282a70276795d83c3dc552e01c6261057272aaa28a99e8a16591ba4545b3459a",
+          "5f8c973e809de4964fa3de19f2a636abcec4faac684b8db82098ceced06428b8",
+          "d13f4f0eebb480527ffb06fb236819b58d55bafee1235d3179e858365e70a25a"
+        ]
+      },
+      "scientific_conclusion": {
+        "status": "output_budget_exhausted_no_submission",
+        "electrical_score": null,
+        "functional_capability": "unknown",
+        "original_extraction_terminal": "invalid_submission_format",
+        "provider_finish_reason": "length",
+        "actual_completion_tokens": 32000
+      }
+    },
+    {
+      "task": "v2-integrate-349-multichannel-readout",
+      "model": "glm-5.3-flash",
+      "mode": "one-shot",
+      "candidate": null,
+      "trajectory": null,
+      "report": {
+        "sha256": "5731ea755936d92887268f224d6ced6f5877150bf3ca75a8b383027e739b1fc0"
+      },
+      "hashes": {
+        "classification_evidence": [
+          "8018a8710c26d489ee774e0828ad05c63102c1272bee9d96a7b8158089028ebe"
+        ]
+      },
+      "scientific_conclusion": {
+        "status": "provider_no_response_attribution_unknown",
+        "electrical_score": null,
+        "functional_capability": "unknown",
+        "original_extraction_terminal": "api_timeout_no_response",
+        "provider_finish_reason": null,
+        "actual_completion_tokens": null
+      }
+    },
+    {
+      "task": "v2-spec-071-acquisition-limited-sample-and-hold",
+      "model": "glm-5.3-flash",
+      "mode": "agentic",
+      "candidate": {
+        "file_sha256": "826725cd660e8eeb4920eebc2676bf6102320b0f56d5adb4d6ea7652d3abe9e9",
+        "aggregate_sha256": "c7793d288f11364ce1607c7d64331e390192bd3f825362d6cd8ab19949b37c13"
+      },
+      "trajectory": [
+        {
+          "sha256": "c5274fc013af171e9d578ea52337c0df158774bd09d6d03ddc58ee7f3a95692e"
+        }
+      ],
+      "report": {
+        "sha256": "a253b9e0af2c56f706794903fd53438a8093513c2f1f2822eb65fd4003555821"
+      },
+      "hashes": {
+        "targeted_review": "450b6f64a60194fef94bf76994f857ae6eefde2a7922b23bd5845c8de04c3704",
+        "waveforms": [
+          "46b7e5dfb407c096a7348734d99ded2d1e09589dec328dc34518e34e71c42b57",
+          "a96b556bced735a2dfc63b4f91901e9886e5b5a07f4838d32b0b425837392fd1"
+        ]
+      },
+      "scientific_conclusion": {
+        "status": "valid-task-pass",
+        "electrical_score": 1,
+        "scope": "Same canonical public contract, final candidate sample cross events control tracking/metric while timer only updates held state. Two actual conditions PASS. Contrasts with one-shot polling bug, not proof of causal tool advantage."
+      }
+    },
+    {
+      "task": "v2-spec-038-programmable-gain-amplifier",
+      "model": "glm-5.3-flash",
+      "mode": "agentic",
+      "candidate": null,
+      "trajectory": [
+        {
+          "sha256": "280e9ddab5753f1293a55148c8527c3a1a7be857e9a46b2e1a8ded617c3d1f45"
+        }
+      ],
+      "report": {
+        "sha256": "0ebc1198c3b0c2c69044a9c6a3fdbbe67e3c65e772151bac58e8c923b2608fd5"
+      },
+      "hashes": {
+        "independent_identity_review": "11a097c20e18c188960cd6922a57f6a8a46ba627e65511f5af4bc32be54c48a1",
+        "root_curator": "5521e6e84310915da298a2cac92e127065a7358b9cea3a9b87f6e5df75fcd91f"
+      },
+      "scientific_conclusion": {
+        "status": "model-completed-without-protocol-submission",
+        "electrical_score": null,
+        "functional_capability": "unknown",
+        "scope": "Actual shell submission instructions reached model; normal stop after local VA edit without any harness-public attempt. Direct native evas names absent does not establish unavailable explicit shell route. Remote route not attempted, so actual remote availability unproven; no electrical verdict."
+      }
+    },
+    {
+      "task": "v2-spec-071-acquisition-limited-sample-and-hold",
+      "model": "glm-5.3-flash",
+      "mode": "one-shot",
+      "candidate": {
+        "dut.va": "b46d156507dc63a28874a9701be8640d7417437ea0d1001a84dd1c26c7458e6c"
+      },
+      "trajectory": null,
+      "report": {
+        "sha256": "24931c327be369321c3faca2f806e11499af0fd3378b98bd9504033a672158a7"
+      },
+      "hashes": {},
+      "scientific_conclusion": {
+        "status": "graded-functional-failure",
+        "scope": "Both actual conditions rc0 reward0; sample window/metric incorrectly polled only at global tick."
+      }
+    },
+    {
+      "task": "v2-spec-308-correlated-double-sampler-offset-cancel",
+      "model": "glm-5.3-flash",
+      "mode": "one-shot",
+      "candidate": {
+        "dut.va": "19294ff132a5d7dd7fbdb2f957a05e91747a659f937da2c4fb1d813768dcc39d",
+        "reset_sample_latch.va": "582222eeab22e753c1c4e6b43eee94f142a500c090e51722f82324525cf76154",
+        "signal_sample_latch.va": "d76c5b445907afd57b5a9ab10fcb8ef959e833e42f5110adf414cb292d0ce81e"
+      },
+      "trajectory": null,
+      "report": {
+        "sha256": "0888a06cfc598c3bffd55063ea3c74d8d8738712b291bdd3ea5e0bad412508ce"
+      },
+      "hashes": {
+        "current_overlay_identity_review": "ed6cde8b2a7ccd48003632c8cae982e2d5e7f81e621cd533b5f24745daf05a4e"
+      },
+      "scientific_conclusion": {
+        "status": "graded-functional-failure",
+        "scope": "Current private coverage actual 5/6: repeated legal signal after same reset ignored. Previous 6/6 raw preserved; module participation alone does not prove full functionality."
+      }
+    },
+    {
+      "task": "v2-spec-308-correlated-double-sampler-offset-cancel",
+      "model": "glm-5.3-flash",
+      "mode": "agentic",
+      "candidate": {
+        "aggregate_sha256": "2034c168139fe425bff60113178f492b844b4260b7a4610d83394c182dcd887b",
+        "files_sha256": {
+          "dut.va": "366308a590a2ee92a2f307799a814d4ecc82c4ba1dadf883f834ab3b208f0ef1",
+          "reset_sample_latch.va": "fd4d1316ccac89e9a8388a8e9183c3168e2c9645a8627d783e30d0f192578587",
+          "signal_sample_latch.va": "ba45e961aab635c655238ee5ce453155a23661cdd64cb5e81b69d005fd5cf48f"
+        }
+      },
+      "trajectory": [
+        {
+          "sha256": "2c68c3a261c20ba7f815f1cea8e5c63e1643ab90b0c282393dee99ac84e365ea"
+        }
+      ],
+      "report": {
+        "sha256": "7cc857b9c2e44280cc918e4f43a1559c94c4a27ddbe3718c2ab64aca035f620a"
+      },
+      "hashes": {
+        "archive": "1aeac036475f751c3eed1f42dd3841476e1617ebb8ce917b4cf2d628acef3258",
+        "actual_final_report": "4d1dcbae325e597962d851a501abedace2e43a16c7d2d5d6347025d9fbc965f4",
+        "cases": "5b35004a6641ff0fe40a0a5f95a079b7e8c2efec804626818a9962dae636cd5e",
+        "waveforms": [
+          "4811378d3c5e72eea3dd949c5c52e346ed51e23b6c839bc3da2d964ea7ae858f",
+          "5dcef0cf1c129cdd52e0b14f0884815a29eef958a215a43b18c8ee40ad749c9e",
+          "fae4e6ed4d9d1b38d0a8041f2a8fb53758820db70d49a82702a6eba22736f59d",
+          "7dfed95c7d0e55da6fdd37ac167c69c86f38bc601f60fb34ac2d8d0daada67a9",
+          "731138b38f4baf283c51973f2ff6414fedf128c3324ce3fa916ee6e784853708",
+          "76469bb9a1156963e75889357b16ed395c66b8b9d41a330d6107f6ea6ffcb213"
+        ],
+        "last_confirmed_submission_receipt": "0a89f23e5119c5f69e39056607b80fcb1fbd0882ba7d6f292276e1f1296fa94a"
+      },
+      "scientific_conclusion": {
+        "status": "model-budget-exhaustion",
+        "electrical_score": 1,
+        "actual_conditions_passed": 6,
+        "actual_conditions_total": 6,
+        "scope": "最后冻结候选实际6/6 PASS；reset资格在signal后保持、仅reset清除，实际15.282/21.432ns连续signal分别更新vout，解释同公开合同one-shot首次signal后清资格的5/6错误。producer输出经reset_node由consumer实际消费，consumer公开输出顶层直连；模块/替身证据不称响应驱动闭环。仅所测条件，不证明全部合法输入或工具收益。",
+        "transport_limit": "末尾final-*重写/模拟和info遇public gateway unavailable，另有一次Python NameError；此前signal写入ba45e961…确认成功，final-dut确认，评分仍绑定已冻结完整candidate2034c168…，未从未确认动作或后续本地文件替代。Native API错误帧0不表示所有公共接口操作均成功。"
+      }
+    }
+  ],
+  "hashes": {
+    "private_review_digest": "86b17ecc969072aa6d02a3fa3f3d77ee2670248549009776cff13a01a2c85da4",
+    "one_shot_fixed_public_projection": "5731ea755936d92887268f224d6ced6f5877150bf3ca75a8b383027e739b1fc0",
+    "public_report_sha256": "53c1995a75a46a4014bf565a07c89f8b82392c67ce4b3e2ffd8ccfc7ef0eaefe",
+    "original_independent_report_sha256": "669e2bfc15e192fc9a6f036fb6729d0a785d38da7759a492c360f01bef56d56a",
+    "agentic_fixed_public_projection": "27e3d2ee2dfa112d5d6c69edf333b879b6205334a851f62db01c35a3d259b185"
+  },
+  "scientific_limits": [
+    "Native default16384 versus one-shot32000 output budgets differ",
+    "Five retained stock network installed versus69 fresh verified offline native targets differ in runtime history",
+    "Canonical public byte parity is not equivalent material representation or model usage",
+    "Eleven revised public contracts oldattempts exploratory only",
+    "Current308 and clock privatecoverage actual regrades are bound; historical raw retained",
+    "Author179/584 calibration is not model148cell completion"
+  ],
+  "status": "representative-analysis-complete-final-matrix-bound",
+  "source_public_projection_sha256": "98d4e110f00f4f27eb619b8bd0d1acc51a18a6802a9f1e4b51ad892d9c1ce4c0",
+  "incremental_public_record_source_sha256": "4e6f9055cde76d41f9363ff8108b28584e18f2730fdb22b96c2fb15fc3cd41df",
+  "final_matrix": {
+    "file": "model-pilot-summary.json",
+    "sha256": "8c13197f33658be7b7d2fc0a5504f7604a4bda2a95dfe6f71e3a3d595d46fbaa",
+    "design_cells": 148,
+    "all_cells_terminal": true,
+    "task_model_pairs_with_same_public_bytes": 74
+  }
+}

@@ -1,0 +1,22 @@
+`include "disciplines.vams"
+module response_comparator(vinp,vinn,request,dcmpp,ready);
+input vinp,vinn,request;
+output dcmpp,ready;
+electrical vinp,vinn,request,dcmpp,ready;
+parameter real offset=0.023, td=200p, tr=20p;
+parameter integer drop_after=99;
+integer decision,responded,n;
+real next_response,next_clear;
+analog begin
+ @(initial_step) begin decision=0; responded=0; n=0; next_response=1e99; next_clear=1e99; end
+ @(cross(V(request)-0.5,+1)) begin
+  n=n+1;
+  decision=(V(vinp,vinn)>=offset);
+  if(n<=drop_after) next_response=$abstime+td;
+ end
+ @(timer(next_response)) begin responded=1; next_clear=$abstime+400p; next_response=1e99; end
+ @(timer(next_clear)) begin responded=0; next_clear=1e99; end
+ V(dcmpp)<+transition(decision,0,tr,tr);
+ V(ready)<+transition(responded,0,tr,tr);
+end
+endmodule

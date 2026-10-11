@@ -1,0 +1,12 @@
+`include "disciplines.vams"
+module hysteresis_meter(vin, cmp_out, begin_round, up, down, width, valid);
+input vin, cmp_out, begin_round;
+output up, down, width, valid;
+electrical vin, cmp_out, begin_round, up, down, width, valid;
+parameter real tr=20p;
+real u,d,w;
+integer su,sd;
+analog begin
+// Implement the public contract.
+end
+endmodule
