@@ -1,5 +1,6 @@
 """Public freeze/run receipts using a tiny independent constant card."""
 import json
+import math
 from pathlib import Path
 import tempfile
 import unittest
@@ -106,14 +107,42 @@ class BreadthRunner(unittest.TestCase):
         rows=[{'time':0.},{'time':5e-7},{'time':1e-6}]
         tool={'version':'sub-version  21.1.0.509.isr12',
               'binary_sha256':'72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f'}
-        evidence=runner.native_observation_evidence(work,'spectre',{'status':'qualified'},rows,tool=tool)
+        evidence=runner.native_observation_evidence(work,'spectre',{'status':'qualified'},rows,tool=tool,card={'stop_s':1e-6},contract={'budgets':{'time_serialization_ulps':16}})
         self.assertEqual(evidence['status'],'qualified')
         self.assertEqual(evidence['facts']['matched_accepted_rows'],2)
         wrong=[{'time':0.},{'time':6e-7},{'time':1e-6}]
-        self.assertEqual(runner.native_observation_evidence(work,'spectre',{'status':'qualified'},wrong,tool=tool)['status'],'unknown')
+        self.assertEqual(runner.native_observation_evidence(work,'spectre',{'status':'qualified'},wrong,tool=tool,card={'stop_s':1e-6},contract={'budgets':{'time_serialization_ulps':16}})['status'],'unknown')
         (work/'spectre.log').write_text('precision = %.17g\ntran: time = 500 ns (50 %), step = 500 ns\n'
             'tran: time = 500 ns (50 %), step = 500 ns\nNumber of accepted tran steps = 2\n')
-        self.assertEqual(runner.native_observation_evidence(work,'spectre',{'status':'qualified'},rows,tool=tool)['status'],'unknown')
+        self.assertEqual(runner.native_observation_evidence(work,'spectre',{'status':'qualified'},rows,tool=tool,card={'stop_s':1e-6},contract={'budgets':{'time_serialization_ulps':16}})['status'],'unknown')
+
+    def test_spectre_strobe_uses_frozen_stop_time_budget_without_retiming(self):
+        work=self.base/'case';work.mkdir()
+        (work/'tb.scs').write_text('tran tran strobeoutput=all skipcount=1 compression=no annotate=steps annotatedigits=16\n')
+        requested=1.75e-6;stop=4e-6;actual=1.749999999999998e-6
+        (work/'requested_times.json').write_text(json.dumps([0,requested,stop]))
+        tool={'version':'sub-version  21.1.0.509.isr12',
+              'binary_sha256':'72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f'}
+        def evidence(times):
+            (work/'spectre.log').write_text('precision = %.17g\n'+''.join(
+                'tran: time = %.16g us (50 %%), step = 1 ns\n' % (t*1e6) for t in times[1:])+
+                'Number of accepted tran steps = %d\n' % (len(times)-1))
+            rows=[{'time':t} for t in times]
+            result=runner.native_observation_evidence(work,'spectre',{'status':'qualified'},rows,
+                tool=tool,card={'stop_s':stop},contract={'budgets':{'time_serialization_ulps':16}})
+            self.assertEqual([r['time'] for r in rows],times)
+            return result
+        self.assertGreater(abs(actual-requested),8*math.ulp(requested))
+        self.assertLess(abs(actual-requested),16*math.ulp(stop))
+        positive=evidence([0.,actual,stop])
+        self.assertEqual(positive['status'],'qualified')
+        self.assertEqual(positive['facts']['strobe_time_uncertainty_s'],16*math.ulp(stop))
+        self.assertEqual(evidence([0.,requested-32*math.ulp(stop),stop])['status'],'unknown')
+        # Two accepted rows inside the same request window are ambiguous.
+        self.assertEqual(evidence([0.,requested-8*math.ulp(stop),requested+8*math.ulp(stop),stop])['status'],'unknown')
+        # Two critical requests must not be collapsed onto one accepted row.
+        (work/'requested_times.json').write_text(json.dumps([0,requested,math.nextafter(requested,math.inf),stop]))
+        self.assertEqual(evidence([0.,actual,stop])['status'],'unknown')
 
     def test_runtime_control_evidence_requires_actual_applied_step(self):
         settings={'actual':{'stop':1e-6,'maxstep':1e-9},

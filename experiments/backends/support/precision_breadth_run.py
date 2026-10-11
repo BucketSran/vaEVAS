@@ -147,7 +147,7 @@ def run(inputs,output,backend,profile_path,family,*,groups=(),cards=(),tiers=())
                     result['effective_settings']=effective_settings(work,backend)
                     result['qualification']=qualification(work,backend,result,native)
                     result['native_observation_evidence']=native_observation_evidence(
-                        work,backend,result['qualification'],native,tool=tool)
+                        work,backend,result['qualification'],native,tool=tool,card=load(work/'condition.json'),contract=data)
                 except Exception as exc:
                     result['analysis_error']=repr(exc)
                     result['qualification']={'status':'evidence_insufficient','issues':[repr(exc)]}
@@ -208,7 +208,7 @@ def runtime_control_evidence(backend,settings):
             'actual':actual,'claim':'validated API/readback controls; stateless origin does not use a propagation step'}
 
 
-def native_observation_evidence(work,backend,qualified,rows,*,tool=None):
+def native_observation_evidence(work,backend,qualified,rows,*,tool=None,card=None,contract=None):
     """Report export facts, and qualify only an independently checked origin path.
 
     read_native preserves raw rows but supplies no origin certificate. A requested
@@ -238,7 +238,7 @@ def native_observation_evidence(work,backend,qualified,rows,*,tool=None):
         if deck.is_file():
             artifacts['tb.scs']=sha(deck)
             facts['all_strobe_export_requested']='strobeoutput=all' in deck.read_text()
-        match=spectre_accepted_rows(work,rows,tool or {})
+        match=spectre_accepted_rows(work,rows,tool or {},card,contract)
         facts.update(match['facts'])
         if match['status']=='qualified':
             return {'status':'qualified','method':'fixed Spectre accepted step annotations matched uniquely to every PSF row',
@@ -261,7 +261,7 @@ def native_observation_evidence(work,backend,qualified,rows,*,tool=None):
             'limit':'deck and aggregate export facts do not certify initial state, counters, phase, or interpolation error'}
 
 
-def spectre_accepted_rows(work,rows,tool):
+def spectre_accepted_rows(work,rows,tool,card=None,contract=None):
     """Match sixteen-digit accepted-step annotations without nearest-row repair."""
     facts={};unknown={'status':'unknown','facts':facts}
     if (tool.get('version')!='sub-version  21.1.0.509.isr12' or
@@ -305,11 +305,29 @@ def spectre_accepted_rows(work,rows,tool):
         for other in (index-1,index+1):
             if 0<=other<len(intervals) and intervals[other][0]-padding<=value<=intervals[other][1]+padding:
                 facts['origin_gap']='raw row has ambiguous accepted annotation';return unknown
-    times=[row['time'] for row in rows]
+    # Use the frozen scientific time-serialization budget, also used by the
+    # core for reference intervals and critical-point coverage. Matching never
+    # changes raw times or removes boundary requests from numerical grading.
+    try:
+        stop=card['stop_s'];ulps=contract['budgets']['time_serialization_ulps']
+        if not math.isfinite(stop) or stop<=0 or type(ulps) is not int or ulps<0:
+            raise ValueError('invalid frozen time budget')
+        padding=ulps*math.ulp(stop)
+    except (TypeError,KeyError,ValueError):
+        facts['origin_gap']='frozen strobe time uncertainty unavailable';return unknown
+    facts.update(strobe_time_uncertainty_s=padding,strobe_time_budget_ulps=ulps,
+                 strobe_time_budget_scale_s=stop)
+    times=[row['time'] for row in rows];used=set()
     for requested in load(work/'requested_times.json'):
-        padding=8*math.ulp(requested)
-        if bisect_right(times,requested+padding)-bisect_left(times,requested-padding)!=1:
+        # Bisect narrows candidates; exact binary64 differences enforce the
+        # declared radius even when floating addition rounds the endpoints.
+        indices=[i for i in range(bisect_left(times,requested-padding),bisect_right(times,requested+padding))
+                 if abs(Fraction(times[i])-Fraction(requested))<=Fraction(padding)]
+        if len(indices)!=1:
             facts['origin_gap']='requested strobe has no unique raw row';return unknown
+        if indices[0] in used:
+            facts['origin_gap']='distinct requested strobes collapse onto one raw row';return unknown
+        used.add(indices[0])
     facts.update(matched_accepted_rows=len(intervals),initial_row_time_s=0,
                  requested_strobes_matched=len(load(work/'requested_times.json')))
     return {'status':'qualified','facts':facts}
