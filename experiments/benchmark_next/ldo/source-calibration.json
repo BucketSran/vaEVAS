@@ -1,0 +1,73 @@
+{
+  "pdk_revision": "f62031a1be9aefe902d6d54cddd6f59b57627436",
+  "adb_revision": "972f7cd7c95381134387b250edf18f3bd23bdd25",
+  "ngspice_version": "******\n** ngspice-47 : Circuit level simulation program\n** Compiled with KLU Direct Linear Solver\n** The U. C. Berkeley CAD Group\n** Copyright 1985-1994, Regents of the University of California.\n** Copyright 2001-2026, The ngspice team.\n** Please get your ngspice manual from https://ngspice.sourceforge.io/docs.html\n** Please file your bug-reports at http://ngspice.sourceforge.net/bugrep.html\n******\n",
+  "records": [
+    {
+      "name": "nominal",
+      "model": "raw_models.spice",
+      "returncode": 0,
+      "peak_v": 1.21117343,
+      "final_v": 1.20346707,
+      "rows": 1415,
+      "netlist_sha256": "25c83429268b9415b5925fde6348bc687ec61311f75b539e88001ccb82973b78",
+      "model_sha256": "a6cc98e01d059eb982404a56dddfe7960af9ea6f5d6f4bade8bab8114a6138f1",
+      "waveform_sha256": "907d43d12f8880815a690d30a54f567fbecfb70b378801e0512839fe5f243c76"
+    },
+    {
+      "name": "light-fast",
+      "model": "raw_models.spice",
+      "returncode": 0,
+      "peak_v": 1.21319853,
+      "final_v": 1.20469867,
+      "rows": 1415,
+      "netlist_sha256": "7f47770b05addbdfc70d548c027a102e7404af0172f92240f40c4a0996f961a5",
+      "model_sha256": "a6cc98e01d059eb982404a56dddfe7960af9ea6f5d6f4bade8bab8114a6138f1",
+      "waveform_sha256": "0072e24553ad58e3437ebcaa6a552a190f0577641b9d1e41706b3329d018cc43"
+    },
+    {
+      "name": "heavy-slow",
+      "model": "raw_models.spice",
+      "returncode": 0,
+      "peak_v": 1.2055154,
+      "final_v": 1.20194927,
+      "rows": 1414,
+      "netlist_sha256": "80131007afd24b386a2d85226197b354b8064b9b240fb8da42b719f1ae4cd97f",
+      "model_sha256": "a6cc98e01d059eb982404a56dddfe7960af9ea6f5d6f4bade8bab8114a6138f1",
+      "waveform_sha256": "1a91a2777e3f159446fa3568b629819a92a179f1191f59a62443b6cd580026f8"
+    },
+    {
+      "name": "nominal",
+      "model": "models.spice",
+      "returncode": 0,
+      "peak_v": 1.21117343,
+      "final_v": 1.20346707,
+      "rows": 1415,
+      "netlist_sha256": "25c83429268b9415b5925fde6348bc687ec61311f75b539e88001ccb82973b78",
+      "model_sha256": "507f63bc37e2d473942e1ab473571e42af4aa511e993af85824b8f8efa8dbe06",
+      "waveform_sha256": "907d43d12f8880815a690d30a54f567fbecfb70b378801e0512839fe5f243c76"
+    },
+    {
+      "name": "light-fast",
+      "model": "models.spice",
+      "returncode": 0,
+      "peak_v": 1.21319853,
+      "final_v": 1.20469867,
+      "rows": 1415,
+      "netlist_sha256": "7f47770b05addbdfc70d548c027a102e7404af0172f92240f40c4a0996f961a5",
+      "model_sha256": "507f63bc37e2d473942e1ab473571e42af4aa511e993af85824b8f8efa8dbe06",
+      "waveform_sha256": "0072e24553ad58e3437ebcaa6a552a190f0577641b9d1e41706b3329d018cc43"
+    },
+    {
+      "name": "heavy-slow",
+      "model": "models.spice",
+      "returncode": 0,
+      "peak_v": 1.2055154,
+      "final_v": 1.20194927,
+      "rows": 1414,
+      "netlist_sha256": "80131007afd24b386a2d85226197b354b8064b9b240fb8da42b719f1ae4cd97f",
+      "model_sha256": "507f63bc37e2d473942e1ab473571e42af4aa511e993af85824b8f8efa8dbe06",
+      "waveform_sha256": "1a91a2777e3f159446fa3568b629819a92a179f1191f59a62443b6cd580026f8"
+    }
+  ]
+}

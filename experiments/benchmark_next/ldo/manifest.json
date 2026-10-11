@@ -1,0 +1,200 @@
+{
+  "spec": 148,
+  "source_group": "adb-ldo-ota5",
+  "backend": "spectre",
+  "task_version": "circuit-benchmark-next-development",
+  "calibration": [
+    {
+      "task": "benchmark/tasks/v3-ldo-startup-measurement",
+      "variant": "reference",
+      "candidate": "experiments/benchmark_next/ldo/candidates/v3-ldo-startup-measurement/reference",
+      "expected_pass": true,
+      "semantic_behavior": "author reference",
+      "candidate_file_sha256": "fb0f7c111488a542ba58f14f9ed05250b17d19fa74c597a5b7d19b8dcc4d48a2"
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-startup-measurement",
+      "variant": "alternate",
+      "candidate": "experiments/benchmark_next/ldo/candidates/v3-ldo-startup-measurement/alternate",
+      "expected_pass": true,
+      "semantic_behavior": "forward suffix-start tracking rather than storing last bad samples",
+      "candidate_file_sha256": "57eb990eb637931510fee8d95b2f708a54115beb51e9c4d4050fa5df9745c9f3"
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-startup-measurement",
+      "variant": "first-entry",
+      "candidate": "experiments/benchmark_next/ldo/candidates/v3-ldo-startup-measurement/first-entry",
+      "expected_pass": false,
+      "semantic_behavior": "freezes threshold clock before real stable crossing",
+      "candidate_file_sha256": "9c9c1b43fd387aba3d88bc8f227236d2a304cffb292e65702cc4ed88343fcee5"
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-startup-measurement",
+      "variant": "final-as-target",
+      "candidate": "experiments/benchmark_next/ldo/candidates/v3-ldo-startup-measurement/final-as-target",
+      "expected_pass": false,
+      "semantic_behavior": "uses measured terminal output as target",
+      "candidate_file_sha256": "99a745dfc5be7d565fc5977ade48923222ed7a3c9590b8f7a203d3c76b4ca8cd"
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-startup-measurement",
+      "variant": "always-invalid",
+      "candidate": "experiments/benchmark_next/ldo/candidates/v3-ldo-startup-measurement/always-invalid",
+      "expected_pass": false,
+      "semantic_behavior": "always reports failed DUT",
+      "candidate_file_sha256": "5616d9836d5445e8c348b0dae1be0eaad77bb1584df78c6c12373212c413198e"
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-startup-measurement",
+      "variant": "input-drive",
+      "candidate": "experiments/benchmark_next/ldo/candidates/v3-ldo-startup-measurement/input-drive",
+      "expected_pass": false,
+      "semantic_behavior": "illegally drives observed DUT output",
+      "candidate_file_sha256": "a8838449eb9d8175592f40442b41612201b058393e3171b65611b6227684a611"
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-startup-measurement",
+      "variant": "input-load",
+      "candidate": "experiments/benchmark_next/ldo/candidates/v3-ldo-startup-measurement/input-load",
+      "expected_pass": false,
+      "semantic_behavior": "loads observed output through 1 Mohm",
+      "candidate_file_sha256": "08bf3483549ae150a9b8a26463dcd97e650614261cc965111c0012f32552ad0b"
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-startup-measurement",
+      "variant": "ideal-metrics",
+      "candidate": "experiments/benchmark_next/ldo/candidates/v3-ldo-startup-measurement/ideal-metrics",
+      "expected_pass": false,
+      "semantic_behavior": "reports ideal ramp metrics",
+      "candidate_file_sha256": "eb7e5ae91fd3c4141d236fd5bf567fdf7638747ff816a8f59c0375a04b5308cd"
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-response-experiment",
+      "variant": "reference",
+      "candidate": "experiments/benchmark_next/ldo/candidates/v3-ldo-response-experiment/reference",
+      "expected_pass": true,
+      "semantic_behavior": "author reference",
+      "candidate_file_sha256": "7db1a0993c6273c6f4a5d91b2d08ed04efcb35891d2a1f5618d2fdb0a2e6182d"
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-response-experiment",
+      "variant": "alternate",
+      "candidate": "experiments/benchmark_next/ldo/candidates/v3-ldo-response-experiment/alternate",
+      "expected_pass": true,
+      "semantic_behavior": "duration qualification instead of count comparison",
+      "candidate_file_sha256": "e8b9cba6f92e5a7b2b5a5a6f318d9699ffa2854d5a5af875b75537b3fa32f9bc"
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-response-experiment",
+      "variant": "fixed-schedule",
+      "candidate": "experiments/benchmark_next/ldo/candidates/v3-ldo-response-experiment/fixed-schedule",
+      "expected_pass": false,
+      "semantic_behavior": "advances on fixed time without actual qualification",
+      "candidate_file_sha256": "5fd2158e2d604d9ac235a0ce3e4ce2892ae0cae26993be1c0bdae3572bae8a44"
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-response-experiment",
+      "variant": "skip-load",
+      "candidate": "experiments/benchmark_next/ldo/candidates/v3-ldo-response-experiment/skip-load",
+      "expected_pass": false,
+      "semantic_behavior": "does not apply load disturbance",
+      "candidate_file_sha256": "fe08c3ab47db66ddd89ef3443f7736c2eb72b0d638ef3e4ce6628ef10d18eb17"
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-response-experiment",
+      "variant": "stale-recovery",
+      "candidate": "experiments/benchmark_next/ldo/candidates/v3-ldo-response-experiment/stale-recovery",
+      "expected_pass": false,
+      "semantic_behavior": "carries qualification across disturbances",
+      "candidate_file_sha256": "6938e28dd1bb0ca4d2e085931cb80beaca8e2a8299d04d04a7912a08c8b79730"
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-response-experiment",
+      "variant": "zero-peaks",
+      "candidate": "experiments/benchmark_next/ldo/candidates/v3-ldo-response-experiment/zero-peaks",
+      "expected_pass": false,
+      "semantic_behavior": "suppresses observed peak deviation",
+      "candidate_file_sha256": "30a698bdc44852b55a851032ac33ecc5a15e183ca944c50108f4db3e1d4a5b57"
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-response-experiment",
+      "variant": "input-drive",
+      "candidate": "experiments/benchmark_next/ldo/candidates/v3-ldo-response-experiment/input-drive",
+      "expected_pass": false,
+      "semantic_behavior": "illegally replaces actual DUT output",
+      "candidate_file_sha256": "980090aeadafc508a9e9d7a0401bafdb1bf9eb2b3e5e9ea0b4ba761861e7b5eb"
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-response-experiment",
+      "variant": "input-load",
+      "candidate": "experiments/benchmark_next/ldo/candidates/v3-ldo-response-experiment/input-load",
+      "expected_pass": false,
+      "semantic_behavior": "loads DUT observation input",
+      "candidate_file_sha256": "288ec2949c307988abe3f4303309cead9c0ff427c68c2d7f736f50f1815ca35e"
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-response-experiment",
+      "variant": "always-timeout",
+      "candidate": "experiments/benchmark_next/ldo/candidates/v3-ldo-response-experiment/always-timeout",
+      "expected_pass": false,
+      "semantic_behavior": "always reports timeout despite health",
+      "candidate_file_sha256": "8f048f3c50751b85de57d599a12c09caaa12daf2927b06da0f3ce7b2140a5aff"
+    }
+  ],
+  "material_sha256": {
+    "benchmark/tasks/v3-ldo-response-experiment/SOURCE.md": "da145fc7479d447d326f0aa1214c5125754460d8a79537b188032db0c0ec93ef",
+    "benchmark/tasks/v3-ldo-response-experiment/environment/Dockerfile": "ad4b50a762513f687ce43b51fced9937b03330757d631fad4e6a12fac86cbbe8",
+    "benchmark/tasks/v3-ldo-response-experiment/environment/public/CC-BY-NC-4.0.txt": "cc97a2c4ff7723a1f25179dc7c18f676fa84191bbb36ea7d0061acaf3c102559",
+    "benchmark/tasks/v3-ldo-response-experiment/environment/public/PDK-LICENSE": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "benchmark/tasks/v3-ldo-response-experiment/environment/public/UPSTREAM-LICENSE": "7d4a87942d5adc7c8a43fb0db75cfa5155f3cdcee8190179a293643c4366a562",
+    "benchmark/tasks/v3-ldo-response-experiment/environment/public/fixed_load.va": "a1aafd996cd8e6858964cea8298b2a4996bdc8e317641608be2a263cdc44f2b5",
+    "benchmark/tasks/v3-ldo-response-experiment/environment/public/ldo_ota5.spi": "40f5806d0eee86e3d9f4f7b78196c03e8e4fcc2443e66d2e6e346f38df3b2658",
+    "benchmark/tasks/v3-ldo-response-experiment/environment/public/models.spice": "507f63bc37e2d473942e1ab473571e42af4aa511e993af85824b8f8efa8dbe06",
+    "benchmark/tasks/v3-ldo-response-experiment/environment/public/public.scs": "cc8d7ecb0ccb2a9c2d6a9d2709efcd5b6173130a654a55fcf6b8a5979031eb4f",
+    "benchmark/tasks/v3-ldo-response-experiment/environment/starter.va": "d13598727c0673cb44a9fcbcabce2100d1a48013abbbbc6a47af31d36af53a5e",
+    "benchmark/tasks/v3-ldo-response-experiment/instruction.md": "3ab3ef3ec7e557325792bf3c47c6be93d3d998828ac56a2c2be90727ebb59b9f",
+    "benchmark/tasks/v3-ldo-response-experiment/solution/dut.va": "7db1a0993c6273c6f4a5d91b2d08ed04efcb35891d2a1f5618d2fdb0a2e6182d",
+    "benchmark/tasks/v3-ldo-response-experiment/solution/solve.sh": "644dc4df795627a25ad82bec407f3639cb7e64438cf70eb89889d6c136fc20f0",
+    "benchmark/tasks/v3-ldo-response-experiment/task.toml": "a38311eade8880a49c25e9e64ec304487f629be58e32d6dc90f3ec0bfa0e8157",
+    "benchmark/tasks/v3-ldo-response-experiment/tests/adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+    "benchmark/tasks/v3-ldo-response-experiment/tests/assets/ldo_ota5.spi": "40f5806d0eee86e3d9f4f7b78196c03e8e4fcc2443e66d2e6e346f38df3b2658",
+    "benchmark/tasks/v3-ldo-response-experiment/tests/assets/models.spice": "507f63bc37e2d473942e1ab473571e42af4aa511e993af85824b8f8efa8dbe06",
+    "benchmark/tasks/v3-ldo-response-experiment/tests/cases.json": "93f58021ee9e4099f7c05456a6d1524e24e8c8b654684407ffed99dd8a9f96ba",
+    "benchmark/tasks/v3-ldo-response-experiment/tests/contract.json": "8e3414d618390b2489a0279decbf57ca986b1ad718b3bcd20a3a11b3cfffb9dc",
+    "benchmark/tasks/v3-ldo-response-experiment/tests/test.sh": "71804a9bba0938cefd4cccf2913771e1b4cfb663cc51373467a73165f4aa85f8",
+    "benchmark/tasks/v3-ldo-response-experiment/tests/v2_next_ldo.py": "478fe16b0c9c419f12b609bbd5db63f2491c37fa5edd1ad1afe8d3f0271dc9fc",
+    "benchmark/tasks/v3-ldo-response-experiment/tests/v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+    "benchmark/tasks/v3-ldo-response-experiment/tests/verify.py": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+    "benchmark/tasks/v3-ldo-startup-measurement/SOURCE.md": "da145fc7479d447d326f0aa1214c5125754460d8a79537b188032db0c0ec93ef",
+    "benchmark/tasks/v3-ldo-startup-measurement/environment/Dockerfile": "ad4b50a762513f687ce43b51fced9937b03330757d631fad4e6a12fac86cbbe8",
+    "benchmark/tasks/v3-ldo-startup-measurement/environment/public/CC-BY-NC-4.0.txt": "cc97a2c4ff7723a1f25179dc7c18f676fa84191bbb36ea7d0061acaf3c102559",
+    "benchmark/tasks/v3-ldo-startup-measurement/environment/public/PDK-LICENSE": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "benchmark/tasks/v3-ldo-startup-measurement/environment/public/UPSTREAM-LICENSE": "7d4a87942d5adc7c8a43fb0db75cfa5155f3cdcee8190179a293643c4366a562",
+    "benchmark/tasks/v3-ldo-startup-measurement/environment/public/ldo_ota5.spi": "40f5806d0eee86e3d9f4f7b78196c03e8e4fcc2443e66d2e6e346f38df3b2658",
+    "benchmark/tasks/v3-ldo-startup-measurement/environment/public/models.spice": "507f63bc37e2d473942e1ab473571e42af4aa511e993af85824b8f8efa8dbe06",
+    "benchmark/tasks/v3-ldo-startup-measurement/environment/public/public.scs": "1b82d94c602e765b3693959a9a693b2fffe2f3a8bfd709d7b27b6d7b5bff9342",
+    "benchmark/tasks/v3-ldo-startup-measurement/environment/starter.va": "f49ea5d5623ff3828adecd0e273285479cf917cb31342595596ffea1041fc024",
+    "benchmark/tasks/v3-ldo-startup-measurement/instruction.md": "60ca6ea889402b52e4165d72ce95ea306a9dcb24b2ac3692da93fc72983b2ffe",
+    "benchmark/tasks/v3-ldo-startup-measurement/solution/dut.va": "fb0f7c111488a542ba58f14f9ed05250b17d19fa74c597a5b7d19b8dcc4d48a2",
+    "benchmark/tasks/v3-ldo-startup-measurement/solution/solve.sh": "644dc4df795627a25ad82bec407f3639cb7e64438cf70eb89889d6c136fc20f0",
+    "benchmark/tasks/v3-ldo-startup-measurement/task.toml": "30c8271e7ad5ff0979da5c5858eb5a2ce355423c59a794cdf0001e3132a59aa3",
+    "benchmark/tasks/v3-ldo-startup-measurement/tests/adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+    "benchmark/tasks/v3-ldo-startup-measurement/tests/assets/ldo_ota5.spi": "40f5806d0eee86e3d9f4f7b78196c03e8e4fcc2443e66d2e6e346f38df3b2658",
+    "benchmark/tasks/v3-ldo-startup-measurement/tests/assets/models.spice": "507f63bc37e2d473942e1ab473571e42af4aa511e993af85824b8f8efa8dbe06",
+    "benchmark/tasks/v3-ldo-startup-measurement/tests/cases.json": "3398689167933818aa1e3368ec346abf05707bb40c0ecb72a354a994650c5e19",
+    "benchmark/tasks/v3-ldo-startup-measurement/tests/contract.json": "ea7434a9d206fa2acfc133e47f1b7a3315fd89c50a75c2410349d6f801e76144",
+    "benchmark/tasks/v3-ldo-startup-measurement/tests/test.sh": "71804a9bba0938cefd4cccf2913771e1b4cfb663cc51373467a73165f4aa85f8",
+    "benchmark/tasks/v3-ldo-startup-measurement/tests/v2_next_ldo.py": "478fe16b0c9c419f12b609bbd5db63f2491c37fa5edd1ad1afe8d3f0271dc9fc",
+    "benchmark/tasks/v3-ldo-startup-measurement/tests/v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+    "benchmark/tasks/v3-ldo-startup-measurement/tests/verify.py": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+    "experiments/benchmark_next/ldo/source/CC-BY-NC-4.0.txt": "cc97a2c4ff7723a1f25179dc7c18f676fa84191bbb36ea7d0061acaf3c102559",
+    "experiments/benchmark_next/ldo/source/PDK-LICENSE": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "experiments/benchmark_next/ldo/source/UPSTREAM-LICENSE": "7d4a87942d5adc7c8a43fb0db75cfa5155f3cdcee8190179a293643c4366a562",
+    "experiments/benchmark_next/ldo/source/ldo_ota5.spi": "40f5806d0eee86e3d9f4f7b78196c03e8e4fcc2443e66d2e6e346f38df3b2658",
+    "experiments/benchmark_next/ldo/source/model-translation.json": "f033f08e47edd81cfa372c41761779faf259efb88733ec3fed52ece35233e798",
+    "experiments/benchmark_next/ldo/source/models.spice": "507f63bc37e2d473942e1ab473571e42af4aa511e993af85824b8f8efa8dbe06",
+    "experiments/benchmark_next/ldo/source/raw_models.spice": "a6cc98e01d059eb982404a56dddfe7960af9ea6f5d6f4bade8bab8114a6138f1",
+    "experiments/benchmark_next/ldo/source/upstream_load.spi": "4f5ede8b269ac230ed33f8715b2587b2bbb0cad841bad22654cdfc854763ee92",
+    "experiments/benchmark_next/ldo/source/upstream_startup.spi": "5704d8d7ef38cd01596b01340ee064d1ef25d38489238991468a5ac870c384ad"
+  }
+}

@@ -1,0 +1,32 @@
+`include "disciplines.vams"
+module ldo_startup_meter(vin,vout,t90_us,overshoot_mv,settle_us,reached,settled,status,done);
+input vin,vout;
+output t90_us,overshoot_mv,settle_us,reached,settled,status,done;
+electrical vin,vout,t90_us,overshoot_mv,settle_us,reached,settled,status,done;
+parameter real tick=50n, ramp_start=1u, ramp_end=21u, window=70u, target=1.2;
+parameter integer tail=20;
+real a,b,c,r,s,code,d,peak,last90,lastbad,y;
+integer bounds,k;
+analog begin
+ @(initial_step) begin a=0;b=0;c=0;r=0;s=0;code=0;d=0;peak=0;last90=0;lastbad=ramp_end;bounds=0;k=0; end
+ @(timer(0,tick)) begin
+  if($abstime<=window+tick/10) begin
+   y=V(vout); if(y>peak) peak=y;
+   if(y<0.9*target) last90=$abstime+tick;
+   if($abstime>=ramp_end-tick/10 && abs(y-target)>0.02*target) lastbad=$abstime+tick;
+   if(y< -0.1 || y>2.2) bounds=1;
+   if($abstime>=window-tick/10) begin
+    r=(last90<=window+tick/10);s=(lastbad<=window-(tail-1)*tick+tick/10);
+    a=r?(last90-ramp_start)*1e6:-1;
+    b=max(0,peak-target)*1e3;
+    c=s?(lastbad-ramp_end)*1e6:-1;
+    code=bounds?4:(!r?2:(!s?3:1));d=1;
+   end
+  end
+ end
+ I(vin)<+1e-12*V(vin);I(vout)<+1e-12*V(vout);
+ V(t90_us)<+transition(a,0,3n);V(overshoot_mv)<+transition(b,0,3n);
+ V(settle_us)<+transition(c,0,3n);V(reached)<+transition(r,0,3n);
+ V(settled)<+transition(s,0,3n);V(status)<+transition(code,0,3n);V(done)<+transition(d,0,3n);
+end
+endmodule

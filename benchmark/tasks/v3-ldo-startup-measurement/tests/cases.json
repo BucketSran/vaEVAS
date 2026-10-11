@@ -1,0 +1,146 @@
+[
+  {
+    "name": "nominal",
+    "kind": "startup",
+    "tick": 5e-08,
+    "ramp_start": 1e-06,
+    "ramp_end": 2.1e-05,
+    "window": 7e-05,
+    "target": 1.2,
+    "tail": 20,
+    "stop": 7.099999999999999e-05,
+    "guard": 5e-09,
+    "vin_high": 1.8,
+    "tolerances": {
+      "t90_us": 0.075,
+      "settle_us": 0.075,
+      "overshoot_mv": 0.3
+    },
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nsimulator lang=spice\n.include \"models.spice\"\n.include \"ldo_ota5.spi\"\n.temp 27\nVIN vin 0 PWL(0 0 1u 0 2.1e-05 1.8 7.1e-05 1.8)\nVREF vref 0 0.8\nIBIAS vin ibias 50u\nRLOAD vout 0 120\nXLDO vin vout 0 vref ibias fb gate_drive gate ldo_ota5\nRFBTOP vout fb 300k\nRFBBOT fb 0 600k\nVLOOP gate_drive gate 0\nRESR vout vcap 50m\nCOUT vcap 0 1e-06\nsimulator lang=spectre\nVOBSIN (vin vin_read) vsource dc=0\nVOBSOUT (vout vout_read) vsource dc=0\nXM (vin_read vout_read t90_us overshoot_mv settle_us reached settled status done) ldo_startup_meter ramp_end=2.1e-05 window=7e-05\ntran tran stop=7.1e-05 maxstep=5n errpreset=conservative\nsave VOBSIN:p VOBSOUT:p vin vout t90_us overshoot_mv settle_us reached settled status done\n",
+    "signals": [
+      "VOBSIN:p",
+      "VOBSOUT:p",
+      "vin",
+      "vout",
+      "t90_us",
+      "overshoot_mv",
+      "settle_us",
+      "reached",
+      "settled",
+      "status",
+      "done"
+    ],
+    "support": {},
+    "observation_currents": [
+      "VOBSIN:p",
+      "VOBSOUT:p"
+    ],
+    "observation_current_atol": 1e-10,
+    "support_files": {
+      "models.spice": {
+        "path": "assets/models.spice",
+        "sha256": "507f63bc37e2d473942e1ab473571e42af4aa511e993af85824b8f8efa8dbe06"
+      },
+      "ldo_ota5.spi": {
+        "path": "assets/ldo_ota5.spi",
+        "sha256": "40f5806d0eee86e3d9f4f7b78196c03e8e4fcc2443e66d2e6e346f38df3b2658"
+      }
+    }
+  },
+  {
+    "name": "dropout-no-target",
+    "kind": "startup",
+    "tick": 5e-08,
+    "ramp_start": 1e-06,
+    "ramp_end": 1.7e-05,
+    "window": 6e-05,
+    "target": 1.2,
+    "tail": 20,
+    "stop": 6.1e-05,
+    "guard": 5e-09,
+    "vin_high": 1.0,
+    "tolerances": {
+      "t90_us": 0.075,
+      "settle_us": 0.075,
+      "overshoot_mv": 0.3
+    },
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nsimulator lang=spice\n.include \"models.spice\"\n.include \"ldo_ota5.spi\"\n.temp 27\nVIN vin 0 PWL(0 0 1u 0 1.7e-05 1 6.1e-05 1)\nVREF vref 0 0.8\nIBIAS vin ibias 50u\nRLOAD vout 0 120\nXLDO vin vout 0 vref ibias fb gate_drive gate ldo_ota5\nRFBTOP vout fb 300k\nRFBBOT fb 0 600k\nVLOOP gate_drive gate 0\nRESR vout vcap 50m\nCOUT vcap 0 1e-06\nsimulator lang=spectre\nVOBSIN (vin vin_read) vsource dc=0\nVOBSOUT (vout vout_read) vsource dc=0\nXM (vin_read vout_read t90_us overshoot_mv settle_us reached settled status done) ldo_startup_meter ramp_end=1.7e-05 window=6e-05\ntran tran stop=6.1e-05 maxstep=5n errpreset=conservative\nsave VOBSIN:p VOBSOUT:p vin vout t90_us overshoot_mv settle_us reached settled status done\n",
+    "signals": [
+      "VOBSIN:p",
+      "VOBSOUT:p",
+      "vin",
+      "vout",
+      "t90_us",
+      "overshoot_mv",
+      "settle_us",
+      "reached",
+      "settled",
+      "status",
+      "done"
+    ],
+    "support": {},
+    "observation_currents": [
+      "VOBSIN:p",
+      "VOBSOUT:p"
+    ],
+    "observation_current_atol": 1e-10,
+    "support_files": {
+      "models.spice": {
+        "path": "assets/models.spice",
+        "sha256": "507f63bc37e2d473942e1ab473571e42af4aa511e993af85824b8f8efa8dbe06"
+      },
+      "ldo_ota5.spi": {
+        "path": "assets/ldo_ota5.spi",
+        "sha256": "40f5806d0eee86e3d9f4f7b78196c03e8e4fcc2443e66d2e6e346f38df3b2658"
+      }
+    }
+  },
+  {
+    "name": "heavy-slow",
+    "kind": "startup",
+    "tick": 5e-08,
+    "ramp_start": 1e-06,
+    "ramp_end": 2.5e-05,
+    "window": 8e-05,
+    "target": 1.2,
+    "tail": 20,
+    "stop": 8.1e-05,
+    "guard": 5e-09,
+    "vin_high": 1.8,
+    "tolerances": {
+      "t90_us": 0.075,
+      "settle_us": 0.075,
+      "overshoot_mv": 0.3
+    },
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nsimulator lang=spice\n.include \"models.spice\"\n.include \"ldo_ota5.spi\"\n.temp 27\nVIN vin 0 PWL(0 0 1u 0 2.5e-05 1.8 8.1e-05 1.8)\nVREF vref 0 0.8\nIBIAS vin ibias 50u\nRLOAD vout 0 60\nXLDO vin vout 0 vref ibias fb gate_drive gate ldo_ota5\nRFBTOP vout fb 300k\nRFBBOT fb 0 600k\nVLOOP gate_drive gate 0\nRESR vout vcap 50m\nCOUT vcap 0 2e-06\nsimulator lang=spectre\nVOBSIN (vin vin_read) vsource dc=0\nVOBSOUT (vout vout_read) vsource dc=0\nXM (vin_read vout_read t90_us overshoot_mv settle_us reached settled status done) ldo_startup_meter ramp_end=2.5e-05 window=8e-05\ntran tran stop=8.1e-05 maxstep=5n errpreset=conservative\nsave VOBSIN:p VOBSOUT:p vin vout t90_us overshoot_mv settle_us reached settled status done\n",
+    "signals": [
+      "VOBSIN:p",
+      "VOBSOUT:p",
+      "vin",
+      "vout",
+      "t90_us",
+      "overshoot_mv",
+      "settle_us",
+      "reached",
+      "settled",
+      "status",
+      "done"
+    ],
+    "support": {},
+    "observation_currents": [
+      "VOBSIN:p",
+      "VOBSOUT:p"
+    ],
+    "observation_current_atol": 1e-10,
+    "support_files": {
+      "models.spice": {
+        "path": "assets/models.spice",
+        "sha256": "507f63bc37e2d473942e1ab473571e42af4aa511e993af85824b8f8efa8dbe06"
+      },
+      "ldo_ota5.spi": {
+        "path": "assets/ldo_ota5.spi",
+        "sha256": "40f5806d0eee86e3d9f4f7b78196c03e8e4fcc2443e66d2e6e346f38df3b2658"
+      }
+    }
+  }
+]

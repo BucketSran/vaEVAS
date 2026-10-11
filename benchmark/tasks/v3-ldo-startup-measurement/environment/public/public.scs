@@ -1,0 +1,23 @@
+simulator lang=spectre
+global 0
+ahdl_include "dut.va"
+simulator lang=spice
+.include "models.spice"
+.include "ldo_ota5.spi"
+.temp 27
+VIN vin 0 PWL(0 0 1u 0 2.1e-05 1.8 7.1e-05 1.8)
+VREF vref 0 0.8
+IBIAS vin ibias 50u
+RLOAD vout 0 120
+XLDO vin vout 0 vref ibias fb gate_drive gate ldo_ota5
+RFBTOP vout fb 300k
+RFBBOT fb 0 600k
+VLOOP gate_drive gate 0
+RESR vout vcap 50m
+COUT vcap 0 1e-06
+simulator lang=spectre
+VOBSIN (vin vin_read) vsource dc=0
+VOBSOUT (vout vout_read) vsource dc=0
+XM (vin_read vout_read t90_us overshoot_mv settle_us reached settled status done) ldo_startup_meter ramp_end=2.1e-05 window=7e-05
+tran tran stop=7.1e-05 maxstep=5n errpreset=conservative
+save VOBSIN:p VOBSOUT:p vin vout t90_us overshoot_mv settle_us reached settled status done
