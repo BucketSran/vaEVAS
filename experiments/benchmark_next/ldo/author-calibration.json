@@ -1,9 +1,11 @@
 {
-  "status": "pending",
+  "status": "passed",
   "model_trials": 0,
   "tasks": 2,
-  "planned_variants": 17,
-  "planned_conditions": 51,
+  "variants": 17,
+  "conditions": 51,
+  "correct_implementations": 4,
+  "semantic_wrong_implementations": 13,
   "material_sha256": {
     "benchmark/tasks/v3-ldo-response-experiment/SOURCE.md": "da145fc7479d447d326f0aa1214c5125754460d8a79537b188032db0c0ec93ef",
     "benchmark/tasks/v3-ldo-response-experiment/environment/Dockerfile": "ad4b50a762513f687ce43b51fced9937b03330757d631fad4e6a12fac86cbbe8",
@@ -60,6 +62,3131 @@
     "experiments/benchmark_next/ldo/source/upstream_load.spi": "4f5ede8b269ac230ed33f8715b2587b2bbb0cad841bad22654cdfc854763ee92",
     "experiments/benchmark_next/ldo/source/upstream_startup.spi": "5704d8d7ef38cd01596b01340ee064d1ef25d38489238991468a5ac870c384ad"
   },
-  "final_revision": "r7",
-  "raw_runs": "runs/ldo-calibration/"
+  "source_calibration_sha256": "6aecce445bba0c7504050fd61dfbda83c71cae0f718645d417a057a6d472dd7b",
+  "calibration": [
+    {
+      "task": "benchmark/tasks/v3-ldo-startup-measurement",
+      "variant": "reference",
+      "expected_pass": true,
+      "semantic_behavior": "author reference",
+      "candidate_file_sha256": "fb0f7c111488a542ba58f14f9ed05250b17d19fa74c597a5b7d19b8dcc4d48a2",
+      "conditions": [
+        {
+          "condition": "nominal",
+          "job_id": "bf-5298d555d3304e248798-nominal",
+          "execution": "ok",
+          "score": 1,
+          "archive_sha256": "03745f5b6ad72a8958a618a0155a8d20c3c6012e279e26d56617ceac86456b49",
+          "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+          "candidate_sha256": "5b29f57505accfaa7025ee4e0316e2c0b416bc10a77d36b31abc52e17e604990",
+          "task_package_sha256": "c0a0bd190d15d66e7b5857c5f23e58531356d0d17766aaa71b3a6d0e39a26209",
+          "backend_version": "2026/10/11 06:53:24 System is not a supported distribution\n2026/10/11 06:53:24 An error occurred. We don't recognize OS \n2026/10/11 06:53:24 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 06:53:24 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "fb0f7c111488a542ba58f14f9ed05250b17d19fa74c597a5b7d19b8dcc4d48a2",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "e5c7124d3fb63f66ac0046353577114155fda0839e375e3a60a6ab770ba256af",
+          "waveform_rows": 14208,
+          "metrics": {
+            "t90_us": 17.85,
+            "overshoot_mv": 10.973924909753352,
+            "settle_us": 0.0,
+            "reached": 1.0,
+            "settled": 1.0,
+            "status": 1.0,
+            "done": 1.0
+          },
+          "observation_current_peaks": {
+            "VOBSIN:p": 0.0,
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [],
+          "failures": []
+        },
+        {
+          "condition": "dropout-no-target",
+          "job_id": "bf-5addf0606d14406da6be-dropout-no-target",
+          "execution": "ok",
+          "score": 1,
+          "archive_sha256": "b02b96165c4f0600afb647b6ec85466f1f5a8aca7e583118f627b35b873bb471",
+          "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+          "candidate_sha256": "5b29f57505accfaa7025ee4e0316e2c0b416bc10a77d36b31abc52e17e604990",
+          "task_package_sha256": "59057a41b8572aa31914dd64c6de9dccf5be126c4fef3de4f79e33af23f92660",
+          "backend_version": "2026/10/11 06:53:45 System is not a supported distribution\n2026/10/11 06:53:45 An error occurred. We don't recognize OS \n2026/10/11 06:53:45 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 06:53:45 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "fb0f7c111488a542ba58f14f9ed05250b17d19fa74c597a5b7d19b8dcc4d48a2",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "84b98f53c9ef5df799efb7bb61122cfc5eb6db9172ebdbd5544760eccf1e8265",
+          "waveform_rows": 12211,
+          "metrics": {
+            "t90_us": -1.0,
+            "overshoot_mv": 0.0,
+            "settle_us": -1.0,
+            "reached": 0.0,
+            "settled": 0.0,
+            "status": 2.0,
+            "done": 1.0
+          },
+          "observation_current_peaks": {
+            "VOBSIN:p": 0.0,
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [],
+          "failures": []
+        },
+        {
+          "condition": "heavy-slow",
+          "job_id": "bf-0d3d141b180f4461af2d-heavy-slow",
+          "execution": "ok",
+          "score": 1,
+          "archive_sha256": "de73cc050035da792d726a27127967930b5106c9a62e2356eeb3fdc7eeca9f37",
+          "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+          "candidate_sha256": "5b29f57505accfaa7025ee4e0316e2c0b416bc10a77d36b31abc52e17e604990",
+          "task_package_sha256": "25212556b6141ec6be67d230b9b09a1d5cf13f16903f7500426b716df6f07aae",
+          "backend_version": "2026/10/11 07:12:16 System is not a supported distribution\n2026/10/11 07:12:16 An error occurred. We don't recognize OS \n2026/10/11 07:12:16 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:12:16 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "fb0f7c111488a542ba58f14f9ed05250b17d19fa74c597a5b7d19b8dcc4d48a2",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "25f61aae550f43bccb360e4aea965e90ffb4fbe1676d963b1c5ef29de8e0e3a0",
+          "waveform_rows": 16208,
+          "metrics": {
+            "t90_us": 23.65,
+            "overshoot_mv": 5.322067221456672,
+            "settle_us": 0.34999999999999837,
+            "reached": 1.0,
+            "settled": 1.0,
+            "status": 1.0,
+            "done": 1.0
+          },
+          "observation_current_peaks": {
+            "VOBSIN:p": 0.0,
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [],
+          "failures": []
+        }
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-startup-measurement",
+      "variant": "alternate",
+      "expected_pass": true,
+      "semantic_behavior": "forward suffix-start tracking rather than storing last bad samples",
+      "candidate_file_sha256": "57eb990eb637931510fee8d95b2f708a54115beb51e9c4d4050fa5df9745c9f3",
+      "conditions": [
+        {
+          "condition": "nominal",
+          "job_id": "bf-5807544fbaaa49a7a697-nominal",
+          "execution": "ok",
+          "score": 1,
+          "archive_sha256": "0c05600e39479ac891cc8e61ecb496d865b6fb7e09e5bd72d08f34bfa77a226b",
+          "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+          "candidate_sha256": "d15e5e138db0fe83d40debf746650d8c2d3c79ad66533e1b62a3c083dff45f15",
+          "task_package_sha256": "c0a0bd190d15d66e7b5857c5f23e58531356d0d17766aaa71b3a6d0e39a26209",
+          "backend_version": "2026/10/11 07:12:36 System is not a supported distribution\n2026/10/11 07:12:36 An error occurred. We don't recognize OS \n2026/10/11 07:12:36 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:12:36 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "57eb990eb637931510fee8d95b2f708a54115beb51e9c4d4050fa5df9745c9f3",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "73fe617457ea3999694adcdb43f6b9f2043e39ef13a1f27832e60ef65dadd5b4",
+          "waveform_rows": 14207,
+          "metrics": {
+            "t90_us": 17.85,
+            "overshoot_mv": 10.973924909547295,
+            "settle_us": 0.0,
+            "reached": 1.0,
+            "settled": 1.0,
+            "status": 1.0,
+            "done": 1.0
+          },
+          "observation_current_peaks": {
+            "VOBSIN:p": 1.8e-12,
+            "VOBSOUT:p": 1.211014908799838e-12
+          },
+          "stage_end_times": [],
+          "failures": []
+        },
+        {
+          "condition": "dropout-no-target",
+          "job_id": "bf-d2222c825b6741e28782-dropout-no-target",
+          "execution": "ok",
+          "score": 1,
+          "archive_sha256": "0f5bf91def0e3c216b96f2385eedf9cbaa147077b40401b3d16d46f45b4f7ecb",
+          "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+          "candidate_sha256": "d15e5e138db0fe83d40debf746650d8c2d3c79ad66533e1b62a3c083dff45f15",
+          "task_package_sha256": "59057a41b8572aa31914dd64c6de9dccf5be126c4fef3de4f79e33af23f92660",
+          "backend_version": "2026/10/11 07:12:56 System is not a supported distribution\n2026/10/11 07:12:56 An error occurred. We don't recognize OS \n2026/10/11 07:12:56 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:12:56 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "57eb990eb637931510fee8d95b2f708a54115beb51e9c4d4050fa5df9745c9f3",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "48af15af9cfbf704dd48194d4cb3f188267253b31da74e6ee9f0ad70f035e3b0",
+          "waveform_rows": 12210,
+          "metrics": {
+            "t90_us": -1.0,
+            "overshoot_mv": 0.0,
+            "settle_us": -1.0,
+            "reached": 0.0,
+            "settled": 0.0,
+            "status": 2.0,
+            "done": 1.0
+          },
+          "observation_current_peaks": {
+            "VOBSIN:p": 1e-12,
+            "VOBSOUT:p": 9.33625734649862e-13
+          },
+          "stage_end_times": [],
+          "failures": []
+        },
+        {
+          "condition": "heavy-slow",
+          "job_id": "bf-753ff106136440a38143-heavy-slow",
+          "execution": "ok",
+          "score": 1,
+          "archive_sha256": "211bd7dd47da9a9ec679ba0db655a6b5cbfc7254f2480933dc8ab60c41c904fa",
+          "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+          "candidate_sha256": "d15e5e138db0fe83d40debf746650d8c2d3c79ad66533e1b62a3c083dff45f15",
+          "task_package_sha256": "25212556b6141ec6be67d230b9b09a1d5cf13f16903f7500426b716df6f07aae",
+          "backend_version": "2026/10/11 07:13:16 System is not a supported distribution\n2026/10/11 07:13:16 An error occurred. We don't recognize OS \n2026/10/11 07:13:16 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:13:16 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "57eb990eb637931510fee8d95b2f708a54115beb51e9c4d4050fa5df9745c9f3",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "6319bc4a46df3d2dcd0023865941a16aca586aa3718d42982d2344d676f7ca98",
+          "waveform_rows": 16207,
+          "metrics": {
+            "t90_us": 23.65,
+            "overshoot_mv": 5.322067221331661,
+            "settle_us": 0.34999999999999837,
+            "reached": 1.0,
+            "settled": 1.0,
+            "status": 1.0,
+            "done": 1.0
+          },
+          "observation_current_peaks": {
+            "VOBSIN:p": 1.8e-12,
+            "VOBSOUT:p": 1.205330144010223e-12
+          },
+          "stage_end_times": [],
+          "failures": []
+        }
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-startup-measurement",
+      "variant": "first-entry",
+      "expected_pass": false,
+      "semantic_behavior": "freezes threshold clock before real stable crossing",
+      "candidate_file_sha256": "9c9c1b43fd387aba3d88bc8f227236d2a304cffb292e65702cc4ed88343fcee5",
+      "conditions": [
+        {
+          "condition": "nominal",
+          "job_id": "bf-4d2d79457a2e4ca5be80-nominal",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "93e6c2aac25e710039e8c7b06f414e9b00e4bff50805b2abcdb674872f37c816",
+          "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+          "candidate_sha256": "21b8ca41062ea65a9d74b748e56cdf8f0b825b1bc460a364e92523f1e344f567",
+          "task_package_sha256": "c0a0bd190d15d66e7b5857c5f23e58531356d0d17766aaa71b3a6d0e39a26209",
+          "backend_version": "2026/10/11 07:13:36 System is not a supported distribution\n2026/10/11 07:13:36 An error occurred. We don't recognize OS \n2026/10/11 07:13:36 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:13:36 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "9c9c1b43fd387aba3d88bc8f227236d2a304cffb292e65702cc4ed88343fcee5",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "27fca9453fc9d4e5f08c6a2e03bf3a7308123e42250c69844d217e852377e5c8",
+          "waveform_rows": 14208,
+          "metrics": {
+            "t90_us": 17.85,
+            "overshoot_mv": 10.973924909753352,
+            "settle_us": 0.0,
+            "reached": 1.0,
+            "settled": 1.0,
+            "status": 1.0,
+            "done": 1.0
+          },
+          "observation_current_peaks": {
+            "VOBSIN:p": 0.0,
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [],
+          "failures": [
+            {
+              "time": 7.000699999998316e-05,
+              "node": "t90_us",
+              "expected": 17.85,
+              "actual": -0.9500000000000002,
+              "tolerance": 0.075
+            },
+            {
+              "time": 7.001199999998316e-05,
+              "node": "t90_us",
+              "expected": 17.85,
+              "actual": -0.95,
+              "tolerance": 0.075
+            },
+            {
+              "time": 7.001699999998316e-05,
+              "node": "t90_us",
+              "expected": 17.85,
+              "actual": -0.95,
+              "tolerance": 0.075
+            },
+            {
+              "time": 7.002199999998316e-05,
+              "node": "t90_us",
+              "expected": 17.85,
+              "actual": -0.95,
+              "tolerance": 0.075
+            }
+          ]
+        },
+        {
+          "condition": "dropout-no-target",
+          "job_id": "bf-ec815f7deb4346e38879-dropout-no-target",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "17a86c9cc6186310758b81b4105ccd9f26903e0999ca0a13d74fc236091d4f7d",
+          "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+          "candidate_sha256": "21b8ca41062ea65a9d74b748e56cdf8f0b825b1bc460a364e92523f1e344f567",
+          "task_package_sha256": "59057a41b8572aa31914dd64c6de9dccf5be126c4fef3de4f79e33af23f92660",
+          "backend_version": "2026/10/11 07:13:56 System is not a supported distribution\n2026/10/11 07:13:56 An error occurred. We don't recognize OS \n2026/10/11 07:13:56 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:13:56 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "9c9c1b43fd387aba3d88bc8f227236d2a304cffb292e65702cc4ed88343fcee5",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "20fb81ef4d175b2e17a71a954e457571aa29a31b9d352abbb24f890c7fe12b61",
+          "waveform_rows": 12211,
+          "metrics": {
+            "t90_us": -1.0,
+            "overshoot_mv": 0.0,
+            "settle_us": -1.0,
+            "reached": 0.0,
+            "settled": 0.0,
+            "status": 2.0,
+            "done": 1.0
+          },
+          "observation_current_peaks": {
+            "VOBSIN:p": 0.0,
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [],
+          "failures": [
+            {
+              "time": 6.00069999999869e-05,
+              "node": "reached",
+              "expected": 0.0,
+              "actual": 1.0,
+              "tolerance": 0.002
+            },
+            {
+              "time": 6.00069999999869e-05,
+              "node": "status",
+              "expected": 2.0,
+              "actual": 3.0,
+              "tolerance": 0.002
+            },
+            {
+              "time": 6.00119999999869e-05,
+              "node": "reached",
+              "expected": 0.0,
+              "actual": 1.0,
+              "tolerance": 0.002
+            },
+            {
+              "time": 6.00119999999869e-05,
+              "node": "status",
+              "expected": 2.0,
+              "actual": 3.0,
+              "tolerance": 0.002
+            }
+          ]
+        },
+        {
+          "condition": "heavy-slow",
+          "job_id": "bf-c39190ec317f4bad8dc3-heavy-slow",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "db702c8a7019493bfd8571bb05cb27e336487bd5f87e61aebae6272ce06a71ee",
+          "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+          "candidate_sha256": "21b8ca41062ea65a9d74b748e56cdf8f0b825b1bc460a364e92523f1e344f567",
+          "task_package_sha256": "25212556b6141ec6be67d230b9b09a1d5cf13f16903f7500426b716df6f07aae",
+          "backend_version": "2026/10/11 07:14:16 System is not a supported distribution\n2026/10/11 07:14:16 An error occurred. We don't recognize OS \n2026/10/11 07:14:16 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:14:16 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "9c9c1b43fd387aba3d88bc8f227236d2a304cffb292e65702cc4ed88343fcee5",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "99ee4a92a3c225b80b1559ffaef07b91ab1544fbdb7f7be9988bf314f84305b1",
+          "waveform_rows": 16208,
+          "metrics": {
+            "t90_us": 23.65,
+            "overshoot_mv": 5.322067221456672,
+            "settle_us": 0.34999999999999837,
+            "reached": 1.0,
+            "settled": 1.0,
+            "status": 1.0,
+            "done": 1.0
+          },
+          "observation_current_peaks": {
+            "VOBSIN:p": 0.0,
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [],
+          "failures": [
+            {
+              "time": 8.000699999997799e-05,
+              "node": "t90_us",
+              "expected": 23.65,
+              "actual": -0.9500000000000002,
+              "tolerance": 0.075
+            },
+            {
+              "time": 8.001199999997798e-05,
+              "node": "t90_us",
+              "expected": 23.65,
+              "actual": -0.95,
+              "tolerance": 0.075
+            },
+            {
+              "time": 8.001699999997798e-05,
+              "node": "t90_us",
+              "expected": 23.65,
+              "actual": -0.95,
+              "tolerance": 0.075
+            },
+            {
+              "time": 8.002199999997798e-05,
+              "node": "t90_us",
+              "expected": 23.65,
+              "actual": -0.95,
+              "tolerance": 0.075
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-startup-measurement",
+      "variant": "final-as-target",
+      "expected_pass": false,
+      "semantic_behavior": "uses measured terminal output as target",
+      "candidate_file_sha256": "99a745dfc5be7d565fc5977ade48923222ed7a3c9590b8f7a203d3c76b4ca8cd",
+      "conditions": [
+        {
+          "condition": "nominal",
+          "job_id": "bf-0a459af3e3a94758be69-nominal",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "65d08674ebf92c8a972ca899e30541df61b031641665c99ffe4d91c91dceac3e",
+          "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+          "candidate_sha256": "7792ed8629b9b6044f5a5ac2371cc38215e05a7194d80493e65111d11448180a",
+          "task_package_sha256": "c0a0bd190d15d66e7b5857c5f23e58531356d0d17766aaa71b3a6d0e39a26209",
+          "backend_version": "2026/10/11 07:14:34 System is not a supported distribution\n2026/10/11 07:14:34 An error occurred. We don't recognize OS \n2026/10/11 07:14:34 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:14:34 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "99a745dfc5be7d565fc5977ade48923222ed7a3c9590b8f7a203d3c76b4ca8cd",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "463df95665d0d21522b2c4781a7facaa7154f9bab8c96ecd58620a8ae2b04543",
+          "waveform_rows": 14208,
+          "metrics": {
+            "t90_us": 17.85,
+            "overshoot_mv": 10.973924909753352,
+            "settle_us": 0.0,
+            "reached": 1.0,
+            "settled": 1.0,
+            "status": 1.0,
+            "done": 1.0
+          },
+          "observation_current_peaks": {
+            "VOBSIN:p": 0.0,
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [],
+          "failures": [
+            {
+              "time": 7.000699999998316e-05,
+              "node": "overshoot_mv",
+              "expected": 10.973924909753352,
+              "actual": 7.506865105089574,
+              "tolerance": 0.3
+            },
+            {
+              "time": 7.001199999998316e-05,
+              "node": "overshoot_mv",
+              "expected": 10.973924909753352,
+              "actual": 7.506865105089577,
+              "tolerance": 0.3
+            },
+            {
+              "time": 7.001699999998316e-05,
+              "node": "overshoot_mv",
+              "expected": 10.973924909753352,
+              "actual": 7.506865105089577,
+              "tolerance": 0.3
+            },
+            {
+              "time": 7.002199999998316e-05,
+              "node": "overshoot_mv",
+              "expected": 10.973924909753352,
+              "actual": 7.506865105089577,
+              "tolerance": 0.3
+            }
+          ]
+        },
+        {
+          "condition": "dropout-no-target",
+          "job_id": "bf-9cff890d402144608b9d-dropout-no-target",
+          "execution": "ok",
+          "score": 1,
+          "archive_sha256": "2e3df483d218783d3a80e4ba722fa128e47bd28da0afeb9fca9c6e9dcc3a0ce2",
+          "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+          "candidate_sha256": "7792ed8629b9b6044f5a5ac2371cc38215e05a7194d80493e65111d11448180a",
+          "task_package_sha256": "59057a41b8572aa31914dd64c6de9dccf5be126c4fef3de4f79e33af23f92660",
+          "backend_version": "2026/10/11 07:14:54 System is not a supported distribution\n2026/10/11 07:14:54 An error occurred. We don't recognize OS \n2026/10/11 07:14:54 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:14:54 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "99a745dfc5be7d565fc5977ade48923222ed7a3c9590b8f7a203d3c76b4ca8cd",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "968a0d561ab1cdf5eff70fa290efa28b23593a13df1f021c84ada9e214d26011",
+          "waveform_rows": 12211,
+          "metrics": {
+            "t90_us": -1.0,
+            "overshoot_mv": 0.0,
+            "settle_us": -1.0,
+            "reached": 0.0,
+            "settled": 0.0,
+            "status": 2.0,
+            "done": 1.0
+          },
+          "observation_current_peaks": {
+            "VOBSIN:p": 0.0,
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [],
+          "failures": []
+        },
+        {
+          "condition": "heavy-slow",
+          "job_id": "bf-940b150278f3499883eb-heavy-slow",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "e7dac49e204f3f20c819ebe1cf9b9dffabdb11e0a597b554c6d9334d6e0ad15d",
+          "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+          "candidate_sha256": "7792ed8629b9b6044f5a5ac2371cc38215e05a7194d80493e65111d11448180a",
+          "task_package_sha256": "25212556b6141ec6be67d230b9b09a1d5cf13f16903f7500426b716df6f07aae",
+          "backend_version": "2026/10/11 07:15:15 System is not a supported distribution\n2026/10/11 07:15:15 An error occurred. We don't recognize OS \n2026/10/11 07:15:15 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:15:15 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "99a745dfc5be7d565fc5977ade48923222ed7a3c9590b8f7a203d3c76b4ca8cd",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "41f86bde77b9372facc14ae4078b9b41f312258314c7db5121c520d2cf32f300",
+          "waveform_rows": 16208,
+          "metrics": {
+            "t90_us": 23.65,
+            "overshoot_mv": 5.322067221456672,
+            "settle_us": 0.34999999999999837,
+            "reached": 1.0,
+            "settled": 1.0,
+            "status": 1.0,
+            "done": 1.0
+          },
+          "observation_current_peaks": {
+            "VOBSIN:p": 0.0,
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [],
+          "failures": [
+            {
+              "time": 8.000699999997799e-05,
+              "node": "overshoot_mv",
+              "expected": 5.322067221456672,
+              "actual": 3.372802354992377,
+              "tolerance": 0.3
+            },
+            {
+              "time": 8.001199999997798e-05,
+              "node": "overshoot_mv",
+              "expected": 5.322067221456672,
+              "actual": 3.372802354992377,
+              "tolerance": 0.3
+            },
+            {
+              "time": 8.001699999997798e-05,
+              "node": "overshoot_mv",
+              "expected": 5.322067221456672,
+              "actual": 3.372802354992377,
+              "tolerance": 0.3
+            },
+            {
+              "time": 8.002199999997798e-05,
+              "node": "overshoot_mv",
+              "expected": 5.322067221456672,
+              "actual": 3.372802354992377,
+              "tolerance": 0.3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-startup-measurement",
+      "variant": "always-invalid",
+      "expected_pass": false,
+      "semantic_behavior": "always reports failed DUT",
+      "candidate_file_sha256": "5616d9836d5445e8c348b0dae1be0eaad77bb1584df78c6c12373212c413198e",
+      "conditions": [
+        {
+          "condition": "nominal",
+          "job_id": "bf-b42a8061eff349939ba9-nominal",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "2cdb902679388dd45528c1a42ae49a8c251694717882e29dcc8b0f30a093eb7a",
+          "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+          "candidate_sha256": "000059802cc319f2da0de6e8bd70fd1820e3d76882700fd9a4f6c7894dab6068",
+          "task_package_sha256": "c0a0bd190d15d66e7b5857c5f23e58531356d0d17766aaa71b3a6d0e39a26209",
+          "backend_version": "2026/10/11 07:15:36 System is not a supported distribution\n2026/10/11 07:15:36 An error occurred. We don't recognize OS \n2026/10/11 07:15:36 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:15:36 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "5616d9836d5445e8c348b0dae1be0eaad77bb1584df78c6c12373212c413198e",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "4943955d946937039ef5c08375a5fbc3a24fbc7e794a33f00b84bfe8ceb73cb6",
+          "waveform_rows": 14208,
+          "metrics": {
+            "t90_us": 17.85,
+            "overshoot_mv": 10.973924909753352,
+            "settle_us": 0.0,
+            "reached": 1.0,
+            "settled": 1.0,
+            "status": 1.0,
+            "done": 1.0
+          },
+          "observation_current_peaks": {
+            "VOBSIN:p": 0.0,
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [],
+          "failures": [
+            {
+              "time": 7.000699999998316e-05,
+              "node": "t90_us",
+              "expected": 17.85,
+              "actual": -1.0,
+              "tolerance": 0.075
+            },
+            {
+              "time": 7.000699999998316e-05,
+              "node": "settle_us",
+              "expected": 0.0,
+              "actual": -1.0,
+              "tolerance": 0.075
+            },
+            {
+              "time": 7.000699999998316e-05,
+              "node": "reached",
+              "expected": 1.0,
+              "actual": 0.0,
+              "tolerance": 0.002
+            },
+            {
+              "time": 7.000699999998316e-05,
+              "node": "settled",
+              "expected": 1.0,
+              "actual": 0.0,
+              "tolerance": 0.002
+            }
+          ]
+        },
+        {
+          "condition": "dropout-no-target",
+          "job_id": "bf-b343f75c82f04eaa80cf-dropout-no-target",
+          "execution": "ok",
+          "score": 1,
+          "archive_sha256": "06bebe95dab02c3682ff951c652725c6aa452067761d869e3d87de6125f1f51e",
+          "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+          "candidate_sha256": "000059802cc319f2da0de6e8bd70fd1820e3d76882700fd9a4f6c7894dab6068",
+          "task_package_sha256": "59057a41b8572aa31914dd64c6de9dccf5be126c4fef3de4f79e33af23f92660",
+          "backend_version": "2026/10/11 07:15:54 System is not a supported distribution\n2026/10/11 07:15:54 An error occurred. We don't recognize OS \n2026/10/11 07:15:54 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:15:54 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "5616d9836d5445e8c348b0dae1be0eaad77bb1584df78c6c12373212c413198e",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "2a1989c8515021ff85ed198b42f50e7e33d348220295085bb28d62d7d4bd4ef8",
+          "waveform_rows": 12211,
+          "metrics": {
+            "t90_us": -1.0,
+            "overshoot_mv": 0.0,
+            "settle_us": -1.0,
+            "reached": 0.0,
+            "settled": 0.0,
+            "status": 2.0,
+            "done": 1.0
+          },
+          "observation_current_peaks": {
+            "VOBSIN:p": 0.0,
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [],
+          "failures": []
+        },
+        {
+          "condition": "heavy-slow",
+          "job_id": "bf-ab6518f5848f404b9af7-heavy-slow",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "7ea99968a44bde7fde3181dc0bcf5c49841aec302c2419aa0553c698a7c073d8",
+          "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+          "candidate_sha256": "000059802cc319f2da0de6e8bd70fd1820e3d76882700fd9a4f6c7894dab6068",
+          "task_package_sha256": "25212556b6141ec6be67d230b9b09a1d5cf13f16903f7500426b716df6f07aae",
+          "backend_version": "2026/10/11 07:16:14 System is not a supported distribution\n2026/10/11 07:16:14 An error occurred. We don't recognize OS \n2026/10/11 07:16:14 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:16:14 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "5616d9836d5445e8c348b0dae1be0eaad77bb1584df78c6c12373212c413198e",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "2e66e89af8263158984707fc6de2718a6948eb2828408fc98d9c09bf3e96ef12",
+          "waveform_rows": 16208,
+          "metrics": {
+            "t90_us": 23.65,
+            "overshoot_mv": 5.322067221456672,
+            "settle_us": 0.34999999999999837,
+            "reached": 1.0,
+            "settled": 1.0,
+            "status": 1.0,
+            "done": 1.0
+          },
+          "observation_current_peaks": {
+            "VOBSIN:p": 0.0,
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [],
+          "failures": [
+            {
+              "time": 8.000699999997799e-05,
+              "node": "t90_us",
+              "expected": 23.65,
+              "actual": -1.0,
+              "tolerance": 0.075
+            },
+            {
+              "time": 8.000699999997799e-05,
+              "node": "settle_us",
+              "expected": 0.34999999999999837,
+              "actual": -1.0,
+              "tolerance": 0.075
+            },
+            {
+              "time": 8.000699999997799e-05,
+              "node": "reached",
+              "expected": 1.0,
+              "actual": 0.0,
+              "tolerance": 0.002
+            },
+            {
+              "time": 8.000699999997799e-05,
+              "node": "settled",
+              "expected": 1.0,
+              "actual": 0.0,
+              "tolerance": 0.002
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-startup-measurement",
+      "variant": "input-drive",
+      "expected_pass": false,
+      "semantic_behavior": "illegally drives observed DUT output",
+      "candidate_file_sha256": "a8838449eb9d8175592f40442b41612201b058393e3171b65611b6227684a611",
+      "conditions": [
+        {
+          "condition": "nominal",
+          "job_id": "bf-213a417d70c64096a388-nominal",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "d44052e1d0c8ec6953f8b28ff79c8fb9895716b18097b0343fb3ecfc117597cb",
+          "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+          "candidate_sha256": "4665443f24b555cd2375d70d40d8c2041b7bf8e4dca8075f47a3fdc413617485",
+          "task_package_sha256": "c0a0bd190d15d66e7b5857c5f23e58531356d0d17766aaa71b3a6d0e39a26209",
+          "backend_version": "2026/10/11 07:16:33 System is not a supported distribution\n2026/10/11 07:16:33 An error occurred. We don't recognize OS \n2026/10/11 07:16:33 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:16:33 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "a8838449eb9d8175592f40442b41612201b058393e3171b65611b6227684a611",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "7e2eeda44faf3b6d87e3d0d3a69d41c8a44877544049e4447f6835ef8d77eee4",
+          "waveform_rows": 14207,
+          "metrics": {
+            "t90_us": -1.0,
+            "overshoot_mv": 0.0,
+            "settle_us": 0.0,
+            "reached": 1.0,
+            "settled": 1.0,
+            "status": 1.0,
+            "done": 1.0
+          },
+          "observation_current_peaks": {
+            "VOBSIN:p": 0.0,
+            "VOBSOUT:p": 0.3008819530807136
+          },
+          "stage_end_times": [],
+          "failures": [
+            {
+              "kind": "read-only-input-current",
+              "node": "VOBSOUT:p",
+              "peak_a": 0.3008819530807136,
+              "limit_a": 1e-10
+            }
+          ]
+        },
+        {
+          "condition": "dropout-no-target",
+          "job_id": "bf-5942bdf0395e4c9c92a8-dropout-no-target",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "a00e78ee2745544009f5f0bb0924df226fc97d599333040bb7f6956b824fb193",
+          "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+          "candidate_sha256": "4665443f24b555cd2375d70d40d8c2041b7bf8e4dca8075f47a3fdc413617485",
+          "task_package_sha256": "59057a41b8572aa31914dd64c6de9dccf5be126c4fef3de4f79e33af23f92660",
+          "backend_version": "2026/10/11 07:16:51 System is not a supported distribution\n2026/10/11 07:16:51 An error occurred. We don't recognize OS \n2026/10/11 07:16:51 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:16:51 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "a8838449eb9d8175592f40442b41612201b058393e3171b65611b6227684a611",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "6d41675ee5074842daae615531a3b533e547777fc7e5c3be66768b3732e3df91",
+          "waveform_rows": 12207,
+          "metrics": {
+            "t90_us": -1.0,
+            "overshoot_mv": 0.0,
+            "settle_us": 0.0,
+            "reached": 1.0,
+            "settled": 1.0,
+            "status": 1.0,
+            "done": 1.0
+          },
+          "observation_current_peaks": {
+            "VOBSIN:p": 0.0,
+            "VOBSOUT:p": 0.3008819530807136
+          },
+          "stage_end_times": [],
+          "failures": [
+            {
+              "kind": "read-only-input-current",
+              "node": "VOBSOUT:p",
+              "peak_a": 0.3008819530807136,
+              "limit_a": 1e-10
+            }
+          ]
+        },
+        {
+          "condition": "heavy-slow",
+          "job_id": "bf-09260ac92e5744c9ad4c-heavy-slow",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "07dcacd35c5e20469dd80818e730d67c922173d9efe8a026c29a6ced4f12d9f5",
+          "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+          "candidate_sha256": "4665443f24b555cd2375d70d40d8c2041b7bf8e4dca8075f47a3fdc413617485",
+          "task_package_sha256": "25212556b6141ec6be67d230b9b09a1d5cf13f16903f7500426b716df6f07aae",
+          "backend_version": "2026/10/11 07:17:09 System is not a supported distribution\n2026/10/11 07:17:09 An error occurred. We don't recognize OS \n2026/10/11 07:17:09 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:17:09 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "a8838449eb9d8175592f40442b41612201b058393e3171b65611b6227684a611",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "83184129e1e0b247e263600937bd5df94b87bfd768833d1d8b290fa00459dead",
+          "waveform_rows": 16207,
+          "metrics": {
+            "t90_us": -1.0,
+            "overshoot_mv": 0.0,
+            "settle_us": -3.3881317890172014e-15,
+            "reached": 1.0,
+            "settled": 1.0,
+            "status": 1.0,
+            "done": 1.0
+          },
+          "observation_current_peaks": {
+            "VOBSIN:p": 0.0,
+            "VOBSOUT:p": 0.310881953080713
+          },
+          "stage_end_times": [],
+          "failures": [
+            {
+              "kind": "read-only-input-current",
+              "node": "VOBSOUT:p",
+              "peak_a": 0.310881953080713,
+              "limit_a": 1e-10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-startup-measurement",
+      "variant": "input-load",
+      "expected_pass": false,
+      "semantic_behavior": "loads observed output through 1 Mohm",
+      "candidate_file_sha256": "08bf3483549ae150a9b8a26463dcd97e650614261cc965111c0012f32552ad0b",
+      "conditions": [
+        {
+          "condition": "nominal",
+          "job_id": "bf-077a958d55ad42bf936a-nominal",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "d49cbfe624e04739f5b2c809a6366d19ca9109122f000f2ddbd9d7a2eeb566d1",
+          "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+          "candidate_sha256": "9be0671232689503f74833f49fc7eb613c70ab3b6d9581648bc101d3da97f31e",
+          "task_package_sha256": "c0a0bd190d15d66e7b5857c5f23e58531356d0d17766aaa71b3a6d0e39a26209",
+          "backend_version": "2026/10/11 07:17:29 System is not a supported distribution\n2026/10/11 07:17:29 An error occurred. We don't recognize OS \n2026/10/11 07:17:29 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:17:29 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "08bf3483549ae150a9b8a26463dcd97e650614261cc965111c0012f32552ad0b",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "90a041b4bb7414eda430b1538a09c1ff315e21fbca0124229eab36f5cfa420b6",
+          "waveform_rows": 14208,
+          "metrics": {
+            "t90_us": 17.85,
+            "overshoot_mv": 10.973708562465267,
+            "settle_us": 0.0,
+            "reached": 1.0,
+            "settled": 1.0,
+            "status": 1.0,
+            "done": 1.0
+          },
+          "observation_current_peaks": {
+            "VOBSIN:p": 0.0,
+            "VOBSOUT:p": 1.21101474869222e-06
+          },
+          "stage_end_times": [],
+          "failures": [
+            {
+              "kind": "read-only-input-current",
+              "node": "VOBSOUT:p",
+              "peak_a": 1.21101474869222e-06,
+              "limit_a": 1e-10
+            }
+          ]
+        },
+        {
+          "condition": "dropout-no-target",
+          "job_id": "bf-67d02be12d6548c6bcb0-dropout-no-target",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "1fc8acef2aa9fe0fab13c39b3469a95dfcde855474e69ac7dcb2a01e213ddc86",
+          "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+          "candidate_sha256": "9be0671232689503f74833f49fc7eb613c70ab3b6d9581648bc101d3da97f31e",
+          "task_package_sha256": "59057a41b8572aa31914dd64c6de9dccf5be126c4fef3de4f79e33af23f92660",
+          "backend_version": "2026/10/11 07:17:50 System is not a supported distribution\n2026/10/11 07:17:50 An error occurred. We don't recognize OS \n2026/10/11 07:17:50 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:17:50 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "08bf3483549ae150a9b8a26463dcd97e650614261cc965111c0012f32552ad0b",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "ffd576310eadb5311a5851f24c49a61651324a25e7c6017ad61e0f0c591479f5",
+          "waveform_rows": 12211,
+          "metrics": {
+            "t90_us": -1.0,
+            "overshoot_mv": 0.0,
+            "settle_us": -1.0,
+            "reached": 0.0,
+            "settled": 0.0,
+            "status": 2.0,
+            "done": 1.0
+          },
+          "observation_current_peaks": {
+            "VOBSIN:p": 0.0,
+            "VOBSOUT:p": 9.336182304526125e-07
+          },
+          "stage_end_times": [],
+          "failures": [
+            {
+              "kind": "read-only-input-current",
+              "node": "VOBSOUT:p",
+              "peak_a": 9.336182304526125e-07,
+              "limit_a": 1e-10
+            }
+          ]
+        },
+        {
+          "condition": "heavy-slow",
+          "job_id": "bf-8b355347ce3f4820801d-heavy-slow",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "05f1b7343978d1220b42d7ed78757361a8be342fe37cff4f09493c229a9fab7d",
+          "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+          "candidate_sha256": "9be0671232689503f74833f49fc7eb613c70ab3b6d9581648bc101d3da97f31e",
+          "task_package_sha256": "25212556b6141ec6be67d230b9b09a1d5cf13f16903f7500426b716df6f07aae",
+          "backend_version": "2026/10/11 07:18:09 System is not a supported distribution\n2026/10/11 07:18:09 An error occurred. We don't recognize OS \n2026/10/11 07:18:09 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:18:09 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "08bf3483549ae150a9b8a26463dcd97e650614261cc965111c0012f32552ad0b",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "d6960d2e4eec59ed4ee84444a0d909f78577ea102d1c35bf96624babea4d12b1",
+          "waveform_rows": 16208,
+          "metrics": {
+            "t90_us": 23.65,
+            "overshoot_mv": 5.3219364391565716,
+            "settle_us": 0.34999999999999837,
+            "reached": 1.0,
+            "settled": 1.0,
+            "status": 1.0,
+            "done": 1.0
+          },
+          "observation_current_peaks": {
+            "VOBSIN:p": 0.0,
+            "VOBSOUT:p": 1.205330027742612e-06
+          },
+          "stage_end_times": [],
+          "failures": [
+            {
+              "kind": "read-only-input-current",
+              "node": "VOBSOUT:p",
+              "peak_a": 1.205330027742612e-06,
+              "limit_a": 1e-10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-startup-measurement",
+      "variant": "ideal-metrics",
+      "expected_pass": false,
+      "semantic_behavior": "reports ideal ramp metrics",
+      "candidate_file_sha256": "eb7e5ae91fd3c4141d236fd5bf567fdf7638747ff816a8f59c0375a04b5308cd",
+      "conditions": [
+        {
+          "condition": "nominal",
+          "job_id": "bf-deffa5c1389347d9bc25-nominal",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "0b4c128b134b83cf6dd86c4c2d5b802cdd95177aa8f99c236e8a8b11137a2c04",
+          "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+          "candidate_sha256": "0ec21da5f70503ea51329845203e144c366d5ebc3f2f7d2efd3777ebc71b6fbe",
+          "task_package_sha256": "c0a0bd190d15d66e7b5857c5f23e58531356d0d17766aaa71b3a6d0e39a26209",
+          "backend_version": "2026/10/11 07:18:29 System is not a supported distribution\n2026/10/11 07:18:29 An error occurred. We don't recognize OS \n2026/10/11 07:18:29 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:18:29 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "eb7e5ae91fd3c4141d236fd5bf567fdf7638747ff816a8f59c0375a04b5308cd",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "62b5f974623a3847b693102869033edd87e8a6abd3e4919d346b64fc118395c7",
+          "waveform_rows": 14208,
+          "metrics": {
+            "t90_us": 17.85,
+            "overshoot_mv": 10.97392490976734,
+            "settle_us": 0.0,
+            "reached": 1.0,
+            "settled": 1.0,
+            "status": 1.0,
+            "done": 1.0
+          },
+          "observation_current_peaks": {
+            "VOBSIN:p": 0.0,
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [],
+          "failures": [
+            {
+              "time": 7.000699999998316e-05,
+              "node": "t90_us",
+              "expected": 17.85,
+              "actual": 18.0,
+              "tolerance": 0.075
+            },
+            {
+              "time": 7.000699999998316e-05,
+              "node": "overshoot_mv",
+              "expected": 10.97392490976734,
+              "actual": 0.0,
+              "tolerance": 0.3
+            },
+            {
+              "time": 7.001199999998316e-05,
+              "node": "t90_us",
+              "expected": 17.85,
+              "actual": 18.0,
+              "tolerance": 0.075
+            },
+            {
+              "time": 7.001199999998316e-05,
+              "node": "overshoot_mv",
+              "expected": 10.97392490976734,
+              "actual": 0.0,
+              "tolerance": 0.3
+            }
+          ]
+        },
+        {
+          "condition": "dropout-no-target",
+          "job_id": "bf-b677a0814118454e9cef-dropout-no-target",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "93402b5cb0bebc0b0ae7c3fa1fe36fb83edd7382b43a9f4b46f465607cb8fe75",
+          "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+          "candidate_sha256": "0ec21da5f70503ea51329845203e144c366d5ebc3f2f7d2efd3777ebc71b6fbe",
+          "task_package_sha256": "59057a41b8572aa31914dd64c6de9dccf5be126c4fef3de4f79e33af23f92660",
+          "backend_version": "2026/10/11 07:18:50 System is not a supported distribution\n2026/10/11 07:18:50 An error occurred. We don't recognize OS \n2026/10/11 07:18:50 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:18:50 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "eb7e5ae91fd3c4141d236fd5bf567fdf7638747ff816a8f59c0375a04b5308cd",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "3bd34449d137bec955dacdca8f4220a9ce9a6fd8b6588c35c936ec92091c950a",
+          "waveform_rows": 12211,
+          "metrics": {
+            "t90_us": -1.0,
+            "overshoot_mv": 0.0,
+            "settle_us": -1.0,
+            "reached": 0.0,
+            "settled": 0.0,
+            "status": 2.0,
+            "done": 1.0
+          },
+          "observation_current_peaks": {
+            "VOBSIN:p": 0.0,
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [],
+          "failures": [
+            {
+              "time": 6.00069999999869e-05,
+              "node": "t90_us",
+              "expected": -1.0,
+              "actual": 18.0,
+              "tolerance": 0.075
+            },
+            {
+              "time": 6.00119999999869e-05,
+              "node": "t90_us",
+              "expected": -1.0,
+              "actual": 18.0,
+              "tolerance": 0.075
+            },
+            {
+              "time": 6.001699999998689e-05,
+              "node": "t90_us",
+              "expected": -1.0,
+              "actual": 18.0,
+              "tolerance": 0.075
+            },
+            {
+              "time": 6.002199999998689e-05,
+              "node": "t90_us",
+              "expected": -1.0,
+              "actual": 18.0,
+              "tolerance": 0.075
+            }
+          ]
+        },
+        {
+          "condition": "heavy-slow",
+          "job_id": "bf-5dfd9143792049629098-heavy-slow",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "3773167da68ea22aa5b8bbbd0b51fc190ae86c4d7bb9c2fa8cf197f6fcf2a297",
+          "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+          "candidate_sha256": "0ec21da5f70503ea51329845203e144c366d5ebc3f2f7d2efd3777ebc71b6fbe",
+          "task_package_sha256": "25212556b6141ec6be67d230b9b09a1d5cf13f16903f7500426b716df6f07aae",
+          "backend_version": "2026/10/11 07:19:09 System is not a supported distribution\n2026/10/11 07:19:09 An error occurred. We don't recognize OS \n2026/10/11 07:19:09 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:19:09 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "eb7e5ae91fd3c4141d236fd5bf567fdf7638747ff816a8f59c0375a04b5308cd",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "e80dd3d6664a88a329073e76253ad063ac7e80befae513793ebd490bc3fc9cb5",
+          "waveform_rows": 16208,
+          "metrics": {
+            "t90_us": 23.65,
+            "overshoot_mv": 5.322067221462667,
+            "settle_us": 0.34999999999999837,
+            "reached": 1.0,
+            "settled": 1.0,
+            "status": 1.0,
+            "done": 1.0
+          },
+          "observation_current_peaks": {
+            "VOBSIN:p": 0.0,
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [],
+          "failures": [
+            {
+              "time": 8.000699999997799e-05,
+              "node": "t90_us",
+              "expected": 23.65,
+              "actual": 18.0,
+              "tolerance": 0.075
+            },
+            {
+              "time": 8.000699999997799e-05,
+              "node": "overshoot_mv",
+              "expected": 5.322067221462667,
+              "actual": 0.0,
+              "tolerance": 0.3
+            },
+            {
+              "time": 8.001199999997798e-05,
+              "node": "t90_us",
+              "expected": 23.65,
+              "actual": 18.0,
+              "tolerance": 0.075
+            },
+            {
+              "time": 8.001199999997798e-05,
+              "node": "overshoot_mv",
+              "expected": 5.322067221462667,
+              "actual": 0.0,
+              "tolerance": 0.3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-response-experiment",
+      "variant": "reference",
+      "expected_pass": true,
+      "semantic_behavior": "author reference",
+      "candidate_file_sha256": "7db1a0993c6273c6f4a5d91b2d08ed04efcb35891d2a1f5618d2fdb0a2e6182d",
+      "conditions": [
+        {
+          "condition": "healthy",
+          "job_id": "bf-e38ad5fe38ea4a68912e-healthy",
+          "execution": "ok",
+          "score": 1,
+          "archive_sha256": "b6a3b270dff1d5e53535235dd6a850db6d3ad733e60d8931d1e7ffd836dfdd40",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "96858eab629ab033d941a877ca4f521936dba8fa30caac92f15cb28a6ff8fb58",
+          "task_package_sha256": "fa7f05c530ec4de81810c4d2ade46740862bdc14bdd76f44fb24f1369ffbca78",
+          "backend_version": "2026/10/11 07:19:29 System is not a supported distribution\n2026/10/11 07:19:29 An error occurred. We don't recognize OS \n2026/10/11 07:19:29 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:19:29 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "7db1a0993c6273c6f4a5d91b2d08ed04efcb35891d2a1f5618d2fdb0a2e6182d",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "967db4d44b91dddde4eecdd7cf7316a21341606f343db11cdeca44c40afbc8ad",
+          "waveform_rows": 48048,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [
+            0.0,
+            2.1949999999999998e-05,
+            2.995e-05,
+            3.795e-05,
+            4.595e-05,
+            5.395e-05
+          ],
+          "failures": []
+        },
+        {
+          "condition": "slow-cap",
+          "job_id": "bf-dffb195956af47c784f1-slow-cap",
+          "execution": "ok",
+          "score": 1,
+          "archive_sha256": "1af09f9b7504c6a97cfa351550563fa2dcd8a234a2a44a936be88850416b41d7",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "96858eab629ab033d941a877ca4f521936dba8fa30caac92f15cb28a6ff8fb58",
+          "task_package_sha256": "c0a7c53041eaa88be8b7b3c7b57cc5d671c78beab2774ff4ab4f30fc0ee36093",
+          "backend_version": "2026/10/11 07:19:52 System is not a supported distribution\n2026/10/11 07:19:52 An error occurred. We don't recognize OS \n2026/10/11 07:19:52 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:19:52 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "7db1a0993c6273c6f4a5d91b2d08ed04efcb35891d2a1f5618d2fdb0a2e6182d",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "c12b737526c89cfc9ee7189bcfb00a274b02a674ca5feeb2d64bcb059dba5a13",
+          "waveform_rows": 48048,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [
+            0.0,
+            2.62e-05,
+            3.42e-05,
+            4.2199999999999996e-05,
+            5.02e-05,
+            5.82e-05
+          ],
+          "failures": []
+        },
+        {
+          "condition": "offset-timeout",
+          "job_id": "bf-d04448297d614315b31a-offset-timeout",
+          "execution": "ok",
+          "score": 1,
+          "archive_sha256": "dddb661ad378b218eb26b9ac9347d706f4fa7a1e1a2d84f888f0548efbfd038e",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "96858eab629ab033d941a877ca4f521936dba8fa30caac92f15cb28a6ff8fb58",
+          "task_package_sha256": "94051f62396c6325f2311678cc7191b308f4f56d4b67452dbb02400f2e009087",
+          "backend_version": "2026/10/11 07:20:15 System is not a supported distribution\n2026/10/11 07:20:15 An error occurred. We don't recognize OS \n2026/10/11 07:20:15 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:20:15 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "7db1a0993c6273c6f4a5d91b2d08ed04efcb35891d2a1f5618d2fdb0a2e6182d",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "198492725a25258ab5543ffcdf482b1f5e309ce4ce15ab8273276fee5cdfe329",
+          "waveform_rows": 48048,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [
+            0.0,
+            7e-05,
+            0.00010999999999999999,
+            0.00015,
+            0.00018999999999999998,
+            0.00022999999999999998
+          ],
+          "failures": []
+        }
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-response-experiment",
+      "variant": "alternate",
+      "expected_pass": true,
+      "semantic_behavior": "duration qualification instead of count comparison",
+      "candidate_file_sha256": "e8b9cba6f92e5a7b2b5a5a6f318d9699ffa2854d5a5af875b75537b3fa32f9bc",
+      "conditions": [
+        {
+          "condition": "healthy",
+          "job_id": "bf-b877b7ee75d5447a8e32-healthy",
+          "execution": "ok",
+          "score": 1,
+          "archive_sha256": "da4290fbf494c60269c8b4724e741e0100b7ffc9eb88958226800627f6c05e8d",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "bff2390972f4467e7a0504bfdada9fe41b8913771c4df91615fd285e328f5d19",
+          "task_package_sha256": "fa7f05c530ec4de81810c4d2ade46740862bdc14bdd76f44fb24f1369ffbca78",
+          "backend_version": "2026/10/11 07:20:43 System is not a supported distribution\n2026/10/11 07:20:43 An error occurred. We don't recognize OS \n2026/10/11 07:20:43 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:20:43 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "e8b9cba6f92e5a7b2b5a5a6f318d9699ffa2854d5a5af875b75537b3fa32f9bc",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "2cb491182fc1cf747faf9207005c325389f41e68b6cc6780b9a2fadc48f91de7",
+          "waveform_rows": 48047,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 1.211014908489979e-12
+          },
+          "stage_end_times": [
+            0.0,
+            2.1949999999999998e-05,
+            2.995e-05,
+            3.795e-05,
+            4.595e-05,
+            5.395e-05
+          ],
+          "failures": []
+        },
+        {
+          "condition": "slow-cap",
+          "job_id": "bf-93ca05c350234282b833-slow-cap",
+          "execution": "ok",
+          "score": 1,
+          "archive_sha256": "fded0c86670b3db316cfca06bd20509368c6745fbae69a07b75a7ebb97c8e377",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "bff2390972f4467e7a0504bfdada9fe41b8913771c4df91615fd285e328f5d19",
+          "task_package_sha256": "c0a7c53041eaa88be8b7b3c7b57cc5d671c78beab2774ff4ab4f30fc0ee36093",
+          "backend_version": "2026/10/11 07:21:09 System is not a supported distribution\n2026/10/11 07:21:09 An error occurred. We don't recognize OS \n2026/10/11 07:21:09 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:21:09 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "e8b9cba6f92e5a7b2b5a5a6f318d9699ffa2854d5a5af875b75537b3fa32f9bc",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "c22a651d1c263aa1d99c80e7092e8b67c41a086417a94a35808dcb3c876dccd7",
+          "waveform_rows": 48047,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 1.206330107396756e-12
+          },
+          "stage_end_times": [
+            0.0,
+            2.62e-05,
+            3.42e-05,
+            4.2199999999999996e-05,
+            5.02e-05,
+            5.82e-05
+          ],
+          "failures": []
+        },
+        {
+          "condition": "offset-timeout",
+          "job_id": "bf-2f2622afd27c4c418fc3-offset-timeout",
+          "execution": "ok",
+          "score": 1,
+          "archive_sha256": "1367238ec8d2f0802d0ecc4fc4279e08214a7d72d21730753a0901ea18290f06",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "bff2390972f4467e7a0504bfdada9fe41b8913771c4df91615fd285e328f5d19",
+          "task_package_sha256": "94051f62396c6325f2311678cc7191b308f4f56d4b67452dbb02400f2e009087",
+          "backend_version": "2026/10/11 07:21:33 System is not a supported distribution\n2026/10/11 07:21:33 An error occurred. We don't recognize OS \n2026/10/11 07:21:33 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:21:33 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "e8b9cba6f92e5a7b2b5a5a6f318d9699ffa2854d5a5af875b75537b3fa32f9bc",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "8b5a2ea5a43cce6238cc27db826cbb1780387906ddf15c5798f21a8a2d268a60",
+          "waveform_rows": 48049,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 1.152092504439775e-12
+          },
+          "stage_end_times": [
+            0.0,
+            7e-05,
+            0.00010999999999999999,
+            0.00015,
+            0.00018999999999999998,
+            0.00022999999999999998
+          ],
+          "failures": []
+        }
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-response-experiment",
+      "variant": "fixed-schedule",
+      "expected_pass": false,
+      "semantic_behavior": "advances on fixed time without actual qualification",
+      "candidate_file_sha256": "5fd2158e2d604d9ac235a0ce3e4ce2892ae0cae26993be1c0bdae3572bae8a44",
+      "conditions": [
+        {
+          "condition": "healthy",
+          "job_id": "bf-57118b00666446c49cd0-healthy",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "4a46380142410689d491a6892032c1032d078c69bd9f98e33d336965226e1bb1",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "c5e5d3aa6759555261635f5e47c5c00cc2b0910d89417945e1bda0eb5a2856a4",
+          "task_package_sha256": "fa7f05c530ec4de81810c4d2ade46740862bdc14bdd76f44fb24f1369ffbca78",
+          "backend_version": "2026/10/11 07:22:02 System is not a supported distribution\n2026/10/11 07:22:02 An error occurred. We don't recognize OS \n2026/10/11 07:22:02 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:22:02 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "5fd2158e2d604d9ac235a0ce3e4ce2892ae0cae26993be1c0bdae3572bae8a44",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "bd60fd1667fe152501fdb9862879cdeddd92eb01381bc757473caf5653989e3b",
+          "waveform_rows": 48048,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [
+            0.0,
+            2.1949999999999998e-05,
+            2.995e-05,
+            3.795e-05,
+            4.595e-05,
+            5.395e-05
+          ],
+          "failures": [
+            {
+              "time": 2.100020799742784e-05,
+              "node": "stage",
+              "expected": 0.0,
+              "actual": 0.2079974257687783,
+              "tolerance": 0.002
+            },
+            {
+              "time": 2.100020799742784e-05,
+              "node": "startup_peak_mv",
+              "expected": 0.0,
+              "actual": 249.5969109225339,
+              "tolerance": 0.3
+            },
+            {
+              "time": 2.100020799742784e-05,
+              "node": "startup_offset_mv",
+              "expected": 0.0,
+              "actual": 0.4912673302689881,
+              "tolerance": 0.3
+            },
+            {
+              "time": 2.100020799742784e-05,
+              "node": "startup_recovery_us",
+              "expected": 0.0,
+              "actual": -0.2079974257687783,
+              "tolerance": 0.075
+            }
+          ]
+        },
+        {
+          "condition": "slow-cap",
+          "job_id": "bf-fe046f77df2743ffb532-slow-cap",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "6e4443aa0ea85a653d264cd9ecd336339b917e37e0dcd112bcf44e450ae79990",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "c5e5d3aa6759555261635f5e47c5c00cc2b0910d89417945e1bda0eb5a2856a4",
+          "task_package_sha256": "c0a7c53041eaa88be8b7b3c7b57cc5d671c78beab2774ff4ab4f30fc0ee36093",
+          "backend_version": "2026/10/11 07:22:25 System is not a supported distribution\n2026/10/11 07:22:25 An error occurred. We don't recognize OS \n2026/10/11 07:22:25 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:22:25 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "5fd2158e2d604d9ac235a0ce3e4ce2892ae0cae26993be1c0bdae3572bae8a44",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "fb5731c4ac8b232e2d3b8a498a09c825eeaef74a6ffb95d03ba0a2030763a23f",
+          "waveform_rows": 48062,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [
+            0.0,
+            2.6099999999999997e-05,
+            3.4099999999999995e-05,
+            4.21e-05,
+            5.01e-05,
+            5.8099999999999996e-05
+          ],
+          "failures": [
+            {
+              "time": 2.500008757607588e-05,
+              "node": "stage",
+              "expected": 0.0,
+              "actual": 0.08757607317133365,
+              "tolerance": 0.002
+            },
+            {
+              "time": 2.500008757607588e-05,
+              "node": "startup_peak_mv",
+              "expected": 0.0,
+              "actual": 105.0912878056004,
+              "tolerance": 0.3
+            },
+            {
+              "time": 2.500008757607588e-05,
+              "node": "startup_offset_mv",
+              "expected": 0.0,
+              "actual": -4.665466385000435,
+              "tolerance": 0.3
+            },
+            {
+              "time": 2.500008757607588e-05,
+              "node": "startup_recovery_us",
+              "expected": 0.0,
+              "actual": -0.08757607317133365,
+              "tolerance": 0.075
+            }
+          ]
+        },
+        {
+          "condition": "offset-timeout",
+          "job_id": "bf-399c8585c2564599940a-offset-timeout",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "bd8e35a4a228b4ed9d5f35e7bb3b47143781f5d1623dc2f986e52e9f04d15c32",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "c5e5d3aa6759555261635f5e47c5c00cc2b0910d89417945e1bda0eb5a2856a4",
+          "task_package_sha256": "94051f62396c6325f2311678cc7191b308f4f56d4b67452dbb02400f2e009087",
+          "backend_version": "2026/10/11 07:22:50 System is not a supported distribution\n2026/10/11 07:22:50 An error occurred. We don't recognize OS \n2026/10/11 07:22:50 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:22:50 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "5fd2158e2d604d9ac235a0ce3e4ce2892ae0cae26993be1c0bdae3572bae8a44",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "a899dc4ccba8e227ef0703cee284951fa5c8e8f87c23b843e0cb61406ca10732",
+          "waveform_rows": 48048,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [
+            0.0,
+            7e-05,
+            0.00010999999999999999,
+            0.00015,
+            0.00018999999999999998,
+            0.00022999999999999998
+          ],
+          "failures": [
+            {
+              "time": 2.100021177451614e-05,
+              "node": "stage",
+              "expected": 0.0,
+              "actual": 0.211774514067347,
+              "tolerance": 0.002
+            },
+            {
+              "time": 2.100021177451614e-05,
+              "node": "startup_peak_mv",
+              "expected": 0.0,
+              "actual": 254.1294168808163,
+              "tolerance": 0.3
+            },
+            {
+              "time": 2.100021177451614e-05,
+              "node": "startup_offset_mv",
+              "expected": 0.0,
+              "actual": -12.03968283787869,
+              "tolerance": 0.3
+            },
+            {
+              "time": 2.100021177451614e-05,
+              "node": "startup_recovery_us",
+              "expected": 0.0,
+              "actual": -0.211774514067347,
+              "tolerance": 0.075
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-response-experiment",
+      "variant": "skip-load",
+      "expected_pass": false,
+      "semantic_behavior": "does not apply load disturbance",
+      "candidate_file_sha256": "fe08c3ab47db66ddd89ef3443f7736c2eb72b0d638ef3e4ce6628ef10d18eb17",
+      "conditions": [
+        {
+          "condition": "healthy",
+          "job_id": "bf-361cae2b07174faa881e-healthy",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "77f14963901fe5bc7c1fa2f9eca9bd2cd0867fe3c02f42dea2abcacae1e709fe",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "6b6f4f2e637d91906faa6bdfcc94669fb49a10a8f37916563a2433b8da51570e",
+          "task_package_sha256": "fa7f05c530ec4de81810c4d2ade46740862bdc14bdd76f44fb24f1369ffbca78",
+          "backend_version": "2026/10/11 07:23:13 System is not a supported distribution\n2026/10/11 07:23:13 An error occurred. We don't recognize OS \n2026/10/11 07:23:13 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:23:13 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "fe08c3ab47db66ddd89ef3443f7736c2eb72b0d638ef3e4ce6628ef10d18eb17",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "52248f0847e9c28133d93fec3dcc636f5db0d9f978dcdf8f5305289a407abdda",
+          "waveform_rows": 48046,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [
+            0.0,
+            2.1949999999999998e-05,
+            2.995e-05,
+            3.795e-05,
+            4.595e-05,
+            5.395e-05
+          ],
+          "failures": [
+            {
+              "time": 3.795699999999625e-05,
+              "node": "load_cmd",
+              "expected": 1.0,
+              "actual": 0.0,
+              "tolerance": 0.002
+            },
+            {
+              "time": 3.795699999999625e-05,
+              "node": "load_current",
+              "expected": 0.01,
+              "actual": 0.0,
+              "tolerance": 2e-05
+            },
+            {
+              "time": 3.796199999999625e-05,
+              "node": "load_cmd",
+              "expected": 1.0,
+              "actual": 0.0,
+              "tolerance": 0.002
+            },
+            {
+              "time": 3.796199999999625e-05,
+              "node": "load_current",
+              "expected": 0.01,
+              "actual": 0.0,
+              "tolerance": 2e-05
+            }
+          ]
+        },
+        {
+          "condition": "slow-cap",
+          "job_id": "bf-810f48ec525c43e29439-slow-cap",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "d47fa4ea55c008863eaa18b81e09b1ba25fc8c2f9d3e23431170160eb9598cfc",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "6b6f4f2e637d91906faa6bdfcc94669fb49a10a8f37916563a2433b8da51570e",
+          "task_package_sha256": "c0a7c53041eaa88be8b7b3c7b57cc5d671c78beab2774ff4ab4f30fc0ee36093",
+          "backend_version": "2026/10/11 07:23:40 System is not a supported distribution\n2026/10/11 07:23:40 An error occurred. We don't recognize OS \n2026/10/11 07:23:40 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:23:40 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "fe08c3ab47db66ddd89ef3443f7736c2eb72b0d638ef3e4ce6628ef10d18eb17",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "aabf60edc41efa5f8e2ecf790790600dfe64fff2cdddbd7ceddeeba91be4ed64",
+          "waveform_rows": 48046,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [
+            0.0,
+            2.62e-05,
+            3.42e-05,
+            4.2199999999999996e-05,
+            5.02e-05,
+            5.82e-05
+          ],
+          "failures": [
+            {
+              "time": 4.22069999999959e-05,
+              "node": "load_cmd",
+              "expected": 1.0,
+              "actual": 0.0,
+              "tolerance": 0.002
+            },
+            {
+              "time": 4.22069999999959e-05,
+              "node": "load_current",
+              "expected": 0.01,
+              "actual": 0.0,
+              "tolerance": 2e-05
+            },
+            {
+              "time": 4.22119999999959e-05,
+              "node": "load_cmd",
+              "expected": 1.0,
+              "actual": 0.0,
+              "tolerance": 0.002
+            },
+            {
+              "time": 4.22119999999959e-05,
+              "node": "load_current",
+              "expected": 0.01,
+              "actual": 0.0,
+              "tolerance": 2e-05
+            }
+          ]
+        },
+        {
+          "condition": "offset-timeout",
+          "job_id": "bf-d3f47dca56274a6d9008-offset-timeout",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "8aea7ae3c14a085dda9d719876c2bc9fca6ddff93b350e78d57765dc89ff3c11",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "6b6f4f2e637d91906faa6bdfcc94669fb49a10a8f37916563a2433b8da51570e",
+          "task_package_sha256": "94051f62396c6325f2311678cc7191b308f4f56d4b67452dbb02400f2e009087",
+          "backend_version": "2026/10/11 07:24:03 System is not a supported distribution\n2026/10/11 07:24:03 An error occurred. We don't recognize OS \n2026/10/11 07:24:03 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:24:03 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "fe08c3ab47db66ddd89ef3443f7736c2eb72b0d638ef3e4ce6628ef10d18eb17",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "a60e7e797afbea5286beea3ee40f811966ea6ee86180750989d5ddd61232b111",
+          "waveform_rows": 48046,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [
+            0.0,
+            7e-05,
+            0.00010999999999999999,
+            0.00015,
+            0.00018999999999999998,
+            0.00022999999999999998
+          ],
+          "failures": [
+            {
+              "time": 0.0001500069999999792,
+              "node": "load_cmd",
+              "expected": 1.0,
+              "actual": 0.0,
+              "tolerance": 0.002
+            },
+            {
+              "time": 0.0001500069999999792,
+              "node": "load_current",
+              "expected": 0.01,
+              "actual": 0.0,
+              "tolerance": 2e-05
+            },
+            {
+              "time": 0.0001500119999999792,
+              "node": "load_cmd",
+              "expected": 1.0,
+              "actual": 0.0,
+              "tolerance": 0.002
+            },
+            {
+              "time": 0.0001500119999999792,
+              "node": "load_current",
+              "expected": 0.01,
+              "actual": 0.0,
+              "tolerance": 2e-05
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-response-experiment",
+      "variant": "stale-recovery",
+      "expected_pass": false,
+      "semantic_behavior": "carries qualification across disturbances",
+      "candidate_file_sha256": "6938e28dd1bb0ca4d2e085931cb80beaca8e2a8299d04d04a7912a08c8b79730",
+      "conditions": [
+        {
+          "condition": "healthy",
+          "job_id": "bf-37b54c0cba5541ea990f-healthy",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "fc6c5b92a289f5135cfecb51955c62812080d82be5ca972ddf697524b50a7a00",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "2aa3137274c7834e3cd086783262ba34b5ed9d4e2edcb9a1a15794fb271231b0",
+          "task_package_sha256": "fa7f05c530ec4de81810c4d2ade46740862bdc14bdd76f44fb24f1369ffbca78",
+          "backend_version": "2026/10/11 07:24:30 System is not a supported distribution\n2026/10/11 07:24:30 An error occurred. We don't recognize OS \n2026/10/11 07:24:30 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:24:30 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "6938e28dd1bb0ca4d2e085931cb80beaca8e2a8299d04d04a7912a08c8b79730",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "9aa052edaf61a87dbce11c0654ff677a85745c34c30fe545a7aa7c4deb6eff47",
+          "waveform_rows": 48048,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [
+            0.0,
+            2.1949999999999998e-05,
+            2.995e-05,
+            3.795e-05,
+            4.595e-05,
+            5.395e-05
+          ],
+          "failures": [
+            {
+              "time": 2.995652756096224e-05,
+              "node": "line_up_recovery_us",
+              "expected": 0.05000000000000122,
+              "actual": -0.9500000000001518,
+              "tolerance": 0.075
+            },
+            {
+              "time": 2.995937474931491e-05,
+              "node": "line_up_recovery_us",
+              "expected": 0.05000000000000122,
+              "actual": -0.9500000000001518,
+              "tolerance": 0.075
+            },
+            {
+              "time": 2.996437474931491e-05,
+              "node": "line_up_recovery_us",
+              "expected": 0.05000000000000122,
+              "actual": -0.9500000000001518,
+              "tolerance": 0.075
+            },
+            {
+              "time": 2.996937474931491e-05,
+              "node": "line_up_recovery_us",
+              "expected": 0.05000000000000122,
+              "actual": -0.9500000000001518,
+              "tolerance": 0.075
+            }
+          ]
+        },
+        {
+          "condition": "slow-cap",
+          "job_id": "bf-cf8c61be5c94487881ce-slow-cap",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "2c8728b347b1c86f518e520064119bcb919466ab92153bbeee4c40affb00f8bd",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "2aa3137274c7834e3cd086783262ba34b5ed9d4e2edcb9a1a15794fb271231b0",
+          "task_package_sha256": "c0a7c53041eaa88be8b7b3c7b57cc5d671c78beab2774ff4ab4f30fc0ee36093",
+          "backend_version": "2026/10/11 07:24:53 System is not a supported distribution\n2026/10/11 07:24:53 An error occurred. We don't recognize OS \n2026/10/11 07:24:53 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:24:53 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "6938e28dd1bb0ca4d2e085931cb80beaca8e2a8299d04d04a7912a08c8b79730",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "cc3d53769c67b9a86d13305bad33c7a9fa1200a70078c23682f556819a92392a",
+          "waveform_rows": 48048,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [
+            0.0,
+            2.62e-05,
+            3.42e-05,
+            4.2199999999999996e-05,
+            5.02e-05,
+            5.82e-05
+          ],
+          "failures": [
+            {
+              "time": 3.420644553372611e-05,
+              "node": "line_up_recovery_us",
+              "expected": 0.049999999999997824,
+              "actual": -0.9500000000001518,
+              "tolerance": 0.075
+            },
+            {
+              "time": 3.420923120309889e-05,
+              "node": "line_up_recovery_us",
+              "expected": 0.049999999999997824,
+              "actual": -0.9500000000001518,
+              "tolerance": 0.075
+            },
+            {
+              "time": 3.421423120309888e-05,
+              "node": "line_up_recovery_us",
+              "expected": 0.049999999999997824,
+              "actual": -0.9500000000001518,
+              "tolerance": 0.075
+            },
+            {
+              "time": 3.421923120309888e-05,
+              "node": "line_up_recovery_us",
+              "expected": 0.049999999999997824,
+              "actual": -0.9500000000001518,
+              "tolerance": 0.075
+            }
+          ]
+        },
+        {
+          "condition": "offset-timeout",
+          "job_id": "bf-7ba4581082c44a80a604-offset-timeout",
+          "execution": "ok",
+          "score": 1,
+          "archive_sha256": "ae02316b9ac8d8aa7f6c19e2b17c4854c9107ae7ccee4167fe62a9812052b310",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "2aa3137274c7834e3cd086783262ba34b5ed9d4e2edcb9a1a15794fb271231b0",
+          "task_package_sha256": "94051f62396c6325f2311678cc7191b308f4f56d4b67452dbb02400f2e009087",
+          "backend_version": "2026/10/11 07:25:17 System is not a supported distribution\n2026/10/11 07:25:17 An error occurred. We don't recognize OS \n2026/10/11 07:25:17 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:25:17 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "6938e28dd1bb0ca4d2e085931cb80beaca8e2a8299d04d04a7912a08c8b79730",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "be0af75e22d110d24e9489d1585573a21767af03a488600452ee2f80973c797f",
+          "waveform_rows": 48048,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [
+            0.0,
+            7e-05,
+            0.00010999999999999999,
+            0.00015,
+            0.00018999999999999998,
+            0.00022999999999999998
+          ],
+          "failures": []
+        }
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-response-experiment",
+      "variant": "zero-peaks",
+      "expected_pass": false,
+      "semantic_behavior": "suppresses observed peak deviation",
+      "candidate_file_sha256": "30a698bdc44852b55a851032ac33ecc5a15e183ca944c50108f4db3e1d4a5b57",
+      "conditions": [
+        {
+          "condition": "healthy",
+          "job_id": "bf-07d3ef07d0b54e009dca-healthy",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "499aa62af22e666fc7926dd393db25b111778246b85021a2110e071f3f833a9d",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "65e2cab044c3618d4d5b17bfe7d89809cf298ce7ac4be7f972de761c61c999cc",
+          "task_package_sha256": "fa7f05c530ec4de81810c4d2ade46740862bdc14bdd76f44fb24f1369ffbca78",
+          "backend_version": "2026/10/11 07:25:44 System is not a supported distribution\n2026/10/11 07:25:44 An error occurred. We don't recognize OS \n2026/10/11 07:25:44 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:25:44 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "30a698bdc44852b55a851032ac33ecc5a15e183ca944c50108f4db3e1d4a5b57",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "544acb3532fad805321c08d0b20073c5bfc171332c888a145ac478258303c8cb",
+          "waveform_rows": 48048,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [
+            0.0,
+            2.1949999999999998e-05,
+            2.995e-05,
+            3.795e-05,
+            4.595e-05,
+            5.395e-05
+          ],
+          "failures": [
+            {
+              "time": 2.195599102911989e-05,
+              "node": "startup_peak_mv",
+              "expected": 1200.0000000000002,
+              "actual": 0.0,
+              "tolerance": 0.3
+            },
+            {
+              "time": 2.195838276235446e-05,
+              "node": "startup_peak_mv",
+              "expected": 1200.0000000000002,
+              "actual": 0.0,
+              "tolerance": 0.3
+            },
+            {
+              "time": 2.196305922027304e-05,
+              "node": "startup_peak_mv",
+              "expected": 1200.0000000000002,
+              "actual": 0.0,
+              "tolerance": 0.3
+            },
+            {
+              "time": 2.196805922027304e-05,
+              "node": "startup_peak_mv",
+              "expected": 1200.0000000000002,
+              "actual": 0.0,
+              "tolerance": 0.3
+            }
+          ]
+        },
+        {
+          "condition": "slow-cap",
+          "job_id": "bf-8bd3b811b5a54f239956-slow-cap",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "f3038af0ce1b57d632d0a5d656163b95bc3a22e2adeb350c258e606b2852d14b",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "65e2cab044c3618d4d5b17bfe7d89809cf298ce7ac4be7f972de761c61c999cc",
+          "task_package_sha256": "c0a7c53041eaa88be8b7b3c7b57cc5d671c78beab2774ff4ab4f30fc0ee36093",
+          "backend_version": "2026/10/11 07:26:07 System is not a supported distribution\n2026/10/11 07:26:07 An error occurred. We don't recognize OS \n2026/10/11 07:26:07 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:26:07 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "30a698bdc44852b55a851032ac33ecc5a15e183ca944c50108f4db3e1d4a5b57",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "494dee425fb24dcdb20eca5a749bb6993f3c2018e3628a5b2787be3e44ea52ef",
+          "waveform_rows": 48048,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [
+            0.0,
+            2.62e-05,
+            3.42e-05,
+            4.2199999999999996e-05,
+            5.02e-05,
+            5.82e-05
+          ],
+          "failures": [
+            {
+              "time": 2.620598773884959e-05,
+              "node": "startup_peak_mv",
+              "expected": 1200.0,
+              "actual": 0.0,
+              "tolerance": 0.3
+            },
+            {
+              "time": 2.620837651513798e-05,
+              "node": "startup_peak_mv",
+              "expected": 1200.0,
+              "actual": 0.0,
+              "tolerance": 0.3
+            },
+            {
+              "time": 2.621304359484017e-05,
+              "node": "startup_peak_mv",
+              "expected": 1200.0,
+              "actual": 0.0,
+              "tolerance": 0.3
+            },
+            {
+              "time": 2.621804359484017e-05,
+              "node": "startup_peak_mv",
+              "expected": 1200.0,
+              "actual": 0.0,
+              "tolerance": 0.3
+            }
+          ]
+        },
+        {
+          "condition": "offset-timeout",
+          "job_id": "bf-e8e2fafdf1844a068d06-offset-timeout",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "3e0133d0cea13dfeab6030372457fc31775233a4ba8515d80c34c8d491dbd385",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "65e2cab044c3618d4d5b17bfe7d89809cf298ce7ac4be7f972de761c61c999cc",
+          "task_package_sha256": "94051f62396c6325f2311678cc7191b308f4f56d4b67452dbb02400f2e009087",
+          "backend_version": "2026/10/11 07:26:34 System is not a supported distribution\n2026/10/11 07:26:34 An error occurred. We don't recognize OS \n2026/10/11 07:26:34 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:26:34 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "30a698bdc44852b55a851032ac33ecc5a15e183ca944c50108f4db3e1d4a5b57",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "e615ffe75f2acc4bf66439b07ad24efad7ce7ec1a10916d0742e803e31478690",
+          "waveform_rows": 48048,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [
+            0.0,
+            7e-05,
+            0.00010999999999999999,
+            0.00015,
+            0.00018999999999999998,
+            0.00022999999999999998
+          ],
+          "failures": [
+            {
+              "time": 7.000560858311551e-05,
+              "node": "startup_peak_mv",
+              "expected": 1200.0000000000002,
+              "actual": 0.0,
+              "tolerance": 0.3
+            },
+            {
+              "time": 7.000751148488023e-05,
+              "node": "startup_peak_mv",
+              "expected": 1200.0000000000002,
+              "actual": 0.0,
+              "tolerance": 0.3
+            },
+            {
+              "time": 7.001074372829615e-05,
+              "node": "startup_peak_mv",
+              "expected": 1200.0000000000002,
+              "actual": 0.0,
+              "tolerance": 0.3
+            },
+            {
+              "time": 7.001574372829615e-05,
+              "node": "startup_peak_mv",
+              "expected": 1200.0000000000002,
+              "actual": 0.0,
+              "tolerance": 0.3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-response-experiment",
+      "variant": "input-drive",
+      "expected_pass": false,
+      "semantic_behavior": "illegally replaces actual DUT output",
+      "candidate_file_sha256": "980090aeadafc508a9e9d7a0401bafdb1bf9eb2b3e5e9ea0b4ba761861e7b5eb",
+      "conditions": [
+        {
+          "condition": "healthy",
+          "job_id": "bf-335ba1df5f5b49cc859e-healthy",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "f2605588fd29da15c3d06dfee6f47f326d07dd1464192e4768197632b38b4d3b",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "5bf89f49335dc3d4c1b5c5b6d8e98f7922d16b6c824f4b5f68222a0a492105e0",
+          "task_package_sha256": "fa7f05c530ec4de81810c4d2ade46740862bdc14bdd76f44fb24f1369ffbca78",
+          "backend_version": "2026/10/11 07:27:03 System is not a supported distribution\n2026/10/11 07:27:03 An error occurred. We don't recognize OS \n2026/10/11 07:27:03 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:27:03 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "980090aeadafc508a9e9d7a0401bafdb1bf9eb2b3e5e9ea0b4ba761861e7b5eb",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "3b59e6e8cbd46153fd780fa9d13bdd3177eff9d502d5e10b224b371d0282edd3",
+          "waveform_rows": 48046,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 0.3008819530807136
+          },
+          "stage_end_times": [
+            0.0,
+            2.1949999999999998e-05,
+            2.995e-05,
+            3.795e-05,
+            4.595e-05,
+            5.395e-05
+          ],
+          "failures": [
+            {
+              "kind": "read-only-input-current",
+              "node": "VOBSOUT:p",
+              "peak_a": 0.3008819530807136,
+              "limit_a": 1e-10
+            }
+          ]
+        },
+        {
+          "condition": "slow-cap",
+          "job_id": "bf-c94b4d81f0f8418ebaee-slow-cap",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "e4366543ede83d91cccbda15602868b7da3bb7faee0cf019e9cb9287178e0f62",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "5bf89f49335dc3d4c1b5c5b6d8e98f7922d16b6c824f4b5f68222a0a492105e0",
+          "task_package_sha256": "c0a7c53041eaa88be8b7b3c7b57cc5d671c78beab2774ff4ab4f30fc0ee36093",
+          "backend_version": "2026/10/11 07:27:30 System is not a supported distribution\n2026/10/11 07:27:30 An error occurred. We don't recognize OS \n2026/10/11 07:27:30 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:27:30 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "980090aeadafc508a9e9d7a0401bafdb1bf9eb2b3e5e9ea0b4ba761861e7b5eb",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "182534b9b0d3a3bf78e651a9edb48afee7db61840283b31094d4f2a131ec3804",
+          "waveform_rows": 48046,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 0.3008819530807136
+          },
+          "stage_end_times": [
+            0.0,
+            2.6e-05,
+            3.4e-05,
+            4.2e-05,
+            4.9999999999999996e-05,
+            5.8e-05
+          ],
+          "failures": [
+            {
+              "time": 2.595019272616904e-05,
+              "node": "stage",
+              "expected": 0.0,
+              "actual": 0.1927261661768762,
+              "tolerance": 0.002
+            },
+            {
+              "time": 2.595019272616904e-05,
+              "node": "startup_recovery_us",
+              "expected": 0.0,
+              "actual": 4.818154154422427,
+              "tolerance": 0.075
+            },
+            {
+              "time": 2.595019272616904e-05,
+              "node": "startup_status",
+              "expected": 0.0,
+              "actual": 0.1927261661768762,
+              "tolerance": 0.002
+            },
+            {
+              "time": 2.595019272616904e-05,
+              "node": "line_cmd",
+              "expected": 1.8,
+              "actual": 1.828908924926531,
+              "tolerance": 0.001
+            }
+          ]
+        },
+        {
+          "condition": "offset-timeout",
+          "job_id": "bf-ca47087c2ab24f44ba78-offset-timeout",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "f90967ea94dc035ce0bf6eec9a51a29562c875ee4a4893b0aa5bf04d481e17c4",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "5bf89f49335dc3d4c1b5c5b6d8e98f7922d16b6c824f4b5f68222a0a492105e0",
+          "task_package_sha256": "94051f62396c6325f2311678cc7191b308f4f56d4b67452dbb02400f2e009087",
+          "backend_version": "2026/10/11 07:27:54 System is not a supported distribution\n2026/10/11 07:27:54 An error occurred. We don't recognize OS \n2026/10/11 07:27:54 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:27:54 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "980090aeadafc508a9e9d7a0401bafdb1bf9eb2b3e5e9ea0b4ba761861e7b5eb",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "320e900c93497a4400692048347fee8684b6d2309cdfd3cea098fcb5529defdd",
+          "waveform_rows": 48050,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 0.2988819532448198
+          },
+          "stage_end_times": [
+            0.0,
+            2.1949999999999998e-05,
+            2.995e-05,
+            3.795e-05,
+            4.595e-05,
+            5.395e-05
+          ],
+          "failures": [
+            {
+              "kind": "read-only-input-current",
+              "node": "VOBSOUT:p",
+              "peak_a": 0.2988819532448198,
+              "limit_a": 1e-10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-response-experiment",
+      "variant": "input-load",
+      "expected_pass": false,
+      "semantic_behavior": "loads DUT observation input",
+      "candidate_file_sha256": "288ec2949c307988abe3f4303309cead9c0ff427c68c2d7f736f50f1815ca35e",
+      "conditions": [
+        {
+          "condition": "healthy",
+          "job_id": "bf-79510525b75b4c96988f-healthy",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "6aef1d2f70903ced0c4ab308a8c1167c0edbcda270cb92015c25123218af9743",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "e1d0a06a8a11932f60500dc69dd42ac5765b8cc34e1e88744960b037c5b19167",
+          "task_package_sha256": "fa7f05c530ec4de81810c4d2ade46740862bdc14bdd76f44fb24f1369ffbca78",
+          "backend_version": "2026/10/11 07:28:21 System is not a supported distribution\n2026/10/11 07:28:21 An error occurred. We don't recognize OS \n2026/10/11 07:28:21 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:28:21 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "288ec2949c307988abe3f4303309cead9c0ff427c68c2d7f736f50f1815ca35e",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "ee159e40deea121db973e18cca0b2928477528020df0b58864acee12b8ebe4d8",
+          "waveform_rows": 48048,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 1.211014748692217e-06
+          },
+          "stage_end_times": [
+            0.0,
+            2.1949999999999998e-05,
+            2.995e-05,
+            3.795e-05,
+            4.595e-05,
+            5.395e-05
+          ],
+          "failures": [
+            {
+              "kind": "read-only-input-current",
+              "node": "VOBSOUT:p",
+              "peak_a": 1.211014748692217e-06,
+              "limit_a": 1e-10
+            }
+          ]
+        },
+        {
+          "condition": "slow-cap",
+          "job_id": "bf-43d62f00cf4a4f37b7e6-slow-cap",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "e6b1545edc06db061af428716b9a85dce232a98aec6c26c24330866a9bac2878",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "e1d0a06a8a11932f60500dc69dd42ac5765b8cc34e1e88744960b037c5b19167",
+          "task_package_sha256": "c0a7c53041eaa88be8b7b3c7b57cc5d671c78beab2774ff4ab4f30fc0ee36093",
+          "backend_version": "2026/10/11 07:28:49 System is not a supported distribution\n2026/10/11 07:28:49 An error occurred. We don't recognize OS \n2026/10/11 07:28:49 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:28:49 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "288ec2949c307988abe3f4303309cead9c0ff427c68c2d7f736f50f1815ca35e",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "5f78f7d45e9377c25f6475216a1c666c35ca02584b07ba11c866b4fec53a7859",
+          "waveform_rows": 48048,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 1.206329982169867e-06
+          },
+          "stage_end_times": [
+            0.0,
+            2.62e-05,
+            3.42e-05,
+            4.2199999999999996e-05,
+            5.02e-05,
+            5.82e-05
+          ],
+          "failures": [
+            {
+              "kind": "read-only-input-current",
+              "node": "VOBSOUT:p",
+              "peak_a": 1.206329982169867e-06,
+              "limit_a": 1e-10
+            }
+          ]
+        },
+        {
+          "condition": "offset-timeout",
+          "job_id": "bf-77d02262213b42d88d13-offset-timeout",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "7db14a7ffcc3402ad7ec7448d848faf5d788483a6326bc9c8e5e9525c26ab914",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "e1d0a06a8a11932f60500dc69dd42ac5765b8cc34e1e88744960b037c5b19167",
+          "task_package_sha256": "94051f62396c6325f2311678cc7191b308f4f56d4b67452dbb02400f2e009087",
+          "backend_version": "2026/10/11 07:29:12 System is not a supported distribution\n2026/10/11 07:29:12 An error occurred. We don't recognize OS \n2026/10/11 07:29:12 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:29:12 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "288ec2949c307988abe3f4303309cead9c0ff427c68c2d7f736f50f1815ca35e",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "3ec55063b952ccc12e2819000e35fc626b43964094d00a0e410ffdf2da848cd8",
+          "waveform_rows": 48048,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 1.15209234274293e-06
+          },
+          "stage_end_times": [
+            0.0,
+            7e-05,
+            0.00010999999999999999,
+            0.00015,
+            0.00018999999999999998,
+            0.00022999999999999998
+          ],
+          "failures": [
+            {
+              "kind": "read-only-input-current",
+              "node": "VOBSOUT:p",
+              "peak_a": 1.15209234274293e-06,
+              "limit_a": 1e-10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-ldo-response-experiment",
+      "variant": "always-timeout",
+      "expected_pass": false,
+      "semantic_behavior": "always reports timeout despite health",
+      "candidate_file_sha256": "8f048f3c50751b85de57d599a12c09caaa12daf2927b06da0f3ce7b2140a5aff",
+      "conditions": [
+        {
+          "condition": "healthy",
+          "job_id": "bf-95863f64830044e5bac5-healthy",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "85d949810255169c364e7c65db595302b837d7f83bad3338ec50b324d2d7d395",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "a6a2e3ff709753e641c84e4418781d0921baccaf51c79a5e32405837f96209fa",
+          "task_package_sha256": "fa7f05c530ec4de81810c4d2ade46740862bdc14bdd76f44fb24f1369ffbca78",
+          "backend_version": "2026/10/11 07:29:40 System is not a supported distribution\n2026/10/11 07:29:40 An error occurred. We don't recognize OS \n2026/10/11 07:29:40 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:29:40 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "8f048f3c50751b85de57d599a12c09caaa12daf2927b06da0f3ce7b2140a5aff",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "321c73e4679aff81ea5b98ffbf96d93a5145c5b1880e074f952cf2cdcfeeb834",
+          "waveform_rows": 48048,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [
+            0.0,
+            2.1949999999999998e-05,
+            2.995e-05,
+            3.795e-05,
+            4.595e-05,
+            5.395e-05
+          ],
+          "failures": [
+            {
+              "time": 2.195500000000223e-05,
+              "node": "stage",
+              "expected": 1.0,
+              "actual": 0.0,
+              "tolerance": 0.002
+            },
+            {
+              "time": 2.195500000000223e-05,
+              "node": "startup_peak_mv",
+              "expected": 1200.0000000000002,
+              "actual": 0.0,
+              "tolerance": 0.3
+            },
+            {
+              "time": 2.195500000000223e-05,
+              "node": "startup_offset_mv",
+              "expected": 3.5516228655423365,
+              "actual": 0.0,
+              "tolerance": 0.3
+            },
+            {
+              "time": 2.195500000000223e-05,
+              "node": "startup_recovery_us",
+              "expected": 21.0,
+              "actual": 0.0,
+              "tolerance": 0.075
+            }
+          ]
+        },
+        {
+          "condition": "slow-cap",
+          "job_id": "bf-24372b2377dc46c39b97-slow-cap",
+          "execution": "ok",
+          "score": 0,
+          "archive_sha256": "a166fb33a3e4bd9116366566635e4cda955633f4445d69438f98c50c15315ccd",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "a6a2e3ff709753e641c84e4418781d0921baccaf51c79a5e32405837f96209fa",
+          "task_package_sha256": "c0a7c53041eaa88be8b7b3c7b57cc5d671c78beab2774ff4ab4f30fc0ee36093",
+          "backend_version": "2026/10/11 07:30:04 System is not a supported distribution\n2026/10/11 07:30:04 An error occurred. We don't recognize OS \n2026/10/11 07:30:04 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:30:04 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "8f048f3c50751b85de57d599a12c09caaa12daf2927b06da0f3ce7b2140a5aff",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "2cf505371be23ec5b1fa6bf0a8ac259840cedb96efc6898e29abb1e37bf0671b",
+          "waveform_rows": 48048,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [
+            0.0,
+            2.62e-05,
+            3.42e-05,
+            4.2199999999999996e-05,
+            5.02e-05,
+            5.82e-05
+          ],
+          "failures": [
+            {
+              "time": 2.62050000000029e-05,
+              "node": "stage",
+              "expected": 1.0,
+              "actual": 0.0,
+              "tolerance": 0.002
+            },
+            {
+              "time": 2.62050000000029e-05,
+              "node": "startup_peak_mv",
+              "expected": 1200.0,
+              "actual": 0.0,
+              "tolerance": 0.3
+            },
+            {
+              "time": 2.62050000000029e-05,
+              "node": "startup_offset_mv",
+              "expected": 5.076092530293952,
+              "actual": 0.0,
+              "tolerance": 0.3
+            },
+            {
+              "time": 2.62050000000029e-05,
+              "node": "startup_recovery_us",
+              "expected": 25.25,
+              "actual": 0.0,
+              "tolerance": 0.075
+            }
+          ]
+        },
+        {
+          "condition": "offset-timeout",
+          "job_id": "bf-05408e98079e455f86c5-offset-timeout",
+          "execution": "ok",
+          "score": 1,
+          "archive_sha256": "d4e6a269eaf83e37f26dc965e254e97111f223c03c768bec797cd931a23ba1d6",
+          "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+          "candidate_sha256": "a6a2e3ff709753e641c84e4418781d0921baccaf51c79a5e32405837f96209fa",
+          "task_package_sha256": "94051f62396c6325f2311678cc7191b308f4f56d4b67452dbb02400f2e009087",
+          "backend_version": "2026/10/11 07:30:32 System is not a supported distribution\n2026/10/11 07:30:32 An error occurred. We don't recognize OS \n2026/10/11 07:30:32 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 07:30:32 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "candidate_file_sha256": "8f048f3c50751b85de57d599a12c09caaa12daf2927b06da0f3ce7b2140a5aff",
+          "checker_sha256": "92ac58093566118db315fc9eac734c5e512adea1f997fa061bb6de284d9fb2ed",
+          "waveform_sha256": "394ed61628f938a492867e17ce4d312cd4b9d64b1e3b7bceb1eee2de9ab199d5",
+          "waveform_rows": 48048,
+          "metrics": null,
+          "observation_current_peaks": {
+            "VOBSOUT:p": 0.0
+          },
+          "stage_end_times": [
+            0.0,
+            7e-05,
+            0.00010999999999999999,
+            0.00015,
+            0.00018999999999999998,
+            0.00022999999999999998
+          ],
+          "failures": []
+        }
+      ]
+    }
+  ],
+  "all_attempts": [
+    {
+      "run": "bench-smoke-r4",
+      "condition": "healthy",
+      "job_id": "bf-3fa62ce98911477aa6c4-healthy",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "274538899afef1a2c7d356ea57eafbf7fc6c245ece90a5a02c838a674472a6ec",
+      "candidate_sha256": "96858eab629ab033d941a877ca4f521936dba8fa30caac92f15cb28a6ff8fb58"
+    },
+    {
+      "run": "final-r5/v3-ldo-response-experiment-alternate",
+      "condition": "healthy",
+      "job_id": "bf-a20b3ff8288a4e8497b1-healthy",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "1bc317ba3ea8735a7221c70b902cbda024350f8cfba88c01df2b3ad76983762c",
+      "candidate_sha256": "2306e9c84c22826aa20a8dd5770c71b82183691565033c113f89a7f433487d09"
+    },
+    {
+      "run": "final-r5/v3-ldo-response-experiment-alternate",
+      "condition": "slow-cap",
+      "job_id": "bf-287d347758de4c29be10-slow-cap",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "1bc317ba3ea8735a7221c70b902cbda024350f8cfba88c01df2b3ad76983762c",
+      "candidate_sha256": "2306e9c84c22826aa20a8dd5770c71b82183691565033c113f89a7f433487d09"
+    },
+    {
+      "run": "final-r5/v3-ldo-response-experiment-alternate",
+      "condition": "offset-timeout",
+      "job_id": "bf-bad83a8ad6954030a91e-offset-timeout",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "1bc317ba3ea8735a7221c70b902cbda024350f8cfba88c01df2b3ad76983762c",
+      "candidate_sha256": "2306e9c84c22826aa20a8dd5770c71b82183691565033c113f89a7f433487d09"
+    },
+    {
+      "run": "final-r5/v3-ldo-response-experiment-reference",
+      "condition": "healthy",
+      "job_id": "bf-a167106e0b254662bea8-healthy",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "1bc317ba3ea8735a7221c70b902cbda024350f8cfba88c01df2b3ad76983762c",
+      "candidate_sha256": "96858eab629ab033d941a877ca4f521936dba8fa30caac92f15cb28a6ff8fb58"
+    },
+    {
+      "run": "final-r5/v3-ldo-response-experiment-reference",
+      "condition": "slow-cap",
+      "job_id": "bf-70519963983042e6a587-slow-cap",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "1bc317ba3ea8735a7221c70b902cbda024350f8cfba88c01df2b3ad76983762c",
+      "candidate_sha256": "96858eab629ab033d941a877ca4f521936dba8fa30caac92f15cb28a6ff8fb58"
+    },
+    {
+      "run": "final-r5/v3-ldo-response-experiment-reference",
+      "condition": "offset-timeout",
+      "job_id": "bf-0c7e24db0637409a9d5a-offset-timeout",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "1bc317ba3ea8735a7221c70b902cbda024350f8cfba88c01df2b3ad76983762c",
+      "candidate_sha256": "96858eab629ab033d941a877ca4f521936dba8fa30caac92f15cb28a6ff8fb58"
+    },
+    {
+      "run": "final-r5/v3-ldo-startup-measurement-alternate",
+      "condition": "nominal",
+      "job_id": "bf-3aade3dde42a4dd38006-nominal",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "6f276498e0adb68999f57eafd31c8047759141969b476a90f5d74b928e1f1ad1",
+      "candidate_sha256": "1ce3f191433c80d0436797e27dfe1105882357ccddd7c68a18808b42ab988f30"
+    },
+    {
+      "run": "final-r5/v3-ldo-startup-measurement-alternate",
+      "condition": "dropout-no-target",
+      "job_id": "bf-070cd7bb479448a38abd-dropout-no-target",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "6f276498e0adb68999f57eafd31c8047759141969b476a90f5d74b928e1f1ad1",
+      "candidate_sha256": "1ce3f191433c80d0436797e27dfe1105882357ccddd7c68a18808b42ab988f30"
+    },
+    {
+      "run": "final-r5/v3-ldo-startup-measurement-alternate",
+      "condition": "heavy-slow",
+      "job_id": "bf-dea20b861b364910a0cc-heavy-slow",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "6f276498e0adb68999f57eafd31c8047759141969b476a90f5d74b928e1f1ad1",
+      "candidate_sha256": "1ce3f191433c80d0436797e27dfe1105882357ccddd7c68a18808b42ab988f30"
+    },
+    {
+      "run": "final-r5/v3-ldo-startup-measurement-reference",
+      "condition": "nominal",
+      "job_id": "bf-e4fe0ebaf0e14403bdaf-nominal",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "6f276498e0adb68999f57eafd31c8047759141969b476a90f5d74b928e1f1ad1",
+      "candidate_sha256": "5b29f57505accfaa7025ee4e0316e2c0b416bc10a77d36b31abc52e17e604990"
+    },
+    {
+      "run": "final-r5/v3-ldo-startup-measurement-reference",
+      "condition": "dropout-no-target",
+      "job_id": "bf-c3503f58c3e644e3b7cb-dropout-no-target",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "6f276498e0adb68999f57eafd31c8047759141969b476a90f5d74b928e1f1ad1",
+      "candidate_sha256": "5b29f57505accfaa7025ee4e0316e2c0b416bc10a77d36b31abc52e17e604990"
+    },
+    {
+      "run": "final-r5/v3-ldo-startup-measurement-reference",
+      "condition": "heavy-slow",
+      "job_id": "bf-bec88d149da74b1ba917-heavy-slow",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "6f276498e0adb68999f57eafd31c8047759141969b476a90f5d74b928e1f1ad1",
+      "candidate_sha256": "5b29f57505accfaa7025ee4e0316e2c0b416bc10a77d36b31abc52e17e604990"
+    },
+    {
+      "run": "final-r6/v3-ldo-startup-measurement-alternate",
+      "condition": "nominal",
+      "job_id": "bf-313ef8fb40904bc58322-nominal",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "6f276498e0adb68999f57eafd31c8047759141969b476a90f5d74b928e1f1ad1",
+      "candidate_sha256": "6be49e9cb4d8833e1199775f1672a5b4452f345cd8e851cba01b40a93e606bda"
+    },
+    {
+      "run": "final-r6/v3-ldo-startup-measurement-alternate",
+      "condition": "dropout-no-target",
+      "job_id": "bf-9d5780c31b914b728224-dropout-no-target",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "6f276498e0adb68999f57eafd31c8047759141969b476a90f5d74b928e1f1ad1",
+      "candidate_sha256": "6be49e9cb4d8833e1199775f1672a5b4452f345cd8e851cba01b40a93e606bda"
+    },
+    {
+      "run": "final-r6/v3-ldo-startup-measurement-alternate",
+      "condition": "heavy-slow",
+      "job_id": "bf-5b95f8950b444e2d9a46-heavy-slow",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "6f276498e0adb68999f57eafd31c8047759141969b476a90f5d74b928e1f1ad1",
+      "candidate_sha256": "6be49e9cb4d8833e1199775f1672a5b4452f345cd8e851cba01b40a93e606bda"
+    },
+    {
+      "run": "final-r6/v3-ldo-startup-measurement-always-invalid",
+      "condition": "nominal",
+      "job_id": "bf-e1861b397d6e443f89e6-nominal",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "6f276498e0adb68999f57eafd31c8047759141969b476a90f5d74b928e1f1ad1",
+      "candidate_sha256": "000059802cc319f2da0de6e8bd70fd1820e3d76882700fd9a4f6c7894dab6068"
+    },
+    {
+      "run": "final-r6/v3-ldo-startup-measurement-always-invalid",
+      "condition": "dropout-no-target",
+      "job_id": "bf-3c31132b8bec487bbd1b-dropout-no-target",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "6f276498e0adb68999f57eafd31c8047759141969b476a90f5d74b928e1f1ad1",
+      "candidate_sha256": "000059802cc319f2da0de6e8bd70fd1820e3d76882700fd9a4f6c7894dab6068"
+    },
+    {
+      "run": "final-r6/v3-ldo-startup-measurement-always-invalid",
+      "condition": "heavy-slow",
+      "job_id": "bf-1875ce02e7424a21b73e-heavy-slow",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "6f276498e0adb68999f57eafd31c8047759141969b476a90f5d74b928e1f1ad1",
+      "candidate_sha256": "000059802cc319f2da0de6e8bd70fd1820e3d76882700fd9a4f6c7894dab6068"
+    },
+    {
+      "run": "final-r6/v3-ldo-startup-measurement-final-as-target",
+      "condition": "nominal",
+      "job_id": "bf-8357e933e21440ca9975-nominal",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "6f276498e0adb68999f57eafd31c8047759141969b476a90f5d74b928e1f1ad1",
+      "candidate_sha256": "7792ed8629b9b6044f5a5ac2371cc38215e05a7194d80493e65111d11448180a"
+    },
+    {
+      "run": "final-r6/v3-ldo-startup-measurement-final-as-target",
+      "condition": "dropout-no-target",
+      "job_id": "bf-2e91c358d8c54d93b0c8-dropout-no-target",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "6f276498e0adb68999f57eafd31c8047759141969b476a90f5d74b928e1f1ad1",
+      "candidate_sha256": "7792ed8629b9b6044f5a5ac2371cc38215e05a7194d80493e65111d11448180a"
+    },
+    {
+      "run": "final-r6/v3-ldo-startup-measurement-final-as-target",
+      "condition": "heavy-slow",
+      "job_id": "bf-91dc46badac549099e9f-heavy-slow",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "6f276498e0adb68999f57eafd31c8047759141969b476a90f5d74b928e1f1ad1",
+      "candidate_sha256": "7792ed8629b9b6044f5a5ac2371cc38215e05a7194d80493e65111d11448180a"
+    },
+    {
+      "run": "final-r6/v3-ldo-startup-measurement-first-entry",
+      "condition": "nominal",
+      "job_id": "bf-44fdc03fdb8e482da63f-nominal",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "6f276498e0adb68999f57eafd31c8047759141969b476a90f5d74b928e1f1ad1",
+      "candidate_sha256": "21b8ca41062ea65a9d74b748e56cdf8f0b825b1bc460a364e92523f1e344f567"
+    },
+    {
+      "run": "final-r6/v3-ldo-startup-measurement-first-entry",
+      "condition": "dropout-no-target",
+      "job_id": "bf-18796b51a8c74716bde8-dropout-no-target",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "6f276498e0adb68999f57eafd31c8047759141969b476a90f5d74b928e1f1ad1",
+      "candidate_sha256": "21b8ca41062ea65a9d74b748e56cdf8f0b825b1bc460a364e92523f1e344f567"
+    },
+    {
+      "run": "final-r6/v3-ldo-startup-measurement-first-entry",
+      "condition": "heavy-slow",
+      "job_id": "bf-bd131b8acba84596816a-heavy-slow",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "6f276498e0adb68999f57eafd31c8047759141969b476a90f5d74b928e1f1ad1",
+      "candidate_sha256": "21b8ca41062ea65a9d74b748e56cdf8f0b825b1bc460a364e92523f1e344f567"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-alternate",
+      "condition": "healthy",
+      "job_id": "bf-b877b7ee75d5447a8e32-healthy",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "bff2390972f4467e7a0504bfdada9fe41b8913771c4df91615fd285e328f5d19"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-alternate",
+      "condition": "slow-cap",
+      "job_id": "bf-93ca05c350234282b833-slow-cap",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "bff2390972f4467e7a0504bfdada9fe41b8913771c4df91615fd285e328f5d19"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-alternate",
+      "condition": "offset-timeout",
+      "job_id": "bf-2f2622afd27c4c418fc3-offset-timeout",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "bff2390972f4467e7a0504bfdada9fe41b8913771c4df91615fd285e328f5d19"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-always-timeout",
+      "condition": "healthy",
+      "job_id": "bf-95863f64830044e5bac5-healthy",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "a6a2e3ff709753e641c84e4418781d0921baccaf51c79a5e32405837f96209fa"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-always-timeout",
+      "condition": "slow-cap",
+      "job_id": "bf-24372b2377dc46c39b97-slow-cap",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "a6a2e3ff709753e641c84e4418781d0921baccaf51c79a5e32405837f96209fa"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-always-timeout",
+      "condition": "offset-timeout",
+      "job_id": "bf-05408e98079e455f86c5-offset-timeout",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "a6a2e3ff709753e641c84e4418781d0921baccaf51c79a5e32405837f96209fa"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-fixed-schedule",
+      "condition": "healthy",
+      "job_id": "bf-57118b00666446c49cd0-healthy",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "c5e5d3aa6759555261635f5e47c5c00cc2b0910d89417945e1bda0eb5a2856a4"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-fixed-schedule",
+      "condition": "slow-cap",
+      "job_id": "bf-fe046f77df2743ffb532-slow-cap",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "c5e5d3aa6759555261635f5e47c5c00cc2b0910d89417945e1bda0eb5a2856a4"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-fixed-schedule",
+      "condition": "offset-timeout",
+      "job_id": "bf-399c8585c2564599940a-offset-timeout",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "c5e5d3aa6759555261635f5e47c5c00cc2b0910d89417945e1bda0eb5a2856a4"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-input-drive",
+      "condition": "healthy",
+      "job_id": "bf-335ba1df5f5b49cc859e-healthy",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "5bf89f49335dc3d4c1b5c5b6d8e98f7922d16b6c824f4b5f68222a0a492105e0"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-input-drive",
+      "condition": "slow-cap",
+      "job_id": "bf-c94b4d81f0f8418ebaee-slow-cap",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "5bf89f49335dc3d4c1b5c5b6d8e98f7922d16b6c824f4b5f68222a0a492105e0"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-input-drive",
+      "condition": "offset-timeout",
+      "job_id": "bf-ca47087c2ab24f44ba78-offset-timeout",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "5bf89f49335dc3d4c1b5c5b6d8e98f7922d16b6c824f4b5f68222a0a492105e0"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-input-load",
+      "condition": "healthy",
+      "job_id": "bf-79510525b75b4c96988f-healthy",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "e1d0a06a8a11932f60500dc69dd42ac5765b8cc34e1e88744960b037c5b19167"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-input-load",
+      "condition": "slow-cap",
+      "job_id": "bf-43d62f00cf4a4f37b7e6-slow-cap",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "e1d0a06a8a11932f60500dc69dd42ac5765b8cc34e1e88744960b037c5b19167"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-input-load",
+      "condition": "offset-timeout",
+      "job_id": "bf-77d02262213b42d88d13-offset-timeout",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "e1d0a06a8a11932f60500dc69dd42ac5765b8cc34e1e88744960b037c5b19167"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-reference",
+      "condition": "healthy",
+      "job_id": "bf-e38ad5fe38ea4a68912e-healthy",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "96858eab629ab033d941a877ca4f521936dba8fa30caac92f15cb28a6ff8fb58"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-reference",
+      "condition": "slow-cap",
+      "job_id": "bf-dffb195956af47c784f1-slow-cap",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "96858eab629ab033d941a877ca4f521936dba8fa30caac92f15cb28a6ff8fb58"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-reference",
+      "condition": "offset-timeout",
+      "job_id": "bf-d04448297d614315b31a-offset-timeout",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "96858eab629ab033d941a877ca4f521936dba8fa30caac92f15cb28a6ff8fb58"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-skip-load",
+      "condition": "healthy",
+      "job_id": "bf-361cae2b07174faa881e-healthy",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "6b6f4f2e637d91906faa6bdfcc94669fb49a10a8f37916563a2433b8da51570e"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-skip-load",
+      "condition": "slow-cap",
+      "job_id": "bf-810f48ec525c43e29439-slow-cap",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "6b6f4f2e637d91906faa6bdfcc94669fb49a10a8f37916563a2433b8da51570e"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-skip-load",
+      "condition": "offset-timeout",
+      "job_id": "bf-d3f47dca56274a6d9008-offset-timeout",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "6b6f4f2e637d91906faa6bdfcc94669fb49a10a8f37916563a2433b8da51570e"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-stale-recovery",
+      "condition": "healthy",
+      "job_id": "bf-37b54c0cba5541ea990f-healthy",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "2aa3137274c7834e3cd086783262ba34b5ed9d4e2edcb9a1a15794fb271231b0"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-stale-recovery",
+      "condition": "slow-cap",
+      "job_id": "bf-cf8c61be5c94487881ce-slow-cap",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "2aa3137274c7834e3cd086783262ba34b5ed9d4e2edcb9a1a15794fb271231b0"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-stale-recovery",
+      "condition": "offset-timeout",
+      "job_id": "bf-7ba4581082c44a80a604-offset-timeout",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "2aa3137274c7834e3cd086783262ba34b5ed9d4e2edcb9a1a15794fb271231b0"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-zero-peaks",
+      "condition": "healthy",
+      "job_id": "bf-07d3ef07d0b54e009dca-healthy",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "65e2cab044c3618d4d5b17bfe7d89809cf298ce7ac4be7f972de761c61c999cc"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-zero-peaks",
+      "condition": "slow-cap",
+      "job_id": "bf-8bd3b811b5a54f239956-slow-cap",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "65e2cab044c3618d4d5b17bfe7d89809cf298ce7ac4be7f972de761c61c999cc"
+    },
+    {
+      "run": "final-r7/v3-ldo-response-experiment-zero-peaks",
+      "condition": "offset-timeout",
+      "job_id": "bf-e8e2fafdf1844a068d06-offset-timeout",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "1250dc5f398ef3f4756fc54aa551573c6c682746e106203b90ddbf02fe7b145f",
+      "candidate_sha256": "65e2cab044c3618d4d5b17bfe7d89809cf298ce7ac4be7f972de761c61c999cc"
+    },
+    {
+      "run": "final-r7/v3-ldo-startup-measurement-alternate",
+      "condition": "nominal",
+      "job_id": "bf-5807544fbaaa49a7a697-nominal",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+      "candidate_sha256": "d15e5e138db0fe83d40debf746650d8c2d3c79ad66533e1b62a3c083dff45f15"
+    },
+    {
+      "run": "final-r7/v3-ldo-startup-measurement-alternate",
+      "condition": "dropout-no-target",
+      "job_id": "bf-d2222c825b6741e28782-dropout-no-target",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+      "candidate_sha256": "d15e5e138db0fe83d40debf746650d8c2d3c79ad66533e1b62a3c083dff45f15"
+    },
+    {
+      "run": "final-r7/v3-ldo-startup-measurement-alternate",
+      "condition": "heavy-slow",
+      "job_id": "bf-753ff106136440a38143-heavy-slow",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+      "candidate_sha256": "d15e5e138db0fe83d40debf746650d8c2d3c79ad66533e1b62a3c083dff45f15"
+    },
+    {
+      "run": "final-r7/v3-ldo-startup-measurement-always-invalid",
+      "condition": "nominal",
+      "job_id": "bf-b42a8061eff349939ba9-nominal",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+      "candidate_sha256": "000059802cc319f2da0de6e8bd70fd1820e3d76882700fd9a4f6c7894dab6068"
+    },
+    {
+      "run": "final-r7/v3-ldo-startup-measurement-always-invalid",
+      "condition": "dropout-no-target",
+      "job_id": "bf-b343f75c82f04eaa80cf-dropout-no-target",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+      "candidate_sha256": "000059802cc319f2da0de6e8bd70fd1820e3d76882700fd9a4f6c7894dab6068"
+    },
+    {
+      "run": "final-r7/v3-ldo-startup-measurement-always-invalid",
+      "condition": "heavy-slow",
+      "job_id": "bf-ab6518f5848f404b9af7-heavy-slow",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+      "candidate_sha256": "000059802cc319f2da0de6e8bd70fd1820e3d76882700fd9a4f6c7894dab6068"
+    },
+    {
+      "run": "final-r7/v3-ldo-startup-measurement-final-as-target",
+      "condition": "nominal",
+      "job_id": "bf-0a459af3e3a94758be69-nominal",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+      "candidate_sha256": "7792ed8629b9b6044f5a5ac2371cc38215e05a7194d80493e65111d11448180a"
+    },
+    {
+      "run": "final-r7/v3-ldo-startup-measurement-final-as-target",
+      "condition": "dropout-no-target",
+      "job_id": "bf-9cff890d402144608b9d-dropout-no-target",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+      "candidate_sha256": "7792ed8629b9b6044f5a5ac2371cc38215e05a7194d80493e65111d11448180a"
+    },
+    {
+      "run": "final-r7/v3-ldo-startup-measurement-final-as-target",
+      "condition": "heavy-slow",
+      "job_id": "bf-940b150278f3499883eb-heavy-slow",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+      "candidate_sha256": "7792ed8629b9b6044f5a5ac2371cc38215e05a7194d80493e65111d11448180a"
+    },
+    {
+      "run": "final-r7/v3-ldo-startup-measurement-first-entry",
+      "condition": "nominal",
+      "job_id": "bf-4d2d79457a2e4ca5be80-nominal",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+      "candidate_sha256": "21b8ca41062ea65a9d74b748e56cdf8f0b825b1bc460a364e92523f1e344f567"
+    },
+    {
+      "run": "final-r7/v3-ldo-startup-measurement-first-entry",
+      "condition": "dropout-no-target",
+      "job_id": "bf-ec815f7deb4346e38879-dropout-no-target",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+      "candidate_sha256": "21b8ca41062ea65a9d74b748e56cdf8f0b825b1bc460a364e92523f1e344f567"
+    },
+    {
+      "run": "final-r7/v3-ldo-startup-measurement-first-entry",
+      "condition": "heavy-slow",
+      "job_id": "bf-c39190ec317f4bad8dc3-heavy-slow",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+      "candidate_sha256": "21b8ca41062ea65a9d74b748e56cdf8f0b825b1bc460a364e92523f1e344f567"
+    },
+    {
+      "run": "final-r7/v3-ldo-startup-measurement-ideal-metrics",
+      "condition": "nominal",
+      "job_id": "bf-deffa5c1389347d9bc25-nominal",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+      "candidate_sha256": "0ec21da5f70503ea51329845203e144c366d5ebc3f2f7d2efd3777ebc71b6fbe"
+    },
+    {
+      "run": "final-r7/v3-ldo-startup-measurement-ideal-metrics",
+      "condition": "dropout-no-target",
+      "job_id": "bf-b677a0814118454e9cef-dropout-no-target",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+      "candidate_sha256": "0ec21da5f70503ea51329845203e144c366d5ebc3f2f7d2efd3777ebc71b6fbe"
+    },
+    {
+      "run": "final-r7/v3-ldo-startup-measurement-ideal-metrics",
+      "condition": "heavy-slow",
+      "job_id": "bf-5dfd9143792049629098-heavy-slow",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+      "candidate_sha256": "0ec21da5f70503ea51329845203e144c366d5ebc3f2f7d2efd3777ebc71b6fbe"
+    },
+    {
+      "run": "final-r7/v3-ldo-startup-measurement-input-drive",
+      "condition": "nominal",
+      "job_id": "bf-213a417d70c64096a388-nominal",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+      "candidate_sha256": "4665443f24b555cd2375d70d40d8c2041b7bf8e4dca8075f47a3fdc413617485"
+    },
+    {
+      "run": "final-r7/v3-ldo-startup-measurement-input-drive",
+      "condition": "dropout-no-target",
+      "job_id": "bf-5942bdf0395e4c9c92a8-dropout-no-target",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+      "candidate_sha256": "4665443f24b555cd2375d70d40d8c2041b7bf8e4dca8075f47a3fdc413617485"
+    },
+    {
+      "run": "final-r7/v3-ldo-startup-measurement-input-drive",
+      "condition": "heavy-slow",
+      "job_id": "bf-09260ac92e5744c9ad4c-heavy-slow",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+      "candidate_sha256": "4665443f24b555cd2375d70d40d8c2041b7bf8e4dca8075f47a3fdc413617485"
+    },
+    {
+      "run": "final-r7/v3-ldo-startup-measurement-input-load",
+      "condition": "nominal",
+      "job_id": "bf-077a958d55ad42bf936a-nominal",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+      "candidate_sha256": "9be0671232689503f74833f49fc7eb613c70ab3b6d9581648bc101d3da97f31e"
+    },
+    {
+      "run": "final-r7/v3-ldo-startup-measurement-input-load",
+      "condition": "dropout-no-target",
+      "job_id": "bf-67d02be12d6548c6bcb0-dropout-no-target",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+      "candidate_sha256": "9be0671232689503f74833f49fc7eb613c70ab3b6d9581648bc101d3da97f31e"
+    },
+    {
+      "run": "final-r7/v3-ldo-startup-measurement-input-load",
+      "condition": "heavy-slow",
+      "job_id": "bf-8b355347ce3f4820801d-heavy-slow",
+      "execution": "ok",
+      "score": 0,
+      "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+      "candidate_sha256": "9be0671232689503f74833f49fc7eb613c70ab3b6d9581648bc101d3da97f31e"
+    },
+    {
+      "run": "final-r7/v3-ldo-startup-measurement-reference",
+      "condition": "nominal",
+      "job_id": "bf-5298d555d3304e248798-nominal",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+      "candidate_sha256": "5b29f57505accfaa7025ee4e0316e2c0b416bc10a77d36b31abc52e17e604990"
+    },
+    {
+      "run": "final-r7/v3-ldo-startup-measurement-reference",
+      "condition": "dropout-no-target",
+      "job_id": "bf-5addf0606d14406da6be-dropout-no-target",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+      "candidate_sha256": "5b29f57505accfaa7025ee4e0316e2c0b416bc10a77d36b31abc52e17e604990"
+    },
+    {
+      "run": "final-r7/v3-ldo-startup-measurement-reference",
+      "condition": "heavy-slow",
+      "job_id": "bf-0d3d141b180f4461af2d-heavy-slow",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "0a1824355cd6afb294c7ee51bc6c8939f54c007d722b54b1e3343c306040b051",
+      "candidate_sha256": "5b29f57505accfaa7025ee4e0316e2c0b416bc10a77d36b31abc52e17e604990"
+    },
+    {
+      "run": "smoke-r1",
+      "condition": "nominal",
+      "job_id": "bf-5fd84822c6a94bd0b3ad-nominal",
+      "execution": "dependency_unavailable",
+      "score": null,
+      "criteria_sha256": "6a077e3ab01864c6f3caa9cf9263bef1d732cb5f635b3cfbbc36133445d62d61",
+      "candidate_sha256": "62b62f958c20a73cda7f5c207c1c94c465215a6ea8db7ad17c500645285795e8"
+    },
+    {
+      "run": "smoke-r2-startup-measurement",
+      "condition": "nominal",
+      "job_id": "bf-a5a6845b68264a2f803e-nominal",
+      "execution": "infrastructure_error",
+      "score": null,
+      "criteria_sha256": "eaf0100342251b4b638c70c39316cb9d5c2a5709bb0715dbeb8d346eaf5d1902",
+      "candidate_sha256": "5b29f57505accfaa7025ee4e0316e2c0b416bc10a77d36b31abc52e17e604990"
+    },
+    {
+      "run": "smoke-r3",
+      "condition": "nominal",
+      "job_id": "bf-fee13fc7dc2143b6b420-nominal",
+      "execution": "infrastructure_error",
+      "score": null,
+      "criteria_sha256": "e67211fbefd8754cc87ed952e87490f75686fcfc6158a869de0b514f91cef4a4",
+      "candidate_sha256": "5b29f57505accfaa7025ee4e0316e2c0b416bc10a77d36b31abc52e17e604990"
+    },
+    {
+      "run": "smoke-r4",
+      "condition": "nominal",
+      "job_id": "bf-ab35ea356ed5413eac6c-nominal",
+      "execution": "ok",
+      "score": 1,
+      "criteria_sha256": "6fd855b76c171050ca3d247bdabda4b02c1f5a68833e228649d020400b8978bc",
+      "candidate_sha256": "5b29f57505accfaa7025ee4e0316e2c0b416bc10a77d36b31abc52e17e604990"
+    }
+  ]
 }
