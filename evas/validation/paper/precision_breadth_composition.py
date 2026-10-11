@@ -258,6 +258,26 @@ def cards():
            24:'Implicit DAE and event/reset combination is outside current documented acceptance.'}
     for i,note in notes.items():
         result[i-1].update(support_probe_only=True,qualification_note=note)
+    # Max-norm voltage perturbation gains over the entire run, conditional
+    # on separately verified event histories. Bounds cover epsilon<=.001 V.
+    # EC03: held rectangle duration <=4T. EC04: 4*q*(stop-rho)
+    # plus quadratic perturbation <=16. EC11: positive filter mass<=1;
+    # derivative impulse L1=2/e<1. EC12: |delta(u^2)|<=9.001 epsilon,
+    # and H=1-1/(sT+2) has impulse total variation <=1.5.
+    gains={3:4.,4:16.,11:1.,12:14.,13:1.2500001,17:7.}
+    for index,gain in gains.items():result[index-1]['input_gain_bound']=gain
+    for c in result:
+        if not c['inputs']:c['input_gain_bound']=0.
+    # Zero on these channels is conditional on exact adapter-proven input
+    # coefficients. The mandatory evidence gate prevents qualification from
+    # sampled voltage error alone; zero is not a claimed Lipschitz bound.
+    result[15]['input_gain_bound']=0.
+    result[15]['input_gain_evidence_required']={
+        'd':'Derivative input requires actual PWL coefficients/topology and derivative evidence; voltage max-norm alone has no finite derivative gain.',
+        'y':'Filter has a derivative direct term; actual input PWL derivative evidence is required.'}
+    result[16]['input_gain_evidence_required']={
+        'phase':'Raw half-open modulo has no finite global voltage-input Lipschitz gain across a wrap; actual PWL input/phase interval evidence is required.'}
+    result[16]['input_gain_bound']={'freq':.25,'phase':0.,'out':7.}
     sensitivities={1:12,2:12,3:5,4:12,6:1,7:2,8:2,10:1,13:2,20:12,21:20}
     for index,multiple in sensitivities.items():
         result[index-1]['event_sensitivity_bound_V_s']=multiple/UNIT
@@ -401,6 +421,18 @@ def _transition(t,events,targets,initial,delay,rise,fall,stages=None):
         target=_i(target);when=event+delay
         current=val(state,when)
         oldorigin,oldstart,oldtarget,oldslope,oldwhen=state
+        # A completed edge has no active history origin. For an uncertain
+        # completion time, retain both idle and interrupted origins: either
+        # branch can occur in the same globally shared callback history box.
+        raw=oldstart+oldslope*_positive(when-oldwhen)
+        idle=oldslope.lo==oldslope.hi==0
+        finished=idle or (oldslope.lo>=0 and raw.lo>=oldtarget.hi) or (oldslope.hi<=0 and raw.hi<=oldtarget.lo)
+        may_finish=idle or (oldslope.lo>=0 and raw.hi>=oldtarget.lo) or (oldslope.hi<=0 and raw.lo<=oldtarget.hi)
+        if finished:
+            oldorigin=oldtarget
+            current=oldtarget
+        elif may_finish:
+            oldorigin=_hull(oldorigin,oldtarget)
         # Cards have alternating targets, except repeated reset/hold targets.
         if target.lo==oldtarget.lo and target.hi==oldtarget.hi:
             new=state
