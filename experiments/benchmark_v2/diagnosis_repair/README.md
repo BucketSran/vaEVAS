@@ -2,7 +2,7 @@
 
 当前作者校准为33/33个登记变体有效，见[作者校准最终报告](../author-calibration-final.md)。模型 Agentic 与适用 one-shot 试做及完整 spec 验收尚未完成。计划和生成清单中的 pending 保留生成时状态，当前作者结论以该报告为准。
 
-本目录建设 spec #136 的四个P1归口来源005、046、272、249以及case-0009多VA系统。任务、原starter、健康资产、参考修复、整体改写和合理语义错误版本已建立。任务构建、独立checker波形合同检查与实际Spectre作者校准已完成；Harbor oracle和两种模型试做尚未完成，不能据此关闭spec或判断难度。
+本目录建设 spec #136 的四个P1归口来源005、046、272、249以及case-0009多VA系统。任务、原starter、健康资产、参考修复、整体改写和合理语义错误版本已建立。任务构建、独立checker波形合同检查与实际Spectre作者校准已完成；五题的[Harbor参考入口](../harbor_reference/harbor-reference-acceptance.md)已通过；两种模型试做尚未完成，不能据此关闭spec或判断难度。
 
 [manifest.json](manifest.json)逐来源记录任务；[run-plan.json](run-plan.json)是实际作者校准请求，每条包含固定task、候选目录、期望结果和行为差异。候选与任务均固定Spectre，尚不声称开源主集可复现。原始来源只在单模块`SOURCE.json`中引用，没有更改reference资料库。
 
@@ -31,4 +31,4 @@ python3 -B experiments/benchmark_v2/diagnosis_repair/build_chain.py
 
 PFD的隐藏重入刺激新增5.11ns的REF上升，位于复位释放之后、旧5.1295ns截止之前；新周期UP必须保持，保留旧计时的错版会提前清零。新增`stale-reset-timer`作者VA负例和手算波形回归。272公开final_stage范围及同步清零优先，输入阈值变化与clk采样保持0.2ns间隔；补充复位发生在最后资格拍的手算回归。
 
-以下保留开发时的首轮状态，当前完整作者证据见最终报告。实际首轮参考校准由协调者执行：四个单模块参考两case通过，多VA因作者VA前导小数点语法导致Spectre VACOMP-1795而未评分。r2统一作者VA显式0.x，需重跑多VA所有候选和272替代实现；249新刺激需重新校准所有本题候选。旧结果保留其版本，不转作r2证据。模型试做与Harbor验收仍未完成。
+以下保留开发时的首轮状态，当前完整作者证据见最终报告。实际首轮参考校准由协调者执行：四个单模块参考两case通过，多VA因作者VA前导小数点语法导致Spectre VACOMP-1795而未评分。r2统一作者VA显式0.x，需重跑多VA所有候选和272替代实现；249新刺激需重新校准所有本题候选。旧结果保留其版本，不转作r2证据。这段记录对应当时的模型与Harbor验收状态；当前Harbor结果见上方正式报告，模型试做仍在进行。

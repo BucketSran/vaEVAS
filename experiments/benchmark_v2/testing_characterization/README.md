@@ -25,7 +25,7 @@ build_tasks.py 生成 Harbor 任务、正确参考、另一种实现和三种行
 
     python3 -B -m unittest discover -s experiments/benchmark_v2/testing_characterization -p test_checker.py -v
 
-统一执行依赖父分支的 v2_runtime.py 和 PSF 读取器，不另行实现评分路径。工具链失败应记录为环境错误，不据此给候选零分。实际校准、Harbor reference、模型试跑和审查通过后，才能完成发布资格与证据记录。
+统一执行依赖父分支的 v2_runtime.py 和 PSF 读取器，不另行实现评分路径。编译或工具链失败先保留未评分，再根据源码、日志和语言规则区分非法候选与环境缺陷，不据此伪造电路零分。实际作者校准与十题的[Harbor参考入口](../harbor_reference/harbor-reference-acceptance.md)已通过；完整模型试跑和审查完成后，才能完成发布资格与证据记录。
 
 POR 使用真实模拟晶体管源和可读数字边界，候选通过观察 POR 完成与 power 欠压事件推进供电。报告 response_us 从各轮首次 osc 上升到 POR 上升计时。周期保留原脚本的第3至第9个振荡器上升平均值。性质判断只观察实际端口，第6/第13个时钟对应断言与释放；不读取内部计数结束标志。健康、慢振荡器、漏恢复脉冲、过早释放和缺首轮下降沿的性质与计量合同公开，具体终评实例隐藏。公开自测仅含原RC健康实例。
 

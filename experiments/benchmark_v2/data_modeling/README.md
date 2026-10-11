@@ -48,7 +48,7 @@ python3 -B experiments/benchmark_v2/data_modeling/test_checker.py
 
 原始归档仅保存在本地ignored `runs/benchmark-spec-20261011/calibration/`，没有公开下载承诺。当前源任务的入口是Harbor固定路径，也不含旧`circuit_task.py`副本。[作者运行器的prepare()](../../benchmark_first_batch/runtime.py)会固定改写`test.sh`为Python 3.12的`-B`入口，并补入协调者的`circuit_task.py`和`adc_linearity.py`。这完整解释了源任务与r4有效包的两处身份差异。
 
-按当前prepare规则只在内存重建后，8组有效模板的完整身份、criteria SHA和全部48个条件的文件SHA及字节数均与r4归档一致。候选和数据身份也一致，因此可在相同规范化作者校准路径下复用r4的D3证据。这个核对不代表源任务全文相同，也不验收Harbor固定路径调用或模型Agent隔离。D4模型试做和完整任务验收仍待完成。
+按当前prepare规则只在内存重建后，8组有效模板的完整身份、criteria SHA和全部48个条件的文件SHA及字节数均与r4归档一致。候选和数据身份也一致，因此可在相同规范化作者校准路径下复用r4的D3证据。这个核对不代表源任务全文相同，也不验收Harbor固定路径调用或模型Agent隔离。其后独立执行的[Harbor参考入口](../harbor_reference/harbor-reference-acceptance.md)已完成本题六个条件，覆盖实际固定路径、提交与冻结；D4模型试做和完整任务验收仍待完成。
 
 开发中先试的低阶多项式在公开新中间电平轨迹出现较大误差，高阶拟合还出现速率外推不稳，未用于发布参考。为此补公开完整阶跃轨迹，改用正值速率表。[旧参考实际校准](isolated-r2-diagnosis.json)随后4/6通过，未过两条的采集RMS约35–36 mV。公开开通波形表明，单一导通沿不能表示直接PMOS与反相器驱动NMOS的差异。因此当前候选拆开两种导通函数和反相器状态，并从已冻结公开训练拟合正修正表；没有修改源数据或阈值，也不从隐藏输出拟合参数。r4校准采用该冻结候选，任何后续修改须重新冻结和校准。
 

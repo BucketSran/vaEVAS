@@ -12,6 +12,8 @@
 
 实际模型候选审查及公开合同复核发现十一题的公式、初始化或时序要求需要明确，见[公开合同修正](model-contract-clarifications.md)。十一题以新版材料重新试做，旧尝试保留；其余26题继续原冻结实验。
 
+37道题的[正式Harbor参考入口](harbor_reference/harbor-reference-acceptance.md)已全部验收，111个私有条件通过。验收覆盖原参考脚本、固定路径、实际提交、候选冻结和独立终评；作者校准、模型试做与参考入口分别记账。ADPLL使用明确的512 MiB输出配置，POR完整终评使用600秒配置，原环境失败保留。
+
 ## 固定后端入口
 
 `benchmark/checkers/v2_runtime.py` 接受固定 Spectre 台架及独立
