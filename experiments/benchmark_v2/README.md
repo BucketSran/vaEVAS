@@ -65,7 +65,7 @@ Spectre到既有harness的评分消费路径。它不代表五类规格已完成
 
 ## 模型试做
 
-[本轮试做协议](model-pilot-protocol.md)记录两种模式的实际材料、预算、异常重试和统计分母。模型结果尚未全部完成；协议文件不代表完整验收。
+[本轮试做协议](model-pilot-protocol.md)记录两种模式的实际材料、预算、异常重试和统计分母。[One-shot结果](model_pilots/one-shot-results.md)已完成74个单元并通过独立证据审核；Agentic仍在执行，尚不代表完整五规格验收。
 
 `pilot.py` 负责封存公开材料、生成 stock Harbor/Pi 配置和一次性模型请求。
 Agent 循环、公开工具、作业恢复及独立终评继续由 circuit harness 提供。
