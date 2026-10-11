@@ -1,0 +1,13 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module healthy_dco(tune,rst,dco);
+input tune,rst;output dco;electrical tune,rst,dco;
+parameter real sensitivity=10e6;
+real freq,phase;
+analog begin
+ freq=20e6+sensitivity*V(tune);if(freq<20e6)freq=20e6;if(freq>60e6)freq=60e6;
+ phase=idt(freq,0,V(rst)>0.45);
+ if(V(rst)>0.45)V(dco)<+0;else V(dco)<+0.45+0.45*tanh(20*sin(2*`M_PI*phase));
+ $bound_step(1/(40*freq));
+end
+endmodule

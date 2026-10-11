@@ -1,0 +1,22 @@
+{
+  "task_id": "v3-calibration-common-mode-servo",
+  "editable": [
+    "dut.va"
+  ],
+  "fixed": [
+    "healthy.va"
+  ],
+  "public_signals": [
+    "inp",
+    "inn",
+    "offset",
+    "cmoffset",
+    "cal",
+    "enable",
+    "rst",
+    "code",
+    "outp",
+    "outn"
+  ],
+  "hidden_changes": "Only published bias/common-mode envelope and slope, actuator and DCO sensitivity ranges; no reference bitstream match"
+}

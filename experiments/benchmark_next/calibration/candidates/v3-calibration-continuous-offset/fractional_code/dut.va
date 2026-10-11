@@ -1,0 +1,21 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module calibration_controller(outp,outn,cal,enable,rst,code);
+input outp,outn,cal,enable,rst;output code;electrical outp,outn,cal,enable,rst,code;
+parameter real mode=0;
+integer value;real error,next;
+analog begin
+ @(initial_step)value=0;
+ @(cross(V(rst)-0.45,+1))value=0;
+ @(timer(1u,2u))begin
+  if(V(rst)>0.45)value=0;
+  else if(V(enable)>0.45 && (mode>0.5 || V(cal)>0.45))begin
+   if(mode<0.5)error=V(outp,outn);else error=(V(outp)+V(outn))*0.5-0.5;
+   next=value-250*error;
+   if(next>=0)value=$rtoi(next+0.5);else value=-$rtoi(-next+0.5);
+   if(value>63)value=63;if(value< -63)value=-63;
+  end
+ end
+ V(code)<+transition(value+0.5*(V(rst)<0.45),0,100n);
+end
+endmodule

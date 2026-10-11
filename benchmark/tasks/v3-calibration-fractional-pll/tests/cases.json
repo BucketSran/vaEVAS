@@ -1,0 +1,154 @@
+[
+  {
+    "name": "fractional-pll-0.25",
+    "kind": "fractional-pll",
+    "stop": 0.0001,
+    "signals": [
+      "ref",
+      "rst",
+      "n",
+      "frac",
+      "dco",
+      "fb",
+      "tune",
+      "lock"
+    ],
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"healthy.va\"\nahdl_include \"dut.va\"\nVR(ref 0) vsource type=pulse val0=0 val1=0.9 period=100n width=49n rise=100p fall=100p delay=10n\nVreset(rst 0) vsource type=pwl wave=[0 0.9 2e-07 0.9 2.01e-07 0 6e-05 0 6.0001e-05 0.9 6.03e-05 0.9 6.0301e-05 0 0.0001 0]\nVN(n 0) vsource type=pwl wave=[0 3 3e-05 3 3.0001e-05 4 0.0001 4]\nVF(frac 0) vsource type=pwl wave=[0 0 1.5e-05 0 1.5001e-05 0.25 4.5e-05 0.25 4.5001e-05 0 7.5e-05 0 7.5001e-05 0.5 0.0001 0.5]\nXO(tune rst dco) healthy_dco\nX(ref rst n frac dco fb tune lock) fractional_pll\ntran tran stop=100u maxstep=2n errpreset=conservative\nsave ref rst n frac dco fb tune lock\n",
+    "support": {
+      "healthy.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule healthy_dco(tune,rst,dco);\ninput tune,rst;output dco;electrical tune,rst,dco;\nparameter real sensitivity=10e6;\nreal freq,phase;\nanalog begin\n freq=20e6+sensitivity*V(tune);if(freq<20e6)freq=20e6;if(freq>60e6)freq=60e6;\n phase=idt(freq,0,V(rst)>0.45);\n if(V(rst)>0.45)V(dco)<+0;else V(dco)<+0.45+0.45*tanh(20*sin(2*`M_PI*phase));\n $bound_step(1/(40*freq));\nend\nendmodule\n"
+    },
+    "windows": [
+      [
+        1.2e-05,
+        1.49e-05,
+        3,
+        0
+      ],
+      [
+        2.7e-05,
+        2.99e-05,
+        3,
+        0.25
+      ],
+      [
+        4.2e-05,
+        4.49e-05,
+        4,
+        0.25
+      ],
+      [
+        5.7e-05,
+        5.99e-05,
+        4,
+        0
+      ],
+      [
+        7.2e-05,
+        7.49e-05,
+        4,
+        0
+      ],
+      [
+        9.4e-05,
+        9.9e-05,
+        4,
+        0.5
+      ]
+    ],
+    "ratio_tolerance": 0.04,
+    "frequency_tolerance": 0.06,
+    "feedback_tolerance": 0.015,
+    "phase_tolerance": 0.35,
+    "mean_phase_tolerance": 0.2,
+    "withdraw_windows": [
+      [
+        1.51e-05,
+        1.6e-05
+      ],
+      [
+        3.01e-05,
+        3.1e-05
+      ],
+      [
+        6.001e-05,
+        6.025e-05
+      ]
+    ]
+  },
+  {
+    "name": "fractional-pll-0.75",
+    "kind": "fractional-pll",
+    "stop": 0.0001,
+    "signals": [
+      "ref",
+      "rst",
+      "n",
+      "frac",
+      "dco",
+      "fb",
+      "tune",
+      "lock"
+    ],
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"healthy.va\"\nahdl_include \"dut.va\"\nVR(ref 0) vsource type=pulse val0=0 val1=0.9 period=100n width=49n rise=100p fall=100p delay=10n\nVreset(rst 0) vsource type=pwl wave=[0 0.9 2e-07 0.9 2.01e-07 0 6e-05 0 6.0001e-05 0.9 6.03e-05 0.9 6.0301e-05 0 0.0001 0]\nVN(n 0) vsource type=pwl wave=[0 3 3e-05 3 3.0001e-05 4 0.0001 4]\nVF(frac 0) vsource type=pwl wave=[0 0 1.5e-05 0 1.5001e-05 0.75 4.5e-05 0.75 4.5001e-05 0 7.5e-05 0 7.5001e-05 0.5 0.0001 0.5]\nXO(tune rst dco) healthy_dco\nX(ref rst n frac dco fb tune lock) fractional_pll\ntran tran stop=100u maxstep=2n errpreset=conservative\nsave ref rst n frac dco fb tune lock\n",
+    "support": {
+      "healthy.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\nmodule healthy_dco(tune,rst,dco);\ninput tune,rst;output dco;electrical tune,rst,dco;\nparameter real sensitivity=12e6;\nreal freq,phase;\nanalog begin\n freq=20e6+sensitivity*V(tune);if(freq<20e6)freq=20e6;if(freq>60e6)freq=60e6;\n phase=idt(freq,0,V(rst)>0.45);\n if(V(rst)>0.45)V(dco)<+0;else V(dco)<+0.45+0.45*tanh(20*sin(2*`M_PI*phase));\n $bound_step(1/(40*freq));\nend\nendmodule\n"
+    },
+    "windows": [
+      [
+        1.2e-05,
+        1.49e-05,
+        3,
+        0
+      ],
+      [
+        2.7e-05,
+        2.99e-05,
+        3,
+        0.75
+      ],
+      [
+        4.2e-05,
+        4.49e-05,
+        4,
+        0.75
+      ],
+      [
+        5.7e-05,
+        5.99e-05,
+        4,
+        0
+      ],
+      [
+        7.2e-05,
+        7.49e-05,
+        4,
+        0
+      ],
+      [
+        9.4e-05,
+        9.9e-05,
+        4,
+        0.5
+      ]
+    ],
+    "ratio_tolerance": 0.04,
+    "frequency_tolerance": 0.06,
+    "feedback_tolerance": 0.015,
+    "phase_tolerance": 0.35,
+    "mean_phase_tolerance": 0.2,
+    "withdraw_windows": [
+      [
+        1.51e-05,
+        1.6e-05
+      ],
+      [
+        3.01e-05,
+        3.1e-05
+      ],
+      [
+        6.001e-05,
+        6.025e-05
+      ]
+    ]
+  }
+]

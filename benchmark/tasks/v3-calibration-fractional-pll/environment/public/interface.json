@@ -1,0 +1,20 @@
+{
+  "task_id": "v3-calibration-fractional-pll",
+  "editable": [
+    "dut.va"
+  ],
+  "fixed": [
+    "healthy.va"
+  ],
+  "public_signals": [
+    "ref",
+    "rst",
+    "n",
+    "frac",
+    "dco",
+    "fb",
+    "tune",
+    "lock"
+  ],
+  "hidden_changes": "Only published bias/common-mode envelope and slope, actuator and DCO sensitivity ranges; no reference bitstream match"
+}

@@ -1,0 +1,159 @@
+{
+  "spec_issue": 150,
+  "weight": 1,
+  "model_trials": "not-requested",
+  "calibration_requests": [
+    {
+      "task": "benchmark/tasks/v3-calibration-fractional-pll",
+      "variant": "reference",
+      "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-fractional-pll/reference",
+      "expected": "pass",
+      "certification": "pending-live-execution"
+    },
+    {
+      "task": "benchmark/tasks/v3-calibration-fractional-pll",
+      "variant": "detached_feedback",
+      "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-fractional-pll/detached_feedback",
+      "expected": "fail",
+      "certification": "pending-live-execution"
+    },
+    {
+      "task": "benchmark/tasks/v3-calibration-fractional-pll",
+      "variant": "alternative",
+      "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-fractional-pll/alternative",
+      "expected": "pass",
+      "certification": "pending-live-execution"
+    },
+    {
+      "task": "benchmark/tasks/v3-calibration-fractional-pll",
+      "variant": "integer_only",
+      "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-fractional-pll/integer_only",
+      "expected": "fail",
+      "certification": "pending-live-execution"
+    },
+    {
+      "task": "benchmark/tasks/v3-calibration-fractional-pll",
+      "variant": "feedback_bypass",
+      "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-fractional-pll/feedback_bypass",
+      "expected": "fail",
+      "certification": "pending-live-execution"
+    },
+    {
+      "task": "benchmark/tasks/v3-calibration-fractional-pll",
+      "variant": "open_loop",
+      "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-fractional-pll/open_loop",
+      "expected": "fail",
+      "certification": "pending-live-execution"
+    },
+    {
+      "task": "benchmark/tasks/v3-calibration-continuous-offset",
+      "variant": "reference",
+      "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-continuous-offset/reference",
+      "expected": "pass",
+      "certification": "pending-live-execution"
+    },
+    {
+      "task": "benchmark/tasks/v3-calibration-continuous-offset",
+      "variant": "alternative",
+      "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-continuous-offset/alternative",
+      "expected": "pass",
+      "certification": "pending-live-execution"
+    },
+    {
+      "task": "benchmark/tasks/v3-calibration-continuous-offset",
+      "variant": "fixed_code",
+      "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-continuous-offset/fixed_code",
+      "expected": "fail",
+      "certification": "pending-live-execution"
+    },
+    {
+      "task": "benchmark/tasks/v3-calibration-continuous-offset",
+      "variant": "wrong_direction",
+      "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-continuous-offset/wrong_direction",
+      "expected": "fail",
+      "certification": "pending-live-execution"
+    },
+    {
+      "task": "benchmark/tasks/v3-calibration-continuous-offset",
+      "variant": "cancel_signal",
+      "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-continuous-offset/cancel_signal",
+      "expected": "fail",
+      "certification": "pending-live-execution"
+    },
+    {
+      "task": "benchmark/tasks/v3-calibration-continuous-offset",
+      "variant": "fractional_code",
+      "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-continuous-offset/fractional_code",
+      "expected": "fail",
+      "certification": "pending-live-execution"
+    },
+    {
+      "task": "benchmark/tasks/v3-calibration-common-mode-servo",
+      "variant": "reference",
+      "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-common-mode-servo/reference",
+      "expected": "pass",
+      "certification": "pending-live-execution"
+    },
+    {
+      "task": "benchmark/tasks/v3-calibration-common-mode-servo",
+      "variant": "alternative",
+      "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-common-mode-servo/alternative",
+      "expected": "pass",
+      "certification": "pending-live-execution"
+    },
+    {
+      "task": "benchmark/tasks/v3-calibration-common-mode-servo",
+      "variant": "fixed_code",
+      "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-common-mode-servo/fixed_code",
+      "expected": "fail",
+      "certification": "pending-live-execution"
+    },
+    {
+      "task": "benchmark/tasks/v3-calibration-common-mode-servo",
+      "variant": "wrong_direction",
+      "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-common-mode-servo/wrong_direction",
+      "expected": "fail",
+      "certification": "pending-live-execution"
+    },
+    {
+      "task": "benchmark/tasks/v3-calibration-common-mode-servo",
+      "variant": "measure_differential",
+      "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-common-mode-servo/measure_differential",
+      "expected": "fail",
+      "certification": "pending-live-execution"
+    },
+    {
+      "task": "benchmark/tasks/v3-calibration-common-mode-servo",
+      "variant": "fractional_code",
+      "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-common-mode-servo/fractional_code",
+      "expected": "fail",
+      "certification": "pending-live-execution"
+    }
+  ],
+  "source_disposition": {
+    "302": "D1 N/N+1 feedback; old toggle convention replaced by explicit rising-edge contract",
+    "306": "D2 static trim retained as healthy frontend start",
+    "369": "D2 signed continuous control merged with306 because same execution contract",
+    "390": "D3 real common-mode actuation and preserved differential transfer"
+  },
+  "tasks": [
+    {
+      "id": "v3-calibration-fractional-pll",
+      "kind": "fractional-pll",
+      "conditions": 2,
+      "case_sha256": "6478a43e1a590e647955229ca5f74a5cb704c0096dc9aa773d6b7f82210bd3ff"
+    },
+    {
+      "id": "v3-calibration-continuous-offset",
+      "kind": "continuous-offset",
+      "conditions": 2,
+      "case_sha256": "332a73b97d5faaf4c53220cb04954d660d342907a79d242cd5e81e299ae1b2fb"
+    },
+    {
+      "id": "v3-calibration-common-mode-servo",
+      "kind": "common-mode-servo",
+      "conditions": 2,
+      "case_sha256": "f13b2f1e882611e670b18acb292179172ee98400c84d5ceddb3ac52cc0a832d5"
+    }
+  ]
+}
