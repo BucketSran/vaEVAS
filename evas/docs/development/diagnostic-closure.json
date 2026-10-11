@@ -289,5 +289,39 @@
     "evas/rust_core/src/transition.rs": "61de1f3b626e78f656d3b8d81a1ecfb14786fc5dfb117a548e1351edd46edf30",
     "evas/rust_core/src/transition_filter.rs": "b77b028da41289d0a848600a4d6b158cde86d0f632eecab5ffe3741d01174bc0",
     "evas/rust_core/ir/src/lib.rs": "6e817c39ffe5143eb91e5cf16bbf2ce6a4e20fb0175a5c2b7cc4e91ae46af677"
+  },
+  "external_consumer": {
+    "harness_revision": "294bc50efe5ec1c3ebc9a3339be381c7db97c279",
+    "evas_revision": "989e7f53ad825e7393167feef67e0df1e2039a1f",
+    "summary": {
+      "public": {
+        "records": 0,
+        "candidates": 0,
+        "match": 0,
+        "false_accept": 0,
+        "false_reject": 0,
+        "infra": 0,
+        "unevaluable": 0,
+        "not_compared": 0
+      },
+      "extension": {
+        "records": 6,
+        "candidates": 6,
+        "match": 0,
+        "false_accept": 0,
+        "false_reject": 0,
+        "infra": 1,
+        "unevaluable": 4,
+        "not_compared": 1
+      }
+    },
+    "final_checks": {
+      "replays_verified": 6,
+      "worker_start_pid_controls": 2,
+      "source_inventory_matches_original": 107
+    },
+    "os_worker_start_receipt_sha256": "73e09af2b634839548b8c2796038f95fd7bdbdb3c9beab1f692b467db17bcb5c",
+    "reference": "https://github.com/BucketSran/circuit-harness/blob/294bc50efe5ec1c3ebc9a3339be381c7db97c279/docs/reference/CURRENT_EVAS_PUBLIC_SESSION.md#evidence-and-limits",
+    "availability": "full source inventories, image/kernel identities, six canonical replay receipts and OS controls retained privately; maintained consumer test is published"
   }
 }
