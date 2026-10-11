@@ -67,7 +67,12 @@ impl IdtMod {
         // Preserve the declared finite-range contract of the ordinary path.
         full_range(self.modulus, self.offset).ok()?;
         let normalized = (raw - I::point(self.offset)) / I::point(self.modulus);
-        if normalized.finite() && normalized.lo.floor() == normalized.hi.floor() {
+        // A nonpoint ordinary phase can also amplify avoidable integral
+        // enclosure width through a sine consumer near zero. Reuse the same
+        // original-source proof used at wraps; absent provenance/budget keeps
+        // the interval path, including any inherited input uncertainty.
+        if raw.lo == raw.hi && normalized.finite() && normalized.lo.floor() == normalized.hi.floor()
+        {
             return None;
         }
         self.exact_source
@@ -201,6 +206,51 @@ mod tests {
         )
         .unwrap();
         assert_eq!(h.value_bounds(1.0).unwrap(), I { lo: -0.5, hi: 0.5 });
+    }
+
+    #[test]
+    fn generated_source_error_cannot_supply_an_exact_ordinary_phase() {
+        use crate::ir::{Expression, Term, TransientInputs};
+        let mut trajectory = crate::pwl::Trajectory::new(
+            TransientInputs {
+                strobetimes: Vec::new(),
+                pwl: Vec::new(),
+                output_times: vec![0.0, 1.0],
+                stop: 1.0,
+                max_step: 1.0,
+            },
+            0,
+        )
+        .unwrap();
+        trajectory
+            .add_enclosed_source(vec![[0.0, 0.25], [1.0, 0.25]], 0.01)
+            .unwrap();
+        let input = Expression::Affine {
+            constant: 0.0,
+            terms: vec![Term {
+                node: 1,
+                coefficient: 1.0,
+            }],
+        };
+        let exact =
+            crate::exact_source::Curve::expression(&input, &[1], &trajectory.exact_sources, 1.0);
+        assert!(exact.is_none());
+        let bounds = [
+            trajectory.value_bounds(0.0)[0],
+            trajectory.value_bounds(1.0)[0],
+        ];
+        let history = IdtMod::enclosed(
+            vec![(0.0, 0.25), (1.0, 0.25)],
+            bounds.to_vec(),
+            0.125,
+            1.0,
+            0.0,
+        )
+        .unwrap()
+        .with_exact_source(exact);
+        let interval = history.value_bounds(0.5).unwrap();
+        assert!(interval.lo <= 0.245 && interval.hi >= 0.255);
+        assert!(interval.hi - interval.lo >= 0.01);
     }
 
     #[test]

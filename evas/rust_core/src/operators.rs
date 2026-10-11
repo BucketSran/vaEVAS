@@ -507,7 +507,9 @@ fn sin_reduced(r: I) -> Result<I, Error> {
         term = -term * r2 / I::point(a * b);
         sum = sum + term;
     }
-    Ok(widen(sum, taylor_remainder(limit, 19)))
+    // Lagrange's remainder depends on this certified argument interval,
+    // not on the largest argument admitted by the reduction domain.
+    Ok(widen(sum, taylor_remainder(r.lo.abs().max(r.hi.abs()), 19)))
 }
 
 fn cos_reduced(r: I) -> Result<I, Error> {
@@ -535,7 +537,7 @@ fn cos_reduced(r: I) -> Result<I, Error> {
         term = -term * r2 / I::point(a * b);
         sum = sum + term;
     }
-    Ok(widen(sum, taylor_remainder(limit, 20)))
+    Ok(widen(sum, taylor_remainder(r.lo.abs().max(r.hi.abs()), 20)))
 }
 
 fn sin_point_bounds(x: f64) -> Result<I, Error> {
