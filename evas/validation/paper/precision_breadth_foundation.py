@@ -155,6 +155,8 @@ def cards():
         c['input_gain_bound']=gains[c['group_id']]
         c['title']={'F01':'Macro and instance parameters','F02':'Sequential locals and contribution snapshots','F03':'Comparisons, logic and ternary DC boundaries','F04':'Scalar case first match and default','F05':'Pure function branches and locals','F06':'Static loop and local array','F07':'Non-idempotent persistent array events','F08':'Static electrical vector','F09':'Two-level hierarchy parameters','F10':'Reference and additive contributions','F11':'Unique affine implicit relation','F12':'Monotone cubic implicit relation','F13':'Integral with nonzero initial state','F14':'PWL derivative one-sided values','F15':'Dyadic laplace_nd DC initialization','F16':'Dyadic laplace_np equivalent encoding','F17':'Fixed delay startup history','F18':'Asymmetric slew reverse catch-up','F19':'Timer and complete asymmetric transition','F20':'Half-open wrapped phase and sine'}[c['group_id']]
         if c['group_id']=='F14':
+            c['input_gain_evidence_required']=True
+            c['input_gain_qualification_note']='Voltage maxnorm error alone does not bound derivative error. Gain 2 applies only to errors in endpoints of the same fixed PWL topology; actual slope/topology adapter evidence is required.'
             c['phase_obligations']={'initial':'DC operating point derivative 0; transient phase must be distinguished','requires_actual_phase_evidence':True}
             c['qualification_note']='time=0 alone is not evidence of DC phase; derivative corners require native one-sided rows.'
         if c['group_id'] in ('F03','F04'):

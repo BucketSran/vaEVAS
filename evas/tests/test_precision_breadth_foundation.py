@@ -231,5 +231,16 @@ class FoundationReferences(unittest.TestCase):
         self.assertGreaterEqual(out['outputs']['y'][1],.5)
 
 
+    def test_derivative_requires_input_slope_evidence_but_constant_phase_does_not(self):
+        derivative=self.card('F14')
+        self.assertTrue(derivative['input_gain_evidence_required'])
+        self.assertIn('maxnorm',derivative['input_gain_qualification_note'])
+        phase=self.card('F20')
+        self.assertEqual(phase['inputs'],{})
+        self.assertFalse(phase.get('input_gain_evidence_required',False))
+        for group in ('F03','F04'):
+            self.assertTrue(self.card(group)['input_exact_evidence_required'])
+
+
 if __name__ == '__main__':
     unittest.main()
