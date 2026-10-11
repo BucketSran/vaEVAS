@@ -29,6 +29,7 @@
 | 共同事件验收重构有何前后对照？ | [六模型、两设置对照](backends/event-acceptance/README.md)，保留原参考误差、精确边界差异和未决资格 |
 | 极近事件后的非线性历史和 PWL 转折是否保持？ | [有序事件历史对照](backends/ordered-event-history/README.md)，保留原四项失败、两项严格计时诊断和未确认的精确顺序 |
 | timer、transition、cross 的工程组合和完整请求成本？ | [事件组合对照](backends/event-alignment/README.md)，保留 C1 阶段差、M1-base 失败及性能限制 |
+| 平方输入的滤波直接通路是否正确？ | [固定前馈 C4 对照](backends/filter-direct/README.md)，含非零初态、反向输入和非整数系数 |
 | 采样、保持、边沿和滤波能否一起工作？ | [四类组合的实际 Spectre 对照](backends/sample-edge-filter/README.md)，含复位、中断、双实例及瞬时保持边界差异 |
 | 两级固定 slew 能否正确追赶和反向？ | [实际 Spectre 对照](backends/slew-cascade/README.md)，含参考步长细化及原超差配置 |
 | 微事件闭包与查询相位如何验证？ | [有序事件源对照](backends/ordered-event-sources/README.md)，区分两组 16 请求、旧相位失败和实际 Spectre 分歧 |
