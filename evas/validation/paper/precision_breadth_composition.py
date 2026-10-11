@@ -172,7 +172,8 @@ def cards():
     c=setcase(16,'DC derivative phase into filter direct term','u d y',
         "V(d)<+T*ddt(V(u)); V(y)<+laplace_nd(V(d),'{1,T},'{1,2*T});",
         inputs={'u':[[0,0],[4,4]]},stop=4)
-    c['phase_obligations']={'dc':{'time_s':0.,'outputs':{'d':0.,'y':0.}},'transient_right':{'outputs':['d','y']}}
+    c['critical_times_s'].append(2e-12)
+    c['phase_obligations']={'dc':{'time_s':0.,'outputs':{'d':0.,'y':0.}},'transient_right':{'time_s':2e-12,'outputs':['d','y']}}
 
     for i, title, inp, freq, ic, offset, stop in [
         (17,'Positive chirp VCO coherent phase and sine',{'u':[[0,0],[4,4]]},'0.5+0.25*V(u)',.125,0,4),
@@ -266,6 +267,8 @@ def cards():
     # plus quadratic perturbation <=16. EC11: positive filter mass<=1;
     # derivative impulse L1=2/e<1. EC12: |delta(u^2)|<=9.001 epsilon,
     # and H=1-1/(sT+2) has impulse total variation <=1.5.
+    # EC17: delta phase <=.25*4*epsilon; sine adds gain 2*pi.
+    # The chirp's instantaneous frequency slope is time sensitivity instead.
     gains={3:4.,4:16.,11:1.,12:14.,13:1.2500001,17:7.}
     for index,gain in gains.items():result[index-1]['input_gain_bound']=gain
     for c in result:
@@ -650,7 +653,12 @@ def reference(card, time_s, event_bounds):
                 a=_hull(a,_min(2*x,2));b=_hull(b,_min(x,2))
             out={'a':a,'b':b}
         elif group==16:
-            out={'d':_i(0),'y':_i(0)} if time_s==0 else {'d':_i(1),'y':1-.5*(-x/2).exp()}
+            out={'d':_i(1),'y':1-.5*(-x/2).exp()}
+            if ts.lo==0:
+                # A zero timestamp has a nonzero serialization box. Retain
+                # the DC derivative/filter point and all transient right
+                # values; only actual phase evidence may distinguish them.
+                out={name:_hull(_i(0),value) for name,value in out.items()}
         elif group in (17,18):
             if group==17:a=.125+.5*x+.125*x**2;freq=.5+.25*x;offset=0
             else:a=.125-.25*x;freq=_i(-.25);offset=-.5

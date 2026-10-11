@@ -93,6 +93,17 @@ class CompositionReferences(unittest.TestCase):
         illegal={**history,card['events'][0]['id']:[0.,0.]}
         with self.assertRaises(ValueError):m.reference(card,m.UNIT,illegal)
         with self.assertRaises(ValueError):m.reference(card,float('nan'),history)
+        repeated={**history,'repeated-callback':[card['unit_s']]*2}
+        with self.assertRaises(ValueError):m.reference(card,m.UNIT,repeated)
+        # Broaden only this negative control's legal windows so the frozen
+        # ordering check, rather than the individual-window check, rejects it.
+        from copy import deepcopy
+        reordered=deepcopy(card)
+        for e in reordered['events']:e['early_s']=e['late_s']=m.UNIT
+        e0,e1=reordered['events']
+        backwards={e0['id']:[.8*m.UNIT]*2,e1['id']:[.4*m.UNIT]*2}
+        with self.assertRaisesRegex(ValueError,'frozen event order'):
+            m.reference(reordered,m.UNIT,backwards)
         self.assertEqual(m.reference(card,m.UNIT,history)['undefined'],{})
 
     def test_probe_slots_never_manufacture_precision_answers(self):
@@ -268,3 +279,76 @@ class CompositionReferences(unittest.TestCase):
             for channel in at:
                 self.assertLessEqual(at[channel][0],base[channel][1])
                 self.assertGreaterEqual(at[channel][1],base[channel][0])
+
+    def test_dc_derivative_boundary_encloses_positive_serialization_times(self):
+        import math
+        m=load();c=next(c for c in m.cards() if c['group_id']=='EC16')
+        # Laplace transfer (1+sT)/(1+2sT) has direct term 1/2.
+        # A transient unit derivative step gives y=1-exp(-x/2)/2;
+        # a DC derivative is zero. Timestamp zero alone selects neither.
+        answer=m.reference(c,0.,{})
+        for name,right in {'d':1.,'y':.5}.items():
+            lo,hi=answer['outputs'][name]
+            self.assertLessEqual(lo,0.)
+            self.assertGreaterEqual(hi,right)
+        radius=c['reference_time_uncertainty_s']
+        for t in (radius/4,radius/2,radius):
+            correct=1-.5*math.exp(-t/m.UNIT/2)
+            lo,hi=answer['outputs']['y']
+            self.assertLessEqual(lo,correct);self.assertGreaterEqual(hi,correct)
+        self.assertTrue(answer['time_uncertainty_included'])
+        right=m.reference(c,2e-12,{})['outputs']
+        self.assertGreater(right['d'][0],.999999)
+        self.assertGreater(right['y'][0],.5)
+        self.assertFalse(right['y'][0]<=0.<=right['y'][1])
+
+    def test_nonlast_transition_window_contains_independent_rational_replay(self):
+        import itertools
+        from fractions import Fraction as F
+        m=load();c=next(c for c in m.cards() if c['group_id']=='EC02')
+        boxes={e['id']:[e['nominal_s'],e['nominal_s']+e['late_s']] for e in c['events']}
+        # Independent scalar state machine in exact fractions. Its state is
+        # actual start, target, slope and origin, with no interval operations.
+        def scalar(query,callbacks):
+            start=target=origin=F(0);slope=F(0);when=F(0)
+            def value(t):
+                v=start+slope*max(F(0),t-when)
+                return min(max(start,target),max(min(start,target),v))
+            for e,newtarget in zip(callbacks,(1,0,1,0)):
+                at=e+F(1,16)
+                if query<at:return value(query)
+                current=value(at)
+                if current==target:origin=target
+                duration=F(1,4) if newtarget>current else F(1,2)
+                history=origin if (newtarget>current)==(slope>=0) else target
+                start=current;slope=(newtarget-history)/duration
+                origin=history;target=F(newtarget);when=at
+            return value(query)
+        for index in (1,2,3):
+            e=c['events'][index];a,b=boxes[e['id']]
+            for weight in (0.,.25,.5,.75,1.):
+                query=a+(b-a)*weight+m.UNIT/16
+                lo,hi=m.reference(c,query,boxes)['outputs']['out']
+                for weights in itertools.product((0.,.5,1.),repeat=4):
+                    callbacks=[F(boxes[e['id']][0]+w*(boxes[e['id']][1]-boxes[e['id']][0]))/F(m.UNIT)
+                               for e,w in zip(c['events'],weights)]
+                    expected=scalar(F(query)/F(m.UNIT),callbacks)
+                    with self.subTest(index=index,weight=weight,history=weights):
+                        self.assertLessEqual(F(lo),expected)
+                        self.assertGreaterEqual(F(hi),expected)
+
+    def test_vco_input_gain_bounds_integrated_voltage_perturbation(self):
+        import math
+        m=load();c=next(c for c in m.cards() if c['group_id']=='EC17')
+        # f=.5+.25u, so delta phase=.25*integral(delta u dx).
+        # The run lasts 4T. Voltage perturbation epsilon has phase gain 1,
+        # then sine has global gain 2*pi. df/dx is a time sensitivity,
+        # not the input-voltage gain.
+        gain=c['input_gain_bound']['out']
+        self.assertGreaterEqual(gain,2*math.pi)
+        for x in (0.,1.,2.,3.,4.):
+            phase=.125+.5*x+.125*x*x
+            for epsilon in (-.001,-.00001,.00001,.001):
+                actual=math.sin(2*math.pi*(phase+.25*epsilon*x))
+                nominal=math.sin(2*math.pi*phase)
+                self.assertLessEqual(abs(actual-nominal),gain*abs(epsilon)+1e-14)
