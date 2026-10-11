@@ -14,7 +14,6 @@ class ContractTests(unittest.TestCase):
         got=phasor(rows,'u',1000)
         self.assertAlmostEqual(abs(got),.2,places=5)
         self.assertAlmostEqual(math.atan2(got.imag,got.real),.4,places=5)
-if __name__=='__main__': unittest.main()
 
 class DynamicContractTests(unittest.TestCase):
     def test_energy_step_requires_continuous_rise(self):
@@ -59,3 +58,5 @@ class SweepContractTests(unittest.TestCase):
         for row in rows:
             if .006<row['time']<.012:row['valid']=1.
         self.assertFalse(evaluate(rows,case,None)['passed'])
+
+if __name__=='__main__': unittest.main()
