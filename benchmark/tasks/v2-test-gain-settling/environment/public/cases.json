@@ -1,0 +1,101 @@
+[
+  {
+    "name": "normal",
+    "kind": "settling",
+    "input_span_uncertainty": 1e-12,
+    "stop": 5.6e-08,
+    "sample_period": 2.5e-10,
+    "samples": 80,
+    "tail_samples": 8,
+    "min_input_span": 0.02,
+    "settle_tol": 0.002,
+    "guard": 8e-11,
+    "atol": 0.003,
+    "tolerances": {
+      "gain": 0.02,
+      "settling_ns": 0.03
+    },
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"static_amp.va\"\nahdl_include \"dynamic_amp.va\"\nVclk (clk 0) vsource type=pulse val0=0 val1=.9 delay=.1n period=.5n width=.2n rise=10p fall=10p\nVen (enable 0) vsource dc=.9\nVvin (vin 0) vsource type=pwl wave=[0 .44 2.2n .44 2.25n 0.47 32.2n 0.47 32.25n 0.43 56n 0.43]\nVlaunch (launch 0) vsource type=pwl wave=[0 0 2n 0 2.02n 1 2.1n 1 2.12n 0 32n 0 32.02n 1 32.1n 1 32.12n 0 56n 0]\nXA (clk 0 enable vin static_out clipping) programmable_gain_amplifier gain_low=2.5 gain_high=2.5\nXD (vin clk 0 enable 0 enable enable dynamic_out error_internal settled_internal) opamp_feedback_settling alpha=0.3 tick=50p tr=100p\nXM (vin static_out dynamic_out launch gain gain_valid settling_ns settled status) gain_settling_meter\ntran tran stop=56n maxstep=5p\nsave vin static_out dynamic_out launch gain gain_valid settling_ns settled status\n",
+    "signals": [
+      "vin",
+      "static_out",
+      "dynamic_out",
+      "launch",
+      "gain",
+      "gain_valid",
+      "settling_ns",
+      "settled",
+      "status"
+    ],
+    "support": {
+      "static_amp.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\n\nmodule programmable_gain_amplifier(clk, rst, gain_sel, vin, out, metric);\n    input clk, rst, gain_sel, vin;\n    output out, metric;\n    electrical clk, rst, gain_sel, vin, out, metric;\n\n    parameter real vth = 0.45;\n    parameter real vcm = 0.45;\n    parameter real gain_low = 0.8;\n    parameter real gain_high = 2.4;\n    parameter real vmin = 0.0;\n    parameter real vmax = 0.9;\n    parameter real tr = 200p from (0:inf);\n\n    real gain_value;\n    real raw;\n    real bounded;\n    real clipped;\n\n    analog begin\n        @(initial_step) begin\n            gain_value = 1.0;\n        end\n\n        @(cross(V(clk) - vth, +1)) begin\n            if (V(rst) > vth)\n                gain_value = 1.0;\n            else if (V(gain_sel) > vth)\n                gain_value = gain_high;\n            else\n                gain_value = gain_low;\n        end\n\n        raw = vcm + gain_value * (V(vin) - vcm);\n        bounded = raw;\n        clipped = 0.0;\n        if (bounded > vmax) begin\n            bounded = vmax;\n            clipped = 1.0;\n        end\n        if (bounded < vmin) begin\n            bounded = vmin;\n            clipped = 1.0;\n        end\n        if (V(rst) > vth) begin\n            bounded = vcm;\n            clipped = 0.0;\n        end\n\n        V(out) <+ bounded;\n        V(metric) <+ transition((clipped > 0.5) ? 0.9 : 0.0, 0, tr, tr);\n    end\nendmodule\n",
+      "dynamic_amp.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\n\nmodule opamp_feedback_settling(vin, clk, rst, enable, gain_2, gain_1, gain_0, vout, error_metric, settled);\n    inout vin, clk, rst, enable, gain_2, gain_1, gain_0, vout, error_metric, settled;\n    electrical vin, clk, rst, enable, gain_2, gain_1, gain_0, vout, error_metric, settled;\n    parameter real vdd = 0.9; parameter real vss = 0.0; parameter real vcm = 0.45; parameter real vth = 0.45;\n    parameter real gain_lsb = 0.5; parameter real alpha = 0.3; parameter real settle_tol = 40e-3; parameter real tr = 200p from (0:inf); parameter real tick = 250p from (0:inf);\n    integer code, mapped_code, settle_count; real prev_clk, target, vout_v, err_v, settled_v;\n    analog function real absval; input x; real x; begin absval = (x < 0.0) ? -x : x; end endfunction\n    analog function real clip; input x; real x; begin if (x < vss) clip = vss; else if (x > vdd) clip = vdd; else clip = x; end endfunction\n    analog begin\n        @(initial_step) begin prev_clk = 0.0; settle_count = 0; vout_v = vcm; err_v = 0.0; settled_v = 0.0; end\n        @(timer(0, tick)) begin\n            if (V(rst) > vth || V(enable) <= vth) begin settle_count = 0; vout_v = vcm; err_v = 0.0; settled_v = 0.0; end\n            else if (V(clk) > vth && prev_clk <= vth) begin\n                code = 0; if (V(gain_0) > vth) code = code + 1; if (V(gain_1) > vth) code = code + 2; if (V(gain_2) > vth) code = code + 4;\n                mapped_code = code;\n                target = clip(vcm + (1.0 + gain_lsb * mapped_code) * (V(vin) - vcm));\n                vout_v = clip(vout_v + alpha * (target - vout_v));\n                err_v = target - vout_v;\n                if (absval(err_v) < settle_tol) settle_count = settle_count + 1; else settle_count = 0;\n                settled_v = (settle_count >= 3) ? vdd : vss;\n            end\n            prev_clk = V(clk);\n        end\n        V(vout) <+ transition(vout_v, 0, tr, tr);\n        V(error_metric) <+ transition(err_v + vcm, 0, tr, tr);\n        V(settled) <+ transition(settled_v, 0, tr, tr);\n    end\nendmodule\n"
+    }
+  },
+  {
+    "name": "unsettled-dut",
+    "kind": "settling",
+    "input_span_uncertainty": 1e-12,
+    "stop": 5.6e-08,
+    "sample_period": 2.5e-10,
+    "samples": 80,
+    "tail_samples": 8,
+    "min_input_span": 0.02,
+    "settle_tol": 0.002,
+    "guard": 8e-11,
+    "atol": 0.003,
+    "tolerances": {
+      "gain": 0.02,
+      "settling_ns": 0.03
+    },
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"static_amp.va\"\nahdl_include \"dynamic_amp.va\"\nVclk (clk 0) vsource type=pulse val0=0 val1=.9 delay=.1n period=.5n width=.2n rise=10p fall=10p\nVen (enable 0) vsource dc=.9\nVvin (vin 0) vsource type=pwl wave=[0 .44 2.2n .44 2.25n 0.47 32.2n 0.47 32.25n 0.43 56n 0.43]\nVlaunch (launch 0) vsource type=pwl wave=[0 0 2n 0 2.02n 1 2.1n 1 2.12n 0 32n 0 32.02n 1 32.1n 1 32.12n 0 56n 0]\nXA (clk 0 enable vin static_out clipping) programmable_gain_amplifier gain_low=2.5 gain_high=2.5\nXD (vin clk 0 enable 0 enable enable dynamic_out error_internal settled_internal) opamp_feedback_settling alpha=0.01 tick=50p tr=100p\nXM (vin static_out dynamic_out launch gain gain_valid settling_ns settled status) gain_settling_meter\ntran tran stop=56n maxstep=5p\nsave vin static_out dynamic_out launch gain gain_valid settling_ns settled status\n",
+    "signals": [
+      "vin",
+      "static_out",
+      "dynamic_out",
+      "launch",
+      "gain",
+      "gain_valid",
+      "settling_ns",
+      "settled",
+      "status"
+    ],
+    "support": {
+      "static_amp.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\n\nmodule programmable_gain_amplifier(clk, rst, gain_sel, vin, out, metric);\n    input clk, rst, gain_sel, vin;\n    output out, metric;\n    electrical clk, rst, gain_sel, vin, out, metric;\n\n    parameter real vth = 0.45;\n    parameter real vcm = 0.45;\n    parameter real gain_low = 0.8;\n    parameter real gain_high = 2.4;\n    parameter real vmin = 0.0;\n    parameter real vmax = 0.9;\n    parameter real tr = 200p from (0:inf);\n\n    real gain_value;\n    real raw;\n    real bounded;\n    real clipped;\n\n    analog begin\n        @(initial_step) begin\n            gain_value = 1.0;\n        end\n\n        @(cross(V(clk) - vth, +1)) begin\n            if (V(rst) > vth)\n                gain_value = 1.0;\n            else if (V(gain_sel) > vth)\n                gain_value = gain_high;\n            else\n                gain_value = gain_low;\n        end\n\n        raw = vcm + gain_value * (V(vin) - vcm);\n        bounded = raw;\n        clipped = 0.0;\n        if (bounded > vmax) begin\n            bounded = vmax;\n            clipped = 1.0;\n        end\n        if (bounded < vmin) begin\n            bounded = vmin;\n            clipped = 1.0;\n        end\n        if (V(rst) > vth) begin\n            bounded = vcm;\n            clipped = 0.0;\n        end\n\n        V(out) <+ bounded;\n        V(metric) <+ transition((clipped > 0.5) ? 0.9 : 0.0, 0, tr, tr);\n    end\nendmodule\n",
+      "dynamic_amp.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\n\nmodule opamp_feedback_settling(vin, clk, rst, enable, gain_2, gain_1, gain_0, vout, error_metric, settled);\n    inout vin, clk, rst, enable, gain_2, gain_1, gain_0, vout, error_metric, settled;\n    electrical vin, clk, rst, enable, gain_2, gain_1, gain_0, vout, error_metric, settled;\n    parameter real vdd = 0.9; parameter real vss = 0.0; parameter real vcm = 0.45; parameter real vth = 0.45;\n    parameter real gain_lsb = 0.5; parameter real alpha = 0.3; parameter real settle_tol = 40e-3; parameter real tr = 200p from (0:inf); parameter real tick = 250p from (0:inf);\n    integer code, mapped_code, settle_count; real prev_clk, target, vout_v, err_v, settled_v;\n    analog function real absval; input x; real x; begin absval = (x < 0.0) ? -x : x; end endfunction\n    analog function real clip; input x; real x; begin if (x < vss) clip = vss; else if (x > vdd) clip = vdd; else clip = x; end endfunction\n    analog begin\n        @(initial_step) begin prev_clk = 0.0; settle_count = 0; vout_v = vcm; err_v = 0.0; settled_v = 0.0; end\n        @(timer(0, tick)) begin\n            if (V(rst) > vth || V(enable) <= vth) begin settle_count = 0; vout_v = vcm; err_v = 0.0; settled_v = 0.0; end\n            else if (V(clk) > vth && prev_clk <= vth) begin\n                code = 0; if (V(gain_0) > vth) code = code + 1; if (V(gain_1) > vth) code = code + 2; if (V(gain_2) > vth) code = code + 4;\n                mapped_code = code;\n                target = clip(vcm + (1.0 + gain_lsb * mapped_code) * (V(vin) - vcm));\n                vout_v = clip(vout_v + alpha * (target - vout_v));\n                err_v = target - vout_v;\n                if (absval(err_v) < settle_tol) settle_count = settle_count + 1; else settle_count = 0;\n                settled_v = (settle_count >= 3) ? vdd : vss;\n            end\n            prev_clk = V(clk);\n        end\n        V(vout) <+ transition(vout_v, 0, tr, tr);\n        V(error_metric) <+ transition(err_v + vcm, 0, tr, tr);\n        V(settled) <+ transition(settled_v, 0, tr, tr);\n    end\nendmodule\n"
+    }
+  },
+  {
+    "name": "invalid-input-span",
+    "kind": "settling",
+    "input_span_uncertainty": 1e-12,
+    "stop": 5.6e-08,
+    "sample_period": 2.5e-10,
+    "samples": 80,
+    "tail_samples": 8,
+    "min_input_span": 0.02,
+    "settle_tol": 0.002,
+    "guard": 8e-11,
+    "atol": 0.003,
+    "tolerances": {
+      "gain": 0.02,
+      "settling_ns": 0.03
+    },
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"static_amp.va\"\nahdl_include \"dynamic_amp.va\"\nVclk (clk 0) vsource type=pulse val0=0 val1=.9 delay=.1n period=.5n width=.2n rise=10p fall=10p\nVen (enable 0) vsource dc=.9\nVvin (vin 0) vsource type=pwl wave=[0 .44 2.2n .44 2.25n 0.445 32.2n 0.445 32.25n 0.442 56n 0.442]\nVlaunch (launch 0) vsource type=pwl wave=[0 0 2n 0 2.02n 1 2.1n 1 2.12n 0 32n 0 32.02n 1 32.1n 1 32.12n 0 56n 0]\nXA (clk 0 enable vin static_out clipping) programmable_gain_amplifier gain_low=2.5 gain_high=2.5\nXD (vin clk 0 enable 0 enable enable dynamic_out error_internal settled_internal) opamp_feedback_settling alpha=0.3 tick=50p tr=100p\nXM (vin static_out dynamic_out launch gain gain_valid settling_ns settled status) gain_settling_meter\ntran tran stop=56n maxstep=5p\nsave vin static_out dynamic_out launch gain gain_valid settling_ns settled status\n",
+    "signals": [
+      "vin",
+      "static_out",
+      "dynamic_out",
+      "launch",
+      "gain",
+      "gain_valid",
+      "settling_ns",
+      "settled",
+      "status"
+    ],
+    "support": {
+      "static_amp.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\n\nmodule programmable_gain_amplifier(clk, rst, gain_sel, vin, out, metric);\n    input clk, rst, gain_sel, vin;\n    output out, metric;\n    electrical clk, rst, gain_sel, vin, out, metric;\n\n    parameter real vth = 0.45;\n    parameter real vcm = 0.45;\n    parameter real gain_low = 0.8;\n    parameter real gain_high = 2.4;\n    parameter real vmin = 0.0;\n    parameter real vmax = 0.9;\n    parameter real tr = 200p from (0:inf);\n\n    real gain_value;\n    real raw;\n    real bounded;\n    real clipped;\n\n    analog begin\n        @(initial_step) begin\n            gain_value = 1.0;\n        end\n\n        @(cross(V(clk) - vth, +1)) begin\n            if (V(rst) > vth)\n                gain_value = 1.0;\n            else if (V(gain_sel) > vth)\n                gain_value = gain_high;\n            else\n                gain_value = gain_low;\n        end\n\n        raw = vcm + gain_value * (V(vin) - vcm);\n        bounded = raw;\n        clipped = 0.0;\n        if (bounded > vmax) begin\n            bounded = vmax;\n            clipped = 1.0;\n        end\n        if (bounded < vmin) begin\n            bounded = vmin;\n            clipped = 1.0;\n        end\n        if (V(rst) > vth) begin\n            bounded = vcm;\n            clipped = 0.0;\n        end\n\n        V(out) <+ bounded;\n        V(metric) <+ transition((clipped > 0.5) ? 0.9 : 0.0, 0, tr, tr);\n    end\nendmodule\n",
+      "dynamic_amp.va": "`include \"constants.vams\"\n`include \"disciplines.vams\"\n\nmodule opamp_feedback_settling(vin, clk, rst, enable, gain_2, gain_1, gain_0, vout, error_metric, settled);\n    inout vin, clk, rst, enable, gain_2, gain_1, gain_0, vout, error_metric, settled;\n    electrical vin, clk, rst, enable, gain_2, gain_1, gain_0, vout, error_metric, settled;\n    parameter real vdd = 0.9; parameter real vss = 0.0; parameter real vcm = 0.45; parameter real vth = 0.45;\n    parameter real gain_lsb = 0.5; parameter real alpha = 0.3; parameter real settle_tol = 40e-3; parameter real tr = 200p from (0:inf); parameter real tick = 250p from (0:inf);\n    integer code, mapped_code, settle_count; real prev_clk, target, vout_v, err_v, settled_v;\n    analog function real absval; input x; real x; begin absval = (x < 0.0) ? -x : x; end endfunction\n    analog function real clip; input x; real x; begin if (x < vss) clip = vss; else if (x > vdd) clip = vdd; else clip = x; end endfunction\n    analog begin\n        @(initial_step) begin prev_clk = 0.0; settle_count = 0; vout_v = vcm; err_v = 0.0; settled_v = 0.0; end\n        @(timer(0, tick)) begin\n            if (V(rst) > vth || V(enable) <= vth) begin settle_count = 0; vout_v = vcm; err_v = 0.0; settled_v = 0.0; end\n            else if (V(clk) > vth && prev_clk <= vth) begin\n                code = 0; if (V(gain_0) > vth) code = code + 1; if (V(gain_1) > vth) code = code + 2; if (V(gain_2) > vth) code = code + 4;\n                mapped_code = code;\n                target = clip(vcm + (1.0 + gain_lsb * mapped_code) * (V(vin) - vcm));\n                vout_v = clip(vout_v + alpha * (target - vout_v));\n                err_v = target - vout_v;\n                if (absval(err_v) < settle_tol) settle_count = settle_count + 1; else settle_count = 0;\n                settled_v = (settle_count >= 3) ? vdd : vss;\n            end\n            prev_clk = V(clk);\n        end\n        V(vout) <+ transition(vout_v, 0, tr, tr);\n        V(error_metric) <+ transition(err_v + vcm, 0, tr, tr);\n        V(settled) <+ transition(settled_v, 0, tr, tr);\n    end\nendmodule\n"
+    }
+  }
+]

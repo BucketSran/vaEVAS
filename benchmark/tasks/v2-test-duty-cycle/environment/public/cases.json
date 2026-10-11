@@ -1,0 +1,74 @@
+[
+  {
+    "name": "variable-clock",
+    "kind": "duty",
+    "edge_time_uncertainty": 1e-15,
+    "stop": 1.5000000000000002e-07,
+    "threshold": 0.45,
+    "vhigh": 0.9,
+    "guard": 1e-10,
+    "atol": 0.002,
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVclk_in (clk_in 0) vsource type=pwl wave=[0 0 10n 0 10.1n 0.9 16n 0 30n 0 30.1n 0.9 40n 0 55n 0 55.1n 0.9 72n 0 90n 0 90.1n 0.9 100n 0 120n 0 120.1n 0.9 126n 0 150n 0]\nXDUT (clk_in valid duty0 duty1 duty2 duty3 duty4 duty5 duty6 duty7) duty_cycle_meter_8b\n\ntran tran stop=150n maxstep=100p\nsave clk_in valid duty0 duty1 duty2 duty3 duty4 duty5 duty6 duty7\n",
+    "signals": [
+      "clk_in",
+      "valid",
+      "duty0",
+      "duty1",
+      "duty2",
+      "duty3",
+      "duty4",
+      "duty5",
+      "duty6",
+      "duty7"
+    ],
+    "support": {}
+  },
+  {
+    "name": "initial-high",
+    "kind": "duty",
+    "edge_time_uncertainty": 1e-15,
+    "stop": 1.5000000000000002e-07,
+    "threshold": 0.45,
+    "vhigh": 0.9,
+    "guard": 1e-10,
+    "atol": 0.002,
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVclk_in (clk_in 0) vsource type=pwl wave=[0 0.9 5n 0.9 5.1n 0 10n 0 10.1n 0.9 16n 0 30n 0 30.1n 0.9 40n 0 55n 0 55.1n 0.9 72n 0 90n 0 90.1n 0.9 100n 0 120n 0 120.1n 0.9 126n 0 150n 0]\nXDUT (clk_in valid duty0 duty1 duty2 duty3 duty4 duty5 duty6 duty7) duty_cycle_meter_8b\n\ntran tran stop=150n maxstep=100p\nsave clk_in valid duty0 duty1 duty2 duty3 duty4 duty5 duty6 duty7\n",
+    "signals": [
+      "clk_in",
+      "valid",
+      "duty0",
+      "duty1",
+      "duty2",
+      "duty3",
+      "duty4",
+      "duty5",
+      "duty6",
+      "duty7"
+    ],
+    "support": {}
+  },
+  {
+    "name": "different-period",
+    "kind": "duty",
+    "edge_time_uncertainty": 1e-15,
+    "stop": 1.5000000000000002e-07,
+    "threshold": 0.45,
+    "vhigh": 0.9,
+    "guard": 1e-10,
+    "atol": 0.002,
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVclk_in (clk_in 0) vsource type=pwl wave=[0 0 10n 0 10.1n 0.9 16n 0 35n 0 35.1n 0.9 47n 0 65n 0 65.1n 0.9 78n 0 90n 0 90.1n 0.9 100n 0 120n 0 120.1n 0.9 126n 0 150n 0]\nXDUT (clk_in valid duty0 duty1 duty2 duty3 duty4 duty5 duty6 duty7) duty_cycle_meter_8b\n\ntran tran stop=150n maxstep=100p\nsave clk_in valid duty0 duty1 duty2 duty3 duty4 duty5 duty6 duty7\n",
+    "signals": [
+      "clk_in",
+      "valid",
+      "duty0",
+      "duty1",
+      "duty2",
+      "duty3",
+      "duty4",
+      "duty5",
+      "duty6",
+      "duty7"
+    ],
+    "support": {}
+  }
+]

@@ -1,0 +1,13 @@
+`include "disciplines.vams"
+module por_observe(raw,power,osc,por);
+input raw,power,osc;output por;electrical raw,power,osc,por;
+parameter integer mode=0;
+integer lost,cut,saw;
+analog begin
+ @(initial_step) begin lost=0;cut=0;saw=0;end
+ @(cross(V(power)-0.9,-1)) lost=1;
+ @(cross(V(raw)-0.9,+1)) begin cut=0;saw=1;end
+ @(cross(V(osc)-0.9,+1)) if(saw && V(raw)>0.9) cut=1;
+ V(por)<+(mode==3 && saw && !lost)?1.8:((mode==1 && lost) || (mode==2 && cut))?0.0:V(raw);
+end
+endmodule

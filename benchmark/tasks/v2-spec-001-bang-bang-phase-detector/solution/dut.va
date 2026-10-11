@@ -1,0 +1,18 @@
+`include "disciplines.vams"
+module alexander(data,clk,rst,enable,retimed,up,down);
+input data,clk,rst,enable; output retimed,up,down;
+electrical data,clk,rst,enable,retimed,up,down;
+parameter real vdd=0.9,vth=0.45,trf=10p,td=0;
+integer a,b,c,u,d;
+analog begin
+ @(initial_step) begin a=0;b=0;c=0;u=0;d=0;end
+ @(cross(V(rst)-vth,+1) or cross(V(enable)-vth,-1)) begin a=0;b=0;c=0;u=0;d=0;end
+ @(cross(V(clk)-vth,-1)) begin if(V(rst)<=vth && V(enable)>vth)b=(V(data)>vth);end
+ @(cross(V(clk)-vth,+1)) begin
+  if(V(rst)>vth || V(enable)<=vth)begin a=0;b=0;c=0;u=0;d=0;end
+  else begin a=c;c=(V(data)>vth);u=(a!=b && b==c);d=(a==b && b!=c);end
+ end
+ V(retimed)<+transition(c?vdd:0,td,trf,trf);
+ V(up)<+transition(u?vdd:0,td,trf,trf);V(down)<+transition(d?vdd:0,td,trf,trf);
+end
+endmodule

@@ -46,9 +46,19 @@ class HistoryProjection(unittest.TestCase):
         for call in ('absdelay', 'slew'):
             args = '1' if call == 'absdelay' else '1,-2'
             for body in (f'V(y,r)<+{call}(V(y,r),{args});',
-                         (f'V(z,r)<+{call}(V(u,r),{args}); V(y,r)<+absdelay(absdelay(V(z,r),1),1);' if call == 'absdelay' else f'V(z,r)<+{call}(V(u,r),{args}); V(y,r)<+{call}(V(z,r),{args});')):
+                         (f'V(z,r)<+{call}(V(u,r),{args}); V(y,r)<+absdelay(absdelay(V(z,r),1),1);' if call == 'absdelay' else f'V(z,r)<+{call}(V(u,r),{args}); V(y,r)<+{call}({call}(V(z,r),{args}),{args});')):
                 with self.subTest(body=body), self.assertRaises(KernelError):
                     execute(body)
+
+    def test_former_two_slew_rejection_preserves_both_histories(self):
+        # Preserve the old rejection model as a positive contract. Both
+        # stages can follow u=min(t,2) at the exact +1 slope limit.
+        body = 'V(z,r)<+slew(V(u,r),1,-2); V(y,r)<+slew(V(z,r),1,-2);'
+        for times, step in (([0,1,2,3,4,5,8],8), ([i/8 for i in range(65)],.125)):
+            with self.subTest(step=step):
+                result = execute(body, times=times, step=step)
+                for node in ('dut:z', 'y'):
+                    self.assertEqual(values(result,node), [min(t,2) for t in times])
 
     def test_cancelled_and_zero_internal_references_have_a_valid_projection(self):
         for call in ('absdelay', 'slew'):

@@ -197,12 +197,12 @@ class InstanceCompiler:
         if expr.op == "laplace_np" and len(expr.args) != 3:
             raise CompileError(f"{self.model.source}:{expr.token.line}:{expr.token.column}: laplace_np epsilon is unsupported; omit the tolerance argument")
         input_nodes = {} if expr.op == "transition" else self.node_ids
-        def nested_delay(nested):
-            if nested.op != "absdelay":
-                raise CompileError("absdelay nesting is limited to fixed absdelay stages")
+        def nested_fixed(nested):
+            if nested.op != expr.op:
+                raise CompileError(f"{expr.op} nesting is limited to fixed {expr.op} stages")
             return self.waveform(nested, resolve)
         value = lower(expr.args[0], resolve, input_nodes, self.model.source,
-                      (lambda nested: self.waveform(nested, resolve)) if expr.op in ("sin", "idt", "laplace_nd", "laplace_np", "ddt") else nested_delay if expr.op == "absdelay" else None,
+                  (lambda nested: self.waveform(nested, resolve)) if expr.op in ("sin", "idt", "laplace_nd", "laplace_np", "ddt") else nested_fixed if expr.op in ("absdelay", "slew") else None,
                       preserve_structure=True, node_declarations=expr.op != "transition")
         if expr.op in ("laplace_nd", "laplace_np"):
             def coefficients(array):

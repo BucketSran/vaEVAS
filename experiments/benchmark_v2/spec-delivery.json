@@ -1,0 +1,5209 @@
+{
+  "schema_version": 3,
+  "status": "implementation-and-model-acceptance-complete",
+  "delivery_pr": "https://github.com/BucketSran/vaEVAS/pull/145",
+  "identity_policy": "Relative evidence files and SHA256 bind this report. Final Git head, CI and merge/issue decisions belong to external review; this document does not self-bind its containing commit.",
+  "approved_spec_hash_semantics": "Each approved_specs SHA identifies the entire retained approved issue snapshot, not only the issue body.",
+  "approved_specs": [
+    {
+      "issue": 133,
+      "sha256": "59710347a5ba8ed10450cdd9b6a4c30bb4516404cfc3c7691be3c36ee5cbd3d6",
+      "url": "https://github.com/BucketSran/vaEVAS/issues/133",
+      "sha256_kind": "retained-issue-snapshot-json"
+    },
+    {
+      "issue": 134,
+      "sha256": "3bf0ff658de27dab7b0e4b1bf3a0d5a7d818cd75c69c51987e75c844ebbd8587",
+      "url": "https://github.com/BucketSran/vaEVAS/issues/134",
+      "sha256_kind": "retained-issue-snapshot-json"
+    },
+    {
+      "issue": 135,
+      "sha256": "36329043e8e3df8b5f13e234497ee7b094ad6f3143432e0a44bb720133e7e20a",
+      "url": "https://github.com/BucketSran/vaEVAS/issues/135",
+      "sha256_kind": "retained-issue-snapshot-json"
+    },
+    {
+      "issue": 136,
+      "sha256": "0261bb9e9cd2742e0e2b91150170ea850ac42b802d2d117f48468a1f4ad0ca85",
+      "url": "https://github.com/BucketSran/vaEVAS/issues/136",
+      "sha256_kind": "retained-issue-snapshot-json"
+    },
+    {
+      "issue": 137,
+      "sha256": "dd9fd987904ea527d5517e65501e01d67d438574f7cda52220e5f2bd6da88e3c",
+      "url": "https://github.com/BucketSran/vaEVAS/issues/137",
+      "sha256_kind": "retained-issue-snapshot-json"
+    }
+  ],
+  "input_sha256": {
+    "task-source-map.json": "58cd4c31de966e445cea03c81dae33088edfe616b887e45c062f8e9b65751553",
+    "author-calibration-final.json": "2a0fa259912f997598f7756afb6ada7c27ef3fa82ea61d331a7cf2f233f49c87",
+    "author-calibration-private-overlays.json": "d788e8c04e3080c5ab61d25eb392ce6dd3f859897e10436f8b0b184780941200",
+    "harbor_reference/harbor-reference-acceptance.json": "87082b173d363511f4eb35bb67c052b4ae8c595f19f3c298ff0f15bf8eddc55b",
+    "model_pilots/one-shot-final.json": "5731ea755936d92887268f224d6ced6f5877150bf3ca75a8b383027e739b1fc0",
+    "model_pilots/agentic-final.json": "27e3d2ee2dfa112d5d6c69edf333b879b6205334a851f62db01c35a3d259b185",
+    "model_pilots/model-pilot-summary.json": "8c13197f33658be7b7d2fc0a5504f7604a4bda2a95dfe6f71e3a3d595d46fbaa",
+    "model_pilots/model-pilot-results.md": "86bd5fa0c22cc83180e0af5053a6efa75d97664404ec6fed8d7104b0a266f7cd",
+    "model_pilots/model-quality.json": "66f072927355866a5c858267283b8fdb205400fcd8af609ea6ab1d465cff6b6f",
+    "model_pilots/model-quality.md": "53c1995a75a46a4014bf565a07c89f8b82392c67ce4b3e2ffd8ccfc7ef0eaefe",
+    "model_pilots/summarize.py": "5521e6e84310915da298a2cac92e127065a7358b9cea3a9b87f6e5df75fcd91f"
+  },
+  "task_count": 37,
+  "P1_unique_owning_sources": 32,
+  "mandatory_additional_representatives": 5,
+  "category_task_counts": {
+    "spec-modeling": 19,
+    "data-modeling": 1,
+    "extension-integration": 2,
+    "diagnosis-repair": 5,
+    "testing-characterization": 10
+  },
+  "task_weight": 1,
+  "author_registered_variants": 179,
+  "author_condition_positions": 584,
+  "formal_reference_tasks": 37,
+  "formal_reference_conditions": 111,
+  "model_design_cells": 148,
+  "canonical_cross_mode_pairs": 74,
+  "retained_independent_attempts": {
+    "one-shot": 106,
+    "agentic": 82
+  },
+  "model_results": {
+    "one-shot": {
+      "all_models": {
+        "design_cells": 74,
+        "complete_submissions": 44,
+        "electrically_graded": 40,
+        "passed": 38,
+        "outcomes": {
+          "context-rejection": 2,
+          "electrical-fail": 2,
+          "invalid-va": 4,
+          "no-response-cause-unknown": 6,
+          "output-budget-no-submission": 19,
+          "pass": 38,
+          "submission-format-error": 3
+        }
+      },
+      "by_model": {
+        "glm-5.3": {
+          "design_cells": 37,
+          "complete_submissions": 19,
+          "electrically_graded": 17,
+          "passed": 17,
+          "outcomes": {
+            "context-rejection": 1,
+            "invalid-va": 2,
+            "output-budget-no-submission": 16,
+            "pass": 17,
+            "submission-format-error": 1
+          }
+        },
+        "glm-5.3-flash": {
+          "design_cells": 37,
+          "complete_submissions": 25,
+          "electrically_graded": 23,
+          "passed": 21,
+          "outcomes": {
+            "context-rejection": 1,
+            "electrical-fail": 2,
+            "invalid-va": 2,
+            "no-response-cause-unknown": 6,
+            "output-budget-no-submission": 3,
+            "pass": 21,
+            "submission-format-error": 2
+          }
+        }
+      }
+    },
+    "agentic": {
+      "all_models": {
+        "design_cells": 74,
+        "complete_submissions": 48,
+        "electrically_graded": 48,
+        "passed": 48,
+        "outcomes": {
+          "output-budget-no-submission": 22,
+          "pass": 48,
+          "protocol-no-submission": 2,
+          "time-budget-no-submission": 2
+        }
+      },
+      "by_model": {
+        "glm-5.3": {
+          "design_cells": 37,
+          "complete_submissions": 25,
+          "electrically_graded": 25,
+          "passed": 25,
+          "outcomes": {
+            "output-budget-no-submission": 11,
+            "pass": 25,
+            "time-budget-no-submission": 1
+          }
+        },
+        "glm-5.3-flash": {
+          "design_cells": 37,
+          "complete_submissions": 23,
+          "electrically_graded": 23,
+          "passed": 23,
+          "outcomes": {
+            "output-budget-no-submission": 11,
+            "pass": 23,
+            "protocol-no-submission": 2,
+            "time-budget-no-submission": 1
+          }
+        }
+      }
+    }
+  },
+  "subsets": {
+    "by_category": {
+      "spec-modeling": {
+        "one-shot": {
+          "all_models": {
+            "design_cells": 38,
+            "complete_submissions": 23,
+            "electrically_graded": 21,
+            "passed": 19,
+            "outcomes": {
+              "electrical-fail": 2,
+              "invalid-va": 2,
+              "no-response-cause-unknown": 2,
+              "output-budget-no-submission": 10,
+              "pass": 19,
+              "submission-format-error": 3
+            },
+            "task_completion": {
+              "numerator": 19,
+              "denominator": 38
+            },
+            "graded_subset_pass": {
+              "numerator": 19,
+              "denominator": 21
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 19,
+              "complete_submissions": 10,
+              "electrically_graded": 9,
+              "passed": 9,
+              "outcomes": {
+                "invalid-va": 1,
+                "output-budget-no-submission": 8,
+                "pass": 9,
+                "submission-format-error": 1
+              },
+              "task_completion": {
+                "numerator": 9,
+                "denominator": 19
+              },
+              "graded_subset_pass": {
+                "numerator": 9,
+                "denominator": 9
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 19,
+              "complete_submissions": 13,
+              "electrically_graded": 12,
+              "passed": 10,
+              "outcomes": {
+                "electrical-fail": 2,
+                "invalid-va": 1,
+                "no-response-cause-unknown": 2,
+                "output-budget-no-submission": 2,
+                "pass": 10,
+                "submission-format-error": 2
+              },
+              "task_completion": {
+                "numerator": 10,
+                "denominator": 19
+              },
+              "graded_subset_pass": {
+                "numerator": 10,
+                "denominator": 12
+              }
+            }
+          }
+        },
+        "agentic": {
+          "all_models": {
+            "design_cells": 38,
+            "complete_submissions": 24,
+            "electrically_graded": 24,
+            "passed": 24,
+            "outcomes": {
+              "output-budget-no-submission": 12,
+              "pass": 24,
+              "protocol-no-submission": 2
+            },
+            "task_completion": {
+              "numerator": 24,
+              "denominator": 38
+            },
+            "graded_subset_pass": {
+              "numerator": 24,
+              "denominator": 24
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 19,
+              "complete_submissions": 13,
+              "electrically_graded": 13,
+              "passed": 13,
+              "outcomes": {
+                "output-budget-no-submission": 6,
+                "pass": 13
+              },
+              "task_completion": {
+                "numerator": 13,
+                "denominator": 19
+              },
+              "graded_subset_pass": {
+                "numerator": 13,
+                "denominator": 13
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 19,
+              "complete_submissions": 11,
+              "electrically_graded": 11,
+              "passed": 11,
+              "outcomes": {
+                "output-budget-no-submission": 6,
+                "pass": 11,
+                "protocol-no-submission": 2
+              },
+              "task_completion": {
+                "numerator": 11,
+                "denominator": 19
+              },
+              "graded_subset_pass": {
+                "numerator": 11,
+                "denominator": 11
+              }
+            }
+          }
+        }
+      },
+      "data-modeling": {
+        "one-shot": {
+          "all_models": {
+            "design_cells": 2,
+            "complete_submissions": 0,
+            "electrically_graded": 0,
+            "passed": 0,
+            "outcomes": {
+              "output-budget-no-submission": 2
+            },
+            "task_completion": {
+              "numerator": 0,
+              "denominator": 2
+            },
+            "graded_subset_pass": {
+              "numerator": 0,
+              "denominator": 0
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 1
+              },
+              "task_completion": {
+                "numerator": 0,
+                "denominator": 1
+              },
+              "graded_subset_pass": {
+                "numerator": 0,
+                "denominator": 0
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 1
+              },
+              "task_completion": {
+                "numerator": 0,
+                "denominator": 1
+              },
+              "graded_subset_pass": {
+                "numerator": 0,
+                "denominator": 0
+              }
+            }
+          }
+        },
+        "agentic": {
+          "all_models": {
+            "design_cells": 2,
+            "complete_submissions": 0,
+            "electrically_graded": 0,
+            "passed": 0,
+            "outcomes": {
+              "time-budget-no-submission": 2
+            },
+            "task_completion": {
+              "numerator": 0,
+              "denominator": 2
+            },
+            "graded_subset_pass": {
+              "numerator": 0,
+              "denominator": 0
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "time-budget-no-submission": 1
+              },
+              "task_completion": {
+                "numerator": 0,
+                "denominator": 1
+              },
+              "graded_subset_pass": {
+                "numerator": 0,
+                "denominator": 0
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "time-budget-no-submission": 1
+              },
+              "task_completion": {
+                "numerator": 0,
+                "denominator": 1
+              },
+              "graded_subset_pass": {
+                "numerator": 0,
+                "denominator": 0
+              }
+            }
+          }
+        }
+      },
+      "extension-integration": {
+        "one-shot": {
+          "all_models": {
+            "design_cells": 4,
+            "complete_submissions": 0,
+            "electrically_graded": 0,
+            "passed": 0,
+            "outcomes": {
+              "no-response-cause-unknown": 2,
+              "output-budget-no-submission": 2
+            },
+            "task_completion": {
+              "numerator": 0,
+              "denominator": 4
+            },
+            "graded_subset_pass": {
+              "numerator": 0,
+              "denominator": 0
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 2,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 2
+              },
+              "task_completion": {
+                "numerator": 0,
+                "denominator": 2
+              },
+              "graded_subset_pass": {
+                "numerator": 0,
+                "denominator": 0
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 2,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "no-response-cause-unknown": 2
+              },
+              "task_completion": {
+                "numerator": 0,
+                "denominator": 2
+              },
+              "graded_subset_pass": {
+                "numerator": 0,
+                "denominator": 0
+              }
+            }
+          }
+        },
+        "agentic": {
+          "all_models": {
+            "design_cells": 4,
+            "complete_submissions": 0,
+            "electrically_graded": 0,
+            "passed": 0,
+            "outcomes": {
+              "output-budget-no-submission": 4
+            },
+            "task_completion": {
+              "numerator": 0,
+              "denominator": 4
+            },
+            "graded_subset_pass": {
+              "numerator": 0,
+              "denominator": 0
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 2,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 2
+              },
+              "task_completion": {
+                "numerator": 0,
+                "denominator": 2
+              },
+              "graded_subset_pass": {
+                "numerator": 0,
+                "denominator": 0
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 2,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 2
+              },
+              "task_completion": {
+                "numerator": 0,
+                "denominator": 2
+              },
+              "graded_subset_pass": {
+                "numerator": 0,
+                "denominator": 0
+              }
+            }
+          }
+        }
+      },
+      "diagnosis-repair": {
+        "one-shot": {
+          "all_models": {
+            "design_cells": 10,
+            "complete_submissions": 8,
+            "electrically_graded": 8,
+            "passed": 8,
+            "outcomes": {
+              "no-response-cause-unknown": 1,
+              "output-budget-no-submission": 1,
+              "pass": 8
+            },
+            "task_completion": {
+              "numerator": 8,
+              "denominator": 10
+            },
+            "graded_subset_pass": {
+              "numerator": 8,
+              "denominator": 8
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 5,
+              "complete_submissions": 4,
+              "electrically_graded": 4,
+              "passed": 4,
+              "outcomes": {
+                "output-budget-no-submission": 1,
+                "pass": 4
+              },
+              "task_completion": {
+                "numerator": 4,
+                "denominator": 5
+              },
+              "graded_subset_pass": {
+                "numerator": 4,
+                "denominator": 4
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 5,
+              "complete_submissions": 4,
+              "electrically_graded": 4,
+              "passed": 4,
+              "outcomes": {
+                "no-response-cause-unknown": 1,
+                "pass": 4
+              },
+              "task_completion": {
+                "numerator": 4,
+                "denominator": 5
+              },
+              "graded_subset_pass": {
+                "numerator": 4,
+                "denominator": 4
+              }
+            }
+          }
+        },
+        "agentic": {
+          "all_models": {
+            "design_cells": 10,
+            "complete_submissions": 10,
+            "electrically_graded": 10,
+            "passed": 10,
+            "outcomes": {
+              "pass": 10
+            },
+            "task_completion": {
+              "numerator": 10,
+              "denominator": 10
+            },
+            "graded_subset_pass": {
+              "numerator": 10,
+              "denominator": 10
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 5,
+              "complete_submissions": 5,
+              "electrically_graded": 5,
+              "passed": 5,
+              "outcomes": {
+                "pass": 5
+              },
+              "task_completion": {
+                "numerator": 5,
+                "denominator": 5
+              },
+              "graded_subset_pass": {
+                "numerator": 5,
+                "denominator": 5
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 5,
+              "complete_submissions": 5,
+              "electrically_graded": 5,
+              "passed": 5,
+              "outcomes": {
+                "pass": 5
+              },
+              "task_completion": {
+                "numerator": 5,
+                "denominator": 5
+              },
+              "graded_subset_pass": {
+                "numerator": 5,
+                "denominator": 5
+              }
+            }
+          }
+        }
+      },
+      "testing-characterization": {
+        "one-shot": {
+          "all_models": {
+            "design_cells": 20,
+            "complete_submissions": 13,
+            "electrically_graded": 11,
+            "passed": 11,
+            "outcomes": {
+              "context-rejection": 2,
+              "invalid-va": 2,
+              "no-response-cause-unknown": 1,
+              "output-budget-no-submission": 4,
+              "pass": 11
+            },
+            "task_completion": {
+              "numerator": 11,
+              "denominator": 20
+            },
+            "graded_subset_pass": {
+              "numerator": 11,
+              "denominator": 11
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 10,
+              "complete_submissions": 5,
+              "electrically_graded": 4,
+              "passed": 4,
+              "outcomes": {
+                "context-rejection": 1,
+                "invalid-va": 1,
+                "output-budget-no-submission": 4,
+                "pass": 4
+              },
+              "task_completion": {
+                "numerator": 4,
+                "denominator": 10
+              },
+              "graded_subset_pass": {
+                "numerator": 4,
+                "denominator": 4
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 10,
+              "complete_submissions": 8,
+              "electrically_graded": 7,
+              "passed": 7,
+              "outcomes": {
+                "context-rejection": 1,
+                "invalid-va": 1,
+                "no-response-cause-unknown": 1,
+                "pass": 7
+              },
+              "task_completion": {
+                "numerator": 7,
+                "denominator": 10
+              },
+              "graded_subset_pass": {
+                "numerator": 7,
+                "denominator": 7
+              }
+            }
+          }
+        },
+        "agentic": {
+          "all_models": {
+            "design_cells": 20,
+            "complete_submissions": 14,
+            "electrically_graded": 14,
+            "passed": 14,
+            "outcomes": {
+              "output-budget-no-submission": 6,
+              "pass": 14
+            },
+            "task_completion": {
+              "numerator": 14,
+              "denominator": 20
+            },
+            "graded_subset_pass": {
+              "numerator": 14,
+              "denominator": 14
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 10,
+              "complete_submissions": 7,
+              "electrically_graded": 7,
+              "passed": 7,
+              "outcomes": {
+                "output-budget-no-submission": 3,
+                "pass": 7
+              },
+              "task_completion": {
+                "numerator": 7,
+                "denominator": 10
+              },
+              "graded_subset_pass": {
+                "numerator": 7,
+                "denominator": 7
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 10,
+              "complete_submissions": 7,
+              "electrically_graded": 7,
+              "passed": 7,
+              "outcomes": {
+                "output-budget-no-submission": 3,
+                "pass": 7
+              },
+              "task_completion": {
+                "numerator": 7,
+                "denominator": 10
+              },
+              "graded_subset_pass": {
+                "numerator": 7,
+                "denominator": 7
+              }
+            }
+          }
+        }
+      }
+    },
+    "p1_owner_subset": {
+      "one-shot": {
+        "all_models": {
+          "design_cells": 64,
+          "complete_submissions": 43,
+          "electrically_graded": 39,
+          "passed": 37,
+          "outcomes": {
+            "electrical-fail": 2,
+            "invalid-va": 4,
+            "no-response-cause-unknown": 4,
+            "output-budget-no-submission": 14,
+            "pass": 37,
+            "submission-format-error": 3
+          },
+          "task_completion": {
+            "numerator": 37,
+            "denominator": 64
+          },
+          "graded_subset_pass": {
+            "numerator": 37,
+            "denominator": 39
+          }
+        },
+        "by_model": {
+          "glm-5.3": {
+            "design_cells": 32,
+            "complete_submissions": 19,
+            "electrically_graded": 17,
+            "passed": 17,
+            "outcomes": {
+              "invalid-va": 2,
+              "output-budget-no-submission": 12,
+              "pass": 17,
+              "submission-format-error": 1
+            },
+            "task_completion": {
+              "numerator": 17,
+              "denominator": 32
+            },
+            "graded_subset_pass": {
+              "numerator": 17,
+              "denominator": 17
+            }
+          },
+          "glm-5.3-flash": {
+            "design_cells": 32,
+            "complete_submissions": 24,
+            "electrically_graded": 22,
+            "passed": 20,
+            "outcomes": {
+              "electrical-fail": 2,
+              "invalid-va": 2,
+              "no-response-cause-unknown": 4,
+              "output-budget-no-submission": 2,
+              "pass": 20,
+              "submission-format-error": 2
+            },
+            "task_completion": {
+              "numerator": 20,
+              "denominator": 32
+            },
+            "graded_subset_pass": {
+              "numerator": 20,
+              "denominator": 22
+            }
+          }
+        }
+      },
+      "agentic": {
+        "all_models": {
+          "design_cells": 64,
+          "complete_submissions": 45,
+          "electrically_graded": 45,
+          "passed": 45,
+          "outcomes": {
+            "output-budget-no-submission": 17,
+            "pass": 45,
+            "protocol-no-submission": 2
+          },
+          "task_completion": {
+            "numerator": 45,
+            "denominator": 64
+          },
+          "graded_subset_pass": {
+            "numerator": 45,
+            "denominator": 45
+          }
+        },
+        "by_model": {
+          "glm-5.3": {
+            "design_cells": 32,
+            "complete_submissions": 24,
+            "electrically_graded": 24,
+            "passed": 24,
+            "outcomes": {
+              "output-budget-no-submission": 8,
+              "pass": 24
+            },
+            "task_completion": {
+              "numerator": 24,
+              "denominator": 32
+            },
+            "graded_subset_pass": {
+              "numerator": 24,
+              "denominator": 24
+            }
+          },
+          "glm-5.3-flash": {
+            "design_cells": 32,
+            "complete_submissions": 21,
+            "electrically_graded": 21,
+            "passed": 21,
+            "outcomes": {
+              "output-budget-no-submission": 9,
+              "pass": 21,
+              "protocol-no-submission": 2
+            },
+            "task_completion": {
+              "numerator": 21,
+              "denominator": 32
+            },
+            "graded_subset_pass": {
+              "numerator": 21,
+              "denominator": 21
+            }
+          }
+        }
+      }
+    },
+    "mandatory_extra_subset": {
+      "one-shot": {
+        "all_models": {
+          "design_cells": 10,
+          "complete_submissions": 1,
+          "electrically_graded": 1,
+          "passed": 1,
+          "outcomes": {
+            "context-rejection": 2,
+            "no-response-cause-unknown": 2,
+            "output-budget-no-submission": 5,
+            "pass": 1
+          },
+          "task_completion": {
+            "numerator": 1,
+            "denominator": 10
+          },
+          "graded_subset_pass": {
+            "numerator": 1,
+            "denominator": 1
+          }
+        },
+        "by_model": {
+          "glm-5.3": {
+            "design_cells": 5,
+            "complete_submissions": 0,
+            "electrically_graded": 0,
+            "passed": 0,
+            "outcomes": {
+              "context-rejection": 1,
+              "output-budget-no-submission": 4
+            },
+            "task_completion": {
+              "numerator": 0,
+              "denominator": 5
+            },
+            "graded_subset_pass": {
+              "numerator": 0,
+              "denominator": 0
+            }
+          },
+          "glm-5.3-flash": {
+            "design_cells": 5,
+            "complete_submissions": 1,
+            "electrically_graded": 1,
+            "passed": 1,
+            "outcomes": {
+              "context-rejection": 1,
+              "no-response-cause-unknown": 2,
+              "output-budget-no-submission": 1,
+              "pass": 1
+            },
+            "task_completion": {
+              "numerator": 1,
+              "denominator": 5
+            },
+            "graded_subset_pass": {
+              "numerator": 1,
+              "denominator": 1
+            }
+          }
+        }
+      },
+      "agentic": {
+        "all_models": {
+          "design_cells": 10,
+          "complete_submissions": 3,
+          "electrically_graded": 3,
+          "passed": 3,
+          "outcomes": {
+            "output-budget-no-submission": 5,
+            "pass": 3,
+            "time-budget-no-submission": 2
+          },
+          "task_completion": {
+            "numerator": 3,
+            "denominator": 10
+          },
+          "graded_subset_pass": {
+            "numerator": 3,
+            "denominator": 3
+          }
+        },
+        "by_model": {
+          "glm-5.3": {
+            "design_cells": 5,
+            "complete_submissions": 1,
+            "electrically_graded": 1,
+            "passed": 1,
+            "outcomes": {
+              "output-budget-no-submission": 3,
+              "pass": 1,
+              "time-budget-no-submission": 1
+            },
+            "task_completion": {
+              "numerator": 1,
+              "denominator": 5
+            },
+            "graded_subset_pass": {
+              "numerator": 1,
+              "denominator": 1
+            }
+          },
+          "glm-5.3-flash": {
+            "design_cells": 5,
+            "complete_submissions": 2,
+            "electrically_graded": 2,
+            "passed": 2,
+            "outcomes": {
+              "output-budget-no-submission": 2,
+              "pass": 2,
+              "time-budget-no-submission": 1
+            },
+            "task_completion": {
+              "numerator": 2,
+              "denominator": 5
+            },
+            "graded_subset_pass": {
+              "numerator": 2,
+              "denominator": 2
+            }
+          }
+        }
+      }
+    },
+    "system_subset": {
+      "one-shot": {
+        "all_models": {
+          "design_cells": 14,
+          "complete_submissions": 2,
+          "electrically_graded": 2,
+          "passed": 1,
+          "outcomes": {
+            "context-rejection": 2,
+            "electrical-fail": 1,
+            "no-response-cause-unknown": 2,
+            "output-budget-no-submission": 8,
+            "pass": 1
+          },
+          "task_completion": {
+            "numerator": 1,
+            "denominator": 14
+          },
+          "graded_subset_pass": {
+            "numerator": 1,
+            "denominator": 2
+          }
+        },
+        "by_model": {
+          "glm-5.3": {
+            "design_cells": 7,
+            "complete_submissions": 0,
+            "electrically_graded": 0,
+            "passed": 0,
+            "outcomes": {
+              "context-rejection": 1,
+              "output-budget-no-submission": 6
+            },
+            "task_completion": {
+              "numerator": 0,
+              "denominator": 7
+            },
+            "graded_subset_pass": {
+              "numerator": 0,
+              "denominator": 0
+            }
+          },
+          "glm-5.3-flash": {
+            "design_cells": 7,
+            "complete_submissions": 2,
+            "electrically_graded": 2,
+            "passed": 1,
+            "outcomes": {
+              "context-rejection": 1,
+              "electrical-fail": 1,
+              "no-response-cause-unknown": 2,
+              "output-budget-no-submission": 2,
+              "pass": 1
+            },
+            "task_completion": {
+              "numerator": 1,
+              "denominator": 7
+            },
+            "graded_subset_pass": {
+              "numerator": 1,
+              "denominator": 2
+            }
+          }
+        }
+      },
+      "agentic": {
+        "all_models": {
+          "design_cells": 14,
+          "complete_submissions": 3,
+          "electrically_graded": 3,
+          "passed": 3,
+          "outcomes": {
+            "output-budget-no-submission": 11,
+            "pass": 3
+          },
+          "task_completion": {
+            "numerator": 3,
+            "denominator": 14
+          },
+          "graded_subset_pass": {
+            "numerator": 3,
+            "denominator": 3
+          }
+        },
+        "by_model": {
+          "glm-5.3": {
+            "design_cells": 7,
+            "complete_submissions": 1,
+            "electrically_graded": 1,
+            "passed": 1,
+            "outcomes": {
+              "output-budget-no-submission": 6,
+              "pass": 1
+            },
+            "task_completion": {
+              "numerator": 1,
+              "denominator": 7
+            },
+            "graded_subset_pass": {
+              "numerator": 1,
+              "denominator": 1
+            }
+          },
+          "glm-5.3-flash": {
+            "design_cells": 7,
+            "complete_submissions": 2,
+            "electrically_graded": 2,
+            "passed": 2,
+            "outcomes": {
+              "output-budget-no-submission": 5,
+              "pass": 2
+            },
+            "task_completion": {
+              "numerator": 2,
+              "denominator": 7
+            },
+            "graded_subset_pass": {
+              "numerator": 2,
+              "denominator": 2
+            }
+          }
+        }
+      }
+    },
+    "relation_groups": [
+      {
+        "group_id": "amplifier-038-093-370",
+        "relation_kind": "shared-asset-and-measurement-family",
+        "adds_weight": false,
+        "groups_may_overlap": true,
+        "task_ids": [
+          "v2-spec-038-programmable-gain-amplifier",
+          "v2-test-online-gain",
+          "v2-spec-370-opamp-feedback-settling-monitor",
+          "v2-test-gain-settling"
+        ],
+        "results": {
+          "one-shot": {
+            "all_models": {
+              "design_cells": 8,
+              "complete_submissions": 4,
+              "electrically_graded": 4,
+              "passed": 4,
+              "outcomes": {
+                "no-response-cause-unknown": 1,
+                "output-budget-no-submission": 3,
+                "pass": 4
+              },
+              "task_completion": {
+                "numerator": 4,
+                "denominator": 8
+              },
+              "graded_subset_pass": {
+                "numerator": 4,
+                "denominator": 4
+              }
+            },
+            "by_model": {
+              "glm-5.3": {
+                "design_cells": 4,
+                "complete_submissions": 1,
+                "electrically_graded": 1,
+                "passed": 1,
+                "outcomes": {
+                  "output-budget-no-submission": 3,
+                  "pass": 1
+                },
+                "task_completion": {
+                  "numerator": 1,
+                  "denominator": 4
+                },
+                "graded_subset_pass": {
+                  "numerator": 1,
+                  "denominator": 1
+                }
+              },
+              "glm-5.3-flash": {
+                "design_cells": 4,
+                "complete_submissions": 3,
+                "electrically_graded": 3,
+                "passed": 3,
+                "outcomes": {
+                  "no-response-cause-unknown": 1,
+                  "pass": 3
+                },
+                "task_completion": {
+                  "numerator": 3,
+                  "denominator": 4
+                },
+                "graded_subset_pass": {
+                  "numerator": 3,
+                  "denominator": 3
+                }
+              }
+            }
+          },
+          "agentic": {
+            "all_models": {
+              "design_cells": 8,
+              "complete_submissions": 5,
+              "electrically_graded": 5,
+              "passed": 5,
+              "outcomes": {
+                "output-budget-no-submission": 2,
+                "pass": 5,
+                "protocol-no-submission": 1
+              },
+              "task_completion": {
+                "numerator": 5,
+                "denominator": 8
+              },
+              "graded_subset_pass": {
+                "numerator": 5,
+                "denominator": 5
+              }
+            },
+            "by_model": {
+              "glm-5.3": {
+                "design_cells": 4,
+                "complete_submissions": 3,
+                "electrically_graded": 3,
+                "passed": 3,
+                "outcomes": {
+                  "output-budget-no-submission": 1,
+                  "pass": 3
+                },
+                "task_completion": {
+                  "numerator": 3,
+                  "denominator": 4
+                },
+                "graded_subset_pass": {
+                  "numerator": 3,
+                  "denominator": 3
+                }
+              },
+              "glm-5.3-flash": {
+                "design_cells": 4,
+                "complete_submissions": 2,
+                "electrically_graded": 2,
+                "passed": 2,
+                "outcomes": {
+                  "output-budget-no-submission": 1,
+                  "pass": 2,
+                  "protocol-no-submission": 1
+                },
+                "task_completion": {
+                  "numerator": 2,
+                  "denominator": 4
+                },
+                "graded_subset_pass": {
+                  "numerator": 2,
+                  "denominator": 2
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "group_id": "sample-hold-024-to-349",
+        "relation_kind": "explicit-baseline-dependency",
+        "adds_weight": false,
+        "groups_may_overlap": true,
+        "task_ids": [
+          "v2-spec-024-clocked-sample-and-hold",
+          "v2-integrate-349-multichannel-readout"
+        ],
+        "results": {
+          "one-shot": {
+            "all_models": {
+              "design_cells": 4,
+              "complete_submissions": 2,
+              "electrically_graded": 1,
+              "passed": 1,
+              "outcomes": {
+                "invalid-va": 1,
+                "no-response-cause-unknown": 1,
+                "output-budget-no-submission": 1,
+                "pass": 1
+              },
+              "task_completion": {
+                "numerator": 1,
+                "denominator": 4
+              },
+              "graded_subset_pass": {
+                "numerator": 1,
+                "denominator": 1
+              }
+            },
+            "by_model": {
+              "glm-5.3": {
+                "design_cells": 2,
+                "complete_submissions": 1,
+                "electrically_graded": 0,
+                "passed": 0,
+                "outcomes": {
+                  "invalid-va": 1,
+                  "output-budget-no-submission": 1
+                },
+                "task_completion": {
+                  "numerator": 0,
+                  "denominator": 2
+                },
+                "graded_subset_pass": {
+                  "numerator": 0,
+                  "denominator": 0
+                }
+              },
+              "glm-5.3-flash": {
+                "design_cells": 2,
+                "complete_submissions": 1,
+                "electrically_graded": 1,
+                "passed": 1,
+                "outcomes": {
+                  "no-response-cause-unknown": 1,
+                  "pass": 1
+                },
+                "task_completion": {
+                  "numerator": 1,
+                  "denominator": 2
+                },
+                "graded_subset_pass": {
+                  "numerator": 1,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          "agentic": {
+            "all_models": {
+              "design_cells": 4,
+              "complete_submissions": 2,
+              "electrically_graded": 2,
+              "passed": 2,
+              "outcomes": {
+                "output-budget-no-submission": 2,
+                "pass": 2
+              },
+              "task_completion": {
+                "numerator": 2,
+                "denominator": 4
+              },
+              "graded_subset_pass": {
+                "numerator": 2,
+                "denominator": 2
+              }
+            },
+            "by_model": {
+              "glm-5.3": {
+                "design_cells": 2,
+                "complete_submissions": 1,
+                "electrically_graded": 1,
+                "passed": 1,
+                "outcomes": {
+                  "output-budget-no-submission": 1,
+                  "pass": 1
+                },
+                "task_completion": {
+                  "numerator": 1,
+                  "denominator": 2
+                },
+                "graded_subset_pass": {
+                  "numerator": 1,
+                  "denominator": 1
+                }
+              },
+              "glm-5.3-flash": {
+                "design_cells": 2,
+                "complete_submissions": 1,
+                "electrically_graded": 1,
+                "passed": 1,
+                "outcomes": {
+                  "output-budget-no-submission": 1,
+                  "pass": 1
+                },
+                "task_completion": {
+                  "numerator": 1,
+                  "denominator": 2
+                },
+                "graded_subset_pass": {
+                  "numerator": 1,
+                  "denominator": 1
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "group_id": "approved-function-family-1",
+        "relation_kind": "functional-family-not-proven-shared-bytes",
+        "adds_weight": false,
+        "groups_may_overlap": true,
+        "task_ids": [
+          "v2-spec-024-clocked-sample-and-hold",
+          "v2-spec-071-acquisition-limited-sample-and-hold",
+          "v2-integrate-349-multichannel-readout"
+        ],
+        "results": {
+          "one-shot": {
+            "all_models": {
+              "design_cells": 6,
+              "complete_submissions": 3,
+              "electrically_graded": 2,
+              "passed": 1,
+              "outcomes": {
+                "electrical-fail": 1,
+                "invalid-va": 1,
+                "no-response-cause-unknown": 1,
+                "output-budget-no-submission": 2,
+                "pass": 1
+              },
+              "task_completion": {
+                "numerator": 1,
+                "denominator": 6
+              },
+              "graded_subset_pass": {
+                "numerator": 1,
+                "denominator": 2
+              }
+            },
+            "by_model": {
+              "glm-5.3": {
+                "design_cells": 3,
+                "complete_submissions": 1,
+                "electrically_graded": 0,
+                "passed": 0,
+                "outcomes": {
+                  "invalid-va": 1,
+                  "output-budget-no-submission": 2
+                },
+                "task_completion": {
+                  "numerator": 0,
+                  "denominator": 3
+                },
+                "graded_subset_pass": {
+                  "numerator": 0,
+                  "denominator": 0
+                }
+              },
+              "glm-5.3-flash": {
+                "design_cells": 3,
+                "complete_submissions": 2,
+                "electrically_graded": 2,
+                "passed": 1,
+                "outcomes": {
+                  "electrical-fail": 1,
+                  "no-response-cause-unknown": 1,
+                  "pass": 1
+                },
+                "task_completion": {
+                  "numerator": 1,
+                  "denominator": 3
+                },
+                "graded_subset_pass": {
+                  "numerator": 1,
+                  "denominator": 2
+                }
+              }
+            }
+          },
+          "agentic": {
+            "all_models": {
+              "design_cells": 6,
+              "complete_submissions": 4,
+              "electrically_graded": 4,
+              "passed": 4,
+              "outcomes": {
+                "output-budget-no-submission": 2,
+                "pass": 4
+              },
+              "task_completion": {
+                "numerator": 4,
+                "denominator": 6
+              },
+              "graded_subset_pass": {
+                "numerator": 4,
+                "denominator": 4
+              }
+            },
+            "by_model": {
+              "glm-5.3": {
+                "design_cells": 3,
+                "complete_submissions": 2,
+                "electrically_graded": 2,
+                "passed": 2,
+                "outcomes": {
+                  "output-budget-no-submission": 1,
+                  "pass": 2
+                },
+                "task_completion": {
+                  "numerator": 2,
+                  "denominator": 3
+                },
+                "graded_subset_pass": {
+                  "numerator": 2,
+                  "denominator": 2
+                }
+              },
+              "glm-5.3-flash": {
+                "design_cells": 3,
+                "complete_submissions": 2,
+                "electrically_graded": 2,
+                "passed": 2,
+                "outcomes": {
+                  "output-budget-no-submission": 1,
+                  "pass": 2
+                },
+                "task_completion": {
+                  "numerator": 2,
+                  "denominator": 3
+                },
+                "graded_subset_pass": {
+                  "numerator": 2,
+                  "denominator": 2
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "group_id": "approved-function-family-3",
+        "relation_kind": "functional-family-not-proven-shared-bytes",
+        "adds_weight": false,
+        "groups_may_overlap": true,
+        "task_ids": [
+          "v2-test-hysteresis",
+          "v2-test-comparator-delay",
+          "v2-spec-047-window-comparator-detector",
+          "v2-spec-314-hysteretic-window-comparator"
+        ],
+        "results": {
+          "one-shot": {
+            "all_models": {
+              "design_cells": 8,
+              "complete_submissions": 6,
+              "electrically_graded": 6,
+              "passed": 6,
+              "outcomes": {
+                "no-response-cause-unknown": 1,
+                "output-budget-no-submission": 1,
+                "pass": 6
+              },
+              "task_completion": {
+                "numerator": 6,
+                "denominator": 8
+              },
+              "graded_subset_pass": {
+                "numerator": 6,
+                "denominator": 6
+              }
+            },
+            "by_model": {
+              "glm-5.3": {
+                "design_cells": 4,
+                "complete_submissions": 3,
+                "electrically_graded": 3,
+                "passed": 3,
+                "outcomes": {
+                  "output-budget-no-submission": 1,
+                  "pass": 3
+                },
+                "task_completion": {
+                  "numerator": 3,
+                  "denominator": 4
+                },
+                "graded_subset_pass": {
+                  "numerator": 3,
+                  "denominator": 3
+                }
+              },
+              "glm-5.3-flash": {
+                "design_cells": 4,
+                "complete_submissions": 3,
+                "electrically_graded": 3,
+                "passed": 3,
+                "outcomes": {
+                  "no-response-cause-unknown": 1,
+                  "pass": 3
+                },
+                "task_completion": {
+                  "numerator": 3,
+                  "denominator": 4
+                },
+                "graded_subset_pass": {
+                  "numerator": 3,
+                  "denominator": 3
+                }
+              }
+            }
+          },
+          "agentic": {
+            "all_models": {
+              "design_cells": 8,
+              "complete_submissions": 6,
+              "electrically_graded": 6,
+              "passed": 6,
+              "outcomes": {
+                "output-budget-no-submission": 2,
+                "pass": 6
+              },
+              "task_completion": {
+                "numerator": 6,
+                "denominator": 8
+              },
+              "graded_subset_pass": {
+                "numerator": 6,
+                "denominator": 6
+              }
+            },
+            "by_model": {
+              "glm-5.3": {
+                "design_cells": 4,
+                "complete_submissions": 3,
+                "electrically_graded": 3,
+                "passed": 3,
+                "outcomes": {
+                  "output-budget-no-submission": 1,
+                  "pass": 3
+                },
+                "task_completion": {
+                  "numerator": 3,
+                  "denominator": 4
+                },
+                "graded_subset_pass": {
+                  "numerator": 3,
+                  "denominator": 3
+                }
+              },
+              "glm-5.3-flash": {
+                "design_cells": 4,
+                "complete_submissions": 3,
+                "electrically_graded": 3,
+                "passed": 3,
+                "outcomes": {
+                  "output-budget-no-submission": 1,
+                  "pass": 3
+                },
+                "task_completion": {
+                  "numerator": 3,
+                  "denominator": 4
+                },
+                "graded_subset_pass": {
+                  "numerator": 3,
+                  "denominator": 3
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "group_id": "approved-function-family-5",
+        "relation_kind": "functional-family-not-proven-shared-bytes",
+        "adds_weight": false,
+        "groups_may_overlap": true,
+        "task_ids": [
+          "v2-spec-003-pipeline-adc-stage",
+          "v2-spec-055-first-order-sigma-delta-modulator"
+        ],
+        "results": {
+          "one-shot": {
+            "all_models": {
+              "design_cells": 4,
+              "complete_submissions": 2,
+              "electrically_graded": 2,
+              "passed": 2,
+              "outcomes": {
+                "pass": 2,
+                "submission-format-error": 2
+              },
+              "task_completion": {
+                "numerator": 2,
+                "denominator": 4
+              },
+              "graded_subset_pass": {
+                "numerator": 2,
+                "denominator": 2
+              }
+            },
+            "by_model": {
+              "glm-5.3": {
+                "design_cells": 2,
+                "complete_submissions": 1,
+                "electrically_graded": 1,
+                "passed": 1,
+                "outcomes": {
+                  "pass": 1,
+                  "submission-format-error": 1
+                },
+                "task_completion": {
+                  "numerator": 1,
+                  "denominator": 2
+                },
+                "graded_subset_pass": {
+                  "numerator": 1,
+                  "denominator": 1
+                }
+              },
+              "glm-5.3-flash": {
+                "design_cells": 2,
+                "complete_submissions": 1,
+                "electrically_graded": 1,
+                "passed": 1,
+                "outcomes": {
+                  "pass": 1,
+                  "submission-format-error": 1
+                },
+                "task_completion": {
+                  "numerator": 1,
+                  "denominator": 2
+                },
+                "graded_subset_pass": {
+                  "numerator": 1,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          "agentic": {
+            "all_models": {
+              "design_cells": 4,
+              "complete_submissions": 4,
+              "electrically_graded": 4,
+              "passed": 4,
+              "outcomes": {
+                "pass": 4
+              },
+              "task_completion": {
+                "numerator": 4,
+                "denominator": 4
+              },
+              "graded_subset_pass": {
+                "numerator": 4,
+                "denominator": 4
+              }
+            },
+            "by_model": {
+              "glm-5.3": {
+                "design_cells": 2,
+                "complete_submissions": 2,
+                "electrically_graded": 2,
+                "passed": 2,
+                "outcomes": {
+                  "pass": 2
+                },
+                "task_completion": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "graded_subset_pass": {
+                  "numerator": 2,
+                  "denominator": 2
+                }
+              },
+              "glm-5.3-flash": {
+                "design_cells": 2,
+                "complete_submissions": 2,
+                "electrically_graded": 2,
+                "passed": 2,
+                "outcomes": {
+                  "pass": 2
+                },
+                "task_completion": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "graded_subset_pass": {
+                  "numerator": 2,
+                  "denominator": 2
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "group_id": "approved-function-family-6",
+        "relation_kind": "functional-family-not-proven-shared-bytes",
+        "adds_weight": false,
+        "groups_may_overlap": true,
+        "task_ids": [
+          "v2-spec-001-bang-bang-phase-detector",
+          "v2-repair-pfd-reset",
+          "v2-test-duty-cycle",
+          "v2-test-clock-frequency"
+        ],
+        "results": {
+          "one-shot": {
+            "all_models": {
+              "design_cells": 8,
+              "complete_submissions": 5,
+              "electrically_graded": 4,
+              "passed": 4,
+              "outcomes": {
+                "invalid-va": 1,
+                "no-response-cause-unknown": 1,
+                "output-budget-no-submission": 2,
+                "pass": 4
+              },
+              "task_completion": {
+                "numerator": 4,
+                "denominator": 8
+              },
+              "graded_subset_pass": {
+                "numerator": 4,
+                "denominator": 4
+              }
+            },
+            "by_model": {
+              "glm-5.3": {
+                "design_cells": 4,
+                "complete_submissions": 2,
+                "electrically_graded": 1,
+                "passed": 1,
+                "outcomes": {
+                  "invalid-va": 1,
+                  "output-budget-no-submission": 2,
+                  "pass": 1
+                },
+                "task_completion": {
+                  "numerator": 1,
+                  "denominator": 4
+                },
+                "graded_subset_pass": {
+                  "numerator": 1,
+                  "denominator": 1
+                }
+              },
+              "glm-5.3-flash": {
+                "design_cells": 4,
+                "complete_submissions": 3,
+                "electrically_graded": 3,
+                "passed": 3,
+                "outcomes": {
+                  "no-response-cause-unknown": 1,
+                  "pass": 3
+                },
+                "task_completion": {
+                  "numerator": 3,
+                  "denominator": 4
+                },
+                "graded_subset_pass": {
+                  "numerator": 3,
+                  "denominator": 3
+                }
+              }
+            }
+          },
+          "agentic": {
+            "all_models": {
+              "design_cells": 8,
+              "complete_submissions": 6,
+              "electrically_graded": 6,
+              "passed": 6,
+              "outcomes": {
+                "output-budget-no-submission": 2,
+                "pass": 6
+              },
+              "task_completion": {
+                "numerator": 6,
+                "denominator": 8
+              },
+              "graded_subset_pass": {
+                "numerator": 6,
+                "denominator": 6
+              }
+            },
+            "by_model": {
+              "glm-5.3": {
+                "design_cells": 4,
+                "complete_submissions": 4,
+                "electrically_graded": 4,
+                "passed": 4,
+                "outcomes": {
+                  "pass": 4
+                },
+                "task_completion": {
+                  "numerator": 4,
+                  "denominator": 4
+                },
+                "graded_subset_pass": {
+                  "numerator": 4,
+                  "denominator": 4
+                }
+              },
+              "glm-5.3-flash": {
+                "design_cells": 4,
+                "complete_submissions": 2,
+                "electrically_graded": 2,
+                "passed": 2,
+                "outcomes": {
+                  "output-budget-no-submission": 2,
+                  "pass": 2
+                },
+                "task_completion": {
+                  "numerator": 2,
+                  "denominator": 4
+                },
+                "graded_subset_pass": {
+                  "numerator": 2,
+                  "denominator": 2
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "group_id": "approved-function-family-7",
+        "relation_kind": "functional-family-not-proven-shared-bytes",
+        "adds_weight": false,
+        "groups_may_overlap": true,
+        "task_ids": [
+          "v2-spec-375-nonoverlap-clock-generator",
+          "v2-spec-396-quadrature-lo-generator-divided-clock"
+        ],
+        "results": {
+          "one-shot": {
+            "all_models": {
+              "design_cells": 4,
+              "complete_submissions": 2,
+              "electrically_graded": 2,
+              "passed": 2,
+              "outcomes": {
+                "no-response-cause-unknown": 1,
+                "output-budget-no-submission": 1,
+                "pass": 2
+              },
+              "task_completion": {
+                "numerator": 2,
+                "denominator": 4
+              },
+              "graded_subset_pass": {
+                "numerator": 2,
+                "denominator": 2
+              }
+            },
+            "by_model": {
+              "glm-5.3": {
+                "design_cells": 2,
+                "complete_submissions": 1,
+                "electrically_graded": 1,
+                "passed": 1,
+                "outcomes": {
+                  "output-budget-no-submission": 1,
+                  "pass": 1
+                },
+                "task_completion": {
+                  "numerator": 1,
+                  "denominator": 2
+                },
+                "graded_subset_pass": {
+                  "numerator": 1,
+                  "denominator": 1
+                }
+              },
+              "glm-5.3-flash": {
+                "design_cells": 2,
+                "complete_submissions": 1,
+                "electrically_graded": 1,
+                "passed": 1,
+                "outcomes": {
+                  "no-response-cause-unknown": 1,
+                  "pass": 1
+                },
+                "task_completion": {
+                  "numerator": 1,
+                  "denominator": 2
+                },
+                "graded_subset_pass": {
+                  "numerator": 1,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          "agentic": {
+            "all_models": {
+              "design_cells": 4,
+              "complete_submissions": 2,
+              "electrically_graded": 2,
+              "passed": 2,
+              "outcomes": {
+                "output-budget-no-submission": 2,
+                "pass": 2
+              },
+              "task_completion": {
+                "numerator": 2,
+                "denominator": 4
+              },
+              "graded_subset_pass": {
+                "numerator": 2,
+                "denominator": 2
+              }
+            },
+            "by_model": {
+              "glm-5.3": {
+                "design_cells": 2,
+                "complete_submissions": 1,
+                "electrically_graded": 1,
+                "passed": 1,
+                "outcomes": {
+                  "output-budget-no-submission": 1,
+                  "pass": 1
+                },
+                "task_completion": {
+                  "numerator": 1,
+                  "denominator": 2
+                },
+                "graded_subset_pass": {
+                  "numerator": 1,
+                  "denominator": 1
+                }
+              },
+              "glm-5.3-flash": {
+                "design_cells": 2,
+                "complete_submissions": 1,
+                "electrically_graded": 1,
+                "passed": 1,
+                "outcomes": {
+                  "output-budget-no-submission": 1,
+                  "pass": 1
+                },
+                "task_completion": {
+                  "numerator": 1,
+                  "denominator": 2
+                },
+                "graded_subset_pass": {
+                  "numerator": 1,
+                  "denominator": 1
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "group_id": "approved-function-family-8",
+        "relation_kind": "functional-family-not-proven-shared-bytes",
+        "adds_weight": false,
+        "groups_may_overlap": true,
+        "task_ids": [
+          "v2-repair-debounce-latch",
+          "v2-repair-uvlo-brownout",
+          "v2-repair-reset-sequencer"
+        ],
+        "results": {
+          "one-shot": {
+            "all_models": {
+              "design_cells": 6,
+              "complete_submissions": 6,
+              "electrically_graded": 6,
+              "passed": 6,
+              "outcomes": {
+                "pass": 6
+              },
+              "task_completion": {
+                "numerator": 6,
+                "denominator": 6
+              },
+              "graded_subset_pass": {
+                "numerator": 6,
+                "denominator": 6
+              }
+            },
+            "by_model": {
+              "glm-5.3": {
+                "design_cells": 3,
+                "complete_submissions": 3,
+                "electrically_graded": 3,
+                "passed": 3,
+                "outcomes": {
+                  "pass": 3
+                },
+                "task_completion": {
+                  "numerator": 3,
+                  "denominator": 3
+                },
+                "graded_subset_pass": {
+                  "numerator": 3,
+                  "denominator": 3
+                }
+              },
+              "glm-5.3-flash": {
+                "design_cells": 3,
+                "complete_submissions": 3,
+                "electrically_graded": 3,
+                "passed": 3,
+                "outcomes": {
+                  "pass": 3
+                },
+                "task_completion": {
+                  "numerator": 3,
+                  "denominator": 3
+                },
+                "graded_subset_pass": {
+                  "numerator": 3,
+                  "denominator": 3
+                }
+              }
+            }
+          },
+          "agentic": {
+            "all_models": {
+              "design_cells": 6,
+              "complete_submissions": 6,
+              "electrically_graded": 6,
+              "passed": 6,
+              "outcomes": {
+                "pass": 6
+              },
+              "task_completion": {
+                "numerator": 6,
+                "denominator": 6
+              },
+              "graded_subset_pass": {
+                "numerator": 6,
+                "denominator": 6
+              }
+            },
+            "by_model": {
+              "glm-5.3": {
+                "design_cells": 3,
+                "complete_submissions": 3,
+                "electrically_graded": 3,
+                "passed": 3,
+                "outcomes": {
+                  "pass": 3
+                },
+                "task_completion": {
+                  "numerator": 3,
+                  "denominator": 3
+                },
+                "graded_subset_pass": {
+                  "numerator": 3,
+                  "denominator": 3
+                }
+              },
+              "glm-5.3-flash": {
+                "design_cells": 3,
+                "complete_submissions": 3,
+                "electrically_graded": 3,
+                "passed": 3,
+                "outcomes": {
+                  "pass": 3
+                },
+                "task_completion": {
+                  "numerator": 3,
+                  "denominator": 3
+                },
+                "graded_subset_pass": {
+                  "numerator": 3,
+                  "denominator": 3
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "group_id": "approved-function-family-9",
+        "relation_kind": "functional-family-not-proven-shared-bytes",
+        "adds_weight": false,
+        "groups_may_overlap": true,
+        "task_ids": [
+          "v2-spec-038-programmable-gain-amplifier",
+          "v2-spec-082-agc-receiver-leveling-loop",
+          "v2-spec-091-chopper-stabilized-differential-amplifier",
+          "v2-spec-308-correlated-double-sampler-offset-cancel",
+          "v2-spec-370-opamp-feedback-settling-monitor"
+        ],
+        "results": {
+          "one-shot": {
+            "all_models": {
+              "design_cells": 10,
+              "complete_submissions": 6,
+              "electrically_graded": 6,
+              "passed": 5,
+              "outcomes": {
+                "electrical-fail": 1,
+                "output-budget-no-submission": 4,
+                "pass": 5
+              },
+              "task_completion": {
+                "numerator": 5,
+                "denominator": 10
+              },
+              "graded_subset_pass": {
+                "numerator": 5,
+                "denominator": 6
+              }
+            },
+            "by_model": {
+              "glm-5.3": {
+                "design_cells": 5,
+                "complete_submissions": 2,
+                "electrically_graded": 2,
+                "passed": 2,
+                "outcomes": {
+                  "output-budget-no-submission": 3,
+                  "pass": 2
+                },
+                "task_completion": {
+                  "numerator": 2,
+                  "denominator": 5
+                },
+                "graded_subset_pass": {
+                  "numerator": 2,
+                  "denominator": 2
+                }
+              },
+              "glm-5.3-flash": {
+                "design_cells": 5,
+                "complete_submissions": 4,
+                "electrically_graded": 4,
+                "passed": 3,
+                "outcomes": {
+                  "electrical-fail": 1,
+                  "output-budget-no-submission": 1,
+                  "pass": 3
+                },
+                "task_completion": {
+                  "numerator": 3,
+                  "denominator": 5
+                },
+                "graded_subset_pass": {
+                  "numerator": 3,
+                  "denominator": 4
+                }
+              }
+            }
+          },
+          "agentic": {
+            "all_models": {
+              "design_cells": 10,
+              "complete_submissions": 4,
+              "electrically_graded": 4,
+              "passed": 4,
+              "outcomes": {
+                "output-budget-no-submission": 4,
+                "pass": 4,
+                "protocol-no-submission": 2
+              },
+              "task_completion": {
+                "numerator": 4,
+                "denominator": 10
+              },
+              "graded_subset_pass": {
+                "numerator": 4,
+                "denominator": 4
+              }
+            },
+            "by_model": {
+              "glm-5.3": {
+                "design_cells": 5,
+                "complete_submissions": 3,
+                "electrically_graded": 3,
+                "passed": 3,
+                "outcomes": {
+                  "output-budget-no-submission": 2,
+                  "pass": 3
+                },
+                "task_completion": {
+                  "numerator": 3,
+                  "denominator": 5
+                },
+                "graded_subset_pass": {
+                  "numerator": 3,
+                  "denominator": 3
+                }
+              },
+              "glm-5.3-flash": {
+                "design_cells": 5,
+                "complete_submissions": 1,
+                "electrically_graded": 1,
+                "passed": 1,
+                "outcomes": {
+                  "output-budget-no-submission": 2,
+                  "pass": 1,
+                  "protocol-no-submission": 2
+                },
+                "task_completion": {
+                  "numerator": 1,
+                  "denominator": 5
+                },
+                "graded_subset_pass": {
+                  "numerator": 1,
+                  "denominator": 1
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "group_id": "approved-function-family-11",
+        "relation_kind": "functional-family-not-proven-shared-bytes",
+        "adds_weight": false,
+        "groups_may_overlap": true,
+        "task_ids": [
+          "v2-test-offset-search",
+          "v2-spec-183-foreground-rdac-calibrator"
+        ],
+        "results": {
+          "one-shot": {
+            "all_models": {
+              "design_cells": 4,
+              "complete_submissions": 3,
+              "electrically_graded": 3,
+              "passed": 3,
+              "outcomes": {
+                "output-budget-no-submission": 1,
+                "pass": 3
+              },
+              "task_completion": {
+                "numerator": 3,
+                "denominator": 4
+              },
+              "graded_subset_pass": {
+                "numerator": 3,
+                "denominator": 3
+              }
+            },
+            "by_model": {
+              "glm-5.3": {
+                "design_cells": 2,
+                "complete_submissions": 1,
+                "electrically_graded": 1,
+                "passed": 1,
+                "outcomes": {
+                  "output-budget-no-submission": 1,
+                  "pass": 1
+                },
+                "task_completion": {
+                  "numerator": 1,
+                  "denominator": 2
+                },
+                "graded_subset_pass": {
+                  "numerator": 1,
+                  "denominator": 1
+                }
+              },
+              "glm-5.3-flash": {
+                "design_cells": 2,
+                "complete_submissions": 2,
+                "electrically_graded": 2,
+                "passed": 2,
+                "outcomes": {
+                  "pass": 2
+                },
+                "task_completion": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "graded_subset_pass": {
+                  "numerator": 2,
+                  "denominator": 2
+                }
+              }
+            }
+          },
+          "agentic": {
+            "all_models": {
+              "design_cells": 4,
+              "complete_submissions": 3,
+              "electrically_graded": 3,
+              "passed": 3,
+              "outcomes": {
+                "output-budget-no-submission": 1,
+                "pass": 3
+              },
+              "task_completion": {
+                "numerator": 3,
+                "denominator": 4
+              },
+              "graded_subset_pass": {
+                "numerator": 3,
+                "denominator": 3
+              }
+            },
+            "by_model": {
+              "glm-5.3": {
+                "design_cells": 2,
+                "complete_submissions": 1,
+                "electrically_graded": 1,
+                "passed": 1,
+                "outcomes": {
+                  "output-budget-no-submission": 1,
+                  "pass": 1
+                },
+                "task_completion": {
+                  "numerator": 1,
+                  "denominator": 2
+                },
+                "graded_subset_pass": {
+                  "numerator": 1,
+                  "denominator": 1
+                }
+              },
+              "glm-5.3-flash": {
+                "design_cells": 2,
+                "complete_submissions": 2,
+                "electrically_graded": 2,
+                "passed": 2,
+                "outcomes": {
+                  "pass": 2
+                },
+                "task_completion": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "graded_subset_pass": {
+                  "numerator": 2,
+                  "denominator": 2
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "group_id": "approved-function-family-13",
+        "relation_kind": "functional-family-not-proven-shared-bytes",
+        "adds_weight": false,
+        "groups_may_overlap": true,
+        "task_ids": [
+          "v2-test-sampled-rms",
+          "v2-test-online-gain",
+          "v2-test-time-protocol"
+        ],
+        "results": {
+          "one-shot": {
+            "all_models": {
+              "design_cells": 6,
+              "complete_submissions": 5,
+              "electrically_graded": 4,
+              "passed": 4,
+              "outcomes": {
+                "invalid-va": 1,
+                "output-budget-no-submission": 1,
+                "pass": 4
+              },
+              "task_completion": {
+                "numerator": 4,
+                "denominator": 6
+              },
+              "graded_subset_pass": {
+                "numerator": 4,
+                "denominator": 4
+              }
+            },
+            "by_model": {
+              "glm-5.3": {
+                "design_cells": 3,
+                "complete_submissions": 2,
+                "electrically_graded": 2,
+                "passed": 2,
+                "outcomes": {
+                  "output-budget-no-submission": 1,
+                  "pass": 2
+                },
+                "task_completion": {
+                  "numerator": 2,
+                  "denominator": 3
+                },
+                "graded_subset_pass": {
+                  "numerator": 2,
+                  "denominator": 2
+                }
+              },
+              "glm-5.3-flash": {
+                "design_cells": 3,
+                "complete_submissions": 3,
+                "electrically_graded": 2,
+                "passed": 2,
+                "outcomes": {
+                  "invalid-va": 1,
+                  "pass": 2
+                },
+                "task_completion": {
+                  "numerator": 2,
+                  "denominator": 3
+                },
+                "graded_subset_pass": {
+                  "numerator": 2,
+                  "denominator": 2
+                }
+              }
+            }
+          },
+          "agentic": {
+            "all_models": {
+              "design_cells": 6,
+              "complete_submissions": 6,
+              "electrically_graded": 6,
+              "passed": 6,
+              "outcomes": {
+                "pass": 6
+              },
+              "task_completion": {
+                "numerator": 6,
+                "denominator": 6
+              },
+              "graded_subset_pass": {
+                "numerator": 6,
+                "denominator": 6
+              }
+            },
+            "by_model": {
+              "glm-5.3": {
+                "design_cells": 3,
+                "complete_submissions": 3,
+                "electrically_graded": 3,
+                "passed": 3,
+                "outcomes": {
+                  "pass": 3
+                },
+                "task_completion": {
+                  "numerator": 3,
+                  "denominator": 3
+                },
+                "graded_subset_pass": {
+                  "numerator": 3,
+                  "denominator": 3
+                }
+              },
+              "glm-5.3-flash": {
+                "design_cells": 3,
+                "complete_submissions": 3,
+                "electrically_graded": 3,
+                "passed": 3,
+                "outcomes": {
+                  "pass": 3
+                },
+                "task_completion": {
+                  "numerator": 3,
+                  "denominator": 3
+                },
+                "graded_subset_pass": {
+                  "numerator": 3,
+                  "denominator": 3
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "group_id": "power-protection-systems",
+        "relation_kind": "related-engineering-goal-not-same-original-source",
+        "adds_weight": false,
+        "groups_may_overlap": true,
+        "task_ids": [
+          "v2-repair-debounce-latch",
+          "v2-repair-uvlo-brownout",
+          "v2-repair-reset-sequencer",
+          "v2-repair-uvlo-reset-chain",
+          "v2-test-por-sequence"
+        ],
+        "results": {
+          "one-shot": {
+            "all_models": {
+              "design_cells": 10,
+              "complete_submissions": 7,
+              "electrically_graded": 7,
+              "passed": 7,
+              "outcomes": {
+                "context-rejection": 2,
+                "output-budget-no-submission": 1,
+                "pass": 7
+              },
+              "task_completion": {
+                "numerator": 7,
+                "denominator": 10
+              },
+              "graded_subset_pass": {
+                "numerator": 7,
+                "denominator": 7
+              }
+            },
+            "by_model": {
+              "glm-5.3": {
+                "design_cells": 5,
+                "complete_submissions": 3,
+                "electrically_graded": 3,
+                "passed": 3,
+                "outcomes": {
+                  "context-rejection": 1,
+                  "output-budget-no-submission": 1,
+                  "pass": 3
+                },
+                "task_completion": {
+                  "numerator": 3,
+                  "denominator": 5
+                },
+                "graded_subset_pass": {
+                  "numerator": 3,
+                  "denominator": 3
+                }
+              },
+              "glm-5.3-flash": {
+                "design_cells": 5,
+                "complete_submissions": 4,
+                "electrically_graded": 4,
+                "passed": 4,
+                "outcomes": {
+                  "context-rejection": 1,
+                  "pass": 4
+                },
+                "task_completion": {
+                  "numerator": 4,
+                  "denominator": 5
+                },
+                "graded_subset_pass": {
+                  "numerator": 4,
+                  "denominator": 4
+                }
+              }
+            }
+          },
+          "agentic": {
+            "all_models": {
+              "design_cells": 10,
+              "complete_submissions": 8,
+              "electrically_graded": 8,
+              "passed": 8,
+              "outcomes": {
+                "output-budget-no-submission": 2,
+                "pass": 8
+              },
+              "task_completion": {
+                "numerator": 8,
+                "denominator": 10
+              },
+              "graded_subset_pass": {
+                "numerator": 8,
+                "denominator": 8
+              }
+            },
+            "by_model": {
+              "glm-5.3": {
+                "design_cells": 5,
+                "complete_submissions": 4,
+                "electrically_graded": 4,
+                "passed": 4,
+                "outcomes": {
+                  "output-budget-no-submission": 1,
+                  "pass": 4
+                },
+                "task_completion": {
+                  "numerator": 4,
+                  "denominator": 5
+                },
+                "graded_subset_pass": {
+                  "numerator": 4,
+                  "denominator": 4
+                }
+              },
+              "glm-5.3-flash": {
+                "design_cells": 5,
+                "complete_submissions": 4,
+                "electrically_graded": 4,
+                "passed": 4,
+                "outcomes": {
+                  "output-budget-no-submission": 1,
+                  "pass": 4
+                },
+                "task_completion": {
+                  "numerator": 4,
+                  "denominator": 5
+                },
+                "graded_subset_pass": {
+                  "numerator": 4,
+                  "denominator": 4
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "subset_policy": "Systems and related groups overlap; they add no task or source weights and must not be summed into a new denominator.",
+  "representative_quality_records": 41,
+  "obligations": [
+    {
+      "spec_issue": 133,
+      "obligation": "M1",
+      "task_ids": [
+        "v2-spec-024-clocked-sample-and-hold"
+      ],
+      "requirement": "理想采样保持合同、独立采样/保持/初态/过渡验收",
+      "construction_evidence": "spec_modeling/README.md",
+      "fixed_author_evidence": "author-calibration-final.md",
+      "current_author_evidence": "author-calibration-private-overlays.md",
+      "formal_reference_evidence": "harbor_reference/harbor-reference-acceptance.md",
+      "one_shot_evidence": "model_pilots/one-shot-final.json",
+      "quality_evidence": "model_pilots/model-quality.md",
+      "construction_and_calibration": "covered-by-fixed-reviewed-evidence",
+      "formal_reference": "accepted-with-current-frozen-case-identity",
+      "representative_quality": "completed-with-stated-capability-limits",
+      "final_matrix_join": "complete-current-terminal-design-cells",
+      "model_results": {
+        "one-shot": {
+          "all_models": {
+            "design_cells": 2,
+            "complete_submissions": 2,
+            "electrically_graded": 1,
+            "passed": 1,
+            "outcomes": {
+              "invalid-va": 1,
+              "pass": 1
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 1,
+              "complete_submissions": 1,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "invalid-va": 1
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 1,
+              "complete_submissions": 1,
+              "electrically_graded": 1,
+              "passed": 1,
+              "outcomes": {
+                "pass": 1
+              }
+            }
+          }
+        },
+        "agentic": {
+          "all_models": {
+            "design_cells": 2,
+            "complete_submissions": 2,
+            "electrically_graded": 2,
+            "passed": 2,
+            "outcomes": {
+              "pass": 2
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 1,
+              "complete_submissions": 1,
+              "electrically_graded": 1,
+              "passed": 1,
+              "outcomes": {
+                "pass": 1
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 1,
+              "complete_submissions": 1,
+              "electrically_graded": 1,
+              "passed": 1,
+              "outcomes": {
+                "pass": 1
+              }
+            }
+          }
+        }
+      },
+      "model_evidence": "model_pilots/model-pilot-summary.json",
+      "evidence_row_keys": [
+        {
+          "task_id": "v2-spec-024-clocked-sample-and-hold",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-024-clocked-sample-and-hold",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-024-clocked-sample-and-hold",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-024-clocked-sample-and-hold",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        }
+      ],
+      "acceptance": "required-materials-calibration-reference-and-pilot-evidence-covered"
+    },
+    {
+      "spec_issue": 133,
+      "obligation": "M2",
+      "task_ids": [
+        "v2-spec-375-nonoverlap-clock-generator"
+      ],
+      "requirement": "tick非重叠、取消/重启及双相实际输出",
+      "construction_evidence": "spec_modeling/README.md",
+      "fixed_author_evidence": "author-calibration-final.md",
+      "current_author_evidence": "author-calibration-private-overlays.md",
+      "formal_reference_evidence": "harbor_reference/harbor-reference-acceptance.md",
+      "one_shot_evidence": "model_pilots/one-shot-final.json",
+      "quality_evidence": "model_pilots/model-quality.md",
+      "construction_and_calibration": "covered-by-fixed-reviewed-evidence",
+      "formal_reference": "accepted-with-current-frozen-case-identity",
+      "representative_quality": "completed-with-stated-capability-limits",
+      "final_matrix_join": "complete-current-terminal-design-cells",
+      "model_results": {
+        "one-shot": {
+          "all_models": {
+            "design_cells": 2,
+            "complete_submissions": 0,
+            "electrically_graded": 0,
+            "passed": 0,
+            "outcomes": {
+              "no-response-cause-unknown": 1,
+              "output-budget-no-submission": 1
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 1
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "no-response-cause-unknown": 1
+              }
+            }
+          }
+        },
+        "agentic": {
+          "all_models": {
+            "design_cells": 2,
+            "complete_submissions": 0,
+            "electrically_graded": 0,
+            "passed": 0,
+            "outcomes": {
+              "output-budget-no-submission": 2
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 1
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 1
+              }
+            }
+          }
+        }
+      },
+      "model_evidence": "model_pilots/model-pilot-summary.json",
+      "evidence_row_keys": [
+        {
+          "task_id": "v2-spec-375-nonoverlap-clock-generator",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-375-nonoverlap-clock-generator",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-375-nonoverlap-clock-generator",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-375-nonoverlap-clock-generator",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        }
+      ],
+      "acceptance": "required-materials-calibration-reference-and-pilot-evidence-covered"
+    },
+    {
+      "spec_issue": 133,
+      "obligation": "M3+P1",
+      "task_ids": [
+        "v2-spec-001-bang-bang-phase-detector",
+        "v2-spec-002-capacitive-sar-feedback-dac",
+        "v2-spec-003-pipeline-adc-stage",
+        "v2-spec-024-clocked-sample-and-hold",
+        "v2-spec-038-programmable-gain-amplifier",
+        "v2-spec-047-window-comparator-detector",
+        "v2-spec-055-first-order-sigma-delta-modulator",
+        "v2-spec-071-acquisition-limited-sample-and-hold",
+        "v2-spec-082-agc-receiver-leveling-loop",
+        "v2-spec-091-chopper-stabilized-differential-amplifier",
+        "v2-spec-183-foreground-rdac-calibrator",
+        "v2-spec-186-sarfend-logic-4b",
+        "v2-spec-307-switched-capacitor-integrator-phase-pair",
+        "v2-spec-308-correlated-double-sampler-offset-cancel",
+        "v2-spec-314-hysteretic-window-comparator",
+        "v2-spec-353-ffe-transmitter-3tap",
+        "v2-spec-370-opamp-feedback-settling-monitor",
+        "v2-spec-375-nonoverlap-clock-generator",
+        "v2-spec-396-quadrature-lo-generator-divided-clock"
+      ],
+      "requirement": "19唯一P1归口；架构规定系统、SAR工程内补模块与跨类复用",
+      "construction_evidence": "spec_modeling/manifest.json",
+      "fixed_author_evidence": "author-calibration-final.md",
+      "current_author_evidence": "author-calibration-private-overlays.md",
+      "formal_reference_evidence": "harbor_reference/harbor-reference-acceptance.md",
+      "one_shot_evidence": "model_pilots/one-shot-final.json",
+      "quality_evidence": "model_pilots/model-quality.md",
+      "construction_and_calibration": "covered-by-fixed-reviewed-evidence",
+      "formal_reference": "accepted-with-current-frozen-case-identity",
+      "representative_quality": "completed-with-stated-capability-limits",
+      "final_matrix_join": "complete-current-terminal-design-cells",
+      "model_results": {
+        "one-shot": {
+          "all_models": {
+            "design_cells": 38,
+            "complete_submissions": 23,
+            "electrically_graded": 21,
+            "passed": 19,
+            "outcomes": {
+              "electrical-fail": 2,
+              "invalid-va": 2,
+              "no-response-cause-unknown": 2,
+              "output-budget-no-submission": 10,
+              "pass": 19,
+              "submission-format-error": 3
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 19,
+              "complete_submissions": 10,
+              "electrically_graded": 9,
+              "passed": 9,
+              "outcomes": {
+                "invalid-va": 1,
+                "output-budget-no-submission": 8,
+                "pass": 9,
+                "submission-format-error": 1
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 19,
+              "complete_submissions": 13,
+              "electrically_graded": 12,
+              "passed": 10,
+              "outcomes": {
+                "electrical-fail": 2,
+                "invalid-va": 1,
+                "no-response-cause-unknown": 2,
+                "output-budget-no-submission": 2,
+                "pass": 10,
+                "submission-format-error": 2
+              }
+            }
+          }
+        },
+        "agentic": {
+          "all_models": {
+            "design_cells": 38,
+            "complete_submissions": 24,
+            "electrically_graded": 24,
+            "passed": 24,
+            "outcomes": {
+              "output-budget-no-submission": 12,
+              "pass": 24,
+              "protocol-no-submission": 2
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 19,
+              "complete_submissions": 13,
+              "electrically_graded": 13,
+              "passed": 13,
+              "outcomes": {
+                "output-budget-no-submission": 6,
+                "pass": 13
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 19,
+              "complete_submissions": 11,
+              "electrically_graded": 11,
+              "passed": 11,
+              "outcomes": {
+                "output-budget-no-submission": 6,
+                "pass": 11,
+                "protocol-no-submission": 2
+              }
+            }
+          }
+        }
+      },
+      "model_evidence": "model_pilots/model-pilot-summary.json",
+      "evidence_row_keys": [
+        {
+          "task_id": "v2-spec-001-bang-bang-phase-detector",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-001-bang-bang-phase-detector",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-001-bang-bang-phase-detector",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-001-bang-bang-phase-detector",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-002-capacitive-sar-feedback-dac",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-002-capacitive-sar-feedback-dac",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-002-capacitive-sar-feedback-dac",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-002-capacitive-sar-feedback-dac",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-003-pipeline-adc-stage",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-003-pipeline-adc-stage",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-003-pipeline-adc-stage",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-003-pipeline-adc-stage",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-024-clocked-sample-and-hold",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-024-clocked-sample-and-hold",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-024-clocked-sample-and-hold",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-024-clocked-sample-and-hold",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-038-programmable-gain-amplifier",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-038-programmable-gain-amplifier",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-038-programmable-gain-amplifier",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-038-programmable-gain-amplifier",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-047-window-comparator-detector",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-047-window-comparator-detector",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-047-window-comparator-detector",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-047-window-comparator-detector",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-055-first-order-sigma-delta-modulator",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-055-first-order-sigma-delta-modulator",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-055-first-order-sigma-delta-modulator",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-055-first-order-sigma-delta-modulator",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-071-acquisition-limited-sample-and-hold",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-071-acquisition-limited-sample-and-hold",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-071-acquisition-limited-sample-and-hold",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-071-acquisition-limited-sample-and-hold",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-082-agc-receiver-leveling-loop",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-082-agc-receiver-leveling-loop",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-082-agc-receiver-leveling-loop",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-082-agc-receiver-leveling-loop",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-091-chopper-stabilized-differential-amplifier",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-091-chopper-stabilized-differential-amplifier",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-091-chopper-stabilized-differential-amplifier",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-091-chopper-stabilized-differential-amplifier",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-183-foreground-rdac-calibrator",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-183-foreground-rdac-calibrator",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-183-foreground-rdac-calibrator",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-183-foreground-rdac-calibrator",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-186-sarfend-logic-4b",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-186-sarfend-logic-4b",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-186-sarfend-logic-4b",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-186-sarfend-logic-4b",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-307-switched-capacitor-integrator-phase-pair",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-307-switched-capacitor-integrator-phase-pair",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-307-switched-capacitor-integrator-phase-pair",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-307-switched-capacitor-integrator-phase-pair",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-308-correlated-double-sampler-offset-cancel",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-308-correlated-double-sampler-offset-cancel",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-308-correlated-double-sampler-offset-cancel",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-308-correlated-double-sampler-offset-cancel",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-314-hysteretic-window-comparator",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-314-hysteretic-window-comparator",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-314-hysteretic-window-comparator",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-314-hysteretic-window-comparator",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-353-ffe-transmitter-3tap",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-353-ffe-transmitter-3tap",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-353-ffe-transmitter-3tap",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-353-ffe-transmitter-3tap",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-370-opamp-feedback-settling-monitor",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-370-opamp-feedback-settling-monitor",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-370-opamp-feedback-settling-monitor",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-370-opamp-feedback-settling-monitor",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-375-nonoverlap-clock-generator",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-375-nonoverlap-clock-generator",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-375-nonoverlap-clock-generator",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-375-nonoverlap-clock-generator",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-396-quadrature-lo-generator-divided-clock",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-396-quadrature-lo-generator-divided-clock",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-spec-396-quadrature-lo-generator-divided-clock",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-spec-396-quadrature-lo-generator-divided-clock",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        }
+      ],
+      "acceptance": "required-materials-calibration-reference-and-pilot-evidence-covered",
+      "quality_conclusion_limit": "024可解性、071两模式不同窗口控制、308 one-shot重复signal失败及Agentic6/6PASS均已审；375Flash实际length无候选，能力未知，不再等待成功解题。"
+    },
+    {
+      "spec_issue": 134,
+      "obligation": "D1+D2",
+      "task_ids": [
+        "v2-data-sampling-identification"
+      ],
+      "requirement": "真实JKU SKY130源、完整序列、初态/误差/可辨识性与固定训练/公开/留出划分",
+      "construction_evidence": "data_modeling/README.md",
+      "fixed_author_evidence": "author-calibration-final.md",
+      "current_author_evidence": "author-calibration-private-overlays.md",
+      "formal_reference_evidence": "harbor_reference/harbor-reference-acceptance.md",
+      "one_shot_evidence": "model_pilots/one-shot-final.json",
+      "quality_evidence": "model_pilots/model-quality.md",
+      "construction_and_calibration": "covered-by-fixed-reviewed-evidence",
+      "formal_reference": "accepted-with-current-frozen-case-identity",
+      "representative_quality": "completed-with-stated-capability-limits",
+      "final_matrix_join": "complete-current-terminal-design-cells",
+      "model_results": {
+        "one-shot": {
+          "all_models": {
+            "design_cells": 2,
+            "complete_submissions": 0,
+            "electrically_graded": 0,
+            "passed": 0,
+            "outcomes": {
+              "output-budget-no-submission": 2
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 1
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 1
+              }
+            }
+          }
+        },
+        "agentic": {
+          "all_models": {
+            "design_cells": 2,
+            "complete_submissions": 0,
+            "electrically_graded": 0,
+            "passed": 0,
+            "outcomes": {
+              "time-budget-no-submission": 2
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "time-budget-no-submission": 1
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "time-budget-no-submission": 1
+              }
+            }
+          }
+        }
+      },
+      "model_evidence": "model_pilots/model-pilot-summary.json",
+      "evidence_row_keys": [
+        {
+          "task_id": "v2-data-sampling-identification",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-data-sampling-identification",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-data-sampling-identification",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-data-sampling-identification",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        }
+      ],
+      "acceptance": "required-materials-calibration-reference-and-pilot-evidence-covered"
+    },
+    {
+      "spec_issue": 134,
+      "obligation": "D3",
+      "task_ids": [
+        "v2-data-sampling-identification"
+      ],
+      "requirement": "独立真值与合理替代/语义负例校准",
+      "construction_evidence": "data_modeling/category-manifest.json",
+      "fixed_author_evidence": "author-calibration-final.md",
+      "current_author_evidence": "author-calibration-private-overlays.md",
+      "formal_reference_evidence": "harbor_reference/harbor-reference-acceptance.md",
+      "one_shot_evidence": "model_pilots/one-shot-final.json",
+      "quality_evidence": "model_pilots/model-quality.md",
+      "construction_and_calibration": "covered-by-fixed-reviewed-evidence",
+      "formal_reference": "accepted-with-current-frozen-case-identity",
+      "representative_quality": "completed-with-stated-capability-limits",
+      "final_matrix_join": "complete-current-terminal-design-cells",
+      "model_results": {
+        "one-shot": {
+          "all_models": {
+            "design_cells": 2,
+            "complete_submissions": 0,
+            "electrically_graded": 0,
+            "passed": 0,
+            "outcomes": {
+              "output-budget-no-submission": 2
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 1
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 1
+              }
+            }
+          }
+        },
+        "agentic": {
+          "all_models": {
+            "design_cells": 2,
+            "complete_submissions": 0,
+            "electrically_graded": 0,
+            "passed": 0,
+            "outcomes": {
+              "time-budget-no-submission": 2
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "time-budget-no-submission": 1
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "time-budget-no-submission": 1
+              }
+            }
+          }
+        }
+      },
+      "model_evidence": "model_pilots/model-pilot-summary.json",
+      "evidence_row_keys": [
+        {
+          "task_id": "v2-data-sampling-identification",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-data-sampling-identification",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-data-sampling-identification",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-data-sampling-identification",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        }
+      ],
+      "acceptance": "required-materials-calibration-reference-and-pilot-evidence-covered"
+    },
+    {
+      "spec_issue": 134,
+      "obligation": "D4",
+      "task_ids": [
+        "v2-data-sampling-identification"
+      ],
+      "requirement": "真实数据题双模式试做与质量判断",
+      "construction_evidence": "data_modeling/README.md",
+      "fixed_author_evidence": "author-calibration-final.md",
+      "current_author_evidence": "author-calibration-private-overlays.md",
+      "formal_reference_evidence": "harbor_reference/harbor-reference-acceptance.md",
+      "one_shot_evidence": "model_pilots/one-shot-final.json",
+      "quality_evidence": "model_pilots/model-quality.md",
+      "construction_and_calibration": "covered-by-fixed-reviewed-evidence",
+      "formal_reference": "accepted-with-current-frozen-case-identity",
+      "representative_quality": "completed-with-stated-capability-limits",
+      "final_matrix_join": "complete-current-terminal-design-cells",
+      "model_results": {
+        "one-shot": {
+          "all_models": {
+            "design_cells": 2,
+            "complete_submissions": 0,
+            "electrically_graded": 0,
+            "passed": 0,
+            "outcomes": {
+              "output-budget-no-submission": 2
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 1
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 1
+              }
+            }
+          }
+        },
+        "agentic": {
+          "all_models": {
+            "design_cells": 2,
+            "complete_submissions": 0,
+            "electrically_graded": 0,
+            "passed": 0,
+            "outcomes": {
+              "time-budget-no-submission": 2
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "time-budget-no-submission": 1
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "time-budget-no-submission": 1
+              }
+            }
+          }
+        }
+      },
+      "model_evidence": "model_pilots/model-pilot-summary.json",
+      "evidence_row_keys": [
+        {
+          "task_id": "v2-data-sampling-identification",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-data-sampling-identification",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-data-sampling-identification",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-data-sampling-identification",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        }
+      ],
+      "acceptance": "required-materials-calibration-reference-and-pilot-evidence-covered",
+      "quality_conclusion_limit": "四格真实试做已终态，Agentic使用公开数据但无VA提交；公开材料已正确到达，留出泛化能力未知。"
+    },
+    {
+      "spec_issue": 135,
+      "obligation": "E1+E2",
+      "task_ids": [
+        "v2-integrate-case0007-adpll-fine-tdc"
+      ],
+      "requirement": "ADPLL健康coarse/fine执行器、TDC控制路径及关闭fine兼容/开启因果",
+      "construction_evidence": "extension_integration/README.md",
+      "fixed_author_evidence": "author-calibration-final.md",
+      "current_author_evidence": "author-calibration-private-overlays.md",
+      "formal_reference_evidence": "harbor_reference/harbor-reference-acceptance.md",
+      "one_shot_evidence": "model_pilots/one-shot-final.json",
+      "quality_evidence": "model_pilots/model-quality.md",
+      "construction_and_calibration": "covered-by-fixed-reviewed-evidence",
+      "formal_reference": "accepted-with-current-frozen-case-identity",
+      "representative_quality": "completed-with-stated-capability-limits",
+      "final_matrix_join": "complete-current-terminal-design-cells",
+      "model_results": {
+        "one-shot": {
+          "all_models": {
+            "design_cells": 2,
+            "complete_submissions": 0,
+            "electrically_graded": 0,
+            "passed": 0,
+            "outcomes": {
+              "no-response-cause-unknown": 1,
+              "output-budget-no-submission": 1
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 1
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "no-response-cause-unknown": 1
+              }
+            }
+          }
+        },
+        "agentic": {
+          "all_models": {
+            "design_cells": 2,
+            "complete_submissions": 0,
+            "electrically_graded": 0,
+            "passed": 0,
+            "outcomes": {
+              "output-budget-no-submission": 2
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 1
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 1
+              }
+            }
+          }
+        }
+      },
+      "model_evidence": "model_pilots/model-pilot-summary.json",
+      "evidence_row_keys": [
+        {
+          "task_id": "v2-integrate-case0007-adpll-fine-tdc",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-integrate-case0007-adpll-fine-tdc",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-integrate-case0007-adpll-fine-tdc",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-integrate-case0007-adpll-fine-tdc",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        }
+      ],
+      "acceptance": "required-materials-calibration-reference-and-pilot-evidence-covered"
+    },
+    {
+      "spec_issue": 135,
+      "obligation": "349",
+      "task_ids": [
+        "v2-integrate-349-multichannel-readout"
+      ],
+      "requirement": "唯一P1归口349复用健康024四部件，公开诊断替身与读出/保持兼容",
+      "construction_evidence": "extension_integration/manifest.json",
+      "fixed_author_evidence": "author-calibration-final.md",
+      "current_author_evidence": "author-calibration-private-overlays.md",
+      "formal_reference_evidence": "harbor_reference/harbor-reference-acceptance.md",
+      "one_shot_evidence": "model_pilots/one-shot-final.json",
+      "quality_evidence": "model_pilots/model-quality.md",
+      "construction_and_calibration": "covered-by-fixed-reviewed-evidence",
+      "formal_reference": "accepted-with-current-frozen-case-identity",
+      "representative_quality": "completed-with-stated-capability-limits",
+      "related_asset_task_ids": [
+        "v2-spec-024-clocked-sample-and-hold"
+      ],
+      "relation_boundary": "Healthy024 is a fixed baseline dependency, not another task counted for349 obligation.",
+      "final_matrix_join": "complete-current-terminal-design-cells",
+      "model_results": {
+        "one-shot": {
+          "all_models": {
+            "design_cells": 2,
+            "complete_submissions": 0,
+            "electrically_graded": 0,
+            "passed": 0,
+            "outcomes": {
+              "no-response-cause-unknown": 1,
+              "output-budget-no-submission": 1
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 1
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "no-response-cause-unknown": 1
+              }
+            }
+          }
+        },
+        "agentic": {
+          "all_models": {
+            "design_cells": 2,
+            "complete_submissions": 0,
+            "electrically_graded": 0,
+            "passed": 0,
+            "outcomes": {
+              "output-budget-no-submission": 2
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 1
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 1
+              }
+            }
+          }
+        }
+      },
+      "model_evidence": "model_pilots/model-pilot-summary.json",
+      "evidence_row_keys": [
+        {
+          "task_id": "v2-integrate-349-multichannel-readout",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-integrate-349-multichannel-readout",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-integrate-349-multichannel-readout",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-integrate-349-multichannel-readout",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        }
+      ],
+      "acceptance": "required-materials-calibration-reference-and-pilot-evidence-covered"
+    },
+    {
+      "spec_issue": 135,
+      "obligation": "E3",
+      "task_ids": [
+        "v2-integrate-349-multichannel-readout",
+        "v2-integrate-case0007-adpll-fine-tdc"
+      ],
+      "requirement": "两系统共同验收、小规模试做和质量结论",
+      "construction_evidence": "extension_integration/README.md",
+      "fixed_author_evidence": "author-calibration-final.md",
+      "current_author_evidence": "author-calibration-private-overlays.md",
+      "formal_reference_evidence": "harbor_reference/harbor-reference-acceptance.md",
+      "one_shot_evidence": "model_pilots/one-shot-final.json",
+      "quality_evidence": "model_pilots/model-quality.md",
+      "construction_and_calibration": "covered-by-fixed-reviewed-evidence",
+      "formal_reference": "accepted-with-current-frozen-case-identity",
+      "representative_quality": "completed-with-stated-capability-limits",
+      "final_matrix_join": "complete-current-terminal-design-cells",
+      "model_results": {
+        "one-shot": {
+          "all_models": {
+            "design_cells": 4,
+            "complete_submissions": 0,
+            "electrically_graded": 0,
+            "passed": 0,
+            "outcomes": {
+              "no-response-cause-unknown": 2,
+              "output-budget-no-submission": 2
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 2,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 2
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 2,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "no-response-cause-unknown": 2
+              }
+            }
+          }
+        },
+        "agentic": {
+          "all_models": {
+            "design_cells": 4,
+            "complete_submissions": 0,
+            "electrically_graded": 0,
+            "passed": 0,
+            "outcomes": {
+              "output-budget-no-submission": 4
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 2,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 2
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 2,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 2
+              }
+            }
+          }
+        }
+      },
+      "model_evidence": "model_pilots/model-pilot-summary.json",
+      "evidence_row_keys": [
+        {
+          "task_id": "v2-integrate-349-multichannel-readout",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-integrate-349-multichannel-readout",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-integrate-349-multichannel-readout",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-integrate-349-multichannel-readout",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-integrate-case0007-adpll-fine-tdc",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-integrate-case0007-adpll-fine-tdc",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-integrate-case0007-adpll-fine-tdc",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-integrate-case0007-adpll-fine-tdc",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        }
+      ],
+      "acceptance": "required-materials-calibration-reference-and-pilot-evidence-covered",
+      "quality_conclusion_limit": "八格终态无可评分候选，预算/提交和provider未知分类保留；新增功能/兼容/部件因果的模型实现能力未知。"
+    },
+    {
+      "spec_issue": 136,
+      "obligation": "R1",
+      "task_ids": [
+        "v2-repair-debounce-latch",
+        "v2-repair-pfd-reset",
+        "v2-repair-reset-sequencer",
+        "v2-repair-uvlo-brownout"
+      ],
+      "requirement": "005/046/272/249四单模块真实starter、健康、局部修复及合法整体重写",
+      "construction_evidence": "diagnosis_repair/manifest.json",
+      "fixed_author_evidence": "author-calibration-final.md",
+      "current_author_evidence": "author-calibration-private-overlays.md",
+      "formal_reference_evidence": "harbor_reference/harbor-reference-acceptance.md",
+      "one_shot_evidence": "model_pilots/one-shot-final.json",
+      "quality_evidence": "model_pilots/model-quality.md",
+      "construction_and_calibration": "covered-by-fixed-reviewed-evidence",
+      "formal_reference": "accepted-with-current-frozen-case-identity",
+      "representative_quality": "completed-with-stated-capability-limits",
+      "final_matrix_join": "complete-current-terminal-design-cells",
+      "model_results": {
+        "one-shot": {
+          "all_models": {
+            "design_cells": 8,
+            "complete_submissions": 7,
+            "electrically_graded": 7,
+            "passed": 7,
+            "outcomes": {
+              "no-response-cause-unknown": 1,
+              "pass": 7
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 4,
+              "complete_submissions": 4,
+              "electrically_graded": 4,
+              "passed": 4,
+              "outcomes": {
+                "pass": 4
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 4,
+              "complete_submissions": 3,
+              "electrically_graded": 3,
+              "passed": 3,
+              "outcomes": {
+                "no-response-cause-unknown": 1,
+                "pass": 3
+              }
+            }
+          }
+        },
+        "agentic": {
+          "all_models": {
+            "design_cells": 8,
+            "complete_submissions": 8,
+            "electrically_graded": 8,
+            "passed": 8,
+            "outcomes": {
+              "pass": 8
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 4,
+              "complete_submissions": 4,
+              "electrically_graded": 4,
+              "passed": 4,
+              "outcomes": {
+                "pass": 4
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 4,
+              "complete_submissions": 4,
+              "electrically_graded": 4,
+              "passed": 4,
+              "outcomes": {
+                "pass": 4
+              }
+            }
+          }
+        }
+      },
+      "model_evidence": "model_pilots/model-pilot-summary.json",
+      "evidence_row_keys": [
+        {
+          "task_id": "v2-repair-debounce-latch",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-repair-debounce-latch",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-repair-debounce-latch",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-repair-debounce-latch",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-repair-pfd-reset",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-repair-pfd-reset",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-repair-pfd-reset",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-repair-pfd-reset",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-repair-reset-sequencer",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-repair-reset-sequencer",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-repair-reset-sequencer",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-repair-reset-sequencer",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-repair-uvlo-brownout",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-repair-uvlo-brownout",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-repair-uvlo-brownout",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-repair-uvlo-brownout",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        }
+      ],
+      "acceptance": "required-materials-calibration-reference-and-pilot-evidence-covered"
+    },
+    {
+      "spec_issue": 136,
+      "obligation": "R2+R3",
+      "task_ids": [
+        "v2-repair-uvlo-reset-chain"
+      ],
+      "requirement": "原创多VA资格/复位/使能/下游因果、危险禁止与正常启动",
+      "construction_evidence": "diagnosis_repair/README.md",
+      "fixed_author_evidence": "author-calibration-final.md",
+      "current_author_evidence": "author-calibration-private-overlays.md",
+      "formal_reference_evidence": "harbor_reference/harbor-reference-acceptance.md",
+      "one_shot_evidence": "model_pilots/one-shot-final.json",
+      "quality_evidence": "model_pilots/model-quality.md",
+      "construction_and_calibration": "covered-by-fixed-reviewed-evidence",
+      "formal_reference": "accepted-with-current-frozen-case-identity",
+      "representative_quality": "completed-with-stated-capability-limits",
+      "final_matrix_join": "complete-current-terminal-design-cells",
+      "model_results": {
+        "one-shot": {
+          "all_models": {
+            "design_cells": 2,
+            "complete_submissions": 1,
+            "electrically_graded": 1,
+            "passed": 1,
+            "outcomes": {
+              "output-budget-no-submission": 1,
+              "pass": 1
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 1
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 1,
+              "complete_submissions": 1,
+              "electrically_graded": 1,
+              "passed": 1,
+              "outcomes": {
+                "pass": 1
+              }
+            }
+          }
+        },
+        "agentic": {
+          "all_models": {
+            "design_cells": 2,
+            "complete_submissions": 2,
+            "electrically_graded": 2,
+            "passed": 2,
+            "outcomes": {
+              "pass": 2
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 1,
+              "complete_submissions": 1,
+              "electrically_graded": 1,
+              "passed": 1,
+              "outcomes": {
+                "pass": 1
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 1,
+              "complete_submissions": 1,
+              "electrically_graded": 1,
+              "passed": 1,
+              "outcomes": {
+                "pass": 1
+              }
+            }
+          }
+        }
+      },
+      "model_evidence": "model_pilots/model-pilot-summary.json",
+      "evidence_row_keys": [
+        {
+          "task_id": "v2-repair-uvlo-reset-chain",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-repair-uvlo-reset-chain",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-repair-uvlo-reset-chain",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-repair-uvlo-reset-chain",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        }
+      ],
+      "acceptance": "required-materials-calibration-reference-and-pilot-evidence-covered"
+    },
+    {
+      "spec_issue": 136,
+      "obligation": "R4+P1",
+      "task_ids": [
+        "v2-repair-debounce-latch",
+        "v2-repair-pfd-reset",
+        "v2-repair-reset-sequencer",
+        "v2-repair-uvlo-brownout",
+        "v2-repair-uvlo-reset-chain"
+      ],
+      "requirement": "四P1来源+原创链，共5题",
+      "construction_evidence": "diagnosis_repair/README.md",
+      "fixed_author_evidence": "author-calibration-final.md",
+      "current_author_evidence": "author-calibration-private-overlays.md",
+      "formal_reference_evidence": "harbor_reference/harbor-reference-acceptance.md",
+      "one_shot_evidence": "model_pilots/one-shot-final.json",
+      "quality_evidence": "model_pilots/model-quality.md",
+      "construction_and_calibration": "covered-by-fixed-reviewed-evidence",
+      "formal_reference": "accepted-with-current-frozen-case-identity",
+      "representative_quality": "completed-with-stated-capability-limits",
+      "final_matrix_join": "complete-current-terminal-design-cells",
+      "model_results": {
+        "one-shot": {
+          "all_models": {
+            "design_cells": 10,
+            "complete_submissions": 8,
+            "electrically_graded": 8,
+            "passed": 8,
+            "outcomes": {
+              "no-response-cause-unknown": 1,
+              "output-budget-no-submission": 1,
+              "pass": 8
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 5,
+              "complete_submissions": 4,
+              "electrically_graded": 4,
+              "passed": 4,
+              "outcomes": {
+                "output-budget-no-submission": 1,
+                "pass": 4
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 5,
+              "complete_submissions": 4,
+              "electrically_graded": 4,
+              "passed": 4,
+              "outcomes": {
+                "no-response-cause-unknown": 1,
+                "pass": 4
+              }
+            }
+          }
+        },
+        "agentic": {
+          "all_models": {
+            "design_cells": 10,
+            "complete_submissions": 10,
+            "electrically_graded": 10,
+            "passed": 10,
+            "outcomes": {
+              "pass": 10
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 5,
+              "complete_submissions": 5,
+              "electrically_graded": 5,
+              "passed": 5,
+              "outcomes": {
+                "pass": 5
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 5,
+              "complete_submissions": 5,
+              "electrically_graded": 5,
+              "passed": 5,
+              "outcomes": {
+                "pass": 5
+              }
+            }
+          }
+        }
+      },
+      "model_evidence": "model_pilots/model-pilot-summary.json",
+      "evidence_row_keys": [
+        {
+          "task_id": "v2-repair-debounce-latch",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-repair-debounce-latch",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-repair-debounce-latch",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-repair-debounce-latch",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-repair-pfd-reset",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-repair-pfd-reset",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-repair-pfd-reset",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-repair-pfd-reset",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-repair-reset-sequencer",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-repair-reset-sequencer",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-repair-reset-sequencer",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-repair-reset-sequencer",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-repair-uvlo-brownout",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-repair-uvlo-brownout",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-repair-uvlo-brownout",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-repair-uvlo-brownout",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-repair-uvlo-reset-chain",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-repair-uvlo-reset-chain",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-repair-uvlo-reset-chain",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-repair-uvlo-reset-chain",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        }
+      ],
+      "acceptance": "required-materials-calibration-reference-and-pilot-evidence-covered",
+      "quality_conclusion_limit": "合法整体重写及系统因果有实际代表证据，基础覆盖定位保留；不禁重写、不按行数或文件数称难。"
+    },
+    {
+      "spec_issue": 137,
+      "obligation": "T1",
+      "task_ids": [
+        "v2-test-hysteresis"
+      ],
+      "requirement": "111滞回测量完整窗口、误报漏报校准",
+      "construction_evidence": "testing_characterization/README.md",
+      "fixed_author_evidence": "author-calibration-final.md",
+      "current_author_evidence": "author-calibration-private-overlays.md",
+      "formal_reference_evidence": "harbor_reference/harbor-reference-acceptance.md",
+      "one_shot_evidence": "model_pilots/one-shot-final.json",
+      "quality_evidence": "model_pilots/model-quality.md",
+      "construction_and_calibration": "covered-by-fixed-reviewed-evidence",
+      "formal_reference": "accepted-with-current-frozen-case-identity",
+      "representative_quality": "completed-with-stated-capability-limits",
+      "final_matrix_join": "complete-current-terminal-design-cells",
+      "model_results": {
+        "one-shot": {
+          "all_models": {
+            "design_cells": 2,
+            "complete_submissions": 2,
+            "electrically_graded": 2,
+            "passed": 2,
+            "outcomes": {
+              "pass": 2
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 1,
+              "complete_submissions": 1,
+              "electrically_graded": 1,
+              "passed": 1,
+              "outcomes": {
+                "pass": 1
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 1,
+              "complete_submissions": 1,
+              "electrically_graded": 1,
+              "passed": 1,
+              "outcomes": {
+                "pass": 1
+              }
+            }
+          }
+        },
+        "agentic": {
+          "all_models": {
+            "design_cells": 2,
+            "complete_submissions": 2,
+            "electrically_graded": 2,
+            "passed": 2,
+            "outcomes": {
+              "pass": 2
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 1,
+              "complete_submissions": 1,
+              "electrically_graded": 1,
+              "passed": 1,
+              "outcomes": {
+                "pass": 1
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 1,
+              "complete_submissions": 1,
+              "electrically_graded": 1,
+              "passed": 1,
+              "outcomes": {
+                "pass": 1
+              }
+            }
+          }
+        }
+      },
+      "model_evidence": "model_pilots/model-pilot-summary.json",
+      "evidence_row_keys": [
+        {
+          "task_id": "v2-test-hysteresis",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-test-hysteresis",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-test-hysteresis",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-test-hysteresis",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        }
+      ],
+      "acceptance": "required-materials-calibration-reference-and-pilot-evidence-covered"
+    },
+    {
+      "spec_issue": 137,
+      "obligation": "T2",
+      "task_ids": [
+        "v2-test-gain-settling"
+      ],
+      "requirement": "gain-settling实际静态038/动态370的增益与有限建立测量代表",
+      "construction_evidence": "testing_characterization/build_tasks.py",
+      "fixed_author_evidence": "author-calibration-final.md",
+      "current_author_evidence": "author-calibration-private-overlays.md",
+      "formal_reference_evidence": "harbor_reference/harbor-reference-acceptance.md",
+      "one_shot_evidence": "model_pilots/one-shot-final.json",
+      "quality_evidence": "model_pilots/model-quality.md",
+      "construction_and_calibration": "covered-by-fixed-reviewed-evidence",
+      "formal_reference": "accepted-with-current-frozen-case-identity",
+      "representative_quality": "completed-with-stated-capability-limits",
+      "related_asset_task_ids": [
+        "v2-test-online-gain",
+        "v2-spec-038-programmable-gain-amplifier",
+        "v2-spec-370-opamp-feedback-settling-monitor"
+      ],
+      "relation_boundary": "093 online gain is related measurement evidence, not another task satisfying the specific T2 gain/finite-settling representative.",
+      "final_matrix_join": "complete-current-terminal-design-cells",
+      "model_results": {
+        "one-shot": {
+          "all_models": {
+            "design_cells": 2,
+            "complete_submissions": 0,
+            "electrically_graded": 0,
+            "passed": 0,
+            "outcomes": {
+              "no-response-cause-unknown": 1,
+              "output-budget-no-submission": 1
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 1
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "no-response-cause-unknown": 1
+              }
+            }
+          }
+        },
+        "agentic": {
+          "all_models": {
+            "design_cells": 2,
+            "complete_submissions": 1,
+            "electrically_graded": 1,
+            "passed": 1,
+            "outcomes": {
+              "output-budget-no-submission": 1,
+              "pass": 1
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 1
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 1,
+              "complete_submissions": 1,
+              "electrically_graded": 1,
+              "passed": 1,
+              "outcomes": {
+                "pass": 1
+              }
+            }
+          }
+        }
+      },
+      "model_evidence": "model_pilots/model-pilot-summary.json",
+      "evidence_row_keys": [
+        {
+          "task_id": "v2-test-gain-settling",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-test-gain-settling",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-test-gain-settling",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-test-gain-settling",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        }
+      ],
+      "acceptance": "required-materials-calibration-reference-and-pilot-evidence-covered"
+    },
+    {
+      "spec_issue": 137,
+      "obligation": "T3",
+      "task_ids": [
+        "v2-test-por-sequence"
+      ],
+      "requirement": "真实Ajacci POR源/数字翻译provenance、闭环供电刺激与独立性质验收",
+      "construction_evidence": "testing_characterization/README.md",
+      "fixed_author_evidence": "author-calibration-final.md",
+      "current_author_evidence": "author-calibration-private-overlays.md",
+      "formal_reference_evidence": "harbor_reference/harbor-reference-acceptance.md",
+      "one_shot_evidence": "model_pilots/one-shot-final.json",
+      "quality_evidence": "model_pilots/model-quality.md",
+      "construction_and_calibration": "covered-by-fixed-reviewed-evidence",
+      "formal_reference": "accepted-with-current-frozen-case-identity",
+      "representative_quality": "completed-with-stated-capability-limits",
+      "final_matrix_join": "complete-current-terminal-design-cells",
+      "model_results": {
+        "one-shot": {
+          "all_models": {
+            "design_cells": 2,
+            "complete_submissions": 0,
+            "electrically_graded": 0,
+            "passed": 0,
+            "outcomes": {
+              "context-rejection": 2
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "context-rejection": 1
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "context-rejection": 1
+              }
+            }
+          }
+        },
+        "agentic": {
+          "all_models": {
+            "design_cells": 2,
+            "complete_submissions": 0,
+            "electrically_graded": 0,
+            "passed": 0,
+            "outcomes": {
+              "output-budget-no-submission": 2
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 1
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 1,
+              "complete_submissions": 0,
+              "electrically_graded": 0,
+              "passed": 0,
+              "outcomes": {
+                "output-budget-no-submission": 1
+              }
+            }
+          }
+        }
+      },
+      "model_evidence": "model_pilots/model-pilot-summary.json",
+      "evidence_row_keys": [
+        {
+          "task_id": "v2-test-por-sequence",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-test-por-sequence",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-test-por-sequence",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-test-por-sequence",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        }
+      ],
+      "acceptance": "required-materials-calibration-reference-and-pilot-evidence-covered"
+    },
+    {
+      "spec_issue": 137,
+      "obligation": "T4+P1",
+      "task_ids": [
+        "v2-test-clock-frequency",
+        "v2-test-comparator-delay",
+        "v2-test-duty-cycle",
+        "v2-test-gain-settling",
+        "v2-test-hysteresis",
+        "v2-test-offset-search",
+        "v2-test-online-gain",
+        "v2-test-por-sequence",
+        "v2-test-sampled-rms",
+        "v2-test-time-protocol"
+      ],
+      "requirement": "8P1唯一归口+放大器/POR两个额外代表，共10题",
+      "construction_evidence": "testing_characterization/build_tasks.py",
+      "fixed_author_evidence": "author-calibration-final.md",
+      "current_author_evidence": "author-calibration-private-overlays.md",
+      "formal_reference_evidence": "harbor_reference/harbor-reference-acceptance.md",
+      "one_shot_evidence": "model_pilots/one-shot-final.json",
+      "quality_evidence": "model_pilots/model-quality.md",
+      "construction_and_calibration": "covered-by-fixed-reviewed-evidence",
+      "formal_reference": "accepted-with-current-frozen-case-identity",
+      "representative_quality": "completed-with-stated-capability-limits",
+      "final_matrix_join": "complete-current-terminal-design-cells",
+      "model_results": {
+        "one-shot": {
+          "all_models": {
+            "design_cells": 20,
+            "complete_submissions": 13,
+            "electrically_graded": 11,
+            "passed": 11,
+            "outcomes": {
+              "context-rejection": 2,
+              "invalid-va": 2,
+              "no-response-cause-unknown": 1,
+              "output-budget-no-submission": 4,
+              "pass": 11
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 10,
+              "complete_submissions": 5,
+              "electrically_graded": 4,
+              "passed": 4,
+              "outcomes": {
+                "context-rejection": 1,
+                "invalid-va": 1,
+                "output-budget-no-submission": 4,
+                "pass": 4
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 10,
+              "complete_submissions": 8,
+              "electrically_graded": 7,
+              "passed": 7,
+              "outcomes": {
+                "context-rejection": 1,
+                "invalid-va": 1,
+                "no-response-cause-unknown": 1,
+                "pass": 7
+              }
+            }
+          }
+        },
+        "agentic": {
+          "all_models": {
+            "design_cells": 20,
+            "complete_submissions": 14,
+            "electrically_graded": 14,
+            "passed": 14,
+            "outcomes": {
+              "output-budget-no-submission": 6,
+              "pass": 14
+            }
+          },
+          "by_model": {
+            "glm-5.3": {
+              "design_cells": 10,
+              "complete_submissions": 7,
+              "electrically_graded": 7,
+              "passed": 7,
+              "outcomes": {
+                "output-budget-no-submission": 3,
+                "pass": 7
+              }
+            },
+            "glm-5.3-flash": {
+              "design_cells": 10,
+              "complete_submissions": 7,
+              "electrically_graded": 7,
+              "passed": 7,
+              "outcomes": {
+                "output-budget-no-submission": 3,
+                "pass": 7
+              }
+            }
+          }
+        }
+      },
+      "model_evidence": "model_pilots/model-pilot-summary.json",
+      "evidence_row_keys": [
+        {
+          "task_id": "v2-test-clock-frequency",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-test-clock-frequency",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-test-clock-frequency",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-test-clock-frequency",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-test-comparator-delay",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-test-comparator-delay",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-test-comparator-delay",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-test-comparator-delay",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-test-duty-cycle",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-test-duty-cycle",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-test-duty-cycle",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-test-duty-cycle",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-test-gain-settling",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-test-gain-settling",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-test-gain-settling",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-test-gain-settling",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-test-hysteresis",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-test-hysteresis",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-test-hysteresis",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-test-hysteresis",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-test-offset-search",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-test-offset-search",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-test-offset-search",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-test-offset-search",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-test-online-gain",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-test-online-gain",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-test-online-gain",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-test-online-gain",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-test-por-sequence",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-test-por-sequence",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-test-por-sequence",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-test-por-sequence",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-test-sampled-rms",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-test-sampled-rms",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-test-sampled-rms",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-test-sampled-rms",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-test-time-protocol",
+          "model": "glm-5.3",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-test-time-protocol",
+          "model": "glm-5.3",
+          "mode": "one-shot"
+        },
+        {
+          "task_id": "v2-test-time-protocol",
+          "model": "glm-5.3-flash",
+          "mode": "agentic"
+        },
+        {
+          "task_id": "v2-test-time-protocol",
+          "model": "glm-5.3-flash",
+          "mode": "one-shot"
+        }
+      ],
+      "acceptance": "required-materials-calibration-reference-and-pilot-evidence-covered",
+      "quality_conclusion_limit": "数值测量、有限建立性质PASS、响应驱动搜索已审；POR大材料/预算无提交属试做限制，不伪造完整电源性质能力。"
+    }
+  ],
+  "uncovered_evidence_obligations": [],
+  "publication_governance": "PR145 carries the exact published revision, CI and final review results, and coordinator merge/issue decisions. These are external to this evidence document, not persisted as incomplete acceptance fields.",
+  "limits": [
+    "All terminal model cells are retained; 60 ungraded results remain null, never reward zero. No best-of candidate selection.",
+    "Canonical public bytes match for 74 task/model pairs; representation, model usage, tool access and compute budgets differ. Results do not isolate a causal tool benefit.",
+    "Data identification and both integration tasks have no graded model candidate; model implementation/generalization capability is unknown. POR and other incomplete submissions likewise do not establish successful model capability.",
+    "Quality evidence preserves late public gateway failures on308; confirmed frozen candidate6/6PASS does not imply all public tool calls succeeded.",
+    "Formal reference acceptance uses stock Harbor Oracle solve, public session write/submit bridge, exact freeze and independent FrozenCandidateVerifier. The original source solve is preserved; source test.sh is not claimed to run verbatim. Archive hashes identify retained evidence, not public download URLs.",
+    "Author historical attempts and replaced environment/science attempts remain retained. Fresh native Trials, archived calibration and overlay regrades are distinct evidence."
+  ],
+  "parent_issues_keep_open": [
+    "vaEVAS#107",
+    "vaEVAS#72",
+    "circuit-harness#5"
+  ]
+}

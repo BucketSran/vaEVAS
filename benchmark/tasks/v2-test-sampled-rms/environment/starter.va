@@ -1,0 +1,23 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module sampled_true_rms_to_dc(vinp, vinn, clk, reset, enable, rms_out, valid);
+    input vinp, vinn, clk, reset, enable;
+    output rms_out, valid;
+    electrical vinp, vinn, clk, reset, enable, rms_out, valid;
+
+    parameter real vth = 0.45;
+    parameter real vhigh = 0.9;
+    parameter real tr = 100p from (0:inf);
+
+    integer sample_count;
+    integer valid_state;
+    real square_sum;
+    real rms_state;
+    real sampled_value;
+    real completed_sum;
+
+    analog begin
+// Implement the public contract.
+end
+endmodule

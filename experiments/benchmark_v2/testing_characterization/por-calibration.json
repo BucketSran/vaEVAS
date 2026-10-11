@@ -1,0 +1,37 @@
+[
+  {
+    "task": "benchmark/tasks/v2-test-por-sequence",
+    "variant": "reference",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-por-sequence/reference",
+    "expected_pass": true,
+    "semantic_behavior": "reference implementation"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-por-sequence",
+    "variant": "alternate",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-por-sequence/alternate",
+    "expected_pass": true,
+    "semantic_behavior": "different state representation and event implementation"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-por-sequence",
+    "variant": "fixed-sequence",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-por-sequence/fixed-sequence",
+    "expected_pass": false,
+    "semantic_behavior": "ignores slower actual first completion when starting undervoltage"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-por-sequence",
+    "variant": "omit-undervoltage",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-por-sequence/omit-undervoltage",
+    "expected_pass": false,
+    "semantic_behavior": "never causes actual undervoltage despite final reports"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-por-sequence",
+    "variant": "always-ok",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-por-sequence/always-ok",
+    "expected_pass": false,
+    "semantic_behavior": "conceals missing or early POR output"
+  }
+]

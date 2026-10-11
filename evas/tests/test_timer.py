@@ -106,6 +106,25 @@ class TimerContracts(unittest.TestCase):
             self.assertEqual(len(result['transient']['events']), expected)
             self.assertEqual(result['transient']['states'][-1], [expected])
 
+    def test_decimal_period_stop_uses_exact_clock_not_interval_padding(self):
+        period = 1e-6
+        source = timer_source('1e-6,1e-6,1e-12')
+        for cycles in [3, 4]:
+            nominal = cycles * Q(period)
+            center = float(nominal)
+            for stop in [math.nextafter(center, 0.), center,
+                         math.nextafter(center, math.inf)]:
+                expected = sum(k * Q(period) <= Q(stop) for k in range(1, 6))
+                for times in [[0, stop], [0]]:
+                    with self.subTest(cycles=cycles, stop=stop, times=times):
+                        result = run_timer(source, stop=stop, times=times, step=period)
+                        events = result['transient']['events']
+                        self.assertEqual(len(events), expected)
+                        self.assertEqual(events[-1]['after'], [expected])
+                        self.assertLessEqual(events[-1]['time'], stop)
+                        if times[-1] == stop:
+                            self.assertEqual(result['transient']['states'][-1], [expected])
+
     def test_constant_enable_and_instance_parameter_binding(self):
         for enable, count in [(0, 0), (-2, 4), (0.5, 4)]:
             for tolerance in ['0.001', '']:
