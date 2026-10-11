@@ -90,30 +90,37 @@ def load_contract(*, cards=None):
             **{key: deepcopy(old[key]) for key in ('tiers', 'budgets', 'observation', 'profiles', 'controls')}}
 
 
-def critical_points(card):
+def _critical_points_exact(card):
     points = [{'id': 'start', 'time_s': 0.}, {'id': 'stop', 'time_s': card['stop_s']}]
     points.extend({'id': f'input:{name}:{i}', 'time_s': t}
                   for name, knots in card['inputs'].items() for i, (t, _) in enumerate(knots))
     points.extend({'id': f'critical:{i}', 'time_s': t} for i, t in enumerate(card.get('critical_times_s', [])))
     for e in card.get('events', []):
-        for label, t in (('nominal', e['nominal_s']), ('early', e['nominal_s'] - e['early_s']),
-                         ('late', e['nominal_s'] + e['late_s'])):
+        center = Fraction(e['nominal_s'])
+        for label, t in (('nominal', center), ('early', center - Fraction(e['early_s'])),
+                         ('late', center + Fraction(e['late_s']))):
             points.append({'id': f"event:{e['id']}:{label}", 'time_s': t})
     for i, p in enumerate(card.get('undefined_points', [])):
         points.extend({'id': f'undefined:{i}:{side}', 'time_s': p[key], 'sides': side == 'center'}
                       for side, key in (('center', 'time_s'), ('left', 'left_s'), ('right', 'right_s')))
-    return [p for p in points if 0 <= p['time_s'] <= card['stop_s']]
+    return [{**p, 'time_s': Fraction(p['time_s'])} for p in points
+            if 0 <= p['time_s'] <= Fraction(card['stop_s'])]
+
+
+def critical_points(card):
+    return [{**p, 'time_s': float(p['time_s'])} for p in _critical_points_exact(card)]
 
 
 def observation_plan(card, contract):
     _validate_card(card)
-    config = contract['observation']; stop = card['stop_s']
+    config = contract['observation']; stop = Fraction(card['stop_s'])
     step = Fraction(card['unit_s']) * Fraction(config['global_request_units'])
-    times = {float(i * step) for i in range(math.ceil(Fraction(stop) / step) + 1)}
-    critical = critical_points(card)
+    times = {i * step for i in range(math.ceil(stop / step) + 1)}
+    critical = _critical_points_exact(card)
+    padding = Fraction(config['padding_s'])
     for p in list(critical):
         t = p['time_s']; times.add(t)
-        for side, delta in (('left', -config['padding_s']), ('right', config['padding_s'])):
+        for side, delta in (('left', -padding), ('right', padding)):
             q = t + delta
             if 0 <= q <= stop:
                 times.add(q); critical.append({'id': p['id'] + ':' + side, 'time_s': q})
@@ -124,18 +131,20 @@ def observation_plan(card, contract):
     slope = card['output_slope_bound_V_s']
     slopes = list(slope.values()) if isinstance(slope, dict) else [slope]
     sensitivity = max(slopes, default=0.) + max(gains, default=0.) * max((slope_bound(p) for p in card['inputs'].values()), default=0.)
-    target = (contract['budgets']['absolute_V'] + contract['budgets']['relative'] * card['scale_V']) * .1
+    target = (Fraction(contract['budgets']['absolute_V']) + Fraction(contract['budgets']['relative']) * Fraction(card['scale_V'])) * Fraction(.1)
     sensitivity = card.get('event_sensitivity_bound_V_s', sensitivity)
     if sensitivity is not None and (not math.isfinite(sensitivity) or sensitivity < 0):
         raise ValueError('invalid event-time sensitivity')
-    interval = min(config['constant_interval_s'], target * config['observation_fraction'] / sensitivity) if sensitivity else config['constant_interval_s']
+    interval = (min(Fraction(config['constant_interval_s']), target * Fraction(config['observation_fraction']) / Fraction(sensitivity))
+                if sensitivity else Fraction(config['constant_interval_s']))
     grids = []
     events = card.get('events', [])
     dense_cap = 20000
     for index, e in enumerate(events):
-        a = max(0., e['nominal_s'] - e['early_s'] - config['padding_s'])
-        b = min(stop, e['nominal_s'] + e['late_s'] + config['padding_s'])
-        n = max(1, math.ceil((Fraction(b) - Fraction(a)) / Fraction(interval)))
+        center = Fraction(e['nominal_s'])
+        a = max(Fraction(0), center - Fraction(e['early_s']) - padding)
+        b = min(stop, center + Fraction(e['late_s']) + padding)
+        n = max(1, math.ceil((b - a) / interval))
         wanted = n
         allocated_points = dense_cap // len(events) + (index < dense_cap % len(events))
         n = min(n, max(1, allocated_points - 1))
@@ -143,11 +152,11 @@ def observation_plan(card, contract):
                       'requested_intervals': wanted, 'planned_intervals': n,
                       'request_density_capped': wanted != n, 'sensitivity_known': sensitivity is not None,
                       'possible_evidence_insufficiency': wanted != n or sensitivity is None,
-                      'planned_interval_s': (b - a) / n,
+                      'planned_interval_s': float((b - a) / n),
                       'claim': 'request density only; actual rows and reference intervals still determine evidence'})
-        times.update(float(Fraction(a) + (Fraction(b) - Fraction(a)) * i / n) for i in range(n + 1))
-    return {'id': 'breadth-native-v1', 'target_tier': 'Q3', 'times_s': sorted(t for t in times if 0 <= t <= stop),
-            'critical': critical, 'event_grids': grids, 'dense_request_cap': dense_cap,
+        times.update(a + (b - a) * i / n for i in range(n + 1))
+    return {'id': 'breadth-native-v1', 'target_tier': 'Q3', 'times_s': sorted({float(t) for t in times if 0 <= t <= stop}),
+            'critical': [{**p, 'time_s': float(p['time_s'])} for p in critical], 'event_grids': grids, 'dense_request_cap': dense_cap,
             'claim': 'requests only; actual rows are qualified separately'}
 
 
