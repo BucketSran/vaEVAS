@@ -248,6 +248,19 @@ class QualificationCalibration(unittest.TestCase):
         self.assertTrue(all(q['numerical']['status'] == 'pass' for q in result['tiers'].values()))
         self.assertTrue(all(q['status'] == 'evidence_insufficient' for q in result['tiers'].values()))
 
+    def test_nonfinite_input_sensitivity_needs_actual_evidence(self):
+        c = card()
+        self.assertTrue(all(q['status'] == 'pass' for q in self.check(c, trace(c))['tiers'].values()))
+        c['input_gain_evidence_required'] = 'derivative or input topology is not bounded by voltage maxnorm'
+        c['input_gain_evidence'] = {'status': 'verified'}
+        result = self.check(c, trace(c))
+        self.assertEqual(result['input_gain_evidence']['status'], 'unknown')
+        self.assertTrue(all(q['numerical']['status'] == 'pass' for q in result['tiers'].values()))
+        self.assertTrue(all(q['status'] == 'evidence_insufficient' for q in result['tiers'].values()))
+        rows = trace(c); rows[-1]['y'] += .1
+        result = self.check(c, rows)
+        self.assertTrue(all(q['numerical']['status'] == 'numerical_error' for q in result['tiers'].values()))
+
     def test_reference_receives_whole_query_time_box_without_card_mutation(self):
         import math
         c = card(); c['reference_time_uncertainty_s'] = 0.; c['output_slope_bound_V_s'] = 1e6
