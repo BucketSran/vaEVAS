@@ -1,4 +1,5 @@
 """Public freeze/run receipts using a tiny independent constant card."""
+GUARDS = ["QUALIFICATION", "DEV:precision-breadth"]
 import json
 import math
 from pathlib import Path
