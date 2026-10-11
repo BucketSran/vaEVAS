@@ -335,8 +335,25 @@ class QualificationCalibration(unittest.TestCase):
     def test_adjacent_input_identity_needs_evidence_beyond_voltage_budget(self):
         c = card(); c['input_exact_evidence_required'] = True
         result = self.check(c, trace(c))
-        self.assertTrue(all(q['numerical']['status'] == 'pass' for q in result['tiers'].values()))
+        self.assertTrue(all(q['numerical']['status'] == 'unknown' for q in result['tiers'].values()))
         self.assertTrue(all(q['status'] == 'evidence_insufficient' for q in result['tiers'].values()))
+
+    def test_unproved_exact_threshold_only_masks_affected_output(self):
+        c = card(); c['inputs'] = {'u':[[0.,.5],[1e-6,.5]]}
+        c['input_exact_evidence_required'] = {'y':'threshold branch requires actual exact input'}
+        c['input_exact_evidence'] = {'status':'verified'}
+        rows = trace(c)
+        for row in rows: row.update(u=.5,y=1.)
+        def threshold(c,t,b):
+            return {'outputs':{'y':[0.,0.], 'z':[-.25,-.25]},'numerical_uncertainty_V':0.,'undefined':{}}
+        result = assess(c,rows,load_contract(cards=[c]),reference=threshold)
+        self.assertTrue(all(q['numerical']['status'] == 'unknown' for q in result['tiers'].values()))
+        self.assertGreater(result['outputs']['y']['conditional_error_lower_V'], .99)
+        self.assertEqual(result['outputs']['y']['error_lower_V'],0.)
+        self.assertEqual(result['input_exact_evidence']['status'],'unknown')
+        rows[-1]['z'] += .1
+        result = assess(c,rows,load_contract(cards=[c]),reference=threshold)
+        self.assertTrue(all(q['numerical']['status'] == 'numerical_error' for q in result['tiers'].values()))
 
     def test_nonfinite_input_sensitivity_needs_actual_evidence(self):
         c = card()
@@ -429,6 +446,20 @@ class FoundationStageCalibration(unittest.TestCase):
         import precision_breadth_foundation as foundation
         self.foundation = foundation
         self.cards = {c['group_id']: c for c in foundation.cards()}
+
+    def test_real_threshold_and_case_branch_need_actual_exact_input(self):
+        cases = [(next(c for c in self.foundation.cards() if c['id']=='F03-dc-0'),
+                  {'lt':1.,'le':1.,'gt':0.,'ge':0.,'logic_out':0.,'tern':3.}),
+                 (next(c for c in self.foundation.cards() if c['id']=='F04-dc-0'), {'y':9.})]
+        for c,values in cases:
+            # These are legal branches for adjacent represented inputs within
+            # the voltage serialization budget, not proof of a DUT defect.
+            rows=[{'time':t, **{name:float(points[0][1]) for name,points in c['inputs'].items()}, **values}
+                  for t in observation_plan(c,load_contract(cards=[c]))['times_s']]
+            result=assess(c,rows,load_contract(cards=[c]),reference=self.foundation.reference)
+            self.assertTrue(all(q['numerical']['status']=='unknown' for q in result['tiers'].values()), result)
+            self.assertTrue(all(q['status']=='evidence_insufficient' for q in result['tiers'].values()), result)
+            self.assertGreater(max(v['conditional_error_lower_V'] for v in result['outputs'].values()), .99)
 
     def perfect_trace(self, group):
         c = self.cards[group]; unit = 1e-6
