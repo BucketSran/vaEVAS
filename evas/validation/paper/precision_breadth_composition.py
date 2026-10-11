@@ -94,11 +94,11 @@ def cards():
         'real h; integer n0;',inputs={'u':[[0,0],[2.25,2.25]]},stop=2.25)
     _event(c,'sample',math.sqrt(2),1,kind='cross',input='u',slope=2*math.sqrt(2)/UNIT)
 
-    c=setcase(5,'Interrupted transition into integral support probe','edge y n',
+    c=setcase(5,'Interrupted transition into integral support probe','edge_v y n',
         '@(initial_step) begin q=0; n0=0; end\n'
         '@(timer(T,0,TT)) begin q=1; n0=n0+1; end\n'
         '@(timer(1.25*T,0,TT)) begin q=0; n0=n0+1; end\n'
-        'V(edge)<+transition(q,0,0.5*T,T); V(y)<+idt(V(edge)/T,0.1); V(n)<+n0;',
+        'V(edge_v)<+transition(q,0,0.5*T,T); V(y)<+idt(V(edge_v)/T,0.1); V(n)<+n0;',
         'integer q,n0;',stop=3,critical=(1,1.25,1.75))
     _event(c,'rise',1,1);_event(c,'reverse',1.25,2)
 
@@ -172,7 +172,8 @@ def cards():
     c=setcase(16,'DC derivative phase into filter direct term','u d y',
         "V(d)<+T*ddt(V(u)); V(y)<+laplace_nd(V(d),'{1,T},'{1,2*T});",
         inputs={'u':[[0,0],[4,4]]},stop=4)
-    c['phase_obligations']={'dc':{'time_s':0.,'outputs':{'d':0.,'y':0.}},'transient_right':{'outputs':['d','y']}}
+    c['critical_times_s'].append(2e-12)
+    c['phase_obligations']={'dc':{'time_s':0.,'outputs':{'d':0.,'y':0.}},'transient_right':{'time_s':2e-12,'outputs':['d','y']}}
 
     for i, title, inp, freq, ic, offset, stop in [
         (17,'Positive chirp VCO coherent phase and sine',{'u':[[0,0],[4,4]]},'0.5+0.25*V(u)',.125,0,4),
@@ -266,6 +267,8 @@ def cards():
     # plus quadratic perturbation <=16. EC11: positive filter mass<=1;
     # derivative impulse L1=2/e<1. EC12: |delta(u^2)|<=9.001 epsilon,
     # and H=1-1/(sT+2) has impulse total variation <=1.5.
+    # EC17: delta phase <=.25*4*epsilon; sine adds gain 2*pi.
+    # The chirp's instantaneous frequency slope is time sensitivity instead.
     gains={3:4.,4:16.,11:1.,12:14.,13:1.2500001,17:7.}
     for index,gain in gains.items():result[index-1]['input_gain_bound']=gain
     for c in result:
@@ -433,7 +436,7 @@ def _transition(t,events,targets,initial,delay,rise,fall,stages=None):
         return _I(max(min(start.lo,target.lo),min(max(start.hi,target.hi),v.lo)),
                   max(min(start.lo,target.lo),min(max(start.hi,target.hi),v.hi)))
     for k,(event,target) in enumerate(zip(events,targets)):
-        if stages is not None and not stages[k]:return val(state,t)
+        if stages is not None and not stages[k]:return answer
         target=_i(target);when=event+delay
         current=val(state,when)
         oldorigin,oldstart,oldtarget,oldslope,oldwhen=state
@@ -462,7 +465,11 @@ def _transition(t,events,targets,initial,delay,rise,fall,stages=None):
             raise ValueError('transition direction cannot be certified from common event history')
         if t.lo>=when.hi:answer=val(new,t)
         elif t.hi>=when.lo:answer=_hull(val(state,t),val(new,t))
-        else:return val(state,t)
+        else:
+            # answer may already contain the previous event's old branch
+            # when the query-time box straddles that event. A later pending
+            # event must not replace that hull with only its new state.
+            return answer
         state=new
     return answer
 
@@ -650,7 +657,12 @@ def reference(card, time_s, event_bounds):
                 a=_hull(a,_min(2*x,2));b=_hull(b,_min(x,2))
             out={'a':a,'b':b}
         elif group==16:
-            out={'d':_i(0),'y':_i(0)} if time_s==0 else {'d':_i(1),'y':1-.5*(-x/2).exp()}
+            out={'d':_i(1),'y':1-.5*(-x/2).exp()}
+            if ts.lo==0:
+                # A zero timestamp has a nonzero serialization box. Retain
+                # the DC derivative/filter point and all transient right
+                # values; only actual phase evidence may distinguish them.
+                out={name:_hull(_i(0),value) for name,value in out.items()}
         elif group in (17,18):
             if group==17:a=.125+.5*x+.125*x**2;freq=.5+.25*x;offset=0
             else:a=.125-.25*x;freq=_i(-.25);offset=-.5
