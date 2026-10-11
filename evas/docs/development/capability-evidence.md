@@ -68,3 +68,7 @@
 补充 TIMER、EVENT-ORDER、TRANSITION、DYNAMICS、COMPOSE、QUALIFICATION。
 固定／精确保持时钟及连续组合共 12 个 EVAS 配置通过；Spectre 10/12，通过范围按固定顺序选档。
 连续组合的两个原预算失败和更广局部历史闭包限制保留，不关闭 #96/#119。
+
+2026-10-11 的[当前 main 复验](../../../experiments/backends/support/README.md#current-main)
+补充 TIMER、CROSS、SLEW、DYNAMICS、COMPOSE、QUALIFICATION 的集成证据。
+复验沿用原判据，未扩展能力定义；逐配置版本和结果见收据，支持结论仍只在支持总表维护。

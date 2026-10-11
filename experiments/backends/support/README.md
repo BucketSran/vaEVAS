@@ -338,6 +338,51 @@ python3 -B experiments/backends/support/core_report.py \
 用现有适配器和原检查器重算，并另存新报告。哈希不是公开下载地址。
 本轮可支持开发文档的实测说明，尚不能宣称独立论文评价、全面 Spectre 对齐或完整公开复现已完成。
 
+<a id="current-main"></a>
+
+## 2026-10-11 当前 main 复验
+
+使用已合入的 **`fc7e57fd`** 重新构建 EVAS，重新编译原 VA，并保留原模型、刺激、
+观察时刻、配置和检查器。**21 个固定条件、74 个配置，EVAS 全部通过原验收。**
+这是已有能力在最新代码上的复验，不增加语言支持范围，也不是新独立论文集。
+
+| 复验范围 | 条件数 | EVAS 配置通过数 |
+| --- | ---: | ---: |
+| 原采样保持与一阶滤波精度集 | 8 | 32/32 |
+| strobe 采样→边沿→滤波及采样→积分 | 4 | 16/16 |
+| 近邻 timer 及连续消费者 | 3 | 12/12 |
+| 两级固定 slew | 3 | 8/8 |
+| 外部平方输入的滤波直接通路 | 3 | 6/6 |
+
+[本轮收据](20261011-current-main.json)记录当前提交、构建、内核、检查器及逐配置结果。
+包版本仍为 0.14.0，IR18 未变；它们不是这次复验的唯一代码身份。
+实际运行采用本机 macOS debug 构建，不作速度或 Linux 新构建通过声明。
+
+本轮**没有新增远端仿真**。Spectre、ngspice 和 Gnucap 复用原批次实际证据，
+不改其版本、失败配置和通过数。原精度集与 strobe 组合的检查器哈希保持一致；
+slew 与滤波直接通路另核验原始文件清单，并在全部原生时刻重新查询 EVAS、运行独立检查。
+旧基础语言与算子表没有全部重跑，仍按原执行版本展示。
+
+可用现有入口重做组合检查：
+
+```sh
+cargo build --locked --manifest-path evas/rust_core/Cargo.toml
+PYTHONPATH=evas/src python3 -B experiments/backends/strobe/near_timer_run.py evas runs/near-timer-strobe-20261011/inputs-v3 runs/new-near-timer-main --kernel evas/rust_core/target/debug/evas-kernel
+python3 -B evas/validation/slew_cascade/compare.py analyze --inputs runs/evas-backlog-20261011/slew-inputs --raw runs/evas-backlog-20261011/slew-collected/outputs --output runs/new-slew-main --kernel evas/rust_core/target/debug/evas-kernel
+python3 -B evas/validation/slew_cascade/compare.py analyze --inputs runs/evas-backlog-20261011/slew-local-inputs --raw runs/evas-backlog-20261011/slew-local-collected/outputs --output runs/new-slew-local-main --kernel evas/rust_core/target/debug/evas-kernel
+python3 -B evas/validation/filter_direct/compare.py analyze --inputs runs/evas-backlog-20261011/c4-inputs --raw runs/evas-backlog-20261011/c4-collected/outputs --output runs/new-filter-main --kernel evas/rust_core/target/debug/evas-kernel
+```
+
+这组命令依赖已有的本地原始材料，不能视作公开下载后的完整复现教程。
+本轮 32+16 个精度及 strobe 请求通过原 `precision_run.py worker` 执行，继续调用原独立检查器、
+生效设置读回、观察来源和时间覆盖检查。仅执行包装改为本机子进程，单次 90 秒超时。
+首次尝试的 Linux 限额包装在 macOS 上不可用；其后两次初步执行的进程清理不满足要求。
+这些记录保留在 `runs/comparison-current-20261011/`，不计入合格运行，也不判为 EVAS 行为失败。
+随后重新执行全部 48 个请求，未放宽数值或观察判据。
+
+完整响应、实际命令、日志、输入及输出清单保存在同一目录，为 **local-only**。
+原严格边界失败、SEF-TIMER-18 的限定接受范围和 #131 draft 均未改变。
+
 <a id="precision-pilot"></a>
 
 ## 2026-10-10 采样保持与一阶滤波精度测试
