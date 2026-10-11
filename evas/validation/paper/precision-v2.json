@@ -1,0 +1,128 @@
+{
+  "schema_version": 2,
+  "id": "precision-engineering-v2",
+  "model_set": {
+    "path": "precision-v1.json",
+    "sha256": "66f861ec83d75ec996a6fdc0b84263567b4a123b98a5f8e0cf920aeb734f328b"
+  },
+  "denominator": 8,
+  "tiers": [
+    {
+      "id": "Q1",
+      "factor": 10
+    },
+    {
+      "id": "Q2",
+      "factor": 1
+    },
+    {
+      "id": "Q3",
+      "factor": 0.1
+    }
+  ],
+  "profiles": [
+    {
+      "id": "base",
+      "reltol": 1e-05,
+      "vabstol_V": 1e-09,
+      "iabstol_A": 1e-13,
+      "step_units": 0.03125
+    },
+    {
+      "id": "tol",
+      "reltol": 1e-08,
+      "vabstol_V": 1e-12,
+      "iabstol_A": 1e-15,
+      "step_units": 0.03125
+    },
+    {
+      "id": "step",
+      "reltol": 1e-05,
+      "vabstol_V": 1e-09,
+      "iabstol_A": 1e-13,
+      "step_units": 0.00390625
+    },
+    {
+      "id": "both",
+      "reltol": 1e-08,
+      "vabstol_V": 1e-12,
+      "iabstol_A": 1e-15,
+      "step_units": 0.00390625
+    },
+    {
+      "id": "deep",
+      "reltol": 1e-10,
+      "vabstol_V": 1e-14,
+      "iabstol_A": 1e-17,
+      "step_units": 0.00048828125
+    }
+  ],
+  "budgets": {
+    "absolute_V": 1e-08,
+    "relative": 1e-06,
+    "input_absolute_V": 1e-10,
+    "input_relative": 1e-08,
+    "count_V": 1e-06,
+    "global_gap_units": 0.0625,
+    "time_serialization_ulps": 16,
+    "voltage_serialization_ulps": 8,
+    "boundary_distance_s": 2.1e-12
+  },
+  "observation": {
+    "id": "q3-native-v1",
+    "target_tier": "Q3",
+    "global_request_units": 0.03125,
+    "padding_s": 2e-12,
+    "ramp_interval_s": 4e-14,
+    "small_interval_s": 4e-13,
+    "constant_interval_s": 2e-12,
+    "bracket_limits_s": {
+      "ramp": [
+        2.1e-12,
+        5e-13,
+        5e-14
+      ],
+      "small": [
+        2.1e-12,
+        2.1e-12,
+        5e-13
+      ],
+      "constant": [
+        2.1e-12,
+        2.1e-12,
+        2.1e-12
+      ]
+    },
+    "reference_fraction": 0.01,
+    "observation_fraction": 0.1,
+    "input_fraction": 0.01
+  },
+  "controls": {
+    "spectre": {
+      "method": "traponly",
+      "errpreset": "conservative",
+      "precision": "%.17g",
+      "compression": "no",
+      "skipcount": 1
+    },
+    "openvaf_r_ngspice": {
+      "method": "trap",
+      "trtol": 7,
+      "chgtol": 1e-14,
+      "itl4": 10,
+      "numdgt": 17
+    },
+    "gnucap_modelgen": {
+      "method": "trap",
+      "dtmin": 1e-16,
+      "trtol": 7,
+      "dtratio": 1000000000.0,
+      "numdgt": 17
+    },
+    "evas": {
+      "observation": "strobe",
+      "iabstol": "not_applicable",
+      "method": "not_applicable"
+    }
+  }
+}

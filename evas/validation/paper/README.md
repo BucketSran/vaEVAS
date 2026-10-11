@@ -16,6 +16,45 @@
 卡的结果状态目前全为 T。源码模板先于本批新结果固定，A1 冻结实际文件、deck、工具和设置身份。
 A0 不是论文结果冻结，也不证明这些源已在任何后端执行。
 
+## 采样保持与一阶滤波的 v2 精度扫描
+
+[precision-v2.json](precision-v2.json)用哈希引用原八条件，另定义 Q1～Q3 外部目标、五个运行配置和固定观察计划。
+数学参考在 [precision_reference.py](precision_reference.py)，共同判定在 [precision_v2.py](precision_v2.py)。
+同一份波形按三档验收，参考答案不随后端或配置改变；事件窗口不裁剪，首次采样前也检查保持漂移。
+[校准测试](test_precision_v2.py)包含正确答案、越界、旧值、漏事件和证据不足。
+
+实际成绩见[支持总表](../../docs/COMPARISON.md#precision-binding-results)，方法和局限见[本轮记录](../../../experiments/backends/support/README.md#precision-bindings)。
+旧 `precision_checker.py` 和 `precision-v1.json` 仍服务原批次；旧通过不直接换算成 Q2。
+这些模型用于开发，尚不是独立留出的论文最终评价集。
+
+### 运行前选择已校准配置
+
+[precision-bindings-v1.json](precision-bindings-v1.json)固定八条件、四后端、三个目标档位的 96 个选择。
+[precision_binding.py](precision_binding.py)同时返回配置和验收要求；无合格配置时给出原因，不降档。
+查看某个目标的全部配置不启动仿真：
+
+```sh
+python3 -B evas/validation/paper/precision_binding.py --tier Q3
+```
+
+为一个已校准条件生成输入时，还必须提供当前工具的预检身份：
+
+```sh
+python3 -B evas/validation/paper/precision_binding.py \
+  --tier Q3 --backend spectre --condition LP-RAMP \
+  --tool-identity runs/current-tool-identity.json --output runs/new-bound-lp-ramp
+```
+
+`current-tool-identity.json` 必须来自本次实际预检，经
+`experiments/backends/support/precision_binding_report.py` 的 `normalized_tool()` 归一化。
+不能直接复制配置表内的预期身份当作预检结果。生成器比较工具、依赖和输入哈希后，
+写出模型、网表、观察计划与 `BINDING.json`；已有目录不会覆盖。
+运行仍使用现有后端适配器、串行锁和资源上限；完成后按绑定档位重新验收。
+
+这是一套具名测试的可复用配置，不是任意 Verilog-A 程序的精度保证。
+`numerical` 记录电压及保持漂移是否达标，`behavior` 记录事件等行为，`evidence` 记录观察和设置依据是否齐全。
+只有三者满足原要求才授予配置资格；证据完整的运行也可能确认数值超差或漏事件。
+
 ## 特性分组与工程用途
 
 论文主表按语言关系、算子和结构分组，工程场景是需求来源和次标签。
