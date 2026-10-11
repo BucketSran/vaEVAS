@@ -1,6 +1,6 @@
 {
   "old_kernel_sha256": "57cb111331190e6310b6d8c518c10a87678b29390e90caa7398df5b98e3197b3",
-  "new_kernel_sha256": "acc493f0454164fb91c554782eadd54518d66f91307f5077b383d6386a5ff401",
+  "new_kernel_sha256": "b1bb58a2bb4d59f060eda0d8e788ef5a4f5e9c52e38c74a4349214f2ee30d86f",
   "records": [
     {
       "case": "E1-base",
@@ -183,10 +183,17 @@
       "response_sha256": "da51cb74e60fbf308eb963b3dbadabe9f1a3ec9895be62d284e11acc416d7e8a",
       "notices": 0,
       "model_notices": 1
+    },
+    {
+      "case": "VCO-original",
+      "equal_except_advisories": true,
+      "response_sha256": "bc093d95f34f6553abd3fbd357a69327077d9baea57a36a10fa1d6bffeebc706",
+      "notices": 0,
+      "model_notices": 1
     }
   ],
   "base_revision": "815aade6",
-  "scope": "Only optional advisories excluded; entire remaining JSON compared exactly. Reuse unchanged physical inputs/checkers/actual Spectre from strobe/20261011-near-timer.json. No new Spectre execution for diagnostic changes.",
+  "scope": "27 complete scientific responses equal except optional portability_advisories; includes original VCO four wraps and adjacent binary64 observations. No new numerical alignment claim.",
   "availability": "compact identities repository-contained; full responses and logs local-only: current/runs/near-timer-strobe-20261011/",
   "source_manifest": {
     "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
@@ -225,7 +232,7 @@
     "evas/rust_core/src/affine_bounds.rs": "b0faf6ee361cac3ab3a7b8a2d80992bece76a3457d4a08a48be81755cfe01c6b",
     "evas/rust_core/src/analog.rs": "d4105a0e850f98d4c10ded8c7deacdcc45c960ed2a2a3c1547ea2cf2a5a687c0",
     "evas/rust_core/src/assembly.rs": "52b5a1a7411b846c2c07d0c26c0fabca0641c3980b4b34a6bcd302e84401d9cb",
-    "evas/rust_core/src/batch.rs": "a41166d5cd9a6fab300d48197bc4093145885d19044b398e48095fdb35473688",
+    "evas/rust_core/src/batch.rs": "ba227471ba388b4efd361e9a523352b7626bb80cd51141a00ca2b1c97eed2888",
     "evas/rust_core/src/continuous.rs": "ea60a978fce74d7e6419303183df55d1be245094eb84f01342fcd4bd6555e5ed",
     "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
     "evas/rust_core/src/continuous_history.rs": "ec6f68c45c3c6c40e4c674ed8c47302c2b47f498f6e678d7105c9a83c06fda35",

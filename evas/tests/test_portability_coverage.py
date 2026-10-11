@@ -1,11 +1,13 @@
 """Successful simulations carry notices without inventing boundary evidence."""
 GUARDS = ["TIMER", "CROSS", "DYNAMICS", "DEV:boundary-portability"]
 import copy
+from fractions import Fraction
+import math
 import unittest
 
-from evas import KernelError, compile_sources, transient
+from evas import Instance, KernelError, compile_sources, transient
 from evas.protocol import validate_response
-from test_affine import KERNEL, instance, model
+from test_affine import EVAS, KERNEL, instance, model
 
 
 class PortabilityCoverage(unittest.TestCase):
@@ -47,6 +49,28 @@ class PortabilityCoverage(unittest.TestCase):
             bad=copy.deepcopy(result);bad['portability_advisories']['model_records'][0].update(changes)
             with self.assertRaisesRegex(KernelError,'invalid_response'):
                 validate_response(bad,program,2,[0,.25])
+
+    def test_original_vco_wrap_observations_keep_nonblocking_source_notice(self):
+        path=EVAS.parent/'experiments/backends/event-alignment/vco-controls/original--tight/dut.va'
+        program=compile_sources({'dut.va':path.read_text()},[
+            Instance('dut','layer_vco',{p:p for p in ('ctl','freq','phase','out')},{})])
+        roots=[float((Fraction(n)-Fraction(1,8))/524288) for n in range(1,5)]
+        stop=8/1048576
+        times=sorted({0.,stop,*[t for root in roots for t in
+            (math.nextafter(root,-math.inf),root,math.nextafter(root,math.inf))]})
+        result=transient(program,{'ctl':[[0,0],[stop,0]]},times,
+                         stop=stop,max_step=stop,kernel=KERNEL)
+        records=result['portability_advisories']['model_records']
+        self.assertEqual([r['code'] for r in records],['modulo_phase_sensitive'])
+        self.assertTrue(records[0]['nonblocking'])
+        self.assertNotIn('query_time_s',records[0])
+        for t,solution in zip(times,result['solutions']):
+            values=dict(zip(result['nodes'],solution['voltages']))
+            phase=float((Fraction(1,8)+524288*Fraction(t))%1)
+            distance=abs(values['phase']-phase)
+            self.assertLessEqual(min(distance,abs(1-distance)),1e-12)
+            self.assertAlmostEqual(values['out'],math.sin(2*math.pi*phase),delta=1e-12)
+        self.assertEqual(validate_response(result,program,len(times),times),result)
 
 
 if __name__=='__main__':unittest.main()

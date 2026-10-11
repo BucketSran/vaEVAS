@@ -12,14 +12,16 @@
 
 本库已补 timer、额外 strobe 和 `idtmod` 写法的非阻断提示，见[提示协议](../reference/diagnostics.md)。
 新增字段属于提示 v2；原错误诊断 v1 与 unknown 回退保持。连续/事件求解算法未因提示改变。
-在同一主机比较新旧内核：原 Spec B 12 请求、近邻 timer 12 请求、原 C1 和一个 modulo 模型，
-共 **26 个完整响应除提示字段外完全相同**。据此复用近邻 timer 的实际 Spectre 对照，
+在同一主机比较新旧内核：原 Spec B 12 请求、近邻 timer 12 请求、原 C1、一个 modulo 模型及原 VCO，
+共 **27 个完整响应除提示字段外完全相同**。VCO 保留四次环回及两侧 binary64 邻点，
+源码提示不宣称定位到了每次环回，也不升级原严格 F/I。据此复用近邻 timer 的实际 Spectre 对照，
 不把诊断改动宣称为新的数值对齐。保存的源码、内核和响应身份见
 [保持性收据](diagnostic-closure.json)。原始运行、首次请求准备错误及 held_timer 适配失败均为本地保留证据。
 
-`worker_start` / `worker_failure` 仍为源码审计和载荷负控，没有人为制造 OS 线程失败或生产 panic；
-不计真实出口覆盖。现有真实失败均按下表记录，未知或有多个原因的出口继续返回 unknown。
-这属于明确的覆盖范围，不能将源码登记总数写成全部出口已执行。
+`worker_failure` 已用真实测试线程 panic 经过生产 join 函数验证，包含后续线程回收和首个错误顺序。
+故障只在测试中注入，没有生产 panic 开关，也未声称找到用户模型可触发的 panic。
+`worker_start` 的 OS 拒绝由外部隔离容器验证，固定版本与限额见下方移交段。
+未知或有多个原因的出口继续返回 unknown，源码登记总数仍不等于全部出口已执行。
 
 外部消费由 [Circuit Harness PR #6](https://github.com/BucketSran/circuit-harness/pull/6)承担。
 最终固定版本的真实 Docker 回放、六项完整失败分母及合并状态在下方移交段更新；
@@ -88,7 +90,7 @@ code 仍为 `kernel.<kind>`，stage 为 kernel，未有特定能力归因时 cap
 | `schedule.calendar` / `event_budget` | 实际日程或重算日程超过事件预算；resource | 实际周期 timer 到日程预算出口。CROSS 日程与调度重算来源为源码审计 |
 | `main.stdin` / `input_io` | Rust stdin 读入 I/O/编码失败；infrastructure | 非 UTF-8 字节经真实内核 stdin 到 input_io；经适配保留原载荷 |
 | `main.sidecar` / `diagnostic_io` | 原求解成功，但 sidecar 无法新建/写出；infrastructure | 真正执行 solve，sidecar 指向已存在目录。CLI 返回 2 且不输出成功 stdout；原内核 exit 3 经既有适配保留错误 |
-| `batch.spawn` / `worker_start` | OS 拒绝 spawn_scoped；infrastructure | 源码审计与载荷保真测试，未强制真实 OS 线程创建失败，不算实际出口覆盖 |
+| `batch.spawn` / `worker_start` | OS 拒绝 spawn_scoped；infrastructure | 隔离 Docker 中内核作为 PID1，以线程额度 1 触发真实 OS error 11；额度 8 下同请求成功。原错误经 Python 适配保留，见外部移交 |
 
 `invalid_state_space`、`state_space_limit`、
 `event_condition`、`event_accuracy`、`event_consistency`、`event_conflict`、
@@ -105,7 +107,7 @@ code、stage、category 和原 message；solve 还断言 sample 身份。
 | --- | --- | --- |
 | 多项式求值 / `nonfinite_arithmetic` | `V(y,r)<+pow(V(u,r),3)`，有限输入 `u=1e200`；numerical | 实际 solve 与 CLI 溢出。其他同 kind 的矩阵、区间和事件算术分支只经源码审计；不推断模型缺陷或实现 bug |
 | events.check_state / `state_range` | integer n 初值 2147483647，t=0 timer 执行 `n=n+1`；unsupported | 实际 transient 与 CLI 到 32 位状态边界。有限运行结果超出实现范围，不归因为资源不足或数值收敛失败 |
-| batch worker join / `worker_failure` | 工作线程 panic；internal | 唯一生产构造为 join 的 panic 分支。仅源码审计与原载荷/未来版本负控，未强制触发真实 panic，不计执行覆盖 |
+| batch worker join / `worker_failure` | 工作线程 panic；internal | 测试线程实际 panic，经生产 `join_workers` 返回并序列化；验证后续 panic 也被回收且首个输入错误不变。Python 原载荷/未来版本负控另验收运输。没有通过用户模型制造生产 panic |
 
 未来非 v1 载荷仍按 unknown 处理。`state_space_limit` 含维度预算、缩放预算和认证失败，
 `invalid_state_space` 由内核生成的内部状态空间校验产生；本轮不把它们统一猜成输入错误或资源。
