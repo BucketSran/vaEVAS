@@ -56,13 +56,13 @@ def cards():
     c['source']='`define SCALE(z) ((z)*G)\n'+c['source']+"module leaf(u,y,r); input u; output y; inout r; electrical u,y,r; parameter real G=3; analog begin V(y,r)<+`SCALE(V(u,r))+0.125; end endmodule\n"
     add('F02','a=V(u,r); V(y,r)<+a; a=2*a+0.125; V(y,r)<+a; V(z,r)<+a;',
         ['y','z'],'real a;')
-    body='V(lt)<+(V(u)<0.5); V(le)<+(V(u)<=0.5); V(gt)<+(V(u)>0.5); V(ge)<+(V(u)>=0.5); V(logic)<+(V(a)||V(b)&&V(c)); V(tern)<+(V(a)?1:V(b)?2:3);'
+    body='V(lt)<+(V(u)<0.5); V(le)<+(V(u)<=0.5); V(gt)<+(V(u)>0.5); V(ge)<+(V(u)>=0.5); V(logic_out)<+(V(a)||V(b)&&V(c)); V(tern)<+(V(a)?1:V(b)?2:3);'
     dc_rows=[(.5,0,0,0),(math.nextafter(.5,-math.inf),-1,0,0),
              (math.nextafter(.5,math.inf),0,-1,1),(-.25,0,1,0)]
     dc_rows += [(.5,a,b,c) for a in (0,1) for b in (0,1) for c in (0,1)]
     for i,row in enumerate(dc_rows):
         inputs={n:[[0,v],[T,v]] for n,v in zip(('u','a','b','c'),row)}
-        c=add('F03',body,['lt','le','gt','ge','logic','tern'],inputs=inputs,stop=T)
+        c=add('F03',body,['lt','le','gt','ge','logic_out','tern'],inputs=inputs,stop=T)
         c['id']=f'F03-dc-{i}'; c['output_slope_bound_V_s']=0
     for i,u in enumerate((0,1,2,-1,.5)):
         c=add('F04','a=9; case(V(u)) 0,1:a=3; 1:a=99; 2:a=7; default:a=9; endcase V(y)<+a;',
@@ -186,7 +186,7 @@ def _pure(card,t):
     if g=='F03':
         a,b,c=(bool(inputs[n]) for n in ('a','b','c'))
         return dict(lt=F(u<F(1,2)),le=F(u<=F(1,2)),gt=F(u>F(1,2)),ge=F(u>=F(1,2)),
-                    logic=F(a or b and c),tern=F(1 if a else 2 if b else 3))
+                    logic_out=F(a or b and c),tern=F(1 if a else 2 if b else 3))
     if g=='F04':return {'y':F(3 if u in (0,1) else 7 if u==2 else 9)}
     if g=='F05':return {'y':min(F(3,4),max(F(0),u)), 'z':u if u<=F(1,2) else 1-u}
     if g=='F06':return {'y':r+6*v,'first':r+v,'last':r+3*v}
@@ -343,12 +343,15 @@ def reference(card, time_s, event_bounds):
             raise ValueError('invalid verified counter stage')
     g=card['group_id'];undefined={}
     if g=='F14':
-        if time_s==0:values=[{'y':F(0)}]
-        elif any(time_s==p['time_s'] for p in card['undefined_points']):
+        if any(time_s==p['time_s'] for p in card['undefined_points']):
             values=[{}];undefined={'y':'PWL derivative undefined at corner; both one-sided critical observations required'}
         else:
             values=[]
             for t in times:
+                # DC is a distinct phase value at zero. A serialized cell
+                # touching zero must enclose it as well as the transient side;
+                # actual phase qualification remains the shared grader's job.
+                if t==0:values.append({'y':F(0)});continue
                 for (a,u),(b,v) in zip(card['inputs']['u'],card['inputs']['u'][1:]):
                     if F(a)<t<=F(b):
                         values.append({'y':F(card['reference_parameters']['derivative_scale'])*(F(v)-F(u))/(F(b)-F(a))});break
