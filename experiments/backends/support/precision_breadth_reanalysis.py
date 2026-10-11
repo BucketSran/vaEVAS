@@ -55,6 +55,40 @@ def freeze_inputs(inputs, output, source_hashes):
     save(output/'OFFICIAL_INPUT_IDENTITY.json', {'path':str(inputs.resolve()),
          'manifest_sha256':sha(inputs/'MANIFEST.json'), 'cards_sha256':sha(inputs/'cards.json')})
     shutil.copyfile(inputs/'cards.json',output/'OFFICIAL_CARDS.json')
+    shutil.copyfile(inputs/'PROFILE_BINDINGS.json',output/'OFFICIAL_PROFILE_BINDINGS.json')
+    identity=load(output/'OFFICIAL_INPUT_IDENTITY.json')
+    identity['profile_bindings_sha256']=sha(inputs/'PROFILE_BINDINGS.json')
+    save(output/'OFFICIAL_INPUT_IDENTITY.json',identity)
+
+
+def profile_binding(card, work, original, bindings):
+    """Certify the requested configuration belongs to this designated target."""
+    requested_path=work/'requested_settings.json';input_path=work/'INPUT_IDENTITY.json'
+    issues=[];expected={};requested=load(requested_path) if requested_path.is_file() else {}
+    backend=original['backend'];tier=original['tier']
+    expected_label=card['id']+'--'+tier
+    if original.get('label')!=expected_label:
+        issues.append({'field':'RESULT.label','expected':expected_label,'actual':original.get('label')})
+    profile_id=bindings.get('backend_tier_profiles',{}).get(backend,{}).get(tier)
+    profile=bindings.get('profiles',{}).get(profile_id)
+    if profile is None:issues.append({'field':'profile_binding','expected':'declared backend/tier profile','actual':profile_id})
+    else:
+        expected={**profile,'target_tier':tier,'stop_s':card['stop_s'],
+                  'maxstep_s':card['unit_s']*profile['step_units'],
+                  'spice_maxstep_s':card['unit_s']*profile['step_units']}
+        for key,value in expected.items():
+            if requested.get(key)!=value:issues.append({'field':key,'expected':value,'actual':requested.get(key)})
+        for key in set(requested)-set(expected)-{'candidate_status'}:
+            issues.append({'field':key,'expected':'no additional requested control','actual':requested[key]})
+        if original.get('profile')!=profile_id:
+            issues.append({'field':'RESULT.profile','expected':profile_id,'actual':original.get('profile')})
+    digest=sha(requested_path) if requested_path.is_file() else None
+    recorded=load(input_path).get('requested_settings_sha256') if input_path.is_file() else None
+    if digest is None or digest!=recorded:
+        issues.append({'field':'INPUT_IDENTITY.requested_settings_sha256','expected':digest,'actual':recorded})
+    return {'status':'matched' if not issues else 'unmatched','issues':issues,'expected':expected,'requested':requested,
+            'requested_settings_sha256':digest,'input_identity_sha256':sha(input_path) if input_path.is_file() else None,
+            'claim':'requested profile membership only; actual readback and runtime remain independent gates'}
 
 
 def verify_lane(lane):
@@ -112,7 +146,9 @@ def failed_assessment(contract, reason):
                     for q in contract['tiers']},'reason':reason}
 
 
-def slot_status(execution, assessment, config, native, runtime, q):
+def slot_status(execution, assessment, config, native, runtime, q, binding=None):
+    if binding is not None and binding.get('status')!='matched':return 'evidence_insufficient'
+    if binding is not None and binding.get('expected',{}).get('target_tier')!=q:return 'evidence_insufficient'
     if execution != 'waveform_available': return 'evidence_insufficient' if execution == 'not_run' else 'execution_failed'
     status = assessment['tiers'][q]['status']
     if status == 'pass' and any(x.get('status') != 'qualified' for x in (config,native,runtime)):
@@ -158,6 +194,9 @@ def worker(frozen, lane, output):
             raise ValueError('generated scientific card contract differs from explicit frozen inputs')
     save(output/'CURRENT_CARDS.json',contract)
     cards = {c['id']:c for c in contract['cards']}; tool = load(lane/'TOOL_IDENTITY.json')
+    bindings=load(output/'OFFICIAL_PROFILE_BINDINGS.json') if (output/'OFFICIAL_PROFILE_BINDINGS.json').is_file() else None
+    if bindings is not None and sha(output/'OFFICIAL_PROFILE_BINDINGS.json')!=load(output/'OFFICIAL_INPUT_IDENTITY.json')['profile_bindings_sha256']:
+        raise ValueError('frozen profile bindings changed')
     save(output/'ORIGINAL_TOOL_IDENTITY.json',tool)
     save(output/'ORIGINAL_STARTED.json',load(lane/'STARTED.json') if (lane/'STARTED.json').is_file() else {})
     records = load(lane/'EXECUTION.json'); results = []; labels = set()
@@ -180,6 +219,7 @@ def worker(frozen, lane, output):
                     'original_assessment_tiers':old.get('assessment',{}).get('tiers'),
                     'original_qualified_tiers':old.get('qualified_tiers')}
         comp = compatible(card,work,old) if card and (work/'dut.va').is_file() else {'status':'incompatible','issues':['missing card or original source']}
+        binding=profile_binding(card,work,old,bindings) if bindings is not None and card else {'status':'unknown','issues':['explicit profile bindings unavailable']}
         assessment = failed_assessment(contract, 'source incompatible or no raw waveform')
         config = native = runtime = {'status':'unknown'}; effective = {}; error = None
         exact = {'status':'unavailable','qualification_override':False}
@@ -206,8 +246,9 @@ def worker(frozen, lane, output):
                   'inheritance':'same raw execution, new independent analysis' if comp['status']=='compatible' else 'new source requires retest; original result retained',
                   'identity':identity,'assessment':assessment,'settings':effective,'configuration':config,
                   'native_observations':native,'runtime_controls':runtime,'analysis_error':error,
+                  'profile_binding':binding,
                   'exact_input_diagnostic':exact,
-                  'qualified_tiers':{tier['id']:slot_status(old['status'],assessment,config,native,runtime,tier['id']) for tier in contract['tiers']}}
+                  'qualified_tiers':{tier['id']:slot_status(old['status'],assessment,config,native,runtime,tier['id'],binding if bindings is not None else None) for tier in contract['tiers']}}
         results.append(result)
         save(output/(label+'.json'),result)
     save(output/'REANALYSIS.json',results)

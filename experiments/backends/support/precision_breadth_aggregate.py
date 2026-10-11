@@ -19,12 +19,14 @@ incompatible and probe-only slots. Each Q uses its designated execution. The
 tool never chooses a better profile. Numerical, behavior and evidence group
 results remain separate from full qualification. The raw archive paths are
 local references, not claims of public reproducibility.
+Group display prioritizes execution failure, then behavior and numerical errors.
+Independent layer statuses retain every known error in the same group.
 """
 import argparse
 import csv
 import hashlib
 import json
-from precision_breadth_reanalysis import verify_lane, sha, load, save
+from precision_breadth_reanalysis import verify_lane, sha, load, save, profile_binding
 from pathlib import Path
 
 BACKENDS=('evas','spectre','openvaf_r_ngspice','gnucap_modelgen')
@@ -101,7 +103,8 @@ def assemble(contract,selection,analyses):
             for tier in contract['tiers']:
                 q=tier['id'];batch=source_batch(backend,c,selection);picked=index.get((backend,c['id'],q))
                 base={'backend':backend,'group':c['group_id'],'variant':c['id'],'Q':q,'selected_batch':batch,
-                      'unit_s':c.get('unit_s'),'model_top':c.get('top'),'probe_only':bool(c.get('probe_only',False)),
+                      'unit_s':c.get('unit_s'),'model_top':c.get('top'),
+                      'probe_only':bool(c.get('probe_only') or c.get('support_probe_only')),
                       'source_sha256':hashlib.sha256(c['source'].encode()).hexdigest(),
                       'original_execution':'not_collected','numeric':'unknown','behavior':'unknown',
                       'evidence':'evidence_insufficient','config':'unknown','native':'unknown','runtime':'unknown',
@@ -137,6 +140,10 @@ def assemble(contract,selection,analyses):
                                     behavior_errors=a.get('behavior',{}).get('errors',[]))
                         if base['probe_only'] and base['final']=='pass':
                             raise ValueError('probe-only condition cannot count as pass')
+                        if 'profile_binding' in r:
+                            base['profile_binding']=r['profile_binding']
+                            if r['profile_binding']['status']!='matched':
+                                base['config']='unknown';base['final']='evidence_insufficient'
                     else:
                         base['inheritance']='incompatible selected source: current scientific status unknown; original execution retained'
                 rows.append(base)
@@ -162,9 +169,12 @@ def main():
     p=argparse.ArgumentParser();p.add_argument('--inputs',type=Path,required=True);p.add_argument('--selection',type=Path,required=True)
     p.add_argument('--catalog',type=Path,required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args()
     output=a.output.resolve()
+    tool_paths=(Path(__file__).resolve(),Path(profile_binding.__code__.co_filename).resolve())
+    tool_hashes={path.name:sha(path) for path in tool_paths}
     if output.is_relative_to(a.inputs.resolve()) or a.inputs.resolve().is_relative_to(output):
         p.error('--output must be a new directory disjoint from frozen inputs')
     contract=load(a.inputs/'cards.json');selection=load(a.selection);expected=load(a.inputs/'SOURCE_IDENTITY.json')
+    bindings=load(a.inputs/'PROFILE_BINDINGS.json')
     manifest=load(a.inputs/'MANIFEST.json')
     for name,digest in manifest.items():
         path=(a.inputs/name).resolve()
@@ -190,13 +200,21 @@ def main():
         if any(available.get(name)!=expected.get(name) for name in required):
             raise ValueError('analysis checker/reader provenance differs from official frozen identity: '+str(path))
         contract_relation=compatible_contract(load(path/'CURRENT_CARDS.json'),contract)
-        entries.append((entry['batch'],str(path),load(path/'REANALYSIS.json')))
+        records=load(path/'REANALYSIS.json');cards={card['id']:card for card in contract['cards']}
+        for record in records:
+            if record['condition'] not in cards:continue
+            work=raw_lane/'runs'/record['label']
+            original=load(work/'RESULT.json')
+            record['profile_binding']=profile_binding(cards[record['condition']],work,original,bindings)
+            record['profile_binding']['official_bindings_sha256']=sha(a.inputs/'PROFILE_BINDINGS.json')
+        entries.append((entry['batch'],str(path),records))
         identities.append({'analysis':str(path),'batch':entry['batch'],'analysis_manifest_sha256':digest,
                            'identity_sha256':sha(path/'ANALYSIS_IDENTITY.json'),'checker_revision':identity['revision'],
                            'contract_relation':contract_relation,'raw_lane':str(raw_lane),
                            'raw_manifest':raw_verification,'tool_identity_sha256':sha(path/'ORIGINAL_TOOL_IDENTITY.json')})
     result=assemble(contract,selection,entries)
     if len(result['slots'])!=852:raise ValueError('official slot denominator lost')
+    if any(sha(path)!=tool_hashes[path.name] for path in tool_paths):raise ValueError('aggregation tool changed during analysis')
     output.mkdir(parents=True,exist_ok=False)
     (output/'CATALOG.json').write_bytes(a.catalog.read_bytes())
     (output/'SELECTION.json').write_bytes(a.selection.read_bytes())
@@ -204,6 +222,7 @@ def main():
     save(output/'OFFICIAL-DRAFT.json',{'claim':'fixed pre-execution selection; incomplete collection remains evidence insufficient',
            'selection_sha256':sha(a.selection),'official_input_manifest_sha256':sha(a.inputs/'MANIFEST.json'),
            'aggregate_source_sha256':sha(Path(__file__)),'catalog_sha256':sha(a.catalog),
+           'tool_source_hashes':tool_hashes,
            'analyses':identities,**result})
     with (output/'SLOTS.tsv').open('w') as f:
         names=sorted({key for row in result['slots'] for key in row});w=csv.DictWriter(f,names,delimiter='\t');w.writeheader();w.writerows(result['slots'])

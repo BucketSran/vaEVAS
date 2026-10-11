@@ -33,7 +33,8 @@ class ReanalysisCalibration(unittest.TestCase):
         r.save(inputs/'cards.json',{'cards':[]})
         expected={'checker.py':'known-checker','evas/validation/paper/precision-v2.json':'known-contract'}
         r.save(inputs/'SOURCE_IDENTITY.json',expected)
-        r.save(inputs/'MANIFEST.json',{name:r.sha(inputs/name) for name in ('cards.json','SOURCE_IDENTITY.json')})
+        r.save(inputs/'PROFILE_BINDINGS.json',{'backend_tier_profiles':{},'profiles':{}})
+        r.save(inputs/'MANIFEST.json',{name:r.sha(inputs/name) for name in ('cards.json','SOURCE_IDENTITY.json','PROFILE_BINDINGS.json')})
         r.freeze_inputs(inputs,output,expected)
         self.assertEqual(r.sha(output/'OFFICIAL_CARDS.json'),r.sha(inputs/'cards.json'))
         with self.assertRaises(ValueError):r.freeze_inputs(inputs,output,{**expected,'checker.py':'changed'})
@@ -53,6 +54,26 @@ class ReanalysisCalibration(unittest.TestCase):
         (self.lane/'dut.va').write_text(c['source']);r.save(self.lane/'condition.json',c)
         old={'source_sha256':r.sha(self.lane/'dut.va')};c={**c,'inputs':{'u':[[0,2]]}}
         self.assertEqual(r.compatible(c,self.lane,old)['status'],'incompatible')
+
+    def test_profile_binding_accepts_legacy_open_and_rejects_profile_tier_or_control_change(self):
+        card={'id':'F11-base','unit_s':2e-6,'stop_s':10e-6}
+        profile={'id':'deep','reltol':1e-10,'vabstol_V':1e-14,'iabstol_A':1e-17,'step_units':.0005}
+        bindings={'backend_tier_profiles':{'gnucap_modelgen':{'Q3':'deep'}},'profiles':{'deep':profile}}
+        old={'backend':'gnucap_modelgen','tier':'Q3','profile':'deep','condition':'F11-base','label':'F11-base--Q3'}
+        requested={**profile,'target_tier':'Q3','stop_s':10e-6,'maxstep_s':1e-9,'spice_maxstep_s':1e-9}
+        def write(value):
+            r.save(self.lane/'requested_settings.json',value)
+            r.save(self.lane/'INPUT_IDENTITY.json',{'requested_settings_sha256':r.sha(self.lane/'requested_settings.json')})
+        write(requested)
+        self.assertEqual(r.profile_binding(card,self.lane,old,bindings)['status'],'matched')
+        for key,value in [('id','base'),('target_tier','Q1'),('reltol',1e-5),('maxstep_s',2e-9)]:
+            write({**requested,key:value});result=r.profile_binding(card,self.lane,old,bindings)
+            self.assertEqual(result['status'],'unmatched')
+            self.assertIn(key,[issue['field'] for issue in result['issues']])
+        write(requested)
+        self.assertEqual(r.profile_binding(card,self.lane,{**old,'label':'F11-base--Q1'},bindings)['status'],'unmatched')
+        assessment={'tiers':{'Q3':{'status':'numerical_error'}}};qualified={'status':'qualified'}
+        self.assertEqual(r.slot_status('waveform_available',assessment,qualified,qualified,qualified,'Q3',{'status':'unmatched'}),'evidence_insufficient')
 
     def test_configuration_gate_does_not_hide_numeric_or_execution_failure(self):
         c={'tiers':{'Q1':{'status':'pass'}}};unknown={'status':'unknown'};qualified={'status':'qualified'}

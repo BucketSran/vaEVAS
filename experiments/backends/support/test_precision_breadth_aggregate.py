@@ -56,11 +56,26 @@ class AggregateCalibration(unittest.TestCase):
         self.assertEqual(picked['numeric'],'pass');self.assertEqual(picked['final'],'evidence_insufficient')
         c['probe_only']=True
         with self.assertRaises(ValueError):a.assemble(self.contract([c]),selection(),[('batch-v2','analysis',[record(c)])])
+        c['probe_only']=False;c['support_probe_only']=True
+        with self.assertRaises(ValueError):a.assemble(self.contract([c]),selection(),[('batch-v2','analysis',[record(c)])])
 
     def test_explicit_group_selection_is_independent_of_batch_names(self):
         sel={'slot_selection':{backend:{'default_batch':'fresh','group_batches':{'F11':'archived'}} for backend in a.BACKENDS}}
         self.assertEqual(a.source_batch('evas',card('one','F01'),sel),'fresh')
         self.assertEqual(a.source_batch('evas',card('one','F11'),sel),'archived')
+
+    def test_wrong_designated_profile_preserves_numeric_failure_and_original_execution(self):
+        c=card('one','F01');r=record(c,status='numerical_error')
+        r['profile_binding']={'status':'unmatched','issues':[{'field':'id','expected':'deep','actual':'base'}]}
+        cell=next(x for x in a.assemble(self.contract([c]),selection(),[('batch-v2','analysis',[r])])['slots'] if x['backend']=='evas' and x['Q']=='Q1')
+        self.assertEqual(cell['numeric'],'numerical_error');self.assertEqual(cell['config'],'unknown')
+        self.assertEqual(cell['original_execution'],'waveform_available');self.assertEqual(cell['final'],'evidence_insufficient')
+
+    def test_group_execution_failure_precedence_retains_independent_numeric_failure(self):
+        cards=[card('one','F01'),card('two','F01')];r1=record(cards[0],status='numerical_error');r2=record(cards[1],status='execution_failed')
+        r2['assessment']['tiers']['Q1']['numerical']['status']='unknown';r2['execution_status']='compile_failed'
+        group=next(x for x in a.assemble(self.contract(cards),selection(),[('batch-v2','analysis',[r1,r2])])['groups'] if x['backend']=='evas' and x['Q']=='Q1')
+        self.assertEqual(group['status'],'execution_failed');self.assertEqual(group['numeric'],'numerical_error')
 
     def test_duplicate_selected_attempt_is_rejected_even_if_one_is_better(self):
         c=card('one','F01')
