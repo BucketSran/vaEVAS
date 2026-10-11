@@ -1,4 +1,5 @@
 """Independent positive/negative calibration of the breadth grading API."""
+GUARDS = ["QUALIFICATION", "DEV:precision-breadth"]
 from pathlib import Path
 import sys
 import unittest

@@ -1,4 +1,5 @@
 """Hand-calculated composition reference anchors through the agreed public API."""
+GUARDS = ["QUALIFICATION", "DEV:precision-breadth"]
 import importlib.util
 from pathlib import Path
 import unittest

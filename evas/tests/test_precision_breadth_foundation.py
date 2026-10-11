@@ -1,4 +1,5 @@
 """Handwritten calibration anchors through the frozen foundation API."""
+GUARDS = ["QUALIFICATION", "DEV:precision-breadth"]
 import importlib.util
 from pathlib import Path
 import unittest
