@@ -1,0 +1,666 @@
+{
+  "status": "reference_smoke_only",
+  "not_final_author_calibration": true,
+  "scope": "five reference outputs before final hold-until-window-end checker addition; complete author matrix pending",
+  "reference_variants": 5,
+  "condition_positions": 11,
+  "all_reference_conditions_passed": true,
+  "current_checker_sha256": "9d1d2426a068498ab2582b6f073a327d94788e9271aeecc8fdb8716600582adb",
+  "records": [
+    {
+      "task_id": "v3-filter-ctle",
+      "candidate_sha256": "ab9c76d626a7558d0146aa1f615b77aacf77222d388254c71be83ab92a3a8e7e",
+      "criteria_sha256": "df07f8b32d863d2743486a27e4039112f316ecebbd327e2b7e78312e41a57cab",
+      "expected_conditions": 2,
+      "all_conditions_graded": true,
+      "reference_passed": true,
+      "has_graded_failure": false,
+      "conditions": [
+        {
+          "condition_id": "ctle-0",
+          "job_id": "bf-90e47adfbb45462c95b3-ctle-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "reason": null,
+          "cases": [
+            {
+              "name": "ctle-0",
+              "netlist_sha256": "d0a1965522962d060e33f537b58fa94323076b3405181ea0406dde5729945193",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.867817809805274,
+              "passed": true,
+              "checks": [
+                {
+                  "signal": "y",
+                  "max_error": 0.0006783065953875345,
+                  "rms_error": 0.00014885981899032696,
+                  "tolerance": 0.006,
+                  "passed": true
+                },
+                {
+                  "frequency": 500,
+                  "complex_error": 0.000520048385709111,
+                  "tolerance": 0.03325315870196663,
+                  "passed": true
+                },
+                {
+                  "frequency": 2000,
+                  "complex_error": 0.0005446258983488586,
+                  "tolerance": 0.059183635429928626,
+                  "passed": true
+                },
+                {
+                  "frequency": 8000,
+                  "complex_error": 0.0023630768836214646,
+                  "tolerance": 0.09000000000000001,
+                  "passed": true
+                },
+                {
+                  "frequency": 16000,
+                  "complex_error": 0.007525662137307972,
+                  "tolerance": 0.06998655333032784,
+                  "passed": true
+                }
+              ],
+              "status": "graded",
+              "waveform_sha256": "4f05e84e4574b288ff2cb6459d0c4d0c0889b1f61cb70a80590f6fcc6457da92",
+              "waveform_rows": 12006
+            }
+          ],
+          "report_sha256": "ef8ce9e466c94f16316ce603da12fcff06371478187672a2ef222d710a11db82",
+          "archive_sha256": "61a3f9397aa15337f90319ab4a8b3359ffcf8e79ba3dd7ab7ec0c002864610f9",
+          "spectre_version": "2026/10/11 06:40:14 System is not a supported distribution\n2026/10/11 06:40:14 An error occurred. We don't recognize OS \n2026/10/11 06:40:14 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 06:40:14 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "checker_sha256": "9f30cb6c6f1501107c1bd853a44cd4d8975239337c9336ba0fe51bb1c263c938",
+          "simulator_returncodes": [
+            0
+          ]
+        },
+        {
+          "condition_id": "ctle-1",
+          "job_id": "bf-b330d8dad79b40ae8ed7-ctle-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "reason": null,
+          "cases": [
+            {
+              "name": "ctle-1",
+              "netlist_sha256": "f4e31f2242f661f74e4f965de49aa72c2ddabb2eb6cba6cfad6c37a83f9054f0",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.867460262030363,
+              "passed": true,
+              "checks": [
+                {
+                  "signal": "y",
+                  "max_error": 0.0007190872005508053,
+                  "rms_error": 0.0002283917628539511,
+                  "tolerance": 0.006,
+                  "passed": true
+                },
+                {
+                  "frequency": 500,
+                  "complex_error": 0.001373530874471451,
+                  "tolerance": 0.04095181078904655,
+                  "passed": true
+                },
+                {
+                  "frequency": 2000,
+                  "complex_error": 0.0015064126478197548,
+                  "tolerance": 0.061287258453780497,
+                  "passed": true
+                },
+                {
+                  "frequency": 8000,
+                  "complex_error": 0.0038235934460101816,
+                  "tolerance": 0.11603103921733905,
+                  "passed": true
+                },
+                {
+                  "frequency": 16000,
+                  "complex_error": 0.011700268446867229,
+                  "tolerance": 0.10965081046751675,
+                  "passed": true
+                }
+              ],
+              "status": "graded",
+              "waveform_sha256": "d48f0ccabc37529ea8bc4606e1f27425169f4ab4e0f8c31872db133f77dd895b",
+              "waveform_rows": 12006
+            }
+          ],
+          "report_sha256": "f839f1d1922d6f954af4b143bd1074f85d7eceb09ef804f253492b9931cabd31",
+          "archive_sha256": "fcf92571d4fd737718ee7f075a75c8fa607a70e0e76824d7af910c8e4181f006",
+          "spectre_version": "2026/10/11 06:40:34 System is not a supported distribution\n2026/10/11 06:40:34 An error occurred. We don't recognize OS \n2026/10/11 06:40:34 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 06:40:34 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "checker_sha256": "9f30cb6c6f1501107c1bd853a44cd4d8975239337c9336ba0fe51bb1c263c938",
+          "simulator_returncodes": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "v3-filter-envelope",
+      "candidate_sha256": "8f219bb8ef5a3fc37f90abe368a53327f30465f43132fe7fc8d57312235166b1",
+      "criteria_sha256": "9ffc374a136272b5c50f3462abf24ba84c05613045fb38c2f19dee17714a0d65",
+      "expected_conditions": 2,
+      "all_conditions_graded": true,
+      "reference_passed": true,
+      "has_graded_failure": false,
+      "conditions": [
+        {
+          "condition_id": "dynamics-0",
+          "job_id": "bf-968051ecf51c4b3cae6e-dynamics-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "reason": null,
+          "cases": [
+            {
+              "name": "dynamics-0",
+              "netlist_sha256": "62085277210118bcb433c286627cbc8fafb982721c081aa8d409eddabe666740",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.4670018274337053,
+              "passed": true,
+              "checks": [
+                {
+                  "signal": "env",
+                  "max_error": 2.1200313400290827e-05,
+                  "rms_error": 3.4374911244110144e-06,
+                  "tolerance": 0.01,
+                  "passed": true
+                }
+              ],
+              "status": "graded",
+              "waveform_sha256": "5efc2f56ae6864a18797cd4f8eca856cea42f394b66714a1c6fcc9146daa1eed",
+              "waveform_rows": 9118
+            }
+          ],
+          "report_sha256": "e0bfbb264ed32ce2dfdc6797a5dc25c6768cd5016c17f2f146de6d3c55a1f190",
+          "archive_sha256": "53c27b9d7bd9ca45d0e59c4a8005849fec141a194bd1ebad07a6b7ec343eb79d",
+          "spectre_version": "2026/10/11 06:42:08 System is not a supported distribution\n2026/10/11 06:42:08 An error occurred. We don't recognize OS \n2026/10/11 06:42:08 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 06:42:08 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "checker_sha256": "9f30cb6c6f1501107c1bd853a44cd4d8975239337c9336ba0fe51bb1c263c938",
+          "simulator_returncodes": [
+            0
+          ]
+        },
+        {
+          "condition_id": "dynamics-1",
+          "job_id": "bf-fd5b4d7c16c94326aa03-dynamics-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "reason": null,
+          "cases": [
+            {
+              "name": "dynamics-1",
+              "netlist_sha256": "890e94490a3c77ac637e0be5b1938f838362e149bd6ca2be173cd3152091e1be",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.868122274056077,
+              "passed": true,
+              "checks": [
+                {
+                  "signal": "env",
+                  "max_error": 7.673096906539445e-05,
+                  "rms_error": 9.485523516902343e-06,
+                  "tolerance": 0.01,
+                  "passed": true
+                }
+              ],
+              "status": "graded",
+              "waveform_sha256": "82ad40f3d15abbec6134663f312d1c094ef9bed65a16b231715d237ba5ecfffc",
+              "waveform_rows": 9095
+            }
+          ],
+          "report_sha256": "100050889b79d61a39dfba487895a2c125c43218e765b28aaa992846dd1fe25f",
+          "archive_sha256": "6226d5a69f177026946011cd05207a92c58e6a3d105c18673d576b63108df6ae",
+          "spectre_version": "2026/10/11 06:42:23 System is not a supported distribution\n2026/10/11 06:42:23 An error occurred. We don't recognize OS \n2026/10/11 06:42:23 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 06:42:23 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "checker_sha256": "9f30cb6c6f1501107c1bd853a44cd4d8975239337c9336ba0fe51bb1c263c938",
+          "simulator_returncodes": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "v3-filter-iq-conversion",
+      "candidate_sha256": "e452a40fd3c64e3eba8ed81cb2aee461c23c1a9ad4de96fbedd7038fe84763b0",
+      "criteria_sha256": "5c9b7b2e58beb9417c5866d019c10ee40eafb3da8396d0309192296f2e2e6029",
+      "expected_conditions": 2,
+      "all_conditions_graded": true,
+      "reference_passed": true,
+      "has_graded_failure": false,
+      "conditions": [
+        {
+          "condition_id": "conversion-0",
+          "job_id": "bf-56c90bdf0bd64de3a472-conversion-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "reason": null,
+          "cases": [
+            {
+              "name": "conversion-0",
+              "netlist_sha256": "518b078e4e128d6fd931a28fc11553cd241d9dc5f72b6135441ef1af0e79f6f3",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 2.219179768115282,
+              "passed": true,
+              "checks": [
+                {
+                  "signal": "up",
+                  "max_error": 1.3877787807814457e-16,
+                  "rms_error": 3.3456701765661433e-17,
+                  "tolerance": 0.002,
+                  "passed": true
+                },
+                {
+                  "signal": "di",
+                  "max_error": 0.0003011067360183528,
+                  "rms_error": 0.00014498787466688285,
+                  "tolerance": 0.008,
+                  "passed": true
+                },
+                {
+                  "signal": "dq",
+                  "max_error": 0.00030549727517995007,
+                  "rms_error": 0.00014919160245704008,
+                  "tolerance": 0.008,
+                  "passed": true
+                },
+                {
+                  "sum_sideband_amplitude": 0.1799784874656479,
+                  "passed": true
+                }
+              ],
+              "status": "graded",
+              "waveform_sha256": "e81c2c810a3a3a627a9ddc6889326a4e43b14134f931b1efe1c74e900f821996",
+              "waveform_rows": 10027
+            }
+          ],
+          "report_sha256": "ba8df7bc57b4d22b86ce33ce87436b89f6bb39fd6e27b11aae0dda87984337e9",
+          "archive_sha256": "61f444f1951489850ac4b703273cd2778fed99474ca107c7bc6cd1e7058580cf",
+          "spectre_version": "2026/10/11 06:41:30 System is not a supported distribution\n2026/10/11 06:41:30 An error occurred. We don't recognize OS \n2026/10/11 06:41:30 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 06:41:30 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "checker_sha256": "9f30cb6c6f1501107c1bd853a44cd4d8975239337c9336ba0fe51bb1c263c938",
+          "simulator_returncodes": [
+            0
+          ]
+        },
+        {
+          "condition_id": "conversion-1",
+          "job_id": "bf-9c88ac63344d485895b5-conversion-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "reason": null,
+          "cases": [
+            {
+              "name": "conversion-1",
+              "netlist_sha256": "9a7ec8fbeabdfd5d7120b2398a8d22c5b0a268099a5b7aac9615a7a18ef7d61c",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 2.2189238350838423,
+              "passed": true,
+              "checks": [
+                {
+                  "signal": "up",
+                  "max_error": 1.6653345369377348e-16,
+                  "rms_error": 3.868737791080027e-17,
+                  "tolerance": 0.002,
+                  "passed": true
+                },
+                {
+                  "signal": "di",
+                  "max_error": 0.0004190288591350566,
+                  "rms_error": 0.00020045932443314715,
+                  "tolerance": 0.008,
+                  "passed": true
+                },
+                {
+                  "signal": "dq",
+                  "max_error": 0.00042137578568571255,
+                  "rms_error": 0.00020413802725800375,
+                  "tolerance": 0.008,
+                  "passed": true
+                },
+                {
+                  "sum_sideband_amplitude": 0.21601991742731264,
+                  "passed": true
+                }
+              ],
+              "status": "graded",
+              "waveform_sha256": "2b1df2f6218af08c6d91a0231815fee12084c5d0dae250be708e061051a8ee9a",
+              "waveform_rows": 10033
+            }
+          ],
+          "report_sha256": "9940270bf72d2fbfb3e2f8c19282a27ffd8dcdbc7f2646227620be4bd4531ec3",
+          "archive_sha256": "1dc158718b1ef7470967f1eb1362778f18a0a8d7a9ee7670910715af45e37d8f",
+          "spectre_version": "2026/10/11 06:41:49 System is not a supported distribution\n2026/10/11 06:41:49 An error occurred. We don't recognize OS \n2026/10/11 06:41:49 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 06:41:49 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "checker_sha256": "9f30cb6c6f1501107c1bd853a44cd4d8975239337c9336ba0fe51bb1c263c938",
+          "simulator_returncodes": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "v3-filter-programmable-lp",
+      "candidate_sha256": "2101dbeee2de4be52912c403d370baf8982988652810ae6501eac0fd3a6f7908",
+      "criteria_sha256": "2d83dcdf871e63a72d7bb4133315df06f35cb73e7d33a1d668f10f8bc8ccc77a",
+      "expected_conditions": 2,
+      "all_conditions_graded": true,
+      "reference_passed": true,
+      "has_graded_failure": false,
+      "conditions": [
+        {
+          "condition_id": "codes-0",
+          "job_id": "bf-925c373d3d3c471b86bc-codes-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "reason": null,
+          "cases": [
+            {
+              "name": "codes-0",
+              "netlist_sha256": "0d9ddecd642b83fb9bb59629e838bc7a84006fe65a44473c5029f397543ab00c",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.7176159545779228,
+              "passed": true,
+              "checks": [
+                {
+                  "signal": "y",
+                  "max_error": 0.0002746937660240966,
+                  "rms_error": 2.0931605844880696e-05,
+                  "tolerance": 0.008,
+                  "passed": true
+                }
+              ],
+              "status": "graded",
+              "waveform_sha256": "ef5076d376dd3764e847891b3d5934b76646ee557aa894d58ecd1f59f057a70d",
+              "waveform_rows": 9070
+            }
+          ],
+          "report_sha256": "1814899b4e078801784fe7531d6067a7146bc76e8b29356bc3acd655651d6025",
+          "archive_sha256": "f8259cd43e7bbd3eaacb4d5cc6c15be52c3247269e212efefd57cbd2c2d50b46",
+          "spectre_version": "2026/10/11 06:40:53 System is not a supported distribution\n2026/10/11 06:40:53 An error occurred. We don't recognize OS \n2026/10/11 06:40:53 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 06:40:53 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "checker_sha256": "9f30cb6c6f1501107c1bd853a44cd4d8975239337c9336ba0fe51bb1c263c938",
+          "simulator_returncodes": [
+            0
+          ]
+        },
+        {
+          "condition_id": "codes-1",
+          "job_id": "bf-4c0422eeb0f04113a39e-codes-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "reason": null,
+          "cases": [
+            {
+              "name": "codes-1",
+              "netlist_sha256": "d92d41cfc6c20b89b6f75f32fb55f47aff953114b62f7057f544c1090c75bc28",
+              "support_sha256": {},
+              "returncode": 0,
+              "elapsed_s": 1.7177737168967724,
+              "passed": true,
+              "checks": [
+                {
+                  "signal": "y",
+                  "max_error": 0.00036022707827841616,
+                  "rms_error": 2.3218023102417898e-05,
+                  "tolerance": 0.008,
+                  "passed": true
+                }
+              ],
+              "status": "graded",
+              "waveform_sha256": "4c0d9cf5280f6ede5937611426ceaf61c0b8043c8462a997e4ce1b885856580c",
+              "waveform_rows": 9071
+            }
+          ],
+          "report_sha256": "38dbfbbd2026fce0c040fcf22e330de382f8d92b55be5cabda0d741bd1f13e0e",
+          "archive_sha256": "5619d319f1b398ac256ca08aad37dc07c5ebff386ec0e4af9c2d45794abb1509",
+          "spectre_version": "2026/10/11 06:41:12 System is not a supported distribution\n2026/10/11 06:41:12 An error occurred. We don't recognize OS \n2026/10/11 06:41:12 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 06:41:12 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "checker_sha256": "9f30cb6c6f1501107c1bd853a44cd4d8975239337c9336ba0fe51bb1c263c938",
+          "simulator_returncodes": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "v3-filter-sweep-measurement",
+      "candidate_sha256": "9d056ce1092982877d5cb5abaed52dcd939101e0b73920f7b80396d992f1e5e4",
+      "criteria_sha256": "ab3eb4392bd26c1c77300aeb8a5e4a53ffc88b4451e6f6b243715fcdfa64bf3f",
+      "expected_conditions": 3,
+      "all_conditions_graded": true,
+      "reference_passed": true,
+      "has_graded_failure": false,
+      "conditions": [
+        {
+          "condition_id": "sweep-0",
+          "job_id": "bf-610a76fb3706499ebe99-sweep-0",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "reason": null,
+          "cases": [
+            {
+              "name": "sweep-0",
+              "netlist_sha256": "47d62ad8d6d2145592ba6a1730b66b50b08ca4833a4ecabb284cb48028e7cdd8",
+              "support_sha256": {
+                "healthy.va": "9b61289b37fc89c512b8a291127ef4dda0e324ca9b3fe2e076c4f12a071b11f3"
+              },
+              "returncode": 0,
+              "elapsed_s": 4.674946650862694,
+              "passed": true,
+              "checks": [
+                {
+                  "tone": 0,
+                  "passed": true,
+                  "measured_gain": 0.8319244848978111,
+                  "measured_phase": -0.5877469686697219
+                },
+                {
+                  "tone": 0,
+                  "excitation_max_error": 5.115916371090101e-15,
+                  "passed": true
+                },
+                {
+                  "tone": 1,
+                  "passed": true,
+                  "measured_gain": 0.35071315398634473,
+                  "measured_phase": -1.2119365482489914
+                },
+                {
+                  "tone": 1,
+                  "excitation_max_error": 2.7276791936259315e-14,
+                  "passed": true
+                },
+                {
+                  "tone": 2,
+                  "passed": true,
+                  "invalid_reason": "low-amplitude or inadequate settling/window"
+                },
+                {
+                  "tone": 2,
+                  "excitation_max_error": 9.094947170610786e-17,
+                  "passed": true
+                },
+                {
+                  "tone": 3,
+                  "passed": true,
+                  "measured_gain": 0.18402568763369123,
+                  "measured_phase": -1.3855344895727
+                },
+                {
+                  "tone": 3,
+                  "excitation_max_error": 4.2612181144763284e-14,
+                  "passed": true
+                }
+              ],
+              "status": "graded",
+              "waveform_sha256": "9ff93dac5e8bd0c00546007c98143a3c9004ef9d668cb11ee62d9576cafeaeb1",
+              "waveform_rows": 67922
+            }
+          ],
+          "report_sha256": "525961bbae3f3270560b9a809ab78be8f310476fcc27745e7f60c40a15db3fdf",
+          "archive_sha256": "4c9386544bbbf6d761bdbf053a94138c8665bb436fd4f2f158970cf1c57b7177",
+          "spectre_version": "2026/10/11 06:42:43 System is not a supported distribution\n2026/10/11 06:42:43 An error occurred. We don't recognize OS \n2026/10/11 06:42:43 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 06:42:43 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "checker_sha256": "9f30cb6c6f1501107c1bd853a44cd4d8975239337c9336ba0fe51bb1c263c938",
+          "simulator_returncodes": [
+            0
+          ]
+        },
+        {
+          "condition_id": "sweep-1",
+          "job_id": "bf-414d826718f04a38a9d7-sweep-1",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "reason": null,
+          "cases": [
+            {
+              "name": "sweep-1",
+              "netlist_sha256": "953fc5e65a5f8397945892f00b4c878f5edf1580eef4f7a6960906c6ee3c0822",
+              "support_sha256": {
+                "healthy.va": "9b61289b37fc89c512b8a291127ef4dda0e324ca9b3fe2e076c4f12a071b11f3"
+              },
+              "returncode": 0,
+              "elapsed_s": 4.572980780154467,
+              "passed": true,
+              "checks": [
+                {
+                  "tone": 0,
+                  "passed": true,
+                  "invalid_reason": "low-amplitude or inadequate settling/window"
+                },
+                {
+                  "tone": 0,
+                  "excitation_max_error": 5.115916371090101e-15,
+                  "passed": true
+                },
+                {
+                  "tone": 1,
+                  "passed": true,
+                  "invalid_reason": "low-amplitude or inadequate settling/window"
+                },
+                {
+                  "tone": 1,
+                  "excitation_max_error": 2.7276791936259315e-14,
+                  "passed": true
+                },
+                {
+                  "tone": 2,
+                  "passed": true,
+                  "invalid_reason": "low-amplitude or inadequate settling/window"
+                },
+                {
+                  "tone": 2,
+                  "excitation_max_error": 9.094947168477706e-17,
+                  "passed": true
+                },
+                {
+                  "tone": 3,
+                  "passed": true,
+                  "measured_gain": 0.38070866592263525,
+                  "measured_phase": -1.2728521432916982
+                },
+                {
+                  "tone": 3,
+                  "excitation_max_error": 4.2612181144763284e-14,
+                  "passed": true
+                }
+              ],
+              "status": "graded",
+              "waveform_sha256": "e12aee49829f5392bc8d54ca11e185b53a35fcc5938cf2bc00bbe2043e311e59",
+              "waveform_rows": 67925
+            }
+          ],
+          "report_sha256": "14cd8a022500fd7f96965ed1053bdce4035e8580b9ddc53e174af4a1b21c098e",
+          "archive_sha256": "a889fc4cb9fc5a7d2479d1e10ac6d985f0d6c773bbea98a6186ca490b51cf205",
+          "spectre_version": "2026/10/11 06:43:03 System is not a supported distribution\n2026/10/11 06:43:03 An error occurred. We don't recognize OS \n2026/10/11 06:43:03 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 06:43:03 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "checker_sha256": "9f30cb6c6f1501107c1bd853a44cd4d8975239337c9336ba0fe51bb1c263c938",
+          "simulator_returncodes": [
+            0
+          ]
+        },
+        {
+          "condition_id": "sweep-2",
+          "job_id": "bf-cb76bf36226e4fae8556-sweep-2",
+          "execution": "ok",
+          "score": 1,
+          "report_status": "completed",
+          "reason": null,
+          "cases": [
+            {
+              "name": "sweep-2",
+              "netlist_sha256": "77d349214433a64ad02a2daed229e8cfe34d8415fc9c2014dde0ccbd2b03de86",
+              "support_sha256": {
+                "healthy.va": "9b61289b37fc89c512b8a291127ef4dda0e324ca9b3fe2e076c4f12a071b11f3"
+              },
+              "returncode": 0,
+              "elapsed_s": 4.825094832107425,
+              "passed": true,
+              "checks": [
+                {
+                  "tone": 0,
+                  "passed": true,
+                  "invalid_reason": "low-amplitude or inadequate settling/window"
+                },
+                {
+                  "tone": 0,
+                  "excitation_max_error": 5.115907701857366e-15,
+                  "passed": true
+                },
+                {
+                  "tone": 1,
+                  "passed": true,
+                  "invalid_reason": "low-amplitude or inadequate settling/window"
+                },
+                {
+                  "tone": 1,
+                  "excitation_max_error": 2.727635825539032e-14,
+                  "passed": true
+                },
+                {
+                  "tone": 2,
+                  "passed": true,
+                  "invalid_reason": "low-amplitude or inadequate settling/window"
+                },
+                {
+                  "tone": 2,
+                  "excitation_max_error": 9.09494718196281e-17,
+                  "passed": true
+                },
+                {
+                  "tone": 3,
+                  "passed": true,
+                  "invalid_reason": "low-amplitude or inadequate settling/window"
+                },
+                {
+                  "tone": 3,
+                  "excitation_max_error": 4.261521691084624e-14,
+                  "passed": true
+                }
+              ],
+              "status": "graded",
+              "waveform_sha256": "80993cea4a227896550758d654eda836d883f0da7b92c1104d49b95f400cfe13",
+              "waveform_rows": 67928
+            }
+          ],
+          "report_sha256": "82787563b45639f9ba82415b59bc93b7fc649459e1f7091e592e8491e00674a8",
+          "archive_sha256": "bb9ec6a0e9989371de91f740356be61d7d9e90f70faef8d1003cfdf67ee79d9f",
+          "spectre_version": "2026/10/11 06:43:24 System is not a supported distribution\n2026/10/11 06:43:24 An error occurred. We don't recognize OS \n2026/10/11 06:43:24 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/11 06:43:24 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+          "checker_sha256": "9f30cb6c6f1501107c1bd853a44cd4d8975239337c9336ba0fe51bb1c263c938",
+          "simulator_returncodes": [
+            0
+          ]
+        }
+      ]
+    }
+  ]
+}
