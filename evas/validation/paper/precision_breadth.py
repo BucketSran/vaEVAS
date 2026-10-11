@@ -216,12 +216,15 @@ def assess(card, rows, contract, *, reference=None):
               'behavior': {'status': 'pass'}, 'outputs': {}, 'tiers': {}}
     issues = []
     result['phase_evidence'] = {'status': 'unknown' if card.get('phase_obligations') else 'not_required'}
+    result['input_gain_evidence'] = {'status': 'unknown' if card.get('input_gain_evidence_required') else 'not_required'}
     if card.get('phase_obligations'):
         issues.append('DC/transient phase requires independent adapter evidence')
     if card.get('order_evidence_required'):
         issues.append('independent callback order evidence unavailable')
     if card.get('input_exact_evidence_required'):
         issues.append('exact input identity requires independent export evidence')
+    if card.get('input_gain_evidence_required'):
+        issues.append('input derivative or topology requires independent adapter evidence')
     required = ['time', *card['inputs'], *card['outputs'], *card.get('counter_channels', {})]
     malformed = False
     if len(rows) < 3 or any(any(type(r.get(k)) not in (int, float) or not math.isfinite(r[k]) for k in required) for r in rows):
