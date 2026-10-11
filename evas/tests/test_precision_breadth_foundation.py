@@ -219,5 +219,17 @@ class FoundationReferences(unittest.TestCase):
                 self.assertEqual(f.reference(base,t,{}),f.reference(other,t,{}))
 
 
+    def test_derivative_undefined_points_match_shared_card_obligations(self):
+        import math
+        c=self.card('F14')
+        self.assertEqual([p['time_s'] for p in c['undefined_points']],[1e-6,2e-6])
+        # A nearby serialized row has uncertain sided values, not a fabricated
+        # mathematically undefined point at a different physical time.
+        out=f.reference(c,math.nextafter(1e-6,math.inf),{})
+        self.assertFalse(out['undefined'])
+        self.assertLessEqual(out['outputs']['y'][0],-1)
+        self.assertGreaterEqual(out['outputs']['y'][1],.5)
+
+
 if __name__ == '__main__':
     unittest.main()

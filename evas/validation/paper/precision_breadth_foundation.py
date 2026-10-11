@@ -110,7 +110,7 @@ def cards():
     c=add('F14',f'V(y)<+{T:.17g}*ddt(V(u));',['y'],
           inputs={'u':[[0,0],[T,.5],[2*T,-.5],[3*T,-.5]]},stop=3*T)
     c['reference_parameters']={'derivative_scale':T}
-    c['undefined_point_obligations']={'y':[T,2*T]}
+    c['undefined_points']=[{'time_s':t,'left_s':t-2e-12,'right_s':t+2e-12,'outputs':['y']} for t in (T,2*T)]
     tau=2**-20
     filt_inputs={'u':[[0,.25],[tau,.75],[2*tau,-.25],[3*tau,-.25]]}
     for group,body in [('F15',f"V(y)<+laplace_nd(V(u),'{{1}},'{{1,{tau:.17g}}});"),
@@ -342,7 +342,7 @@ def reference(card, time_s, event_bounds):
     g=card['group_id'];undefined={}
     if g=='F14':
         if time_s==0:values=[{'y':F(0)}]
-        elif any(low<=F(t)<=high for t in card['undefined_point_obligations']['y']):
+        elif any(time_s==p['time_s'] for p in card['undefined_points']):
             values=[{}];undefined={'y':'PWL derivative undefined at corner; both one-sided critical observations required'}
         else:
             values=[]
