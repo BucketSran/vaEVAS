@@ -23,6 +23,82 @@ def record(c,backend='evas',q='Q1',status='pass',compatibility='compatible'):
 class AggregateCalibration(unittest.TestCase):
     def contract(self,cards):return {'cards':cards,'tiers':[{'id':q} for q in ('Q1','Q2','Q3')]}
 
+    def test_external_integrator_and_legacy_readback_survive_without_raising_scores(self):
+        c=card('one','F01');r=record(c,backend='gnucap_modelgen',status='evidence_insufficient')
+        r['configuration']={'status':'unknown','issues':['actual integrator unavailable']}
+        r['legacy_qualification']={'configuration':{'status':'qualified','actual':{'method':'trap','reltol':1e-5}}}
+        r['profile_binding']={'status':'matched','requested':{'reltol':1e-5}}
+        r['actual_integrator']={'status':'unknown','issues':['first-history integrator path pending']}
+        r['external_open_evidence']={key:{'status':'unknown'} for key in ('identity','config','runtime','native','integrator','diagnostics','observations')}
+        r['external_open_evidence']['integrator']=r['actual_integrator']
+        result=a.assemble(self.contract([c]),selection(),[('batch-v2','analysis',[r])])
+        cell=next(x for x in result['slots'] if x['backend']=='gnucap_modelgen' and x['Q']=='Q1')
+        self.assertEqual(cell['integrator'],'unknown');self.assertEqual(cell['actual_settings']['method'],'trap')
+        self.assertEqual(cell['requested_settings']['reltol'],1e-5)
+        self.assertEqual(cell['legacy_configuration']['status'],'qualified')
+        self.assertEqual(cell['external_qualification'],r['external_open_evidence'])
+        self.assertEqual(cell['final'],'evidence_insufficient')
+        group=next(x for x in result['groups'] if x['backend']=='gnucap_modelgen' and x['Q']=='Q1')
+        self.assertEqual(group['integrator'],'unknown')
+        other=next(x for x in result['groups'] if x['backend']=='evas' and x['Q']=='Q1')
+        self.assertEqual(other['integrator'],'not_applicable')
+
+    def test_external_full_configuration_cannot_hide_unknown_actual_integrator(self):
+        c=card('one','F01');r=record(c,backend='gnucap_modelgen')
+        r['actual_integrator']={'status':'unknown'}
+        r['external_open_evidence']={key:{'status':'qualified'} for key in ('identity','config','runtime','native','diagnostics','observations')}
+        r['external_open_evidence']['integrator']={'status':'unknown'}
+        with self.assertRaises(ValueError):a.assemble(self.contract([c]),selection(),[('batch-v2','analysis',[r])])
+
+    def test_external_identity_must_be_bound_and_manifest_covered(self):
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td);a.save(root/'COMPLETION.json',{'returncode':0,'original_manifest_unchanged':True})
+            (root/'adapter.py').write_text('reviewed code')
+            config={'adapter':'adapter.py','approved_adapter_sha256':None,'proof':None,
+                    'approved_proof_sha256':None,'execution_input_manifest_sha256':'original',
+                    'sealed_files':{'adapter.py':a.sha(root/'adapter.py')}}
+            a.save(root/'OPEN_EVIDENCE_IDENTITY.json',config)
+            a.save(root/'ANALYSIS_IDENTITY.json',{'external_open_evidence_identity_sha256':a.sha(root/'OPEN_EVIDENCE_IDENTITY.json')})
+            def manifest():a.save(root/'ANALYSIS_MANIFEST.json',{p.name:{'sha256':a.sha(p),'bytes':p.stat().st_size} for p in root.iterdir() if p.name!='ANALYSIS_MANIFEST.json'})
+            manifest();value=a.external_evidence_identity(root)
+            self.assertEqual(value['adapter_sha256'],a.sha(root/'adapter.py'))
+            self.assertIsNone(value['proof_metadata'])
+            a.save(root/'ANALYSIS_IDENTITY.json',{'external_open_evidence_identity_sha256':'wrong'})
+            manifest()
+            with self.assertRaises(ValueError):a.external_evidence_identity(root)
+            a.save(root/'ANALYSIS_IDENTITY.json',{'external_open_evidence_identity_sha256':a.sha(root/'OPEN_EVIDENCE_IDENTITY.json')})
+            manifest();m=a.load(root/'ANALYSIS_MANIFEST.json');del m['adapter.py'];a.save(root/'ANALYSIS_MANIFEST.json',m)
+            with self.assertRaises(ValueError):a.external_evidence_identity(root)
+
+    def test_official_card_identity_requires_verified_manifest_membership(self):
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td);a.save(root/'cards.json',{'cards':['frozen']})
+            digest=a.sha(root/'cards.json')
+            self.assertEqual(a.verified_cards_digest(root,{'cards.json':digest}),digest)
+            with self.assertRaises(ValueError):a.verified_cards_digest(root,{})
+            a.save(root/'cards.json',{'cards':['changed-source-or-probe']})
+            with self.assertRaises(ValueError):a.verified_cards_digest(root,{'cards.json':digest})
+
+    def test_external_proof_metadata_is_exact_selected_subset_and_never_a_verdict(self):
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td);a.save(root/'COMPLETION.json',{'returncode':0,'original_manifest_unchanged':True})
+            (root/'adapter.py').write_text('reviewed code')
+            original={'schema':'open-backend-proof-v1','backend':'gnucap_modelgen','attachments':{},'claims':{'integrator':'not closed'},'extra_not_exported':'unused'}
+            a.save(root/'proof.json',original)
+            config={'adapter':'adapter.py','approved_adapter_sha256':None,'proof':'proof.json',
+                'approved_proof_sha256':None,'evidence_root':'attachments',
+                'sealed_files':{name:a.sha(root/name) for name in ('adapter.py','proof.json')}}
+            a.save(root/'OPEN_EVIDENCE_IDENTITY.json',config)
+            a.save(root/'ANALYSIS_IDENTITY.json',{'external_open_evidence_identity_sha256':a.sha(root/'OPEN_EVIDENCE_IDENTITY.json')})
+            def manifest():a.save(root/'ANALYSIS_MANIFEST.json',{p.name:{'sha256':a.sha(p),'bytes':p.stat().st_size} for p in root.iterdir() if p.name!='ANALYSIS_MANIFEST.json'})
+            manifest();value=a.external_evidence_identity(root)
+            self.assertEqual(value['proof_metadata'],{k:original[k] for k in a.PROOF_METADATA_FIELDS if k in original})
+            self.assertIsNone(value['approved_proof_sha256'])
+            self.assertEqual(value['proof_sha256'],a.sha(root/'proof.json'))
+            del config['sealed_files']['proof.json'];a.save(root/'OPEN_EVIDENCE_IDENTITY.json',config)
+            a.save(root/'ANALYSIS_IDENTITY.json',{'external_open_evidence_identity_sha256':a.sha(root/'OPEN_EVIDENCE_IDENTITY.json')});manifest()
+            with self.assertRaises(ValueError):a.external_evidence_identity(root)
+
     def test_added_execution_profile_does_not_change_old_or_scientific_contract(self):
         old={'cards':[card('one','F01')],'budgets':{'B':1},'profiles':[{'id':'deep','step':1}]}
         new={**old,'profiles':old['profiles']+[{'id':'deep_bound','step':2}]}

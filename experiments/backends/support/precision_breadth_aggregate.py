@@ -50,6 +50,73 @@ def verify_analysis(path):
     return sha(path/'ANALYSIS_MANIFEST.json')
 
 
+PROOF_METADATA_FIELDS=('schema','backend','image_id','binary_hashes','environment_sha256','argv_sha256','claims','run_scopes','attachments','reviews')
+
+
+def external_evidence_identity(path):
+    """Publish sealed external provenance without granting any qualification."""
+    verify_analysis(path)
+    manifest=load(path/'ANALYSIS_MANIFEST.json');analysis=load(path/'ANALYSIS_IDENTITY.json')
+    name='OPEN_EVIDENCE_IDENTITY.json';expected=analysis.get('external_open_evidence_identity_sha256')
+    if name not in manifest:
+        if expected is not None:raise ValueError('external identity missing from sealed analysis')
+        return None
+    if sha(path/name)!=expected:raise ValueError('external identity is not bound to analysis identity')
+    config=load(path/name);sealed=config['sealed_files']
+    for filename,digest in sealed.items():
+        target=path/filename
+        if filename not in manifest or manifest[filename]['sha256']!=digest or sha(target)!=digest:
+            raise ValueError('external artifact not covered by sealed manifest: '+filename)
+        if target.is_symlink() or not target.resolve().is_relative_to(path.resolve()):
+            raise ValueError('unsafe external artifact path')
+    adapter=config['adapter'];proof=config.get('proof')
+    if adapter not in sealed or (proof and proof not in sealed):raise ValueError('adapter/proof absent from sealed files')
+    metadata=None
+    if proof:
+        original=load(path/proof)
+        metadata={key:original[key] for key in PROOF_METADATA_FIELDS if key in original}
+        for attachment,digest in original.get('attachments',{}).items():
+            filename=str(Path(config['evidence_root'])/attachment)
+            if sealed.get(filename)!=digest:raise ValueError('proof attachment absent from sealed identity')
+    return {'identity_path':name,'identity_sha256':sha(path/name),
+            'adapter_sha256':sealed[adapter],'approved_adapter_sha256':config.get('approved_adapter_sha256'),
+            'proof_sha256':sealed[proof] if proof else None,'approved_proof_sha256':config.get('approved_proof_sha256'),
+            'execution_input_manifest_sha256':config.get('execution_input_manifest_sha256'),
+            'sealed_files':sealed,'proof_metadata':metadata,
+            'scope':'external qualification only; frozen mathematical assessment and original execution unchanged'}
+
+
+def readback_provenance(record):
+    legacy=record.get('legacy_qualification')
+    config=legacy['configuration'] if legacy else record.get('configuration',{})
+    requested=record.get('profile_binding',{}).get('requested',config.get('requested',{}))
+    return {'legacy_configuration':config,'actual_settings':config.get('actual',{}),
+            'requested_settings':requested,
+            'settings_provenance':{'actual':'legacy_qualification.configuration.actual' if legacy else 'configuration.actual',
+                                  'requested':'profile_binding.requested' if 'requested' in record.get('profile_binding',{}) else 'legacy configuration requested',
+                                  'scope':'method setting/readback is distinct from actual device integrator path'}}
+
+
+def external_axes(record,backend):
+    external=record.get('external_open_evidence')
+    default={'status':'unknown' if backend in BACKENDS[2:] else 'not_applicable',
+             'scope':'open-backend actual device integrator evidence'}
+    integrator=record.get('actual_integrator',default)
+    if external:
+        if backend not in BACKENDS[2:]:raise ValueError('open external evidence attached to non-open backend')
+        if integrator!=external.get('integrator'):raise ValueError('external integrator receipt mismatch')
+        if record['configuration']['status']=='qualified' and any(external.get(axis,{}).get('status')!='qualified' for axis in ('identity','config','integrator')):
+            raise ValueError('complete external configuration lacks identity/config/actual integrator qualification')
+    return {'integrator':integrator['status'],'integrator_evidence':integrator,'external_qualification':external}
+
+
+def verified_cards_digest(inputs,manifest):
+    path=inputs/'cards.json'
+    if 'cards.json' not in manifest or path.is_symlink() or sha(path)!=manifest['cards.json']:
+        raise ValueError('official cards absent from verified input manifest or hash drift')
+    return sha(path)
+
+
 def source_batch(backend,card,selection):
     if 'slot_selection' in selection:
         rule=selection['slot_selection'][backend]
@@ -108,6 +175,8 @@ def assemble(contract,selection,analyses):
                       'source_sha256':hashlib.sha256(c['source'].encode()).hexdigest(),
                       'original_execution':'not_collected','numeric':'unknown','behavior':'unknown',
                       'evidence':'evidence_insufficient','config':'unknown','native':'unknown','runtime':'unknown',
+                      'integrator':'unknown' if backend in BACKENDS[2:] else 'not_applicable',
+                      'integrator_evidence':None,'external_qualification':None,'legacy_configuration':None,'settings_provenance':None,
                       'source_compatibility':'unknown','final':'evidence_insufficient',
                       'analysis':None,'label':None,'inheritance':'selected execution not yet collected'}
                 if picked:
@@ -119,9 +188,9 @@ def assemble(contract,selection,analyses):
                     base.update(original_input_identity=r['identity'].get('original_input_identity'),
                                 raw_artifact_hashes={k:v for k,v in r['identity'].get('original_artifact_hashes',{}).items()
                                       if k in ('waveform.txt','waveform.csv','waveform.raw','RESULT.json','dut.va','dut.so','INPUT_IDENTITY.json','requested_settings.json','observation_plan.json')},
-                                actual_settings=r.get('configuration',{}).get('actual',{}),
-                                requested_settings=r.get('configuration',{}).get('requested',{}),
+
                                 tool_identity_sha256=r['identity'].get('original_tool_identity_sha256'))
+                    base.update(readback_provenance(r));base.update(external_axes(r,backend))
                     if r['source_compatibility']['status']=='compatible':
                         if r['source_compatibility']['current_source_sha256']!=base['source_sha256']:
                             raise ValueError('analysis uses a different current DUT source')
@@ -159,6 +228,7 @@ def assemble(contract,selection,analyses):
                                'config':layer_status(cells,'config','qualified'),
                                'native':layer_status(cells,'native','qualified'),
                                'runtime':layer_status(cells,'runtime','qualified'),
+                               'integrator':'not_applicable' if backend not in BACKENDS[2:] else ('qualified' if all(r['integrator']=='qualified' for r in cells) else 'unknown'),
                                'status':group_status(cells),'variants':{r['variant']:r['final'] for r in cells},
                                'execution_relations':{r['variant']:{'batch':r['selected_batch'],'original_execution':r['original_execution'],
                                                       'inheritance':r['inheritance'],'analysis':r['analysis']} for r in cells}})
@@ -178,6 +248,7 @@ def main():
     for name,digest in manifest.items():
         path=(a.inputs/name).resolve()
         if not path.is_relative_to(a.inputs.resolve()) or sha(path)!=digest:raise ValueError('frozen official input drift')
+    official_cards_sha256=verified_cards_digest(a.inputs,manifest)
     bindings=verified_bindings(a.inputs,manifest)
     if len(contract['cards'])!=71 or len({c['group_id'] for c in contract['cards']})!=44 or len(contract['tiers'])!=3:
         raise ValueError('official inventory differs from 44 groups/71 variants/3 Q')
@@ -200,6 +271,7 @@ def main():
         if any(available.get(name)!=expected.get(name) for name in required):
             raise ValueError('analysis checker/reader provenance differs from official frozen identity: '+str(path))
         contract_relation=compatible_contract(load(path/'CURRENT_CARDS.json'),contract)
+        external_identity=external_evidence_identity(path)
         records=load(path/'REANALYSIS.json');cards={card['id']:card for card in contract['cards']}
         for record in records:
             if record['condition'] not in cards:continue
@@ -211,7 +283,8 @@ def main():
         identities.append({'analysis':str(path),'batch':entry['batch'],'analysis_manifest_sha256':digest,
                            'identity_sha256':sha(path/'ANALYSIS_IDENTITY.json'),'checker_revision':identity['revision'],
                            'contract_relation':contract_relation,'raw_lane':str(raw_lane),
-                           'raw_manifest':raw_verification,'tool_identity_sha256':sha(path/'ORIGINAL_TOOL_IDENTITY.json')})
+                           'raw_manifest':raw_verification,'tool_identity_sha256':sha(path/'ORIGINAL_TOOL_IDENTITY.json'),
+                           'external_evidence':external_identity})
     result=assemble(contract,selection,entries)
     if len(result['slots'])!=852:raise ValueError('official slot denominator lost')
     if any(sha(path)!=tool_hashes[path.name] for path in tool_paths):raise ValueError('aggregation tool changed during analysis')
@@ -222,7 +295,7 @@ def main():
     save(output/'OFFICIAL-DRAFT.json',{'claim':'fixed pre-execution selection; incomplete collection remains evidence insufficient',
            'selection_sha256':sha(a.selection),'official_input_manifest_sha256':sha(a.inputs/'MANIFEST.json'),
            'aggregate_source_sha256':sha(Path(__file__)),'catalog_sha256':sha(a.catalog),
-           'tool_source_hashes':tool_hashes,
+           'tool_source_hashes':tool_hashes,'official_cards_sha256':official_cards_sha256,
            'analyses':identities,**result})
     with (output/'SLOTS.tsv').open('w') as f:
         names=sorted({key for row in result['slots'] for key in row});w=csv.DictWriter(f,names,delimiter='\t');w.writeheader();w.writerows(result['slots'])
