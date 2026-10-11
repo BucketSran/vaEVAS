@@ -76,6 +76,45 @@ class BreadthRunner(unittest.TestCase):
         self.assertEqual(records[0]['qualified_tiers']['Q1']['status'],'evidence_insufficient')
         self.assertEqual(runner.load(self.base/'out/ATTEMPTS.json')['stage_invocations'],1)
 
+    def test_analysis_failure_retains_every_frozen_tier(self):
+        self.freeze();profile=self.base/'profile.json';profile.write_text('{}')
+        outcome={'status':'waveform_available','waveform':'fake.csv','stages':[],'abort_batch':False}
+        with patch.object(runner,'preflight',return_value=({},{})), patch.object(runner,'verify_tool'), \
+             patch.object(runner,'execute_one',return_value=outcome), \
+             patch.object(runner,'read_native',side_effect=ValueError('missing column')):
+            records=runner.run(self.inputs,self.base/'out','evas',profile,'foundation',tiers=['Q1'])
+        result=records[0]
+        self.assertIn('missing column',result['analysis_error'])
+        self.assertEqual(set(result['qualified_tiers']),{'Q1','Q2','Q3'})
+        self.assertTrue(all(q['status']=='evidence_insufficient' for q in result['qualified_tiers'].values()))
+
+    def test_accepted_row_count_alone_cannot_prove_native_origins(self):
+        work=self.base/'case';work.mkdir()
+        (work/'spectre.log').write_text('Number of accepted tran steps = 2\n')
+        (work/'tb.scs').write_text('tran tran strobeoutput=all skipcount=1 compression=no\n')
+        rows=[{'time':0},{'time':.5},{'time':1}]
+        evidence=runner.native_observation_evidence(work,'spectre',{'status':'qualified'},rows)
+        self.assertEqual(evidence['status'],'unknown')
+        self.assertTrue(evidence['facts']['rows_equal_accepted_steps_plus_initial'])
+
+    def test_spectre_each_accepted_time_matches_raw_export(self):
+        work=self.base/'case';work.mkdir()
+        (work/'spectre.log').write_text('tran: time = 500 ns (50 %), step = 500 ns\n'
+            'tran: time = 1 us (100 %), step = 500 ns\nNumber of accepted tran steps = 2\n')
+        (work/'tb.scs').write_text('tran tran strobeoutput=all skipcount=1 compression=no annotate=steps annotatedigits=16\n')
+        (work/'requested_times.json').write_text('[0, 0.0000005, 0.000001]')
+        rows=[{'time':0.},{'time':5e-7},{'time':1e-6}]
+        tool={'version':'sub-version  21.1.0.509.isr12',
+              'binary_sha256':'72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f'}
+        evidence=runner.native_observation_evidence(work,'spectre',{'status':'qualified'},rows,tool=tool)
+        self.assertEqual(evidence['status'],'qualified')
+        self.assertEqual(evidence['facts']['matched_accepted_rows'],2)
+        wrong=[{'time':0.},{'time':6e-7},{'time':1e-6}]
+        self.assertEqual(runner.native_observation_evidence(work,'spectre',{'status':'qualified'},wrong,tool=tool)['status'],'unknown')
+        (work/'spectre.log').write_text('tran: time = 500 ns (50 %), step = 500 ns\n'
+            'tran: time = 500 ns (50 %), step = 500 ns\nNumber of accepted tran steps = 2\n')
+        self.assertEqual(runner.native_observation_evidence(work,'spectre',{'status':'qualified'},rows,tool=tool)['status'],'unknown')
+
     def test_current_source_drift_rejected(self):
         self.freeze()
         identities=runner.load(self.inputs/'SOURCE_IDENTITY.json')
