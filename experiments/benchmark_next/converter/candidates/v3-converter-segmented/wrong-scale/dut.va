@@ -1,0 +1,14 @@
+`include "disciplines.vams"
+module dut(b0,b1,t0,t1,t2,clk,rst,aout);
+inout b0,b1,t0,t1,t2,clk,rst,aout;electrical b0,b1,t0,t1,t2,clk,rst,aout;
+parameter real lo=0, hi=1, tr=100p;
+real q,weighted;
+analog begin
+ @(initial_step) q=lo;
+ @(cross(V(clk)-0.5,+1)) begin
+  weighted=1*(V(b0)>0.45)+2*(V(b1)>0.45)+4*(V(t0)>0.45)+4*(V(t1)>0.45)+4*(V(t2)>0.45);
+  q=lo+(hi-lo)*weighted/16;
+ end
+ V(aout)<+transition(q,0,tr,tr);
+end
+endmodule

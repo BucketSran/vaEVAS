@@ -1,0 +1,11 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module dut(code,clk,rst,sample_ok,sndr,sfdr,dc,enob,valid);
+inout code,clk,rst,sample_ok,sndr,sfdr,dc,enob,valid;electrical code,clk,rst,sample_ok,sndr,sfdr,dc,enob,valid;
+parameter integer tone_bin=5;
+real cs[0:32],ss[0:32],x,p,fund,spurious,noise,sum,out_sndr,out_sfdr,out_dc;
+integer n,k,bad,ok;
+analog begin
+// Implement the public contract.
+end
+endmodule
