@@ -126,6 +126,16 @@ DC 的 `t=0` 观察与 `t=0+` 的瞬态右侧极限分别求值：前者在整�
 这与只在连续历史中查询 `output_times` 不同，新增分段可能改变舍入包围。
 局部时间锚定的因果闭包尚不支持该控制，明确拒绝而不沿用不完整的绝对时间表。
 
+仅含原始物理 PWL 输入且没有输入误差时，时长大于零的分段直接复用原折点的斜率
+`m=(u_b-u_a)/(t_b-t_a)`，由 `Trajectory::range` 向外包围。
+强制点仍划分传播区间，但不通过两个已插值区间的差商重新估计斜率。
+若端点误差分别为 `e_a,e_b`，该差商会把误差放大到约 `(e_a+e_b)/h`；
+例如 F14 在相距约 2 ps 的 strobe 间可能因此拒绝原本恒定的导数。
+`continuous.rs::build_segments` 只在 `has_only_physical_inputs()` 成立时收紧这项证明。
+生成输入或继承输入误差仍使用原端点包围，起止时刻相同的终点段仍取零斜率。
+[导数回归](../../tests/test_continuous_dynamics.py)检查原 F14 严格 strobe、折点两侧、
+多源异刻折点与恒值尾段；Rust 校准保留生成源误差与零宽段。
+
 <a id="exponential-enclosure-recovery"></a>
 
 `state_space.rs` 使用向外舍入区间 Taylor、缩放和平方。把 `G*h` 缩放到无穷范数

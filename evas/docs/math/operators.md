@@ -587,6 +587,21 @@ outward affine arithmetic，保留常量和系数折叠、相消及 binary64 运
 其他状态输入、内部节点输入、operator 前向引用、多个 operator 混合、算子驱动 cross 和
 operator 乘 voltage/state 仍拒绝。
 
+正弦范围缩减后，令 `R=max(|r.lo|,|r.hi|)`，17 阶正弦与 18 阶余弦多项式
+分别加入向外包围的余项 `R^19/19!` 与 `R^20/20!`。
+这两个界来自下一偶数或奇数 Taylor 系数为零及导数绝对值不超过 1。
+域检查仍限制缩减区间在 `[-π/2,π/2]` 内；余项使用当前已认证区间的半径。
+若每次都使用整个允许域的半径，零点附近也会增加约 `4.38e-14` 的正弦余项，
+足以挡住 F20 的 `1e-14 V` 绝对预算。收紧余项不改变正弦数学值或允许误差。
+
+普通非点相位也可复用 `exact_source::Curve.wrapped` 的原 binary64 源证明，
+通过精确有理数积分与取模收紧包围。固定初值、modulus、offset 与半开区间规则保持原义；
+该证明仍保留真实 wrap 侧，不能以区间中点选择侧别。
+生成源的非零误差使引用它的精确曲线不可用；缺少曲线、超出证明预算或 turn 限制时，
+`idtmod.rs` 保留原区间路径及继承误差。
+[相位回归](../../tests/test_phase.py)用 Fraction 与 Decimal 检查 F20 零点及邻点，
+也保留不可表达输出的严格预算拒绝；Rust 负控检查生成源误差不被丢弃。
+
 wrapped 相位本身是不连续输出。严格区间若横跨 wrap 点，默认只能给出整个 `[offset,offset+modulus]`
 保守范围；只有通过 outward interval arithmetic 证明 raw phase 落在同一个 turn 内，才返回窄 wrapped 界。
 对常量输入段、精确点输入/前缀积分和可用 exact binary64 product/sum 判定的请求，若 raw phase 区间
