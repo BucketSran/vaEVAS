@@ -264,11 +264,14 @@ def assess(card, rows, contract, *, reference=None):
     result['behavior'] = behavior
     issues.extend(event_issues)
     reference = reference or _reference(card)
+    reference_card = deepcopy(card)
+    reference_card['reference_time_uncertainty_s'] = ut
+    result['reference_time_uncertainty_s'] = ut
     answers = []; reference_ok = True
     result['undefined_observations'] = []
     try:
         for row in rows:
-            answer = reference(card, row['time'], result['event_bounds_s'])
+            answer = reference(reference_card, row['time'], deepcopy(result['event_bounds_s']))
             rounding = answer['numerical_uncertainty_V']
             if type(rounding) not in (int, float) or not math.isfinite(rounding) or rounding < 0:
                 raise ValueError('invalid numerical reference uncertainty')
@@ -313,7 +316,9 @@ def assess(card, rows, contract, *, reference=None):
                 continue
             observed += 1
             lo, hi = answer['outputs'][output]; rounding = answer['numerical_uncertainty_V']
-            export = _uncertainty(row[output], scale, budgets['voltage_serialization_ulps']) + slope * ut
+            export = _uncertainty(row[output], scale, budgets['voltage_serialization_ulps'])
+            if answer.get('time_uncertainty_included') is not True:
+                export += slope * ut
             uncertainty = rounding + export + input_u
             low = max(0., lo - row[output] - uncertainty, row[output] - hi - uncertainty)
             high = max(abs(row[output] - lo), abs(row[output] - hi)) + uncertainty

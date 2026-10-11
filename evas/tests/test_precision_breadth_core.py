@@ -232,6 +232,39 @@ class QualificationCalibration(unittest.TestCase):
         self.assertTrue(all(q['numerical']['status'] == 'pass' for q in result['tiers'].values()))
         self.assertTrue(all(q['status'] == 'evidence_insufficient' for q in result['tiers'].values()))
 
+    def test_reference_receives_whole_query_time_box_without_card_mutation(self):
+        import math
+        c = card(); c['reference_time_uncertainty_s'] = 0.; c['output_slope_bound_V_s'] = 1e6
+        seen = []
+        def oracle(model, t, bounds):
+            seen.append(model['reference_time_uncertainty_s'])
+            ans = reference(model, t, bounds)
+            ans['time_uncertainty_included'] = True
+            return ans
+        result = assess(c, trace(c), load_contract(cards=[c]), reference=oracle)
+        self.assertTrue(all(t == 16 * math.ulp(1e-6) for t in seen))
+        self.assertEqual(c['reference_time_uncertainty_s'], 0.)
+        # A declared whole-box reference needs only voltage export rounding;
+        # the large smooth derivative must not be counted a second time.
+        self.assertLess(result['outputs']['y']['unresolved_uncertainty_V'], 2e-15)
+
+    def test_query_time_box_keeps_half_open_wrap_boundary_defined(self):
+        import math
+        c = card(); c['critical_times_s'] = [5e-7]
+        c['outputs'] = ['y']; c['output_slope_bound_V_s'] = 1e6
+        def wrap(model, t, bounds):
+            ut = model['reference_time_uncertainty_s']
+            interval = [0., 1.] if abs(t - 5e-7) <= ut else ([.75, .75] if t < 5e-7 else [.25, .25])
+            return {'outputs': {'y': interval}, 'numerical_uncertainty_V': 0.,
+                    'undefined': {}, 'time_uncertainty_included': True}
+        rows = trace(c)
+        for r in rows: r['y'] = .75 if r['time'] < 5e-7 else .25
+        result = assess(c, rows, load_contract(cards=[c]), reference=wrap)
+        self.assertEqual(result['undefined_observations'], [])
+        self.assertEqual(result['outputs']['y']['defined_observations'], len(rows))
+        self.assertGreater(result['outputs']['y']['error_upper_V'], .74)
+        self.assertTrue(all(q['status'] == 'evidence_insufficient' for q in result['tiers'].values()))
+
     def test_invalid_contract_metadata_is_rejected_before_execution(self):
         c = card(); c['input_gain_bound'] = -1.
         with self.assertRaises(ValueError): load_contract(cards=[c])
