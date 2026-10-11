@@ -1,0 +1,317 @@
+[
+  {
+    "task": "benchmark/tasks/v2-test-hysteresis",
+    "variant": "reference",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-hysteresis/reference",
+    "expected_pass": true,
+    "semantic_behavior": "reference implementation"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-hysteresis",
+    "variant": "alternate",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-hysteresis/alternate",
+    "expected_pass": true,
+    "semantic_behavior": "different state representation and event implementation"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-hysteresis",
+    "variant": "wrong-sign",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-hysteresis/wrong-sign",
+    "expected_pass": false,
+    "semantic_behavior": "reverses signed hysteresis width"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-hysteresis",
+    "variant": "constant-target",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-hysteresis/constant-target",
+    "expected_pass": false,
+    "semantic_behavior": "reports ideal target constants instead of actual delayed edges"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-hysteresis",
+    "variant": "stale-round",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-hysteresis/stale-round",
+    "expected_pass": false,
+    "semantic_behavior": "does not clear second-round history"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-comparator-delay",
+    "variant": "reference",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-comparator-delay/reference",
+    "expected_pass": true,
+    "semantic_behavior": "reference implementation"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-comparator-delay",
+    "variant": "alternate",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-comparator-delay/alternate",
+    "expected_pass": true,
+    "semantic_behavior": "different state representation and event implementation"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-comparator-delay",
+    "variant": "seconds-as-ps",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-comparator-delay/seconds-as-ps",
+    "expected_pass": false,
+    "semantic_behavior": "reports seconds in a ps output"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-comparator-delay",
+    "variant": "stale-valid",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-comparator-delay/stale-valid",
+    "expected_pass": false,
+    "semantic_behavior": "keeps old completed validity across a missing response"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-comparator-delay",
+    "variant": "signed-overdrive",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-comparator-delay/signed-overdrive",
+    "expected_pass": false,
+    "semantic_behavior": "reports negative overdrive for negative input"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-duty-cycle",
+    "variant": "reference",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-duty-cycle/reference",
+    "expected_pass": true,
+    "semantic_behavior": "reference implementation"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-duty-cycle",
+    "variant": "alternate",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-duty-cycle/alternate",
+    "expected_pass": true,
+    "semantic_behavior": "different state representation and event implementation"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-duty-cycle",
+    "variant": "low-time",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-duty-cycle/low-time",
+    "expected_pass": false,
+    "semantic_behavior": "reports low fraction instead of high fraction"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-duty-cycle",
+    "variant": "missing-refresh",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-duty-cycle/missing-refresh",
+    "expected_pass": false,
+    "semantic_behavior": "holds only first completed result"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-duty-cycle",
+    "variant": "initial-partial",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-duty-cycle/initial-partial",
+    "expected_pass": false,
+    "semantic_behavior": "accepts falling edge before first rising event"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-sampled-rms",
+    "variant": "reference",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-sampled-rms/reference",
+    "expected_pass": true,
+    "semantic_behavior": "reference implementation"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-sampled-rms",
+    "variant": "alternate",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-sampled-rms/alternate",
+    "expected_pass": true,
+    "semantic_behavior": "different state representation and event implementation"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-sampled-rms",
+    "variant": "wrong-window",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-sampled-rms/wrong-window",
+    "expected_pass": false,
+    "semantic_behavior": "uses three samples"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-sampled-rms",
+    "variant": "no-reset",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-sampled-rms/no-reset",
+    "expected_pass": false,
+    "semantic_behavior": "resets on wrong polarity"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-sampled-rms",
+    "variant": "absolute-mean",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-sampled-rms/absolute-mean",
+    "expected_pass": false,
+    "semantic_behavior": "reports mean magnitude rather than RMS"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-online-gain",
+    "variant": "reference",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-online-gain/reference",
+    "expected_pass": true,
+    "semantic_behavior": "reference implementation"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-online-gain",
+    "variant": "alternate",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-online-gain/alternate",
+    "expected_pass": true,
+    "semantic_behavior": "different state representation and event implementation"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-online-gain",
+    "variant": "inverse-ratio",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-online-gain/inverse-ratio",
+    "expected_pass": false,
+    "semantic_behavior": "reverses measured span ratio"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-online-gain",
+    "variant": "constant-six",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-online-gain/constant-six",
+    "expected_pass": false,
+    "semantic_behavior": "reports historical synthetic gain regardless of DUT"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-online-gain",
+    "variant": "stale-window",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-online-gain/stale-window",
+    "expected_pass": false,
+    "semantic_behavior": "does not reset extrema at new measurement window"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-clock-frequency",
+    "variant": "reference",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-clock-frequency/reference",
+    "expected_pass": true,
+    "semantic_behavior": "reference implementation"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-clock-frequency",
+    "variant": "alternate",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-clock-frequency/alternate",
+    "expected_pass": true,
+    "semantic_behavior": "different state representation and event implementation"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-clock-frequency",
+    "variant": "half-period-frequency",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-clock-frequency/half-period-frequency",
+    "expected_pass": false,
+    "semantic_behavior": "reports half actual frequency"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-clock-frequency",
+    "variant": "target-ratio",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-clock-frequency/target-ratio",
+    "expected_pass": false,
+    "semantic_behavior": "reports nominal target divider instead of actual clock"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-clock-frequency",
+    "variant": "no-reset",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-clock-frequency/no-reset",
+    "expected_pass": false,
+    "semantic_behavior": "keeps history across disable and reset"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-offset-search",
+    "variant": "reference",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-offset-search/reference",
+    "expected_pass": true,
+    "semantic_behavior": "reference implementation"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-offset-search",
+    "variant": "alternate",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-offset-search/alternate",
+    "expected_pass": true,
+    "semantic_behavior": "different state representation and event implementation"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-offset-search",
+    "variant": "wrong-direction",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-offset-search/wrong-direction",
+    "expected_pass": false,
+    "semantic_behavior": "inverts feedback decision direction"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-offset-search",
+    "variant": "premature-done",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-offset-search/premature-done",
+    "expected_pass": false,
+    "semantic_behavior": "stops after two responses"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-offset-search",
+    "variant": "permanent-wait",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-offset-search/permanent-wait",
+    "expected_pass": false,
+    "semantic_behavior": "never reports missing-response timeout"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-time-protocol",
+    "variant": "reference",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-time-protocol/reference",
+    "expected_pass": true,
+    "semantic_behavior": "reference implementation"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-time-protocol",
+    "variant": "alternate",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-time-protocol/alternate",
+    "expected_pass": true,
+    "semantic_behavior": "different state representation and event implementation"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-time-protocol",
+    "variant": "count-by-two",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-time-protocol/count-by-two",
+    "expected_pass": false,
+    "semantic_behavior": "counts two clock ticks per edge"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-time-protocol",
+    "variant": "early-overflow",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-time-protocol/early-overflow",
+    "expected_pass": false,
+    "semantic_behavior": "overflows on 255th edge"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-time-protocol",
+    "variant": "no-rearm-clear",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-time-protocol/no-rearm-clear",
+    "expected_pass": false,
+    "semantic_behavior": "keeps old report when restarted"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-gain-settling",
+    "variant": "reference",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-gain-settling/reference",
+    "expected_pass": true,
+    "semantic_behavior": "reference implementation"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-gain-settling",
+    "variant": "alternate",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-gain-settling/alternate",
+    "expected_pass": true,
+    "semantic_behavior": "different state representation and event implementation"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-gain-settling",
+    "variant": "first-entry",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-gain-settling/first-entry",
+    "expected_pass": false,
+    "semantic_behavior": "reports first entry rather than last excursion"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-gain-settling",
+    "variant": "always-settled",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-gain-settling/always-settled",
+    "expected_pass": false,
+    "semantic_behavior": "reports settled even for slow DUT"
+  },
+  {
+    "task": "benchmark/tasks/v2-test-gain-settling",
+    "variant": "no-window-reset",
+    "candidate": "experiments/benchmark_v2/testing_characterization/candidates/v2-test-gain-settling/no-window-reset",
+    "expected_pass": false,
+    "semantic_behavior": "keeps first baseline in second window"
+  }
+]

@@ -1,0 +1,538 @@
+{
+  "scope": "Author calibration used to verify v2 runtime and legacy harness consumption; these are development candidates, not completed spec acceptance or model trials.",
+  "revision": "6ec29fa02ec1c4b43bbce5d9d4078a5b36ecadb6",
+  "spectre_version": "21.1.0.509.isr12",
+  "isolation": "Trusted author candidates, no Agent sandbox claim.",
+  "reference_runs": [
+    {
+      "task_id": "v2-test-hysteresis",
+      "candidate_sha256": "6435deeb6c56cfa76cc01a074a4cd140ec70461a65acd989b8c32068eb30ca7e",
+      "criteria_sha256": "2c4f0887ad74f9d99d3f8347b5116ece88c0877e38e0a36333ca94c5d081d3d2",
+      "expected_conditions": 3,
+      "all_conditions_graded": true,
+      "reference_passed": true,
+      "has_graded_failure": false,
+      "conditions": [
+        {
+          "condition_id": "normal",
+          "execution": "ok",
+          "score": 1,
+          "report_sha256": "8f85a7d63ca69f056aa527a2a24c6d5f25174ca9c386a7f7b8f8c0d4a51f20a1",
+          "cases": [
+            {
+              "name": "normal",
+              "status": "graded",
+              "waveform_sha256": "0101c04f50b495e1e1a4fe9b9e18d0ecfac55be7d4db2af60acc92ac57f790e8",
+              "failures": []
+            }
+          ]
+        },
+        {
+          "condition_id": "bad-dut-wide",
+          "execution": "ok",
+          "score": 1,
+          "report_sha256": "a92aa607d0b3f67d1a83fb2d57ad81710e7e86e6a37f4b46e1a9713a326cfbd3",
+          "cases": [
+            {
+              "name": "bad-dut-wide",
+              "status": "graded",
+              "waveform_sha256": "8e5fa2e8091c663ce1d89d23eca7118d6711c1e9d2c1313c29faa97b0fe4e34e",
+              "failures": []
+            }
+          ]
+        },
+        {
+          "condition_id": "incomplete-second-round",
+          "execution": "ok",
+          "score": 1,
+          "report_sha256": "ed21d5992174ca4416c7a065a16af77869847a2cf7517ca4bfaac84da8492ebf",
+          "cases": [
+            {
+              "name": "incomplete-second-round",
+              "status": "graded",
+              "waveform_sha256": "cab5bf0f77388ac312fbc3d382f41ebb56fa005f2e7e8737c0182f498c289f70",
+              "failures": []
+            }
+          ]
+        }
+      ],
+      "package_sha256": [
+        "51849d1df4df33465ec8e4fe1a1d3b051328bd5e3bb10f44a4fdba38eca01d97",
+        "169d7ea32672fe6e61ff62366168392140d8795dc4cf14cc09bfd8dd9ddc63b5",
+        "4d94bfe813f2652e2305738e02dae90c312608558678785e546bae0ed4c4d001"
+      ]
+    },
+    {
+      "task_id": "v2-spec-024-clocked-sample-and-hold",
+      "candidate_sha256": "3121205effdc25dd9cd4072f0e5b26dbc0d92a7627e96b9f4e64e72d3a838cfd",
+      "criteria_sha256": "0575e6715a60e4cb1c0f8487717a99b2a455f18034caba30a36f613f2aec4d47",
+      "expected_conditions": 2,
+      "all_conditions_graded": true,
+      "reference_passed": true,
+      "has_graded_failure": false,
+      "conditions": [
+        {
+          "condition_id": "contract-base",
+          "execution": "ok",
+          "score": 1,
+          "report_sha256": "470e4e0bc25fe7e828ee7a466ab2f76b9017d74cc63b174727f1c3ef413342e3",
+          "cases": [
+            {
+              "name": "contract-base",
+              "status": "graded",
+              "waveform_sha256": "08687157d9cb9a8d29691406e54417de21e194205819bfd2d323f6601ce5214f",
+              "failures": []
+            }
+          ]
+        },
+        {
+          "condition_id": "contract-stretched-input",
+          "execution": "ok",
+          "score": 1,
+          "report_sha256": "2e8a9a664f0c5378441b2462206ba3687c556d9e30769eaeab42fb25b2410db8",
+          "cases": [
+            {
+              "name": "contract-stretched-input",
+              "status": "graded",
+              "waveform_sha256": "ffad13987931cd8bfd1a7c1234ef45c4825e9b6446315b9439cbdc71e8e0b975",
+              "failures": []
+            }
+          ]
+        }
+      ],
+      "package_sha256": [
+        "9b79c860fda86890bdc105d249cc56abd37d5296b545687378486ed210e33f22",
+        "6baa29a5aee47ca1631cfee9b527e7c5fe361aa2d830b9d5032431c119207e88"
+      ]
+    },
+    {
+      "task_id": "v2-repair-debounce-latch",
+      "candidate_sha256": "ff86ff901c58b5f4d3712e977e2ac469ffa407079f0af655bbdaaa226e17b3dd",
+      "criteria_sha256": "9d0c4b47a59b140fc3f48e171ce28fb296da70f005cadbad0b87f2bbaeeae199",
+      "expected_conditions": 2,
+      "all_conditions_graded": true,
+      "reference_passed": true,
+      "has_graded_failure": false,
+      "conditions": [
+        {
+          "condition_id": "public-reproduction",
+          "execution": "ok",
+          "score": 1,
+          "report_sha256": "8c7eb21af008f784d56969222951def1941faeed4523a943c609fffb5e6c6c45",
+          "cases": [
+            {
+              "name": "public-reproduction",
+              "status": "graded",
+              "waveform_sha256": "599a3c60747d47cea67e19775a719b47edc0e359a23bbf89a833ace9d51fdcc6",
+              "failures": []
+            }
+          ]
+        },
+        {
+          "condition_id": "reentry-boundaries",
+          "execution": "ok",
+          "score": 1,
+          "report_sha256": "6e1f8bf8a9d8780276dbf7936e9db3ad1b07f7bd3f8068efe5e7ee5fb0140e1f",
+          "cases": [
+            {
+              "name": "reentry-boundaries",
+              "status": "graded",
+              "waveform_sha256": "2065ca128f8a93a6ed972237fd13cd31f8ed7bfefd34d8768c36f77f5da94ff3",
+              "failures": []
+            }
+          ]
+        }
+      ],
+      "package_sha256": [
+        "8ac10f0ee4d7138aca7aeb0d9358ca0eb9b147bcfe7da5b2aa187ecc9211aec4",
+        "3c5ed4ead5102746365d3d1147bc31ab389d30d6d6927a1a9f91cf4a51d1d7d8"
+      ]
+    },
+    {
+      "task_id": "v2-repair-reset-sequencer",
+      "candidate_sha256": "0a8e742b98de99aff735367043f07c21157f88fb0036577589ec2b04b7886f9a",
+      "criteria_sha256": "41340d98627dbe001c0184d5e6db8e534f01119784131142c93299d767dc6848",
+      "expected_conditions": 2,
+      "all_conditions_graded": true,
+      "reference_passed": true,
+      "has_graded_failure": false,
+      "conditions": [
+        {
+          "condition_id": "public-reproduction",
+          "execution": "ok",
+          "score": 1,
+          "report_sha256": "5dc069e267b10ced61a886f4fd873b117f25e5e18ac93f23af7d07778da4bdec",
+          "cases": [
+            {
+              "name": "public-reproduction",
+              "status": "graded",
+              "waveform_sha256": "d30be180d78d7281147a750c397f1b95790c4639e82cb6ca8581db830b239516",
+              "failures": []
+            }
+          ]
+        },
+        {
+          "condition_id": "reentry-boundaries",
+          "execution": "ok",
+          "score": 1,
+          "report_sha256": "79a73cbc665362e34ac6320da91252ffad520a9da7f70a8c46f7acb554ff4864",
+          "cases": [
+            {
+              "name": "reentry-boundaries",
+              "status": "graded",
+              "waveform_sha256": "a474e2bf8da69993fb16d77fbf60752030b6f13c4b8704d3e7a31a7ac62b3e0e",
+              "failures": []
+            }
+          ]
+        }
+      ],
+      "package_sha256": [
+        "1fbb7281262bb45c7d3b4c74c8939433504f4a94af939be47e95c6c985723c35",
+        "97e5c0bae4a09cc7e80cb3e885caa61a3004415241014e0125367c19c02a5d24"
+      ]
+    },
+    {
+      "task_id": "v2-test-comparator-delay",
+      "candidate_sha256": "6f62b5843fa02265652b0cd039c3555ca87dff6816a80440d7dfc3d11be0b62d",
+      "criteria_sha256": "d0b1e67baac523b2a023a3adca813fb92d307cceb3899fb19c59f7f7b2deb88c",
+      "expected_conditions": 3,
+      "all_conditions_graded": true,
+      "reference_passed": false,
+      "has_graded_failure": true,
+      "conditions": [
+        {
+          "condition_id": "normal",
+          "execution": "ok",
+          "score": 1,
+          "report_sha256": "b5a1021c7e79db647247d85b3eac982276d386fdbf2bf35e07fb0602577ea973",
+          "cases": [
+            {
+              "name": "normal",
+              "status": "graded",
+              "waveform_sha256": "0773ddce77bd6efa9f2e75c536ba64ff9dc8671a1acf4b915b47962926f80b34",
+              "failures": []
+            }
+          ]
+        },
+        {
+          "condition_id": "slow-dut",
+          "execution": "ok",
+          "score": 0,
+          "report_sha256": "c0d70d7262e18ae49ee83fbb75f37849b952e105e09cb50c66b9c8def219b1c6",
+          "cases": [
+            {
+              "name": "slow-dut",
+              "status": "graded",
+              "waveform_sha256": "2afec399e7b23249c979e8696bb434a8859298a1581a51ccfca0f052f7804265",
+              "failures": [
+                {
+                  "kind": "report",
+                  "node": "polarity",
+                  "time": 7.1695166562249275e-09,
+                  "expected": 0.9,
+                  "actual": 0.0
+                },
+                {
+                  "kind": "report",
+                  "node": "polarity",
+                  "time": 7.110000000001027e-09,
+                  "expected": 0.9,
+                  "actual": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "condition_id": "missing-final-decision",
+          "execution": "ok",
+          "score": 0,
+          "report_sha256": "9f0c88c83a77ffa44cb46a531d99a76fd88cf4bdbc915ce1627516a144be4aa7",
+          "cases": [
+            {
+              "name": "missing-final-decision",
+              "status": "graded",
+              "waveform_sha256": "69b217384d28cdf01996bb9514f915cd45a886ec2e68526dbaf4c1170ccf27ae",
+              "failures": [
+                {
+                  "kind": "report",
+                  "node": "polarity",
+                  "time": 7.1695166562249275e-09,
+                  "expected": 0.9,
+                  "actual": 0.0
+                },
+                {
+                  "kind": "report",
+                  "node": "polarity",
+                  "time": 7.110000000001027e-09,
+                  "expected": 0.9,
+                  "actual": 0.0
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "package_sha256": [
+        "4606eeaeac62562627cc9db9aa8e391310febfdc4a65a6af9a511f3042d43d61",
+        "ed2d8a86355fb50633a715855037efcc5a8a8be7d650c0244cabda37d776fda0",
+        "aa2b3996937f070427099456d80f9d1ec9022a26a9a53454ff09267c088eb02b"
+      ]
+    },
+    {
+      "task_id": "v2-test-duty-cycle",
+      "candidate_sha256": "29e31b02c66df500d56fe92283c19ec05d0c0f7926b22cc4d019a016f99cc0e8",
+      "criteria_sha256": "8a40caee7de56acac8c3d9a9b6c42e3edb368caab58c29448a2f00da90d5d5f2",
+      "expected_conditions": 3,
+      "all_conditions_graded": true,
+      "reference_passed": false,
+      "has_graded_failure": true,
+      "conditions": [
+        {
+          "condition_id": "variable-clock",
+          "execution": "ok",
+          "score": 0,
+          "report_sha256": "19681361a84e957b5935a1178e5984977dd2edf54ce8aef3507364f11bf7d03e",
+          "cases": [
+            {
+              "name": "variable-clock",
+              "status": "graded",
+              "waveform_sha256": "eda186ce9029fec1df4d67208614b9bed1a4dd93102aad2f9e7bd3d8151676e1",
+              "failures": [
+                {
+                  "kind": "report",
+                  "node": "duty0",
+                  "time": 3.255000000000001e-08,
+                  "expected": 0.0,
+                  "actual": 0.9
+                },
+                {
+                  "kind": "report",
+                  "node": "duty0",
+                  "time": 3.015203275000004e-08,
+                  "expected": 0.0,
+                  "actual": 0.9
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "condition_id": "initial-high",
+          "execution": "ok",
+          "score": 0,
+          "report_sha256": "0e8e67820c9e278ecf2ab2c5b3a560b80bef477274a6edd853da56eeb514f844",
+          "cases": [
+            {
+              "name": "initial-high",
+              "status": "graded",
+              "waveform_sha256": "01baa99bc3f32ffdd50a9888f8646301a6e2467867a5e0bbc94504b61ac99c2d",
+              "failures": [
+                {
+                  "kind": "report",
+                  "node": "duty0",
+                  "time": 3.255000000000001e-08,
+                  "expected": 0.0,
+                  "actual": 0.9
+                },
+                {
+                  "kind": "report",
+                  "node": "duty0",
+                  "time": 3.015203275000004e-08,
+                  "expected": 0.0,
+                  "actual": 0.9
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "condition_id": "different-period",
+          "execution": "ok",
+          "score": 0,
+          "report_sha256": "080c57f3991f49e108626f628f3b9d4e11d3dbd26c220b3f2faa30a14d1882d4",
+          "cases": [
+            {
+              "name": "different-period",
+              "status": "graded",
+              "waveform_sha256": "ed2c315e18cc34502645ee1faf4f2247b8c18d9f5e3c172b0767b69c3e288611",
+              "failures": [
+                {
+                  "kind": "report",
+                  "node": "duty0",
+                  "time": 6.83e-08,
+                  "expected": 0.9,
+                  "actual": 0.0
+                },
+                {
+                  "kind": "report",
+                  "node": "duty1",
+                  "time": 6.83e-08,
+                  "expected": 0.9,
+                  "actual": 0.0
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "package_sha256": [
+        "aefdd7fd58b42d33956ff256b68b1b8fa1b89b9086e424425f01e4b2cf6306cf",
+        "dddada440def4201da6a001faf67aab2e323604de134853f80f33786bbb9a1d3",
+        "7c202cf19411e14c893c33ce70059636279703a6ec33b188ec7b9530e009e4f3"
+      ]
+    },
+    {
+      "task_id": "v2-test-sampled-rms",
+      "candidate_sha256": "cf94d62a00273c1e634b4e381c265f47473f3ce0647a3493d9f30a171c6adb56",
+      "criteria_sha256": "1e53ed02e2cbbdc3adbacc413bc885625e8846befdd0ea3c3011acdd1a60fce6",
+      "expected_conditions": 3,
+      "all_conditions_graded": true,
+      "reference_passed": true,
+      "has_graded_failure": false,
+      "conditions": [
+        {
+          "condition_id": "normal-reset-disable",
+          "execution": "ok",
+          "score": 1,
+          "report_sha256": "fb5e5155a11bd0604f31606e10ad3ccaa635edb61b2a345da70c45da64e8d8da",
+          "cases": [
+            {
+              "name": "normal-reset-disable",
+              "status": "graded",
+              "waveform_sha256": "4a030a1b5d03d1e1943386df45aa83d5f07ad7c65952705ad713772debcde425",
+              "failures": []
+            }
+          ]
+        },
+        {
+          "condition_id": "dc-input",
+          "execution": "ok",
+          "score": 1,
+          "report_sha256": "4975fbff2380637f6aadbfe59b3431b9eb11b3c01c41c51039c684a2a58d3d79",
+          "cases": [
+            {
+              "name": "dc-input",
+              "status": "graded",
+              "waveform_sha256": "d01330b03ff6c70cbfb5c9013a5bd03500f41b2da9160f10d3e4b8cc74f9f99a",
+              "failures": []
+            }
+          ]
+        },
+        {
+          "condition_id": "different-waveform",
+          "execution": "ok",
+          "score": 1,
+          "report_sha256": "0b4ca53e142a067d0d9a1c264422ab9f5024bc93beab95d19729ae2cb8d62105",
+          "cases": [
+            {
+              "name": "different-waveform",
+              "status": "graded",
+              "waveform_sha256": "c270a27024296981b515ff42595ed7243cec6225107779b80ad24ba313722365",
+              "failures": []
+            }
+          ]
+        }
+      ],
+      "package_sha256": [
+        "cccbb90df57d9d0bf2e71c924f042de1d1d18ac89ba3f3aa888f78b214cc7907",
+        "64a8ffea683e02020bedbec056f096e86db5f28a557321302744b7ba8b882e51",
+        "a78ccaa76517a4f1e0e7e4866c59c395820315a005a53d46076ea22d70eeb56e"
+      ]
+    },
+    {
+      "task_id": "v2-test-online-gain",
+      "candidate_sha256": "5a7dde20f2fce61ecdbb27b9ee87c1e4918ec01d168d32331f28de90ea274ea2",
+      "criteria_sha256": "3413ec7e2dca514aef6474d6e844c3816c5cc411f92a44608fe6baeb55e2a8dd",
+      "expected_conditions": 3,
+      "all_conditions_graded": false,
+      "reference_passed": false,
+      "has_graded_failure": false,
+      "conditions": [
+        {
+          "condition_id": "normal",
+          "execution": "infrastructure_error",
+          "score": null,
+          "report_sha256": "01a21671266fa51dd022a6446913a51dca4d1381f8454164dd3e227fe41f0306",
+          "cases": [
+            {
+              "name": "normal",
+              "status": "execution_error",
+              "waveform_sha256": null,
+              "failures": []
+            }
+          ]
+        }
+      ],
+      "package_sha256": [
+        "33bb1a6fc9d3484fcb7816bf4b95031f1ff11408814fb8696849bcb6e8907dee",
+        "f51978af3ad932d91fffe12846c68420d6699ae9248a3963c524e97cfe0dd923",
+        "6a32d236450fec9cc21614d1b49b01c1fd7395ce275111aab1db65c7aacf4637"
+      ]
+    },
+    {
+      "task_id": "v2-integrate-349-multichannel-readout",
+      "candidate_sha256": "8a4a75f249c4671adaa6c9c1b25442a9b071a590c1bfdc4235375ff5e60af3ab",
+      "criteria_sha256": "d3b4979414fac60b906575f8281935355be8eba673a5132ae374945110fde2d7",
+      "expected_conditions": 1,
+      "all_conditions_graded": false,
+      "reference_passed": false,
+      "has_graded_failure": false,
+      "conditions": [
+        {
+          "condition_id": "sample-read-reset",
+          "execution": "infrastructure_error",
+          "score": null,
+          "report_sha256": "4a71c6570ef6453f9f1aaa4181ce2c3c0466c66d8655e2f8b85e795cd83703d1",
+          "cases": [
+            {
+              "name": "sample-read-reset",
+              "status": "execution_error",
+              "waveform_sha256": null,
+              "failures": []
+            }
+          ]
+        }
+      ],
+      "package_sha256": [
+        "bfa18fd8efbc3d30191d10faff3aa4b09d45587bc68884c88e7c5b809220d0e4"
+      ]
+    },
+    {
+      "task_id": "v2-integrate-case0007-adpll-fine-tdc",
+      "candidate_sha256": "5561369db0ae910fddfaa4ff8696561ac2a7e151c696881eea0b3aa6abeb261c",
+      "criteria_sha256": "125d63858f23ee4e44614dfe09a4318b117e9f72718282c0bf486900e1fa5719",
+      "expected_conditions": 4,
+      "all_conditions_graded": false,
+      "reference_passed": false,
+      "has_graded_failure": false,
+      "conditions": [
+        {
+          "condition_id": "tdc-lead-lag-saturation-timeout",
+          "execution": "infrastructure_error",
+          "score": null,
+          "report_sha256": "dbfb72baf99a944d3a9839a3ece2c2381434694f750b48e9b87323489bb5b2f9",
+          "cases": [
+            {
+              "name": "tdc-lead-lag-saturation-timeout",
+              "status": "execution_error",
+              "waveform_sha256": null,
+              "failures": []
+            }
+          ]
+        }
+      ],
+      "package_sha256": [
+        "9ab67d0e72a94bee941f2c7189ee17eba19d7f23999e71121a731092f99985bc",
+        "2d6b11b11991e6a248910f6f967eb27c4653c4f20acb8272909716686ebd74dc",
+        "1046c553fdf909b67bd25675be8e1a2dfbeb6d2fdf3f2d82607e47d986a4f3dd",
+        "fdf580be3d704e5143ad36cad458018611c774a061c9547cbdf1343d32cfbe9f"
+      ]
+    }
+  ],
+  "review": {
+    "standards": "No outstanding findings; 7 protocol tests, 8 legacy consumer tests and 7 historical package identities checked.",
+    "spec": "No outstanding findings; actual local _read_report to project_report returned ok/1.",
+    "excluded_prior_run": "803b173a reports lacked candidate_sha256 and were rejected; they are not graded evidence."
+  }
+}

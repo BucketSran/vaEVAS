@@ -1,0 +1,80 @@
+[
+  {
+    "name": "terminal-normal-positive",
+    "kind": "search",
+    "stop": 3.2e-08,
+    "first_request": 1.01e-09,
+    "gap": 1e-09,
+    "timeout": 1e-08,
+    "step_initial": 0.064,
+    "iterations": 7,
+    "guard": 8e-11,
+    "atol": 0.0015,
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"comparator.va\"\nXS (dcmpp ready vinp vinn request offset_est valid status) offset_search\nXC (vinp vinn request dcmpp ready) response_comparator offset=0.031 td=350p drop_after=99\ntran tran stop=32n maxstep=5p\nsave vinp vinn request dcmpp ready offset_est valid status\n",
+    "signals": [
+      "vinp",
+      "vinn",
+      "request",
+      "dcmpp",
+      "ready",
+      "offset_est",
+      "valid",
+      "status"
+    ],
+    "support": {
+      "comparator.va": "`include \"disciplines.vams\"\nmodule response_comparator(vinp,vinn,request,dcmpp,ready);\ninput vinp,vinn,request;\noutput dcmpp,ready;\nelectrical vinp,vinn,request,dcmpp,ready;\nparameter real offset=0.023, td=200p, tr=20p;\nparameter integer drop_after=99;\ninteger decision,responded,n;\nreal next_response,next_clear;\nanalog begin\n @(initial_step) begin decision=0; responded=0; n=0; next_response=1e99; next_clear=1e99; end\n @(cross(V(request)-0.5,+1)) begin\n  n=n+1;\n  decision=(V(vinp,vinn)>=offset);\n  if(n<=drop_after) next_response=$abstime+td;\n end\n @(timer(next_response)) begin responded=1; next_clear=$abstime+400p; next_response=1e99; end\n @(timer(next_clear)) begin responded=0; next_clear=1e99; end\n V(dcmpp)<+transition(decision,0,tr,tr);\n V(ready)<+transition(responded,0,tr,tr);\nend\nendmodule\n"
+    }
+  },
+  {
+    "name": "terminal-normal-negative",
+    "kind": "search",
+    "stop": 3.2e-08,
+    "first_request": 1.01e-09,
+    "gap": 1e-09,
+    "timeout": 1e-08,
+    "step_initial": 0.064,
+    "iterations": 7,
+    "guard": 8e-11,
+    "atol": 0.0015,
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"comparator.va\"\nXS (dcmpp ready vinp vinn request offset_est valid status) offset_search\nXC (vinp vinn request dcmpp ready) response_comparator offset=-0.036 td=450p drop_after=99\ntran tran stop=32n maxstep=5p\nsave vinp vinn request dcmpp ready offset_est valid status\n",
+    "signals": [
+      "vinp",
+      "vinn",
+      "request",
+      "dcmpp",
+      "ready",
+      "offset_est",
+      "valid",
+      "status"
+    ],
+    "support": {
+      "comparator.va": "`include \"disciplines.vams\"\nmodule response_comparator(vinp,vinn,request,dcmpp,ready);\ninput vinp,vinn,request;\noutput dcmpp,ready;\nelectrical vinp,vinn,request,dcmpp,ready;\nparameter real offset=0.023, td=200p, tr=20p;\nparameter integer drop_after=99;\ninteger decision,responded,n;\nreal next_response,next_clear;\nanalog begin\n @(initial_step) begin decision=0; responded=0; n=0; next_response=1e99; next_clear=1e99; end\n @(cross(V(request)-0.5,+1)) begin\n  n=n+1;\n  decision=(V(vinp,vinn)>=offset);\n  if(n<=drop_after) next_response=$abstime+td;\n end\n @(timer(next_response)) begin responded=1; next_clear=$abstime+400p; next_response=1e99; end\n @(timer(next_clear)) begin responded=0; next_clear=1e99; end\n V(dcmpp)<+transition(decision,0,tr,tr);\n V(ready)<+transition(responded,0,tr,tr);\nend\nendmodule\n"
+    }
+  },
+  {
+    "name": "terminal-response-timeout",
+    "kind": "search",
+    "stop": 3.2e-08,
+    "first_request": 1.01e-09,
+    "gap": 1e-09,
+    "timeout": 1e-08,
+    "step_initial": 0.064,
+    "iterations": 7,
+    "guard": 8e-11,
+    "atol": 0.0015,
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"comparator.va\"\nXS (dcmpp ready vinp vinn request offset_est valid status) offset_search\nXC (vinp vinn request dcmpp ready) response_comparator offset=-0.012 td=350p drop_after=3\ntran tran stop=32n maxstep=5p\nsave vinp vinn request dcmpp ready offset_est valid status\n",
+    "signals": [
+      "vinp",
+      "vinn",
+      "request",
+      "dcmpp",
+      "ready",
+      "offset_est",
+      "valid",
+      "status"
+    ],
+    "support": {
+      "comparator.va": "`include \"disciplines.vams\"\nmodule response_comparator(vinp,vinn,request,dcmpp,ready);\ninput vinp,vinn,request;\noutput dcmpp,ready;\nelectrical vinp,vinn,request,dcmpp,ready;\nparameter real offset=0.023, td=200p, tr=20p;\nparameter integer drop_after=99;\ninteger decision,responded,n;\nreal next_response,next_clear;\nanalog begin\n @(initial_step) begin decision=0; responded=0; n=0; next_response=1e99; next_clear=1e99; end\n @(cross(V(request)-0.5,+1)) begin\n  n=n+1;\n  decision=(V(vinp,vinn)>=offset);\n  if(n<=drop_after) next_response=$abstime+td;\n end\n @(timer(next_response)) begin responded=1; next_clear=$abstime+400p; next_response=1e99; end\n @(timer(next_clear)) begin responded=0; next_clear=1e99; end\n V(dcmpp)<+transition(decision,0,tr,tr);\n V(ready)<+transition(responded,0,tr,tr);\nend\nendmodule\n"
+    }
+  }
+]

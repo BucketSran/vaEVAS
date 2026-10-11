@@ -1,0 +1,36 @@
+[
+  {
+    "name": "contract-base",
+    "source_id": "038",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 period=8n width=4n delay=2n rise=80p fall=80p\nVrst (rst 0) vsource type=pwl wave=[0 0.9 2.2n 0.9 2.3n 0 86n 0]\nVgain (gain_sel 0) vsource type=pwl wave=[ \\\n0 0 \\\n21n 0 21.2n 0.9 \\\n49n 0.9 49.2n 0 \\\n69n 0 69.2n 0.9 \\\n86n 0.9 \\\n]\nVvin (vin 0) vsource type=pwl wave=[ \\\n0 0.45 \\\n18n 0.42 \\\n23n 0.74 \\\n35n 0.74 \\\n36n 0.18 \\\n50n 0.18 \\\n54n 0.58 \\\n68n 0.58 \\\n72n 0.84 \\\n84n 0.84 \\\n86n 0.45 \\\n]\nXDUT (clk rst gain_sel vin out metric) programmable_gain_amplifier\n\ntran tran stop=86n maxstep=2p strobeperiod=2p\nsave clk rst gain_sel vin out metric\n",
+    "signals": [
+      "clk",
+      "rst",
+      "gain_sel",
+      "vin",
+      "out",
+      "metric"
+    ],
+    "stop": 8.6e-08,
+    "resolution": 2e-12,
+    "atol": 0.002,
+    "params": {}
+  },
+  {
+    "name": "contract-stretched-input",
+    "source_id": "038",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 period=9.84n width=4.92n delay=2.46n rise=80p fall=80p\nVrst (rst 0) vsource type=pwl wave=[0 0.9 2.706n 0.9 2.829n 0 105.78n 0]\nVgain (gain_sel 0) vsource type=pwl wave=[ \\\n0 0 \\\n25.83n 0 26.076n 0.9 \\\n60.27n 0.9 60.516n 0 \\\n84.87n 0 85.116n 0.9 \\\n105.78n 0.9 \\\n]\nVvin (vin 0) vsource type=pwl wave=[ \\\n0 0.45 \\\n22.14n 0.42 \\\n28.29n 0.74 \\\n43.05n 0.74 \\\n44.28n 0.18 \\\n61.5n 0.18 \\\n66.42n 0.58 \\\n83.64n 0.58 \\\n88.56n 0.84 \\\n103.32n 0.84 \\\n105.78n 0.45 \\\n]\nXDUT (clk rst gain_sel vin out metric) programmable_gain_amplifier\n\ntran tran stop=105.78n maxstep=2p strobeperiod=2p\nsave clk rst gain_sel vin out metric\n",
+    "signals": [
+      "clk",
+      "rst",
+      "gain_sel",
+      "vin",
+      "out",
+      "metric"
+    ],
+    "stop": 1.0578e-07,
+    "resolution": 2e-12,
+    "atol": 0.002,
+    "params": {}
+  }
+]

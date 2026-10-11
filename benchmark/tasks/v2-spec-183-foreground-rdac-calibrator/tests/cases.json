@@ -1,0 +1,54 @@
+[
+  {
+    "name": "contract-base",
+    "source_id": "183",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVck (ck 0) vsource type=pwl wave=[0 0 1n 0 1.05n 1 1.45n 1 1.50n 0 3n 0 3.05n 1 3.45n 1 3.50n 0 5n 0 5.05n 1 5.45n 1 5.50n 0 7n 0 7.05n 1 7.45n 1 7.50n 0 9n 0 9.05n 1 9.45n 1 9.50n 0 11n 0 11.05n 1 11.45n 1 11.50n 0 13n 0 13.05n 1 13.45n 1 13.50n 0]\nVd (d 0) vsource type=pwl wave=[0 0 2.8n 0 2.9n 1 4.8n 1 4.9n 0 6.8n 0 6.9n 1 8.8n 1 8.9n 0 10.8n 0 10.9n 1]\nVvrefp (vrefp 0) vsource type=pwl wave=[0 0.78 4n 0.78 4.1n 0.66 10n 0.66 10.1n 0.82]\nVvrefn (vrefn 0) vsource type=pwl wave=[0 0.22 4n 0.22 4.1n 0.31 10n 0.31 10.1n 0.18]\nXDUT (ck d vrefp vrefn dc0 dc1 dc2 dc3 dc4 dc5 dc6 cvinp cvinn en enb) foreground_rdac_calibrator\n\ntran tran stop=15n maxstep=2p strobeperiod=2p\nsave ck cvinn cvinp d dc0 dc1 dc2 dc3 dc4 dc5 dc6 en enb vrefn vrefp\n",
+    "signals": [
+      "ck",
+      "cvinn",
+      "cvinp",
+      "d",
+      "dc0",
+      "dc1",
+      "dc2",
+      "dc3",
+      "dc4",
+      "dc5",
+      "dc6",
+      "en",
+      "enb",
+      "vrefn",
+      "vrefp"
+    ],
+    "stop": 1.5000000000000002e-08,
+    "resolution": 2e-12,
+    "atol": 0.002,
+    "params": {}
+  },
+  {
+    "name": "contract-stretched-input",
+    "source_id": "183",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVck (ck 0) vsource type=pwl wave=[0 0 1.23n 0 1.2915n 1 1.7835n 1 1.845n 0 3.69n 0 3.7515n 1 4.2435n 1 4.305n 0 6.15n 0 6.2115n 1 6.7035n 1 6.765n 0 8.61n 0 8.6715n 1 9.1635n 1 9.225n 0 11.07n 0 11.1315n 1 11.6235n 1 11.685n 0 13.53n 0 13.5915n 1 14.0835n 1 14.145n 0 15.99n 0 16.0515n 1 16.5435n 1 16.605n 0]\nVd (d 0) vsource type=pwl wave=[0 0 3.444n 0 3.567n 1 5.904n 1 6.027n 0 8.364n 0 8.487n 1 10.824n 1 10.947n 0 13.284n 0 13.407n 1]\nVvrefp (vrefp 0) vsource type=pwl wave=[0 0.78 4.92n 0.78 5.043n 0.66 12.3n 0.66 12.423n 0.82]\nVvrefn (vrefn 0) vsource type=pwl wave=[0 0.22 4.92n 0.22 5.043n 0.31 12.3n 0.31 12.423n 0.18]\nXDUT (ck d vrefp vrefn dc0 dc1 dc2 dc3 dc4 dc5 dc6 cvinp cvinn en enb) foreground_rdac_calibrator\n\ntran tran stop=18.45n maxstep=2p strobeperiod=2p\nsave ck cvinn cvinp d dc0 dc1 dc2 dc3 dc4 dc5 dc6 en enb vrefn vrefp\n",
+    "signals": [
+      "ck",
+      "cvinn",
+      "cvinp",
+      "d",
+      "dc0",
+      "dc1",
+      "dc2",
+      "dc3",
+      "dc4",
+      "dc5",
+      "dc6",
+      "en",
+      "enb",
+      "vrefn",
+      "vrefp"
+    ],
+    "stop": 1.8450000000000003e-08,
+    "resolution": 2e-12,
+    "atol": 0.002,
+    "params": {}
+  }
+]

@@ -1,0 +1,55 @@
+// Digital boundary adaptation of Ajacci por_dig.v, revision db8745ef4.
+// Copyright 2024 Ajacci, Ltd. Co.
+// License Apache-2.0 with upstream NOTICE addendum.
+// State updates preserve the nonblocking old-state reads in the source.
+// Analog detection, filtering, oscillator and output buffers remain transistor circuits.
+`include "disciplines.vams"
+module por_dig(VGND,VPWR,force_dis_rc_osc,force_ena_rc_osc,force_pdn,force_pdnb,force_short_oneshot,osc_ck,osc_ena,otrip0,otrip1,otrip2,decoded0,decoded1,decoded2,decoded3,decoded4,decoded5,decoded6,decoded7,por_timed_out,por_unbuf,pwup_filt,startup_timed_out);
+inout VGND,VPWR,force_dis_rc_osc,force_ena_rc_osc,force_pdn,force_pdnb,force_short_oneshot,osc_ck,osc_ena,otrip0,otrip1,otrip2,decoded0,decoded1,decoded2,decoded3,decoded4,decoded5,decoded6,decoded7,por_timed_out,por_unbuf,pwup_filt,startup_timed_out;
+electrical VGND,VPWR,force_dis_rc_osc,force_ena_rc_osc,force_pdn,force_pdnb,force_short_oneshot,osc_ck,osc_ena,otrip0,otrip1,otrip2,decoded0,decoded1,decoded2,decoded3,decoded4,decoded5,decoded6,decoded7,por_timed_out,por_unbuf,pwup_filt,startup_timed_out;
+parameter real tr=100p;
+integer stage1,rsb,start_count,por_count,old_rsb,old_stage1,old_started,old_finished,short_mode,trip;
+real high;
+analog begin
+ @(initial_step) begin stage1=0; rsb=0; start_count=0; por_count=0; end
+ @(cross(V(pwup_filt,VGND)-0.5*V(VPWR,VGND),-1)) begin
+  stage1=0; rsb=0; start_count=0; por_count=0;
+ end
+ @(cross(V(osc_ck,VGND)-0.5*V(VPWR,VGND),+1)) begin
+  if(V(pwup_filt,VGND)<=0.5*V(VPWR,VGND)) begin
+   stage1=0; rsb=0; start_count=0; por_count=0;
+  end else begin
+   old_rsb=rsb; old_stage1=stage1;
+   old_started=(start_count==37); old_finished=(por_count==1842);
+   short_mode=(V(force_short_oneshot,VGND)>0.5*V(VPWR,VGND));
+   stage1=1; rsb=old_stage1;
+   if(!old_rsb) begin start_count=0; por_count=0; end
+   else begin
+    if(!old_started) begin
+     if(short_mode) start_count=((start_count&56)+13)&63;
+     else start_count=(start_count+1)&63;
+    end
+    if(old_started && !old_finished) begin
+     if(short_mode) por_count=((por_count&1792)+306)&2047;
+     else por_count=(por_count+1)&2047;
+    end
+   end
+  end
+ end
+ high=V(VPWR,VGND);
+ trip=(V(otrip0,VGND)>0.5*high)+2*(V(otrip1,VGND)>0.5*high)+4*(V(otrip2,VGND)>0.5*high);
+ V(force_pdnb,VGND)<+high*transition(V(force_pdn,VGND)<0.5*high,0,tr,tr);
+ V(osc_ena,VGND)<+high*transition((V(force_ena_rc_osc,VGND)>0.5*high) || ((V(force_dis_rc_osc,VGND)<0.5*high) && (V(pwup_filt,VGND)>0.5*high) && (por_count!=1842)),0,tr,tr);
+ V(decoded0,VGND)<+high*transition(trip==0,0,tr,tr);
+ V(decoded1,VGND)<+high*transition(trip==1,0,tr,tr);
+ V(decoded2,VGND)<+high*transition(trip==2,0,tr,tr);
+ V(decoded3,VGND)<+high*transition(trip==3,0,tr,tr);
+ V(decoded4,VGND)<+high*transition(trip==4,0,tr,tr);
+ V(decoded5,VGND)<+high*transition(trip==5,0,tr,tr);
+ V(decoded6,VGND)<+high*transition(trip==6,0,tr,tr);
+ V(decoded7,VGND)<+high*transition(trip==7,0,tr,tr);
+ V(startup_timed_out,VGND)<+high*transition(start_count==37,0,tr,tr);
+ V(por_timed_out,VGND)<+high*transition(por_count==1842,0,tr,tr);
+ V(por_unbuf,VGND)<+high*transition((start_count==37)&&(por_count!=1842),0,tr,tr);
+end
+endmodule

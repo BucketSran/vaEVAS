@@ -1,0 +1,74 @@
+[
+  {
+    "name": "terminal-variable-clock",
+    "kind": "duty",
+    "edge_time_uncertainty": 1e-15,
+    "stop": 1.45e-07,
+    "threshold": 0.45,
+    "vhigh": 0.9,
+    "guard": 1e-10,
+    "atol": 0.002,
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVclk_in (clk_in 0) vsource type=pwl wave=[0 0 8n 0 8.1n 0.9 13.9n 0.9 14n 0 27n 0 27.1n 0.9 35.9n 0.9 36n 0 49n 0 49.1n 0.9 62.9n 0.9 63n 0 78n 0 78.1n 0.9 87.9n 0.9 88n 0 109n 0 109.1n 0.9 119.9n 0.9 120n 0 145n 0]\nXDUT (clk_in valid duty0 duty1 duty2 duty3 duty4 duty5 duty6 duty7) duty_cycle_meter_8b\n\ntran tran stop=145n maxstep=100p\nsave clk_in valid duty0 duty1 duty2 duty3 duty4 duty5 duty6 duty7\n",
+    "signals": [
+      "clk_in",
+      "valid",
+      "duty0",
+      "duty1",
+      "duty2",
+      "duty3",
+      "duty4",
+      "duty5",
+      "duty6",
+      "duty7"
+    ],
+    "support": {}
+  },
+  {
+    "name": "terminal-initial-high",
+    "kind": "duty",
+    "edge_time_uncertainty": 1e-15,
+    "stop": 1.45e-07,
+    "threshold": 0.45,
+    "vhigh": 0.9,
+    "guard": 1e-10,
+    "atol": 0.002,
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVclk_in (clk_in 0) vsource type=pwl wave=[0 0.9 3n 0.9 3.1n 0 8n 0 8.1n 0.9 13.9n 0.9 14n 0 27n 0 27.1n 0.9 35.9n 0.9 36n 0 49n 0 49.1n 0.9 62.9n 0.9 63n 0 78n 0 78.1n 0.9 87.9n 0.9 88n 0 109n 0 109.1n 0.9 119.9n 0.9 120n 0 145n 0]\nXDUT (clk_in valid duty0 duty1 duty2 duty3 duty4 duty5 duty6 duty7) duty_cycle_meter_8b\n\ntran tran stop=145n maxstep=100p\nsave clk_in valid duty0 duty1 duty2 duty3 duty4 duty5 duty6 duty7\n",
+    "signals": [
+      "clk_in",
+      "valid",
+      "duty0",
+      "duty1",
+      "duty2",
+      "duty3",
+      "duty4",
+      "duty5",
+      "duty6",
+      "duty7"
+    ],
+    "support": {}
+  },
+  {
+    "name": "terminal-different-period",
+    "kind": "duty",
+    "edge_time_uncertainty": 1e-15,
+    "stop": 1.45e-07,
+    "threshold": 0.45,
+    "vhigh": 0.9,
+    "guard": 1e-10,
+    "atol": 0.002,
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVclk_in (clk_in 0) vsource type=pwl wave=[0 0 9n 0 9.1n 0.9 17.9n 0.9 18n 0 29n 0 29.1n 0.9 42.9n 0.9 43n 0 54n 0 54.1n 0.9 70.9n 0.9 71n 0 87n 0 87.1n 0.9 101.9n 0.9 102n 0 119n 0 119.1n 0.9 127.9n 0.9 128n 0 145n 0]\nXDUT (clk_in valid duty0 duty1 duty2 duty3 duty4 duty5 duty6 duty7) duty_cycle_meter_8b\n\ntran tran stop=145n maxstep=100p\nsave clk_in valid duty0 duty1 duty2 duty3 duty4 duty5 duty6 duty7\n",
+    "signals": [
+      "clk_in",
+      "valid",
+      "duty0",
+      "duty1",
+      "duty2",
+      "duty3",
+      "duty4",
+      "duty5",
+      "duty6",
+      "duty7"
+    ],
+    "support": {}
+  }
+]

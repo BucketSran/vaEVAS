@@ -1,0 +1,58 @@
+[
+  {
+    "name": "contract-base",
+    "source_id": "002",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvdd (VDD 0) vsource dc=0.9\nVvss (VSS 0) vsource dc=0\nVclk (CLK 0) vsource type=pulse val0=0 val1=0.9 delay=1n rise=20p fall=20p width=1n period=4n\nVd9 (D9 0) vsource type=pwl wave=[0 0 2.9n 0 3n 0.9 6.9n 0.9 7n 0.9 10.9n 0.9 11n 0 14.9n 0 15n 0.9 18.9n 0.9 19n 0 22.9n 0 23n 0 26.9n 0 27n 0.9 30.9n 0.9 31n 0 34.9n 0 35n 0.9 40n 0.9]\nVd8 (D8 0) vsource type=pwl wave=[0 0 2.9n 0 3n 0.9 6.9n 0.9 7n 0 10.9n 0 11n 0.9 14.9n 0.9 15n 0.9 18.9n 0.9 19n 0.9 22.9n 0.9 23n 0 26.9n 0 27n 0.9 30.9n 0.9 31n 0.9 34.9n 0.9 35n 0 40n 0]\nVd7 (D7 0) vsource type=pwl wave=[0 0 2.9n 0 3n 0.9 6.9n 0.9 7n 0 10.9n 0 11n 0 14.9n 0 15n 0 18.9n 0 19n 0.9 22.9n 0.9 23n 0 26.9n 0 27n 0.9 30.9n 0.9 31n 0.9 34.9n 0.9 35n 0 40n 0]\nVd6 (D6 0) vsource type=pwl wave=[0 0 2.9n 0 3n 0.9 6.9n 0.9 7n 0 10.9n 0 11n 0 14.9n 0 15n 0 18.9n 0 19n 0.9 22.9n 0.9 23n 0 26.9n 0 27n 0 30.9n 0 31n 0.9 34.9n 0.9 35n 0 40n 0]\nVd5 (D5 0) vsource type=pwl wave=[0 0 2.9n 0 3n 0.9 6.9n 0.9 7n 0 10.9n 0 11n 0 14.9n 0 15n 0 18.9n 0 19n 0.9 22.9n 0.9 23n 0 26.9n 0 27n 0 30.9n 0 31n 0 34.9n 0 35n 0.9 40n 0.9]\nVd4 (D4 0) vsource type=pwl wave=[0 0 2.9n 0 3n 0.9 6.9n 0.9 7n 0 10.9n 0 11n 0 14.9n 0 15n 0 18.9n 0 19n 0.9 22.9n 0.9 23n 0 26.9n 0 27n 0 30.9n 0 31n 0 34.9n 0 35n 0.9 40n 0.9]\nVd3 (D3 0) vsource type=pwl wave=[0 0 2.9n 0 3n 0.9 6.9n 0.9 7n 0 10.9n 0 11n 0 14.9n 0 15n 0 18.9n 0 19n 0.9 22.9n 0.9 23n 0 26.9n 0 27n 0 30.9n 0 31n 0 34.9n 0 35n 0.9 40n 0.9]\nVd2 (D2 0) vsource type=pwl wave=[0 0 2.9n 0 3n 0.9 6.9n 0.9 7n 0 10.9n 0 11n 0 14.9n 0 15n 0 18.9n 0 19n 0.9 22.9n 0.9 23n 0 26.9n 0 27n 0.9 30.9n 0.9 31n 0 34.9n 0 35n 0.9 40n 0.9]\nVd1 (D1 0) vsource type=pwl wave=[0 0 2.9n 0 3n 0.9 6.9n 0.9 7n 0 10.9n 0 11n 0 14.9n 0 15n 0 18.9n 0 19n 0.9 22.9n 0.9 23n 0 26.9n 0 27n 0 30.9n 0 31n 0.9 34.9n 0.9 35n 0 40n 0]\nVd0 (D0 0) vsource type=pwl wave=[0 0 2.9n 0 3n 0.9 6.9n 0.9 7n 0 10.9n 0 11n 0 14.9n 0 15n 0 18.9n 0 19n 0.9 22.9n 0.9 23n 0.9 26.9n 0.9 27n 0 30.9n 0 31n 0 34.9n 0 35n 0.9 40n 0.9]\nVcal0 (CAL0 0) vsource type=pwl wave=[0 0 2.9n 0 3n 0.9 6.9n 0.9 7n 0 10.9n 0 11n 0.9 14.9n 0.9 15n 0 18.9n 0 19n 0.9 22.9n 0.9 23n 0.9 26.9n 0.9 27n 0 30.9n 0 31n 0 34.9n 0 35n 0.9 40n 0.9]\nVcal1 (CAL1 0) vsource type=pwl wave=[0 0 2.9n 0 3n 0 6.9n 0 7n 0.9 10.9n 0.9 11n 0.9 14.9n 0.9 15n 0 18.9n 0 19n 0.9 22.9n 0.9 23n 0 26.9n 0 27n 0.9 30.9n 0.9 31n 0 34.9n 0 35n 0.9 40n 0.9]\nXDUT (VDD VSS CLK D9 D8 D7 D6 D5 D4 D3 D2 D1 D0 CAL0 CAL1 VDAC_P VDAC_N) cdac_cal\n\ntran tran stop=40n maxstep=2p strobeperiod=2p\nsave VDD VSS CLK D9 D8 D7 D6 D5 D4 D3 D2 D1 D0 CAL0 CAL1 VDAC_P VDAC_N\n",
+    "signals": [
+      "VDD",
+      "VSS",
+      "CLK",
+      "D9",
+      "D8",
+      "D7",
+      "D6",
+      "D5",
+      "D4",
+      "D3",
+      "D2",
+      "D1",
+      "D0",
+      "CAL0",
+      "CAL1",
+      "VDAC_P",
+      "VDAC_N"
+    ],
+    "stop": 4e-08,
+    "resolution": 2e-12,
+    "atol": 0.002,
+    "params": {}
+  },
+  {
+    "name": "contract-stretched-input",
+    "source_id": "002",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvdd (VDD 0) vsource dc=0.9\nVvss (VSS 0) vsource dc=0\nVclk (CLK 0) vsource type=pulse val0=0 val1=0.9 delay=1.23n rise=20p fall=20p width=1.23n period=4.92n\nVd9 (D9 0) vsource type=pwl wave=[0 0 3.567n 0 3.69n 0.9 8.487n 0.9 8.61n 0.9 13.407n 0.9 13.53n 0 18.327n 0 18.45n 0.9 23.247n 0.9 23.37n 0 28.167n 0 28.29n 0 33.087n 0 33.21n 0.9 38.007n 0.9 38.13n 0 42.927n 0 43.05n 0.9 49.2n 0.9]\nVd8 (D8 0) vsource type=pwl wave=[0 0 3.567n 0 3.69n 0.9 8.487n 0.9 8.61n 0 13.407n 0 13.53n 0.9 18.327n 0.9 18.45n 0.9 23.247n 0.9 23.37n 0.9 28.167n 0.9 28.29n 0 33.087n 0 33.21n 0.9 38.007n 0.9 38.13n 0.9 42.927n 0.9 43.05n 0 49.2n 0]\nVd7 (D7 0) vsource type=pwl wave=[0 0 3.567n 0 3.69n 0.9 8.487n 0.9 8.61n 0 13.407n 0 13.53n 0 18.327n 0 18.45n 0 23.247n 0 23.37n 0.9 28.167n 0.9 28.29n 0 33.087n 0 33.21n 0.9 38.007n 0.9 38.13n 0.9 42.927n 0.9 43.05n 0 49.2n 0]\nVd6 (D6 0) vsource type=pwl wave=[0 0 3.567n 0 3.69n 0.9 8.487n 0.9 8.61n 0 13.407n 0 13.53n 0 18.327n 0 18.45n 0 23.247n 0 23.37n 0.9 28.167n 0.9 28.29n 0 33.087n 0 33.21n 0 38.007n 0 38.13n 0.9 42.927n 0.9 43.05n 0 49.2n 0]\nVd5 (D5 0) vsource type=pwl wave=[0 0 3.567n 0 3.69n 0.9 8.487n 0.9 8.61n 0 13.407n 0 13.53n 0 18.327n 0 18.45n 0 23.247n 0 23.37n 0.9 28.167n 0.9 28.29n 0 33.087n 0 33.21n 0 38.007n 0 38.13n 0 42.927n 0 43.05n 0.9 49.2n 0.9]\nVd4 (D4 0) vsource type=pwl wave=[0 0 3.567n 0 3.69n 0.9 8.487n 0.9 8.61n 0 13.407n 0 13.53n 0 18.327n 0 18.45n 0 23.247n 0 23.37n 0.9 28.167n 0.9 28.29n 0 33.087n 0 33.21n 0 38.007n 0 38.13n 0 42.927n 0 43.05n 0.9 49.2n 0.9]\nVd3 (D3 0) vsource type=pwl wave=[0 0 3.567n 0 3.69n 0.9 8.487n 0.9 8.61n 0 13.407n 0 13.53n 0 18.327n 0 18.45n 0 23.247n 0 23.37n 0.9 28.167n 0.9 28.29n 0 33.087n 0 33.21n 0 38.007n 0 38.13n 0 42.927n 0 43.05n 0.9 49.2n 0.9]\nVd2 (D2 0) vsource type=pwl wave=[0 0 3.567n 0 3.69n 0.9 8.487n 0.9 8.61n 0 13.407n 0 13.53n 0 18.327n 0 18.45n 0 23.247n 0 23.37n 0.9 28.167n 0.9 28.29n 0 33.087n 0 33.21n 0.9 38.007n 0.9 38.13n 0 42.927n 0 43.05n 0.9 49.2n 0.9]\nVd1 (D1 0) vsource type=pwl wave=[0 0 3.567n 0 3.69n 0.9 8.487n 0.9 8.61n 0 13.407n 0 13.53n 0 18.327n 0 18.45n 0 23.247n 0 23.37n 0.9 28.167n 0.9 28.29n 0 33.087n 0 33.21n 0 38.007n 0 38.13n 0.9 42.927n 0.9 43.05n 0 49.2n 0]\nVd0 (D0 0) vsource type=pwl wave=[0 0 3.567n 0 3.69n 0.9 8.487n 0.9 8.61n 0 13.407n 0 13.53n 0 18.327n 0 18.45n 0 23.247n 0 23.37n 0.9 28.167n 0.9 28.29n 0.9 33.087n 0.9 33.21n 0 38.007n 0 38.13n 0 42.927n 0 43.05n 0.9 49.2n 0.9]\nVcal0 (CAL0 0) vsource type=pwl wave=[0 0 3.567n 0 3.69n 0.9 8.487n 0.9 8.61n 0 13.407n 0 13.53n 0.9 18.327n 0.9 18.45n 0 23.247n 0 23.37n 0.9 28.167n 0.9 28.29n 0.9 33.087n 0.9 33.21n 0 38.007n 0 38.13n 0 42.927n 0 43.05n 0.9 49.2n 0.9]\nVcal1 (CAL1 0) vsource type=pwl wave=[0 0 3.567n 0 3.69n 0 8.487n 0 8.61n 0.9 13.407n 0.9 13.53n 0.9 18.327n 0.9 18.45n 0 23.247n 0 23.37n 0.9 28.167n 0.9 28.29n 0 33.087n 0 33.21n 0.9 38.007n 0.9 38.13n 0 42.927n 0 43.05n 0.9 49.2n 0.9]\nXDUT (VDD VSS CLK D9 D8 D7 D6 D5 D4 D3 D2 D1 D0 CAL0 CAL1 VDAC_P VDAC_N) cdac_cal\n\ntran tran stop=49.2n maxstep=2p strobeperiod=2p\nsave VDD VSS CLK D9 D8 D7 D6 D5 D4 D3 D2 D1 D0 CAL0 CAL1 VDAC_P VDAC_N\n",
+    "signals": [
+      "VDD",
+      "VSS",
+      "CLK",
+      "D9",
+      "D8",
+      "D7",
+      "D6",
+      "D5",
+      "D4",
+      "D3",
+      "D2",
+      "D1",
+      "D0",
+      "CAL0",
+      "CAL1",
+      "VDAC_P",
+      "VDAC_N"
+    ],
+    "stop": 4.92e-08,
+    "resolution": 2e-12,
+    "atol": 0.002,
+    "params": {}
+  }
+]

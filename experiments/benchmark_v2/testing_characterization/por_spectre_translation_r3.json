@@ -1,0 +1,39 @@
+{
+  "status": "passed",
+  "backend_execution": "not yet run",
+  "scope": "all original r2 SPICE assets",
+  "assets": [
+    {
+      "asset": "models.spice",
+      "brace_expressions": 12339,
+      "suffix_constants": 0,
+      "expression_contents": "byte-identical",
+      "numeric_constants": "exact Decimal equality",
+      "comments": "byte-identical",
+      "source_sha256": "baf03f5d5f6cb4e986f2796ad129ef70a2a69e8ca8e32e494bd969f946ed7040",
+      "translated_sha256": "63a2c86a7d7d03b83a308d4cf475b002c473637ffaf83f2fe88428df1a306954"
+    },
+    {
+      "asset": "cells.spice",
+      "brace_expressions": 0,
+      "suffix_constants": 170,
+      "expression_contents": "byte-identical",
+      "numeric_constants": "exact Decimal equality",
+      "comments": "byte-identical",
+      "source_sha256": "72377bdb4012ffa870d4fc5cb7a74b1660a530a4e0c585675d91d1e5db8a4091",
+      "translated_sha256": "cf4ef0acbb0b911bca6ff2f9643df940799215c796ace37e4ee153f08fe663e4"
+    },
+    {
+      "asset": "analog.spice",
+      "brace_expressions": 0,
+      "suffix_constants": 0,
+      "expression_contents": "byte-identical",
+      "numeric_constants": "exact Decimal equality",
+      "comments": "byte-identical",
+      "source_sha256": "d35293893afe78f4d6e4b127c8e1329807ebe79dfa16dacb3afb0347ce3f0869",
+      "translated_sha256": "d35293893afe78f4d6e4b127c8e1329807ebe79dfa16dacb3afb0347ce3f0869"
+    }
+  ],
+  "cases_sha256": "c086f9940fc876650dfc5faf2bcb8906800fc448bb38e00553ce1e043d1e00aa",
+  "actual_r2": "Spectre read-in errors SFE841/874/1016; exponent-plus-u warning SFE1818; no circuit score"
+}

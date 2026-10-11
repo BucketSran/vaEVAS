@@ -1,0 +1,1232 @@
+{
+  "schema_version": 1,
+  "scope": "read-only statistical join metadata; not execution/calibration/model completion status",
+  "source_revision": "d901727f4a0588dea20d5d4ca8d2d60842924d62",
+  "join_key": "task_id",
+  "weight_rule": "one task, one primary category, weight1; no file-count/context/system bonus; source relations never create additional observations",
+  "task_count": 37,
+  "category_counts": {
+    "spec-modeling": 19,
+    "data-modeling": 1,
+    "extension-integration": 2,
+    "diagnosis-repair": 5,
+    "testing-characterization": 10
+  },
+  "unique_p1_source_count": 32,
+  "p1_ownership_counts": {
+    "spec-modeling": 19,
+    "data-modeling": 0,
+    "extension-integration": 1,
+    "diagnosis-repair": 4,
+    "testing-characterization": 8
+  },
+  "mandatory_extra_count": 5,
+  "system_tasks": [
+    "v2-integrate-349-multichannel-readout",
+    "v2-integrate-case0007-adpll-fine-tdc",
+    "v2-repair-uvlo-reset-chain",
+    "v2-spec-091-chopper-stabilized-differential-amplifier",
+    "v2-spec-307-switched-capacitor-integrator-phase-pair",
+    "v2-spec-308-correlated-double-sampler-offset-cancel",
+    "v2-test-por-sequence"
+  ],
+  "system_context_without_extra_weight": [
+    "v2-spec-186-sarfend-logic-4b"
+  ],
+  "historical_status_boundary": "Old manifest/plan pending fields remain their generation-time record. This table neither overwrites them nor infers model completion.",
+  "relation_groups": [
+    {
+      "group_id": "amplifier-038-093-370",
+      "relation_kind": "shared-asset-and-measurement-family",
+      "task_ids": [
+        "v2-spec-038-programmable-gain-amplifier",
+        "v2-test-online-gain",
+        "v2-spec-370-opamp-feedback-settling-monitor",
+        "v2-test-gain-settling"
+      ],
+      "description": "038 PGA is measured by093 online gain; gain-settling measures static038 and dynamic370 in parallel. Distinct engineering actions, reused circuit assets.",
+      "evidence": "experiments/benchmark_v2/testing_characterization/build_tasks.py:243-272,492-512; gain-settling SOURCE.md",
+      "adds_weight": false,
+      "identical_candidate_or_independent_circuit_claimed": false
+    },
+    {
+      "group_id": "sample-hold-024-to-349",
+      "relation_kind": "explicit-baseline-dependency",
+      "task_ids": [
+        "v2-spec-024-clocked-sample-and-hold",
+        "v2-integrate-349-multichannel-readout"
+      ],
+      "description": "349 extends the fixed healthy024 sample_hold baseline, with four channels and readout;349 owns its own P1 source.",
+      "evidence": "experiments/benchmark_v2/extension_integration/manifest.json; v2-integrate-349-multichannel-readout/SOURCE.md; approved#135comment",
+      "adds_weight": false,
+      "identical_candidate_or_independent_circuit_claimed": false
+    },
+    {
+      "group_id": "approved-function-family-1",
+      "relation_kind": "functional-family-not-proven-shared-bytes",
+      "task_ids": [
+        "v2-spec-024-clocked-sample-and-hold",
+        "v2-spec-071-acquisition-limited-sample-and-hold",
+        "v2-integrate-349-multichannel-readout"
+      ],
+      "description": "采样保持与多通道读出; 理想采样、有限采集、多通道采样与读出协议",
+      "evidence": "approved-v2/coverage.json:p1_function_groups",
+      "adds_weight": false,
+      "identical_candidate_or_independent_circuit_claimed": false
+    },
+    {
+      "group_id": "approved-function-family-3",
+      "relation_kind": "functional-family-not-proven-shared-bytes",
+      "task_ids": [
+        "v2-test-hysteresis",
+        "v2-test-comparator-delay",
+        "v2-spec-047-window-comparator-detector",
+        "v2-spec-314-hysteretic-window-comparator"
+      ],
+      "description": "比较器门限、滞回与延迟; 双向门限、过驱动与延迟、窗口、带历史的滞回窗口",
+      "evidence": "approved-v2/coverage.json:p1_function_groups",
+      "adds_weight": false,
+      "identical_candidate_or_independent_circuit_claimed": false
+    },
+    {
+      "group_id": "approved-function-family-5",
+      "relation_kind": "functional-family-not-proven-shared-bytes",
+      "task_ids": [
+        "v2-spec-003-pipeline-adc-stage",
+        "v2-spec-055-first-order-sigma-delta-modulator"
+      ],
+      "description": "残差级与ΣΔ; 级间采样历史、积分和一位反馈",
+      "evidence": "approved-v2/coverage.json:p1_function_groups",
+      "adds_weight": false,
+      "identical_candidate_or_independent_circuit_claimed": false
+    },
+    {
+      "group_id": "approved-function-family-6",
+      "relation_kind": "functional-family-not-proven-shared-bytes",
+      "task_ids": [
+        "v2-spec-001-bang-bang-phase-detector",
+        "v2-repair-pfd-reset",
+        "v2-test-duty-cycle",
+        "v2-test-clock-frequency"
+      ],
+      "description": "判相、振荡分频与时钟测量; 完整Alexander BBPD、PFD复位、占空比、码频与分频",
+      "evidence": "approved-v2/coverage.json:p1_function_groups",
+      "adds_weight": false,
+      "identical_candidate_or_independent_circuit_claimed": false
+    },
+    {
+      "group_id": "approved-function-family-7",
+      "relation_kind": "functional-family-not-proven-shared-bytes",
+      "task_ids": [
+        "v2-spec-375-nonoverlap-clock-generator",
+        "v2-spec-396-quadrature-lo-generator-divided-clock"
+      ],
+      "description": "非重叠与正交时钟; 两相死区与取消、正交LO相序和重启",
+      "evidence": "approved-v2/coverage.json:p1_function_groups",
+      "adds_weight": false,
+      "identical_candidate_or_independent_circuit_claimed": false
+    },
+    {
+      "group_id": "approved-function-family-8",
+      "relation_kind": "functional-family-not-proven-shared-bytes",
+      "task_ids": [
+        "v2-repair-debounce-latch",
+        "v2-repair-uvlo-brownout",
+        "v2-repair-reset-sequencer"
+      ],
+      "description": "电源资格、复位与去抖; 稳定资格、欠压状态、复位释放及重新计时",
+      "evidence": "approved-v2/coverage.json:p1_function_groups",
+      "adds_weight": false,
+      "identical_candidate_or_independent_circuit_claimed": false
+    },
+    {
+      "group_id": "approved-function-family-9",
+      "relation_kind": "functional-family-not-proven-shared-bytes",
+      "task_ids": [
+        "v2-spec-038-programmable-gain-amplifier",
+        "v2-spec-082-agc-receiver-leveling-loop",
+        "v2-spec-091-chopper-stabilized-differential-amplifier",
+        "v2-spec-308-correlated-double-sampler-offset-cancel",
+        "v2-spec-370-opamp-feedback-settling-monitor"
+      ],
+      "description": "放大、调节与精密前端; PGA、AGC、斩波、CDS、有限建立",
+      "evidence": "approved-v2/coverage.json:p1_function_groups",
+      "adds_weight": false,
+      "identical_candidate_or_independent_circuit_claimed": false
+    },
+    {
+      "group_id": "approved-function-family-11",
+      "relation_kind": "functional-family-not-proven-shared-bytes",
+      "task_ids": [
+        "v2-test-offset-search",
+        "v2-spec-183-foreground-rdac-calibrator"
+      ],
+      "description": "校准搜索与试码; 响应驱动失调搜索、逐位试码与采样对齐",
+      "evidence": "approved-v2/coverage.json:p1_function_groups",
+      "adds_weight": false,
+      "identical_candidate_or_independent_circuit_claimed": false
+    },
+    {
+      "group_id": "approved-function-family-13",
+      "relation_kind": "functional-family-not-proven-shared-bytes",
+      "task_ids": [
+        "v2-test-sampled-rms",
+        "v2-test-online-gain",
+        "v2-test-time-protocol"
+      ],
+      "description": "在线仪表与时间测量; RMS、增益、重武装、stop锁存及溢出",
+      "evidence": "approved-v2/coverage.json:p1_function_groups",
+      "adds_weight": false,
+      "identical_candidate_or_independent_circuit_claimed": false
+    },
+    {
+      "group_id": "power-protection-systems",
+      "relation_kind": "related-engineering-goal-not-same-original-source",
+      "task_ids": [
+        "v2-repair-debounce-latch",
+        "v2-repair-uvlo-brownout",
+        "v2-repair-reset-sequencer",
+        "v2-repair-uvlo-reset-chain",
+        "v2-test-por-sequence"
+      ],
+      "description": "Qualification/reset themes are related; original VA repair chain and real Ajacci POR are separate origins, not extra v4 sources.",
+      "evidence": "approved#136/#137; repair chain SOURCE.json; POR SOURCE.md",
+      "adds_weight": false,
+      "identical_candidate_or_independent_circuit_claimed": false
+    }
+  ],
+  "rows": [
+    {
+      "task_id": "v2-data-sampling-identification",
+      "primary_category": "data-modeling",
+      "spec_issue": 134,
+      "task_weight": 1,
+      "p1_owning_source_id": null,
+      "p1_owner_category": null,
+      "counts_as_unique_p1_source": false,
+      "source_class": "real-transistor-data",
+      "mandatory_extra_representative": true,
+      "declared_source_group": "jku-sampling-stage",
+      "related_v4_source_ids": [],
+      "context_level": "bounded-work-unit",
+      "system_task_kind": null,
+      "relation_group_ids": [],
+      "source_document": "benchmark/tasks/v2-data-sampling-identification/SOURCE.md",
+      "task_metadata_sha256": "ae9c0222695bc94687019c39538387182a9e38aa55a194036489fe02df80d454",
+      "source_document_sha256": "95b86cbba16ef4e07c3d85bbddb198cab38ddddf3a49201ba38242e9e6ce5aab",
+      "contract_sha256": "003bf2000580dac0bc3641cd4b42f67d8a4863fa3a8f98fd637fba281ca020ad",
+      "extra_provenance": "JKU SKY130 sampling stage, case-0006"
+    },
+    {
+      "task_id": "v2-integrate-349-multichannel-readout",
+      "primary_category": "extension-integration",
+      "spec_issue": 135,
+      "task_weight": 1,
+      "p1_owning_source_id": "349",
+      "p1_owner_category": "extension-integration",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-349",
+      "related_v4_source_ids": [
+        "349"
+      ],
+      "context_level": "bounded-engineering-project",
+      "system_task_kind": "system-extension",
+      "relation_group_ids": [
+        "sample-hold-024-to-349",
+        "approved-function-family-1"
+      ],
+      "source_document": "benchmark/tasks/v2-integrate-349-multichannel-readout/SOURCE.md",
+      "task_metadata_sha256": "2dbca248a2e934e34526d2ceb373ec319d0c59b14754de38f97c59a0d5361992",
+      "source_document_sha256": "772b22f6b818389aab4580cd5c5f8d4850a2f568c89185c3c7a75d875e57a698",
+      "contract_sha256": "211aeabb124fa60a15c0b4bca1c670a1d78e8e95cf183b3009cefcc331e51937"
+    },
+    {
+      "task_id": "v2-integrate-case0007-adpll-fine-tdc",
+      "primary_category": "extension-integration",
+      "spec_issue": 135,
+      "task_weight": 1,
+      "p1_owning_source_id": null,
+      "p1_owner_category": null,
+      "counts_as_unique_p1_source": false,
+      "source_class": "adapted-external-system",
+      "mandatory_extra_representative": true,
+      "declared_source_group": "tiny-tapeout-adpll",
+      "related_v4_source_ids": [],
+      "context_level": "bounded-engineering-project",
+      "system_task_kind": "system-extension",
+      "relation_group_ids": [],
+      "source_document": "benchmark/tasks/v2-integrate-case0007-adpll-fine-tdc/SOURCE.md",
+      "task_metadata_sha256": "1dfcfb6d1681353247d99772e8cf1411346acce0bab961be40df6070be9a0fe0",
+      "source_document_sha256": "32ef0df5a256019c1d2ab925a4edd666d9de2bed53232720086f8943b0f2839e",
+      "contract_sha256": "ddd725f11e3b2ab9f1a307cff3b664d81eaaa57bf7d8de0a3bbaf82300cf686e",
+      "extra_provenance": "tiny-tapeout ADPLL, case-0007; author voltage-domain coarse/fine baseline"
+    },
+    {
+      "task_id": "v2-repair-debounce-latch",
+      "primary_category": "diagnosis-repair",
+      "spec_issue": 136,
+      "task_weight": 1,
+      "p1_owning_source_id": "005",
+      "p1_owner_category": "diagnosis-repair",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-family-005",
+      "related_v4_source_ids": [
+        "005"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [
+        "approved-function-family-8",
+        "power-protection-systems"
+      ],
+      "source_document": "benchmark/tasks/v2-repair-debounce-latch/SOURCE.md",
+      "task_metadata_sha256": "7862d23a4775e466696a00d3a589aa902da1821dbd225fd819bd35b7c23091c2",
+      "source_document_sha256": "711937d807f5810634a664dea28fa497114fdc6ae69395fff86a5d94fea67c90",
+      "contract_sha256": "442f5e2911d3beadbe20619cf2ea93effe403ca51f04b362a1142c3209334873"
+    },
+    {
+      "task_id": "v2-repair-pfd-reset",
+      "primary_category": "diagnosis-repair",
+      "spec_issue": 136,
+      "task_weight": 1,
+      "p1_owning_source_id": "249",
+      "p1_owner_category": "diagnosis-repair",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-family-249",
+      "related_v4_source_ids": [
+        "249"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [
+        "approved-function-family-6"
+      ],
+      "source_document": "benchmark/tasks/v2-repair-pfd-reset/SOURCE.md",
+      "task_metadata_sha256": "266c20293af966acd199668737da702dc857c131b8607cc75519e6ff045dd83f",
+      "source_document_sha256": "711937d807f5810634a664dea28fa497114fdc6ae69395fff86a5d94fea67c90",
+      "contract_sha256": "c3417402c077f296bdf996fb3d206af46586fd3f88c3c53c42f8b4a4c39460a3"
+    },
+    {
+      "task_id": "v2-repair-reset-sequencer",
+      "primary_category": "diagnosis-repair",
+      "spec_issue": 136,
+      "task_weight": 1,
+      "p1_owning_source_id": "272",
+      "p1_owner_category": "diagnosis-repair",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-family-272",
+      "related_v4_source_ids": [
+        "272"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [
+        "approved-function-family-8",
+        "power-protection-systems"
+      ],
+      "source_document": "benchmark/tasks/v2-repair-reset-sequencer/SOURCE.md",
+      "task_metadata_sha256": "f7cdc12f330a44c28148aad7eddeb08555270c6c12e6e4720d78d0aa617a1988",
+      "source_document_sha256": "711937d807f5810634a664dea28fa497114fdc6ae69395fff86a5d94fea67c90",
+      "contract_sha256": "216b451fafa7f646f028c9acc9ba813ff89c98d660adb4fb27bb68bef28571e0"
+    },
+    {
+      "task_id": "v2-repair-uvlo-brownout",
+      "primary_category": "diagnosis-repair",
+      "spec_issue": 136,
+      "task_weight": 1,
+      "p1_owning_source_id": "046",
+      "p1_owner_category": "diagnosis-repair",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-family-046",
+      "related_v4_source_ids": [
+        "046"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [
+        "approved-function-family-8",
+        "power-protection-systems"
+      ],
+      "source_document": "benchmark/tasks/v2-repair-uvlo-brownout/SOURCE.md",
+      "task_metadata_sha256": "098165da52a0a20b791f54c369e2bd1bed07382f7e6564eef7b4aa10f86b178f",
+      "source_document_sha256": "711937d807f5810634a664dea28fa497114fdc6ae69395fff86a5d94fea67c90",
+      "contract_sha256": "262dcf40ccd75b31101347ba4d5381ac215179b24b361e12c0732459a4f471a3"
+    },
+    {
+      "task_id": "v2-repair-uvlo-reset-chain",
+      "primary_category": "diagnosis-repair",
+      "spec_issue": 136,
+      "task_weight": 1,
+      "p1_owning_source_id": null,
+      "p1_owner_category": null,
+      "counts_as_unique_p1_source": false,
+      "source_class": "repository-original-system",
+      "mandatory_extra_representative": true,
+      "declared_source_group": "original-uvlo-chain-case0009",
+      "related_v4_source_ids": [],
+      "context_level": "multi-module-system",
+      "system_task_kind": "original-system-repair",
+      "relation_group_ids": [
+        "power-protection-systems"
+      ],
+      "source_document": "benchmark/tasks/v2-repair-uvlo-reset-chain/SOURCE.md",
+      "task_metadata_sha256": "a01b65d3a894d296787637511ca724f269075770cf29521ea7767b72fd95dadd",
+      "source_document_sha256": "711937d807f5810634a664dea28fa497114fdc6ae69395fff86a5d94fea67c90",
+      "contract_sha256": "de9261c8acca7996197a3742e7706a30c35dcecd0d957514fe94035bde113c19",
+      "extra_provenance": "original behavioral UVLO/reset/enable/downstream chain, case-0009"
+    },
+    {
+      "task_id": "v2-spec-001-bang-bang-phase-detector",
+      "primary_category": "spec-modeling",
+      "spec_issue": 133,
+      "task_weight": 1,
+      "p1_owning_source_id": "001",
+      "p1_owner_category": "spec-modeling",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-001",
+      "related_v4_source_ids": [
+        "001"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [
+        "approved-function-family-6"
+      ],
+      "source_document": "benchmark/tasks/v2-spec-001-bang-bang-phase-detector/SOURCE.md",
+      "task_metadata_sha256": "c3d6982ade850930aff729d9680187d801582e16ba3e1f33f2ba662c6edc3c8f",
+      "source_document_sha256": "c8fedf0a05fe5d96a3c8f37e817efc6489389ad856bab686e29c576fdb1041f4",
+      "contract_sha256": "b962b0e8a9d4b61ef85074052c7a29feddda8e200b8deb2fe160465fbcb313c0"
+    },
+    {
+      "task_id": "v2-spec-002-capacitive-sar-feedback-dac",
+      "primary_category": "spec-modeling",
+      "spec_issue": 133,
+      "task_weight": 1,
+      "p1_owning_source_id": "002",
+      "p1_owner_category": "spec-modeling",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-002",
+      "related_v4_source_ids": [
+        "002"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [],
+      "source_document": "benchmark/tasks/v2-spec-002-capacitive-sar-feedback-dac/SOURCE.md",
+      "task_metadata_sha256": "1629e85f2d220c4dc092494c5e5af9558bfa18e9851d413033d3b99e83a95051",
+      "source_document_sha256": "d92851c6e46a0e001bc2396d50dcd3b52bcc2d3402323edd6087c028440809a1",
+      "contract_sha256": "08d1f1925a3351dbcf063bbd80e490ceb123192003574cae25771c6e1ab7e824"
+    },
+    {
+      "task_id": "v2-spec-003-pipeline-adc-stage",
+      "primary_category": "spec-modeling",
+      "spec_issue": 133,
+      "task_weight": 1,
+      "p1_owning_source_id": "003",
+      "p1_owner_category": "spec-modeling",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-003",
+      "related_v4_source_ids": [
+        "003"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [
+        "approved-function-family-5"
+      ],
+      "source_document": "benchmark/tasks/v2-spec-003-pipeline-adc-stage/SOURCE.md",
+      "task_metadata_sha256": "f461a905b53ed71a2e4f22f2873ba6d123c696d5469864db4324a941f5824105",
+      "source_document_sha256": "eecebdaeb0a3c4ea3613e5bb2097c340b45615f46c507a7838d4e0c09c0a0a3e",
+      "contract_sha256": "16bc6ee0e08ae8ae7efcb90115862337c5734725e3861478122cdc1ea2b5ce44"
+    },
+    {
+      "task_id": "v2-spec-024-clocked-sample-and-hold",
+      "primary_category": "spec-modeling",
+      "spec_issue": 133,
+      "task_weight": 1,
+      "p1_owning_source_id": "024",
+      "p1_owner_category": "spec-modeling",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-024",
+      "related_v4_source_ids": [
+        "024"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [
+        "sample-hold-024-to-349",
+        "approved-function-family-1"
+      ],
+      "source_document": "benchmark/tasks/v2-spec-024-clocked-sample-and-hold/SOURCE.md",
+      "task_metadata_sha256": "393f7796c7968e199d2b35473dd608943d73700a10ab45269b2f503f3a1e2a17",
+      "source_document_sha256": "5df2a4c56758900c5a8917fbb176b33e6bed9a1e628fd8e78f709a97152866d4",
+      "contract_sha256": "84c2765cb83e4b9619e812434b619987a76794946da1818fca4de2a168028344"
+    },
+    {
+      "task_id": "v2-spec-038-programmable-gain-amplifier",
+      "primary_category": "spec-modeling",
+      "spec_issue": 133,
+      "task_weight": 1,
+      "p1_owning_source_id": "038",
+      "p1_owner_category": "spec-modeling",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-038",
+      "related_v4_source_ids": [
+        "038"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [
+        "amplifier-038-093-370",
+        "approved-function-family-9"
+      ],
+      "source_document": "benchmark/tasks/v2-spec-038-programmable-gain-amplifier/SOURCE.md",
+      "task_metadata_sha256": "86760138db557ec1ad0bcc98aa535baf1ab7145ada57d788a7fc987fcc93b993",
+      "source_document_sha256": "57413354101fbe16abf1a095afa77d9015010ad598c222ec7a3ec82ee8cd9c37",
+      "contract_sha256": "bf62085ac8596b6c61af8b6de71a81486db790b68a322aced64fb1583d172c78"
+    },
+    {
+      "task_id": "v2-spec-047-window-comparator-detector",
+      "primary_category": "spec-modeling",
+      "spec_issue": 133,
+      "task_weight": 1,
+      "p1_owning_source_id": "047",
+      "p1_owner_category": "spec-modeling",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-047",
+      "related_v4_source_ids": [
+        "047"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [
+        "approved-function-family-3"
+      ],
+      "source_document": "benchmark/tasks/v2-spec-047-window-comparator-detector/SOURCE.md",
+      "task_metadata_sha256": "d39056bd7b1be37ce2840f53b1a59305420c601d8b086fd02ad74d9ef2dddfe8",
+      "source_document_sha256": "6e0f21f34726dfe46fff4875a36818bbea9da96bb0fcd310e4a9d2c978476b32",
+      "contract_sha256": "344c66d6059996622f4551e0193add2a90b918da09d297bd51149d9c3513b2f7"
+    },
+    {
+      "task_id": "v2-spec-055-first-order-sigma-delta-modulator",
+      "primary_category": "spec-modeling",
+      "spec_issue": 133,
+      "task_weight": 1,
+      "p1_owning_source_id": "055",
+      "p1_owner_category": "spec-modeling",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-055",
+      "related_v4_source_ids": [
+        "055"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [
+        "approved-function-family-5"
+      ],
+      "source_document": "benchmark/tasks/v2-spec-055-first-order-sigma-delta-modulator/SOURCE.md",
+      "task_metadata_sha256": "cf74b783f962efc0dbcabc1a9e3846e0d47b5cf0192aac97a71f9f82c1954668",
+      "source_document_sha256": "fb8698e6d5b16a83ee97a8e2584911b7c4ba9afe6692838bca5a1cd0e812a595",
+      "contract_sha256": "9e98a535ca49065834d0518cf4f671144b399407ef98a275918e65bea87654cb"
+    },
+    {
+      "task_id": "v2-spec-071-acquisition-limited-sample-and-hold",
+      "primary_category": "spec-modeling",
+      "spec_issue": 133,
+      "task_weight": 1,
+      "p1_owning_source_id": "071",
+      "p1_owner_category": "spec-modeling",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-071",
+      "related_v4_source_ids": [
+        "071"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [
+        "approved-function-family-1"
+      ],
+      "source_document": "benchmark/tasks/v2-spec-071-acquisition-limited-sample-and-hold/SOURCE.md",
+      "task_metadata_sha256": "ddff8e63ee4b513d1fbaca4b6faaabe5983645630a2a154068ae1d54868097df",
+      "source_document_sha256": "d70d881b6144028321d0ab430b1bf7a6f2dbc30947013d46ab9d6eadced2e2e3",
+      "contract_sha256": "c0779a4587cf247eeeb11814ee92164d1d6a0e88cc2662a0778127429b868440"
+    },
+    {
+      "task_id": "v2-spec-082-agc-receiver-leveling-loop",
+      "primary_category": "spec-modeling",
+      "spec_issue": 133,
+      "task_weight": 1,
+      "p1_owning_source_id": "082",
+      "p1_owner_category": "spec-modeling",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-082",
+      "related_v4_source_ids": [
+        "082"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [
+        "approved-function-family-9"
+      ],
+      "source_document": "benchmark/tasks/v2-spec-082-agc-receiver-leveling-loop/SOURCE.md",
+      "task_metadata_sha256": "b834640c6318d4f4ec6d5bf57764cf6517986629515a733d7905a60679b5af53",
+      "source_document_sha256": "2ecec5a1d3c4cf68e2a1990ae7258512705c94a9ed3bef9a215c663e9c3a1379",
+      "contract_sha256": "329c9320be765f88f8b73d30af9d6fe7424d1abd38fd6b8d588bad025b50d794"
+    },
+    {
+      "task_id": "v2-spec-091-chopper-stabilized-differential-amplifier",
+      "primary_category": "spec-modeling",
+      "spec_issue": 133,
+      "task_weight": 1,
+      "p1_owning_source_id": "091",
+      "p1_owner_category": "spec-modeling",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-091",
+      "related_v4_source_ids": [
+        "091"
+      ],
+      "context_level": "multi-module-system",
+      "system_task_kind": "architecture-constrained-system",
+      "relation_group_ids": [
+        "approved-function-family-9"
+      ],
+      "source_document": "benchmark/tasks/v2-spec-091-chopper-stabilized-differential-amplifier/SOURCE.md",
+      "task_metadata_sha256": "72f65fc5eeaf323de9843408a9167cd78f49224b3c5e550a0c11679e570172b6",
+      "source_document_sha256": "3822b79f22ecf7749f79db67455fb3cb1926beaa89ed399b582d3ae63a384806",
+      "contract_sha256": "2a67c1185318adda132e676d04633c2f7e39a5db22f3091dea10712aada698b3"
+    },
+    {
+      "task_id": "v2-spec-183-foreground-rdac-calibrator",
+      "primary_category": "spec-modeling",
+      "spec_issue": 133,
+      "task_weight": 1,
+      "p1_owning_source_id": "183",
+      "p1_owner_category": "spec-modeling",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-183",
+      "related_v4_source_ids": [
+        "183"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [
+        "approved-function-family-11"
+      ],
+      "source_document": "benchmark/tasks/v2-spec-183-foreground-rdac-calibrator/SOURCE.md",
+      "task_metadata_sha256": "b84ba28e3d8dc405b6b431efbf4bd42a2d5a9e603f8578761f22d9670f821caa",
+      "source_document_sha256": "c816e7796265c31fa27b09783cd339ad96d766547af49906f59b7d05970e475a",
+      "contract_sha256": "ddd5db209903a6ee37e63eb851d0c0dbf19ecbc3e807ef332166c6a43b7d54fd"
+    },
+    {
+      "task_id": "v2-spec-186-sarfend-logic-4b",
+      "primary_category": "spec-modeling",
+      "spec_issue": 133,
+      "task_weight": 1,
+      "p1_owning_source_id": "186",
+      "p1_owner_category": "spec-modeling",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-186",
+      "related_v4_source_ids": [
+        "186"
+      ],
+      "context_level": "fixed-system-module",
+      "system_task_kind": null,
+      "relation_group_ids": [],
+      "source_document": "benchmark/tasks/v2-spec-186-sarfend-logic-4b/SOURCE.md",
+      "task_metadata_sha256": "55909e26470de5ef9233e9b2fdc08a8097e44b983cdafbbaedbe778a7183a20a",
+      "source_document_sha256": "90d3696542f42cbed3c6a1816eb8f0949dd52684372982815619ee1c27806a02",
+      "contract_sha256": "0dcc7ec6c35aa51ec9fce088a4d8fe55fdf19fd352119fe3c266cf184fe8277b"
+    },
+    {
+      "task_id": "v2-spec-307-switched-capacitor-integrator-phase-pair",
+      "primary_category": "spec-modeling",
+      "spec_issue": 133,
+      "task_weight": 1,
+      "p1_owning_source_id": "307",
+      "p1_owner_category": "spec-modeling",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-307",
+      "related_v4_source_ids": [
+        "307"
+      ],
+      "context_level": "multi-module-system",
+      "system_task_kind": "architecture-constrained-system",
+      "relation_group_ids": [],
+      "source_document": "benchmark/tasks/v2-spec-307-switched-capacitor-integrator-phase-pair/SOURCE.md",
+      "task_metadata_sha256": "14e34915380758094bd4ba5940a322f706487101925e14c86fed64e8168261c1",
+      "source_document_sha256": "3d70528e4246526985e9945202cc27a7f0c1373666b7e9a655000d6742e5215b",
+      "contract_sha256": "2de6377e34c279c94976d7536ef356429edc59dd9b72710902f1615ba76e1f20"
+    },
+    {
+      "task_id": "v2-spec-308-correlated-double-sampler-offset-cancel",
+      "primary_category": "spec-modeling",
+      "spec_issue": 133,
+      "task_weight": 1,
+      "p1_owning_source_id": "308",
+      "p1_owner_category": "spec-modeling",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-308",
+      "related_v4_source_ids": [
+        "308"
+      ],
+      "context_level": "multi-module-system",
+      "system_task_kind": "architecture-constrained-system",
+      "relation_group_ids": [
+        "approved-function-family-9"
+      ],
+      "source_document": "benchmark/tasks/v2-spec-308-correlated-double-sampler-offset-cancel/SOURCE.md",
+      "task_metadata_sha256": "43564208a270ba59b8bf4c4bf0b337b6745a45943338b3700c3efce8f3530692",
+      "source_document_sha256": "bb5733fbf8e277911612b153d0adfc15d3ca7162e160f20f0a0063a3ac5c0729",
+      "contract_sha256": "92b6a444301c6925f468d04273bb211ec240bd86804df5e1823fbee3c6317691"
+    },
+    {
+      "task_id": "v2-spec-314-hysteretic-window-comparator",
+      "primary_category": "spec-modeling",
+      "spec_issue": 133,
+      "task_weight": 1,
+      "p1_owning_source_id": "314",
+      "p1_owner_category": "spec-modeling",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-314",
+      "related_v4_source_ids": [
+        "314"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [
+        "approved-function-family-3"
+      ],
+      "source_document": "benchmark/tasks/v2-spec-314-hysteretic-window-comparator/SOURCE.md",
+      "task_metadata_sha256": "a2c4506f4c88ec84aaa37c506944e3f5a2df11d42b3d5c53d3cc06fce6f1cb84",
+      "source_document_sha256": "91be892d45da05ae183c0d78665f127a3423974d623ddb7401a3beae77aad901",
+      "contract_sha256": "2e3e9f22ad5d3a1e92a08564676689e014df505e432d5cd04a9380770ad37d2f"
+    },
+    {
+      "task_id": "v2-spec-353-ffe-transmitter-3tap",
+      "primary_category": "spec-modeling",
+      "spec_issue": 133,
+      "task_weight": 1,
+      "p1_owning_source_id": "353",
+      "p1_owner_category": "spec-modeling",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-353",
+      "related_v4_source_ids": [
+        "353"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [],
+      "source_document": "benchmark/tasks/v2-spec-353-ffe-transmitter-3tap/SOURCE.md",
+      "task_metadata_sha256": "000b70022c3f78f449b11e7de3cfc860eb0259a27ca2e6be9d6158257fa80232",
+      "source_document_sha256": "ddfe9705acf9d0533d82a747bb30c5a76d698d63851b0ddf341c948ffc75d9a4",
+      "contract_sha256": "2edd551c3b84e1f7412a1292b8ec86b276e00377504d595da5b9d822b0afaace"
+    },
+    {
+      "task_id": "v2-spec-370-opamp-feedback-settling-monitor",
+      "primary_category": "spec-modeling",
+      "spec_issue": 133,
+      "task_weight": 1,
+      "p1_owning_source_id": "370",
+      "p1_owner_category": "spec-modeling",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-370",
+      "related_v4_source_ids": [
+        "370"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [
+        "amplifier-038-093-370",
+        "approved-function-family-9"
+      ],
+      "source_document": "benchmark/tasks/v2-spec-370-opamp-feedback-settling-monitor/SOURCE.md",
+      "task_metadata_sha256": "3693771dcd5bfb0794d749e931ee0766cd9d0792051c2b09e5d49731cf8fa32f",
+      "source_document_sha256": "db53edaa2abf5989c86bf66d75d577795f10a30f8f4597786c231a8931a04007",
+      "contract_sha256": "64f94635fdcdee0a1980addffd30d48be86e25e46bb23c78e413bdfeedf42262"
+    },
+    {
+      "task_id": "v2-spec-375-nonoverlap-clock-generator",
+      "primary_category": "spec-modeling",
+      "spec_issue": 133,
+      "task_weight": 1,
+      "p1_owning_source_id": "375",
+      "p1_owner_category": "spec-modeling",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-375",
+      "related_v4_source_ids": [
+        "375"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [
+        "approved-function-family-7"
+      ],
+      "source_document": "benchmark/tasks/v2-spec-375-nonoverlap-clock-generator/SOURCE.md",
+      "task_metadata_sha256": "f39c13beab9699fc8ab0027697a3c50a6bb6ac0f23c2d2ed717cac9288acdf02",
+      "source_document_sha256": "46a24175a3115b4df0dadb2bdcf45540197ea2596bc198654986402827795722",
+      "contract_sha256": "119a657731291e1653b760e2752fc506ee6e24da14dcb219d167ba95cb9c9ab7"
+    },
+    {
+      "task_id": "v2-spec-396-quadrature-lo-generator-divided-clock",
+      "primary_category": "spec-modeling",
+      "spec_issue": 133,
+      "task_weight": 1,
+      "p1_owning_source_id": "396",
+      "p1_owner_category": "spec-modeling",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-396",
+      "related_v4_source_ids": [
+        "396"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [
+        "approved-function-family-7"
+      ],
+      "source_document": "benchmark/tasks/v2-spec-396-quadrature-lo-generator-divided-clock/SOURCE.md",
+      "task_metadata_sha256": "443180615b8062b11e42091ba36cec8c5bcb4eff48244aa4633f792952965076",
+      "source_document_sha256": "f166f49211087dd8f4f611751d1b3e072f0c64d395489848b9a30dd674fd9ad8",
+      "contract_sha256": "dd2f1f1c6bc41ba0237a352490d50e9d241618deff28496cef7112a60a3e062d"
+    },
+    {
+      "task_id": "v2-test-clock-frequency",
+      "primary_category": "testing-characterization",
+      "spec_issue": 137,
+      "task_weight": 1,
+      "p1_owning_source_id": "362",
+      "p1_owner_category": "testing-characterization",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-362",
+      "related_v4_source_ids": [
+        "362"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [
+        "approved-function-family-6"
+      ],
+      "source_document": "benchmark/tasks/v2-test-clock-frequency/SOURCE.md",
+      "task_metadata_sha256": "76bd1ecc8358ecf2bc753816568aa528057af9870ccbeb7c52c362c7cca49f43",
+      "source_document_sha256": "9efa6a3a8f85b8adaf5d3b77e71cd2ac500bd20283e11ef926a7b221613f2863",
+      "contract_sha256": "f478cb36d136419a8abe5f4f76ecddd3cb83a1f77dcf5453903c082fda0de736"
+    },
+    {
+      "task_id": "v2-test-comparator-delay",
+      "primary_category": "testing-characterization",
+      "spec_issue": 137,
+      "task_weight": 1,
+      "p1_owning_source_id": "170",
+      "p1_owner_category": "testing-characterization",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-170",
+      "related_v4_source_ids": [
+        "170"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [
+        "approved-function-family-3"
+      ],
+      "source_document": "benchmark/tasks/v2-test-comparator-delay/SOURCE.md",
+      "task_metadata_sha256": "73ceed903f84699cb9b315a85072439b12272ca76056520144e3d6649819c8df",
+      "source_document_sha256": "676464dff251ee6c20baf8ee490e99cd66daecbc7ba60c8d08166841595f9b2b",
+      "contract_sha256": "1a39d6da29cc416aaba791c26d4ff1c3bb1845743e02539c54d899b4e2d4e3bb"
+    },
+    {
+      "task_id": "v2-test-duty-cycle",
+      "primary_category": "testing-characterization",
+      "spec_issue": 137,
+      "task_weight": 1,
+      "p1_owning_source_id": "060",
+      "p1_owner_category": "testing-characterization",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-060",
+      "related_v4_source_ids": [
+        "060"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [
+        "approved-function-family-6"
+      ],
+      "source_document": "benchmark/tasks/v2-test-duty-cycle/SOURCE.md",
+      "task_metadata_sha256": "bd5f21a50a2818b4d49c222613b333d47f35ff69128cf9fc3f0aa0edf9840141",
+      "source_document_sha256": "4628b00459679c790d2b77ffebf1db219ed82275372aa91ad1bbbe7f4b22ad08",
+      "contract_sha256": "53c6d6ee8da93c02273cf896588b0b83016c7862bb2b3bbfec9ce72180c68fdb"
+    },
+    {
+      "task_id": "v2-test-gain-settling",
+      "primary_category": "testing-characterization",
+      "spec_issue": 137,
+      "task_weight": 1,
+      "p1_owning_source_id": null,
+      "p1_owner_category": null,
+      "counts_as_unique_p1_source": false,
+      "source_class": "shared-v4-assets-new-engineering-action",
+      "mandatory_extra_representative": true,
+      "declared_source_group": "case-0018+v4-038+v4-370",
+      "related_v4_source_ids": [
+        "038",
+        "370"
+      ],
+      "context_level": "multi-DUT-measurement",
+      "system_task_kind": null,
+      "relation_group_ids": [
+        "amplifier-038-093-370"
+      ],
+      "source_document": "benchmark/tasks/v2-test-gain-settling/SOURCE.md",
+      "task_metadata_sha256": "4d6b61a24620d5e4ca67229829a56b180b05f955ba6e548815758692b604f39f",
+      "source_document_sha256": "c1d64c53f732bb3e63848eedca85f64343658d898a9b2c935c1ff59440c02758",
+      "contract_sha256": "22e71d26e06c0e11417fa8ada7266303682294073d55f5415b337b995d957ed1",
+      "extra_provenance": "case-0018; actual static038 and dynamic370 measurement"
+    },
+    {
+      "task_id": "v2-test-hysteresis",
+      "primary_category": "testing-characterization",
+      "spec_issue": 137,
+      "task_weight": 1,
+      "p1_owning_source_id": "111",
+      "p1_owner_category": "testing-characterization",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-111",
+      "related_v4_source_ids": [
+        "111"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [
+        "approved-function-family-3"
+      ],
+      "source_document": "benchmark/tasks/v2-test-hysteresis/SOURCE.md",
+      "task_metadata_sha256": "fc9327f1980a2b2473318596a6da371614422c19eb3849767790072525771d86",
+      "source_document_sha256": "b04268a4536d8fb78aca7a79f6f20c1ebcce705f8a2d7f19c9664155ce1a473c",
+      "contract_sha256": "bfceb849227da610bd68da76114e396973809b1759430ba50b0208037ecdabb8"
+    },
+    {
+      "task_id": "v2-test-offset-search",
+      "primary_category": "testing-characterization",
+      "spec_issue": 137,
+      "task_weight": 1,
+      "p1_owning_source_id": "109",
+      "p1_owner_category": "testing-characterization",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-109",
+      "related_v4_source_ids": [
+        "109"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [
+        "approved-function-family-11"
+      ],
+      "source_document": "benchmark/tasks/v2-test-offset-search/SOURCE.md",
+      "task_metadata_sha256": "0c88866faaaaf617b8e0a6021c230955b4499cd833de56c2b56f80bded78e462",
+      "source_document_sha256": "3905fcd854e771ce49c2ccbdf7cd75907b96149a0d2cedad48032456157e4e24",
+      "contract_sha256": "d8acf04ae68acca97dad4c3f962baccd47a1f0063fc15e8355c2629e53466228"
+    },
+    {
+      "task_id": "v2-test-online-gain",
+      "primary_category": "testing-characterization",
+      "spec_issue": 137,
+      "task_weight": 1,
+      "p1_owning_source_id": "093",
+      "p1_owner_category": "testing-characterization",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-093+v4-038",
+      "related_v4_source_ids": [
+        "038",
+        "093"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [
+        "amplifier-038-093-370",
+        "approved-function-family-13"
+      ],
+      "source_document": "benchmark/tasks/v2-test-online-gain/SOURCE.md",
+      "task_metadata_sha256": "57bead48af7bb8a657d5fa8a7cc114a12d18eccff8615ad2e3931a06be5ee9da",
+      "source_document_sha256": "086ae2a97f6f50256b7fd35344406ebf75a2c10e16294ed8ea7e6c96b7bd7299",
+      "contract_sha256": "48ad4fddff39c917d0c0734448a83a452842906c63148e871d7bd560adc8e002"
+    },
+    {
+      "task_id": "v2-test-por-sequence",
+      "primary_category": "testing-characterization",
+      "spec_issue": 137,
+      "task_weight": 1,
+      "p1_owning_source_id": null,
+      "p1_owner_category": null,
+      "counts_as_unique_p1_source": false,
+      "source_class": "real-external-mixed-system",
+      "mandatory_extra_representative": true,
+      "declared_source_group": "case-0001-sky130-ajc-por",
+      "related_v4_source_ids": [],
+      "context_level": "full-system-testbench",
+      "system_task_kind": "real-mixed-system-testbench",
+      "relation_group_ids": [
+        "power-protection-systems"
+      ],
+      "source_document": "benchmark/tasks/v2-test-por-sequence/SOURCE.md",
+      "task_metadata_sha256": "ffb57d2791d84aad46576bd12e645fece18b4a26a465f49f9f4ec38243209902",
+      "source_document_sha256": "1d625b59d5197417bdf814477a04f54682ef0a2e7207d56ce0fb8409aef6e66b",
+      "contract_sha256": "ee0a35a2af5e4ba6e87833382fbf09a62198f1d91c5e2fb2b3e9fd1886e02985",
+      "extra_provenance": "Ajacci SKY130 POR, case-0001"
+    },
+    {
+      "task_id": "v2-test-sampled-rms",
+      "primary_category": "testing-characterization",
+      "spec_issue": 137,
+      "task_weight": 1,
+      "p1_owning_source_id": "074",
+      "p1_owner_category": "testing-characterization",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-074",
+      "related_v4_source_ids": [
+        "074"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [
+        "approved-function-family-13"
+      ],
+      "source_document": "benchmark/tasks/v2-test-sampled-rms/SOURCE.md",
+      "task_metadata_sha256": "3a43b4434fcfb676a856d84d59bbf0246be0225174435c7541b83cb1b962d91a",
+      "source_document_sha256": "386300a141048fab452b7d3d1169ab931ba1ec7262c68397629905fb42a665f3",
+      "contract_sha256": "7bed769931789df589b45a2de1c96e5dd6337b10b90cfaa3e7c82b7848290b0c"
+    },
+    {
+      "task_id": "v2-test-time-protocol",
+      "primary_category": "testing-characterization",
+      "spec_issue": 137,
+      "task_weight": 1,
+      "p1_owning_source_id": "346",
+      "p1_owner_category": "testing-characterization",
+      "counts_as_unique_p1_source": true,
+      "source_class": "v4-P1-adaptation",
+      "mandatory_extra_representative": false,
+      "declared_source_group": "v4-346",
+      "related_v4_source_ids": [
+        "346"
+      ],
+      "context_level": "single-module",
+      "system_task_kind": null,
+      "relation_group_ids": [
+        "approved-function-family-13"
+      ],
+      "source_document": "benchmark/tasks/v2-test-time-protocol/SOURCE.md",
+      "task_metadata_sha256": "e1790669d8a06f028be117198a7715a77b43801fa1339f2526dc0331bbdaaf73",
+      "source_document_sha256": "167be8f78c1cb78e528a737225d79defae8a525c5d5d48afa7c64cffb25e590b",
+      "contract_sha256": "19d63c389d24271ecccd4e1085bcdd6ca20fcd69b273abbcddee018dc5283562"
+    }
+  ],
+  "source_audit_sha256": "a6be5a556a049de3fef3c32d230e10d5c384f02ce6a9be40cdcfb54c5dc93987",
+  "public_source_inputs_sha256": {
+    "benchmark/workbench/migration/v4-migration-priorities.md": "cac35e86f0af7fc552263c242b8ac88463ff96224c2657e0cc0dbcffe614d266",
+    "experiments/benchmark_v2/spec_modeling/manifest.json": "df50f27fb1652a82e2e7279f12bf487c3a7655a6e895b2142f599460282b153d",
+    "experiments/benchmark_v2/diagnosis_repair/manifest.json": "1f4fc6302cfdf22298bfa20f7195b3613a403c89878fafd23b75fb482fb08983",
+    "experiments/benchmark_v2/extension_integration/manifest.json": "0e5c98f44a32122aceedf7d642352ec22ae92214396099555a83b6ae57cf0410",
+    "experiments/benchmark_v2/data_modeling/category-manifest.json": "e9e3c8af7bb4ed8f335018daf426adb1cf1fa9bebca3c4b72720c07d26f3843d",
+    "experiments/benchmark_v2/testing_characterization/build_tasks.py": "aaccbb1862e1093caf9e0de4e00eabb960628cbb68ee8aee0148bc8b17577456",
+    "experiments/benchmark_v2/testing_characterization/build_por_task.py": "9d9367ce58be9eac7381a8cf9f2072e1627fe147cfa27f7fe58886df45a8b5e0",
+    "benchmark/tasks/v2-data-sampling-identification/tests/contract.json": "003bf2000580dac0bc3641cd4b42f67d8a4863fa3a8f98fd637fba281ca020ad",
+    "benchmark/tasks/v2-data-sampling-identification/task.toml": "ae9c0222695bc94687019c39538387182a9e38aa55a194036489fe02df80d454",
+    "benchmark/tasks/v2-data-sampling-identification/SOURCE.md": "95b86cbba16ef4e07c3d85bbddb198cab38ddddf3a49201ba38242e9e6ce5aab",
+    "benchmark/tasks/v2-integrate-349-multichannel-readout/tests/contract.json": "211aeabb124fa60a15c0b4bca1c670a1d78e8e95cf183b3009cefcc331e51937",
+    "benchmark/tasks/v2-integrate-349-multichannel-readout/task.toml": "2dbca248a2e934e34526d2ceb373ec319d0c59b14754de38f97c59a0d5361992",
+    "benchmark/tasks/v2-integrate-349-multichannel-readout/SOURCE.md": "772b22f6b818389aab4580cd5c5f8d4850a2f568c89185c3c7a75d875e57a698",
+    "benchmark/tasks/v2-integrate-case0007-adpll-fine-tdc/tests/contract.json": "ddd725f11e3b2ab9f1a307cff3b664d81eaaa57bf7d8de0a3bbaf82300cf686e",
+    "benchmark/tasks/v2-integrate-case0007-adpll-fine-tdc/task.toml": "1dfcfb6d1681353247d99772e8cf1411346acce0bab961be40df6070be9a0fe0",
+    "benchmark/tasks/v2-integrate-case0007-adpll-fine-tdc/SOURCE.md": "32ef0df5a256019c1d2ab925a4edd666d9de2bed53232720086f8943b0f2839e",
+    "benchmark/tasks/v2-repair-debounce-latch/tests/contract.json": "442f5e2911d3beadbe20619cf2ea93effe403ca51f04b362a1142c3209334873",
+    "benchmark/tasks/v2-repair-debounce-latch/task.toml": "7862d23a4775e466696a00d3a589aa902da1821dbd225fd819bd35b7c23091c2",
+    "benchmark/tasks/v2-repair-debounce-latch/SOURCE.md": "711937d807f5810634a664dea28fa497114fdc6ae69395fff86a5d94fea67c90",
+    "benchmark/tasks/v2-repair-pfd-reset/tests/contract.json": "c3417402c077f296bdf996fb3d206af46586fd3f88c3c53c42f8b4a4c39460a3",
+    "benchmark/tasks/v2-repair-pfd-reset/task.toml": "266c20293af966acd199668737da702dc857c131b8607cc75519e6ff045dd83f",
+    "benchmark/tasks/v2-repair-pfd-reset/SOURCE.md": "711937d807f5810634a664dea28fa497114fdc6ae69395fff86a5d94fea67c90",
+    "benchmark/tasks/v2-repair-reset-sequencer/tests/contract.json": "216b451fafa7f646f028c9acc9ba813ff89c98d660adb4fb27bb68bef28571e0",
+    "benchmark/tasks/v2-repair-reset-sequencer/task.toml": "f7cdc12f330a44c28148aad7eddeb08555270c6c12e6e4720d78d0aa617a1988",
+    "benchmark/tasks/v2-repair-reset-sequencer/SOURCE.md": "711937d807f5810634a664dea28fa497114fdc6ae69395fff86a5d94fea67c90",
+    "benchmark/tasks/v2-repair-uvlo-brownout/tests/contract.json": "262dcf40ccd75b31101347ba4d5381ac215179b24b361e12c0732459a4f471a3",
+    "benchmark/tasks/v2-repair-uvlo-brownout/task.toml": "098165da52a0a20b791f54c369e2bd1bed07382f7e6564eef7b4aa10f86b178f",
+    "benchmark/tasks/v2-repair-uvlo-brownout/SOURCE.md": "711937d807f5810634a664dea28fa497114fdc6ae69395fff86a5d94fea67c90",
+    "benchmark/tasks/v2-repair-uvlo-reset-chain/tests/contract.json": "de9261c8acca7996197a3742e7706a30c35dcecd0d957514fe94035bde113c19",
+    "benchmark/tasks/v2-repair-uvlo-reset-chain/task.toml": "a01b65d3a894d296787637511ca724f269075770cf29521ea7767b72fd95dadd",
+    "benchmark/tasks/v2-repair-uvlo-reset-chain/SOURCE.md": "711937d807f5810634a664dea28fa497114fdc6ae69395fff86a5d94fea67c90",
+    "benchmark/tasks/v2-spec-001-bang-bang-phase-detector/tests/contract.json": "b962b0e8a9d4b61ef85074052c7a29feddda8e200b8deb2fe160465fbcb313c0",
+    "benchmark/tasks/v2-spec-001-bang-bang-phase-detector/task.toml": "c3d6982ade850930aff729d9680187d801582e16ba3e1f33f2ba662c6edc3c8f",
+    "benchmark/tasks/v2-spec-001-bang-bang-phase-detector/SOURCE.md": "c8fedf0a05fe5d96a3c8f37e817efc6489389ad856bab686e29c576fdb1041f4",
+    "benchmark/tasks/v2-spec-002-capacitive-sar-feedback-dac/tests/contract.json": "08d1f1925a3351dbcf063bbd80e490ceb123192003574cae25771c6e1ab7e824",
+    "benchmark/tasks/v2-spec-002-capacitive-sar-feedback-dac/task.toml": "1629e85f2d220c4dc092494c5e5af9558bfa18e9851d413033d3b99e83a95051",
+    "benchmark/tasks/v2-spec-002-capacitive-sar-feedback-dac/SOURCE.md": "d92851c6e46a0e001bc2396d50dcd3b52bcc2d3402323edd6087c028440809a1",
+    "benchmark/tasks/v2-spec-003-pipeline-adc-stage/tests/contract.json": "16bc6ee0e08ae8ae7efcb90115862337c5734725e3861478122cdc1ea2b5ce44",
+    "benchmark/tasks/v2-spec-003-pipeline-adc-stage/task.toml": "f461a905b53ed71a2e4f22f2873ba6d123c696d5469864db4324a941f5824105",
+    "benchmark/tasks/v2-spec-003-pipeline-adc-stage/SOURCE.md": "eecebdaeb0a3c4ea3613e5bb2097c340b45615f46c507a7838d4e0c09c0a0a3e",
+    "benchmark/tasks/v2-spec-024-clocked-sample-and-hold/tests/contract.json": "84c2765cb83e4b9619e812434b619987a76794946da1818fca4de2a168028344",
+    "benchmark/tasks/v2-spec-024-clocked-sample-and-hold/task.toml": "393f7796c7968e199d2b35473dd608943d73700a10ab45269b2f503f3a1e2a17",
+    "benchmark/tasks/v2-spec-024-clocked-sample-and-hold/SOURCE.md": "5df2a4c56758900c5a8917fbb176b33e6bed9a1e628fd8e78f709a97152866d4",
+    "benchmark/tasks/v2-spec-038-programmable-gain-amplifier/tests/contract.json": "bf62085ac8596b6c61af8b6de71a81486db790b68a322aced64fb1583d172c78",
+    "benchmark/tasks/v2-spec-038-programmable-gain-amplifier/task.toml": "86760138db557ec1ad0bcc98aa535baf1ab7145ada57d788a7fc987fcc93b993",
+    "benchmark/tasks/v2-spec-038-programmable-gain-amplifier/SOURCE.md": "57413354101fbe16abf1a095afa77d9015010ad598c222ec7a3ec82ee8cd9c37",
+    "benchmark/tasks/v2-spec-047-window-comparator-detector/tests/contract.json": "344c66d6059996622f4551e0193add2a90b918da09d297bd51149d9c3513b2f7",
+    "benchmark/tasks/v2-spec-047-window-comparator-detector/task.toml": "d39056bd7b1be37ce2840f53b1a59305420c601d8b086fd02ad74d9ef2dddfe8",
+    "benchmark/tasks/v2-spec-047-window-comparator-detector/SOURCE.md": "6e0f21f34726dfe46fff4875a36818bbea9da96bb0fcd310e4a9d2c978476b32",
+    "benchmark/tasks/v2-spec-055-first-order-sigma-delta-modulator/tests/contract.json": "9e98a535ca49065834d0518cf4f671144b399407ef98a275918e65bea87654cb",
+    "benchmark/tasks/v2-spec-055-first-order-sigma-delta-modulator/task.toml": "cf74b783f962efc0dbcabc1a9e3846e0d47b5cf0192aac97a71f9f82c1954668",
+    "benchmark/tasks/v2-spec-055-first-order-sigma-delta-modulator/SOURCE.md": "fb8698e6d5b16a83ee97a8e2584911b7c4ba9afe6692838bca5a1cd0e812a595",
+    "benchmark/tasks/v2-spec-071-acquisition-limited-sample-and-hold/tests/contract.json": "c0779a4587cf247eeeb11814ee92164d1d6a0e88cc2662a0778127429b868440",
+    "benchmark/tasks/v2-spec-071-acquisition-limited-sample-and-hold/task.toml": "ddff8e63ee4b513d1fbaca4b6faaabe5983645630a2a154068ae1d54868097df",
+    "benchmark/tasks/v2-spec-071-acquisition-limited-sample-and-hold/SOURCE.md": "d70d881b6144028321d0ab430b1bf7a6f2dbc30947013d46ab9d6eadced2e2e3",
+    "benchmark/tasks/v2-spec-082-agc-receiver-leveling-loop/tests/contract.json": "329c9320be765f88f8b73d30af9d6fe7424d1abd38fd6b8d588bad025b50d794",
+    "benchmark/tasks/v2-spec-082-agc-receiver-leveling-loop/task.toml": "b834640c6318d4f4ec6d5bf57764cf6517986629515a733d7905a60679b5af53",
+    "benchmark/tasks/v2-spec-082-agc-receiver-leveling-loop/SOURCE.md": "2ecec5a1d3c4cf68e2a1990ae7258512705c94a9ed3bef9a215c663e9c3a1379",
+    "benchmark/tasks/v2-spec-091-chopper-stabilized-differential-amplifier/tests/contract.json": "2a67c1185318adda132e676d04633c2f7e39a5db22f3091dea10712aada698b3",
+    "benchmark/tasks/v2-spec-091-chopper-stabilized-differential-amplifier/task.toml": "72f65fc5eeaf323de9843408a9167cd78f49224b3c5e550a0c11679e570172b6",
+    "benchmark/tasks/v2-spec-091-chopper-stabilized-differential-amplifier/SOURCE.md": "3822b79f22ecf7749f79db67455fb3cb1926beaa89ed399b582d3ae63a384806",
+    "benchmark/tasks/v2-spec-183-foreground-rdac-calibrator/tests/contract.json": "ddd5db209903a6ee37e63eb851d0c0dbf19ecbc3e807ef332166c6a43b7d54fd",
+    "benchmark/tasks/v2-spec-183-foreground-rdac-calibrator/task.toml": "b84ba28e3d8dc405b6b431efbf4bd42a2d5a9e603f8578761f22d9670f821caa",
+    "benchmark/tasks/v2-spec-183-foreground-rdac-calibrator/SOURCE.md": "c816e7796265c31fa27b09783cd339ad96d766547af49906f59b7d05970e475a",
+    "benchmark/tasks/v2-spec-186-sarfend-logic-4b/tests/contract.json": "0dcc7ec6c35aa51ec9fce088a4d8fe55fdf19fd352119fe3c266cf184fe8277b",
+    "benchmark/tasks/v2-spec-186-sarfend-logic-4b/task.toml": "55909e26470de5ef9233e9b2fdc08a8097e44b983cdafbbaedbe778a7183a20a",
+    "benchmark/tasks/v2-spec-186-sarfend-logic-4b/SOURCE.md": "90d3696542f42cbed3c6a1816eb8f0949dd52684372982815619ee1c27806a02",
+    "benchmark/tasks/v2-spec-307-switched-capacitor-integrator-phase-pair/tests/contract.json": "2de6377e34c279c94976d7536ef356429edc59dd9b72710902f1615ba76e1f20",
+    "benchmark/tasks/v2-spec-307-switched-capacitor-integrator-phase-pair/task.toml": "14e34915380758094bd4ba5940a322f706487101925e14c86fed64e8168261c1",
+    "benchmark/tasks/v2-spec-307-switched-capacitor-integrator-phase-pair/SOURCE.md": "3d70528e4246526985e9945202cc27a7f0c1373666b7e9a655000d6742e5215b",
+    "benchmark/tasks/v2-spec-308-correlated-double-sampler-offset-cancel/tests/contract.json": "92b6a444301c6925f468d04273bb211ec240bd86804df5e1823fbee3c6317691",
+    "benchmark/tasks/v2-spec-308-correlated-double-sampler-offset-cancel/task.toml": "43564208a270ba59b8bf4c4bf0b337b6745a45943338b3700c3efce8f3530692",
+    "benchmark/tasks/v2-spec-308-correlated-double-sampler-offset-cancel/SOURCE.md": "bb5733fbf8e277911612b153d0adfc15d3ca7162e160f20f0a0063a3ac5c0729",
+    "benchmark/tasks/v2-spec-314-hysteretic-window-comparator/tests/contract.json": "2e3e9f22ad5d3a1e92a08564676689e014df505e432d5cd04a9380770ad37d2f",
+    "benchmark/tasks/v2-spec-314-hysteretic-window-comparator/task.toml": "a2c4506f4c88ec84aaa37c506944e3f5a2df11d42b3d5c53d3cc06fce6f1cb84",
+    "benchmark/tasks/v2-spec-314-hysteretic-window-comparator/SOURCE.md": "91be892d45da05ae183c0d78665f127a3423974d623ddb7401a3beae77aad901",
+    "benchmark/tasks/v2-spec-353-ffe-transmitter-3tap/tests/contract.json": "2edd551c3b84e1f7412a1292b8ec86b276e00377504d595da5b9d822b0afaace",
+    "benchmark/tasks/v2-spec-353-ffe-transmitter-3tap/task.toml": "000b70022c3f78f449b11e7de3cfc860eb0259a27ca2e6be9d6158257fa80232",
+    "benchmark/tasks/v2-spec-353-ffe-transmitter-3tap/SOURCE.md": "ddfe9705acf9d0533d82a747bb30c5a76d698d63851b0ddf341c948ffc75d9a4",
+    "benchmark/tasks/v2-spec-370-opamp-feedback-settling-monitor/tests/contract.json": "64f94635fdcdee0a1980addffd30d48be86e25e46bb23c78e413bdfeedf42262",
+    "benchmark/tasks/v2-spec-370-opamp-feedback-settling-monitor/task.toml": "3693771dcd5bfb0794d749e931ee0766cd9d0792051c2b09e5d49731cf8fa32f",
+    "benchmark/tasks/v2-spec-370-opamp-feedback-settling-monitor/SOURCE.md": "db53edaa2abf5989c86bf66d75d577795f10a30f8f4597786c231a8931a04007",
+    "benchmark/tasks/v2-spec-375-nonoverlap-clock-generator/tests/contract.json": "119a657731291e1653b760e2752fc506ee6e24da14dcb219d167ba95cb9c9ab7",
+    "benchmark/tasks/v2-spec-375-nonoverlap-clock-generator/task.toml": "f39c13beab9699fc8ab0027697a3c50a6bb6ac0f23c2d2ed717cac9288acdf02",
+    "benchmark/tasks/v2-spec-375-nonoverlap-clock-generator/SOURCE.md": "46a24175a3115b4df0dadb2bdcf45540197ea2596bc198654986402827795722",
+    "benchmark/tasks/v2-spec-396-quadrature-lo-generator-divided-clock/tests/contract.json": "dd2f1f1c6bc41ba0237a352490d50e9d241618deff28496cef7112a60a3e062d",
+    "benchmark/tasks/v2-spec-396-quadrature-lo-generator-divided-clock/task.toml": "443180615b8062b11e42091ba36cec8c5bcb4eff48244aa4633f792952965076",
+    "benchmark/tasks/v2-spec-396-quadrature-lo-generator-divided-clock/SOURCE.md": "f166f49211087dd8f4f611751d1b3e072f0c64d395489848b9a30dd674fd9ad8",
+    "benchmark/tasks/v2-test-clock-frequency/tests/contract.json": "f478cb36d136419a8abe5f4f76ecddd3cb83a1f77dcf5453903c082fda0de736",
+    "benchmark/tasks/v2-test-clock-frequency/task.toml": "76bd1ecc8358ecf2bc753816568aa528057af9870ccbeb7c52c362c7cca49f43",
+    "benchmark/tasks/v2-test-clock-frequency/SOURCE.md": "9efa6a3a8f85b8adaf5d3b77e71cd2ac500bd20283e11ef926a7b221613f2863",
+    "benchmark/tasks/v2-test-comparator-delay/tests/contract.json": "1a39d6da29cc416aaba791c26d4ff1c3bb1845743e02539c54d899b4e2d4e3bb",
+    "benchmark/tasks/v2-test-comparator-delay/task.toml": "73ceed903f84699cb9b315a85072439b12272ca76056520144e3d6649819c8df",
+    "benchmark/tasks/v2-test-comparator-delay/SOURCE.md": "676464dff251ee6c20baf8ee490e99cd66daecbc7ba60c8d08166841595f9b2b",
+    "benchmark/tasks/v2-test-duty-cycle/tests/contract.json": "53c6d6ee8da93c02273cf896588b0b83016c7862bb2b3bbfec9ce72180c68fdb",
+    "benchmark/tasks/v2-test-duty-cycle/task.toml": "bd5f21a50a2818b4d49c222613b333d47f35ff69128cf9fc3f0aa0edf9840141",
+    "benchmark/tasks/v2-test-duty-cycle/SOURCE.md": "4628b00459679c790d2b77ffebf1db219ed82275372aa91ad1bbbe7f4b22ad08",
+    "benchmark/tasks/v2-test-gain-settling/tests/contract.json": "22e71d26e06c0e11417fa8ada7266303682294073d55f5415b337b995d957ed1",
+    "benchmark/tasks/v2-test-gain-settling/task.toml": "4d6b61a24620d5e4ca67229829a56b180b05f955ba6e548815758692b604f39f",
+    "benchmark/tasks/v2-test-gain-settling/SOURCE.md": "c1d64c53f732bb3e63848eedca85f64343658d898a9b2c935c1ff59440c02758",
+    "benchmark/tasks/v2-test-hysteresis/tests/contract.json": "bfceb849227da610bd68da76114e396973809b1759430ba50b0208037ecdabb8",
+    "benchmark/tasks/v2-test-hysteresis/task.toml": "fc9327f1980a2b2473318596a6da371614422c19eb3849767790072525771d86",
+    "benchmark/tasks/v2-test-hysteresis/SOURCE.md": "b04268a4536d8fb78aca7a79f6f20c1ebcce705f8a2d7f19c9664155ce1a473c",
+    "benchmark/tasks/v2-test-offset-search/tests/contract.json": "d8acf04ae68acca97dad4c3f962baccd47a1f0063fc15e8355c2629e53466228",
+    "benchmark/tasks/v2-test-offset-search/task.toml": "0c88866faaaaf617b8e0a6021c230955b4499cd833de56c2b56f80bded78e462",
+    "benchmark/tasks/v2-test-offset-search/SOURCE.md": "3905fcd854e771ce49c2ccbdf7cd75907b96149a0d2cedad48032456157e4e24",
+    "benchmark/tasks/v2-test-online-gain/tests/contract.json": "48ad4fddff39c917d0c0734448a83a452842906c63148e871d7bd560adc8e002",
+    "benchmark/tasks/v2-test-online-gain/task.toml": "57bead48af7bb8a657d5fa8a7cc114a12d18eccff8615ad2e3931a06be5ee9da",
+    "benchmark/tasks/v2-test-online-gain/SOURCE.md": "086ae2a97f6f50256b7fd35344406ebf75a2c10e16294ed8ea7e6c96b7bd7299",
+    "benchmark/tasks/v2-test-por-sequence/tests/contract.json": "ee0a35a2af5e4ba6e87833382fbf09a62198f1d91c5e2fb2b3e9fd1886e02985",
+    "benchmark/tasks/v2-test-por-sequence/task.toml": "ffb57d2791d84aad46576bd12e645fece18b4a26a465f49f9f4ec38243209902",
+    "benchmark/tasks/v2-test-por-sequence/SOURCE.md": "1d625b59d5197417bdf814477a04f54682ef0a2e7207d56ce0fb8409aef6e66b",
+    "benchmark/tasks/v2-test-sampled-rms/tests/contract.json": "7bed769931789df589b45a2de1c96e5dd6337b10b90cfaa3e7c82b7848290b0c",
+    "benchmark/tasks/v2-test-sampled-rms/task.toml": "3a43b4434fcfb676a856d84d59bbf0246be0225174435c7541b83cb1b962d91a",
+    "benchmark/tasks/v2-test-sampled-rms/SOURCE.md": "386300a141048fab452b7d3d1169ab931ba1ec7262c68397629905fb42a665f3",
+    "benchmark/tasks/v2-test-time-protocol/tests/contract.json": "19d63c389d24271ecccd4e1085bcdd6ca20fcd69b273abbcddee018dc5283562",
+    "benchmark/tasks/v2-test-time-protocol/task.toml": "e1790669d8a06f028be117198a7715a77b43801fa1339f2526dc0331bbdaaf73",
+    "benchmark/tasks/v2-test-time-protocol/SOURCE.md": "167be8f78c1cb78e528a737225d79defae8a525c5d5d48afa7c64cffb25e590b"
+  },
+  "approved_specs": [
+    {
+      "issue": 133,
+      "url": "https://github.com/BucketSran/vaEVAS/issues/133",
+      "retained_issue_snapshot_sha256": "59710347a5ba8ed10450cdd9b6a4c30bb4516404cfc3c7691be3c36ee5cbd3d6"
+    },
+    {
+      "issue": 134,
+      "url": "https://github.com/BucketSran/vaEVAS/issues/134",
+      "retained_issue_snapshot_sha256": "3bf0ff658de27dab7b0e4b1bf3a0d5a7d818cd75c69c51987e75c844ebbd8587"
+    },
+    {
+      "issue": 135,
+      "url": "https://github.com/BucketSran/vaEVAS/issues/135",
+      "retained_issue_snapshot_sha256": "36329043e8e3df8b5f13e234497ee7b094ad6f3143432e0a44bb720133e7e20a"
+    },
+    {
+      "issue": 136,
+      "url": "https://github.com/BucketSran/vaEVAS/issues/136",
+      "retained_issue_snapshot_sha256": "0261bb9e9cd2742e0e2b91150170ea850ac42b802d2d117f48468a1f4ad0ca85"
+    },
+    {
+      "issue": 137,
+      "url": "https://github.com/BucketSran/vaEVAS/issues/137",
+      "retained_issue_snapshot_sha256": "dd9fd987904ea527d5517e65501e01d67d438574f7cda52220e5f2bd6da88e3c"
+    }
+  ],
+  "retained_approved_coverage_snapshot_sha256": "450eb8b83f70e92076da9fc546a2bcc9768e7aeb75f266592b2da8500a6964e6"
+}

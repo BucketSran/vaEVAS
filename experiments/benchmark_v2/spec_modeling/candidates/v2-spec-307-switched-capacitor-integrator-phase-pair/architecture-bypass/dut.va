@@ -1,0 +1,119 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module switched_cap_integrator_phase_pair_top(vin, phi1, phi2, rst, enable, vout, phase_metric, valid);
+    input vin, phi1, phi2, rst, enable;
+    output vout, phase_metric, valid;
+    electrical vin, phi1, phi2, rst, enable, vout, phase_metric, valid;
+    electrical sample_node, sample_valid;
+
+    electrical unused_vout,unused_phase_metric,unused_valid,unused_sample_node,unused_sample_valid;
+parameter real vdd = 0.9;
+    parameter real vss = 0.0;
+    parameter real vcm = 0.45;
+    parameter real vth = 0.45;
+    parameter real tr = 200p from (0:inf);
+    parameter real k_int = 0.2;
+
+    private_sample_phase_cell #(.vdd(vdd), .vss(vss), .vcm(vcm), .vth(vth), .tr(tr))
+        XSAMPLE (vin, phi1, phi2, rst, enable, sample_node, sample_valid);
+    private_integrator_state_cell #(.vdd(vdd), .vss(vss), .vcm(vcm), .vth(vth), .tr(tr), .k_int(k_int))
+        XINT (phi1, phi2, rst, enable, sample_node, sample_valid, vout, phase_metric, valid);
+sample_phase_cell #(.vdd(vdd), .vss(vss), .vcm(vcm), .vth(vth), .tr(tr))
+        UNUSED_XSAMPLE (vin, phi1, phi2, rst, enable, unused_sample_node, unused_sample_valid);
+    integrator_state_cell #(.vdd(vdd), .vss(vss), .vcm(vcm), .vth(vth), .tr(tr), .k_int(k_int))
+        UNUSED_XINT (phi1, phi2, rst, enable, unused_sample_node, unused_sample_valid, unused_vout, unused_phase_metric, unused_valid);
+
+endmodule
+`include "constants.vams"
+`include "disciplines.vams"
+
+module private_sample_phase_cell(vin, phi1, phi2, rst, enable, sample_node, sample_valid);
+    input vin, phi1, phi2, rst, enable;
+    output sample_node, sample_valid;
+    electrical vin, phi1, phi2, rst, enable, sample_node, sample_valid;
+
+    parameter real vdd = 0.9;
+    parameter real vss = 0.0;
+    parameter real vcm = 0.45;
+    parameter real vth = 0.45;
+    parameter real tr = 200p from (0:inf);
+    real sample_v, valid_v;
+
+    analog function real clip01;
+        input x;
+        real x;
+        begin
+            if (x < vss) clip01 = vss;
+            else if (x > vdd) clip01 = vdd;
+            else clip01 = x;
+        end
+    endfunction
+
+    analog begin
+        @(initial_step) begin sample_v = vcm; valid_v = vss; end
+ @(cross(V(rst)-vth,+1) or cross(V(enable)-vth,-1)) begin sample_v = vcm; valid_v = vss; end
+        @(cross(V(phi1) - vth, +1)) begin
+            if ((V(rst) > vth || V(enable) <= vth)) begin
+                sample_v = vcm;
+                valid_v = vss;
+            end else if (V(phi2) <= vth || 0) begin
+                sample_v = V(vin);
+                valid_v = vdd;
+            end else begin
+                valid_v = vss;
+            end
+        end
+        V(sample_node) <+ transition(clip01(sample_v), 0, tr, tr);
+        V(sample_valid) <+ transition(valid_v, 0, tr, tr);
+    end
+endmodule
+`include "constants.vams"
+`include "disciplines.vams"
+
+module private_integrator_state_cell(phi1, phi2, rst, enable, sample_node, sample_valid, vout, phase_metric, valid);
+    input phi1, phi2, rst, enable, sample_node, sample_valid;
+    output vout, phase_metric, valid;
+    electrical phi1, phi2, rst, enable, sample_node, sample_valid, vout, phase_metric, valid;
+
+    parameter real vdd = 0.9;
+    parameter real vss = 0.0;
+    parameter real vcm = 0.45;
+    parameter real vth = 0.45;
+    parameter real tr = 200p from (0:inf);
+    parameter real k_int = 0.2;
+    integer consumed;
+ real state_v, phase_metric_v, valid_v;
+
+    analog function real clip01;
+        input x;
+        real x;
+        begin
+            if (x < vss) clip01 = vss;
+            else if (x > vdd) clip01 = vdd;
+            else clip01 = x;
+        end
+    endfunction
+
+    analog begin
+        @(initial_step) begin consumed=1;state_v = vcm; phase_metric_v = vcm; valid_v = vss; end
+ @(cross(V(rst)-vth,+1) or cross(V(enable)-vth,-1)) begin consumed=1;state_v = vcm; phase_metric_v = vcm; valid_v = vss; end
+        @(cross(V(phi1)-vth,+1))consumed=0;
+ @(cross(V(phi2) - vth, +1)) begin
+            if ((V(rst) > vth || V(enable) <= vth)) begin
+                state_v = vcm;
+                phase_metric_v = vcm;
+                valid_v = vss;
+            end else if ((V(phi1) <= vth || 0) && V(sample_valid) > vth && !consumed) begin
+                consumed=1;state_v = clip01(state_v + 1.0 * k_int * (V(sample_node) - vcm));
+                phase_metric_v = V(sample_node);
+                valid_v = vdd;
+            end else begin
+                valid_v = vss;
+            end
+        end
+        V(vout) <+ transition(clip01(state_v), 0, tr, tr);
+        V(phase_metric) <+ transition(clip01(phase_metric_v), 0, tr, tr);
+        V(valid) <+ transition(valid_v, 0, tr, tr);
+    end
+endmodule

@@ -1,0 +1,13 @@
+`include "disciplines.vams"
+module chain_downstream(clk,resetb,enable,activity);
+input clk,resetb,enable; output activity; electrical clk,resetb,enable,activity;
+integer count; parameter real tr=10p;
+analog begin
+@(initial_step) count=0;
+@(cross(V(resetb)-0.45,-1) or cross(V(enable)-0.45,-1)) count=0;
+@(cross(V(clk)-0.45,1)) begin
+if(V(resetb)>0.45 && V(enable)>0.45) count=count+1; else count=0;
+end
+V(activity)<+transition(0.1*count,0,tr);
+end
+endmodule

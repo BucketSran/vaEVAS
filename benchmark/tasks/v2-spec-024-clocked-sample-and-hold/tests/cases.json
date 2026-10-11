@@ -1,0 +1,50 @@
+[
+  {
+    "name": "contract-base",
+    "source_id": "024",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nV_VDD (vdd 0) vsource dc=1.0\nV_VSS (vss 0) vsource dc=0.1\nV_IN (in vss) vsource type=pwl wave=[0 0 240n 0.9]\nV_CLK (clk vss) vsource type=pulse val0=0 val1=0.9 period=20n delay=1n rise=200p fall=200p width=10n\nXDUT (vdd vss in clk out) sample_hold\n\ntran tran stop=240n maxstep=2p strobeperiod=2p\nsave vdd vss in clk out\n",
+    "signals": [
+      "vdd",
+      "vss",
+      "in",
+      "clk",
+      "out"
+    ],
+    "stop": 2.4000000000000003e-07,
+    "resolution": 2e-12,
+    "atol": 0.002,
+    "params": {}
+  },
+  {
+    "name": "contract-stretched-input",
+    "source_id": "024",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nV_VDD (vdd 0) vsource dc=1.0\nV_VSS (vss 0) vsource dc=0.1\nV_IN (in vss) vsource type=pwl wave=[0 0 295.2n 0.9]\nV_CLK (clk vss) vsource type=pulse val0=0 val1=0.9 period=24.6n delay=1.23n rise=200p fall=200p width=12.3n\nXDUT (vdd vss in clk out) sample_hold\n\ntran tran stop=295.2n maxstep=2p strobeperiod=2p\nsave vdd vss in clk out\n",
+    "signals": [
+      "vdd",
+      "vss",
+      "in",
+      "clk",
+      "out"
+    ],
+    "stop": 2.9520000000000005e-07,
+    "resolution": 2e-12,
+    "atol": 0.002,
+    "params": {}
+  },
+  {
+    "name": "irregular-clock-stop-and-large-jumps",
+    "source_id": "024",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nVDD (vdd 0) vsource dc=1.0\nVSS (vss 0) vsource dc=.1\nVIN (in vss) vsource type=pwl wave=[0 .1 5n .1 10n .8 20n .8 25n .2 40n .7 50n .7]\nVCLK (clk vss) vsource type=pwl wave=[0 0 4n 0 4.12n .9 6n .9 6.12n 0 14n 0 14.12n .9 16n .9 16.12n 0 27n 0 27.12n .9 28n .9 28.12n 0 50n 0]\nX (vdd vss in clk out) sample_hold\ntran tran stop=50n maxstep=2p strobeperiod=2p\nsave vdd vss in clk out\n",
+    "signals": [
+      "vdd",
+      "vss",
+      "in",
+      "clk",
+      "out"
+    ],
+    "stop": 5e-08,
+    "resolution": 2e-12,
+    "atol": 0.002,
+    "params": {}
+  }
+]

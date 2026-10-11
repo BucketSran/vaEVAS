@@ -47,7 +47,11 @@ def sync(check=False):
             continue
         tree = ast.parse((tests / "verify.py").read_text())
         modules = {node.module for node in ast.walk(tree) if isinstance(node, ast.ImportFrom) and node.module}
-        names = {"circuit_task", "adc_linearity", *[m for m in modules if m.startswith("first_batch_")]}
+        v2 = "v2_runtime" in modules
+        if v2:
+            names = {"adc_linearity", *[m for m in modules if m.startswith("v2_")]}
+        else:
+            names = {"circuit_task", "adc_linearity", *[m for m in modules if m.startswith("first_batch_")]}
         if "first_batch_triangle" in modules:
             names.add("triangle_oscillator")
         for name in sorted(names):
@@ -58,13 +62,16 @@ def sync(check=False):
                 stale.append(str(target.relative_to(ROOT)))
                 if not check:
                     target.write_bytes(data)
-        instruction = tests.parent / "instruction.md"
-        original = instruction.read_text()
-        updated = with_submission_policy(original, json.loads(contract.read_text()))
-        if updated != original:
-            stale.append(str(instruction.relative_to(ROOT)))
-            if not check:
-                instruction.write_text(updated)
+        # V2 preserves the task's public requirements and executes candidate
+        # bytes unchanged. Legacy language and zero-on-error rules do not apply.
+        if not v2:
+            instruction = tests.parent / "instruction.md"
+            original = instruction.read_text()
+            updated = with_submission_policy(original, json.loads(contract.read_text()))
+            if updated != original:
+                stale.append(str(instruction.relative_to(ROOT)))
+                if not check:
+                    instruction.write_text(updated)
         count += 1
     return count, stale
 

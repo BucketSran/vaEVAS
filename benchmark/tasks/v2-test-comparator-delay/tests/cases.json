@@ -1,0 +1,86 @@
+[
+  {
+    "name": "terminal-normal",
+    "kind": "delay",
+    "threshold": 0.45,
+    "vhigh": 0.9,
+    "stop": 2.9e-08,
+    "guard": 8e-11,
+    "atol": 0.002,
+    "tolerances": {
+      "delay_ps": 0.7,
+      "overdrive_mv": 0.2
+    },
+    "signals": [
+      "clk",
+      "vinp",
+      "vinn",
+      "outp",
+      "outn",
+      "delay_ps",
+      "overdrive_mv",
+      "polarity",
+      "valid"
+    ],
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\nahdl_include \"support_cmp.va\"\n\nVvdd (vdd 0) vsource dc=0.9\nVvss (vss 0) vsource dc=0.0\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 delay=1.4n period=5.7n width=2.5n rise=60p fall=60p\nVvinp (vinp 0) vsource type=pwl wave=[0 0.4746 5.8n 0.4746 6n 0.4377 11.8n 0.4377 12n 0.45492 17.8n 0.45492 18n 0.446925 23.8n 0.446925 24n 0.46845]\nVvinn (vinn 0) vsource type=pwl wave=[0 0.4254 5.8n 0.4254 6n 0.4623 11.8n 0.4623 12n 0.44508 17.8n 0.44508 18n 0.453075 23.8n 0.453075 24n 0.43155]\nXCMP (vdd vss clk vinp vinn outp outn) support_overdrive_delay_comparator td_0=160p td_max=480p\nXMEAS (vdd vss clk vinp vinn outp outn delay_ps overdrive_mv polarity valid) delay_meter\n\ntran tran stop=29n maxstep=1p\nsave clk vinp vinn outp outn delay_ps overdrive_mv polarity valid\n",
+    "support": {
+      "support_cmp.va": "`include \"disciplines.vams\"\n\nmodule support_overdrive_delay_comparator(vdd, vss, clk, vinp, vinn, outp, outn);\ninput vdd, vss, clk, vinp, vinn;\noutput outp, outn;\nelectrical vdd, vss, clk, vinp, vinn, outp, outn;\n\nparameter real td_0 = 24p;\nparameter real tau = 5p;\nparameter real td_min = 25p;\nparameter real td_max = 140p;\nparameter real tr = 20p;\n\nreal td;\nreal out_delay;\nreal diff;\nreal diff_abs;\ninteger outp_state;\ninteger outn_state;\n\nanalog begin\n    @(initial_step) begin\n        td = td_min;\n        out_delay = 0.0;\n        outp_state = 0;\n        outn_state = 0;\n    end\n\n    @(cross(V(clk, vss) - 0.5 * V(vdd, vss), +1)) begin\n        diff = V(vinp, vinn);\n        diff_abs = diff;\n        if (diff_abs < 0.0) begin\n            diff_abs = -diff_abs;\n        end\n        if (diff_abs < 1u) begin\n            diff_abs = 1u;\n        end\n        td = td_0 + tau * ln(V(vdd, vss) / diff_abs);\n        if (td < td_min) begin\n            td = td_min;\n        end\n        if (td > td_max) begin\n            td = td_max;\n        end\n        outp_state = (diff >= 0.0);\n        outn_state = (diff < 0.0);\n        out_delay = td;\n    end\n\n    @(cross(V(clk, vss) - 0.5 * V(vdd, vss), -1)) begin\n        outp_state = 0;\n        outn_state = 0;\n        out_delay = 0.0;\n    end\n\n    V(outp, vss) <+ transition(outp_state ? 1.0 : 0.0, out_delay, tr, tr) * V(vdd, vss);\n    V(outn, vss) <+ transition(outn_state ? 1.0 : 0.0, out_delay, tr, tr) * V(vdd, vss);\nend\n\nendmodule\n"
+    }
+  },
+  {
+    "name": "terminal-slow-dut",
+    "kind": "delay",
+    "threshold": 0.45,
+    "vhigh": 0.9,
+    "stop": 2.9e-08,
+    "guard": 8e-11,
+    "atol": 0.002,
+    "tolerances": {
+      "delay_ps": 0.7,
+      "overdrive_mv": 0.2
+    },
+    "signals": [
+      "clk",
+      "vinp",
+      "vinn",
+      "outp",
+      "outn",
+      "delay_ps",
+      "overdrive_mv",
+      "polarity",
+      "valid"
+    ],
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\nahdl_include \"support_cmp.va\"\n\nVvdd (vdd 0) vsource dc=0.9\nVvss (vss 0) vsource dc=0.0\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 delay=1.4n period=5.7n width=2.5n rise=60p fall=60p\nVvinp (vinp 0) vsource type=pwl wave=[0 0.4746 5.8n 0.4746 6n 0.4377 11.8n 0.4377 12n 0.45492 17.8n 0.45492 18n 0.446925 23.8n 0.446925 24n 0.46845]\nVvinn (vinn 0) vsource type=pwl wave=[0 0.4254 5.8n 0.4254 6n 0.4623 11.8n 0.4623 12n 0.44508 17.8n 0.44508 18n 0.453075 23.8n 0.453075 24n 0.43155]\nXCMP (vdd vss clk vinp vinn outp outn) support_overdrive_delay_comparator td_0=290p td_max=720p\nXMEAS (vdd vss clk vinp vinn outp outn delay_ps overdrive_mv polarity valid) delay_meter\n\ntran tran stop=29n maxstep=1p\nsave clk vinp vinn outp outn delay_ps overdrive_mv polarity valid\n",
+    "support": {
+      "support_cmp.va": "`include \"disciplines.vams\"\n\nmodule support_overdrive_delay_comparator(vdd, vss, clk, vinp, vinn, outp, outn);\ninput vdd, vss, clk, vinp, vinn;\noutput outp, outn;\nelectrical vdd, vss, clk, vinp, vinn, outp, outn;\n\nparameter real td_0 = 24p;\nparameter real tau = 5p;\nparameter real td_min = 25p;\nparameter real td_max = 140p;\nparameter real tr = 20p;\n\nreal td;\nreal out_delay;\nreal diff;\nreal diff_abs;\ninteger outp_state;\ninteger outn_state;\n\nanalog begin\n    @(initial_step) begin\n        td = td_min;\n        out_delay = 0.0;\n        outp_state = 0;\n        outn_state = 0;\n    end\n\n    @(cross(V(clk, vss) - 0.5 * V(vdd, vss), +1)) begin\n        diff = V(vinp, vinn);\n        diff_abs = diff;\n        if (diff_abs < 0.0) begin\n            diff_abs = -diff_abs;\n        end\n        if (diff_abs < 1u) begin\n            diff_abs = 1u;\n        end\n        td = td_0 + tau * ln(V(vdd, vss) / diff_abs);\n        if (td < td_min) begin\n            td = td_min;\n        end\n        if (td > td_max) begin\n            td = td_max;\n        end\n        outp_state = (diff >= 0.0);\n        outn_state = (diff < 0.0);\n        out_delay = td;\n    end\n\n    @(cross(V(clk, vss) - 0.5 * V(vdd, vss), -1)) begin\n        outp_state = 0;\n        outn_state = 0;\n        out_delay = 0.0;\n    end\n\n    V(outp, vss) <+ transition(outp_state ? 1.0 : 0.0, out_delay, tr, tr) * V(vdd, vss);\n    V(outn, vss) <+ transition(outn_state ? 1.0 : 0.0, out_delay, tr, tr) * V(vdd, vss);\nend\n\nendmodule\n"
+    }
+  },
+  {
+    "name": "terminal-missing-final-decision",
+    "kind": "delay",
+    "threshold": 0.45,
+    "vhigh": 0.9,
+    "stop": 2.9e-08,
+    "guard": 8e-11,
+    "atol": 0.002,
+    "tolerances": {
+      "delay_ps": 0.7,
+      "overdrive_mv": 0.2
+    },
+    "signals": [
+      "clk",
+      "vinp",
+      "vinn",
+      "outp",
+      "outn",
+      "delay_ps",
+      "overdrive_mv",
+      "polarity",
+      "valid"
+    ],
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\nahdl_include \"support_cmp.va\"\n\nVvdd (vdd 0) vsource dc=0.9\nVvss (vss 0) vsource dc=0.0\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 delay=1.4n period=5.7n width=2.5n rise=60p fall=60p\nVvinp (vinp 0) vsource type=pwl wave=[0 0.4746 5.8n 0.4746 6n 0.4377 11.8n 0.4377 12n 0.45492 17.8n 0.45492 18n 0.446925 23.8n 0.446925 24n 0.46845]\nVvinn (vinn 0) vsource type=pwl wave=[0 0.4254 5.8n 0.4254 6n 0.4623 11.8n 0.4623 12n 0.44508 17.8n 0.44508 18n 0.453075 23.8n 0.453075 24n 0.43155]\nXCMP (vdd vss clk vinp vinn outp outn) support_overdrive_delay_comparator td_0=290p td_max=720p\nXMEAS (vdd vss clk vinp vinn outp outn delay_ps overdrive_mv polarity valid) delay_meter\n\ntran tran stop=29n maxstep=1p\nsave clk vinp vinn outp outn delay_ps overdrive_mv polarity valid\n",
+    "support": {
+      "support_cmp.va": "`include \"disciplines.vams\"\n\nmodule support_overdrive_delay_comparator(vdd, vss, clk, vinp, vinn, outp, outn);\ninput vdd, vss, clk, vinp, vinn;\noutput outp, outn;\nelectrical vdd, vss, clk, vinp, vinn, outp, outn;\n\nparameter real td_0 = 24p;\nparameter real tau = 5p;\nparameter real td_min = 25p;\nparameter real td_max = 140p;\nparameter real tr = 20p;\n\nreal td;\nreal out_delay;\nreal diff;\nreal diff_abs;\ninteger outp_state;\ninteger outn_state;\n\nanalog begin\n    @(initial_step) begin\n        td = td_min;\n        out_delay = 0.0;\n        outp_state = 0;\n        outn_state = 0;\n    end\n\n    @(cross(V(clk, vss) - 0.5 * V(vdd, vss), +1)) begin\n        diff = V(vinp, vinn);\n        diff_abs = diff;\n        if (diff_abs < 0.0) begin\n            diff_abs = -diff_abs;\n        end\n        if (diff_abs < 1u) begin\n            diff_abs = 1u;\n        end\n        td = td_0 + tau * ln(V(vdd, vss) / diff_abs);\n        if (td < td_min) begin\n            td = td_min;\n        end\n        if (td > td_max) begin\n            td = td_max;\n        end\n        outp_state = (diff >= 0.0 && $abstime < 22n);\n        outn_state = (diff < 0.0 && $abstime < 22n);\n        out_delay = td;\n    end\n\n    @(cross(V(clk, vss) - 0.5 * V(vdd, vss), -1)) begin\n        outp_state = 0;\n        outn_state = 0;\n        out_delay = 0.0;\n    end\n\n    V(outp, vss) <+ transition(outp_state ? 1.0 : 0.0, out_delay, tr, tr) * V(vdd, vss);\n    V(outn, vss) <+ transition(outn_state ? 1.0 : 0.0, out_delay, tr, tr) * V(vdd, vss);\nend\n\nendmodule\n"
+    }
+  }
+]

@@ -1,0 +1,17 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module duty_cycle_meter_8b(clk_in, valid, duty0, duty1, duty2, duty3, duty4, duty5, duty6, duty7);
+    input clk_in;
+    output valid, duty0, duty1, duty2, duty3, duty4, duty5, duty6, duty7;
+    electrical clk_in, valid, duty0, duty1, duty2, duty3, duty4, duty5, duty6, duty7;
+
+    parameter real vdd = 0.9;
+    parameter real vth = 0.45;
+    parameter real tr = 20p;
+
+    real rise_t; real fall_t; integer have_fall; integer have_rise; integer code; real valid_level;
+    analog begin
+// Implement the public contract.
+end
+endmodule

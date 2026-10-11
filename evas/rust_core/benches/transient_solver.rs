@@ -22,8 +22,18 @@ fn request(kind: &str, observations: usize) -> Request {
     let mut pwl = json!([[[0.0, 0.0], [1.0, 1.0]]]);
     match kind {
         "pwl" => {}
-        "idt" | "nonlinear_idt" => {
-            let (rhs, ic) = if kind == "idt" {
+        "idt" | "pwl_idt" | "nonlinear_idt" => {
+            if kind == "pwl_idt" {
+                // A repeated triangular input exposes immutable source-copy
+                // costs. Keep half-segment observations, not just zero areas.
+                let segments = (observations - 1) / 2;
+                assert!(observations == 2 * segments + 1);
+                assert!(segments >= 4 && segments.is_power_of_two());
+                pwl = json!([(0..=segments)
+                    .map(|i| [i as f64 / segments as f64, [0., 1., 0., -1.][i % 4]])
+                    .collect::<Vec<_>>()]);
+            }
+            let (rhs, ic) = if kind != "nonlinear_idt" {
                 (input, 0.0)
             } else {
                 (
@@ -67,7 +77,12 @@ fn main() {
         .unwrap_or(129);
     assert!(count >= 2);
     let mut records = Vec::new();
-    for kind in ["pwl", "idt", "nonlinear_idt", "timer", "cross"] {
+    let selected = std::env::var("EVAS_BENCH_CASE").ok();
+    let kinds = selected.as_deref().map_or_else(
+        || vec!["pwl", "idt", "nonlinear_idt", "timer", "cross"],
+        |kind| vec![kind],
+    );
+    for kind in kinds {
         if let Ok(directory) = std::env::var("EVAS_BENCH_REQUESTS") {
             std::fs::write(
                 std::path::Path::new(&directory).join(format!("{kind}-{count}.json")),
@@ -86,6 +101,20 @@ fn main() {
                 let expected = match kind {
                     "pwl" => t,
                     "idt" => 0.5 * t * t,
+                    "pwl_idt" => {
+                        // Integral of one triangle, then its sign reversal.
+                        // Each complete four-segment period has zero area.
+                        let segments = (count - 1) / 2;
+                        let phase = (i % 8) as f64 / 2.;
+                        let area = if phase <= 1. {
+                            phase * phase / 2.
+                        } else if phase <= 3. {
+                            1. - (phase - 2.).powi(2) / 2.
+                        } else {
+                            (phase - 4.).powi(2) / 2.
+                        };
+                        area / segments as f64
+                    }
                     "nonlinear_idt" => 1.0 / (1.0 + t),
                     "timer" => (8.0 * t).floor(),
                     "cross" => [0.125, 0.375, 0.625, 0.875]

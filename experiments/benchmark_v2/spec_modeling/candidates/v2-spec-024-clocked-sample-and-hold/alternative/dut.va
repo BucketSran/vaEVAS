@@ -1,0 +1,13 @@
+`include "disciplines.vams"
+module sample_hold(VDD,VSS,IN,CLK,OUT);
+inout VDD,VSS;input IN,CLK;output OUT;electrical VDD,VSS,IN,CLK,OUT;
+parameter real vth=0.45,tedge=100p;
+real old_value,next_value,sample_time,ratio;
+analog begin
+ @(initial_step)begin old_value=0;next_value=0;sample_time=-tedge;end
+ @(cross(V(CLK,VSS)-vth,+1))begin old_value=next_value;next_value=V(IN,VSS);sample_time=$abstime;end
+ ratio=($abstime-sample_time)/tedge;if(ratio<0)ratio=0;if(ratio>1)ratio=1;
+ $bound_step(tedge/16);
+ V(OUT,VSS)<+old_value+(next_value-old_value)*ratio;
+end
+endmodule

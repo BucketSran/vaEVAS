@@ -262,8 +262,9 @@ fn build_delay(
 
 #[derive(Clone)]
 struct DirectInput {
-    points: Vec<(f64, f64)>,
-    bounds: Vec<I>,
+    // The source definition is immutable across candidate and replay frames.
+    points: Arc<[(f64, f64)]>,
+    bounds: Arc<[I]>,
 }
 
 impl DirectInput {
@@ -291,7 +292,10 @@ impl DirectInput {
         Ok((values_local, slopes.unwrap_or(I::ZERO)))
     }
     fn new(points: Vec<(f64, f64)>, bounds: Vec<I>) -> Self {
-        Self { points, bounds }
+        Self {
+            points: points.into(),
+            bounds: bounds.into(),
+        }
     }
 
     fn index(&self, time: f64) -> Result<usize, Error> {
