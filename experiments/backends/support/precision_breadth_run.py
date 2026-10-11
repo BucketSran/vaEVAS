@@ -4,6 +4,7 @@ Q targets bind candidate controls before execution; they are not qualifications.
 Scientific grading and actual settings/provenance remain separate records.
 """
 import argparse
+import ast
 from bisect import bisect_left, bisect_right
 from decimal import Decimal
 from fractions import Fraction
@@ -54,16 +55,34 @@ def verify(inputs):
             raise ValueError('source drift: '+file)
 
 
-def freeze(output):
+def freeze(output,*,backend_tier_profiles=None):
     data=load_contract();profiles={p['id']:p for p in data['profiles']}
     if not set(TIER_PROFILES.values())<=profiles.keys():raise ValueError('missing candidate profiles')
+    binding_source=ROOT/'experiments/backends/support/precision_binding_run.py'
+    definitions=[n.value for n in ast.parse(binding_source.read_text()).body if isinstance(n,ast.Assign)
+                 and any(isinstance(t,ast.Name) and t.id=='DEEP_BOUND' for t in n.targets)]
+    if len(definitions)!=1:raise ValueError('ambiguous existing deep_bound profile source')
+    prior=ast.literal_eval(definitions[0])
+    profiles['deep_bound']={**profiles['deep'],'id':'deep_bound','step_units':prior['step_units']}
+    mapping={b:dict(TIER_PROFILES) for b in BACKENDS}
+    mapping['spectre']['Q3']='deep_bound'
+    if backend_tier_profiles is not None:mapping=backend_tier_profiles
+    if (set(mapping)!=set(BACKENDS) or any(set(m)!=set(TIER_PROFILES) or
+        any(p not in profiles for p in m.values()) for m in mapping.values())):
+        raise ValueError('backend profile binding must cover every backend and tier with known candidates')
+    bindings={'schema_version':'breadth-v2','backend_tier_profiles':mapping,'profiles':profiles,
+              'sources':{'deep_bound':{'base_profile':'deep','overridden_controls':['step_units'],
+                  'step_units_source':str(binding_source.relative_to(ROOT)),'source_sha256':sha(binding_source)}},
+              'claim':'candidate controls bound before execution; fixed Q budgets are unchanged'}
+    data={**data,'profiles':list(profiles.values())}
     cards=data['cards']
     if len({c['id'] for c in cards})!=len(cards):raise ValueError('duplicate card identity')
     output.mkdir(parents=True,exist_ok=False)
-    save(output/'cards.json',data);plan=[];estimates=[]
+    save(output/'cards.json',data);save(output/'PROFILE_BINDINGS.json',bindings);plan=[];estimates=[]
     for card in cards:
         observation=observation_plan(card,data);times=observation['times_s']
-        estimated_rows=2*(len(times)+int(card['stop_s']/(card['unit_s']/2048))+1)
+        min_step=min(profiles[p]['step_units'] for m in mapping.values() for p in m.values())
+        estimated_rows=2*(len(times)+int(card['stop_s']/(card['unit_s']*min_step))+1)
         estimated_bytes=estimated_rows*(len(card['ports'])+2)*32
         if estimated_bytes>BREADTH_LIMITS['file_limit_bytes']*.8:
             raise ValueError('waveform estimate exceeds file budget: '+card['id'])
@@ -71,13 +90,13 @@ def freeze(output):
                           'estimated_waveform_bytes':estimated_bytes})
         physical={**card,'stimulus':{n:{'points_s_V':v} for n,v in card['inputs'].items()}}
         bind={'top_module':card['top'],'ports':card['ports'],'parameters':card['parameters']}
-        for tier,profile_id in TIER_PROFILES.items():
-            profile=profiles[profile_id]
-            settings={**profile,'target_tier':tier,'candidate_status':'unqualified',
-                      'stop_s':card['stop_s'],'maxstep_s':card['unit_s']*profile['step_units'],
-                      'spice_maxstep_s':card['unit_s']*profile['step_units']}
-            generated=decks(physical,settings,bind,times,{'records':[{'time_s':t} for t in times]})
+        for tier in TIER_PROFILES:
             for backend in BACKENDS:
+                profile_id=mapping[backend][tier];profile=profiles[profile_id]
+                settings={**profile,'target_tier':tier,'candidate_status':'unqualified',
+                          'stop_s':card['stop_s'],'maxstep_s':card['unit_s']*profile['step_units'],
+                          'spice_maxstep_s':card['unit_s']*profile['step_units']}
+                generated=decks(physical,settings,bind,times,{'records':[{'time_s':t} for t in times]})
                 label=card['id']+'--'+tier;work=output/'runs'/backend/label;work.mkdir(parents=True)
                 filename,text=generated[backend]
                 if backend=='spectre':
@@ -100,7 +119,7 @@ def freeze(output):
     save(output/'PREFLIGHT.json',{'limits':BREADTH_LIMITS,'estimates':estimates,
                                 'claim':'planning estimate; runtime limits still apply'})
     paths=set(source_files())|{Path(__file__),ROOT/'experiments/backends/support/precision_report.py',
-                ROOT/'evas/validation/paper/precision-v2.json'}
+                ROOT/'evas/validation/paper/precision-v2.json',binding_source}
     save(output/'SOURCE_IDENTITY.json',{str(p.relative_to(ROOT)):sha(p) for p in sorted(paths)})
     save(output/'MANIFEST.json',{str(p.relative_to(output)):sha(p) for p in sorted(output.rglob('*')) if p.is_file()})
     return plan
@@ -117,7 +136,7 @@ def select_plan(plan,backend,family,groups=(),cards=(),tiers=()):
 def run(inputs,output,backend,profile_path,family,*,groups=(),cards=(),tiers=()):
     plan=select_plan(load(inputs/'PLAN.json'),backend,family,groups,cards,tiers)
     output.mkdir(parents=True,exist_ok=False);results=[];attempts=[]
-    save(output/'STARTED.json',{'schema_version':'breadth-v1','limits':BREADTH_LIMITS,'selected':plan,
+    save(output/'STARTED.json',{'schema_version':load(inputs/'PROFILE_BINDINGS.json')['schema_version'] if (inputs/'PROFILE_BINDINGS.json').is_file() else 'breadth-v1','limits':BREADTH_LIMITS,'selected':plan,
          'input_manifest_sha256':sha(inputs/'MANIFEST.json'),'profile_sha256':sha(profile_path)})
     try:
         verify(inputs);data=load(inputs/'cards.json');profile=load(profile_path)
