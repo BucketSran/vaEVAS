@@ -252,6 +252,41 @@ class ObservationAndReferenceCalibration(unittest.TestCase):
             self.assertIn(t, plan['times_s'])
         self.assertLess(min(b-a for a,b in zip(plan['times_s'], plan['times_s'][1:])), 1e-13)
 
+    def test_fraction_event_grid_rounds_original_operands_only_once(self):
+        from fractions import Fraction
+        import precision_breadth_foundation as foundation
+        c=next(c for c in foundation.cards() if c['group_id']=='F07')
+        contract=load_contract(cards=[c]);plan=observation_plan(c,contract)
+        event=c['events'][1];pad=Fraction(contract['observation']['padding_s'])
+        center=Fraction(event['nominal_s'])
+        a=center-Fraction(event['early_s'])-pad
+        b=center+Fraction(event['late_s'])+pad
+        n=53
+        self.assertEqual(plan['event_grids'][1]['requested_intervals'],n)
+        self.assertTrue({float(a+(b-a)*i/n) for i in range(n+1)} <= set(plan['times_s']))
+        self.assertIn(float(center+pad),plan['times_s'])
+        self.assertNotIn(5.00002e-7,plan['times_s'])
+
+    def test_planning_preserves_independently_declared_binary64_neighbors(self):
+        import math
+        from fractions import Fraction
+        c=card();center=5e-7;neighbor=math.nextafter(center,math.inf)
+        c['critical_times_s']=[center,neighbor]
+        contract=load_contract(cards=[c]);plan=observation_plan(c,contract)
+        pad=Fraction(contract['observation']['padding_s'])
+        for t in (center,neighbor):
+            self.assertIn(t,plan['times_s'])
+            self.assertIn(float(Fraction(t)-pad),plan['times_s'])
+            self.assertIn(float(Fraction(t)+pad),plan['times_s'])
+        import precision_breadth_composition as composition
+        c=next(c for c in composition.cards() if c['group_id']=='EC20')
+        plan=observation_plan(c,load_contract(cards=[c]))
+        nominals=[e['nominal_s'] for e in c['events'] if 5e-6<e['nominal_s']<7e-6]
+        exact=[tuple(e['nominal_exact_fraction']) for e in c['events'] if 5e-6<e['nominal_s']<7e-6]
+        self.assertEqual(len(set(exact)),2)
+        self.assertEqual(len(exact),2)
+        self.assertTrue(set(nominals)<=set(plan['times_s']))
+
 
 class QualificationCalibration(unittest.TestCase):
     def check(self, c, rows):
