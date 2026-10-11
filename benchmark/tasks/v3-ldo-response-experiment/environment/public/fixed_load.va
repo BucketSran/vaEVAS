@@ -1,0 +1,6 @@
+`include "disciplines.vams"
+module fixed_load(vout,cmd,load_current);
+input vout,cmd;output load_current;
+electrical vout,cmd,load_current;
+analog begin I(vout)<+0.01*V(cmd);V(load_current)<+0.01*V(cmd);end
+endmodule

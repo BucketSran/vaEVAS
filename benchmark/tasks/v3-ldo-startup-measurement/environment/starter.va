@@ -1,0 +1,12 @@
+`include "disciplines.vams"
+module ldo_startup_meter(vin,vout,t90_us,overshoot_mv,settle_us,reached,settled,status,done);
+input vin,vout;
+output t90_us,overshoot_mv,settle_us,reached,settled,status,done;
+electrical vin,vout,t90_us,overshoot_mv,settle_us,reached,settled,status,done;
+parameter real tick=50n, ramp_start=1u, ramp_end=21u, window=70u, target=1.2;
+parameter integer tail=20;
+real a,b,c,r,s,code,d,peak,last90,lastbad,y;
+integer bounds,k;
+analog begin
+end
+endmodule

@@ -1,0 +1,13 @@
+`include "disciplines.vams"
+module ldo_experiment(vout,line_cmd,load_cmd,stage,done,startup_peak_mv,startup_offset_mv,startup_recovery_us,startup_status,line_up_peak_mv,line_up_offset_mv,line_up_recovery_us,line_up_status,line_down_peak_mv,line_down_offset_mv,line_down_recovery_us,line_down_status,load_up_peak_mv,load_up_offset_mv,load_up_recovery_us,load_up_status,load_down_peak_mv,load_down_offset_mv,load_down_recovery_us,load_down_status);
+input vout;
+output line_cmd,load_cmd,stage,done,startup_peak_mv,startup_offset_mv,startup_recovery_us,startup_status,line_up_peak_mv,line_up_offset_mv,line_up_recovery_us,line_up_status,line_down_peak_mv,line_down_offset_mv,line_down_recovery_us,line_down_status,load_up_peak_mv,load_up_offset_mv,load_up_recovery_us,load_up_status,load_down_peak_mv,load_down_offset_mv,load_down_recovery_us,load_down_status;
+electrical vout,line_cmd,load_cmd,stage,done,startup_peak_mv,startup_offset_mv,startup_recovery_us,startup_status,line_up_peak_mv,line_up_offset_mv,line_up_recovery_us,line_up_status,line_down_peak_mv,line_down_offset_mv,line_down_recovery_us,line_down_status,load_up_peak_mv,load_up_offset_mv,load_up_recovery_us,load_up_status,load_down_peak_mv,load_down_offset_mv,load_down_recovery_us,load_down_status;
+parameter real tick=50n,target=1.2,band=0.024,ramp_start=1u,ramp_end=21u,min_window=8u,timeout=40u,startup_timeout=70u;
+parameter integer qualification=20;
+real p[0:4],o[0:4],r[0:4],s[0:4];
+real y,peak,start,runstart,age,minimum,limit,line,load,d;
+integer st,good,j,ok;
+analog begin
+end
+endmodule

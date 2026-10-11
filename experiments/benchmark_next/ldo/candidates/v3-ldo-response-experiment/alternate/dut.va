@@ -1,0 +1,42 @@
+`include "disciplines.vams"
+module ldo_experiment(vout,line_cmd,load_cmd,stage,done,startup_peak_mv,startup_offset_mv,startup_recovery_us,startup_status,line_up_peak_mv,line_up_offset_mv,line_up_recovery_us,line_up_status,line_down_peak_mv,line_down_offset_mv,line_down_recovery_us,line_down_status,load_up_peak_mv,load_up_offset_mv,load_up_recovery_us,load_up_status,load_down_peak_mv,load_down_offset_mv,load_down_recovery_us,load_down_status);
+input vout;
+output line_cmd,load_cmd,stage,done,startup_peak_mv,startup_offset_mv,startup_recovery_us,startup_status,line_up_peak_mv,line_up_offset_mv,line_up_recovery_us,line_up_status,line_down_peak_mv,line_down_offset_mv,line_down_recovery_us,line_down_status,load_up_peak_mv,load_up_offset_mv,load_up_recovery_us,load_up_status,load_down_peak_mv,load_down_offset_mv,load_down_recovery_us,load_down_status;
+electrical vout,line_cmd,load_cmd,stage,done,startup_peak_mv,startup_offset_mv,startup_recovery_us,startup_status,line_up_peak_mv,line_up_offset_mv,line_up_recovery_us,line_up_status,line_down_peak_mv,line_down_offset_mv,line_down_recovery_us,line_down_status,load_up_peak_mv,load_up_offset_mv,load_up_recovery_us,load_up_status,load_down_peak_mv,load_down_offset_mv,load_down_recovery_us,load_down_status;
+parameter real tick=50n,target=1.2,band=0.024,ramp_start=1u,ramp_end=21u,min_window=8u,timeout=40u,startup_timeout=70u;
+parameter integer qualification=20;
+real p[0:4],o[0:4],r[0:4],s[0:4];
+real y,peak,start,runstart,age,minimum,limit,line,load,d;
+integer st,good,j,ok,bad;
+analog begin
+ @(initial_step) begin
+  st=0;bad=0;good=0;peak=0;start=0;runstart=0;line=0;load=0;d=0;
+  for(j=0;j<5;j=j+1) begin p[j]=0;o[j]=0;r[j]=0;s[j]=0;end
+ end
+ @(timer(0,tick)) begin
+  if(st<5) begin
+   y=V(vout);peak=max(peak,abs(y-target));
+   if(abs(y-target)<=band && (st>0 || $abstime>=ramp_end-tick/10)) begin
+    if(good==0) runstart=$abstime; bad=0;
+    good=good+1;
+   end else begin good=0;bad=1;end
+   age=$abstime-start;minimum=(st==0)?ramp_end:min_window;limit=(st==0)?startup_timeout:timeout;
+   ok=(!bad && $abstime-runstart >= (qualification-1)*tick-tick/10);
+   if((age>=minimum-tick/10 && ok) || age>=limit-tick/10) begin
+    p[st]=peak*1e3;o[st]=(y-target)*1e3;r[st]=ok?(runstart-start)*1e6:-1;s[st]=ok?1:2;
+    st=st+1;start=$abstime;good=0;peak=0;
+    line=(st==1)?1.95:1.8;load=(st==3)?1:0;
+    if(st==5) d=1;
+   end
+  end
+ end
+ V(line_cmd)<+1.8*min(1,max(0,($abstime-ramp_start)/(ramp_end-ramp_start)))+transition((st>0)?line-1.8:0,0,1n);
+ I(vout)<+1e-12*V(vout);
+ V(load_cmd)<+transition(load,0,1n);V(stage)<+transition(st,0,3n);V(done)<+transition(d,0,3n);
+ V(startup_peak_mv)<+transition(p[0],0,3n);V(startup_offset_mv)<+transition(o[0],0,3n);V(startup_recovery_us)<+transition(r[0],0,3n);V(startup_status)<+transition(s[0],0,3n);
+ V(line_up_peak_mv)<+transition(p[1],0,3n);V(line_up_offset_mv)<+transition(o[1],0,3n);V(line_up_recovery_us)<+transition(r[1],0,3n);V(line_up_status)<+transition(s[1],0,3n);
+ V(line_down_peak_mv)<+transition(p[2],0,3n);V(line_down_offset_mv)<+transition(o[2],0,3n);V(line_down_recovery_us)<+transition(r[2],0,3n);V(line_down_status)<+transition(s[2],0,3n);
+ V(load_up_peak_mv)<+transition(p[3],0,3n);V(load_up_offset_mv)<+transition(o[3],0,3n);V(load_up_recovery_us)<+transition(r[3],0,3n);V(load_up_status)<+transition(s[3],0,3n);
+ V(load_down_peak_mv)<+transition(p[4],0,3n);V(load_down_offset_mv)<+transition(o[4],0,3n);V(load_down_recovery_us)<+transition(r[4],0,3n);V(load_down_status)<+transition(s[4],0,3n);
+end
+endmodule
