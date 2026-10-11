@@ -497,12 +497,19 @@ class FoundationStageCalibration(unittest.TestCase):
             self.assertGreater(max(v['conditional_error_lower_V'] for v in result['outputs'].values()), .99)
 
     def perfect_trace(self, group):
+        from fractions import Fraction
         c = self.cards[group]; unit = 1e-6
         callbacks = ([unit / 4 + 50e-12, unit / 2 + 50e-12] if group == 'F07'
                      else [unit + 50e-12, 3 * unit + 50e-12])
         points = {i * unit / 32 for i in range(round(c['stop_s'] / unit * 32) + 1)}
         for t in c['critical_times_s']:
             points.update((t - 2e-12, t, t + 2e-12))
+        # Events own their window obligations independently of optional
+        # duplicate entries in the card's explicit critical-point list.
+        for event in c['events']:
+            for offset in (Fraction(0), -Fraction(event['early_s']), Fraction(event['late_s'])):
+                center = Fraction(event['nominal_s']) + offset
+                points.update(float(center+side) for side in (Fraction(0),-Fraction(2e-12),Fraction(2e-12)))
         for t in callbacks:
             points.update((t - 1e-14, t + 1e-14))
         rows = []
