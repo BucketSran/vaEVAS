@@ -37,6 +37,8 @@ def main():
   for r in json.loads(file.read_text()):
    result=r['result'];attempts.append(dict(run=str(file.parent.relative_to(a.runs)),condition=r['condition_id'],job_id=r['job_id'],execution=result['execution'],score=result['score'],criteria_sha256=result.get('criteria_sha256'),candidate_sha256=result.get('candidate_sha256')))
  summary=dict(status='passed',model_trials=0,tasks=2,variants=len(items),conditions=sum(len(i['conditions']) for i in items),correct_implementations=sum(i['expected_pass'] for i in items),semantic_wrong_implementations=sum(not i['expected_pass'] for i in items),material_sha256=manifest['material_sha256'],source_calibration_sha256=sha(HERE/'source-calibration.json'),calibration=items,all_attempts=attempts)
+ final_jobs={c['job_id'] for item in items for c in item['conditions']}
+ summary['attempt_counts']=dict(total=len(attempts),final=sum(r['job_id'] in final_jobs for r in attempts),historical=sum(r['job_id'] not in final_jobs for r in attempts))
  (HERE/'author-calibration.json').write_text(json.dumps(summary,indent=2)+'\n')
  print(json.dumps(dict(status=summary['status'],variants=summary['variants'],conditions=summary['conditions'],attempts=len(attempts))))
 if __name__=='__main__':main()
