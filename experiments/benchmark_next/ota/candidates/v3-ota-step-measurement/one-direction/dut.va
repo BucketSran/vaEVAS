@@ -1,0 +1,41 @@
+`include "disciplines.vams"
+module stimulus_meter(vin,enable,launch,vout,gain,slew_metric,settle,valid,status,direction);
+output vin,enable,launch,gain,slew_metric,settle,valid,status,direction; input vout;
+electrical vin,enable,launch,vout,gain,slew_metric,settle,valid,status,direction;
+real input_value,launch_value,enable_value,report_gain,report_slew,report_settle,report_valid,report_status,report_direction;
+real values[0:179]; real before_input,before_output,final_value,peak,last_value,span;
+integer index,round,active,j,lastbad,settled,clipped;
+analog begin
+ @(initial_step) begin input_value=0.75;launch_value=0;enable_value=0;report_gain=0;report_slew=0;report_settle=0;report_valid=0;report_status=0;report_direction=0;round=-1;active=0;index=0;end
+ @(timer(10n)) enable_value=1.5;
+ @(timer(200n,200n)) begin
+  if(round<5) begin
+   round=round+1;before_input=input_value;before_output=V(vout);
+   case(round) 0:input_value=0.8;1:input_value=0.7;2:input_value=1.2;3:input_value=0.3;4:input_value=1.6;5:input_value=0.75;endcase
+   launch_value=1;active=1;index=0;report_valid=0;report_status=0;
+  end
+ end
+ @(timer(1n,1n)) begin
+  if(active && $abstime > (round+1)*200n+0.5n) begin
+   values[index]=V(vout);index=index+1;
+   if(index==180) begin
+    final_value=0;for(j=160;j<180;j=j+1) final_value=final_value+values[j]/20;
+    lastbad=0;peak=0;last_value=before_output;
+    for(j=0;j<180;j=j+1) begin
+     if(abs(values[j]-final_value)>0.003) lastbad=j+1;
+     if(abs(values[j]-last_value)>peak) peak=abs(values[j]-last_value);
+     last_value=values[j];
+    end
+    span=input_value-before_input;settled=(lastbad<=160);clipped=(final_value<=0.105 || final_value>=1.395);
+    report_gain=(abs(span)>=0.02)?(final_value-before_output)/span:0;
+    report_slew=peak;report_settle=settled?(lastbad+1):180;
+    report_status=(abs(span)<0.02)?4:clipped?3:settled?1:2;report_valid=(report_status==1)?1:0;
+    report_direction=1;active=0;launch_value=0;
+   end
+  end
+ end
+ V(vin)<+transition(input_value,0,10p);V(enable)<+transition(enable_value,0,10p);V(launch)<+transition(launch_value,0,10p);
+ V(gain)<+transition(report_gain,0,10p);V(slew_metric)<+transition(report_slew,0,10p);V(settle)<+transition(report_settle,0,10p);V(valid)<+transition(report_valid,0,10p);V(status)<+transition(report_status,0,10p);V(direction)<+transition(report_direction,0,10p);
+ $bound_step(100p);
+end
+endmodule

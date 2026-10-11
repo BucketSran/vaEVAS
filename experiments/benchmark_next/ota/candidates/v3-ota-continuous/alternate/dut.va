@@ -1,0 +1,20 @@
+`include "disciplines.vams"
+module ota(vin,enable,vout);
+input vin,enable; output vout; electrical vin,enable,vout; electrical q;
+// The disabled DC solution initializes the capacitor at zero.
+parameter real tau=20n, positive=10e6, negative=6e6, gain=0.98, low=0.1, high=1.4;
+real target,rate;
+analog begin
+ target=0.75+gain*(V(vin)-0.75);
+ if(target<low) target=low; if(target>high) target=high;
+ if(V(enable)<0.75) begin target=0; rate=(target-V(q))/50n; end
+ else begin
+ rate=(target-V(q))/tau;
+ if(rate>positive) rate=positive;
+ if(rate< -negative) rate= -negative;
+ end
+ I(q)<+ddt(V(q))-rate;
+ V(vout)<+V(q);
+ $bound_step(0.25n);
+end
+endmodule

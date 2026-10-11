@@ -1,0 +1,41 @@
+`include "disciplines.vams"
+module ota(vin,enable,vout);
+input vin,enable;output vout;electrical vin,enable,vout,b,q,d;
+real bias_drive,db,activation,target,err,om,damp,dq,dd,bias;
+analog function real dc_curve;
+input x; real x; begin
+if (x<0.4) dc_curve=0.351919953644+(x-0.35)*0.9953587087776;
+else if (x<0.5) dc_curve=0.40168788908288+(x-0.4)*0.9990540869776;
+else if (x<0.68) dc_curve=0.50159329778064+(x-0.5)*1.0017053315451;
+else if (x<0.73) dc_curve=0.68190025745876+(x-0.68)*0.9972552808248;
+else if (x<0.75) dc_curve=0.7317630215+(x-0.73)*0.99619637644;
+else if (x<0.77) dc_curve=0.7516869490288+(x-0.75)*0.99576514856;
+else if (x<0.78) dc_curve=0.771602252+(x-0.77)*0.9954770222;
+else if (x<0.8) dc_curve=0.781557022222+(x-0.78)*0.9951821829;
+else if (x<0.82) dc_curve=0.80146066588+(x-0.8)*0.99478825600001;
+else if (x<0.83) dc_curve=0.821356431+(x-0.82)*0.9944883;
+else if (x<0.88) dc_curve=0.831301314+(x-0.83)*0.993836310178;
+else if (x<1.1) dc_curve=0.8809931295089+(x-0.88)*0.98917136586864;
+else if (x<1.2) dc_curve=1.09861083+(x-1.1)*0.966310439834;
+else if (x<1.25) dc_curve=1.1952418739834+(x-1.2)*0.904116514764;
+else if (x<1.43) dc_curve=1.2404476997216+(x-1.25)*0.55033821379111;
+else if (x<1.435) dc_curve=1.339508578204+(x-1.43)*0.25351213040001;
+else if (x<1.44) dc_curve=1.340776138856+(x-1.435)*0.24409022879999;
+else dc_curve=1.34199659;
+end endfunction
+analog begin
+ bias=($abstime-1.1u)/100n;if(bias<0)bias=0;if(bias>1)bias=1;
+ bias_drive=(V(enable)>0.9)?bias:0;
+ db=(bias_drive-V(b))/28.682390721712n;
+ activation=1/(1+exp(-min(100,max(-100,(V(b)-0.56700650327143)/0.030345870180964))));
+ target=dc_curve(V(vin))*activation-2.3447498873754*db*1n*exp(-pow((V(b)-0.27487316126389)/0.14247286105387,2));
+ err=target-V(q);
+ om=2.8515141296699*(1+-0.02021983089789*tanh(err/0.05))*(1-1.4352030908523e-12/(1+exp(-min(100,max(-100,(V(q)-1.2)*30)))))*(1-0.45855070346717/(1+exp(min(100,max(-100,(V(q)-0.5)*30)))));
+ damp=1.9999999702453*(1+-0.11720487926089*tanh(err/0.05));
+ dq=V(d)*1e9;dd=(om*om*0.18767295245279*tanh(err/0.18767295245279)-2*damp*om*V(d))*1e9;
+ if(V(b)<0.95) begin dq=err/0.10000000154799n;dd=-V(d)/1n;end
+ if(V(enable)<0.8) begin dq=-V(q)*min(100,exp((0.70040652-V(enable))/0.00645861))/1n;dd=-V(d)/0.1n;end
+ V(b)<+idt(db,0);V(q)<+idt(dq,0);V(d)<+idt(dd,0);V(vout)<+((V(enable)>0.9)?dc_curve(V(vin)):0);
+ $bound_step(0.05n);
+end
+endmodule

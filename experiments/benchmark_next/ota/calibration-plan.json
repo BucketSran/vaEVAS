@@ -1,0 +1,135 @@
+[
+  {
+    "task": "benchmark/tasks/v3-ota-continuous",
+    "variant": "reference",
+    "candidate": "experiments/benchmark_next/ota/candidates/v3-ota-continuous/reference",
+    "expected_pass": true,
+    "semantic_behavior": "author reference"
+  },
+  {
+    "task": "benchmark/tasks/v3-ota-continuous",
+    "variant": "alternate",
+    "candidate": "experiments/benchmark_next/ota/candidates/v3-ota-continuous/alternate",
+    "expected_pass": true,
+    "semantic_behavior": "different state/event representation"
+  },
+  {
+    "task": "benchmark/tasks/v3-ota-continuous",
+    "variant": "static",
+    "candidate": "experiments/benchmark_next/ota/candidates/v3-ota-continuous/static",
+    "expected_pass": false,
+    "semantic_behavior": "static follower loses continuous history"
+  },
+  {
+    "task": "benchmark/tasks/v3-ota-continuous",
+    "variant": "symmetric-slew",
+    "candidate": "experiments/benchmark_next/ota/candidates/v3-ota-continuous/symmetric-slew",
+    "expected_pass": false,
+    "semantic_behavior": "negative slew_metric incorrectly equals positive"
+  },
+  {
+    "task": "benchmark/tasks/v3-ota-continuous",
+    "variant": "single-tau",
+    "candidate": "experiments/benchmark_next/ota/candidates/v3-ota-continuous/single-tau",
+    "expected_pass": false,
+    "semantic_behavior": "all amplitudes use linear pole"
+  },
+  {
+    "task": "benchmark/tasks/v3-ota-continuous",
+    "variant": "reset-on-disable",
+    "candidate": "experiments/benchmark_next/ota/candidates/v3-ota-continuous/reset-on-disable",
+    "expected_pass": false,
+    "semantic_behavior": "disable incorrectly clears continuous state"
+  },
+  {
+    "task": "benchmark/tasks/v3-ota-step-measurement",
+    "variant": "reference",
+    "candidate": "experiments/benchmark_next/ota/candidates/v3-ota-step-measurement/reference",
+    "expected_pass": true,
+    "semantic_behavior": "author reference"
+  },
+  {
+    "task": "benchmark/tasks/v3-ota-step-measurement",
+    "variant": "alternate",
+    "candidate": "experiments/benchmark_next/ota/candidates/v3-ota-step-measurement/alternate",
+    "expected_pass": true,
+    "semantic_behavior": "different state/event representation"
+  },
+  {
+    "task": "benchmark/tasks/v3-ota-step-measurement",
+    "variant": "pulse-only",
+    "candidate": "experiments/benchmark_next/ota/candidates/v3-ota-step-measurement/pulse-only",
+    "expected_pass": false,
+    "semantic_behavior": "turns off DUT after check points instead of holding experiment"
+  },
+  {
+    "task": "benchmark/tasks/v3-ota-step-measurement",
+    "variant": "one-direction",
+    "candidate": "experiments/benchmark_next/ota/candidates/v3-ota-step-measurement/one-direction",
+    "expected_pass": false,
+    "semantic_behavior": "negative direction missing"
+  },
+  {
+    "task": "benchmark/tasks/v3-ota-step-measurement",
+    "variant": "old-valid",
+    "candidate": "experiments/benchmark_next/ota/candidates/v3-ota-step-measurement/old-valid",
+    "expected_pass": false,
+    "semantic_behavior": "new event preserves old valid"
+  },
+  {
+    "task": "benchmark/tasks/v3-ota-step-measurement",
+    "variant": "first-entry",
+    "candidate": "experiments/benchmark_next/ota/candidates/v3-ota-step-measurement/first-entry",
+    "expected_pass": false,
+    "semantic_behavior": "uses first instead of last band violation"
+  },
+  {
+    "task": "benchmark/tasks/v3-ota-step-measurement",
+    "variant": "parameter-oracle",
+    "candidate": "experiments/benchmark_next/ota/candidates/v3-ota-step-measurement/parameter-oracle",
+    "expected_pass": false,
+    "semantic_behavior": "nominal gain substitutes observed gain"
+  },
+  {
+    "task": "benchmark/tasks/v3-ota-data-model",
+    "variant": "reference",
+    "candidate": "experiments/benchmark_next/ota/candidates/v3-ota-data-model/reference",
+    "expected_pass": true,
+    "semantic_behavior": "author reference"
+  },
+  {
+    "task": "benchmark/tasks/v3-ota-data-model",
+    "variant": "alternate",
+    "candidate": "experiments/benchmark_next/ota/candidates/v3-ota-data-model/alternate",
+    "expected_pass": true,
+    "semantic_behavior": "different state/event representation"
+  },
+  {
+    "task": "benchmark/tasks/v3-ota-data-model",
+    "variant": "static",
+    "candidate": "experiments/benchmark_next/ota/candidates/v3-ota-data-model/static",
+    "expected_pass": false,
+    "semantic_behavior": "static curve loses startup and dynamic response"
+  },
+  {
+    "task": "benchmark/tasks/v3-ota-data-model",
+    "variant": "single-pole",
+    "candidate": "experiments/benchmark_next/ota/candidates/v3-ota-data-model/single-pole",
+    "expected_pass": false,
+    "semantic_behavior": "one fixed time constant does not explain amplitude dynamics"
+  },
+  {
+    "task": "benchmark/tasks/v3-ota-data-model",
+    "variant": "no-startup",
+    "candidate": "experiments/benchmark_next/ota/candidates/v3-ota-data-model/no-startup",
+    "expected_pass": false,
+    "semantic_behavior": "omits startup bias behavior"
+  },
+  {
+    "task": "benchmark/tasks/v3-ota-data-model",
+    "variant": "clear-recovery",
+    "candidate": "experiments/benchmark_next/ota/candidates/v3-ota-data-model/clear-recovery",
+    "expected_pass": false,
+    "semantic_behavior": "clears continuous output and velocity to initial state on rail recovery"
+  }
+]

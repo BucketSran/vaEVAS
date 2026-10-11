@@ -1,0 +1,11 @@
+`include "disciplines.vams"
+module stimulus_meter(vin,enable,launch,vout,gain,slew_metric,settle,valid,status,direction);
+output vin,enable,launch,gain,slew_metric,settle,valid,status,direction; input vout;
+electrical vin,enable,launch,vout,gain,slew_metric,settle,valid,status,direction;
+real input_value,launch_value,enable_value,report_gain,report_slew,report_settle,report_valid,report_status,report_direction;
+real values[0:179]; real before_input,before_output,final_value,peak,last_value,span;
+integer index,round,active,j,lastbad,settled,clipped;
+analog begin
+// Implement the public contract.
+end
+endmodule
