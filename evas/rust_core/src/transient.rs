@@ -1173,6 +1173,118 @@ mod tests {
     }
 
     #[test]
+    fn slew_cascade_failed_trial_preserves_controller_and_retry_history() {
+        let (original, _, _) = fixture(false);
+        let mut program = original.program;
+        program.operators = serde_json::from_value(serde_json::json!([
+            {"kind":"slew", "input":{"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]},
+             "rise":0.5,"fall":-0.5,"origin":{"source":"rollback.va","line":3,"column":1,"instance":"dut"}},
+            {"kind":"slew", "input":{"op":"operator","operator":0},
+             "rise":0.25,"fall":-0.25,"origin":{"source":"rollback.va","line":3,"column":2,"instance":"dut"}}
+        ])).unwrap();
+        program.contributions[0].rhs = serde_json::from_value(serde_json::json!({
+            "op":"multiply","left":{"op":"affine","constant":-1,"terms":[]},
+            "right":{"op":"add","left":{"op":"state","state":0},
+                "right":{"op":"multiply","left":{"op":"affine","constant":1073741824.0,"terms":[]},
+                    "right":{"op":"operator","operator":1}}}
+        }))
+        .unwrap();
+        program.events[0].trigger = EventTrigger::Timer {
+            start: 4.,
+            period: 0.,
+            time_tolerance: 1e-12,
+            enabled: true,
+        };
+        let mut model = EventModel::new(
+            program,
+            vec!["u".into()],
+            Tolerances {
+                absolute: 1e-9,
+                relative: 0.,
+            },
+        )
+        .unwrap();
+        let trajectory = Trajectory::new(
+            TransientInputs {
+                pwl: vec![vec![[0., 0.], [2., 4.], [4., -4.], [24., -4.]]],
+                output_times: vec![0., 4., 24.],
+                stop: 24.,
+                max_step: 24.,
+                strobetimes: vec![],
+            },
+            1,
+        )
+        .unwrap();
+        let operators =
+            Operators::new(&model.program, &trajectory, &model.driven, &model.initial()).unwrap();
+        let prior_values = operators.values(4.).unwrap();
+        let prior_bounds = operators.bounds(4.).unwrap();
+        let prior_deadline = operators.next_breakpoint(0.);
+        let circuit = model
+            .circuit_with(&model.initial(), &operators.values(0.).unwrap())
+            .unwrap();
+        let frame = Frame {
+            time: 0.,
+            states: model.initial(),
+            state_bounds: vec![I::ZERO],
+            solution: circuit.solve(&trajectory.values(0.)).unwrap(),
+            circuit,
+            operators,
+        };
+        let mut controller = Controller {
+            accepted: frame,
+            event: 0,
+            records: vec![],
+            outputs: vec![],
+        };
+        let crossings = independent_schedule(&model, &trajectory).unwrap();
+        for _ in 0..2 {
+            assert_eq!(
+                controller
+                    .accept_events(&model, &trajectory, &crossings)
+                    .unwrap_err()
+                    .kind,
+                "waveform_accuracy"
+            );
+            assert_eq!(controller.accepted.time, 0.);
+            assert_eq!(controller.accepted.states, [0.]);
+            assert_eq!(controller.accepted.state_bounds, [I::ZERO]);
+            assert_eq!(controller.event, 0);
+            assert!(controller.records.is_empty() && controller.outputs.is_empty());
+            assert_eq!(
+                controller.accepted.operators.values(4.).unwrap(),
+                prior_values
+            );
+            assert_eq!(
+                controller.accepted.operators.bounds(4.).unwrap(),
+                prior_bounds
+            );
+            assert_eq!(
+                controller.accepted.operators.next_breakpoint(0.),
+                prior_deadline
+            );
+        }
+        model.tolerances.absolute = 1e-5;
+        controller
+            .accept_events(&model, &trajectory, &crossings)
+            .unwrap();
+        assert_eq!(controller.accepted.states, [1.]);
+        assert_eq!(controller.event, 1);
+        assert_eq!(controller.records.len(), 1);
+        assert_eq!(
+            controller.accepted.operators.values(4.).unwrap(),
+            prior_values
+        );
+        assert_eq!(
+            controller.accepted.operators.bounds(4.).unwrap(),
+            prior_bounds
+        );
+        assert!(
+            (controller.accepted.solution.voltages[2] - (1. + 7. * 1073741824. / 9.)).abs() < 1e-5
+        );
+    }
+
+    #[test]
     fn idt_failed_certification_preserves_frame_and_same_time_retry_uses_budget() {
         let (mut model, trajectory, before) = idt_fixture(
             false,
