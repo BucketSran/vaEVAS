@@ -115,5 +115,22 @@ class AggregateCalibration(unittest.TestCase):
             a.verify_analysis(path);(path/'raw').write_text('tamper')
             with self.assertRaises(ValueError):a.verify_analysis(path)
 
+    def test_raw_label_cannot_escape_runs_or_follow_a_symlink(self):
+        with tempfile.TemporaryDirectory() as temp:
+            lane=Path(temp)/'lane';runs=lane/'runs';runs.mkdir(parents=True)
+            safe=runs/'F01--Q1';safe.mkdir()
+            self.assertEqual(a.raw_work(lane,'F01--Q1'),safe.resolve())
+            with self.assertRaises(ValueError):a.raw_work(lane,'../../outside')
+            (runs/'alias').symlink_to(safe,target_is_directory=True)
+            with self.assertRaises(ValueError):a.raw_work(lane,'alias')
+
+    def test_unmanifested_official_profile_bindings_are_rejected(self):
+        with tempfile.TemporaryDirectory() as temp:
+            inputs=Path(temp)
+            a.save(inputs/'PROFILE_BINDINGS.json',{'profiles':{}})
+            with self.assertRaises(ValueError):a.verified_bindings(inputs,{})
+            bindings=a.verified_bindings(inputs,{'PROFILE_BINDINGS.json':a.sha(inputs/'PROFILE_BINDINGS.json')})
+            self.assertEqual(bindings,{'profiles':{}})
+
 
 if __name__=='__main__':unittest.main()

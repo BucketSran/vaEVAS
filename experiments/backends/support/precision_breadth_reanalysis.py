@@ -40,9 +40,29 @@ def load(path): return json.loads(path.read_text())
 def save(path, data): path.write_text(json.dumps(data, indent=2, sort_keys=True, allow_nan=False)+'\n')
 
 
+def raw_work(lane,label):
+    runs=lane.resolve()/'runs';candidate=runs/label
+    if runs.is_symlink() or candidate.is_symlink():raise ValueError('symlink raw work path')
+    for parent in candidate.parents:
+        if parent==runs:break
+        if parent.is_symlink():raise ValueError('symlink raw work ancestor')
+    resolved=candidate.resolve()
+    if resolved==runs or not resolved.is_relative_to(runs):raise ValueError('raw label escapes runs directory')
+    return resolved
+
+
+def verified_bindings(inputs,manifest):
+    path=inputs/'PROFILE_BINDINGS.json'
+    if 'PROFILE_BINDINGS.json' not in manifest or path.is_symlink():
+        raise ValueError('official profile bindings absent from verified input manifest')
+    if sha(path)!=manifest['PROFILE_BINDINGS.json']:raise ValueError('official profile bindings hash drift')
+    return load(path)
+
+
 def freeze_inputs(inputs, output, source_hashes):
     """Bind the analysis to explicit scientific inputs without changing them."""
     manifest = load(inputs/'MANIFEST.json')
+    verified_bindings(inputs,manifest)
     for name, digest in manifest.items():
         path = (inputs/name).resolve()
         if not path.is_relative_to(inputs.resolve()) or sha(path) != digest:
@@ -205,8 +225,7 @@ def worker(frozen, lane, output):
     for recorded in records:
         label = recorded['label']
         if label in labels: raise ValueError('duplicate original slot; official attempt mapping required')
-        labels.add(label); work = lane/'runs'/label
-        if work.parent.resolve() != (lane/'runs').resolve(): raise ValueError('unsafe slot label')
+        labels.add(label); work = raw_work(lane,label)
         oldpath = work/'RESULT.json'; old = load(oldpath) if oldpath.is_file() else recorded
         for key in ('label','backend','condition','tier','status'):
             if old.get(key) != recorded.get(key): raise ValueError('RESULT/EXECUTION mismatch: '+label)
@@ -248,7 +267,10 @@ def worker(frozen, lane, output):
                   'native_observations':native,'runtime_controls':runtime,'analysis_error':error,
                   'profile_binding':binding,
                   'exact_input_diagnostic':exact,
-                  'qualified_tiers':{tier['id']:slot_status(old['status'],assessment,config,native,runtime,tier['id'],binding if bindings is not None else None) for tier in contract['tiers']}}
+                  'qualified_tiers':{tier['id']:slot_status(old['status'],assessment,config,native,runtime,tier['id'],binding) for tier in contract['tiers']}}
+        if binding['status']!='matched':
+            result['configuration']={**config,'status':'unknown','original_readback_status':config.get('status'),
+                                      'binding_issues':binding['issues']}
         results.append(result)
         save(output/(label+'.json'),result)
     save(output/'REANALYSIS.json',results)

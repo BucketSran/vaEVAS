@@ -26,7 +26,7 @@ import argparse
 import csv
 import hashlib
 import json
-from precision_breadth_reanalysis import verify_lane, sha, load, save, profile_binding
+from precision_breadth_reanalysis import verify_lane, sha, load, save, profile_binding, raw_work, verified_bindings
 from pathlib import Path
 
 BACKENDS=('evas','spectre','openvaf_r_ngspice','gnucap_modelgen')
@@ -174,11 +174,11 @@ def main():
     if output.is_relative_to(a.inputs.resolve()) or a.inputs.resolve().is_relative_to(output):
         p.error('--output must be a new directory disjoint from frozen inputs')
     contract=load(a.inputs/'cards.json');selection=load(a.selection);expected=load(a.inputs/'SOURCE_IDENTITY.json')
-    bindings=load(a.inputs/'PROFILE_BINDINGS.json')
     manifest=load(a.inputs/'MANIFEST.json')
     for name,digest in manifest.items():
         path=(a.inputs/name).resolve()
         if not path.is_relative_to(a.inputs.resolve()) or sha(path)!=digest:raise ValueError('frozen official input drift')
+    bindings=verified_bindings(a.inputs,manifest)
     if len(contract['cards'])!=71 or len({c['group_id'] for c in contract['cards']})!=44 or len(contract['tiers'])!=3:
         raise ValueError('official inventory differs from 44 groups/71 variants/3 Q')
     if selection['denominator']!={'groups':44,'variants':71,'targets_per_backend':213,'total_official_slots':852}:
@@ -203,7 +203,7 @@ def main():
         records=load(path/'REANALYSIS.json');cards={card['id']:card for card in contract['cards']}
         for record in records:
             if record['condition'] not in cards:continue
-            work=raw_lane/'runs'/record['label']
+            work=raw_work(raw_lane,record['label'])
             original=load(work/'RESULT.json')
             record['profile_binding']=profile_binding(cards[record['condition']],work,original,bindings)
             record['profile_binding']['official_bindings_sha256']=sha(a.inputs/'PROFILE_BINDINGS.json')

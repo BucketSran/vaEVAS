@@ -94,16 +94,23 @@ class ReanalysisCalibration(unittest.TestCase):
         self.assertEqual(r.exact_dc_inputs(c,[{'u':.5}],'spectre',qualified)['status'],'unclosed')
 
     def test_single_lane_uses_prebound_target_slot_and_never_modifies_original(self):
-        card={'id':'F01','group_id':'F01','source':'module x; endmodule'}
+        card={'id':'F01','group_id':'F01','source':'module x; endmodule','unit_s':1.0,'stop_s':1.0}
         contract={'cards':[card],'tiers':[{'id':q} for q in ('Q1','Q2','Q3')]}
+        profiles={'base':{'id':'base','step_units':.1},'both':{'id':'both','step_units':.01}}
+        bindings={'backend_tier_profiles':{'evas':{'Q1':'base','Q2':'both'}},'profiles':profiles}
         rows=[];runs=[]
         for q,status in [('Q1','pass'),('Q2','numerical_error')]:
             label='F01--'+q;work=self.lane/'runs'/label;work.mkdir(parents=True)
             (work/'dut.va').write_text(card['source']);r.save(work/'condition.json',card)
             (work/'waveform').write_text(status)
             old={'label':label,'backend':'evas','condition':'F01','group_id':'F01','tier':q,
+                 'profile':bindings['backend_tier_profiles']['evas'][q],
                  'status':'waveform_available','source_sha256':r.sha(work/'dut.va'),
                  'waveform':'waveform','waveform_sha256':r.sha(work/'waveform')}
+            profile=profiles[old['profile']]
+            r.save(work/'requested_settings.json',{**profile,'target_tier':q,'stop_s':1.0,
+                       'maxstep_s':profile['step_units'],'spice_maxstep_s':profile['step_units']})
+            r.save(work/'INPUT_IDENTITY.json',{'requested_settings_sha256':r.sha(work/'requested_settings.json')})
             r.save(work/'RESULT.json',old);runs.append(old)
         r.save(self.lane/'EXECUTION.json',runs);r.save(self.lane/'TOOL_IDENTITY.json',{'kernel_sha256':'original-kernel'})
         self.manifest();before=r.verify_lane(self.lane)
@@ -118,12 +125,22 @@ class ReanalysisCalibration(unittest.TestCase):
               'precision_report':module(qualification=lambda *a:{'status':'qualified'}),
               'observations':module(read_native=lambda path,backend:path.read_text())}
         out=self.root/'analysis';out.mkdir()
+        r.save(out/'OFFICIAL_PROFILE_BINDINGS.json',bindings)
+        r.save(out/'OFFICIAL_INPUT_IDENTITY.json',{'profile_bindings_sha256':r.sha(out/'OFFICIAL_PROFILE_BINDINGS.json')})
         with patch.dict(sys.modules,fake): r.worker(self.root/'frozen',self.lane,out)
         self.assertEqual(before,r.verify_lane(self.lane))
         groups=r.load(out/'GROUPS.json')
         self.assertEqual(groups[0]['status'],'pass')
         self.assertEqual(groups[1]['variant_statuses']['F01'],'numerical_error')
         self.assertEqual(groups[2]['variant_statuses']['F01'],'not_in_lane')
+        missing=self.root/'missing-bindings';missing.mkdir()
+        with patch.dict(sys.modules,fake):r.worker(self.root/'frozen',self.lane,missing)
+        actual=r.load(missing/'REANALYSIS.json')
+        self.assertEqual(actual[0]['assessment']['tiers']['Q1']['numerical']['status'],'pass')
+        self.assertEqual(actual[1]['assessment']['tiers']['Q2']['numerical']['status'],'numerical_error')
+        self.assertTrue(all(record['execution_status']=='waveform_available' for record in actual))
+        self.assertTrue(all(record['configuration']['status']=='unknown' for record in actual))
+        self.assertTrue(all(record['qualified_tiers'][record['executed_target_tier']]=='evidence_insufficient' for record in actual))
 
 
 if __name__=='__main__':unittest.main()
