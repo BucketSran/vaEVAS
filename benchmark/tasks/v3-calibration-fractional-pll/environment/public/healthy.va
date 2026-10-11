@@ -3,7 +3,7 @@
 module healthy_dco(tune,rst,dco);
 input tune,rst;output dco;electrical tune,rst,dco;
 parameter real sensitivity=10e6;
-parameter real frequency_step=0,step_start=100u,step_end=120u;
+parameter real frequency_step=0,step_start=150u,step_end=175u;
 real freq,phase,perturb;
 analog begin
  @(initial_step)perturb=0;

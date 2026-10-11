@@ -25,14 +25,14 @@ class FractionalContract(unittest.TestCase):
  def waveform(self, variant, reference_shift=0):
   # Independently chosen 35MHz DCO and alternating 3/4 edge divide.
   events=[]
-  for signal,times in [('dco',[10e-9+i/35e6 for i in range(400)]),('ref',[10e-9+reference_shift+i/10e6 for i in range(120)])]:
+  for signal,times in [('dco',[10e-9+i/35e6 for i in range(1400)]),('ref',[10e-9+reference_shift+i/10e6 for i in range(420)])]:
    for t in times:events.extend([(t-1e-11,signal,0),(t+1e-11,signal,.9),(t+1e-9,signal,.9),(t+1.01e-9,signal,0)])
   counts=[3,4] if variant==0 else [4,3]
   index=0;times=[]
-  for i in range(115):
+  for i in range(400):
    index+=counts[i%2];times.append(10e-9+index/35e6+50e-12)
   for t in times:events.extend([(t-1e-11,'fb',0),(t+1e-11,'fb',.9),(t+1e-9,'fb',.9),(t+1.01e-9,'fb',0)])
-  values={'dco':0,'ref':0,'fb':0,'lock':.9,'rst':0};rows=[]
+  values={'dco':0,'ref':0,'fb':0,'lock':.9,'rst':0,'n':3,'frac':.5};rows=[]
   for t,signal,value in sorted(events):
    values[signal]=value;rows.append({'time':t,**values})
   return rows
@@ -55,4 +55,15 @@ class FractionalContract(unittest.TestCase):
   c={'kind':'fractional-pll','windows':[[1e-6,10e-6,3,.5]],'ratio_tolerance':.04,'frequency_tolerance':.06,'feedback_tolerance':.015,'phase_tolerance':.35,'mean_phase_tolerance':.2,'withdraw_windows':[[3.1e-6,3.2e-6],[6.1e-6,6.2e-6]]}
   result=evaluate(self.waveform(0),c,Path('.'))
   self.assertEqual([check['name'] for check in result['checks'] if not check['passed']],['withdraw-qualification','withdraw-qualification'])
+ def test_recovery_at_14us_respects_public_15us_deadline(self):
+  c={'kind':'fractional-pll','windows':[[16e-6,30e-6,3,.5]],'ratio_tolerance':.04,'frequency_tolerance':.06,'feedback_tolerance':.015,'phase_tolerance':.35,'mean_phase_tolerance':.2,'disturbance_events':[0]}
+  rows=self.waveform(0)
+  for row in rows:row['lock']=.9 if row['time']>=14e-6 else 0
+  self.assertTrue(evaluate(rows,c,Path('.'))['passed'])
+ def test_recovery_at_16us_cannot_hide_behind_later_stable_window(self):
+  c={'kind':'fractional-pll','windows':[[16e-6,30e-6,3,.5]],'ratio_tolerance':.04,'frequency_tolerance':.06,'feedback_tolerance':.015,'phase_tolerance':.35,'mean_phase_tolerance':.2,'disturbance_events':[0]}
+  rows=self.waveform(0)
+  for row in rows:row['lock']=.9 if row['time']>=16e-6 else 0
+  verdict=evaluate(rows,c,Path('.'))
+  self.assertEqual([v['name'] for v in verdict['checks'] if not v['passed']],['0:recovery-deadline-qualification'])
 if __name__=="__main__": unittest.main()

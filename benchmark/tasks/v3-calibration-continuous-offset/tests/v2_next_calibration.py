@@ -16,6 +16,21 @@ def evaluate(rows,case,work):
     def check(name,actual,limit):
         checks.append({'name':name,'actual':actual,'limit':limit,'passed':actual<=limit})
     if case['kind']=='fractional-pll':
+        recovery_events=list(case.get('disturbance_events',[]));last_change=None
+        for a,b in zip(rows,rows[1:]):
+            if a['rst']>=.45>b['rst']:
+                recovery_events.append(a['time']+(b['time']-a['time'])*(.45-a['rst'])/(b['rst']-a['rst']))
+            if abs(b['n']-a['n'])>1e-6 or abs(b['frac']-a['frac'])>1e-6:
+                if last_change is None or b['time']-last_change>2.2e-9:recovery_events.append(b['time'])
+                last_change=b['time']
+        times=[r['time'] for r in rows]
+        for j,event in enumerate(sorted(recovery_events)):
+            deadline=event+15e-6+2.2e-9
+            k=bisect.bisect_left(times,deadline)
+            if k==0 or k==len(rows):raise ValueError('recovery deadline outside observed transient')
+            a,b=rows[k-1],rows[k]
+            lock=a['lock']+(b['lock']-a['lock'])*(deadline-a['time'])/(b['time']-a['time'])
+            check(f'{j}:recovery-deadline-qualification',max(0,.8-lock),0)
         reset_start=None;reset_feedback=[];reset_qualification=[]
         for row in rows:
             if row['rst']>.45:

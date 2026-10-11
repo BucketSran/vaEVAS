@@ -34,6 +34,6 @@ analog begin
  end
  V(tune)<+control+0.5*(up-dn);
  V(fb)<+transition(state*0.9,0,100p);
- V(lock)<+transition((good>=250 || ($abstime>45u && $abstime<46u) || ($abstime>75u && $abstime<76u))*0.9,0,100p);
+ V(lock)<+transition((good>=250 || ($abstime>75u && $abstime<76u) || ($abstime>125u && $abstime<126u))*0.9,0,100p);
 end
 endmodule

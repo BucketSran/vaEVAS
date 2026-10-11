@@ -7,7 +7,7 @@ INC='`include "constants.vams"\n`include "disciplines.vams"\n'
 DCO=INC+'''module healthy_dco(tune,rst,dco);
 input tune,rst;output dco;electrical tune,rst,dco;
 parameter real sensitivity=10e6;
-parameter real frequency_step=0,step_start=100u,step_end=120u;
+parameter real frequency_step=0,step_start=150u,step_end=175u;
 real freq,phase,perturb;
 analog begin
  @(initial_step)perturb=0;
@@ -125,11 +125,12 @@ def pll_cases():
  result=[]
  for k,f in enumerate((0.25,0.75)):
   net='simulator lang=spectre\nglobal 0\nahdl_include "healthy.va"\nahdl_include "dut.va"\nVR(ref 0) vsource type=pulse val0=0 val1=0.9 period=100n width=49n rise=100p fall=100p delay=10n\n'
-  net+=pwl('Vreset','rst',[(0,0.9),(200e-9,0.9),(201e-9,0),(60e-6,0),(60.001e-6,0.9),(60.3e-6,0.9),(60.301e-6,0),(100e-6,0)])
-  net+=pwl('VN','n',[(0,3),(30e-6,3),(30.001e-6,4),(100e-6,4)])
-  net+=pwl('VF','frac',[(0,0),(15e-6,0),(15.001e-6,f),(45e-6,f),(45.001e-6,0),(75e-6,0),(75.001e-6,0.5),(100e-6,0.5)])
-  net+=f'XO(tune rst dco) healthy_dco frequency_step={2e6 if k==0 else -2e6:0.12g}\nX(ref rst n frac dco fb tune lock) fractional_pll\ntran tran stop=140u maxstep=2n errpreset=conservative\nsave ref rst n frac dco fb tune lock\n'
-  result.append(dict(name=f'fractional-pll-{f}',kind='fractional-pll',stop=140e-6,signals=['ref','rst','n','frac','dco','fb','tune','lock'],netlist=net,support={'healthy.va':DCO.replace('sensitivity=10e6','sensitivity=12e6') if k else DCO},windows=[[12e-6,14.9e-6,3,0],[27e-6,29.9e-6,3,f],[42e-6,44.9e-6,4,f],[57e-6,59.9e-6,4,0],[72e-6,74.9e-6,4,0],[94e-6,99e-6,4,0.5],[112e-6,119e-6,4,0.5],[132e-6,139e-6,4,0.5]],ratio_tolerance=0.04,frequency_tolerance=0.06,feedback_tolerance=0.015,phase_tolerance=0.35,mean_phase_tolerance=0.2,withdraw_windows=[[15.004e-6,16e-6],[30.004e-6,31e-6],[45.004e-6,46e-6],[60.01e-6,60.25e-6],[75.004e-6,76e-6]]))
+  net+=pwl('Vreset','rst',[(0,0.9),(200e-9,0.9),(201e-9,0),(100e-6,0),(100.001e-6,0.9),(100.3e-6,0.9),(100.301e-6,0),(200e-6,0)])
+  net+=pwl('VN','n',[(0,3),(50e-6,3),(50.001e-6,4),(200e-6,4)])
+  net+=pwl('VF','frac',[(0,0),(25e-6,0),(25.001e-6,f),(75e-6,f),(75.001e-6,0),(125e-6,0),(125.001e-6,0.5),(200e-6,0.5)])
+  net+=f'XO(tune rst dco) healthy_dco frequency_step={2e6 if k==0 else -2e6:0.12g}\nX(ref rst n frac dco fb tune lock) fractional_pll\ntran tran stop=200u maxstep=2n errpreset=conservative\nsave ref rst n frac dco fb tune lock\n'
+  windows=[[15.2032e-6,24.9e-6,3,0],[40.0032e-6,49.9e-6,3,f],[65.0032e-6,74.9e-6,4,f],[90.0032e-6,99.9e-6,4,0],[115.3032e-6,124.9e-6,4,0],[140.0032e-6,149.9e-6,4,0.5],[165.0022e-6,174.9e-6,4,0.5],[190.0022e-6,199.9e-6,4,0.5]]
+  result.append(dict(name=f'fractional-pll-{f}',kind='fractional-pll',stop=200e-6,signals=['ref','rst','n','frac','dco','fb','tune','lock'],netlist=net,support={'healthy.va':DCO.replace('sensitivity=10e6','sensitivity=12e6') if k else DCO},windows=windows,ratio_tolerance=0.04,frequency_tolerance=0.06,feedback_tolerance=0.015,phase_tolerance=0.35,mean_phase_tolerance=0.2,disturbance_events=[150e-6,175e-6],withdraw_windows=[[25.004e-6,26e-6],[50.004e-6,51e-6],[75.004e-6,76e-6],[100.01e-6,100.25e-6],[125.004e-6,126e-6]]))
  return result
 
 def build(selected=None):
@@ -171,13 +172,16 @@ storage_mb = 4096
   (test/'test.sh').chmod(0o755)
   (test/'contract.json').write_text(json.dumps(dict(task_id=task.name,candidate_files=['dut.va'],category='extension-integration'),indent=2)+'\n')
   (test/'cases.json').write_text(json.dumps(cases,indent=2)+'\n')
-  (pub/'acceptance-windows.json').write_text(json.dumps({key:cases[0][key] for key in ('windows','hold_windows','reset_windows','withdraw_windows') if key in cases[0]},indent=2)+'\n')
+  (pub/'acceptance-windows.json').write_text(json.dumps({key:cases[0][key] for key in ('windows','hold_windows','reset_windows','withdraw_windows','disturbance_events') if key in cases[0]},indent=2)+'\n')
   (pub/'interface.json').write_text(json.dumps(dict(task_id=task.name,editable=['dut.va'],fixed=['healthy.va'],public_signals=cases[0]['signals'],hidden_changes='Only published bias/common-mode envelope and slope, actuator, DCO sensitivity and frequency-disturbance ranges; no reference bitstream match'),indent=2)+'\n')
   variants={'reference':reference}
   if kind=='fractional-pll':
    variants.update(detached_feedback=reference.replace('dco,fb,tune,lock;\ninteger','dco,fb,tune,lock,fake;\nhealthy_dco #(.sensitivity(10e6)) detached(tune,rst,fake);\ninteger').replace('cross(V(dco)-0.45','cross(V(fake)-0.45'),alternative=reference.replace('acc=0;','acc=0.5;').replace('control+0.5*(up-dn)','control+0.65*(up-dn)'),integer_only=reference.replace('acc=acc+V(frac);','acc=acc+0;'),feedback_bypass=reference.replace('V(fb)<+transition(state*0.9,0,100p);','V(fb)<+V(ref);'),open_loop=reference.replace('control=control+0.0004*(up-dn);','control=V(n)+V(frac)-2;').replace('control+0.5*(up-dn)','control'))
    variants['reset_feedback']=reference.replace('transition(state*0.9,0,100p)','transition((V(rst)>0.45 ? 0.9 : state*0.9),0,100p)')
-   variants['stale_qualification']=reference.replace('(good>=250)*0.9','(good>=250 || ($abstime>45u && $abstime<46u) || ($abstime>75u && $abstime<76u))*0.9')
+   variants['stale_qualification']=reference.replace('(good>=250)*0.9','(good>=250 || ($abstime>75u && $abstime<76u) || ($abstime>125u && $abstime<126u))*0.9')
+   delayed=reference.replace('V(tune)<+', '@(timer(150u))begin epoch=$abstime;good=0;end\n @(timer(175u))begin epoch=$abstime;good=0;end\n V(tune)<+')
+   variants['within_deadline']=delayed.replace('(good>=250)*0.9','(good>=250 && $abstime-epoch>=14u)*0.9')
+   variants['late_recovery']=delayed.replace('(good>=250)*0.9','(good>=250 && $abstime-epoch>=16u)*0.9')
   else:
    variants.update(detached_feedback=reference.replace('dco,fb,tune,lock;\ninteger','dco,fb,tune,lock,fake;\nhealthy_dco #(.sensitivity(10e6)) detached(tune,rst,fake);\ninteger').replace('cross(V(dco)-0.45','cross(V(fake)-0.45'),alternative=reference.replace('next=value-250*error;','if(error>0.015)next=value-8;else if(error< -0.015)next=value+8;else if(error>0.0015)next=value-2;else if(error< -0.0015)next=value+2;else next=value;'),fixed_code=reference.replace('next=value-250*error;','next=0;'),wrong_direction=reference.replace('next=value-250*error;','next=value+125*error;'))
    if kind=='continuous-offset':variants['cancel_signal']=reference.replace('(mode>0.5 || V(cal)>0.45)','(1)')
@@ -187,7 +191,7 @@ storage_mb = 4096
    variants['fractional_code']=reference.replace('transition(value,0,100n)','transition(value+0.5*(V(rst)<0.45),0,100n)').replace('value>64)value=64','value>63)value=63').replace('value< -64)value=-64','value< -63)value=-63')
   for name,source in variants.items():
    directory=OUT/'candidates'/task.name/name;directory.mkdir(parents=True,exist_ok=True);(directory/'dut.va').write_text(source)
-   manifest['calibration_requests'].append(dict(task=str(task.relative_to(ROOT)),variant=name,candidate_directory=str(directory.relative_to(ROOT)),expected='pass' if name in ('reference','alternative') else 'fail',certification='pending-live-execution'))
+   manifest['calibration_requests'].append(dict(task=str(task.relative_to(ROOT)),variant=name,candidate_directory=str(directory.relative_to(ROOT)),expected='pass' if name in ('reference','alternative','within_deadline') else 'fail',certification='pending-live-execution'))
   manifest.setdefault('tasks',[]).append(dict(id=task.name,kind=kind,conditions=len(cases),case_sha256=hashlib.sha256((test/'cases.json').read_bytes()).hexdigest()))
  if selected:
   old=json.loads((OUT/'manifest.json').read_text());changed={f'v3-calibration-{kind}' for kind in selected}
