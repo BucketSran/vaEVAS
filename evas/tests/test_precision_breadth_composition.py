@@ -352,3 +352,25 @@ class CompositionReferences(unittest.TestCase):
                 actual=math.sin(2*math.pi*(phase+.25*epsilon*x))
                 nominal=math.sin(2*math.pi*phase)
                 self.assertLessEqual(abs(actual-nominal),gain*abs(epsilon)+1e-14)
+
+    def test_nonlast_transition_keeps_old_branch_across_query_time_box(self):
+        from decimal import localcontext
+        from fractions import Fraction as F
+        m=load()
+        with localcontext() as ctx:
+            ctx.prec=80
+            query=m._I(.05-1e-9,.05+1e-9)
+            events=[m._I(0),m._I(.05),m._I(1)]
+            # At the left query endpoint the .05 reversal has not occurred,
+            # so the old rise is still 8*t. At the right endpoint it has
+            # reversed from 8*.05 with downward slope -4.
+            old_left=8*F(.05-1e-9)
+            new_right=8*F(.05)-4*(F(.05+1e-9)-F(.05))
+            for stages in (None,[True,True,False]):
+                lo,hi=m._transition(query,events,[1,0,1],0,0,
+                                    m._I(.125),m._I(.25),stages).floats()
+                self.assertLessEqual(F(lo),old_left)
+                self.assertGreaterEqual(F(hi),new_right)
+                # The incomplete-edge target value .5 is a wrong-state
+                # control. Enclosing both branches must not accept it.
+                self.assertFalse(lo<=.5<=hi)

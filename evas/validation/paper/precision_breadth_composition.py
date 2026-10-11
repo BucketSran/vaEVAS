@@ -436,7 +436,7 @@ def _transition(t,events,targets,initial,delay,rise,fall,stages=None):
         return _I(max(min(start.lo,target.lo),min(max(start.hi,target.hi),v.lo)),
                   max(min(start.lo,target.lo),min(max(start.hi,target.hi),v.hi)))
     for k,(event,target) in enumerate(zip(events,targets)):
-        if stages is not None and not stages[k]:return val(state,t)
+        if stages is not None and not stages[k]:return answer
         target=_i(target);when=event+delay
         current=val(state,when)
         oldorigin,oldstart,oldtarget,oldslope,oldwhen=state
@@ -465,7 +465,11 @@ def _transition(t,events,targets,initial,delay,rise,fall,stages=None):
             raise ValueError('transition direction cannot be certified from common event history')
         if t.lo>=when.hi:answer=val(new,t)
         elif t.hi>=when.lo:answer=_hull(val(state,t),val(new,t))
-        else:return val(state,t)
+        else:
+            # answer may already contain the previous event's old branch
+            # when the query-time box straddles that event. A later pending
+            # event must not replace that hull with only its new state.
+            return answer
         state=new
     return answer
 
