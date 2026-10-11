@@ -38,11 +38,42 @@ class BreadthRunner(unittest.TestCase):
     def test_freeze_binds_allfour_same_source_and_tier_settings(self):
         self.freeze();plan=runner.load(self.inputs/'PLAN.json')
         self.assertEqual(len(plan),12)
-        self.assertEqual({r['tier']:r['profile'] for r in plan},{'Q1':'base','Q2':'both','Q3':'deep'})
+        self.assertEqual({r['tier']:r['profile'] for r in plan if r['backend']=='evas'},{'Q1':'base','Q2':'both','Q3':'deep'})
+        self.assertEqual({r['tier']:r['profile'] for r in plan if r['backend']=='spectre'},{'Q1':'base','Q2':'both','Q3':'deep_bound'})
         self.assertEqual(len({r['source_sha256'] for r in plan}),1)
         runner.verify(self.inputs)
         self.assertIn('SOURCE_IDENTITY.json',runner.load(self.inputs/'MANIFEST.json'))
         with self.assertRaises(FileExistsError):runner.freeze(self.inputs)
+
+    def test_backend_profile_binding_is_frozen_before_execution(self):
+        self.freeze();bindings=runner.load(self.inputs/'PROFILE_BINDINGS.json')
+        self.assertEqual(bindings['schema_version'],'breadth-v2')
+        for row in runner.load(self.inputs/'PLAN.json'):
+            settings=runner.load(self.inputs/row['work']/'requested_settings.json')
+            special=row['backend']=='spectre' and row['tier']=='Q3'
+            expected=0.0004 if special else fixture()['profiles'][['base','both','deep'].index(runner.TIER_PROFILES[row['tier']])]['step_units']
+            self.assertEqual(settings['step_units'],expected)
+            if row['tier']=='Q3':self.assertEqual(settings['reltol'],fixture()['profiles'][2]['reltol'])
+            self.assertEqual(bindings['backend_tier_profiles'][row['backend']][row['tier']],row['profile'])
+        self.assertIn('PROFILE_BINDINGS.json',runner.load(self.inputs/'MANIFEST.json'))
+        self.assertIn('experiments/backends/support/precision_binding_run.py',runner.load(self.inputs/'SOURCE_IDENTITY.json'))
+        old=self.base/'old'
+        runner.freeze(old,backend_tier_profiles={b:dict(runner.TIER_PROFILES) for b in runner.BACKENDS})
+        self.assertTrue(all(r['profile']=='deep' for r in runner.load(old/'PLAN.json') if r['tier']=='Q3'))
+        with self.assertRaises(ValueError):runner.freeze(self.base/'bad',backend_tier_profiles={'spectre':{'Q3':'invented'}})
+        self.assertFalse((self.base/'bad').exists())
+
+    def test_legacy_plan_runs_without_new_binding_metadata(self):
+        runner.freeze(self.inputs,backend_tier_profiles={b:dict(runner.TIER_PROFILES) for b in runner.BACKENDS})
+        (self.inputs/'PROFILE_BINDINGS.json').unlink()
+        manifest=runner.load(self.inputs/'MANIFEST.json');del manifest['PROFILE_BINDINGS.json']
+        runner.checkpoint(self.inputs/'MANIFEST.json',manifest)
+        profile=self.base/'profile.json';profile.write_text('{}')
+        with patch.object(runner,'preflight',side_effect=RuntimeError('unavailable')):
+            with self.assertRaises(RuntimeError):runner.run(self.inputs,self.base/'out','spectre',profile,'foundation',tiers=['Q3'])
+        started=runner.load(self.base/'out/STARTED.json')
+        self.assertEqual(started['schema_version'],'breadth-v1')
+        self.assertEqual(started['selected'][0]['profile'],'deep')
 
     def test_drift_rejected_and_fixed_plan_retained(self):
         self.freeze();(self.inputs/'cards.json').write_text('{}')
