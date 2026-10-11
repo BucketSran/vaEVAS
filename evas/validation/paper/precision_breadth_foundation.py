@@ -343,12 +343,15 @@ def reference(card, time_s, event_bounds):
             raise ValueError('invalid verified counter stage')
     g=card['group_id'];undefined={}
     if g=='F14':
-        if time_s==0:values=[{'y':F(0)}]
-        elif any(time_s==p['time_s'] for p in card['undefined_points']):
+        if any(time_s==p['time_s'] for p in card['undefined_points']):
             values=[{}];undefined={'y':'PWL derivative undefined at corner; both one-sided critical observations required'}
         else:
             values=[]
             for t in times:
+                # DC is a distinct phase value at zero. A serialized cell
+                # touching zero must enclose it as well as the transient side;
+                # actual phase qualification remains the shared grader's job.
+                if t==0:values.append({'y':F(0)});continue
                 for (a,u),(b,v) in zip(card['inputs']['u'],card['inputs']['u'][1:]):
                     if F(a)<t<=F(b):
                         values.append({'y':F(card['reference_parameters']['derivative_scale'])*(F(v)-F(u))/(F(b)-F(a))});break
