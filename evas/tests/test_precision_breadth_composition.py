@@ -101,6 +101,16 @@ class CompositionReferences(unittest.TestCase):
         for c in probes:
             with self.assertRaises(NotImplementedError):m.reference(c,0.,{})
 
+    def test_interrupted_integral_probe_uses_legal_port_identifier(self):
+        m=load();c=next(c for c in m.cards() if c['group_id']=='EC05')
+        # VAMS 2.4 Annex B/C.16 reserves edge. This source revision keeps
+        # the logical case/group count; frozen runs retain their old source.
+        self.assertEqual(c['ports'],['edge_v','y','n'])
+        self.assertIn('V(edge_v)<+transition',c['source'])
+        self.assertIn('idt(V(edge_v)/T',c['source'])
+        self.assertNotIn('V(edge)',c['source'])
+        self.assertTrue(c['support_probe_only'])
+
     def test_all_ready_groups_have_independent_handwritten_anchors(self):
         m=load();cs={c['group_id']:c for c in m.cards() if c['id'].endswith('-v1')}
         # Values were derived from state tables, rectangle/trapezoid areas,

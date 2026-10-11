@@ -94,11 +94,11 @@ def cards():
         'real h; integer n0;',inputs={'u':[[0,0],[2.25,2.25]]},stop=2.25)
     _event(c,'sample',math.sqrt(2),1,kind='cross',input='u',slope=2*math.sqrt(2)/UNIT)
 
-    c=setcase(5,'Interrupted transition into integral support probe','edge y n',
+    c=setcase(5,'Interrupted transition into integral support probe','edge_v y n',
         '@(initial_step) begin q=0; n0=0; end\n'
         '@(timer(T,0,TT)) begin q=1; n0=n0+1; end\n'
         '@(timer(1.25*T,0,TT)) begin q=0; n0=n0+1; end\n'
-        'V(edge)<+transition(q,0,0.5*T,T); V(y)<+idt(V(edge)/T,0.1); V(n)<+n0;',
+        'V(edge_v)<+transition(q,0,0.5*T,T); V(y)<+idt(V(edge_v)/T,0.1); V(n)<+n0;',
         'integer q,n0;',stop=3,critical=(1,1.25,1.75))
     _event(c,'rise',1,1);_event(c,'reverse',1.25,2)
 
