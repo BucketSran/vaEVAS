@@ -66,6 +66,33 @@ class FoundationReferences(unittest.TestCase):
             a,b,d=(c['inputs'][n][0][1]!=0 for n in ('a','b','c'))
             self.contains(f.reference(c,0,{}),'logic_out',int(a or b and d))
 
+    def test_nested_ternary_has_handwritten_dc_answers(self):
+        # Source a?1:b?2:3: nonzero a selects 1; otherwise nonzero b
+        # selects 2, else 3. c is irrelevant, including both c values.
+        answers=(3,1,2,2,3,3,2,2,1,1,1,1)
+        for i,answer in enumerate(answers):
+            c=self.card('F03',f'F03-dc-{i}')
+            for t in (0,c['stop_s']/2,c['stop_s']):
+                out=f.reference(c,t,{})
+                self.contains(out,'tern',answer)
+                for wrong in (1,2,3):
+                    if wrong!=answer:
+                        self.assertFalse(out['outputs']['tern'][0]<=wrong<=out['outputs']['tern'][1])
+
+    def test_common_mode_absolute_output_has_handwritten_anchors(self):
+        base=self.card('F10','F10-base')
+        shifted=self.card('F10','F10-common-mode')
+        # At zero shifted u=-.375, r=.375: y=2u-r+.125=-1.
+        # At 2us shifted u=.625, r=.5: y=.875. Both voltages
+        # rise by .125, so the absolute output rises by exactly .125.
+        for t,base_y,shifted_y in ((0,-1.125,-1.),(2e-6,.75,.875),
+                                  (4e-6,-1.125,-1.),(base['stop_s'],-1.125,-1.)):
+            self.contains(f.reference(base,t,{}),'y',base_y)
+            out=f.reference(shifted,t,{})
+            self.contains(out,'y',shifted_y)
+            # Treating the absolute output as common-mode invariant is wrong.
+            self.assertFalse(out['outputs']['y'][0]<=base_y<=out['outputs']['y'][1])
+
     def test_functions_include_threshold_and_both_branches(self):
         for variant, expected in [('F05-dc-0',0),('F05-dc-1',.5),('F05-dc-2',.75)]:
             out=f.reference(self.card('F05',variant),0,{})
