@@ -133,11 +133,12 @@ def select_plan(plan,backend,family,groups=(),cards=(),tiers=()):
     return selected
 
 
-def run(inputs,output,backend,profile_path,family,*,groups=(),cards=(),tiers=()):
+def run(inputs,output,backend,profile_path,family,*,groups=(),cards=(),tiers=(),defer_analysis=False):
     plan=select_plan(load(inputs/'PLAN.json'),backend,family,groups,cards,tiers)
     output.mkdir(parents=True,exist_ok=False);results=[];attempts=[]
     save(output/'STARTED.json',{'schema_version':load(inputs/'PROFILE_BINDINGS.json')['schema_version'] if (inputs/'PROFILE_BINDINGS.json').is_file() else 'breadth-v1','limits':BREADTH_LIMITS,'selected':plan,
-         'input_manifest_sha256':sha(inputs/'MANIFEST.json'),'profile_sha256':sha(profile_path)})
+         'input_manifest_sha256':sha(inputs/'MANIFEST.json'),'profile_sha256':sha(profile_path),
+         'defer_analysis':defer_analysis})
     try:
         verify(inputs);data=load(inputs/'cards.json');profile=load(profile_path)
         tool,env=preflight(backend,profile,output,LIMITS);save(output/'TOOL_IDENTITY.json',tool)
@@ -156,9 +157,12 @@ def run(inputs,output,backend,profile_path,family,*,groups=(),cards=(),tiers=())
                 attempt.update(status='adapter_error',reason=repr(exc),
                                stages=[load(work/(n+'.json')) for n in ('compile','simulate') if (work/(n+'.json')).is_file()])
                 result={**row,'status':'execution_failed','reason':repr(exc),'abort_batch':True}
+                if defer_analysis:deferred_analysis(result,data)
                 save(work/'RESULT.json',result);results.append(result)
                 raise
-            if result['status']=='waveform_available':
+            if defer_analysis:
+                deferred_analysis(result,data)
+            elif result['status']=='waveform_available':
                 try:
                     native=read_native(work/result['waveform'],backend)
                     result['assessment']=assess(load(work/'condition.json'),native,data)
@@ -198,6 +202,14 @@ def run(inputs,output,backend,profile_path,family,*,groups=(),cards=(),tiers=())
         save(output/'FILE_MANIFEST.json',{str(p.relative_to(output)):{'sha256':sha(p),'bytes':p.stat().st_size}
              for p in sorted(output.rglob('*')) if p.is_file() and p.name!='FILE_MANIFEST.json'})
     return results
+
+
+def deferred_analysis(result,contract):
+    """Execution success is raw evidence availability, never a science pass."""
+    result['analysis_status']='pending' if result['status']=='waveform_available' else 'not_available'
+    result['qualification']={'status':'unknown','reason':'analysis deferred to independent local reanalysis'}
+    result['qualified_tiers']={tier['id']:{'status':'unknown','settings_and_provenance':'unknown',
+        'native_observations':'unknown','runtime_controls':'unknown'} for tier in contract['tiers']}
 
 
 def runtime_control_evidence(backend,settings):
@@ -373,7 +385,8 @@ if __name__=='__main__':
     p.add_argument('--family',choices=('foundation','composition'),required=True)
     p.add_argument('--group',action='append',default=[]);p.add_argument('--card',action='append',default=[])
     p.add_argument('--tier',choices=tuple(TIER_PROFILES),action='append',default=[])
+    p.add_argument('--defer-analysis',action='store_true',help='export raw evidence; leave scientific and settings analysis pending')
     a=parser.parse_args()
     if a.mode=='freeze':freeze(a.output.resolve())
     else:run(a.inputs.resolve(),a.output.resolve(),a.backend,a.profile.resolve(),a.family,
-             groups=a.group,cards=a.card,tiers=a.tier)
+             groups=a.group,cards=a.card,tiers=a.tier,defer_analysis=a.defer_analysis)
