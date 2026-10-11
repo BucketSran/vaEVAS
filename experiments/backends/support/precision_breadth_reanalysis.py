@@ -14,7 +14,9 @@ artifacts. The tool copies its checker dependencies and runs from that snapshot.
 REANALYSIS.json separates original execution, numerical, behavior, evidence,
 configuration, native observations and runtime controls. Source or physical
 input changes require new execution. Missing exact-input evidence remains
-unknown, including F03/F04 threshold cases. Original verdicts and hashes remain
+unknown, including F03/F04 threshold cases. Optional external open evidence
+uses a separately sealed adapter/proof and original execution manifest; legacy
+configuration, official profiles and actual integrator evidence all remain gates. Original verdicts and hashes remain
 in each record. No simulator or remote command runs here.
 """
 import argparse
@@ -22,6 +24,7 @@ import csv
 from datetime import datetime, timezone
 import hashlib
 import inspect
+import importlib.util
 import json
 from pathlib import Path
 import shutil
@@ -195,6 +198,120 @@ def exact_dc_inputs(card, rows, backend, config):
             'limit':'exact constant node values plus raw/CSV equality only; actual evidence API/review still required, B/100 is never an exact-identity proof'}
 
 
+OPEN_AXES=('identity','config','runtime','native','integrator','diagnostics','observations')
+OPEN_INPUTS=('dut.va','condition.json','requested_settings.json','requested_times.json','observation_plan.json')
+OPEN_BACKENDS={'gnucap_modelgen':('tb.gc','dut.so'),'openvaf_r_ngspice':('tb.cir','dut.osdi')}
+
+
+def verified_execution_inputs(inputs):
+    manifest=load(inputs/'MANIFEST.json')
+    if not isinstance(manifest,dict) or not manifest:
+        raise ValueError('empty execution input manifest')
+    for name,digest in manifest.items():
+        path=inputs/name;resolved=path.resolve()
+        linked=path.is_symlink()
+        for parent in path.parents:
+            if parent==inputs:break
+            linked=linked or parent.is_symlink()
+        if linked or not resolved.is_relative_to(inputs.resolve()) or sha(resolved)!=digest:
+            raise ValueError('execution input manifest mismatch: '+name)
+    return manifest
+
+
+def seal_open_evidence(args,output):
+    """External qualification has its own identity, outside frozen science."""
+    if not args.open_evidence_adapter:
+        if any((args.open_proof,args.approved_open_proof_sha256,args.proof_evidence_root,args.execution_inputs,args.approved_open_adapter_sha256)):
+            raise ValueError('open evidence options require an external adapter')
+        return
+    directory=output/'external-open-evidence';directory.mkdir()
+    adapter=directory/'adapter.py';shutil.copyfile(args.open_evidence_adapter,adapter)
+    config={'adapter':'external-open-evidence/adapter.py',
+            'approved_proof_sha256':args.approved_open_proof_sha256,
+            'approved_adapter_sha256':args.approved_open_adapter_sha256,
+            'proof':None,'evidence_root':'external-open-evidence/attachments'}
+    if args.execution_inputs:
+        manifest=verified_execution_inputs(args.execution_inputs.resolve())
+        save(directory/'EXECUTION_MANIFEST.json',manifest)
+        config['execution_input_manifest_sha256']=sha(args.execution_inputs/'MANIFEST.json')
+    if args.open_proof:
+        proof=load(args.open_proof)
+        shutil.copyfile(args.open_proof,directory/'proof.json');config['proof']='external-open-evidence/proof.json'
+        attachments=proof.get('attachments',{})
+        if not isinstance(attachments,dict):raise ValueError('proof attachments must be a mapping')
+        if attachments and not args.proof_evidence_root:raise ValueError('proof attachment root required')
+        for name,digest in attachments.items():
+            root=args.proof_evidence_root.resolve();source=root/name
+            if source.is_symlink() or not source.resolve().is_relative_to(root) or sha(source)!=digest:
+                raise ValueError('proof attachment identity mismatch: '+name)
+            target=directory/'attachments'/name
+            if not target.resolve().is_relative_to((directory/'attachments').resolve()):
+                raise ValueError('escaping proof attachment')
+            target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(source,target)
+    config['sealed_files']={str(p.relative_to(output)):sha(p) for p in directory.rglob('*') if p.is_file()}
+    save(output/'OPEN_EVIDENCE_IDENTITY.json',config)
+    analysis=load(output/'ANALYSIS_IDENTITY.json')
+    analysis['external_open_evidence_identity_sha256']=sha(output/'OPEN_EVIDENCE_IDENTITY.json')
+    analysis['external_qualification_claim']='separate adapter/proof identity; scientific snapshot and original grades unchanged'
+    save(output/'ANALYSIS_IDENTITY.json',analysis)
+
+
+def external_open_evidence(output,work,tool,old):
+    unknown={axis:{'status':'unknown','issues':['external approved evidence unavailable']} for axis in OPEN_AXES}
+    identity_path=output/'OPEN_EVIDENCE_IDENTITY.json'
+    if not identity_path.is_file():return unknown
+    trusted=load(output/'ANALYSIS_IDENTITY.json').get('external_open_evidence_identity_sha256')
+    if sha(identity_path)!=trusted:raise ValueError('external evidence identity drift')
+    config=load(identity_path)
+    for name,digest in config['sealed_files'].items():
+        path=output/name
+        if not path.resolve().is_relative_to(output.resolve()) or sha(path)!=digest:
+            raise ValueError('sealed external evidence drift: '+name)
+    try:
+        if sha(output/config['adapter'])!=config.get('approved_adapter_sha256'):
+            raise ValueError('external adapter lacks exact approved digest')
+        if not config['proof'] or sha(output/config['proof'])!=config.get('approved_proof_sha256'):
+            raise ValueError('external proof lacks exact approved digest')
+        manifest_path=output/'external-open-evidence/EXECUTION_MANIFEST.json'
+        if not manifest_path.is_file():raise ValueError('verified original execution manifest unavailable')
+        manifest=load(manifest_path);backend=old['backend'];deck,compiled=OPEN_BACKENDS[backend]
+        prefix='runs/'+backend+'/'+old['label']+'/'
+        frozen_manifest={name:manifest[prefix+name] for name in (*OPEN_INPUTS,deck)}
+        raw_lane=work.parent.parent
+        verify_lane(raw_lane)
+        raw=load(raw_lane/'FILE_MANIFEST.json');rawprefix='runs/'+old['label']+'/'
+        raw_manifest={name:raw[rawprefix+name]['sha256'] for name in
+                      ('simulate-final.json','simulate.log','waveform.txt',compiled,'INPUT_IDENTITY.json','RESULT.json')}
+        spec=importlib.util.spec_from_file_location('sealed_open_evidence',output/config['adapter'])
+        adapter=importlib.util.module_from_spec(spec);spec.loader.exec_module(adapter)
+        result=adapter.qualify_open_backend(work,backend,tool,frozen_manifest,raw_manifest,
+            proof_path=output/config['proof'] if config['proof'] else None,
+            evidence_root=output/config['evidence_root'],approved_proof_sha256=config['approved_proof_sha256'])
+        if not isinstance(result,dict) or any(axis not in result for axis in OPEN_AXES):
+            raise ValueError('external adapter omitted qualification axes')
+        return result
+    except (ValueError,KeyError,FileNotFoundError,TypeError) as exc:
+        return {axis:{'status':'unknown','issues':[str(exc)]} for axis in OPEN_AXES}
+
+
+def integrator_axis(backend,open_axes):
+    if backend not in OPEN_BACKENDS:
+        return {'status':'not_applicable','scope':'external open-backend actual-device proof only; original backend method qualification unchanged'}
+    return open_axes['integrator'] if open_axes else {'status':'unknown','scope':'open backend actual device integrator',
+                   'issues':['baseline did not independently qualify open-backend actual device integrator']}
+
+
+def open_gate(legacy,binding,adapter):
+    issues=[]
+    if legacy.get('status')!='qualified':issues.append('legacy configuration qualification incomplete')
+    if binding.get('status')!='matched':issues.append('official profile binding incomplete')
+    for axis in ('identity','config','integrator'):
+        if adapter.get(axis,{}).get('status')!='qualified':issues.append('external '+axis+' qualification incomplete')
+    config={'status':'qualified' if not issues else 'unknown','issues':issues,
+            'claim':'legacy configuration AND official binding AND external identity/config/actual integrator'}
+    return config,adapter['native'],adapter['runtime']
+
+
 def worker(frozen, lane, output):
     sys.path[:0] = [str(frozen/'experiments/backends/support'),str(frozen/'experiments/backends/paper'),
                     str(frozen/'evas/validation/paper'),str(frozen/'evas/src')]
@@ -242,6 +359,7 @@ def worker(frozen, lane, output):
         assessment = failed_assessment(contract, 'source incompatible or no raw waveform')
         config = native = runtime = {'status':'unknown'}; effective = {}; error = None
         exact = {'status':'unavailable','qualification_override':False}
+        legacy_axes=None;open_axes=None
         if comp['status'] == 'compatible' and old['status'] == 'waveform_available':
             try:
                 waveform = (work/old['waveform']).resolve()
@@ -255,6 +373,10 @@ def worker(frozen, lane, output):
                 exact = exact_dc_inputs(card,rows,old['backend'],config)
                 native = native_observation_evidence(work,old['backend'],config,rows,tool=tool,card=card,contract=contract)
                 runtime = runtime_control_evidence(old['backend'],effective)
+                if old['backend'] in OPEN_BACKENDS and (output/'OPEN_EVIDENCE_IDENTITY.json').is_file():
+                    legacy_axes={'configuration':config,'native_observations':native,'runtime_controls':runtime}
+                    open_axes=external_open_evidence(output,work,tool,old)
+                    config,native,runtime=open_gate(config,binding,open_axes)
             except Exception as exc:
                 error = repr(exc)
                 # Retain a completed independent mathematical assessment, but
@@ -266,6 +388,8 @@ def worker(frozen, lane, output):
                   'identity':identity,'assessment':assessment,'settings':effective,'configuration':config,
                   'native_observations':native,'runtime_controls':runtime,'analysis_error':error,
                   'profile_binding':binding,
+                  'legacy_qualification':legacy_axes,'external_open_evidence':open_axes,
+                  'actual_integrator':integrator_axis(old['backend'],open_axes),
                   'exact_input_diagnostic':exact,
                   'qualified_tiers':{tier['id']:slot_status(old['status'],assessment,config,native,runtime,tier['id'],binding) for tier in contract['tiers']}}
         if binding['status']!='matched':
@@ -290,6 +414,7 @@ def worker(frozen, lane, output):
                           'config':r['configuration']['status'] if r else 'unknown',
                           'native':r['native_observations']['status'] if r else 'unknown',
                           'runtime':r['runtime_controls']['status'] if r else 'unknown',
+                          'integrator':r['actual_integrator']['status'] if r else 'unknown',
                           'final':r['qualified_tiers'][q] if r else 'not_in_lane',
                           'compatibility':r['source_compatibility']['status'] if r else 'not_in_lane'})
     with (output/'VARIANTS.tsv').open('w') as stream:
@@ -310,6 +435,12 @@ def main():
     parser.add_argument('--lane',type=Path,required=True);parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--primary',type=Path);parser.add_argument('--frozen',type=Path)
     parser.add_argument('--inputs',type=Path,help='explicit immutable input directory; required for a new analysis')
+    parser.add_argument('--open-evidence-adapter',type=Path)
+    parser.add_argument('--approved-open-adapter-sha256',help='externally reviewed adapter digest; absence preserves unknown')
+    parser.add_argument('--open-proof',type=Path)
+    parser.add_argument('--approved-open-proof-sha256')
+    parser.add_argument('--proof-evidence-root',type=Path)
+    parser.add_argument('--execution-inputs',type=Path,help='original execution freeze; independent verified MANIFEST')
     args = parser.parse_args(); lane = args.lane.resolve(); output = args.output.resolve()
     if args.frozen:
         frozen = args.frozen.resolve()
@@ -329,6 +460,7 @@ def main():
     save(output/'ORIGINAL_MANIFEST_VERIFICATION.json',verification)
     frozen, script = snapshot(args.primary.resolve(),output)
     freeze_inputs(args.inputs.resolve(), output, load(output/'ANALYSIS_IDENTITY.json')['source_hashes'])
+    seal_open_evidence(args,output)
     result = subprocess.run([sys.executable,'-B',str(script),'--lane',str(lane),'--output',str(output),'--frozen',str(frozen)],
                             capture_output=True,text=True)
     (output/'worker.stdout').write_text(result.stdout);(output/'worker.stderr').write_text(result.stderr)
