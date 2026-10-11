@@ -1,0 +1,19 @@
+`include "disciplines.vams"
+module hysteresis_meter(vin, cmp_out, begin_round, up, down, width, valid);
+input vin, cmp_out, begin_round;
+output up, down, width, valid;
+electrical vin, cmp_out, begin_round, up, down, width, valid;
+parameter real tr=20p;
+real u,d,w;
+integer su,sd;
+analog begin
+ @(initial_step) begin u=0; d=0; w=0; su=0; sd=0; end
+ @(cross(V(begin_round)-0.5,+1)) begin u=0; d=0; w=0; su=0; sd=0; end
+ @(cross(V(cmp_out)-0.5,+1)) begin u=0.53; su=1; if(sd) w=u-d; end
+ @(cross(V(cmp_out)-0.5,-1)) begin d=0.48; sd=1; if(su) w=u-d; end
+ V(up)<+transition(u,0,tr,tr);
+ V(down)<+transition(d,0,tr,tr);
+ V(width)<+transition(w,0,tr,tr);
+ V(valid)<+transition((su && sd)?1.0:0.0,0,tr,tr);
+end
+endmodule

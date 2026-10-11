@@ -1,0 +1,14 @@
+`include "disciplines.vams"
+module gain_settling_meter(vin,static_out,dynamic_out,launch,gain,gain_valid,settling_ns,settled,status);
+input vin,static_out,dynamic_out,launch;
+output gain,gain_valid,settling_ns,settled,status;
+electrical vin,static_out,dynamic_out,launch,gain,gain_valid,settling_ns,settled,status;
+parameter real sample_period=250p, min_input_span=0.02, settle_tol=0.002, tr=20p;
+parameter integer samples=80,tail_samples=8;
+real observed[0:80];
+real base_in,base_out,next_sample,target,span,g,st;
+integer active,index,j,last_bad,gv,sv,state;
+analog begin
+// Implement the public contract.
+end
+endmodule

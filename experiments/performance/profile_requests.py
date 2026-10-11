@@ -9,6 +9,7 @@ import re
 import resource
 import subprocess
 import time
+from fractions import Fraction
 from pathlib import Path
 
 
@@ -22,10 +23,16 @@ def validate(case, request, response):
     kind, size = case.rsplit('-', 1)
     if request.get('transient'):
         times = request['transient']['output_times']
+        assert response['transient']['times'] == times
+        assert len(response['solutions']) == len(times)
+        if kind == 'pwl_idt':
+            validate_triangle(request, response)
         expected_events = [0.125*i for i in range(1,9)] if kind == 'timer' else [0.125,0.375,0.625,0.875] if kind == 'cross' else []
         assert [e['time'] for e in response['transient']['events']] == expected_events
         for t, solution in zip(times, response['solutions']):
-            expected = {'pwl':lambda:t, 'idt':lambda:0.5*t*t, 'nonlinear_idt':lambda:1/(1+t),
+            expected = {'pwl':lambda:t, 'idt':lambda:0.5*t*t,
+                        'pwl_idt':lambda:triangular_integral(t, len(request['transient']['pwl'][0])-1),
+                        'nonlinear_idt':lambda:1/(1+t),
                         'timer':lambda:int(8*t), 'cross':lambda:sum(e<=t for e in expected_events)}[kind]()
             assert abs(solution['voltages'][2]-expected) < 1e-9, (case,t)
     else:
@@ -48,6 +55,44 @@ def validate(case, request, response):
                     expected = value
                 assert abs(result-expected) < 1e-9, (case, result, expected)
                 previous = expected
+
+
+def triangular_integral(time, segments):
+    """Exact dyadic reference at half-knots of the generated triangle train."""
+    phase = Fraction(time) * segments % 4
+    if phase <= 1:
+        area = phase * phase / 2
+    elif phase <= 3:
+        area = 1 - (phase - 2) ** 2 / 2
+    else:
+        area = (phase - 4) ** 2 / 2
+    return area / segments
+
+
+def validate_triangle(request, response):
+    """Check the requested budget and enclosure independently of EVAS."""
+    transient = request['transient']
+    points, = transient['pwl']
+    segments = len(points) - 1
+    assert segments >= 4 and segments & (segments - 1) == 0
+    assert points == [[i / segments, [0., 1., 0., -1.][i % 4]]
+                      for i in range(segments + 1)]
+    times = [i / (2 * segments) for i in range(2 * segments + 1)]
+    assert transient['output_times'] == times
+    evidence = response['observation_evidence']
+    bounds = evidence['voltage_bounds_V']
+    assert len(bounds) == len(times)
+    tolerance = request['tolerances']
+    assert evidence['effective_controls']['absolute_V'] == tolerance['absolute']
+    assert evidence['effective_controls']['relative'] == tolerance['relative']
+    for t, solution, row in zip(times, response['solutions'], bounds):
+        expected = triangular_integral(t, segments)
+        actual = Fraction(solution['voltages'][2])
+        lo, hi = map(Fraction, row[2])
+        budget = Fraction(tolerance['absolute']) + Fraction(tolerance['relative']) * abs(actual)
+        assert lo <= expected <= hi, ('missing exact integral', t)
+        assert lo <= actual <= hi, ('missing nominal value', t)
+        assert max(actual - lo, hi - actual) <= budget, ('enclosure over budget', t)
 
 
 def main():

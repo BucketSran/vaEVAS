@@ -1,0 +1,14 @@
+`include "disciplines.vams"
+module offset_search(dcmpp,ready,vinp,vinn,request,offset_est,valid,status);
+input dcmpp,ready;
+output vinp,vinn,request,offset_est,valid,status;
+electrical dcmpp,ready,vinp,vinn,request,offset_est,valid,status;
+parameter real step_initial=0.064;
+parameter integer iterations=7;
+parameter real gap=1n, timeout=10n, tr=20p;
+real estimate,step,next_request,deadline;
+integer count,req,done,armed,state;
+analog begin
+// Implement the public contract.
+end
+endmodule

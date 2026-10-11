@@ -1,0 +1,22 @@
+`include "disciplines.vams"
+// Fixed engineering context: decision comparator and weighted trial DAC.
+module sar_fixed_frontend(clks,clkc,vin,dp4,dp3,dp2,dp1,dcomp,dcompb,dac);
+input clks,clkc,vin,dp4,dp3,dp2,dp1;output dcomp,dcompb,dac;
+electrical clks,clkc,vin,dp4,dp3,dp2,dp1,dcomp,dcompb,dac;
+integer k,prefix,decision;real trial,p,n;
+analog begin
+ @(initial_step)begin k=3;trial=0.5;p=0;n=0;end
+ @(cross(V(clks)-0.45,+1))begin k=3;p=0;n=0;trial=0.5;end
+ @(cross(V(clkc)-0.45,+1))begin
+  prefix=0;
+  if(k<3 && V(dp4)>0.45)prefix=prefix+8;
+  if(k<2 && V(dp3)>0.45)prefix=prefix+4;
+  if(k<1 && V(dp2)>0.45)prefix=prefix+2;
+  trial=(prefix+(1<<k))/16.0;
+  decision=(V(vin)>=trial);p=decision;n=1-decision;
+  if(k>0)k=k-1;
+ end
+ @(cross(V(clkc)-0.45,-1))begin p=0;n=0;end
+ V(dcomp)<+transition(p,100p,10p,10p);V(dcompb)<+transition(n,100p,10p,10p);V(dac)<+trial;
+end
+endmodule

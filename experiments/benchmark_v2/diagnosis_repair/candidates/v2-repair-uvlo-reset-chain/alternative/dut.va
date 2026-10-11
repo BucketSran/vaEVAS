@@ -1,0 +1,8 @@
+`include "disciplines.vams"
+module power_chain(vin,clk,pgood,resetb,enable,activity);
+input vin,clk; output pgood,resetb,enable,activity; electrical vin,clk,pgood,resetb,enable,activity;
+chain_uvlo monitor(vin,pgood);
+chain_release release_control(pgood,resetb);
+chain_enable gate_control(pgood,resetb,enable);
+chain_downstream consumer(clk,resetb,enable,activity);
+endmodule

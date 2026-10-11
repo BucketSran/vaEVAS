@@ -1,0 +1,40 @@
+[
+  {
+    "name": "contract-base",
+    "source_id": "314",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvin (vin 0) vsource type=pwl wave=[0 0.28 8n 0.28 14n 0.43 23n 0.43 31n 0.50 44n 0.50 44.1n 0.625 47n 0.625 47.1n 0.66 50n 0.66 50.1n 0.50 70n 0.50 70.1n 0.395 75n 0.395 75.1n 0.38 80n 0.38]\nVrst (rst 0) vsource type=pwl wave=[0 0.9 2.1n 0.9 2.2n 0 52n 0 52.1n 0.9 55.5n 0.9 55.6n 0 80n 0]\nVenable (enable 0) vsource type=pwl wave=[0 0 5n 0 5.1n 0.9 34n 0.9 34.1n 0 38n 0 38.1n 0.9 80n 0.9]\nVlow_trip (low_trip 0) vsource type=dc dc=0.40\nVhigh_trip (high_trip 0) vsource type=dc dc=0.62\nXDUT (vin rst enable low_trip high_trip inside_flag state_metric toggled) hysteretic_window_comparator\n\ntran tran stop=80n maxstep=2p strobeperiod=2p\nsave vin rst enable low_trip high_trip inside_flag state_metric toggled\n",
+    "signals": [
+      "vin",
+      "rst",
+      "enable",
+      "low_trip",
+      "high_trip",
+      "inside_flag",
+      "state_metric",
+      "toggled"
+    ],
+    "stop": 8e-08,
+    "resolution": 2e-12,
+    "atol": 0.002,
+    "params": {}
+  },
+  {
+    "name": "contract-stretched-input",
+    "source_id": "314",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVvin (vin 0) vsource type=pwl wave=[0 0.28 9.84n 0.28 17.22n 0.43 28.29n 0.43 38.13n 0.50 54.12n 0.50 54.243n 0.625 57.81n 0.625 57.933n 0.66 61.5n 0.66 61.623n 0.50 86.1n 0.50 86.223n 0.395 92.25n 0.395 92.373n 0.38 98.4n 0.38]\nVrst (rst 0) vsource type=pwl wave=[0 0.9 2.583n 0.9 2.706n 0 63.96n 0 64.083n 0.9 68.265n 0.9 68.388n 0 98.4n 0]\nVenable (enable 0) vsource type=pwl wave=[0 0 6.15n 0 6.273n 0.9 41.82n 0.9 41.943n 0 46.74n 0 46.863n 0.9 98.4n 0.9]\nVlow_trip (low_trip 0) vsource type=dc dc=0.40\nVhigh_trip (high_trip 0) vsource type=dc dc=0.62\nXDUT (vin rst enable low_trip high_trip inside_flag state_metric toggled) hysteretic_window_comparator\n\ntran tran stop=98.4n maxstep=2p strobeperiod=2p\nsave vin rst enable low_trip high_trip inside_flag state_metric toggled\n",
+    "signals": [
+      "vin",
+      "rst",
+      "enable",
+      "low_trip",
+      "high_trip",
+      "inside_flag",
+      "state_metric",
+      "toggled"
+    ],
+    "stop": 9.84e-08,
+    "resolution": 2e-12,
+    "atol": 0.002,
+    "params": {}
+  }
+]

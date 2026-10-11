@@ -1,0 +1,110 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module correlated_double_sampler_top(vin, clk, rst, sample_reset, sample_signal, vout, offset_dbg, valid);
+    input vin, clk, rst, sample_reset, sample_signal;
+    output vout, offset_dbg, valid;
+    electrical vin, clk, rst, sample_reset, sample_signal, vout, offset_dbg, valid;
+    electrical reset_node;
+
+    electrical unused_vout,unused_offset_dbg,unused_valid,unused_reset_node;
+parameter real vdd = 0.9;
+    parameter real vss = 0.0;
+    parameter real vcm = 0.45;
+    parameter real vth = 0.45;
+    parameter real tr = 200p from (0:inf);
+    parameter real cds_gain = 1.0;
+
+    private_reset_sample_latch #(.vdd(vdd), .vss(vss), .vcm(vcm), .vth(vth), .tr(tr))
+        XRST (vin, clk, rst, sample_reset, reset_node);
+    private_signal_sample_latch #(.vdd(vdd), .vss(vss), .vcm(vcm), .vth(vth), .tr(tr), .cds_gain(cds_gain))
+        XSIG (vin, clk, rst, sample_signal, sample_reset, reset_node, vout, offset_dbg, valid);
+reset_sample_latch #(.vdd(vdd), .vss(vss), .vcm(vcm), .vth(vth), .tr(tr))
+        UNUSED_XRST (vin, clk, rst, sample_reset, unused_reset_node);
+    signal_sample_latch #(.vdd(vdd), .vss(vss), .vcm(vcm), .vth(vth), .tr(tr), .cds_gain(cds_gain))
+        UNUSED_XSIG (vin, clk, rst, sample_signal, sample_reset, unused_reset_node, unused_vout, unused_offset_dbg, unused_valid);
+
+endmodule
+`include "constants.vams"
+`include "disciplines.vams"
+
+module private_reset_sample_latch(vin, clk, rst, sample_reset, reset_node);
+    input vin, clk, rst, sample_reset;
+    output reset_node;
+    electrical vin, clk, rst, sample_reset, reset_node;
+
+    parameter real vdd = 0.9;
+    parameter real vss = 0.0;
+    parameter real vcm = 0.45;
+    parameter real vth = 0.45;
+    parameter real tr = 200p from (0:inf);
+    real reset_sample;
+
+    analog function real clip01;
+        input x;
+        real x;
+        begin
+            if (x < vss) clip01 = vss;
+            else if (x > vdd) clip01 = vdd;
+            else clip01 = x;
+        end
+    endfunction
+
+    analog begin
+        @(initial_step) reset_sample = vcm;
+ @(cross(V(rst)-vth,+1)) reset_sample=vcm;
+        @(cross(V(clk) - vth, +1)) begin
+            if (V(rst) > vth) reset_sample = vcm;
+            else if (V(sample_reset) > vth) reset_sample = V(vin);
+        end
+        V(reset_node) <+ transition(clip01(reset_sample), 0, tr, tr);
+    end
+endmodule
+`include "constants.vams"
+`include "disciplines.vams"
+
+module private_signal_sample_latch(vin, clk, rst, sample_signal, sample_reset, reset_node, vout, offset_dbg, valid);
+    input vin, clk, rst, sample_signal, sample_reset, reset_node;
+    output vout, offset_dbg, valid;
+    electrical vin, clk, rst, sample_signal, sample_reset, reset_node, vout, offset_dbg, valid;
+
+    parameter real vdd = 0.9;
+    parameter real vss = 0.0;
+    parameter real vcm = 0.45;
+    parameter real vth = 0.45;
+    parameter real tr = 200p from (0:inf);
+    parameter real cds_gain = 1.0;
+    integer has_reset;
+ real reset_sample, vout_v, offset_dbg_v, valid_v;
+
+    analog function real clip01;
+        input x;
+        real x;
+        begin
+            if (x < vss) clip01 = vss;
+            else if (x > vdd) clip01 = vdd;
+            else clip01 = x;
+        end
+    endfunction
+
+    analog begin
+        @(initial_step) begin has_reset=0; vout_v = vcm; offset_dbg_v = vss; valid_v = vss; end
+ @(cross(V(rst)-vth,+1)) begin has_reset=0; vout_v = vcm; offset_dbg_v = vss; valid_v = vss; end
+        @(cross(V(clk) - vth, +1)) begin
+            reset_sample = V(reset_node);
+ if(V(sample_reset)>vth)has_reset=1;
+            if (V(rst) > vth) begin
+                has_reset=0;vout_v = vcm;
+                offset_dbg_v = vss;
+                valid_v = vss;
+            end else if (V(sample_signal) > vth && has_reset) begin
+                vout_v = clip01(vcm + cds_gain * (V(vin) - reset_sample));
+                offset_dbg_v = clip01(reset_sample);
+                valid_v = vdd;
+            end
+        end
+        V(vout) <+ transition(clip01(vout_v), 0, tr, tr);
+        V(offset_dbg) <+ transition(clip01(offset_dbg_v), 0, tr, tr);
+        V(valid) <+ transition(valid_v, 0, tr, tr);
+    end
+endmodule

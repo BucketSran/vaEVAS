@@ -1,0 +1,59 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+module agc_receiver_leveling_loop(clk, rst, vin, out, metric, gain_mon, rssi_mon);
+input clk, rst, vin;
+output out, metric, gain_mon, rssi_mon;
+electrical clk, rst, vin, out, metric, gain_mon, rssi_mon;
+parameter real tr = 100p;
+parameter real vth = 0.45;
+parameter real target_amp = 0.18;
+parameter real deadband = 0.025;
+integer gain_code;
+real gain_mon_v, rawv, yv, ampv, rssi_mon_v, errv, metricv;
+analog begin
+    @(initial_step) begin
+        gain_code = 220;
+        gain_mon_v = 0.9 * ((0.01*gain_code) - 0.45) / (3.0 - 0.45);
+        yv = 0.45;
+        rssi_mon_v = 0.0;
+        metricv = 0.0;
+    end
+    @(cross(V(clk) - vth, +1)) begin
+        if (V(rst) > vth) begin
+            gain_code = 220;
+            gain_mon_v = 0.9 * ((0.01*gain_code) - 0.45) / (3.0 - 0.45);
+            yv = 0.45;
+            rssi_mon_v = 0.0;
+            metricv = 0.0;
+        end else begin
+            rawv = (0.01*gain_code) * (V(vin) - 0.45);
+            yv = 0.45 + rawv;
+            if (yv > 0.88) yv = 0.88;
+            if (yv < 0.02) yv = 0.02;
+            ampv = yv - 0.45;
+            if (ampv < 0.0) ampv = -ampv;
+            rssi_mon_v = 0.9 * ampv / 0.43;
+            if (rssi_mon_v > 0.9) rssi_mon_v = 0.9;
+            if (rssi_mon_v < 0.0) rssi_mon_v = 0.0;
+            if (ampv > target_amp + deadband) begin
+                gain_code = gain_code - 18;
+            end else if (ampv < target_amp - deadband) begin
+                gain_code = gain_code + 10;
+            end
+            if (gain_code > 300) gain_code = 300;
+            if (gain_code < 45) gain_code = 45;
+            gain_mon_v = 0.9 * ((0.01*gain_code) - 0.45) / (3.0 - 0.45);
+            errv = ampv - target_amp;
+            if (errv < 0.0) errv = -errv;
+            metricv = 0.9 - 4.0 * errv;
+            if (metricv > 0.9) metricv = 0.9;
+            if (metricv < 0.0) metricv = 0.0;
+        end
+    end
+    V(out) <+ transition(yv, 0, tr, tr);
+    V(metric) <+ transition(metricv, 0, tr, tr);
+    V(gain_mon) <+ transition(gain_mon_v, 0, tr, tr);
+    V(rssi_mon) <+ transition(rssi_mon_v, 0, tr, tr);
+end
+endmodule

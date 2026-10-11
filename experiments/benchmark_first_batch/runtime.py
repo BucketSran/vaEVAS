@@ -11,6 +11,7 @@ import json
 from pathlib import Path
 import re
 import shutil
+import stat
 import sys
 import time
 import uuid
@@ -36,6 +37,40 @@ def harness_modules(checkout):
     return modules
 
 
+def collect_test_assets(tests):
+    """Keep top-level graders and only explicitly referenced nested assets."""
+    tests = Path(tests)
+    if tests.is_symlink():
+        raise ValueError("tests root must not be a symlink")
+    root = tests.resolve()
+    assets = {}
+    for path in root.iterdir():
+        if path.is_symlink():
+            raise ValueError("linked private task asset")
+        if stat.S_ISREG(path.stat().st_mode):
+            assets[path.name] = path.read_bytes()
+        elif not path.is_dir():
+            raise ValueError("private task asset must be a regular file")
+    for case in json.loads(assets["cases.json"]):
+        for item in case.get("support_files", {}).values():
+            name = item["path"]
+            if (not isinstance(name, str) or not name or "\\" in name or "\0" in name
+                    or Path(name).is_absolute() or any(p in {"", ".", ".."} for p in name.split("/"))):
+                raise ValueError("unsafe private source path")
+            relative = Path(name)
+            path = root / relative
+            if any((root / Path(*relative.parts[:i])).is_symlink()
+                   for i in range(1, len(relative.parts) + 1)):
+                raise ValueError("linked private source path")
+            if not path.resolve().is_relative_to(root) or not stat.S_ISREG(path.stat().st_mode):
+                raise ValueError("private source must be a regular file inside tests")
+            data = path.read_bytes()
+            if hashlib.sha256(data).hexdigest() != item["sha256"]:
+                raise ValueError("private source identity mismatch")
+            assets[name] = data
+    return assets
+
+
 def prepare(task, candidate, output, harness_checkout, *, case_names=None, task_version=VERSION):
     if Path(candidate).is_symlink():
         raise ValueError("candidate must not be a symlink")
@@ -57,7 +92,7 @@ def prepare(task, candidate, output, harness_checkout, *, case_names=None, task_
         shutil.copyfile(src, dst)
     frozen = output / "frozen"
     freeze.freeze_candidate(source, frozen, files, task_id=task.name, task_version=task_version, reason="first batch calibration")
-    templates = {p.name: p.read_bytes() for p in (task / "tests").iterdir() if p.is_file()}
+    templates = collect_test_assets(task / "tests")
     # The actual portable runtime is coordinator-owned. Task graders are owned
     # by the task's checkout and snapshotted with the task.
     for name in ["circuit_task.py", "adc_linearity.py"]:
@@ -90,7 +125,9 @@ def prepare(task, candidate, output, harness_checkout, *, case_names=None, task_
         package = output / "packages" / case["name"]
         (package / "tests").mkdir(mode=0o700, parents=True)
         for name, data in templates.items():
-            (package / "tests" / name).write_bytes(data)
+            target = package / "tests" / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(data)
         (package / "tests/cases.json").write_text(json.dumps([case], indent=2) + "\n")
         inventory = {str(p.relative_to(package)): {"sha256": sha(p), "bytes": p.stat().st_size}
                      for p in package.rglob("*") if p.is_file()}

@@ -1,0 +1,33 @@
+`include "disciplines.vams"
+module sampling_model(vin,clock,vhold);
+input vin,clock;output vhold;electrical vin,clock,vhold;
+real replay;
+analog begin
+if($abstime<=0.0) replay=0.300000001;
+else if($abstime<=3.002e-08) replay=0.300000001+(0.003739645)*($abstime-0)/3.002e-08;
+else if($abstime<=4.005e-08) replay=0.303739646+(-0.0049896515)*($abstime-3.002e-08)/1.003e-08;
+else if($abstime<=4.102e-08) replay=0.2987499945+(0.4067039965)*($abstime-4.005e-08)/9.7e-10;
+else if($abstime<=6e-08) replay=0.705453991+(-0.00101021)*($abstime-4.102e-08)/1.898e-08;
+else if($abstime<=7.01e-08) replay=0.704443781+(-0.0014701285)*($abstime-6e-08)/1.01e-08;
+else if($abstime<=7.11e-08) replay=0.7029736525+(-0.2409541617)*($abstime-7.01e-08)/1e-09;
+else if($abstime<=7.205e-08) replay=0.4620194908+(-0.0512174223)*($abstime-7.11e-08)/9.5e-10;
+else if($abstime<=9.4e-08) replay=0.4108020685+(-0.0026736795)*($abstime-7.205e-08)/2.195e-08;
+else if($abstime<=1.002e-07) replay=0.408128389+(0.0141224234)*($abstime-9.4e-08)/6.2e-09;
+else if($abstime<=1.012e-07) replay=0.4222508124+(0.2834411606)*($abstime-1.002e-07)/1e-09;
+else if($abstime<=1.022e-07) replay=0.705691973+(0.0993762488)*($abstime-1.012e-07)/1e-09;
+else if($abstime<=1.032e-07) replay=0.8050682218+(0.0486438615)*($abstime-1.022e-07)/1e-09;
+else if($abstime<=1.0415e-07) replay=0.8537120833+(0.0259678498)*($abstime-1.032e-07)/9.5e-10;
+else if($abstime<=1.2685e-07) replay=0.8796799331+(-0.0001112961)*($abstime-1.0415e-07)/2.27e-08;
+else if($abstime<=1.3035e-07) replay=0.879568637+(-0.0134686937)*($abstime-1.2685e-07)/3.5e-09;
+else if($abstime<=1.3135e-07) replay=0.8660999433+(-0.0878824305)*($abstime-1.3035e-07)/1e-09;
+else if($abstime<=1.3235e-07) replay=0.7782175128+(-0.046133031)*($abstime-1.3135e-07)/1e-09;
+else if($abstime<=1.3335e-07) replay=0.7320844818+(-0.0197903872)*($abstime-1.3235e-07)/1e-09;
+else if($abstime<=1.3435e-07) replay=0.7122940946+(-0.0077172807)*($abstime-1.3335e-07)/1e-09;
+else if($abstime<=1.353e-07) replay=0.7045768139+(-0.0023229944)*($abstime-1.3435e-07)/9.5e-10;
+else if($abstime<=1.5995e-07) replay=0.7022538195+(-7.65000000014e-08)*($abstime-1.353e-07)/2.465e-08;
+else if($abstime<=1.6e-07) replay=0.702253743+(0)*($abstime-1.5995e-07)/5e-11;
+else replay=0.702253743;
+V(vhold)<+replay;
+$bound_step(10p);
+end
+endmodule

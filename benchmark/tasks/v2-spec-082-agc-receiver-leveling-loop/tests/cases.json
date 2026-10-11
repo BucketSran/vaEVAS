@@ -1,0 +1,38 @@
+[
+  {
+    "name": "contract-base",
+    "source_id": "082",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 period=2n width=1n rise=50p fall=50p\nVrst (rst 0) vsource type=pwl wave=[0 0.9 1.6n 0.9 1.7n 0 60n 0]\nVvin (vin 0) vsource type=pwl wave=[0 0.45 7.5n 0.535 22n 0.535 22.1n 0.77 36n 0.77 36.1n 0.54 60n 0.54]\nXDUT (clk rst vin out metric gain_mon rssi_mon) agc_receiver_leveling_loop\n\ntran tran stop=60n maxstep=2p strobeperiod=2p\nsave clk rst vin out metric gain_mon rssi_mon\n",
+    "signals": [
+      "clk",
+      "rst",
+      "vin",
+      "out",
+      "metric",
+      "gain_mon",
+      "rssi_mon"
+    ],
+    "stop": 6.000000000000001e-08,
+    "resolution": 2e-12,
+    "atol": 0.002,
+    "params": {}
+  },
+  {
+    "name": "contract-stretched-input",
+    "source_id": "082",
+    "netlist": "simulator lang=spectre\nglobal 0\n\nahdl_include \"dut.va\"\n\nVclk (clk 0) vsource type=pulse val0=0 val1=0.9 period=2.46n width=1.23n rise=50p fall=50p\nVrst (rst 0) vsource type=pwl wave=[0 0.9 1.968n 0.9 2.091n 0 73.8n 0]\nVvin (vin 0) vsource type=pwl wave=[0 0.45 9.225n 0.535 27.06n 0.535 27.183n 0.77 44.28n 0.77 44.403n 0.54 73.8n 0.54]\nXDUT (clk rst vin out metric gain_mon rssi_mon) agc_receiver_leveling_loop\n\ntran tran stop=73.8n maxstep=2p strobeperiod=2p\nsave clk rst vin out metric gain_mon rssi_mon\n",
+    "signals": [
+      "clk",
+      "rst",
+      "vin",
+      "out",
+      "metric",
+      "gain_mon",
+      "rssi_mon"
+    ],
+    "stop": 7.380000000000001e-08,
+    "resolution": 2e-12,
+    "atol": 0.002,
+    "params": {}
+  }
+]
