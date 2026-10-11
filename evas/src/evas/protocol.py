@@ -65,7 +65,7 @@ def _observation_evidence(response, solutions, output_times):
             _invalid('invalid observation voltage bounds or representative containment')
 
 
-def _portability_advisories(response, program, output_times):
+def _portability_advisories_v1(response, program, output_times):
     if 'portability_advisories' not in response:
         return
     advice=response['portability_advisories']
@@ -112,6 +112,77 @@ def _portability_advisories(response, program, output_times):
                 or identity in seen):
             _invalid('portability advisory does not match a nearby committed cross certificate')
         seen.add(identity)
+
+
+def _portability_advisories(response, program, output_times):
+    advice=response.get('portability_advisories')
+    if 'portability_advisories' not in response:
+        return
+    if isinstance(advice,dict) and type(advice.get('schema_version')) is int and advice['schema_version']==1:
+        return _portability_advisories_v1(response,program,output_times)
+    if (output_times is None or not isinstance(advice,dict)
+            or type(advice.get('schema_version')) is not int or advice['schema_version']!=2
+            or type(advice.get('record_limit')) is not int or advice['record_limit']!=128
+            or not _index(advice.get('dropped_records'))
+            or type(advice.get('truncated')) is not bool
+            or advice['truncated']!=(advice['dropped_records']>0)):
+        _invalid('invalid portability advisory identity or budget')
+    records=advice.get('records');models=advice.get('model_records')
+    if (not isinstance(records,list) or not isinstance(models,list)
+            or not 0<len(records)+len(models)<=128
+            or advice['dropped_records'] and len(records)+len(models)!=128):
+        _invalid('invalid portability advisory records')
+    grids={'output_times':output_times,
+           'strobetimes':response.get('strobe_evidence',{}).get('times',[])}
+    events=response['transient']['events'];seen=set()
+    for record in records:
+        if (not isinstance(record,dict)
+                or record.get('code') not in ('cross_observation_boundary','timer_observation_boundary')
+                or record.get('query_source') not in ('output_times','strobetimes')
+                or record.get('nonblocking') is not True
+                or not isinstance(record.get('message'),str) or not record['message']
+                or any(not _index(record.get(k)) for k in ('event_record','event','trigger','query_index'))
+                or record['event_record']>=len(events)
+                or not _finite(record.get('query_time_s')) or not _bounds(record.get('time_bounds_s'))):
+            _invalid('invalid portability advisory record')
+        times=grids[record['query_source']]
+        if record['query_index']>=len(times) or record['query_time_s']!=times[record['query_index']]:
+            _invalid('portability advisory does not match its observation grid')
+        kind='cross' if record['code']=='cross_observation_boundary' else 'timer'
+        event=events[record['event_record']]
+        requested=program.events[event['event']].trigger
+        leaves=requested.triggers if isinstance(requested,OrTrigger) else (requested,)
+        allowed_kinds=('timer','held_timer') if kind=='timer' else ('cross',)
+        if record['trigger']>=len(leaves) or leaves[record['trigger']].kind not in allowed_kinds:
+            _invalid('portability advisory trigger does not match the request')
+        if event['kind']==kind and record['trigger']==0:
+            expected=event.get('observation_time_bounds',[event['time'],event['time']])
+        else:
+            leaf=next((f for f in event.get('fired_triggers',[])
+                       if f['trigger']==record['trigger'] and f.get('kind')==kind),None)
+            expected=leaf.get('time_bounds') if leaf else None
+        lo,hi=record['time_bounds_s']
+        identity=(record['event_record'],record['trigger'],record['query_source'],record['query_index'])
+        if (record['event']!=event['event'] or record.get('origin')!=event['origin']
+                or record['time_bounds_s']!=expected or lo<0
+                or kind=='cross' and hi>math.nextafter(lo,math.inf)
+                or not math.nextafter(lo,-math.inf)<=record['query_time_s']<=math.nextafter(hi,math.inf)
+                or identity in seen):
+            _invalid('portability advisory does not match a nearby committed certificate')
+        seen.add(identity)
+    operators=set()
+    for record in models:
+        if (not isinstance(record,dict)
+                or set(record)!={'code','nonblocking','message','operator','origin'}
+                or record.get('code')!='modulo_phase_sensitive' or record.get('nonblocking') is not True
+                or not isinstance(record.get('message'),str) or not record['message']
+                or not _index(record.get('operator')) or record['operator']>=len(program.operators)):
+            _invalid('invalid model portability advisory')
+        op=program.operators[record['operator']];origin=op.origin
+        expected=f'{origin.source}:{origin.line}:{origin.column} ({origin.instance})'
+        if op.kind!='idt_mod' or record['origin']!=expected or record['operator'] in operators:
+            _invalid('model portability advisory does not match an idtmod call site')
+        operators.add(record['operator'])
 
 
 def validate_response(response, program, count, output_times=None, *, strobetimes=None):

@@ -6,6 +6,25 @@
 “实际触发”指经过公开编译/执行入口得到该失败；“源码审计”只确认构造分支的条件与类别。
 后者不计为实际执行覆盖。没有可靠归因的出口仍为 `unknown`。
 
+<a id="diagnostic-closure"></a>
+
+## 2026-10-11 诊断收尾
+
+本库已补 timer、额外 strobe 和 `idtmod` 写法的非阻断提示，见[提示协议](../reference/diagnostics.md)。
+新增字段属于提示 v2；原错误诊断 v1 与 unknown 回退保持。连续/事件求解算法未因提示改变。
+在同一主机比较新旧内核：原 Spec B 12 请求、近邻 timer 12 请求、原 C1 和一个 modulo 模型，
+共 **26 个完整响应除提示字段外完全相同**。据此复用近邻 timer 的实际 Spectre 对照，
+不把诊断改动宣称为新的数值对齐。保存的源码、内核和响应身份见
+[保持性收据](diagnostic-closure.json)。原始运行、首次请求准备错误及 held_timer 适配失败均为本地保留证据。
+
+`worker_start` / `worker_failure` 仍为源码审计和载荷负控，没有人为制造 OS 线程失败或生产 panic；
+不计真实出口覆盖。现有真实失败均按下表记录，未知或有多个原因的出口继续返回 unknown。
+这属于明确的覆盖范围，不能将源码登记总数写成全部出口已执行。
+
+外部消费由 [Circuit Harness PR #6](https://github.com/BucketSran/circuit-harness/pull/6)承担。
+最终固定版本的真实 Docker 回放、六项完整失败分母及合并状态在下方移交段更新；
+外部尚未整合时不提前关闭 #64。
+
 ## 输入和来源
 
 | 来源身份 | 条件与出口 | 分类、阶段、能力 | 来源及验收 |

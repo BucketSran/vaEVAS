@@ -26,7 +26,7 @@ class BoundaryPortability(unittest.TestCase):
     def test_original_c1_reports_local_query_risk_without_rewriting_source(self):
         program,times,result=run_c1()
         advice=result['portability_advisories']
-        self.assertEqual(advice['schema_version'],1)
+        self.assertEqual(advice['schema_version'],2)
         self.assertFalse(advice['truncated'])
         records=advice['records']
         self.assertTrue(records)
@@ -39,7 +39,7 @@ class BoundaryPortability(unittest.TestCase):
         self.assertIn('cross',record['message'])
         self.assertEqual(validate_response(result,program,len(times),times),result)
 
-    def test_binary64_neighbors_warn_but_far_queries_and_timer_do_not(self):
+    def test_binary64_neighbors_warn_and_far_queries_do_not(self):
         program=compile_sources({'test.va':model('@(initial_step) q=0; @(cross(V(u,r)-0.5,1)) q=q+1; V(y,r)<+q;','integer q;')},[instance()])
         times=[0,math.nextafter(.5,-math.inf),.5,math.nextafter(.5,math.inf),.75,1]
         result=transient(program,{'u':[[0,0],[1,1]]},times,stop=1,max_step=1,kernel=KERNEL)
@@ -49,7 +49,9 @@ class BoundaryPortability(unittest.TestCase):
         self.assertEqual(result['transient']['events'],sparse['transient']['events'])
         self.assertEqual(result['solutions'][-1],sparse['solutions'][-1])
         timer=compile_sources({'test.va':model('@(initial_step) q=0; @(timer(0.5)) q=1; V(y,r)<+q;','integer q;')},[instance()])
-        self.assertNotIn('portability_advisories',transient(timer,{'u':[[0,0],[1,1]]},times,stop=1,max_step=1,kernel=KERNEL))
+        timer_result=transient(timer,{'u':[[0,0],[1,1]]},times,stop=1,max_step=1,kernel=KERNEL)
+        self.assertTrue(all(r['code']=='timer_observation_boundary' for r in timer_result['portability_advisories']['records']))
+        self.assertNotIn('portability_advisories',transient(timer,{'u':[[0,0],[1,1]]},[0,.75,1],stop=1,max_step=1,kernel=KERNEL))
 
     def test_public_budget_counts_all_cross_query_matches(self):
         # Fifty distinct same-time cross statements each have three neighboring queries.
@@ -81,8 +83,9 @@ class BoundaryPortability(unittest.TestCase):
             artifact=capture(path,KERNEL)
             response=artifact['payload']['response']
             advice=response['portability_advisories']
-            self.assertEqual(advice['records'][0]['trigger'],1)
-            self.assertEqual(advice['records'][0]['root_time_bounds_s'],[.5,.5])
+            cross=[r for r in advice['records'] if r['code']=='cross_observation_boundary']
+            self.assertEqual(cross[0]['trigger'],1)
+            self.assertEqual(cross[0]['time_bounds_s'],[.5,.5])
             status=run(path,kernel=KERNEL,out=folder/'result')
             self.assertEqual(status['status'],'complete')
             bundled=json.loads((folder/'result/result.json').read_text())
@@ -90,13 +93,18 @@ class BoundaryPortability(unittest.TestCase):
 
     def test_optional_protocol_rejects_malformed_and_unbound_records(self):
         program,times,result=run_c1()
+        legacy=copy.deepcopy(result);advice=legacy['portability_advisories']
+        advice['schema_version']=1;advice.pop('model_records')
+        for record in advice['records']:
+            record['root_time_bounds_s']=record.pop('time_bounds_s');record.pop('query_source')
+        self.assertEqual(validate_response(legacy,program,len(times),times),legacy)
         old=copy.deepcopy(result);old.pop('portability_advisories')
         self.assertEqual(validate_response(old,program,len(times),times),old)
         mutations=[lambda a:a.update(schema_version=True),lambda a:a.update(record_limit=129),
             lambda a:a.update(truncated=True),lambda a:a.update(dropped_records=-1),
             lambda a:a['records'][0].update(query_index=True),lambda a:a['records'][0].update(event=999),
             lambda a:a['records'][0].update(trigger=999),lambda a:a['records'][0].update(origin='invented'),
-            lambda a:a['records'][0].update(query_time_s=0),lambda a:a['records'][0].update(root_time_bounds_s=[0,1]),
+            lambda a:a['records'][0].update(query_time_s=0),lambda a:a['records'][0].update(time_bounds_s=[0,1]),
             lambda a:a['records'][0].update(nonblocking=False),lambda a:a['records'][0].update(message=42)]
         for mutation in mutations:
             bad=copy.deepcopy(result);mutation(bad['portability_advisories'])

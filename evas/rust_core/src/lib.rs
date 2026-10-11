@@ -61,8 +61,16 @@ pub fn run_with_threads(request: Request, static_threads: usize) -> Result<Respo
         ));
     }
     if request.transient.is_some() {
+        let modulo_sources = portability::modulo_sources(&request.program);
         let mut response = transient::run(request)?;
-        response.portability_advisories = portability::collect(response.transient.as_ref());
+        response.portability_advisories = portability::collect(
+            response.transient.as_ref(),
+            response
+                .strobe_evidence
+                .as_ref()
+                .map(|s| s.times.as_slice()),
+            &modulo_sources,
+        );
         return Ok(response);
     }
     if !request.program.states.is_empty()
