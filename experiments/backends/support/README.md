@@ -89,7 +89,9 @@ PYTHONPATH=evas/src:evas/tests python3 -B -m unittest -v \
 [汇总工具](precision_breadth_aggregate.py)按运行前固定的选择表收齐全部位置，不按结果挑选最优配置。
 外部参数路径或导出证明需要单独审核的固定身份，缺少批准就保持未知。
 
-独立审查、规格和决策日志将在同一 PR 的固定历史提交中提供；原始大文件继续保留本地。
+[独立审查](https://github.com/BucketSran/vaEVAS/blob/e913cc74bfd50fe0ba30bc761a53303b7a0e01f1/experiments/archive/precision-breadth-review/REVIEW-INDEX.md)、[本轮规格](https://github.com/BucketSran/vaEVAS/blob/e913cc74bfd50fe0ba30bc761a53303b7a0e01f1/experiments/archive/precision-breadth-review/SPEC.md)和
+[决策日志](https://github.com/BucketSran/vaEVAS/blob/e913cc74bfd50fe0ba30bc761a53303b7a0e01f1/experiments/archive/precision-breadth-review/decisions.tsv)已保存在固定历史提交。
+这些链接提供选定的报告；原始波形、完整调用记录和编译产物继续保留本地。
 
 
 ## 早期批次与历史结果

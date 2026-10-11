@@ -1,9 +1,0 @@
-# 4137有限机制审查裁决
-
-固定包REVIEW_PACKAGE_MANIFEST SHA4137f4a482c1c6a1a48a0ac4333a820be1cf671e0cf6410e4b873a80b0b5cfa8。单fail-fast builder实际核79package成员SHA/bytes和534去重attachment SHA，固定完整sourcecopies并生成READY 07f306a52eb02a558aec738a4eeac7b47d112346f0df1ccacc2b4ed00731049c；launcher再次校验后才启动。完整新增NG helper/evaluate/main/cpinit/readinit，GN IDT/STORAGE/HS_PARAM/main/config及CLAIMS/README/assembler供审。261 run_scopes/argv重复列表明确省略，不声称逐run proof批准或science审查；既有runtime/DCtran/export旧子链不重复审。
-
-实际canonical glm-5.3，1 turn，$0.594625，response dd95851787d54bae1e9193eac7fdcc597dbfd0f6d7ee92935123f55b2728b0df。模型整体确认候选/partial/gap区分诚实，七draft无一满足批准门，原I不变。
-
-保留新增前提：NG startup搜索受禁init/servermode/实际deck参数条件；GN system startup命中include会整体跳过default plugins；HS_PARAM的ONLY/local/层级方法优先需按真实deck排除，不能只有OPT回显；ft_cpinit当前已定位系统spinit加载入口，Lib_Path/cp_getvar/tildexpand及条件codemodel/OSDI仍需实际身份。DEV_IDT的time[1]==0 Euler例外准确，DDT不同条件不得外推，现文已明示，非错误。
-
-纠正模型NG-RODATA finding：本次scopedprompt未附实际rodata字节，属于本次审查覆盖限制；不能由此推断固定4137包实际没有附件或字符串错误。模型明确缺caller/dvec_extend/apply_func/实际loader/startup历史覆盖；这些保持unknown，未转成后端缺陷。系统startup互斥后果和ONLY规则属于待闭前提补充，不是当前科学成绩错误。不得将新增主路径确认授native/runtime/integrator资格。本次不批准exactSHA，无需为了unknown无限递归补链。
