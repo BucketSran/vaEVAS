@@ -1,0 +1,13 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module ctle(u,y);
+inout u,y;
+electrical u,y;
+parameter real fz=1000, fp1=4000, fp2=12000, gain=1, x1init=0, x2init=0;
+electrical a,d;
+analog begin
+V(a) <+ idt(2*`M_PI*fp1*(V(u)-V(a)),x1init);
+V(d) <+ idt(2*`M_PI*fp1*(V(u)-V(a))-2*`M_PI*fp2*V(d),x1init-x2init);
+V(y) <+ gain*(V(a)+(fp2/fz-1)*V(d));
+end
+endmodule

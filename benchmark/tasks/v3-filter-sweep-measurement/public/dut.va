@@ -1,0 +1,13 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module sweep_meter(drive,sense,gain,phase,valid);
+inout drive,sense,gain,phase,valid;
+electrical drive,sense,gain,phase,valid;
+parameter real f0=1000,f1=4000,f2=16000,f3=8000, amplitude=0.12,
+slot=0.02,settle=0.004,window=0.008;
+integer idx; real tloc,freq,amp,theta,active,g,p,v,den,num,ph;
+electrical ai,bi,ao,bo;
+analog begin
+V(drive)<+0; V(gain)<+0; V(phase)<+0; V(valid)<+0;
+end
+endmodule

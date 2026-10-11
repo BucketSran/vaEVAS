@@ -1,0 +1,11 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module ctle(u,y);
+inout u,y;
+electrical u,y;
+parameter real fz=1000, fp1=4000, fp2=12000, gain=1, x1init=0, x2init=0;
+electrical a,b;
+analog begin
+V(y)<+0;
+end
+endmodule

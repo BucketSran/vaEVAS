@@ -1,0 +1,114 @@
+[
+  {
+    "task": "v3-filter-ctle",
+    "design_unit": "C1",
+    "engineering_action": "spec-modeling",
+    "source_group": "verilogalib-ctle",
+    "weight": 1,
+    "conditions": 2,
+    "variants": [
+      "reference",
+      "alternative",
+      "unnormalized",
+      "hz-as-radians",
+      "zero-initval"
+    ],
+    "candidate_sha256": {
+      "reference": "d1cbd215f7e96a6ac3296f5e899d4d5b194aa156159f5e9b74318891c598799b",
+      "alternative": "3aba928fda947e8d773a6169acebbf86b1edca56f07c29e066116e2798f76a15",
+      "unnormalized": "dee34774203b4a8c199a5b77a6ebbee474b53efefbb410128e449a40c3712299",
+      "hz-as-radians": "9014d78fcaea3c619478f688affb56cb6f37348f477095b414779cf6a4dfd97a",
+      "zero-initval": "461c511e57e252f367c2dbcda75e46b0ae644a1d2afbf10ec7906f5dff1fe0f1"
+    }
+  },
+  {
+    "task": "v3-filter-programmable-lp",
+    "design_unit": "C2",
+    "engineering_action": "extension-integration",
+    "source_group": "v4-334",
+    "weight": 1,
+    "conditions": 2,
+    "variants": [
+      "reference",
+      "alternative",
+      "fixed-cutoff",
+      "reset-on-code",
+      "ignore-reset"
+    ],
+    "candidate_sha256": {
+      "reference": "d4ecdc6a449ea8aa78ba45355686f4e58a26a817c3a7093a4209b5be44c7b95c",
+      "alternative": "ed8418d8bc3b31aff92ea994eda82be4f743d345f8ad1dbe6dcfeb7cdd24eef8",
+      "fixed-cutoff": "22cb4b5b0f95e2811dad902a3a78b1cea7fbfe52f73ca7ed0510dd95b79f83a4",
+      "reset-on-code": "94e07c9e73696ace3a3d65056ffbfd7c2532431f5b9e6e0e4b0fd1b1cef761a3",
+      "ignore-reset": "dcda359d58c9fe52e2d3ecd4de89bbcfe6d2fd34f30318948bde2b8f18c779b9"
+    }
+  },
+  {
+    "task": "v3-filter-iq-conversion",
+    "design_unit": "C3a",
+    "engineering_action": "spec-modeling",
+    "source_group": "v4-364+400",
+    "weight": 1,
+    "conditions": 2,
+    "variants": [
+      "reference",
+      "alternative",
+      "q-sign",
+      "no-down-filter",
+      "ignore-enable"
+    ],
+    "candidate_sha256": {
+      "reference": "61e5b94f1d237d342e875bda637158f93ea13c8a260094112edb7c2bf751ebd9",
+      "alternative": "05aebdcef72676983d0b6293464f4025660748fbd04a34631a2e592881aa2c63",
+      "q-sign": "5f5efbfa1816b82ab6428ad25d74a3cfb94bb7e331644c8ea4d9abc3066a683f",
+      "no-down-filter": "24925dea2e114a433393e3a95cd3acf4cf4620e8c866598fa6d957a46b735b3f",
+      "ignore-enable": "fa3528cd30645a1b98e18bf9f0149b59171174419be801020e0f28ee105bd752"
+    }
+  },
+  {
+    "task": "v3-filter-envelope",
+    "design_unit": "C3b",
+    "engineering_action": "spec-modeling",
+    "source_group": "v4-336",
+    "weight": 1,
+    "conditions": 2,
+    "variants": [
+      "reference",
+      "alternative",
+      "instant-envelope",
+      "wrong-bandwidth",
+      "disable-holds"
+    ],
+    "candidate_sha256": {
+      "reference": "605cd141bd2e9cc1d4f052daf05c9d7eefa74c9bdd853dca9fc8a1d6e13bf2f0",
+      "alternative": "b74fafc0a7852b5e7f82607c70134efde8eddc5ef883dc643a722a86825de171",
+      "instant-envelope": "4135862c25fb3e93bd5aca0c53eb1097dae9ca144f8729c6e3caaa974f0a90db",
+      "wrong-bandwidth": "d14945279ac5af4e5d022822534bd797cf932e119495aa588d3148537dfa8a2a",
+      "disable-holds": "51404d8e1500cad5c2d2f851f777efc4de53736c4bcd37b81ee3762b5eac33f9"
+    }
+  },
+  {
+    "task": "v3-filter-sweep-measurement",
+    "design_unit": "C4",
+    "engineering_action": "testing-characterization",
+    "source_group": "original-filter-measurement",
+    "weight": 1,
+    "conditions": 3,
+    "variants": [
+      "reference",
+      "alternative",
+      "parameter-replay",
+      "always-valid",
+      "skip-frequency",
+      "premature-report"
+    ],
+    "candidate_sha256": {
+      "reference": "3a774882ca3eab7d15d8fb44d43d19044d8f383596e0afe71cabd16b46235212",
+      "alternative": "8c41fea6f7e2412696eb745d3d8f3311de4a8640f17588ce2bef9bb9f8ac93b7",
+      "parameter-replay": "10f63afb8a6e2e3768896e1564a668f336790deb452d8eff90e1382edf0ce498",
+      "always-valid": "5a2785cb5abf21a818c28099d735ce7317ab277f3832190b93e6e6e16471cbd4",
+      "skip-frequency": "ee406e44f3cc7dbf127c2e0a61133686bca02153779884a05eef9b22f57cff22",
+      "premature-report": "8709da3f531767e5206e01c3f8cee885cc893b7e2dab7cd156edfae2b58f9574"
+    }
+  }
+]

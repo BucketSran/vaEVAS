@@ -1,0 +1,8 @@
+simulator lang=spectre
+ahdl_include "dut.va"
+Vu (u 0) vsource type=sine ampl=0.2 freq=700 sinephase=90.0
+Vc (code 0) vsource type=pwl wave=[0 0 0.002 0 0.002001 3 0.004 3 0.004001 1 0.007 1 0.007001 2]
+Vr (reset 0) vsource type=pwl wave=[0 0 0.005 0 0.005001 1 0.0055 1 0.005501 0]
+X (u code reset y) programmable_lp base=800 initval=0.0
+tran tran stop=0.009 maxstep=1e-06 errpreset=conservative
+save u code reset y

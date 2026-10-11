@@ -1,0 +1,11 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module healthy_lowpass(u,y);
+inout u,y;
+electrical u,y;
+parameter real fc=1500,g=1;
+electrical x;
+analog begin
+V(x) <+ idt(2*`M_PI*fc*(V(u)-V(x)),0); V(y) <+ g*V(x);
+end
+endmodule

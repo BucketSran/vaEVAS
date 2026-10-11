@@ -1,0 +1,10 @@
+simulator lang=spectre
+ahdl_include "dut.va"
+Vdc (u n0) vsource dc=0.03
+Vn0 (n0 n1) vsource type=sine ampl=0.035 freq=500 sinephase=90.0
+Vn1 (n1 n2) vsource type=sine ampl=0.035 freq=2000 sinephase=101.45915590261646
+Vn2 (n2 n3) vsource type=sine ampl=0.035 freq=8000 sinephase=112.91831180523293
+Vn3 (n3 0) vsource type=sine ampl=0.035 freq=16000 sinephase=124.3774677078494
+X (u y) ctle fz=1000 fp1=4000 fp2=12000 gain=1.0 x1init=0.0 x2init=-0.0
+tran tran stop=0.012 maxstep=1e-06 errpreset=conservative
+save u y

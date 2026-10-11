@@ -1,0 +1,11 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module iq_mixer(i,q,lc,ls,rf,en,up,di,dq);
+inout i,q,lc,ls,rf,en,up,di,dq;
+electrical i,q,lc,ls,rf,en,up,di,dq;
+parameter real gain=1, fbw=2000;
+electrical a,b;
+analog begin
+V(up)<+0; V(di)<+0; V(dq)<+0;
+end
+endmodule

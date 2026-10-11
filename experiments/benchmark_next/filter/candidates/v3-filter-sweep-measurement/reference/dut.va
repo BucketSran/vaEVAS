@@ -1,0 +1,30 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module sweep_meter(drive,sense,gain,phase,valid);
+inout drive,sense,gain,phase,valid;
+electrical drive,sense,gain,phase,valid;
+parameter real f0=1000,f1=4000,f2=16000,f3=8000, amplitude=0.12,
+slot=0.02,settle=0.004,window=0.008;
+integer idx; real tloc,freq,amp,theta,active,g,p,v,den,num,ph;
+electrical ai,bi,ao,bo;
+analog begin
+@(initial_step) begin g=0; p=0; v=0; end
+idx=min(3,floor($abstime/slot)); tloc=$abstime-idx*slot;
+freq=f0; if(idx==1) freq=f1; else if(idx==2) freq=f2; else if(idx==3) freq=f3;
+amp=(idx==2)?0.0001:amplitude; theta=2*`M_PI*freq*tloc;
+V(drive) <+ amp*sin(theta);
+active=(tloc>=settle && tloc<=settle+window);
+V(ai) <+ idt(V(drive)*sin(theta)*active,0,!active);
+V(bi) <+ idt(V(drive)*cos(theta)*active,0,!active);
+V(ao) <+ idt(V(sense)*sin(theta)*active,0,!active);
+V(bo) <+ idt(V(sense)*cos(theta)*active,0,!active);
+@(timer(settle+window,slot)) begin
+ den=sqrt(V(ai)*V(ai)+V(bi)*V(bi)); num=sqrt(V(ao)*V(ao)+V(bo)*V(bo));
+ v=(2*den/window>=0.01 && window*freq>=6 && settle>=0.003)?1:0;
+ if(v>0.5) begin g=num/den; ph=atan2(V(bo),V(ao))-atan2(V(bi),V(ai));
+ p=atan2(sin(ph),cos(ph)); end else begin g=0; p=0; end
+end
+V(gain) <+ g; V(phase) <+ p; V(valid) <+ v;
+$bound_step(1/(freq*100));
+end
+endmodule

@@ -1,0 +1,210 @@
+[
+  {
+    "task": "benchmark/tasks/v3-filter-ctle",
+    "variant": "reference",
+    "candidate_directory": "experiments/benchmark_next/filter/candidates/v3-filter-ctle/reference",
+    "expected": "pass",
+    "semantic_behavior": "reference",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v3-filter-ctle",
+    "variant": "alternative",
+    "candidate_directory": "experiments/benchmark_next/filter/candidates/v3-filter-ctle/alternative",
+    "expected": "pass",
+    "semantic_behavior": "alternative",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v3-filter-ctle",
+    "variant": "unnormalized",
+    "candidate_directory": "experiments/benchmark_next/filter/candidates/v3-filter-ctle/unnormalized",
+    "expected": "fail",
+    "semantic_behavior": "unnormalized",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v3-filter-ctle",
+    "variant": "hz-as-radians",
+    "candidate_directory": "experiments/benchmark_next/filter/candidates/v3-filter-ctle/hz-as-radians",
+    "expected": "fail",
+    "semantic_behavior": "hz-as-radians",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v3-filter-ctle",
+    "variant": "zero-initval",
+    "candidate_directory": "experiments/benchmark_next/filter/candidates/v3-filter-ctle/zero-initval",
+    "expected": "fail",
+    "semantic_behavior": "zero-initval",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v3-filter-programmable-lp",
+    "variant": "reference",
+    "candidate_directory": "experiments/benchmark_next/filter/candidates/v3-filter-programmable-lp/reference",
+    "expected": "pass",
+    "semantic_behavior": "reference",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v3-filter-programmable-lp",
+    "variant": "alternative",
+    "candidate_directory": "experiments/benchmark_next/filter/candidates/v3-filter-programmable-lp/alternative",
+    "expected": "pass",
+    "semantic_behavior": "alternative",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v3-filter-programmable-lp",
+    "variant": "fixed-cutoff",
+    "candidate_directory": "experiments/benchmark_next/filter/candidates/v3-filter-programmable-lp/fixed-cutoff",
+    "expected": "fail",
+    "semantic_behavior": "fixed-cutoff",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v3-filter-programmable-lp",
+    "variant": "reset-on-code",
+    "candidate_directory": "experiments/benchmark_next/filter/candidates/v3-filter-programmable-lp/reset-on-code",
+    "expected": "fail",
+    "semantic_behavior": "reset-on-code",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v3-filter-programmable-lp",
+    "variant": "ignore-reset",
+    "candidate_directory": "experiments/benchmark_next/filter/candidates/v3-filter-programmable-lp/ignore-reset",
+    "expected": "fail",
+    "semantic_behavior": "ignore-reset",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v3-filter-iq-conversion",
+    "variant": "reference",
+    "candidate_directory": "experiments/benchmark_next/filter/candidates/v3-filter-iq-conversion/reference",
+    "expected": "pass",
+    "semantic_behavior": "reference",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v3-filter-iq-conversion",
+    "variant": "alternative",
+    "candidate_directory": "experiments/benchmark_next/filter/candidates/v3-filter-iq-conversion/alternative",
+    "expected": "pass",
+    "semantic_behavior": "alternative",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v3-filter-iq-conversion",
+    "variant": "q-sign",
+    "candidate_directory": "experiments/benchmark_next/filter/candidates/v3-filter-iq-conversion/q-sign",
+    "expected": "fail",
+    "semantic_behavior": "q-sign",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v3-filter-iq-conversion",
+    "variant": "no-down-filter",
+    "candidate_directory": "experiments/benchmark_next/filter/candidates/v3-filter-iq-conversion/no-down-filter",
+    "expected": "fail",
+    "semantic_behavior": "no-down-filter",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v3-filter-iq-conversion",
+    "variant": "ignore-enable",
+    "candidate_directory": "experiments/benchmark_next/filter/candidates/v3-filter-iq-conversion/ignore-enable",
+    "expected": "fail",
+    "semantic_behavior": "ignore-enable",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v3-filter-envelope",
+    "variant": "reference",
+    "candidate_directory": "experiments/benchmark_next/filter/candidates/v3-filter-envelope/reference",
+    "expected": "pass",
+    "semantic_behavior": "reference",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v3-filter-envelope",
+    "variant": "alternative",
+    "candidate_directory": "experiments/benchmark_next/filter/candidates/v3-filter-envelope/alternative",
+    "expected": "pass",
+    "semantic_behavior": "alternative",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v3-filter-envelope",
+    "variant": "instant-envelope",
+    "candidate_directory": "experiments/benchmark_next/filter/candidates/v3-filter-envelope/instant-envelope",
+    "expected": "fail",
+    "semantic_behavior": "instant-envelope",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v3-filter-envelope",
+    "variant": "wrong-bandwidth",
+    "candidate_directory": "experiments/benchmark_next/filter/candidates/v3-filter-envelope/wrong-bandwidth",
+    "expected": "fail",
+    "semantic_behavior": "wrong-bandwidth",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v3-filter-envelope",
+    "variant": "disable-holds",
+    "candidate_directory": "experiments/benchmark_next/filter/candidates/v3-filter-envelope/disable-holds",
+    "expected": "fail",
+    "semantic_behavior": "disable-holds",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v3-filter-sweep-measurement",
+    "variant": "reference",
+    "candidate_directory": "experiments/benchmark_next/filter/candidates/v3-filter-sweep-measurement/reference",
+    "expected": "pass",
+    "semantic_behavior": "reference",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v3-filter-sweep-measurement",
+    "variant": "alternative",
+    "candidate_directory": "experiments/benchmark_next/filter/candidates/v3-filter-sweep-measurement/alternative",
+    "expected": "pass",
+    "semantic_behavior": "alternative",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v3-filter-sweep-measurement",
+    "variant": "parameter-replay",
+    "candidate_directory": "experiments/benchmark_next/filter/candidates/v3-filter-sweep-measurement/parameter-replay",
+    "expected": "fail",
+    "semantic_behavior": "parameter-replay",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v3-filter-sweep-measurement",
+    "variant": "always-valid",
+    "candidate_directory": "experiments/benchmark_next/filter/candidates/v3-filter-sweep-measurement/always-valid",
+    "expected": "fail",
+    "semantic_behavior": "always-valid",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v3-filter-sweep-measurement",
+    "variant": "skip-frequency",
+    "candidate_directory": "experiments/benchmark_next/filter/candidates/v3-filter-sweep-measurement/skip-frequency",
+    "expected": "fail",
+    "semantic_behavior": "skip-frequency",
+    "certification": "pending-live-execution"
+  },
+  {
+    "task": "benchmark/tasks/v3-filter-sweep-measurement",
+    "variant": "premature-report",
+    "candidate_directory": "experiments/benchmark_next/filter/candidates/v3-filter-sweep-measurement/premature-report",
+    "expected": "fail",
+    "semantic_behavior": "premature-report",
+    "certification": "pending-live-execution"
+  }
+]
