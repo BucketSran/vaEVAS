@@ -1,7 +1,7 @@
 """Development-informed foundation cards and simulator-independent bounds.
 
 Fractions describe the actual binary64 tokens. Returned ranges include callback
-and half-ULP time serialization uncertainty. They are not DUT error allowances.
+and 16*ULP(stop) time serialization uncertainty. They are not DUT error allowances.
 """
 from fractions import Fraction as F
 import math
@@ -315,7 +315,9 @@ def _dynamic(card,t,callback_ranges):
 def reference(card, time_s, event_bounds):
     if not isinstance(time_s,(int,float)) or not math.isfinite(time_s):raise ValueError('nonfinite time')
     if time_s<0 or time_s>card['stop_s']:raise ValueError('time outside card extent')
-    time=F(time_s);half=F(math.ulp(time_s))/2
+    ut=card.get('reference_time_uncertainty_s',16*math.ulp(card['stop_s']))
+    if not math.isfinite(ut) or ut<0:raise ValueError('invalid time serialization uncertainty')
+    time=F(time_s);half=F(ut)
     low=max(F(0),time-half);high=min(F(card['stop_s']),time+half)
     times=[low,high]
     times += [F(t) for t in card['critical_times_s'] if low<=F(t)<=high]
@@ -358,4 +360,5 @@ def reference(card, time_s, event_bounds):
     # 120 bisections, 90-digit exp, and the rational Taylor tail contribute
     # less than 1e-30 V here; four binary64 ULPs bound outward export conversion.
     arithmetic=max((4*math.ulp(max(abs(lo),abs(hi))) for lo,hi in ranges.values()),default=0.)+1e-30
-    return dict(outputs=ranges,numerical_uncertainty_V=arithmetic,undefined=undefined)
+    return dict(outputs=ranges,numerical_uncertainty_V=arithmetic,undefined=undefined,
+                time_uncertainty_included=True)

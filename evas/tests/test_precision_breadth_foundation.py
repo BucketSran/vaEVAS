@@ -178,5 +178,15 @@ class FoundationReferences(unittest.TestCase):
         self.assertTrue(self.card('F14')['phase_obligations']['requires_actual_phase_evidence'])
 
 
+    def test_stop_scaled_serialization_uncertainty_is_not_a_wrap_slope_patch(self):
+        import math
+        c=self.card('F20');root=c['wrap_times_s'][0]
+        # One ULP away is inside the 16*ulp(stop) serialization cell.
+        for t in (math.nextafter(root,-math.inf),math.nextafter(root,math.inf)):
+            out=f.reference(c,t,{})
+            self.assertGreater(out['outputs']['phase'][1]-out['outputs']['phase'][0],.9)
+            self.assertFalse(out['undefined'])
+
+
 if __name__ == '__main__':
     unittest.main()
