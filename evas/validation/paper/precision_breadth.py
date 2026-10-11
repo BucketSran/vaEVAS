@@ -235,6 +235,7 @@ def assess(card, rows, contract, *, reference=None):
     issues = []
     result['phase_evidence'] = {'status': 'unknown' if card.get('phase_obligations') else 'not_required'}
     result['input_gain_evidence'] = {'status': 'unknown' if card.get('input_gain_evidence_required') else 'not_required'}
+    result['input_exact_evidence'] = {'status': 'unknown' if card.get('input_exact_evidence_required') else 'not_required'}
     if card.get('phase_obligations'):
         issues.append('DC/transient phase requires independent adapter evidence')
     if card.get('order_evidence_required'):
@@ -340,6 +341,8 @@ def assess(card, rows, contract, *, reference=None):
         conditional_lower = conditional_upper = 0.; unqualified = 0
         gain_obligation = card.get('input_gain_evidence_required')
         gain_unknown = output in gain_obligation if isinstance(gain_obligation, dict) else bool(gain_obligation)
+        exact_obligation = card.get('input_exact_evidence_required')
+        exact_unknown = output in exact_obligation if isinstance(exact_obligation, dict) else bool(exact_obligation)
         phase = card.get('phase_obligations')
         dc = phase.get('dc', {}) if isinstance(phase, dict) else {}
         phase_outputs = dc.get('outputs', card['outputs'])
@@ -360,11 +363,13 @@ def assess(card, rows, contract, *, reference=None):
             high = max(abs(row[output] - lo), abs(row[output] - hi)) + uncertainty
             conditional_lower = max(conditional_lower, low); conditional_upper = max(conditional_upper, high)
             phase_unknown = bool(phase and output in phase_outputs and abs(row['time'] - phase_time) <= ut)
-            if gain_unknown or phase_unknown:
+            if gain_unknown or phase_unknown or exact_unknown:
                 unqualified += 1
                 result['unqualified_observations'].append({'time_s': row['time'], 'output': output,
                     'reasons': (['input derivative or topology is unproved'] if gain_unknown else [])
                              + (['DC/transient phase is unproved'] if phase_unknown else [])})
+                if exact_unknown:
+                    result['unqualified_observations'][-1]['reasons'].append('actual exact input identity is unproved')
                 continue
             observed += 1
             lower = max(lower, low); rounding_max = max(rounding_max, rounding)
