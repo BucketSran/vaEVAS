@@ -1,0 +1,87 @@
+{
+  "selection_rule": "minimum worst acquisition RMS over 32 public training experiments; selftest and hidden not used for selection",
+  "trials": [
+    {
+      "kernel_scale_V": 0.2,
+      "tau_ns": [
+        0.06,
+        0.08
+      ],
+      "training_max_track_rms_V": 0.04830424875150107,
+      "training_experiment_rms_V": 0.017034634888660343
+    },
+    {
+      "kernel_scale_V": 0.2,
+      "tau_ns": [
+        0.07,
+        0.08
+      ],
+      "training_max_track_rms_V": 0.03322081400431039,
+      "training_experiment_rms_V": 0.011108619012356123
+    },
+    {
+      "kernel_scale_V": 0.2,
+      "tau_ns": [
+        0.08,
+        0.08
+      ],
+      "training_max_track_rms_V": 0.018182769666499322,
+      "training_experiment_rms_V": 0.0061989225664930295
+    },
+    {
+      "kernel_scale_V": 0.2,
+      "tau_ns": [
+        0.09,
+        0.08
+      ],
+      "training_max_track_rms_V": 0.015559913949294084,
+      "training_experiment_rms_V": 0.006464911879909278
+    },
+    {
+      "kernel_scale_V": 0.4,
+      "tau_ns": [
+        0.06,
+        0.08
+      ],
+      "training_max_track_rms_V": 0.037837743440232836,
+      "training_experiment_rms_V": 0.0161029633661067
+    },
+    {
+      "kernel_scale_V": 0.4,
+      "tau_ns": [
+        0.07,
+        0.08
+      ],
+      "training_max_track_rms_V": 0.022889051055686026,
+      "training_experiment_rms_V": 0.010337880093015053
+    },
+    {
+      "kernel_scale_V": 0.4,
+      "tau_ns": [
+        0.08,
+        0.08
+      ],
+      "training_max_track_rms_V": 0.015668546755771402,
+      "training_experiment_rms_V": 0.006524342008784503
+    },
+    {
+      "kernel_scale_V": 0.4,
+      "tau_ns": [
+        0.09,
+        0.08
+      ],
+      "training_max_track_rms_V": 0.02261052638439831,
+      "training_experiment_rms_V": 0.008129856048971307
+    }
+  ],
+  "selected": {
+    "kernel_scale_V": 0.2,
+    "tau_ns": [
+      0.09,
+      0.08
+    ]
+  },
+  "fit_samples": 2952,
+  "training_identity": "switch-fit.json training_sha256",
+  "offline_integration": "10 ps Euler with 57x57 voltage / 37 gate dense channel table; final candidates evaluated independently by Spectre"
+}

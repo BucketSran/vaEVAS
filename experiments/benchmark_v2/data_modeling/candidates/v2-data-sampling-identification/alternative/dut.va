@@ -1,0 +1,372 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module sampling_model(vin, clock, vhold);
+input vin, clock; output vhold;
+electrical vin, clock, vhold, invstate, state;
+real vinit, gateinit, correction, rate, target, tau;
+analog function real channel_n;
+input u,y,g; real u,y,g;
+real lo,hi,delta,over,drain;
+begin
+lo=min(u,y); hi=max(u,y); delta=hi-lo;
+over=max(0.0,g-lo-0.9-5.74525975682e-20*(sqrt(0.7+lo)-sqrt(0.7)));
+drain=min(delta,over);
+if(delta>1e-8) channel_n=8.68950768676*(over-0.5*drain)*drain/delta*(1.0+1.90820421815e-22*delta)/(1.0+2.15815474565*over);
+else channel_n=8.68950768676*over/(1.0+2.15815474565*over);
+end
+endfunction
+analog function real channel_p;
+input u,y,g; real u,y,g;
+real lo,hi,delta,over,drain;
+begin
+lo=min(u,y); hi=max(u,y); delta=hi-lo;
+over=max(0.0,hi-g-0.2-1.46884482886*(sqrt(2.5-hi)-sqrt(0.7)));
+drain=min(delta,over);
+if(delta>1e-8) channel_p=0.34283938012*(over-0.5*drain)*drain/delta*(1.0+0.0413635387959*delta)/(1.0+1.08093547196e-19*over);
+else channel_p=0.34283938012*over/(1.0+1.08093547196e-19*over);
+end
+endfunction
+analog function real adjust0;
+input z; real z;
+begin
+if(z<=0.2) adjust0=1.1713642316;
+else if(z<=0.3) adjust0=1.1713642316+(-0.030874775677)*(z-0.2)/0.1;
+else if(z<=0.4) adjust0=1.14048945592+(-0.0385008097587)*(z-0.3)/0.1;
+else if(z<=0.5) adjust0=1.10198864616+(-0.0316523163054)*(z-0.4)/0.1;
+else if(z<=0.6) adjust0=1.07033632986+(-0.038059375214)*(z-0.5)/0.1;
+else if(z<=0.7) adjust0=1.03227695464+(-0.0451820978547)*(z-0.6)/0.1;
+else if(z<=0.8) adjust0=0.987094856789+(-0.0270971561012)*(z-0.7)/0.1;
+else if(z<=0.9) adjust0=0.959997700688+(0.00126930538121)*(z-0.8)/0.1;
+else if(z<=1) adjust0=0.961267006069+(0.00891952536304)*(z-0.9)/0.1;
+else if(z<=1.1) adjust0=0.970186531433+(0.0019720247642)*(z-1)/0.1;
+else if(z<=1.2) adjust0=0.972158556197+(0.000255782461851)*(z-1.1)/0.1;
+else if(z<=1.3) adjust0=0.972414338659+(-0.00537954069784)*(z-1.2)/0.1;
+else if(z<=1.4) adjust0=0.967034797961+(-0.0176893751538)*(z-1.3)/0.1;
+else if(z<=1.5) adjust0=0.949345422807+(-0.0148446121883)*(z-1.4)/0.1;
+else if(z<=1.6) adjust0=0.934500810619+(0.00540846585449)*(z-1.5)/0.1;
+else adjust0=0.939909276473;
+end
+endfunction
+analog function real adjust1;
+input z; real z;
+begin
+if(z<=0.2) adjust1=1.14760980743;
+else if(z<=0.3) adjust1=1.14760980743+(-0.0302450515125)*(z-0.2)/0.1;
+else if(z<=0.4) adjust1=1.11736475592+(-0.0390932808352)*(z-0.3)/0.1;
+else if(z<=0.5) adjust1=1.07827147508+(-0.0293338141671)*(z-0.4)/0.1;
+else if(z<=0.6) adjust1=1.04893766092+(-0.0284296713454)*(z-0.5)/0.1;
+else if(z<=0.7) adjust1=1.02050798957+(-0.0356748712573)*(z-0.6)/0.1;
+else if(z<=0.8) adjust1=0.984833118315+(-0.0243758970685)*(z-0.7)/0.1;
+else if(z<=0.9) adjust1=0.960457221246+(0.00231418180024)*(z-0.8)/0.1;
+else if(z<=1) adjust1=0.962771403047+(0.0117719542296)*(z-0.9)/0.1;
+else if(z<=1.1) adjust1=0.974543357276+(0.00215579850572)*(z-1)/0.1;
+else if(z<=1.2) adjust1=0.976699155782+(-0.00262516843451)*(z-1.1)/0.1;
+else if(z<=1.3) adjust1=0.974073987347+(-0.0056831807927)*(z-1.2)/0.1;
+else if(z<=1.4) adjust1=0.968390806555+(-0.0139765895769)*(z-1.3)/0.1;
+else if(z<=1.5) adjust1=0.954414216978+(-0.0113718893595)*(z-1.4)/0.1;
+else if(z<=1.6) adjust1=0.943042327618+(0.00553628001851)*(z-1.5)/0.1;
+else adjust1=0.948578607637;
+end
+endfunction
+analog function real adjust2;
+input z; real z;
+begin
+if(z<=0.2) adjust2=1.1106240617;
+else if(z<=0.3) adjust2=1.1106240617+(-0.020085162648)*(z-0.2)/0.1;
+else if(z<=0.4) adjust2=1.09053889905+(-0.0410590688706)*(z-0.3)/0.1;
+else if(z<=0.5) adjust2=1.04947983018+(-0.0368602754374)*(z-0.4)/0.1;
+else if(z<=0.6) adjust2=1.01261955475+(-0.0207270462812)*(z-0.5)/0.1;
+else if(z<=0.7) adjust2=0.991892508464+(-0.0136868845166)*(z-0.6)/0.1;
+else if(z<=0.8) adjust2=0.978205623948+(-0.00812057355944)*(z-0.7)/0.1;
+else if(z<=0.9) adjust2=0.970085050388+(0.00665452008487)*(z-0.8)/0.1;
+else if(z<=1) adjust2=0.976739570473+(0.0115282279038)*(z-0.9)/0.1;
+else if(z<=1.1) adjust2=0.988267798377+(-6.02810655251e-05)*(z-1)/0.1;
+else if(z<=1.2) adjust2=0.988207517311+(-0.00705118659082)*(z-1.1)/0.1;
+else if(z<=1.3) adjust2=0.981156330721+(-0.0072382681191)*(z-1.2)/0.1;
+else if(z<=1.4) adjust2=0.973918062602+(-0.00903455316914)*(z-1.3)/0.1;
+else if(z<=1.5) adjust2=0.964883509432+(-0.00507195579698)*(z-1.4)/0.1;
+else if(z<=1.6) adjust2=0.959811553635+(0.00637030210661)*(z-1.5)/0.1;
+else adjust2=0.966181855742;
+end
+endfunction
+analog function real adjust3;
+input z; real z;
+begin
+if(z<=0.2) adjust3=1.0860559867;
+else if(z<=0.3) adjust3=1.0860559867+(-0.00789796072543)*(z-0.2)/0.1;
+else if(z<=0.4) adjust3=1.07815802597+(-0.044570618633)*(z-0.3)/0.1;
+else if(z<=0.5) adjust3=1.03358740734+(-0.0525629704302)*(z-0.4)/0.1;
+else if(z<=0.6) adjust3=0.981024436909+(-0.0304659703165)*(z-0.5)/0.1;
+else if(z<=0.7) adjust3=0.950558466593+(-0.00947535023358)*(z-0.6)/0.1;
+else if(z<=0.8) adjust3=0.941083116359+(0.00396273579467)*(z-0.7)/0.1;
+else if(z<=0.9) adjust3=0.945045852154+(0.0178804500418)*(z-0.8)/0.1;
+else if(z<=1) adjust3=0.962926302196+(0.0186635523862)*(z-0.9)/0.1;
+else if(z<=1.1) adjust3=0.981589854582+(0.00537412015853)*(z-1)/0.1;
+else if(z<=1.2) adjust3=0.98696397474+(-0.00156905782698)*(z-1.1)/0.1;
+else if(z<=1.3) adjust3=0.985394916913+(-0.00397329975369)*(z-1.2)/0.1;
+else if(z<=1.4) adjust3=0.98142161716+(-0.00875755053862)*(z-1.3)/0.1;
+else if(z<=1.5) adjust3=0.972664066621+(-0.00556526566861)*(z-1.4)/0.1;
+else if(z<=1.6) adjust3=0.967098800953+(0.00577317247295)*(z-1.5)/0.1;
+else adjust3=0.972871973425;
+end
+endfunction
+analog function real adjust4;
+input z; real z;
+begin
+if(z<=0.2) adjust4=1.07647543293;
+else if(z<=0.3) adjust4=1.07647543293+(-0.00513101396441)*(z-0.2)/0.1;
+else if(z<=0.4) adjust4=1.07134441896+(-0.0434671027204)*(z-0.3)/0.1;
+else if(z<=0.5) adjust4=1.02787731624+(-0.0590748630283)*(z-0.4)/0.1;
+else if(z<=0.6) adjust4=0.968802453215+(-0.0522047471865)*(z-0.5)/0.1;
+else if(z<=0.7) adjust4=0.916597706029+(-0.0275297153032)*(z-0.6)/0.1;
+else if(z<=0.8) adjust4=0.889067990726+(0.0230463152917)*(z-0.7)/0.1;
+else if(z<=0.9) adjust4=0.912114306017+(0.0629646345236)*(z-0.8)/0.1;
+else if(z<=1) adjust4=0.975078940541+(0.0361175426707)*(z-0.9)/0.1;
+else if(z<=1.1) adjust4=1.01119648321+(-0.0136696215595)*(z-1)/0.1;
+else if(z<=1.2) adjust4=0.997526861652+(-0.014362695382)*(z-1.1)/0.1;
+else if(z<=1.3) adjust4=0.98316416627+(-0.00013797743359)*(z-1.2)/0.1;
+else if(z<=1.4) adjust4=0.983026188837+(-0.00872146570341)*(z-1.3)/0.1;
+else if(z<=1.5) adjust4=0.974304723133+(-0.0130851204689)*(z-1.4)/0.1;
+else if(z<=1.6) adjust4=0.961219602664+(0.00177199198934)*(z-1.5)/0.1;
+else adjust4=0.962991594654;
+end
+endfunction
+analog function real adjust5;
+input z; real z;
+begin
+if(z<=0.2) adjust5=1.07100566936;
+else if(z<=0.3) adjust5=1.07100566936+(-0.0174874970601)*(z-0.2)/0.1;
+else if(z<=0.4) adjust5=1.0535181723+(-0.0333330601582)*(z-0.3)/0.1;
+else if(z<=0.5) adjust5=1.02018511214+(-0.0409747379113)*(z-0.4)/0.1;
+else if(z<=0.6) adjust5=0.979210374232+(-0.0650437462717)*(z-0.5)/0.1;
+else if(z<=0.7) adjust5=0.91416662796+(-0.040291493936)*(z-0.6)/0.1;
+else if(z<=0.8) adjust5=0.873875134024+(0.0818458928907)*(z-0.7)/0.1;
+else if(z<=0.9) adjust5=0.955721026915+(0.174301606284)*(z-0.8)/0.1;
+else if(z<=1) adjust5=1.1300226332+(0.0482905928867)*(z-0.9)/0.1;
+else if(z<=1.1) adjust5=1.17831322609+(-0.118193260259)*(z-1)/0.1;
+else if(z<=1.2) adjust5=1.06011996583+(-0.0872560004143)*(z-1.1)/0.1;
+else if(z<=1.3) adjust5=0.972863965412+(-0.00619861226126)*(z-1.2)/0.1;
+else if(z<=1.4) adjust5=0.966665353151+(0.00100989322976)*(z-1.3)/0.1;
+else if(z<=1.5) adjust5=0.967675246381+(-0.0159343197679)*(z-1.4)/0.1;
+else if(z<=1.6) adjust5=0.951740926613+(-0.00202730538664)*(z-1.5)/0.1;
+else adjust5=0.949713621226;
+end
+endfunction
+analog function real adjust6;
+input z; real z;
+begin
+if(z<=0.2) adjust6=1.06363750693;
+else if(z<=0.3) adjust6=1.06363750693+(-0.0366589640375)*(z-0.2)/0.1;
+else if(z<=0.4) adjust6=1.02697854289+(-0.017482012456)*(z-0.3)/0.1;
+else if(z<=0.5) adjust6=1.00949653043+(-0.00368424680274)*(z-0.4)/0.1;
+else if(z<=0.6) adjust6=1.00581228363+(-0.0557146546176)*(z-0.5)/0.1;
+else if(z<=0.7) adjust6=0.950097629012+(-0.0283764819468)*(z-0.6)/0.1;
+else if(z<=0.8) adjust6=0.921721147065+(0.178875068881)*(z-0.7)/0.1;
+else if(z<=0.9) adjust6=1.10059621595+(0.199403784054)*(z-0.8)/0.1;
+else if(z<=1) adjust6=1.3+(0)*(z-0.9)/0.1;
+else if(z<=1.1) adjust6=1.3+(-0.177181343867)*(z-1)/0.1;
+else if(z<=1.2) adjust6=1.12281865613+(-0.182487931565)*(z-1.1)/0.1;
+else if(z<=1.3) adjust6=0.940330724569+(-0.0113051455064)*(z-1.2)/0.1;
+else if(z<=1.4) adjust6=0.929025579062+(0.0189805616483)*(z-1.3)/0.1;
+else if(z<=1.5) adjust6=0.948006140711+(-0.0067760423581)*(z-1.4)/0.1;
+else if(z<=1.6) adjust6=0.941230098352+(0.00315332146887)*(z-1.5)/0.1;
+else adjust6=0.944383419821;
+end
+endfunction
+analog function real adjust7;
+input z; real z;
+begin
+if(z<=0.2) adjust7=1.05453972243;
+else if(z<=0.3) adjust7=1.05453972243+(-0.0467677531532)*(z-0.2)/0.1;
+else if(z<=0.4) adjust7=1.00777196927+(-0.00230043055026)*(z-0.3)/0.1;
+else if(z<=0.5) adjust7=1.00547153872+(0.0297658961524)*(z-0.4)/0.1;
+else if(z<=0.6) adjust7=1.03523743488+(-0.0305838778392)*(z-0.5)/0.1;
+else if(z<=0.7) adjust7=1.00465355704+(0.000690012571613)*(z-0.6)/0.1;
+else if(z<=0.8) adjust7=1.00534356961+(0.23711488199)*(z-0.7)/0.1;
+else if(z<=0.9) adjust7=1.2424584516+(0.0575415484001)*(z-0.8)/0.1;
+else if(z<=1) adjust7=1.3+(0)*(z-0.9)/0.1;
+else if(z<=1.1) adjust7=1.3+(-0.259686305253)*(z-1)/0.1;
+else if(z<=1.2) adjust7=1.04031369475+(-0.169346408236)*(z-1.1)/0.1;
+else if(z<=1.3) adjust7=0.870967286511+(0.0152619268794)*(z-1.2)/0.1;
+else if(z<=1.4) adjust7=0.886229213391+(0.0348190913128)*(z-1.3)/0.1;
+else if(z<=1.5) adjust7=0.921048304703+(0.00911675973177)*(z-1.4)/0.1;
+else if(z<=1.6) adjust7=0.930165064435+(0.0215507042426)*(z-1.5)/0.1;
+else adjust7=0.951715768678;
+end
+endfunction
+analog function real adjust8;
+input z; real z;
+begin
+if(z<=0.2) adjust8=1.04126163756;
+else if(z<=0.3) adjust8=1.04126163756+(-0.0390656951237)*(z-0.2)/0.1;
+else if(z<=0.4) adjust8=1.00219594243+(0.00979252655053)*(z-0.3)/0.1;
+else if(z<=0.5) adjust8=1.01198846899+(0.0406543723718)*(z-0.4)/0.1;
+else if(z<=0.6) adjust8=1.05264284136+(-0.00943677707807)*(z-0.5)/0.1;
+else if(z<=0.7) adjust8=1.04320606428+(0.0231875541538)*(z-0.6)/0.1;
+else if(z<=0.8) adjust8=1.06639361843+(0.17667680803)*(z-0.7)/0.1;
+else if(z<=0.9) adjust8=1.24307042646+(0.056929573537)*(z-0.8)/0.1;
+else if(z<=1) adjust8=1.3+(-0.222939028852)*(z-0.9)/0.1;
+else if(z<=1.1) adjust8=1.07706097115+(-0.253458644237)*(z-1)/0.1;
+else if(z<=1.2) adjust8=0.823602326912+(-0.031653406192)*(z-1.1)/0.1;
+else if(z<=1.3) adjust8=0.79194892072+(0.0777319564144)*(z-1.2)/0.1;
+else if(z<=1.4) adjust8=0.869680877134+(0.0448699490747)*(z-1.3)/0.1;
+else if(z<=1.5) adjust8=0.914550826209+(0.0219337858658)*(z-1.4)/0.1;
+else if(z<=1.6) adjust8=0.936484612074+(0.0424449030985)*(z-1.5)/0.1;
+else adjust8=0.978929515173;
+end
+endfunction
+analog function real adjust9;
+input z; real z;
+begin
+if(z<=0.2) adjust9=1.01982986038;
+else if(z<=0.3) adjust9=1.01982986038+(-0.0181093230563)*(z-0.2)/0.1;
+else if(z<=0.4) adjust9=1.00172053732+(0.0210077060751)*(z-0.3)/0.1;
+else if(z<=0.5) adjust9=1.02272824339+(0.0311474474646)*(z-0.4)/0.1;
+else if(z<=0.6) adjust9=1.05387569086+(-0.00612615954504)*(z-0.5)/0.1;
+else if(z<=0.7) adjust9=1.04774953131+(0.0260037136147)*(z-0.6)/0.1;
+else if(z<=0.8) adjust9=1.07375324493+(0.061658121531)*(z-0.7)/0.1;
+else if(z<=0.9) adjust9=1.13541136646+(-0.121330480026)*(z-0.8)/0.1;
+else if(z<=1) adjust9=1.01408088643+(-0.253156200889)*(z-0.9)/0.1;
+else if(z<=1.1) adjust9=0.760924685545+(-0.0609246855451)*(z-1)/0.1;
+else if(z<=1.2) adjust9=0.7+(0.0688231639008)*(z-1.1)/0.1;
+else if(z<=1.3) adjust9=0.768823163901+(0.140691336399)*(z-1.2)/0.1;
+else if(z<=1.4) adjust9=0.9095145003+(0.0480513715534)*(z-1.3)/0.1;
+else if(z<=1.5) adjust9=0.957565871853+(0.0234002233637)*(z-1.4)/0.1;
+else if(z<=1.6) adjust9=0.980966095217+(0.0447504726081)*(z-1.5)/0.1;
+else adjust9=1.02571656782;
+end
+endfunction
+analog function real adjust10;
+input z; real z;
+begin
+if(z<=0.2) adjust10=0.993217389617;
+else if(z<=0.3) adjust10=0.993217389617+(0.00403548961399)*(z-0.2)/0.1;
+else if(z<=0.4) adjust10=0.997252879231+(0.0334280510173)*(z-0.3)/0.1;
+else if(z<=0.5) adjust10=1.03068093025+(0.0189911620211)*(z-0.4)/0.1;
+else if(z<=0.6) adjust10=1.04967209227+(-0.015112134154)*(z-0.5)/0.1;
+else if(z<=0.7) adjust10=1.03455995811+(0.0157556956897)*(z-0.6)/0.1;
+else if(z<=0.8) adjust10=1.0503156538+(-0.00513282581075)*(z-0.7)/0.1;
+else if(z<=0.9) adjust10=1.04518282799+(-0.176895018149)*(z-0.8)/0.1;
+else if(z<=1) adjust10=0.868287809845+(-0.168287809845)*(z-0.9)/0.1;
+else if(z<=1.1) adjust10=0.7+(0)*(z-1)/0.1;
+else if(z<=1.2) adjust10=0.7+(0.144758000504)*(z-1.1)/0.1;
+else if(z<=1.3) adjust10=0.844758000504+(0.162800547447)*(z-1.2)/0.1;
+else if(z<=1.4) adjust10=1.00755854795+(0.0387762557918)*(z-1.3)/0.1;
+else if(z<=1.5) adjust10=1.04633480374+(0.0108968691223)*(z-1.4)/0.1;
+else if(z<=1.6) adjust10=1.05723167287+(0.0179678725402)*(z-1.5)/0.1;
+else adjust10=1.07519954541;
+end
+endfunction
+analog function real adjust11;
+input z; real z;
+begin
+if(z<=0.2) adjust11=0.97105936225;
+else if(z<=0.3) adjust11=0.97105936225+(0.0178213711521)*(z-0.2)/0.1;
+else if(z<=0.4) adjust11=0.988880733402+(0.0437210545672)*(z-0.3)/0.1;
+else if(z<=0.5) adjust11=1.03260178797+(0.016466394218)*(z-0.4)/0.1;
+else if(z<=0.6) adjust11=1.04906818219+(-0.0210769298999)*(z-0.5)/0.1;
+else if(z<=0.7) adjust11=1.02799125229+(0.00332837367776)*(z-0.6)/0.1;
+else if(z<=0.8) adjust11=1.03131962597+(-0.0175193836119)*(z-0.7)/0.1;
+else if(z<=0.9) adjust11=1.01380024235+(-0.134910878818)*(z-0.8)/0.1;
+else if(z<=1) adjust11=0.878889363535+(-0.119697058259)*(z-0.9)/0.1;
+else if(z<=1.1) adjust11=0.759192305276+(0.0484438288839)*(z-1)/0.1;
+else if(z<=1.2) adjust11=0.80763613416+(0.175676134136)*(z-1.1)/0.1;
+else if(z<=1.3) adjust11=0.983312268296+(0.127520088499)*(z-1.2)/0.1;
+else if(z<=1.4) adjust11=1.11083235679+(0.0269539572695)*(z-1.3)/0.1;
+else if(z<=1.5) adjust11=1.13778631406+(0.00187510367139)*(z-1.4)/0.1;
+else if(z<=1.6) adjust11=1.13966141774+(-0.0177756493529)*(z-1.5)/0.1;
+else adjust11=1.12188576838;
+end
+endfunction
+analog function real adjust12;
+input z; real z;
+begin
+if(z<=0.2) adjust12=0.961263527586;
+else if(z<=0.3) adjust12=0.961263527586+(0.0211812236072)*(z-0.2)/0.1;
+else if(z<=0.4) adjust12=0.982444751194+(0.0452568548031)*(z-0.3)/0.1;
+else if(z<=0.5) adjust12=1.027701606+(0.0193440244635)*(z-0.4)/0.1;
+else if(z<=0.6) adjust12=1.04704563046+(-0.017015679774)*(z-0.5)/0.1;
+else if(z<=0.7) adjust12=1.03002995069+(-0.0046501887305)*(z-0.6)/0.1;
+else if(z<=0.8) adjust12=1.02537976196+(-0.0169853090751)*(z-0.7)/0.1;
+else if(z<=0.9) adjust12=1.00839445288+(-0.0795259146789)*(z-0.8)/0.1;
+else if(z<=1) adjust12=0.928868538202+(-0.0508508963952)*(z-0.9)/0.1;
+else if(z<=1.1) adjust12=0.878017641806+(0.0668231231326)*(z-1)/0.1;
+else if(z<=1.2) adjust12=0.944840764939+(0.124975102824)*(z-1.1)/0.1;
+else if(z<=1.3) adjust12=1.06981586776+(0.0797793030977)*(z-1.2)/0.1;
+else if(z<=1.4) adjust12=1.14959517086+(0.0410247602818)*(z-1.3)/0.1;
+else if(z<=1.5) adjust12=1.19061993114+(0.0214885217708)*(z-1.4)/0.1;
+else if(z<=1.6) adjust12=1.21210845291+(-0.0305492004671)*(z-1.5)/0.1;
+else adjust12=1.18155925245;
+end
+endfunction
+analog function real adjust13;
+input z; real z;
+begin
+if(z<=0.2) adjust13=0.96520482655;
+else if(z<=0.3) adjust13=0.96520482655+(0.0182878916308)*(z-0.2)/0.1;
+else if(z<=0.4) adjust13=0.98349271818+(0.0367312204189)*(z-0.3)/0.1;
+else if(z<=0.5) adjust13=1.0202239386+(0.0172137831964)*(z-0.4)/0.1;
+else if(z<=0.6) adjust13=1.0374377218+(-0.00951814239131)*(z-0.5)/0.1;
+else if(z<=0.7) adjust13=1.0279195794+(-0.0060196898567)*(z-0.6)/0.1;
+else if(z<=0.8) adjust13=1.02189988955+(-0.0215839729038)*(z-0.7)/0.1;
+else if(z<=0.9) adjust13=1.00031591664+(-0.0571699171453)*(z-0.8)/0.1;
+else if(z<=1) adjust13=0.943145999499+(-0.021717278232)*(z-0.9)/0.1;
+else if(z<=1.1) adjust13=0.921428721267+(0.0595420046442)*(z-1)/0.1;
+else if(z<=1.2) adjust13=0.980970725911+(0.0853838981212)*(z-1.1)/0.1;
+else if(z<=1.3) adjust13=1.06635462403+(0.0665350935476)*(z-1.2)/0.1;
+else if(z<=1.4) adjust13=1.13288971758+(0.0695618684137)*(z-1.3)/0.1;
+else if(z<=1.5) adjust13=1.20245158599+(0.0534377918544)*(z-1.4)/0.1;
+else if(z<=1.6) adjust13=1.25588937785+(-0.0172564345943)*(z-1.5)/0.1;
+else adjust13=1.23863294325;
+end
+endfunction
+analog function real adjust14;
+input z; real z;
+begin
+if(z<=0.2) adjust14=0.978132085868;
+else if(z<=0.3) adjust14=0.978132085868+(0.0145881351166)*(z-0.2)/0.1;
+else if(z<=0.4) adjust14=0.992720220985+(0.0242656630687)*(z-0.3)/0.1;
+else if(z<=0.5) adjust14=1.01698588405+(0.00841378700982)*(z-0.4)/0.1;
+else if(z<=0.6) adjust14=1.02539967106+(-0.00711443197029)*(z-0.5)/0.1;
+else if(z<=0.7) adjust14=1.01828523909+(-0.00339602028398)*(z-0.6)/0.1;
+else if(z<=0.8) adjust14=1.01488921881+(-0.02021639829)*(z-0.7)/0.1;
+else if(z<=0.9) adjust14=0.994672820519+(-0.0473345180428)*(z-0.8)/0.1;
+else if(z<=1) adjust14=0.947338302476+(-0.0139128484147)*(z-0.9)/0.1;
+else if(z<=1.1) adjust14=0.933425454062+(0.0526455113609)*(z-1)/0.1;
+else if(z<=1.2) adjust14=0.986070965422+(0.0736590985114)*(z-1.1)/0.1;
+else if(z<=1.3) adjust14=1.05973006393+(0.061991975294)*(z-1.2)/0.1;
+else if(z<=1.4) adjust14=1.12172203923+(0.0654156422066)*(z-1.3)/0.1;
+else if(z<=1.5) adjust14=1.18713768143+(0.0522549563854)*(z-1.4)/0.1;
+else if(z<=1.6) adjust14=1.23939263782+(-0.00369629501785)*(z-1.5)/0.1;
+else adjust14=1.2356963428;
+end
+endfunction
+analog begin
+@(initial_step) begin vinit=V(vin); gateinit=1.8-V(clock); end
+if(V(vin)<=0.2) correction=adjust0(V(state));
+else if(V(vin)<=0.3) correction=adjust0(V(state))+(adjust1(V(state))-adjust0(V(state)))*(V(vin)-0.2)/0.1;
+else if(V(vin)<=0.4) correction=adjust1(V(state))+(adjust2(V(state))-adjust1(V(state)))*(V(vin)-0.3)/0.1;
+else if(V(vin)<=0.5) correction=adjust2(V(state))+(adjust3(V(state))-adjust2(V(state)))*(V(vin)-0.4)/0.1;
+else if(V(vin)<=0.6) correction=adjust3(V(state))+(adjust4(V(state))-adjust3(V(state)))*(V(vin)-0.5)/0.1;
+else if(V(vin)<=0.7) correction=adjust4(V(state))+(adjust5(V(state))-adjust4(V(state)))*(V(vin)-0.6)/0.1;
+else if(V(vin)<=0.8) correction=adjust5(V(state))+(adjust6(V(state))-adjust5(V(state)))*(V(vin)-0.7)/0.1;
+else if(V(vin)<=0.9) correction=adjust6(V(state))+(adjust7(V(state))-adjust6(V(state)))*(V(vin)-0.8)/0.1;
+else if(V(vin)<=1) correction=adjust7(V(state))+(adjust8(V(state))-adjust7(V(state)))*(V(vin)-0.9)/0.1;
+else if(V(vin)<=1.1) correction=adjust8(V(state))+(adjust9(V(state))-adjust8(V(state)))*(V(vin)-1)/0.1;
+else if(V(vin)<=1.2) correction=adjust9(V(state))+(adjust10(V(state))-adjust9(V(state)))*(V(vin)-1.1)/0.1;
+else if(V(vin)<=1.3) correction=adjust10(V(state))+(adjust11(V(state))-adjust10(V(state)))*(V(vin)-1.2)/0.1;
+else if(V(vin)<=1.4) correction=adjust11(V(state))+(adjust12(V(state))-adjust11(V(state)))*(V(vin)-1.3)/0.1;
+else if(V(vin)<=1.5) correction=adjust12(V(state))+(adjust13(V(state))-adjust12(V(state)))*(V(vin)-1.4)/0.1;
+else if(V(vin)<=1.6) correction=adjust13(V(state))+(adjust14(V(state))-adjust13(V(state)))*(V(vin)-1.5)/0.1;
+else correction=adjust14(V(state));
+target=1.8-V(clock);
+tau=(target>V(invstate)) ? 0.09e-9 : 0.08e-9;
+rate=correction*(channel_n(V(vin),V(state),V(invstate))+channel_p(V(vin),V(state),V(clock)));
+I(invstate) <+ 1e-12*ddt(V(invstate));
+I(invstate) <+ 1e-12*(V(invstate)-target)/tau;
+I(state) <+ 1e-12*ddt(V(state));
+I(state) <+ rate*(V(state)-V(vin))*1e-3;
+V(vhold) <+ V(state);
+$bound_step(5p);
+end
+endmodule

@@ -1,0 +1,5 @@
+`include "disciplines.vams"
+module chain_enable(pgood,resetb,enable);
+input pgood,resetb; output enable; electrical pgood,resetb,enable;
+analog V(enable)<+ 0.9*(V(pgood)>0.45);
+endmodule

@@ -1,0 +1,34 @@
+`include "disciplines.vams"
+module sample_mux_readout_top(ch0,ch1,ch2,ch3,clk,rst,sample,read,out,ch_sel_1,ch_sel_0,valid);
+input ch0,ch1,ch2,ch3,clk,rst,sample,read; output out,ch_sel_1,ch_sel_0,valid;
+electrical ch0,ch1,ch2,ch3,clk,rst,sample,read,out,ch_sel_1,ch_sel_0,valid;
+parameter real vdd=0.9,vth=0.45,tr=100p;
+electrical supply,gnd,unused0,unused1,unused2,unused3;
+sample_hold s0(supply,gnd,ch0,clk,unused0);
+sample_hold s1(supply,gnd,ch1,clk,unused1);
+sample_hold s2(supply,gnd,ch2,clk,unused2);
+sample_hold s3(supply,gnd,ch3,clk,unused3);
+real frame0,frame1,frame2,frame3,value;
+integer pointer,selected,valid_state;
+analog begin
+ V(supply)<+vdd;V(gnd)<+0;
+ @(initial_step)begin frame0=0;frame1=0;frame2=0;frame3=0;value=0;pointer=0;selected=0;valid_state=0;end
+ @(cross(V(rst)-vth,+1))begin frame0=0;frame1=0;frame2=0;frame3=0;value=0;pointer=0;selected=0;valid_state=0;end
+ @(cross(V(clk)-vth,+1))begin
+  if(V(rst)>vth)begin frame0=0;frame1=0;frame2=0;frame3=0;value=0;pointer=0;selected=0;valid_state=0;end
+  else begin
+   valid_state=0;
+   if(V(read)>vth)begin
+    selected=pointer;
+    if(pointer==0)value=frame0;else if(pointer==1)value=frame1;else if(pointer==2)value=frame2;else value=frame3;
+    pointer=(pointer+1)%4;valid_state=1;
+   end
+   if(V(sample)>vth)begin frame0=V(ch0);frame1=V(ch1);frame2=V(ch2);frame3=V(ch3);end
+  end
+ end
+ V(out)<+transition(value,0,tr);
+ V(ch_sel_1)<+transition(((selected/2)%2)*vdd,0,tr);
+ V(ch_sel_0)<+transition((selected%2)*vdd,0,tr);
+ V(valid)<+transition(valid_state*vdd,0,tr);
+end
+endmodule

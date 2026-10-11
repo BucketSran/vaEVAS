@@ -1,0 +1,33 @@
+[
+  {
+    "source_id": "005",
+    "task_id": "v2-repair-debounce-latch",
+    "status": "built-awaiting-live-calibration",
+    "contract": "debounce"
+  },
+  {
+    "source_id": "046",
+    "task_id": "v2-repair-uvlo-brownout",
+    "status": "built-awaiting-live-calibration",
+    "contract": "uvlo"
+  },
+  {
+    "source_id": "272",
+    "task_id": "v2-repair-reset-sequencer",
+    "status": "built-awaiting-live-calibration",
+    "contract": "sequencer"
+  },
+  {
+    "source_id": "249",
+    "task_id": "v2-repair-pfd-reset",
+    "status": "built-awaiting-live-calibration",
+    "contract": "pfd"
+  },
+  {
+    "source_id": "case-0009",
+    "task_id": "v2-repair-uvlo-reset-chain",
+    "status": "built-awaiting-live-calibration",
+    "contract": "chain",
+    "provenance": "original behavior system, artificial stale-event fault"
+  }
+]

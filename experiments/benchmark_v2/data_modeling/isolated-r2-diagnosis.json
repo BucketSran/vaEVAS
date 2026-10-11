@@ -1,0 +1,108 @@
+{
+  "source_candidate_sha256": "452cdfa86f95349a2414b0450d08f0ef39dd6a0f643b7d3e81d5807a56f3bbd3",
+  "diagnosis": "single 65 ps/35 ps gate transition applies the same timing to both direct PMOS and inverter-driven NMOS; public transient slopes show a voltage-dependent opening ramp",
+  "actual_reference_results": [
+    {
+      "condition": "selftest-0",
+      "passed": true,
+      "metrics_V": {
+        "track_rms": 0.02461524716985942,
+        "sample_max": 0.031097002254218964,
+        "hold_max": 0.031243869454218864
+      },
+      "per_track_rms_V": [
+        0.02461524716985942,
+        0.004042232388358423,
+        0.01578235332854735,
+        0.003893601933302066
+      ]
+    },
+    {
+      "condition": "selftest-1",
+      "passed": true,
+      "metrics_V": {
+        "track_rms": 0.022989481934093964,
+        "sample_max": 0.02722174783731529,
+        "hold_max": 0.0272217667373153
+      },
+      "per_track_rms_V": [
+        0.010292536754784806,
+        0.003669026308831518,
+        0.017920264825256063,
+        0.022989481934093964
+      ]
+    },
+    {
+      "condition": "heldout-0",
+      "passed": false,
+      "metrics_V": {
+        "track_rms": 0.036315220758849305,
+        "sample_max": 0.044402662844831964,
+        "hold_max": 0.04440267314483204
+      },
+      "per_track_rms_V": [
+        0.024183306540583954,
+        0.006323254325064583,
+        0.010971522500969656,
+        0.036315220758849305
+      ]
+    },
+    {
+      "condition": "heldout-1",
+      "passed": false,
+      "metrics_V": {
+        "track_rms": 0.035665212236853594,
+        "sample_max": 0.013606366780576251,
+        "hold_max": 0.013606371680576212
+      },
+      "per_track_rms_V": [
+        6.703229033772595e-05,
+        0.035665212236853594,
+        0.00970976884165609,
+        0.012273293172936971
+      ]
+    },
+    {
+      "condition": "heldout-2",
+      "passed": true,
+      "metrics_V": {
+        "track_rms": 0.022776402283701227,
+        "sample_max": 0.01988113147773196,
+        "hold_max": 0.019881136477732153
+      },
+      "per_track_rms_V": [
+        0.0009317681600156713,
+        0.01871663282711814,
+        0.022776402283701227,
+        0.004919232528650408,
+        0.0200119802348499,
+        0.01601597359294582
+      ]
+    },
+    {
+      "condition": "heldout-3",
+      "passed": true,
+      "metrics_V": {
+        "track_rms": 0.014797890836270824,
+        "sample_max": 0.015075319040597446,
+        "hold_max": 0.015075323840597399
+      },
+      "per_track_rms_V": [
+        0.009299995370457588,
+        0.007413180085887982,
+        0.014797890836270824,
+        0.001777495414900786,
+        0.00762062120459744,
+        0.004834372488986969
+      ]
+    }
+  ],
+  "public_selftest0_opening_rate_per_ns": {
+    "40.05ns": 0.1088,
+    "40.10ns": 0.1584,
+    "40.20ns": 0.4779,
+    "40.30ns": 0.6234
+  },
+  "fix_selection": "32 public training only; analytic split-channel law + bounded positive public residual correction + separate inverter state",
+  "new_va_evidence": "pending fresh actual Spectre calibration"
+}

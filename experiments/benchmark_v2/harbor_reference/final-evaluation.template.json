@@ -1,0 +1,13 @@
+{
+  "backend": "remote_spectre",
+  "task_package": "ABSOLUTE_FROZEN_FINAL_PACKAGE",
+  "remote": {
+    "host": "OPERATOR_SSH_ALIAS",
+    "python": "REMOTE_PYTHON",
+    "bundle": "VERSIONED_WORKER_BUNDLE",
+    "profile": "VERSIONED_PROFILE_JSON",
+    "run_root": "PRIVATE_RUN_ROOT",
+    "archive_root": "PRIVATE_ARCHIVE_ROOT",
+    "upload_root": "PRIVATE_UPLOAD_ROOT"
+  }
+}

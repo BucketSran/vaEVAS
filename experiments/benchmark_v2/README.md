@@ -1,10 +1,18 @@
 # 五类工程任务的实施与校准
 
+固定a5科学版本的37题、179个登记变体的作者正负校准全部齐全，覆盖584个当前条件位置，无剩余作者校准缺口，见[最终报告](author-calibration-final.md)和[固定机器摘要](author-calibration-final.json)。模型 Agentic 与适用 one-shot 试做、完整 spec 验收及发布资格尚未完成。计划及生成清单中的 pending 是生成时状态，该版本作者结论以最终报告为准。
+
+实际模型审查发现308缺少同一reset样本后的重复signal采样，频率题第三例的观察窗口也不足。这两项私有激励修订现已完成真实校准，公开材料、checker和容差保持不变。当前179个登记变体、584个条件位置由169个原变体的539个条件和10个变体的45个新条件组成，详见[增量校准报告](author-calibration-private-overlays.md)。旧成绩保留原身份，同一冻结模型候选另用新激励补判。
+
 本目录支撑规格 #133–#137 的完整 v2 实施。当前任务和证据分别归属
 `spec_modeling/`、`data_modeling/`、`extension_integration/`、
 `diagnosis_repair/`、`testing_characterization/`。
 覆盖范围是32个P1来源及各规格规定的外部代表，具体任务量由独立工程目标决定。
 参考解运行、checker校准、模型试做和发布资格分别记录，旧first_batch成绩不代替本轮证据。
+
+实际模型候选审查及公开合同复核发现十一题的公式、初始化或时序要求需要明确，见[公开合同修正](model-contract-clarifications.md)。十一题以新版材料重新试做，旧尝试保留；其余26题继续原冻结实验。
+
+37道题的[正式Harbor参考入口](harbor_reference/harbor-reference-acceptance.md)已全部验收，111个私有条件通过。验收覆盖原参考脚本、固定路径、实际提交、候选冻结和独立终评；作者校准、模型试做与参考入口分别记账。ADPLL使用明确的512 MiB输出配置，POR完整终评使用600秒配置，原环境失败保留。
 
 ## 固定后端入口
 
@@ -56,6 +64,8 @@ Spectre到既有harness的评分消费路径。它不代表五类规格已完成
 `support_files` 将模拟文件名映射到 `{"path": "dut/model.spice", "sha256": "…"}`。路径以私有 `tests/` 为根；runtime 在启动后端前核对普通文件类型、根目录约束与原字节SHA，再按原UTF-8内容写入隔离运行目录。引用不能覆盖候选，也不能与内联support重名。多个条件可共享同一文件，材料去重不改变实际仿真输入。
 
 ## 模型试做
+
+[本轮试做协议](model-pilot-protocol.md)记录两种模式的实际材料、预算、异常重试和统计分母。[One-shot结果](model_pilots/one-shot-results.md)已完成74个单元并通过独立证据审核；Agentic仍在执行，尚不代表完整五规格验收。
 
 `pilot.py` 负责封存公开材料、生成 stock Harbor/Pi 配置和一次性模型请求。
 Agent 循环、公开工具、作业恢复及独立终评继续由 circuit harness 提供。

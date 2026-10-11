@@ -1,0 +1,38 @@
+[
+  {
+    "name": "contract-base",
+    "source_id": "001",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nVdata (data 0) vsource type=pwl wave=[0 0 3n 0 3.1n .9 7n .9 7.1n 0 13n 0 13.1n .9 19n .9 19.1n 0 27n 0 27.1n .9 32n .9]\nVclk (clk 0) vsource type=pulse val0=0 val1=.9 delay=1n period=4n width=1.9n rise=50p fall=50p\nVrst (rst 0) vsource type=pwl wave=[0 .9 .3n .9 .4n 0 20n 0 20.1n .9 20.5n .9 20.6n 0 32n 0]\nVen (enable 0) vsource dc=.9\nXDUT (data clk rst enable retimed up down) alexander\ntran tran stop=32n maxstep=2p strobeperiod=2p\nsave data clk rst enable retimed up down\n",
+    "signals": [
+      "data",
+      "clk",
+      "rst",
+      "enable",
+      "retimed",
+      "up",
+      "down"
+    ],
+    "stop": 3.2e-08,
+    "resolution": 2e-12,
+    "atol": 0.002,
+    "params": {}
+  },
+  {
+    "name": "contract-stretched-input",
+    "source_id": "001",
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nVdata (data 0) vsource type=pwl wave=[0 0 3.69n 0 3.813n .9 8.61n .9 8.733n 0 15.99n 0 16.113n .9 23.37n .9 23.493n 0 33.21n 0 33.333n .9 39.36n .9]\nVclk (clk 0) vsource type=pulse val0=0 val1=.9 delay=1.23n period=4.92n width=2.337n rise=50p fall=50p\nVrst (rst 0) vsource type=pwl wave=[0 .9 .3n .9 .4n 0 24.6n 0 24.723n .9 25.215n .9 25.338n 0 39.36n 0]\nVen (enable 0) vsource dc=.9\nXDUT (data clk rst enable retimed up down) alexander\ntran tran stop=39.36n maxstep=2p strobeperiod=2p\nsave data clk rst enable retimed up down\n",
+    "signals": [
+      "data",
+      "clk",
+      "rst",
+      "enable",
+      "retimed",
+      "up",
+      "down"
+    ],
+    "stop": 3.936e-08,
+    "resolution": 2e-12,
+    "atol": 0.002,
+    "params": {}
+  }
+]

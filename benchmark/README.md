@@ -21,7 +21,9 @@
 其中复用振荡器修复和 ADC DNL/INL 两题，保留原六题初筛作为独立历史基线。
 [执行与检查入口](../experiments/benchmark_first_batch/README.md)区分实际校准、归档重判、
 模型试跑和发布资格；[来源元数据](first_batch/METADATA.md)记录同源关联与上下文层次。
-当前采用[五类方案](docs/task-types.md)，旧分类与历史结果不改写。选题材料与学习入口见
+当前采用[五类方案](docs/task-types.md)，旧分类与历史结果不改写。
+[v2五类工程任务](../experiments/benchmark_v2/README.md)已建立37题。179个登记变体的作者校准及两项私有激励修订的补充校准已齐全；模型试做和完整spec验收尚未完成。旧版本身份与完整分母见[作者校准固定报告](../experiments/benchmark_v2/author-calibration-final.md)，当前证据见[增量报告](../experiments/benchmark_v2/author-calibration-private-overlays.md)。
+选题材料与学习入口见
 [五类任务材料研究](research/README.md)。
 
 新的逐题设计记录集中在 [Benchmark 工作区](workbench/README.md)，按工程动作、电路家族和

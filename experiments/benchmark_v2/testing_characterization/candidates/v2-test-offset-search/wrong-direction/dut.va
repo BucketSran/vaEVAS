@@ -1,0 +1,34 @@
+`include "disciplines.vams"
+module offset_search(dcmpp,ready,vinp,vinn,request,offset_est,valid,status);
+input dcmpp,ready;
+output vinp,vinn,request,offset_est,valid,status;
+electrical dcmpp,ready,vinp,vinn,request,offset_est,valid,status;
+parameter real step_initial=0.064;
+parameter integer iterations=7;
+parameter real gap=1n, timeout=10n, tr=20p;
+real estimate,step,next_request,deadline;
+integer count,req,done,armed,state;
+analog begin
+ @(initial_step) begin estimate=0; step=step_initial; count=0; req=0; done=0; armed=0; state=0; next_request=1n; deadline=1e99; end
+ @(timer(next_request)) begin
+  if(!done) begin req=1; armed=1; deadline=$abstime+timeout; next_request=1e99; end
+ end
+ @(cross(V(ready)-0.5,+1)) begin
+  if(armed && !done) begin
+   if(V(dcmpp)>0.5) estimate=estimate+step; else estimate=estimate-step;
+   step=step/2; count=count+1; req=0; armed=0; deadline=1e99;
+   if(count>=iterations) begin done=1; state=1; end
+   else next_request=$abstime+gap;
+  end
+ end
+ @(timer(deadline)) begin
+  if(armed && !done) begin req=0; armed=0; done=1; state=2; next_request=1e99; end
+ end
+ V(vinp)<+0.5+0.5*transition(estimate,0,tr,tr);
+ V(vinn)<+0.5-0.5*transition(estimate,0,tr,tr);
+ V(offset_est)<+transition(estimate,0,tr,tr);
+ V(request)<+transition(req,0,tr,tr);
+ V(valid)<+transition((state==1)?1.0:0.0,0,tr,tr);
+ V(status)<+transition(state,0,tr,tr);
+end
+endmodule

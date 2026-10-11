@@ -1,0 +1,23 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module synchronous_lp_state(demod_sample,baseband_ref,event_strobe,rst,enable,hold,voutp,voutn,settled,offset_residual);
+input demod_sample,baseband_ref,event_strobe,rst,enable,hold; output voutp,voutn,settled,offset_residual;
+electrical demod_sample,baseband_ref,event_strobe,rst,enable,hold,voutp,voutn,settled,offset_residual;
+parameter real vdd=0.9,vss=0.0,vcm=0.45,vth=0.45,gain=3.0,lp_alpha=0.25,settle_tol=20m,tr=100p;
+parameter integer settle_cycles=3;
+real baseband_q,residual_q,outp_q,outn_q,settled_q; integer converged_q;
+analog begin
+ @(initial_step) begin baseband_q=0; residual_q=0; outp_q=vcm; outn_q=vcm; settled_q=vss; converged_q=0; end
+ @(cross(V(event_strobe)-vth,+1) or cross(V(event_strobe)-vth,-1)) begin
+  if((V(rst)>vth)||(V(enable)<=vth)) begin baseband_q=0; residual_q=0; outp_q=vcm; outn_q=vcm; settled_q=vss; converged_q=0; end
+  else begin
+   baseband_q=baseband_q+lp_alpha*(V(demod_sample)-baseband_q); residual_q=baseband_q-V(baseband_ref);
+   if(abs(residual_q)<=settle_tol) converged_q=converged_q+1; else converged_q=0; settled_q=(converged_q>=settle_cycles)?vdd:vss;
+   outp_q=vcm+0.5*baseband_q; outn_q=vcm-0.5*baseband_q;
+   if(outp_q>vdd)outp_q=vdd; if(outp_q<vss)outp_q=vss; if(outn_q>vdd)outn_q=vdd; if(outn_q<vss)outn_q=vss;
+  end
+ end
+ @(cross(V(rst)-vth,+1) or cross(V(enable)-vth,-1)) begin baseband_q=0; residual_q=0; outp_q=vcm; outn_q=vcm; settled_q=vss; converged_q=0; end
+ V(voutp)<+transition(outp_q,0,tr,tr); V(voutn)<+transition(outn_q,0,tr,tr); V(settled)<+transition(settled_q,0,tr,tr); V(offset_residual)<+transition(residual_q,0,tr,tr);
+end
+endmodule
