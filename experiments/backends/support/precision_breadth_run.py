@@ -270,6 +270,8 @@ def spectre_accepted_rows(work,rows,tool):
     if not all((work/n).is_file() for n in ('spectre.log','tb.scs','requested_times.json')):
         facts['origin_gap']='missing log/deck/request identity';return unknown
     log=(work/'spectre.log').read_text();deck=(work/'tb.scs').read_text()
+    if not re.search(r'^\s*precision\s*=\s*%\.17g\s*$',log,re.M):
+        facts['origin_gap']='actual seventeen-digit export readback unavailable';return unknown
     if not all(token in deck for token in ('annotate=steps','annotatedigits=16','strobeoutput=all','skipcount=1','compression=no')):
         facts['origin_gap']='accepted step/export annotation recipe absent';return unknown
     counts=re.findall(r'Number of accepted tran steps\s*=\s*(\d+)',log)
