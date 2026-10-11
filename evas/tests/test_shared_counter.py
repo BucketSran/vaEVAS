@@ -49,9 +49,17 @@ class SharedCounter(unittest.TestCase):
         with self.assertRaisesRegex(KernelError,'state_range'):
             transient(p,{'u':[[0,0],[1,0]]},[0,1],stop=1,max_step=1,kernel=KERNEL)
 
-    def test_other_state_hidden_dependencies_and_scaling_remain_rejected(self):
+    def test_shared_scaled_self_update_uses_previous_accepted_state(self):
+        source=model('''@(initial_step) begin n=0; q=1; end
+          @(timer(0.25)) begin n=n+1; q=2; end
+          @(timer(0.75)) n=2*n+1; V(y,r)<+n;''','real n,q;')
+        p=compile_sources({'counter-scaled.va':source},[instance()])
+        result=transient(p,{'u':[[0,0],[1,0]]},[0,.5,1],stop=1,max_step=1,kernel=KERNEL)
+        self.assertEqual(result['transient']['states'],[[0,1],[1,2],[3,2]])
+
+    def test_other_state_hidden_dependencies_remain_rejected(self):
         for rhs in ['q-q', '0*q', '(1e-200*1e-200)*q', 'n+q-q', 'n+0*q',
-                    '2*n+1', '0*n+1', 'n+V(u,r)', 'n+idt(V(u,r),0)']:
+                    '0*n+1', 'n+V(u,r)', 'n+idt(V(u,r),0)']:
             source=model(f'''@(initial_step) begin n=0; q=1; end
               @(timer(0.25)) begin n=n+1; q=2; end
               @(timer(0.75)) n={rhs}; V(y,r)<+n;''','real n,q;')

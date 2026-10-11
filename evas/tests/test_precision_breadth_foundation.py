@@ -2,6 +2,12 @@
 import importlib.util
 from pathlib import Path
 import unittest
+import copy
+import math
+import sys
+
+sys.path.insert(0, str(PATH_DIR := Path(__file__).parents[1] / 'validation/paper'))
+from precision_breadth import assess, load_contract
 
 PATH = Path(__file__).parents[1] / 'validation/paper/precision_breadth_foundation.py'
 spec = importlib.util.spec_from_file_location('foundation', PATH)
@@ -51,6 +57,15 @@ class FoundationReferences(unittest.TestCase):
             else:
                 self.contains(out,'y',3 if u in (0,1) else 7 if u==2 else 9)
 
+    def test_logical_expression_uses_spectre_compatible_port_name(self):
+        # Actual VACOMP-2259 located the unescaped `logic` port declaration.
+        for c in (c for c in f.cards() if c['group_id']=='F03'):
+            self.assertIn('logic_out',c['ports'])
+            self.assertNotIn('logic',c['ports'])
+            self.assertIn('V(logic_out)<+',c['source'])
+            a,b,d=(c['inputs'][n][0][1]!=0 for n in ('a','b','c'))
+            self.contains(f.reference(c,0,{}),'logic_out',int(a or b and d))
+
     def test_functions_include_threshold_and_both_branches(self):
         for variant, expected in [('F05-dc-0',0),('F05-dc-1',.5),('F05-dc-2',.75)]:
             out=f.reference(self.card('F05',variant),0,{})
@@ -83,7 +98,8 @@ class FoundationReferences(unittest.TestCase):
 
     def test_ddt_defined_sides_and_undefined_corner(self):
         c=self.card('F14')
-        self.contains(f.reference(c,0,{}),'y',0)
+        point=copy.deepcopy(c);point['reference_time_uncertainty_s']=0
+        self.contains(f.reference(point,0,{}),'y',0)
         self.contains(f.reference(c,.5e-6,{}),'y',.5)
         self.contains(f.reference(c,1.5e-6,{}),'y',-1)
         self.assertIn('y',f.reference(c,1e-6,{})['undefined'])
@@ -166,8 +182,69 @@ class FoundationReferences(unittest.TestCase):
         after=f.reference(c,root+2e-12,{})['outputs']['phase']
         self.assertGreater(before[0],.99)
         self.assertLess(after[1],.01)
-        # An entire cycle is a raw voltage error, even when sin is unchanged.
-        self.assertFalse(after[0]<=1+after[0]<=after[1])
+
+    def test_derivative_serialization_cell_includes_dc_and_right_limit(self):
+        c=self.card('F14');ut=16*math.ulp(c['stop_s'])
+        for t in (0,math.ulp(c['stop_s']),ut):
+            interval=f.reference(c,t,{})['outputs']['y']
+            self.assertLessEqual(interval[0],0)
+            self.assertGreaterEqual(interval[1],.5)
+        self.contains(f.reference(c,2*ut,{}),'y',.5)
+
+    def test_callback_point_is_right_continuous_at_upper_bound(self):
+        for group in ('F07','F19'):
+            c=copy.deepcopy(self.card(group));c['reference_time_uncertainty_s']=0
+            e=c['events'][0];hi=e['nominal_s']+e['late_s']
+            bounds={ev['id']:[ev['nominal_s']-ev['early_s'],ev['nominal_s']+ev['late_s']] for ev in c['events']}
+            out=f.reference(c,hi,bounds)
+            self.contains(out,'count',1)
+            self.contains(out,'y' if group=='F07' else 'state',13 if group=='F07' else .5)
+
+    def calibration_trace(self, group, rise_s=.5e-6, fall_s=1e-6):
+        c=self.card(group);unit=1e-6
+        points={i*unit/32 for i in range(round(c['stop_s']/unit*32)+1)}
+        for t in c['critical_times_s']:points.update((t-2e-12,t,t+2e-12))
+        callbacks=[unit+50e-12,3*unit+50e-12]
+        if group=='F19':
+            for t in callbacks:points.update((t-1e-14,t+1e-14))
+        rows=[]
+        for t in sorted(t for t in points if 0<=t<=c['stop_s']):
+            if group=='F20':
+                phase=(.125+750000*t)%1
+                rows.append({'time':t,'phase':phase,'y':math.sin(6.2831853071795862*phase)})
+            else:
+                n=sum(t>=e for e in callbacks)
+                rise=min(1.,max(0.,(t-callbacks[0]-unit/4)/rise_s))
+                fall=min(1.,max(0.,(t-callbacks[1]-unit/4)/fall_s))
+                rows.append({'time':t,'y':.5*(rise-fall),'state':.5 if n==1 else 0.,'count':float(n)})
+        return c,rows
+
+    def test_correct_sine_cannot_hide_raw_phase_shift_through_grader(self):
+        c,rows=self.calibration_trace('F20');contract=load_contract(cards=[c])
+        correct=assess(c,rows,contract,reference=f.reference)
+        self.assertLess(correct['outputs']['y']['error_upper_V'],1e-10)
+        self.assertLess(correct['outputs']['phase']['error_lower_V'],1e-10)
+        for row in rows:row['phase']+=1
+        wrong=assess(c,rows,contract,reference=f.reference)
+        self.assertLess(wrong['outputs']['y']['error_upper_V'],1e-10)
+        self.assertGreater(wrong['outputs']['phase']['error_lower_V'],.99)
+        self.assertTrue(all(q['status']=='numerical_error' for q in wrong['tiers'].values()))
+
+    def test_transition_wrong_complete_rise_and_fall_fail_grader(self):
+        c,rows=self.calibration_trace('F19');contract=load_contract(cards=[c])
+        good=assess(c,rows,contract,reference=f.reference)
+        self.assertTrue(all(q['status']=='pass' for q in good['tiers'].values()),good)
+        for rise,fall in ((.4e-6,1e-6),(.5e-6,.5e-6)):
+            _,bad=self.calibration_trace('F19',rise,fall)
+            wrong=assess(c,bad,contract,reference=f.reference)
+            self.assertEqual(wrong['behavior']['status'],'pass')
+            self.assertGreater(wrong['outputs']['y']['error_lower_V'],.01)
+            self.assertTrue(all(q['status']=='numerical_error' for q in wrong['tiers'].values()))
+
+    def test_nonfinite_output_does_not_qualify(self):
+        c,rows=self.calibration_trace('F19');rows[len(rows)//2]['y']=math.nan
+        result=assess(c,rows,load_contract(cards=[c]),reference=f.reference)
+        self.assertTrue(all(q['status']=='evidence_insufficient' for q in result['tiers'].values()))
 
     def test_all_function_corner_values_and_l1_input_amplification(self):
         c=self.card('F05')
@@ -229,6 +306,17 @@ class FoundationReferences(unittest.TestCase):
         self.assertFalse(out['undefined'])
         self.assertLessEqual(out['outputs']['y'][0],-1)
         self.assertGreaterEqual(out['outputs']['y'][1],.5)
+
+
+    def test_derivative_requires_input_slope_evidence_but_constant_phase_does_not(self):
+        derivative=self.card('F14')
+        self.assertTrue(derivative['input_gain_evidence_required'])
+        self.assertIn('maxnorm',derivative['input_gain_qualification_note'])
+        phase=self.card('F20')
+        self.assertEqual(phase['inputs'],{})
+        self.assertFalse(phase.get('input_gain_evidence_required',False))
+        for group in ('F03','F04'):
+            self.assertTrue(self.card(group)['input_exact_evidence_required'])
 
 
 if __name__ == '__main__':

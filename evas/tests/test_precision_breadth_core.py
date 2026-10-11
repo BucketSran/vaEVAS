@@ -30,6 +30,27 @@ def trace(c):
 
 
 class ContractCalibration(unittest.TestCase):
+    def test_declared_counter_and_event_extent_are_contract_errors(self):
+        for fault in ('unknown_counter', 'past_final', 'before_initial', 'negative_window'):
+            c = event_card()
+            if fault == 'unknown_counter': c['events'][0]['counter'] = 'missing'
+            elif fault == 'past_final': c['events'][0]['index'] = 2
+            elif fault == 'before_initial': c['events'][0]['index'] = 0
+            else: c['events'][0]['early_s'] = 1e-6
+            with self.assertRaises(ValueError, msg=fault): load_contract(cards=[c])
+
+    def test_invalid_undefined_obligations_are_contract_errors(self):
+        for fault in ('left', 'right', 'output', 'finite', 'endpoint'):
+            c = card(); p = {'time_s': 5e-7, 'left_s': 5e-7-2e-12,
+                             'right_s': 5e-7+2e-12, 'outputs': ['y']}
+            if fault == 'left': p['left_s'] = p['time_s']
+            elif fault == 'right': p['right_s'] = 2e-6
+            elif fault == 'output': p['outputs'] = ['nonexistent']
+            elif fault == 'finite': p['time_s'] = float('nan')
+            else: p['time_s'] = 0.; p['left_s'] = -2e-12
+            c['undefined_points'] = [p]
+            with self.assertRaises(ValueError, msg=fault): load_contract(cards=[c])
+
     def test_fixed_q_budgets_and_all_outputs(self):
         c = card(); contract = load_contract(cards=[c])
         self.assertEqual([q['factor'] for q in contract['tiers']], [10, 1, .1])
@@ -69,6 +90,42 @@ class EventCalibration(unittest.TestCase):
         self.assertEqual(result['tiers']['Q3']['status'], 'pass', result)
         self.assertIn('sample', result['event_bounds_s'])
         self.assertTrue(all(b == result['event_bounds_s'] for b in seen))
+
+    def test_two_consumers_use_counter_history_not_separate_output_fits(self):
+        c = event_card(); at = 5e-7
+        rows = event_trace(c, at)
+        rows.extend({'time':t, 'u':.25, 'y':.5, 'z':-1., 'count':float(t>=at)}
+                    for t in (at-1e-15, at+1e-15))
+        rows.sort(key=lambda r:r['time'])
+        for row in rows: row['z'] = -1.
+        def consumer_reference(c, t, bounds):
+            lo, hi = bounds['sample']
+            return {'outputs':{'y':[lo*1e6,hi*1e6], 'z':[-2e6*hi,-2e6*lo]},
+                    'numerical_uncertainty_V':0., 'undefined':{}}
+        result = self.check(c, rows, consumer_reference)
+        self.assertTrue(all(q['status'] == 'pass' for q in result['tiers'].values()), result)
+        for row in rows: row['z'] += 1e-3
+        result = self.check(c, rows, consumer_reference)
+        self.assertTrue(all(q['status'] == 'numerical_error' for q in result['tiers'].values()))
+
+    def test_unobservable_declared_order_never_becomes_observed_failure_or_pass(self):
+        for reverse in (False, True):
+            c = card()
+            c['events'] = [dict(id=str(i), index=1, nominal_s=t, early_s=1e-10, late_s=1e-10, kind='timer')
+                           for i,t in enumerate(([7e-7,3e-7] if reverse else [3e-7,7e-7]))]
+            result = self.check(c, trace(c))
+            self.assertEqual(result['behavior']['status'], 'unknown')
+            self.assertTrue(all(q['status'] == 'evidence_insufficient' for q in result['tiers'].values()))
+
+    def test_cross_legal_window_requires_both_frozen_tolerances(self):
+        c = event_card(); c['events'][0].update(kind='cross', early_s=0., late_s=1e-10,
+                                               slope_V_s=1e6, expression_tolerance_V=5e-5)
+        result = self.check(c, event_trace(c, 5e-7+7e-11))
+        self.assertEqual(result['behavior']['status'], 'behavior_error')
+        c['events'][0].pop('counter'); c['counter_channels'] = {}; c['outputs'].remove('count')
+        result = self.check(c, event_trace(c))
+        self.assertEqual(result['event_bounds_s']['sample'], [5e-7,5e-7+5e-11])
+        self.assertEqual(result['behavior']['status'], 'unknown')
 
     def test_reference_stage_is_verified_counter_state_not_card_hint_or_output(self):
         c = event_card(); c['reference_counter_stages'] = {'count': 999}
@@ -200,6 +257,39 @@ class QualificationCalibration(unittest.TestCase):
     def check(self, c, rows):
         return assess(c, rows, load_contract(cards=[c]), reference=reference)
 
+    def test_input_deviation_and_actual_extent_gap_cannot_qualify(self):
+        for fault in ('input', 'start', 'stop', 'gap'):
+            c = card(); rows = trace(c)
+            if fault == 'input': rows[10]['u'] += 1e-4
+            elif fault == 'start': rows = rows[1:]
+            elif fault == 'stop': rows = rows[:-1]
+            else: rows = [r for r in rows if not 1e-7 < r['time'] < 4e-7]
+            result = self.check(c, rows)
+            if fault == 'input':
+                self.assertGreater(result['input_error_upper_V']['u'], 9e-5)
+                self.assertTrue(all('input uncertainty exceeds B/100' in q['evidence']['issues'] for q in result['tiers'].values()))
+            else:
+                reason = 'observation gap exceeds frozen limit' if fault == 'gap' else 'incomplete start/stop coverage'
+                self.assertIn(reason, result['observation_issues'])
+            self.assertTrue(all(q['status'] == 'evidence_insufficient' for q in result['tiers'].values()), fault)
+
+    def test_undefined_is_not_a_serialization_window_exemption(self):
+        import math
+        c = card(); point = 5e-7
+        c['undefined_points'] = [{'time_s':point, 'left_s':point-2e-12,
+                                 'right_s':point+2e-12, 'outputs':['z']}]
+        rows = trace(c)
+        for row in rows:
+            if row['time'] == point: row['time'] = math.nextafter(point, math.inf)
+        def oracle(c, t, b):
+            ans = reference(c, t, b)
+            if t == math.nextafter(point, math.inf):
+                del ans['outputs']['z']; ans['undefined'] = {'z':'fake undefined window'}
+            return ans
+        result = assess(c, rows, load_contract(cards=[c]), reference=oracle)
+        self.assertTrue(all(q['numerical']['status'] == 'unknown' for q in result['tiers'].values()))
+        self.assertTrue(any('undeclared mathematical undefined' in issue for issue in result['observation_issues']))
+
     def test_two_independent_counters_must_prove_event_order(self):
         c = event_card(); c['outputs'].append('other')
         c['counter_channels']['other'] = {'initial': 0, 'final': 1}
@@ -255,11 +345,45 @@ class QualificationCalibration(unittest.TestCase):
         c['input_gain_evidence'] = {'status': 'verified'}
         result = self.check(c, trace(c))
         self.assertEqual(result['input_gain_evidence']['status'], 'unknown')
-        self.assertTrue(all(q['numerical']['status'] == 'pass' for q in result['tiers'].values()))
+        self.assertTrue(all(q['numerical']['status'] == 'unknown' for q in result['tiers'].values()))
         self.assertTrue(all(q['status'] == 'evidence_insufficient' for q in result['tiers'].values()))
         rows = trace(c); rows[-1]['y'] += .1
         result = self.check(c, rows)
+        self.assertTrue(all(q['numerical']['status'] == 'unknown' for q in result['tiers'].values()))
+        self.assertGreater(result['outputs']['y']['conditional_error_lower_V'], .09)
+        c['input_gain_evidence_required'] = {'y': 'derivative requires topology evidence'}
+        rows[-1]['z'] += .1
+        self.assertTrue(all(q['numerical']['status'] == 'numerical_error'
+                            for q in self.check(c, rows)['tiers'].values()))
+
+    def test_unknown_initial_phase_does_not_accuse_transient_right_row(self):
+        c = card(); c['phase_obligations'] = {'dc': {'time_s': 0., 'outputs': {'y': 0.}}}
+        rows = trace(c); rows[0]['y'] = 0.
+        result = self.check(c, rows)
+        self.assertTrue(all(q['numerical']['status'] == 'unknown' for q in result['tiers'].values()))
+        self.assertEqual(result['outputs']['y']['unqualified_observations'], 1)
+        rows[-1]['y'] += .1
+        result = self.check(c, rows)
         self.assertTrue(all(q['numerical']['status'] == 'numerical_error' for q in result['tiers'].values()))
+
+    def test_real_derivative_filter_transient_right_is_not_accused_of_dc_error(self):
+        import math
+        import precision_breadth_composition as composition
+        c = next(c for c in composition.cards() if c['group_id'] == 'EC16')
+        times = observation_plan(c, load_contract(cards=[c]))['times_s']
+        rows = [{'time': t, 'u': t/c['unit_s'], 'd': 1.,
+                 'y': 1. - .5*math.exp(-t/(2*c['unit_s']))} for t in times]
+        result = assess(c, rows, load_contract(cards=[c]), reference=composition.reference)
+        self.assertTrue(all(q['numerical']['status'] == 'unknown' for q in result['tiers'].values()), result)
+        # Isolate the phase obligation with independently stipulated input
+        # topology in this control; it is not an actual adapter qualification.
+        c.pop('input_gain_evidence_required')
+        result = assess(c, rows, load_contract(cards=[c]), reference=composition.reference)
+        self.assertTrue(all(q['numerical']['status'] == 'unknown' for q in result['tiers'].values()), result)
+        self.assertEqual(result['outputs']['y']['unqualified_observations'], 1)
+        rows[-1]['y'] += .1
+        result = assess(c, rows, load_contract(cards=[c]), reference=composition.reference)
+        self.assertTrue(all(q['numerical']['status'] == 'numerical_error' for q in result['tiers'].values()), result)
 
     def test_reference_receives_whole_query_time_box_without_card_mutation(self):
         import math

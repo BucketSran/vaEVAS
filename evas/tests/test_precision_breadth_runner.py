@@ -1,5 +1,6 @@
 """Public freeze/run receipts using a tiny independent constant card."""
 import json
+import math
 from pathlib import Path
 import tempfile
 import unittest
@@ -75,6 +76,86 @@ class BreadthRunner(unittest.TestCase):
         self.assertEqual(records[0]['assessment']['tiers']['Q1']['status'],'pass')
         self.assertEqual(records[0]['qualified_tiers']['Q1']['status'],'evidence_insufficient')
         self.assertEqual(runner.load(self.base/'out/ATTEMPTS.json')['stage_invocations'],1)
+
+    def test_analysis_failure_retains_every_frozen_tier(self):
+        self.freeze();profile=self.base/'profile.json';profile.write_text('{}')
+        outcome={'status':'waveform_available','waveform':'fake.csv','stages':[],'abort_batch':False}
+        with patch.object(runner,'preflight',return_value=({},{})), patch.object(runner,'verify_tool'), \
+             patch.object(runner,'execute_one',return_value=outcome), \
+             patch.object(runner,'read_native',side_effect=ValueError('missing column')):
+            records=runner.run(self.inputs,self.base/'out','evas',profile,'foundation',tiers=['Q1'])
+        result=records[0]
+        self.assertIn('missing column',result['analysis_error'])
+        self.assertEqual(set(result['qualified_tiers']),{'Q1','Q2','Q3'})
+        self.assertTrue(all(q['status']=='evidence_insufficient' for q in result['qualified_tiers'].values()))
+
+    def test_accepted_row_count_alone_cannot_prove_native_origins(self):
+        work=self.base/'case';work.mkdir()
+        (work/'spectre.log').write_text('Number of accepted tran steps = 2\n')
+        (work/'tb.scs').write_text('tran tran strobeoutput=all skipcount=1 compression=no\n')
+        rows=[{'time':0},{'time':.5},{'time':1}]
+        evidence=runner.native_observation_evidence(work,'spectre',{'status':'qualified'},rows)
+        self.assertEqual(evidence['status'],'unknown')
+        self.assertTrue(evidence['facts']['rows_equal_accepted_steps_plus_initial'])
+
+    def test_spectre_each_accepted_time_matches_raw_export(self):
+        work=self.base/'case';work.mkdir()
+        (work/'spectre.log').write_text('precision = %.17g\ntran: time = 500 ns (50 %), step = 500 ns\n'
+            'tran: time = 1 us (100 %), step = 500 ns\nNumber of accepted tran steps = 2\n')
+        (work/'tb.scs').write_text('tran tran strobeoutput=all skipcount=1 compression=no annotate=steps annotatedigits=16\n')
+        (work/'requested_times.json').write_text('[0, 0.0000005, 0.000001]')
+        rows=[{'time':0.},{'time':5e-7},{'time':1e-6}]
+        tool={'version':'sub-version  21.1.0.509.isr12',
+              'binary_sha256':'72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f'}
+        evidence=runner.native_observation_evidence(work,'spectre',{'status':'qualified'},rows,tool=tool,card={'stop_s':1e-6},contract={'budgets':{'time_serialization_ulps':16}})
+        self.assertEqual(evidence['status'],'qualified')
+        self.assertEqual(evidence['facts']['matched_accepted_rows'],2)
+        wrong=[{'time':0.},{'time':6e-7},{'time':1e-6}]
+        self.assertEqual(runner.native_observation_evidence(work,'spectre',{'status':'qualified'},wrong,tool=tool,card={'stop_s':1e-6},contract={'budgets':{'time_serialization_ulps':16}})['status'],'unknown')
+        (work/'spectre.log').write_text('precision = %.17g\ntran: time = 500 ns (50 %), step = 500 ns\n'
+            'tran: time = 500 ns (50 %), step = 500 ns\nNumber of accepted tran steps = 2\n')
+        self.assertEqual(runner.native_observation_evidence(work,'spectre',{'status':'qualified'},rows,tool=tool,card={'stop_s':1e-6},contract={'budgets':{'time_serialization_ulps':16}})['status'],'unknown')
+
+    def test_spectre_strobe_uses_frozen_stop_time_budget_without_retiming(self):
+        work=self.base/'case';work.mkdir()
+        (work/'tb.scs').write_text('tran tran strobeoutput=all skipcount=1 compression=no annotate=steps annotatedigits=16\n')
+        requested=1.75e-6;stop=4e-6;actual=1.749999999999998e-6
+        (work/'requested_times.json').write_text(json.dumps([0,requested,stop]))
+        tool={'version':'sub-version  21.1.0.509.isr12',
+              'binary_sha256':'72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f'}
+        def evidence(times):
+            (work/'spectre.log').write_text('precision = %.17g\n'+''.join(
+                'tran: time = %.16g us (50 %%), step = 1 ns\n' % (t*1e6) for t in times[1:])+
+                'Number of accepted tran steps = %d\n' % (len(times)-1))
+            rows=[{'time':t} for t in times]
+            result=runner.native_observation_evidence(work,'spectre',{'status':'qualified'},rows,
+                tool=tool,card={'stop_s':stop},contract={'budgets':{'time_serialization_ulps':16}})
+            self.assertEqual([r['time'] for r in rows],times)
+            return result
+        self.assertGreater(abs(actual-requested),8*math.ulp(requested))
+        self.assertLess(abs(actual-requested),16*math.ulp(stop))
+        positive=evidence([0.,actual,stop])
+        self.assertEqual(positive['status'],'qualified')
+        self.assertEqual(positive['facts']['strobe_time_uncertainty_s'],16*math.ulp(stop))
+        self.assertEqual(evidence([0.,requested-32*math.ulp(stop),stop])['status'],'unknown')
+        # Two accepted rows inside the same request window are ambiguous.
+        self.assertEqual(evidence([0.,requested-8*math.ulp(stop),requested+8*math.ulp(stop),stop])['status'],'unknown')
+        # Two critical requests must not be collapsed onto one accepted row.
+        (work/'requested_times.json').write_text(json.dumps([0,requested,math.nextafter(requested,math.inf),stop]))
+        self.assertEqual(evidence([0.,actual,stop])['status'],'unknown')
+
+    def test_runtime_control_evidence_requires_actual_applied_step(self):
+        settings={'actual':{'stop':1e-6,'maxstep':1e-9},
+                  'requested':{'stop':1e-6,'maxstep':1e-9},'max_step_applied':False}
+        self.assertEqual(runner.runtime_control_evidence('evas',settings)['status'],'unknown')
+        settings.update(sample_origin_summary={'stateless_working_point':3},observed_response={'accepted_steps':0})
+        evidence=runner.runtime_control_evidence('evas',settings)
+        self.assertEqual(evidence['status'],'qualified')
+        self.assertEqual(evidence['maxstep_application'],'not_applicable')
+        settings['max_step_applied']=True
+        self.assertEqual(runner.runtime_control_evidence('evas',settings)['status'],'qualified')
+        settings['actual']['maxstep']='unknown'
+        self.assertEqual(runner.runtime_control_evidence('spectre',settings)['status'],'unknown')
 
     def test_current_source_drift_rejected(self):
         self.freeze()
