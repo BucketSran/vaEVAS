@@ -77,10 +77,12 @@ class EventHistoryContinuation(unittest.TestCase):
     def test_linear_corner_uncertainty_cannot_bypass_voltage_budget(self):
         program = compile_sources({'corner-budget.va': LINEAR_PWL}, [instance()])
         corner = math.nextafter(6e-6, -math.inf)
-        # Both sources are zero before the corner, so the unchanged prefix
-        # must pass. The amplified slope makes the later event enclosure too
-        # wide for the same absolute voltage budget; it cannot be discarded.
-        for amplitude in (1.0, 1e6):
+        # The prefix is independent of amplitude. The original 1e6 case now
+        # certifies after tighter exponential evaluation; check its exact PWL
+        # area and complete enclosure rather than requiring a stale refusal.
+        # The largest jump cannot fit the requested budget even at the
+        # nearest binary64 output, so its refusal is mathematically required.
+        for amplitude in (1.0, 1e6, 1e12):
             source = {'u': [[0, 0], [corner, 0], [6e-6, amplitude], [7e-6, amplitude]]}
             prefix = transient(program, source, [0, 5e-6], stop=5e-6,
                 max_step=7e-6, vabstol=1e-7, reltol=0, kernel=KERNEL)
@@ -88,10 +90,30 @@ class EventHistoryContinuation(unittest.TestCase):
                                       + 10*(Q(5e-6)-Q(3e-6)))
             self.assertAlmostEqual(prefix['solutions'][-1]['voltages'][
                 prefix['nodes'].index('dut:z')], float(expected), delta=1e-7)
-            if amplitude == 1:
-                transient(program, source, [0, 7e-6], stop=7e-6,
+            def exact_integral(end):
+                a, b = Q(2e-6), Q(3e-6)
+                area = sum(end-k*a for k in (1, 2, 3) if k*a <= end)
+                area += 10*sum(end-k*b for k in (1, 2) if k*b <= end)
+                for (ta, u), (tb, v) in zip(source['u'], source['u'][1:]):
+                    ta, u, tb, v = map(Q, (ta, u, tb, v))
+                    duration = max(Q(0), min(end, tb)-ta)
+                    area += u*duration+(v-u)*duration**2/(2*(tb-ta))
+                return Q(1e6)*area
+            if amplitude <= 1e6:
+                result = transient(program, source, [0, 7e-6], stop=7e-6,
                     max_step=7e-6, vabstol=1e-7, reltol=0, kernel=KERNEL)
+                for name, time in [('dut:z', Q(7e-6)), ('y', 2*Q(3e-6))]:
+                    node = result['nodes'].index(name)
+                    value = Q(result['solutions'][-1]['voltages'][node])
+                    lo, hi = map(Q, result['observation_evidence']['voltage_bounds_V'][-1][node])
+                    answer = exact_integral(time)
+                    self.assertLessEqual(lo, answer)
+                    self.assertLessEqual(answer, hi)
+                    self.assertLessEqual(abs(value-answer), Q(1e-7))
+                    self.assertLessEqual(max(abs(value-lo), abs(value-hi)), Q(1e-7))
             else:
+                answer = exact_integral(Q(7e-6))
+                self.assertGreater(abs(Q(float(answer))-answer), Q(1e-7))
                 with self.assertRaisesRegex(KernelError,
                         'waveform_accuracy.*same-time forward error at dut:z'):
                     transient(program, source, [0, 7e-6], stop=7e-6,
