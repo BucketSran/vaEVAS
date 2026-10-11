@@ -145,11 +145,18 @@ class SampleStatePrecision(unittest.TestCase):
         program = compile_model(
             '@(initial_step) q=1; @(timer(1,1,1e-12)) q=1e16*(V(u,r)-1); '
             "V(y,r)<+laplace_nd(q,'{1},'{1,1});", 'real q;')
-        # The first event leaves filter voltage exactly 1, so it can pass.
+        # The exact first-event voltage is 1. Its binary64 representative may
+        # round; the returned enclosure must contain 1 within the same budget.
         # Later its uncertain drive (~.74015 V) matters despite rounded q=0.
         prefix = run(program, {'u': POINTS}, [0, 1], stop=1, max_step=1,
                      vabstol=1e-7, reltol=0)
-        self.assertEqual(values(prefix), [1, 1])
+        node = prefix['nodes'].index('y')
+        for value, bounds in zip(values(prefix), prefix['observation_evidence']['voltage_bounds_V']):
+            lo, hi = map(Fraction, bounds[node])
+            self.assertLessEqual(lo, 1)
+            self.assertLessEqual(1, hi)
+            self.assertLessEqual(abs(Fraction(value)-1), Fraction(1e-7))
+            self.assertLessEqual(max(abs(Fraction(value)-lo), abs(Fraction(value)-hi)), Fraction(1e-7))
         self.assertEqual([event['time'] for event in prefix['transient']['events']], [1])
         for step in [3, 1/16]:
             with self.subTest(step=step):

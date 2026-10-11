@@ -9,7 +9,9 @@ use crate::ir::Error;
 const MAX_DIMENSION: usize = 32;
 const MAX_SCALING: usize = 48;
 const TAYLOR_TERMS: usize = 40;
-const TAYLOR_TARGET_NORM: f64 = 1.0 / 16.0;
+// The degree-40 tail at norm 1/2 is below 2e-62 (bounded again at runtime).
+// Extra scaling would amplify binary64 enclosure rounding during squaring.
+const TAYLOR_TARGET_NORM: f64 = 0.5;
 
 type Matrix = Vec<Vec<Interval>>;
 
@@ -93,16 +95,19 @@ fn exponential_from_scaled_generator(generator: &Matrix) -> Result<Matrix, Error
         }
     }
 
+    // Horner evaluates the same degree-N Taylor polynomial. It avoids adding
+    // each sub-ulp tail term to a unit diagonal and accumulating rounding
+    // width that the following squarings would amplify. All operations stay
+    // outward rounded, including interval-valued matrix coefficients.
     let mut result = identity(dimension);
-    let mut term = identity(dimension);
-    for order in 1..=TAYLOR_TERMS {
-        term = multiply_matrices(&term, &scaled)?;
-        for row in &mut term {
+    for order in (1..=TAYLOR_TERMS).rev() {
+        result = multiply_matrices(&scaled, &result)?;
+        for row in &mut result {
             for value in row {
                 *value = *value / Interval::point(order as f64);
             }
         }
-        add_assign_matrix(&mut result, &term)?;
+        add_assign_matrix(&mut result, &identity(dimension))?;
     }
     let tail = taylor_tail_bound(infinity_norm_bound(&scaled), TAYLOR_TERMS + 1)?;
     widen_matrix(&mut result, tail)?;

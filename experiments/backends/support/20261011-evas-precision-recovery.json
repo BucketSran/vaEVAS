@@ -1,0 +1,2371 @@
+{
+  "id": "precision-evas-recovery-20261011",
+  "scope": "local unmerged candidate; finite observations, original criteria unchanged",
+  "artifact_availability": "local-only bulk files; compact public facts are not a complete reproducible dataset",
+  "analysis_sha256": "fb61ecfb3c55e227262c8636bcc2216d7be445dd42c8519cbc207439ca7c65f4",
+  "checker_sha256": "7816ce29f02f2f42a7a712c38d70659d7308cb777487187e426fea5445bdb64b",
+  "source_identity": {
+    "evas/rust_core/Cargo.lock": "4ac34a67969cbd69004115347a99e1d1ad71b577ca98d5dacdadd707aedadd01",
+    "evas/rust_core/Cargo.toml": "68fbb7ba79e5964b59a4e00cf36c4f42f7311dba99e3fed6943366f599bf7e3f",
+    "evas/rust_core/benches/static_solver.rs": "cb7e8f046aa8cde417b94e6e52bf3cd59c714dba19de48ab2c0050a70cefaaa8",
+    "evas/rust_core/benches/transient_solver.rs": "07c249e600cfcbe4b2eae5f6398f3bf65c689f63846ef11c7cbbaec2737c2520",
+    "evas/rust_core/fuzz/Cargo.lock": "73066eeca7edc897b74437b0270c407eb1b0f5b1182b4246cb46be6a865ea42b",
+    "evas/rust_core/fuzz/Cargo.toml": "d21f7d8969051ba0c5dbdfaf7bfb510c6a3d8e073a7947b413a0077a7c775e12",
+    "evas/rust_core/fuzz/fuzz_targets/parse_request.rs": "ab9d99942c6e7c7079ad3d78646ea2657277997b67686208d9398cf5548987d5",
+    "evas/rust_core/fuzz/fuzz_targets/run.rs": "6dba9b211200fce17a36129ecbebf4332b50964abd63b829893a8940d0ac33bb",
+    "evas/rust_core/ir/Cargo.toml": "ee626ead9fe9620b9b48c956bef41d283578683d25bc879b20f25730adf325f0",
+    "evas/rust_core/ir/src/lib.rs": "6e817c39ffe5143eb91e5cf16bbf2ce6a4e20fb0175a5c2b7cc4e91ae46af677",
+    "evas/rust_core/ir/tests/transport.rs": "4199c2369bf3ed486612d8bbe1fbc46ee64e75409eb834abc6e15cfa74078cf1",
+    "evas/rust_core/src/absdelay.rs": "e0f6144590856b3a95d03a59af58e9032309fa1e316a41c063a40ec9f73109c7",
+    "evas/rust_core/src/accuracy.rs": "03fd769af88f73072a1964a942b9b9d1503196c56c5c4cb48cec7f21ee084d35",
+    "evas/rust_core/src/affine_bounds.rs": "b0faf6ee361cac3ab3a7b8a2d80992bece76a3457d4a08a48be81755cfe01c6b",
+    "evas/rust_core/src/analog.rs": "d4105a0e850f98d4c10ded8c7deacdcc45c960ed2a2a3c1547ea2cf2a5a687c0",
+    "evas/rust_core/src/assembly.rs": "52b5a1a7411b846c2c07d0c26c0fabca0641c3980b4b34a6bcd302e84401d9cb",
+    "evas/rust_core/src/batch.rs": "ba227471ba388b4efd361e9a523352b7626bb80cd51141a00ca2b1c97eed2888",
+    "evas/rust_core/src/continuous.rs": "ea60a978fce74d7e6419303183df55d1be245094eb84f01342fcd4bd6555e5ed",
+    "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+    "evas/rust_core/src/continuous_history.rs": "ec6f68c45c3c6c40e4c674ed8c47302c2b47f498f6e678d7105c9a83c06fda35",
+    "evas/rust_core/src/continuous_initialization.rs": "5145a36a517b9ba3ace0fb6241ebbd615fef6004b50aeb5dc99d76ff295874a8",
+    "evas/rust_core/src/continuous_runtime.rs": "70f93a4f9b046b53c3d0abb1a4b92ad66a3645e7f4272f6f9a21a66e87e49fcc",
+    "evas/rust_core/src/diagnostics.rs": "bd0feac3399c8b43bf14de204677d58a160d3648416242a76d3eae46e0dea699",
+    "evas/rust_core/src/dynamic_roots.rs": "30146ae2e527e12c6596aff3b0dad3cd172def2af80d27e3b92131032cb6a827",
+    "evas/rust_core/src/event_accuracy.rs": "d2b621cb23080ee219b5272fc489010dfc6a4ba15930fd8e6d94f0428e253dd6",
+    "evas/rust_core/src/event_conditions.rs": "8b0c00b449cf1b27326972a95b97a5f5c911b4f56cd6d30dec7f8905312ab30f",
+    "evas/rust_core/src/events.rs": "c30446f5becb7ca185645837592a868121df5d4aaee6aa2adacdd5aac8f30e28",
+    "evas/rust_core/src/exact_affine_history.rs": "768c7509b3d76e901e12b166291d0bb8ae7f282791fa513a72f087b07100f161",
+    "evas/rust_core/src/exact_source.rs": "bee5abfc22ebb00510d4010885b3550034d50d114a6aabde77d90631b8df71e6",
+    "evas/rust_core/src/exact_time.rs": "68e8415109ff7138b27195fe8d32f686441c61d4b012e774e31ede58e5eef824",
+    "evas/rust_core/src/expression.rs": "99024d0b32c2348b6d32db2dc7a27122ff16728c3d4dc476bde6d9f8cb766ffb",
+    "evas/rust_core/src/filter_budget.rs": "94807ee47a346648b5eb4d7d4af03366c0f1f1b79a0e67f636fc279c90b67656",
+    "evas/rust_core/src/guard_trajectory.rs": "c919578fe553f2e87ded91d054780e8e66d505db688894875a8506ae826ec84c",
+    "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+    "evas/rust_core/src/idtmod.rs": "c57464703c5332f4a5ea827e8a6f85799f57c7d9a6655351475684b3fdeda190",
+    "evas/rust_core/src/implicit_dynamics.rs": "ec086b6df26ba43107709db3755c97345ea63431e6d1151077a3ac7d9a68b615",
+    "evas/rust_core/src/initialization.rs": "7a0bf9345d0cb264ea766c9ff3c801d781948f1683474eb1e1a53f6abd1af365",
+    "evas/rust_core/src/input_clamp.rs": "4fc823c7de00e10fd49a45422d3c807d25095f0d4b095500f7de06780341521d",
+    "evas/rust_core/src/interval.rs": "89a83ce96dbf6cdc217a046c9885ca0cf580c6e6f932c36f0195120d49e53f56",
+    "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
+    "evas/rust_core/src/ir.rs": "cc687fdd3d78e908644537aa8194d3a3ccb3dcb5b88c11a78d7b3e640ad97ea0",
+    "evas/rust_core/src/laplace.rs": "8f211b465b19d062033392ef6defbc1bdc66b34c7be9172ab3c41e32a9e7b3d1",
+    "evas/rust_core/src/lib.rs": "f9658733453cf4140e8f1c6c3a70a30ddf8366a605713a06fa41f51234a8a980",
+    "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+    "evas/rust_core/src/linear/dense.rs": "00a1d9e1a9c5f933f765dd586ab9a8982073d270fed73ed7e602af858e732cad",
+    "evas/rust_core/src/linear/properties.rs": "d1a8b5ec069fef4f621b99290b532f7563cb8f55a1ba2178a77877f60192ab7f",
+    "evas/rust_core/src/linear/refinement.rs": "8476ad2ea3f3698e3c4552f8ff785c00ff878caab584b157dbb80b9c282f32a8",
+    "evas/rust_core/src/linear/sparse.rs": "3914adce2368b027027c06240f160864af0f53de934c0b3285515114fe7aa869",
+    "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+    "evas/rust_core/src/linear.rs": "e0280cfcaaebd2449ab5e4474daf5cd19e6a9fbda5db53e14e5229fc81a4eb36",
+    "evas/rust_core/src/main.rs": "70626c73fa421340afcc53c025a220720b208657273ba3f5e20bc1e4c6e01c3c",
+    "evas/rust_core/src/nonlinear/continuation.rs": "6d0aabe1bb6563a32d4e920fabdefde881777a54b8dc2b4658de432347f6448a",
+    "evas/rust_core/src/nonlinear.rs": "1e535704fb6dc14a577496ed47315ddf6e5f887d6dfa2b62b78d9b7b3a275863",
+    "evas/rust_core/src/nonlinear_dynamics.rs": "78182dc3731e8ad7fa50f767948291e69720cabce5027e6d811d8d32e8b8954e",
+    "evas/rust_core/src/observation.rs": "a4bddbd4b5f336883909fe66fd5a5cf3e636fb6da265d8c7be05e48107fcee32",
+    "evas/rust_core/src/operators.rs": "9f3638058a8aba8dbad36f52ec373db3edf7d5d161842f630f858db21dd11d83",
+    "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+    "evas/rust_core/src/portability.rs": "7fc70f2df49cfc6c5d5503b816a02adf15dbf7ce13eb2cf231f999918c4bd48a",
+    "evas/rust_core/src/pwl.rs": "e14b98fc39bd719e1a7994630aad71a0ae8de2cb72e4433222d0bf92ca6e6d3a",
+    "evas/rust_core/src/reset_dependencies.rs": "d2adaba2e28d70511e0977c223ea7922b627c832e633b7f94360c951a6f0e3fa",
+    "evas/rust_core/src/schedule.rs": "7540a99f5c10c5d529b8b4791bdbb70350fafc58a0b664a9432a4d5e1f64c08e",
+    "evas/rust_core/src/settlement.rs": "2936275c2ccd13d1e28563307253ae629174236656364b86b5ad61a66fcc1e13",
+    "evas/rust_core/src/settlement_bounds.rs": "4d41bb6dbab3fcd56ec69b3402dc2c204d661b3bab628aa709e98db8e235bda9",
+    "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+    "evas/rust_core/src/slew_cascade.rs": "26b9cedd714dd24893d2076818d84c8905525da29c900c4df97bf9a7c40cc7b8",
+    "evas/rust_core/src/solver.rs": "b2ba26829db2d0fc94e329b375ed13b803510456b3131371ec4688a4dfcd0eba",
+    "evas/rust_core/src/solver_cache_tests.rs": "727acd4fc9084bb6e546a8aa70e2f1e5bd476d27265f5198c5cdd08b0a7fd3fa",
+    "evas/rust_core/src/state_space.rs": "bc791c33b49c78259c0efa4b89203758830b6f90b461058d6a526ada5e1b2a94",
+    "evas/rust_core/src/strobe.rs": "2cb7db0c54f6cf4656186343f764399132a9704f8b65552b00e737c9108c16af",
+    "evas/rust_core/src/transient.rs": "9ab81ab37b6ec9793e090ea6f0a14f0099c2c7bbb5dff21b58620f7c8781b1f3",
+    "evas/rust_core/src/transient_condition_tests.rs": "9b041e9ae55b4094f115e215ac5bea81782c23f6ca29aabdf2acfa80167e69d0",
+    "evas/rust_core/src/transient_event_acceptance.rs": "587293a1b02d2bd31492a4125f56ad2bf89ff70ec271c343f7a931db779b515d",
+    "evas/rust_core/src/transient_history_calendar.rs": "ee914bd940d94ffab3d397ca3069d849d5c895ca122edc35c2a3ca4339e7e585",
+    "evas/rust_core/src/transient_idt_tests.rs": "dfd640a90830437089e8389eedf7e354bd20253b47e3dcc7d3226dd1a496ee33",
+    "evas/rust_core/src/transient_lifecycle_tests.rs": "74af82b4c2156266f53b044700a5ce8129acd962d8510cfd4279d8ca01958a36",
+    "evas/rust_core/src/transient_root_refinement.rs": "1572524223234e9d64665f6704267d1b5b28347058f3d714c0208548211e3095",
+    "evas/rust_core/src/transient_window_tests.rs": "08285e435c4e7df5b2a31ac259347840e72a63ef7941953ee850655fdc1a7909",
+    "evas/rust_core/src/transition.rs": "61de1f3b626e78f656d3b8d81a1ecfb14786fc5dfb117a548e1351edd46edf30",
+    "evas/rust_core/src/transition_filter.rs": "b77b028da41289d0a848600a4d6b158cde86d0f632eecab5ffe3741d01174bc0",
+    "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+    "evas/src/evas/__main__.py": "f98567eedc0052dddf00fd13f5380e996409f72aed9fbf09702d5bf173fae1d5",
+    "evas/src/evas/array_elaboration.py": "4faf4543a735ad19c89bbbc760d39f6860089d854b7f24922edaa390cf20df0b",
+    "evas/src/evas/diagnostics.py": "e787f6c1b0ab3939fa37c15ec6da550f59520c6f99edf29e9c53784f31e3308f",
+    "evas/src/evas/elaboration.py": "ff4ffb36428b7a5fd26a646b31788e2699de050c0a2ec6935d807ed79286fbd8",
+    "evas/src/evas/errors.py": "1a361344eb6678f6d82a91f3c356513025146bf468e9d3f5d4b593a9c04b3c08",
+    "evas/src/evas/frontend.py": "55d6f9724c71ffb3938d4e6eb8ff425d1c85d66808e6bbc6492593640e30ae19",
+    "evas/src/evas/hierarchy.py": "c277bc21cbe987f7cb427a2955b6b20588d5c42ae09bbc62853dab7bdba4138f",
+    "evas/src/evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+    "evas/src/evas/instance_compiler.py": "8f3e101bc1f1e854598bbb752f9f5ada41f321299f28e039957108fc0059ee38",
+    "evas/src/evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+    "evas/src/evas/ir.py": "ec167d9f02ddde4bff1dbf7b24b903d4a178822cfc0a2749638e753b1398f8cf",
+    "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+    "evas/src/evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+    "evas/src/evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+    "evas/src/evas/lowering.py": "3df0c3f873285e45aa9de85863ca7d42b4c1cffc205a24164700b953b1874c71",
+    "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+    "evas/src/evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+    "evas/src/evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+    "evas/src/evas/node_elaboration.py": "2b68adb511d792c349e40f98fa71933402f1569467c8e2cb6e6e9125773e7658",
+    "evas/src/evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+    "evas/src/evas/preprocessor.py": "83d54364c2cbc993da5d749bb3582f4ef5de110deff5f23a41ad9af4d928478c",
+    "evas/src/evas/protocol.py": "78b0f2dde1f3891fc9dbbdb64244582e5480053fc913ded02793e37ceca86685",
+    "evas/src/evas/query.py": "2fda97253f88c236d308d795aeae52a00ff5cfbb458f87a4bcfdc3751fae4f64",
+    "evas/src/evas/results.py": "91bc585e4ee9a871fce7da38beebebe71218f0b59c7dda57fec904a9994810bd",
+    "evas/src/evas/runtime.py": "e467f9de3635dcd23813771ea528e57fa35dd98c36dce893b35f920f278c7c0f",
+    "evas/src/evas/scs.py": "6258b0b03294d399ad7cd0ad42e6513a19948d216e25333512a5b9b2695c6d6d",
+    "evas/src/evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
+    "evas/src/evas/standard_headers.py": "9f190d1b17d6a341cecdba14f8a43771f7754d2e0de1403d59e4432849ec7e30",
+    "evas/src/evas/strobe.py": "18d6b1911436459a7a19ee100d309636f5d0d75acd927b228219367098f19c80",
+    "evas/src/evas/syntax.py": "0808529711ffc52e04557d0adfad8452f12e3073132699c5afe8a59b6f602605",
+    "experiments/backends/support/precision_run.py": "c4ccb3cd0215bd0540f28c13ff7eb5ab2056a3e16b3e4bc0dd7adf82b2fcef3e",
+    "runs/precision-evas-recovery-20261011/final_local.py": "51f49da271857c230934ad63984c0b63ffebfca0a4492949d1573565f816eb33"
+  },
+  "source_archive": {
+    "path": "runs/precision-evas-recovery-20261011/executed-source.tar.gz",
+    "sha256": "77d22e9dceb18a06cdb5ed3b59972b8fcb9fd9b8ab2e8dcb629c2fcc99fc1ee7",
+    "base_commit": "7c9e6abaeb22e517ccdfe8ad7eb81c6dea68d08c",
+    "dirty_source": true,
+    "files": 112,
+    "capture": "Captured after execution from files verified against the execution source manifest; local-only."
+  },
+  "manifests": {
+    "local": "9dbff56d1890b71aa93abf104456a2c15e51e28a9c95c050761852a7c110a245",
+    "spectre": "45aab5654136f25eae207692fd4569795013cb0633c5971a7cc35124b94a68c0"
+  },
+  "collection": {
+    "archive_sha256": "9c2408916992a6b57260f5e451745e5c1c37faf8065a378247844a1295f298a5",
+    "verified_files": 127,
+    "manifest_sha256": "45aab5654136f25eae207692fd4569795013cb0633c5971a7cc35124b94a68c0",
+    "operator_sha256": "adfef6222c3cee21cc756ab103687ee4309a1a661ed4a0f9b8f2e5cbf96d9ead",
+    "cleanup_confirmed": true,
+    "availability": "local-only"
+  },
+  "tools": {
+    "evas": {
+      "kernel_sha256": "f605af5c3d7153d64c89bfee0da73dfedb1fa2e16af272057c756a7854c63132",
+      "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "platform": "macOS-26.3.2-arm64-arm-64bit-Mach-O",
+      "rustc_version": "rustc 1.95.0 (59807616e 2026-04-14)"
+    },
+    "spectre": {
+      "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+      "version": "sub-version  21.1.0.509.isr12"
+    }
+  },
+  "results": [
+    {
+      "condition": "LP-IDT",
+      "backend": "evas",
+      "profile": "deep",
+      "model_sha256": "f377a2b9f55b9e5d083bd0ba7526583b0a3a3f90b6f38af0c953395746507236",
+      "waveform_sha256": "962853a488244b9ff454ebcaf8828eb1224e6135e7400b65b5b499eced2ebfbf",
+      "input_identity_sha256": "6ab16bc1828b6d921812bc4893b8ccc81e9d27be9e850c243006e9c05f3da37e",
+      "assessment": {
+        "schema_version": 2,
+        "condition": "LP-IDT",
+        "reference": "represented PWL and first-order ODE; independent bounded arithmetic",
+        "claim": "finite native/forced observations including named boundaries; not all-time proof",
+        "tiers": {
+          "Q1": {
+            "status": "pass",
+            "voltage_budget_V": 1.0099999999999998e-05,
+            "reasons": []
+          },
+          "Q2": {
+            "status": "pass",
+            "voltage_budget_V": 1.0099999999999999e-06,
+            "reasons": []
+          },
+          "Q3": {
+            "status": "pass",
+            "voltage_budget_V": 1.0099999999999999e-07,
+            "reasons": []
+          }
+        },
+        "behavior": {
+          "status": "pass",
+          "issues": []
+        },
+        "observation_issues": [],
+        "row_count": 267,
+        "extent_s": [
+          0.0,
+          8e-06
+        ],
+        "max_gap_s": 3.125000000000076e-08,
+        "time_serialization_bound_s": 2.710505431213761e-20,
+        "input_errors": {
+          "u": {
+            "lower_V": 0.0,
+            "upper_V": 2.899243345400038e-14,
+            "scale_V": 1.0
+          }
+        },
+        "error_lower_V": 0.0,
+        "error_upper_V": 5.695444116327053e-14,
+        "hold_drift_lower_V": 0.0,
+        "hold_drift_upper_V": 0.0,
+        "observation_uncertainty_V": 1.103006574965093e-13,
+        "reference_uncertainty_V": 1.1102230246251565e-16,
+        "max_callback_bracket_s": 0.0,
+        "event_records": [],
+        "worst": {
+          "time_s": 2.9375e-06,
+          "actual_V": 0.5056288124170542,
+          "reference_V": [
+            0.5056288124170009,
+            0.5056288124171093
+          ]
+        }
+      },
+      "settings": {
+        "status": "qualified",
+        "issues": [],
+        "notes": [],
+        "actual": {
+          "reltol": 1e-10,
+          "vabstol": 1e-14,
+          "iabstol": "unknown",
+          "stop": 8e-06,
+          "maxstep": 4.8828125e-10,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-10,
+          "vabstol": 1e-14,
+          "iabstol": 1e-17,
+          "stop": 8e-06,
+          "maxstep": 4.8828125e-10
+        },
+        "additional_controls": {
+          "observation_mode": "forced solver observation",
+          "origins": [
+            "accepted_controller_frame"
+          ],
+          "max_step_applied": true,
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 16529,
+          "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred"
+        },
+        "scope": "finite native/forced observations; runtime control readbacks and any separately audited parameter paths are listed explicitly",
+        "verified_extra_controls": {}
+      },
+      "boundary_witnesses": [],
+      "axes": {
+        "Q1": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.0099999999999998e-05
+        },
+        "Q2": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.0099999999999999e-06
+        },
+        "Q3": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.0099999999999999e-07
+        }
+      }
+    },
+    {
+      "condition": "LP-NONZERO",
+      "backend": "evas",
+      "profile": "deep",
+      "model_sha256": "747c09cc841a07d6a51491ee2124f750451c82b8dd0034e1cc682059db3175b9",
+      "waveform_sha256": "356c969b67e14dc70e979863d93e3d9e862b113b637c0fa0e4cb24a4d667b49c",
+      "input_identity_sha256": "f041d90d28d8cf0ec919b4f86b7c8aea7c2cfabaa8326fb3767437685c275c6f",
+      "assessment": {
+        "schema_version": 2,
+        "condition": "LP-NONZERO",
+        "reference": "represented PWL and first-order ODE; independent bounded arithmetic",
+        "claim": "finite native/forced observations including named boundaries; not all-time proof",
+        "tiers": {
+          "Q1": {
+            "status": "pass",
+            "voltage_budget_V": 1.0099999999999998e-05,
+            "reasons": []
+          },
+          "Q2": {
+            "status": "pass",
+            "voltage_budget_V": 1.0099999999999999e-06,
+            "reasons": []
+          },
+          "Q3": {
+            "status": "pass",
+            "voltage_budget_V": 1.0099999999999999e-07,
+            "reasons": []
+          }
+        },
+        "behavior": {
+          "status": "pass",
+          "issues": []
+        },
+        "observation_issues": [],
+        "row_count": 267,
+        "extent_s": [
+          0.0,
+          8e-06
+        ],
+        "max_gap_s": 3.125000000000076e-08,
+        "time_serialization_bound_s": 2.710505431213761e-20,
+        "input_errors": {
+          "u": {
+            "lower_V": 0.0,
+            "upper_V": 2.221616987596598e-14,
+            "scale_V": 1.0
+          }
+        },
+        "error_lower_V": 0.0,
+        "error_upper_V": 5.617728504603292e-14,
+        "hold_drift_lower_V": 0.0,
+        "hold_drift_upper_V": 0.0,
+        "observation_uncertainty_V": 1.103006574965093e-13,
+        "reference_uncertainty_V": 1.1102230246251565e-16,
+        "max_callback_bracket_s": 0.0,
+        "event_records": [],
+        "worst": {
+          "time_s": 3.09375e-06,
+          "actual_V": 0.5196685688474856,
+          "reference_V": [
+            0.5196685688474315,
+            0.51966856884754
+          ]
+        }
+      },
+      "settings": {
+        "status": "qualified",
+        "issues": [],
+        "notes": [],
+        "actual": {
+          "reltol": 1e-10,
+          "vabstol": 1e-14,
+          "iabstol": "unknown",
+          "stop": 8e-06,
+          "maxstep": 4.8828125e-10,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-10,
+          "vabstol": 1e-14,
+          "iabstol": 1e-17,
+          "stop": 8e-06,
+          "maxstep": 4.8828125e-10
+        },
+        "additional_controls": {
+          "observation_mode": "forced solver observation",
+          "origins": [
+            "accepted_controller_frame"
+          ],
+          "max_step_applied": true,
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 16529,
+          "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred"
+        },
+        "scope": "finite native/forced observations; runtime control readbacks and any separately audited parameter paths are listed explicitly",
+        "verified_extra_controls": {}
+      },
+      "boundary_witnesses": [],
+      "axes": {
+        "Q1": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.0099999999999998e-05
+        },
+        "Q2": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.0099999999999999e-06
+        },
+        "Q3": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.0099999999999999e-07
+        }
+      }
+    },
+    {
+      "condition": "LP-RAMP",
+      "backend": "evas",
+      "profile": "deep",
+      "model_sha256": "747c09cc841a07d6a51491ee2124f750451c82b8dd0034e1cc682059db3175b9",
+      "waveform_sha256": "07777babb7df9996dc17c05d8066bb8a930059dc2d48f59a91dbabdf60f71aac",
+      "input_identity_sha256": "fec841c8beec775921e13922c740b8a4979cf346fe10d93b9c263efde2f53cf0",
+      "assessment": {
+        "schema_version": 2,
+        "condition": "LP-RAMP",
+        "reference": "represented PWL and first-order ODE; independent bounded arithmetic",
+        "claim": "finite native/forced observations including named boundaries; not all-time proof",
+        "tiers": {
+          "Q1": {
+            "status": "pass",
+            "voltage_budget_V": 1.0099999999999998e-05,
+            "reasons": []
+          },
+          "Q2": {
+            "status": "pass",
+            "voltage_budget_V": 1.0099999999999999e-06,
+            "reasons": []
+          },
+          "Q3": {
+            "status": "pass",
+            "voltage_budget_V": 1.0099999999999999e-07,
+            "reasons": []
+          }
+        },
+        "behavior": {
+          "status": "pass",
+          "issues": []
+        },
+        "observation_issues": [],
+        "row_count": 267,
+        "extent_s": [
+          0.0,
+          8e-06
+        ],
+        "max_gap_s": 3.125000000000076e-08,
+        "time_serialization_bound_s": 2.710505431213761e-20,
+        "input_errors": {
+          "u": {
+            "lower_V": 0.0,
+            "upper_V": 2.899243345400038e-14,
+            "scale_V": 1.0
+          }
+        },
+        "error_lower_V": 0.0,
+        "error_upper_V": 5.617728504603292e-14,
+        "hold_drift_lower_V": 0.0,
+        "hold_drift_upper_V": 0.0,
+        "observation_uncertainty_V": 1.103006574965093e-13,
+        "reference_uncertainty_V": 1.1102230246251565e-16,
+        "max_callback_bracket_s": 0.0,
+        "event_records": [],
+        "worst": {
+          "time_s": 2.6562499999999998e-06,
+          "actual_V": 0.5407777999700101,
+          "reference_V": [
+            0.5407777999699557,
+            0.5407777999700641
+          ]
+        }
+      },
+      "settings": {
+        "status": "qualified",
+        "issues": [],
+        "notes": [],
+        "actual": {
+          "reltol": 1e-10,
+          "vabstol": 1e-14,
+          "iabstol": "unknown",
+          "stop": 8e-06,
+          "maxstep": 4.8828125e-10,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-10,
+          "vabstol": 1e-14,
+          "iabstol": 1e-17,
+          "stop": 8e-06,
+          "maxstep": 4.8828125e-10
+        },
+        "additional_controls": {
+          "observation_mode": "forced solver observation",
+          "origins": [
+            "accepted_controller_frame"
+          ],
+          "max_step_applied": true,
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 16529,
+          "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred"
+        },
+        "scope": "finite native/forced observations; runtime control readbacks and any separately audited parameter paths are listed explicitly",
+        "verified_extra_controls": {}
+      },
+      "boundary_witnesses": [],
+      "axes": {
+        "Q1": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.0099999999999998e-05
+        },
+        "Q2": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.0099999999999999e-06
+        },
+        "Q3": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.0099999999999999e-07
+        }
+      }
+    },
+    {
+      "condition": "LP-SMALL",
+      "backend": "evas",
+      "profile": "deep",
+      "model_sha256": "747c09cc841a07d6a51491ee2124f750451c82b8dd0034e1cc682059db3175b9",
+      "waveform_sha256": "236c559a2ff843a5236e94b74cefd35525257342d4e14f97339e42ce5a4080c5",
+      "input_identity_sha256": "66b0e3dcc632bec678887f65434e54a43abddb56be1be1abb243cc857f0579b6",
+      "assessment": {
+        "schema_version": 2,
+        "condition": "LP-SMALL",
+        "reference": "represented PWL and first-order ODE; independent bounded arithmetic",
+        "claim": "finite native/forced observations including named boundaries; not all-time proof",
+        "tiers": {
+          "Q1": {
+            "status": "pass",
+            "voltage_budget_V": 1.1e-07,
+            "reasons": []
+          },
+          "Q2": {
+            "status": "pass",
+            "voltage_budget_V": 1.1000000000000001e-08,
+            "reasons": []
+          },
+          "Q3": {
+            "status": "pass",
+            "voltage_budget_V": 1.1000000000000001e-09,
+            "reasons": []
+          }
+        },
+        "behavior": {
+          "status": "pass",
+          "issues": []
+        },
+        "observation_issues": [],
+        "row_count": 267,
+        "extent_s": [
+          0.0,
+          8e-06
+        ],
+        "max_gap_s": 3.125000000000076e-08,
+        "time_serialization_bound_s": 2.710505431213761e-20,
+        "input_errors": {
+          "u": {
+            "lower_V": 0.0,
+            "upper_V": 2.905661822261152e-17,
+            "scale_V": 0.001
+          }
+        },
+        "error_lower_V": 0.0,
+        "error_upper_V": 5.616167253474913e-17,
+        "hold_drift_lower_V": 0.0,
+        "hold_drift_upper_V": 0.0,
+        "observation_uncertainty_V": 1.102633609417758e-16,
+        "reference_uncertainty_V": 1.931233798368407e-19,
+        "max_callback_bracket_s": 0.0,
+        "event_records": [],
+        "worst": {
+          "time_s": 2.625e-06,
+          "actual_V": 0.0005414541752959613,
+          "reference_V": [
+            0.0005414541752959068,
+            0.0005414541752960154
+          ]
+        }
+      },
+      "settings": {
+        "status": "qualified",
+        "issues": [],
+        "notes": [],
+        "actual": {
+          "reltol": 1e-10,
+          "vabstol": 1e-14,
+          "iabstol": "unknown",
+          "stop": 8e-06,
+          "maxstep": 4.8828125e-10,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-10,
+          "vabstol": 1e-14,
+          "iabstol": 1e-17,
+          "stop": 8e-06,
+          "maxstep": 4.8828125e-10
+        },
+        "additional_controls": {
+          "observation_mode": "forced solver observation",
+          "origins": [
+            "accepted_controller_frame"
+          ],
+          "max_step_applied": true,
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 16529,
+          "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred"
+        },
+        "scope": "finite native/forced observations; runtime control readbacks and any separately audited parameter paths are listed explicitly",
+        "verified_extra_controls": {}
+      },
+      "boundary_witnesses": [],
+      "axes": {
+        "Q1": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.1e-07
+        },
+        "Q2": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.1000000000000001e-08
+        },
+        "Q3": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.1000000000000001e-09
+        }
+      }
+    },
+    {
+      "condition": "SH-X-RAMP",
+      "backend": "evas",
+      "profile": "base",
+      "model_sha256": "c1e5bbb9eaf6c73ebb968f05dc2bc78a3f68a2d39c6fc9fdebf5059d572c6bd6",
+      "waveform_sha256": "44509ed82a4c64900f763e7e7d67f8fa5788dd97b03451389e6e454d8d91326f",
+      "input_identity_sha256": "91256768b9d5d8c506490fef7c84119eb28991ffefaf6a10b904d24527aa96aa",
+      "assessment": {
+        "schema_version": 2,
+        "condition": "SH-X-RAMP",
+        "reference": "represented PWL and first-order ODE; independent bounded arithmetic",
+        "claim": "finite native/forced observations including named boundaries; not all-time proof",
+        "tiers": {
+          "Q1": {
+            "status": "evidence_insufficient",
+            "voltage_budget_V": 1.0099999999999998e-05,
+            "reasons": [
+              "event 1 bracket not wholly inside legal window",
+              "event 2 bracket not wholly inside legal window",
+              "event 3 bracket not wholly inside legal window",
+              "event 4 bracket not wholly inside legal window",
+              "event 5 bracket not wholly inside legal window",
+              "event 6 bracket not wholly inside legal window",
+              "event 7 bracket not wholly inside legal window",
+              "event 8 bracket not wholly inside legal window"
+            ]
+          },
+          "Q2": {
+            "status": "evidence_insufficient",
+            "voltage_budget_V": 1.0099999999999999e-06,
+            "reasons": [
+              "event 1 bracket not wholly inside legal window",
+              "event 2 bracket not wholly inside legal window",
+              "event 3 bracket not wholly inside legal window",
+              "event 4 bracket not wholly inside legal window",
+              "event 5 bracket not wholly inside legal window",
+              "event 6 bracket not wholly inside legal window",
+              "event 7 bracket not wholly inside legal window",
+              "event 8 bracket not wholly inside legal window"
+            ]
+          },
+          "Q3": {
+            "status": "evidence_insufficient",
+            "voltage_budget_V": 1.0099999999999999e-07,
+            "reasons": [
+              "event 1 bracket not wholly inside legal window",
+              "event 2 bracket not wholly inside legal window",
+              "event 3 bracket not wholly inside legal window",
+              "event 4 bracket not wholly inside legal window",
+              "event 5 bracket not wholly inside legal window",
+              "event 6 bracket not wholly inside legal window",
+              "event 7 bracket not wholly inside legal window",
+              "event 8 bracket not wholly inside legal window"
+            ]
+          }
+        },
+        "behavior": {
+          "status": "pass",
+          "issues": []
+        },
+        "observation_issues": [
+          "event 1 bracket not wholly inside legal window",
+          "event 2 bracket not wholly inside legal window",
+          "event 3 bracket not wholly inside legal window",
+          "event 4 bracket not wholly inside legal window",
+          "event 5 bracket not wholly inside legal window",
+          "event 6 bracket not wholly inside legal window",
+          "event 7 bracket not wholly inside legal window",
+          "event 8 bracket not wholly inside legal window"
+        ],
+        "row_count": 21201,
+        "extent_s": [
+          0.0,
+          8.5e-06
+        ],
+        "max_gap_s": 3.125000000000076e-08,
+        "time_serialization_bound_s": 2.710505431213761e-20,
+        "input_errors": {
+          "u": {
+            "lower_V": 0.0,
+            "upper_V": 7.308390004290288e-15,
+            "scale_V": 1.0
+          },
+          "clk": {
+            "lower_V": 0.0,
+            "upper_V": 2.729379222632415e-13,
+            "scale_V": 1.0
+          }
+        },
+        "error_lower_V": 0.0,
+        "error_upper_V": 7.843144439467764e-09,
+        "hold_drift_lower_V": 0.0,
+        "hold_drift_upper_V": 3.552713678800501e-15,
+        "observation_uncertainty_V": 7.843149962827312e-09,
+        "reference_uncertainty_V": 1.1102058013848124e-16,
+        "max_callback_bracket_s": 3.9215740809566465e-14,
+        "event_records": [
+          {
+            "index": 1,
+            "counter_bracket_s": [
+              9.999999999999728e-07,
+              1.0000000392157132e-06
+            ],
+            "qualified_callback_s": [
+              9.999999999999728e-07,
+              1.0000000392157132e-06
+            ],
+            "independent_event_evidence_used": false,
+            "legal_s": [
+              1e-06,
+              1.0001e-06
+            ],
+            "clock_root_uncertainty_s": 5.45875844526483e-20,
+            "timing_status": "evidence_insufficient",
+            "sample_reference_range_V": [
+              -0.20000000000000545,
+              -0.19999999215685735
+            ],
+            "error_lower_V": 0.0,
+            "error_upper_V": 7.843144439467764e-09,
+            "hold_drift_upper_V": 3.552713678800501e-15,
+            "observations": 2647
+          },
+          {
+            "index": 2,
+            "counter_bracket_s": [
+              1.999999999231038e-06,
+              2.000000000000027e-06
+            ],
+            "qualified_callback_s": [
+              1.999999999231038e-06,
+              2.000000000000027e-06
+            ],
+            "independent_event_evidence_used": false,
+            "legal_s": [
+              2e-06,
+              2.0000999999999997e-06
+            ],
+            "clock_root_uncertainty_s": 5.45875844526483e-20,
+            "timing_status": "evidence_insufficient",
+            "sample_reference_range_V": [
+              -1.5379238410117432e-10,
+              5.421010862427523e-15
+            ],
+            "error_lower_V": 0.0,
+            "error_upper_V": 1.5379416045801372e-10,
+            "hold_drift_upper_V": 3.552713678800501e-15,
+            "observations": 2648
+          },
+          {
+            "index": 3,
+            "counter_bracket_s": [
+              2.999999999231038e-06,
+              3.000000000000027e-06
+            ],
+            "qualified_callback_s": [
+              2.999999999231038e-06,
+              3.000000000000027e-06
+            ],
+            "independent_event_evidence_used": false,
+            "legal_s": [
+              3e-06,
+              3.0001e-06
+            ],
+            "clock_root_uncertainty_s": 5.45875844526483e-20,
+            "timing_status": "evidence_insufficient",
+            "sample_reference_range_V": [
+              0.19999999984620764,
+              0.20000000000000548
+            ],
+            "error_lower_V": 0.0,
+            "error_upper_V": 1.537941718421365e-10,
+            "hold_drift_upper_V": 3.552713678800501e-15,
+            "observations": 2648
+          },
+          {
+            "index": 4,
+            "counter_bracket_s": [
+              3.999999999231038e-06,
+              4.000000000000027e-06
+            ],
+            "qualified_callback_s": [
+              3.999999999231038e-06,
+              4.000000000000027e-06
+            ],
+            "independent_event_evidence_used": false,
+            "legal_s": [
+              4e-06,
+              4.0001e-06
+            ],
+            "clock_root_uncertainty_s": 5.45875844526483e-20,
+            "timing_status": "evidence_insufficient",
+            "sample_reference_range_V": [
+              0.3999999998462076,
+              0.4
+            ],
+            "error_lower_V": 0.0,
+            "error_upper_V": 1.5379419959771212e-10,
+            "hold_drift_upper_V": 3.552713678800501e-15,
+            "observations": 2649
+          },
+          {
+            "index": 5,
+            "counter_bracket_s": [
+              4.9999999999999725e-06,
+              5.000000039215713e-06
+            ],
+            "qualified_callback_s": [
+              4.9999999999999725e-06,
+              5.000000039215713e-06
+            ],
+            "independent_event_evidence_used": false,
+            "legal_s": [
+              4.9999999999999996e-06,
+              5.0001e-06
+            ],
+            "clock_root_uncertainty_s": 5.45875844526483e-20,
+            "timing_status": "evidence_insufficient",
+            "sample_reference_range_V": [
+              0.1999999921568573,
+              0.20000000000000548
+            ],
+            "error_lower_V": 0.0,
+            "error_upper_V": 7.843144328445462e-09,
+            "hold_drift_upper_V": 3.552713678800501e-15,
+            "observations": 2647
+          },
+          {
+            "index": 6,
+            "counter_bracket_s": [
+              5.999999999231038e-06,
+              6.000000000000027e-06
+            ],
+            "qualified_callback_s": [
+              5.999999999231038e-06,
+              6.000000000000027e-06
+            ],
+            "independent_event_evidence_used": false,
+            "legal_s": [
+              6e-06,
+              6.0001e-06
+            ],
+            "clock_root_uncertainty_s": 5.45875844526483e-20,
+            "timing_status": "evidence_insufficient",
+            "sample_reference_range_V": [
+              -5.505714157152953e-15,
+              1.537922993978796e-10
+            ],
+            "error_lower_V": 0.0,
+            "error_upper_V": 1.5379418677702146e-10,
+            "hold_drift_upper_V": 3.552713678800501e-15,
+            "observations": 2648
+          },
+          {
+            "index": 7,
+            "counter_bracket_s": [
+              6.999999999231038e-06,
+              7.000000000000027e-06
+            ],
+            "qualified_callback_s": [
+              6.999999999231038e-06,
+              7.000000000000027e-06
+            ],
+            "independent_event_evidence_used": false,
+            "legal_s": [
+              7e-06,
+              7.0001e-06
+            ],
+            "clock_root_uncertainty_s": 5.45875844526483e-20,
+            "timing_status": "evidence_insufficient",
+            "sample_reference_range_V": [
+              -0.20000000000000548,
+              -0.19999999984620764
+            ],
+            "error_lower_V": 0.0,
+            "error_upper_V": 1.537941718421365e-10,
+            "hold_drift_upper_V": 3.552713678800501e-15,
+            "observations": 2648
+          },
+          {
+            "index": 8,
+            "counter_bracket_s": [
+              7.999999999231038e-06,
+              8.000000000000027e-06
+            ],
+            "qualified_callback_s": [
+              7.999999999231038e-06,
+              8.000000000000027e-06
+            ],
+            "independent_event_evidence_used": false,
+            "legal_s": [
+              8e-06,
+              8.0001e-06
+            ],
+            "clock_root_uncertainty_s": 5.45875844526483e-20,
+            "timing_status": "evidence_insufficient",
+            "sample_reference_range_V": [
+              -0.4,
+              -0.3999999998462076
+            ],
+            "error_lower_V": 0.0,
+            "error_upper_V": 1.5379419959771212e-10,
+            "hold_drift_upper_V": 3.552713678800501e-15,
+            "observations": 2578
+          }
+        ],
+        "worst": {
+          "time_s": 1.0000000392156861e-06,
+          "actual_V": -0.2,
+          "reference_V": [
+            -0.20000000000000545,
+            -0.19999999215685735
+          ]
+        }
+      },
+      "settings": {
+        "status": "qualified",
+        "issues": [],
+        "notes": [],
+        "actual": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": "unknown",
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "additional_controls": {
+          "observation_mode": "forced solver observation",
+          "origins": [
+            "accepted_controller_frame"
+          ],
+          "max_step_applied": true,
+          "engine": "evas-events-0.14.0",
+          "accepted_steps": 21234,
+          "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred"
+        },
+        "scope": "finite native/forced observations; runtime control readbacks and any separately audited parameter paths are listed explicitly",
+        "verified_extra_controls": {}
+      },
+      "boundary_witnesses": [],
+      "axes": {
+        "Q1": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "incomplete",
+          "evidence_reasons": [
+            "event 1 bracket not wholly inside legal window",
+            "event 2 bracket not wholly inside legal window",
+            "event 3 bracket not wholly inside legal window",
+            "event 4 bracket not wholly inside legal window",
+            "event 5 bracket not wholly inside legal window",
+            "event 6 bracket not wholly inside legal window",
+            "event 7 bracket not wholly inside legal window",
+            "event 8 bracket not wholly inside legal window"
+          ],
+          "status": "evidence_insufficient",
+          "voltage_budget_V": 1.0099999999999998e-05
+        },
+        "Q2": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "incomplete",
+          "evidence_reasons": [
+            "event 1 bracket not wholly inside legal window",
+            "event 2 bracket not wholly inside legal window",
+            "event 3 bracket not wholly inside legal window",
+            "event 4 bracket not wholly inside legal window",
+            "event 5 bracket not wholly inside legal window",
+            "event 6 bracket not wholly inside legal window",
+            "event 7 bracket not wholly inside legal window",
+            "event 8 bracket not wholly inside legal window"
+          ],
+          "status": "evidence_insufficient",
+          "voltage_budget_V": 1.0099999999999999e-06
+        },
+        "Q3": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "incomplete",
+          "evidence_reasons": [
+            "event 1 bracket not wholly inside legal window",
+            "event 2 bracket not wholly inside legal window",
+            "event 3 bracket not wholly inside legal window",
+            "event 4 bracket not wholly inside legal window",
+            "event 5 bracket not wholly inside legal window",
+            "event 6 bracket not wholly inside legal window",
+            "event 7 bracket not wholly inside legal window",
+            "event 8 bracket not wholly inside legal window"
+          ],
+          "status": "evidence_insufficient",
+          "voltage_budget_V": 1.0099999999999999e-07
+        }
+      }
+    },
+    {
+      "condition": "LP-IDT",
+      "backend": "spectre",
+      "profile": "deep_bound",
+      "model_sha256": "f377a2b9f55b9e5d083bd0ba7526583b0a3a3f90b6f38af0c953395746507236",
+      "waveform_sha256": "e41e3e25a5d3cc6fa841457de962dd5a84bd0276a4583a93a69cd933d45471e3",
+      "input_identity_sha256": "7e0aff959ed536a0044a661f09ccaaf831e9baab409314e2a4123d1f213bda0b",
+      "assessment": {
+        "schema_version": 2,
+        "condition": "LP-IDT",
+        "reference": "represented PWL and first-order ODE; independent bounded arithmetic",
+        "claim": "finite native/forced observations including named boundaries; not all-time proof",
+        "tiers": {
+          "Q1": {
+            "status": "pass",
+            "voltage_budget_V": 1.0099999999999998e-05,
+            "reasons": []
+          },
+          "Q2": {
+            "status": "pass",
+            "voltage_budget_V": 1.0099999999999999e-06,
+            "reasons": []
+          },
+          "Q3": {
+            "status": "pass",
+            "voltage_budget_V": 1.0099999999999999e-07,
+            "reasons": []
+          }
+        },
+        "behavior": {
+          "status": "pass",
+          "issues": []
+        },
+        "observation_issues": [],
+        "row_count": 21615,
+        "extent_s": [
+          0.0,
+          8e-06
+        ],
+        "max_gap_s": 4.0000000000003005e-10,
+        "time_serialization_bound_s": 2.710505431213761e-20,
+        "input_errors": {
+          "u": {
+            "lower_V": 0.0,
+            "upper_V": 2.910345575646289e-14,
+            "scale_V": 1.0
+          }
+        },
+        "error_lower_V": 5.538804748184134e-09,
+        "error_upper_V": 5.53891682519847e-09,
+        "hold_drift_lower_V": 0.0,
+        "hold_drift_upper_V": 0.0,
+        "observation_uncertainty_V": 1.103006574965093e-13,
+        "reference_uncertainty_V": 1.1102230246251565e-16,
+        "max_callback_bracket_s": 0.0,
+        "event_records": [],
+        "worst": {
+          "time_s": 3.1870500000000024e-06,
+          "actual_V": 0.43799982279962235,
+          "reference_V": [
+            0.4379998172607073,
+            0.4379998172608158
+          ]
+        }
+      },
+      "settings": {
+        "status": "qualified",
+        "issues": [],
+        "notes": [
+          "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+        ],
+        "actual": {
+          "reltol": 1e-11,
+          "vabstol": 1.0000000000000002e-14,
+          "iabstol": 1e-17,
+          "stop": 8e-06,
+          "maxstep": 4e-10,
+          "method": "traponly"
+        },
+        "requested": {
+          "reltol": 1e-10,
+          "vabstol": 1e-14,
+          "iabstol": 1e-17,
+          "stop": 8e-06,
+          "maxstep": 4e-10
+        },
+        "additional_controls": {},
+        "scope": "finite native/forced observations; runtime control readbacks and any separately audited parameter paths are listed explicitly",
+        "verified_extra_controls": {}
+      },
+      "boundary_witnesses": [],
+      "axes": {
+        "Q1": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.0099999999999998e-05
+        },
+        "Q2": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.0099999999999999e-06
+        },
+        "Q3": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.0099999999999999e-07
+        }
+      }
+    },
+    {
+      "condition": "LP-NONZERO",
+      "backend": "spectre",
+      "profile": "deep_bound",
+      "model_sha256": "747c09cc841a07d6a51491ee2124f750451c82b8dd0034e1cc682059db3175b9",
+      "waveform_sha256": "6519a1bc962e8b948390bec118f41027af4ed2797b560f68703d0b1a157cc098",
+      "input_identity_sha256": "947dae1b592e5f16fa875415df8544aa621935d57e9b4f29bfb9a6da1c57ca4f",
+      "assessment": {
+        "schema_version": 2,
+        "condition": "LP-NONZERO",
+        "reference": "represented PWL and first-order ODE; independent bounded arithmetic",
+        "claim": "finite native/forced observations including named boundaries; not all-time proof",
+        "tiers": {
+          "Q1": {
+            "status": "pass",
+            "voltage_budget_V": 1.0099999999999998e-05,
+            "reasons": []
+          },
+          "Q2": {
+            "status": "pass",
+            "voltage_budget_V": 1.0099999999999999e-06,
+            "reasons": []
+          },
+          "Q3": {
+            "status": "pass",
+            "voltage_budget_V": 1.0099999999999999e-07,
+            "reasons": []
+          }
+        },
+        "behavior": {
+          "status": "pass",
+          "issues": []
+        },
+        "observation_issues": [],
+        "row_count": 20292,
+        "extent_s": [
+          0.0,
+          8e-06
+        ],
+        "max_gap_s": 4.0000000000003005e-10,
+        "time_serialization_bound_s": 2.710505431213761e-20,
+        "input_errors": {
+          "u": {
+            "lower_V": 0.0,
+            "upper_V": 2.2327192178428496e-14,
+            "scale_V": 1.0
+          }
+        },
+        "error_lower_V": 5.0521520716939605e-09,
+        "error_upper_V": 5.052264046359611e-09,
+        "hold_drift_lower_V": 0.0,
+        "hold_drift_upper_V": 0.0,
+        "observation_uncertainty_V": 1.103006574965093e-13,
+        "reference_uncertainty_V": 1.1102230246251565e-16,
+        "max_callback_bracket_s": 0.0,
+        "event_records": [],
+        "worst": {
+          "time_s": 4.999550000000002e-06,
+          "actual_V": -0.009241273091942913,
+          "reference_V": [
+            -0.009241268039789065,
+            -0.009241268039680643
+          ]
+        }
+      },
+      "settings": {
+        "status": "qualified",
+        "issues": [],
+        "notes": [
+          "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+        ],
+        "actual": {
+          "reltol": 1e-11,
+          "vabstol": 1.0000000000000002e-14,
+          "iabstol": 1e-17,
+          "stop": 8e-06,
+          "maxstep": 4e-10,
+          "method": "traponly"
+        },
+        "requested": {
+          "reltol": 1e-10,
+          "vabstol": 1e-14,
+          "iabstol": 1e-17,
+          "stop": 8e-06,
+          "maxstep": 4e-10
+        },
+        "additional_controls": {},
+        "scope": "finite native/forced observations; runtime control readbacks and any separately audited parameter paths are listed explicitly",
+        "verified_extra_controls": {}
+      },
+      "boundary_witnesses": [],
+      "axes": {
+        "Q1": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.0099999999999998e-05
+        },
+        "Q2": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.0099999999999999e-06
+        },
+        "Q3": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.0099999999999999e-07
+        }
+      }
+    },
+    {
+      "condition": "LP-RAMP",
+      "backend": "spectre",
+      "profile": "deep_bound",
+      "model_sha256": "747c09cc841a07d6a51491ee2124f750451c82b8dd0034e1cc682059db3175b9",
+      "waveform_sha256": "344dff49eb81a0b692c72dffc70e0aaf8fd781daba357d6873e507aa8873d279",
+      "input_identity_sha256": "8f8791ad15e55bd4cc358d177d32ad4b138a70c828d44ae6793daf014903ec74",
+      "assessment": {
+        "schema_version": 2,
+        "condition": "LP-RAMP",
+        "reference": "represented PWL and first-order ODE; independent bounded arithmetic",
+        "claim": "finite native/forced observations including named boundaries; not all-time proof",
+        "tiers": {
+          "Q1": {
+            "status": "pass",
+            "voltage_budget_V": 1.0099999999999998e-05,
+            "reasons": []
+          },
+          "Q2": {
+            "status": "pass",
+            "voltage_budget_V": 1.0099999999999999e-06,
+            "reasons": []
+          },
+          "Q3": {
+            "status": "pass",
+            "voltage_budget_V": 1.0099999999999999e-07,
+            "reasons": []
+          }
+        },
+        "behavior": {
+          "status": "pass",
+          "issues": []
+        },
+        "observation_issues": [],
+        "row_count": 21615,
+        "extent_s": [
+          0.0,
+          8e-06
+        ],
+        "max_gap_s": 4.0000000000003005e-10,
+        "time_serialization_bound_s": 2.710505431213761e-20,
+        "input_errors": {
+          "u": {
+            "lower_V": 0.0,
+            "upper_V": 2.910345575646289e-14,
+            "scale_V": 1.0
+          }
+        },
+        "error_lower_V": 5.538803249383051e-09,
+        "error_upper_V": 5.538915326397387e-09,
+        "hold_drift_lower_V": 0.0,
+        "hold_drift_upper_V": 0.0,
+        "observation_uncertainty_V": 1.103006574965093e-13,
+        "reference_uncertainty_V": 1.1102230246251565e-16,
+        "max_callback_bracket_s": 0.0,
+        "event_records": [],
+        "worst": {
+          "time_s": 3.1870500000000024e-06,
+          "actual_V": 0.43799982279962085,
+          "reference_V": [
+            0.4379998172607073,
+            0.4379998172608158
+          ]
+        }
+      },
+      "settings": {
+        "status": "qualified",
+        "issues": [],
+        "notes": [
+          "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+        ],
+        "actual": {
+          "reltol": 1e-11,
+          "vabstol": 1.0000000000000002e-14,
+          "iabstol": 1e-17,
+          "stop": 8e-06,
+          "maxstep": 4e-10,
+          "method": "traponly"
+        },
+        "requested": {
+          "reltol": 1e-10,
+          "vabstol": 1e-14,
+          "iabstol": 1e-17,
+          "stop": 8e-06,
+          "maxstep": 4e-10
+        },
+        "additional_controls": {},
+        "scope": "finite native/forced observations; runtime control readbacks and any separately audited parameter paths are listed explicitly",
+        "verified_extra_controls": {}
+      },
+      "boundary_witnesses": [],
+      "axes": {
+        "Q1": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.0099999999999998e-05
+        },
+        "Q2": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.0099999999999999e-06
+        },
+        "Q3": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.0099999999999999e-07
+        }
+      }
+    },
+    {
+      "condition": "LP-SMALL",
+      "backend": "spectre",
+      "profile": "deep_bound",
+      "model_sha256": "747c09cc841a07d6a51491ee2124f750451c82b8dd0034e1cc682059db3175b9",
+      "waveform_sha256": "b9f794829d63eba1c764ee31d2346a86034b941f8aba8dd285f6e6580371d2b3",
+      "input_identity_sha256": "3624a8e0cd1919326f6b42c613dfc6aff422c3992536258d740e9b2e217929cd",
+      "assessment": {
+        "schema_version": 2,
+        "condition": "LP-SMALL",
+        "reference": "represented PWL and first-order ODE; independent bounded arithmetic",
+        "claim": "finite native/forced observations including named boundaries; not all-time proof",
+        "tiers": {
+          "Q1": {
+            "status": "pass",
+            "voltage_budget_V": 1.1e-07,
+            "reasons": []
+          },
+          "Q2": {
+            "status": "pass",
+            "voltage_budget_V": 1.1000000000000001e-08,
+            "reasons": []
+          },
+          "Q3": {
+            "status": "pass",
+            "voltage_budget_V": 1.1000000000000001e-09,
+            "reasons": []
+          }
+        },
+        "behavior": {
+          "status": "pass",
+          "issues": []
+        },
+        "observation_issues": [],
+        "row_count": 20292,
+        "extent_s": [
+          0.0,
+          8e-06
+        ],
+        "max_gap_s": 4.0000000000003005e-10,
+        "time_serialization_bound_s": 2.710505431213761e-20,
+        "input_errors": {
+          "u": {
+            "lower_V": 0.0,
+            "upper_V": 2.905661822261152e-17,
+            "scale_V": 0.001
+          }
+        },
+        "error_lower_V": 5.143916325875408e-12,
+        "error_upper_V": 5.1440282697497175e-12,
+        "hold_drift_lower_V": 0.0,
+        "hold_drift_upper_V": 0.0,
+        "observation_uncertainty_V": 1.102633609417758e-16,
+        "reference_uncertainty_V": 2.1659928421701774e-19,
+        "max_callback_bracket_s": 0.0,
+        "event_records": [],
+        "worst": {
+          "time_s": 3.2760000000000018e-06,
+          "actual_V": 0.0004071787334384562,
+          "reference_V": [
+            0.00040717872829442966,
+            0.00040717872829453813
+          ]
+        }
+      },
+      "settings": {
+        "status": "qualified",
+        "issues": [],
+        "notes": [
+          "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+        ],
+        "actual": {
+          "reltol": 1e-11,
+          "vabstol": 1.0000000000000002e-14,
+          "iabstol": 1e-17,
+          "stop": 8e-06,
+          "maxstep": 4e-10,
+          "method": "traponly"
+        },
+        "requested": {
+          "reltol": 1e-10,
+          "vabstol": 1e-14,
+          "iabstol": 1e-17,
+          "stop": 8e-06,
+          "maxstep": 4e-10
+        },
+        "additional_controls": {},
+        "scope": "finite native/forced observations; runtime control readbacks and any separately audited parameter paths are listed explicitly",
+        "verified_extra_controls": {}
+      },
+      "boundary_witnesses": [],
+      "axes": {
+        "Q1": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.1e-07
+        },
+        "Q2": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.1000000000000001e-08
+        },
+        "Q3": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.1000000000000001e-09
+        }
+      }
+    },
+    {
+      "condition": "SH-X-RAMP",
+      "backend": "spectre",
+      "profile": "base",
+      "model_sha256": "c420e34a54b6b055548504ba20d78c74bba04dce3de2f633b355ff0552c17ce4",
+      "waveform_sha256": "25489f7af6902b4278302a6292d4a136cebd3e958d3a30ffed39948d9a6c2b80",
+      "input_identity_sha256": "71d5987da4c0799a82a412cf87803793583d59102fccf58dda02da7137b97514",
+      "assessment": {
+        "schema_version": 2,
+        "condition": "SH-X-RAMP",
+        "reference": "represented PWL and first-order ODE; independent bounded arithmetic",
+        "claim": "finite native/forced observations including named boundaries; not all-time proof",
+        "tiers": {
+          "Q1": {
+            "status": "pass",
+            "voltage_budget_V": 1.0099999999999998e-05,
+            "reasons": []
+          },
+          "Q2": {
+            "status": "pass",
+            "voltage_budget_V": 1.0099999999999999e-06,
+            "reasons": []
+          },
+          "Q3": {
+            "status": "pass",
+            "voltage_budget_V": 1.0099999999999999e-07,
+            "reasons": []
+          }
+        },
+        "behavior": {
+          "status": "pass",
+          "issues": []
+        },
+        "observation_issues": [],
+        "row_count": 21857,
+        "extent_s": [
+          0.0,
+          8.5e-06
+        ],
+        "max_gap_s": 3.125000000000076e-08,
+        "time_serialization_bound_s": 2.710505431213761e-20,
+        "input_errors": {
+          "u": {
+            "lower_V": 0.0,
+            "upper_V": 7.308390004290288e-15,
+            "scale_V": 1.0
+          },
+          "clk": {
+            "lower_V": 0.0,
+            "upper_V": 2.729379222632415e-13,
+            "scale_V": 1.0
+          }
+        },
+        "error_lower_V": 0.0,
+        "error_upper_V": 1.8596235662471372e-15,
+        "hold_drift_lower_V": 0.0,
+        "hold_drift_upper_V": 3.608224830031759e-15,
+        "observation_uncertainty_V": 1.8318679906315083e-15,
+        "reference_uncertainty_V": 1.1102058013848124e-16,
+        "max_callback_bracket_s": 0.0,
+        "event_records": [
+          {
+            "index": 1,
+            "counter_bracket_s": [
+              9.999999992310378e-07,
+              1.0000000392157132e-06
+            ],
+            "qualified_callback_s": [
+              1.0000000392156861e-06,
+              1.0000000392156861e-06
+            ],
+            "independent_event_evidence_used": true,
+            "legal_s": [
+              1e-06,
+              1.0001e-06
+            ],
+            "clock_root_uncertainty_s": 5.45875844526483e-20,
+            "timing_status": "pass",
+            "sample_reference_range_V": [
+              -0.1999999921568628,
+              -0.19999999215686276
+            ],
+            "error_lower_V": 0.0,
+            "error_upper_V": 1.8596235662471372e-15,
+            "hold_drift_upper_V": 3.608224830031759e-15,
+            "observations": 2730
+          },
+          {
+            "index": 2,
+            "counter_bracket_s": [
+              1.999999999231038e-06,
+              2.000000039215713e-06
+            ],
+            "qualified_callback_s": [
+              2.000000039215686e-06,
+              2.000000039215686e-06
+            ],
+            "independent_event_evidence_used": true,
+            "legal_s": [
+              2e-06,
+              2.0000999999999997e-06
+            ],
+            "clock_root_uncertainty_s": 5.45875844526483e-20,
+            "timing_status": "pass",
+            "sample_reference_range_V": [
+              7.843137235188273e-09,
+              7.843137235188275e-09
+            ],
+            "error_lower_V": 0.0,
+            "error_upper_V": 1.7919422456297296e-15,
+            "hold_drift_upper_V": 3.552713678800501e-15,
+            "observations": 2730
+          },
+          {
+            "index": 3,
+            "counter_bracket_s": [
+              2.999999999231038e-06,
+              3.0000000392157134e-06
+            ],
+            "qualified_callback_s": [
+              3.0000000392156863e-06,
+              3.0000000392156863e-06
+            ],
+            "independent_event_evidence_used": true,
+            "legal_s": [
+              3e-06,
+              3.0001e-06
+            ],
+            "clock_root_uncertainty_s": 5.45875844526483e-20,
+            "timing_status": "pass",
+            "sample_reference_range_V": [
+              0.20000000784313726,
+              0.2000000078431373
+            ],
+            "error_lower_V": 0.0,
+            "error_upper_V": 1.8318679906315083e-15,
+            "hold_drift_upper_V": 3.552713678800501e-15,
+            "observations": 2730
+          },
+          {
+            "index": 4,
+            "counter_bracket_s": [
+              3.999999999231038e-06,
+              4.0000000392157135e-06
+            ],
+            "qualified_callback_s": [
+              4.000000039215686e-06,
+              4.000000039215686e-06
+            ],
+            "independent_event_evidence_used": true,
+            "legal_s": [
+              4e-06,
+              4.0001e-06
+            ],
+            "clock_root_uncertainty_s": 5.45875844526483e-20,
+            "timing_status": "pass",
+            "sample_reference_range_V": [
+              0.39999999215686266,
+              0.3999999921568627
+            ],
+            "error_lower_V": 0.0,
+            "error_upper_V": 1.8318679906315083e-15,
+            "hold_drift_upper_V": 3.552713678800501e-15,
+            "observations": 2730
+          },
+          {
+            "index": 5,
+            "counter_bracket_s": [
+              4.999999999231038e-06,
+              5.000000039215713e-06
+            ],
+            "qualified_callback_s": [
+              5.000000039215686e-06,
+              5.000000039215686e-06
+            ],
+            "independent_event_evidence_used": true,
+            "legal_s": [
+              4.9999999999999996e-06,
+              5.0001e-06
+            ],
+            "clock_root_uncertainty_s": 5.45875844526483e-20,
+            "timing_status": "pass",
+            "sample_reference_range_V": [
+              0.19999999215686273,
+              0.19999999215686276
+            ],
+            "error_lower_V": 0.0,
+            "error_upper_V": 1.8318679906315083e-15,
+            "hold_drift_upper_V": 3.58046925441613e-15,
+            "observations": 2730
+          },
+          {
+            "index": 6,
+            "counter_bracket_s": [
+              5.999999999231038e-06,
+              6.000000039215714e-06
+            ],
+            "qualified_callback_s": [
+              6.000000039215687e-06,
+              6.000000039215687e-06
+            ],
+            "independent_event_evidence_used": true,
+            "legal_s": [
+              6e-06,
+              6.0001e-06
+            ],
+            "clock_root_uncertainty_s": 5.45875844526483e-20,
+            "timing_status": "pass",
+            "sample_reference_range_V": [
+              -7.843137404594865e-09,
+              -7.843137404594863e-09
+            ],
+            "error_lower_V": 0.0,
+            "error_upper_V": 1.789069109872643e-15,
+            "hold_drift_upper_V": 3.552713678800501e-15,
+            "observations": 2730
+          },
+          {
+            "index": 7,
+            "counter_bracket_s": [
+              6.999999999231038e-06,
+              7.000000039215714e-06
+            ],
+            "qualified_callback_s": [
+              7.0000000392156865e-06,
+              7.0000000392156865e-06
+            ],
+            "independent_event_evidence_used": true,
+            "legal_s": [
+              7e-06,
+              7.0001e-06
+            ],
+            "clock_root_uncertainty_s": 5.45875844526483e-20,
+            "timing_status": "pass",
+            "sample_reference_range_V": [
+              -0.2000000078431374,
+              -0.20000000784313737
+            ],
+            "error_lower_V": 0.0,
+            "error_upper_V": 1.8596235662471372e-15,
+            "hold_drift_upper_V": 3.552713678800501e-15,
+            "observations": 2730
+          },
+          {
+            "index": 8,
+            "counter_bracket_s": [
+              7.999999999231038e-06,
+              8.000000039215712e-06
+            ],
+            "qualified_callback_s": [
+              8.000000039215685e-06,
+              8.000000039215685e-06
+            ],
+            "independent_event_evidence_used": true,
+            "legal_s": [
+              8e-06,
+              8.0001e-06
+            ],
+            "clock_root_uncertainty_s": 5.45875844526483e-20,
+            "timing_status": "pass",
+            "sample_reference_range_V": [
+              -0.3999999921568629,
+              -0.3999999921568628
+            ],
+            "error_lower_V": 0.0,
+            "error_upper_V": 1.8318679906315083e-15,
+            "hold_drift_upper_V": 3.552713678800501e-15,
+            "observations": 2632
+          }
+        ],
+        "worst": {
+          "time_s": 1.0000000792003075e-06,
+          "actual_V": -0.1999999921568627,
+          "reference_V": [
+            -0.1999999921568628,
+            -0.19999999215686276
+          ]
+        }
+      },
+      "settings": {
+        "status": "qualified",
+        "issues": [],
+        "notes": [
+          "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+        ],
+        "actual": {
+          "reltol": 1e-06,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 8.5e-06,
+          "maxstep": 3.1250000000000005e-08,
+          "method": "traponly"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 8.5e-06,
+          "maxstep": 3.125e-08
+        },
+        "additional_controls": {},
+        "scope": "finite native/forced observations; runtime control readbacks and any separately audited parameter paths are listed explicitly",
+        "verified_extra_controls": {}
+      },
+      "boundary_witnesses": [],
+      "axes": {
+        "Q1": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.0099999999999998e-05
+        },
+        "Q2": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.0099999999999999e-06
+        },
+        "Q3": {
+          "numerical": "pass",
+          "behavior": "pass",
+          "evidence": "complete",
+          "evidence_reasons": [],
+          "status": "pass",
+          "voltage_budget_V": 1.0099999999999999e-07
+        }
+      }
+    }
+  ],
+  "recovery_witnesses": [
+    {
+      "before": {
+        "consumer": "y",
+        "representative": 4.986651684118354e-05,
+        "enclosure": [
+          4.98665168188906e-05,
+          4.986651686356668e-05
+        ],
+        "error_bound": 2.238314378679232e-14,
+        "budget": 1.4986651684118354e-14
+      },
+      "after": {
+        "condition": "LP-RAMP",
+        "time_s": 4.130859374999995e-06,
+        "value_V": 4.986651684118354e-05,
+        "enclosure_V": [
+          4.986651683680856e-05,
+          4.98665168458647e-05
+        ],
+        "error_bound_V": 4.681158076186992e-15,
+        "internal_budget_V": 1.4986651684118354e-14,
+        "independent_reference_V": [
+          4.986651684127618e-05,
+          4.9866516841276184e-05
+        ],
+        "reference_error_upper_V": 9.264507563888635e-17
+      },
+      "before_sha256": "5f434be925d3f8d631a787f8224158e53374620477ca6e93b8214710b5b5c826",
+      "after_sha256": "792490f960b29a76913e73077c06b5ea1276c7c798f0e5b608d0058b825e7722"
+    },
+    {
+      "before": {
+        "consumer": "y",
+        "representative": 3.0937639339811973e-06,
+        "enclosure": [
+          3.0937639128800205e-06,
+          3.0937639551743144e-06
+        ],
+        "error_bound": 2.1193117129525126e-14,
+        "budget": 1.0309376393398119e-14
+      },
+      "after": {
+        "condition": "LP-NONZERO",
+        "time_s": 4.178710937499984e-06,
+        "value_V": 3.0937639339811973e-06,
+        "enclosure_V": [
+          3.0937639291361142e-06,
+          3.093763939103836e-06
+        ],
+        "error_bound_V": 5.122638848075985e-15,
+        "internal_budget_V": 1.030937639339812e-14,
+        "independent_reference_V": [
+          3.09376393405859e-06,
+          3.0937639340585903e-06
+        ],
+        "reference_error_upper_V": 7.73929768741518e-17
+      },
+      "before_sha256": "48ef1cd2f7ae0f07cb42b6bdebae90f0a0de3f093f459197623d77ba16e75521",
+      "after_sha256": "6dce1ac181147205e657bad33f0cf947e8d06cde14889dd36ccbdc14f4ebb601"
+    },
+    {
+      "before": {
+        "consumer": "y",
+        "representative": 0.0004429016459217536,
+        "enclosure": [
+          0.00044290164586302256,
+          0.00044290164598048465
+        ],
+        "error_bound": 5.87310690532139e-14,
+        "budget": 5.429016459217535e-14
+      },
+      "after": {
+        "condition": "LP-IDT",
+        "time_s": 4.129882812499996e-06,
+        "value_V": 0.00044290164592167226,
+        "enclosure_V": [
+          0.0004429016459131509,
+          0.00044290164593019366
+        ],
+        "error_bound_V": 8.52139539486707e-15,
+        "internal_budget_V": 5.4290164592167227e-14,
+        "independent_reference_V": [
+          0.00044290164592200387,
+          0.0004429016459220039
+        ],
+        "reference_error_upper_V": 3.316574445633158e-16
+      },
+      "before_sha256": "cd96868828d5e7123c9ac9ac516c383a820640845fb3fc7702bab9a8d46ba3ff",
+      "after_sha256": "2b7172fb61aba3758b00a2dd6e7f93bac072bf9df78ee18c59653ac0f1c5b619"
+    }
+  ],
+  "boundary_probe": {
+    "method": "represented-source-neighbor-queries-v1",
+    "waveform_rows_sha256": "5c065b8c1a1469d13249ecd83d73c9f86d17ad7a160714626fb1a9a02dcb1ec1",
+    "roots_rational_s": [
+      "18889465931478581/18889465931478580854784",
+      "18889465931478579/9444732965739290427392",
+      "14167099448608935/4722366482869645213696",
+      "4722366482869645/1180591620717411303424",
+      "11805916207174113/2361183241434822606848",
+      "14167099448608935/2361183241434822606848",
+      "16528282690043757/2361183241434822606848",
+      "4722366482869645/590295810358705651712"
+    ],
+    "observations": [
+      {
+        "time_s": 9.999999999999993e-07,
+        "expected_count": 0,
+        "actual_count": -0.0,
+        "count_matches": true,
+        "held_error_upper_V": 0.0
+      },
+      {
+        "time_s": 9.999999999999995e-07,
+        "expected_count": 0,
+        "actual_count": -0.0,
+        "count_matches": true,
+        "held_error_upper_V": 0.0
+      },
+      {
+        "time_s": 9.999999999999997e-07,
+        "expected_count": 0,
+        "actual_count": -0.0,
+        "count_matches": true,
+        "held_error_upper_V": 0.0
+      },
+      {
+        "time_s": 1e-06,
+        "expected_count": 0,
+        "actual_count": -0.0,
+        "count_matches": true,
+        "held_error_upper_V": 0.0
+      },
+      {
+        "time_s": 1.0000000000000002e-06,
+        "expected_count": 1,
+        "actual_count": 1.0,
+        "count_matches": true,
+        "held_error_upper_V": 1.0587911840678756e-17
+      },
+      {
+        "time_s": 1.0000000000000004e-06,
+        "expected_count": 1,
+        "actual_count": 1.0,
+        "count_matches": true,
+        "held_error_upper_V": 1.0587911840678756e-17
+      },
+      {
+        "time_s": 1.0000000000000006e-06,
+        "expected_count": 1,
+        "actual_count": 1.0,
+        "count_matches": true,
+        "held_error_upper_V": 1.0587911840678756e-17
+      },
+      {
+        "time_s": 1.9999999999999986e-06,
+        "expected_count": 1,
+        "actual_count": 1.0,
+        "count_matches": true,
+        "held_error_upper_V": 1.0587911840678756e-17
+      },
+      {
+        "time_s": 1.999999999999999e-06,
+        "expected_count": 1,
+        "actual_count": 1.0,
+        "count_matches": true,
+        "held_error_upper_V": 1.0587911840678756e-17
+      },
+      {
+        "time_s": 1.9999999999999995e-06,
+        "expected_count": 1,
+        "actual_count": 1.0,
+        "count_matches": true,
+        "held_error_upper_V": 1.0587911840678756e-17
+      },
+      {
+        "time_s": 2e-06,
+        "expected_count": 2,
+        "actual_count": 2.0,
+        "count_matches": true,
+        "held_error_upper_V": 2.1175823681357512e-17
+      },
+      {
+        "time_s": 2.0000000000000003e-06,
+        "expected_count": 2,
+        "actual_count": 2.0,
+        "count_matches": true,
+        "held_error_upper_V": 2.1175823681357512e-17
+      },
+      {
+        "time_s": 2.0000000000000008e-06,
+        "expected_count": 2,
+        "actual_count": 2.0,
+        "count_matches": true,
+        "held_error_upper_V": 2.1175823681357512e-17
+      },
+      {
+        "time_s": 2.000000000000001e-06,
+        "expected_count": 2,
+        "actual_count": 2.0,
+        "count_matches": true,
+        "held_error_upper_V": 2.1175823681357512e-17
+      },
+      {
+        "time_s": 2.999999999999999e-06,
+        "expected_count": 2,
+        "actual_count": 2.0,
+        "count_matches": true,
+        "held_error_upper_V": 2.1175823681357512e-17
+      },
+      {
+        "time_s": 2.9999999999999992e-06,
+        "expected_count": 2,
+        "actual_count": 2.0,
+        "count_matches": true,
+        "held_error_upper_V": 2.1175823681357512e-17
+      },
+      {
+        "time_s": 2.9999999999999997e-06,
+        "expected_count": 2,
+        "actual_count": 2.0,
+        "count_matches": true,
+        "held_error_upper_V": 2.1175823681357512e-17
+      },
+      {
+        "time_s": 3e-06,
+        "expected_count": 3,
+        "actual_count": 3.0,
+        "count_matches": true,
+        "held_error_upper_V": 2.7755575615628914e-17
+      },
+      {
+        "time_s": 3.0000000000000005e-06,
+        "expected_count": 3,
+        "actual_count": 3.0,
+        "count_matches": true,
+        "held_error_upper_V": 2.7755575615628914e-17
+      },
+      {
+        "time_s": 3.000000000000001e-06,
+        "expected_count": 3,
+        "actual_count": 3.0,
+        "count_matches": true,
+        "held_error_upper_V": 2.7755575615628914e-17
+      },
+      {
+        "time_s": 3.0000000000000013e-06,
+        "expected_count": 3,
+        "actual_count": 3.0,
+        "count_matches": true,
+        "held_error_upper_V": 2.7755575615628914e-17
+      },
+      {
+        "time_s": 3.999999999999997e-06,
+        "expected_count": 3,
+        "actual_count": 3.0,
+        "count_matches": true,
+        "held_error_upper_V": 2.7755575615628914e-17
+      },
+      {
+        "time_s": 3.999999999999998e-06,
+        "expected_count": 3,
+        "actual_count": 3.0,
+        "count_matches": true,
+        "held_error_upper_V": 2.7755575615628914e-17
+      },
+      {
+        "time_s": 3.999999999999999e-06,
+        "expected_count": 3,
+        "actual_count": 3.0,
+        "count_matches": true,
+        "held_error_upper_V": 2.7755575615628914e-17
+      },
+      {
+        "time_s": 4e-06,
+        "expected_count": 4,
+        "actual_count": 4.0,
+        "count_matches": true,
+        "held_error_upper_V": 0.0
+      },
+      {
+        "time_s": 4.000000000000001e-06,
+        "expected_count": 4,
+        "actual_count": 4.0,
+        "count_matches": true,
+        "held_error_upper_V": 0.0
+      },
+      {
+        "time_s": 4.0000000000000015e-06,
+        "expected_count": 4,
+        "actual_count": 4.0,
+        "count_matches": true,
+        "held_error_upper_V": 0.0
+      },
+      {
+        "time_s": 4.000000000000002e-06,
+        "expected_count": 4,
+        "actual_count": 4.0,
+        "count_matches": true,
+        "held_error_upper_V": 0.0
+      },
+      {
+        "time_s": 4.999999999999997e-06,
+        "expected_count": 4,
+        "actual_count": 4.0,
+        "count_matches": true,
+        "held_error_upper_V": 0.0
+      },
+      {
+        "time_s": 4.999999999999998e-06,
+        "expected_count": 4,
+        "actual_count": 4.0,
+        "count_matches": true,
+        "held_error_upper_V": 0.0
+      },
+      {
+        "time_s": 4.999999999999999e-06,
+        "expected_count": 4,
+        "actual_count": 4.0,
+        "count_matches": true,
+        "held_error_upper_V": 0.0
+      },
+      {
+        "time_s": 4.9999999999999996e-06,
+        "expected_count": 4,
+        "actual_count": 4.0,
+        "count_matches": true,
+        "held_error_upper_V": 0.0
+      },
+      {
+        "time_s": 5e-06,
+        "expected_count": 5,
+        "actual_count": 5.0,
+        "count_matches": true,
+        "held_error_upper_V": 1.2418180633105846e-16
+      },
+      {
+        "time_s": 5.000000000000001e-06,
+        "expected_count": 5,
+        "actual_count": 5.0,
+        "count_matches": true,
+        "held_error_upper_V": 1.2418180633105846e-16
+      },
+      {
+        "time_s": 5.000000000000002e-06,
+        "expected_count": 5,
+        "actual_count": 5.0,
+        "count_matches": true,
+        "held_error_upper_V": 1.2418180633105846e-16
+      },
+      {
+        "time_s": 5.999999999999998e-06,
+        "expected_count": 5,
+        "actual_count": 5.0,
+        "count_matches": true,
+        "held_error_upper_V": 1.2418180633105846e-16
+      },
+      {
+        "time_s": 5.9999999999999985e-06,
+        "expected_count": 5,
+        "actual_count": 5.0,
+        "count_matches": true,
+        "held_error_upper_V": 1.2418180633105846e-16
+      },
+      {
+        "time_s": 5.999999999999999e-06,
+        "expected_count": 5,
+        "actual_count": 5.0,
+        "count_matches": true,
+        "held_error_upper_V": 1.2418180633105846e-16
+      },
+      {
+        "time_s": 6e-06,
+        "expected_count": 6,
+        "actual_count": 6.0,
+        "count_matches": true,
+        "held_error_upper_V": 1.1102230246251565e-16
+      },
+      {
+        "time_s": 6.000000000000001e-06,
+        "expected_count": 6,
+        "actual_count": 6.0,
+        "count_matches": true,
+        "held_error_upper_V": 1.1102230246251565e-16
+      },
+      {
+        "time_s": 6.000000000000002e-06,
+        "expected_count": 6,
+        "actual_count": 6.0,
+        "count_matches": true,
+        "held_error_upper_V": 1.1102230246251565e-16
+      },
+      {
+        "time_s": 6.000000000000003e-06,
+        "expected_count": 6,
+        "actual_count": 6.0,
+        "count_matches": true,
+        "held_error_upper_V": 1.1102230246251565e-16
+      },
+      {
+        "time_s": 6.9999999999999965e-06,
+        "expected_count": 6,
+        "actual_count": 6.0,
+        "count_matches": true,
+        "held_error_upper_V": 1.1102230246251565e-16
+      },
+      {
+        "time_s": 6.999999999999997e-06,
+        "expected_count": 6,
+        "actual_count": 6.0,
+        "count_matches": true,
+        "held_error_upper_V": 1.1102230246251565e-16
+      },
+      {
+        "time_s": 6.999999999999998e-06,
+        "expected_count": 6,
+        "actual_count": 6.0,
+        "count_matches": true,
+        "held_error_upper_V": 1.1102230246251565e-16
+      },
+      {
+        "time_s": 6.999999999999999e-06,
+        "expected_count": 6,
+        "actual_count": 6.0,
+        "count_matches": true,
+        "held_error_upper_V": 1.1102230246251565e-16
+      },
+      {
+        "time_s": 7e-06,
+        "expected_count": 7,
+        "actual_count": 7.0,
+        "count_matches": true,
+        "held_error_upper_V": 7.010722297834394e-17
+      },
+      {
+        "time_s": 7.000000000000001e-06,
+        "expected_count": 7,
+        "actual_count": 7.0,
+        "count_matches": true,
+        "held_error_upper_V": 7.010722297834394e-17
+      },
+      {
+        "time_s": 7.000000000000002e-06,
+        "expected_count": 7,
+        "actual_count": 7.0,
+        "count_matches": true,
+        "held_error_upper_V": 7.010722297834394e-17
+      },
+      {
+        "time_s": 7.999999999999995e-06,
+        "expected_count": 7,
+        "actual_count": 7.0,
+        "count_matches": true,
+        "held_error_upper_V": 7.010722297834394e-17
+      },
+      {
+        "time_s": 7.999999999999996e-06,
+        "expected_count": 7,
+        "actual_count": 7.0,
+        "count_matches": true,
+        "held_error_upper_V": 7.010722297834394e-17
+      },
+      {
+        "time_s": 7.999999999999998e-06,
+        "expected_count": 7,
+        "actual_count": 7.0,
+        "count_matches": true,
+        "held_error_upper_V": 7.010722297834394e-17
+      },
+      {
+        "time_s": 8e-06,
+        "expected_count": 8,
+        "actual_count": 8.0,
+        "count_matches": true,
+        "held_error_upper_V": 0.0
+      },
+      {
+        "time_s": 8.000000000000001e-06,
+        "expected_count": 8,
+        "actual_count": 8.0,
+        "count_matches": true,
+        "held_error_upper_V": 0.0
+      },
+      {
+        "time_s": 8.000000000000003e-06,
+        "expected_count": 8,
+        "actual_count": 8.0,
+        "count_matches": true,
+        "held_error_upper_V": 0.0
+      },
+      {
+        "time_s": 8.000000000000005e-06,
+        "expected_count": 8,
+        "actual_count": 8.0,
+        "count_matches": true,
+        "held_error_upper_V": 0.0
+      }
+    ],
+    "matching_counts": 56,
+    "total_count_checks": 56,
+    "held_error_upper_V": 1.2418180633105846e-16,
+    "callback_qualification": "not_established",
+    "scope": "observable states at the listed binary64 times; no assertion about unobserved callback time or all-time error"
+  },
+  "boundary_artifacts": {
+    "runs/precision-evas-recovery-20261011/cross-candidate/REQUEST.json": "8a3ad4519bd93711c9f161d1482361857f81f565edca6f087b689baff4c2bb4c",
+    "runs/precision-evas-recovery-20261011/cross-candidate/response.json": "c46fa10bee3c39819a2abf3c792da14646dc6f0f527f0330c0ceb12d567ed109"
+  },
+  "binding_registry": "v1 retained for its historical source/tool identity; no new registry issued"
+}

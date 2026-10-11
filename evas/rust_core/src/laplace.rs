@@ -286,7 +286,10 @@ pub(crate) fn laplace_weights(h: I, tau: I) -> Result<(I, I), Error> {
     }
     let mut reduced = x;
     let mut halvings = 0;
-    while reduced.hi > 1.0 / 16.0 {
+    // At x <= 1/2 the alternating terms decrease, and the first omitted
+    // term of the degree-24 polynomial is below 2e-33. Avoid unnecessary
+    // doublings, each of which carries interval rounding into the next.
+    while reduced.hi > 0.5 {
         reduced = reduced / I::point(2.0);
         halvings += 1;
         if halvings > 64 || !reduced.finite() {
@@ -311,29 +314,32 @@ pub(crate) fn laplace_weights(h: I, tau: I) -> Result<(I, I), Error> {
 }
 
 fn small_weights(x: I) -> Result<(I, I), Error> {
-    if !x.finite() || x.lo < 0.0 || x.hi > 1.0 / 16.0 {
+    if !x.finite() || x.lo < 0.0 || x.hi > 0.5 {
         return Err(Error::new(
             "waveform_accuracy",
             "laplace_nd small exponential range is invalid",
         ));
     }
     let n = 24;
-    let mut term = x;
-    let mut g = term;
-    for k in 2..=n {
-        term = term * x / I::point(k as f64);
-        g = if k % 2 == 0 { g - term } else { g + term };
+    // The same alternating Taylor polynomials, evaluated from the smallest
+    // terms inward. Adding every tiny term to an already large interval sum
+    // needlessly widens it by an ulp each time. Horner form keeps all input
+    // uncertainty; the next-term remainder bound remains unchanged.
+    let mut g = I::ONE;
+    for k in (2..=n).rev() {
+        g = I::ONE - (x / I::point(k as f64)) * g;
     }
-    term = term * x / I::point((n + 1) as f64);
+    g = x * g;
+    let mut b = I::ONE;
+    for k in (3..=n).rev() {
+        b = I::ONE - (x / I::point(k as f64)) * b;
+    }
+    b = (x * x / I::point(2.0)) * b;
+    let mut term = x;
+    for k in 2..=n + 1 {
+        term = term * x / I::point(k as f64);
+    }
     let g = expand(g + symmetric(term.magnitude()));
-
-    let mut term = x;
-    let mut b = I::ZERO;
-    for k in 2..=n {
-        term = term * x / I::point(k as f64);
-        b = if k % 2 == 0 { b + term } else { b - term };
-    }
-    term = term * x / I::point((n + 1) as f64);
     let b = expand(b + symmetric(term.magnitude()));
     Ok((g, b))
 }
