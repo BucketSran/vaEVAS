@@ -166,8 +166,9 @@ def cards():
         c['timing_evidence_required']=bool(c['events'])
         if c['group_id']=='F07':c['event_sensitivity_bound_V_s']=0.
         if c['group_id']=='F19':c['event_sensitivity_bound_V_s']=1e6
-        if c['events']:
-            for e in c['events']:c['critical_times_s'] += [e['nominal_s']-e['early_s'],e['nominal_s']+e['late_s']]
+        # Event center, early/late boundaries and padded observations come
+        # directly from event operands in the shared planner. Do not append
+        # pre-rounded copies here: subsequent padding would round twice.
         c['critical_times_s']=sorted(set(c['critical_times_s']))
     return sorted(result,key=lambda c:(c['group_id'],c['id']))
 

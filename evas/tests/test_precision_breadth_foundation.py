@@ -7,7 +7,8 @@ import math
 import sys
 
 sys.path.insert(0, str(PATH_DIR := Path(__file__).parents[1] / 'validation/paper'))
-from precision_breadth import assess, load_contract
+from precision_breadth import assess, load_contract, observation_plan
+from fractions import Fraction
 
 PATH = Path(__file__).parents[1] / 'validation/paper/precision_breadth_foundation.py'
 spec = importlib.util.spec_from_file_location('foundation', PATH)
@@ -234,6 +235,10 @@ class FoundationReferences(unittest.TestCase):
         callbacks=[unit+50e-12,3*unit+50e-12]
         if group=='F19':
             for t in callbacks:points.update((t-1e-14,t+1e-14))
+            for e in c['events']:
+                center=Fraction(e['nominal_s'])
+                for t in (center,center-Fraction(e['early_s']),center+Fraction(e['late_s'])):
+                    points.update(float(t+d) for d in (0,-Fraction(2e-12),Fraction(2e-12)))
         rows=[]
         for t in sorted(t for t in points if 0<=t<=c['stop_s']):
             if group=='F20':
@@ -313,6 +318,48 @@ class FoundationReferences(unittest.TestCase):
             for e in c['events']:
                 self.assertEqual(e['late_s'],1e-10)
                 self.assertEqual(e['early_s'],0 if e['kind']=='cross' else 1e-10)
+
+    def test_event_boundaries_have_one_exact_source_and_keep_all_sides(self):
+        for group in ('F07','F19'):
+            c=self.card(group);contract=load_contract(cards=[c])
+            plan=observation_plan(c,contract)
+            critical={p['id']:p['time_s'] for p in plan['critical']}
+            padding=Fraction(contract['observation']['padding_s'])
+            for e in c['events']:
+                center=Fraction(e['nominal_s'])
+                for label,t in (('nominal',center),('early',center-Fraction(e['early_s'])),
+                                ('late',center+Fraction(e['late_s']))):
+                    prefix=f"event:{e['id']}:{label}"
+                    for suffix,point in (('',t),(':left',t-padding),(':right',t+padding)):
+                        self.assertEqual(critical[prefix+suffix],float(point))
+                        self.assertIn(float(point),plan['times_s'])
+                    if label!='nominal' and t!=center:
+                        self.assertNotIn(float(t),c['critical_times_s'])
+            # An independently supplied adjacent event observation must survive.
+            near=math.nextafter(c['events'][0]['nominal_s'],math.inf)
+            independent=copy.deepcopy(c);independent['critical_times_s'].append(near)
+            self.assertIn(near,observation_plan(independent,load_contract(cards=[independent]))['times_s'])
+
+    def test_removing_event_boundary_copies_preserves_reference_enclosures(self):
+        for group in ('F07','F19'):
+            c=self.card(group);old=copy.deepcopy(c)
+            boundaries=[t for e in c['events'] for t in
+                        (e['nominal_s']-e['early_s'],e['nominal_s']+e['late_s'])]
+            old['critical_times_s']=sorted(set(old['critical_times_s']+boundaries))
+            points=set(c['critical_times_s']+boundaries)
+            points.update(t+d*math.ulp(t) for t in boundaries for d in (-16,-1,1,16))
+            for bounds in ({},{e['id']:[e['nominal_s'],e['nominal_s']] for e in c['events']}):
+                for t in points:
+                    self.assertEqual(f.reference(c,t,bounds),f.reference(old,t,bounds),(group,t,bounds))
+
+    def test_phase_wrap_and_global_neighbour_are_independent_obligations(self):
+        c=self.card('F20');plan=observation_plan(c,load_contract(cards=[c]))
+        wrap=2.5e-6
+        global_point=float(80*Fraction(c['unit_s'])*Fraction(1,32))
+        self.assertNotEqual(wrap,global_point)
+        self.assertIn(wrap,c['wrap_times_s'])
+        self.assertIn(wrap,plan['times_s'])
+        self.assertIn(global_point,plan['times_s'])
 
 
     def test_mandatory_declaration_and_contribution_order_variants(self):
