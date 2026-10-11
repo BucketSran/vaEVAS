@@ -1,0 +1,237 @@
+{
+  "base": "81eb66258b59b0a0cd48cd3decaa767be02cdd58",
+  "kernel_sha256": "57cb111331190e6310b6d8c518c10a87678b29390e90caa7398df5b98e3197b3",
+  "checker_sha256": "4a80e6cc91c553ae40d5d635c81ee0d11fd4436bc6fd96d88d1b1a51a13e28ff",
+  "scope": "Fresh EVAS execution of all 12 frozen manifests; unchanged checker. No new Spectre execution for Spec B; historical reference verdicts not upgraded.",
+  "runtime_source_manifest": "../strobe/20261011-near-timer.json:evas.source_manifest",
+  "results": [
+    {
+      "case": "E1-base",
+      "returncode": 0,
+      "manifest_sha256": "863a106d9df816d9e08684c8653a5c34780abdde793b2de276213aee8ef6255c",
+      "source_sha256": "326062e92f947abaa76ce755ab1be453b8975f157da065a1cbdf87882e5260cb",
+      "response_sha256": "d7bb8b205f085df10c8e1bf91872848807d5a8cc5096f24b09baaee204ad0b81",
+      "assessment": {
+        "numeric_status": "P",
+        "event_status": "P",
+        "qualification_status": "I",
+        "max_errors_V": {
+          "u": 0.0,
+          "z": 0.0,
+          "history": 2.6911806116913795e-17,
+          "sample": 0.0
+        },
+        "failures": []
+      }
+    },
+    {
+      "case": "E1-fine",
+      "returncode": 0,
+      "manifest_sha256": "06da81bbcfe46e63baca8a51c542bf9b9dd86e73df4f15846ba7b757360ab2df",
+      "source_sha256": "326062e92f947abaa76ce755ab1be453b8975f157da065a1cbdf87882e5260cb",
+      "response_sha256": "0e288b05e93db9c1aa1658b67ddd7cb0fc6f4c38226518bf3ddd4f790d77914f",
+      "assessment": {
+        "numeric_status": "P",
+        "event_status": "P",
+        "qualification_status": "I",
+        "max_errors_V": {
+          "u": 0.0,
+          "z": 0.0,
+          "history": 2.7256419343757443e-17,
+          "sample": 0.0
+        },
+        "failures": []
+      }
+    },
+    {
+      "case": "E2-base",
+      "returncode": 0,
+      "manifest_sha256": "863a106d9df816d9e08684c8653a5c34780abdde793b2de276213aee8ef6255c",
+      "source_sha256": "844715d7691fc21a6ce81ff123363177cf6b39468294afdd32235f20fede4a22",
+      "response_sha256": "4e1ddc50f35ff5c3ff1ca076e4495d1673acc04805088ba78c1aa2cc6e655e84",
+      "assessment": {
+        "numeric_status": "P",
+        "event_status": "P",
+        "qualification_status": "I",
+        "max_errors_V": {
+          "u": 0.0,
+          "z": 0.0,
+          "history": 2.6911806116913795e-17,
+          "sample": 0.0
+        },
+        "failures": []
+      }
+    },
+    {
+      "case": "E2-fine",
+      "returncode": 0,
+      "manifest_sha256": "06da81bbcfe46e63baca8a51c542bf9b9dd86e73df4f15846ba7b757360ab2df",
+      "source_sha256": "844715d7691fc21a6ce81ff123363177cf6b39468294afdd32235f20fede4a22",
+      "response_sha256": "6550b5b35e79e9d7e78d635fcafd820bfd90ab9254b270d4a26f7c15ce4ab19e",
+      "assessment": {
+        "numeric_status": "P",
+        "event_status": "P",
+        "qualification_status": "I",
+        "max_errors_V": {
+          "u": 0.0,
+          "z": 0.0,
+          "history": 2.7256419343757443e-17,
+          "sample": 0.0
+        },
+        "failures": []
+      }
+    },
+    {
+      "case": "E3-base",
+      "returncode": 0,
+      "manifest_sha256": "6ca100c743f5855098bcfec0c82dc30e204bbbe762985a6ada0ca7027ccc7d1d",
+      "source_sha256": "68b7a1153d422a44af222e40df152f23003c2274627bd9d812d2e4cb8449e123",
+      "response_sha256": "2b09798c2adbfe920c817adef6fe7dd35de9deb6e3b0764fdcbaaf0b77e62261",
+      "assessment": {
+        "numeric_status": "P",
+        "event_status": "P",
+        "qualification_status": "I",
+        "max_errors_V": {
+          "u": 0.0,
+          "z": 5.3734794391857577e-14,
+          "history": 0.0,
+          "sample": 0.0
+        },
+        "failures": []
+      }
+    },
+    {
+      "case": "E3-fine",
+      "returncode": 0,
+      "manifest_sha256": "b823a54d9d99060eff53be79b62c53e5395dcd45fb442942a3ff014f57998009",
+      "source_sha256": "68b7a1153d422a44af222e40df152f23003c2274627bd9d812d2e4cb8449e123",
+      "response_sha256": "878cc67f581f03be8006fe8efa6589340490992bcb750ecb16a150f8adfb88e9",
+      "assessment": {
+        "numeric_status": "P",
+        "event_status": "P",
+        "qualification_status": "I",
+        "max_errors_V": {
+          "u": 0.0,
+          "z": 5.3734794391857577e-14,
+          "history": 0.0,
+          "sample": 0.0
+        },
+        "failures": []
+      }
+    },
+    {
+      "case": "E4-base",
+      "returncode": 0,
+      "manifest_sha256": "a52bd551996b2bb228fb993a2160476150f64bc096e6ddea4a76ec0333b681b1",
+      "source_sha256": "ba01568c1e7cd74e2c57460d4e49b8ce3c3e1b197e0bfdd0016ce3adbdb2299d",
+      "response_sha256": "ddd11d4fe795305eda29f82764bdfa65e684e1034ac333d49e7dabd87567f761",
+      "assessment": {
+        "numeric_status": "P",
+        "event_status": "P",
+        "qualification_status": "I",
+        "max_errors_V": {
+          "u": 0.0,
+          "z": 1.0764722446765518e-16,
+          "history": 0.0,
+          "sample": 0.0
+        },
+        "failures": []
+      }
+    },
+    {
+      "case": "E4-fine",
+      "returncode": 0,
+      "manifest_sha256": "bda8113620a241ba53cf586b44a05dd9baef02f9aa6f08a82fb68b759191eb38",
+      "source_sha256": "ba01568c1e7cd74e2c57460d4e49b8ce3c3e1b197e0bfdd0016ce3adbdb2299d",
+      "response_sha256": "010fa7aef06210a4e1e6bc2acb34d9714f8b255e01a73804e91d87d204825d68",
+      "assessment": {
+        "numeric_status": "P",
+        "event_status": "P",
+        "qualification_status": "I",
+        "max_errors_V": {
+          "u": 0.0,
+          "z": 1.1015899303856713e-16,
+          "history": 0.0,
+          "sample": 0.0
+        },
+        "failures": []
+      }
+    },
+    {
+      "case": "E5-base",
+      "returncode": 0,
+      "manifest_sha256": "e95c2a9be2f33197212fd3873983e54ad844068a0fc1b0ed70ebe8c7f3e09e08",
+      "source_sha256": "683387a6e759b6f7b92d1332511191465f21bee045b82941fb44a23449550645",
+      "response_sha256": "4b5c1c8b63924bccf8f69aa6723fcc25d2a96867ae06787c0316479fd7e110e4",
+      "assessment": {
+        "numeric_status": "P",
+        "event_status": "P",
+        "qualification_status": "I",
+        "max_errors_V": {
+          "u": 0.0,
+          "z": 2.6053233644537006e-14,
+          "history": 0.0,
+          "sample": 6.661338147750939e-15
+        },
+        "failures": []
+      }
+    },
+    {
+      "case": "E5-fine",
+      "returncode": 0,
+      "manifest_sha256": "9e1bf0127fa9457d09bc555c79594b5aee2311986a60bfb6d58bdc3e87664226",
+      "source_sha256": "683387a6e759b6f7b92d1332511191465f21bee045b82941fb44a23449550645",
+      "response_sha256": "6ab926efbc45aee9ec260be47229598662127fc6c40361aaf3a32068fa0ea010",
+      "assessment": {
+        "numeric_status": "P",
+        "event_status": "P",
+        "qualification_status": "I",
+        "max_errors_V": {
+          "u": 0.0,
+          "z": 2.6275278249462037e-14,
+          "history": 0.0,
+          "sample": 6.661338147750939e-15
+        },
+        "failures": []
+      }
+    },
+    {
+      "case": "E6-base",
+      "returncode": 0,
+      "manifest_sha256": "6ca100c743f5855098bcfec0c82dc30e204bbbe762985a6ada0ca7027ccc7d1d",
+      "source_sha256": "36374dd08827950fb22ac96aaab88d2b7056b3fef13b71cef744fc64601c0abd",
+      "response_sha256": "a65cdff0552f5d08092423356e5a2f54844df3ecd2c572f680968e4dd0211933",
+      "assessment": {
+        "numeric_status": "P",
+        "event_status": "P",
+        "qualification_status": "I",
+        "max_errors_V": {
+          "u": 0.0,
+          "z": 3.8301796981049646e-16,
+          "history": 0.0,
+          "sample": 0.0
+        },
+        "failures": []
+      }
+    },
+    {
+      "case": "E6-fine",
+      "returncode": 0,
+      "manifest_sha256": "b823a54d9d99060eff53be79b62c53e5395dcd45fb442942a3ff014f57998009",
+      "source_sha256": "36374dd08827950fb22ac96aaab88d2b7056b3fef13b71cef744fc64601c0abd",
+      "response_sha256": "a1bacb95986ac82c64f827b81a2f71e405d0fb1236fc89f5cb8bdd190c2496bf",
+      "assessment": {
+        "numeric_status": "P",
+        "event_status": "P",
+        "qualification_status": "I",
+        "max_errors_V": {
+          "u": 0.0,
+          "z": 3.7371074852587784e-16,
+          "history": 0.0,
+          "sample": 0.0
+        },
+        "failures": []
+      }
+    }
+  ]
+}

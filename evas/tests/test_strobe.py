@@ -92,14 +92,78 @@ class StrobeControl(unittest.TestCase):
             with self.assertRaisesRegex(KernelError,'invalid_response'):
                 validate_response(bad,program,2,[0,1],strobetimes=[0.2])
 
-    def test_atomic_causal_query_is_not_claimed_as_a_forced_solve(self):
+    def test_nearby_timers_stop_at_forced_phase_without_consuming_later_event(self):
         source=model('@(initial_step) begin a=0; b=0; end @(timer(0.3,0,1e-6)) a=1; '
                      '@(timer(0.1,0.2,1e-6)) b=b+1; V(y,r)<+a+10*b;', declarations='integer a,b;')
         program=compile_sources({'strobe.va':source}, [instance()])
-        with self.assertRaises(KernelError) as caught:
-            transient(program, {'u':[[0,0],[1,0]]}, [0,1], stop=1, max_step=1,
-                      strobetimes=[0.3], kernel=KERNEL)
-        self.assertEqual(caught.exception.detail['kind'], 'unsupported_strobe')
+        times=[math.nextafter(.3,-math.inf),.3,math.nextafter(.3,math.inf),.8]
+        result=transient(program, {'u':[[0,0],[1,0]]}, [0,1], stop=1, max_step=1,
+                         strobetimes=times, kernel=KERNEL)
+        receipt=result['strobe_evidence']; column=result['nodes'].index('y')
+        self.assertEqual(receipt['sample_origins'],['accepted_controller_frame']*len(times))
+        # .3 < exact binary64(.1) + binary64(.2) < nextafter(.3,+inf).
+        self.assertEqual([row[column] for row in receipt['voltages_V']],[10,11,21,41])
+        self.assertEqual(result['solutions'][-1]['voltages'][column],51)
+        self.assertEqual(len(result['transient']['events']),6)
+
+
+    def test_nearby_timer_forced_points_preserve_each_history(self):
+        prefix='@(initial_step) begin a=0; b=0; end @(timer(0.3,0,1e-6)) a=1; @(timer(0.1,0.2,1e-6)) b=b+1; '
+        steps=[(.1,.1),(.3,.01),(.3,.1),(.5,.1),(.7,.1),(.9,.1)]
+        def integral(t):
+            return sum(d*max(0,t-e) for e,d in steps)
+        def lowpass(t):
+            return sum(d*(-math.expm1(-max(0,t-e)/.05)) for e,d in steps)
+        # The near pair is separated by < 1e-16 s: collapsing only that
+        # distance in these continuous analytic answers adds < 1e-14 V.
+        for contribution, answer in [('idt(0.01*a+0.1*b,0)',integral),
+                                      ("laplace_nd(0.01*a+0.1*b,'{1},'{1,0.05})",lowpass)]:
+            with self.subTest(contribution=contribution):
+                source=model(prefix+'V(y,r)<+'+contribution+';','integer a,b;')
+                program=compile_sources({'strobe.va':source},[instance()])
+                sparse=[.3,math.nextafter(.3,math.inf),.4,.8]
+                dense=sorted(set(sparse+[.15,.25,.35,.45,.6,.85]))
+                results=[]
+                for forced in (sparse,dense):
+                    result=transient(program,{'u':[[0,0],[1,0]]},[0,1],stop=1,max_step=1,
+                                     strobetimes=forced,vabstol=1e-8,reltol=0,kernel=KERNEL)
+                    receipt=result['strobe_evidence'];column=result['nodes'].index('y')
+                    self.assertEqual(receipt['sample_origins'],['accepted_controller_frame']*len(forced))
+                    values={t:row[column] for t,row in zip(forced,receipt['voltages_V'])}
+                    for t,value in values.items():self.assertAlmostEqual(value,answer(t),delta=1e-8)
+                    self.assertAlmostEqual(result['solutions'][-1]['voltages'][column],answer(1),delta=1e-8)
+                    self.assertEqual(len(result['transient']['events']),6)
+                    results.append(values)
+                for t in sparse:self.assertAlmostEqual(results[0][t],results[1][t],delta=1e-12)
+
+    def test_exact_held_timer_forced_points_do_not_inherit_rounding_padding(self):
+        source=model('@(initial_step) begin p=0.2; a=0; b=0; end '
+                     '@(timer(0.3,0,1e-6)) a=1; '
+                     '@(timer(0.1,p,1e-6)) b=b+1; V(y,r)<+a+10*b;',
+                     'real p; integer a,b;')
+        program=compile_sources({'strobe.va':source},[instance()])
+        forced=[.3,math.nextafter(.3,math.inf),.8]
+        result=transient(program,{'u':[[0,0],[1,0]]},[0,1],stop=1,max_step=1,
+                         strobetimes=forced,kernel=KERNEL)
+        column=result['nodes'].index('y');receipt=result['strobe_evidence']
+        self.assertEqual(receipt['sample_origins'],['accepted_controller_frame']*len(forced))
+        self.assertEqual([row[column] for row in receipt['voltages_V']],[11,21,41])
+
+    def test_exact_held_timer_forced_phase_uses_current_period(self):
+        source=model('@(initial_step) begin p=0.2; a=0; b=0; end '
+                     '@(timer(0.3,0,1e-6)) begin a=1; p=0.4; end '
+                     '@(timer(0.1,p,1e-6)) b=b+1; V(y,r)<+a+10*b;',
+                     'real p; integer a,b;')
+        program=compile_sources({'strobe.va':source},[instance()])
+        forced=[.3,math.nextafter(.3,math.inf),.5,math.nextafter(.5,math.inf),.8]
+        result=transient(program,{'u':[[0,0],[1,0]]},[0,1],stop=1,max_step=1,
+                         strobetimes=forced,kernel=KERNEL)
+        column=result['nodes'].index('y');receipt=result['strobe_evidence']
+        self.assertEqual(receipt['sample_origins'],['accepted_controller_frame']*len(forced))
+        # Changing p at .3 cancels the pending .1+.2 callback. The new
+        # clock is .1+k*.4, whose first return is just greater than .5.
+        self.assertEqual([row[column] for row in receipt['voltages_V']],[11,11,11,21,21])
+        self.assertEqual(result['solutions'][-1]['voltages'][column],31)
 
     def test_periodic_timer_forced_points_have_committed_state(self):
         source=model('@(initial_step) q=0.125; @(timer(T,T,1e-10)) q=V(u,r); V(y,r)<+q;',

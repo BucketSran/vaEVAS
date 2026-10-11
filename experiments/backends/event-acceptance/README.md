@@ -1,4 +1,26 @@
-# Spec B baseline, candidate and actual reference comparison
+# Spec B 验收记录
+
+## 当前如何判读
+
+**结构重构已交付；旧的跨后端精确验收仍未全部完成。**
+2026-10-11 在近邻 strobe 修复版本重新执行原 E1–E6 × base/fine 共 12 个 EVAS 请求，
+冻结 checker 不变，数值与事件检查均为 12/12 P；资格仍为 12/12 I。
+[当前运行身份](20261011-current.json)与历史参考分开保存。这次没有重跑 Spec B 的 Spectre，
+不能把新 strobe 三例的结论替代这些旧模型。
+
+| 旧记录 | 现在有证据支持的判断 | 剩余工作 |
+| --- | --- | --- |
+| E1/E2/E4 的基础档 | 原有限数值和事件通过，但导出资格 I | 补合格观测，不能仅改写结论 |
+| 其余七个数值 I | 原生导出终点未精确命中科学域终点 | 保留原 I；若新增工程验收须另记时间误差依据 |
+| E6 两个数值 F | Spectre 原误差 7.85/4.67 µV，超过原 1 µV；收紧容差后降至 0.334/0.020 µV | 保留原 F；新增参考仍有资格或端点义务 |
+| E3/E4 精确边界 | 原记录中计数相差 1，窗外未见差异 | 未纳入 SEF-TIMER-18；不能自动宣布已接受 |
+| E5 的 1/3 | binary64 无法精确表示该有理时刻 | 分开精确数学时刻与实际可观察时刻，不用最近点冒充 |
+
+本页只管理 Spec B。原 C1、#79 stop=3、VCO 和源驱动局部历史由
+[#96](https://github.com/BucketSran/vaEVAS/issues/96)按原模型继续跟踪；
+非阻断提示不解决这些严格差异。下面完整保留原数据、预算和历史检查点。
+
+## 原始对照与判据
 
 P102 baseline `56473944` and candidate `5e38bdf882f41ad17f2a704268907ae0e36600d9` each executed all twelve frozen requests. All twelve requests and responses are byte-identical between revisions. Both pass the independent finite mathematical and event tests; maximum EVAS error across continuous and stored-sample channels is 2.9109159527251904e-11 V. There is no new candidate-only discrepancy. This is preservation evidence, not compatibility acceptance.
 

@@ -1,0 +1,2938 @@
+{
+  "schema_version": 1,
+  "denominator": 12,
+  "voltage_budget_V": 1e-06,
+  "scope": "finite native/forced observations; full boundary records retained; no complete-trajectory proof",
+  "input_manifest_sha256": "aa27213dd7266683304b9f6ea3b8f264a72d681d03cb708694d45ab122308afd",
+  "checker_sha256": "46178578a9fcb7baca94c0a7d95f3ca99d1cf47380677b1274123c431577628b",
+  "reader_sha256": "0aff2f248d63b9e81b1fcf5bab5722df13bdcf42fd7edffe4fe65f45b79b845c",
+  "analysis_sha256": "61714ced3de2a6fa64e4e04654c4be16531d00536513c264f2cea051caddc138",
+  "spectre_tool": {
+    "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "version": "sub-version  21.1.0.509.isr12"
+  },
+  "spectre_tool_identity_sha256": "ba949a21461de706d143c873a2b52aedd805c412addffc14d45e9e574153cb38",
+  "spectre": [
+    {
+      "case": "chain-base",
+      "assessment": {
+        "status": "fail",
+        "points": 1089,
+        "maximum_nominal_error_V": {
+          "e": 2.7755575615628914e-16,
+          "f": 1.5491338785089681e-06,
+          "i": 3.486451853484951e-05
+        },
+        "failures": [
+          {
+            "time": 0.1502138588113484,
+            "node": "f",
+            "error_V": 1.0973993460408615e-06
+          },
+          {
+            "time": 0.15063804017159196,
+            "node": "f",
+            "error_V": 1.0849531408146929e-06
+          },
+          {
+            "time": 0.15098786045863505,
+            "node": "f",
+            "error_V": 1.0756200802680693e-06
+          },
+          {
+            "time": 0.15138702802164888,
+            "node": "f",
+            "error_V": 1.0644602282811055e-06
+          },
+          {
+            "time": 0.15218536314767656,
+            "node": "f",
+            "error_V": 1.0270731660017018e-06
+          },
+          {
+            "time": 0.15243602791238134,
+            "node": "f",
+            "error_V": 1.0213048535073765e-06
+          },
+          {
+            "time": 0.1529373574417909,
+            "node": "f",
+            "error_V": 1.006108799384009e-06
+          },
+          {
+            "time": 0.15318546067022906,
+            "node": "f",
+            "error_V": 1.0005249144115491e-06
+          },
+          {
+            "time": 0.29999999999999993,
+            "node": "i",
+            "error_V": 1.4523486064829672e-06
+          },
+          {
+            "time": 0.30001320857616703,
+            "node": "i",
+            "error_V": 1.4523486064933755e-06
+          },
+          {
+            "time": 0.30003158585749856,
+            "node": "i",
+            "error_V": 1.4523486064933755e-06
+          },
+          {
+            "time": 0.30004919206183694,
+            "node": "i",
+            "error_V": 1.4523486065003144e-06
+          },
+          {
+            "time": 0.3000844044705137,
+            "node": "i",
+            "error_V": 1.4523486065003144e-06
+          },
+          {
+            "time": 0.30015482928786724,
+            "node": "i",
+            "error_V": 1.4523486065037838e-06
+          },
+          {
+            "time": 0.3002956789225743,
+            "node": "i",
+            "error_V": 1.4523486065003144e-06
+          },
+          {
+            "time": 0.30057737819198843,
+            "node": "i",
+            "error_V": 1.4523486065003144e-06
+          },
+          {
+            "time": 0.3011407767308167,
+            "node": "i",
+            "error_V": 1.4523486065003144e-06
+          },
+          {
+            "time": 0.30142537179691903,
+            "node": "i",
+            "error_V": 1.4523486065003144e-06
+          },
+          {
+            "time": 0.3019945619291237,
+            "node": "i",
+            "error_V": 1.452348606496845e-06
+          },
+          {
+            "time": 0.30228182710237733,
+            "node": "i",
+            "error_V": 1.4523486064933755e-06
+          }
+        ],
+        "failure_count": 801,
+        "exact_requested_hits": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.29999999999999993,
+          0.325,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "qualification": {
+        "status": "qualified",
+        "issues": [],
+        "notes": [
+          "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+        ],
+        "actual": {
+          "reltol": 1e-06,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 1.0,
+          "maxstep": 0.03125,
+          "method": "traponly"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 1.0,
+          "maxstep": 0.03125
+        },
+        "additional_controls": {},
+        "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+      },
+      "source_sha256": "a45ba82d62d93cdf0afceff46f3b3e4282f74953e051b965847d0be86cdb160e",
+      "deck_sha256": "1462b2f0368691b6e096f758a934010c0926dfc9ade283c9fcece7b52c2a6c23",
+      "native_sha256": "0f09a5df52f16e1a9e396612575ebe7a9c4962cb58673cf6187220d54c2ee301",
+      "receipt_sha256": "83fdd8aa9657fab55968da9ad3003e08f0c8839b117fae6637d60e9d50eca88c"
+    },
+    {
+      "case": "chain-both",
+      "assessment": {
+        "status": "pass",
+        "points": 3298,
+        "maximum_nominal_error_V": {
+          "e": 2.7755575615628914e-16,
+          "f": 1.2745833394278705e-07,
+          "i": 2.9164096859712885e-08
+        },
+        "failures": [],
+        "failure_count": 0,
+        "exact_requested_hits": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.29999999999999993,
+          0.325,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "qualification": {
+        "status": "qualified",
+        "issues": [],
+        "notes": [
+          "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+        ],
+        "actual": {
+          "reltol": 1e-09,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 1.0,
+          "maxstep": 0.00390625,
+          "method": "traponly"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 1.0,
+          "maxstep": 0.00390625
+        },
+        "additional_controls": {},
+        "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+      },
+      "source_sha256": "a45ba82d62d93cdf0afceff46f3b3e4282f74953e051b965847d0be86cdb160e",
+      "deck_sha256": "31137a7bb7b6f2b579fab9292635e8217cfa5bacdd750fea0f41fe212b2361bc",
+      "native_sha256": "327e3220d4c442b9e5c54f3842aac39bf4f50f4eb477016e84d6c4409fb8934a",
+      "receipt_sha256": "5c74cb075dd34e4b5a22c5b5b7bf7fb42b41a76e7f7a74051b34a26543e5c307"
+    },
+    {
+      "case": "chain-step",
+      "assessment": {
+        "status": "fail",
+        "points": 1104,
+        "maximum_nominal_error_V": {
+          "e": 2.7755575615628914e-16,
+          "f": 1.5491349758534056e-06,
+          "i": 3.486793346385575e-05
+        },
+        "failures": [
+          {
+            "time": 0.15021848257217973,
+            "node": "f",
+            "error_V": 1.1233945720681704e-06
+          },
+          {
+            "time": 0.15064569443241005,
+            "node": "f",
+            "error_V": 1.1105931974481065e-06
+          },
+          {
+            "time": 0.15099807538858093,
+            "node": "f",
+            "error_V": 1.1009861366831353e-06
+          },
+          {
+            "time": 0.15139740866335916,
+            "node": "f",
+            "error_V": 1.0896182574479663e-06
+          },
+          {
+            "time": 0.15219607521291562,
+            "node": "f",
+            "error_V": 1.051804405134693e-06
+          },
+          {
+            "time": 0.15244682785989097,
+            "node": "f",
+            "error_V": 1.0459100497003937e-06
+          },
+          {
+            "time": 0.15294833315384168,
+            "node": "f",
+            "error_V": 1.0304607119052123e-06
+          },
+          {
+            "time": 0.15319650226582276,
+            "node": "f",
+            "error_V": 1.02475459138468e-06
+          },
+          {
+            "time": 0.15369284048978493,
+            "node": "f",
+            "error_V": 1.0098463353591658e-06
+          },
+          {
+            "time": 0.29999999999999993,
+            "node": "i",
+            "error_V": 1.4557679129598156e-06
+          },
+          {
+            "time": 0.30001323211040243,
+            "node": "i",
+            "error_V": 1.4557679129736933e-06
+          },
+          {
+            "time": 0.30003165221220685,
+            "node": "i",
+            "error_V": 1.4557679129771628e-06
+          },
+          {
+            "time": 0.30004929818170234,
+            "node": "i",
+            "error_V": 1.4557679129771628e-06
+          },
+          {
+            "time": 0.30008459012069333,
+            "node": "i",
+            "error_V": 1.455767912970224e-06
+          },
+          {
+            "time": 0.3001551739986753,
+            "node": "i",
+            "error_V": 1.4557679129736933e-06
+          },
+          {
+            "time": 0.30029634175463926,
+            "node": "i",
+            "error_V": 1.4557679129736933e-06
+          },
+          {
+            "time": 0.3005786772665672,
+            "node": "i",
+            "error_V": 1.455767912970224e-06
+          },
+          {
+            "time": 0.301143348290423,
+            "node": "i",
+            "error_V": 1.4557679129667545e-06
+          },
+          {
+            "time": 0.3014279536053347,
+            "node": "i",
+            "error_V": 1.4557679129736933e-06
+          },
+          {
+            "time": 0.3019971642351581,
+            "node": "i",
+            "error_V": 1.455767912970224e-06
+          }
+        ],
+        "failure_count": 802,
+        "exact_requested_hits": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.29999999999999993,
+          0.325,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "qualification": {
+        "status": "qualified",
+        "issues": [],
+        "notes": [
+          "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+        ],
+        "actual": {
+          "reltol": 1e-06,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 1.0,
+          "maxstep": 0.00390625,
+          "method": "traponly"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 1.0,
+          "maxstep": 0.00390625
+        },
+        "additional_controls": {},
+        "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+      },
+      "source_sha256": "a45ba82d62d93cdf0afceff46f3b3e4282f74953e051b965847d0be86cdb160e",
+      "deck_sha256": "510346a4fb8fbbf16b3cd6cc7f45316ef3f22d2faf58654e24087b8b7ef0f06e",
+      "native_sha256": "3b1daaf6e06c5c5653988ec72569d70fed8c93412df38856ca4ab53d06952420",
+      "receipt_sha256": "707ca18e8dace49fe50cb83bbb6073898eee143d95bf2b0961299f17da3e5c20"
+    },
+    {
+      "case": "chain-tol",
+      "assessment": {
+        "status": "pass",
+        "points": 3283,
+        "maximum_nominal_error_V": {
+          "e": 2.7755575615628914e-16,
+          "f": 1.2745833077865143e-07,
+          "i": 2.916577779288332e-08
+        },
+        "failures": [],
+        "failure_count": 0,
+        "exact_requested_hits": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.29999999999999993,
+          0.325,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "qualification": {
+        "status": "qualified",
+        "issues": [],
+        "notes": [
+          "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+        ],
+        "actual": {
+          "reltol": 1e-09,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 1.0,
+          "maxstep": 0.03125,
+          "method": "traponly"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 1.0,
+          "maxstep": 0.03125
+        },
+        "additional_controls": {},
+        "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+      },
+      "source_sha256": "a45ba82d62d93cdf0afceff46f3b3e4282f74953e051b965847d0be86cdb160e",
+      "deck_sha256": "7e2fa96c3c5dff631bf55442613317f3f6f7ade9e40876b35375bb4bd56991f4",
+      "native_sha256": "4469f0293d02df05eb162fe660d966e3bc6f74d2e3b71bec77424717d42594ef",
+      "receipt_sha256": "7eefd62fbc8ce38955cf53a2a92199cd4e857e3cb1f296a447cac30b29fac5c8"
+    },
+    {
+      "case": "fixed-base",
+      "assessment": {
+        "status": "pass",
+        "points": 127,
+        "maximum_nominal_error_V": {},
+        "failures": [],
+        "failure_count": 0,
+        "exact_requested_hits": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.29999999999999993,
+          0.325,
+          0.35,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "qualification": {
+        "status": "qualified",
+        "issues": [],
+        "notes": [
+          "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+        ],
+        "actual": {
+          "reltol": 1e-06,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 1.0,
+          "maxstep": 0.03125,
+          "method": "traponly"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 1.0,
+          "maxstep": 0.03125
+        },
+        "additional_controls": {},
+        "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+      },
+      "source_sha256": "a0391a59e519a4b2fdfbd64698db80709b4f354835e3c12a23bd627a8dfbde64",
+      "deck_sha256": "6ad81e7709a249bddd5553c958fea3e913cfa603f9d67e831d7bfca4ac30d371",
+      "native_sha256": "1bf968c860fc5efafcc7ca533e194fc628f0167f7519474a041e537fb0c3e883",
+      "receipt_sha256": "1c9c873b8debc0946ccbe5f5f1fd804e26c95dcd56c31a0952a39e3d1225785b"
+    },
+    {
+      "case": "fixed-both",
+      "assessment": {
+        "status": "pass",
+        "points": 298,
+        "maximum_nominal_error_V": {},
+        "failures": [],
+        "failure_count": 0,
+        "exact_requested_hits": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.29999999999999993,
+          0.325,
+          0.35,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "qualification": {
+        "status": "qualified",
+        "issues": [],
+        "notes": [
+          "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+        ],
+        "actual": {
+          "reltol": 1e-09,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 1.0,
+          "maxstep": 0.00390625,
+          "method": "traponly"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 1.0,
+          "maxstep": 0.00390625
+        },
+        "additional_controls": {},
+        "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+      },
+      "source_sha256": "a0391a59e519a4b2fdfbd64698db80709b4f354835e3c12a23bd627a8dfbde64",
+      "deck_sha256": "62284b55d1d9b37299d748a78f7104da612af5c32a350cbf262e382ebd3dcac7",
+      "native_sha256": "e561a86646b69422af5f0183b695c7612b6a49315c0243762dcac6b31e426e85",
+      "receipt_sha256": "95ad593080d7f28f14c36e5d34a388acf40f5fe9ecabccd4fbd026d24a046560"
+    },
+    {
+      "case": "fixed-step",
+      "assessment": {
+        "status": "pass",
+        "points": 298,
+        "maximum_nominal_error_V": {},
+        "failures": [],
+        "failure_count": 0,
+        "exact_requested_hits": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.29999999999999993,
+          0.325,
+          0.35,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "qualification": {
+        "status": "qualified",
+        "issues": [],
+        "notes": [
+          "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+        ],
+        "actual": {
+          "reltol": 1e-06,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 1.0,
+          "maxstep": 0.00390625,
+          "method": "traponly"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 1.0,
+          "maxstep": 0.00390625
+        },
+        "additional_controls": {},
+        "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+      },
+      "source_sha256": "a0391a59e519a4b2fdfbd64698db80709b4f354835e3c12a23bd627a8dfbde64",
+      "deck_sha256": "f347ade1dd7cd37981fe98b0b82725ac08d304671857fd709141172f9272f900",
+      "native_sha256": "26a8f51f1a98d14b88648ae3c35770db885b10623a78ddd2bc99c7ab48b4fea8",
+      "receipt_sha256": "e78be755ec6968b04fc9f362137134fef2cf70bd880dcc7d68b6de3313c80a4f"
+    },
+    {
+      "case": "fixed-tol",
+      "assessment": {
+        "status": "pass",
+        "points": 127,
+        "maximum_nominal_error_V": {},
+        "failures": [],
+        "failure_count": 0,
+        "exact_requested_hits": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.29999999999999993,
+          0.325,
+          0.35,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "qualification": {
+        "status": "qualified",
+        "issues": [],
+        "notes": [
+          "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+        ],
+        "actual": {
+          "reltol": 1e-09,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 1.0,
+          "maxstep": 0.03125,
+          "method": "traponly"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 1.0,
+          "maxstep": 0.03125
+        },
+        "additional_controls": {},
+        "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+      },
+      "source_sha256": "a0391a59e519a4b2fdfbd64698db80709b4f354835e3c12a23bd627a8dfbde64",
+      "deck_sha256": "6cf37f140af444d90161a402daa87c794ef9dda6995b5e9caa1143dd5182b8c9",
+      "native_sha256": "0cb247767af891444f3768291bab3eedc47ce30caa530cb68a4bc16a304b213a",
+      "receipt_sha256": "1a57ae8acc691bc8c1b47ead08cfe4d363fac5f6ebe3975d5816a3158560ecd6"
+    },
+    {
+      "case": "held-base",
+      "assessment": {
+        "status": "pass",
+        "points": 127,
+        "maximum_nominal_error_V": {},
+        "failures": [],
+        "failure_count": 0,
+        "exact_requested_hits": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.29999999999999993,
+          0.325,
+          0.35,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "qualification": {
+        "status": "qualified",
+        "issues": [],
+        "notes": [
+          "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+        ],
+        "actual": {
+          "reltol": 1e-06,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 1.0,
+          "maxstep": 0.03125,
+          "method": "traponly"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 1.0,
+          "maxstep": 0.03125
+        },
+        "additional_controls": {},
+        "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+      },
+      "source_sha256": "17fbd6a5d867deaba2628a5ef8a5796dd8db102ebdd6e1526b569cee70cb2162",
+      "deck_sha256": "6ad81e7709a249bddd5553c958fea3e913cfa603f9d67e831d7bfca4ac30d371",
+      "native_sha256": "d23d76fa62d29609fc141db79202035a2970d0e145490abbc85d40cccb567ad6",
+      "receipt_sha256": "beac750b769785e11fb2c8136c33787428c70fdff76d3a207024f774aa110197"
+    },
+    {
+      "case": "held-both",
+      "assessment": {
+        "status": "pass",
+        "points": 298,
+        "maximum_nominal_error_V": {},
+        "failures": [],
+        "failure_count": 0,
+        "exact_requested_hits": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.29999999999999993,
+          0.325,
+          0.35,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "qualification": {
+        "status": "qualified",
+        "issues": [],
+        "notes": [
+          "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+        ],
+        "actual": {
+          "reltol": 1e-09,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 1.0,
+          "maxstep": 0.00390625,
+          "method": "traponly"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 1.0,
+          "maxstep": 0.00390625
+        },
+        "additional_controls": {},
+        "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+      },
+      "source_sha256": "17fbd6a5d867deaba2628a5ef8a5796dd8db102ebdd6e1526b569cee70cb2162",
+      "deck_sha256": "62284b55d1d9b37299d748a78f7104da612af5c32a350cbf262e382ebd3dcac7",
+      "native_sha256": "24229fe4142f59dc411b7da77119cdc781512abcee073836305e1a8f59b66b7d",
+      "receipt_sha256": "9baa330a4ac732cdaf35cfda85c15e5b2734fec39c293f7679e3aef77d85134b"
+    },
+    {
+      "case": "held-step",
+      "assessment": {
+        "status": "pass",
+        "points": 298,
+        "maximum_nominal_error_V": {},
+        "failures": [],
+        "failure_count": 0,
+        "exact_requested_hits": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.29999999999999993,
+          0.325,
+          0.35,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "qualification": {
+        "status": "qualified",
+        "issues": [],
+        "notes": [
+          "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+        ],
+        "actual": {
+          "reltol": 1e-06,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 1.0,
+          "maxstep": 0.00390625,
+          "method": "traponly"
+        },
+        "requested": {
+          "reltol": 1e-05,
+          "vabstol": 1e-09,
+          "iabstol": 1e-13,
+          "stop": 1.0,
+          "maxstep": 0.00390625
+        },
+        "additional_controls": {},
+        "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+      },
+      "source_sha256": "17fbd6a5d867deaba2628a5ef8a5796dd8db102ebdd6e1526b569cee70cb2162",
+      "deck_sha256": "f347ade1dd7cd37981fe98b0b82725ac08d304671857fd709141172f9272f900",
+      "native_sha256": "b718183fe0f0e3311d28a091ae4ac79be8645b3c20658618d9cf27c849650b86",
+      "receipt_sha256": "3b1c9552f48ffcb54bdbde2862f66a4e82c5e1456b4bec2bb3ba5bdb80a6c9e3"
+    },
+    {
+      "case": "held-tol",
+      "assessment": {
+        "status": "pass",
+        "points": 127,
+        "maximum_nominal_error_V": {},
+        "failures": [],
+        "failure_count": 0,
+        "exact_requested_hits": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.29999999999999993,
+          0.325,
+          0.35,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "qualification": {
+        "status": "qualified",
+        "issues": [],
+        "notes": [
+          "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+        ],
+        "actual": {
+          "reltol": 1e-09,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 1.0,
+          "maxstep": 0.03125,
+          "method": "traponly"
+        },
+        "requested": {
+          "reltol": 1e-08,
+          "vabstol": 1e-12,
+          "iabstol": 1e-15,
+          "stop": 1.0,
+          "maxstep": 0.03125
+        },
+        "additional_controls": {},
+        "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked"
+      },
+      "source_sha256": "17fbd6a5d867deaba2628a5ef8a5796dd8db102ebdd6e1526b569cee70cb2162",
+      "deck_sha256": "6cf37f140af444d90161a402daa87c794ef9dda6995b5e9caa1143dd5182b8c9",
+      "native_sha256": "949c48dd25796380c046c6c062e0578ff9e08bc879f8a646a6bf222eaf7f2186",
+      "receipt_sha256": "b434bc28be7cc7d14f1a2dfc1c07090ac8394c022850e9524d83ce90873465fc"
+    }
+  ],
+  "evas": {
+    "base": "81eb66258b59b0a0cd48cd3decaa767be02cdd58",
+    "dirty": true,
+    "kernel_sha256": "57cb111331190e6310b6d8c518c10a87678b29390e90caa7398df5b98e3197b3",
+    "input_manifest_sha256": "aa27213dd7266683304b9f6ea3b8f264a72d681d03cb708694d45ab122308afd",
+    "checker_sha256": "46178578a9fcb7baca94c0a7d95f3ca99d1cf47380677b1274123c431577628b",
+    "source_manifest": {
+      "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/src/evas/__main__.py": "f98567eedc0052dddf00fd13f5380e996409f72aed9fbf09702d5bf173fae1d5",
+      "evas/src/evas/array_elaboration.py": "4faf4543a735ad19c89bbbc760d39f6860089d854b7f24922edaa390cf20df0b",
+      "evas/src/evas/diagnostics.py": "e787f6c1b0ab3939fa37c15ec6da550f59520c6f99edf29e9c53784f31e3308f",
+      "evas/src/evas/elaboration.py": "ff4ffb36428b7a5fd26a646b31788e2699de050c0a2ec6935d807ed79286fbd8",
+      "evas/src/evas/errors.py": "1a361344eb6678f6d82a91f3c356513025146bf468e9d3f5d4b593a9c04b3c08",
+      "evas/src/evas/frontend.py": "55d6f9724c71ffb3938d4e6eb8ff425d1c85d66808e6bbc6492593640e30ae19",
+      "evas/src/evas/hierarchy.py": "c277bc21cbe987f7cb427a2955b6b20588d5c42ae09bbc62853dab7bdba4138f",
+      "evas/src/evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+      "evas/src/evas/instance_compiler.py": "8f3e101bc1f1e854598bbb752f9f5ada41f321299f28e039957108fc0059ee38",
+      "evas/src/evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+      "evas/src/evas/ir.py": "ec167d9f02ddde4bff1dbf7b24b903d4a178822cfc0a2749638e753b1398f8cf",
+      "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+      "evas/src/evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+      "evas/src/evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+      "evas/src/evas/lowering.py": "3df0c3f873285e45aa9de85863ca7d42b4c1cffc205a24164700b953b1874c71",
+      "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+      "evas/src/evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+      "evas/src/evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+      "evas/src/evas/node_elaboration.py": "2b68adb511d792c349e40f98fa71933402f1569467c8e2cb6e6e9125773e7658",
+      "evas/src/evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+      "evas/src/evas/preprocessor.py": "83d54364c2cbc993da5d749bb3582f4ef5de110deff5f23a41ad9af4d928478c",
+      "evas/src/evas/protocol.py": "9dacd13cfd98a803e3e45a927c98035944a736a0930da5a33d6d202a8ebbe3bb",
+      "evas/src/evas/query.py": "2fda97253f88c236d308d795aeae52a00ff5cfbb458f87a4bcfdc3751fae4f64",
+      "evas/src/evas/results.py": "91bc585e4ee9a871fce7da38beebebe71218f0b59c7dda57fec904a9994810bd",
+      "evas/src/evas/runtime.py": "e467f9de3635dcd23813771ea528e57fa35dd98c36dce893b35f920f278c7c0f",
+      "evas/src/evas/scs.py": "6258b0b03294d399ad7cd0ad42e6513a19948d216e25333512a5b9b2695c6d6d",
+      "evas/src/evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
+      "evas/src/evas/standard_headers.py": "9f190d1b17d6a341cecdba14f8a43771f7754d2e0de1403d59e4432849ec7e30",
+      "evas/src/evas/strobe.py": "18d6b1911436459a7a19ee100d309636f5d0d75acd927b228219367098f19c80",
+      "evas/src/evas/syntax.py": "0808529711ffc52e04557d0adfad8452f12e3073132699c5afe8a59b6f602605",
+      "evas/rust_core/src/absdelay.rs": "e0f6144590856b3a95d03a59af58e9032309fa1e316a41c063a40ec9f73109c7",
+      "evas/rust_core/src/accuracy.rs": "03fd769af88f73072a1964a942b9b9d1503196c56c5c4cb48cec7f21ee084d35",
+      "evas/rust_core/src/affine_bounds.rs": "b0faf6ee361cac3ab3a7b8a2d80992bece76a3457d4a08a48be81755cfe01c6b",
+      "evas/rust_core/src/analog.rs": "d4105a0e850f98d4c10ded8c7deacdcc45c960ed2a2a3c1547ea2cf2a5a687c0",
+      "evas/rust_core/src/assembly.rs": "52b5a1a7411b846c2c07d0c26c0fabca0641c3980b4b34a6bcd302e84401d9cb",
+      "evas/rust_core/src/batch.rs": "a41166d5cd9a6fab300d48197bc4093145885d19044b398e48095fdb35473688",
+      "evas/rust_core/src/continuous.rs": "ea60a978fce74d7e6419303183df55d1be245094eb84f01342fcd4bd6555e5ed",
+      "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+      "evas/rust_core/src/continuous_history.rs": "ec6f68c45c3c6c40e4c674ed8c47302c2b47f498f6e678d7105c9a83c06fda35",
+      "evas/rust_core/src/continuous_initialization.rs": "5145a36a517b9ba3ace0fb6241ebbd615fef6004b50aeb5dc99d76ff295874a8",
+      "evas/rust_core/src/continuous_runtime.rs": "70f93a4f9b046b53c3d0abb1a4b92ad66a3645e7f4272f6f9a21a66e87e49fcc",
+      "evas/rust_core/src/diagnostics.rs": "bd0feac3399c8b43bf14de204677d58a160d3648416242a76d3eae46e0dea699",
+      "evas/rust_core/src/dynamic_roots.rs": "30146ae2e527e12c6596aff3b0dad3cd172def2af80d27e3b92131032cb6a827",
+      "evas/rust_core/src/event_accuracy.rs": "d2b621cb23080ee219b5272fc489010dfc6a4ba15930fd8e6d94f0428e253dd6",
+      "evas/rust_core/src/event_conditions.rs": "8b0c00b449cf1b27326972a95b97a5f5c911b4f56cd6d30dec7f8905312ab30f",
+      "evas/rust_core/src/events.rs": "c30446f5becb7ca185645837592a868121df5d4aaee6aa2adacdd5aac8f30e28",
+      "evas/rust_core/src/exact_affine_history.rs": "768c7509b3d76e901e12b166291d0bb8ae7f282791fa513a72f087b07100f161",
+      "evas/rust_core/src/exact_source.rs": "bee5abfc22ebb00510d4010885b3550034d50d114a6aabde77d90631b8df71e6",
+      "evas/rust_core/src/exact_time.rs": "68e8415109ff7138b27195fe8d32f686441c61d4b012e774e31ede58e5eef824",
+      "evas/rust_core/src/expression.rs": "99024d0b32c2348b6d32db2dc7a27122ff16728c3d4dc476bde6d9f8cb766ffb",
+      "evas/rust_core/src/filter_budget.rs": "94807ee47a346648b5eb4d7d4af03366c0f1f1b79a0e67f636fc279c90b67656",
+      "evas/rust_core/src/guard_trajectory.rs": "c919578fe553f2e87ded91d054780e8e66d505db688894875a8506ae826ec84c",
+      "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+      "evas/rust_core/src/idtmod.rs": "c57464703c5332f4a5ea827e8a6f85799f57c7d9a6655351475684b3fdeda190",
+      "evas/rust_core/src/implicit_dynamics.rs": "ec086b6df26ba43107709db3755c97345ea63431e6d1151077a3ac7d9a68b615",
+      "evas/rust_core/src/initialization.rs": "7a0bf9345d0cb264ea766c9ff3c801d781948f1683474eb1e1a53f6abd1af365",
+      "evas/rust_core/src/input_clamp.rs": "4fc823c7de00e10fd49a45422d3c807d25095f0d4b095500f7de06780341521d",
+      "evas/rust_core/src/interval.rs": "89a83ce96dbf6cdc217a046c9885ca0cf580c6e6f932c36f0195120d49e53f56",
+      "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
+      "evas/rust_core/src/ir.rs": "cc687fdd3d78e908644537aa8194d3a3ccb3dcb5b88c11a78d7b3e640ad97ea0",
+      "evas/rust_core/src/laplace.rs": "04d0bd3fb6e3517174bdb9e3ddb93ee9d448a83ff46b8112ab98410d68b9848e",
+      "evas/rust_core/src/lib.rs": "f8f63bee61f3f4e55e03100448d7742239859ee17bd5980db94477a69284de81",
+      "evas/rust_core/src/linear.rs": "e0280cfcaaebd2449ab5e4474daf5cd19e6a9fbda5db53e14e5229fc81a4eb36",
+      "evas/rust_core/src/main.rs": "70626c73fa421340afcc53c025a220720b208657273ba3f5e20bc1e4c6e01c3c",
+      "evas/rust_core/src/nonlinear.rs": "1e535704fb6dc14a577496ed47315ddf6e5f887d6dfa2b62b78d9b7b3a275863",
+      "evas/rust_core/src/nonlinear_dynamics.rs": "78182dc3731e8ad7fa50f767948291e69720cabce5027e6d811d8d32e8b8954e",
+      "evas/rust_core/src/observation.rs": "a4bddbd4b5f336883909fe66fd5a5cf3e636fb6da265d8c7be05e48107fcee32",
+      "evas/rust_core/src/operators.rs": "9f3638058a8aba8dbad36f52ec373db3edf7d5d161842f630f858db21dd11d83",
+      "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+      "evas/rust_core/src/portability.rs": "8a807dd498a87b7680c8c2dd605908a6a8a933bab2aa6f1b57844d0285a7229a",
+      "evas/rust_core/src/pwl.rs": "e14b98fc39bd719e1a7994630aad71a0ae8de2cb72e4433222d0bf92ca6e6d3a",
+      "evas/rust_core/src/reset_dependencies.rs": "d2adaba2e28d70511e0977c223ea7922b627c832e633b7f94360c951a6f0e3fa",
+      "evas/rust_core/src/schedule.rs": "7540a99f5c10c5d529b8b4791bdbb70350fafc58a0b664a9432a4d5e1f64c08e",
+      "evas/rust_core/src/settlement.rs": "2936275c2ccd13d1e28563307253ae629174236656364b86b5ad61a66fcc1e13",
+      "evas/rust_core/src/settlement_bounds.rs": "4d41bb6dbab3fcd56ec69b3402dc2c204d661b3bab628aa709e98db8e235bda9",
+      "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+      "evas/rust_core/src/slew_cascade.rs": "26b9cedd714dd24893d2076818d84c8905525da29c900c4df97bf9a7c40cc7b8",
+      "evas/rust_core/src/solver.rs": "b2ba26829db2d0fc94e329b375ed13b803510456b3131371ec4688a4dfcd0eba",
+      "evas/rust_core/src/solver_cache_tests.rs": "727acd4fc9084bb6e546a8aa70e2f1e5bd476d27265f5198c5cdd08b0a7fd3fa",
+      "evas/rust_core/src/state_space.rs": "c7e8ff82302cb87c6ba150e5def9d1cf9eba15e23657e2f2686eb067ce4ef74c",
+      "evas/rust_core/src/strobe.rs": "2cb7db0c54f6cf4656186343f764399132a9704f8b65552b00e737c9108c16af",
+      "evas/rust_core/src/transient.rs": "9ab81ab37b6ec9793e090ea6f0a14f0099c2c7bbb5dff21b58620f7c8781b1f3",
+      "evas/rust_core/src/transient_condition_tests.rs": "9b041e9ae55b4094f115e215ac5bea81782c23f6ca29aabdf2acfa80167e69d0",
+      "evas/rust_core/src/transient_event_acceptance.rs": "587293a1b02d2bd31492a4125f56ad2bf89ff70ec271c343f7a931db779b515d",
+      "evas/rust_core/src/transient_history_calendar.rs": "ee914bd940d94ffab3d397ca3069d849d5c895ca122edc35c2a3ca4339e7e585",
+      "evas/rust_core/src/transient_idt_tests.rs": "dfd640a90830437089e8389eedf7e354bd20253b47e3dcc7d3226dd1a496ee33",
+      "evas/rust_core/src/transient_lifecycle_tests.rs": "74af82b4c2156266f53b044700a5ce8129acd962d8510cfd4279d8ca01958a36",
+      "evas/rust_core/src/transient_root_refinement.rs": "1572524223234e9d64665f6704267d1b5b28347058f3d714c0208548211e3095",
+      "evas/rust_core/src/transient_window_tests.rs": "08285e435c4e7df5b2a31ac259347840e72a63ef7941953ee850655fdc1a7909",
+      "evas/rust_core/src/transition.rs": "61de1f3b626e78f656d3b8d81a1ecfb14786fc5dfb117a548e1351edd46edf30",
+      "evas/rust_core/src/transition_filter.rs": "b77b028da41289d0a848600a4d6b158cde86d0f632eecab5ffe3741d01174bc0"
+    },
+    "results": [
+      {
+        "case": "chain-base",
+        "assessment": {
+          "status": "pass",
+          "points": 16,
+          "maximum_nominal_error_V": {
+            "e": 5.551115123125783e-17,
+            "f": 5.551115123125783e-17,
+            "i": 3.3306690738754696e-16
+          },
+          "failures": [],
+          "failure_count": 0,
+          "exact_requested_hits": [
+            0.0,
+            0.05,
+            0.1,
+            0.2,
+            0.29999999999999993,
+            0.3,
+            0.30000000000000004,
+            0.325,
+            0.35,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.0
+          ]
+        },
+        "response_sha256": "513d9d6d29047d9bc493bdcea1c79a5df3815c7466356e0b94f20481042e15f7",
+        "events": [
+          {
+            "time": 0.1,
+            "event": 1,
+            "origin": "dut.va:2:173 (dut)",
+            "kind": "timer",
+            "before": [
+              0.0,
+              0.0
+            ],
+            "after": [
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.3,
+            "event": 0,
+            "origin": "dut.va:2:146 (dut)",
+            "kind": "timer",
+            "before": [
+              0.0,
+              1.0
+            ],
+            "after": [
+              1.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.30000000000000004,
+            "observation_time_bounds": [
+              0.3,
+              0.30000000000000004
+            ],
+            "event": 1,
+            "origin": "dut.va:2:173 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              1.0
+            ],
+            "after": [
+              1.0,
+              2.0
+            ]
+          },
+          {
+            "time": 0.5000000000000001,
+            "observation_time_bounds": [
+              0.5,
+              0.5000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:173 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              2.0
+            ],
+            "after": [
+              1.0,
+              3.0
+            ]
+          },
+          {
+            "time": 0.7000000000000001,
+            "observation_time_bounds": [
+              0.7,
+              0.7000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:173 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              3.0
+            ],
+            "after": [
+              1.0,
+              4.0
+            ]
+          },
+          {
+            "time": 0.9000000000000001,
+            "observation_time_bounds": [
+              0.9,
+              0.9000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:173 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              4.0
+            ],
+            "after": [
+              1.0,
+              5.0
+            ]
+          }
+        ],
+        "engine": "evas-events-0.14.0",
+        "observation_origins": [
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame"
+        ],
+        "requested_settings": {
+          "stop_s": 1.0,
+          "maxstep_s": 0.03125,
+          "reltol": 1e-05,
+          "vabstol_V": 1e-09
+        }
+      },
+      {
+        "case": "chain-both",
+        "assessment": {
+          "status": "pass",
+          "points": 16,
+          "maximum_nominal_error_V": {
+            "e": 5.551115123125783e-17,
+            "f": 5.551115123125783e-17,
+            "i": 3.3306690738754696e-16
+          },
+          "failures": [],
+          "failure_count": 0,
+          "exact_requested_hits": [
+            0.0,
+            0.05,
+            0.1,
+            0.2,
+            0.29999999999999993,
+            0.3,
+            0.30000000000000004,
+            0.325,
+            0.35,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.0
+          ]
+        },
+        "response_sha256": "e8cb269f43e881d368003b532285d49241523c3653f8c15818f202b225790cc3",
+        "events": [
+          {
+            "time": 0.1,
+            "event": 1,
+            "origin": "dut.va:2:173 (dut)",
+            "kind": "timer",
+            "before": [
+              0.0,
+              0.0
+            ],
+            "after": [
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.3,
+            "event": 0,
+            "origin": "dut.va:2:146 (dut)",
+            "kind": "timer",
+            "before": [
+              0.0,
+              1.0
+            ],
+            "after": [
+              1.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.30000000000000004,
+            "observation_time_bounds": [
+              0.3,
+              0.30000000000000004
+            ],
+            "event": 1,
+            "origin": "dut.va:2:173 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              1.0
+            ],
+            "after": [
+              1.0,
+              2.0
+            ]
+          },
+          {
+            "time": 0.5000000000000001,
+            "observation_time_bounds": [
+              0.5,
+              0.5000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:173 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              2.0
+            ],
+            "after": [
+              1.0,
+              3.0
+            ]
+          },
+          {
+            "time": 0.7000000000000001,
+            "observation_time_bounds": [
+              0.7,
+              0.7000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:173 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              3.0
+            ],
+            "after": [
+              1.0,
+              4.0
+            ]
+          },
+          {
+            "time": 0.9000000000000001,
+            "observation_time_bounds": [
+              0.9,
+              0.9000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:173 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              4.0
+            ],
+            "after": [
+              1.0,
+              5.0
+            ]
+          }
+        ],
+        "engine": "evas-events-0.14.0",
+        "observation_origins": [
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame"
+        ],
+        "requested_settings": {
+          "stop_s": 1.0,
+          "maxstep_s": 0.00390625,
+          "reltol": 1e-08,
+          "vabstol_V": 1e-12
+        }
+      },
+      {
+        "case": "chain-step",
+        "assessment": {
+          "status": "pass",
+          "points": 16,
+          "maximum_nominal_error_V": {
+            "e": 5.551115123125783e-17,
+            "f": 5.551115123125783e-17,
+            "i": 3.3306690738754696e-16
+          },
+          "failures": [],
+          "failure_count": 0,
+          "exact_requested_hits": [
+            0.0,
+            0.05,
+            0.1,
+            0.2,
+            0.29999999999999993,
+            0.3,
+            0.30000000000000004,
+            0.325,
+            0.35,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.0
+          ]
+        },
+        "response_sha256": "853b5d539345932aaed41f09245299308b482cbdb01b3c4671908c4861eafcf5",
+        "events": [
+          {
+            "time": 0.1,
+            "event": 1,
+            "origin": "dut.va:2:173 (dut)",
+            "kind": "timer",
+            "before": [
+              0.0,
+              0.0
+            ],
+            "after": [
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.3,
+            "event": 0,
+            "origin": "dut.va:2:146 (dut)",
+            "kind": "timer",
+            "before": [
+              0.0,
+              1.0
+            ],
+            "after": [
+              1.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.30000000000000004,
+            "observation_time_bounds": [
+              0.3,
+              0.30000000000000004
+            ],
+            "event": 1,
+            "origin": "dut.va:2:173 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              1.0
+            ],
+            "after": [
+              1.0,
+              2.0
+            ]
+          },
+          {
+            "time": 0.5000000000000001,
+            "observation_time_bounds": [
+              0.5,
+              0.5000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:173 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              2.0
+            ],
+            "after": [
+              1.0,
+              3.0
+            ]
+          },
+          {
+            "time": 0.7000000000000001,
+            "observation_time_bounds": [
+              0.7,
+              0.7000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:173 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              3.0
+            ],
+            "after": [
+              1.0,
+              4.0
+            ]
+          },
+          {
+            "time": 0.9000000000000001,
+            "observation_time_bounds": [
+              0.9,
+              0.9000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:173 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              4.0
+            ],
+            "after": [
+              1.0,
+              5.0
+            ]
+          }
+        ],
+        "engine": "evas-events-0.14.0",
+        "observation_origins": [
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame"
+        ],
+        "requested_settings": {
+          "stop_s": 1.0,
+          "maxstep_s": 0.00390625,
+          "reltol": 1e-05,
+          "vabstol_V": 1e-09
+        }
+      },
+      {
+        "case": "chain-tol",
+        "assessment": {
+          "status": "pass",
+          "points": 16,
+          "maximum_nominal_error_V": {
+            "e": 5.551115123125783e-17,
+            "f": 5.551115123125783e-17,
+            "i": 3.3306690738754696e-16
+          },
+          "failures": [],
+          "failure_count": 0,
+          "exact_requested_hits": [
+            0.0,
+            0.05,
+            0.1,
+            0.2,
+            0.29999999999999993,
+            0.3,
+            0.30000000000000004,
+            0.325,
+            0.35,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.0
+          ]
+        },
+        "response_sha256": "aed2059298c5978952edf9bddd4480d6c1d03a2cd1f86bf55c6247d344252e53",
+        "events": [
+          {
+            "time": 0.1,
+            "event": 1,
+            "origin": "dut.va:2:173 (dut)",
+            "kind": "timer",
+            "before": [
+              0.0,
+              0.0
+            ],
+            "after": [
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.3,
+            "event": 0,
+            "origin": "dut.va:2:146 (dut)",
+            "kind": "timer",
+            "before": [
+              0.0,
+              1.0
+            ],
+            "after": [
+              1.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.30000000000000004,
+            "observation_time_bounds": [
+              0.3,
+              0.30000000000000004
+            ],
+            "event": 1,
+            "origin": "dut.va:2:173 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              1.0
+            ],
+            "after": [
+              1.0,
+              2.0
+            ]
+          },
+          {
+            "time": 0.5000000000000001,
+            "observation_time_bounds": [
+              0.5,
+              0.5000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:173 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              2.0
+            ],
+            "after": [
+              1.0,
+              3.0
+            ]
+          },
+          {
+            "time": 0.7000000000000001,
+            "observation_time_bounds": [
+              0.7,
+              0.7000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:173 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              3.0
+            ],
+            "after": [
+              1.0,
+              4.0
+            ]
+          },
+          {
+            "time": 0.9000000000000001,
+            "observation_time_bounds": [
+              0.9,
+              0.9000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:173 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              4.0
+            ],
+            "after": [
+              1.0,
+              5.0
+            ]
+          }
+        ],
+        "engine": "evas-events-0.14.0",
+        "observation_origins": [
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame"
+        ],
+        "requested_settings": {
+          "stop_s": 1.0,
+          "maxstep_s": 0.03125,
+          "reltol": 1e-08,
+          "vabstol_V": 1e-12
+        }
+      },
+      {
+        "case": "fixed-base",
+        "assessment": {
+          "status": "pass",
+          "points": 16,
+          "maximum_nominal_error_V": {},
+          "failures": [],
+          "failure_count": 0,
+          "exact_requested_hits": [
+            0.0,
+            0.05,
+            0.1,
+            0.2,
+            0.29999999999999993,
+            0.3,
+            0.30000000000000004,
+            0.325,
+            0.35,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.0
+          ]
+        },
+        "response_sha256": "a3a47fa64bf40f9ff2f31128bf52da96f53596a524786088568b4cce6b93137f",
+        "events": [
+          {
+            "time": 0.1,
+            "event": 1,
+            "origin": "dut.va:2:152 (dut)",
+            "kind": "timer",
+            "before": [
+              0.0,
+              0.0
+            ],
+            "after": [
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.3,
+            "event": 0,
+            "origin": "dut.va:2:126 (dut)",
+            "kind": "timer",
+            "before": [
+              0.0,
+              1.0
+            ],
+            "after": [
+              1.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.30000000000000004,
+            "observation_time_bounds": [
+              0.3,
+              0.30000000000000004
+            ],
+            "event": 1,
+            "origin": "dut.va:2:152 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              1.0
+            ],
+            "after": [
+              1.0,
+              2.0
+            ]
+          },
+          {
+            "time": 0.5000000000000001,
+            "observation_time_bounds": [
+              0.5,
+              0.5000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:152 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              2.0
+            ],
+            "after": [
+              1.0,
+              3.0
+            ]
+          },
+          {
+            "time": 0.7000000000000001,
+            "observation_time_bounds": [
+              0.7,
+              0.7000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:152 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              3.0
+            ],
+            "after": [
+              1.0,
+              4.0
+            ]
+          },
+          {
+            "time": 0.9000000000000001,
+            "observation_time_bounds": [
+              0.9,
+              0.9000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:152 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              4.0
+            ],
+            "after": [
+              1.0,
+              5.0
+            ]
+          }
+        ],
+        "engine": "evas-events-0.14.0",
+        "observation_origins": [
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame"
+        ],
+        "requested_settings": {
+          "stop_s": 1.0,
+          "maxstep_s": 0.03125,
+          "reltol": 1e-05,
+          "vabstol_V": 1e-09
+        }
+      },
+      {
+        "case": "fixed-both",
+        "assessment": {
+          "status": "pass",
+          "points": 16,
+          "maximum_nominal_error_V": {},
+          "failures": [],
+          "failure_count": 0,
+          "exact_requested_hits": [
+            0.0,
+            0.05,
+            0.1,
+            0.2,
+            0.29999999999999993,
+            0.3,
+            0.30000000000000004,
+            0.325,
+            0.35,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.0
+          ]
+        },
+        "response_sha256": "0d687af483dedac95631cc627774501586ef5cb9fe7b7f2b28b2d9b85a118cfd",
+        "events": [
+          {
+            "time": 0.1,
+            "event": 1,
+            "origin": "dut.va:2:152 (dut)",
+            "kind": "timer",
+            "before": [
+              0.0,
+              0.0
+            ],
+            "after": [
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.3,
+            "event": 0,
+            "origin": "dut.va:2:126 (dut)",
+            "kind": "timer",
+            "before": [
+              0.0,
+              1.0
+            ],
+            "after": [
+              1.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.30000000000000004,
+            "observation_time_bounds": [
+              0.3,
+              0.30000000000000004
+            ],
+            "event": 1,
+            "origin": "dut.va:2:152 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              1.0
+            ],
+            "after": [
+              1.0,
+              2.0
+            ]
+          },
+          {
+            "time": 0.5000000000000001,
+            "observation_time_bounds": [
+              0.5,
+              0.5000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:152 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              2.0
+            ],
+            "after": [
+              1.0,
+              3.0
+            ]
+          },
+          {
+            "time": 0.7000000000000001,
+            "observation_time_bounds": [
+              0.7,
+              0.7000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:152 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              3.0
+            ],
+            "after": [
+              1.0,
+              4.0
+            ]
+          },
+          {
+            "time": 0.9000000000000001,
+            "observation_time_bounds": [
+              0.9,
+              0.9000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:152 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              4.0
+            ],
+            "after": [
+              1.0,
+              5.0
+            ]
+          }
+        ],
+        "engine": "evas-events-0.14.0",
+        "observation_origins": [
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame"
+        ],
+        "requested_settings": {
+          "stop_s": 1.0,
+          "maxstep_s": 0.00390625,
+          "reltol": 1e-08,
+          "vabstol_V": 1e-12
+        }
+      },
+      {
+        "case": "fixed-step",
+        "assessment": {
+          "status": "pass",
+          "points": 16,
+          "maximum_nominal_error_V": {},
+          "failures": [],
+          "failure_count": 0,
+          "exact_requested_hits": [
+            0.0,
+            0.05,
+            0.1,
+            0.2,
+            0.29999999999999993,
+            0.3,
+            0.30000000000000004,
+            0.325,
+            0.35,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.0
+          ]
+        },
+        "response_sha256": "c02ecfb5de8c668e94c908e67bf3df0008cc02b7e8c46c1e6e1e53c4e95ffbb9",
+        "events": [
+          {
+            "time": 0.1,
+            "event": 1,
+            "origin": "dut.va:2:152 (dut)",
+            "kind": "timer",
+            "before": [
+              0.0,
+              0.0
+            ],
+            "after": [
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.3,
+            "event": 0,
+            "origin": "dut.va:2:126 (dut)",
+            "kind": "timer",
+            "before": [
+              0.0,
+              1.0
+            ],
+            "after": [
+              1.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.30000000000000004,
+            "observation_time_bounds": [
+              0.3,
+              0.30000000000000004
+            ],
+            "event": 1,
+            "origin": "dut.va:2:152 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              1.0
+            ],
+            "after": [
+              1.0,
+              2.0
+            ]
+          },
+          {
+            "time": 0.5000000000000001,
+            "observation_time_bounds": [
+              0.5,
+              0.5000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:152 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              2.0
+            ],
+            "after": [
+              1.0,
+              3.0
+            ]
+          },
+          {
+            "time": 0.7000000000000001,
+            "observation_time_bounds": [
+              0.7,
+              0.7000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:152 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              3.0
+            ],
+            "after": [
+              1.0,
+              4.0
+            ]
+          },
+          {
+            "time": 0.9000000000000001,
+            "observation_time_bounds": [
+              0.9,
+              0.9000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:152 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              4.0
+            ],
+            "after": [
+              1.0,
+              5.0
+            ]
+          }
+        ],
+        "engine": "evas-events-0.14.0",
+        "observation_origins": [
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame"
+        ],
+        "requested_settings": {
+          "stop_s": 1.0,
+          "maxstep_s": 0.00390625,
+          "reltol": 1e-05,
+          "vabstol_V": 1e-09
+        }
+      },
+      {
+        "case": "fixed-tol",
+        "assessment": {
+          "status": "pass",
+          "points": 16,
+          "maximum_nominal_error_V": {},
+          "failures": [],
+          "failure_count": 0,
+          "exact_requested_hits": [
+            0.0,
+            0.05,
+            0.1,
+            0.2,
+            0.29999999999999993,
+            0.3,
+            0.30000000000000004,
+            0.325,
+            0.35,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.0
+          ]
+        },
+        "response_sha256": "33d8170d14e0e06c6337ea694bd1d7b7dac4bd26980d391e2f0cb2ac99b7aa4f",
+        "events": [
+          {
+            "time": 0.1,
+            "event": 1,
+            "origin": "dut.va:2:152 (dut)",
+            "kind": "timer",
+            "before": [
+              0.0,
+              0.0
+            ],
+            "after": [
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.3,
+            "event": 0,
+            "origin": "dut.va:2:126 (dut)",
+            "kind": "timer",
+            "before": [
+              0.0,
+              1.0
+            ],
+            "after": [
+              1.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.30000000000000004,
+            "observation_time_bounds": [
+              0.3,
+              0.30000000000000004
+            ],
+            "event": 1,
+            "origin": "dut.va:2:152 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              1.0
+            ],
+            "after": [
+              1.0,
+              2.0
+            ]
+          },
+          {
+            "time": 0.5000000000000001,
+            "observation_time_bounds": [
+              0.5,
+              0.5000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:152 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              2.0
+            ],
+            "after": [
+              1.0,
+              3.0
+            ]
+          },
+          {
+            "time": 0.7000000000000001,
+            "observation_time_bounds": [
+              0.7,
+              0.7000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:152 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              3.0
+            ],
+            "after": [
+              1.0,
+              4.0
+            ]
+          },
+          {
+            "time": 0.9000000000000001,
+            "observation_time_bounds": [
+              0.9,
+              0.9000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:152 (dut)",
+            "kind": "timer",
+            "before": [
+              1.0,
+              4.0
+            ],
+            "after": [
+              1.0,
+              5.0
+            ]
+          }
+        ],
+        "engine": "evas-events-0.14.0",
+        "observation_origins": [
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame"
+        ],
+        "requested_settings": {
+          "stop_s": 1.0,
+          "maxstep_s": 0.03125,
+          "reltol": 1e-08,
+          "vabstol_V": 1e-12
+        }
+      },
+      {
+        "case": "held-base",
+        "assessment": {
+          "status": "pass",
+          "points": 16,
+          "maximum_nominal_error_V": {},
+          "failures": [],
+          "failure_count": 0,
+          "exact_requested_hits": [
+            0.0,
+            0.05,
+            0.1,
+            0.2,
+            0.29999999999999993,
+            0.3,
+            0.30000000000000004,
+            0.325,
+            0.35,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.0
+          ]
+        },
+        "response_sha256": "c28068ccf49735923a07c3312620fc5d379deb4f41348b226f8023fc9747db03",
+        "events": [
+          {
+            "time": 0.1,
+            "event": 1,
+            "origin": "dut.va:2:167 (dut)",
+            "kind": "timer",
+            "before": [
+              0.2,
+              0.0,
+              0.0
+            ],
+            "after": [
+              0.2,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.3,
+            "event": 0,
+            "origin": "dut.va:2:141 (dut)",
+            "kind": "timer",
+            "before": [
+              0.2,
+              0.0,
+              1.0
+            ],
+            "after": [
+              0.2,
+              1.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.30000000000000004,
+            "observation_time_bounds": [
+              0.3,
+              0.30000000000000004
+            ],
+            "event": 1,
+            "origin": "dut.va:2:167 (dut)",
+            "kind": "timer",
+            "before": [
+              0.2,
+              1.0,
+              1.0
+            ],
+            "after": [
+              0.2,
+              1.0,
+              2.0
+            ]
+          },
+          {
+            "time": 0.5000000000000001,
+            "observation_time_bounds": [
+              0.5,
+              0.5000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:167 (dut)",
+            "kind": "timer",
+            "before": [
+              0.2,
+              1.0,
+              2.0
+            ],
+            "after": [
+              0.2,
+              1.0,
+              3.0
+            ]
+          },
+          {
+            "time": 0.7000000000000001,
+            "observation_time_bounds": [
+              0.7,
+              0.7000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:167 (dut)",
+            "kind": "timer",
+            "before": [
+              0.2,
+              1.0,
+              3.0
+            ],
+            "after": [
+              0.2,
+              1.0,
+              4.0
+            ]
+          },
+          {
+            "time": 0.9000000000000001,
+            "observation_time_bounds": [
+              0.9,
+              0.9000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:167 (dut)",
+            "kind": "timer",
+            "before": [
+              0.2,
+              1.0,
+              4.0
+            ],
+            "after": [
+              0.2,
+              1.0,
+              5.0
+            ]
+          }
+        ],
+        "engine": "evas-events-0.14.0",
+        "observation_origins": [
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame"
+        ],
+        "requested_settings": {
+          "stop_s": 1.0,
+          "maxstep_s": 0.03125,
+          "reltol": 1e-05,
+          "vabstol_V": 1e-09
+        }
+      },
+      {
+        "case": "held-both",
+        "assessment": {
+          "status": "pass",
+          "points": 16,
+          "maximum_nominal_error_V": {},
+          "failures": [],
+          "failure_count": 0,
+          "exact_requested_hits": [
+            0.0,
+            0.05,
+            0.1,
+            0.2,
+            0.29999999999999993,
+            0.3,
+            0.30000000000000004,
+            0.325,
+            0.35,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.0
+          ]
+        },
+        "response_sha256": "f40977ffd78fa1e0dd96f5d5b1e21282505b0b5ac1e15c43b6198309df04dda3",
+        "events": [
+          {
+            "time": 0.1,
+            "event": 1,
+            "origin": "dut.va:2:167 (dut)",
+            "kind": "timer",
+            "before": [
+              0.2,
+              0.0,
+              0.0
+            ],
+            "after": [
+              0.2,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.3,
+            "event": 0,
+            "origin": "dut.va:2:141 (dut)",
+            "kind": "timer",
+            "before": [
+              0.2,
+              0.0,
+              1.0
+            ],
+            "after": [
+              0.2,
+              1.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.30000000000000004,
+            "observation_time_bounds": [
+              0.3,
+              0.30000000000000004
+            ],
+            "event": 1,
+            "origin": "dut.va:2:167 (dut)",
+            "kind": "timer",
+            "before": [
+              0.2,
+              1.0,
+              1.0
+            ],
+            "after": [
+              0.2,
+              1.0,
+              2.0
+            ]
+          },
+          {
+            "time": 0.5000000000000001,
+            "observation_time_bounds": [
+              0.5,
+              0.5000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:167 (dut)",
+            "kind": "timer",
+            "before": [
+              0.2,
+              1.0,
+              2.0
+            ],
+            "after": [
+              0.2,
+              1.0,
+              3.0
+            ]
+          },
+          {
+            "time": 0.7000000000000001,
+            "observation_time_bounds": [
+              0.7,
+              0.7000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:167 (dut)",
+            "kind": "timer",
+            "before": [
+              0.2,
+              1.0,
+              3.0
+            ],
+            "after": [
+              0.2,
+              1.0,
+              4.0
+            ]
+          },
+          {
+            "time": 0.9000000000000001,
+            "observation_time_bounds": [
+              0.9,
+              0.9000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:167 (dut)",
+            "kind": "timer",
+            "before": [
+              0.2,
+              1.0,
+              4.0
+            ],
+            "after": [
+              0.2,
+              1.0,
+              5.0
+            ]
+          }
+        ],
+        "engine": "evas-events-0.14.0",
+        "observation_origins": [
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame"
+        ],
+        "requested_settings": {
+          "stop_s": 1.0,
+          "maxstep_s": 0.00390625,
+          "reltol": 1e-08,
+          "vabstol_V": 1e-12
+        }
+      },
+      {
+        "case": "held-step",
+        "assessment": {
+          "status": "pass",
+          "points": 16,
+          "maximum_nominal_error_V": {},
+          "failures": [],
+          "failure_count": 0,
+          "exact_requested_hits": [
+            0.0,
+            0.05,
+            0.1,
+            0.2,
+            0.29999999999999993,
+            0.3,
+            0.30000000000000004,
+            0.325,
+            0.35,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.0
+          ]
+        },
+        "response_sha256": "ce8bd2aace9b55e488526e52d5b69503ca1344916b6ca029d480bd3892cb38ef",
+        "events": [
+          {
+            "time": 0.1,
+            "event": 1,
+            "origin": "dut.va:2:167 (dut)",
+            "kind": "timer",
+            "before": [
+              0.2,
+              0.0,
+              0.0
+            ],
+            "after": [
+              0.2,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.3,
+            "event": 0,
+            "origin": "dut.va:2:141 (dut)",
+            "kind": "timer",
+            "before": [
+              0.2,
+              0.0,
+              1.0
+            ],
+            "after": [
+              0.2,
+              1.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.30000000000000004,
+            "observation_time_bounds": [
+              0.3,
+              0.30000000000000004
+            ],
+            "event": 1,
+            "origin": "dut.va:2:167 (dut)",
+            "kind": "timer",
+            "before": [
+              0.2,
+              1.0,
+              1.0
+            ],
+            "after": [
+              0.2,
+              1.0,
+              2.0
+            ]
+          },
+          {
+            "time": 0.5000000000000001,
+            "observation_time_bounds": [
+              0.5,
+              0.5000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:167 (dut)",
+            "kind": "timer",
+            "before": [
+              0.2,
+              1.0,
+              2.0
+            ],
+            "after": [
+              0.2,
+              1.0,
+              3.0
+            ]
+          },
+          {
+            "time": 0.7000000000000001,
+            "observation_time_bounds": [
+              0.7,
+              0.7000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:167 (dut)",
+            "kind": "timer",
+            "before": [
+              0.2,
+              1.0,
+              3.0
+            ],
+            "after": [
+              0.2,
+              1.0,
+              4.0
+            ]
+          },
+          {
+            "time": 0.9000000000000001,
+            "observation_time_bounds": [
+              0.9,
+              0.9000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:167 (dut)",
+            "kind": "timer",
+            "before": [
+              0.2,
+              1.0,
+              4.0
+            ],
+            "after": [
+              0.2,
+              1.0,
+              5.0
+            ]
+          }
+        ],
+        "engine": "evas-events-0.14.0",
+        "observation_origins": [
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame"
+        ],
+        "requested_settings": {
+          "stop_s": 1.0,
+          "maxstep_s": 0.00390625,
+          "reltol": 1e-05,
+          "vabstol_V": 1e-09
+        }
+      },
+      {
+        "case": "held-tol",
+        "assessment": {
+          "status": "pass",
+          "points": 16,
+          "maximum_nominal_error_V": {},
+          "failures": [],
+          "failure_count": 0,
+          "exact_requested_hits": [
+            0.0,
+            0.05,
+            0.1,
+            0.2,
+            0.29999999999999993,
+            0.3,
+            0.30000000000000004,
+            0.325,
+            0.35,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.0
+          ]
+        },
+        "response_sha256": "067620aae200e8cb3a0a4503c1957bb2486cac9210ff741ca6428566fa3f30e5",
+        "events": [
+          {
+            "time": 0.1,
+            "event": 1,
+            "origin": "dut.va:2:167 (dut)",
+            "kind": "timer",
+            "before": [
+              0.2,
+              0.0,
+              0.0
+            ],
+            "after": [
+              0.2,
+              0.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.3,
+            "event": 0,
+            "origin": "dut.va:2:141 (dut)",
+            "kind": "timer",
+            "before": [
+              0.2,
+              0.0,
+              1.0
+            ],
+            "after": [
+              0.2,
+              1.0,
+              1.0
+            ]
+          },
+          {
+            "time": 0.30000000000000004,
+            "observation_time_bounds": [
+              0.3,
+              0.30000000000000004
+            ],
+            "event": 1,
+            "origin": "dut.va:2:167 (dut)",
+            "kind": "timer",
+            "before": [
+              0.2,
+              1.0,
+              1.0
+            ],
+            "after": [
+              0.2,
+              1.0,
+              2.0
+            ]
+          },
+          {
+            "time": 0.5000000000000001,
+            "observation_time_bounds": [
+              0.5,
+              0.5000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:167 (dut)",
+            "kind": "timer",
+            "before": [
+              0.2,
+              1.0,
+              2.0
+            ],
+            "after": [
+              0.2,
+              1.0,
+              3.0
+            ]
+          },
+          {
+            "time": 0.7000000000000001,
+            "observation_time_bounds": [
+              0.7,
+              0.7000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:167 (dut)",
+            "kind": "timer",
+            "before": [
+              0.2,
+              1.0,
+              3.0
+            ],
+            "after": [
+              0.2,
+              1.0,
+              4.0
+            ]
+          },
+          {
+            "time": 0.9000000000000001,
+            "observation_time_bounds": [
+              0.9,
+              0.9000000000000001
+            ],
+            "event": 1,
+            "origin": "dut.va:2:167 (dut)",
+            "kind": "timer",
+            "before": [
+              0.2,
+              1.0,
+              4.0
+            ],
+            "after": [
+              0.2,
+              1.0,
+              5.0
+            ]
+          }
+        ],
+        "engine": "evas-events-0.14.0",
+        "observation_origins": [
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame"
+        ],
+        "requested_settings": {
+          "stop_s": 1.0,
+          "maxstep_s": 0.03125,
+          "reltol": 1e-08,
+          "vabstol_V": 1e-12
+        }
+      }
+    ]
+  },
+  "availability": "repository-contained recipes/summary; raw outputs and full logs local-only",
+  "preparation_attempts": {
+    "v1_spectre_executions": 12,
+    "v1_final_acceptance": false,
+    "v2_spectre_executions": 0,
+    "v3_spectre_executions": 12,
+    "local_failures_retained": "runs/near-timer-strobe-20261011/"
+  },
+  "review": "Independent source/spec/measurement review; discrete y/h checker defect corrected with positive and negative calibration; no remaining actionable finding.",
+  "selection": {
+    "order": [
+      "base",
+      "tol",
+      "step",
+      "both"
+    ],
+    "fixed": "base",
+    "held": "base",
+    "chain": "tol"
+  }
+}

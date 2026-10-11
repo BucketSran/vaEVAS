@@ -688,10 +688,11 @@ fn add_timer(
         // enclosure covers both product and sum. Choosing its upper endpoint
         // cannot fire early, including when the source omitted time_tol. The
         // clock remains start + index * period, never prior accepted time + T.
-        let mut bounds = if forced_points && !held {
+        let mut bounds = if forced_points && start.lo == start.hi && period.lo == period.hi {
             // A forced solve point must not be crossed only because interval
             // arithmetic widened an otherwise exactly ordered source clock.
-            // Keep ordinary-query and uncertain held-timer paths unchanged.
+            // A held clock qualifies only when both current parameters are
+            // exact singletons. Keep uncertain held-timer bounds unchanged.
             crate::exact_time::Clock {
                 start: start.lo,
                 period: period.lo,
