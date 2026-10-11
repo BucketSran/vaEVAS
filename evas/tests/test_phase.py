@@ -179,6 +179,36 @@ class PhaseContracts(unittest.TestCase):
             self.assertLessEqual(abs(Decimal.from_float(observed) - expected),
                                  Decimal("1e-14"))
 
+    def test_refined_observation_keeps_an_independent_input_cross_safe(self):
+        body = """
+@(initial_step) count=0;
+@(cross(V(f,r)-0.625,1,1e-12,1e-12)) count=count+1;
+phase_v=idtmod(750000,0.125,1,0);
+V(phase,r)<+phase_v;
+V(out,r)<+sin(2*`M_PI*phase_v);
+V(total,r)<+count;
+"""
+        end = 2**-17
+        event = 0.625 * end
+        times = [0, 4.5e-6, event, 5e-6]
+        result = transient(compile_phase(body, "real phase_v; integer count;"),
+                           {"f": [[0, 0], [end, 1]]}, times,
+                           stop=times[-1], max_step=end, strobetimes=times,
+                           kernel=KERNEL, vabstol=1e-14, reltol=1e-10)
+        self.assertEqual(voltages(result, "total"), [0, 0, 1, 1])
+        for time, actual in zip(times, voltages(result, "out")):
+            phase = (F(1,8) + F(750000)*F.from_float(time)) % 1
+            angle = F.from_float(2*math.pi)*phase
+            expected = decimal_sin(Decimal(angle.numerator)/Decimal(angle.denominator))
+            budget = Decimal.from_float(1e-14) + Decimal.from_float(1e-10)*abs(expected)
+            self.assertLessEqual(abs(Decimal.from_float(actual)-expected), budget)
+        for guard in ["V(phase,r)-0.5", "V(out,r)", "V(f,r)+V(phase,r)-V(phase,r)-0.625"]:
+            guarded = body.replace("V(f,r)-0.625", guard)
+            with self.assertRaisesRegex(KernelError, "unsupported_cross"):
+                transient(compile_phase(guarded, "real phase_v; integer count;"),
+                          {"f": [[0,0],[end,1]]}, times, stop=times[-1],
+                          max_step=end, kernel=KERNEL, vabstol=1e-14, reltol=1e-10)
+
     def test_sine_unrepresentable_output_keeps_strict_budget_rejection(self):
         exact = decimal_sin(0.1)
         nearest = Decimal.from_float(float(exact))
