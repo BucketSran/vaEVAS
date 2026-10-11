@@ -1,0 +1,67 @@
+{
+  "source": "5635f2f5bb52968ed6c5d6896b2243d023af7edc",
+  "source_netlist_sha256": "7d15c2e32b40b5094442878390703d42768efeff828fef73e9f02d6bf2c556ff",
+  "ngspice_version": "******\n** ngspice-47 : Circuit level simulation program\n** Compiled with KLU Direct Linear Solver\n** The U. C. Berkeley CAD Group\n** Copyright 1985-1994, Regents of the University of California.\n** Copyright 2001-2026, The ngspice team.\n** Please get your ngspice manual from https://ngspice.sourceforge.io/docs.html\n** Please file your bug-reports at http://ngspice.sourceforge.net/bugrep.html\n******\n",
+  "osdi_sha256": "77459d1a08c8e61a2c3e5521df11f0649b116a78b669577662ee7082c7bf541d",
+  "model_files": {
+    "cornerMOSlv.lib": "03d505847c880d233b341be115a1e5460edf4d8e9b3e8a7df791a52fa4455d67",
+    "sg13g2_moslv_mod.lib": "84ec57080b9dd4666417f05db6f7b34c8dd3f12118929f9b308018613bece16e",
+    "sg13g2_moslv_parm.lib": "cbf10b8453a18bb70b8ad0d6e40faa0937338e699b5460947a94900db6c92a6e"
+  },
+  "records": [
+    {
+      "record_id": "train-0",
+      "raw_sha256": "9fe23743eecde58b3ad041d27279700f43aa8393f215d711950f61dbb45d5066",
+      "deck_sha256": "e608adb7d9efcd4ce512d77d0f0aee7f1af1090bc9fe759646f3e0019db90c94",
+      "export_sha256": "82f5ec2b4f51d1eb73cd30863f70350404f5143e7c0bd38ea13b45520bc16c64",
+      "raw_rows": 34330,
+      "export_rows": 8396
+    },
+    {
+      "record_id": "train-1",
+      "raw_sha256": "f26e6db8261670ac09d19c5dc194db7ea54c82c40326a7286b933c8d88b77da2",
+      "deck_sha256": "6029b175b5885911d8bd549863ba1c64e8226644659eb6b911a14d2f4eb0ee9a",
+      "export_sha256": "7f51ce2116ec0ba0dbd96de5e318a7ec5a721df71c4bceaa0f7aaac3ff1fc784",
+      "raw_rows": 34339,
+      "export_rows": 8396
+    },
+    {
+      "record_id": "train-2",
+      "raw_sha256": "94ef87fbd678c368dc5acaaba0507101f7c93f4fece52ba4b6f0b4ee6606c068",
+      "deck_sha256": "e800e8857b9dbb74f5f07ee117b753ded09389fbd0689de339fa113ee5810020",
+      "export_sha256": "e6cdde3b59f5c677f6f396b3b6035908d3207cc09cc7e803953248e6158b394e",
+      "raw_rows": 34325,
+      "export_rows": 8396
+    },
+    {
+      "record_id": "test-0",
+      "raw_sha256": "0e03ee15041dc4b20e46ad69e3e2748b4f7528e2736f22536e54e25ca0750705",
+      "deck_sha256": "54c7289ec63a5e337decb1164e721407ebcb7a1e5e950ad3203a3639e6f43503",
+      "export_sha256": "9b920669bbdc4d4b22633426373627d9c65ed500e107d2a6a90dfdbb7e889965",
+      "raw_rows": 34334,
+      "export_rows": 8396
+    },
+    {
+      "record_id": "test-1",
+      "raw_sha256": "3c1c3ababa7a04e21b8758f0dce823e3f4fceff17fed4a1196dd115da89b046b",
+      "deck_sha256": "83efd190abc9791b26695fc48dbc1b8014068fad937a5d83bb8bf14b9ec8b4c5",
+      "export_sha256": "b9bd18d09bcc3a940a5b6c93ea22e60cd60f2cd5dd161a34df2f7ddcc32a9968",
+      "raw_rows": 34330,
+      "export_rows": 8396
+    },
+    {
+      "record_id": "test-2",
+      "raw_sha256": "f8acebf96a84a4caa158294decace0f3dfabce2486b6d1b02ef5fd38346cf3f8",
+      "deck_sha256": "191a9d5439b902cbd4e2aab38648a23bd016309c317148d6d1a94e8cd5e60859",
+      "export_sha256": "f8eea604b2df7a84546343fbe2a9e5cf9f88b6bb966d07fa131e45af8a32a7cd",
+      "raw_rows": 34342,
+      "export_rows": 8396
+    }
+  ],
+  "maxstep_s": 5e-10,
+  "openvaf_release": "v24.0.2mob",
+  "openvaf_release_archive_sha256": "022d5659257239af98f5e8ee59e2fe4403e1b2e694a06461152d5251c0ad0196",
+  "nqs_osdi_sha256": "6860201e92346da664c09d53d9b50e3327f85d48f2bbb5b750ed73777a6509a9",
+  "source_pdk_revision": "597570eec556a473d1eedb22c055545d4522f442",
+  "sibling_models_revision": "5e6d592e4002946a4616f798c357f0f3c06cf3b6"
+}

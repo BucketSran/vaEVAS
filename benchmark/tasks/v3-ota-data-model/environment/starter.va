@@ -1,0 +1,29 @@
+`include "disciplines.vams"
+module ota(vin,enable,vout);
+input vin,enable;output vout;electrical vin,enable,vout,b,q,d;
+real bias_drive,db,activation,target,err,om,damp,dq,dd,bias;
+analog function real dc_curve;
+input x; real x; begin
+if (x<0.4) dc_curve=0.351919953644+(x-0.35)*0.9953587087776;
+else if (x<0.5) dc_curve=0.40168788908288+(x-0.4)*0.9990540869776;
+else if (x<0.68) dc_curve=0.50159329778064+(x-0.5)*1.0017053315451;
+else if (x<0.73) dc_curve=0.68190025745876+(x-0.68)*0.9972552808248;
+else if (x<0.75) dc_curve=0.7317630215+(x-0.73)*0.99619637644;
+else if (x<0.77) dc_curve=0.7516869490288+(x-0.75)*0.99576514856;
+else if (x<0.78) dc_curve=0.771602252+(x-0.77)*0.9954770222;
+else if (x<0.8) dc_curve=0.781557022222+(x-0.78)*0.9951821829;
+else if (x<0.82) dc_curve=0.80146066588+(x-0.8)*0.99478825600001;
+else if (x<0.83) dc_curve=0.821356431+(x-0.82)*0.9944883;
+else if (x<0.88) dc_curve=0.831301314+(x-0.83)*0.993836310178;
+else if (x<1.1) dc_curve=0.8809931295089+(x-0.88)*0.98917136586864;
+else if (x<1.2) dc_curve=1.09861083+(x-1.1)*0.966310439834;
+else if (x<1.25) dc_curve=1.1952418739834+(x-1.2)*0.904116514764;
+else if (x<1.43) dc_curve=1.2404476997216+(x-1.25)*0.55033821379111;
+else if (x<1.435) dc_curve=1.339508578204+(x-1.43)*0.25351213040001;
+else if (x<1.44) dc_curve=1.340776138856+(x-1.435)*0.24409022879999;
+else dc_curve=1.34199659;
+end endfunction
+analog begin
+// Implement the public contract.
+end
+endmodule

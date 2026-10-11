@@ -1,0 +1,86 @@
+[
+  {
+    "name": "heldout-healthy",
+    "kind": "measurement",
+    "stop": 1.4e-06,
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"support.va\"\nXD (vin enable vout) measurement_dut tau=1.7e-08 positive=8e+06 negative=5e+06 gain=0.97\nXM (vin enable launch vout gain slew_metric settle valid status direction) stimulus_meter\ntran tran stop=1.4u maxstep=100p\nsave vin enable launch vout gain slew_metric settle valid status direction\n",
+    "signals": [
+      "vin",
+      "enable",
+      "launch",
+      "vout",
+      "gain",
+      "slew_metric",
+      "settle",
+      "valid",
+      "status",
+      "direction"
+    ],
+    "resolution": 1e-10,
+    "dut_parameters": {
+      "tau": 1.7e-08,
+      "positive": 8000000.0,
+      "negative": 5000000.0,
+      "gain": 0.97
+    },
+    "support": {
+      "support.va": "`include \"disciplines.vams\"\nmodule measurement_dut(vin,enable,vout);\ninput vin,enable; output vout; electrical vin,enable,vout; electrical q;\nparameter real tau=20n, positive=10e6, negative=6e6, gain=0.98, low=0.1, high=1.4;\nreal target,rate;\nanalog begin\n target=0.75+gain*(V(vin)-0.75);\n if(target<low) target=low; if(target>high) target=high;\n if(V(enable)<0.75) begin target=0; rate=(target-V(q))/50n; end\n else begin\n rate=(target-V(q))/tau;\n if(rate>positive) rate=positive;\n if(rate< -negative) rate= -negative;\n end\n V(q)<+idt(rate,0);\n V(vout)<+V(q);\n $bound_step(0.25n);\nend\nendmodule\n"
+    }
+  },
+  {
+    "name": "heldout-slow",
+    "kind": "measurement",
+    "stop": 1.4e-06,
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"support.va\"\nXD (vin enable vout) measurement_dut tau=3e-07 positive=1e+06 negative=600000 gain=0.96\nXM (vin enable launch vout gain slew_metric settle valid status direction) stimulus_meter\ntran tran stop=1.4u maxstep=100p\nsave vin enable launch vout gain slew_metric settle valid status direction\n",
+    "signals": [
+      "vin",
+      "enable",
+      "launch",
+      "vout",
+      "gain",
+      "slew_metric",
+      "settle",
+      "valid",
+      "status",
+      "direction"
+    ],
+    "resolution": 1e-10,
+    "dut_parameters": {
+      "tau": 3e-07,
+      "positive": 1000000.0,
+      "negative": 600000.0,
+      "gain": 0.96
+    },
+    "support": {
+      "support.va": "`include \"disciplines.vams\"\nmodule measurement_dut(vin,enable,vout);\ninput vin,enable; output vout; electrical vin,enable,vout; electrical q;\nparameter real tau=20n, positive=10e6, negative=6e6, gain=0.98, low=0.1, high=1.4;\nreal target,rate;\nanalog begin\n target=0.75+gain*(V(vin)-0.75);\n if(target<low) target=low; if(target>high) target=high;\n if(V(enable)<0.75) begin target=0; rate=(target-V(q))/50n; end\n else begin\n rate=(target-V(q))/tau;\n if(rate>positive) rate=positive;\n if(rate< -negative) rate= -negative;\n end\n V(q)<+idt(rate,0);\n V(vout)<+V(q);\n $bound_step(0.25n);\nend\nendmodule\n"
+    }
+  },
+  {
+    "name": "heldout-asymmetric",
+    "kind": "measurement",
+    "stop": 1.4e-06,
+    "netlist": "simulator lang=spectre\nglobal 0\nahdl_include \"dut.va\"\nahdl_include \"support.va\"\nXD (vin enable vout) measurement_dut tau=2.3e-08 positive=1.2e+07 negative=3.5e+06 gain=0.99\nXM (vin enable launch vout gain slew_metric settle valid status direction) stimulus_meter\ntran tran stop=1.4u maxstep=100p\nsave vin enable launch vout gain slew_metric settle valid status direction\n",
+    "signals": [
+      "vin",
+      "enable",
+      "launch",
+      "vout",
+      "gain",
+      "slew_metric",
+      "settle",
+      "valid",
+      "status",
+      "direction"
+    ],
+    "resolution": 1e-10,
+    "dut_parameters": {
+      "tau": 2.3e-08,
+      "positive": 12000000.0,
+      "negative": 3500000.0,
+      "gain": 0.99
+    },
+    "support": {
+      "support.va": "`include \"disciplines.vams\"\nmodule measurement_dut(vin,enable,vout);\ninput vin,enable; output vout; electrical vin,enable,vout; electrical q;\nparameter real tau=20n, positive=10e6, negative=6e6, gain=0.98, low=0.1, high=1.4;\nreal target,rate;\nanalog begin\n target=0.75+gain*(V(vin)-0.75);\n if(target<low) target=low; if(target>high) target=high;\n if(V(enable)<0.75) begin target=0; rate=(target-V(q))/50n; end\n else begin\n rate=(target-V(q))/tau;\n if(rate>positive) rate=positive;\n if(rate< -negative) rate= -negative;\n end\n V(q)<+idt(rate,0);\n V(vout)<+V(q);\n $bound_step(0.25n);\nend\nendmodule\n"
+    }
+  }
+]

@@ -1,0 +1,40 @@
+* (c) 2024-2025 Harald Pretl, Apache-2.0. Geometry transcription.
+.subckt ota vinp vinn vout d_ena ibias_5u vdd vss
+XM5 net7 gate vss vss sg13_lv_nmos mm_ok=1 l=5u w=6u ng=3 m=1
+XM4 net2 gate_p vdd vdd sg13_lv_pmos mm_ok=1 l=0.5u w=3u ng=1 m=1
+XM1 net5 vinp tail vss sg13_lv_nmos mm_ok=1 l=0.5u w=1u ng=1 m=1
+XM2 net6 vinn tail vss sg13_lv_nmos mm_ok=1 l=0.5u w=1u ng=1 m=1
+XM3 net3 gate_p vdd vdd sg13_lv_pmos mm_ok=1 l=0.5u w=3u ng=1 m=1
+XM6 net1 gate vss vss sg13_lv_nmos mm_ok=1 l=5u w=2u ng=1 m=1
+XMpd5 gate ena_n vss vss sg13_lv_nmos mm_ok=1 l=0.13u w=1u ng=1 m=1
+XMpd3 ena ena_n vss vss sg13_lv_nmos mm_ok=1 l=0.13u w=1u ng=1 m=1
+XMpd4 ena ena_n vdd vdd sg13_lv_pmos mm_ok=1 l=0.13u w=1u ng=1 m=1
+XMpd6 net1 ena gate vss sg13_lv_nmos mm_ok=1 l=0.13u w=1u ng=1 m=1
+XM2c vout dp_casc net6 vss sg13_lv_nmos mm_ok=1 l=0.5u w=1u ng=1 m=1
+XM1c gate_p dp_casc net5 vss sg13_lv_nmos mm_ok=1 l=0.5u w=1u ng=1 m=1
+XM4c vout gate_pc net2 vdd sg13_lv_pmos mm_ok=1 l=0.5u w=3u ng=1 m=1
+XM3c gate_p gate_pc net3 vdd sg13_lv_pmos mm_ok=1 l=0.5u w=3u ng=1 m=1
+XM7 net4 gate vss vss sg13_lv_nmos mm_ok=1 l=5u w=2u ng=1 m=1
+XMpd8 gate_p ena vdd vdd sg13_lv_pmos mm_ok=1 l=0.13u w=1u ng=1 m=1
+XM8_1 n_980_1340 gate_pc vdd vdd sg13_lv_pmos mm_ok=1 l=0.5u w=3u ng=1 m=1
+XM9_1 n_1230_1340 gate_pc vdd vdd sg13_lv_pmos mm_ok=1 l=0.5u w=3u ng=1 m=1
+XMpd7 gate_pc ena vdd vdd sg13_lv_pmos mm_ok=1 l=0.13u w=1u ng=1 m=1
+XM10_3 n_1230_920 dp_casc n_1230_860 vss sg13_lv_nmos mm_ok=1 l=0.5u w=1u ng=1 m=1
+Vmeas gate_pc net4 0
+Vmeas1 tail net7 0
+XMpd1 ena_n d_ena vss vss sg13_lv_nmos mm_ok=1 l=0.13u w=1u ng=1 m=1
+XMpd2 ena_n d_ena vdd vdd sg13_lv_pmos mm_ok=1 l=0.13u w=1u ng=1 m=1
+Vmeas4 ibias_5u net1 0
+XMpd11 vout ena_n vss vss sg13_lv_nmos mm_ok=1 l=0.13u w=0.5u ng=1 m=1
+XM10_4 n_1230_860 dp_casc tail vss sg13_lv_nmos mm_ok=1 l=0.5u w=1u ng=1 m=1
+XMdecoup1 vss gate vss vss sg13_lv_nmos mm_ok=1 l=1u w=8u ng=4 m=1
+XMdecoup3 vdd gate_pc vdd vdd sg13_lv_pmos mm_ok=1 l=0.5u w=12u ng=4 m=1
+XM10_2 n_1230_980 dp_casc n_1230_920 vss sg13_lv_nmos mm_ok=1 l=0.5u w=1u ng=1 m=1
+XM10_1 dp_casc dp_casc n_1230_980 vss sg13_lv_nmos mm_ok=1 l=0.5u w=1u ng=1 m=1
+XM8_2 n_980_1280 gate_pc n_980_1340 vdd sg13_lv_pmos mm_ok=1 l=0.5u w=3u ng=1 m=1
+XM8_3 n_980_1220 gate_pc n_980_1280 vdd sg13_lv_pmos mm_ok=1 l=0.5u w=3u ng=1 m=1
+XM9_2 n_1230_1280 gate_pc n_1230_1340 vdd sg13_lv_pmos mm_ok=1 l=0.5u w=3u ng=1 m=1
+XM9_3 n_1230_1220 gate_pc n_1230_1280 vdd sg13_lv_pmos mm_ok=1 l=0.5u w=3u ng=1 m=1
+XM8_4 gate_pc gate_pc n_980_1220 vdd sg13_lv_pmos mm_ok=1 l=0.5u w=3u ng=1 m=1
+XM9_4 dp_casc gate_pc n_1230_1220 vdd sg13_lv_pmos mm_ok=1 l=0.5u w=3u ng=1 m=1
+.ends ota

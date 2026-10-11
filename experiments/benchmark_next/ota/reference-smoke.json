@@ -1,0 +1,197 @@
+{
+  "state": "reference smoke only; final 57-condition author calibration pending",
+  "task_version": "circuit-benchmark-next-development",
+  "backend": "Spectre 21.1.0.509.isr12",
+  "actual_reference_conditions": [
+    {
+      "job_id": "bf-73a8c9e5a69f4c4499a9-heldout-2",
+      "archive_sha256": "7bf181fd9dfdf179984428e3cced0db20006dfbba4e9ea9ce43c25dfc5e8d2ec",
+      "report_sha256": "73aca6fdc7b97f49ac0cf80ec4e0f2c448db3697ec9f6cf1f96d3eb159e2cbf0",
+      "status": "completed",
+      "reward": 1,
+      "runtime_sha256": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "parser_sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "cases_sha256": "943a3922fcc124b0f66b4ea921387a278a778adb29f75831c1102d0aff04fb4f",
+      "contract_sha256": "a85f563c10240a8724c89027ba07436d50158d1ad80b9b191ec96e7b514d754c",
+      "candidate_sha256": "73453a7046a2105d6e59973273233102ce6471855ca7470d365da69a01c1c27c",
+      "checker_sha256": "8bf02a925099f379d30e4bb1eb4eaf7f32d1b75b4ec75c5e2c8831f44fcb1578",
+      "cases": [
+        {
+          "name": "heldout-2",
+          "netlist_sha256": "5e198d143a5d4154acd060598f35c7faa88cf46822d157d79a571fea56128ef1",
+          "returncode": 0,
+          "status": "graded"
+        }
+      ]
+    },
+    {
+      "job_id": "bf-8032e8ee12e14cd1b2ac-heldout-0",
+      "archive_sha256": "cf3bd3d9144bf861db247e7bfb8a73bbc6dbfbb0f9e8aba3b53862dafd308eea",
+      "report_sha256": "43581ff30b4eb46b54f67c8d1b7a40def3c05b4934a40d2db84f7b7f5f1bcb61",
+      "status": "completed",
+      "reward": 1,
+      "runtime_sha256": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "parser_sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "cases_sha256": "16a38c41d455d6ac729d3d819bfb359babb835ddb71502bf9d7de1fe604a2f50",
+      "contract_sha256": "a85f563c10240a8724c89027ba07436d50158d1ad80b9b191ec96e7b514d754c",
+      "candidate_sha256": "73453a7046a2105d6e59973273233102ce6471855ca7470d365da69a01c1c27c",
+      "checker_sha256": "8bf02a925099f379d30e4bb1eb4eaf7f32d1b75b4ec75c5e2c8831f44fcb1578",
+      "cases": [
+        {
+          "name": "heldout-0",
+          "netlist_sha256": "95126da7c2483208978fd599c971487a2b8794ba9eb56222ae1ca4e8777b0fc0",
+          "returncode": 0,
+          "status": "graded"
+        }
+      ]
+    },
+    {
+      "job_id": "bf-5719d2d8b45644b9a657-heldout-1",
+      "archive_sha256": "21da6a47d99fad14d72bac9faf0a4a4e04bf434f5dbda0335ff7ffce4ce73290",
+      "report_sha256": "2f56ce18ad340f9b010700e66bd3ca90f85781d6357943b2d399099ff26b0045",
+      "status": "completed",
+      "reward": 1,
+      "runtime_sha256": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "parser_sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "cases_sha256": "4dc318d4d8ec88b68b669c8a23bca1601d181d2fcc660aac644e07f505dcad5a",
+      "contract_sha256": "a85f563c10240a8724c89027ba07436d50158d1ad80b9b191ec96e7b514d754c",
+      "candidate_sha256": "73453a7046a2105d6e59973273233102ce6471855ca7470d365da69a01c1c27c",
+      "checker_sha256": "8bf02a925099f379d30e4bb1eb4eaf7f32d1b75b4ec75c5e2c8831f44fcb1578",
+      "cases": [
+        {
+          "name": "heldout-1",
+          "netlist_sha256": "68847fea4e6c7a684724ec9eb8317c0cd2aa0c32b12467b9dd78f3c33816865a",
+          "returncode": 0,
+          "status": "graded"
+        }
+      ]
+    },
+    {
+      "job_id": "bf-f4cfbbafab414b8884aa-heldout-asymmetric",
+      "archive_sha256": "f73c40175c4c180bdf23d0d329ae17257c03085b32eec20c38ca1816b7d1b8b3",
+      "report_sha256": "a4053b121fa531d658deef5fb1e5b7a9af863fa1d9b6dfbd378ff706c3ef8a9f",
+      "status": "completed",
+      "reward": 1,
+      "runtime_sha256": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "parser_sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "cases_sha256": "e6cd97a98529d06ac869aaaa4ab7094c45025953448f340eccd4ba2b74bf737b",
+      "contract_sha256": "5c92a7aea753a5b1892e925960a8a337a253f5fbf974fed914cd9a3eb793ee66",
+      "candidate_sha256": "abc9d1effa7471ab7a64afd2759c3df10b5cb480bb6a7b090639d376bcb4e1a2",
+      "checker_sha256": "8bf02a925099f379d30e4bb1eb4eaf7f32d1b75b4ec75c5e2c8831f44fcb1578",
+      "cases": [
+        {
+          "name": "heldout-asymmetric",
+          "netlist_sha256": "256c3f8bc2bdb3482882b6c9d92f81c0562fdd6922895fcab0103ffdf5a0950f",
+          "returncode": 0,
+          "status": "graded"
+        }
+      ]
+    },
+    {
+      "job_id": "bf-978a2e31b4ea438f8b7f-heldout-healthy",
+      "archive_sha256": "307fa63e7694da7725dd0c2eea1c7933959adce2f31be111f6568106875f539f",
+      "report_sha256": "3a6105138592ec7fc9221d7d82ae20c58e54bc2cec337456345d46cddb3401fa",
+      "status": "completed",
+      "reward": 1,
+      "runtime_sha256": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "parser_sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "cases_sha256": "54e5f523ce12457e65fcae5034111a141d8b75fb1270cc023aaf063487f3bcbc",
+      "contract_sha256": "5c92a7aea753a5b1892e925960a8a337a253f5fbf974fed914cd9a3eb793ee66",
+      "candidate_sha256": "abc9d1effa7471ab7a64afd2759c3df10b5cb480bb6a7b090639d376bcb4e1a2",
+      "checker_sha256": "8bf02a925099f379d30e4bb1eb4eaf7f32d1b75b4ec75c5e2c8831f44fcb1578",
+      "cases": [
+        {
+          "name": "heldout-healthy",
+          "netlist_sha256": "7fe51c3ef0b66a1e5cc479c661973ab788a78d46ec91f35e6884038c5158c06e",
+          "returncode": 0,
+          "status": "graded"
+        }
+      ]
+    },
+    {
+      "job_id": "bf-de612dd18ba948e3a43d-heldout-slow",
+      "archive_sha256": "45477e06fe615077113efe3a99c050c5b369f64d54f373c43d4f9ef955f521ff",
+      "report_sha256": "d32de980ef5cef8e3dc0748b377f611ce52721e883552f68faa8fef302a493bb",
+      "status": "completed",
+      "reward": 1,
+      "runtime_sha256": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "parser_sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "cases_sha256": "faa0466edeb40e89b979bce3533acd9eadf44ac5c2de304df836d456242e2fd6",
+      "contract_sha256": "5c92a7aea753a5b1892e925960a8a337a253f5fbf974fed914cd9a3eb793ee66",
+      "candidate_sha256": "abc9d1effa7471ab7a64afd2759c3df10b5cb480bb6a7b090639d376bcb4e1a2",
+      "checker_sha256": "8bf02a925099f379d30e4bb1eb4eaf7f32d1b75b4ec75c5e2c8831f44fcb1578",
+      "cases": [
+        {
+          "name": "heldout-slow",
+          "netlist_sha256": "48643564e9cb77291ff512b762ba0cb1360b20dfbb323e03fa21addb68ec0791",
+          "returncode": 0,
+          "status": "graded"
+        }
+      ]
+    },
+    {
+      "job_id": "bf-eb3f0ad018314a34afa3-test-0",
+      "archive_sha256": "9e9ee2991a8f0bfbe769cf884d262389d2c94e1682477be777f5d8cb8b4a04a2",
+      "report_sha256": "247bc174b53089c7005720e928ac5380145f4d56480409ee940e107ad52592b3",
+      "status": "completed",
+      "reward": 1,
+      "runtime_sha256": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "parser_sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "cases_sha256": "fa35a3b3280f79d1754fb6b920d6885894d5b8ea2c2c70b71dbd753bfde0aaf9",
+      "contract_sha256": "8d2e4dd3bef9836b66ef9893acc3251afac8cf298e0947bc73444da94f716a43",
+      "candidate_sha256": "4804f079155d80103876f82c7ad6979d029e345fd793b87933d2e90f46ae6816",
+      "checker_sha256": "8bf02a925099f379d30e4bb1eb4eaf7f32d1b75b4ec75c5e2c8831f44fcb1578",
+      "cases": [
+        {
+          "name": "test-0",
+          "netlist_sha256": "709c9237b50719187762787a4319501a5545554078754d6091c04c499796c95f",
+          "returncode": 0,
+          "status": "graded"
+        }
+      ]
+    },
+    {
+      "job_id": "bf-7641b785536f4ba5a77a-test-2",
+      "archive_sha256": "2eb090e827817417645a06b76df3f63b4be5c831ec300f318ffbd45723abea67",
+      "report_sha256": "48c4ef0201f8a98ebfe84e94a9214df83f9cb7ca7e5f9c6d3f74fa97b37b6d74",
+      "status": "completed",
+      "reward": 1,
+      "runtime_sha256": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "parser_sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "cases_sha256": "853c60e27bb2bcfe139c9b5491ca332b0c7e63a49fb69069d96743984b3dc66d",
+      "contract_sha256": "8d2e4dd3bef9836b66ef9893acc3251afac8cf298e0947bc73444da94f716a43",
+      "candidate_sha256": "4804f079155d80103876f82c7ad6979d029e345fd793b87933d2e90f46ae6816",
+      "checker_sha256": "8bf02a925099f379d30e4bb1eb4eaf7f32d1b75b4ec75c5e2c8831f44fcb1578",
+      "cases": [
+        {
+          "name": "test-2",
+          "netlist_sha256": "ef88aef26b14ffb1e5fbf8cbc14907a483016f9e415dc185a3797e8d14a30eb9",
+          "returncode": 0,
+          "status": "graded"
+        }
+      ]
+    },
+    {
+      "job_id": "bf-c3aaa60bee824f7c83c1-test-1",
+      "archive_sha256": "ca534da2fe3572a2e9aaeae4c6bf8f54b47bf95e1abaeb3dbbe5cea2fe6ed656",
+      "report_sha256": "cabb80f5dbbcf257ded418faf76c2d85e4802003cb3f107cad69a1d22d1869bf",
+      "status": "completed",
+      "reward": 1,
+      "runtime_sha256": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "parser_sha256": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "cases_sha256": "c4f3ca02ffa337a48abac14ec2d31e21473a2c7a80cc85d6422c5b41ef880629",
+      "contract_sha256": "8d2e4dd3bef9836b66ef9893acc3251afac8cf298e0947bc73444da94f716a43",
+      "candidate_sha256": "4804f079155d80103876f82c7ad6979d029e345fd793b87933d2e90f46ae6816",
+      "checker_sha256": "8bf02a925099f379d30e4bb1eb4eaf7f32d1b75b4ec75c5e2c8831f44fcb1578",
+      "cases": [
+        {
+          "name": "test-1",
+          "netlist_sha256": "fc08a473970d122dcd5d9b6c3280ea5dab17d66e69dc7ba98277306577078813",
+          "returncode": 0,
+          "status": "graded"
+        }
+      ]
+    }
+  ],
+  "scope_limit": "Checker received additional stimulus and fixed-DUT checks after smoke; final identities require new actual calibration."
+}
