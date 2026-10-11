@@ -150,6 +150,14 @@ class ObservationAndReferenceCalibration(unittest.TestCase):
             result = self.check(card(), trace(card()), ref)
             self.assertTrue(all(q['status'] == 'evidence_insufficient' for q in result['tiers'].values()))
 
+    def test_request_resource_cap_keeps_event_and_reports_unachieved_density(self):
+        c = event_card(); c['event_sensitivity_bound_V_s'] = 1e15
+        plan = observation_plan(c, load_contract(cards=[c]))
+        self.assertIn(5e-7, plan['times_s'])
+        self.assertLess(len(plan['times_s']), 20100)
+        self.assertTrue(plan['event_grids'][0]['request_density_capped'])
+        self.assertGreater(plan['event_grids'][0]['requested_intervals'], plan['event_grids'][0]['planned_intervals'])
+
     def test_true_undefined_point_requires_named_one_sided_obligations(self):
         c = card(); c['undefined_points'] = [{'time_s': 5e-7, 'outputs': ['z'],
                                              'left_s': 5e-7 - 2e-12, 'right_s': 5e-7 + 2e-12}]

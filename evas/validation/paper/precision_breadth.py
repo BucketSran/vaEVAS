@@ -111,16 +111,30 @@ def observation_plan(card, contract):
     slopes = list(slope.values()) if isinstance(slope, dict) else [slope]
     sensitivity = max(slopes, default=0.) + max(gains, default=0.) * max((slope_bound(p) for p in card['inputs'].values()), default=0.)
     target = (contract['budgets']['absolute_V'] + contract['budgets']['relative'] * card['scale_V']) * .1
-    interval = min(config['constant_interval_s'], target * config['observation_fraction'] / (2 * sensitivity)) if sensitivity else config['constant_interval_s']
-    for e in card.get('events', []):
+    sensitivity = card.get('event_sensitivity_bound_V_s', sensitivity)
+    if sensitivity is not None and (not math.isfinite(sensitivity) or sensitivity < 0):
+        raise ValueError('invalid event-time sensitivity')
+    interval = min(config['constant_interval_s'], target * config['observation_fraction'] / sensitivity) if sensitivity else config['constant_interval_s']
+    grids = []
+    events = card.get('events', [])
+    dense_cap = 20000
+    for index, e in enumerate(events):
         a = max(0., e['nominal_s'] - e['early_s'] - config['padding_s'])
         b = min(stop, e['nominal_s'] + e['late_s'] + config['padding_s'])
         n = max(1, math.ceil((Fraction(b) - Fraction(a)) / Fraction(interval)))
-        if n > 200000:
-            raise ValueError('event observation plan exceeds 200000 requests; explicit preflight required')
+        wanted = n
+        allocated_points = dense_cap // len(events) + (index < dense_cap % len(events))
+        n = min(n, max(1, allocated_points - 1))
+        grids.append({'event': e['id'], 'sensitivity_bound_V_s': sensitivity,
+                      'requested_intervals': wanted, 'planned_intervals': n,
+                      'request_density_capped': wanted != n, 'sensitivity_known': sensitivity is not None,
+                      'possible_evidence_insufficiency': wanted != n or sensitivity is None,
+                      'planned_interval_s': (b - a) / n,
+                      'claim': 'request density only; actual rows and reference intervals still determine evidence'})
         times.update(float(Fraction(a) + (Fraction(b) - Fraction(a)) * i / n) for i in range(n + 1))
     return {'id': 'breadth-native-v1', 'target_tier': 'Q3', 'times_s': sorted(t for t in times if 0 <= t <= stop),
-            'critical': critical, 'claim': 'requests only; actual rows are qualified separately'}
+            'critical': critical, 'event_grids': grids, 'dense_request_cap': dense_cap,
+            'claim': 'requests only; actual rows are qualified separately'}
 
 
 def _uncertainty(value, scale, ulps):
