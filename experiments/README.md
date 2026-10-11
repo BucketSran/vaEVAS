@@ -7,6 +7,7 @@
 实际校准、性能配对证据与 Agentic 试跑入口；[Verilog-A 能力初筛](va_screen/README.md)
 保留原六题的 Spectre 校准与模型评测。
 仿真器语义测试的通过数不作为建模任务成绩。
+[下一批 Benchmark](benchmark_next/README.md)保存五条扩充路线的题目建设、作者校准工具和收据；它不延续或改写旧模型试做分母。
 
 ## main 保留什么
 
