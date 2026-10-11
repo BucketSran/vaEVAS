@@ -29,6 +29,10 @@ A0 不是论文结果冻结，也不证明这些源已在任何后端执行。
 
 ### 运行前选择已校准配置
 
+以下 v1 绑定固定的是旧执行版本。严格滤波修复改变了 EVAS 数值源码，因此这些命令在修复版上会因身份不匹配而拒绝复用。
+旧表继续用于历史复验；新版本须另行校准配置，不能只替换旧哈希。已完成的有限复测见
+[严格滤波修复记录](../../../experiments/backends/support/README.md#evas-precision-recovery)。
+
 [precision-bindings-v1.json](precision-bindings-v1.json)固定八条件、四后端、三个目标档位的 96 个选择。
 [precision_binding.py](precision_binding.py)同时返回配置和验收要求；无合格配置时给出原因，不降档。
 查看某个目标的全部配置不启动仿真：
