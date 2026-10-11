@@ -99,7 +99,7 @@ class BreadthRunner(unittest.TestCase):
 
     def test_spectre_each_accepted_time_matches_raw_export(self):
         work=self.base/'case';work.mkdir()
-        (work/'spectre.log').write_text('tran: time = 500 ns (50 %), step = 500 ns\n'
+        (work/'spectre.log').write_text('precision = %.17g\ntran: time = 500 ns (50 %), step = 500 ns\n'
             'tran: time = 1 us (100 %), step = 500 ns\nNumber of accepted tran steps = 2\n')
         (work/'tb.scs').write_text('tran tran strobeoutput=all skipcount=1 compression=no annotate=steps annotatedigits=16\n')
         (work/'requested_times.json').write_text('[0, 0.0000005, 0.000001]')
@@ -111,9 +111,22 @@ class BreadthRunner(unittest.TestCase):
         self.assertEqual(evidence['facts']['matched_accepted_rows'],2)
         wrong=[{'time':0.},{'time':6e-7},{'time':1e-6}]
         self.assertEqual(runner.native_observation_evidence(work,'spectre',{'status':'qualified'},wrong,tool=tool)['status'],'unknown')
-        (work/'spectre.log').write_text('tran: time = 500 ns (50 %), step = 500 ns\n'
+        (work/'spectre.log').write_text('precision = %.17g\ntran: time = 500 ns (50 %), step = 500 ns\n'
             'tran: time = 500 ns (50 %), step = 500 ns\nNumber of accepted tran steps = 2\n')
         self.assertEqual(runner.native_observation_evidence(work,'spectre',{'status':'qualified'},rows,tool=tool)['status'],'unknown')
+
+    def test_runtime_control_evidence_requires_actual_applied_step(self):
+        settings={'actual':{'stop':1e-6,'maxstep':1e-9},
+                  'requested':{'stop':1e-6,'maxstep':1e-9},'max_step_applied':False}
+        self.assertEqual(runner.runtime_control_evidence('evas',settings)['status'],'unknown')
+        settings.update(sample_origin_summary={'stateless_working_point':3},observed_response={'accepted_steps':0})
+        evidence=runner.runtime_control_evidence('evas',settings)
+        self.assertEqual(evidence['status'],'qualified')
+        self.assertEqual(evidence['maxstep_application'],'not_applicable')
+        settings['max_step_applied']=True
+        self.assertEqual(runner.runtime_control_evidence('evas',settings)['status'],'qualified')
+        settings['actual']['maxstep']='unknown'
+        self.assertEqual(runner.runtime_control_evidence('spectre',settings)['status'],'unknown')
 
     def test_current_source_drift_rejected(self):
         self.freeze()

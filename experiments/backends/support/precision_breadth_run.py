@@ -159,10 +159,12 @@ def run(inputs,output,backend,profile_path,family,*,groups=(),cards=(),tiers=())
                                     'evidence':{'status':'evidence_insufficient','issues':[result['analysis_error']]}}
                         for tier in data['tiers']}}
                     save(work/'ASSESSMENT-breadth.json',result['assessment'])
-                qualified=q['status']=='qualified' and provenance['status']=='qualified'
+                result['runtime_control_evidence']=runtime_control_evidence(backend,result.get('effective_settings',{}))
+                qualified=q['status']=='qualified' and provenance['status']=='qualified' and result['runtime_control_evidence']['status']=='qualified'
                 result['qualified_tiers']={tier['id']:{
                     'status':a['status'] if qualified or a['status']!='pass' else 'evidence_insufficient',
-                    'settings_and_provenance':q['status'],'native_observations':provenance['status']}
+                    'settings_and_provenance':q['status'],'native_observations':provenance['status'],
+                    'runtime_controls':result['runtime_control_evidence']['status']}
                     for tier in data['tiers']
                     for a in [result['assessment'].get('tiers',{}).get(tier['id'],{'status':'evidence_insufficient'})]}
             result['directory_budget']=directory_budget(work)
@@ -177,6 +179,33 @@ def run(inputs,output,backend,profile_path,family,*,groups=(),cards=(),tiers=())
         save(output/'FILE_MANIFEST.json',{str(p.relative_to(output)):{'sha256':sha(p),'bytes':p.stat().st_size}
              for p in sorted(output.rglob('*')) if p.is_file() and p.name!='FILE_MANIFEST.json'})
     return results
+
+
+def runtime_control_evidence(backend,settings):
+    """Qualify reported controls; a verified stateless solve has no step to cap."""
+    issues=[];actual=settings.get('actual',{});requested=settings.get('requested',{})
+    if backend not in ('evas','spectre'):
+        return {'status':'unknown','issues':['installed-version maxstep/stop mapping not supplied'],
+                'actual':actual,'claim':'deck controls alone do not prove runtime application'}
+    for key in ('stop','maxstep'):
+        value=actual.get(key);wanted=requested.get(key)
+        if (type(value) not in (int,float) or type(wanted) not in (int,float) or
+            not math.isfinite(value) or not math.isfinite(wanted) or value<=0 or wanted<=0 or
+            not math.isclose(value,wanted,rel_tol=1e-12)):
+            issues.append('missing or mismatched actual '+key)
+    step='applied'
+    if backend=='evas' and settings.get('max_step_applied') is not True:
+        summary=settings.get('sample_origin_summary',{})
+        observed=settings.get('observed_response',{})
+        if (settings.get('max_step_applied') is False and summary and
+            set(summary)=={'stateless_working_point'} and
+            type(summary['stateless_working_point']) is int and summary['stateless_working_point']>0 and
+            observed.get('accepted_steps')==0):
+            step='not_applicable'
+        else:
+            step='unknown';issues.append('maxstep propagation application unavailable')
+    return {'status':'unknown' if issues else 'qualified','issues':issues,'maxstep_application':step,
+            'actual':actual,'claim':'validated API/readback controls; stateless origin does not use a propagation step'}
 
 
 def native_observation_evidence(work,backend,qualified,rows,*,tool=None):
@@ -241,6 +270,8 @@ def spectre_accepted_rows(work,rows,tool):
     if not all((work/n).is_file() for n in ('spectre.log','tb.scs','requested_times.json')):
         facts['origin_gap']='missing log/deck/request identity';return unknown
     log=(work/'spectre.log').read_text();deck=(work/'tb.scs').read_text()
+    if not re.search(r'^\s*precision\s*=\s*%\.17g\s*$',log,re.M):
+        facts['origin_gap']='actual seventeen-digit export readback unavailable';return unknown
     if not all(token in deck for token in ('annotate=steps','annotatedigits=16','strobeoutput=all','skipcount=1','compression=no')):
         facts['origin_gap']='accepted step/export annotation recipe absent';return unknown
     counts=re.findall(r'Number of accepted tran steps\s*=\s*(\d+)',log)
