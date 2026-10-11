@@ -188,5 +188,36 @@ class FoundationReferences(unittest.TestCase):
             self.assertFalse(out['undefined'])
 
 
+    def test_verified_counter_stage_conditions_discrete_values_without_clipping_history(self):
+        import copy
+        c=copy.deepcopy(self.card('F07'));c['reference_counter_stages']={'count':1}
+        e=c['events'][0];out=f.reference(c,e['nominal_s'],{})
+        self.contains(out,'y',13)
+        self.contains(out,'count',1)
+        c=copy.deepcopy(self.card('F19'));c['reference_counter_stages']={'count':1}
+        e=c['events'][0];out=f.reference(c,e['nominal_s'],{})
+        self.contains(out,'state',.5)
+        # Later edge value still includes the full legal event-time range.
+        out=f.reference(c,1.5e-6,{})
+        self.assertGreater(out['outputs']['y'][1]-out['outputs']['y'][0],.00019)
+        c['reference_counter_stages']={'count':3}
+        with self.assertRaises(ValueError):f.reference(c,0,{})
+
+    def test_event_metadata_offsets_bind_to_source_nominal_times(self):
+        for group in ('F07','F19'):
+            c=self.card(group)
+            for e in c['events']:
+                self.assertEqual(e['late_s'],1e-10)
+                self.assertEqual(e['early_s'],0 if e['kind']=='cross' else 1e-10)
+
+
+    def test_mandatory_declaration_and_contribution_order_variants(self):
+        for group,variant in [('F09','F09-reordered'),('F10','F10-reordered')]:
+            base=self.card(group,group+'-base');other=self.card(group,variant)
+            self.assertNotEqual(base['source'],other['source'])
+            for t in (0,base['stop_s']/2,base['stop_s']):
+                self.assertEqual(f.reference(base,t,{}),f.reference(other,t,{}))
+
+
 if __name__ == '__main__':
     unittest.main()
