@@ -255,11 +255,45 @@ class QualificationCalibration(unittest.TestCase):
         c['input_gain_evidence'] = {'status': 'verified'}
         result = self.check(c, trace(c))
         self.assertEqual(result['input_gain_evidence']['status'], 'unknown')
-        self.assertTrue(all(q['numerical']['status'] == 'pass' for q in result['tiers'].values()))
+        self.assertTrue(all(q['numerical']['status'] == 'unknown' for q in result['tiers'].values()))
         self.assertTrue(all(q['status'] == 'evidence_insufficient' for q in result['tiers'].values()))
         rows = trace(c); rows[-1]['y'] += .1
         result = self.check(c, rows)
+        self.assertTrue(all(q['numerical']['status'] == 'unknown' for q in result['tiers'].values()))
+        self.assertGreater(result['outputs']['y']['conditional_error_lower_V'], .09)
+        c['input_gain_evidence_required'] = {'y': 'derivative requires topology evidence'}
+        rows[-1]['z'] += .1
+        self.assertTrue(all(q['numerical']['status'] == 'numerical_error'
+                            for q in self.check(c, rows)['tiers'].values()))
+
+    def test_unknown_initial_phase_does_not_accuse_transient_right_row(self):
+        c = card(); c['phase_obligations'] = {'dc': {'time_s': 0., 'outputs': {'y': 0.}}}
+        rows = trace(c); rows[0]['y'] = 0.
+        result = self.check(c, rows)
+        self.assertTrue(all(q['numerical']['status'] == 'unknown' for q in result['tiers'].values()))
+        self.assertEqual(result['outputs']['y']['unqualified_observations'], 1)
+        rows[-1]['y'] += .1
+        result = self.check(c, rows)
         self.assertTrue(all(q['numerical']['status'] == 'numerical_error' for q in result['tiers'].values()))
+
+    def test_real_derivative_filter_transient_right_is_not_accused_of_dc_error(self):
+        import math
+        import precision_breadth_composition as composition
+        c = next(c for c in composition.cards() if c['group_id'] == 'EC16')
+        times = observation_plan(c, load_contract(cards=[c]))['times_s']
+        rows = [{'time': t, 'u': t/c['unit_s'], 'd': 1.,
+                 'y': 1. - .5*math.exp(-t/(2*c['unit_s']))} for t in times]
+        result = assess(c, rows, load_contract(cards=[c]), reference=composition.reference)
+        self.assertTrue(all(q['numerical']['status'] == 'unknown' for q in result['tiers'].values()), result)
+        # Isolate the phase obligation with independently stipulated input
+        # topology in this control; it is not an actual adapter qualification.
+        c.pop('input_gain_evidence_required')
+        result = assess(c, rows, load_contract(cards=[c]), reference=composition.reference)
+        self.assertTrue(all(q['numerical']['status'] == 'unknown' for q in result['tiers'].values()), result)
+        self.assertEqual(result['outputs']['y']['unqualified_observations'], 1)
+        rows[-1]['y'] += .1
+        result = assess(c, rows, load_contract(cards=[c]), reference=composition.reference)
+        self.assertTrue(all(q['numerical']['status'] == 'numerical_error' for q in result['tiers'].values()), result)
 
     def test_reference_receives_whole_query_time_box_without_card_mutation(self):
         import math

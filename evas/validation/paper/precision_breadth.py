@@ -272,6 +272,7 @@ def assess(card, rows, contract, *, reference=None):
     result['reference_time_uncertainty_s'] = ut
     answers = []; reference_ok = True
     result['undefined_observations'] = []
+    result['unqualified_observations'] = []
     try:
         for row in rows:
             # Only validated counters condition the current discrete phase.
@@ -318,6 +319,13 @@ def assess(card, rows, contract, *, reference=None):
         if output in card.get('counter_channels', {}):
             continue
         lower = upper = rounding_max = unresolved = 0.; witness = None
+        conditional_lower = conditional_upper = 0.; unqualified = 0
+        gain_obligation = card.get('input_gain_evidence_required')
+        gain_unknown = output in gain_obligation if isinstance(gain_obligation, dict) else bool(gain_obligation)
+        phase = card.get('phase_obligations')
+        dc = phase.get('dc', {}) if isinstance(phase, dict) else {}
+        phase_outputs = dc.get('outputs', card['outputs'])
+        phase_time = dc.get('time_s', 0.)
         gain = _bound(card['input_gain_bound'], output)
         slope = _bound(card['output_slope_bound_V_s'], output)
         input_u = max(input_errors.values(), default=0.) * gain
@@ -325,7 +333,6 @@ def assess(card, rows, contract, *, reference=None):
         for row, answer in zip(rows, answers if reference_ok else []):
             if answer.get('undefined', {}).get(output):
                 continue
-            observed += 1
             lo, hi = answer['outputs'][output]; rounding = answer['numerical_uncertainty_V']
             export = _uncertainty(row[output], scale, budgets['voltage_serialization_ulps'])
             if answer.get('time_uncertainty_included') is not True:
@@ -333,13 +340,24 @@ def assess(card, rows, contract, *, reference=None):
             uncertainty = rounding + export + input_u
             low = max(0., lo - row[output] - uncertainty, row[output] - hi - uncertainty)
             high = max(abs(row[output] - lo), abs(row[output] - hi)) + uncertainty
+            conditional_lower = max(conditional_lower, low); conditional_upper = max(conditional_upper, high)
+            phase_unknown = bool(phase and output in phase_outputs and abs(row['time'] - phase_time) <= ut)
+            if gain_unknown or phase_unknown:
+                unqualified += 1
+                result['unqualified_observations'].append({'time_s': row['time'], 'output': output,
+                    'reasons': (['input derivative or topology is unproved'] if gain_unknown else [])
+                             + (['DC/transient phase is unproved'] if phase_unknown else [])})
+                continue
+            observed += 1
             lower = max(lower, low); rounding_max = max(rounding_max, rounding)
             unresolved = max(unresolved, (hi - lo) / 2 + export)
             if high > upper:
                 upper = high; witness = {'time_s': row['time'], 'actual_V': row[output], 'reference_V': [lo, hi]}
         if not observed:
-            issues.append('no defined reference observations: ' + output)
-        result['outputs'][output] = {'defined_observations': observed, 'error_lower_V': lower, 'error_upper_V': upper,
+            issues.append('no qualified defined reference observations: ' + output)
+        result['outputs'][output] = {'defined_observations': observed, 'unqualified_observations': unqualified,
+                                     'conditional_error_lower_V': conditional_lower, 'conditional_error_upper_V': conditional_upper,
+                                     'error_lower_V': lower, 'error_upper_V': upper,
                                      'reference_uncertainty_V': rounding_max, 'unresolved_uncertainty_V': unresolved,
                                      'input_uncertainty_V': input_u, 'worst': witness}
     result['observation_issues'] = issues
@@ -348,8 +366,9 @@ def assess(card, rows, contract, *, reference=None):
         budget = (budgets['absolute_V'] + budgets['relative'] * scale) * q['factor']
         lower = max((r['error_lower_V'] for r in result['outputs'].values()), default=0.)
         upper = max((r['error_upper_V'] for r in result['outputs'].values()), default=0.)
-        numerical = ('unknown' if not reference_ok else
-                     'numerical_error' if lower > budget else 'pass' if upper <= budget else 'evidence_insufficient')
+        numerical = ('numerical_error' if reference_ok and lower > budget else
+                     'unknown' if not reference_ok or any(r['unqualified_observations'] for r in result['outputs'].values()) else
+                     'pass' if upper <= budget else 'evidence_insufficient')
         tier_issues = list(issues)
         if any(e > budget * contract['observation']['input_fraction'] for e in input_errors.values()):
             tier_issues.append('input uncertainty exceeds B/100')
