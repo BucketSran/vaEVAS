@@ -8,126 +8,308 @@
       "variant": "reference",
       "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-fractional-pll/reference",
       "expected": "pass",
-      "certification": "pending-live-execution"
+      "certification": "actual-author-calibration-satisfied",
+      "candidate_sha256": "ac30d94c116f3681efe9031c7adf10f6a59ab43c46ea5155ab5d8d6c742e0b03",
+      "execution_criteria_sha256": "d7d556a35cf00cabb3c999c820b51cd4b16e891a64a21ceb301c33736493a599",
+      "condition_scores": [
+        1,
+        1
+      ]
     },
     {
       "task": "benchmark/tasks/v3-calibration-fractional-pll",
       "variant": "detached_feedback",
       "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-fractional-pll/detached_feedback",
       "expected": "fail",
-      "certification": "pending-live-execution"
+      "certification": "actual-author-calibration-satisfied",
+      "candidate_sha256": "a4dc1013bc532ccb3f15f6d2e2b4783c1ef9085f380025e00ae45f56e52dfe94",
+      "execution_criteria_sha256": "d7d556a35cf00cabb3c999c820b51cd4b16e891a64a21ceb301c33736493a599",
+      "condition_scores": [
+        0,
+        0
+      ]
     },
     {
       "task": "benchmark/tasks/v3-calibration-fractional-pll",
       "variant": "alternative",
       "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-fractional-pll/alternative",
       "expected": "pass",
-      "certification": "pending-live-execution"
+      "certification": "actual-author-calibration-satisfied",
+      "candidate_sha256": "799a0c1a4a0b57fb2c612a93fd1ab6085eee9c9f27d771ed5d4a6df69cf7f464",
+      "execution_criteria_sha256": "d7d556a35cf00cabb3c999c820b51cd4b16e891a64a21ceb301c33736493a599",
+      "condition_scores": [
+        1,
+        1
+      ]
     },
     {
       "task": "benchmark/tasks/v3-calibration-fractional-pll",
       "variant": "integer_only",
       "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-fractional-pll/integer_only",
       "expected": "fail",
-      "certification": "pending-live-execution"
+      "certification": "actual-author-calibration-satisfied",
+      "candidate_sha256": "355c57ccd647c22b69ed1bbed74360938b6d19d7eff42a7b428ed683d9ef4177",
+      "execution_criteria_sha256": "d7d556a35cf00cabb3c999c820b51cd4b16e891a64a21ceb301c33736493a599",
+      "condition_scores": [
+        0,
+        0
+      ]
     },
     {
       "task": "benchmark/tasks/v3-calibration-fractional-pll",
       "variant": "feedback_bypass",
       "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-fractional-pll/feedback_bypass",
       "expected": "fail",
-      "certification": "pending-live-execution"
+      "certification": "actual-author-calibration-satisfied",
+      "candidate_sha256": "fb8f8d3acddf8b2db584db407b57fc84bb682178430277d0ceed96b9267b4f22",
+      "execution_criteria_sha256": "d7d556a35cf00cabb3c999c820b51cd4b16e891a64a21ceb301c33736493a599",
+      "condition_scores": [
+        0,
+        0
+      ]
     },
     {
       "task": "benchmark/tasks/v3-calibration-fractional-pll",
       "variant": "open_loop",
       "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-fractional-pll/open_loop",
       "expected": "fail",
-      "certification": "pending-live-execution"
+      "certification": "actual-author-calibration-satisfied",
+      "candidate_sha256": "c30bb544a34c70696a4e40258e1f115eee9ff30ddc3f85eb081e7f6fb6a51a13",
+      "execution_criteria_sha256": "d7d556a35cf00cabb3c999c820b51cd4b16e891a64a21ceb301c33736493a599",
+      "condition_scores": [
+        0,
+        0
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-calibration-fractional-pll",
+      "variant": "reset_feedback",
+      "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-fractional-pll/reset_feedback",
+      "expected": "fail",
+      "certification": "actual-author-calibration-satisfied",
+      "candidate_sha256": "284338a8fb90c682c77e66ffcd5c25f0298adfae4d75f03d1a5a661b1b1351f3",
+      "execution_criteria_sha256": "d7d556a35cf00cabb3c999c820b51cd4b16e891a64a21ceb301c33736493a599",
+      "condition_scores": [
+        0,
+        0
+      ]
+    },
+    {
+      "task": "benchmark/tasks/v3-calibration-fractional-pll",
+      "variant": "stale_qualification",
+      "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-fractional-pll/stale_qualification",
+      "expected": "fail",
+      "certification": "actual-author-calibration-satisfied",
+      "candidate_sha256": "bfc635a50d9c62c3baff8370c2a4b66fd469f554694b6dbb72b1f552da43a4e7",
+      "execution_criteria_sha256": "d7d556a35cf00cabb3c999c820b51cd4b16e891a64a21ceb301c33736493a599",
+      "condition_scores": [
+        0,
+        0
+      ]
     },
     {
       "task": "benchmark/tasks/v3-calibration-continuous-offset",
       "variant": "reference",
       "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-continuous-offset/reference",
       "expected": "pass",
-      "certification": "pending-live-execution"
+      "certification": "actual-execution-and-current-checker-reanalysis-satisfied",
+      "candidate_sha256": "ba66111f5556419557fc17873c9784af11369bfa69604413a334b1f845c700e4",
+      "condition_scores": [
+        1,
+        1
+      ],
+      "execution_criteria_sha256": "2105305d87a6352b4034b9b56f9ed6b69c0dcd2fcd4705b73802228ad67233fb",
+      "analysis_identity_sha256": [
+        "63b647dc116f896aa0bc1ce1bf22f80e01704d198f7fc22a129f6d4bf0d2fe42",
+        "1c875a5c0813baa97256c121888b0b6f88b0c4193dc09e2c4eca10005a480323"
+      ]
     },
     {
       "task": "benchmark/tasks/v3-calibration-continuous-offset",
       "variant": "alternative",
       "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-continuous-offset/alternative",
       "expected": "pass",
-      "certification": "pending-live-execution"
+      "certification": "actual-execution-and-current-checker-reanalysis-satisfied",
+      "candidate_sha256": "3fcfd5977dc0a06bb893a1a27c9950a9c5b4a0ad99565a22a29568600e734f70",
+      "condition_scores": [
+        1,
+        1
+      ],
+      "execution_criteria_sha256": "2105305d87a6352b4034b9b56f9ed6b69c0dcd2fcd4705b73802228ad67233fb",
+      "analysis_identity_sha256": [
+        "e8fde24df88997329e716947059cc342081db58e96970c4cd4e556462e1acacb",
+        "d7abf5d1fa3e208cb7b9280af96b233cc53a2eabe64a4a7744fdf13f86db67ef"
+      ]
     },
     {
       "task": "benchmark/tasks/v3-calibration-continuous-offset",
       "variant": "fixed_code",
       "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-continuous-offset/fixed_code",
       "expected": "fail",
-      "certification": "pending-live-execution"
+      "certification": "actual-execution-and-current-checker-reanalysis-satisfied",
+      "candidate_sha256": "a069373854271109c6a773ce188386ff10beb1d7ea0ecc07c297859b2f7784d2",
+      "condition_scores": [
+        0,
+        0
+      ],
+      "execution_criteria_sha256": "2105305d87a6352b4034b9b56f9ed6b69c0dcd2fcd4705b73802228ad67233fb",
+      "analysis_identity_sha256": [
+        "735a572ce3282144a86464343ce51667f2400a27be191788633dac6b6ec845f6",
+        "c2e9808646f800fe0654e8c56b7e83e67bffda5682c9279d5394d41a6ec30083"
+      ]
     },
     {
       "task": "benchmark/tasks/v3-calibration-continuous-offset",
       "variant": "wrong_direction",
       "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-continuous-offset/wrong_direction",
       "expected": "fail",
-      "certification": "pending-live-execution"
+      "certification": "actual-execution-and-current-checker-reanalysis-satisfied",
+      "candidate_sha256": "670575ed81ec34e84bb05a44c057285fbdcdb381a2869a29cf9257b726c72a8b",
+      "condition_scores": [
+        0,
+        0
+      ],
+      "execution_criteria_sha256": "2105305d87a6352b4034b9b56f9ed6b69c0dcd2fcd4705b73802228ad67233fb",
+      "analysis_identity_sha256": [
+        "81135524dbb94cf237e6ffd169364a0d38e08430f6c41c443a93774d82821dd1",
+        "3e513753198d089c3e7dda43d78c39150599519409713c2551d05d83ced5ff95"
+      ]
     },
     {
       "task": "benchmark/tasks/v3-calibration-continuous-offset",
       "variant": "cancel_signal",
       "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-continuous-offset/cancel_signal",
       "expected": "fail",
-      "certification": "pending-live-execution"
+      "certification": "actual-execution-and-current-checker-reanalysis-satisfied",
+      "candidate_sha256": "e7e2b68c7599a8a004f34753ff1f7d415de3103cdc60d78fb8bfadf65fa2a2c5",
+      "condition_scores": [
+        0,
+        0
+      ],
+      "execution_criteria_sha256": "2105305d87a6352b4034b9b56f9ed6b69c0dcd2fcd4705b73802228ad67233fb",
+      "analysis_identity_sha256": [
+        "22affd7263adea09012d958221b90c4c105348289acf4f5037dc297c15830fac",
+        "02763e59f436664fc434932084bc3943659fc62615e7b59408f9bf7eda141e08"
+      ]
     },
     {
       "task": "benchmark/tasks/v3-calibration-continuous-offset",
       "variant": "fractional_code",
       "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-continuous-offset/fractional_code",
       "expected": "fail",
-      "certification": "pending-live-execution"
+      "certification": "actual-execution-and-current-checker-reanalysis-satisfied",
+      "candidate_sha256": "e77783aaabed999e268781356a5fbfa013e8df1d5a2126b2234ab383ebfdc3fc",
+      "condition_scores": [
+        0,
+        0
+      ],
+      "execution_criteria_sha256": "2105305d87a6352b4034b9b56f9ed6b69c0dcd2fcd4705b73802228ad67233fb",
+      "analysis_identity_sha256": [
+        "c593f44791af86f837f7026841771c93b91ee9716bcd958134cf263623ff39a6",
+        "cb9eaabd88dd15547f5588a04c594cfd92372c43e9f960bfa17e47122f1e922d"
+      ]
     },
     {
       "task": "benchmark/tasks/v3-calibration-common-mode-servo",
       "variant": "reference",
       "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-common-mode-servo/reference",
       "expected": "pass",
-      "certification": "pending-live-execution"
+      "certification": "actual-execution-and-current-checker-reanalysis-satisfied",
+      "candidate_sha256": "8dfbe463eb9cf3fdc651dfe41fb8504b17d8836607919c984d7926c061fe89b5",
+      "condition_scores": [
+        1,
+        1
+      ],
+      "execution_criteria_sha256": "99abb26ba7200c51631303eabfebfb1988f11161e02add0129df34bd90e3bf1a",
+      "analysis_identity_sha256": [
+        "162bd230bd2a8cb5d7946cd6df8ce298d5141ba31cc5f49aed6afc2dbc0616fd",
+        "7a260e02bd63331db7abf847cfc876784a5b3242a00778a7e0065ff7ece29ee6"
+      ]
     },
     {
       "task": "benchmark/tasks/v3-calibration-common-mode-servo",
       "variant": "alternative",
       "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-common-mode-servo/alternative",
       "expected": "pass",
-      "certification": "pending-live-execution"
+      "certification": "actual-execution-and-current-checker-reanalysis-satisfied",
+      "candidate_sha256": "3f6dd29654c8547e57b6b092e9082f97a395fb8fe5580db8ae4cd650717d4e54",
+      "condition_scores": [
+        1,
+        1
+      ],
+      "execution_criteria_sha256": "99abb26ba7200c51631303eabfebfb1988f11161e02add0129df34bd90e3bf1a",
+      "analysis_identity_sha256": [
+        "d7f3cc6dc43e83f5399a6b56b3ec0e80f59e499934a69d03f040f590e2aaebe2",
+        "4f1b014b8d142be42650d4ac4fa86d8afc35e5b7cb00ef0c8a74c0166baf722a"
+      ]
     },
     {
       "task": "benchmark/tasks/v3-calibration-common-mode-servo",
       "variant": "fixed_code",
       "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-common-mode-servo/fixed_code",
       "expected": "fail",
-      "certification": "pending-live-execution"
+      "certification": "actual-execution-and-current-checker-reanalysis-satisfied",
+      "candidate_sha256": "57f48e4949a86a154d1528d48d09efa482578485e8c3d608bf5aa91926d64040",
+      "condition_scores": [
+        0,
+        0
+      ],
+      "execution_criteria_sha256": "99abb26ba7200c51631303eabfebfb1988f11161e02add0129df34bd90e3bf1a",
+      "analysis_identity_sha256": [
+        "0fb009087d4257aab999c75702a04cae1260523387a602d6574d9658f594e9dd",
+        "39af6618c8f77f913c012135f557507cb86ea77b240238b125984e9be8ab911d"
+      ]
     },
     {
       "task": "benchmark/tasks/v3-calibration-common-mode-servo",
       "variant": "wrong_direction",
       "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-common-mode-servo/wrong_direction",
       "expected": "fail",
-      "certification": "pending-live-execution"
+      "certification": "actual-execution-and-current-checker-reanalysis-satisfied",
+      "candidate_sha256": "9cf3c7f9a2ad92cc65c08963f9745947f20378df67be44498984743be5de360c",
+      "condition_scores": [
+        0,
+        0
+      ],
+      "execution_criteria_sha256": "99abb26ba7200c51631303eabfebfb1988f11161e02add0129df34bd90e3bf1a",
+      "analysis_identity_sha256": [
+        "27c1fab6355f297687973dfb28adcb6a7e7617fa457457f596844f2815eeae74",
+        "34c9c7344adc5f5b9c8ea51a8ff645c725a6edd7ef7c5a0ce03202f4567ed1a2"
+      ]
     },
     {
       "task": "benchmark/tasks/v3-calibration-common-mode-servo",
       "variant": "measure_differential",
       "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-common-mode-servo/measure_differential",
       "expected": "fail",
-      "certification": "pending-live-execution"
+      "certification": "actual-execution-and-current-checker-reanalysis-satisfied",
+      "candidate_sha256": "9bc0c861b7f763ee33476d7badd35457edc70cfe2afebafeac2a07bfcde1d401",
+      "condition_scores": [
+        0,
+        0
+      ],
+      "execution_criteria_sha256": "99abb26ba7200c51631303eabfebfb1988f11161e02add0129df34bd90e3bf1a",
+      "analysis_identity_sha256": [
+        "5cc812fc04addcf42354e8189ba7f55cc7ebf3b5b8ebbb150f5b561101379231",
+        "351f0ee578996a89702db2edb3bded438d153fd3a7bbdfdbbd602ea768b360ed"
+      ]
     },
     {
       "task": "benchmark/tasks/v3-calibration-common-mode-servo",
       "variant": "fractional_code",
       "candidate_directory": "experiments/benchmark_next/calibration/candidates/v3-calibration-common-mode-servo/fractional_code",
       "expected": "fail",
-      "certification": "pending-live-execution"
+      "certification": "actual-execution-and-current-checker-reanalysis-satisfied",
+      "candidate_sha256": "5307debe5e30b596bc0ad0f8380f07c43ed0826321c1289b4bd3407fd985c085",
+      "condition_scores": [
+        0,
+        0
+      ],
+      "execution_criteria_sha256": "99abb26ba7200c51631303eabfebfb1988f11161e02add0129df34bd90e3bf1a",
+      "analysis_identity_sha256": [
+        "94e8b5ee9241649274d20899d91cd67592b16af17c1736fe0f5b1e9c2dd93492",
+        "29e7ff4134fcc15b6a72d969f9906098009f9f14b158bf87bcc67e6434c16ed8"
+      ]
     }
   ],
   "source_disposition": {
@@ -141,7 +323,7 @@
       "id": "v3-calibration-fractional-pll",
       "kind": "fractional-pll",
       "conditions": 2,
-      "case_sha256": "6478a43e1a590e647955229ca5f74a5cb704c0096dc9aa773d6b7f82210bd3ff"
+      "case_sha256": "69fc674eb1b62b97b11267132b7c5c2bd414073aa78a161bfcc784c272ae3a43"
     },
     {
       "id": "v3-calibration-continuous-offset",
@@ -155,5 +337,20 @@
       "conditions": 2,
       "case_sha256": "f13b2f1e882611e670b18acb292179172ee98400c84d5ceddb3ac52cc0a832d5"
     }
-  ]
+  ],
+  "author_calibration": {
+    "report": "author-calibration.json",
+    "report_sha256": "f861e7e3c117b4a5b2a7207c4643c6b6807e4892c3ce4cf8b03e578c6488c32a",
+    "final_conditions": 40,
+    "new_final_simulations": 16,
+    "reused_simulations_reanalyzed": 24,
+    "all_final_conditions_graded": true,
+    "registered_variants": 20,
+    "correct_conditions_passed": 12,
+    "semantic_negative_variants_rejected": 14,
+    "history_actual_conditions": 52,
+    "backend_version": "21.1.0.509.isr12",
+    "model_trials": 0,
+    "publication": "pending-coordinator-review"
+  }
 }

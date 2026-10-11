@@ -16,6 +16,17 @@ def evaluate(rows,case,work):
     def check(name,actual,limit):
         checks.append({'name':name,'actual':actual,'limit':limit,'passed':actual<=limit})
     if case['kind']=='fractional-pll':
+        reset_start=None;reset_feedback=[];reset_qualification=[]
+        for row in rows:
+            if row['rst']>.45:
+                if reset_start is None:reset_start=row['time']
+                if row['time']-reset_start>=2.2e-9:
+                    reset_feedback.append(abs(row['fb']))
+                    reset_qualification.append(abs(row['lock']))
+            else:reset_start=None
+        if reset_feedback:
+            check('reset-feedback-clear',max(reset_feedback),.1)
+            check('reset-qualification-clear',max(reset_qualification),.1)
         dco=edges(rows,'dco');fb=edges(rows,'fb');ref=edges(rows,'ref')
         for j,window in enumerate(case['windows']):
             start,end,n,fraction=window
