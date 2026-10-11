@@ -96,6 +96,48 @@ class BreadthRunner(unittest.TestCase):
         self.assertEqual(receipt['stage_invocations'],0)
         self.assertEqual(receipt['attempts'][0]['status'],'adapter_error')
 
+    def test_deferred_export_retains_raw_without_calling_analysis(self):
+        self.freeze();profile=self.base/'profile.json';profile.write_text('{}')
+        def export(backend,tool,env,work):
+            (work/'waveform.csv').write_text('time,y\n0,1\n0.000001,1\n')
+            (work/'raw-response.json').write_text('{"sample_origins":["accepted"]}')
+            return {'status':'waveform_available','waveform':'waveform.csv','stages':[{'stage':'simulate'}],'abort_batch':False}
+        with patch.object(runner,'preflight',return_value=({},{})),patch.object(runner,'verify_tool'), \
+             patch.object(runner,'execute_one',side_effect=export),patch.object(runner,'read_native') as native, \
+             patch.object(runner,'assess') as assess,patch.object(runner,'effective_settings') as settings, \
+             patch.object(runner,'qualification') as qualification,patch.object(runner,'native_observation_evidence') as provenance:
+            results=runner.run(self.inputs,self.base/'out','evas',profile,'foundation',tiers=['Q1'],defer_analysis=True)
+        for analysis in (native,assess,settings,qualification,provenance):analysis.assert_not_called()
+        result=results[0]
+        self.assertEqual(result['analysis_status'],'pending')
+        self.assertEqual(result['qualification']['status'],'unknown')
+        self.assertNotIn('assessment',result)
+        self.assertTrue(all(t['status']=='unknown' for t in result['qualified_tiers'].values()))
+        self.assertTrue(runner.load(self.base/'out/STARTED.json')['defer_analysis'])
+        manifest=runner.load(self.base/'out/FILE_MANIFEST.json')
+        self.assertIn('runs/'+result['label']+'/waveform.csv',manifest)
+        self.assertIn('runs/'+result['label']+'/raw-response.json',manifest)
+        self.assertEqual(runner.load(self.base/'out/ATTEMPTS.json')['stage_invocations'],1)
+
+    def test_deferred_failed_invocation_retains_failure_and_unrun_slots(self):
+        self.freeze();profile=self.base/'profile.json';profile.write_text('{}')
+        with patch.object(runner,'preflight',return_value=({},{})),patch.object(runner,'verify_tool'), \
+             patch.object(runner,'execute_one',side_effect=RuntimeError('adapter failed')),patch.object(runner,'assess') as assess:
+            with self.assertRaises(RuntimeError):runner.run(self.inputs,self.base/'out','evas',profile,'foundation',defer_analysis=True)
+        assess.assert_not_called()
+        records=runner.load(self.base/'out/EXECUTION.json')
+        self.assertEqual([r['status'] for r in records],['execution_failed','not_run','not_run'])
+        self.assertEqual(records[0]['analysis_status'],'not_available')
+        self.assertEqual(records[0]['qualification']['status'],'unknown')
+        self.assertEqual(runner.load(self.base/'out/ATTEMPTS.json')['backend_invocations'],1)
+        self.assertTrue((self.base/'out/FILE_MANIFEST.json').exists())
+        with patch.object(runner,'preflight',return_value=({},{})),patch.object(runner,'verify_tool'), \
+             patch.object(runner,'execute_one',return_value={'status':'compile_failed','stages':[],'abort_batch':False}):
+            returned=runner.run(self.inputs,self.base/'compile-out','evas',profile,'foundation',tiers=['Q1'],defer_analysis=True)
+        self.assertEqual(returned[0]['status'],'compile_failed')
+        self.assertEqual(returned[0]['analysis_status'],'not_available')
+        self.assertTrue(all(q['status']=='unknown' for q in returned[0]['qualified_tiers'].values()))
+
     def test_numerical_pass_cannot_qualify_without_actual_settings(self):
         self.freeze();profile=self.base/'profile.json';profile.write_text('{}')
         outcome={'status':'waveform_available','waveform':'fake.csv','stages':[{'command':['fake']}],'abort_batch':False}
@@ -105,6 +147,7 @@ class BreadthRunner(unittest.TestCase):
              patch.object(runner,'effective_settings',side_effect=ValueError('absent actual controls')):
             records=runner.run(self.inputs,self.base/'out','evas',profile,'foundation',tiers=['Q1'])
         self.assertEqual(records[0]['assessment']['tiers']['Q1']['status'],'pass')
+        self.assertFalse(runner.load(self.base/'out/STARTED.json')['defer_analysis'])
         self.assertEqual(records[0]['qualified_tiers']['Q1']['status'],'evidence_insufficient')
         self.assertEqual(runner.load(self.base/'out/ATTEMPTS.json')['stage_invocations'],1)
 
