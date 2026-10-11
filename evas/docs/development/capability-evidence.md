@@ -72,3 +72,15 @@
 2026-10-11 的[当前 main 复验](../../../experiments/backends/support/README.md#current-main)
 补充 TIMER、CROSS、SLEW、DYNAMICS、COMPOSE、QUALIFICATION 的集成证据。
 复验沿用原判据，未扩展能力定义；逐配置版本和结果见收据，支持结论仍只在支持总表维护。
+
+2026-10-11 的 [v2 精度扫描](../../../experiments/backends/support/README.md#precision-v2)
+补充 TIMER、CROSS、DYNAMICS、COMPOSE、QUALIFICATION 的有限证据。
+新检查器按同一数学参考验收 Q1～Q3，保留合法回调窗口的全部不确定区间和初始保持阶段；
+160 个运行配置与原 v1 成绩分开保存。缺少时刻或生效设置证据时不授予通过，
+未修改 EVAS 生产行为，也未迁移旧 core 或其他组合的判据。
+
+同日的[配置绑定与补证](../../../experiments/backends/support/README.md#precision-bindings)
+继续补充 TIMER、CROSS、DYNAMICS、COMPOSE、QUALIFICATION 的验收依据。
+新增 16 次外部后端运行，EVAS 复用首轮相同实现及原生记录；Q 档位、实际配置和验收要求已绑定。
+数值、行为与证据状态分别保存，EVAS 阈值采样的回调缺证及极严配置拒绝继续保留。
+原 v1/v2 判据与成绩未改写，#131 未动。

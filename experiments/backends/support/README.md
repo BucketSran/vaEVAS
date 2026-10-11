@@ -470,3 +470,197 @@ python3 -B experiments/backends/support/precision_report.py \
 `precision_query.py` 是三个 timer 用例的独立追加入口，保留原输入和普通查询执行身份。
 本批执行时的冻结源码和追加查询脚本随原始归档保存；之后统一了执行与分析的设置资格检查，
 重算报告不会改写旧执行收据。每次分析写新文件，不覆盖历史报告。
+
+<a id="precision-v2"></a>
+
+## 2026-10-11 三档精度扫描
+
+本轮新跑 **8 条件 × 4 后端 × 5 配置，共 160 个组合**。采用独立 v2 checker，
+同一数学答案分别检查 Q1、Q2、Q3。原八条件的源码、刺激、初态、事件容差完全不变；
+观察计划加密，新增合法窗口端点及其两侧。原 v1 checker、条件卡、收据和成绩保留。
+[主表](../../../evas/docs/COMPARISON.md#precision-v2-results)列出完整验收结论，
+[新收据](20261011-precision-v2.json)保留全部配置、误差、资格问题、选中配置及后续退化。
+
+### 实际执行与数学参考
+
+EVAS 使用 main `826fefb12b5b068544be9de97e68f21e3c60e76f` 的模拟器源码，未作行为改动。
+服务器离线 release 构建使用 Rust/Cargo 1.96.0，内核 SHA256 为
+`262c157050ad7ab9dc8e3c86b6c2303c1355c8766cf66d10e8949d5e3b8b89b7`。
+本轮未提交的内容是新 checker、执行工具和文档，其执行快照另有文件清单。
+其他后端在同服务器新跑，工具、镜像与编译器身份逐批登记，没有用旧波形替代新扫描。
+
+160 个组合全部尝试一次，**137 个取得波形，20 个 ngspice 采样保持配置工作点失败，
+3 个 EVAS deep 滤波配置被精度认证拒绝**。八批均有完成及清理回执，逐文件和归档哈希已核验。
+Spectre 滤波执行结束后 SSH 客户端断开；服务器的完成回执已确认 20 例成功结束，
+随后仅收集原结果并继续未启动的三批，没有重复仿真或覆盖失败。
+
+PWL 参考对实际表示的输入数值作精确有理数运算。一阶滤波使用逐段解析解、
+80 位 Decimal 定向舍入及向外转换，记录参考自身的不确定度。
+参考不调用 EVAS，也不由 Spectre 输出拟合。计算误差界后，对三档目标分别判分。
+新校准包括合法与越界回调、跨窗缺证、旧值、漏事件、每个保持阶段的漂移、
+非零滤波初态、跨输入折点、输入错误和参考／导出不够准。
+
+### 一阶滤波的误差如何变化
+
+以下是 LP-RAMP 在全部实际观察点的最大误差上界，单位 µV。
+Q1/Q2/Q3 门槛分别为 10.1、1.01、0.101 µV。
+本表只展示波形误差，完整通过还要求设置与关键观察合格。
+
+| 后端 | base | tol | step | both | deep |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Spectre | 1.467706 | 0.367300 | 0.494824 | 0.354625 | 0.008520 |
+| ngspice + OpenVAF-R | 19.733028 | 2.837244 | 0.563426 | 0.653434 | 0.010371 |
+| Gnucap + modelgen-verilog | 32.790222 | 2.817119 | 0.497813 | 0.494399 | 0.007741 |
+| EVAS | < 0.000001 | < 0.000001 | < 0.000001 | < 0.000001 | 内部认证拒绝 |
+
+EVAS 前四档在本例输出相同，误差上界约 5.63×10⁻¹⁴ V。它走本例的解析传播路径，
+不能由此推广到全部非线性积分路径，也不能称为没有误差。
+其 LP-RAMP、LP-NONZERO、LP-IDT 在 deep 下分别因内部误差界超过极紧预算而拒绝；
+LP-SMALL 的 deep 成功。外部 Q3 通过不代表内部容差可以任意收紧。
+
+Spectre 的四个滤波条件在 deep 下都满足 Q3 波形要求；日志与 PSF 仅以六位数字回显
+最大步长，尚不能确认完整请求值。ngspice 四条件各有 Q2 数值达标配置，
+但 TMAX/stop 仍缺独立生效证明；LP-RAMP、LP-IDT 的 deep 还缺输入折点一侧的观察。
+这些是配置或观察资格问题，没有冒充数值超差。
+
+Gnucap 的实际镜像内源码、构建源清单、安装目标、库符号和启动加载记录已配对，
+可以追踪 `.tran` 的第四参数到求解器最大步长。前四档符合请求；deep 经 `dtmin` 取整后
+为 4.882813×10⁻¹⁰ s，与冻结请求 4.8828125×10⁻¹⁰ s 不同，该档保留资格问题。
+这不是逐位重建 Gnucap 的证明，来源审计材料及独立审查的哈希在新收据中登记。
+Gnucap LP-NONZERO 五档仍从 0 V 开始，正确 DC 初态为 0.25 V，属于真实输出错误。
+
+### 采样保持为何还有缺证
+
+EVAS、Gnucap 的三个 timer 条件均在基础档满足 Q3。
+Spectre 四个采样条件、EVAS 的 cross 条件，其输出误差都已小于 Q3 门槛，
+但计数变化括定的回调区间跨越合法窗口的端点。v2 不再把区间与窗口相交就算合格。
+因此新结论为“回调边界待证”，不称为这些波形已证明时间越界。
+
+以 Spectre SH-T-RAMP 基础档第一次回调为例，观察区间从约 999.899999608 ns
+到 999.900039600 ns，合法起点为 999.900000000 ns。数值差很小，
+仍不足以证明回调没有早于窗口。旧 v1 成绩保留，新规则不裁掉区间外侧。
+完整接受点清单只说明没有漏保存点，不能独立证明 handler 的实际时刻等于首个新计数点。
+
+Gnucap 的 cross 条件在本轮五档均只记录 3 次事件，预期为 8 次，属于真实行为错误。
+新观察计划比旧版更密，不能把旧基础档的 8 次事件拿来替换本轮结果。
+ngspice 四个采样条件的五档设置全部在工作点失败；此前事件 lowering 诊断仍见
+[编译器定位](#ngspice-events)，本轮没有重新审计这四个模型的全部编译中间代码。
+
+下一步需要分别处理：同次运行的实际回调取证、精度控制的可靠读回或安装版本传递证明，
+以及上述确切的行为错误和 EVAS 极严配置拒绝。缺证首先补观察与身份，不据此修改 EVAS 的数学边界。
+#131 和其他组合的原验收范围未变。这批仍是开发条件，尚不能宣称独立论文评价集已完成。
+
+### 校准、复核与资料位置
+
+本轮新 checker 有 16 项校准，配置与报告有 7 项校准。
+连同原检查器与报告回归，共 70 项检查通过。独立 Spec/Standards 审查覆盖数学参考、
+配置资格、冻结输入身份和决策记录。审查中修复了空镜像身份被误当相同、执行条件卡未绑定冻结方案两项问题。
+最终分析使用新身份，执行时的初步判定原样保留。
+
+```sh
+python3 -B -m unittest discover -s evas/validation/paper -p 'test_*.py'
+python3 -B -m unittest discover -s experiments/backends/support -p 'test_*.py'
+python3 -B experiments/backends/support/precision_v2_run.py freeze runs/new-precision-v2-inputs
+python3 -B experiments/backends/support/precision_v2_report.py \
+  runs/precision-tiers-20261011 runs/new-precision-v2-report.json \
+  --step-evidence runs/precision-tiers-20261011/step-evidence.json
+```
+
+冻结不启动仿真。实际执行入口为 `precision_v2_run.py run INPUTS OUTPUT --backend BACKEND --profile PROFILE --family FAMILY`，
+仍须使用既有串行锁、外层输出监控和本机配置。沿用每阶段 90 秒、4 GiB 内存、
+32 MiB 单文件及 256 MiB 条件目录限制，无自动重试。
+原始模型、网表、波形、日志、设置、源码快照、构建与清理证据保存在
+`runs/precision-tiers-20261011/` 和服务器原目录，均为 **local-only**。
+仓库内的新定义、脚本和精简收据可审查；哈希不是公开下载地址，上述重分析命令依赖本地原始材料。
+
+<a id="precision-bindings"></a>
+
+## 2026-10-11 配置绑定与补充取证
+
+本轮补齐“运行前选 Q 档”的配置入口。首轮 v2 的定义、检查器、160 次执行资料和原成绩保持不变；
+[新增收据](20261011-precision-binding.json)保存全部 176 个尝试的新分析，另保留每项原 v2 判定。
+[可复用配置](../../../evas/validation/paper/precision-bindings-v1.json)包含 96 个条件／后端／Q 档选择，
+其中 75 个有合格配置，21 个明确列出尚不可用的原因。75 个选择复用 45 个不同的运行配置。
+它们仅适用于本批八个固定条件和工具身份，不能推广为任意模型的先验精度保证。
+
+### 新跑了什么，复用了什么
+
+新增 16 次实际运行均取得波形：四个 Spectre 采样保持条件增加同次回调日志；
+Spectre、ngspice、Gnucap 各补跑四个滤波条件。后者采用 `deep_bound`，
+请求 reltol=10⁻¹⁰、Vabs=10 fV、Iabs=10 aA、最大步长 **0.4 ns**。
+Spectre 的实际 reltol 为 10⁻¹¹，其余两个为 10⁻¹⁰；原模型、刺激、事件容差、Q 门槛和观察计划不变。
+
+EVAS 未改代码、未重跑，复用首轮同一源码和内核的完整原生记录。
+四个补测批次均保留串行执行、资源上限、清理回执和全文件清单，归档哈希已核验。
+新增批次的 15 个尝试完整通过 Q3，Gnucap 非零初态继续确认失败。
+联合分析仍保留首轮 20 个 ngspice 工作点失败和 3 个 EVAS deep 认证拒绝。
+
+以下为新增 deep_bound 的电压误差上界，包含原 checker 规定的不确定度。
+这些数值只描述固定观察，不是全时域上界。
+
+| 滤波条件 | Spectre | ngspice + OpenVAF-R | Gnucap + modelgen-verilog | Q3 门槛 |
+| --- | ---: | ---: | ---: | ---: |
+| 斜坡 LP-RAMP | 5.539 nV | 7.581 nV | 5.163 nV | 101 nV |
+| 非零 DC 初态 LP-NONZERO | 5.053 nV | 7.697 nV | 0.250 V，失败 | 101 nV |
+| 小信号 LP-SMALL | 0.005145 nV | 0.007581 nV | 0.005164 nV | 1.1 nV |
+| 等价 idt LP-IDT | 5.539 nV | 7.581 nV | 5.296 nV | 101 nV |
+
+表中数值向上取整。选择可复用配置时仍按预先确定的顺序取首个完整通过者，
+因此 ngspice Q3 的大信号滤波选中的是原 deep，小信号也不需要 deep_bound。
+最终选择和实际参数见[主表](../../../evas/docs/COMPARISON.md#measured-settings)。
+
+### 哪些证据补齐了
+
+- **Spectre 回调时刻**：单实例采样模型在更新计数后输出 17 位 `$abstime`。
+  共 56 条回调均与同次原生波形的计数变化、采样值对应，无漏行或重复。
+  依据语言的 binary64 real 定义和安装版接口手册，规范格式可往返恢复机器时间。
+  这允许判断恰好落在合法端点的记录；数学阈值根的不确定度继续保留。
+- **Spectre 与 Gnucap 步长**：新增 0.4 ns 配置分别取得完整回显和 dtmin 整数刻度表示。
+  原 deep 的回显不足和量化差异不改写。
+- **ngspice 参数传递**：针对实际安装二进制核对 `.control tran` 到解析、任务参数、TRANinit 和 DCtran 的路径。
+  显式正 TMAX/stop 可据此核验；其他容差与方法仍使用运行时回显。
+  二进制 SHA256 为 `e9b0e776ac656de5e470f6b339c4a7254c961d77714b4b94f4b71be2422e7b46`，
+  镜像 ID 为 `233b15bcc2bdfd40c915dbf6ed41d731306f64083885d1255ae1bdd37cdcb555`。
+  这不是运行时 TMAX 回显，也不证明每个浮点时间间隔严格受限。
+- **ngspice 折点两侧**：原 deep 和新增 deep_bound 的 LP-RAMP、LP-IDT 各有一处旧搜索漏检。
+  新证据层在原 2.1 ps 距离内搜索全部原生记录，保存左右见证点。
+  未更改观察义务，没有删掉任何数值评分点，原 v2 缺证结论仍在收据中。
+
+Spectre、EVAS、ngspice、Gnucap 在每个 Q 档分别取得 8/8、7/8、4/8、6/8 的完整配置资格。
+数值达标、行为结果和证据完整性分别保存在 `axes` 中。
+EVAS 阈值采样数值达标，但回调区间仍跨合法窗端点，不能仅凭数学根自报改成通过。
+Gnucap 阈值采样漏事件时没有完整数值评分，记录为不可评，而不是零误差通过。
+
+### 校准和复验入口
+
+新增绑定校准 14 项，连同原检查器和报告回归共 84 项通过。
+正反例覆盖端点与早一 ULP、低精度或重复回调记录、错误计数、真实缺失与密集网格漏检、
+数值通过但证据不足、工具／依赖变化以及禁止降档。
+Spec 与 Standards 独立审查均检查了最终分析和配置选择；冻结前后执行与输入身份均核验。
+本地生成检查还逐项确认 75 个合格绑定可重建原输入，21 个不可用绑定拒绝生成。
+这项检查不算新的仿真运行，也不代替当前工具预检。
+
+```sh
+python3 -B evas/validation/paper/precision_binding.py --tier Q3
+python3 -B -m unittest discover -s evas/validation/paper -p 'test_*.py'
+python3 -B -m unittest discover -s experiments/backends/support -p 'test_*.py'
+python3 -B experiments/backends/support/precision_binding_report.py \
+  runs/precision-tiers-20261011 runs/precision-binding-20261011/batch \
+  runs/new-binding-analysis --step-evidence runs/precision-binding-20261011/step-evidence.json
+```
+
+新分析通过校准和审查后，冻结到新的收据与注册表路径：
+
+```sh
+python3 -B evas/validation/paper/precision_binding.py \
+  --freeze-analysis runs/new-binding-analysis \
+  --receipt experiments/backends/support/NEW-binding.json \
+  --registry evas/validation/paper/NEW-bindings.json
+```
+
+首次生成补测输入的入口是 `precision_binding_run.py freeze NEW_INPUTS`，不会启动仿真。
+实际执行沿用 `precision_v2_run.py` 的后端适配器，须继续使用既有串行锁、外层输出监控和资源上限。
+本地完整材料在 `runs/precision-binding-20261011/`，最终分析为 `analysis-02`；`analysis-01` 仅为中间诊断。
+服务器补测目录为 `/tmp/chips-jinzhihong/precision-binding-20261011/batch`。
+原始日志、波形、二进制审查资料和完整审查报告均为 **local-only**，仓库收据中的哈希不是公开下载地址。
+公开重跑仍需要相应工具和运行环境；旧 v1/v2 的原始资料继续留在各自原目录。
