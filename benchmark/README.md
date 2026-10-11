@@ -23,6 +23,7 @@
 模型试跑和发布资格；[来源元数据](first_batch/METADATA.md)记录同源关联与上下文层次。
 当前采用[五类方案](docs/task-types.md)，旧分类与历史结果不改写。
 [v2五类工程任务](../experiments/benchmark_v2/README.md)已建立37题。179个登记变体的作者校准及两项私有激励修订的补充校准已齐全；148个模型试做单元和五份spec的义务核对已完成，见[交付验收](../experiments/benchmark_v2/spec-delivery.md)。旧版本身份与完整分母见[作者校准固定报告](../experiments/benchmark_v2/author-calibration-final.md)，当前证据见[增量报告](../experiments/benchmark_v2/author-calibration-private-overlays.md)。
+[下一批题目与作者校准](../experiments/benchmark_next/README.md)按五条已批准路线分别交付，沿用五类工程动作。各路线的任务、参考解、独立 checker 和实际校准状态分开记录；本轮没有模型解题实验。
 选题材料与学习入口见
 [五类任务材料研究](research/README.md)。
 
