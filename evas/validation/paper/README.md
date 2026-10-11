@@ -1,5 +1,13 @@
 # 论文比较的特性映射与首批条件
 
+新增的 44 组精度验证包含 20 组基础特性和 24 组工程组合，共 71 个必测变体。
+模型、独立参考和校准分别位于 [基础特性](precision_breadth_foundation.py)、
+[工程组合](precision_breadth_composition.py)及[共同 checker](precision_breadth.py)。
+每个变体在运行前绑定 Q1、Q2、Q3 的候选配置；数值、行为和证据分别判定。
+[评测标准](../../docs/COMPARISON-METHODOLOGY.md#precision-breadth)解释范围与预算，
+[实际收据](../../../experiments/backends/support/README.md#precision-breadth)记录执行身份和结果。
+它们不修改下方原八条件、A0、v1 卡或历史成绩。
+
 2026-10-10 已确认的[下一版测试范围](#next-engineering-suite)在本页末尾维护。
 下面的 A0、v1 卡与资格规则保留原设计身份，不是当前全部支持状态；最新实测结论见
 [支持总表](../../docs/COMPARISON.md)。新规划不改写这些冻结卡或历史成绩。

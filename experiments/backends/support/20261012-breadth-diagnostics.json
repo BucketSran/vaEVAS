@@ -1,0 +1,334 @@
+{
+  "scope": "actual independent diagnostic records only; original scientific slots are immutable; EC01 is not a replacement; NG F03 selection is the fixed full36 rerun",
+  "availability": "local-only raw bundles; compact publication selected by root",
+  "detailed_record_reference": {
+    "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/BREADTH-DIAGNOSTICS-DETAIL.json",
+    "sha256": "130fc36739cd50206b369c21579d8c912a439b321c3a818bca3411a87d02c8b4",
+    "availability": "local-only"
+  },
+  "items": {
+    "spectre_ec01_single_diagnostic": {
+      "change": "only simulatorOptions digits=17 notation=sci; precision %.17g and all scientific controls/DUT/requested times unchanged",
+      "stage_returncodes": [
+        0
+      ],
+      "options_accepted": {
+        "precision": "%.17g",
+        "digits": "17",
+        "notation": "sci"
+      },
+      "actual_stop_maxstep_tokens": [
+        "    stop = 8.583068847656250e-06 s",
+        "    maxstep = 2.980232238769531e-08 s",
+        "          maxstep = 2.980232238769531e-08 s, default 8.583068847656250e-08 s (conservative)"
+      ],
+      "actual_psf_header_tokens": [
+        "\"stop\" 8.58307e-06",
+        "\"maxstep\" 2.98023e-08"
+      ],
+      "dut_sha256": "e7264046f7846f5a53e0980b31947471bff559d3d397fc135b9e1ae70372b9d3",
+      "dut_byte_equal": true,
+      "compiled_artifact_byte_equal": true,
+      "compiled_artifact_sha256": "9ce92246a1351d737a50989ed64c707954673ff4be671347e72243f491801348",
+      "raw_rows": 20724,
+      "all_paired_time_and_output_binary64_equal": true,
+      "old_collection": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-v2/collected/composition-spectre-part1/COLLECTION.json",
+        "sha256": "8fadb541ae351e03fbb5726bae5e04b7e3094c12b2457baec27131646a7426b3",
+        "availability": "local-only"
+      },
+      "old_file_manifest": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-v2/collected/composition-spectre-part1/outputs/composition-spectre-part1/FILE_MANIFEST.json",
+        "sha256": "090cba21cc11d66cae069c3fbf1a7f168d5673c6c2ff59d6cb1b6c5221465ff7",
+        "availability": "local-only"
+      },
+      "archive_sha256": "83c8e142154898e9d94795c5d7107ee8cf556cb0dab12819cafabf6a6133eb12",
+      "file_manifest": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/observation-source-audit/collected/spectre-ec01-digits17-sci-01/audit/FILE_MANIFEST.json",
+        "sha256": "065a3ac0fe85ca2c2e4f655b787616ffa975422b1d84326deb4ece77bf4811db",
+        "availability": "local-only"
+      },
+      "limits": "PSF HEADER still prints six significant digits; this does not establish exact PSF effective-setting readback or authorize historical backfill; no further Spectre probe"
+    },
+    "ng_f03_single_four_node_probe": {
+      "condition": "F03-dc-0--Q1",
+      "stage_returncodes": [
+        0,
+        0
+      ],
+      "dut_sha256": "e618a9e18e6a5646fa483be8e3f7d7d1a1117d7a8e82a425cc07916500c45a20",
+      "old_compiled_osdi_sha256": "c881a862b3266ec4dcd142d019d987942e468b05928c812c1b2c0dc2775a1d38",
+      "new_compiled_osdi_sha256": "c881a862b3266ec4dcd142d019d987942e468b05928c812c1b2c0dc2775a1d38",
+      "compiled_osdi_byte_equal": true,
+      "raw_header": " time                     v(u)                     v(a)                     v(b)                     v(c)                     v(lt)                    v(le)                    v(gt)                    v(ge)                    v(logic_out)             v(tern)                 ",
+      "old_collection": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-v2/collected/foundation-openvaf_r_ngspice-part1/COLLECTION.json",
+        "sha256": "b47334a5fe3e5111fa1052ec58cb9bc930c3c1f4b01de29074f2a1af75828ae6",
+        "availability": "local-only"
+      },
+      "old_file_manifest": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-v2/collected/foundation-openvaf_r_ngspice-part1/outputs/foundation-openvaf_r_ngspice-part1/FILE_MANIFEST.json",
+        "sha256": "0a6deec08aafa29fde8fa864673df00b2099768bec40c52a0d9707ee5da8c439",
+        "availability": "local-only"
+      },
+      "archive_sha256": "53f052c2d43a69a4f366a959044d2ab3b1f387d581559141781839db6464cb96",
+      "file_manifest": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/observation-source-audit/collected/ng-f03-quoted-export-01/audit/FILE_MANIFEST.json",
+        "sha256": "f1c21c74a45f1e00396624bd705ff2056099564f1982e337e3cba8aa3ac9c7f4",
+        "availability": "local-only"
+      },
+      "limits": "this validates installed parser support and dc0 export only; does not prove adjacent-input dc1 or approve quoted native/provenance grammar for any other execution"
+    },
+    "ng_f03_fixed_full36_rerun": {
+      "source_revision": "d6ac5ae34c228ac49dd381817b2d8e721f324cd3",
+      "source_manifest": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-ng-f03/SOURCE_MANIFEST.json",
+        "sha256": "5990db4b64cdfd41ecb6e5723124ac909e5a4f53dd55145956e3f0ff16d69509",
+        "availability": "local-only"
+      },
+      "input_equivalence": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-ng-f03/INPUT_EQUIVALENCE.json",
+        "sha256": "337f3b73cd6f6cae01c6abfac336ad947c615079c1880d3e3138ab510112a8d5",
+        "availability": "local-only"
+      },
+      "checker_equivalence": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-ng-f03/CHECKER_EQUIVALENCE.json",
+        "sha256": "7c35cae2802c622e6315c8a7711e28fac502ed4b928ce6d10c677f7e6c545b96",
+        "availability": "local-only"
+      },
+      "selection": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-ng-f03/SELECTION.json",
+        "sha256": "96e85e03be4151080a468c89ef0e1c6c385f66672b8575b06c78306a4bb4aeb9",
+        "availability": "local-only"
+      },
+      "controller_identity": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-ng-f03/CONTROLLER_IDENTITY.json",
+        "sha256": "c35f39e2900b323570ca5058db95022e497e162b003e1541a3a2fc2de0a0e555",
+        "availability": "local-only"
+      },
+      "continued_seed": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-ng-f03/ATTEMPT_SEED.json",
+        "sha256": "27f20d79faabb5e3b01d3a7bf0942262144b8786c67f6721d21b2dc08d772188",
+        "availability": "local-only"
+      },
+      "collection": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-ng-f03/collected/foundation-openvaf_r_ngspice-f03-quoted/COLLECTION.json",
+        "sha256": "a6ba8ab47eba2b5b3a830dfdf8e2ca7932bd01275a5d1335f924f3662d394e22",
+        "availability": "local-only"
+      },
+      "archive_sha256": "aea811f2a437590748c86c654345e15d09a2e620cf84345c9f85b910f56b2edd",
+      "file_manifest": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-ng-f03/collected/foundation-openvaf_r_ngspice-f03-quoted/outputs/foundation-openvaf_r_ngspice-f03-quoted/FILE_MANIFEST.json",
+        "sha256": "c9a8192292aca8c66bd5a4d0eb23e28e574e6852bbbccd4d72f0e2f5baffaefc",
+        "availability": "local-only"
+      },
+      "slots": 36,
+      "execution_counts": {
+        "waveform_available": 36
+      },
+      "compiled_byte_equal_slots": 36,
+      "actual_attempts": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-ng-f03/collected/foundation-openvaf_r_ngspice-f03-quoted/outputs/foundation-openvaf_r_ngspice-f03-quoted/ATTEMPTS.json",
+        "sha256": "01fd2c70762693ee564332f057b7ef87580792c494979f3d618a944d68962d32",
+        "availability": "local-only"
+      },
+      "limits": "raw execution success is not numerical or formal qualification; strict quoted grammar/proof and exact-input/DC obligations remain subject to the unchanged checker and independent reviewed evidence; original36 failures retained, no best-of",
+      "dc1_actual_readout": [
+        {
+          "label": "F03-dc-1--Q1",
+          "fixed_requested_u_decimal17": "0.49999999999999994",
+          "fixed_requested_u_binary64": "0x1.fffffffffffffp-2",
+          "exported_actual_u_token17": "5.00000000000000000e-01",
+          "mismatch_rows": 186,
+          "total_raw_rows": 186,
+          "time0_comparators": {
+            "lt": "0.00000000000000000e+00",
+            "le": "1.00000000000000000e+00",
+            "gt": "0.00000000000000000e+00",
+            "ge": "1.00000000000000000e+00"
+          }
+        },
+        {
+          "label": "F03-dc-1--Q2",
+          "fixed_requested_u_decimal17": "0.49999999999999994",
+          "fixed_requested_u_binary64": "0x1.fffffffffffffp-2",
+          "exported_actual_u_token17": "5.00000000000000000e-01",
+          "mismatch_rows": 376,
+          "total_raw_rows": 376,
+          "time0_comparators": {
+            "lt": "0.00000000000000000e+00",
+            "le": "1.00000000000000000e+00",
+            "gt": "0.00000000000000000e+00",
+            "ge": "1.00000000000000000e+00"
+          }
+        },
+        {
+          "label": "F03-dc-1--Q3",
+          "fixed_requested_u_decimal17": "0.49999999999999994",
+          "fixed_requested_u_binary64": "0x1.fffffffffffffp-2",
+          "exported_actual_u_token17": "5.00000000000000000e-01",
+          "mismatch_rows": 2165,
+          "total_raw_rows": 2165,
+          "time0_comparators": {
+            "lt": "0.00000000000000000e+00",
+            "le": "1.00000000000000000e+00",
+            "gt": "0.00000000000000000e+00",
+            "ge": "1.00000000000000000e+00"
+          }
+        }
+      ],
+      "interpretation": "fixed requested source value and exported actual u do not agree; actual readout is established, but parsing/solving/export/internal-node root cause is not established; do not call this comparator failure or infer internal rounding",
+      "actual_input_fact_reference": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-ng-f03/collected/foundation-openvaf_r_ngspice-f03-quoted/ACTUAL_INPUT_BINARY64_FACTS.json",
+        "sha256": "bb0b8522e92b1bd9c051356874b25f8b829936b9fb7fcac8a66f8587a12bc931",
+        "availability": "local-only"
+      }
+    },
+    "ng-closure-01": {
+      "fixed_image": "sha256:233b15bcc2bdfd40c915dbf6ed41d731306f64083885d1255ae1bdd37cdcb555",
+      "status": "inspection_complete_review_pending",
+      "cleanup_confirmed": true,
+      "scientific_simulations": 0,
+      "archive_sha256": "41cd3a8dc986278a4d2aa9b648c97597ae3e856bc2f6b2ef5aebe8e567a269be",
+      "file_manifest": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/observation-source-audit/collected/ng-closure-01/audit/FILE_MANIFEST.json",
+        "sha256": "13d503a851d3b0f7db5a2bbdd32a844ad782831821be15a11b132fe277826f76",
+        "availability": "local-only"
+      },
+      "verified_files": 146,
+      "limits": "installed-body/configuration evidence only; new /work absence does not by itself prove archived startup; installed method selection code does not prove each DUT loaded/selected that integrator; qualification remains unapproved/unknown pending independent scope review",
+      "function_table_extents": [
+        {
+          "symbol": "ft_funcs",
+          "address": "0x763300",
+          "bytes": 976,
+          "source": "actual nm -aS installed binary",
+          "status": "collected"
+        },
+        {
+          "symbol": "funcs",
+          "address": "0x75c880",
+          "bytes": 936,
+          "source": "actual nm -aS installed binary",
+          "status": "collected"
+        }
+      ],
+      "collected_bodies": [
+        "disassembly-AddRealValueToVector.json",
+        "disassembly-AddRealValueToVector.log",
+        "disassembly-AddRealValueToVector.log.EXECUTION.json",
+        "disassembly-OUTpData.json",
+        "disassembly-OUTpData.log",
+        "disassembly-OUTpData.log.EXECUTION.json",
+        "disassembly-PPparse.json",
+        "disassembly-PPparse.log",
+        "disassembly-PPparse.log.EXECUTION.json",
+        "disassembly-apply_func.json",
+        "disassembly-apply_func.log",
+        "disassembly-apply_func.log.EXECUTION.json",
+        "disassembly-apply_func_funcall.json",
+        "disassembly-apply_func_funcall.log",
+        "disassembly-apply_func_funcall.log.EXECUTION.json",
+        "disassembly-dvec_extend.json",
+        "disassembly-dvec_extend.log",
+        "disassembly-dvec_extend.log.EXECUTION.json",
+        "disassembly-ft_cpinit.json",
+        "disassembly-ft_cpinit.log",
+        "disassembly-ft_cpinit.log.EXECUTION.json",
+        "disassembly-ft_evaluate.json",
+        "disassembly-ft_evaluate.log",
+        "disassembly-ft_evaluate.log.EXECUTION.json",
+        "disassembly-ft_getpnames.json",
+        "disassembly-ft_getpnames.log",
+        "disassembly-ft_getpnames.log.EXECUTION.json",
+        "disassembly-ft_getpnames_quotes.json",
+        "disassembly-ft_getpnames_quotes.log",
+        "disassembly-ft_getpnames_quotes.log.EXECUTION.json",
+        "disassembly-ft_pnode.json",
+        "disassembly-ft_pnode.log",
+        "disassembly-ft_pnode.log.EXECUTION.json",
+        "disassembly-ft_writesimple.json",
+        "disassembly-ft_writesimple.log",
+        "disassembly-ft_writesimple.log.EXECUTION.json",
+        "disassembly-main.json",
+        "disassembly-main.log",
+        "disassembly-main.log.EXECUTION.json",
+        "disassembly-read_initialisation_file.json",
+        "disassembly-read_initialisation_file.log",
+        "disassembly-read_initialisation_file.log.EXECUTION.json",
+        "disassembly-vec_copy.json",
+        "disassembly-vec_copy.log",
+        "disassembly-vec_copy.log.EXECUTION.json"
+      ]
+    },
+    "gn-closure-01": {
+      "fixed_image": "sha256:6a094609a9dbe4e6e535625807569a212d681ecf6a66fa5d532344f10121a698",
+      "status": "inspection_complete_review_pending",
+      "cleanup_confirmed": true,
+      "scientific_simulations": 0,
+      "archive_sha256": "55ac1494be2f81d2895394e741a69f9394d901634167fe994975c169cb656a30",
+      "file_manifest": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/observation-source-audit/collected/gn-closure-01/audit/FILE_MANIFEST.json",
+        "sha256": "9c95df2b6fd9a71b406b083b4a52a84efb20dfe54c3c10993aa252c1ed47dd19",
+        "availability": "local-only"
+      },
+      "verified_files": 153,
+      "limits": "installed-body/configuration evidence only; new /work absence does not by itself prove archived startup; installed method selection code does not prove each DUT loaded/selected that integrator; qualification remains unapproved/unknown pending independent scope review",
+      "actual_entry_and_method_bodies": [
+        {
+          "target": "findfile",
+          "symbol": "_Z8findfileRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES6_i",
+          "address": "0xaeae0",
+          "status": "collected",
+          "claim": "installed body; execution path requires review"
+        },
+        {
+          "target": "STORAGE::select_method",
+          "symbol": "_ZNK7STORAGE13select_methodEPK10PARAM_LIST",
+          "address": "0x103eb0",
+          "status": "collected",
+          "claim": "installed body; execution path requires review"
+        }
+      ],
+      "candidate_files": {
+        "/work/gnucap.rc": {
+          "exists": false,
+          "sha256": null
+        },
+        "/work/.gnucap/gnucap.rc": {
+          "exists": false,
+          "sha256": null
+        },
+        "/opt/gnucap/etc/gnucap.rc": {
+          "exists": false,
+          "sha256": null
+        },
+        "/opt/gnucap/etc/gnucap/gnucap.rc": {
+          "exists": false,
+          "sha256": null
+        },
+        "/root/.gnucaprc": {
+          "exists": false,
+          "sha256": null
+        }
+      }
+    }
+  },
+  "final_execution": {
+    "conservative_shared_counts": {
+      "spectre": 347,
+      "open": 463,
+      "evas": 519
+    },
+    "new_ng_compile_stages": 36,
+    "new_ng_simulator_stages": 36,
+    "operator_cleanup_confirmed": true,
+    "lock_observation": "nonblocking exclusive lock acquired for final read-only snapshot, released when this process exits",
+    "reference": {
+      "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-overnight-20261012/batch-ng-f03/FINAL_EXECUTION_RECEIPT.json",
+      "sha256": "39d4987c7252ed9a742139a3c9f1a864fbf63e432c35fefdee798af2f7c235c7",
+      "availability": "local-only"
+    },
+    "further_remote_execution": "stopped; ownership returned to root"
+  }
+}

@@ -46,6 +46,7 @@
 
 | 目的 | 入口 |
 | --- | --- |
+| 检查 44 组基础特性与工程组合的三档精度 | [模型与共同 checker](paper/README.md)、[范围和预算](../docs/COMPARISON-METHODOLOGY.md#precision-breadth)、[实际收据](../../experiments/backends/support/README.md#precision-breadth)；不与旧 31 条件混算 |
 | 查看新论文集的特性映射、有限首批和独立条件卡 | [论文比较设计](paper/README.md)，设计与冻结条件；[当前 main 实测](../../experiments/backends/support/README.md)保留 I/X |
 | 检查支持表的 15 个专项探针 | [固定模型、判据与校准](support/README.md)，有限开发观测 |
 | 检查两级固定 slew 的独立公式与实际配对 | [输入生成与检查器](slew_cascade/compare.py)、[范围和实测](../../experiments/backends/slew-cascade/README.md) |
