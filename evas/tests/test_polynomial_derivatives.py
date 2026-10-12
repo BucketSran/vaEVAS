@@ -24,6 +24,13 @@ class PolynomialDerivativeContracts(unittest.TestCase):
             for actual, answer in zip(values(result), [0., 10., -12., -10., -8.]):
                 assert_close(self, actual, answer)
 
+    def test_terminal_corner_uses_left_even_when_source_extends_past_stop(self):
+        program = compile_model("V(y,r)<+ddt(V(u,r)*V(u,r));")
+        result = run(program, {"u": [[0., 2.], [.5, 3.], [1., 2.]]},
+                     [0., .25, .5], stop=.5)
+        for actual, answer in zip(values(result), [0., 10., 12.]):
+            assert_close(self, actual, answer)
+
     def test_chain_rule_combines_time_voltage_products_and_powers(self):
         program = compile_model("V(y,r)<+ddt($abstime*pow(V(u,r),3));")
         # u=2+t: d(t*u^3)=u^3+3*t*u^2.

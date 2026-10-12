@@ -144,7 +144,9 @@ impl DirectDerivative {
             .map(|source| {
                 // Interior corners use the right side; the final stop uses the left.
                 let i = source
-                    .partition_point(|p| p[0] <= time)
+                    .partition_point(|p| {
+                        p[0] < time || p[0] == time && time != self.trajectory.config.stop
+                    })
                     .min(source.len() - 1)
                     .max(1);
                 let [a, x] = source[i - 1];
