@@ -9,6 +9,7 @@
 | --- | --- |
 | 能做什么，与 Spectre 对齐到什么程度？ | [四后端支持范围](COMPARISON.md) |
 | 表中“通过”依据什么，精度怎样判定？ | [四后端评测标准](COMPARISON-METHODOLOGY.md) |
+| 新测试是否覆盖旧测试，还缺什么？ | [累计测试清单](../validation/paper/COVERAGE.md) |
 | 当前版本包含哪些改动？ | [版本记录](UPDATE.md#baseline-20261009) |
 | 如何安装、设置观测或读取结果？ | 下方[接口参考](#接口参考) |
 | 电压、积分和事件怎样计算？ | [数学原理](math/README.md) |
