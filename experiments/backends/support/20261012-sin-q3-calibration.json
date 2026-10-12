@@ -1,0 +1,813 @@
+{
+  "schema": "sin-q3-curated-calibration-v1",
+  "operation": "new evidence audit; original scientific verdicts unchanged",
+  "checkpoint": "a64c2ad0542fa3e0bf24174d853b91da0f922cce",
+  "positions": 6,
+  "counts": {
+    "evas": {
+      "execution_failed": 1,
+      "pass": 2
+    },
+    "spectre": {
+      "pass": 3
+    }
+  },
+  "contract": {
+    "id": "sin-Q3-voltage-floor-calibration-v1",
+    "cards": [
+      {
+        "id": "P-sin",
+        "function": "sin",
+        "exponent": 3,
+        "expression": "sin(V(u))",
+        "inputs": {
+          "u": [
+            [
+              0.0,
+              -12.566370614359172
+            ],
+            [
+              1e-06,
+              -1.5707963267948966
+            ],
+            [
+              2e-06,
+              0.0
+            ],
+            [
+              3e-06,
+              1.5707963267948966
+            ],
+            [
+              4e-06,
+              12.566370614359172
+            ]
+          ]
+        },
+        "scope": "finite sampled instants, including input corners and observed interior values",
+        "top": "va_primitive",
+        "ports": [
+          "u",
+          "y"
+        ],
+        "parameters": {},
+        "unit_s": 1e-06,
+        "scale_V": 1.0,
+        "stop_s": 4e-06,
+        "source": "`include \"disciplines.vams\"\nmodule va_primitive(u,y);\ninput u; output y; electrical u,y;\nanalog begin V(y) <+ sin(V(u)); end\nendmodule\n"
+      }
+    ],
+    "budgets_V": {
+      "Q1": 1.01e-05,
+      "Q2": 1.01e-06,
+      "Q3": 1.01e-07
+    },
+    "target_tier": "Q3",
+    "varied_control": "vabstol only",
+    "floors_V": [
+      1e-14,
+      1e-13,
+      1e-12
+    ],
+    "historical_criteria": "unchanged",
+    "selection_rule": "retain all attempts; lowest floor passing original Q3 and evidence audit is the calibrated candidate"
+  },
+  "inputs_manifest_sha256": "8843b303988e46e0bff432d08939e224c818596d7150e7677cf11448f90bf25d",
+  "source_identity_sha256": "e95226f9a8b0ab455cfdd95aab587a500b1b410698fc0d33619fd3066cb39e61",
+  "kernel_build": {
+    "record_sha256": "f7e8bdeb0b26969596491c957cdf286514e0824c7539ca77cf2aea7b830df9d9",
+    "kernel_sha256": "e050ae98af880b4d73ca183846b8955d26169b090c02c9450d0855b7b2b52216",
+    "compiler_identity": {
+      "cargo": {
+        "actual_binary_path": "/home/jinzhihong/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/cargo",
+        "actual_binary_sha256": "f30f9fd1b1d0b8fd10dc33219eb4cd4bec3543f40e434ac71f5a03fd0359063f",
+        "version": "cargo 1.96.0 (30a34c682 2026-05-25)",
+        "resolution_argv": [
+          "/home/jinzhihong/.cargo/bin/rustup",
+          "which",
+          "cargo"
+        ]
+      },
+      "rustc": {
+        "actual_binary_path": "/home/jinzhihong/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rustc",
+        "actual_binary_sha256": "ba4b837efb6612dfa8d941c5a72b8a50d1d03a0f36216743b173949aa8d9eb75",
+        "version": "rustc 1.96.0 (ac68faa20 2026-05-25)",
+        "resolution_argv": [
+          "/home/jinzhihong/.cargo/bin/rustup",
+          "which",
+          "rustc"
+        ]
+      }
+    },
+    "cargo_lock_sha256": "4ac34a67969cbd69004115347a99e1d1ad71b577ca98d5dacdadd707aedadd01"
+  },
+  "analyses": [
+    {
+      "file": "ANALYSIS.json",
+      "sha256": "b7035deaf500e5413b77471e7a205cbbb9c5d98288b48ad4417e273255100887",
+      "analysis_source_identity": {
+        "experiments/backends/support/primitives_run.py": "37d548ae096fd97e43a4adc54cff00b96d97d79c031678babd3db9ece1cb2112",
+        "evas/validation/paper/primitives.py": "a039cd064b0fd49ee8faf8b5f9a5815be95e06d02fc46f9add6ce00eed082405",
+        "evas/validation/paper/precision_reference.py": "f147be6e821de4b87a27be149acc22015fd927e8bf4cb90036ae99eb7f23cc29",
+        "experiments/backends/paper/observations.py": "0aff2f248d63b9e81b1fcf5bab5722df13bdcf42fd7edffe4fe65f45b79b845c",
+        "experiments/backends/support/precision_readback_audit.py": "ca31070362aace42d97c6d2ae0cae9f65fec228c8de4681d704cae5448e80658",
+        "experiments/archive/dvs2-starter-pilot/analyze.py": "e10acac779cb8c8e627358832689506f4f366de9241155e9daf512d8bcb01680",
+        "experiments/archive/dvs2-starter-pilot/suite.py": "7c4e686253688d575b32f9aec89e6e741da201c1411436b765f5f7e2f12e49ff"
+      }
+    }
+  ],
+  "auditor_sha256": "d6481770037f5aee39e4ce3e0e2611a382f1ad3ce7fd6e5a10d19f8ca97f1716",
+  "sources": [
+    {
+      "lane": "sin-floor-evas",
+      "manifest_sha256": "99d33a386dc8046f96138bf1a44c72f4b8b152ebcf2e55d08a3936a4b6cae2d3",
+      "tool_identity_sha256": "22c7ccc34f368382e3d480068c86fe98564cb47d32fc75e43218d67040831195",
+      "tool_binary_sha256": "e050ae98af880b4d73ca183846b8955d26169b090c02c9450d0855b7b2b52216",
+      "version": "0.14.0",
+      "images": null,
+      "environment_sha256": null,
+      "availability": "local-only"
+    },
+    {
+      "lane": "sin-floor-spectre",
+      "manifest_sha256": "13831f35cafbb7743f815e6933a9beafd581b30bdae7f2c1784de3f92448bfe4",
+      "tool_identity_sha256": "a57a3a0e125acf1a8a10f7001a484e18d152894e012f3facba7c8133ee7d1615",
+      "tool_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+      "version": "sub-version  21.1.0.509.isr12",
+      "images": null,
+      "environment_sha256": null,
+      "availability": "local-only"
+    }
+  ],
+  "records": [
+    {
+      "backend": "evas",
+      "label": "P-sin--Q3-vabstol-1e-14",
+      "tier": "Q3",
+      "execution": "execution_failed",
+      "result_sha256": "996d6075f51f7f6304d51a513836007474a4b8007adfe8e59b14314c44070791",
+      "input_hashes": {
+        "dut.va": "bfb91ba1e8c806e54b0d01ead89904b5f373366da35f97121c2d30b0eaa72e97",
+        "condition.json": "d2cd1efb068f980043a01fa14a16d9b8a00e6965e93988c33beb6eb92c3c43fe",
+        "requested_settings.json": "484bf760eac4265b0e1bf36ab73b489ed36711d6fb7c97dece07e1e58e3bf397",
+        "requested_times.json": "df4a59d579242a892cc74d452fc71833133f085d6a1e9af2b1bd2af2c0c6ed62",
+        "request.json": "14fc3e8a908591ff006e31078927ed006cfe1470bda187f47c3e602bd2fa58c4"
+      },
+      "requested_controls": {
+        "id": "deep",
+        "reltol": 1e-10,
+        "vabstol_V": 1e-14,
+        "iabstol_A": 1e-17,
+        "step_units": 0.03125,
+        "target_tier": "Q3",
+        "stop_s": 4e-06,
+        "maxstep_s": 3.125e-08,
+        "spice_maxstep_s": 3.125e-08
+      },
+      "reason": "waveform_accuracy: cannot certify same-time forward error at y: bound 4.603687023219686e-14, budget 1.0000000000048984e-14",
+      "finite_evidence": "no waveform",
+      "effective_controls": null,
+      "execution_artifacts": {
+        "simulate.json": "ccea24247fc9b5a12abf4cf2aa44c186f40f2a589f9d6d2672ebb90b1b845c6c",
+        "simulate.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "worker-result.json": "45d90c35f95cb270d4e1885551541a6cbe76d1c317a8b5ff152cdef2af8ad0e8"
+      }
+    },
+    {
+      "backend": "evas",
+      "label": "P-sin--Q3-vabstol-1e-13",
+      "tier": "Q3",
+      "execution": "waveform_available",
+      "result_sha256": "96fdaa884127d02ce8aa0eb66f52f6275968f683057f51c7055836b3ffd8f99a",
+      "assessment": {
+        "status": "pass",
+        "error_lower_V": 0.0,
+        "error_upper_V": 3.36952687973735e-14,
+        "input_error_max_V": 1.8108597509306907e-15,
+        "budget_V": 1.01e-07,
+        "rows": 65,
+        "issues": [],
+        "scope": "fixed finite observations; settings and sample origin are separate evidence axes"
+      },
+      "input_hashes": {
+        "dut.va": "bfb91ba1e8c806e54b0d01ead89904b5f373366da35f97121c2d30b0eaa72e97",
+        "condition.json": "d2cd1efb068f980043a01fa14a16d9b8a00e6965e93988c33beb6eb92c3c43fe",
+        "requested_settings.json": "fcbbebb1e9168da8e536837a4f57df2d118b07a98fa114979248f099526c8305",
+        "requested_times.json": "df4a59d579242a892cc74d452fc71833133f085d6a1e9af2b1bd2af2c0c6ed62",
+        "request.json": "491aa943c0d6bc41d0085a02572d728073e6abe04efc0bd9ff78b9cdd157250e"
+      },
+      "requested_controls": {
+        "id": "deep",
+        "reltol": 1e-10,
+        "vabstol_V": 1e-13,
+        "iabstol_A": 1e-17,
+        "step_units": 0.03125,
+        "target_tier": "Q3",
+        "stop_s": 4e-06,
+        "maxstep_s": 3.125e-08,
+        "spice_maxstep_s": 3.125e-08
+      },
+      "reason": null,
+      "finite_evidence": "audited",
+      "effective_controls": {
+        "reltol": 1e-10,
+        "vabstol": 1e-13,
+        "iabstol": "unknown",
+        "stop": 4e-06,
+        "maxstep": 3.125e-08,
+        "method": "unknown; unsupported integration_method control"
+      },
+      "execution_artifacts": {
+        "simulate.json": "34e84e295df7b04fab09be81ca4247ed81051b762c5248b3c2acfb8ea8f0274b",
+        "simulate.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "worker-result.json": "0c76c72d36677070c7979f32d29171a215584a7352784e454b5a2c4e6ff6af36"
+      },
+      "native_export": {
+        "path": "waveform.csv",
+        "sha256": "78b6b7639e1e3d88a9c26b13136f451fed11bcb6183a7e7e25f84cf0d76476c0",
+        "rows": 65,
+        "start_s": 0.0,
+        "end_s": 4e-06,
+        "max_gap_s": 6.250000000000025e-08,
+        "reader_interpolation": false,
+        "claim": "actual exported observations, not accepted-step certification"
+      },
+      "control_limit": "iabstol/integration method are not EVAS voltage-domain controls"
+    },
+    {
+      "backend": "evas",
+      "label": "P-sin--Q3-vabstol-1e-12",
+      "tier": "Q3",
+      "execution": "waveform_available",
+      "result_sha256": "ef0c7facaf01435fb6bfb8b0c19396e6470b561c98a528a5e656b8a9adc06e8d",
+      "assessment": {
+        "status": "pass",
+        "error_lower_V": 0.0,
+        "error_upper_V": 3.36952687973735e-14,
+        "input_error_max_V": 1.8108597509306907e-15,
+        "budget_V": 1.01e-07,
+        "rows": 65,
+        "issues": [],
+        "scope": "fixed finite observations; settings and sample origin are separate evidence axes"
+      },
+      "input_hashes": {
+        "dut.va": "bfb91ba1e8c806e54b0d01ead89904b5f373366da35f97121c2d30b0eaa72e97",
+        "condition.json": "d2cd1efb068f980043a01fa14a16d9b8a00e6965e93988c33beb6eb92c3c43fe",
+        "requested_settings.json": "efed2c011b15be50f538be68f38dfde7cb010fafb6b2926626ec42b9a559e4b0",
+        "requested_times.json": "df4a59d579242a892cc74d452fc71833133f085d6a1e9af2b1bd2af2c0c6ed62",
+        "request.json": "3ea41033711f44db65d5b8788ebd0c2d12f3de754680fee44bc8bfbab5b19621"
+      },
+      "requested_controls": {
+        "id": "deep",
+        "reltol": 1e-10,
+        "vabstol_V": 1e-12,
+        "iabstol_A": 1e-17,
+        "step_units": 0.03125,
+        "target_tier": "Q3",
+        "stop_s": 4e-06,
+        "maxstep_s": 3.125e-08,
+        "spice_maxstep_s": 3.125e-08
+      },
+      "reason": null,
+      "finite_evidence": "audited",
+      "effective_controls": {
+        "reltol": 1e-10,
+        "vabstol": 1e-12,
+        "iabstol": "unknown",
+        "stop": 4e-06,
+        "maxstep": 3.125e-08,
+        "method": "unknown; unsupported integration_method control"
+      },
+      "execution_artifacts": {
+        "simulate.json": "3497127d1a3a422b495c1a967d8e836f508d0b6352c868286b141cb1cd87fdef",
+        "simulate.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "worker-result.json": "0c76c72d36677070c7979f32d29171a215584a7352784e454b5a2c4e6ff6af36"
+      },
+      "native_export": {
+        "path": "waveform.csv",
+        "sha256": "78b6b7639e1e3d88a9c26b13136f451fed11bcb6183a7e7e25f84cf0d76476c0",
+        "rows": 65,
+        "start_s": 0.0,
+        "end_s": 4e-06,
+        "max_gap_s": 6.250000000000025e-08,
+        "reader_interpolation": false,
+        "claim": "actual exported observations, not accepted-step certification"
+      },
+      "control_limit": "iabstol/integration method are not EVAS voltage-domain controls"
+    },
+    {
+      "backend": "spectre",
+      "label": "P-sin--Q3-vabstol-1e-14",
+      "tier": "Q3",
+      "execution": "waveform_available",
+      "result_sha256": "7ffb3f26773a05094f69a757e859c1a8583ab0582cfe8f45a38a508f1785d5f9",
+      "assessment": {
+        "status": "pass",
+        "error_lower_V": 0.0,
+        "error_upper_V": 3.2464281828863455e-14,
+        "input_error_max_V": 1.6954377218776177e-15,
+        "budget_V": 1.01e-07,
+        "rows": 2371,
+        "issues": [],
+        "scope": "fixed finite observations; settings and sample origin are separate evidence axes"
+      },
+      "input_hashes": {
+        "dut.va": "bfb91ba1e8c806e54b0d01ead89904b5f373366da35f97121c2d30b0eaa72e97",
+        "condition.json": "d2cd1efb068f980043a01fa14a16d9b8a00e6965e93988c33beb6eb92c3c43fe",
+        "requested_settings.json": "484bf760eac4265b0e1bf36ab73b489ed36711d6fb7c97dece07e1e58e3bf397",
+        "requested_times.json": "df4a59d579242a892cc74d452fc71833133f085d6a1e9af2b1bd2af2c0c6ed62",
+        "tb.scs": "d4ec6794d5eb5a9a6a7e21fe42a0142a58e765be01b3391fb6ae283d6c778cba"
+      },
+      "requested_controls": {
+        "id": "deep",
+        "reltol": 1e-10,
+        "vabstol_V": 1e-14,
+        "iabstol_A": 1e-17,
+        "step_units": 0.03125,
+        "target_tier": "Q3",
+        "stop_s": 4e-06,
+        "maxstep_s": 3.125e-08,
+        "spice_maxstep_s": 3.125e-08
+      },
+      "reason": null,
+      "finite_evidence": "audited",
+      "effective_controls": {
+        "stop_s": 4e-06,
+        "maxstep_s": 3.125e-08,
+        "reltol": 1e-11,
+        "vabstol_V": 1e-14,
+        "iabstol_A": 1e-17,
+        "method": "traponly"
+      },
+      "execution_artifacts": {
+        "simulate.json": "c436ca8fd4318c25eeba02903cd539e1557d519712da693a79f2fabe11c3cd6b",
+        "simulate.log": "fda315dd25a2d8b27bacd026ef74eaed52169bb13986db1667a3f0cad011dc6d"
+      },
+      "native_export": {
+        "path": "psf/tran.tran.tran",
+        "sha256": "6575262fcf935f4515f2053762248ff38f55e2ca0367bb552d8501802a27cd46",
+        "rows": 2371,
+        "start_s": 0.0,
+        "end_s": 4e-06,
+        "max_gap_s": 3.98681152343752e-09,
+        "reader_interpolation": false,
+        "claim": "actual exported observations, not accepted-step certification"
+      },
+      "metadata_rounding": []
+    },
+    {
+      "backend": "spectre",
+      "label": "P-sin--Q3-vabstol-1e-13",
+      "tier": "Q3",
+      "execution": "waveform_available",
+      "result_sha256": "d3bc86d967f15024151d7b9fc90b0fc2f6aabc1af1d52915533fe794e9766218",
+      "assessment": {
+        "status": "pass",
+        "error_lower_V": 0.0,
+        "error_upper_V": 3.2464281828863455e-14,
+        "input_error_max_V": 1.6954377218776177e-15,
+        "budget_V": 1.01e-07,
+        "rows": 2371,
+        "issues": [],
+        "scope": "fixed finite observations; settings and sample origin are separate evidence axes"
+      },
+      "input_hashes": {
+        "dut.va": "bfb91ba1e8c806e54b0d01ead89904b5f373366da35f97121c2d30b0eaa72e97",
+        "condition.json": "d2cd1efb068f980043a01fa14a16d9b8a00e6965e93988c33beb6eb92c3c43fe",
+        "requested_settings.json": "fcbbebb1e9168da8e536837a4f57df2d118b07a98fa114979248f099526c8305",
+        "requested_times.json": "df4a59d579242a892cc74d452fc71833133f085d6a1e9af2b1bd2af2c0c6ed62",
+        "tb.scs": "0d5c258374159c45c4eebf32433bfdcca4818b412c2d5489a97224d5d00c1ba0"
+      },
+      "requested_controls": {
+        "id": "deep",
+        "reltol": 1e-10,
+        "vabstol_V": 1e-13,
+        "iabstol_A": 1e-17,
+        "step_units": 0.03125,
+        "target_tier": "Q3",
+        "stop_s": 4e-06,
+        "maxstep_s": 3.125e-08,
+        "spice_maxstep_s": 3.125e-08
+      },
+      "reason": null,
+      "finite_evidence": "audited",
+      "effective_controls": {
+        "stop_s": 4e-06,
+        "maxstep_s": 3.125e-08,
+        "reltol": 1e-11,
+        "vabstol_V": 1e-13,
+        "iabstol_A": 1e-17,
+        "method": "traponly"
+      },
+      "execution_artifacts": {
+        "simulate.json": "d5e7da2256f324e063c2331bf41407bbb3513ef075637d3e0c9a0cc6e44cb84c",
+        "simulate.log": "669d8c4e601e0fc378ed55a16f8a67d8c0cb0ad9da46e1553ad99a1488fb2dfb"
+      },
+      "native_export": {
+        "path": "psf/tran.tran.tran",
+        "sha256": "36b3708f715b509c30dfe3218b0afed678079badb019eb1c76981c7bbb16f2c1",
+        "rows": 2371,
+        "start_s": 0.0,
+        "end_s": 4e-06,
+        "max_gap_s": 3.98681152343752e-09,
+        "reader_interpolation": false,
+        "claim": "actual exported observations, not accepted-step certification"
+      },
+      "metadata_rounding": []
+    },
+    {
+      "backend": "spectre",
+      "label": "P-sin--Q3-vabstol-1e-12",
+      "tier": "Q3",
+      "execution": "waveform_available",
+      "result_sha256": "0ee007d9906e3cd71c4c04e8081f36e29720f0af2897685462c2c90bcd5d280b",
+      "assessment": {
+        "status": "pass",
+        "error_lower_V": 0.0,
+        "error_upper_V": 3.2464281828863455e-14,
+        "input_error_max_V": 1.6954377218776177e-15,
+        "budget_V": 1.01e-07,
+        "rows": 2371,
+        "issues": [],
+        "scope": "fixed finite observations; settings and sample origin are separate evidence axes"
+      },
+      "input_hashes": {
+        "dut.va": "bfb91ba1e8c806e54b0d01ead89904b5f373366da35f97121c2d30b0eaa72e97",
+        "condition.json": "d2cd1efb068f980043a01fa14a16d9b8a00e6965e93988c33beb6eb92c3c43fe",
+        "requested_settings.json": "efed2c011b15be50f538be68f38dfde7cb010fafb6b2926626ec42b9a559e4b0",
+        "requested_times.json": "df4a59d579242a892cc74d452fc71833133f085d6a1e9af2b1bd2af2c0c6ed62",
+        "tb.scs": "ed3215e98b4f0db73c3b07ab0ffcbf195df70485ae6ec5b72341962bd21284f5"
+      },
+      "requested_controls": {
+        "id": "deep",
+        "reltol": 1e-10,
+        "vabstol_V": 1e-12,
+        "iabstol_A": 1e-17,
+        "step_units": 0.03125,
+        "target_tier": "Q3",
+        "stop_s": 4e-06,
+        "maxstep_s": 3.125e-08,
+        "spice_maxstep_s": 3.125e-08
+      },
+      "reason": null,
+      "finite_evidence": "audited",
+      "effective_controls": {
+        "stop_s": 4e-06,
+        "maxstep_s": 3.125e-08,
+        "reltol": 1e-11,
+        "vabstol_V": 1e-12,
+        "iabstol_A": 1e-17,
+        "method": "traponly"
+      },
+      "execution_artifacts": {
+        "simulate.json": "903b0c90b232763cacf79bb99c1de91349258e0cf53a09c3d15ea7ad5fc445c4",
+        "simulate.log": "dede8a4739d617fb862437fae89487c4f0e0303b226207f8571b5aa753699585"
+      },
+      "native_export": {
+        "path": "psf/tran.tran.tran",
+        "sha256": "aee419d71dd87989868ffe08492bd4aec7ee76035cb17e3f58517bd9c555247d",
+        "rows": 2371,
+        "start_s": 0.0,
+        "end_s": 4e-06,
+        "max_gap_s": 3.98681152343752e-09,
+        "reader_interpolation": false,
+        "claim": "actual exported observations, not accepted-step certification"
+      },
+      "metadata_rounding": []
+    }
+  ],
+  "claim": "audited finite exported observations only; no event-origin or continuous-trajectory guarantee",
+  "history": "prior criteria, scores and rejected fixture attempts retained separately",
+  "calibration": {
+    "selection_rule": "retain all attempts; lowest floor passing original Q3 and evidence audit is the calibrated candidate",
+    "selected_by_backend": {
+      "evas": {
+        "label": "P-sin--Q3-vabstol-1e-13",
+        "vabstol_V": 1e-13,
+        "effective_controls": {
+          "reltol": 1e-10,
+          "vabstol": 1e-13,
+          "iabstol": "unknown",
+          "stop": 4e-06,
+          "maxstep": 3.125e-08,
+          "method": "unknown; unsupported integration_method control"
+        },
+        "error_upper_V": 3.36952687973735e-14,
+        "budget_V": 1.01e-07
+      },
+      "spectre": {
+        "label": "P-sin--Q3-vabstol-1e-14",
+        "vabstol_V": 1e-14,
+        "effective_controls": {
+          "stop_s": 4e-06,
+          "maxstep_s": 3.125e-08,
+          "reltol": 1e-11,
+          "vabstol_V": 1e-14,
+          "iabstol_A": 1e-17,
+          "method": "traponly"
+        },
+        "error_upper_V": 3.2464281828863455e-14,
+        "budget_V": 1.01e-07
+      }
+    },
+    "baseline_manifest_sha256": "887ad29c564d7e332c4fb801f98710585a1d3d8270f2f23dc46c1d0be4bb343f",
+    "baseline_scope": "original corrected finite-primitives P-sin Q3 (va_primitive); static maxstep T/32 already fixed before this calibration",
+    "external_budget_V": 1.01e-07,
+    "retained_positions": 6,
+    "old_scores": "Original 120 corrected primitive positions and all historical assessments unchanged; these six executions are additional",
+    "binding_scope": "this frozen P-sin static card only; does not alter precision-bindings-v1.json or precision-v2.json",
+    "baseline_receipt": {
+      "file": "20261012-primitives.json",
+      "sha256": "c624c009c9254be1a1ca899eb0dfdc9fcb2ab690187c485e5eed47a52daaea1c",
+      "sources": [
+        {
+          "lane": "primitives-valid-spectre",
+          "manifest_sha256": "14b9ac2b4104434a58c05337664157536db0e6c07191cdbc0c7c2008589bf670",
+          "tool_identity_sha256": "aec16c568ebb31193ed9d2d0cc96d99ffcd9399f99026bdb6e217b49ecfaa3bc",
+          "tool_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+          "version": "sub-version  21.1.0.509.isr12",
+          "images": null,
+          "environment_sha256": null,
+          "availability": "local-only"
+        },
+        {
+          "lane": "primitives-valid-evas",
+          "manifest_sha256": "4f7c570a99dfae69ab1390ba0fc8e945a11888ed2c9bbaf078078a256bbf0dac",
+          "tool_identity_sha256": "f18e5d64a52ed5c58a83e0132b10e8db504e2e3b6680743f2320a9f1c06b35cf",
+          "tool_binary_sha256": "e050ae98af880b4d73ca183846b8955d26169b090c02c9450d0855b7b2b52216",
+          "version": "0.14.0",
+          "images": null,
+          "environment_sha256": null,
+          "availability": "local-only"
+        }
+      ],
+      "records": [
+        {
+          "backend": "spectre",
+          "label": "P-sin--Q3",
+          "tier": "Q3",
+          "execution": "waveform_available",
+          "result_sha256": "bdfa14916ab524b23bca788b45be02dffcf2adfe53b2a4c988593cfe0088c9a9",
+          "assessment": {
+            "status": "pass",
+            "error_lower_V": 0.0,
+            "error_upper_V": 3.2464281828863455e-14,
+            "input_error_max_V": 1.6954377218776177e-15,
+            "budget_V": 1.01e-07,
+            "rows": 2371,
+            "issues": [],
+            "scope": "fixed finite observations; settings and sample origin are separate evidence axes"
+          },
+          "input_hashes": {
+            "dut.va": "bfb91ba1e8c806e54b0d01ead89904b5f373366da35f97121c2d30b0eaa72e97",
+            "condition.json": "d2cd1efb068f980043a01fa14a16d9b8a00e6965e93988c33beb6eb92c3c43fe",
+            "requested_settings.json": "484bf760eac4265b0e1bf36ab73b489ed36711d6fb7c97dece07e1e58e3bf397",
+            "requested_times.json": "df4a59d579242a892cc74d452fc71833133f085d6a1e9af2b1bd2af2c0c6ed62",
+            "tb.scs": "d4ec6794d5eb5a9a6a7e21fe42a0142a58e765be01b3391fb6ae283d6c778cba"
+          },
+          "requested_controls": {
+            "id": "deep",
+            "reltol": 1e-10,
+            "vabstol_V": 1e-14,
+            "iabstol_A": 1e-17,
+            "step_units": 0.03125,
+            "target_tier": "Q3",
+            "stop_s": 4e-06,
+            "maxstep_s": 3.125e-08,
+            "spice_maxstep_s": 3.125e-08
+          },
+          "reason": null,
+          "finite_evidence": "audited",
+          "effective_controls": {
+            "stop_s": 4e-06,
+            "maxstep_s": 3.125e-08,
+            "reltol": 1e-11,
+            "vabstol_V": 1e-14,
+            "iabstol_A": 1e-17,
+            "method": "traponly"
+          },
+          "execution_artifacts": {
+            "simulate.json": "ead7127aa7a5c08445eba3a716e492e92f24887ee3886caa1f1cccd81db3dab3",
+            "simulate.log": "dad10b6c261cbea6b48cead38a081a6dd741ac3c3843f1ecb8c757db4d593c89"
+          },
+          "native_export": {
+            "path": "psf/tran.tran.tran",
+            "sha256": "90aabca1c5a848579feaaef5782ace082dc1f2c62330d98ebcef4873f3fadbee",
+            "rows": 2371,
+            "start_s": 0.0,
+            "end_s": 4e-06,
+            "max_gap_s": 3.98681152343752e-09,
+            "reader_interpolation": false,
+            "claim": "actual exported observations, not accepted-step certification"
+          },
+          "metadata_rounding": []
+        },
+        {
+          "backend": "evas",
+          "label": "P-sin--Q3",
+          "tier": "Q3",
+          "execution": "execution_failed",
+          "result_sha256": "34852ce62566d800c91251e288b185535e6c3df24e92d2cc74c78aeed8c28b9f",
+          "input_hashes": {
+            "dut.va": "bfb91ba1e8c806e54b0d01ead89904b5f373366da35f97121c2d30b0eaa72e97",
+            "condition.json": "d2cd1efb068f980043a01fa14a16d9b8a00e6965e93988c33beb6eb92c3c43fe",
+            "requested_settings.json": "484bf760eac4265b0e1bf36ab73b489ed36711d6fb7c97dece07e1e58e3bf397",
+            "requested_times.json": "df4a59d579242a892cc74d452fc71833133f085d6a1e9af2b1bd2af2c0c6ed62",
+            "request.json": "14fc3e8a908591ff006e31078927ed006cfe1470bda187f47c3e602bd2fa58c4"
+          },
+          "requested_controls": {
+            "id": "deep",
+            "reltol": 1e-10,
+            "vabstol_V": 1e-14,
+            "iabstol_A": 1e-17,
+            "step_units": 0.03125,
+            "target_tier": "Q3",
+            "stop_s": 4e-06,
+            "maxstep_s": 3.125e-08,
+            "spice_maxstep_s": 3.125e-08
+          },
+          "reason": "waveform_accuracy: cannot certify same-time forward error at y: bound 4.603687023219686e-14, budget 1.0000000000048984e-14",
+          "finite_evidence": "no waveform",
+          "effective_controls": null,
+          "execution_artifacts": {
+            "simulate.json": "0c8d9eba7c5d3a4f10ba289128591de7e84bc22619695cb9d89e92db9baf81dc",
+            "simulate.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "worker-result.json": "45d90c35f95cb270d4e1885551541a6cbe76d1c317a8b5ff152cdef2af8ad0e8"
+          }
+        }
+      ]
+    },
+    "effective_control_differences": [
+      {
+        "backend": "evas",
+        "label": "P-sin--Q3-vabstol-1e-14",
+        "mismatches": [],
+        "claim": "requested and effective values both retained; Spectre conservative actual transient reltol=1e-11, requested=1e-10; EVAS unsupported controls remain unknown"
+      },
+      {
+        "backend": "evas",
+        "label": "P-sin--Q3-vabstol-1e-13",
+        "mismatches": [],
+        "claim": "requested and effective values both retained; Spectre conservative actual transient reltol=1e-11, requested=1e-10; EVAS unsupported controls remain unknown"
+      },
+      {
+        "backend": "evas",
+        "label": "P-sin--Q3-vabstol-1e-12",
+        "mismatches": [],
+        "claim": "requested and effective values both retained; Spectre conservative actual transient reltol=1e-11, requested=1e-10; EVAS unsupported controls remain unknown"
+      },
+      {
+        "backend": "spectre",
+        "label": "P-sin--Q3-vabstol-1e-14",
+        "mismatches": [
+          "reltol"
+        ],
+        "claim": "requested and effective values both retained; Spectre conservative actual transient reltol=1e-11, requested=1e-10; EVAS unsupported controls remain unknown"
+      },
+      {
+        "backend": "spectre",
+        "label": "P-sin--Q3-vabstol-1e-13",
+        "mismatches": [
+          "reltol"
+        ],
+        "claim": "requested and effective values both retained; Spectre conservative actual transient reltol=1e-11, requested=1e-10; EVAS unsupported controls remain unknown"
+      },
+      {
+        "backend": "spectre",
+        "label": "P-sin--Q3-vabstol-1e-12",
+        "mismatches": [
+          "reltol"
+        ],
+        "claim": "requested and effective values both retained; Spectre conservative actual transient reltol=1e-11, requested=1e-10; EVAS unsupported controls remain unknown"
+      }
+    ],
+    "profile_label_scope": "deep denotes point-control lineage; static primitive maxstep T/32 overrides the dynamic deep step, exactly as in the original corrected primitive baseline. Actual parameter values define the configuration.",
+    "unchanged_source_subset": {
+      "count": 110,
+      "scope": "Every source-manifest entry under evas/src/ or evas/rust_core/, including tests, benches and build auxiliary files; not the separate 101-file production-check count in SOURCE_PROVENANCE",
+      "baseline_source_identity_sha256": "e17925c99467e475b30409edcdfa2185332b001741964c3943c12338f1d6a370",
+      "current_source_identity_sha256": "e95226f9a8b0ab455cfdd95aab587a500b1b410698fc0d33619fd3066cb39e61",
+      "files": {
+        "evas/rust_core/Cargo.lock": "4ac34a67969cbd69004115347a99e1d1ad71b577ca98d5dacdadd707aedadd01",
+        "evas/rust_core/Cargo.toml": "68fbb7ba79e5964b59a4e00cf36c4f42f7311dba99e3fed6943366f599bf7e3f",
+        "evas/rust_core/benches/static_solver.rs": "cb7e8f046aa8cde417b94e6e52bf3cd59c714dba19de48ab2c0050a70cefaaa8",
+        "evas/rust_core/benches/transient_solver.rs": "07c249e600cfcbe4b2eae5f6398f3bf65c689f63846ef11c7cbbaec2737c2520",
+        "evas/rust_core/fuzz/Cargo.lock": "73066eeca7edc897b74437b0270c407eb1b0f5b1182b4246cb46be6a865ea42b",
+        "evas/rust_core/fuzz/Cargo.toml": "d21f7d8969051ba0c5dbdfaf7bfb510c6a3d8e073a7947b413a0077a7c775e12",
+        "evas/rust_core/fuzz/fuzz_targets/parse_request.rs": "ab9d99942c6e7c7079ad3d78646ea2657277997b67686208d9398cf5548987d5",
+        "evas/rust_core/fuzz/fuzz_targets/run.rs": "6dba9b211200fce17a36129ecbebf4332b50964abd63b829893a8940d0ac33bb",
+        "evas/rust_core/ir/Cargo.toml": "ee626ead9fe9620b9b48c956bef41d283578683d25bc879b20f25730adf325f0",
+        "evas/rust_core/ir/src/lib.rs": "6e817c39ffe5143eb91e5cf16bbf2ce6a4e20fb0175a5c2b7cc4e91ae46af677",
+        "evas/rust_core/ir/tests/transport.rs": "4199c2369bf3ed486612d8bbe1fbc46ee64e75409eb834abc6e15cfa74078cf1",
+        "evas/rust_core/src/absdelay.rs": "e0f6144590856b3a95d03a59af58e9032309fa1e316a41c063a40ec9f73109c7",
+        "evas/rust_core/src/accuracy.rs": "03fd769af88f73072a1964a942b9b9d1503196c56c5c4cb48cec7f21ee084d35",
+        "evas/rust_core/src/affine_bounds.rs": "b0faf6ee361cac3ab3a7b8a2d80992bece76a3457d4a08a48be81755cfe01c6b",
+        "evas/rust_core/src/analog.rs": "d4105a0e850f98d4c10ded8c7deacdcc45c960ed2a2a3c1547ea2cf2a5a687c0",
+        "evas/rust_core/src/assembly.rs": "52b5a1a7411b846c2c07d0c26c0fabca0641c3980b4b34a6bcd302e84401d9cb",
+        "evas/rust_core/src/batch.rs": "ba227471ba388b4efd361e9a523352b7626bb80cd51141a00ca2b1c97eed2888",
+        "evas/rust_core/src/continuous.rs": "ea60a978fce74d7e6419303183df55d1be245094eb84f01342fcd4bd6555e5ed",
+        "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+        "evas/rust_core/src/continuous_history.rs": "ec6f68c45c3c6c40e4c674ed8c47302c2b47f498f6e678d7105c9a83c06fda35",
+        "evas/rust_core/src/continuous_initialization.rs": "5145a36a517b9ba3ace0fb6241ebbd615fef6004b50aeb5dc99d76ff295874a8",
+        "evas/rust_core/src/continuous_runtime.rs": "70f93a4f9b046b53c3d0abb1a4b92ad66a3645e7f4272f6f9a21a66e87e49fcc",
+        "evas/rust_core/src/diagnostics.rs": "bd0feac3399c8b43bf14de204677d58a160d3648416242a76d3eae46e0dea699",
+        "evas/rust_core/src/dynamic_roots.rs": "30146ae2e527e12c6596aff3b0dad3cd172def2af80d27e3b92131032cb6a827",
+        "evas/rust_core/src/event_accuracy.rs": "d2b621cb23080ee219b5272fc489010dfc6a4ba15930fd8e6d94f0428e253dd6",
+        "evas/rust_core/src/event_conditions.rs": "8b0c00b449cf1b27326972a95b97a5f5c911b4f56cd6d30dec7f8905312ab30f",
+        "evas/rust_core/src/events.rs": "c30446f5becb7ca185645837592a868121df5d4aaee6aa2adacdd5aac8f30e28",
+        "evas/rust_core/src/exact_affine_history.rs": "768c7509b3d76e901e12b166291d0bb8ae7f282791fa513a72f087b07100f161",
+        "evas/rust_core/src/exact_source.rs": "bee5abfc22ebb00510d4010885b3550034d50d114a6aabde77d90631b8df71e6",
+        "evas/rust_core/src/exact_time.rs": "68e8415109ff7138b27195fe8d32f686441c61d4b012e774e31ede58e5eef824",
+        "evas/rust_core/src/expression.rs": "99024d0b32c2348b6d32db2dc7a27122ff16728c3d4dc476bde6d9f8cb766ffb",
+        "evas/rust_core/src/filter_budget.rs": "94807ee47a346648b5eb4d7d4af03366c0f1f1b79a0e67f636fc279c90b67656",
+        "evas/rust_core/src/guard_trajectory.rs": "c919578fe553f2e87ded91d054780e8e66d505db688894875a8506ae826ec84c",
+        "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+        "evas/rust_core/src/idtmod.rs": "c57464703c5332f4a5ea827e8a6f85799f57c7d9a6655351475684b3fdeda190",
+        "evas/rust_core/src/implicit_dynamics.rs": "ec086b6df26ba43107709db3755c97345ea63431e6d1151077a3ac7d9a68b615",
+        "evas/rust_core/src/initialization.rs": "7a0bf9345d0cb264ea766c9ff3c801d781948f1683474eb1e1a53f6abd1af365",
+        "evas/rust_core/src/input_clamp.rs": "4fc823c7de00e10fd49a45422d3c807d25095f0d4b095500f7de06780341521d",
+        "evas/rust_core/src/interval.rs": "89a83ce96dbf6cdc217a046c9885ca0cf580c6e6f932c36f0195120d49e53f56",
+        "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
+        "evas/rust_core/src/ir.rs": "cc687fdd3d78e908644537aa8194d3a3ccb3dcb5b88c11a78d7b3e640ad97ea0",
+        "evas/rust_core/src/laplace.rs": "8f211b465b19d062033392ef6defbc1bdc66b34c7be9172ab3c41e32a9e7b3d1",
+        "evas/rust_core/src/lib.rs": "f9658733453cf4140e8f1c6c3a70a30ddf8366a605713a06fa41f51234a8a980",
+        "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+        "evas/rust_core/src/linear/dense.rs": "00a1d9e1a9c5f933f765dd586ab9a8982073d270fed73ed7e602af858e732cad",
+        "evas/rust_core/src/linear/properties.rs": "d1a8b5ec069fef4f621b99290b532f7563cb8f55a1ba2178a77877f60192ab7f",
+        "evas/rust_core/src/linear/refinement.rs": "8476ad2ea3f3698e3c4552f8ff785c00ff878caab584b157dbb80b9c282f32a8",
+        "evas/rust_core/src/linear/sparse.rs": "3914adce2368b027027c06240f160864af0f53de934c0b3285515114fe7aa869",
+        "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+        "evas/rust_core/src/linear.rs": "e0280cfcaaebd2449ab5e4474daf5cd19e6a9fbda5db53e14e5229fc81a4eb36",
+        "evas/rust_core/src/main.rs": "70626c73fa421340afcc53c025a220720b208657273ba3f5e20bc1e4c6e01c3c",
+        "evas/rust_core/src/nonlinear/continuation.rs": "6d0aabe1bb6563a32d4e920fabdefde881777a54b8dc2b4658de432347f6448a",
+        "evas/rust_core/src/nonlinear.rs": "1e535704fb6dc14a577496ed47315ddf6e5f887d6dfa2b62b78d9b7b3a275863",
+        "evas/rust_core/src/nonlinear_dynamics.rs": "78182dc3731e8ad7fa50f767948291e69720cabce5027e6d811d8d32e8b8954e",
+        "evas/rust_core/src/observation.rs": "a4bddbd4b5f336883909fe66fd5a5cf3e636fb6da265d8c7be05e48107fcee32",
+        "evas/rust_core/src/operators.rs": "9f3638058a8aba8dbad36f52ec373db3edf7d5d161842f630f858db21dd11d83",
+        "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+        "evas/rust_core/src/portability.rs": "7fc70f2df49cfc6c5d5503b816a02adf15dbf7ce13eb2cf231f999918c4bd48a",
+        "evas/rust_core/src/pwl.rs": "e14b98fc39bd719e1a7994630aad71a0ae8de2cb72e4433222d0bf92ca6e6d3a",
+        "evas/rust_core/src/reset_dependencies.rs": "d2adaba2e28d70511e0977c223ea7922b627c832e633b7f94360c951a6f0e3fa",
+        "evas/rust_core/src/schedule.rs": "7540a99f5c10c5d529b8b4791bdbb70350fafc58a0b664a9432a4d5e1f64c08e",
+        "evas/rust_core/src/settlement.rs": "2936275c2ccd13d1e28563307253ae629174236656364b86b5ad61a66fcc1e13",
+        "evas/rust_core/src/settlement_bounds.rs": "4d41bb6dbab3fcd56ec69b3402dc2c204d661b3bab628aa709e98db8e235bda9",
+        "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+        "evas/rust_core/src/slew_cascade.rs": "26b9cedd714dd24893d2076818d84c8905525da29c900c4df97bf9a7c40cc7b8",
+        "evas/rust_core/src/solver.rs": "b2ba26829db2d0fc94e329b375ed13b803510456b3131371ec4688a4dfcd0eba",
+        "evas/rust_core/src/solver_cache_tests.rs": "727acd4fc9084bb6e546a8aa70e2f1e5bd476d27265f5198c5cdd08b0a7fd3fa",
+        "evas/rust_core/src/state_space.rs": "bc791c33b49c78259c0efa4b89203758830b6f90b461058d6a526ada5e1b2a94",
+        "evas/rust_core/src/strobe.rs": "2cb7db0c54f6cf4656186343f764399132a9704f8b65552b00e737c9108c16af",
+        "evas/rust_core/src/transient.rs": "9ab81ab37b6ec9793e090ea6f0a14f0099c2c7bbb5dff21b58620f7c8781b1f3",
+        "evas/rust_core/src/transient_condition_tests.rs": "9b041e9ae55b4094f115e215ac5bea81782c23f6ca29aabdf2acfa80167e69d0",
+        "evas/rust_core/src/transient_event_acceptance.rs": "587293a1b02d2bd31492a4125f56ad2bf89ff70ec271c343f7a931db779b515d",
+        "evas/rust_core/src/transient_history_calendar.rs": "ee914bd940d94ffab3d397ca3069d849d5c895ca122edc35c2a3ca4339e7e585",
+        "evas/rust_core/src/transient_idt_tests.rs": "dfd640a90830437089e8389eedf7e354bd20253b47e3dcc7d3226dd1a496ee33",
+        "evas/rust_core/src/transient_lifecycle_tests.rs": "74af82b4c2156266f53b044700a5ce8129acd962d8510cfd4279d8ca01958a36",
+        "evas/rust_core/src/transient_root_refinement.rs": "1572524223234e9d64665f6704267d1b5b28347058f3d714c0208548211e3095",
+        "evas/rust_core/src/transient_window_tests.rs": "08285e435c4e7df5b2a31ac259347840e72a63ef7941953ee850655fdc1a7909",
+        "evas/rust_core/src/transition.rs": "61de1f3b626e78f656d3b8d81a1ecfb14786fc5dfb117a548e1351edd46edf30",
+        "evas/rust_core/src/transition_filter.rs": "b77b028da41289d0a848600a4d6b158cde86d0f632eecab5ffe3741d01174bc0",
+        "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+        "evas/src/evas/__main__.py": "f98567eedc0052dddf00fd13f5380e996409f72aed9fbf09702d5bf173fae1d5",
+        "evas/src/evas/array_elaboration.py": "4faf4543a735ad19c89bbbc760d39f6860089d854b7f24922edaa390cf20df0b",
+        "evas/src/evas/diagnostics.py": "e787f6c1b0ab3939fa37c15ec6da550f59520c6f99edf29e9c53784f31e3308f",
+        "evas/src/evas/elaboration.py": "ff4ffb36428b7a5fd26a646b31788e2699de050c0a2ec6935d807ed79286fbd8",
+        "evas/src/evas/errors.py": "1a361344eb6678f6d82a91f3c356513025146bf468e9d3f5d4b593a9c04b3c08",
+        "evas/src/evas/frontend.py": "55d6f9724c71ffb3938d4e6eb8ff425d1c85d66808e6bbc6492593640e30ae19",
+        "evas/src/evas/hierarchy.py": "c277bc21cbe987f7cb427a2955b6b20588d5c42ae09bbc62853dab7bdba4138f",
+        "evas/src/evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+        "evas/src/evas/instance_compiler.py": "8f3e101bc1f1e854598bbb752f9f5ada41f321299f28e039957108fc0059ee38",
+        "evas/src/evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+        "evas/src/evas/ir.py": "ec167d9f02ddde4bff1dbf7b24b903d4a178822cfc0a2749638e753b1398f8cf",
+        "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+        "evas/src/evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+        "evas/src/evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+        "evas/src/evas/lowering.py": "3df0c3f873285e45aa9de85863ca7d42b4c1cffc205a24164700b953b1874c71",
+        "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+        "evas/src/evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+        "evas/src/evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+        "evas/src/evas/node_elaboration.py": "2b68adb511d792c349e40f98fa71933402f1569467c8e2cb6e6e9125773e7658",
+        "evas/src/evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+        "evas/src/evas/preprocessor.py": "83d54364c2cbc993da5d749bb3582f4ef5de110deff5f23a41ad9af4d928478c",
+        "evas/src/evas/protocol.py": "78b0f2dde1f3891fc9dbbdb64244582e5480053fc913ded02793e37ceca86685",
+        "evas/src/evas/query.py": "2fda97253f88c236d308d795aeae52a00ff5cfbb458f87a4bcfdc3751fae4f64",
+        "evas/src/evas/results.py": "91bc585e4ee9a871fce7da38beebebe71218f0b59c7dda57fec904a9994810bd",
+        "evas/src/evas/runtime.py": "e467f9de3635dcd23813771ea528e57fa35dd98c36dce893b35f920f278c7c0f",
+        "evas/src/evas/scs.py": "6258b0b03294d399ad7cd0ad42e6513a19948d216e25333512a5b9b2695c6d6d",
+        "evas/src/evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
+        "evas/src/evas/standard_headers.py": "9f190d1b17d6a341cecdba14f8a43771f7754d2e0de1403d59e4432849ec7e30",
+        "evas/src/evas/strobe.py": "18d6b1911436459a7a19ee100d309636f5d0d75acd927b228219367098f19c80",
+        "evas/src/evas/syntax.py": "0808529711ffc52e04557d0adfad8452f12e3073132699c5afe8a59b6f602605"
+      }
+    }
+  },
+  "audit_schema": "finite-primitives-audit-v1",
+  "curation": {
+    "operation": "Manually curated supplement appended to an unchanged machine audit; calibration is not generated by auditor_sha256",
+    "base_audit_sha256": "c8037d17b1b0a3222ac78cbc962fe8def59646546830cf780e6f67f393a5412c",
+    "base_audit_path": "runs/comparison-evidence/sin-floor-probe/AUDIT.json",
+    "availability": "local-only raw audit; compact curated receipt intended for repository evidence",
+    "operation_record": "runs/comparison-evidence/decisions.tsv",
+    "review": "Selection and baseline metadata independently checked by Astra and Standards/Spec; no scientific record changed"
+  }
+}

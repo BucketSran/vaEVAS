@@ -101,10 +101,14 @@ def ngspice(log, deck):
         return (command in {'set filetype=ascii','set wr_singlescale','set wr_vecnames'}
                 or re.fullmatch(r'set numdgt=\d+',command)
                 or re.fullmatch(r'pre_osdi [\w./-]+',command))
+    # Reserved comparison names (lt/le/gt/ge) need quotes in ngspice. Accept
+    # only literal node names, retaining the ban on expressions and commands.
+    node = r'(?:[\w.#]+|"[\w.#\[\]]+")'
+    export_command = r'wrdata [\w./-]+(?: v\(' + node + r'\))+'
     for _,r in commands:
         if (r not in {'option','quit'} and not setup_command(r)
                 and not r.startswith('tran ')
-                and not re.fullmatch(r'wrdata [\w./-]+(?: v\([\w.#]+\))+',r)):
+                and not re.fullmatch(export_command,r)):
             raise ReadbackError('unsupported/mutable control command: '+r)
     opts=[i for i,(_,r) in enumerate(commands) if r=='option']
     trans=[i for i,(_,r) in enumerate(commands) if r.startswith('tran ')]

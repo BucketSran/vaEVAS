@@ -6,8 +6,13 @@
 
 [累计测试清单](../../validation/paper/COVERAGE.md)登记历史条件与新 44 组的逐项关系，
 涵盖 LANG、LIN、NONLINEAR、TIMER、CROSS、EVENT-ORDER、TRANSITION、ABSDELAY、SLEW、DYNAMICS、COMPOSE、QUALIFICATION。
-这次整理没有改变实现、判据或成绩。主表按五层能力目录汇总，区分部分范围的已验证精度与整行资格。
+这次整理没有改变实现、判据或成绩。主表按五层固定用例呈现；打勾只表示本行全部必测用例通过，扩展计划和缺证清单分别保留。
 L1–L5 是表格导航 ID，不替换下表开发 ID；旧版本、原预算和失败继续保留。
+
+[独立基础卡与历史补证](../../../experiments/backends/support/README.md#primitives-main)
+补充 LANG、NONLINEAR、DYNAMICS、QUALIFICATION：十卡、三档、四后端共120个新位置，
+另重读168份历史配置。新卡固定 main 检查点 `a64c2ad0`，仅验收有限导出值；
+不覆盖后续 main、不补造旧事件回调资格，也不回写原成绩。
 
 Q 档精度集的[失败归因复核](../../../experiments/backends/support/README.md#failure-attribution)
 补充 CROSS、TIMER、DYNAMICS、QUALIFICATION 的原因证据。它区分事件编译缺陷、已复现的行为错误、
