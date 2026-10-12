@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "scope": "Spectre 21.1.0.509.isr12 sci log 16-significant digits versus psfascii header six digits; local-only original runs, compact extracted controls retained",
+  "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+  "version": "21.1.0.509.isr12",
+  "producer_options": {
+    "digits": 17,
+    "notation": "sci",
+    "precision": "%.17g",
+    "transres_s": 1e-20
+  },
+  "log": "Version 21.1.0.509.isr12 64bit -- 24 Sep 2022\nGlobal user options:\n            vabstol = 1e-09\n            iabstol = 1e-13\n          precision = %.17g\n             digits = 17\n           notation = sci\n             reltol = 1e-05\n\nTransient Analysis `tran': time = (0.000000000000000e+00 s -> 2.145767211914062e-06 s)\n********************************************************************************\nDC simulation time: CPU = 1.710000000000045e-04 s, elapsed = 1.711845397949219e-04 s.\n\nOpening the PSFASCII file psf/tran.tran.tran ...\nImportant parameter values:\n    start = 0.000000000000000e+00 s\n    outputstart = 0.000000000000000e+00 s\n    stop = 2.145767211914062e-06 s\n    step = 2.145767211914063e-09 s\n    maxstep = 2.980232238769531e-08 s\n    ic = all\n    useprevic = no\n    skipdc = no\n    reltol = 1.000000000000000e-06\n    abstol(V) = 1.000000000000000e-09 V\n    abstol(I) = 1.000000000000000e-13 A\n    temp = 2.700000000000000e+01 C\n    tnom = 2.700000000000000e+01 C\n    tempeffects = all\n    errpreset = conservative\n    method = traponly\n    lteratio = 1.000000000000000e+01\n    relref = alllocal\n    cmin = 0.000000000000000e+00 F\n    gmin = 1.000000000000000e-12 S\n\n",
+  "psf_header": "HEADER\n\"PSFversion\" \"1.00\"\n\"simulator\" \"spectre\"\n\"version\" \"21.1.0.509.isr12\"\n\"date\" \"4:16:01 AM, Tue Oct 13, 2026\"\n\"design\" \"(no title)\"\n\"analysis type\" \"tran\"\n\"analysis name\" \"tran\"\n\"analysis description\" \"Transient Analysis `tran': time = (0.000000000000000e+00 s -> 2.145767211914062e-06 s)\"\n\"xVecSorted\" \"ascending\"\n\"tolerance.relative\" 1.00000e-05\n\"start\" 0.00000\n\"outputstart\" 0.00000\n\"stop\" 2.14577e-06\n\"step\" 2.14577e-09\n\"istep\" 0.00100000\n\"maxstep\" 2.98023e-08\n\"ic\" \"all\"\n\"useprevic\" \"no\"\n\"skipdc\" \"no\"\n\"reltol\" 1.00000e-06\n\"abstol(V)\" 1.00000e-09\n\"abstol(I)\" 1.00000e-13\n\"temp\" 27.0000\n\"tnom\" 27.0000\n\"tempeffects\" \"all\"\n\"errpreset\" \"conservative\"\n\"method\" \"traponly\"\n\"lteratio\" 10.0000\n\"relref\" \"alllocal\"\n\"cmin\" 0.00000\n\"gmin\" 1.00000e-12\nTYPE\n",
+  "binary_records_hex": {
+    "stop": "000000230000000473746f703ec2000000000000",
+    "maxstep": "00000023000000076d617873746570003e60000000000000",
+    "reltol": "000000230000000672656c746f6c00003eb0c6f7a0b5ed8e",
+    "abstol(V)": "0000002300000009616273746f6c2856290000003e112e0be826d695",
+    "abstol(I)": "0000002300000009616273746f6c2849290000003d3c25c268497682"
+  },
+  "source_sha256": {
+    "sci_ascii_log": "d66003b9de8b948430c91aaab996cc49c867a25e3277f289c9b40c7a7de44f5b",
+    "sci_ascii_psf": "491f65a21c01ce92e94411cf6e8d9e2ce1e432eb685b2655f3a7dc4e6ccc194a",
+    "sci_ascii_deck": "3a447f178e1d942a3bde464369d71bea27ef172be5a29a28893450d342a5c807",
+    "sci_ascii_operator": "c72bad1f3a7796c12ef85e972b53ffcfbf07a7d6279c829a68f8f4e6f73a58bf",
+    "sci_ascii_execution": "b4743f2dd1c2fa4b7141ac07e690ad305ff54b204e91da4cd3ded8f2c7af3f9b",
+    "binary_psf": "b3c8e441c07b5fb4907c036f761fdcb2f765e5bb9c45d127220874b4eb55a658",
+    "binary_log": "63a2751ace29e41ea4eb7b554395281a9bf92ee451ffe4f2c72ed4e6cdead065",
+    "binary_deck": "3a447f178e1d942a3bde464369d71bea27ef172be5a29a28893450d342a5c807",
+    "binary_operator": "22ccaf026b3690bed7331e47238c4224dbb23d2cfbfc1c15bada3d3bc0113ea7"
+  },
+  "native_strobe_times_s": [
+    9.5357431640625e-07,
+    9.5357431680625e-07,
+    9.5357431720625e-07
+  ],
+  "cleanup_confirmed_observed": true,
+  "deck": "simulator lang=spectre\nV0 (out 0) vsource type=pwl wave=[0 0 3e-6 3]\nopt options reltol=1e-5 vabstol=1e-9 iabstol=1e-13 precision=\"%.17g\" digits=17 notation=sci\ntran tran stop=2.1457672119140625e-06 maxstep=2.9802322387695312e-08 errpreset=conservative method=traponly strobetimes=[9.5357431640624999e-07 9.5357431680624997e-07 9.5357431720624995e-07] strobeoutput=all compression=no transres=1e-20\nsave out\noptionsInfo info what=options where=rawfile\n"
+}
