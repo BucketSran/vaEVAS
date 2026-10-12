@@ -73,10 +73,13 @@ class TightFilterPrecision(unittest.TestCase):
             "V(y,r)<+laplace_nd(V(u,r)*V(u,r),'{1,9.5367431640625e-7},"
             "'{2,9.5367431640625e-7});")}, [instance()])
         times = [0., unit, 2*unit, 3*unit, 4*unit]
+        # This 8192-step debug-kernel accuracy regression has a bounded
+        # ten-minute timeout. The original release-card 90-second execution
+        # budget is validated separately without changing its request.
         result = transient(program, {"u": [[0., .5], [2*unit, 2.5], [4*unit, 2.5]]},
                            times, strobetimes=times, stop=4*unit,
                            max_step=unit/2048, kernel=KERNEL,
-                           vabstol=1e-14, reltol=1e-10)
+                           vabstol=1e-14, reltol=1e-10, timeout=600.)
         node = result['nodes'].index('y')
         with localcontext() as ctx:
             ctx.prec = 90
