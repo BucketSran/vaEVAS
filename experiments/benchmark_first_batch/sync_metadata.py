@@ -27,9 +27,10 @@ END = "<!-- end generated first-batch metadata -->"
 
 
 def protected_identity(root):
-    """All task bytes except the two explicitly editable metadata files."""
+    """Protect task contents, excluding editable metadata and root suite manifests."""
     return {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in (root / "benchmark/tasks").rglob("*")
+            for task in (root / "benchmark/tasks").iterdir() if task.is_dir()
+            for p in task.rglob("*")
             if p.is_file() and p.name not in {"task.toml", "SOURCE.md"}}
 
 
@@ -58,7 +59,7 @@ def normalize(root, check=False):
     changes = {}
     seen = set()
     for filename in ("model_repair.json", "identification.json", "integration.json", "verification_measurement.json", "optimization.json"):
-        path = root / "benchmark/first_batch" / filename
+        path = root / "benchmark/tasks" / ("first_batch-" + filename)
         document = json.loads(path.read_text())
         for row in document.get("tasks", []) + document.get("candidates", []):
             ident = row.get("id", row.get("task_id", row.get("candidate_id")))

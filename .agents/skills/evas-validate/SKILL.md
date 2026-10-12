@@ -188,7 +188,7 @@ waveform, an engine diagnostic without that waveform leaves the check incomplete
 an expected rejection needs the contract's specified rejection evidence. A case used for
 debugging is development evidence, not an untouched holdout.
 Record reusable modeling or compatibility discoveries in the
-[candidate register](../../../benchmark/CANDIDATES.md), linking the original failure
+[candidate register](../../../benchmark/workbench/CANDIDATES.md), linking the original failure
 and distinguishing model intent, language semantics and backend observations.
 
 ## Report only the supported conclusion

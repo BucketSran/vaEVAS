@@ -6,9 +6,9 @@
 
 ZOOM/SAR 仿真需要多路采样、积分、残差和转换时钟协同工作。一个能编译却没有产生脉冲的 VA 发生器，会使整个测试环境失去有效激励。
 
-用途来自课题组 [zoom_sar_multiphase_clock.va](../reference/veriloga/lab/clock_sampling/zoom_sar_multiphase_clock.va)。规格采用已运行初筛题的[完整脉冲日历和参数合同](../tasks/va03-zoom-timing/instruction.md)。
+用途来自课题组 [zoom_sar_multiphase_clock.va](../../reference/veriloga/lab/clock_sampling/zoom_sar_multiphase_clock.va)。规格采用已运行初筛题的[完整脉冲日历和参数合同](../../tasks/va03-zoom-timing/instruction.md)。
 
-待修复材料来自首轮 `glm-5.3` 的生成答案：两组条件下输出都没有有效边沿，人工小范围修改后两组均通过，见[首轮失败分析](../../experiments/va_screen/RESULTS.md)。**这是实际评测中的生成代码故障，不是已经证实的课题组原始代码故障。**
+待修复材料来自首轮 `glm-5.3` 的生成答案：两组条件下输出都没有有效边沿，人工小范围修改后两组均通过，见[首轮失败分析](../../../experiments/va_screen/RESULTS.md)。**这是实际评测中的生成代码故障，不是已经证实的课题组原始代码故障。**
 
 ## 给模型的题面示例
 

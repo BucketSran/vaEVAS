@@ -2,13 +2,13 @@
 
 状态：设计稿，2026-10-04。有已通过初筛校准的运放参考模型和功能判据，**尚未证实它存在值得优化的性能瓶颈，也没有构造或运行本优化任务**。必须先测得可复现问题，才能采用下文性能目标。
 
-范围状态：本稿要求保留候选的输入电流、输出阻抗和负载耦合，超出[当前电压域范围](../README.md#目标与边界)。保留为储备方向；纳入题目建设前，须先决定扩展范围，或另行设计电压域改编。
+范围状态：本稿要求保留候选的输入电流、输出阻抗和负载耦合，超出[当前电压域范围](../../README.md#目标与边界)。保留为储备方向；纳入题目建设前，须先决定扩展范围，或另行设计电压域改编。
 
 ## 工程用途与来源
 
 工程师已经有能表达所需行为的宏模型，但某个重复仿真工作负载耗时过长，或在规定条件下数值表现不稳定。任务是改善其模拟实现，同时保留系统实际依赖的行为。
 
-来源是 Cadence [opamp.va](../reference/veriloga/cadence/analog/opamp.va)及其[来源记录](../reference/veriloga/SOURCES.md#cadence-analog-opamp)。首轮已经为其改编版给出[行为方程](../tasks/va06-loaded-opamp/instruction.md)、[参考实现](../tasks/va06-loaded-opamp/solution/dut.va)和独立动态判据；原有有限条件的通过情况见[初筛结果](../../experiments/va_screen/RESULTS.md)。
+来源是 Cadence [opamp.va](../../reference/veriloga/cadence/analog/opamp.va)及其[来源记录](../../reference/veriloga/SOURCES.md#cadence-analog-opamp)。首轮已经为其改编版给出[行为方程](../../tasks/va06-loaded-opamp/instruction.md)、[参考实现](../../tasks/va06-loaded-opamp/solution/dut.va)和独立动态判据；原有有限条件的通过情况见[初筛结果](../../../experiments/va_screen/RESULTS.md)。
 
 原安装库代码的存在不证明它慢或难以收敛。本例拟用已验证功能的改编版开展性能剖析；若没有明显瓶颈或可达改进空间，就不把它包装成难题，也不人为塞入无意义小步长后宣称发现工程难题。
 

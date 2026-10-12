@@ -6,15 +6,15 @@
 
 ## 本地材料身份与分发边界
 
-下列前三项来自旧 v4 r53 单模块 bugfix 包，已逐项读取规格、starter、reference、checker profile、评分网表、derivation manifest 与 mutation catalog。[资料入口](../reference/README.md)记载其迁入来源为 Arcadia-1/behavioral-veriloga-eval，固定快照 `7b5616dc52195ec275ec6d21c71d7763613702cd`。该目录仅供内部研究，不是本项目当前 Harbor 正式发布集。没有查到可据以外发整套派生任务的授权；三个模型是否另受第三方来源权利约束仍需逐项追溯。本次没有复制 Cadence 安装库代码或发往外部。
+下列前三项来自旧 v4 r53 单模块 bugfix 包，已逐项读取规格、starter、reference、checker profile、评分网表、derivation manifest 与 mutation catalog。[资料入口](../../reference/README.md)记载其迁入来源为 Arcadia-1/behavioral-veriloga-eval，固定快照 `7b5616dc52195ec275ec6d21c71d7763613702cd`。该目录仅供内部研究，不是本项目当前 Harbor 正式发布集。没有查到可据以外发整套派生任务的授权；三个模型是否另受第三方来源权利约束仍需逐项追溯。本次没有复制 Cadence 安装库代码或发往外部。
 
-v4 `checker_profile.json` 明示 `access=private_checker_backend`、`checker_source_public=false`。本地材料提供 checker 名称、信号合同、认证记录和网表，但本次未定位三个对应的实际 checker 实现，因此只能评估合同和建议新独立 checker，不能声称旧 checker 已审计。三个 r53 `task_record.json` 都将公开 visible deck 与 trusted replay 绑定为相同字节，改题需要新建固定验收版本，不能将旧公开刺激直接当成隐藏泛化测试。[示例 task record](../reference/v4/release/benchmarkv4-r53/tasks/1042-sample-and-hold-with-droop-leakage-bugfix/task_record.json)。
+v4 `checker_profile.json` 明示 `access=private_checker_backend`、`checker_source_public=false`。本地材料提供 checker 名称、信号合同、认证记录和网表，但本次未定位三个对应的实际 checker 实现，因此只能评估合同和建议新独立 checker，不能声称旧 checker 已审计。三个 r53 `task_record.json` 都将公开 visible deck 与 trusted replay 绑定为相同字节，改题需要新建固定验收版本，不能将旧公开刺激直接当成隐藏泛化测试。[示例 task record](../../reference/v4/release/benchmarkv4-r53/tasks/1042-sample-and-hold-with-droop-leakage-bugfix/task_record.json)。
 
 ### 1. v4-1042：采样保持与周期下垂
 
-资产目录 [1042-sample-and-hold-with-droop-leakage-bugfix](../reference/v4/release/benchmarkv4-r53/tasks/1042-sample-and-hold-with-droop-leakage-bugfix/public/instruction.md)。精确起始路径为该任务 `public/buggy_bundle/leaky_hold.va`，参考为 `evaluator/solution/leaky_hold.va`，评分刺激为 `evaluator/score_tb.scs`，checker profile 为 `evaluator/checker_profile.json`。来源故障清单为 [042 mutation catalog](../reference/v4/provenance/dut-base-v3-exact-five-hash-bound-v2/042-sample-and-hold-with-droop-leakage/evaluator/mutation_catalog.json)，派生 manifest 的 bugfix seed 是 `neg_001`。
+资产目录 [1042-sample-and-hold-with-droop-leakage-bugfix](../../reference/v4/release/benchmarkv4-r53/tasks/1042-sample-and-hold-with-droop-leakage-bugfix/public/instruction.md)。精确起始路径为该任务 `public/buggy_bundle/leaky_hold.va`，参考为 `evaluator/solution/leaky_hold.va`，评分刺激为 `evaluator/score_tb.scs`，checker profile 为 `evaluator/checker_profile.json`。来源故障清单为 [042 mutation catalog](../../reference/v4/provenance/dut-base-v3-exact-five-hash-bound-v2/042-sample-and-hold-with-droop-leakage/evaluator/mutation_catalog.json)，派生 manifest 的 bugfix seed 是 `neg_001`。
 
-事实：接口 `leaky_hold(sample,rst,vin,vout)`。sample 上升交点采集当前 vin；每 leak_period 将 held 乘 decay；reset 在采样或泄漏更新事件时清零；transition 平滑输出。starter 将采样更新写成 held=0，且 decay 默认 0.900，与合同/参考的 0.985 不同。它是人工 mutation 派生的具体故障素材，本次未找到真实用户工程 bug 记录。旧 [certification](../reference/v4/provenance/dut-base-v3-exact-five-hash-bound-v2/042-sample-and-hold-with-droop-leakage/evaluator/certification.json) 标明 `rust_evas2_only`，记录 EVAS2 0.8.3、五个负例 killed；这不是当前 Spectre 终验。
+事实：接口 `leaky_hold(sample,rst,vin,vout)`。sample 上升交点采集当前 vin；每 leak_period 将 held 乘 decay；reset 在采样或泄漏更新事件时清零；transition 平滑输出。starter 将采样更新写成 held=0，且 decay 默认 0.900，与合同/参考的 0.985 不同。它是人工 mutation 派生的具体故障素材，本次未找到真实用户工程 bug 记录。旧 [certification](../../reference/v4/provenance/dut-base-v3-exact-five-hash-bound-v2/042-sample-and-hold-with-droop-leakage/evaluator/certification.json) 标明 `rust_evas2_only`，记录 EVAS2 0.8.3、五个负例 killed；这不是当前 Spectre 终验。
 
 工程用途是离散采样保持和读出链路的泄漏估计，非真实开关电路下垂表征。它的乘性 droop 合同可用明确递推式验收：从外部 sample 交点取得 vin，以已规定的 timer 网格计算泄漏次数，独立算 held。避开或显式定义 sample 与泄漏完全同时的优先级。检查不同 leak_period、decay、正负输入、初态、复位脉冲及 sample 之间 vin 改变仍保持的条件，不使用 reference 波形作答案。
 
@@ -22,7 +22,7 @@ v4 `checker_profile.json` 明示 `access=private_checker_backend`、`checker_sou
 
 ### 2. v4-1249：PFD 的外部低有效复位
 
-资产 [1249 instruction](../reference/v4/release/benchmarkv4-r53/tasks/1249-pfd-active-low-reset-bugfix/public/instruction.md)。精确起始文件为任务 `public/buggy_bundle/pfd_active_low_reset.va`，参考为 `evaluator/solution/pfd_active_low_reset.va`，刺激为 `evaluator/score_tb.scs`；来源 [249 mutation catalog](../reference/v4/provenance/dut-base-v3-exact-five-hash-bound-v2/249-pfd-active-low-reset/evaluator/mutation_catalog.json) 与 [derivation manifest](../reference/v4/provenance/dut-base-v3-exact-five-hash-bound-v2/249-pfd-active-low-reset/evaluator/derivation_manifest.json)。
+资产 [1249 instruction](../../reference/v4/release/benchmarkv4-r53/tasks/1249-pfd-active-low-reset-bugfix/public/instruction.md)。精确起始文件为任务 `public/buggy_bundle/pfd_active_low_reset.va`，参考为 `evaluator/solution/pfd_active_low_reset.va`，刺激为 `evaluator/score_tb.scs`；来源 [249 mutation catalog](../../reference/v4/provenance/dut-base-v3-exact-five-hash-bound-v2/249-pfd-active-low-reset/evaluator/mutation_catalog.json) 与 [derivation manifest](../../reference/v4/provenance/dut-base-v3-exact-five-hash-bound-v2/249-pfd-active-low-reset/evaluator/derivation_manifest.json)。
 
 事实：ref/fb 上升沿分别置 UP/DOWN，两边均到达后延迟 reset_delay 清零；rstb 低需立即清掉任意单边挂起状态、抑制新边沿并取消挂起互复位。starter 完全不使用 rstb，且缺少公开参数 tr，仅硬写 10p。参考加入 reset 的下降 crossing、边沿使能判断和低电平清零。故障类型为人工注入，可映射 PLL 启动、停钟及复位恢复场景。
 
@@ -34,7 +34,7 @@ v4 `checker_profile.json` 明示 `access=private_checker_backend`、`checker_sou
 
 ### 3. v4-1281：电源有效条件与异步复位事件计数
 
-资产 [1281 instruction](../reference/v4/release/benchmarkv4-r53/tasks/1281-async-reset-event-counter-bugfix/public/instruction.md)。精确文件为该任务 `public/buggy_bundle/async_reset_event_counter.va`、`evaluator/solution/async_reset_event_counter.va`、`evaluator/score_tb.scs`、`evaluator/checker_profile.json`；来源为 [281 mutation catalog](../reference/v4/provenance/dut-base-v3-exact-five-hash-bound-v2/281-async-reset-event-counter/evaluator/mutation_catalog.json) 与同目录 derivation manifest。
+资产 [1281 instruction](../../reference/v4/release/benchmarkv4-r53/tasks/1281-async-reset-event-counter-bugfix/public/instruction.md)。精确文件为该任务 `public/buggy_bundle/async_reset_event_counter.va`、`evaluator/solution/async_reset_event_counter.va`、`evaluator/score_tb.scs`、`evaluator/checker_profile.json`；来源为 [281 mutation catalog](../../reference/v4/provenance/dut-base-v3-exact-five-hash-bound-v2/281-async-reset-event-counter/evaluator/mutation_catalog.json) 与同目录 derivation manifest。
 
 事实：本地供电 span=V(vdd,vss)，输入相对 vss 归一化。clk 或 rst 上升触发更新；rst 高或 en/span 无效时清零；有效时满足两路输入阈值便计数，最多4，flag 在3以上有效。starter 算出 valid_v 后忽略它，既不在 invalid 时清零，又用常数1替代计数使能。它确有非 ADC 的状态/电源接口故障素材，但合同带14端口，其中 in2/in3/ctrl0/ctrl1没有影响主要计数逻辑，工程架构仍偏通用 helper。仅加“电路”名称不足以形成真实监控任务。
 
@@ -48,7 +48,7 @@ checker 建议只根据外部边沿、span、输入归一化和饱和递推计�
 
 ### 4. 三角波振荡器的双向 cross 反复换向
 
-[来源](../tasks/va07-triangle-repair/SOURCE.md)、[题面](../tasks/va07-triangle-repair/instruction.md)、[独立 checker](../checkers/triangle_oscillator.py)。固定仓库来源链接为 [base 上的 SOURCE](https://github.com/BucketSran/vaEVAS/blob/b86845e1ef80498a8eed708a56bed993f7a7f17c/benchmark/tasks/va07-triangle-repair/SOURCE.md)。仓库记录 BC-0001 和真实积分历史重定位开发故障：cross 的方向0在边界事件中翻转自身积分斜率，返回穿越又翻转，产生额外换向。这是电路事件表达错误，不是收敛/加速题。
+[来源](../../tasks/va07-triangle-repair/SOURCE.md)、[题面](../../tasks/va07-triangle-repair/instruction.md)、[独立 checker](../../checkers/triangle_oscillator.py)。固定仓库来源链接为 [base 上的 SOURCE](https://github.com/BucketSran/vaEVAS/blob/b86845e1ef80498a8eed708a56bed993f7a7f17c/benchmark/tasks/va07-triangle-repair/SOURCE.md)。仓库记录 BC-0001 和真实积分历史重定位开发故障：cross 的方向0在边界事件中翻转自身积分斜率，返回穿越又翻转，产生额外换向。这是电路事件表达错误，不是收敛/加速题。
 
 资产是仓库自有原创任务，不包含第三方模型源码；具体公开分发仍按仓库许可证和审批处理。参考用上限+1、下限-1的有向 crossing。checker 用外部正速度 ctl 的分段积分与三角波折返解析答案，不依赖参考波形，验收波形、换向时间和次数。允许重写且重写不必退化：输入连续变速、方向、初态和上下限变化要求模型保持积分历史；可比较另一种等价算法。但完整规格仍允许重新建模，应记录为“真实开发故障上的修复”，不可夸大为大型工程诊断。
 
@@ -56,7 +56,7 @@ SOURCE 记录已有历史 Spectre 校准，且区分本地 EVAS 查询网格未�
 
 ### 5. UVLO 资格计时取消遗漏
 
-[题面](../tasks/repair-uvlo-recovery/instruction.md)、[来源](../tasks/repair-uvlo-recovery/SOURCE.md)、[起始代码](../tasks/repair-uvlo-recovery/environment/public/starter.va)、[参考解](../tasks/repair-uvlo-recovery/solution/dut.va)、[checker 的 uvlo_targets](https://github.com/BucketSran/vaEVAS/blob/b86845e1ef80498a8eed708a56bed993f7a7f17c/benchmark/checkers/first_batch_model_repair.py#L121)、[故障生成位置](https://github.com/BucketSran/vaEVAS/blob/b86845e1ef80498a8eed708a56bed993f7a7f17c/experiments/benchmark_first_batch/model_repair/build.py#L244)。
+[题面](../../tasks/repair-uvlo-recovery/instruction.md)、[来源](../../tasks/repair-uvlo-recovery/SOURCE.md)、[起始代码](../../tasks/repair-uvlo-recovery/environment/public/starter.va)、[参考解](../../tasks/repair-uvlo-recovery/solution/dut.va)、[checker 的 uvlo_targets](https://github.com/BucketSran/vaEVAS/blob/b86845e1ef80498a8eed708a56bed993f7a7f17c/benchmark/checkers/first_batch_model_repair.py#L121)、[故障生成位置](https://github.com/BucketSran/vaEVAS/blob/b86845e1ef80498a8eed708a56bed993f7a7f17c/experiments/benchmark_first_batch/model_repair/build.py#L244)。
 
 这是仓库原创电压 UVLO 合同，SOURCE 明确人工注错，未复制旧 v4/Cadence 源，也不声称实测或晶体管级真实性。故障删除 vin 回落时取消 up_at，并删掉 timer 发布时的 vin 再检查，允许旧资格事件错误发布 power-good。工程用途具体：启动短毛刺不能解除系统复位，棕断恢复需重新资格。独立 checker 从 PWL 阈值交点和复位时刻建立带 token 的队列，取消 token 使旧 deadline 失效；该算法与 VA 的实数 timer 实现不同。
 
@@ -110,8 +110,8 @@ SOURCE 记录已有历史 Spectre 校准，且区分本地 EVAS 查询网格未�
 
 优先读三份材料：
 
-- [三角波修复 SOURCE 和独立 checker](../tasks/va07-triangle-repair/SOURCE.md)。它给出真实故障、独立设计目标、仿真器差异和校准边界的完整分离范例。
-- [v4-1249 PFD 合同及 starter](../reference/v4/release/benchmarkv4-r53/tasks/1249-pfd-active-low-reset-bugfix/public/instruction.md)。重点读单边挂起复位和 pending mutual reset；同时核对来源标签差异，避免沿用不一致的 provenance。
+- [三角波修复 SOURCE 和独立 checker](../../tasks/va07-triangle-repair/SOURCE.md)。它给出真实故障、独立设计目标、仿真器差异和校准边界的完整分离范例。
+- [v4-1249 PFD 合同及 starter](../../reference/v4/release/benchmarkv4-r53/tasks/1249-pfd-active-low-reset-bugfix/public/instruction.md)。重点读单边挂起复位和 pending mutual reset；同时核对来源标签差异，避免沿用不一致的 provenance。
 - [UVLO 独立 token 事件队列](https://github.com/BucketSran/vaEVAS/blob/b86845e1ef80498a8eed708a56bed993f7a7f17c/benchmark/checkers/first_batch_model_repair.py#L121)。它展示如何用外部刺激和独立数据结构验收取消计时，适合扩展到多模块复位系统。
 
 优先任务方向按以下顺序推进：

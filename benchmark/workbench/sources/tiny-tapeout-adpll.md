@@ -60,4 +60,4 @@ f_MHz = 1000/T_ns
 - 提供能实际执行 fine 校正的 DCO 或受控 dithering 路径。原低 6 位是保留位，仅新增更细的测量器不能保证相位指标改善；是否引入 DSM 仍待选题决定。
 - 定义关闭 fine 模式时保留的旧行为，并用独立的输出/反馈边沿检查频率、相差和扰动响应，同时核对内部 TDC 码与控制码，避免仅凭 lock 判分。
 
-这些是任务设计建议，不是原作者接口。健康 VA 基线、可达条件、数值容差、正式验收后端和 checker 校准均尚缺。后端按逐题合同与实际支持/校准证据决定，来源论文采用 co-simulation 不替本题指定后端。已有研究的背景见 [规格建模](../../research/spec-modeling.md) 与 [扩展集成](../../research/extension-integration.md)。
+这些是任务设计建议，不是原作者接口。健康 VA 基线、可达条件、数值容差、正式验收后端和 checker 校准均尚缺。后端按逐题合同与实际支持/校准证据决定，来源论文采用 co-simulation 不替本题指定后端。已有研究的背景见 [规格建模](../research/spec-modeling.md) 与 [扩展集成](../research/extension-integration.md)。

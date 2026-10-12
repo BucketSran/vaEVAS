@@ -46,7 +46,7 @@
 不能立即反向，也不能用输出查询点重建一级历史。
 
 EVAS 原先拒绝此组合，本次候选用完整分段历史计算。Spectre 21.1.0.509.isr12 的基础和收紧档
-均超过本批 1 µV 预算，局部细化步长后达标，见[实际对照及原失败](../experiments/backends/slew-cascade/README.md)。
+均超过本批 1 µV 预算，局部细化步长后达标，见[实际对照及原失败](../../experiments/backends/slew-cascade/README.md)。
 这分别是 EVAS 的支持缺口与参考设置的精度问题，不能把前者修复成拟合后者的粗网格误差。
 
 候选任务可要求建立有非对称速率、非零初值和多次反向的输出限速链，以独立分段交点检查
@@ -60,14 +60,14 @@ EVAS 原先拒绝此组合，本次候选用完整分段历史计算。Spectre 2
 **来源和触发。** 来自 EVAS 事件修改积分轨迹后的根重定位工作。初态 `z=0、s=1、n=0`，
 `z=idt(s,0)`；在 `cross((z-0.5)*(z+0.5),0)` 中执行 `s=-s; n=n+1;`。
 初始实验显式设置 `ttol=1e-9、expr_tol=1e-8`。精确源码、输入和后端配置见
-[生成器](../experiments/backends/dvs2-spectre-validation/history_relocalization.py)及
-[原执行收据](../experiments/backends/dvs2-spectre-validation/results/history-relocalization.json)。
+[生成器](../../experiments/backends/dvs2-spectre-validation/history_relocalization.py)及
+[原执行收据](../../experiments/backends/dvs2-spectre-validation/results/history-relocalization.json)。
 
 **设计要求与实际观察。** 目标是在 ±0.5 之间产生三角波，首次在 0.5 s 换向，之后每秒换向。
 这是待实现的设计要求，不能直接认定原 VA 已正确表达它。本分支修复前的 EVAS 候选符合该理想轨迹；
 Spectre 出现大量额外事件。后续固定模型的短窗口实验，在不同设置下观察到 1、2、12、1002 次事件。
 独立预期来自分段积分；所有失败与设置扫描见
-[问题分析](../experiments/backends/dvs2-spectre-validation/README.md#oscillator-compatibility)。
+[问题分析](../../experiments/backends/dvs2-spectre-validation/README.md#oscillator-compatibility)。
 
 **原因与分类。** 这同时暴露模型稳健性和仿真器兼容性问题。首次触发略晚于真根时，换向会
 使轨迹返回穿越相同阈值，双向规则仍会触发。向外触发的对照支持这一解释；不能据此认定
@@ -75,7 +75,7 @@ Spectre 有 bug。本分支修复前的离根检查缺少进入方向，不能�
 当前候选保留方向，并在无法区分时拒绝；原双向模型的跨后端行为仍未完全对齐，
 由 [Issue #70](https://github.com/BucketSran/vaEVAS/issues/70) 跟踪。
 
-后续[拆分诊断](../experiments/backends/dvs2-spectre-validation/README.md#cross-restart-diagnostic)
+后续[拆分诊断](../../experiments/backends/dvs2-spectre-validation/README.md#cross-restart-diagnostic)
 区分了近距离穿越的分辨能力与换向附近的积分误差。原反馈模型在 Spectre 基础档换向后出现
 约 29.75 ns 的积分平台；这与梯形公式两端斜率抵消一致，尚不是对闭源实现的证明。
 添加 `$discontinuity` 会改变事件数，但没有稳定消除差异。因此候选题应检查稳健的建模关系，
@@ -86,19 +86,19 @@ Spectre 有 bug。本分支修复前的离根检查缺少进入方向，不能�
 改变阈值、初态、方向及速度轨迹，检出硬编码周期、错误积分或无条件双向换向。
 接受满足规格的等价写法，不把某一种 cross 语法作为评分条件。
 
-**原型和已有证据。** [va07-triangle-repair](tasks/va07-triangle-repair/instruction.md) 已有原型。
+**原型和已有证据。** [va07-triangle-repair](../tasks/va07-triangle-repair/instruction.md) 已有原型。
 在已校准的两档设置下，四类输入共八个配置在 EVAS、Spectre 都通过外部判据。
 两份等价写法通过，四个错误版本被检出；首次参考解超差也保留在
-[校准收据](../experiments/backends/dvs2-spectre-validation/results/oscillator-compatibility.json)。
+[校准收据](../../experiments/backends/dvs2-spectre-validation/results/oscillator-compatibility.json)。
 这些是开发和校准证据；代码为未合并的本地候选，原始波形为本地/thu-sui 保留材料。
 
-2026-10-05 的[本地 harness 接入](tasks/va07-triangle-repair/SOURCE.md#local-evas)
+2026-10-05 的[本地 harness 接入](../tasks/va07-triangle-repair/SOURCE.md#local-evas)
 补跑了此前 EVAS 批次跳过的 wrong-speed 负控。`constant-tighter` 参考模型通过补充波形观测，
 但 wrong-speed 在 EVAS 0.13.0 返回区间端点 `event_resolution`，未进入独立评分。
 这一数值拒绝与候选模型的速度错误分别记录；不能把拒绝当作评分器检出了错误模型。
 仍需单独定位引擎接受范围并重跑同配置负控，不以改变 stop 或容差补记校准通过。
 
-2026-10-06 的[新增行为实测对照](../experiments/backends/dvs2-spectre-validation/results/pr-alignment-20261006.md)
+2026-10-06 的[新增行为实测对照](../../experiments/backends/dvs2-spectre-validation/results/pr-alignment-20261006.md)
 补充了终点观察变体。PR #79 固定头 `ffc602cb` 的半速定向模型在 `stop=3 s`
 提交第二次事件，计数为 2；Spectre 21.1.0.509.isr12 的同刻原始输出计数为 1，
 连续电压差却只有约 `5.74e-10 V`。预先冻结的稍延后 stop 控制能够观察到第二次转换，
@@ -107,7 +107,7 @@ Spectre 有 bug。本分支修复前的离根检查缺少进入方向，不能�
 候选题的后续改造应明确终止时刻、事件时间容差与计数观察规则，检出“电压接近即认为
 离散行为正确”的评分漏洞；不能将这些开发输入重新列为未见测评，也不立即新增题目。
 
-2026-10-07 的[独立事件控制](../experiments/backends/spectre-alignment/event-unforced.md)
+2026-10-07 的[独立事件控制](../../experiments/backends/spectre-alignment/event-unforced.md)
 在斜坡采样微例中移除整组含根的强制观察点后，暴露了宽/紧事件容差的触发时间与采样值差异。
 候选评分须独立核对时间和采样误差，并记录观察网格对结果的影响；无触发时间字段的输出
 不能取得隐藏事件时间资格。这不证明原振荡器已对齐，也不增加正式题目。
@@ -120,7 +120,7 @@ Spectre 有 bug。本分支修复前的离根检查缺少进入方向，不能�
 
 ## BC-0002：嵌套纯函数的计算与校验义务
 
-固定 4e9051df/0425728a 的[函数路径实际对照](../experiments/backends/dvs2-spectre-validation/l1a-function-alignment-20261006/function-path-report.md)覆盖原十二叶常量返回、两个十四层函数结果相加和比较条件；它不绑定后续合并源码。
+固定 4e9051df/0425728a 的[函数路径实际对照](../../experiments/backends/dvs2-spectre-validation/l1a-function-alignment-20261006/function-path-report.md)覆盖原十二叶常量返回、两个十四层函数结果相加和比较条件；它不绑定后续合并源码。
 
 来自 [PR #85](https://github.com/BucketSran/vaEVAS/pull/85) 的兼容性审查。
 函数 `t=a+a; f=1` 接收十二个 `V(u)` 叶子的平衡求和，外包七层相同函数。
@@ -131,7 +131,7 @@ Spectre 有 bug。本分支修复前的离根检查缺少进入方向，不能�
 这是编译器兼容性回归。实参及每条赋值 RHS 的校验义务被一并替换，
 七层检查树按 `3S+4` 增长，实际返回值却一直是常量。修复把计算值与校验义务分开，
 保留丢弃表达式的语义检查，并按单次展开中的 AST 身份合并义务。
-[开发回归](../evas/tests/test_stateless_expressions.py) 检查原接受范围、实际倍增计算预算、
+[开发回归](../../evas/tests/test_stateless_expressions.py) 检查原接受范围、实际倍增计算预算、
 大量同级函数调用及函数结果外部算术的兼容性、丢弃的非法决策和别名、电气节点下标边界，以及两种实例顺序。
 原反例实际 RED 和修后公开编译/内核 GREEN 在本地保留的
 `worktrees/overnight-l1a/runs/l1a-budget-fix/`；它是本地开发证据，尚非公开执行包。
@@ -147,37 +147,37 @@ Spectre 有 bug。本分支修复前的离根检查缺少进入方向，不能�
 
 首轮四后端开发验证暴露近零采样状态、复位与 transition 组合、独立时钟接近同刻时的
 执行缺口。相关修复及三例新 Spectre 有限对照见
-[紧凑证据](../experiments/backends/transient-accuracy/core-followup.json)和
-[采样状态回归](../evas/tests/test_sample_state_precision.py)、
-[固定时钟回归](../evas/tests/test_timer_ordering.py)。这是组合候选的开发证据，raw为本地保留材料。
+[紧凑证据](../../experiments/backends/transient-accuracy/core-followup.json)和
+[采样状态回归](../../evas/tests/test_sample_state_precision.py)、
+[固定时钟回归](../../evas/tests/test_timer_ordering.py)。这是组合候选的开发证据，raw为本地保留材料。
 
 工程题可要求构造带复位的双时钟采样器，分别检查采样值、保持区间、回调次数和实例独立性。
 验收要预先规定事件时间窗口和边界观测方式。新参考在窗口内存在不同回调阶段，单看
 连续电压最大差或最终计数都不足以证明行为正确；不能把某个内核的 binary64 排序算法
 直接变成题目答案。还需设计漏采、旧值读取、复位顺序错误和实例串扰的负控，并独立校准。
 
-[OpenVAF-R 的事件诊断](../experiments/backends/support/README.md#ngspice-events)又给出一个后端负控：
+[OpenVAF-R 的事件诊断](../../experiments/backends/support/README.md#ngspice-events)又给出一个后端负控：
 采样保持模型能运行，但输出一直跟随输入。后续 checker 应能检出事件之前的提前更新与两次事件之间的
 保持丢失；应先校准执行后端，不能把后端错误计成模型作答错误。本例是已知开发证据，不增加正式题目。
 
-[当前八条件的失败归因](../experiments/backends/support/README.md#failure-attribution)进一步确认了四个采样模型的事件编译缺陷。
+[当前八条件的失败归因](../../experiments/backends/support/README.md#failure-attribution)进一步确认了四个采样模型的事件编译缺陷。
 Gnucap 的阈值采样在密集观察下只触发 3 次，移除独立观察源后变为 4 次，均少于应有的 8 次。
 候选评分应检查实际事件计数及观察配置敏感性，不能通过减少关键观察来取得通过；这仍是开发负控，不新增题目或成绩。
 
-[固定 timer 与 strobe 修复](../experiments/backends/strobe/README.md#timer-fix)补充了观察接口的反例：
+[固定 timer 与 strobe 修复](../../experiments/backends/strobe/README.md#timer-fix)补充了观察接口的反例：
 同刻普通查询可正确返回采样值，但强制求解因时间包围过宽而拒绝。候选评分须分开检查
 事件状态和所需观察接口，不能用成功的普通查询替代强制点回执，也不能把该引擎拒绝计成 VA 模型错误。
 
-[近邻强制点修复](../experiments/backends/strobe/README.md#near-timer)进一步要求逐点区分 `.3` 与 `.1+.2`，
+[近邻强制点修复](../../experiments/backends/strobe/README.md#near-timer)进一步要求逐点区分 `.3` 与 `.1+.2`，
 检查计数、保持值、历史续算和失败后的同控制器重试；12 组 EVAS 与实际 Spectre 对照已记录。
 这仍是候选需求，不增加已评分任务。
 
 近邻时钟后续还暴露了积分历史与未来cross重建的组合缺口，见
-[独立答案及新Spectre容差对照](../experiments/backends/transient-accuracy/near-clock-history.md)。
+[独立答案及新Spectre容差对照](../../experiments/backends/transient-accuracy/near-clock-history.md)。
 可把采样时刻偏移对累计积分的影响加入候选判据；仍需独立设计留出输入，不能把
 实现选用的代表时间当作唯一正确答案。
 
-停止边界还需检查最终一次读取是否发生：[原周期采样探针](../experiments/backends/sample-edge-filter/BOUNDARY.md#timer-stop)
+停止边界还需检查最终一次读取是否发生：[原周期采样探针](../../experiments/backends/sample-edge-filter/BOUNDARY.md#timer-stop)
 曾因时间包围跨过 stop 被拒绝。候选可检查终点计数、保持值和延迟下游历史，
 同时在不请求终点输出时核对事件记录；这仍是候选素材，不增加评分任务。
 
@@ -193,7 +193,7 @@ Gnucap 的阈值采样在密集观察下只触发 3 次，移除独立观察源�
 运行在约 299.999 ms 以 `SPECTRE-18`/segmentation fault 中止。
 原源只补充数字前导零以满足参考编译器；已核对二进制数值和去位置 IR
 不变。`.1` 的 lexical 接受差异与内部仿真崩溃分别保留，不称为物理语义
-差异。[紧凑对照与冻结输入](../experiments/backends/ordered-event-sources/README.md)
+差异。[紧凑对照与冻结输入](../../experiments/backends/ordered-event-sources/README.md)
 保留每组失败和身份；原始波形为本地保留材料。该崩溃不是 EVAS 正确性或 tight 拒绝通过的证据。
 
 后续候选应分别规定物理事件顺序、离散阶段输出、binary64 代表值资格及
@@ -205,7 +205,7 @@ Gnucap 的阈值采样在密集观察下只触发 3 次，移除独立观察源�
 有界事件闭包的开发曾出现两类错误。事件记录已包含回调，但实际输出仍读到
 旧状态；以及仅增加一个普通输出点，就使原来可接受的受迫积分被拒绝。后一种
 错误还涉及回调修改未来 held 定时器后，沿用旧日程触发不必要的局部历史。
-[逐版本反例和独立答案](../experiments/backends/ordered-event-sources/candidate-phase/README.md)
+[逐版本反例和独立答案](../../experiments/backends/ordered-event-sources/candidate-phase/README.md)
 保留原物理相位失败、普通受迫积分失败和 held 改期失败，未改变原通过分母。
 
 可复用的验收要求是：在保持输入和容差不变时增加观测点，已有观测的物理状态
@@ -218,15 +218,15 @@ Gnucap 的阈值采样在密集观察下只触发 3 次，移除独立观察源�
 同一斜坡的 `cross(u-0.7,+1)` 采样值继续驱动 transition 时，旧集成候选在
 普通名义查询 `1.4 µs` 拒绝判断物理阶段，实际 Spectre 两档均完成。
 原始 binary64 输入能证明根比查询稍晚，但经过端点区间计算后丢失了这个证明。
-[固定工程合同](../evas/validation/event_alignment/README.md)和
-[对照结果](../experiments/backends/event-alignment/README.md)保留旧拒绝、独立采样/边沿判据及参考失败。
+[固定工程合同](../../evas/validation/event_alignment/README.md)和
+[对照结果](../../experiments/backends/event-alignment/README.md)保留旧拒绝、独立采样/边沿判据及参考失败。
 这是 EVAS 的来源信息丢失，不能据此标记 VA 模型错误。
 后续题目可联合检查采样时刻、保持值与中断边沿，并对等价 guard 写法校准；
 精确 binary64 侧别仍应与工程事件窗口分开，不新增计分题或未见确认集。
 
 BC-0003 还包含一个组合独立性反例：积分流在 0.25 s 从 1 改为 2，
 z=0.75 的根应为 0.5 s；加入无关的非零滤波历史却使旧 EVAS 拒绝精确根查询。
-[修复与对照](../experiments/backends/event-alignment/consumer-precision.md)保留原失败、
+[修复与对照](../../experiments/backends/event-alignment/consumer-precision.md)保留原失败、
 依赖滤波器的负向控制及近零采样放大后的拒绝控制。该案例可用于研究工程题的
 组合变体与消费者检查，不能把模拟器缺陷归为模型错误，也不新增计分任务。
 
@@ -234,17 +234,17 @@ z=0.75 的根应为 0.5 s；加入无关的非零滤波历史却使旧 EVAS 拒�
 
 基线 `ad6f3577` 拒绝单个 transition 电压继续进入一阶 laplace_nd。
 初期修复又暴露输出查询提交历史、非点事件观察早于当前历史的问题。
-[四类实际对照](../experiments/backends/sample-edge-filter/README.md)保留失败和修复后证据，
+[四类实际对照](../../experiments/backends/sample-edge-filter/README.md)保留失败和修复后证据，
 工程变体包括时钟复位、中断边沿及双实例。Spectre 收紧容差后滤波差缩小，瞬时保持边界仍有跳变侧差异。
 这些是仿真器组合缺口及兼容差异，不能直接作为 VA 模型错误。
-后续[根窗口反例](../experiments/backends/sample-edge-filter/BOUNDARY.md)显示：`cross` 的宽定位窗口若在进入
+后续[根窗口反例](../../experiments/backends/sample-edge-filter/BOUNDARY.md)显示：`cross` 的宽定位窗口若在进入
 transition 时被压成单点，会错误接受超出预算的滤波误差；零延迟还需保留真实事件到执行代表时刻之间的积分。
 Spectre 回调探针也说明不能只比较最终计数而忽略跳变侧，或把粗容差下的回调时间当成数学根。
-本批 18 条 timer 阶段差异已接受为 [SEF-TIMER-18](../experiments/backends/sample-edge-filter/BOUNDARY.md#accepted-timer-18)。
+本批 18 条 timer 阶段差异已接受为 [SEF-TIMER-18](../../experiments/backends/sample-edge-filter/BOUNDARY.md#accepted-timer-18)。
 它们不是待修 EVAS 缺陷或 benchmark 中的错误模型答案；其他事件、采样和下游精度要求继续验证。
 候选任务可考察采样保持到滤波的信号链，并以独立卷积、事件次数和查询不变性检查；
 正式改造仍需独立留出刺激和模型错误控制。此处只登记，不新增计分任务。
-后续[滤波链预算案例](../experiments/backends/sample-edge-filter/BOUNDARY.md#filter-budget)可检验
+后续[滤波链预算案例](../../experiments/backends/sample-edge-filter/BOUNDARY.md#filter-budget)可检验
 输出需求能否同时约束采样幅值与事件时移，避免只把根缩窄就宣告精度改善。
 验收需保留过严预算拒绝和查询不变性，不把更少的根迭代直接当作端到端加速。
 
@@ -254,20 +254,20 @@ Spectre 回调探针也说明不能只比较最终计数而忽略跳变侧，或
 ## BC-0004：输入限幅与 VCO 相位历史
 
 来源为 [Spec A / Issue96](https://github.com/BucketSran/vaEVAS/issues/96) 的 CO-VCO-01。
-[原 VA](../evas/tests/fixtures/input_clamp_vco.va)先计算 `f=0.4+0.5V(ctl)`，
+[原 VA](../../evas/tests/fixtures/input_clamp_vco.va)先计算 `f=0.4+0.5V(ctl)`，
 再限到 [0.2,1]，送入 `idtmod(f/1us,0.125,1,0)` 与 `sin(2πphase)`。
 reviewed main 4368a890 的正常 public compile/Rust 路径实际返回
 `unsupported_transient: ordinary analog conditionals are not supported in transient event equations`。
 开发失败原件与身份在拥有 worktree 的 ignored `runs/clamp/red.log` 及根任务预检中保留，
 这些本地路径不是公开复现收据。
 
-独立预期为 clip 后的分段面积；[开发回归](../evas/tests/test_input_clamp.py)核对频率、
+独立预期为 clip 后的分段面积；[开发回归](../../evas/tests/test_input_clamp.py)核对频率、
 wrapped phase、正弦、不同观测网格和实例隔离。该失败属于既有仿射历史路径的能力限制，
 不能据此说合法源非法。候选任务可以考察夹限、初相位和包裹观测，但不得通过替换
 为已有支持编码隐藏原失败，或把开发用例重新称为未见确认集。
 
 [PR100](https://github.com/BucketSran/vaEVAS/pull/100) 的受限原始来源证书已完成实际对照与独立审查，尚未合并。
-[比较证据](../experiments/backends/input-clamp/README.md)保留原40840个Spectre时刻，
+[比较证据](../../experiments/backends/input-clamp/README.md)保留原40840个Spectre时刻，
 四个回绕中心在EVAS均可查询；第三中心普通phase仍相差约1cycle，而圆周phase与正弦接近。
 两个新增Spectre控制档分别收紧容差与减小步长，普通phase侧别仍存在差异；一个原生末行超出stop，
 原整批拒绝与域内诊断分别保留。这属于已观测兼容性差异，不能仅凭侧别判定某个模拟器有缺陷。
@@ -277,8 +277,8 @@ wrapped phase、正弦、不同观测网格和实例隔离。该失败属于既�
 当前只记录候选，没有新增正式benchmark题目或论文分母，也不把这些开发用例列为未见评测。
 
 2026-10-07 分层跟进：直接 PWL 回绕及独立积分观察的原请求拒绝已修复，
-见[实现证据](../experiments/backends/input-clamp/alignment-implementation.json)。
-[新分层对照](../experiments/backends/spectre-alignment/README.md)还发现，
+见[实现证据](../../experiments/backends/input-clamp/alignment-implementation.json)。
+[新分层对照](../../experiments/backends/spectre-alignment/README.md)还发现，
 导出时间文字的精度可能决定回绕侧判定；候选任务应明确观察时刻的表示与来源，
 不能将时间标签舍入导致的0/1差异直接当作模型积分错误。该发现仍是候选，不新增计分任务。
 
@@ -295,9 +295,9 @@ wrapped phase、正弦、不同观测网格和实例隔离。该失败属于既�
 
 当前候选 IR18 增加实际 driven/ground 仿射比较初值，以及仅依赖目标自身且系数为 1 的
 共享自增/自减。源码、独立答案、正负控制见
-[输入初始化回归](../evas/tests/test_input_initialization.py)、
-[共享计数回归](../evas/tests/test_shared_counter.py)和
-[初始化/写者契约](../evas/docs/math/events.md#input-initialization)。
+[输入初始化回归](../../evas/tests/test_input_initialization.py)、
+[共享计数回归](../../evas/tests/test_shared_counter.py)和
+[初始化/写者契约](../../evas/docs/math/events.md#input-initialization)。
 原失败日志和设计暂仅本地 `runs/initialization/` 保留，实际 Spectre 对齐待补。
 开发测试不证明新的论文资格，也未扩大固定 N。
 
@@ -312,10 +312,10 @@ wrapped phase、正弦、不同观测网格和实例隔离。该失败属于既�
 ## BC-0004：初始化静态循环与空循环校验
 
 reviewed main `3b588ec7` 的公开编译在初始化/cross 共用体内拒绝已支持的
-静态 genvar 数组赋值，[原输入与失败收据](../evas/validation/cases/initial_static_loop/original-failure.json)
+静态 genvar 数组赋值，[原输入与失败收据](../../evas/validation/cases/initial_static_loop/original-failure.json)
 保留该身份。只放开语法又会让零次循环隐藏动态初值、动态/越界下标和整数组赋值。
-[初始化循环契约](../evas/validation/INITIAL_STATIC_LOOP_CONTRACT.md)与
-[公开回归](../evas/tests/test_initial_static_loops.py)区分唯一初值、顺序展开、
+[初始化循环契约](../../evas/validation/INITIAL_STATIC_LOOP_CONTRACT.md)与
+[公开回归](../../evas/tests/test_initial_static_loops.py)区分唯一初值、顺序展开、
 实例隔离、重复 cross 叶子、共享资源预算和未执行体的检查义务。
 有限配对探针用 timer 污染数组，再由 cross 恢复，并单独保存元素观察量；
 实际 Spectre 执行尚待专项收据。
@@ -330,7 +330,7 @@ reviewed main `3b588ec7` 的公开编译在初始化/cross 共用体内拒绝已
 ## BC-0007：非线性输入的滤波直接项与初态
 
 `laplace_nd(u², '{1,1}, '{2,1})` 在 C4 基线中被拒绝，
-[原反例、独立卷积答案与实际 Spectre 配对](../experiments/backends/filter-direct/README.md)
+[原反例、独立卷积答案与实际 Spectre 配对](../../experiments/backends/filter-direct/README.md)
 记录修复后的固定外部源切片。反向输入的 Spectre 基础档超差保留，收紧设置后达标。
 候选建模任务可要求保留直接项、非零 DC 和跨 PWL 折点的历史，
 用漏掉直接项、初态清零和每段重做 DC 的错误实现作负控。

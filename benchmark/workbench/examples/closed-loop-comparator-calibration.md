@@ -23,7 +23,7 @@ flowchart LR
 
 ## 来源与改编边界
 
-原始资产是课题组的 [foreground_comparator_rdac_calibration.va](../reference/veriloga/lab/calibration_control/foreground_comparator_rdac_calibration.va)，历史别名为 `zhaoh/VA_calib_foreground_rdac.va`，工程位置见[总来源文档](../reference/veriloga/SOURCES.md#lab-calibration_control-foreground_comparator_rdac_calibration)。
+原始资产是课题组的 [foreground_comparator_rdac_calibration.va](../../reference/veriloga/lab/calibration_control/foreground_comparator_rdac_calibration.va)，历史别名为 `zhaoh/VA_calib_foreground_rdac.va`，工程位置见[总来源文档](../../reference/veriloga/SOURCES.md#lab-calibration_control-foreground_comparator_rdac_calibration)。
 
 源码已有的内容：读取比较结果 `D`，逐位更新七位输出 `DC`，提供校准输入，并在既定过程结束后撤销 `EN`。原模块没有独立复位端口。文件的工程目录来源不能证明下文测试条件就是原工程条件，也不能证明原代码在恢复后的电路中正确。
 
@@ -162,4 +162,4 @@ endmodule
 
 随后才能制作公开开发环境、独立测量程序和参考解，验证本例的数值及时序合同。若电路不能满足这些拟议参数，应在发题前调整设计，而不是修改原始资产来制造历史依据。
 
-环境和 checker 校准完成后，才把可运行版本放入 `benchmark/tasks/<task-id>/`，按 [Harbor 任务约定](../README.md#任务结构)组织材料。本文保持为任务设计示例。
+环境和 checker 校准完成后，才把可运行版本放入 `benchmark/tasks/<task-id>/`，按 [Harbor 任务约定](../../README.md#任务结构)组织材料。本文保持为任务设计示例。

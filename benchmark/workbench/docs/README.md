@@ -13,12 +13,12 @@
 
 | 位置 | 保存内容 |
 | --- | --- |
-| `benchmark/docs/` | 已采用的共同定义、设计理由和仍待讨论的核心问题 |
+| `benchmark/workbench/docs/` | 已采用的共同定义、设计理由和仍待讨论的核心问题 |
 | [research/](../research/README.md) | 论文、技术资料和开源工程的阅读结果、适用范围与证据 |
-| [workbench/](../workbench/README.md) | 每个 Case 的来源、电路、拟定形式、规格草案、checker 方案与 review 状态 |
-| [tasks/](../README.md#任务结构) | 可执行任务、参考解和评分入口，资格由各题证据说明 |
+| [workbench/](../README.md) | 每个 Case 的来源、电路、拟定形式、规格草案、checker 方案与 review 状态 |
+| [tasks/](../../README.md#任务结构) | 可执行任务、参考解和评分入口，资格由各题证据说明 |
 | GitHub Issues | 工作范围、依赖、验收条件和推进状态 |
-| [实验入口](../../experiments/README.md) | 已运行实验的协议、结果和证据，不用候选数量代替成绩 |
+| [实验入口](../../../experiments/README.md) | 已运行实验的协议、结果和证据，不用候选数量代替成绩 |
 
 [Issue #72](https://github.com/BucketSran/vaEVAS/issues/72) 负责总体建设与阶段入口；
 [Issue #107](https://github.com/BucketSran/vaEVAS/issues/107) 负责五类定义及代表题的验收设计。

@@ -14,7 +14,7 @@ BENCHMARK_PREFIXES = (
     'experiments/benchmark_v2/', 'experiments/benchmark_next/',
 )
 TASK_PREFIXES = (
-    'benchmark/tasks/', 'benchmark/first_batch/',
+    'benchmark/tasks/',
     'experiments/benchmark_first_batch/', 'experiments/benchmark_v2/',
     'experiments/benchmark_next/',
 )

@@ -2,13 +2,13 @@
 
 公开规格与独立判据定义正确性，仿真后端执行验收所需的实验。
 所有工程类别都配备严格 checker；编译成功、某个仿真器的输出或参考源码相似度
-不能直接作为正确答案。任务格式与当前执行入口见[benchmark 说明](../README.md#任务结构)。
+不能直接作为正确答案。任务格式与当前执行入口见[benchmark 说明](../../README.md#任务结构)。
 
 ## 解题与最终验收分别执行
 
-主评测采用 [Agentic 评测](../../GLOSSARY.md#agentic-评测)，允许 Agent 在约定预算内
+主评测采用 [Agentic 评测](../../../GLOSSARY.md#agentic-评测)，允许 Agent 在约定预算内
 读取材料、运行仿真、查看反馈并修改交付物，以任务完成率衡量工程能力。
-[One-shot 评测](../../GLOSSARY.md#one-shot-评测)作为对照，具体可用材料与交互权限
+[One-shot 评测](../../../GLOSSARY.md#one-shot-评测)作为对照，具体可用材料与交互权限
 随实验配置固定，不能把不同权限的结果混为同一条件。
 
 解题期间 checker、参考答案和最终评分实例对 Agent 隐藏。
@@ -21,7 +21,7 @@
 
 预算耗尽时验收最后完整保存的候选，不事后挑选历史最好结果。
 工具、反馈、墙钟时间、仿真次数及终评资源需要随正式协议固定。
-现有[Agentic 试跑协议](../../experiments/benchmark_first_batch/agentic/README.md)
+现有[Agentic 试跑协议](../../../experiments/benchmark_first_batch/agentic/README.md)
 属于历史批次设置，不能自动作为后续所有任务的资源合同。
 
 ## 每题固定后端，设计时处理能力差异
@@ -77,7 +77,7 @@ benchmark 负责题目判据与校准，circuit harness 负责共享执行、错
 
 ## 开源复现保留同一道题的要求
 
-[开源复现](../../GLOSSARY.md#开源复现)首先指重新验收已保存的同一候选：
+[开源复现](../../../GLOSSARY.md#开源复现)首先指重新验收已保存的同一候选：
 使用规定输入、初态与独立判据，不依赖商业工具复核通过或失败。
 重新调用模型生成交付物属于另一项实验。
 
@@ -98,7 +98,7 @@ benchmark 负责题目判据与校准，circuit harness 负责共享执行、错
 
 直接使用 ngspice 正式评分的题不统一要求 Spectre 对照。
 集合归属随版本固定，补齐环境与校准后才在后续版本调整。
-来源、许可与对外材料遵循[使用约定](../reference/README.md#使用约定)。
+来源、许可与对外材料遵循[使用约定](../../reference/README.md#使用约定)。
 
 工具依赖分组参考 CVDP 官方 `commercial` 与 `no_commercial` 发布方式，见
 [数据说明](https://huggingface.co/datasets/nvidia/cvdp-benchmark-dataset/blob/main/README.md)。
@@ -112,3 +112,39 @@ benchmark 负责题目判据与校准，circuit harness 负责共享执行、错
 完整仓库任务可单列表现，工作量不直接折算为更高分值。
 具体汇总口径、正式交互预算和五类题量仍需代表题研究及试跑后确定。
 历史批次的分类、分母和运行身份保持原记录，不重命名为新五类成绩。
+
+## 共享评分程序
+
+[checkers/spectre_waveform.py](../../checkers/spectre_waveform.py) 是六题共用的评分源码。
+[任务生成器](../../../experiments/va_screen/build_tasks.py)将它复制到每题的 `tests/verify.py`；
+任务运行时执行该副本，`tests/cases.json` 保存各题的网表、独立期望值与容差。
+
+修改共享源后，需要同步受影响的执行副本，并重做其参考解和错误版本校准。
+生成器会重建全部六题文件，运行前应保留正在修改的任务。提交前使用
+[身份检查](../../../experiments/va_screen/README.md#身份与再校准)确认源、副本及校准记录一致。
+校准通过证明这些已测条件，不能证明评分程序覆盖任意错误实现。
+
+[checkers/triangle_oscillator.py](../../checkers/triangle_oscillator.py) 单独负责振荡器修复题。
+它使用正速度的分段解析积分和三角波折返关系；固定题目配置与错误版本校准见
+[来源和验证边界](../../tasks/va07-triangle-repair/SOURCE.md)。无需 Spectre 的检查器回归：
+
+```sh
+python3 -B -m unittest discover -s experiments/backends/dvs2-spectre-validation -p test_triangle_oscillator.py -v
+```
+
+当前 EVAS 的本地接入验收入口是 [triangle_evas.py](../../checkers/triangle_evas.py)，
+通过操作者指定的 circuit harness 执行，仅覆盖 `constant-tighter` 开发配置。
+[调用方式、配置映射与未完成的负例验收](../../tasks/va07-triangle-repair/SOURCE.md#local-evas)
+由该任务维护。原解析判据与 case 文件字节保持不变。当前 Spectre 入口经由共享的
+`circuit_task` 执行，旧校准与当前入口的复核证据分别记录。
+
+## 环境与结果
+
+每个任务在自己的 `environment/` 中声明运行环境。
+当前使用固定 digest 的 Python 基础镜像与远端 Spectre verifier；
+任务镜像本身不包含商业仿真器，运行时必须按初筛说明指定 verifier。
+镜像应记录依赖版本和构建方法；执行记录应保存实际使用的镜像身份。
+完整运行日志与临时输出放在 Git 忽略的 `runs/` 中。
+
+Benchmark 评分与 [EVAS 正确性验证](../../../evas/validation/README.md)分别维护和报告。
+EVAS 的构建与运行方法见 [仿真器说明](../../../evas/README.md)。

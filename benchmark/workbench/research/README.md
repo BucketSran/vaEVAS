@@ -5,17 +5,17 @@
 当前定义见[五类工程任务](../docs/task-types.md)，设计判断见[核心文档](../docs/README.md)。
 [Issue #107](https://github.com/BucketSran/vaEVAS/issues/107)跟进定义与代表题设计，这里维护学习材料及其适用范围。
 
-具体候选的资产来源、改编形式和设计 review 进入 [逐题工作区](../workbench/README.md)。
+具体候选的资产来源、改编形式和设计 review 进入 [逐题工作区](../README.md)。
 本目录继续维护跨题材料研究；逐题状态以工作区为准，不在两处重复登记。
-旧 v4 优先迁移的源码筛选与五类对应见[迁移记录](../workbench/migration/README.md)。
+旧 v4 优先迁移的源码筛选与五类对应见[迁移记录](../migration/README.md)。
 
 初轮核查日期为 2026-10-08。核查包括论文正文、实际源文件、数据说明、版本和许可；
 没有运行电路仿真、模型训练或新增题目校准。材料中的 checker 和任务方案均为研究建议，
 不是已建成题目。第三方公开代码不能自动作为正确答案，论文可读也不代表代码或数据可再分发。
 
-2026-10-10 的逐题来源复核记录在 [工作区来源卡](../workbench/sources/README.md)，
-新增候选及缺口见 [review 队列](../workbench/REVIEW.md)。早期专题中的后端建议保留阅读时的背景；
-正式政策以 [当前 benchmark 合同](../README.md#评测方式与题目建设)为准，已允许满足条件的 ngspice 题独立评分，
+2026-10-10 的逐题来源复核记录在 [工作区来源卡](../sources/README.md)，
+新增候选及缺口见 [review 队列](../REVIEW.md)。早期专题中的后端建议保留阅读时的背景；
+正式政策以 [当前 benchmark 合同](../../README.md#评测方式与题目建设)为准，已允许满足条件的 ngspice 题独立评分，
 不将 Spectre 对照设为所有新题的统一前提。
 
 ## 按五类查材料

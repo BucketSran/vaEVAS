@@ -16,6 +16,20 @@
 
 这三种数量不相加。用户将基于统一总览重新组织后续 review，本次不批量变更历史卡状态，也不新增逐题审批要求。
 
+## 工作区导航
+
+| 内容 | 入口 |
+| --- | --- |
+| 当前电路审核 | [功能族资产](circuits/README.md)、[56 题总览](TASKS.md) |
+| 共同定义 | [设计目标、五类任务与评测约定](docs/README.md) |
+| 材料学习 | [研究笔记](research/README.md)、[来源记录](sources/README.md) |
+| 候选与旧题迁移 | [开发问题候选](CANDIDATES.md)、[v4 迁移筛选](migration/README.md) |
+| 历史设计与建设 | [设计稿](examples/README.md)、[批次记录](history/README.md)、[早期题卡](REVIEW.md) |
+
+本次目录整理将原 `benchmark/docs/`、`research/`、`examples/` 和 `CANDIDATES.md` 收入工作区。
+题目包与题集清单统一留在 `benchmark/tasks/`；旧七类配置的路径对照见[历史入口](history/README.md#首批题集配置的位置)。
+原始来源资产与已封存实验记录保持原身份，现有链接和建设脚本使用当前路径。
+
 ## 电路功能族的目录
 
 每个功能族在 `circuits/<功能族>/` 下维护总览，按以下结构保存审核资产：
@@ -123,7 +137,7 @@
 
 每道题在实现、校准后固定后端与工具链；历史设计卡中的 `backend: null` 表示尚未选定，不能据此声称 EVAS、ngspice 或 Spectre 已运行通过。公开自测的两种形式均保留，逐题选择：固定公开测试，或固定工程连接下自定义激励与观测。
 
-优先寻找真实电路与配套 VA 模型。用 VA 替代器件电路时，保留候选接口、公开要求、验收标准及影响判定的电路效应，校准后才可称为同题复现。改变这些要求的简化版本另建关联 Case。固定工具链下可完整验收的 ngspice 题允许独立评分；后端能力造成的正确 VA 无法执行属于环境缺陷。完整规则见 [评测与复现原则](../docs/evaluation.md)。
+优先寻找真实电路与配套 VA 模型。用 VA 替代器件电路时，保留候选接口、公开要求、验收标准及影响判定的电路效应，校准后才可称为同题复现。改变这些要求的简化版本另建关联 Case。固定工具链下可完整验收的 ngspice 题允许独立评分；后端能力造成的正确 VA 无法执行属于环境缺陷。完整规则见 [评测与复现原则](docs/evaluation.md)。
 
 ## 维护入口
 
@@ -137,4 +151,4 @@ python3 -B scripts/benchmark_workbench.py --check
 前者校验后刷新索引和题卡摘要；后者只读检查重复 ID、引用、分类路径、设计版本和索引是否过期。它们不运行仿真，也不能证明 checker 正确、后端适用或题目具有区分度。生成内容只在标记块内或注明 Generated 的索引页中维护。
 题目迁移后，刷新会移除不再需要且带完整生成标记的类别/家族索引页，手写设计记录保留。
 
-分类和验收边界仍由 [Issue #107](https://github.com/BucketSran/vaEVAS/issues/107)承接；全局建设见 [Issue #72](https://github.com/BucketSran/vaEVAS/issues/72)。[研究目录](../research/README.md)用于跨题材料学习，这里用于逐题形成可 review 的设计。
+分类和验收边界仍由 [Issue #107](https://github.com/BucketSran/vaEVAS/issues/107)承接；全局建设见 [Issue #72](https://github.com/BucketSran/vaEVAS/issues/72)。[研究目录](research/README.md)用于跨题材料学习，这里用于逐题形成可 review 的设计。

@@ -603,7 +603,7 @@ def all_tasks():
         d=OUT/task
         shutil.copyfile(HERE/'public_smoke.py',d/'environment/public/smoke.py')
         shutil.copyfile(ROOT/'benchmark/checkers/first_batch_integration.py',d/'environment/public/waveform_check.py')
-    write(ROOT/'benchmark/first_batch/integration.json',json.dumps({'category':'extension-integration','tasks':[{'id':task,'path':f'benchmark/tasks/{task}','source_group':{'integrate-tdc-measurement-chain':'original-tdc-chain','integrate-pipeline-adc-alignment':'original-pipeline-adc','integrate-iq-baseband-calibration':'original-iq-baseband','integrate-pll-hop-reacquisition':'original-hopping-pll','integrate-agc-attack-release':'original-receiver-agc'}[task],'construction':'reference-and-semantic-mutants-authored','spectre_calibration':'pending','agentic':'pending','release_set':'spectre-extension-candidate'} for task in tasks]},indent=2)+'\n')
+    write(ROOT/'benchmark/tasks/first_batch-integration.json',json.dumps({'category':'extension-integration','tasks':[{'id':task,'path':f'benchmark/tasks/{task}','source_group':{'integrate-tdc-measurement-chain':'original-tdc-chain','integrate-pipeline-adc-alignment':'original-pipeline-adc','integrate-iq-baseband-calibration':'original-iq-baseband','integrate-pll-hop-reacquisition':'original-hopping-pll','integrate-agc-attack-release':'original-receiver-agc'}[task],'construction':'reference-and-semantic-mutants-authored','spectre_calibration':'pending','agentic':'pending','release_set':'spectre-extension-candidate'} for task in tasks]},indent=2)+'\n')
     return tasks
 
 

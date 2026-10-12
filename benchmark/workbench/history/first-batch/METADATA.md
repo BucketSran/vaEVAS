@@ -42,10 +42,10 @@ normalizer 仅修改五个首批登记 JSON、所属任务 task.toml 和 SOURCE.
 映射遵循用户已确定的七类工程动作、三种上下文、人工故障/真实开发问题/原创需求的区别、同源关联及合成数据如实标记。题量、后端校准、Agentic 和发布集合资格继续按原合同分别报告。
 
 当前本批七类各 5 题，共 35 个正式资产，均已完成参考及代表负例校准。
-前六类 30 题的实际校准范围见 [校准证据](../../experiments/benchmark_first_batch/CALIBRATION.md)。
+前六类 30 题的实际校准范围见 [校准证据](../../../../experiments/benchmark_first_batch/CALIBRATION.md)。
 五个优化任务的 36 个提交、108 个条件均完成封存核验，无待处理条件，见
-[优化正式校准说明](../../experiments/benchmark_first_batch/optimization/FORMAL_CALIBRATION.md)
-及[核验收据](../../experiments/benchmark_first_batch/optimization/formal_calibration_receipt.json)。
+[优化正式校准说明](../../../../experiments/benchmark_first_batch/optimization/FORMAL_CALIBRATION.md)
+及[核验收据](../../../../experiments/benchmark_first_batch/optimization/formal_calibration_receipt.json)。
 优化参考的 15 个条件全部通过；Flash 旧二分提交的 3 个 CPU-only equivalent 校准条件通过。
 30 个负例的 90 个条件包含 63 个语义失败、5 个性能失败和 22 个通过条件，每个负例
 至少一个条件被拒绝。负例按提交分为 24 个语义负例、5 个仅性能负例和 1 个混合负例。
@@ -54,5 +54,5 @@ metadata 准入计数本身不证明校准完成，执行状态以对应证据�
 模型 pilot 的 14 个固定单元覆盖七类代表题，请求模型标识为 GLM 系列的
 `glm-5.3` 和 `glm-5.3-flash`。Pi 记录的配置名不等于独立观察到的服务端响应身份。
 14 个固定单元均已完成冻结候选终评，尝试、工具轨迹和成绩属于
-[Agentic pilot 证据](../../experiments/benchmark_first_batch/agentic/PILOT.md)，不能由 metadata
+[Agentic pilot 证据](../../../../experiments/benchmark_first_batch/agentic/PILOT.md)，不能由 metadata
 或人工参考解校准推导 35 题整体模型通过率。

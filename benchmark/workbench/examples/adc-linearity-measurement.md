@@ -1,14 +1,14 @@
 # Example：用 Verilog-A 自动测量 ADC 的 DNL/INL
 
 状态：首题本地原型已完成实际 Spectre 校准和完整 Harbor oracle Trial，Agentic 主评测试跑尚未完成。
-原创任务、参考测量器、独立 checker 及具体证据见 [va08](../tasks/va08-adc-linearity/SOURCE.md)。
+原创任务、参考测量器、独立 checker 及具体证据见 [va08](../../tasks/va08-adc-linearity/SOURCE.md)。
 原设计稿的 Cadence 源码只说明工程用途，不进入原创资产。下文保留原设计依据，当前任务状态以该任务记录为准。
 
 ## 工程用途与来源
 
 工程师需要一个能驱动 ADC、等待转换、读取输出码并统计非线性的仿真测量模块。若激励和采样顺序错误，模块仍可能输出一张看似合理的结果表。
 
-参考资产是 Cadence [adc_dnl_8bit__icadvm201.va](../reference/veriloga/cadence/measurement_stimulus/adc_dnl_8bit__icadvm201.va)，其[安装来源](../reference/veriloga/SOURCES.md#cadence-measurement_stimulus-adc_dnl_8bit__icadvm201)已记录。原文件按 4096 次转换统计 256 个码，并对内部 254 个码归一化。
+参考资产是 Cadence [adc_dnl_8bit__icadvm201.va](../../reference/veriloga/cadence/measurement_stimulus/adc_dnl_8bit__icadvm201.va)，其[安装来源](../../reference/veriloga/SOURCES.md#cadence-measurement_stimulus-adc_dnl_8bit__icadvm201)已记录。原文件按 4096 次转换统计 256 个码，并对内部 254 个码归一化。
 
 本例保留“激励、采样和统计”的用途，重新明确转换延迟、输入采样点、文件格式与端点约定，并增加与本合同一致的累计 INL。它不是原文件的逐字翻译，也不声称原文件已经在本例环境中验证。
 
@@ -77,7 +77,7 @@ checker核对每行时间、实际原始总线及阈值真值，不以候选报�
 | 已知真值 | 根据隐藏阈值和规定输入点计算理论码流，与实际 ADC 波形确认一致 |
 | 输出结果 | 检查 CSV 码序、整数命中数、DNL/INL 数值、无重复或遗漏行 |
 
-命中次数要求整数完全相等；DNL/INL 的文件数值容差拟为 `1e-6 LSB`，候选应输出足够精度。首题冻结稳态电压容差为2 uV、时钟/done穿越时间为0.2 ns、读取记录时间为1 ps，实际校准见 [va08 任务记录](../tasks/va08-adc-linearity/SOURCE.md)。若 ADC 实际行为不符合其公开转换合同，记录环境问题，不能用该场景判候选失败。
+命中次数要求整数完全相等；DNL/INL 的文件数值容差拟为 `1e-6 LSB`，候选应输出足够精度。首题冻结稳态电压容差为2 uV、时钟/done穿越时间为0.2 ns、读取记录时间为1 ps，实际校准见 [va08 任务记录](../../tasks/va08-adc-linearity/SOURCE.md)。若 ADC 实际行为不符合其公开转换合同，记录环境问题，不能用该场景判候选失败。
 
 Checker 同时核对输入和时钟，防止候选只访问少量码却按理想分布报告结果。既不能只比较 CSV，也不能仅凭候选的 `done` 判断完成。
 
@@ -92,7 +92,7 @@ Checker 同时核对输入和时钟，防止候选只访问少量码却按理想
 本例考查仿真测量流程、时序和统计定义。统计公式本身很简单；没有证据说明强模型会在允许调试后持续失败。
 
 已制作首题已知阈值的 ADC 环境、独立 checker、公开数据格式和参考测量器，完成实际 Spectre 校准和完整 Harbor oracle Trial。
-模型试跑的已有尝试与未完成事项见 [va08 任务记录](../tasks/va08-adc-linearity/SOURCE.md)，尚无 Agentic 主评测结果。
+模型试跑的已有尝试与未完成事项见 [va08 任务记录](../../tasks/va08-adc-linearity/SOURCE.md)，尚无 Agentic 主评测结果。
 后续若接真实晶体管 ADC，应先验证输出时序和测量精度，并将统计不确定性纳入新合同；本例的合成被测器件不能标成真实电路测量。
 
 [返回事例目录](README.md)

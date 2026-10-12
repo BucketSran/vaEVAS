@@ -1,6 +1,6 @@
 # 原创来源与验证边界
 
-本题是仓库原创资产，基于 [ADC 测量设计稿](../../examples/adc-linearity-measurement.md)
+本题是仓库原创资产，基于 [ADC 测量设计稿](../../workbench/examples/adc-linearity-measurement.md)
 确定工程用途及有限扫描定义。没有复制、改写或分发 Cadence 安装库源码。
 参考测量器、合成 ADC、开发网表和 checker 均在本次实现中独立编写。
 

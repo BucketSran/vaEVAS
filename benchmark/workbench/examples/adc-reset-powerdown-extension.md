@@ -6,7 +6,7 @@
 
 系统验证需要在 ADC 转换过程中复位或关闭模块，并在重新启用后继续转换。测试环境要能区分有效结果和旧数据，还要防止已排队的输出更新在掉电后重新出现。
 
-原始资产是 [ideal_adc_vref_thresholds.va](../reference/veriloga/lab/data_converters/ideal_adc_vref_thresholds.va)，历史工程来源见[总表](../reference/veriloga/SOURCES.md#lab-data_converters-ideal_adc_vref_thresholds)。它在时钟上升沿采样差分输入，用 `LVL-1` 个门限量化，并以**电压数值表示整数码**，不是二进制电平总线。
+原始资产是 [ideal_adc_vref_thresholds.va](../../reference/veriloga/lab/data_converters/ideal_adc_vref_thresholds.va)，历史工程来源见[总表](../../reference/veriloga/SOURCES.md#lab-data_converters-ideal_adc_vref_thresholds)。它在时钟上升沿采样差分输入，用 `LVL-1` 个门限量化，并以**电压数值表示整数码**，不是二进制电平总线。
 
 原模型没有复位、掉电或 VALID 端口。本例在保留这种输出编码及量化规则的基础上新增状态。不能把原模型缺少新需求称作历史故障。
 

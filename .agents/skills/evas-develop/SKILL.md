@@ -94,7 +94,7 @@ Update the owning component documentation when behavior or evidence changes;
 keep stage discussion and review history in the PR, preparing text locally when
 publication is outside the task's scope.
 If the failure can become a reusable modeling task, update the
-[benchmark candidate register](../../../benchmark/CANDIDATES.md) with its trigger,
+[benchmark candidate register](../../../benchmark/workbench/CANDIDATES.md) with its trigger,
 evidence, proposed task and unresolved questions. Capture first; do not start formal
 benchmark construction unless it is part of the requested scope.
 For semantic/numerical work, update the relevant handbook chapter using the

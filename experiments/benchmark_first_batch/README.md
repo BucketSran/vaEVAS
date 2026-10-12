@@ -1,6 +1,6 @@
 # 首批任务的校准入口
 
-任务范围与准入条件见 [首批合同](../../benchmark/first_batch/README.md)。
+任务范围与准入条件见 [首批合同](../../benchmark/workbench/history/first-batch/README.md)。
 本目录提供任务打包、校准队列和各类任务的独立判据回归。
 远端提交、进程限制、清理和归档由已有 circuit harness 执行。
 

@@ -40,7 +40,7 @@ benchmark 以实际 Verilog-A 使用场景组织工程任务，检查交付物�
 按工程动作、电路家族和稳定 Case ID 记录来源、改编形式与 review 状态。
 POR、LDO 和运放压摆率三个候选仍是草案；下述七类资产保留为历史批次。
 
-**当前状态：**[首批七类工程任务](benchmark/first_batch/README.md)已完成每类 5 题，
+**当前状态：**[首批七类工程任务](benchmark/workbench/history/first-batch/README.md)已完成每类 5 题，
 共 35 题的参考解与代表负例 Spectre 校准。真实模型试跑及其反馈限制见
 [Agentic 实验](experiments/benchmark_first_batch/agentic/README.md)；校准通过不代表模型通过，
 当前任务仍依赖商业后端验收。
@@ -120,7 +120,7 @@ main 保留持续维护的工具与支撑公开结论的精简证据；已结束
 ## 仓库导航
 
 本仓库是 EVAS 与 benchmark 的共同开发入口。两条线各按可验收结果建立任务；
-EVAS 从[四后端支持范围](evas/docs/COMPARISON.md)选择问题，benchmark 从[候选登记](benchmark/CANDIDATES.md)
+EVAS 从[四后端支持范围](evas/docs/COMPARISON.md)选择问题，benchmark 从[候选登记](benchmark/workbench/CANDIDATES.md)
 和[题库入口](benchmark/README.md)继续。候选与设计稿不等于已发布任务。
 
 共享电路仿真 harness 在独立仓库维护执行与结果回收，目标是接入当前 EVAS 和远端仿真器。

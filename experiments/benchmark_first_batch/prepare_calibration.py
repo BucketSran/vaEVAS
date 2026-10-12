@@ -25,7 +25,7 @@ def build(output, harness, selected=None, include="all"):
     output.mkdir(mode=0o700, parents=True, exist_ok=False)
     task_names = set()
     for name in ("model_repair", "identification", "integration", "verification_measurement"):
-        registry = json.loads((ROOT / "benchmark/first_batch" / (name + ".json")).read_text())
+        registry = json.loads((ROOT / "benchmark/tasks" / ("first_batch-" + name + ".json")).read_text())
         task_names.update(t.get("id", t.get("task_id")) for t in registry["tasks"])
     task_names = {name for name in task_names if not name.startswith("va")}
     if selected:

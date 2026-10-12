@@ -12,7 +12,7 @@ def check(runtime):
     spec = importlib.util.spec_from_file_location('first_batch_submission_policy', runtime)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    registry = json.loads((ROOT / 'benchmark/first_batch/verification_measurement.json').read_text())
+    registry = json.loads((ROOT / 'benchmark/tasks/first_batch-verification_measurement.json').read_text())
     sources = []
     for task in registry['tasks']:
         if task['id'] == 'va08-adc-linearity':
