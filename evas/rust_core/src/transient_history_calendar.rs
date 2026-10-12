@@ -112,9 +112,6 @@ impl Controller {
                 }
             }
             if needs_closure {
-                if !trajectory.config.strobetimes.is_empty() {
-                    return Err(Error::new("unsupported_strobe", "forced solve points with a local-time causal event closure are not yet supported"));
-                }
                 let clock = physical_anchor.ok_or_else(|| {
                     Error::new(
                         "event_resolution",

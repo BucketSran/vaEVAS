@@ -4,6 +4,12 @@
 面向使用者的支持结论只在[四后端支持范围](../COMPARISON.md)维护，详细接受与拒绝条件由所链接的契约维护。
 收据只证明其固定执行版本；下表仅登记 ID 与证据，供追溯工具读取，不维护第二份支持状态或当前 main 通过率。
 
+[采样积分与局部 strobe 修复](../../../experiments/backends/support/README.md#sampled-integral-fix)
+补充 DYNAMICS、CROSS、TIMER、EVENT-ORDER、COMPOSE、QUALIFICATION。
+[独立面积与物理阶段回归](../../tests/test_sampled_integral_strobe.py)、
+[非自治强制点负控](../../tests/test_bounded_event_closure.py)及实际五卡三档对照保留原预算。
+EC04 的原窗口资格与 #131 冻结范围保留；回调证明只补离散事件，不替代连续输出验收。
+
 [累计测试清单](../../validation/paper/COVERAGE.md)登记历史条件与新 44 组的逐项关系，
 涵盖 LANG、LIN、NONLINEAR、TIMER、CROSS、EVENT-ORDER、TRANSITION、ABSDELAY、SLEW、DYNAMICS、COMPOSE、QUALIFICATION。
 五层目录整理没有改变实现、判据或成绩。主表按五层固定用例呈现；打勾只表示本行全部必测用例通过，扩展计划和缺证清单分别保留。

@@ -2,9 +2,10 @@
 
 本清单登记本版主表的固定用例、五层扩展计划、历史对应和待补证据。
 [支持对比表](../../docs/COMPARISON.md)只呈现结果；本页登记用例关系，不另判成绩。
-新 44 组及相应 EVAS 修复来自 [#162 候选](https://github.com/BucketSran/vaEVAS/pull/162)，本轮不包含该 PR 的实现。
-其模型、checker 和收据链接固定版本，候选成绩不代表当前 main。
+新 44 组及相应 EVAS 修复来自已合入的 [#162](https://github.com/BucketSran/vaEVAS/pull/162)。
+其模型、checker 和收据链接固定执行版本，旧成绩不自动代表后续 main。
 本轮新增 IR19 数学函数与恒定输入修复，执行身份和固定范围见[本轮证据](../../../experiments/backends/support/README.md#q3-closure)。
+采样积分与局部 strobe 的五卡复测另见[新修复收据](../../../experiments/backends/support/README.md#sampled-integral-fix)，不覆盖旧运行。
 
 本次盘点覆盖历史对比表引用的 31 条件、core-v1 的 12 条件、15 个专项、8 个精度条件，
 以及采样滤波、strobe、近邻 timer、两级 slew、滤波直通、直接采样、非线性续算和七模型确认集。
@@ -691,9 +692,11 @@ Gnucap的固定延迟、限速、非线性反馈、定时边沿和电压求解�
 Gnucap 的停止边界漏事件、采样到滤波的输出或历史错误。主表直接写这些原因。
 其中的“超差”只说明已测配置未达标，不证明所有可选配置均无法达到目标。
 
-EVAS 还有已复现的执行缺口：采样后积分在严格配置下认证拒绝，非线性保持输入遇到历史容量上限，
-复位级联和事件后 Riccati 滤波超时，以及局部事件闭包拒绝 strobe。
-这些没有通过补证而变成通过。本轮数学函数修复也没有解决这些组合，详见[本轮剩余缺口](../../../experiments/backends/support/README.md#q3-remaining)。
+上述 EVAS 执行缺口已在[采样积分修复批次](../../../experiments/backends/support/README.md#sampled-integral-fix)实际复验：
+EC03/EC07/EC10/EC20 各三档完整通过，EC04 各三档完成执行但根区间未满足原触发窗。
+EC04 的完整区间包含旧 nominal 的下邻；不裁剪区间、不将数值正确诊断改记为原卡通过。
+这次没有扩展各行必测范围，也没有替换原44组或历史成绩；新增源码和内核身份另立收据。
+两张 ddt 卡仍缺时间表达式准入和非线性输入支持。
 
 探索用的动态 timer、中断后积分、内部反馈事件和隐式复位仍在[扩展计划](#exploratory-cases)，
 参考或验收尚未定稿，不纳入本版固定支持行。

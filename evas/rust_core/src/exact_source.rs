@@ -189,9 +189,29 @@ fn evaluate(
     }
 }
 
-/// Certify a comparison at the original binary64 query time. The caller first
-/// validates predicate affinity and source ownership; absent exact provenance
-/// or an exceeded resource budget yields no certificate.
+/// Enclose an original source expression at a binary64 time. Missing source
+/// provenance or an exceeded arithmetic budget yields no certificate.
+pub(crate) fn point_bounds(
+    expression: &Expression,
+    nodes: &[usize],
+    sources: &[Option<Curve>],
+    time: f64,
+) -> Option<I> {
+    let time = binary(time)?;
+    let mut budget = Budget(0);
+    let mut count = 0;
+    enclosure(&evaluate(
+        expression,
+        nodes,
+        sources,
+        &time,
+        &mut budget,
+        0,
+        &mut count,
+    )?)
+}
+
+/// Certify a comparison using the original expression trees and source knots.
 pub(crate) fn predicate_sign(
     left: &Expression,
     right: &Expression,
@@ -584,6 +604,41 @@ mod tests {
             };
         }
         assert_eq!(predicate_sign(&deep, &scalar(0.0), &[], &[], 0.0), None);
+    }
+
+    #[test]
+    fn point_value_encloses_original_product_at_adjacent_root_queries() {
+        let input = Expression::Affine {
+            constant: 0.,
+            terms: vec![crate::ir::Term {
+                node: 1,
+                coefficient: 1.,
+            }],
+        };
+        let guard = Expression::Add {
+            left: Box::new(Expression::Multiply {
+                left: Box::new(input.clone()),
+                right: Box::new(input),
+            }),
+            right: Box::new(Expression::Affine {
+                constant: -2.,
+                terms: vec![],
+            }),
+        };
+        let source = Curve::source(&[[0., 0.], [3., 3.]]);
+        let sources = [source];
+        let center = 2_f64.sqrt();
+        for query in [center.next_down(), center, center.next_up()] {
+            let bounds = point_bounds(&guard, &[1], &sources, query).unwrap();
+            let rational = binary(query).unwrap();
+            let exact = &rational * &rational - binary(2.).unwrap();
+            assert!(contains(bounds, &exact));
+            assert_eq!(
+                bounds.sign(),
+                Some(if exact.is_positive() { 1 } else { -1 })
+            );
+        }
+        assert!(point_bounds(&guard, &[1], &[None], center).is_none());
     }
 
     #[test]

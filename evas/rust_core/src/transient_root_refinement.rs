@@ -161,9 +161,24 @@ impl Controller {
         } else {
             None
         };
-        let proactive = chain
-            .as_ref()
-            .is_some_and(|d| d.target_width.is_some() && d.predicted_error_bound > d.budget);
+        // For consumers without an allocated filter budget, original source
+        // arithmetic can resolve a polynomial root down to adjacent binary64
+        // times. Keep the allocated filter's budgeted stopping policy intact.
+        // Refinement is independent of the query grid:
+        // selecting a post-root phase must not require querying a history
+        // before its execution representative.
+        let exact_source = chain.is_none()
+            && event
+                .exact_input_value(
+                    model,
+                    trajectory,
+                    event.bounds().lo + (event.bounds().hi - event.bounds().lo) * 0.5,
+                )
+                .is_some();
+        let proactive = exact_source
+            || chain
+                .as_ref()
+                .is_some_and(|d| d.target_width.is_some() && d.predicted_error_bound > d.budget);
         let failure = match self.preflight_root_consumer(model, trajectory, crossings) {
             Ok(_) if !proactive => return Ok(()),
             Ok(_) => None,

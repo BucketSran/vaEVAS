@@ -225,7 +225,7 @@ impl LinearContinuous {
                 *slot = Some(*value);
             }
         }
-        for segment in &self.segments {
+        for segment in self.segments.iter() {
             let lo = time_bounds.lo.max(segment.start);
             let hi = time_bounds.hi.min(segment.end);
             if lo > hi {

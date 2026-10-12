@@ -663,7 +663,7 @@ fn initialize(
             .collect(),
         tolerances: tolerances.clone(),
         initial,
-        steps: Vec::new(),
+        steps: Arc::new(Vec::new()),
         start: 0.0,
         event_dependent: false,
         event_seed: None,

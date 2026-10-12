@@ -116,12 +116,16 @@ class RootRecovery(unittest.TestCase):
         self.assertEqual(receipt['sample_origins'], ['accepted_controller_frame']*4)
         self.assertEqual(receipt['voltages_V'],
                          [forced['solutions'][i]['voltages'] for i in [0, 1, 3, 4]])
-        # A legal phase query inside the retained root window is still not an
-        # accepted controller frame. Tight timer bounds do not change that rule.
+        # A certified post-root phase can now commit a forced prefix. It keeps
+        # the same event certificate and sampled uncertainty; the output origin
+        # must come from that transaction, not a relabeled historical query.
         request['transient']['strobetimes'] = [near_root]
         result, error, _ = observe(request)
-        self.assertIsNone(result)
-        self.assertEqual(error['kind'], 'unsupported_strobe')
+        self.assertIsNone(error)
+        self.assertEqual(result['transient']['events'], ordinary['transient']['events'])
+        self.assertEqual(result['solutions'], ordinary['solutions'])
+        self.assertEqual(result['strobe_evidence']['sample_origins'], ['accepted_controller_frame'])
+        self.assertEqual(result['strobe_evidence']['voltages_V'], [result['solutions'][2]['voltages']])
 
     def test_second_consumer_can_require_a_bounded_fallback(self):
         request = request_for(

@@ -111,8 +111,10 @@ V(y,r)<+h;""", "integer n,q,h;electrical z;")
 V(z,r)<+idt(q+1e-30*V(u,r),0); V(w,r)<+idt(V(u,r),0);
 @(cross(V(z,r)-1e-18,1,1e-6,1e-6)) h=h+1;
 V(y,r)<+h+V(w,r);""", "integer n,q,h;electrical z,w;")
-        with self.assertRaisesRegex(KernelError,"autonomous"):
-            transient(compile_sources({"nonautonomous.va":source},[instance()]),{"u":[[0,0],[.31,.31]]},[0,.31],stop=.31,max_step=.31,vabstol=1.,reltol=0.,kernel=KERNEL)
+        program=compile_sources({"nonautonomous.va":source},[instance()])
+        for forced in [None,[.3000000000000001]]:
+            with self.subTest(strobetimes=forced), self.assertRaisesRegex(KernelError,"autonomous"):
+                transient(program,{"u":[[0,0],[.31,.31]]},[0,.31],stop=.31,max_step=.31,vabstol=1.,reltol=0.,strobetimes=forced,kernel=KERNEL)
 
     def test_physical_phase_without_a_cross_trigger(self):
         source=model("""@(initial_step) begin n=0;q=0;m=0;end
