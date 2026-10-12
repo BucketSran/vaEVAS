@@ -77,9 +77,11 @@ class TightFilterPrecision(unittest.TestCase):
         # This 8192-step Q3 regression uses an explicitly built release
         # fixture: the debug kernel exceeds even a 600-second timeout.
         # Keep the original release-card 90-second execution budget.
-        subprocess.run(["cargo", "build", "--locked", "--release", "--manifest-path",
+        target_dir = EVAS / "rust_core/target"
+        subprocess.run(["cargo", "build", "--locked", "--release",
+                        "--target-dir", str(target_dir), "--manifest-path",
                         str(EVAS / "rust_core/Cargo.toml")], check=True, timeout=300.)
-        release_kernel = EVAS / "rust_core/target/release/evas-kernel"
+        release_kernel = target_dir / "release/evas-kernel"
         result = transient(program, {"u": [[0., .5], [2*unit, 2.5], [4*unit, 2.5]]},
                            times, strobetimes=times, stop=4*unit,
                            max_step=unit/2048, kernel=release_kernel,
