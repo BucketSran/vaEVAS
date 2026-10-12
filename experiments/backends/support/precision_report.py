@@ -29,6 +29,21 @@ def load(p):return json.loads(p.read_text())
 SPECTRE_CALIBRATED_BINARY_SHA256 = '72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f'
 
 
+def spectre_calibration_binary_value(raw, name):
+    """Decode one captured double control record; reject incomplete evidence."""
+    try:
+        tag, length = struct.unpack_from('>II', raw)
+        padded = (length+3)//4*4
+        if tag != 0x23 or raw[8:8+length].decode() != name or len(raw) != 16+padded:
+            raise ReadbackError('invalid calibration binary typed record')
+        value = struct.unpack_from('>d', raw, 8+padded)[0]
+    except (struct.error, UnicodeDecodeError) as exc:
+        raise ReadbackError('invalid calibration binary typed record') from exc
+    if not math.isfinite(value) or value <= 0:
+        raise ReadbackError('invalid calibration binary control value')
+    return value
+
+
 def spectre_fullprecision_settings(work, tool, *, frozen_deck_sha256):
     """Explicit current-installation API; the caller verifies frozen execution.
 
@@ -68,11 +83,7 @@ def spectre_fullprecision_settings(work, tool, *, frozen_deck_sha256):
     # equivalent binary run; they are not inferred from requested controls.
     for name,key in mapping.items():
         raw = bytes.fromhex(fixture['binary_records_hex'][name])
-        tag,length = struct.unpack_from('>II',raw)
-        n = (length+3)//4*4
-        if tag != 0x23 or raw[8:8+length].decode() != name or len(raw) != 16+n:
-            raise ReadbackError('invalid calibration binary typed record')
-        value = struct.unpack_from('>d',raw,8+n)[0]
+        value = spectre_calibration_binary_value(raw,name)
         interval = calibration['psf_printed_intervals'][key]
         if not (Decimal(interval['log_lower_s_or_native']) <= Decimal.from_float(value)
                 <= Decimal(interval['log_upper_s_or_native'])):
@@ -179,13 +190,13 @@ def report(base):
     frozen=base/'inputs';data=load(frozen/'cards.json')
     for rel,digest in load(frozen/'MANIFEST.json').items():
         if sha(frozen/rel)!=digest:raise ValueError('frozen input drift: '+rel)
-    # Reanalysis is allowed only with the same mathematical checker and reader.
-    for rel in ('evas/validation/paper/precision_checker.py','experiments/backends/paper/inputs.py','experiments/backends/paper/observations.py',
-                'experiments/archive/dvs2-starter-pilot/analyze.py','experiments/archive/dvs2-starter-pilot/suite.py'):
-        if sha(ROOT/rel)!=load(frozen/'SOURCE_IDENTITY.json')[rel]:raise ValueError('analysis dependency drift: '+rel)
+    # Reanalysis is allowed only with the same mathematical checker and readers.
     dependencies=('evas/validation/paper/precision_checker.py','experiments/backends/paper/inputs.py',
-                  'experiments/backends/paper/observations.py','experiments/archive/dvs2-starter-pilot/analyze.py',
-                  'experiments/archive/dvs2-starter-pilot/suite.py')
+                  'experiments/backends/paper/observations.py','experiments/backends/paper/settings_readback.py',
+                  'experiments/archive/dvs2-starter-pilot/analyze.py','experiments/archive/dvs2-starter-pilot/suite.py')
+    source_identity=load(frozen/'SOURCE_IDENTITY.json')
+    for rel in dependencies:
+        if sha(ROOT/rel)!=source_identity.get(rel):raise ValueError('analysis dependency drift: '+rel)
     result={'schema_version':1,'purpose':'eight development-informed conditions; finite engineering acceptance, not a held-out final paper suite',
             'source':load(base/'SOURCE_PROVENANCE.json'),'cards_sha256':sha(frozen/'cards.json'),
             'input_manifest_sha256':sha(frozen/'MANIFEST.json'),'analysis_sha256':sha(Path(__file__)),
@@ -236,7 +247,8 @@ def report(base):
                 row['receipt_sha256']=sha(work/'RESULT.json');row['runner_verdict']=record.get('engineering_verdict')
                 if row['execution_status']=='waveform_available':
                     rows=read_native(work/record['waveform'],backend);card=load(work/'condition.json')
-                    assessment=assess(card,rows,data['budgets']);q=qualification(work,backend,record,rows)
+                    assessment=assess(card,rows,data['budgets'])
+                    q=qualification(work,backend,record,rows,spectre_tool=tool if backend=='spectre' else None)
                     row['status']=assessment['status'] if q['status']=='qualified' or assessment['status']!='pass' else 'evidence_insufficient'
                     row['assessment']={k:v for k,v in assessment.items() if k!='event_records'}
                     if assessment.get('event_records'):
