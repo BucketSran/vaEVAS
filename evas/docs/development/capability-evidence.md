@@ -6,8 +6,16 @@
 
 [累计测试清单](../../validation/paper/COVERAGE.md)登记历史条件与新 44 组的逐项关系，
 涵盖 LANG、LIN、NONLINEAR、TIMER、CROSS、EVENT-ORDER、TRANSITION、ABSDELAY、SLEW、DYNAMICS、COMPOSE、QUALIFICATION。
-这次整理没有改变实现、判据或成绩。主表按五层固定用例呈现；打勾只表示本行全部必测用例通过，扩展计划和缺证清单分别保留。
+五层目录整理没有改变实现、判据或成绩。主表按五层固定用例呈现；打勾只表示本行全部必测用例通过，扩展计划和缺证清单分别保留。
 L1–L5 是表格导航 ID，不替换下表开发 ID；旧版本、原预算和失败继续保留。
+
+[Q3 支持修复与横线补证](../../../experiments/backends/support/README.md#q3-closure)
+补充 LANG、NONLINEAR、DYNAMICS、COMPOSE、QUALIFICATION 的实现与有限证据。
+IR19 增加纯数学函数，恒定 PWL 保留原输入位；契约见[纯数学函数](../math/operators.md#elementary-functions)，
+回归见[函数测试](../../tests/test_unary_functions.py)、[恒定输入测试](../../tests/test_constant_input_identity.py)，
+独立校准见[校准工具](../../validation/calibrate_elementary.py)。
+静态输入与回调证书只解除已证明的义务；新旧成绩、具体工具版本和未完组合均在收据中分开记录。
+函数修复属于本轮源码交付；#162 的旧运行不计作当前 main 能力，#131 不动。
 
 [独立基础卡与历史补证](../../../experiments/backends/support/README.md#primitives-main)
 补充 LANG、NONLINEAR、DYNAMICS、QUALIFICATION：十卡、三档、四后端共120个新位置，

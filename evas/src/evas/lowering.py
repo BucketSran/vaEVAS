@@ -111,6 +111,33 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
         truth = choose(values[1], one, zero)
         return choose(values[0], truth, zero) if expr.op == "&&" else choose(values[0], one, truth)
 
+    bound_exponent = None
+    if expr.op == "power":
+        bound_exponent = lower(expr.args[1], parameters, nodes, source,
+                               preserve_structure=preserve_structure, memo=memo,
+                               node_declarations=node_declarations)
+        exponent = bound_exponent
+        if isinstance(exponent, Affine) and not exponent.terms and exponent.constant == 0.5:
+            if decision_scope:
+                fail("decision expressions do not support waveform operators in any operand or arm")
+            return lower(Expr("sqrt", None, (expr.args[0],), expr.token, expr.expansion),
+                         parameters, nodes, source, operators, preserve_structure,
+                         decisions, validate_decision, decision_scope,
+                         memo=memo, node_declarations=node_declarations)
+    if expr.op in ("cos", "exp", "ln", "sqrt") and operators is None:
+        argument = lower(expr.args[0], parameters, nodes, source,
+                         preserve_structure=preserve_structure, memo=memo,
+                         node_declarations=node_declarations)
+        if not isinstance(argument, Affine) or argument.terms:
+            fail("nonconstant mathematical functions require a waveform contribution")
+        try:
+            value = {"cos": math.cos, "exp": math.exp, "ln": math.log,
+                     "sqrt": math.sqrt}[expr.op](argument.constant)
+        except (ValueError, OverflowError):
+            fail("mathematical constant is outside the finite function domain")
+        if not math.isfinite(value):
+            fail("nonfinite mathematical constant")
+        return Affine(value, ())
     if expr.op in OPERATOR_NAMES:
         if operators is None:
             fail("waveform operators are only allowed in contributions; nesting is unsupported")
@@ -135,7 +162,11 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
             return Binary("add", Affine(0.0, (Term(nodes[p], 1.0),)),
                           Affine(0.0, (Term(nodes[n], -1.0),)))
         return affine(0.0, {} if nodes[p] == nodes[n] else {nodes[p]: 1.0, nodes[n]: -1.0})
-    values = [lower(arg, parameters, nodes, source, operators, preserve_structure, decisions, validate_decision, decision_scope, memo=memo, node_declarations=node_declarations) for arg in expr.args]
+    values = [bound_exponent if expr.op == "power" and i == 1 else
+              lower(arg, parameters, nodes, source, operators, preserve_structure,
+                    decisions, validate_decision, decision_scope, memo=memo,
+                    node_declarations=node_declarations)
+              for i, arg in enumerate(expr.args)]
     a = values[0]
     if expr.op.startswith("unary"):
         result = scale(a, -1.0 if expr.op == "unary-" else 1.0)

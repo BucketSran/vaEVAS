@@ -29,7 +29,8 @@ def spectre_controls(log, psf):
     try:
         return {**spectre(log, psf), 'metadata_rounding': []}
     except ReadbackError as exc:
-        if str(exc) != 'log/PSF disagreement: maxstep_s':
+        if str(exc) not in ('log/PSF disagreement: maxstep_s',
+                            'log/PSF disagreement: stop_s'):
             raise
     lines=list(enumerate(log.splitlines(),1))
     starts=[i for i,(_,s) in enumerate(lines) if s.strip()=='Important parameter values:']

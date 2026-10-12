@@ -23,6 +23,21 @@ class PrintedMetadataAudit(unittest.TestCase):
             with self.subTest(value=value),self.assertRaises(ReadbackError):
                 spectre_controls(log,PSF.replace('"maxstep" 2e-10','"maxstep" '+value))
 
+    def test_high_precision_stop_and_step_have_independent_rounding_checks(self):
+        log = LOG.replace('6 us', '2.86102294921875 us').replace(
+            '200 ps', '381.4697265625 ps')
+        psf = PSF.replace('"stop" 6e-6', '"stop" 2.86102e-6').replace(
+            '"maxstep" 2e-10', '"maxstep" 3.81470e-10')
+        with self.assertRaises(ReadbackError):
+            spectre(log, psf)
+        audited = spectre_controls(log, psf)
+        self.assertEqual(audited['effective']['stop_s']['value'], 2.86102294921875e-6)
+        self.assertEqual({r['field'] for r in audited['metadata_rounding']},
+                         {'stop_s', 'maxstep_s'})
+        for stop in ('2.86101e-6', '2.86103e-6'):
+            with self.subTest(stop=stop), self.assertRaises(ReadbackError):
+                spectre_controls(log, psf.replace('2.86102e-6', stop))
+
     def test_rounding_does_not_hide_analysis_or_method_changes(self):
         log=LOG.replace('200 ps','4.882812500000000e-10 s')
         psf=PSF.replace('"maxstep" 2e-10','"maxstep" 4.88281e-10')

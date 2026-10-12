@@ -317,6 +317,7 @@ pub(crate) fn lower(
             o,
             OperatorSpec::IdtMod { .. }
                 | OperatorSpec::Sin { .. }
+                | OperatorSpec::Math { .. }
                 | OperatorSpec::Idt { reset: None, .. }
         )
     }) {
@@ -338,6 +339,7 @@ pub(crate) fn lower(
         let input = match o {
             OperatorSpec::IdtMod { input, .. }
             | OperatorSpec::Sin { input, .. }
+            | OperatorSpec::Math { input, .. }
             | OperatorSpec::Idt { input, .. } => input,
             _ => unreachable!(),
         };

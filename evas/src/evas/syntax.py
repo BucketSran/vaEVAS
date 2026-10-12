@@ -36,7 +36,7 @@ _SUFFIX = dict(T=1e12, G=1e9, M=1e6, k=1e3, K=1e3, m=1e-3,
                u=1e-6, n=1e-9, p=1e-12, f=1e-15, a=1e-18)
 OPERATOR_ARITIES = {"transition": (3, 4), "absdelay": (2,), "slew": (3,),
                     "idt": (2, 3), "laplace_nd": (3,), "laplace_np": (3, 4), "idtmod": (4,), "ddt": (1,)}
-OPERATOR_NAMES = frozenset(OPERATOR_ARITIES) | {"sin"}
+OPERATOR_NAMES = frozenset(OPERATOR_ARITIES) | {"sin", "cos", "exp", "ln", "sqrt"}
 DECISION_NAMES = frozenset(("<", "<=", ">", ">=", "&&", "||", "unary!", "ternary"))
 _KEYWORDS = {"module", "endmodule", "input", "output", "inout", "electrical",
              "parameter", "real", "analog", "begin", "end", "integer", "initial_step", "if", "else", "or",
@@ -80,7 +80,7 @@ def _tokens(source: str, name: str, *, tolerant=False) -> list[Token]:
 @dataclass(frozen=True)
 class Expr:
     op: Literal["number", "parameter", "node", "voltage", "array", "unary+", "unary-",
-                "+", "-", "*", "/", "power", "sin", "transition", "absdelay", "slew",
+                "+", "-", "*", "/", "power", "sin", "cos", "exp", "ln", "sqrt", "transition", "absdelay", "slew",
                 "idt", "laplace_nd", "laplace_np", "idtmod", "ddt", "call", "index",
                 "<", "<=", ">", ">=", "&&", "||", "unary!", "ternary", "checked"]
     value: str | float | None
@@ -363,11 +363,11 @@ class Parser:
                         else 'syntax_error')
                 self.fail(f"{token.text} requires {label} explicit arguments", token, code=code)
             left = Expr(token.text, None, tuple(arguments), token)
-        elif token.text == "sin":
+        elif token.text in ("sin", "cos", "exp", "ln", "sqrt"):
             self.take("(")
             argument = self.expression()
             self.take(")")
-            left = Expr("sin", None, (argument,), token)
+            left = Expr(token.text, None, (argument,), token)
         elif token.text == "pow":
             self.take("(")
             base = self.expression()
