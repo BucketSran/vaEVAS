@@ -4,6 +4,39 @@
 具体实验的运行器与分析器在 [experiments/](../experiments/README.md)。
 以下命令均从仓库根目录执行，使用 Python 3.10+。
 
+## CI 按改动选择检查
+
+普通 Markdown / reStructuredText 文档修改只跑静态检查：改动行的空白、追溯矩阵、
+冻结输入身份、数学与 checker 校准、论文表的证据规则。不编译 Rust、不运行仿真器、
+不构建安装包。静态通过不代表重新完成了 Spectre 对照。
+
+| 改动内容 | 追加检查 |
+| --- | --- |
+| EVAS 实现、开发测试、VA / JSON 等测试输入、后端实验代码 | 完整 Rust / Python 回归、ngspice 对照、fuzz smoke |
+| 安装包中的 Python / Rust 源码、依赖或构建文件 | Linux x86_64 与 macOS arm64 安装测试 |
+| Benchmark 输入、checker 或实验工具 | Benchmark 身份、独立判据和题目来源检查 |
+| CI 配置、检查选择器或未知的非文档路径 | 全部检查 |
+
+题目的 Markdown 指令属于 Benchmark 输入，不能当成普通说明文档跳过。
+混合修改取所需检查的并集；删除、重命名同样参与选择。PR 按分叉点至最新提交的完整 Git
+差异选择，main 推送按推送前后的提交选择；不使用有文件数量上限的路径过滤。
+差异身份缺失、首次推送或手动 `workflow_dispatch` 时运行全部相关检查。
+
+规则集中在 [ci_selection.py](ci_selection.py)，三个工作流通过
+[select-checks.yml](../.github/workflows/select-checks.yml) 调用。
+每个工作流始终提供一个结果检查，只允许明确未选中的任务跳过；选中的任务失败、取消
+或意外跳过均不能通过。需要设置分支必需检查时，选 `numerical-result`、`package-result`
+和 `benchmark-result`，不要把会按需跳过的编译或安装任务设为必需检查。
+同一 PR 的新推送会取消该 PR 的过期 CI。main 推送和手动运行互相独立，不自动取消：
+后来的文档推送不能取消前一版代码尚未完成的回归。
+
+```sh
+python3 -B -m unittest discover -s scripts/tests -p test_ci_selection.py -v
+```
+
+回归使用真实临时 Git 仓库，检查纯文档、混合修改、删除、重命名、分叉点和身份缺失，
+并验证必需任务失败或跳过时结果检查会拒绝。这里不修改模拟器判据或历史成绩。
+
 ## 本地工作区检查
 
 ```sh

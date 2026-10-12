@@ -2,17 +2,23 @@ name: Installed EVAS package
 
 on:
   pull_request:
-    paths: ['evas/**', 'scripts/check_installed_evas.py', '.github/workflows/package-install.yml']
   push:
     branches: [main]
-    paths: ['evas/**', 'scripts/check_installed_evas.py', '.github/workflows/package-install.yml']
   workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: package-install-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
+  selection:
+    uses: ./.github/workflows/select-checks.yml
   install:
+    needs: selection
+    if: needs.selection.outputs.package == 'true'
     strategy:
       fail-fast: false
       matrix:
@@ -52,3 +58,14 @@ jobs:
             runs/package-install
           if-no-files-found: ignore
           retention-days: 14
+  package-result:
+    needs: [selection, install]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Require both selected installation platforms to succeed
+        env:
+          CI_NEEDS: ${{ toJSON(needs) }}
+        run: python3 -B scripts/ci_selection.py gate --lane package
