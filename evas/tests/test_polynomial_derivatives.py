@@ -1,4 +1,5 @@
 """Independent chain-rule answers through the public compiler/Rust interface."""
+GUARDS = ["DYNAMICS"]
 import unittest
 
 from evas import CompileError, KernelError, Instance, compile_sources, transient
