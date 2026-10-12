@@ -822,8 +822,10 @@ fn select_network_operators(
             {
                 selected.insert(index);
             }
-            OperatorSpec::Ddt { .. } => {
-                selected.insert(index);
+            OperatorSpec::Ddt { input, .. } => {
+                if !crate::operators::direct_derivative::eligible(input, program, driven_nodes) {
+                    selected.insert(index);
+                }
             }
             _ => {}
         }
