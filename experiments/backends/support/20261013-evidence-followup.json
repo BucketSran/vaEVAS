@@ -1,0 +1,4048 @@
+{
+  "schema": "q3-eleven-cell-evidence-followup-v1",
+  "analysis_date": "2026-10-13",
+  "base_main": "8029f5173310ca33722e7fe71b6769e0d9221ba9",
+  "previous_published_PR": {
+    "number": 165,
+    "merge_commit": "8029f5173310ca33722e7fe71b6769e0d9221ba9"
+  },
+  "scope": "Exactly the former 11 evidence-limit cells; fixed mandatory variants and budgets retained. New finite analyses are separate from original grades. No EVAS production-source change.",
+  "baseline": {
+    "repository_path": "experiments/backends/support/20261012-q3-closure.json",
+    "sha256": "2c7109f2c4fc62048040b758927c0981dc797fe1831636292600bf016893f78e",
+    "counts": {
+      "qualified_pass": 53,
+      "evidence_limit": 11,
+      "actual_failure": 11,
+      "qualified_engineering_pass": 3
+    },
+    "historical_execution_denominator": 852
+  },
+  "preservation": {
+    "original_checker_changed": false,
+    "original_scores_changed": false,
+    "original_budget_changed": false,
+    "original_request_lists_changed": false,
+    "original_failures_removed": false,
+    "issue_131_changed": false,
+    "issue_131_head": "1edfa1176372bb4a0bbb4d1c25f8c5bf5d484654",
+    "SEF_TIMER_18_exception_applied_to_new_cases": false
+  },
+  "cells": [
+    {
+      "cell": "l2-02/E",
+      "mandatory_variants": [
+        "SH-X-RAMP"
+      ],
+      "previous_status": "evidence_limit",
+      "previous_display": "回调取证不足",
+      "new_status": "original_callback_window_unmet",
+      "display": "原触发窗未满足",
+      "evidence_keys": [
+        "callback_audit"
+      ],
+      "historical_grades_changed": false
+    },
+    {
+      "cell": "l2-10/S",
+      "mandatory_variants": [
+        "F20-base",
+        "EC18-v1"
+      ],
+      "previous_status": "evidence_limit",
+      "previous_display": "求值取证不足",
+      "new_status": "boundary_and_observation_unqualified",
+      "display": "环回边界未验收",
+      "evidence_keys": [
+        "s_public",
+        "s_finite",
+        "s_accepted"
+      ],
+      "historical_grades_changed": false
+    },
+    {
+      "cell": "l2-10/N",
+      "mandatory_variants": [
+        "F20-base",
+        "EC18-v1"
+      ],
+      "previous_status": "evidence_limit",
+      "previous_display": "求值取证不足",
+      "new_status": "boundary_unqualified",
+      "display": "环回边界未验收",
+      "evidence_keys": [
+        "ng_phase_original",
+        "ng_ec18_finite",
+        "ng_f20_stop"
+      ],
+      "historical_grades_changed": false
+    },
+    {
+      "cell": "l3-01-cross/E",
+      "mandatory_variants": [
+        "SH-X-RAMP"
+      ],
+      "previous_status": "evidence_limit",
+      "previous_display": "回调取证不足",
+      "new_status": "original_callback_window_unmet",
+      "display": "原触发窗未满足",
+      "evidence_keys": [
+        "callback_audit"
+      ],
+      "historical_grades_changed": false
+    },
+    {
+      "cell": "l3-07/S",
+      "mandatory_variants": [
+        "EC16-v1"
+      ],
+      "previous_status": "evidence_limit",
+      "previous_display": "导数取证不足",
+      "new_status": "tested_configuration_numerical_error",
+      "display": "Q3 启动误差超限",
+      "evidence_keys": [
+        "s_public",
+        "s_finite",
+        "s_accepted",
+        "s_tight_failure"
+      ],
+      "historical_grades_changed": false
+    },
+    {
+      "cell": "l3-07/N",
+      "mandatory_variants": [
+        "EC16-v1"
+      ],
+      "previous_status": "evidence_limit",
+      "previous_display": "导数取证不足",
+      "new_status": "new_finite_qualified_pass",
+      "display": "✓ Q3",
+      "evidence_keys": [
+        "ng_ec16_actual",
+        "ng_ec16_finite"
+      ],
+      "historical_grades_changed": false
+    },
+    {
+      "cell": "l3-07/G",
+      "mandatory_variants": [
+        "EC16-v1"
+      ],
+      "previous_status": "evidence_limit",
+      "previous_display": "导数取证不足",
+      "new_status": "tested_configuration_numerical_error",
+      "display": "误差超限",
+      "evidence_keys": [
+        "gn_ec16_summary",
+        "gn_ec16_finite"
+      ],
+      "historical_grades_changed": false
+    },
+    {
+      "cell": "l4-04/S",
+      "mandatory_variants": [
+        "F20-base",
+        "EC17-v1",
+        "EC18-v1"
+      ],
+      "previous_status": "evidence_limit",
+      "previous_display": "求值取证不足",
+      "new_status": "boundary_and_observation_unqualified",
+      "display": "环回边界未验收",
+      "evidence_keys": [
+        "s_public",
+        "s_finite",
+        "s_accepted"
+      ],
+      "historical_grades_changed": false
+    },
+    {
+      "cell": "l5-01-phase/S",
+      "mandatory_variants": [
+        "EC19-v1"
+      ],
+      "previous_status": "evidence_limit",
+      "previous_display": "求值取证不足",
+      "new_status": "boundary_unqualified",
+      "display": "环回边界未验收",
+      "evidence_keys": [
+        "s_ec19"
+      ],
+      "historical_grades_changed": false
+    },
+    {
+      "cell": "l5-04-adjacent/S",
+      "mandatory_variants": [
+        "EC20-v1"
+      ],
+      "previous_status": "evidence_limit",
+      "previous_display": "顺序取证不足",
+      "new_status": "strict_order_unqualified",
+      "display": "回调同刻",
+      "evidence_keys": [
+        "s_ec20",
+        "s_ec20_coverage"
+      ],
+      "historical_grades_changed": false
+    },
+    {
+      "cell": "l5-04-adjacent/G",
+      "mandatory_variants": [
+        "EC20-v1"
+      ],
+      "previous_status": "evidence_limit",
+      "previous_display": "顺序取证不足",
+      "new_status": "strict_order_unqualified",
+      "display": "回调同刻",
+      "evidence_keys": [
+        "callback_audit"
+      ],
+      "historical_grades_changed": false
+    }
+  ],
+  "source_evidence": {
+    "callback_audit": {
+      "local_archive_path": "runs/q3-support-closure/followup-callback-order-v1/AUDIT.json",
+      "sha256": "f8db26ebc955cdb4f053c4b6a8be3177ebec08a75133d4140a8499c0a7b7ad79",
+      "bytes": 72512,
+      "availability": "local-only"
+    },
+    "s_public": {
+      "local_archive_path": "runs/q3-support-closure/followup-phase-evidence-v1/public-native-analysis-v3/ANALYSIS.json",
+      "sha256": "6b14513d789b44b758689311f49c0830b843cbb5f7a698a773c99d99085d5e89",
+      "bytes": 20638990,
+      "availability": "local-only"
+    },
+    "s_finite": {
+      "local_archive_path": "runs/q3-support-closure/followup-phase-evidence-v1/public-native-analysis-v3/FINITE_REFERENCE.json",
+      "sha256": "10909886b32e7edafffd3b145890bcb7c2217669a656936a31addb592e197a8c",
+      "bytes": 16641,
+      "availability": "local-only"
+    },
+    "s_accepted": {
+      "local_archive_path": "runs/q3-support-closure/followup-phase-evidence-v1/public-native-accepted-association-v2/CALIBRATION_AND_COLLISIONS.json",
+      "sha256": "fb7d07119e406f9b21802e7bc28839d73c552a4b78fecde8c4fa27d027ba665e",
+      "bytes": 3146,
+      "availability": "local-only"
+    },
+    "s_tight_failure": {
+      "local_archive_path": "runs/q3-support-closure/followup-phase-evidence-v1/ec16-tight100-analysis-v1/RESULT.json",
+      "sha256": "8110d07170186e4f5aef963e547f79158f5628389d4f6bbec7aa9b7f04140bb3",
+      "bytes": 6302,
+      "availability": "local-only"
+    },
+    "s_ec19": {
+      "local_archive_path": "runs/q3-support-closure/followup-phase-evidence-v1/native-analysis-v1/ANALYSIS.json",
+      "sha256": "948f55ff6d775d408806128432fa15092c697b4620674c5ff8092f0cf4ed7ef6",
+      "bytes": 44432,
+      "availability": "local-only"
+    },
+    "s_ec20": {
+      "local_archive_path": "runs/q3-support-closure/followup-s-ec20-native-v1/actual-analysis-v1/RECEIPT.json",
+      "sha256": "17e9bbfd28a98db5164fe948137c15ce48df7c15927a537d215d832f09e234ff",
+      "bytes": 6693,
+      "availability": "local-only"
+    },
+    "s_ec20_coverage": {
+      "local_archive_path": "runs/q3-support-closure/review/followup-s-public-astra-v1/EC20-REQUEST-COVERAGE.json",
+      "sha256": "6a3d8f82ff4c7c43dc6448a863e5bc2d000de556280539bfd85668e3927dc116",
+      "bytes": 326,
+      "availability": "local-only"
+    },
+    "ng_ec16_actual": {
+      "local_archive_path": "runs/q3-support-closure/followup-consumer-evidence-v1/sealed-ng-ec16-v3/ACTUAL_ANALYSIS.json",
+      "sha256": "26ca9277b33a9b68d660b20756d5b45ddf4048aaa0149b2bcb386a0e856c5d78",
+      "bytes": 2878086,
+      "availability": "local-only"
+    },
+    "ng_ec16_finite": {
+      "local_archive_path": "runs/q3-support-closure/review/followup-ng-ec16-astra-v1/FINITE-QUALIFICATION.json",
+      "sha256": "04f1eae64bb2eb17459900f8c2a66094c3c2dba49a71b7b8607e9180cc990a5b",
+      "bytes": 7513,
+      "availability": "local-only"
+    },
+    "ng_phase_original": {
+      "local_archive_path": "runs/q3-support-closure/followup-consumer-evidence-v1/phase-capture-v1/sealed-ng-phase-v1/F20-N-Q3-consumer-proof-v1-ACTUAL_ANALYSIS.json",
+      "sha256": "4b6dd947b6ec515326574d08ceb33ed7606f195afcae0e256d1fe4e3f1a47184",
+      "bytes": 24673,
+      "availability": "local-only"
+    },
+    "ng_ec18_finite": {
+      "local_archive_path": "runs/q3-support-closure/followup-consumer-evidence-v1/phase-capture-v1/EC18_FINITE_CONSUMER_CERTIFICATE.json",
+      "sha256": "0a9da469181a69ea4ebe38360cdbed8b078568f94eac98c9faa902d7de05b3c6",
+      "bytes": 8215,
+      "availability": "local-only"
+    },
+    "ng_f20_stop": {
+      "local_archive_path": "runs/q3-support-closure/followup-consumer-evidence-v1/phase-capture-v1/sealed-f20-stop-encoded-q3-v1/F20-N-Q3-stop-encoded-v1-ACTUAL_ANALYSIS.json",
+      "sha256": "fb487cf21be74a13ea0f8c66d1d86b10bfe0813968bb92a4c0eca54c26586af8",
+      "bytes": 25325,
+      "availability": "local-only"
+    },
+    "gn_ec16_summary": {
+      "local_archive_path": "runs/q3-support-closure/followup-gn-ec16-v1/analysis-v1/SUMMARY.json",
+      "sha256": "2070fbf7ff83dc484100a33dc86757fffa83a0bb0cad31c4b3825875f1545e9d",
+      "bytes": 14093,
+      "availability": "local-only"
+    },
+    "gn_ec16_finite": {
+      "local_archive_path": "runs/q3-support-closure/followup-gn-ec16-v1/analysis-v1/FINITE_QUALIFICATION.json",
+      "sha256": "0a392348ae0e8cc2aef6d56714064b80facedec5c9c80f2a2bf5ee918d2406b3",
+      "bytes": 2194,
+      "availability": "local-only"
+    }
+  },
+  "finite_analysis_contract": {
+    "EC16_math": {
+      "T_s": 9.5367431640625e-07,
+      "input": "u=t/T for 0<t<=4T; original PWL [0,0],[4T,4]",
+      "DC_t0": {
+        "d": 0,
+        "y": 0
+      },
+      "transient_t_positive": {
+        "d": "1",
+        "y": "1-exp(-t/(2T))/2"
+      },
+      "new_DC_reference_basis": "Actual normal DC source and execution/consumer/writer association; only t=0 reference specialized. Original grader remains frozen.",
+      "Q1_Q2_Q3_budget_V": [
+        1.01e-05,
+        1.01e-06,
+        1.01e-07
+      ]
+    },
+    "wrapped_phase": "Ordinary scalar half-open reference at exact returned binary64 coordinate is a separate diagnostic, not a replacement of the original 16-ULP interval grade. Tiny integration/input-rounding shifts can amplify into opposite wrap sides.",
+    "event_order": "Original a.hi < b.lo; identical public double callback times do not prove strict ordering.",
+    "claim_limit": "Finite original native observations with all original coverage obligations retained, no whole-trajectory or universal backend claim."
+  },
+  "NG_EC16": {
+    "actual_native_rows": 8621,
+    "actual_single_Q3_configuration": true,
+    "not_three_configuration_reruns": true,
+    "OFF_ON_waveform_bytes_equal": true,
+    "all_native_writer_values_bit_equal": true,
+    "new_finite_assessment": {
+      "schema_version": 1,
+      "condition": "EC16-v1",
+      "group_id": "EC16",
+      "claim": "finite actual observations; no whole-trajectory or settings proof",
+      "setting_evidence": {
+        "status": "unknown",
+        "reason": "effective settings require runner evidence"
+      },
+      "behavior": {
+        "status": "pass",
+        "errors": [],
+        "issues": []
+      },
+      "outputs": {
+        "d": {
+          "defined_observations": 8621,
+          "unqualified_observations": 0,
+          "conditional_error_lower_V": 3.63431507111045e-12,
+          "conditional_error_upper_V": 3.6417535653754385e-12,
+          "error_lower_V": 3.63431507111045e-12,
+          "error_upper_V": 3.6417535653754385e-12,
+          "reference_uncertainty_V": 1.7763568394002505e-15,
+          "unresolved_uncertainty_V": 1.942890293094024e-15,
+          "input_uncertainty_V": 0.0,
+          "worst": {
+            "time_s": 9.538140147924422e-07,
+            "actual_V": 0.999999999996362,
+            "reference_V": [
+              0.9999999999999999,
+              1.0000000000000002
+            ]
+          }
+        },
+        "y": {
+          "defined_observations": 8621,
+          "unqualified_observations": 0,
+          "conditional_error_lower_V": 2.176425595301623e-09,
+          "conditional_error_upper_V": 2.176435143219635e-09,
+          "error_lower_V": 2.176425595301623e-09,
+          "error_upper_V": 2.176435143219635e-09,
+          "reference_uncertainty_V": 1.7763568394002505e-15,
+          "unresolved_uncertainty_V": 5.440092820663267e-15,
+          "input_uncertainty_V": 0.0,
+          "worst": {
+            "time_s": 2.2650230675935747e-06,
+            "actual_V": 0.8475123363567828,
+            "reference_V": [
+              0.847512338533212,
+              0.8475123385332144
+            ]
+          }
+        }
+      },
+      "tiers": {
+        "Q1": {
+          "status": "pass",
+          "voltage_budget_V": 1.0099999999999998e-05,
+          "numerical": {
+            "status": "pass",
+            "error_lower_V": 2.176425595301623e-09,
+            "error_upper_V": 2.176435143219635e-09
+          },
+          "behavior": {
+            "status": "pass",
+            "errors": [],
+            "issues": []
+          },
+          "evidence": {
+            "status": "complete",
+            "issues": []
+          }
+        },
+        "Q2": {
+          "status": "pass",
+          "voltage_budget_V": 1.0099999999999999e-06,
+          "numerical": {
+            "status": "pass",
+            "error_lower_V": 2.176425595301623e-09,
+            "error_upper_V": 2.176435143219635e-09
+          },
+          "behavior": {
+            "status": "pass",
+            "errors": [],
+            "issues": []
+          },
+          "evidence": {
+            "status": "complete",
+            "issues": []
+          }
+        },
+        "Q3": {
+          "status": "pass",
+          "voltage_budget_V": 1.0099999999999999e-07,
+          "numerical": {
+            "status": "pass",
+            "error_lower_V": 2.176425595301623e-09,
+            "error_upper_V": 2.176435143219635e-09
+          },
+          "behavior": {
+            "status": "pass",
+            "errors": [],
+            "issues": []
+          },
+          "evidence": {
+            "status": "complete",
+            "issues": []
+          }
+        }
+      },
+      "phase_evidence": {
+        "status": "not_required"
+      },
+      "input_gain_evidence": {
+        "status": "not_required"
+      },
+      "input_exact_evidence": {
+        "status": "not_required"
+      },
+      "input_error_upper_V": {
+        "u": 2.1316282072803006e-14
+      },
+      "time_observation_allowance_s": 1.3552527156068805e-20,
+      "event_bounds_s": {},
+      "reference_time_uncertainty_s": 1.3552527156068805e-20,
+      "undefined_observations": [],
+      "unqualified_observations": [],
+      "observation_issues": [],
+      "evidence": {
+        "status": "complete",
+        "issues": []
+      }
+    },
+    "actual_record_negative_controls": {
+      "wrong_coefficient": "rejected",
+      "wrong_topology": "rejected",
+      "missing_writer": "rejected",
+      "wrong_writer_value": "rejected",
+      "wrong_writer_time": "rejected",
+      "wrong_initial_phase": "rejected",
+      "wrong_T": "rejected",
+      "wrong_reactive_cache": "rejected"
+    },
+    "effective_options": {
+      "basis": {
+        "local_archive_path": "runs/q3-support-closure/followup-consumer-evidence-v1/sealed-ng-ec16-v3/collected/EC16-N-Q3-consumer-proof-v3/outputs/EC16-N-Q3-consumer-proof-v3/off/simulate.log",
+        "sha256": "0af1577c8f076abb8dd3e068cd85946c5c18f8ef990f5e395c4feedfee875395",
+        "bytes": 2694,
+        "availability": "local-only"
+      },
+      "selected_block": "last Current simulation options, after deck load and simulation",
+      "reltol": 1e-10,
+      "vntol_V": 1e-14,
+      "abstol_A": 1e-17,
+      "method": "TRAPEZOIDAL",
+      "maxord": 2,
+      "trtol": 7,
+      "chgtol_C": 1e-14,
+      "itl4": 10
+    },
+    "requested_configuration": {
+      "id": "deep",
+      "reltol": 1e-10,
+      "vabstol_V": 1e-14,
+      "iabstol_A": 1e-17,
+      "step_units": 0.00048828125,
+      "target_tier": "Q3",
+      "candidate_status": "unqualified",
+      "stop_s": 3.814697265625e-06,
+      "maxstep_s": 4.656612873077393e-10,
+      "spice_maxstep_s": 4.656612873077393e-10
+    },
+    "config_only_in_checker": "The standalone assessment reports setting_evidence unknown; actual runner echo above independently supplies settings evidence."
+  },
+  "GN_EC16": {
+    "actual_native_rows": 8198,
+    "counts": {
+      "source": 147618,
+      "source_calls": 49206,
+      "consumer": 82015,
+      "MOD": 114826,
+      "accepted_native": 8198,
+      "CLI_singleton_snapshots": 1
+    },
+    "OFF_ON_historical_full_bytes_equal": true,
+    "finite_qualification": {
+      "scope": "EC16-v1/G single actual Q3 configuration, original model/input/target/checker unchanged; external finite consumer acceptance",
+      "qualification": "actual 8198 printed native observations have original source/consumer/accepted writer association; external source and execution premises required",
+      "science_conclusion": "numerical_error under original frozen Q1/Q2/Q3 budgets after discharging proved external phase/input-gain premises; not a physical semantic bug assertion",
+      "actual_record_negative_controls": 24,
+      "actual_record_controls_result": "all rejected",
+      "structure_controls": 14,
+      "structure_controls_are_consumer_qualification": false,
+      "original_historical_grade_mutated": false,
+      "original_B100_gates": {
+        "input": true,
+        "amplified_input": true,
+        "reference": true
+      },
+      "original_B10_gate": false,
+      "original_total_B_gate": false,
+      "coverage_original_rules": true,
+      "start_stop_s": [
+        0.0,
+        3.814697265625e-06
+      ],
+      "outputs": {
+        "d": {
+          "original_native_error_lower_V": 0.0008604130707643431,
+          "original_hidden_double_error_lower_V": 0.0008604130707643431,
+          "rho_additive_formatter_extra_V": 2.92176151120998e-11,
+          "conservative_lower_after_subtracting_extra_V": 0.0008604130415467281,
+          "Q3_budget_V": 1.01e-07,
+          "Q3_lower_to_budget_ratio": 8518.94100541315,
+          "original_reference_uncertainty_V": 1.7763568394002505e-15,
+          "original_unresolved_uncertainty_V": 0.5000000000000019
+        },
+        "y": {
+          "original_native_error_lower_V": 0.0006744215081037064,
+          "original_hidden_double_error_lower_V": 0.0006744215081035954,
+          "rho_additive_formatter_extra_V": 2.9209901047115525e-11,
+          "conservative_lower_after_subtracting_extra_V": 0.0006744214788936943,
+          "Q3_budget_V": 1.01e-07,
+          "Q3_lower_to_budget_ratio": 6677.440385086082,
+          "original_reference_uncertainty_V": 1.7763568394002505e-15,
+          "original_unresolved_uncertainty_V": 0.2500000000000036
+        }
+      },
+      "DC_limitation": "original oracle time interval at t=0 crosses DC/transient and retains d[0,1]/y[0,0.5] uncertainty; no phase-aware oracle replacement performed",
+      "independent_review": "pending"
+    },
+    "actual_effective_options": {
+      "basis": {
+        "local_archive_path": "runs/q3-support-closure/followup-gn-ec16-v1/sealed-q3-v2/collected/EC16-G-Q3-original-consumer-v2/outputs/EC16-G-Q3-original-consumer-v2/off/simulate.log",
+        "sha256": "abc8e86535da1df63cb98541c233c7698bad9b841ce27a86518db83733621291",
+        "bytes": 2585,
+        "availability": "local-only"
+      },
+      "reltol": 1e-10,
+      "vntol_V": 1e-14,
+      "abstol_A": 1e-17,
+      "method": "trap",
+      "trtol": 7,
+      "chgtol_C": 1e-14,
+      "storage_method_actual_enum": 2,
+      "requested_configuration": {
+        "id": "deep",
+        "reltol": 1e-10,
+        "vabstol_V": 1e-14,
+        "iabstol_A": 1e-17,
+        "step_units": 0.00048828125,
+        "target_tier": "Q3",
+        "candidate_status": "unqualified",
+        "stop_s": 3.814697265625e-06,
+        "maxstep_s": 4.656612873077393e-10,
+        "spice_maxstep_s": 4.656612873077393e-10
+      }
+    }
+  },
+  "S_public": {
+    "F20-base": {
+      "rows": 12683,
+      "outputs": [
+        "phase",
+        "y"
+      ],
+      "native_exact_coordinate_status": "fail",
+      "worst": {
+        "phase": {
+          "max_lower": {
+            "row": 9725,
+            "native_time_hex": "0x1.01402a4ae58fdp-18",
+            "native_value_hex": "0x1.ffffffffffd63p-1",
+            "reference_lo_decimal": "2.1400795632148250646764608973171561956405639648437499999999999999999999999999999E-16",
+            "reference_hi_decimal": "2.1400795632148250646764608973171561956405639648437500000000000000000000000000001E-16",
+            "error_lower_after_8_voltage_ULPs_V": 0.9999999999999237,
+            "error_upper_with_8_voltage_ULPs_V": 0.9999999999999273,
+            "Q3_budget_V": 1.0099999999999999e-07
+          },
+          "max_upper": {
+            "row": 9725,
+            "native_time_hex": "0x1.01402a4ae58fdp-18",
+            "native_value_hex": "0x1.ffffffffffd63p-1",
+            "reference_lo_decimal": "2.1400795632148250646764608973171561956405639648437499999999999999999999999999999E-16",
+            "reference_hi_decimal": "2.1400795632148250646764608973171561956405639648437500000000000000000000000000001E-16",
+            "error_lower_after_8_voltage_ULPs_V": 0.9999999999999237,
+            "error_upper_with_8_voltage_ULPs_V": 0.9999999999999273,
+            "Q3_budget_V": 1.0099999999999999e-07
+          }
+        },
+        "y": {
+          "max_lower": {
+            "row": 11537,
+            "native_time_hex": "0x1.313008375a551p-18",
+            "native_value_hex": "-0x1.c8039bfcb84f1p-3",
+            "reference_lo_decimal": "-0.22266313424148524766814414003945625209756258231787311476775406527774043947646252",
+            "reference_hi_decimal": "-0.22266313424148324766814414003945625209756258231787311476775406527774043947646252",
+            "error_lower_after_8_voltage_ULPs_V": 4.717465771209342e-13,
+            "error_upper_with_8_voltage_ULPs_V": 4.772992907997347e-13,
+            "Q3_budget_V": 1.0099999999999999e-07
+          },
+          "max_upper": {
+            "row": 11537,
+            "native_time_hex": "0x1.313008375a551p-18",
+            "native_value_hex": "-0x1.c8039bfcb84f1p-3",
+            "reference_lo_decimal": "-0.22266313424148524766814414003945625209756258231787311476775406527774043947646252",
+            "reference_hi_decimal": "-0.22266313424148324766814414003945625209756258231787311476775406527774043947646252",
+            "error_lower_after_8_voltage_ULPs_V": 4.717465771209342e-13,
+            "error_upper_with_8_voltage_ULPs_V": 4.772992907997347e-13,
+            "Q3_budget_V": 1.0099999999999999e-07
+          }
+        }
+      },
+      "accepted_counts": {
+        "ORIGINAL": 12682,
+        "OFF": 12682,
+        "ON": 12682
+      },
+      "original_full_grade": "I unchanged"
+    },
+    "EC17-v1": {
+      "rows": 10182,
+      "outputs": [
+        "freq",
+        "phase",
+        "out"
+      ],
+      "native_exact_coordinate_status": "fail",
+      "worst": {
+        "freq": {
+          "max_lower": {
+            "row": 0,
+            "native_time_hex": "0x0.0p+0",
+            "native_value_hex": "0x1.0000000000000p-1",
+            "reference_lo_decimal": "0.49999999999999999999999999999999999999999999999999999999999999999999999999999999",
+            "reference_hi_decimal": "0.50000000000000000000000000000000000000000000000000000000000000000000000000000001",
+            "error_lower_after_8_voltage_ULPs_V": 0.0,
+            "error_upper_with_8_voltage_ULPs_V": 1.7763568394002505e-15,
+            "Q3_budget_V": 1.0099999999999999e-07
+          },
+          "max_upper": {
+            "row": 5167,
+            "native_time_hex": "0x1.03f8a0902ddfdp-19",
+            "native_value_hex": "0x1.01fc504816efep+0",
+            "reference_lo_decimal": "1.0077562499999995759836224351602140814065933227539062499999999999999999999999999",
+            "reference_hi_decimal": "1.0077562499999995759836224351602140814065933227539062500000000000000000000000001",
+            "error_lower_after_8_voltage_ULPs_V": 0.0,
+            "error_upper_with_8_voltage_ULPs_V": 1.887379141862766e-15,
+            "Q3_budget_V": 1.0099999999999999e-07
+          }
+        },
+        "phase": {
+          "max_lower": {
+            "row": 3352,
+            "native_time_hex": "0x1.510e527fade68p-20",
+            "native_value_hex": "0x1.6100000000000p-45",
+            "reference_lo_decimal": "0.99999999999999996755299554337280352133063057840394278750800922950237037412080098",
+            "reference_hi_decimal": "0.99999999999999996755299554337280352133063057840394278750800922950237037412080100",
+            "error_lower_after_8_voltage_ULPs_V": 0.999999999999959,
+            "error_upper_with_8_voltage_ULPs_V": 0.9999999999999626,
+            "Q3_budget_V": 1.0099999999999999e-07
+          },
+          "max_upper": {
+            "row": 3352,
+            "native_time_hex": "0x1.510e527fade68p-20",
+            "native_value_hex": "0x1.6100000000000p-45",
+            "reference_lo_decimal": "0.99999999999999996755299554337280352133063057840394278750800922950237037412080098",
+            "reference_hi_decimal": "0.99999999999999996755299554337280352133063057840394278750800922950237037412080100",
+            "error_lower_after_8_voltage_ULPs_V": 0.999999999999959,
+            "error_upper_with_8_voltage_ULPs_V": 0.9999999999999626,
+            "Q3_budget_V": 1.0099999999999999e-07
+          }
+        },
+        "out": {
+          "max_lower": {
+            "row": 10181,
+            "native_time_hex": "0x1.0000000000000p-18",
+            "native_value_hex": "0x1.6a09e667ff204p-1",
+            "reference_lo_decimal": "0.70710678118654652440084436210484903928483593768847403658833986899536623923101650",
+            "reference_hi_decimal": "0.70710678118654852440084436210484903928483593768847403658833986899536623923101659",
+            "error_lower_after_8_voltage_ULPs_V": 5.176129322596135e-12,
+            "error_upper_with_8_voltage_ULPs_V": 5.1816820362749356e-12,
+            "Q3_budget_V": 1.0099999999999999e-07
+          },
+          "max_upper": {
+            "row": 10181,
+            "native_time_hex": "0x1.0000000000000p-18",
+            "native_value_hex": "0x1.6a09e667ff204p-1",
+            "reference_lo_decimal": "0.70710678118654652440084436210484903928483593768847403658833986899536623923101650",
+            "reference_hi_decimal": "0.70710678118654852440084436210484903928483593768847403658833986899536623923101659",
+            "error_lower_after_8_voltage_ULPs_V": 5.176129322596135e-12,
+            "error_upper_with_8_voltage_ULPs_V": 5.1816820362749356e-12,
+            "Q3_budget_V": 1.0099999999999999e-07
+          }
+        }
+      },
+      "accepted_counts": {
+        "ORIGINAL": 10181,
+        "OFF": 10181,
+        "ON": 10181
+      },
+      "original_full_grade": "I unchanged"
+    },
+    "EC18-v1": {
+      "rows": 10138,
+      "outputs": [
+        "freq",
+        "phase",
+        "out"
+      ],
+      "native_exact_coordinate_status": "pass",
+      "worst": {
+        "freq": {
+          "max_lower": {
+            "row": 0,
+            "native_time_hex": "0x0.0p+0",
+            "native_value_hex": "-0x1.0000000000000p-2",
+            "reference_lo_decimal": "-0.25",
+            "reference_hi_decimal": "-0.25",
+            "error_lower_after_8_voltage_ULPs_V": 0.0,
+            "error_upper_with_8_voltage_ULPs_V": 1.7763568394002505e-15,
+            "Q3_budget_V": 1.0099999999999999e-07
+          },
+          "max_upper": {
+            "row": 0,
+            "native_time_hex": "0x0.0p+0",
+            "native_value_hex": "-0x1.0000000000000p-2",
+            "reference_lo_decimal": "-0.25",
+            "reference_hi_decimal": "-0.25",
+            "error_lower_after_8_voltage_ULPs_V": 0.0,
+            "error_upper_with_8_voltage_ULPs_V": 1.7763568394002505e-15,
+            "Q3_budget_V": 1.0099999999999999e-07
+          }
+        },
+        "phase": {
+          "max_lower": {
+            "row": 0,
+            "native_time_hex": "0x0.0p+0",
+            "native_value_hex": "0x1.0000000000000p-3",
+            "reference_lo_decimal": "0.12499999999999999999999999999999999999999999999999999999999999999999999999999999",
+            "reference_hi_decimal": "0.12500000000000000000000000000000000000000000000000000000000000000000000000000001",
+            "error_lower_after_8_voltage_ULPs_V": 0.0,
+            "error_upper_with_8_voltage_ULPs_V": 1.7763568394002505e-15,
+            "Q3_budget_V": 1.0099999999999999e-07
+          },
+          "max_upper": {
+            "row": 6341,
+            "native_time_hex": "0x1.40007b2532885p-19",
+            "native_value_hex": "0x1.ffff09b59af00p-2",
+            "reference_lo_decimal": "0.49999632998399989869398041264503262937068939208984374999999999999999999999999999",
+            "reference_hi_decimal": "0.49999632998399989869398041264503262937068939208984375000000000000000000000000001",
+            "error_lower_after_8_voltage_ULPs_V": 0.0,
+            "error_upper_with_8_voltage_ULPs_V": 2.3314683517128287e-15,
+            "Q3_budget_V": 1.0099999999999999e-07
+          }
+        },
+        "out": {
+          "max_lower": {
+            "row": 6282,
+            "native_time_hex": "0x1.3d3a92a305530p-19",
+            "native_value_hex": "-0x1.1689a79521814p-5",
+            "reference_lo_decimal": "-0.034001185712481546819255042769867931934344274337245121425571639997344369832610929",
+            "reference_hi_decimal": "-0.034001185712479546819255042769867931934344274337245121425571639997344369832610832",
+            "error_lower_after_8_voltage_ULPs_V": 3.7707585684771805e-16,
+            "error_upper_with_8_voltage_ULPs_V": 5.9297895356482186e-15,
+            "Q3_budget_V": 1.0099999999999999e-07
+          },
+          "max_upper": {
+            "row": 6282,
+            "native_time_hex": "0x1.3d3a92a305530p-19",
+            "native_value_hex": "-0x1.1689a79521814p-5",
+            "reference_lo_decimal": "-0.034001185712481546819255042769867931934344274337245121425571639997344369832610929",
+            "reference_hi_decimal": "-0.034001185712479546819255042769867931934344274337245121425571639997344369832610832",
+            "error_lower_after_8_voltage_ULPs_V": 3.7707585684771805e-16,
+            "error_upper_with_8_voltage_ULPs_V": 5.9297895356482186e-15,
+            "Q3_budget_V": 1.0099999999999999e-07
+          }
+        }
+      },
+      "accepted_counts": {
+        "ORIGINAL": 10137,
+        "OFF": 10137,
+        "ON": 10137
+      },
+      "original_full_grade": "I unchanged"
+    },
+    "EC16-v1": {
+      "rows": 10168,
+      "outputs": [
+        "d",
+        "y"
+      ],
+      "native_exact_coordinate_status": "fail",
+      "worst": {
+        "d": {
+          "max_lower": {
+            "row": 7639,
+            "native_time_hex": "0x1.800d1b71758e2p-19",
+            "native_value_hex": "0x1.fffffffffc000p-1",
+            "reference_lo_decimal": "1",
+            "reference_hi_decimal": "1",
+            "error_lower_after_8_voltage_ULPs_V": 1.8172130467064562e-12,
+            "error_upper_with_8_voltage_ULPs_V": 1.8207657603852567e-12,
+            "Q3_budget_V": 1.0099999999999999e-07
+          },
+          "max_upper": {
+            "row": 7639,
+            "native_time_hex": "0x1.800d1b71758e2p-19",
+            "native_value_hex": "0x1.fffffffffc000p-1",
+            "reference_lo_decimal": "1",
+            "reference_hi_decimal": "1",
+            "error_lower_after_8_voltage_ULPs_V": 1.8172130467064562e-12,
+            "error_upper_with_8_voltage_ULPs_V": 1.8207657603852567e-12,
+            "Q3_budget_V": 1.0099999999999999e-07
+          }
+        },
+        "y": {
+          "max_lower": {
+            "row": 3,
+            "native_time_hex": "0x1.c25c268497682p-49",
+            "native_value_hex": "0x1.fffff8b32dbcfp-2",
+            "reference_lo_decimal": "0.50000000081919999932891138524867620054584602792698052613155885064865807347412296",
+            "reference_hi_decimal": "0.50000000081919999932891138524867620054584602792698052613155885064865807347412301",
+            "error_lower_after_8_voltage_ULPs_V": 1.0959891684463754e-07,
+            "error_upper_with_8_voltage_ULPs_V": 1.0959892039735122e-07,
+            "Q3_budget_V": 1.0099999999999999e-07
+          },
+          "max_upper": {
+            "row": 3,
+            "native_time_hex": "0x1.c25c268497682p-49",
+            "native_value_hex": "0x1.fffff8b32dbcfp-2",
+            "reference_lo_decimal": "0.50000000081919999932891138524867620054584602792698052613155885064865807347412296",
+            "reference_hi_decimal": "0.50000000081919999932891138524867620054584602792698052613155885064865807347412301",
+            "error_lower_after_8_voltage_ULPs_V": 1.0959891684463754e-07,
+            "error_upper_with_8_voltage_ULPs_V": 1.0959892039735122e-07,
+            "Q3_budget_V": 1.0099999999999999e-07
+          }
+        }
+      },
+      "accepted_counts": {
+        "ORIGINAL": 10167,
+        "OFF": 10167,
+        "ON": 10167
+      },
+      "original_full_grade": "I unchanged"
+    }
+  },
+  "S_EC19": {
+    "rows_per_slot": {
+      "ORIGINAL": 10169,
+      "OFF": 10169,
+      "ON2": 10169
+    },
+    "accepted_steps": {
+      "ORIGINAL": 10168,
+      "OFF": 10168,
+      "ON2": 10168
+    },
+    "public_parameters": {
+      "dut": {
+        "model": "breadth_behavioral",
+        "parameters": {
+          "T": 9.5367431640625e-07,
+          "TT": 1e-10,
+          "m": 1.0
+        }
+      },
+      "dut.b": {
+        "model": "phase_cell",
+        "parameters": {
+          "T": 9.5367431640625e-07,
+          "TT": 1e-10,
+          "F": 0.75,
+          "IC": -0.25,
+          "m": 1.0
+        }
+      },
+      "dut.a": {
+        "model": "phase_cell",
+        "parameters": {
+          "T": 9.5367431640625e-07,
+          "TT": 1e-10,
+          "F": 0.5,
+          "IC": 0.125,
+          "m": 1.0
+        }
+      }
+    },
+    "p_to_node": {
+      "dut.a:p": {
+        "node": "phase_a",
+        "different_rows": 4,
+        "maximum_absolute_difference_V": 2.2204418140855768e-16,
+        "all_differences": [
+          {
+            "row": 4460,
+            "time_hex": "0x1.c000232f33026p-20",
+            "p_hex": "0x1.1979982100001p-20",
+            "node_hex": "0x1.1979982100000p-20",
+            "absolute_difference_V": 2.117582368135751e-22,
+            "exact_difference": "1/4722366482869645213696"
+          },
+          {
+            "row": 4461,
+            "time_hex": "0x1.c000698d99072p-20",
+            "p_hex": "0x1.a636642380001p-19",
+            "node_hex": "0x1.a636642400000p-19",
+            "absolute_difference_V": 2.2204418140855768e-16,
+            "exact_difference": "-524287/2361183241434822606848"
+          },
+          {
+            "row": 9530,
+            "time_hex": "0x1.e000119799813p-19",
+            "p_hex": "0x1.1979982100001p-20",
+            "node_hex": "0x1.1979982100000p-20",
+            "absolute_difference_V": 2.117582368135751e-22,
+            "exact_difference": "1/4722366482869645213696"
+          },
+          {
+            "row": 9531,
+            "time_hex": "0x1.e00034c6cc839p-19",
+            "p_hex": "0x1.a636642380001p-19",
+            "node_hex": "0x1.a636642400000p-19",
+            "absolute_difference_V": 2.2204418140855768e-16,
+            "exact_difference": "-524287/2361183241434822606848"
+          }
+        ]
+      },
+      "dut.b:p": {
+        "node": "phase_b",
+        "different_rows": 7,
+        "maximum_absolute_difference_V": 8.881767256342307e-16,
+        "all_differences": [
+          {
+            "row": 864,
+            "time_hex": "0x1.5556fb8bb971ap-22",
+            "p_hex": "0x1.3ca8cb1068000p-18",
+            "node_hex": "0x1.3ca8cb1080000p-18",
+            "absolute_difference_V": 8.326672684688674e-17,
+            "exact_difference": "-3/36028797018963968"
+          },
+          {
+            "row": 865,
+            "time_hex": "0x1.55592e7ee9976p-22",
+            "p_hex": "0x1.716f97965c000p-17",
+            "node_hex": "0x1.716f979600000p-17",
+            "absolute_difference_V": 6.38378239159465e-16,
+            "exact_difference": "23/36028797018963968"
+          },
+          {
+            "row": 4243,
+            "time_hex": "0x1.aaab143843b1dp-20",
+            "p_hex": "0x1.3ca8cb1080001p-18",
+            "node_hex": "0x1.3ca8cb1080000p-18",
+            "absolute_difference_V": 8.470329472543003e-22,
+            "exact_difference": "1/1180591620717411303424"
+          },
+          {
+            "row": 4244,
+            "time_hex": "0x1.aaaba0f50fbb5p-20",
+            "p_hex": "0x1.716f979680001p-17",
+            "node_hex": "0x1.716f979700000p-17",
+            "absolute_difference_V": 8.881767256342307e-16,
+            "exact_difference": "-524287/590295810358705651712"
+          },
+          {
+            "row": 7627,
+            "time_hex": "0x1.8000119799813p-19",
+            "p_hex": "0x1.a636640a00000p-20",
+            "node_hex": "0x1.a636640980000p-20",
+            "absolute_difference_V": 1.1102230246251565e-16,
+            "exact_difference": "1/9007199254740992"
+          },
+          {
+            "row": 7628,
+            "time_hex": "0x1.800034c6cc839p-19",
+            "p_hex": "0x1.3ca8cb10c0000p-18",
+            "node_hex": "0x1.3ca8cb1080000p-18",
+            "absolute_difference_V": 2.220446049250313e-16,
+            "exact_difference": "1/4503599627370496"
+          },
+          {
+            "row": 7629,
+            "time_hex": "0x1.80007b2532885p-19",
+            "p_hex": "0x1.716f9796a0000p-17",
+            "node_hex": "0x1.716f979700000p-17",
+            "absolute_difference_V": 6.661338147750939e-16,
+            "exact_difference": "-3/4503599627370496"
+          }
+        ]
+      }
+    },
+    "native_coordinate_worst": {
+      "phase_a": {
+        "row": 9211,
+        "native_time_hex": "0x1.cff8a0902ddfdp-19",
+        "native_time_fraction": "8162267669650941/2361183241434822606848",
+        "native_value_hex": "0x1.dff141205bc20p-1",
+        "exact_native_coordinate_reference_fraction": "4221617995701757/4503599627370496",
+        "ordinary_scalar_difference_fraction": "19/4503599627370496",
+        "ordinary_scalar_difference_V": 4.218847493575595e-15,
+        "retained_voltage_allowance_V": 1.7763568394002505e-15,
+        "difference_lower_after_voltage_allowance_V": 2.4424906541753444e-15,
+        "Q3_budget_V": 1.0099999999999999e-07,
+        "new_point_bound_exceeds_scalar_budget": false
+      },
+      "phase_b": {
+        "row": 7626,
+        "native_time_hex": "0x1.8000000000000p-19",
+        "native_time_fraction": "3/1048576",
+        "native_value_hex": "0x1.fffffffffffdbp-1",
+        "exact_native_coordinate_reference_fraction": "0",
+        "ordinary_scalar_difference_fraction": "9007199254740955/9007199254740992",
+        "ordinary_scalar_difference_V": 0.9999999999999959,
+        "retained_voltage_allowance_V": 1.7763568394002505e-15,
+        "difference_lower_after_voltage_allowance_V": 0.9999999999999941,
+        "Q3_budget_V": 1.0099999999999999e-07,
+        "new_point_bound_exceeds_scalar_budget": true
+      }
+    },
+    "exact_3T_record": [
+      {
+        "row": 7626,
+        "time_hex": "0x1.8000000000000p-19",
+        "phase_b_hex": "0x1.fffffffffffdbp-1",
+        "saved_p_b_hex": "0x1.fffffffffffdbp-1",
+        "unwrapped_exact_reference_fraction": "2"
+      }
+    ],
+    "old_grades_or_checker_or_radius_changed": false,
+    "signed_zero_boundary": "CLI synthetic ASCII paths normalized signed zero; real-valued budget treats +/-0 equal. No whole-bit preservation claim for signed zero; no zero rows removed.",
+    "missing_END_control_boundary": "CLI tolerated missing END. Actual source manifests plus explicit complete row/field/type/count validation compensate; CLI rc0 alone is not qualification.",
+    "hidden_state_boundary": "public saveahdlvars captured original p after the original idtmod call. No exposed hidden integrator state and no requirement to reproduce backend rounding side."
+  },
+  "S_EC20": {
+    "rows": {
+      "ORIGINAL": 34689,
+      "OFF": 34689,
+      "ON": 34689
+    },
+    "public_science_nonperturbation_fields_per_comparison": 208134,
+    "public_science_differences": {
+      "OFF": [],
+      "ON": []
+    },
+    "a3_b2_bits": "3ed92a57f4310a7c",
+    "a3_b2_public_same_double": true,
+    "original_strict_gate": "a.hi < b.lo",
+    "historical_grade_unchanged": true,
+    "limitation": "Same language callback scalar at accepted observation is now actually available. It cannot support strictly disjoint physical intervals. This is not a backend-global mathematical failure, and hidden stage/rollback state is not exposed. Public CLI signed-zero normalization remains a limit."
+  },
+  "GN_EC20": {
+    "a3": {
+      "event_id": "EC20-v1:a3",
+      "counter": "na",
+      "index": 3,
+      "seq": 163309,
+      "timebits": 4528697575604282452,
+      "time_s": 6e-06,
+      "legal_window_s": [
+        5.9999e-06,
+        6.0001e-06
+      ],
+      "inside_legal_window": true
+    },
+    "b2": {
+      "event_id": "EC20-v1:b2",
+      "counter": "nb",
+      "index": 2,
+      "seq": 163309,
+      "timebits": 4528697575604282452,
+      "time_s": 6e-06,
+      "legal_window_s": [
+        5.9999e-06,
+        6.0001e-06
+      ],
+      "inside_legal_window": true
+    },
+    "strict_time_separation_proved": false,
+    "original_order_gate": "a.hi < b.lo; equality remains unresolved"
+  },
+  "EVAS_SHX": {
+    "profiles": 5,
+    "callback_boxes": 40,
+    "boxes_meeting_original_inset_window": 0,
+    "profiles_full_records": [
+      {
+        "profile": "base",
+        "event_records": [
+          {
+            "index": 1,
+            "box": [
+              1e-06,
+              1.0000000000000002e-06
+            ],
+            "original_assessment_box": [
+              9.999999999999728e-07,
+              1.0000000392157132e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 1.0000000000000546e-06,
+            "inset_hi": 1.0000999999999453e-06,
+            "exact_lower_deficit_s": "2267479546147923/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 2,
+            "box": [
+              1.9999999999999995e-06,
+              2e-06
+            ],
+            "original_assessment_box": [
+              1.999999999231038e-06,
+              2.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 2.0000000000000545e-06,
+            "inset_hi": 2.000099999999945e-06,
+            "exact_lower_deficit_s": "2285071732192339/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 3,
+            "box": [
+              2.9999999999999997e-06,
+              3e-06
+            ],
+            "original_assessment_box": [
+              2.999999999231038e-06,
+              3.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 3.0000000000000547e-06,
+            "inset_hi": 3.0000999999999452e-06,
+            "exact_lower_deficit_s": "2285071732192339/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 4,
+            "box": [
+              4e-06,
+              4e-06
+            ],
+            "original_assessment_box": [
+              3.999999999231038e-06,
+              4.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 4.000000000000054e-06,
+            "inset_hi": 4.000099999999946e-06,
+            "exact_lower_deficit_s": "2267479546147923/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 5,
+            "box": [
+              4.9999999999999996e-06,
+              5e-06
+            ],
+            "original_assessment_box": [
+              4.9999999999999725e-06,
+              5.000000039215713e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 5.000000000000054e-06,
+            "inset_hi": 5.0000999999999456e-06,
+            "exact_lower_deficit_s": "2267479546147923/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 6,
+            "box": [
+              5.999999999999999e-06,
+              6e-06
+            ],
+            "original_assessment_box": [
+              5.999999999231038e-06,
+              6.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 6.000000000000054e-06,
+            "inset_hi": 6.000099999999946e-06,
+            "exact_lower_deficit_s": "2302663918236755/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 7,
+            "box": [
+              6.999999999999999e-06,
+              7e-06
+            ],
+            "original_assessment_box": [
+              6.999999999231038e-06,
+              7.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 7.000000000000054e-06,
+            "inset_hi": 7.000099999999946e-06,
+            "exact_lower_deficit_s": "2302663918236755/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 8,
+            "box": [
+              8e-06,
+              8e-06
+            ],
+            "original_assessment_box": [
+              7.999999999231038e-06,
+              8.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 8.000000000000054e-06,
+            "inset_hi": 8.000099999999946e-06,
+            "exact_lower_deficit_s": "2267479546147923/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          }
+        ],
+        "original_behavior": {
+          "status": "pass",
+          "issues": []
+        },
+        "original_tiers": {
+          "Q1": {
+            "status": "evidence_insufficient",
+            "voltage_budget_V": 1.0099999999999998e-05,
+            "reasons": [
+              "event 1 bracket not wholly inside legal window",
+              "event 2 bracket not wholly inside legal window",
+              "event 3 bracket not wholly inside legal window",
+              "event 4 bracket not wholly inside legal window",
+              "event 5 bracket not wholly inside legal window",
+              "event 6 bracket not wholly inside legal window",
+              "event 7 bracket not wholly inside legal window",
+              "event 8 bracket not wholly inside legal window"
+            ]
+          },
+          "Q2": {
+            "status": "evidence_insufficient",
+            "voltage_budget_V": 1.0099999999999999e-06,
+            "reasons": [
+              "event 1 bracket not wholly inside legal window",
+              "event 2 bracket not wholly inside legal window",
+              "event 3 bracket not wholly inside legal window",
+              "event 4 bracket not wholly inside legal window",
+              "event 5 bracket not wholly inside legal window",
+              "event 6 bracket not wholly inside legal window",
+              "event 7 bracket not wholly inside legal window",
+              "event 8 bracket not wholly inside legal window"
+            ]
+          },
+          "Q3": {
+            "status": "evidence_insufficient",
+            "voltage_budget_V": 1.0099999999999999e-07,
+            "reasons": [
+              "event 1 bracket not wholly inside legal window",
+              "event 2 bracket not wholly inside legal window",
+              "event 3 bracket not wholly inside legal window",
+              "event 4 bracket not wholly inside legal window",
+              "event 5 bracket not wholly inside legal window",
+              "event 6 bracket not wholly inside legal window",
+              "event 7 bracket not wholly inside legal window",
+              "event 8 bracket not wholly inside legal window"
+            ]
+          }
+        },
+        "raw_event_records": [
+          {
+            "time": 1.0000000000000002e-06,
+            "observation_time_bounds": [
+              1e-06,
+              1.0000000000000002e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 7.771561172376096e-16,
+            "before": [
+              0.125,
+              0.0
+            ],
+            "after": [
+              -0.2,
+              1.0
+            ]
+          },
+          {
+            "time": 2e-06,
+            "observation_time_bounds": [
+              1.9999999999999995e-06,
+              2e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 5.551115123125783e-16,
+            "before": [
+              -0.2,
+              1.0
+            ],
+            "after": [
+              0.0,
+              2.0
+            ]
+          },
+          {
+            "time": 3e-06,
+            "observation_time_bounds": [
+              2.9999999999999997e-06,
+              3e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 1.1102230246251565e-15,
+            "before": [
+              0.0,
+              2.0
+            ],
+            "after": [
+              0.20000000000000004,
+              3.0
+            ]
+          },
+          {
+            "time": 4e-06,
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 0.0,
+            "before": [
+              0.20000000000000004,
+              3.0
+            ],
+            "after": [
+              0.4,
+              4.0
+            ]
+          },
+          {
+            "time": 5e-06,
+            "observation_time_bounds": [
+              4.9999999999999996e-06,
+              5e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 2.1094237467877974e-15,
+            "before": [
+              0.4,
+              4.0
+            ],
+            "after": [
+              0.19999999999999984,
+              5.0
+            ]
+          },
+          {
+            "time": 6e-06,
+            "observation_time_bounds": [
+              5.999999999999999e-06,
+              6e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 2.1094237467877974e-15,
+            "before": [
+              0.19999999999999984,
+              5.0
+            ],
+            "after": [
+              -1.1102230246251565e-16,
+              6.0
+            ]
+          },
+          {
+            "time": 7e-06,
+            "observation_time_bounds": [
+              6.999999999999999e-06,
+              7e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 2.1094237467877974e-15,
+            "before": [
+              -1.1102230246251565e-16,
+              6.0
+            ],
+            "after": [
+              -0.20000000000000004,
+              7.0
+            ]
+          },
+          {
+            "time": 8e-06,
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 0.0,
+            "before": [
+              -0.20000000000000004,
+              7.0
+            ],
+            "after": [
+              -0.4,
+              8.0
+            ]
+          }
+        ],
+        "rows": 21201
+      },
+      {
+        "profile": "tol",
+        "event_records": [
+          {
+            "index": 1,
+            "box": [
+              1e-06,
+              1.0000000000000002e-06
+            ],
+            "original_assessment_box": [
+              9.999999999999728e-07,
+              1.0000000392157132e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 1.0000000000000546e-06,
+            "inset_hi": 1.0000999999999453e-06,
+            "exact_lower_deficit_s": "2267479546147923/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 2,
+            "box": [
+              1.9999999999999995e-06,
+              2e-06
+            ],
+            "original_assessment_box": [
+              1.999999999231038e-06,
+              2.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 2.0000000000000545e-06,
+            "inset_hi": 2.000099999999945e-06,
+            "exact_lower_deficit_s": "2285071732192339/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 3,
+            "box": [
+              2.9999999999999997e-06,
+              3e-06
+            ],
+            "original_assessment_box": [
+              2.999999999231038e-06,
+              3.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 3.0000000000000547e-06,
+            "inset_hi": 3.0000999999999452e-06,
+            "exact_lower_deficit_s": "2285071732192339/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 4,
+            "box": [
+              4e-06,
+              4e-06
+            ],
+            "original_assessment_box": [
+              3.999999999231038e-06,
+              4.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 4.000000000000054e-06,
+            "inset_hi": 4.000099999999946e-06,
+            "exact_lower_deficit_s": "2267479546147923/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 5,
+            "box": [
+              4.9999999999999996e-06,
+              5e-06
+            ],
+            "original_assessment_box": [
+              4.9999999999999725e-06,
+              5.000000039215713e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 5.000000000000054e-06,
+            "inset_hi": 5.0000999999999456e-06,
+            "exact_lower_deficit_s": "2267479546147923/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 6,
+            "box": [
+              5.999999999999999e-06,
+              6e-06
+            ],
+            "original_assessment_box": [
+              5.999999999231038e-06,
+              6.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 6.000000000000054e-06,
+            "inset_hi": 6.000099999999946e-06,
+            "exact_lower_deficit_s": "2302663918236755/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 7,
+            "box": [
+              6.999999999999999e-06,
+              7e-06
+            ],
+            "original_assessment_box": [
+              6.999999999231038e-06,
+              7.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 7.000000000000054e-06,
+            "inset_hi": 7.000099999999946e-06,
+            "exact_lower_deficit_s": "2302663918236755/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 8,
+            "box": [
+              8e-06,
+              8e-06
+            ],
+            "original_assessment_box": [
+              7.999999999231038e-06,
+              8.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 8.000000000000054e-06,
+            "inset_hi": 8.000099999999946e-06,
+            "exact_lower_deficit_s": "2267479546147923/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          }
+        ],
+        "original_behavior": {
+          "status": "pass",
+          "issues": []
+        },
+        "original_tiers": {
+          "Q1": {
+            "status": "evidence_insufficient",
+            "voltage_budget_V": 1.0099999999999998e-05,
+            "reasons": [
+              "event 1 bracket not wholly inside legal window",
+              "event 2 bracket not wholly inside legal window",
+              "event 3 bracket not wholly inside legal window",
+              "event 4 bracket not wholly inside legal window",
+              "event 5 bracket not wholly inside legal window",
+              "event 6 bracket not wholly inside legal window",
+              "event 7 bracket not wholly inside legal window",
+              "event 8 bracket not wholly inside legal window"
+            ]
+          },
+          "Q2": {
+            "status": "evidence_insufficient",
+            "voltage_budget_V": 1.0099999999999999e-06,
+            "reasons": [
+              "event 1 bracket not wholly inside legal window",
+              "event 2 bracket not wholly inside legal window",
+              "event 3 bracket not wholly inside legal window",
+              "event 4 bracket not wholly inside legal window",
+              "event 5 bracket not wholly inside legal window",
+              "event 6 bracket not wholly inside legal window",
+              "event 7 bracket not wholly inside legal window",
+              "event 8 bracket not wholly inside legal window"
+            ]
+          },
+          "Q3": {
+            "status": "evidence_insufficient",
+            "voltage_budget_V": 1.0099999999999999e-07,
+            "reasons": [
+              "event 1 bracket not wholly inside legal window",
+              "event 2 bracket not wholly inside legal window",
+              "event 3 bracket not wholly inside legal window",
+              "event 4 bracket not wholly inside legal window",
+              "event 5 bracket not wholly inside legal window",
+              "event 6 bracket not wholly inside legal window",
+              "event 7 bracket not wholly inside legal window",
+              "event 8 bracket not wholly inside legal window"
+            ]
+          }
+        },
+        "raw_event_records": [
+          {
+            "time": 1.0000000000000002e-06,
+            "observation_time_bounds": [
+              1e-06,
+              1.0000000000000002e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 7.771561172376096e-16,
+            "before": [
+              0.125,
+              0.0
+            ],
+            "after": [
+              -0.2,
+              1.0
+            ]
+          },
+          {
+            "time": 2e-06,
+            "observation_time_bounds": [
+              1.9999999999999995e-06,
+              2e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 5.551115123125783e-16,
+            "before": [
+              -0.2,
+              1.0
+            ],
+            "after": [
+              0.0,
+              2.0
+            ]
+          },
+          {
+            "time": 3e-06,
+            "observation_time_bounds": [
+              2.9999999999999997e-06,
+              3e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 1.1102230246251565e-15,
+            "before": [
+              0.0,
+              2.0
+            ],
+            "after": [
+              0.20000000000000004,
+              3.0
+            ]
+          },
+          {
+            "time": 4e-06,
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 0.0,
+            "before": [
+              0.20000000000000004,
+              3.0
+            ],
+            "after": [
+              0.4,
+              4.0
+            ]
+          },
+          {
+            "time": 5e-06,
+            "observation_time_bounds": [
+              4.9999999999999996e-06,
+              5e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 2.1094237467877974e-15,
+            "before": [
+              0.4,
+              4.0
+            ],
+            "after": [
+              0.19999999999999984,
+              5.0
+            ]
+          },
+          {
+            "time": 6e-06,
+            "observation_time_bounds": [
+              5.999999999999999e-06,
+              6e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 2.1094237467877974e-15,
+            "before": [
+              0.19999999999999984,
+              5.0
+            ],
+            "after": [
+              -1.1102230246251565e-16,
+              6.0
+            ]
+          },
+          {
+            "time": 7e-06,
+            "observation_time_bounds": [
+              6.999999999999999e-06,
+              7e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 2.1094237467877974e-15,
+            "before": [
+              -1.1102230246251565e-16,
+              6.0
+            ],
+            "after": [
+              -0.20000000000000004,
+              7.0
+            ]
+          },
+          {
+            "time": 8e-06,
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 0.0,
+            "before": [
+              -0.20000000000000004,
+              7.0
+            ],
+            "after": [
+              -0.4,
+              8.0
+            ]
+          }
+        ],
+        "rows": 21201
+      },
+      {
+        "profile": "step",
+        "event_records": [
+          {
+            "index": 1,
+            "box": [
+              1e-06,
+              1.0000000000000002e-06
+            ],
+            "original_assessment_box": [
+              9.999999999999728e-07,
+              1.0000000392157132e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 1.0000000000000546e-06,
+            "inset_hi": 1.0000999999999453e-06,
+            "exact_lower_deficit_s": "2267479546147923/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 2,
+            "box": [
+              1.9999999999999995e-06,
+              2e-06
+            ],
+            "original_assessment_box": [
+              1.999999999231038e-06,
+              2.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 2.0000000000000545e-06,
+            "inset_hi": 2.000099999999945e-06,
+            "exact_lower_deficit_s": "2285071732192339/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 3,
+            "box": [
+              2.9999999999999997e-06,
+              3e-06
+            ],
+            "original_assessment_box": [
+              2.999999999231038e-06,
+              3.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 3.0000000000000547e-06,
+            "inset_hi": 3.0000999999999452e-06,
+            "exact_lower_deficit_s": "2285071732192339/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 4,
+            "box": [
+              4e-06,
+              4e-06
+            ],
+            "original_assessment_box": [
+              3.999999999231038e-06,
+              4.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 4.000000000000054e-06,
+            "inset_hi": 4.000099999999946e-06,
+            "exact_lower_deficit_s": "2267479546147923/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 5,
+            "box": [
+              4.9999999999999996e-06,
+              5e-06
+            ],
+            "original_assessment_box": [
+              4.9999999999999725e-06,
+              5.000000039215713e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 5.000000000000054e-06,
+            "inset_hi": 5.0000999999999456e-06,
+            "exact_lower_deficit_s": "2267479546147923/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 6,
+            "box": [
+              5.999999999999999e-06,
+              6e-06
+            ],
+            "original_assessment_box": [
+              5.999999999231038e-06,
+              6.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 6.000000000000054e-06,
+            "inset_hi": 6.000099999999946e-06,
+            "exact_lower_deficit_s": "2302663918236755/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 7,
+            "box": [
+              6.999999999999999e-06,
+              7e-06
+            ],
+            "original_assessment_box": [
+              6.999999999231038e-06,
+              7.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 7.000000000000054e-06,
+            "inset_hi": 7.000099999999946e-06,
+            "exact_lower_deficit_s": "2302663918236755/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 8,
+            "box": [
+              8e-06,
+              8e-06
+            ],
+            "original_assessment_box": [
+              7.999999999231038e-06,
+              8.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 8.000000000000054e-06,
+            "inset_hi": 8.000099999999946e-06,
+            "exact_lower_deficit_s": "2267479546147923/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          }
+        ],
+        "original_behavior": {
+          "status": "pass",
+          "issues": []
+        },
+        "original_tiers": {
+          "Q1": {
+            "status": "evidence_insufficient",
+            "voltage_budget_V": 1.0099999999999998e-05,
+            "reasons": [
+              "event 1 bracket not wholly inside legal window",
+              "event 2 bracket not wholly inside legal window",
+              "event 3 bracket not wholly inside legal window",
+              "event 4 bracket not wholly inside legal window",
+              "event 5 bracket not wholly inside legal window",
+              "event 6 bracket not wholly inside legal window",
+              "event 7 bracket not wholly inside legal window",
+              "event 8 bracket not wholly inside legal window"
+            ]
+          },
+          "Q2": {
+            "status": "evidence_insufficient",
+            "voltage_budget_V": 1.0099999999999999e-06,
+            "reasons": [
+              "event 1 bracket not wholly inside legal window",
+              "event 2 bracket not wholly inside legal window",
+              "event 3 bracket not wholly inside legal window",
+              "event 4 bracket not wholly inside legal window",
+              "event 5 bracket not wholly inside legal window",
+              "event 6 bracket not wholly inside legal window",
+              "event 7 bracket not wholly inside legal window",
+              "event 8 bracket not wholly inside legal window"
+            ]
+          },
+          "Q3": {
+            "status": "evidence_insufficient",
+            "voltage_budget_V": 1.0099999999999999e-07,
+            "reasons": [
+              "event 1 bracket not wholly inside legal window",
+              "event 2 bracket not wholly inside legal window",
+              "event 3 bracket not wholly inside legal window",
+              "event 4 bracket not wholly inside legal window",
+              "event 5 bracket not wholly inside legal window",
+              "event 6 bracket not wholly inside legal window",
+              "event 7 bracket not wholly inside legal window",
+              "event 8 bracket not wholly inside legal window"
+            ]
+          }
+        },
+        "raw_event_records": [
+          {
+            "time": 1.0000000000000002e-06,
+            "observation_time_bounds": [
+              1e-06,
+              1.0000000000000002e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 7.771561172376096e-16,
+            "before": [
+              0.125,
+              0.0
+            ],
+            "after": [
+              -0.2,
+              1.0
+            ]
+          },
+          {
+            "time": 2e-06,
+            "observation_time_bounds": [
+              1.9999999999999995e-06,
+              2e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 5.551115123125783e-16,
+            "before": [
+              -0.2,
+              1.0
+            ],
+            "after": [
+              0.0,
+              2.0
+            ]
+          },
+          {
+            "time": 3e-06,
+            "observation_time_bounds": [
+              2.9999999999999997e-06,
+              3e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 1.1102230246251565e-15,
+            "before": [
+              0.0,
+              2.0
+            ],
+            "after": [
+              0.20000000000000004,
+              3.0
+            ]
+          },
+          {
+            "time": 4e-06,
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 0.0,
+            "before": [
+              0.20000000000000004,
+              3.0
+            ],
+            "after": [
+              0.4,
+              4.0
+            ]
+          },
+          {
+            "time": 5e-06,
+            "observation_time_bounds": [
+              4.9999999999999996e-06,
+              5e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 2.1094237467877974e-15,
+            "before": [
+              0.4,
+              4.0
+            ],
+            "after": [
+              0.19999999999999984,
+              5.0
+            ]
+          },
+          {
+            "time": 6e-06,
+            "observation_time_bounds": [
+              5.999999999999999e-06,
+              6e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 2.1094237467877974e-15,
+            "before": [
+              0.19999999999999984,
+              5.0
+            ],
+            "after": [
+              -1.1102230246251565e-16,
+              6.0
+            ]
+          },
+          {
+            "time": 7e-06,
+            "observation_time_bounds": [
+              6.999999999999999e-06,
+              7e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 2.1094237467877974e-15,
+            "before": [
+              -1.1102230246251565e-16,
+              6.0
+            ],
+            "after": [
+              -0.20000000000000004,
+              7.0
+            ]
+          },
+          {
+            "time": 8e-06,
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 0.0,
+            "before": [
+              -0.20000000000000004,
+              7.0
+            ],
+            "after": [
+              -0.4,
+              8.0
+            ]
+          }
+        ],
+        "rows": 21201
+      },
+      {
+        "profile": "both",
+        "event_records": [
+          {
+            "index": 1,
+            "box": [
+              1e-06,
+              1.0000000000000002e-06
+            ],
+            "original_assessment_box": [
+              9.999999999999728e-07,
+              1.0000000392157132e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 1.0000000000000546e-06,
+            "inset_hi": 1.0000999999999453e-06,
+            "exact_lower_deficit_s": "2267479546147923/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 2,
+            "box": [
+              1.9999999999999995e-06,
+              2e-06
+            ],
+            "original_assessment_box": [
+              1.999999999231038e-06,
+              2.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 2.0000000000000545e-06,
+            "inset_hi": 2.000099999999945e-06,
+            "exact_lower_deficit_s": "2285071732192339/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 3,
+            "box": [
+              2.9999999999999997e-06,
+              3e-06
+            ],
+            "original_assessment_box": [
+              2.999999999231038e-06,
+              3.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 3.0000000000000547e-06,
+            "inset_hi": 3.0000999999999452e-06,
+            "exact_lower_deficit_s": "2285071732192339/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 4,
+            "box": [
+              4e-06,
+              4e-06
+            ],
+            "original_assessment_box": [
+              3.999999999231038e-06,
+              4.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 4.000000000000054e-06,
+            "inset_hi": 4.000099999999946e-06,
+            "exact_lower_deficit_s": "2267479546147923/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 5,
+            "box": [
+              4.9999999999999996e-06,
+              5e-06
+            ],
+            "original_assessment_box": [
+              4.9999999999999725e-06,
+              5.000000039215713e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 5.000000000000054e-06,
+            "inset_hi": 5.0000999999999456e-06,
+            "exact_lower_deficit_s": "2267479546147923/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 6,
+            "box": [
+              5.999999999999999e-06,
+              6e-06
+            ],
+            "original_assessment_box": [
+              5.999999999231038e-06,
+              6.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 6.000000000000054e-06,
+            "inset_hi": 6.000099999999946e-06,
+            "exact_lower_deficit_s": "2302663918236755/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 7,
+            "box": [
+              6.999999999999999e-06,
+              7e-06
+            ],
+            "original_assessment_box": [
+              6.999999999231038e-06,
+              7.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 7.000000000000054e-06,
+            "inset_hi": 7.000099999999946e-06,
+            "exact_lower_deficit_s": "2302663918236755/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 8,
+            "box": [
+              8e-06,
+              8e-06
+            ],
+            "original_assessment_box": [
+              7.999999999231038e-06,
+              8.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 8.000000000000054e-06,
+            "inset_hi": 8.000099999999946e-06,
+            "exact_lower_deficit_s": "2267479546147923/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          }
+        ],
+        "original_behavior": {
+          "status": "pass",
+          "issues": []
+        },
+        "original_tiers": {
+          "Q1": {
+            "status": "evidence_insufficient",
+            "voltage_budget_V": 1.0099999999999998e-05,
+            "reasons": [
+              "event 1 bracket not wholly inside legal window",
+              "event 2 bracket not wholly inside legal window",
+              "event 3 bracket not wholly inside legal window",
+              "event 4 bracket not wholly inside legal window",
+              "event 5 bracket not wholly inside legal window",
+              "event 6 bracket not wholly inside legal window",
+              "event 7 bracket not wholly inside legal window",
+              "event 8 bracket not wholly inside legal window"
+            ]
+          },
+          "Q2": {
+            "status": "evidence_insufficient",
+            "voltage_budget_V": 1.0099999999999999e-06,
+            "reasons": [
+              "event 1 bracket not wholly inside legal window",
+              "event 2 bracket not wholly inside legal window",
+              "event 3 bracket not wholly inside legal window",
+              "event 4 bracket not wholly inside legal window",
+              "event 5 bracket not wholly inside legal window",
+              "event 6 bracket not wholly inside legal window",
+              "event 7 bracket not wholly inside legal window",
+              "event 8 bracket not wholly inside legal window"
+            ]
+          },
+          "Q3": {
+            "status": "evidence_insufficient",
+            "voltage_budget_V": 1.0099999999999999e-07,
+            "reasons": [
+              "event 1 bracket not wholly inside legal window",
+              "event 2 bracket not wholly inside legal window",
+              "event 3 bracket not wholly inside legal window",
+              "event 4 bracket not wholly inside legal window",
+              "event 5 bracket not wholly inside legal window",
+              "event 6 bracket not wholly inside legal window",
+              "event 7 bracket not wholly inside legal window",
+              "event 8 bracket not wholly inside legal window"
+            ]
+          }
+        },
+        "raw_event_records": [
+          {
+            "time": 1.0000000000000002e-06,
+            "observation_time_bounds": [
+              1e-06,
+              1.0000000000000002e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 7.771561172376096e-16,
+            "before": [
+              0.125,
+              0.0
+            ],
+            "after": [
+              -0.2,
+              1.0
+            ]
+          },
+          {
+            "time": 2e-06,
+            "observation_time_bounds": [
+              1.9999999999999995e-06,
+              2e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 5.551115123125783e-16,
+            "before": [
+              -0.2,
+              1.0
+            ],
+            "after": [
+              0.0,
+              2.0
+            ]
+          },
+          {
+            "time": 3e-06,
+            "observation_time_bounds": [
+              2.9999999999999997e-06,
+              3e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 1.1102230246251565e-15,
+            "before": [
+              0.0,
+              2.0
+            ],
+            "after": [
+              0.20000000000000004,
+              3.0
+            ]
+          },
+          {
+            "time": 4e-06,
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 0.0,
+            "before": [
+              0.20000000000000004,
+              3.0
+            ],
+            "after": [
+              0.4,
+              4.0
+            ]
+          },
+          {
+            "time": 5e-06,
+            "observation_time_bounds": [
+              4.9999999999999996e-06,
+              5e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 2.1094237467877974e-15,
+            "before": [
+              0.4,
+              4.0
+            ],
+            "after": [
+              0.19999999999999984,
+              5.0
+            ]
+          },
+          {
+            "time": 6e-06,
+            "observation_time_bounds": [
+              5.999999999999999e-06,
+              6e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 2.1094237467877974e-15,
+            "before": [
+              0.19999999999999984,
+              5.0
+            ],
+            "after": [
+              -1.1102230246251565e-16,
+              6.0
+            ]
+          },
+          {
+            "time": 7e-06,
+            "observation_time_bounds": [
+              6.999999999999999e-06,
+              7e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 2.1094237467877974e-15,
+            "before": [
+              -1.1102230246251565e-16,
+              6.0
+            ],
+            "after": [
+              -0.20000000000000004,
+              7.0
+            ]
+          },
+          {
+            "time": 8e-06,
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 0.0,
+            "before": [
+              -0.20000000000000004,
+              7.0
+            ],
+            "after": [
+              -0.4,
+              8.0
+            ]
+          }
+        ],
+        "rows": 21201
+      },
+      {
+        "profile": "deep",
+        "event_records": [
+          {
+            "index": 1,
+            "box": [
+              1e-06,
+              1.0000000000000002e-06
+            ],
+            "original_assessment_box": [
+              9.999999999999728e-07,
+              1.0000000392157132e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 1.0000000000000546e-06,
+            "inset_hi": 1.0000999999999453e-06,
+            "exact_lower_deficit_s": "2267479546147923/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 2,
+            "box": [
+              1.9999999999999995e-06,
+              2e-06
+            ],
+            "original_assessment_box": [
+              1.999999999231038e-06,
+              2.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 2.0000000000000545e-06,
+            "inset_hi": 2.000099999999945e-06,
+            "exact_lower_deficit_s": "2285071732192339/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 3,
+            "box": [
+              2.9999999999999997e-06,
+              3e-06
+            ],
+            "original_assessment_box": [
+              2.999999999231038e-06,
+              3.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 3.0000000000000547e-06,
+            "inset_hi": 3.0000999999999452e-06,
+            "exact_lower_deficit_s": "2285071732192339/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 4,
+            "box": [
+              4e-06,
+              4e-06
+            ],
+            "original_assessment_box": [
+              3.999999999231038e-06,
+              4.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 4.000000000000054e-06,
+            "inset_hi": 4.000099999999946e-06,
+            "exact_lower_deficit_s": "2267479546147923/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 5,
+            "box": [
+              4.9999999999999996e-06,
+              5e-06
+            ],
+            "original_assessment_box": [
+              4.9999999999999725e-06,
+              5.000000039215713e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 5.000000000000054e-06,
+            "inset_hi": 5.0000999999999456e-06,
+            "exact_lower_deficit_s": "2267479546147923/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 6,
+            "box": [
+              5.999999999999999e-06,
+              6e-06
+            ],
+            "original_assessment_box": [
+              5.999999999231038e-06,
+              6.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 6.000000000000054e-06,
+            "inset_hi": 6.000099999999946e-06,
+            "exact_lower_deficit_s": "2302663918236755/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 7,
+            "box": [
+              6.999999999999999e-06,
+              7e-06
+            ],
+            "original_assessment_box": [
+              6.999999999231038e-06,
+              7.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 7.000000000000054e-06,
+            "inset_hi": 7.000099999999946e-06,
+            "exact_lower_deficit_s": "2302663918236755/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          },
+          {
+            "index": 8,
+            "box": [
+              8e-06,
+              8e-06
+            ],
+            "original_assessment_box": [
+              7.999999999231038e-06,
+              8.000000000000027e-06
+            ],
+            "root_u": 5.45875844526483e-20,
+            "inset_lo": 8.000000000000054e-06,
+            "inset_hi": 8.000099999999946e-06,
+            "exact_lower_deficit_s": "2267479546147923/41538374868278621028243970633760768",
+            "complete_box_inside_exact_inset": false,
+            "representative_hi_inside_exact_inset": false,
+            "original_timing_status": "evidence_insufficient"
+          }
+        ],
+        "original_behavior": {
+          "status": "pass",
+          "issues": []
+        },
+        "original_tiers": {
+          "Q1": {
+            "status": "evidence_insufficient",
+            "voltage_budget_V": 1.0099999999999998e-05,
+            "reasons": [
+              "event 1 bracket not wholly inside legal window",
+              "event 2 bracket not wholly inside legal window",
+              "event 3 bracket not wholly inside legal window",
+              "event 4 bracket not wholly inside legal window",
+              "event 5 bracket not wholly inside legal window",
+              "event 6 bracket not wholly inside legal window",
+              "event 7 bracket not wholly inside legal window",
+              "event 8 bracket not wholly inside legal window"
+            ]
+          },
+          "Q2": {
+            "status": "evidence_insufficient",
+            "voltage_budget_V": 1.0099999999999999e-06,
+            "reasons": [
+              "event 1 bracket not wholly inside legal window",
+              "event 2 bracket not wholly inside legal window",
+              "event 3 bracket not wholly inside legal window",
+              "event 4 bracket not wholly inside legal window",
+              "event 5 bracket not wholly inside legal window",
+              "event 6 bracket not wholly inside legal window",
+              "event 7 bracket not wholly inside legal window",
+              "event 8 bracket not wholly inside legal window"
+            ]
+          },
+          "Q3": {
+            "status": "evidence_insufficient",
+            "voltage_budget_V": 1.0099999999999999e-07,
+            "reasons": [
+              "event 1 bracket not wholly inside legal window",
+              "event 2 bracket not wholly inside legal window",
+              "event 3 bracket not wholly inside legal window",
+              "event 4 bracket not wholly inside legal window",
+              "event 5 bracket not wholly inside legal window",
+              "event 6 bracket not wholly inside legal window",
+              "event 7 bracket not wholly inside legal window",
+              "event 8 bracket not wholly inside legal window"
+            ]
+          }
+        },
+        "raw_event_records": [
+          {
+            "time": 1.0000000000000002e-06,
+            "observation_time_bounds": [
+              1e-06,
+              1.0000000000000002e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 7.771561172376096e-16,
+            "before": [
+              0.125,
+              0.0
+            ],
+            "after": [
+              -0.2,
+              1.0
+            ]
+          },
+          {
+            "time": 2e-06,
+            "observation_time_bounds": [
+              1.9999999999999995e-06,
+              2e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 5.551115123125783e-16,
+            "before": [
+              -0.2,
+              1.0
+            ],
+            "after": [
+              0.0,
+              2.0
+            ]
+          },
+          {
+            "time": 3e-06,
+            "observation_time_bounds": [
+              2.9999999999999997e-06,
+              3e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 1.1102230246251565e-15,
+            "before": [
+              0.0,
+              2.0
+            ],
+            "after": [
+              0.20000000000000004,
+              3.0
+            ]
+          },
+          {
+            "time": 4e-06,
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 0.0,
+            "before": [
+              0.20000000000000004,
+              3.0
+            ],
+            "after": [
+              0.4,
+              4.0
+            ]
+          },
+          {
+            "time": 5e-06,
+            "observation_time_bounds": [
+              4.9999999999999996e-06,
+              5e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 2.1094237467877974e-15,
+            "before": [
+              0.4,
+              4.0
+            ],
+            "after": [
+              0.19999999999999984,
+              5.0
+            ]
+          },
+          {
+            "time": 6e-06,
+            "observation_time_bounds": [
+              5.999999999999999e-06,
+              6e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 2.1094237467877974e-15,
+            "before": [
+              0.19999999999999984,
+              5.0
+            ],
+            "after": [
+              -1.1102230246251565e-16,
+              6.0
+            ]
+          },
+          {
+            "time": 7e-06,
+            "observation_time_bounds": [
+              6.999999999999999e-06,
+              7e-06
+            ],
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 2.1094237467877974e-15,
+            "before": [
+              -1.1102230246251565e-16,
+              6.0
+            ],
+            "after": [
+              -0.20000000000000004,
+              7.0
+            ]
+          },
+          {
+            "time": 8e-06,
+            "event": 0,
+            "origin": "dut.va:8:1 (dut)",
+            "kind": "cross",
+            "guard_value": 0.0,
+            "before": [
+              -0.20000000000000004,
+              7.0
+            ],
+            "after": [
+              -0.4,
+              8.0
+            ]
+          }
+        ],
+        "rows": 21201
+      }
+    ],
+    "not_a_new_simulator_run": true
+  },
+  "NG_F20_new_stop": {
+    "native_rows": 10797,
+    "off_on_waveform_bytes_equal": true,
+    "actual_job_stop_matches_card": true,
+    "requested_stop_bits": "3ed4f8b588e368f0",
+    "actual_job_stop_bits": "3ed4f8b588e368f0",
+    "last_writer_time_bits": "3ed4f8b588e368f0",
+    "all_native_exact": true,
+    "wrapped_implicit_writer_matches": 10797
+  },
+  "S_EC16_tight100": {
+    "actual_execution": {
+      "ORIGINAL": {
+        "actual_requested_echo": {
+          "reltol": 1e-12,
+          "vabstol": 1e-16,
+          "iabstol": 1e-19
+        },
+        "actual_tran_reltol": 1e-13,
+        "science_rc": 1,
+        "error": "SPECTRE-16928 minstep approach limit",
+        "error_time_decimal_s": "51.39490745636756e-9",
+        "accepted_annotation_rows": 1641
+      },
+      "ON": {
+        "actual_requested_echo": {
+          "reltol": 1e-12,
+          "vabstol": 1e-16,
+          "iabstol": 1e-19
+        },
+        "actual_tran_reltol": 1e-13,
+        "science_rc": 1,
+        "error": "SPECTRE-16928 minstep approach limit",
+        "error_time_decimal_s": "51.39490745636756e-9",
+        "accepted_annotation_rows": 1641
+      }
+    },
+    "partial_rows_per_slot": {
+      "ORIGINAL": 1642,
+      "ON": 1642
+    },
+    "all_partial_science_fields_equal": true,
+    "compared_fields": 6568,
+    "native_last_time_hex": "0x1.b97a98c2340dap-25",
+    "requested_stop_hex": "0x1.0000000000000p-18",
+    "missing_original_requested_count": 128,
+    "full_Q3_qualification": "not achieved; simulation stopped before original complete extent; partial errors cannot replace complete grade",
+    "original_Q3_startup_failure_retained": true,
+    "no_more_precision_scans": true
+  },
+  "controls_and_known_limits": {
+    "S_F20": "172 requests ->171 distinct native rows; one adjacent-ULP pair at row6347; no request dropped.",
+    "S_EC16": "new as annotation helper separately calibrated; old unrecognized-unit result retained.",
+    "S_EC20": "16266 original requests, one with no native candidate; original full qualification remains incomplete.",
+    "PSF_export": "43 nonzero synthetic values exact; six negative zeros normalize to positive zero; origin of normalization not localized. Missing END input accepted by CLI, so return code alone cannot qualify data.",
+    "probe_failures": "NG wrong matrix extent gate and GN missing direct headers compile failure retained as probe/setup failures, not simulator science failures.",
+    "public_input_scope": "Original source/deck, actual public parameters and all finite native inputs; no invented private PWL array or hidden-history observation."
+  },
+  "actual_resource_limits": {
+    "remote_execution": "serial under existing shared lock",
+    "case_timeout_seconds": 90,
+    "memory_bytes": 4294967296,
+    "file_bytes": 33554432,
+    "case_output_bytes": 268435456,
+    "new_tool_installation": false,
+    "new_purchase": false
+  },
+  "raw_availability": {
+    "kind": "local-only",
+    "project_entry": "worktrees/q3-support-closure",
+    "relative_run_root": "runs/q3-support-closure",
+    "hashes_are_download_links": false,
+    "retire_or_delete_raw_authorized": false
+  },
+  "reviews": [
+    {
+      "reviewer_model": "gpt-6-astra",
+      "scope": [
+        "GN EC16",
+        "NG EC16",
+        "Spectre EC19",
+        "Spectre F20/EC17/EC18/EC16",
+        "Spectre EC20 public callback/native values",
+        "Spectre tight100 failure"
+      ],
+      "method": "independent complete local replay and source checks",
+      "report": {
+        "path": "runs/q3-support-closure/review/followup-gn-ng-numeric-astra-v1/REPORT.md",
+        "bytes": 11211,
+        "sha256": "e95ea8004e122ea9c8d4a76cc643b311d8b62e0519394d7d1925b1231dda2657",
+        "availability": "local-only"
+      },
+      "supporting_records": [
+        {
+          "path": "runs/q3-support-closure/review/followup-gn-ng-numeric-astra-v1/MANIFEST.json",
+          "bytes": 5447,
+          "sha256": "1d344e8f60ccbedfabf4e74a093e55717ee159fd82569c395be57427a533f018",
+          "availability": "local-only"
+        }
+      ],
+      "limit": "Finite fixed cases only; no old grade rewrite or universal backend qualification."
+    },
+    {
+      "reviewer_model": "gpt-6-astra",
+      "scope": [
+        "NG F20 and EC18 source/consumer/native",
+        "coarse stop calibration",
+        "same-step actual stop-encoded F20",
+        "all-point Fraction phase diagnostic",
+        "three frozen checker whole-object replays"
+      ],
+      "method": "independent complete local replay and source checks",
+      "report": {
+        "path": "runs/q3-support-closure/review/followup-ng-phase-actual-astra-v1/REPORT.md",
+        "bytes": 9136,
+        "sha256": "cc9180dbf18860c98a99a0d3ee65d8859a46d8bdbe4b2fe12a708d669d0a0fdb",
+        "availability": "local-only"
+      },
+      "supporting_records": [
+        {
+          "path": "runs/q3-support-closure/review/followup-ng-phase-actual-astra-v1/MANIFEST.json",
+          "bytes": 4345,
+          "sha256": "fb3c9f1769309bb191f8de8e1efb119d8e16f4144235b613b3fe0915bbddb997",
+          "availability": "local-only"
+        }
+      ],
+      "limit": "Finite fixed cases only; no old grade rewrite or universal backend qualification."
+    },
+    {
+      "reviewer_model": "glm-5.3",
+      "scope": [
+        "fixed host/OSDI source and original record reading; overly large writer scope superseded"
+      ],
+      "method": "independent supplied-text source/evidence review; actual CLI receipt",
+      "report": {
+        "path": "runs/q3-support-closure/review/followup-ng-ec16-glm-v1/REPORT.md",
+        "bytes": 2816,
+        "sha256": "3d1e3d338ea0907d635c502062680d13474918d62d8d32fe7b6974a180005000",
+        "availability": "local-only"
+      },
+      "supporting_records": [
+        {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-glm-v1/DISPOSITION.json",
+          "bytes": 2460,
+          "sha256": "01a66ffc637a97f69ee61cc7891e14f0c8a7f3e7db83a2124ed96fc8bafccbd0",
+          "availability": "local-only"
+        },
+        {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-glm-v1/CALL_SUMMARY.json",
+          "bytes": 3143,
+          "sha256": "e79739c0c3c265dd829fcb3a849f2f7b4083a1178f7e5fd06f937bbaff0ca8d0",
+          "availability": "local-only"
+        },
+        {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-glm-v1/FILE_MANIFEST.json",
+          "bytes": 15021,
+          "sha256": "7d980bcf35d7c375ceca7e7ca80f193924b2ad24a3b95e83a77cdf32498548ee",
+          "availability": "local-only"
+        }
+      ],
+      "limit": "Finite fixed cases only; no old grade rewrite or universal backend qualification."
+    },
+    {
+      "reviewer_model": "glm-5.3",
+      "scope": [
+        "NG EC16 fixed source/consumer/native writer qualification"
+      ],
+      "method": "independent supplied-text source/evidence review; actual CLI receipt",
+      "report": {
+        "path": "runs/q3-support-closure/review/followup-ng-ec16-writer-glm-scoped-v2/README.md",
+        "bytes": 924,
+        "sha256": "655b931af285f3fd3401390be90e72d84b02c5f7c577eac73d9ad750f0ace0db",
+        "availability": "local-only"
+      },
+      "supporting_records": [
+        {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-writer-glm-scoped-v2/ADJUDICATION.json",
+          "bytes": 5744,
+          "sha256": "14539162aaff1590a1fc742e5393dde9a2a8365d8534fb37789ac6f79a2be63f",
+          "availability": "local-only"
+        },
+        {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-writer-glm-scoped-v2/SEALED.json",
+          "bytes": 5944,
+          "sha256": "682a3adee590d84798da41153e4c5322624789bef656a3de1fbc4d47c2701002",
+          "availability": "local-only"
+        },
+        {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-writer-glm-scoped-v2/ACTUAL-MAPPING-CHECK.json",
+          "bytes": 1045,
+          "sha256": "e5c5bf8835ce404e1e44c8187a5802db6849794a0b8ec03be7938952744ae095",
+          "availability": "local-only"
+        }
+      ],
+      "limit": "Finite fixed cases only; no old grade rewrite or universal backend qualification."
+    },
+    {
+      "reviewer_model": "glm-5.3",
+      "scope": [
+        "NG EC16 finite adapter, original DC/TRAN reference and unchanged budgets",
+        "whole native observations and actual negative controls"
+      ],
+      "method": "independent supplied-text source/evidence review; actual CLI receipt",
+      "report": {
+        "path": "runs/q3-support-closure/review/followup-ng-ec16-adapter-glm-scoped-v2/REPORT.md",
+        "bytes": 2646,
+        "sha256": "00ed164e6764b0f70355708033e8c51f36379b89f7e82d6ab07af00d12692586",
+        "availability": "local-only"
+      },
+      "supporting_records": [
+        {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-adapter-glm-scoped-v2/DISPOSITION.json",
+          "bytes": 7903,
+          "sha256": "4ee29666852e22944b78fdb35f9bad19c32ca951f3541b72327433f59bf7ea2e",
+          "availability": "local-only"
+        },
+        {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-adapter-glm-scoped-v2/CALL_SUMMARY.json",
+          "bytes": 520,
+          "sha256": "33756d821b28c0d21a6b4de816433dd0bce055188ea8c7cb30ffb1dcb4467746",
+          "availability": "local-only"
+        },
+        {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-adapter-glm-scoped-v2/FILE_MANIFEST.json",
+          "bytes": 3924,
+          "sha256": "bcbedb24a8f881259e753d6c6ad39c2ca1bba5e4ab378a6df4d0a8f2490d1f94",
+          "availability": "local-only"
+        },
+        {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-adapter-glm-scoped-v2/witness-correction-v1/CORRECTED_RAW_WITNESSES.json",
+          "bytes": 29450,
+          "sha256": "4a9d2d90c96a9cf317275d39bb26cffd59f0ed6df750fa336c4acb04917ac77a",
+          "availability": "local-only"
+        },
+        {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-adapter-glm-scoped-v2/witness-correction-v1/PRESERVATION.json",
+          "bytes": 402,
+          "sha256": "2d06f717090943cf1fb32051a6b10917fd60292ed61c82c86a393ff5a30943e1",
+          "availability": "local-only"
+        }
+      ],
+      "limit": "Finite fixed cases only; no old grade rewrite or universal backend qualification."
+    },
+    {
+      "reviewer_model": "glm-5.3",
+      "scope": [
+        "GN actual producer/source/consumer",
+        "EC16 bound and DC limits",
+        "current identity bridge and deep-record negative controls"
+      ],
+      "method": "independent supplied-text source/evidence review; actual CLI receipt",
+      "report": {
+        "path": "runs/q3-support-closure/review/followup-gn-ec16-glm-v1/REPORT.md",
+        "bytes": 2877,
+        "sha256": "dbfc46a603fd61ba2819c2beb2548be8d9e42aef980e79b6abe8d220f32c4fb2",
+        "availability": "local-only"
+      },
+      "supporting_records": [
+        {
+          "path": "runs/q3-support-closure/review/followup-gn-ec16-glm-v1/DISPOSITION.json",
+          "bytes": 23189,
+          "sha256": "71ec3436812bda4d2a0b8970a9a7f89bdddcf165ebbf678e0659780bd8f5f858",
+          "availability": "local-only"
+        },
+        {
+          "path": "runs/q3-support-closure/review/followup-gn-ec16-glm-v1/REVIEW_MANIFEST.json",
+          "bytes": 11958,
+          "sha256": "ed155b29f4197f7f25dd93f1fc765add63124daee03b2180b903ce1e71b43389",
+          "availability": "local-only"
+        }
+      ],
+      "limit": "Finite fixed cases only; no old grade rewrite or universal backend qualification."
+    },
+    {
+      "reviewer_model": "glm-5.3",
+      "scope": [
+        "Spectre EC19 public PSF native reader, exact-coordinate phase and controls"
+      ],
+      "method": "independent supplied-text source/evidence review; actual CLI receipt",
+      "report": {
+        "path": "runs/q3-support-closure/review/followup-ec19-native-glm-v1/REPORT.md",
+        "bytes": 2959,
+        "sha256": "3582347c34d8b445e144c0987c509d4e5922b299bccb78d57bb2bb65e107a83b",
+        "availability": "local-only"
+      },
+      "supporting_records": [
+        {
+          "path": "runs/q3-support-closure/review/followup-ec19-native-glm-v1/DISPOSITION.json",
+          "bytes": 1856,
+          "sha256": "83777352580a53989c9902f396ba8f87734cdd553aa883a62dac73fe9e454fe0",
+          "availability": "local-only"
+        },
+        {
+          "path": "runs/q3-support-closure/review/followup-ec19-native-glm-v1/CALL_SUMMARY.json",
+          "bytes": 288,
+          "sha256": "d6873709e0a9999b107beb9c48b608eb7aa947a6d2914f274baeeeea4205bc27",
+          "availability": "local-only"
+        },
+        {
+          "path": "runs/q3-support-closure/review/followup-ec19-native-glm-v1/FILE_MANIFEST.json",
+          "bytes": 5084,
+          "sha256": "cf9c7d7085f40e4c052eb5a0e6b19c992a163145738ce1892fcbdd4044c933c4",
+          "availability": "local-only"
+        }
+      ],
+      "limit": "Finite fixed cases only; no old grade rewrite or universal backend qualification."
+    },
+    {
+      "reviewer_model": "glm-5.3",
+      "scope": [
+        "Spectre four public cards",
+        "original EC20 callback fields",
+        "accepted-as association/collisions and tight100 termination"
+      ],
+      "method": "independent supplied-text source/evidence review; actual CLI receipt",
+      "report": {
+        "path": "runs/q3-support-closure/review/followup-s-public-glm-v1/README.md",
+        "bytes": 1706,
+        "sha256": "5f34a64f133c52f8f9261c56ad71e29d6dcb8eb1831d76485c805be35b879bb8",
+        "availability": "local-only"
+      },
+      "supporting_records": [
+        {
+          "path": "runs/q3-support-closure/review/followup-s-public-glm-v1/ADJUDICATION.json",
+          "bytes": 3959,
+          "sha256": "4e92931b9ba23986d987285483c80be5fead4e208afd925b5a05fb4143a824f4",
+          "availability": "local-only"
+        },
+        {
+          "path": "runs/q3-support-closure/review/followup-s-public-glm-v1/SOURCE_MANIFEST.json",
+          "bytes": 63640,
+          "sha256": "da3e4a47170a20f0c43b6e1b628e23c7a2172a65066521874ac6f043385c3255",
+          "availability": "local-only"
+        },
+        {
+          "path": "runs/q3-support-closure/review/followup-s-public-glm-v1/accepted-tight-append-v1/README.md",
+          "bytes": 568,
+          "sha256": "e53e6344190730310535a8c3a563ac0d2d89769a85659f2243e658dd8774837c",
+          "availability": "local-only"
+        },
+        {
+          "path": "runs/q3-support-closure/review/followup-s-public-glm-v1/accepted-tight-append-v1/ADJUDICATION.json",
+          "bytes": 2332,
+          "sha256": "94a87a7e546cd72948e6af9fa5dec2471513d8e65fc0c82ae1cfbb122ad4f0b1",
+          "availability": "local-only"
+        }
+      ],
+      "limit": "Finite fixed cases only; no old grade rewrite or universal backend qualification.",
+      "report_scope_note": "The primary README and ADJUDICATION are preserved two-call historical snapshots. The final third-call accepted-as/tight100 scope is identified separately by accepted-tight-append-v1 records; no scope is retroactively transferred."
+    },
+    {
+      "reviewer_model": "glm-5.3",
+      "scope": [
+        "EC18 scoped-v2",
+        "F20 scoped-v2 original/coarse/new same-step",
+        "actual CKT consistency checks; large original context superseded"
+      ],
+      "method": "independent supplied-text source/evidence review; actual CLI receipt",
+      "report": {
+        "path": "runs/q3-support-closure/review/followup-ng-phase-glm-v1/README.md",
+        "bytes": 821,
+        "sha256": "6e9cb8dbd8bd5d4413aa218a43a2392014ac19af6f4fc61fbaf3dab9f2ab8d32",
+        "availability": "local-only"
+      },
+      "supporting_records": [
+        {
+          "path": "runs/q3-support-closure/review/followup-ng-phase-glm-v1/SCOPED-CONTEXT-VERIFICATION.json",
+          "bytes": 732,
+          "sha256": "2ecdd98ae3ac9e3205ccae1cdddf85aa7e0813bd12bb466c95002d33287f27bf",
+          "availability": "local-only"
+        },
+        {
+          "path": "runs/q3-support-closure/review/followup-ng-phase-glm-v1/SCOPED-ACTUAL-CKT-CHECK.json",
+          "bytes": 2481,
+          "sha256": "b274bb6ccc90e016a0159109949afa59b2cf7e82f5668b30dfe5b36c41c423ba",
+          "availability": "local-only"
+        },
+        {
+          "path": "runs/q3-support-closure/review/followup-ng-phase-glm-v1/SCOPED-SEALED-v2.json",
+          "bytes": 10443,
+          "sha256": "27ab446cd149d2966cffdbbf311d6b5c31d323fdcd9d33fd56a1d4c5ab3b642f",
+          "availability": "local-only"
+        },
+        {
+          "path": "runs/q3-support-closure/review/followup-ng-phase-glm-v1/ec18-scoped-v2/README.md",
+          "bytes": 511,
+          "sha256": "539e58d520528dc0acee1c479b3121a441581e3c4bdf036a2e7523a43d7239b1",
+          "availability": "local-only"
+        },
+        {
+          "path": "runs/q3-support-closure/review/followup-ng-phase-glm-v1/ec18-scoped-v2/ADJUDICATION.json",
+          "bytes": 2646,
+          "sha256": "244c8055a80f5bf1aeca8fd5210a49fae0fd0f720e5be6f357e29b2628dc4221",
+          "availability": "local-only"
+        },
+        {
+          "path": "runs/q3-support-closure/review/followup-ng-phase-glm-v1/f20-scoped-v2/README.md",
+          "bytes": 511,
+          "sha256": "b96ec7776da6fd00178baaa5cbee52314e52490f36ca73b0ed4ab8aa1d409f91",
+          "availability": "local-only"
+        },
+        {
+          "path": "runs/q3-support-closure/review/followup-ng-phase-glm-v1/f20-scoped-v2/ADJUDICATION.json",
+          "bytes": 2283,
+          "sha256": "e5dcf80bd6b089136485c64bc82fb5d503172d986a677d5257007062cef6cb8b",
+          "availability": "local-only"
+        }
+      ],
+      "limit": "Finite fixed cases only; no old grade rewrite or universal backend qualification.",
+      "report_scope_note": "The primary README is the preserved large-context historical snapshot. Final scope qualification comes from both ec18-scoped-v2 and f20-scoped-v2 reports/dispositions and their actual bounded-context CLI receipts."
+    }
+  ],
+  "S_public_effective_configurations": {
+    "F20-base": {
+      "basis": {
+        "local_archive_path": "runs/q3-support-closure/followup-phase-evidence-v1/s-phase-mandatory-native-v1/collected/f20-native-original/outputs/f20-native-original/runs/f20-native-original/spectre.log",
+        "sha256": "7e3eb0013fcb2e6cd260c2cfbba78db4b619b1d294f2d2b23c14c0e7dbacbf22",
+        "bytes": 956748,
+        "availability": "local-only"
+      },
+      "actual_global_echo": {
+        "reltol": 1e-10,
+        "vabstol_V": 1e-14,
+        "iabstol_A": 1e-17
+      },
+      "actual_transient_reltol": 1e-11,
+      "method": "traponly",
+      "errpreset": "conservative",
+      "skipdc": "no",
+      "actual_stop_log": "stop = 5 us",
+      "actual_maxstep_log": "maxstep = 400 ps"
+    },
+    "EC17-v1": {
+      "basis": {
+        "local_archive_path": "runs/q3-support-closure/followup-phase-evidence-v1/s-phase-mandatory-native-v1/collected/ec17-native-original/outputs/ec17-native-original/runs/ec17-native-original/spectre.log",
+        "sha256": "9b0ee762ae7ff3b793b15cd896014687cd63f6f1015b5a391cc836e49a2d321e",
+        "bytes": 789125,
+        "availability": "local-only"
+      },
+      "actual_global_echo": {
+        "reltol": 1e-10,
+        "vabstol_V": 1e-14,
+        "iabstol_A": 1e-17
+      },
+      "actual_transient_reltol": 1e-11,
+      "method": "traponly",
+      "errpreset": "conservative",
+      "skipdc": "no",
+      "actual_stop_log": "stop = 3.814697265625 us",
+      "actual_maxstep_log": "maxstep = 381.4697265625 ps"
+    },
+    "EC18-v1": {
+      "basis": {
+        "local_archive_path": "runs/q3-support-closure/followup-phase-evidence-v1/s-phase-mandatory-native-v1/collected/ec18-native-original/outputs/ec18-native-original/runs/ec18-native-original/spectre.log",
+        "sha256": "f49f1ab1581f74b65104e53b45d718c165a3a9b73167a3fa1e02d9b5e91582bb",
+        "bytes": 786095,
+        "availability": "local-only"
+      },
+      "actual_global_echo": {
+        "reltol": 1e-10,
+        "vabstol_V": 1e-14,
+        "iabstol_A": 1e-17
+      },
+      "actual_transient_reltol": 1e-11,
+      "method": "traponly",
+      "errpreset": "conservative",
+      "skipdc": "no",
+      "actual_stop_log": "stop = 3.814697265625 us",
+      "actual_maxstep_log": "maxstep = 381.4697265625 ps"
+    },
+    "EC16-v1": {
+      "basis": {
+        "local_archive_path": "runs/q3-support-closure/followup-phase-evidence-v1/s-ec16-native-v1/collected/ec16-native-original/outputs/ec16-native-original/runs/ec16-native-original/spectre.log",
+        "sha256": "ff909995486231872c00ab0fbb586278edf1295490c90c6c5bfffdd60cc49eb3",
+        "bytes": 787859,
+        "availability": "local-only"
+      },
+      "actual_global_echo": {
+        "reltol": 1e-10,
+        "vabstol_V": 1e-14,
+        "iabstol_A": 1e-17
+      },
+      "actual_transient_reltol": 1e-11,
+      "method": "traponly",
+      "errpreset": "conservative",
+      "skipdc": "no",
+      "actual_stop_log": "stop = 3.814697265625 us",
+      "actual_maxstep_log": "maxstep = 381.4697265625 ps"
+    }
+  },
+  "eleven_cell_counts": {
+    "new_finite_Q3_pass": 1,
+    "original_callback_window_unmet": 2,
+    "phase_boundary_unqualified": 4,
+    "tested_configuration_numerical_error": 2,
+    "strict_event_order_unqualified": 2
+  },
+  "old_analysis_fields": {
+    "meaning": "Copied frozen assessment flags such as setting_evidence unknown or independent_review pending describe those analysis snapshots. The explicitly separate runner/review records supply new qualifications; frozen fields are not rewritten."
+  },
+  "actual_GLM_calls": {
+    "calls": [
+      {
+        "scope_directory": "followup-ng-ec16-glm-v1/abi-source/context-retry-v1",
+        "receipt": {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-glm-v1/abi-source/context-retry-v1/receipt.json",
+          "bytes": 3932,
+          "sha256": "6bc7987c06d6b674d4fe40a10982e36c46ec41eabc1d9630b8c286929a21948e",
+          "availability": "local-only"
+        },
+        "response": {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-glm-v1/abi-source/context-retry-v1/response.json",
+          "bytes": 19923,
+          "sha256": "2d4cdb2e1c760e832574b4d3ffb7b918782880bf4d00dc38b19b8724000c18d4",
+          "availability": "local-only"
+        },
+        "returncode": 0,
+        "timed_out": false,
+        "actual_reported_turns": 1,
+        "reported_cost_usd": "1.17919",
+        "reported_models": [
+          "glm-5.3"
+        ],
+        "model_identity_and_terminal_valid": true,
+        "input_tokens": 188193,
+        "output_tokens": 9529,
+        "reported_context_window": 200000,
+        "within_reported_total_context": true,
+        "superseded_for_scope_completeness_by": null,
+        "configured_budget_usd": 5.0,
+        "configured_timeout_s": 900,
+        "configured_output_cap": 32000
+      },
+      {
+        "scope_directory": "followup-ng-ec16-glm-v1/abi-source",
+        "receipt": {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-glm-v1/abi-source/receipt.json",
+          "bytes": 3664,
+          "sha256": "9bc009018a4c4aa904862a87aa176f4376dfc82c2d1705371d8246aad22c6918",
+          "availability": "local-only"
+        },
+        "response": {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-glm-v1/abi-source/response.json",
+          "bytes": 1522,
+          "sha256": "3f26a401d24dcea9111740e662108f7185bf3dd2f66f38121d66376e33d3e388",
+          "availability": "local-only"
+        },
+        "returncode": 1,
+        "timed_out": false,
+        "actual_reported_turns": 1,
+        "reported_cost_usd": "0",
+        "reported_models": [],
+        "model_identity_and_terminal_valid": false,
+        "input_tokens": null,
+        "output_tokens": null,
+        "reported_context_window": null,
+        "within_reported_total_context": false,
+        "superseded_for_scope_completeness_by": null,
+        "configured_budget_usd": 5.0,
+        "configured_timeout_s": 900,
+        "configured_output_cap": 32000
+      },
+      {
+        "scope_directory": "followup-ng-ec16-glm-v1/context-closure-v1/output-scope-v1",
+        "receipt": {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-glm-v1/context-closure-v1/output-scope-v1/receipt.json",
+          "bytes": 3954,
+          "sha256": "3627fc6454db806f57e35c4da8c24e8e7cf12aef579b1fb7b806bc15a7377da7",
+          "availability": "local-only"
+        },
+        "response": {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-glm-v1/context-closure-v1/output-scope-v1/response.json",
+          "bytes": 20958,
+          "sha256": "48f9277f466f3f0a68285754faa6eef1b60ea47e82172c012ff03932712150f9",
+          "availability": "local-only"
+        },
+        "returncode": 0,
+        "timed_out": false,
+        "actual_reported_turns": 1,
+        "reported_cost_usd": "1.1758199999999999",
+        "reported_models": [
+          "glm-5.3"
+        ],
+        "model_identity_and_terminal_valid": true,
+        "input_tokens": 195399,
+        "output_tokens": 7953,
+        "reported_context_window": 200000,
+        "within_reported_total_context": false,
+        "superseded_for_scope_completeness_by": "followup-ng-ec16-writer-glm-scoped-v2",
+        "configured_budget_usd": 5.0,
+        "configured_timeout_s": 900,
+        "configured_output_cap": 32000
+      },
+      {
+        "scope_directory": "followup-ng-ec16-glm-v1/context-closure-v1",
+        "receipt": {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-glm-v1/context-closure-v1/receipt.json",
+          "bytes": 3664,
+          "sha256": "9ef8fba46b471af568d79ac653bc8be5db091e5bd3ddadf8bb5be0cf5e929537",
+          "availability": "local-only"
+        },
+        "response": {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-glm-v1/context-closure-v1/response.json",
+          "bytes": 1521,
+          "sha256": "f227ebb93621685e7f8d1c2efc318000d6a255080868cf33201b5eaab568c046",
+          "availability": "local-only"
+        },
+        "returncode": 1,
+        "timed_out": false,
+        "actual_reported_turns": 1,
+        "reported_cost_usd": "0",
+        "reported_models": [],
+        "model_identity_and_terminal_valid": false,
+        "input_tokens": null,
+        "output_tokens": null,
+        "reported_context_window": null,
+        "within_reported_total_context": false,
+        "superseded_for_scope_completeness_by": null,
+        "configured_budget_usd": 5.0,
+        "configured_timeout_s": 900,
+        "configured_output_cap": 32000
+      },
+      {
+        "scope_directory": "followup-ng-ec16-glm-v1/context-closure-v1/source-facts-v1",
+        "receipt": {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-glm-v1/context-closure-v1/source-facts-v1/receipt.json",
+          "bytes": 3934,
+          "sha256": "3c32aec0185770ed7a979c7f3789859daf7d2f15dc7492ea796f0614dd499445",
+          "availability": "local-only"
+        },
+        "response": {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-glm-v1/context-closure-v1/source-facts-v1/response.json",
+          "bytes": 25062,
+          "sha256": "5506699920c6290c2237dc771268bf2d995513449bda5f166c62abb4070610ce",
+          "availability": "local-only"
+        },
+        "returncode": 0,
+        "timed_out": false,
+        "actual_reported_turns": 1,
+        "reported_cost_usd": "1.17374",
+        "reported_models": [
+          "glm-5.3"
+        ],
+        "model_identity_and_terminal_valid": true,
+        "input_tokens": 166878,
+        "output_tokens": 13574,
+        "reported_context_window": 200000,
+        "within_reported_total_context": true,
+        "superseded_for_scope_completeness_by": null,
+        "configured_budget_usd": 5.0,
+        "configured_timeout_s": 900,
+        "configured_output_cap": 32000
+      },
+      {
+        "scope_directory": "followup-ng-ec16-glm-v1/writer-qualification/context-retry-v1",
+        "receipt": {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-glm-v1/writer-qualification/context-retry-v1/receipt.json",
+          "bytes": 3934,
+          "sha256": "8ee8e364e85093411aa46487c966eed955fd23fe5e828320a9d135e50f57d0f0",
+          "availability": "local-only"
+        },
+        "response": {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-glm-v1/writer-qualification/context-retry-v1/response.json",
+          "bytes": 20999,
+          "sha256": "35b751f145f9c7a92e66a55d5efe14541c66f6f053d3e758073803052426fe5f",
+          "availability": "local-only"
+        },
+        "returncode": 0,
+        "timed_out": false,
+        "actual_reported_turns": 1,
+        "reported_cost_usd": "1.287495",
+        "reported_models": [
+          "glm-5.3"
+        ],
+        "model_identity_and_terminal_valid": true,
+        "input_tokens": 215394,
+        "output_tokens": 8421,
+        "reported_context_window": 200000,
+        "within_reported_total_context": false,
+        "superseded_for_scope_completeness_by": "followup-ng-ec16-writer-glm-scoped-v2",
+        "configured_budget_usd": 5.0,
+        "configured_timeout_s": 900,
+        "configured_output_cap": 32000
+      },
+      {
+        "scope_directory": "followup-ng-ec16-adapter-glm-v1",
+        "receipt": {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-adapter-glm-v1/receipt.json",
+          "bytes": 3956,
+          "sha256": "31465ed49f9ca462e10c29164443abddabfd43e1cd011f671659635cbf16f9cb",
+          "availability": "local-only"
+        },
+        "response": {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-adapter-glm-v1/response.json",
+          "bytes": 20727,
+          "sha256": "a28c0de699797f7a7d32095c0123c3435554d3ba325a02fe35deab0bd2a54735",
+          "availability": "local-only"
+        },
+        "returncode": 0,
+        "timed_out": false,
+        "actual_reported_turns": 1,
+        "reported_cost_usd": "1.3257249999999998",
+        "reported_models": [
+          "glm-5.3"
+        ],
+        "model_identity_and_terminal_valid": true,
+        "input_tokens": 201950,
+        "output_tokens": 12639,
+        "reported_context_window": 200000,
+        "within_reported_total_context": false,
+        "superseded_for_scope_completeness_by": "followup-ng-ec16-adapter-glm-scoped-v2",
+        "configured_budget_usd": 5.0,
+        "configured_timeout_s": 900,
+        "configured_output_cap": 32000
+      },
+      {
+        "scope_directory": "followup-ng-ec16-adapter-glm-scoped-v2",
+        "receipt": {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-adapter-glm-scoped-v2/receipt.json",
+          "bytes": 3934,
+          "sha256": "68dbc860c243b07b0c9c7159f8c413e7d2b0ad276a04b38934a0d4c3c08c86bf",
+          "availability": "local-only"
+        },
+        "response": {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-adapter-glm-scoped-v2/response.json",
+          "bytes": 14862,
+          "sha256": "75e0b48b880522a2c4236b394ce5c4abcb0405b9e1a83f72874b029929fd6f8c",
+          "availability": "local-only"
+        },
+        "returncode": 0,
+        "timed_out": false,
+        "actual_reported_turns": 1,
+        "reported_cost_usd": "0.556165",
+        "reported_models": [
+          "glm-5.3"
+        ],
+        "model_identity_and_terminal_valid": true,
+        "input_tokens": 61168,
+        "output_tokens": 10013,
+        "reported_context_window": 200000,
+        "within_reported_total_context": true,
+        "superseded_for_scope_completeness_by": null,
+        "configured_budget_usd": 5.0,
+        "configured_timeout_s": 900,
+        "configured_output_cap": 32000
+      },
+      {
+        "scope_directory": "followup-ng-ec16-writer-glm-scoped-v2",
+        "receipt": {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-writer-glm-scoped-v2/receipt.json",
+          "bytes": 3968,
+          "sha256": "07295dbebd9766142f125c378c9c2b6ed29ddad7b285ff9d425b94bc94b2e803",
+          "availability": "local-only"
+        },
+        "response": {
+          "path": "runs/q3-support-closure/review/followup-ng-ec16-writer-glm-scoped-v2/response.json",
+          "bytes": 17233,
+          "sha256": "ac2ac92f0ead13af5e47fdff02bd4dffcdedd7988d35d8b0b111697ea7023734",
+          "availability": "local-only"
+        },
+        "returncode": 0,
+        "timed_out": false,
+        "actual_reported_turns": 1,
+        "reported_cost_usd": "0.63857",
+        "reported_models": [
+          "glm-5.3"
+        ],
+        "model_identity_and_terminal_valid": true,
+        "input_tokens": 106074,
+        "output_tokens": 4328,
+        "reported_context_window": 200000,
+        "within_reported_total_context": true,
+        "superseded_for_scope_completeness_by": null,
+        "configured_budget_usd": 5.0,
+        "configured_timeout_s": 900,
+        "configured_output_cap": 32000
+      },
+      {
+        "scope_directory": "followup-gn-ec16-glm-v1/boundary-followup-v2",
+        "receipt": {
+          "path": "runs/q3-support-closure/review/followup-gn-ec16-glm-v1/boundary-followup-v2/receipt.json",
+          "bytes": 3951,
+          "sha256": "d09413c697dba5f67f6de11fbd5d24d47b00301466e7e816d30baa8b2227d07b",
+          "availability": "local-only"
+        },
+        "response": {
+          "path": "runs/q3-support-closure/review/followup-gn-ec16-glm-v1/boundary-followup-v2/response.json",
+          "bytes": 20295,
+          "sha256": "7e026d91d3c8f49ec3cc2478bab751c94b30fe43b84acddb6fabf1d186a69359",
+          "availability": "local-only"
+        },
+        "returncode": 0,
+        "timed_out": false,
+        "actual_reported_turns": 1,
+        "reported_cost_usd": "0.5903799999999999",
+        "reported_models": [
+          "glm-5.3"
+        ],
+        "model_identity_and_terminal_valid": true,
+        "input_tokens": 95811,
+        "output_tokens": 4453,
+        "reported_context_window": 200000,
+        "within_reported_total_context": true,
+        "superseded_for_scope_completeness_by": null,
+        "configured_budget_usd": 5.0,
+        "configured_timeout_s": 900,
+        "configured_output_cap": 32000
+      },
+      {
+        "scope_directory": "followup-gn-ec16-glm-v1/producer",
+        "receipt": {
+          "path": "runs/q3-support-closure/review/followup-gn-ec16-glm-v1/producer/receipt.json",
+          "bytes": 3663,
+          "sha256": "3747018e19649cf9a8590e2f6073d7a3745107b21dc17f98e9e74c139baed0a4",
+          "availability": "local-only"
+        },
+        "response": {
+          "path": "runs/q3-support-closure/review/followup-gn-ec16-glm-v1/producer/response.json",
+          "bytes": 1521,
+          "sha256": "d7e08853c8865fa321dae6c656bb8e2e30d71611be98ff521894361a89ea4580",
+          "availability": "local-only"
+        },
+        "returncode": 1,
+        "timed_out": false,
+        "actual_reported_turns": 1,
+        "reported_cost_usd": "0",
+        "reported_models": [],
+        "model_identity_and_terminal_valid": false,
+        "input_tokens": null,
+        "output_tokens": null,
+        "reported_context_window": null,
+        "within_reported_total_context": false,
+        "superseded_for_scope_completeness_by": null,
+        "configured_budget_usd": 5.0,
+        "configured_timeout_s": 900,
+        "configured_output_cap": 32000
+      },
+      {
+        "scope_directory": "followup-gn-ec16-glm-v1/producer-instrument-retry",
+        "receipt": {
+          "path": "runs/q3-support-closure/review/followup-gn-ec16-glm-v1/producer-instrument-retry/receipt.json",
+          "bytes": 3934,
+          "sha256": "0c29753b2ccd1ed745b1ce7069aba9882a53195994dd1fa0dc6fea5340f98211",
+          "availability": "local-only"
+        },
+        "response": {
+          "path": "runs/q3-support-closure/review/followup-gn-ec16-glm-v1/producer-instrument-retry/response.json",
+          "bytes": 23698,
+          "sha256": "a4298c5d2b47697438b7f0f0e76214ff7a21bdbeeb8943ea4f3f8486219bfc1a",
+          "availability": "local-only"
+        },
+        "returncode": 0,
+        "timed_out": false,
+        "actual_reported_turns": 1,
+        "reported_cost_usd": "0.97794",
+        "reported_models": [
+          "glm-5.3"
+        ],
+        "model_identity_and_terminal_valid": true,
+        "input_tokens": 103038,
+        "output_tokens": 18510,
+        "reported_context_window": 200000,
+        "within_reported_total_context": true,
+        "superseded_for_scope_completeness_by": null,
+        "configured_budget_usd": 5.0,
+        "configured_timeout_s": 900,
+        "configured_output_cap": 32000
+      },
+      {
+        "scope_directory": "followup-gn-ec16-glm-v1/producer-source-retry",
+        "receipt": {
+          "path": "runs/q3-support-closure/review/followup-gn-ec16-glm-v1/producer-source-retry/receipt.json",
+          "bytes": 3932,
+          "sha256": "321d72a76d19b5de9c68abe258506daec65f0c2f4c881dd5f2e0de294e929453",
+          "availability": "local-only"
+        },
+        "response": {
+          "path": "runs/q3-support-closure/review/followup-gn-ec16-glm-v1/producer-source-retry/response.json",
+          "bytes": 17925,
+          "sha256": "d43c71f389f5057ff7ccb69b029b0802762f1dfc63f42c4d8d32ab13ce9e28f8",
+          "availability": "local-only"
+        },
+        "returncode": 0,
+        "timed_out": false,
+        "actual_reported_turns": 1,
+        "reported_cost_usd": "0.727035",
+        "reported_models": [
+          "glm-5.3"
+        ],
+        "model_identity_and_terminal_valid": true,
+        "input_tokens": 121067,
+        "output_tokens": 4868,
+        "reported_context_window": 200000,
+        "within_reported_total_context": true,
+        "superseded_for_scope_completeness_by": null,
+        "configured_budget_usd": 5.0,
+        "configured_timeout_s": 900,
+        "configured_output_cap": 32000
+      },
+      {
+        "scope_directory": "followup-gn-ec16-glm-v1/science",
+        "receipt": {
+          "path": "runs/q3-support-closure/review/followup-gn-ec16-glm-v1/science/receipt.json",
+          "bytes": 3956,
+          "sha256": "40fbae837850239c705ff17b3b882925b62d187f3fd346d0c14d348662df45a4",
+          "availability": "local-only"
+        },
+        "response": {
+          "path": "runs/q3-support-closure/review/followup-gn-ec16-glm-v1/science/response.json",
+          "bytes": 19865,
+          "sha256": "c97e4e1ca6dcaabe8395ed3d179dddebc3d14bf2a8bf799ef864c5bd3e682484",
+          "availability": "local-only"
+        },
+        "returncode": 0,
+        "timed_out": false,
+        "actual_reported_turns": 1,
+        "reported_cost_usd": "0.9616549999999999",
+        "reported_models": [
+          "glm-5.3"
+        ],
+        "model_identity_and_terminal_valid": true,
+        "input_tokens": 107686,
+        "output_tokens": 16929,
+        "reported_context_window": 200000,
+        "within_reported_total_context": true,
+        "superseded_for_scope_completeness_by": null,
+        "configured_budget_usd": 5.0,
+        "configured_timeout_s": 900,
+        "configured_output_cap": 32000
+      },
+      {
+        "scope_directory": "followup-ec19-native-glm-v1/closure-v1",
+        "receipt": {
+          "path": "runs/q3-support-closure/review/followup-ec19-native-glm-v1/closure-v1/receipt.json",
+          "bytes": 3930,
+          "sha256": "ddf187edc46e29b13b94468e4227f9e6f42c11023cc630a94ad06e71b1067604",
+          "availability": "local-only"
+        },
+        "response": {
+          "path": "runs/q3-support-closure/review/followup-ec19-native-glm-v1/closure-v1/response.json",
+          "bytes": 21805,
+          "sha256": "bd4da78413ba039201677e93960d1cb088d989f90e6f9a0988c032ea581aee87",
+          "availability": "local-only"
+        },
+        "returncode": 0,
+        "timed_out": false,
+        "actual_reported_turns": 1,
+        "reported_cost_usd": "0.62036",
+        "reported_models": [
+          "glm-5.3"
+        ],
+        "model_identity_and_terminal_valid": true,
+        "input_tokens": 82457,
+        "output_tokens": 8323,
+        "reported_context_window": 200000,
+        "within_reported_total_context": true,
+        "superseded_for_scope_completeness_by": null,
+        "configured_budget_usd": 5.0,
+        "configured_timeout_s": 900,
+        "configured_output_cap": 32000
+      },
+      {
+        "scope_directory": "followup-ec19-native-glm-v1",
+        "receipt": {
+          "path": "runs/q3-support-closure/review/followup-ec19-native-glm-v1/receipt.json",
+          "bytes": 3932,
+          "sha256": "8978f7147ba6a50c8dee64fdf92e3359dafed0513aa96f3645457849c0258033",
+          "availability": "local-only"
+        },
+        "response": {
+          "path": "runs/q3-support-closure/review/followup-ec19-native-glm-v1/response.json",
+          "bytes": 15057,
+          "sha256": "34ea323287753bef602615e41fc478bfabc6c6917749e313bb60163e6270676e",
+          "availability": "local-only"
+        },
+        "returncode": 0,
+        "timed_out": false,
+        "actual_reported_turns": 1,
+        "reported_cost_usd": "1.05152",
+        "reported_models": [
+          "glm-5.3"
+        ],
+        "model_identity_and_terminal_valid": true,
+        "input_tokens": 163029,
+        "output_tokens": 9455,
+        "reported_context_window": 200000,
+        "within_reported_total_context": true,
+        "superseded_for_scope_completeness_by": null,
+        "configured_budget_usd": 5.0,
+        "configured_timeout_s": 900,
+        "configured_output_cap": 32000
+      },
+      {
+        "scope_directory": "followup-s-public-glm-v1/accepted-tight-append-v1",
+        "receipt": {
+          "path": "runs/q3-support-closure/review/followup-s-public-glm-v1/accepted-tight-append-v1/receipt.json",
+          "bytes": 4006,
+          "sha256": "4b7986b84afa6a3e9b36efe69369c6f9a5ae71f84c1686618b09e009d089e8fe",
+          "availability": "local-only"
+        },
+        "response": {
+          "path": "runs/q3-support-closure/review/followup-s-public-glm-v1/accepted-tight-append-v1/response.json",
+          "bytes": 14932,
+          "sha256": "9592d8395325cddcf3dec9f3a6c67ef00f6e2a4ea884068120e2e0aa65529bf6",
+          "availability": "local-only"
+        },
+        "returncode": 0,
+        "timed_out": false,
+        "actual_reported_turns": 1,
+        "reported_cost_usd": "0.30946900000000005",
+        "reported_models": [
+          "glm-5.3"
+        ],
+        "model_identity_and_terminal_valid": true,
+        "input_tokens": 43151,
+        "output_tokens": 3746,
+        "reported_context_window": 200000,
+        "within_reported_total_context": true,
+        "superseded_for_scope_completeness_by": null,
+        "configured_budget_usd": 5.0,
+        "configured_timeout_s": 900,
+        "configured_output_cap": 32000
+      },
+      {
+        "scope_directory": "followup-s-public-glm-v1/focused-delta-v1",
+        "receipt": {
+          "path": "runs/q3-support-closure/review/followup-s-public-glm-v1/focused-delta-v1/receipt.json",
+          "bytes": 3931,
+          "sha256": "054665e8ebeec4397a35bdcbe8bbc659b2fbf8a1ab5915fbf05e8e14da32e64b",
+          "availability": "local-only"
+        },
+        "response": {
+          "path": "runs/q3-support-closure/review/followup-s-public-glm-v1/focused-delta-v1/response.json",
+          "bytes": 18281,
+          "sha256": "6d0c8dc2d396dc9c13a2eaa1ff5bf292a863ebab0bd860d9cb907c34a7d66696",
+          "availability": "local-only"
+        },
+        "returncode": 0,
+        "timed_out": false,
+        "actual_reported_turns": 1,
+        "reported_cost_usd": "0.54979",
+        "reported_models": [
+          "glm-5.3"
+        ],
+        "model_identity_and_terminal_valid": true,
+        "input_tokens": 67013,
+        "output_tokens": 8589,
+        "reported_context_window": 200000,
+        "within_reported_total_context": true,
+        "superseded_for_scope_completeness_by": null,
+        "configured_budget_usd": 5.0,
+        "configured_timeout_s": 900,
+        "configured_output_cap": 32000
+      },
+      {
+        "scope_directory": "followup-s-public-glm-v1",
+        "receipt": {
+          "path": "runs/q3-support-closure/review/followup-s-public-glm-v1/receipt.json",
+          "bytes": 3928,
+          "sha256": "774fd7473ff2b81a3b3f1338ea74a8fb477ffc9f0f45b62f1707150f502f4c0c",
+          "availability": "local-only"
+        },
+        "response": {
+          "path": "runs/q3-support-closure/review/followup-s-public-glm-v1/response.json",
+          "bytes": 16752,
+          "sha256": "8236783a4341e0254c8fada341c6ab4c2484b889b0780b93fab7edc27c69efad",
+          "availability": "local-only"
+        },
+        "returncode": 0,
+        "timed_out": false,
+        "actual_reported_turns": 1,
+        "reported_cost_usd": "0.5271",
+        "reported_models": [
+          "glm-5.3"
+        ],
+        "model_identity_and_terminal_valid": true,
+        "input_tokens": 77590,
+        "output_tokens": 5566,
+        "reported_context_window": 200000,
+        "within_reported_total_context": true,
+        "superseded_for_scope_completeness_by": null,
+        "configured_budget_usd": 5.0,
+        "configured_timeout_s": 900,
+        "configured_output_cap": 32000
+      },
+      {
+        "scope_directory": "followup-ng-phase-glm-v1/ec18-scoped-v2",
+        "receipt": {
+          "path": "runs/q3-support-closure/review/followup-ng-phase-glm-v1/ec18-scoped-v2/receipt.json",
+          "bytes": 4147,
+          "sha256": "7ad4107d2ff0608d6f90deb9007cf7b0758a0c0e3f8b7ce799504f522c2e64b5",
+          "availability": "local-only"
+        },
+        "response": {
+          "path": "runs/q3-support-closure/review/followup-ng-phase-glm-v1/ec18-scoped-v2/response.json",
+          "bytes": 14431,
+          "sha256": "431b2b0bff6894379dd6cfdface26e0868144dcdcdb33d0614f98f5d56dff946",
+          "availability": "local-only"
+        },
+        "returncode": 0,
+        "timed_out": false,
+        "actual_reported_turns": 1,
+        "reported_cost_usd": "0.6646399999999999",
+        "reported_models": [
+          "glm-5.3"
+        ],
+        "model_identity_and_terminal_valid": true,
+        "input_tokens": 102018,
+        "output_tokens": 6182,
+        "reported_context_window": 200000,
+        "within_reported_total_context": true,
+        "superseded_for_scope_completeness_by": null,
+        "configured_budget_usd": 5.0,
+        "configured_timeout_s": 900,
+        "configured_output_cap": 32000
+      },
+      {
+        "scope_directory": "followup-ng-phase-glm-v1/f20-scoped-v2",
+        "receipt": {
+          "path": "runs/q3-support-closure/review/followup-ng-phase-glm-v1/f20-scoped-v2/receipt.json",
+          "bytes": 4131,
+          "sha256": "ef430f913944a956485a3d96134a87640ebc348b51722a2b37efb815af8ce091",
+          "availability": "local-only"
+        },
+        "response": {
+          "path": "runs/q3-support-closure/review/followup-ng-phase-glm-v1/f20-scoped-v2/response.json",
+          "bytes": 14012,
+          "sha256": "587c14f2fe732a7d4a947db366e5462945d89f6d870ead02d81c604aed55b7df",
+          "availability": "local-only"
+        },
+        "returncode": 0,
+        "timed_out": false,
+        "actual_reported_turns": 1,
+        "reported_cost_usd": "0.83299",
+        "reported_models": [
+          "glm-5.3"
+        ],
+        "model_identity_and_terminal_valid": true,
+        "input_tokens": 120313,
+        "output_tokens": 9257,
+        "reported_context_window": 200000,
+        "within_reported_total_context": true,
+        "superseded_for_scope_completeness_by": null,
+        "configured_budget_usd": 5.0,
+        "configured_timeout_s": 900,
+        "configured_output_cap": 32000
+      },
+      {
+        "scope_directory": "followup-ng-phase-glm-v1",
+        "receipt": {
+          "path": "runs/q3-support-closure/review/followup-ng-phase-glm-v1/receipt.json",
+          "bytes": 3981,
+          "sha256": "38354437762aa32808a1e09af631add74ce8df923093ae2c30ae44518cf42460",
+          "availability": "local-only"
+        },
+        "response": {
+          "path": "runs/q3-support-closure/review/followup-ng-phase-glm-v1/response.json",
+          "bytes": 18337,
+          "sha256": "e709dacec2ccf37dd2e2b201f2547a33afad398864bc4a3154cc6845634ce82e",
+          "availability": "local-only"
+        },
+        "returncode": 0,
+        "timed_out": false,
+        "actual_reported_turns": 1,
+        "reported_cost_usd": "1.23103",
+        "reported_models": [
+          "glm-5.3"
+        ],
+        "model_identity_and_terminal_valid": true,
+        "input_tokens": 212706,
+        "output_tokens": 6700,
+        "reported_context_window": 200000,
+        "within_reported_total_context": false,
+        "superseded_for_scope_completeness_by": "followup-ng-phase-glm-v1/ec18-scoped-v2 + f20-scoped-v2",
+        "configured_budget_usd": 5.0,
+        "configured_timeout_s": 900,
+        "configured_output_cap": 32000
+      }
+    ],
+    "actual_call_count": 22,
+    "actual_reported_turns_including_failed_responses": 22,
+    "reported_total_usd": "16.38061399999999945",
+    "limit": "Terminal/model validity alone does not establish review scope. Large-context responses and all failures are retained; specified scoped rechecks supply the final qualification. No prior Astra/GLM review conclusions were used as model-review input; author analyses were supplied as claims to verify."
+  },
+  "additional_independent_local_audits": {
+    "S_request_association_and_EC20_missing_request": {
+      "model_identity": "unverified; directory name is not a model-use claim",
+      "report": {
+        "path": "runs/q3-support-closure/review/followup-s-public-astra-v1/REPORT.md",
+        "bytes": 7374,
+        "sha256": "ba5c42508ff05c0ff9040e7d72eb369224a16a4a9ae9641f55e420c261527e9a",
+        "availability": "local-only"
+      },
+      "manifest": {
+        "path": "runs/q3-support-closure/review/followup-s-public-astra-v1/MANIFEST.json",
+        "bytes": 41490,
+        "sha256": "25cf28673045caff64f710ec1c331aa861d76756cf0b60af9ebb3a7cd13839d6",
+        "availability": "local-only"
+      }
+    }
+  },
+  "maintenance_checks": {
+    "support_unittests": {
+      "run": 75,
+      "skipped": 1,
+      "result": "OK"
+    },
+    "traceability_freshness_check": "PASS",
+    "paper_design_check": "PASS; static design/arithmetic, not new simulator evidence",
+    "old_frozen_receipt_sha_and_852_denominator": "unchanged",
+    "link_anchor_readability_and_final_bindings": "checked separately at final local handoff",
+    "EVAS_regressions": "not rerun for follow-up; no EVAS production-source changes",
+    "remote_new_CI": "not run for unpublished follow-up; PR165 CI already passed before merge",
+    "workspace_visibility": "PASS; follow-up remains visible and pending integration"
+  }
+}

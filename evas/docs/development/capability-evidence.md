@@ -17,6 +17,11 @@ IR19 增加纯数学函数，恒定 PWL 保留原输入位；契约见[纯数学
 静态输入与回调证书只解除已证明的义务；新旧成绩、具体工具版本和未完组合均在收据中分开记录。
 函数修复属于本轮源码交付；#162 的旧运行不计作当前 main 能力，#131 不动。
 
+[原11格后续取证](../../../experiments/backends/support/README.md#evidence-followup)
+补充 CROSS、EVENT-ORDER、DYNAMICS、QUALIFICATION 的有限来源证据。
+回调记录、实际输入消费者与最终接受状态按固定卡重新核准；新数值分析与旧I并列保存。
+这次不修改EVAS生产源码，不将环回侧别或同刻回调直接认定为EVAS缺陷，也不豁免原验收。
+
 [独立基础卡与历史补证](../../../experiments/backends/support/README.md#primitives-main)
 补充 LANG、NONLINEAR、DYNAMICS、QUALIFICATION：十卡、三档、四后端共120个新位置，
 另重读168份历史配置。新卡固定 main 检查点 `a64c2ad0`，仅验收有限导出值；
