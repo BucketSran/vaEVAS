@@ -1,0 +1,22 @@
+simulator lang=spectre
+global 0
+ahdl_include "../../system/cds/circuit.va"
+ahdl_include "../../module/core/track_hold.va"
+
+// Two CDS cycles. ph1 acquires the vcm reference, ph2 the signal; 150 ns
+// windows keep settle residual negligible so the output difference isolates
+// pedestal cancellation vs the droop gap. Xref is a plain single core on the
+// same ph2 for pedestal contrast; Xcds_off adds a 10 mV common offset that the
+// difference should reject.
+Vvin (vin 0) vsource type=pwl wave=[0 1.6 560n 1.6 560.2n 0.2 1.5u 0.2]
+Vph1 (ph1 0) vsource type=pwl wave=[0 0 100n 0 100.2n 1.8 250n 1.8 250.2n 0 650n 0 650.2n 1.8 800n 1.8 800.2n 0 1.5u 0]
+Vph2 (ph2 0) vsource type=pwl wave=[0 0 350n 0 350.2n 1.8 500n 1.8 500.2n 0 900n 0 900.2n 1.8 1050n 1.8 1050.2n 0 1.5u 0]
+Vrst (rst 0) vsource type=pwl wave=[0 0 20n 0 20.2n 1.8 60n 1.8 60.2n 0 1.5u 0]
+
+Xcds (vin ph1 ph2 rst cds_v cds_valid cds_href cds_hsig) r01_cds_sampler
+Xcds_off (vin ph1 ph2 rst off_v off_valid off_href off_hsig) r01_cds_sampler voff=10m
+Xref (vin ph2 rst ref_held) r01_track_hold
+
+opts options reltol=1e-5 vabstol=1e-7 iabstol=1e-12
+tran tran stop=1.5u maxstep=2n errpreset=conservative
+save vin ph1 ph2 rst cds_v cds_valid cds_href cds_hsig off_v off_valid ref_held

@@ -1,0 +1,111 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Two apertures on one input. The serializer consumes the actual held nodes.
+module r01_interleaved_sampler(vin, track0, track1, read_clk, rst,
+                              held0, held1, serial, valid, branch_id,
+                              sample_index, sample_time);
+    input vin, track0, track1, read_clk, rst;
+    output held0, held1, serial, valid, branch_id, sample_index, sample_time;
+    electrical vin, track0, track1, read_clk, rst;
+    electrical held0, held1, serial, valid, branch_id, sample_index, sample_time;
+    electrical feed0, feed1;
+
+    parameter real vth = 0.9;
+    parameter real vlogic = 1.8;
+    parameter real vcm = 0.9;
+    parameter real vinit = 0.9;
+    parameter real gain0 = 1.0;
+    parameter real gain1 = 1.0;
+    parameter real offset0 = 0.0;
+    parameter real offset1 = 0.0;
+    parameter real tau_acq0 = 10n from (0:inf);
+    parameter real tau_acq1 = 10n from (0:inf);
+    parameter real tau_hold = 200u from (0:inf);
+    parameter real vleak = 0.0;
+    parameter real pedestal = 2m;
+    parameter real tout = 1n from (0:inf);
+    parameter real time_scale = 1u from (0:inf);
+
+    integer pending0, pending1, next_branch, last_branch, count, valid_state;
+    real hold_time0, hold_time1, last_time, serialized;
+
+    r01_track_hold #(.vth(vth), .vinit(vinit), .tau_acq(tau_acq0),
+                    .tau_hold(tau_hold), .vleak(vleak), .pedestal(pedestal))
+        sampler0(feed0, track0, rst, held0);
+    r01_track_hold #(.vth(vth), .vinit(vinit), .tau_acq(tau_acq1),
+                    .tau_hold(tau_hold), .vleak(vleak), .pedestal(pedestal))
+        sampler1(feed1, track1, rst, held1);
+
+    analog begin
+        V(feed0) <+ vcm + gain0 * (V(vin) - vcm) + offset0;
+        V(feed1) <+ vcm + gain1 * (V(vin) - vcm) + offset1;
+
+        @(initial_step) begin
+            pending0 = 0;
+            pending1 = 0;
+            next_branch = 0;
+            last_branch = 0;
+            count = -1;
+            valid_state = 0;
+            hold_time0 = 0.0;
+            hold_time1 = 0.0;
+            last_time = 0.0;
+            serialized = vinit;
+        end
+        @(cross(V(rst) - vth, +1)) begin
+            pending0 = 0;
+            pending1 = 0;
+            next_branch = 0;
+            last_branch = 0;
+            count = -1;
+            valid_state = 0;
+            last_time = 0.0;
+            serialized = vinit;
+        end
+        // A new tracking interval invalidates the unconsumed old sample.
+        @(cross(V(track0) - vth, +1)) pending0 = 0;
+        @(cross(V(track1) - vth, +1)) pending1 = 0;
+        @(cross(V(track0) - vth, -1)) begin
+            if (V(rst) < vth) begin
+                pending0 = 1;
+                hold_time0 = $abstime;
+            end
+        end
+        @(cross(V(track1) - vth, -1)) begin
+            if (V(rst) < vth) begin
+                pending1 = 1;
+                hold_time1 = $abstime;
+            end
+        end
+        @(cross(V(read_clk) - vth, +1)) begin
+            valid_state = 0;
+            if (V(rst) < vth) begin
+                if ((next_branch == 0) && pending0 && (V(track0) < vth)
+                    && ((count < 0) || (hold_time0 > last_time))) begin
+                    serialized = V(held0);
+                    last_time = hold_time0;
+                    last_branch = 0;
+                    pending0 = 0;
+                    next_branch = 1;
+                    count = count + 1;
+                    valid_state = 1;
+                end else if ((next_branch == 1) && pending1 && (V(track1) < vth)
+                             && ((count < 0) || (hold_time1 > last_time))) begin
+                    serialized = V(held1);
+                    last_time = hold_time1;
+                    last_branch = 1;
+                    pending1 = 0;
+                    next_branch = 0;
+                    count = count + 1;
+                    valid_state = 1;
+                end
+            end
+        end
+        V(serial) <+ transition(serialized, 0, tout, tout);
+        V(valid) <+ transition(valid_state * vlogic, 0, tout, tout);
+        V(branch_id) <+ transition(last_branch * vlogic, 0, tout, tout);
+        V(sample_index) <+ transition(count, 0, tout, tout);
+        V(sample_time) <+ transition(last_time / time_scale, 0, tout, tout);
+    end
+endmodule

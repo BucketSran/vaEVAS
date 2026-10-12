@@ -1,0 +1,20 @@
+simulator lang=spectre
+global 0
+ahdl_include "../../system/pingpong/circuit.va"
+ahdl_include "../../module/core/track_hold.va"
+
+// Opposite-phase apertures, 100 ns high per 200 ns period. The output must
+// level-select the holding branch with a completed sample: invalid before the
+// first falling edge, then alternating full-hold segments. Input steps at
+// 450 ns and 900 ns land on known phases so each branch's captured value is
+// predictable from the phase that was acquiring at that time.
+Vvin (vin 0) vsource type=pwl wave=[0 1.6 450n 1.6 450.2n 0.6 902n 0.6 902.2n 1.2 1.4u 1.2]
+Vph0 (ph0 0) vsource type=pwl wave=[0 0 100n 0 100.2n 1.8 200n 1.8 200.2n 0 300n 0 300.2n 1.8 400n 1.8 400.2n 0 500n 0 500.2n 1.8 600n 1.8 600.2n 0 700n 0 700.2n 1.8 800n 1.8 800.2n 0 900n 0 900.2n 1.8 1000n 1.8 1000.2n 0 1100n 0 1100.2n 1.8 1200n 1.8 1200.2n 0 1.4u 0]
+Vph1 (ph1 0) vsource type=pwl wave=[0 0 200n 0 200.2n 1.8 300n 1.8 300.2n 0 400n 0 400.2n 1.8 500n 1.8 500.2n 0 600n 0 600.2n 1.8 700n 1.8 700.2n 0 800n 0 800.2n 1.8 900n 1.8 900.2n 0 1000n 0 1000.2n 1.8 1100n 1.8 1100.2n 0 1.4u 0]
+Vrst (rst 0) vsource type=pwl wave=[0 1.8 40n 1.8 40.2n 0 1.4u 0]
+
+Xpp (vin ph0 ph1 rst pp_v pp_valid pp_branch pp_h0 pp_h1) r01_pingpong_sampler
+
+opts options reltol=1e-5 vabstol=1e-7 iabstol=1e-12
+tran tran stop=1.4u maxstep=2n errpreset=conservative
+save vin ph0 ph1 rst pp_v pp_valid pp_branch pp_h0 pp_h1

@@ -1,0 +1,19 @@
+simulator lang=spectre
+// Run from this directory. All four channels capture at the same aperture.
+ahdl_include "../../module/core/track_hold.va"
+ahdl_include "../../system/simultaneous/circuit.va"
+
+V0 (ain0 0) vsource type=pwl wave=[0 0.2 500n 0.2 1u 0.4 1.1u 1.6 24u 1.6 25u 1.4 25.1u 0.2 45u 0.2]
+V1 (ain1 0) vsource type=pwl wave=[0 0.6 500n 0.6 1u 0.8 1.1u 0.2 24u 0.2 25u 0.6 25.1u 1.6 45u 1.6]
+V2 (ain2 0) vsource type=pwl wave=[0 1.2 500n 1.2 1u 1.0 1.1u 1.6 24u 1.6 25u 1.0 25.1u 0.2 45u 0.2]
+V3 (ain3 0) vsource type=pwl wave=[0 1.6 500n 1.6 1u 1.4 1.1u 0.2 24u 0.2 25u 0.4 25.1u 1.6 45u 1.6]
+// Startup track is high. Reset release starts acquisition without a track edge.
+Vr (rst 0) vsource type=pwl wave=[0 1.8 499n 1.8 500n 0 32u 0 32.001u 1.8 33u 1.8 33.001u 0 45u 0]
+Vt (track 0) vsource type=pwl wave=[0 1.8 999n 1.8 1u 0 24u 0 24.001u 1.8 24.999u 1.8 25u 0 45u 0]
+// Read 0,1,2,3 after waits of about 0.2,2,6,12 us. Re-read 0 at 20 us.
+Vs0 (sel0 0) vsource type=pwl wave=[0 0 2.9u 0 2.901u 1.8 6.9u 1.8 6.901u 0 12.9u 0 12.901u 1.8 19.9u 1.8 19.901u 0 27.9u 0 27.901u 1.8 45u 1.8]
+Vs1 (sel1 0) vsource type=pwl wave=[0 0 6.9u 0 6.901u 1.8 19.9u 1.8 19.901u 0 27.9u 0 27.901u 1.8 45u 1.8]
+Ve (read_en 0) vsource type=pwl wave=[0 0 1.2u 0 1.201u 1.8 2u 1.8 2.001u 0 3u 0 3.001u 1.8 4u 1.8 4.001u 0 7u 0 7.001u 1.8 8u 1.8 8.001u 0 13u 0 13.001u 1.8 14u 1.8 14.001u 0 21u 0 21.001u 1.8 22u 1.8 22.001u 0 25.2u 0 25.201u 1.8 26u 1.8 26.001u 0 28u 0 28.001u 1.8 45u 1.8]
+Xarray (ain0 ain1 ain2 ain3 track rst sel0 sel1 read_en dout valid held0 held1 held2 held3) r01_simultaneous
+save ain0 ain1 ain2 ain3 track rst sel0 sel1 read_en dout valid held0 held1 held2 held3
+tran tran stop=45u maxstep=100n errpreset=conservative

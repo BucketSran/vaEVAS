@@ -1,0 +1,73 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Correlated double sampling on the shared core. ph1 acquires a reference
+// (input clamped to vcm+voff), ph2 acquires the signal (vin+voff); the output
+// forms vcm + (held_sig - held_ref). Fixed pedestal and the common offset are
+// common to both acquisitions and cancel in the difference; the droop gap and
+// the differing acquisition targets do not cancel.
+module r01_cds_sampler(vin, ph1, ph2, rst, vout, valid, held_ref, held_sig);
+    input vin, ph1, ph2, rst;
+    output vout, valid, held_ref, held_sig;
+    electrical vin, ph1, ph2, rst;
+    electrical vout, valid, held_ref, held_sig;
+    electrical feed_ref, feed_sig;
+
+    parameter real vth = 0.9;
+    parameter real vlogic = 1.8;
+    parameter real vcm = 0.9;
+    parameter real vinit = 0.9;
+    parameter real voff = 0.0;
+    parameter real tau_acq = 10n from (0:inf);
+    parameter real tau_hold = 200u from (0:inf);
+    parameter real vleak = 0.0;
+    parameter real pedestal = 2m;
+    parameter real edge_time = 1n from (0:inf);
+
+    integer ref_done, sig_done, pair_ok;
+
+    r01_track_hold #(.vth(vth), .vinit(vinit), .tau_acq(tau_acq),
+        .tau_hold(tau_hold), .vleak(vleak), .pedestal(pedestal))
+        ref_sh(feed_ref, ph1, rst, held_ref);
+    r01_track_hold #(.vth(vth), .vinit(vinit), .tau_acq(tau_acq),
+        .tau_hold(tau_hold), .vleak(vleak), .pedestal(pedestal))
+        sig_sh(feed_sig, ph2, rst, held_sig);
+
+    analog begin
+        // Common offset enters both acquisition targets, so it cancels in the
+        // difference like a real input-referred offset behind one switch pair.
+        V(feed_ref) <+ vcm + voff;
+        V(feed_sig) <+ V(vin) + voff;
+
+        @(initial_step) begin
+            ref_done = 0;
+            sig_done = 0;
+        end
+        @(cross(V(rst)-vth, +1)) begin
+            ref_done = 0;
+            sig_done = 0;
+        end
+        // A new reference phase starts a new CDS cycle and invalidates any
+        // signal still held from the previous pair.
+        @(cross(V(ph1)-vth, +1)) begin
+            ref_done = 0;
+            sig_done = 0;
+        end
+        @(cross(V(ph1)-vth, -1)) begin
+            if (V(rst) < vth) ref_done = 1;
+        end
+        // A new signal phase replaces only the signal half of the pair.
+        @(cross(V(ph2)-vth, +1)) begin
+            sig_done = 0;
+        end
+        @(cross(V(ph2)-vth, -1)) begin
+            if (V(rst) < vth && ref_done) sig_done = 1;
+        end
+
+        pair_ok = ref_done && sig_done && V(ph1) <= vth && V(ph2) <= vth
+                  && V(rst) <= vth;
+        V(vout) <+ (vcm + V(held_sig) - V(held_ref))
+                   * transition(pair_ok, 0, edge_time);
+        V(valid) <+ vlogic * transition(pair_ok, 0, edge_time);
+    end
+endmodule

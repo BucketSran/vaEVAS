@@ -1,0 +1,69 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// A scan controller fixes the mux route for one acquisition window.
+// The sole storage node is never reset by a channel selection change.
+module r01_mux(ain0, ain1, ain2, ain3, sel0, sel1, track, rst,
+               read_en, dout, valid, owner0, owner1, held);
+    input ain0, ain1, ain2, ain3, sel0, sel1, track, rst, read_en;
+    output dout, valid, owner0, owner1, held;
+    electrical ain0, ain1, ain2, ain3, sel0, sel1, track, rst, read_en;
+    electrical dout, valid, owner0, owner1, held, mux_in;
+    parameter real vth = 0.9;
+    parameter real vlogic = 1.8;
+    parameter real vinit = 0.9;
+    parameter real tau_acq = 10n from (0:inf);
+    parameter real tau_hold = 200u from (0:inf);
+    parameter real vleak = 0.0;
+    parameter real pedestal = 2m;
+    parameter real edge_time = 1n from (0:inf);
+    integer active_channel, sample_valid, acquired, readable;
+    real mux_value;
+
+    r01_track_hold #(.vth(vth), .vinit(vinit), .tau_acq(tau_acq),
+        .tau_hold(tau_hold), .vleak(vleak), .pedestal(pedestal))
+        shared_sh(mux_in, track, rst, held);
+
+    analog begin
+        @(initial_step) begin
+            active_channel = 0;
+            sample_valid = 0;
+            acquired = 0;
+            if (V(rst) <= vth && V(track) > vth) begin
+                active_channel = (V(sel0) > vth ? 1 : 0)
+                               + (V(sel1) > vth ? 2 : 0);
+                acquired = 1;
+            end
+        end
+        @(cross(V(rst)-vth, +1)) begin
+            sample_valid = 0;
+            acquired = 0;
+            active_channel = 0;
+        end
+        @(cross(V(track)-vth, +1) or cross(V(rst)-vth, -1)) begin
+            sample_valid = 0;
+            if (V(rst) <= vth && V(track) > vth) begin
+                active_channel = (V(sel0) > vth ? 1 : 0)
+                               + (V(sel1) > vth ? 2 : 0);
+                acquired = 1;
+            end
+        end
+        @(cross(V(track)-vth, -1)) begin
+            if (V(rst) <= vth && acquired) sample_valid = 1;
+            acquired = 0;
+        end
+        case (active_channel)
+            0: mux_value = V(ain0);
+            1: mux_value = V(ain1);
+            2: mux_value = V(ain2);
+            3: mux_value = V(ain3);
+        endcase
+        V(mux_in) <+ mux_value;
+        readable = sample_valid && V(track) <= vth && V(rst) <= vth
+                   && V(read_en) > vth;
+        V(dout) <+ V(held) * transition(readable, 0, edge_time);
+        V(valid) <+ vlogic * transition(readable, 0, edge_time);
+        V(owner0) <+ vlogic * transition(active_channel % 2, 0, edge_time);
+        V(owner1) <+ vlogic * transition(active_channel / 2, 0, edge_time);
+    end
+endmodule

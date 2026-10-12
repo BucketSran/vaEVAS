@@ -1,0 +1,26 @@
+simulator lang=spectre
+global 0
+ahdl_include "../../module/core/track_hold.va"
+ahdl_include "../../system/interleaved/circuit.va"
+
+// All values are nominal design stimuli, not a fitted silicon model.
+Vin (vin 0) vsource type=sine dc=0.9 ampl=0.55 freq=1.37M
+Rst (rst 0) vsource type=pwl wave=[0 1.8 34n 1.8 35n 0 2u 0 2.001u 1.8 2.039u 1.8 2.040u 0]
+T0 (track0 0) vsource type=pulse val0=0 val1=1.8 delay=60n rise=1n fall=1n width=80n period=200n
+T1 (track1 0) vsource type=pulse val0=0 val1=1.8 delay=160n rise=1n fall=1n width=80n period=200n
+// This physically shifts branch 1's acquisition window and hold edge.
+T1skew (track1skew 0) vsource type=pulse val0=0 val1=1.8 delay=172n rise=1n fall=1n width=80n period=200n
+// First read at 75.5ns is deliberately invalid; later reads are in hold.
+Read (read_clk 0) vsource type=pulse val0=0 val1=1.8 delay=75n rise=1n fall=1n width=8n period=100n
+
+Matched (vin track0 track1 read_clk rst m_h0 m_h1 m_serial m_valid m_branch_id m_index m_time) r01_interleaved_sampler
+Mismatch (vin track0 track1 read_clk rst g_h0 g_h1 g_serial g_valid g_branch_id g_index g_time) r01_interleaved_sampler gain0=1.01 gain1=0.99 offset0=6m offset1=-6m
+Skew (vin track0 track1skew read_clk rst s_h0 s_h1 s_serial s_valid s_branch_id s_index s_time) r01_interleaved_sampler
+Bandwidth (vin track0 track1 read_clk rst b_h0 b_h1 b_serial b_valid b_branch_id b_index b_time) r01_interleaved_sampler tau_acq0=10n tau_acq1=25n
+
+save vin rst track0 track1 track1skew read_clk
+save m_h0 m_h1 m_serial m_valid m_branch_id m_index m_time
+save g_h0 g_h1 g_serial g_valid g_branch_id g_index g_time
+save s_h0 s_h1 s_serial s_valid s_branch_id s_index s_time
+save b_h0 b_h1 b_serial b_valid b_branch_id b_index b_time
+tran tran stop=4u maxstep=1n errpreset=conservative
