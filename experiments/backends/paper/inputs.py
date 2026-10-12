@@ -120,6 +120,11 @@ def decks(card, settings, bind, times, breakpoints):
     observer_wave=' '.join(f"{r['time_s']:.17g} {i%2}" for i,r in enumerate(breakpoints['records']))
     spice_sources.append('Vpaper_observer paper_observer 0 PWL('+observer_wave+')')
     signals = ' '.join(f'v({p})' for p in bind['ports'])
+    # ngspice's expression lexer treats these bare node names as operators.
+    # Quote only the export reference; keep the physical ports and other decks.
+    ng_operators = {'lt', 'le', 'gt', 'ge', 'ne', 'eq', 'or', 'and', 'not'}
+    ng_signals = ' '.join(f'v("{p}")' if p in ng_operators else f'v({p})'
+                          for p in bind['ports'])
     stop, step = settings['stop_s'], settings['maxstep_s']
     spice_step = settings['spice_maxstep_s']
     strobes = ' '.join(f'{t:.17g}' for t in times)
@@ -134,7 +139,7 @@ def decks(card, settings, bind, times, breakpoints):
         '.options '+options+' method=trap','.control','pre_osdi dut.osdi',
         'set filetype=ascii','set wr_singlescale','set wr_vecnames','set numdgt=17','option',
         f'tran {spice_step:.17g} {stop:.17g} 0 {spice_step:.17g}',
-        'wrdata waveform.txt '+signals,'option','quit','.endc','.end'])+'\n'
+        'wrdata waveform.txt '+ng_signals,'option','quit','.endc','.end'])+'\n'
     override = ' #('+', '.join(f'.{k}({v:.17g})' for k,v in bind['parameters'].items())+')' if params else ''
     gc = '\n'.join(['load mgsim','load ./dut.so','verilog',
         f"\\{bind['top_module']}{override} dut({','.join(bind['ports'])});",'spice',

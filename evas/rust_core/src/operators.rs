@@ -567,7 +567,9 @@ fn sin_reduced(r: I) -> Result<I, Error> {
         term = -term * r2 / I::point(a * b);
         sum = sum + term;
     }
-    Ok(widen(sum, taylor_remainder(limit, 19)))
+    // Lagrange's remainder depends on this certified argument interval,
+    // not on the largest argument admitted by the reduction domain.
+    Ok(widen(sum, taylor_remainder(r.lo.abs().max(r.hi.abs()), 19)))
 }
 
 fn cos_reduced(r: I) -> Result<I, Error> {
@@ -595,7 +597,7 @@ fn cos_reduced(r: I) -> Result<I, Error> {
         term = -term * r2 / I::point(a * b);
         sum = sum + term;
     }
-    Ok(widen(sum, taylor_remainder(limit, 20)))
+    Ok(widen(sum, taylor_remainder(r.lo.abs().max(r.hi.abs()), 20)))
 }
 
 fn sin_point_bounds(x: f64) -> Result<I, Error> {
@@ -1099,6 +1101,14 @@ impl Operators {
         };
         let (values, derivatives) = self.continuous.as_ref().unwrap().local_range(delta)?;
         Ok((values[slot], derivatives[slot]))
+    }
+
+    pub(crate) fn refine_ordinary_phase(&mut self, enabled: bool) {
+        for entry in &mut self.entries {
+            if let Runtime::IdtMod(history) = entry {
+                history.refine_ordinary(enabled);
+            }
+        }
     }
 
     pub(crate) fn event_bounds(&self, time: f64, window: I) -> Result<Vec<I>, Error> {

@@ -3,12 +3,33 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
-from inputs import freeze, verify, requested_times
+from inputs import decks, freeze, verify, requested_times
 
 ROOT = Path(__file__).resolve().parents[3]
 CARDS = ROOT / 'evas/validation/paper/core-v1.json'
 
 class InputContracts(unittest.TestCase):
+    def test_ngspice_operator_named_nodes_are_exported_without_renaming_ports(self):
+        # The ngspice expression lexer reads bare lt/ge/etc. as operators even
+        # inside v(...). Quoting is only for the export expression, not the DUT.
+        ports = ['u', 'lt', 'le', 'gt', 'ge', 'ne', 'eq', 'or', 'and', 'not', 'out']
+        card = {'id': 'operator_nodes', 'stimulus': {
+            'u': {'points_s_V': [[0, .5], [1e-6, .5]]}}}
+        settings = {'stop_s': 1e-6, 'maxstep_s': 1e-9, 'spice_maxstep_s': 1e-9,
+                    'reltol': 1e-8, 'vabstol_V': 1e-12, 'iabstol_A': 1e-15}
+        bind = {'ports': ports, 'top_module': 'operator_nodes', 'parameters': {}}
+        generated = decks(card, settings, bind, [0, 1e-6],
+                          {'records': [{'time_s': 0}, {'time_s': 1e-6}]})
+        ng = generated['openvaf_r_ngspice'][1]
+        self.assertIn('wrdata waveform.txt v(u) v("lt") v("le") v("gt") v("ge") '
+                      'v("ne") v("eq") v("or") v("and") v("not") v(out)\n', ng)
+        self.assertIn('N0 ' + ' '.join(ports) + ' model0\n', ng)
+        self.assertIn('.print tran ' + ' '.join(f'v({p})' for p in ports)
+                      + ' v(bench_ref)\n', generated['gnucap_modelgen'][1])
+        request = json.loads(generated['evas'][1])
+        self.assertEqual(request['instances'][0]['ports'], {p: p for p in ports})
+        self.assertEqual(request['inputs']['u'], [[0, .5], [1e-6, .5]])
+
     def test_exact_sources_and_hierarchical_isolation_survive_all_decks(self):
         with tempfile.TemporaryDirectory() as tmp:
             out = Path(tmp) / 'freeze'

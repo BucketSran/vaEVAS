@@ -46,6 +46,7 @@
 
 | 目的 | 入口 |
 | --- | --- |
+| 检查 44 组基础特性与工程组合的三档精度 | [模型与共同 checker](paper/README.md)、[范围和预算](../docs/COMPARISON-METHODOLOGY.md#precision-breadth)、[实际收据](../../experiments/backends/support/README.md#precision-breadth)；不与旧 31 条件混算 |
 | 查看新论文集的特性映射、有限首批和独立条件卡 | [论文比较设计](paper/README.md)，设计与冻结条件；[当前 main 实测](../../experiments/backends/support/README.md)保留 I/X |
 | 检查支持表的 15 个专项探针 | [固定模型、判据与校准](support/README.md)，有限开发观测 |
 | 检查两级固定 slew 的独立公式与实际配对 | [输入生成与检查器](slew_cascade/compare.py)、[范围和实测](../../experiments/backends/slew-cascade/README.md) |
@@ -141,6 +142,35 @@ python3 -B scripts/verify_validation_version.py
 前四项检查数学关系和构造的正反校准，最后一项核验冻结 v1 的 Git 对象及输入身份。
 它们不执行后端、不增加矩阵达标数。执行仿真请从
 [EVAS 运行示例](../README.md#构建与运行)或具体实验协议进入，并保存新的执行身份。
+
+<a id="breadth-local-checks"></a>
+
+### 校准扩展精度集的参考与判定
+
+[breadth 方法](../docs/COMPARISON-METHODOLOGY.md#precision-breadth)定义独立的 44 组、71 必测变体，
+保留四个未决支持探针。其分母与原 31 条件矩阵、八条件精度集分别记录。
+[基础参考](paper/precision_breadth_foundation.py)、[工程组合参考](paper/precision_breadth_composition.py)
+给出独立数学答案，[共享 checker](paper/precision_breadth.py)检查数值、行为与证据。
+在仓库根目录运行本地校准：
+
+```sh
+PYTHONPATH=evas/src python3 -B -m unittest discover -s evas/tests -p 'test_precision_breadth*.py'
+```
+
+这些测试用手写值和构造的正确、错误轨迹检查参考与判定，包括完整边沿、原始相位和事件计数。
+组合卡另做前端编译及四后端网表生成检查。命令不运行生产内核或四后端仿真，不产生达标成绩。
+数值公式通过校准，也不能代替实际原生观察与生效配置证据。
+
+[breadth runner](../../experiments/backends/support/precision_breadth_run.py)的 `freeze` 子命令保存新批次身份，
+`run` 子命令执行指定后端、基础或组合 family 及预绑定 Q 档。
+可用以下命令查看入口而不启动仿真：
+
+```sh
+python3 -B experiments/backends/support/precision_breadth_run.py --help
+```
+
+runner 的配置是待验收候选；旧 `precision-bindings-v1.json` 的资格不能直接迁移到新条件。
+后端运行还需工具身份、原生行来源和实际设置依据，按新批次保存结果，保留所有失败与未运行槽位。
 
 ## 版本与资产
 

@@ -529,17 +529,20 @@ s− 开始，因此求解、重放或缓存重试不会再累计一次事件。
 
 写者检查按实际候选批次执行。
 构建期允许不同事件块潜在写同一 state。读取其他块也可能写的状态时，
-仅允许 `n=n+c` 的受限自增/自减：完整结构状态依赖集恰为赋值目标 `n`，
-其仿射系数恰为 1，常数有限，且没有电压或算子依赖。integer 仍需每句通过整型/范围检查。
-例如两个异刻迟滞块都执行 `n=n+1`，各自读取同一份已接受历史并逐句更新。
-依赖另一个状态、`n-n`、`0*n`、舍入下溢或非 1 系数不会获得此例外。
+允许 `q=a*q+b` 的受限自身仿射更新：完整结构状态依赖集恰为赋值目标 `q`，
+系数 `a` 非零且有限，常数 `b` 有限，且没有电压或算子依赖。integer 仍需每句通过整型和范围检查。
+例如两个异刻事件执行 `q=10*q+1`，初值 0 在第一事件后为 1，第二事件后为 11。
+数组的每个元素是独立状态；同块后续赋值读取前句结果，不同批次读取各自事件前的已接受历史。
+依赖另一个状态、`q-q`、`0*q` 或系数舍入下溢为零的表达式不会获得此例外。
 每次 `settlement::prepare` 先选择条件路径，再调用 `check_selection_writers(selection)`；
 只有实际选中的赋值参与冲突判断。不同批次触发的上升/下降迟滞块可以共同维护同一 `q`。
 同一批次中两个不同事件块写同一 state 时返回 `event_conflict`，即使写入值相同，也不按源码顺序仲裁。
 失败候选不提交 state、state bounds、算子历史、事件游标或记录。
 
 独立冲突与互斥批次回归见 [test_event_writers.py](../../tests/test_event_writers.py)，
-共享自增/自减及原常量初值迟滞计数见 [test_shared_counter.py](../../tests/test_shared_counter.py)；
+共享仿射更新及原常量初值迟滞计数见 [test_shared_counter.py](../../tests/test_shared_counter.py)，
+数组的两次非幂等更新、负系数、分数系数和同刻写者保护见
+[test_variable_arrays.py](../../tests/test_variable_arrays.py)；
 真实帧回退由 Rust 私有测试检查。固定 V3 的 EVAS/Spectre 对照见
 [对照收据](../../../experiments/archive/pr14-pr15-validation/results/event-writers-spectre-v3.json)，
 定位差异见[诊断收据](../../../experiments/archive/pr14-pr15-validation/results/event-writers-timing.json)及

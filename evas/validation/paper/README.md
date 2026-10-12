@@ -4,7 +4,7 @@
 哪些规划尚缺测试或验收。查看支持结论用[对比表](../../docs/COMPARISON.md)，具体模型和运行入口继续在本页维护。
 
 新增的 44 组精度验证来自 [#162 候选](https://github.com/BucketSran/vaEVAS/pull/162)，包含 20 组基础特性和 24 组工程组合，共 71 个必测变体。
-本次只合入目录与报告，以下新工具仍从所链接的固定候选版本取得。
+本轮整合该批工具和修复；历史成绩仍对应固定运行版本，不代表整合版本已全量复验。
 模型、独立参考和校准分别位于 [基础特性](https://github.com/BucketSran/vaEVAS/blob/814da00daf2f0bea1555fffe923f5b6abd78b6bf/evas/validation/paper/precision_breadth_foundation.py)、
 [工程组合](https://github.com/BucketSran/vaEVAS/blob/814da00daf2f0bea1555fffe923f5b6abd78b6bf/evas/validation/paper/precision_breadth_composition.py)及[共同 checker](https://github.com/BucketSran/vaEVAS/blob/814da00daf2f0bea1555fffe923f5b6abd78b6bf/evas/validation/paper/precision_breadth.py)。
 每个变体在运行前绑定 Q1、Q2、Q3 的候选配置；数值、行为和证据分别判定。

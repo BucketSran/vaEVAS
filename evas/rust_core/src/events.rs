@@ -452,12 +452,13 @@ impl EventModel {
                     .state_dependencies
                     .iter()
                     .any(|&state| writers[state].iter().any(|&writer| writer != index));
-                // A self increment/decrement reads only this target's accepted
+                // A nonzero affine self update reads only this target's accepted
                 // history. Existing selected-writer checks still forbid two
                 // active blocks in one batch; do not infer safety by cancellation.
                 let self_update = rhs.state_dependencies.len() == 1
                     && rhs.state_dependencies.contains(target)
-                    && rhs.states[*target] == 1.0
+                    && rhs.states[*target].is_finite()
+                    && rhs.states[*target] != 0.0
                     && rhs.constant.is_finite()
                     && rhs.node_dependencies.is_empty()
                     && rhs.operator_dependencies.is_empty();

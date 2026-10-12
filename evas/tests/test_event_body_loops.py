@@ -203,13 +203,14 @@ class EventBodyLoops(unittest.TestCase):
             with self.subTest(body=body), self.assertRaisesRegex(KernelError, diagnostic):
                 run(program)
 
-    def test_loop_does_not_enable_reads_from_another_event_writer(self):
+    def test_shared_nonzero_self_updates_replay_each_loop_iteration(self):
         program = compile_loop('''@(initial_step) n=0;
           @(timer(0.5)) n=7;
           @(timer(1)) for(i=0;i<2;i=i+1) n=10*n+i;
           V(y,r)<+n;''')
-        with self.assertRaisesRegex(KernelError, 'unsupported_cross'):
-            run(program)
+        result = run(program)
+        # First block holds 7; the second block performs 7 -> 70 -> 701.
+        self.assertEqual(result['transient']['states'][-1], [701])
 
 
 if __name__ == '__main__':

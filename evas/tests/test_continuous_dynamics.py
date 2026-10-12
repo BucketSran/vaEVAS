@@ -237,6 +237,29 @@ class ContinuousInitializationContracts(unittest.TestCase):
 
 
 class DerivativeContracts(unittest.TestCase):
+    def test_tight_strobes_do_not_inflate_physical_pwl_derivative_error(self):
+        # Frozen F14 knots and scale. T*(.5/T)=.5 and T*(-1/T)=-1.
+        program = compile_model("V(y,r)<+9.9999999999999995e-07*ddt(V(u,r));")
+        points = [[0,0],[1e-6,.5],[2e-6,-.5],[3e-6,-.5]]
+        times = [0,9.999959999999998e-7,9.99998e-7,1e-6,
+                 1.000002e-6,1.000004e-6,3e-6]
+        result = run(program, {'u': points}, times, stop=3e-6, max_step=3e-6,
+                     strobetimes=times, vabstol=1e-14, reltol=1e-10)
+        for observed, expected in zip(values(result), [0,.5,.5,-1,-1,-1,0]):
+            self.assertLessEqual(abs(observed-expected), 1e-14+1e-10*abs(expected))
+
+    def test_physical_slope_strobes_keep_each_sources_corner_side(self):
+        program = compile_model("V(y,r)<+ddt(V(u,r))+ddt(V(v,r));", ports="u,v,y,r",
+                                directions="input u,v; output y; inout r;")
+        sources = {'u': [[0,0],[1,2],[3,-2],[4,-2]],
+                   'v': [[0,0],[1.5,1.5],[2.5,1.5],[4,1.5]]}
+        times = [0,.5,1,1.5,2,2.5,3,3.5,4]
+        for strobes in [None, times]:
+            result = run(program, sources, times, stop=4, max_step=4,
+                         strobetimes=strobes, vabstol=1e-12, reltol=0)
+            for observed, expected in zip(values(result), [0,3,-1,-2,-2,-2,0,0,0]):
+                assert_close(self, observed, expected, delta=1e-12)
+
     def test_ddt_of_direct_pwl_uses_documented_side_convention(self):
         program = compile_model("V(y,r)<+ddt(V(u,r));")
         points = [[0.0, 0.0], [1.0, 2.0], [3.0, -2.0], [4.0, -2.0]]

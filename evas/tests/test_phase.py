@@ -150,6 +150,80 @@ class PhaseContracts(unittest.TestCase):
             expected = decimal_sin(source_value)
             self.assertLessEqual(abs(Decimal.from_float(observed) - expected), Decimal("1e-12"))
 
+    def test_sine_near_zero_uses_local_reduced_argument_remainder(self):
+        # A 17th-degree sine polynomial has |r|^19/19! remainder.
+        # Near integer multiples of pi, that is much smaller than 1e-14.
+        body = "V(out,r)<+sin(V(f,r)); V(total,r)<+0; V(phase,r)<+0;"
+        values = [0.0, math.pi, -math.pi, 2*math.pi,
+                  math.nextafter(math.pi, math.inf), math.pi + 1e-3]
+        points = [(float(i), value) for i, value in enumerate(values)]
+        result = run_phase(points, [p[0] for p in points], body,
+                           declarations="", vabstol=1e-14, reltol=0)
+        for observed, value in zip(voltages(result, "out"), values):
+            self.assertLessEqual(abs(Decimal.from_float(observed) - decimal_sin(value)),
+                                 Decimal("1e-14"))
+
+    def test_fast_wrapped_phase_sine_meets_fixed_absolute_budget_at_zero(self):
+        # Frozen F20 source parameters; exact phase is 1/8+750000*t modulo 1.
+        body = """phase_v=idtmod(750000,0.125,1,0);
+          V(phase,r)<+phase_v; V(out,r)<+sin(6.2831853071795862*phase_v);
+          V(total,r)<+0;"""
+        times = [.5e-6, 4.5e-6-2e-12, 4.5e-6, 4.5e-6+2e-12]
+        result = run_phase([(0,0),(4.9999999999999996e-06,0)], times, body,
+                           declarations="real phase_v;", vabstol=1e-14, reltol=1e-10,
+                           strobetimes=times)
+        for t, observed in zip(times, voltages(result, "out")):
+            phase = rational_wrapped(rational_constant_raw(t, 750000))
+            exact_angle = F(6.2831853071795862) * phase
+            expected = decimal_sin(Decimal(exact_angle.numerator) / Decimal(exact_angle.denominator))
+            self.assertLessEqual(abs(Decimal.from_float(observed) - expected),
+                                 Decimal("1e-14"))
+
+    def test_refined_observation_keeps_an_independent_input_cross_safe(self):
+        body = """
+@(initial_step) count=0;
+@(cross(V(f,r)-0.625,1,1e-12,1e-12)) count=count+1;
+phase_v=idtmod(750000,0.125,1,0);
+V(phase,r)<+phase_v;
+V(out,r)<+sin(2*`M_PI*phase_v);
+V(total,r)<+count;
+"""
+        end = 2**-17
+        event = 0.625 * end
+        times = [0, 4.5e-6, event, 5e-6]
+        result = transient(compile_phase(body, "real phase_v; integer count;"),
+                           {"f": [[0, 0], [end, 1]]}, times,
+                           stop=times[-1], max_step=end, strobetimes=times,
+                           kernel=KERNEL, vabstol=1e-14, reltol=1e-10)
+        self.assertEqual(voltages(result, "total"), [0, 0, 1, 1])
+        for time, actual in zip(times, voltages(result, "out")):
+            phase = (F(1,8) + F(750000)*F.from_float(time)) % 1
+            angle = F.from_float(2*math.pi)*phase
+            expected = decimal_sin(Decimal(angle.numerator)/Decimal(angle.denominator))
+            budget = Decimal.from_float(1e-14) + Decimal.from_float(1e-10)*abs(expected)
+            self.assertLessEqual(abs(Decimal.from_float(actual)-expected), budget)
+        with self.assertRaisesRegex(KernelError, "waveform_accuracy"):
+            transient(compile_phase(body.replace("0.625", "0.589824"),
+                                    "real phase_v; integer count;"),
+                      {"f": [[0,0],[end,1]]}, times, stop=times[-1],
+                      max_step=end, strobetimes=times, kernel=KERNEL,
+                      vabstol=1e-14, reltol=1e-10)
+        for guard in ["V(phase,r)-0.5", "V(out,r)", "V(f,r)+V(phase,r)-V(phase,r)-0.625"]:
+            guarded = body.replace("V(f,r)-0.625", guard)
+            with self.assertRaisesRegex(KernelError, "unsupported_cross"):
+                transient(compile_phase(guarded, "real phase_v; integer count;"),
+                          {"f": [[0,0],[end,1]]}, times, stop=times[-1],
+                          max_step=end, kernel=KERNEL, vabstol=1e-14, reltol=1e-10)
+
+    def test_sine_unrepresentable_output_keeps_strict_budget_rejection(self):
+        exact = decimal_sin(0.1)
+        nearest = Decimal.from_float(float(exact))
+        self.assertGreater(abs(nearest - exact), Decimal("1e-20"))
+        body = "V(out,r)<+sin(V(f,r)); V(total,r)<+0; V(phase,r)<+0;"
+        with self.assertRaisesRegex(KernelError, "waveform_accuracy"):
+            run_phase([(0,.1),(1,.1)], [0,1], body,
+                      declarations="", vabstol=1e-20, reltol=0)
+
     def test_repeated_phase_alias_affine_coefficients_match_decimal_reference(self):
         body = """
 phase_v = idtmod(V(f,r), 0.125, 1, 0);

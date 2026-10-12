@@ -1272,6 +1272,11 @@ fn build_segments(
         let duration = I::point(end) - I::point(start);
         let slopes = if start == end {
             vec![I::ZERO; source_count]
+        } else if trajectory.has_only_physical_inputs() {
+            // Solver/strobe points partition the original PWL segments. Use
+            // their knot slopes rather than subtracting independently rounded
+            // interpolated endpoints across a possibly tiny query interval.
+            trajectory.range(I { lo: start, hi: end })?.1
         } else {
             source_start
                 .iter()
@@ -1610,6 +1615,54 @@ mod tests {
             0,
         )
         .unwrap()
+    }
+
+    #[test]
+    fn generated_input_uncertainty_keeps_endpoint_slope_enclosure() {
+        let input = Expression::Affine {
+            constant: 0.0,
+            terms: vec![Term {
+                node: 2,
+                coefficient: 1.0,
+            }],
+        };
+        let mut program = program_with_idt(input.clone(), 0.0);
+        program.nodes.push("u".into());
+        program.operators[0] = OperatorSpec::Ddt {
+            input,
+            origin: origin(),
+        };
+        let mut trajectory = no_source_trajectory(1.0);
+        trajectory.config.strobetimes = vec![0.5];
+        trajectory
+            .add_enclosed_source(vec![[0.0, 0.0], [1.0, 1.0]], 0.01)
+            .unwrap();
+        assert!(!trajectory.has_only_physical_inputs());
+        let continuous = LinearContinuous::new(&program, &trajectory, &["u".into()], &[])
+            .unwrap()
+            .unwrap();
+        let bound = continuous.bounds(0.5).unwrap()[0];
+        assert!(bound.lo <= 0.96 && bound.hi >= 1.04);
+    }
+
+    #[test]
+    fn zero_width_terminal_segment_keeps_zero_source_slope() {
+        let trajectory = Trajectory::new(
+            TransientInputs {
+                strobetimes: Vec::new(),
+                pwl: vec![vec![[0.0, 0.0], [1.0, 1.0]]],
+                output_times: vec![0.0, 1.0],
+                stop: 1.0,
+                max_step: 1.0,
+            },
+            1,
+        )
+        .unwrap();
+        let segments =
+            build_segments(&trajectory, 0, 1, &[], &[], &[], &[], Vec::new(), 1.0).unwrap();
+        assert_eq!(segments.len(), 1);
+        assert_eq!(segments[0].start, segments[0].end);
+        assert_eq!(segments[0].initial, vec![I::ONE, I::ZERO, I::ONE]);
     }
 
     #[test]

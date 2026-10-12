@@ -230,6 +230,7 @@ impl Controller {
 // Current policy chooses the certified mathematical root as the actual cross
 // observation. Its enclosure and fired-root constraints travel together; b is
 // only a representative. No late-trigger policy is silently substituted.
+#[derive(Clone, Copy)]
 struct EventMoment<'a> {
     representative: f64,
     observation: I,
@@ -291,6 +292,34 @@ fn prepare_root_window(
     moment: EventMoment<'_>,
     events: &[usize],
 ) -> Result<Frame, Error> {
+    let ordinary = prepare_root_window_impl(model, trajectory, accepted, moment, events, false);
+    match ordinary {
+        Err(error)
+            if error.kind == "waveform_accuracy"
+                && error
+                    .message
+                    .starts_with("cannot certify same-time forward error at ")
+                && moment.observation.lo == moment.observation.hi
+                && events.is_empty()
+                && moment.fired_roots.is_empty() =>
+        {
+            // Retry the entire disposable settlement from accepted history.
+            // The proof refines representatives and every downstream bound;
+            // neither an event/root window nor its timing is changed.
+            prepare_root_window_impl(model, trajectory, accepted, moment, events, true)
+        }
+        result => result,
+    }
+}
+
+fn prepare_root_window_impl(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    accepted: &Frame,
+    moment: EventMoment<'_>,
+    events: &[usize],
+    refine_ordinary_phase: bool,
+) -> Result<Frame, Error> {
     let _timing = crate::diagnostics::span("controller.prepare_candidate");
 
     let EventMoment {
@@ -301,6 +330,7 @@ fn prepare_root_window(
     } = moment;
     let copying = crate::diagnostics::span("history.clone");
     let mut operators = accepted.operators.clone();
+    operators.refine_ordinary_phase(refine_ordinary_phase);
     drop(copying);
     crate::diagnostics::counter("history_clone_calls", 1);
     crate::diagnostics::counter(
@@ -378,7 +408,7 @@ fn prepare_root_window(
         .copied()
         .filter(|&s| old_bounds[s] != prepared.bounds[s] || old_bounds[s].lo != old_bounds[s].hi)
         .collect();
-    let operators = frozen.advanced_until(
+    let mut operators = frozen.advanced_until(
         time_bounds,
         &prepared.states,
         &prepared.bounds,
@@ -417,6 +447,8 @@ fn prepare_root_window(
         )?;
         crate::observation::retain_bounds(&mut prepared.solution, nodes);
     }
+    // Refinement belongs to this observation, never future root predictions.
+    operators.refine_ordinary_phase(false);
     Ok(Frame {
         time,
         states: prepared.states,
@@ -1550,6 +1582,135 @@ mod tests {
         assert_eq!(retry.solution.voltages, first.solution.voltages);
         assert_eq!(retry.state_bounds, first.state_bounds);
         assert_initial_idt_frame(&before, &bounds);
+    }
+
+    #[test]
+    fn ordinary_phase_retry_preserves_frames_and_does_not_refine_events_or_roots() {
+        let (original, _, _) = fixture(false);
+        let mut program = original.program;
+        program.operators = serde_json::from_value(serde_json::json!([
+            {"kind":"idt_mod", "input":{"op":"affine","constant":750000,"terms":[]},
+             "ic":0.125,"modulus":1,"offset":0,
+             "origin":{"source":"phase.va","line":1,"column":1,"instance":"dut"}},
+            {"kind":"sin", "input":{"op":"multiply",
+             "left":{"op":"affine","constant":std::f64::consts::TAU,"terms":[]},
+             "right":{"op":"operator","operator":0}},
+             "origin":{"source":"phase.va","line":1,"column":2,"instance":"dut"}}
+        ]))
+        .unwrap();
+        program.contributions[0].rhs = serde_json::from_value(serde_json::json!({
+            "op":"multiply","left":{"op":"affine","constant":-1,"terms":[]},
+            "right":{"op":"operator","operator":1}
+        }))
+        .unwrap();
+        let mut model = EventModel::new(
+            program,
+            vec!["u".into()],
+            Tolerances {
+                absolute: 1e-14,
+                relative: 1e-10,
+            },
+        )
+        .unwrap();
+        let trajectory = Trajectory::new(
+            TransientInputs {
+                pwl: vec![vec![[0., 0.], [5e-6, 0.]]],
+                output_times: vec![0., 0.5e-6, 4.5e-6],
+                strobetimes: vec![0., 0.5e-6, 4.5e-6],
+                stop: 5e-6,
+                max_step: 5e-6,
+            },
+            1,
+        )
+        .unwrap();
+        let states = vec![0.];
+        let operators =
+            Operators::new(&model.program, &trajectory, &model.driven, &states).unwrap();
+        let circuit = model
+            .circuit_with(&states, &operators.values(0.).unwrap())
+            .unwrap();
+        let before = Frame {
+            time: 0.,
+            state_bounds: vec![I::ZERO],
+            states,
+            solution: circuit.solve(&trajectory.values(0.)).unwrap(),
+            circuit,
+            operators,
+        };
+        let time = 4.5e-6;
+        let moment = EventMoment {
+            representative: time,
+            observation: I::point(time),
+            fired_roots: &[],
+            prediction_end: trajectory.config.stop,
+        };
+        let ordinary_bounds = before.operators.bounds(time).unwrap();
+        assert_eq!(
+            prepare_root_window_impl(&model, &trajectory, &before, moment, &[], false)
+                .err()
+                .unwrap()
+                .kind,
+            "waveform_accuracy"
+        );
+        let clean = prepare_root_window(&model, &trajectory, &before, moment, &[]).unwrap();
+        assert_eq!(clean.operators.bounds(time).unwrap(), ordinary_bounds);
+        assert_eq!(before.time, 0.);
+        assert_eq!(before.states, [0.]);
+        assert_eq!(before.state_bounds, [I::ZERO]);
+        assert_eq!(
+            prepare_root_window(&model, &trajectory, &before, moment, &[0])
+                .err()
+                .unwrap()
+                .kind,
+            "waveform_accuracy"
+        );
+        let root_moment = EventMoment {
+            fired_roots: &[0],
+            ..moment
+        };
+        assert_eq!(
+            prepare_root_window(&model, &trajectory, &before, root_moment, &[])
+                .err()
+                .unwrap()
+                .kind,
+            "waveform_accuracy"
+        );
+        let window_moment = EventMoment {
+            observation: I {
+                lo: time - 2e-12,
+                hi: time + 2e-12,
+            },
+            ..moment
+        };
+        assert_eq!(
+            prepare_root_window(&model, &trajectory, &before, window_moment, &[])
+                .err()
+                .unwrap()
+                .kind,
+            "event_resolution"
+        );
+        model.tolerances.absolute = 1e-20;
+        model.tolerances.relative = 0.;
+        assert_eq!(
+            prepare_root_window(&model, &trajectory, &before, moment, &[])
+                .err()
+                .unwrap()
+                .kind,
+            "waveform_accuracy"
+        );
+        assert_eq!(before.operators.bounds(time).unwrap(), ordinary_bounds);
+        model.tolerances.absolute = 1e-14;
+        model.tolerances.relative = 1e-10;
+        let retried = prepare_root_window(&model, &trajectory, &before, moment, &[]).unwrap();
+        assert_eq!(retried.solution.voltages, clean.solution.voltages);
+        assert_eq!(retried.state_bounds, clean.state_bounds);
+        assert_eq!(retried.operators.bounds(time).unwrap(), ordinary_bounds);
+        let later = EventMoment {
+            representative: 4.500002e-6,
+            observation: I::point(4.500002e-6),
+            ..moment
+        };
+        assert!(prepare_root_window(&model, &trajectory, &retried, later, &[]).is_ok());
     }
 
     #[test]
