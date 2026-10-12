@@ -17,6 +17,9 @@ use std::sync::Arc;
 #[path = "transition_filter.rs"]
 pub(crate) mod transition_filter;
 
+#[path = "direct_derivative.rs"]
+pub(crate) mod direct_derivative;
+
 type DirectPoints = (Vec<(f64, f64)>, Vec<I>);
 
 /// Materialize the accepted continuous input definition at its semantic knots.
@@ -452,6 +455,7 @@ impl Function {
 
 #[derive(Clone)]
 enum Runtime {
+    DirectDerivative(direct_derivative::DirectDerivative),
     Continuous(usize),
     Idt {
         history: Idt,
@@ -1125,6 +1129,7 @@ impl Operators {
         let mut bounds = Vec::with_capacity(self.entries.len());
         for (index, entry) in self.entries.iter().enumerate() {
             let bound = match entry {
+                Runtime::DirectDerivative(history) => history.range(window)?,
                 Runtime::Continuous(slot) => continuous.as_ref().unwrap()[*slot],
                 Runtime::Idt { history, .. } => history.value_range(window)?,
                 Runtime::LaplaceNd(history) => {
@@ -1236,7 +1241,9 @@ impl Operators {
             // The kernel must not assume a trusted Python producer.
             if matches!(
                 spec,
-                OperatorSpec::Idt { .. } | OperatorSpec::LaplaceNd { .. }
+                OperatorSpec::Idt { .. }
+                    | OperatorSpec::LaplaceNd { .. }
+                    | OperatorSpec::Ddt { .. }
             ) {
                 crate::continuous::validate_integral_input(input, program, &origin.instance)?;
             } else {
@@ -1267,11 +1274,12 @@ impl Operators {
                 continue;
             }
             match spec {
-                OperatorSpec::Ddt { .. } => {
-                    return Err(Error::new(
-                        "invalid_ir",
-                        "ddt is missing its continuous trajectory slot",
-                    ))
+                OperatorSpec::Ddt { input, .. } => {
+                    entries.push(Runtime::DirectDerivative(
+                        direct_derivative::DirectDerivative::new(
+                            input, program, trajectory, driven,
+                        )?,
+                    ));
                 }
                 OperatorSpec::Idt {
                     input,
@@ -1517,7 +1525,8 @@ impl Operators {
                     changes_on_advance[*operator]
                 }
                 Runtime::Continuous(_) => continuous.as_ref().is_some_and(|c| c.changes_on_event()),
-                Runtime::Idt { reset: None, .. }
+                Runtime::DirectDerivative(_)
+                | Runtime::Idt { reset: None, .. }
                 | Runtime::IdtMod(_)
                 | Runtime::Math(_, SinInput::Direct(_))
                 | Runtime::AbsDelay(_)
@@ -1684,6 +1693,7 @@ impl Operators {
                     }
                 }
                 let value = match entry {
+                    Runtime::DirectDerivative(history) => history.value(time)?,
                     Runtime::Continuous(slot) => continuous.as_ref().unwrap()[*slot],
                     Runtime::Idt { history, .. } => history.value(time)?,
                     Runtime::LaplaceNd(history) => history.value(time)?,
@@ -1718,6 +1728,7 @@ impl Operators {
         self.entries
             .iter()
             .filter_map(|entry| match entry {
+                Runtime::DirectDerivative(history) => history.next_breakpoint(after),
                 Runtime::Continuous(_) => self.continuous.as_ref().unwrap().next_breakpoint(after),
                 Runtime::Idt { history, .. } => history.next_breakpoint(after),
                 Runtime::IdtMod(history) => history.next_breakpoint(after),
@@ -1755,6 +1766,7 @@ impl Operators {
                     }
                 }
                 let bound = match entry {
+                    Runtime::DirectDerivative(history) => history.bounds(time)?,
                     Runtime::Continuous(slot) => continuous.as_ref().unwrap()[*slot],
                     Runtime::Idt { history, .. } => history.value_bounds(time)?,
                     Runtime::LaplaceNd(history) => history.value_bounds(time)?,
@@ -1815,6 +1827,7 @@ impl Operators {
             .entries
             .iter()
             .flat_map(|entry| match entry {
+                Runtime::DirectDerivative(_) => Vec::new(),
                 Runtime::Continuous(_) => Vec::new(),
                 Runtime::Idt { .. } => Vec::new(),
                 Runtime::IdtMod(_) => Vec::new(),
@@ -1926,6 +1939,7 @@ impl Operators {
         }
         for entry in &mut self.entries {
             match entry {
+                Runtime::DirectDerivative(_) => {}
                 Runtime::Continuous(_) => {}
                 Runtime::Idt { history, reset } => {
                     if let Some(reset) = reset {
