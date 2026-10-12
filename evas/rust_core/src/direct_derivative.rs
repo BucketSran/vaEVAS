@@ -162,11 +162,13 @@ impl DirectDerivative {
         }
         let (values, slopes) = self.trajectory.range(time)?;
         let value = self.eval(&self.expr, time, &values, &slopes)?.1;
-        Ok(if time.lo == 0. {
-            value.hull(I::ZERO)
-        } else {
-            value
-        })
+        // The source segment enclosure covers the open interval's slopes.
+        // A closed upper endpoint at an interior knot instead observes the
+        // right derivative. Include both point observations, also preserving
+        // zero DC and the left derivative at the request's terminal point.
+        Ok(value
+            .hull(self.bounds(time.lo)?)
+            .hull(self.bounds(time.hi)?))
     }
     pub(super) fn value(&self, time: f64) -> Result<f64, Error> {
         let b = self.bounds(time)?;
@@ -174,5 +176,88 @@ impl DirectDerivative {
     }
     pub(super) fn next_breakpoint(&self, after: f64) -> Option<f64> {
         self.trajectory.knots.iter().copied().find(|t| *t > after)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::ir::{Term, TransientInputs, SCHEMA_VERSION};
+
+    fn squared_pwl(stop: f64) -> DirectDerivative {
+        let program = Program {
+            schema_version: SCHEMA_VERSION,
+            nodes: vec!["0".into(), "u".into()],
+            contributions: vec![],
+            states: vec![],
+            events: vec![],
+            operators: vec![],
+        };
+        let expr = Expression::Power {
+            base: Box::new(Expression::Affine {
+                constant: 0.,
+                terms: vec![Term {
+                    node: 1,
+                    coefficient: 1.,
+                }],
+            }),
+            exponent: 2,
+        };
+        let trajectory = Trajectory::new(
+            TransientInputs {
+                pwl: vec![vec![[0., 2.], [0.5, 3.], [1., 2.]]],
+                output_times: vec![0., stop],
+                strobetimes: vec![],
+                stop,
+                max_step: stop,
+            },
+            1,
+        )
+        .unwrap();
+        DirectDerivative::new(&expr, &program, &trajectory, &["u".into()]).unwrap()
+    }
+
+    #[test]
+    fn closed_range_contains_dc_and_right_sided_interior_corner() {
+        let history = squared_pwl(1.);
+        // d(u^2)=2*u*u': 10 at .25, -12 at the right side of .5.
+        let interval = I { lo: 0.25, hi: 0.5 };
+        let range = history.range(interval).unwrap();
+        assert!(range.lo <= -12. && range.hi >= 12., "{range:?}");
+        for interval in [
+            I { lo: 0., hi: 0.5 },
+            interval,
+            I { lo: 0.5, hi: 0.75 },
+            I { lo: 0., hi: 1. },
+        ] {
+            let range = history.range(interval).unwrap();
+            for t in [interval.lo, interval.hi, 0.5] {
+                if t < interval.lo || t > interval.hi {
+                    continue;
+                }
+                let point = history.bounds(t).unwrap();
+                assert!(
+                    range.lo <= point.lo && range.hi >= point.hi,
+                    "range {interval:?}={range:?} excludes bounds({t})={point:?}"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn closed_range_preserves_left_sided_stop_with_extended_source() {
+        let history = squared_pwl(0.5);
+        // A request ending at .5 observes +12 from the left, although the
+        // underlying source also declares the later descending segment.
+        let range = history.range(I { lo: 0.25, hi: 0.5 }).unwrap();
+        let endpoint = history.bounds(0.5).unwrap();
+        assert!(endpoint.lo <= 12. && endpoint.hi >= 12.);
+        assert!(range.lo <= endpoint.lo && range.hi >= endpoint.hi);
+        assert!(
+            range.lo > 9.,
+            "terminal query included future slope: {range:?}"
+        );
+        let initial_range = history.range(I { lo: 0., hi: 0.25 }).unwrap();
+        assert!(initial_range.lo <= 0. && initial_range.hi >= 10.);
     }
 }
