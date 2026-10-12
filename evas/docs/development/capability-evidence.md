@@ -4,6 +4,11 @@
 面向使用者的支持结论只在[四后端支持范围](../COMPARISON.md)维护，详细接受与拒绝条件由所链接的契约维护。
 收据只证明其固定执行版本；下表仅登记 ID 与证据，供追溯工具读取，不维护第二份支持状态或当前 main 通过率。
 
+[累计测试清单](../../validation/paper/COVERAGE.md)登记历史条件与新 44 组的逐项关系，
+涵盖 LANG、LIN、NONLINEAR、TIMER、CROSS、EVENT-ORDER、TRANSITION、ABSDELAY、SLEW、DYNAMICS、COMPOSE、QUALIFICATION。
+这次整理没有改变实现、判据或成绩。主表按五层能力目录汇总，区分部分范围的已验证精度与整行资格。
+L1–L5 是表格导航 ID，不替换下表开发 ID；旧版本、原预算和失败继续保留。
+
 Q 档精度集的[失败归因复核](../../../experiments/backends/support/README.md#failure-attribution)
 补充 CROSS、TIMER、DYNAMICS、QUALIFICATION 的原因证据。它区分事件编译缺陷、已复现的行为错误、
 EVAS 回调缺证与严格配置认证拒绝，不改原验收成绩或扩大能力范围。
@@ -11,6 +16,10 @@ EVAS 回调缺证与严格配置认证拒绝，不改原验收成绩或扩大能
 同日的[严格滤波修复与阈值边界补测](../../../experiments/backends/support/README.md#evas-precision-recovery)
 补充 DYNAMICS、CROSS、QUALIFICATION。修复版四个滤波条件通过原 Q3，56 个根附近查询状态正确；
 阈值采样的完整回调资格仍未取得。新代码不能直接复用旧源码身份的配置绑定。
+
+[44 组扩展验证](../COMPARISON-METHODOLOGY.md#precision-breadth)补充 LANG、LIN、NONLINEAR、
+TIMER、CROSS、EVENT-ORDER、TRANSITION、ABSDELAY、SLEW、DYNAMICS、COMPOSE、QUALIFICATION。
+它分别记录数值、行为和取证结果；支持结论仍只在支持总表维护，开发用例不计为独立留出集。
 
 | 能力 ID | 契约或数学入口 | 验证与历史证据 |
 | --- | --- | --- |
