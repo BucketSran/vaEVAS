@@ -83,9 +83,7 @@ impl ImplicitField {
                     let (ac, bc) = (constant_value(&a), constant_value(&b));
                     if ac.is_some_and(|v| v.zero()) {
                         a
-                    } else if bc.is_some_and(|v| v.zero()) {
-                        b
-                    } else if ac == Some(I::ONE) {
+                    } else if bc.is_some_and(|v| v.zero()) || ac == Some(I::ONE) {
                         b
                     } else if bc == Some(I::ONE) {
                         a
@@ -97,7 +95,7 @@ impl ImplicitField {
                         Polynomial::Multiply(Box::new(a), Box::new(b))
                     }
                 }
-                Polynomial::Power(a, n) if n == 1 => simplify(*a),
+                Polynomial::Power(a, 1) => simplify(*a),
                 Polynomial::Power(a, n) => Polynomial::Power(Box::new(simplify(*a)), n),
                 p => p,
             }
