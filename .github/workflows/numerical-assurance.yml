@@ -91,6 +91,11 @@ jobs:
     needs: selection
     if: needs.selection.outputs.regression == 'true'
     runs-on: ubuntu-latest
+    env:
+      # Retain runtime checks while avoiding unoptimized interval arithmetic.
+      CARGO_PROFILE_DEV_OPT_LEVEL: '1'
+      CARGO_PROFILE_DEV_DEBUG_ASSERTIONS: 'true'
+      CARGO_PROFILE_DEV_OVERFLOW_CHECKS: 'true'
     # The prior regression job took 17m52s before adding the circuit replays.
     timeout-minutes: 30
     steps:
@@ -104,7 +109,7 @@ jobs:
       - run: rustup toolchain install stable --profile minimal --component clippy --component rustfmt
       - uses: ./.github/actions/rust-cache
         with:
-          lane: regression
+          lane: regression-opt1
           targets: evas/rust_core/target
       - name: Build the kernel used by Python regressions
         run: cargo +stable build --locked --manifest-path evas/rust_core/Cargo.toml
@@ -113,7 +118,17 @@ jobs:
       - name: Full Python regression
         env:
           PYTHONPATH: evas/src
-        run: python3 -B -m unittest discover -s evas/tests -v
+        run: python3 -B scripts/run_regression.py --report runs/python-regression.json
+      - name: Retain per-test durations and last started test
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: python-regression-timings
+          path: |
+            runs/python-regression.json
+            runs/python-regression.jsonl
+          if-no-files-found: warn
+          retention-days: 14
       - name: Rust lint and formatting
         run: |
           cargo +stable clippy --locked --workspace --manifest-path evas/rust_core/Cargo.toml --all-targets -- -D warnings

@@ -229,8 +229,9 @@ class NonlinearIntegralContracts(unittest.TestCase):
 
     def test_finite_time_blowup_is_not_reported_as_valid_waveform(self):
         program = compile_model("V(y,r)<+idt(pow(V(y,r),2),1);")
-        with self.assertRaises(KernelError):
+        with self.assertRaises(KernelError) as caught:
             run(program, times=[0, .5, 1, 2], stop=2)
+        self.assertEqual(caught.exception.detail["kind"], "waveform_accuracy")
 
     def test_event_changes_nonlinear_coefficient_without_reinitializing_state(self):
         program = compile_model(

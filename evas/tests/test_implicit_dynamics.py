@@ -62,8 +62,17 @@ class ImplicitDynamicsContracts(unittest.TestCase):
 
     def test_singular_algebraic_jacobian_cannot_silently_switch_branches(self):
         program=compile_model("V(y,r)<+idt(-1,0)-pow(V(y,r),2);")
-        with self.assertRaises(KernelError):
+        with self.assertRaises(KernelError) as caught:
             run(program,times=[0,.125,.3],stop=.3,vabstol=1e-8,reltol=0)
+        self.assertEqual(caught.exception.detail["kind"], "waveform_accuracy")
+
+    def test_near_singular_branch_remains_accurate_before_the_fold(self):
+        import math
+        program=compile_model("V(y,r)<+idt(-1,0)-pow(V(y,r),2);")
+        times=[0,.125,.24,.249]
+        result=run(program,times=times,stop=.249,vabstol=1e-8,reltol=0)
+        for t,actual in zip(times,values(result)):
+            assert_close(self,actual,(-1+math.sqrt(1-4*t))/2,delta=1e-8)
 
     def test_implicit_history_is_not_accepted_under_impossible_precision(self):
         program=compile_model("V(y,r)<+idt(1+2*V(y,r),0)-pow(V(y,r),2);")

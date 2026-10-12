@@ -1235,8 +1235,9 @@ impl NonlinearContinuous {
     fn propagate_until(&mut self, horizon: f64) -> Result<(), Error> {
         let base = self.clone();
         let mut refinement = 1.0;
-        // Count valid attempted steps across discarded suffixes too. Otherwise
-        // eight retries would multiply the documented integration-work limit.
+        // Charge every trial evaluation, including failed tubes and higher
+        // orders, across discarded suffixes. Counting only validated steps
+        // lets difficult refusals spend most of their work outside this limit.
         let mut remaining_work = MAX_STEPS.saturating_sub(base.steps.len());
         for _ in 0..MAX_HISTORY_REFINEMENTS {
             let mut candidate = base.clone();
@@ -1307,12 +1308,6 @@ impl NonlinearContinuous {
                         "validated nonlinear integration exceeded 16384 stored internal steps",
                     ));
                 }
-                if *remaining_work == 0 {
-                    return Err(Error::new(
-                        "waveform_accuracy",
-                        "validated nonlinear integration exhausted the cumulative 16384 candidate-step work limit",
-                    ));
-                }
                 let source = trajectory.value_bounds(start);
                 let mut end = (start + 0.125_f64.min(trajectory.config.max_step)).min(b);
                 let mut accepted = None;
@@ -1320,6 +1315,7 @@ impl NonlinearContinuous {
                     if end <= start {
                         break;
                     }
+                    Self::charge_trial(remaining_work, start, end)?;
                     if let Some(step) = self.trial_order(
                         start,
                         end,
@@ -1339,6 +1335,7 @@ impl NonlinearContinuous {
                         // tail. Rational DAE propagation retains order 12.
                         if self.implicit.is_none() {
                             crate::diagnostics::counter("nonlinear_order_refinements", 1);
+                            Self::charge_trial(remaining_work, start, end)?;
                             if let Some(step) = self.trial_order(
                                 start,
                                 end,
@@ -1372,7 +1369,6 @@ impl NonlinearContinuous {
                         "cannot refine nonlinear trajectory within 64 trials: tube or user-budget Taylor remainder not certified",
                     )
                 })?;
-                *remaining_work -= 1;
                 crate::diagnostics::counter("nonlinear_validated_work_steps", 1);
                 state = step.range(I::point(step.end));
                 centers = step.centered_range(I::point(step.end) - I::point(step.start), true);
@@ -1424,6 +1420,26 @@ impl NonlinearContinuous {
             }
         }
         Ok(true)
+    }
+
+    fn charge_trial(remaining_work: &mut usize, start: f64, end: f64) -> Result<(), Error> {
+        if *remaining_work == 0 {
+            crate::diagnostics::record(
+                "nonlinear_candidate",
+                "work_limit",
+                Some(start),
+                Some(end),
+                1,
+                Some("failed trials and order retries share the suffix work allowance"),
+            );
+            return Err(Error::new(
+                "waveform_accuracy",
+                "validated nonlinear integration exhausted the cumulative 16384 trial evaluations; trajectory accuracy is not certified",
+            ));
+        }
+        *remaining_work -= 1;
+        crate::diagnostics::counter("nonlinear_trial_evaluations", 1);
+        Ok(())
     }
 
     pub(super) fn operator_value_index(&self, op: usize) -> Option<usize> {
@@ -1905,6 +1921,7 @@ mod tests {
         assert_eq!(accepted.initial, prefix);
         assert_eq!(accepted.certified_end(), 0.0);
         assert!(accepted.steps.is_empty());
+        assert!(candidate.same_history(&accepted));
     }
 
     #[test]
@@ -1945,15 +1962,46 @@ mod tests {
     }
 
     #[test]
+    fn failed_trials_consume_the_shared_work_allowance() {
+        let mut candidate = scalar(1e300);
+        let accepted = candidate.clone();
+        let mut remaining = 1;
+        let (result, report) = crate::diagnostics::capture(Default::default(), || {
+            candidate.propagate_once(0.125, 1.0, &mut remaining)
+        });
+        let error = result.unwrap_err();
+        assert_eq!(error.kind, "waveform_accuracy");
+        assert!(error.message.contains("trial evaluations"));
+        assert_eq!(remaining, 0);
+        assert_eq!(report.counters["nonlinear_rejected_trials"], 1);
+        assert!(candidate.same_history(&accepted));
+    }
+
+    #[test]
     fn discarded_candidates_share_the_remaining_work_limit() {
         let mut candidate = scalar(-1.0);
         let accepted = candidate.clone();
         // A previously discarded suffix has already consumed this call's
         // work allowance; no step may be validated in the next attempt.
         let error = candidate.propagate_once(0.125, 1.0, &mut 0).unwrap_err();
-        assert!(error
-            .message
-            .contains("cumulative 16384 candidate-step work limit"));
+        assert!(error.message.contains("cumulative 16384 trial evaluations"));
+        assert!(candidate.same_history(&accepted));
+    }
+
+    #[test]
+    fn higher_order_retry_also_consumes_the_shared_work_allowance() {
+        let mut candidate = scalar(-1.0);
+        candidate.tolerances = Tolerances {
+            absolute: 1e-20,
+            relative: 0.0,
+        };
+        let accepted = candidate.clone();
+        let (result, report) = crate::diagnostics::capture(Default::default(), || {
+            candidate.propagate_once(0.125, 1.0, &mut 1)
+        });
+        assert!(result.unwrap_err().message.contains("trial evaluations"));
+        assert_eq!(report.counters["nonlinear_trial_evaluations"], 1);
+        assert_eq!(report.counters["nonlinear_order_refinements"], 1);
         assert!(candidate.same_history(&accepted));
     }
 

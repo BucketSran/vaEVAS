@@ -186,12 +186,20 @@ raise SystemExit(results.main(sys.argv[3:]))
         for label,body in bodies.items():
             with self.subTest(label=label):
                 self.out=self.root/label
-                result=self.cli(self.fixture_kernel(body),'--timeout','0.1')
+                # Only the timeout fixture tests a 100 ms execution budget.
+                # Protocol fixtures must reach their output checks even when
+                # process startup is slow on a loaded CI runner.
+                timeout = '0.1' if label == 'timeout' else '3'
+                result=self.cli(self.fixture_kernel(body),'--timeout',timeout)
                 self.assertEqual(result.returncode,2,result.stderr)
                 state=json.loads((self.out/'manifest.json').read_text())
                 self.assertEqual(state['status'],'failed')
                 self.assertFalse((self.out/'observations.csv').exists())
                 self.assertEqual(state['error'],json.loads(result.stderr))
+                expected = {'failure': 'invalid_request', 'timeout': 'kernel_timeout',
+                            'truncated': 'invalid_response', 'fewer_rows': 'invalid_response',
+                            'wrong_nodes': 'invalid_response', 'nonfinite': 'invalid_response'}
+                self.assertEqual(state['error']['kind'], expected[label])
                 if label in ('fewer_rows','wrong_nodes'):
                     self.assertTrue((self.out/'result.json').exists())
 
