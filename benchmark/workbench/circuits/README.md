@@ -6,6 +6,7 @@
 | [Analog Design Bench：OTA5 LDO 电路资产](adb-ldo-ota5.md) | [case-0002](../cases/testing-characterization/power/case-0002-ldo-startup/README.md) |
 | [既有 ADC 频谱合成观测资产](first-batch-adc-spectrum.md) | [case-0010](../cases/testing-characterization/adc/case-0010-adc-spectrum-records/README.md) |
 | [JKU SKY130 SAR ADC 采样级](jku-sampling-stage.md) | [case-0006](../cases/data-modeling/adc/case-0006-sampling-identification/README.md) |
+| [R01 采样与多通道读出审核资产](r01-sampling.md) | 尚无 Case |
 | [SKY130 AJC POR 电路资产](sky130-ajc-por.md) | [case-0001](../cases/testing-characterization/power/case-0001-por-sequence/README.md) |
 | [Tiny Tapeout ADPLL 架构资产](tiny-tapeout-adpll.md) | [case-0004](../cases/spec-modeling/pll/case-0004-adpll-dco/README.md)、[case-0007](../cases/extension-integration/pll/case-0007-adpll-fine-tdc/README.md) |
 | [原创 UVLO 及拟建复位控制链](uvlo-monitor-original.md) | [case-0009](../cases/diagnosis-repair/power/case-0009-uvlo-reset-chain/README.md) |

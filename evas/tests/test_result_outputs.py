@@ -167,7 +167,7 @@ raise SystemExit(results.main(sys.argv[3:]))
     def fixture_kernel(self, body):
         path=self.root/'fixture'
         identity=dict(identity_version=1,name='evas-kernel',version='fixture',build_revision=None,
-                      ir_schema_version=18,request_protocol_version=None,platform=dict(os='fixture',arch='fixture'))
+                      ir_schema_version=19,request_protocol_version=None,platform=dict(os='fixture',arch='fixture'))
         path.write_text('#!'+sys.executable+'\nimport json,sys,time\n'
                         +'if sys.argv[1:]==["--version","--json"]:\n print('+repr(json.dumps(identity))+')\n sys.exit(0)\n'
                         +body+'\n')
@@ -175,7 +175,7 @@ raise SystemExit(results.main(sys.argv[3:]))
         return path
 
     def test_kernel_failure_timeout_truncation_rows_nodes_and_nonfinite(self):
-        good=dict(schema_version=18,engine='fixture',nodes=['0','u','y'],solutions=[dict(voltages=[0,-.5,-.75],max_residual_v=0,max_residual_ratio=0),dict(voltages=[0,0,.25],max_residual_v=0,max_residual_ratio=0),dict(voltages=[0,.75,1.75],max_residual_v=0,max_residual_ratio=0)])
+        good=dict(schema_version=19,engine='fixture',nodes=['0','u','y'],solutions=[dict(voltages=[0,-.5,-.75],max_residual_v=0,max_residual_ratio=0),dict(voltages=[0,0,.25],max_residual_v=0,max_residual_ratio=0),dict(voltages=[0,.75,1.75],max_residual_v=0,max_residual_ratio=0)])
         bodies={
             'failure':'sys.stderr.write(\'{"kind":"invalid_request","message":"fixture failure"}\'); sys.exit(2)',
             'timeout':'time.sleep(3)',
@@ -186,12 +186,20 @@ raise SystemExit(results.main(sys.argv[3:]))
         for label,body in bodies.items():
             with self.subTest(label=label):
                 self.out=self.root/label
-                result=self.cli(self.fixture_kernel(body),'--timeout','0.1')
+                # Only the timeout fixture tests a 100 ms execution budget.
+                # Protocol fixtures must reach their output checks even when
+                # process startup is slow on a loaded CI runner.
+                timeout = '0.1' if label == 'timeout' else '3'
+                result=self.cli(self.fixture_kernel(body),'--timeout',timeout)
                 self.assertEqual(result.returncode,2,result.stderr)
                 state=json.loads((self.out/'manifest.json').read_text())
                 self.assertEqual(state['status'],'failed')
                 self.assertFalse((self.out/'observations.csv').exists())
                 self.assertEqual(state['error'],json.loads(result.stderr))
+                expected = {'failure': 'invalid_request', 'timeout': 'kernel_timeout',
+                            'truncated': 'invalid_response', 'fewer_rows': 'invalid_response',
+                            'wrong_nodes': 'invalid_response', 'nonfinite': 'invalid_response'}
+                self.assertEqual(state['error']['kind'], expected[label])
                 if label in ('fewer_rows','wrong_nodes'):
                     self.assertTrue((self.out/'result.json').exists())
 
@@ -261,7 +269,7 @@ raise SystemExit(main(sys.argv[1:]))
         self.data=dict(models=['m.va'],instances=[dict(name='dut',module='m',connections=dict(y='y'))],
                        transient=dict(sources={},output_times=[0,.25,.5],stop=.5,max_step=.5))
         self.path.write_text(json.dumps(self.data))
-        response=dict(schema_version=18,engine='fixture',nodes=['0','y'],
+        response=dict(schema_version=19,engine='fixture',nodes=['0','y'],
                       solutions=[dict(voltages=[0,v],max_residual_v=0,max_residual_ratio=0) for v in [.25,.5,.75]],
                       transient=dict(times=[0,.2,.5],state_names=[],states=[[],[],[]],events=[],accepted_steps=2,discarded_trials=0))
         result=self.cli(self.fixture_kernel('print('+repr(json.dumps(response))+')'))

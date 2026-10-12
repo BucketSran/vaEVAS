@@ -1,0 +1,203 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Response-driven instrument. No DUT parameters are read by this module.
+module r01_characterization(vin, track, rst, vout, done, status,
+                            acq_ns, hold_drift, hold_peak, hold_step, valid_count);
+  output vin, track, rst, done, status, acq_ns;
+  output hold_drift, hold_peak, hold_step, valid_count;
+  input vout;
+  electrical vin, track, rst, vout, done, status, acq_ns;
+  electrical hold_drift, hold_peak, hold_step, valid_count;
+
+  parameter integer case_id = 0;
+  parameter integer repetitions = 2 from [1:inf);
+  parameter real target_hi = 1.4;
+  parameter real target_lo = 0.3;
+  parameter real reset_level = 0.9;
+  parameter real accuracy = 2m from (0:inf);
+  parameter real reset_accuracy = 2m from (0:inf);
+  parameter real stable_window = 10n from (0:inf);
+  parameter real reset_timeout = 200n from (0:inf);
+  parameter real acq_timeout = 300n from (0:inf);
+  parameter real hold_guard = 10n from (0:inf);
+  parameter real hold_window = 1u from (0:inf);
+  parameter real tick = 1n from (0:inf);
+  parameter real edge_time = 100p from (0:inf);
+  parameter real sense_limit = 10 from (0:inf);
+
+  integer phase, round_index, report_round, report_status, report_phase;
+  integer failures, valid_rounds, round_finished;
+  real vin_command, track_command, rst_command, target;
+  real reset_start, acq_start, hold_start, baseline_time;
+  real reset_candidate, acq_candidate;
+  real measured_acq, measured_drift, measured_peak, measured_step;
+  real before_hold, baseline, observed, deviation;
+  real acq_sum, max_hold_peak;
+  real latched_acq, latched_drift, latched_peak, latched_step;
+
+  analog begin
+    @(initial_step) begin
+      phase = 0;
+      round_index = 1;
+      report_round = 0;
+      report_status = 0;
+      report_phase = 0;
+      failures = 0;
+      valid_rounds = 0;
+      round_finished = 0;
+      vin_command = reset_level;
+      track_command = 0;
+      rst_command = 1.8;
+      target = target_hi;
+      reset_start = 0;
+      acq_start = 0;
+      hold_start = 0;
+      baseline_time = 0;
+      reset_candidate = -1;
+      acq_candidate = -1;
+      measured_acq = -1;
+      measured_drift = 0;
+      measured_peak = 0;
+      measured_step = 0;
+      before_hold = 0;
+      baseline = 0;
+      acq_sum = 0;
+      max_hold_peak = 0;
+      latched_acq = -1;
+      latched_drift = 0;
+      latched_peak = 0;
+      latched_step = 0;
+      $strobe("R01 BEGIN case=%0d rounds=%0d observation_tick_s=%g accuracy_V=%g stable_window_s=%g", case_id, repetitions, tick, accuracy, stable_window);
+    end
+
+    // Leaving the band cancels the candidate even between instrument ticks.
+    // Both event expressions remain present in every analog evaluation.
+    @(cross(abs(V(vout)-target)-accuracy, +1)) begin
+      if (phase == 1) acq_candidate = -1;
+    end
+    @(cross(abs(V(vout)-reset_level)-reset_accuracy, +1)) begin
+      if (phase == 0) reset_candidate = -1;
+    end
+
+    // A fixed, positive periodic schedule cannot leave stale phase timers.
+    @(timer(tick, tick)) begin
+      observed = V(vout);
+      round_finished = 0;
+      if (phase != 4) begin
+        if ((observed != observed) || (abs(observed) > sense_limit)) begin
+          report_status = 4;
+          failures = failures | 4;
+          round_finished = 1;
+        end else begin
+          case (phase)
+            0: begin
+              if (abs(observed-reset_level) < reset_accuracy) begin
+                if (reset_candidate < 0) reset_candidate = $abstime;
+              end else reset_candidate = -1;
+              if ((reset_candidate >= 0) &&
+                  ($abstime-reset_candidate >= stable_window)) begin
+                target = (round_index % 2 == 1) ? target_hi : target_lo;
+                vin_command = target;
+                rst_command = 0;
+                track_command = 1.8;
+                acq_start = $abstime;
+                acq_candidate = -1;
+                phase = 1;
+              end else if ($abstime-reset_start >= reset_timeout) begin
+                report_status = 1;
+                failures = failures | 1;
+                round_finished = 1;
+              end
+            end
+            1: begin
+              if (abs(observed-target) < accuracy) begin
+                if (acq_candidate < 0) acq_candidate = $abstime;
+              end else acq_candidate = -1;
+              if ((acq_candidate >= 0) &&
+                  ($abstime-acq_candidate >= stable_window)) begin
+                measured_acq = acq_candidate-acq_start;
+                before_hold = observed;
+                hold_start = $abstime;
+                track_command = 0;
+                // Change the source while holding to expose failed isolation.
+                vin_command = (round_index % 2 == 1) ? target_lo : target_hi;
+                phase = 2;
+              end else if ($abstime-acq_start >= acq_timeout) begin
+                report_status = 2;
+                failures = failures | 2;
+                round_finished = 1;
+              end
+            end
+            2: begin
+              if ($abstime-hold_start >= hold_guard) begin
+                baseline = observed;
+                baseline_time = $abstime;
+                measured_step = baseline-before_hold;
+                measured_peak = 0;
+                phase = 3;
+              end
+            end
+            3: begin
+              deviation = observed-baseline;
+              measured_peak = max(measured_peak, abs(deviation));
+              if ($abstime-baseline_time >= hold_window) begin
+                measured_drift = deviation;
+                report_status = 0;
+                valid_rounds = valid_rounds+1;
+                acq_sum = acq_sum+measured_acq;
+                max_hold_peak = max(max_hold_peak, measured_peak);
+                latched_acq = measured_acq;
+                latched_drift = measured_drift;
+                latched_peak = measured_peak;
+                latched_step = measured_step;
+                round_finished = 1;
+              end
+            end
+          endcase
+        end
+
+        if (round_finished == 1) begin
+          report_round = round_index;
+          report_phase = phase;
+          // Failed rounds never publish zero drift as a valid observation.
+          if (report_status == 0)
+            $strobe("R01 ROUND case=%0d round=%0d status=0 target_V=%g acq_s=%g hold_step_V=%g hold_drift_V=%g hold_peak_V=%g baseline_V=%g hold_observed_s=%g", case_id, report_round, target, measured_acq, measured_step, measured_drift, measured_peak, baseline, $abstime-baseline_time);
+          else
+            $strobe("R01 ROUND case=%0d round=%0d status=%0d phase=%0d elapsed_s=%g vout_V=%g metrics_valid=0", case_id, report_round, report_status, report_phase, $abstime, observed);
+          if (round_index >= repetitions) begin
+            phase = 4;
+            track_command = 0;
+            rst_command = 0;
+            if (valid_rounds > 0)
+              $strobe("R01 DONE case=%0d failure_bits=%0d valid_rounds=%0d mean_acq_s=%g max_hold_peak_V=%g", case_id, failures, valid_rounds, acq_sum/valid_rounds, max_hold_peak);
+            else
+              $strobe("R01 DONE case=%0d failure_bits=%0d valid_rounds=0 metrics_valid=0", case_id, failures);
+          end else begin
+            round_index = round_index+1;
+            phase = 0;
+            reset_start = $abstime;
+            reset_candidate = -1;
+            acq_candidate = -1;
+            vin_command = reset_level;
+            track_command = 0;
+            rst_command = 1.8;
+          end
+        end
+      end
+    end
+
+    $bound_step(tick);
+    V(vin) <+ transition(vin_command, 0, edge_time);
+    V(track) <+ transition(track_command, 0, edge_time);
+    V(rst) <+ transition(rst_command, 0, edge_time);
+    V(done) <+ (phase == 4 ? 1 : 0);
+    V(status) <+ failures;
+    // Metric nodes latch the last completed, valid round. Text preserves all rounds.
+    V(acq_ns) <+ (valid_rounds > 0 ? latched_acq*1e9 : -1);
+    V(hold_drift) <+ latched_drift;
+    V(hold_peak) <+ latched_peak;
+    V(hold_step) <+ latched_step;
+    V(valid_count) <+ valid_rounds;
+  end
+endmodule

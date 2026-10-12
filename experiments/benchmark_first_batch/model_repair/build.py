@@ -358,7 +358,7 @@ def build_all():
     items=[build_comparator(),build_bbpd(),build_sigma(),build_hold(),build_uvlo(),build_sigma('repair-sigma-delta-phase',True),build_uvlo('repair-uvlo-recovery',True),build_sar(),build_zoom()]
     items.append({'id':'va07-triangle-repair','action':'repair','source_group':'repository-triangle-oscillator','path':'benchmark/tasks/va07-triangle-repair','status':'existing_prototype_reused_no_new_copy','notes':'Existing development/Spectre evidence belongs to va07 SOURCE; formal admission and Agentic still pending. Not counted twice.'})
     registry={'schema':'first-batch-model-repair-v1','counts':{'specification':5,'repair':5,'new_tasks':9,'reused_tasks':1},'tasks':items,'local_checker_tests':'python3 -B -m unittest discover -s experiments/benchmark_first_batch/model_repair -p test_contracts.py -v','evidence_boundary':'Line-level synthetic tests are checker tests, not Verilog-A execution. Actual calibration is recorded separately by coordinator.'}
-    (ROOT/'benchmark/first_batch/model_repair.json').write_text(json.dumps(registry,indent=2)+'\n')
+    (ROOT/'benchmark/tasks/first_batch-model_repair.json').write_text(json.dumps(registry,indent=2)+'\n')
     return registry
 
 if __name__=='__main__':build_all()

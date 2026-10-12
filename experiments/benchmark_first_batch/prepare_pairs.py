@@ -9,7 +9,7 @@ from runtime import ROOT, prepare
 def build(output, harness, selections):
     output = Path(output).resolve()
     output.mkdir(mode=0o700, parents=True, exist_ok=False)
-    registry = json.loads((ROOT / "benchmark/first_batch/optimization.json").read_text())
+    registry = json.loads((ROOT / "benchmark/tasks/first_batch-optimization.json").read_text())
     entries = registry["candidates"] + registry["tasks"]
     candidates = {c.get("candidate_id", c.get("id")): c for c in entries}
     if len(candidates) != len(entries) or None in candidates:

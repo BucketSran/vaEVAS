@@ -4,6 +4,29 @@
 面向使用者的支持结论只在[四后端支持范围](../COMPARISON.md)维护，详细接受与拒绝条件由所链接的契约维护。
 收据只证明其固定执行版本；下表仅登记 ID 与证据，供追溯工具读取，不维护第二份支持状态或当前 main 通过率。
 
+[累计测试清单](../../validation/paper/COVERAGE.md)登记历史条件与新 44 组的逐项关系，
+涵盖 LANG、LIN、NONLINEAR、TIMER、CROSS、EVENT-ORDER、TRANSITION、ABSDELAY、SLEW、DYNAMICS、COMPOSE、QUALIFICATION。
+五层目录整理没有改变实现、判据或成绩。主表按五层固定用例呈现；打勾只表示本行全部必测用例通过，扩展计划和缺证清单分别保留。
+L1–L5 是表格导航 ID，不替换下表开发 ID；旧版本、原预算和失败继续保留。
+
+[Q3 支持修复与横线补证](../../../experiments/backends/support/README.md#q3-closure)
+补充 LANG、NONLINEAR、DYNAMICS、COMPOSE、QUALIFICATION 的实现与有限证据。
+IR19 增加纯数学函数，恒定 PWL 保留原输入位；契约见[纯数学函数](../math/operators.md#elementary-functions)，
+回归见[函数测试](../../tests/test_unary_functions.py)、[恒定输入测试](../../tests/test_constant_input_identity.py)，
+独立校准见[校准工具](../../validation/calibrate_elementary.py)。
+静态输入与回调证书只解除已证明的义务；新旧成绩、具体工具版本和未完组合均在收据中分开记录。
+函数修复属于本轮源码交付；#162 的旧运行不计作当前 main 能力，#131 不动。
+
+[原11格后续取证](../../../experiments/backends/support/README.md#evidence-followup)
+补充 CROSS、EVENT-ORDER、DYNAMICS、QUALIFICATION 的有限来源证据。
+回调记录、实际输入消费者与最终接受状态按固定卡重新核准；新数值分析与旧I并列保存。
+这次不修改EVAS生产源码，不将环回侧别或同刻回调直接认定为EVAS缺陷，也不豁免原验收。
+
+[独立基础卡与历史补证](../../../experiments/backends/support/README.md#primitives-main)
+补充 LANG、NONLINEAR、DYNAMICS、QUALIFICATION：十卡、三档、四后端共120个新位置，
+另重读168份历史配置。新卡固定 main 检查点 `a64c2ad0`，仅验收有限导出值；
+不覆盖后续 main、不补造旧事件回调资格，也不回写原成绩。
+
 Q 档精度集的[失败归因复核](../../../experiments/backends/support/README.md#failure-attribution)
 补充 CROSS、TIMER、DYNAMICS、QUALIFICATION 的原因证据。它区分事件编译缺陷、已复现的行为错误、
 EVAS 回调缺证与严格配置认证拒绝，不改原验收成绩或扩大能力范围。

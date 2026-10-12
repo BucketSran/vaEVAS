@@ -26,7 +26,7 @@
 | --- | --- | --- |
 | [旧 v4 r53](../../reference/v4/release/benchmarkv4-r53/) | 1200 个 task record，400 个 family；DUT、Testbench、Bugfix 各400包 | 本轮主要筛选池；按家族保存关联，不能当1200个独立电路 |
 | [v1 与原始 VA 资料](../../reference/README.md) | 资料索引记载 v1 有86个发布目标；本轮只追少量来源，不重审全库 | 查原始工程、用途及来源，不重复计成新电路 |
-| [本仓库旧七类首批](../../first_batch/README.md) | 五份 JSON 中35项、32个 source group；与 v4 是不同批次 | 已有实现可复用，但按五类新定义逐题复核；历史资格不自动沿用 |
+| [本仓库旧七类首批](../history/first-batch/README.md) | 五份 JSON 中35项、32个 source group；与 v4 是不同批次 | 已有实现可复用，但按五类新定义逐题复核；历史资格不自动沿用 |
 
 历史仓库来源快照为 `7b5616dc52195ec275ec6d21c71d7763613702cd`；本轮核对的是 vaEVAS `c81b8c7c17535bd5267f5bc1d7abe80b3087a9a9` 保存的原始字节。统计 task record 和声明数量只证明材料规模，不证明质量、独立性或可运行性。内部资料的使用范围见[原资产约定](../../reference/README.md#使用约定)；本轮仅建立引用和设计记录。
 

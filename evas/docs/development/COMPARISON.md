@@ -21,6 +21,8 @@ checker和证据身份。以下数据集状态描述该历史批次；后续记�
 
 新标准替换旧判据时，校准检查器并使用新的分析身份；保留原判定。
 旧有有限观察或排除窗的通过不能直接升级为新范围通过。
+主表每行按[comparison-scope-v1 固定范围](../../validation/paper/COVERAGE.md#summary-scopes)列出全部必测用例，
+未来扩展另立范围版本。缺证明细和未定稿计划不作为后端不支持的结论。
 已接受差异及重新调查条件遵循[对齐验收](../../../docs/contributing/validation.md#classify-differences-before-selecting-a-repair)。
 候选证据须标明未合并，不能升级 main 的支持范围。
 

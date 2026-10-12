@@ -1,0 +1,36 @@
+name: Cache Rust build inputs
+description: Restore Cargo downloads and optional build outputs, then let Cargo validate them.
+inputs:
+  toolchain:
+    description: Installed rustup toolchain
+    default: stable
+  lane:
+    description: Separate incompatible build profiles and installation checks
+    required: true
+  targets:
+    description: Optional build directories; leave empty for clean package builds
+    default: ''
+outputs:
+  compiler:
+    description: Hash of the actual compiler identity
+    value: ${{ steps.compiler.outputs.hash }}
+runs:
+  using: composite
+  steps:
+    - id: compiler
+      shell: bash
+      env:
+        CI_RUST_TOOLCHAIN: ${{ inputs.toolchain }}
+      run: |
+        compiler_hash=$(rustc +"$CI_RUST_TOOLCHAIN" -vV | shasum -a 256 | cut -d ' ' -f 1)
+        echo "hash=$compiler_hash" >> "$GITHUB_OUTPUT"
+    - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+      with:
+        path: |
+          ~/.cargo/registry/index
+          ~/.cargo/registry/cache
+          ~/.cargo/git/db
+          ${{ inputs.targets }}
+        key: rust-v1-${{ runner.os }}-${{ runner.arch }}-${{ inputs.lane }}-${{ steps.compiler.outputs.hash }}-${{ hashFiles('evas/rust_core/**/Cargo.lock', 'evas/rust_core/**/Cargo.toml') }}-${{ github.sha }}
+        restore-keys: |
+          rust-v1-${{ runner.os }}-${{ runner.arch }}-${{ inputs.lane }}-${{ steps.compiler.outputs.hash }}-${{ hashFiles('evas/rust_core/**/Cargo.lock', 'evas/rust_core/**/Cargo.toml') }}-

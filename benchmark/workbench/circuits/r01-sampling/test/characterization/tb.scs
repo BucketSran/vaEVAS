@@ -1,0 +1,24 @@
+simulator lang=spectre
+global 0
+ahdl_include "../../module/core/track_hold.va"
+ahdl_include "bench.va"
+
+// Independent instruments; parameter changes belong to the DUT instances.
+// Values illustrate engineering conditions, not fitted device measurements.
+Xdut_nom (vin_nom track_nom rst_nom out_nom) r01_track_hold tau_acq=10n tau_hold=200u
+Xbench_nom (vin_nom track_nom rst_nom out_nom done_nom status_nom acq_nom drift_nom peak_nom step_nom valid_nom) r01_characterization case_id=1
+
+Xdut_slow (vin_slow track_slow rst_slow out_slow) r01_track_hold tau_acq=35n tau_hold=200u
+Xbench_slow (vin_slow track_slow rst_slow out_slow done_slow status_slow acq_slow drift_slow peak_slow step_slow valid_slow) r01_characterization case_id=2
+
+Xdut_leak (vin_leak track_leak rst_leak out_leak) r01_track_hold tau_acq=10n tau_hold=20u
+Xbench_leak (vin_leak track_leak rst_leak out_leak done_leak status_leak acq_leak drift_leak peak_leak step_leak valid_leak) r01_characterization case_id=3
+
+Xdut_timeout (vin_timeout track_timeout rst_timeout out_timeout) r01_track_hold tau_acq=200n tau_hold=200u
+Xbench_timeout (vin_timeout track_timeout rst_timeout out_timeout done_timeout status_timeout acq_timeout drift_timeout peak_timeout step_timeout valid_timeout) r01_characterization case_id=4
+
+save vin_nom track_nom rst_nom out_nom done_nom status_nom acq_nom drift_nom peak_nom step_nom valid_nom
+save vin_slow track_slow rst_slow out_slow done_slow status_slow acq_slow drift_slow peak_slow step_slow valid_slow
+save vin_leak track_leak rst_leak out_leak done_leak status_leak acq_leak drift_leak peak_leak step_leak valid_leak
+save vin_timeout track_timeout rst_timeout out_timeout done_timeout status_timeout acq_timeout drift_timeout peak_timeout step_timeout valid_timeout
+tran_char tran stop=4u maxstep=1n errpreset=conservative

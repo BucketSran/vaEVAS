@@ -1,0 +1,20 @@
+simulator lang=spectre
+global 0
+ahdl_include "../../module/core/track_hold.va"
+
+// Identical excitation for parameter contrasts. All transitions have finite edges.
+// Startup is hold at vinit. First reset overlaps tracking to exercise priority.
+Vvin (vin 0) vsource type=pwl wave=[0 0.2 135n 0.2 135.2n 1.6 310n 1.6 310.2n 0.2 415n 0.2 415.2n 1.6 600n 1.6 600.2n 0.7 1u 0.7 1.02u 1.4 2u 1.4 2.02u 0.3 4u 0.3 4.02u 1.7 8u 1.7 8.02u 0.5 16.45u 0.5 16.4502u 1.3 17u 1.3]
+Vtrack (track 0) vsource type=pwl wave=[0 0 10n 0 10.2n 1.8 125n 1.8 125.2n 0 140n 0 140.2n 1.8 148n 1.8 148.2n 0 180n 0 180.2n 1.8 188n 1.8 188.2n 0 220n 0 220.2n 1.8 300n 1.8 300.2n 0 330n 0 330.2n 1.8 410n 1.8 410.2n 0 420n 0 420.2n 1.8 500n 1.8 500.2n 0 16.40u 0 16.4002u 1.8 16.53u 1.8 16.5302u 0 17u 0]
+Vrst (rst 0) vsource type=pwl wave=[0 0 20n 0 20.2n 1.8 60n 1.8 60.2n 0 16.405u 0 16.4052u 1.8 16.445u 1.8 16.4452u 0 17u 0]
+
+Xnominal (vin track rst nominal) r01_track_hold
+Xno_pedestal (vin track rst no_pedestal) r01_track_hold pedestal=0
+Xfast (vin track rst fast) r01_track_hold tau_acq=5n
+Xflat (vin track rst flat) r01_track_hold acq_curvature=0
+Xleaky (vin track rst leaky) r01_track_hold tau_hold=50u
+Xzero (vin track rst zero_init) r01_track_hold vinit=0
+
+opts options reltol=1e-5 vabstol=1e-7 iabstol=1e-12
+tran tran stop=17u maxstep=10n errpreset=conservative
+save vin track rst nominal no_pedestal fast flat leaky zero_init

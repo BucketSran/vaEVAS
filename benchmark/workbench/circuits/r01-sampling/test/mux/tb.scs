@@ -1,0 +1,18 @@
+simulator lang=spectre
+ahdl_include "../../module/core/track_hold.va"
+ahdl_include "../../system/mux/circuit.va"
+V0 (ain0 0) vsource dc=0.2
+V1 (ain1 0) vsource dc=1.6
+V2 (ain2 0) vsource dc=0.6
+V3 (ain3 0) vsource dc=1.2
+Vr (rst 0) vsource type=pwl wave=[0 1.8 199n 1.8 200n 0 6u 0 6.001u 1.8 6.2u 1.8 6.201u 0 7u 0]
+// Approximate acquisition lengths at the 0.9 V threshold: 100,5,5,100,100,5 ns.
+// Final acquisition starts at reset release while track is already high.
+Vt (track 0) vsource type=pwl wave=[0 0 300n 0 301n 1.8 400n 1.8 401n 0 500n 0 501n 1.8 505n 1.8 506n 0 600n 0 601n 1.8 605n 1.8 606n 0 700n 0 701n 1.8 800n 1.8 801n 0 900n 0 901n 1.8 1u 1.8 1.001u 0 1.1u 0 1.101u 1.8 1.105u 1.8 1.106u 0 6.15u 0 6.151u 1.8 6.35u 1.8 6.351u 0 7u 0]
+Vs0 (sel0 0) vsource type=pwl wave=[0 1.8 480n 1.8 481n 0 580n 0 581n 1.8 680n 1.8 681n 0 880n 0 881n 1.8 1.08u 1.8 1.081u 0 7u 0]
+Vs1 (sel1 0) vsource type=pwl wave=[0 0 6.1u 0 6.101u 1.8 7u 1.8]
+// Pausing readout neither freezes nor resets the shared storage node.
+Ve (read_en 0) vsource type=pwl wave=[0 1.8 2u 1.8 2.001u 0 4u 0 4.001u 1.8 7u 1.8]
+Xmux (ain0 ain1 ain2 ain3 sel0 sel1 track rst read_en dout valid owner0 owner1 held) r01_mux
+save ain0 ain1 ain2 ain3 sel0 sel1 track rst read_en dout valid owner0 owner1 held Xmux.mux_in
+tran tran stop=7u maxstep=2n errpreset=conservative

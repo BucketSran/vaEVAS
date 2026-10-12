@@ -28,4 +28,4 @@ Harbor oracle 和 Agentic 模型试跑分别记录，参考通过不证明整个
 - ZOOM 用相位日历核验九路时钟、全部脉冲数及相位关系；计时量化容差公开，不以累计RMSE掩盖漏脉冲。
 
 所有新题是电压域行为工程任务，未声称晶体管级测量真实性、噪声/负载/电流能力或开源复现。
-`benchmark/first_batch/model_repair.json` 保存任务清单与当前状态，实际校准收据由协调者维护。
+`benchmark/tasks/first_batch-model_repair.json` 保存任务清单与当前状态，实际校准收据由协调者维护。

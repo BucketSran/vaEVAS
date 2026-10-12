@@ -1,6 +1,6 @@
 # BMAS 2000：SC 滤波器中的运放规格
 
-来源：[Lauwers、Lampaert、Miliozzi、Gielen，High-level design case of a switched-capacitor low-pass filter using Verilog-A](https://bmas.designers-guide.org/2000/papers/bmas00-lauwers.pdf)。2026-10-10 重读正文 §2–3，确认原例为一阶全差分 SC 低通，运放与开关模型用于研究子模块规格对系统的影响。沿用 [规格建模研究](../../research/spec-modeling.md#2-lauwers-等开关电容低通滤波器的分层规格) 的材料身份；本轮没有下载或复现完整工程。
+来源：[Lauwers、Lampaert、Miliozzi、Gielen，High-level design case of a switched-capacitor low-pass filter using Verilog-A](https://bmas.designers-guide.org/2000/papers/bmas00-lauwers.pdf)。2026-10-10 重读正文 §2–3，确认原例为一阶全差分 SC 低通，运放与开关模型用于研究子模块规格对系统的影响。沿用 [规格建模研究](../research/spec-modeling.md#2-lauwers-等开关电容低通滤波器的分层规格) 的材料身份；本轮没有下载或复现完整工程。
 
 原文讨论有限增益、GBW、压摆、限幅与内部饱和状态，也明确考虑输出阻抗和周围开关的耦合。因此不能把原模型删掉电流端口后，仍称为原电路的等价实现。论文提供连接示意、局部语句及结果，未核查到完整可运行代码或独立源码许可。只引用方法，自行定义公开规格与模型。
 

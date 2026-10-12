@@ -8,7 +8,7 @@
 
 逐个读取 [r53 tasks](../../reference/v4/release/benchmarkv4-r53/tasks/) 的 `task_record.json`，1200 个包分为 dut、testbench、bugfix 各400个。对400个 bugfix 的 `public/buggy_bundle/*.va` 先将行注释、块注释和双引号字符串替换为空白，再用词法模式 `\bmodule\s+[A-Za-z_][A-Za-z0-9_$]*` 扫描声明，包含同行声明。1/2/3/4/5 module 分别为355/3/18/14/10包，即355个单module、45个多module包，共521个 VA文件。本次修正方法后数量不变。这是静态声明数，未展开实例层级，也不是355道已经合格的单模块题。
 
-按名称先筛状态、复位、保持、边沿与计时方向，再细读下表六个包的题面、公开合同、actual starter、reference、score deck、checker profile、task record及各自 provenance 的 manifest/catalog。逐个计算 starter SHA-256，并比对实际 mutation 文件和 catalog 哈希；仅六个包做此身份核验。复用[已有修复调查](../../research/diagnosis-repair.md)的042/281线索和[PFD来源卡](../sources/v4-pfd-reset.md)，不重复建case。未普查其余394个故障，也未证明候选有真实用户工程bug记录，六项均按人工注错素材讨论。
+按名称先筛状态、复位、保持、边沿与计时方向，再细读下表六个包的题面、公开合同、actual starter、reference、score deck、checker profile、task record及各自 provenance 的 manifest/catalog。逐个计算 starter SHA-256，并比对实际 mutation 文件和 catalog 哈希；仅六个包做此身份核验。复用[已有修复调查](../research/diagnosis-repair.md)的042/281线索和[PFD来源卡](../sources/v4-pfd-reset.md)，不重复建case。未普查其余394个故障，也未证明候选有真实用户工程bug记录，六项均按人工注错素材讨论。
 
 | family / 修复ID | actual starter违反的行为 | manifest seed / 实际mutation | 讨论位置 |
 | --- | --- | --- | --- |

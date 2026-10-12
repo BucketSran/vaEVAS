@@ -1,0 +1,79 @@
+{
+  "date": "2026-10-11",
+  "base_commit": "826fefb12b5b068544be9de97e68f21e3c60e76f",
+  "simulator": "Spectre 21.1.0.509.isr12 64bit",
+  "inputs": [
+    {
+      "path": "characterization/bench.va",
+      "sha256": "b45f1034eedf627f6b3721144baec4c3847c976b1b06b40763c6292a0bc2b5c8",
+      "successful_attempt": "attempt-02"
+    },
+    {
+      "path": "characterization/tb.scs",
+      "sha256": "5dd814bcf4aae36fdc5fac9866b4dacab9a7fdaa03b151421bd274f24f7b5f70",
+      "successful_attempt": "attempt-02"
+    },
+    {
+      "path": "core/tb.scs",
+      "sha256": "ddc5cb219b213448b6870d695b986459398f4217ffe6f625abf7f9fc142a93ec",
+      "successful_attempt": "attempt-02"
+    },
+    {
+      "path": "core/track_hold.va",
+      "sha256": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+      "successful_attempt": "attempt-02"
+    },
+    {
+      "path": "ideal/circuit.va",
+      "sha256": "1997a8bb8f487a5d49729b16da786361f8459fb2846b6d085cd9f9f82c6d4228",
+      "successful_attempt": "ideal-run-20261012"
+    },
+    {
+      "path": "ideal/tb.scs",
+      "sha256": "eb516f9a264f72a8db53bb7eecba653613ebc49a9dbba50f5f33c1a67d187b01",
+      "successful_attempt": "ideal-run-20261012"
+    },
+    {
+      "path": "basic/circuit.va",
+      "sha256": "bd1cfe0c11bbe3c75453fb528e3ac2e5aa72e710fa5bc9ed3bcb197ed2b1eec5",
+      "successful_attempt": "basic-run-20261012"
+    },
+    {
+      "path": "basic/tb.scs",
+      "sha256": "28b11ebf1025ba4097967eedbe38762ac872ed02f38deab06f753aae22aae93f",
+      "successful_attempt": "basic-run-20261012"
+    },
+    {
+      "path": "interleaved/circuit.va",
+      "sha256": "a0e95764645c716359dec99afa037ec4299202b49b7dcfbc6587245501bae3cd",
+      "successful_attempt": "attempt-03"
+    },
+    {
+      "path": "interleaved/tb.scs",
+      "sha256": "46858d8ebb336795bc5aae9852c3c4caebe1a7d301599c05ec8536ce75af8517",
+      "successful_attempt": "attempt-03"
+    },
+    {
+      "path": "mux/circuit.va",
+      "sha256": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+      "successful_attempt": "attempt-02"
+    },
+    {
+      "path": "mux/tb.scs",
+      "sha256": "ebebd7493167911a2c6274bcfca749df7e74b4542a821a1d20abfc8be549d69e",
+      "successful_attempt": "attempt-02"
+    },
+    {
+      "path": "simultaneous/circuit.va",
+      "sha256": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+      "successful_attempt": "attempt-02"
+    },
+    {
+      "path": "simultaneous/tb.scs",
+      "sha256": "10ec3734a86a079d3520d0ce7ebac15dd12b1a3b0a1b26233bc684fb97b3f1ed",
+      "successful_attempt": "attempt-02"
+    }
+  ],
+  "shared_dependency": "core/track_hold.va",
+  "scope": "Circuit execution and waveform inspection; no benchmark scoring or model-solving experiment."
+}

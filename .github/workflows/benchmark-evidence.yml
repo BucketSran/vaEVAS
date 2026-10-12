@@ -1,18 +1,20 @@
 name: Benchmark evidence
 
 on:
-  pull_request:
-    paths: ['benchmark/tasks/**', 'benchmark/checkers/**', 'benchmark/first_batch/**', 'experiments/va_screen/**', 'experiments/benchmark_first_batch/**', 'experiments/benchmark_v2/**', 'experiments/benchmark_next/**', '.github/workflows/benchmark-evidence.yml']
-  push:
-    branches: [main]
-    paths: ['benchmark/tasks/**', 'benchmark/checkers/**', 'benchmark/first_batch/**', 'experiments/va_screen/**', 'experiments/benchmark_first_batch/**', 'experiments/benchmark_v2/**', 'experiments/benchmark_next/**', '.github/workflows/benchmark-evidence.yml']
-  workflow_dispatch:
+  workflow_call:
+    outputs:
+      identity_result:
+        value: ${{ jobs.identity.outputs.result }}
+      first_batch_result:
+        value: ${{ jobs.first-batch.outputs.result }}
 
 permissions:
   contents: read
 
 jobs:
   identity:
+    outputs:
+      result: ${{ steps.verified.outputs.result }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -28,7 +30,12 @@ jobs:
         run: python3 -B -m unittest experiments.va_screen.test_identity experiments.va_screen.test_summarize -v
       - name: Saved-candidate EVAS replay regressions
         run: python3 -B -m unittest discover -s benchmark/checkers -p test_triangle_evas_replay.py -v
+      - name: Record completed checks
+        id: verified
+        run: echo "result=success" >> "$GITHUB_OUTPUT"
   first-batch:
+    outputs:
+      result: ${{ steps.verified.outputs.result }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -52,3 +59,6 @@ jobs:
               fi
             done
           fi
+      - name: Record completed checks
+        id: verified
+        run: echo "result=success" >> "$GITHUB_OUTPUT"

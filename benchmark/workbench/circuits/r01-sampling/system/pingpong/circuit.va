@@ -1,0 +1,66 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Ping-pong sampler: two apertures on one input at the same sample rate.
+// While one branch acquires, the other holds for the full half-period and the
+// output continuously selects the holding branch. There is no read clock and
+// no queue: the output is a level-selected held node, unlike the interleaved
+// consumer that latches a branch value at read_clk edges.
+module r01_pingpong_sampler(vin, ph0, ph1, rst,
+                            vout, valid, branch_id, held0, held1);
+    input vin, ph0, ph1, rst;
+    output vout, valid, branch_id, held0, held1;
+    electrical vin, ph0, ph1, rst;
+    electrical vout, valid, branch_id, held0, held1;
+
+    parameter real vth = 0.9;
+    parameter real vlogic = 1.8;
+    parameter real vinit = 0.9;
+    parameter real tau_acq = 10n from (0:inf);
+    parameter real tau_hold = 200u from (0:inf);
+    parameter real vleak = 0.0;
+    parameter real pedestal = 2m;
+    parameter real edge_time = 1n from (0:inf);
+
+    integer done0, done1, sel;
+
+    r01_track_hold #(.vth(vth), .vinit(vinit), .tau_acq(tau_acq),
+        .tau_hold(tau_hold), .vleak(vleak), .pedestal(pedestal))
+        sh0(vin, ph0, rst, held0);
+    r01_track_hold #(.vth(vth), .vinit(vinit), .tau_acq(tau_acq),
+        .tau_hold(tau_hold), .vleak(vleak), .pedestal(pedestal))
+        sh1(vin, ph1, rst, held1);
+
+    analog begin
+        @(initial_step) begin
+            done0 = 0;
+            done1 = 0;
+        end
+        @(cross(V(rst)-vth, +1)) begin
+            done0 = 0;
+            done1 = 0;
+        end
+        // Reopening an aperture invalidates that branch's unconsumed sample.
+        @(cross(V(ph0)-vth, +1)) done0 = 0;
+        @(cross(V(ph1)-vth, +1)) done1 = 0;
+        @(cross(V(ph0)-vth, -1)) begin
+            if (V(rst) < vth) done0 = 1;
+        end
+        @(cross(V(ph1)-vth, -1)) begin
+            if (V(rst) < vth) done1 = 1;
+        end
+
+        // Level selection: prefer the branch in hold with a completed sample.
+        // transition() must be evaluated unconditionally, so the selection is
+        // a sum of gated held nodes rather than a conditional output branch.
+        sel = -1;
+        if (V(ph0) <= vth && done0)
+            sel = 0;
+        else if (V(ph1) <= vth && done1)
+            sel = 1;
+        V(vout) <+ V(held0) * transition(sel == 0, 0, edge_time)
+                 + V(held1) * transition(sel == 1, 0, edge_time);
+        V(valid) <+ vlogic * transition(sel >= 0, 0, edge_time);
+        V(branch_id) <+ vlogic * transition(sel > 0, 0, edge_time);
+    end
+endmodule
