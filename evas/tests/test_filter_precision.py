@@ -3,10 +3,11 @@
 GUARDS = ["DEV:filter-precision", "DYNAMICS"]
 
 from decimal import Decimal, localcontext
+import subprocess
 import unittest
 
 from evas import KernelError, compile_sources, transient
-from test_affine import KERNEL, instance, model
+from test_affine import EVAS, KERNEL, instance, model
 
 
 def reference(points, time, initial):
@@ -73,13 +74,16 @@ class TightFilterPrecision(unittest.TestCase):
             "V(y,r)<+laplace_nd(V(u,r)*V(u,r),'{1,9.5367431640625e-7},"
             "'{2,9.5367431640625e-7});")}, [instance()])
         times = [0., unit, 2*unit, 3*unit, 4*unit]
-        # This 8192-step debug-kernel accuracy regression has a bounded
-        # ten-minute timeout. The original release-card 90-second execution
-        # budget is validated separately without changing its request.
+        # This 8192-step Q3 regression uses an explicitly built release
+        # fixture: the debug kernel exceeds even a 600-second timeout.
+        # Keep the original release-card 90-second execution budget.
+        subprocess.run(["cargo", "build", "--locked", "--release", "--manifest-path",
+                        str(EVAS / "rust_core/Cargo.toml")], check=True, timeout=300.)
+        release_kernel = EVAS / "rust_core/target/release/evas-kernel"
         result = transient(program, {"u": [[0., .5], [2*unit, 2.5], [4*unit, 2.5]]},
                            times, strobetimes=times, stop=4*unit,
-                           max_step=unit/2048, kernel=KERNEL,
-                           vabstol=1e-14, reltol=1e-10, timeout=600.)
+                           max_step=unit/2048, kernel=release_kernel,
+                           vabstol=1e-14, reltol=1e-10, timeout=90.)
         node = result['nodes'].index('y')
         with localcontext() as ctx:
             ctx.prec = 90
