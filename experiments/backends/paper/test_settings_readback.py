@@ -76,6 +76,19 @@ class Calibration(unittest.TestCase):
   self.assertEqual(r['effective']['reltol']['value'],1e-5)
   self.assertEqual(r['initial_snapshot']['reltol']['value'],0.001)
   self.assertEqual(r['invocation_controls']['maxstep_s']['value'],2e-10)
+ def test_ng_quoted_node_exports_preserve_readback(self):
+  for signals in ['v("lt") v("le") v("gt") v("ge")',
+                  'v(out) v("dut.a") v("bus[0]")']:
+   with self.subTest(signals=signals):
+    result=ngspice(NG,DECK.replace('v(out)',signals))
+    self.assertEqual(result['effective']['reltol']['value'],1e-5)
+    self.assertEqual(result['invocation_controls']['maxstep_s']['value'],2e-10)
+ def test_ng_quoted_exports_reject_commands_and_expressions(self):
+  for signals in ['v("lt"); reset', 'v("lt") reset', 'v("lt; reset")',
+                  'v("lt)', 'v(lt")', 'v("a")+v("b")', 'v("a b")',
+                  'v("a\\"b")', 'v("a")\nreset']:
+   with self.subTest(signals=signals),self.assertRaises(ReadbackError):
+    ngspice(NG,DECK.replace('v(out)',signals))
  def test_ng_ambiguity(self):
   with self.assertRaises(ReadbackError): ngspice(NG+SNAP.format('2e-5'),DECK)
  def test_ng_missing(self):
