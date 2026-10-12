@@ -63,3 +63,11 @@ class ProducerBinding(unittest.TestCase):
    self.assertIn('maxstep',settings['mismatches'])
    self.assertIn('stop',settings['mismatches'])
    self.assertEqual(qualification(w,'spectre',{'effective_settings':settings},[],spectre_tool=tool)['status'],'evidence_insufficient')
+ def test_binary_calibration_decoder_rejects_truncated_typed_records(self):
+  from precision_report import spectre_calibration_binary_value
+  f=json.loads(FIXTURE.read_text());raw=bytes.fromhex(f['binary_records_hex']['stop'])
+  self.assertEqual(spectre_calibration_binary_value(raw,'stop'),2.1457672119140625e-6)
+  for bad in [b'',raw[:3],raw[:10],raw[:-1],b'\0\0\0\x22'+raw[4:],raw[:-8]+bytes.fromhex('7ff8000000000000')]:
+   with self.subTest(size=len(bad)),self.assertRaises(ReadbackError):
+    spectre_calibration_binary_value(bad,'stop')
+  with self.assertRaises(ReadbackError):spectre_calibration_binary_value(raw,'maxstep')

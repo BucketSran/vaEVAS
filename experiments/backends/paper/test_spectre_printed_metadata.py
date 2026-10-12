@@ -55,3 +55,13 @@ class PrintedMetadata(unittest.TestCase):
   self.assertEqual(interval['lower_s_or_native'],'9.999995E-7')
   with self.assertRaises(ReadbackError):
    printed_interval(' maxstep = 9.999980000000000e-07 s','"maxstep" 1.00000e-06','maxstep_s')
+
+ def test_actual_global_format_controls_are_required_only_for_calibrated_mode(self):
+  evidence=(Path(__file__).parent/'fixtures/spectre-21.1.0.509-format-calibration.json').read_bytes()
+  f=json.loads(evidence)
+  for old,new in [('digits = 17','digits = 6'),('notation = sci','notation = eng'),
+                  ('precision = %.17g','precision = %.6g'),('digits = 17',''),
+                  ('digits = 17','digits = 17\n digits = 17')]:
+   with self.subTest(new=new),self.assertRaises(ReadbackError):
+    spectre(f['log'].replace(old,new),f['psf_header'],format_evidence=evidence)
+  self.assertEqual(spectre(LOG,PSF)['effective']['method']['value'],'traponly')

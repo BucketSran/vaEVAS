@@ -113,6 +113,12 @@ def spectre(log, psf, analysis='tran', *, format_evidence=None):
         raise ReadbackError('missing/ambiguous global block')
     ge=next((i for i in range(gs[0]+1,len(lines)) if not lines[i][1].strip()),len(lines))
     global_options=assignments(lines[gs[0]+1:ge],{'reltol':'reltol','vabstol':'vabstol_V','iabstol':'iabstol_A'},'global_user')
+    if calibrated:
+        global_block = '\n'.join(raw for _,raw in lines[gs[0]+1:ge])
+        for name,expected in [('digits','17'),('notation','sci'),('precision','%.17g')]:
+            values = re.findall(r'^\s*'+name+r'\s*=\s*(.*?)\s*$',global_block,re.M)
+            if values != [expected]:
+                raise ReadbackError('uncalibrated observed global format control: '+name)
     plines=list(enumerate(psf.splitlines(),1))
     types=[i for i,(_,raw) in enumerate(plines) if raw=='TYPE']
     if not plines or plines[0][1]!='HEADER' or len(types)!=1:
