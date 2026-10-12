@@ -56,8 +56,8 @@ def qualify(card, executed_source, log, rows, *, producer_qualified=False, forma
         # match the two schedules; they are not silently filtered out.
         if 'hidden_bcell_n' in by_channel:
             child = [(r['index'], r['time_s']) for r in by_channel['hidden_bcell_n']]
-            visible = [(r['index'], r['time_s']) for r in by_channel['n']]
-            if child != visible:
+            visible_rows = [(r['index'], r['time_s']) for r in by_channel['n']]
+            if child != visible_rows:
                 raise ValueError('child schedule differs; separate hidden-channel reference required')
         bounds = {}
         # Reuse the frozen checker's represented-window endpoints and 16-ULP
