@@ -4,6 +4,11 @@
 面向使用者的支持结论只在[四后端支持范围](../COMPARISON.md)维护，详细接受与拒绝条件由所链接的契约维护。
 收据只证明其固定执行版本；下表仅登记 ID 与证据，供追溯工具读取，不维护第二份支持状态或当前 main 通过率。
 
+[本轮导数与严格组合修复](../../../experiments/backends/support/README.md#capability-gaps)
+补充 LANG、DYNAMICS、COMPOSE、QUALIFICATION；两张导数卡与八张组合卡保留实际候选源码、内核、原判据和Spectre对照。
+回归见[多项式导数](../../tests/test_polynomial_derivatives.py)、[滤波精度](../../tests/test_filter_precision.py)。
+旧触发窗冲突及本地候选状态明确保留，不转授 main 或任意组合支持。
+
 [采样积分与局部 strobe 修复](../../../experiments/backends/support/README.md#sampled-integral-fix)
 补充 DYNAMICS、CROSS、TIMER、EVENT-ORDER、COMPOSE、QUALIFICATION。
 [独立面积与物理阶段回归](../../tests/test_sampled_integral_strobe.py)、

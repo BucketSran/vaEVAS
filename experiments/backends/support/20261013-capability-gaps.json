@@ -1,0 +1,532 @@
+{
+  "alignment_limit": "Actual Spectre comparisons are recorded, but no universal alignment claim. P-ddt actual Spectre output is zero; original EC04 window conflict and Spectre callbacks/native limitations remain. Mathematical diagnostics do not change original scores. #131 unchanged.",
+  "counts": {
+    "evas": {
+      "evidence_insufficient": 3,
+      "pass": 27
+    },
+    "spectre": {
+      "evidence_insufficient": 21,
+      "numerical_error": 3,
+      "pass": 6
+    }
+  },
+  "evidence": {
+    "analysis_callback_identity_sha256": "e154aa3c2cda55ca9e9690d01fa108d5842fd2062134c5c5f4db0fbf3ef6a4c5",
+    "analysis_evas_identity_sha256": "8cd6eb30eb5d257476ffa40e1989f2ddbaf5052eea4feadd1b0076cb5c781bb1",
+    "analysis_spectre_identity_sha256": "a2b6012b35d698da6ed2b4a47de994adb5c31f1d8889af1e138398f052be694e",
+    "availability": "local-only",
+    "composition_evas_archive_sha256": "9f030ce4fb2ac762a6ab553c5abad1e5cd4e938eea26e57a5ccbf78577e6f94a",
+    "composition_spectre_archive_sha256": "8ca41b9302c2b2487e78a865ee5039d07f2fccb9a6e6155921cd216b79993eb4",
+    "location": "visible worktrees/precision-integration/runs/feature-gaps-20261013",
+    "original_physical_inputs_unchanged": true,
+    "primitive_evas_archive_sha256": "22cd0e2ab4fea3263b6121381316a389ed4a78e9e688b8fe292895082ed766ec",
+    "primitive_spectre_archive_sha256": "dbf9edf1ca87724d2064443fb30e260267ca2b8f7a211495c321c336829aaaf8",
+    "primitives_analysis_sha256": "7a65b280e3536b3140a4a1de59c524843142e943076f8bd7d4c45cc878fc8790",
+    "raw_data_publicly_downloadable": false,
+    "source_rebinding_sha256": "d1476cb3dc0c16525b63e0c8e148f4ba4e7efe7496d3cb6b87790c8290d4ac1d"
+  },
+  "id": "comparison-capability-gaps-20261013",
+  "implementation": {
+    "after_scientific_source": "Reporting/readback and human documents only; production EVAS source checked byte-identical to source e2d8cbf8",
+    "base_revision": "2c3f357c2ccfa8f0d902eb22ece65800da04766d",
+    "build_record_sha256": "9be55ac5346b64628b7c95cdec33bb9fc50a3b9e99fb58638f2ad37dce655e4b",
+    "integration_branch": "codex/sampled-integral-local-strobe",
+    "integration_status": "review candidate; not merged into main",
+    "ir_version": 19,
+    "package_version": "0.14.0",
+    "scientific_kernel_sha256": "b6c2c7048f40b07eae62b632a2bb5e3047bcdabc0df0dbeaa53cc73adc7ca963",
+    "scientific_source_revision": "e2d8cbf805db98fdbb8c1d58a5fb5976a48be9fa",
+    "source_manifest_sha256": "fe669611f6c216d7ed2c0a5a6be11565f8a65dd11b8c897cc2be436f62b12702"
+  },
+  "limits": {
+    "address_space_bytes": 4294967296,
+    "build_separate_seconds": 600,
+    "case_bytes": 268435456,
+    "file_bytes": 33554432,
+    "remote_serial": true,
+    "science_stage_seconds": 90,
+    "threads": 1
+  },
+  "other_backends": "ngspice + OpenVAF-R and Gnucap + modelgen-verilog reuse the unchanged version-bound original receipts; no new runs claimed",
+  "review": {
+    "actual_glm_calls": [
+      {
+        "actual_models": [
+          "glm-5.3"
+        ],
+        "id": "glm-overnight-handoff",
+        "num_turns": 1,
+        "receipt_sha256": "3ec579c407279fea1cb033aeff25c87ac18d8bb446e78c91c7cfb3b45a62b9fa",
+        "report_sha256": "f0bde26242a668e6e0a12d17cba613826609bcf19e90ad92ff6c737aeb3b8014"
+      },
+      {
+        "actual_models": [
+          "glm-5.3"
+        ],
+        "id": "glm-overnight-trace",
+        "num_turns": 1,
+        "receipt_sha256": "9885eb17892b4798e4e2638840ec5940607f19eb55772eff2743c7b3a1736a45",
+        "report_sha256": "518b326f88d16b091cc7a2bae25277a53430cfc21d0d222085215446dc4a6036"
+      },
+      {
+        "actual_models": [
+          "glm-5.3"
+        ],
+        "id": "glm-overnight-trace-closure",
+        "num_turns": 1,
+        "receipt_sha256": "e46d59be2bfc69da71f1d464f369f2b1d9c836cb8ae86530f143cf737edafb5b",
+        "report_sha256": "6b955475953abac961f2b4814898610033f5300a5921a598cec0a1497eb05e9b"
+      },
+      {
+        "actual_models": [
+          "glm-5.3"
+        ],
+        "id": "glm-overnight-sealed-verifier",
+        "num_turns": 1,
+        "receipt_sha256": "0a14854820035f99fd7e0f731df333064fdd358e21f6b3f016ba9fad174968a4",
+        "report_sha256": "d0ada117e20595e565e3a5bbcc6fa665bc820c28486d379e717702686f35e0c4"
+      }
+    ],
+    "availability": "local-only",
+    "reports": [
+      {
+        "id": "overnight-science-final-astra.md",
+        "sha256": "877661259f4cc6c803bdbd7a31e3f95a982b8306ce8ef957c7131b8cc0cee632"
+      },
+      {
+        "id": "overnight-standards-handoff.md",
+        "sha256": "d2f581e3b8c3ae4a047ad3c2319a477ebd1a6df71ed16508b48951fed9413073"
+      }
+    ],
+    "scope": "Astra independently checks actual raw numerical evidence; GLM is static review of supplied complete code/evidence paths, not a substitute for raw recalculation."
+  },
+  "root_window_findings": {
+    "EC04-v1": {
+      "fixing_EVAs_by_shifting_or_clipping_root": false,
+      "issue": "Original early=0 lower bound is the upward-rounded nominal; a box containing the mathematical root cannot fit the original window",
+      "original_verdict": "evidence_insufficient",
+      "true_root": "sqrt(2)*2^-20 s"
+    },
+    "SH-X-RAMP": {
+      "boxes_containing_exact_physical_PWL_root": 40,
+      "complete_boxes_checked": 40,
+      "no_new_SHX_simulation_claimed": true,
+      "reuse": "20261013-evidence-followup.json EVAS_SHX: five actual original configurations; original models/source/tool identities retained",
+      "true_roots_before_original_inner_lower_bound": 40
+    }
+  },
+  "scope": "comparison-scope-v1; original mandatory variants, windows, Q budgets and historical scores unchanged",
+  "spectre_observation_profile": {
+    "calibration_sha256": "f1477648d9de091749d8b31b7198ec55beea46ebc9cf71148f9b690f74f195ab",
+    "composition_only": true,
+    "digits": 17,
+    "new_profile_suffix": "_native_v1",
+    "notation": "sci",
+    "original_numeric_controls_unchanged": true,
+    "prebound_before_execution": true,
+    "precision": "%.17g",
+    "tool_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "transres_s": 1e-20
+  },
+  "spectre_trace_attempts": {
+    "analysis_identity_sha256": "75cdef04b47f851f0d9341c018309a3a8cfe27abcc260b4ebaaf2fe76e75df7e",
+    "analysis_sha256": "71ee77c7d1b32d9da06a230869444a349c8521cecc4b727ea26269d8f1f63eb3",
+    "archive_sha256": "8912e33c16f7b41f12df5087237ce2f435a2f40614571872ebc89ad142512b09",
+    "claim": "Separate instrumented attempts; never transferred as qualification of original uninstrumented runs",
+    "counts": {
+      "evidence_insufficient": 4,
+      "numerical_error": 3,
+      "pass": 11
+    },
+    "producer_identity_sha256": "087e559279388b0e45777fc534b0020e3289fd2e9806d68dccb18c93fbc72093",
+    "records": [
+      {
+        "callback_proof": "qualified",
+        "callback_reason": null,
+        "configuration": "qualified",
+        "identity_sha256": "37b75a9da5aeede89caf5d95f6bbfca007e0ae52c9b33ac50e477fc1749b49e7",
+        "label": "EC03-v1--Q1",
+        "native_observations": "qualified",
+        "numerical": {
+          "error_lower_V": 5.245559542288447e-10,
+          "error_upper_V": 5.246207912534828e-10,
+          "status": "pass"
+        },
+        "runtime": "qualified",
+        "verdict": "pass"
+      },
+      {
+        "callback_proof": "qualified",
+        "callback_reason": null,
+        "configuration": "qualified",
+        "identity_sha256": "f9799095f4d93d26c14f13d22375b18f79fc25efb45848c363cab05f8fc3fe5f",
+        "label": "EC03-v1--Q2",
+        "native_observations": "qualified",
+        "numerical": {
+          "error_lower_V": 5.245410772403147e-10,
+          "error_upper_V": 5.246061363095578e-10,
+          "status": "pass"
+        },
+        "runtime": "qualified",
+        "verdict": "pass"
+      },
+      {
+        "callback_proof": "qualified",
+        "callback_reason": null,
+        "configuration": "qualified",
+        "identity_sha256": "358e9a511babc5681110baddf4644922fd94e7a99f091e7d7803f0808193f11e",
+        "label": "EC03-v1--Q3",
+        "native_observations": "unknown",
+        "numerical": {
+          "error_lower_V": 5.244700229667387e-10,
+          "error_upper_V": 5.245350820359818e-10,
+          "status": "pass"
+        },
+        "runtime": "qualified",
+        "verdict": "evidence_insufficient"
+      },
+      {
+        "callback_proof": "qualified",
+        "callback_reason": null,
+        "configuration": "qualified",
+        "identity_sha256": "f51c6b86764ae0fa9153702b50df2100e7a6c09e3ba8b4e4cdded3b523e5e9fc",
+        "label": "EC04-v1--Q1",
+        "native_observations": "qualified",
+        "numerical": {
+          "error_lower_V": 1.7321047707241632e-08,
+          "error_upper_V": 1.7321664103064904e-08,
+          "status": "pass"
+        },
+        "runtime": "qualified",
+        "verdict": "pass"
+      },
+      {
+        "callback_proof": "qualified",
+        "callback_reason": null,
+        "configuration": "qualified",
+        "identity_sha256": "786462ef89ff9a00a3ba92a63a2f34ac1c5d78b6299fb847142f4d1243d50f89",
+        "label": "EC04-v1--Q2",
+        "native_observations": "qualified",
+        "numerical": {
+          "error_lower_V": 1.7321047707241632e-08,
+          "error_upper_V": 1.7321664103064904e-08,
+          "status": "pass"
+        },
+        "runtime": "qualified",
+        "verdict": "pass"
+      },
+      {
+        "callback_proof": "qualified",
+        "callback_reason": null,
+        "configuration": "qualified",
+        "identity_sha256": "41266e000b1b1799fff0247a4aa2ce051d372a261056736d0c3f75d4b6a759a8",
+        "label": "EC04-v1--Q3",
+        "native_observations": "qualified",
+        "numerical": {
+          "error_lower_V": 1.7321072576237384e-08,
+          "error_upper_V": 1.7321688972060656e-08,
+          "status": "pass"
+        },
+        "runtime": "qualified",
+        "verdict": "pass"
+      },
+      {
+        "callback_proof": "qualified",
+        "callback_reason": null,
+        "configuration": "qualified",
+        "identity_sha256": "2d5de8ebda5efb03946fa7fa1f7bd3ab5fadb72148559e79e782559d018e5c06",
+        "label": "EC07-v1--Q1",
+        "native_observations": "qualified",
+        "numerical": {
+          "error_lower_V": 0.49989514239999816,
+          "error_upper_V": 0.49989514240000266,
+          "status": "numerical_error"
+        },
+        "runtime": "qualified",
+        "verdict": "numerical_error"
+      },
+      {
+        "callback_proof": "qualified",
+        "callback_reason": null,
+        "configuration": "qualified",
+        "identity_sha256": "4bbb584bb1385fce85d4bb75e9da2608e02d669c95e69294cf059ecceb0934cd",
+        "label": "EC07-v1--Q2",
+        "native_observations": "qualified",
+        "numerical": {
+          "error_lower_V": 0.49989514239999816,
+          "error_upper_V": 0.49989514240000266,
+          "status": "numerical_error"
+        },
+        "runtime": "qualified",
+        "verdict": "numerical_error"
+      },
+      {
+        "callback_proof": "qualified",
+        "callback_reason": null,
+        "configuration": "qualified",
+        "identity_sha256": "a4bfa627d7ad77ef8ee6f8e9bfeed32e6646b5ef002ec04714098e3badb79ff6",
+        "label": "EC07-v1--Q3",
+        "native_observations": "qualified",
+        "numerical": {
+          "error_lower_V": 0.4998951424000017,
+          "error_upper_V": 0.4998951424000062,
+          "status": "numerical_error"
+        },
+        "runtime": "qualified",
+        "verdict": "numerical_error"
+      },
+      {
+        "callback_proof": "qualified",
+        "callback_reason": null,
+        "configuration": "qualified",
+        "identity_sha256": "7091b2231c9423952e32b5af1e0093490fc726b3462a18af9efee1c37f9d0588",
+        "label": "EC08-v1--Q1",
+        "native_observations": "qualified",
+        "numerical": {
+          "error_lower_V": 2.155737644393696e-06,
+          "error_upper_V": 2.1557376570502385e-06,
+          "status": "pass"
+        },
+        "runtime": "qualified",
+        "verdict": "pass"
+      },
+      {
+        "callback_proof": "qualified",
+        "callback_reason": null,
+        "configuration": "qualified",
+        "identity_sha256": "23d5767515a294b86248f4657c3b6e994a78f8a1541d13dccfdc648e14480968",
+        "label": "EC08-v1--Q2",
+        "native_observations": "qualified",
+        "numerical": {
+          "error_lower_V": 1.440970515131923e-07,
+          "error_upper_V": 1.440970697208499e-07,
+          "status": "pass"
+        },
+        "runtime": "qualified",
+        "verdict": "pass"
+      },
+      {
+        "callback_proof": "qualified",
+        "callback_reason": null,
+        "configuration": "qualified",
+        "identity_sha256": "ec52f767b2c9722fb3776b8d3273e3b90a736d393681aa53bb35331b71695170",
+        "label": "EC08-v1--Q3",
+        "native_observations": "qualified",
+        "numerical": {
+          "error_lower_V": 6.26689522498225e-09,
+          "error_upper_V": 6.266909879926175e-09,
+          "status": "pass"
+        },
+        "runtime": "qualified",
+        "verdict": "pass"
+      },
+      {
+        "callback_proof": "qualified",
+        "callback_reason": null,
+        "configuration": "qualified",
+        "identity_sha256": "1e4742bfbc7273f3677f310c33d87a57163778c99d17a576ef86900d2afeb913",
+        "label": "EC10-v1--Q1",
+        "native_observations": "qualified",
+        "numerical": {
+          "error_lower_V": 1.2205215922378443e-06,
+          "error_upper_V": 1.2205216011196285e-06,
+          "status": "pass"
+        },
+        "runtime": "qualified",
+        "verdict": "pass"
+      },
+      {
+        "callback_proof": "qualified",
+        "callback_reason": null,
+        "configuration": "qualified",
+        "identity_sha256": "e5e7a1bb8b35ad437a786df4e2213f1db308e60f23c7d2579cc901bc472b3d0c",
+        "label": "EC10-v1--Q2",
+        "native_observations": "qualified",
+        "numerical": {
+          "error_lower_V": 1.747123223871938e-08,
+          "error_upper_V": 1.7471241120503578e-08,
+          "status": "pass"
+        },
+        "runtime": "qualified",
+        "verdict": "pass"
+      },
+      {
+        "callback_proof": "qualified",
+        "callback_reason": null,
+        "configuration": "qualified",
+        "identity_sha256": "35733391503ae6594bd2335451538161d0acabe6d76ca28cd75ae2e1c6eb343a",
+        "label": "EC10-v1--Q3",
+        "native_observations": "qualified",
+        "numerical": {
+          "error_lower_V": 8.178253629864685e-10,
+          "error_upper_V": 8.178346888598753e-10,
+          "status": "pass"
+        },
+        "runtime": "qualified",
+        "verdict": "pass"
+      },
+      {
+        "callback_proof": "unknown",
+        "callback_reason": "required cross-channel strict order is not proved",
+        "configuration": "qualified",
+        "identity_sha256": "23bd3a7a17f90a50a0135c2f5ac25706a7a8419adb524c1c95add626a486d1d3",
+        "label": "EC20-v1--Q1",
+        "native_observations": "qualified",
+        "numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 0.0,
+          "status": "unknown"
+        },
+        "runtime": "qualified",
+        "verdict": "evidence_insufficient"
+      },
+      {
+        "callback_proof": "unknown",
+        "callback_reason": "required cross-channel strict order is not proved",
+        "configuration": "qualified",
+        "identity_sha256": "360cb1caab2593954c8a3c12cfcbfbddf8668933148b92fd76d76f30c5b7978e",
+        "label": "EC20-v1--Q2",
+        "native_observations": "qualified",
+        "numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 0.0,
+          "status": "unknown"
+        },
+        "runtime": "qualified",
+        "verdict": "evidence_insufficient"
+      },
+      {
+        "callback_proof": "unknown",
+        "callback_reason": "required cross-channel strict order is not proved",
+        "configuration": "qualified",
+        "identity_sha256": "951c486c777f3a5c73afd6b00c30e8e838c9fbcd0d580758bb9c5909d1e0bef3",
+        "label": "EC20-v1--Q3",
+        "native_observations": "unknown",
+        "numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 0.0,
+          "status": "unknown"
+        },
+        "runtime": "qualified",
+        "verdict": "evidence_insufficient"
+      }
+    ]
+  },
+  "verification": {
+    "availability": "local-only",
+    "checks": [
+      {
+        "failed": 0,
+        "id": "mapped-python",
+        "log_sha256": "1cdeeb0a5143aabdbb027c5561db26e24c2722195dd44aa5459ae91e382d557b",
+        "passed": 159,
+        "revision": "f85f5781"
+      },
+      {
+        "failed": 0,
+        "id": "rust-regression",
+        "ignored": 1,
+        "log_sha256": "c97470ceb295bac0591071baeb2e143e2169d184f390a8c2000d7957c11b04a1",
+        "passed": 251,
+        "revision": "f85f5781"
+      },
+      {
+        "id": "rustfmt",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "revision": "f85f5781",
+        "status": "pass"
+      },
+      {
+        "id": "strict-clippy-all-targets",
+        "log_sha256": "35b80ee45df814e45d103011f8639ed05c84d344297083b1690ccbf13618cd40",
+        "revision": "f85f5781",
+        "status": "pass"
+      },
+      {
+        "id": "external-target-dir-negative-control",
+        "log_sha256": "3652af913681b31875609fa179a9b01c9ba97fc295459fbddd4e4e9cd164148d",
+        "passed": 1,
+        "revision": "f85f5781"
+      },
+      {
+        "failed": 0,
+        "id": "paper-calibration",
+        "log_sha256": "7db7e24a5da9c437dc89ab95f4c9d1b57b4c71d4e1b773fce9946d4c9befd63a",
+        "passed": 125,
+        "revision": "bd2a312a"
+      },
+      {
+        "failed": 0,
+        "id": "support-calibration",
+        "log_sha256": "7e8c3c769741168bbeb98102d260cf45c54f8f4011f73ab4fa4828b454d30221",
+        "passed": 174,
+        "revision": "bd2a312a",
+        "skipped": 1
+      }
+    ],
+    "interpretation": "Mapped regression is reused for unchanged production source; final reporting changes receive their own calibration. These groups overlap and are not a total coverage count."
+  },
+  "records": [
+    {"actual_controls": {"iabstol": "unknown", "maxstep": 2.9802322387695312e-08, "method": "unknown; unsupported integration_method control", "reltol": 1e-05, "stop": 3.814697265625e-06, "vabstol": 1e-09}, "backend": "evas", "behavior": "pass", "callback_proof": "qualified", "card": "EC03-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "3397eadacf2d6fd7eb647e78a1aef36b607c4c724ba8c9bcd075122e3d52983c", "callback_analysis_sha256": "7af3d7b462fd00591a899ef087ad5eadf6ba8fb1dc8f72cf2dd701cdddc2b44d"}, "native_observations": "qualified", "numerical": {"error_lower_V": 0.0, "error_upper_V": 3.6415315207705135e-14, "status": "pass"}, "profile": "base", "runtime": "qualified", "tier": "Q1", "verdict": "pass"},
+    {"actual_controls": {"iabstol": "unknown", "maxstep": 3.725290298461914e-09, "method": "unknown; unsupported integration_method control", "reltol": 1e-08, "stop": 3.814697265625e-06, "vabstol": 1e-12}, "backend": "evas", "behavior": "pass", "callback_proof": "qualified", "card": "EC03-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "c338e4171c80ba9254b261927d89a6dd7d1bc36421a941837e2c0f28c3fa645d", "callback_analysis_sha256": "de18c49569b3109d2c76a2d01f611cc87fa7526e41238a8a6d87eeb612057ef4"}, "native_observations": "qualified", "numerical": {"error_lower_V": 0.0, "error_upper_V": 3.6415315207705135e-14, "status": "pass"}, "profile": "both", "runtime": "qualified", "tier": "Q2", "verdict": "pass"},
+    {"actual_controls": {"iabstol": "unknown", "maxstep": 4.656612873077393e-10, "method": "unknown; unsupported integration_method control", "reltol": 1e-10, "stop": 3.814697265625e-06, "vabstol": 1e-14}, "backend": "evas", "behavior": "pass", "callback_proof": "qualified", "card": "EC03-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "98808813fc4ac9f9f58b12fb1227611d245c8c8ded541bfc197ac03559427ced", "callback_analysis_sha256": "235632979faef72ae6c1a56e777d7bfe01f2e5edc9ae4f81b1519b37abd91f9c"}, "native_observations": "qualified", "numerical": {"error_lower_V": 0.0, "error_upper_V": 3.6415315207705135e-14, "status": "pass"}, "profile": "deep", "runtime": "qualified", "tier": "Q3", "verdict": "pass"},
+    {"actual_controls": {"iabstol": "unknown", "maxstep": 2.9802322387695312e-08, "method": "unknown; unsupported integration_method control", "reltol": 1e-05, "stop": 2.1457672119140625e-06, "vabstol": 1e-09}, "backend": "evas", "behavior": "unknown", "callback_proof": "unknown", "card": "EC04-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "ac88d0e8a8017073c9c4217d347a5e8e649b5a86e07e1496d789c2b0177f6cb5", "callback_analysis_sha256": "55c2dd97ae210604b8561705915097d559509471fc2361f675b1a836c45ede3f"}, "native_observations": "qualified", "numerical": {"status": "unknown"}, "profile": "base", "runtime": "qualified", "tier": "Q1", "verdict": "evidence_insufficient"},
+    {"actual_controls": {"iabstol": "unknown", "maxstep": 3.725290298461914e-09, "method": "unknown; unsupported integration_method control", "reltol": 1e-08, "stop": 2.1457672119140625e-06, "vabstol": 1e-12}, "backend": "evas", "behavior": "unknown", "callback_proof": "unknown", "card": "EC04-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "47cbb85d50059571210e279a5611b1134d918c8e69385a8cef3c6b2a780a49c7", "callback_analysis_sha256": "7d30358534e63bda216cdf2be8e215e37bf7dc3b5041da0b0516d707da410221"}, "native_observations": "qualified", "numerical": {"status": "unknown"}, "profile": "both", "runtime": "qualified", "tier": "Q2", "verdict": "evidence_insufficient"},
+    {"actual_controls": {"iabstol": "unknown", "maxstep": 4.656612873077393e-10, "method": "unknown; unsupported integration_method control", "reltol": 1e-10, "stop": 2.1457672119140625e-06, "vabstol": 1e-14}, "backend": "evas", "behavior": "unknown", "callback_proof": "unknown", "card": "EC04-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "9c0d061796801a6cb34301b4ef665ede44a055276f2c0820300fbce5b78ca84b", "callback_analysis_sha256": "c8d0bed7ea26888e882035eb96c07954002248c93130268b1d6e9e9455fd4075"}, "native_observations": "qualified", "numerical": {"status": "unknown"}, "profile": "deep", "runtime": "qualified", "tier": "Q3", "verdict": "evidence_insufficient"},
+    {"actual_controls": {"iabstol": "unknown", "maxstep": 2.9802322387695312e-08, "method": "unknown; unsupported integration_method control", "reltol": 1e-05, "stop": 1.9073486328125e-06, "vabstol": 1e-09}, "backend": "evas", "behavior": "pass", "callback_proof": "qualified", "card": "EC07-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "0cd46d0f315a20dcd105f17a737755e36708d4f5c04210ee4a219ac20cd33380", "callback_analysis_sha256": "d8fc3a8bd772366b47e0f63ee48d5c96b7e057eef604565d3b4140083b41c931"}, "native_observations": "qualified", "numerical": {"error_lower_V": 1.1113332476497817e-12, "error_upper_V": 1.1297629498585593e-12, "status": "pass"}, "profile": "base", "runtime": "qualified", "tier": "Q1", "verdict": "pass"},
+    {"actual_controls": {"iabstol": "unknown", "maxstep": 3.725290298461914e-09, "method": "unknown; unsupported integration_method control", "reltol": 1e-08, "stop": 1.9073486328125e-06, "vabstol": 1e-12}, "backend": "evas", "behavior": "pass", "callback_proof": "qualified", "card": "EC07-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "28d9048ccdfc6f5a4d01864723928ed79b41fb98b461ce7907071c26fc157000", "callback_analysis_sha256": "0c60b847b9670ccb6b68e8e29ce8993f9a6a1e27a0d75d7b8a0d8ed01c3f5ac8"}, "native_observations": "qualified", "numerical": {"error_lower_V": 1.1113332476497817e-12, "error_upper_V": 1.1297629498585593e-12, "status": "pass"}, "profile": "both", "runtime": "qualified", "tier": "Q2", "verdict": "pass"},
+    {"actual_controls": {"iabstol": "unknown", "maxstep": 4.656612873077393e-10, "method": "unknown; unsupported integration_method control", "reltol": 1e-10, "stop": 1.9073486328125e-06, "vabstol": 1e-14}, "backend": "evas", "behavior": "pass", "callback_proof": "qualified", "card": "EC07-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "4faf62c79860f59ad154a564d8e524e6a637d863a60ddd3ee52833bea85f4773", "callback_analysis_sha256": "a58cebf068b9c24fa7a0bd85535349dbd40a70ebfc06a7e08e4b89a5ad4594cf"}, "native_observations": "qualified", "numerical": {"error_lower_V": 1.1113332476497817e-12, "error_upper_V": 1.1297629498585593e-12, "status": "pass"}, "profile": "deep", "runtime": "qualified", "tier": "Q3", "verdict": "pass"},
+    {"actual_controls": {"iabstol": "unknown", "maxstep": 2.9802322387695312e-08, "method": "unknown; unsupported integration_method control", "reltol": 1e-05, "stop": 2.86102294921875e-06, "vabstol": 1e-09}, "backend": "evas", "behavior": "pass", "callback_proof": null, "card": "EC08-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "1e3c1f5915c2da5a2ddbfa51d50e25dbd593c99a0fafb77315117594d8232354"}, "native_observations": "qualified", "numerical": {"error_lower_V": 2.731148640577885e-14, "error_upper_V": 6.158987764237622e-09, "status": "pass"}, "profile": "base", "runtime": "qualified", "tier": "Q1", "verdict": "pass"},
+    {"actual_controls": {"iabstol": "unknown", "maxstep": 3.725290298461914e-09, "method": "unknown; unsupported integration_method control", "reltol": 1e-08, "stop": 2.86102294921875e-06, "vabstol": 1e-12}, "backend": "evas", "behavior": "pass", "callback_proof": null, "card": "EC08-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "f526ab328b89640fbfadc72365b180f18f0c06ab411b339b7eeaaa7133e50e08"}, "native_observations": "qualified", "numerical": {"error_lower_V": 2.731148640577885e-14, "error_upper_V": 6.158987764237622e-09, "status": "pass"}, "profile": "both", "runtime": "qualified", "tier": "Q2", "verdict": "pass"},
+    {"actual_controls": {"iabstol": "unknown", "maxstep": 4.656612873077393e-10, "method": "unknown; unsupported integration_method control", "reltol": 1e-10, "stop": 2.86102294921875e-06, "vabstol": 1e-14}, "backend": "evas", "behavior": "pass", "callback_proof": null, "card": "EC08-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "25d677ca887e054aa166e7db0e409798c333d98caed75c6c423bb9b785cb40c8"}, "native_observations": "qualified", "numerical": {"error_lower_V": 2.731148640577885e-14, "error_upper_V": 6.158987764237622e-09, "status": "pass"}, "profile": "deep", "runtime": "qualified", "tier": "Q3", "verdict": "pass"},
+    {"actual_controls": {"iabstol": "unknown", "maxstep": 2.9802322387695312e-08, "method": "unknown; unsupported integration_method control", "reltol": 1e-05, "stop": 2.86102294921875e-06, "vabstol": 1e-09}, "backend": "evas", "behavior": "pass", "callback_proof": "qualified", "card": "EC10-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "f3ccb3951bb77e7fadf1e76c4e3f63b71e0feb1e9cf614e99075b303654a980a", "callback_analysis_sha256": "81773fe436136dd9b86b51e24a7640cdaaa48fdb526e9bc7e9a1d38cc4ea50cc"}, "native_observations": "qualified", "numerical": {"error_lower_V": 0.0, "error_upper_V": 5.773159728050814e-15, "status": "pass"}, "profile": "base", "runtime": "qualified", "tier": "Q1", "verdict": "pass"},
+    {"actual_controls": {"iabstol": "unknown", "maxstep": 3.725290298461914e-09, "method": "unknown; unsupported integration_method control", "reltol": 1e-08, "stop": 2.86102294921875e-06, "vabstol": 1e-12}, "backend": "evas", "behavior": "pass", "callback_proof": "qualified", "card": "EC10-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "af414dac06ed2711b516f3a7ccf93cc1a1336bdbf4c34d01fb246040008d7c5a", "callback_analysis_sha256": "e9ac3ffc13efa43ea4bc2ded6fbaf4808f7c83980ce55c3789919c7e830b6dea"}, "native_observations": "qualified", "numerical": {"error_lower_V": 0.0, "error_upper_V": 5.773159728050814e-15, "status": "pass"}, "profile": "both", "runtime": "qualified", "tier": "Q2", "verdict": "pass"},
+    {"actual_controls": {"iabstol": "unknown", "maxstep": 4.656612873077393e-10, "method": "unknown; unsupported integration_method control", "reltol": 1e-10, "stop": 2.86102294921875e-06, "vabstol": 1e-14}, "backend": "evas", "behavior": "pass", "callback_proof": "qualified", "card": "EC10-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "9703cd09dd059a7f43c4c2dddbe4c1d1bb2e9430425bdece60cd300b9ceea297", "callback_analysis_sha256": "949f780c58c053e33ed5fa65731194f8780350c9e692c5d9940d19e900e0ab64"}, "native_observations": "qualified", "numerical": {"error_lower_V": 0.0, "error_upper_V": 5.773159728050814e-15, "status": "pass"}, "profile": "deep", "runtime": "qualified", "tier": "Q3", "verdict": "pass"},
+    {"actual_controls": {"iabstol": "unknown", "maxstep": 2.9802322387695312e-08, "method": "unknown; unsupported integration_method control", "reltol": 1e-05, "stop": 3.814697265625e-06, "vabstol": 1e-09}, "backend": "evas", "behavior": "pass", "callback_proof": null, "card": "EC12-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "bb5fa317a692490666b9cd0a155fd03040e587d000ef0e92fc97c473e57ba727"}, "native_observations": "qualified", "numerical": {"error_lower_V": 0.0, "error_upper_V": 5.373479439185758e-13, "status": "pass"}, "profile": "base", "runtime": "qualified", "tier": "Q1", "verdict": "pass"},
+    {"actual_controls": {"iabstol": "unknown", "maxstep": 3.725290298461914e-09, "method": "unknown; unsupported integration_method control", "reltol": 1e-08, "stop": 3.814697265625e-06, "vabstol": 1e-12}, "backend": "evas", "behavior": "pass", "callback_proof": null, "card": "EC12-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "dc5c785858cd62b7f38a3ebc9186078a39d7c27402d10e0bc77c2aba7a9d0d6a"}, "native_observations": "qualified", "numerical": {"error_lower_V": 0.0, "error_upper_V": 5.373479439185758e-13, "status": "pass"}, "profile": "both", "runtime": "qualified", "tier": "Q2", "verdict": "pass"},
+    {"actual_controls": {"iabstol": "unknown", "maxstep": 4.656612873077393e-10, "method": "unknown; unsupported integration_method control", "reltol": 1e-10, "stop": 3.814697265625e-06, "vabstol": 1e-14}, "backend": "evas", "behavior": "pass", "callback_proof": null, "card": "EC12-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "0bbe25ea0c4c05a838528b511a664b1b0c13a4b29d4c2cd1faff09b94d90e1f9"}, "native_observations": "qualified", "numerical": {"error_lower_V": 0.0, "error_upper_V": 5.373479439185758e-13, "status": "pass"}, "profile": "deep", "runtime": "qualified", "tier": "Q3", "verdict": "pass"},
+    {"actual_controls": {"iabstol": "unknown", "maxstep": 2.9802322387695312e-08, "method": "unknown; unsupported integration_method control", "reltol": 1e-05, "stop": 7e-06, "vabstol": 1e-09}, "backend": "evas", "behavior": "pass", "callback_proof": "qualified", "card": "EC20-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "46c709961a8639ae76f102dbe8a48e8c4df5f51b714c94f38e32b8b7c91a2218", "callback_analysis_sha256": "fdedf104f1dfa02f5be1ae510dadb0a52960dc6c430b33ca37a89fbeabb7c80c"}, "native_observations": "qualified", "numerical": {"error_lower_V": 0.0, "error_upper_V": 1.0302869668521453e-13, "status": "pass"}, "profile": "base", "runtime": "qualified", "tier": "Q1", "verdict": "pass"},
+    {"actual_controls": {"iabstol": "unknown", "maxstep": 3.725290298461914e-09, "method": "unknown; unsupported integration_method control", "reltol": 1e-08, "stop": 7e-06, "vabstol": 1e-12}, "backend": "evas", "behavior": "pass", "callback_proof": "qualified", "card": "EC20-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "179165f429ea042af06f4dd2cbbf0f41d9aca69b47cd08e16f1d9e5179d7292f", "callback_analysis_sha256": "0a748f0593dc4c4f8ed2d59fbcb675790c7f32ed742d81c41ec02ea168f1c783"}, "native_observations": "qualified", "numerical": {"error_lower_V": 0.0, "error_upper_V": 1.0302869668521453e-13, "status": "pass"}, "profile": "both", "runtime": "qualified", "tier": "Q2", "verdict": "pass"},
+    {"actual_controls": {"iabstol": "unknown", "maxstep": 4.656612873077393e-10, "method": "unknown; unsupported integration_method control", "reltol": 1e-10, "stop": 7e-06, "vabstol": 1e-14}, "backend": "evas", "behavior": "pass", "callback_proof": "qualified", "card": "EC20-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "c3ec6e8a70dff31739cde0c8d58130a5b0f52097c72b75bef3ed3f29babb85bc", "callback_analysis_sha256": "29f3dc13c9d7efe8619ff45ad3c1c74ad858746e7382ff65d1a96339a5c76b22"}, "native_observations": "qualified", "numerical": {"error_lower_V": 0.0, "error_upper_V": 1.0302869668521453e-13, "status": "pass"}, "profile": "deep", "runtime": "qualified", "tier": "Q3", "verdict": "pass"},
+    {"actual_controls": {"iabstol": "unknown", "maxstep": 2.9802322387695312e-08, "method": "unknown; unsupported integration_method control", "reltol": 1e-05, "stop": 3.814697265625e-06, "vabstol": 1e-09}, "backend": "evas", "behavior": "pass", "callback_proof": null, "card": "EC12-v2", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "946cd486dcce0875bb2b0e25f54d289b392ad44091f1e5b3ffe476c5611ea315"}, "native_observations": "qualified", "numerical": {"error_lower_V": 0.0, "error_upper_V": 3.659295089164516e-13, "status": "pass"}, "profile": "base", "runtime": "qualified", "tier": "Q1", "verdict": "pass"},
+    {"actual_controls": {"iabstol": "unknown", "maxstep": 3.725290298461914e-09, "method": "unknown; unsupported integration_method control", "reltol": 1e-08, "stop": 3.814697265625e-06, "vabstol": 1e-12}, "backend": "evas", "behavior": "pass", "callback_proof": null, "card": "EC12-v2", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "5bedbcfed415d8ea7c151d98d212e6ba2dfce1b19437ea8dafedf7a36a12d649"}, "native_observations": "qualified", "numerical": {"error_lower_V": 0.0, "error_upper_V": 3.659295089164516e-13, "status": "pass"}, "profile": "both", "runtime": "qualified", "tier": "Q2", "verdict": "pass"},
+    {"actual_controls": {"iabstol": "unknown", "maxstep": 4.656612873077393e-10, "method": "unknown; unsupported integration_method control", "reltol": 1e-10, "stop": 3.814697265625e-06, "vabstol": 1e-14}, "backend": "evas", "behavior": "pass", "callback_proof": null, "card": "EC12-v2", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "97c70851f21f33e12eefde79aba9c5901c9956318692422c1647ae964c1a3bca"}, "native_observations": "qualified", "numerical": {"error_lower_V": 0.0, "error_upper_V": 3.659295089164516e-13, "status": "pass"}, "profile": "deep", "runtime": "qualified", "tier": "Q3", "verdict": "pass"},
+    {"actual_controls": {"iabstol": 1e-13, "maxstep": 2.980232238769531e-08, "method": "traponly", "reltol": 1e-06, "stop": 3.814697265625e-06, "vabstol": 1e-09}, "backend": "spectre", "behavior": "unknown", "callback_proof": null, "card": "EC03-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "0089d93ff639c532e4226dca39a20ee5a0ffa1e5447ef3f0cc1f8d55a0bafce8"}, "native_observations": "qualified", "numerical": {"status": "unknown"}, "profile": "base_native_v1", "runtime": "qualified", "tier": "Q1", "verdict": "evidence_insufficient"},
+    {"actual_controls": {"iabstol": 1e-15, "maxstep": 3.725290298461914e-09, "method": "traponly", "reltol": 1e-09, "stop": 3.814697265625e-06, "vabstol": 1e-12}, "backend": "spectre", "behavior": "unknown", "callback_proof": null, "card": "EC03-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "c49815409009d3707b0062aba7678e291c745934ae1d33bd6b9eb08911f82938"}, "native_observations": "qualified", "numerical": {"status": "unknown"}, "profile": "both_native_v1", "runtime": "qualified", "tier": "Q2", "verdict": "evidence_insufficient"},
+    {"actual_controls": {"iabstol": 1e-17, "maxstep": 3.814697265625e-10, "method": "traponly", "reltol": 1e-11, "stop": 3.814697265625e-06, "vabstol": 1e-14}, "backend": "spectre", "behavior": "unknown", "callback_proof": null, "card": "EC03-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "543b6964b6a861802cd3030e0b57fc7d6a4b324a3808c9b6c63324baada6ebad"}, "native_observations": "unknown", "numerical": {"status": "unknown"}, "profile": "deep_bound_native_v1", "runtime": "qualified", "tier": "Q3", "verdict": "evidence_insufficient"},
+    {"actual_controls": {"iabstol": 1e-13, "maxstep": 2.980232238769531e-08, "method": "traponly", "reltol": 1e-06, "stop": 2.145767211914062e-06, "vabstol": 1e-09}, "backend": "spectre", "behavior": "unknown", "callback_proof": null, "card": "EC04-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "67b9a50fa132f87ac8c718e174c8a8b4c4191ba60c6af04fde969745ed2217c2"}, "native_observations": "qualified", "numerical": {"status": "unknown"}, "profile": "base_native_v1", "runtime": "qualified", "tier": "Q1", "verdict": "evidence_insufficient"},
+    {"actual_controls": {"iabstol": 1e-15, "maxstep": 3.725290298461914e-09, "method": "traponly", "reltol": 1e-09, "stop": 2.145767211914062e-06, "vabstol": 1e-12}, "backend": "spectre", "behavior": "unknown", "callback_proof": null, "card": "EC04-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "5a0f7aab3142e9760d15fb52a46e220e3451e38f1d200fd6e92784efbb9350be"}, "native_observations": "qualified", "numerical": {"status": "unknown"}, "profile": "both_native_v1", "runtime": "qualified", "tier": "Q2", "verdict": "evidence_insufficient"},
+    {"actual_controls": {"iabstol": 1e-17, "maxstep": 3.814697265625e-10, "method": "traponly", "reltol": 1e-11, "stop": 2.145767211914062e-06, "vabstol": 1e-14}, "backend": "spectre", "behavior": "unknown", "callback_proof": null, "card": "EC04-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "810d669e3524ae9fa15461a30d93ae4b02d1add53947dccdb39fc690b9d0c4ff"}, "native_observations": "qualified", "numerical": {"status": "unknown"}, "profile": "deep_bound_native_v1", "runtime": "qualified", "tier": "Q3", "verdict": "evidence_insufficient"},
+    {"actual_controls": {"iabstol": 1e-13, "maxstep": 2.980232238769531e-08, "method": "traponly", "reltol": 1e-06, "stop": 1.9073486328125e-06, "vabstol": 1e-09}, "backend": "spectre", "behavior": "unknown", "callback_proof": null, "card": "EC07-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "e66235c56f187d1aeb64ed385ef44d7fb06e7ee00828d2ffd51dd38b2d64e1fa"}, "native_observations": "qualified", "numerical": {"status": "unknown"}, "profile": "base_native_v1", "runtime": "qualified", "tier": "Q1", "verdict": "evidence_insufficient"},
+    {"actual_controls": {"iabstol": 1e-15, "maxstep": 3.725290298461914e-09, "method": "traponly", "reltol": 1e-09, "stop": 1.9073486328125e-06, "vabstol": 1e-12}, "backend": "spectre", "behavior": "unknown", "callback_proof": null, "card": "EC07-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "a3cc4edd4024c7f83a83af5aecfe31ff7d509a9f87d5d17021589101a61de19b"}, "native_observations": "qualified", "numerical": {"status": "unknown"}, "profile": "both_native_v1", "runtime": "qualified", "tier": "Q2", "verdict": "evidence_insufficient"},
+    {"actual_controls": {"iabstol": 1e-17, "maxstep": 3.814697265625e-10, "method": "traponly", "reltol": 1e-11, "stop": 1.9073486328125e-06, "vabstol": 1e-14}, "backend": "spectre", "behavior": "unknown", "callback_proof": null, "card": "EC07-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "af052f01fdab33c92079df1dad710ee9f97419e13bfc9882dfa38dac50c6015a"}, "native_observations": "qualified", "numerical": {"status": "unknown"}, "profile": "deep_bound_native_v1", "runtime": "qualified", "tier": "Q3", "verdict": "evidence_insufficient"},
+    {"actual_controls": {"iabstol": 1e-13, "maxstep": 2.980232238769531e-08, "method": "traponly", "reltol": 1e-06, "stop": 2.86102294921875e-06, "vabstol": 1e-09}, "backend": "spectre", "behavior": "unknown", "callback_proof": null, "card": "EC08-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "4b025ae2dc50bbff5bdc364970fe845466f3473339c3507f0b2f774109238190"}, "native_observations": "qualified", "numerical": {"status": "unknown"}, "profile": "base_native_v1", "runtime": "qualified", "tier": "Q1", "verdict": "evidence_insufficient"},
+    {"actual_controls": {"iabstol": 1e-15, "maxstep": 3.725290298461914e-09, "method": "traponly", "reltol": 1e-09, "stop": 2.86102294921875e-06, "vabstol": 1e-12}, "backend": "spectre", "behavior": "unknown", "callback_proof": null, "card": "EC08-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "4d3654cb4ba64a703a626984f8c527331bb706d7516169fd5b2eb6356ff31069"}, "native_observations": "qualified", "numerical": {"status": "unknown"}, "profile": "both_native_v1", "runtime": "qualified", "tier": "Q2", "verdict": "evidence_insufficient"},
+    {"actual_controls": {"iabstol": 1e-17, "maxstep": 3.814697265625e-10, "method": "traponly", "reltol": 1e-11, "stop": 2.86102294921875e-06, "vabstol": 1e-14}, "backend": "spectre", "behavior": "unknown", "callback_proof": null, "card": "EC08-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "97b4f238180b6851d0d719f8115e5f814631cf57cef5f6a9f24ca7b826e375f6"}, "native_observations": "qualified", "numerical": {"status": "unknown"}, "profile": "deep_bound_native_v1", "runtime": "qualified", "tier": "Q3", "verdict": "evidence_insufficient"},
+    {"actual_controls": {"iabstol": 1e-13, "maxstep": 2.980232238769531e-08, "method": "traponly", "reltol": 1e-06, "stop": 2.86102294921875e-06, "vabstol": 1e-09}, "backend": "spectre", "behavior": "unknown", "callback_proof": null, "card": "EC10-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "693f712df67110b9a84cef20c8eee0c8a69e82a33c17e4801522f739224932bf"}, "native_observations": "qualified", "numerical": {"status": "unknown"}, "profile": "base_native_v1", "runtime": "qualified", "tier": "Q1", "verdict": "evidence_insufficient"},
+    {"actual_controls": {"iabstol": 1e-15, "maxstep": 3.725290298461914e-09, "method": "traponly", "reltol": 1e-09, "stop": 2.86102294921875e-06, "vabstol": 1e-12}, "backend": "spectre", "behavior": "unknown", "callback_proof": null, "card": "EC10-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "55292c57fa778b560b782e69821f5dd62842e2e6e1bc14c422a6b95da4b9c5bb"}, "native_observations": "qualified", "numerical": {"status": "unknown"}, "profile": "both_native_v1", "runtime": "qualified", "tier": "Q2", "verdict": "evidence_insufficient"},
+    {"actual_controls": {"iabstol": 1e-17, "maxstep": 3.814697265625e-10, "method": "traponly", "reltol": 1e-11, "stop": 2.86102294921875e-06, "vabstol": 1e-14}, "backend": "spectre", "behavior": "unknown", "callback_proof": null, "card": "EC10-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "9cd989607bd5cfdc6f9b2818ba46f6727cb84ae816a584772efd71ad68a8531d"}, "native_observations": "qualified", "numerical": {"status": "unknown"}, "profile": "deep_bound_native_v1", "runtime": "qualified", "tier": "Q3", "verdict": "evidence_insufficient"},
+    {"actual_controls": {"iabstol": 1e-13, "maxstep": 2.980232238769531e-08, "method": "traponly", "reltol": 1e-06, "stop": 3.814697265625e-06, "vabstol": 1e-09}, "backend": "spectre", "behavior": "pass", "callback_proof": null, "card": "EC12-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "1587545e4f2018357e79cb4b0f8476f6709e72d0ea2e06069ec9f3aaa5443322"}, "native_observations": "qualified", "numerical": {"error_lower_V": 1.066177701680715e-11, "error_upper_V": 1.1328410431943325e-11, "status": "pass"}, "profile": "base_native_v1", "runtime": "qualified", "tier": "Q1", "verdict": "pass"},
+    {"actual_controls": {"iabstol": 1e-15, "maxstep": 3.725290298461914e-09, "method": "traponly", "reltol": 1e-09, "stop": 3.814697265625e-06, "vabstol": 1e-12}, "backend": "spectre", "behavior": "pass", "callback_proof": null, "card": "EC12-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "9060cef65dad5e93f953f455318a81f5d68e6b4e68861f97afa3e5388880b95f"}, "native_observations": "qualified", "numerical": {"error_lower_V": 1.745270594710746e-12, "error_upper_V": 2.629896300732071e-12, "status": "pass"}, "profile": "both_native_v1", "runtime": "qualified", "tier": "Q2", "verdict": "pass"},
+    {"actual_controls": {"iabstol": 1e-17, "maxstep": 3.814697265625e-10, "method": "traponly", "reltol": 1e-11, "stop": 3.814697265625e-06, "vabstol": 1e-14}, "backend": "spectre", "behavior": "pass", "callback_proof": null, "card": "EC12-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "55f3baa81db9c0ca16ca967b6afe49dafee103f261c25862b6e96d1c5f153232"}, "native_observations": "qualified", "numerical": {"error_lower_V": 1.7328360968349443e-12, "error_upper_V": 2.617461802856269e-12, "status": "pass"}, "profile": "deep_bound_native_v1", "runtime": "qualified", "tier": "Q3", "verdict": "pass"},
+    {"actual_controls": {"iabstol": 1e-13, "maxstep": 2.980232238769531e-08, "method": "traponly", "reltol": 1e-06, "stop": 7e-06, "vabstol": 1e-09}, "backend": "spectre", "behavior": "unknown", "callback_proof": null, "card": "EC20-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "3ab27bb10db21946febb308897669eed4ce219501bb00ae4e9357aaefb6b2bfe"}, "native_observations": "qualified", "numerical": {"status": "unknown"}, "profile": "base_native_v1", "runtime": "qualified", "tier": "Q1", "verdict": "evidence_insufficient"},
+    {"actual_controls": {"iabstol": 1e-15, "maxstep": 3.725290298461914e-09, "method": "traponly", "reltol": 1e-09, "stop": 7e-06, "vabstol": 1e-12}, "backend": "spectre", "behavior": "unknown", "callback_proof": null, "card": "EC20-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "86e76a1c27712b10a8302efbc0ca3ca9f70f8eee1b32dd373f1c5180482ea960"}, "native_observations": "qualified", "numerical": {"status": "unknown"}, "profile": "both_native_v1", "runtime": "qualified", "tier": "Q2", "verdict": "evidence_insufficient"},
+    {"actual_controls": {"iabstol": 1e-17, "maxstep": 3.814697265625e-10, "method": "traponly", "reltol": 1e-11, "stop": 7e-06, "vabstol": 1e-14}, "backend": "spectre", "behavior": "unknown", "callback_proof": null, "card": "EC20-v1", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "038b28ec8ac1c4ec2ad270f9b6d8c0d82be3a7d5a3b79da1b835144aaf5192d9"}, "native_observations": "unknown", "numerical": {"status": "unknown"}, "profile": "deep_bound_native_v1", "runtime": "qualified", "tier": "Q3", "verdict": "evidence_insufficient"},
+    {"actual_controls": {"iabstol": 1e-13, "maxstep": 2.980232238769531e-08, "method": "traponly", "reltol": 1e-06, "stop": 3.814697265625e-06, "vabstol": 1e-09}, "backend": "spectre", "behavior": "pass", "callback_proof": null, "card": "EC12-v2", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "66a76f2dffde3e33fda28e96983166fb5195df089b408080e08fca231cbb1abd"}, "native_observations": "qualified", "numerical": {"error_lower_V": 7.316002334611937e-06, "error_upper_V": 7.316002876400773e-06, "status": "pass"}, "profile": "base_native_v1", "runtime": "qualified", "tier": "Q1", "verdict": "pass"},
+    {"actual_controls": {"iabstol": 1e-15, "maxstep": 3.725290298461914e-09, "method": "traponly", "reltol": 1e-09, "stop": 3.814697265625e-06, "vabstol": 1e-12}, "backend": "spectre", "behavior": "pass", "callback_proof": null, "card": "EC12-v2", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "f5df38915868883ff5f7041cb86874fcda83944b334d87165dc8c73d00e2a01f"}, "native_observations": "qualified", "numerical": {"error_lower_V": 1.0176492541980053e-06, "error_upper_V": 1.0176497799996298e-06, "status": "numerical_error"}, "profile": "both_native_v1", "runtime": "qualified", "tier": "Q2", "verdict": "numerical_error"},
+    {"actual_controls": {"iabstol": 1e-17, "maxstep": 3.814697265625e-10, "method": "traponly", "reltol": 1e-11, "stop": 3.814697265625e-06, "vabstol": 1e-14}, "backend": "spectre", "behavior": "pass", "callback_proof": null, "card": "EC12-v2", "configuration": "qualified", "execution": "waveform_available", "identity": {"analysis_sha256": "9452abc863f72dd63ecba21fe544f827aa4d5f38894456393e186bbe6ee3350b"}, "native_observations": "qualified", "numerical": {"error_lower_V": 1.943156258121803e-08, "error_upper_V": 1.9432115472284295e-08, "status": "pass"}, "profile": "deep_bound_native_v1", "runtime": "qualified", "tier": "Q3", "verdict": "pass"},
+    {"actual_controls": {"actual": {"iabstol": "unknown", "maxstep": 3.125e-08, "method": "unknown; unsupported integration_method control", "reltol": 1e-05, "stop": 3e-06, "vabstol": 1e-09}, "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification", "max_step_applied": true, "mismatches": [], "observed_response": {"accepted_steps": 117, "engine": "evas-events-0.14.0"}, "request_echo": {"maxstep": 3.125e-08, "reltol": 1e-05, "stop": 3e-06, "vabstol": 1e-09}, "requested": {"iabstol": 1e-13, "maxstep": 3.125e-08, "reltol": 1e-05, "stop": 3e-06, "vabstol": 1e-09}, "sample_origin_summary": {"accepted_controller_frame": 49}, "status": "I"}, "backend": "evas", "card": "P-ddt", "configuration": "qualified", "execution": "waveform_available", "identity": {"report_sha256": "7a65b280e3536b3140a4a1de59c524843142e943076f8bd7d4c45cc878fc8790"}, "numerical": {"budget_V": 1.01e-05, "error_lower_V": 0.0, "error_upper_V": 1.5987211554602254e-14, "input_error_max_V": 0.0, "issues": [], "rows": 49, "scope": "fixed finite observations; settings and sample origin are separate evidence axes", "status": "pass"}, "profile": "base", "runtime_qualified": true, "tier": "Q1", "verdict": "pass"},
+    {"actual_controls": {"actual": {"iabstol": "unknown", "maxstep": 3.90625e-09, "method": "unknown; unsupported integration_method control", "reltol": 1e-08, "stop": 3e-06, "vabstol": 1e-12}, "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification", "max_step_applied": true, "mismatches": [], "observed_response": {"accepted_steps": 781, "engine": "evas-events-0.14.0"}, "request_echo": {"maxstep": 3.90625e-09, "reltol": 1e-08, "stop": 3e-06, "vabstol": 1e-12}, "requested": {"iabstol": 1e-15, "maxstep": 3.90625e-09, "reltol": 1e-08, "stop": 3e-06, "vabstol": 1e-12}, "sample_origin_summary": {"accepted_controller_frame": 49}, "status": "I"}, "backend": "evas", "card": "P-ddt", "configuration": "qualified", "execution": "waveform_available", "identity": {"report_sha256": "7a65b280e3536b3140a4a1de59c524843142e943076f8bd7d4c45cc878fc8790"}, "numerical": {"budget_V": 1.01e-06, "error_lower_V": 0.0, "error_upper_V": 1.5987211554602254e-14, "input_error_max_V": 0.0, "issues": [], "rows": 49, "scope": "fixed finite observations; settings and sample origin are separate evidence axes", "status": "pass"}, "profile": "both", "runtime_qualified": true, "tier": "Q2", "verdict": "pass"},
+    {"actual_controls": {"actual": {"iabstol": "unknown", "maxstep": 4.8828125e-10, "method": "unknown; unsupported integration_method control", "reltol": 1e-10, "stop": 3e-06, "vabstol": 1e-14}, "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification", "max_step_applied": true, "mismatches": [], "observed_response": {"accepted_steps": 6154, "engine": "evas-events-0.14.0"}, "request_echo": {"maxstep": 4.8828125e-10, "reltol": 1e-10, "stop": 3e-06, "vabstol": 1e-14}, "requested": {"iabstol": 1e-17, "maxstep": 4.8828125e-10, "reltol": 1e-10, "stop": 3e-06, "vabstol": 1e-14}, "sample_origin_summary": {"accepted_controller_frame": 49}, "status": "I"}, "backend": "evas", "card": "P-ddt", "configuration": "qualified", "execution": "waveform_available", "identity": {"report_sha256": "7a65b280e3536b3140a4a1de59c524843142e943076f8bd7d4c45cc878fc8790"}, "numerical": {"budget_V": 1.01e-07, "error_lower_V": 0.0, "error_upper_V": 1.5987211554602254e-14, "input_error_max_V": 0.0, "issues": [], "rows": 49, "scope": "fixed finite observations; settings and sample origin are separate evidence axes", "status": "pass"}, "profile": "deep", "runtime_qualified": true, "tier": "Q3", "verdict": "pass"},
+    {"actual_controls": {"actual": {"iabstol": "unknown", "maxstep": 3.125e-08, "method": "unknown; unsupported integration_method control", "reltol": 1e-05, "stop": 3e-06, "vabstol": 1e-09}, "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification", "max_step_applied": true, "mismatches": [], "observed_response": {"accepted_steps": 117, "engine": "evas-events-0.14.0"}, "request_echo": {"maxstep": 3.125e-08, "reltol": 1e-05, "stop": 3e-06, "vabstol": 1e-09}, "requested": {"iabstol": 1e-13, "maxstep": 3.125e-08, "reltol": 1e-05, "stop": 3e-06, "vabstol": 1e-09}, "sample_origin_summary": {"accepted_controller_frame": 49}, "status": "I"}, "backend": "evas", "card": "P-ddt-input", "configuration": "qualified", "execution": "waveform_available", "identity": {"report_sha256": "7a65b280e3536b3140a4a1de59c524843142e943076f8bd7d4c45cc878fc8790"}, "numerical": {"budget_V": 1.01e-05, "error_lower_V": 0.0, "error_upper_V": 1.509903313490213e-14, "input_error_max_V": 2.1175823681357508e-16, "issues": [], "rows": 49, "scope": "fixed finite observations; settings and sample origin are separate evidence axes", "status": "pass"}, "profile": "base", "runtime_qualified": true, "tier": "Q1", "verdict": "pass"},
+    {"actual_controls": {"actual": {"iabstol": "unknown", "maxstep": 3.90625e-09, "method": "unknown; unsupported integration_method control", "reltol": 1e-08, "stop": 3e-06, "vabstol": 1e-12}, "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification", "max_step_applied": true, "mismatches": [], "observed_response": {"accepted_steps": 781, "engine": "evas-events-0.14.0"}, "request_echo": {"maxstep": 3.90625e-09, "reltol": 1e-08, "stop": 3e-06, "vabstol": 1e-12}, "requested": {"iabstol": 1e-15, "maxstep": 3.90625e-09, "reltol": 1e-08, "stop": 3e-06, "vabstol": 1e-12}, "sample_origin_summary": {"accepted_controller_frame": 49}, "status": "I"}, "backend": "evas", "card": "P-ddt-input", "configuration": "qualified", "execution": "waveform_available", "identity": {"report_sha256": "7a65b280e3536b3140a4a1de59c524843142e943076f8bd7d4c45cc878fc8790"}, "numerical": {"budget_V": 1.01e-06, "error_lower_V": 0.0, "error_upper_V": 1.509903313490213e-14, "input_error_max_V": 2.1175823681357508e-16, "issues": [], "rows": 49, "scope": "fixed finite observations; settings and sample origin are separate evidence axes", "status": "pass"}, "profile": "both", "runtime_qualified": true, "tier": "Q2", "verdict": "pass"},
+    {"actual_controls": {"actual": {"iabstol": "unknown", "maxstep": 4.8828125e-10, "method": "unknown; unsupported integration_method control", "reltol": 1e-10, "stop": 3e-06, "vabstol": 1e-14}, "claim": "actual runtime controls when reported; iabstol/method remain unsupported and settings do not establish mathematical or native qualification", "max_step_applied": true, "mismatches": [], "observed_response": {"accepted_steps": 6154, "engine": "evas-events-0.14.0"}, "request_echo": {"maxstep": 4.8828125e-10, "reltol": 1e-10, "stop": 3e-06, "vabstol": 1e-14}, "requested": {"iabstol": 1e-17, "maxstep": 4.8828125e-10, "reltol": 1e-10, "stop": 3e-06, "vabstol": 1e-14}, "sample_origin_summary": {"accepted_controller_frame": 49}, "status": "I"}, "backend": "evas", "card": "P-ddt-input", "configuration": "qualified", "execution": "waveform_available", "identity": {"report_sha256": "7a65b280e3536b3140a4a1de59c524843142e943076f8bd7d4c45cc878fc8790"}, "numerical": {"budget_V": 1.01e-07, "error_lower_V": 0.0, "error_upper_V": 1.509903313490213e-14, "input_error_max_V": 2.1175823681357508e-16, "issues": [], "rows": 49, "scope": "fixed finite observations; settings and sample origin are separate evidence axes", "status": "pass"}, "profile": "deep", "runtime_qualified": true, "tier": "Q3", "verdict": "pass"},
+    {"actual_controls": {"actual": {"iabstol": 1e-13, "maxstep": 3.125e-08, "method": "traponly", "reltol": 1e-06, "stop": 3e-06, "vabstol": 1e-09}, "claim": "settings readback only; not numerical or native observation qualification", "mismatches": ["reltol"], "producer_binding": {"binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f", "calibration_sha256": "f1477648d9de091749d8b31b7198ec55beea46ebc9cf71148f9b690f74f195ab", "claim": "external preflight and frozen input identity required; observed log values with calibrated PSF printed-interval crosscheck", "frozen_deck_sha256": "f22af3743ce464dea6dd0685917056180f2317413a14434def4eb996d7653ca5", "log_sha256": "2d411fe8142b1f4ad6a7e30f6414f0690f41f50f515dbd334768da16a67bd0a9", "psf_sha256": "aa669051e741d6d5f646943c78e947e1336de8fa78ba9cf2e223df1805266db0", "version": "21.1.0.509.isr12"}, "requested": {"iabstol": 1e-13, "maxstep": 3.125e-08, "reltol": 1e-05, "stop": 3e-06, "vabstol": 1e-09}, "scoped_readback": {"effective": {"iabstol_A": {"line": 132, "raw": "    abstol(I) = 1.000000000000000e-13 A", "scope": "transient:tran", "value": 1e-13}, "maxstep_s": {"line": 126, "raw": "    maxstep = 3.125000000000000e-08 s", "scope": "transient:tran", "value": 3.125e-08}, "method": {"line": 137, "raw": "    method = traponly", "scope": "transient:tran", "value": "traponly"}, "reltol": {"line": 130, "raw": "    reltol = 1.000000000000000e-06", "scope": "transient:tran", "value": 1e-06}, "stop_s": {"line": 124, "raw": "    stop = 3.000000000000000e-06 s", "scope": "transient:tran", "value": 3e-06}, "vabstol_V": {"line": 131, "raw": "    abstol(V) = 1.000000000000000e-09 V", "scope": "transient:tran", "value": 1e-09}}, "format_calibration_sha256": "f1477648d9de091749d8b31b7198ec55beea46ebc9cf71148f9b690f74f195ab", "global_user": {"iabstol_A": {"line": 85, "raw": "            iabstol = 1e-13", "scope": "global_user", "value": 1e-13}, "reltol": {"line": 89, "raw": "             reltol = 1e-05", "scope": "global_user", "value": 1e-05}, "vabstol_V": {"line": 84, "raw": "            vabstol = 1e-09", "scope": "global_user", "value": 1e-09}}, "limit": "actual values are observed log values; PSF intervals only crosscheck formatting compatibility", "psf_printed_intervals": {"iabstol_A": {"log_lower_s_or_native": "9.9999999999999995E-14", "log_upper_s_or_native": "1.0000000000000005E-13", "lower_s_or_native": "9.999995E-14", "raw": "\"abstol(I)\" 1.00000e-13", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "1.000005E-13"}, "maxstep_s": {"log_lower_s_or_native": "3.1249999999999995E-8", "log_upper_s_or_native": "3.1250000000000005E-8", "lower_s_or_native": "3.124995E-8", "raw": "\"maxstep\" 3.12500e-08", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "3.125005E-8"}, "reltol": {"log_lower_s_or_native": "9.9999999999999995E-7", "log_upper_s_or_native": "0.0000010000000000000005", "lower_s_or_native": "9.999995E-7", "raw": "\"reltol\" 1.00000e-06", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "0.000001000005"}, "stop_s": {"log_lower_s_or_native": "0.0000029999999999999995", "log_upper_s_or_native": "0.0000030000000000000005", "lower_s_or_native": "0.000002999995", "raw": "\"stop\" 3.00000e-06", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "0.000003000005"}, "vabstol_V": {"log_lower_s_or_native": "9.9999999999999995E-10", "log_upper_s_or_native": "1.0000000000000005E-9", "lower_s_or_native": "9.999995E-10", "raw": "\"abstol(V)\" 1.00000e-09", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "1.000005E-9"}}, "psf_relative_metadata": {"tolerance.relative": {"line": 11, "raw": "\"tolerance.relative\" 1.00000e-05", "scope": "psf_header", "value": 1e-05}}, "readback_mode": "calibrated_sci_log_printed_psf_intervals"}, "status": "I"}, "backend": "spectre", "card": "P-ddt", "configuration": "qualified", "execution": "waveform_available", "identity": {"report_sha256": "7a65b280e3536b3140a4a1de59c524843142e943076f8bd7d4c45cc878fc8790"}, "numerical": {"budget_V": 1.01e-05, "error_lower_V": 5.999999999999986, "error_upper_V": 5.999999999999994, "input_error_max_V": 0.0, "issues": ["missing mandatory corner: 3e-06"], "rows": 100, "scope": "fixed finite observations; settings and sample origin are separate evidence axes", "status": "numerical_error"}, "profile": "base", "runtime_qualified": true, "tier": "Q1", "verdict": "numerical_error"},
+    {"actual_controls": {"actual": {"iabstol": 1e-15, "maxstep": 3.90625e-09, "method": "traponly", "reltol": 1e-09, "stop": 3e-06, "vabstol": 1e-12}, "claim": "settings readback only; not numerical or native observation qualification", "mismatches": ["reltol"], "producer_binding": {"binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f", "calibration_sha256": "f1477648d9de091749d8b31b7198ec55beea46ebc9cf71148f9b690f74f195ab", "claim": "external preflight and frozen input identity required; observed log values with calibrated PSF printed-interval crosscheck", "frozen_deck_sha256": "1faaea7acbe5fb7d7f89bf9ac02b79e3fe9683ae7c7b7efab2f4af9cd9ea6001", "log_sha256": "d94dbf2817f4f18a997edbb3b37990fceb1698e1d9f04c57c8f10cbb0903cc2a", "psf_sha256": "e056884778cd2dc9de51b8b410ee4dbac52c8b9ed7c1b36bb0ae65ec70501777", "version": "21.1.0.509.isr12"}, "requested": {"iabstol": 1e-15, "maxstep": 3.90625e-09, "reltol": 1e-08, "stop": 3e-06, "vabstol": 1e-12}, "scoped_readback": {"effective": {"iabstol_A": {"line": 132, "raw": "    abstol(I) = 1.000000000000000e-15 A", "scope": "transient:tran", "value": 1e-15}, "maxstep_s": {"line": 126, "raw": "    maxstep = 3.906250000000000e-09 s", "scope": "transient:tran", "value": 3.90625e-09}, "method": {"line": 137, "raw": "    method = traponly", "scope": "transient:tran", "value": "traponly"}, "reltol": {"line": 130, "raw": "    reltol = 1.000000000000000e-09", "scope": "transient:tran", "value": 1e-09}, "stop_s": {"line": 124, "raw": "    stop = 3.000000000000000e-06 s", "scope": "transient:tran", "value": 3e-06}, "vabstol_V": {"line": 131, "raw": "    abstol(V) = 1.000000000000000e-12 V", "scope": "transient:tran", "value": 1e-12}}, "format_calibration_sha256": "f1477648d9de091749d8b31b7198ec55beea46ebc9cf71148f9b690f74f195ab", "global_user": {"iabstol_A": {"line": 85, "raw": "            iabstol = 1e-15", "scope": "global_user", "value": 1e-15}, "reltol": {"line": 89, "raw": "             reltol = 1e-08", "scope": "global_user", "value": 1e-08}, "vabstol_V": {"line": 84, "raw": "            vabstol = 1e-12", "scope": "global_user", "value": 1e-12}}, "limit": "actual values are observed log values; PSF intervals only crosscheck formatting compatibility", "psf_printed_intervals": {"iabstol_A": {"log_lower_s_or_native": "9.9999999999999995E-16", "log_upper_s_or_native": "1.0000000000000005E-15", "lower_s_or_native": "9.999995E-16", "raw": "\"abstol(I)\" 1.00000e-15", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "1.000005E-15"}, "maxstep_s": {"log_lower_s_or_native": "3.9062499999999995E-9", "log_upper_s_or_native": "3.9062500000000005E-9", "lower_s_or_native": "3.906245E-9", "raw": "\"maxstep\" 3.90625e-09", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "3.906255E-9"}, "reltol": {"log_lower_s_or_native": "9.9999999999999995E-10", "log_upper_s_or_native": "1.0000000000000005E-9", "lower_s_or_native": "9.999995E-10", "raw": "\"reltol\" 1.00000e-09", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "1.000005E-9"}, "stop_s": {"log_lower_s_or_native": "0.0000029999999999999995", "log_upper_s_or_native": "0.0000030000000000000005", "lower_s_or_native": "0.000002999995", "raw": "\"stop\" 3.00000e-06", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "0.000003000005"}, "vabstol_V": {"log_lower_s_or_native": "9.9999999999999995E-13", "log_upper_s_or_native": "1.0000000000000005E-12", "lower_s_or_native": "9.999995E-13", "raw": "\"abstol(V)\" 1.00000e-12", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "1.000005E-12"}}, "psf_relative_metadata": {"tolerance.relative": {"line": 11, "raw": "\"tolerance.relative\" 1.00000e-08", "scope": "psf_header", "value": 1e-08}}, "readback_mode": "calibrated_sci_log_printed_psf_intervals"}, "status": "I"}, "backend": "spectre", "card": "P-ddt", "configuration": "qualified", "execution": "waveform_available", "identity": {"report_sha256": "7a65b280e3536b3140a4a1de59c524843142e943076f8bd7d4c45cc878fc8790"}, "numerical": {"budget_V": 1.01e-06, "issues": ["observation outside frozen time range"], "status": "evidence_insufficient"}, "profile": "both", "runtime_qualified": true, "tier": "Q2", "verdict": "evidence_insufficient"},
+    {"actual_controls": {"actual": {"iabstol": 1e-17, "maxstep": 4.8828125e-10, "method": "traponly", "reltol": 1e-11, "stop": 3e-06, "vabstol": 1e-14}, "claim": "settings readback only; not numerical or native observation qualification", "mismatches": ["reltol"], "producer_binding": {"binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f", "calibration_sha256": "f1477648d9de091749d8b31b7198ec55beea46ebc9cf71148f9b690f74f195ab", "claim": "external preflight and frozen input identity required; observed log values with calibrated PSF printed-interval crosscheck", "frozen_deck_sha256": "4b27a05dc58bac6e29facd1f4c8ff72347102fed09b6090d59d11cd36b73430f", "log_sha256": "889c90ee2bd8285ddad2650f6d09b976428c83664845bbb7b94d5cca9d0d29f6", "psf_sha256": "4f10c2ee0b39b2a5f066ca4540880f36ac9e8af44e4c279d0ac1d7b66255b402", "version": "21.1.0.509.isr12"}, "requested": {"iabstol": 1e-17, "maxstep": 4.8828125e-10, "reltol": 1e-10, "stop": 3e-06, "vabstol": 1e-14}, "scoped_readback": {"effective": {"iabstol_A": {"line": 132, "raw": "    abstol(I) = 1.000000000000000e-17 A", "scope": "transient:tran", "value": 1e-17}, "maxstep_s": {"line": 126, "raw": "    maxstep = 4.882812500000000e-10 s", "scope": "transient:tran", "value": 4.8828125e-10}, "method": {"line": 137, "raw": "    method = traponly", "scope": "transient:tran", "value": "traponly"}, "reltol": {"line": 130, "raw": "    reltol = 1.000000000000000e-11", "scope": "transient:tran", "value": 1e-11}, "stop_s": {"line": 124, "raw": "    stop = 3.000000000000000e-06 s", "scope": "transient:tran", "value": 3e-06}, "vabstol_V": {"line": 131, "raw": "    abstol(V) = 1.000000000000000e-14 V", "scope": "transient:tran", "value": 1e-14}}, "format_calibration_sha256": "f1477648d9de091749d8b31b7198ec55beea46ebc9cf71148f9b690f74f195ab", "global_user": {"iabstol_A": {"line": 85, "raw": "            iabstol = 1e-17", "scope": "global_user", "value": 1e-17}, "reltol": {"line": 89, "raw": "             reltol = 1e-10", "scope": "global_user", "value": 1e-10}, "vabstol_V": {"line": 84, "raw": "            vabstol = 1e-14", "scope": "global_user", "value": 1e-14}}, "limit": "actual values are observed log values; PSF intervals only crosscheck formatting compatibility", "psf_printed_intervals": {"iabstol_A": {"log_lower_s_or_native": "9.9999999999999995E-18", "log_upper_s_or_native": "1.0000000000000005E-17", "lower_s_or_native": "9.999995E-18", "raw": "\"abstol(I)\" 1.00000e-17", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "1.000005E-17"}, "maxstep_s": {"log_lower_s_or_native": "4.8828124999999995E-10", "log_upper_s_or_native": "4.8828125000000005E-10", "lower_s_or_native": "4.882805E-10", "raw": "\"maxstep\" 4.88281e-10", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "4.882815E-10"}, "reltol": {"log_lower_s_or_native": "9.9999999999999995E-12", "log_upper_s_or_native": "1.0000000000000005E-11", "lower_s_or_native": "9.999995E-12", "raw": "\"reltol\" 1.00000e-11", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "1.000005E-11"}, "stop_s": {"log_lower_s_or_native": "0.0000029999999999999995", "log_upper_s_or_native": "0.0000030000000000000005", "lower_s_or_native": "0.000002999995", "raw": "\"stop\" 3.00000e-06", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "0.000003000005"}, "vabstol_V": {"log_lower_s_or_native": "9.9999999999999995E-15", "log_upper_s_or_native": "1.0000000000000005E-14", "lower_s_or_native": "9.999995E-15", "raw": "\"abstol(V)\" 1.00000e-14", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "1.000005E-14"}}, "psf_relative_metadata": {"tolerance.relative": {"line": 11, "raw": "\"tolerance.relative\" 1.00000e-10", "scope": "psf_header", "value": 1e-10}}, "readback_mode": "calibrated_sci_log_printed_psf_intervals"}, "status": "I"}, "backend": "spectre", "card": "P-ddt", "configuration": "qualified", "execution": "waveform_available", "identity": {"report_sha256": "7a65b280e3536b3140a4a1de59c524843142e943076f8bd7d4c45cc878fc8790"}, "numerical": {"budget_V": 1.01e-07, "issues": ["observation outside frozen time range"], "status": "evidence_insufficient"}, "profile": "deep", "runtime_qualified": true, "tier": "Q3", "verdict": "evidence_insufficient"},
+    {"actual_controls": {"actual": {"iabstol": 1e-13, "maxstep": 3.125e-08, "method": "traponly", "reltol": 1e-06, "stop": 3e-06, "vabstol": 1e-09}, "claim": "settings readback only; not numerical or native observation qualification", "mismatches": ["reltol"], "producer_binding": {"binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f", "calibration_sha256": "f1477648d9de091749d8b31b7198ec55beea46ebc9cf71148f9b690f74f195ab", "claim": "external preflight and frozen input identity required; observed log values with calibrated PSF printed-interval crosscheck", "frozen_deck_sha256": "b828f99fde33d5a8ad3ec5b7ab8cd5682fdf11a6c260a7f5188f421e216e8746", "log_sha256": "465863f45d1c06ad4234f732d3f33bd536a6266e952e607d0f08eb2cd09841e3", "psf_sha256": "e84b202737d4959f227d23ba7e1189664e8b66a4037985c664fc48f5b01bb678", "version": "21.1.0.509.isr12"}, "requested": {"iabstol": 1e-13, "maxstep": 3.125e-08, "reltol": 1e-05, "stop": 3e-06, "vabstol": 1e-09}, "scoped_readback": {"effective": {"iabstol_A": {"line": 132, "raw": "    abstol(I) = 1.000000000000000e-13 A", "scope": "transient:tran", "value": 1e-13}, "maxstep_s": {"line": 126, "raw": "    maxstep = 3.125000000000000e-08 s", "scope": "transient:tran", "value": 3.125e-08}, "method": {"line": 137, "raw": "    method = traponly", "scope": "transient:tran", "value": "traponly"}, "reltol": {"line": 130, "raw": "    reltol = 1.000000000000000e-06", "scope": "transient:tran", "value": 1e-06}, "stop_s": {"line": 124, "raw": "    stop = 3.000000000000000e-06 s", "scope": "transient:tran", "value": 3e-06}, "vabstol_V": {"line": 131, "raw": "    abstol(V) = 1.000000000000000e-09 V", "scope": "transient:tran", "value": 1e-09}}, "format_calibration_sha256": "f1477648d9de091749d8b31b7198ec55beea46ebc9cf71148f9b690f74f195ab", "global_user": {"iabstol_A": {"line": 85, "raw": "            iabstol = 1e-13", "scope": "global_user", "value": 1e-13}, "reltol": {"line": 89, "raw": "             reltol = 1e-05", "scope": "global_user", "value": 1e-05}, "vabstol_V": {"line": 84, "raw": "            vabstol = 1e-09", "scope": "global_user", "value": 1e-09}}, "limit": "actual values are observed log values; PSF intervals only crosscheck formatting compatibility", "psf_printed_intervals": {"iabstol_A": {"log_lower_s_or_native": "9.9999999999999995E-14", "log_upper_s_or_native": "1.0000000000000005E-13", "lower_s_or_native": "9.999995E-14", "raw": "\"abstol(I)\" 1.00000e-13", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "1.000005E-13"}, "maxstep_s": {"log_lower_s_or_native": "3.1249999999999995E-8", "log_upper_s_or_native": "3.1250000000000005E-8", "lower_s_or_native": "3.124995E-8", "raw": "\"maxstep\" 3.12500e-08", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "3.125005E-8"}, "reltol": {"log_lower_s_or_native": "9.9999999999999995E-7", "log_upper_s_or_native": "0.0000010000000000000005", "lower_s_or_native": "9.999995E-7", "raw": "\"reltol\" 1.00000e-06", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "0.000001000005"}, "stop_s": {"log_lower_s_or_native": "0.0000029999999999999995", "log_upper_s_or_native": "0.0000030000000000000005", "lower_s_or_native": "0.000002999995", "raw": "\"stop\" 3.00000e-06", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "0.000003000005"}, "vabstol_V": {"log_lower_s_or_native": "9.9999999999999995E-10", "log_upper_s_or_native": "1.0000000000000005E-9", "lower_s_or_native": "9.999995E-10", "raw": "\"abstol(V)\" 1.00000e-09", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "1.000005E-9"}}, "psf_relative_metadata": {"tolerance.relative": {"line": 11, "raw": "\"tolerance.relative\" 1.00000e-05", "scope": "psf_header", "value": 1e-05}}, "readback_mode": "calibrated_sci_log_printed_psf_intervals"}, "status": "I"}, "backend": "spectre", "card": "P-ddt-input", "configuration": "qualified", "execution": "waveform_available", "identity": {"report_sha256": "7a65b280e3536b3140a4a1de59c524843142e943076f8bd7d4c45cc878fc8790"}, "numerical": {"budget_V": 1.01e-05, "error_lower_V": 0.0006666833637281044, "error_upper_V": 0.0006666833637574143, "input_error_max_V": 2.2197519134251348e-16, "issues": [], "rows": 2149, "scope": "fixed finite observations; settings and sample origin are separate evidence axes", "status": "numerical_error"}, "profile": "base", "runtime_qualified": true, "tier": "Q1", "verdict": "numerical_error"},
+    {"actual_controls": {"actual": {"iabstol": 1e-15, "maxstep": 3.90625e-09, "method": "traponly", "reltol": 1e-09, "stop": 3e-06, "vabstol": 1e-12}, "claim": "settings readback only; not numerical or native observation qualification", "mismatches": ["reltol"], "producer_binding": {"binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f", "calibration_sha256": "f1477648d9de091749d8b31b7198ec55beea46ebc9cf71148f9b690f74f195ab", "claim": "external preflight and frozen input identity required; observed log values with calibrated PSF printed-interval crosscheck", "frozen_deck_sha256": "87bd5f5e7b579b360fcd683e168f8982fa7b0820209d8a0b1b76b5714f9c6ead", "log_sha256": "89c21bc73af02478ca45bb4ac3b8eb69cc71df9a37d29928137c28f02cb861e3", "psf_sha256": "32b5d23ab1ef4dd12dfcef27e6c16086a5b01da6c12086e0f1a141582bdd2909", "version": "21.1.0.509.isr12"}, "requested": {"iabstol": 1e-15, "maxstep": 3.90625e-09, "reltol": 1e-08, "stop": 3e-06, "vabstol": 1e-12}, "scoped_readback": {"effective": {"iabstol_A": {"line": 132, "raw": "    abstol(I) = 1.000000000000000e-15 A", "scope": "transient:tran", "value": 1e-15}, "maxstep_s": {"line": 126, "raw": "    maxstep = 3.906250000000000e-09 s", "scope": "transient:tran", "value": 3.90625e-09}, "method": {"line": 137, "raw": "    method = traponly", "scope": "transient:tran", "value": "traponly"}, "reltol": {"line": 130, "raw": "    reltol = 1.000000000000000e-09", "scope": "transient:tran", "value": 1e-09}, "stop_s": {"line": 124, "raw": "    stop = 3.000000000000000e-06 s", "scope": "transient:tran", "value": 3e-06}, "vabstol_V": {"line": 131, "raw": "    abstol(V) = 1.000000000000000e-12 V", "scope": "transient:tran", "value": 1e-12}}, "format_calibration_sha256": "f1477648d9de091749d8b31b7198ec55beea46ebc9cf71148f9b690f74f195ab", "global_user": {"iabstol_A": {"line": 85, "raw": "            iabstol = 1e-15", "scope": "global_user", "value": 1e-15}, "reltol": {"line": 89, "raw": "             reltol = 1e-08", "scope": "global_user", "value": 1e-08}, "vabstol_V": {"line": 84, "raw": "            vabstol = 1e-12", "scope": "global_user", "value": 1e-12}}, "limit": "actual values are observed log values; PSF intervals only crosscheck formatting compatibility", "psf_printed_intervals": {"iabstol_A": {"log_lower_s_or_native": "9.9999999999999995E-16", "log_upper_s_or_native": "1.0000000000000005E-15", "lower_s_or_native": "9.999995E-16", "raw": "\"abstol(I)\" 1.00000e-15", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "1.000005E-15"}, "maxstep_s": {"log_lower_s_or_native": "3.9062499999999995E-9", "log_upper_s_or_native": "3.9062500000000005E-9", "lower_s_or_native": "3.906245E-9", "raw": "\"maxstep\" 3.90625e-09", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "3.906255E-9"}, "reltol": {"log_lower_s_or_native": "9.9999999999999995E-10", "log_upper_s_or_native": "1.0000000000000005E-9", "lower_s_or_native": "9.999995E-10", "raw": "\"reltol\" 1.00000e-09", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "1.000005E-9"}, "stop_s": {"log_lower_s_or_native": "0.0000029999999999999995", "log_upper_s_or_native": "0.0000030000000000000005", "lower_s_or_native": "0.000002999995", "raw": "\"stop\" 3.00000e-06", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "0.000003000005"}, "vabstol_V": {"log_lower_s_or_native": "9.9999999999999995E-13", "log_upper_s_or_native": "1.0000000000000005E-12", "lower_s_or_native": "9.999995E-13", "raw": "\"abstol(V)\" 1.00000e-12", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "1.000005E-12"}}, "psf_relative_metadata": {"tolerance.relative": {"line": 11, "raw": "\"tolerance.relative\" 1.00000e-08", "scope": "psf_header", "value": 1e-08}}, "readback_mode": "calibrated_sci_log_printed_psf_intervals"}, "status": "I"}, "backend": "spectre", "card": "P-ddt-input", "configuration": "qualified", "execution": "waveform_available", "identity": {"report_sha256": "7a65b280e3536b3140a4a1de59c524843142e943076f8bd7d4c45cc878fc8790"}, "numerical": {"budget_V": 1.01e-06, "error_lower_V": 6.667491687650795e-07, "error_upper_V": 6.667491980749674e-07, "input_error_max_V": 2.2097135814932691e-16, "issues": [], "rows": 2295, "scope": "fixed finite observations; settings and sample origin are separate evidence axes", "status": "pass"}, "profile": "both", "runtime_qualified": true, "tier": "Q2", "verdict": "pass"},
+    {"actual_controls": {"actual": {"iabstol": 1e-17, "maxstep": 4.8828125e-10, "method": "traponly", "reltol": 1e-11, "stop": 3e-06, "vabstol": 1e-14}, "claim": "settings readback only; not numerical or native observation qualification", "mismatches": ["reltol"], "producer_binding": {"binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f", "calibration_sha256": "f1477648d9de091749d8b31b7198ec55beea46ebc9cf71148f9b690f74f195ab", "claim": "external preflight and frozen input identity required; observed log values with calibrated PSF printed-interval crosscheck", "frozen_deck_sha256": "cb4e75b64910b55aba085b3cf47f437ca74001317080b42658ed9a89875581aa", "log_sha256": "2a5e5df38ce81ba6141d77db46ba1bc2226735f80c9753aa37e5f2f96dfcd173", "psf_sha256": "e53d524ba7352a3397ccf9796e3d4425ab8063ba49c86e9f4f04f6ed8d647576", "version": "21.1.0.509.isr12"}, "requested": {"iabstol": 1e-17, "maxstep": 4.8828125e-10, "reltol": 1e-10, "stop": 3e-06, "vabstol": 1e-14}, "scoped_readback": {"effective": {"iabstol_A": {"line": 132, "raw": "    abstol(I) = 1.000000000000000e-17 A", "scope": "transient:tran", "value": 1e-17}, "maxstep_s": {"line": 126, "raw": "    maxstep = 4.882812500000000e-10 s", "scope": "transient:tran", "value": 4.8828125e-10}, "method": {"line": 137, "raw": "    method = traponly", "scope": "transient:tran", "value": "traponly"}, "reltol": {"line": 130, "raw": "    reltol = 1.000000000000000e-11", "scope": "transient:tran", "value": 1e-11}, "stop_s": {"line": 124, "raw": "    stop = 3.000000000000000e-06 s", "scope": "transient:tran", "value": 3e-06}, "vabstol_V": {"line": 131, "raw": "    abstol(V) = 1.000000000000000e-14 V", "scope": "transient:tran", "value": 1e-14}}, "format_calibration_sha256": "f1477648d9de091749d8b31b7198ec55beea46ebc9cf71148f9b690f74f195ab", "global_user": {"iabstol_A": {"line": 85, "raw": "            iabstol = 1e-17", "scope": "global_user", "value": 1e-17}, "reltol": {"line": 89, "raw": "             reltol = 1e-10", "scope": "global_user", "value": 1e-10}, "vabstol_V": {"line": 84, "raw": "            vabstol = 1e-14", "scope": "global_user", "value": 1e-14}}, "limit": "actual values are observed log values; PSF intervals only crosscheck formatting compatibility", "psf_printed_intervals": {"iabstol_A": {"log_lower_s_or_native": "9.9999999999999995E-18", "log_upper_s_or_native": "1.0000000000000005E-17", "lower_s_or_native": "9.999995E-18", "raw": "\"abstol(I)\" 1.00000e-17", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "1.000005E-17"}, "maxstep_s": {"log_lower_s_or_native": "4.8828124999999995E-10", "log_upper_s_or_native": "4.8828125000000005E-10", "lower_s_or_native": "4.882805E-10", "raw": "\"maxstep\" 4.88281e-10", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "4.882815E-10"}, "reltol": {"log_lower_s_or_native": "9.9999999999999995E-12", "log_upper_s_or_native": "1.0000000000000005E-11", "lower_s_or_native": "9.999995E-12", "raw": "\"reltol\" 1.00000e-11", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "1.000005E-11"}, "stop_s": {"log_lower_s_or_native": "0.0000029999999999999995", "log_upper_s_or_native": "0.0000030000000000000005", "lower_s_or_native": "0.000002999995", "raw": "\"stop\" 3.00000e-06", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "0.000003000005"}, "vabstol_V": {"log_lower_s_or_native": "9.9999999999999995E-15", "log_upper_s_or_native": "1.0000000000000005E-14", "lower_s_or_native": "9.999995E-15", "raw": "\"abstol(V)\" 1.00000e-14", "scope": "printed PSF metadata compatibility interval; not an actual control value", "significant_digits": 6, "upper_s_or_native": "1.000005E-14"}}, "psf_relative_metadata": {"tolerance.relative": {"line": 11, "raw": "\"tolerance.relative\" 1.00000e-10", "scope": "psf_header", "value": 1e-10}}, "readback_mode": "calibrated_sci_log_printed_psf_intervals"}, "status": "I"}, "backend": "spectre", "card": "P-ddt-input", "configuration": "qualified", "execution": "waveform_available", "identity": {"report_sha256": "7a65b280e3536b3140a4a1de59c524843142e943076f8bd7d4c45cc878fc8790"}, "numerical": {"budget_V": 1.01e-07, "issues": ["observation outside frozen time range"], "status": "evidence_insufficient"}, "profile": "deep", "runtime_qualified": true, "tier": "Q3", "verdict": "evidence_insufficient"}
+  ]
+}
