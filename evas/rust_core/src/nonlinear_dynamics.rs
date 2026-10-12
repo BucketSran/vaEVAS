@@ -860,9 +860,17 @@ impl NonlinearContinuous {
                 variable[1] = slope;
             }
         }
+        let reduced = self
+            .implicit
+            .as_ref()
+            .and_then(|field| field.polynomial_functions(&self.functions, slopes));
+        if tight && self.implicit.is_some() && reduced.is_none() {
+            return None;
+        }
+        let functions = reduced.as_deref().unwrap_or(&self.functions);
         for n in 0..order {
             let derivatives = if tight {
-                self.functions
+                functions
                     .iter()
                     .map(|f| f.jet_with(&variables, n, true))
                     .collect()
@@ -894,11 +902,14 @@ impl NonlinearContinuous {
         coefficients: &[Jet],
         centers: Option<&[CenterValue]>,
     ) -> Option<CenteredPolynomial> {
-        // The implicit rational field needs its own derivative proof. Its
-        // existing interval propagation remains unchanged here.
-        if self.implicit.is_some() {
-            return None;
-        }
+        // Reuse the polynomial sensitivity proof only after structurally
+        // reducing a constant-Jacobian DAE. Rational fields retain interval
+        // propagation with no centered recovery.
+        let reduced = match &self.implicit {
+            Some(field) => Some(field.polynomial_functions(&self.functions, slopes)?),
+            None => None,
+        };
+        let functions = reduced.as_deref().unwrap_or(&self.functions);
         let centers: Vec<_> = centers.map_or_else(
             || {
                 state
@@ -930,8 +941,7 @@ impl NonlinearContinuous {
         // Differentiate the Taylor recurrence by the chain rule. Evaluation
         // uses the entire original initial box, and unmodified source boxes.
         for n in 0..order {
-            let gradients: Vec<Vec<Jet>> = self
-                .functions
+            let gradients: Vec<Vec<Jet>> = functions
                 .iter()
                 .map(|function| {
                     (0..count)
