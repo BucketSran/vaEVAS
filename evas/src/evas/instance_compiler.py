@@ -9,7 +9,7 @@ from fractions import Fraction
 from typing import TYPE_CHECKING
 
 from .ir import (Affine, Assignment, Conditional, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger, HeldTimerTrigger, OrTrigger,
-                 Origin, Program, Power, Select, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt, LaplaceNd, IdtMod, Sin, Ddt)
+                 Origin, Program, Power, Select, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt, LaplaceNd, IdtMod, Sin, MathFunction, Ddt)
 from .lowering import lower, scale
 from .limits import check_ir
 from .parameters import bind_parameters
@@ -30,7 +30,7 @@ class Compilation:
     contributions: list[Contribution] = field(default_factory=list)
     states: list[State] = field(default_factory=list)
     events: list[Event] = field(default_factory=list)
-    operators: list[Transition | AbsDelay | Slew | Idt | LaplaceNd | IdtMod | Sin | Ddt] = field(default_factory=list)
+    operators: list[Transition | AbsDelay | Slew | Idt | LaplaceNd | IdtMod | Sin | MathFunction | Ddt] = field(default_factory=list)
     indices: dict[str, int] = field(init=False)
 
     def __post_init__(self):
@@ -202,7 +202,7 @@ class InstanceCompiler:
                 raise CompileError(f"{expr.op} nesting is limited to fixed {expr.op} stages")
             return self.waveform(nested, resolve)
         value = lower(expr.args[0], resolve, input_nodes, self.model.source,
-                  (lambda nested: self.waveform(nested, resolve)) if expr.op in ("sin", "idt", "laplace_nd", "laplace_np", "ddt") else nested_fixed if expr.op in ("absdelay", "slew") else None,
+                  (lambda nested: self.waveform(nested, resolve)) if expr.op in ("sin", "cos", "exp", "ln", "sqrt", "idt", "laplace_nd", "laplace_np", "ddt") else nested_fixed if expr.op in ("absdelay", "slew") else None,
                       preserve_structure=True, node_declarations=expr.op != "transition")
         if expr.op in ("laplace_nd", "laplace_np"):
             def coefficients(array):
@@ -264,6 +264,8 @@ class InstanceCompiler:
             self.compilation.operators.append(IdtMod(value, ic, modulus, offset, origin))
         elif expr.op == "sin":
             self.compilation.operators.append(Sin(value, origin))
+        elif expr.op in ("cos", "exp", "ln", "sqrt"):
+            self.compilation.operators.append(MathFunction(expr.op, value, origin))
         elif expr.op == "absdelay":
             delay = settings[0].constant
             if delay < 0:
@@ -399,14 +401,18 @@ class InstanceCompiler:
         self.expression_decision_origins.add(origin)
         return result
 
-    def lower_local(self, expr, env, *, preserve_structure=False):
+    def lower_local(self, expr, env, *, preserve_structure=False, conditional=False):
         resolve = self.local_symbol(env)
         decision = contains_decision(expr)
         if decision and contains_operator(expr):
             raise CompileError(f"{self.model.source}:{expr.token.line}: decision expressions do not support waveform operators in any operand or arm")
         factory = self.expression_select if not self.model.initial and not self.model.events else None
+        def waveform(op):
+            if conditional:
+                raise CompileError(f"{self.model.source}:{op.token.line}: waveform call sites must be unconditional")
+            return self.waveform(op, resolve)
         value = lower(expr, resolve, self.node_ids, self.model.source,
-                      lambda op: self.waveform(op, resolve), preserve_structure or decision, factory, self.validate_decision_expression, decision, node_declarations=True)
+                      waveform, preserve_structure or decision, factory, self.validate_decision_expression, decision, node_declarations=True)
         # Validate the enclosing arithmetic too: an input-selected scalar must
         # not become a coefficient multiplying another input dependency.
         def has_expression_decision(item):
@@ -440,7 +446,7 @@ class InstanceCompiler:
         emitted = []
         for statement in statements:
             if isinstance(statement, ContributionStatement):
-                emitted.append((statement, self.lower_local(statement.rhs, result, preserve_structure=self.preserve_analog_structure)))
+                emitted.append((statement, self.lower_local(statement.rhs, result, preserve_structure=self.preserve_analog_structure, conditional=conditional)))
             elif isinstance(statement, SyntaxConditional):
                 if contains_operator(statement.left) or contains_operator(statement.right):
                     raise CompileError(f"{self.model.source}:{statement.token.line}: ordinary analog if predicates do not support waveform operators")
@@ -472,7 +478,7 @@ class InstanceCompiler:
                     raise CompileError(f"{self.model.source}:{statement.token.line}: ordinary analog assignment target must be a local real")
                 if conditional and contains_operator(statement.rhs):
                     raise CompileError(f"{self.model.source}:{statement.token.line}: waveform call sites must be unconditional")
-                value = self.lower_local(statement.rhs, result, preserve_structure=self.preserve_analog_structure)
+                value = self.lower_local(statement.rhs, result, preserve_structure=self.preserve_analog_structure, conditional=conditional)
                 check_ir(value, Origin(self.model.source, statement.token.line, statement.token.column, self.instance.name))
                 result[statement.name] = value
         return result, emitted

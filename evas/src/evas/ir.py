@@ -1,4 +1,4 @@
-"""Version 18: voltage/event IR with held timers and expanded call-site identities.
+"""Version 19: voltage/event IR with held timers and expanded call-site identities.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -11,7 +11,7 @@ from typing import Literal
 from .limits import check_ir
 
 
-SCHEMA_VERSION = 18
+SCHEMA_VERSION = 19
 
 
 @dataclass(frozen=True)
@@ -146,6 +146,14 @@ class Sin:
 
 
 @dataclass(frozen=True)
+class MathFunction:
+    function: Literal["cos", "exp", "ln", "sqrt"]
+    input: Expression
+    origin: Origin
+    kind: str = field(default="math", init=False)
+
+
+@dataclass(frozen=True)
 class State:
     instance: str
     name: str
@@ -235,7 +243,7 @@ class Program:
     contributions: tuple[Contribution, ...]
     states: tuple[State, ...] = ()
     events: tuple[Event, ...] = ()
-    operators: tuple[Transition | AbsDelay | Slew | Idt | LaplaceNd | IdtMod | Sin | Ddt, ...] = ()
+    operators: tuple[Transition | AbsDelay | Slew | Idt | LaplaceNd | IdtMod | Sin | MathFunction | Ddt, ...] = ()
     schema_version: int = SCHEMA_VERSION
 
     def to_dict(self) -> dict:

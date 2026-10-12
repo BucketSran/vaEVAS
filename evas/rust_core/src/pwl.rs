@@ -369,6 +369,11 @@ impl Trajectory {
                 }
                 let [start, a] = source[index - 1];
                 let [end, b] = source[index];
+                // A flat segment is the supplied value itself. Weighted
+                // interpolation can move a threshold neighbor by one ULP.
+                if a == b {
+                    return a;
+                }
                 let fraction = (time - start) / (end - start);
                 (1.0 - fraction) * a + fraction * b
             })
@@ -482,6 +487,29 @@ impl Trajectory {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn flat_generated_source_keeps_its_enclosure_error() {
+        let mut trajectory = Trajectory::new(
+            TransientInputs {
+                strobetimes: Vec::new(),
+                pwl: vec![vec![[0., 0.], [1., 0.]]],
+                output_times: vec![0., 1.],
+                stop: 1.,
+                max_step: 1.,
+            },
+            1,
+        )
+        .unwrap();
+        let value = f64::from_bits(0.5_f64.to_bits() - 1);
+        trajectory
+            .add_enclosed_source(vec![[0., value], [1., value]], 1e-6)
+            .unwrap();
+        assert_eq!(trajectory.values(0.3)[1].to_bits(), value.to_bits());
+        let enclosure = trajectory.value_bounds(0.3)[1];
+        assert!(enclosure.lo <= value - 1e-6 && enclosure.hi >= value + 1e-6);
+        assert!(!trajectory.has_only_physical_inputs());
+    }
 
     #[test]
     fn generated_zero_error_sources_do_not_gain_original_guard_provenance() {

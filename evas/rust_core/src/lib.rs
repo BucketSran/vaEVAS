@@ -114,3 +114,5 @@ mod tests {
         assert_eq!(response.solutions[0].voltages, [0.0, 0.25, 0.25]);
     }
 }
+
+mod math_functions;

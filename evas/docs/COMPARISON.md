@@ -7,16 +7,18 @@
 
 - **✓ Q3**：本行全部必测用例完整通过 Q3。只通过 Q2 就写 **✓ Q2**；更严档位的失败仍保留。
 - **具体原因**：已测配置发生编译失败、初始化失败、误差超限、漏事件、执行拒绝或超时。
-- **—**：尚无完整验收结论；缺少的测试或证据见配套清单，不能据此判断不支持。
+- **取证不足**：实验已运行，但某项验收依据不完整。格内注明缺的是求值、导数、回调或顺序证据，不能据此判断后端不支持。
 
 精度标记是验收上限，不是实测最大误差。1 V 刻度的 Q1、Q2、Q3 分别为 **10.1 µV、1.01 µV、101 nV**；
 1 mV 小信号 Q3 为 **1.1 nV**。时间、状态和关键边界也须通过，详见[评测标准](COMPARISON-METHODOLOGY.md)。
 只检查窗外、只有正确数字或只有运行成功，都不能打勾。
 
 结果来自不同版本，**不是当前 main 的一次全量验收**。
-44组中的 EVAS 为 [#162 候选](https://github.com/BucketSran/vaEVAS/pull/162) `519d5e28`；
-独立基础卡为 main 检查点 `a64c2ad0`，八条件绑定为 `826fefb1`，其他身份见[范围与来源](../validation/paper/COVERAGE.md#summary-scopes)。
-通过仅适用于所列模型、观察、配置和执行版本，不外推到所有合法写法或全时域。
+本轮修复和补证见[更新记录](../../experiments/backends/support/README.md#q3-closure)，
+旧表保存在[更新前的固定版本](https://github.com/BucketSran/vaEVAS/blob/8f7d911fe42f0692774ba388846d5dbf50f1bc34/evas/docs/COMPARISON.md)。
+五个数学函数使用本轮 IR19 构建，源码与内核身份由收据固定；事件和相位部分复用
+[#162 候选](https://github.com/BucketSran/vaEVAS/pull/162) `519d5e28` 的实际运行，其他身份见
+[范围与来源](../validation/paper/COVERAGE.md#summary-scopes)。通过限于所列模型、观察、配置和执行版本，不外推到所有合法写法或全时域。
 
 <a id="支持矩阵"></a><a id="precision-binding-results"></a><a id="新精度测试"></a><a id="precision-breadth-results"></a>
 
@@ -24,82 +26,82 @@
 
 | 能力与测试范围 | Spectre | ngspice + OpenVAF-R | Gnucap + modelgen-verilog | EVAS |
 | --- | --- | --- | --- | --- |
-| [宏与 include（含实例）](../validation/paper/COVERAGE.md#scope-l1-01) | ✓ Q3 | 层次语法编译失败 | — | ✓ Q3 |
-| [参数](../validation/paper/COVERAGE.md#scope-l1-02) | ✓ Q3 | 层次语法编译失败 | — | ✓ Q3 |
-| [条件与逻辑表达式](../validation/paper/COVERAGE.md#scope-l1-03) | — | — | — | — |
-| [case 分支](../validation/paper/COVERAGE.md#scope-l1-04) | — | — | — | — |
-| [顺序赋值](../validation/paper/COVERAGE.md#scope-l1-05) | ✓ Q3 | — | — | ✓ Q3 |
-| [用户函数](../validation/paper/COVERAGE.md#scope-l1-06) | ✓ Q3 | — | — | ✓ Q3 |
-| [静态循环](../validation/paper/COVERAGE.md#scope-l1-07) | ✓ Q3 | — | 编译失败 | ✓ Q3 |
-| [变量数组](../validation/paper/COVERAGE.md#scope-l1-08) | ✓ Q3 | — | 编译失败 | ✓ Q3 |
-| [电气向量](../validation/paper/COVERAGE.md#scope-l1-09) | ✓ Q3 | — | 编译失败 | ✓ Q3 |
-| [模块层次](../validation/paper/COVERAGE.md#scope-l1-10) | ✓ Q3 | 编译失败 | — | ✓ Q3 |
+| [宏与 include（含实例）](../validation/paper/COVERAGE.md#scope-l1-01) | ✓ Q3 | 层次语法编译失败 | ✓ Q3 | ✓ Q3 |
+| [参数](../validation/paper/COVERAGE.md#scope-l1-02) | ✓ Q3 | 层次语法编译失败 | ✓ Q3 | ✓ Q3 |
+| [条件与逻辑表达式](../validation/paper/COVERAGE.md#scope-l1-03) | ✓ Q3 | ✓ Q3 | ✓ Q3 | ✓ Q3 |
+| [case 分支](../validation/paper/COVERAGE.md#scope-l1-04) | ✓ Q3 | ✓ Q3 | ✓ Q3 | ✓ Q3 |
+| [顺序赋值](../validation/paper/COVERAGE.md#scope-l1-05) | ✓ Q3 | ✓ Q3 | ✓ Q3 | ✓ Q3 |
+| [用户函数](../validation/paper/COVERAGE.md#scope-l1-06) | ✓ Q3 | ✓ Q3 | ✓ Q3 | ✓ Q3 |
+| [静态循环](../validation/paper/COVERAGE.md#scope-l1-07) | ✓ Q3 | ✓ Q3 | 编译失败 | ✓ Q3 |
+| [变量数组](../validation/paper/COVERAGE.md#scope-l1-08) | ✓ Q3 | ✓ Q3 | 编译失败 | ✓ Q3 |
+| [电气向量](../validation/paper/COVERAGE.md#scope-l1-09) | ✓ Q3 | ✓ Q3 | 编译失败 | ✓ Q3 |
+| [模块层次](../validation/paper/COVERAGE.md#scope-l1-10) | ✓ Q3 | 编译失败 | ✓ Q3 | ✓ Q3 |
 | [sin](../validation/paper/COVERAGE.md#scope-l1-11) | ✓ Q3 | ✓ Q3 | ✓ Q3 | ✓ Q3 |
-| [cos](../validation/paper/COVERAGE.md#scope-l1-12) | ✓ Q3 | ✓ Q3 | ✓ Q3 | 编译失败 |
-| [exp](../validation/paper/COVERAGE.md#scope-l1-13) | ✓ Q3 | ✓ Q3 | ✓ Q3 | 编译失败 |
-| [ln](../validation/paper/COVERAGE.md#scope-l1-14) | ✓ Q3 | 初始化失败 | ✓ Q3 | 编译失败 |
-| [sqrt](../validation/paper/COVERAGE.md#scope-l1-15) | ✓ Q3 | 初始化失败 | ✓ Q3 | 编译失败 |
+| [cos](../validation/paper/COVERAGE.md#scope-l1-12) | ✓ Q3 | ✓ Q3 | ✓ Q3 | ✓ Q3 |
+| [exp](../validation/paper/COVERAGE.md#scope-l1-13) | ✓ Q3 | ✓ Q3 | ✓ Q3 | ✓ Q3 |
+| [ln](../validation/paper/COVERAGE.md#scope-l1-14) | ✓ Q3 | 初始化失败 | ✓ Q3 | ✓ Q3 |
+| [sqrt](../validation/paper/COVERAGE.md#scope-l1-15) | ✓ Q3 | 初始化失败 | ✓ Q3 | ✓ Q3 |
 | [pow：三次幂](../validation/paper/COVERAGE.md#scope-l1-16-cube) | ✓ Q3 | ✓ Q3 | ✓ Q3 | ✓ Q3 |
-| [pow：半次幂](../validation/paper/COVERAGE.md#scope-l1-16-half) | ✓ Q3 | ✓ Q3 | ✓ Q3 | 编译失败 |
-| [电压访问与贡献](../validation/paper/COVERAGE.md#scope-l1-17) | ✓ Q3 | — | — | ✓ Q3 |
-| [静态电压反馈](../validation/paper/COVERAGE.md#scope-l1-18) | ✓ Q3 | — | — | ✓ Q3 |
+| [pow：半次幂](../validation/paper/COVERAGE.md#scope-l1-16-half) | ✓ Q3 | ✓ Q3 | ✓ Q3 | ✓ Q3 |
+| [电压访问与贡献](../validation/paper/COVERAGE.md#scope-l1-17) | ✓ Q3 | ✓ Q3 | ✓ Q3 | ✓ Q3 |
+| [静态电压反馈](../validation/paper/COVERAGE.md#scope-l1-18) | ✓ Q3 | ✓ Q3 | ✓ Q3 | ✓ Q3 |
 
 ## 2. 单个动态算子与基本事件
 
 | 能力与测试范围 | Spectre | ngspice + OpenVAF-R | Gnucap + modelgen-verilog | EVAS |
 | --- | --- | --- | --- | --- |
-| [initial_step：事件状态初始化](../validation/paper/COVERAGE.md#scope-l2-01) | — | 编译或初始化失败 | 编译失败 | — |
-| [cross：斜坡穿越](../validation/paper/COVERAGE.md#scope-l2-02) | ✓ Q3 | 初始化失败 | 漏事件 | — |
+| [initial_step：事件状态初始化](../validation/paper/COVERAGE.md#scope-l2-01) | ✓ Q3 | 编译或初始化失败 | 编译失败 | ✓ Q3 |
+| [cross：斜坡穿越](../validation/paper/COVERAGE.md#scope-l2-02) | ✓ Q3 | 初始化失败 | 漏事件 | 回调取证不足 |
 | [固定 timer](../validation/paper/COVERAGE.md#scope-l2-03) | ✓ Q3 | 初始化失败 | ✓ Q3 | ✓ Q3 |
-| [事件 OR：采样与复位](../validation/paper/COVERAGE.md#scope-l2-05) | — | 编译失败 | — | — |
-| [transition：定时非对称沿](../validation/paper/COVERAGE.md#scope-l2-06) | — | 初始化失败 | — | ✓ Q3 |
-| [固定 absdelay](../validation/paper/COVERAGE.md#scope-l2-07) | ✓ Q3 | 初始化失败 | — | ✓ Q3 |
-| [固定 slew](../validation/paper/COVERAGE.md#scope-l2-08) | ✓ Q3 | 编译失败 | — | ✓ Q3 |
+| [事件 OR：采样与复位](../validation/paper/COVERAGE.md#scope-l2-05) | ✓ Q3 | 编译失败 | 漏事件 | ✓ Q3 |
+| [transition：定时非对称沿](../validation/paper/COVERAGE.md#scope-l2-06) | ✓ Q3 | 初始化失败 | ✓ Q3 | ✓ Q3 |
+| [固定 absdelay](../validation/paper/COVERAGE.md#scope-l2-07) | ✓ Q3 | 初始化失败 | ✓ Q3 | ✓ Q3 |
+| [固定 slew](../validation/paper/COVERAGE.md#scope-l2-08) | ✓ Q3 | 编译失败 | ✓ Q3 | ✓ Q3 |
 | [idt：非零初值与正负面积](../validation/paper/COVERAGE.md#scope-l2-09) | ✓ Q2 | ✓ Q3 | ✓ Q3 | ✓ Q3 |
-| [idtmod：原始相位与环回](../validation/paper/COVERAGE.md#scope-l2-10) | — | — | 编译失败 | — |
+| [idtmod：原始相位与环回](../validation/paper/COVERAGE.md#scope-l2-10) | 求值取证不足 | 求值取证不足 | 编译失败 | ✓ Q3 |
 | [ddt：二次时间表达式](../validation/paper/COVERAGE.md#scope-l2-11-time) | Q1 误差超限 | 误差超限 | ✓ Q2 | 时间表达式编译失败 |
 | [ddt：电压斜坡平方](../validation/paper/COVERAGE.md#scope-l2-11-input) | ✓ Q2 | 误差超限 | ✓ Q2 | 非线性输入执行拒绝 |
 | [一阶 laplace_nd](../validation/paper/COVERAGE.md#scope-l2-12) | ✓ Q3 | ✓ Q3 | 非零初态错误 | ✓ Q3 |
-| [一阶 laplace_np](../validation/paper/COVERAGE.md#scope-l2-13) | — | 编译失败 | 误差超限 | ✓ Q3 |
-| [二阶滤波（内部微分）](../validation/paper/COVERAGE.md#scope-l2-14) | — | Q1 误差超限 | 误差超限 | ✓ Q3 |
+| [一阶 laplace_np](../validation/paper/COVERAGE.md#scope-l2-13) | ✓ Q3 | 编译失败 | 误差超限 | ✓ Q3 |
+| [二阶滤波（内部微分）](../validation/paper/COVERAGE.md#scope-l2-14) | ✓ Q3 | Q1 误差超限 | 误差超限 | ✓ Q3 |
 
 ## 3. 简单组合
 
 | 能力与测试范围 | Spectre | ngspice + OpenVAF-R | Gnucap + modelgen-verilog | EVAS |
 | --- | --- | --- | --- | --- |
 | [采样保持：定时](../validation/paper/COVERAGE.md#scope-l3-01-timer) | ✓ Q3 | 初始化失败 | ✓ Q3 | ✓ Q3 |
-| [采样保持：阈值](../validation/paper/COVERAGE.md#scope-l3-01-cross) | ✓ Q3 | 初始化失败 | 漏事件 | — |
-| [采样、复位与输出边沿](../validation/paper/COVERAGE.md#scope-l3-02) | — | 编译失败 | — | — |
-| [迟滞比较器与边沿](../validation/paper/COVERAGE.md#scope-l3-03) | — | 初始化失败 | 误差超限 | — |
-| [定时采样→积分：原模型](../validation/paper/COVERAGE.md#scope-l3-04-timer) | 误差超限 | — | — | ✓ 100 µV |
-| [采样→积分：停止边界与非线性](../validation/paper/COVERAGE.md#scope-l3-04-ordered) | — | 初始化失败 | 停止边界未达标 | 超时或计算拒绝 |
-| [积分级联与复位](../validation/paper/COVERAGE.md#scope-l3-05) | — | 初始化失败 | 误差超限 | 超时 |
+| [采样保持：阈值](../validation/paper/COVERAGE.md#scope-l3-01-cross) | ✓ Q3 | 初始化失败 | 漏事件 | 回调取证不足 |
+| [采样、复位与输出边沿](../validation/paper/COVERAGE.md#scope-l3-02) | ✓ Q3 | 编译失败 | 漏事件 | ✓ Q3 |
+| [迟滞比较器与边沿](../validation/paper/COVERAGE.md#scope-l3-03) | ✓ Q3 | 初始化失败 | 误差超限 | ✓ Q3 |
+| [定时采样→积分：原模型](../validation/paper/COVERAGE.md#scope-l3-04-timer) | 误差超限 | 初始化失败 | 漏定时事件 | ✓ 100 µV |
+| [采样→积分：停止边界与非线性](../validation/paper/COVERAGE.md#scope-l3-04-ordered) | ✓ Q3 | 初始化失败 | 停止边界未达标 | 超时或计算拒绝 |
+| [积分级联与复位](../validation/paper/COVERAGE.md#scope-l3-05) | 复位误差超限 | 初始化失败 | 误差超限 | 超时 |
 | [非线性输入与滤波直通项](../validation/paper/COVERAGE.md#scope-l3-06) | Q2 误差超限 | Q1/Q2 误差超限 | 误差超限 | ✓ Q2 |
-| [滤波与微分：DC 直通项](../validation/paper/COVERAGE.md#scope-l3-07) | — | — | — | — |
-| [两个固定延迟的历史](../validation/paper/COVERAGE.md#scope-l3-08) | — | 编译失败 | — | ✓ Q3 |
-| [两级 slew 与反向追赶](../validation/paper/COVERAGE.md#scope-l3-09) | — | 编译失败 | — | ✓ Q3 |
-| [数组的事件状态更新](../validation/paper/COVERAGE.md#scope-l3-11) | — | 初始化失败 | 编译失败 | — |
+| [滤波与微分：DC 直通项](../validation/paper/COVERAGE.md#scope-l3-07) | 导数取证不足 | 导数取证不足 | 导数取证不足 | ✓ Q3 |
+| [两个固定延迟的历史](../validation/paper/COVERAGE.md#scope-l3-08) | ✓ Q3 | 编译失败 | ✓ Q3 | ✓ Q3 |
+| [两级 slew 与反向追赶](../validation/paper/COVERAGE.md#scope-l3-09) | ✓ Q3 | 编译失败 | ✓ Q3 | ✓ Q3 |
+| [数组的事件状态更新](../validation/paper/COVERAGE.md#scope-l3-11) | ✓ Q3 | 初始化失败 | 编译失败 | ✓ Q3 |
 
 ## 4. 完整工程信号链
 
 | 能力与测试范围 | Spectre | ngspice + OpenVAF-R | Gnucap + modelgen-verilog | EVAS |
 | --- | --- | --- | --- | --- |
-| [采样→保持→边沿→滤波](../validation/paper/COVERAGE.md#scope-l4-01) | ✓ 100 µV | — | — | ✓ 100 µV |
-| [滤波→采样保持](../validation/paper/COVERAGE.md#scope-l4-02) | — | — | — | — |
-| [电压求解→延迟→采样](../validation/paper/COVERAGE.md#scope-l4-03) | — | 编译失败 | — | ✓ Q3 |
-| [VCO：扫频与原始相位](../validation/paper/COVERAGE.md#scope-l4-04) | — | 扫频误差超限 | 编译失败 | — |
+| [采样→保持→边沿→滤波](../validation/paper/COVERAGE.md#scope-l4-01) | ✓ 100 µV | 编译失败 | 事件与输出错误 | ✓ 100 µV |
+| [滤波→采样保持](../validation/paper/COVERAGE.md#scope-l4-02) | ✓ 600 µV / 1 mV | 编译失败 | 采样历史错误 | ✓ 600 µV / 1 mV |
+| [电压求解→延迟→采样](../validation/paper/COVERAGE.md#scope-l4-03) | ✓ Q3 | 编译失败 | ✓ Q3 | ✓ Q3 |
+| [VCO：扫频与原始相位](../validation/paper/COVERAGE.md#scope-l4-04) | 求值取证不足 | 扫频误差超限 | 编译失败 | ✓ Q3 |
 
 ## 5. 复杂交互
 
 | 能力与测试范围 | Spectre | ngspice + OpenVAF-R | Gnucap + modelgen-verilog | EVAS |
 | --- | --- | --- | --- | --- |
-| [实例隔离：双积分器复位](../validation/paper/COVERAGE.md#scope-l5-01-integral) | — | 编译失败 | 误差超限 | ✓ Q3 |
-| [实例隔离：双相位历史](../validation/paper/COVERAGE.md#scope-l5-01-phase) | — | 编译失败 | 编译失败 | — |
-| [非线性积分与滤波联合反馈](../validation/paper/COVERAGE.md#scope-l5-02) | — | 误差超限 | — | ✓ Q3 |
-| [事件改变动态：线性反馈](../validation/paper/COVERAGE.md#scope-l5-03-linear) | — | 初始化失败 | Q1 误差超限 | ✓ Q2 |
-| [事件改变动态：Riccati 滤波](../validation/paper/COVERAGE.md#scope-l5-03-riccati) | — | 初始化失败 | 误差超限 | 超时 |
-| [近邻定时事件：原整链](../validation/paper/COVERAGE.md#scope-l5-04-chain) | ✓ 1 µV | — | — | ✓ 1 µV |
-| [近邻定时事件：相邻浮点采样积分](../validation/paper/COVERAGE.md#scope-l5-04-adjacent) | — | 初始化失败 | — | 组合不支持 |
+| [实例隔离：双积分器复位](../validation/paper/COVERAGE.md#scope-l5-01-integral) | 复位误差超限 | 编译失败 | 误差超限 | ✓ Q3 |
+| [实例隔离：双相位历史](../validation/paper/COVERAGE.md#scope-l5-01-phase) | 求值取证不足 | 编译失败 | 编译失败 | ✓ Q3 |
+| [非线性积分与滤波联合反馈](../validation/paper/COVERAGE.md#scope-l5-02) | ✓ Q3 | 误差超限 | ✓ Q3 | ✓ Q3 |
+| [事件改变动态：线性反馈](../validation/paper/COVERAGE.md#scope-l5-03-linear) | ✓ Q3 | 初始化失败 | Q1 误差超限 | ✓ Q2 |
+| [事件改变动态：Riccati 滤波](../validation/paper/COVERAGE.md#scope-l5-03-riccati) | ✓ Q3 | 初始化失败 | 误差超限 | 超时 |
+| [近邻定时事件：原整链](../validation/paper/COVERAGE.md#scope-l5-04-chain) | ✓ 1 µV | 初始化失败 | ✓ 1µV | ✓ 1 µV |
+| [近邻定时事件：相邻浮点采样积分](../validation/paper/COVERAGE.md#scope-l5-04-adjacent) | 顺序取证不足 | 初始化失败 | 顺序取证不足 | 组合不支持 |
 
 未定稿的动态 timer、中断边沿后积分、ADC、同刻事件、内部反馈事件与隐式复位，列在[扩展计划](../validation/paper/COVERAGE.md#exploratory-cases)，不作为当前支持结论。
-[待补证据](../validation/paper/COVERAGE.md#pending-evidence)登记“—”对应的缺失测试与证据；[累计清单](../validation/paper/COVERAGE.md#先找到各批的原始成绩)保留全部历史用例、失败和原成绩。
+[配套清单](../validation/paper/COVERAGE.md#pending-evidence)说明取证不足的具体原因；[累计清单](../validation/paper/COVERAGE.md#先找到各批的原始成绩)保留全部历史用例、失败和原成绩。

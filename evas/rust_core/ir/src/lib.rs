@@ -1,7 +1,7 @@
 //! The only executable model format for the voltage kernel.
 use serde::{Deserialize, Serialize};
 
-pub const SCHEMA_VERSION: u32 = 18;
+pub const SCHEMA_VERSION: u32 = 19;
 
 pub fn check_schema_version(version: u64) -> Result<(), Error> {
     if version != u64::from(SCHEMA_VERSION) {
@@ -105,6 +105,15 @@ pub enum Expression {
     },
 }
 
+#[derive(Debug, Clone, Copy, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum MathFunction {
+    Cos,
+    Exp,
+    Ln,
+    Sqrt,
+}
+
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum OperatorSpec {
@@ -124,6 +133,11 @@ pub enum OperatorSpec {
         ic: f64,
         modulus: f64,
         offset: f64,
+        origin: Origin,
+    },
+    Math {
+        function: MathFunction,
+        input: Expression,
         origin: Origin,
     },
     Sin {
@@ -166,7 +180,8 @@ impl OperatorSpec {
             | Self::Slew { origin, .. }
             | Self::LaplaceNd { origin, .. }
             | Self::IdtMod { origin, .. }
-            | Self::Sin { origin, .. } => origin,
+            | Self::Sin { origin, .. }
+            | Self::Math { origin, .. } => origin,
         }
     }
 }

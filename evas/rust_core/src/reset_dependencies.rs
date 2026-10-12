@@ -97,7 +97,8 @@ pub(crate) fn check(
             | OperatorSpec::Slew { input, .. }
             | OperatorSpec::LaplaceNd { input, .. }
             | OperatorSpec::IdtMod { input, .. }
-            | OperatorSpec::Sin { input, .. } => input,
+            | OperatorSpec::Sin { input, .. }
+            | OperatorSpec::Math { input, .. } => input,
         };
         let mut expressions = vec![input];
         if let OperatorSpec::Idt {
@@ -162,7 +163,9 @@ pub(crate) fn check(
                         }
                         paths
                     }
-                    OperatorSpec::Sin { .. } => vec![(false, false), (false, true), (true, true)],
+                    OperatorSpec::Sin { .. } | OperatorSpec::Math { .. } => {
+                        vec![(false, false), (false, true), (true, true)]
+                    }
                     _ => Vec::new(),
                 }
             };

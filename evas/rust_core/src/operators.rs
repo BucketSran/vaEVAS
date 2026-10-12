@@ -390,6 +390,66 @@ enum SinInput {
     },
 }
 
+#[derive(Clone, Copy)]
+enum Function {
+    Sin,
+    Cos,
+    Exp,
+    Ln,
+    Sqrt,
+}
+impl From<crate::ir::MathFunction> for Function {
+    fn from(value: crate::ir::MathFunction) -> Self {
+        match value {
+            crate::ir::MathFunction::Cos => Self::Cos,
+            crate::ir::MathFunction::Exp => Self::Exp,
+            crate::ir::MathFunction::Ln => Self::Ln,
+            crate::ir::MathFunction::Sqrt => Self::Sqrt,
+        }
+    }
+}
+impl Function {
+    fn value(self, x: f64) -> f64 {
+        match self {
+            Self::Sin => x.sin(),
+            Self::Cos => x.cos(),
+            Self::Exp => x.exp(),
+            Self::Ln => x.ln(),
+            Self::Sqrt => x.sqrt(),
+        }
+    }
+    fn bounds(self, x: I) -> Result<I, Error> {
+        match self {
+            Self::Sin => sin_bounds(x),
+            Self::Cos => sin_bounds(x + constant_interval(FRAC_PI_2_BITS)),
+            Self::Exp => crate::math_functions::exp(x),
+            Self::Ln => crate::math_functions::ln(x),
+            Self::Sqrt => crate::math_functions::sqrt(x),
+        }
+    }
+    fn derivative(self, x: I) -> Result<I, Error> {
+        match self {
+            Self::Sin => sin_bounds(x + constant_interval(FRAC_PI_2_BITS)),
+            Self::Cos => Ok(-sin_bounds(x)?),
+            Self::Exp => self.bounds(x),
+            Self::Ln => {
+                self.bounds(x)?;
+                Ok(I::ONE / x)
+            }
+            Self::Sqrt => {
+                let root = self.bounds(x)?;
+                if root.lo <= 0.0 {
+                    return Err(Error::new(
+                        "unsupported_cross",
+                        "sqrt derivative is singular at zero",
+                    ));
+                }
+                Ok(I::ONE / (I::point(2.0) * root))
+            }
+        }
+    }
+}
+
 #[derive(Clone)]
 enum Runtime {
     Continuous(usize),
@@ -398,7 +458,7 @@ enum Runtime {
         reset: Option<ResetExpression>,
     },
     IdtMod(IdtMod),
-    Sin(SinInput),
+    Math(Function, SinInput),
     AbsDelay(AbsDelay),
     LaplaceNd(LaplaceNd),
     TransitionFilter {
@@ -435,7 +495,7 @@ fn sin_operator_bounds(
     {
         return Err(Error::new(
             "unsupported_operator",
-            "sin operator input must have one bounded operator dependency and constants only",
+            "mathematical function input must have one bounded operator dependency and constants only",
         ));
     }
     let coefficient = row[coefficient_index];
@@ -443,7 +503,7 @@ fn sin_operator_bounds(
     if coefficient.zero() || !coefficient.finite() || !constant.finite() {
         return Err(Error::new(
             "unsupported_operator",
-            "sin operator input must have finite bounded affine coefficients",
+            "mathematical function input must have finite bounded affine coefficients",
         ));
     }
     Ok((coefficient, constant))
@@ -912,18 +972,21 @@ impl Evaluation<'_> {
                     values[i] = self.values[i];
                     bounds[i] = self.bounds[i];
                 }
-                Runtime::Sin(SinInput::Operator {
-                    operator,
-                    coefficient,
-                    constant,
-                    coefficient_bounds,
-                    constant_bounds,
-                }) if values[*operator] != self.values[*operator]
+                Runtime::Math(
+                    function,
+                    SinInput::Operator {
+                        operator,
+                        coefficient,
+                        constant,
+                        coefficient_bounds,
+                        constant_bounds,
+                    },
+                ) if values[*operator] != self.values[*operator]
                     || bounds[*operator] != self.bounds[*operator] =>
                 {
-                    values[i] = (*constant + *coefficient * values[*operator]).sin();
-                    bounds[i] =
-                        sin_bounds(*constant_bounds + *coefficient_bounds * bounds[*operator])?;
+                    values[i] = function.value(*constant + *coefficient * values[*operator]);
+                    bounds[i] = function
+                        .bounds(*constant_bounds + *coefficient_bounds * bounds[*operator])?;
                 }
                 _ => {}
             }
@@ -1065,13 +1128,18 @@ impl Operators {
                 Runtime::TransitionFilter { parent, history } => {
                     history.range(self.transition(*parent)?, window)?
                 }
-                Runtime::Sin(SinInput::Direct(source)) => sin_bounds(source.range(window)?.0)?,
-                Runtime::Sin(SinInput::Operator {
-                    operator,
-                    coefficient_bounds,
-                    constant_bounds,
-                    ..
-                }) => sin_bounds(*constant_bounds + *coefficient_bounds * bounds[*operator])?,
+                Runtime::Math(function, SinInput::Direct(source)) => {
+                    function.bounds(source.range(window)?.0)?
+                }
+                Runtime::Math(
+                    function,
+                    SinInput::Operator {
+                        operator,
+                        coefficient_bounds,
+                        constant_bounds,
+                        ..
+                    },
+                ) => function.bounds(*constant_bounds + *coefficient_bounds * bounds[*operator])?,
                 Runtime::Transition { history, .. } => history.value_range(window)?,
                 _ => {
                     return Err(Error::new(
@@ -1148,6 +1216,7 @@ impl Operators {
                 | OperatorSpec::LaplaceNd { input, .. }
                 | OperatorSpec::Ddt { input, .. }
                 | OperatorSpec::Sin { input, .. }
+                | OperatorSpec::Math { input, .. }
                 | OperatorSpec::AbsDelay { input, .. }
                 | OperatorSpec::Transition { input, .. }
                 | OperatorSpec::Slew { input, .. }
@@ -1251,7 +1320,12 @@ impl Operators {
                             .with_exact_source(exact_source),
                     ));
                 }
-                OperatorSpec::Sin { input, origin } => {
+                OperatorSpec::Sin { input, origin } | OperatorSpec::Math { input, origin, .. } => {
+                    let function = match spec {
+                        OperatorSpec::Sin { .. } => Function::Sin,
+                        OperatorSpec::Math { function, .. } => Function::from(*function),
+                        _ => unreachable!(),
+                    };
                     let bound_input = affine(input, program, &origin.instance)?;
                     let sin_input = if let Some((operator, coefficient, constant)) =
                         bound_input.single_operator_form()
@@ -1265,7 +1339,7 @@ impl Operators {
                         {
                             return Err(Error::new(
                                 "unsupported_operator",
-                                "sin operator input must reference exactly one earlier operator with finite affine coefficients",
+                                "mathematical function input must reference exactly one earlier operator with finite affine coefficients",
                             ));
                         }
                         let (coefficient_bounds, constant_bounds) =
@@ -1282,7 +1356,7 @@ impl Operators {
                             direct_points(input, program, trajectory, driven, origin)?;
                         SinInput::Direct(DirectInput::new(points, bounds))
                     };
-                    entries.push(Runtime::Sin(sin_input));
+                    entries.push(Runtime::Math(function, sin_input));
                 }
                 OperatorSpec::AbsDelay { .. } => {
                     entries.push(Runtime::AbsDelay(build_delay(
@@ -1429,11 +1503,13 @@ impl Operators {
                 Runtime::Idt { reset: Some(_), .. }
                 | Runtime::Transition { .. }
                 | Runtime::TransitionFilter { .. } => true,
-                Runtime::Sin(SinInput::Operator { operator, .. }) => changes_on_advance[*operator],
+                Runtime::Math(_, SinInput::Operator { operator, .. }) => {
+                    changes_on_advance[*operator]
+                }
                 Runtime::Continuous(_) => continuous.as_ref().is_some_and(|c| c.changes_on_event()),
                 Runtime::Idt { reset: None, .. }
                 | Runtime::IdtMod(_)
-                | Runtime::Sin(SinInput::Direct(_))
+                | Runtime::Math(_, SinInput::Direct(_))
                 | Runtime::AbsDelay(_)
                 | Runtime::LaplaceNd(_)
                 | Runtime::Slew(_)
@@ -1469,8 +1545,8 @@ impl Operators {
             Runtime::Continuous(_)
             | Runtime::Idt { .. }
             | Runtime::LaplaceNd(_)
-            | Runtime::Sin(SinInput::Direct(_)) => {}
-            Runtime::Sin(SinInput::Operator { operator, .. }) => self.check_guard(*operator)?,
+            | Runtime::Math(_, SinInput::Direct(_)) => {}
+            Runtime::Math(_, SinInput::Operator { operator, .. }) => self.check_guard(*operator)?,
             _ => {
                 return Err(Error::new(
                     "unsupported_cross",
@@ -1520,7 +1596,7 @@ impl Operators {
             Runtime::LaplaceNd(history) => {
                 history.range(time, self.direct[index].as_ref().unwrap().range(time)?.0)?
             }
-            Runtime::Sin(input) => {
+            Runtime::Math(function, input) => {
                 let (value, derivative) = match input {
                     SinInput::Direct(source) => source.range(time)?,
                     SinInput::Operator {
@@ -1537,8 +1613,8 @@ impl Operators {
                     }
                 };
                 (
-                    sin_bounds(value)?,
-                    sin_bounds(value + constant_interval(FRAC_PI_2_BITS))? * derivative,
+                    function.bounds(value)?,
+                    function.derivative(value)? * derivative,
                 )
             }
             _ => {
@@ -1605,14 +1681,14 @@ impl Operators {
                         history.value(self.transition(*parent)?, time)?
                     }
                     Runtime::IdtMod(history) => history.value(time)?,
-                    Runtime::Sin(input) => match input {
-                        SinInput::Direct(source) => source.value(time)?.sin(),
+                    Runtime::Math(function, input) => match input {
+                        SinInput::Direct(source) => function.value(source.value(time)?),
                         SinInput::Operator {
                             operator,
                             coefficient,
                             constant,
                             ..
-                        } => (*constant + *coefficient * values[*operator]).sin(),
+                        } => function.value(*constant + *coefficient * values[*operator]),
                     },
                     Runtime::AbsDelay(history) => history.value(time)?,
                     Runtime::Transition { history, .. } => history.value(time)?,
@@ -1635,8 +1711,8 @@ impl Operators {
                 Runtime::Continuous(_) => self.continuous.as_ref().unwrap().next_breakpoint(after),
                 Runtime::Idt { history, .. } => history.next_breakpoint(after),
                 Runtime::IdtMod(history) => history.next_breakpoint(after),
-                Runtime::Sin(SinInput::Direct(source)) => source.next_breakpoint(after),
-                Runtime::Sin(SinInput::Operator { .. }) => None,
+                Runtime::Math(_, SinInput::Direct(source)) => source.next_breakpoint(after),
+                Runtime::Math(_, SinInput::Operator { .. }) => None,
                 Runtime::AbsDelay(history) => history.next_breakpoint(after),
                 Runtime::LaplaceNd(history) => history.next_breakpoint(after),
                 Runtime::TransitionFilter { .. } => None,
@@ -1676,8 +1752,8 @@ impl Operators {
                         history.bounds(self.transition(*parent)?, time)?
                     }
                     Runtime::IdtMod(history) => history.value_bounds(time)?,
-                    Runtime::Sin(input) => match input {
-                        SinInput::Direct(source) => sin_bounds(source.value_bounds(time)?)?,
+                    Runtime::Math(function, input) => match input {
+                        SinInput::Direct(source) => function.bounds(source.value_bounds(time)?)?,
                         SinInput::Operator {
                             operator,
                             coefficient_bounds,
@@ -1690,7 +1766,7 @@ impl Operators {
                                     .into_iter()
                                     .try_fold(None, |acc, phase| {
                                         let input = *constant_bounds + *coefficient_bounds * phase;
-                                        let bound = sin_bounds(input)?;
+                                        let bound = function.bounds(input)?;
                                         Ok::<_, Error>(Some(match acc {
                                             Some(previous) => union(previous, bound),
                                             None => bound,
@@ -1699,13 +1775,13 @@ impl Operators {
                                     .ok_or_else(|| {
                                         Error::new(
                                             "waveform_accuracy",
-                                            "cannot certify sine of empty wrapped phase enclosure",
+                                            "cannot certify mathematical function of empty wrapped phase enclosure",
                                         )
                                     })?
                             } else {
                                 let input =
                                     *constant_bounds + *coefficient_bounds * bounds[*operator];
-                                sin_bounds(input)?
+                                function.bounds(input)?
                             }
                         }
                     },
@@ -1732,7 +1808,7 @@ impl Operators {
                 Runtime::Continuous(_) => Vec::new(),
                 Runtime::Idt { .. } => Vec::new(),
                 Runtime::IdtMod(_) => Vec::new(),
-                Runtime::Sin(_) => Vec::new(),
+                Runtime::Math(_, _) => Vec::new(),
                 Runtime::AbsDelay(_) => Vec::new(),
                 Runtime::LaplaceNd(_) => Vec::new(),
                 Runtime::TransitionFilter { .. } => Vec::new(),
@@ -1847,7 +1923,7 @@ impl Operators {
                     }
                 }
                 Runtime::IdtMod(_) => {}
-                Runtime::Sin(_) => {}
+                Runtime::Math(_, _) => {}
                 Runtime::AbsDelay(_) => {}
                 Runtime::LaplaceNd(_) => {}
                 Runtime::TransitionFilter { .. } => {}
@@ -1918,7 +1994,9 @@ impl Operators {
                 // A pure function of an earlier, permitted reset change may
                 // change at the same instant. The caller still re-solves and
                 // replays every history from the same accepted base.
-                Runtime::Sin(SinInput::Operator { operator, .. }) => permitted_changes[*operator],
+                Runtime::Math(_, SinInput::Operator { operator, .. }) => {
+                    permitted_changes[*operator]
+                }
                 _ => false,
             };
             if after != before && !permitted {

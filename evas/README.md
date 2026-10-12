@@ -263,7 +263,7 @@ CLI 与迁移工具共用 manifest 校验。`models` 和 `instances` 必须是�
 限 64；函数调用、表达式下降与条件体嵌套共同累计到 80 层展开深度预算，
 避免分别合规的嵌套相乘使编译器递归溢出；不另设累计校验图上限。
 超限时返回带源码位置的 `CompileError`。合法但过大的模型也可能被拒绝，
-包括旧版本偶尔能处理的长表达式。使用 IR18，不通过重关联算式或消去依赖绕过预算；
+包括旧版本偶尔能处理的长表达式。使用 IR19，不通过重关联算式或消去依赖绕过预算；
 更大的模型需要后续共享表达式 IR 或其他有独立验证的方案。
 
 `solve` / `transient` 的 `timeout` 默认 **300 秒**，只限制内核进程执行时间，
@@ -369,9 +369,11 @@ tests 通过的数目不折算为验证条件数；分组与运行方式见
 
 ## IR 与贡献契约
 
-当前实现使用 IR v18，新增受限 driven 输入比较初值，保留 v17 的保持状态控制 timer 与 v16 的 ddt、连续动态网络、动态 guard 及逐条贡献契约；每条贡献的 RHS 是带 `op` 标签的表达式，不含“直接写节点”指令。
+当前实现使用 IR v19，新增 `cos/exp/ln/sqrt` 纯函数调用点，保留 IR18 的输入比较初值及已有动态契约；每条贡献的 RHS 是带 `op` 标签的表达式，不含“直接写节点”指令。
 `affine` 叶子保存有限常数和不重复的节点系数；`add` / `multiply` 含 `left` / `right`；
-`power` 含 `base` 和整数 `exponent`；`select` 含比较关系、两侧表达式、两臂值与源码位置。
+`power` 含 `base` 和整数 `exponent`；半次幂编译为 `sqrt` 调用点。
+`math` 调用点含函数名和输入表达式；认证范围见[纯数学函数](docs/math/operators.md#elementary-functions)。
+`select` 含比较关系、两侧表达式、两臂值与源码位置。
 Rust 递归检查所有节点、指数和字段，不能绕过前端注入非法表达式。
 每条贡献有源码文件、行列、实例以及本地支路身份。
 
@@ -405,19 +407,20 @@ Rust 独立检查同一实例内本地端点的绑定一致性、地绑定和规
 
 ### IR 版本与迁移
 
-Program 和成功 Response 的 `schema_version` 均为 **18**，Python 适配器与 Rust 内核同步检查。
+Program 和成功 Response 的 `schema_version` 均为 **19**，Python 适配器与 Rust 内核同步检查。
 旧版本或未知整数版本先于载荷解码返回 `unsupported_ir_version`；版本缺失/错误类型及当前格式错误返回
-`invalid_request`。Rust 库构造入口也检查版本。旧 IR 1–17 的 JSON 须从原始 VA 与 manifest 重新编译，不能只改版本号。
-前端与内核须配套使用。IR18 将 `State.initial` 扩为有限常数或明确的 0/1 `select` 比较；
+`invalid_request`。Rust 库构造入口也检查版本。旧 IR 1–18 的 JSON 须从原始 VA 与 manifest 重新编译，不能只改版本号。
+前端与内核须配套使用。IR19 增加纯数学函数格式，不能只给旧 JSON 改版本号。
+IR18 将 `State.initial` 扩为有限常数或明确的 0/1 `select` 比较；
 比较只适用于 real 状态，两侧限 ground/实际 driven 输入的仿射表达式。
 初始化先于算子历史、守卫日程、首次电压求解和 t=0 事件；详见[初始化契约](docs/math/events.md#input-initialization)。
-IR1–17 必须从原始 VA/manifest 重新编译，不原地改写历史 IR 或收据。
+IR1–18 必须从原始 VA/manifest 重新编译，不原地改写历史 IR 或收据。
 
-仓库冒烟 manifest 的默认范围为 `evas/validation/smoke/`。批量工具读取原 VA 和实例参数，写入新的 IR18，
+仓库冒烟 manifest 的默认范围为 `evas/validation/smoke/`。批量工具读取原 VA 和实例参数，写入新的 IR19，
 保留每项 manifest/source SHA256 及失败诊断；原 IR、历史波形和收据不改写：
 
 ```sh
-python3 scripts/recompile_evas_manifests.py --output runs/recompile-ir18
+python3 scripts/recompile_evas_manifests.py --output runs/recompile-ir19
 python3 scripts/recompile_evas_manifests.py --output runs/recompile-selected evas/validation/smoke/idt.json
 ```
 
