@@ -1,24 +1,20 @@
 name: Benchmark evidence
 
 on:
-  pull_request:
-  push:
-    branches: [main]
-  workflow_dispatch:
+  workflow_call:
+    outputs:
+      identity_result:
+        value: ${{ jobs.identity.outputs.result }}
+      first_batch_result:
+        value: ${{ jobs.first-batch.outputs.result }}
 
 permissions:
   contents: read
 
-concurrency:
-  group: benchmark-evidence-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
-
 jobs:
-  selection:
-    uses: ./.github/workflows/select-checks.yml
   identity:
-    needs: selection
-    if: needs.selection.outputs.benchmark == 'true'
+    outputs:
+      result: ${{ steps.verified.outputs.result }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -34,9 +30,12 @@ jobs:
         run: python3 -B -m unittest experiments.va_screen.test_identity experiments.va_screen.test_summarize -v
       - name: Saved-candidate EVAS replay regressions
         run: python3 -B -m unittest discover -s benchmark/checkers -p test_triangle_evas_replay.py -v
+      - name: Record completed checks
+        id: verified
+        run: echo "result=success" >> "$GITHUB_OUTPUT"
   first-batch:
-    needs: selection
-    if: needs.selection.outputs.benchmark == 'true'
+    outputs:
+      result: ${{ steps.verified.outputs.result }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -60,14 +59,6 @@ jobs:
               fi
             done
           fi
-  benchmark-result:
-    needs: [selection, identity, first-batch]
-    if: always()
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - name: Require all selected benchmark checks to succeed
-        env:
-          CI_NEEDS: ${{ toJSON(needs) }}
-        run: python3 -B scripts/ci_selection.py gate --lane benchmark
+      - name: Record completed checks
+        id: verified
+        run: echo "result=success" >> "$GITHUB_OUTPUT"

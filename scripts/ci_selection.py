@@ -19,58 +19,104 @@ TASK_PREFIXES = (
     'experiments/benchmark_next/',
 )
 CI_FILES = {'scripts/ci_selection.py', 'scripts/tests/test_ci_selection.py'}
-PACKAGE_FILES = {
-    'evas/setup.py', 'evas/pyproject.toml', 'evas/MANIFEST.in',
-    'evas/rust_core/Cargo.toml', 'evas/rust_core/Cargo.lock',
-    'evas/rust_core/fuzz/seeds/static.json', 'scripts/check_installed_evas.py',
-    'scripts/tests/test_installed_evas_package.py',
+CHECKS = ('maintenance', 'calibration', 'provenance', 'regression',
+          'differential', 'fuzz', 'package', 'benchmark')
+JOB_FLAGS = {
+    'static-checks': ('maintenance', 'calibration', 'provenance'),
+    'regression': ('regression',),
+    'properties-and-ngspice': ('differential',),
+    'fuzz-smoke': ('fuzz',),
+    'package': ('package',),
+    'benchmark': ('benchmark',),
 }
-PACKAGE_PREFIXES = (
-    'evas/src/', 'evas/rust_core/src/', 'evas/rust_core/ir/',
-    'evas/rust_core/benches/',
+CHILD_RESULTS = {'package': ('install_result',),
+                 'benchmark': ('identity_result', 'first_batch_result')}
+MAINTENANCE_FILES = {
+    'scripts/traceability.py', 'scripts/diagnostic_inventory.py',
+    'scripts/verify_validation_version.py', 'scripts/check_workspaces.py',
+    'scripts/benchmark_workbench.py', 'scripts/tests/test_traceability.py',
+    'scripts/tests/test_diagnostic_inventory.py', 'scripts/tests/test_workspaces.py',
+    'scripts/tests/test_benchmark_workbench.py',
+}
+PACKAGE_FILES = {'scripts/check_installed_evas.py',
+                 'scripts/tests/test_installed_evas_package.py'}
+PROVENANCE_PREFIXES = ('evas/validation/paper/', 'evas/validation/support/',
+                       'experiments/backends/paper/', 'experiments/backends/support/')
+CALIBRATION_PREFIXES = (
+    'experiments/backends/evidence/', 'experiments/backends/dvs2-spectre-validation/',
+    'experiments/backends/spectre-alignment/', 'experiments/backends/event-alignment/',
+    'experiments/backends/sample-edge-filter/', 'experiments/performance/',
 )
-LANES = {
-    'numerical': ('full', ('regression', 'properties-and-ngspice', 'fuzz-smoke')),
-    'package': ('package', ('install',)),
-    'benchmark': ('benchmark', ('identity', 'first-batch')),
+# These are consumed by development regressions, not only by backend checkers.
+REGRESSION_INPUTS = {
+    'experiments/backends/paper/inputs.py',
+    'experiments/backends/dvs2-spectre-validation/run_suite.py',
+    'experiments/backends/dvs2-spectre-validation/check_results.py',
 }
 
 
-def flags(full=False, package=False, benchmark=False):
-    return {'full': full, 'package': package, 'benchmark': benchmark}
+def flags(*enabled):
+    return {key: key in enabled for key in CHECKS}
 
 
 def classify(paths):
-    selected = flags()
+    selected = set()
     for path in paths:
+        suffix = Path(path).suffix.lower()
         if path.startswith('.github/') or path in CI_FILES:
-            return flags(True, True, True)
+            return flags(*CHECKS)
         # Task instructions are test inputs, even when written in Markdown.
         if path.startswith(TASK_PREFIXES):
-            selected['benchmark'] = True
-            continue
-        if Path(path).suffix.lower() in ('.md', '.rst'):
-            continue
-        if path.startswith(BENCHMARK_PREFIXES) or path == 'scripts/benchmark_workbench.py':
-            selected['benchmark'] = True
-            continue
-        if path.startswith(('evas/', 'experiments/', 'scripts/')):
-            selected['full'] = True
-            if path in PACKAGE_FILES or path.startswith(PACKAGE_PREFIXES):
-                selected['package'] = True
-            if path.startswith('evas/rust_core/') and not path.startswith(
-                ('evas/rust_core/tests/', 'evas/rust_core/fuzz/', 'evas/rust_core/examples/')
-            ):
-                selected['package'] = True
-            # An unfamiliar EVAS build input must not bypass installation.
-            if path.startswith('evas/') and not path.startswith(
-                ('evas/docs/', 'evas/tests/', 'evas/validation/', 'evas/rust_core/')
-            ):
-                selected['package'] = True
-            continue
-        # Unknown non-documentation paths may introduce a shared dependency.
-        return flags(True, True, True)
-    return selected
+            selected.add('benchmark')
+        elif suffix in ('.md', '.rst'):
+            if path in ('evas/docs/COMPARISON.md', 'evas/docs/COMPARISON-METHODOLOGY.md'):
+                selected.add('provenance')
+                if path.endswith('METHODOLOGY.md'):
+                    selected.add('calibration')
+            elif path.startswith(PROVENANCE_PREFIXES):
+                selected.add('provenance')
+            elif path.startswith(('evas/docs/math/', 'evas/validation/', *CALIBRATION_PREFIXES)):
+                selected.add('calibration')
+            elif path.startswith('evas/docs/development/'):
+                selected.add('maintenance')
+        elif path.startswith(BENCHMARK_PREFIXES):
+            selected.add('benchmark')
+        elif path in MAINTENANCE_FILES:
+            selected.add('maintenance')
+        elif path in PACKAGE_FILES:
+            selected.update(('maintenance', 'package'))
+        elif path == 'scripts/recompile_evas_manifests.py':
+            selected.update(('maintenance', 'regression', 'calibration'))
+        elif path.startswith(('evas/src/', 'evas/rust_core/')):
+            selected.update(('maintenance', 'calibration', 'provenance', 'regression'))
+            if path.startswith('evas/rust_core/fuzz/'):
+                selected.add('fuzz')
+                if path == 'evas/rust_core/fuzz/seeds/static.json':
+                    selected.add('package')
+            elif not path.startswith('evas/rust_core/tests/'):
+                selected.update(('differential', 'fuzz', 'package'))
+        elif path.startswith('evas/tests/'):
+            selected.update(('maintenance', 'calibration', 'provenance', 'regression'))
+        elif path.startswith('evas/validation/differential/'):
+            selected.update(('maintenance', 'calibration', 'differential'))
+        elif path.startswith((*PROVENANCE_PREFIXES, *CALIBRATION_PREFIXES)):
+            # Backend modules share archive/parser helpers and paper contracts.
+            selected.update(('calibration', 'provenance'))
+            if path in REGRESSION_INPUTS or suffix not in ('.py', '.csv'):
+                selected.update(('maintenance', 'regression'))
+        elif path.startswith('evas/validation/'):
+            selected.update(('maintenance', 'calibration', 'provenance', 'regression'))
+            if path.startswith(('evas/validation/smoke/', 'evas/validation/cases/')):
+                selected.add('differential')
+        elif path.startswith('evas/docs/'):
+            selected.update(('maintenance', 'calibration', 'provenance'))
+        elif path.startswith('evas/'):
+            # Unfamiliar package/build inputs must not bypass installation.
+            selected.update(CHECKS[:-1])
+        else:
+            # Unknown scripts/experiments may introduce a shared dependency.
+            return flags(*CHECKS)
+    return flags(*selected)
 
 
 def git(repo, *args):
@@ -84,7 +130,7 @@ def commit(repo, sha):
 
 
 def select(repo, event_name, event):
-    plan = {**flags(True, True, True), 'base': '', 'head': '', 'paths': []}
+    plan = {**flags(*CHECKS), 'base': '', 'head': '', 'paths': []}
     if event_name == 'workflow_dispatch':
         return {**plan, 'reason': 'manual full check'}
     try:
@@ -106,26 +152,28 @@ def select(repo, event_name, event):
         return {**plan, 'reason': f'full check: change identity unavailable ({error})'}
 
 
-def gate_errors(lane, needs):
-    flag, jobs = LANES[lane]
+def gate_errors(needs):
     errors = []
-    required = ['selection']
-    if lane == 'numerical':
-        required.append('static-checks')
-    value = needs.get('selection', {}).get('outputs', {}).get(flag)
-    if value not in ('true', 'false'):
-        errors.append(f'invalid selection output: {flag}={value!r}')
-    if value == 'true':
-        required.extend(jobs)
-    for job in required:
+    selection = needs.get('selection', {})
+    if selection.get('result') != 'success':
+        errors.append('selection did not succeed')
+    outputs = selection.get('outputs', {})
+    for flag in CHECKS:
+        if outputs.get(flag) not in ('true', 'false'):
+            errors.append(f'invalid selection output: {flag}={outputs.get(flag)!r}')
+    for job, required_flags in JOB_FLAGS.items():
+        required = any(outputs.get(flag) == 'true' for flag in required_flags)
         result = needs.get(job, {}).get('result')
-        if result != 'success':
+        if required and result != 'success':
             errors.append(f'{job}: expected success, got {result!r}')
-    # Never ignore a failed job, even if the selector did not require it.
-    for job in jobs:
-        result = needs.get(job, {}).get('result')
-        if result not in ('success', 'skipped') and job not in required:
+        elif not required and result not in ('success', 'skipped'):
             errors.append(f'{job}: unexpected result {result!r}')
+        # A reusable workflow can be green even if one of its jobs was skipped.
+        if required:
+            for child in CHILD_RESULTS.get(job, ()):
+                value = needs.get(job, {}).get('outputs', {}).get(child)
+                if value != 'success':
+                    errors.append(f'{job}/{child}: expected success, got {value!r}')
     return errors
 
 
@@ -138,12 +186,11 @@ def main():
     selection.add_argument('--event-path', type=Path,
                            default=os.environ.get('GITHUB_EVENT_PATH'))
     selection.add_argument('--output', type=Path, default=os.environ.get('GITHUB_OUTPUT'))
-    gate = commands.add_parser('gate')
-    gate.add_argument('--lane', choices=LANES, required=True)
+    commands.add_parser('gate')
     args = parser.parse_args()
     if args.command == 'gate':
         needs = json.loads(os.environ['CI_NEEDS'])
-        errors = gate_errors(args.lane, needs)
+        errors = gate_errors(needs)
         for error in errors:
             print(error, file=sys.stderr)
         return 1 if errors else 0

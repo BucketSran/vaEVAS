@@ -14,48 +14,95 @@ spec.loader.exec_module(ci)
 
 
 class RoutingTests(unittest.TestCase):
-    def test_five_layer_documentation_change_does_not_build_or_simulate(self):
+    def test_plain_prose_only_needs_selection_and_whitespace(self):
+        self.assertEqual(ci.classify(['README.md', 'evas/README.md',
+                                      'docs/contributing/workspaces.md']), ci.flags())
+
+    def test_five_layer_documentation_change_keeps_only_related_static_checks(self):
         paths = [
             'evas/docs/COMPARISON.md', 'evas/docs/COMPARISON-METHODOLOGY.md',
             'evas/docs/README.md', 'evas/docs/development/capability-evidence.md',
             'evas/validation/paper/COVERAGE.md', 'evas/validation/paper/README.md',
             'experiments/backends/support/README.md',
         ]
-        self.assertEqual(ci.classify(paths), ci.flags())
+        self.assertEqual(ci.classify(paths), ci.flags('maintenance', 'calibration', 'provenance'))
 
-    def test_production_change_keeps_full_regression_and_both_install_platforms(self):
+    def test_documentation_uses_its_own_contract(self):
+        for path, expected in (
+            ('evas/docs/COMPARISON.md', ('provenance',)),
+            ('evas/docs/COMPARISON-METHODOLOGY.md', ('calibration', 'provenance')),
+            ('evas/docs/math/continuous.md', ('calibration',)),
+            ('evas/validation/NEXT_CASE_CARDS.md', ('calibration',)),
+            ('evas/docs/development/TRACEABILITY.md', ('maintenance',)),
+        ):
+            with self.subTest(path=path):
+                self.assertEqual(ci.classify([path]), ci.flags(*expected))
+
+    def test_production_and_build_changes_keep_all_evas_checks(self):
         for path in ('evas/src/evas/compiler.py', 'evas/rust_core/src/main.rs',
                      'evas/rust_core/ir/src/lib.rs', 'evas/rust_core/Cargo.lock',
                      'evas/rust_core/build.rs', 'evas/rust_core/.cargo/config.toml',
                      'evas/pyproject.toml', 'evas/MANIFEST.in', 'evas/setup.py'):
             with self.subTest(path=path):
-                self.assertEqual(ci.classify([path]), ci.flags(full=True, package=True))
+                self.assertEqual(ci.classify([path]), ci.flags(*ci.CHECKS[:-1]))
 
-    def test_checker_or_fixture_change_cannot_be_mistaken_for_documentation(self):
+    def test_fixtures_keep_regression_without_unrelated_fuzz_or_install(self):
         for path in ('evas/tests/test_events.py', 'evas/validation/strobe/cases.json',
                      'evas/validation/paper/dut/hold.va',
-                     'experiments/backends/support/checker.py'):
+                     'experiments/backends/event-alignment/vco-controls/original--tight/dut.va',
+                     'evas/validation/paper/core-v1.json', 'experiments/backends/paper/inputs.py',
+                     'experiments/backends/dvs2-spectre-validation/check_results.py'):
             with self.subTest(path=path):
-                self.assertEqual(ci.classify([path]), ci.flags(full=True))
+                self.assertEqual(ci.classify([path]),
+                                 ci.flags('maintenance', 'calibration', 'provenance', 'regression'))
+
+    def test_backend_checkers_keep_calibration_without_kernel_regression(self):
+        for path in ('experiments/backends/support/checker.py',
+                     'experiments/backends/evidence/archive.py',
+                     'evas/validation/paper/criteria.py', 'experiments/performance/test_profile.py'):
+            with self.subTest(path=path):
+                self.assertEqual(ci.classify([path]), ci.flags('calibration', 'provenance'))
+
+    def test_maintenance_and_install_checks_are_separate(self):
+        self.assertEqual(ci.classify(['scripts/check_workspaces.py']), ci.flags('maintenance'))
+        self.assertEqual(ci.classify(['scripts/check_installed_evas.py']),
+                         ci.flags('maintenance', 'package'))
+        self.assertEqual(ci.classify(['evas/validation/differential/ngspice_compare.py']),
+                         ci.flags('maintenance', 'calibration', 'differential'))
+        plan = ci.classify(['evas/rust_core/fuzz/fuzz_targets/run.rs'])
+        self.assertTrue(plan['fuzz'])
+        self.assertFalse(plan['differential'])
+        self.assertFalse(plan['package'])
+
+    def test_shared_smoke_inputs_and_required_sdist_seed_keep_their_consumers(self):
+        for path in ('evas/validation/smoke/idt.json', 'evas/validation/cases/n_v1_02/dut.va'):
+            with self.subTest(path=path):
+                plan = ci.classify([path])
+                self.assertTrue(plan['regression'])
+                self.assertTrue(plan['differential'])
+        plan = ci.classify(['evas/rust_core/fuzz/seeds/static.json'])
+        self.assertTrue(plan['fuzz'])
+        self.assertTrue(plan['package'])
 
     def test_task_instructions_are_a_benchmark_input_even_when_markdown(self):
         for path in ('benchmark/tasks/adc/instruction.md',
                      'experiments/benchmark_next/adc/source/instruction.md',
                      'benchmark/checkers/adc.py'):
             with self.subTest(path=path):
-                self.assertEqual(ci.classify([path]), ci.flags(benchmark=True))
+                self.assertEqual(ci.classify([path]), ci.flags('benchmark'))
 
     def test_mixed_change_runs_the_union_of_checks(self):
         self.assertEqual(ci.classify(['evas/docs/COMPARISON.md',
-                                      'evas/src/evas/compiler.py',
-                                      'benchmark/checkers/adc.py']), ci.flags(True, True, True))
+                                      'scripts/check_workspaces.py',
+                                      'benchmark/checkers/adc.py']),
+                         ci.flags('maintenance', 'provenance', 'benchmark'))
 
-    def test_workflow_selector_or_unrecognized_code_runs_every_lane(self):
-        for path in ('.github/workflows/package-install.yml',
+    def test_workflow_selector_or_unrecognized_code_runs_every_check(self):
+        for path in ('.github/workflows/package-install.yml', '.github/actions/rust-cache/action.yml',
                      'scripts/ci_selection.py', 'scripts/tests/test_ci_selection.py',
-                     'new_runtime/solver.py'):
+                     'scripts/new_tool.py', 'experiments/new_backend/test.py', 'new_runtime/solver.py'):
             with self.subTest(path=path):
-                self.assertEqual(ci.classify([path]), ci.flags(True, True, True))
+                self.assertEqual(ci.classify([path]), ci.flags(*ci.CHECKS))
 
 
 class GitChangeTests(unittest.TestCase):
@@ -92,15 +139,16 @@ class GitChangeTests(unittest.TestCase):
         plan = ci.select(self.repo, 'pull_request', {'pull_request': {
             'base': {'sha': base_tip}, 'head': {'sha': head}}})
         self.assertEqual(plan['paths'], ['evas/docs/with space.md'])
-        self.assertFalse(plan['full'])
+        self.assertFalse(plan['regression'])
         self.assertEqual(plan['base'], self.base)
 
     def test_push_includes_deletion_and_rename_destination(self):
-        self.git('mv', 'evas/docs/old.md', 'evas/docs/old.py')
+        (self.repo / 'evas/tests').mkdir()
+        self.git('mv', 'evas/docs/old.md', 'evas/tests/old.py')
         head = self.commit()
         plan = ci.select(self.repo, 'push', {'before': self.base, 'after': head})
-        self.assertEqual(set(plan['paths']), {'evas/docs/old.md', 'evas/docs/old.py'})
-        self.assertTrue(plan['full'])
+        self.assertEqual(set(plan['paths']), {'evas/docs/old.md', 'evas/tests/old.py'})
+        self.assertTrue(plan['regression'])
 
     def test_deleted_source_still_runs_regression_and_install(self):
         self.write('evas/src/evas/deleted.py', 'old\n')
@@ -108,7 +156,7 @@ class GitChangeTests(unittest.TestCase):
         self.git('rm', 'evas/src/evas/deleted.py')
         head = self.commit()
         plan = ci.select(self.repo, 'push', {'before': base, 'after': head})
-        self.assertTrue(plan['full'])
+        self.assertTrue(plan['regression'])
         self.assertTrue(plan['package'])
 
     def test_missing_history_initial_push_and_manual_run_cannot_skip_checks(self):
@@ -118,7 +166,7 @@ class GitChangeTests(unittest.TestCase):
         for name, event in events:
             with self.subTest(name=name, event=event):
                 plan = ci.select(self.repo, name, event)
-                self.assertEqual({key: plan[key] for key in ci.flags()}, ci.flags(True, True, True))
+                self.assertEqual({key: plan[key] for key in ci.flags()}, ci.flags(*ci.CHECKS))
 
     def test_cli_emits_github_boolean_outputs(self):
         self.write('evas/docs/with space.md', 'documentation\n')
@@ -131,45 +179,68 @@ class GitChangeTests(unittest.TestCase):
             '--event-name', 'push', '--event-path', str(event_file),
             '--output', str(output_file),
         ], text=True, capture_output=True, check=True)
-        self.assertFalse(json.loads(completed.stdout)['full'])
-        self.assertIn('full=false\n', output_file.read_text())
+        self.assertFalse(json.loads(completed.stdout)['regression'])
+        self.assertIn('regression=false\n', output_file.read_text())
         self.assertIn('package=false\n', output_file.read_text())
 
 
 class GateTests(unittest.TestCase):
-    def results(self, lane, selected=False):
-        output = {'full': 'true' if selected else 'false',
-                  'package': 'true' if selected else 'false',
-                  'benchmark': 'true' if selected else 'false'}
+    def results(self, *selected):
+        output = {key: str(value).lower() for key, value in ci.flags(*selected).items()}
         needs = {'selection': {'result': 'success', 'outputs': output}}
-        if lane == 'numerical':
-            needs['static-checks'] = {'result': 'success'}
-        jobs = {'numerical': ('regression', 'properties-and-ngspice', 'fuzz-smoke'),
-                'package': ('install',), 'benchmark': ('identity', 'first-batch')}[lane]
-        needs.update({job: {'result': 'success' if selected else 'skipped'} for job in jobs})
+        for job, flags in ci.JOB_FLAGS.items():
+            result = 'success' if any(flag in selected for flag in flags) else 'skipped'
+            needs[job] = {'result': result, 'outputs': {
+                child: result for child in ci.CHILD_RESULTS.get(job, ())}}
         return needs
 
     def test_intentional_skips_are_allowed_but_selected_skips_are_not(self):
-        for lane in ('numerical', 'package', 'benchmark'):
-            self.assertEqual(ci.gate_errors(lane, self.results(lane)), [])
-            needs = self.results(lane, True)
-            job = next(job for job in needs if job not in ('selection', 'static-checks'))
-            needs[job]['result'] = 'skipped'
-            self.assertTrue(ci.gate_errors(lane, needs))
+        self.assertEqual(ci.gate_errors(self.results()), [])
+        for flag in ci.CHECKS:
+            needs = self.results(flag)
+            self.assertEqual(ci.gate_errors(needs), [])
+            for job, flags in ci.JOB_FLAGS.items():
+                if flag in flags:
+                    needs[job]['result'] = 'skipped'
+                    self.assertTrue(ci.gate_errors(needs), (flag, job))
 
-    def test_failed_selector_static_checks_and_cancelled_jobs_cannot_turn_green(self):
-        for job, result in (('selection', 'failure'), ('static-checks', 'failure'),
-                            ('regression', 'cancelled'), ('fuzz-smoke', 'failure')):
-            with self.subTest(job=job):
-                needs = self.results('numerical', True)
-                needs[job]['result'] = result
-                self.assertTrue(ci.gate_errors('numerical', needs))
+    def test_failure_cancellation_missing_jobs_or_unexpected_execution_failures_are_rejected(self):
+        for job in ('selection', *ci.JOB_FLAGS):
+            for result in ('failure', 'cancelled', None):
+                with self.subTest(job=job, result=result):
+                    needs = self.results(*ci.CHECKS)
+                    needs[job]['result'] = result
+                    self.assertTrue(ci.gate_errors(needs))
+                    needs = self.results()
+                    needs[job]['result'] = result
+                    self.assertTrue(ci.gate_errors(needs))
 
     def test_missing_or_invalid_selector_output_is_rejected(self):
-        for value in (None, '', 'unknown'):
-            needs = self.results('numerical')
-            needs['selection']['outputs']['full'] = value
-            self.assertTrue(ci.gate_errors('numerical', needs))
+        for flag in ci.CHECKS:
+            for value in (None, '', 'unknown'):
+                needs = self.results()
+                needs['selection']['outputs'][flag] = value
+                self.assertTrue(ci.gate_errors(needs))
+
+    def test_reusable_workflow_success_cannot_hide_skipped_or_failed_child_jobs(self):
+        for job, children in ci.CHILD_RESULTS.items():
+            for child in children:
+                for result in (None, 'skipped', 'failure', 'cancelled'):
+                    with self.subTest(job=job, child=child, result=result):
+                        needs = self.results(*ci.CHECKS)
+                        needs[job]['outputs'][child] = result
+                        self.assertTrue(ci.gate_errors(needs))
+
+    def test_cli_gate_returns_nonzero_for_failed_selected_check(self):
+        import os
+        for failed in (False, True):
+            needs = self.results('regression')
+            if failed:
+                needs['regression']['result'] = 'failure'
+            result = subprocess.run(['python3', '-B', str(SCRIPT), 'gate'],
+                                    env={**os.environ, 'CI_NEEDS': json.dumps(needs)},
+                                    capture_output=True, text=True)
+            self.assertEqual(result.returncode, int(failed), result.stderr)
 
 
 if __name__ == '__main__':
