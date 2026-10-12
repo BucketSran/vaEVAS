@@ -54,7 +54,38 @@ python3 -B -m unittest discover -s scripts/tests -p test_ci_selection.py -v
 
 路由回归使用真实临时 Git 仓库，覆盖文档分类、共享夹具、混合修改、删除、重命名、分叉点
 和身份缺失，也检查被选任务及子工作流意外跳过时是否拒绝通过。
-本轮只改变检查调度和缓存，仿真器判据与历史成绩不变。
+检查调度和缓存不改变仿真器判据与历史成绩。
+
+### 找出回归慢在哪里
+
+Python 回归在 Actions 摘要列出最慢的 20 个测试，并保留 `python-regression-timings` 附件。
+JSON 记录每个测试的耗时和结果；JSONL 在测试开始、结束时立即写入。
+如果进程被终止，最后一条开始记录可以定位尚未结束的测试。报告是否完整会单独标明，
+缺少最终报告不能解释为通过。硬终止时附件上传仍取决于 Actions runner 是否可用。
+
+本地使用相同入口：
+
+```sh
+PYTHONPATH=evas/src python3 -B scripts/run_regression.py --report runs/python-regression.json
+```
+
+这仍执行完整 unittest 回归。失败、错误、意外成功、空测试集和中断均返回非零状态。
+论文电路按 12 张卡分别计时，仍保留每张卡的稀疏与加密查询、原精度要求和历史一致性检查。
+耗时是定位线索，单次 CI 数字不能当作可复现的性能提升。
+
+`regression` 使用 Cargo 开发配置的 `opt-level=1`，明确保留 `debug-assertions=true`
+和 `overflow-checks=true`，缓存单独使用 `regression-opt1`。这减少未优化代码的执行成本，
+不改变模型、精度参数或误差门槛。配置含义见 [Cargo profiles](https://doc.rust-lang.org/cargo/reference/profiles.html)。
+需要复现 CI 构建时，在 Cargo 命令前设置对应环境变量：
+
+```sh
+CARGO_PROFILE_DEV_OPT_LEVEL=1 CARGO_PROFILE_DEV_DEBUG_ASSERTIONS=true CARGO_PROFILE_DEV_OVERFLOW_CHECKS=true \
+  cargo +stable build --locked --manifest-path evas/rust_core/Cargo.toml
+```
+
+数值拒绝测试必须核对预期的错误类型。`kernel_timeout`、进程启动失败或协议错误
+不能证明求解器正确拒绝了模型；相关防退化检查见
+[拒绝测试校准](../evas/tests/test_rejection_contracts.py)。
 
 ## 本地工作区检查
 
