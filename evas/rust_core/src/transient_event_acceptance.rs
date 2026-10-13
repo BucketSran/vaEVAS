@@ -115,17 +115,47 @@ impl PreparedEvents {
         ];
         let mut microevents = 0;
         let mut static_cursor = end;
-        while future
-            .first()
-            .is_some_and(|event| event.bounds().lo <= next.time)
-        {
-            // A forced point is a controller boundary, not a historical
-            // query through the completed cluster. Stop at this accepted
-            // phase only when the next event is proved physically later.
-            // Overlapping rounded enclosures alone must not consume it.
-            if trajectory.config.strobetimes.contains(&next.time)
-                && future[0].physical_order_for_query(next.time, model, trajectory)
-                    == Some(std::cmp::Ordering::Greater)
+        loop {
+            // A forced point owns an accepted prefix. Its physical phase must
+            // follow every consumed batch and precede the retained successor.
+            // This also covers a point below a rounded event representative:
+            // local history preserves the exact clock and physical seed.
+            let forced = trajectory.config.strobetimes.iter().copied().find(|&time| {
+                time > controller.accepted.time
+                    && time <= next.time
+                    && phases[1..].iter().all(|(_, batch)| {
+                        batch.iter().all(|event| {
+                            matches!(
+                                event.physical_order_for_query(time, model, trajectory),
+                                Some(std::cmp::Ordering::Less | std::cmp::Ordering::Equal)
+                            )
+                        })
+                    })
+                    && future.first().is_none_or(|event| {
+                        event.physical_order_for_query(time, model, trajectory)
+                            == Some(std::cmp::Ordering::Greater)
+                    })
+            });
+            if let Some(time) = forced {
+                if time != next.time {
+                    next = prepare_root_window(
+                        model,
+                        trajectory,
+                        &next,
+                        EventMoment {
+                            representative: time,
+                            observation: I::point(time),
+                            fired_roots: &[],
+                            prediction_end: prediction_end(model, trajectory, future.first()),
+                        },
+                        &[],
+                    )?;
+                }
+                break;
+            }
+            if !future
+                .first()
+                .is_some_and(|event| event.bounds().lo <= next.time)
             {
                 break;
             }

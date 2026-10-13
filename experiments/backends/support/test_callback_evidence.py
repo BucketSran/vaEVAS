@@ -1,6 +1,6 @@
 import copy
 import unittest
-from callback_evidence import callbacks
+from callback_evidence import callbacks, _fixed_clock
 
 
 def fixture():
@@ -68,6 +68,47 @@ class CallbackCalibration(unittest.TestCase):
         self.assertEqual(result['event_bounds_s']['c'],[.5,.505])
         event['fired_triggers'][0]['kind']='timer'
         self.assertEqual(callbacks(c,p,r,w,producer_qualified=True)['status'],'unknown')
+    def test_integral_consumer_keeps_the_complete_discrete_chain(self):
+        c,p,r,w=fixture();c['id']='EC03-v1'
+        p['states'].insert(0,dict(initial=-.25,instance='dut'))
+        p['contributions'][0]['rhs']['state']=1
+        for event,held in zip(r['transient']['events'],(.5,1.)):
+            event['before'].insert(0,-.25 if event['event']==0 else .5)
+            event['after'].insert(0,held)
+        self.assertEqual(callbacks(c,p,r,w,producer_qualified=True)['status'],'qualified')
+        r['transient']['events'][1]['before'][0]=.75
+        self.assertEqual(callbacks(c,p,r,w,producer_qualified=True)['status'],'unknown')
+
+    def test_two_counters_prove_distinct_physical_order(self):
+        c,p,r,w=fixture();c['id']='EC20-v1'
+        c['counter_channels']={'n':dict(initial=0,final=1),'m':dict(initial=0,final=1)}
+        c['events'][1].update(counter='m',index=1)
+        p['nodes'].append('m');r['nodes']=p['nodes']
+        p['states'].append(dict(initial=0.,instance='dut'))
+        p['contributions'].append(dict(positive=3,negative=0,rhs=dict(op='state',state=1)))
+        r['transient']['events'][0].update(before=[0.,0.],after=[1.,0.])
+        r['transient']['events'][1].update(before=[1.,0.],after=[1.,1.])
+        w=[dict(time=0.,n=0.,m=0.),dict(time=.25,n=1.,m=0.),
+           dict(time=.5,n=1.,m=1.),dict(time=1.,n=1.,m=1.)]
+        self.assertEqual(callbacks(c,p,r,w,producer_qualified=True)['status'],'qualified')
+        r['transient']['events'][1]['after'][0]=2.
+        self.assertEqual(callbacks(c,p,r,w,producer_qualified=True)['status'],'unknown')
+
+    def test_exact_fixed_clock_order_does_not_clip_touching_boxes(self):
+        from fractions import Fraction as F
+        a=dict(kind='timer',enabled=True,start=.1,period=.2)
+        b=dict(kind='timer',enabled=True,start=.3,period=0.)
+        box=[.3,.30000000000000004]
+        first=_fixed_clock(b,0,box);second=_fixed_clock(a,1,box)
+        self.assertLess(first,second)
+        self.assertEqual(first,F(.3))
+        self.assertEqual(second,F(.1)+F(.2))
+        self.assertEqual(box,[.3,.30000000000000004])
+        with self.assertRaisesRegex(ValueError,'outside complete'):
+            _fixed_clock(a,1,[.3,.3])
+        with self.assertRaisesRegex(ValueError,'one-shot'):
+            _fixed_clock(b,1,box)
+
     def test_missing_guard_is_not_zero(self):
         self.reject(lambda c,p,r,w:r['transient']['events'][1].pop('guard_value'))
     def test_nonfinite_box(self):

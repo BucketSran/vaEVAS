@@ -2,6 +2,7 @@
 import hashlib
 import math
 import re
+from decimal import Decimal, localcontext
 
 class ReadbackError(ValueError):
     pass
@@ -49,8 +50,53 @@ def assignments(lines, mapping, scope, quoted=False):
         raise ReadbackError('missing settings: '+str(sorted(missing)))
     return result
 
-def spectre(log, psf, analysis='tran'):
+# Actual installation and independently compared binary/ASCII calibration.
+# Other versions/formatters require new evidence and review, not an opt-in flag.
+SPECTRE_CALIBRATED_VERSION = '21.1.0.509.isr12'
+SPECTRE_FORMAT_CALIBRATION_SHA256 = 'f1477648d9de091749d8b31b7198ec55beea46ebc9cf71148f9b690f74f195ab'
+
+
+def printed_interval(log_raw, psf_raw, key):
+    """Crosscheck exact decimal print intervals, never identify metadata as actual.
+
+    This installation prints 16 significant sci log digits and six PSF digits.
+    Closed half-quantum intervals cover an unknown tie direction. At a decade
+    rollover the lower print half-bin is one tenth as wide because its quantum is ten
+    times smaller. Decimal arithmetic preserves these boundary distinctions.
+    """
+    lm = re.fullmatch(r'\s*[^=]+ = ([1-9]\.\d{15}e[+-]\d{2,3})(?: ([sVA]))?\s*', log_raw)
+    pm = re.fullmatch(r'"[^"]+" ([1-9]\.\d{5}e[+-]\d{2,3})', psf_raw)
+    expected_unit = {'maxstep_s':'s','stop_s':'s','vabstol_V':'V','iabstol_A':'A'}.get(key)
+    if not lm or not pm or lm[2] != expected_unit:
+        raise ReadbackError('uncalibrated printed numeric format/units: '+key)
+    with localcontext() as context:
+        context.prec = 80
+        log_value = Decimal(lm[1]); metadata = Decimal(pm[1])
+        def bounds(value, digits):
+            quantum = Decimal(10) ** (value.adjusted()-digits+1)
+            # The previous representable decimal number below an exact power
+            # of ten belongs to the smaller-exponent bin.
+            lower_quantum = quantum/10 if value == Decimal(10)**value.adjusted() else quantum
+            return value-lower_quantum/2, value+quantum/2
+        ll, lu = bounds(log_value, 16); lower, upper = bounds(metadata, 6)
+        if lu < lower or ll > upper:
+            raise ReadbackError('log/PSF printed-interval disagreement: '+key)
+        return {'lower_s_or_native':str(lower), 'upper_s_or_native':str(upper),
+                'log_lower_s_or_native':str(ll), 'log_upper_s_or_native':str(lu),
+                'raw':psf_raw, 'significant_digits':6,
+                'scope':'printed PSF metadata compatibility interval; not an actual control value'}
+
+
+def spectre(log, psf, analysis='tran', *, format_evidence=None):
     """Only accepts one named transient and crosschecks its log/PSF header."""
+    calibrated = format_evidence is not None
+    if calibrated:
+        if (not isinstance(format_evidence, bytes) or
+                hashlib.sha256(format_evidence).hexdigest() != SPECTRE_FORMAT_CALIBRATION_SHA256):
+            raise ReadbackError('unqualified Spectre format calibration')
+        versions = re.findall(r'^Version (\S+) 64bit.*$', log, re.M)
+        if versions != [SPECTRE_CALIBRATED_VERSION]:
+            raise ReadbackError('uncalibrated Spectre log version')
     lines = list(enumerate(log.splitlines(),1))
     trans = [(i,n,raw) for i,(n,raw) in enumerate(lines) if re.match(r'^Transient Analysis `',raw)]
     if len(trans) != 1 or not trans[0][2].startswith('Transient Analysis `'+analysis+"':"):
@@ -67,6 +113,12 @@ def spectre(log, psf, analysis='tran'):
         raise ReadbackError('missing/ambiguous global block')
     ge=next((i for i in range(gs[0]+1,len(lines)) if not lines[i][1].strip()),len(lines))
     global_options=assignments(lines[gs[0]+1:ge],{'reltol':'reltol','vabstol':'vabstol_V','iabstol':'iabstol_A'},'global_user')
+    if calibrated:
+        global_block = '\n'.join(raw for _,raw in lines[gs[0]+1:ge])
+        for name,expected in [('digits','17'),('notation','sci'),('precision','%.17g')]:
+            values = re.findall(r'^\s*'+name+r'\s*=\s*(.*?)\s*$',global_block,re.M)
+            if values != [expected]:
+                raise ReadbackError('uncalibrated observed global format control: '+name)
     plines=list(enumerate(psf.splitlines(),1))
     types=[i for i,(_,raw) in enumerate(plines) if raw=='TYPE']
     if not plines or plines[0][1]!='HEADER' or len(types)!=1:
@@ -78,6 +130,27 @@ def spectre(log, psf, analysis='tran'):
         raise ReadbackError('PSF analysis identity mismatch')
     psf_effective=assignments(header,mapping,'psf_transient:'+analysis,quoted=True)
     relative=assignments(header,{'tolerance.relative':'tolerance.relative'},'psf_header',quoted=True)
+    if calibrated:
+        versions = [raw for _, raw in header if raw.startswith('"version"')]
+        if versions != ['"version" "'+SPECTRE_CALIBRATED_VERSION+'"']:
+            raise ReadbackError('uncalibrated PSF version')
+        for field, value in [('simulator','spectre'),('PSFversion','1.00')]:
+            if [raw for _, raw in header if raw.startswith('"'+field+'"')] != ['"'+field+'" "'+value+'"']:
+                raise ReadbackError('uncalibrated PSF producer/format')
+        if not math.isclose(relative['tolerance.relative']['value'],global_options['reltol']['value'],rel_tol=1e-12,abs_tol=0):
+            raise ReadbackError('PSF relative metadata differs from observed global reltol')
+        intervals = {}
+        for key, v in effective.items():
+            if key == 'method':
+                if psf_effective[key]['value'] != v['value']:
+                    raise ReadbackError('log/PSF disagreement: method')
+                continue
+            intervals[key] = printed_interval(v['raw'], psf_effective[key]['raw'], key)
+        return {'effective':effective, 'global_user':global_options,
+                'psf_printed_intervals':intervals, 'psf_relative_metadata':relative,
+                'format_calibration_sha256':SPECTRE_FORMAT_CALIBRATION_SHA256,
+                'readback_mode':'calibrated_sci_log_printed_psf_intervals',
+                'limit':'actual values are observed log values; PSF intervals only crosscheck formatting compatibility'}
     for key,v in effective.items():
         w=psf_effective[key]['value']
         if isinstance(w,str): equal=w==v['value']

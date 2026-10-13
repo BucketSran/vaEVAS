@@ -40,6 +40,22 @@ class TraceCalibration(unittest.TestCase):
             with self.subTest(kwargs=kwargs):
                 self.assertEqual(self.check(**kwargs)['status'], 'unknown')
 
+    def test_hidden_child_schedule_is_compared_without_discarding_records(self):
+        card = deepcopy(self.card)
+        card['id'] = 'EC06-v1'
+        log = ('EVAS_BREADTH_CALLBACK n0 dut.acell 1 1\n'
+               'EVAS_BREADTH_CALLBACK n0 dut.bcell 1 1\n'
+               'EVAS_BREADTH_CALLBACK n0 dut.acell 2 2\n'
+               'EVAS_BREADTH_CALLBACK n0 dut.bcell 2 2\n')
+        proof = self.check(card=card, log=log)
+        self.assertEqual(proof['status'], 'qualified')
+        self.assertEqual(len(proof['records']), 4)
+        self.assertEqual(proof['event_bounds_s'], {'one': [1., 1.], 'two': [2., 2.]})
+        bad = self.check(card=card, log=log.replace('dut.bcell 2 2', 'dut.bcell 2 2.1'))
+        self.assertEqual(bad['status'], 'unknown')
+        self.assertIn('child schedule differs', bad['reason'])
+        self.assertEqual(len(bad['records']), 4)
+
     def test_counter_contradiction(self):
         rows = deepcopy(self.rows)
         rows[1]['n'] = 1

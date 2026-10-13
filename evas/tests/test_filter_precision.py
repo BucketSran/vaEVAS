@@ -3,10 +3,11 @@
 GUARDS = ["DEV:filter-precision", "DYNAMICS"]
 
 from decimal import Decimal, localcontext
+import subprocess
 import unittest
 
 from evas import KernelError, compile_sources, transient
-from test_affine import KERNEL, instance, model
+from test_affine import EVAS, KERNEL, instance, model
 
 
 def reference(points, time, initial):
@@ -62,6 +63,42 @@ class TightFilterPrecision(unittest.TestCase):
                 dense_times = sorted(set(times + [i*1e-7 for i in range(80)]))
                 dense = self.run_filter(0., integral, dense_times)
                 self.assertEqual(sparse, [dense[dense_times.index(t)] for t in times])
+
+    def test_polynomial_direct_filter_corner_keeps_q3_accuracy(self):
+        # H(s)=(1+s*T)/(2+s*T), u=.5+x up to x=2 and 2.5
+        # afterwards. Solving z'+2*z=u*u from DC z(0)=.125 gives
+        # h=.5*x*x+x+.125 before the corner and 3.125+exp(-2*r)
+        # afterwards. This oracle does not integrate the DUT recurrence.
+        unit = 2.0 ** -20
+        program = compile_sources({"precision.va": model(
+            "V(y,r)<+laplace_nd(V(u,r)*V(u,r),'{1,9.5367431640625e-7},"
+            "'{2,9.5367431640625e-7});")}, [instance()])
+        times = [0., unit, 2*unit, 3*unit, 4*unit]
+        # This 8192-step Q3 regression uses an explicitly built release
+        # fixture: the debug kernel exceeds even a 600-second timeout.
+        # Keep the original release-card 90-second execution budget.
+        target_dir = EVAS / "rust_core/target"
+        subprocess.run(["cargo", "build", "--locked", "--release",
+                        "--target-dir", str(target_dir), "--manifest-path",
+                        str(EVAS / "rust_core/Cargo.toml")], check=True, timeout=300.)
+        release_kernel = target_dir / "release/evas-kernel"
+        result = transient(program, {"u": [[0., .5], [2*unit, 2.5], [4*unit, 2.5]]},
+                           times, strobetimes=times, stop=4*unit,
+                           max_step=unit/2048, kernel=release_kernel,
+                           vabstol=1e-14, reltol=1e-10, timeout=90.)
+        node = result['nodes'].index('y')
+        with localcontext() as ctx:
+            ctx.prec = 90
+            for t, solution, bounds in zip(times, result['solutions'],
+                                           result['observation_evidence']['voltage_bounds_V']):
+                x = Decimal.from_float(t)/Decimal.from_float(unit)
+                expected = (x*x/2+x+Decimal('.125') if x <= 2 else
+                            Decimal('3.125')+(-2*(x-2)).exp())
+                value = solution['voltages'][node]
+                self.assertLessEqual(Decimal.from_float(bounds[node][0]), expected)
+                self.assertLessEqual(expected, Decimal.from_float(bounds[node][1]))
+                self.assertLessEqual(abs(Decimal.from_float(value)-expected),
+                                     Decimal.from_float(1e-14+1e-10*abs(value)))
 
     def test_unrepresentable_accuracy_still_refuses(self):
         with self.assertRaises(KernelError) as caught:

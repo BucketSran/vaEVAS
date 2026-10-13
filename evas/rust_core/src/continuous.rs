@@ -99,7 +99,7 @@ pub(crate) use runtime::Continuous;
 #[derive(Clone)]
 pub(crate) struct LinearContinuous {
     slots: Vec<OperatorSlot>,
-    segments: Vec<Segment>,
+    segments: Arc<Vec<Segment>>,
     value_count: usize,
     dc_values: Vec<I>,
     stop: f64,
@@ -381,7 +381,7 @@ impl LinearContinuous {
             exact_affine::History::build(&exact_states, &segments, start, state_count, None);
         Ok(Some(Self {
             slots,
-            segments,
+            segments: Arc::new(segments),
             value_count: operators.len(),
             dc_values,
             stop: trajectory.config.stop,
@@ -434,7 +434,12 @@ impl LinearContinuous {
         } else {
             vec![None; self.value_count]
         };
-        for segment in &self.segments {
+        for segment in self
+            .segments
+            .iter()
+            .skip(self.segments.partition_point(|s| s.end < time.lo))
+            .take_while(|s| s.start <= time.hi)
+        {
             let lo = time.lo.max(segment.start);
             let hi = time.hi.min(segment.end);
             if lo > hi {
@@ -470,7 +475,12 @@ impl LinearContinuous {
         self.ensure_time(time.lo)?;
         self.ensure_time(time.hi)?;
         let mut out: Vec<Option<I>> = vec![None; self.value_count];
-        for segment in &self.segments {
+        for segment in self
+            .segments
+            .iter()
+            .skip(self.segments.partition_point(|s| s.end < time.lo))
+            .take_while(|s| s.start <= time.hi)
+        {
             let lo = time.lo.max(segment.start);
             let hi = time.hi.min(segment.end);
             if lo > hi {
@@ -812,7 +822,9 @@ fn select_network_operators(
             {
                 selected.insert(index);
             }
-            OperatorSpec::Ddt { .. } => {
+            OperatorSpec::Ddt { input, .. }
+                if !crate::operators::direct_derivative::eligible(input, program, driven_nodes) =>
+            {
                 selected.insert(index);
             }
             _ => {}
@@ -1254,6 +1266,15 @@ fn build_segments(
 ) -> Result<Vec<Segment>, Error> {
     let mut state = initial_state;
     let mut segments = Vec::new();
+    // Forced observations partition this closed-form flow, but do not change
+    // it. For a state-independent field, evaluate each initial state from the
+    // same physical source/event anchor instead of accumulating one rounding
+    // enclosure per forced point. Inherited seed uncertainty is retained.
+    let direct_anchor = trajectory.has_only_physical_inputs()
+        && state_derivatives
+            .iter()
+            .all(|row| row[..state_count].iter().all(|c| c.zero()));
+    let mut anchor: Option<Segment> = None;
     let mut knots = vec![start_time];
     knots.extend(
         trajectory
@@ -1267,6 +1288,16 @@ fn build_segments(
     }
     for window in knots.windows(2) {
         let (start, end) = (window[0], window[1]);
+        if direct_anchor {
+            if let Some(physical) = &anchor {
+                state = crate::state_space::propagate(
+                    &physical.matrix,
+                    &physical.initial,
+                    I::point(start) - I::point(physical.start),
+                )?[..state_count]
+                    .to_vec();
+            }
+        }
         let source_start = trajectory.value_bounds(start);
         let source_end = trajectory.value_bounds(end);
         let duration = I::point(end) - I::point(start);
@@ -1317,6 +1348,9 @@ fn build_segments(
             values: value_rows.to_vec(),
             derivatives: derivative_rows.to_vec(),
         };
+        if direct_anchor && (anchor.is_none() || trajectory.knots.contains(&start)) {
+            anchor = Some(segment.clone());
+        }
         let next = crate::state_space::propagate(&segment.matrix, &segment.initial, duration)?;
         state = next[..state_count].to_vec();
         segments.push(segment);

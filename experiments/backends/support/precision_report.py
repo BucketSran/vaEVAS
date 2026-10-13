@@ -9,6 +9,9 @@ import math
 from pathlib import Path
 import re
 import sys
+import struct
+import hashlib
+from decimal import Decimal
 
 ROOT=Path(__file__).resolve().parents[3]
 sys.path.insert(0,str(ROOT/'experiments/backends/paper'))
@@ -16,15 +19,111 @@ sys.path.insert(0,str(ROOT/'evas/validation/paper'))
 from inputs import BACKENDS, sha
 from observations import read_native
 from precision_checker import assess
+from settings_readback import (spectre, ReadbackError, SPECTRE_CALIBRATED_VERSION,
+                               SPECTRE_FORMAT_CALIBRATION_SHA256)
 
 
 def load(p):return json.loads(p.read_text())
 
 
-def qualification(work, backend, record, rows):
+SPECTRE_CALIBRATED_BINARY_SHA256 = '72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f'
+
+
+def spectre_calibration_binary_value(raw, name):
+    """Decode one captured double control record; reject incomplete evidence."""
+    try:
+        tag, length = struct.unpack_from('>II', raw)
+        padded = (length+3)//4*4
+        if tag != 0x23 or raw[8:8+length].decode() != name or len(raw) != 16+padded:
+            raise ReadbackError('invalid calibration binary typed record')
+        value = struct.unpack_from('>d', raw, 8+padded)[0]
+    except (struct.error, UnicodeDecodeError) as exc:
+        raise ReadbackError('invalid calibration binary typed record') from exc
+    if not math.isfinite(value) or value <= 0:
+        raise ReadbackError('invalid calibration binary control value')
+    return value
+
+
+def spectre_fullprecision_settings(work, tool, *, frozen_deck_sha256):
+    """Explicit current-installation API; the caller verifies frozen execution.
+
+    Tool identity must come from the external runner's actual binary/version
+    preflight. The frozen hash comes from its verified input manifest, not a
+    self-declared case flag. This only admits settings, never native observations
+    or numerical acceptance. Default runner/readback behavior stays strict.
+    """
+    version = tool.get('version')
+    if (tool.get('binary_sha256') != SPECTRE_CALIBRATED_BINARY_SHA256 or
+            not isinstance(version,str) or
+            not re.fullmatch(r'sub-version\s+'+re.escape(SPECTRE_CALIBRATED_VERSION),version.strip())):
+        raise ReadbackError('uncalibrated Spectre producer identity')
+    if not re.fullmatch('[0-9a-f]{64}',str(frozen_deck_sha256)) or sha(work/'tb.scs') != frozen_deck_sha256:
+        raise ReadbackError('Spectre frozen deck identity mismatch')
+    deck = (work/'tb.scs').read_text()
+    lines = [line.split('//',1)[0].strip() for line in deck.splitlines()]
+    options = [line for line in lines if re.match(r'^\w+ options(?:\s|$)',line)]
+    trans = [line for line in lines if re.match(r'^\w+ tran(?:\s|$)',line)]
+    if len(options) != 1 or len(trans) != 1 or not trans[0].startswith('tran tran '):
+        raise ReadbackError('ambiguous Spectre producer deck scope')
+    for name,value,line in [('digits','17',options[0]),('notation','sci',options[0]),
+                            ('precision','"%.17g"',options[0]),('transres','1e-20',trans[0]),
+                            ('errpreset','conservative',trans[0]),('method','traponly',trans[0])]:
+        found = re.findall(r'(?<![\w])'+name+r'\s*=\s*("[^"]*"|[^\s]+)',line)
+        if found != [value]:
+            raise ReadbackError('uncalibrated Spectre producer control: '+name)
+    evidence = (ROOT/'experiments/backends/paper/fixtures/spectre-21.1.0.509-format-calibration.json').read_bytes()
+    # Pin actual captured evidence. A caller-provided verified flag is absent.
+    if hashlib.sha256(evidence).hexdigest() != SPECTRE_FORMAT_CALIBRATION_SHA256:
+        raise ReadbackError('Spectre calibration artifact changed')
+    fixture = json.loads(evidence)
+    calibration = spectre(fixture['log'],fixture['psf_header'],format_evidence=evidence)
+    mapping = {'reltol':'reltol','abstol(V)':'vabstol_V','abstol(I)':'iabstol_A',
+               'maxstep':'maxstep_s','stop':'stop_s'}
+    # Independent binary typed records were captured from the configuration-
+    # equivalent binary run; they are not inferred from requested controls.
+    for name,key in mapping.items():
+        raw = bytes.fromhex(fixture['binary_records_hex'][name])
+        value = spectre_calibration_binary_value(raw,name)
+        interval = calibration['psf_printed_intervals'][key]
+        if not (Decimal(interval['log_lower_s_or_native']) <= Decimal.from_float(value)
+                <= Decimal(interval['log_upper_s_or_native'])):
+            raise ReadbackError('calibration log disagrees with exact binary control')
+    log_path = work/'spectre.log'; psf_path = work/'psf/tran.tran.tran'
+    scoped = spectre(log_path.read_text(),psf_path.read_text(),format_evidence=evidence)
+    request = load(work/'requested_settings.json')
+    expected = {'reltol':request['reltol'],'vabstol':request['vabstol_V'],
+                'iabstol':request['iabstol_A'],'stop':request['stop_s'],'maxstep':request['maxstep_s']}
+    keymap = {'reltol':'reltol','vabstol':'vabstol_V','iabstol':'iabstol_A','stop':'stop_s','maxstep':'maxstep_s','method':'method'}
+    actual = {key:scoped['effective'][name]['value'] for key,name in keymap.items()}
+    for key, field in [('reltol','reltol'),('vabstol','vabstol_V'),('iabstol','iabstol_A')]:
+        if not math.isclose(scoped['global_user'][field]['value'],expected[key],rel_tol=1e-12,abs_tol=0):
+            raise ReadbackError('Spectre observed global control differs from frozen request: '+key)
+    mismatches = [key for key,value in expected.items() if not math.isclose(actual[key],value,rel_tol=1e-12,abs_tol=0)]
+    binding = {'calibration_sha256':SPECTRE_FORMAT_CALIBRATION_SHA256,
+               'binary_sha256':tool['binary_sha256'],'version':SPECTRE_CALIBRATED_VERSION,
+               'frozen_deck_sha256':frozen_deck_sha256,'log_sha256':sha(log_path),'psf_sha256':sha(psf_path),
+               'claim':'external preflight and frozen input identity required; observed log values with calibrated PSF printed-interval crosscheck'}
+    return {'actual':actual,'requested':expected,'mismatches':mismatches,'scoped_readback':scoped,
+            'producer_binding':binding,'status':'I' if mismatches else 'readback_matches',
+            'claim':'settings readback only; not numerical or native observation qualification'}
+
+
+def qualification(work, backend, record, rows, *, spectre_tool=None):
     settings=record.get('effective_settings',{})
     actual=dict(settings.get('actual',{}));requested=settings.get('requested',{})
     issues=[];notes=[];extra={}
+    printed_mode = settings.get('scoped_readback',{}).get('readback_mode') == 'calibrated_sci_log_printed_psf_intervals'
+    producer_verified = False
+    if backend == 'spectre' and printed_mode:
+        try:
+            rebound = spectre_fullprecision_settings(work,spectre_tool or {},
+                frozen_deck_sha256=settings.get('producer_binding',{}).get('frozen_deck_sha256'))
+            if rebound != settings:
+                raise ReadbackError('Spectre settings differ from raw producer readback')
+            producer_verified = True
+            extra['spectre_producer_binding'] = rebound['producer_binding']
+        except (ReadbackError,OSError,ValueError,KeyError,TypeError) as exc:
+            issues.append('unqualified calibrated Spectre producer: '+str(exc))
     if not actual:issues.append('no actual settings readback')
     needed=('reltol','vabstol') if backend=='evas' else ('reltol','vabstol','iabstol')
     for key in needed:
@@ -36,8 +135,10 @@ def qualification(work, backend, record, rows):
         scoped=settings.get('scoped_readback',{})
         preset=(backend=='spectre' and key=='reltol' and 'errpreset=conservative' in (work/'tb.scs').read_text()
                 and math.isclose(actual[key],requested[key]/10,rel_tol=1e-12)
-                and scoped.get('psf_effective',{}).get('reltol',{}).get('value')==actual[key])
-        if preset:notes.append('conservative preset: transient reltol is requested global reltol / 10; log and PSF agree')
+                and (scoped.get('psf_effective',{}).get('reltol',{}).get('value')==actual[key]
+                     or (printed_mode and producer_verified)))
+        if preset:notes.append('conservative preset: transient reltol is requested global reltol / 10; '+
+            ('full-precision log and calibrated PSF printed interval are compatible' if printed_mode else 'log and PSF agree'))
         else:issues.append('unexplained requested/actual mismatch: '+key)
     if backend=='openvaf_r_ngspice':
         lines=(work/'simulate.log').read_text().splitlines()
@@ -89,13 +190,13 @@ def report(base):
     frozen=base/'inputs';data=load(frozen/'cards.json')
     for rel,digest in load(frozen/'MANIFEST.json').items():
         if sha(frozen/rel)!=digest:raise ValueError('frozen input drift: '+rel)
-    # Reanalysis is allowed only with the same mathematical checker and reader.
-    for rel in ('evas/validation/paper/precision_checker.py','experiments/backends/paper/inputs.py','experiments/backends/paper/observations.py',
-                'experiments/archive/dvs2-starter-pilot/analyze.py','experiments/archive/dvs2-starter-pilot/suite.py'):
-        if sha(ROOT/rel)!=load(frozen/'SOURCE_IDENTITY.json')[rel]:raise ValueError('analysis dependency drift: '+rel)
+    # Reanalysis is allowed only with the same mathematical checker and readers.
     dependencies=('evas/validation/paper/precision_checker.py','experiments/backends/paper/inputs.py',
-                  'experiments/backends/paper/observations.py','experiments/archive/dvs2-starter-pilot/analyze.py',
-                  'experiments/archive/dvs2-starter-pilot/suite.py')
+                  'experiments/backends/paper/observations.py','experiments/backends/paper/settings_readback.py',
+                  'experiments/archive/dvs2-starter-pilot/analyze.py','experiments/archive/dvs2-starter-pilot/suite.py')
+    source_identity=load(frozen/'SOURCE_IDENTITY.json')
+    for rel in dependencies:
+        if sha(ROOT/rel)!=source_identity.get(rel):raise ValueError('analysis dependency drift: '+rel)
     result={'schema_version':1,'purpose':'eight development-informed conditions; finite engineering acceptance, not a held-out final paper suite',
             'source':load(base/'SOURCE_PROVENANCE.json'),'cards_sha256':sha(frozen/'cards.json'),
             'input_manifest_sha256':sha(frozen/'MANIFEST.json'),'analysis_sha256':sha(Path(__file__)),
@@ -146,7 +247,8 @@ def report(base):
                 row['receipt_sha256']=sha(work/'RESULT.json');row['runner_verdict']=record.get('engineering_verdict')
                 if row['execution_status']=='waveform_available':
                     rows=read_native(work/record['waveform'],backend);card=load(work/'condition.json')
-                    assessment=assess(card,rows,data['budgets']);q=qualification(work,backend,record,rows)
+                    assessment=assess(card,rows,data['budgets'])
+                    q=qualification(work,backend,record,rows,spectre_tool=tool if backend=='spectre' else None)
                     row['status']=assessment['status'] if q['status']=='qualified' or assessment['status']!='pass' else 'evidence_insufficient'
                     row['assessment']={k:v for k,v in assessment.items() if k!='event_records'}
                     if assessment.get('event_records'):

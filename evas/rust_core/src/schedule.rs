@@ -23,6 +23,26 @@ pub(crate) struct ScheduledEvent {
 }
 
 impl ScheduledEvent {
+    pub(crate) fn exact_input_value(
+        &self,
+        model: &EventModel,
+        trajectory: &Trajectory,
+        time: f64,
+    ) -> Option<I> {
+        if !self.can_refine_input_root(model) || !trajectory.has_only_physical_inputs() {
+            return None;
+        }
+        let EventTrigger::Cross { guard, .. } = &model.triggers[self.event].trigger else {
+            return None;
+        };
+        let nodes: Option<Vec<_>> = model
+            .driven
+            .iter()
+            .map(|name| model.program.nodes.iter().position(|node| node == name))
+            .collect();
+        crate::exact_source::point_bounds(guard, &nodes?, &trajectory.exact_sources, time)
+    }
+
     pub(crate) fn can_refine_input_root(&self, model: &EventModel) -> bool {
         model.guard_operators[self.event].is_empty()
             && !model.relocalized_guards[self.event]
@@ -61,7 +81,24 @@ impl ScheduledEvent {
             crate::dynamic_roots::CertifiedRoot { bounds, derivative },
             target_width,
             work_limit,
-            &mut |t| Ok(guards.range(guard, t, &origin.instance)?.0),
+            &mut |t| {
+                let original = guards.range(guard, t, &origin.instance)?.0;
+                if target_width.is_none() && t.lo == t.hi {
+                    if let Some(exact) = self.exact_input_value(model, trajectory, t.lo) {
+                        let bounds = I {
+                            lo: original.lo.max(exact.lo),
+                            hi: original.hi.min(exact.hi),
+                        };
+                        if bounds.lo > bounds.hi {
+                            return Err(unresolved(
+                                "exact source value contradicts the guard enclosure",
+                            ));
+                        }
+                        return Ok(bounds);
+                    }
+                }
+                Ok(original)
+            },
             &mut |t| Ok(guards.range(guard, t, &origin.instance)?.1),
         )?;
         let mut candidate = self.clone();
@@ -169,7 +206,29 @@ impl ScheduledEvent {
             .origin
             .instance;
         crate::diagnostics::counter("root_query_phase_checks", 1);
-        let sign = source.range(guard, I::point(time), owner).ok()?.0.sign()?;
+        // Original physical PWLs can prove the sign at a binary64 query even
+        // when ordinary interval products straddle zero. This certificate only
+        // selects the already-isolated transverse root's side. Its enclosure,
+        // sampled input bounds and execution time are unchanged.
+        let nodes: Option<Vec<_>> = model
+            .driven
+            .iter()
+            .map(|name| model.program.nodes.iter().position(|node| node == name))
+            .collect();
+        let sign = nodes
+            .and_then(|nodes| {
+                crate::exact_source::predicate_sign(
+                    guard,
+                    &crate::ir::Expression::Affine {
+                        constant: 0.,
+                        terms: vec![],
+                    },
+                    &nodes,
+                    &trajectory.exact_sources,
+                    time,
+                )
+            })
+            .or_else(|| source.range(guard, I::point(time), owner).ok()?.0.sign())?;
         Some(match sign * self.dynamic_direction()? {
             -1 => std::cmp::Ordering::Greater,
             0 => std::cmp::Ordering::Equal,

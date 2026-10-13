@@ -43,20 +43,25 @@ EVAS 对输入 binary64 值作精确有理数运算，再将每个时刻舍入�
 这项修复没有放宽 `time_tol`，也没有把普通查询的结果改标为强制求解。
 未开启 strobe 的请求保留原调度路径；保持状态决定的 timer 参数不采用该细化。
 
-当前遇到局部时间锚定的因果事件闭包，或强制点只能通过原子事件簇的
-`certified_causal_frame` 查询取得时，返回 `unsupported_strobe`。
-这类查询尚不能证明已在该点完成所请求的强制推进。
-普通查询仍按原契约处理，不因本功能扩大拒绝范围。
+局部时间锚定的事件现在可以接受 strobe，但必须证明该点处于已经完成的物理阶段：
+之前的事件都已发生，下一事件还没有发生，积分历史和节点电压也通过原预算。
+控制器先提交这段前缀，把后续事件留在日程中；来源为 `accepted_controller_frame`。
+例如两个周期时钟在 6 µs 附近先后发生，夹在中间的强制点仍可读取正确的计数和积分。
+
+如果只能通过原子事件簇的 `certified_causal_frame` 查询取得结果，仍返回
+`unsupported_strobe`。未能证明先后的根盒、非自治局部流等原拒绝边界也保留。
+强制点不会因有一个可查询数值就被改标为正式接受帧。
 
 `strobe_evidence` 使用版本 1，包含 `times`、`sample_origins` 和 `voltages_V`。
 节点次序与常规结果一致。前端核对强制点完整性与来源，不能把缺失字段当成功。
 当前来源为 `stateless_working_point`、`accepted_controller_frame` 或
 `implicit_history_evaluation`；历史类来源的落点由积分分段规则及内核回归共同验证。
 该字段不提供 Spectre 回调次序证明，也不扩大已有连续时间误差证据。
-请求协议保持 IR18 的可选扩展；旧内核拒绝未知请求字段，新前端拒绝缺失回执。
+strobe 请求是 IR18 引入的可选扩展，当前编译格式为 IR19；旧内核拒绝未知请求字段，新前端拒绝缺失回执。
 
 验证入口为 [公共控制测试](../../tests/test_strobe.py)、
-[独立模型与冻结预算](../../validation/strobe/README.md)。
+[独立模型与冻结预算](../../validation/strobe/README.md)、
+[采样积分与局部前缀回归](../../tests/test_sampled_integral_strobe.py)。
 原 C1、#79 和 VCO 的严格边界缺口继续保留，不因新增控制或提示转为通过。
 
 `.scs` 示例：`tran tran stop=1 maxstep=0.5 strobeperiod=0.25 strobedelay=0.125`。

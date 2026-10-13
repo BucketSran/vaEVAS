@@ -27,7 +27,7 @@ class Token:
 _TOKEN = re.compile(
     r"(?P<space>\s+)|(?P<comment>//[^\n]*|/\*[\s\S]*?\*/)"
     r'|(?P<include>`include[ \t]+"[^"\n]+")'
-    r"|(?P<macro>`M_PI\b)"
+    r"|(?P<macro>`M_PI\b)|(?P<system>\$abstime\b)"
     r'|(?P<directive>`[A-Za-z_][A-Za-z_0-9]*)|(?P<string>"[^"\n]*")'
     r"|(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?[TGMkKmunpfa]?)"
     r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<=|>=|&&|\|\||'\{|[\[\]:<>(){}+*/;,=@#.?!\-])"
@@ -330,6 +330,9 @@ class Parser:
             if not math.isfinite(value):
                 self.fail("nonfinite numeric literal", token)
             left = Expr("number", value, (), token)
+        elif token.kind == "system":
+            # Absolute time is an exact constant-rate integral in the existing IR.
+            left = Expr("idt", None, (Expr("number", 1., (), token), Expr("number", 0., (), token)), token)
         elif token.kind == "macro":
             left = Expr("number", math.pi, (), token)
         elif token.text == "V":

@@ -509,7 +509,7 @@ pub(crate) struct NonlinearContinuous {
     accuracy_rows: Vec<Vec<I>>,
     tolerances: Tolerances,
     initial: Vec<I>,
-    steps: Vec<DenseStep>,
+    steps: Arc<Vec<DenseStep>>,
     start: f64,
     event_dependent: bool,
     event_seed: Option<PhysicalEventSeed>,
@@ -814,7 +814,7 @@ impl NonlinearContinuous {
             accuracy_rows,
             tolerances: tolerances.clone(),
             initial,
-            steps: Vec::new(),
+            steps: Arc::new(Vec::new()),
             start,
             event_dependent,
             event_seed: None,
@@ -860,9 +860,17 @@ impl NonlinearContinuous {
                 variable[1] = slope;
             }
         }
+        let reduced = self
+            .implicit
+            .as_ref()
+            .and_then(|field| field.polynomial_functions(&self.functions, slopes));
+        if tight && self.implicit.is_some() && reduced.is_none() {
+            return None;
+        }
+        let functions = reduced.as_deref().unwrap_or(&self.functions);
         for n in 0..order {
             let derivatives = if tight {
-                self.functions
+                functions
                     .iter()
                     .map(|f| f.jet_with(&variables, n, true))
                     .collect()
@@ -894,11 +902,14 @@ impl NonlinearContinuous {
         coefficients: &[Jet],
         centers: Option<&[CenterValue]>,
     ) -> Option<CenteredPolynomial> {
-        // The implicit rational field needs its own derivative proof. Its
-        // existing interval propagation remains unchanged here.
-        if self.implicit.is_some() {
-            return None;
-        }
+        // Reuse the polynomial sensitivity proof only after structurally
+        // reducing a constant-Jacobian DAE. Rational fields retain interval
+        // propagation with no centered recovery.
+        let reduced = match &self.implicit {
+            Some(field) => Some(field.polynomial_functions(&self.functions, slopes)?),
+            None => None,
+        };
+        let functions = reduced.as_deref().unwrap_or(&self.functions);
         let centers: Vec<_> = centers.map_or_else(
             || {
                 state
@@ -930,8 +941,7 @@ impl NonlinearContinuous {
         // Differentiate the Taylor recurrence by the chain rule. Evaluation
         // uses the entire original initial box, and unmodified source boxes.
         for n in 0..order {
-            let gradients: Vec<Vec<Jet>> = self
-                .functions
+            let gradients: Vec<Vec<Jet>> = functions
                 .iter()
                 .map(|function| {
                     (0..count)
@@ -1186,18 +1196,21 @@ impl NonlinearContinuous {
                 .map(|rows| rows.into_iter().map(|row| row[0]).collect::<Vec<_>>())
         };
         let mut derivative = evaluate(initial)?;
+        let mut previous = initial.to_vec();
         for _ in 0..TUBE_ATTEMPTS {
             let tube: Vec<_> = initial
                 .iter()
                 .zip(&derivative)
-                .map(|(&v, &d)| {
+                .zip(&previous)
+                .map(|((&v, &d), &prior)| {
                     let radius =
                         (I::point(elapsed.hi) * I::point(d.magnitude().max(1e-15)) * I::point(2.0))
                             .hi;
-                    let expanded = v + I {
+                    let expanded = (v + I {
                         lo: -radius,
                         hi: radius,
-                    };
+                    })
+                    .hull(prior);
                     // Even zero flows and sub-ulp durations require a strict
                     // tube around every possible initial value.
                     I {
@@ -1222,8 +1235,19 @@ impl NonlinearContinuous {
             {
                 return Some((tube, image));
             }
+            // A sub-ulp motion can make the outward image touch the first
+            // tube's boundary. Grow from the actual failed inclusion, then
+            // retry the same strict Picard test. No acceptance test is relaxed.
+            previous = tube.iter().zip(image).map(|(&z, v)| z.hull(v)).collect();
         }
         None
+    }
+
+    fn step_budget(&self) -> usize {
+        // Input validation already caps forced points at 100000. Extra forced
+        // partitions must not consume the entire adaptive integration allowance.
+        // Both stored steps and cumulative discarded trial work remain bounded.
+        MAX_STEPS + self.context.trajectory.config.strobetimes.len()
     }
 
     pub(super) fn certified_end(&self) -> f64 {
@@ -1238,7 +1262,7 @@ impl NonlinearContinuous {
         // Charge every trial evaluation, including failed tubes and higher
         // orders, across discarded suffixes. Counting only validated steps
         // lets difficult refusals spend most of their work outside this limit.
-        let mut remaining_work = MAX_STEPS.saturating_sub(base.steps.len());
+        let mut remaining_work = self.step_budget().saturating_sub(base.steps.len());
         for _ in 0..MAX_HISTORY_REFINEMENTS {
             let mut candidate = base.clone();
             if candidate.propagate_once(horizon, refinement, &mut remaining_work)? {
@@ -1294,18 +1318,25 @@ impl NonlinearContinuous {
         knots.push(horizon);
         for segment in knots.windows(2) {
             let (a, b) = (segment[0], segment[1]);
-            let slopes: Vec<_> = trajectory
-                .value_bounds(b)
-                .iter()
-                .zip(trajectory.value_bounds(a))
-                .map(|(&v, u)| (v - u) / (I::point(b) - I::point(a)))
-                .collect();
+            let slopes: Vec<_> = if trajectory.has_only_physical_inputs() {
+                trajectory.range(I { lo: a, hi: b })?.1
+            } else {
+                trajectory
+                    .value_bounds(b)
+                    .iter()
+                    .zip(trajectory.value_bounds(a))
+                    .map(|(&v, u)| (v - u) / (I::point(b) - I::point(a)))
+                    .collect()
+            };
             let mut start = a;
             while start < b {
-                if self.steps.len() >= MAX_STEPS {
+                if self.steps.len() >= self.step_budget() {
                     return Err(Error::new(
                         "waveform_accuracy",
-                        "validated nonlinear integration exceeded 16384 stored internal steps",
+                        format!(
+                            "validated nonlinear integration exceeded {} stored internal steps",
+                            self.step_budget()
+                        ),
                     ));
                 }
                 let source = trajectory.value_bounds(start);
@@ -1315,7 +1346,7 @@ impl NonlinearContinuous {
                     if end <= start {
                         break;
                     }
-                    Self::charge_trial(remaining_work, start, end)?;
+                    Self::charge_trial(remaining_work, start, end, self.step_budget())?;
                     if let Some(step) = self.trial_order(
                         start,
                         end,
@@ -1335,7 +1366,7 @@ impl NonlinearContinuous {
                         // tail. Rational DAE propagation retains order 12.
                         if self.implicit.is_none() {
                             crate::diagnostics::counter("nonlinear_order_refinements", 1);
-                            Self::charge_trial(remaining_work, start, end)?;
+                            Self::charge_trial(remaining_work, start, end, self.step_budget())?;
                             if let Some(step) = self.trial_order(
                                 start,
                                 end,
@@ -1407,7 +1438,7 @@ impl NonlinearContinuous {
                     return Ok(false);
                 }
                 start = step.end;
-                self.steps.push(step);
+                Arc::make_mut(&mut self.steps).push(step);
                 crate::diagnostics::counter("nonlinear_certified_candidate_steps", 1);
                 crate::diagnostics::record(
                     "nonlinear_candidate",
@@ -1422,7 +1453,12 @@ impl NonlinearContinuous {
         Ok(true)
     }
 
-    fn charge_trial(remaining_work: &mut usize, start: f64, end: f64) -> Result<(), Error> {
+    fn charge_trial(
+        remaining_work: &mut usize,
+        start: f64,
+        end: f64,
+        work_limit: usize,
+    ) -> Result<(), Error> {
         if *remaining_work == 0 {
             crate::diagnostics::record(
                 "nonlinear_candidate",
@@ -1434,7 +1470,7 @@ impl NonlinearContinuous {
             );
             return Err(Error::new(
                 "waveform_accuracy",
-                "validated nonlinear integration exhausted the cumulative 16384 trial evaluations; trajectory accuracy is not certified",
+                format!("validated nonlinear integration exhausted the cumulative {work_limit} trial evaluations; trajectory accuracy is not certified"),
             ));
         }
         *remaining_work -= 1;
@@ -1459,7 +1495,7 @@ impl NonlinearContinuous {
             && self.certified_end() == other.certified_end()
             && self.initial == other.initial
             && self.parameters == other.parameters
-            && self.steps == other.steps
+            && (Arc::ptr_eq(&self.steps, &other.steps) || self.steps == other.steps)
             && self.event_seed == other.event_seed
     }
     pub(super) fn next_breakpoint(&self, time: f64) -> Option<f64> {
@@ -1486,7 +1522,12 @@ impl NonlinearContinuous {
             .iter()
             .map(|&v| (time.lo == self.start).then_some(v))
             .collect();
-        for step in &self.steps {
+        for step in self
+            .steps
+            .iter()
+            .skip(self.steps.partition_point(|s| s.end < time.lo))
+            .take_while(|s| s.start <= time.hi)
+        {
             let range = I {
                 lo: time.lo.max(step.start),
                 hi: time.hi.min(step.end),
@@ -1793,7 +1834,7 @@ mod tests {
             parameters: vec![],
             implicit: None,
             initial: vec![I::ONE],
-            steps: vec![],
+            steps: Arc::new(vec![]),
             start: 0.0,
             event_dependent: false,
             event_seed: None,
@@ -1979,13 +2020,23 @@ mod tests {
 
     #[test]
     fn discarded_candidates_share_the_remaining_work_limit() {
-        let mut candidate = scalar(-1.0);
-        let accepted = candidate.clone();
-        // A previously discarded suffix has already consumed this call's
-        // work allowance; no step may be validated in the next attempt.
-        let error = candidate.propagate_once(0.125, 1.0, &mut 0).unwrap_err();
-        assert!(error.message.contains("cumulative 16384 trial evaluations"));
-        assert!(candidate.same_history(&accepted));
+        for count in [0, 3, 100_000] {
+            let mut candidate = scalar(-1.0);
+            Arc::get_mut(&mut candidate.context)
+                .unwrap()
+                .trajectory
+                .config
+                .strobetimes = (0..count).map(|i| i as f64 * 0.125 / 100_000.0).collect();
+            let accepted = candidate.clone();
+            // Previously discarded trials consume this call's allowance;
+            // forced partitions must not reset it or publish a partial suffix.
+            let error = candidate.propagate_once(0.125, 1.0, &mut 0).unwrap_err();
+            assert!(error
+                .message
+                .contains(&format!("cumulative {} trial evaluations", 16384 + count)));
+            assert!(candidate.same_history(&accepted));
+            assert_eq!(candidate.certified_end(), 0.0);
+        }
     }
 
     #[test]

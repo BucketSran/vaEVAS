@@ -1,0 +1,3238 @@
+{
+  "availability": {
+    "compact_receipt": "repository-contained",
+    "hashes_are_not_download_links": true,
+    "local_root": "runs/feature-gaps-20261013",
+    "raw_bundles": "local-only",
+    "raw_evas_lane_manifest_sha256": "be71c23e7967a84a6631409493d2807cefef30134ef5ddd9b9d2402093c398fa",
+    "raw_spectre_lane_manifest_sha256": "4c188ab3793887c6089bc0596d277b1f4673481eb040f336a5add3b47fe00741"
+  },
+  "checks": {
+    "callback_calibration": "23 passed; included in support tests",
+    "final_debug_kernel_sha256": "ab607201995104a3e110c34ad6038537f56a0d238cff9d2fefde3c0ac25f4d4f",
+    "final_mapped_log_sha256": "1f749b9a0019000f86d94c652a4106fb0bcb3fc2cc3bdcaf0c0a7c74940c5a4c",
+    "final_mapped_regression": "172 passed in 468.587s on the final rebuilt debug kernel; earlier development 172 result retained separately.",
+    "final_strobe_root_closure_sampled_integral": "43 passed",
+    "local_changed_markdown": "8 files, 1485 local links/anchors checked, no issues. Readability separately reviewed by Standards/Spec; external links not network-checked.",
+    "maintenance": "cargo fmt check, git diff check, traceability 114 test files, frozen validation identity and workspace visibility passed.",
+    "mapped_regressions": "172 passed; earlier development run",
+    "overlap_note": "Counts overlap; do not add as independent coverage.",
+    "rust": "246 passed, 1 existing ignored",
+    "support_tools": "168 tests run, 167 passed, 1 skipped"
+  },
+  "ec04_ideal_root_diagnostic": [
+    {
+      "backend": "spectre",
+      "limit": "Diagnostic ideal physical root only, not original-window qualification.",
+      "maximum_ideal_sqrt2_y_absolute_error_V": "1.7321354754908468904195507205408572064810631807547787556966543925067713E-8",
+      "rows": 20117,
+      "tier": "Q1",
+      "witness": {
+        "n": 1.0,
+        "q": 3.8284271247461903,
+        "time": 1.348699180450014e-06,
+        "u": 1.414213591839554,
+        "y": 10.656854698699329
+      }
+    },
+    {
+      "backend": "spectre",
+      "limit": "Diagnostic ideal physical root only, not original-window qualification.",
+      "maximum_ideal_sqrt2_y_absolute_error_V": "1.7321354754908468904195507205408572064810631807547787556966543925067713E-8",
+      "rows": 20618,
+      "tier": "Q2",
+      "witness": {
+        "n": 1.0,
+        "q": 3.8284271247461903,
+        "time": 1.348699180450014e-06,
+        "u": 1.414213591839554,
+        "y": 10.656854698699329
+      }
+    },
+    {
+      "backend": "spectre",
+      "limit": "Diagnostic ideal physical root only, not original-window qualification.",
+      "maximum_ideal_sqrt2_y_absolute_error_V": "1.7321379708537038854374517680884856668341169244265922462680865885676717E-8",
+      "rows": 25728,
+      "tier": "Q3",
+      "witness": {
+        "n": 1.0,
+        "q": 3.8284271247461903,
+        "time": 1.3486991648492342e-06,
+        "u": 1.4142135754809506,
+        "y": 10.656854458933688
+      }
+    },
+    {
+      "backend": "evas",
+      "limit": "Diagnostic ideal physical root only, not original-window qualification.",
+      "maximum_ideal_sqrt2_y_absolute_error_V": "4.446180457083931155868988082029930681743881620917032436325382625E-15",
+      "rows": 20079,
+      "tier": "Q1",
+      "witness": {
+        "0": 0.0,
+        "n": 1.0,
+        "q": 3.8284271247461903,
+        "time": 2.0265579223632812e-06,
+        "u": 2.125,
+        "y": 21.074747468305837
+      }
+    },
+    {
+      "backend": "evas",
+      "limit": "Diagnostic ideal physical root only, not original-window qualification.",
+      "maximum_ideal_sqrt2_y_absolute_error_V": "4.446180457083931155868988082029930681743881620917032436325382625E-15",
+      "rows": 20079,
+      "tier": "Q2",
+      "witness": {
+        "0": 0.0,
+        "n": 1.0,
+        "q": 3.8284271247461903,
+        "time": 2.0265579223632812e-06,
+        "u": 2.125,
+        "y": 21.074747468305837
+      }
+    },
+    {
+      "backend": "evas",
+      "limit": "Diagnostic ideal physical root only, not original-window qualification.",
+      "maximum_ideal_sqrt2_y_absolute_error_V": "4.446180457083931155868988082029930681743881620917032436325382625E-15",
+      "rows": 20079,
+      "tier": "Q3",
+      "witness": {
+        "0": 0.0,
+        "n": 1.0,
+        "q": 3.8284271247461903,
+        "time": 2.0265579223632812e-06,
+        "u": 2.125,
+        "y": 21.074747468305837
+      }
+    }
+  ],
+  "id": "sampled-integral-local-strobe-20261013",
+  "implementation": {
+    "after_execution_change": "Only cfg(test) nonlinear forced-work allowance calibration, Python tests, callback analysis calibration and documentation changed; production Rust matches the frozen build.",
+    "base_revision": "2c3f357c2ccfa8f0d902eb22ece65800da04766d",
+    "branch": "codex/sampled-integral-local-strobe",
+    "build_record_sha256": "db4f6630fe4ddfd4d6f2118ea097667e06853a431cd8d88d61b5226985cc3235",
+    "ir_version": 19,
+    "kernel_sha256": "bb0e58b44b296583757c70400051bea249e401fa4a4c016ef42af466d72a8463",
+    "package_version": "0.14.0",
+    "rust_source_hashes": {
+      "evas/rust_core/src/absdelay.rs": "e0f6144590856b3a95d03a59af58e9032309fa1e316a41c063a40ec9f73109c7",
+      "evas/rust_core/src/accuracy.rs": "03fd769af88f73072a1964a942b9b9d1503196c56c5c4cb48cec7f21ee084d35",
+      "evas/rust_core/src/affine_bounds.rs": "b0faf6ee361cac3ab3a7b8a2d80992bece76a3457d4a08a48be81755cfe01c6b",
+      "evas/rust_core/src/analog.rs": "d4105a0e850f98d4c10ded8c7deacdcc45c960ed2a2a3c1547ea2cf2a5a687c0",
+      "evas/rust_core/src/assembly.rs": "52b5a1a7411b846c2c07d0c26c0fabca0641c3980b4b34a6bcd302e84401d9cb",
+      "evas/rust_core/src/batch.rs": "ba227471ba388b4efd361e9a523352b7626bb80cd51141a00ca2b1c97eed2888",
+      "evas/rust_core/src/continuous.rs": "12551b6ea8959ace952abf74d2a20c24bb69a58f625f938fab13e7a2f42e40d3",
+      "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+      "evas/rust_core/src/continuous_history.rs": "628f2a6a2c04c6cc326bd26d6605e25baa58aed3c872d74bb0a1ee77b138613c",
+      "evas/rust_core/src/continuous_initialization.rs": "5145a36a517b9ba3ace0fb6241ebbd615fef6004b50aeb5dc99d76ff295874a8",
+      "evas/rust_core/src/continuous_runtime.rs": "70f93a4f9b046b53c3d0abb1a4b92ad66a3645e7f4272f6f9a21a66e87e49fcc",
+      "evas/rust_core/src/diagnostics.rs": "bd0feac3399c8b43bf14de204677d58a160d3648416242a76d3eae46e0dea699",
+      "evas/rust_core/src/dynamic_roots.rs": "30146ae2e527e12c6596aff3b0dad3cd172def2af80d27e3b92131032cb6a827",
+      "evas/rust_core/src/event_accuracy.rs": "d2b621cb23080ee219b5272fc489010dfc6a4ba15930fd8e6d94f0428e253dd6",
+      "evas/rust_core/src/event_conditions.rs": "8b0c00b449cf1b27326972a95b97a5f5c911b4f56cd6d30dec7f8905312ab30f",
+      "evas/rust_core/src/events.rs": "dcd7d6a5a6d7a7d41a5b7032e4c06534a6a1b6af9c52790d1ef58534060bf106",
+      "evas/rust_core/src/exact_affine_history.rs": "768c7509b3d76e901e12b166291d0bb8ae7f282791fa513a72f087b07100f161",
+      "evas/rust_core/src/exact_source.rs": "dfd4022c98a257948720ca572d8b912889d425849e19d5e47a0f3f886ba63a7c",
+      "evas/rust_core/src/exact_time.rs": "68e8415109ff7138b27195fe8d32f686441c61d4b012e774e31ede58e5eef824",
+      "evas/rust_core/src/expression.rs": "99024d0b32c2348b6d32db2dc7a27122ff16728c3d4dc476bde6d9f8cb766ffb",
+      "evas/rust_core/src/filter_budget.rs": "94807ee47a346648b5eb4d7d4af03366c0f1f1b79a0e67f636fc279c90b67656",
+      "evas/rust_core/src/guard_trajectory.rs": "c919578fe553f2e87ded91d054780e8e66d505db688894875a8506ae826ec84c",
+      "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+      "evas/rust_core/src/idtmod.rs": "b40261e69921bcbcf1c0a24413ae55a9a317415307a62b3c4a516b8c63ff4c82",
+      "evas/rust_core/src/implicit_dynamics.rs": "706304a1925fff786bea81da7e2fa3b810b894f011d855dd331f945e57ab0470",
+      "evas/rust_core/src/initialization.rs": "7a0bf9345d0cb264ea766c9ff3c801d781948f1683474eb1e1a53f6abd1af365",
+      "evas/rust_core/src/input_clamp.rs": "66c0c4bd1c134156b96d04562d9cf4bb6235d09079a81ebe38e3535bddf0172c",
+      "evas/rust_core/src/interval.rs": "89a83ce96dbf6cdc217a046c9885ca0cf580c6e6f932c36f0195120d49e53f56",
+      "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
+      "evas/rust_core/src/ir.rs": "cc687fdd3d78e908644537aa8194d3a3ccb3dcb5b88c11a78d7b3e640ad97ea0",
+      "evas/rust_core/src/laplace.rs": "8f211b465b19d062033392ef6defbc1bdc66b34c7be9172ab3c41e32a9e7b3d1",
+      "evas/rust_core/src/lib.rs": "336d1475744f06d38e2113fd3e220520f6541e5fb525fddb11cad1b5d4f93f67",
+      "evas/rust_core/src/linear.rs": "e0280cfcaaebd2449ab5e4474daf5cd19e6a9fbda5db53e14e5229fc81a4eb36",
+      "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+      "evas/rust_core/src/linear/dense.rs": "00a1d9e1a9c5f933f765dd586ab9a8982073d270fed73ed7e602af858e732cad",
+      "evas/rust_core/src/linear/properties.rs": "d1a8b5ec069fef4f621b99290b532f7563cb8f55a1ba2178a77877f60192ab7f",
+      "evas/rust_core/src/linear/refinement.rs": "8476ad2ea3f3698e3c4552f8ff785c00ff878caab584b157dbb80b9c282f32a8",
+      "evas/rust_core/src/linear/sparse.rs": "3914adce2368b027027c06240f160864af0f53de934c0b3285515114fe7aa869",
+      "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+      "evas/rust_core/src/main.rs": "70626c73fa421340afcc53c025a220720b208657273ba3f5e20bc1e4c6e01c3c",
+      "evas/rust_core/src/math_functions.rs": "f81de5e49d457425159427414e034fd308fe5c966f70cdeb7bf6d48afee80e84",
+      "evas/rust_core/src/nonlinear.rs": "1e535704fb6dc14a577496ed47315ddf6e5f887d6dfa2b62b78d9b7b3a275863",
+      "evas/rust_core/src/nonlinear/continuation.rs": "6d0aabe1bb6563a32d4e920fabdefde881777a54b8dc2b4658de432347f6448a",
+      "evas/rust_core/src/nonlinear_dynamics.rs": "011dc5124b406c40ba4be8c25dad171b57cf66680031670954fff5035b50143a",
+      "evas/rust_core/src/observation.rs": "a4bddbd4b5f336883909fe66fd5a5cf3e636fb6da265d8c7be05e48107fcee32",
+      "evas/rust_core/src/operators.rs": "a8fbfc58698fad557878f94501a43040bf3cedb966d9f138de03d821bb092bec",
+      "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+      "evas/rust_core/src/portability.rs": "7fc70f2df49cfc6c5d5503b816a02adf15dbf7ce13eb2cf231f999918c4bd48a",
+      "evas/rust_core/src/pwl.rs": "fe7a9486783b5b33d9d7cf37120214e29680f707a4a94332acb1eb0df25b16c4",
+      "evas/rust_core/src/reset_dependencies.rs": "3f894fe282b3e22b7d07e7022a9e9aa9e6e06dc641591bdae25c0a7acf26f51f",
+      "evas/rust_core/src/schedule.rs": "8ed0032b2f76ae1a8d2e392fe548e06afbbdcafb11dc9afb4daa1d070bc5762d",
+      "evas/rust_core/src/settlement.rs": "2936275c2ccd13d1e28563307253ae629174236656364b86b5ad61a66fcc1e13",
+      "evas/rust_core/src/settlement_bounds.rs": "4d41bb6dbab3fcd56ec69b3402dc2c204d661b3bab628aa709e98db8e235bda9",
+      "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+      "evas/rust_core/src/slew_cascade.rs": "26b9cedd714dd24893d2076818d84c8905525da29c900c4df97bf9a7c40cc7b8",
+      "evas/rust_core/src/solver.rs": "b2ba26829db2d0fc94e329b375ed13b803510456b3131371ec4688a4dfcd0eba",
+      "evas/rust_core/src/solver_cache_tests.rs": "727acd4fc9084bb6e546a8aa70e2f1e5bd476d27265f5198c5cdd08b0a7fd3fa",
+      "evas/rust_core/src/state_space.rs": "bc791c33b49c78259c0efa4b89203758830b6f90b461058d6a526ada5e1b2a94",
+      "evas/rust_core/src/strobe.rs": "2cb7db0c54f6cf4656186343f764399132a9704f8b65552b00e737c9108c16af",
+      "evas/rust_core/src/transient.rs": "dc32cf9bc6cad5ec5a22d818950bc4729903c70d55794ae632f28a851b233a80",
+      "evas/rust_core/src/transient_condition_tests.rs": "9b041e9ae55b4094f115e215ac5bea81782c23f6ca29aabdf2acfa80167e69d0",
+      "evas/rust_core/src/transient_event_acceptance.rs": "f21491a70934cff2de421289d11822960be431e9aa258af21d221f1488d7d985",
+      "evas/rust_core/src/transient_history_calendar.rs": "e39ba63dcb296a0f646cc76d972b4d2486d75ebb60e9057ae6f877f01e0fc3e6",
+      "evas/rust_core/src/transient_idt_tests.rs": "dfd640a90830437089e8389eedf7e354bd20253b47e3dcc7d3226dd1a496ee33",
+      "evas/rust_core/src/transient_lifecycle_tests.rs": "74af82b4c2156266f53b044700a5ce8129acd962d8510cfd4279d8ca01958a36",
+      "evas/rust_core/src/transient_root_refinement.rs": "8ed16a06750811b6c8ebcd4aa65bf4752123eb80aeaf298c1763f4cf05c78716",
+      "evas/rust_core/src/transient_window_tests.rs": "08285e435c4e7df5b2a31ac259347840e72a63ef7941953ee850655fdc1a7909",
+      "evas/rust_core/src/transition.rs": "61de1f3b626e78f656d3b8d81a1ecfb14786fc5dfb117a548e1351edd46edf30",
+      "evas/rust_core/src/transition_filter.rs": "b77b028da41289d0a848600a4d6b158cde86d0f632eecab5ffe3741d01174bc0"
+    },
+    "source_clean_at_execution": false,
+    "source_manifest_path": "runs/feature-gaps-20261013/feature-remote-v2/SOURCE_MANIFEST.json",
+    "source_manifest_sha256": "bf6598372663ef7523ac05181a8eb13b1cafa219ae0bc3317976a0ad8261c8d6",
+    "source_patch_path": "runs/feature-gaps-20261013/feature-remote-v2/SOURCE.patch",
+    "source_patch_sha256": "2adedfba8e69f4fe78e8676deeea5108413b35f8a3a40dfe407d3b440f7b6c97",
+    "source_snapshot_files": 47768,
+    "source_snapshot_path": "runs/feature-gaps-20261013/feature-remote-v2/repo"
+  },
+  "inputs_and_criteria": {
+    "callback_adapter_sha256": "a7d6999839df36b10a7c73171a54373a6e0c6030a63af9ff09754b8c8f7cd1ab",
+    "cards_sha256": "407c42213e71b4f44c7029ae74a5a646f33d059401d84d4391fe02160d6902fb",
+    "ec20_callback_order_proof": {
+      "a3_box_s": [
+        5.999999999999999e-06,
+        6e-06
+      ],
+      "actual_time_rule": "Fraction(compiled_start) + ordinal * Fraction(compiled_period), from the original binary64 constants, not card nominal times.",
+      "b2_box_s": [
+        6e-06,
+        6.000000000000001e-06
+      ],
+      "b2_minus_a3_s": "1/2361183241434822606848",
+      "grade_scope": "Original finite observed voltage/state/event/precision requirements only; not a proof of all times or all Verilog-A programs.",
+      "limits": "Full original callback boxes remain. Touching boxes alone do not prove order; exact compiled fixed-timer clocks must be inside them and strictly increasing. No transfer to held/dynamic/OR timers, unsupported producers or Spectre.",
+      "producer": "Independently recompiled original fixed-timer IR and the complete event ordinal/state chain; external source, build and output identities qualified before reanalysis."
+    },
+    "input_manifest_sha256": "339701ff7eb422e139e11e1af4c9fd7c99b5b647a4c170da8deb98dc81075815",
+    "mathematics": "Original analytic interval reference, original output/state/time windows and Q thresholds; full callback boxes retained. EC04 independent ideal-root diagnostic never overrides its old result.",
+    "old_checker_and_grades_unchanged": true,
+    "physical_inputs_unchanged": true,
+    "profile_bindings_sha256": "cf58b1c7b9a02626169eb725c29e96568139642105a47a8f695371e490f9eac9",
+    "unchanged_frozen_reference_hashes": {
+      "evas/validation/paper/precision-v2.json": "a5e08c66388a01e1ae24f161d53125ae605914158fec5c58d0e1f94c4708f603",
+      "evas/validation/paper/precision_breadth.py": "299ae9a2bcdff8fa2d987ad54ce0a4a8ebaa9db015a6b686a23dba63c6f31ceb",
+      "evas/validation/paper/precision_breadth_composition.py": "62299a0b389f8a3b1b08e1f5cbdd44950724cc3ed4476e4884afa8a84325e6e2",
+      "evas/validation/paper/precision_reference.py": "f147be6e821de4b87a27be149acc22015fd927e8bf4cb90036ae99eb7f23cc29"
+    }
+  },
+  "limits": {
+    "case_bytes": 268435456,
+    "case_limit_note": "Polling directory cap, not hard container-tree quota.",
+    "file_bytes": 33554432,
+    "memory_bytes": 4294967296,
+    "nonlinear_internal_allowance": "16384 plus actual forced-point count; maximum 116384. Discarded trials and order upgrades consume shared allowance. Numerical thresholds unchanged.",
+    "scientific_stage_seconds": 90,
+    "threads": 1
+  },
+  "provenance_corrections": {
+    "feature_v1_evas": "Source patch was not applied in nested snapshot; actual kernel 90159c7a is old main, excluded as candidate validation. Original artifact/source statements preserved and superseded by this correction.",
+    "feature_v2": "Direct tracked-file copy and per-file local/remote hash barriers; authentic source and kernel verified by independent Astra.",
+    "local_helper_failures": "callback-actual-v1 lacked request.program; v2 compared tuple IR to JSON lists without normalization. Both failed locally before producing grades; retained. v3 normalized serialized IR and independently recompiled it."
+  },
+  "results": {
+    "evas": [
+      {
+        "callback_evidence_reason": null,
+        "callback_evidence_status": "qualified",
+        "card": "EC03-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 2.9802322387695312e-08,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-05,
+            "stop": 3.814697265625e-06,
+            "vabstol": 1e-09
+          },
+          "additional_controls": {
+            "accepted_steps": 20149,
+            "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred",
+            "engine": "evas-events-0.14.0",
+            "max_step_applied": true,
+            "observation_mode": "forced solver observation",
+            "origins": [
+              "accepted_controller_frame"
+            ]
+          },
+          "issues": [],
+          "notes": [],
+          "requested": {
+            "iabstol": 1e-13,
+            "maxstep": 2.9802322387695312e-08,
+            "reltol": 1e-05,
+            "stop": 3.814697265625e-06,
+            "vabstol": 1e-09
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "qualified"
+        },
+        "executed_target_tier": "Q1",
+        "identity": {
+          "original_analysis_sha256": "a1c695cc64d602ce4b789ac6f57f5352e321ef3e9b767bb6b83bb0a446302ba4",
+          "original_result_sha256": "b8fbc823d241cddcae0d3e8e3626ae7a2a7c72129165bd5acf13ddecf63c5c03",
+          "program_sha256": "c2c4833aea48733388b888ea431435204eb9aebc87e48b54a419f1608e51963f",
+          "raw_response_sha256": "a03ff0e3ef4a7b41c79a629f898a386262eca054ae2bbf224dcba22362e04b0a",
+          "request_sha256": "63e6eb5548dc48c9ea69091c44902f87e41920a419b123c35d1fb4b2dff66137",
+          "waveform_sha256": "29f8adfd5674d526b5a02bc9a644c8e9299b92f1e4c40efaa6beaa400b2f68b3"
+        },
+        "label": "EC03-v1--Q1",
+        "native_observations": {
+          "artifacts": {
+            "raw-response.json": "a03ff0e3ef4a7b41c79a629f898a386262eca054ae2bbf224dcba22362e04b0a",
+            "waveform.csv": "29f8adfd5674d526b5a02bc9a644c8e9299b92f1e4c40efaa6beaa400b2f68b3"
+          },
+          "facts": {
+            "row_count": 20150
+          },
+          "limit": "forced solver/history observations; not DC/transient phase or callback-order proof",
+          "method": "precision_report raw response/CSV equality and explicit origin validation",
+          "origins": [
+            "accepted_controller_frame"
+          ],
+          "status": "qualified"
+        },
+        "new_behavior": {
+          "errors": [],
+          "issues": [],
+          "status": "pass"
+        },
+        "new_evidence": {
+          "issues": [],
+          "status": "complete"
+        },
+        "new_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 3.6415315207705135e-14,
+          "status": "pass"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 5.8836966410069635e-08,
+          "status": "pass"
+        },
+        "qualified_tier": "pass",
+        "runtime_controls": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 2.9802322387695312e-08,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-05,
+            "stop": 3.814697265625e-06,
+            "vabstol": 1e-09
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [],
+          "maxstep_application": "applied",
+          "status": "qualified"
+        }
+      },
+      {
+        "callback_evidence_reason": null,
+        "callback_evidence_status": "qualified",
+        "card": "EC03-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 3.725290298461914e-09,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-08,
+            "stop": 3.814697265625e-06,
+            "vabstol": 1e-12
+          },
+          "additional_controls": {
+            "accepted_steps": 21045,
+            "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred",
+            "engine": "evas-events-0.14.0",
+            "max_step_applied": true,
+            "observation_mode": "forced solver observation",
+            "origins": [
+              "accepted_controller_frame"
+            ]
+          },
+          "issues": [],
+          "notes": [],
+          "requested": {
+            "iabstol": 1e-15,
+            "maxstep": 3.725290298461914e-09,
+            "reltol": 1e-08,
+            "stop": 3.814697265625e-06,
+            "vabstol": 1e-12
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "qualified"
+        },
+        "executed_target_tier": "Q2",
+        "identity": {
+          "original_analysis_sha256": "dc3ca07376e1476fec4fca38b3bc2aec03ea6bbb71207b70c53197af7c9bcf38",
+          "original_result_sha256": "2467a885e453ae3cf384796e45e6813f75250cc532d3b23e1853398a2d83a592",
+          "program_sha256": "c2c4833aea48733388b888ea431435204eb9aebc87e48b54a419f1608e51963f",
+          "raw_response_sha256": "e33281e966aa9296e7dad606132fff2668633bf8247c3370678cca33ff3e9a4e",
+          "request_sha256": "57cd4125d7f60c0d45dc74f627d38006da7ba1eaea2161ba94da7486123805eb",
+          "waveform_sha256": "29f8adfd5674d526b5a02bc9a644c8e9299b92f1e4c40efaa6beaa400b2f68b3"
+        },
+        "label": "EC03-v1--Q2",
+        "native_observations": {
+          "artifacts": {
+            "raw-response.json": "e33281e966aa9296e7dad606132fff2668633bf8247c3370678cca33ff3e9a4e",
+            "waveform.csv": "29f8adfd5674d526b5a02bc9a644c8e9299b92f1e4c40efaa6beaa400b2f68b3"
+          },
+          "facts": {
+            "row_count": 20150
+          },
+          "limit": "forced solver/history observations; not DC/transient phase or callback-order proof",
+          "method": "precision_report raw response/CSV equality and explicit origin validation",
+          "origins": [
+            "accepted_controller_frame"
+          ],
+          "status": "qualified"
+        },
+        "new_behavior": {
+          "errors": [],
+          "issues": [],
+          "status": "pass"
+        },
+        "new_evidence": {
+          "issues": [],
+          "status": "complete"
+        },
+        "new_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 3.6415315207705135e-14,
+          "status": "pass"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 5.8836966410069635e-08,
+          "status": "pass"
+        },
+        "qualified_tier": "pass",
+        "runtime_controls": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 3.725290298461914e-09,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-08,
+            "stop": 3.814697265625e-06,
+            "vabstol": 1e-12
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [],
+          "maxstep_application": "applied",
+          "status": "qualified"
+        }
+      },
+      {
+        "callback_evidence_reason": null,
+        "callback_evidence_status": "qualified",
+        "card": "EC03-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 4.656612873077393e-10,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-10,
+            "stop": 3.814697265625e-06,
+            "vabstol": 1e-14
+          },
+          "additional_controls": {
+            "accepted_steps": 28213,
+            "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred",
+            "engine": "evas-events-0.14.0",
+            "max_step_applied": true,
+            "observation_mode": "forced solver observation",
+            "origins": [
+              "accepted_controller_frame"
+            ]
+          },
+          "issues": [],
+          "notes": [],
+          "requested": {
+            "iabstol": 1e-17,
+            "maxstep": 4.656612873077393e-10,
+            "reltol": 1e-10,
+            "stop": 3.814697265625e-06,
+            "vabstol": 1e-14
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "qualified"
+        },
+        "executed_target_tier": "Q3",
+        "identity": {
+          "original_analysis_sha256": "d4d05724952a26838b3903d1ade2e3eff5b86716e5c0a8a132be9a7a5a3fc9dc",
+          "original_result_sha256": "2a66f62d9f4912ba08421d0d7faad0425ff13ca826b283a6b2a3f4eebec2714a",
+          "program_sha256": "c2c4833aea48733388b888ea431435204eb9aebc87e48b54a419f1608e51963f",
+          "raw_response_sha256": "d60acede1c560f4824a8080fcf4d43a45e0663ee1d767e2c3c5e9ebe2cfb63d1",
+          "request_sha256": "350f054717bd8a05a5ab8b951fc6545f7e532ed65aed5c214848d44a2c63cfb3",
+          "waveform_sha256": "29f8adfd5674d526b5a02bc9a644c8e9299b92f1e4c40efaa6beaa400b2f68b3"
+        },
+        "label": "EC03-v1--Q3",
+        "native_observations": {
+          "artifacts": {
+            "raw-response.json": "d60acede1c560f4824a8080fcf4d43a45e0663ee1d767e2c3c5e9ebe2cfb63d1",
+            "waveform.csv": "29f8adfd5674d526b5a02bc9a644c8e9299b92f1e4c40efaa6beaa400b2f68b3"
+          },
+          "facts": {
+            "row_count": 20150
+          },
+          "limit": "forced solver/history observations; not DC/transient phase or callback-order proof",
+          "method": "precision_report raw response/CSV equality and explicit origin validation",
+          "origins": [
+            "accepted_controller_frame"
+          ],
+          "status": "qualified"
+        },
+        "new_behavior": {
+          "errors": [],
+          "issues": [],
+          "status": "pass"
+        },
+        "new_evidence": {
+          "issues": [],
+          "status": "complete"
+        },
+        "new_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 3.6415315207705135e-14,
+          "status": "pass"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 5.8836966410069635e-08,
+          "status": "pass"
+        },
+        "qualified_tier": "pass",
+        "runtime_controls": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 4.656612873077393e-10,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-10,
+            "stop": 3.814697265625e-06,
+            "vabstol": 1e-14
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [],
+          "maxstep_application": "applied",
+          "status": "qualified"
+        }
+      },
+      {
+        "callback_evidence_reason": "complete callback box exceeds legal window",
+        "callback_evidence_status": "unknown",
+        "card": "EC04-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 2.9802322387695312e-08,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-05,
+            "stop": 2.1457672119140625e-06,
+            "vabstol": 1e-09
+          },
+          "additional_controls": {
+            "accepted_steps": 20078,
+            "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred",
+            "engine": "evas-events-0.14.0",
+            "max_step_applied": true,
+            "observation_mode": "forced solver observation",
+            "origins": [
+              "accepted_controller_frame"
+            ]
+          },
+          "issues": [],
+          "notes": [],
+          "requested": {
+            "iabstol": 1e-13,
+            "maxstep": 2.9802322387695312e-08,
+            "reltol": 1e-05,
+            "stop": 2.1457672119140625e-06,
+            "vabstol": 1e-09
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "qualified"
+        },
+        "executed_target_tier": "Q1",
+        "identity": {
+          "original_analysis_sha256": "030f3c3a0cc2f922106312c4adcc67bbf0230162db2e58131b0049a6a857d8f1",
+          "original_result_sha256": "14d5d49bd04bd144da69ec4acff4961b468a439b75a557bbb3cb7251c2707c4a",
+          "program_sha256": "d70b3c215a18e87fa0c1448d63ef26a637b89b4fd5008ade4c92f0f83bf3ac7e",
+          "raw_response_sha256": "448fbf3f4f5d3dc44b04de4b20aed5932e5042a8b24dd0eb574f4d57578104ae",
+          "request_sha256": "dd6c5feacfae262e49a4f875b615bcc16ce664ac44f11e6829ba91a27e54125f",
+          "waveform_sha256": "cbd082c9c617f80c86f880965cebb6681510933979030541c5db5c3c7c270812"
+        },
+        "label": "EC04-v1--Q1",
+        "native_observations": {
+          "artifacts": {
+            "raw-response.json": "448fbf3f4f5d3dc44b04de4b20aed5932e5042a8b24dd0eb574f4d57578104ae",
+            "waveform.csv": "cbd082c9c617f80c86f880965cebb6681510933979030541c5db5c3c7c270812"
+          },
+          "facts": {
+            "row_count": 20079
+          },
+          "limit": "forced solver/history observations; not DC/transient phase or callback-order proof",
+          "method": "precision_report raw response/CSV equality and explicit origin validation",
+          "origins": [
+            "accepted_controller_frame"
+          ],
+          "status": "qualified"
+        },
+        "new_behavior": {
+          "errors": [],
+          "issues": [
+            "full callback bracket does not fit legal window: EC04-v1:sample"
+          ],
+          "status": "unknown"
+        },
+        "new_evidence": {
+          "issues": [
+            "full callback bracket does not fit legal window: EC04-v1:sample",
+            "reference unavailable or invalid: callback bracket outside complete legal window",
+            "no qualified defined reference observations: q",
+            "no qualified defined reference observations: y"
+          ],
+          "status": "evidence_insufficient"
+        },
+        "new_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 0.0,
+          "status": "unknown"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 0.0,
+          "status": "unknown"
+        },
+        "qualified_tier": "evidence_insufficient",
+        "runtime_controls": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 2.9802322387695312e-08,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-05,
+            "stop": 2.1457672119140625e-06,
+            "vabstol": 1e-09
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [],
+          "maxstep_application": "applied",
+          "status": "qualified"
+        }
+      },
+      {
+        "callback_evidence_reason": "complete callback box exceeds legal window",
+        "callback_evidence_status": "unknown",
+        "card": "EC04-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 3.725290298461914e-09,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-08,
+            "stop": 2.1457672119140625e-06,
+            "vabstol": 1e-12
+          },
+          "additional_controls": {
+            "accepted_steps": 20582,
+            "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred",
+            "engine": "evas-events-0.14.0",
+            "max_step_applied": true,
+            "observation_mode": "forced solver observation",
+            "origins": [
+              "accepted_controller_frame"
+            ]
+          },
+          "issues": [],
+          "notes": [],
+          "requested": {
+            "iabstol": 1e-15,
+            "maxstep": 3.725290298461914e-09,
+            "reltol": 1e-08,
+            "stop": 2.1457672119140625e-06,
+            "vabstol": 1e-12
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "qualified"
+        },
+        "executed_target_tier": "Q2",
+        "identity": {
+          "original_analysis_sha256": "b8a63973b6c35212565a6c672250bed845ba1327ebfbb333cad8701f4afc9fb4",
+          "original_result_sha256": "362c4c30c5d37c051ef928f81fc6abb53246f5d7ebf2623494679fa0aaf30f03",
+          "program_sha256": "d70b3c215a18e87fa0c1448d63ef26a637b89b4fd5008ade4c92f0f83bf3ac7e",
+          "raw_response_sha256": "fa8345eee7649bf7ba1a14f02647991204b54692a59480592bf1bf379c59ab41",
+          "request_sha256": "bfdb36b2057a558465aa70b16d765ba71c70f72d05fc3ed006d174a851859515",
+          "waveform_sha256": "cbd082c9c617f80c86f880965cebb6681510933979030541c5db5c3c7c270812"
+        },
+        "label": "EC04-v1--Q2",
+        "native_observations": {
+          "artifacts": {
+            "raw-response.json": "fa8345eee7649bf7ba1a14f02647991204b54692a59480592bf1bf379c59ab41",
+            "waveform.csv": "cbd082c9c617f80c86f880965cebb6681510933979030541c5db5c3c7c270812"
+          },
+          "facts": {
+            "row_count": 20079
+          },
+          "limit": "forced solver/history observations; not DC/transient phase or callback-order proof",
+          "method": "precision_report raw response/CSV equality and explicit origin validation",
+          "origins": [
+            "accepted_controller_frame"
+          ],
+          "status": "qualified"
+        },
+        "new_behavior": {
+          "errors": [],
+          "issues": [
+            "full callback bracket does not fit legal window: EC04-v1:sample"
+          ],
+          "status": "unknown"
+        },
+        "new_evidence": {
+          "issues": [
+            "full callback bracket does not fit legal window: EC04-v1:sample",
+            "reference unavailable or invalid: callback bracket outside complete legal window",
+            "no qualified defined reference observations: q",
+            "no qualified defined reference observations: y"
+          ],
+          "status": "evidence_insufficient"
+        },
+        "new_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 0.0,
+          "status": "unknown"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 0.0,
+          "status": "unknown"
+        },
+        "qualified_tier": "evidence_insufficient",
+        "runtime_controls": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 3.725290298461914e-09,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-08,
+            "stop": 2.1457672119140625e-06,
+            "vabstol": 1e-12
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [],
+          "maxstep_application": "applied",
+          "status": "qualified"
+        }
+      },
+      {
+        "callback_evidence_reason": "complete callback box exceeds legal window",
+        "callback_evidence_status": "unknown",
+        "card": "EC04-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 4.656612873077393e-10,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-10,
+            "stop": 2.1457672119140625e-06,
+            "vabstol": 1e-14
+          },
+          "additional_controls": {
+            "accepted_steps": 24614,
+            "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred",
+            "engine": "evas-events-0.14.0",
+            "max_step_applied": true,
+            "observation_mode": "forced solver observation",
+            "origins": [
+              "accepted_controller_frame"
+            ]
+          },
+          "issues": [],
+          "notes": [],
+          "requested": {
+            "iabstol": 1e-17,
+            "maxstep": 4.656612873077393e-10,
+            "reltol": 1e-10,
+            "stop": 2.1457672119140625e-06,
+            "vabstol": 1e-14
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "qualified"
+        },
+        "executed_target_tier": "Q3",
+        "identity": {
+          "original_analysis_sha256": "caf944b881e4c284d4ca8d51711bc5e91d6d85ec2d161da622856e0be3f8ea81",
+          "original_result_sha256": "b6529edba115bb2a5e8f06e8ec8584c0dc2ff1235885a70c0c8cb08fbe277596",
+          "program_sha256": "d70b3c215a18e87fa0c1448d63ef26a637b89b4fd5008ade4c92f0f83bf3ac7e",
+          "raw_response_sha256": "496b5eb09522f6d8200a011bdf9e11ba232e27b4321f55e1e42f71852b0203f3",
+          "request_sha256": "1dc0f158184e94da2ec39bc08d7da4f6c97e3ba3a2009e67fc711bc559c1ac9d",
+          "waveform_sha256": "cbd082c9c617f80c86f880965cebb6681510933979030541c5db5c3c7c270812"
+        },
+        "label": "EC04-v1--Q3",
+        "native_observations": {
+          "artifacts": {
+            "raw-response.json": "496b5eb09522f6d8200a011bdf9e11ba232e27b4321f55e1e42f71852b0203f3",
+            "waveform.csv": "cbd082c9c617f80c86f880965cebb6681510933979030541c5db5c3c7c270812"
+          },
+          "facts": {
+            "row_count": 20079
+          },
+          "limit": "forced solver/history observations; not DC/transient phase or callback-order proof",
+          "method": "precision_report raw response/CSV equality and explicit origin validation",
+          "origins": [
+            "accepted_controller_frame"
+          ],
+          "status": "qualified"
+        },
+        "new_behavior": {
+          "errors": [],
+          "issues": [
+            "full callback bracket does not fit legal window: EC04-v1:sample"
+          ],
+          "status": "unknown"
+        },
+        "new_evidence": {
+          "issues": [
+            "full callback bracket does not fit legal window: EC04-v1:sample",
+            "reference unavailable or invalid: callback bracket outside complete legal window",
+            "no qualified defined reference observations: q",
+            "no qualified defined reference observations: y"
+          ],
+          "status": "evidence_insufficient"
+        },
+        "new_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 0.0,
+          "status": "unknown"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 0.0,
+          "status": "unknown"
+        },
+        "qualified_tier": "evidence_insufficient",
+        "runtime_controls": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 4.656612873077393e-10,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-10,
+            "stop": 2.1457672119140625e-06,
+            "vabstol": 1e-14
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [],
+          "maxstep_application": "applied",
+          "status": "qualified"
+        }
+      },
+      {
+        "callback_evidence_reason": null,
+        "callback_evidence_status": "qualified",
+        "card": "EC07-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 2.9802322387695312e-08,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-05,
+            "stop": 1.9073486328125e-06,
+            "vabstol": 1e-09
+          },
+          "additional_controls": {
+            "accepted_steps": 20078,
+            "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred",
+            "engine": "evas-events-0.14.0",
+            "max_step_applied": true,
+            "observation_mode": "forced solver observation",
+            "origins": [
+              "accepted_controller_frame"
+            ]
+          },
+          "issues": [],
+          "notes": [],
+          "requested": {
+            "iabstol": 1e-13,
+            "maxstep": 2.9802322387695312e-08,
+            "reltol": 1e-05,
+            "stop": 1.9073486328125e-06,
+            "vabstol": 1e-09
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "qualified"
+        },
+        "executed_target_tier": "Q1",
+        "identity": {
+          "original_analysis_sha256": "242fa3044fb4408c71853451cdc2002cb6ab957715193ca51ea64e33945631aa",
+          "original_result_sha256": "fe27cb52b9a8faf085a879450c516b83827442f7294fd08b4793dfcd80783b9f",
+          "program_sha256": "5fa5145ebd803a439ece924bab951ef03b4f06891582aec41a95a81a6bba0253",
+          "raw_response_sha256": "1d13d456bb29bf7a3cb639f0ed19017586bf0d63c20e7a8264161faa3e26d0e9",
+          "request_sha256": "3f0ee6ad3627eda8914fe455a32ae4901b003855b1c88caee6de4ebc848fd211",
+          "waveform_sha256": "947fee03114865fd0b3bfe6f0a8e3c99760190939956c5a80584397229af3f0d"
+        },
+        "label": "EC07-v1--Q1",
+        "native_observations": {
+          "artifacts": {
+            "raw-response.json": "1d13d456bb29bf7a3cb639f0ed19017586bf0d63c20e7a8264161faa3e26d0e9",
+            "waveform.csv": "947fee03114865fd0b3bfe6f0a8e3c99760190939956c5a80584397229af3f0d"
+          },
+          "facts": {
+            "row_count": 20079
+          },
+          "limit": "forced solver/history observations; not DC/transient phase or callback-order proof",
+          "method": "precision_report raw response/CSV equality and explicit origin validation",
+          "origins": [
+            "accepted_controller_frame"
+          ],
+          "status": "qualified"
+        },
+        "new_behavior": {
+          "errors": [],
+          "issues": [],
+          "status": "pass"
+        },
+        "new_evidence": {
+          "issues": [],
+          "status": "complete"
+        },
+        "new_numerical": {
+          "error_lower_V": 1.1113332476497817e-12,
+          "error_upper_V": 1.1297629498585593e-12,
+          "status": "pass"
+        },
+        "original_numerical": {
+          "error_lower_V": 5.535572000781031e-13,
+          "error_upper_V": 1.3369582330113872e-08,
+          "status": "pass"
+        },
+        "qualified_tier": "pass",
+        "runtime_controls": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 2.9802322387695312e-08,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-05,
+            "stop": 1.9073486328125e-06,
+            "vabstol": 1e-09
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [],
+          "maxstep_application": "applied",
+          "status": "qualified"
+        }
+      },
+      {
+        "callback_evidence_reason": null,
+        "callback_evidence_status": "qualified",
+        "card": "EC07-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 3.725290298461914e-09,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-08,
+            "stop": 1.9073486328125e-06,
+            "vabstol": 1e-12
+          },
+          "additional_controls": {
+            "accepted_steps": 20526,
+            "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred",
+            "engine": "evas-events-0.14.0",
+            "max_step_applied": true,
+            "observation_mode": "forced solver observation",
+            "origins": [
+              "accepted_controller_frame"
+            ]
+          },
+          "issues": [],
+          "notes": [],
+          "requested": {
+            "iabstol": 1e-15,
+            "maxstep": 3.725290298461914e-09,
+            "reltol": 1e-08,
+            "stop": 1.9073486328125e-06,
+            "vabstol": 1e-12
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "qualified"
+        },
+        "executed_target_tier": "Q2",
+        "identity": {
+          "original_analysis_sha256": "fb7d966cfc6b222c4d9040aa5c6c07fbc2e77337ef57788da64bc4bfb4beddee",
+          "original_result_sha256": "8aa3d0e6c165f676bca82b71924fc1c60526264f5067e5bb884cb2398d31cdc1",
+          "program_sha256": "5fa5145ebd803a439ece924bab951ef03b4f06891582aec41a95a81a6bba0253",
+          "raw_response_sha256": "6761b56eef4b12987f8d47324810ecabea20c722eec574a7a5e9a08d8055657a",
+          "request_sha256": "960b54715a01d746443d0668756609aeef590a3185b7c1f5e290c45cc874ceec",
+          "waveform_sha256": "947fee03114865fd0b3bfe6f0a8e3c99760190939956c5a80584397229af3f0d"
+        },
+        "label": "EC07-v1--Q2",
+        "native_observations": {
+          "artifacts": {
+            "raw-response.json": "6761b56eef4b12987f8d47324810ecabea20c722eec574a7a5e9a08d8055657a",
+            "waveform.csv": "947fee03114865fd0b3bfe6f0a8e3c99760190939956c5a80584397229af3f0d"
+          },
+          "facts": {
+            "row_count": 20079
+          },
+          "limit": "forced solver/history observations; not DC/transient phase or callback-order proof",
+          "method": "precision_report raw response/CSV equality and explicit origin validation",
+          "origins": [
+            "accepted_controller_frame"
+          ],
+          "status": "qualified"
+        },
+        "new_behavior": {
+          "errors": [],
+          "issues": [],
+          "status": "pass"
+        },
+        "new_evidence": {
+          "issues": [],
+          "status": "complete"
+        },
+        "new_numerical": {
+          "error_lower_V": 1.1113332476497817e-12,
+          "error_upper_V": 1.1297629498585593e-12,
+          "status": "pass"
+        },
+        "original_numerical": {
+          "error_lower_V": 5.535572000781031e-13,
+          "error_upper_V": 1.3369582330113872e-08,
+          "status": "pass"
+        },
+        "qualified_tier": "pass",
+        "runtime_controls": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 3.725290298461914e-09,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-08,
+            "stop": 1.9073486328125e-06,
+            "vabstol": 1e-12
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [],
+          "maxstep_application": "applied",
+          "status": "qualified"
+        }
+      },
+      {
+        "callback_evidence_reason": null,
+        "callback_evidence_status": "qualified",
+        "card": "EC07-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 4.656612873077393e-10,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-10,
+            "stop": 1.9073486328125e-06,
+            "vabstol": 1e-14
+          },
+          "additional_controls": {
+            "accepted_steps": 24110,
+            "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred",
+            "engine": "evas-events-0.14.0",
+            "max_step_applied": true,
+            "observation_mode": "forced solver observation",
+            "origins": [
+              "accepted_controller_frame"
+            ]
+          },
+          "issues": [],
+          "notes": [],
+          "requested": {
+            "iabstol": 1e-17,
+            "maxstep": 4.656612873077393e-10,
+            "reltol": 1e-10,
+            "stop": 1.9073486328125e-06,
+            "vabstol": 1e-14
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "qualified"
+        },
+        "executed_target_tier": "Q3",
+        "identity": {
+          "original_analysis_sha256": "1c0ceb816acf7ceeb3e70e7bc6c771ef19a814166b2627e16fe0aa47c85c208b",
+          "original_result_sha256": "ad37a1f1c9dcca3225741736cbcaeb52f57e048633b6f84e44341181869f2187",
+          "program_sha256": "5fa5145ebd803a439ece924bab951ef03b4f06891582aec41a95a81a6bba0253",
+          "raw_response_sha256": "db6b278a6ae96a3ad59c8e0551c424ffe02b2d1ab149cea57a992444a84b5be2",
+          "request_sha256": "f81640e87484308cd35b70e568d0d4eeed505368aba6a02bbc6d5d838a6197ce",
+          "waveform_sha256": "947fee03114865fd0b3bfe6f0a8e3c99760190939956c5a80584397229af3f0d"
+        },
+        "label": "EC07-v1--Q3",
+        "native_observations": {
+          "artifacts": {
+            "raw-response.json": "db6b278a6ae96a3ad59c8e0551c424ffe02b2d1ab149cea57a992444a84b5be2",
+            "waveform.csv": "947fee03114865fd0b3bfe6f0a8e3c99760190939956c5a80584397229af3f0d"
+          },
+          "facts": {
+            "row_count": 20079
+          },
+          "limit": "forced solver/history observations; not DC/transient phase or callback-order proof",
+          "method": "precision_report raw response/CSV equality and explicit origin validation",
+          "origins": [
+            "accepted_controller_frame"
+          ],
+          "status": "qualified"
+        },
+        "new_behavior": {
+          "errors": [],
+          "issues": [],
+          "status": "pass"
+        },
+        "new_evidence": {
+          "issues": [],
+          "status": "complete"
+        },
+        "new_numerical": {
+          "error_lower_V": 1.1113332476497817e-12,
+          "error_upper_V": 1.1297629498585593e-12,
+          "status": "pass"
+        },
+        "original_numerical": {
+          "error_lower_V": 5.535572000781031e-13,
+          "error_upper_V": 1.3369582330113872e-08,
+          "status": "pass"
+        },
+        "qualified_tier": "pass",
+        "runtime_controls": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 4.656612873077393e-10,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-10,
+            "stop": 1.9073486328125e-06,
+            "vabstol": 1e-14
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [],
+          "maxstep_application": "applied",
+          "status": "qualified"
+        }
+      },
+      {
+        "callback_evidence_reason": null,
+        "callback_evidence_status": "qualified",
+        "card": "EC10-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 2.9802322387695312e-08,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-05,
+            "stop": 2.86102294921875e-06,
+            "vabstol": 1e-09
+          },
+          "additional_controls": {
+            "accepted_steps": 20104,
+            "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred",
+            "engine": "evas-events-0.14.0",
+            "max_step_applied": true,
+            "observation_mode": "forced solver observation",
+            "origins": [
+              "accepted_controller_frame"
+            ]
+          },
+          "issues": [],
+          "notes": [],
+          "requested": {
+            "iabstol": 1e-13,
+            "maxstep": 2.9802322387695312e-08,
+            "reltol": 1e-05,
+            "stop": 2.86102294921875e-06,
+            "vabstol": 1e-09
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "qualified"
+        },
+        "executed_target_tier": "Q1",
+        "identity": {
+          "original_analysis_sha256": "8f92110f7d2da4a7110f4c6dc042f9bc5b2afbd390a14507ad8e89fe77115ee1",
+          "original_result_sha256": "1085f093ad84980689138eb53cf883b6574895cfcf7bb2731bbc91d0e45a002a",
+          "program_sha256": "872a82bf833167eb5a6e925289ecc73834c1702e3468470d8533a7fe083ebece",
+          "raw_response_sha256": "4b9a34e7d461a0397398bae5b4e16a7f6bef70945ef0254a60a93dc13c1ddbec",
+          "request_sha256": "e9692096284fdf39564b35f60d4e42fdb992ec66c62bd7659d72b670f64a87e0",
+          "waveform_sha256": "0969be38a0adcf18d89708f5b78e217763cb3292aca26c705fee8a48a8a400a0"
+        },
+        "label": "EC10-v1--Q1",
+        "native_observations": {
+          "artifacts": {
+            "raw-response.json": "4b9a34e7d461a0397398bae5b4e16a7f6bef70945ef0254a60a93dc13c1ddbec",
+            "waveform.csv": "0969be38a0adcf18d89708f5b78e217763cb3292aca26c705fee8a48a8a400a0"
+          },
+          "facts": {
+            "row_count": 20105
+          },
+          "limit": "forced solver/history observations; not DC/transient phase or callback-order proof",
+          "method": "precision_report raw response/CSV equality and explicit origin validation",
+          "origins": [
+            "accepted_controller_frame"
+          ],
+          "status": "qualified"
+        },
+        "new_behavior": {
+          "errors": [],
+          "issues": [],
+          "status": "pass"
+        },
+        "new_evidence": {
+          "issues": [],
+          "status": "complete"
+        },
+        "new_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 5.773159728050814e-15,
+          "status": "pass"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 1.3370087259545471e-09,
+          "status": "pass"
+        },
+        "qualified_tier": "pass",
+        "runtime_controls": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 2.9802322387695312e-08,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-05,
+            "stop": 2.86102294921875e-06,
+            "vabstol": 1e-09
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [],
+          "maxstep_application": "applied",
+          "status": "qualified"
+        }
+      },
+      {
+        "callback_evidence_reason": null,
+        "callback_evidence_status": "qualified",
+        "card": "EC10-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 3.725290298461914e-09,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-08,
+            "stop": 2.86102294921875e-06,
+            "vabstol": 1e-12
+          },
+          "additional_controls": {
+            "accepted_steps": 20776,
+            "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred",
+            "engine": "evas-events-0.14.0",
+            "max_step_applied": true,
+            "observation_mode": "forced solver observation",
+            "origins": [
+              "accepted_controller_frame"
+            ]
+          },
+          "issues": [],
+          "notes": [],
+          "requested": {
+            "iabstol": 1e-15,
+            "maxstep": 3.725290298461914e-09,
+            "reltol": 1e-08,
+            "stop": 2.86102294921875e-06,
+            "vabstol": 1e-12
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "qualified"
+        },
+        "executed_target_tier": "Q2",
+        "identity": {
+          "original_analysis_sha256": "286afcfed1ac9535a5462689311f45fbf4cc8835d75326bb41d27f52b58a3c7c",
+          "original_result_sha256": "5210c96f16a6409702c62c5e528c173d1a599a2a14d236ee4a3d8521cbf83dfb",
+          "program_sha256": "872a82bf833167eb5a6e925289ecc73834c1702e3468470d8533a7fe083ebece",
+          "raw_response_sha256": "dbd753ac115ea3f6635790c77182d36ab8ab01c6e618feb7929f6fe4b10f958d",
+          "request_sha256": "47d2c00ab4bc71c8ce444672b47bba66dbb768a2906aab4a387462ee29183173",
+          "waveform_sha256": "ecafbbf7400f2fb8f86c6845ebd429e7c6ba73267eec38b9a7137c8258deef68"
+        },
+        "label": "EC10-v1--Q2",
+        "native_observations": {
+          "artifacts": {
+            "raw-response.json": "dbd753ac115ea3f6635790c77182d36ab8ab01c6e618feb7929f6fe4b10f958d",
+            "waveform.csv": "ecafbbf7400f2fb8f86c6845ebd429e7c6ba73267eec38b9a7137c8258deef68"
+          },
+          "facts": {
+            "row_count": 20105
+          },
+          "limit": "forced solver/history observations; not DC/transient phase or callback-order proof",
+          "method": "precision_report raw response/CSV equality and explicit origin validation",
+          "origins": [
+            "accepted_controller_frame"
+          ],
+          "status": "qualified"
+        },
+        "new_behavior": {
+          "errors": [],
+          "issues": [],
+          "status": "pass"
+        },
+        "new_evidence": {
+          "issues": [],
+          "status": "complete"
+        },
+        "new_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 5.773159728050814e-15,
+          "status": "pass"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 1.3370087259545471e-09,
+          "status": "pass"
+        },
+        "qualified_tier": "pass",
+        "runtime_controls": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 3.725290298461914e-09,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-08,
+            "stop": 2.86102294921875e-06,
+            "vabstol": 1e-12
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [],
+          "maxstep_application": "applied",
+          "status": "qualified"
+        }
+      },
+      {
+        "callback_evidence_reason": null,
+        "callback_evidence_status": "qualified",
+        "card": "EC10-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 4.656612873077393e-10,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-10,
+            "stop": 2.86102294921875e-06,
+            "vabstol": 1e-14
+          },
+          "additional_controls": {
+            "accepted_steps": 26152,
+            "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred",
+            "engine": "evas-events-0.14.0",
+            "max_step_applied": true,
+            "observation_mode": "forced solver observation",
+            "origins": [
+              "accepted_controller_frame"
+            ]
+          },
+          "issues": [],
+          "notes": [],
+          "requested": {
+            "iabstol": 1e-17,
+            "maxstep": 4.656612873077393e-10,
+            "reltol": 1e-10,
+            "stop": 2.86102294921875e-06,
+            "vabstol": 1e-14
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "qualified"
+        },
+        "executed_target_tier": "Q3",
+        "identity": {
+          "original_analysis_sha256": "48bed7d8cd28178f860dd0780e93eaedb715b5f0e9799ff8f64a3edb6641e19b",
+          "original_result_sha256": "8397cdd95c0763c502c8406cbd14e651a33073c4bde28009351e3b9068efc0a1",
+          "program_sha256": "872a82bf833167eb5a6e925289ecc73834c1702e3468470d8533a7fe083ebece",
+          "raw_response_sha256": "89fbc58a43cfdde767ceb5d3944122cb486683103f5742cc3382af21d5200db2",
+          "request_sha256": "e5739e33b57221424700383e3d4ed4ba04a2f388ecf2991a357f7850a62e1c8f",
+          "waveform_sha256": "ecafbbf7400f2fb8f86c6845ebd429e7c6ba73267eec38b9a7137c8258deef68"
+        },
+        "label": "EC10-v1--Q3",
+        "native_observations": {
+          "artifacts": {
+            "raw-response.json": "89fbc58a43cfdde767ceb5d3944122cb486683103f5742cc3382af21d5200db2",
+            "waveform.csv": "ecafbbf7400f2fb8f86c6845ebd429e7c6ba73267eec38b9a7137c8258deef68"
+          },
+          "facts": {
+            "row_count": 20105
+          },
+          "limit": "forced solver/history observations; not DC/transient phase or callback-order proof",
+          "method": "precision_report raw response/CSV equality and explicit origin validation",
+          "origins": [
+            "accepted_controller_frame"
+          ],
+          "status": "qualified"
+        },
+        "new_behavior": {
+          "errors": [],
+          "issues": [],
+          "status": "pass"
+        },
+        "new_evidence": {
+          "issues": [],
+          "status": "complete"
+        },
+        "new_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 5.773159728050814e-15,
+          "status": "pass"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 1.3370087259545471e-09,
+          "status": "pass"
+        },
+        "qualified_tier": "pass",
+        "runtime_controls": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 4.656612873077393e-10,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-10,
+            "stop": 2.86102294921875e-06,
+            "vabstol": 1e-14
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [],
+          "maxstep_application": "applied",
+          "status": "qualified"
+        }
+      },
+      {
+        "callback_evidence_reason": null,
+        "callback_evidence_status": "qualified",
+        "card": "EC20-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 2.9802322387695312e-08,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-05,
+            "stop": 7e-06,
+            "vabstol": 1e-09
+          },
+          "additional_controls": {
+            "accepted_steps": 16265,
+            "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred",
+            "engine": "evas-events-0.14.0",
+            "max_step_applied": true,
+            "observation_mode": "forced solver observation",
+            "origins": [
+              "accepted_controller_frame"
+            ]
+          },
+          "issues": [],
+          "notes": [],
+          "requested": {
+            "iabstol": 1e-13,
+            "maxstep": 2.9802322387695312e-08,
+            "reltol": 1e-05,
+            "stop": 7e-06,
+            "vabstol": 1e-09
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "qualified"
+        },
+        "executed_target_tier": "Q1",
+        "identity": {
+          "original_analysis_sha256": "025652ad990ceb3b69a90c03560baf2c3a49360e67a93e9eda4ac285e3277e3e",
+          "original_result_sha256": "ff1312ab1abd211abc346465fe6ba79b39d9a28599c14d75a19c42105f4cd672",
+          "program_sha256": "5db3889630f4d14e0cf19babcb32b8d5f5321ae4b11ae328c16059eeabd78302",
+          "raw_response_sha256": "7992cd3df8c5d2a28f81a615bcb057d84e02bbc60221529c3097874ab9b126f9",
+          "request_sha256": "32320febe4d9d56e5c4c194f48c19b36c957c4c1a61ed87befd1997311a29759",
+          "waveform_sha256": "35602ad0c2a90c9cca1f1959f03e2b6fd997f2e671e002a62f15f26b41d0443c"
+        },
+        "label": "EC20-v1--Q1",
+        "native_observations": {
+          "artifacts": {
+            "raw-response.json": "7992cd3df8c5d2a28f81a615bcb057d84e02bbc60221529c3097874ab9b126f9",
+            "waveform.csv": "35602ad0c2a90c9cca1f1959f03e2b6fd997f2e671e002a62f15f26b41d0443c"
+          },
+          "facts": {
+            "row_count": 16266
+          },
+          "limit": "forced solver/history observations; not DC/transient phase or callback-order proof",
+          "method": "precision_report raw response/CSV equality and explicit origin validation",
+          "origins": [
+            "accepted_controller_frame"
+          ],
+          "status": "qualified"
+        },
+        "new_behavior": {
+          "errors": [],
+          "issues": [],
+          "status": "pass"
+        },
+        "new_evidence": {
+          "issues": [],
+          "status": "complete"
+        },
+        "new_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 1.0302869668521453e-13,
+          "status": "pass"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 1.604724282344705e-07,
+          "status": "pass"
+        },
+        "qualified_tier": "pass",
+        "runtime_controls": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 2.9802322387695312e-08,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-05,
+            "stop": 7e-06,
+            "vabstol": 1e-09
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [],
+          "maxstep_application": "applied",
+          "status": "qualified"
+        }
+      },
+      {
+        "callback_evidence_reason": null,
+        "callback_evidence_status": "qualified",
+        "card": "EC20-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 3.725290298461914e-09,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-08,
+            "stop": 7e-06,
+            "vabstol": 1e-12
+          },
+          "additional_controls": {
+            "accepted_steps": 17910,
+            "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred",
+            "engine": "evas-events-0.14.0",
+            "max_step_applied": true,
+            "observation_mode": "forced solver observation",
+            "origins": [
+              "accepted_controller_frame"
+            ]
+          },
+          "issues": [],
+          "notes": [],
+          "requested": {
+            "iabstol": 1e-15,
+            "maxstep": 3.725290298461914e-09,
+            "reltol": 1e-08,
+            "stop": 7e-06,
+            "vabstol": 1e-12
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "qualified"
+        },
+        "executed_target_tier": "Q2",
+        "identity": {
+          "original_analysis_sha256": "cb0ce69ebee7e4c42ae1fc03dcdbc4b28d9754e37914d3bbb34e64cb8109ba30",
+          "original_result_sha256": "999a8a52c0788d75372516c60dc0abd1c96a1cf864aa448a5945a124fd1ccd0e",
+          "program_sha256": "5db3889630f4d14e0cf19babcb32b8d5f5321ae4b11ae328c16059eeabd78302",
+          "raw_response_sha256": "21205919c2eab33db70237c6c82e32f57d66c5f001fb22a6c52424a4d6b3be27",
+          "request_sha256": "51d084ddf225d6f3fe87664fd73e2dd13e64f7ceddce1554969e5990e1394146",
+          "waveform_sha256": "35602ad0c2a90c9cca1f1959f03e2b6fd997f2e671e002a62f15f26b41d0443c"
+        },
+        "label": "EC20-v1--Q2",
+        "native_observations": {
+          "artifacts": {
+            "raw-response.json": "21205919c2eab33db70237c6c82e32f57d66c5f001fb22a6c52424a4d6b3be27",
+            "waveform.csv": "35602ad0c2a90c9cca1f1959f03e2b6fd997f2e671e002a62f15f26b41d0443c"
+          },
+          "facts": {
+            "row_count": 16266
+          },
+          "limit": "forced solver/history observations; not DC/transient phase or callback-order proof",
+          "method": "precision_report raw response/CSV equality and explicit origin validation",
+          "origins": [
+            "accepted_controller_frame"
+          ],
+          "status": "qualified"
+        },
+        "new_behavior": {
+          "errors": [],
+          "issues": [],
+          "status": "pass"
+        },
+        "new_evidence": {
+          "issues": [],
+          "status": "complete"
+        },
+        "new_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 1.0302869668521453e-13,
+          "status": "pass"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 1.604724282344705e-07,
+          "status": "pass"
+        },
+        "qualified_tier": "pass",
+        "runtime_controls": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 3.725290298461914e-09,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-08,
+            "stop": 7e-06,
+            "vabstol": 1e-12
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [],
+          "maxstep_application": "applied",
+          "status": "qualified"
+        }
+      },
+      {
+        "callback_evidence_reason": null,
+        "callback_evidence_status": "qualified",
+        "card": "EC20-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 4.656612873077393e-10,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-10,
+            "stop": 7e-06,
+            "vabstol": 1e-14
+          },
+          "additional_controls": {
+            "accepted_steps": 31060,
+            "control_note": "iabstol/method unsupported; max_step_applied is reported, never inferred",
+            "engine": "evas-events-0.14.0",
+            "max_step_applied": true,
+            "observation_mode": "forced solver observation",
+            "origins": [
+              "accepted_controller_frame"
+            ]
+          },
+          "issues": [],
+          "notes": [],
+          "requested": {
+            "iabstol": 1e-17,
+            "maxstep": 4.656612873077393e-10,
+            "reltol": 1e-10,
+            "stop": 7e-06,
+            "vabstol": 1e-14
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "qualified"
+        },
+        "executed_target_tier": "Q3",
+        "identity": {
+          "original_analysis_sha256": "a39dbb7717e4a27a2474721b7a27553d5c2e79634fdfa47e655adf08df08241b",
+          "original_result_sha256": "6e94ceae7d103e10b320963a1642f6195383d88f679fd68e84638317c6e08292",
+          "program_sha256": "5db3889630f4d14e0cf19babcb32b8d5f5321ae4b11ae328c16059eeabd78302",
+          "raw_response_sha256": "582bd183c14d5e386a73b5f0f2672d5b172c7c78b8286315945b82c0087dbd57",
+          "request_sha256": "51556aa4d6872317165556eab532796beade73c9cf88a8170a4cbe98b8ff2c95",
+          "waveform_sha256": "35602ad0c2a90c9cca1f1959f03e2b6fd997f2e671e002a62f15f26b41d0443c"
+        },
+        "label": "EC20-v1--Q3",
+        "native_observations": {
+          "artifacts": {
+            "raw-response.json": "582bd183c14d5e386a73b5f0f2672d5b172c7c78b8286315945b82c0087dbd57",
+            "waveform.csv": "35602ad0c2a90c9cca1f1959f03e2b6fd997f2e671e002a62f15f26b41d0443c"
+          },
+          "facts": {
+            "row_count": 16266
+          },
+          "limit": "forced solver/history observations; not DC/transient phase or callback-order proof",
+          "method": "precision_report raw response/CSV equality and explicit origin validation",
+          "origins": [
+            "accepted_controller_frame"
+          ],
+          "status": "qualified"
+        },
+        "new_behavior": {
+          "errors": [],
+          "issues": [],
+          "status": "pass"
+        },
+        "new_evidence": {
+          "issues": [],
+          "status": "complete"
+        },
+        "new_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 1.0302869668521453e-13,
+          "status": "pass"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 1.604724282344705e-07,
+          "status": "evidence_insufficient"
+        },
+        "qualified_tier": "pass",
+        "runtime_controls": {
+          "actual": {
+            "iabstol": "unknown",
+            "maxstep": 4.656612873077393e-10,
+            "method": "unknown; unsupported integration_method control",
+            "reltol": 1e-10,
+            "stop": 7e-06,
+            "vabstol": 1e-14
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [],
+          "maxstep_application": "applied",
+          "status": "qualified"
+        }
+      }
+    ],
+    "evas_complete_passes": 12,
+    "evas_original_window_unmet": 3,
+    "executions_returning_waveforms": 30,
+    "spectre_fresh": [
+      {
+        "condition": "EC03-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": 1e-13,
+            "maxstep": 2.98023e-08,
+            "method": "traponly",
+            "reltol": 1e-06,
+            "stop": 3.8147e-06,
+            "vabstol": 1e-09
+          },
+          "additional_controls": {},
+          "issues": [
+            "unexplained requested/actual mismatch: stop",
+            "unexplained requested/actual mismatch: maxstep"
+          ],
+          "notes": [
+            "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+          ],
+          "requested": {
+            "iabstol": 1e-13,
+            "maxstep": 2.9802322387695312e-08,
+            "reltol": 1e-05,
+            "stop": 3.814697265625e-06,
+            "vabstol": 1e-09
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "evidence_insufficient"
+        },
+        "executed_target_tier": "Q1",
+        "execution_status": "waveform_available",
+        "label": "EC03-v1--Q1",
+        "native_observations": {
+          "artifacts": {
+            "psf/tran.tran.tran": "f566cb22781fe07ee6e1f78aacbd485398d9edaaa3a01d01415f83588810a987",
+            "spectre.log": "243350a81073c0145b76c137d8b9d1ee52837b0aeb853b601492a06b3ddaab04",
+            "tb.scs": "57f16ac13c95715c53e3782fa06f4a84eb68c3fc4e108d86dad328d8c1573a67"
+          },
+          "facts": {
+            "all_strobe_export_requested": true,
+            "logged_accepted_steps": 20207,
+            "origin_gap": "requested strobe has no unique raw row",
+            "row_count": 20208,
+            "rows_equal_accepted_steps_plus_initial": true,
+            "strobe_time_budget_scale_s": 3.814697265625e-06,
+            "strobe_time_budget_ulps": 16,
+            "strobe_time_uncertainty_s": 1.3552527156068805e-20
+          },
+          "limit": "deck and aggregate export facts do not certify initial state, counters, phase, or interpolation error",
+          "reason": "installed-version per-row accepted/forced origin correspondence unavailable",
+          "status": "unknown"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 0.0,
+          "status": "unknown"
+        },
+        "qualified_tiers": {
+          "Q1": "evidence_insufficient",
+          "Q2": "evidence_insufficient",
+          "Q3": "evidence_insufficient"
+        },
+        "runtime_controls": {
+          "actual": {
+            "iabstol": 1e-13,
+            "maxstep": 2.98023e-08,
+            "method": "traponly",
+            "reltol": 1e-06,
+            "stop": 3.8147e-06,
+            "vabstol": 1e-09
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [
+            "missing or mismatched actual stop",
+            "missing or mismatched actual maxstep"
+          ],
+          "maxstep_application": "applied",
+          "status": "unknown"
+        },
+        "tool_and_result_identity": {
+          "kernel_or_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+          "original_input_identity": {
+            "deck_sha256": "57f16ac13c95715c53e3782fa06f4a84eb68c3fc4e108d86dad328d8c1573a67",
+            "requested_settings_sha256": "9d5ca128916317ca1d3e16b95b093b2877f595576a678545d7a96e1f4f93a069",
+            "source_sha256": "8b556ea7b28a4ca8eb247ea850249c164ff06d1feaba104a0b9f7519ddfdc7f2"
+          },
+          "original_result_sha256": "956f1cdd5e076d41158c94d77f62d2bc464273459298092815258121da65bf70",
+          "original_tool_identity_sha256": "f35aa93d0eb21d6aa8b96efe0d80b9f5a235e1cf465babe3a23a767aade08f88"
+        }
+      },
+      {
+        "condition": "EC03-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": 1e-15,
+            "maxstep": 3.7252900000000005e-09,
+            "method": "traponly",
+            "reltol": 1e-09,
+            "stop": 3.8147e-06,
+            "vabstol": 1e-12
+          },
+          "additional_controls": {},
+          "issues": [
+            "unexplained requested/actual mismatch: stop",
+            "unexplained requested/actual mismatch: maxstep"
+          ],
+          "notes": [
+            "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+          ],
+          "requested": {
+            "iabstol": 1e-15,
+            "maxstep": 3.725290298461914e-09,
+            "reltol": 1e-08,
+            "stop": 3.814697265625e-06,
+            "vabstol": 1e-12
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "evidence_insufficient"
+        },
+        "executed_target_tier": "Q2",
+        "execution_status": "waveform_available",
+        "label": "EC03-v1--Q2",
+        "native_observations": {
+          "artifacts": {
+            "psf/tran.tran.tran": "b589802d729db30f9bdfe8a7efd5dec5c8f98f211b57db7c2e1a95f4094d1af1",
+            "spectre.log": "de304f39c0f57c48acfc554cfe97228949321c96b032797142f3f40fcb887a7c",
+            "tb.scs": "6a147ea25a0ebe631fafae510bb8ec216bbe89f1eac7cd0deb0d12817abca2a1"
+          },
+          "facts": {
+            "all_strobe_export_requested": true,
+            "logged_accepted_steps": 21091,
+            "origin_gap": "requested strobe has no unique raw row",
+            "row_count": 21092,
+            "rows_equal_accepted_steps_plus_initial": true,
+            "strobe_time_budget_scale_s": 3.814697265625e-06,
+            "strobe_time_budget_ulps": 16,
+            "strobe_time_uncertainty_s": 1.3552527156068805e-20
+          },
+          "limit": "deck and aggregate export facts do not certify initial state, counters, phase, or interpolation error",
+          "reason": "installed-version per-row accepted/forced origin correspondence unavailable",
+          "status": "unknown"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 0.0,
+          "status": "unknown"
+        },
+        "qualified_tiers": {
+          "Q1": "evidence_insufficient",
+          "Q2": "evidence_insufficient",
+          "Q3": "evidence_insufficient"
+        },
+        "runtime_controls": {
+          "actual": {
+            "iabstol": 1e-15,
+            "maxstep": 3.7252900000000005e-09,
+            "method": "traponly",
+            "reltol": 1e-09,
+            "stop": 3.8147e-06,
+            "vabstol": 1e-12
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [
+            "missing or mismatched actual stop",
+            "missing or mismatched actual maxstep"
+          ],
+          "maxstep_application": "applied",
+          "status": "unknown"
+        },
+        "tool_and_result_identity": {
+          "kernel_or_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+          "original_input_identity": {
+            "deck_sha256": "6a147ea25a0ebe631fafae510bb8ec216bbe89f1eac7cd0deb0d12817abca2a1",
+            "requested_settings_sha256": "0036fa4b9c0627639c2ddcbc2f3b6b428c4bc1e156131739fce954af72333f5a",
+            "source_sha256": "8b556ea7b28a4ca8eb247ea850249c164ff06d1feaba104a0b9f7519ddfdc7f2"
+          },
+          "original_result_sha256": "f610e98df28f67e47c176302edf3ac87c99d1242274689bd2032dcc05b3a68e0",
+          "original_tool_identity_sha256": "f35aa93d0eb21d6aa8b96efe0d80b9f5a235e1cf465babe3a23a767aade08f88"
+        }
+      },
+      {
+        "condition": "EC03-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": 1e-17,
+            "maxstep": 3.8147000000000003e-10,
+            "method": "traponly",
+            "reltol": 1e-11,
+            "stop": 3.8147e-06,
+            "vabstol": 1.0000000000000002e-14
+          },
+          "additional_controls": {},
+          "issues": [
+            "unexplained requested/actual mismatch: stop",
+            "unexplained requested/actual mismatch: maxstep"
+          ],
+          "notes": [
+            "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+          ],
+          "requested": {
+            "iabstol": 1e-17,
+            "maxstep": 3.814697265625e-10,
+            "reltol": 1e-10,
+            "stop": 3.814697265625e-06,
+            "vabstol": 1e-14
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "evidence_insufficient"
+        },
+        "executed_target_tier": "Q3",
+        "execution_status": "waveform_available",
+        "label": "EC03-v1--Q3",
+        "native_observations": {
+          "artifacts": {
+            "psf/tran.tran.tran": "5ac721a10dd945be36d623223ad19cebe221950c96eafb10ad0b911699b5fcfc",
+            "spectre.log": "71e49cf44f6a1405920cb4bd63d97a8c215ec6c08f2c0bbd750cf892f0eed2e0",
+            "tb.scs": "54d5a375ade8819d17ba4d9c1e52a55aa5ec5698ab2cf327121af79a13a99c9a"
+          },
+          "facts": {
+            "all_strobe_export_requested": true,
+            "logged_accepted_steps": 30189,
+            "origin_gap": "requested strobe has no unique raw row",
+            "row_count": 30190,
+            "rows_equal_accepted_steps_plus_initial": true,
+            "strobe_time_budget_scale_s": 3.814697265625e-06,
+            "strobe_time_budget_ulps": 16,
+            "strobe_time_uncertainty_s": 1.3552527156068805e-20
+          },
+          "limit": "deck and aggregate export facts do not certify initial state, counters, phase, or interpolation error",
+          "reason": "installed-version per-row accepted/forced origin correspondence unavailable",
+          "status": "unknown"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 0.0,
+          "status": "unknown"
+        },
+        "qualified_tiers": {
+          "Q1": "evidence_insufficient",
+          "Q2": "evidence_insufficient",
+          "Q3": "evidence_insufficient"
+        },
+        "runtime_controls": {
+          "actual": {
+            "iabstol": 1e-17,
+            "maxstep": 3.8147000000000003e-10,
+            "method": "traponly",
+            "reltol": 1e-11,
+            "stop": 3.8147e-06,
+            "vabstol": 1.0000000000000002e-14
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [
+            "missing or mismatched actual stop",
+            "missing or mismatched actual maxstep"
+          ],
+          "maxstep_application": "applied",
+          "status": "unknown"
+        },
+        "tool_and_result_identity": {
+          "kernel_or_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+          "original_input_identity": {
+            "deck_sha256": "54d5a375ade8819d17ba4d9c1e52a55aa5ec5698ab2cf327121af79a13a99c9a",
+            "requested_settings_sha256": "e1b3289352a0e89b28349e9b8cdbecbcc0743dc8dcb9724a00f3cbb7e3905a29",
+            "source_sha256": "8b556ea7b28a4ca8eb247ea850249c164ff06d1feaba104a0b9f7519ddfdc7f2"
+          },
+          "original_result_sha256": "0e662bd0a97b719b3d7f37918c48610578867e9620e42a73921668c8373d0e1d",
+          "original_tool_identity_sha256": "f35aa93d0eb21d6aa8b96efe0d80b9f5a235e1cf465babe3a23a767aade08f88"
+        }
+      },
+      {
+        "condition": "EC04-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": 1e-13,
+            "maxstep": 2.98023e-08,
+            "method": "traponly",
+            "reltol": 1e-06,
+            "stop": 2.14577e-06,
+            "vabstol": 1e-09
+          },
+          "additional_controls": {},
+          "issues": [
+            "unexplained requested/actual mismatch: stop",
+            "unexplained requested/actual mismatch: maxstep"
+          ],
+          "notes": [
+            "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+          ],
+          "requested": {
+            "iabstol": 1e-13,
+            "maxstep": 2.9802322387695312e-08,
+            "reltol": 1e-05,
+            "stop": 2.1457672119140625e-06,
+            "vabstol": 1e-09
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "evidence_insufficient"
+        },
+        "executed_target_tier": "Q1",
+        "execution_status": "waveform_available",
+        "label": "EC04-v1--Q1",
+        "native_observations": {
+          "artifacts": {
+            "psf/tran.tran.tran": "a7be994deef0e0f4949ea768661fc0ac0e65cc2d7e52408f577c7f521801703e",
+            "spectre.log": "dba6bba390e6585cf18ddffc3747be1b0b94627e70b2422d1fd3de9f2de0168d",
+            "tb.scs": "f99f52cafcdd67fc40b56b132f3f12ee747cb5062bb1d79c3b0b819ae8eeceec"
+          },
+          "facts": {
+            "all_strobe_export_requested": true,
+            "logged_accepted_steps": 20116,
+            "origin_gap": "requested strobe has no unique raw row",
+            "row_count": 20117,
+            "rows_equal_accepted_steps_plus_initial": true,
+            "strobe_time_budget_scale_s": 2.1457672119140625e-06,
+            "strobe_time_budget_ulps": 16,
+            "strobe_time_uncertainty_s": 6.776263578034403e-21
+          },
+          "limit": "deck and aggregate export facts do not certify initial state, counters, phase, or interpolation error",
+          "reason": "installed-version per-row accepted/forced origin correspondence unavailable",
+          "status": "unknown"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 0.0,
+          "status": "unknown"
+        },
+        "qualified_tiers": {
+          "Q1": "evidence_insufficient",
+          "Q2": "evidence_insufficient",
+          "Q3": "evidence_insufficient"
+        },
+        "runtime_controls": {
+          "actual": {
+            "iabstol": 1e-13,
+            "maxstep": 2.98023e-08,
+            "method": "traponly",
+            "reltol": 1e-06,
+            "stop": 2.14577e-06,
+            "vabstol": 1e-09
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [
+            "missing or mismatched actual stop",
+            "missing or mismatched actual maxstep"
+          ],
+          "maxstep_application": "applied",
+          "status": "unknown"
+        },
+        "tool_and_result_identity": {
+          "kernel_or_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+          "original_input_identity": {
+            "deck_sha256": "f99f52cafcdd67fc40b56b132f3f12ee747cb5062bb1d79c3b0b819ae8eeceec",
+            "requested_settings_sha256": "318e09a594eae6f98f55a1acaaf4527a9707e8d72e13fdf1400c783153908ab6",
+            "source_sha256": "cf7b4da2debd35aa6e5b5267edb7a64f1be995d6d5928ab19163f75c7ccf7ee4"
+          },
+          "original_result_sha256": "50aed0f2a5a378374ea6df42c846443a32af9799492f82d2001071285ef0a94d",
+          "original_tool_identity_sha256": "f35aa93d0eb21d6aa8b96efe0d80b9f5a235e1cf465babe3a23a767aade08f88"
+        }
+      },
+      {
+        "condition": "EC04-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": 1e-15,
+            "maxstep": 3.7252900000000005e-09,
+            "method": "traponly",
+            "reltol": 1e-09,
+            "stop": 2.14577e-06,
+            "vabstol": 1e-12
+          },
+          "additional_controls": {},
+          "issues": [
+            "unexplained requested/actual mismatch: stop",
+            "unexplained requested/actual mismatch: maxstep"
+          ],
+          "notes": [
+            "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+          ],
+          "requested": {
+            "iabstol": 1e-15,
+            "maxstep": 3.725290298461914e-09,
+            "reltol": 1e-08,
+            "stop": 2.1457672119140625e-06,
+            "vabstol": 1e-12
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "evidence_insufficient"
+        },
+        "executed_target_tier": "Q2",
+        "execution_status": "waveform_available",
+        "label": "EC04-v1--Q2",
+        "native_observations": {
+          "artifacts": {
+            "psf/tran.tran.tran": "77b77dde6aa347c57a052b284372166abb94e42ff2c4e4b6c860fa16a3c91c75",
+            "spectre.log": "2a3114c0eb775a64ae0cc0983f3be040d92580743f090536a2313510ae194c8d",
+            "tb.scs": "217c538d99896f04065223c2f027cc4ed3dbb15bc98ece3666ab05fbf495dcd5"
+          },
+          "facts": {
+            "all_strobe_export_requested": true,
+            "logged_accepted_steps": 20617,
+            "origin_gap": "requested strobe has no unique raw row",
+            "row_count": 20618,
+            "rows_equal_accepted_steps_plus_initial": true,
+            "strobe_time_budget_scale_s": 2.1457672119140625e-06,
+            "strobe_time_budget_ulps": 16,
+            "strobe_time_uncertainty_s": 6.776263578034403e-21
+          },
+          "limit": "deck and aggregate export facts do not certify initial state, counters, phase, or interpolation error",
+          "reason": "installed-version per-row accepted/forced origin correspondence unavailable",
+          "status": "unknown"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 0.0,
+          "status": "unknown"
+        },
+        "qualified_tiers": {
+          "Q1": "evidence_insufficient",
+          "Q2": "evidence_insufficient",
+          "Q3": "evidence_insufficient"
+        },
+        "runtime_controls": {
+          "actual": {
+            "iabstol": 1e-15,
+            "maxstep": 3.7252900000000005e-09,
+            "method": "traponly",
+            "reltol": 1e-09,
+            "stop": 2.14577e-06,
+            "vabstol": 1e-12
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [
+            "missing or mismatched actual stop",
+            "missing or mismatched actual maxstep"
+          ],
+          "maxstep_application": "applied",
+          "status": "unknown"
+        },
+        "tool_and_result_identity": {
+          "kernel_or_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+          "original_input_identity": {
+            "deck_sha256": "217c538d99896f04065223c2f027cc4ed3dbb15bc98ece3666ab05fbf495dcd5",
+            "requested_settings_sha256": "80cae4e78f17c2998dd08a76aef0a5accedc708a05c0f8b4856ae4dd77b8f324",
+            "source_sha256": "cf7b4da2debd35aa6e5b5267edb7a64f1be995d6d5928ab19163f75c7ccf7ee4"
+          },
+          "original_result_sha256": "eacd8221412c86f44714020648f791026132177efcc5a714651c483eb1f12dd4",
+          "original_tool_identity_sha256": "f35aa93d0eb21d6aa8b96efe0d80b9f5a235e1cf465babe3a23a767aade08f88"
+        }
+      },
+      {
+        "condition": "EC04-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": 1e-17,
+            "maxstep": 3.8147000000000003e-10,
+            "method": "traponly",
+            "reltol": 1e-11,
+            "stop": 2.14577e-06,
+            "vabstol": 1.0000000000000002e-14
+          },
+          "additional_controls": {},
+          "issues": [
+            "unexplained requested/actual mismatch: stop",
+            "unexplained requested/actual mismatch: maxstep"
+          ],
+          "notes": [
+            "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+          ],
+          "requested": {
+            "iabstol": 1e-17,
+            "maxstep": 3.814697265625e-10,
+            "reltol": 1e-10,
+            "stop": 2.1457672119140625e-06,
+            "vabstol": 1e-14
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "evidence_insufficient"
+        },
+        "executed_target_tier": "Q3",
+        "execution_status": "waveform_available",
+        "label": "EC04-v1--Q3",
+        "native_observations": {
+          "artifacts": {
+            "psf/tran.tran.tran": "1eb4cb0f25cb9eca228809176a1413a705b417fa7212c487df99f77d8ce65106",
+            "spectre.log": "06f04fcd1ae6c9a4112b19e4d426c9148e09a436644a9234bdc4e2c046e7619b",
+            "tb.scs": "b066ebb664a492c34e7113f7d311dbb34d4c48d87570d48afad39afcde10d23a"
+          },
+          "facts": {
+            "all_strobe_export_requested": true,
+            "logged_accepted_steps": 25727,
+            "origin_gap": "requested strobe has no unique raw row",
+            "row_count": 25728,
+            "rows_equal_accepted_steps_plus_initial": true,
+            "strobe_time_budget_scale_s": 2.1457672119140625e-06,
+            "strobe_time_budget_ulps": 16,
+            "strobe_time_uncertainty_s": 6.776263578034403e-21
+          },
+          "limit": "deck and aggregate export facts do not certify initial state, counters, phase, or interpolation error",
+          "reason": "installed-version per-row accepted/forced origin correspondence unavailable",
+          "status": "unknown"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 0.0,
+          "status": "unknown"
+        },
+        "qualified_tiers": {
+          "Q1": "evidence_insufficient",
+          "Q2": "evidence_insufficient",
+          "Q3": "evidence_insufficient"
+        },
+        "runtime_controls": {
+          "actual": {
+            "iabstol": 1e-17,
+            "maxstep": 3.8147000000000003e-10,
+            "method": "traponly",
+            "reltol": 1e-11,
+            "stop": 2.14577e-06,
+            "vabstol": 1.0000000000000002e-14
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [
+            "missing or mismatched actual stop",
+            "missing or mismatched actual maxstep"
+          ],
+          "maxstep_application": "applied",
+          "status": "unknown"
+        },
+        "tool_and_result_identity": {
+          "kernel_or_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+          "original_input_identity": {
+            "deck_sha256": "b066ebb664a492c34e7113f7d311dbb34d4c48d87570d48afad39afcde10d23a",
+            "requested_settings_sha256": "412d14f5640fed6475279cc9cdf94e454670ef7c9fbd271d6215556db22ac401",
+            "source_sha256": "cf7b4da2debd35aa6e5b5267edb7a64f1be995d6d5928ab19163f75c7ccf7ee4"
+          },
+          "original_result_sha256": "b8029864e92012570af4c117536162fa11af09894ee6b741d042745748451f81",
+          "original_tool_identity_sha256": "f35aa93d0eb21d6aa8b96efe0d80b9f5a235e1cf465babe3a23a767aade08f88"
+        }
+      },
+      {
+        "condition": "EC07-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": 1e-13,
+            "maxstep": 2.98023e-08,
+            "method": "traponly",
+            "reltol": 1e-06,
+            "stop": 1.90735e-06,
+            "vabstol": 1e-09
+          },
+          "additional_controls": {},
+          "issues": [
+            "unexplained requested/actual mismatch: stop",
+            "unexplained requested/actual mismatch: maxstep"
+          ],
+          "notes": [
+            "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+          ],
+          "requested": {
+            "iabstol": 1e-13,
+            "maxstep": 2.9802322387695312e-08,
+            "reltol": 1e-05,
+            "stop": 1.9073486328125e-06,
+            "vabstol": 1e-09
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "evidence_insufficient"
+        },
+        "executed_target_tier": "Q1",
+        "execution_status": "waveform_available",
+        "label": "EC07-v1--Q1",
+        "native_observations": {
+          "artifacts": {
+            "psf/tran.tran.tran": "a39dbaad25d07561934f3a531880935f7f6e9f6e135efcbdefcee1896af6799c",
+            "spectre.log": "da2a568b72a248e6b7342b99f57a785797f8d41f0146c5ac82bc9280eb1003de",
+            "tb.scs": "f2d94ba1eeac852a520c738d2ec8b3c1914a6e6b5050c235fd929e83292841b2"
+          },
+          "facts": {
+            "all_strobe_export_requested": true,
+            "logged_accepted_steps": 20788,
+            "origin_gap": "requested strobe has no unique raw row",
+            "row_count": 20789,
+            "rows_equal_accepted_steps_plus_initial": true,
+            "strobe_time_budget_scale_s": 1.9073486328125e-06,
+            "strobe_time_budget_ulps": 16,
+            "strobe_time_uncertainty_s": 6.776263578034403e-21
+          },
+          "limit": "deck and aggregate export facts do not certify initial state, counters, phase, or interpolation error",
+          "reason": "installed-version per-row accepted/forced origin correspondence unavailable",
+          "status": "unknown"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 0.0,
+          "status": "unknown"
+        },
+        "qualified_tiers": {
+          "Q1": "evidence_insufficient",
+          "Q2": "evidence_insufficient",
+          "Q3": "evidence_insufficient"
+        },
+        "runtime_controls": {
+          "actual": {
+            "iabstol": 1e-13,
+            "maxstep": 2.98023e-08,
+            "method": "traponly",
+            "reltol": 1e-06,
+            "stop": 1.90735e-06,
+            "vabstol": 1e-09
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [
+            "missing or mismatched actual stop",
+            "missing or mismatched actual maxstep"
+          ],
+          "maxstep_application": "applied",
+          "status": "unknown"
+        },
+        "tool_and_result_identity": {
+          "kernel_or_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+          "original_input_identity": {
+            "deck_sha256": "f2d94ba1eeac852a520c738d2ec8b3c1914a6e6b5050c235fd929e83292841b2",
+            "requested_settings_sha256": "bb6b50d5d2d28f6a3d7bb50c7fc751bd6c050688c53ff70faf17dd5dc0150fe3",
+            "source_sha256": "3286ed28487ace9b709b26aa8c2d6af01710b4350bcc2afa877bd09ab2fb5bb2"
+          },
+          "original_result_sha256": "54a98da15048b8f02909eac514478e04d99e3a792f69265e1baafaaeb3602bb7",
+          "original_tool_identity_sha256": "f35aa93d0eb21d6aa8b96efe0d80b9f5a235e1cf465babe3a23a767aade08f88"
+        }
+      },
+      {
+        "condition": "EC07-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": 1e-15,
+            "maxstep": 3.7252900000000005e-09,
+            "method": "traponly",
+            "reltol": 1e-09,
+            "stop": 1.90735e-06,
+            "vabstol": 1e-12
+          },
+          "additional_controls": {},
+          "issues": [
+            "unexplained requested/actual mismatch: stop",
+            "unexplained requested/actual mismatch: maxstep"
+          ],
+          "notes": [
+            "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+          ],
+          "requested": {
+            "iabstol": 1e-15,
+            "maxstep": 3.725290298461914e-09,
+            "reltol": 1e-08,
+            "stop": 1.9073486328125e-06,
+            "vabstol": 1e-12
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "evidence_insufficient"
+        },
+        "executed_target_tier": "Q2",
+        "execution_status": "waveform_available",
+        "label": "EC07-v1--Q2",
+        "native_observations": {
+          "artifacts": {
+            "psf/tran.tran.tran": "87a1cbd5aad6409fd9053b148946f8b7d3ae85d3651283e2ee4480d3253bae33",
+            "spectre.log": "5f7eeab11a6b3d21e68b321eb6af12f9f97a86354c1ffb69a119667e74bfbc1d",
+            "tb.scs": "bc22c9a051ffbea53ca88f6817b53a8cb341b8042dcf810ac41d65a25647aec4"
+          },
+          "facts": {
+            "all_strobe_export_requested": true,
+            "logged_accepted_steps": 22359,
+            "origin_gap": "requested strobe has no unique raw row",
+            "row_count": 22360,
+            "rows_equal_accepted_steps_plus_initial": true,
+            "strobe_time_budget_scale_s": 1.9073486328125e-06,
+            "strobe_time_budget_ulps": 16,
+            "strobe_time_uncertainty_s": 6.776263578034403e-21
+          },
+          "limit": "deck and aggregate export facts do not certify initial state, counters, phase, or interpolation error",
+          "reason": "installed-version per-row accepted/forced origin correspondence unavailable",
+          "status": "unknown"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 0.0,
+          "status": "unknown"
+        },
+        "qualified_tiers": {
+          "Q1": "evidence_insufficient",
+          "Q2": "evidence_insufficient",
+          "Q3": "evidence_insufficient"
+        },
+        "runtime_controls": {
+          "actual": {
+            "iabstol": 1e-15,
+            "maxstep": 3.7252900000000005e-09,
+            "method": "traponly",
+            "reltol": 1e-09,
+            "stop": 1.90735e-06,
+            "vabstol": 1e-12
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [
+            "missing or mismatched actual stop",
+            "missing or mismatched actual maxstep"
+          ],
+          "maxstep_application": "applied",
+          "status": "unknown"
+        },
+        "tool_and_result_identity": {
+          "kernel_or_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+          "original_input_identity": {
+            "deck_sha256": "bc22c9a051ffbea53ca88f6817b53a8cb341b8042dcf810ac41d65a25647aec4",
+            "requested_settings_sha256": "5dc7417bdb043705182c1bfb28b238ae490e42913df301b37ce7ebe417fa6f80",
+            "source_sha256": "3286ed28487ace9b709b26aa8c2d6af01710b4350bcc2afa877bd09ab2fb5bb2"
+          },
+          "original_result_sha256": "14b270d5c6b96318ec1798304bed74ae1e2a57e00c393b061621c6e02c8b4452",
+          "original_tool_identity_sha256": "f35aa93d0eb21d6aa8b96efe0d80b9f5a235e1cf465babe3a23a767aade08f88"
+        }
+      },
+      {
+        "condition": "EC07-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": 1e-17,
+            "maxstep": 3.8147000000000003e-10,
+            "method": "traponly",
+            "reltol": 1e-11,
+            "stop": 1.90735e-06,
+            "vabstol": 1.0000000000000002e-14
+          },
+          "additional_controls": {},
+          "issues": [
+            "unexplained requested/actual mismatch: stop",
+            "unexplained requested/actual mismatch: maxstep"
+          ],
+          "notes": [
+            "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+          ],
+          "requested": {
+            "iabstol": 1e-17,
+            "maxstep": 3.814697265625e-10,
+            "reltol": 1e-10,
+            "stop": 1.9073486328125e-06,
+            "vabstol": 1e-14
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "evidence_insufficient"
+        },
+        "executed_target_tier": "Q3",
+        "execution_status": "waveform_available",
+        "label": "EC07-v1--Q3",
+        "native_observations": {
+          "artifacts": {
+            "psf/tran.tran.tran": "88e4746c43a4b32d7cf280780487296f22326893dacc579990511a3a44f99b52",
+            "spectre.log": "1b79170c50a1085ff2a8032cad01d1ddd646b4ef4dc40b21c3e95721307149e9",
+            "tb.scs": "b96222300449d36fd03ae9c24f0e9f4517cfcfc864c6c45ad46a7a70fd4f775d"
+          },
+          "facts": {
+            "all_strobe_export_requested": true,
+            "logged_accepted_steps": 25141,
+            "origin_gap": "requested strobe has no unique raw row",
+            "row_count": 25142,
+            "rows_equal_accepted_steps_plus_initial": true,
+            "strobe_time_budget_scale_s": 1.9073486328125e-06,
+            "strobe_time_budget_ulps": 16,
+            "strobe_time_uncertainty_s": 6.776263578034403e-21
+          },
+          "limit": "deck and aggregate export facts do not certify initial state, counters, phase, or interpolation error",
+          "reason": "installed-version per-row accepted/forced origin correspondence unavailable",
+          "status": "unknown"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 0.0,
+          "status": "unknown"
+        },
+        "qualified_tiers": {
+          "Q1": "evidence_insufficient",
+          "Q2": "evidence_insufficient",
+          "Q3": "evidence_insufficient"
+        },
+        "runtime_controls": {
+          "actual": {
+            "iabstol": 1e-17,
+            "maxstep": 3.8147000000000003e-10,
+            "method": "traponly",
+            "reltol": 1e-11,
+            "stop": 1.90735e-06,
+            "vabstol": 1.0000000000000002e-14
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [
+            "missing or mismatched actual stop",
+            "missing or mismatched actual maxstep"
+          ],
+          "maxstep_application": "applied",
+          "status": "unknown"
+        },
+        "tool_and_result_identity": {
+          "kernel_or_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+          "original_input_identity": {
+            "deck_sha256": "b96222300449d36fd03ae9c24f0e9f4517cfcfc864c6c45ad46a7a70fd4f775d",
+            "requested_settings_sha256": "4325400c8f4e310378a75e346a9c53f0fb38dd86a745563fe4b22300a35e77aa",
+            "source_sha256": "3286ed28487ace9b709b26aa8c2d6af01710b4350bcc2afa877bd09ab2fb5bb2"
+          },
+          "original_result_sha256": "ef836ed7ebadccd3dc0a01728c723c50266fd64203b1caa14b2613287496ad64",
+          "original_tool_identity_sha256": "f35aa93d0eb21d6aa8b96efe0d80b9f5a235e1cf465babe3a23a767aade08f88"
+        }
+      },
+      {
+        "condition": "EC10-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": 1e-13,
+            "maxstep": 2.98023e-08,
+            "method": "traponly",
+            "reltol": 1e-06,
+            "stop": 2.86102e-06,
+            "vabstol": 1e-09
+          },
+          "additional_controls": {},
+          "issues": [
+            "unexplained requested/actual mismatch: stop",
+            "unexplained requested/actual mismatch: maxstep"
+          ],
+          "notes": [
+            "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+          ],
+          "requested": {
+            "iabstol": 1e-13,
+            "maxstep": 2.9802322387695312e-08,
+            "reltol": 1e-05,
+            "stop": 2.86102294921875e-06,
+            "vabstol": 1e-09
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "evidence_insufficient"
+        },
+        "executed_target_tier": "Q1",
+        "execution_status": "waveform_available",
+        "label": "EC10-v1--Q1",
+        "native_observations": {
+          "artifacts": {
+            "psf/tran.tran.tran": "acc992ca44f5a5f0faf9084f2674fc0cb1c31aa11c84fa1fc14e5e22bfa806f6",
+            "spectre.log": "bec626732b14ecfd63dd64f8d796e60764793a5d692ab1288732b9d905712079",
+            "tb.scs": "e26064a8de660a089d634471c99ec27f6cb670d126238093bead4925a4502740"
+          },
+          "facts": {
+            "all_strobe_export_requested": true,
+            "logged_accepted_steps": 20223,
+            "origin_gap": "requested strobe has no unique raw row",
+            "row_count": 20224,
+            "rows_equal_accepted_steps_plus_initial": true,
+            "strobe_time_budget_scale_s": 2.86102294921875e-06,
+            "strobe_time_budget_ulps": 16,
+            "strobe_time_uncertainty_s": 6.776263578034403e-21
+          },
+          "limit": "deck and aggregate export facts do not certify initial state, counters, phase, or interpolation error",
+          "reason": "installed-version per-row accepted/forced origin correspondence unavailable",
+          "status": "unknown"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 0.0,
+          "status": "unknown"
+        },
+        "qualified_tiers": {
+          "Q1": "evidence_insufficient",
+          "Q2": "evidence_insufficient",
+          "Q3": "evidence_insufficient"
+        },
+        "runtime_controls": {
+          "actual": {
+            "iabstol": 1e-13,
+            "maxstep": 2.98023e-08,
+            "method": "traponly",
+            "reltol": 1e-06,
+            "stop": 2.86102e-06,
+            "vabstol": 1e-09
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [
+            "missing or mismatched actual stop",
+            "missing or mismatched actual maxstep"
+          ],
+          "maxstep_application": "applied",
+          "status": "unknown"
+        },
+        "tool_and_result_identity": {
+          "kernel_or_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+          "original_input_identity": {
+            "deck_sha256": "e26064a8de660a089d634471c99ec27f6cb670d126238093bead4925a4502740",
+            "requested_settings_sha256": "769840f6cefb05f388e627c5915e4f17973404cee44defacf3ffd26afe1d1623",
+            "source_sha256": "3298578c3225b94d4465572c899a54750b2fd0d72f3ddab0b37868a95a172115"
+          },
+          "original_result_sha256": "dece7017fd5dc462e795246a6b507eeee7d0d5bbc069f187b3589fd236d4e756",
+          "original_tool_identity_sha256": "f35aa93d0eb21d6aa8b96efe0d80b9f5a235e1cf465babe3a23a767aade08f88"
+        }
+      },
+      {
+        "condition": "EC10-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": 1e-15,
+            "maxstep": 3.7252900000000005e-09,
+            "method": "traponly",
+            "reltol": 1e-09,
+            "stop": 2.86102e-06,
+            "vabstol": 1e-12
+          },
+          "additional_controls": {},
+          "issues": [
+            "unexplained requested/actual mismatch: stop",
+            "unexplained requested/actual mismatch: maxstep"
+          ],
+          "notes": [
+            "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+          ],
+          "requested": {
+            "iabstol": 1e-15,
+            "maxstep": 3.725290298461914e-09,
+            "reltol": 1e-08,
+            "stop": 2.86102294921875e-06,
+            "vabstol": 1e-12
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "evidence_insufficient"
+        },
+        "executed_target_tier": "Q2",
+        "execution_status": "waveform_available",
+        "label": "EC10-v1--Q2",
+        "native_observations": {
+          "artifacts": {
+            "psf/tran.tran.tran": "24d53d91f75b6242be71278b04b14d16576904ab995f8f7f0c3160983766eab2",
+            "spectre.log": "e385dcbd9f7f677d7255c2d77da14a414a4016b4a7e73302bc81772f33af49e4",
+            "tb.scs": "a88284eaf83da59d949efcee36f00e5c31dafcc9ec8ab12180a51db111ca3a53"
+          },
+          "facts": {
+            "all_strobe_export_requested": true,
+            "logged_accepted_steps": 21833,
+            "origin_gap": "requested strobe has no unique raw row",
+            "row_count": 21834,
+            "rows_equal_accepted_steps_plus_initial": true,
+            "strobe_time_budget_scale_s": 2.86102294921875e-06,
+            "strobe_time_budget_ulps": 16,
+            "strobe_time_uncertainty_s": 6.776263578034403e-21
+          },
+          "limit": "deck and aggregate export facts do not certify initial state, counters, phase, or interpolation error",
+          "reason": "installed-version per-row accepted/forced origin correspondence unavailable",
+          "status": "unknown"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 0.0,
+          "status": "unknown"
+        },
+        "qualified_tiers": {
+          "Q1": "evidence_insufficient",
+          "Q2": "evidence_insufficient",
+          "Q3": "evidence_insufficient"
+        },
+        "runtime_controls": {
+          "actual": {
+            "iabstol": 1e-15,
+            "maxstep": 3.7252900000000005e-09,
+            "method": "traponly",
+            "reltol": 1e-09,
+            "stop": 2.86102e-06,
+            "vabstol": 1e-12
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [
+            "missing or mismatched actual stop",
+            "missing or mismatched actual maxstep"
+          ],
+          "maxstep_application": "applied",
+          "status": "unknown"
+        },
+        "tool_and_result_identity": {
+          "kernel_or_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+          "original_input_identity": {
+            "deck_sha256": "a88284eaf83da59d949efcee36f00e5c31dafcc9ec8ab12180a51db111ca3a53",
+            "requested_settings_sha256": "baaec4e96f7675f0a49cb00a4460ca3942397214b30ccfcbb32eea0f35168454",
+            "source_sha256": "3298578c3225b94d4465572c899a54750b2fd0d72f3ddab0b37868a95a172115"
+          },
+          "original_result_sha256": "79d697d6c7ffd3a3f6b7fec21875e380abb5cc8c068e7298b30d3e4bf287e1bc",
+          "original_tool_identity_sha256": "f35aa93d0eb21d6aa8b96efe0d80b9f5a235e1cf465babe3a23a767aade08f88"
+        }
+      },
+      {
+        "condition": "EC10-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": 1e-17,
+            "maxstep": 3.8147000000000003e-10,
+            "method": "traponly",
+            "reltol": 1e-11,
+            "stop": 2.86102e-06,
+            "vabstol": 1.0000000000000002e-14
+          },
+          "additional_controls": {},
+          "issues": [
+            "unexplained requested/actual mismatch: stop",
+            "unexplained requested/actual mismatch: maxstep"
+          ],
+          "notes": [
+            "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+          ],
+          "requested": {
+            "iabstol": 1e-17,
+            "maxstep": 3.814697265625e-10,
+            "reltol": 1e-10,
+            "stop": 2.86102294921875e-06,
+            "vabstol": 1e-14
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "evidence_insufficient"
+        },
+        "executed_target_tier": "Q3",
+        "execution_status": "waveform_available",
+        "label": "EC10-v1--Q3",
+        "native_observations": {
+          "artifacts": {
+            "psf/tran.tran.tran": "68e57e1e7ac401e3d9013e63b289483ed26e7a8dae3214aa33ce75b847945927",
+            "spectre.log": "5a366a872ffe9b58553fcb480ce71cbba3cd22e785eede72c7491616ea9da66a",
+            "tb.scs": "f27a951580465f9f2a3f83df6cd8cbddbce023458c2ede0dd31fe5a4aac81d3a"
+          },
+          "facts": {
+            "all_strobe_export_requested": true,
+            "logged_accepted_steps": 27615,
+            "origin_gap": "requested strobe has no unique raw row",
+            "row_count": 27616,
+            "rows_equal_accepted_steps_plus_initial": true,
+            "strobe_time_budget_scale_s": 2.86102294921875e-06,
+            "strobe_time_budget_ulps": 16,
+            "strobe_time_uncertainty_s": 6.776263578034403e-21
+          },
+          "limit": "deck and aggregate export facts do not certify initial state, counters, phase, or interpolation error",
+          "reason": "installed-version per-row accepted/forced origin correspondence unavailable",
+          "status": "unknown"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 0.0,
+          "status": "unknown"
+        },
+        "qualified_tiers": {
+          "Q1": "evidence_insufficient",
+          "Q2": "evidence_insufficient",
+          "Q3": "evidence_insufficient"
+        },
+        "runtime_controls": {
+          "actual": {
+            "iabstol": 1e-17,
+            "maxstep": 3.8147000000000003e-10,
+            "method": "traponly",
+            "reltol": 1e-11,
+            "stop": 2.86102e-06,
+            "vabstol": 1.0000000000000002e-14
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [
+            "missing or mismatched actual stop",
+            "missing or mismatched actual maxstep"
+          ],
+          "maxstep_application": "applied",
+          "status": "unknown"
+        },
+        "tool_and_result_identity": {
+          "kernel_or_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+          "original_input_identity": {
+            "deck_sha256": "f27a951580465f9f2a3f83df6cd8cbddbce023458c2ede0dd31fe5a4aac81d3a",
+            "requested_settings_sha256": "1bfa7552c2715a49c4bd1db9edb6a089b07848d77000e421413d5a1f3be6be79",
+            "source_sha256": "3298578c3225b94d4465572c899a54750b2fd0d72f3ddab0b37868a95a172115"
+          },
+          "original_result_sha256": "f92c1dfecc09cc720a4731bea318f48fdc4680c39c76eb430f328d04f1e60fa3",
+          "original_tool_identity_sha256": "f35aa93d0eb21d6aa8b96efe0d80b9f5a235e1cf465babe3a23a767aade08f88"
+        }
+      },
+      {
+        "condition": "EC20-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": 1e-13,
+            "maxstep": 2.98023e-08,
+            "method": "traponly",
+            "reltol": 1e-06,
+            "stop": 7e-06,
+            "vabstol": 1e-09
+          },
+          "additional_controls": {},
+          "issues": [
+            "unexplained requested/actual mismatch: maxstep"
+          ],
+          "notes": [
+            "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+          ],
+          "requested": {
+            "iabstol": 1e-13,
+            "maxstep": 2.9802322387695312e-08,
+            "reltol": 1e-05,
+            "stop": 7e-06,
+            "vabstol": 1e-09
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "evidence_insufficient"
+        },
+        "executed_target_tier": "Q1",
+        "execution_status": "waveform_available",
+        "label": "EC20-v1--Q1",
+        "native_observations": {
+          "artifacts": {
+            "psf/tran.tran.tran": "758f5ccff6a7df91f4100082ceb35e8c56690c04fc717413f9e555223a4174de",
+            "spectre.log": "de26c3ec19efda407181b8720abfff4caa139b6740850669e1da5c90289ee455",
+            "tb.scs": "96a2b03f1d5e93f60dce098825eca1cb60202226150ac4aa529722e20af94b8a"
+          },
+          "facts": {
+            "all_strobe_export_requested": true,
+            "initial_row_time_s": 0,
+            "logged_accepted_steps": 16384,
+            "matched_accepted_rows": 16384,
+            "requested_strobes_matched": 16266,
+            "row_count": 16385,
+            "rows_equal_accepted_steps_plus_initial": true,
+            "strobe_time_budget_scale_s": 7e-06,
+            "strobe_time_budget_ulps": 16,
+            "strobe_time_uncertainty_s": 1.3552527156068805e-20
+          },
+          "limit": "accepted export timestamps; DC/transient phase, callback order and exact input identity remain separate",
+          "method": "fixed Spectre accepted step annotations matched uniquely to every PSF row",
+          "status": "qualified"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 0.0,
+          "status": "unknown"
+        },
+        "qualified_tiers": {
+          "Q1": "evidence_insufficient",
+          "Q2": "evidence_insufficient",
+          "Q3": "evidence_insufficient"
+        },
+        "runtime_controls": {
+          "actual": {
+            "iabstol": 1e-13,
+            "maxstep": 2.98023e-08,
+            "method": "traponly",
+            "reltol": 1e-06,
+            "stop": 7e-06,
+            "vabstol": 1e-09
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [
+            "missing or mismatched actual maxstep"
+          ],
+          "maxstep_application": "applied",
+          "status": "unknown"
+        },
+        "tool_and_result_identity": {
+          "kernel_or_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+          "original_input_identity": {
+            "deck_sha256": "96a2b03f1d5e93f60dce098825eca1cb60202226150ac4aa529722e20af94b8a",
+            "requested_settings_sha256": "fefdb32df9f26f292121086781e6b3ccffb335f30c132a87c081230734373208",
+            "source_sha256": "4d4743fb8d29554dc038f1c8ef1730fe22d81d43c2600a95e8e265a41e58b5d1"
+          },
+          "original_result_sha256": "e3959bc68c53a2d73d729c33cd59414dea417cb7e4b57f22573e1992881a861a",
+          "original_tool_identity_sha256": "f35aa93d0eb21d6aa8b96efe0d80b9f5a235e1cf465babe3a23a767aade08f88"
+        }
+      },
+      {
+        "condition": "EC20-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": 1e-15,
+            "maxstep": 3.7252900000000005e-09,
+            "method": "traponly",
+            "reltol": 1e-09,
+            "stop": 7e-06,
+            "vabstol": 1e-12
+          },
+          "additional_controls": {},
+          "issues": [
+            "unexplained requested/actual mismatch: maxstep"
+          ],
+          "notes": [
+            "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+          ],
+          "requested": {
+            "iabstol": 1e-15,
+            "maxstep": 3.725290298461914e-09,
+            "reltol": 1e-08,
+            "stop": 7e-06,
+            "vabstol": 1e-12
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "evidence_insufficient"
+        },
+        "executed_target_tier": "Q2",
+        "execution_status": "waveform_available",
+        "label": "EC20-v1--Q2",
+        "native_observations": {
+          "artifacts": {
+            "psf/tran.tran.tran": "8d887a3c5203db4b291ed54399e48e736391a0cd8eb7bc8f6ed50067fa6a66d3",
+            "spectre.log": "6efedeacf239895502557f56a40fb186fd1bbbc5cdd45201bbdbecbd73132f83",
+            "tb.scs": "4095a031ee8274031f4071bf9fe926ce727c8fce2b5d1d5bb92723fc181f808b"
+          },
+          "facts": {
+            "all_strobe_export_requested": true,
+            "logged_accepted_steps": 18027,
+            "origin_gap": "requested strobe has no unique raw row",
+            "row_count": 18028,
+            "rows_equal_accepted_steps_plus_initial": true,
+            "strobe_time_budget_scale_s": 7e-06,
+            "strobe_time_budget_ulps": 16,
+            "strobe_time_uncertainty_s": 1.3552527156068805e-20
+          },
+          "limit": "deck and aggregate export facts do not certify initial state, counters, phase, or interpolation error",
+          "reason": "installed-version per-row accepted/forced origin correspondence unavailable",
+          "status": "unknown"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 0.0,
+          "status": "unknown"
+        },
+        "qualified_tiers": {
+          "Q1": "evidence_insufficient",
+          "Q2": "evidence_insufficient",
+          "Q3": "evidence_insufficient"
+        },
+        "runtime_controls": {
+          "actual": {
+            "iabstol": 1e-15,
+            "maxstep": 3.7252900000000005e-09,
+            "method": "traponly",
+            "reltol": 1e-09,
+            "stop": 7e-06,
+            "vabstol": 1e-12
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [
+            "missing or mismatched actual maxstep"
+          ],
+          "maxstep_application": "applied",
+          "status": "unknown"
+        },
+        "tool_and_result_identity": {
+          "kernel_or_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+          "original_input_identity": {
+            "deck_sha256": "4095a031ee8274031f4071bf9fe926ce727c8fce2b5d1d5bb92723fc181f808b",
+            "requested_settings_sha256": "e34d4c0c718e5c5e11083cccddf3131bb29531a7f2b57b7a44756c8c8107a231",
+            "source_sha256": "4d4743fb8d29554dc038f1c8ef1730fe22d81d43c2600a95e8e265a41e58b5d1"
+          },
+          "original_result_sha256": "97d3f0752e87b08e3ea36c6e9d230b76689ef6021896c653fb105530dd4faea1",
+          "original_tool_identity_sha256": "f35aa93d0eb21d6aa8b96efe0d80b9f5a235e1cf465babe3a23a767aade08f88"
+        }
+      },
+      {
+        "condition": "EC20-v1",
+        "configuration": {
+          "actual": {
+            "iabstol": 1e-17,
+            "maxstep": 3.8147000000000003e-10,
+            "method": "traponly",
+            "reltol": 1e-11,
+            "stop": 7e-06,
+            "vabstol": 1.0000000000000002e-14
+          },
+          "additional_controls": {},
+          "issues": [
+            "unexplained requested/actual mismatch: maxstep"
+          ],
+          "notes": [
+            "conservative preset: transient reltol is requested global reltol / 10; log and PSF agree"
+          ],
+          "requested": {
+            "iabstol": 1e-17,
+            "maxstep": 3.814697265625e-10,
+            "reltol": 1e-10,
+            "stop": 7e-06,
+            "vabstol": 1e-14
+          },
+          "scope": "finite exported native/forced observations; ngspice/Gnucap stop/maxstep are deck-only controls, with actual extent independently checked",
+          "status": "evidence_insufficient"
+        },
+        "executed_target_tier": "Q3",
+        "execution_status": "waveform_available",
+        "label": "EC20-v1--Q3",
+        "native_observations": {
+          "artifacts": {
+            "psf/tran.tran.tran": "875de30b00492994410f9b53acd90dbe1b1cafe73bcb9f90e9e4bb65e7bbdc6d",
+            "spectre.log": "38d8e522a26e565d0fbd8528ac3af10cbac27f307d60a36740af880b0ecdd37e",
+            "tb.scs": "1e6295e183ac5dd98c0c1934244502f2d3feed89875c3cd07a0f4d0a3ad97dce"
+          },
+          "facts": {
+            "all_strobe_export_requested": true,
+            "logged_accepted_steps": 34688,
+            "origin_gap": "requested strobe has no unique raw row",
+            "row_count": 34689,
+            "rows_equal_accepted_steps_plus_initial": true,
+            "strobe_time_budget_scale_s": 7e-06,
+            "strobe_time_budget_ulps": 16,
+            "strobe_time_uncertainty_s": 1.3552527156068805e-20
+          },
+          "limit": "deck and aggregate export facts do not certify initial state, counters, phase, or interpolation error",
+          "reason": "installed-version per-row accepted/forced origin correspondence unavailable",
+          "status": "unknown"
+        },
+        "original_numerical": {
+          "error_lower_V": 0.0,
+          "error_upper_V": 0.0,
+          "status": "unknown"
+        },
+        "qualified_tiers": {
+          "Q1": "evidence_insufficient",
+          "Q2": "evidence_insufficient",
+          "Q3": "evidence_insufficient"
+        },
+        "runtime_controls": {
+          "actual": {
+            "iabstol": 1e-17,
+            "maxstep": 3.8147000000000003e-10,
+            "method": "traponly",
+            "reltol": 1e-11,
+            "stop": 7e-06,
+            "vabstol": 1.0000000000000002e-14
+          },
+          "claim": "validated API/readback controls; stateless origin does not use a propagation step",
+          "issues": [
+            "missing or mismatched actual maxstep"
+          ],
+          "maxstep_application": "applied",
+          "status": "unknown"
+        },
+        "tool_and_result_identity": {
+          "kernel_or_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+          "original_input_identity": {
+            "deck_sha256": "1e6295e183ac5dd98c0c1934244502f2d3feed89875c3cd07a0f4d0a3ad97dce",
+            "requested_settings_sha256": "14736baa0155817e06b1b1ec05c1d3faa1be9798c3d7a3d69e870f4b2f11f06a",
+            "source_sha256": "4d4743fb8d29554dc038f1c8ef1730fe22d81d43c2600a95e8e265a41e58b5d1"
+          },
+          "original_result_sha256": "bcf440a45b277c763b3380d0701787c72f438bad1031371ccdb59ebb50869d59",
+          "original_tool_identity_sha256": "f35aa93d0eb21d6aa8b96efe0d80b9f5a235e1cf465babe3a23a767aade08f88"
+        }
+      }
+    ],
+    "spectre_limit": "Fresh raw waveform brackets, rounded stop/maxstep readback and requested/native observation correspondence remain incomplete. Old independently qualified Spectre grades remain tied to their original receipts. No claim of five-card pointwise alignment or 15 new Spectre Q3 passes."
+  },
+  "reviews": {
+    "astra_actual_report_sha256": "468db0bc3294a3ec651857671fab26fa5f3351eee5c68d6448801b37e6889891",
+    "astra_callback_report_sha256": "69714575294c495c217cd7371b3a64c8690196fce90d7d024b309ce6da51b0ac",
+    "astra_final_document_review": {
+      "availability": "local-only",
+      "path": "runs/feature-gaps-20261013/review/feature-spec-final.md",
+      "report_sha256": "19fd783ea8d1152463935c571f115d1cee23135abdf686536296499bb87d6691",
+      "scope": "Read-only final document/evidence review against the provided base plus candidate diff; original reports preserved."
+    },
+    "glm_actual_cli": [
+      {
+        "availability": "local-only",
+        "elapsed_seconds": 0.757,
+        "input_sha256": "5936c74953e81c72a45063c339bdff4335cf51fb436974da799ddf97dd70d578",
+        "model_identity_valid": false,
+        "name": "glm-feature-v1",
+        "num_turns": 1,
+        "reported_cost_usd": 0,
+        "reported_models": [],
+        "requested_model": "glm-5.3",
+        "response_sha256": "d6b4447b04fbbb76df89db3dabc2b8e1fb6da87a06ebc9dfed8d69e7b9e9782a",
+        "review_sha256": "0ee95d7ef2ddedd758f1d1fa7dca83366a0b5da9176ef119cc3b3d460ecda848",
+        "review_valid": false,
+        "scope_note": "Group reviews are complementary. v1 prompt-too-long is a failed report; v3-callback context and resource concerns are resolved by full implementations in v3-callers/v4-resolution. Static review does not prove actual execution.",
+        "stop_reason": "stop_sequence",
+        "terminal_reason": "blocking_limit"
+      },
+      {
+        "availability": "local-only",
+        "elapsed_seconds": 67.576,
+        "input_sha256": "03f7585940f33435d905674fe591603a1f5d7f5709801647cbe0e8ea986fcf52",
+        "model_identity_valid": true,
+        "name": "glm-feature-v2-history",
+        "num_turns": 1,
+        "reported_cost_usd": 0.41512499999999997,
+        "reported_models": [
+          "glm-5.3"
+        ],
+        "requested_model": "glm-5.3",
+        "response_sha256": "f559a9f328d74f4cf9a4227a87005201bc3f74765c42b190c2f0e57ea5e14f3f",
+        "review_sha256": "027105dec3ee72712bf6341df1a02b5e3d0a1fddb0c9f502a683d91e9aa58904",
+        "review_valid": true,
+        "scope_note": "Group reviews are complementary. v1 prompt-too-long is a failed report; v3-callback context and resource concerns are resolved by full implementations in v3-callers/v4-resolution. Static review does not prove actual execution.",
+        "stop_reason": "end_turn",
+        "terminal_reason": "completed"
+      },
+      {
+        "availability": "local-only",
+        "elapsed_seconds": 258.53,
+        "input_sha256": "870fd35a42d0896c4e16dfef9e2534c6378d3c9b26d76987b0e6d69cdebc89b1",
+        "model_identity_valid": true,
+        "name": "glm-feature-v2-events",
+        "num_turns": 1,
+        "reported_cost_usd": 0.48016499999999995,
+        "reported_models": [
+          "glm-5.3"
+        ],
+        "requested_model": "glm-5.3",
+        "response_sha256": "706254ab02cae2ea34e5e67368b3d01bd8a563fc45002809f60f47f4c65d8b36",
+        "review_sha256": "9ed19320ac3d573d7b80b516d2d94e642269ce5f3d5a51d706f0d5b7f46c76ee",
+        "review_valid": true,
+        "scope_note": "Group reviews are complementary. v1 prompt-too-long is a failed report; v3-callback context and resource concerns are resolved by full implementations in v3-callers/v4-resolution. Static review does not prove actual execution.",
+        "stop_reason": "end_turn",
+        "terminal_reason": "completed"
+      },
+      {
+        "availability": "local-only",
+        "elapsed_seconds": 45.856,
+        "input_sha256": "2ac399e95022a0450c47415e0153578b45a828961ced5591b6c7cd95b524f378",
+        "model_identity_valid": true,
+        "name": "glm-feature-v3-callers",
+        "num_turns": 1,
+        "reported_cost_usd": 0.71357,
+        "reported_models": [
+          "glm-5.3"
+        ],
+        "requested_model": "glm-5.3",
+        "response_sha256": "7aeb771ec9e01b4c3e02e60dfdb352db3bd66f9f8fb589c776b811ccf2c813ab",
+        "review_sha256": "8b0e542ac4e81fab16ae91f1ae8041b6585efa6b06a8c958fcf58fa1bd38a6c9",
+        "review_valid": true,
+        "scope_note": "Group reviews are complementary. v1 prompt-too-long is a failed report; v3-callback context and resource concerns are resolved by full implementations in v3-callers/v4-resolution. Static review does not prove actual execution.",
+        "stop_reason": "end_turn",
+        "terminal_reason": "completed"
+      },
+      {
+        "availability": "local-only",
+        "elapsed_seconds": 44.933,
+        "input_sha256": "9b93caca6abf4fa632ceb169c5c7d211690116efa4a39d138b5ff171d3f012b4",
+        "model_identity_valid": true,
+        "name": "glm-feature-v3-callback",
+        "num_turns": 1,
+        "reported_cost_usd": 0.299435,
+        "reported_models": [
+          "glm-5.3"
+        ],
+        "requested_model": "glm-5.3",
+        "response_sha256": "9ec77552a959db1a9b5cc87c93421c53dfaef5563593da961016efab86079720",
+        "review_sha256": "c31a636ca8cb4a6b2c0553698ffb4cfad2335ea99399610ff121281ebf8a26c9",
+        "review_valid": true,
+        "scope_note": "Group reviews are complementary. v1 prompt-too-long is a failed report; v3-callback context and resource concerns are resolved by full implementations in v3-callers/v4-resolution. Static review does not prove actual execution.",
+        "stop_reason": "end_turn",
+        "terminal_reason": "completed"
+      },
+      {
+        "availability": "local-only",
+        "elapsed_seconds": 55.423,
+        "input_sha256": "cbb4df7b8287907a61fef491d7d4307b85bf95b1400cc534e5dc1446545ddaa4",
+        "model_identity_valid": true,
+        "name": "glm-feature-v4-resolution",
+        "num_turns": 1,
+        "reported_cost_usd": 0.627885,
+        "reported_models": [
+          "glm-5.3"
+        ],
+        "requested_model": "glm-5.3",
+        "response_sha256": "ff96e90b67c45fdf2d66fefdc8be1ed3f42bbe46c39be974cf22853ba2ac1a9a",
+        "review_sha256": "f46e1fb6f2eca6c555ec4df098e78b6ce4a96d48b5686319094e3afa11066d49",
+        "review_valid": true,
+        "scope_note": "Group reviews are complementary. v1 prompt-too-long is a failed report; v3-callback context and resource concerns are resolved by full implementations in v3-callers/v4-resolution. Static review does not prove actual execution.",
+        "stop_reason": "end_turn",
+        "terminal_reason": "completed"
+      },
+      {
+        "availability": "local-only",
+        "elapsed_seconds": 79.441,
+        "input_sha256": "7b73989132b726b87642fda462203bb0d1aaaba5d612cc26eb81d255ba1941c8",
+        "model_identity_valid": true,
+        "name": "glm-feature-v5-evidence",
+        "num_turns": 1,
+        "reported_cost_usd": 0.6268400000000001,
+        "reported_models": [
+          "glm-5.3"
+        ],
+        "requested_model": "glm-5.3",
+        "response_sha256": "983d5b964a115c508af7e1801144900635230b238826eaca18804ad05a988e8d",
+        "review_sha256": "5820778ff29c107f45e5b2de8dd55e847e4f7fa3adb28ae99c334845e46ae668",
+        "review_valid": true,
+        "scope_note": "Complementary static evidence/math/qualification review. v5 requested a rounding explanation; v6 confirmed the added upward-rounding statement and supplied fixed-scope context. This is not an independent raw-waveform execution.",
+        "stop_reason": "end_turn",
+        "terminal_reason": "completed"
+      },
+      {
+        "availability": "local-only",
+        "elapsed_seconds": 36.778,
+        "input_sha256": "37d89afc6a2032fc843c3540a5f628988ea7c39f9ea43047fe2e37651a33dc93",
+        "model_identity_valid": true,
+        "name": "glm-feature-v6-context",
+        "num_turns": 1,
+        "reported_cost_usd": 0.6668149999999999,
+        "reported_models": [
+          "glm-5.3"
+        ],
+        "requested_model": "glm-5.3",
+        "response_sha256": "4d2257e1ae87d396c34523c0c9420c4d31ce046b658a14a14abdeb0f35fb68aa",
+        "review_sha256": "ea8cfbd9a83bb562085e0e44b4b9d7c9d7fb8b6799bda6a51a1b491e57afec64",
+        "review_valid": true,
+        "scope_note": "Complementary static evidence/math/qualification review. v5 requested a rounding explanation; v6 confirmed the added upward-rounding statement and supplied fixed-scope context. This is not an independent raw-waveform execution.",
+        "stop_reason": "end_turn",
+        "terminal_reason": "completed"
+      }
+    ],
+    "scope": "Astra independently recompiled all 15 actual programs and assessed every row of all 30 waveforms, then checked final documentation and receipt values. GLM independently reviewed supplied complete implementation, calibration and important mathematical/evidence text in complementary actual calls; it did not inspect all raw waveforms. Standards and Spec final reviews found no unresolved actionable defects. Scientific qualification limits remain as stated in results.",
+    "standards_final_review": {
+      "availability": "local-only",
+      "path": "runs/feature-gaps-20261013/review/feature-standards-final.md",
+      "report_sha256": "0051af9c0f7d05ced2d0cc7760cf5c3edaa6ffb4a8d1cde89deb10a33a1aec80",
+      "scope": "Read-only final document/evidence review against the provided base plus candidate diff; original reports preserved."
+    }
+  },
+  "schema_version": 1,
+  "scope": {
+    "backend_configurations": 30,
+    "capability_ids": [
+      "DYNAMICS",
+      "CROSS",
+      "TIMER",
+      "EVENT-ORDER",
+      "COMPOSE",
+      "QUALIFICATION"
+    ],
+    "cards": [
+      "EC03-v1",
+      "EC04-v1",
+      "EC07-v1",
+      "EC10-v1",
+      "EC20-v1"
+    ],
+    "ddt_not_in_this_batch": true,
+    "fresh_spectre": 15,
+    "frozen_pr131_untouched": true,
+    "new_evas": 15
+  }
+}

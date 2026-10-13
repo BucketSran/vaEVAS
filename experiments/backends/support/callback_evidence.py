@@ -3,15 +3,17 @@
 Caller verifies the lane manifest and supplies the independently reviewed producer
 identity. This module never grants that identity, edits raw records, synthesizes
 waveform rows, clips callback boxes, or guesses events by nearest nominal time.
-The small supported scope has direct discrete counters, with no integral state.
-Transition history remains subject to the original reference and checker.
+The supported scope has direct discrete counters, including sampled-integral
+consumers. Integral/filter voltages still use the original reference and checker;
+a callback certificate does not qualify their continuous history by itself.
 """
 from copy import deepcopy
 from fractions import Fraction as F
 import hashlib
 import math
 
-SUPPORTED = {'F07-base', 'EC01-v1', 'EC02-v1'}
+SUPPORTED = {'F07-base', 'EC01-v1', 'EC02-v1', 'EC03-v1', 'EC04-v1',
+             'EC07-v1', 'EC10-v1', 'EC20-v1'}
 
 
 def finite(x):return type(x) in (int,float) and math.isfinite(x)
@@ -43,6 +45,21 @@ def _counter_state(program, name):
     return matches[0]
 
 
+def _fixed_clock(trigger, occurrence, box):
+    # This proves the scheduled physical moment from the reviewed EVAS fixed
+    # timer producer, not from the frozen expected answer or printed time.
+    # Keep its complete observation box; never replace it by this point.
+    if (trigger.get('kind')!='timer' or trigger.get('enabled') is not True or
+        not finite(trigger.get('start')) or not finite(trigger.get('period')) or
+        trigger['start']<=0 or trigger['period']<0):return None
+    if trigger['period']==0 and occurrence:
+        raise ValueError('one-shot fixed timer repeated')
+    tick=F(trigger['start'])+occurrence*F(trigger['period'])
+    if not F(box[0])<=tick<=F(box[1]):
+        raise ValueError('physical fixed clock is outside complete callback box')
+    return tick
+
+
 def callbacks(card, program, response, rows, *, producer_qualified=False):
     """Return complete boxes only after identity, state and waveform checks.
 
@@ -59,23 +76,26 @@ def callbacks(card, program, response, rows, *, producer_qualified=False):
             raise ValueError('initial state was not settled')
         if not rows:raise ValueError('missing waveform')
         channels=card['counter_channels']
-        if len(channels)!=1:raise ValueError('only one direct persistent counter is supported')
-        name=next(iter(channels));state=_counter_state(program,name)
+        if not channels:raise ValueError('missing direct persistent counters')
+        states={name:_counter_state(program,name) for name in channels}
+        if len(set(states.values()))!=len(states):raise ValueError('counter states are aliased')
         actual=response['transient']['events'];expected=card['events']
         if len(actual)!=len(expected):raise ValueError('missing or extra committed callback')
         previous=[s['initial'] for s in program['states']]
-        bounds={};history=[]
+        bounds={};history=[];occurrences={};previous_clock=None
         for i,(record,e) in enumerate(zip(actual,expected,strict=True)):
             index=record['event']
             if type(index) is not int or not 0<=index<len(program['events']):raise ValueError('invalid compiled event index')
             compiled=program['events'][index]
+            name=e['counter'];state=states[name]
             if (record['origin']!=_origin_label(compiled['origin']) or
                 compiled['origin']['instance']!=program['states'][state]['instance']):
                 raise ValueError('event origin or counter instance mismatch')
             before,after=record['before'],record['after']
             if before!=previous or len(after)!=len(previous) or not all(finite(v) for v in before+after):
                 raise ValueError('broken accepted state chain')
-            if before[state]!=channels[name]['initial']+i or after[state]!=before[state]+1 or e['index']!=after[state] or e['counter']!=name:
+            if (after[state]!=before[state]+1 or e['index']!=after[state] or
+                any(after[other]!=before[other] for channel,other in states.items() if channel!=name)):
                 raise ValueError('wrong counter update or frozen event order')
             trigger=compiled['trigger']
             box=_box(record.get('observation_time_bounds',[record['time'],record['time']]),record['time'],card['stop_s'])
@@ -108,19 +128,30 @@ def callbacks(card, program, response, rows, *, producer_qualified=False):
             early=F(e['nominal_s'])-F(e['early_s']);late=F(e['nominal_s'])+F(e['late_s'])
             if e['kind']=='cross':late=min(late,F(e['nominal_s'])+F(e['expression_tolerance_V'])/abs(F(e['slope_V_s'])))
             if F(box[0])<early or F(box[1])>late:raise ValueError('complete callback box exceeds legal window')
-            if history and history[-1]['box_s'][1]>=box[0]:raise ValueError('strict callback order is unproved')
-            bounds[e['id']]=list(box);history.append(dict(event_id=e['id'],box_s=list(box),before=before[state],after=after[state]))
+            occurrence=occurrences.get(index,0)
+            clock=_fixed_clock(trigger,occurrence,box)
+            occurrences[index]=occurrence+1
+            if history and history[-1]['box_s'][1]>=box[0]:
+                if previous_clock is None or clock is None or previous_clock>=clock:
+                    raise ValueError('strict callback order is unproved')
+            previous_clock=clock
+            bounds[e['id']]=list(box);history.append(dict(event_id=e['id'],counter=name,box_s=list(box),before=before[state],after=after[state],
+                physical_clock_fraction=None if clock is None else [clock.numerator,clock.denominator]))
             previous=after
         ut=16*math.ulp(card['stop_s'])
-        for row in rows:
-            if not finite(row.get('time')) or not finite(row.get(name)):raise ValueError('invalid waveform counter')
-            possible={channels[name]['initial']}
-            for item in history:
-                lo,hi=item['box_s']
-                if row['time']>hi+ut:possible={item['after']}
-                elif row['time']>=lo-ut:possible.add(item['after'])
-            if not any(abs(row[name]-value)<=1e-9 for value in possible):
-                raise ValueError('waveform counter contradicts committed history')
+        for name,state in states.items():
+            if previous[state]!=channels[name]['final']:
+                raise ValueError('wrong final counter')
+            for row in rows:
+                if not finite(row.get('time')) or not finite(row.get(name)):raise ValueError('invalid waveform counter')
+                possible={channels[name]['initial']}
+                for item in history:
+                    if item['counter']!=name:continue
+                    lo,hi=item['box_s']
+                    if row['time']>hi+ut:possible={item['after']}
+                    elif row['time']>=lo-ut:possible.add(item['after'])
+                if not any(abs(row[name]-value)<=1e-9 for value in possible):
+                    raise ValueError('waveform counter contradicts committed history')
         return dict(status='qualified',event_bounds_s=bounds,history=history,
                     claim='complete accepted callback boxes; no whole-trajectory proof')
     except (ValueError,KeyError,TypeError,IndexError,OverflowError) as exc:
@@ -146,6 +177,11 @@ def reanalyze(science, card, program, response, rows, contract, *, producer_qual
     new=science.assess(card,rows,contract,reference=actual_reference)
     # These issues concern only the broad bracket replaced by this certificate.
     resolved={'full callback bracket does not fit legal window: '+e['id'] for e in card['events']}
+    if card.get('order_evidence_required'):
+        # callbacks() proved frozen physical order by disjoint complete boxes
+        # or the independently reviewed fixed-clock producer. Boxes stay intact.
+        resolved.update({'independent callback order evidence unavailable',
+                         'cross-channel callback order is unresolved'})
     if new['behavior']['errors']:return result
     def keep(issues):return [x for x in issues if x not in resolved]
     new['behavior']['issues']=keep(new['behavior']['issues'])

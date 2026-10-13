@@ -14,6 +14,142 @@ pub(super) struct ImplicitField {
 }
 
 impl ImplicitField {
+    // A structurally constant voltage Jacobian defines a polynomial vector
+    // field for each fixed PWL slope. This is a global expression check, not
+    // a Jacobian evaluated at the selected initial root. Variable/rational
+    // Jacobians keep the original interval solve and cannot use this recovery.
+    pub(super) fn polynomial_functions(
+        &self,
+        functions: &[Polynomial],
+        slopes: &[I],
+    ) -> Option<Vec<Polynomial>> {
+        let n = self.gradients.len();
+        let width = functions.first()?.width();
+        fn constant_value(p: &Polynomial) -> Option<I> {
+            match p {
+                Polynomial::Linear(row) => row[..row.len() - 1]
+                    .iter()
+                    .all(|v| v.zero())
+                    .then_some(*row.last().unwrap()),
+                Polynomial::Add(a, b) => Some(constant_value(a)? + constant_value(b)?),
+                Polynomial::Multiply(a, b) => {
+                    let a = constant_value(a);
+                    let b = constant_value(b);
+                    if a.is_some_and(|v| v.zero()) || b.is_some_and(|v| v.zero()) {
+                        Some(I::ZERO)
+                    } else {
+                        Some(a? * b?)
+                    }
+                }
+                Polynomial::Power(a, n) => {
+                    let a = constant_value(a)?;
+                    Some((0..*n).fold(I::ONE, |value, _| value * a))
+                }
+            }
+        }
+        let jacobian: Vec<Vec<I>> = self
+            .gradients
+            .iter()
+            .map(|row| {
+                row[self.physical..self.physical + n]
+                    .iter()
+                    .map(|gradient| constant_value(gradient).filter(|value| value.finite()))
+                    .collect::<Option<Vec<_>>>()
+            })
+            .collect::<Option<Vec<_>>>()?;
+        let constant = |value: I| {
+            let mut row = vec![I::ZERO; width];
+            *row.last_mut().unwrap() = value;
+            Polynomial::Linear(row)
+        };
+        fn simplify(p: Polynomial) -> Polynomial {
+            match p {
+                Polynomial::Add(a, b) => {
+                    let (a, b) = (simplify(*a), simplify(*b));
+                    if let (Polynomial::Linear(a), Polynomial::Linear(b)) = (&a, &b) {
+                        Polynomial::Linear(
+                            a.iter().zip(b).map(|(&a, &b)| tight_add(a, b)).collect(),
+                        )
+                    } else if constant_value(&a).is_some_and(|v| v.zero()) {
+                        b
+                    } else if constant_value(&b).is_some_and(|v| v.zero()) {
+                        a
+                    } else {
+                        Polynomial::Add(Box::new(a), Box::new(b))
+                    }
+                }
+                Polynomial::Multiply(a, b) => {
+                    let (a, b) = (simplify(*a), simplify(*b));
+                    let (ac, bc) = (constant_value(&a), constant_value(&b));
+                    if ac.is_some_and(|v| v.zero()) {
+                        a
+                    } else if bc.is_some_and(|v| v.zero()) || ac == Some(I::ONE) {
+                        b
+                    } else if bc == Some(I::ONE) {
+                        a
+                    } else if let (Some(gain), Polynomial::Linear(row)) = (ac, &b) {
+                        Polynomial::Linear(row.iter().map(|&v| tight_mul(gain, v)).collect())
+                    } else if let (Polynomial::Linear(row), Some(gain)) = (&a, bc) {
+                        Polynomial::Linear(row.iter().map(|&v| tight_mul(gain, v)).collect())
+                    } else {
+                        Polynomial::Multiply(Box::new(a), Box::new(b))
+                    }
+                }
+                Polynomial::Power(a, 1) => simplify(*a),
+                Polynomial::Power(a, n) => Polynomial::Power(Box::new(simplify(*a)), n),
+                p => p,
+            }
+        }
+        let rhs: Vec<_> = self
+            .gradients
+            .iter()
+            .map(|row| {
+                let mut result = constant(I::ZERO);
+                for (gradient, function) in row[..self.physical].iter().zip(functions) {
+                    result = Polynomial::Add(
+                        Box::new(result),
+                        Box::new(Polynomial::Multiply(
+                            Box::new(gradient.clone()),
+                            Box::new(function.clone()),
+                        )),
+                    );
+                }
+                for (gradient, &slope) in row[self.physical + n..].iter().zip(slopes) {
+                    result = Polynomial::Add(
+                        Box::new(result),
+                        Box::new(Polynomial::Multiply(
+                            Box::new(gradient.clone()),
+                            Box::new(constant(slope)),
+                        )),
+                    );
+                }
+                result
+            })
+            .collect();
+        let mut voltage = vec![constant(I::ZERO); n];
+        for (column, rhs) in rhs.into_iter().enumerate() {
+            let mut basis = vec![I::ZERO; n];
+            basis[column] = -I::ONE;
+            for (value, gain) in voltage.iter_mut().zip(solve(&jacobian, &basis)?) {
+                *value = Polynomial::Add(
+                    Box::new(value.clone()),
+                    Box::new(Polynomial::Multiply(
+                        Box::new(constant(gain)),
+                        Box::new(rhs.clone()),
+                    )),
+                );
+            }
+        }
+        Some(
+            functions[..self.physical]
+                .iter()
+                .cloned()
+                .chain(voltage)
+                .map(simplify)
+                .collect(),
+        )
+    }
+
     pub(super) fn jets(
         &self,
         functions: &[Polynomial],
@@ -663,7 +799,7 @@ fn initialize(
             .collect(),
         tolerances: tolerances.clone(),
         initial,
-        steps: Vec::new(),
+        steps: Arc::new(Vec::new()),
         start: 0.0,
         event_dependent: false,
         event_seed: None,
@@ -861,6 +997,61 @@ mod tests {
                 .kind,
             "waveform_accuracy"
         );
+    }
+
+    #[test]
+    fn polynomial_recovery_requires_structurally_constant_voltage_jacobian() {
+        // z'=-2z+u^2 and h=u^2-z imply h'=2z-u^2+2u*m.
+        // Compare the reduced vector field with independent literal values.
+        let constant = |value| Polynomial::Linear(vec![I::ZERO, I::ZERO, I::ZERO, I::point(value)]);
+        let coordinate = |index| {
+            let mut row = vec![I::ZERO; 4];
+            row[index] = I::ONE;
+            Polynomial::Linear(row)
+        };
+        let functions = vec![Polynomial::Add(
+            Box::new(Polynomial::Multiply(
+                Box::new(constant(-2.0)),
+                Box::new(coordinate(0)),
+            )),
+            Box::new(Polynomial::Power(Box::new(coordinate(2)), 2)),
+        )];
+        let field = ImplicitField {
+            physical: 1,
+            gradients: vec![vec![
+                constant(1.0),
+                constant(1.0),
+                Polynomial::Multiply(Box::new(constant(-2.0)), Box::new(coordinate(2))),
+            ]],
+        };
+        let reduced = field.polynomial_functions(&functions, &[I::ONE]).unwrap();
+        let variables = vec![
+            vec![I::point(0.125)],
+            vec![I::point(0.125)],
+            vec![I::point(0.5)],
+        ];
+        assert_eq!(reduced[0].jet_with(&variables, 0, true)[0], I::ZERO);
+        assert_eq!(reduced[1].jet_with(&variables, 0, true)[0], I::ONE);
+        // This Jacobian equals one at the supplied initial point but varies
+        // with h. Pointwise invertibility cannot authorize polynomial recovery.
+        let variable_field = ImplicitField {
+            physical: 1,
+            gradients: vec![vec![
+                constant(1.0),
+                Polynomial::Add(Box::new(constant(0.875)), Box::new(coordinate(1))),
+                constant(-1.0),
+            ]],
+        };
+        assert!(variable_field
+            .polynomial_functions(&functions, &[I::ONE])
+            .is_none());
+        let singular = ImplicitField {
+            physical: 1,
+            gradients: vec![vec![constant(1.0), constant(0.0), constant(-1.0)]],
+        };
+        assert!(singular
+            .polynomial_functions(&functions, &[I::ONE])
+            .is_none());
     }
 
     #[test]
