@@ -9,29 +9,34 @@ use std::sync::Arc;
 #[derive(Clone, Copy, PartialEq)]
 pub(crate) struct Projection {
     pub(crate) parent: usize,
-    coefficient: I,
-    constant: I,
+    pub(crate) coefficient: I,
+    pub(crate) constant: I,
 }
 
 /// Structural dependencies are checked before projection. Cancellation must
 /// not admit feedback, state forcing or a second history accidentally.
 pub(crate) fn projection(program: &Program, driven: &[String], index: usize) -> Option<Projection> {
-    let OperatorSpec::LaplaceNd {
-        input,
-        numerator,
-        denominator,
-        origin,
-    } = &program.operators[index]
-    else {
-        return None;
+    let (input, origin, integral) = match &program.operators[index] {
+        OperatorSpec::LaplaceNd {
+            input,
+            numerator,
+            denominator,
+            origin,
+        } if numerator.len() == 1
+            && denominator.len() == 2
+            && denominator[0] > 0.
+            && denominator[1] > 0. =>
+        {
+            (input, origin, false)
+        }
+        OperatorSpec::Idt {
+            input,
+            reset: None,
+            origin,
+            ..
+        } => (input, origin, true),
+        _ => return None,
     };
-    if numerator.len() != 1
-        || denominator.len() != 2
-        || denominator[0] <= 0.
-        || denominator[1] <= 0.
-    {
-        return None;
-    }
     let driven_nodes: BTreeSet<_> = driven
         .iter()
         .filter_map(|n| program.nodes.iter().position(|x| x == n))
@@ -66,7 +71,8 @@ pub(crate) fn projection(program: &Program, driven: &[String], index: usize) -> 
         return None;
     }
     let parent = *operators.iter().next()?;
-    if !matches!(program.operators[parent], OperatorSpec::Transition { .. })
+    if (integral && parent >= index)
+        || !matches!(program.operators[parent], OperatorSpec::Transition { .. })
         || program.operators[parent].origin().instance != origin.instance
     {
         return None;

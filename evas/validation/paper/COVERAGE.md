@@ -102,7 +102,7 @@ L1–L5 是本文的表格导航 ID，不替代开发回归的 LANG、TIMER 等�
 | <a id="l3-07"></a>L3-07 滤波与微分组合 | 滤波后内部导数、输入导数进入直通项、DC 与瞬态阶段、折点 | [`EC11`](#ec11)、[`EC16`](#ec16) | 阶段证据、光滑输入及共轭极点组合 |
 | <a id="l3-08"></a>L3-08 延迟级联 | 各级历史、拐点平移、独立并行延迟、短脉冲 | [`EC14`](#ec14)、[`projected`](#old-projected) | 短脉冲、更深级联；原 projected 另有 slew 消费者 |
 | <a id="l3-09"></a>L3-09 限速及延迟限速级联 | 各级历史、平台追赶、反向、短脉冲、延迟后限速 | [`EC15`](#ec15)、[`SC:ramp`](#old-sc-ramp)、[`SC:catch`](#old-sc-catch)、[`SC:reverse`](#old-sc-reverse)、[`projected`](#old-projected) | 独立延迟后限速卡、短脉冲及更深级联 |
-| <a id="l3-10"></a>L3-10 中断边沿后积分 | 边沿中断、反向、下游面积与已有历史 | [`EC05`](#ec05) | 现有支持探针缺完整参考资格，先定合同 |
+| <a id="l3-10"></a>L3-10 中断边沿后积分 | 边沿中断、反向、下游面积与已有历史 | [`EC05`](#ec05) | EC05-Q-v2 已另定共同回调历史与独立面积判据；原探针及成绩保留，见[本轮证据](../../../experiments/backends/support/README.md#legacy-chain-q)。 |
 | <a id="l3-11"></a>L3-11 数组的事件状态更新 | 初始化、异刻更新、非幂等计数、各元素状态保留 | [`F07`](#f07)、[`LANG-array-events`](#old-lang-array-events) | 不同元素与来源的隔离变体；同刻交互另列 L5-05 |
 
 <a id="layer-4"></a>
@@ -170,11 +170,12 @@ L1–L5 是本文的表格导航 ID，不替代开发回归的 LANG、TIMER 等�
 
 ## 判据尚未确定的探针
 
-EC05、EC22、EC23、EC24 的完整参考尚未确认，继续保留模型、执行结果、失败和原评测位置。
+EC05-v1、EC22、EC23、EC24 的原探针继续保留模型、执行结果、失败和原评测位置。
+EC05 另立 EC05-Q-v2，以独立中断折线面积验收，原探针成绩不变。EC22–EC24 的完整参考仍未确认。
 EC21 虽有原档位通过记录，timer 重新读取 next 的语义仍依赖未核实假设，也不据此授予新版通用支持。
 它们进入新版正式验收前，先固定合法模型、数学或语义答案、事件规则及校准。
 只有这类材料的能力不列入本版支持主表，保留在本节计划中，不把它解释成四个后端均不支持。
-适用 ID 为 L2-04、L3-10、L5-05、L5-06、L5-07；L4-05 ADC 暂无独立对比卡，也只列计划。
+尚未定稿的 ID 为 L2-04、L5-05、L5-06、L5-07；L3-10 的新版范围另列下文。L4-05 ADC 暂无独立对比卡，也只列计划。
 
 这不改变历史 breadth 的 44 组、71 变体、852 个评测位置，也不重算原 P/F/I 或移除失败。
 后端失败本身不是转为探针的理由；这里沿用原卡已经记录的参考限制。
@@ -209,13 +210,23 @@ P 卡包含本卡的全部有限观察、起止点和输入折点；V 卡包含�
 | ST | [原定时 strobe 对照](../../../experiments/backends/strobe/README.md#timer-fix)。固定原模型，采用整合及 main 复验身份，不改原100 ps条件。 |
 | SEF | [原采样滤波及 main 复验](../../../experiments/backends/sample-edge-filter/README.md)。四模型按 PR #123 集成收据，ST 三观察另按 `fc7e57fd` 复验；并列范围，不是一次同版全量执行。 |
 | NT | [原近邻 timer 及 main 复验](../../../experiments/backends/strobe/README.md#near-timer)。原三模型收据与 `fc7e57fd` 复验；使用各自原预算。 |
-| OLD | [原31条件](#legacy-31)。保留 c2-main 原成绩；没有新的 Q 档通过资格。 |
+| OLD | [原31条件](#legacy-31)。保留 c2-main 原成绩；2026-10-13 的 Q 补验另立身份，不转授其他原31条件。 |
+| Q-CHAIN | [旧整链 Q 补验](../../../experiments/backends/support/README.md#legacy-chain-q)。EVAS 生产代码对应 main `7344e4db`；新强制观察、只读回调与分析来源分别记录。 |
+| Q-AREA | [EC05-Q-v2](../../../experiments/backends/support/README.md#legacy-chain-q)。保留 EC05-v1 源码，新建独立面积验收；EVAS 实现纳入 0.15.0，执行仍绑定发布前候选；原两种开源方案尚无新版 Q 结果。 |
 
 两类导数和八张组合卡另用 `e2d8cbf8` 构建进行实际复验，实现已随 #167 合入 main `e028f96d`。
 [原收据](../../../experiments/backends/support/20261013-capability-gaps.json)保留执行时的候选身份。
 [新版根窗口批次](../../../experiments/backends/support/README.md#root-window-v3)复测 SH-X-RAMP 与 EC04-v1，
 共18个配置：EVAS原模型6个、Spectre原模型6个、Spectre只读回调模型6个。它们是已有用例的重复执行，
 不增加独立用例数或更换必测范围。新旧判据和成绩分开保存；其他行不算 main 同版全量验收。
+
+**2026-10-13 补充范围 v1.1** 另立旧整链 Q 验收和 EC05-Q-v2。旧整链仍为
+STROBE-TIMER-IDT、SEF四电路及三观察、c2-main、NT三模型，共12个条件。
+模型、初态、原事件范围、旧 checker 和成绩不变。新 Q 观察保留旧请求并添加关键边界强制点，
+不宣称原普通查询执行已经复现。旧 checker 在新波形上的重审也与历史运行分开。
+EC05-Q-v2 保留原 EC05-v1 源码，单独增加参考、回调取证和边界观察。
+这是新验收身份，不回写原44组852个位置。来源、实际配置和逐档结果见
+[本轮证据](../../../experiments/backends/support/README.md#legacy-chain-q)。
 
 主表结果按下列范围引用，版本和收据随来源保留。不同版本的结果不能解释为同一最新版的整体支持。
 函数卡中写作 π 的输入，实际使用冻结源码里的 binary64 近似值；参考答案按这些实际操作数计算。
@@ -271,21 +282,22 @@ P 卡包含本卡的全部有限观察、起止点和输入折点；V 卡包含�
 | <a id="scope-l3-01-cross"></a>[L3-01](#l3-01) 采样保持：阈值 | V：[`SH-X-RAMP`](#old-sh-x-ramp) | 完整8次穿越及其读值、保持；不借定时采样通过授予资格。 |
 | <a id="scope-l3-02"></a>[L3-02](#l3-02) 采样、复位与输出边沿 | B：[`EC01`](#ec01) | EC01-v1 的固定时序、复位优先级和完整边沿输出。 |
 | <a id="scope-l3-03"></a>[L3-03](#l3-03) 迟滞比较器与边沿 | B：[`EC02`](#ec02) | EC02-v1：迟滞阈值、非对称边沿与短脉冲反转，全部输出必测。 |
-| <a id="scope-l3-04-timer"></a>[L3-04](#l3-04) 定时采样→积分：原模型 | ST：[`STROBE-TIMER-IDT`](#old-strobe-timer-idt) | 原 TT=100 ps、100 µV 输出预算与原 strobe 请求；10 ps/1 ps 诊断不替代本卡。 |
+| <a id="scope-l3-04-timer"></a>[L3-04](#l3-04) 定时采样→积分：原模型 | ST：[`STROBE-TIMER-IDT`](#old-strobe-timer-idt) | 原 TT=100 ps、100 µV 判据与历史成绩保留；Q补验保留原请求，增加有限边界强制点，不借10 ps/1 ps诊断替代本卡。 |
 | <a id="scope-l3-04-ordered"></a>[L3-04](#l3-04) 采样→积分：停止边界与非线性 | B：[`EC03`](#ec03)、[`EC04`](#ec04) | EC03 stop 的末次回调和 EC04 的非线性输入全部验收；不截掉停止时刻。 |
 | <a id="scope-l3-05"></a>[L3-05](#l3-05) 积分级联与复位 | B：[`EC07`](#ec07) | EC07-v1：上游复位、保持与释放，下游保留已有面积。 |
 | <a id="scope-l3-06"></a>[L3-06](#l3-06) 非线性输入与滤波直通项 | B：[`EC12`](#ec12) | EC12-v1/v2 全部变体：非零 DC 初态、多项式输入，v2 内部折点。 |
 | <a id="scope-l3-07"></a>[L3-07](#l3-07) 滤波与微分：DC 直通项 | B：[`EC16`](#ec16) | EC16-v1 的 DC 导数与瞬态直通输出；不以二阶滤波 EC11 的通过代替。 |
 | <a id="scope-l3-08"></a>[L3-08](#l3-08) 两个固定延迟的历史 | B：[`EC14`](#ec14) | EC14-v1 的全部两路延迟与输出，独立并行历史。 |
 | <a id="scope-l3-09"></a>[L3-09](#l3-09) 两级 slew 与反向追赶 | B：[`EC15`](#ec15) | EC15-v1 的两级非对称 slew 与全部反向边界观察；不含任意深度级联。 |
+| <a id="scope-l3-10"></a>[L3-10](#l3-10) 中断边沿后积分 | Q-AREA：[`EC05`](#ec05) / EC05-Q-v2 | 原上升与反向沿、0.1 V 非零积分初值；完整两次回调、边沿起止点两侧与全部输出。保留旧探针成绩；新 Q 结论分别属于 EVAS 原源和 Spectre 只读源。 |
 | <a id="scope-l3-11"></a>[L3-11](#l3-11) 数组的事件状态更新 | B：[`F07`](#f07) | F07-base 的持久数组、非幂等更新、重复事件和全部元素；与初始化行共用执行。 |
 
 ### 第4层的固定用例
 
 | 主表行 | 全部必测用例 | 本版范围与限制 |
 | --- | --- | --- |
-| <a id="scope-l4-01"></a>[L4-01](#l4-01) 采样→保持→边沿→滤波 | SEF：[`SEF-TIMER`](#old-sef-timer)、[`SEF-RESET`](#old-sef-reset)、[`SEF-INTERRUPT`](#old-sef-interrupt)、[`SEF-ISOLATION`](#old-sef-isolation)、[`ST:SEF-TIMER`](#old-st-sef-timer)、[`ST:SEF-INTERRUPT`](#old-st-sef-interrupt)、[`ST:SEF-ISOLATION`](#old-st-sef-isolation) | 原四种电路与三种 strobe 观察；保留已接受的 SEF-TIMER-18 特定差异及全部严格失败。 |
-| <a id="scope-l4-02"></a>[L4-02](#l4-02) 滤波→采样保持 | OLD：[`c2-main`](#old-c2-main) | 原 c2-main 同源模型；已有旧成绩，但本版关键边界与共同精度验收尚未完成。 |
+| <a id="scope-l4-01"></a>[L4-01](#l4-01) 采样→保持→边沿→滤波 | SEF：[`SEF-TIMER`](#old-sef-timer)、[`SEF-RESET`](#old-sef-reset)、[`SEF-INTERRUPT`](#old-sef-interrupt)、[`SEF-ISOLATION`](#old-sef-isolation)、[`ST:SEF-TIMER`](#old-st-sef-timer)、[`ST:SEF-INTERRUPT`](#old-st-sef-interrupt)、[`ST:SEF-ISOLATION`](#old-st-sef-isolation) | 原四种电路与三种观察；Q补验保留旧观察并添加强制点。保留 SEF-TIMER-18 的已接受范围和全部严格失败，不将其扩大。 |
+| <a id="scope-l4-02"></a>[L4-02](#l4-02) 滤波→采样保持 | OLD：[`c2-main`](#old-c2-main) | 原 c2-main 同源模型；旧600 µV与1 mV判据保留，新Q验收检查滤波值、实际采样、完整保持及关键边界。 |
 | <a id="scope-l4-03"></a>[L4-03](#l4-03) 电压求解→延迟→采样 | B：[`EC13`](#ec13) | EC13-v1 的代数电压解、延迟历史及全部4次 timer 回调，包含 stop 要求。 |
 | <a id="scope-l4-04"></a>[L4-04](#l4-04) VCO：扫频与原始相位 | B：[`F20`](#f20)、[`EC17`](#ec17)、[`EC18`](#ec18) | 固定频率、正向扫频、负频率及非零偏置；原始相位和正弦均须验收。 |
 
@@ -298,7 +310,7 @@ P 卡包含本卡的全部有限观察、起止点和输入折点；V 卡包含�
 | <a id="scope-l5-02"></a>[L5-02](#l5-02) 非线性积分与滤波联合反馈 | B：[`EC09`](#ec09) | EC09-v1 的联合反馈轨迹与全部输出；原 LP-IDT、NA 放大模型另存历史。 |
 | <a id="scope-l5-03-linear"></a>[L5-03](#l5-03) 事件改变动态：线性反馈 | B：[`EC08`](#ec08) | EC08-v1：事件改变保持输入，线性反馈保留其他状态；旧Q3超时保留；新候选三档通过。 |
 | <a id="scope-l5-03-riccati"></a>[L5-03](#l5-03) 事件改变动态：Riccati 滤波 | B：[`EC10`](#ec10) | EC10-v1：事件激活 Riccati 滤波，不重新进行 DC 初始化。 |
-| <a id="scope-l5-04-chain"></a>[L5-04](#l5-04) 近邻定时事件：原整链 | NT：[`NT:fixed`](#old-nt-fixed)、[`NT:held`](#old-nt-held)、[`NT:chain`](#old-nt-chain) | 原三模型全部计数、采样和连续输出；采用各模型原事件容差，连续链预算1 µV。 |
+| <a id="scope-l5-04-chain"></a>[L5-04](#l5-04) 近邻定时事件：原整链 | NT：[`NT:fixed`](#old-nt-fixed)、[`NT:held`](#old-nt-held)、[`NT:chain`](#old-nt-chain) | 原三模型全部计数、采样和连续输出；采用各模型原事件容差和接地参考。旧1 µV判据保留，Q补验另立身份。 |
 | <a id="scope-l5-04-adjacent"></a>[L5-04](#l5-04) 近邻定时事件：相邻浮点采样积分 | B：[`EC20`](#ec20) | EC20-v1 的相邻 binary64 时刻、采样值与积分面积；不同于原 NT 整链。 |
 
 ### 怎样查回旧结论
@@ -325,6 +337,8 @@ P 卡包含本卡的全部有限观察、起止点和输入折点；V 卡包含�
 | 既有组合复验 | 下方各专项定义 | [21 条件复验](../../../experiments/backends/support/README.md#current-main)；EVAS `fc7e57fd`，含上述 8 条件，不增加条件数 |
 | 严格滤波修复 | 仍用原 8 条件中的 4 个滤波模型 | [deep 补测](../../../experiments/backends/support/README.md#evas-precision-recovery)；基线 `7c9e6aba`，不回填旧绑定表 |
 | 新 44 组，71 变体 | [基础](https://github.com/BucketSran/vaEVAS/blob/814da00daf2f0bea1555fffe923f5b6abd78b6bf/evas/validation/paper/precision_breadth_foundation.py)、[组合](https://github.com/BucketSran/vaEVAS/blob/814da00daf2f0bea1555fffe923f5b6abd78b6bf/evas/validation/paper/precision_breadth_composition.py) | [逐档成绩](../../../experiments/backends/support/README.md#breadth-tier-results)、[收据](https://github.com/BucketSran/vaEVAS/blob/814da00daf2f0bea1555fffe923f5b6abd78b6bf/experiments/backends/support/20261012-breadth.json)；EVAS `519d5e28` |
+| 旧整链 Q 补验，12 条件 | 旧 SEF/ST、STROBE-TIMER-IDT、c2-main、NT；新 Q 观察与只读源分开 | [逐档补验](../../../experiments/backends/support/README.md#legacy-chain-q)，108次；EVAS内核对应 main `7344e4db`，36次完整通过；不增加旧条件数。 |
+| 中断边沿积分新版，1 条件 | EC05-v1 源码；EC05-Q-v2 面积与边界判据 | [实际对照](../../../experiments/backends/support/README.md#legacy-chain-q)，9次；EVAS本分支和Spectre只读源三档通过，原Spectre源未取得新Q资格；原852位置不改。 |
 
 上述 EVAS 版本不构成一次同版本全量复验。各后端实际工具身份和设置随原收据保留。
 历史通过只表示对应判据的有限观察通过；没有完成 Q 档验收的，不能仅按电压阈值换算成 Q1/Q2/Q3。
@@ -543,7 +557,7 @@ SEF-TIMER-18 只豁免[已列出的 18 条跳变侧差异](../../../experiments/
 | <a id="ec02"></a>**EC02**：`EC02-v1` | [L3-03](#l3-03) | CO-HC-01；EV-HC-01/02；v3-main | 迟滞后边沿的快速反向和短脉冲 |
 | <a id="ec03"></a>**EC03**：`EC03-v1` | [L3-04](#l3-04) | STROBE-TIMER-IDT；SH-T-RAMP | 非零积分初值；另规定 stop 时已看到最后回调 |
 | <a id="ec04"></a>**EC04**：`EC04-v1` | [L3-04](#l3-04) | DS:positive/negative/small；e1-aligned/shifted/slow | 非线性根采样后再驱动非线性积分 |
-| <a id="ec05"></a>**EC05**：`EC05-v1` | [L3-10](#l3-10) | SEF-INTERRUPT；ST:SEF-INTERRUPT | 中断 transition 改为驱动积分；支持探针 |
+| <a id="ec05"></a>**EC05**：`EC05-v1` | [L3-10](#l3-10) | SEF-INTERRUPT；ST:SEF-INTERRUPT | 原支持探针保留；EC05-Q-v2另验收中断后积分面积、非零初值和边界两侧。 |
 | <a id="ec06"></a>**EC06**：`EC06-v1`, `EC06-v2` | [L5-01](#l5-01) | d1-reset；确认集 histories/reset_filter | 双积分器仅复位一路、独立初值和编码变体 |
 | <a id="ec07"></a>**EC07**：`EC07-v1` | [L3-05](#l3-05) | d1-reset | 上游复位后下游积分保留已有面积 |
 | <a id="ec08"></a>**EC08**：`EC08-v1` | [L5-03](#l5-03) | LP-IDT；确认集 reset_filter | 保持输入驱动反馈并保留另路状态 |
@@ -642,7 +656,7 @@ EVAS 为固定 main 检查点 `a64c2ad0`；旧31条件、专项、原八条件�
 | --- | --- | --- |
 | 小信号、长采样 | SH-T-SMALL、LP-SMALL、SH-T-LONG 已测 | 在目标集成版本复验；不由 1 V 的新短测试代替 |
 | 采样、边沿与滤波整链 | SEF、ST、NT:chain 已测 | 保留整链回归；新 44 组不能替代这些消费者 |
-| 滤波后采样 | 原 c2-main 已测 | 原模型按新精度及边界标准验收，不能写成从未测试 |
+| 滤波后采样 | 原 c2-main 已测，已补 main 的 Q1/Q2/Q3 强制观察验收 | 更广输入与滤波参数另定新版；不由本卡外推全部滤波后采样 |
 | 供电和参考的单因素关系 | 原 v2 四条件已测 | 新统一精度流程中的供电依赖和对应观察 |
 | 宏、参数、循环和数组的边界 | 旧语言模型及 F01–F09 部分覆盖 | include 保护、参数范围、零次/一次/参数化循环、声明方向等规划条件 |
 | 独立数学函数 | 组合里用到 sin、exp、pow | 已补十张固定独立卡及六项sin校准；更大范围与参数变体另立新版，组合使用不等于独立覆盖 |
@@ -711,7 +725,13 @@ Spectre原模型6个配置没有回调日志，继续保留证据不足；只读
 
 两张 `ddt` 卡及 EC08/EC12 的 Q3 执行限制已由[本轮修复与复验](../../../experiments/backends/support/README.md#capability-gaps)处理。
 原编译失败、拒绝和超时与新三档结果并列保存，不回写历史。
-c2-main 保留原 600 µV / 1 mV 工程成绩；没有追加共同Q档或关键边界资格，不将未测部分归为EVAS缺陷。
+c2-main 保留原 600 µV / 1 mV 工程成绩；[旧整链Q补验](../../../experiments/backends/support/README.md#legacy-chain-q)
+另取得EVAS原源与Spectre只读源三档完整资格，不回写旧记录。
 
-探索用的动态 timer、中断后积分、内部反馈事件和隐式复位仍在[扩展计划](#exploratory-cases)，
+本轮旧整链的待补资料是Spectre近邻三模型的关键边界双侧观察及stop打印格式校准，三档共9次。
+其原1 µV成绩仍保留，EVAS同组已通过三档。旧整链的36个原Spectre源、EC05的3个原Spectre源
+没有回调日志，资格不从只读源转移。中断积分的另外两个开源后端还没有EC05-Q-v2验收，
+旧EC05-v1的执行失败或证据不足继续留在原44组收据中。
+
+探索用的动态 timer、内部反馈事件和隐式复位仍在[扩展计划](#exploratory-cases)，
 参考或验收尚未定稿，不纳入本版固定支持行。

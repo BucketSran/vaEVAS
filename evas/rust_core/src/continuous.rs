@@ -798,6 +798,8 @@ fn select_network_operators(
         .map(|&n| program.nodes[n].clone())
         .collect();
     for (index, spec) in program.operators.iter().enumerate() {
+        // The shared projector admits only a stable first-order filter or a
+        // feed-forward integral of one accepted transition history.
         if crate::operators::transition_filter::projection(program, &driven, index).is_some() {
             continue;
         }

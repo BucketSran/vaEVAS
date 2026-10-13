@@ -6,7 +6,7 @@
 
 ```sh
 python3 -m venv .venv
-.venv/bin/python -m pip install /path/to/evas_rebuild-0.13.0-py3-none-PLATFORM.whl
+.venv/bin/python -m pip install /path/to/evas_rebuild-0.15.0-py3-none-PLATFORM.whl
 .venv/bin/evas-rebuild version --json --bundled-kernel
 .venv/bin/evas-rebuild solve /path/to/sim.json
 .venv/bin/evas-rebuild transient /path/to/transient.json
@@ -16,7 +16,7 @@ python3 -m venv .venv
 `solve`、`transient`、`simulate` 及 results 的 `run` 默认使用当前安装包内核。
 Python API 的 `solve(..., kernel=None)`、`transient(..., kernel=None)`、
 `simulate_scs(..., kernel=None)` 与 `results.run(..., kernel=None, out=...)` 同样使用它。
-默认选择检查构建记录、文件 SHA256、内核实际报告、IR17、包版本和 OS/架构。
+默认选择检查构建记录、文件 SHA256、内核实际报告、IR19、包版本和 OS/架构。
 macOS 的 arm64 映射到 Rust 的 aarch64，darwin 映射到 macos。
 
 显式 `--kernel PATH` 始终选择该路径；API 的显式参数原样传给子进程，

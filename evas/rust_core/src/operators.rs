@@ -17,6 +17,9 @@ use std::sync::Arc;
 #[path = "transition_filter.rs"]
 pub(crate) mod transition_filter;
 
+#[path = "transition_integral.rs"]
+pub(crate) mod transition_integral;
+
 #[path = "direct_derivative.rs"]
 pub(crate) mod direct_derivative;
 
@@ -468,6 +471,10 @@ enum Runtime {
     TransitionFilter {
         parent: usize,
         history: Box<transition_filter::Filter>,
+    },
+    TransitionIntegral {
+        parent: usize,
+        history: Box<transition_integral::Integral>,
     },
     Transition {
         input: AffineState,
@@ -1143,6 +1150,9 @@ impl Operators {
                 Runtime::TransitionFilter { parent, history } => {
                     history.range(self.transition(*parent)?, window)?
                 }
+                Runtime::TransitionIntegral { parent, history } => {
+                    history.range(self.transition(*parent)?, window)?
+                }
                 Runtime::Math(function, SinInput::Direct(source)) => {
                     function.bounds(source.range(window)?.0)?
                 }
@@ -1287,6 +1297,20 @@ impl Operators {
                     reset,
                     origin,
                 } => {
+                    if let Some(projection) = transition_filter::projection(program, driven, index)
+                    {
+                        if !matches!(entries[projection.parent], Runtime::Transition { .. }) {
+                            return Err(Error::new(
+                                "unsupported_operator",
+                                "integral forcing lacks accepted transition history",
+                            ));
+                        }
+                        entries.push(Runtime::TransitionIntegral {
+                            parent: projection.parent,
+                            history: Box::new(transition_integral::Integral::new(projection, *ic)?),
+                        });
+                        continue;
+                    }
                     let (points, bounds) =
                         direct_points(input, program, trajectory, driven, origin)?;
                     let reset = reset
@@ -1520,7 +1544,8 @@ impl Operators {
             let changes = match entry {
                 Runtime::Idt { reset: Some(_), .. }
                 | Runtime::Transition { .. }
-                | Runtime::TransitionFilter { .. } => true,
+                | Runtime::TransitionFilter { .. }
+                | Runtime::TransitionIntegral { .. } => true,
                 Runtime::Math(_, SinInput::Operator { operator, .. }) => {
                     changes_on_advance[*operator]
                 }
@@ -1700,6 +1725,9 @@ impl Operators {
                     Runtime::TransitionFilter { parent, history } => {
                         history.value(self.transition(*parent)?, time)?
                     }
+                    Runtime::TransitionIntegral { parent, history } => {
+                        history.value(self.transition(*parent)?, time)?
+                    }
                     Runtime::IdtMod(history) => history.value(time)?,
                     Runtime::Math(function, input) => match input {
                         SinInput::Direct(source) => function.value(source.value(time)?),
@@ -1736,7 +1764,7 @@ impl Operators {
                 Runtime::Math(_, SinInput::Operator { .. }) => None,
                 Runtime::AbsDelay(history) => history.next_breakpoint(after),
                 Runtime::LaplaceNd(history) => history.next_breakpoint(after),
-                Runtime::TransitionFilter { .. } => None,
+                Runtime::TransitionFilter { .. } | Runtime::TransitionIntegral { .. } => None,
                 Runtime::Transition { history, .. } => history.next_breakpoint(after),
                 Runtime::Slew(history) => history.next_breakpoint(after),
                 Runtime::SlewCascade(history) => history.next_breakpoint(after),
@@ -1771,6 +1799,9 @@ impl Operators {
                     Runtime::Idt { history, .. } => history.value_bounds(time)?,
                     Runtime::LaplaceNd(history) => history.value_bounds(time)?,
                     Runtime::TransitionFilter { parent, history } => {
+                        history.bounds(self.transition(*parent)?, time)?
+                    }
+                    Runtime::TransitionIntegral { parent, history } => {
                         history.bounds(self.transition(*parent)?, time)?
                     }
                     Runtime::IdtMod(history) => history.value_bounds(time)?,
@@ -1834,7 +1865,7 @@ impl Operators {
                 Runtime::Math(_, _) => Vec::new(),
                 Runtime::AbsDelay(_) => Vec::new(),
                 Runtime::LaplaceNd(_) => Vec::new(),
-                Runtime::TransitionFilter { .. } => Vec::new(),
+                Runtime::TransitionFilter { .. } | Runtime::TransitionIntegral { .. } => Vec::new(),
                 Runtime::Transition { history, .. } => history.deadlines(after),
                 Runtime::Slew(_) | Runtime::SlewCascade(_) => Vec::new(),
             })
@@ -1873,58 +1904,68 @@ impl Operators {
         // Consume the OLD edge before any candidate target/queue mutation.
         // Compute all predictions first so a failure cannot partially update
         // this collection. The owning frame still controls atomic commit.
-        let filters = self
-            .entries
-            .iter()
-            .enumerate()
-            .filter_map(|(i, e)| match e {
-                Runtime::TransitionFilter { parent, history } => {
-                    let Runtime::Transition {
-                        input,
-                        history: forcing,
-                        ..
-                    } = &self.entries[*parent]
-                    else {
-                        return None;
-                    };
-                    (changed.iter().any(|s| input.state_dependencies.contains(s))
-                        || history.reaches_deadline(forcing, time))
-                    .then_some((i, *parent, history))
-                }
-                _ => None,
-            })
-            .map(|(i, parent, history)| {
-                let Runtime::Transition {
-                    input,
-                    input_bounds,
-                    history: old,
-                } = &self.entries[parent]
-                else {
-                    unreachable!()
-                };
-                let target_bounds = input_bounds
-                    .iter()
-                    .zip(bounds.iter().copied().chain([I::ONE]))
-                    .fold(I::ZERO, |sum, (&a, b)| sum + a * b);
-                let may_change = changed.iter().any(|s| input.state_dependencies.contains(s));
-                let mut preview = old.clone();
-                preview.advance_at(
-                    time,
-                    time_bounds,
-                    input.value(&[], states)?,
-                    target_bounds,
-                    may_change,
-                )?;
-                Ok((
-                    i,
-                    history.committed_change(old, &preview, time, time_bounds)?,
-                ))
-            })
-            .collect::<Result<Vec<_>, Error>>()?;
-        for (i, prediction) in filters {
-            if let Runtime::TransitionFilter { history, .. } = &mut self.entries[i] {
-                **history = prediction;
+        let mut predictions = Vec::new();
+        for (i, entry) in self.entries.iter().enumerate() {
+            let (parent, reaches_deadline) = match entry {
+                Runtime::TransitionFilter { parent, history } => (
+                    *parent,
+                    history.reaches_deadline(self.transition(*parent)?, time),
+                ),
+                Runtime::TransitionIntegral { parent, history } => (
+                    *parent,
+                    history.reaches_deadline(self.transition(*parent)?, time),
+                ),
+                _ => continue,
+            };
+            let Runtime::Transition {
+                input,
+                input_bounds,
+                history: old,
+            } = &self.entries[parent]
+            else {
+                unreachable!()
+            };
+            let may_change = changed.iter().any(|s| input.state_dependencies.contains(s));
+            if !may_change && !reaches_deadline {
+                continue;
             }
+            let target_bounds = input_bounds
+                .iter()
+                .zip(bounds.iter().copied().chain([I::ONE]))
+                .fold(I::ZERO, |sum, (&a, b)| sum + a * b);
+            let mut preview = old.clone();
+            preview.advance_at(
+                time,
+                time_bounds,
+                input.value(&[], states)?,
+                target_bounds,
+                may_change,
+            )?;
+            let prediction = match entry {
+                Runtime::TransitionFilter { history, .. } => Runtime::TransitionFilter {
+                    parent,
+                    history: Box::new(history.committed_change(
+                        old,
+                        &preview,
+                        time,
+                        time_bounds,
+                    )?),
+                },
+                Runtime::TransitionIntegral { history, .. } => Runtime::TransitionIntegral {
+                    parent,
+                    history: Box::new(history.committed_change(
+                        old,
+                        &preview,
+                        time,
+                        time_bounds,
+                    )?),
+                },
+                _ => unreachable!(),
+            };
+            predictions.push((i, prediction));
+        }
+        for (i, prediction) in predictions {
+            self.entries[i] = prediction;
         }
 
         if let Some(continuous) = &self.continuous {
@@ -1950,7 +1991,7 @@ impl Operators {
                 Runtime::Math(_, _) => {}
                 Runtime::AbsDelay(_) => {}
                 Runtime::LaplaceNd(_) => {}
-                Runtime::TransitionFilter { .. } => {}
+                Runtime::TransitionFilter { .. } | Runtime::TransitionIntegral { .. } => {}
                 Runtime::Transition {
                     input,
                     input_bounds,
@@ -1995,6 +2036,10 @@ impl Operators {
                     (
                         Runtime::TransitionFilter { history: a, .. },
                         Runtime::TransitionFilter { history: b, .. },
+                    ) => a.same_history(b),
+                    (
+                        Runtime::TransitionIntegral { history: a, .. },
+                        Runtime::TransitionIntegral { history: b, .. },
                     ) => a.same_history(b),
                     _ => true,
                 })
@@ -2088,6 +2133,55 @@ mod phase_operator_tests {
         assert!(candidate.same_reset_history(&clean));
         let at = candidate.bounds(1.625).unwrap()[1];
         let expected = 0.25 + (0.5 - 0.25 * (1. - (-2.0_f64).exp())) / 0.5;
+        assert!(at.lo <= expected && expected <= at.hi);
+        assert_eq!(
+            candidate.bounds(0.5).unwrap()[1],
+            base.bounds(0.5).unwrap()[1]
+        );
+        assert_eq!(base.bounds(3.).unwrap(), original);
+    }
+
+    #[test]
+    fn transition_integral_candidates_consume_old_edge_and_retry_failed_targets() {
+        use serde_json::json;
+        let origin =
+            |column| json!({"source":"chain.va","line":1,"column":column,"instance":"dut"});
+        let program:Program=serde_json::from_value(json!({
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u","edge","filtered"],
+            "states":[{"instance":"dut","name":"q","kind":"real","initial":0.25}],
+            "operators":[
+                {"kind":"transition","input":{"op":"state","state":0},"delay":0.125,"rise":0.5,"fall":0.5,"origin":origin(1)},
+                {"kind":"idt","input":{"op":"affine","constant":0,"terms":[{"node":2,"coefficient":1}]},"ic":0.1,"origin":origin(2)}],
+            "contributions":[
+                {"branch":{"instance":"dut","local_positive":"edge","local_negative":"r","kind":"voltage"},"positive":2,"negative":0,"rhs":{"op":"operator","operator":0},"origin":origin(3)},
+                {"branch":{"instance":"dut","local_positive":"filtered","local_negative":"r","kind":"voltage"},"positive":3,"negative":0,"rhs":{"op":"operator","operator":1},"origin":origin(4)}]
+        })).unwrap();
+        let trajectory = Trajectory::new(
+            crate::ir::TransientInputs {
+                strobetimes: vec![],
+                pwl: vec![vec![[0., 0.], [3., 0.]]],
+                output_times: vec![0., 3.],
+                stop: 3.,
+                max_step: 3.,
+            },
+            1,
+        )
+        .unwrap();
+        let base = Operators::new(&program, &trajectory, &["u".into()], &[0.25]).unwrap();
+        let original = base.bounds(3.).unwrap();
+        let frozen = base.evaluation(1.).unwrap();
+        let failed = frozen.advanced(I::point(1.), &[0.25], &[I { lo: 0.2, hi: 0.3 }], &[0]);
+        assert!(failed.is_err());
+        assert_eq!(base.bounds(3.).unwrap(), original);
+        let candidate = frozen
+            .advanced(I::point(1.), &[1.25], &[I::point(1.25)], &[0])
+            .unwrap();
+        let clean = frozen
+            .advanced(I::point(1.), &[1.25], &[I::point(1.25)], &[0])
+            .unwrap();
+        assert!(candidate.same_reset_history(&clean));
+        let at = candidate.bounds(1.625).unwrap()[1];
+        let expected = 0.1 + 0.25 * 1.625 + 0.25;
         assert!(at.lo <= expected && expected <= at.hi);
         assert_eq!(
             candidate.bounds(0.5).unwrap()[1],
