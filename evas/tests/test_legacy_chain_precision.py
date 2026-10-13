@@ -307,17 +307,24 @@ class LegacyChainPrecision(unittest.TestCase):
                 runner.validate_spectre_controls(broken)
 
     def test_bad_record_does_not_hide_remaining_reanalysis(self):
+        from unittest.mock import patch
         with tempfile.TemporaryDirectory() as tmp:
-            lane=Path(tmp)/'lane';lane.mkdir()
-            runner.save(lane/'FILE_MANIFEST.json',{})
-            runner.save(lane/'EXECUTION.json',[
-                dict(status='waveform_available',label='missing-condition'),
-                dict(status='not_run',label='remaining')])
+            inputs=Path(tmp)/'inputs';lane=Path(tmp)/'lane';profile=Path(tmp)/'profile.json'
+            runner.freeze(inputs,cases=['NT:fixed','NT:held'],tiers=['Q1'])
+            runner.save(profile,{})
+            def simulate(backend,tool,env,work):
+                (work/'waveform.csv').write_text('time,y,y\n0,0,0\n')
+                return dict(status='waveform_available',waveform='waveform.csv',abort_batch=False,stages=[])
+            with patch.object(runner.execution,'preflight',return_value=({},{})),                 patch.object(runner.execution,'verify_tool'),                 patch.object(runner,'execute_one',side_effect=simulate):
+                runner.run(inputs,lane,'evas',profile,pilot=True,defer_analysis=True)
+            original=runner.pipeline.file_manifest(lane)
             output=Path(tmp)/'analysis.json';runner.analyze([lane],output)
             records=runner.load(output)['records']
             self.assertEqual(len(records),2)
             self.assertEqual(records[0]['Q_qualification']['status'],'evidence_insufficient')
+            self.assertIn('duplicate CSV columns',records[0]['Q_qualification']['issues'][0])
             self.assertEqual(records[1]['status'],'not_run')
+            self.assertEqual(original,runner.pipeline.file_manifest(lane))
 
     def test_pending_reference_never_claims_proved_history(self):
         from unittest.mock import patch

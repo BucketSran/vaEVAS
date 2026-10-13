@@ -75,27 +75,30 @@ class TransitionIntegralPrecision(unittest.TestCase):
         sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'experiments/backends/support'))
         import transition_integral_run as runner
         with tempfile.TemporaryDirectory() as tmp:
-            inputs=Path(tmp)/'inputs';inputs.mkdir();profile=Path(tmp)/'profile.json'
-            runner.save(profile,{})
-            plan=[]
-            for variant in ('original','trace'):
-                work=inputs/variant;work.mkdir();(work/'waveform').write_text('malformed')
-                plan.append(dict(backend='spectre',tier='Q1',variant=variant,label=variant,work=variant))
-            runner.save(inputs/'PLAN.json',plan);runner.save(inputs/'MANIFEST.json',{})
+            inputs=Path(tmp)/'inputs';profile=Path(tmp)/'profile.json'
+            runner.freeze(inputs);runner.save(profile,{})
+            def simulate(backend,tool,env,work):
+                (work/'waveform.psf').write_text('VALUE\n"time" 0\n"y" 0\n"y" 0\nEND\n')
+                (work/'spectre.log').write_text('')
+                return dict(status='waveform_available',waveform='waveform.psf',abort_batch=False,stages=[])
             output=Path(tmp)/'lane'
-            with patch.object(runner,'verify'),patch.object(runner.execution,'preflight',return_value=({},{})),\
-                 patch.object(runner.execution,'verify_tool'),\
-                 patch.object(runner.execution,'execute_one',return_value=dict(status='waveform_available',waveform='waveform',abort_batch=False)),\
-                 patch.object(runner.execution,'directory_budget',return_value=dict(status='within_limit')),\
-                 patch.object(runner,'analyze_work',side_effect=ValueError('bad waveform')),\
-                 patch.object(runner,'read_native',side_effect=ValueError('bad waveform')):
-                runner.run(inputs,output,'spectre',profile)
+            with patch.object(runner.execution,'preflight',return_value=({},{})),                 patch.object(runner.execution,'verify_tool'),                 patch.object(runner.execution,'execute_one',side_effect=simulate):
+                runner.run(inputs,output,'spectre',profile,tiers=['Q1'])
             records=runner.execution.load(output/'EXECUTION.json')
+            self.assertEqual(len(records),2)
+            self.assertEqual({r['variant'] for r in records},{'original','trace'})
             self.assertTrue(all(r['engineering_verdict']=='evidence_insufficient' for r in records))
+            self.assertTrue(all('PSF time missing or repeated signal' in r['analysis_error'] for r in records))
             comparison=runner.execution.load(output/'OBSERVER_COMPARISON.json')[0]['comparison']
             self.assertEqual(comparison['status'],'evidence_insufficient')
             manifest=runner.execution.load(output/'FILE_MANIFEST.json')
             self.assertIn('EXECUTION.json',manifest);self.assertIn('OBSERVER_COMPARISON.json',manifest)
+            for record in records:self.assertIn('runs/'+record['label']+'/RESULT.json',manifest)
+            self.assertEqual(manifest,runner.pipeline.file_manifest(output))
+            runner.pipeline.verify_lane(output,runner.ROOT)
+            runner.reanalyze([output],Path(tmp)/'analysis.json')
+            self.assertEqual(manifest,runner.pipeline.file_manifest(output))
+
 
 
 
