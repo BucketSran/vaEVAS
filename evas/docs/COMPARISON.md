@@ -12,14 +12,16 @@
 1 mV 小信号 Q3 为 **1.1 nV**。时间、状态和关键边界也须通过，详见[评测标准](COMPARISON-METHODOLOGY.md)。
 只检查窗外、只有正确数字或只有运行成功，都不能打勾。
 
-本轮候选补齐两类 `ddt`，修复采样后积分、局部 strobe 和严格滤波的执行限制。
-旧触发窗与正确数学根冲突的三格保留原不通过，详见[本轮结果与限制](../../experiments/backends/support/README.md#capability-gaps)。
+[#167](https://github.com/BucketSran/vaEVAS/pull/167) 已合入 main，补齐两类 `ddt`、采样后积分和局部 strobe。
+本轮用独立新版 checker 重新验收旧窗口冲突的两个模型，三格取得 **✓ Q3**。
+时间判断采用原有限导出分辨率，严格“没有提前触发”仍单列为未决；详见[新版结果](../../experiments/backends/support/README.md#root-window-v3)。
 
 结果来自不同版本，**不是当前 main 的一次全量验收**。
 五个数学函数的修复见[更新记录](../../experiments/backends/support/README.md#q3-closure)，
 原11格的补证见[后续核对](../../experiments/backends/support/README.md#evidence-followup)，
 旧表保存在[更新前的固定版本](https://github.com/BucketSran/vaEVAS/blob/8f7d911fe42f0692774ba388846d5dbf50f1bc34/evas/docs/COMPARISON.md)。
-最新两类导数及八张组合卡使用 `e2d8cbf8` 候选构建，仍未合入 main；其他行保留各自固定身份。
+两类导数及八张组合卡的实际构建源为 `e2d8cbf8`，实现已随 #167 合入 `e028f96d`。
+新版窗口的18次运行复用经逐文件核对的同一内核；其他行保留各自固定身份。
 五个数学函数使用 IR19 构建，源码与内核身份由收据固定；事件和相位部分复用
 [已合入的 #162](https://github.com/BucketSran/vaEVAS/pull/162) 的早期候选 `519d5e28` 的实际运行，其他身份见
 [范围与来源](../validation/paper/COVERAGE.md#summary-scopes)。通过限于所列模型、观察、配置和执行版本，不外推到所有合法写法或全时域。
@@ -55,7 +57,7 @@
 | 能力与测试范围 | Spectre | ngspice + OpenVAF-R | Gnucap + modelgen-verilog | EVAS |
 | --- | --- | --- | --- | --- |
 | [initial_step：事件状态初始化](../validation/paper/COVERAGE.md#scope-l2-01) | ✓ Q3 | 编译或初始化失败 | 编译失败 | ✓ Q3 |
-| [cross：斜坡穿越](../validation/paper/COVERAGE.md#scope-l2-02) | ✓ Q3 | 初始化失败 | 漏事件 | 旧窗与数学根冲突 |
+| [cross：斜坡穿越](../validation/paper/COVERAGE.md#scope-l2-02) | ✓ Q3 | 初始化失败 | 漏事件 | ✓ Q3 |
 | [固定 timer](../validation/paper/COVERAGE.md#scope-l2-03) | ✓ Q3 | 初始化失败 | ✓ Q3 | ✓ Q3 |
 | [事件 OR：采样与复位](../validation/paper/COVERAGE.md#scope-l2-05) | ✓ Q3 | 编译失败 | 漏事件 | ✓ Q3 |
 | [transition：定时非对称沿](../validation/paper/COVERAGE.md#scope-l2-06) | ✓ Q3 | 初始化失败 | ✓ Q3 | ✓ Q3 |
@@ -74,11 +76,11 @@
 | 能力与测试范围 | Spectre | ngspice + OpenVAF-R | Gnucap + modelgen-verilog | EVAS |
 | --- | --- | --- | --- | --- |
 | [采样保持：定时](../validation/paper/COVERAGE.md#scope-l3-01-timer) | ✓ Q3 | 初始化失败 | ✓ Q3 | ✓ Q3 |
-| [采样保持：阈值](../validation/paper/COVERAGE.md#scope-l3-01-cross) | ✓ Q3 | 初始化失败 | 漏事件 | 旧窗与数学根冲突 |
+| [采样保持：阈值](../validation/paper/COVERAGE.md#scope-l3-01-cross) | ✓ Q3 | 初始化失败 | 漏事件 | ✓ Q3 |
 | [采样、复位与输出边沿](../validation/paper/COVERAGE.md#scope-l3-02) | ✓ Q3 | 编译失败 | 漏事件 | ✓ Q3 |
 | [迟滞比较器与边沿](../validation/paper/COVERAGE.md#scope-l3-03) | ✓ Q3 | 初始化失败 | 误差超限 | ✓ Q3 |
 | [定时采样→积分：原模型](../validation/paper/COVERAGE.md#scope-l3-04-timer) | 误差超限 | 初始化失败 | 漏定时事件 | ✓ 100 µV |
-| [采样→积分：停止边界与非线性](../validation/paper/COVERAGE.md#scope-l3-04-ordered) | ✓ Q3 | 初始化失败 | 停止边界未达标 | 旧窗与数学根冲突 |
+| [采样→积分：停止边界与非线性](../validation/paper/COVERAGE.md#scope-l3-04-ordered) | ✓ Q3 | 初始化失败 | 停止边界未达标 | ✓ Q3 |
 | [积分级联与复位](../validation/paper/COVERAGE.md#scope-l3-05) | 复位误差超限 | 初始化失败 | 误差超限 | ✓ Q3 |
 | [非线性输入与滤波直通项](../validation/paper/COVERAGE.md#scope-l3-06) | Q2 误差超限 | Q1/Q2 误差超限 | 误差超限 | ✓ Q3 |
 | [滤波与微分：DC 直通项](../validation/paper/COVERAGE.md#scope-l3-07) | Q3 启动误差超限 | ✓ Q3 | 误差超限 | ✓ Q3 |

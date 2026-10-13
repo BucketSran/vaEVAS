@@ -32,6 +32,42 @@ checker和证据身份。以下数据集状态描述该历史批次；后续记�
 [评测标准](../COMPARISON-METHODOLOGY.md)了解判据及其依据。
 尚未实施的条件和配置需单独冻结；已有条件保留原版本，本节不改写历史成绩。
 
+<a id="root-window-v3"></a>
+
+### 两个固定模型的新版根窗口
+
+[root-window-v3 合同](../../validation/paper/precision-root-v3.json)固定 SH-X-RAMP 和 EC04-v1，
+并逐项固定原合同和数学 checker 的文件哈希。它不扩展其他模型的验收资格。
+[根计算](../../validation/paper/root_windows.py)不读取后端结果：SH-X 用精确 Fraction 计算实际 PWL 根，
+EC04 对正根用 `(t/T)²` 与 2 的精确比较，并验证整个原时间容差区间满足非线性 guard 容差。
+
+完整实际回调区间 C 用于两项时间判断：严格判断要求 C 位于 `[ρ,ρ+late]`；
+有限导出分辨率判断要求 C 位于 `[ρ−S,ρ+late+S]`，`S=16×ulp(stop)` 沿用原预算。
+区间完全越界为行为错误，只有部分相交为证据不足；两种判断分别存储，不裁剪 C。
+EC04 的参考域适配仅供原数学参考计算完整 C，不能单独授予通过。
+
+[SH-X checker](../../validation/paper/precision_root_v3.py)与
+[EC04 checker](../../validation/paper/precision_composition_root_v3.py)保留全部非时间验收要求。
+外层报告须先核对冻结与实际执行输入、源码/内核身份、重新编译的程序、实际精度读回及原生观察来源。
+EVAS 的已提交状态记录须核对状态链、计数、guard、实例和波形；Spectre 使用单独运行的只读回调日志。
+带日志的成绩只属于该次运行，不转授原未插桩运行。
+
+```sh
+PYTHONPATH=evas/validation/paper:experiments/backends/support \
+  python3 -B -m unittest discover -s evas/validation/paper -p 'test_*root*.py'
+python3 -B experiments/backends/support/root_window_run.py freeze runs/new-root-inputs
+python3 -B experiments/backends/support/root_window_report.py \
+  runs/root-window-v3/remote runs/new-root-analysis \
+  --previous-build runs/feature-gaps-20261013/overnight-remote-v2/collected/primitive-evas-final/build/BUILD.json \
+  --previous-manifest runs/feature-gaps-20261013/overnight-remote-v2/SOURCE_MANIFEST.json
+```
+
+执行器复用既有后端适配器和资源限制；共享服务器须沿用串行锁与任务进程监督。
+报告保留 `original_assessment` 与 `new_assessment`，旧 checker、旧成绩和原始波形均不回写。
+执行时的源码快照在 `remote/repo` 独立验证；报告另记当前分析文件身份，允许经审查的分析工具修正，
+不把分析身份写回冻结输入。必须核对完整执行分母、目录所属、原模型源码和旧构建记录。
+本批结果与严格时间结论见[实测收据](../../../experiments/backends/support/20261013-root-window-v3.json)。
+
 <a id="numerical-checks"></a>
 
 ### 数值判分与预算
