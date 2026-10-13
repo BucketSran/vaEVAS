@@ -14,6 +14,7 @@ import re
 from pathlib import Path
 import shutil
 import sys
+from time import perf_counter
 
 ROOT=Path(__file__).resolve().parents[3]
 sys.path.insert(0,str(ROOT/'evas/validation/paper'))
@@ -23,6 +24,7 @@ from precision_run import (LIMITS, source_files, execute_one, load, preflight,
 from inputs import BACKENDS, decks, save, sha
 from observations import read_native
 from precision_report import qualification
+from precision_precheck import inspect_plan, pilot_plan, measure
 
 TIER_PROFILES={'Q1':'base','Q2':'both','Q3':'deep'}
 BREADTH_LIMITS={**LIMITS,'condition_limit_bytes':256*1024**2}
@@ -118,7 +120,8 @@ def freeze(output,*,backend_tier_profiles=None):
     save(output/'PLAN.json',plan)
     save(output/'PREFLIGHT.json',{'limits':BREADTH_LIMITS,'estimates':estimates,
                                 'claim':'planning estimate; runtime limits still apply'})
-    paths=set(source_files())|{Path(__file__),ROOT/'experiments/backends/support/precision_report.py',
+    paths=set(source_files())|{Path(__file__),ROOT/'experiments/backends/support/precision_precheck.py',
+                ROOT/'experiments/backends/support/precision_report.py',
                 ROOT/'evas/validation/paper/precision-v2.json',binding_source}
     save(output/'SOURCE_IDENTITY.json',{str(p.relative_to(ROOT)):sha(p) for p in sorted(paths)})
     save(output/'MANIFEST.json',{str(p.relative_to(output)):sha(p) for p in sorted(output.rglob('*')) if p.is_file()})
@@ -126,6 +129,10 @@ def freeze(output,*,backend_tier_profiles=None):
 
 
 def select_plan(plan,backend,family,groups=(),cards=(),tiers=()):
+    available=[r for r in plan if r['backend']==backend and r['family']==family]
+    for field,requested in (('group_id',groups),('condition',cards),('tier',tiers)):
+        unknown=set(requested)-{r[field] for r in available}
+        if unknown:raise ValueError('unknown selection '+field+': '+', '.join(sorted(unknown)))
     selected=[r for r in plan if r['backend']==backend and r['family']==family and
               (not groups or r['group_id'] in groups) and (not cards or r['condition'] in cards) and
               (not tiers or r['tier'] in tiers)]
@@ -133,30 +140,44 @@ def select_plan(plan,backend,family,groups=(),cards=(),tiers=()):
     return selected
 
 
-def run(inputs,output,backend,profile_path,family,*,groups=(),cards=(),tiers=(),defer_analysis=False):
-    plan=select_plan(load(inputs/'PLAN.json'),backend,family,groups,cards,tiers)
+def run(inputs,output,backend,profile_path,family,*,groups=(),cards=(),tiers=(),defer_analysis=False,pilot=False):
+    full_plan=select_plan(load(inputs/'PLAN.json'),backend,family,groups,cards,tiers)
+    plan=pilot_plan(full_plan) if pilot else full_plan
     output.mkdir(parents=True,exist_ok=False);results=[];attempts=[]
+    started=perf_counter()
+    timings={'status':'interrupted','precheck_s':0,'tool_preflight_s':0}
     save(output/'STARTED.json',{'schema_version':load(inputs/'PROFILE_BINDINGS.json')['schema_version'] if (inputs/'PROFILE_BINDINGS.json').is_file() else 'breadth-v1','limits':BREADTH_LIMITS,'selected':plan,
          'input_manifest_sha256':sha(inputs/'MANIFEST.json'),'profile_sha256':sha(profile_path),
-         'defer_analysis':defer_analysis})
+         'defer_analysis':defer_analysis,'scope':'pilot' if pilot else 'full-selection',
+         'full_selection':full_plan})
     try:
-        verify(inputs);data=load(inputs/'cards.json');profile=load(profile_path)
-        tool,env=preflight(backend,profile,output,LIMITS);save(output/'TOOL_IDENTITY.json',tool)
+        with measure(timings,'precheck_s'):
+            verify(inputs)
+            recipe=inspect_plan(inputs,full_plan)
+            save(output/'RECIPE_CHECK.json',recipe)
+            data=load(inputs/'cards.json');profile=load(profile_path)
+        with measure(timings,'tool_preflight_s'):
+            tool,env=preflight(backend,profile,output,LIMITS);save(output/'TOOL_IDENTITY.json',tool)
         for row in plan:
-            verify(inputs);verify_tool(tool,profile,env)
-            work=output/'runs'/row['label'];shutil.copytree(inputs/row['work'],work)
-            save(work/'INPUT_IDENTITY.json',{'source_sha256':sha(work/'dut.va'),
-                 'requested_settings_sha256':sha(work/'requested_settings.json'),'deck_sha256':sha(work/row['deck'])})
+            phase_timings={'input_preparation':0,'backend_execution':0,'inline_analysis':0}
+            with measure(phase_timings,'input_preparation'):
+                verify(inputs);verify_tool(tool,profile,env)
+                work=output/'runs'/row['label'];shutil.copytree(inputs/row['work'],work)
+                save(work/'INPUT_IDENTITY.json',{'source_sha256':sha(work/'dut.va'),
+                     'requested_settings_sha256':sha(work/'requested_settings.json'),'deck_sha256':sha(work/row['deck'])})
             attempt={'index':len(attempts)+1,'backend':backend,'label':row['label'],
                      'status':'invoked','stages':[],'stage_receipts_complete':False}
             attempts.append(attempt);checkpoint(output/'ATTEMPTS.json',attempt_receipt(attempts))
             try:
-                result={**row,**execute_one(backend,tool,env,work)}
+                with measure(phase_timings,'backend_execution'):
+                    result={**row,**execute_one(backend,tool,env,work)}
+                result['phase_timings_s']=phase_timings
                 attempt.update(status=result['status'],stages=result.get('stages',[]),stage_receipts_complete=True)
             except Exception as exc:
                 attempt.update(status='adapter_error',reason=repr(exc),
                                stages=[load(work/(n+'.json')) for n in ('compile','simulate') if (work/(n+'.json')).is_file()])
-                result={**row,'status':'execution_failed','reason':repr(exc),'abort_batch':True}
+                result={**row,'status':'execution_failed','reason':repr(exc),'abort_batch':True,
+                        'phase_timings_s':phase_timings}
                 if defer_analysis:deferred_analysis(result,data)
                 save(work/'RESULT.json',result);results.append(result)
                 raise
@@ -164,13 +185,14 @@ def run(inputs,output,backend,profile_path,family,*,groups=(),cards=(),tiers=(),
                 deferred_analysis(result,data)
             elif result['status']=='waveform_available':
                 try:
-                    native=read_native(work/result['waveform'],backend)
-                    result['assessment']=assess(load(work/'condition.json'),native,data)
-                    save(work/'ASSESSMENT-breadth.json',result['assessment'])
-                    result['effective_settings']=effective_settings(work,backend)
-                    result['qualification']=qualification(work,backend,result,native)
-                    result['native_observation_evidence']=native_observation_evidence(
-                        work,backend,result['qualification'],native,tool=tool,card=load(work/'condition.json'),contract=data)
+                    with measure(phase_timings,'inline_analysis'):
+                        native=read_native(work/result['waveform'],backend)
+                        result['assessment']=assess(load(work/'condition.json'),native,data)
+                        save(work/'ASSESSMENT-breadth.json',result['assessment'])
+                        result['effective_settings']=effective_settings(work,backend)
+                        result['qualification']=qualification(work,backend,result,native)
+                        result['native_observation_evidence']=native_observation_evidence(
+                            work,backend,result['qualification'],native,tool=tool,card=load(work/'condition.json'),contract=data)
                 except Exception as exc:
                     result['analysis_error']=repr(exc)
                     result['qualification']={'status':'evidence_insufficient','issues':[repr(exc)]}
@@ -194,14 +216,36 @@ def run(inputs,output,backend,profile_path,family,*,groups=(),cards=(),tiers=(),
             save(work/'RESULT.json',result);results.append(result)
             checkpoint(output/'EXECUTION.json',results);checkpoint(output/'ATTEMPTS.json',attempt_receipt(attempts))
             if result.get('abort_batch') or result['directory_budget']['status']!='within_limit':break
+        timings['status']='complete' if len(results)==len(plan) else 'aborted'
     finally:
         recorded={r['label'] for r in results}
+        selected={r['label'] for r in plan}
         results.extend({**r,'status':'not_run','reason':'lane did not reach this frozen slot'}
                        for r in plan if r['label'] not in recorded)
+        results.extend({**r,'status':'not_run','reason':'pilot did not select this frozen slot'}
+                       for r in full_plan if r['label'] not in selected)
         checkpoint(output/'EXECUTION.json',results);checkpoint(output/'ATTEMPTS.json',attempt_receipt(attempts))
-        save(output/'FILE_MANIFEST.json',{str(p.relative_to(output)):{'sha256':sha(p),'bytes':p.stat().st_size}
-             for p in sorted(output.rglob('*')) if p.is_file() and p.name!='FILE_MANIFEST.json'})
+        timings['cases']={r['label']:r['phase_timings_s'] for r in results if 'phase_timings_s' in r}
+        timings['claim']='wall time of named phases; backend_execution includes compile/export; total excludes final receipt writes; not a speed ranking'
+        with measure(timings,'artifact_sealing_s'):
+            manifest={str(p.relative_to(output)):{'sha256':sha(p),'bytes':p.stat().st_size}
+                 for p in sorted(output.rglob('*')) if p.is_file() and p.name!='FILE_MANIFEST.json'}
+        timings['total_s']=perf_counter()-started
+        save(output/'TIMINGS.json',timings)
+        manifest['TIMINGS.json']={'sha256':sha(output/'TIMINGS.json'),'bytes':(output/'TIMINGS.json').stat().st_size}
+        save(output/'FILE_MANIFEST.json',manifest)
     return results
+
+
+def precheck(inputs,backend,family,*,groups=(),cards=(),tiers=(),pilot=False):
+    """Inspect recipes without contacting a backend or creating run output."""
+    verify(inputs)
+    plan=select_plan(load(inputs/'PLAN.json'),backend,family,groups,cards,tiers)
+    report=inspect_plan(inputs,plan)
+    selected=pilot_plan(plan) if pilot else plan
+    return {**report,'scope':'pilot' if pilot else 'full-selection',
+            'selected_slots':len(selected),'selected_labels':[r['label'] for r in selected],
+            'omitted_slots':len(plan)-len(selected)}
 
 
 def deferred_analysis(result,contract):
@@ -380,13 +424,19 @@ def attempt_receipt(attempts):
 if __name__=='__main__':
     parser=argparse.ArgumentParser();sub=parser.add_subparsers(dest='mode',required=True)
     p=sub.add_parser('freeze');p.add_argument('output',type=Path)
-    p=sub.add_parser('run');p.add_argument('inputs',type=Path);p.add_argument('output',type=Path)
-    p.add_argument('--backend',choices=BACKENDS,required=True);p.add_argument('--profile',type=Path,required=True)
-    p.add_argument('--family',choices=('foundation','composition'),required=True)
-    p.add_argument('--group',action='append',default=[]);p.add_argument('--card',action='append',default=[])
-    p.add_argument('--tier',choices=tuple(TIER_PROFILES),action='append',default=[])
-    p.add_argument('--defer-analysis',action='store_true',help='export raw evidence; leave scientific and settings analysis pending')
+    for mode in ('run','precheck'):
+        p=sub.add_parser(mode);p.add_argument('inputs',type=Path)
+        if mode=='run':
+            p.add_argument('output',type=Path);p.add_argument('--profile',type=Path,required=True)
+            p.add_argument('--defer-analysis',action='store_true',help='export raw evidence; leave scientific and settings analysis pending')
+        p.add_argument('--backend',choices=BACKENDS,required=True)
+        p.add_argument('--family',choices=('foundation','composition'),required=True)
+        p.add_argument('--group',action='append',default=[]);p.add_argument('--card',action='append',default=[])
+        p.add_argument('--tier',choices=tuple(TIER_PROFILES),action='append',default=[])
+        p.add_argument('--pilot',action='store_true',help='first frozen condition per group/configuration; omitted slots remain not_run')
     a=parser.parse_args()
     if a.mode=='freeze':freeze(a.output.resolve())
+    elif a.mode=='precheck':
+        print(json.dumps(precheck(a.inputs.resolve(),a.backend,a.family,groups=a.group,cards=a.card,tiers=a.tier,pilot=a.pilot)))
     else:run(a.inputs.resolve(),a.output.resolve(),a.backend,a.profile.resolve(),a.family,
-             groups=a.group,cards=a.card,tiers=a.tier,defer_analysis=a.defer_analysis)
+             groups=a.group,cards=a.card,tiers=a.tier,defer_analysis=a.defer_analysis,pilot=a.pilot)

@@ -13,6 +13,7 @@ from precision_v2 import assess
 from precision_report import qualification as legacy_qualification
 from inputs import BACKENDS, sha
 from observations import read_native
+from precision_run import effective_settings
 
 
 def load(path):return json.loads(path.read_text())
@@ -48,6 +49,22 @@ def verify_case_inputs(work,frozen_work,plan_entry):
                  'requested_times.json','observation_plan.json'):
         if sha(work/name)!=sha(frozen_work/name):raise ValueError('executed input drift: '+name)
     if sha(work/'dut.va')!=plan_entry['source_sha256']:raise ValueError('executed model identity mismatch')
+
+
+def settings_artifacts(work,backend,manifest,out):
+    """Bind every control/observation input to the already verified raw seal."""
+    names=['requested_settings.json','requested_times.json','simulate.log']
+    if backend=='evas':names+=['effective.json','raw-response.json']
+    elif backend=='spectre':names+=['spectre.log','psf/tran.tran.tran','tb.scs']
+    elif backend=='openvaf_r_ngspice':names+=['tb.cir']
+    artifacts={}
+    for name in names:
+        path=work/name
+        if not path.exists():continue
+        rel=str(path.relative_to(out))
+        if rel not in manifest:raise ValueError('unsealed analysis input: '+rel)
+        artifacts[name]=manifest[rel]['sha256']
+    return artifacts
 
 
 def control_qualification(work,backend,record,rows,contract,tool,step_evidence=None):
@@ -148,6 +165,8 @@ def report(base,step_evidence=None):
             'analysis_dependencies':{str(p.relative_to(ROOT)):sha(p) for p in
                 [Path(__file__),ROOT/'evas/validation/paper/precision_v2.py',ROOT/'evas/validation/paper/precision_reference.py',
                  ROOT/'experiments/backends/support/precision_report.py',ROOT/'experiments/backends/paper/observations.py',
+                 ROOT/'experiments/backends/support/precision_run.py',ROOT/'experiments/backends/paper/runner.py',
+                 ROOT/'experiments/backends/paper/settings_readback.py',
                  ROOT/'experiments/archive/dvs2-starter-pilot/analyze.py',ROOT/'experiments/archive/dvs2-starter-pilot/suite.py']},
             'claim':'finite development-informed conditions, not held-out paper suite; original v1 scores unchanged'}
     for family in ('sample_hold','first_order'):
@@ -183,10 +202,24 @@ def report(base,step_evidence=None):
                     verify_case_inputs(work,frozen/p['work'],p)
                     rows=read_native(work/rec['waveform'],backend)
                     assessment=assess(load(work/'condition.json'),rows,contract)
-                    q=control_qualification(work,backend,rec,rows,contract,tool,(step_evidence or {}).get(backend))
+                    artifacts=settings_artifacts(work,backend,manifest,out)
+                    reconstructed=rec.get('analysis_status')=='pending' or 'effective_settings' not in rec
+                    settings=rec.get('effective_settings',{})
+                    provenance={'origin':'reconstructed_from_verified_raw' if reconstructed else 'original_execution_record',
+                                'artifacts':artifacts,'execution_sha256':sha(out/'EXECUTION.json'),
+                                'file_manifest_sha256':sha(out/'FILE_MANIFEST.json')}
+                    try:
+                        if reconstructed:settings=effective_settings(work,backend)
+                        observed={**rec,'effective_settings':settings}
+                        q=control_qualification(work,backend,observed,rows,contract,tool,(step_evidence or {}).get(backend))
+                    except (OSError,ValueError,KeyError,TypeError,AttributeError,IndexError,OverflowError) as exc:
+                        provenance['error']=repr(exc)
+                        q={'status':'evidence_insufficient','issues':['raw control/observation evidence unreadable: '+repr(exc)],
+                           'actual':{},'requested':{},'additional_controls':{}}
                     q['issues']+=lane_issues
                     if q['issues']:q['status']='evidence_insufficient'
                     r.update(assessment={k:v for k,v in assessment.items() if k!='event_records'},qualification=q,
+                             effective_settings=settings,settings_readback=provenance,
                              waveform_sha256=sha(work/rec['waveform']),receipt_sha256=sha(work/'RESULT.json'))
                     r['tiers']={k:{**v,'status':'evidence_insufficient' if v['status']=='pass' and q['issues'] else v['status'],
                                    'reasons':v['reasons']+q['issues']} for k,v in assessment['tiers'].items()}
