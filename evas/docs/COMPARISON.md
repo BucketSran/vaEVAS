@@ -22,6 +22,12 @@
 EVAS 0.15.0 / IR19 纳入中断边沿积分实现；该行 Q3 来自发布前候选的实际运行。
 原预算和历史成绩继续保留，实际对照见[本轮记录](../../experiments/backends/support/README.md#legacy-chain-q)。
 
+本地 0.17.0 / IR21 候选增加顺序初始化与默认零状态、可证明整型的局部运算、
+受限状态谓词、事件输出记录、合成时间驱动、有理连续流、受限 exp forcing 及保持物理状态的条件选路，
+并将动态 [`$bound_step`](math/events.md#bound-step) 传入已支持的非线性内部积分段。
+这些是开发支持，尚未合入，未取得本候选的实际 Spectre 对照；原始 70 条件的本轮复跑
+尚未形成完整验收结论，不据此修改下表成绩。一般数学函数与非线性电压代数耦合及更广组合仍有缺口。
+
 结果来自不同版本，**不是当前 main 的一次全量验收**。
 五个数学函数的修复见[更新记录](../../experiments/backends/support/README.md#q3-closure)，
 原11格的补证见[后续核对](../../experiments/backends/support/README.md#evidence-followup)，

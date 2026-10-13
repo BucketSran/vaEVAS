@@ -126,18 +126,34 @@ enum Polynomial {
     Add(Box<Self>, Box<Self>),
     Multiply(Box<Self>, Box<Self>),
     Power(Box<Self>, u32),
+    Reciprocal(Box<Self>),
+    Exp(Box<Self>),
 }
 
 pub(super) fn validate(expr: &Expression, program: &Program, owner: &str) -> Result<(), Error> {
     match expr {
-        Expression::Add { left, right } | Expression::Multiply { left, right } => {
+        Expression::Add { left, right }
+        | Expression::Multiply { left, right }
+        | Expression::Divide { left, right } => {
             validate(left, program, owner)?;
             validate(right, program, owner)
         }
         Expression::Power { base, exponent } if (1..=32).contains(exponent) => {
             validate(base, program, owner)
         }
-        Expression::Select { .. } | Expression::Power { .. } => Err(Error::new(
+        Expression::Select {
+            left,
+            right,
+            then_value,
+            else_value,
+            ..
+        } => {
+            for child in [left, right, then_value, else_value] {
+                validate(child, program, owner)?;
+            }
+            Ok(())
+        }
+        Expression::Power { .. } => Err(Error::new(
             "unsupported_operator",
             "integral input must be a polynomial with powers 1..32",
         )),
@@ -161,6 +177,26 @@ impl Polynomial {
                 Box::new(Self::compile(left, program, system, mapping)?),
                 Box::new(Self::compile(right, program, system, mapping)?),
             ),
+            Expression::Operator { operator }
+                if matches!(
+                    program.operators[*operator],
+                    OperatorSpec::Math {
+                        function: crate::ir::MathFunction::Exp,
+                        ..
+                    }
+                ) =>
+            {
+                let OperatorSpec::Math { input, .. } = &program.operators[*operator] else {
+                    unreachable!()
+                };
+                Self::Exp(Box::new(Self::compile(input, program, system, mapping)?))
+            }
+            Expression::Divide { left, right } => Self::Multiply(
+                Box::new(Self::compile(left, program, system, mapping)?),
+                Box::new(Self::Reciprocal(Box::new(Self::compile(
+                    right, program, system, mapping,
+                )?))),
+            ),
             Expression::Power { base, exponent } => Self::Power(
                 Box::new(Self::compile(base, program, system, mapping)?),
                 *exponent,
@@ -178,6 +214,54 @@ impl Polynomial {
     // Differentiate the polynomial expression before evaluating its Taylor
     // jet. These are derivatives with respect to a state coordinate, not
     // independent derivatives of already rounded coefficient endpoints.
+    fn source_only(&self, count: usize) -> bool {
+        match self {
+            Self::Linear(row) => row[..count].iter().all(|v| v.zero()),
+            Self::Add(a, b) | Self::Multiply(a, b) => a.source_only(count) && b.source_only(count),
+            Self::Power(a, _) | Self::Reciprocal(a) | Self::Exp(a) => a.source_only(count),
+        }
+    }
+    fn certify_source_denominators(
+        &self,
+        count: usize,
+        start: &[Jet],
+        end: &[Jet],
+        tube: &[Jet],
+    ) -> Result<(), Error> {
+        match self {
+            Self::Reciprocal(a) if a.source_only(count) => {
+                let left = a.jet(start, 0)[0];
+                let right = a.jet(end, 0)[0];
+                if left == I::ZERO
+                    || right == I::ZERO
+                    || (left.hi < 0. && right.lo > 0.)
+                    || (left.lo > 0. && right.hi < 0.)
+                {
+                    return Err(Error::new(
+                        "division_domain",
+                        "continuous source denominator reaches or crosses zero",
+                    ));
+                }
+                let range = a.jet(tube, 0)[0];
+                if !range.finite() {
+                    return Err(Error::new(
+                        "division_domain",
+                        "cannot bound source denominator domain",
+                    ));
+                }
+                a.certify_source_denominators(count, start, end, tube)
+            }
+            Self::Add(a, b) | Self::Multiply(a, b) => {
+                a.certify_source_denominators(count, start, end, tube)?;
+                b.certify_source_denominators(count, start, end, tube)
+            }
+            Self::Power(a, _) | Self::Reciprocal(a) | Self::Exp(a) => {
+                a.certify_source_denominators(count, start, end, tube)
+            }
+            _ => Ok(()),
+        }
+    }
+
     fn gradient_jet(&self, variables: &[Jet], order: usize, coordinate: usize) -> Jet {
         match self {
             Self::Linear(row) => {
@@ -203,6 +287,22 @@ impl Polynomial {
                     order,
                 );
                 left.into_iter().zip(right).map(|(a, b)| a + b).collect()
+            }
+            Self::Exp(a) => multiply(
+                &self.jet(variables, order),
+                &a.gradient_jet(variables, order, coordinate),
+                order,
+            ),
+            Self::Reciprocal(a) => {
+                let inverse = reciprocal_jet(&a.jet(variables, order), order);
+                multiply(
+                    &multiply(&inverse, &inverse, order),
+                    &a.gradient_jet(variables, order, coordinate),
+                    order,
+                )
+                .into_iter()
+                .map(|v| -v)
+                .collect()
             }
             Self::Power(a, n) => {
                 let values = a.jet(variables, order);
@@ -248,6 +348,26 @@ impl Polynomial {
                     None
                 }
             }
+            Self::Exp(a) => {
+                let mut row = a.dc_affine(known)?;
+                let last = row.len() - 1;
+                if row[..last].iter().any(|v| !v.zero()) {
+                    return None;
+                }
+                row[last] = crate::math_functions::exp(row[last]).ok()?;
+                Some(row)
+            }
+            Self::Reciprocal(a) => {
+                let mut row = a.dc_affine(known)?;
+                let last = row.len() - 1;
+                if row[..last].iter().any(|v| !v.zero())
+                    || (row[last].lo <= 0. && row[last].hi >= 0.)
+                {
+                    return None;
+                }
+                row[last] = I::ONE / row[last];
+                Some(row)
+            }
             Self::Power(a, n) => {
                 let mut row = a.dc_affine(known)?;
                 if *n == 1 {
@@ -291,6 +411,8 @@ impl Polynomial {
                 order,
                 tight,
             ),
+            Self::Exp(a) => exp_jet(&a.jet_with(variables, order, tight), order),
+            Self::Reciprocal(a) => reciprocal_jet(&a.jet_with(variables, order, tight), order),
             Self::Power(a, n) => {
                 let a = a.jet_with(variables, order, tight);
                 let mut out = vec![I::ZERO; order + 1];
@@ -302,6 +424,28 @@ impl Polynomial {
             }
         }
     }
+}
+
+fn exp_jet(a: &[I], order: usize) -> Jet {
+    let mut q = vec![I::ZERO; order + 1];
+    q[0] = crate::math_functions::exp(a[0]).unwrap_or(I {
+        lo: f64::NEG_INFINITY,
+        hi: f64::INFINITY,
+    });
+    for n in 1..=order {
+        q[n] = (1..=n).fold(I::ZERO, |sum, k| sum + I::point(k as f64) * a[k] * q[n - k])
+            / I::point(n as f64);
+    }
+    q
+}
+
+fn reciprocal_jet(a: &[I], order: usize) -> Jet {
+    let mut q = vec![I::ZERO; order + 1];
+    q[0] = I::ONE / a[0];
+    for n in 1..=order {
+        q[n] = -(1..=n).fold(I::ZERO, |sum, k| sum + a[k] * q[n - k]) / a[0];
+    }
+    q
 }
 
 fn multiply(a: &[I], b: &[I], order: usize) -> Jet {
@@ -503,6 +647,9 @@ pub(crate) struct NonlinearContinuous {
     context: Arc<Context>,
     parameters: Vec<I>,
     functions: Vec<Polynomial>,
+    step_bounds: Vec<(Polynomial, Polynomial)>,
+    math_outputs: Vec<(usize, Polynomial)>,
+    modes: Vec<(f64, f64, Arc<Self>)>,
     implicit: Option<implicit::ImplicitField>,
     operators: Vec<NetworkOperator>,
     values: Vec<Vec<I>>,
@@ -523,7 +670,9 @@ impl NonlinearContinuous {
                 Polynomial::Add(a, b) | Polynomial::Multiply(a, b) => {
                     autonomous(a, count, sources) && autonomous(b, count, sources)
                 }
-                Polynomial::Power(a, _) => autonomous(a, count, sources),
+                Polynomial::Power(a, _) | Polynomial::Reciprocal(a) | Polynomial::Exp(a) => {
+                    autonomous(a, count, sources)
+                }
             }
         }
         let seed = self.event_seed.as_ref().ok_or_else(|| {
@@ -587,6 +736,7 @@ impl NonlinearContinuous {
                 program: program.clone(),
                 trajectory: trajectory.clone(),
                 driven: driven.to_vec(),
+                force_integrals: false,
             }),
             states.iter().copied().map(I::point).collect(),
             0.0,
@@ -618,6 +768,21 @@ impl NonlinearContinuous {
         restart: Option<Vec<I>>,
         tolerances: &Tolerances,
     ) -> Result<Self, Error> {
+        if selection::needed(&context.program) {
+            let stop = context.trajectory.config.stop;
+            let cuts = selection::cuts(&context, &parameters, start, stop)?;
+            let end = cuts.iter().find(|c| c.lo > start).map_or(stop, |c| c.lo);
+            let probe = if end > start {
+                start * 0.5 + end * 0.5
+            } else {
+                start
+            };
+            let frozen = selection::freeze_context(&context, &parameters, probe)?;
+            let mut result = Self::initialized(frozen, parameters, start, restart, tolerances)?;
+            result.context = context;
+            result.event_dependent = true;
+            return Ok(result);
+        }
         let program = &context.program;
         let driven = driven_node_indices(program, &context.driven)?;
         let mut sources = vec![None; program.nodes.len()];
@@ -628,6 +793,24 @@ impl NonlinearContinuous {
         let mut state_count = 0;
         let mut event_dependent = false;
         for (i, spec) in program.operators.iter().enumerate() {
+            if let OperatorSpec::Math {
+                input,
+                function,
+                origin,
+            } = spec
+            {
+                validate(input, program, &origin.instance)?;
+                let (_, _, deps) = integral_dependency_edges(input, program, &origin.instance)?;
+                if deps.iter().any(|&j| j >= i) {
+                    return Err(Error::new("invalid_ir","mathematical operators require earlier call-site references; cycles are unsupported"));
+                }
+                if !matches!(function, crate::ir::MathFunction::Exp) {
+                    continue;
+                }
+                event_dependent |=
+                    history_event_dependency(input, program, origin, &driven, &mut BTreeSet::new());
+                continue;
+            }
             let origin = spec.origin();
             let (kind, input, states, laplace, held_reset) = match spec {
                 OperatorSpec::Idt { input, ic, reset, .. } => {
@@ -670,7 +853,16 @@ impl NonlinearContinuous {
                     I::ZERO;
                     program.nodes.len() + program.states.len() + program.operators.len() + 1
                 ];
-            if let Ok(row) = affine_for_operator_input(input, program, origin) {
+            if let Ok(row) = affine_for_operator_input(input, program, origin).and_then(|row| {
+                if contains_exp_operator(input, program) {
+                    Err(Error::new(
+                        "unsupported_operator",
+                        "mathematical forcing requires nonlinear reduction",
+                    ))
+                } else {
+                    Ok(row)
+                }
+            }) {
                 structural = row;
             } else {
                 collect_structure(input, program, &origin.instance, &mut structural)?;
@@ -740,6 +932,37 @@ impl NonlinearContinuous {
                 _ => {}
             }
         }
+        let math_outputs = program
+            .operators
+            .iter()
+            .enumerate()
+            .filter_map(|(i, o)| match o {
+                OperatorSpec::Math {
+                    input,
+                    function: crate::ir::MathFunction::Exp,
+                    ..
+                } => Some((i, input)),
+                _ => None,
+            })
+            .map(|(i, e)| {
+                Ok((
+                    i,
+                    Polynomial::Exp(Box::new(Polynomial::compile(
+                        e, program, &system, &mapping,
+                    )?)),
+                ))
+            })
+            .collect::<Result<Vec<_>, Error>>()?;
+        let step_bounds = program
+            .step_bounds
+            .iter()
+            .map(|b| {
+                Ok((
+                    Polynomial::compile(&b.active, program, &system, &mapping)?,
+                    Polynomial::compile(&b.value, program, &system, &mapping)?,
+                ))
+            })
+            .collect::<Result<Vec<_>, Error>>()?;
         let mut initial = if let Some(state) = restart {
             // Restart is an IVP with accepted physical history. It must not
             // impose a new DC equilibrium on the event's future vector field.
@@ -808,6 +1031,9 @@ impl NonlinearContinuous {
             context,
             parameters,
             functions,
+            step_bounds,
+            math_outputs,
+            modes: vec![],
             implicit: None,
             operators,
             values,
@@ -1257,15 +1483,135 @@ impl NonlinearContinuous {
     // Extend only a disposable candidate; retained dense steps and their
     // endpoint enclosures stay unchanged when an event leaves the mode intact.
     fn propagate_until(&mut self, horizon: f64) -> Result<(), Error> {
+        let mut remaining_work = self.step_budget().saturating_sub(self.steps.len());
+        self.propagate_with_budget(horizon, &mut remaining_work)
+    }
+
+    fn propagate_with_budget(
+        &mut self,
+        horizon: f64,
+        remaining_work: &mut usize,
+    ) -> Result<(), Error> {
+        if selection::needed(&self.context.program) {
+            let certified = self.certified_end();
+            if horizon <= certified {
+                return Ok(());
+            }
+            let cuts = selection::cuts(&self.context, &self.parameters, self.start, horizon)?;
+            let mut seed = if self.modes.is_empty() {
+                self.initial.clone()
+            } else {
+                self.modes
+                    .last()
+                    .unwrap()
+                    .2
+                    .state_bounds(I::point(certified))?
+            };
+            let mut modes = self.modes.clone();
+            let mut new_steps = Vec::new();
+            for pair in cuts.windows(2) {
+                let (begin, end) = (pair[0].hi, pair[1].hi);
+                if end <= certified || begin == end {
+                    continue;
+                }
+                let (mut mode, mode_begin, prefix) = if begin < certified {
+                    let (mode_begin, prior_end, prior) = modes.pop().ok_or_else(|| {
+                        Error::new(
+                            "event_resolution",
+                            "selected continuation lacks immutable prefix",
+                        )
+                    })?;
+                    if prior_end != certified {
+                        return Err(Error::new(
+                            "event_resolution",
+                            "selected continuation prefix ends at a different physical time",
+                        ));
+                    }
+                    ((*prior).clone(), mode_begin, prior.steps.len())
+                } else {
+                    // At a previously accepted uncertain switch, include every
+                    // pre-switch endpoint before starting the post-switch flow.
+                    if pair[0].lo != pair[0].hi {
+                        if let Some((_, _, prior)) = modes.last() {
+                            for (v, b) in seed.iter_mut().zip(prior.state_bounds(I {
+                                lo: pair[0].lo.max(prior.start),
+                                hi: pair[0].hi,
+                            })?) {
+                                *v = v.hull(b);
+                            }
+                        }
+                    }
+                    // A source root enclosure can overlap an event restart.
+                    // Freeze within this physical epoch, never before its seed.
+                    let probe = begin * 0.5 + pair[1].lo.max(begin) * 0.5;
+                    let frozen = selection::freeze_context(&self.context, &self.parameters, probe)?;
+                    let mut mode = Self::initialized(
+                        frozen,
+                        self.parameters.clone(),
+                        begin,
+                        Some(seed.clone()),
+                        &self.tolerances,
+                    )?;
+                    if pair[0].lo != pair[0].hi {
+                        let elapsed = I {
+                            lo: 0.,
+                            hi: (I::point(pair[0].hi) - I::point(pair[0].lo)).hi,
+                        };
+                        let source = mode.source_bounds(pair[0]);
+                        let (_, image) = mode
+                            .picard_enclosure(&mode.initial, &source, &[], elapsed)
+                            .ok_or_else(|| {
+                                Error::new(
+                                    "condition_precision",
+                                    "cannot bound post-switch root-window propagation",
+                                )
+                            })?;
+                        mode.initial = image;
+                    }
+                    (mode, begin, 0)
+                };
+                crate::diagnostics::counter("selected_nonlinear_mode_extensions", 1);
+                let available = *remaining_work;
+                let propagation = mode.propagate_with_budget(end, remaining_work);
+                crate::diagnostics::counter(
+                    "selected_nonlinear_trial_evaluations",
+                    available - *remaining_work,
+                );
+                propagation?;
+                seed = mode.state_bounds(I::point(end))?;
+                if pair[1].lo != pair[1].hi {
+                    for (v, b) in seed.iter_mut().zip(mode.state_bounds(I {
+                        // The accepted event seed already contains the earlier
+                        // physical event window. This mode owns only t>=start;
+                        // its root-time Picard allowance below remains intact.
+                        lo: pair[1].lo.max(mode.start),
+                        hi: pair[1].hi,
+                    })?) {
+                        *v = v.hull(b);
+                    }
+                }
+                new_steps.extend(mode.steps.iter().skip(prefix).cloned());
+                modes.push((mode_begin, end, Arc::new(mode)));
+                if self.steps.len() + new_steps.len() > self.step_budget() {
+                    return Err(Error::new(
+                        "waveform_accuracy",
+                        "selected nonlinear histories exceed cumulative internal step limit",
+                    ));
+                }
+            }
+            Arc::make_mut(&mut self.steps).extend(new_steps);
+            self.modes = modes;
+            return Ok(());
+        }
+
         let base = self.clone();
         let mut refinement = 1.0;
         // Charge every trial evaluation, including failed tubes and higher
         // orders, across discarded suffixes. Counting only validated steps
         // lets difficult refusals spend most of their work outside this limit.
-        let mut remaining_work = self.step_budget().saturating_sub(base.steps.len());
         for _ in 0..MAX_HISTORY_REFINEMENTS {
             let mut candidate = base.clone();
-            if candidate.propagate_once(horizon, refinement, &mut remaining_work)? {
+            if candidate.propagate_once(horizon, refinement, remaining_work)? {
                 *self = candidate;
                 return Ok(());
             }
@@ -1328,6 +1674,20 @@ impl NonlinearContinuous {
                     .map(|(&v, u)| (v - u) / (I::point(b) - I::point(a)))
                     .collect()
             };
+            let coordinates = |sources: Vec<I>| {
+                self.initial
+                    .iter()
+                    .copied()
+                    .chain(sources)
+                    .map(|v| vec![v])
+                    .collect::<Vec<_>>()
+            };
+            let left = coordinates(trajectory.value_bounds(a));
+            let right = coordinates(trajectory.value_bounds(b));
+            let tube = coordinates(trajectory.range(I { lo: a, hi: b })?.0);
+            for f in &self.functions {
+                f.certify_source_denominators(self.initial.len(), &left, &right, &tube)?;
+            }
             let mut start = a;
             while start < b {
                 if self.steps.len() >= self.step_budget() {
@@ -1340,7 +1700,32 @@ impl NonlinearContinuous {
                     ));
                 }
                 let source = trajectory.value_bounds(start);
-                let mut end = (start + 0.125_f64.min(trajectory.config.max_step)).min(b);
+                let mut step = 0.125_f64.min(trajectory.config.max_step);
+                let variables: Vec<_> = state.iter().chain(&source).map(|&v| vec![v]).collect();
+                for (active, value) in &self.step_bounds {
+                    let active = active.jet(&variables, 0)[0];
+                    if active == I::ZERO {
+                        continue;
+                    }
+                    if !active.finite() {
+                        return Err(Error::new(
+                            "bound_step_precision",
+                            "nonfinite internal $bound_step activation",
+                        ));
+                    }
+                    let bound = value.jet(&variables, 0)[0];
+                    if !bound.finite() || bound.lo < 0. {
+                        return Err(Error::new(
+                            "invalid_bound_step",
+                            "internal $bound_step must be finite and nonnegative",
+                        ));
+                    }
+                    step = step.min(bound.lo);
+                }
+                let mut end = (I::point(start) + I::point(step))
+                    .lo
+                    .max(start.next_up())
+                    .min(b);
                 let mut accepted = None;
                 for _ in 0..MAX_REFINEMENTS {
                     if end <= start {
@@ -1479,10 +1864,23 @@ impl NonlinearContinuous {
     }
 
     pub(super) fn operator_value_index(&self, op: usize) -> Option<usize> {
-        self.operators.iter().position(|slot| slot.operator == op)
+        self.operators
+            .iter()
+            .position(|slot| slot.operator == op)
+            .or_else(|| {
+                self.math_outputs
+                    .iter()
+                    .position(|(i, _)| *i == op)
+                    .map(|i| i + self.operators.len())
+            })
     }
     pub(super) fn operator_spec(&self, slot: usize) -> &OperatorSpec {
-        &self.context.program.operators[self.operators[slot].operator]
+        let index = if slot < self.operators.len() {
+            self.operators[slot].operator
+        } else {
+            self.math_outputs[slot - self.operators.len()].0
+        };
+        &self.context.program.operators[index]
     }
     pub(super) fn reset_active(&self, slot: usize) -> bool {
         self.operators[slot].held_reset
@@ -1499,12 +1897,18 @@ impl NonlinearContinuous {
             && self.event_seed == other.event_seed
     }
     pub(super) fn next_breakpoint(&self, time: f64) -> Option<f64> {
-        self.context
+        let selected = self.modes.iter().map(|m| m.1).find(|&t| t > time);
+        let source = self
+            .context
             .trajectory
             .knots
             .iter()
             .copied()
-            .find(|t| *t > time)
+            .find(|t| *t > time);
+        match (selected, source) {
+            (Some(a), Some(b)) => Some(a.min(b)),
+            (a, b) => a.or(b),
+        }
     }
     fn state_bounds(&self, time: I) -> Result<Vec<I>, Error> {
         if !time.finite()
@@ -1514,7 +1918,13 @@ impl NonlinearContinuous {
         {
             return Err(Error::new(
                 "event_resolution",
-                "nonlinear history query outside accepted trajectory",
+                format!(
+                    "nonlinear history query [{:e},{:e}] outside accepted trajectory [{:e},{:e}]",
+                    time.lo,
+                    time.hi,
+                    self.start,
+                    self.certified_end()
+                ),
             ));
         }
         let mut result: Vec<_> = self
@@ -1551,7 +1961,60 @@ impl NonlinearContinuous {
             })
             .collect()
     }
+    fn output_bounds(&self, forcing: &[I]) -> Result<Vec<I>, Error> {
+        let mut result = self
+            .values
+            .iter()
+            .map(|row| dot(row, forcing, "nonlinear operator output"))
+            .collect::<Result<Vec<_>, _>>()?;
+        let count = self.initial.len() + self.context.driven.len();
+        let variables: Vec<_> = forcing[..count].iter().map(|&v| vec![v]).collect();
+        for (_, function) in &self.math_outputs {
+            let value = function.jet(&variables, 0)[0];
+            if !value.finite() {
+                return Err(Error::new(
+                    "waveform_accuracy",
+                    "mathematical output domain or range is not finite",
+                ));
+            }
+            result.push(value);
+        }
+        Ok(result)
+    }
+    fn mode_range(&self, time: I, derivative: bool) -> Result<Option<Vec<I>>, Error> {
+        if self.modes.is_empty() {
+            return Ok(None);
+        }
+        let mut result: Option<Vec<I>> = None;
+        for (begin, end, mode) in &self.modes {
+            let window = I {
+                lo: time.lo.max(*begin),
+                hi: time.hi.min(*end),
+            };
+            if window.lo > window.hi {
+                continue;
+            }
+            let bounds = if derivative {
+                mode.derivative_bounds(window)?
+            } else {
+                mode.range_bounds(window)?
+            };
+            if let Some(result) = &mut result {
+                for (v, b) in result.iter_mut().zip(bounds) {
+                    *v = v.hull(b);
+                }
+            } else {
+                result = Some(bounds);
+            }
+        }
+        result
+            .map(Some)
+            .ok_or_else(|| Error::new("event_resolution", "selected query lacks covered mode"))
+    }
     pub(super) fn range_bounds(&self, time: I) -> Result<Vec<I>, Error> {
+        if let Some(bounds) = self.mode_range(time, false)? {
+            return Ok(bounds);
+        }
         let state = self.state_bounds(time)?;
         let source = self.source_bounds(time);
         let forcing: Vec<_> = state
@@ -1560,15 +2023,48 @@ impl NonlinearContinuous {
             .chain(vec![I::ZERO; source.len()])
             .chain([I::ONE])
             .collect();
-        self.values
-            .iter()
-            .map(|row| dot(row, &forcing, "nonlinear operator output"))
-            .collect()
+        self.output_bounds(&forcing)
     }
     pub(super) fn derivative_bounds(&self, time: I) -> Result<Vec<I>, Error> {
+        if !self.modes.is_empty() {
+            let mut result: Option<Vec<I>> = None;
+            for (begin, end, mode) in &self.modes {
+                let window = I {
+                    lo: time.lo.max(*begin),
+                    hi: time.hi.min(*end),
+                };
+                if window.lo > window.hi {
+                    continue;
+                }
+                let bounds = mode.derivative_bounds(window)?;
+                if let Some(result) = &mut result {
+                    for (v, b) in result.iter_mut().zip(bounds) {
+                        *v = v.hull(b);
+                    }
+                } else {
+                    result = Some(bounds);
+                }
+            }
+            return result.ok_or_else(|| {
+                Error::new(
+                    "event_resolution",
+                    "selected derivative query lacks covered mode",
+                )
+            });
+        }
+
         let state = self.state_bounds(time)?;
         let (source, slopes) = self.context.trajectory.range(time)?;
         let variables: Vec<_> = state.iter().chain(&source).map(|&v| vec![v]).collect();
+        let velocities = self
+            .derivative_jets(&variables, &slopes, 0)
+            .ok_or_else(|| {
+                Error::new(
+                    "waveform_accuracy",
+                    "cannot certify mathematical output derivative",
+                )
+            })?;
+        let source_velocities = slopes.clone();
         let forcing: Vec<_> = self
             .derivative_jets(&variables, &slopes, 0)
             .ok_or_else(|| Error::new("waveform_accuracy", "cannot certify implicit derivative"))?
@@ -1578,10 +2074,29 @@ impl NonlinearContinuous {
             .chain(vec![I::ZERO; source.len()])
             .chain([I::ZERO])
             .collect();
-        self.values
+        let mut result = self
+            .values
             .iter()
             .map(|row| dot(row, &forcing, "nonlinear operator derivative"))
-            .collect()
+            .collect::<Result<Vec<_>, _>>()?;
+        for (_, function) in &self.math_outputs {
+            let derivative = velocities
+                .iter()
+                .map(|v| v[0])
+                .chain(source_velocities.iter().copied())
+                .enumerate()
+                .fold(I::ZERO, |sum, (k, v)| {
+                    sum + function.gradient_jet(&variables, 0, k)[0] * v
+                });
+            if !derivative.finite() {
+                return Err(Error::new(
+                    "waveform_accuracy",
+                    "nonfinite mathematical output derivative",
+                ));
+            }
+            result.push(derivative);
+        }
+        Ok(result)
     }
     fn source_bounds(&self, time: I) -> Vec<I> {
         let trajectory = &self.context.trajectory;
@@ -1651,10 +2166,7 @@ impl NonlinearContinuous {
             .chain(vec![I::ZERO; source.len()])
             .chain([I::ONE])
             .collect();
-        self.values
-            .iter()
-            .map(|row| dot(row, &forcing, "ordered nonlinear event sample"))
-            .collect()
+        self.output_bounds(&forcing)
     }
 
     pub(super) fn restarted(
@@ -1730,11 +2242,27 @@ fn collect_structure(
     row: &mut [I],
 ) -> Result<(), Error> {
     match expr {
-        Expression::Add { left, right } | Expression::Multiply { left, right } => {
+        Expression::Add { left, right }
+        | Expression::Multiply { left, right }
+        | Expression::Divide { left, right } => {
             collect_structure(left, program, owner, row)?;
             collect_structure(right, program, owner, row)
         }
         Expression::Power { base, .. } => collect_structure(base, program, owner, row),
+        Expression::Operator { operator }
+            if matches!(
+                program.operators[*operator],
+                OperatorSpec::Math {
+                    function: crate::ir::MathFunction::Exp,
+                    ..
+                }
+            ) =>
+        {
+            let OperatorSpec::Math { input, .. } = &program.operators[*operator] else {
+                unreachable!()
+            };
+            collect_structure(input, program, owner, row)
+        }
         _ => {
             let deps = crate::events::affine(expr, program, owner)?;
             for node in deps.node_dependencies {
@@ -1829,6 +2357,7 @@ mod tests {
             context: Arc::new(Context {
                 program,
                 trajectory,
+                force_integrals: false,
                 driven: vec![],
             }),
             parameters: vec![],
@@ -1842,6 +2371,9 @@ mod tests {
             values: vec![vec![I::ONE, I::ZERO]],
             accuracy_rows: vec![vec![I::ONE, I::ZERO]],
             tolerances: Tolerances::default(),
+            step_bounds: vec![],
+            math_outputs: vec![],
+            modes: vec![],
             functions: vec![Polynomial::Multiply(
                 Box::new(Polynomial::Linear(vec![I::ZERO, I::point(quadratic_sign)])),
                 Box::new(Polynomial::Power(
@@ -1943,6 +2475,53 @@ mod tests {
         assert!(
             crate::interval::sum_products_sign(&[(future[0].hi, 9.0), (-8.0, 1.0)]).unwrap() >= 0
         );
+    }
+
+    #[test]
+    fn selected_modes_share_trial_budget_and_retain_accepted_prefix() {
+        use serde_json::json;
+        let origin = json!({"instance":"dut","source":"selected.va","line":1,"column":1});
+        let program: Program = serde_json::from_value(json!({
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u","y"],
+            "operators":[{"kind":"idt","ic":0,"origin":origin,
+                "input":{"op":"select","relation":"lt","origin":origin,
+                    "left":{"op":"affine","constant":0,"terms":[{"node":1,"coefficient":1}]},
+                    "right":{"op":"affine","constant":0.0625,"terms":[]},
+                    "then_value":{"op":"affine","constant":1,"terms":[]},
+                    "else_value":{"op":"affine","constant":2,"terms":[]}}}],
+            "contributions":[{"branch":{"instance":"dut","local_positive":"y","local_negative":"r","kind":"voltage"},
+                "positive":2,"negative":0,"origin":origin,"rhs":{"op":"operator","operator":0}}]
+        })).unwrap();
+        let trajectory = Trajectory::new(
+            crate::ir::TransientInputs {
+                strobetimes: vec![],
+                pwl: vec![vec![[0., 0.], [0.125, 0.125]]],
+                output_times: vec![0., 0.125],
+                stop: 0.125,
+                max_step: 0.125,
+            },
+            1,
+        )
+        .unwrap();
+        let accepted =
+            NonlinearContinuous::new(&program, &trajectory, &["u".into()], &[], 0.03125).unwrap();
+        let prefix = accepted.range_bounds(I::point(0.03125)).unwrap();
+        let mut candidate = accepted.clone();
+        let mut allowance = 1;
+        let (result, report) = crate::diagnostics::capture(Default::default(), || {
+            candidate.propagate_with_budget(0.125, &mut allowance)
+        });
+        assert!(result.unwrap_err().message.contains("trial evaluations"));
+        assert_eq!(allowance, 0);
+        assert_eq!(report.counters["selected_nonlinear_mode_extensions"], 2);
+        assert_eq!(report.counters["selected_nonlinear_trial_evaluations"], 1);
+        assert!(candidate.same_history(&accepted));
+        assert_eq!(candidate.range_bounds(I::point(0.03125)).unwrap(), prefix);
+        let mut retry = accepted.clone();
+        retry.propagate_with_budget(0.125, &mut 4).unwrap();
+        let answer = retry.range_bounds(I::point(0.125)).unwrap()[0];
+        assert!(answer.lo <= 0.1875 && answer.hi >= 0.1875);
+        assert_eq!(retry.range_bounds(I::point(0.03125)).unwrap(), prefix);
     }
 
     #[test]
@@ -2375,5 +2954,31 @@ mod tests {
             .restarted(window.hi, window, &[I::point(2.0)], trajectory.config.stop)
             .unwrap();
         assert_eq!(retry.range_bounds(I::point(0.75)).unwrap(), future);
+    }
+}
+
+pub(super) fn contains_exp_operator(expr: &Expression, program: &Program) -> bool {
+    match expr {
+        Expression::Operator { operator } => matches!(
+            program.operators[*operator],
+            OperatorSpec::Math {
+                function: crate::ir::MathFunction::Exp,
+                ..
+            }
+        ),
+        Expression::Add { left, right }
+        | Expression::Multiply { left, right }
+        | Expression::Divide { left, right } => {
+            contains_exp_operator(left, program) || contains_exp_operator(right, program)
+        }
+        Expression::Power { base, .. } => contains_exp_operator(base, program),
+        Expression::Select {
+            then_value,
+            else_value,
+            ..
+        } => {
+            contains_exp_operator(then_value, program) || contains_exp_operator(else_value, program)
+        }
+        _ => false,
     }
 }

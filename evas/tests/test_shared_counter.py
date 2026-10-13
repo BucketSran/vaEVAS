@@ -57,16 +57,37 @@ class SharedCounter(unittest.TestCase):
         result=transient(p,{'u':[[0,0],[1,0]]},[0,.5,1],stop=1,max_step=1,kernel=KERNEL)
         self.assertEqual(result['transient']['states'],[[0,1],[1,2],[3,2]])
 
-    def test_other_state_hidden_dependencies_remain_rejected(self):
-        for rhs in ['q-q', '0*q', '(1e-200*1e-200)*q', 'n+q-q', 'n+0*q',
-                    '0*n+1', 'n+V(u,r)', 'n+idt(V(u,r),0)']:
+    def test_later_block_reads_accepted_states_and_direct_source(self):
+        cases = [('q-q', 0), ('0*q', 0), ('(1e-200*1e-200)*q', 0),
+                 ('n+q-q', 1), ('n+0*q', 1), ('0*n+1', 1), ('n+V(u,r)', 1.75)]
+        for rhs, final in cases:
             source=model(f'''@(initial_step) begin n=0; q=1; end
               @(timer(0.25)) begin n=n+1; q=2; end
               @(timer(0.75)) n={rhs}; V(y,r)<+n;''','real n,q;')
             with self.subTest(rhs=rhs):
-                try:
-                    p=compile_sources({'counter-bad.va':source},[instance()])
-                except CompileError:
-                    continue
+                p=compile_sources({'counter-accepted.va':source},[instance()])
+                result=transient(p,{'u':[[0,0],[1,1]]},[0,.5,1],
+                                 stop=1,max_step=1,kernel=KERNEL)
+                self.assertEqual(result['transient']['states'],[[0,1],[1,2],[final,2]])
+                self.assertEqual([e['event'] for e in result['transient']['events']],[0,1])
+                y=result['nodes'].index('y')
+                self.assertEqual([row['voltages'][y] for row in result['solutions']],[0,1,final])
+
+    def test_simultaneous_other_state_reads_keep_structural_dependencies(self):
+        # Cancellation, zero factors and underflow cannot erase another
+        # selected block's writer from a same-time read dependency.
+        for rhs in ['q-q', '0*q', '(1e-200*1e-200)*q', 'n+q-q', 'n+0*q']:
+            source=model(f'''@(initial_step) begin n=1; q=1; end
+              @(timer(0.75)) q=2;
+              @(timer(0.75)) n={rhs}; V(y,r)<+n;''','real n,q;')
+            with self.subTest(rhs=rhs):
+                p=compile_sources({'counter-simultaneous.va':source},[instance()])
                 with self.assertRaisesRegex(KernelError,'unsupported_cross'):
-                    transient(p,{'u':[[0,0],[1,0]]},[0,1],stop=1,max_step=1,kernel=KERNEL)
+                    transient(p,{'u':[[0,0],[1,1]]},[0,1],stop=1,max_step=1,kernel=KERNEL)
+
+    def test_waveform_operator_in_event_assignment_stays_rejected(self):
+        source=model('''@(initial_step) begin n=0; q=1; end
+          @(timer(0.25)) begin n=n+1; q=2; end
+          @(timer(0.75)) n=n+idt(V(u,r),0); V(y,r)<+n;''','real n,q;')
+        with self.assertRaises(CompileError):
+            compile_sources({'counter-operator.va':source},[instance()])

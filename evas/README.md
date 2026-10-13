@@ -32,7 +32,7 @@ EVAS 的价值需要由电压域工程行为证明：在正确时刻采样，保
 每类都检查初始化、事件前后读值、历史延续、多个实例和误差控制，再扩展反馈及更复杂组合。
 支持结论仍只维护在总表中。晶体管、电流与电荷方程不属于当前范围；性能优化排在行为与精度之后。
 
-当前版本为 **EVAS 0.15.0 / IR19**。变化和历史执行身份见[版本记录](docs/UPDATE.md)。
+当前开发版本为 **EVAS 0.17.0 / IR21**（本地候选，尚未发布）。变化和历史执行身份见[版本记录](docs/UPDATE.md)。
 
 <a id="model-handoff"></a>
 
@@ -173,15 +173,45 @@ API 为 `evas.scs.load_scs(path)`（检查测试台并返回 manifest 和模型�
 | 模型与连接 | `ahdl_include "file.va"`；按 VA 声明顺序展开静态向量后逐位连接的标量节点列表；常量参数覆盖；`global 0` |
 | 数字 | 有限十进制、科学计数和单字母 SI 后缀 `T G M k K m u n p f a`；可引用先前 `parameters` 语句的常量 |
 | `vsource` | 一端接地；`dc`；从零开始、时间严格递增的 `wave=[time value ...]`；显式 `delay/rise/width/fall/period/val0/val1` 的线性 pulse |
-| 瞬态 | 一条 `tran tran stop=... maxstep=...`，两项必须显式指定且为正；观察点取 `0`、小于 stop 的 `k*maxstep` 和 stop；可另给 [strobe 五项控制](docs/reference/strobe.md)，不改变常规观察网格 |
+| `bsource` 电压式 | 一端接地；`v=V(node)`，可加减一个有限常量或先前 `parameters` 常量；偏移可用一层括号包住，例如 `v=V(vin)+(-0.04)` |
+| 瞬态 | 一条 `tran tran stop=... maxstep=...`，两项必须显式指定且为正；观察点取 `0`、转换为浮点数后仍小于 stop 的 `k*maxstep` 和一次 stop；可另给 [strobe 五项控制](docs/reference/strobe.md)，不改变常规观察网格 |
 | 精度 | `options reltol=... vabstol=...`，映射到现有 EVAS 设置；未指定项使用 EVAS 默认值，不采用 Spectre 默认值 |
+| 电流容差兼容 | `options iabstol=...` 接受有限、非负标量，但发出 warning；EVAS 没有电流未知量，该值不参与求解 |
+| 精度预设兼容 | `tran` 的 `errpreset=liberal/moderate/conservative` 接受但发出 warning，不应用 Spectre 的预设调整；使用显式容差和步长，未指定容差使用 EVAS 默认值 |
 | 输出 | `save` 选择标量端口节点；`saved` 输出所选列，原 `solutions` 保留完整求解响应 |
 
+所有外部 `vsource` 驱动都保留在请求中，包括未连接到 VA 端口、仅被行为源引用的节点；
+不能把它们变成待解的内部节点。独立回归见 [SCS 驱动保留](tests/test_scs_driven_nodes.py)。
+
 输入允许 `//` 注释、反斜杠续行和跨行括号。所有字段必须被消费。
-未知 options、`iabstol`、`errpreset`、sine、理想跳变、浮动源、R/C/I 器件、
+未知 options、未知 `errpreset` 值、sine、理想跳变、浮动源、R/C/I 器件、
 子电路指令、电流探针、总线名/范围/拼接/切片等连接语法均明确拒绝；不把它们当作可忽略的文本。
 VA 的自定义 include 仍使用显式 source 清单；适配器只加载 `ahdl_include` 列出的文件。
 重复源、重复设置、非法源时刻和未知 save 节点在运行前拒绝。
+
+例如 `options reltol=1e-6 vabstol=1e-9 iabstol=1e-15` 保留两项电压求解设置，
+并警告 `iabstol` 被忽略、实际不生效。API 发出 `ScsIgnoredOptionWarning`，
+成功结果的 `testbench.warnings` 记录请求值、原因和网表位置；`load_scs` 的对应字段为 `metadata.warnings`。
+CLI 在 stderr 输出包含 `warnings` 的 JSON，成功结果仍在 stdout。
+若后续检查或求解失败，已发出的 warnings 附在同一个错误 JSON 中，保留原错误及退出码。
+`iabstol` 的非法数值和重复声明仍拒绝；接受该选项不增加电流网络支持。
+
+`errpreset` 的 warning 在网表语句扫描和基本数值检查完成后发出，
+包含最终 `effective_controls`，即 `reltol`、`vabstol` 和 `max_step`。
+例如请求 `reltol=1e-6` 和 `errpreset=conservative` 时，EVAS 仍采用 `reltol=1e-6`，
+不会套用 Spectre 的预设缩放。这种输入兼容不保证两者具有相同实际误差。
+
+`B (us 0) bsource v=V(vin)+(0.04)` 表示 `V(us)=V(vin)+0.04 V`。
+适配器将它转换成普通 VA 电压关系，交给同一 Rust 内核联立求解；引用内部节点时也不会预计算波形。
+反向接地端口保留电压方向，串联源可按任意声明顺序连接。
+未知参考节点、同一节点的重复 `bsource`/`vsource` 驱动、电流表达式、乘除和一般函数表达式均拒绝。
+测试台仍须包含 `ahdl_include` 和 VA 实例；这不是完整的 Spectre 行为源实现。
+独立三角波、正负偏移、反向连接和反馈答案见 [bsource 回归](tests/test_scs_bsource.py)。
+
+含 `bsource` 时，`load_scs` 返回的 `sources` 包含一个只存在于内存的辅助 VA 模型，
+`manifest` 必须与这些源码一起使用；直接将 manifest 保存后交给文件入口会缺少该生成文件。
+`model_sha256` 保留原文件哈希，`generated_model_sha256` 单独记录生成源码的哈希。
+辅助模型名和源码键避开用户已声明的模型及文件，不写入或覆盖磁盘文件。
 
 静态向量端口按每个实例的有效参数展开，索引按声明方向依次连接。
 例如 `input [1:0] u; output [0:1] y;` 的 `DUT (a b c d) bus`
@@ -263,7 +293,7 @@ CLI 与迁移工具共用 manifest 校验。`models` 和 `instances` 必须是�
 限 64；函数调用、表达式下降与条件体嵌套共同累计到 80 层展开深度预算，
 避免分别合规的嵌套相乘使编译器递归溢出；不另设累计校验图上限。
 超限时返回带源码位置的 `CompileError`。合法但过大的模型也可能被拒绝，
-包括旧版本偶尔能处理的长表达式。使用 IR19，不通过重关联算式或消去依赖绕过预算；
+包括旧版本偶尔能处理的长表达式。使用 IR21，不通过重关联算式或消去依赖绕过预算；
 更大的模型需要后续共享表达式 IR 或其他有独立验证的方案。
 
 `solve` / `transient` 的 `timeout` 默认 **300 秒**，只限制内核进程执行时间，
@@ -289,9 +319,11 @@ Python 的编译与求解接口：`compile_sources(sources, instances) -> Progra
 保留 `absolute` / `relative` 作为对应旧名称；同一容差不能同时提供新旧名称。
 本分支的非线性 Taylor/DAE 路径将节点容差用于候选细化，并保留最终前向电压误差验收。
 `max_step` 同时限制其内部试步；线性/PWL 解析路径保持解析传播。观察网格不定义积分历史。
+模型还可用 [`$bound_step`](docs/math/events.md#bound-step) 限制下一次推进；它与 `max_step` 取最小值。
+非线性预构造历史和隐式路径目前只接受正的无条件常数请求，动态请求在这些组合中明确拒绝。
 极小步长或无法认证的累计包围会明确失败，资源上限与数学说明见
 [非线性精度控制](docs/math/continuous.md#多项式非线性积分与误差证明)。
-当前实现 Python 前端与 Rust 内核使用 IR v18；版本迁移规则见[下文](#ir-v8-migration)。
+当前实现 Python 前端与 Rust 内核使用 IR v20；版本迁移规则见[下文](#ir-v8-migration)。
 
 Rust 库接口：`Circuit::new(...)` 和无状态的 `Circuit::solve(inputs)`。
 独立 Rust 进程也校验 IR，不能依赖 Python 已验证输入。
@@ -302,7 +334,7 @@ Rust 库接口：`Circuit::new(...)` 和无状态的 `Circuit::solve(inputs)`。
 
 语法解析不依赖 IR；绑定层只依赖语法树与 IR。Rust 求解层依赖内部组装模块，
 组装模块依赖 IR 和表达式校验，不反向调用求解层。`Circuit::new` 保留为公开构造入口，
-内部组装结果不成为新的公共 API。结构化支路身份沿用 v2；当前实现表达式、事件与算子使用 IR v18，序列化迁移规则见下文。
+内部组装结果不成为新的公共 API。结构化支路身份沿用 v2；当前实现表达式、事件与算子使用 IR v20，序列化迁移规则见下文。
 
 当前用 JSON 进程接口使 IR 易于检查，避免先复制旧的复杂 FFI。
 性能基准覆盖 Rust 库内静态求解、批量并行和五类瞬态路径。
@@ -369,7 +401,7 @@ tests 通过的数目不折算为验证条件数；分组与运行方式见
 
 ## IR 与贡献契约
 
-当前实现使用 IR v19，新增 `cos/exp/ln/sqrt` 纯函数调用点，保留 IR18 的输入比较初值及已有动态契约；每条贡献的 RHS 是带 `op` 标签的表达式，不含“直接写节点”指令。
+当前实现使用 IR v20，新增模型步长请求 `step_bounds`，保留纯数学函数、输入比较初值及已有动态契约；每条贡献的 RHS 是带 `op` 标签的表达式，不含“直接写节点”指令。
 `affine` 叶子保存有限常数和不重复的节点系数；`add` / `multiply` 含 `left` / `right`；
 `power` 含 `base` 和整数 `exponent`；半次幂编译为 `sqrt` 调用点。
 `math` 调用点含函数名和输入表达式；认证范围见[纯数学函数](docs/math/operators.md#elementary-functions)。
@@ -407,20 +439,22 @@ Rust 独立检查同一实例内本地端点的绑定一致性、地绑定和规
 
 ### IR 版本与迁移
 
-Program 和成功 Response 的 `schema_version` 均为 **19**，Python 适配器与 Rust 内核同步检查。
+Program 和成功 Response 的 `schema_version` 均为 **21**，Python 适配器与 Rust 内核同步检查。
 旧版本或未知整数版本先于载荷解码返回 `unsupported_ir_version`；版本缺失/错误类型及当前格式错误返回
-`invalid_request`。Rust 库构造入口也检查版本。旧 IR 1–18 的 JSON 须从原始 VA 与 manifest 重新编译，不能只改版本号。
-前端与内核须配套使用。IR19 增加纯数学函数格式，不能只给旧 JSON 改版本号。
+`invalid_request`。Rust 库构造入口也检查版本。旧 IR 1–20 的 JSON 须从原始 VA 与 manifest 重新编译，不能只改版本号。
+前端与内核须配套使用。IR21 保留 `step_bounds`，新增变量分母的 `divide` 表达式、顺序初始化和事件输出记录。
+`step_bounds` 保存每次 `$bound_step` 的值、激活条件和源码身份。
+IR19 引入的纯数学函数格式继续保留；不能只给旧 JSON 改版本号。
 IR18 将 `State.initial` 扩为有限常数或明确的 0/1 `select` 比较；
-比较只适用于 real 状态，两侧限 ground/实际 driven 输入的仿射表达式。
+IR21 将初始化扩展到 real/integer 的顺序赋值、默认零值及受限条件；输入仍限 ground/实际 driven 输入。
 初始化先于算子历史、守卫日程、首次电压求解和 t=0 事件；详见[初始化契约](docs/math/events.md#input-initialization)。
-IR1–18 必须从原始 VA/manifest 重新编译，不原地改写历史 IR 或收据。
+IR1–20 必须从原始 VA/manifest 重新编译，不原地改写历史 IR 或收据。
 
-仓库冒烟 manifest 的默认范围为 `evas/validation/smoke/`。批量工具读取原 VA 和实例参数，写入新的 IR19，
+仓库冒烟 manifest 的默认范围为 `evas/validation/smoke/`。批量工具读取原 VA 和实例参数，写入新的 IR21，
 保留每项 manifest/source SHA256 及失败诊断；原 IR、历史波形和收据不改写：
 
 ```sh
-python3 scripts/recompile_evas_manifests.py --output runs/recompile-ir19
+python3 scripts/recompile_evas_manifests.py --output runs/recompile-ir21
 python3 scripts/recompile_evas_manifests.py --output runs/recompile-selected evas/validation/smoke/idt.json
 ```
 

@@ -97,8 +97,16 @@ class VariableArrays(unittest.TestCase):
                 self.compile(body, declarations)
 
     def test_unassigned_element_does_not_borrow_another_element(self):
+        program = self.compile('a[0]=1; V(y,r)<+a[1];')
+        result = transient(program, {'u': [[0,1],[1,1]]}, [0,1],
+                           stop=1, max_step=1, kernel=KERNEL)
+        self.assertEqual(result['transient']['states'], [[0],[0]])
+        self.assertEqual([row['voltages'][program.nodes.index('y')]
+                          for row in result['solutions']], [0,0])
+
+    def test_analog_element_read_before_its_assignment_still_rejects(self):
         with self.assertRaisesRegex(CompileError, 'not assigned before use'):
-            self.compile('a[0]=1; V(y,r)<+a[1];')
+            self.compile('a[0]=a[1]; a[1]=1; V(y,r)<+a[0];')
 
     def test_indexed_function_return_cannot_silently_become_scalar(self):
         declarations = 'analog function real f; input x; real x; begin f[0]=x; end endfunction'

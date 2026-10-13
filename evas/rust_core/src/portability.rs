@@ -134,6 +134,7 @@ mod tests {
             states: vec![],
             accepted_steps: 0,
             discarded_trials: 0,
+            display_records: vec![],
             events: vec![EventRecord {
                 time: bounds[1],
                 observation_time_bounds: Some(bounds),
@@ -144,6 +145,7 @@ mod tests {
                 fired_triggers: vec![],
                 before: vec![],
                 after: vec![],
+                display_records: vec![],
             }],
         }
     }

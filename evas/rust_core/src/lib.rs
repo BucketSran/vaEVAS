@@ -7,6 +7,7 @@ mod batch;
 mod continuous;
 pub mod diagnostics;
 mod dynamic_roots;
+mod display;
 mod event_accuracy;
 mod event_conditions;
 mod events;
@@ -36,6 +37,7 @@ mod slew;
 mod slew_cascade;
 pub mod solver;
 mod state_space;
+mod step_bounds;
 mod strobe;
 mod transient;
 mod transition;
@@ -52,8 +54,23 @@ pub fn run(request: Request) -> Result<Response, Error> {
 
 /// Independent static samples may run concurrently. Results and errors retain
 /// input order; transient state always advances on the serial controller.
-pub fn run_with_threads(request: Request, static_threads: usize) -> Result<Response, Error> {
+pub fn run_with_threads(mut request: Request, static_threads: usize) -> Result<Response, Error> {
     let _timing = crate::diagnostics::span("kernel.run");
+    ir::check_schema_version(u64::from(request.program.schema_version))?;
+    step_bounds::Bounds::new(&request.program)?;
+    // The compiler reserves this unspellable VA identifier for physical time.
+    // It is a driven quantity, so event samples retain their root-time enclosure.
+    if request.program.nodes.iter().any(|n| n == "$abstime") {
+        if request.driven.iter().any(|n| n == "$abstime") {
+            return Err(Error::new("invalid_inputs", "absolute time cannot be externally driven"));
+        }
+        request.driven.push("$abstime".into());
+        if let Some(transient) = &mut request.transient {
+            transient.pwl.push(vec![[0.0, 0.0], [transient.stop, transient.stop]]);
+        } else {
+            for sample in &mut request.samples { sample.push(0.0); }
+        }
+    }
     if !(1..=64).contains(&static_threads) {
         return Err(Error::new(
             "invalid_config",

@@ -24,7 +24,9 @@ pub(crate) fn validate(expr: &Expression, count: usize) -> Result<(), Error> {
                 ));
             }
         }
-        Expression::Add { left, right } | Expression::Multiply { left, right } => {
+        Expression::Add { left, right }
+        | Expression::Multiply { left, right }
+        | Expression::Divide { left, right } => {
             validate(left, count)?;
             validate(right, count)?;
         }
@@ -63,7 +65,9 @@ fn predicate_nodes(expr: &Expression, nodes: &mut BTreeSet<usize>) {
         Expression::Affine { terms, .. } => {
             nodes.extend(terms.iter().map(|t| t.node));
         }
-        Expression::Add { left, right } | Expression::Multiply { left, right } => {
+        Expression::Add { left, right }
+        | Expression::Multiply { left, right }
+        | Expression::Divide { left, right } => {
             predicate_nodes(left, nodes);
             predicate_nodes(right, nodes);
         }
@@ -113,7 +117,7 @@ fn predicate_degree(expr: &Expression) -> Option<u8> {
                 .max(predicate_degree(then_value)?)
                 .max(predicate_degree(else_value)?),
         ),
-        Expression::State { .. } | Expression::Operator { .. } => None,
+        Expression::State { .. } | Expression::Operator { .. } | Expression::Divide { .. } => None,
     }
 }
 
@@ -156,7 +160,9 @@ pub(crate) fn validate_select_predicates(
             validate_select_predicates(then_value, allowed_nodes)?;
             validate_select_predicates(else_value, allowed_nodes)?;
         }
-        Expression::Add { left, right } | Expression::Multiply { left, right } => {
+        Expression::Add { left, right }
+        | Expression::Multiply { left, right }
+        | Expression::Divide { left, right } => {
             validate_select_predicates(left, allowed_nodes)?;
             validate_select_predicates(right, allowed_nodes)?;
         }
@@ -269,6 +275,23 @@ impl Accumulator {
                 }
                 for (node, db) in b.gradient {
                     self.add_derivative(node, factor * a.value * db);
+                }
+            }
+            Expression::Divide { left, right } => {
+                let a = evaluate(left, nodes)?;
+                let b = evaluate(right, nodes)?;
+                if b.value == 0. {
+                    return Err(Error::new(
+                        "nonfinite_arithmetic",
+                        "division denominator is zero",
+                    ));
+                }
+                self.value.add(factor * a.value / b.value);
+                for (node, da) in a.gradient {
+                    self.add_derivative(node, factor * da / b.value);
+                }
+                for (node, db) in b.gradient {
+                    self.add_derivative(node, -factor * a.value * db / (b.value * b.value));
                 }
             }
             Expression::Power { base, exponent } => {
@@ -425,6 +448,16 @@ fn expression_interval(expr: &Expression, nodes: &[I]) -> Result<I, Error> {
         }
         Expression::Multiply { left, right } => {
             Ok(expression_interval(left, nodes)? * expression_interval(right, nodes)?)
+        }
+        Expression::Divide { left, right } => {
+            let denominator = expression_interval(right, nodes)?;
+            if denominator.lo <= 0. && denominator.hi >= 0. {
+                return Err(Error::new(
+                    "nonfinite_arithmetic",
+                    "division denominator interval contains zero",
+                ));
+            }
+            Ok(expression_interval(left, nodes)? / denominator)
         }
         Expression::Power { base, exponent } => {
             let base = expression_interval(base, nodes)?;
@@ -624,6 +657,24 @@ fn resolve_selects_inner(
             )?),
         },
         Expression::Multiply { left, right } => Expression::Multiply {
+            left: Box::new(resolve_selects_inner(
+                left,
+                nodes,
+                input_nodes,
+                exact_sources,
+                time,
+                allow_source_certificate,
+            )?),
+            right: Box::new(resolve_selects_inner(
+                right,
+                nodes,
+                input_nodes,
+                exact_sources,
+                time,
+                allow_source_certificate,
+            )?),
+        },
+        Expression::Divide { left, right } => Expression::Divide {
             left: Box::new(resolve_selects_inner(
                 left,
                 nodes,

@@ -136,7 +136,7 @@ class SparseTransientContracts(unittest.TestCase):
 
     def test_held_guard_and_history_dependency_remain_distinct_in_sparse_networks(self):
         cell = model('V(y,r)<+V(u,r);')
-        for expression in ['n', 'n-n', '1e-300*(1e-300*n)']:
+        for expression in ['n', '1.0*n-1.0*n', '1e-300*(1e-300*n)']:
             driver = model(f'''@(initial_step) n=0;
                 @(cross(V(u,r)-0.5,+1)) n=n+1; V(y,r)<+{expression};''', 'integer n;')
             driver = driver.replace('module m(', 'module driver(')

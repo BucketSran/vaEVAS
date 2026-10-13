@@ -7,6 +7,7 @@ from pathlib import Path
 import subprocess
 import sys
 import unittest
+import warnings
 from evas import CompileError, Instance, compile_sources, transient
 from evas.scs import load_scs, simulate_scs
 from test_affine import KERNEL, model
@@ -33,6 +34,61 @@ class ScsContracts(unittest.TestCase):
         self.assertEqual(actual['saved']['values'],[[0,0],[1.5,.5],[3,1],[1.5,.5],[0,0]])
         self.assertEqual(actual['testbench']['effective_tolerances'],dict(vabstol=1e-9,reltol=0))
 
+    def test_iabstol_warns_without_changing_voltage_request_or_solution(self):
+        self.deck(extra='opts options reltol=0 vabstol=1n')
+        baseline=load_scs(self.path)
+        expected=simulate_scs(self.path,kernel=KERNEL)
+        for value in ('0','1f','2m'):
+            with self.subTest(value=value):
+                self.deck(extra=f'parameters current_tol={value}\nopts options reltol=0 vabstol=1n iabstol=current_tol')
+                with self.assertWarnsRegex(UserWarning,'iabstol.*ignored.*no effect'):
+                    bench=load_scs(self.path)
+                self.assertEqual(bench.manifest,baseline.manifest)
+                with self.assertWarnsRegex(UserWarning,'iabstol.*ignored'):
+                    actual=simulate_scs(self.path,kernel=KERNEL)
+                self.assertEqual(actual['solutions'],expected['solutions'])
+                self.assertEqual(actual['saved']['values'],[[0,0],[1.5,.5],[3,1],[1.5,.5],[0,0]])
+                report=actual['testbench']['warnings'][0]
+                self.assertEqual(report['code'],'ignored_scs_option')
+                self.assertEqual(report['option'],'iabstol')
+                self.assertEqual(report['severity'],'warning')
+                self.assertEqual(report['location']['source'],str(self.path.resolve()))
+                self.assertEqual(report['location']['line'],7)
+                self.assertEqual(report['requested_value'],dict(zip(('0','1f','2m'),(0.,1e-15,.002)))[value])
+
+    def test_iabstol_warning_cli_preserves_json_on_success_and_later_failure(self):
+        for extra,exit_code in [('',0),('\nbad options mystery=1',2)]:
+            with self.subTest(extra=extra):
+                self.deck(extra='opts options iabstol=1f'+extra)
+                child=subprocess.run([sys.executable,'-m','evas','simulate',str(self.path),'--kernel',str(KERNEL)],
+                                     text=True,capture_output=True)
+                self.assertEqual(child.returncode,exit_code,child.stderr)
+                report=json.loads(child.stderr)
+                self.assertEqual(report['warnings'][0]['option'],'iabstol')
+                if exit_code==0:
+                    self.assertEqual(json.loads(child.stdout)['testbench']['warnings'],report['warnings'])
+                else:
+                    self.assertEqual(child.stdout,'')
+                    self.assertEqual(report['code'],'unsupported_scs')
+
+    def test_invalid_or_duplicate_iabstol_still_rejects(self):
+        for settings in ('iabstol=-1f','iabstol=1e999','iabstol=[1f]',
+                         'iabstol=missing','iabstol=1f iabstol=2f',
+                         'iabstol=1f\nmore options iabstol=2f'):
+            with self.subTest(settings=settings),warnings.catch_warnings():
+                warnings.simplefilter('ignore',UserWarning)
+                with self.assertRaises(CompileError):
+                    load_scs(self.deck(extra='opts options '+settings))
+
+    def test_iabstol_warning_location_identifies_setting_not_constant_or_statement(self):
+        self.deck(extra='parameters iabstol=1f\niabstol options reltol=iabstol \\\n  iabstol=1f')
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter('always',UserWarning)
+            bench=load_scs(self.path)
+        self.assertEqual(len(caught),1)
+        location=bench.metadata['warnings'][0]['location']
+        self.assertEqual((location['line'],location['column']),(8,3))
+
     def test_strobe_controls_reach_kernel_without_changing_output_grid(self):
         self.deck(tran='tran tran stop=1 maxstep=.25 strobetimes=[.125 .625] strobeperiod=.25 strobedelay=.0625 skipstart=.25 skipstop=.75')
         actual=simulate_scs(self.path,kernel=KERNEL)
@@ -43,6 +99,42 @@ class ScsContracts(unittest.TestCase):
         self.assertEqual(actual['strobe_evidence']['times'],[.125,.3125,.5625,.625])
         self.assertEqual(actual['saved']['times'],[0,.25,.5,.75,1])
         self.assertEqual(actual['solutions'],expected['solutions'])
+
+    def test_errpreset_warns_and_preserves_explicit_and_default_controls(self):
+        for options in ('','opts options vabstol=1n reltol=1u'):
+            self.deck(extra=options)
+            baseline=load_scs(self.path)
+            expected=simulate_scs(self.path,kernel=KERNEL)
+            for preset in ('liberal','moderate','conservative'):
+                with self.subTest(options=options,preset=preset):
+                    self.deck(extra=options,tran='tran tran stop=1 maxstep=.25 errpreset='+preset)
+                    # Options after tran must still determine the effective controls.
+                    if options:
+                        self.path.write_text(self.path.read_text().replace(options+'\n','')+options+'\n')
+                    with self.assertWarnsRegex(UserWarning,'errpreset.*ignored'):
+                        bench=load_scs(self.path)
+                    self.assertEqual(bench.manifest,baseline.manifest)
+                    with self.assertWarnsRegex(UserWarning,'errpreset.*ignored'):
+                        actual=simulate_scs(self.path,kernel=KERNEL)
+                    self.assertEqual(actual['solutions'],expected['solutions'])
+                    report=actual['testbench']['warnings'][0]
+                    self.assertEqual(report['requested_value'],preset)
+                    self.assertEqual(report['effective_controls'],dict(baseline.manifest['tolerances'],max_step=.25))
+
+    def test_errpreset_cli_keeps_both_warnings_when_kernel_fails(self):
+        self.deck(extra='opts options iabstol=1f',tran='tran tran stop=1 maxstep=.25 errpreset=conservative')
+        child=subprocess.run([sys.executable,'-m','evas','simulate',str(self.path),'--kernel',str(self.root/'missing')],
+                             text=True,capture_output=True)
+        self.assertEqual(child.returncode,2)
+        self.assertEqual(child.stdout,'')
+        report=json.loads(child.stderr)
+        self.assertEqual(report['code'],'kernel.kernel_process')
+        self.assertEqual([w['option'] for w in report['warnings']],['iabstol','errpreset'])
+
+    def test_unknown_malformed_or_duplicate_errpreset_rejects(self):
+        for value in ('conservativ','1','[1]','conservative errpreset=moderate'):
+            with self.subTest(value=value),self.assertRaises(CompileError):
+                load_scs(self.deck(tran='tran tran stop=1 maxstep=.25 errpreset='+value))
 
     def test_invalid_strobe_settings_fail_in_netlist_with_location(self):
         for controls in ['strobetimes=.1','strobetimes=[.2 .1]','strobetimes=[1.1]',
@@ -83,8 +175,8 @@ class ScsContracts(unittest.TestCase):
                ('Vin (u 0) vsource type=dc dc=[0 1]',''),
                ('Vin (u y) vsource dc=1',''),
                ('Vin (u 0) vsource dc=1','R1 (y 0) resistor r=1k'),
-               ('Vin (u 0) vsource dc=1','opts options iabstol=1p'),
-               ('Vin (u 0) vsource dc=1','bad tran stop=1 maxstep=.1 errpreset=conservative'),
+               ('Vin (u 0) vsource dc=1','opts options mystery=1p'),
+               ('Vin (u 0) vsource dc=1','bad tran stop=1 maxstep=.1 errpreset=unknown'),
                ('Vin (u 0) vsource type=pwl wave=[0 0 .5 0 .5 1 1 1]',''),
                ('Vin (u 0) vsource type=pulse val0=0 val1=1 delay=0 rise=0 fall=.1 width=.1 period=1','')]
         for source,extra in cases:

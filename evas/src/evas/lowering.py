@@ -53,6 +53,24 @@ def lower(expr: Expr, parameters: Callable[[str], float | Expression], nodes: Ma
           validate_decision: Callable[[Expr, Expression], None] | None = None,
           decision_scope: bool = False, *, memo: dict | None = None,
           node_declarations: bool = False) -> Expression:
+    validator = getattr(parameters, "validate_integer_operation", None)
+    depth = getattr(parameters, "integer_operation_depth", 0)
+    if validator is not None:
+        parameters.integer_operation_depth = depth + 1
+    try:
+        value = _lower_checked(expr, parameters, nodes, source, operators, preserve_structure,
+                               decisions, validate_decision, decision_scope,
+                               memo=memo, node_declarations=node_declarations)
+        if validator is not None:
+            validator(expr, value, root=depth == 0 and getattr(parameters, "allow_integer_assignment_root", False))
+        return value
+    finally:
+        if validator is not None:
+            parameters.integer_operation_depth = depth
+
+
+def _lower_checked(expr, parameters, nodes, source, operators, preserve_structure,
+                   decisions, validate_decision, decision_scope, *, memo, node_declarations):
     # Only a caller with the complete declared electrical environment may label
     # a missing voltage node invalid. Closed constant/state contexts stay unknown.
     # This flag changes failure metadata only, never voltage acceptance or IR.
@@ -66,9 +84,11 @@ def lower(expr: Expr, parameters: Callable[[str], float | Expression], nodes: Ma
             value = _lower(expr, parameters, nodes, source, operators, preserve_structure,
                            decisions, validate_decision, decision_scope, memo, node_declarations)
             memo[key] = (expr, value)
-        return memo[key][1]
-    return _lower(expr, parameters, nodes, source, operators, preserve_structure,
-                  decisions, validate_decision, decision_scope, None, node_declarations)
+        value = memo[key][1]
+    else:
+        value = _lower(expr, parameters, nodes, source, operators, preserve_structure,
+                       decisions, validate_decision, decision_scope, None, node_declarations)
+    return value
 
 
 def _lower(expr, parameters, nodes, source, operators, preserve_structure,
@@ -100,10 +120,33 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
         def select(relation, left, right, then_value, else_value):
             return decisions(expr, relation, left, right, then_value, else_value)
         def choose(value, then_value, else_value):
+            def boolean_tree(item):
+                if isinstance(item, Affine):
+                    return not item.terms and item.constant in (0., 1.)
+                return isinstance(item, Select) and boolean_tree(item.then_value) and boolean_tree(item.else_value)
+            if isinstance(value, Select) and boolean_tree(value):
+                # Validate all source arms first, then substitute boolean
+                # leaves. Testing the generated 0/1 tree twice duplicates
+                # every predicate and produces exponential wire expansion.
+                select("gt", value, zero, then_value, else_value)
+                def substitute(item):
+                    if isinstance(item, Affine):
+                        return then_value if item.constant else else_value
+                    return select(item.relation, item.left, item.right,
+                                  substitute(item.then_value), substitute(item.else_value))
+                return substitute(value)
             return select("gt", value, zero, then_value,
                           select("lt", value, zero, then_value, else_value))
+        if expr.op == "abs":
+            return select("ge", values[0], zero, values[0], scale(values[0], -1.))
+        if expr.op in ("min", "max"):
+            return select("le" if expr.op == "min" else "ge", values[0], values[1], values[0], values[1])
         if expr.op in ("<", "<=", ">", ">="):
             return select({"<":"lt", "<=":"le", ">":"gt", ">=":"ge"}[expr.op], values[0], values[1], one, zero)
+        if expr.op in ("==", "!="):
+            yes, no = (one, zero) if expr.op == "==" else (zero, one)
+            return select("le", values[0], values[1],
+                          select("ge", values[0], values[1], yes, no), no)
         if expr.op == "unary!":
             return choose(values[0], zero, one)
         if expr.op == "ternary":
@@ -148,6 +191,10 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
         fail('array index requires scalarization before semantic lowering')
     if expr.op == "array":
         fail("standard array literals are only supported as laplace_nd coefficient lists")
+    if expr.op == "time":
+        if "$abstime" not in nodes:
+            fail("absolute time is unavailable in a constant expression")
+        return Affine(0., (Term(nodes["$abstime"], 1.),))
     if expr.op == "number":
         return Affine(float(expr.value), ())
     if expr.op == "parameter":
@@ -191,8 +238,18 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
                                 {t.node: t.coefficient * factor for t in (a.terms or b.terms)})
             else:
                 result = Binary("multiply", a, b)
-        elif expr.op == "/":
-            if not isinstance(b, Affine) or b.terms or b.constant == 0:
+        elif expr.op in ("/", "%"):
+            integer_arithmetic = getattr(parameters, "integer_arithmetic", None)
+            integer_result = integer_arithmetic(expr, a, b) if integer_arithmetic is not None else None
+            if integer_result is not None:
+                return integer_result
+            if expr.op == "%":
+                fail("modulo requires integer typed operands and a supported constant divisor")
+            if not isinstance(b, Affine) or b.terms:
+                if operators is None:
+                    fail("variable division requires an ordinary analog expression")
+                return Binary("divide", a, b)
+            if b.constant == 0:
                 fail("division requires a nonzero constant denominator")
             # Keep division, rather than multiplication by a reciprocal, on
             # the affine path so its existing rounding behavior is preserved.

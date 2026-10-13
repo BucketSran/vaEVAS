@@ -132,7 +132,7 @@ class EventWriterContracts(unittest.TestCase):
                 kernel=KERNEL,
             )
 
-    def test_cross_block_state_reads_use_structural_dependencies(self):
+    def test_asynchronous_cross_block_reads_and_simultaneous_structural_ambiguity(self):
         cases = [
             ('same_cancel', 'real q;', '@(initial_step) q=3;', 'q', 'q-q'),
             ('same_zero', 'real q;', '@(initial_step) q=3;', 'q', '0*q'),
@@ -142,20 +142,24 @@ class EventWriterContracts(unittest.TestCase):
             ('other_underflow', 'real p,q;', '@(initial_step) p=3; @(initial_step) q=0;', 'p', '(1e-200*1e-200)*p'),
         ]
         for label, declarations, initial, written, rhs in cases:
-            source = model(f'''{initial}
-              @(timer(0.5,0,1e-12)) {written}=7;
-              @(timer(1.0,0,1e-12)) q={rhs};
-              V(y,r)<+q;''', declarations)
-            program = compile_sources({label + '.va': source}, [instance()])
-            with self.subTest(label=label), self.assertRaisesRegex(KernelError, 'unsupported_cross'):
-                transient(
-                    program,
-                    {'u': [[0,0],[1,0]]},
-                    [0,0.5,1.0],
-                    stop=1.0,
-                    max_step=2,
-                    kernel=KERNEL,
-                )
+            for simultaneous in [False, True]:
+                second = 0.5 if simultaneous else 1.0
+                source = model(f"""{initial}
+                  @(timer(0.5,0,1e-12)) {written}=7;
+                  @(timer({second},0,1e-12)) q={rhs};
+                  V(y,r)<+q;""", declarations)
+                program = compile_sources({label + '.va': source}, [instance()])
+                options = dict(stop=1.0, max_step=2, kernel=KERNEL)
+                with self.subTest(label=label, simultaneous=simultaneous):
+                    if simultaneous:
+                        kind = 'event_conflict' if written == 'q' else 'unsupported_cross'
+                        with self.assertRaisesRegex(KernelError, kind):
+                            transient(program, {'u': [[0,0],[1,0]]}, [0,0.5,1], **options)
+                    else:
+                        result = transient(program, {'u': [[0,0],[1,0]]}, [0,0.5,1], **options)
+                        index = result['nodes'].index('y')
+                        self.assertEqual(result['solutions'][-1]['voltages'][index], 0)
+
 
 
 if __name__ == '__main__':

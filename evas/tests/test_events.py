@@ -36,6 +36,22 @@ def execute_event(source=COUNTER, *, instances=None, sources=None, times=None,
 
 
 class EventContracts(unittest.TestCase):
+    def test_event_state_defaults_to_zero_without_explicit_initial_step(self):
+        text = model('@(cross(V(u,r)-0.5,1)) n=n+1; V(y,r)<+n;', 'integer n;')
+        result = execute_event(text)
+        self.assertEqual(result['transient']['states'], [[0],[0],[1],[1],[2],[2]])
+        self.assertEqual([event['after'] for event in result['transient']['events']], [[1],[2]])
+        y = result['nodes'].index('y')
+        self.assertEqual([row['voltages'][y] for row in result['solutions']], [0,0,1,1,2,2])
+
+    def test_repeated_initial_writes_preserve_procedural_order(self):
+        text = model('''@(initial_step) begin n=0; n=1; n=n+2; end
+            @(cross(V(u,r)-0.5,1)) n=n+1; V(y,r)<+n;''', 'integer n;')
+        result = execute_event(text)
+        self.assertEqual(result['transient']['states'], [[3],[3],[4],[4],[5],[5]])
+        y = result['nodes'].index('y')
+        self.assertEqual([row['voltages'][y] for row in result['solutions']], [3,3,4,4,5,5])
+
     def test_voltage_tolerance_aliases_preserve_event_trace(self):
         program = compile_event()
         sources = {'u': [[0,.4],[1e-6,.6],[2e-6,.4],[3e-6,.6]]}
@@ -212,11 +228,9 @@ class EventContracts(unittest.TestCase):
 
 
 class EventRejections(unittest.TestCase):
-    def test_frontend_rejects_uninitialized_nonconstant_init_and_unsupported_events(self):
+    def test_frontend_rejects_nonconstant_init_and_unsupported_events(self):
         bodies = [
-            ('integer n;','@(cross(V(u),1)) n=n+1; V(y)<+n;'),
             ('integer n;','@(initial_step) n=V(u); V(y)<+n;'),
-            ('integer n;','@(initial_step) begin n=0; n=1; end V(y)<+n;'),
             ('integer n;','@(initial_step) n=0; @(cross(V(u),2)) n=n+1; V(y)<+n;'),
             ('integer n;','@(initial_step) n=0; @(cross(V(u),1,0)) n=n+1; V(y)<+n;'),
             ('integer n;','@(initial_step) n=0; @(timer(V(u))) n=n+1; V(y)<+n;'),
@@ -227,7 +241,7 @@ class EventRejections(unittest.TestCase):
             with self.subTest(body=body), self.assertRaises(CompileError):
                 compile_event(model(body,declarations))
 
-    def test_state_feedback_nonlinear_and_cross_block_state_dependency_rejected(self):
+    def test_state_feedback_nonlinear_and_simultaneous_cross_block_dependency_rejected(self):
         for source in [
             model('@(initial_step) n=0; @(cross(V(y)-0.5,1)) n=n+1; V(y)<+V(u)+n;','integer n;'),
             model('''@(initial_step) n=0; @(cross(V(u)-0.5,1)) n=n+1;
@@ -235,7 +249,7 @@ class EventRejections(unittest.TestCase):
             model('@(initial_step) n=0; @(cross(V(u),1)) n=n+1; V(y)<+V(u)*V(u)+n;','integer n;'),
             model('''@(initial_step) begin n=0; m=0; end
               @(cross(V(u)-0.5,1)) n=m+1;
-              @(cross(V(u)-0.5,-1)) m=n+1; V(y)<+n+m;''','integer n,m;'),
+              @(cross(V(u)-0.5,1)) m=n+1; V(y)<+n+m;''','integer n,m;'),
         ]:
             with self.subTest(source=source), self.assertRaises((CompileError,KernelError)):
                 execute_event(source)

@@ -54,7 +54,9 @@ pub(crate) fn integral_dependency_edges(
     owner: &str,
 ) -> Result<DependencySets, Error> {
     match expr {
-        Expression::Add { left, right } | Expression::Multiply { left, right } => {
+        Expression::Add { left, right }
+        | Expression::Multiply { left, right }
+        | Expression::Divide { left, right } => {
             let (mut n, mut s, mut o) = integral_dependency_edges(left, program, owner)?;
             let (nn, ss, oo) = integral_dependency_edges(right, program, owner)?;
             n.extend(nn);
@@ -63,6 +65,22 @@ pub(crate) fn integral_dependency_edges(
             Ok((n, s, o))
         }
         Expression::Power { base, .. } => integral_dependency_edges(base, program, owner),
+        Expression::Select {
+            left,
+            right,
+            then_value,
+            else_value,
+            ..
+        } => {
+            let (mut n, mut s, mut o) = (BTreeSet::new(), BTreeSet::new(), BTreeSet::new());
+            for child in [left, right, then_value, else_value] {
+                let (nn, ss, oo) = integral_dependency_edges(child, program, owner)?;
+                n.extend(nn);
+                s.extend(ss);
+                o.extend(oo);
+            }
+            Ok((n, s, o))
+        }
         _ => {
             let a = crate::events::affine(expr, program, owner)?;
             Ok((
@@ -94,7 +112,10 @@ mod exact_affine;
 mod history;
 #[path = "continuous_runtime.rs"]
 mod runtime;
+#[path = "continuous_select.rs"]
+mod selection;
 pub(crate) use runtime::Continuous;
+pub(crate) use selection::{resolve_selection, validate as validate_selection};
 
 #[derive(Clone)]
 pub(crate) struct LinearContinuous {
@@ -120,6 +141,7 @@ struct Context {
     program: Program,
     trajectory: Trajectory,
     driven: Vec<String>,
+    force_integrals: bool,
 }
 
 fn local_context(context: &Arc<Context>, horizon: f64) -> Arc<Context> {
@@ -133,6 +155,7 @@ fn local_context(context: &Arc<Context>, horizon: f64) -> Arc<Context> {
         program: context.program.clone(),
         trajectory,
         driven: context.driven.clone(),
+        force_integrals: context.force_integrals,
     })
 }
 
@@ -190,6 +213,7 @@ impl LinearContinuous {
                 program: program.clone(),
                 trajectory: trajectory.clone(),
                 driven: driven.to_vec(),
+                force_integrals: false,
             }),
             states.iter().copied().map(I::point).collect(),
             0.0,
@@ -203,10 +227,24 @@ impl LinearContinuous {
         start: f64,
         restart: Option<Vec<I>>,
     ) -> Result<Option<Self>, Error> {
+        if selection::needed(&context.program) {
+            return selection::build(context, parameters, start, restart);
+        }
         let (program, trajectory, driven) =
             (&context.program, &context.trajectory, &context.driven);
         let driven_nodes = driven_node_indices(program, driven)?;
-        let network_ids = select_network_operators(program, &driven_nodes)?;
+        let mut network_ids = select_network_operators(program, &driven_nodes)?;
+        if context.force_integrals {
+            network_ids.extend(
+                program
+                    .operators
+                    .iter()
+                    .enumerate()
+                    .filter_map(|(i, o)| matches!(o, OperatorSpec::Idt { .. }).then_some(i)),
+            );
+            network_ids.sort_unstable();
+            network_ids.dedup();
+        }
         if network_ids.is_empty() {
             return Ok(None);
         }
@@ -574,7 +612,9 @@ fn history_event_dependency(
 ) -> bool {
     match expr {
         Expression::State { .. } => true,
-        Expression::Add { left, right } | Expression::Multiply { left, right } => {
+        Expression::Add { left, right }
+        | Expression::Multiply { left, right }
+        | Expression::Divide { left, right } => {
             history_event_dependency(left, program, origin, driven, seen)
                 || history_event_dependency(right, program, origin, driven, seen)
         }
@@ -605,7 +645,12 @@ fn history_event_dependency(
                 if matches!(spec, OperatorSpec::Idt { reset: Some(_), .. }) {
                     return true;
                 }
-                if let Some((input, origin)) = continuous_operator_input(spec) {
+                if let Some((input, origin)) =
+                    continuous_operator_input(spec).or_else(|| match spec {
+                        OperatorSpec::Math { input, origin, .. } => Some((input, origin)),
+                        _ => None,
+                    })
+                {
                     if history_event_dependency(input, program, origin, driven, seen) {
                         return true;
                     }
@@ -1614,6 +1659,7 @@ mod tests {
 
     fn program_with_idt(input: Expression, ic: f64) -> Program {
         Program {
+            step_bounds: vec![],
             schema_version: SCHEMA_VERSION,
             nodes: vec!["0".to_string(), "y".to_string()],
             contributions: vec![Contribution {
@@ -1772,6 +1818,7 @@ mod tests {
     }
     fn ramp_filter_program(tau: f64) -> Program {
         Program {
+            step_bounds: vec![],
             schema_version: SCHEMA_VERSION,
             nodes: vec!["0".to_string(), "u".to_string(), "y".to_string()],
             contributions: vec![Contribution {
@@ -1910,6 +1957,7 @@ mod tests {
     #[test]
     fn cancelled_internal_relay_enters_continuous_network_as_exact_zero() {
         let program = Program {
+            step_bounds: vec![],
             schema_version: SCHEMA_VERSION,
             nodes: vec!["0".to_string(), "z".to_string(), "y".to_string()],
             contributions: vec![Contribution {
@@ -1945,6 +1993,7 @@ mod tests {
     #[test]
     fn cancelled_internal_relay_keeps_event_history_dependency() {
         let program = Program {
+            step_bounds: vec![],
             schema_version: SCHEMA_VERSION,
             nodes: vec!["0".to_string(), "z".to_string(), "y".to_string()],
             contributions: vec![
@@ -1997,6 +2046,7 @@ mod tests {
     #[test]
     fn selection_closes_through_voltage_relation_producers() {
         let program = Program {
+            step_bounds: vec![],
             schema_version: SCHEMA_VERSION,
             nodes: vec![
                 "0".to_string(),

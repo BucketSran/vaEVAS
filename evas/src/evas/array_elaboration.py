@@ -3,7 +3,7 @@ from dataclasses import replace
 from .errors import CompileError
 from .ir import Affine
 from .lowering import lower
-from .syntax import Assignment, Conditional, Expr
+from .syntax import Assignment, Conditional, Expr, Display
 from .elaboration import unroll_loops
 
 ARRAY_BUDGET = 4096
@@ -69,6 +69,8 @@ def scalarize_arrays(model, parameter):
             if isinstance(statement, Conditional):
                 result.append(replace(statement, left=expression(statement.left), right=expression(statement.right),
                                       then_body=body(statement.then_body), else_body=body(statement.else_body)))
+            elif isinstance(statement, Display):
+                result.append(replace(statement, args=tuple(expression(arg) for arg in statement.args)))
             elif isinstance(statement, Assignment):
                 name = statement.name
                 if statement.index is not None:

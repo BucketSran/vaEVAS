@@ -349,6 +349,7 @@ fn prepare_root_window_impl(
     frozen.bounds = base.event_bounds(time, time_bounds)?;
     let inputs = trajectory.values(time);
     let input_bounds = trajectory.range(time_bounds)?.0;
+    let observation_inputs = trajectory.value_bounds(time);
     let settle = |values: &[f64], bounds: &[I]| {
         if time_bounds.lo == time_bounds.hi {
             crate::settlement::prepare(
@@ -366,6 +367,7 @@ fn prepare_root_window_impl(
                 model,
                 (events, fired_leaves),
                 (&inputs, &input_bounds),
+                &observation_inputs,
                 &accepted.states,
                 values,
                 old_bounds,
@@ -529,6 +531,12 @@ fn prepare_batch_until(
         .collect();
     let next = prepare_root_window(model, trajectory, accepted, moment, &blocks)?;
     next.operators.check_deadline_order(event_time, None)?;
+    let selection = model.conditions.select_at_roots(
+        &blocks, &trajectory.value_bounds(event_time), ids, &accepted.state_bounds,
+    )?;
+    let (_, candidate_displays) = model.apply_with_displays(
+        &selection, &next.solution.voltages, &accepted.states, event_time,
+    )?;
     let mut records = Vec::new();
     for id in blocks {
         let mut fired = Vec::new();
@@ -612,6 +620,8 @@ fn prepare_batch_until(
             EventTrigger::Cross { .. } => ("cross", fired[0].guard_value),
             EventTrigger::Timer { .. } | EventTrigger::HeldTimer { .. } => ("timer", None),
             EventTrigger::Or { .. } => ("or", None),
+            EventTrigger::FinalStep { .. } => ("final_step", None),
+            EventTrigger::InitialStep { .. } => ("initial_step", None),
         };
         if kind != "or" {
             fired.clear();
@@ -627,6 +637,7 @@ fn prepare_batch_until(
             fired_triggers: fired,
             before: accepted.states.clone(),
             after: next.states.clone(),
+            display_records: candidate_displays.iter().filter(|r| r.event == id).cloned().collect(),
         });
     }
     Ok((next, records))
@@ -706,7 +717,8 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
             "transient execution cannot also contain static samples",
         ));
     }
-    let transient = request.transient.unwrap();
+    let mut transient = request.transient.unwrap();
+    transient.max_step = crate::step_bounds::history_cap(&request.program, transient.max_step)?;
     if request.program.states.is_empty()
         && request.program.events.is_empty()
         && request.program.operators.is_empty()
@@ -737,10 +749,12 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
             .all(|c| !crate::analog::has_select(&c.rhs))
         && (crate::continuous::needs_polynomial_feedthrough(&request.program)
             || request.program.contributions.iter().any(|c| {
-                crate::events::affine(&c.rhs, &request.program, &c.origin.instance)
+                crate::events::contribution_affine(&c.rhs, &request.program, &c.origin.instance)
                     .is_err_and(|error| error.kind == "unsupported_transient")
             }))
     {
+        transient.max_step =
+            crate::step_bounds::constant_cap(&request.program, transient.max_step)?;
         return crate::continuous::run_implicit(
             request.program,
             request.driven,
@@ -752,6 +766,7 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
         crate::input_clamp::lower(&mut request.program, &mut request.driven, &mut trajectory)?;
 
     let model = EventModel::new(request.program, request.driven, request.tolerances)?;
+    let step_bounds = crate::step_bounds::Bounds::new(&model.program)?;
     let initial = model.initial();
     let relocalize = model.relocalized_guards.iter().any(|&held| held);
     let history_calendar = model.guard_operators.iter().any(|ops| !ops.is_empty());
@@ -792,7 +807,7 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
         )?;
         (operators, crossings)
     };
-    let circuit = model.circuit_with(&initial, &operators.values(0.0)?)?;
+    let circuit = model.circuit_at(&initial, &operators.values(0.0)?, &trajectory.value_bounds(0.0))?;
     let mut accepted = Frame {
         time: 0.0,
         solution: circuit.solve(&trajectory.values(0.0))?,
@@ -813,6 +828,7 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
     accepted.state_bounds = state_bounds;
     crate::observation::retain_bounds(&mut accepted.solution, node_bounds);
     let mut trace = TransientTrace {
+        display_records: Vec::new(),
         times: trajectory.config.output_times.clone(),
         state_names: model
             .program
@@ -834,6 +850,23 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
         records: Vec::new(),
         outputs: Vec::new(),
     };
+    // Passive measurement initial bodies run before ordinary timer(0) blocks.
+    let initials: Vec<_> = model.triggers.iter().enumerate()
+        .filter_map(|(index, leaf)| matches!(leaf.trigger, EventTrigger::InitialStep { .. }).then_some(index))
+        .collect();
+    if !initials.is_empty() {
+        if initials.iter().any(|&id| {
+            let owner = &model.program.events[model.triggers[id].event].origin.instance;
+            model.program.contributions.iter().any(|c| &c.origin.instance == owner)
+        }) {
+            return Err(Error::new("unsupported_initial_event", "initial display requires a passive measurement model"));
+        }
+        let (frame, records) = prepare_batch_until(&model, &trajectory, &controller.accepted,
+            EventMoment { representative: 0.0, observation: I::point(0.0),
+                fired_roots: &initials, prediction_end: trajectory.config.stop })?;
+        controller.commit_events(frame, records, 0);
+        if relocalize { crossings = schedule_held(&model, &trajectory, &controller.accepted.state_bounds)?; }
+    }
     let mut preflighted_event = None;
     loop {
         if !history_calendar && !relocalize && preflighted_event != Some(controller.event) {
@@ -904,8 +937,21 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
             ));
         }
         let accepted_start = controller.accepted.time;
-        let mut time =
-            (controller.accepted.time + trajectory.config.max_step).min(trajectory.knots[knot]);
+        let proposed_time = if model.program.step_bounds.is_empty() {
+            controller.accepted.time + trajectory.config.max_step
+        } else {
+            step_bounds.next_time(
+                controller.accepted.time,
+                trajectory.config.max_step,
+                &controller.accepted.solution,
+                &controller.accepted.state_bounds,
+                &controller
+                    .accepted
+                    .operators
+                    .bounds(controller.accepted.time)?,
+            )?
+        };
+        let mut time = proposed_time.min(trajectory.knots[knot]);
         if output < trace.times.len() {
             time = time.min(trace.times[output]);
         }
@@ -999,13 +1045,18 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                 )?;
                 controller.accepted = next;
             } else {
-                // Without history operators or an event, the state and matrix
-                // are unchanged. Reuse the accepted factorization, but certify
-                // the same PWL/state bounds as the full candidate path before
-                // committing any observation or time advance.
+                // Held state is unchanged. Source-selected contributions may
+                // change their equation coefficients without a state event.
+                // Certify the selected equations before committing this frame;
+                // reuse a factor only when its coefficients still agree.
                 let inputs = trajectory.values(time);
                 let input_bounds = trajectory.value_bounds(time);
-                let mut solution = controller.accepted.circuit.solve(&inputs)?;
+                let mut selected_circuit = if model.program.contributions.iter().any(|c| crate::analog::has_select(&c.rhs)) {
+                    let mut circuit = model.circuit_at(&controller.accepted.states, &[], &input_bounds)?;
+                    circuit.reuse_affine_factor_from(&controller.accepted.circuit);
+                    Some(circuit)
+                } else { None };
+                let mut solution = selected_circuit.as_mut().unwrap_or(&mut controller.accepted.circuit).solve(&inputs)?;
                 let (state_bounds, node_bounds) = model.certify_observation(
                     &model.conditions.select(&[], &input_bounds)?,
                     &input_bounds,
@@ -1017,6 +1068,7 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                 crate::observation::retain_bounds(&mut solution, node_bounds);
                 controller.accepted.solution = solution;
                 controller.accepted.state_bounds = state_bounds;
+                if let Some(circuit) = selected_circuit { controller.accepted.circuit = circuit; }
                 controller.accepted.time = time;
             }
         }
@@ -1033,6 +1085,18 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
             knot += 1;
         }
     }
+    // Lifecycle final blocks execute after every ordinary event at stop, even
+    // when their source declaration precedes a timer firing at the same time.
+    let finals: Vec<_> = model.triggers.iter().enumerate()
+        .filter_map(|(index, leaf)| matches!(leaf.trigger, EventTrigger::FinalStep { .. }).then_some(index))
+        .collect();
+    if !finals.is_empty() {
+        let (frame, records) = prepare_batch_until(&model, &trajectory, &controller.accepted,
+            EventMoment { representative: trajectory.config.stop, observation: I::point(trajectory.config.stop),
+                fired_roots: &finals, prediction_end: trajectory.config.stop })?;
+        controller.commit_events(frame, records, controller.event);
+    }
+    trace.display_records = controller.records.iter().flat_map(|r| r.display_records.iter().cloned()).collect();
     trace.events = controller.records;
     // Internal source-derived nodes are mathematical lowering details, never
     // user inputs/outputs or a change to the external serialized IR contract.
@@ -1076,10 +1140,15 @@ fn run_stateless_transient(
     let trajectory = Trajectory::new(transient, driven.len())?;
     let times = trajectory.config.output_times.clone();
     let nodes = program.nodes.clone();
+    let bounded = !program.step_bounds.is_empty();
+    let step_bounds = crate::step_bounds::Bounds::new(&program)?;
     let mut circuit = crate::analog::Analog::new(program, driven, tolerances.clone())?;
     let mut solutions = Vec::new();
     let mut previous: Option<Solution> = None;
-    for (sample, &time) in times.iter().enumerate() {
+    let mut time = if bounded { 0. } else { times[0] };
+    let mut sample = 0;
+    let mut accepted_steps = 0;
+    loop {
         let solution = circuit
             .solve(
                 &trajectory.values(time),
@@ -1092,8 +1161,47 @@ fn run_stateless_transient(
                 error.sample = Some(sample);
                 error
             })?;
-        previous = Some(solution.clone());
-        solutions.push(solution);
+        if sample < times.len() && time == times[sample] {
+            solutions.push(solution.clone());
+            sample += 1;
+        }
+        if bounded {
+            if time == trajectory.config.stop {
+                break;
+            }
+            if accepted_steps == 1_000_000 {
+                return Err(Error::new(
+                    "step_budget",
+                    "bounded stateless execution exceeded 1,000,000 steps",
+                ));
+            }
+            let next_knot = trajectory
+                .knots
+                .iter()
+                .copied()
+                .find(|&t| t > time)
+                .unwrap_or(trajectory.config.stop);
+            let mut next = step_bounds
+                .next_time(time, trajectory.config.max_step, &solution, &[], &[])?
+                .min(next_knot);
+            if sample < times.len() {
+                next = next.min(times[sample]);
+            }
+            if next <= time {
+                return Err(Error::new(
+                    "event_resolution",
+                    "$bound_step cannot advance time",
+                ));
+            }
+            time = next;
+            accepted_steps += 1;
+        } else {
+            if sample == times.len() {
+                break;
+            }
+            time = times[sample];
+        }
+        previous = Some(solution);
     }
     let sample_count = solutions.len();
     let observation_evidence = crate::observation::evidence(
@@ -1102,7 +1210,7 @@ fn run_stateless_transient(
         &trajectory.config,
         &tolerances,
         vec!["stateless_working_point"; sample_count],
-        false,
+        bounded,
         (times.first() == Some(&0.0)).then_some(true),
     );
     Ok(Response {
@@ -1114,13 +1222,13 @@ fn run_stateless_transient(
         nodes,
         solutions,
         transient: Some(TransientTrace {
+            display_records: Vec::new(),
             times,
             state_names: Vec::new(),
             states: vec![Vec::new(); sample_count],
             events: Vec::new(),
-            // Stateless observations solve working points; no physical frame
-            // or integration step is accepted on this path.
-            accepted_steps: 0,
+            // A model bound advances working points; this path has no history.
+            accepted_steps,
             discarded_trials: 0,
         }),
     })

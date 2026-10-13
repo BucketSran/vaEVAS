@@ -80,7 +80,7 @@ class ObservationEvidence(unittest.TestCase):
         # publishes both requested phases after closing the overlapping cluster.
         program=compile_sources({'test.va':model(
             '@(initial_step) begin a=0; b=0; end @(timer(0.3,0,1e-6)) a=1; '
-            '@(timer(0.1,0.2,1e-6)) b=b+1; V(y,r)<+a+10*b;', 'integer a,b;')},[instance()])
+            '@(timer(0.1,0.2,1e-6)) b=b+1; V(y,r)<+1.0*a+10.0*b;', 'integer a,b;')},[instance()])
         times=[0,0.3,0.30000000000000004,1]
         result=transient(program,{'u':[[0,0],[1,0]]},times,stop=1,max_step=1,kernel=KERNEL)
         evidence=result['observation_evidence']

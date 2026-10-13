@@ -23,7 +23,7 @@ class InitializedEventComposition(unittest.TestCase):
             f'@(timer({fixed!r},0,1e-12)) k=k+1; '
             '@(cross(V(u,r)-0.5000000000000001,1,1e-12,1e-9)) m=m+1; '
             '@(timer(due,0,1e-12)) h=h+1; '
-            'V(y,r)<+n+10*k+100*m+1000*h; '
+            'V(y,r)<+1.0*n+10.0*k+100.0*m+1000.0*h; '
             'V(z,r)<+transition(n,0,0.125,0.125);')
         declarations = 'integer n,m,k,h; real due; electrical z;'
         program = compile_model(body, declarations)
@@ -94,7 +94,7 @@ class InitializedEventComposition(unittest.TestCase):
                 '@(timer(0.5,0,1e-12)) k=k+1; '
                 'V(z,r)<+V(u,r); '
                 f'@(cross(V(z,r)-{threshold!r},1,1e-12,1e-9)) m=m+1; '
-                'V(y,r)<+n+m+k;', 'integer n,m,k; electrical z;')
+                'V(y,r)<+1.0*n+1.0*m+1.0*k;', 'integer n,m,k; electrical z;')
             for times in [[0, 1], [0, .5, math.nextafter(.5, math.inf), 1]]:
                 with self.assertRaises(KernelError) as caught:
                     run(program, {'u': [[0,.1],[1,.9]]}, times, stop=1)
@@ -141,7 +141,7 @@ class InitializedEventComposition(unittest.TestCase):
                 ' end @(cross(V(u,r)-0.5,1,1e-9,1e-9)) n0=n0+1; '
                 '@(timer(0.5,0,1e-9)) n1=n1+1; ' +
                 ''.join(f'@(timer(0.5000000000000001,0,1e-9)) {name}={name}+1; ' for name in names[2:]) +
-                'V(y,r)<+' + '+'.join(names) + ';')
+                'V(y,r)<+' + '+'.join('1.0*'+name for name in names) + ';')
         result = run(compile_model(body, 'integer ' + ','.join(names) + ';'),
                      {'u': [[0,.1],[1,.9]]}, [0,.5,.5000000000000001,1], stop=1)
         self.assertEqual(values(result), [0,2,72,72])

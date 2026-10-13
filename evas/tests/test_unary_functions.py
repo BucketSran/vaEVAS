@@ -33,8 +33,19 @@ class UnaryFunctions(unittest.TestCase):
         self.assertEqual(bindings, ['one'])
 
     def test_half_power_preserves_conditional_admission(self):
-        for body in ['if (V(u,r)>0) q=pow(V(u,r),0.5); else q=0; V(y,r)<+q;',
-                     'V(y,r)<+(V(u,r)>0 ? pow(V(u,r),0.5) : 0);']:
+        for expression in ('pow(V(u,r),0.5)', 'sqrt(V(u,r))'):
+            body = f'if (V(u,r)>0) q={expression}; else q=0; V(y,r)<+q;'
+            program = compile_sources({'m.va':model(body,'real q;')},
+                [Instance('dut','m',dict(u='u',y='y',r='0'))])
+            for value, expected in ((4.,2.), (.25,.5), (0.,0.)):
+                with self.subTest(expression=expression,value=value):
+                    result=transient(program,{'u':[[0,value],[1,value]]},[0,.5,1],
+                                     stop=1,max_step=1,kernel=KERNEL)
+                    index=result['nodes'].index('y')
+                    self.assertEqual([row['voltages'][index] for row in result['solutions']],[expected]*3)
+        for body in ['V(y,r)<+(V(u,r)>0 ? pow(V(u,r),0.5) : 0);',
+                     'if(V(u,r)>0) q=pow(idt(V(u,r),0),0.5); else q=0; V(y,r)<+q;',
+                     'if(V(u,r)>0) q=pow(V(u,r),1.5); else q=0; V(y,r)<+q;']:
             with self.subTest(body=body), self.assertRaises(CompileError):
                 compile_sources({'m.va':model(body,'real q;')},
                     [Instance('dut','m',dict(u='u',y='y',r='0'))])

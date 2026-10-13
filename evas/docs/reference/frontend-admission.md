@@ -44,8 +44,10 @@ nature 的 abstol 也不改变 manifest 的求解容差。
 `cos`、`exp`、`ln`、`sqrt` 接受受限连续表达式。它们是保留的数学函数名，
 不能声明为用户函数、参数、节点或变量。负平方根、非正对数及认证域外的请求明确拒绝；
 具体定义域与数值认证见[纯数学函数](../math/operators.md#elementary-functions)。
+当前条件分支不能屏蔽数学算子的定义域检查。例如 `if (V(u)>0) q=sqrt(V(u)); else q=0;`
+在负输入下仍会拒绝，即使该时刻选择了 `else`。这类分支需要后续运行时支持。
 
-模型按以下绑定规则生成 IR19。支持总览见[四后端支持范围](../COMPARISON.md)；本节定义具体编译约束。
+模型按以下绑定规则生成 IR21。支持总览见[四后端支持范围](../COMPARISON.md)；本节定义具体编译约束。
 
 - `parameter integer` 首批接受精确的有符号 32 位值；非整数实数的隐式转换仍明确拒绝。
   涉及 integer 参数的整数除法和溢出表达式也拒绝，避免把整数语义静默换成实数运算；
@@ -60,8 +62,9 @@ nature 的 abstol 也不改变 manifest 的求解容差。
   electrical 与方向声明必须有相同范围。含向量模块展开后的节点上限为 4096，动态位选、切片、拼接仍拒绝。
 - `initial_step or initial_step("dc")` 等只含初始化叶、且至少含一个无分析限定叶的 OR，
   归并为一次初始化体。重复叶不重复执行，也不生成零时刻 timer。
-  纯初始化中的 real 还接受[实际 driven 输入比较](../math/events.md#input-initialization)，
-  每个状态仍须初始化一次；常量初值保持原规则。
+  纯初始化中的 real/integer 还接受[实际 driven 输入比较](../math/events.md#input-initialization)，
+  初始化语句按源码顺序执行，后续语句读取先前写入；没有显式初值的持久状态从零开始。
+  受限条件、逻辑与三元表达式可以组合已接受的初值。
   另支持一个无分析限定 `initial_step` 与 cross 叶子的共享常量赋值体：初始化安装一次，
   后续 cross 触发时执行同一体。赋值须无条件，所有状态合计初始化须唯一、完整且为实例常量。
   混合体中的 timer、多个或分析限定初始化叶，以及电压/状态/历史相关初值仍拒绝。
@@ -84,11 +87,29 @@ nature 的 abstol 也不改变 manifest 的求解容差。
   具体范围及迁移见本页的编译准入规则。
   语法位置、包含路径及宏展开路径会进入 Origin；支持边界见[预处理契约](../../validation/ANALOG_CONDITIONS_CONTRACT.md#preprocessing)。
 - `parameter real` 默认值、实例覆盖以及参数依赖，有限实数与 SI 后缀。
-- 一个 `analog begin ... end`，含无条件 `V(p)` / `V(p,n)` 贡献，以及受限事件块。
-- 接受无状态电压表达式中的 `< <= > >= && || ! ?:`，比较返回 0/1，有限非零值为真。
+- 一个 `analog begin ... end`，含 `V(p)` / `V(p,n)` 贡献及受限事件块。条件贡献要求每条电压支路在所有路径都持续存在；
+  可能断开的支路仍拒绝，见[普通条件契约](../../validation/ANALOG_CONDITIONS_CONTRACT.md)。
+- 接受无状态电压表达式中的 `< <= > >= == != && || ! ?:`，比较返回 0/1，有限非零值为真。
   所有分支先检查支持范围，数值认证只访问选中路径。谓词限外部输入仿射电压，分支限分段仿射；
-  历史、事件状态、输出反馈谓词与非线性结构仍拒绝。见[普通条件契约](../../validation/ANALOG_CONDITIONS_CONTRACT.md)。
-- 表达式支持括号、单目正负、加减、乘法及非零常数分母。
+  输出反馈与新历史调用仍拒绝；持久状态谓词及连续选择的范围见[事件条件](../math/events.md#event-conditions)与[连续选择](../math/continuous.md#selected-flow)。见[普通条件契约](../../validation/ANALOG_CONDITIONS_CONTRACT.md)。
+- `abs(x)`、`min(a,b)`、`max(a,b)` 降低为同一受限比较选择，数值与结构认证沿用所在上下文的谓词规则。
+  这不新增任意内部电压反馈或历史谓词支持。
+- 标量 `case` 使用精确相等和源码首个匹配分支，最多 16 个非 default 标签，至多一个 default。
+  互异数值字面量标签采用平衡比较树；参数标签或重叠标签保留首匹配顺序，仍检查表达式展开预算。
+  独立回归见 [case 选择](../../tests/test_case_statements.py)。
+- 普通 analog 体接受 [`$bound_step(expr)`](../math/events.md#bound-step)，按顺序局部环境记录请求。
+  初始化体、事件体及新历史调用仍拒绝；具体运行路径和动态值限制见链接契约。
+- 表达式支持括号、单目正负、加减、乘法和除法。变量分母的连续认证见[有理连续流](../math/continuous.md#selected-flow)。
+- 普通局部 `integer` 赋值要求所有路径可证明为 signed 32-bit 整数。整数 `/` 向零截断，
+  `%` 满足 `a=(a/b)*b+a%b`；分母须为非零整数常量，有限值域最多展开 256 个商区间。
+  无法界定的递归状态值域不能用于上述商区间展开；溢出和隐含 real 到 integer 转换拒绝。
+  每个整型中间算术须单独证明 signed 32-bit 范围。未知状态值域时，只有赋值根表达式可交内核检查最终值，
+  因此 `n=n+1` 可保留，但 `(n+1)-1`、`(n+1)>0` 的隐藏中间值无法证明时拒绝。
+  整型贡献 `n+m+k` 也可能因中间范围拒绝；显式 `1.0*n` 提升为 real 后沿用实数规则。
+  `n/2.0` 使用实数除法；
+  返回 real 的函数即使返回 `7`，`f(0)/2` 也为 3.5。
+- 事件中的 `$display` 与受限被动初始化、`final_step` 输出见[记录契约](../math/events.md#display-records)。
+  `$abstime` 为内核驱动的合成时间节点，不再创建积分历史；调用者不能覆盖它。
 - `pow(base, exponent)` 的指数须在实例绑定后为 **1–32 的整数常数**，支持负数、零和正数底数；
   该界限是本内核的实现范围，不声称覆盖完整 `pow`。另接受常数指数 `0.5`，编译为 `sqrt`。其他分数、变量、零和负指数仍拒绝。
   数学函数的语言来源见 [LRM 2.4 数学函数表](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)。
@@ -108,6 +129,11 @@ nature 的 abstol 也不改变 manifest 的求解容差。
 的静态 genvar 赋值循环，初值仍须是实例常量并唯一初始化每个持久状态，见
 [初始化循环契约](../../validation/INITIAL_STATIC_LOOP_CONTRACT.md)。模拟条件下的事件及
 循环包围 `initial_step` 事件仍未支持。数学与 ZOOM 对照见[静态循环事件](../math/events.md#static-loop-events)。
+IR21 还接受声明为标量 `integer` 的固定边界 `for`，初始化、终止边界和步长均须为实例常量整数。
+编译展开仍保留控制变量每轮的赋值、退出值及零次循环的初始值。例如
+`for(i=0;i<3;i=i+1)` 退出后 i=3，`for(i=2;i<2;i=i+1)` 不执行循环体但 i=2。
+循环体不得写自己的控制变量，运行期状态边界及动态数组下标仍拒绝。
+独立回归见 [整数循环](../../tests/test_integer_loops.py)。
 总迭代与展开语句各限 4096，事件及其体内叶子分别计数；每个展开的历史调用分别占用一个算子槽。
 也支持一维 real/integer 变量数组：实例常量范围和静态下标，总元素数限 4096，
 数组元素在绑定后展开为独立标量。动态下标、多维及参数数组仍缺。

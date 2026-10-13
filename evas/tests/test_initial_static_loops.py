@@ -80,8 +80,7 @@ class InitialStaticLoops(unittest.TestCase):
             self.assertEqual(result['transient']['events'][0]['before'],[])
             self.assertEqual(result['transient']['events'][0]['after'],[])
         self.assertEqual(results[0]['solutions'],results[1]['solutions'])
-        with self.assertRaisesRegex(CompileError,'not assigned before use'):
-            compiled(prefix+'for(i=0;i<0;i=i+1) q[i]=i; V(y,r)<+q[0];')
+        self.assertEqual(values(run(compiled(prefix+'for(i=0;i<0;i=i+1) q[i]=i; V(y,r)<+q[0];'))), [0]*5)
 
     def test_explicit_element_rewrite_has_the_same_public_platforms_and_state_changes(self):
         trigger='@(initial_step or cross(V(u,r)-0.5,1,1e-12,1e-9)) '
@@ -152,14 +151,16 @@ class InitialStaticLoops(unittest.TestCase):
             self.assertEqual(result['transient']['events'][0]['before'],[0,1])
             self.assertEqual(result['transient']['events'][0]['after'],[0,1])
 
-    def test_repeated_or_missing_element_initialization_remains_rejected(self):
-        for body in (
-            '@(initial_step) for(i=0;i<2;i=i+1) begin q[i]=i; q[0]=4; end',
-            '@(initial_step) for(i=0;i<2;i=i+1) q[0]=i;',
-            '@(initial_step) for(i=0;i<1;i=i+1) q[i]=i; @(timer(0.25)) q[1]=5;',
+    def test_repeated_and_missing_element_initialization_uses_order_and_zero(self):
+        for body, expected, initial in (
+            ('@(initial_step) for(i=0;i<2;i=i+1) begin q[i]=i; q[0]=4; end', [5]*5, [4,1]),
+            ('@(initial_step) for(i=0;i<2;i=i+1) q[0]=i;', [1]*5, [1,0]),
+            ('@(initial_step) for(i=0;i<1;i=i+1) q[i]=i; @(timer(0.25)) q[1]=5;', [0,0,5,5,5], [0,0]),
         ):
-            with self.subTest(body=body),self.assertRaises(CompileError):
-                compiled(body+' V(y,r)<+q[0]+q[1];')
+            with self.subTest(body=body):
+                result = run(compiled(body+' V(y,r)<+q[0]+q[1];'))
+                self.assertEqual(values(result), expected)
+                self.assertEqual(result['transient']['states'][0], initial)
 
     def test_initial_loop_admission_does_not_enable_conditions_or_dynamic_indices(self):
         for body in ('if(V(u,r)>0) q[i]=i;', 'q[V(u,r)]=i;', 'q[i]=V(u,r);',

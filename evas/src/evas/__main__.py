@@ -3,6 +3,7 @@
 import json
 from pathlib import Path
 import sys
+import warnings
 
 from . import CompileError, Instance, KernelError, compile_sources, solve, transient
 from .runtime import DEFAULT_TIMEOUT
@@ -19,6 +20,7 @@ def main():
     parser.add_argument("--kernel", type=Path, help="override the bundled evas-kernel with an explicit executable")
     parser.add_argument("--timeout", type=float, default=None, help=f"kernel execution timeout in seconds (default: {DEFAULT_TIMEOUT})")
     args = parser.parse_args()
+    warning_reports = []
     try:
         if args.action == 'lint':
             if args.kernel is not None or args.timeout is not None:
@@ -29,8 +31,15 @@ def main():
         if args.timeout is None:
             args.timeout = DEFAULT_TIMEOUT
         if args.action == 'simulate':
-            from .scs import simulate_scs
-            result = simulate_scs(args.manifest, kernel=args.kernel.resolve() if args.kernel is not None else None, timeout=args.timeout)
+            from .scs import ScsIgnoredOptionWarning, simulate_scs
+            with warnings.catch_warnings(record=True) as recorded:
+                warnings.simplefilter('always', ScsIgnoredOptionWarning)
+                try:
+                    result = simulate_scs(args.manifest, kernel=args.kernel.resolve() if args.kernel is not None else None, timeout=args.timeout)
+                finally:
+                    warning_reports.extend(w.message.report for w in recorded if isinstance(w.message, ScsIgnoredOptionWarning))
+            if warning_reports:
+                print(json.dumps(dict(warnings=warning_reports), allow_nan=False), file=sys.stderr)
             print(json.dumps(result, indent=2, allow_nan=False))
             return 0
         from .lint import load_manifest
@@ -45,14 +54,17 @@ def main():
             result = solve(program, manifest["driven"], manifest["samples"],
                            kernel=args.kernel.resolve() if args.kernel is not None else None, timeout=args.timeout, **manifest.get("tolerances", {}))
         print(json.dumps(result, indent=2, allow_nan=False))
-    except KernelError as exc:
-        print(json.dumps(exc.diagnostic, allow_nan=False), file=sys.stderr)
-        return 2
-    except CompileError as exc:
-        print(json.dumps(exc.diagnostic, allow_nan=False), file=sys.stderr)
+    except (KernelError, CompileError) as exc:
+        report = dict(exc.diagnostic)
+        if warning_reports:
+            report['warnings'] = warning_reports
+        print(json.dumps(report, allow_nan=False), file=sys.stderr)
         return 2
     except (OSError, ValueError, KeyError, TypeError) as exc:
-        print(json.dumps(diagnostic('input_io' if isinstance(exc, OSError) else 'input_error', str(exc)), allow_nan=False), file=sys.stderr)
+        report = diagnostic('input_io' if isinstance(exc, OSError) else 'input_error', str(exc))
+        if warning_reports:
+            report['warnings'] = warning_reports
+        print(json.dumps(report, allow_nan=False), file=sys.stderr)
         return 2
     return 0
 

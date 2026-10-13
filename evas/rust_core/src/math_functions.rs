@@ -11,9 +11,7 @@ fn domain(message: &str) -> Error {
 
 fn exp_positive(x: f64) -> Result<I, Error> {
     if !x.is_finite() || !(0.0..=512.0).contains(&x) {
-        return Err(domain(
-            "exp requires an argument in the certified range [-512,512]",
-        ));
+        return Err(domain("exp requires a finite argument no greater than 512"));
     }
     let mut r = I::point(x);
     let mut squares = 0;
@@ -41,6 +39,15 @@ fn exp_positive(x: f64) -> Result<I, Error> {
 }
 
 fn exp_point(x: f64) -> Result<I, Error> {
+    if x.is_finite() && x < -512.0 {
+        // Monotonicity gives a certified absolute tail beyond range reduction.
+        // No platform underflow result participates in this enclosure proof.
+        let boundary = I::ONE / exp_positive(512.0)?;
+        return Ok(I {
+            lo: 0.0,
+            hi: boundary.hi,
+        });
+    }
     if x < 0.0 {
         Ok(I::ONE / exp_positive(-x)?)
     } else {
@@ -167,6 +174,28 @@ mod tests {
         assert!(ln(I::ZERO).is_err());
         assert!(exp(I::point(513.0)).is_err());
     }
+    #[test]
+    fn negative_exp_tail_has_a_positive_analytic_upper_bound() {
+        // The first five series terms give e > 8/3 and hence e^3 > 16.
+        // Therefore e^-600 < 2^-800.
+        // The deliberately coarser endpoint at -512 must enclose that bound.
+        let upper = 2.0_f64.powi(-800);
+        for x in [-600., -1000., -f64::MAX] {
+            let enclosure = exp(I::point(x)).unwrap();
+            assert_eq!(enclosure.lo, 0.);
+            assert!(enclosure.hi >= upper && enclosure.hi < 1e-220);
+        }
+        let crossing = exp(I {
+            lo: -1000.,
+            hi: -500.,
+        })
+        .unwrap();
+        assert_eq!(crossing.lo, 0.);
+        assert_eq!(crossing.hi, exp(I::point(-500.)).unwrap().hi);
+        assert!(exp(I::point(513.)).is_err());
+        assert!(exp(I::point(f64::NEG_INFINITY)).is_err());
+    }
+
     #[test]
     fn sqrt_endpoints_are_proved_even_at_extremes() {
         for x in [f64::from_bits(1), f64::MIN_POSITIVE, 1e-12, 2.0, f64::MAX] {

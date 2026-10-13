@@ -81,7 +81,7 @@ class InitialCross(unittest.TestCase):
             run(compiled(text))
 
     def test_dynamic_initial_values_have_initialization_diagnostic(self):
-        for value in ('V(u,r)', 'n', 'idt(V(u,r),0)'):
+        for value in ('V(u,r)', 'idt(V(u,r),0)'):
             with self.subTest(value=value), self.assertRaises(CompileError) as caught:
                 compiled(source(value=value))
             self.assertEqual(caught.exception.diagnostic['code'], 'unsupported_initial_event')
@@ -144,17 +144,19 @@ class InitialCross(unittest.TestCase):
         self.assertAlmostEqual(result['transient']['events'][0]['time'], 2, delta=1e-9)
         self.assertEqual(result['transient']['events'][0]['kind'], 'cross')
 
-    def test_mixed_body_preserves_unique_complete_unconditional_initialization(self):
+    def test_mixed_body_preserves_procedural_writes_and_default_state(self):
         valid = source()
-        invalid = [
-            valid.replace('n=7;', 'begin n=7; n=8; end', 1),
-            valid.replace('integer n;', 'integer n,p;'),
-            valid.replace('n=7;', 'if(V(u,r)>0) n=7;', 1),
-            valid.replace('n=7;', '@(timer(1)) n=7;', 1),
-        ]
-        for text in invalid:
-            with self.subTest(text=text), self.assertRaises(CompileError):
-                compiled(text)
+        for text, answer in [(valid.replace('n=7;', 'begin n=7; n=8; end', 1), [8,8,2,8]),
+                (valid.replace('integer n;', 'integer n,p;').replace('V(y,r)<+n;', 'V(y,r)<+n+p;'), [7,7,2,7]),
+                (valid.replace('n=7;', 'if(V(u,r)>0) n=7;', 1), [0,0,2,7]),
+                (source(value='n'), [0,0,2,2])]:
+            with self.subTest(text=text):
+                result = run(compiled(text))
+                self.assertEqual(values(result), answer)
+                if 'integer n,p;' in text:
+                    self.assertEqual([row[1] for row in result['transient']['states']], [0]*4)
+        with self.assertRaises(CompileError):
+            compiled(valid.replace('n=7;', '@(timer(1)) n=7;', 1))
 
 
 if __name__ == '__main__':

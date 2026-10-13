@@ -102,6 +102,14 @@ pub(crate) fn affine(expr: &Expression, program: &Program) -> Result<Vec<I>, Err
             }
             result[n] = a[n] * b[n];
         }
+        Expression::Divide { left, right } => {
+            let a = affine(left, program)?;
+            let b = affine(right, program)?;
+            if b[..n].iter().any(|v| !v.zero()) || (b[n].lo <= 0. && b[n].hi >= 0.) {
+                return Err(unresolved("cannot certify affine variable division"));
+            }
+            result = a.iter().map(|&v| v / b[n]).collect();
+        }
         Expression::Power { .. } => {
             return Err(unresolved("cannot bound a polynomial event expression"));
         }

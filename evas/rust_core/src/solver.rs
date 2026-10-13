@@ -151,6 +151,20 @@ fn interval_evaluate(expr: &Expression, values: &[I]) -> Result<IntervalValue, E
             }
             left.value * right.value
         }
+        Expression::Divide { left, right } => {
+            let left = interval_evaluate(left, values)?;
+            let right = interval_evaluate(right, values)?;
+            if right.value.lo <= 0. && right.value.hi >= 0. {
+                return Err(Error::new(
+                    "waveform_accuracy",
+                    "division denominator interval contains zero",
+                ));
+            }
+            for ((g, dl), dr) in gradient.iter_mut().zip(left.gradient).zip(right.gradient) {
+                *g = dl / right.value - left.value * dr / (right.value * right.value);
+            }
+            left.value / right.value
+        }
         Expression::Power { base, exponent } => {
             let base = interval_evaluate(base, values)?;
             let derivative =

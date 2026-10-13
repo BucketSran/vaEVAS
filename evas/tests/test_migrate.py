@@ -88,16 +88,20 @@ class ManifestMigrationTests(unittest.TestCase):
             self.assertFalse((root / "out/bad.ir.json").exists())
 
     def test_invalid_source_is_a_diagnostic_not_a_fake_ir(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            write(root / "dut.va", source("V(y,r)<+1/0;"))
-            mpath = write(root / "bad-source.json", json.dumps(manifest()))
-            batch = recompile_manifests([mpath], root / "out", repo_root=root)
+        for expression, diagnostic in [
+            ("1/0", "nonzero constant integer divisor"),
+            ("1.0/0.0", "nonzero constant denominator"),
+        ]:
+            with self.subTest(expression=expression), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                write(root / "dut.va", source(f"V(y,r)<+{expression};"))
+                mpath = write(root / "bad-source.json", json.dumps(manifest()))
+                batch = recompile_manifests([mpath], root / "out", repo_root=root)
 
-            self.assertFalse(batch.ok)
-            self.assertEqual(batch.results[0].status, "failure")
-            self.assertIn("nonzero constant denominator", batch.results[0].diagnostic)
-            self.assertFalse((root / "out/bad-source.ir.json").exists())
+                self.assertFalse(batch.ok)
+                self.assertEqual(batch.results[0].status, "failure")
+                self.assertIn(diagnostic, batch.results[0].diagnostic)
+                self.assertFalse((root / "out/bad-source.ir.json").exists())
 
     def test_refuses_to_overwrite_output_directory(self):
         with tempfile.TemporaryDirectory() as tmp:

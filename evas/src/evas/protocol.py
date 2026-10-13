@@ -2,7 +2,7 @@
 import math
 
 from .errors import KernelError
-from .ir import SCHEMA_VERSION, OrTrigger
+from .ir import SCHEMA_VERSION, OrTrigger, Display, Conditional
 
 
 def _invalid(message):
@@ -261,11 +261,27 @@ def validate_response(response, program, count, output_times=None, *, strobetime
                     or 'time_bounds' in leaf and not _bounds(leaf['time_bounds'])):
                 _invalid('invalid fired trigger record')
             kind = leaves[leaf['trigger']].kind
-            if kind == 'held_timer':
+            if kind in ('held_timer',):
                 kind = 'timer'
             if (leaf.get('kind', kind) != kind
                     or kind == 'cross' and not _finite(leaf.get('guard_value'))
                     or kind == 'timer' and 'guard_value' in leaf):
                 _invalid('fired trigger type or guard value does not match the request')
+    def contains_display(body):
+        return any(isinstance(statement, Display) or isinstance(statement, Conditional)
+                   and (contains_display(statement.then_body) or contains_display(statement.else_body))
+                   for statement in body)
+    if any(contains_display(event.body) for event in program.events) and 'display_records' not in trace:
+        _invalid('transient response omitted requested display records')
+    display_records = trace.get('display_records', [])
+    if not isinstance(display_records, list):
+        _invalid('display records must be an array')
+    for record in display_records:
+        if (not isinstance(record, dict) or not _finite(record.get('time'))
+                or not _index(record.get('event')) or record['event'] >= len(program.events)
+                or not isinstance(record.get('origin'), str) or not record['origin']
+                or not isinstance(record.get('text'), str)
+                or not any(event['event'] == record['event'] and event['time'] == record['time'] for event in events)):
+            _invalid('invalid or uncommitted display record')
     _portability_advisories(response, program, output_times)
     return response

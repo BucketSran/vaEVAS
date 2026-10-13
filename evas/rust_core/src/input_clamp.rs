@@ -82,7 +82,9 @@ fn validate_original(e: &Expression, p: &Program, owner: &str) -> Result<(), Err
                 "invalid original clamp-program operator index",
             ))
         }
-        Expression::Add { left, right } | Expression::Multiply { left, right } => {
+        Expression::Add { left, right }
+        | Expression::Multiply { left, right }
+        | Expression::Divide { left, right } => {
             validate_original(left, p, owner)?;
             validate_original(right, p, owner)?;
         }
@@ -276,7 +278,9 @@ impl Lowering<'_> {
                     }],
                 };
             }
-            Expression::Add { left, right } | Expression::Multiply { left, right } => {
+            Expression::Add { left, right }
+            | Expression::Multiply { left, right }
+            | Expression::Divide { left, right } => {
                 self.expression(left)?;
                 self.expression(right)?;
             }
@@ -307,7 +311,27 @@ pub(crate) fn lower(
         return Ok(output_count);
     }
     if !program.events.is_empty() || !program.states.is_empty() {
-        return Err(unsupported());
+        return Ok(output_count);
+    }
+    fn only_clamps(e: &Expression) -> bool {
+        match e {
+            Expression::Select { .. } => recognize(e).is_some(),
+            Expression::Add { left, right } | Expression::Multiply { left, right } => {
+                only_clamps(left) && only_clamps(right)
+            }
+            Expression::Power { base, .. } => only_clamps(base),
+            _ => true,
+        }
+    }
+    if program.contributions.iter().any(|c| !only_clamps(&c.rhs))
+        || program.operators.iter().any(|o| match o {
+            OperatorSpec::Idt { input, .. } | OperatorSpec::IdtMod { input, .. } => {
+                !only_clamps(input)
+            }
+            _ => false,
+        })
+    {
+        return Ok(output_count);
     }
     // Admit source-only integrals alongside the immutable phase/sine path.
     // In particular derivative histories need a different contract
@@ -658,10 +682,7 @@ mod tests {
         let mut t = trajectory();
         let sources = t.config.pwl.clone();
         let mut driven = vec!["u".into()];
-        assert_eq!(
-            lower(&mut p, &mut driven, &mut t).unwrap_err().kind,
-            "unsupported_transient"
-        );
+        assert_eq!(lower(&mut p, &mut driven, &mut t).unwrap(), p.nodes.len());
         assert_eq!(serde_json::to_string(&p).unwrap(), before);
         assert_eq!(t.config.pwl, sources);
         assert_eq!(driven, vec!["u"]);

@@ -118,7 +118,6 @@ module pair(a,b,oa,ob,na,nb); inout a,b,oa,ob,na,nb;
             ('unknown', lambda initial: initial.update(extra=0)),
             ('wrong owner', lambda initial: initial['origin'].update(instance='other')),
             ('wrong source', lambda initial: initial['origin'].update(source='')),
-            ('wrong arms', lambda initial: initial['then_value'].update(constant=2)),
             ('state', lambda initial: initial.update(left=dict(op='state',state=0))),
             ('operator', lambda initial: initial.update(left=dict(op='operator',operator=0))),
             ('cancelled undriven', lambda initial: initial.update(left=dict(op='affine',constant=1,terms=[dict(node=2,coefficient=0)]))),
@@ -136,12 +135,25 @@ module pair(a,b,oa,ob,na,nb); inout a,b,oa,ob,na,nb;
 
     def test_frontend_rejects_broader_initialization_structurally(self):
         for rhs in ['V(u,r)', '(V(y,r)>0.65)', '(0*V(y,r)>0.65)',
-                    '(V(y,y)>0.65)', '(q>0.65)', '(idt(V(u,r),0)>0.65)',
+                    '(V(y,y)>0.65)', '(idt(V(u,r),0)>0.65)',
                     '(V(u,r)>0.65)?1:(V(y,r)>0.65)', '(V(u,r)*V(u,r)>0.65)']:
             with self.subTest(rhs=rhs), self.assertRaises(CompileError):
                 compile_sources({'bad.va':model(f'@(initial_step) q={rhs}; V(y,r)<+q;', 'real q;')},[instance()])
-        with self.assertRaises(CompileError):
-            compile_sources({'integer.va':model('@(initial_step) q=(V(u,r)>0.65); V(y,r)<+q;', 'integer q;')},[instance()])
+    def test_affine_default_state_and_integer_initialization(self):
+        for kind, rhs, value, answer in [('real','q>0.65',.9,0), ('integer','V(u,r)>0.65',.9,1)]:
+            with self.subTest(kind=kind, rhs=rhs):
+                source = model(f'@(initial_step) q={rhs}; V(y,r)<+q;', f'{kind} q;')
+                p = compile_sources({'initial-expanded.va': source}, [instance()])
+                result = transient(p, {'u': [[0,value],[1,value]]}, [0,1],stop=1,max_step=1,kernel=KERNEL)
+                self.assertEqual(result['transient']['states'], [[answer],[answer]])
+
+    def test_raw_selected_initial_arms_have_their_actual_numeric_value(self):
+        p = compile_sources({'initial.va':model('@(initial_step) q=(V(u,r)>0.65); V(y,r)<+q;', 'real q;')},[instance()]).to_dict()
+        p['states'][0]['initial']['then_value']['constant'] = 2
+        request = dict(program=p,driven=['u'],samples=[],transient=dict(pwl=[[[0,.9],[1,.9]]],output_times=[0],stop=1,max_step=1))
+        proc = subprocess.run([str(KERNEL)],input=json.dumps(request),text=True,capture_output=True)
+        self.assertEqual(proc.returncode,0,proc.stderr)
+        self.assertEqual(json.loads(proc.stdout)['transient']['states'],[[2]])
 
     def test_undriven_inout_rejected_by_kernel(self):
         p=original_program(SOURCE.replace('V(in)>0.65','V(out)>0.65'))

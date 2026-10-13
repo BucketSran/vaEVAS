@@ -28,7 +28,10 @@ impl GuardBounds {
                     EventTrigger::Cross { guard, .. } => {
                         (!dynamic[expressions.len()]).then_some(guard)
                     }
-                    EventTrigger::Timer { .. } | EventTrigger::HeldTimer { .. } => None,
+                    EventTrigger::Timer { .. }
+                    | EventTrigger::HeldTimer { .. }
+                    | EventTrigger::FinalStep { .. }
+                    | EventTrigger::InitialStep { .. } => None,
                     EventTrigger::Or { .. } => unreachable!("validated leaves are not OR groups"),
                 });
             }
@@ -53,7 +56,7 @@ impl GuardBounds {
                 });
             }
         }
-        Self::project(program, driven, &expressions, Some(states))
+        Self::project(program, driven, &expressions, Some(states), false)
     }
 
     /// Project state-independent affine expressions onto the driven inputs.
@@ -62,7 +65,16 @@ impl GuardBounds {
         driven: &[String],
         expressions: &[Option<&Expression>],
     ) -> Result<Self, Error> {
-        Self::project(program, driven, expressions, None)
+        Self::project(program, driven, expressions, None, false)
+    }
+
+    /// Keep accepted/local held states as certified forcing columns.
+    pub(crate) fn stateful_expressions(
+        program: &Program,
+        driven: &[String],
+        expressions: &[Option<&Expression>],
+    ) -> Result<Self, Error> {
+        Self::project(program, driven, expressions, None, true)
     }
 
     fn project(
@@ -70,11 +82,42 @@ impl GuardBounds {
         driven: &[String],
         expressions: &[Option<&Expression>],
         states: Option<&[I]>,
+        keep_states: bool,
     ) -> Result<Self, Error> {
         let count = program.nodes.len();
         let variables = count + program.states.len() + program.operators.len();
         let width = driven.len() + program.states.len() + program.operators.len() + 1;
-        let nodes = crate::affine_bounds::node_map(program, driven)?;
+        // Direct driven/state predicates do not need unrelated output equations.
+        // In particular an analog Select elsewhere cannot change a supplied input.
+        let driven_nodes: Vec<_> = driven
+            .iter()
+            .map(|name| {
+                program
+                    .nodes
+                    .iter()
+                    .position(|node| node == name)
+                    .ok_or_else(|| Error::new("invalid_inputs", "unknown driven node"))
+            })
+            .collect::<Result<_, _>>()?;
+        let direct = expressions
+            .iter()
+            .flatten()
+            .map(|expression| affine(expression, program))
+            .collect::<Result<Vec<_>, _>>()?
+            .iter()
+            .all(|row| (1..count).all(|node| row[node].zero() || driven_nodes.contains(&node)));
+        let nodes = if direct {
+            let mut nodes = vec![vec![I::ZERO; width]; variables];
+            for (column, &node) in driven_nodes.iter().enumerate() {
+                nodes[node][column] = I::ONE;
+            }
+            for index in 0..program.states.len() + program.operators.len() {
+                nodes[count + index][driven.len() + index] = I::ONE;
+            }
+            nodes
+        } else {
+            crate::affine_bounds::node_map(program, driven)?
+        };
         let mut coefficients = expressions
             .iter()
             .map(|expression| {
@@ -116,10 +159,11 @@ impl GuardBounds {
         if coefficients.iter().flatten().any(|x| !x.finite()) {
             return Err(unresolved("nonfinite event trajectory bounds"));
         }
-        if coefficients
-            .iter()
-            .any(|row| row[driven.len()..width - 1].iter().any(|x| !x.zero()))
-        {
+        if coefficients.iter().any(|row| {
+            row[driven.len() + if keep_states { program.states.len() } else { 0 }..width - 1]
+                .iter()
+                .any(|x| !x.zero())
+        }) {
             return Err(unresolved(
                 "cannot certify cross guard independence from event state",
             ));
@@ -160,6 +204,17 @@ impl GuardBounds {
                     .fold(*row.last().unwrap(), |sum, (&a, &v)| sum + a * v)
             })
             .collect()
+    }
+
+    pub(crate) fn value_with_states(&self, expression: usize, inputs: &[I], states: &[I]) -> I {
+        let row = &self.coefficients[expression];
+        row[..self.driven_count]
+            .iter()
+            .zip(inputs)
+            .chain(self.state_coefficients[expression].iter().zip(states))
+            .fold(*row.last().unwrap(), |sum, (&coefficient, &value)| {
+                sum + coefficient * value
+            })
     }
 
     pub(crate) fn same_zero_set(&self, first: usize, second: usize) -> bool {

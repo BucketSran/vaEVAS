@@ -123,11 +123,13 @@ class GapIntegration(unittest.TestCase):
         for row in actual:
             self.assertAlmostEqual(row["y"],0,delta=1e-12)
 
-    def test_select_with_dynamic_operator_keeps_documented_rejection(self):
+    def test_source_select_preserves_unconditional_integral_history(self):
         source=model("tmp=V(u,r); if(V(u,r)>0.5) tmp=1; else tmp=0; V(y,r)<+tmp+idt(V(u,r),0);","real tmp;")
         program=compile_sources({"select-idt.va":source},[Instance("dut","m",dict(u="u",y="y",r="0"))])
-        with self.assertRaisesRegex(KernelError,"unsupported_transient"):
-            rows(program,{"u":[[0,0],[1,1]]},[0,1],max_step=1)
+        times = [0,.25,.75,1]
+        _, actual = rows(program,{"u":[[0,0],[1,1]]},times,max_step=1)
+        for time, row in zip(times, actual):
+            self.assertAlmostEqual(row["y"], .5*time*time+(time>.5), delta=1e-10)
 
 
     def test_local_alias_cancellation_preserves_predicate_dependency(self):

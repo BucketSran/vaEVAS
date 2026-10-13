@@ -11,7 +11,7 @@ class BoundedEventClosure(unittest.TestCase):
 @(timer(0.1,0.2,1e-6)) n=n+1;
 @(cross(V(u,r),1,1e-6,1e-6)) k=k+1;
 @(timer(0.30000000000000004,0,1e-6)) j=j+1;
-V(y,r)<+n+k+j;""", "integer n,k,j;")
+V(y,r)<+1.0*n+1.0*k+1.0*j;""", "integer n,k,j;")
         root=Q(.4)*Q(.3)/(Q(.3)+Q(.1))
         physical=sorted([(Q(.1),0),(Q(.1)+Q(.2),0),(root,1),(Q(.30000000000000004),2)])
         baseline=None
@@ -31,7 +31,7 @@ V(y,r)<+n+k+j;""", "integer n,k,j;")
         source=model("""@(initial_step) begin a=0.1;p=0.2;n=0;k=0;j=0;end
 @(timer(a,p,1e-6)) n=n+1;
 @(timer(0.30000000000000004,0,1e-6)) k=k+1;
-V(y,r)<+n+k+j;""", "real a,p;integer n,k,j;")
+V(y,r)<+1.0*n+1.0*k+1.0*j;""", "real a,p;integer n,k,j;")
         result=transient(compile_sources({"held.va":source},[instance()]),{"u":[[0,0],[.31,0]]},[0,.31],stop=.31,max_step=.31,kernel=KERNEL)
         self.assertEqual(result["transient"]["states"][-1],[.1,.2,2,1,0])
         self.assertEqual([e["event"] for e in result["transient"]["events"]],[0,0,1])
@@ -43,8 +43,8 @@ V(y,r)<+n+k+j;""", "real a,p;integer n,k,j;")
 @(timer(0.30000000000000004,0,1e-6)) m=m+1;
 V(z,r)<+idt(FLOW,0);
 @(cross(V(z,r)-1e-18,1,TTOL,1e-6)) h=h+1;
-EXTRA V(y,r)<+h+j;""", "integer n,q,h,m,j;electrical z;")
-        flow="q" if not chain else "q+h"
+EXTRA V(y,r)<+1.0*h+1.0*j;""", "integer n,q,h,m,j;electrical z;")
+        flow="q" if not chain else "1.0*q+1.0*h"
         if polynomial:flow="("+flow+")*(1+V(z,r))*(1+V(z,r))"
         source=source.replace("FLOW",flow).replace("TTOL","1e-20" if tight else "1e-6").replace("EXTRA", "@(cross(V(z,r)-3e-18,1,1e-6,1e-6)) j=j+1;" if chain else "")
         program=compile_sources({"hidden.va":source},[instance()])
@@ -120,7 +120,7 @@ V(y,r)<+h+V(w,r);""", "integer n,q,h;electrical z,w;")
         source=model("""@(initial_step) begin n=0;q=0;m=0;end
 @(timer(0.1,0.2,1e-6)) begin n=n+1;q=n-1;end
 @(timer(0.30000000000000004,0,1e-6)) m=m+1;
-V(z,r)<+idt(q,0); V(y,r)<+q+10*m;""", "integer n,q,m;electrical z;")
+V(z,r)<+idt(q,0); V(y,r)<+1.0*q+10.0*m;""", "integer n,q,m;electrical z;")
         baseline=None
         for times,step in [([0,.31],.31),([0,.3,.3000000000000001,.31],.31),([0,.3,.30000000000000004,.3000000000000001,.31],.012)]:
             result=transient(compile_sources({"nocross.va":source},[instance()]),{"u":[[0,0],[.31,.31]]},times,stop=.31,max_step=step,vabstol=1.,reltol=0.,kernel=KERNEL)

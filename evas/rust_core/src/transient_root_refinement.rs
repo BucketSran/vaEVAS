@@ -22,6 +22,7 @@ impl Controller {
             model,
             (&blocks, &roots),
             (&trajectory.values(event.time), &inputs),
+            &trajectory.value_bounds(event.time),
             &self.accepted.states,
             &evaluation.values,
             &self.accepted.state_bounds,
@@ -31,12 +32,22 @@ impl Controller {
         .ok()?;
         let selection = model
             .conditions
-            .select_at_roots(&blocks, &inputs, &roots)
+            .select_at_roots(&blocks, &inputs, &roots, &self.accepted.state_bounds)
             .ok()?;
         let point_inputs = trajectory.value_bounds(event.time);
         let observation = model.conditions.select(&[], &point_inputs).ok()?;
-        let sample = crate::settlement_bounds::Bounds::new(model, &selection).ok()?;
-        let output = crate::settlement_bounds::Bounds::new(model, &observation).ok()?;
+        let sampled_program = model
+            .selected_program_at_roots(&prepared.bounds, &inputs, &roots)
+            .ok()?;
+        let observed_program = model
+            .selected_program(&prepared.bounds, &point_inputs)
+            .ok()?;
+        let sample =
+            crate::settlement_bounds::Bounds::for_program(model, &selection, &sampled_program)
+                .ok()?;
+        let output =
+            crate::settlement_bounds::Bounds::for_program(model, &observation, &observed_program)
+                .ok()?;
         sample.filter_root_budget(
             &output,
             model,
@@ -71,6 +82,7 @@ impl Controller {
             model,
             (&blocks, &roots),
             (&trajectory.values(event.time), &inputs),
+            &trajectory.value_bounds(event.time),
             &self.accepted.states,
             &[],
             &self.accepted.state_bounds,
@@ -80,12 +92,22 @@ impl Controller {
         .ok()?;
         let selection = model
             .conditions
-            .select_at_roots(&blocks, &inputs, &roots)
+            .select_at_roots(&blocks, &inputs, &roots, &self.accepted.state_bounds)
             .ok()?;
         let point_inputs = trajectory.value_bounds(event.time);
         let observation = model.conditions.select(&[], &point_inputs).ok()?;
-        let sample = crate::settlement_bounds::Bounds::new(model, &selection).ok()?;
-        let output = crate::settlement_bounds::Bounds::new(model, &observation).ok()?;
+        let sampled_program = model
+            .selected_program_at_roots(&prepared.bounds, &inputs, &roots)
+            .ok()?;
+        let observed_program = model
+            .selected_program(&prepared.bounds, &point_inputs)
+            .ok()?;
+        let sample =
+            crate::settlement_bounds::Bounds::for_program(model, &selection, &sampled_program)
+                .ok()?;
+        let output =
+            crate::settlement_bounds::Bounds::for_program(model, &observation, &observed_program)
+                .ok()?;
         sample.input_root_demand(
             &output,
             model,

@@ -17,7 +17,7 @@ def clocks(a=2e-6, b=3e-6, tol=1e-9):
     return model(f'''@(initial_step) begin n=0; m=0; end
         @(timer({a!r},{a!r},{tol!r})) n=n+1;
         @(timer({b!r},{b!r},{tol!r})) m=m+1;
-        V(y,r)<+n+10*m;''', 'integer n,m;')
+        V(y,r)<+n+10.0*m;''', 'integer n,m;')
 
 
 class TimerOrdering(unittest.TestCase):
@@ -95,7 +95,7 @@ class TimerOrdering(unittest.TestCase):
         source = model("""@(initial_step) begin n=0; m=0; end
           @(timer(0.1,0.1,1e-6)) n=n+1;
           @(cross(V(u,r)-0.3,1,1e-9,1e-8)) m=m+1;
-          V(y,r)<+n+10*m;""", 'integer n,m;')
+          V(y,r)<+n+10.0*m;""", 'integer n,m;')
         baseline = None
         for times, step in [([0,.35],.35), ([0,.15,.25,.3,.35],.012)]:
             result = run_timer(source, stop=.35, times=times, step=step)
@@ -114,7 +114,7 @@ class TimerOrdering(unittest.TestCase):
         source = model("""@(initial_step) begin q=0.1; n=0; m=0; end
           @(timer(0.1,0.2,1e-6)) n=n+1;
           @(timer(q,q,1e-6)) m=m+1;
-          V(y,r)<+n+10*m;""", 'real q; integer n,m;')
+          V(y,r)<+n+10.0*m;""", 'real q; integer n,m;')
         baseline = None
         for times, step in [([0,.35],.35), ([0,.15,.25,.3,.35],.012)]:
             result = run_timer(source, stop=.35, times=times, step=step)
@@ -128,7 +128,7 @@ class TimerOrdering(unittest.TestCase):
 
     def test_near_timer_history_rebuild_retains_fixed_order(self):
         source = clocks().replace('integer n,m;', 'integer n,m; electrical z;').replace(
-            'V(y,r)<+n+10*m;', 'V(y,r)<+n+10*m; V(z,r)<+idt(n,0); '
+            'V(y,r)<+n+10.0*m;', 'V(y,r)<+n+10.0*m; V(z,r)<+idt(n,0); '
             '@(cross(V(z,r)-1,1,1e-9,1e-8));')
         result = run_timer(source, stop=7e-6, times=[0,7e-6])
         self.assertEqual(result['transient']['states'][-1], [3,2])

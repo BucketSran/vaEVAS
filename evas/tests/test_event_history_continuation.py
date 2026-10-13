@@ -5,8 +5,8 @@ import math
 import unittest
 from evas import KernelError, compile_sources, transient
 from test_affine import KERNEL, instance, model
-NONLINEAR = '`include "disciplines.vams"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; integer n,m,h;real s;electrical z; analog begin @(initial_step) begin n=0;m=0;h=0;s=1;end\n@(timer(2e-6,2e-6,1e-9)) n=n+1;\n@(timer(3e-6,3e-6,1e-9)) begin m=m+1;s=V(z,r);end\nV(z,r)<+idt(-1e6*(n+10*m)*V(z,r)*V(z,r),1);\n@(cross(V(z,r)-100,1,1e-12,1e-7)) h=h+1; V(y,r)<+s; end endmodule'
-LINEAR_PWL = '`include "disciplines.vams"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; integer n,m,h;real s;electrical z; analog begin @(initial_step) begin n=0;m=0;h=0;s=1;end\n@(timer(2e-6,2e-6,1e-9)) n=n+1;\n@(timer(3e-6,3e-6,1e-9)) begin m=m+1;s=V(z,r);end\nV(z,r)<+idt(1e6*(n+10*m+V(u,r)),0);\n@(cross(V(z,r)-1000,1,1e-12,1e-7)) h=h+1;V(y,r)<+s; end endmodule'
+NONLINEAR = '`include "disciplines.vams"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; integer n,m,h;real s;electrical z; analog begin @(initial_step) begin n=0;m=0;h=0;s=1;end\n@(timer(2e-6,2e-6,1e-9)) n=n+1;\n@(timer(3e-6,3e-6,1e-9)) begin m=m+1;s=V(z,r);end\nV(z,r)<+idt(-1e6*(n+10.0*m)*V(z,r)*V(z,r),1);\n@(cross(V(z,r)-100,1,1e-12,1e-7)) h=h+1; V(y,r)<+s; end endmodule'
+LINEAR_PWL = '`include "disciplines.vams"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; integer n,m,h;real s;electrical z; analog begin @(initial_step) begin n=0;m=0;h=0;s=1;end\n@(timer(2e-6,2e-6,1e-9)) n=n+1;\n@(timer(3e-6,3e-6,1e-9)) begin m=m+1;s=V(z,r);end\nV(z,r)<+idt(1e6*(n+10.0*m+V(u,r)),0);\n@(cross(V(z,r)-1000,1,1e-12,1e-7)) h=h+1;V(y,r)<+s; end endmodule'
 
 class EventHistoryContinuation(unittest.TestCase):
     def check_case(self, source, pwl, nonlinear):
@@ -21,7 +21,7 @@ class EventHistoryContinuation(unittest.TestCase):
                 duration=min(tb,end)-ta
                 total+=ua*duration+(ub-ua)*duration*duration/(2*(tb-ta))
             return Q(1e6)*total
-        uses_source = 'n+10*m+V(u,r)' in source
+        uses_source = 'n+10.0*m+V(u,r)' in source
         final_area = area+(source_area(T) if uses_source else 0)
         sampled_area = sample_area+(source_area(2*b) if uses_source else 0)
         final = 1/(1+final_area) if nonlinear else final_area
@@ -66,7 +66,7 @@ class EventHistoryContinuation(unittest.TestCase):
             transient(compile_sources({'amplified.va':source},[instance()]),{'u':[[0,0],[7e-6,1]]},[0,7e-6],stop=7e-6,max_step=7e-6,vabstol=1e-7,reltol=0,kernel=KERNEL)
 
     def test_nonlinear_ordered_history_with_pwl_forcing(self):
-        source=NONLINEAR.replace('(n+10*m)', '(n+10*m+V(u,r))')
+        source=NONLINEAR.replace('(n+10.0*m)', '(n+10.0*m+V(u,r))')
         self.check_case(source,[[0,0],[6e-6,1],[7e-6,1]],True)
 
     def test_linear_event_window_spans_two_source_corners(self):

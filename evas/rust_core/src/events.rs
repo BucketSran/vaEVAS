@@ -9,9 +9,9 @@ use std::collections::BTreeSet;
 
 #[derive(Clone)]
 pub(crate) struct AffineState {
-    constant: f64,
-    nodes: Vec<f64>,
-    states: Vec<f64>,
+    pub(crate) constant: f64,
+    pub(crate) nodes: Vec<f64>,
+    pub(crate) states: Vec<f64>,
     operators: Vec<f64>,
     pub(crate) node_dependencies: BTreeSet<usize>,
     pub(crate) state_dependencies: BTreeSet<usize>,
@@ -221,6 +221,26 @@ pub(crate) fn affine(
                 .map(|(x, y)| ka * x + kb * y)
                 .collect();
         }
+        Expression::Divide { left, right } => {
+            let mut numerator = affine(left, program, owner)?;
+            let denominator = affine(right, program, owner)?;
+            if denominator.has_variables || denominator.constant == 0.0 {
+                return Err(Error::new(
+                    "unsupported_transient",
+                    "affine event division requires a finite nonzero constant denominator",
+                ));
+            }
+            numerator.constant /= denominator.constant;
+            for value in numerator
+                .nodes
+                .iter_mut()
+                .chain(&mut numerator.states)
+                .chain(&mut numerator.operators)
+            {
+                *value /= denominator.constant;
+            }
+            result = numerator;
+        }
         Expression::Power { .. } => {
             return Err(Error::new(
                 "unsupported_transient",
@@ -248,6 +268,133 @@ pub(crate) fn affine(
         ));
     }
     Ok(result)
+}
+
+// Conservative contribution connectivity, independent of the currently selected arm.
+// Coefficients are used only for dependency analysis; runtime equations resolve
+// Select before affine binding.
+pub(crate) fn contribution_affine(
+    expr: &Expression,
+    program: &Program,
+    owner: &str,
+) -> Result<AffineState, Error> {
+    match expr {
+        Expression::Select {
+            left,
+            right,
+            then_value,
+            else_value,
+            ..
+        } => {
+            let mut result = contribution_affine(then_value, program, owner)?;
+            for child in [left, right, else_value] {
+                let other = contribution_affine(child, program, owner)?;
+                result.node_dependencies.extend(other.node_dependencies);
+                result.state_dependencies.extend(other.state_dependencies);
+                result
+                    .operator_dependencies
+                    .extend(other.operator_dependencies);
+                result.has_variables |= other.has_variables;
+            }
+            Ok(result)
+        }
+        Expression::Add { left, right }
+        | Expression::Multiply { left, right }
+        | Expression::Divide { left, right } => {
+            let a = contribution_affine(left, program, owner)?;
+            let b = contribution_affine(right, program, owner)?;
+            // Reuse affine validation on a representative arm, retaining every
+            // structural dependency separately for feedback checks.
+            let representative = representative(expr);
+            let state_only = |v: &AffineState| {
+                !v.state_dependencies.is_empty()
+                    && v.node_dependencies.is_empty()
+                    && v.operator_dependencies.is_empty()
+            };
+            let operator_only = |v: &AffineState| {
+                !v.operator_dependencies.is_empty()
+                    && v.node_dependencies.is_empty()
+                    && v.state_dependencies.is_empty()
+            };
+            let sampled_coefficient = matches!(expr, Expression::Multiply { .. })
+                && ((state_only(&a) && operator_only(&b)) || (operator_only(&a) && state_only(&b)));
+            if matches!(expr, Expression::Divide { .. }) && b.has_variables {
+                return Err(Error::new(
+                    "unsupported_transient",
+                    "affine event division requires a constant denominator",
+                ));
+            }
+            let scalar_product = matches!(expr, Expression::Multiply { .. })
+                && (!a.has_variables || !b.has_variables);
+            let mut result = if sampled_coefficient || scalar_product {
+                affine(
+                    &freeze_operators(&representative, &vec![1.0; program.operators.len()]),
+                    program,
+                    owner,
+                )?
+            } else if matches!(expr, Expression::Add { .. } | Expression::Divide { .. }) {
+                affine(
+                    &freeze_operators(&representative, &vec![1.0; program.operators.len()]),
+                    program,
+                    owner,
+                )?
+            } else {
+                affine(&representative, program, owner)?
+            };
+            result.has_variables |= a.has_variables || b.has_variables;
+            result.node_dependencies.extend(a.node_dependencies);
+            result.node_dependencies.extend(b.node_dependencies);
+            result.state_dependencies.extend(a.state_dependencies);
+            result.state_dependencies.extend(b.state_dependencies);
+            result.operator_dependencies.extend(a.operator_dependencies);
+            result.operator_dependencies.extend(b.operator_dependencies);
+            Ok(result)
+        }
+        _ => affine(expr, program, owner),
+    }
+}
+
+// Operator samples are fixed during the same-time voltage/state solve. Only
+// contribution coefficients use this binding; event RHS affinity stays strict.
+fn freeze_operators(expr: &Expression, values: &[f64]) -> Expression {
+    match expr {
+        Expression::Operator { operator } => Expression::Affine {
+            constant: values[*operator],
+            terms: Vec::new(),
+        },
+        Expression::Add { left, right } => Expression::Add {
+            left: Box::new(freeze_operators(left, values)),
+            right: Box::new(freeze_operators(right, values)),
+        },
+        Expression::Multiply { left, right } => Expression::Multiply {
+            left: Box::new(freeze_operators(left, values)),
+            right: Box::new(freeze_operators(right, values)),
+        },
+        Expression::Divide { left, right } => Expression::Divide {
+            left: Box::new(freeze_operators(left, values)),
+            right: Box::new(freeze_operators(right, values)),
+        },
+        _ => expr.clone(),
+    }
+}
+
+fn representative(expr: &Expression) -> Expression {
+    match expr {
+        Expression::Select { then_value, .. } => representative(then_value),
+        Expression::Add { left, right } => Expression::Add {
+            left: Box::new(representative(left)),
+            right: Box::new(representative(right)),
+        },
+        Expression::Multiply { left, right } => Expression::Multiply {
+            left: Box::new(representative(left)),
+            right: Box::new(representative(right)),
+        },
+        Expression::Divide { left, right } => Expression::Divide {
+            left: Box::new(representative(left)),
+            right: Box::new(representative(right)),
+        },
+        _ => expr.clone(),
+    }
 }
 
 pub(crate) fn check_state(value: f64, kind: &StateKind) -> Result<(), Error> {
@@ -310,6 +457,10 @@ impl EventModel {
                     .contributions
                     .iter()
                     .any(|c| c.branch.instance == state.instance)
+                    && !program
+                        .events
+                        .iter()
+                        .any(|e| e.origin.instance == state.instance)
             {
                 return Err(Error::new(
                     "invalid_ir",
@@ -318,25 +469,63 @@ impl EventModel {
             }
             check_state(state.initial.constant()?, &state.kind)?;
         }
+        for c in &program.contributions {
+            crate::continuous::validate_selection(&c.rhs, &program, &driven, &c.origin.instance)?;
+        }
         let rhs = program
             .contributions
             .iter()
-            .map(|c| affine(&c.rhs, &program, &c.origin.instance))
+            .map(|c| contribution_affine(&c.rhs, &program, &c.origin.instance))
             .collect::<Result<Vec<_>, _>>()?;
         let mut guards = Vec::new();
         let mut dynamic_guards = Vec::new();
         let mut triggers = Vec::new();
+        fn validate_displays(
+            body: &[crate::ir::Statement],
+            program: &Program,
+            owner: &str,
+        ) -> Result<(), Error> {
+            for statement in body {
+                match statement {
+                    crate::ir::Statement::Display {
+                        format,
+                        args,
+                        origin,
+                    } => {
+                        if origin.instance != owner
+                            || origin.source.is_empty()
+                            || origin.line == 0
+                            || origin.column == 0
+                        {
+                            return Err(Error::new("invalid_ir", "invalid display origin"));
+                        }
+                        crate::display::validate(format, args.len())?;
+                        for argument in args {
+                            crate::display::validate_expression(argument, program, owner)?;
+                        }
+                    }
+                    crate::ir::Statement::If {
+                        then_body,
+                        else_body,
+                        ..
+                    } => {
+                        validate_displays(then_body, program, owner)?;
+                        validate_displays(else_body, program, owner)?;
+                    }
+                    crate::ir::Statement::Assign(_) => {}
+                }
+            }
+            Ok(())
+        }
+        for event in &program.events {
+            validate_displays(&event.body, &program, &event.origin.instance)?;
+        }
         let mut actions = Vec::new();
-        let mut writers = vec![BTreeSet::new(); program.states.len()];
         for (index, event) in program.events.iter().enumerate() {
             if event.origin.instance.is_empty()
                 || event.origin.source.is_empty()
                 || event.origin.line == 0
                 || event.origin.column == 0
-                || !program
-                    .contributions
-                    .iter()
-                    .any(|c| c.branch.instance == event.origin.instance)
             {
                 return Err(Error::new("invalid_ir", "invalid event origin"));
             }
@@ -402,6 +591,10 @@ impl EventModel {
                         dynamic_guards.push(false);
                         None
                     }
+                    EventTrigger::InitialStep {} | EventTrigger::FinalStep {} => {
+                        dynamic_guards.push(false);
+                        None
+                    }
                     EventTrigger::Or { .. } => unreachable!("validated leaves are not OR groups"),
                 };
                 guards.push(guard);
@@ -422,7 +615,6 @@ impl EventModel {
                         "event assignment must write a state in its instance",
                     ));
                 }
-                writers[assignment.state].insert(index);
                 let value = affine(&assignment.rhs, &program, &event.origin.instance)?;
                 if !value.operator_dependencies.is_empty() {
                     return Err(Error::new(
@@ -445,30 +637,6 @@ impl EventModel {
                 body.push((assignment.state, value));
             }
             actions.push(body);
-        }
-        for (index, body) in actions.iter().enumerate() {
-            if body.iter().any(|(target, rhs)| {
-                let shared_read = rhs
-                    .state_dependencies
-                    .iter()
-                    .any(|&state| writers[state].iter().any(|&writer| writer != index));
-                // A nonzero affine self update reads only this target's accepted
-                // history. Existing selected-writer checks still forbid two
-                // active blocks in one batch; do not infer safety by cancellation.
-                let self_update = rhs.state_dependencies.len() == 1
-                    && rhs.state_dependencies.contains(target)
-                    && rhs.states[*target].is_finite()
-                    && rhs.states[*target] != 0.0
-                    && rhs.constant.is_finite()
-                    && rhs.node_dependencies.is_empty()
-                    && rhs.operator_dependencies.is_empty();
-                shared_read && !self_update
-            }) {
-                return Err(Error::new(
-                    "unsupported_cross",
-                    "event blocks cannot read state written by another event block",
-                ));
-            }
         }
         let conditions = Conditions::new(&program)?;
         let mut model = Self {
@@ -501,7 +669,56 @@ impl EventModel {
         voltages: &[f64],
         states: &[f64],
     ) -> Result<(Vec<I>, Vec<I>), Error> {
+        self.certify_observation_at_roots(
+            selection,
+            &[],
+            inputs,
+            before,
+            operators,
+            voltages,
+            states,
+        )
+    }
+
+    pub(crate) fn certify_observation_at_roots(
+        &self,
+        selection: &Selection,
+        fired: &[usize],
+        inputs: &[I],
+        before: &[I],
+        operators: &[I],
+        voltages: &[f64],
+        states: &[f64],
+    ) -> Result<(Vec<I>, Vec<I>), Error> {
         let _timing = crate::diagnostics::span("event.certificate");
+        let selected = self.selected_program_at_roots(
+            &states.iter().copied().map(I::point).collect::<Vec<_>>(),
+            inputs,
+            fired,
+        )?;
+        let resolved = selected
+            .contributions
+            .iter()
+            .zip(&self.program.contributions)
+            .any(|(a, b)| a.rhs != b.rhs);
+        if resolved || !operators.is_empty() {
+            let bounds = Bounds::for_program_with_operators(self, selection, &selected, operators)?;
+            let result =
+                bounds.check_observation(self, inputs, before, operators, voltages, states)?;
+            let replay = self.selected_program_at_roots(&result.0, inputs, fired)?;
+            if replay
+                .contributions
+                .iter()
+                .zip(&selected.contributions)
+                .any(|(a, b)| a.rhs != b.rhs)
+            {
+                return Err(Error::new(
+                    "event_condition",
+                    "state enclosure changes contribution selection",
+                ));
+            }
+            return Ok(result);
+        }
         let mut cache = self.certificate.borrow_mut();
         if !cache.as_ref().is_some_and(|(path, _)| path == selection) {
             *cache = Some((selection.clone(), Bounds::new(self, selection)?));
@@ -516,6 +733,7 @@ impl EventModel {
     pub(crate) fn certify_event_states(
         &self,
         selection: &Selection,
+        fired: &[usize],
         inputs: &[I],
         before: &[I],
         operators: &[I],
@@ -524,6 +742,33 @@ impl EventModel {
     ) -> Result<Vec<I>, Error> {
         let _timing = crate::diagnostics::span("event.state_certificate");
 
+        let selected = self.selected_program_at_roots(
+            &states.iter().copied().map(I::point).collect::<Vec<_>>(),
+            inputs,
+            fired,
+        )?;
+        let resolved = selected
+            .contributions
+            .iter()
+            .zip(&self.program.contributions)
+            .any(|(a, b)| a.rhs != b.rhs);
+        if resolved || !operators.is_empty() {
+            let bounds = Bounds::for_program_with_operators(self, selection, &selected, operators)?;
+            let result = bounds.check_states(self, inputs, before, operators, voltages, states)?;
+            let replay = self.selected_program_at_roots(&result, inputs, fired)?;
+            if replay
+                .contributions
+                .iter()
+                .zip(&selected.contributions)
+                .any(|(a, b)| a.rhs != b.rhs)
+            {
+                return Err(Error::new(
+                    "event_condition",
+                    "state enclosure changes contribution selection",
+                ));
+            }
+            return Ok(result);
+        }
         let mut cache = self.certificate.borrow_mut();
         if !cache.as_ref().is_some_and(|(path, _)| path == selection) {
             *cache = Some((selection.clone(), Bounds::new(self, selection)?));
@@ -560,6 +805,20 @@ impl EventModel {
                 writers[state] = Some(*event);
             }
         }
+        self.conditions
+            .check_selection_readers(selection, &writers)?;
+        for (event, indices) in &selection.actions {
+            for &index in indices {
+                let (_, rhs) = &self.actions[*event][index];
+                if rhs
+                    .state_dependencies
+                    .iter()
+                    .any(|&s| writers[s].is_some_and(|writer| writer != *event))
+                {
+                    return Err(Error::new("unsupported_cross", "simultaneous event blocks cannot read state written by another selected block"));
+                }
+            }
+        }
         Ok(())
     }
 
@@ -579,10 +838,201 @@ impl EventModel {
         )
     }
 
+    pub(crate) fn check_contribution_predicate_updates(
+        &self,
+        selection: &Selection,
+    ) -> Result<(), Error> {
+        fn predicates(e: &Expression, out: &mut BTreeSet<usize>) {
+            match e {
+                Expression::Select {
+                    left,
+                    right,
+                    then_value,
+                    else_value,
+                    ..
+                } => {
+                    out.extend(crate::guard_trajectory::state_dependencies(left));
+                    out.extend(crate::guard_trajectory::state_dependencies(right));
+                    predicates(then_value, out);
+                    predicates(else_value, out);
+                }
+                Expression::Add { left, right }
+                | Expression::Multiply { left, right }
+                | Expression::Divide { left, right } => {
+                    predicates(left, out);
+                    predicates(right, out);
+                }
+                _ => {}
+            }
+        }
+        let mut tested = BTreeSet::new();
+        for c in &self.program.contributions {
+            predicates(&c.rhs, &mut tested);
+        }
+        for (event, indices) in &selection.actions {
+            let mut voltage_dependent = vec![false; self.program.states.len()];
+            for &index in indices {
+                let (state, rhs) = &self.actions[*event][index];
+                voltage_dependent[*state] = !rhs.node_dependencies.is_empty()
+                    || rhs.state_dependencies.iter().any(|&s| voltage_dependent[s]);
+            }
+            if tested.iter().any(|&s| voltage_dependent[s]) {
+                return Err(Error::new(
+                    "unsupported_condition",
+                    "same-time contribution predicate depends on a voltage-assigned state",
+                ));
+            }
+        }
+        Ok(())
+    }
+
+    /// Freeze certified predicates, retaining selected arm state references.
+    pub(crate) fn selected_program(&self, states: &[I], inputs: &[I]) -> Result<Program, Error> {
+        self.selected_program_at_roots(states, inputs, &[])
+    }
+
+    pub(crate) fn selected_program_at_roots(
+        &self,
+        states: &[I],
+        inputs: &[I],
+        fired: &[usize],
+    ) -> Result<Program, Error> {
+        let mut nodes = vec![I::ZERO; self.program.nodes.len()];
+        for (name, &value) in self.driven.iter().zip(inputs) {
+            let index = self
+                .program
+                .nodes
+                .iter()
+                .position(|n| n == name)
+                .ok_or_else(|| Error::new("invalid_inputs", "unknown driven node"))?;
+            nodes[index] = value;
+        }
+        let mut p = self.program.clone();
+        for c in &mut p.contributions {
+            c.rhs = crate::continuous::resolve_selection(
+                &self.resolve_root_selects(&c.rhs, fired)?,
+                &self.program,
+                &self.driven,
+                &nodes,
+                states,
+            )?;
+        }
+        Ok(p)
+    }
+
+    fn resolve_root_selects(&self, e: &Expression, fired: &[usize]) -> Result<Expression, Error> {
+        use crate::ir::Relation;
+        let recurse = |e: &Expression| self.resolve_root_selects(e, fired);
+        Ok(match e {
+            Expression::Select {
+                relation,
+                left,
+                right,
+                then_value,
+                else_value,
+                origin,
+            } => {
+                let left = recurse(left)?;
+                let right = recurse(right)?;
+                let difference = Expression::Add {
+                    left: Box::new(left.clone()),
+                    right: Box::new(Expression::Multiply {
+                        left: Box::new(Expression::Affine {
+                            constant: -1.,
+                            terms: vec![],
+                        }),
+                        right: Box::new(right.clone()),
+                    }),
+                };
+                let root = fired.iter().any(|&leaf| {
+                    let Some(TriggerLeaf {
+                        trigger: EventTrigger::Cross { guard, .. },
+                        ..
+                    }) = self.triggers.get(leaf)
+                    else {
+                        return false;
+                    };
+                    crate::event_accuracy::GuardBounds::expressions(
+                        &self.program,
+                        &self.driven,
+                        &[Some(guard), Some(&difference)],
+                    )
+                    .is_ok_and(|b| b.same_zero_set(0, 1))
+                });
+                if root {
+                    recurse(if matches!(relation, Relation::Le | Relation::Ge) {
+                        then_value
+                    } else {
+                        else_value
+                    })?
+                } else {
+                    Expression::Select {
+                        relation: *relation,
+                        left: Box::new(left),
+                        right: Box::new(right),
+                        then_value: Box::new(recurse(then_value)?),
+                        else_value: Box::new(recurse(else_value)?),
+                        origin: origin.clone(),
+                    }
+                }
+            }
+            Expression::Add { left, right } => Expression::Add {
+                left: Box::new(recurse(left)?),
+                right: Box::new(recurse(right)?),
+            },
+            Expression::Multiply { left, right } => Expression::Multiply {
+                left: Box::new(recurse(left)?),
+                right: Box::new(recurse(right)?),
+            },
+            Expression::Divide { left, right } => Expression::Divide {
+                left: Box::new(recurse(left)?),
+                right: Box::new(recurse(right)?),
+            },
+            Expression::Power { base, exponent } => Expression::Power {
+                base: Box::new(recurse(base)?),
+                exponent: *exponent,
+            },
+            _ => e.clone(),
+        })
+    }
+
+    pub(crate) fn circuit_at(
+        &self,
+        states: &[f64],
+        operators: &[f64],
+        inputs: &[I],
+    ) -> Result<Circuit, Error> {
+        let bounds: Vec<_> = states.iter().copied().map(I::point).collect();
+        let mut p = self.selected_program(&bounds, inputs)?;
+        let rhs = p
+            .contributions
+            .iter()
+            .map(|c| affine(&freeze_operators(&c.rhs, operators), &p, &c.origin.instance))
+            .collect::<Result<Vec<_>, _>>()?;
+        p.states.clear();
+        p.events.clear();
+        p.operators.clear();
+        for (c, rhs) in p.contributions.iter_mut().zip(&rhs) {
+            c.rhs = rhs.bind(states, operators)?;
+        }
+        Circuit::new(p, &self.driven, self.tolerances.clone())
+    }
+
     /// Eliminate trial state updates from F(v, state, t)=0 to obtain an affine
     /// voltage system F(v, Phi(old_state, v), t)=0. No accepted state is mutated.
+    #[cfg(test)]
     pub(crate) fn event_circuit(
         &self,
+        selection: &Selection,
+        before: &[f64],
+        operators: &[f64],
+    ) -> Result<Circuit, Error> {
+        self.event_circuit_program(&self.program, selection, before, operators)
+    }
+
+    pub(crate) fn event_circuit_program(
+        &self,
+        selected: &Program,
         selection: &Selection,
         before: &[f64],
         operators: &[f64],
@@ -614,22 +1064,47 @@ impl EventModel {
                 updates[*state] = local[*state].clone();
             }
         }
-        let mut program = self.program.clone();
+        let mut program = selected.clone();
+        let rhs = selected
+            .contributions
+            .iter()
+            .map(|c| {
+                affine(
+                    &freeze_operators(&c.rhs, operators),
+                    selected,
+                    &c.origin.instance,
+                )
+            })
+            .collect::<Result<Vec<_>, _>>()?;
         program.states.clear();
         program.events.clear();
         program.operators.clear();
-        for (contribution, rhs) in program.contributions.iter_mut().zip(&self.rhs) {
+        for (contribution, rhs) in program.contributions.iter_mut().zip(&rhs) {
             contribution.rhs = rhs.substitute(&updates)?.bind(&[], operators)?;
         }
         Circuit::new(program, &self.driven, self.tolerances.clone())
     }
 
     fn bind(&self, states: &[f64], operators: &[f64]) -> Result<Program, Error> {
-        let mut program = self.program.clone();
+        let mut program = self.selected_program(
+            &states.iter().copied().map(I::point).collect::<Vec<_>>(),
+            &vec![I::ZERO; self.driven.len()],
+        )?;
+        let rhs = program
+            .contributions
+            .iter()
+            .map(|c| {
+                affine(
+                    &freeze_operators(&c.rhs, operators),
+                    &program,
+                    &c.origin.instance,
+                )
+            })
+            .collect::<Result<Vec<_>, _>>()?;
         program.states.clear();
         program.events.clear();
         program.operators.clear();
-        for (contribution, rhs) in program.contributions.iter_mut().zip(&self.rhs) {
+        for (contribution, rhs) in program.contributions.iter_mut().zip(&rhs) {
             contribution.rhs = rhs.bind(states, operators)?;
         }
         Ok(program)
@@ -639,7 +1114,16 @@ impl EventModel {
         // Conservative undirected equation connectivity, excluding fixed inputs
         // and ground. No floating-point sensitivity threshold can hide feedback.
         let assembled = crate::assembly::assemble(
-            self.bind(&self.initial(), &vec![0.0; self.program.operators.len()])?,
+            {
+                let mut p = self.program.clone();
+                for (c, rhs) in p.contributions.iter_mut().zip(&self.rhs) {
+                    c.rhs = rhs.bind(&self.initial(), &vec![0.0; p.operators.len()])?;
+                }
+                p.states.clear();
+                p.events.clear();
+                p.operators.clear();
+                p
+            },
             &self.driven,
             self.tolerances.clone(),
         )?;
@@ -781,6 +1265,79 @@ impl EventModel {
             &groups,
             &assembled,
         )
+    }
+
+    /// Replay the certified path and capture displays at their statement position.
+    /// The returned records are candidate data; the caller commits them on acceptance.
+    pub(crate) fn apply_with_displays(
+        &self,
+        selection: &Selection,
+        voltages: &[f64],
+        before: &[f64],
+        time: f64,
+    ) -> Result<(Vec<f64>, Vec<crate::ir::DisplayRecord>), Error> {
+        fn collect<'a>(body: &'a [crate::ir::Statement], out: &mut Vec<&'a crate::ir::Statement>) {
+            for statement in body {
+                match statement {
+                    crate::ir::Statement::Display { .. } => out.push(statement),
+                    crate::ir::Statement::If {
+                        then_body,
+                        else_body,
+                        ..
+                    } => {
+                        collect(then_body, out);
+                        collect(else_body, out);
+                    }
+                    _ => {}
+                }
+            }
+        }
+        let mut after = before.to_vec();
+        let mut records = Vec::new();
+        for (event, steps) in &selection.ordered_steps {
+            let body = &self.program.events[*event];
+            let mut displays = Vec::new();
+            collect(&body.body, &mut displays);
+            let mut local = before.to_vec();
+            for step in steps {
+                match step {
+                    crate::event_conditions::SelectedStep::Assign(index) => {
+                        let (state, expression) = &self.actions[*event][*index];
+                        local[*state] = expression.value(voltages, &local)?;
+                        check_state(local[*state], &self.program.states[*state].kind)?;
+                        after[*state] = local[*state];
+                    }
+                    crate::event_conditions::SelectedStep::Display(index) => {
+                        if let crate::ir::Statement::Display {
+                            format,
+                            args,
+                            origin,
+                        } = displays[*index]
+                        {
+                            let values = args
+                                .iter()
+                                .map(|expr| {
+                                    crate::display::evaluate(
+                                        expr,
+                                        &self.program,
+                                        &body.origin.instance,
+                                        voltages,
+                                        &local,
+                                    )
+                                })
+                                .collect::<Result<Vec<_>, _>>()?;
+                            records.push(crate::ir::DisplayRecord {
+                                time,
+                                event: *event,
+                                origin: origin.label(),
+                                text: crate::display::render(format, &values)?,
+                            });
+                        }
+                    }
+                }
+            }
+        }
+        Ok((after, records))
     }
 
     /// Replay against supplied trial voltages and the fixed accepted old state.

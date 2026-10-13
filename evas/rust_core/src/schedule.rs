@@ -1093,9 +1093,9 @@ fn schedule_with_history(
         None
     };
     if let Some(bounds) = &bounds {
-        let circuit = model.circuit(&model.initial())?;
-        // Preserve network-consistency checks on all physical input knots.
+        // Each source-selected branch is checked at its actual input value.
         for &time in &trajectory.knots {
+            let circuit = model.circuit_at(&model.initial(), &vec![0.; model.program.operators.len()], &trajectory.value_bounds(time))?;
             circuit.solve(&trajectory.values(time))?;
         }
         for (index, leaf) in model.triggers.iter().enumerate() {

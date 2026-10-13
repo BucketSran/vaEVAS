@@ -165,7 +165,32 @@ impl Continuous {
         horizon: f64,
         tolerances: &Tolerances,
     ) -> Result<Option<Self>, Error> {
-        if program.operators.iter().any(|op| matches!(op, OperatorSpec::Idt { input, .. } | OperatorSpec::LaplaceNd { input, .. } if affine_bounds::affine(input, program).is_err())) {
+        if !program.operators.iter().any(|op| {
+            matches!(
+                op,
+                OperatorSpec::Idt { .. }
+                    | OperatorSpec::LaplaceNd { .. }
+                    | OperatorSpec::Ddt { .. }
+            )
+        }) {
+            return Ok(None);
+        }
+        if selection::needed(program) {
+            let parameters: Vec<_> = states.iter().copied().map(I::point).collect();
+            let context = Arc::new(Context {
+                program: program.clone(),
+                trajectory: trajectory.clone(),
+                driven: driven.to_vec(),
+                force_integrals: true,
+            });
+            let frozen = selection::freeze_context(&context, &parameters, 0.)?;
+            if program.operators.iter().any(|op|matches!(op,OperatorSpec::Idt{input,..}|OperatorSpec::LaplaceNd{input,..} if selection::has_variable_division(input)||nonlinear::contains_exp_operator(input,program))) || frozen.program.operators.iter().any(|op|matches!(op,OperatorSpec::Idt{input,..}|OperatorSpec::LaplaceNd{input,..} if affine_bounds::affine(input,&frozen.program).is_err())) {
+                return nonlinear::NonlinearContinuous::new_with_tolerances(program,trajectory,driven,states,horizon,tolerances).map(|v|Some(Self::Nonlinear(Box::new(v))));
+            }
+            return LinearContinuous::new(program, trajectory, driven, states)
+                .map(|v| v.map(|v| Self::Linear(Box::new(v))));
+        }
+        if program.operators.iter().any(|op| matches!(op, OperatorSpec::Idt { input, .. } | OperatorSpec::LaplaceNd { input, .. } if affine_bounds::affine(input, program).is_err() || nonlinear::contains_exp_operator(input,program))) {
             return nonlinear::NonlinearContinuous::new_with_tolerances(program, trajectory, driven, states, horizon, tolerances).map(|v| Some(Self::Nonlinear(Box::new(v))));
         }
         LinearContinuous::new(program, trajectory, driven, states)

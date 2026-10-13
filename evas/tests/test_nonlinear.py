@@ -148,9 +148,18 @@ class PolynomialContracts(unittest.TestCase):
         self.assertEqual(error.exception.detail['sample'],1)
         self.assertEqual(error.exception.detail['kind'],'residual_failure')
 
-    def test_unsupported_exponents_divisors_and_calls_are_explicit(self):
+    def test_variable_divisor_has_independent_answers_and_rejects_zero(self):
+        source = model('V(y,r)<+1/V(u,r);')
+        inputs = (-4, -.5, .25, 2)
+        rows = execute(source, samples=[[u] for u in inputs])
+        for row, u in zip(rows, inputs):
+            self.assertAlmostEqual(row['y'], 1/u, places=12)
+        with self.assertRaisesRegex(KernelError, 'nonfinite_arithmetic'):
+            execute(source, samples=[[0]])
+
+    def test_unsupported_exponents_and_calls_are_explicit(self):
         for expression in ('pow(V(u,r),0)','pow(V(u,r),-1)','pow(V(u,r),0.25)',
-                           'pow(V(u,r),33)','pow(V(u,r),V(u,r))','1/V(u,r)',
+                           'pow(V(u,r),33)','pow(V(u,r),V(u,r))',
                            'pow(V(u,r))','pow(V(u,r),2,3)'):
             with self.subTest(expression=expression),self.assertRaises(CompileError):
                 compile_sources({'bad.va':model('V(y,r)<+'+expression+';')},[instance()])
