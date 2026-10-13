@@ -162,6 +162,13 @@ the smallest scope that supports the request. Use remote resources, backends,
 and budgets only within current authorization; access credentials alone do not
 authorize a new experiment. Reuse authorization already given for this task.
 
+For a new multi-case precision comparison, use the
+[staged experiment procedure](../../../experiments/backends/support/README.md#experiment-pipeline):
+check frozen recipes, verify a scoped pilot's evidence, then execute the full fixed
+selection and analyze collected raw files locally. Select supported runner modes
+from `--help`; retain unrun slots and use a new analysis directory for regrading.
+Keep an already-running batch on its frozen tools and inputs.
+
 ## Preserve independent evidence
 
 Before execution, fix case identities, stimuli, initial conditions, expected

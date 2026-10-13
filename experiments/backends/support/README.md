@@ -1004,6 +1004,80 @@ LANG-preprocess 的输出虽然接近答案，输入已经违反固定合同，�
 其自动有效设置记录仍为 unknown。原生打印行和日志哈希另外保留，没有伪装成读回器已通过。
 这组结果支持“本例受最大步长影响”的结论，不推断 Spectre 的内部实现；基础档 F 不被细档替换。
 
+<a id="experiment-pipeline"></a>
+
+## 先试跑，再完整验收
+
+实验分成输入检查、小批试跑、正式仿真和本地验收。先确认接线、配置和导出资料可用，再扩到完整范围。
+远端继续串行执行，数值 checker 放到收集后的本地目录运行。这样一个用例的验收不会占住远端仿真队列。
+原判据、Q1/Q2/Q3 门槛和历史成绩保持不变。
+
+### 运行前检查接线和配置
+
+`precision_breadth_run.py precheck` 不启动仿真，也不写运行目录。它检查冻结哈希、用例身份、
+档位绑定、端口顺序和观察时刻；Spectre 还核对 deck 中的输入与请求控制。
+EVAS 的请求接线、输入、容差和最大步长必须与用例一致。错误的筛选名称会报错，不会静默遗漏测试。
+这里的 `ready` 只表示输入相互一致，编译支持、实际生效设置和数值精度仍需运行验证。
+
+```sh
+python3 -B experiments/backends/support/precision_breadth_run.py freeze runs/new-breadth-inputs
+python3 -B experiments/backends/support/precision_breadth_run.py precheck runs/new-breadth-inputs \
+  --backend spectre --family composition --group EC05 --tier Q3 --pilot
+```
+
+执行工具发生修改后，为新实验重新冻结输入；不要修改旧快照来绕过来源校验。
+输入检查不能代替 [checker 校准](../../../evas/validation/README.md)。修改 checker 时先运行其正反例测试，
+再用新分析身份重判原始波形。修改模型、刺激或仿真设置时，使用新的执行身份。
+
+### 用一个固定组合试跑
+
+用 `--group` 和 `--tier` 限定本次诊断，再加 `--pilot`。每个所选能力组和实际配置取冻结顺序中的首个用例，
+保留各档自己的配置，不用 Q3 的一次运行冒充 Q1 或 Q2。
+该选择用于检查实验流程；它不保证选中了组内最难的用例。诊断特定反例时用 `--card` 明确指定。
+不限定组时，试跑会覆盖所有组，可能仍有很多配置。
+
+在已有授权的执行主机上运行，`PRIVATE_PROFILE` 指向该主机的实际工具配置：
+
+```sh
+python3 -B experiments/backends/support/precision_breadth_run.py run runs/new-breadth-inputs \
+  runs/pilot-spectre --backend spectre --profile PRIVATE_PROFILE \
+  --family composition --group EC05 --tier Q3 --pilot --defer-analysis
+```
+
+`STARTED.json` 同时保留所选完整范围和试跑范围。未选用例在 `EXECUTION.json` 中写 `not_run`，
+不会从分母消失。`waveform_available` 表示取得了波形，`analysis_status=pending` 表示还未验收。
+编译失败、超时或缺少回调等结果都要检查；试跑结束不等于取得支持结论。
+
+### 收集原件后在本地验收
+
+`--defer-analysis` 保留波形、日志、执行收据和完整文件清单，不在远端读取大波形或运行 checker。
+基础与组合执行器已有该选项；采样保持和一阶滤波的 `precision_v2_run.py run` 也支持该选项。
+原命令不加它时仍进行原来的随运行验收。其他执行入口不要假定已支持这个选项。
+
+沿用既有收集工具取回原件并核对哈希。一个批次收集完毕后，本地可以分析它，远端继续下一批串行仿真。
+各份分析使用独立输出目录，不修改原 `RESULT.json` 或原文件清单。基础与组合使用现有重分析入口：
+
+```sh
+python3 -B experiments/backends/support/precision_breadth_reanalysis.py \
+  --primary . --inputs runs/new-breadth-inputs --lane runs/pilot-spectre \
+  --output runs/pilot-spectre-analysis
+```
+
+`precision_v2_run.py` 的资料继续使用 `precision_v2_report.py` 和其原收集目录约定，见下方三档扫描入口。
+报告先核对原件和冻结输入，再从原日志及响应读回精度设置。缺失或损坏的证据继续标为不足；新报告不回写旧执行记录。
+只有 checker 或说明改变、原件观察已够用时，重新分析原件即可。缺少关键观察或执行身份不同，才补跑相应配置。
+没有回执的旧执行先检查状态，不自动重试。失败的尝试与未运行位置继续保留。
+
+试跑资料确认可用后，去掉 `--pilot` 执行固定范围。正式验收仍覆盖该范围的全部用例、各档和关键边界。
+数值达标、实际设置读回、回调和原生观察分别核对，缺证不能当作通过。
+
+### 从记录定位耗时
+
+基础与组合的新运行保存 `TIMINGS.json`，分开记录输入检查、工具预检、输入准备、后端执行、随运行验收和归档哈希计算。
+后端执行含编译、仿真及导出；更细的编译和仿真耗时见原阶段收据。
+本地重分析有自己的结果身份。这里没有测量或宣称四后端速度排名。
+审查按实现、checker 和执行证据分别给出完整材料，沿用项目审查规则，避免因上下文过大反复重做整轮审查。
+
 ## 复核、再运行和材料位置
 
 新检查器先通过正负校准；维护的 paper 执行器/观察工具 115 项检查通过。

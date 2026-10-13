@@ -87,6 +87,7 @@ def freeze(output):
         save(base/'PLAN.json',plan)
         paths=set(source_files())|{Path(__file__),ROOT/'experiments/backends/support/precision_binding_run.py',
             ROOT/'experiments/backends/support/precision_breadth_run.py',
+            ROOT/'experiments/backends/support/precision_precheck.py',
             ROOT/'experiments/backends/support/breadth_callback_trace.py',
             ROOT/'experiments/backends/support/root_callback_evidence.py',
             ROOT/'experiments/backends/support/root_window_report.py',
