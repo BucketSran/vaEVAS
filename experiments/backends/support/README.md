@@ -5,6 +5,99 @@
 本页继续保留每个固定组、每一档的原结果、失败与证据缺口。
 例如 Q3 通过不回写 Q2 的缺证，Q3 超时也不抹去 Q2 的通过。历史条件不因新增批次退出清单。
 
+旧 EVAS 工作区在 0.15.0 整理时已保全至项目入口的 `local/archives/evas-0.15.0-20261013/`。
+下文历史 `worktrees/...` 路径仍表示取证时的位置；归档目录的 `README.md` 与逐文件清单提供恢复位置和校验值。
+归档不改变运行身份、原判据或成绩，也不把本地证据变成公开下载。
+
+<a id="legacy-chain-q"></a>
+
+## 旧整链 Q 验收与中断边沿积分（2026-10-13）
+
+**当前 main 的四条旧整链已取得 EVAS Q3；新增中断边沿积分也完成实际 Spectre 对照。**
+旧整链保留12个条件，逐一运行 Q1/Q2/Q3。新增积分实现纳入 0.15.0，实测使用发布前候选的独立构建。
+下表误差相对独立数学参考，包含实际回调范围和参考计算误差，不表示两个后端逐点相同。
+
+| 固定范围 | EVAS Q3 | Spectre Q3，只读回调版本 |
+| --- | --- | --- |
+| 采样→保持→边沿→滤波，7条件 | 全部通过 | 全部通过，最大13.87 nV |
+| 原定时采样→积分，1条件 | 通过 | 通过，5.85 nV |
+| 滤波→采样保持，1条件 | 通过 | 通过，0.992 nV |
+| 原近邻定时整链，3条件 | 全部通过 | 边界观察缺失；stop读回格式未校准 |
+| 中断边沿→积分，EC05-Q-v2 | 通过，6.22 fV | 通过，2.20 pV |
+
+旧整链 EVAS 三档36次全部通过，三档最大误差上界为65.61 fV。
+Spectre 原模型与只读回调模型分别实际运行36次：只读模型27次完整通过，近邻三模型的9次缺边界观察及stop读回格式校准。
+原模型缺回调取证，全部保留证据不足。36对观测开关的完整科学波形逐位相同，
+但这项核对不把只读模型的 Q 资格转授给原模型。
+
+近邻定时事件的问题是观察精度。Spectre 已使用 `transres=1e-20 s`，仍将多个极近请求合并到一个原生点。
+本卡要求边界两侧距离不超过 `16×ulp(1 s)`，没有删除这些要求或用插值补齐。
+此外，日志中的stop以科学计数法打印，PSF中的1 s采用另一种打印形式，现有共同读回校准尚未覆盖。
+旧1 µV成绩与新 Q 的不完整资格并列保留；这不表明 EVAS 需要修复同一问题。
+
+### 新积分修复了什么
+
+原缺口是 `transition` 的输出不能驱动这个前馈 `idt`。现在先积完旧边沿的面积，再安装新的边沿目标。
+中断会改变后续斜率，但不会重置已有面积或积分初值。
+本卡的初值为0.1 V，两个三角形面积合计0.1875 V，终值为 **0.2875 V**。
+手算、实际回调参考、负控与限制见[积分说明](../../../evas/docs/math/operators.md#transition-integral)。
+
+新积分实际运行9个配置：EVAS原源三档、Spectre原源三档、Spectre只读源三档。
+EVAS与Spectre只读源均通过全部三档；Spectre原源仍缺回调资料。
+三对 Spectre 观测开关的完整科学波形逐位相同。
+
+**这里仍有可解释的逐点差异。** Spectre 两次回调都比 EVAS 早100 ps，处于本卡原±100 ps窗口内。
+三档3853个共同原生时刻的最大原始差为边沿209.7152 µV、积分52.43 µV、计数通道1 V。
+按各自整条实际合法回调历史计算参考后，额外数值误差才是上表的6.22 fV与2.20 pV。
+Q3终值分别为0.2875 V和0.2875000000010809 V；没有通过改变源码容差或删掉边界来取得通过。
+这项范围内的时间差依据本卡原窗口验收，与此前18条边界差异的豁免无关。
+进一步用两条完整实际回调历史预测这些差，再与原生波形的差核对：三档的边沿残差为0，
+积分残差最大约2.20 pV，两侧已有误差上界之和不超过2.21 pV。
+这是解释原始差异的诊断，没有新增误差预算，也没有将波形平移或另选每个点的回调历史。
+
+### 身份与保留范围
+
+[紧凑收据](20261013-legacy-chain-q.json)记录117个最终固定配置的输入、实际参数、工具、构建和分析身份。
+旧整链内核对应 main `7344e4db`；新增积分内核来自同一基线加本分支生产改动。
+Rust构建、原Python执行来源与新分析来源分别核验，没有把新版分析脚本当作旧内核构建输入。
+实际档位设置见[评测标准](../../../evas/docs/COMPARISON-METHODOLOGY.md#legacy-chain-profiles)；
+两个开源后端沿用原收据，本轮没有新增其 Q 验收。
+
+旧源码、判据和历史成绩保持。新观察保留旧请求，并增加关键边界强制点；
+旧 checker 对新波形的重审也单独记录，不称为复现了旧普通查询执行。
+初次近邻参考端口绑定错误及原构建门混淆导致的失败保留为诊断，最终输入和新版重分析各有独立身份。
+完整原件、失败的GLM调用与后续完整报告保留在可见项目入口的
+`current/runs/legacy-chain-transition-integral-20261013/`，为local-only，哈希不是下载地址。
+#131保持不动。本轮支持限于单个前馈transition驱动显式非零初值积分；反馈、复位和长期历史压力不在范围内。
+
+### 两个入口的运行与重新验收
+
+`legacy_chain_run.py` 和 `transition_integral_run.py` 都提供 `freeze`、`precheck`、`run`、`analyze`。
+先冻结本次源码与输入，再用 `precheck` 检查配方。`--pilot` 保留选中条件的原源码和只读回调版本，
+未执行项写为 `not_run`；它不代表完整范围通过。两个入口目前只运行 EVAS 和 Spectre。
+
+```sh
+python3 -B experiments/backends/support/transition_integral_run.py freeze runs/area-inputs
+python3 -B experiments/backends/support/transition_integral_run.py precheck runs/area-inputs \
+  --backend spectre --tier Q3 --pilot
+python3 -B experiments/backends/support/transition_integral_run.py run runs/area-inputs runs/area-spectre \
+  --backend spectre --profile PRIVATE_PROFILE --tier Q3 --pilot --defer-analysis
+```
+
+`PRIVATE_PROFILE` 是已授权执行主机上的实际工具配置。新运行用 `TIMINGS.json` 分开记录检查、执行和分析耗时，
+不据此声称后端速度排名。`--defer-analysis` 只封存执行资料，数值与资格都留待本地分析。
+
+```sh
+python3 -B experiments/backends/support/transition_integral_run.py analyze \
+  --lane runs/area-spectre --producer-repo /path/to/preserved-execution-repo \
+  --output runs/area-analysis.json
+```
+
+重新验收先核对原执行清单、冻结配方和执行时源码，再读取波形、回调与实际设置。
+输出必须使用原运行目录外的新文件。原 `RESULT.json`、原判据和历史成绩不改写。
+旧运行没有新增的冻结预检回执时，报告明确标作有限历史重审，不补造当时的预检记录。
+完整流程见[实验步骤](#experiment-pipeline)。
+
 <a id="root-window-v3"></a>
 
 ## 旧窗口的新版验收（2026-10-13）

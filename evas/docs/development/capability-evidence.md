@@ -4,6 +4,14 @@
 面向使用者的支持结论只在[四后端支持范围](../COMPARISON.md)维护，详细接受与拒绝条件由所链接的契约维护。
 收据只证明其固定执行版本；下表仅登记 ID 与证据，供追溯工具读取，不维护第二份支持状态或当前 main 通过率。
 
+[旧整链 Q 补验与中断边沿积分](../../../experiments/backends/support/README.md#legacy-chain-q)
+补充 TIMER、TRANSITION、DYNAMICS、COMPOSE、QUALIFICATION。
+旧整链使用 main `7344e4db` 对应内核代码；[新增前馈积分](../math/operators.md#transition-integral)
+纳入 0.15.0 / IR19，支持范围与发布前实际构建、执行身份分别保留。
+校准见[完整回调历史](../../tests/test_legacy_chain_precision.py)、
+[有向数学包围](../../tests/test_legacy_chain_bounds.py)和[独立边沿面积](../../tests/test_transition_integral_precision.py)，
+生产回归见[中断与历史保持](../../tests/test_transition_integral.py)。不覆盖 #131。
+
 [本轮导数与严格组合修复](../../../experiments/backends/support/README.md#capability-gaps)
 补充 LANG、DYNAMICS、COMPOSE、QUALIFICATION；两张导数卡与八张组合卡保留实际候选源码、内核、原判据和Spectre对照。
 回归见[多项式导数](../../tests/test_polynomial_derivatives.py)、[滤波精度](../../tests/test_filter_precision.py)。
