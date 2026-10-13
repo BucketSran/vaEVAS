@@ -6,11 +6,17 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-sys.path.insert(0,str(Path(__file__).resolve().parent))
-import legacy_chain_run as legacy
-import transition_integral_run as area
-import legacy_pipeline as pipeline
-from inputs import sha
+# Runner imports install their local dependency paths. Restore the caller's
+# search order so later discovery resolves tests from this support directory.
+_import_path = sys.path[:]
+try:
+    sys.path.insert(0,str(Path(__file__).resolve().parent))
+    import legacy_chain_run as legacy
+    import transition_integral_run as area
+    import legacy_pipeline as pipeline
+    from inputs import sha
+finally:
+    sys.path[:] = _import_path
 save=pipeline.save
 
 
