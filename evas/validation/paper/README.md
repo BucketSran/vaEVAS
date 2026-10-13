@@ -3,6 +3,11 @@
 [累计测试清单](COVERAGE.md)逐项对应历史用例与新 44 组，说明哪些旧条件仍需保留，
 哪些规划尚缺测试或验收。查看支持结论用[对比表](../../docs/COMPARISON.md)，具体模型和运行入口继续在本页维护。
 
+SH-X-RAMP 与 EC04 的旧窗口冲突另用 [root-window-v3](precision-root-v3.json)验收。
+它保留原成绩和全部非时间要求，分别报告严格事件语义与有限时间导出分辨率。
+[实现和复验入口](../../docs/development/COMPARISON.md#root-window-v3)说明如何核对完整回调、源码和实际配置；
+不能只凭根区间或运行成功授予精度成绩。
+
 新增的 44 组精度验证来自 [#162 候选](https://github.com/BucketSran/vaEVAS/pull/162)，包含 20 组基础特性和 24 组工程组合，共 71 个必测变体。
 本轮整合该批工具和修复；历史成绩仍对应固定运行版本，不代表整合版本已全量复验。
 模型、独立参考和校准分别位于 [基础特性](https://github.com/BucketSran/vaEVAS/blob/814da00daf2f0bea1555fffe923f5b6abd78b6bf/evas/validation/paper/precision_breadth_foundation.py)、

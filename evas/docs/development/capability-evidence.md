@@ -7,7 +7,12 @@
 [本轮导数与严格组合修复](../../../experiments/backends/support/README.md#capability-gaps)
 补充 LANG、DYNAMICS、COMPOSE、QUALIFICATION；两张导数卡与八张组合卡保留实际候选源码、内核、原判据和Spectre对照。
 回归见[多项式导数](../../tests/test_polynomial_derivatives.py)、[滤波精度](../../tests/test_filter_precision.py)。
-旧触发窗冲突及本地候选状态明确保留，不转授 main 或任意组合支持。
+实现已随 #167 合入 main `e028f96d`；原收据的候选身份和成绩保留，不转授任意组合支持。
+
+[新版根窗口实测](../../../experiments/backends/support/README.md#root-window-v3)
+补充 CROSS、EVENT-ORDER、DYNAMICS、COMPOSE、QUALIFICATION。固定 SH-X-RAMP 与 EC04-v1 的三档运行，
+保留完整回调区间，严格时间语义与有限分辨率验收分别报告；这是判据与证据更新，没有修改 EVAS 求解器。
+[新版合同与校准](../../validation/paper/precision-root-v3.json)不覆盖 #131 或其他窗口。
 
 [采样积分与局部 strobe 修复](../../../experiments/backends/support/README.md#sampled-integral-fix)
 补充 DYNAMICS、CROSS、TIMER、EVENT-ORDER、COMPOSE、QUALIFICATION。

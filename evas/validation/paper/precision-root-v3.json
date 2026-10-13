@@ -1,0 +1,21 @@
+{
+  "schema_version": 3,
+  "id": "root-window-v3",
+  "scope": [
+    "SH-X-RAMP",
+    "EC04-v1"
+  ],
+  "historical_assets": {
+    "precision-v1.json": "66f861ec83d75ec996a6fdc0b84263567b4a123b98a5f8e0cf920aeb734f328b",
+    "precision-v2.json": "a5e08c66388a01e1ae24f161d53125ae605914158fec5c58d0e1f94c4708f603",
+    "precision_v2.py": "7816ce29f02f2f42a7a712c38d70659d7308cb777487187e426fea5445bdb64b",
+    "precision_breadth.py": "299ae9a2bcdff8fa2d987ad54ce0a4a8ebaa9db015a6b686a23dba63c6f31ceb",
+    "precision_breadth_composition.py": "62299a0b389f8a3b1b08e1f5cbdd44950724cc3ed4476e4884afa8a84325e6e2",
+    "precision_reference.py": "f147be6e821de4b87a27be149acc22015fd927e8bf4cb90036ae99eb7f23cc29"
+  },
+  "time_resolution": "inherit time_serialization_ulps * ulp(stop) from frozen v2 budgets",
+  "strict_timing": "no early triggering; report independently from finite exported-time resolution",
+  "root_reference": "exact represented PWL endpoints; exact sqrt(2)*T algebraic comparison",
+  "changed_rule": "derive time windows from represented-input mathematical roots, not rounded nominal or inward-shifted window",
+  "preserved": "source, stimulus, all non-time acceptance rules, original checker and original assessments"
+}
