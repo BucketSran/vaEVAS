@@ -63,19 +63,29 @@ def freeze(output):
     print(json.dumps({'configurations':len(plan),'manifest_sha256':sha(output/'MANIFEST.json'),'estimates':estimates}))
 
 
-def run(inputs,output,backend,profile_path,family):
+def run(inputs,output,backend,profile_path,family,*,defer_analysis=False):
     verify(inputs);data=load(inputs/'cards.json');profile=load(profile_path)
     plan=[r for r in load(inputs/'PLAN.json') if r['backend']==backend and r['family']==family]
     output.mkdir(parents=True,exist_ok=False);results=[]
     save(output/'STARTED.json',{'limits':LIMITS,'selected':plan,'input_manifest_sha256':sha(inputs/'MANIFEST.json'),
-                              'profile_sha256':sha(profile_path),'schema_version':2})
+                              'profile_sha256':sha(profile_path),'schema_version':2,
+                              'defer_analysis':defer_analysis})
     try:
         tool,env=preflight(backend,profile,output,LIMITS);save(output/'TOOL_IDENTITY.json',tool)
         for row in plan:
             verify(inputs);verify_tool(tool,profile,env)
             work=output/'runs'/row['label'];shutil.copytree(inputs/row['work'],work)
-            result={**row,**execute_one(backend,tool,env,work)}
-            if result['status']=='waveform_available':
+            try:
+                result={**row,**execute_one(backend,tool,env,work)}
+            except Exception as exc:
+                result={**row,'status':'execution_failed','reason':repr(exc),'abort_batch':True,
+                        'stages':[load(work/(n+'.json')) for n in ('compile','simulate') if (work/(n+'.json')).is_file()]}
+                if defer_analysis:result['analysis_status']='not_available'
+                save(work/'RESULT.json',result);results.append(result)
+                raise
+            if defer_analysis:
+                result['analysis_status']='pending' if result['status']=='waveform_available' else 'not_available'
+            elif result['status']=='waveform_available':
                 try:
                     native=read_native(work/result['waveform'],backend)
                     result['assessment']=assess(load(work/'condition.json'),native,data)
@@ -102,6 +112,7 @@ if __name__=='__main__':
     p=sub.add_parser('run');p.add_argument('inputs',type=Path);p.add_argument('output',type=Path)
     p.add_argument('--backend',choices=BACKENDS,required=True);p.add_argument('--profile',type=Path,required=True)
     p.add_argument('--family',choices=('sample_hold','first_order'),required=True)
+    p.add_argument('--defer-analysis',action='store_true',help='save raw evidence; analyze locally with precision_v2_report.py')
     a=parser.parse_args()
     if a.mode=='freeze':freeze(a.output.resolve())
-    else:run(a.inputs.resolve(),a.output.resolve(),a.backend,a.profile.resolve(),a.family)
+    else:run(a.inputs.resolve(),a.output.resolve(),a.backend,a.profile.resolve(),a.family,defer_analysis=a.defer_analysis)
