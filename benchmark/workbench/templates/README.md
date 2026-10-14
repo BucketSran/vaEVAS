@@ -1,5 +1,16 @@
 # 新增和维护题卡
 
+单文件题的新目标格式见[题包规范](../../README.md#单文件题的目标规范)：
+直接编辑并交付 `/app/circuit.va`，题面使用 `Spec` 和 `Deliverable` 两个主段。
+模块名按电路功能命名，公开 testbench 提供指标和公开用例的 PASS/FAIL；
+终评材料与求解环境隔离，公开通过不代表整题通过。
+本目录 INSTRUCTION.md 已按新规范更新，实际题包、生成器和格式检查仍待迁移；
+模板更新不表示现有 R01 已完成格式统一。
+
+先按[建设流程](../docs/evaluation.md#建设流程与完成标准)确认当前阶段。
+功能族讨论与任务方向可以直接记在该族 README、任务清单和现有 issue 中；
+已有清单不必为了使用模板再创建一套历史题卡。以下步骤用于确实需要新增或维护设计卡的工作。
+
 1. 从总表和暂缓项确认未使用的全局 Case ID；编号不随分类变化，不回收旧编号。
 2. 在 `catalog.json` 已登记的工程动作与电路家族下创建 `case-NNNN-purpose/`。
 3. 复制本目录 [case.json](case.json) 和 [CASE.md](CASE.md) 为新目录的 `case.json` 与 `README.md`，替换占位信息。模板本身不参与题目计数。
@@ -16,3 +27,18 @@
 阶段可用值：`source-screening`、`design-draft`、`implementation`、`calibration`、`model-trials`、`frozen`、`deferred`。设计 review 可用值：`pending`、`changes-requested`、`accepted`、`not-requested`。
 
 上下文可用值：`bounded-work-unit`、`bounded-project`、`full-repository`。公开自测方式：`undecided`、`fixed-public-tests`、`fixed-connections-custom-probes`。即使尚未选自测形式，也应在正文写清拟交付物与终评边界。
+
+## 从方向转成正式题包
+
+1. 从已认可方向中选一个样板，查同类现有工程题。文件分工参考[已有工程题](https://github.com/BucketSran/vaEVAS/tree/ff5d0fd9bc4dbeafe7fc91e233ad97880155a233/benchmark/tasks/v2-test-hysteresis)，英文题面从 [INSTRUCTION.md](INSTRUCTION.md)起草；历史题的文字和验收规则不自动成为新合同。
+2. 按[题包规范](../../README.md#单文件题的目标规范)独立编写公开 starter。建模题默认只给接口声明、参数和 TODO，特殊接口才补注释。instruction 引用它，说明工程目标、行为要求、修改范围与交付；公开运行的详细使用说明放在对应运行工具或公开 README 中。
+3. Agent 先核对代表题公开材料的合同一致性并列出疑点，再把英文题面、独立接口、实际公开工程、交付伪代码和[验收方案](../docs/evaluation.md#验收方案与结果呈现)交人工审核。人工重点判断工程价值、工作边界、关键行为、交付与实验是否有解释力；尚待审核时如实记录，不称为已认可模板。
+4. 代表题合同确认后，完成参考解和独立 checker，走通公开运行、参考交付和独立终评，完成必要的作者校准；再将相同文件分工复用到授权范围。新环境先验证一个题，避免批量发现环境依赖。
+5. 按共用电路资产逐组完成建设与校准，检查生成源与题包一致，逐组交付人工 review。新规范的静态检查仍待适配；工具可用后确认其覆盖并记录实际结果。每组说明新增工作、同源区别与剩余问题；源码、运行结果和未决问题回到已有任务清单与校准记录。
+
+人工 review 使用真实题包和简短中文导读。导读写在功能族现有任务清单或说明中，
+说明场景、材料、代码大体思路、关键行为、交付伪代码与未决问题，并链接英文题面、
+独立接口和公开工程。保持求解者公开材料自足，不把完整规格另抄一份；参考解和 checker 用于最终审核。
+
+每轮交接在现有记录中给出当前阶段、范围与依据、本轮交付、实际完成结果和下一项依赖。
+文档或检查仍在未合入的工作区时，链接其可见入口；后续工作不能据此声称 main 已采用。
