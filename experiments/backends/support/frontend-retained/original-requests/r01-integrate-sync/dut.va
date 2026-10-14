@@ -1,0 +1,67 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Four independent storage nodes share one acquisition aperture.
+// Selection and read enable belong to the downstream readout controller.
+module r01_simultaneous(ain0, ain1, ain2, ain3, track, rst,
+                       sel0, sel1, read_en, dout, valid,
+                       held0, held1, held2, held3);
+    input ain0, ain1, ain2, ain3, track, rst, sel0, sel1, read_en;
+    output dout, valid, held0, held1, held2, held3;
+    electrical ain0, ain1, ain2, ain3, track, rst, sel0, sel1, read_en;
+    electrical dout, valid, held0, held1, held2, held3;
+    parameter real vth = 0.9;
+    parameter real vlogic = 1.8;
+    parameter real vinit = 0.9;
+    parameter real tau_acq = 10n from (0:inf);
+    parameter real tau_hold = 200u from (0:inf);
+    parameter real vleak = 0.0;
+    parameter real pedestal = 2m;
+    parameter real edge_time = 1n from (0:inf);
+    integer frame_valid, acquired;
+    integer selected, readable;
+    real read_value;
+
+    r01_track_hold #(.vth(vth), .vinit(vinit), .tau_acq(tau_acq),
+        .tau_hold(tau_hold), .vleak(vleak), .pedestal(pedestal))
+        sh0(ain0, track, rst, held0);
+    r01_track_hold #(.vth(vth), .vinit(vinit), .tau_acq(tau_acq),
+        .tau_hold(tau_hold), .vleak(vleak), .pedestal(pedestal))
+        sh1(ain1, track, rst, held1);
+    r01_track_hold #(.vth(vth), .vinit(vinit), .tau_acq(tau_acq),
+        .tau_hold(tau_hold), .vleak(vleak), .pedestal(pedestal))
+        sh2(ain2, track, rst, held2);
+    r01_track_hold #(.vth(vth), .vinit(vinit), .tau_acq(tau_acq),
+        .tau_hold(tau_hold), .vleak(vleak), .pedestal(pedestal))
+        sh3(ain3, track, rst, held3);
+
+    analog begin
+        @(initial_step) begin
+            frame_valid = 0;
+            acquired = (V(rst) <= vth && V(track) > vth);
+        end
+        @(cross(V(rst)-vth, +1)) begin
+            frame_valid = 0;
+            acquired = 0;
+        end
+        @(cross(V(track)-vth, +1) or cross(V(rst)-vth, -1)) begin
+            frame_valid = 0;
+            if (V(rst) <= vth && V(track) > vth) acquired = 1;
+        end
+        @(cross(V(track)-vth, -1)) begin
+            if (V(rst) <= vth && acquired) frame_valid = 1;
+            acquired = 0;
+        end
+        selected = (V(sel0) > vth ? 1 : 0) + (V(sel1) > vth ? 2 : 0);
+        case (selected)
+            0: read_value = V(held0);
+            1: read_value = V(held1);
+            2: read_value = V(held2);
+            3: read_value = V(held3);
+        endcase
+        readable = frame_valid && V(track) <= vth && V(rst) <= vth
+                   && V(read_en) > vth;
+        V(dout) <+ read_value * transition(readable, 0, edge_time);
+        V(valid) <+ vlogic * transition(readable, 0, edge_time);
+    end
+endmodule

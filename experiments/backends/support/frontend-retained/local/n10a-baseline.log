@@ -1,0 +1,35 @@
+
+======================================================================
+ERROR: test_dead_scalar_does_not_make_valid_transfer_singular (test_unused_internal_nodes.UnusedInternalNodes.test_dead_scalar_does_not_make_valid_transfer_singular)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_unused_internal_nodes.py", line 17, in test_dead_scalar_does_not_make_valid_transfer_singular
+    r=solve(p,['u'],[[0.],[0.5]],kernel=KERNEL)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/src/evas/runtime.py", line 26, in solve
+    response = _invoke(request, kernel, timeout)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/src/evas/runtime.py", line 92, in _invoke
+    raise KernelError(detail)
+evas.errors.KernelError: singular_system: fewer voltage constraints than unknown nodes; unknown nodes: ["dut:dead", "y"]; constraints: unused.va:2:76 (dut)
+
+======================================================================
+FAIL: test_child_connections_and_instance_private_names_are_retained (test_unused_internal_nodes.UnusedInternalNodes.test_child_connections_and_instance_private_names_are_retained)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_unused_internal_nodes.py", line 60, in test_child_connections_and_instance_private_names_are_retained
+    self.assertNotIn('dut:dead',p.nodes)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'dut:dead' unexpectedly found in ('0', 'dut/c:unused', 'dut:dead', 'dut:link', 'u', 'y')
+
+======================================================================
+FAIL: test_dead_vector_is_removed_but_declarations_still_validated (test_unused_internal_nodes.UnusedInternalNodes.test_dead_vector_is_removed_but_declarations_still_validated)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_unused_internal_nodes.py", line 23, in test_dead_vector_is_removed_but_declarations_still_validated
+    self.assertFalse(any('dead' in n for n in p.nodes))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.041s
+
+FAILED (failures=2, errors=1)
