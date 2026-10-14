@@ -120,13 +120,19 @@ pub(crate) fn render(format: &str, args: &[f64]) -> Result<String, Error> {
     Ok(output)
 }
 
-fn bind(
+pub(crate) fn bind(
     expr: &Expression,
     program: &Program,
     owner: &str,
     states: &[f64],
 ) -> Result<Expression, Error> {
     Ok(match expr {
+        Expression::EventMath { .. } => {
+            return Err(Error::new(
+                "unsupported_display",
+                "pure event mathematics requires event evaluation",
+            ))
+        }
         Expression::State { state } => {
             if *state >= program.states.len() || program.states[*state].instance != owner {
                 return Err(Error::new(
@@ -193,10 +199,13 @@ pub(crate) fn validate_expression(
     program: &Program,
     owner: &str,
 ) -> Result<(), Error> {
-    crate::expression::validate(
-        &bind(expr, program, owner, &vec![0.; program.states.len()])?,
-        program.nodes.len(),
-    )
+    if crate::event_numeric::contains_operator(expr) {
+        return Err(Error::new(
+            "unsupported_display",
+            "display waveform operator arguments are not supported",
+        ));
+    }
+    crate::event_numeric::validate(expr, program, owner)
 }
 
 pub(crate) fn evaluate(
@@ -206,7 +215,12 @@ pub(crate) fn evaluate(
     voltages: &[f64],
     states: &[f64],
 ) -> Result<f64, Error> {
-    Ok(crate::expression::evaluate(&bind(expr, program, owner, states)?, voltages)?.value)
+    crate::event_numeric::validate(expr, program, owner)?;
+    if crate::event_numeric::contains_math(expr) {
+        crate::event_numeric::value(expr, program, owner, voltages, states)
+    } else {
+        Ok(crate::expression::evaluate(&bind(expr, program, owner, states)?, voltages)?.value)
+    }
 }
 
 #[cfg(test)]

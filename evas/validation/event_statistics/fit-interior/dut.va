@@ -1,0 +1,17 @@
+`include "disciplines.vams"
+module statistics(x,y); input x,y; electrical x,y;
+integer n; real sx,sy,sxx,sxy,syy,xx,yy,den,gain,offset,rms;
+analog begin
+ @(initial_step) begin n=0;sx=0;sy=0;sxx=0;sxy=0;syy=0;end
+ @(timer(0.25,0.25,1e-12)) begin
+   xx=V(x);yy=V(y);n=n+1;sx=sx+xx;sy=sy+yy;
+   sxx=sxx+xx*xx;sxy=sxy+xx*yy;syy=syy+yy*yy;
+ end
+ @(final_step) begin
+   den=n*sxx-sx*sx;
+   gain=(n*sxy-sx*sy)/den;
+   offset=(sy-gain*sx)/n;
+   rms=sqrt(max(0.0,(syy-gain*sxy-offset*sy)/n));
+   $display("fit %d %.12g %.12g %.12g",n,gain,offset,rms);
+ end
+end endmodule

@@ -1,7 +1,7 @@
 //! The only executable model format for the voltage kernel.
 use serde::{Deserialize, Serialize};
 
-pub const SCHEMA_VERSION: u32 = 21;
+pub const SCHEMA_VERSION: u32 = 22;
 
 pub fn check_schema_version(version: u64) -> Result<(), Error> {
     if version != u64::from(SCHEMA_VERSION) {
@@ -83,6 +83,11 @@ pub enum ContributionKind {
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 #[serde(tag = "op", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Expression {
+    EventMath {
+        function: EventMathFunction,
+        args: Vec<Expression>,
+        origin: Origin,
+    },
     Operator {
         operator: usize,
     },
@@ -117,6 +122,15 @@ pub enum Expression {
         else_value: Box<Expression>,
         origin: Origin,
     },
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum EventMathFunction {
+    Sqrt,
+    Abs,
+    Min,
+    Max,
 }
 
 #[derive(Debug, Clone, Copy, Deserialize, Serialize)]

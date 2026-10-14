@@ -2,7 +2,7 @@ use super::*;
 use crate::ir::{Term, TransientInputs};
 fn program() -> Program {
     serde_json::from_value(serde_json::json!({
-        "schema_version": 21,
+        "schema_version": crate::ir::SCHEMA_VERSION,
         "nodes": ["0", "u", "y"],
         "contributions": [],
         "states": [{"instance": "dut", "name": "q", "kind": "real", "initial": 0.25}],

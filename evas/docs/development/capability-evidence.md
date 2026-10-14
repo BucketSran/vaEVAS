@@ -25,6 +25,8 @@ IR21 共同基础已随 [#174](https://github.com/BucketSran/vaEVAS/pull/174) �
 
 [原70请求的同版复验摘要](../../../experiments/backends/support/r01-main70-summary.json)保留当前main的工程完成、拒绝与原判据身份，完整资产仍是local-only，不能转为论文Q成绩。[覆盖缺口](../../validation/paper/COVERAGE.md#engineering-gap-audit)将LANG、DYNAMICS、TRANSITION、COMPOSE及事件需求对应到独立卡规划，尚无新增支持声明。
 
+[隔离事件统计](../../../experiments/backends/support/README.md#event-statistics)补充 LANG、EVENT-CONDITIONS、EVENT-ORDER、TIMER：IR22 的状态分母及 sqrt/abs/min/max 纯事件数学只扩展完整 IR 证明隔离的观察实例。三条原 gain 请求及四个手算控制已实际验收，不新增论文 Q 成绩。合同见[事件数学](../math/events.md#event-math)，独立输入见[统计控制](../../validation/event_statistics/README.md)，回归见[test_event_statistics.py](../../tests/test_event_statistics.py)。
+
 [连续状态与原 timing 请求](../../../experiments/backends/support/r01-causal-timing/README.md)
 补充 DYNAMICS、TIMER、TRANSITION、CROSS、EVENT-CONDITIONS、EVENT-ORDER 与 COMPOSE。
 契约见[连续因果投影](../math/continuous.md)和[事件条件与观察](../math/events.md)。

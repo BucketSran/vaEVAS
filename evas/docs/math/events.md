@@ -1,6 +1,6 @@
 # 事件、时间推进与历史
 
-适用范围：IR21 的 `cross`、固定/保持状态 `timer`、受限事件体条件、事件 OR、多事件写者及模型步长请求。
+适用范围：IR22 的 `cross`、固定/保持状态 `timer`、受限事件体条件、事件 OR、多事件写者及模型步长请求。
 能力 ID 为 LANG、CROSS、TIMER、EVENT-ORDER、EVENT-CONDITIONS、DYNAMICS、COMPOSE；支持与缺口见[四后端支持范围](../COMPARISON.md)。
 
 本页维护定位、顺序赋值和同刻关系。历史的复位、观察及未来传播见
@@ -41,9 +41,9 @@
 已支持的线性解析历史由接受帧上的动态请求限制推进，不改变解析公式。
 这不是一般动态模型的完整 `$bound_step` 支持。
 
-Python 的 `instance_compiler.py` 生成 IR21 `step_bounds`，每项保存 `value/active/origin`。
+Python 的 `instance_compiler.py` 生成 IR22 `step_bounds`，每项保存 `value/active/origin`。
 Rust 的 `step_bounds.rs` 验证引用和来源、计算认证上限；`transient.rs` 在接受帧调用它，
-`nonlinear_dynamics.rs` 限制实际积分段。旧 IR1–20 须从 VA 重新编译。
+`nonlinear_dynamics.rs` 限制实际积分段。旧 IR1–21 须从 VA 重新编译。
 [test_bound_step.py](../../tests/test_bound_step.py) 独立检查多调用/实例取最小值、条件释放、
 事件后状态、语句顺序、查询不改变终值、非法 IR，以及 `y'=y²,y(0)=1` 的解析答案和实际积分段宽度。
 [test_r01_language.py](../../tests/test_r01_language.py) 补语言入口回归。
@@ -70,6 +70,65 @@ Rust 的 `step_bounds.rs` 验证引用和来源、计算认证上限；`transien
 该事件联立路径中的变量或算子分母仍拒绝。一般定时波形算子与 `idt`、`laplace_nd`、`ddt` 的混合网络
 仍可能返回 `unsupported`，不能从一个乘积贡献推导整个混合网络受支持。
 开发回归见 [事件选路与算子系数](../../tests/test_r01_event_select.py)；尚无本候选的实际 Spectre 对照。
+
+<a id="event-math"></a>
+
+## 隔离观察事件中的统计数学
+
+IR22 的本地源码候选扩展独立测量实例的统计表达式。物理事件先完成同刻联立求解和历史闭合，
+观察事件再读取实际事件时刻 tau 的电压值及区间。实例必须满足[完整 IR 隔离判定](#passive-observer)，
+不能拥有电压贡献、历史算子或步长请求，也不能让其他实例消费其状态。
+判定扫描所有分支及显式零项，不按模型名、当前参数或数值结果放行。
+事件中含 `initial_step` 或固定 start=0 timer 叶子时保留原路径，该 timer 的后续周期也不获得此扩展。
+正常完成时的隔离 `final_step` 可读取已接受统计状态，时序仍遵守[事件输出合同](#display-records)。
+
+新增纯数学表达式只含 `sqrt`、`abs`、`min`、`max`，并组合原有加减乘除及整数幂。
+它们在事件执行时求值，不创建连续历史。已有可用的仿射求值和常量数学保留；
+非隔离事件仍须满足原联立仿射合同，其他一般函数及事件历史调用仍拒绝。
+
+例如，下列片段在可证明 `n>0` 时计算均值及标准差：
+
+```verilog
+if (n > 0) begin
+    mean = sum / n;
+    variance = sumsq / n - mean * mean;
+    sigma = sqrt(max(0.0, variance));
+    $display("mean=%g sigma=%g", mean, sigma);
+end
+```
+
+每条赋值读取同块此前写入的状态，条件与 `$display` 也读取其所在语句位置的状态。
+新增非仿射赋值、数学函数参数和直接显示复用同一个补偿求值入口；不能让同一表达式因消费者不同而采用不同的舍入顺序。
+名义值用于记录数值，区间用于证明定义域、选路及后续消费者的误差，不能只凭名义值为正就接受除法。
+内核还检查代表值确实位于原表达式的区间内；补偿求值不能代替这项认证。
+区间传播遵守下列规则：
+
+- 除法要求分母整个包围不含零。分母值为零或包围跨零时返回 `event_domain`。
+- `sqrt` 要求输入整个包围非负，并用既有平方根认证得到输出包围。源码没有 `max` 时，负输入不能擅自夹零。
+- 对 `X=[L,H]`，`abs(X)` 的上界为 `max(abs(L),abs(H))`；含零时下界为零，否则为两端绝对值的较小值。
+- 对 `X=[Lx,Hx]` 与 `Y=[Ly,Hy]`，`min(X,Y)=[min(Lx,Ly),min(Hx,Hy)]`，
+  `max(X,Y)=[max(Lx,Ly),max(Hx,Hy)]`。因此 `max(0.0,variance)` 的输出下界是零，
+  即使 variance 的包围跨零，也不需要猜测一条赋值分支。
+
+真 `if` 与三元表达式仍须证明选路，只求值选中臂的数学域。
+例如可证明 `n=0` 时，`n>0 ? sum/n : 0.0` 不执行除法。
+编译和 IR 校验仍检查两臂的名字、类型、参数数目、源码身份及结构预算；未选臂不能隐藏非法声明或历史调用。
+未知条件沿用原保守拒绝和已有两臂等价规则，根处比较仍须满足原同零集证书要求。
+非有限值或包围明确失败，integer 继续要求精确整数，real 统计状态保留全部误差区间。
+
+状态、误差包围、显示记录和未来日程只在整批验收成功后提交。数学域错误或后续日程、输出认证失败，
+都保留批次前的已接受状态和记录；普通输出查询不重做统计累计。
+前端与内核必须配套使用 IR22，从原 VA 与 manifest 重编译，不能仅修改旧 JSON 的版本号。
+
+实现入口为 [lowering.py](../../src/evas/lowering.py) 的事件数学降低、
+[events.rs](../../rust_core/src/events.rs) 的原路径选择及依赖检查、
+[event_numeric.rs](../../rust_core/src/event_numeric.rs) 的值和区间运算、
+[event_conditions.rs](../../rust_core/src/event_conditions.rs) 的条件认证，以及
+[passive_events.rs](../../rust_core/src/passive_events.rs) 的隔离观察候选。
+[公开回归入口](../../tests/test_event_statistics.py)维护独立统计答案与定义域边界。
+三条原 gain 请求已在冻结候选完整通过原 checker，并完成实际 Spectre 对照；
+[四项独立统计控制及原请求收据](../../../experiments/backends/support/README.md#event-statistics)保留输入、配置和有限范围。
+这项工程验收不增加 Q 成绩，不证明全时域一致。
 
 <a id="display-records"></a>
 
@@ -518,7 +577,7 @@ stop 事件经过相同的事件后求解和残差验收，成功提交后才返
 [LRM 2.4 §5.10.3.3](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
 的 `analog_expression_or_null` / `constant_expression_or_null`；start 和显式 enable 不能留空。
 前端把省略的 period 归一化为 0，enable 归一化为 1，time_tol 归一化为 `1e-12 s`，
-再生成当前 IR21，不引入另一套计时器。1 ps 是 EVAS 的实现选择，规范没有规定这个数值，
+再生成当前 IR22，不引入另一套计时器。1 ps 是 EVAS 的实现选择，规范没有规定这个数值，
 也不代表 Spectre 的缺省值。显式容差须有限且非负；零容差仅接受下述固定精确时钟。
 固定日程的 start 必须为非负有限实例常数，period 为有限实例常数。
 enable 为有限实例常数，0 禁用，非零启用；禁用不跳过模型的语法、IR 和依赖检查。
@@ -800,7 +859,7 @@ initial_step 与固定 start=0 的 timer 保留原执行顺序，后者后续周
 独立初始测量不会要求旧方程越过已知物理事件预测到 stop。例如 `z′=q z²`、z(0)=1、q 初值 1，在 timer(.5) 将 q 改为 −1；真实曲线在 .5 前为 1/(1−t)，之后为 1/t。初始 Display 不能迫使 q=1 的旧流算到 t=2，因为旧流在 t=1 发散，而真实请求仍有限。
 仅在原 IR 证明初始实例完全隔离、且没有动态或历史 guard 时，初始化先预测到当前日历首个期限。再用候选初态重建 held timer 日历，预测到新的首个期限，完成未来历史与输出认证后一起提交。`due=0` 改为未来值或禁用会改变第二个期限；仍为零的 timer 保留给主循环执行，不把 initial 当成已消费 timer。初始测量体和 Display 只执行一次。其他初始化路径保留原策略。
 独立曲线、改期、零 timer 与查询网格检查见 [test_initial_observer_horizon.py](../../tests/test_initial_observer_horizon.py)。
-一般电路反馈谓词与任意非线性事件赋值仍未支持。
+一般电路反馈谓词与非隔离非线性事件赋值仍未支持；隔离统计数学的有限扩展见[事件数学](#event-math)。
 
 实现见[实例隔离与投影](../../rust_core/src/passive_events.rs)、
 [物理事件提交](../../rust_core/src/transient.rs)与[物理采样区间](../../rust_core/src/settlement_bounds.rs)。

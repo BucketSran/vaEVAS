@@ -1,0 +1,8 @@
+simulator lang=spectre
+ahdl_include "dut.va"
+simulatorOptions options reltol=1e-8 vabstol=1e-10 iabstol=1e-14
+Vx (x 0) vsource type=pwl wave=[0 -1 .25 -1 .5 0 .75 1]
+Vy (y 0) vsource type=pwl wave=[0 -1 .25 -1 .5 1 .75 3]
+M (x y) statistics
+tran tran stop=0.875 maxstep=0.03125
+save x y

@@ -2,7 +2,7 @@
 import math
 from typing import Callable, Mapping
 
-from .ir import Affine, Binary, Expression, OperatorRef, Power, Select, StateRef, Term
+from .ir import EventMath, Origin, Affine, Binary, Expression, OperatorRef, Power, Select, StateRef, Term
 from .syntax import CompileError, Expr, OPERATOR_NAMES, DECISION_NAMES, contains_operator, contains_decision
 
 
@@ -137,6 +137,26 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
         raise CompileError(f"{expr.token.source or source}:{expr.token.line}:{expr.token.column}: {message}",
                            code=code, token=expr.token)
 
+    event_math = getattr(parameters, "event_math", None)
+    if event_math is not None and expr.op in ("sqrt", "abs", "min", "max"):
+        args = tuple(lower(arg, parameters, nodes, source, None, True,
+                           decisions, validate_decision, False, indices,
+                           node_declarations=node_declarations) for arg in expr.args)
+        if all(isinstance(arg, Affine) and not arg.terms for arg in args):
+            values = [arg.constant for arg in args]
+            try:
+                value = {"sqrt": lambda: math.sqrt(values[0]),
+                         "abs": lambda: abs(values[0]),
+                         "min": lambda: min(values),
+                         "max": lambda: max(values)}[expr.op]()
+            except (ValueError, OverflowError):
+                # Invalid pure mathematics remains a selected-arm runtime check.
+                pass
+            else:
+                if math.isfinite(value):
+                    return Affine(value, ())
+        return event_math(expr, args)
+
     if expr.op == "checked":
         scope = decision_scope or contains_decision(expr) or _has_bound_decision(expr, parameters)
         if scope and decisions is None:
@@ -153,7 +173,7 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
     if expr.op in DECISION_NAMES:
         if decisions is None:
             fail("decision expressions are only supported in stateless ordinary analog expressions")
-        if contains_operator(expr):
+        if contains_operator(expr) and event_math is None:
             fail("decision expressions do not support waveform operators in any operand or arm")
         values = [lower(arg, parameters, nodes, source, operators, True, decisions, validate_decision, True, indices, memo=memo, node_declarations=node_declarations) for arg in expr.args]
         zero, one = Affine(0.0, ()), Affine(1.0, ())
@@ -208,7 +228,7 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
         return Affine(float(expr.value), ())
     if expr.op == "parameter":
         value = parameters(str(expr.value))
-        return value if isinstance(value, (Affine, Binary, Power, Select, StateRef, OperatorRef)) else Affine(value, ())
+        return value if isinstance(value, (Affine, Binary, Power, Select, StateRef, OperatorRef, EventMath)) else Affine(value, ())
     if expr.op == "voltage":
         p, n = (str(arg.value) for arg in expr.args)
         if p not in nodes or n not in nodes:
@@ -255,8 +275,10 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
             if expr.op == "%":
                 fail("modulo requires integer typed operands and a supported constant divisor")
             if not isinstance(b, Affine) or b.terms:
-                if operators is None:
+                if operators is None and event_math is None:
                     fail("variable division requires an ordinary analog expression")
+                return Binary("divide", a, b)
+            if b.constant == 0 and event_math is not None:
                 return Binary("divide", a, b)
             if b.constant == 0:
                 fail("division requires a nonzero constant denominator")

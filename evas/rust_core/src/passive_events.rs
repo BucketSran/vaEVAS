@@ -135,46 +135,104 @@ pub(crate) fn prepare(
             .passive_conditions
             .select_at_roots(&passive, &nodes[1..], fired, before_bounds)?;
     model.check_selection_writers(&selection)?;
-    let states = model.apply(&selection, voltages, before)?;
     let mut bounds = before_bounds.to_vec();
-    for (event, indices) in &selection.actions {
-        let assignments = model.program.events[*event].assignments();
-        let mut local = before_bounds.to_vec();
-        let mut local_values = before.to_vec();
-        for &index in indices {
-            let assignment = assignments[index];
-            let row = crate::affine_bounds::affine(&assignment.rhs, &model.program)?;
-            let parameters: Vec<_> = nodes
-                .iter()
-                .chain(&local)
-                .copied()
-                .chain(std::iter::repeat_n(I::ZERO, model.program.operators.len()))
-                .chain([I::ONE])
-                .collect();
-            let exact = row
-                .iter()
-                .zip(&parameters)
-                .fold(I::ZERO, |sum, (&a, &b)| sum + a * b);
-            local_values[assignment.state] = crate::events::affine(
-                &assignment.rhs,
-                &model.program,
-                &model.program.events[*event].origin.instance,
-            )?
-            .value(voltages, &local_values)?;
-            if !exact.finite()
-                || (model.program.states[assignment.state].kind == StateKind::Integer
-                    && (exact.lo != local_values[assignment.state]
-                        || exact.hi != local_values[assignment.state]))
-            {
-                return Err(Error::new(
-                    "event_accuracy",
-                    "cannot certify passive event state",
-                ));
+    fn displays<'a>(body: &'a [crate::ir::Statement], out: &mut Vec<&'a [crate::ir::Expression]>) {
+        for step in body {
+            match step {
+                crate::ir::Statement::Display { args, .. } => out.push(args),
+                crate::ir::Statement::If {
+                    then_body,
+                    else_body,
+                    ..
+                } => {
+                    displays(then_body, out);
+                    displays(else_body, out);
+                }
+                _ => {}
             }
-            local[assignment.state] = exact;
-            bounds[assignment.state] = exact;
         }
     }
+    for (event, steps) in &selection.ordered_steps {
+        let assignments = &model.action_expressions[*event];
+        let targets = model.program.events[*event].assignments();
+        let mut display_args = Vec::new();
+        displays(&model.program.events[*event].body, &mut display_args);
+        let mut local = before_bounds.to_vec();
+        let mut local_values = before.to_vec();
+        for step in steps {
+            match step {
+                crate::event_conditions::SelectedStep::Assign(index) => {
+                    let expression = &assignments[*index];
+                    let assignment = targets[*index];
+                    let exact = if model.numeric_actions[*event][*index] {
+                        crate::event_numeric::bounds(expression, nodes, &local)?
+                    } else {
+                        let row = crate::affine_bounds::affine(expression, &model.program)?;
+                        let parameters: Vec<_> = nodes
+                            .iter()
+                            .chain(&local)
+                            .copied()
+                            .chain(std::iter::repeat_n(I::ZERO, model.program.operators.len()))
+                            .chain([I::ONE])
+                            .collect();
+                        row.iter()
+                            .zip(&parameters)
+                            .fold(I::ZERO, |sum, (&a, &b)| sum + a * b)
+                    };
+                    local_values[assignment.state] = if model.numeric_actions[*event][*index] {
+                        crate::event_numeric::value(
+                            expression,
+                            &model.program,
+                            &model.program.events[*event].origin.instance,
+                            voltages,
+                            &local_values,
+                        )?
+                    } else {
+                        crate::events::affine(
+                            expression,
+                            &model.program,
+                            &model.program.events[*event].origin.instance,
+                        )?
+                        .value(voltages, &local_values)?
+                    };
+                    if !exact.finite()
+                        || (model.numeric_actions[*event][*index]
+                            && (local_values[assignment.state] < exact.lo
+                                || local_values[assignment.state] > exact.hi))
+                        || (model.program.states[assignment.state].kind == StateKind::Integer
+                            && (exact.lo != local_values[assignment.state]
+                                || exact.hi != local_values[assignment.state]))
+                    {
+                        return Err(Error::new(
+                            "event_accuracy",
+                            "cannot certify passive event state",
+                        ));
+                    }
+                    local[assignment.state] = exact;
+                    bounds[assignment.state] = exact;
+                }
+                crate::event_conditions::SelectedStep::Display(index) => {
+                    for arg in display_args[*index] {
+                        let enclosure = crate::event_numeric::bounds(arg, nodes, &local)?;
+                        let point = crate::display::evaluate(
+                            arg,
+                            &model.program,
+                            &model.program.events[*event].origin.instance,
+                            voltages,
+                            &local_values,
+                        )?;
+                        if !point.is_finite() || point < enclosure.lo || point > enclosure.hi {
+                            return Err(Error::new(
+                                "event_accuracy",
+                                "cannot certify passive display value",
+                            ));
+                        }
+                    }
+                }
+            }
+        }
+    }
+    let states = model.apply(&selection, voltages, before)?;
     Ok(Prepared {
         selection,
         states,

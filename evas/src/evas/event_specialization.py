@@ -74,6 +74,9 @@ def audit_event_body(compiler, statements):
             # The existing memo contract keeps shared function obligations
             # bounded without memoizing arbitrary semantic callbacks.
             options["memo"] = {}
+        if compiler.numeric_observer_candidate():
+            options.pop("memo", None)
+            return compiler.lower_event_value(root, compiler.symbol, compiler.node_ids, **options)
         return compiler.lower_event(root, compiler.symbol, compiler.node_ids, **options)
 
     def resource_tree(root, memo=None):

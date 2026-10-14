@@ -5,7 +5,7 @@ use std::collections::{BTreeSet, HashSet};
 
 pub(crate) fn validate(expr: &Expression, count: usize) -> Result<(), Error> {
     match expr {
-        Expression::State { .. } | Expression::Operator { .. } => {
+        Expression::EventMath { .. } | Expression::State { .. } | Expression::Operator { .. } => {
             return Err(Error::new(
                 "unsupported_analysis",
                 "state requires transient execution",
@@ -62,6 +62,11 @@ pub(crate) fn validate(expr: &Expression, count: usize) -> Result<(), Error> {
 
 fn predicate_nodes(expr: &Expression, nodes: &mut BTreeSet<usize>) {
     match expr {
+        Expression::EventMath { args, .. } => {
+            for arg in args {
+                predicate_nodes(arg, nodes);
+            }
+        }
         Expression::Affine { terms, .. } => {
             nodes.extend(terms.iter().map(|t| t.node));
         }
@@ -117,7 +122,10 @@ fn predicate_degree(expr: &Expression) -> Option<u8> {
                 .max(predicate_degree(then_value)?)
                 .max(predicate_degree(else_value)?),
         ),
-        Expression::State { .. } | Expression::Operator { .. } | Expression::Divide { .. } => None,
+        Expression::EventMath { .. }
+        | Expression::State { .. }
+        | Expression::Operator { .. }
+        | Expression::Divide { .. } => None,
     }
 }
 
@@ -126,6 +134,12 @@ pub(crate) fn validate_select_predicates(
     allowed_nodes: &HashSet<usize>,
 ) -> Result<(), Error> {
     match expr {
+        Expression::EventMath { .. } => {
+            return Err(Error::new(
+                "unsupported_analysis",
+                "pure event mathematics requires isolated event execution",
+            ))
+        }
         Expression::Select {
             left,
             right,
@@ -243,7 +257,9 @@ impl Accumulator {
         nodes: &[f64],
     ) -> Result<(), Error> {
         match expr {
-            Expression::State { .. } | Expression::Operator { .. } => {
+            Expression::EventMath { .. }
+            | Expression::State { .. }
+            | Expression::Operator { .. } => {
                 return Err(Error::new(
                     "unsupported_analysis",
                     "unbound state in static expression",
@@ -432,10 +448,12 @@ fn affine_product_terms(
 
 fn expression_interval(expr: &Expression, nodes: &[I]) -> Result<I, Error> {
     match expr {
-        Expression::State { .. } | Expression::Operator { .. } => Err(Error::new(
-            "unsupported_analysis",
-            "unbound state in static expression",
-        )),
+        Expression::EventMath { .. } | Expression::State { .. } | Expression::Operator { .. } => {
+            Err(Error::new(
+                "unsupported_analysis",
+                "unbound state in static expression",
+            ))
+        }
         Expression::Affine { constant, terms } => {
             let mut value = I::point(*constant);
             for term in terms {
@@ -513,7 +531,7 @@ fn predicate_sign(left: &Expression, right: &Expression, nodes: &[f64]) -> Resul
     ))
 }
 
-fn select_predicate(
+pub(crate) fn select_predicate(
     relation: Relation,
     left: &Expression,
     right: &Expression,

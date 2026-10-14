@@ -9,7 +9,7 @@ from fractions import Fraction
 from typing import TYPE_CHECKING
 
 from .ir import (Affine, Assignment, Conditional, Binary, BranchIdentity, Contribution, CrossTrigger, Event, TimerTrigger, HeldTimerTrigger, OrTrigger,
-                 Origin, Program, Power, Select, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt, LaplaceNd, IdtMod, Sin, MathFunction, Ddt, StepBound, Display, FinalStepTrigger, InitialStepTrigger)
+                 EventMath, Origin, Program, Power, Select, State, StateRef, OperatorRef, Transition, AbsDelay, Slew, Idt, LaplaceNd, IdtMod, Sin, MathFunction, Ddt, StepBound, Display, FinalStepTrigger, InitialStepTrigger)
 from .lowering import lower, scale
 from .limits import check_ir
 from .parameters import bind_parameters
@@ -300,8 +300,18 @@ class InstanceCompiler:
 
     def lower_event(self, expr, resolve, nodes, *args, **kwargs):
         assignment_root = kwargs.pop("integer_assignment_root", False)
+        event_values = kwargs.pop("event_values", False)
+        typed = self.typed_resolve(resolve, allow_integer_assignment_root=assignment_root)
+        if event_values:
+            def math_value(item, args):
+                origin = Origin(item.token.source or self.model.source, item.token.line,
+                    item.token.column, self.instance.name, item.expansion)
+                return EventMath(item.op, args, origin)
+            typed.event_math = math_value
+            kwargs["decisions"] = self.event_select
+            kwargs.pop("validate_decision", None)
         try:
-            return lower(expr, self.typed_resolve(resolve, allow_integer_assignment_root=assignment_root), nodes, self.model.source, *args, **kwargs)
+            return lower(expr, typed, nodes, self.model.source, *args, **kwargs)
         except CompileError as error:
             if (error.diagnostic['code'] in ('unsupported_local_event', 'unsupported_event_state_dependency')
                     and 'location' not in error.diagnostic):
@@ -309,12 +319,21 @@ class InstanceCompiler:
                                    instance=self.instance.name) from error
             raise
 
+    def event_select(self, expr, relation, left, right, yes, no):
+        origin = Origin(expr.token.source or self.model.source, expr.token.line,
+                        expr.token.column, self.instance.name, expr.expansion)
+        result = Select(relation, left, right, yes, no, origin)
+        check_ir(result, origin)
+        return result
+
     def integral(self, expression):
         # Do not introduce an implicit real-to-integer rounding rule.
         if isinstance(expression, Affine):
             return not expression.terms and expression.constant.is_integer()
         if isinstance(expression, StateRef):
             return self.compilation.states[expression.state].kind == "integer"
+        if isinstance(expression, EventMath):
+            return expression.function != "sqrt" and all(self.integral(arg) for arg in expression.args)
         if isinstance(expression, Select):
             return self.integral(expression.then_value) and self.integral(expression.else_value)
         if isinstance(expression, Power):
@@ -610,7 +629,7 @@ class InstanceCompiler:
         elements = self.array_elements.get(array, ())
         index_value = self._dynamic_index(statement.index, statement.token, 'write', array)
         kind = self.model.variables[f'{array}[{elements[0]}]']
-        value = self.lower_event(statement.rhs, self.symbol, self.node_ids, preserve_structure=True,
+        value = self.lower_event_value(statement.rhs, self.symbol, self.node_ids, preserve_structure=True,
                                  decisions=self.expression_select, validate_decision=self.validate_decision_expression,
                                  node_declarations=True, indices=self.event_index_read,
                                  integer_assignment_root=(kind == "integer"))
@@ -798,12 +817,28 @@ class InstanceCompiler:
                 result = HeldTimerTrigger(values[0], values[1], time_tol, values[2])
         return result
 
+    def numeric_observer_candidate(self):
+        # This source check preserves existing physical-expression lowering.
+        # The kernel proves isolation against the complete original bound IR.
+        def physical(statements):
+            for statement in statements:
+                if isinstance(statement, (ContributionStatement, BoundStep)):
+                    return True
+                if isinstance(statement, SyntaxConditional) and (physical(statement.then_body) or physical(statement.else_body)):
+                    return True
+            return False
+        return not physical(self.model.analog)
+
+    def lower_event_value(self, expr, resolve, nodes, *args, **kwargs):
+        return self.lower_event(expr, resolve, nodes, *args,
+                                event_values=self.numeric_observer_candidate(), **kwargs)
+
     def body(self, statements):
         result = []
         for statement in statements:
             origin = Origin(statement.token.source or self.model.source, statement.token.line, statement.token.column, self.instance.name, statement.token.expansion)
             if isinstance(statement, SyntaxDisplay):
-                arguments = tuple(self.lower_event(arg, self.symbol, self.node_ids,
+                arguments = tuple(self.lower_event_value(arg, self.symbol, self.node_ids,
                     preserve_structure=True, decisions=self.expression_select,
                     validate_decision=self.validate_decision_expression, node_declarations=True,
                     indices=self.event_index_read)
@@ -812,8 +847,8 @@ class InstanceCompiler:
             elif isinstance(statement, SyntaxConditional):
                 # The kernel evaluates predicates against the preceding
                 # assignments, preserving procedural statement order.
-                left = self.lower_event(statement.left, self.symbol, self.node_ids, preserve_structure=True, decisions=self.expression_select, node_declarations=True, indices=self.event_index_read)
-                right = self.lower_event(statement.right, self.symbol, self.node_ids, preserve_structure=True, decisions=self.expression_select, node_declarations=True, indices=self.event_index_read)
+                left = self.lower_event_value(statement.left, self.symbol, self.node_ids, preserve_structure=True, decisions=self.expression_select, node_declarations=True, indices=self.event_index_read)
+                right = self.lower_event_value(statement.right, self.symbol, self.node_ids, preserve_structure=True, decisions=self.expression_select, node_declarations=True, indices=self.event_index_read)
                 result.extend(self.event_conditional({"<": "lt", "<=": "le", ">": "gt", ">=": "ge"}[statement.relation],
                                           left, right, self.body(statement.then_body), self.body(statement.else_body), origin))
             elif isinstance(statement, SyntaxAssignment) and statement.index is not None:
@@ -825,7 +860,7 @@ class InstanceCompiler:
                     raise CompileError(f"{self.model.source}:{statement.token.line}: assignment target must be an instance state")
                 # Reset feedback checks need voltage dependencies even
                 # when a coefficient cancels or underflows to zero.
-                value = self.lower_event(statement.rhs, self.symbol, self.node_ids, preserve_structure=True,
+                value = self.lower_event_value(statement.rhs, self.symbol, self.node_ids, preserve_structure=True,
                                          decisions=self.expression_select, validate_decision=self.validate_decision_expression, node_declarations=True,
                                          indices=self.event_index_read,
                                          integer_assignment_root=self.model.variables[statement.name] == "integer")
@@ -843,6 +878,17 @@ class InstanceCompiler:
                     decision, yes, no = child
                     return decision, replace(expression, **{field: yes}), replace(expression, **{field: no})
             return expression, expression.then_value, expression.else_value
+        if isinstance(expression, EventMath):
+            for index, arg in enumerate(expression.args):
+                child = InstanceCompiler.split_selection(arg)
+                if child is not None:
+                    decision, yes, no = child
+                    def arm(value):
+                        args = list(expression.args)
+                        args[index] = value
+                        return replace(expression, args=tuple(args))
+                    return decision, arm(yes), arm(no)
+            return None
         fields = ("left", "right") if isinstance(expression, Binary) else ("base",) if isinstance(expression, Power) else ()
         for field in fields:
             child = InstanceCompiler.split_selection(getattr(expression, field))
@@ -881,6 +927,8 @@ class InstanceCompiler:
         return expand(value)
 
     def expression_nodes(self, expression):
+        if isinstance(expression, EventMath):
+            return set().union(*(self.expression_nodes(arg) for arg in expression.args))
         if isinstance(expression, Affine):
             return {term.node for term in expression.terms}
         if isinstance(expression, Binary):

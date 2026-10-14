@@ -76,6 +76,32 @@ mod tests {
             .expect("same interval is not proof that q=-q preserves the old value");
         assert_eq!(error.kind, "event_condition");
     }
+
+    #[test]
+    fn empty_and_inactive_selections_preserve_results_but_reject_unknown_indices() {
+        let origin = serde_json::json!({"source":"empty.va","line":1,"column":1,"instance":"M"});
+        let program:Program=serde_json::from_value(serde_json::json!({
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","u"],"contributions":[],
+            "states":[{"instance":"M","name":"q","kind":"real","initial":0}],
+            "events":[{"origin":origin,"trigger":{"kind":"timer","start":0.5,"period":0,"enabled":true,"time_tolerance":0.001},
+                "body":[{"kind":"if","relation":"gt","left":{"op":"state","state":0},"right":{"op":"affine","constant":0,"terms":[]},
+                    "then_body":[],"else_body":[],"origin":origin}]}]
+        })).unwrap();
+        let mut conditions = Conditions::new(&program).unwrap();
+        conditions.prepare(&program, &["u".into()]).unwrap();
+        // No reachable event used these inputs/bounds before the optimization.
+        assert!(conditions.select_at_roots(&[], &[], &[], &[]).unwrap() == Selection::default());
+        conditions.restrict_events(&[false]);
+        assert!(conditions.select_at_roots(&[0], &[], &[], &[]).unwrap() == Selection::default());
+        assert_eq!(
+            conditions
+                .select_at_roots(&[1], &[], &[], &[])
+                .err()
+                .unwrap()
+                .kind,
+            "invalid_ir"
+        );
+    }
 }
 
 #[derive(Clone, PartialEq, Eq)]
@@ -100,6 +126,7 @@ struct Predicate {
     expression: Expression,
     origin: Origin,
     dependencies: AffineState,
+    numeric: bool,
 }
 
 pub(crate) struct Conditions {
@@ -130,6 +157,7 @@ struct AssignmentBounds {
     expression: Expression,
     dependencies: AffineState,
     row: usize,
+    numeric: bool,
 }
 
 fn compile(
@@ -139,6 +167,7 @@ fn compile(
     next: &mut usize,
     displays: &mut usize,
     predicates: &mut Vec<Predicate>,
+    general: bool,
 ) -> Result<Vec<Step>, Error> {
     body.iter()
         .map(|statement| match statement {
@@ -177,7 +206,13 @@ fn compile(
                         right: right.clone(),
                     }),
                 };
-                let dependencies = affine(&expression, p, owner)?;
+                let ordinary = affine(&expression, p, owner);
+                let numeric = ordinary.is_err() && general;
+                let dependencies = if numeric {
+                    crate::event_numeric::dependencies(&expression, p, owner)?
+                } else {
+                    ordinary?
+                };
                 if !dependencies.operator_dependencies.is_empty() {
                     return Err(Error::new(
                         "unsupported_condition",
@@ -194,11 +229,12 @@ fn compile(
                     expression,
                     origin: origin.clone(),
                     dependencies,
+                    numeric,
                 });
                 Ok(Step::If {
                     predicate,
-                    yes: compile(then_body, p, owner, next, displays, predicates)?,
-                    no: compile(else_body, p, owner, next, displays, predicates)?,
+                    yes: compile(then_body, p, owner, next, displays, predicates, general)?,
+                    no: compile(else_body, p, owner, next, displays, predicates, general)?,
                 })
             }
         })
@@ -206,7 +242,11 @@ fn compile(
 }
 
 impl Conditions {
+    #[cfg(test)]
     pub(crate) fn new(program: &Program) -> Result<Self, Error> {
+        Self::new_with_numeric(program, &vec![false; program.events.len()])
+    }
+    pub(crate) fn new_with_numeric(program: &Program, general: &[bool]) -> Result<Self, Error> {
         let mut predicates = Vec::new();
         let mut stateful_events = Vec::new();
         let mut state_references = Vec::new();
@@ -223,6 +263,7 @@ impl Conditions {
                     &mut 0,
                     &mut 0,
                     &mut predicates,
+                    general[event_index],
                 )?;
                 for predicate in &mut predicates[start..] {
                     predicate.event = event_index;
@@ -256,7 +297,17 @@ impl Conditions {
                         Ok(AssignmentBounds {
                             state: a.state,
                             expression: a.rhs.clone(),
-                            dependencies: affine(&a.rhs, program, &event.origin.instance)?,
+                            dependencies: if general[index] {
+                                crate::event_numeric::dependencies(
+                                    &a.rhs,
+                                    program,
+                                    &event.origin.instance,
+                                )?
+                            } else {
+                                affine(&a.rhs, program, &event.origin.instance)?
+                            },
+                            numeric: general[index]
+                                && affine(&a.rhs, program, &event.origin.instance).is_err(),
                             row: usize::MAX,
                         })
                     })
@@ -405,7 +456,7 @@ impl Conditions {
             let mut expressions: Vec<_> = self
                 .predicates
                 .iter()
-                .map(|p| self.active_events[p.event].then_some(&p.expression))
+                .map(|p| (self.active_events[p.event] && !p.numeric).then_some(&p.expression))
                 .collect();
             for assignment in self
                 .assignments
@@ -414,7 +465,7 @@ impl Conditions {
                 .filter(|a| a.row != usize::MAX)
             {
                 assignment.row = expressions.len();
-                expressions.push(Some(&assignment.expression));
+                expressions.push((!assignment.numeric).then_some(&assignment.expression));
             }
             self.bounds = Some(
                 GuardBounds::stateful_expressions(program, driven, &expressions)
@@ -427,11 +478,9 @@ impl Conditions {
                 for trigger in event.trigger.leaves()? {
                     let matches = if let EventTrigger::Cross { guard, .. } = trigger {
                         let expressions: Vec<_> = std::iter::once(Some(guard))
-                            .chain(
-                                self.predicates
-                                    .iter()
-                                    .map(|p| self.active_events[p.event].then_some(&p.expression)),
-                            )
+                            .chain(self.predicates.iter().map(|p| {
+                                (self.active_events[p.event] && !p.numeric).then_some(&p.expression)
+                            }))
                             .collect();
                         GuardBounds::stateful_expressions(program, driven, &expressions)
                             .map(|bounds| {
@@ -461,6 +510,18 @@ impl Conditions {
         fired_leaves: &[usize],
         before_bounds: &[I],
     ) -> Result<Selection, Error> {
+        if events
+            .iter()
+            .any(|&event| event >= self.active_events.len())
+        {
+            return Err(Error::new(
+                "invalid_ir",
+                "selected event index out of range",
+            ));
+        }
+        if !events.iter().any(|&event| self.active_events[event]) {
+            return Ok(Selection::default());
+        }
         let mut values = self
             .bounds
             .as_ref()
@@ -485,20 +546,28 @@ impl Conditions {
             ordered: &mut Vec<SelectedStep>,
             assignments: &[AssignmentBounds],
             identity: &[ActionIdentity],
-            bounds: Option<&GuardBounds>,
+            context: &Conditions,
             inputs: &[I],
             states: &mut [I],
             written: &mut [bool],
             at_root: &[bool],
             proof_attempts: &mut usize,
         ) -> Result<(), Error> {
+            let bounds = context.bounds.as_ref();
+            let numeric_nodes: Vec<I> = std::iter::once(I::ZERO)
+                .chain(inputs.iter().copied())
+                .collect();
             for step in body {
                 match step {
                     Step::Assign(index) => {
                         actions.push(*index);
                         ordered.push(SelectedStep::Assign(*index));
                         if let Some(a) = assignments.get(*index).filter(|a| a.row != usize::MAX) {
-                            let value = bounds.unwrap().value_with_states(a.row, inputs, states);
+                            let value = if a.numeric {
+                                crate::event_numeric::bounds(&a.expression, &numeric_nodes, states)?
+                            } else {
+                                bounds.unwrap().value_with_states(a.row, inputs, states)
+                            };
                             if !value.finite() {
                                 return Err(Error::new(
                                     "event_condition",
@@ -512,7 +581,9 @@ impl Conditions {
                     Step::Display(index) => ordered.push(SelectedStep::Display(*index)),
                     Step::If { predicate, yes, no } => {
                         let p = &predicates[*predicate];
-                        let value = if p.dependencies.state_dependencies.is_empty() {
+                        let value = if p.numeric {
+                            crate::event_numeric::bounds(&p.expression, &numeric_nodes, states)?
+                        } else if p.dependencies.state_dependencies.is_empty() {
                             values[*predicate]
                         } else if at_root[*predicate]
                             && p.dependencies
@@ -560,7 +631,7 @@ impl Conditions {
                                 &mut yo,
                                 assignments,
                                 identity,
-                                bounds,
+                                context,
                                 inputs,
                                 &mut ys,
                                 &mut yw,
@@ -576,7 +647,7 @@ impl Conditions {
                                 &mut no_ordered,
                                 assignments,
                                 identity,
-                                bounds,
+                                context,
                                 inputs,
                                 &mut ns,
                                 &mut nw,
@@ -643,7 +714,7 @@ impl Conditions {
                             ordered,
                             assignments,
                             identity,
-                            bounds,
+                            context,
                             inputs,
                             states,
                             written,
@@ -680,7 +751,7 @@ impl Conditions {
                 &mut ordered,
                 &self.assignments[event],
                 &self.action_identity[event],
-                self.bounds.as_ref(),
+                self,
                 inputs,
                 &mut states,
                 &mut written,

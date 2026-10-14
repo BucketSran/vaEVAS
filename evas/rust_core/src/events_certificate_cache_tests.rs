@@ -259,3 +259,99 @@ fn branch_review_cache_distinguishes_ambiguous_equivalent_and_proved_no_selectio
             .is_ok());
     }
 }
+
+#[test]
+fn direct_circuit_program_matches_clone_clear_with_borrowed_and_owned_selection() {
+    for dynamic in [false, true] {
+        for selected in [false, true] {
+            let base = fixture(dynamic, false);
+            let mut program = base.program.clone();
+            let origin = program.contributions[0].origin.clone();
+            program.step_bounds.push(crate::ir::StepBound {
+                value: Expression::Affine {
+                    constant: 0.125,
+                    terms: vec![],
+                },
+                active: Expression::Affine {
+                    constant: 1.,
+                    terms: vec![],
+                },
+                origin: origin.clone(),
+            });
+            if selected {
+                program.contributions[0].rhs = Expression::Select {
+                    relation: crate::ir::Relation::Gt,
+                    left: Box::new(Expression::Affine {
+                        constant: 0.,
+                        terms: vec![Term {
+                            node: 1,
+                            coefficient: 1.,
+                        }],
+                    }),
+                    right: Box::new(Expression::Affine {
+                        constant: 0.5,
+                        terms: vec![],
+                    }),
+                    then_value: Box::new(Expression::State { state: 0 }),
+                    else_value: Box::new(Expression::Multiply {
+                        left: Box::new(Expression::Affine {
+                            constant: -1.,
+                            terms: vec![],
+                        }),
+                        right: Box::new(Expression::State { state: 0 }),
+                    }),
+                    origin,
+                };
+            }
+            let model = EventModel::new(program, base.driven, base.tolerances).unwrap();
+            for input in [0., 1.] {
+                let states = [2.];
+                let operators = [0.25];
+                let inputs = [I::point(input)];
+                let selection = model
+                    .selected_program_at_roots(&[I::point(2.)], &inputs, &[])
+                    .unwrap();
+                assert_eq!(matches!(selection, std::borrow::Cow::Owned(_)), selected);
+                let mut old = model.selected_program(&[I::point(2.)], &inputs).unwrap();
+                let rhs = old
+                    .contributions
+                    .iter()
+                    .map(|c| {
+                        affine(
+                            &freeze_operators(&c.rhs, &operators),
+                            &old,
+                            &c.origin.instance,
+                        )
+                    })
+                    .collect::<Result<Vec<_>, _>>()
+                    .unwrap();
+                old.states.clear();
+                old.events.clear();
+                old.operators.clear();
+                for (c, rhs) in old.contributions.iter_mut().zip(&rhs) {
+                    c.rhs = rhs.bind(&states, &operators).unwrap();
+                }
+                let actual = model
+                    .bound_circuit_program_at(&states, &operators, &inputs)
+                    .unwrap();
+                assert_eq!(
+                    serde_json::to_value(&actual).unwrap(),
+                    serde_json::to_value(&old).unwrap()
+                );
+                let old_solution = Circuit::new(old, &model.driven, model.tolerances.clone())
+                    .unwrap()
+                    .solve(&[input])
+                    .unwrap();
+                let actual_solution = model
+                    .circuit_at(&states, &operators, &inputs)
+                    .unwrap()
+                    .solve(&[input])
+                    .unwrap();
+                assert_eq!(
+                    serde_json::to_value(&actual_solution).unwrap(),
+                    serde_json::to_value(&old_solution).unwrap()
+                );
+            }
+        }
+    }
+}
