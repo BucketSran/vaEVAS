@@ -140,6 +140,8 @@ python3 -B -m unittest discover -s scripts/tests -v
 
 ## Benchmark 题卡与 review 索引
 
+使用 Python 3.11+；任务元数据由标准库 `tomllib` 读取。
+
 ```sh
 python3 -B scripts/benchmark_workbench.py --write
 python3 -B scripts/benchmark_workbench.py --check
@@ -147,9 +149,13 @@ python3 -B -m unittest discover -s scripts/tests -p test_benchmark_workbench.py 
 ```
 
 `benchmark_workbench.py` 读取 [workbench](../benchmark/workbench/README.md) 的 `catalog.json` 与
-逐题 `case.json`，维护总览、类别/家族索引、review 队列、同源分组及题卡摘要。
+逐题 `case.json`，维护历史卡索引与摘要；读取 `tasks.json` 的功能组与卡片关联，
+以及各题 `task.toml` 的类别和来源组，生成任务计数、定位链接与设计卡的实现关联。
 `--write` 先验证所有元数据与摘要标记，再更新生成内容；`--check` 只读，拒绝重复 ID、
 失效来源/电路/证据引用、错误分类路径、旧版本的设计认可和过期索引。
+对现有 `vN-*`（N ≥ 2）任务，还拒绝漏登记、缺少题面/来源/元数据及无效任务关联。
+旧首批和早期 VA 题包不加入该分母。Benchmark evidence CI 执行 `--check` 与登记回归；
+CI 接线不代表每次检查都已执行，实际结果仍按具体作业报告。
 题目迁移后，`--write` 删除不再需要且带完整生成标记的类别/家族索引页，保留手写说明。
 可用 `--root` 指定另一处同结构目录；其中运行证据路径相对该目录上两级的仓库根目录。
 静态通过只说明登记与索引一致，不证明仿真通过、checker 正确或题目达到发布条件。

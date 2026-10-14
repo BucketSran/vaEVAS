@@ -23,11 +23,11 @@
 每道题仅计一次；历史初筛、旧七类题集和设计卡不额外加入这 56 题。
 
 当前先整理 main 的材料、工作分支和待完成事项，暂不开始实际题目设计或模型实验。
-材料集合、分支状态和后续整理事项见[当前盘点](workbench/DISCUSSION.md#当前材料与待整理事项)。
+材料集合、分支处置和后续整理事项见[整合与归档结果](workbench/DISCUSSION.md#整合与归档结果)。
 电路功能与场景审核仍以 [#159](https://github.com/BucketSran/vaEVAS/issues/159) 为入口，
 例如 [R01 采样与多通道读出](workbench/circuits/r01-sampling/README.md)。
-R01 的 20 道新题草稿、参考解、checker 和旧格式运行记录仍保留在本地工作区，尚未进入 main，
-不加入上述 56 题。新题包规范已确认，实际题包迁移、代表题合同及验收方案审核仍待完成；
+R01 的 20 道旧格式草稿、参考解、checker 和运行记录已保全在本地归档，未作为正式题包进入 main，
+不加入上述 56 题。已确认的方向与交付伪代码见 R01 功能族。实际题包迁移、代表题合同及验收方案审核仍待完成；
 历史作者校准不能替代新规范的验收或人工设计认可。
 原有 18 张设计卡与 62 个迁移来源候选留在工作区供追溯，不与题量相加。
 
@@ -123,7 +123,7 @@ benchmark/tasks/<task-id>/
 ```
 
 上述是已确认的目标规范，本次同步规范与英文起草模板。现有任务和本地 R01 草稿仍按原工程保留，
-生成器、格式检查和实际题包尚待迁移。旧格式检查通过不能作为已与 analogbench 统一的证据；
+题包生成器、格式检查和实际题包尚待迁移。旧格式检查通过不能作为已与 analogbench 统一的证据；
 实际迁移和受影响的校准完成前，继续使用各任务原有运行合同。
 已读取的格式参照为 [analogbench MUX 题包](https://github.com/Arcadia-1/analog-design-bench/tree/972f7cd7c95381134387b250edf18f3bd23bdd25/tasks/sky130-analog-input-mux-8to1-pvt)。
 
@@ -144,7 +144,8 @@ benchmark/tasks/<task-id>/
 ## 维护与历史
 
 开发中发现的可复用问题进入[候选登记](workbench/CANDIDATES.md)，先记录触发条件、独立预期与证据，
-不自动创建题目或增加评分分母。题卡索引由 `python3 -B scripts/benchmark_workbench.py --check` 检查。
+不自动创建题目或增加评分分母。`python3 -B scripts/benchmark_workbench.py --check` 检查历史题卡、
+现有 `vN-*`（N ≥ 2）任务登记与生成索引；不证明题包符合新格式。
 共享 checker 的副本同步、校准与环境说明见[评分实现](workbench/docs/evaluation.md#共享评分程序)。
 
 [历史题集与建设记录](workbench/history/README.md)保留初筛、旧七类和后续两批的来源及实验入口；

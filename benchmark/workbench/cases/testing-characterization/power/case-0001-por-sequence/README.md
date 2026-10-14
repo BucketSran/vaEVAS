@@ -17,8 +17,8 @@
 | 电路资产 | [sky130-ajc-por](../../../../circuits/sky130-ajc-por.md) |
 | 同源组 | sky130-ajc-por |
 | 关联 Case | 无 |
-| 正式任务 | 尚未建立 |
-| 运行 / 校准证据 | 无；当前仅有材料阅读与题目草案 |
+| 正式任务（设计状态独立） | [v2-test-por-sequence](../../../../../tasks/v2-test-por-sequence/instruction.md) |
+| 本卡登记的运行 / 校准证据 | 本卡未登记；关联任务的校准范围见[交付证据入口](../../../../TASKS.md) |
 
 <!-- workbench:end -->
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate benchmark design cards and render their human review indexes."""
+"""Validate design cards and task lineage, and render the benchmark indexes."""
 
 import argparse
 import json
@@ -7,11 +7,10 @@ import os
 from pathlib import Path
 import re
 import sys
+import tomllib
 from urllib.parse import quote
 
 
-BEGIN = "<!-- workbench:begin -->"
-END = "<!-- workbench:end -->"
 STAGES = {
     "source-screening": "材料筛选", "design-draft": "题目草案",
     "implementation": "实现中", "calibration": "校准中",
@@ -55,13 +54,15 @@ def table(headers, rows):
     ]) + "\n"
 
 
-def replace_block(path, block):
-    original = path.read_text(encoding="utf-8")
-    require(original.count(BEGIN) == original.count(END) == 1,
-            f"{path}: expected exactly one workbench marker pair")
-    start = original.index(BEGIN) + len(BEGIN)
-    stop = original.index(END)
-    require(start < stop, f"{path}: reversed workbench markers")
+def replace_block(path, block, tag="workbench", original=None):
+    if original is None:
+        original = path.read_text(encoding="utf-8")
+    begin, end = f"<!-- {tag}:begin -->", f"<!-- {tag}:end -->"
+    require(original.count(begin) == original.count(end) == 1,
+            f"{path}: expected exactly one {tag} marker pair")
+    start = original.index(begin) + len(begin)
+    stop = original.index(end)
+    require(start < stop, f"{path}: reversed {tag} markers")
     return original[:start] + "\n\n" + block.rstrip() + "\n\n" + original[stop:]
 
 
@@ -148,6 +149,104 @@ def load_cases(root, catalog):
     return sorted(cases, key=lambda data: int(data["case_id"].split("-")[1]))
 
 
+def task_batch(identity):
+    match = re.match(r"v([0-9]+)-", identity)
+    return f"v{match[1]}" if match and int(match[1]) >= 2 else None
+
+
+def load_tasks(root, catalog, cases):
+    """Read source/category facts from task files, keeping only lineage in tasks.json."""
+    data = read_json(root / "tasks.json")
+    require(isinstance(data, dict) and set(data) == {"schema_version", "function_groups", "tasks"}
+            and type(data["schema_version"]) is int and data["schema_version"] == 1,
+            "tasks.json: invalid schema; review and execution status belong in their evidence records")
+    groups = data["function_groups"]
+    require(isinstance(groups, dict), "tasks.json: invalid function_groups")
+    review_ids = set()
+    for key, group in groups.items():
+        require(SLUG.fullmatch(key) and isinstance(group, dict)
+                and set(group) == {"title", "review_id"}
+                and isinstance(group["title"], str) and group["title"].strip(),
+                f"tasks.json: invalid function group {key}")
+        review_id = group["review_id"]
+        require(isinstance(review_id, str) and re.fullmatch(r"R[0-9]{2,}", review_id)
+                and review_id not in review_ids, f"tasks.json: invalid or duplicate review_id {review_id}")
+        review_ids.add(review_id)
+    rows = data["tasks"]
+    require(isinstance(rows, list), "tasks.json: tasks must be a list")
+    case_index = {c["case_id"]: c for c in cases}
+    tasks, ids = [], set()
+    repo = root.parent.parent
+    task_root = repo / "benchmark/tasks"
+    for row in rows:
+        require(isinstance(row, dict) and set(row) == {"task_id", "title", "function_group", "case_ids"},
+                "tasks.json: invalid task fields; category and source_group come from task.toml")
+        identity = row["task_id"]
+        require(isinstance(identity, str) and SLUG.fullmatch(identity) and task_batch(identity),
+                f"invalid task_id: {identity}")
+        require(identity not in ids, f"duplicate task_id: {identity}")
+        ids.add(identity)
+        require(isinstance(row["title"], str) and row["title"].strip(), f"{identity}: missing title")
+        require(isinstance(row["function_group"], str) and row["function_group"] in groups,
+                f"{identity}: unknown function_group")
+        linked = row["case_ids"]
+        require(isinstance(linked, list) and all(isinstance(c, str) and c in case_index for c in linked)
+                and len(linked) == len(set(linked)), f"{identity}: invalid case_ids")
+        directory = task_root / identity
+        for filename in ("instruction.md", "SOURCE.md", "task.toml"):
+            target = repository_file(repo, str(directory.relative_to(repo) / filename), identity)
+            require(target.is_file(), f"{identity}: expected file {filename}")
+        metadata = tomllib.loads((directory / "task.toml").read_text(encoding="utf-8")).get("metadata", {})
+        require(isinstance(metadata, dict), f"{identity}: invalid metadata table")
+        require(metadata.get("name") == identity, f"{identity}: task.toml name mismatch")
+        action, source = metadata.get("engineering_action"), metadata.get("source_group")
+        require(isinstance(action, str) and action in catalog["categories"], f"{identity}: unknown engineering_action")
+        require(isinstance(source, str) and source.strip(), f"{identity}: missing source_group")
+        tasks.append(dict(row, directory=directory, batch=task_batch(identity),
+                          engineering_action=action, source_group=source))
+    discovered = {p.name for p in task_root.iterdir() if p.is_dir() and task_batch(p.name)} if task_root.exists() else set()
+    require(ids == discovered,
+            f"task registration mismatch: unregistered={sorted(discovered - ids)}, missing={sorted(ids - discovered)}")
+    for case in cases:
+        if case["task_path"] is not None:
+            target = (repo / case["task_path"]).resolve()
+            if target.parent == task_root.resolve() and task_batch(target.name):
+                require(any(t["task_id"] == target.name and case["case_id"] in t["case_ids"] for t in tasks),
+                        f"{case['case_id']}: task_path disagrees with tasks.json")
+    return groups, tasks
+
+
+def render_tasks(root, catalog, groups, tasks, cases, outputs):
+    """Generate counts and navigation only; preserve human judgments and contracts."""
+    categories = catalog["categories"]
+    batches = sorted({t["batch"] for t in tasks}, key=lambda b: int(b[1:]))
+    summary = f"登记 **{len(tasks)} 道已建设任务**；" + "、".join(
+        f"{batch} {sum(t['batch'] == batch for t in tasks)} 道" for batch in batches) + "。\n"
+    summary += "类别、来源组读自 `task.toml`；登记与生成索引不证明设计认可、校准通过或正式发布。\n"
+    for name in ("README.md", "TASKS.md"):
+        page = root / name
+        outputs[page] = replace_block(page, summary, "task-summary", outputs.get(page))
+    page = root / "TASKS.md"
+    counts = table(["工程动作", *batches, "合计"], [
+        [label, *(str(sum(t["engineering_action"] == key and t["batch"] == batch for t in tasks)) for batch in batches),
+         str(sum(t["engineering_action"] == key for t in tasks))] for key, label in categories.items()
+    ] + [["总计", *(str(sum(t["batch"] == b for t in tasks)) for b in batches), str(len(tasks))]])
+    functions = table(["审核组 / 电路功能", *categories.values(), "合计"], [
+        [cell(group["review_id"] + " / " + group["title"]),
+         *(str(sum(t["function_group"] == key and t["engineering_action"] == c for t in tasks)) for c in categories),
+         str(sum(t["function_group"] == key for t in tasks))] for key, group in groups.items()
+    ] + [["总计", *(str(sum(t["engineering_action"] == c for t in tasks)) for c in categories), str(len(tasks))]])
+    case_index = {c["case_id"]: c for c in cases}
+    index = table(["电路功能", "批次 / 类别", "任务与有效题面", "来源 / 元数据来源组", "历史设计卡"], [
+        [cell(groups[t["function_group"]]["title"]), cell(t["batch"] + " / " + categories[t["engineering_action"]]),
+         link(t["title"], t["directory"] / "instruction.md", page),
+         link("SOURCE", t["directory"] / "SOURCE.md", page) + " / " + cell(t["source_group"]),
+         "、".join(case_link(case_index[c], page) for c in t["case_ids"]) or "无历史卡"] for t in tasks
+    ])
+    for tag, block in (("task-category-counts", counts), ("task-function-counts", functions), ("task-inventory", index)):
+        outputs[page] = replace_block(page, block, tag, outputs[page])
+
+
 def case_link(data, page):
     return link(data["case_id"], data["directory"] / "README.md", page)
 
@@ -163,7 +262,7 @@ def case_table(cases, page, catalog):
     ])
 
 
-def render(root, catalog, cases):
+def render(root, catalog, cases, groups, tasks):
     """Build all expected contents before writing anything, including marker validation."""
     outputs = {}
     page = root / "README.md"
@@ -203,11 +302,16 @@ def render(root, catalog, cases):
         rows.append(["同源组", cell("、".join(data["source_groups"]) or "未确定；不与其他未知项合并")])
         related = {d["case_id"]: d for d in cases}
         rows.append(["关联 Case", "、".join(case_link(related[r["case_id"]], page) + "（" + r["relation"] + "）" for r in data["related_cases"]) or "无"])
-        rows.append(["正式任务", link(data["task_path"], root.parent.parent / data["task_path"], page) if data["task_path"] else "尚未建立"])
-        rows.append(["运行 / 校准证据", "、".join(link(v, root.parent.parent / v, page) for v in data["evidence_paths"]) or "无；当前仅有材料阅读与题目草案"])
+        linked_tasks = [t for t in tasks if data["case_id"] in t["case_ids"]]
+        task_links = [link(t["task_id"], t["directory"] / "instruction.md", page) for t in linked_tasks]
+        if data["task_path"] and not linked_tasks:
+            task_links.append(link(data["task_path"], root.parent.parent / data["task_path"], page))
+        rows.append(["正式任务（设计状态独立）", "、".join(task_links) or "尚无登记映射"])
+        rows.append(["本卡登记的运行 / 校准证据", "、".join(link(v, root.parent.parent / v, page) for v in data["evidence_paths"])
+                     or "本卡未登记；关联任务的校准范围见" + link("交付证据入口", root / "TASKS.md", page)])
         outputs[page] = replace_block(page, table(["项目", "当前记录"], rows))
     page = root / "REVIEW.md"
-    outputs[page] = GENERATED + "# 设计 Review\n\n设计认可与实现、校准、任务冻结分别记录。这里只汇总历史设计卡的 review 状态；已建设任务与当前宏观 review 入口见 [已建设任务总览](TASKS.md)。旧卡尚未逐一回填实现映射，pending 不等于没有正式任务。\n"
+    outputs[page] = GENERATED + "# 设计 Review\n\n设计认可与实现、校准、任务冻结分别记录。这里只汇总历史设计卡的 review 状态；已建设任务与实现映射见 [已建设任务总览](TASKS.md)。当前按电路类别的审核结论维护在 [#159](https://github.com/BucketSran/vaEVAS/issues/159)。pending 不等于没有正式任务，登记映射也不改变设计认可状态。\n"
     for status, label in REVIEWS.items():
         outputs[page] += f"\n## {label}\n\n" + case_table([d for d in cases if d["review_status"] == status], page, catalog)
     page = root / "SOURCE_GROUPS.md"
@@ -226,6 +330,7 @@ def render(root, catalog, cases):
             rows.append([link(headings[0] if headings else source.stem, source, page),
                          "、".join(case_link(d, page) for d in cases if source.stem in d[field]) or "尚无 Case"])
         outputs[page] = GENERATED + f"# {title}\n\n" + table(["记录", "关联 Case"], rows)
+    render_tasks(root, catalog, groups, tasks, cases, outputs)
     return outputs
 
 
@@ -240,7 +345,8 @@ def main():
         root = args.root.resolve()
         catalog = load_catalog(root)
         cases = load_cases(root, catalog)
-        outputs = render(root, catalog, cases)
+        groups, tasks = load_tasks(root, catalog, cases)
+        outputs = render(root, catalog, cases, groups, tasks)
         for path, content in outputs.items():
             if content.startswith(GENERATED) and path.exists():
                 require(path.read_text(encoding="utf-8").startswith(GENERATED),
@@ -255,8 +361,8 @@ def main():
             path.write_text(outputs[path], encoding="utf-8")
         for path in obsolete:
             path.unlink()
-        print(f"{len(cases)} cases validated; {len(changed)} views updated; {len(obsolete)} obsolete indexes removed"
-              if args.write else f"{len(cases)} cases validated; all generated views current")
+        print(f"{len(cases)} cases and {len(tasks)} tasks validated; {len(changed)} views updated; {len(obsolete)} obsolete indexes removed"
+              if args.write else f"{len(cases)} cases and {len(tasks)} tasks validated; all generated views current")
         return 0
     except (OSError, ValueError, TypeError, KeyError) as error:
         print(f"workbench: {error}", file=sys.stderr)

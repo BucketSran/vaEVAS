@@ -17,8 +17,8 @@
 | 电路资产 | [v4-amplifier-characterization-fixtures](../../../../circuits/v4-amplifier-characterization-fixtures.md) |
 | 同源组 | v4-family-038、v4-family-093、v4-family-370 |
 | 关联 Case | [case-0003](../case-0003-opamp-slew/README.md)（related） |
-| 正式任务 | 尚未建立 |
-| 运行 / 校准证据 | 无；当前仅有材料阅读与题目草案 |
+| 正式任务（设计状态独立） | [v2-test-gain-settling](../../../../../tasks/v2-test-gain-settling/instruction.md) |
+| 本卡登记的运行 / 校准证据 | 本卡未登记；关联任务的校准范围见[交付证据入口](../../../../TASKS.md) |
 
 <!-- workbench:end -->
 

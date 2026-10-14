@@ -23,7 +23,15 @@ class WorkbenchTests(unittest.TestCase):
             "families": {"power": "电源与复位"},
         }))
         self.write("README.md", "# Review\n\nHuman introduction.\n\n"
-                   "<!-- workbench:begin -->\n<!-- workbench:end -->\n")
+                   "<!-- workbench:begin -->\n<!-- workbench:end -->\n"
+                   "<!-- task-summary:begin -->\n<!-- task-summary:end -->\n")
+        self.write("TASKS.md", "# Tasks\n\nHuman engineering judgment.\n\n" + "\n".join(
+            f"<!-- {tag}:begin -->\n<!-- {tag}:end -->" for tag in
+            ("task-summary", "task-category-counts", "task-function-counts", "task-inventory")))
+        self.inventory = {"schema_version": 1,
+                          "function_groups": {"power-reset": {"title": "电源与复位", "review_id": "R03"}},
+                          "tasks": []}
+        self.write("tasks.json", json.dumps(self.inventory))
         self.write("sources/example.md", "# Example source\n")
         self.write("circuits/example-por.md", "# Example POR\n")
         self.directory = "cases/testing-characterization/power/case-0001-por"
@@ -57,6 +65,162 @@ class WorkbenchTests(unittest.TestCase):
             [sys.executable, "-B", str(SCRIPT), "--root", str(self.root), *args],
             capture_output=True, text=True,
         )
+
+    def add_task(self, identity="v2-test-por", category="testing-characterization"):
+        directory = self.repo / "benchmark/tasks" / identity
+        directory.mkdir(parents=True)
+        (directory / "instruction.md").write_text("Public task contract.\n")
+        (directory / "SOURCE.md").write_text("# Original circuit and adaptation\n")
+        (directory / "task.toml").write_text(
+            f'[metadata]\nname = "{identity}"\nengineering_action = "{category}"\nsource_group = "real-por"\n')
+        row = {"task_id": identity, "title": "复位测量", "function_group": "power-reset", "case_ids": ["case-0001"]}
+        self.inventory["tasks"].append(row)
+        self.save_inventory()
+        return directory
+
+    def save_inventory(self):
+        self.write("tasks.json", json.dumps(self.inventory, ensure_ascii=False))
+
+    def test_task_mapping_does_not_approve_design_or_change_human_conclusions(self):
+        self.add_task()
+        card = self.root / self.directory / "case.json"
+        before = card.read_bytes()
+        result = self.run_cli("--write")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(before, card.read_bytes())
+        self.assertIn("待 review", (self.root / self.directory / "README.md").read_text())
+        self.assertIn("v2-test-por/instruction.md", (self.root / self.directory / "README.md").read_text())
+        self.assertIn("本卡未登记", (self.root / self.directory / "README.md").read_text())
+        self.assertNotIn("当前仅有材料阅读", (self.root / self.directory / "README.md").read_text())
+        index = (self.root / "TASKS.md").read_text()
+        self.assertIn("Human engineering judgment.", index)
+        self.assertIn("real-por", index)
+        self.assertIn("case-0001", index)
+        self.assertIn("登记 **1 道已建设任务**", index)
+        self.assertEqual(self.run_cli("--check").returncode, 0)
+
+    def test_missing_registration_in_new_version_fails_before_any_write(self):
+        self.add_task("v4-test-por")
+        self.inventory["tasks"] = []
+        self.save_inventory()
+        before = (self.root / "README.md").read_bytes()
+        result = self.run_cli("--write")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("unregistered=['v4-test-por']", result.stderr)
+        self.assertEqual(before, (self.root / "README.md").read_bytes())
+        self.assertFalse((self.root / "REVIEW.md").exists())
+
+    def test_malformed_versioned_task_directory_is_not_silently_ignored(self):
+        directory = self.repo / "benchmark/tasks/v4-NewTask"
+        directory.mkdir(parents=True)
+        result = self.run_cli("--write")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("unregistered=['v4-NewTask']", result.stderr)
+        self.assertFalse((self.root / "REVIEW.md").exists())
+
+    def test_duplicate_and_dangling_task_mappings_are_rejected(self):
+        self.add_task()
+        original = dict(self.inventory["tasks"][0])
+        for rows, message in (([original, original], "duplicate task_id"),
+                              ([dict(original, case_ids=["case-9999"])], "case_ids"),
+                              ([dict(original, case_ids=["case-0001", "case-0001"])], "case_ids"),
+                              ([dict(original, function_group="missing")], "function_group"),
+                              ([dict(original, review_status="accepted")], "invalid task fields")):
+            with self.subTest(message=message, rows=rows):
+                self.inventory["tasks"] = rows
+                self.save_inventory()
+                result = self.run_cli("--write")
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(message, result.stderr)
+                self.assertFalse((self.root / "REVIEW.md").exists())
+
+    def test_task_metadata_changes_make_counts_and_source_index_stale(self):
+        directory = self.add_task()
+        self.write("catalog.json", json.dumps({
+            "categories": {"testing-characterization": "测试", "spec-modeling": "规格"},
+            "families": {"power": "电源"}}))
+        self.assertEqual(self.run_cli("--write").returncode, 0)
+        before = (self.root / "TASKS.md").read_bytes()
+        path = directory / "task.toml"
+        path.write_text(path.read_text().replace('"testing-characterization"', '"spec-modeling"').replace('"real-por"', '"revised-por"'))
+        result = self.run_cli("--check")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("stale", result.stderr)
+        self.assertEqual(before, (self.root / "TASKS.md").read_bytes())
+        self.assertEqual(self.run_cli("--write").returncode, 0)
+        text = (self.root / "TASKS.md").read_text()
+        self.assertIn("| 规格 | 1 | 1 |", text)
+        self.assertIn("revised-por", text)
+        self.assertNotIn("real-por", text)
+
+    def test_missing_task_files_and_bad_metadata_are_rejected(self):
+        directory = self.add_task()
+        for filename in ("instruction.md", "SOURCE.md", "task.toml"):
+            with self.subTest(filename=filename):
+                path = directory / filename
+                content = path.read_bytes()
+                path.unlink()
+                result = self.run_cli("--write")
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(filename, result.stderr)
+                self.assertFalse((self.root / "REVIEW.md").exists())
+                path.write_bytes(content)
+        path = directory / "task.toml"
+        content = path.read_text()
+        for old, new, message in (("v2-test-por", "wrong-name", "name mismatch"),
+                                   ("testing-characterization", "unknown", "engineering_action"),
+                                   ("real-por", "", "source_group")):
+            with self.subTest(message=message):
+                path.write_text(content.replace(old, new))
+                result = self.run_cli("--write")
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(message, result.stderr)
+
+    def test_legacy_scope_and_many_to_many_lineage_keep_task_denominator(self):
+        self.add_task()
+        self.add_task("v3-test-por")
+        self.inventory["tasks"][0]["case_ids"].append("case-0002")
+        self.save_inventory()
+        self.write_case("cases/testing-characterization/power/case-0002-other",
+                        dict(self.metadata, case_id="case-0002"))
+        (self.repo / "benchmark/tasks/va01-legacy").mkdir()
+        (self.repo / "benchmark/tasks/v1-old-category").mkdir()
+        self.assertEqual(self.run_cli("--write").returncode, 0)
+        text = (self.root / "TASKS.md").read_text()
+        self.assertIn("登记 **2 道已建设任务**", text)
+        self.assertIn("| 总计 | 1 | 1 | 2 |", text)
+        card = (self.root / self.directory / "README.md").read_text()
+        self.assertIn("v2-test-por", card)
+        self.assertIn("v3-test-por", card)
+
+    def test_legacy_task_path_must_agree_with_registered_lineage(self):
+        self.add_task()
+        self.inventory["tasks"][0]["case_ids"] = []
+        self.save_inventory()
+        self.metadata["task_path"] = "benchmark/tasks/v2-test-por"
+        self.write(f"{self.directory}/case.json", json.dumps(self.metadata))
+        result = self.run_cli("--write")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("task_path disagrees", result.stderr)
+
+    def test_missing_inventory_or_broken_task_markers_cannot_silently_skip_checks(self):
+        self.add_task()
+        self.write("TASKS.md", "Human text without markers.\n")
+        result = self.run_cli("--write")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("marker", result.stderr)
+        self.assertFalse((self.root / "REVIEW.md").exists())
+        (self.root / "tasks.json").unlink()
+        result = self.run_cli("--check")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("tasks.json", result.stderr)
+
+    def test_duplicate_review_ids_are_rejected(self):
+        self.inventory["function_groups"]["another"] = {"title": "Another", "review_id": "R03"}
+        self.save_inventory()
+        result = self.run_cli("--write")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("duplicate review_id", result.stderr)
 
     def test_views_include_each_case_and_check_is_read_only(self):
         result = self.run_cli("--write")
