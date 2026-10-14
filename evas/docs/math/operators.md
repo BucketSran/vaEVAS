@@ -74,7 +74,29 @@ IR 保存 operators 与调用点引用。结构依赖在数值绑定前检查，
 延迟和边沿为有限实例常数，`d≥0`、`tr>0,tf>0`。仅省略 fall 且显式 rise 为正时，
 按 Verilog-AMS LRM 2.4 §4.5.8 将 `tf=tr`，编译到同一 Transition IR；保留原源位置、实例和调用点。
 这不引入零边沿或完全省略边沿的默认最小时间。
-初值为已初始化输入，不凭空添加从零开始的边沿。未中断变化在实际接受时刻 te 发生，
+初值为最终零时刻状态决定的输入，不凭空添加从零开始的边沿。
+例如 q 初始为0，固定 `timer(0,0,0.001)` 将 q 赋为1，
+`transition(q,0.125,0.5,0.5)` 从 t=0 起即为1；延迟不产生一条额外初始边沿。
+
+构造前只处理精确固定零时刻 timer，回调各执行一次。所有分支的读值必须仅依赖 held 状态和直接驱动输入，
+顺序赋值、共享旧状态、writer 与整数检查仍保留。最终完整状态向量必须有限，且逐项得到 point 证书。
+一个 point 证书表示精确区间只包含提交值；不能把带舍入区间的状态当作精确种子。
+首个电压解和电压误差仍在历史构造后认证，通过后才发布帧、日程游标和事件记录。
+OR 的多个零叶共用一个回调体；正时刻邻居由原事件事务处理。
+
+这条路径限定于闭合的 source-free 仿射状态 transition 及其直接一阶 filter、直接 integral 消费者。
+父 transition 与 filter 使用同一最终 DC 种子，`idt` 保留自身 ic。
+改变种子且混有其他历史、mutable held 日程或历史守卫时返回 `unsupported_initial_history`。
+若全分支有序仿射传递证明 transition 种子不变，则完整保留原事件事务，
+兼容独立积分、滤波、数学历史和仅流向无关状态的内部电压读值；证明不会跳过实际事件检查。
+这里没有扩展 IR、source-target 或同刻日程闭包。实现入口是
+`transient_initialization::prepare`、`settlement_bounds::Bounds::held_inputs` 和
+`initial_state_invariance::unchanged`，最终历史仍由 `Operators::new_until` 构造。
+公开编译/内核的独立行为锚点见 `test_transition_initialization.py`，
+同对象失败重试见 `transient_initialization` 的 Rust 测试；这些是开发证据，不能单独代替 Spectre 对齐资格。
+[实际有限配对](../../../experiments/backends/support/README.md#initial-transition-seed)覆盖开、关及直接滤波三个初态反例；不扩展一般历史反馈支持。
+
+未中断变化在实际接受时刻 te 发生，
 选择完整上/下沿时间 D，则
 
 `y(t)=y0+(y1-y0)*clip((t-te-d)/D,0,1)`。

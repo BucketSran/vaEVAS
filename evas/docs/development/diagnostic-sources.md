@@ -107,6 +107,7 @@ code、stage、category 和原 message；solve 还断言 sample 身份。
 | --- | --- | --- |
 | 多项式求值 / `nonfinite_arithmetic` | `V(y,r)<+pow(V(u,r),3)`，有限输入 `u=1e200`；numerical | 实际 solve 与 CLI 溢出。其他同 kind 的矩阵、区间和事件算术分支只经源码审计；不推断模型缺陷或实现 bug |
 | events.check_state / `state_range` | integer n 初值 2147483647，t=0 timer 执行 `n=n+1`；unsupported | 实际 transient 与 CLI 到 32 位状态边界。有限运行结果超出实现范围，不归因为资源不足或数值收敛失败 |
+| transient_initialization.unsupported / `unsupported_initial_history` | `test_transition_initialization.py` 的改变种子与未证明历史/日程组合；unsupported / COMPOSE | 公开 API 断言精确 kind、category 与 capability；种子不变的原支持组合继续走旧事务，不由 unsupported 前缀猜测类别 |
 | batch worker join / `worker_failure` | 工作线程 panic；internal | 测试线程实际 panic，经生产 `join_workers` 返回并序列化；验证后续 panic 也被回收且首个输入错误不变。Python 原载荷/未来版本负控另验收运输。没有通过用户模型制造生产 panic |
 
 未来非 v1 载荷仍按 unknown 处理。`state_space_limit` 含维度预算、缩放预算和认证失败，
@@ -118,10 +119,11 @@ code、stage、category 和原 message；solve 还断言 sample 身份。
 [diagnostic-inventory.json](diagnostic-inventory.json) 枚举本库 Python 前端/CLI 与 Rust workspace
 生产源码，包括 `ir` 子 crate；排除构建产物、测试文件与 `cfg(test)` 项。当前源码审计确认
 Python 工厂为 CompileError、KernelError 及迁移编码子类；错误包装为各模块的 fail/_fail。
-Rust Error 由 IR crate 的 `Error::new` 构造。当前返回 Error 的额外包装有四个：
+Rust Error 由 IR crate 的 `Error::new` 构造。PR #91 审计时返回 Error 的额外包装有四个：
 continuous.unsupported 明确构造 unsupported_operator；event_accuracy.unresolved、
 dynamic_roots.unresolved 和 transition.invalid 明确构造 event_resolution。
 event_accuracy.unresolved 还被 affine_bounds、pwl、schedule、slew 导入使用。
+本轮新增 transient_initialization.unsupported，明确构造 unsupported_initial_history；其分类由精确登记维护。
 PR #91 历史审计中这四个函数的包装调用数为 continuous 11、continuous_derivatives 2、
 continuous_initialization 1、implicit_dynamics 3、nonlinear_dynamics 4、dynamic_roots 20、
 event_accuracy 2、transition 13、affine_bounds 7、pwl 2、schedule 10、slew 7，共 82 个。
