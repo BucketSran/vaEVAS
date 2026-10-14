@@ -2,6 +2,8 @@
 
 DC seeds, event counts and integral initial conditions are independent answers.
 """
+GUARDS = ["TIMED-OPERATOR", "LAPLACE", "DYNAMICS", "COMPOSE"]
+
 import unittest
 
 from evas import CompileError, KernelError
@@ -102,6 +104,8 @@ class FinalInitialHistory(unittest.TestCase):
                                '@(timer(0,0,0.001)) a=1; ' + suffix, [0, 1], 1,
                                declarations='real a,b; electrical e;')
             self.assertEqual(caught.exception.detail['kind'], 'unsupported_initial_history')
+            self.assertEqual(caught.exception.diagnostic['category'], 'unsupported')
+            self.assertEqual(caught.exception.diagnostic['capability'], 'COMPOSE')
 
     def test_changed_seed_rejects_nonpoint_state_certificate(self):
         with self.assertRaises(KernelError) as caught:

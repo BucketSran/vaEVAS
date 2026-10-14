@@ -94,6 +94,7 @@ OR 的多个零叶共用一个回调体；正时刻邻居由原事件事务处�
 `initial_state_invariance::unchanged`，最终历史仍由 `Operators::new_until` 构造。
 公开编译/内核的独立行为锚点见 `test_transition_initialization.py`，
 同对象失败重试见 `transient_initialization` 的 Rust 测试；这些是开发证据，不能单独代替 Spectre 对齐资格。
+[实际有限配对](../../../experiments/backends/support/README.md#initial-transition-seed)覆盖开、关及直接滤波三个初态反例；不扩展一般历史反馈支持。
 
 未中断变化在实际接受时刻 te 发生，
 选择完整上/下沿时间 D，则

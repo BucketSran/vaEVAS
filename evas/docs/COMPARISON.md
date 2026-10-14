@@ -22,6 +22,9 @@
 EVAS 0.15.0 / IR19 纳入中断边沿积分实现；该行 Q3 来自发布前候选的实际运行。
 原预算和历史成绩继续保留，实际对照见[本轮记录](../../experiments/backends/support/README.md#legacy-chain-q)。
 
+固定零时刻 timer 的 transition 初态修正已取得[三模型实际有限配对](../../experiments/backends/support/README.md#initial-transition-seed)。
+该修复使用原 `1e-8 V` 预算；第四反馈模型仅作诊断，不新增本表 Q 成绩，也不覆盖一般历史反馈。
+
 结果来自不同版本，**不是当前 main 的一次全量验收**。
 五个数学函数的修复见[更新记录](../../experiments/backends/support/README.md#q3-closure)，
 原11格的补证见[后续核对](../../experiments/backends/support/README.md#evidence-followup)，
