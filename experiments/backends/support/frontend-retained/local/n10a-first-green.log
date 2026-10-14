@@ -1,0 +1,41 @@
+
+======================================================================
+ERROR: test_singular_and_floating_circuits_fail (test_affine.AffineContracts.test_singular_and_floating_circuits_fail)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_affine.py", line 123, in test_singular_and_floating_circuits_fail
+    self.assertEqual(error.exception.detail["kind"], "singular_system")
+                     ^^^^^^^^^^^^^^^
+AttributeError: '_AssertRaisesContext' object has no attribute 'exception'
+
+======================================================================
+FAIL: test_singular_and_floating_circuits_fail (test_affine.AffineContracts.test_singular_and_floating_circuits_fail) (source='`include "disciplines.vams"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; electrical floating; analog begin V(y,r)<+V(u,r); end endmodule')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_affine.py", line 121, in test_singular_and_floating_circuits_fail
+    with self.subTest(source=source), self.assertRaises(KernelError) as error:
+                                      ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+AssertionError: KernelError not raised
+
+======================================================================
+FAIL: test_rejections_are_explicit (test_laplace.LaplaceContracts.test_rejections_are_explicit) (body="@(initial_step) q=0; V(y,r)<+laplace_nd(q,'{1.0},'{1.0,0.5e-6});")
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_laplace.py", line 202, in test_rejections_are_explicit
+    with self.subTest(body=body), self.assertRaises((CompileError, KernelError)):
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'evas.errors.CompileError'>, <class 'evas.errors.KernelError'>) not raised
+
+======================================================================
+FAIL: test_rejections_are_explicit (test_laplace.LaplaceContracts.test_rejections_are_explicit) (body="V(y,r)<+laplace_nd(V(u,r),'{1.0},'{1.0,0.5e-6})*V(u,r);")
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_laplace.py", line 202, in test_rejections_are_explicit
+    with self.subTest(body=body), self.assertRaises((CompileError, KernelError)):
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (<class 'evas.errors.CompileError'>, <class 'evas.errors.KernelError'>) not raised
+
+----------------------------------------------------------------------
+Ran 78 tests in 7.960s
+
+FAILED (failures=3, errors=1)

@@ -67,6 +67,7 @@ CLI 在 stderr 输出同样的 JSON 并返回 2；命令参数错误也采用此
 | `unsupported_initial_event` | 不支持的初始化生命周期、混合事件或初值表达式 |
 | `unsupported_event_context` | binding：事件位于普通模拟条件下，需要尚未支持的运行时激活语义 |
 | `scs_input` / `unsupported_scs` | netlist：非法测试台，或未支持的输入语义 |
+| `kernel.unsupported_initial_history` | kernel / unsupported / COMPOSE：改变零时刻种子但历史组合、日程、读值或最终 point 证书未得到支持 |
 | `kernel.unsupported_implicit_dynamics` | kernel：包括 DAE 与事件/状态尚未联合支持的情况 |
 
 本 E1 切片把已审计的 token、宏/函数、genvar、层级与数组预算来源映射到已有

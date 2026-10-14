@@ -194,15 +194,29 @@ class LaplaceContracts(unittest.TestCase):
         kernel_errors = [
             "V(y,r)<+laplace_nd(V(u,r),'{1.0},'{0.0,0.5e-6});",
             "V(y,r)<+laplace_nd(V(u,r),'{1.0},'{1.0,-0.5e-6});",
-            "@(initial_step) q=0; V(y,r)<+laplace_nd(q,'{1.0},'{1.0,0.5e-6});",
             "V(y,r)<+laplace_nd(V(y,r),'{1.0},'{1.0,0.5e-6});",
-            "V(y,r)<+laplace_nd(V(u,r),'{1.0},'{1.0,0.5e-6})*V(u,r);",
         ]
         for body in kernel_errors:
             with self.subTest(body=body), self.assertRaises((CompileError, KernelError)):
                 execute(compile_filter(body, "electrical z; real q;"))
         with self.assertRaises(KernelError):
             solve(compile_filter(), ["u"], [[1]], kernel=KERNEL)
+
+    def test_supported_filter_inputs_are_not_rejected_by_unused_declarations(self):
+        # These models used to fail because the unused z was an unknown,
+        # hiding already-supported constant forcing and nonlinear readout.
+        times = [0, .5e-6, 1e-6, 2e-6, 3e-6, 4e-6, 6e-6]
+        zero = compile_filter(
+            "@(initial_step) q=0; V(y,r)<+laplace_nd(q,'{1.0},'{1.0,0.5e-6});",
+            "electrical z; real q;")
+        self.assertEqual(column(execute(zero, times=times)), [0.] * len(times))
+        product = compile_filter(
+            "V(y,r)<+laplace_nd(V(u,r),'{1.0},'{1.0,0.5e-6})*V(u,r);",
+            "electrical z; real q;")
+        result = execute(product, times=times, vabstol=1e-9, reltol=0)
+        source_values = [0., .5, 1., 1., 1., -1., -1.]
+        for t, source, actual in zip(times, source_values, column(result)):
+            self.assertAlmostEqual(actual, source * expected(POINTS, t), delta=2e-9)
 
     def test_raw_ir_rejects_bad_coefficients_and_dependencies(self):
         good = compile_filter().to_dict()

@@ -1,13 +1,40 @@
 """Bind an instance tree into flat, private identities for the shared kernel."""
+from dataclasses import fields, is_dataclass
 from .errors import CompileError
 from .ir import Affine
 from .lowering import lower
 from .parameters import bind_parameters
 from .node_elaboration import scalarize_nodes
 from .integer_constants import check_integer_expression
+from .syntax import Expr
 
 INSTANCE_BUDGET = 4096
 DEPTH_BUDGET = 64
+
+
+def _referenced_nodes(model):
+    """Keep structural uses before loops or expressions can erase references."""
+    used = set(model.ports)
+    for child in model.children:
+        connections = child.connections
+        used.update(connections.values() if isinstance(connections, dict) else connections)
+    pending, seen = [model], set()
+    while pending:
+        value = pending.pop()
+        if id(value) in seen:
+            continue
+        if isinstance(value, Expr) and value.op == 'node':
+            used.add(value.value)
+        if is_dataclass(value):
+            seen.add(id(value))
+            pending.extend(getattr(value, field.name) for field in fields(value))
+        elif isinstance(value, dict):
+            seen.add(id(value))
+            pending.extend(value.values())
+        elif isinstance(value, (tuple, list)):
+            seen.add(id(value))
+            pending.extend(value)
+    return used
 
 
 def bind_hierarchy(models, instances, instance_type):
@@ -26,6 +53,7 @@ def bind_hierarchy(models, instances, instance_type):
             raise CompileError(f'{instance.name}: recursive module hierarchy is unsupported')
         model = models[instance.module]
         parameters = bind_parameters(model, instance.parameters, instance.name)
+        referenced = _referenced_nodes(model)
         model, groups = scalarize_nodes(model, parameters)
         if set(instance.connections) != set(model.ports):
             raise CompileError(f'{instance.name}: connections must exactly match {model.ports}',
@@ -36,7 +64,11 @@ def bind_hierarchy(models, instances, instance_type):
             if ':' in instance.name:
                 raise CompileError("instance names cannot contain ':'")
             port_nets = instance.connections
-        nets = {n: port_nets.get(n, f'{instance.name}:{n}') for n in model.nodes}
+        # Scalarization still validates every declaration. A reference to any
+        # vector bit retains its whole group; no numerical dead-code pruning.
+        active = {bit for name in referenced for bit in groups.get(name, ())}
+        nets = {n: port_nets.get(n, f'{instance.name}:{n}')
+                for n in model.nodes if n in active}
         nets['0'] = '0'
         bindings.append((instance, model, nets))
         if not model.children:

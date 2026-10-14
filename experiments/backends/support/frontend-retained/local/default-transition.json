@@ -1,0 +1,7 @@
+{
+  "source": "`include \"disciplines.vams\"\n`include \"constants.vams\"\n`default_transition 1n\nmodule m(y);output y;electrical y;analog V(y)<+1;endmodule",
+  "result": {
+    "rejected": true,
+    "message": "directive.va:3:1: undefined or unsupported macro 'default_transition'"
+  }
+}

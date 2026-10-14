@@ -46,6 +46,7 @@ _KERNEL_CATEGORIES = {
     'unsupported_operator': 'unsupported', 'unsupported_transient': 'unsupported',
     'unsupported_cross': 'unsupported', 'unsupported_timer': 'unsupported',
     'unsupported_implicit_dynamics': 'unsupported', 'unsupported_initialization': 'unsupported',
+    'unsupported_initial_history': 'unsupported',
     'invalid_request': 'invalid_input', 'invalid_ir': 'invalid_input',
     'invalid_inputs': 'invalid_input', 'invalid_config': 'invalid_input',
     'unsupported_ir_version': 'version', 'kernel_process': 'infrastructure',
@@ -63,6 +64,7 @@ _KERNEL_CATEGORIES = {
 }
 _KERNEL_CAPABILITIES = {'unsupported_strobe': 'DYNAMICS', 'unsupported_timer': 'TIMER', 'unsupported_cross': 'CROSS',
                         'unsupported_implicit_dynamics': 'DYNAMICS',
+                        'unsupported_initial_history': 'COMPOSE',
                         'unsupported_initialization': 'LANG', 'initialization_precision': 'LANG'}
 
 

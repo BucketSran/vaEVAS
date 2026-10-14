@@ -317,8 +317,14 @@ impl Controller {
                 CalendarPlan::Held(future)
             }
             Strategy::Held => {
-                let future =
-                    self.prepare_held_future(model, trajectory, &next, &records, &calendar[end..])?;
+                let future = self.prepare_held_future(
+                    model,
+                    trajectory,
+                    &next,
+                    &records,
+                    &calendar[end..],
+                    &calendar[self.event..end],
+                )?;
                 self.prepare_physical_history(
                     model,
                     trajectory,

@@ -1,0 +1,830 @@
+{
+  "manifests": {
+    "MANIFEST.json": {
+      "files": 16,
+      "sha256": "fa277161cea67e56490532829b2fa6af6562750826f4d0d0dee0ae5d19e327c9",
+      "mismatches": []
+    },
+    "OUTPUT_MANIFEST.json": {
+      "files": 90,
+      "sha256": "77cd5186906c65b04f292c429debc73c188b025166b47a6f86a43990567a6a7c",
+      "mismatches": []
+    }
+  },
+  "tool": {
+    "file_sha256": {
+      "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+      "/home/cshrc/.cshrc.cadence.sui": "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+      "/home/cshrc/.cshrc.mentor25.sui": "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+    },
+    "version": "sub-version  21.1.0.509.isr12 \n",
+    "execution": {
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "prlimit",
+        "--as=4294967296",
+        "--fsize=33554432",
+        "--",
+        "/bin/csh",
+        "-f",
+        "version.csh"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "status": "completed",
+      "cleanup": {
+        "signals": [
+          "SIGTERM",
+          "SIGKILL"
+        ],
+        "errors": [],
+        "complete": true
+      },
+      "elapsed_seconds": 1.9264657348394394,
+      "completed_utc": "2026-10-14T05:19:41Z",
+      "log": "version.log",
+      "log_sha256": "d0e6c83a98026a294bfc4b9754c4e294d322b60b1872a28e38f84caccbdf7f81"
+    }
+  },
+  "tool_unchanged": true,
+  "calibration": {
+    "known_accept": true,
+    "known_reject": true,
+    "missing_point_rejected": true,
+    "nonfinite_rejected": true,
+    "missing_node_rejected": true
+  },
+  "interpolation": false,
+  "visibility": "local ignored runs; actual Spectre raw from completed remote execution, not public retained evidence",
+  "cases": {
+    "unused_scalar": {
+      "source_sha256": "c19422f975845f0dd33e583c4a64badb51cc8e75a7a36420ea5a69e782b86dc9",
+      "deck_sha256": "6c0f411e26a0afa568f2c8a1ffe183b9970b114d374477301b0862a7abf45c51",
+      "psf_sha256": "c516ab5ea18f5e2ba230c663d0c06aac9a622d43cf38698c4f6af8ec7177e636",
+      "native_rows": 2,
+      "completion": {
+        "errors": 0,
+        "warnings": 1,
+        "notices": 3
+      },
+      "effective": {
+        "tolerance.relative": "1.00000e-10",
+        "start": "0.00000",
+        "stop": "1.00000",
+        "maxstep": "0.0312500",
+        "reltol": "1.00000e-11",
+        "abstol(V)": "1.00000e-12",
+        "abstol(I)": "1.00000e-15",
+        "errpreset": "\"conservative\"",
+        "method": "\"traponly\"",
+        "gmin": "1.00000e-12"
+      },
+      "warning_extracts": [
+        "Warning from spectre during AHDL read-in.\n    WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow.\n",
+        "    WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow.\n\nReading file:  /edamgr/Spectre/SPECTRE211Hotfix/tools.lnx86/spectre/etc/ahdl/disciplines.vams",
+        "    gmin = 1 pS\n\n"
+      ],
+      "execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 9.403899928554893,
+        "completed_utc": "2026-10-14T05:19:50Z",
+        "log": "stdout.log",
+        "log_sha256": "93bb9c459a9d3e942dfbd6b582b82c57602e6c14e74563313939f58768b55092",
+        "label": "unused_scalar",
+        "source_sha256": "c19422f975845f0dd33e583c4a64badb51cc8e75a7a36420ea5a69e782b86dc9",
+        "deck_sha256": "6c0f411e26a0afa568f2c8a1ffe183b9970b114d374477301b0862a7abf45c51",
+        "directory_bytes": 97826
+      },
+      "role": "positive_control",
+      "query_times": [
+        0,
+        1
+      ],
+      "spectre_native_values": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.5,
+          0.5
+        ]
+      ],
+      "independent_expected_y": [
+        [
+          0
+        ],
+        [
+          0.5
+        ]
+      ],
+      "missing_exact_query_times": [],
+      "nearest_native_to_missing": [],
+      "available_query_times": [
+        0,
+        1
+      ],
+      "full_paired_qualification": "passed",
+      "spectre_available_vs_oracle": {
+        "passed": true,
+        "max_abs_error": 0.0,
+        "budget": 1e-09
+      },
+      "candidate_vs_oracle": {
+        "passed": true,
+        "max_abs_error": 0.0,
+        "budget": 1e-09
+      },
+      "candidate_available_vs_spectre": {
+        "passed": true,
+        "max_abs_error": 0.0,
+        "budget": 1e-09
+      },
+      "candidate_values": [
+        [
+          -0.0
+        ],
+        [
+          0.5
+        ]
+      ],
+      "protocol_note": "Static EVAS u=0/.5 versus Spectre PWL endpoint t=0/1: same algebraic source relation, not identical original request protocol",
+      "available_point_errors": [
+        {
+          "time": 0,
+          "spectre_y": 0.0,
+          "candidate_y": -0.0,
+          "oracle_y": 0,
+          "candidate_minus_spectre": -0.0
+        },
+        {
+          "time": 1,
+          "spectre_y": 0.5,
+          "candidate_y": 0.5,
+          "oracle_y": 0.5,
+          "candidate_minus_spectre": 0.0
+        }
+      ]
+    },
+    "zero_forcing_filter": {
+      "source_sha256": "c9f63ce25dd32bfee9bcfb00b7302155d2cbacd12ce180ee3b6cec7c7de362f3",
+      "deck_sha256": "5144dc46867a207008f5d4b4408d960f9b70c4bd5fa9710132fb96cdad56cfc1",
+      "psf_sha256": "46594c63147e2f21f3037c44b0f0e3e47b76c24118fb0c874808638defb18218",
+      "native_rows": 7,
+      "completion": {
+        "errors": 0,
+        "warnings": 1,
+        "notices": 3
+      },
+      "effective": {
+        "tolerance.relative": "1.00000e-10",
+        "start": "0.00000",
+        "stop": "6.00000e-06",
+        "maxstep": "5.00000e-10",
+        "reltol": "1.00000e-11",
+        "abstol(V)": "1.00000e-12",
+        "abstol(I)": "1.00000e-15",
+        "errpreset": "\"conservative\"",
+        "method": "\"traponly\"",
+        "gmin": "1.00000e-12"
+      },
+      "warning_extracts": [
+        "Warning from spectre during AHDL read-in.\n    WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow.\n",
+        "    WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow.\n\nReading file:  /edamgr/Spectre/SPECTRE211Hotfix/tools.lnx86/spectre/etc/ahdl/disciplines.vams",
+        "    gmin = 1 pS\n\n"
+      ],
+      "execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 9.354806818068027,
+        "completed_utc": "2026-10-14T05:19:59Z",
+        "log": "stdout.log",
+        "log_sha256": "db42b6c96a7c446544e71824cfbcd8fc7240011b6d614bba1107c73c19e77e5e",
+        "label": "zero_forcing_filter",
+        "source_sha256": "c9f63ce25dd32bfee9bcfb00b7302155d2cbacd12ce180ee3b6cec7c7de362f3",
+        "deck_sha256": "5144dc46867a207008f5d4b4408d960f9b70c4bd5fa9710132fb96cdad56cfc1",
+        "directory_bytes": 116666
+      },
+      "role": "positive_control",
+      "query_times": [
+        0,
+        5e-07,
+        1e-06,
+        2e-06,
+        3e-06,
+        4e-06,
+        6e-06
+      ],
+      "spectre_native_values": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.5,
+          0.0
+        ],
+        [
+          1.0,
+          0.0
+        ],
+        [
+          -1.0,
+          0.0
+        ],
+        [
+          -1.0,
+          0.0
+        ]
+      ],
+      "independent_expected_y": [
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "missing_exact_query_times": [
+        1e-06,
+        3e-06
+      ],
+      "nearest_native_to_missing": [
+        {
+          "query": 1e-06,
+          "nearest": 1.0000000000000374e-06
+        },
+        {
+          "query": 3e-06,
+          "nearest": 2.9999999999996515e-06
+        }
+      ],
+      "available_query_times": [
+        0,
+        5e-07,
+        2e-06,
+        4e-06,
+        6e-06
+      ],
+      "full_paired_qualification": "insufficient_exact_native_points",
+      "spectre_available_vs_oracle": {
+        "passed": true,
+        "max_abs_error": 0.0,
+        "budget": 1e-09
+      },
+      "candidate_vs_oracle": {
+        "passed": true,
+        "max_abs_error": 0.0,
+        "budget": 1e-09
+      },
+      "candidate_available_vs_spectre": {
+        "passed": true,
+        "max_abs_error": 0.0,
+        "budget": 1e-09
+      },
+      "candidate_values": [
+        [
+          -0.0
+        ],
+        [
+          -0.0
+        ],
+        [
+          -0.0
+        ],
+        [
+          -0.0
+        ],
+        [
+          -0.0
+        ],
+        [
+          -0.0
+        ],
+        [
+          -0.0
+        ]
+      ],
+      "protocol_note": "Original filter PWL and query times unchanged; Spectre native exact points, no interpolation",
+      "candidate_effective": {
+        "absolute_V": 1e-09,
+        "relative": 0.0,
+        "stop_s": 6e-06,
+        "max_step_s": 1e-05,
+        "max_step_applied": true
+      },
+      "available_point_errors": [
+        {
+          "time": 0,
+          "spectre_y": 0.0,
+          "candidate_y": -0.0,
+          "oracle_y": 0,
+          "candidate_minus_spectre": -0.0
+        },
+        {
+          "time": 5e-07,
+          "spectre_y": 0.0,
+          "candidate_y": -0.0,
+          "oracle_y": 0,
+          "candidate_minus_spectre": -0.0
+        },
+        {
+          "time": 2e-06,
+          "spectre_y": 0.0,
+          "candidate_y": -0.0,
+          "oracle_y": 0,
+          "candidate_minus_spectre": -0.0
+        },
+        {
+          "time": 4e-06,
+          "spectre_y": 0.0,
+          "candidate_y": -0.0,
+          "oracle_y": 0,
+          "candidate_minus_spectre": -0.0
+        },
+        {
+          "time": 6e-06,
+          "spectre_y": 0.0,
+          "candidate_y": -0.0,
+          "oracle_y": 0,
+          "candidate_minus_spectre": -0.0
+        }
+      ]
+    },
+    "input_filter_product": {
+      "source_sha256": "db758e435d7932bb78f2e2ed601515e1a3778b6741671ddacd681f01814b883e",
+      "deck_sha256": "5144dc46867a207008f5d4b4408d960f9b70c4bd5fa9710132fb96cdad56cfc1",
+      "psf_sha256": "d68fea2940a104579a338734ce5b91319d6625a901c46a0032b19e53cd1dbdb5",
+      "native_rows": 7,
+      "completion": {
+        "errors": 0,
+        "warnings": 1,
+        "notices": 3
+      },
+      "effective": {
+        "tolerance.relative": "1.00000e-10",
+        "start": "0.00000",
+        "stop": "6.00000e-06",
+        "maxstep": "5.00000e-10",
+        "reltol": "1.00000e-11",
+        "abstol(V)": "1.00000e-12",
+        "abstol(I)": "1.00000e-15",
+        "errpreset": "\"conservative\"",
+        "method": "\"traponly\"",
+        "gmin": "1.00000e-12"
+      },
+      "warning_extracts": [
+        "Warning from spectre during AHDL read-in.\n    WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow.\n",
+        "    WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow.\n\nReading file:  /edamgr/Spectre/SPECTRE211Hotfix/tools.lnx86/spectre/etc/ahdl/disciplines.vams",
+        "    gmin = 1 pS\n\n"
+      ],
+      "execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 9.245279770344496,
+        "completed_utc": "2026-10-14T05:20:09Z",
+        "log": "stdout.log",
+        "log_sha256": "15d5c55e8bb71375f7a16ab2fa83475b40b44c4d24ad7ec92c19cc5e1fdeeee9",
+        "label": "input_filter_product",
+        "source_sha256": "db758e435d7932bb78f2e2ed601515e1a3778b6741671ddacd681f01814b883e",
+        "deck_sha256": "5144dc46867a207008f5d4b4408d960f9b70c4bd5fa9710132fb96cdad56cfc1",
+        "directory_bytes": 123513
+      },
+      "role": "positive_control",
+      "query_times": [
+        0,
+        5e-07,
+        1e-06,
+        2e-06,
+        3e-06,
+        4e-06,
+        6e-06
+      ],
+      "spectre_native_values": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.5,
+          0.0919698573224772
+        ],
+        [
+          1.0,
+          0.5676676339681493
+        ],
+        [
+          1.0,
+          0.9414901863399446
+        ],
+        [
+          -1.0,
+          0.13640690704264655
+        ],
+        [
+          -1.0,
+          0.9841827458705391
+        ]
+      ],
+      "independent_expected_y": [
+        [
+          0.0
+        ],
+        [
+          0.09196986029286058
+        ],
+        [
+          0.5676676416183063
+        ],
+        [
+          0.9414901778260607
+        ],
+        [
+          0.9920815566439661
+        ],
+        [
+          0.1364069280109946
+        ],
+        [
+          0.9841827411466367
+        ]
+      ],
+      "missing_exact_query_times": [
+        3e-06
+      ],
+      "nearest_native_to_missing": [
+        {
+          "query": 3e-06,
+          "nearest": 2.9999999999996515e-06
+        }
+      ],
+      "available_query_times": [
+        0,
+        5e-07,
+        1e-06,
+        2e-06,
+        4e-06,
+        6e-06
+      ],
+      "full_paired_qualification": "failed_available_points_and_missing_exact_points",
+      "spectre_available_vs_oracle": {
+        "passed": false,
+        "max_abs_error": 2.09683480578704e-08,
+        "budget": 2e-09
+      },
+      "candidate_vs_oracle": {
+        "passed": true,
+        "max_abs_error": 1.1102230246251565e-16,
+        "budget": 2e-09
+      },
+      "candidate_available_vs_spectre": {
+        "passed": false,
+        "max_abs_error": 2.0968347974603674e-08,
+        "budget": 2e-09
+      },
+      "candidate_values": [
+        [
+          0.0
+        ],
+        [
+          0.09196986029286058
+        ],
+        [
+          0.5676676416183063
+        ],
+        [
+          0.9414901778260607
+        ],
+        [
+          0.992081556643966
+        ],
+        [
+          0.13640692801099452
+        ],
+        [
+          0.9841827411466368
+        ]
+      ],
+      "protocol_note": "Original filter PWL and query times unchanged; Spectre native exact points, no interpolation",
+      "candidate_effective": {
+        "absolute_V": 1e-09,
+        "relative": 0.0,
+        "stop_s": 6e-06,
+        "max_step_s": 1e-05,
+        "max_step_applied": true
+      },
+      "available_point_errors": [
+        {
+          "time": 0,
+          "spectre_y": 0.0,
+          "candidate_y": 0.0,
+          "oracle_y": 0.0,
+          "candidate_minus_spectre": 0.0
+        },
+        {
+          "time": 5e-07,
+          "spectre_y": 0.0919698573224772,
+          "candidate_y": 0.09196986029286058,
+          "oracle_y": 0.09196986029286058,
+          "candidate_minus_spectre": 2.9703833837047e-09
+        },
+        {
+          "time": 1e-06,
+          "spectre_y": 0.5676676339681493,
+          "candidate_y": 0.5676676416183063,
+          "oracle_y": 0.5676676416183063,
+          "candidate_minus_spectre": 7.650156952365705e-09
+        },
+        {
+          "time": 2e-06,
+          "spectre_y": 0.9414901863399446,
+          "candidate_y": 0.9414901778260607,
+          "oracle_y": 0.9414901778260607,
+          "candidate_minus_spectre": -8.513883931193789e-09
+        },
+        {
+          "time": 4e-06,
+          "spectre_y": 0.13640690704264655,
+          "candidate_y": 0.13640692801099452,
+          "oracle_y": 0.1364069280109946,
+          "candidate_minus_spectre": 2.0968347974603674e-08
+        },
+        {
+          "time": 6e-06,
+          "spectre_y": 0.9841827458705391,
+          "candidate_y": 0.9841827411466368,
+          "oracle_y": 0.9841827411466367,
+          "candidate_minus_spectre": -4.723902269354596e-09
+        }
+      ]
+    },
+    "referenced_singular": {
+      "source_sha256": "28abe32cba048c10cc3bf1bdfb747eded1ea49842113852db3c938590d49f773",
+      "deck_sha256": "6c0f411e26a0afa568f2c8a1ffe183b9970b114d374477301b0862a7abf45c51",
+      "psf_sha256": "ae44bcabb58d18436f718b6ddab47a395005beeb876b933b4af1a6341bb55465",
+      "native_rows": 2,
+      "completion": {
+        "errors": 0,
+        "warnings": 1,
+        "notices": 4
+      },
+      "effective": {
+        "tolerance.relative": "1.00000e-10",
+        "start": "0.00000",
+        "stop": "1.00000",
+        "maxstep": "0.0312500",
+        "reltol": "1.00000e-11",
+        "abstol(V)": "1.00000e-12",
+        "abstol(I)": "1.00000e-15",
+        "errpreset": "\"conservative\"",
+        "method": "\"traponly\"",
+        "gmin": "1.00000e-12"
+      },
+      "warning_extracts": [
+        "Warning from spectre during AHDL read-in.\n    WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow.\n",
+        "    WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow.\n\nReading file:  /edamgr/Spectre/SPECTRE211Hotfix/tools.lnx86/spectre/etc/ahdl/disciplines.vams",
+        "    No DC path from node `Xdut.floating' to ground, Gmin installed to provide path.\n\n",
+        "    gmin = 1 pS\n\n"
+      ],
+      "execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 9.318453799933195,
+        "completed_utc": "2026-10-14T05:20:18Z",
+        "log": "stdout.log",
+        "log_sha256": "dad6fa45c84efe32a8eb895230aacec69677119ec63815f0130dea24708ab15b",
+        "label": "referenced_singular",
+        "source_sha256": "28abe32cba048c10cc3bf1bdfb747eded1ea49842113852db3c938590d49f773",
+        "deck_sha256": "6c0f411e26a0afa568f2c8a1ffe183b9970b114d374477301b0862a7abf45c51",
+        "directory_bytes": 100254
+      },
+      "role": "diagnostic_underconstrained",
+      "candidate_rejection": {
+        "kind": "singular_system",
+        "message": "fewer voltage constraints than unknown nodes; unknown nodes: [\"dut:floating\", \"y\"]; constraints: referenced_singular.va:2:98 (dut)",
+        "sample": 0
+      },
+      "qualification_verdict": null
+    }
+  },
+  "candidate": {
+    "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/n10-controls/candidate.json",
+    "sha256": "a830c20ee048393b5fdcfe1e3ed86090c4a62175de0d32833a89ebf0d5941ee8",
+    "identity_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/FINAL-IDENTITY.json",
+    "identity_sha256": "fd24874f767e95a6110206463d9bd6fecfb8183fbce3324b45ba38a0acbfd8ed",
+    "head": "e9429435e85bd997e18359f5791fc948cc00a3d6",
+    "base": "ff5d0fd9bc4dbeafe7fc91e233ad97880155a233",
+    "kernel_sha256": "642cc6079d39a07fc54870f1d1b2d495dec0a0dbea5dae5a80af06f1ce8c6f1d",
+    "frontend_sha256": {
+      "evas/src/evas/hierarchy.py": "ec8cd24105bfb646f28874dd40fe0923ae51ca5d22b45b1be0e6153347a7a10b",
+      "evas/src/evas/standard_headers.py": "efe0b2421d400ac723cfdf71c5d406cdef510dc89d3556ad999e2253600ec88e"
+    }
+  },
+  "contract_sha256": "84ac40852c365595f89154dcdb758b6bd9bccc0172ab953a45b1a707fb467648",
+  "n20_reuse": {
+    "actual_independent_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/review/astra-n20a-headers/ACTUAL-INDEPENDENT.json",
+    "sha256": "f6c410ce4571844c0a0f2fa3cfbfd07d9eb7ed2f6f93af145d17cc3e4065674f",
+    "actual": {
+      "all_frozen_inputs_identical": true,
+      "manifest": {
+        "MANIFEST.json": {
+          "files": 13,
+          "sha256": "c6eabbf1d18612e609598b435a12a23643a2b93373327ecfb6343c264bee2e48"
+        },
+        "OUTPUT_MANIFEST.json": {
+          "files": 39,
+          "sha256": "61ba898e846e9dfe0e5495424d9ada097343e49a467a86018baa61df45d3218a"
+        }
+      },
+      "native_rows": 16,
+      "node_checks": 224,
+      "exact_query_times": [
+        "0",
+        "0.125",
+        "0.5",
+        "1"
+      ],
+      "query_node_checks": 56,
+      "worst_decimal_error_V": "5.074E-16",
+      "worst_witness": [
+        "1",
+        "k1",
+        "1.4426950408889629"
+      ],
+      "budget_V": "1e-14",
+      "full_native_and_exact_query_pass": true,
+      "effective": {
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-12",
+        "abstol(I)": "1.00000e-15",
+        "maxstep": "0.125000",
+        "start": "0.00000",
+        "stop": "1.00000"
+      },
+      "tool": {
+        "file_sha256": {
+          "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+          "/home/cshrc/.cshrc.cadence.sui": "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+          "/home/cshrc/.cshrc.mentor25.sui": "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+        },
+        "version": "sub-version  21.1.0.509.isr12 \n",
+        "execution": {
+          "argv": [
+            "taskset",
+            "-c",
+            "0",
+            "prlimit",
+            "--as=4294967296",
+            "--fsize=33554432",
+            "--",
+            "/bin/csh",
+            "-f",
+            "version.csh"
+          ],
+          "returncode": 0,
+          "timeout": false,
+          "status": "completed",
+          "cleanup": {
+            "signals": [
+              "SIGTERM",
+              "SIGKILL"
+            ],
+            "errors": [],
+            "complete": true
+          },
+          "elapsed_seconds": 1.8513964787125587,
+          "completed_utc": "2026-10-14T01:33:34Z",
+          "log": "version.log",
+          "log_sha256": "d0e6c83a98026a294bfc4b9754c4e294d322b60b1872a28e38f84caccbdf7f81"
+        }
+      },
+      "PSF_sha256": "5d8f57beb42eef96cba899840c239c60f2546bd6280ded586b6e37199e075291",
+      "source_sha256": "4999a6c71fec89ac2d3943264ef6c2be6d652721b9a0fc415572e42571d0d556",
+      "max_native_step_s": "0.125"
+    },
+    "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/constants14/LOCAL-ANALYSIS.json",
+    "local_sha256": "135ecaf421a156b3be13432a2f08340bdf2ba823a63ae01eb248e9e15662e80c",
+    "local": {
+      "query_rows": 4,
+      "node_values": 56,
+      "max_decimal_error": "2.449340730629116296768188477E-16",
+      "absolute_limit": "1e-14",
+      "passed": true,
+      "va_sha256": "4999a6c71fec89ac2d3943264ef6c2be6d652721b9a0fc415572e42571d0d556",
+      "reference_va_sha256": "4999a6c71fec89ac2d3943264ef6c2be6d652721b9a0fc415572e42571d0d556"
+    },
+    "reuse_source_match": true,
+    "manifest_rechecked": {
+      "MANIFEST.json": {
+        "count": 13,
+        "sha256": "c6eabbf1d18612e609598b435a12a23643a2b93373327ecfb6343c264bee2e48"
+      },
+      "OUTPUT_MANIFEST.json": {
+        "count": 39,
+        "sha256": "61ba898e846e9dfe0e5495424d9ada097343e49a467a86018baa61df45d3218a"
+      }
+    }
+  }
+}

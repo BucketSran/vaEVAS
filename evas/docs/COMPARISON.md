@@ -28,6 +28,12 @@ EVAS 0.15.0 / IR19 纳入中断边沿积分实现；该行 Q3 来自发布前候
 这些是开发支持，尚未合入，未取得本候选的实际 Spectre 对照；原始 70 条件的本轮复跑
 尚未形成完整验收结论，不据此修改下表成绩。一般数学函数与非线性电压代数耦合及更广组合仍有缺口。
 
+固定零时刻 timer 的 transition 初态修正已取得[三模型实际有限配对](../../experiments/backends/support/README.md#initial-transition-seed)。
+该修复使用原 `1e-8 V` 预算；第四反馈模型仅作诊断，不新增本表 Q 成绩，也不覆盖一般历史反馈。
+
+[空循环声明与当前 timer 修复](../../experiments/backends/support/retained-safety/README.md)只消除错误接受。
+新生成当前 timer 仍需同刻闭包，本轮没有改动下面各行的历史精度结论。
+
 结果来自不同版本，**不是当前 main 的一次全量验收**。
 五个数学函数的修复见[更新记录](../../experiments/backends/support/README.md#q3-closure)，
 原11格的补证见[后续核对](../../experiments/backends/support/README.md#evidence-followup)，

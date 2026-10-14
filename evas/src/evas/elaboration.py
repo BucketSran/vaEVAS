@@ -191,6 +191,49 @@ def inline_functions(model: Model) -> Model:
                            for event in model.events])
 
 
+def _validate_loop_node_declarations(model: Model):
+    """Check voltage names before a loop can erase them, without creating IR.
+
+    Declarations are fixed for this model, so expression identity is sufficient
+    for this name-only walk. It checks every checked/conditional arm but neither
+    evaluates indices nor proves types, ranges or event activation. Keep strong
+    references in the cache; never share it across models or compilations.
+    """
+    from .syntax import ContributionStatement
+
+    pending = [*model.initial, *model.analog, *model.events]
+    seen = {}
+    while pending:
+        item = pending.pop()
+        key = id(item)
+        if key in seen:
+            continue
+        if isinstance(item, Expr):
+            if item.op == 'node' and item.value != '0' and item.value not in model.nodes:
+                token = item.token
+                raise CompileError(
+                    f'{token.source or model.source}:{token.line}:{token.column}: '
+                    f'undeclared electrical node {item.value!r}',
+                    code='undeclared_node', token=token)
+            pending.extend(item.args)
+        elif isinstance(item, Loop):
+            pending.extend((item.start, item.limit, item.update, *item.body))
+        elif isinstance(item, Conditional):
+            pending.extend((item.left, item.right, *item.then_body, *item.else_body))
+        elif isinstance(item, Event):
+            pending.extend(item.body)
+            pending.extend(arg for leaf in item.triggers for arg in leaf.arguments if arg is not None)
+        elif isinstance(item, Assignment):
+            pending.append(item.rhs)
+            if item.index is not None:
+                pending.append(item.index)
+        elif isinstance(item, ContributionStatement):
+            pending.extend((item.branch, item.rhs))
+        else:
+            raise CompileError('unsupported statement in loop declaration check', token=item.token)
+        seen[key] = item
+
+
 def elaborate_loops(model: Model, parameter):
     """Expand initial and analog trees with one budget; no runtime loop path."""
     from .ir import Affine
@@ -204,6 +247,8 @@ def elaborate_loops(model: Model, parameter):
                    for statement in statements)
 
     if not has_loop(model.analog) and not has_loop(model.initial):
+        if any(has_loop(event.body) for event in model.events):
+            _validate_loop_node_declarations(model)
         return model
 
     budget = 4096
@@ -511,6 +556,9 @@ def elaborate_loops(model: Model, parameter):
         affected = propagated
     for statements, indices in event_bodies:
         validate_event_body(statements, indices, affected)
+    # Preserve structural diagnostics, then check names in the original tree,
+    # including events erased by an outer zero-trip loop.
+    _validate_loop_node_declarations(model)
     return replace(model, initial=list(expanded_initial), analog=list(expanded))
 
 

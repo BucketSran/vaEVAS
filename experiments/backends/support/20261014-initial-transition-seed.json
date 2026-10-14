@@ -1,0 +1,722 @@
+{
+  "scope": "N18 fixed timer(0) final transition seed; three finite qualification probes; feedback diagnostic is not a new Q score",
+  "baseline": {
+    "commit": "ff5d0fd9bc4dbeafe7fc91e233ad97880155a233",
+    "kernel_sha256": "2509e4e46144879dbd9083b9675a945f96266aa24f8fd524df68e97384bd981f"
+  },
+  "candidate": {
+    "commit": "e353897e59d1aca5a3c23f937768bbad3e54e685",
+    "base": "ff5d0fd9bc4dbeafe7fc91e233ad97880155a233",
+    "kernel_sha256": "6c073270b085ae3e4a734b3ae22f78bf87c28711739253a4bc377a24f2ad1f6e",
+    "identity_limit": "changed source files individually git-show verified, kernel matches existing built artifact; not an independent rebuild or full-source receipt",
+    "commit_changed_files_verified": {
+      "evas/docs/development/diagnostic-inventory.json": "54a8fa91d583cc9006b683e5962c92bdf1fc494e5dcbf5bf959922b9ef6ce7ca",
+      "evas/docs/math/operators.md": "1c84c9ea0b121eef5f9d21b167367ff58d148171fe774b55e4e300f565c1a7c7",
+      "evas/rust_core/src/settlement_bounds.rs": "5cd459a9c4b06372b1aabf26499b034d742feff8c36400cbb2f27af163a4c9cf",
+      "evas/rust_core/src/transient.rs": "97a960f6bb3013d1ef73525e0b8e4c69c23c30f66c502a30a9ff736f47fd6984",
+      "evas/tests/test_transition.py": "c3347534e220f1b31f0e4955fe8a931403d63a2fb020fde48879f6b0b857bd51",
+      "evas/tests/test_transition_accuracy.py": "9465c65ff9b74c0b6dd997479e7b6de42638384fdb57f382279c8aa35c5f8aee",
+      "evas/rust_core/src/initial_state_invariance.rs": "5427698f4bdd9fbdcc7d1354bb52e4bdabb6c16aa75db1541ee0ca23fcbaad2a",
+      "evas/rust_core/src/transient_initialization.rs": "365b32f00273c4ade7d45f617ff35d5e2959ccdcdc2d104e18561528237a8945",
+      "evas/tests/test_transition_initialization.py": "f87c63fbc585aa823227be2af477393315fa7194d61e3321b112a5d67eb731fb"
+    }
+  },
+  "spectre": {
+    "version": "sub-version  21.1.0.509.isr12",
+    "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "tool_unchanged": true,
+    "requested": {
+      "reltol": 1e-09,
+      "vabstol_V": 1e-11,
+      "iabstol_A": 1e-15,
+      "maxstep_s": 0.03125,
+      "errpreset": "conservative"
+    }
+  },
+  "analysis": {
+    "mode": "n18-final",
+    "script_sha256": "c6591c0e3c0ea7fef23466f21eb82ffd01f2223c7eb04f7a0ec5b010bc85833c",
+    "interpolation": false,
+    "calibration": {
+      "known_accept": true,
+      "known_reject": true,
+      "missing_point_rejected": true,
+      "nonfinite_rejected": true,
+      "missing_node_rejected": true
+    },
+    "source_analysis_sha256": "f6803cec5e6df780befe00458dfc8babf4dadc60911dc3087460c04c5a39aa5b",
+    "source_report_sha256": "056fced53bdbcb37af0c96f491a54f94d34d5bfc370a910f8895995b0548b805",
+    "manifests": {
+      "MANIFEST.json": {
+        "files": 12,
+        "sha256": "df83e4b01f20f535da196239474e6ec1b49212d0324c024de021a6eafbde68f9",
+        "mismatches": []
+      },
+      "OUTPUT_MANIFEST.json": {
+        "files": 86,
+        "sha256": "f27db6fcea23e984e617efd7e28b860177cbea2f9073dc1f5035f9d3a3a6e191",
+        "mismatches": []
+      }
+    }
+  },
+  "availability": "Compact source, settings, values and provenance retained here. Raw output and full logs remain local ignored runs/evas-night-20261014/delivery/n18-spectre-v1; hashes are integrity identities, not download links. No independent rebuild or full-source build receipt.",
+  "cases": {
+    "n18_disable": {
+      "source_sha256": "fc1eb289d29c923e7736a496874bf95e72abed3fe83256097b41fb345842325e",
+      "deck_sha256": "e24fa403d84fddcfd476b7b4b84f6623ec393637560c0a1560e5d88c76ce3871",
+      "psf_sha256": "add6e09111ea5518ce00180730c880f7899f07a93b1a1d1e55be59ccb94b407c",
+      "query_times": [
+        0,
+        0.0625,
+        0.125,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "nodes": [
+        "y",
+        "z"
+      ],
+      "spectre_native_values": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "effective": {
+        "tolerance.relative": "1.00000e-09",
+        "start": "0.00000",
+        "stop": "1.00000",
+        "maxstep": "0.0312500",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-11",
+        "abstol(I)": "1.00000e-15",
+        "errpreset": "\"conservative\"",
+        "method": "\"gear2only\"",
+        "gmin": "1.00000e-12"
+      },
+      "completion": {
+        "errors": 0,
+        "warnings": 1,
+        "notices": 3
+      },
+      "role": "qualification",
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,z,r); input u; output y,z; inout r; electrical u,y,z,r; real q; analog begin @(initial_step) q=1; @(timer(0,0,0.001)) q=0; V(y,r)<+transition(q,0.125,0.5,0.5); V(z,r)<+q; end endmodule",
+      "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVinput (u 0) vsource type=pwl wave=[0 0 1 1]\nXdut (u y z 0) m\nsimulatorOptions options reltol=1e-9 vabstol=1e-11 iabstol=1e-15 digits=17\ntran tran stop=1 maxstep=0.03125 errpreset=conservative strobetimes=[0 0.0625 0.125 0.25 0.5 0.75 1]\nsave u y z\n",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "completed_utc": "2026-10-14T05:15:56Z"
+      },
+      "candidate_values": [
+        [
+          -0.0,
+          -0.0
+        ],
+        [
+          -0.0,
+          -0.0
+        ],
+        [
+          -0.0,
+          -0.0
+        ],
+        [
+          -0.0,
+          -0.0
+        ],
+        [
+          -0.0,
+          -0.0
+        ],
+        [
+          -0.0,
+          -0.0
+        ],
+        [
+          -0.0,
+          -0.0
+        ]
+      ],
+      "candidate_effective": {
+        "absolute_V": 1e-08,
+        "relative": 0.0,
+        "stop_s": 1.0,
+        "max_step_s": 0.125,
+        "max_step_applied": true
+      },
+      "candidate_vs_oracle": {
+        "passed": true,
+        "max_abs_error": 0.0,
+        "budget": 1e-08
+      },
+      "candidate_vs_spectre": {
+        "passed": true,
+        "max_abs_error": 0.0,
+        "budget": 1e-08
+      },
+      "spectre_vs_oracle": {
+        "passed": true,
+        "max_abs_error": 0.0,
+        "budget": 1e-08
+      },
+      "baseline_values": [
+        [
+          1.0,
+          -0.0
+        ],
+        [
+          1.0,
+          -0.0
+        ],
+        [
+          1.0,
+          -0.0
+        ],
+        [
+          0.75,
+          -0.0
+        ],
+        [
+          0.25,
+          -0.0
+        ],
+        [
+          -0.0,
+          -0.0
+        ],
+        [
+          -0.0,
+          -0.0
+        ]
+      ],
+      "oracle_values": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ]
+    },
+    "n18_enable": {
+      "source_sha256": "2b07916a458b68a59062a9392e94b767c06b50cc746bba41879a5e89bf9b1609",
+      "deck_sha256": "e24fa403d84fddcfd476b7b4b84f6623ec393637560c0a1560e5d88c76ce3871",
+      "psf_sha256": "04dce724973b132be251af1df6a8ff6c10be3e375e17f531ea68e3b9f2411626",
+      "query_times": [
+        0,
+        0.0625,
+        0.125,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "nodes": [
+        "y",
+        "z"
+      ],
+      "spectre_native_values": [
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "effective": {
+        "tolerance.relative": "1.00000e-09",
+        "start": "0.00000",
+        "stop": "1.00000",
+        "maxstep": "0.0312500",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-11",
+        "abstol(I)": "1.00000e-15",
+        "errpreset": "\"conservative\"",
+        "method": "\"gear2only\"",
+        "gmin": "1.00000e-12"
+      },
+      "completion": {
+        "errors": 0,
+        "warnings": 1,
+        "notices": 3
+      },
+      "role": "qualification",
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,z,r); input u; output y,z; inout r; electrical u,y,z,r; real q; analog begin @(initial_step) q=0; @(timer(0,0,0.001)) q=1; V(y,r)<+transition(q,0.125,0.5,0.5); V(z,r)<+q; end endmodule",
+      "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVinput (u 0) vsource type=pwl wave=[0 0 1 1]\nXdut (u y z 0) m\nsimulatorOptions options reltol=1e-9 vabstol=1e-11 iabstol=1e-15 digits=17\ntran tran stop=1 maxstep=0.03125 errpreset=conservative strobetimes=[0 0.0625 0.125 0.25 0.5 0.75 1]\nsave u y z\n",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "completed_utc": "2026-10-14T05:16:09Z"
+      },
+      "candidate_values": [
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "candidate_effective": {
+        "absolute_V": 1e-08,
+        "relative": 0.0,
+        "stop_s": 1.0,
+        "max_step_s": 0.125,
+        "max_step_applied": true
+      },
+      "candidate_vs_oracle": {
+        "passed": true,
+        "max_abs_error": 0.0,
+        "budget": 1e-08
+      },
+      "candidate_vs_spectre": {
+        "passed": true,
+        "max_abs_error": 0.0,
+        "budget": 1e-08
+      },
+      "spectre_vs_oracle": {
+        "passed": true,
+        "max_abs_error": 0.0,
+        "budget": 1e-08
+      },
+      "baseline_values": [
+        [
+          -0.0,
+          1.0
+        ],
+        [
+          -0.0,
+          1.0
+        ],
+        [
+          -0.0,
+          1.0
+        ],
+        [
+          0.25,
+          1.0
+        ],
+        [
+          0.75,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "oracle_values": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    "n18_filter": {
+      "source_sha256": "0da00a5cc9bba00a721db3d3501518525f8513bb289213f44c95bcbaa91c5a7c",
+      "deck_sha256": "e24fa403d84fddcfd476b7b4b84f6623ec393637560c0a1560e5d88c76ce3871",
+      "psf_sha256": "34b682ca0854321a30deca32079d000ced064abb7289b00c0a682dddb38022a9",
+      "query_times": [
+        0,
+        0.0625,
+        0.125,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "nodes": [
+        "y",
+        "z"
+      ],
+      "spectre_native_values": [
+        [
+          1.0,
+          1.0
+        ],
+        [
+          0.9999999999999969,
+          1.0
+        ],
+        [
+          0.9999999999999976,
+          1.0
+        ],
+        [
+          0.9999999999999984,
+          1.0
+        ],
+        [
+          0.9999999999999994,
+          1.0
+        ],
+        [
+          0.9999999999999993,
+          1.0
+        ],
+        [
+          0.9999999999999992,
+          1.0
+        ]
+      ],
+      "effective": {
+        "tolerance.relative": "1.00000e-09",
+        "start": "0.00000",
+        "stop": "1.00000",
+        "maxstep": "0.0312500",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-11",
+        "abstol(I)": "1.00000e-15",
+        "errpreset": "\"conservative\"",
+        "method": "\"gear2only\"",
+        "gmin": "1.00000e-12"
+      },
+      "completion": {
+        "errors": 0,
+        "warnings": 1,
+        "notices": 3
+      },
+      "role": "qualification",
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,z,r); input u; output y,z; inout r; electrical u,y,z,r; real q; electrical e; analog begin @(initial_step) q=0; @(timer(0,0,0.001)) q=1; V(e,r)<+transition(q,0.125,0.5,0.5); V(y,r)<+laplace_nd(V(e,r),'{1},'{1,0.25}); V(z,r)<+q; end endmodule",
+      "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVinput (u 0) vsource type=pwl wave=[0 0 1 1]\nXdut (u y z 0) m\nsimulatorOptions options reltol=1e-9 vabstol=1e-11 iabstol=1e-15 digits=17\ntran tran stop=1 maxstep=0.03125 errpreset=conservative strobetimes=[0 0.0625 0.125 0.25 0.5 0.75 1]\nsave u y z\n",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "completed_utc": "2026-10-14T05:16:26Z"
+      },
+      "candidate_values": [
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          1.0000000000000002,
+          1.0
+        ],
+        [
+          1.0000000000000002,
+          1.0
+        ]
+      ],
+      "candidate_effective": {
+        "absolute_V": 1e-08,
+        "relative": 0.0,
+        "stop_s": 1.0,
+        "max_step_s": 0.125,
+        "max_step_applied": true
+      },
+      "candidate_vs_oracle": {
+        "passed": true,
+        "max_abs_error": 2.220446049250313e-16,
+        "budget": 1e-08
+      },
+      "candidate_vs_spectre": {
+        "passed": true,
+        "max_abs_error": 3.1086244689504383e-15,
+        "budget": 1e-08
+      },
+      "spectre_vs_oracle": {
+        "passed": true,
+        "max_abs_error": 3.1086244689504383e-15,
+        "budget": 1e-08
+      },
+      "baseline_values": [
+        [
+          -0.0,
+          1.0
+        ],
+        [
+          -0.0,
+          1.0
+        ],
+        [
+          -0.0,
+          1.0
+        ],
+        [
+          0.05326532985631671,
+          1.0
+        ],
+        [
+          0.36156508007421484,
+          1.0
+        ],
+        [
+          0.7377771694556327,
+          1.0
+        ],
+        [
+          0.9035336116369443,
+          1.0
+        ]
+      ],
+      "oracle_values": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    "n18_existing_feedback": {
+      "source_sha256": "ba4d7dc60c9f4f4fc2edfd00c23ff2bb09fdddf0a548fa12a635e2f8bcc86847",
+      "deck_sha256": "d742bf1ce00f4120883aae1a507e55e3664a5fc1741e9c8c5d2a85a68bd43028",
+      "psf_sha256": "63d7d003a3489589698151aa8618d3edb7c00f01c2e17682858ebc156bb21dd8",
+      "query_times": [
+        0,
+        1,
+        1.5,
+        2,
+        2.5
+      ],
+      "nodes": [
+        "y"
+      ],
+      "spectre_native_values": [
+        [
+          1.0
+        ],
+        [
+          3.0
+        ],
+        [
+          3.0
+        ],
+        [
+          3.0
+        ],
+        [
+          3.0
+        ]
+      ],
+      "effective": {
+        "tolerance.relative": "1.00000e-09",
+        "start": "0.00000",
+        "stop": "2.50000",
+        "maxstep": "0.0312500",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-11",
+        "abstol(I)": "1.00000e-15",
+        "errpreset": "\"conservative\"",
+        "method": "\"gear2only\"",
+        "gmin": "1.00000e-12"
+      },
+      "completion": {
+        "errors": 0,
+        "warnings": 1,
+        "notices": 3
+      },
+      "role": "diagnostic_not_new_score",
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; real a,b; analog begin @(initial_step) begin a=0; b=0; end\n          @(timer(0,0,0.001)) b=1;\n          @(timer(1,1,0.001)) a=V(y,r)+1;\n          V(y,r)<+0.5*a+transition(b,0,2,2); end endmodule",
+      "spectre_deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVinput (u 0) vsource dc=0\nXdut (u y 0) m\nsimulatorOptions options reltol=1e-9 vabstol=1e-11 iabstol=1e-15 digits=17\ntran tran stop=2.5 maxstep=0.03125 errpreset=conservative strobetimes=[0 1 1.5 2 2.5]\nsave u y\n",
+      "execution": {
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "completed_utc": "2026-10-14T05:16:37Z"
+      },
+      "qualification_verdict": null,
+      "diagnostic_note": "Reported file precision matches [1,3,3,3,3]; no zero-ULP guarantee or qualification gate",
+      "historical_developer_expected_y": [
+        0,
+        2,
+        2.25,
+        3,
+        3
+      ]
+    }
+  }
+}

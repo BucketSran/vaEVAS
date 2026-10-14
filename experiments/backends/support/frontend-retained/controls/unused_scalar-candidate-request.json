@@ -1,0 +1,61 @@
+{
+  "program": {
+    "nodes": [
+      "0",
+      "u",
+      "y"
+    ],
+    "contributions": [
+      {
+        "branch": {
+          "instance": "dut",
+          "local_positive": "r",
+          "local_negative": "y",
+          "kind": "voltage"
+        },
+        "positive": 0,
+        "negative": 2,
+        "rhs": {
+          "constant": -0.0,
+          "terms": [
+            {
+              "node": 0,
+              "coefficient": 1.0
+            },
+            {
+              "node": 1,
+              "coefficient": -1.0
+            }
+          ],
+          "op": "affine"
+        },
+        "origin": {
+          "source": "unused_scalar.va",
+          "line": 2,
+          "column": 98,
+          "instance": "dut",
+          "expansion": []
+        }
+      }
+    ],
+    "states": [],
+    "events": [],
+    "operators": [],
+    "schema_version": 19
+  },
+  "driven": [
+    "u"
+  ],
+  "samples": [
+    [
+      0.0
+    ],
+    [
+      0.5
+    ]
+  ],
+  "tolerances": {
+    "absolute": 1e-09,
+    "relative": 0
+  }
+}

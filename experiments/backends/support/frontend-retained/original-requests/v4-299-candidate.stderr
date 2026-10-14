@@ -1,0 +1,23 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    from pathlib import Path;from evas import compile_sources; p=Path('/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/original-v4-299/sine_vco_idtmod_bound_step.va');compile_sources({p.name:p.read_text()},[])
+                                                                                                                                                                                                                                        ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/src/evas/frontend.py", line 37, in compile_sources
+    models = parse_sources(sources)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/src/evas/frontend.py", line 26, in parse_sources
+    for parsed in Parser('', path, tokens=tokens).parse_all():
+                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/src/evas/syntax.py", line 719, in parse_all
+    result.append(self.parse(eof=False))
+                  ~~~~~~~~~~^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/src/evas/syntax.py", line 770, in parse
+    ports = self.names()
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/src/evas/syntax.py", line 249, in names
+    names = [self.name()]
+             ~~~~~~~~~^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/src/evas/syntax.py", line 245, in name
+    self.fail("expected a non-reserved identifier")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/src/evas/syntax.py", line 234, in fail
+    raise CompileError(f"{token.source or self.source}:{token.line}:{token.column}: {message}", code=code, token=token)
+evas.errors.CompileError: sine_vco_idtmod_bound_step.va:9:5: expected a non-reserved identifier

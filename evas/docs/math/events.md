@@ -966,6 +966,11 @@ transition 截止点包围重叠的 timer，检查最终排序拒绝与修正重
 本切片以每个事件间保持的 `q_k` 求 `a(q_k)`、`p(q_k)`、`e(q_k)` 的区间。
 若 p>0，未来发生集合为 `a+k*p` 中严格晚于已接受边界的名义事件；
 p≤0 则只考虑未来的一次 a。没有改变参数的叶子继续使用原日程。
+若参数变化产生当前时刻的候选，必须证明这个 timer 叶子的同一精确时钟已经消费。
+共用 OR 事件体不等于同一叶子；相同浮点代表或重叠窗口也不证明同一时钟。
+新出现且未消费的当前 timer 返回 `event_resolution`，不能静默丢弃。
+例如在 .5 将另一 timer 的 start 从 .75 改成 .5，需要尚未实现的同刻闭包；
+已消费 timer 在本次回调中把 period 从 .5 改成 .25，则保留已消费事实并继续寻找未来事件。
 `next=next+.25` 的单次 timer 应依次在 .25、.5、.75、1 发生；
 start=0、period 从 .5 改为 .25 后依旧按 0+.25k 定位，不从改写时刻重起周期。
 
@@ -983,7 +988,9 @@ start=0、period 从 .5 改为 .25 后依旧按 0+.25k 定位，不从改写时�
 答案在 .5 前为 1/(1−t)，之后为 1/t；不能沿旧增长流场预测到 stop。
 同一 Controller 另检查新日程成功、未来流场失败后的完整回退与修正重试。
 连续电压参数、动态 tolerance、一般非线性参数仍需补齐。历史驱动 guard 的受限联合预测见“事件修改积分轨迹后的根重定位”。
-独立回归见 [test_dynamic_timer.py](../../tests/test_dynamic_timer.py)。该切片无新 Spectre 对照。
+独立回归见 [test_dynamic_timer.py](../../tests/test_dynamic_timer.py)。
+[新当前 timer 的实际对照](../../../experiments/backends/support/retained-safety/README.md)
+确认两个反例的 Spectre 回调与一个改周期正控；它没有证明一般 held timer 组合全部兼容。
 
 
 ## 有界局部因果闭包（候选）
