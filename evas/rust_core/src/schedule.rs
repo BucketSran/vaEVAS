@@ -822,7 +822,9 @@ fn add_timer(
                     continue;
                 }
                 if after.is_some_and(|time| bounds.lo <= time) {
-                    return Err(unresolved("future held timer cannot be ordered after the accepted representative"));
+                    return Err(unresolved(
+                        "future held timer cannot be ordered after the accepted representative",
+                    ));
                 }
             }
         }
@@ -1057,34 +1059,55 @@ struct TimerBoundary<'a> {
 impl<'a> TimerBoundary<'a> {
     fn new(model: &EventModel, after: f64, batch: &'a [ScheduledEvent]) -> Result<Self, Error> {
         if !after.is_finite() || batch.is_empty() {
-            return Err(unresolved("held timer rescheduling requires the current event batch"));
+            return Err(unresolved(
+                "held timer rescheduling requires the current event batch",
+            ));
         }
         let mut observation = I::point(after);
         let mut consumed = std::collections::BTreeMap::new();
         for event in batch {
-            if event.time != after || event.event >= model.triggers.len()
-                || !event.bounds().finite() || event.bounds().lo > event.bounds().hi {
-                return Err(unresolved("held timer boundary does not identify the current batch"));
+            if event.time != after
+                || event.event >= model.triggers.len()
+                || !event.bounds().finite()
+                || event.bounds().lo > event.bounds().hi
+            {
+                return Err(unresolved(
+                    "held timer boundary does not identify the current batch",
+                ));
             }
             observation = observation.hull(event.bounds());
-            if matches!(model.triggers[event.event].trigger, EventTrigger::HeldTimer { .. })
-                && (!matches!(event.moment, Moment::HeldTimer { .. })
-                    || consumed.insert(event.event, event).is_some())
+            if matches!(
+                model.triggers[event.event].trigger,
+                EventTrigger::HeldTimer { .. }
+            ) && (!matches!(event.moment, Moment::HeldTimer { .. })
+                || consumed.insert(event.event, event).is_some())
             {
-                return Err(unresolved("held timer consumption requires a unique timer leaf"));
+                return Err(unresolved(
+                    "held timer consumption requires a unique timer leaf",
+                ));
             }
         }
         let first = &batch[0].moment;
-        let common_moment = batch.iter().all(|event| {
-            first.exact_order(&event.moment) == Some(std::cmp::Ordering::Equal)
-                || (first.bounds().lo == first.bounds().hi && first.bounds() == event.bounds())
-        }).then_some(first);
-        Ok(Self { observation, consumed, common_moment })
+        let common_moment = batch
+            .iter()
+            .all(|event| {
+                first.exact_order(&event.moment) == Some(std::cmp::Ordering::Equal)
+                    || (first.bounds().lo == first.bounds().hi && first.bounds() == event.bounds())
+            })
+            .then_some(first);
+        Ok(Self {
+            observation,
+            consumed,
+            common_moment,
+        })
     }
 
-    fn already_past_or_consumed(&self, leaf: usize, bounds: I, clock: Option<Clock>)
-        -> Result<bool, Error>
-    {
+    fn already_past_or_consumed(
+        &self,
+        leaf: usize,
+        bounds: I,
+        clock: Option<Clock>,
+    ) -> Result<bool, Error> {
         if bounds.hi < self.observation.lo {
             return Ok(true);
         }
@@ -1092,7 +1115,11 @@ impl<'a> TimerBoundary<'a> {
             return Ok(false);
         }
         if let (Some(clock), Some(old)) = (clock, self.common_moment) {
-            let candidate = Moment::HeldTimer { bounds, index: clock.index, clock: Some(clock) };
+            let candidate = Moment::HeldTimer {
+                bounds,
+                index: clock.index,
+                clock: Some(clock),
+            };
             match candidate.exact_order(old) {
                 Some(std::cmp::Ordering::Less) => return Ok(true),
                 Some(std::cmp::Ordering::Greater) => return Ok(false),
@@ -1109,9 +1136,13 @@ impl<'a> TimerBoundary<'a> {
             }
         }
         if bounds.lo != bounds.hi {
-            return Err(unresolved("dynamic timer window overlaps the accepted boundary"));
+            return Err(unresolved(
+                "dynamic timer window overlaps the accepted boundary",
+            ));
         }
-        Err(unresolved("new unconsumed held timer at current event boundary requires a same-time closure"))
+        Err(unresolved(
+            "new unconsumed held timer at current event boundary requires a same-time closure",
+        ))
     }
 }
 
