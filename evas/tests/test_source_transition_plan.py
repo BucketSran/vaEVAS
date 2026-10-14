@@ -77,6 +77,52 @@ def filtered_enclosure(t, start=.25, duration=.125, tau=.125, offset=0):
 
 
 class SourceTransitionPlan(unittest.TestCase):
+
+    def test_exact_zero_platforms_keep_all_relation_modes_and_history(self):
+        pwl=[[0.,-1.],[.25,0.],[.5,0.],[.75,1.],[1.,1.],
+             [1.25,0.],[1.5,0.],[1.75,-1.],[2.,-1.]]
+        times=[i/32 for i in range(65)]
+        times=sorted(set(times+[math.nextafter(x,d) for x in (.25,.5,1.25,1.5)
+                                for d in (-math.inf,math.inf)]))
+        for relation,start,end,initial,sign in [
+                ('>',.5,1.25,0,1),('>=',.25,1.5,0,1),
+                ('<',.25,1.5,1,-1),('<=',.5,1.25,1,-1)]:
+            for consumer in ('integral','filter'):
+                with self.subTest(relation=relation,consumer=consumer):
+                    rhs='idt(V(y,r),0)' if consumer=='integral' else "laplace_nd(V(y,r),'{1},'{1,0.125})"
+                    p=program(f'V(y,r)<+transition(V(u,r){relation}0?1.0:0.0,0,0.125,0.125); V(z,r)<+{rhs};')
+                    def expected_y(t):return initial+sign*(ramp(t,start)-ramp(t,end))
+                    def expected_z(t):
+                        if consumer=='integral':return initial*Fraction(t)+sign*(integral(t,start)-integral(t,end))
+                        return initial+sign*(filtered(t,start)-filtered(t,end))
+                    def z_enclosure(t):
+                        a,b=filtered_enclosure(t,start);c,d=filtered_enclosure(t,end)
+                        lo,hi=a-d,b-c
+                        return (initial+lo,initial+hi) if sign==1 else (initial-hi,initial-lo)
+                    baseline=evaluate(p,times,stop=2.,step=2.,pwl=pwl)
+                    forced=evaluate(p,times,stop=2.,step=.0625,forced=True,pwl=pwl)
+                    for r in (baseline,forced):
+                        self.assert_node(r,times,'y',expected_y)
+                        self.assert_node(r,times,'z',expected_z,
+                                         enclosure=z_enclosure if consumer=='filter' else None)
+                    self.assertEqual(baseline['solutions'],forced['solutions'])
+
+    def test_zero_platform_rebinds_held_predicate_and_preserves_third_value_refusal(self):
+        pwl=[[0.,-1.],[.25,0.],[1.,0.],[1.25,1.],[2.,1.]]
+        times=[i/32 for i in range(65)]
+        p=program('@(initial_step) q=0; @(timer(0.375,0,0)) q=-0.5; @(timer(0.75,0,0)) q=0; '
+                  'V(y,r)<+transition(V(u,r)>q?1.0:0.0,0,0.125,0.125); V(z,r)<+idt(V(y,r),0);','real q;')
+        for forced in (False,True):
+            r=evaluate(p,times,stop=2.,step=2.,forced=forced,pwl=pwl)
+            self.assert_node(r,times,'y',lambda t:ramp(t,.375)-ramp(t,.75)+ramp(t,1.))
+            self.assert_node(r,times,'z',lambda t:integral(t,.375)-integral(t,.75)+integral(t,1.))
+        # Final q=1 at the platform end gives old target 0, point 2, right 1.
+        p=program('@(initial_step) q=0; @(timer(1,0,0)) q=1; '
+                  'V(y,r)<+transition(V(u,r)<=0?2*q:q,0,0.125,0.125); V(z,r)<+0;','integer q;')
+        with self.assertRaises(KernelError):
+            evaluate(p,[0.,.25,1.,2.],stop=2.,pwl=pwl)
+
+
     def assert_node(self, result, times, node, oracle, *, enclosure=None):
         self.assertEqual(len(result['solutions']),len(times))
         self.assertIn('observation_evidence', result)

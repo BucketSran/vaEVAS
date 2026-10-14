@@ -20,6 +20,9 @@ EVENT-ORDER、EVENT-CONDITIONS、TRANSITION、DYNAMICS、COMPOSE、QUALIFICATION
 涵盖受限事件数组、隐式步长控制、初始化、辅助电压依赖、精确期限及根窗口历史；新当前 timer 仍安全拒绝。
 统一 v9 重放原 70 条件，12 完成并通过旧输出 checker，12 编译失败、46 运行拒绝或超时。
 数值、原生观测和完整实际配对分别报告；未完成的 GLM 审查、原始模型缺口和 local-only 证据不改变主表成绩。
+后续 LANG 节点声明检查见 [N22a](../../../experiments/backends/night-slices/README.md#n22a)；
+TRANSITION、DYNAMICS、COMPOSE 的精确零平台扩展见 [N18d](../../../experiments/backends/night-slices/README.md#n18d)。
+后者仍缺部分 Spectre 原生紧邻点，不改变上述 70 条原始模型的成绩。
 
 [旧整链 Q 补验与中断边沿积分](../../../experiments/backends/support/README.md#legacy-chain-q)
 补充 TIMER、TRANSITION、DYNAMICS、COMPOSE、QUALIFICATION。

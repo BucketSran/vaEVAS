@@ -384,7 +384,7 @@ impl Spec {
                             })?;
                         self.work.exact()?;
                         let found = curve.isolated_zero_cuts().ok_or_else(|| {
-                            invalid("source-target root is nonpoint or has a zero plateau")
+                            invalid("source-target root is nonpoint or its exact cuts are unproved")
                         })?;
                         self.work.debit(1, found.len() as u64)?;
                         cuts.extend(found);

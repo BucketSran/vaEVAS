@@ -253,7 +253,7 @@ impl Curve {
     }
 
     /// Exact roots and knots of an already validated affine source curve.
-    /// A zero plateau or a nonrepresentable root has no first-slice schedule.
+    /// A zero plateau is delimited by its original knots; isolated roots must be representable.
     /// This API is used by source-target plans; existing guard rules are unchanged.
     pub(crate) fn isolated_zero_cuts(&self) -> Option<Vec<f64>> {
         let mut work = Budget(0);
@@ -261,7 +261,7 @@ impl Curve {
         for pair in self.0.windows(2) {
             let (a, x) = &pair[0];
             let (b, y) = &pair[1];
-            if a >= b || (x.is_zero() && y.is_zero()) {
+            if a >= b {
                 return None;
             }
             for t in [a, b] {

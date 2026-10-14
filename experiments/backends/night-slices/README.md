@@ -436,3 +436,30 @@ N22a 独立审查另执行 19 项公开回归及 30 个父版、34 个候选探�
 
 N22a 完整 Python 回归实际运行 1664 项，全部通过，运行期间前端和测试文件身份未变。
 见 `R/n22a-node-bindings/full-python-v1/result.json` 与 `python.log`。Rust 与已审查父版相同。
+
+<a id="n18d"></a>
+
+## N18d：源条件的精确零平台
+
+原实现同时拒绝非可表示的孤立根和恒零平台。候选只解除后者：精确仿射段两端均为零时，
+整段恒零，保留原端点即可确定严格或非严格比较的目标。原模式顺序、第三点、旧历史和重绑定检查保留。
+四关系的积分/滤波、普通/strobe 查询及平台内保持阈值更新均有数学回归。
+独立审查又检查 Source 同对象失败重试、相邻时间点无内部值及第三点拒绝；不能据此宣称整个引擎新获回滚证明。
+见 `R/n18d-zero-plateau/CONTRACT.md`、`R/review/astra-n18d-implementation/REPORT.md`。
+
+实际 Spectre 四例全部完成，全原生波形误差最大 1.319e-7 V，满足事前 1e-6 V 门槛。
+请求 reltol=1e-9，实际 readback=1e-10；vabstol=1e-12、maxstep=1/128、traponly、17 位输出。
+但各例原 73 点仅有 65 点精确存在，8 个 nextafter 全缺失；另四个事前诊断 strobe 均存在。
+完整参考资格仍为 0/4。EVAS 八个 ordinary/forced 请求满足原 1e-8 V 和数学包围，
+可配对的 65 个原点符合实际对照预算。缺失点不从分母删除，没有插值补齐。
+详见 `R/review/astra-n18d-actual-v1/REPORT.md`；kernel 为
+`5a188435c8d261d8170c27c3a028d1f9317937fb0f2dcf5c79e8a83bbc366b7f`。
+
+隔离候选 Rust 316 项通过、1 忽略，公开 source-plan 18 方法通过。
+独立数值正例 20 个请求检查 4164 个节点值，最大误差 2.23e-16 V，另八个负例按预期拒绝。
+此扩展没有解决原始 17 条源目标请求；这些源叶均存在非可表示根，保留静态精确分析和一条 CDS 原请求的继续拒绝。
+无新增 Q 档、发布或完整对齐结论，GLM 仍待审。
+
+N18d 集成到工作分支后，debug 构建及 Rust 316 项通过、1 忽略，相关 Python 77 项通过。
+首版命令误写了不存在的 filter 测试模块，42 项实际测试通过及一个加载错误均保留；
+修正为已有动态组合模块后单独重跑，见 `R/n18d-zero-plateau/integrated-checks-v2/result.json`。

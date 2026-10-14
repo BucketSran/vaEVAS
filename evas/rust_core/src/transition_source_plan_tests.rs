@@ -180,8 +180,7 @@ fn unproved_roots_provenance_and_event_overlap_stay_rejected() {
     assert!(p.check_incoming(0., I { lo: 0.49, hi: 0.51 }).is_err());
     assert!(p.check_incoming(0., I::point(0.5)).is_ok());
     assert!(p.check_incoming(0., I { lo: 0.4, hi: 0.49 }).is_ok());
-    let t = trajectory(vec![[0., 0.], [0.5, 0.], [1., 1.]]);
-    assert!(Plan::build(spec(gate(0.), &t, Work::default()), &[I::ZERO]).is_err());
+
 }
 #[test]
 fn structural_hidden_continuous_leaf_is_not_admitted() {
@@ -333,4 +332,24 @@ fn terminal_held_update_must_match_new_epoch_left_mode() {
     let old = Plan::build(spec(e, &ramp(), Work::default()), &[I::point(3.)]).unwrap();
     let new = old.rebind(&[I::point(4.)]).unwrap();
     assert!(new.prepare(1., &old.seed()).is_err());
+}
+
+#[test]
+fn exact_zero_plateaus_keep_all_knots_and_predicate_truth() {
+    let t = trajectory(vec![[0.,-1.],[0.25,0.],[0.5,0.],[0.75,1.],[1.,1.]]);
+    for relation in [Relation::Lt, Relation::Le, Relation::Gt, Relation::Ge] {
+        let p = Plan::build(spec(select(relation.clone(),source(),constant(0.),constant(1.),constant(0.)), &t, Work::default()), &[I::ZERO]).unwrap();
+        assert_eq!(*p.cuts, vec![0.,0.25,0.5,0.75,1.]);
+        let truth = |sign: i32| match relation { Relation::Lt => sign<0, Relation::Le => sign<=0, Relation::Gt => sign>0, Relation::Ge => sign>=0 };
+        assert_eq!(p.seed().value, if truth(-1) {1.} else {0.});
+        let at_plateau = p.prepare(0.25,&p.seed()).unwrap();
+        assert_eq!(at_plateau.value, if truth(0) {1.} else {0.});
+        let after = p.prepare(0.5,&at_plateau).unwrap();
+        assert_eq!(after.value, if truth(1) {1.} else {0.});
+        assert!(p.check_incoming(0.,I{lo:0.24,hi:0.26}).is_err());
+    }
+    let all_zero = trajectory(vec![[0.,0.],[0.25,0.],[1.,0.]]);
+    let p=Plan::build(spec(gate(0.),&all_zero,Work::default()), &[I::ZERO]).unwrap();
+    assert_eq!(p.seed().value,0.);
+    assert_eq!(p.prepare(1.,&p.seed()).unwrap().value,0.);
 }
