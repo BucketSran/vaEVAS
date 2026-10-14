@@ -56,16 +56,28 @@ module m(u,y,z,w,r); input u; output y,z,w; inout r;
                     i=result['nodes'].index(node)
                     self.assertEqual([row['voltages'][i] for row in result['solutions']],expected)
 
-    def test_same_time_feedback_uses_current_operator_value_on_cached_batches(self):
-        # At t=1 and t=2 the frozen ramp is .5 and 1. Solving a=y+1,
-        # y=.5*a+z gives a=3,4. An old-voltage read or cached z gives wrong states.
+    def test_final_initial_seed_is_used_in_same_time_feedback(self):
+        # The final timer(0) state seeds z=1. At both later events,
+        # a=y+1 and y=.5*a+1 give a=4, y=3. Actual Spectre confirms this.
         body = """@(initial_step) begin a=0; b=0; end
           @(timer(0,0,0.001)) b=1;
           @(timer(1,1,0.001)) a=V(y,r)+1;
           V(y,r)<+0.5*a+transition(b,0,2,2);"""
         for step in [2.5, .125]:
             result=run_transition(body,[0,1,1.5,2,2.5],2.5,step)
-            self.assert_waveform(result,[0,2,2.25,3,3])
+            self.assert_waveform(result,[1,3,3,3,3])
+            self.assertEqual([event['after'][0] for event in result['transient']['events']], [0,4,4])
+
+    def test_positive_time_feedback_uses_current_operator_value_on_cached_batches(self):
+        # At t=1.5 and t=2.5 the frozen ramp is .5 and 1. Solving a=y+1,
+        # y=.5*a+z gives a=3,4. An old-voltage read or cached z gives wrong states.
+        body = """@(initial_step) begin a=0; b=0; end
+          @(timer(0.5,0,0.001)) b=1;
+          @(timer(1.5,1,0.001)) a=V(y,r)+1;
+          V(y,r)<+0.5*a+transition(b,0,2,2);"""
+        for step in [3, .125]:
+            result=run_transition(body,[0,0.5,1.5,2,2.5,3],3,step)
+            self.assert_waveform(result,[0,0,2,2.25,3,3])
             self.assertEqual([event['after'][0] for event in result['transient']['events']], [0,3,4])
 
     def test_edge_nonzero_initial_delay_and_asymmetric_times(self):
@@ -130,14 +142,16 @@ module m(u,y,z,w,r); input u; output y,z,w; inout r;
         sparse = run_transition(body, [0,13.5e-9,16e-9], 16e-9)
         self.assertEqual(sparse['solutions'][1], coarse['solutions'][4])
 
-    def test_timer_zero_and_target_at_previous_edge_endpoint(self):
+    def test_positive_timer_target_at_previous_edge_endpoint(self):
         body = '''@(initial_step) begin a=0.2; b=0; end
-          @(timer(0,0,1p)) a=0.8;
-          @(timer(4n,0,1p)) b=-0.8;
+          @(timer(4n,0,1p)) a=0.8;
+          @(timer(8n,0,1p)) b=-0.8;
           V(y,r)<+transition(a+b,0,4n,8n);'''
-        result = run_transition(body, [0,2e-9,4e-9,8e-9,12e-9], 12e-9)
-        self.assert_waveform(result,[.2,.5,.8,.4,0])
-        self.assertEqual(result['transient']['states'][0], [.8,0])
+        # Doubling the exact stored 4n duration proves the shared endpoint;
+        # 1n+4n versus a separate 5n literal has a binary64 clock overlap.
+        result = run_transition(body, [0,4e-9,6e-9,8e-9,12e-9,16e-9], 16e-9)
+        self.assert_waveform(result,[.2,.2,.5,.8,.4,0])
+        self.assertEqual(result['transient']['states'][1], [.8,0])
 
     def test_same_instant_state_changes_have_one_common_input(self):
         body = '''@(initial_step) begin a=0; b=0; end

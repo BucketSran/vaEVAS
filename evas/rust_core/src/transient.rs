@@ -18,6 +18,9 @@ mod event_acceptance;
 #[path = "transient_history_calendar.rs"]
 mod history_calendar;
 
+#[path = "transient_initialization.rs"]
+mod initialization;
+
 #[path = "transient_root_refinement.rs"]
 mod root_refinement;
 
@@ -752,7 +755,10 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
         crate::input_clamp::lower(&mut request.program, &mut request.driven, &mut trajectory)?;
 
     let model = EventModel::new(request.program, request.driven, request.tolerances)?;
-    let initial = model.initial();
+    let prepared = initialization::prepare(&model, &trajectory)?;
+    let initial = prepared
+        .as_ref()
+        .map_or_else(|| model.initial(), |p| p.states.clone());
     let relocalize = model.relocalized_guards.iter().any(|&held| held);
     let history_calendar = model.guard_operators.iter().any(|ops| !ops.is_empty());
     let (operators, mut crossings) = if history_calendar {
@@ -792,11 +798,20 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
         )?;
         (operators, crossings)
     };
+    let initial_cursor = prepared
+        .as_ref()
+        .map(|p| p.cursor(&crossings))
+        .transpose()?
+        .unwrap_or(0);
+    let initial_bounds = prepared.as_ref().map_or_else(
+        || initial.iter().copied().map(I::point).collect(),
+        |p| p.bounds.clone(),
+    );
     let circuit = model.circuit_with(&initial, &operators.values(0.0)?)?;
     let mut accepted = Frame {
         time: 0.0,
         solution: circuit.solve(&trajectory.values(0.0))?,
-        state_bounds: initial.iter().copied().map(I::point).collect(),
+        state_bounds: initial_bounds,
         states: initial,
         circuit,
         operators,
@@ -830,8 +845,8 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
     let (mut output, mut knot) = (0, 1);
     let mut controller = Controller {
         accepted,
-        event: 0,
-        records: Vec::new(),
+        event: initial_cursor,
+        records: prepared.map(|p| p.records).unwrap_or_default(),
         outputs: Vec::new(),
     };
     let mut preflighted_event = None;
