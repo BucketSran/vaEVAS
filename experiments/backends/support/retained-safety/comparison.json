@@ -1,6 +1,6 @@
 {
   "purpose": "admission and silent-event-loss safety; no Q qualification",
-  "kernel_sha256": "c8bdc273ee185afb4c7dafbc4eacd3a93b9f69c7dd3ccb9a703ca3eb4dd0a051",
+  "kernel_sha256": "a87d21f359de4b2360729c61e55b07cb76133d0873f007d6d5f204f113403b01",
   "analysis_sha256": "4d6641238df3add7c6921f5be540ee02f2b787d8e677b50917acdc67722fa6e8",
   "manifest_checks": {
     "MANIFEST.json": {
@@ -981,7 +981,7 @@
       }
     }
   ],
-  "source_revision": "b053ac6545c23045d5bee29d1621ff9b866602d1",
+  "source_revision": "ec0a77eae8b92ae838e2573bb3950c6634d26e8c",
   "baseline_revision": "ff5d0fd9bc4dbeafe7fc91e233ad97880155a233",
   "baseline_kernel_sha256": "f3869595309448ec9d9e2155e93a9cb9c723485bdc515dc2ff81730a6a94027a",
   "build": {
@@ -993,9 +993,9 @@
   },
   "source_files_sha256": {
     "evas/src/evas/elaboration.py": "bb78fd16b3ef62cd1967054e442c23a91e324c58c3cd10fe7099b2e472ce0237",
-    "evas/rust_core/src/schedule.rs": "7bf24d3fa9dc5046c6f58b04d9fe17de633bd0bf964a6ff9463a64592dd1b37b",
+    "evas/rust_core/src/schedule.rs": "f0f2b32ea8aff5c4e608a0619e7faa63b3fe1d0c12bad22beb0cb9385531b51c",
     "evas/rust_core/src/transient.rs": "be5ce57d13079dfe334ffdde9753c355ae72661227c7b7a9b858478306f786a3",
-    "evas/rust_core/src/transient_event_acceptance.rs": "ce6361e21c77c71ad52ea48d4debd8117c223f79264351a0b52bd4f2d97d3f71",
+    "evas/rust_core/src/transient_event_acceptance.rs": "338db6e99e8fbb74c9400da42f3250f8ae374de25c31f0d14810a02b74687cb9",
     "evas/rust_core/src/transient_history_calendar.rs": "cf3431c7582c5ef79801cadbf220e6db5587c480a28e03f4aae9b3bcef4ca921"
   }
 }
