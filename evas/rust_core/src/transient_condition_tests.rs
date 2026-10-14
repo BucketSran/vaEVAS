@@ -264,7 +264,7 @@ fn simultaneous_cross_block_state_writers_fail_without_committing_history() {
 }
 
 #[test]
-fn cross_block_state_reads_reject_structural_cancellation_in_raw_ir() {
+fn simultaneous_cross_block_state_reads_reject_structural_cancellation_in_raw_ir() {
     let origin = json!({"source":"raw-read.va","line":2,"column":1,"instance":"dut"});
     let cases = [
         (
@@ -303,7 +303,7 @@ fn cross_block_state_reads_reject_structural_cancellation_in_raw_ir() {
             "events":[
                 {"trigger":{"kind":"timer","start":0.25,"period":0,"time_tolerance":0.001,"enabled":true},
                     "origin":origin,"body":[{"kind":"assign","state":first_state,"rhs":{"op":"affine","constant":7,"terms":[]}}]},
-                {"trigger":{"kind":"timer","start":0.5,"period":0,"time_tolerance":0.001,"enabled":true},
+                {"trigger":{"kind":"timer","start":0.25,"period":0,"time_tolerance":0.001,"enabled":true},
                     "origin":origin,"body":[{"kind":"assign","state":second_state,"rhs":rhs}]}
             ],
             "operators":[],
@@ -312,12 +312,29 @@ fn cross_block_state_reads_reject_structural_cancellation_in_raw_ir() {
                 "rhs":{"op":"multiply","left":{"op":"affine","constant":-1,"terms":[]},
                     "right":{"op":"state","state":second_state}}}]
         })).unwrap();
+        let model = EventModel::new(program, vec!["u".into()], Tolerances::default()).unwrap();
+        let before = model.initial();
+        let before_bounds: Vec<_> = before.iter().copied().map(I::point).collect();
+        let kind = crate::settlement::prepare(
+            &model,
+            &[0, 1],
+            (&[0.], &[I::ZERO]),
+            &before,
+            &[],
+            &before_bounds,
+            &[],
+            None,
+        )
+        .err()
+        .unwrap()
+        .kind;
         assert_eq!(
-            EventModel::new(program, vec!["u".into()], Tolerances::default())
-                .err()
-                .unwrap()
-                .kind,
-            "unsupported_cross"
+            kind,
+            if first_state == second_state {
+                "event_conflict"
+            } else {
+                "unsupported_cross"
+            }
         );
     }
 }

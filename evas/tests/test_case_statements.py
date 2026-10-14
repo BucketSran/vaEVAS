@@ -67,10 +67,11 @@ class CaseStatements(unittest.TestCase):
         self.assertEqual(output(p,[0,1]),[1,2])
 
     def test_expansion_resources_reject_before_recursive_compilation(self):
-        for body in (' '.join(f'{i}: value={i};' for i in range(17)),
-                     ' '.join(f'{i}: value={i};' for i in range(16))):
+        for body in (' '.join(f'{i}: value={i};' for i in range(513)),
+                     ' '.join(f'k{i}: value={i};' for i in range(17))):
             with self.subTest(body=body), self.assertRaises(CompileError) as caught:
-                program('value=0; case(V(u)) '+body+' endcase V(y,r)<+value;')
+                declarations='real value;'+' '.join(f'parameter real k{i}={i};' for i in range(17))
+                program('value=0; case(V(u)) '+body+' endcase V(y,r)<+value;',declarations)
             self.assertEqual(caught.exception.diagnostic['code'],'resource_budget')
 
     def test_frozen_scs_and_manual_manifest_match_independent_table(self):
@@ -94,16 +95,27 @@ class CaseStatements(unittest.TestCase):
         bodies = [
             'value=0; case(missing) endcase V(y,r)<+value;',
             'value=0; case(missing) default:value=1; endcase V(y,r)<+value;',
-            '@(initial_step) value=0; @(timer(1)) case(value) 0:value=1; endcase V(y,r)<+value;',
             'value=0; case(V(u)) default:value=1; default:value=2; endcase V(y,r)<+value;',
             'case(V(u)) 1:value=1; endcase V(y,r)<+value;',
-            'case(V(u)) 1:V(y,r)<+1; default:V(y,r)<+2; endcase',
+            'case(V(u)) 1:V(y,r)<+1; endcase',
             'value=0; case(idt(V(u),0)) 1:value=1; endcase V(y,r)<+value;',
             'value=0; case(V(y)) 1:value=1; endcase V(y,r)<+value;',
         ]
         for body in bodies:
             with self.subTest(body=body), self.assertRaises(CompileError):
                 program(body)
+
+    def test_literal_case_tree_is_bounded_and_state_selector_is_ordered(self):
+        body=' '.join(f'{i}: value={i+2};' for i in range(16))
+        p=program('case(V(u)) '+body+' default:value=-1; endcase V(y,r)<+value;')
+        self.assertEqual(output(p,[-1,0,7,15,16]),[-1,2,9,17,-1])
+        p=program('@(initial_step) value=0; @(timer(0.5)) begin value=value+1; case(value) 1:value=4; default:value=8; endcase end V(y,r)<+value;')
+        result=transient(p,{'u':[[0,0],[1,0]]},[0,.5,1],stop=1,max_step=1,kernel=KERNEL)
+        self.assertEqual([row['voltages'][result['nodes'].index('y')] for row in result['solutions']],[0,4,4])
+
+    def test_case_voltage_branch_exists_for_every_selected_arm(self):
+        p=program('case(V(u)) 1:V(y,r)<+1; default:V(y,r)<+2; endcase')
+        self.assertEqual(output(p,[0,1,2]),[2,1,2])
 
 
 if __name__ == '__main__':

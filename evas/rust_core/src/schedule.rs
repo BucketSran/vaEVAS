@@ -592,6 +592,64 @@ impl Moment {
 /// Resolve a complete cluster with certified physical order. Keep nominal
 /// enclosures for sampling/forward-error propagation; representative delays
 /// neither erase uncertainty nor relax any clock's original tolerance.
+// Only a certified equal-time group containing a fixed zero-tolerance timer
+// may use this contraction. Each fixed clock must independently prove the same
+// singleton, contained in its original enclosure. Other moment kinds keep
+// their own certificates and must still pass the ordinary accepts check.
+fn contract_zero_timer_group(
+    events: &mut [ScheduledEvent],
+    model: &EventModel,
+) -> Result<Option<f64>, Error> {
+    let mut time = None;
+    for event in events.iter() {
+        if matches!(
+            model.triggers[event.event].trigger,
+            EventTrigger::Timer {
+                time_tolerance: 0.0,
+                ..
+            }
+        ) {
+            let bounds = event.bounds();
+            if bounds.lo != bounds.hi || !bounds.finite() || time.is_some_and(|t| t != bounds.lo) {
+                return Err(unresolved(
+                    "zero-tolerance timer group is not one exact point",
+                ));
+            }
+            time = Some(bounds.lo);
+        }
+    }
+    let Some(time) = time else { return Ok(None) };
+    // Prove the whole group before changing its local certificates.
+    for event in events.iter() {
+        if let Moment::Timer {
+            bounds,
+            start,
+            period,
+            index,
+        } = event.moment
+        {
+            let exact = Clock {
+                start,
+                period,
+                index,
+            }
+            .bounds()
+            .ok_or_else(|| unresolved("fixed timer exact clock has no finite bounds"))?;
+            if exact != I::point(time) || bounds.lo > time || bounds.hi < time {
+                return Err(unresolved(
+                    "fixed timer cannot share the zero-tolerance point",
+                ));
+            }
+        }
+    }
+    for event in events.iter_mut() {
+        if let Moment::Timer { bounds, .. } = &mut event.moment {
+            *bounds = I::point(time);
+        }
+    }
+    Ok(Some(time))
+}
+
 fn order_fixed_timers(
     events: &mut [ScheduledEvent],
     model: &EventModel,
@@ -634,11 +692,19 @@ fn order_fixed_timers(
         }
         // All equal nominal times must share one representative, including
         // when their different arithmetic decompositions have different bounds.
-        let mut time = events[start..end]
-            .iter()
-            .map(|e| e.time.max(e.bounds().hi))
-            .fold(0.0, f64::max);
+        let zero_time = contract_zero_timer_group(&mut events[start..end], model)?;
+        let mut time = zero_time.unwrap_or_else(|| {
+            events[start..end]
+                .iter()
+                .map(|e| e.time.max(e.bounds().hi))
+                .fold(0.0, f64::max)
+        });
         if let Some(prior) = previous {
+            if zero_time.is_some() && prior >= time {
+                return Err(unresolved(
+                    "prior event occupies a zero-tolerance timer time",
+                ));
+            }
             time = time.max(prior.next_up());
         }
         if !time.is_finite() {
@@ -685,6 +751,13 @@ fn add_timer(
 ) -> Result<(), Error> {
     let stop = config.stop;
     let forced_points = !config.strobetimes.is_empty();
+    let zero_tolerance = matches!(
+        trigger,
+        EventTrigger::Timer {
+            time_tolerance: 0.0,
+            ..
+        }
+    );
     let (start, period, enabled, held) = match trigger {
         EventTrigger::Timer {
             start,
@@ -749,7 +822,31 @@ fn add_timer(
         // enclosure covers both product and sum. Choosing its upper endpoint
         // cannot fire early, including when the source omitted time_tol. The
         // clock remains start + index * period, never prior accepted time + T.
-        let mut bounds = if forced_points && start.lo == start.hi && period.lo == period.hi {
+        // For a fixed zero budget, first prove whether this clock is outside
+        // the requested domain. A later nonrepresentable clock must not reject
+        // an otherwise valid finite prefix whose stop precedes that clock.
+        let exact_clock = Clock {
+            start: start.lo,
+            period: period.lo,
+            index,
+        };
+        if zero_tolerance
+            && exact_clock.order(Clock {
+                start: stop,
+                period: 0.,
+                index: 0,
+            }) == Some(std::cmp::Ordering::Greater)
+        {
+            break;
+        }
+        let mut bounds = if zero_tolerance {
+            if (index as f64).mul_add(period.lo, start.lo) == f64::INFINITY {
+                break;
+            }
+            exact_clock
+                .bounds()
+                .ok_or_else(|| unresolved("zero-tolerance timer has no finite exact bounds"))?
+        } else if forced_points && start.lo == start.hi && period.lo == period.hi {
             // A forced solve point must not be crossed only because interval
             // arithmetic widened an otherwise exactly ordered source clock.
             // A held clock qualifies only when both current parameters are
@@ -807,6 +904,9 @@ fn add_timer(
             return Err(unresolved(
                 "cannot certify timer nominal time relative to stop",
             ));
+        }
+        if zero_tolerance && bounds.lo != bounds.hi {
+            return Err(unresolved("zero-tolerance timer time is not representable"));
         }
         if held {
             if let Some(boundary) = boundary {
@@ -1223,9 +1323,13 @@ fn schedule_with_history(
         None
     };
     if let Some(bounds) = &bounds {
-        let circuit = model.circuit(&model.initial())?;
-        // Preserve network-consistency checks on all physical input knots.
+        // Each source-selected branch is checked at its actual input value.
         for &time in &trajectory.knots {
+            let circuit = model.circuit_at(
+                &model.initial(),
+                &vec![0.; model.program.operators.len()],
+                &trajectory.value_bounds(time),
+            )?;
             circuit.solve(&trajectory.values(time))?;
         }
         for (index, leaf) in model.triggers.iter().enumerate() {

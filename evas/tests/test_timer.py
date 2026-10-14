@@ -43,7 +43,7 @@ class TimerContracts(unittest.TestCase):
                 source = model(f'''@(initial_step) begin n=0; m=0; end
                   @(timer({start!r},0,{unit/1024!r})) n=n+1;
                   @(cross(V(u,r)-{threshold},1,{unit/1024!r},0.001)) m=m+1;
-                  V(y,r)<+n+m;''', 'integer n,m;')
+                  V(y,r)<+1.0*n+m;''', 'integer n,m;')
                 program=compile_sources({'timer.va':source},[instance()])
                 result=transient(program,{'u':[[0,0],[stop,19]]},[0,stop],
                                  stop=stop,max_step=stop,kernel=KERNEL)
@@ -57,7 +57,7 @@ class TimerContracts(unittest.TestCase):
         source=model('''@(initial_step) begin n=0; m=0; end
             @(timer(15,0,0.01)) n=n+1;
             @(cross(V(u,r)-15,1,0.01,0.01)) m=m+1;
-            V(y,r)<+n+m;''','integer n,m;')
+            V(y,r)<+1.0*n+m;''','integer n,m;')
         result=run_timer(source,stop=22,times=[0,22])
         self.assertEqual([e['time'] for e in result['transient']['events']],[15.,15.])
 
@@ -66,7 +66,7 @@ class TimerContracts(unittest.TestCase):
             source=model(f'''@(initial_step) begin n=0; m=0; end
               @(timer({start!r},0,0.1)) n=n+1;
               @(cross(V(u,r)-8,1,0.1,0.1)) m=m+1;
-              V(y,r)<+n+m;''','integer n,m;')
+              V(y,r)<+1.0*n+m;''','integer n,m;')
             result=run_timer(source,stop=19,times=[0,19])
             self.assertEqual([e['time'] for e in result['transient']['events']],sorted([8.,start]))
             self.assertEqual(result['transient']['states'][-1], [1,1])
@@ -228,7 +228,7 @@ class TimerContracts(unittest.TestCase):
                       stop=stop, times=[0, stop], step=stop)
 
     def test_frontend_rejects_invalid_or_unsupported_settings(self):
-        for arguments in ['', ',5', '2,5,0', '-1,0,1', 'V(u)', 'V(u),0,1',
+        for arguments in ['', ',5', '2,5,-1', '-1,0,1', 'V(u)', 'V(u),0,1',
                           '0,0,n', '0,0,1,1,1', '0,,,', '0,0,1 or cross(V(u))']:
             with self.subTest(arguments=arguments), self.assertRaises(CompileError):
                 compile_sources({'timer.va': timer_source(arguments)}, [instance()])
@@ -237,18 +237,18 @@ class TimerContracts(unittest.TestCase):
         for statement in ['@(cross(V(u)-0.5,1)) n=n+1;',
                           '@(timer(0.5,0,0.001)) n=n+1;']:
             source = model('''@(initial_step) begin n=0; m=0; end
-                @(timer(0,0,0.001)) n=n+1;''' + statement + 'V(y,r)<+n+m;', 'integer n,m;')
+                @(timer(0,0,0.001)) n=n+1;''' + statement + 'V(y,r)<+1.0*n+m;', 'integer n,m;')
             with self.subTest(statement=statement):
                 result = run_timer(source, stop=1, times=[0, 1])
                 self.assertEqual(result['transient']['states'], [[1,0],[2,0]])
                 self.assertEqual([event['time'] for event in result['transient']['events']], [0,.5])
 
-    def test_cross_block_other_state_read_restriction_remains(self):
+    def test_later_block_reads_accepted_state_from_prior_timer(self):
         source = model('''@(initial_step) begin n=0; m=0; end
             @(timer(0,0,0.001)) n=n+1;
-            @(timer(0.5,0,0.001)) m=n+1; V(y,r)<+n+m;''', 'integer n,m;')
-        with self.assertRaisesRegex(KernelError, 'unsupported_cross'):
-            run_timer(source, stop=1, times=[0, 1])
+            @(timer(0.5,0,0.001)) m=n+1; V(y,r)<+1.0*n+m;''', 'integer n,m;')
+        result = run_timer(source, stop=1, times=[0, 1])
+        self.assertEqual(result['transient']['states'], [[1,0],[1,2]])
 
     def test_raw_ir_rejects_malformed_timer_and_legacy_event_fields(self):
         program = compile_sources({'timer.va': timer_source()}, [instance()]).to_dict()
@@ -256,7 +256,7 @@ class TimerContracts(unittest.TestCase):
             pwl=[[[0, 0], [19, 19]]], output_times=[0, 19], stop=19, max_step=19))
         for mutation, kind in [
             (lambda t: t.update(start=-1), 'invalid_ir'),
-            (lambda t: t.update(time_tolerance=0), 'invalid_ir'),
+            (lambda t: t.update(time_tolerance=-1), 'invalid_ir'),
             (lambda t: t.update(period='5'), 'invalid_request'),
             (lambda t: t.update(enabled=1), 'invalid_request'),
             (lambda t: t.update(guard={'op': 'affine', 'constant': 0, 'terms': []}), 'invalid_request'),

@@ -1,0 +1,1006 @@
+[
+  {
+    "task_id": "r01-extend-hold",
+    "condition": "c0",
+    "command": [
+      "local-tool:python3.14",
+      "-B",
+      "-m",
+      "evas",
+      "simulate",
+      "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-extend-hold/c0/run/work/verifier/c0/tb.scs",
+      "--kernel",
+      "archive:vaEVAS/worktrees/evas-r01-delivery/evas/rust_core/target/release/evas-kernel",
+      "--timeout",
+      "120.0"
+    ],
+    "elapsed_seconds": 18.09458433301188,
+    "input_sha256": {
+      "candidate/files/dut.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+      "run/work/verifier/c0/dut.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+      "run/work/verifier/c0/tb.scs": "4e0fb6cb4d477ed1258409b69f4ebda74344d50d08f2ac64bdf50218b1904478"
+    },
+    "timeout_seconds": 120.0,
+    "timeout_source": "frozen original cases.json timeout_s",
+    "status": "completed",
+    "exit_code": 0,
+    "diagnostic": {
+      "warnings": [
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "iabstol",
+          "requested_value": 1e-15,
+          "message": "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-extend-hold/c0/run/work/verifier/c0/tb.scs",
+            "line": 3,
+            "column": 51
+          }
+        },
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "errpreset",
+          "requested_value": "conservative",
+          "message": "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-06, vabstol=1e-09, max_step=1e-10.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-extend-hold/c0/run/work/verifier/c0/tb.scs",
+            "line": 9,
+            "column": 35
+          },
+          "effective_controls": {
+            "vabstol": 1e-09,
+            "reltol": 1e-06,
+            "max_step": 1e-10
+          }
+        }
+      ]
+    },
+    "kernel_invoked": true,
+    "solution_rows": 9001
+  },
+  {
+    "task_id": "r01-extend-hold",
+    "condition": "c1",
+    "command": [
+      "local-tool:python3.14",
+      "-B",
+      "-m",
+      "evas",
+      "simulate",
+      "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-extend-hold/c1/run/work/verifier/c1/tb.scs",
+      "--kernel",
+      "archive:vaEVAS/worktrees/evas-r01-delivery/evas/rust_core/target/release/evas-kernel",
+      "--timeout",
+      "120.0"
+    ],
+    "elapsed_seconds": 20.8794353751,
+    "input_sha256": {
+      "candidate/files/dut.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+      "run/work/verifier/c1/dut.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+      "run/work/verifier/c1/tb.scs": "c036cbc7bc21625b9af85d620db78f6cae92d40b1134f4ca8c2255218241b10d"
+    },
+    "timeout_seconds": 120.0,
+    "timeout_source": "frozen original cases.json timeout_s",
+    "status": "completed",
+    "exit_code": 0,
+    "diagnostic": {
+      "warnings": [
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "iabstol",
+          "requested_value": 1e-15,
+          "message": "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-extend-hold/c1/run/work/verifier/c1/tb.scs",
+            "line": 3,
+            "column": 51
+          }
+        },
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "errpreset",
+          "requested_value": "conservative",
+          "message": "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-06, vabstol=1e-09, max_step=1e-10.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-extend-hold/c1/run/work/verifier/c1/tb.scs",
+            "line": 9,
+            "column": 39
+          },
+          "effective_controls": {
+            "vabstol": 1e-09,
+            "reltol": 1e-06,
+            "max_step": 1e-10
+          }
+        }
+      ]
+    },
+    "kernel_invoked": true,
+    "solution_rows": 10341
+  },
+  {
+    "task_id": "r01-extend-hold",
+    "condition": "c2",
+    "command": [
+      "local-tool:python3.14",
+      "-B",
+      "-m",
+      "evas",
+      "simulate",
+      "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-extend-hold/c2/run/work/verifier/c2/tb.scs",
+      "--kernel",
+      "archive:vaEVAS/worktrees/evas-r01-delivery/evas/rust_core/target/release/evas-kernel",
+      "--timeout",
+      "120.0"
+    ],
+    "elapsed_seconds": 15.93864891701378,
+    "input_sha256": {
+      "candidate/files/dut.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+      "run/work/verifier/c2/dut.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+      "run/work/verifier/c2/tb.scs": "2a2499f6a905e10d19e08bf0fffe8d6104c14009327a979cdf38be3860225ccb"
+    },
+    "timeout_seconds": 120.0,
+    "timeout_source": "frozen original cases.json timeout_s",
+    "status": "completed",
+    "exit_code": 0,
+    "diagnostic": {
+      "warnings": [
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "iabstol",
+          "requested_value": 1e-15,
+          "message": "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-extend-hold/c2/run/work/verifier/c2/tb.scs",
+            "line": 3,
+            "column": 51
+          }
+        },
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "errpreset",
+          "requested_value": "conservative",
+          "message": "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-06, vabstol=1e-09, max_step=1e-10.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-extend-hold/c2/run/work/verifier/c2/tb.scs",
+            "line": 9,
+            "column": 38
+          },
+          "effective_controls": {
+            "vabstol": 1e-09,
+            "reltol": 1e-06,
+            "max_step": 1e-10
+          }
+        }
+      ]
+    },
+    "kernel_invoked": true,
+    "solution_rows": 8141
+  },
+  {
+    "task_id": "r01-integrate-sync",
+    "condition": "c2",
+    "command": [
+      "local-tool:python3.14",
+      "-B",
+      "-m",
+      "evas",
+      "simulate",
+      "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-integrate-sync/c2/run/work/verifier/c2/tb.scs",
+      "--kernel",
+      "archive:vaEVAS/worktrees/evas-r01-delivery/evas/rust_core/target/release/evas-kernel",
+      "--timeout",
+      "120.0"
+    ],
+    "elapsed_seconds": 0.27150449994951487,
+    "input_sha256": {
+      "candidate/files/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+      "run/work/verifier/c2/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+      "run/work/verifier/c2/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+      "run/work/verifier/c2/tb.scs": "9e3dd504c886f7735e70d56eb10061eaa2bfff504934c0ffaa4eea08b9aa41b5"
+    },
+    "timeout_seconds": 120.0,
+    "timeout_source": "frozen original cases.json timeout_s",
+    "status": "failed",
+    "exit_code": 2,
+    "diagnostic": {
+      "kind": "unsupported_transient",
+      "message": "transient expressions must be jointly affine in voltage and state",
+      "diagnostic_version": 1,
+      "code": "kernel.unsupported_transient",
+      "stage": "kernel",
+      "category": "unsupported",
+      "capability": null,
+      "warnings": [
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "iabstol",
+          "requested_value": 1e-15,
+          "message": "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-integrate-sync/c2/run/work/verifier/c2/tb.scs",
+            "line": 3,
+            "column": 51
+          }
+        },
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "errpreset",
+          "requested_value": "conservative",
+          "message": "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-06, vabstol=1e-09, max_step=1e-10.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-integrate-sync/c2/run/work/verifier/c2/tb.scs",
+            "line": 17,
+            "column": 38
+          },
+          "effective_controls": {
+            "vabstol": 1e-09,
+            "reltol": 1e-06,
+            "max_step": 1e-10
+          }
+        }
+      ]
+    },
+    "kernel_invoked": true
+  },
+  {
+    "task_id": "r01-integrate-sync",
+    "condition": "core-boundary",
+    "command": [
+      "local-tool:python3.14",
+      "-B",
+      "-m",
+      "evas",
+      "simulate",
+      "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-integrate-sync/core-boundary/run/work/verifier/core-boundary/tb.scs",
+      "--kernel",
+      "archive:vaEVAS/worktrees/evas-r01-delivery/evas/rust_core/target/release/evas-kernel",
+      "--timeout",
+      "120.0"
+    ],
+    "elapsed_seconds": 0.2027981251012534,
+    "input_sha256": {
+      "candidate/files/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+      "run/work/verifier/core-boundary/core.va": "061320ed3eaf2f6bc8c83178209361edba4279613503561ade08b6fa4b69c405",
+      "run/work/verifier/core-boundary/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+      "run/work/verifier/core-boundary/tb.scs": "3b7ed7b9b38bb66c5d0ae2d0a7ca5ade360fae99265a3e6a5153b5e92fb84bb1"
+    },
+    "timeout_seconds": 120.0,
+    "timeout_source": "frozen original cases.json timeout_s",
+    "status": "failed",
+    "exit_code": 2,
+    "diagnostic": {
+      "kind": "unsupported_transient",
+      "message": "transient expressions must be jointly affine in voltage and state",
+      "diagnostic_version": 1,
+      "code": "kernel.unsupported_transient",
+      "stage": "kernel",
+      "category": "unsupported",
+      "capability": null,
+      "warnings": [
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "iabstol",
+          "requested_value": 1e-15,
+          "message": "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-integrate-sync/core-boundary/run/work/verifier/core-boundary/tb.scs",
+            "line": 3,
+            "column": 51
+          }
+        },
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "errpreset",
+          "requested_value": "conservative",
+          "message": "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-06, vabstol=1e-09, max_step=1e-10.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-integrate-sync/core-boundary/run/work/verifier/core-boundary/tb.scs",
+            "line": 17,
+            "column": 35
+          },
+          "effective_controls": {
+            "vabstol": 1e-09,
+            "reltol": 1e-06,
+            "max_step": 1e-10
+          }
+        }
+      ]
+    },
+    "kernel_invoked": true
+  },
+  {
+    "task_id": "r01-repair-recovery",
+    "condition": "c2",
+    "command": [
+      "local-tool:python3.14",
+      "-B",
+      "-m",
+      "evas",
+      "simulate",
+      "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-repair-recovery/c2/run/work/verifier/c2/tb.scs",
+      "--kernel",
+      "archive:vaEVAS/worktrees/evas-r01-delivery/evas/rust_core/target/release/evas-kernel",
+      "--timeout",
+      "120.0"
+    ],
+    "elapsed_seconds": 15.378640832845122,
+    "input_sha256": {
+      "candidate/files/dut.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+      "run/work/verifier/c2/dut.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+      "run/work/verifier/c2/tb.scs": "2a2499f6a905e10d19e08bf0fffe8d6104c14009327a979cdf38be3860225ccb"
+    },
+    "timeout_seconds": 120.0,
+    "timeout_source": "frozen original cases.json timeout_s",
+    "status": "completed",
+    "exit_code": 0,
+    "diagnostic": {
+      "warnings": [
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "iabstol",
+          "requested_value": 1e-15,
+          "message": "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-repair-recovery/c2/run/work/verifier/c2/tb.scs",
+            "line": 3,
+            "column": 51
+          }
+        },
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "errpreset",
+          "requested_value": "conservative",
+          "message": "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-06, vabstol=1e-09, max_step=1e-10.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-repair-recovery/c2/run/work/verifier/c2/tb.scs",
+            "line": 9,
+            "column": 38
+          },
+          "effective_controls": {
+            "vabstol": 1e-09,
+            "reltol": 1e-06,
+            "max_step": 1e-10
+          }
+        }
+      ]
+    },
+    "kernel_invoked": true,
+    "solution_rows": 8141
+  },
+  {
+    "task_id": "r01-repair-recovery",
+    "condition": "c0",
+    "command": [
+      "local-tool:python3.14",
+      "-B",
+      "-m",
+      "evas",
+      "simulate",
+      "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-repair-recovery/c0/run/work/verifier/c0/tb.scs",
+      "--kernel",
+      "archive:vaEVAS/worktrees/evas-r01-delivery/evas/rust_core/target/release/evas-kernel",
+      "--timeout",
+      "120.0"
+    ],
+    "elapsed_seconds": 17.879866207949817,
+    "input_sha256": {
+      "candidate/files/dut.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+      "run/work/verifier/c0/dut.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+      "run/work/verifier/c0/tb.scs": "4e0fb6cb4d477ed1258409b69f4ebda74344d50d08f2ac64bdf50218b1904478"
+    },
+    "timeout_seconds": 120.0,
+    "timeout_source": "frozen original cases.json timeout_s",
+    "status": "completed",
+    "exit_code": 0,
+    "diagnostic": {
+      "warnings": [
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "iabstol",
+          "requested_value": 1e-15,
+          "message": "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-repair-recovery/c0/run/work/verifier/c0/tb.scs",
+            "line": 3,
+            "column": 51
+          }
+        },
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "errpreset",
+          "requested_value": "conservative",
+          "message": "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-06, vabstol=1e-09, max_step=1e-10.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-repair-recovery/c0/run/work/verifier/c0/tb.scs",
+            "line": 9,
+            "column": 35
+          },
+          "effective_controls": {
+            "vabstol": 1e-09,
+            "reltol": 1e-06,
+            "max_step": 1e-10
+          }
+        }
+      ]
+    },
+    "kernel_invoked": true,
+    "solution_rows": 9001
+  },
+  {
+    "task_id": "r01-repair-recovery",
+    "condition": "c1",
+    "command": [
+      "local-tool:python3.14",
+      "-B",
+      "-m",
+      "evas",
+      "simulate",
+      "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-repair-recovery/c1/run/work/verifier/c1/tb.scs",
+      "--kernel",
+      "archive:vaEVAS/worktrees/evas-r01-delivery/evas/rust_core/target/release/evas-kernel",
+      "--timeout",
+      "120.0"
+    ],
+    "elapsed_seconds": 16.917064958019182,
+    "input_sha256": {
+      "candidate/files/dut.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+      "run/work/verifier/c1/dut.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+      "run/work/verifier/c1/tb.scs": "c036cbc7bc21625b9af85d620db78f6cae92d40b1134f4ca8c2255218241b10d"
+    },
+    "timeout_seconds": 120.0,
+    "timeout_source": "frozen original cases.json timeout_s",
+    "status": "completed",
+    "exit_code": 0,
+    "diagnostic": {
+      "warnings": [
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "iabstol",
+          "requested_value": 1e-15,
+          "message": "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-repair-recovery/c1/run/work/verifier/c1/tb.scs",
+            "line": 3,
+            "column": 51
+          }
+        },
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "errpreset",
+          "requested_value": "conservative",
+          "message": "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-06, vabstol=1e-09, max_step=1e-10.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-repair-recovery/c1/run/work/verifier/c1/tb.scs",
+            "line": 9,
+            "column": 39
+          },
+          "effective_controls": {
+            "vabstol": 1e-09,
+            "reltol": 1e-06,
+            "max_step": 1e-10
+          }
+        }
+      ]
+    },
+    "kernel_invoked": true,
+    "solution_rows": 10341
+  },
+  {
+    "task_id": "r01-repair-sync",
+    "condition": "c2",
+    "command": [
+      "local-tool:python3.14",
+      "-B",
+      "-m",
+      "evas",
+      "simulate",
+      "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-repair-sync/c2/run/work/verifier/c2/tb.scs",
+      "--kernel",
+      "archive:vaEVAS/worktrees/evas-r01-delivery/evas/rust_core/target/release/evas-kernel",
+      "--timeout",
+      "120.0"
+    ],
+    "elapsed_seconds": 0.24498633411712945,
+    "input_sha256": {
+      "candidate/files/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+      "run/work/verifier/c2/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+      "run/work/verifier/c2/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+      "run/work/verifier/c2/tb.scs": "9e3dd504c886f7735e70d56eb10061eaa2bfff504934c0ffaa4eea08b9aa41b5"
+    },
+    "timeout_seconds": 120.0,
+    "timeout_source": "frozen original cases.json timeout_s",
+    "status": "failed",
+    "exit_code": 2,
+    "diagnostic": {
+      "kind": "unsupported_transient",
+      "message": "transient expressions must be jointly affine in voltage and state",
+      "diagnostic_version": 1,
+      "code": "kernel.unsupported_transient",
+      "stage": "kernel",
+      "category": "unsupported",
+      "capability": null,
+      "warnings": [
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "iabstol",
+          "requested_value": 1e-15,
+          "message": "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-repair-sync/c2/run/work/verifier/c2/tb.scs",
+            "line": 3,
+            "column": 51
+          }
+        },
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "errpreset",
+          "requested_value": "conservative",
+          "message": "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-06, vabstol=1e-09, max_step=1e-10.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-repair-sync/c2/run/work/verifier/c2/tb.scs",
+            "line": 17,
+            "column": 38
+          },
+          "effective_controls": {
+            "vabstol": 1e-09,
+            "reltol": 1e-06,
+            "max_step": 1e-10
+          }
+        }
+      ]
+    },
+    "kernel_invoked": true
+  },
+  {
+    "task_id": "r01-repair-sync",
+    "condition": "core-boundary",
+    "command": [
+      "local-tool:python3.14",
+      "-B",
+      "-m",
+      "evas",
+      "simulate",
+      "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-repair-sync/core-boundary/run/work/verifier/core-boundary/tb.scs",
+      "--kernel",
+      "archive:vaEVAS/worktrees/evas-r01-delivery/evas/rust_core/target/release/evas-kernel",
+      "--timeout",
+      "120.0"
+    ],
+    "elapsed_seconds": 0.26639366685412824,
+    "input_sha256": {
+      "candidate/files/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+      "run/work/verifier/core-boundary/core.va": "061320ed3eaf2f6bc8c83178209361edba4279613503561ade08b6fa4b69c405",
+      "run/work/verifier/core-boundary/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+      "run/work/verifier/core-boundary/tb.scs": "3b7ed7b9b38bb66c5d0ae2d0a7ca5ade360fae99265a3e6a5153b5e92fb84bb1"
+    },
+    "timeout_seconds": 120.0,
+    "timeout_source": "frozen original cases.json timeout_s",
+    "status": "failed",
+    "exit_code": 2,
+    "diagnostic": {
+      "kind": "unsupported_transient",
+      "message": "transient expressions must be jointly affine in voltage and state",
+      "diagnostic_version": 1,
+      "code": "kernel.unsupported_transient",
+      "stage": "kernel",
+      "category": "unsupported",
+      "capability": null,
+      "warnings": [
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "iabstol",
+          "requested_value": 1e-15,
+          "message": "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-repair-sync/core-boundary/run/work/verifier/core-boundary/tb.scs",
+            "line": 3,
+            "column": 51
+          }
+        },
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "errpreset",
+          "requested_value": "conservative",
+          "message": "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-06, vabstol=1e-09, max_step=1e-10.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-repair-sync/core-boundary/run/work/verifier/core-boundary/tb.scs",
+            "line": 17,
+            "column": 35
+          },
+          "effective_controls": {
+            "vabstol": 1e-09,
+            "reltol": 1e-06,
+            "max_step": 1e-10
+          }
+        }
+      ]
+    },
+    "kernel_invoked": true
+  },
+  {
+    "task_id": "r01-spec-acquisition",
+    "condition": "c0",
+    "command": [
+      "local-tool:python3.14",
+      "-B",
+      "-m",
+      "evas",
+      "simulate",
+      "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-spec-acquisition/c0/run/work/verifier/c0/tb.scs",
+      "--kernel",
+      "archive:vaEVAS/worktrees/evas-r01-delivery/evas/rust_core/target/release/evas-kernel",
+      "--timeout",
+      "120.0"
+    ],
+    "elapsed_seconds": 6.280498249921948,
+    "input_sha256": {
+      "candidate/files/dut.va": "bd1cfe0c11bbe3c75453fb528e3ac2e5aa72e710fa5bc9ed3bcb197ed2b1eec5",
+      "run/work/verifier/c0/dut.va": "bd1cfe0c11bbe3c75453fb528e3ac2e5aa72e710fa5bc9ed3bcb197ed2b1eec5",
+      "run/work/verifier/c0/tb.scs": "344ad3f97563d6f6787b1a239783fb63370ca8e9bcce8234b99f8ba8c39e5ce2"
+    },
+    "timeout_seconds": 120.0,
+    "timeout_source": "frozen original cases.json timeout_s",
+    "status": "completed",
+    "exit_code": 0,
+    "diagnostic": {
+      "warnings": [
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "iabstol",
+          "requested_value": 1e-15,
+          "message": "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-spec-acquisition/c0/run/work/verifier/c0/tb.scs",
+            "line": 3,
+            "column": 51
+          }
+        },
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "errpreset",
+          "requested_value": "conservative",
+          "message": "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-06, vabstol=1e-09, max_step=1e-10.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-spec-acquisition/c0/run/work/verifier/c0/tb.scs",
+            "line": 9,
+            "column": 35
+          },
+          "effective_controls": {
+            "vabstol": 1e-09,
+            "reltol": 1e-06,
+            "max_step": 1e-10
+          }
+        }
+      ]
+    },
+    "kernel_invoked": true,
+    "solution_rows": 9001
+  },
+  {
+    "task_id": "r01-spec-acquisition",
+    "condition": "c1",
+    "command": [
+      "local-tool:python3.14",
+      "-B",
+      "-m",
+      "evas",
+      "simulate",
+      "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-spec-acquisition/c1/run/work/verifier/c1/tb.scs",
+      "--kernel",
+      "archive:vaEVAS/worktrees/evas-r01-delivery/evas/rust_core/target/release/evas-kernel",
+      "--timeout",
+      "120.0"
+    ],
+    "elapsed_seconds": 9.23424566606991,
+    "input_sha256": {
+      "candidate/files/dut.va": "bd1cfe0c11bbe3c75453fb528e3ac2e5aa72e710fa5bc9ed3bcb197ed2b1eec5",
+      "run/work/verifier/c1/dut.va": "bd1cfe0c11bbe3c75453fb528e3ac2e5aa72e710fa5bc9ed3bcb197ed2b1eec5",
+      "run/work/verifier/c1/tb.scs": "621bcb202d1b1d3fdb962ede3267c7675489569aa864723e5b16512b9ac9a2c7"
+    },
+    "timeout_seconds": 120.0,
+    "timeout_source": "frozen original cases.json timeout_s",
+    "status": "completed",
+    "exit_code": 0,
+    "diagnostic": {
+      "warnings": [
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "iabstol",
+          "requested_value": 1e-15,
+          "message": "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-spec-acquisition/c1/run/work/verifier/c1/tb.scs",
+            "line": 3,
+            "column": 51
+          }
+        },
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "errpreset",
+          "requested_value": "conservative",
+          "message": "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-06, vabstol=1e-09, max_step=1e-10.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-spec-acquisition/c1/run/work/verifier/c1/tb.scs",
+            "line": 9,
+            "column": 39
+          },
+          "effective_controls": {
+            "vabstol": 1e-09,
+            "reltol": 1e-06,
+            "max_step": 1e-10
+          }
+        }
+      ]
+    },
+    "kernel_invoked": true,
+    "solution_rows": 10341
+  },
+  {
+    "task_id": "r01-spec-acquisition",
+    "condition": "c2",
+    "command": [
+      "local-tool:python3.14",
+      "-B",
+      "-m",
+      "evas",
+      "simulate",
+      "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-spec-acquisition/c2/run/work/verifier/c2/tb.scs",
+      "--kernel",
+      "archive:vaEVAS/worktrees/evas-r01-delivery/evas/rust_core/target/release/evas-kernel",
+      "--timeout",
+      "120.0"
+    ],
+    "elapsed_seconds": 6.553322875173762,
+    "input_sha256": {
+      "candidate/files/dut.va": "bd1cfe0c11bbe3c75453fb528e3ac2e5aa72e710fa5bc9ed3bcb197ed2b1eec5",
+      "run/work/verifier/c2/dut.va": "bd1cfe0c11bbe3c75453fb528e3ac2e5aa72e710fa5bc9ed3bcb197ed2b1eec5",
+      "run/work/verifier/c2/tb.scs": "343facb1010562e33234671714bbb4ca5d054bc0a9ae412feff1af6fe06529dd"
+    },
+    "timeout_seconds": 120.0,
+    "timeout_source": "frozen original cases.json timeout_s",
+    "status": "completed",
+    "exit_code": 0,
+    "diagnostic": {
+      "warnings": [
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "iabstol",
+          "requested_value": 1e-15,
+          "message": "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-spec-acquisition/c2/run/work/verifier/c2/tb.scs",
+            "line": 3,
+            "column": 51
+          }
+        },
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "errpreset",
+          "requested_value": "conservative",
+          "message": "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-06, vabstol=1e-09, max_step=1e-10.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-spec-acquisition/c2/run/work/verifier/c2/tb.scs",
+            "line": 9,
+            "column": 38
+          },
+          "effective_controls": {
+            "vabstol": 1e-09,
+            "reltol": 1e-06,
+            "max_step": 1e-10
+          }
+        }
+      ]
+    },
+    "kernel_invoked": true,
+    "solution_rows": 8141
+  },
+  {
+    "task_id": "r01-spec-ideal",
+    "condition": "c0",
+    "command": [
+      "local-tool:python3.14",
+      "-B",
+      "-m",
+      "evas",
+      "simulate",
+      "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-spec-ideal/c0/run/work/verifier/c0/tb.scs",
+      "--kernel",
+      "archive:vaEVAS/worktrees/evas-r01-delivery/evas/rust_core/target/release/evas-kernel",
+      "--timeout",
+      "120.0"
+    ],
+    "elapsed_seconds": 1.0545336659997702,
+    "input_sha256": {
+      "candidate/files/dut.va": "1997a8bb8f487a5d49729b16da786361f8459fb2846b6d085cd9f9f82c6d4228",
+      "run/work/verifier/c0/dut.va": "1997a8bb8f487a5d49729b16da786361f8459fb2846b6d085cd9f9f82c6d4228",
+      "run/work/verifier/c0/tb.scs": "25abc928bc80837c99b4861d6ecb85f828ea31e2e7351873d20d7f5ffb3a9442"
+    },
+    "timeout_seconds": 120.0,
+    "timeout_source": "frozen original cases.json timeout_s",
+    "status": "completed",
+    "exit_code": 0,
+    "diagnostic": {
+      "warnings": [
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "iabstol",
+          "requested_value": 1e-15,
+          "message": "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-spec-ideal/c0/run/work/verifier/c0/tb.scs",
+            "line": 3,
+            "column": 51
+          }
+        },
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "errpreset",
+          "requested_value": "conservative",
+          "message": "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-06, vabstol=1e-09, max_step=1e-10.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-spec-ideal/c0/run/work/verifier/c0/tb.scs",
+            "line": 9,
+            "column": 35
+          },
+          "effective_controls": {
+            "vabstol": 1e-09,
+            "reltol": 1e-06,
+            "max_step": 1e-10
+          }
+        }
+      ]
+    },
+    "kernel_invoked": true,
+    "solution_rows": 9001
+  },
+  {
+    "task_id": "r01-spec-ideal",
+    "condition": "c1",
+    "command": [
+      "local-tool:python3.14",
+      "-B",
+      "-m",
+      "evas",
+      "simulate",
+      "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-spec-ideal/c1/run/work/verifier/c1/tb.scs",
+      "--kernel",
+      "archive:vaEVAS/worktrees/evas-r01-delivery/evas/rust_core/target/release/evas-kernel",
+      "--timeout",
+      "120.0"
+    ],
+    "elapsed_seconds": 0.8378197499550879,
+    "input_sha256": {
+      "candidate/files/dut.va": "1997a8bb8f487a5d49729b16da786361f8459fb2846b6d085cd9f9f82c6d4228",
+      "run/work/verifier/c1/dut.va": "1997a8bb8f487a5d49729b16da786361f8459fb2846b6d085cd9f9f82c6d4228",
+      "run/work/verifier/c1/tb.scs": "5f4b8ddb5fe3da84fed4df59ac8f80f9f2420eedb0bf97e94fc9c484bb65dc46"
+    },
+    "timeout_seconds": 120.0,
+    "timeout_source": "frozen original cases.json timeout_s",
+    "status": "completed",
+    "exit_code": 0,
+    "diagnostic": {
+      "warnings": [
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "iabstol",
+          "requested_value": 1e-15,
+          "message": "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-spec-ideal/c1/run/work/verifier/c1/tb.scs",
+            "line": 3,
+            "column": 51
+          }
+        },
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "errpreset",
+          "requested_value": "conservative",
+          "message": "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-06, vabstol=1e-09, max_step=1e-10.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-spec-ideal/c1/run/work/verifier/c1/tb.scs",
+            "line": 9,
+            "column": 39
+          },
+          "effective_controls": {
+            "vabstol": 1e-09,
+            "reltol": 1e-06,
+            "max_step": 1e-10
+          }
+        }
+      ]
+    },
+    "kernel_invoked": true,
+    "solution_rows": 10341
+  },
+  {
+    "task_id": "r01-spec-ideal",
+    "condition": "c2",
+    "command": [
+      "local-tool:python3.14",
+      "-B",
+      "-m",
+      "evas",
+      "simulate",
+      "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-spec-ideal/c2/run/work/verifier/c2/tb.scs",
+      "--kernel",
+      "archive:vaEVAS/worktrees/evas-r01-delivery/evas/rust_core/target/release/evas-kernel",
+      "--timeout",
+      "120.0"
+    ],
+    "elapsed_seconds": 0.6868004589341581,
+    "input_sha256": {
+      "candidate/files/dut.va": "1997a8bb8f487a5d49729b16da786361f8459fb2846b6d085cd9f9f82c6d4228",
+      "run/work/verifier/c2/dut.va": "1997a8bb8f487a5d49729b16da786361f8459fb2846b6d085cd9f9f82c6d4228",
+      "run/work/verifier/c2/tb.scs": "4e6ae394cef92e95c28480718c6e407dae1c20b991a741a4cd4524824721dbd9"
+    },
+    "timeout_seconds": 120.0,
+    "timeout_source": "frozen original cases.json timeout_s",
+    "status": "completed",
+    "exit_code": 0,
+    "diagnostic": {
+      "warnings": [
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "iabstol",
+          "requested_value": 1e-15,
+          "message": "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-spec-ideal/c2/run/work/verifier/c2/tb.scs",
+            "line": 3,
+            "column": 51
+          }
+        },
+        {
+          "code": "ignored_scs_option",
+          "severity": "warning",
+          "option": "errpreset",
+          "requested_value": "conservative",
+          "message": "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-06, vabstol=1e-09, max_step=1e-10.",
+          "location": {
+            "source": "archive:vaEVAS/current/runs/r01-evas-compat-20261013/spectre/r01-spec-ideal/c2/run/work/verifier/c2/tb.scs",
+            "line": 9,
+            "column": 38
+          },
+          "effective_controls": {
+            "vabstol": 1e-09,
+            "reltol": 1e-06,
+            "max_step": 1e-10
+          }
+        }
+      ]
+    },
+    "kernel_invoked": true,
+    "solution_rows": 8141
+  }
+]

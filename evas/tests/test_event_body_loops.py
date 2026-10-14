@@ -7,7 +7,7 @@ from evas import CompileError, KernelError, compile_sources, transient
 from test_affine import KERNEL, instance, model
 
 
-def compile_loop(body, declarations='genvar i; integer n; parameter integer N=3;', instances=None):
+def compile_loop(body, declarations='genvar i; real n; parameter integer N=3;', instances=None):
     return compile_sources({'event-loop.va': model(body, declarations)}, instances or [instance()])
 
 
@@ -121,7 +121,7 @@ class EventBodyLoops(unittest.TestCase):
         ):
             with self.subTest(loop=loop):
                 program = compile_loop(f'@(initial_step) n=0; @(timer(1)) {loop} V(y,r)<+n;',
-                                       'genvar i,j; integer n;')
+                                       'genvar i,j; real n;')
                 self.assertEqual(values(run(program)), [0, 0, expected, expected])
 
     def test_static_array_indices_are_substituted_before_state_lowering(self):
@@ -163,12 +163,17 @@ class EventBodyLoops(unittest.TestCase):
                 compile_loop(f'@(initial_step) n=0; @(timer(1)) {loop} V(y,r)<+n;',
                              'genvar i,j; integer n;')
 
+    def test_state_predicates_read_each_prior_iteration_and_zero_trip_stays_empty(self):
+        for count,expected in ((0,1),(2,3)):
+            program=compile_loop(f'@(initial_step) n=1; @(timer(1)) for(i=0;i<{count};i=i+1) if(n>0) n=n+1; V(y,r)<+n;', 'genvar i; integer n;')
+            self.assertEqual(values(run(program)),[1,1,expected,expected])
+
     def test_event_body_restrictions_survive_loop_admission(self):
         for body in (
             'V(y,r)<+1;',
             'n=idt(V(u,r),0);',
             '@(timer(2)) n=1;',
-            'if(n>0) n=1;',
+            'if(n*n>0) n=1;',
             'if(idt(V(u,r),0)>0) n=1;',
         ):
             with self.subTest(body=body), self.assertRaises(CompileError):
@@ -176,7 +181,7 @@ class EventBodyLoops(unittest.TestCase):
                   @(timer(1)) for(i=0;i<2;i=i+1) {body} V(y,r)<+n;''')
 
     def test_empty_loop_cannot_hide_unsupported_event_expressions(self):
-        for body in ('n=idt(V(u,r),0);', 'if(n>0) n=1;', 'if(idt(V(u,r),0)>0) n=1;'):
+        for body in ('n=idt(V(u,r),0);', 'if(n*n>0) n=1;', 'if(idt(V(u,r),0)>0) n=1;'):
             with self.subTest(body=body), self.assertRaises(CompileError):
                 compile_loop(f'''@(initial_step) n=0;
                   @(timer(1)) for(i=0;i<0;i=i+1) {body} V(y,r)<+n;''')
@@ -221,11 +226,11 @@ class EventBodyLoops(unittest.TestCase):
                              'genvar i; integer n; electrical z;')
 
     def test_runtime_integer_overflow_and_same_time_conflicts_remain_errors(self):
-        for body, diagnostic in (
-            ('@(timer(1)) for(i=0;i<10;i=i+1) n=10*n+9;', 'integer'),
-            ('@(timer(1)) for(i=0;i<2;i=i+1) n=i; @(timer(1)) n=7;', 'event_conflict'),
+        for body, diagnostic, initial in (
+            ('@(timer(1)) for(i=0;i<2;i=i+1) n=n+1;', 'integer', 2147483647),
+            ('@(timer(1)) for(i=0;i<2;i=i+1) n=i; @(timer(1)) n=7;', 'event_conflict', 0),
         ):
-            program = compile_loop(f'@(initial_step) n=0; {body} V(y,r)<+n;')
+            program = compile_loop(f'@(initial_step) n={initial}; {body} V(y,r)<+n;', 'genvar i; integer n;')
             with self.subTest(body=body), self.assertRaisesRegex(KernelError, diagnostic):
                 run(program)
 

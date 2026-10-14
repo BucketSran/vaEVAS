@@ -1,0 +1,60 @@
+{
+  "id": "n08c/n08c-transres-positive-forced",
+  "source_sha256": "a0b2b14ef90f7fecb1e0e0cf635b32bd44c69c13dd8c930f53f695476477235e",
+  "controls": {
+    "instances": [
+      {
+        "name": "Xd",
+        "module": "endpoint_ns",
+        "connections": {
+          "u": "u",
+          "y": "y"
+        }
+      }
+    ],
+    "pwl": {
+      "u": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          3e-08,
+          0.0
+        ],
+        [
+          3.02e-08,
+          1.8
+        ],
+        [
+          4e-08,
+          1.8
+        ]
+      ]
+    },
+    "output_times": [
+      0.0,
+      3e-08,
+      3.01e-08,
+      3.02e-08,
+      4e-08
+    ],
+    "stop": 4e-08,
+    "max_step": 1e-10,
+    "vabstol": 1e-12,
+    "reltol": 1e-09,
+    "strobetimes": [
+      0.0,
+      3e-08,
+      3.01e-08,
+      3.02e-08,
+      4e-08
+    ],
+    "timeout": 120
+  },
+  "kernel_sha256": "867a112262b1311f07f0a612a594b471ad6c7b3c1a3bea9e207f7a06ea8cece4",
+  "program_sha256": "d407f274e410ad4ac1cee2e4bad7996e3f3694d8fe384591508550f593a7d70b",
+  "status": "completed",
+  "response_sha256": "f8eff61515e9252e73d7ec4c40f1279b7ea74edf08d47f8d3a2cd8856dbc9fe3",
+  "elapsed_seconds": 0.16501925000920892
+}

@@ -1,0 +1,322 @@
+{
+  "portability_advisories": {
+    "schema_version": 2,
+    "record_limit": 128,
+    "records": [
+      {
+        "code": "timer_observation_boundary",
+        "nonblocking": true,
+        "message": "Observation is inside or within one binary64 neighbor of a committed timer deadline enclosure. A backend may trigger elsewhere within the model's timing tolerance. Check samples and downstream history against their budgets; this notice neither proves a mismatch nor accepts a changed final result.",
+        "event_record": 1,
+        "event": 0,
+        "trigger": 0,
+        "origin": "initial_display_transition.va:6:9 (active)",
+        "query_source": "output_times",
+        "query_index": 0,
+        "query_time_s": 0.0,
+        "time_bounds_s": [
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "code": "timer_observation_boundary",
+        "nonblocking": true,
+        "message": "Observation is inside or within one binary64 neighbor of a committed timer deadline enclosure. A backend may trigger elsewhere within the model's timing tolerance. Check samples and downstream history against their budgets; this notice neither proves a mismatch nor accepts a changed final result.",
+        "event_record": 2,
+        "event": 2,
+        "trigger": 0,
+        "origin": "initial_display_transition.va:16:1 (meter)",
+        "query_source": "output_times",
+        "query_index": 0,
+        "query_time_s": 0.0,
+        "time_bounds_s": [
+          0.0,
+          0.0
+        ]
+      }
+    ],
+    "model_records": [],
+    "dropped_records": 0,
+    "truncated": false
+  },
+  "observation_evidence": {
+    "schema_version": 1,
+    "nodes": [
+      "0",
+      "u",
+      "y"
+    ],
+    "effective_controls": {
+      "absolute_V": 9.313225746154785e-10,
+      "relative": 0.0,
+      "stop_s": 1.0,
+      "max_step_s": 0.03125,
+      "max_step_applied": true
+    },
+    "sample_origins": [
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame"
+    ],
+    "initial_settled": true,
+    "voltage_bounds_V": [
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ]
+    ]
+  },
+  "engine": "evas-events-0.17.0",
+  "schema_version": 21,
+  "nodes": [
+    "0",
+    "u",
+    "y"
+  ],
+  "solutions": [
+    {
+      "voltages": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    },
+    {
+      "voltages": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    },
+    {
+      "voltages": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    },
+    {
+      "voltages": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    },
+    {
+      "voltages": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    },
+    {
+      "voltages": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    }
+  ],
+  "transient": {
+    "times": [
+      0.0,
+      0.125,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "state_names": [
+      "active:a",
+      "meter:n"
+    ],
+    "states": [
+      [
+        1.0,
+        3.0
+      ],
+      [
+        1.0,
+        3.0
+      ],
+      [
+        1.0,
+        3.0
+      ],
+      [
+        1.0,
+        3.0
+      ],
+      [
+        1.0,
+        3.0
+      ],
+      [
+        1.0,
+        3.0
+      ]
+    ],
+    "events": [
+      {
+        "time": 0.0,
+        "event": 1,
+        "origin": "initial_display_transition.va:13:9 (meter)",
+        "kind": "initial_step",
+        "before": [
+          0.0,
+          0.0
+        ],
+        "after": [
+          0.0,
+          3.0
+        ]
+      },
+      {
+        "time": 0.0,
+        "event": 0,
+        "origin": "initial_display_transition.va:6:9 (active)",
+        "kind": "timer",
+        "before": [
+          0.0,
+          3.0
+        ],
+        "after": [
+          1.0,
+          3.0
+        ]
+      },
+      {
+        "time": 0.0,
+        "event": 2,
+        "origin": "initial_display_transition.va:16:1 (meter)",
+        "kind": "timer",
+        "before": [
+          0.0,
+          3.0
+        ],
+        "after": [
+          1.0,
+          3.0
+        ]
+      }
+    ],
+    "display_records": [
+      {
+        "time": 0.0,
+        "event": 1,
+        "origin": "initial_display_transition.va:14:5 (meter)",
+        "text": "before=0"
+      },
+      {
+        "time": 0.0,
+        "event": 1,
+        "origin": "initial_display_transition.va:14:36 (meter)",
+        "text": "after=3"
+      },
+      {
+        "time": 0.0,
+        "event": 2,
+        "origin": "initial_display_transition.va:16:17 (meter)",
+        "text": "timer=3"
+      }
+    ],
+    "accepted_steps": 32,
+    "discarded_trials": 0
+  }
+}

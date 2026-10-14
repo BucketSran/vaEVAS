@@ -73,7 +73,7 @@ class EventOrContracts(unittest.TestCase):
             for order in itertools.permutations(blocks):
                 with self.subTest(simultaneous=simultaneous, order=order):
                     text = model("@(initial_step) begin a=0; b=0; c=0; end "
-                                 + "".join(order) + " V(y,r)<+a+10*b+100*c;",
+                                 + "".join(order) + " V(y,r)<+a+10.0*b+100.0*c;",
                                  "integer a,b,c;")
                     result = execute(text, times=[0,.25,.5,.75,1])
                     y = result['nodes'].index('y')

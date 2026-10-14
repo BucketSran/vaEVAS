@@ -171,7 +171,7 @@ class EventAccuracy(unittest.TestCase):
         source=model('''@(initial_step) begin n=0; m=0; end
           @(cross(V(u,r)-0.5,1,1e-12,1e-9)) n=n+1;
           @(cross(V(u,r)-0.5000000000000001,1,1e-12,1e-9)) m=m+1;
-          V(y,r)<+n+m;''','integer n,m;')
+          V(y,r)<+1.0*n+m;''','integer n,m;')
         result = execute_event(source,sources={'u':[[0,.1],[1,.9]]},
                                times=[0,1],stop=1,max_step=1)
         # The same two inputs previously lost their exact provenance when
@@ -194,7 +194,7 @@ class EventAccuracy(unittest.TestCase):
           V(z,r)<+V(u,r);
           @(cross(V(z,r)-0.5,1)) n=n+1;
           @(cross(V(z,r)-0.5000000000000001,1)) m=m+1;
-          V(y,r)<+n+m;''','integer n,m; electrical z;')
+          V(y,r)<+1.0*n+m;''','integer n,m; electrical z;')
         with self.assertRaises(KernelError) as caught:
             execute_event(source,sources={'u':[[0,.1],[1,.9]]},
                           times=[0,1],stop=1,max_step=1)
@@ -234,5 +234,8 @@ class EventAccuracy(unittest.TestCase):
                                  instance('b','constraint',dict(u='u',y='w',r='0'),dict(offset=1e-14))])
         with self.assertRaises(KernelError) as caught:
             transient(program,{'u':[[0,0],[1,1]]},[0,1],stop=1,max_step=1,kernel=KERNEL)
-        self.assertEqual(caught.exception.detail['kind'],'event_resolution')
+        # A direct-source guard no longer projects unrelated output equations.
+        # The full-circuit observation certificate must still refuse the
+        # inconsistent redundant constraint before returning a root or trace.
+        self.assertEqual(caught.exception.detail['kind'],'event_accuracy')
         self.assertIn('redundant',caught.exception.detail['message'])

@@ -1,0 +1,101 @@
+[
+  {
+    "argv": [
+      "taskset",
+      "-c",
+      "0",
+      "prlimit",
+      "--as=4294967296",
+      "--fsize=33554432",
+      "--",
+      "/bin/csh",
+      "-f",
+      "run.csh"
+    ],
+    "returncode": 0,
+    "timeout": false,
+    "status": "completed",
+    "cleanup": {
+      "signals": [
+        "SIGTERM",
+        "SIGKILL"
+      ],
+      "errors": [],
+      "complete": true
+    },
+    "elapsed_seconds": 15.818902615457773,
+    "completed_utc": "2026-10-14T00:49:09Z",
+    "log": "stdout.log",
+    "log_sha256": "ec4b24d0b4cb435f886f2c76f09da4f2a959dc609c8c062e371d57cbfb1145ec",
+    "label": "root-endpoint_rise_after_cascade",
+    "source_sha256": "ebec8fc57b2bf414d3e2ebe0b46313237b018a184eecceb6b5971d738f5f11eb",
+    "deck_sha256": "d1e4ba36e1eda5e906e45876eac4c35d88ea47876500044ff3b8326ba5e0db4f",
+    "directory_bytes": 434733
+  },
+  {
+    "argv": [
+      "taskset",
+      "-c",
+      "0",
+      "prlimit",
+      "--as=4294967296",
+      "--fsize=33554432",
+      "--",
+      "/bin/csh",
+      "-f",
+      "run.csh"
+    ],
+    "returncode": 0,
+    "timeout": false,
+    "status": "completed",
+    "cleanup": {
+      "signals": [
+        "SIGTERM",
+        "SIGKILL"
+      ],
+      "errors": [],
+      "complete": true
+    },
+    "elapsed_seconds": 15.943643948063254,
+    "completed_utc": "2026-10-14T00:49:25Z",
+    "log": "stdout.log",
+    "log_sha256": "024ec7eb9f4066988f122e97f1554d9030de26da000573dd3ff3cfc128d9c076",
+    "label": "root-endpoint_fall_before_cascade",
+    "source_sha256": "ed9a968a5ca8201039309ff07efd854215c4c552211d8fb49355d502b46ccabd",
+    "deck_sha256": "cc8ece4df807ab18480460c73fc1a184e9946e944858d48736154e36f346a679",
+    "directory_bytes": 429652
+  },
+  {
+    "argv": [
+      "taskset",
+      "-c",
+      "0",
+      "prlimit",
+      "--as=4294967296",
+      "--fsize=33554432",
+      "--",
+      "/bin/csh",
+      "-f",
+      "run.csh"
+    ],
+    "returncode": 0,
+    "timeout": false,
+    "status": "completed",
+    "cleanup": {
+      "signals": [
+        "SIGTERM",
+        "SIGKILL"
+      ],
+      "errors": [],
+      "complete": true
+    },
+    "elapsed_seconds": 15.705824691802263,
+    "completed_utc": "2026-10-14T00:49:40Z",
+    "log": "stdout.log",
+    "log_sha256": "166d584a0e1297d6f1ab8de3680f74cb4382a1996a224c1ab70da5abee536334",
+    "label": "root-endpoint_rise_separated",
+    "source_sha256": "cc8b7f601b8538ce7869477196a4211fddb250cbe737a987f0ee31c0c7369522",
+    "deck_sha256": "d1e4ba36e1eda5e906e45876eac4c35d88ea47876500044ff3b8326ba5e0db4f",
+    "directory_bytes": 415023
+  }
+]

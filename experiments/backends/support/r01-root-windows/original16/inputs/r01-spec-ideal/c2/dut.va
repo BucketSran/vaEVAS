@@ -1,0 +1,38 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Ideal edge-driven track/hold: instantaneous acquisition, exact freeze, no droop.
+// The stored value changes only at control crossings; while track is high the
+// output is an ideal buffer of vin. Contrast with ../core/track_hold.va.
+module r01_track_hold_ideal(vin, track, rst, vout);
+    input vin, track, rst;
+    output vout;
+    electrical vin, track, rst, vout;
+
+    parameter real vth = 0.9;
+    parameter real vinit = 0.9;
+
+    real held;
+
+    analog begin
+        // No fictional sample at startup, even when initial track is low.
+        @(initial_step) held = vinit;
+        // A falling track edge freezes the input present at the crossing.
+        // No aperture delay: the sample is the crossing-time value.
+        @(cross(V(track)-vth, -1))
+            held = V(vin);
+        // Releasing reset directly into hold freezes the reset value,
+        // not a sample from before the reset.
+        @(cross(V(rst)-vth, -1)) begin
+            if (V(track) <= vth)
+                held = vinit;
+        end
+
+        if (V(rst) > vth)
+            V(vout) <+ vinit;
+        else if (V(track) > vth)
+            V(vout) <+ V(vin);
+        else
+            V(vout) <+ held;
+    end
+endmodule

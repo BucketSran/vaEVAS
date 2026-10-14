@@ -1,0 +1,18 @@
+`include "disciplines.vams"
+module active(u,y,r);
+    input u; output y; inout r; electrical u,y,r; real a;
+    analog begin
+        @(initial_step) a=0;
+        @(timer(0,0,0)) a=1;
+        V(y,r)<+transition(a,0.125,0.5,0.5);
+    end
+endmodule
+module meter(u,y,r);
+    input u,y; inout r; electrical u,y,r; integer n;
+    analog begin
+        @(initial_step) begin
+    $display("before=%d", n); n=3; $display("after=%d", n);
+end
+@(timer(0,0,0)) $display("timer=%d",n);
+    end
+endmodule

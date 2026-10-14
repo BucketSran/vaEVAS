@@ -1,0 +1,200 @@
+[
+  {
+    "argv": [
+      "taskset",
+      "-c",
+      "0",
+      "prlimit",
+      "--as=4294967296",
+      "--fsize=33554432",
+      "--",
+      "/bin/csh",
+      "-f",
+      "run.csh"
+    ],
+    "returncode": 0,
+    "timeout": false,
+    "status": "completed",
+    "cleanup": {
+      "signals": [
+        "SIGTERM",
+        "SIGKILL"
+      ],
+      "errors": [],
+      "complete": true
+    },
+    "elapsed_seconds": 15.348007259890437,
+    "completed_utc": "2026-10-14T00:28:26Z",
+    "log": "stdout.log",
+    "log_sha256": "5124c87607af70aeb6a455287ef847e41d9f77209c6cf961be7d2f22123c251f",
+    "label": "root-third_rise_integral",
+    "source_sha256": "effcf8bed0a691bd2c567145826c67833073e960957d59d0da54c96b01cf9974",
+    "deck_sha256": "0d8c43b19c1677fffc76b82cfa5bc2650668297be7d937a2e19e5ba7650659c0",
+    "directory_bytes": 297362
+  },
+  {
+    "argv": [
+      "taskset",
+      "-c",
+      "0",
+      "prlimit",
+      "--as=4294967296",
+      "--fsize=33554432",
+      "--",
+      "/bin/csh",
+      "-f",
+      "run.csh"
+    ],
+    "returncode": 0,
+    "timeout": false,
+    "status": "completed",
+    "cleanup": {
+      "signals": [
+        "SIGTERM",
+        "SIGKILL"
+      ],
+      "errors": [],
+      "complete": true
+    },
+    "elapsed_seconds": 16.18769235908985,
+    "completed_utc": "2026-10-14T00:28:42Z",
+    "log": "stdout.log",
+    "log_sha256": "771d01a89ffc09ff234f870d876c0b6eed6b906363055606f17f2d0d264fc6b4",
+    "label": "root-endpoint_rise_after_cascade",
+    "source_sha256": "ebec8fc57b2bf414d3e2ebe0b46313237b018a184eecceb6b5971d738f5f11eb",
+    "deck_sha256": "76c10d3fd5c1c55c15d3dd0711c3472c9618e4f78536dd9ead93dfa53aad0e6a",
+    "directory_bytes": 357093
+  },
+  {
+    "argv": [
+      "taskset",
+      "-c",
+      "0",
+      "prlimit",
+      "--as=4294967296",
+      "--fsize=33554432",
+      "--",
+      "/bin/csh",
+      "-f",
+      "run.csh"
+    ],
+    "returncode": 0,
+    "timeout": false,
+    "status": "completed",
+    "cleanup": {
+      "signals": [
+        "SIGTERM",
+        "SIGKILL"
+      ],
+      "errors": [],
+      "complete": true
+    },
+    "elapsed_seconds": 15.940489327535033,
+    "completed_utc": "2026-10-14T00:28:58Z",
+    "log": "stdout.log",
+    "log_sha256": "a136406e3ab90a522c00d73e99e07cabd162090ec6e77ae86dbaf338e0a557e1",
+    "label": "root-endpoint_fall_before_cascade",
+    "source_sha256": "ed9a968a5ca8201039309ff07efd854215c4c552211d8fb49355d502b46ccabd",
+    "deck_sha256": "54e8dc6753ee7e8c4586a8ac02fd841cba6e3662891aefdec19df27f545fe3ad",
+    "directory_bytes": 352859
+  },
+  {
+    "argv": [
+      "taskset",
+      "-c",
+      "0",
+      "prlimit",
+      "--as=4294967296",
+      "--fsize=33554432",
+      "--",
+      "/bin/csh",
+      "-f",
+      "run.csh"
+    ],
+    "returncode": 0,
+    "timeout": false,
+    "status": "completed",
+    "cleanup": {
+      "signals": [
+        "SIGTERM",
+        "SIGKILL"
+      ],
+      "errors": [],
+      "complete": true
+    },
+    "elapsed_seconds": 16.337168239057064,
+    "completed_utc": "2026-10-14T00:29:14Z",
+    "log": "stdout.log",
+    "log_sha256": "8dc747b8c7c90460472352e1a25a474d331fe50d674a3d39130824f02ce7f487",
+    "label": "root-endpoint_rise_separated",
+    "source_sha256": "cc8b7f601b8538ce7869477196a4211fddb250cbe737a987f0ee31c0c7369522",
+    "deck_sha256": "76c10d3fd5c1c55c15d3dd0711c3472c9618e4f78536dd9ead93dfa53aad0e6a",
+    "directory_bytes": 352537
+  },
+  {
+    "argv": [
+      "taskset",
+      "-c",
+      "0",
+      "prlimit",
+      "--as=4294967296",
+      "--fsize=33554432",
+      "--",
+      "/bin/csh",
+      "-f",
+      "run.csh"
+    ],
+    "returncode": 0,
+    "timeout": false,
+    "status": "completed",
+    "cleanup": {
+      "signals": [
+        "SIGTERM",
+        "SIGKILL"
+      ],
+      "errors": [],
+      "complete": true
+    },
+    "elapsed_seconds": 16.63282346725464,
+    "completed_utc": "2026-10-14T00:29:31Z",
+    "log": "stdout.log",
+    "log_sha256": "cdc020e2c1d2a7d284dfdbd11aeb1c3efe069df7e1d34004d768c1d8d5e444d0",
+    "label": "root-third_fall_filter",
+    "source_sha256": "6e12cbf357bfba46a44b92e48ead6d2c70cb732a65527548d5332176fa7cdf40",
+    "deck_sha256": "d62051380f7efca13da591f182a76f1b6bbe7047e4679f3c2ddfc70171ebdd12",
+    "directory_bytes": 468366
+  },
+  {
+    "argv": [
+      "taskset",
+      "-c",
+      "0",
+      "prlimit",
+      "--as=4294967296",
+      "--fsize=33554432",
+      "--",
+      "/bin/csh",
+      "-f",
+      "run.csh"
+    ],
+    "returncode": 0,
+    "timeout": false,
+    "status": "completed",
+    "cleanup": {
+      "signals": [
+        "SIGTERM",
+        "SIGKILL"
+      ],
+      "errors": [],
+      "complete": true
+    },
+    "elapsed_seconds": 9.294109240174294,
+    "completed_utc": "2026-10-14T00:29:40Z",
+    "log": "stdout.log",
+    "log_sha256": "1a9016fb5ce0557f45bcd73069992eac741c244f351cd8d1bd0147f78420606d",
+    "label": "root-endpoint_highgain_safety",
+    "source_sha256": "ff5df389d123471db743641e9ae0a5cf5450b0735e42fc6744905ea4032c5fb7",
+    "deck_sha256": "76c10d3fd5c1c55c15d3dd0711c3472c9618e4f78536dd9ead93dfa53aad0e6a",
+    "directory_bytes": 253651
+  }
+]

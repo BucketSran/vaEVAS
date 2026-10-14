@@ -110,11 +110,13 @@ class ConditionalEvents(unittest.TestCase):
         self.assertEqual(states(execute(text)), [0,2,2])  # q=.5q+1
         self.assertEqual([s['voltages'][-1] for s in execute(text)['solutions']], [0,2,2])
 
-    def test_unselected_bad_stateful_branches_still_reject(self):
+    def test_unselected_state_predicates_leave_selected_value_unchanged(self):
         for expression in ['q', '0*q', 'q-q', '1e-200*(1e-200*q)']:
             text = source(f'if (1>0) q=2; else if ({expression}>0) q=3;')
-            with self.subTest(expression=expression), self.assertRaises(CompileError):
-                execute(text)
+            with self.subTest(expression=expression):
+                self.assertEqual(states(execute(text)), [0, 2, 2])
+
+    def test_unselected_state_dependent_voltage_branches_still_reject(self):
         for expression in ['V(y,r)', '0*V(y,r)', 'V(y,y)', 'V(y,r)-V(y,r)', '1e-200*(1e-200*V(y,r))']:
             text = source(f'if (1>0) q=2; else if ({expression}>0) q=3;')
             with self.subTest(expression=expression), self.assertRaisesRegex(KernelError,'unsupported_condition'):
@@ -148,17 +150,28 @@ class ConditionalEvents(unittest.TestCase):
             self.assertEqual((row['ya'],row['yb']), (.5,-1))
 
     def test_unsupported_syntax_and_static_invalid_arm(self):
-        for body in ['if (V(u,r)==0.5) q=1;', 'if (V(u,r)!=0.5) q=1;',
-                     'if (V(u,r)>0.5 && V(u,r)<1) q=1;',
-                     'if (1>0) q=2; else missing=1;', 'if (1>0) q=2; else V(y,r)<+2;',
+        for body in ['if (1>0) q=2; else missing=1;', 'if (1>0) q=2; else V(y,r)<+2;',
                      'if (1>0) q=2; else q=idt(V(u,r),0);']:
             with self.subTest(body=body), self.assertRaises(CompileError):
                 execute(source(body))
-        for trigger in ['initial_step']:
-            with self.subTest(trigger=trigger), self.assertRaises(CompileError):
-                execute(source('if (V(u,r)>0.5) q=1;', trigger=trigger))
         with self.assertRaisesRegex(KernelError,'unsupported_transient'):
             execute(source('if (V(u,r)*V(u,r)>0.5) q=1;'))
+
+    def test_initial_condition_uses_initial_input_and_preserves_missing_else(self):
+        text = source('if (V(u,r)>0.5) q=1;', trigger='initial_step')
+        for points, expected in [([[0,0],[1,1]], [0,0,0]),
+                                 ([[0,1],[1,0]], [1,1,1])]:
+            with self.subTest(points=points):
+                result = execute(text, points=points)
+                self.assertEqual(states(result), expected)
+                self.assertEqual(result['transient']['events'], [])
+
+    def test_equality_and_logic_without_else_preserve_unselected_state(self):
+        for predicate, expected in [('V(u,r)==0.5',[0,1,1]),
+                                    ('V(u,r)!=0.5',[0,0,1]),
+                                    ('V(u,r)>0.5 && V(u,r)<1',[0,0,0])]:
+            with self.subTest(predicate=predicate):
+                self.assertEqual(states(execute(source(f'if({predicate}) q=1;'))),expected)
 
     def test_conditional_target_transition_has_independent_edge_values(self):
         text = source('if (V(u,r)>0.25) q=2; else q=0;',
@@ -188,19 +201,30 @@ class ConditionalEvents(unittest.TestCase):
             self.assertNotEqual(run.returncode, 0)
             return json.loads(run.stderr)['kind']
         for mutation, kind in [('relation','invalid_request'), ('missing','invalid_request'),
-                               ('assignments','invalid_request'), ('state','unsupported_condition'),
+                               ('assignments','invalid_request'), ('state_index','invalid_ir'),
                                ('index','invalid_ir'), ('owner','invalid_ir'), ('extra','invalid_request')]:
             program = copy.deepcopy(p)
             cond = program['events'][0]['body'][0]
             if mutation=='relation': cond['relation']='eq'
             elif mutation=='missing': del cond['else_body']
             elif mutation=='assignments': program['events'][0]['assignments']=program['events'][0].pop('body')
-            elif mutation=='state': cond['left']={'op':'state','state':0}
+            elif mutation=='state_index': cond['left']={'op':'state','state':100}
             elif mutation=='index': cond['else_body'][0]['state']=100
             elif mutation=='owner': cond['origin']['instance']='elsewhere'
             else: cond['then_body'][0]['unknown']=1
             with self.subTest(mutation=mutation):
                 self.assertEqual(request(program), kind)
+
+    def test_raw_ir_state_predicate_reads_accepted_state_at_each_event(self):
+        program = compile_sources({'raw.va': source('if (V(u,r)>0.5) q=2; else q=3;')}, [instance()]).to_dict()
+        program['events'][0]['body'][0]['left'] = {'op':'state','state':0}
+        payload = dict(program=program, driven=['u'], samples=[], transient=dict(
+            pwl=[[[0,0],[1,1]]], output_times=[0,1], stop=1, max_step=2))
+        run = subprocess.run([str(KERNEL)], input=json.dumps(payload), capture_output=True, text=True)
+        self.assertEqual(run.returncode, 0, run.stderr)
+        result = json.loads(run.stdout)
+        self.assertEqual(result['transient']['states'], [[0],[2]])
+        self.assertEqual([event['after'] for event in result['transient']['events']], [[3],[2]])
 
 
 if __name__ == '__main__':

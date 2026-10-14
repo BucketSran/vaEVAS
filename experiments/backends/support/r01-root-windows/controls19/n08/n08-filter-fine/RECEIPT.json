@@ -1,0 +1,60 @@
+{
+  "id": "n08/n08-filter-fine",
+  "source_sha256": "f2252f56bbec1f05a4461c8b22cf32be643af3e91ef556422171eaa9071f7cd0",
+  "controls": {
+    "instances": [
+      {
+        "name": "dut",
+        "module": "m",
+        "connections": {
+          "u": "u",
+          "y": "y"
+        }
+      }
+    ],
+    "pwl": {
+      "u": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    "output_times": [
+      0.0,
+      0.125,
+      0.25,
+      0.375,
+      0.5,
+      0.625,
+      0.75,
+      0.875,
+      1.0
+    ],
+    "stop": 1,
+    "max_step": 0.001,
+    "vabstol": 1e-11,
+    "reltol": 1e-09,
+    "strobetimes": [
+      0.0,
+      0.125,
+      0.25,
+      0.375,
+      0.5,
+      0.625,
+      0.75,
+      0.875,
+      1.0
+    ],
+    "timeout": 120
+  },
+  "kernel_sha256": "867a112262b1311f07f0a612a594b471ad6c7b3c1a3bea9e207f7a06ea8cece4",
+  "program_sha256": "638e4387c0e137ddc02b34f63ea1279659f922cae775b10caef09e097b7ea31d",
+  "status": "completed",
+  "response_sha256": "582f0f62d0efcf29353e0f992eaafd88ba1b88efa9d5dcf2a203285a1063ca5c",
+  "elapsed_seconds": 0.420241542160511
+}

@@ -1,0 +1,6 @@
+simulator lang=spectre
+ahdl_include "dut.va"
+dut (y 0) m
+simulatorOptions options precision="%.17g" reltol=1.0000000000000001e-09 vabstol=9.9999999999999994e-12 iabstol=1.0000000000000001e-15
+tran tran stop=0.625 maxstep=0.0050000000000000001 method=traponly errpreset=conservative compression=no
+save y

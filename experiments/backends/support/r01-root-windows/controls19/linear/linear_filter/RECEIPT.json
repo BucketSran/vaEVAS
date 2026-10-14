@@ -1,0 +1,61 @@
+{
+  "id": "linear/linear_filter",
+  "source_sha256": "dd2f08d7db6da7354280f4591a79ab9fc458a05b9dc8da022bcc6565d3c93694",
+  "controls": {
+    "source_file": "dut.va",
+    "instances": [
+      {
+        "name": "Xdut",
+        "module": "m",
+        "connections": {
+          "u": "u",
+          "y": "y",
+          "r": "0"
+        }
+      }
+    ],
+    "pwl": {
+      "u": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    "output_times": [
+      0,
+      0.25,
+      0.5,
+      0.75,
+      1
+    ],
+    "stop": 1,
+    "max_step": 3.0517578125e-05,
+    "vabstol": 1e-12,
+    "reltol": 1e-10,
+    "strobetimes": [
+      0,
+      0.25,
+      0.5,
+      0.75,
+      1
+    ],
+    "timeout": 120
+  },
+  "kernel_sha256": "867a112262b1311f07f0a612a594b471ad6c7b3c1a3bea9e207f7a06ea8cece4",
+  "program_sha256": "b0a3bf230a88d1b762fe15865180f915460fddcc40e5034dc3a45b95bb8d824a",
+  "status": "rejected",
+  "exception": {
+    "type": "KernelError",
+    "message": "unsupported_operator: selected continuous mode contains no integral network",
+    "detail": {
+      "kind": "unsupported_operator",
+      "message": "selected continuous mode contains no integral network"
+    }
+  },
+  "elapsed_seconds": 0.04403845896013081
+}

@@ -1,0 +1,992 @@
+{
+  "identity": {
+    "kernel": "archive:vaEVAS/worktrees/evas-r01-delivery/evas/rust_core/target/debug/evas-kernel",
+    "sha256": "507ca273777ad46e28ac4acdd7182b61143490511046a8012e9ad581882a2ccc"
+  },
+  "records": [
+    {
+      "name": "linear_endpoint_False",
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r;  analog begin V(y,r)<+idt((3*V(u,r)>1)?1e10:0,0); end endmodule",
+      "pwl": {
+        "u": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.33333333333333337
+          ]
+        ]
+      },
+      "output_times": [
+        0.0,
+        0.5,
+        1.0
+      ],
+      "stop": 1.0,
+      "max_step": 0.125,
+      "vabstol": 1e-09,
+      "reltol": 1e-06,
+      "timeout": 20,
+      "program": {
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "contributions": [
+          {
+            "branch": {
+              "instance": "dut",
+              "local_positive": "r",
+              "local_negative": "y",
+              "kind": "voltage"
+            },
+            "positive": 0,
+            "negative": 2,
+            "rhs": {
+              "op": "multiply",
+              "left": {
+                "constant": -1.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "right": {
+                "operator": 0,
+                "op": "operator"
+              }
+            },
+            "origin": {
+              "source": "linear_endpoint_False.va",
+              "line": 2,
+              "column": 78,
+              "instance": "dut",
+              "expansion": []
+            }
+          }
+        ],
+        "states": [],
+        "events": [],
+        "operators": [
+          {
+            "input": {
+              "relation": "gt",
+              "left": {
+                "op": "multiply",
+                "left": {
+                  "constant": 3.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "right": {
+                  "constant": 0.0,
+                  "terms": [
+                    {
+                      "node": 0,
+                      "coefficient": -1.0
+                    },
+                    {
+                      "node": 1,
+                      "coefficient": 1.0
+                    }
+                  ],
+                  "op": "affine"
+                }
+              },
+              "right": {
+                "constant": 1.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "then_value": {
+                "constant": 10000000000.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "else_value": {
+                "constant": 0.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "origin": {
+                "source": "linear_endpoint_False.va",
+                "line": 2,
+                "column": 102,
+                "instance": "dut",
+                "expansion": []
+              },
+              "op": "select"
+            },
+            "ic": 0.0,
+            "origin": {
+              "source": "linear_endpoint_False.va",
+              "line": 2,
+              "column": 86,
+              "instance": "dut",
+              "expansion": []
+            },
+            "reset": null,
+            "kind": "idt"
+          }
+        ],
+        "schema_version": 21,
+        "step_bounds": []
+      },
+      "exception": {
+        "type": "KernelError",
+        "message": "condition_precision: uncertain nested predicate segment endpoint",
+        "detail": {
+          "kind": "condition_precision",
+          "message": "uncertain nested predicate segment endpoint"
+        }
+      },
+      "independent_expected": {
+        "fraction": "10000000000/9007199254740993",
+        "value": 1.1102230246251563e-06,
+        "derivation": "u(t)=u_end*t; root=1/(3*u_end); integral=1e10*(1-root)"
+      }
+    },
+    {
+      "name": "linear_endpoint_True",
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r;  analog begin V(y,r)<+idt(((3*V(u,r)>1?1:0)>0.5)?1e10:0,0); end endmodule",
+      "pwl": {
+        "u": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.33333333333333337
+          ]
+        ]
+      },
+      "output_times": [
+        0.0,
+        0.5,
+        1.0
+      ],
+      "stop": 1.0,
+      "max_step": 0.125,
+      "vabstol": 1e-09,
+      "reltol": 1e-06,
+      "timeout": 20,
+      "program": {
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "contributions": [
+          {
+            "branch": {
+              "instance": "dut",
+              "local_positive": "r",
+              "local_negative": "y",
+              "kind": "voltage"
+            },
+            "positive": 0,
+            "negative": 2,
+            "rhs": {
+              "op": "multiply",
+              "left": {
+                "constant": -1.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "right": {
+                "operator": 0,
+                "op": "operator"
+              }
+            },
+            "origin": {
+              "source": "linear_endpoint_True.va",
+              "line": 2,
+              "column": 78,
+              "instance": "dut",
+              "expansion": []
+            }
+          }
+        ],
+        "states": [],
+        "events": [],
+        "operators": [
+          {
+            "input": {
+              "relation": "gt",
+              "left": {
+                "relation": "gt",
+                "left": {
+                  "op": "multiply",
+                  "left": {
+                    "constant": 3.0,
+                    "terms": [],
+                    "op": "affine"
+                  },
+                  "right": {
+                    "constant": 0.0,
+                    "terms": [
+                      {
+                        "node": 0,
+                        "coefficient": -1.0
+                      },
+                      {
+                        "node": 1,
+                        "coefficient": 1.0
+                      }
+                    ],
+                    "op": "affine"
+                  }
+                },
+                "right": {
+                  "constant": 1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "then_value": {
+                  "constant": 1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "else_value": {
+                  "constant": 0.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "origin": {
+                  "source": "linear_endpoint_True.va",
+                  "line": 2,
+                  "column": 102,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "op": "select"
+              },
+              "right": {
+                "constant": 0.5,
+                "terms": [],
+                "op": "affine"
+              },
+              "then_value": {
+                "constant": 10000000000.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "else_value": {
+                "constant": 0.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "origin": {
+                "source": "linear_endpoint_True.va",
+                "line": 2,
+                "column": 112,
+                "instance": "dut",
+                "expansion": []
+              },
+              "op": "select"
+            },
+            "ic": 0.0,
+            "origin": {
+              "source": "linear_endpoint_True.va",
+              "line": 2,
+              "column": 86,
+              "instance": "dut",
+              "expansion": []
+            },
+            "reset": null,
+            "kind": "idt"
+          }
+        ],
+        "schema_version": 21,
+        "step_bounds": []
+      },
+      "exception": {
+        "type": "KernelError",
+        "message": "condition_precision: uncertain nested predicate segment endpoint",
+        "detail": {
+          "kind": "condition_precision",
+          "message": "uncertain nested predicate segment endpoint"
+        }
+      },
+      "independent_expected": {
+        "fraction": "10000000000/9007199254740993",
+        "value": 1.1102230246251563e-06,
+        "derivation": "u(t)=u_end*t; root=1/(3*u_end); integral=1e10*(1-root)"
+      }
+    },
+    {
+      "name": "cross_block_direct",
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; real q,n; analog begin @(initial_step) begin q=0; n=0; end @(timer(0.5)) q=1; @(timer(0.5)) $display(\"q=%g\",q); V(y,r)<+q+n; end endmodule",
+      "pwl": {
+        "u": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ]
+      },
+      "output_times": [
+        0.0,
+        0.5,
+        1.0
+      ],
+      "stop": 1.0,
+      "max_step": 0.125,
+      "vabstol": 1e-09,
+      "reltol": 1e-06,
+      "timeout": 20,
+      "program": {
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "contributions": [
+          {
+            "branch": {
+              "instance": "dut",
+              "local_positive": "r",
+              "local_negative": "y",
+              "kind": "voltage"
+            },
+            "positive": 0,
+            "negative": 2,
+            "rhs": {
+              "op": "multiply",
+              "left": {
+                "constant": -1.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "right": {
+                "op": "add",
+                "left": {
+                  "state": 0,
+                  "op": "state"
+                },
+                "right": {
+                  "state": 1,
+                  "op": "state"
+                }
+              }
+            },
+            "origin": {
+              "source": "cross_block_direct.va",
+              "line": 2,
+              "column": 176,
+              "instance": "dut",
+              "expansion": []
+            }
+          }
+        ],
+        "states": [
+          {
+            "instance": "dut",
+            "name": "q",
+            "kind": "real",
+            "initial": 0.0
+          },
+          {
+            "instance": "dut",
+            "name": "n",
+            "kind": "real",
+            "initial": 0.0
+          }
+        ],
+        "events": [
+          {
+            "trigger": {
+              "start": 0.5,
+              "period": 0.0,
+              "time_tolerance": 1e-12,
+              "enabled": true,
+              "kind": "timer"
+            },
+            "body": [
+              {
+                "state": 0,
+                "rhs": {
+                  "constant": 1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "kind": "assign"
+              }
+            ],
+            "origin": {
+              "source": "cross_block_direct.va",
+              "line": 2,
+              "column": 123,
+              "instance": "dut",
+              "expansion": []
+            }
+          },
+          {
+            "trigger": {
+              "start": 0.5,
+              "period": 0.0,
+              "time_tolerance": 1e-12,
+              "enabled": true,
+              "kind": "timer"
+            },
+            "body": [
+              {
+                "format": "q=%g",
+                "args": [
+                  {
+                    "state": 0,
+                    "op": "state"
+                  }
+                ],
+                "origin": {
+                  "source": "cross_block_direct.va",
+                  "line": 2,
+                  "column": 156,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "kind": "display"
+              }
+            ],
+            "origin": {
+              "source": "cross_block_direct.va",
+              "line": 2,
+              "column": 142,
+              "instance": "dut",
+              "expansion": []
+            }
+          }
+        ],
+        "operators": [],
+        "schema_version": 21,
+        "step_bounds": []
+      },
+      "exception": {
+        "type": "KernelError",
+        "message": "unsupported_cross: simultaneous event blocks cannot read state written by another selected block",
+        "detail": {
+          "kind": "unsupported_cross",
+          "message": "simultaneous event blocks cannot read state written by another selected block"
+        }
+      }
+    },
+    {
+      "name": "cross_block_selected",
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; real q,n; analog begin @(initial_step) begin q=0; n=0; end @(timer(0.5)) q=1; @(timer(0.5)) $display(\"q=%g\",q>0?1:0); V(y,r)<+q+n; end endmodule",
+      "pwl": {
+        "u": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ]
+      },
+      "output_times": [
+        0.0,
+        0.5,
+        1.0
+      ],
+      "stop": 1.0,
+      "max_step": 0.125,
+      "vabstol": 1e-09,
+      "reltol": 1e-06,
+      "timeout": 20,
+      "program": {
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "contributions": [
+          {
+            "branch": {
+              "instance": "dut",
+              "local_positive": "r",
+              "local_negative": "y",
+              "kind": "voltage"
+            },
+            "positive": 0,
+            "negative": 2,
+            "rhs": {
+              "op": "multiply",
+              "left": {
+                "constant": -1.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "right": {
+                "op": "add",
+                "left": {
+                  "state": 0,
+                  "op": "state"
+                },
+                "right": {
+                  "state": 1,
+                  "op": "state"
+                }
+              }
+            },
+            "origin": {
+              "source": "cross_block_selected.va",
+              "line": 2,
+              "column": 182,
+              "instance": "dut",
+              "expansion": []
+            }
+          }
+        ],
+        "states": [
+          {
+            "instance": "dut",
+            "name": "q",
+            "kind": "real",
+            "initial": 0.0
+          },
+          {
+            "instance": "dut",
+            "name": "n",
+            "kind": "real",
+            "initial": 0.0
+          }
+        ],
+        "events": [
+          {
+            "trigger": {
+              "start": 0.5,
+              "period": 0.0,
+              "time_tolerance": 1e-12,
+              "enabled": true,
+              "kind": "timer"
+            },
+            "body": [
+              {
+                "state": 0,
+                "rhs": {
+                  "constant": 1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "kind": "assign"
+              }
+            ],
+            "origin": {
+              "source": "cross_block_selected.va",
+              "line": 2,
+              "column": 123,
+              "instance": "dut",
+              "expansion": []
+            }
+          },
+          {
+            "trigger": {
+              "start": 0.5,
+              "period": 0.0,
+              "time_tolerance": 1e-12,
+              "enabled": true,
+              "kind": "timer"
+            },
+            "body": [
+              {
+                "format": "q=%g",
+                "args": [
+                  {
+                    "relation": "gt",
+                    "left": {
+                      "state": 0,
+                      "op": "state"
+                    },
+                    "right": {
+                      "constant": 0.0,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "then_value": {
+                      "constant": 1.0,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "else_value": {
+                      "constant": 0.0,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "origin": {
+                      "source": "cross_block_selected.va",
+                      "line": 2,
+                      "column": 175,
+                      "instance": "dut",
+                      "expansion": []
+                    },
+                    "op": "select"
+                  }
+                ],
+                "origin": {
+                  "source": "cross_block_selected.va",
+                  "line": 2,
+                  "column": 156,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "kind": "display"
+              }
+            ],
+            "origin": {
+              "source": "cross_block_selected.va",
+              "line": 2,
+              "column": 142,
+              "instance": "dut",
+              "expansion": []
+            }
+          }
+        ],
+        "operators": [],
+        "schema_version": 21,
+        "step_bounds": []
+      },
+      "exception": {
+        "type": "KernelError",
+        "message": "unsupported_cross: simultaneous event blocks cannot read state written by another selected block",
+        "detail": {
+          "kind": "unsupported_cross",
+          "message": "simultaneous event blocks cannot read state written by another selected block"
+        }
+      }
+    },
+    {
+      "name": "cross_block_assignment_control",
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; real q,n; analog begin @(initial_step) begin q=0; n=0; end @(timer(0.5)) q=1; @(timer(0.5)) n=q; V(y,r)<+q+n; end endmodule",
+      "pwl": {
+        "u": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ]
+      },
+      "output_times": [
+        0.0,
+        0.5,
+        1.0
+      ],
+      "stop": 1.0,
+      "max_step": 0.125,
+      "vabstol": 1e-09,
+      "reltol": 1e-06,
+      "timeout": 20,
+      "program": {
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "contributions": [
+          {
+            "branch": {
+              "instance": "dut",
+              "local_positive": "r",
+              "local_negative": "y",
+              "kind": "voltage"
+            },
+            "positive": 0,
+            "negative": 2,
+            "rhs": {
+              "op": "multiply",
+              "left": {
+                "constant": -1.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "right": {
+                "op": "add",
+                "left": {
+                  "state": 0,
+                  "op": "state"
+                },
+                "right": {
+                  "state": 1,
+                  "op": "state"
+                }
+              }
+            },
+            "origin": {
+              "source": "cross_block_assignment_control.va",
+              "line": 2,
+              "column": 161,
+              "instance": "dut",
+              "expansion": []
+            }
+          }
+        ],
+        "states": [
+          {
+            "instance": "dut",
+            "name": "q",
+            "kind": "real",
+            "initial": 0.0
+          },
+          {
+            "instance": "dut",
+            "name": "n",
+            "kind": "real",
+            "initial": 0.0
+          }
+        ],
+        "events": [
+          {
+            "trigger": {
+              "start": 0.5,
+              "period": 0.0,
+              "time_tolerance": 1e-12,
+              "enabled": true,
+              "kind": "timer"
+            },
+            "body": [
+              {
+                "state": 0,
+                "rhs": {
+                  "constant": 1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "kind": "assign"
+              }
+            ],
+            "origin": {
+              "source": "cross_block_assignment_control.va",
+              "line": 2,
+              "column": 123,
+              "instance": "dut",
+              "expansion": []
+            }
+          },
+          {
+            "trigger": {
+              "start": 0.5,
+              "period": 0.0,
+              "time_tolerance": 1e-12,
+              "enabled": true,
+              "kind": "timer"
+            },
+            "body": [
+              {
+                "state": 1,
+                "rhs": {
+                  "state": 0,
+                  "op": "state"
+                },
+                "kind": "assign"
+              }
+            ],
+            "origin": {
+              "source": "cross_block_assignment_control.va",
+              "line": 2,
+              "column": 142,
+              "instance": "dut",
+              "expansion": []
+            }
+          }
+        ],
+        "operators": [],
+        "schema_version": 21,
+        "step_bounds": []
+      },
+      "exception": {
+        "type": "KernelError",
+        "message": "unsupported_cross: simultaneous event blocks cannot read state written by another selected block",
+        "detail": {
+          "kind": "unsupported_cross",
+          "message": "simultaneous event blocks cannot read state written by another selected block"
+        }
+      }
+    },
+    {
+      "name": "cross_block_predicate_control",
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; real q,n; analog begin @(initial_step) begin q=0; n=0; end @(timer(0.5)) q=1; @(timer(0.5)) if(q>0) n=1; V(y,r)<+q+n; end endmodule",
+      "pwl": {
+        "u": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ]
+      },
+      "output_times": [
+        0.0,
+        0.5,
+        1.0
+      ],
+      "stop": 1.0,
+      "max_step": 0.125,
+      "vabstol": 1e-09,
+      "reltol": 1e-06,
+      "timeout": 20,
+      "program": {
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "contributions": [
+          {
+            "branch": {
+              "instance": "dut",
+              "local_positive": "r",
+              "local_negative": "y",
+              "kind": "voltage"
+            },
+            "positive": 0,
+            "negative": 2,
+            "rhs": {
+              "op": "multiply",
+              "left": {
+                "constant": -1.0,
+                "terms": [],
+                "op": "affine"
+              },
+              "right": {
+                "op": "add",
+                "left": {
+                  "state": 0,
+                  "op": "state"
+                },
+                "right": {
+                  "state": 1,
+                  "op": "state"
+                }
+              }
+            },
+            "origin": {
+              "source": "cross_block_predicate_control.va",
+              "line": 2,
+              "column": 169,
+              "instance": "dut",
+              "expansion": []
+            }
+          }
+        ],
+        "states": [
+          {
+            "instance": "dut",
+            "name": "q",
+            "kind": "real",
+            "initial": 0.0
+          },
+          {
+            "instance": "dut",
+            "name": "n",
+            "kind": "real",
+            "initial": 0.0
+          }
+        ],
+        "events": [
+          {
+            "trigger": {
+              "start": 0.5,
+              "period": 0.0,
+              "time_tolerance": 1e-12,
+              "enabled": true,
+              "kind": "timer"
+            },
+            "body": [
+              {
+                "state": 0,
+                "rhs": {
+                  "constant": 1.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "kind": "assign"
+              }
+            ],
+            "origin": {
+              "source": "cross_block_predicate_control.va",
+              "line": 2,
+              "column": 123,
+              "instance": "dut",
+              "expansion": []
+            }
+          },
+          {
+            "trigger": {
+              "start": 0.5,
+              "period": 0.0,
+              "time_tolerance": 1e-12,
+              "enabled": true,
+              "kind": "timer"
+            },
+            "body": [
+              {
+                "relation": "gt",
+                "left": {
+                  "state": 0,
+                  "op": "state"
+                },
+                "right": {
+                  "constant": 0.0,
+                  "terms": [],
+                  "op": "affine"
+                },
+                "then_body": [
+                  {
+                    "state": 1,
+                    "rhs": {
+                      "constant": 1.0,
+                      "terms": [],
+                      "op": "affine"
+                    },
+                    "kind": "assign"
+                  }
+                ],
+                "else_body": [],
+                "origin": {
+                  "source": "cross_block_predicate_control.va",
+                  "line": 2,
+                  "column": 156,
+                  "instance": "dut",
+                  "expansion": []
+                },
+                "kind": "if"
+              }
+            ],
+            "origin": {
+              "source": "cross_block_predicate_control.va",
+              "line": 2,
+              "column": 142,
+              "instance": "dut",
+              "expansion": []
+            }
+          }
+        ],
+        "operators": [],
+        "schema_version": 21,
+        "step_bounds": []
+      },
+      "exception": {
+        "type": "KernelError",
+        "message": "unsupported_cross: simultaneous event condition reads state written by another selected block at cross_block_predicate_control.va:2:156 (dut)",
+        "detail": {
+          "kind": "unsupported_cross",
+          "message": "simultaneous event condition reads state written by another selected block at cross_block_predicate_control.va:2:156 (dut)"
+        }
+      }
+    }
+  ]
+}

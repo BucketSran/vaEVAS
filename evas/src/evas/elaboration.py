@@ -40,7 +40,8 @@ def inline_functions(model: Model) -> Model:
     def unpack(expr, obligations):
         if expr.op == 'checked':
             obligations.extend(expr.args[1:])
-            return expr.args[0]
+            value = expr.args[0]
+            return replace(value, result_type=expr.result_type) if expr.result_type else value
         return expr
 
     def checked(value, obligations, origin):
@@ -139,9 +140,10 @@ def inline_functions(model: Model) -> Model:
         # discarded decisions and aliases. Only the real result is substituted
         # into the caller's computation; closed index/operator contexts stay local.
         bounded(local[name])
-        return checked(local[name], obligations, expr)
+        return replace(checked(local[name], obligations, expr), result_type="real")
 
     def body(statements):
+        from .syntax import Display
         result = []
         for statement in statements:
             if isinstance(statement, Loop):
@@ -154,6 +156,8 @@ def inline_functions(model: Model) -> Model:
             elif isinstance(statement, Conditional):
                 result.append(replace(statement, left=expand(statement.left), right=expand(statement.right),
                                       then_body=body(statement.then_body), else_body=body(statement.else_body)))
+            elif isinstance(statement, Display):
+                result.append(replace(statement, args=tuple(expand(arg) for arg in statement.args)))
             else:
                 updates = {'rhs': expand(statement.rhs)}
                 if getattr(statement, 'index', None) is not None:
@@ -195,7 +199,7 @@ def _validate_loop_node_declarations(model: Model):
     evaluates indices nor proves types, ranges or event activation. Keep strong
     references in the cache; never share it across models or compilations.
     """
-    from .syntax import ContributionStatement
+    from .syntax import ContributionStatement, Display
 
     pending = [*model.initial, *model.analog, *model.events]
     seen = {}
@@ -225,6 +229,8 @@ def _validate_loop_node_declarations(model: Model):
                 pending.append(item.index)
         elif isinstance(item, ContributionStatement):
             pending.extend((item.branch, item.rhs))
+        elif isinstance(item, Display):
+            pending.extend(item.args)
         else:
             raise CompileError('unsupported statement in loop declaration check', token=item.token)
         seen[key] = item
@@ -234,7 +240,7 @@ def elaborate_loops(model: Model, parameter):
     """Expand initial and analog trees with one budget; no runtime loop path."""
     from .ir import Affine
     from .lowering import lower
-    from .syntax import Assignment, ContributionStatement
+    from .syntax import Assignment, ContributionStatement, Display
 
     def has_loop(statements):
         return any(isinstance(statement, Loop) or isinstance(statement, Conditional)
@@ -284,9 +290,9 @@ def elaborate_loops(model: Model, parameter):
         except CompileError as exc:
             if exc.diagnostic['code'] == 'resource_budget':
                 raise
-            fail(f'genvar control requires a signed 32-bit instance-constant integer: {exc}', expr.token)
+            fail(f'static for control requires a signed 32-bit instance-constant integer: {exc}', expr.token)
         if not isinstance(value, Affine) or value.terms or not value.constant.is_integer() or not -2147483648 <= value.constant <= 2147483647:
-            fail('genvar control requires a signed 32-bit instance-constant integer', expr.token)
+            fail('static for control requires a signed 32-bit instance-constant integer', expr.token)
         return int(value.constant)
 
     def node_name(expr, indices):
@@ -315,6 +321,24 @@ def elaborate_loops(model: Model, parameter):
             held |= child_held
         return nodes, held
 
+    def validate_loop(statement, active):
+        integer_local = model.variables.get(statement.name) == 'integer' and statement.name not in model.arrays
+        if (statement.name not in model.genvars and not integer_local) or statement.name in active:
+            fail('static for requires an unshadowed declared genvar or scalar integer', statement.token)
+        if integer_local:
+            def writes(body):
+                for item in body:
+                    if isinstance(item, Assignment) and item.name == statement.name:
+                        return True
+                    if isinstance(item, Conditional) and (writes(item.then_body) or writes(item.else_body)):
+                        return True
+                    if isinstance(item, (Loop, Event)) and (getattr(item, 'name', None) == statement.name or writes(item.body)):
+                        return True
+                return False
+            if writes(statement.body):
+                fail('static integer for body cannot modify its loop control variable', statement.token)
+        return integer_local
+
     def validate_event_body(statements, active, affected):
         # Empty static loops must not erase unsupported event-body structure.
         def expression(expr, predicate=False, seen=None):
@@ -332,18 +356,18 @@ def elaborate_loops(model: Model, parameter):
 
         for statement in statements:
             if isinstance(statement, Loop):
-                if statement.name not in model.genvars or statement.name in active:
-                    fail('static for requires an unshadowed declared genvar', statement.token)
-                for expr in (statement.start, statement.limit, statement.update):
-                    expression(expr, True)
+                validate_loop(statement, active)
                 start = constant(statement.start, active)
                 scope = {**active, statement.name: start}
+                expression(substitute(statement.start, active), True)
+                for expr in (statement.limit, statement.update):
+                    expression(substitute(expr, scope), True)
                 constant(statement.limit, scope)
                 constant(statement.update, scope)
                 validate_event_body(statement.body, scope, affected)
             elif isinstance(statement, Conditional):
-                expression(statement.left, True)
-                expression(statement.right, True)
+                expression(statement.left)
+                expression(statement.right)
                 # Reuse the existing IR predicate boundary, including structural
                 # dependencies that numeric cancellation must not erase.
                 from .instance_compiler import _predicate_degree
@@ -356,7 +380,15 @@ def elaborate_loops(model: Model, parameter):
                     key = id(expr)
                     if key in memo:
                         return memo[key][1]
-                    if expr.op == 'node':
+                    if expr.op == 'index':
+                        if expr.value not in model.arrays:
+                            fail('indexed identifier is not a declared variable array', expr.token)
+                        index = constant(expr.args[0], active)
+                        first, last = (constant(bound, active) for bound in model.arrays[expr.value])
+                        if not min(first,last) <= index <= max(first,last):
+                            fail('event predicate array index is outside its declaration', expr.token)
+                        result = Expr('parameter', f'{expr.value}[{index}]', (), expr.token)
+                    elif expr.op == 'node':
                         name = node_name(expr, active)
                         nodes.setdefault(name, len(nodes))
                         result = replace(expr, value=name, args=())
@@ -365,14 +397,20 @@ def elaborate_loops(model: Model, parameter):
                     memo[key] = (expr, result)
                     return result
                 for expr in (statement.left, statement.right):
-                    value = lower(scalar(substitute(expr, active)), parameter, nodes,
+                    from .ir import StateRef
+                    def resolve(name):
+                        return StateRef(0) if name in model.variables or name.split('[',1)[0] in model.arrays else parameter(name)
+                    value = lower(scalar(substitute(expr, active)), resolve, nodes,
                                   model.source, preserve_structure=True, memo={})
                     if _predicate_degree(value) is None:
-                        fail('event conditions require affine voltage predicates', expr.token)
+                        fail('event conditions require affine voltage/state predicates', expr.token)
                     if dependencies(expr, active)[0] & affected:
                         fail('event condition may depend on state through the voltage network', expr.token)
                 validate_event_body(statement.then_body, active, affected)
                 validate_event_body(statement.else_body, active, affected)
+            elif isinstance(statement, Display):
+                for arg in statement.args:
+                    expression(arg)
             else:
                 if not isinstance(statement, Assignment):
                     fail('event bodies require assignments or supported conditionals', statement.token)
@@ -380,15 +418,14 @@ def elaborate_loops(model: Model, parameter):
                     fail('genvar can only be assigned in its for control', statement.token)
                 expression(statement.rhs)
                 if statement.index is not None:
-                    expression(statement.index, True)
+                    expression(substitute(statement.index, active), True)
 
     def validate_initial_body(statements, active, in_loop=False):
         # Validate the unexpanded tree too: a zero-trip loop cannot erase a
         # dynamic initializer, index, illegal nested control or declaration.
         for statement in statements:
             if isinstance(statement, Loop):
-                if statement.name not in model.genvars or statement.name in active:
-                    fail('static for requires an unshadowed declared genvar', statement.token)
+                validate_loop(statement, active)
                 start = constant(statement.start, active)
                 scope = {**active, statement.name: start}
                 constant(statement.limit, scope)
@@ -437,8 +474,7 @@ def elaborate_loops(model: Model, parameter):
         result = []
         for statement in statements:
             if isinstance(statement, Loop):
-                if statement.name not in model.genvars or statement.name in indices:
-                    fail('static for requires an unshadowed declared genvar', statement.token)
+                integer_local = validate_loop(statement, indices)
                 value = constant(statement.start, indices)
                 seen = set()
                 while True:
@@ -454,8 +490,18 @@ def elaborate_loops(model: Model, parameter):
                     if iterations > budget:
                         fail('total static iteration budget (4096) exceeded', statement.token, code="resource_budget")
                     seen.add(value)
+                    if integer_local:
+                        count += 1
+                        if count > budget:
+                            fail('elaborated statement budget (4096) exceeded', statement.token, code="resource_budget")
+                        result.append(Assignment(statement.name, Expr('number', float(value), (), statement.token), origin(statement.token, scope)))
                     result.extend(body(statement.body, scope, depth+1))
                     value = constant(statement.update, scope)
+                if integer_local:
+                    count += 1
+                    if count > budget:
+                        fail('elaborated statement budget (4096) exceeded', statement.token, code="resource_budget")
+                    result.append(Assignment(statement.name, Expr('number', float(value), (), statement.token), origin(statement.token, indices)))
             elif isinstance(statement, Conditional):
                 result.append(replace(statement, left=substitute(statement.left,indices), right=substitute(statement.right,indices),
                                       then_body=body(statement.then_body,indices,depth+1),
@@ -473,6 +519,10 @@ def elaborate_loops(model: Model, parameter):
                             replace(leaf, token=origin(leaf.token,indices), arguments=tuple(
                                 substitute(arg,indices) if arg is not None else None for arg in leaf.arguments))
                             for leaf in statement.triggers)))
+                    continue
+                if isinstance(statement, Display):
+                    result.append(replace(statement, token=origin(statement.token, indices),
+                        args=tuple(substitute(arg, indices) for arg in statement.args)))
                     continue
                 updates = {'rhs': substitute(statement.rhs, indices)}
                 if isinstance(statement, Assignment) and statement.index is not None:

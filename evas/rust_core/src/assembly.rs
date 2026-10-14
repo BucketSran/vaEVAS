@@ -83,7 +83,10 @@ pub(crate) fn assemble(
     }
     let mut predicate_nodes: HashSet<usize> = driven.iter().copied().collect();
     predicate_nodes.insert(0);
-    if program.contributions.is_empty() {
+    // Passive measurement circuits need no equations when every voltage is
+    // fixed by a submitted source or ground. Floating nodes still require an
+    // equation and must not acquire an invented zero voltage.
+    if program.contributions.is_empty() && driven.len() + 1 != count {
         return Err(Error::new(
             "invalid_ir",
             "program has no voltage contributions",

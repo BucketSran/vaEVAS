@@ -27,17 +27,17 @@ class Token:
 _TOKEN = re.compile(
     r"(?P<space>\s+)|(?P<comment>//[^\n]*|/\*[\s\S]*?\*/)"
     r'|(?P<include>`include[ \t]+"[^"\n]+")'
-    r"|(?P<macro>`M_PI\b)|(?P<system>\$abstime\b)"
+    r"|(?P<macro>`M_PI\b)|(?P<system>\$abstime\b)|(?P<task>\$(?:bound_step|display)\b)"
     r'|(?P<directive>`[A-Za-z_][A-Za-z_0-9]*)|(?P<string>"[^"\n]*")'
     r"|(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?[TGMkKmunpfa]?)"
-    r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<=|>=|&&|\|\||'\{|[\[\]:<>(){}+*/;,=@#.?!\-])"
+    r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<=|>=|==|!=|&&|\|\||'\{|[\[\]:<>(){}+*/%;,=@#.?!\-])"
 )
 _SUFFIX = dict(T=1e12, G=1e9, M=1e6, k=1e3, K=1e3, m=1e-3,
                u=1e-6, n=1e-9, p=1e-12, f=1e-15, a=1e-18)
 OPERATOR_ARITIES = {"transition": (3, 4), "absdelay": (2,), "slew": (3,),
                     "idt": (2, 3), "laplace_nd": (3,), "laplace_np": (3, 4), "idtmod": (4,), "ddt": (1,)}
 OPERATOR_NAMES = frozenset(OPERATOR_ARITIES) | {"sin", "cos", "exp", "ln", "sqrt"}
-DECISION_NAMES = frozenset(("<", "<=", ">", ">=", "&&", "||", "unary!", "ternary"))
+DECISION_NAMES = frozenset(("<", "<=", ">", ">=", "==", "!=", "&&", "||", "unary!", "ternary", "abs", "min", "max"))
 _KEYWORDS = {"module", "endmodule", "input", "output", "inout", "electrical",
              "parameter", "real", "analog", "begin", "end", "integer", "initial_step", "if", "else", "or",
              "function", "endfunction", "for", "genvar", "from", "exclude", "inf",
@@ -80,13 +80,14 @@ def _tokens(source: str, name: str, *, tolerant=False) -> list[Token]:
 @dataclass(frozen=True)
 class Expr:
     op: Literal["number", "parameter", "node", "voltage", "array", "unary+", "unary-",
-                "+", "-", "*", "/", "power", "sin", "cos", "exp", "ln", "sqrt", "transition", "absdelay", "slew",
+                "+", "-", "*", "/", "%", "power", "sin", "cos", "exp", "ln", "sqrt", "transition", "absdelay", "slew",
                 "idt", "laplace_nd", "laplace_np", "idtmod", "ddt", "call", "index",
-                "<", "<=", ">", ">=", "&&", "||", "unary!", "ternary", "checked"]
+                "<", "<=", ">", ">=", "==", "!=", "&&", "||", "unary!", "ternary", "abs", "min", "max", "checked"]
     value: str | float | None
     args: tuple["Expr", ...]
     token: Token
     expansion: tuple[tuple[str, int], ...] = ()
+    result_type: str | None = None
 
 
 def contains_operator(expr: Expr) -> bool:
@@ -136,6 +137,19 @@ class Conditional:
 @dataclass(frozen=True)
 class ContributionStatement:
     branch: Expr
+    rhs: Expr
+    token: Token
+
+
+@dataclass(frozen=True)
+class Display:
+    format: str
+    args: tuple[Expr, ...]
+    token: Token
+
+
+@dataclass(frozen=True)
+class BoundStep:
     rhs: Expr
     token: Token
 
@@ -193,7 +207,7 @@ class Model:
     parameters: dict[str, Expr]
     analog: list[Assignment | Conditional | ContributionStatement | Loop | Event]
     variables: dict[str, str]
-    initial: list[Assignment | Loop]
+    initial: list[Assignment | Conditional | Loop]
     events: list[Event]
     functions: dict[str, Function] = field(default_factory=dict)
     genvars: frozenset[str] = frozenset()
@@ -331,8 +345,7 @@ class Parser:
                 self.fail("nonfinite numeric literal", token)
             left = Expr("number", value, (), token)
         elif token.kind == "system":
-            # Absolute time is an exact constant-rate integral in the existing IR.
-            left = Expr("idt", None, (Expr("number", 1., (), token), Expr("number", 0., (), token)), token)
+            left = Expr("time", None, (), token)
         elif token.kind == "macro":
             left = Expr("number", math.pi, (), token)
         elif token.text == "V":
@@ -371,6 +384,15 @@ class Parser:
             argument = self.expression()
             self.take(")")
             left = Expr(token.text, None, (argument,), token)
+        elif token.text in ("abs", "min", "max"):
+            self.take("(")
+            first = self.expression()
+            arguments = (first,)
+            if token.text != "abs":
+                self.take(",")
+                arguments += (self.expression(),)
+            self.take(")")
+            left = Expr(token.text, None, arguments, token, result_type="real")
         elif token.text == "pow":
             self.take("(")
             base = self.expression()
@@ -398,8 +420,8 @@ class Parser:
                 left = Expr("parameter", token.text, (), token)
         else:
             self.fail(f"unsupported expression {token.text!r}", token)
-        precedence_table = {"||": 1, "&&": 2, "<": 3, "<=": 3, ">": 3, ">=": 3,
-                            "+": 10, "-": 10, "*": 20, "/": 20}
+        precedence_table = {"||": 1, "&&": 2, "==": 3, "!=": 3, "<": 4, "<=": 4, ">": 4, ">=": 4,
+                            "+": 10, "-": 10, "*": 20, "/": 20, "%": 20}
         while self.token.text in precedence_table or self.token.text == "?":
             op = self.token
             if op.text == "?":
@@ -416,6 +438,35 @@ class Parser:
                 self.take()
                 left = Expr(op.text, None, (left, self.expression(precedence + 1)), op)
         return replace(left, expansion=left.token.expansion)
+
+    def condition(self, expr, yes, no, token):
+        """Lower pure Boolean control to the existing ordered comparison tree.
+
+        No assignment runs between comparisons. Duplicated fallback bodies keep
+        short-circuit order and are subject to the normal expanded IR budget.
+        """
+        def choose(value, then_body, else_body):
+            return self.condition(value, then_body, else_body, token)
+        if expr.op == '&&':
+            result = choose(expr.args[0], choose(expr.args[1], yes, no), no)
+        elif expr.op == '||':
+            result = choose(expr.args[0], yes, choose(expr.args[1], yes, no))
+        elif expr.op == 'unary!':
+            result = choose(expr.args[0], no, yes)
+        elif expr.op in ('==', '!='):
+            if expr.op == '!=':
+                yes, no = no, yes
+            left, right = expr.args
+            equal = Conditional('>=', left, right, yes, no, token)
+            result = (Conditional('<=', left, right, (equal,), no, token),)
+        elif expr.op in ('<', '<=', '>', '>='):
+            result = (Conditional(expr.op, *expr.args, yes, no, token),)
+        else:
+            zero = Expr('number', 0., (), token)
+            negative = Conditional('<', expr, zero, yes, no, token)
+            result = (Conditional('>', expr, zero, yes, (negative,), token),)
+        check_ir(result, token)
+        return result
 
     def statements(self, conditional=False, analog=False):
         if self.nesting >= MAX_SOURCE_NESTING:
@@ -444,18 +495,14 @@ class Parser:
         if token.text == "if" and conditional:
             self.take("if")
             self.take("(")
-            left = self.expression(4)
-            relation = self.take()
-            if relation.text not in ("<", "<=", ">", ">="):
-                self.fail("event condition requires <, <=, > or >=", relation)
-            right = self.expression(4)
+            predicate = self.expression()
             self.take(")")
             then_body = self.statements(True, analog)
             else_body = ()
             if self.token.text == "else":
                 self.take("else")
                 else_body = self.statements(True, analog)
-            return (Conditional(relation.text, left, right, then_body, else_body, token),)
+            return self.condition(predicate, then_body, else_body, token)
         if (analog or conditional) and token.text == "case":
             self.take("case")
             self.take("(")
@@ -492,9 +539,34 @@ class Parser:
             # cannot change the captured selection. Else links preserve the
             # first matching label, including overlapping labels/items.
             result = default or ()
-            for label, body in reversed(items):
-                equal = Conditional(">=", selector, label, body, result, token)
-                result = (Conditional("<=", selector, label, (equal,), result, token),)
+            def literal(expr):
+                if expr.op == "number":
+                    return expr.value
+                if expr.op in ("unary+", "unary-") and expr.args[0].op == "number":
+                    return expr.args[0].value * (-1 if expr.op == "unary-" else 1)
+                return None
+            numeric = [literal(label) for label, _ in items]
+            if None not in numeric and len(set(numeric)) == len(numeric):
+                # Distinct literal labels have no priority ambiguity. A
+                # balanced search avoids duplicating the remaining case tree
+                # at both comparisons of every equality test.
+                ordered = sorted(zip(numeric, items), key=lambda item: item[0])
+                def search(entries):
+                    if len(entries) == 1:
+                        _, (label, body) = entries[0]
+                        equal = Conditional(">=", selector, label, body, result, token)
+                        return (Conditional("<=", selector, label, (equal,), result, token),)
+                    middle = len(entries)//2
+                    pivot = entries[middle][1][0]
+                    return (Conditional("<", selector, pivot,
+                        search(entries[:middle]), search(entries[middle:]), token),)
+                result = search(ordered)
+            else:
+                # Instance-dependent and overlapping labels keep source-order
+                # first-match semantics and the existing expansion budget.
+                for label, body in reversed(items):
+                    equal = Conditional(">=", selector, label, body, result, token)
+                    result = (Conditional("<=", selector, label, (equal,), result, token),)
             # Generated comparison trees duplicate fallbacks on the wire.
             # Check their expanded size before later recursive compiler passes.
             check_ir(result, token)
@@ -506,7 +578,7 @@ class Parser:
             self.take("=")
             start = self.expression()
             self.take(";")
-            left = self.expression(4)
+            left = self.expression(5)
             relation = self.take()
             if left.op != "parameter" or left.value != name or relation.text not in ("<", "<=", ">", ">="):
                 self.fail("static for condition requires its genvar and <, <=, > or >=", relation)
@@ -530,6 +602,31 @@ class Parser:
             rhs = self.expression()
             self.take(";")
             return (ContributionStatement(branch, rhs, token),)
+        if token.text == '$display':
+            from .display import validate_format
+            self.take()
+            self.take('(')
+            literal = self.take()
+            if literal.kind != 'string':
+                self.fail('$display requires a literal format string', literal)
+            args = []
+            while self.token.text == ',':
+                self.take(',')
+                args.append(self.expression())
+            self.take(')')
+            self.take(';')
+            try:
+                validate_format(literal.text[1:-1], len(args))
+            except ValueError as error:
+                self.fail(str(error), literal)
+            return (Display(literal.text[1:-1], tuple(args), token),)
+        if analog and token.text == '$bound_step':
+            self.take()
+            self.take('(')
+            rhs = self.expression()
+            self.take(')')
+            self.take(';')
+            return (BoundStep(rhs, token),)
         name = self.name()
         index = None
         if self.token.text == "[":
@@ -593,6 +690,13 @@ class Parser:
                     break
                 self.take('or')
                 continue
+            if kind == 'final_step':
+                if self.token.text == '(':
+                    self.fail('analysis-qualified final_step is not supported', leaf)
+                triggers.append(Trigger(kind, (), leaf))
+                if self.token.text != ')':
+                    self.fail('final_step cannot be combined with other event leaves', leaf)
+                break
             if kind not in ("cross", "timer"):
                 self.fail("only cross and timer events are supported here; initial_step must be top-level", leaf,
                           code='unsupported_initial_event' if kind == 'initial_step' else 'syntax_error')
@@ -612,6 +716,8 @@ class Parser:
                 break
             self.take("or")
         self.take(")")
+        if any(t.kind == "final_step" for t in triggers) and (len(triggers) != 1 or initial_count):
+            self.fail("final_step must be a standalone event", token)
         if initial_count:
             if not unqualified:
                 self.fail('analysis-specific initialization requires an analysis lifecycle; include an unqualified initial_step leaf', token, code='unsupported_initial_event')
@@ -625,9 +731,20 @@ class Parser:
                 self.mixed_initial_body = previous_context
             def initialization(statements):
                 return all(isinstance(statement, Assignment) or isinstance(statement, Loop)
-                           and initialization(statement.body) for statement in statements)
+                           and initialization(statement.body) or isinstance(statement, Conditional)
+                           and initialization(statement.then_body) and initialization(statement.else_body)
+                           for statement in statements)
+            def has_display(statements):
+                return any(isinstance(statement, Display) or isinstance(statement, (Conditional, Loop))
+                           and (has_display(statement.then_body) or has_display(statement.else_body)
+                                if isinstance(statement, Conditional) else has_display(statement.body))
+                           for statement in statements)
+            if has_display(body):
+                if triggers:
+                    self.fail('initial display cannot be combined with monitored event leaves', token)
+                return Event((Trigger('initial_step', (), token),), body, token)
             if not initialization(body):
-                self.fail('initial_step body requires unconditional assignments or static genvar loops', token, code='unsupported_initial_event')
+                self.fail('initial_step body requires assignments, conditionals or static genvar loops', token, code='unsupported_initial_event')
             initial.extend(body)
             return Event(tuple(triggers), body, token) if triggers else None
         return Event(tuple(triggers), self.statements(True), token)
@@ -648,6 +765,13 @@ class Parser:
                 continue
             analog.extend(self.statements(True, True))
         self.take("end")
+        def contributes(statements):
+            return any(isinstance(s, ContributionStatement) or isinstance(s, Conditional)
+                       and (contributes(s.then_body) or contributes(s.else_body))
+                       or isinstance(s, Loop) and contributes(s.body) for s in statements)
+        if contributes(analog) and any(isinstance(s, Event) and any(t.kind == 'initial_step' for t in s.triggers) for s in analog):
+            self.fail('initial $display is currently supported only in passive measurement models')
+        analog.sort(key=lambda s: 0 if isinstance(s, Event) and any(t.kind == 'initial_step' for t in s.triggers) else 1)
         return analog, initial, events
 
     def child_instances(self):
@@ -868,8 +992,11 @@ class Parser:
                 pending.extend(statement.body)
             elif isinstance(statement, Conditional):
                 pending.extend((*statement.then_body, *statement.else_body))
-        if not contributed and (not children or initial or events or monitored):
+        if not contributed and not monitored and (not children or initial or events):
             self.fail("model must contain at least one voltage contribution", self.tokens[0])
+        if children and any(isinstance(statement, Event) and any(t.kind == 'initial_step' for t in statement.triggers)
+                            for statement in analog):
+            self.fail('initial $display in a hierarchical model is not supported', module_token)
         if set(functions) & (nodes | set(ports) | parameters.keys() | variables.keys() | genvars):
             self.fail("function name conflicts with a module declaration")
         return Model(name, module_token.source or self.source, tuple(ports), directions, nodes, parameters, analog, variables, initial, events, functions, frozenset(genvars), arrays, tuple(children), parameter_types, parameter_ranges, node_ranges, port_ranges, module_token)

@@ -11,7 +11,7 @@ from typing import Literal
 from .limits import check_ir
 
 
-SCHEMA_VERSION = 19
+SCHEMA_VERSION = 21
 
 
 @dataclass(frozen=True)
@@ -38,7 +38,7 @@ class Affine:
 
 @dataclass(frozen=True)
 class Binary:
-    op: Literal["add", "multiply"]
+    op: Literal["add", "multiply", "divide"]
     left: "Expression"
     right: "Expression"
 
@@ -180,6 +180,24 @@ class Conditional:
 
 
 @dataclass(frozen=True)
+class Display:
+    format: str
+    args: tuple[Expression, ...]
+    origin: Origin
+    kind: str = field(default="display", init=False)
+
+
+@dataclass(frozen=True)
+class InitialStepTrigger:
+    kind: str = field(default="initial_step", init=False)
+
+
+@dataclass(frozen=True)
+class FinalStepTrigger:
+    kind: str = field(default="final_step", init=False)
+
+
+@dataclass(frozen=True)
 class CrossTrigger:
     guard: Expression
     direction: int
@@ -214,8 +232,8 @@ class OrTrigger:
 
 @dataclass(frozen=True)
 class Event:
-    trigger: CrossTrigger | TimerTrigger | HeldTimerTrigger | OrTrigger
-    body: tuple[Assignment | Conditional, ...]
+    trigger: CrossTrigger | TimerTrigger | HeldTimerTrigger | OrTrigger | FinalStepTrigger | InitialStepTrigger
+    body: tuple[Assignment | Conditional | Display, ...]
     origin: Origin
 
 
@@ -238,6 +256,13 @@ class Contribution:
 
 
 @dataclass(frozen=True)
+class StepBound:
+    value: Expression
+    active: Expression
+    origin: Origin
+
+
+@dataclass(frozen=True)
 class Program:
     nodes: tuple[str, ...]
     contributions: tuple[Contribution, ...]
@@ -245,6 +270,7 @@ class Program:
     events: tuple[Event, ...] = ()
     operators: tuple[Transition | AbsDelay | Slew | Idt | LaplaceNd | IdtMod | Sin | MathFunction | Ddt, ...] = ()
     schema_version: int = SCHEMA_VERSION
+    step_bounds: tuple[StepBound, ...] = ()
 
     def to_dict(self) -> dict:
         check_ir(self)

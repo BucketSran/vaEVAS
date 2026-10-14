@@ -1,0 +1,49 @@
+{
+  "source_file": "dut.va",
+  "instances": [
+    {
+      "name": "Xdut",
+      "module": "m",
+      "connections": {
+        "u": "u",
+        "y": "y",
+        "z": "z",
+        "w": "w",
+        "d": "d",
+        "r": "0"
+      }
+    }
+  ],
+  "pwl": {
+    "u": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ]
+    ]
+  },
+  "output_times": [
+    0,
+    0.25,
+    0.5,
+    0.75,
+    1
+  ],
+  "stop": 1,
+  "max_step": 0.0001220703125,
+  "vabstol": 1e-12,
+  "reltol": 1e-10,
+  "strobetimes": [
+    0,
+    0.25,
+    0.5,
+    0.75,
+    1
+  ],
+  "timeout": 120,
+  "candidate_entry": "compile_sources + transient, or load_scs + coupled compile_sources + transient at exact REQUEST output times; no precomputed bsource"
+}

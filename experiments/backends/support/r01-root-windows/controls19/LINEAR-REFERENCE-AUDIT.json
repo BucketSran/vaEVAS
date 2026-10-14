@@ -1,0 +1,370 @@
+{
+  "script_sha256": "d13cdf523332d6097b23494bd76fbbb04421e92e71217827f8fd7affb77bc411",
+  "manifest_checks": {
+    "MANIFEST.json": {
+      "files": 14,
+      "all_hashes_match": true,
+      "sha256": "c1877f8761aea1e53018d1bda3cc4e39fad619c5270151b65dc9a11787a9e814"
+    },
+    "OUTPUT_MANIFEST.json": {
+      "files": 72,
+      "all_hashes_match": true,
+      "sha256": "1811dc984eb285d7ae352c938b5277afdbeeff4c12615460facdf2b2522eeeb8"
+    }
+  },
+  "tool_identity": {
+    "file_sha256": {
+      "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+      "backend-config:cadence.sui": "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+      "backend-config:mentor25.sui": "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+    },
+    "version": "sub-version  21.1.0.509.isr12 \n",
+    "execution": {
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "prlimit",
+        "--as=4294967296",
+        "--fsize=33554432",
+        "--",
+        "/bin/csh",
+        "-f",
+        "version.csh"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "status": "completed",
+      "cleanup": {
+        "signals": [
+          "SIGTERM",
+          "SIGKILL"
+        ],
+        "errors": [],
+        "complete": true
+      },
+      "elapsed_seconds": 1.9612801764160395,
+      "completed_utc": "2026-10-14T05:45:42Z",
+      "log": "version.log",
+      "log_sha256": "d0e6c83a98026a294bfc4b9754c4e294d322b60b1872a28e38f84caccbdf7f81"
+    }
+  },
+  "tool_before_after_equal": true,
+  "gate_calibration": "known accept/reject/nonfinite checked",
+  "cases": [
+    {
+      "label": "linear_idt",
+      "source_sha256": "83e38780fecbed5f03ffe1cbd6b8d3a6cb0ca5134a74e43b263586094e3f0ac3",
+      "deck_sha256": "1aaa53f16168b041523b62e79103c20d2e35d9074776b928967bc88a4d2fb5d8",
+      "psf_sha256": "0e8e98a6797dbee12e73d706933aed519fc312f0e8349c6984711587fcc0f086",
+      "request": {
+        "source_file": "dut.va",
+        "instances": [
+          {
+            "name": "Xdut",
+            "module": "m",
+            "connections": {
+              "u": "u",
+              "y": "y",
+              "r": "0"
+            }
+          }
+        ],
+        "pwl": {
+          "u": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        "output_times": [
+          0,
+          0.25,
+          0.5,
+          0.75,
+          1
+        ],
+        "stop": 1,
+        "max_step": 3.0517578125e-05,
+        "vabstol": 1e-12,
+        "reltol": 1e-10,
+        "strobetimes": [
+          0,
+          0.25,
+          0.5,
+          0.75,
+          1
+        ],
+        "timeout": 120
+      },
+      "effective_psf": {
+        "tolerance.relative": "1.00000e-10",
+        "reltol": "1.00000e-11",
+        "maxstep": "3.05176e-05",
+        "method": "\"traponly\"",
+        "abstol(V)": "1.00000e-12",
+        "abstol(I)": "1.00000e-15"
+      },
+      "completion": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 10.497531596571207,
+        "completed_utc": "2026-10-14T05:45:52Z",
+        "log": "stdout.log",
+        "log_sha256": "e38b3bb7d8f021b0841cf529a7facbca710ba258c03596f17826db4b2a33a6e5",
+        "label": "linear_idt",
+        "source_sha256": "83e38780fecbed5f03ffe1cbd6b8d3a6cb0ca5134a74e43b263586094e3f0ac3",
+        "deck_sha256": "1aaa53f16168b041523b62e79103c20d2e35d9074776b928967bc88a4d2fb5d8",
+        "directory_bytes": 2450799
+      },
+      "native_rows": 32828,
+      "missing_exact_original_queries": [],
+      "all_native_analytic_max_error_V": "7.9531663E-10",
+      "all_native_analytic_upper_error_V": "7.95316630000000000000000000000000000000000000000001E-10",
+      "all_native_analytic_pass_1e-8": true,
+      "oracle_arithmetic": "80-digit Decimal of PSF decimal timestamps; affine controls exact at this precision; exponential arithmetic numerical diagnostic, 1e-60 margin far below 1e-8",
+      "warnings": [
+        "WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow."
+      ],
+      "log_completion": [
+        "spectre completes with 0 errors, 1 warning, and 3 notices."
+      ]
+    },
+    {
+      "label": "linear_filter",
+      "source_sha256": "dd2f08d7db6da7354280f4591a79ab9fc458a05b9dc8da022bcc6565d3c93694",
+      "deck_sha256": "1aaa53f16168b041523b62e79103c20d2e35d9074776b928967bc88a4d2fb5d8",
+      "psf_sha256": "9c5a1b84b1fd2ce813dc3f21e328285809f99714aa73032939fb190dd6e312ed",
+      "request": {
+        "source_file": "dut.va",
+        "instances": [
+          {
+            "name": "Xdut",
+            "module": "m",
+            "connections": {
+              "u": "u",
+              "y": "y",
+              "r": "0"
+            }
+          }
+        ],
+        "pwl": {
+          "u": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        "output_times": [
+          0,
+          0.25,
+          0.5,
+          0.75,
+          1
+        ],
+        "stop": 1,
+        "max_step": 3.0517578125e-05,
+        "vabstol": 1e-12,
+        "reltol": 1e-10,
+        "strobetimes": [
+          0,
+          0.25,
+          0.5,
+          0.75,
+          1
+        ],
+        "timeout": 120
+      },
+      "effective_psf": {
+        "tolerance.relative": "1.00000e-10",
+        "reltol": "1.00000e-11",
+        "maxstep": "3.05176e-05",
+        "method": "\"traponly\"",
+        "abstol(V)": "1.00000e-12",
+        "abstol(I)": "1.00000e-15"
+      },
+      "completion": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 10.915087228640914,
+        "completed_utc": "2026-10-14T05:46:03Z",
+        "log": "stdout.log",
+        "log_sha256": "b7d8d5056374311df08d4ddeacfd0154b792cff739dc6bf1e26ca15ca86b4344",
+        "label": "linear_filter",
+        "source_sha256": "dd2f08d7db6da7354280f4591a79ab9fc458a05b9dc8da022bcc6565d3c93694",
+        "deck_sha256": "1aaa53f16168b041523b62e79103c20d2e35d9074776b928967bc88a4d2fb5d8",
+        "directory_bytes": 2444102
+      },
+      "native_rows": 32832,
+      "missing_exact_original_queries": [],
+      "all_native_analytic_max_error_V": "1.9535918222558242325880044855242448970071156699982011221144512789300777E-9",
+      "all_native_analytic_upper_error_V": "1.9535918222558242325880044855242448970071156699982021221144512789300777E-9",
+      "all_native_analytic_pass_1e-8": true,
+      "oracle_arithmetic": "80-digit Decimal of PSF decimal timestamps; affine controls exact at this precision; exponential arithmetic numerical diagnostic, 1e-60 margin far below 1e-8",
+      "warnings": [
+        "WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow."
+      ],
+      "log_completion": [
+        "spectre completes with 0 errors, 1 warning, and 3 notices."
+      ]
+    },
+    {
+      "label": "linear_held_gate",
+      "source_sha256": "a488d140cc7dc3fb9c23b06deeea09f12574f3d926444dcc45cf92f873223b8e",
+      "deck_sha256": "1aaa53f16168b041523b62e79103c20d2e35d9074776b928967bc88a4d2fb5d8",
+      "psf_sha256": "a4406c36fb296e038b3eae1bec6455df0e52568af4b2a2369ffec1f18ed8b4d9",
+      "request": {
+        "source_file": "dut.va",
+        "instances": [
+          {
+            "name": "Xdut",
+            "module": "m",
+            "connections": {
+              "u": "u",
+              "y": "y",
+              "r": "0"
+            }
+          }
+        ],
+        "pwl": {
+          "u": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        "output_times": [
+          0,
+          0.25,
+          0.5,
+          0.75,
+          1
+        ],
+        "stop": 1,
+        "max_step": 3.0517578125e-05,
+        "vabstol": 1e-12,
+        "reltol": 1e-10,
+        "strobetimes": [
+          0,
+          0.25,
+          0.5,
+          0.75,
+          1
+        ],
+        "timeout": 120
+      },
+      "effective_psf": {
+        "tolerance.relative": "1.00000e-10",
+        "reltol": "1.00000e-11",
+        "maxstep": "3.05176e-05",
+        "method": "\"traponly\"",
+        "abstol(V)": "1.00000e-12",
+        "abstol(I)": "1.00000e-15"
+      },
+      "completion": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 11.234084848314524,
+        "completed_utc": "2026-10-14T05:46:15Z",
+        "log": "stdout.log",
+        "log_sha256": "303ca04a1c2254e5c745248799bbc73f853a1aa166f572bccc8a74b060827100",
+        "label": "linear_held_gate",
+        "source_sha256": "a488d140cc7dc3fb9c23b06deeea09f12574f3d926444dcc45cf92f873223b8e",
+        "deck_sha256": "1aaa53f16168b041523b62e79103c20d2e35d9074776b928967bc88a4d2fb5d8",
+        "directory_bytes": 2521474
+      },
+      "native_rows": 32865,
+      "missing_exact_original_queries": [],
+      "all_native_analytic_max_error_V": "7.9531663E-10",
+      "all_native_analytic_upper_error_V": "7.95316630000000000000000000000000000000000000000001E-10",
+      "all_native_analytic_pass_1e-8": true,
+      "oracle_arithmetic": "80-digit Decimal of PSF decimal timestamps; affine controls exact at this precision; exponential arithmetic numerical diagnostic, 1e-60 margin far below 1e-8",
+      "warnings": [
+        "WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow."
+      ],
+      "log_completion": [
+        "spectre completes with 0 errors, 1 warning, and 3 notices."
+      ]
+    }
+  ],
+  "interpolation_used": false,
+  "historical_scores_changed": false
+}

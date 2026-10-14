@@ -22,6 +22,13 @@
 EVAS 0.15.0 / IR19 纳入中断边沿积分实现；该行 Q3 来自发布前候选的实际运行。
 原预算和历史成绩继续保留，实际对照见[本轮记录](../../experiments/backends/support/README.md#legacy-chain-q)。
 
+0.17.0 / IR21 开发代码增加顺序初始化与默认零状态、可证明整型的局部运算、
+受限状态谓词、事件输出记录、合成时间驱动、有理连续流、受限 exp forcing 及保持物理状态的条件选路，
+并将动态 [`$bound_step`](math/events.md#bound-step) 传入已支持的非线性内部积分段。
+最终候选已取得[七项基础和三项初态的实际有限对照](../../experiments/backends/support/r01-root-windows/final-controls/README.md)，
+它们使用独立控制预算，不属于下表固定 Q 用例。原16条复跑仍为12条完成，原70没有形成最终版本的完整验收，
+因此不改下表历史成绩。一般数学函数与非线性电压代数耦合及更广组合仍有缺口。
+
 固定零时刻 timer 的 transition 初态修正已取得[三模型实际有限配对](../../experiments/backends/support/README.md#initial-transition-seed)。
 该修复使用原 `1e-8 V` 预算；第四反馈模型仅作诊断，不新增本表 Q 成绩，也不覆盖一般历史反馈。
 

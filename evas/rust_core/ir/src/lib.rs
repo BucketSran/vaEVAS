@@ -1,7 +1,7 @@
 //! The only executable model format for the voltage kernel.
 use serde::{Deserialize, Serialize};
 
-pub const SCHEMA_VERSION: u32 = 19;
+pub const SCHEMA_VERSION: u32 = 21;
 
 pub fn check_schema_version(version: u64) -> Result<(), Error> {
     if version != u64::from(SCHEMA_VERSION) {
@@ -43,6 +43,16 @@ pub struct Program {
     pub events: Vec<Event>,
     #[serde(default)]
     pub operators: Vec<OperatorSpec>,
+    #[serde(default)]
+    pub step_bounds: Vec<StepBound>,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct StepBound {
+    pub value: Expression,
+    pub active: Expression,
+    pub origin: Origin,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -88,6 +98,10 @@ pub enum Expression {
         right: Box<Expression>,
     },
     Multiply {
+        left: Box<Expression>,
+        right: Box<Expression>,
+    },
+    Divide {
         left: Box<Expression>,
         right: Box<Expression>,
     },
@@ -392,6 +406,11 @@ pub struct Event {
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Statement {
     Assign(Assignment),
+    Display {
+        format: String,
+        args: Vec<Expression>,
+        origin: Origin,
+    },
     If {
         relation: Relation,
         left: Box<Expression>,
@@ -418,6 +437,7 @@ impl Event {
             for statement in body {
                 match statement {
                     Statement::Assign(a) => out.push(a),
+                    Statement::Display { .. } => {},
                     Statement::If {
                         then_body,
                         else_body,
@@ -438,6 +458,8 @@ impl Event {
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 pub enum EventTrigger {
+    FinalStep {},
+    InitialStep {},
     Or {
         triggers: Vec<EventTrigger>,
     },
@@ -516,6 +538,8 @@ pub struct EventRecord {
     pub fired_triggers: Vec<FiredTrigger>,
     pub before: Vec<f64>,
     pub after: Vec<f64>,
+    #[serde(skip)]
+    pub display_records: Vec<DisplayRecord>,
 }
 
 #[derive(Debug, Serialize)]
@@ -528,12 +552,21 @@ pub struct FiredTrigger {
     pub time_bounds: Option<[f64; 2]>,
 }
 
+#[derive(Debug, Clone, Serialize)]
+pub struct DisplayRecord {
+    pub time: f64,
+    pub event: usize,
+    pub origin: String,
+    pub text: String,
+}
+
 #[derive(Debug, Serialize)]
 pub struct TransientTrace {
     pub times: Vec<f64>,
     pub state_names: Vec<String>,
     pub states: Vec<Vec<f64>>,
     pub events: Vec<EventRecord>,
+    pub display_records: Vec<DisplayRecord>,
     pub accepted_steps: usize,
     pub discarded_trials: usize,
 }

@@ -1,0 +1,7 @@
+simulator lang=spectre
+ahdl_include "dut.va"
+B (u 0) bsource v=V(y)+.25
+Xdut (u y 0) m
+simulatorOptions options reltol=1e-10 vabstol=1e-12 iabstol=1e-15
+tran tran stop=1 maxstep=0.0001220703125 errpreset=conservative strobetimes=[0 .25 .5 .75 1]
+save u y

@@ -1,0 +1,27 @@
+{
+  "instances": [
+    {
+      "name": "dut",
+      "module": "m",
+      "connections": {
+        "y": "y",
+        "r": "0"
+      }
+    }
+  ],
+  "pwl": {},
+  "output_times": [
+    0,
+    0.125,
+    0.25,
+    0.375,
+    0.5,
+    0.625
+  ],
+  "stop": 0.625,
+  "max_step": 0.005,
+  "vabstol": 1e-11,
+  "reltol": 1e-09,
+  "strobetimes": [],
+  "timeout": 120
+}

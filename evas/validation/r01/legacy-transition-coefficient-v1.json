@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "purpose": "Frozen old expectation retained for historical regrading; not the current final-zero-state contract.",
+  "original_revision": "ee01f8d92451e62a3f194cd62ce2592f05a622b8",
+  "original_test_sha256": "6dfe8852a22dbe7c7b37675db683dbfa9d0ddfb862977271ecf51895856e323d",
+  "original_test_method": "SampledOperatorCoefficientContracts.test_joint_state_update_uses_current_transition_coefficient",
+  "body": "@(initial_step) begin q=0; valid=0; end\n            @(timer(0)) valid=1;\n            @(timer(0.5)) q=V(y,r)+1;\n            V(y,r)<+q*transition(valid,0,1,1);",
+  "declarations": "real q; integer valid;",
+  "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; real q; integer valid; analog begin @(initial_step) begin q=0; valid=0; end\n            @(timer(0)) valid=1;\n            @(timer(0.5)) q=V(y,r)+1;\n            V(y,r)<+q*transition(valid,0,1,1); end endmodule",
+  "source_sha256": "865ae32ffbb0a2ab482bb01ced3509dc2b50f222b53922ddba5a7561bd136f2e",
+  "queries": [
+    0,
+    0.25,
+    0.5,
+    0.75,
+    1
+  ],
+  "old_expected": [
+    0,
+    0,
+    1,
+    1.5,
+    2
+  ],
+  "old_check": "exact list equality",
+  "old_verdict_at_original_revision": "ERROR singular_system",
+  "current_joint_contract": "final transition coefficient = 1; q=y+1 and y=q have no solution",
+  "reference_status": "Spectre 21.1.0.509.isr12 returns zero after SPECTRE-17087 skips breakpoint; not qualified as a correct accepted event",
+  "original_benchmark_checker_changed": false
+}

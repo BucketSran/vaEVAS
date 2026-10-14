@@ -9,6 +9,7 @@ import hashlib
 import math
 from pathlib import Path
 import re
+import warnings
 
 from .errors import CompileError
 from .frontend import Instance, compile_sources, parse_sources
@@ -73,6 +74,7 @@ class _Statement:
         self.tokens=tokens
         self.index=0
         self.constants=constants
+        self.setting_tokens={}
 
     @property
     def token(self):
@@ -111,14 +113,15 @@ class _Statement:
             self.fail('numeric value must be finite')
         return value
 
-    def settings(self):
+    def settings(self, *, symbolic=()):
         result={}
         while self.index<len(self.tokens):
             key=self.take()
             if key.kind!='name' or key.text in result:
                 self.fail('duplicate or invalid setting name')
+            self.setting_tokens[key.text]=key
             self.take('=')
-            if key.text in ('type','edgetype'):
+            if key.text in ('type','edgetype') or key.text in symbolic:
                 value=self.take().text
             elif self.token.text=='[':
                 self.take('['); value=[]
@@ -130,6 +133,25 @@ class _Statement:
             result[key.text]=value
         return result
 
+    def voltage_expression(self):
+        """Consume the bounded subset V(node) [+- constant] used by bsource."""
+        self.take('v');self.take('=');self.take('V');self.take('(')
+        node=self.take()
+        if node.kind not in ('name','number'):
+            self.fail('bsource requires a scalar voltage node',unsupported=True)
+        self.take(')')
+        offset=0.
+        if self.index<len(self.tokens) and self.token.text in ('+','-'):
+            sign=-1 if self.take().text=='-' else 1
+            grouped=self.token.text=='('
+            if grouped:
+                self.take('(')
+            offset=sign*self.number()
+            if grouped:
+                self.take(')')
+        self.done()
+        return node,offset
+
 
 @dataclass
 class ScsTestbench:
@@ -137,6 +159,21 @@ class ScsTestbench:
     manifest: dict
     save: list[str]
     metadata: dict
+
+
+class ScsIgnoredOptionWarning(UserWarning):
+    """An accepted SCS setting with no effect on the voltage-domain request."""
+
+    def __init__(self, report):
+        self.report=report
+        super().__init__(report['message'])
+
+
+def _warn_ignored(token,value,message,reports,**details):
+    report=dict(code='ignored_scs_option',severity='warning',option=token.text,requested_value=value,
+                message=message,location=dict(source=token.source,line=token.line,column=token.column),**details)
+    reports.append(report)
+    warnings.warn_explicit(ScsIgnoredOptionWarning(report),ScsIgnoredOptionWarning,token.source,token.line)
 
 
 def load_scs(path: str | Path) -> ScsTestbench:
@@ -147,6 +184,9 @@ def load_scs(path: str | Path) -> ScsTestbench:
         _fail(str(exc),Token('', '',1,1,str(path)))
     constants, sources, devices, names = {},{},[],set()
     saved,tolerances,source_specs = [],{},[]
+    seen_options,warning_reports=set(),[]
+    behavioral_sources=[]
+    preset=None
     transient_spec=None
     for tokens in _statements(text,str(path)):
         s=_Statement(tokens,constants)
@@ -190,7 +230,14 @@ def load_scs(path: str | Path) -> ScsTestbench:
                 if token.kind not in ('name','number'):
                     s.fail('only scalar net connections are supported',unsupported=True)
                 nodes.append(token.text)
-            s.take(')');module=s.take().text;settings=s.settings()
+            s.take(')');module=s.take().text
+            if module=='bsource':
+                if len(nodes)!=2 or (nodes[0]!='0' and nodes[1]!='0') or nodes[0]==nodes[1]:
+                    s.fail('bsource requires one ground terminal and one distinct output node',unsupported=True)
+                reference,offset=s.voltage_expression()
+                behavioral_sources.append((first,nodes,reference,offset))
+                continue
+            settings=s.settings()
             if module=='vsource':
                 if len(nodes)!=2 or (nodes[0]!='0' and nodes[1]!='0') or nodes[0]==nodes[1]:
                     s.fail('vsource requires one ground terminal and one distinct driven node',unsupported=True)
@@ -203,19 +250,31 @@ def load_scs(path: str | Path) -> ScsTestbench:
                 devices.append((first,nodes,module,settings))
         elif s.index<len(s.tokens) and s.token.text in ('options','tran'):
             kind=s.take().text
-            settings=s.settings()
-            allowed={'vabstol','reltol'} if kind=='options' else {'stop','maxstep'} | STROBE_FIELDS
+            settings=s.settings(symbolic={'errpreset'} if kind=='tran' else ())
+            allowed={'vabstol','reltol','iabstol'} if kind=='options' else {'stop','maxstep','errpreset'} | STROBE_FIELDS
             if set(settings)-allowed:
                 s.fail(f'unsupported {kind} settings: {sorted(set(settings)-allowed)}',unsupported=True)
-            if any(not isinstance(v,list if k=='strobetimes' else float) for k,v in settings.items()):
+            if any(not isinstance(v,list if k=='strobetimes' else str if k=='errpreset' else float) for k,v in settings.items()):
                 s.fail('analysis settings must be scalar numbers')
             if kind=='options':
-                if set(settings)&tolerances.keys():
+                if set(settings)&seen_options:
                     s.fail('duplicate tolerance setting')
+                seen_options.update(settings)
+                if 'iabstol' in settings:
+                    value=settings.pop('iabstol')
+                    if value<0:
+                        s.fail('iabstol must be nonnegative')
+                    _warn_ignored(s.setting_tokens['iabstol'],value,
+                                  'iabstol is ignored and has no effect: EVAS has no current unknowns.',warning_reports)
                 tolerances.update(settings)
             else:
                 if transient_spec is not None or not {'stop','maxstep'} <= settings.keys():
                     s.fail('exactly one tran with explicit stop and maxstep is required')
+                if 'errpreset' in settings:
+                    value=settings.pop('errpreset')
+                    if value not in ('liberal','moderate','conservative'):
+                        s.fail('errpreset must be liberal, moderate, or conservative',unsupported=True)
+                    preset=(s.setting_tokens['errpreset'],value)
                 transient_spec=settings
         else:
             s.fail(f'unsupported netlist statement {first.text!r}',unsupported=True)
@@ -228,6 +287,14 @@ def load_scs(path: str | Path) -> ScsTestbench:
     stop,step=transient_spec['stop'],transient_spec['maxstep']
     if stop<=0 or step<=0 or any(v<0 for v in tolerances.values()):
         fail('stop/maxstep must be positive; tolerances must be nonnegative')
+    effective=dict(vabstol=1e-12,reltol=1e-10)
+    effective.update(tolerances)
+    if preset:
+        token,value=preset
+        _warn_ignored(token,value,
+                      f'errpreset={value} is ignored: Spectre preset adjustments are not applied. '
+                      f'EVAS uses reltol={effective["reltol"]:g}, vabstol={effective["vabstol"]:g}, max_step={step:g}.',
+                      warning_reports,effective_controls=dict(effective,max_step=step))
     strobe={k:v for k,v in transient_spec.items() if k in STROBE_FIELDS}
     try:
         forced=expand_strobe(stop,**strobe) if strobe else []
@@ -236,7 +303,9 @@ def load_scs(path: str | Path) -> ScsTestbench:
     count=int(Q(stop)//Q(step))
     if count+2>POINT_BUDGET:
         fail('output point budget (100000) exceeded; increase maxstep')
-    times=[float(i*Q(step)) for i in range(count+1) if i*Q(step)<Q(stop)]+[stop]
+    # A mathematical interior point can round to stop. It denotes the same
+    # binary64 observation, so retain the explicit endpoint exactly once.
+    times=[t for i in range(count+1) if (t:=float(i*Q(step)))<stop]+[stop]
     if any(a>=b for a,b in zip(times,times[1:])):
         fail('output times collapse at binary64 resolution')
     waveforms,rounding={},{}
@@ -266,19 +335,45 @@ def load_scs(path: str | Path) -> ScsTestbench:
         if len(nodes)!=len(expanded.ports):
             _fail(f'instance {token.text!r} requires {len(expanded.ports)} scalar ports in declared order',token)
         instances.append(dict(name=token.text,module=name,connections=dict(zip(expanded.ports,nodes)),parameters=settings))
+    model_sha256={p:hashlib.sha256(t.encode()).hexdigest() for p,t in sources.items()}
+    generated_sha256={}
+    if behavioral_sources:
+        available={'0',*waveforms,*[net for i in instances for net in i['connections'].values()],
+                   *[net for _,nodes,_,_ in behavioral_sources for net in nodes]}
+        driven=set(waveforms)
+        module_name='__evas_scs_bsource'
+        while module_name in models:
+            module_name+='_'  # Do not shadow a user model.
+        generated_path=str(path)+'.bsource.va'
+        while generated_path in sources:
+            generated_path+='.va'
+        generated=('`include "disciplines.vams"\n'
+                   f'module {module_name}(p,n,u,g); inout p,n,g; input u; electrical p,n,u,g; '
+                   'parameter real offset=0; analog begin V(p,n)<+V(u,g)+offset; end endmodule\n')
+        for token,nodes,reference,offset in behavioral_sources:
+            net=nodes[0] if nodes[1]=='0' else nodes[1]
+            if net in driven:
+                _fail('multiple voltage sources drive the same node',token)
+            driven.add(net)
+            if reference.text not in available:
+                _fail(f'bsource references unknown scalar node {reference.text!r}',reference)
+            instances.append(dict(name=token.text,module=module_name,
+                                  connections=dict(p=nodes[0],n=nodes[1],u=reference.text,g='0'),parameters=dict(offset=offset)))
+        sources[generated_path]=generated
+        generated_sha256[generated_path]=hashlib.sha256(generated.encode()).hexdigest()
     available={'0',*waveforms,*[net for i in instances for net in i['connections'].values()]}
     if not set(saved)<=available:
         fail(f'save names unknown scalar nodes: {sorted(set(saved)-available)}')
-    if not set(waveforms)<=set(net for i in instances for net in i['connections'].values()):
-        fail('every driven source must connect to a declared model port')
-    effective=dict(vabstol=1e-12,reltol=1e-10)
-    effective.update(tolerances)
     manifest=dict(models=list(sources),instances=instances,tolerances=effective,
                   transient=dict(sources=waveforms,output_times=times,stop=stop,max_step=step,**strobe))
     metadata=dict(input_format='spectre-voltage-subset',path=str(path),sha256=hashlib.sha256(text.encode()).hexdigest(),
-                  model_sha256={p:hashlib.sha256(t.encode()).hexdigest() for p,t in sources.items()},
+                  model_sha256=model_sha256,
                   effective_tolerances=effective,output_grid='0, k*maxstep below stop, stop',
                   pulse_corner_rounding_seconds=rounding)
+    if generated_sha256:
+        metadata['generated_model_sha256']=generated_sha256
+    if warning_reports:
+        metadata['warnings']=warning_reports
     if strobe:
         metadata['strobe_controls']=strobe
         metadata['forced_times']=forced
@@ -287,7 +382,8 @@ def load_scs(path: str | Path) -> ScsTestbench:
 
 def simulate_scs(path: str | Path, *, kernel=None, timeout=DEFAULT_TIMEOUT):
     bench=load_scs(path)
-    program=compile_sources(bench.sources,[Instance(**i) for i in bench.manifest['instances']])
+    program=compile_sources(bench.sources,[Instance(**i) for i in bench.manifest['instances']],
+                            external_nodes=bench.manifest['transient']['sources'])
     result=transient(program,kernel=kernel,timeout=timeout,
                      **bench.manifest['transient'],**bench.manifest['tolerances'])
     saved=bench.save or list(result['nodes'])

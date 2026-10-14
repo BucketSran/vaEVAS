@@ -477,12 +477,62 @@ enum Runtime {
         history: Box<transition_integral::Integral>,
     },
     Transition {
+        expression: Expression,
+        program: Arc<Program>,
+        owner: String,
         input: AffineState,
         input_bounds: Vec<I>,
         history: Box<Transition>,
     },
     Slew(Slew),
     SlewCascade(crate::slew_cascade::Cascade),
+}
+
+fn transition_input(
+    expression: &Expression,
+    program: &Program,
+    states: &[I],
+    owner: &str,
+) -> Result<(AffineState, Vec<I>), Error> {
+    crate::continuous::validate_selection(expression, program, &[], owner)?;
+    let (nodes, state_dependencies, operators) =
+        crate::continuous::integral_dependency_edges(expression, program, owner)?;
+    if nodes.iter().any(|&n| n != 0) || !operators.is_empty() {
+        return Err(Error::new(
+            "unsupported_operator",
+            "transition input must depend only on held instance state and constants",
+        ));
+    }
+    fn arms(e: &Expression, p: &Program, owner: &str) -> Result<(), Error> {
+        match e {
+            Expression::Select {
+                then_value,
+                else_value,
+                ..
+            } => {
+                arms(then_value, p, owner)?;
+                arms(else_value, p, owner)
+            }
+            _ => affine(e, p, owner).map(|_| ()),
+        }
+    }
+    arms(expression, program, owner)?;
+    let selected = crate::continuous::resolve_selection(
+        expression,
+        program,
+        &[],
+        &vec![I::ZERO; program.nodes.len()],
+        states,
+    )?;
+    let mut input = affine(&selected, program, owner)?;
+    input.state_dependencies.extend(state_dependencies);
+    let row = crate::affine_bounds::affine(&selected, program)?;
+    let coefficients = row[program.nodes.len()..program.nodes.len() + program.states.len()]
+        .iter()
+        .copied()
+        .chain([*row.last().unwrap()])
+        .collect();
+    Ok((input, coefficients))
 }
 
 const SIN_MAX_MAGNITUDE: f64 = 128.0;
@@ -825,7 +875,7 @@ fn reset_terms(expr: &Expression) -> Result<ResetTerms, Error> {
                 right_terms.scale(left_terms.constant_value()?)?
             };
         }
-        Expression::Power { .. } | Expression::Select { .. } => {
+        Expression::Divide { .. } | Expression::Power { .. } | Expression::Select { .. } => {
             return Err(Error::new(
                 "unsupported_operator",
                 "idt reset must be affine in instance state and constants",
@@ -897,7 +947,7 @@ fn reset_interval(expr: &Expression, states: &[I]) -> Result<I, Error> {
             let right_value = reset_interval(right, states)?;
             left_value * right_value
         }
-        Expression::Power { .. } | Expression::Select { .. } => {
+        Expression::Divide { .. } | Expression::Power { .. } | Expression::Select { .. } => {
             return Err(Error::new(
                 "unsupported_operator",
                 "idt reset must be affine in instance state and constants",
@@ -1254,6 +1304,8 @@ impl Operators {
                 OperatorSpec::Idt { .. }
                     | OperatorSpec::LaplaceNd { .. }
                     | OperatorSpec::Ddt { .. }
+                    | OperatorSpec::Math { .. }
+                    | OperatorSpec::Transition { .. }
             ) {
                 crate::continuous::validate_integral_input(input, program, &origin.instance)?;
             } else {
@@ -1470,27 +1522,27 @@ impl Operators {
                     fall,
                     origin,
                 } => {
-                    // Validate raw state/operator references before interval indexing.
-                    let bound_input = affine(input, program, &origin.instance)?;
-                    if !bound_input.node_dependencies.is_empty()
-                        || !bound_input.operator_dependencies.is_empty()
-                    {
-                        return Err(Error::new("unsupported_operator", "transition input must be affine in instance state and constants; nesting and voltage inputs are unsupported"));
-                    }
-                    let row = crate::affine_bounds::affine(input, program)?;
-                    let input_bounds: Vec<_> = row
-                        [program.nodes.len()..program.nodes.len() + program.states.len()]
-                        .iter()
-                        .copied()
-                        .chain([*row.last().unwrap()])
-                        .collect();
-                    let input = bound_input;
+                    let (input, input_bounds) = transition_input(
+                        input,
+                        program,
+                        &states.iter().copied().map(I::point).collect::<Vec<_>>(),
+                        &origin.instance,
+                    )?;
                     let initial = input.value(&[], states)?;
                     let bounds = input_bounds
                         .iter()
                         .zip(states.iter().copied().map(I::point).chain([I::ONE]))
                         .fold(I::ZERO, |sum, (&a, b)| sum + a * b);
+                    let OperatorSpec::Transition {
+                        input: expression, ..
+                    } = spec
+                    else {
+                        unreachable!()
+                    };
                     entries.push(Runtime::Transition {
+                        expression: expression.clone(),
+                        program: Arc::new(program.clone()),
+                        owner: origin.instance.clone(),
                         input,
                         input_bounds,
                         history: Box::new(Transition::enclosed(
@@ -1919,13 +1971,17 @@ impl Operators {
             };
             let Runtime::Transition {
                 input,
-                input_bounds,
+                input_bounds: _,
                 history: old,
+                expression,
+                program,
+                owner,
             } = &self.entries[parent]
             else {
                 unreachable!()
             };
             let may_change = changed.iter().any(|s| input.state_dependencies.contains(s));
+            let (input, input_bounds) = transition_input(expression, program, bounds, owner)?;
             if !may_change && !reaches_deadline {
                 continue;
             }
@@ -1996,7 +2052,17 @@ impl Operators {
                     input,
                     input_bounds,
                     history,
+                    expression,
+                    program,
+                    owner,
                 } => {
+                    let may_change = changed.iter().any(|s| input.state_dependencies.contains(s));
+                    if may_change {
+                        let (next_input, next_bounds) =
+                            transition_input(expression, program, bounds, owner)?;
+                        *input = next_input;
+                        *input_bounds = next_bounds;
+                    }
                     let bounds = input_bounds
                         .iter()
                         .zip(bounds.iter().copied().chain([I::ONE]))

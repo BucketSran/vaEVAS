@@ -1,0 +1,282 @@
+{
+  "strobe_evidence": {
+    "schema_version": 1,
+    "times": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "sample_origins": [
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame"
+    ],
+    "voltages_V": [
+      [
+        0.0,
+        0.0,
+        -0.0
+      ],
+      [
+        0.0,
+        0.25,
+        0.24497866312686414
+      ],
+      [
+        0.0,
+        0.5,
+        0.4636476090008061
+      ],
+      [
+        0.0,
+        0.75,
+        0.6435011087932844
+      ],
+      [
+        0.0,
+        1.0,
+        0.7853981633974483
+      ]
+    ]
+  },
+  "portability_advisories": {
+    "schema_version": 2,
+    "record_limit": 128,
+    "records": [
+      {
+        "code": "timer_observation_boundary",
+        "nonblocking": true,
+        "message": "Observation is inside or within one binary64 neighbor of a committed timer deadline enclosure. A backend may trigger elsewhere within the model's timing tolerance. Check samples and downstream history against their budgets; this notice neither proves a mismatch nor accepts a changed final result.",
+        "event_record": 0,
+        "event": 0,
+        "trigger": 0,
+        "origin": "dut.va:3:38 (Xdut)",
+        "query_source": "output_times",
+        "query_index": 2,
+        "query_time_s": 0.5,
+        "time_bounds_s": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "code": "timer_observation_boundary",
+        "nonblocking": true,
+        "message": "Observation is inside or within one binary64 neighbor of a committed timer deadline enclosure. A backend may trigger elsewhere within the model's timing tolerance. Check samples and downstream history against their budgets; this notice neither proves a mismatch nor accepts a changed final result.",
+        "event_record": 0,
+        "event": 0,
+        "trigger": 0,
+        "origin": "dut.va:3:38 (Xdut)",
+        "query_source": "strobetimes",
+        "query_index": 2,
+        "query_time_s": 0.5,
+        "time_bounds_s": [
+          0.5,
+          0.5
+        ]
+      }
+    ],
+    "model_records": [],
+    "dropped_records": 0,
+    "truncated": false
+  },
+  "observation_evidence": {
+    "schema_version": 1,
+    "nodes": [
+      "0",
+      "u",
+      "y"
+    ],
+    "effective_controls": {
+      "absolute_V": 1e-12,
+      "relative": 1e-10,
+      "stop_s": 1.0,
+      "max_step_s": 0.0001220703125,
+      "max_step_applied": true
+    },
+    "sample_origins": [
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame"
+    ],
+    "initial_settled": true,
+    "voltage_bounds_V": [
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          -0.0,
+          0.0
+        ]
+      ],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.25,
+          0.25
+        ],
+        [
+          0.2449786631268641,
+          0.2449786631268642
+        ]
+      ],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.5,
+          0.5
+        ],
+        [
+          0.463647609000806,
+          0.4636476090008062
+        ]
+      ],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.75,
+          0.75
+        ],
+        [
+          0.6435011087932841,
+          0.6435011087932846
+        ]
+      ],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          0.7853981633974481,
+          0.7853981633974485
+        ]
+      ]
+    ]
+  },
+  "engine": "evas-events-0.17.0",
+  "schema_version": 21,
+  "nodes": [
+    "0",
+    "u",
+    "y"
+  ],
+  "solutions": [
+    {
+      "voltages": [
+        0.0,
+        0.0,
+        -0.0
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    },
+    {
+      "voltages": [
+        0.0,
+        0.25,
+        0.24497866312686414
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    },
+    {
+      "voltages": [
+        0.0,
+        0.5,
+        0.4636476090008061
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    },
+    {
+      "voltages": [
+        0.0,
+        0.75,
+        0.6435011087932844
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    },
+    {
+      "voltages": [
+        0.0,
+        1.0,
+        0.7853981633974483
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    }
+  ],
+  "transient": {
+    "times": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "state_names": [
+      "Xdut:q"
+    ],
+    "states": [
+      [
+        0.125
+      ],
+      [
+        0.125
+      ],
+      [
+        0.0625
+      ],
+      [
+        0.0625
+      ],
+      [
+        0.0625
+      ]
+    ],
+    "events": [
+      {
+        "time": 0.5,
+        "event": 0,
+        "origin": "dut.va:3:38 (Xdut)",
+        "kind": "timer",
+        "before": [
+          0.125
+        ],
+        "after": [
+          0.0625
+        ]
+      }
+    ],
+    "display_records": [],
+    "accepted_steps": 8192,
+    "discarded_trials": 0
+  }
+}

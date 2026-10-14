@@ -61,6 +61,9 @@ fn body(
         budget.take(1)?;
         match s {
             Statement::Assign(a) => local[a.state] = transfer(&a.rhs, p, local, budget)?,
+            // This proof concerns state transfer only. Runtime still validates
+            // and captures displays through the ordinary/candidate event path.
+            Statement::Display { .. } => {}
             Statement::If {
                 then_body,
                 else_body,

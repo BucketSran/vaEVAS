@@ -96,7 +96,7 @@ class StatelessExpressionContracts(unittest.TestCase):
     def test_hidden_operators_and_unsupported_arms_reject_before_execution(self):
         hidden=['idt(V(u),0)','ddt(V(u))',"laplace_nd(V(u),'{1},'{1,1})",'transition(1,0,1,1)','sin(V(u))']
         invalid=['V(u)*V(u)','pow(V(u),2)','(V(y)>0?1:0)','(0*V(y)>0?1:0)',
-                 '(V(u)*V(u)-V(u)*V(u)>0?1:0)','((V(u)>0?1:0)*V(b))']
+                 '(V(u)*V(u)-V(u)*V(u)>0?1:0)','((V(u)>0?V(u):0)*V(b))']
         for bad in hidden+invalid:
             for expr in (f'1?{bad}:0',f'0?{bad}:0',f'1?0:{bad}',f'0&&({bad})',f'1||({bad})'):
                 with self.subTest(expr=expr),self.assertRaises(CompileError):compile_expr(expr)
@@ -106,22 +106,34 @@ class StatelessExpressionContracts(unittest.TestCase):
             with self.subTest(expr=expr),self.assertRaises(CompileError):
                 compile_expr(expr,'alias=V(y);','real alias;')
 
-    def test_events_initialization_parameters_and_waveform_contexts_do_not_expand(self):
+    def test_event_and_waveform_decisions_keep_parameter_rejection(self):
         for prefix in ('@(initial_step) q=0;', '@(initial_step) q=0; @(timer(1,0,1e-12)) q=1;'):
-            with self.subTest(prefix=prefix),self.assertRaises(CompileError):compile_expr('V(a)>0',prefix,'real q;')
+            p=compile_expr('V(a)>0',prefix,'real q;')
+            self.assertEqual(values(transient(p,{n:[[0,0],[1,0]] for n in INPUTS}|{'a':[[0,-1],[1,1]]},[0,1],stop=1,max_step=1,kernel=KERNEL)),[0,1])
         for decl in ('parameter real z=1?2:3;', 'parameter real z=1&&2;'):
             with self.subTest(decl=decl),self.assertRaises(CompileError):compile_expr('0',declarations=decl)
-        with self.assertRaises(CompileError):compile_expr('idt(V(a)>0,0)')
+        p=compile_expr('idt(V(a)>0,0)')
+        for actual,expected in zip(values(transient(p,{n:[[0,0],[1,0]] for n in INPUTS}|{'a':[[0,1],[1,1]]},[0,.5,1],stop=1,max_step=1,kernel=KERNEL)),[0,.5,1]):
+            self.assertAlmostEqual(actual,expected,delta=1e-9)
 
-    def test_equality_bitwise_nonfinite_and_unassigned_local_stay_rejected(self):
-        for expr in ('V(a)==0','V(a)!=0','V(a)&V(b)','V(a)|V(b)','V(a)^V(b)','~V(a)',
+    def test_equality_preserves_exact_ties_and_boolean_precedence(self):
+        for expr,expected in [('V(a)==0',[0,1,0]),('V(a)!=0',[1,0,1]),
+                              ('V(a)<0 == V(b)>0',[1,0,0])]:
+            with self.subTest(expr=expr):
+                result=solve(compile_expr(expr),list(INPUTS),[[-1,1,0,0],[0,1,0,0],[1,1,0,0]],kernel=KERNEL)
+                self.assertEqual(values(result),expected)
+
+    def test_bitwise_nonfinite_and_unassigned_local_stay_rejected(self):
+        for expr in ('V(a)&V(b)','V(a)|V(b)','V(a)^V(b)','~V(a)',
                      '1?1e309:0','0?1e308*1e308:0','0?unknown:1'):
             with self.subTest(expr=expr),self.assertRaises(CompileError):compile_expr(expr)
-        with self.assertRaises(CompileError):compile_expr('0?alias:1',declarations='real alias;')
+        p=compile_expr('alias',declarations='real alias;')
+        self.assertEqual(values(transient(p,{n:[[0,0],[1,0]] for n in INPUTS},[0,1],stop=1,max_step=1,kernel=KERNEL)),[0,0])
+        with self.assertRaises(CompileError):compile_expr('alias','if(V(a)>0) alias=1;','real alias;')
 
     def test_local_aliases_functions_and_loop_arrays_keep_decision_structure(self):
-        with self.assertRaises(CompileError):
-            compile_expr('alias*V(b)','alias=V(a)>0;','real alias;')
+        result=solve(compile_expr('alias*V(b)','alias=V(a)>0;','real alias;'),list(INPUTS),[[-1,2,0,0],[1,2,0,0]],kernel=KERNEL)
+        self.assertEqual(values(result),[0,2])
         with self.assertRaises(CompileError):
             compile_expr('0?alias:0','alias=idt(V(u),0);','real alias;')
         function='analog function real sign_value; input x; real x; begin sign_value=x>0?2:-1; end endfunction '
@@ -141,7 +153,7 @@ class StatelessExpressionContracts(unittest.TestCase):
         overwritten='analog function real overwrite; input x; real x,tmp; begin tmp=x>0; tmp=1; overwrite=1; end endfunction '
         for expression in ('discard(V(y)>0)', '0?discard(V(y)>0):2',
                            'discard(V(u)*V(u)>0)', 'discard(0*V(y)>0)',
-                           'discard((V(a)>0?1:0)*V(b))', '0?discard(V(u)*V(u)):2',
+                           'discard((V(a)>0?V(a):0)*V(b))', '0?discard(V(u)*V(u)):2',
                            'overwrite(V(y))', 'overwrite(V(u)*V(u))'):
             with self.subTest(expression=expression), self.assertRaises(CompileError):
                 compile_expr(expression,declarations=discard+overwritten)
@@ -158,10 +170,7 @@ class StatelessExpressionContracts(unittest.TestCase):
         discard='analog function real discard; input x; real x; begin discard=1; end endfunction '
         fixtures=[
             ('0','','parameter real k=discard(1>0);'),
-            ('q','@(initial_step) q=discard(1>0);','real q;'),
-            ('q','@(initial_step) q=0; @(timer(1,0,1e-12)) q=discard(1>0);','real q;'),
             ('q','@(initial_step) q=0; @(cross(discard(V(a)>0),1,1e-9,1e-8)) q=1;','real q;'),
-            ('idt(discard(V(a)>0),0)','',''),
             ('0','for(i=discard(1>0);i<2;i=i+1) V(y,r)<+0;','genvar i;'),
             ('0','for(i=0;i<discard(1>0);i=i+1) V(y,r)<+0;','genvar i;'),
             ('0','for(i=0;i<2;i=i+discard(1>0)) V(y,r)<+0;','genvar i;'),
@@ -268,7 +277,7 @@ class StatelessExpressionContracts(unittest.TestCase):
         function='analog function real discard; input x; real x,tmp; begin tmp=x+x; discard=1; end endfunction '
         for expression,prefix,declaration in (
             ('V(y)>0','',''),
-            ('alias*V(b)','alias=V(a)>0;','real alias;'),
+            ('alias*V(b)','alias=V(a)>0?V(a):0;','real alias;'),
             ('pow(alias,2)','alias=V(a)>0;','real alias;'),
             ('1>0','','parameter real k=VALUE;'),
         ):
@@ -291,14 +300,14 @@ class StatelessExpressionContracts(unittest.TestCase):
                    'analog function real overwrite; input x; real x,tmp; begin tmp=x*x; tmp=1; overwrite=1; end endfunction '
                    'analog function real pair; input x,z; real x,z; begin pair=1; end endfunction ')
         for expression,prefix,declaration in (
-            ('discard(alias*V(b))','alias=V(a)>0;','real alias;'),
+            ('discard(alias*V(b))','alias=V(a)>0?V(a):0;','real alias;'),
             ('discard(pow(alias,2))','alias=V(a)>0;','real alias;'),
-            ('discard(other*V(b))','alias=V(a)>0; other=alias;','real alias,other;'),
-            ('overwrite(alias)','alias=V(a)>0;','real alias;'),
-            ('discard(z[0]*V(b))','z[0]=V(a)>0;','real z[0:0];'),
+            ('discard(other*V(b))','alias=V(a)>0?V(a):0; other=alias;','real alias,other;'),
+            ('overwrite(alias)','alias=V(a)>0?V(a):0;','real alias;'),
+            ('discard(z[0]*V(b))','z[0]=V(a)>0?V(a):0;','real z[0:0];'),
             ('0','for(i=0;i<1;i=i+1) begin z[i]=V(a)>0; V(y,r)<+discard(pow(z[i],2)); end','real z[0:0]; genvar i;'),
             ('pair(alias,discard(V(b)*V(b)))','alias=V(a)>0;','real alias;'),
-            ('transition(discard(alias),0,1,1)','alias=V(a)>0;','real alias;'),
+            ('transition(discard(alias),0,1,1)','alias=V(y)>0;','real alias;'),
         ):
             with self.subTest(expression=expression,prefix=prefix),self.assertRaises(CompileError):
                 compile_expr(expression,prefix,functions+declaration)
@@ -316,9 +325,37 @@ class StatelessExpressionContracts(unittest.TestCase):
         self.assertEqual(values(transient(program,sources,[1.],stop=3,max_step=3,kernel=KERNEL,
                                          vabstol=1e-9,reltol=0)),[1])
 
-    def test_generated_wire_tree_budget_is_preserved(self):
-        with self.assertRaisesRegex(CompileError,'(generated|expanded) IR .*limit'):
-            compile_expr('!'*60+'V(a)')
+    def test_boolean_tree_reuse_preserves_truth_and_real_budget(self):
+        p=compile_expr('!'*60+'V(a)')
+        self.assertEqual(values(solve(p,list(INPUTS),[[0,0,0,0],[1,0,0,0]],kernel=KERNEL)),[0,1])
+        def tree(depth):
+            if depth == 0: return 'V(a)'
+            child=tree(depth-1)
+            return '(V(b)>0?('+child+'+1):('+child+'-1))'
+        with self.assertRaisesRegex(CompileError,'budget') as caught:
+            compile_expr(tree(15))
+        self.assertEqual(caught.exception.diagnostic['code'],'resource_budget')
+
+    def test_supported_discarded_affine_choices_and_event_values(self):
+        discard='analog function real discard; input x; real x; begin discard=1; end endfunction '
+        overwrite='analog function real overwrite; input x; real x,tmp; begin tmp=x*x; tmp=1; overwrite=1; end endfunction '
+        for expression,prefix,declaration in (
+            ('discard(alias*V(b))','alias=V(a)>0;','real alias;'),
+            ('overwrite(alias)','alias=V(a)>0;','real alias;'),
+            ('discard(z[0]*V(b))','z[0]=V(a)>0;','real z[0:0];'),
+        ):
+            with self.subTest(expression=expression):
+                p=compile_expr(expression,prefix,discard+overwrite+declaration)
+                self.assertEqual(values(solve(p,list(INPUTS),[[-1,2,0,0],[1,2,0,0]],kernel=KERNEL)),[1,1])
+        for prefix,expected in (
+            ('@(initial_step) q=discard(1>0);',[1,1,1]),
+            ('@(initial_step) q=0; @(timer(0.5)) q=discard(1>0);',[0,1,1]),
+        ):
+            p=compile_expr('q',prefix,discard+'real q;')
+            self.assertEqual(values(transient(p,{n:[[0,0],[1,0]] for n in INPUTS},[0,.5,1],stop=1,max_step=1,kernel=KERNEL)),expected)
+        p=compile_expr('idt(discard(V(a)>0),0)',declarations=discard)
+        for actual,expected in zip(values(transient(p,{n:[[0,0],[1,0]] for n in INPUTS}|{'a':[[0,1],[1,1]]},[0,.5,1],stop=1,max_step=1,kernel=KERNEL)),[0,.5,1]):
+            self.assertAlmostEqual(actual,expected,delta=1e-9)
 
 
 if __name__=='__main__':unittest.main()

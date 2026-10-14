@@ -27,6 +27,7 @@ pub(crate) fn prepare(
         model,
         (events, &[]),
         inputs,
+        inputs.1,
         before,
         operators,
         before_bounds,
@@ -41,6 +42,7 @@ pub(crate) fn prepare_window(
     model: &EventModel,
     events_and_roots: (&[usize], &[usize]),
     inputs: (&[f64], &[I]),
+    observation_inputs: &[I],
     before: &[f64],
     operators: &[f64],
     before_bounds: &[I],
@@ -51,6 +53,7 @@ pub(crate) fn prepare_window(
         model,
         events_and_roots,
         inputs,
+        observation_inputs,
         before,
         operators,
         before_bounds,
@@ -66,6 +69,7 @@ fn prepare_impl(
     model: &EventModel,
     events_and_roots: (&[usize], &[usize]),
     inputs: (&[f64], &[I]),
+    observation_inputs: &[I],
     before: &[f64],
     operators: &[f64],
     before_bounds: &[I],
@@ -74,32 +78,61 @@ fn prepare_impl(
     check_voltages: bool,
 ) -> Result<Prepared, Error> {
     let (inputs, input_bounds) = inputs;
-    let selection =
-        model
-            .conditions
-            .select_at_roots(events_and_roots.0, input_bounds, events_and_roots.1)?;
+    let selection = model.conditions.select_at_roots(
+        events_and_roots.0,
+        input_bounds,
+        events_and_roots.1,
+        before_bounds,
+    )?;
     model.check_selection_writers(&selection)?;
+    model.check_contribution_predicate_updates(&selection)?;
     // A unique voltage solution is required. In particular, a zero-delay loop
     // with multiple fixed points is not accepted merely because iteration stalls.
-    let mut joint = model.event_circuit(&selection, before, operators)?;
+    // Constant/integer event updates can change mode predicates in this same
+    // batch. Evaluate those updates first, retaining voltage-dependent updates
+    // as affine unknowns in the actual joint solve.
+    let predicate_states =
+        model.apply(&selection, &vec![0.0; model.program.nodes.len()], before)?;
+    let predicate_bounds: Vec<_> = predicate_states.iter().copied().map(I::point).collect();
+    let selected =
+        model.selected_program_at_roots(&predicate_bounds, input_bounds, events_and_roots.1)?;
+    let mut joint = model.event_circuit_program(&selected, &selection, before, operators)?;
     if let Some(previous) = previous {
         joint.reuse_affine_factor_from(previous);
     }
     let candidate = joint.solve(inputs)?;
     let states = model.apply(&selection, &candidate.voltages, before)?;
+    let replayed = model.selected_program_at_roots(
+        &states.iter().copied().map(I::point).collect::<Vec<_>>(),
+        input_bounds,
+        events_and_roots.1,
+    )?;
+    if replayed
+        .contributions
+        .iter()
+        .zip(&selected.contributions)
+        .any(|(a, b)| a.rhs != b.rhs)
+    {
+        return Err(Error::new(
+            "unsupported_condition",
+            "same-time contribution predicate depends on a voltage-assigned state",
+        ));
+    }
     // Validate the original, unsubstituted voltage constraints with the replayed
     // state. Substitution roundoff must not replace the physical residual check.
-    let mut circuit = model.circuit_with(&states, operators)?;
+    let mut circuit = model.circuit_at(&states, operators, observation_inputs)?;
     if let Some(previous) = previous {
         circuit.reuse_affine_factor_from(previous);
     }
     let mut solution = circuit.solve(inputs)?;
     // Replay the same input/root certificate. A small equation residual
     // cannot certify a branch chosen from rounded representative inputs.
-    if model
-        .conditions
-        .select_at_roots(events_and_roots.0, input_bounds, events_and_roots.1)?
-        != selection
+    if model.conditions.select_at_roots(
+        events_and_roots.0,
+        input_bounds,
+        events_and_roots.1,
+        before_bounds,
+    )? != selection
     {
         return Err(Error::new(
             "event_consistency",
@@ -124,8 +157,9 @@ fn prepare_impl(
         }
     }
     let bounds = if check_voltages {
-        let (states, nodes) = model.certify_observation(
+        let (states, nodes) = model.certify_observation_at_roots(
             &selection,
+            events_and_roots.1,
             input_bounds,
             before_bounds,
             operator_bounds,
@@ -137,6 +171,7 @@ fn prepare_impl(
     } else {
         model.certify_event_states(
             &selection,
+            events_and_roots.1,
             input_bounds,
             before_bounds,
             operator_bounds,

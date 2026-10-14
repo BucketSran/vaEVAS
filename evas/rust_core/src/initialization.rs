@@ -49,62 +49,70 @@ fn affine_degree(expression: &Expression, allowed: &HashSet<usize>) -> Result<u8
     })
 }
 
-fn bit(expression: &Expression, expected: f64) -> bool {
-    matches!(expression, Expression::Affine { constant, terms } if *constant == expected && terms.is_empty())
-}
-
+// Procedural initialization is compiled to a source-order expression. Runtime
+// checks every arm before selecting, and accepts only a deterministic value.
 fn predicate(
     expression: &Expression,
     owner: &str,
-    kind: &StateKind,
+    _kind: &StateKind,
     nodes: &[I],
     allowed: &HashSet<usize>,
 ) -> Result<f64, Error> {
-    let Expression::Select {
-        left,
-        right,
-        then_value,
-        else_value,
-        origin,
-        ..
-    } = expression
-    else {
-        return Err(unsupported(
-            "initial expression must be a single 0/1 comparison",
-        ));
-    };
-    if *kind != StateKind::Real || !bit(then_value, 1.0) || !bit(else_value, 0.0) {
-        return Err(unsupported(
-            "initial comparison requires a real state and exact 1/0 arms",
-        ));
+    fn check(e: &Expression, owner: &str, allowed: &HashSet<usize>) -> Result<(), Error> {
+        match e {
+            Expression::Select {
+                left,
+                right,
+                then_value,
+                else_value,
+                origin,
+                ..
+            } => {
+                if origin.instance != owner || !origin.valid_expansion() {
+                    return Err(Error::new("invalid_ir", "invalid initial expression owner"));
+                }
+                for predicate in [left, right] {
+                    check(predicate, owner, allowed)?;
+                }
+                check(then_value, owner, allowed)?;
+                check(else_value, owner, allowed)?;
+            }
+            Expression::Add { left, right } | Expression::Multiply { left, right } => {
+                check(left, owner, allowed)?;
+                check(right, owner, allowed)?;
+            }
+            _ => {
+                affine_degree(e, allowed)?;
+            }
+        }
+        Ok(())
     }
-    if origin.instance != owner {
-        return Err(Error::new(
-            "invalid_ir",
-            "initial predicate owner differs from state owner",
-        ));
-    }
-    // Validate field values/indices first. Structural rejection remains independent
-    // of the selected branch and of numerical cancellations.
-    affine_degree(left, allowed)?;
-    affine_degree(right, allowed)?;
+    check(expression, owner, allowed)?;
     validate(expression, nodes.len())?;
     let result = resolve_selects(expression, nodes).map_err(|mut error| {
         if error.kind == "condition_precision" {
             error.kind = "initialization_precision";
-            error.message = format!(
-                "initial comparison cannot be certified at {}",
-                origin.label()
-            );
         }
         error
     })?;
-    match result {
-        Expression::Affine { constant, terms } if terms.is_empty() => Ok(constant),
-        _ => Err(unsupported(
-            "initial comparison did not resolve to a constant",
-        )),
+    // State.initial currently stores an exact value, not an uncertainty interval.
+    // Require no voltage reads remain after selecting source-dependent arms.
+    fn constant(e: &Expression) -> bool {
+        match e {
+            Expression::Affine { terms, .. } => terms.is_empty(),
+            Expression::Add { left, right } | Expression::Multiply { left, right } => {
+                constant(left) && constant(right)
+            }
+            Expression::Power { base, .. } => constant(base),
+            _ => false,
+        }
     }
+    if !constant(&result) {
+        return Err(unsupported(
+            "initial expression must select constant values",
+        ));
+    }
+    Ok(crate::expression::evaluate(&result, &[])?.value)
 }
 
 pub(crate) fn resolve(
@@ -292,7 +300,7 @@ mod tests {
     }
 
     #[test]
-    fn cancelled_undriven_dependencies_and_non_predicate_payload_are_rejected() {
+    fn cancelled_undriven_dependency_is_rejected_and_constant_payload_is_exact() {
         let mut p = predicate_program();
         let StateInitial::Predicate(Expression::Select { left, .. }) = &mut p.states[0].initial
         else {
@@ -316,11 +324,7 @@ mod tests {
             constant: 1.,
             terms: vec![],
         });
-        assert_eq!(
-            resolve(p, &["u".into()], &[I::point(0.9)])
-                .unwrap_err()
-                .kind,
-            "unsupported_initialization"
-        );
+        let resolved = resolve(p, &["u".into()], &[I::point(0.9)]).unwrap();
+        assert_eq!(resolved.states[0].initial.constant().unwrap(), 1.);
     }
 }

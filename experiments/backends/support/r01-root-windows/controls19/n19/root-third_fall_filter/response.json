@@ -1,0 +1,534 @@
+{
+  "strobe_evidence": {
+    "schema_version": 1,
+    "times": [
+      0.0,
+      0.125,
+      0.25,
+      0.375,
+      0.5,
+      0.625,
+      0.75,
+      0.875,
+      1.0
+    ],
+    "sample_origins": [
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame"
+    ],
+    "voltages_V": [
+      [
+        0.0,
+        3.0,
+        -0.0,
+        -0.0,
+        -0.0
+      ],
+      [
+        0.0,
+        2.625,
+        -0.0,
+        -0.0,
+        -0.0
+      ],
+      [
+        0.0,
+        2.25,
+        -0.0,
+        -0.0,
+        -0.0
+      ],
+      [
+        0.0,
+        1.875,
+        0.06023059856823826,
+        0.3962673611111114,
+        -0.0
+      ],
+      [
+        0.0,
+        1.5,
+        0.6439281343229293,
+        1.3611111111111112,
+        -0.0
+      ],
+      [
+        0.0,
+        1.125,
+        1.3614464003812354,
+        2.044704861111111,
+        -0.0
+      ],
+      [
+        0.0,
+        0.75,
+        1.976277177957625,
+        2.517361111111111,
+        1.0
+      ],
+      [
+        0.0,
+        0.375,
+        2.3183074561557606,
+        2.517361111111111,
+        1.0
+      ],
+      [
+        0.0,
+        0.0,
+        2.4441333637630036,
+        2.517361111111111,
+        1.0
+      ]
+    ]
+  },
+  "portability_advisories": {
+    "schema_version": 2,
+    "record_limit": 128,
+    "records": [
+      {
+        "code": "timer_observation_boundary",
+        "nonblocking": true,
+        "message": "Observation is inside or within one binary64 neighbor of a committed timer deadline enclosure. A backend may trigger elsewhere within the model's timing tolerance. Check samples and downstream history against their budgets; this notice neither proves a mismatch nor accepts a changed final result.",
+        "event_record": 0,
+        "event": 0,
+        "trigger": 0,
+        "origin": "dut.va:4:1 (dut)",
+        "query_source": "output_times",
+        "query_index": 6,
+        "query_time_s": 0.75,
+        "time_bounds_s": [
+          0.75,
+          0.75
+        ]
+      },
+      {
+        "code": "timer_observation_boundary",
+        "nonblocking": true,
+        "message": "Observation is inside or within one binary64 neighbor of a committed timer deadline enclosure. A backend may trigger elsewhere within the model's timing tolerance. Check samples and downstream history against their budgets; this notice neither proves a mismatch nor accepts a changed final result.",
+        "event_record": 0,
+        "event": 0,
+        "trigger": 0,
+        "origin": "dut.va:4:1 (dut)",
+        "query_source": "strobetimes",
+        "query_index": 6,
+        "query_time_s": 0.75,
+        "time_bounds_s": [
+          0.75,
+          0.75
+        ]
+      }
+    ],
+    "model_records": [],
+    "dropped_records": 0,
+    "truncated": false
+  },
+  "observation_evidence": {
+    "schema_version": 1,
+    "nodes": [
+      "0",
+      "u",
+      "w",
+      "y",
+      "z"
+    ],
+    "effective_controls": {
+      "absolute_V": 1e-12,
+      "relative": 1e-09,
+      "stop_s": 1.0,
+      "max_step_s": 0.0078125,
+      "max_step_applied": true
+    },
+    "sample_origins": [
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame",
+      "accepted_controller_frame"
+    ],
+    "initial_settled": true,
+    "voltage_bounds_V": [
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          3.0,
+          3.0
+        ],
+        [
+          -0.0,
+          0.0
+        ],
+        [
+          -0.0,
+          0.0
+        ],
+        [
+          -0.0,
+          0.0
+        ]
+      ],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          2.625,
+          2.625
+        ],
+        [
+          -1.1626014163425775e-41,
+          1.1626014163425775e-41
+        ],
+        [
+          -0.0,
+          0.0
+        ],
+        [
+          -0.0,
+          0.0
+        ]
+      ],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          2.25,
+          2.25
+        ],
+        [
+          -1.5902985756918159e-41,
+          1.5902985756918159e-41
+        ],
+        [
+          -0.0,
+          0.0
+        ],
+        [
+          -0.0,
+          0.0
+        ]
+      ],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1.875,
+          1.875
+        ],
+        [
+          0.06023059856823808,
+          0.060230598568238446
+        ],
+        [
+          0.39626736111111066,
+          0.39626736111111205
+        ],
+        [
+          -0.0,
+          0.0
+        ]
+      ],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1.5,
+          1.5
+        ],
+        [
+          0.6439281343229287,
+          0.64392813432293
+        ],
+        [
+          1.3611111111111105,
+          1.361111111111112
+        ],
+        [
+          -0.0,
+          0.0
+        ]
+      ],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1.125,
+          1.125
+        ],
+        [
+          1.3614464003812345,
+          1.3614464003812363
+        ],
+        [
+          2.0447048611111103,
+          2.044704861111112
+        ],
+        [
+          -0.0,
+          0.0
+        ]
+      ],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.75,
+          0.75
+        ],
+        [
+          1.9762771779576238,
+          1.976277177957626
+        ],
+        [
+          2.5173611111111103,
+          2.517361111111112
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.375,
+          0.375
+        ],
+        [
+          2.3183074561557593,
+          2.318307456155762
+        ],
+        [
+          2.5173611111111103,
+          2.517361111111112
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          2.4441333637630023,
+          2.4441333637630054
+        ],
+        [
+          2.5173611111111103,
+          2.517361111111112
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ]
+    ]
+  },
+  "engine": "evas-events-0.17.0",
+  "schema_version": 21,
+  "nodes": [
+    "0",
+    "u",
+    "w",
+    "y",
+    "z"
+  ],
+  "solutions": [
+    {
+      "voltages": [
+        0.0,
+        3.0,
+        -0.0,
+        -0.0,
+        -0.0
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    },
+    {
+      "voltages": [
+        0.0,
+        2.625,
+        -0.0,
+        -0.0,
+        -0.0
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    },
+    {
+      "voltages": [
+        0.0,
+        2.25,
+        -0.0,
+        -0.0,
+        -0.0
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    },
+    {
+      "voltages": [
+        0.0,
+        1.875,
+        0.06023059856823826,
+        0.3962673611111114,
+        -0.0
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    },
+    {
+      "voltages": [
+        0.0,
+        1.5,
+        0.6439281343229293,
+        1.3611111111111112,
+        -0.0
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    },
+    {
+      "voltages": [
+        0.0,
+        1.125,
+        1.3614464003812354,
+        2.044704861111111,
+        -0.0
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    },
+    {
+      "voltages": [
+        0.0,
+        0.75,
+        1.976277177957625,
+        2.517361111111111,
+        1.0
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    },
+    {
+      "voltages": [
+        0.0,
+        0.375,
+        2.3183074561557606,
+        2.517361111111111,
+        1.0
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    },
+    {
+      "voltages": [
+        0.0,
+        0.0,
+        2.4441333637630036,
+        2.517361111111111,
+        1.0
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    }
+  ],
+  "transient": {
+    "times": [
+      0.0,
+      0.125,
+      0.25,
+      0.375,
+      0.5,
+      0.625,
+      0.75,
+      0.875,
+      1.0
+    ],
+    "state_names": [
+      "dut:q"
+    ],
+    "states": [
+      [
+        0.0
+      ],
+      [
+        0.0
+      ],
+      [
+        0.0
+      ],
+      [
+        0.0
+      ],
+      [
+        0.0
+      ],
+      [
+        0.0
+      ],
+      [
+        1.0
+      ],
+      [
+        1.0
+      ],
+      [
+        1.0
+      ]
+    ],
+    "events": [
+      {
+        "time": 0.75,
+        "event": 0,
+        "origin": "dut.va:4:1 (dut)",
+        "kind": "timer",
+        "before": [
+          0.0
+        ],
+        "after": [
+          1.0
+        ]
+      }
+    ],
+    "display_records": [],
+    "accepted_steps": 130,
+    "discarded_trials": 0
+  }
+}

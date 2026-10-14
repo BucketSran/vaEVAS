@@ -1,0 +1,249 @@
+{
+  "label": "bsource_chain",
+  "source_sha256": "89a2bcac3daa4100d936067110a20b1dc232d9ca4078e06d33fa7e106b3ef93f",
+  "budget_V": 1e-08,
+  "spectre_status": "pending actual run",
+  "original_spectre_deck_evas_admission": {
+    "type": "CompileError",
+    "message": "tb.scs:7:44: expected a finite numeric literal or preceding constant, got '\"%.17g\"'"
+  },
+  "deck_metadata": {
+    "input_format": "spectre-voltage-subset",
+    "path": "tb.evas.scs",
+    "sha256": "d5d8d6bcbff2cd072c4d2d5f3dc29d928169b2b14e7512169f1e955bd8eac7fb",
+    "model_sha256": {
+      "dut.va": "89a2bcac3daa4100d936067110a20b1dc232d9ca4078e06d33fa7e106b3ef93f"
+    },
+    "effective_tolerances": {
+      "vabstol": 1e-12,
+      "reltol": 1e-10
+    },
+    "output_grid": "0, k*maxstep below stop, stop",
+    "pulse_corner_rounding_seconds": {
+      "VX": 0.0
+    },
+    "generated_model_sha256": {
+      "tb.evas.scs.bsource.va": "1bb3c23a067f4c17d2f25ca7ffd856d8565b9d2fdd3906c3d692af09e876cbd1"
+    },
+    "warnings": [
+      {
+        "code": "ignored_scs_option",
+        "severity": "warning",
+        "option": "iabstol",
+        "requested_value": 1e-15,
+        "message": "iabstol is ignored and has no effect: EVAS has no current unknowns.",
+        "location": {
+          "source": "tb.evas.scs",
+          "line": 7,
+          "column": 53
+        }
+      },
+      {
+        "code": "ignored_scs_option",
+        "severity": "warning",
+        "option": "errpreset",
+        "requested_value": "conservative",
+        "message": "errpreset=conservative is ignored: Spectre preset adjustments are not applied. EVAS uses reltol=1e-10, vabstol=1e-12, max_step=0.00012207.",
+        "location": {
+          "source": "tb.evas.scs",
+          "line": 8,
+          "column": 42
+        },
+        "effective_controls": {
+          "vabstol": 1e-12,
+          "reltol": 1e-10,
+          "max_step": 0.0001220703125
+        }
+      }
+    ],
+    "strobe_controls": {
+      "strobetimes": [
+        0.0,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ]
+    },
+    "forced_times": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ]
+  },
+  "coupled_public_entry": "load_scs + compile_sources(external_nodes) + transient; exact five requested observations replace public dense display grid only",
+  "status": "completed",
+  "response_sha256": "4e0c212b3c39e708b6904e314689084f5b29eb7f36ec938337688219e3319553",
+  "mathchecks": [
+    {
+      "time": 0,
+      "node": "x",
+      "value": 0.0,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0,
+      "node": "a",
+      "value": 0.25,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0,
+      "node": "u",
+      "value": -0.125,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0,
+      "node": "y",
+      "value": -0.375,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0.25,
+      "node": "x",
+      "value": 0.25,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0.25,
+      "node": "a",
+      "value": 0.5,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0.25,
+      "node": "u",
+      "value": -0.375,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0.25,
+      "node": "y",
+      "value": -1.125,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0.5,
+      "node": "x",
+      "value": 0.5,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0.5,
+      "node": "a",
+      "value": 0.75,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0.5,
+      "node": "u",
+      "value": -0.625,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0.5,
+      "node": "y",
+      "value": -1.875,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0.75,
+      "node": "x",
+      "value": 0.75,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0.75,
+      "node": "a",
+      "value": 1.0,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0.75,
+      "node": "u",
+      "value": -0.875,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0.75,
+      "node": "y",
+      "value": -2.625,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 1,
+      "node": "x",
+      "value": 1.0,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 1,
+      "node": "a",
+      "value": 1.25,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 1,
+      "node": "u",
+      "value": -1.125,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 1,
+      "node": "y",
+      "value": -3.375,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    }
+  ],
+  "analytic_budget_pass": true,
+  "enclosure_contains_oracle": true,
+  "elapsed_seconds": 0.04485387500062643,
+  "packaging": {
+    "original_receipt_sha256": "0623d8d50acc335229241c28b4ef05c56ced01cb5bf74dd73db6bf4aafaa0339",
+    "absolute_input_path_prefix_removed": true,
+    "receipt_is_sanitized_extract": true
+  }
+}

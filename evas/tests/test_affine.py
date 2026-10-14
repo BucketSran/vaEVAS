@@ -15,7 +15,7 @@ import random
 import subprocess
 import unittest
 
-from evas import CompileError, Instance, KernelError, compile_sources, solve
+from evas import CompileError, Instance, KernelError, compile_sources, solve, transient
 
 EVAS = Path(__file__).resolve().parents[1]
 KERNEL = EVAS / "rust_core/target/debug/evas-kernel"
@@ -150,9 +150,17 @@ class AffineContracts(unittest.TestCase):
 
 
 class RejectionContracts(unittest.TestCase):
+    def test_variable_real_division_and_zero_denominator(self):
+        program = compile_sources({"division.va": model("V(y,r)<+1/V(u,r);")}, [instance()])
+        result = solve(program, ["u"], [[2], [-4]], kernel=KERNEL)
+        index = result["nodes"].index("y")
+        self.assertEqual([row["voltages"][index] for row in result["solutions"]], [.5, -.25])
+        with self.assertRaisesRegex(KernelError, "division denominator is zero"):
+            transient(program, {"u": [[0, -1], [1, 1]]}, [0, .5, 1],
+                      stop=1, max_step=1, kernel=KERNEL)
+
     def test_unsupported_and_malformed_source_is_not_silently_lowered(self):
         cases = [
-            model("V(y,r)<+1/V(u,r);"),
             model("V(y,r)<+idt(V(u,r));"),
             model("@(cross(V(u,r),1)) V(y,r)<+1;"),
             model("if (1) V(y,r)<+1;"),

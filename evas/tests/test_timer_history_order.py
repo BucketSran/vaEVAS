@@ -16,7 +16,7 @@ def clocks_with_history(threshold=100.0):
         @(timer(3e-6,3e-6,1e-9)) m=m+1;
         V(z,r)<+idt(1e6*n,0);
         @(cross(V(z,r)-{threshold!r},1,1e-12,1e-7)) h=h+1;
-        V(y,r)<+n+10*m+100*h;''', 'integer n,m,h; electrical z;')
+        V(y,r)<+n+10.0*m+100.0*h;''', 'integer n,m,h; electrical z;')
 
 
 def run_history(source, *, stop=7e-6, times=None, step=7e-6):
@@ -65,7 +65,7 @@ class TimerHistoryOrder(unittest.TestCase):
         source = model('''@(initial_step) begin n=0; m=0; h=0; s=0; end
           @(timer(2e-6,2e-6,1e-9)) n=n+1;
           @(timer(3e-6,3e-6,1e-9)) begin m=m+1; s=V(z,r); end
-          V(z,r)<+idt(1e6*(n+10*m),0);
+          V(z,r)<+idt(1e6*(n+10.0*m),0);
           @(cross(V(z,r)-100,1,1e-12,1e-7)) h=h+1;
           V(y,r)<+s;''', 'integer n,m,h; real s; electrical z;')
         baseline = None

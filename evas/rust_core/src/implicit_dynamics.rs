@@ -41,6 +41,8 @@ impl ImplicitField {
                         Some(a? * b?)
                     }
                 }
+                Polynomial::Exp(a) => crate::math_functions::exp(constant_value(a)?).ok(),
+                Polynomial::Reciprocal(a) => Some(I::ONE / constant_value(a)?),
                 Polynomial::Power(a, n) => {
                     let a = constant_value(a)?;
                     Some((0..*n).fold(I::ONE, |value, _| value * a))
@@ -239,6 +241,19 @@ impl Polynomial {
                 left: Box::new(a.point_expression(variables)?),
                 right: Box::new(b.point_expression(variables)?),
             },
+            Self::Exp(_) => {
+                return Err(Error::new(
+                    "unsupported_operator",
+                    "implicit mathematical output requires an explicit compiled function reference",
+                ))
+            }
+            Self::Reciprocal(a) => Expression::Divide {
+                left: Box::new(Expression::Affine {
+                    constant: 1.,
+                    terms: vec![],
+                }),
+                right: Box::new(a.point_expression(variables)?),
+            },
             Self::Power(a, exponent) => Expression::Power {
                 base: Box::new(a.point_expression(variables)?),
                 exponent: *exponent,
@@ -261,6 +276,21 @@ impl Polynomial {
                 Box::new(Self::Multiply(Box::new(a.derivative(variable)), b.clone())),
                 Box::new(Self::Multiply(a.clone(), Box::new(b.derivative(variable)))),
             ),
+            Self::Exp(a) => Self::Multiply(
+                Box::new(a.derivative(variable)),
+                Box::new(Self::Exp(a.clone())),
+            ),
+            Self::Reciprocal(a) => {
+                let mut negative = vec![I::ZERO; self.width()];
+                *negative.last_mut().unwrap() = -I::ONE;
+                Self::Multiply(
+                    Box::new(Self::Linear(negative)),
+                    Box::new(Self::Multiply(
+                        Box::new(a.derivative(variable)),
+                        Box::new(Self::Power(Box::new(Self::Reciprocal(a.clone())), 2)),
+                    )),
+                )
+            }
             Self::Power(a, n) => {
                 let power = if *n == 1 {
                     a.derivative(variable)
@@ -279,7 +309,11 @@ impl Polynomial {
     fn width(&self) -> usize {
         match self {
             Self::Linear(row) => row.len(),
-            Self::Add(a, _) | Self::Multiply(a, _) | Self::Power(a, _) => a.width(),
+            Self::Add(a, _)
+            | Self::Multiply(a, _)
+            | Self::Power(a, _)
+            | Self::Reciprocal(a)
+            | Self::Exp(a) => a.width(),
         }
     }
 }
@@ -536,6 +570,12 @@ impl Coordinates {
                 Box::new(self.expression(left, program, owner)?),
                 Box::new(self.expression(right, program, owner)?),
             ),
+            Expression::Divide { left, right } => Polynomial::Multiply(
+                Box::new(self.expression(left, program, owner)?),
+                Box::new(Polynomial::Reciprocal(Box::new(
+                    self.expression(right, program, owner)?,
+                ))),
+            ),
             Expression::Power { base, exponent } => {
                 Polynomial::Power(Box::new(self.expression(base, program, owner)?), *exponent)
             }
@@ -773,12 +813,16 @@ fn initialize(
     }
     let mut flow = NonlinearContinuous {
         context: Arc::new(Context {
+            force_integrals: false,
             program: program.clone(),
             trajectory: trajectory.clone(),
             driven: driven.to_vec(),
         }),
         parameters: vec![],
         functions,
+        step_bounds: vec![],
+        math_outputs: vec![],
+        modes: vec![],
         implicit: Some(ImplicitField {
             physical,
             gradients,
@@ -888,6 +932,7 @@ pub(crate) fn run(
         solutions.push(solution);
     }
     let trace = TransientTrace {
+        display_records: Vec::new(),
         times: trajectory.config.output_times.clone(),
         state_names: vec![],
         states: vec![vec![]; solutions.len()],

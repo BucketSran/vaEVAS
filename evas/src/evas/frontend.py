@@ -1,6 +1,6 @@
 """Parse models, bind flat instances and coordinate one compilation context."""
 from dataclasses import dataclass, field
-from typing import Mapping
+from typing import Mapping, Iterable
 
 from .ir import Program
 from .elaboration import inline_functions
@@ -8,7 +8,7 @@ from .hierarchy import bind_hierarchy
 from .preprocessor import preprocess_sources
 from .instance_compiler import Compilation, InstanceCompiler
 from .syntax import (CompileError, Parser, contains_operator, Assignment as SyntaxAssignment,
-                     Conditional as SyntaxConditional, ContributionStatement, Loop)
+                     Conditional as SyntaxConditional, ContributionStatement, BoundStep, Loop, Display, Event)
 
 
 @dataclass(frozen=True)
@@ -32,8 +32,11 @@ def parse_sources(sources: Mapping[str, str]):
     return models
 
 
-def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Program:
+def compile_sources(sources: Mapping[str, str], instances: list[Instance], *, external_nodes: Iterable[str] = ()) -> Program:
     """Compile source text and explicit flat instances; never import validation data."""
+    external_nodes = tuple(external_nodes)
+    if any(not isinstance(n, str) or not n or n.startswith('$') for n in external_nodes):
+        raise CompileError("external nodes must be nonempty ordinary node names")
     models = parse_sources(sources)
     for instance in instances:
         if (not isinstance(instance, Instance) or not isinstance(instance.name, str)
@@ -51,7 +54,12 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
             if isinstance(statement, Loop):
                 yield from (statement.start,statement.limit,statement.update)
                 yield from body_expressions(statement.body)
-            elif isinstance(statement, ContributionStatement):
+            elif isinstance(statement, Display):
+                yield from statement.args
+            elif isinstance(statement, Event):
+                yield from body_expressions(statement.body)
+                yield from (arg for trigger in statement.triggers for arg in trigger.arguments if arg is not None)
+            elif isinstance(statement, (ContributionStatement, BoundStep)):
                 yield statement.rhs
             elif isinstance(statement, SyntaxAssignment):
                 yield statement.rhs
@@ -71,7 +79,17 @@ def compile_sources(sources: Mapping[str, str], instances: list[Instance]) -> Pr
 
     has_conditions = any(has_condition(model.analog) or any(has_condition(event.body) for event in model.events)
                          for _, model, _ in bindings)
-    names = ("0", *sorted({n for _, _, nets in bindings for n in nets.values()} - {"0"}))
+    def uses_time(expr):
+        return expr.op == 'time' or any(uses_time(arg) for arg in expr.args)
+    has_time = any(uses_time(expr) for _, model, _ in bindings
+                   for expr in (*body_expressions(model.analog), *body_expressions(model.initial),
+                                *(expr for event in model.events for expr in body_expressions(event.body)),
+                                *(arg for event in model.events for leaf in event.triggers
+                                  for arg in leaf.arguments if arg is not None)))
+    node_names = {n for _, _, nets in bindings for n in nets.values()} | set(external_nodes)
+    if has_time:
+        node_names.add('$abstime')
+    names = ("0", *sorted(node_names - {"0"}))
     compilation = Compilation(names, has_operators or has_conditions)
     for instance, model, nets in bindings:
         try:

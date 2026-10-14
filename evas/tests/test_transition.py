@@ -180,6 +180,13 @@ module m(u,y,z,w,r); input u; output y,z,w; inout r;
 
 
 class TransitionRejections(unittest.TestCase):
+    def test_held_state_coefficient_samples_the_current_transition_value(self):
+        body = '@(initial_step) a=2; @(timer(0.5)) a=4; V(y,r)<+a*transition(a,0,0.25,0.25);'
+        result = run_transition(body, [0,.5,.625,1], 1, declarations='real a;')
+        index = result['nodes'].index('y')
+        for row, expected in zip(result['solutions'], [4,8,12,16], strict=True):
+            self.assertAlmostEqual(row['voltages'][index], expected, delta=2e-12)
+
     def test_unsupported_inputs_settings_and_contexts(self):
         for expression in ['transition(V(u,r),0,1n,1n)', 'transition(a,0,0,1n)',
                            'transition(a,-1n,1n,1n)', 'transition(a,0)',
@@ -189,7 +196,7 @@ class TransitionRejections(unittest.TestCase):
                 compile_transition(f'@(initial_step) a=0; V(y,r)<+{expression};','real a;')
         for expression in ['transition(a,0,1n,1n)*V(u,r)',
                            'transition(a,0,1n,1n)*(V(u,r)-V(u,r))',
-                           'transition(a,0,1n,1n)*a', 'transition(a,0,1n,1n)*(V(u,r)/1e308/1e308)', 'transition(a*a,0,1n,1n)']:
+                           'transition(a,0,1n,1n)*(V(u,r)/1e308/1e308)', 'transition(a*a,0,1n,1n)']:
             with self.subTest(expression=expression), self.assertRaises(KernelError):
                 run_transition(f'@(initial_step) a=0; V(y,r)<+{expression};',[0,1e-9],1e-9,declarations='real a;')
 

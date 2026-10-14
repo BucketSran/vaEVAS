@@ -1,0 +1,43 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Continuous-state track/hold without charge injection and droop.
+// Acquisition is finite and input-dependent, so short windows keep residual
+// history from the previous window; hold is an exact freeze (rate = 0).
+// Same ODE-state structure as ../core/track_hold.va with those two mechanisms
+// removed by construction, not by parameter limits.
+module r01_track_hold_basic(vin, track, rst, vout);
+    input vin, track, rst;
+    output vout;
+    electrical vin, track, rst, vout;
+    electrical memory;
+
+    parameter real vth = 0.9;
+    parameter real vinit = 0.9;
+    parameter real tau_acq = 10n from (0:inf);
+    parameter real vmid = 0.9;
+    parameter real vscale = 0.9 from (0:inf);
+    parameter real acq_curvature = 0.6 from [0:inf);
+    parameter real tau_reset = 2n from (0:inf);
+
+    real normalized_input, effective_tau, rate;
+
+    analog begin
+        normalized_input = (V(vin)-vmid)/vscale;
+        effective_tau = tau_acq *
+            (1.0 + acq_curvature*normalized_input*normalized_input);
+        rate = 0.0;
+        if (V(rst) > vth) begin
+            rate = (vinit-V(memory))/tau_reset;
+            $bound_step(tau_reset/16.0);
+        end else if (V(track) > vth) begin
+            rate = (V(vin)-V(memory))/effective_tau;
+            $bound_step(effective_tau/16.0);
+        end
+        // Hold contributes nothing: the stored value is exactly frozen.
+        // Unconditional idt and node feedback give the solver a state equation.
+        // vinit applies in DC and at transient startup for every control level.
+        V(memory) <+ idt(rate, vinit);
+        V(vout) <+ V(memory);
+    end
+endmodule

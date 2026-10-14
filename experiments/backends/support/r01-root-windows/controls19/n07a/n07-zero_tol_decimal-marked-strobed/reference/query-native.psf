@@ -1,0 +1,173 @@
+HEADER
+"PSFversion" "1.00"
+"simulator" "spectre"
+"version" "21.1.0.509.isr12"
+"date" "5:29:03 AM, Wed Oct 14, 2026"
+"design" "(no title)"
+"analysis type" "tran"
+"analysis name" "tran"
+"analysis description" "Transient Analysis `tran': time = (0 s -> 625 ms)"
+"xVecSorted" "ascending"
+"tolerance.relative" 1.00000e-09
+"start" 0.00000
+"outputstart" 0.00000
+"stop" 0.625000
+"step" 0.000625000
+"istep" 0.00100000
+"maxstep" 0.00500000
+"ic" "all"
+"useprevic" "no"
+"skipdc" "no"
+"reltol" 1.00000e-10
+"abstol(V)" 1.00000e-11
+"abstol(I)" 1.00000e-15
+"temp" 27.0000
+"tnom" 27.0000
+"tempeffects" "all"
+"errpreset" "conservative"
+"method" "traponly"
+"lteratio" 10.0000
+"relref" "alllocal"
+"cmin" 0.00000
+"gmin" 1.00000e-12
+TYPE
+"sweep" FLOAT DOUBLE PROP(
+"key" "sweep"
+)
+"LogicV" FLOAT DOUBLE PROP(
+"key" "node"
+)
+"Real" FLOAT DOUBLE PROP(
+"units" ""
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"Tau" FLOAT DOUBLE PROP(
+"units" "N*m"
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"Alpha" FLOAT DOUBLE PROP(
+"units" "rads/s^2"
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"Omega" FLOAT DOUBLE PROP(
+"units" "rads/s"
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"Theta" FLOAT DOUBLE PROP(
+"units" "rads"
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"F" FLOAT DOUBLE PROP(
+"units" "N"
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"Imp" FLOAT DOUBLE PROP(
+"units" "m/s^3"
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"Acc" FLOAT DOUBLE PROP(
+"units" "m/s^2"
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"Vel" FLOAT DOUBLE PROP(
+"units" "m/s"
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"Pos" FLOAT DOUBLE PROP(
+"units" "m"
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"Phi" FLOAT DOUBLE PROP(
+"units" "Wb"
+"key" "node"
+"tolerance" 1.00000e-09
+)
+"V" FLOAT DOUBLE PROP(
+"units" "V"
+"key" "node"
+"tolerance" 1.00000e-11
+)
+"I" FLOAT DOUBLE PROP(
+"units" "A"
+"key" "branch"
+"tolerance" 1.00000e-15
+)
+"MMF" FLOAT DOUBLE PROP(
+"units" "A*turn"
+"key" "node"
+"tolerance" 1.00000e-12
+)
+"Wb" FLOAT DOUBLE PROP(
+"units" "Wb"
+"key" "node"
+"tolerance" 1.00000e-09
+)
+"Temp" FLOAT DOUBLE PROP(
+"units" "C"
+"key" "node"
+"tolerance" 0.000100000
+)
+"Pwr" FLOAT DOUBLE PROP(
+"units" "W"
+"key" "node"
+"tolerance" 1.00000e-09
+)
+"U" FLOAT DOUBLE PROP(
+"units" ""
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"V/Sec" FLOAT DOUBLE PROP(
+"units" "V/s"
+"key" "node"
+"tolerance" 0.000100000
+)
+"I/Sec" FLOAT DOUBLE PROP(
+"units" "A/s"
+"key" "node"
+"tolerance" 1.00000e-06
+)
+"1/Sec" FLOAT DOUBLE PROP(
+"units" "1/s"
+"key" "node"
+"tolerance" 0.000100000
+)
+"HOD" FLOAT DOUBLE PROP(
+"units" ""
+"key" "node"
+"tolerance" 0.0100000
+)
+"Q" FLOAT DOUBLE PROP(
+"units" "coul"
+"key" "node"
+"tolerance" 1.00000e-14
+)
+SWEEP
+"time" "sweep" PROP(
+"sweep_direction" 0
+"units" "s"
+"plot" 0
+"grid" 1
+)
+TRACE
+"y" "V"
+VALUE
+"time" 0
+"y" 0
+"time" 0.125
+"y" 1
+"time" 0.5
+"y" 2
+"time" 0.625
+"y" 3
+END

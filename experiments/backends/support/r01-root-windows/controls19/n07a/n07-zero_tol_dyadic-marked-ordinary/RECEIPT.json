@@ -1,0 +1,39 @@
+{
+  "id": "n07a/n07-zero_tol_dyadic-marked-ordinary",
+  "source_sha256": "1498ac448d75bf19abbfa51c96d8e185b857a154ad9326815383f985edf5911b",
+  "controls": {
+    "instances": [
+      {
+        "name": "dut",
+        "module": "m",
+        "connections": {
+          "y": "y",
+          "r": "0"
+        }
+      }
+    ],
+    "pwl": {},
+    "output_times": [
+      0,
+      0.125,
+      0.25,
+      0.375,
+      0.5,
+      0.625
+    ],
+    "stop": 0.625,
+    "max_step": 0.005,
+    "vabstol": 1e-11,
+    "reltol": 1e-09,
+    "strobetimes": [],
+    "timeout": 120
+  },
+  "kernel_sha256": "867a112262b1311f07f0a612a594b471ad6c7b3c1a3bea9e207f7a06ea8cece4",
+  "status": "rejected",
+  "exception": {
+    "type": "CompileError",
+    "message": "dut.va:3:68: expected a non-reserved identifier",
+    "detail": null
+  },
+  "elapsed_seconds": 0.02173266699537635
+}

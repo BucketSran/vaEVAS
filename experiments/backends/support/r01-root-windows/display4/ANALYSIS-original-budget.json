@@ -1,0 +1,657 @@
+{
+  "scope": "new independent 4 display variants; old 19 and strobe failures unchanged",
+  "manifest_checks": {
+    "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/n07-display-controls-v1/inputs/MANIFEST.json": {
+      "files": 17,
+      "sha256": "e7bb9ec13309f8f5e768f91b67853faf67eeee322be20cc70d563b29f892a067",
+      "all_match": true
+    },
+    "runs/evas-night-20261014/delivery/r01-zero-timer-spectre-v1/raw/MANIFEST.json": {
+      "files": 17,
+      "sha256": "e7bb9ec13309f8f5e768f91b67853faf67eeee322be20cc70d563b29f892a067",
+      "all_match": true
+    },
+    "runs/evas-night-20261014/delivery/r01-zero-timer-spectre-v1/raw/OUTPUT_MANIFEST.json": {
+      "files": 91,
+      "sha256": "e71963f62da2c3d83ced8bbb86485283b7a17e16d3fbda8f3abfda9b2d2ea180",
+      "all_match": true
+    }
+  },
+  "tool": {
+    "file_sha256": {
+      "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+      "backend-config:cadence.sui": "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+      "backend-config:mentor25.sui": "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+    },
+    "version": "sub-version  21.1.0.509.isr12 \n",
+    "execution": {
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "prlimit",
+        "--as=4294967296",
+        "--fsize=33554432",
+        "--",
+        "/bin/csh",
+        "-f",
+        "version.csh"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "status": "completed",
+      "cleanup": {
+        "signals": [
+          "SIGTERM",
+          "SIGKILL"
+        ],
+        "errors": [],
+        "complete": true
+      },
+      "elapsed_seconds": 1.9588979240506887,
+      "completed_utc": "2026-10-14T05:53:16Z",
+      "log": "version.log",
+      "log_sha256": "d0e6c83a98026a294bfc4b9754c4e294d322b60b1872a28e38f84caccbdf7f81"
+    }
+  },
+  "tool_before_after_equal": true,
+  "cases": [
+    {
+      "label": "n07-zero_tol_dyadic-marked-ordinary",
+      "source_sha256": "91203108910e8ff7047f26297f295999e6315ab3a8f80b9940aa8cf671aa9608",
+      "request": {
+        "instances": [
+          {
+            "name": "dut",
+            "module": "m",
+            "connections": {
+              "y": "y",
+              "r": "0"
+            }
+          }
+        ],
+        "pwl": {},
+        "output_times": [
+          0,
+          0.125,
+          0.25,
+          0.375,
+          0.5,
+          0.625
+        ],
+        "stop": 0.625,
+        "max_step": 0.005,
+        "vabstol": 1e-11,
+        "reltol": 1e-09,
+        "strobetimes": [],
+        "timeout": 120
+      },
+      "original_budget_V": 0,
+      "spectre_receipt": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 9.297690322622657,
+        "completed_utc": "2026-10-14T05:53:26Z",
+        "log": "stdout.log",
+        "log_sha256": "557ed7feb015a17dd716f2f61d5c32a25b22a52d4b7205553e16ec5aaeb7c648",
+        "label": "n07-zero_tol_dyadic-marked-ordinary",
+        "source_sha256": "91203108910e8ff7047f26297f295999e6315ab3a8f80b9940aa8cf671aa9608",
+        "deck_sha256": "5362a040f10fbd6b356ac4e62b8302aeb5c759a426853e7d068e4dc1c21e08a4",
+        "directory_bytes": 120458
+      },
+      "exact_native_missing_tokens": [],
+      "spectre_callback_records": [
+        {
+          "time": "0.125",
+          "n": 1
+        },
+        {
+          "time": "0.25",
+          "n": 2
+        },
+        {
+          "time": "0.375",
+          "n": 3
+        },
+        {
+          "time": "0.5",
+          "n": 4
+        },
+        {
+          "time": "0.625",
+          "n": 5
+        }
+      ],
+      "effective": {
+        "tolerance.relative": "1.00000e-09",
+        "reltol": "1.00000e-10",
+        "maxstep": "0.00500000",
+        "method": "\"traponly\"",
+        "abstol(V)": "1.00000e-11"
+      },
+      "warnings": [
+        "WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow."
+      ],
+      "compiled": true,
+      "status": "completed",
+      "response_sha256": "d2a35a28c29c6758e368825742e292158d694baea358b6faadec6005e2b05ee0",
+      "candidate_callback_records": [
+        {
+          "time": 0.125,
+          "event": 0,
+          "origin": "dut.va:3:68 (dut)",
+          "text": "N07 zero t=0.125 n=1"
+        },
+        {
+          "time": 0.25,
+          "event": 0,
+          "origin": "dut.va:3:68 (dut)",
+          "text": "N07 zero t=0.25 n=2"
+        },
+        {
+          "time": 0.375,
+          "event": 0,
+          "origin": "dut.va:3:68 (dut)",
+          "text": "N07 zero t=0.375 n=3"
+        },
+        {
+          "time": 0.5,
+          "event": 0,
+          "origin": "dut.va:3:68 (dut)",
+          "text": "N07 zero t=0.5 n=4"
+        },
+        {
+          "time": 0.625,
+          "event": 0,
+          "origin": "dut.va:3:68 (dut)",
+          "text": "N07 zero t=0.625 n=5"
+        }
+      ],
+      "callback_sequence_pass": true,
+      "pairs": [
+        {
+          "time": "0",
+          "candidate": "-0",
+          "spectre": "0",
+          "error_V": "0",
+          "analytic_error_V": "0"
+        },
+        {
+          "time": "0.125",
+          "candidate": "1",
+          "spectre": "1",
+          "error_V": "0",
+          "analytic_error_V": "0"
+        },
+        {
+          "time": "0.25",
+          "candidate": "2",
+          "spectre": "2",
+          "error_V": "0",
+          "analytic_error_V": "0"
+        },
+        {
+          "time": "0.375",
+          "candidate": "3",
+          "spectre": "3",
+          "error_V": "0",
+          "analytic_error_V": "0"
+        },
+        {
+          "time": "0.5",
+          "candidate": "4",
+          "spectre": "4",
+          "error_V": "0",
+          "analytic_error_V": "0"
+        },
+        {
+          "time": "0.625",
+          "candidate": "5",
+          "spectre": "5",
+          "error_V": "0",
+          "analytic_error_V": "0"
+        }
+      ],
+      "finite_pair_pass": true,
+      "elapsed_seconds": 0.03798704105429351
+    },
+    {
+      "label": "n07-zero_tol_dyadic-marked-strobed",
+      "source_sha256": "91203108910e8ff7047f26297f295999e6315ab3a8f80b9940aa8cf671aa9608",
+      "request": {
+        "instances": [
+          {
+            "name": "dut",
+            "module": "m",
+            "connections": {
+              "y": "y",
+              "r": "0"
+            }
+          }
+        ],
+        "pwl": {},
+        "output_times": [
+          0,
+          0.125,
+          0.25,
+          0.375,
+          0.5,
+          0.625
+        ],
+        "stop": 0.625,
+        "max_step": 0.005,
+        "vabstol": 1e-11,
+        "reltol": 1e-09,
+        "strobetimes": [
+          0,
+          0.125,
+          0.25,
+          0.375,
+          0.5,
+          0.625
+        ],
+        "timeout": 120
+      },
+      "original_budget_V": 0,
+      "spectre_receipt": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 9.415063744410872,
+        "completed_utc": "2026-10-14T05:53:35Z",
+        "log": "stdout.log",
+        "log_sha256": "46e3d1b8b8b654c319753b13a35b661cfdd30c85a9fcf320e9f5ae09d506cd27",
+        "label": "n07-zero_tol_dyadic-marked-strobed",
+        "source_sha256": "91203108910e8ff7047f26297f295999e6315ab3a8f80b9940aa8cf671aa9608",
+        "deck_sha256": "4e5716d9c9245b31aa92e2e5d4adb767f9c105aff51228ff8ac74858406d31db",
+        "directory_bytes": 120637
+      },
+      "exact_native_missing_tokens": [],
+      "spectre_callback_records": [
+        {
+          "time": "0.125",
+          "n": 1
+        },
+        {
+          "time": "0.25",
+          "n": 2
+        },
+        {
+          "time": "0.375",
+          "n": 3
+        },
+        {
+          "time": "0.5",
+          "n": 4
+        },
+        {
+          "time": "0.625",
+          "n": 5
+        }
+      ],
+      "effective": {
+        "tolerance.relative": "1.00000e-09",
+        "reltol": "1.00000e-10",
+        "maxstep": "0.00500000",
+        "method": "\"traponly\"",
+        "abstol(V)": "1.00000e-11"
+      },
+      "warnings": [
+        "WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow."
+      ],
+      "compiled": true,
+      "status": "completed",
+      "response_sha256": "a5889de81be8877283642bd5b82fb42d469e733a8bd5e7a9f39afa228ceb9f06",
+      "candidate_callback_records": [
+        {
+          "time": 0.125,
+          "event": 0,
+          "origin": "dut.va:3:68 (dut)",
+          "text": "N07 zero t=0.125 n=1"
+        },
+        {
+          "time": 0.25,
+          "event": 0,
+          "origin": "dut.va:3:68 (dut)",
+          "text": "N07 zero t=0.25 n=2"
+        },
+        {
+          "time": 0.375,
+          "event": 0,
+          "origin": "dut.va:3:68 (dut)",
+          "text": "N07 zero t=0.375 n=3"
+        },
+        {
+          "time": 0.5,
+          "event": 0,
+          "origin": "dut.va:3:68 (dut)",
+          "text": "N07 zero t=0.5 n=4"
+        },
+        {
+          "time": 0.625,
+          "event": 0,
+          "origin": "dut.va:3:68 (dut)",
+          "text": "N07 zero t=0.625 n=5"
+        }
+      ],
+      "callback_sequence_pass": true,
+      "pairs": [
+        {
+          "time": "0",
+          "candidate": "-0",
+          "spectre": "0",
+          "error_V": "0",
+          "analytic_error_V": "0"
+        },
+        {
+          "time": "0.125",
+          "candidate": "1",
+          "spectre": "1",
+          "error_V": "0",
+          "analytic_error_V": "0"
+        },
+        {
+          "time": "0.25",
+          "candidate": "2",
+          "spectre": "2",
+          "error_V": "0",
+          "analytic_error_V": "0"
+        },
+        {
+          "time": "0.375",
+          "candidate": "3",
+          "spectre": "3",
+          "error_V": "0",
+          "analytic_error_V": "0"
+        },
+        {
+          "time": "0.5",
+          "candidate": "4",
+          "spectre": "4",
+          "error_V": "0",
+          "analytic_error_V": "0"
+        },
+        {
+          "time": "0.625",
+          "candidate": "5",
+          "spectre": "5",
+          "error_V": "0",
+          "analytic_error_V": "0"
+        }
+      ],
+      "finite_pair_pass": true,
+      "elapsed_seconds": 0.03281541704200208
+    },
+    {
+      "label": "n07-zero_tol_decimal-marked-ordinary",
+      "source_sha256": "509d6a12a71e9a3fc494a367e38f2dad9dbf2008ec2e03e891f598fc396cce24",
+      "request": {
+        "instances": [
+          {
+            "name": "dut",
+            "module": "m",
+            "connections": {
+              "y": "y",
+              "r": "0"
+            }
+          }
+        ],
+        "pwl": {},
+        "output_times": [
+          0,
+          0.125,
+          0.25,
+          0.375,
+          0.5,
+          0.625
+        ],
+        "stop": 0.625,
+        "max_step": 0.005,
+        "vabstol": 1e-11,
+        "reltol": 1e-09,
+        "strobetimes": [],
+        "timeout": 120
+      },
+      "original_budget_V": 0,
+      "spectre_receipt": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 9.595996228978038,
+        "completed_utc": "2026-10-14T05:53:45Z",
+        "log": "stdout.log",
+        "log_sha256": "504f1c3b70e291efe46f61a8df0514c13b3e95dee3e7126eb7fa785ba79bd1cc",
+        "label": "n07-zero_tol_decimal-marked-ordinary",
+        "source_sha256": "509d6a12a71e9a3fc494a367e38f2dad9dbf2008ec2e03e891f598fc396cce24",
+        "deck_sha256": "5362a040f10fbd6b356ac4e62b8302aeb5c759a426853e7d068e4dc1c21e08a4",
+        "directory_bytes": 120223
+      },
+      "exact_native_missing_tokens": [
+        "0.125",
+        "0.25",
+        "0.375"
+      ],
+      "spectre_callback_records": [
+        {
+          "time": "0.10000000000000001",
+          "n": 1
+        },
+        {
+          "time": "0.20000000000000001",
+          "n": 2
+        },
+        {
+          "time": "0.5",
+          "n": 3
+        },
+        {
+          "time": "0.59999999999999998",
+          "n": 4
+        }
+      ],
+      "effective": {
+        "tolerance.relative": "1.00000e-09",
+        "reltol": "1.00000e-10",
+        "maxstep": "0.00500000",
+        "method": "\"traponly\"",
+        "abstol(V)": "1.00000e-11"
+      },
+      "warnings": [
+        "WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow."
+      ],
+      "compiled": true,
+      "status": "rejected",
+      "exception": {
+        "type": "KernelError",
+        "message": "event_resolution: zero-tolerance timer time is not representable",
+        "detail": {
+          "kind": "event_resolution",
+          "message": "zero-tolerance timer time is not representable"
+        }
+      },
+      "elapsed_seconds": 0.024187459144741297
+    },
+    {
+      "label": "n07-zero_tol_decimal-marked-strobed",
+      "source_sha256": "509d6a12a71e9a3fc494a367e38f2dad9dbf2008ec2e03e891f598fc396cce24",
+      "request": {
+        "instances": [
+          {
+            "name": "dut",
+            "module": "m",
+            "connections": {
+              "y": "y",
+              "r": "0"
+            }
+          }
+        ],
+        "pwl": {},
+        "output_times": [
+          0,
+          0.125,
+          0.25,
+          0.375,
+          0.5,
+          0.625
+        ],
+        "stop": 0.625,
+        "max_step": 0.005,
+        "vabstol": 1e-11,
+        "reltol": 1e-09,
+        "strobetimes": [
+          0,
+          0.125,
+          0.25,
+          0.375,
+          0.5,
+          0.625
+        ],
+        "timeout": 120
+      },
+      "original_budget_V": 0,
+      "spectre_receipt": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 9.46301387064159,
+        "completed_utc": "2026-10-14T05:53:54Z",
+        "log": "stdout.log",
+        "log_sha256": "e511d2102621e8bf89c41334fde815eb1264f6fcca7473658dec211ca2b536fd",
+        "label": "n07-zero_tol_decimal-marked-strobed",
+        "source_sha256": "509d6a12a71e9a3fc494a367e38f2dad9dbf2008ec2e03e891f598fc396cce24",
+        "deck_sha256": "4e5716d9c9245b31aa92e2e5d4adb767f9c105aff51228ff8ac74858406d31db",
+        "directory_bytes": 119247
+      },
+      "exact_native_missing_tokens": [
+        "0.25",
+        "0.375"
+      ],
+      "spectre_callback_records": [
+        {
+          "time": "0.10000000000000001",
+          "n": 1
+        },
+        {
+          "time": "0.5",
+          "n": 2
+        },
+        {
+          "time": "0.59999999999999998",
+          "n": 3
+        }
+      ],
+      "effective": {
+        "tolerance.relative": "1.00000e-09",
+        "reltol": "1.00000e-10",
+        "maxstep": "0.00500000",
+        "method": "\"traponly\"",
+        "abstol(V)": "1.00000e-11"
+      },
+      "warnings": [
+        "WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow."
+      ],
+      "compiled": true,
+      "status": "rejected",
+      "exception": {
+        "type": "KernelError",
+        "message": "event_resolution: zero-tolerance timer time is not representable",
+        "detail": {
+          "kind": "event_resolution",
+          "message": "zero-tolerance timer time is not representable"
+        }
+      },
+      "elapsed_seconds": 0.023262042086571455
+    }
+  ],
+  "source_kernel_unchanged_after_each_case": true,
+  "interpolation": false,
+  "checker_historical_scores_changed": false,
+  "budget_correction": "Initial runner generic 1e-8 gate was incorrect. This final analysis restores unchanged frozen N07 zero-V budget. No backend rerun or response modifications; both dyadic controls have exactly zero difference.",
+  "finalizer_sha256": "84710c130a519f792d4c40f047f4c1db068e2053fa3c96b6f4cc9d9c7936f745",
+  "zero_budget_gate_calibration": {
+    "accept_zero": true,
+    "reject_nonzero": true,
+    "reject_nonfinite": true
+  }
+}

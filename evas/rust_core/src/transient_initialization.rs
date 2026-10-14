@@ -26,6 +26,13 @@ fn check_body(body: &[Statement], model: &EventModel, owner: &str) -> Result<(),
     for statement in body {
         match statement {
             Statement::Assign(a) => check_expression(&a.rhs, model, owner)?,
+            Statement::Display { args, .. } => {
+                // Bootstrap has no solved internal node or operator history.
+                // Validate every display argument before candidate replay.
+                for argument in args {
+                    check_expression(argument, model, owner)?;
+                }
+            }
             Statement::If {
                 left,
                 right,
@@ -110,6 +117,20 @@ pub(super) fn prepare(
         .collect::<BTreeSet<_>>()
         .into_iter()
         .collect();
+    let initial_ids: Vec<_> = model
+        .triggers
+        .iter()
+        .enumerate()
+        .filter_map(|(index, leaf)| {
+            matches!(leaf.trigger, EventTrigger::InitialStep { .. }).then_some(index)
+        })
+        .collect();
+    let initial_blocks: Vec<_> = initial_ids
+        .iter()
+        .map(|&index| model.triggers[index].event)
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect();
     let assigned: BTreeSet<_> = blocks
         .iter()
         .flat_map(|&i| model.program.events[i].assignments())
@@ -130,7 +151,7 @@ pub(super) fn prepare(
     if seeds.is_disjoint(&assigned)
         || crate::settlement_bounds::unchanged_initial_states(
             &model.program,
-            std::slice::from_ref(&blocks),
+            &[initial_blocks.clone(), blocks.clone()],
             &seeds,
         )
     {
@@ -152,7 +173,25 @@ pub(super) fn prepare(
     {
         return Err(unsupported("changed initial transition seeds require a calendar independent of held state and histories"));
     }
-    for &block in &blocks {
+    if initial_blocks.iter().any(|block| blocks.contains(block)) {
+        return Err(unsupported(
+            "transition bootstrap cannot order an initial/timer OR body",
+        ));
+    }
+    if initial_blocks.iter().any(|&block| {
+        let owner = &model.program.events[block].origin.instance;
+        model
+            .program
+            .contributions
+            .iter()
+            .any(|c| &c.origin.instance == owner)
+    }) {
+        return Err(Error::new(
+            "unsupported_initial_event",
+            "initial display requires a passive measurement model",
+        ));
+    }
+    for &block in initial_blocks.iter().chain(&blocks) {
         let event = &model.program.events[block];
         check_body(&event.body, model, &event.origin.instance)?;
     }
@@ -165,21 +204,64 @@ pub(super) fn prepare(
             return Err(unsupported("changed initial transition seeds require a closed transition/filter/integral graph"));
         }
     }
+    // Build candidates in language order; neither stage commits any history,
+    // calendar consumption or record. Histories are constructed once from the
+    // final seed only after both stages pass their certificates.
     let before = model.initial();
     let before_bounds: Vec<_> = before.iter().copied().map(I::point).collect();
-    let inputs = trajectory.value_bounds(0.);
+    let (initial_states, initial_bounds, mut records) = prepare_stage(
+        model,
+        trajectory,
+        &initial_blocks,
+        &initial_ids,
+        &before,
+        &before_bounds,
+    )?;
     let ids: Vec<_> = zero.iter().copied().collect();
-    let selection = model.conditions.select_at_roots(&blocks, &inputs, &ids)?;
+    let (states, bounds, timer_records) = prepare_stage(
+        model,
+        trajectory,
+        &blocks,
+        &ids,
+        &initial_states,
+        &initial_bounds,
+    )?;
+    records.extend(timer_records);
+    Ok(Some(Prepared {
+        states,
+        bounds,
+        records,
+        zero,
+    }))
+}
+
+type PreparedStage = (Vec<f64>, Vec<I>, Vec<EventRecord>);
+
+fn prepare_stage(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    blocks: &[usize],
+    ids: &[usize],
+    before: &[f64],
+    before_bounds: &[I],
+) -> Result<PreparedStage, Error> {
+    if blocks.is_empty() {
+        return Ok((before.to_vec(), before_bounds.to_vec(), Vec::new()));
+    }
+    let inputs = trajectory.value_bounds(0.);
+    let selection = model
+        .conditions
+        .select_at_roots(blocks, &inputs, ids, before_bounds)?;
     model.check_selection_writers(&selection)?;
     let mut direct = vec![0.; model.program.nodes.len()];
     for (name, value) in model.driven.iter().zip(trajectory.values(0.)) {
         direct[model.program.nodes.iter().position(|n| n == name).unwrap()] = value;
     }
-    let states = model.apply(&selection, &direct, &before)?;
+    let (states, display_records) = model.apply_with_displays(&selection, &direct, before, 0.)?;
     let bounds = crate::settlement_bounds::Bounds::held_inputs(model, &selection)?.check_states(
         model,
         &inputs,
-        &before_bounds,
+        before_bounds,
         &[],
         &[],
         &states,
@@ -195,8 +277,18 @@ pub(super) fn prepare(
             "transition bootstrap requires finite final point state certificates",
         ));
     }
-    if model.apply(&selection, &direct, &before)? != states
-        || model.conditions.select_at_roots(&blocks, &inputs, &ids)? != selection
+    let (replay_states, replay_displays) =
+        model.apply_with_displays(&selection, &direct, before, 0.)?;
+    let same_displays = replay_displays.len() == display_records.len()
+        && replay_displays.iter().zip(&display_records).all(|(a, b)| {
+            a.time == b.time && a.event == b.event && a.origin == b.origin && a.text == b.text
+        });
+    if replay_states != states
+        || !same_displays
+        || model
+            .conditions
+            .select_at_roots(blocks, &inputs, ids, before_bounds)?
+            != selection
     {
         return Err(Error::new(
             "event_consistency",
@@ -204,8 +296,8 @@ pub(super) fn prepare(
         ));
     }
     let records = blocks
-        .into_iter()
-        .map(|block| {
+        .iter()
+        .map(|&block| {
             let event = &model.program.events[block];
             let or = matches!(event.trigger, EventTrigger::Or { .. });
             EventRecord {
@@ -213,14 +305,27 @@ pub(super) fn prepare(
                 observation_time_bounds: None,
                 event: block,
                 origin: event.origin.label(),
-                kind: if or { "or" } else { "timer" },
+                kind: if or {
+                    "or"
+                } else if matches!(event.trigger, EventTrigger::InitialStep { .. }) {
+                    "initial_step"
+                } else {
+                    "timer"
+                },
                 guard_value: None,
                 fired_triggers: if or {
-                    zero.iter()
+                    ids.iter()
                         .filter(|&&i| model.triggers[i].event == block)
                         .map(|&i| FiredTrigger {
                             trigger: model.triggers[i].index,
-                            kind: "timer",
+                            kind: if matches!(
+                                model.triggers[i].trigger,
+                                EventTrigger::InitialStep { .. }
+                            ) {
+                                "initial_step"
+                            } else {
+                                "timer"
+                            },
                             guard_value: None,
                             time_bounds: None,
                         })
@@ -228,17 +333,17 @@ pub(super) fn prepare(
                 } else {
                     Vec::new()
                 },
-                before: before.clone(),
+                before: before.to_vec(),
                 after: states.clone(),
+                display_records: display_records
+                    .iter()
+                    .filter(|record| record.event == block)
+                    .cloned()
+                    .collect(),
             }
         })
         .collect();
-    Ok(Some(Prepared {
-        states,
-        bounds,
-        records,
-        zero,
-    }))
+    Ok((states, bounds, records))
 }
 
 #[cfg(test)]

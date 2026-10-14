@@ -1,0 +1,2 @@
+`include "disciplines.vams"
+module m(u,y);input u;output y;electrical u,y;real q,h;analog begin @(initial_step) q=0; @(timer(0.375,0,1e-10)) q=0.5; V(y)<+idt(((V(u)>0.25?V(u):0.0)+q)>0.5?1.0:0.0,0.25); end endmodule

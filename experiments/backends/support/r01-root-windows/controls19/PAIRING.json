@@ -1,0 +1,3142 @@
+{
+  "script_sha256": "1a1d100c76f6cad35c7b83521decf9f92ca57cd4a23edd47b9fa2731a6a9bf8b",
+  "reference_map_sha256": "edcb47b33b24d858802c361f97301132ca569333e8e36cf9d2d2955f38991143",
+  "calibration": {
+    "accept": true,
+    "reject": true,
+    "nonfinite_rejected": true
+  },
+  "candidate_identity": {
+    "kernel": "archive:vaEVAS/worktrees/evas-r01-delivery/evas/rust_core/target/release/evas-kernel",
+    "kernel_sha256": "867a112262b1311f07f0a612a594b471ad6c7b3c1a3bea9e207f7a06ea8cece4",
+    "source": "archive:vaEVAS/worktrees/evas-r01-delivery",
+    "source_sha256": {
+      "evas/src/evas/standard_headers.py": "9f190d1b17d6a341cecdba14f8a43771f7754d2e0de1403d59e4432849ec7e30",
+      "evas/src/evas/scs.py": "3f5d686dc29880d6a181409ee85b01dda7edb3a38e1c5713452b9a885f56a82b",
+      "evas/src/evas/elaboration.py": "6e8fa4dc1d4675670bd90f38a8ae8000d8e6d5db30fd8d21aecea253a5c460a1",
+      "evas/src/evas/instance_compiler.py": "6faefd75d56c071998df15f11e4b61b7f2d66930e61ce9385f69798ed11e4bc5",
+      "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+      "evas/src/evas/query.py": "2fda97253f88c236d308d795aeae52a00ff5cfbb458f87a4bcfdc3751fae4f64",
+      "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+      "evas/src/evas/results.py": "91bc585e4ee9a871fce7da38beebebe71218f0b59c7dda57fec904a9994810bd",
+      "evas/src/evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+      "evas/src/evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
+      "evas/src/evas/diagnostics.py": "e787f6c1b0ab3939fa37c15ec6da550f59520c6f99edf29e9c53784f31e3308f",
+      "evas/src/evas/protocol.py": "6259e984782022afd7abfe50dc4e58a454bf30ca219829f4f32a6586467795a9",
+      "evas/src/evas/lowering.py": "ad1949aa84c721c80d15e0dda1db0744c95b17dc9cb77abfd796dadcac623307",
+      "evas/src/evas/frontend.py": "310159f89cea075ff3f35a7d46e7177dfd8888eb8841528ddb924be45768854a",
+      "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+      "evas/src/evas/node_elaboration.py": "c21db591e370dc5efcfde9ee31eaf26cf4f69727536bfd775c86e2b58916ded5",
+      "evas/src/evas/preprocessor.py": "83d54364c2cbc993da5d749bb3582f4ef5de110deff5f23a41ad9af4d928478c",
+      "evas/src/evas/ir.py": "e2c55f9180b49b15e5f8806f1def29b23b766ad5a1f9009e24d0ec51ba5d51c1",
+      "evas/src/evas/hierarchy.py": "c277bc21cbe987f7cb427a2955b6b20588d5c42ae09bbc62853dab7bdba4138f",
+      "evas/src/evas/display.py": "c53802f643b2405e1f3da36596a8d4674aebf409635232ded3dc52f852f38b5c",
+      "evas/src/evas/runtime.py": "e467f9de3635dcd23813771ea528e57fa35dd98c36dce893b35f920f278c7c0f",
+      "evas/src/evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+      "evas/src/evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+      "evas/src/evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+      "evas/src/evas/strobe.py": "18d6b1911436459a7a19ee100d309636f5d0d75acd927b228219367098f19c80",
+      "evas/src/evas/syntax.py": "15b49e6573ef8fa52eaa9703e026044f484f6659350367b70c548ceb01498b09",
+      "evas/src/evas/errors.py": "1a361344eb6678f6d82a91f3c356513025146bf468e9d3f5d4b593a9c04b3c08",
+      "evas/src/evas/array_elaboration.py": "44f8b9edd6b59724b35798b158096792ace773d3a2c8988958493ac497a6849c",
+      "evas/src/evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+      "evas/src/evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+      "evas/src/evas/__main__.py": "03467610db7d5563c99f2ffcf65c8f258175575fff18a38ca89dc5854439d651",
+      "evas/src/evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+      "evas/rust_core/src/implicit_dynamics.rs": "db474c82a1a28fca546c46c8451b1ac2d2b968efabd68a4549108e3f132b41f5",
+      "evas/rust_core/src/display.rs": "7b0dc22cd76d81c374b6f127e87f676f54ed19cbe1f81c4875e9dca1f5ac9fd5",
+      "evas/rust_core/src/dynamic_roots.rs": "30146ae2e527e12c6596aff3b0dad3cd172def2af80d27e3b92131032cb6a827",
+      "evas/rust_core/src/ir.rs": "cc687fdd3d78e908644537aa8194d3a3ccb3dcb5b88c11a78d7b3e640ad97ea0",
+      "evas/rust_core/src/linear.rs": "e0280cfcaaebd2449ab5e4474daf5cd19e6a9fbda5db53e14e5229fc81a4eb36",
+      "evas/rust_core/src/nonlinear_root_window.rs": "7341efc680fc3f1a247803651875bdc115791426f587acdcb8b10d9386e302dd",
+      "evas/rust_core/src/diagnostics.rs": "bd0feac3399c8b43bf14de204677d58a160d3648416242a76d3eae46e0dea699",
+      "evas/rust_core/src/events.rs": "97fe92e76405910d1fe139693be924bbedc0b16cb7f7129cb48e4e92602b7db9",
+      "evas/rust_core/src/idtmod.rs": "b40261e69921bcbcf1c0a24413ae55a9a317415307a62b3c4a516b8c63ff4c82",
+      "evas/rust_core/src/continuous_select_candidates.rs": "e06b7ea373f3be85c24edcd744c6fc8e70504f9c796b172b4821244209707926",
+      "evas/rust_core/src/transient_condition_tests.rs": "ae26baead05ef62ec4196834e2df8059ee1c27ccb718d1e53dde290b49fc65b5",
+      "evas/rust_core/src/settlement.rs": "df2caef2ae17243231a6749504f60ab663545304ca8df4c9fed501277fcc3897",
+      "evas/rust_core/src/transition.rs": "61de1f3b626e78f656d3b8d81a1ecfb14786fc5dfb117a548e1351edd46edf30",
+      "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+      "evas/rust_core/src/continuous_select.rs": "67bc2218f31b66d478179096de62bf2b0910911a4bf189efe3255cd587041938",
+      "evas/rust_core/src/affine_bounds.rs": "0683f15162c812c8e4359f48998b5b261a61bc3ab60fdc4a8ef30a9b8a6bfe6e",
+      "evas/rust_core/src/exact_affine_history.rs": "768c7509b3d76e901e12b166291d0bb8ae7f282791fa513a72f087b07100f161",
+      "evas/rust_core/src/batch.rs": "ba227471ba388b4efd361e9a523352b7626bb80cd51141a00ca2b1c97eed2888",
+      "evas/rust_core/src/portability.rs": "c101c1075de370d3622ad270bb0ca7bdf73c6ba2b3ed6ddd940a45a3c8134cb4",
+      "evas/rust_core/src/solver.rs": "1114f108dbdec616dc5f35117a2e14eb0c25bec370253d1c2d77ae1ad4317941",
+      "evas/rust_core/src/exact_source.rs": "dfd4022c98a257948720ca572d8b912889d425849e19d5e47a0f3f886ba63a7c",
+      "evas/rust_core/src/solver_cache_tests.rs": "727acd4fc9084bb6e546a8aa70e2f1e5bd476d27265f5198c5cdd08b0a7fd3fa",
+      "evas/rust_core/src/transient_root_refinement.rs": "ec72d524e91de3fbc08f4d036aab5a2ef2681babcd4440da945f635f80cf887a",
+      "evas/rust_core/src/lib.rs": "90fb33d2793882a1ea9761fbb7c33b8d63411e1dae250dc657f0d315dab39652",
+      "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+      "evas/rust_core/src/continuous_initialization.rs": "5145a36a517b9ba3ace0fb6241ebbd615fef6004b50aeb5dc99d76ff295874a8",
+      "evas/rust_core/src/guard_trajectory.rs": "c919578fe553f2e87ded91d054780e8e66d505db688894875a8506ae826ec84c",
+      "evas/rust_core/src/transient_window_tests.rs": "08285e435c4e7df5b2a31ac259347840e72a63ef7941953ee850655fdc1a7909",
+      "evas/rust_core/src/interval.rs": "89a83ce96dbf6cdc217a046c9885ca0cf580c6e6f932c36f0195120d49e53f56",
+      "evas/rust_core/src/laplace.rs": "8f211b465b19d062033392ef6defbc1bdc66b34c7be9172ab3c41e32a9e7b3d1",
+      "evas/rust_core/src/direct_derivative.rs": "3379f1dc9283af5f1d53b6d3bd03dc6cec00d04de9bcfd45ddb4bab1002e9183",
+      "evas/rust_core/src/step_bounds.rs": "1d0ee01f8d6985813c0a2b61f8b598ebdf65bcf430ed6a502610eacf90c4f01a",
+      "evas/rust_core/src/analog.rs": "1505d79dc24df924c7544da0a0fdfa9a6280bffb67f5ee191dad0ff2f13ad484",
+      "evas/rust_core/src/absdelay.rs": "e0f6144590856b3a95d03a59af58e9032309fa1e316a41c063a40ec9f73109c7",
+      "evas/rust_core/src/exact_time.rs": "68e8415109ff7138b27195fe8d32f686441c61d4b012e774e31ede58e5eef824",
+      "evas/rust_core/src/pwl.rs": "016d8512f6005d66386e56fc41c9fc31b2aac766d96dd61989d912c633a1539e",
+      "evas/rust_core/src/nonlinear.rs": "1e535704fb6dc14a577496ed47315ddf6e5f887d6dfa2b62b78d9b7b3a275863",
+      "evas/rust_core/src/observation.rs": "a4bddbd4b5f336883909fe66fd5a5cf3e636fb6da265d8c7be05e48107fcee32",
+      "evas/rust_core/src/continuous_history.rs": "628f2a6a2c04c6cc326bd26d6605e25baa58aed3c872d74bb0a1ee77b138613c",
+      "evas/rust_core/src/expression.rs": "f6d9a5852d6f55371cd3f6634bf030545efa19274e73f89aee2b10624b5cda2b",
+      "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
+      "evas/rust_core/src/reset_dependencies.rs": "3f894fe282b3e22b7d07e7022a9e9aa9e6e06dc641591bdae25c0a7acf26f51f",
+      "evas/rust_core/src/transient_idt_tests.rs": "dfd640a90830437089e8389eedf7e354bd20253b47e3dcc7d3226dd1a496ee33",
+      "evas/rust_core/src/transition_integral.rs": "e5e32e03013915527e80c646ceecfba86d65161dbfa4c6df6c1ad0f8282447ed",
+      "evas/rust_core/src/schedule.rs": "b3b3f4137bbfc25900d06803a3fa281cbb56441b52867a80ef8ea2527eab8188",
+      "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+      "evas/rust_core/src/settlement_bounds.rs": "b9442599a964d3646ade5aea646bf27b2381ccaa65840832a087c2aa2c87972e",
+      "evas/rust_core/src/continuous_step_simplify.rs": "6eb21f7aa44f234105814f7d8483e764ce96d44acf026195cb341a985baba741",
+      "evas/rust_core/src/continuous.rs": "e7f4b4b0d9c425574357da0b10d645ff3d8115ca306e4d3f4836269f2fea4eed",
+      "evas/rust_core/src/event_conditions.rs": "575cea75aee5752510f55b29586d54926911ca746688b78311f38c04aff8935a",
+      "evas/rust_core/src/main.rs": "70626c73fa421340afcc53c025a220720b208657273ba3f5e20bc1e4c6e01c3c",
+      "evas/rust_core/src/nonlinear_dynamics.rs": "c21fdea17bce4348d1b518b7c9aefca64060b7bdec54b1c71612bb82d8a80511",
+      "evas/rust_core/src/operators.rs": "5fa6599793235599765adf91d27438eaa485fc81d48b24bd4e970aef5d287a2e",
+      "evas/rust_core/src/transient_event_acceptance.rs": "f21491a70934cff2de421289d11822960be431e9aa258af21d221f1488d7d985",
+      "evas/rust_core/src/accuracy.rs": "03fd769af88f73072a1964a942b9b9d1503196c56c5c4cb48cec7f21ee084d35",
+      "evas/rust_core/src/state_space.rs": "bc791c33b49c78259c0efa4b89203758830b6f90b461058d6a526ada5e1b2a94",
+      "evas/rust_core/src/continuous_select_cache_tests.rs": "4c86a3d1eef26832c428d5bb70dfe4fef7d0ae0b440e5a1a083d41ecf2f3bda5",
+      "evas/rust_core/src/slew_cascade.rs": "26b9cedd714dd24893d2076818d84c8905525da29c900c4df97bf9a7c40cc7b8",
+      "evas/rust_core/src/transient.rs": "f787076375114d4735bcfd10eedf00a74681fab1b0237fdd336022ec13c020e9",
+      "evas/rust_core/src/strobe.rs": "2cb7db0c54f6cf4656186343f764399132a9704f8b65552b00e737c9108c16af",
+      "evas/rust_core/src/input_clamp.rs": "c9a214c80d2e352ccafde153c4b38184074553753ce71b6b0cb4bfa698c048cd",
+      "evas/rust_core/src/math_functions.rs": "a57b876344f203b03d3dc0a2bb8f49bce673abd35619f55552c0a0d29b7f13a0",
+      "evas/rust_core/src/event_accuracy.rs": "315f58dc5589f234ccdda2f01f602057e1e283ebd65833a8247a300713e8dd4e",
+      "evas/rust_core/src/initialization.rs": "d6b88d2b63329538e7a72f0d27b09cc6eefd810612830c617685be2dca9865ed",
+      "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+      "evas/rust_core/src/filter_budget.rs": "94807ee47a346648b5eb4d7d4af03366c0f1f1b79a0e67f636fc279c90b67656",
+      "evas/rust_core/src/transient_lifecycle_tests.rs": "74af82b4c2156266f53b044700a5ce8129acd962d8510cfd4279d8ca01958a36",
+      "evas/rust_core/src/assembly.rs": "beab047ea57b6510e00e897b1caf02e437f3a30bd1567f92bc39c0a7e40b62f9",
+      "evas/rust_core/src/transient_history_calendar.rs": "e39ba63dcb296a0f646cc76d972b4d2486d75ebb60e9057ae6f877f01e0fc3e6",
+      "evas/rust_core/src/transition_filter.rs": "4c150a62e482910ebe7e2bf666b4687044b4bedaeb2a7c7bf4c39b7f1f98df24",
+      "evas/rust_core/src/continuous_runtime.rs": "ce769275fd31a85f43cf0f0e4b51a62528a0fc52f926f556ab72033b634b6fa1",
+      "evas/rust_core/src/linear/refinement.rs": "8476ad2ea3f3698e3c4552f8ff785c00ff878caab584b157dbb80b9c282f32a8",
+      "evas/rust_core/src/linear/dense.rs": "00a1d9e1a9c5f933f765dd586ab9a8982073d270fed73ed7e602af858e732cad",
+      "evas/rust_core/src/linear/sparse_tests.rs": "54e6b9a2af9b4539ba6cd1125bff1b548ebe38d786bed96d0b1b6f4d6c4baa06",
+      "evas/rust_core/src/linear/properties.rs": "d1a8b5ec069fef4f621b99290b532f7563cb8f55a1ba2178a77877f60192ab7f",
+      "evas/rust_core/src/linear/sparse.rs": "3914adce2368b027027c06240f160864af0f53de934c0b3285515114fe7aa869",
+      "evas/rust_core/src/linear/columns.rs": "22d752fd1675dcaea8c2f058c9a387531f0b5b2b973858994c1bfea1b3813db6",
+      "evas/rust_core/src/nonlinear/continuation.rs": "6d0aabe1bb6563a32d4e920fabdefde881777a54b8dc2b4658de432347f6448a",
+      "evas/rust_core/ir/src/lib.rs": "9cd43d6370a24e4cd623e585b05b7b9904341c271030970f6a14b91d25bc6e23"
+    },
+    "head": "ce677d592ebcab1b97b9146c3aa560b9810c02dd",
+    "git_status": "M evas/docs/development/TRACEABILITY.md\n M evas/rust_core/src/continuous.rs\n M evas/rust_core/src/continuous_select.rs\n M evas/rust_core/src/display.rs\n M evas/rust_core/src/event_conditions.rs\n M evas/rust_core/src/events.rs\n M evas/rust_core/src/initialization.rs\n M evas/rust_core/src/lib.rs\n M evas/rust_core/src/nonlinear_dynamics.rs\n M evas/rust_core/src/pwl.rs\n M evas/rust_core/src/schedule.rs\n M evas/rust_core/src/step_bounds.rs\n M evas/rust_core/src/transient.rs\n M evas/src/evas/instance_compiler.py\n M evas/src/evas/protocol.py\n M evas/tests/test_bound_step.py\n M evas/tests/test_display.py\n M evas/tests/test_timer.py\n?? evas/rust_core/src/continuous_select_cache_tests.rs\n?? evas/rust_core/src/continuous_select_candidates.rs\n?? evas/rust_core/src/continuous_step_simplify.rs\n?? evas/rust_core/src/nonlinear_root_window.rs\n?? evas/tests/test_exact_predicate_endpoints.py\n?? evas/tests/test_nested_predicate_cuts.py\n?? evas/tests/test_repeated_predicate_cuts.py\n?? evas/tests/test_root_window_history.py\n?? evas/tests/test_root_witness_neighbors.py\n?? evas/tests/test_zero_timer.py",
+    "python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+    "script_sha256": "1a1d100c76f6cad35c7b83521decf9f92ca57cd4a23edd47b9fa2731a6a9bf8b",
+    "complete_reviewed_identity_path": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-plan/REVIEW-FIXED-COMPLETE-IDENTITY.json",
+    "complete_reviewed_identity_sha256": "b82d98da472466d5d3c224d0a2b93b749f192d9409d0817e30dea4132331d8f7",
+    "complete_source_files_checked": 325,
+    "scope": "candidate public API newly compiles frozen DUTs; no old DUT response reused"
+  },
+  "cases": [
+    {
+      "id": "n08/n08-parent-fine",
+      "role": "physical_control",
+      "candidate_status": "completed",
+      "scope": "finite pair only, not original task score",
+      "missing_exact_native_tokens": [
+        "0.25",
+        "0.375",
+        "0.75",
+        "0.875",
+        "1"
+      ],
+      "pairs": [
+        {
+          "time": "0",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.125",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.5",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.625",
+          "node": "y",
+          "error_V": 1.642558331e-08,
+          "pass": true
+        }
+      ],
+      "mathchecks": [
+        {
+          "time": "0",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.125",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.25",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.375",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.5",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.625",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.75",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.875",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1",
+          "node": "y",
+          "contains": true,
+          "error_V": 1.1102230246251565e-16,
+          "pass_budget": true
+        }
+      ],
+      "callback_sequence_equal": null,
+      "finite_pair_pass": false,
+      "reference_qualification_not_upgraded": true,
+      "qualification": null,
+      "qualification_note": "Final qualification additionally requires unchanged reference acceptance/configuration/full native mathematical checks; this script never upgrades old incomplete or diagnostic references"
+    },
+    {
+      "id": "n08/n08-boolean-fine",
+      "role": "physical_control",
+      "candidate_status": "completed",
+      "scope": "finite pair only, not original task score",
+      "missing_exact_native_tokens": [
+        "0.5",
+        "0.625",
+        "0.75",
+        "0.875",
+        "1"
+      ],
+      "pairs": [
+        {
+          "time": "0",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.125",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.25",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.375",
+          "node": "y",
+          "error_V": 1.64255832e-08,
+          "pass": true
+        }
+      ],
+      "mathchecks": [
+        {
+          "time": "0",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.125",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.25",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.375",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.5",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.625",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.75",
+          "node": "y",
+          "contains": true,
+          "error_V": 1.1102230246251565e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "0.875",
+          "node": "y",
+          "contains": true,
+          "error_V": 2.220446049250313e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "1",
+          "node": "y",
+          "contains": true,
+          "error_V": 2.220446049250313e-16,
+          "pass_budget": true
+        }
+      ],
+      "callback_sequence_equal": null,
+      "finite_pair_pass": false,
+      "reference_qualification_not_upgraded": true,
+      "qualification": null,
+      "qualification_note": "Final qualification additionally requires unchanged reference acceptance/configuration/full native mathematical checks; this script never upgrades old incomplete or diagnostic references"
+    },
+    {
+      "id": "n08/n08-held-fine",
+      "role": "physical_control",
+      "candidate_status": "completed",
+      "scope": "finite pair only, not original task score",
+      "missing_exact_native_tokens": [
+        "0.25",
+        "0.625",
+        "0.75",
+        "0.875",
+        "1"
+      ],
+      "pairs": [
+        {
+          "time": "0",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.125",
+          "node": "y",
+          "error_V": 5.551115123125783e-17,
+          "pass": true
+        },
+        {
+          "time": "0.375",
+          "node": "y",
+          "error_V": 2.417329613466546e-09,
+          "pass": true
+        },
+        {
+          "time": "0.5",
+          "node": "y",
+          "error_V": 2.417329727955395e-09,
+          "pass": true
+        }
+      ],
+      "mathchecks": [
+        {
+          "time": "0",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.125",
+          "node": "y",
+          "contains": true,
+          "error_V": 5.551115123125783e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "0.25",
+          "node": "y",
+          "contains": true,
+          "error_V": 1.1102230246251565e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "0.375",
+          "node": "y",
+          "contains": true,
+          "error_V": 1.6653345369377348e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "0.5",
+          "node": "y",
+          "contains": true,
+          "error_V": 2.220446049250313e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "0.625",
+          "node": "y",
+          "contains": true,
+          "error_V": 2.220446049250313e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "0.75",
+          "node": "y",
+          "contains": true,
+          "error_V": 2.220446049250313e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "0.875",
+          "node": "y",
+          "contains": true,
+          "error_V": 2.220446049250313e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "1",
+          "node": "y",
+          "contains": true,
+          "error_V": 3.3306690738754696e-16,
+          "pass_budget": true
+        }
+      ],
+      "callback_sequence_equal": null,
+      "finite_pair_pass": false,
+      "reference_qualification_not_upgraded": true,
+      "qualification": null,
+      "qualification_note": "Final qualification additionally requires unchanged reference acceptance/configuration/full native mathematical checks; this script never upgrades old incomplete or diagnostic references"
+    },
+    {
+      "id": "n08/n08-nonlinear-fine",
+      "role": "physical_control",
+      "candidate_status": "completed",
+      "scope": "finite pair only, not original task score",
+      "missing_exact_native_tokens": [
+        "0.25",
+        "0.375"
+      ],
+      "pairs": [
+        {
+          "time": "0",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.125",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.5",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.625",
+          "node": "y",
+          "error_V": 1.6059011162156085e-08,
+          "pass": true
+        },
+        {
+          "time": "0.75",
+          "node": "y",
+          "error_V": 1.5600086607452545e-08,
+          "pass": true
+        },
+        {
+          "time": "0.875",
+          "node": "y",
+          "error_V": 1.4847950037868772e-08,
+          "pass": true
+        },
+        {
+          "time": "1",
+          "node": "y",
+          "error_V": 1.3981038495484013e-08,
+          "pass": true
+        }
+      ],
+      "mathchecks": [
+        {
+          "time": "0",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.125",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.25",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.375",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.5",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.625",
+          "node": "y",
+          "contains": true,
+          "error_V": 2.7755575615628914e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "0.75",
+          "node": "y",
+          "contains": true,
+          "error_V": 5.551115123125783e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "0.875",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1",
+          "node": "y",
+          "contains": true,
+          "error_V": 5.551115123125783e-17,
+          "pass_budget": true
+        }
+      ],
+      "callback_sequence_equal": null,
+      "finite_pair_pass": false,
+      "reference_qualification_not_upgraded": true,
+      "qualification": null,
+      "qualification_note": "Final qualification additionally requires unchanged reference acceptance/configuration/full native mathematical checks; this script never upgrades old incomplete or diagnostic references"
+    },
+    {
+      "id": "n08/n08-filter-fine",
+      "role": "physical_control",
+      "candidate_status": "completed",
+      "scope": "finite pair only, not original task score",
+      "missing_exact_native_tokens": [
+        "0.25",
+        "0.375"
+      ],
+      "pairs": [
+        {
+          "time": "0",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.125",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.5",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.625",
+          "node": "y",
+          "error_V": 2.3825194622630824e-08,
+          "pass": true
+        },
+        {
+          "time": "0.75",
+          "node": "y",
+          "error_V": 3.259478376493424e-08,
+          "pass": true
+        },
+        {
+          "time": "0.875",
+          "node": "y",
+          "error_V": 3.5248680975358714e-08,
+          "pass": true
+        },
+        {
+          "time": "1",
+          "node": "y",
+          "error_V": 3.0263703213671565e-08,
+          "pass": true
+        }
+      ],
+      "mathchecks": [
+        {
+          "time": "0",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.125",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.25",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.375",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.5",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.625",
+          "node": "y",
+          "contains": true,
+          "error_V": 1.3877787807814457e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "0.75",
+          "node": "y",
+          "contains": true,
+          "error_V": 8.326672684688674e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "0.875",
+          "node": "y",
+          "contains": true,
+          "error_V": 2.7755575615628914e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "1",
+          "node": "y",
+          "contains": true,
+          "error_V": 6.661338147750939e-16,
+          "pass_budget": true
+        }
+      ],
+      "callback_sequence_equal": null,
+      "finite_pair_pass": false,
+      "reference_qualification_not_upgraded": true,
+      "qualification": null,
+      "qualification_note": "Final qualification additionally requires unchanged reference acceptance/configuration/full native mathematical checks; this script never upgrades old incomplete or diagnostic references"
+    },
+    {
+      "id": "n19/root-third_rise_integral",
+      "role": "physical_history",
+      "candidate_status": "completed",
+      "scope": "finite pair only, not original task score",
+      "missing_exact_native_tokens": [],
+      "pairs": [
+        {
+          "time": "0",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0",
+          "node": "w",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.125",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.125",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.125",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.125",
+          "node": "w",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.25",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.25",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.25",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.25",
+          "node": "w",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.375",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.375",
+          "node": "y",
+          "error_V": 5.772418849545644e-09,
+          "pass": true
+        },
+        {
+          "time": "0.375",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.375",
+          "node": "w",
+          "error_V": 2.221627767414808e-09,
+          "pass": true
+        },
+        {
+          "time": "0.5",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.5",
+          "node": "y",
+          "error_V": 4.904861916954564e-08,
+          "pass": true
+        },
+        {
+          "time": "0.5",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.5",
+          "node": "w",
+          "error_V": 2.4581280342358012e-08,
+          "pass": true
+        },
+        {
+          "time": "0.625",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.625",
+          "node": "y",
+          "error_V": 1.0317318823954564e-07,
+          "pass": true
+        },
+        {
+          "time": "0.625",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.625",
+          "node": "w",
+          "error_V": 6.45402113950568e-08,
+          "pass": true
+        },
+        {
+          "time": "0.75",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.75",
+          "node": "y",
+          "error_V": 1.4802578849545644e-07,
+          "pass": true
+        },
+        {
+          "time": "0.75",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.75",
+          "node": "w",
+          "error_V": 1.308446953e-07,
+          "pass": true
+        },
+        {
+          "time": "0.875",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.875",
+          "node": "y",
+          "error_V": 1.4802578899545644e-07,
+          "pass": true
+        },
+        {
+          "time": "0.875",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.875",
+          "node": "w",
+          "error_V": 1.4934791826045436e-07,
+          "pass": true
+        },
+        {
+          "time": "1",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "1",
+          "node": "y",
+          "error_V": 1.4802578899545644e-07,
+          "pass": true
+        },
+        {
+          "time": "1",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "1",
+          "node": "w",
+          "error_V": 1.678511438768195e-07,
+          "pass": true
+        }
+      ],
+      "mathchecks": [
+        {
+          "time": "0",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0",
+          "node": "w",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.125",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.125",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.125",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.125",
+          "node": "w",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.25",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.25",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.25",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.25",
+          "node": "w",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.375",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.375",
+          "node": "y",
+          "contains": true,
+          "error_V": 4.9343245538895844e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "0.375",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.375",
+          "node": "w",
+          "contains": true,
+          "error_V": 9.25185853854297e-18,
+          "pass_budget": true
+        },
+        {
+          "time": "0.5",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.5",
+          "node": "y",
+          "contains": true,
+          "error_V": 4.9343245538895844e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "0.5",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.5",
+          "node": "w",
+          "contains": true,
+          "error_V": 1.5419764230904953e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "0.625",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.625",
+          "node": "y",
+          "contains": true,
+          "error_V": 4.9343245538895844e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "0.625",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.625",
+          "node": "w",
+          "contains": true,
+          "error_V": 6.1679056923619804e-18,
+          "pass_budget": true
+        },
+        {
+          "time": "0.75",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.75",
+          "node": "y",
+          "contains": true,
+          "error_V": 4.934324553889585e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "0.75",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.75",
+          "node": "w",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.875",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.875",
+          "node": "y",
+          "contains": true,
+          "error_V": 4.934324553889585e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "0.875",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.875",
+          "node": "w",
+          "contains": true,
+          "error_V": 4.9343245538895844e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "1",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1",
+          "node": "y",
+          "contains": true,
+          "error_V": 4.934324553889585e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "1",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1",
+          "node": "w",
+          "contains": true,
+          "error_V": 3.4540271877227093e-16,
+          "pass_budget": true
+        }
+      ],
+      "callback_sequence_equal": null,
+      "finite_pair_pass": true,
+      "reference_qualification_not_upgraded": true,
+      "qualification": null,
+      "qualification_note": "Final qualification additionally requires unchanged reference acceptance/configuration/full native mathematical checks; this script never upgrades old incomplete or diagnostic references"
+    },
+    {
+      "id": "n19/root-endpoint_rise_after_cascade",
+      "role": "physical_history",
+      "candidate_status": "completed",
+      "scope": "finite pair only, not original task score",
+      "missing_exact_native_tokens": [],
+      "pairs": [
+        {
+          "time": "0",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0",
+          "node": "w",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "4.9999999999999998e-08",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "4.9999999999999998e-08",
+          "node": "y",
+          "error_V": 1e-15,
+          "pass": true
+        },
+        {
+          "time": "4.9999999999999998e-08",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "4.9999999999999998e-08",
+          "node": "w",
+          "error_V": 6.1e-16,
+          "pass": true
+        },
+        {
+          "time": "9.9999999999999995e-08",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "9.9999999999999995e-08",
+          "node": "y",
+          "error_V": 2.2e-15,
+          "pass": true
+        },
+        {
+          "time": "9.9999999999999995e-08",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "9.9999999999999995e-08",
+          "node": "w",
+          "error_V": 1.22e-15,
+          "pass": true
+        },
+        {
+          "time": "1.002e-07",
+          "node": "u",
+          "error_V": 4.4408920985006264e-17,
+          "pass": true
+        },
+        {
+          "time": "1.002e-07",
+          "node": "y",
+          "error_V": 1.3606533273576667e-08,
+          "pass": true
+        },
+        {
+          "time": "1.002e-07",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "1.002e-07",
+          "node": "w",
+          "error_V": 3.828226334630598e-11,
+          "pass": true
+        },
+        {
+          "time": "1.2499999999999999e-07",
+          "node": "u",
+          "error_V": 4.4408920985006264e-17,
+          "pass": true
+        },
+        {
+          "time": "1.2499999999999999e-07",
+          "node": "y",
+          "error_V": 1.3606532973576667e-08,
+          "pass": true
+        },
+        {
+          "time": "1.2499999999999999e-07",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "1.2499999999999999e-07",
+          "node": "w",
+          "error_V": 3.4127072288406056e-09,
+          "pass": true
+        },
+        {
+          "time": "1.4999999999999999e-07",
+          "node": "u",
+          "error_V": 4.4408920985006264e-17,
+          "pass": true
+        },
+        {
+          "time": "1.4999999999999999e-07",
+          "node": "y",
+          "error_V": 1.3606532973576667e-08,
+          "pass": true
+        },
+        {
+          "time": "1.4999999999999999e-07",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "1.4999999999999999e-07",
+          "node": "w",
+          "error_V": 6.814348608257075e-09,
+          "pass": true
+        },
+        {
+          "time": "1.9999999999999999e-07",
+          "node": "u",
+          "error_V": 4.4408920985006264e-17,
+          "pass": true
+        },
+        {
+          "time": "1.9999999999999999e-07",
+          "node": "y",
+          "error_V": 1.3606532973576667e-08,
+          "pass": true
+        },
+        {
+          "time": "1.9999999999999999e-07",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "1.9999999999999999e-07",
+          "node": "w",
+          "error_V": 1.3617568223000804e-08,
+          "pass": true
+        }
+      ],
+      "mathchecks": [
+        {
+          "time": "0",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0",
+          "node": "w",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "4.9999999999999998e-08",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "4.9999999999999998e-08",
+          "node": "y",
+          "contains": true,
+          "error_V": 2.262594408705687e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "4.9999999999999998e-08",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "4.9999999999999998e-08",
+          "node": "w",
+          "contains": true,
+          "error_V": 1.1312972043528435e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "9.9999999999999995e-08",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "9.9999999999999995e-08",
+          "node": "y",
+          "contains": true,
+          "error_V": 4.525188817411374e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "9.9999999999999995e-08",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "9.9999999999999995e-08",
+          "node": "w",
+          "contains": true,
+          "error_V": 4.525188817411374e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "1.002e-07",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1.002e-07",
+          "node": "y",
+          "contains": true,
+          "error_V": 1.2073821197661277e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "1.002e-07",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1.002e-07",
+          "node": "w",
+          "contains": true,
+          "error_V": 3.618533622849215e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "1.2499999999999999e-07",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1.2499999999999999e-07",
+          "node": "y",
+          "contains": true,
+          "error_V": 1.2073821197661277e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "1.2499999999999999e-07",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1.2499999999999999e-07",
+          "node": "w",
+          "contains": true,
+          "error_V": 2.656948425320576e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "1.4999999999999999e-07",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1.4999999999999999e-07",
+          "node": "y",
+          "contains": true,
+          "error_V": 1.2073821197661277e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "1.4999999999999999e-07",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1.4999999999999999e-07",
+          "node": "w",
+          "contains": true,
+          "error_V": 4.2940925697132986e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "1.9999999999999999e-07",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1.9999999999999999e-07",
+          "node": "y",
+          "contains": true,
+          "error_V": 1.2073821197661277e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "1.9999999999999999e-07",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1.9999999999999999e-07",
+          "node": "w",
+          "contains": true,
+          "error_V": 2.6212746425225215e-16,
+          "pass_budget": true
+        }
+      ],
+      "callback_sequence_equal": null,
+      "finite_pair_pass": true,
+      "reference_qualification_not_upgraded": true,
+      "qualification": null,
+      "qualification_note": "Final qualification additionally requires unchanged reference acceptance/configuration/full native mathematical checks; this script never upgrades old incomplete or diagnostic references"
+    },
+    {
+      "id": "n19/root-endpoint_fall_before_cascade",
+      "role": "physical_history",
+      "candidate_status": "completed",
+      "scope": "finite pair only, not original task score",
+      "missing_exact_native_tokens": [],
+      "pairs": [
+        {
+          "time": "0",
+          "node": "u",
+          "error_V": 4.4408920985006264e-17,
+          "pass": true
+        },
+        {
+          "time": "0",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0",
+          "node": "w",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "4.9999999999999998e-08",
+          "node": "u",
+          "error_V": 4.4408920985006264e-17,
+          "pass": true
+        },
+        {
+          "time": "4.9999999999999998e-08",
+          "node": "y",
+          "error_V": 6.706581410364015e-15,
+          "pass": true
+        },
+        {
+          "time": "4.9999999999999998e-08",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "4.9999999999999998e-08",
+          "node": "w",
+          "error_V": 2.113354647408996e-15,
+          "pass": true
+        },
+        {
+          "time": "9.9999999999999995e-08",
+          "node": "u",
+          "error_V": 4.4408920985006264e-17,
+          "pass": true
+        },
+        {
+          "time": "9.9999999999999995e-08",
+          "node": "y",
+          "error_V": 1.781316282072803e-14,
+          "pass": true
+        },
+        {
+          "time": "9.9999999999999995e-08",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "9.9999999999999995e-08",
+          "node": "w",
+          "error_V": 3.7507799486047586e-17,
+          "pass": true
+        },
+        {
+          "time": "1.002e-07",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "1.002e-07",
+          "node": "y",
+          "error_V": 3.4530122749693573e-08,
+          "pass": true
+        },
+        {
+          "time": "1.002e-07",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "1.002e-07",
+          "node": "w",
+          "error_V": 2.872548460217537e-11,
+          "pass": true
+        },
+        {
+          "time": "1.2499999999999999e-07",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "1.2499999999999999e-07",
+          "node": "y",
+          "error_V": 3.4530122749693573e-08,
+          "pass": true
+        },
+        {
+          "time": "1.2499999999999999e-07",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "1.2499999999999999e-07",
+          "node": "w",
+          "error_V": 8.534772879100869e-09,
+          "pass": true
+        },
+        {
+          "time": "1.4999999999999999e-07",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "1.4999999999999999e-07",
+          "node": "y",
+          "error_V": 3.4530122749693573e-08,
+          "pass": true
+        },
+        {
+          "time": "1.4999999999999999e-07",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "1.4999999999999999e-07",
+          "node": "w",
+          "error_V": 1.7167359088568868e-08,
+          "pass": true
+        },
+        {
+          "time": "1.9999999999999999e-07",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "1.9999999999999999e-07",
+          "node": "y",
+          "error_V": 3.4530122749693573e-08,
+          "pass": true
+        },
+        {
+          "time": "1.9999999999999999e-07",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "1.9999999999999999e-07",
+          "node": "w",
+          "error_V": 3.443253771932645e-08,
+          "pass": true
+        }
+      ],
+      "mathchecks": [
+        {
+          "time": "0",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0",
+          "node": "w",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "4.9999999999999998e-08",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "4.9999999999999998e-08",
+          "node": "y",
+          "contains": true,
+          "error_V": 1.225793555201249e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "4.9999999999999998e-08",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "4.9999999999999998e-08",
+          "node": "w",
+          "contains": true,
+          "error_V": 5.4628339612311507e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "9.9999999999999995e-08",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "9.9999999999999995e-08",
+          "node": "y",
+          "contains": true,
+          "error_V": 2.451587110402498e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "9.9999999999999995e-08",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "9.9999999999999995e-08",
+          "node": "w",
+          "contains": true,
+          "error_V": 2.255758514008166e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "1.002e-07",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1.002e-07",
+          "node": "y",
+          "contains": true,
+          "error_V": 1.761063824878441e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "1.002e-07",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1.002e-07",
+          "node": "w",
+          "contains": true,
+          "error_V": 7.929745327085338e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "1.2499999999999999e-07",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1.2499999999999999e-07",
+          "node": "y",
+          "contains": true,
+          "error_V": 1.761063824878441e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "1.2499999999999999e-07",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1.2499999999999999e-07",
+          "node": "w",
+          "contains": true,
+          "error_V": 3.1218327669518545e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "1.4999999999999999e-07",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1.4999999999999999e-07",
+          "node": "y",
+          "contains": true,
+          "error_V": 1.761063824878441e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "1.4999999999999999e-07",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1.4999999999999999e-07",
+          "node": "w",
+          "contains": true,
+          "error_V": 1.8216496334588153e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "1.9999999999999999e-07",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1.9999999999999999e-07",
+          "node": "y",
+          "contains": true,
+          "error_V": 1.761063824878441e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "1.9999999999999999e-07",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1.9999999999999999e-07",
+          "node": "w",
+          "contains": true,
+          "error_V": 8.103067563473989e-16,
+          "pass_budget": true
+        }
+      ],
+      "callback_sequence_equal": null,
+      "finite_pair_pass": true,
+      "reference_qualification_not_upgraded": true,
+      "qualification": null,
+      "qualification_note": "Final qualification additionally requires unchanged reference acceptance/configuration/full native mathematical checks; this script never upgrades old incomplete or diagnostic references"
+    },
+    {
+      "id": "n19/root-endpoint_rise_separated",
+      "role": "physical_history",
+      "candidate_status": "completed",
+      "scope": "finite pair only, not original task score",
+      "missing_exact_native_tokens": [],
+      "pairs": [
+        {
+          "time": "0",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0",
+          "node": "w",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "4.9999999999999998e-08",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "4.9999999999999998e-08",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "4.9999999999999998e-08",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "4.9999999999999998e-08",
+          "node": "w",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "9.9999999999999995e-08",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "9.9999999999999995e-08",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "9.9999999999999995e-08",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "9.9999999999999995e-08",
+          "node": "w",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "1.002e-07",
+          "node": "u",
+          "error_V": 4.4408920985006264e-17,
+          "pass": true
+        },
+        {
+          "time": "1.002e-07",
+          "node": "y",
+          "error_V": 9.456566690702285e-07,
+          "pass": true
+        },
+        {
+          "time": "1.002e-07",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "1.002e-07",
+          "node": "w",
+          "error_V": 9.437316408031087e-10,
+          "pass": true
+        },
+        {
+          "time": "1.2499999999999999e-07",
+          "node": "u",
+          "error_V": 4.4408920985006264e-17,
+          "pass": true
+        },
+        {
+          "time": "1.2499999999999999e-07",
+          "node": "y",
+          "error_V": 9.538635952190815e-07,
+          "pass": true
+        },
+        {
+          "time": "1.2499999999999999e-07",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "1.2499999999999999e-07",
+          "node": "w",
+          "error_V": 2.3587691000641432e-07,
+          "pass": true
+        },
+        {
+          "time": "1.4999999999999999e-07",
+          "node": "u",
+          "error_V": 4.4408920985006264e-17,
+          "pass": true
+        },
+        {
+          "time": "1.4999999999999999e-07",
+          "node": "y",
+          "error_V": 9.538635953290817e-07,
+          "pass": true
+        },
+        {
+          "time": "1.4999999999999999e-07",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "1.4999999999999999e-07",
+          "node": "w",
+          "error_V": 4.743428073689403e-07,
+          "pass": true
+        },
+        {
+          "time": "1.9999999999999999e-07",
+          "node": "u",
+          "error_V": 4.4408920985006264e-17,
+          "pass": true
+        },
+        {
+          "time": "1.9999999999999999e-07",
+          "node": "y",
+          "error_V": 9.538635953290817e-07,
+          "pass": true
+        },
+        {
+          "time": "1.9999999999999999e-07",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "1.9999999999999999e-07",
+          "node": "w",
+          "error_V": 9.512745902139922e-07,
+          "pass": true
+        }
+      ],
+      "mathchecks": [
+        {
+          "time": "0",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0",
+          "node": "w",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "4.9999999999999998e-08",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "4.9999999999999998e-08",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "4.9999999999999998e-08",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "4.9999999999999998e-08",
+          "node": "w",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "9.9999999999999995e-08",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "9.9999999999999995e-08",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "9.9999999999999995e-08",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "9.9999999999999995e-08",
+          "node": "w",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1.002e-07",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1.002e-07",
+          "node": "y",
+          "contains": true,
+          "error_V": 2.5677763138432564e-19,
+          "pass_budget": true
+        },
+        {
+          "time": "1.002e-07",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1.002e-07",
+          "node": "w",
+          "contains": true,
+          "error_V": 1.2017327373005404e-22,
+          "pass_budget": true
+        },
+        {
+          "time": "1.2499999999999999e-07",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1.2499999999999999e-07",
+          "node": "y",
+          "contains": true,
+          "error_V": 5.977350497974718e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "1.2499999999999999e-07",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1.2499999999999999e-07",
+          "node": "w",
+          "contains": true,
+          "error_V": 6.789901159122961e-18,
+          "pass_budget": true
+        },
+        {
+          "time": "1.4999999999999999e-07",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1.4999999999999999e-07",
+          "node": "y",
+          "contains": true,
+          "error_V": 5.977350497974718e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "1.4999999999999999e-07",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1.4999999999999999e-07",
+          "node": "w",
+          "contains": true,
+          "error_V": 2.9132261309003866e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "1.9999999999999999e-07",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1.9999999999999999e-07",
+          "node": "y",
+          "contains": true,
+          "error_V": 5.977350497974718e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "1.9999999999999999e-07",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1.9999999999999999e-07",
+          "node": "w",
+          "contains": true,
+          "error_V": 7.381698160876567e-17,
+          "pass_budget": true
+        }
+      ],
+      "callback_sequence_equal": null,
+      "finite_pair_pass": true,
+      "reference_qualification_not_upgraded": true,
+      "qualification": null,
+      "qualification_note": "Final qualification additionally requires unchanged reference acceptance/configuration/full native mathematical checks; this script never upgrades old incomplete or diagnostic references"
+    },
+    {
+      "id": "n19/root-third_fall_filter",
+      "role": "physical_history",
+      "candidate_status": "completed",
+      "scope": "finite pair only, not original task score",
+      "missing_exact_native_tokens": [],
+      "pairs": [
+        {
+          "time": "0",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0",
+          "node": "w",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.125",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.125",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.125",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.125",
+          "node": "w",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.25",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.25",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.25",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.25",
+          "node": "w",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.375",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.375",
+          "node": "y",
+          "error_V": 3.9802028750103845e-10,
+          "pass": true
+        },
+        {
+          "time": "0.375",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.375",
+          "node": "w",
+          "error_V": 6.42728595330574e-09,
+          "pass": true
+        },
+        {
+          "time": "0.5",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.5",
+          "node": "y",
+          "error_V": 1.0467488439545643e-08,
+          "pass": true
+        },
+        {
+          "time": "0.5",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.5",
+          "node": "w",
+          "error_V": 5.604114039977585e-08,
+          "pass": true
+        },
+        {
+          "time": "0.625",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.625",
+          "node": "y",
+          "error_V": 5.7923156939545646e-08,
+          "pass": true
+        },
+        {
+          "time": "0.625",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.625",
+          "node": "w",
+          "error_V": 7.75002904331302e-08,
+          "pass": true
+        },
+        {
+          "time": "0.75",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.75",
+          "node": "y",
+          "error_V": 1.8584020013954565e-07,
+          "pass": true
+        },
+        {
+          "time": "0.75",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.75",
+          "node": "w",
+          "error_V": 2.8161339080187073e-08,
+          "pass": true
+        },
+        {
+          "time": "0.875",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.875",
+          "node": "y",
+          "error_V": 1.8584019833954566e-07,
+          "pass": true
+        },
+        {
+          "time": "0.875",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.875",
+          "node": "w",
+          "error_V": 2.813015815847538e-07,
+          "pass": true
+        },
+        {
+          "time": "1",
+          "node": "u",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "1",
+          "node": "y",
+          "error_V": 1.8584019873954564e-07,
+          "pass": true
+        },
+        {
+          "time": "1",
+          "node": "z",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "1",
+          "node": "w",
+          "error_V": 3.370379699920287e-07,
+          "pass": true
+        }
+      ],
+      "mathchecks": [
+        {
+          "time": "0",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0",
+          "node": "w",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.125",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.125",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.125",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.125",
+          "node": "w",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.25",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.25",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.25",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.25",
+          "node": "w",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.375",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.375",
+          "node": "y",
+          "contains": true,
+          "error_V": 2.713878504639272e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "0.375",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.375",
+          "node": "w",
+          "contains": true,
+          "error_V": 5.858247231686389e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "0.5",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.5",
+          "node": "y",
+          "contains": true,
+          "error_V": 4.9343245538895844e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "0.5",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.5",
+          "node": "w",
+          "contains": true,
+          "error_V": 1.2876512560709112e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "0.625",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.625",
+          "node": "y",
+          "contains": true,
+          "error_V": 4.9343245538895844e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "0.625",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.625",
+          "node": "w",
+          "contains": true,
+          "error_V": 1.1397416936848605e-16,
+          "pass_budget": true
+        },
+        {
+          "time": "0.75",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.75",
+          "node": "y",
+          "contains": true,
+          "error_V": 4.9343245538895844e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "0.75",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.75",
+          "node": "w",
+          "contains": true,
+          "error_V": 2.1611956756885512e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "0.875",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.875",
+          "node": "y",
+          "contains": true,
+          "error_V": 4.9343245538895844e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "0.875",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.875",
+          "node": "w",
+          "contains": true,
+          "error_V": 4.911836803710455e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "1",
+          "node": "u",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1",
+          "node": "y",
+          "contains": true,
+          "error_V": 4.9343245538895844e-17,
+          "pass_budget": true
+        },
+        {
+          "time": "1",
+          "node": "z",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1",
+          "node": "w",
+          "contains": true,
+          "error_V": 4.396468692204149e-17,
+          "pass_budget": true
+        }
+      ],
+      "callback_sequence_equal": null,
+      "finite_pair_pass": true,
+      "reference_qualification_not_upgraded": true,
+      "qualification": null,
+      "qualification_note": "Final qualification additionally requires unchanged reference acceptance/configuration/full native mathematical checks; this script never upgrades old incomplete or diagnostic references"
+    },
+    {
+      "id": "n19/root-endpoint_highgain_safety",
+      "role": "unscored_safety",
+      "candidate_status": "rejected",
+      "scope": "finite pair only, not original task score",
+      "exception": {
+        "type": "KernelError",
+        "message": "waveform_accuracy: root-window endpoint exceeds the unchanged voltage budget",
+        "detail": {
+          "kind": "waveform_accuracy",
+          "message": "root-window endpoint exceeds the unchanged voltage budget"
+        }
+      },
+      "qualification": null
+    },
+    {
+      "id": "n08c/n08c-transres-positive-forced",
+      "role": "physical_control",
+      "candidate_status": "completed",
+      "scope": "finite pair only, not original task score",
+      "missing_exact_native_tokens": [],
+      "pairs": [
+        {
+          "time": "0",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "2.9999999999999997e-08",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "3.0099999999999998e-08",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "3.0199999999999999e-08",
+          "node": "y",
+          "error_V": 1.7967630126790642e-09,
+          "pass": true
+        },
+        {
+          "time": "4.0000000000000001e-08",
+          "node": "y",
+          "error_V": 1.7967637352074256e-09,
+          "pass": true
+        }
+      ],
+      "mathchecks": [
+        {
+          "time": "0",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "2.9999999999999997e-08",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "3.0099999999999998e-08",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "3.0199999999999999e-08",
+          "node": "y",
+          "contains": true,
+          "error_V": 8.656676720938949e-19,
+          "pass_budget": true
+        },
+        {
+          "time": "4.0000000000000001e-08",
+          "node": "y",
+          "contains": true,
+          "error_V": 1.729573515657501e-16,
+          "pass_budget": true
+        }
+      ],
+      "callback_sequence_equal": null,
+      "finite_pair_pass": true,
+      "reference_qualification_not_upgraded": true,
+      "qualification": null,
+      "qualification_note": "Final qualification additionally requires unchanged reference acceptance/configuration/full native mathematical checks; this script never upgrades old incomplete or diagnostic references"
+    },
+    {
+      "id": "n07a/n07-zero_tol_dyadic-marked-ordinary",
+      "role": "exact_dyadic_control",
+      "candidate_status": "rejected",
+      "scope": "finite pair only, not original task score",
+      "exception": {
+        "type": "CompileError",
+        "message": "dut.va:3:68: expected a non-reserved identifier",
+        "detail": null
+      },
+      "qualification": false
+    },
+    {
+      "id": "n07a/n07-zero_tol_dyadic-marked-strobed",
+      "role": "exact_dyadic_control",
+      "candidate_status": "rejected",
+      "scope": "finite pair only, not original task score",
+      "exception": {
+        "type": "CompileError",
+        "message": "dut.va:3:68: expected a non-reserved identifier",
+        "detail": null
+      },
+      "qualification": false
+    },
+    {
+      "id": "n07a/n07-zero_tol_decimal-marked-ordinary",
+      "role": "unscored_safety",
+      "candidate_status": "rejected",
+      "scope": "finite pair only, not original task score",
+      "exception": {
+        "type": "CompileError",
+        "message": "dut.va:3:64: expected a non-reserved identifier",
+        "detail": null
+      },
+      "qualification": null
+    },
+    {
+      "id": "n07a/n07-zero_tol_decimal-marked-strobed",
+      "role": "unscored_safety",
+      "candidate_status": "rejected",
+      "scope": "finite pair only, not original task score",
+      "exception": {
+        "type": "CompileError",
+        "message": "dut.va:3:64: expected a non-reserved identifier",
+        "detail": null
+      },
+      "qualification": null
+    },
+    {
+      "id": "linear/linear_idt",
+      "role": "qualification",
+      "candidate_status": "completed",
+      "scope": "finite pair only, not original task score",
+      "missing_exact_native_tokens": [],
+      "pairs": [
+        {
+          "time": "0",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.25",
+          "node": "y",
+          "error_V": 2.2e-16,
+          "pass": true
+        },
+        {
+          "time": "0.5",
+          "node": "y",
+          "error_V": 7.953163e-10,
+          "pass": true
+        },
+        {
+          "time": "0.75",
+          "node": "y",
+          "error_V": 7.953147e-10,
+          "pass": true
+        },
+        {
+          "time": "1",
+          "node": "y",
+          "error_V": 7.953149220446049e-10,
+          "pass": true
+        }
+      ],
+      "mathchecks": [
+        {
+          "time": "0",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.25",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.5",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.75",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1",
+          "node": "y",
+          "contains": true,
+          "error_V": 2.220446049250313e-16,
+          "pass_budget": true
+        }
+      ],
+      "callback_sequence_equal": null,
+      "finite_pair_pass": true,
+      "reference_qualification_not_upgraded": true,
+      "qualification": null,
+      "qualification_note": "Final qualification additionally requires unchanged reference acceptance/configuration/full native mathematical checks; this script never upgrades old incomplete or diagnostic references"
+    },
+    {
+      "id": "linear/linear_filter",
+      "role": "qualification",
+      "candidate_status": "rejected",
+      "scope": "finite pair only, not original task score",
+      "exception": {
+        "type": "KernelError",
+        "message": "unsupported_operator: selected continuous mode contains no integral network",
+        "detail": {
+          "kind": "unsupported_operator",
+          "message": "selected continuous mode contains no integral network"
+        }
+      },
+      "qualification": false
+    },
+    {
+      "id": "linear/linear_held_gate",
+      "role": "qualification",
+      "candidate_status": "completed",
+      "scope": "finite pair only, not original task score",
+      "missing_exact_native_tokens": [],
+      "pairs": [
+        {
+          "time": "0",
+          "node": "y",
+          "error_V": 0.0,
+          "pass": true
+        },
+        {
+          "time": "0.25",
+          "node": "y",
+          "error_V": 2.2e-16,
+          "pass": true
+        },
+        {
+          "time": "0.5",
+          "node": "y",
+          "error_V": 7.953163e-10,
+          "pass": true
+        },
+        {
+          "time": "0.75",
+          "node": "y",
+          "error_V": 3.800473e-10,
+          "pass": true
+        },
+        {
+          "time": "1",
+          "node": "y",
+          "error_V": 3.800470559107902e-10,
+          "pass": true
+        }
+      ],
+      "mathchecks": [
+        {
+          "time": "0",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.25",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.5",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "0.75",
+          "node": "y",
+          "contains": true,
+          "error_V": 0.0,
+          "pass_budget": true
+        },
+        {
+          "time": "1",
+          "node": "y",
+          "contains": true,
+          "error_V": 4.440892098500626e-16,
+          "pass_budget": true
+        }
+      ],
+      "callback_sequence_equal": null,
+      "finite_pair_pass": true,
+      "reference_qualification_not_upgraded": true,
+      "qualification": null,
+      "qualification_note": "Final qualification additionally requires unchanged reference acceptance/configuration/full native mathematical checks; this script never upgrades old incomplete or diagnostic references"
+    }
+  ],
+  "historical_scores_changed": false
+}

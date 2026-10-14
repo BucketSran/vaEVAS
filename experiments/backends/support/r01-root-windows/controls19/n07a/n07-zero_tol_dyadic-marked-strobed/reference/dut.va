@@ -1,0 +1,3 @@
+`include "disciplines.vams"
+module m(y,r); output y; inout r; electrical y,r; integer n;
+analog begin @(initial_step)n=0;@(timer(0.125,0.125,0))begin n=n+1;$strobe("N07 zero t=%.17g n=%d",$abstime,n);end V(y,r)<+n; end endmodule

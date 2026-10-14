@@ -5,12 +5,62 @@ use crate::affine_bounds::{affine, eliminate};
 use crate::event_conditions::Selection;
 use crate::events::EventModel;
 use crate::interval::Interval as I;
-use crate::ir::{Error, StateKind};
+use crate::ir::{Error, Expression, StateKind};
 use std::collections::BTreeMap;
 
 #[path = "filter_budget.rs"]
 mod filter_budget;
 pub(crate) use filter_budget::FilterBudget;
+
+// Preserve operator history uncertainty as interval coefficients. State and
+// voltage columns remain live, so a sampled state can still participate in
+// the same-time joint equations. This map is rebuilt for each operator sample.
+fn affine_with_operators(
+    expr: &Expression,
+    p: &crate::ir::Program,
+    operators: &[I],
+) -> Result<Vec<I>, Error> {
+    let n = p.nodes.len() + p.states.len() + p.operators.len();
+    let recurse = |e: &Expression| affine_with_operators(e, p, operators);
+    match expr {
+        Expression::Operator { operator } => {
+            let mut result = vec![I::ZERO; n + 1];
+            result[n] = operators[*operator];
+            Ok(result)
+        }
+        Expression::Add { left, right } => Ok(recurse(left)?
+            .iter()
+            .zip(recurse(right)?)
+            .map(|(&a, b)| a + b)
+            .collect()),
+        Expression::Multiply { left, right } => {
+            let a = recurse(left)?;
+            let b = recurse(right)?;
+            if a[..n].iter().any(|v| !v.zero()) && b[..n].iter().any(|v| !v.zero()) {
+                return Err(Error::new(
+                    "event_accuracy",
+                    "cannot certify nonlinear voltage/state product",
+                ));
+            }
+            Ok((0..n)
+                .map(|k| a[k] * b[n] + b[k] * a[n])
+                .chain([a[n] * b[n]])
+                .collect())
+        }
+        Expression::Divide { left, right } => {
+            let a = recurse(left)?;
+            let b = recurse(right)?;
+            if b[..n].iter().any(|v| !v.zero()) || (b[n].lo <= 0.0 && b[n].hi >= 0.0) {
+                return Err(Error::new(
+                    "event_accuracy",
+                    "cannot certify variable division",
+                ));
+            }
+            Ok(a.iter().map(|&v| v / b[n]).collect())
+        }
+        _ => affine(expr, p),
+    }
+}
 
 #[path = "initial_state_invariance.rs"]
 mod initial_state_invariance;
@@ -200,7 +250,32 @@ impl Bounds {
     }
 
     pub(crate) fn new(model: &EventModel, selection: &Selection) -> Result<Self, Error> {
-        let p = &model.program;
+        Self::for_program(model, selection, &model.program)
+    }
+
+    pub(crate) fn for_program(
+        model: &EventModel,
+        selection: &Selection,
+        p: &crate::ir::Program,
+    ) -> Result<Self, Error> {
+        Self::for_program_with_operators(model, selection, p, &[])
+    }
+
+    pub(crate) fn for_program_with_operators(
+        model: &EventModel,
+        selection: &Selection,
+        p: &crate::ir::Program,
+        operators: &[I],
+    ) -> Result<Self, Error> {
+        let bind = |expr: &Expression| {
+            if operators.is_empty() {
+                affine(expr, p)
+            } else {
+                // Keep linear operator columns and their exact cancellations.
+                // Only bilinear coefficients require per-sample interval binding.
+                affine(expr, p).or_else(|_| affine_with_operators(expr, p, operators))
+            }
+        };
         let count = p.nodes.len();
         let parameters = p.states.len() + p.operators.len();
         let variables = count + parameters;
@@ -225,13 +300,13 @@ impl Bounds {
             let mut local = initial.clone();
             for &index in indices {
                 let action = assignments[index];
-                local[action.state] = substitute(&affine(&action.rhs, p)?, &local, count);
+                local[action.state] = substitute(&bind(&action.rhs)?, &local, count);
                 updates[action.state] = local[action.state].clone();
             }
         }
         let mut grouped = BTreeMap::new();
         for c in &p.contributions {
-            let rhs = substitute(&affine(&c.rhs, p)?, &updates, count);
+            let rhs = substitute(&bind(&c.rhs)?, &updates, count);
             let row = grouped.entry(&c.branch).or_insert_with(|| {
                 let mut row = vec![I::ZERO; variables + 1];
                 row[c.positive] = row[c.positive] + I::ONE;
@@ -410,5 +485,38 @@ impl Bounds {
             }
         }
         Ok((state_bounds, voltage_bounds))
+    }
+}
+
+#[cfg(test)]
+mod sampled_coefficient_tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn sampled_operator_uncertainty_remains_in_state_coefficient() {
+        let origin = json!({"source":"coefficient.va","line":1,"column":1,"instance":"dut"});
+        let p: crate::ir::Program = serde_json::from_value(json!({
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","y"],
+            "states":[{"instance":"dut","name":"q","kind":"real","initial":2}],
+            "events":[], "contributions":[],
+            "operators":[{"kind":"transition","input":{"op":"state","state":0},
+                "delay":0,"rise":1,"fall":1,"origin":origin}]
+        }))
+        .unwrap();
+        let expr = Expression::Multiply {
+            left: Box::new(Expression::State { state: 0 }),
+            right: Box::new(Expression::Operator { operator: 0 }),
+        };
+        let row = affine_with_operators(&expr, &p, &[I { lo: 0.4, hi: 0.6 }]).unwrap();
+        assert!(row[2].lo <= 0.4 && row[2].hi >= 0.6);
+        assert!(row[3].zero());
+        let value = dot(
+            &row,
+            &[I::ZERO, I::ZERO, I::point(2.0), I::point(0.5), I::ONE],
+        );
+        assert!(value.lo <= 0.8 && value.hi >= 1.2);
+        // A nominal-only binding would produce 1 and erase both endpoints.
+        assert!(value.lo < 1.0 && value.hi > 1.0);
     }
 }

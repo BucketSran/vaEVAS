@@ -1,0 +1,8 @@
+simulator lang=spectre
+ahdl_include "dut.va"
+simulatorOptions options reltol=1e-9 vabstol=1e-11 iabstol=1e-15 digits=17
+U (u 0) vsource dc=0
+A (u y 0) active
+M (u y 0) meter
+tran tran stop=1 maxstep=0.03125 errpreset=conservative method=gear2only strobetimes=[0 0.125 0.25 0.5 0.75 1] strobeoutput=strobe
+save u y

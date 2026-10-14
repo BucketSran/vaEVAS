@@ -62,10 +62,17 @@ class PolynomialDerivativeContracts(unittest.TestCase):
             ("@(initial_step) q=0; @(timer(0.5)) q=1; V(y,r)<+ddt(q*q);", "real q;"),
             ("V(z,r)<+V(u,r); V(y,r)<+ddt(V(z,r)*V(z,r));", "electrical z;"),
             ("V(y,r)<+ddt(ddt(V(u,r))*V(u,r));", ""),
-            ("V(y,r)<+ddt((V(u,r)>0)?V(u,r):0);", ""),
         ):
             with self.subTest(body=body), self.assertRaises((CompileError, KernelError)):
                 run(compile_model(body, declarations))
+
+    def test_selected_derivative_on_fixed_active_input_branches(self):
+        program = compile_model("V(y,r)<+ddt((V(u,r)>0)?V(u,r):0);")
+        for points, expected in [([[0,1],[1,2]],[0,1,1]), ([[0,-2],[1,-1]],[0,0,0])]:
+            with self.subTest(points=points):
+                result = run(program, {'u':points}, [0,.25,1])
+                for actual, answer in zip(values(result), expected):
+                    assert_close(self,actual,answer)
 
     def test_unrelated_events_preserve_derivative_history(self):
         program = compile_model(

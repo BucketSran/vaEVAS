@@ -1,0 +1,54 @@
+{
+  "id": "linear/linear_idt",
+  "source_sha256": "83e38780fecbed5f03ffe1cbd6b8d3a6cb0ca5134a74e43b263586094e3f0ac3",
+  "controls": {
+    "source_file": "dut.va",
+    "instances": [
+      {
+        "name": "Xdut",
+        "module": "m",
+        "connections": {
+          "u": "u",
+          "y": "y",
+          "r": "0"
+        }
+      }
+    ],
+    "pwl": {
+      "u": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    "output_times": [
+      0,
+      0.25,
+      0.5,
+      0.75,
+      1
+    ],
+    "stop": 1,
+    "max_step": 3.0517578125e-05,
+    "vabstol": 1e-12,
+    "reltol": 1e-10,
+    "strobetimes": [
+      0,
+      0.25,
+      0.5,
+      0.75,
+      1
+    ],
+    "timeout": 120
+  },
+  "kernel_sha256": "867a112262b1311f07f0a612a594b471ad6c7b3c1a3bea9e207f7a06ea8cece4",
+  "program_sha256": "d6f11b0fc301619ba5999f5fe71a05ef001575469aa64afe119454fa72bf9378",
+  "status": "completed",
+  "response_sha256": "c7e99f26590f6ada4d742b74ed686ccef74e667b8e8bc1852a8e47427569619d",
+  "elapsed_seconds": 7.5317567079328
+}

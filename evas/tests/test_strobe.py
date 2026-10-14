@@ -94,7 +94,7 @@ class StrobeControl(unittest.TestCase):
 
     def test_nearby_timers_stop_at_forced_phase_without_consuming_later_event(self):
         source=model('@(initial_step) begin a=0; b=0; end @(timer(0.3,0,1e-6)) a=1; '
-                     '@(timer(0.1,0.2,1e-6)) b=b+1; V(y,r)<+a+10*b;', declarations='integer a,b;')
+                     '@(timer(0.1,0.2,1e-6)) b=b+1; V(y,r)<+a+10.0*b;', declarations='integer a,b;')
         program=compile_sources({'strobe.va':source}, [instance()])
         times=[math.nextafter(.3,-math.inf),.3,math.nextafter(.3,math.inf),.8]
         result=transient(program, {'u':[[0,0],[1,0]]}, [0,1], stop=1, max_step=1,
@@ -139,7 +139,7 @@ class StrobeControl(unittest.TestCase):
     def test_exact_held_timer_forced_points_do_not_inherit_rounding_padding(self):
         source=model('@(initial_step) begin p=0.2; a=0; b=0; end '
                      '@(timer(0.3,0,1e-6)) a=1; '
-                     '@(timer(0.1,p,1e-6)) b=b+1; V(y,r)<+a+10*b;',
+                     '@(timer(0.1,p,1e-6)) b=b+1; V(y,r)<+a+10.0*b;',
                      'real p; integer a,b;')
         program=compile_sources({'strobe.va':source},[instance()])
         forced=[.3,math.nextafter(.3,math.inf),.8]
@@ -152,7 +152,7 @@ class StrobeControl(unittest.TestCase):
     def test_exact_held_timer_forced_phase_uses_current_period(self):
         source=model('@(initial_step) begin p=0.2; a=0; b=0; end '
                      '@(timer(0.3,0,1e-6)) begin a=1; p=0.4; end '
-                     '@(timer(0.1,p,1e-6)) b=b+1; V(y,r)<+a+10*b;',
+                     '@(timer(0.1,p,1e-6)) b=b+1; V(y,r)<+a+10.0*b;',
                      'real p; integer a,b;')
         program=compile_sources({'strobe.va':source},[instance()])
         forced=[.3,math.nextafter(.3,math.inf),.5,math.nextafter(.5,math.inf),.8]
