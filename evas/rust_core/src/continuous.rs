@@ -645,12 +645,10 @@ fn history_event_dependency(
                 if matches!(spec, OperatorSpec::Idt { reset: Some(_), .. }) {
                     return true;
                 }
-                if let Some((input, origin)) =
-                    continuous_operator_input(spec).or_else(|| match spec {
-                        OperatorSpec::Math { input, origin, .. } => Some((input, origin)),
-                        _ => None,
-                    })
-                {
+                if let Some((input, origin)) = continuous_operator_input(spec).or(match spec {
+                    OperatorSpec::Math { input, origin, .. } => Some((input, origin)),
+                    _ => None,
+                }) {
                     if history_event_dependency(input, program, origin, driven, seen) {
                         return true;
                     }

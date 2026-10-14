@@ -92,6 +92,18 @@ class BoundStepContracts(unittest.TestCase):
             with self.subTest(mutation=mutation),self.assertRaisesRegex(KernelError,kind):
                 _invoke({'program':data,'driven':['u'],'samples':[[0]]},KERNEL)
 
+    def test_raw_ir_rejects_malformed_bound_source_expansion(self):
+        payload = program('$bound_step(0.125); V(y,r)<+V(u,r);').to_dict()
+        for expansion in [[['not valid identifier', 0]], [['i', 0]] * 65]:
+            with self.subTest(expansion=expansion):
+                data = copy.deepcopy(payload)
+                data['step_bounds'][0]['origin']['expansion'] = expansion
+                with self.assertRaisesRegex(KernelError, 'invalid_ir'):
+                    _invoke({'program': data, 'driven': ['u'], 'samples': [[0.5]]}, KERNEL)
+        payload['step_bounds'][0]['origin']['expansion'] = [['i', 0]] * 64
+        result = _invoke({'program': payload, 'driven': ['u'], 'samples': [[0.5]]}, KERNEL)
+        self.assertEqual(result['solutions'][0]['voltages'][-1], 0.5)
+
     def test_bound_caps_actual_nonlinear_integration_segments(self):
         p=program('$bound_step(0.01); V(y,r)<+idt(pow(V(y,r),2),1);')
         request=dict(program=p.to_dict(),driven=['u'],samples=[],

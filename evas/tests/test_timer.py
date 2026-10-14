@@ -228,7 +228,7 @@ class TimerContracts(unittest.TestCase):
                       stop=stop, times=[0, stop], step=stop)
 
     def test_frontend_rejects_invalid_or_unsupported_settings(self):
-        for arguments in ['', ',5', '2,5,0', '-1,0,1', 'V(u)', 'V(u),0,1',
+        for arguments in ['', ',5', '2,5,-1', '-1,0,1', 'V(u)', 'V(u),0,1',
                           '0,0,n', '0,0,1,1,1', '0,,,', '0,0,1 or cross(V(u))']:
             with self.subTest(arguments=arguments), self.assertRaises(CompileError):
                 compile_sources({'timer.va': timer_source(arguments)}, [instance()])
@@ -256,7 +256,7 @@ class TimerContracts(unittest.TestCase):
             pwl=[[[0, 0], [19, 19]]], output_times=[0, 19], stop=19, max_step=19))
         for mutation, kind in [
             (lambda t: t.update(start=-1), 'invalid_ir'),
-            (lambda t: t.update(time_tolerance=0), 'invalid_ir'),
+            (lambda t: t.update(time_tolerance=-1), 'invalid_ir'),
             (lambda t: t.update(period='5'), 'invalid_request'),
             (lambda t: t.update(enabled=1), 'invalid_request'),
             (lambda t: t.update(guard={'op': 'affine', 'constant': 0, 'terms': []}), 'invalid_request'),

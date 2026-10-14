@@ -267,11 +267,18 @@ def validate_response(response, program, count, output_times=None, *, strobetime
                     or kind == 'cross' and not _finite(leaf.get('guard_value'))
                     or kind == 'timer' and 'guard_value' in leaf):
                 _invalid('fired trigger type or guard value does not match the request')
-    def contains_display(body):
-        return any(isinstance(statement, Display) or isinstance(statement, Conditional)
-                   and (contains_display(statement.then_body) or contains_display(statement.else_body))
-                   for statement in body)
-    if any(contains_display(event.body) for event in program.events) and 'display_records' not in trace:
+    def display_origins(body):
+        result = set()
+        for statement in body:
+            if isinstance(statement, Display):
+                origin = statement.origin
+                result.add(f'{origin.source}:{origin.line}:{origin.column} ({origin.instance})')
+            elif isinstance(statement, Conditional):
+                result.update(display_origins(statement.then_body))
+                result.update(display_origins(statement.else_body))
+        return result
+    requested_displays = [display_origins(event.body) for event in program.events]
+    if any(requested_displays) and 'display_records' not in trace:
         _invalid('transient response omitted requested display records')
     display_records = trace.get('display_records', [])
     if not isinstance(display_records, list):
@@ -280,6 +287,7 @@ def validate_response(response, program, count, output_times=None, *, strobetime
         if (not isinstance(record, dict) or not _finite(record.get('time'))
                 or not _index(record.get('event')) or record['event'] >= len(program.events)
                 or not isinstance(record.get('origin'), str) or not record['origin']
+                or record['origin'] not in requested_displays[record['event']]
                 or not isinstance(record.get('text'), str)
                 or not any(event['event'] == record['event'] and event['time'] == record['time'] for event in events)):
             _invalid('invalid or uncommitted display record')

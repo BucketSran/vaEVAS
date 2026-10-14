@@ -326,13 +326,10 @@ pub(crate) fn contribution_affine(
             }
             let scalar_product = matches!(expr, Expression::Multiply { .. })
                 && (!a.has_variables || !b.has_variables);
-            let mut result = if sampled_coefficient || scalar_product {
-                affine(
-                    &freeze_operators(&representative, &vec![1.0; program.operators.len()]),
-                    program,
-                    owner,
-                )?
-            } else if matches!(expr, Expression::Add { .. } | Expression::Divide { .. }) {
+            let mut result = if sampled_coefficient
+                || scalar_product
+                || matches!(expr, Expression::Add { .. } | Expression::Divide { .. })
+            {
                 affine(
                     &freeze_operators(&representative, &vec![1.0; program.operators.len()]),
                     program,
@@ -564,7 +561,7 @@ impl EventModel {
                             || *start < 0.0
                             || !period.is_finite()
                             || !time_tolerance.is_finite()
-                            || *time_tolerance <= 0.0
+                            || *time_tolerance < 0.0
                         {
                             return Err(Error::new("invalid_ir", "invalid timer settings"));
                         }
@@ -680,6 +677,7 @@ impl EventModel {
         )
     }
 
+    #[allow(clippy::too_many_arguments)] // Root, state and voltage certificates are distinct inputs.
     pub(crate) fn certify_observation_at_roots(
         &self,
         selection: &Selection,
@@ -730,6 +728,7 @@ impl EventModel {
             .check_observation(self, inputs, before, operators, voltages, states)
     }
 
+    #[allow(clippy::too_many_arguments)] // Root, state and voltage certificates are distinct inputs.
     pub(crate) fn certify_event_states(
         &self,
         selection: &Selection,
@@ -789,6 +788,46 @@ impl EventModel {
     }
 
     pub(crate) fn check_selection_writers(&self, selection: &Selection) -> Result<(), Error> {
+        fn reads_other_writer(expr: &Expression, event: usize, writers: &[Option<usize>]) -> bool {
+            match expr {
+                Expression::State { state } => {
+                    writers[*state].is_some_and(|writer| writer != event)
+                }
+                Expression::Add { left, right }
+                | Expression::Multiply { left, right }
+                | Expression::Divide { left, right } => {
+                    reads_other_writer(left, event, writers)
+                        || reads_other_writer(right, event, writers)
+                }
+                Expression::Power { base, .. } => reads_other_writer(base, event, writers),
+                Expression::Select {
+                    left,
+                    right,
+                    then_value,
+                    else_value,
+                    ..
+                } => [left, right, then_value, else_value]
+                    .iter()
+                    .any(|expr| reads_other_writer(expr, event, writers)),
+                Expression::Affine { .. } | Expression::Operator { .. } => false,
+            }
+        }
+        fn display_args<'a>(body: &'a [crate::ir::Statement], out: &mut Vec<&'a [Expression]>) {
+            for statement in body {
+                match statement {
+                    crate::ir::Statement::Display { args, .. } => out.push(args),
+                    crate::ir::Statement::If {
+                        then_body,
+                        else_body,
+                        ..
+                    } => {
+                        display_args(then_body, out);
+                        display_args(else_body, out);
+                    }
+                    _ => {}
+                }
+            }
+        }
         let mut writers = vec![None; self.program.states.len()];
         for (event, indices) in &selection.actions {
             for &index in indices {
@@ -816,6 +855,20 @@ impl EventModel {
                     .any(|&s| writers[s].is_some_and(|writer| writer != *event))
                 {
                     return Err(Error::new("unsupported_cross", "simultaneous event blocks cannot read state written by another selected block"));
+                }
+            }
+        }
+        for (event, steps) in &selection.ordered_steps {
+            let mut displays = Vec::new();
+            display_args(&self.program.events[*event].body, &mut displays);
+            for step in steps {
+                if let crate::event_conditions::SelectedStep::Display(index) = step {
+                    if displays[*index]
+                        .iter()
+                        .any(|expr| reads_other_writer(expr, *event, &writers))
+                    {
+                        return Err(Error::new("unsupported_cross", "simultaneous event blocks cannot read state written by another selected block"));
+                    }
                 }
             }
         }

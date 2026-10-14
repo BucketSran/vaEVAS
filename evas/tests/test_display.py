@@ -5,7 +5,11 @@ import unittest
 import copy
 import json
 import subprocess
+import sys
+import tempfile
+from pathlib import Path
 from evas import CompileError, KernelError, compile_sources, transient
+from evas.runtime import _invoke
 from test_affine import KERNEL, instance, model
 
 
@@ -16,6 +20,52 @@ def execute(body, declarations='integer n;'):
 
 
 class DisplayMeasurements(unittest.TestCase):
+    def test_same_batch_display_cannot_read_another_selected_writer(self):
+        for expression in ['q', 'q>0?1:0', '0*q']:
+            with self.subTest(expression=expression), self.assertRaisesRegex(KernelError, 'unsupported_cross'):
+                execute('@(timer(0.5)) q=1; @(timer(0.5)) $display("q=%g",'
+                        + expression + '); V(y,r)<+q;', 'real q;')
+        # Variable denominators are not a VA event-language admission here;
+        # raw IR still must apply the same dependency guard to Divide nodes.
+        program = compile_sources({'display.va': model(
+            '@(timer(0.5)) q=1; @(timer(0.5)) $display("q=%g",q); V(y,r)<+q;',
+            'real q;')}, [instance()]).to_dict()
+        program['events'][1]['body'][0]['args'] = [dict(op='divide',
+            left=dict(op='affine', constant=1, terms=[]),
+            right=dict(op='add', left=dict(op='state', state=0),
+                       right=dict(op='affine', constant=1, terms=[])))]
+        with self.assertRaisesRegex(KernelError, 'unsupported_cross'):
+            _invoke(dict(program=program, driven=['u'], samples=[], transient=dict(
+                pwl=[[[0,1],[1,1]]], output_times=[0,1], stop=1, max_step=1)), KERNEL)
+
+    def test_display_read_controls_preserve_order_and_selected_branches(self):
+        result = execute('''@(timer(0.25)) q=2;
+            @(timer(0.5)) begin q=q+1; $display("q=%g",q); end
+            @(timer(0.75)) $display("later=%g",q);
+            V(y,r)<+q;''', 'real q;')
+        self.assertEqual([r['text'] for r in result['transient']['display_records']],
+                         ['q=3', 'later=3'])
+        result = execute('''@(timer(0.5)) q=1;
+            @(timer(0.5)) if(V(u,r)<0) $display("q=%g",q);
+            V(y,r)<+q;''', 'real q;')
+        self.assertEqual(result['transient']['display_records'], [])
+
+    def test_response_display_records_must_belong_to_requested_display(self):
+        for body in ['@(timer(0.5)) n=n+1;', '@(timer(0.5)) $display("n=%d",n);']:
+            program = compile_sources({'display.va': model(body+' V(y,r)<+n;', 'integer n;')}, [instance()])
+            response = transient(program, {'u':[[0,1],[1,1]]}, [0,1],
+                                 stop=1, max_step=1, kernel=KERNEL)
+            response['transient']['display_records'] = [dict(time=0.5, event=0,
+                origin='unrelated.va:99:1 (not_dut)', text='forged')]
+            with self.subTest(body=body), tempfile.TemporaryDirectory() as directory:
+                fixture = Path(directory) / 'kernel'
+                fixture.write_text('#!'+sys.executable+'\nimport sys\nsys.stdin.read()\nprint('
+                                   +repr(json.dumps(response))+')\n')
+                fixture.chmod(0o700)
+                with self.assertRaisesRegex(KernelError, 'invalid_response'):
+                    transient(program, {'u':[[0,1],[1,1]]}, [0,1],
+                              stop=1, max_step=1, kernel=fixture)
+
     def test_timer_records_prior_and_following_assignment_in_source_order(self):
         result = execute('''@(timer(0.5)) begin
             $display("before=%d t=%.12g", n, $abstime);

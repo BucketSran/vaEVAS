@@ -350,11 +350,46 @@ impl Trajectory {
         guard: &crate::ir::Expression,
         input_nodes: &[usize],
     ) -> Option<crate::exact_source::Curve> {
+        self.original_guard_curve_until(guard, input_nodes, self.config.stop)
+    }
+
+    /// A local integration horizon may precede a source segment's end. Use the
+    /// retained original curve to certify that full segment, without changing
+    /// the integration horizon or extrapolating beyond any source's domain.
+    pub(crate) fn original_guard_curve_until(
+        &self,
+        guard: &crate::ir::Expression,
+        input_nodes: &[usize],
+        end: f64,
+    ) -> Option<crate::exact_source::Curve> {
+        if !end.is_finite() || end < 0.0 {
+            return None;
+        }
         crate::exact_source::Curve::expression(
             guard,
             input_nodes.get(..self.original_source_count)?,
             &self.exact_sources[..self.original_source_count],
-            self.config.stop,
+            end,
+        )
+    }
+
+    /// Compare retained original source trees, never rounded/generated nodes.
+    pub(crate) fn original_predicate_sign(
+        &self,
+        left: &crate::ir::Expression,
+        right: &crate::ir::Expression,
+        input_nodes: &[usize],
+        time: f64,
+    ) -> Option<i8> {
+        if !time.is_finite() || time < 0.0 || time > self.config.stop {
+            return None;
+        }
+        crate::exact_source::predicate_sign(
+            left,
+            right,
+            input_nodes.get(..self.original_source_count)?,
+            &self.exact_sources[..self.original_source_count],
+            time,
         )
     }
 

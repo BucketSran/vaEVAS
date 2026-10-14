@@ -532,10 +532,16 @@ fn prepare_batch_until(
     let next = prepare_root_window(model, trajectory, accepted, moment, &blocks)?;
     next.operators.check_deadline_order(event_time, None)?;
     let selection = model.conditions.select_at_roots(
-        &blocks, &trajectory.value_bounds(event_time), ids, &accepted.state_bounds,
+        &blocks,
+        &trajectory.value_bounds(event_time),
+        ids,
+        &accepted.state_bounds,
     )?;
     let (_, candidate_displays) = model.apply_with_displays(
-        &selection, &next.solution.voltages, &accepted.states, event_time,
+        &selection,
+        &next.solution.voltages,
+        &accepted.states,
+        event_time,
     )?;
     let mut records = Vec::new();
     for id in blocks {
@@ -637,7 +643,11 @@ fn prepare_batch_until(
             fired_triggers: fired,
             before: accepted.states.clone(),
             after: next.states.clone(),
-            display_records: candidate_displays.iter().filter(|r| r.event == id).cloned().collect(),
+            display_records: candidate_displays
+                .iter()
+                .filter(|r| r.event == id)
+                .cloned()
+                .collect(),
         });
     }
     Ok((next, records))
@@ -807,7 +817,11 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
         )?;
         (operators, crossings)
     };
-    let circuit = model.circuit_at(&initial, &operators.values(0.0)?, &trajectory.value_bounds(0.0))?;
+    let circuit = model.circuit_at(
+        &initial,
+        &operators.values(0.0)?,
+        &trajectory.value_bounds(0.0),
+    )?;
     let mut accepted = Frame {
         time: 0.0,
         solution: circuit.solve(&trajectory.values(0.0))?,
@@ -851,21 +865,45 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
         outputs: Vec::new(),
     };
     // Passive measurement initial bodies run before ordinary timer(0) blocks.
-    let initials: Vec<_> = model.triggers.iter().enumerate()
-        .filter_map(|(index, leaf)| matches!(leaf.trigger, EventTrigger::InitialStep { .. }).then_some(index))
+    let initials: Vec<_> = model
+        .triggers
+        .iter()
+        .enumerate()
+        .filter_map(|(index, leaf)| {
+            matches!(leaf.trigger, EventTrigger::InitialStep { .. }).then_some(index)
+        })
         .collect();
     if !initials.is_empty() {
         if initials.iter().any(|&id| {
-            let owner = &model.program.events[model.triggers[id].event].origin.instance;
-            model.program.contributions.iter().any(|c| &c.origin.instance == owner)
+            let owner = &model.program.events[model.triggers[id].event]
+                .origin
+                .instance;
+            model
+                .program
+                .contributions
+                .iter()
+                .any(|c| &c.origin.instance == owner)
         }) {
-            return Err(Error::new("unsupported_initial_event", "initial display requires a passive measurement model"));
+            return Err(Error::new(
+                "unsupported_initial_event",
+                "initial display requires a passive measurement model",
+            ));
         }
-        let (frame, records) = prepare_batch_until(&model, &trajectory, &controller.accepted,
-            EventMoment { representative: 0.0, observation: I::point(0.0),
-                fired_roots: &initials, prediction_end: trajectory.config.stop })?;
+        let (frame, records) = prepare_batch_until(
+            &model,
+            &trajectory,
+            &controller.accepted,
+            EventMoment {
+                representative: 0.0,
+                observation: I::point(0.0),
+                fired_roots: &initials,
+                prediction_end: trajectory.config.stop,
+            },
+        )?;
         controller.commit_events(frame, records, 0);
-        if relocalize { crossings = schedule_held(&model, &trajectory, &controller.accepted.state_bounds)?; }
+        if relocalize {
+            crossings = schedule_held(&model, &trajectory, &controller.accepted.state_bounds)?;
+        }
     }
     let mut preflighted_event = None;
     loop {
@@ -1051,12 +1089,23 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                 // reuse a factor only when its coefficients still agree.
                 let inputs = trajectory.values(time);
                 let input_bounds = trajectory.value_bounds(time);
-                let mut selected_circuit = if model.program.contributions.iter().any(|c| crate::analog::has_select(&c.rhs)) {
-                    let mut circuit = model.circuit_at(&controller.accepted.states, &[], &input_bounds)?;
+                let mut selected_circuit = if model
+                    .program
+                    .contributions
+                    .iter()
+                    .any(|c| crate::analog::has_select(&c.rhs))
+                {
+                    let mut circuit =
+                        model.circuit_at(&controller.accepted.states, &[], &input_bounds)?;
                     circuit.reuse_affine_factor_from(&controller.accepted.circuit);
                     Some(circuit)
-                } else { None };
-                let mut solution = selected_circuit.as_mut().unwrap_or(&mut controller.accepted.circuit).solve(&inputs)?;
+                } else {
+                    None
+                };
+                let mut solution = selected_circuit
+                    .as_mut()
+                    .unwrap_or(&mut controller.accepted.circuit)
+                    .solve(&inputs)?;
                 let (state_bounds, node_bounds) = model.certify_observation(
                     &model.conditions.select(&[], &input_bounds)?,
                     &input_bounds,
@@ -1068,7 +1117,9 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                 crate::observation::retain_bounds(&mut solution, node_bounds);
                 controller.accepted.solution = solution;
                 controller.accepted.state_bounds = state_bounds;
-                if let Some(circuit) = selected_circuit { controller.accepted.circuit = circuit; }
+                if let Some(circuit) = selected_circuit {
+                    controller.accepted.circuit = circuit;
+                }
                 controller.accepted.time = time;
             }
         }
@@ -1087,16 +1138,33 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
     }
     // Lifecycle final blocks execute after every ordinary event at stop, even
     // when their source declaration precedes a timer firing at the same time.
-    let finals: Vec<_> = model.triggers.iter().enumerate()
-        .filter_map(|(index, leaf)| matches!(leaf.trigger, EventTrigger::FinalStep { .. }).then_some(index))
+    let finals: Vec<_> = model
+        .triggers
+        .iter()
+        .enumerate()
+        .filter_map(|(index, leaf)| {
+            matches!(leaf.trigger, EventTrigger::FinalStep { .. }).then_some(index)
+        })
         .collect();
     if !finals.is_empty() {
-        let (frame, records) = prepare_batch_until(&model, &trajectory, &controller.accepted,
-            EventMoment { representative: trajectory.config.stop, observation: I::point(trajectory.config.stop),
-                fired_roots: &finals, prediction_end: trajectory.config.stop })?;
+        let (frame, records) = prepare_batch_until(
+            &model,
+            &trajectory,
+            &controller.accepted,
+            EventMoment {
+                representative: trajectory.config.stop,
+                observation: I::point(trajectory.config.stop),
+                fired_roots: &finals,
+                prediction_end: trajectory.config.stop,
+            },
+        )?;
         controller.commit_events(frame, records, controller.event);
     }
-    trace.display_records = controller.records.iter().flat_map(|r| r.display_records.iter().cloned()).collect();
+    trace.display_records = controller
+        .records
+        .iter()
+        .flat_map(|r| r.display_records.iter().cloned())
+        .collect();
     trace.events = controller.records;
     // Internal source-derived nodes are mathematical lowering details, never
     // user inputs/outputs or a change to the external serialized IR contract.

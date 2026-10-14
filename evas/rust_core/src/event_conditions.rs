@@ -393,6 +393,7 @@ impl Conditions {
                 }
             }
         }
+        #[allow(clippy::too_many_arguments)] // Keep the recursive event-selection context explicit.
         fn walk(
             body: &[Step],
             values: &[I],

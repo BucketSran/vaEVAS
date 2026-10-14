@@ -2,6 +2,7 @@
 
 平台 wheel 包含 Python 前端和独立 `evas-kernel` 程序。安装 wheel 不需要 Rust。
 发行名称仍为 `evas-rebuild`，命令仍为 `evas-rebuild`；没有公共 PyPI 发布或版本 tag。
+0.17.0 是本地源码候选；下列 wheel 路径是安装命令示例，不表示该版本已有已验收的发布产物。
 从本地构建产物或具名 CI artifact 取得 wheel 后，在匹配平台安装：
 
 ```sh
@@ -37,6 +38,7 @@ results 仍需已有身份查询合同。请求协议没有独立版本，字段
 新增 [安装 CI](../../../.github/workflows/package-install.yml) 的目标是 Ubuntu 24.04 x86_64 / Python 3.10
 及 macOS 14 arm64 / Python 3.12。实际通过情况以对应工作流 revision、runner 和 artifact 为准；
 配置任务不等于已获得执行证据。本地首次安装验收在 macOS 26 arm64 / Python 3.14 执行。
+这条历史安装记录不证明本轮 0.17.0 wheel 已通过；本轮须另绑定实际构建和安装收据。
 
 Linux 构建生成本机 `linux_x86_64` 标签，没有声明 manylinux、musllinux 或任意 Linux 发行版兼容。
 Ubuntu 24.04 的 glibc/链接环境是本批 CI 边界；在不同 libc 或旧系统上需独立构建和验收。

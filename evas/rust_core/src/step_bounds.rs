@@ -129,7 +129,12 @@ impl Bounds {
         let mut expressions = Vec::new();
         for bound in &program.step_bounds {
             let o = &bound.origin;
-            if o.source.is_empty() || o.instance.is_empty() || o.line == 0 || o.column == 0 {
+            if o.source.is_empty()
+                || o.instance.is_empty()
+                || o.line == 0
+                || o.column == 0
+                || !o.valid_expansion()
+            {
                 return Err(Error::new("invalid_ir", "invalid $bound_step origin"));
             }
             let active = bind(&bound.active, program, &o.instance)?;
@@ -326,8 +331,8 @@ mod tests {
             ..
         } = &mut selected_value
         {
-            *then_value = Box::new(constant(0.1));
-            *else_value = Box::new(constant(0.2));
+            **then_value = constant(0.1);
+            **else_value = constant(0.2);
         }
         let bounds = Bounds {
             expressions: vec![(active.clone(), selected_value)],
@@ -341,10 +346,10 @@ mod tests {
         );
         let mut invalid_predicate = active;
         if let Expression::Select { left, .. } = &mut invalid_predicate {
-            *left = Box::new(Expression::Divide {
+            **left = Expression::Divide {
                 left: Box::new(constant(1.)),
                 right: Box::new(constant(0.)),
-            });
+            };
         }
         assert!(
             possible_activation(&invalid_predicate, &|e| crate::expression::resolve_selects(

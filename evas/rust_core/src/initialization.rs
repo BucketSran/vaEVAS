@@ -60,11 +60,20 @@ fn predicate(
 ) -> Result<f64, Error> {
     fn check(e: &Expression, owner: &str, allowed: &HashSet<usize>) -> Result<(), Error> {
         match e {
-            Expression::Select { left, right, then_value, else_value, origin, .. } => {
+            Expression::Select {
+                left,
+                right,
+                then_value,
+                else_value,
+                origin,
+                ..
+            } => {
                 if origin.instance != owner || !origin.valid_expansion() {
                     return Err(Error::new("invalid_ir", "invalid initial expression owner"));
                 }
-                for predicate in [left, right] { check(predicate, owner, allowed)?; }
+                for predicate in [left, right] {
+                    check(predicate, owner, allowed)?;
+                }
                 check(then_value, owner, allowed)?;
                 check(else_value, owner, allowed)?;
             }
@@ -72,14 +81,18 @@ fn predicate(
                 check(left, owner, allowed)?;
                 check(right, owner, allowed)?;
             }
-            _ => { affine_degree(e, allowed)?; }
+            _ => {
+                affine_degree(e, allowed)?;
+            }
         }
         Ok(())
     }
     check(expression, owner, allowed)?;
     validate(expression, nodes.len())?;
     let result = resolve_selects(expression, nodes).map_err(|mut error| {
-        if error.kind == "condition_precision" { error.kind = "initialization_precision"; }
+        if error.kind == "condition_precision" {
+            error.kind = "initialization_precision";
+        }
         error
     })?;
     // State.initial currently stores an exact value, not an uncertainty interval.
@@ -87,13 +100,17 @@ fn predicate(
     fn constant(e: &Expression) -> bool {
         match e {
             Expression::Affine { terms, .. } => terms.is_empty(),
-            Expression::Add { left, right } | Expression::Multiply { left, right } => constant(left) && constant(right),
+            Expression::Add { left, right } | Expression::Multiply { left, right } => {
+                constant(left) && constant(right)
+            }
             Expression::Power { base, .. } => constant(base),
             _ => false,
         }
     }
     if !constant(&result) {
-        return Err(unsupported("initial expression must select constant values"));
+        return Err(unsupported(
+            "initial expression must select constant values",
+        ));
     }
     Ok(crate::expression::evaluate(&result, &[])?.value)
 }

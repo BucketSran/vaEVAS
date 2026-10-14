@@ -616,8 +616,8 @@ class InstanceCompiler:
             arguments = leaf.arguments + (None,) * (4-len(leaf.arguments))
             start_arg, period_arg, tolerance_arg, enable_arg = arguments
             time_tol = 1e-12 if tolerance_arg is None else setting(tolerance_arg)
-            if time_tol <= 0:
-                raise CompileError("timer requires nonnegative start and positive time_tol")
+            if time_tol < 0:
+                raise CompileError("timer requires nonnegative start and time_tol")
             values = [self.lower_event(arg, self.symbol, {}, preserve_structure=True) if arg is not None else Affine(0., ())
                       for arg in (start_arg, period_arg, enable_arg)]
             if enable_arg is None:
@@ -625,9 +625,11 @@ class InstanceCompiler:
             if all(isinstance(value, Affine) and not value.terms for value in values):
                 start, period, enabled = (value.constant for value in values)
                 if start < 0:
-                    raise CompileError("timer requires nonnegative start and positive time_tol")
+                    raise CompileError("timer requires nonnegative start and time_tol")
                 result = TimerTrigger(start, period, time_tol, enabled != 0)
             else:
+                if time_tol == 0:
+                    raise CompileError("zero time_tol requires fixed timer parameters")
                 result = HeldTimerTrigger(values[0], values[1], time_tol, values[2])
         return result
 

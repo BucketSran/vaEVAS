@@ -19,6 +19,17 @@ IR21 的 `divide` 保留变量分母，连续积分可执行可认证的有理�
 边界值保持 1.25。切换根的不确定区间继续传入历史包围和电压验收，不能当作精确浮点时刻丢弃。
 内部电压或算子控制的谓词、无法证明模式或根次序、误差超预算仍拒绝。
 
+普通线性谓词与嵌套谓词共用完整切换根扫描，检查原 PWL 的每一段，而不依赖输出查询网格。
+端点符号不确定时不能判为“无根”。根区间重叠、根与段端点无法分离，或区间内没有可用浮点见证时，
+返回 `condition_precision`；能认证的精确零端点仍按原源单点证书处理。
+这项修复防止漏掉短时间选中的积分流，但不保证原先被错误接受的请求现在能完成计算。
+
+切换根区间中的传播须包围各模式的完整物理状态，后续积分、滤波、导数和事件重启继续使用这个包围。
+不能只保存输出的名义值，或用根区间两端的采样代替整个窗口。
+独立回归见[端点证明](../../tests/test_exact_predicate_endpoints.py)、
+[嵌套切点](../../tests/test_nested_predicate_cuts.py)、[相邻切点](../../tests/test_repeated_predicate_cuts.py)
+和[根窗口历史](../../tests/test_root_window_history.py)。
+
 此切片扩展连续流，不解除隐式 DAE 的事件、复位或奇异 Jacobian 限制。
 连续 `idt` 的 RHS 可展开受限 `exp` forcing，以认证 Taylor jet 传播。
 例如 `idt(exp(-u),0)` 在 `u=t` 时为 `1-exp(-t)`。事件改变保持参数时，
@@ -28,7 +39,8 @@ IR21 的 `divide` 保留变量分母，连续积分可执行可认证的有理�
 详细定义域见[纯数学函数](operators.md#elementary-functions)。
 实现见 [continuous_select.rs](../../rust_core/src/continuous_select.rs) 与
 [nonlinear_dynamics.rs](../../rust_core/src/nonlinear_dynamics.rs)，独立答案见
-[选路积分与有理流](../../tests/test_r01_runtime_select.py)。本候选尚无新的实际 Spectre 对照。
+[选路积分与有理流](../../tests/test_r01_runtime_select.py)。
+本轮实际 Spectre 参考与最终代码身份的绑定待完成；上述开发回归不替代该验收。
 
 ## 行为与边界
 
