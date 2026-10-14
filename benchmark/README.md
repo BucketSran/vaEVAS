@@ -22,11 +22,12 @@
 按五类工程动作和电路功能列出输入、交付、checker 思路、同源变体与覆盖缺口。
 每道题仅计一次；历史初筛、旧七类题集和设计卡不额外加入这 56 题。
 
-当前按 [#159](https://github.com/BucketSran/vaEVAS/issues/159) 逐类判断电路功能与场景的工程价值、
-现有覆盖及扩展方向。审核使用实际电路资产，例如 [R01 采样与多通道读出](workbench/circuits/r01-sampling/README.md)。
-已讨论的 R01 先进入[R01 题目试制与人工审核](workbench/circuits/r01-sampling/TASKS.md)：
-20 道新题带参考解与独立 checker，另关联 CDS 308 和既有数据题；本轮不做模型试做。
-R01 的 20 道英文题包已完成公开 Spectre 仿真、冻结 DUT 与 70 个条件的独立终评，详见[运行状态](../experiments/r01_authoring/README.md)。其他功能族继续按各自阶段推进。
+当前先整理 main 的材料、工作分支和待完成事项，暂不开始实际题目设计或模型实验。
+电路功能与场景审核仍以 [#159](https://github.com/BucketSran/vaEVAS/issues/159) 为入口，
+例如 [R01 采样与多通道读出](workbench/circuits/r01-sampling/README.md)。
+R01 的 20 道新题草稿、参考解、checker 和旧格式运行记录仍保留在本地工作区，尚未进入 main，
+不加入上述 56 题。新题包规范已确认，实际题包迁移、代表题合同及验收方案审核仍待完成；
+历史作者校准不能替代新规范的验收或人工设计认可。
 原有 18 张设计卡与 62 个迁移来源候选留在工作区供追溯，不与题量相加。
 
 <a id="目标与边界"></a>
