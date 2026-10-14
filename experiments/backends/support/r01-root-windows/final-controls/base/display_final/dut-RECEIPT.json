@@ -1,0 +1,119 @@
+{
+  "label": "display_final",
+  "source_sha256": "e70619789c213bf215cd532297dffdef08e28c4bd46e8e75a8fc8cbda65e2889",
+  "budget_V": 1e-08,
+  "spectre_status": "pending actual run",
+  "status": "completed",
+  "response_sha256": "04882416e292a6c28d16bcd44ba5d106e8841eac5594d899012f3c760c08df60",
+  "mathchecks": [
+    {
+      "time": 0,
+      "node": "u",
+      "value": 0.0,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0,
+      "node": "y",
+      "value": 1.0,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0.25,
+      "node": "u",
+      "value": 0.25,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0.25,
+      "node": "y",
+      "value": 1.25,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0.5,
+      "node": "u",
+      "value": 0.5,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0.5,
+      "node": "y",
+      "value": 2.5,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0.75,
+      "node": "u",
+      "value": 0.75,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0.75,
+      "node": "y",
+      "value": 2.75,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 1,
+      "node": "u",
+      "value": 1.0,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 1,
+      "node": "y",
+      "value": 8.0,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    }
+  ],
+  "analytic_budget_pass": true,
+  "enclosure_contains_oracle": true,
+  "display_records": [
+    {
+      "time": 0.5,
+      "event": 0,
+      "origin": "dut.va:3:57 (Xdut)",
+      "text": "BASE before 0.5 1"
+    },
+    {
+      "time": 0.5,
+      "event": 0,
+      "origin": "dut.va:3:107 (Xdut)",
+      "text": "BASE after 0.5 2"
+    },
+    {
+      "time": 1.0,
+      "event": 2,
+      "origin": "dut.va:3:187 (Xdut)",
+      "text": "BASE final 1 7"
+    }
+  ],
+  "callback_sequence_pass": true,
+  "elapsed_seconds": 0.4851230409994969,
+  "packaging": {
+    "original_receipt_sha256": "0ce0ec79051487cfb5b02e872f779706e1cb899c5f0238ea75bea972f7027139",
+    "absolute_input_path_prefix_removed": false,
+    "receipt_is_sanitized_extract": true
+  }
+}

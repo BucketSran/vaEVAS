@@ -1,5 +1,10 @@
 # R01 根窗口交付的紧凑证据
 
+最新有限对照见 [final-controls](final-controls/README.md)：最终数值候选 `bbf1a3bc` 的七例基础重配7/7，三例初态18个精确原生点及显示顺序匹配。新控制不加入原70、19、16或Q成绩，原始资料仍只在本地；精度与观测限制在该页直接列出。下文先前冻结的三个选择仍保留原核、原分母与原判据。
+
+## 历史冻结的三个选择
+
+
 此包保存冻结 release 核 `867a1122…` 的三个独立选择，不能据此宣称完整 R01 与 Spectre 对齐。源码共 325 项与执行时的 dirty freeze 相同，后续提交定位为 `6b065e4f`。完整哈希见 [SOURCE-IDENTITY.json](SOURCE-IDENTITY.json)，源码核对与构建身份限制见 [COMMITTED-SOURCE.json](provenance/COMMITTED-SOURCE.json)。后续 commit 的定位由交付协调者提供；此整理没有重建，二进制的构建 revision 仍未知。
 
 | 固定选择 | 执行结果 | 判定结果与限制 |

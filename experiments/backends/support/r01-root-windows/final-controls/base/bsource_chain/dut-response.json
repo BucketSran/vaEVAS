@@ -1,0 +1,280 @@
+{
+  "strobe_evidence": {
+    "schema_version": 1,
+    "times": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "sample_origins": [
+      "stateless_working_point",
+      "stateless_working_point",
+      "stateless_working_point",
+      "stateless_working_point",
+      "stateless_working_point"
+    ],
+    "voltages_V": [
+      [
+        0.0,
+        0.25,
+        -0.125,
+        0.0,
+        -0.375
+      ],
+      [
+        0.0,
+        0.5,
+        -0.375,
+        0.25,
+        -1.125
+      ],
+      [
+        0.0,
+        0.75,
+        -0.625,
+        0.5,
+        -1.875
+      ],
+      [
+        0.0,
+        1.0,
+        -0.875,
+        0.75,
+        -2.625
+      ],
+      [
+        0.0,
+        1.25,
+        -1.125,
+        1.0,
+        -3.375
+      ]
+    ]
+  },
+  "observation_evidence": {
+    "schema_version": 1,
+    "nodes": [
+      "0",
+      "a",
+      "u",
+      "x",
+      "y"
+    ],
+    "effective_controls": {
+      "absolute_V": 1e-12,
+      "relative": 1e-10,
+      "stop_s": 1.0,
+      "max_step_s": 0.0001220703125,
+      "max_step_applied": false
+    },
+    "sample_origins": [
+      "stateless_working_point",
+      "stateless_working_point",
+      "stateless_working_point",
+      "stateless_working_point",
+      "stateless_working_point"
+    ],
+    "initial_settled": true,
+    "voltage_bounds_V": [
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.25,
+          0.25
+        ],
+        [
+          -0.125,
+          -0.125
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          -0.375,
+          -0.375
+        ]
+      ],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.5,
+          0.5
+        ],
+        [
+          -0.375,
+          -0.375
+        ],
+        [
+          0.25,
+          0.25
+        ],
+        [
+          -1.125,
+          -1.125
+        ]
+      ],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.75,
+          0.75
+        ],
+        [
+          -0.625,
+          -0.625
+        ],
+        [
+          0.5,
+          0.5
+        ],
+        [
+          -1.875,
+          -1.875
+        ]
+      ],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          -0.875,
+          -0.875
+        ],
+        [
+          0.75,
+          0.75
+        ],
+        [
+          -2.625,
+          -2.625
+        ]
+      ],
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1.25,
+          1.25
+        ],
+        [
+          -1.125,
+          -1.125
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          -3.375,
+          -3.375
+        ]
+      ]
+    ]
+  },
+  "engine": "evas-events-0.17.0",
+  "schema_version": 21,
+  "nodes": [
+    "0",
+    "a",
+    "u",
+    "x",
+    "y"
+  ],
+  "solutions": [
+    {
+      "voltages": [
+        0.0,
+        0.25,
+        -0.125,
+        0.0,
+        -0.375
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    },
+    {
+      "voltages": [
+        0.0,
+        0.5,
+        -0.375,
+        0.25,
+        -1.125
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    },
+    {
+      "voltages": [
+        0.0,
+        0.75,
+        -0.625,
+        0.5,
+        -1.875
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    },
+    {
+      "voltages": [
+        0.0,
+        1.0,
+        -0.875,
+        0.75,
+        -2.625
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    },
+    {
+      "voltages": [
+        0.0,
+        1.25,
+        -1.125,
+        1.0,
+        -3.375
+      ],
+      "max_residual_v": 0.0,
+      "max_residual_ratio": 0.0
+    }
+  ],
+  "transient": {
+    "times": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "state_names": [],
+    "states": [
+      [],
+      [],
+      [],
+      [],
+      []
+    ],
+    "events": [],
+    "display_records": [],
+    "accepted_steps": 0,
+    "discarded_trials": 0
+  }
+}

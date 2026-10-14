@@ -1,0 +1,98 @@
+{
+  "availability": "repository-contained finite extracts; full raw local-only",
+  "identity_checks": {
+    "r01-base-spectre-v1": {
+      "MANIFEST.json": {
+        "sha256": "31ca9a4b1fcfad91da8624dd53ba1b89bd94ffd92b55aca7af91f2591381fb85",
+        "files": 35,
+        "mismatches": []
+      },
+      "OUTPUT_MANIFEST.json": {
+        "sha256": "849d6db1486d4f290e63e9c207bb9a7efcb70208814c7dcc6b4d48a603292b81",
+        "files": 185,
+        "mismatches": []
+      },
+      "tool": {
+        "version": "sub-version  21.1.0.509.isr12",
+        "before_after_equal": true,
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "environment_setup_file_sha256": [
+          "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59",
+          "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3"
+        ],
+        "identity_before_sha256": "07b1f2b169d39d67300d6b392f5dbd1c616daf9dfab0fbee9d5056d9cb7b7d36",
+        "identity_after_sha256": "e2a8caea590af8458ef5738f552028106c0da50d755c54b6aaaec219fef220e9"
+      },
+      "raw_archive": {
+        "availability": "local-only",
+        "sha256": "9cc8f67f5e2012c85801c1a4ec075c66d48e8a96dd204afbbf91a23b8d218b8c",
+        "bytes": 1123961,
+        "public_archive": false
+      }
+    },
+    "r01-initial-records-spectre-v1": {
+      "MANIFEST.json": {
+        "sha256": "0e8fe9c389836367773720e2f7a25733d45bc3c3e9814f0eb122941238a65ccc",
+        "files": 10,
+        "mismatches": []
+      },
+      "OUTPUT_MANIFEST.json": {
+        "sha256": "245a2152556141ff272e0fd1e3c7d8fb41e21a55339819c96746dd82c1818f54",
+        "files": 92,
+        "mismatches": []
+      },
+      "tool": {
+        "version": "sub-version  21.1.0.509.isr12",
+        "before_after_equal": true,
+        "binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+        "environment_setup_file_sha256": [
+          "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59",
+          "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3"
+        ],
+        "identity_before_sha256": "2e3d4bfac3e0bee09a1db612c62985d5f48a07e4228ae6da163478338878d9f1",
+        "identity_after_sha256": "e2a8caea590af8458ef5738f552028106c0da50d755c54b6aaaec219fef220e9"
+      },
+      "raw_archive": {
+        "availability": "local-only",
+        "sha256": "3d66d4cc82398ccc3b4c93f73ffc0da42dc194cbe005fca68495c11fea816f1f",
+        "bytes": 227377,
+        "public_archive": false
+      }
+    }
+  },
+  "base_final_summary_sha256": "2906ab288e5a57d77dd3e718bef853ad1076dfa6f1160240d0fb9a89afac6ca4",
+  "base_final_checker_sha256": "1ee3c914cf952adec851deba78ab01b6d7c5b6cceef652efe7cb9fd87070c7ad",
+  "base_oracle_sha256": "da511051409011eede1028deba9824e3428f859428cf443b29a29a00a03d820a",
+  "initial_independent_review_sha256": "06ce0a87b83f5bfd4e902e6e56871388f9a02e9148f576da1e7784adcdac6f7e",
+  "initial_independent_analysis_sha256": "04564f7f8ab81c4f28ff90c5a548c91484da0371d58cd7cc51c6ba67aa9bc864",
+  "base_labels": [
+    "initial_integer",
+    "display_final",
+    "bsource_chain",
+    "bsource_feedback",
+    "rational_bound_state",
+    "held_exponential",
+    "selected_feedback"
+  ],
+  "initial_labels": [
+    "ordered_records",
+    "prior_initial_condition",
+    "zero_or_neighbor"
+  ],
+  "base_denominator": 7,
+  "base_qualified": 7,
+  "initial_exact_native_points": 18,
+  "initial_display_records": 10,
+  "historical_score_denominators_70_19_16_Q_unchanged": true,
+  "issue_131_unchanged": true,
+  "bound_step_internal_mesh_proven": false,
+  "simulation_rerun_by_packager": false,
+  "limits": [
+    "Finite saved points and retained analysis do not prove all-time behavior or broader compositions.",
+    "Initial strobeoutput=strobe was ignored by Spectre. Exact native query points were nevertheless actually present.",
+    "Initial Display text lacks $abstime; order, count and values match, exact hidden callback times are not directly measured.",
+    "Raw SHA256 is an identity marker, not a public archive.",
+    "Initial reltol request 1e-9 differs from effective reltol 1e-10 and tolerance.relative 1e-9.",
+    "EVAS and Spectre methods are not claimed equivalent."
+  ]
+}

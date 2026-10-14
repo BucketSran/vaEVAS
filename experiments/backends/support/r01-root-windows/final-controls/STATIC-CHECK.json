@@ -1,0 +1,94 @@
+{
+  "status": "pass",
+  "scope": "retained finite points only; no simulation or complete raw replay",
+  "manifest_files": 67,
+  "base_cases": 7,
+  "initial_cases": 3,
+  "initial_exact_native_points": 18,
+  "outcomes": [
+    {
+      "label": "initial_integer",
+      "query_points": 5,
+      "voltage_pairs": 25,
+      "max_pair_error_V": 0.0,
+      "pass": true
+    },
+    {
+      "label": "display_final",
+      "query_points": 5,
+      "voltage_pairs": 10,
+      "max_pair_error_V": 0.0,
+      "pass": true
+    },
+    {
+      "label": "bsource_chain",
+      "query_points": 5,
+      "voltage_pairs": 20,
+      "max_pair_error_V": 0.0,
+      "pass": true
+    },
+    {
+      "label": "bsource_feedback",
+      "query_points": 5,
+      "voltage_pairs": 10,
+      "max_pair_error_V": 5.551115123125783e-17,
+      "pass": true
+    },
+    {
+      "label": "rational_bound_state",
+      "query_points": 5,
+      "voltage_pairs": 10,
+      "max_pair_error_V": 8.370024709680242e-10,
+      "pass": true
+    },
+    {
+      "label": "held_exponential",
+      "query_points": 5,
+      "voltage_pairs": 10,
+      "max_pair_error_V": 1.4743937185262348e-09,
+      "pass": true
+    },
+    {
+      "label": "selected_feedback",
+      "query_points": 5,
+      "voltage_pairs": 10,
+      "max_pair_error_V": 1.5051872542631174e-09,
+      "pass": true
+    },
+    {
+      "label": "ordered_records",
+      "query_points": 6,
+      "voltage_pairs": 6,
+      "max_pair_error_V": 0.0,
+      "pass": true
+    },
+    {
+      "label": "prior_initial_condition",
+      "query_points": 6,
+      "voltage_pairs": 6,
+      "max_pair_error_V": 0.0,
+      "pass": true
+    },
+    {
+      "label": "zero_or_neighbor",
+      "query_points": 6,
+      "voltage_pairs": 6,
+      "max_pair_error_V": 0.0,
+      "pass": true
+    }
+  ],
+  "calibration": {
+    "oracle": {
+      "accept": true,
+      "reject": true,
+      "nonfinite_reject": true,
+      "exact_zero": true
+    },
+    "wrong_reference_rejected": true,
+    "nonexact_time_rejected": true,
+    "wrong_dut_rejected": true,
+    "wrong_display_order_rejected": true
+  },
+  "historical_scores_changed": false,
+  "issue_131_changed": false
+}

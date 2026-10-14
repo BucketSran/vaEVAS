@@ -1,0 +1,98 @@
+{
+  "label": "held_exponential",
+  "source_sha256": "7155aa9f80953460c535f2c41ed8a165cced74854fa8b5dfa5f6c4c84db17beb",
+  "budget_V": 1e-08,
+  "spectre_status": "pending actual run",
+  "status": "completed",
+  "response_sha256": "c52bf27424de32d31ff4b0b5f2b4a3c97316e3f3a3113351827cfe5d88fed212",
+  "mathchecks": [
+    {
+      "time": 0,
+      "node": "u",
+      "value": 0.0,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0,
+      "node": "y",
+      "value": -0.0,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0.25,
+      "node": "u",
+      "value": 0.25,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0.25,
+      "node": "y",
+      "value": 0.22119921692859512,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 1.0231869534531498e-17
+    },
+    {
+      "time": 0.5,
+      "node": "u",
+      "value": 0.5,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0.5,
+      "node": "y",
+      "value": 0.3934693402873666,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 6.593178415491414e-19
+    },
+    {
+      "time": 0.75,
+      "node": "u",
+      "value": 0.75,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 0.75,
+      "node": "y",
+      "value": 0.6146685572159616,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 1.219134898385963e-16
+    },
+    {
+      "time": 1,
+      "node": "u",
+      "value": 1.0,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 0.0
+    },
+    {
+      "time": 1,
+      "node": "y",
+      "value": 0.7869386805747332,
+      "analytic_budget_pass": true,
+      "enclosure_contains_oracle": true,
+      "max_error_V": 1.3186356830982827e-18
+    }
+  ],
+  "analytic_budget_pass": true,
+  "enclosure_contains_oracle": true,
+  "elapsed_seconds": 6.637257499999578,
+  "packaging": {
+    "original_receipt_sha256": "d9bd7c7dd579a6b5a6ba5063658f328507f484710507bb6b6ca8c32c3b9a3777",
+    "absolute_input_path_prefix_removed": false,
+    "receipt_is_sanitized_extract": true
+  }
+}

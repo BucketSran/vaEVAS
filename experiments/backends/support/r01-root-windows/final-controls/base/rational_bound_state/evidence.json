@@ -1,0 +1,190 @@
+{
+  "label": "rational_bound_state",
+  "budget_V": 1e-08,
+  "relative_comparison_budget": 0,
+  "query_times": [
+    0,
+    0.25,
+    0.5,
+    0.75,
+    1
+  ],
+  "saved_nodes": [
+    "u",
+    "y"
+  ],
+  "native_query_tokens": [
+    {
+      "time": "0",
+      "voltages": {
+        "u": "0",
+        "y": "0"
+      }
+    },
+    {
+      "time": "0.25",
+      "voltages": {
+        "u": "0.25",
+        "y": "0.24497866257730572"
+      }
+    },
+    {
+      "time": "0.5",
+      "voltages": {
+        "u": "0.5",
+        "y": "0.46364760820650436"
+      }
+    },
+    {
+      "time": "0.75",
+      "voltages": {
+        "u": "0.75",
+        "y": "0.6435011079562819"
+      }
+    },
+    {
+      "time": "1",
+      "voltages": {
+        "u": "1",
+        "y": "0.78539816270250007"
+      }
+    }
+  ],
+  "requested": {
+    "reltol": 1e-10,
+    "vabstol": 1e-12,
+    "iabstol": 1e-15,
+    "maxstep": 0.0001220703125,
+    "stop": 1,
+    "method": "traponly",
+    "errpreset": "conservative"
+  },
+  "effective": {
+    "tolerance.relative": "1.00000e-10",
+    "stop": "1.00000",
+    "maxstep": "0.000122070",
+    "reltol": "1.00000e-11",
+    "abstol(V)": "1.00000e-12",
+    "abstol(I)": "1.00000e-15",
+    "method": "\"traponly\""
+  },
+  "warnings": [
+    "WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow."
+  ],
+  "source_sha256": "a8b86cf1bb20ff36515a92957040517aba2267306edab70d764a5dbd9776c50b",
+  "deck_sha256": "85b79972b30a4c23e29bce2a1efccec5a2f1c942ee91b2cbc925eba6d952ebaa",
+  "evas_deck_sha256": "e4113fe488015e58883275d60f45156f01c39a8b4424f370e34820f0e2a05cb2",
+  "request_sha256": "343d9b7faf7074650b700cbd9df70f9b81770fc4bac61ab46dd23bb604a45ea1",
+  "psf_sha256": "83fed54d914c820ce9e3743445b4c97a693a83a6348cbec3529b5b624740c7e9",
+  "psf_availability": "local-only",
+  "raw_native_rows": 8215,
+  "original_native_analysis": {
+    "native_max_errors_V": {
+      "u": 0.0,
+      "y": 8.805798718740575e-10
+    },
+    "native_math_failures": [],
+    "finite_pair_pass": true,
+    "qualified": true,
+    "effective_gate": true,
+    "pairs": [
+      {
+        "time": "0",
+        "node": "u",
+        "error_V": 0.0,
+        "pass": true
+      },
+      {
+        "time": "0",
+        "node": "y",
+        "error_V": 0.0,
+        "pass": true
+      },
+      {
+        "time": "0.25",
+        "node": "u",
+        "error_V": 0.0,
+        "pass": true
+      },
+      {
+        "time": "0.25",
+        "node": "y",
+        "error_V": 5.495584234733268e-10,
+        "pass": true
+      },
+      {
+        "time": "0.5",
+        "node": "u",
+        "error_V": 0.0,
+        "pass": true
+      },
+      {
+        "time": "0.5",
+        "node": "y",
+        "error_V": 7.943017335154788e-10,
+        "pass": true
+      },
+      {
+        "time": "0.75",
+        "node": "u",
+        "error_V": 0.0,
+        "pass": true
+      },
+      {
+        "time": "0.75",
+        "node": "y",
+        "error_V": 8.370024709680242e-10,
+        "pass": true
+      },
+      {
+        "time": "1",
+        "node": "u",
+        "error_V": 0.0,
+        "pass": true
+      },
+      {
+        "time": "1",
+        "node": "y",
+        "error_V": 6.949482089994909e-10,
+        "pass": true
+      }
+    ]
+  },
+  "spectre_execution": {
+    "argv": [
+      "taskset",
+      "-c",
+      "0",
+      "prlimit",
+      "--as=4294967296",
+      "--fsize=33554432",
+      "--",
+      "/bin/csh",
+      "-f",
+      "run.csh"
+    ],
+    "returncode": 0,
+    "timeout": false,
+    "status": "completed",
+    "cleanup": {
+      "signals": [
+        "SIGTERM",
+        "SIGKILL"
+      ],
+      "errors": [],
+      "complete": true
+    },
+    "elapsed_seconds": 10.02503971196711,
+    "completed_utc": "2026-10-14T07:58:22Z",
+    "log": "stdout.log",
+    "log_sha256": "28f9963bd6c78ac9af362d13a241095424bf62ebbca7a0c584980aa206438ed3",
+    "label": "rational_bound_state",
+    "source_sha256": "a8b86cf1bb20ff36515a92957040517aba2267306edab70d764a5dbd9776c50b",
+    "deck_sha256": "85b79972b30a4c23e29bce2a1efccec5a2f1c942ee91b2cbc925eba6d952ebaa",
+    "directory_bytes": 708454
+  },
+  "math_oracle": "y=atan(t); q=.125 before.5 then.0625; model bound limits EVAS accepted advancement, Spectre waveform alone does not prove internal cap",
+  "spectre_callbacks": null,
+  "callback_sequence_pass": null,
+  "analysis_sha256": "3b41c64a0fca18df9d3e7b156ce575feba6088f0c9ba95aef555ac8a7299367d"
+}

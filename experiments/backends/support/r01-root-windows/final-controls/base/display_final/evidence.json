@@ -1,0 +1,206 @@
+{
+  "label": "display_final",
+  "budget_V": 1e-08,
+  "relative_comparison_budget": 0,
+  "query_times": [
+    0,
+    0.25,
+    0.5,
+    0.75,
+    1
+  ],
+  "saved_nodes": [
+    "u",
+    "y"
+  ],
+  "native_query_tokens": [
+    {
+      "time": "0",
+      "voltages": {
+        "u": "0",
+        "y": "1"
+      }
+    },
+    {
+      "time": "0.25",
+      "voltages": {
+        "u": "0.25",
+        "y": "1.25"
+      }
+    },
+    {
+      "time": "0.5",
+      "voltages": {
+        "u": "0.5",
+        "y": "2.5"
+      }
+    },
+    {
+      "time": "0.75",
+      "voltages": {
+        "u": "0.75",
+        "y": "2.75"
+      }
+    },
+    {
+      "time": "1",
+      "voltages": {
+        "u": "1",
+        "y": "8"
+      }
+    }
+  ],
+  "requested": {
+    "reltol": 1e-10,
+    "vabstol": 1e-12,
+    "iabstol": 1e-15,
+    "maxstep": 0.0001220703125,
+    "stop": 1,
+    "method": "traponly",
+    "errpreset": "conservative"
+  },
+  "effective": {
+    "tolerance.relative": "1.00000e-10",
+    "stop": "1.00000",
+    "maxstep": "0.000122070",
+    "reltol": "1.00000e-11",
+    "abstol(V)": "1.00000e-12",
+    "abstol(I)": "1.00000e-15",
+    "method": "\"traponly\""
+  },
+  "warnings": [
+    "WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow."
+  ],
+  "source_sha256": "e70619789c213bf215cd532297dffdef08e28c4bd46e8e75a8fc8cbda65e2889",
+  "deck_sha256": "85b79972b30a4c23e29bce2a1efccec5a2f1c942ee91b2cbc925eba6d952ebaa",
+  "evas_deck_sha256": "e4113fe488015e58883275d60f45156f01c39a8b4424f370e34820f0e2a05cb2",
+  "request_sha256": "343d9b7faf7074650b700cbd9df70f9b81770fc4bac61ab46dd23bb604a45ea1",
+  "psf_sha256": "67e3dbcac3234aed829c186c6bd3f91b2b559f1ad5336da960308767686402d7",
+  "psf_availability": "local-only",
+  "raw_native_rows": 8211,
+  "original_native_analysis": {
+    "native_max_errors_V": {
+      "u": 0.0,
+      "y": 1.5e-16
+    },
+    "native_math_failures": [],
+    "finite_pair_pass": true,
+    "qualified": true,
+    "effective_gate": true,
+    "pairs": [
+      {
+        "time": "0",
+        "node": "u",
+        "error_V": 0.0,
+        "pass": true
+      },
+      {
+        "time": "0",
+        "node": "y",
+        "error_V": 0.0,
+        "pass": true
+      },
+      {
+        "time": "0.25",
+        "node": "u",
+        "error_V": 0.0,
+        "pass": true
+      },
+      {
+        "time": "0.25",
+        "node": "y",
+        "error_V": 0.0,
+        "pass": true
+      },
+      {
+        "time": "0.5",
+        "node": "u",
+        "error_V": 0.0,
+        "pass": true
+      },
+      {
+        "time": "0.5",
+        "node": "y",
+        "error_V": 0.0,
+        "pass": true
+      },
+      {
+        "time": "0.75",
+        "node": "u",
+        "error_V": 0.0,
+        "pass": true
+      },
+      {
+        "time": "0.75",
+        "node": "y",
+        "error_V": 0.0,
+        "pass": true
+      },
+      {
+        "time": "1",
+        "node": "u",
+        "error_V": 0.0,
+        "pass": true
+      },
+      {
+        "time": "1",
+        "node": "y",
+        "error_V": 0.0,
+        "pass": true
+      }
+    ]
+  },
+  "spectre_execution": {
+    "argv": [
+      "taskset",
+      "-c",
+      "0",
+      "prlimit",
+      "--as=4294967296",
+      "--fsize=33554432",
+      "--",
+      "/bin/csh",
+      "-f",
+      "run.csh"
+    ],
+    "returncode": 0,
+    "timeout": false,
+    "status": "completed",
+    "cleanup": {
+      "signals": [
+        "SIGTERM",
+        "SIGKILL"
+      ],
+      "errors": [],
+      "complete": true
+    },
+    "elapsed_seconds": 9.296828340739012,
+    "completed_utc": "2026-10-14T07:57:35Z",
+    "log": "stdout.log",
+    "log_sha256": "7a1a8a33b57ad8cb7ce1367d4b0c2d39d9799647482608b9e7fc08c1fb50f80c",
+    "label": "display_final",
+    "source_sha256": "e70619789c213bf215cd532297dffdef08e28c4bd46e8e75a8fc8cbda65e2889",
+    "deck_sha256": "85b79972b30a4c23e29bce2a1efccec5a2f1c942ee91b2cbc925eba6d952ebaa",
+    "directory_bytes": 652997
+  },
+  "math_oracle": "y=t+1 for t<.5; t+2 for .5<=t<1; at1 y=8; logs before(.5,1),after(.5,2),final(1,7); post-event queries",
+  "spectre_callbacks": [
+    [
+      "0.5",
+      1,
+      "before"
+    ],
+    [
+      "0.5",
+      2,
+      "after"
+    ],
+    [
+      "1",
+      7,
+      "final"
+    ]
+  ],
+  "callback_sequence_pass": true,
+  "analysis_sha256": "9f487f62c4614fb0405050ad5ddc89fb4afc5b5e099c3722f8b8f9a3c6ffdf07"
+}
