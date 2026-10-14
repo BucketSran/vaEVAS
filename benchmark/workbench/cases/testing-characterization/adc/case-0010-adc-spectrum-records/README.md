@@ -17,8 +17,8 @@
 | 电路资产 | [first-batch-adc-spectrum](../../../../circuits/first-batch-adc-spectrum.md) |
 | 同源组 | first-batch-measure-adc-spectrum |
 | 关联 Case | 无 |
-| 正式任务 | 尚未建立 |
-| 运行 / 校准证据 | 无；当前仅有材料阅读与题目草案 |
+| 正式任务（设计状态独立） | [v3-converter-adc-spectrum](../../../../../tasks/v3-converter-adc-spectrum/instruction.md) |
+| 本卡登记的运行 / 校准证据 | 本卡未登记；关联任务的校准范围见[交付证据入口](../../../../TASKS.md) |
 
 <!-- workbench:end -->
 

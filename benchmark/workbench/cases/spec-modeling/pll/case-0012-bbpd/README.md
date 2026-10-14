@@ -17,8 +17,8 @@
 | 电路资产 | [v4-bbpd](../../../../circuits/v4-bbpd.md) |
 | 同源组 | v4-family-001、cdr-phase-original |
 | 关联 Case | 无 |
-| 正式任务 | 尚未建立 |
-| 运行 / 校准证据 | 无；当前仅有材料阅读与题目草案 |
+| 正式任务（设计状态独立） | [v2-spec-001-bang-bang-phase-detector](../../../../../tasks/v2-spec-001-bang-bang-phase-detector/instruction.md) |
+| 本卡登记的运行 / 校准证据 | 本卡未登记；关联任务的校准范围见[交付证据入口](../../../../TASKS.md) |
 
 <!-- workbench:end -->
 

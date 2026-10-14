@@ -1,0 +1,413 @@
+{
+  "schema_version": 1,
+  "function_groups": {
+    "sampling-readout": {
+      "title": "采样与多通道读出",
+      "review_id": "R01"
+    },
+    "adc-control": {
+      "title": "ADC 结构与转换控制",
+      "review_id": "R09"
+    },
+    "dac-metrics": {
+      "title": "DAC 与转换器指标",
+      "review_id": "R10"
+    },
+    "amplifier-processing": {
+      "title": "放大与模拟信号处理",
+      "review_id": "R07"
+    },
+    "continuous-ota": {
+      "title": "连续 OTA 动态",
+      "review_id": "R02"
+    },
+    "comparators": {
+      "title": "比较器与门限",
+      "review_id": "R08"
+    },
+    "pll-clock": {
+      "title": "PLL 与时钟",
+      "review_id": "R04"
+    },
+    "filter-rf": {
+      "title": "滤波、均衡与 RF",
+      "review_id": "R06"
+    },
+    "calibration-servo": {
+      "title": "模拟校准与伺服",
+      "review_id": "R05"
+    },
+    "power-reset": {
+      "title": "电源、复位与响应测试",
+      "review_id": "R03"
+    }
+  },
+  "tasks": [
+    {
+      "task_id": "v2-spec-024-clocked-sample-and-hold",
+      "title": "边沿采样保持",
+      "function_group": "sampling-readout",
+      "case_ids": [
+        "case-0011"
+      ]
+    },
+    {
+      "task_id": "v2-spec-071-acquisition-limited-sample-and-hold",
+      "title": "有限采集采样保持",
+      "function_group": "sampling-readout",
+      "case_ids": []
+    },
+    {
+      "task_id": "v2-data-sampling-identification",
+      "title": "真实采样级动态辨识",
+      "function_group": "sampling-readout",
+      "case_ids": [
+        "case-0006"
+      ]
+    },
+    {
+      "task_id": "v2-integrate-349-multichannel-readout",
+      "title": "四通道采集与读出",
+      "function_group": "sampling-readout",
+      "case_ids": []
+    },
+    {
+      "task_id": "v2-spec-003-pipeline-adc-stage",
+      "title": "流水 ADC 级",
+      "function_group": "adc-control",
+      "case_ids": []
+    },
+    {
+      "task_id": "v2-spec-055-first-order-sigma-delta-modulator",
+      "title": "一级 ΣΔ 调制器",
+      "function_group": "adc-control",
+      "case_ids": []
+    },
+    {
+      "task_id": "v2-spec-186-sarfend-logic-4b",
+      "title": "SAR 前端逻辑补齐",
+      "function_group": "adc-control",
+      "case_ids": [
+        "case-0013"
+      ]
+    },
+    {
+      "task_id": "v2-spec-002-capacitive-sar-feedback-dac",
+      "title": "SAR 电容反馈 DAC",
+      "function_group": "dac-metrics",
+      "case_ids": []
+    },
+    {
+      "task_id": "v3-converter-segmented",
+      "title": "分段 DAC",
+      "function_group": "dac-metrics",
+      "case_ids": []
+    },
+    {
+      "task_id": "v3-converter-thermometer",
+      "title": "温度计 DAC",
+      "function_group": "dac-metrics",
+      "case_ids": []
+    },
+    {
+      "task_id": "v3-converter-nonideal",
+      "title": "指定非理想权重 DAC",
+      "function_group": "dac-metrics",
+      "case_ids": []
+    },
+    {
+      "task_id": "v3-converter-subradix",
+      "title": "Sub-radix DAC",
+      "function_group": "dac-metrics",
+      "case_ids": []
+    },
+    {
+      "task_id": "v3-converter-dac-linearity",
+      "title": "DAC 静态线性度测量",
+      "function_group": "dac-metrics",
+      "case_ids": []
+    },
+    {
+      "task_id": "v3-converter-adc-spectrum",
+      "title": "ADC 相干频谱指标",
+      "function_group": "dac-metrics",
+      "case_ids": [
+        "case-0010"
+      ]
+    },
+    {
+      "task_id": "v2-spec-038-programmable-gain-amplifier",
+      "title": "可编程增益放大器",
+      "function_group": "amplifier-processing",
+      "case_ids": []
+    },
+    {
+      "task_id": "v2-spec-082-agc-receiver-leveling-loop",
+      "title": "AGC 电平调节环路",
+      "function_group": "amplifier-processing",
+      "case_ids": []
+    },
+    {
+      "task_id": "v2-spec-091-chopper-stabilized-differential-amplifier",
+      "title": "多模块斩波放大器",
+      "function_group": "amplifier-processing",
+      "case_ids": []
+    },
+    {
+      "task_id": "v2-spec-308-correlated-double-sampler-offset-cancel",
+      "title": "多模块相关双采样",
+      "function_group": "amplifier-processing",
+      "case_ids": []
+    },
+    {
+      "task_id": "v2-spec-370-opamp-feedback-settling-monitor",
+      "title": "离散反馈建立模型",
+      "function_group": "amplifier-processing",
+      "case_ids": []
+    },
+    {
+      "task_id": "v2-test-online-gain",
+      "title": "在线增益仪表",
+      "function_group": "amplifier-processing",
+      "case_ids": []
+    },
+    {
+      "task_id": "v2-test-gain-settling",
+      "title": "增益与有限窗口建立测量",
+      "function_group": "amplifier-processing",
+      "case_ids": [
+        "case-0018"
+      ]
+    },
+    {
+      "task_id": "v2-test-sampled-rms",
+      "title": "四样本在线 RMS",
+      "function_group": "amplifier-processing",
+      "case_ids": []
+    },
+    {
+      "task_id": "v3-ota-continuous",
+      "title": "连续 OTA 规格建模",
+      "function_group": "continuous-ota",
+      "case_ids": []
+    },
+    {
+      "task_id": "v3-ota-data-model",
+      "title": "真实 OTA 数据建模",
+      "function_group": "continuous-ota",
+      "case_ids": []
+    },
+    {
+      "task_id": "v3-ota-step-measurement",
+      "title": "OTA 阶跃激励与测量",
+      "function_group": "continuous-ota",
+      "case_ids": []
+    },
+    {
+      "task_id": "v2-spec-047-window-comparator-detector",
+      "title": "窗口比较器",
+      "function_group": "comparators",
+      "case_ids": []
+    },
+    {
+      "task_id": "v2-spec-314-hysteretic-window-comparator",
+      "title": "滞回窗口比较器",
+      "function_group": "comparators",
+      "case_ids": []
+    },
+    {
+      "task_id": "v2-test-hysteresis",
+      "title": "翻转电压与表观滞回",
+      "function_group": "comparators",
+      "case_ids": [
+        "case-0016"
+      ]
+    },
+    {
+      "task_id": "v2-test-comparator-delay",
+      "title": "比较器过驱动延迟",
+      "function_group": "comparators",
+      "case_ids": []
+    },
+    {
+      "task_id": "v2-test-offset-search",
+      "title": "自适应失调搜索",
+      "function_group": "comparators",
+      "case_ids": []
+    },
+    {
+      "task_id": "v2-spec-001-bang-bang-phase-detector",
+      "title": "Alexander BBPD 内部采样",
+      "function_group": "pll-clock",
+      "case_ids": [
+        "case-0012"
+      ]
+    },
+    {
+      "task_id": "v2-spec-375-nonoverlap-clock-generator",
+      "title": "两相非重叠时钟",
+      "function_group": "pll-clock",
+      "case_ids": [
+        "case-0017"
+      ]
+    },
+    {
+      "task_id": "v2-spec-396-quadrature-lo-generator-divided-clock",
+      "title": "正交分频时钟",
+      "function_group": "pll-clock",
+      "case_ids": []
+    },
+    {
+      "task_id": "v2-integrate-case0007-adpll-fine-tdc",
+      "title": "ADPLL fine TDC 集成",
+      "function_group": "pll-clock",
+      "case_ids": [
+        "case-0007"
+      ]
+    },
+    {
+      "task_id": "v2-repair-pfd-reset",
+      "title": "PFD 复位与事件取消修复",
+      "function_group": "pll-clock",
+      "case_ids": [
+        "case-0008"
+      ]
+    },
+    {
+      "task_id": "v2-test-clock-frequency",
+      "title": "时钟与 DCO 频率测量",
+      "function_group": "pll-clock",
+      "case_ids": []
+    },
+    {
+      "task_id": "v2-test-duty-cycle",
+      "title": "完整周期占空比测量",
+      "function_group": "pll-clock",
+      "case_ids": []
+    },
+    {
+      "task_id": "v2-test-time-protocol",
+      "title": "时间编码与重装协议测量",
+      "function_group": "pll-clock",
+      "case_ids": []
+    },
+    {
+      "task_id": "v3-calibration-fractional-pll",
+      "title": "分数 PLL 扩展",
+      "function_group": "pll-clock",
+      "case_ids": []
+    },
+    {
+      "task_id": "v2-spec-353-ffe-transmitter-3tap",
+      "title": "三抽头 FFE",
+      "function_group": "filter-rf",
+      "case_ids": []
+    },
+    {
+      "task_id": "v2-spec-307-switched-capacitor-integrator-phase-pair",
+      "title": "多模块两相 SC 积分",
+      "function_group": "filter-rf",
+      "case_ids": []
+    },
+    {
+      "task_id": "v3-filter-ctle",
+      "title": "连续 CTLE",
+      "function_group": "filter-rf",
+      "case_ids": []
+    },
+    {
+      "task_id": "v3-filter-programmable-lp",
+      "title": "可编程连续低通扩展",
+      "function_group": "filter-rf",
+      "case_ids": []
+    },
+    {
+      "task_id": "v3-filter-iq-conversion",
+      "title": "I/Q 变频",
+      "function_group": "filter-rf",
+      "case_ids": []
+    },
+    {
+      "task_id": "v3-filter-envelope",
+      "title": "动态包络",
+      "function_group": "filter-rf",
+      "case_ids": []
+    },
+    {
+      "task_id": "v3-filter-sweep-measurement",
+      "title": "扫频激励与复数频响测量",
+      "function_group": "filter-rf",
+      "case_ids": []
+    },
+    {
+      "task_id": "v2-spec-183-foreground-rdac-calibrator",
+      "title": "前台 RDAC 校准",
+      "function_group": "calibration-servo",
+      "case_ids": []
+    },
+    {
+      "task_id": "v3-calibration-continuous-offset",
+      "title": "持续失调校准",
+      "function_group": "calibration-servo",
+      "case_ids": []
+    },
+    {
+      "task_id": "v3-calibration-common-mode-servo",
+      "title": "共模伺服",
+      "function_group": "calibration-servo",
+      "case_ids": []
+    },
+    {
+      "task_id": "v2-repair-debounce-latch",
+      "title": "去抖资格修复",
+      "function_group": "power-reset",
+      "case_ids": [
+        "case-0014"
+      ]
+    },
+    {
+      "task_id": "v2-repair-reset-sequencer",
+      "title": "复位释放序列修复",
+      "function_group": "power-reset",
+      "case_ids": [
+        "case-0015"
+      ]
+    },
+    {
+      "task_id": "v2-repair-uvlo-brownout",
+      "title": "UVLO 欠压恢复修复",
+      "function_group": "power-reset",
+      "case_ids": []
+    },
+    {
+      "task_id": "v2-repair-uvlo-reset-chain",
+      "title": "多模块 UVLO 复位链修复",
+      "function_group": "power-reset",
+      "case_ids": [
+        "case-0009"
+      ]
+    },
+    {
+      "task_id": "v2-test-por-sequence",
+      "title": "真实 POR 响应测试台",
+      "function_group": "power-reset",
+      "case_ids": [
+        "case-0001"
+      ]
+    },
+    {
+      "task_id": "v3-ldo-startup-measurement",
+      "title": "真实 LDO 启动测量",
+      "function_group": "power-reset",
+      "case_ids": [
+        "case-0002"
+      ]
+    },
+    {
+      "task_id": "v3-ldo-response-experiment",
+      "title": "真实 LDO 响应驱动 line/load 实验",
+      "function_group": "power-reset",
+      "case_ids": []
+    }
+  ]
+}

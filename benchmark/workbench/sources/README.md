@@ -6,6 +6,7 @@
 | [ADCToolbox：ADC 频谱指标的计算合同](adctoolbox-spectrum.md) | [case-0010](../cases/testing-characterization/adc/case-0010-adc-spectrum-records/README.md) |
 | [Alexander BBPD 的结构与模型边界主源](alexander-bbpd-primary.md) | [case-0012](../cases/spec-modeling/pll/case-0012-bbpd/README.md) |
 | [Analog Design Bench：LDO 启动测量](analog-design-bench-ldo.md) | [case-0002](../cases/testing-characterization/power/case-0002-ldo-startup/README.md) |
+| [Analog Design Bench 的 starter 与题面分工](analog-task-package.md) | 尚无 Case |
 | [Cadence 安装库：VA 测量与激励示例](cadence-measurement.md) | [case-0003](../cases/testing-characterization/amplifiers/case-0003-opamp-slew/README.md) |
 | [JKU：SKY130 transmission-gate 采样级](jku-sampling-stage.md) | [case-0006](../cases/data-modeling/adc/case-0006-sampling-identification/README.md) |
 | [BMAS 2000：SC 滤波器中的运放规格](sc-filter-bmas2000.md) | [case-0005](../cases/spec-modeling/filters/case-0005-sc-opamp/README.md) |

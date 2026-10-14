@@ -1,4 +1,11 @@
-# 两批 56 道题总览
+# 已建设任务总览
+
+<!-- task-summary:begin -->
+
+登记 **56 道已建设任务**；v2 37 道、v3 19 道。
+类别、来源组读自 `task.toml`；登记与生成索引不证明设计认可、校准通过或正式发布。
+
+<!-- task-summary:end -->
 
 本页汇总 v2 的 37 道题和下一批的 19 道题，供按工程动作与电路功能做宏观 review。每个任务只计一次，权重均为 1；参数场景、作者错版和共享来源不另增题量。五类不要求数量相等，也不因多文件或系统规模加权。
 
@@ -6,14 +13,26 @@
 
 ## 五类工程动作
 
-| 工程动作 | 前批 | 新增 | 合计 | 典型输入 → 交付 | 独立 checker 的判断对象 |
-| --- | ---: | ---: | ---: | --- | --- |
-| 按规格构建模型 | 19 | 8 | **27** | 接口、行为/动态规格，必要时给定模块职责 → 单模块或指定模块组成的 VA 模型 | 实际波形对照状态、事件、解析式或独立数值解；系统题另验组件职责及真实连接 |
-| 从数据建立模型 | 1 | 1 | **2** | 真实电路的固定表征数据、输入和工况说明 → 可接受新输入、保留动态历史的 VA 模型 | 完整保留实验上的自由运行误差；不把正确输出反馈给候选模型 |
-| 扩展与集成 | 2 | 4 | **6** | 可运行健康基线、固定工程及新增需求 → 扩展模块、连接或控制功能 | 原能力兼容、新能力及实际闭环作用，避免只生成正确监控数字 |
-| 诊断与修复 | 5 | 0 | **5** | 有缺陷的 VA 源码、规格和固定测试环境 → 修复后的指定源码，允许整体重写 | 故障被消除，同时正常行为、复位、取消与跨模块依赖仍正确 |
-| 电路测试与表征 | 10 | 6 | **16** | 可读 DUT/观测、接口、指标与实验合同 → 在线仪表、激励与测量模块或响应驱动测试台 | 从实际输入、DUT 响应和事件独立重算指标，并检查实验流程与无效状态 |
-| **总计** | **37** | **19** | **56** | | |
+<!-- task-category-counts:begin -->
+
+| 工程动作 | v2 | v3 | 合计 |
+| --- | --- | --- | --- |
+| 按规格构建模型 | 19 | 8 | 27 |
+| 从数据建立模型 | 1 | 1 | 2 |
+| 扩展与集成 | 2 | 4 | 6 |
+| 诊断与修复 | 5 | 0 | 5 |
+| 电路测试与表征 | 10 | 6 | 16 |
+| 总计 | 37 | 19 | 56 |
+
+<!-- task-category-counts:end -->
+
+| 工程动作 | 典型输入 → 交付 | 独立 checker 的判断对象 |
+| --- | --- | --- |
+| 按规格构建模型 | 接口、行为/动态规格，必要时给定模块职责 → 单模块或指定模块组成的 VA 模型 | 实际波形对照状态、事件、解析式或独立数值解；系统题另验组件职责及真实连接 |
+| 从数据建立模型 | 真实电路的固定表征数据、输入和工况说明 → 可接受新输入、保留动态历史的 VA 模型 | 完整保留实验上的自由运行误差；不把正确输出反馈给候选模型 |
+| 扩展与集成 | 可运行健康基线、固定工程及新增需求 → 扩展模块、连接或控制功能 | 原能力兼容、新能力及实际闭环作用，避免只生成正确监控数字 |
+| 诊断与修复 | 有缺陷的 VA 源码、规格和固定测试环境 → 修复后的指定源码，允许整体重写 | 故障被消除，同时正常行为、复位、取消与跨模块依赖仍正确 |
+| 电路测试与表征 | 可读 DUT/观测、接口、指标与实验合同 → 在线仪表、激励与测量模块或响应驱动测试台 | 从实际输入、DUT 响应和事件独立重算指标，并检查实验流程与无效状态 |
 
 测试与表征保留三种有价值的形式：伴随仿真直接出指标；施加规定激励并测量；根据真实响应决定下一步激励。不是每道题都需要自适应流程。例如 DAC 线性度题读取固定扫描，而 LDO line/load 题需要等待真实响应后推进阶段。正确测出 DUT 不达标也可以通过，不能把“DUT 合格”误当成“测量模块合格”。
 
@@ -21,19 +40,23 @@
 
 下表按主要电路功能归组，每道题只进入一组，便于核对数量。跨组的工程关联在后面的同源关系表中保留。“新增”只指相对前批 37 题，不表示这些想法或原始资产从未出现在历史 benchmark 中。
 
-| 电路功能 | 规格 | 数据 | 扩展 | 修复 | 测试 | 合计 |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| 采样与多通道读出 | 2 | 1 | 1 | 0 | 0 | 4 |
-| ADC 结构与转换控制 | 3 | 0 | 0 | 0 | 0 | 3 |
-| DAC 与转换器指标 | 5 | 0 | 0 | 0 | 2 | 7 |
-| 放大与模拟信号处理 | 5 | 0 | 0 | 0 | 3 | 8 |
-| 连续 OTA 动态 | 1 | 1 | 0 | 0 | 1 | 3 |
-| 比较器与门限 | 2 | 0 | 0 | 0 | 3 | 5 |
-| PLL 与时钟 | 3 | 0 | 2 | 1 | 3 | 9 |
-| 滤波、均衡与 RF | 5 | 0 | 1 | 0 | 1 | 7 |
-| 模拟校准与伺服 | 1 | 0 | 2 | 0 | 0 | 3 |
-| 电源、复位与响应测试 | 0 | 0 | 0 | 4 | 3 | 7 |
-| **合计** | **27** | **2** | **6** | **5** | **16** | **56** |
+<!-- task-function-counts:begin -->
+
+| 审核组 / 电路功能 | 按规格构建模型 | 从数据建立模型 | 扩展与集成 | 诊断与修复 | 电路测试与表征 | 合计 |
+| --- | --- | --- | --- | --- | --- | --- |
+| R01 / 采样与多通道读出 | 2 | 1 | 1 | 0 | 0 | 4 |
+| R09 / ADC 结构与转换控制 | 3 | 0 | 0 | 0 | 0 | 3 |
+| R10 / DAC 与转换器指标 | 5 | 0 | 0 | 0 | 2 | 7 |
+| R07 / 放大与模拟信号处理 | 5 | 0 | 0 | 0 | 3 | 8 |
+| R02 / 连续 OTA 动态 | 1 | 1 | 0 | 0 | 1 | 3 |
+| R08 / 比较器与门限 | 2 | 0 | 0 | 0 | 3 | 5 |
+| R04 / PLL 与时钟 | 3 | 0 | 2 | 1 | 3 | 9 |
+| R06 / 滤波、均衡与 RF | 5 | 0 | 1 | 0 | 1 | 7 |
+| R05 / 模拟校准与伺服 | 1 | 0 | 2 | 0 | 0 | 3 |
+| R03 / 电源、复位与响应测试 | 0 | 0 | 0 | 4 | 3 | 7 |
+| 总计 | 27 | 2 | 6 | 5 | 16 | 56 |
+
+<!-- task-function-counts:end -->
 
 | 电路功能（前批 + 新增） | 已覆盖内容及本批增量 | 输入材料 → 交付要求 | checker 思路 |
 | --- | --- | --- | --- |
@@ -84,68 +107,68 @@
 
 ## 56 题定位索引
 
-以下只用于定位题面与来源，不逐题重新定义规格。类别简称：**规格、数据、扩展、修复、测试**。`v2` 是前批 37 题，`v3` 是新增 19 题；版本前缀不是难度等级。
+以下定位由 [tasks.json](tasks.json) 与各题 `task.toml` 生成，不重新定义规格。登记保存电路功能与历史设计卡关联；类别和来源组读取任务元数据。关联说明设计沿革，不表示旧卡合同已由新题实现，也不改变设计认可或校准状态。`v2`、`v3` 是建设批次，不是难度等级。
 
 <!-- task-inventory:begin -->
 
-| 电路功能 | 批次 / 类别 | 任务与有效题面 | 来源说明 |
-| --- | --- | --- | --- |
-| 采样与多通道读出 | v2 / 规格 | [边沿采样保持](../tasks/v2-spec-024-clocked-sample-and-hold/instruction.md) | [SOURCE](../tasks/v2-spec-024-clocked-sample-and-hold/SOURCE.md) |
-| 采样与多通道读出 | v2 / 规格 | [有限采集采样保持](../tasks/v2-spec-071-acquisition-limited-sample-and-hold/instruction.md) | [SOURCE](../tasks/v2-spec-071-acquisition-limited-sample-and-hold/SOURCE.md) |
-| 采样与多通道读出 | v2 / 数据 | [真实采样级动态辨识](../tasks/v2-data-sampling-identification/instruction.md) | [SOURCE](../tasks/v2-data-sampling-identification/SOURCE.md) |
-| 采样与多通道读出 | v2 / 扩展 | [四通道采集与读出](../tasks/v2-integrate-349-multichannel-readout/instruction.md) | [SOURCE](../tasks/v2-integrate-349-multichannel-readout/SOURCE.md) |
-| ADC 结构与转换控制 | v2 / 规格 | [流水 ADC 级](../tasks/v2-spec-003-pipeline-adc-stage/instruction.md) | [SOURCE](../tasks/v2-spec-003-pipeline-adc-stage/SOURCE.md) |
-| ADC 结构与转换控制 | v2 / 规格 | [一级 ΣΔ 调制器](../tasks/v2-spec-055-first-order-sigma-delta-modulator/instruction.md) | [SOURCE](../tasks/v2-spec-055-first-order-sigma-delta-modulator/SOURCE.md) |
-| ADC 结构与转换控制 | v2 / 规格 | [SAR 前端逻辑补齐](../tasks/v2-spec-186-sarfend-logic-4b/instruction.md) | [SOURCE](../tasks/v2-spec-186-sarfend-logic-4b/SOURCE.md) |
-| DAC 与转换器指标 | v2 / 规格 | [SAR 电容反馈 DAC](../tasks/v2-spec-002-capacitive-sar-feedback-dac/instruction.md) | [SOURCE](../tasks/v2-spec-002-capacitive-sar-feedback-dac/SOURCE.md) |
-| DAC 与转换器指标 | v3 / 规格 | [分段 DAC](../tasks/v3-converter-segmented/instruction.md) | [SOURCE](../tasks/v3-converter-segmented/SOURCE.md) |
-| DAC 与转换器指标 | v3 / 规格 | [温度计 DAC](../tasks/v3-converter-thermometer/instruction.md) | [SOURCE](../tasks/v3-converter-thermometer/SOURCE.md) |
-| DAC 与转换器指标 | v3 / 规格 | [指定非理想权重 DAC](../tasks/v3-converter-nonideal/instruction.md) | [SOURCE](../tasks/v3-converter-nonideal/SOURCE.md) |
-| DAC 与转换器指标 | v3 / 规格 | [Sub-radix DAC](../tasks/v3-converter-subradix/instruction.md) | [SOURCE](../tasks/v3-converter-subradix/SOURCE.md) |
-| DAC 与转换器指标 | v3 / 测试 | [DAC 静态线性度测量](../tasks/v3-converter-dac-linearity/instruction.md) | [SOURCE](../tasks/v3-converter-dac-linearity/SOURCE.md) |
-| DAC 与转换器指标 | v3 / 测试 | [ADC 相干频谱指标](../tasks/v3-converter-adc-spectrum/instruction.md) | [SOURCE](../tasks/v3-converter-adc-spectrum/SOURCE.md) |
-| 放大与模拟信号处理 | v2 / 规格 | [可编程增益放大器](../tasks/v2-spec-038-programmable-gain-amplifier/instruction.md) | [SOURCE](../tasks/v2-spec-038-programmable-gain-amplifier/SOURCE.md) |
-| 放大与模拟信号处理 | v2 / 规格 | [AGC 电平调节环路](../tasks/v2-spec-082-agc-receiver-leveling-loop/instruction.md) | [SOURCE](../tasks/v2-spec-082-agc-receiver-leveling-loop/SOURCE.md) |
-| 放大与模拟信号处理 | v2 / 规格 | [多模块斩波放大器](../tasks/v2-spec-091-chopper-stabilized-differential-amplifier/instruction.md) | [SOURCE](../tasks/v2-spec-091-chopper-stabilized-differential-amplifier/SOURCE.md) |
-| 放大与模拟信号处理 | v2 / 规格 | [多模块相关双采样](../tasks/v2-spec-308-correlated-double-sampler-offset-cancel/instruction.md) | [SOURCE](../tasks/v2-spec-308-correlated-double-sampler-offset-cancel/SOURCE.md) |
-| 放大与模拟信号处理 | v2 / 规格 | [离散反馈建立模型](../tasks/v2-spec-370-opamp-feedback-settling-monitor/instruction.md) | [SOURCE](../tasks/v2-spec-370-opamp-feedback-settling-monitor/SOURCE.md) |
-| 放大与模拟信号处理 | v2 / 测试 | [在线增益仪表](../tasks/v2-test-online-gain/instruction.md) | [SOURCE](../tasks/v2-test-online-gain/SOURCE.md) |
-| 放大与模拟信号处理 | v2 / 测试 | [增益与有限窗口建立测量](../tasks/v2-test-gain-settling/instruction.md) | [SOURCE](../tasks/v2-test-gain-settling/SOURCE.md) |
-| 放大与模拟信号处理 | v2 / 测试 | [四样本在线 RMS](../tasks/v2-test-sampled-rms/instruction.md) | [SOURCE](../tasks/v2-test-sampled-rms/SOURCE.md) |
-| 连续 OTA 动态 | v3 / 规格 | [连续 OTA 规格建模](../tasks/v3-ota-continuous/instruction.md) | [SOURCE](../tasks/v3-ota-continuous/SOURCE.md) |
-| 连续 OTA 动态 | v3 / 数据 | [真实 OTA 数据建模](../tasks/v3-ota-data-model/instruction.md) | [SOURCE](../tasks/v3-ota-data-model/SOURCE.md) |
-| 连续 OTA 动态 | v3 / 测试 | [OTA 阶跃激励与测量](../tasks/v3-ota-step-measurement/instruction.md) | [SOURCE](../tasks/v3-ota-step-measurement/SOURCE.md) |
-| 比较器与门限 | v2 / 规格 | [窗口比较器](../tasks/v2-spec-047-window-comparator-detector/instruction.md) | [SOURCE](../tasks/v2-spec-047-window-comparator-detector/SOURCE.md) |
-| 比较器与门限 | v2 / 规格 | [滞回窗口比较器](../tasks/v2-spec-314-hysteretic-window-comparator/instruction.md) | [SOURCE](../tasks/v2-spec-314-hysteretic-window-comparator/SOURCE.md) |
-| 比较器与门限 | v2 / 测试 | [翻转电压与表观滞回](../tasks/v2-test-hysteresis/instruction.md) | [SOURCE](../tasks/v2-test-hysteresis/SOURCE.md) |
-| 比较器与门限 | v2 / 测试 | [比较器过驱动延迟](../tasks/v2-test-comparator-delay/instruction.md) | [SOURCE](../tasks/v2-test-comparator-delay/SOURCE.md) |
-| 比较器与门限 | v2 / 测试 | [自适应失调搜索](../tasks/v2-test-offset-search/instruction.md) | [SOURCE](../tasks/v2-test-offset-search/SOURCE.md) |
-| PLL 与时钟 | v2 / 规格 | [Alexander BBPD 内部采样](../tasks/v2-spec-001-bang-bang-phase-detector/instruction.md) | [SOURCE](../tasks/v2-spec-001-bang-bang-phase-detector/SOURCE.md) |
-| PLL 与时钟 | v2 / 规格 | [两相非重叠时钟](../tasks/v2-spec-375-nonoverlap-clock-generator/instruction.md) | [SOURCE](../tasks/v2-spec-375-nonoverlap-clock-generator/SOURCE.md) |
-| PLL 与时钟 | v2 / 规格 | [正交分频时钟](../tasks/v2-spec-396-quadrature-lo-generator-divided-clock/instruction.md) | [SOURCE](../tasks/v2-spec-396-quadrature-lo-generator-divided-clock/SOURCE.md) |
-| PLL 与时钟 | v2 / 扩展 | [ADPLL fine TDC 集成](../tasks/v2-integrate-case0007-adpll-fine-tdc/instruction.md) | [SOURCE](../tasks/v2-integrate-case0007-adpll-fine-tdc/SOURCE.md) |
-| PLL 与时钟 | v2 / 修复 | [PFD 复位与事件取消修复](../tasks/v2-repair-pfd-reset/instruction.md) | [SOURCE](../tasks/v2-repair-pfd-reset/SOURCE.md) |
-| PLL 与时钟 | v2 / 测试 | [时钟与 DCO 频率测量](../tasks/v2-test-clock-frequency/instruction.md) | [SOURCE](../tasks/v2-test-clock-frequency/SOURCE.md) |
-| PLL 与时钟 | v2 / 测试 | [完整周期占空比测量](../tasks/v2-test-duty-cycle/instruction.md) | [SOURCE](../tasks/v2-test-duty-cycle/SOURCE.md) |
-| PLL 与时钟 | v2 / 测试 | [时间编码与重装协议测量](../tasks/v2-test-time-protocol/instruction.md) | [SOURCE](../tasks/v2-test-time-protocol/SOURCE.md) |
-| PLL 与时钟 | v3 / 扩展 | [分数 PLL 扩展](../tasks/v3-calibration-fractional-pll/instruction.md) | [SOURCE](../tasks/v3-calibration-fractional-pll/SOURCE.md) |
-| 滤波、均衡与 RF | v2 / 规格 | [三抽头 FFE](../tasks/v2-spec-353-ffe-transmitter-3tap/instruction.md) | [SOURCE](../tasks/v2-spec-353-ffe-transmitter-3tap/SOURCE.md) |
-| 滤波、均衡与 RF | v2 / 规格 | [多模块两相 SC 积分](../tasks/v2-spec-307-switched-capacitor-integrator-phase-pair/instruction.md) | [SOURCE](../tasks/v2-spec-307-switched-capacitor-integrator-phase-pair/SOURCE.md) |
-| 滤波、均衡与 RF | v3 / 规格 | [连续 CTLE](../tasks/v3-filter-ctle/instruction.md) | [SOURCE](../tasks/v3-filter-ctle/SOURCE.md) |
-| 滤波、均衡与 RF | v3 / 扩展 | [可编程连续低通扩展](../tasks/v3-filter-programmable-lp/instruction.md) | [SOURCE](../tasks/v3-filter-programmable-lp/SOURCE.md) |
-| 滤波、均衡与 RF | v3 / 规格 | [I/Q 变频](../tasks/v3-filter-iq-conversion/instruction.md) | [SOURCE](../tasks/v3-filter-iq-conversion/SOURCE.md) |
-| 滤波、均衡与 RF | v3 / 规格 | [动态包络](../tasks/v3-filter-envelope/instruction.md) | [SOURCE](../tasks/v3-filter-envelope/SOURCE.md) |
-| 滤波、均衡与 RF | v3 / 测试 | [扫频激励与复数频响测量](../tasks/v3-filter-sweep-measurement/instruction.md) | [SOURCE](../tasks/v3-filter-sweep-measurement/SOURCE.md) |
-| 模拟校准与伺服 | v2 / 规格 | [前台 RDAC 校准](../tasks/v2-spec-183-foreground-rdac-calibrator/instruction.md) | [SOURCE](../tasks/v2-spec-183-foreground-rdac-calibrator/SOURCE.md) |
-| 模拟校准与伺服 | v3 / 扩展 | [持续失调校准](../tasks/v3-calibration-continuous-offset/instruction.md) | [SOURCE](../tasks/v3-calibration-continuous-offset/SOURCE.md) |
-| 模拟校准与伺服 | v3 / 扩展 | [共模伺服](../tasks/v3-calibration-common-mode-servo/instruction.md) | [SOURCE](../tasks/v3-calibration-common-mode-servo/SOURCE.md) |
-| 电源、复位与响应测试 | v2 / 修复 | [去抖资格修复](../tasks/v2-repair-debounce-latch/instruction.md) | [SOURCE](../tasks/v2-repair-debounce-latch/SOURCE.md) |
-| 电源、复位与响应测试 | v2 / 修复 | [复位释放序列修复](../tasks/v2-repair-reset-sequencer/instruction.md) | [SOURCE](../tasks/v2-repair-reset-sequencer/SOURCE.md) |
-| 电源、复位与响应测试 | v2 / 修复 | [UVLO 欠压恢复修复](../tasks/v2-repair-uvlo-brownout/instruction.md) | [SOURCE](../tasks/v2-repair-uvlo-brownout/SOURCE.md) |
-| 电源、复位与响应测试 | v2 / 修复 | [多模块 UVLO 复位链修复](../tasks/v2-repair-uvlo-reset-chain/instruction.md) | [SOURCE](../tasks/v2-repair-uvlo-reset-chain/SOURCE.md) |
-| 电源、复位与响应测试 | v2 / 测试 | [真实 POR 响应测试台](../tasks/v2-test-por-sequence/instruction.md) | [SOURCE](../tasks/v2-test-por-sequence/SOURCE.md) |
-| 电源、复位与响应测试 | v3 / 测试 | [真实 LDO 启动测量](../tasks/v3-ldo-startup-measurement/instruction.md) | [SOURCE](../tasks/v3-ldo-startup-measurement/SOURCE.md) |
-| 电源、复位与响应测试 | v3 / 测试 | [真实 LDO 响应驱动 line/load 实验](../tasks/v3-ldo-response-experiment/instruction.md) | [SOURCE](../tasks/v3-ldo-response-experiment/SOURCE.md) |
+| 电路功能 | 批次 / 类别 | 任务与有效题面 | 来源 / 元数据来源组 | 历史设计卡 |
+| --- | --- | --- | --- | --- |
+| 采样与多通道读出 | v2 / 按规格构建模型 | [边沿采样保持](../tasks/v2-spec-024-clocked-sample-and-hold/instruction.md) | [SOURCE](../tasks/v2-spec-024-clocked-sample-and-hold/SOURCE.md) / v4-024 | [case-0011](cases/spec-modeling/adc/case-0011-clocked-sample-hold/README.md) |
+| 采样与多通道读出 | v2 / 按规格构建模型 | [有限采集采样保持](../tasks/v2-spec-071-acquisition-limited-sample-and-hold/instruction.md) | [SOURCE](../tasks/v2-spec-071-acquisition-limited-sample-and-hold/SOURCE.md) / v4-071 | 无历史卡 |
+| 采样与多通道读出 | v2 / 从数据建立模型 | [真实采样级动态辨识](../tasks/v2-data-sampling-identification/instruction.md) | [SOURCE](../tasks/v2-data-sampling-identification/SOURCE.md) / jku-sampling-stage | [case-0006](cases/data-modeling/adc/case-0006-sampling-identification/README.md) |
+| 采样与多通道读出 | v2 / 扩展与集成 | [四通道采集与读出](../tasks/v2-integrate-349-multichannel-readout/instruction.md) | [SOURCE](../tasks/v2-integrate-349-multichannel-readout/SOURCE.md) / v4-349 | 无历史卡 |
+| ADC 结构与转换控制 | v2 / 按规格构建模型 | [流水 ADC 级](../tasks/v2-spec-003-pipeline-adc-stage/instruction.md) | [SOURCE](../tasks/v2-spec-003-pipeline-adc-stage/SOURCE.md) / v4-003 | 无历史卡 |
+| ADC 结构与转换控制 | v2 / 按规格构建模型 | [一级 ΣΔ 调制器](../tasks/v2-spec-055-first-order-sigma-delta-modulator/instruction.md) | [SOURCE](../tasks/v2-spec-055-first-order-sigma-delta-modulator/SOURCE.md) / v4-055 | 无历史卡 |
+| ADC 结构与转换控制 | v2 / 按规格构建模型 | [SAR 前端逻辑补齐](../tasks/v2-spec-186-sarfend-logic-4b/instruction.md) | [SOURCE](../tasks/v2-spec-186-sarfend-logic-4b/SOURCE.md) / v4-186 | [case-0013](cases/spec-modeling/adc/case-0013-sar-handshake/README.md) |
+| DAC 与转换器指标 | v2 / 按规格构建模型 | [SAR 电容反馈 DAC](../tasks/v2-spec-002-capacitive-sar-feedback-dac/instruction.md) | [SOURCE](../tasks/v2-spec-002-capacitive-sar-feedback-dac/SOURCE.md) / v4-002 | 无历史卡 |
+| DAC 与转换器指标 | v3 / 按规格构建模型 | [分段 DAC](../tasks/v3-converter-segmented/instruction.md) | [SOURCE](../tasks/v3-converter-segmented/SOURCE.md) / v4-014 | 无历史卡 |
+| DAC 与转换器指标 | v3 / 按规格构建模型 | [温度计 DAC](../tasks/v3-converter-thermometer/instruction.md) | [SOURCE](../tasks/v3-converter-thermometer/SOURCE.md) / v4-018 | 无历史卡 |
+| DAC 与转换器指标 | v3 / 按规格构建模型 | [指定非理想权重 DAC](../tasks/v3-converter-nonideal/instruction.md) | [SOURCE](../tasks/v3-converter-nonideal/SOURCE.md) / v4-025 | 无历史卡 |
+| DAC 与转换器指标 | v3 / 按规格构建模型 | [Sub-radix DAC](../tasks/v3-converter-subradix/instruction.md) | [SOURCE](../tasks/v3-converter-subradix/SOURCE.md) / v4-243 | 无历史卡 |
+| DAC 与转换器指标 | v3 / 电路测试与表征 | [DAC 静态线性度测量](../tasks/v3-converter-dac-linearity/instruction.md) | [SOURCE](../tasks/v3-converter-dac-linearity/SOURCE.md) / repository-owned-dac-scan | 无历史卡 |
+| DAC 与转换器指标 | v3 / 电路测试与表征 | [ADC 相干频谱指标](../tasks/v3-converter-adc-spectrum/instruction.md) | [SOURCE](../tasks/v3-converter-adc-spectrum/SOURCE.md) / first-batch-measure-adc-spectrum | [case-0010](cases/testing-characterization/adc/case-0010-adc-spectrum-records/README.md) |
+| 放大与模拟信号处理 | v2 / 按规格构建模型 | [可编程增益放大器](../tasks/v2-spec-038-programmable-gain-amplifier/instruction.md) | [SOURCE](../tasks/v2-spec-038-programmable-gain-amplifier/SOURCE.md) / v4-038 | 无历史卡 |
+| 放大与模拟信号处理 | v2 / 按规格构建模型 | [AGC 电平调节环路](../tasks/v2-spec-082-agc-receiver-leveling-loop/instruction.md) | [SOURCE](../tasks/v2-spec-082-agc-receiver-leveling-loop/SOURCE.md) / v4-082 | 无历史卡 |
+| 放大与模拟信号处理 | v2 / 按规格构建模型 | [多模块斩波放大器](../tasks/v2-spec-091-chopper-stabilized-differential-amplifier/instruction.md) | [SOURCE](../tasks/v2-spec-091-chopper-stabilized-differential-amplifier/SOURCE.md) / v4-091 | 无历史卡 |
+| 放大与模拟信号处理 | v2 / 按规格构建模型 | [多模块相关双采样](../tasks/v2-spec-308-correlated-double-sampler-offset-cancel/instruction.md) | [SOURCE](../tasks/v2-spec-308-correlated-double-sampler-offset-cancel/SOURCE.md) / v4-308 | 无历史卡 |
+| 放大与模拟信号处理 | v2 / 按规格构建模型 | [离散反馈建立模型](../tasks/v2-spec-370-opamp-feedback-settling-monitor/instruction.md) | [SOURCE](../tasks/v2-spec-370-opamp-feedback-settling-monitor/SOURCE.md) / v4-370 | 无历史卡 |
+| 放大与模拟信号处理 | v2 / 电路测试与表征 | [在线增益仪表](../tasks/v2-test-online-gain/instruction.md) | [SOURCE](../tasks/v2-test-online-gain/SOURCE.md) / v4-093+v4-038 | 无历史卡 |
+| 放大与模拟信号处理 | v2 / 电路测试与表征 | [增益与有限窗口建立测量](../tasks/v2-test-gain-settling/instruction.md) | [SOURCE](../tasks/v2-test-gain-settling/SOURCE.md) / case-0018+v4-038+v4-370 | [case-0018](cases/testing-characterization/amplifiers/case-0018-amplifier-gain-settling/README.md) |
+| 放大与模拟信号处理 | v2 / 电路测试与表征 | [四样本在线 RMS](../tasks/v2-test-sampled-rms/instruction.md) | [SOURCE](../tasks/v2-test-sampled-rms/SOURCE.md) / v4-074 | 无历史卡 |
+| 连续 OTA 动态 | v3 / 按规格构建模型 | [连续 OTA 规格建模](../tasks/v3-ota-continuous/instruction.md) | [SOURCE](../tasks/v3-ota-continuous/SOURCE.md) / jku-ota-dynamics | 无历史卡 |
+| 连续 OTA 动态 | v3 / 从数据建立模型 | [真实 OTA 数据建模](../tasks/v3-ota-data-model/instruction.md) | [SOURCE](../tasks/v3-ota-data-model/SOURCE.md) / jku-ota-dynamics | 无历史卡 |
+| 连续 OTA 动态 | v3 / 电路测试与表征 | [OTA 阶跃激励与测量](../tasks/v3-ota-step-measurement/instruction.md) | [SOURCE](../tasks/v3-ota-step-measurement/SOURCE.md) / jku-ota-dynamics | 无历史卡 |
+| 比较器与门限 | v2 / 按规格构建模型 | [窗口比较器](../tasks/v2-spec-047-window-comparator-detector/instruction.md) | [SOURCE](../tasks/v2-spec-047-window-comparator-detector/SOURCE.md) / v4-047 | 无历史卡 |
+| 比较器与门限 | v2 / 按规格构建模型 | [滞回窗口比较器](../tasks/v2-spec-314-hysteretic-window-comparator/instruction.md) | [SOURCE](../tasks/v2-spec-314-hysteretic-window-comparator/SOURCE.md) / v4-314 | 无历史卡 |
+| 比较器与门限 | v2 / 电路测试与表征 | [翻转电压与表观滞回](../tasks/v2-test-hysteresis/instruction.md) | [SOURCE](../tasks/v2-test-hysteresis/SOURCE.md) / v4-111 | [case-0016](cases/testing-characterization/comparators/case-0016-hysteresis-characterizer/README.md) |
+| 比较器与门限 | v2 / 电路测试与表征 | [比较器过驱动延迟](../tasks/v2-test-comparator-delay/instruction.md) | [SOURCE](../tasks/v2-test-comparator-delay/SOURCE.md) / v4-170 | 无历史卡 |
+| 比较器与门限 | v2 / 电路测试与表征 | [自适应失调搜索](../tasks/v2-test-offset-search/instruction.md) | [SOURCE](../tasks/v2-test-offset-search/SOURCE.md) / v4-109 | 无历史卡 |
+| PLL 与时钟 | v2 / 按规格构建模型 | [Alexander BBPD 内部采样](../tasks/v2-spec-001-bang-bang-phase-detector/instruction.md) | [SOURCE](../tasks/v2-spec-001-bang-bang-phase-detector/SOURCE.md) / v4-001 | [case-0012](cases/spec-modeling/pll/case-0012-bbpd/README.md) |
+| PLL 与时钟 | v2 / 按规格构建模型 | [两相非重叠时钟](../tasks/v2-spec-375-nonoverlap-clock-generator/instruction.md) | [SOURCE](../tasks/v2-spec-375-nonoverlap-clock-generator/SOURCE.md) / v4-375 | [case-0017](cases/spec-modeling/pll/case-0017-nonoverlap-clock/README.md) |
+| PLL 与时钟 | v2 / 按规格构建模型 | [正交分频时钟](../tasks/v2-spec-396-quadrature-lo-generator-divided-clock/instruction.md) | [SOURCE](../tasks/v2-spec-396-quadrature-lo-generator-divided-clock/SOURCE.md) / v4-396 | 无历史卡 |
+| PLL 与时钟 | v2 / 扩展与集成 | [ADPLL fine TDC 集成](../tasks/v2-integrate-case0007-adpll-fine-tdc/instruction.md) | [SOURCE](../tasks/v2-integrate-case0007-adpll-fine-tdc/SOURCE.md) / tiny-tapeout-adpll | [case-0007](cases/extension-integration/pll/case-0007-adpll-fine-tdc/README.md) |
+| PLL 与时钟 | v2 / 诊断与修复 | [PFD 复位与事件取消修复](../tasks/v2-repair-pfd-reset/instruction.md) | [SOURCE](../tasks/v2-repair-pfd-reset/SOURCE.md) / v4-family-249 | [case-0008](cases/diagnosis-repair/pll/case-0008-pfd-reset/README.md) |
+| PLL 与时钟 | v2 / 电路测试与表征 | [时钟与 DCO 频率测量](../tasks/v2-test-clock-frequency/instruction.md) | [SOURCE](../tasks/v2-test-clock-frequency/SOURCE.md) / v4-362 | 无历史卡 |
+| PLL 与时钟 | v2 / 电路测试与表征 | [完整周期占空比测量](../tasks/v2-test-duty-cycle/instruction.md) | [SOURCE](../tasks/v2-test-duty-cycle/SOURCE.md) / v4-060 | 无历史卡 |
+| PLL 与时钟 | v2 / 电路测试与表征 | [时间编码与重装协议测量](../tasks/v2-test-time-protocol/instruction.md) | [SOURCE](../tasks/v2-test-time-protocol/SOURCE.md) / v4-346 | 无历史卡 |
+| PLL 与时钟 | v3 / 扩展与集成 | [分数 PLL 扩展](../tasks/v3-calibration-fractional-pll/instruction.md) | [SOURCE](../tasks/v3-calibration-fractional-pll/SOURCE.md) / fractional-pll-302 | 无历史卡 |
+| 滤波、均衡与 RF | v2 / 按规格构建模型 | [三抽头 FFE](../tasks/v2-spec-353-ffe-transmitter-3tap/instruction.md) | [SOURCE](../tasks/v2-spec-353-ffe-transmitter-3tap/SOURCE.md) / v4-353 | 无历史卡 |
+| 滤波、均衡与 RF | v2 / 按规格构建模型 | [多模块两相 SC 积分](../tasks/v2-spec-307-switched-capacitor-integrator-phase-pair/instruction.md) | [SOURCE](../tasks/v2-spec-307-switched-capacitor-integrator-phase-pair/SOURCE.md) / v4-307 | 无历史卡 |
+| 滤波、均衡与 RF | v3 / 按规格构建模型 | [连续 CTLE](../tasks/v3-filter-ctle/instruction.md) | [SOURCE](../tasks/v3-filter-ctle/SOURCE.md) / verilogalib-ctle | 无历史卡 |
+| 滤波、均衡与 RF | v3 / 扩展与集成 | [可编程连续低通扩展](../tasks/v3-filter-programmable-lp/instruction.md) | [SOURCE](../tasks/v3-filter-programmable-lp/SOURCE.md) / v4-334 | 无历史卡 |
+| 滤波、均衡与 RF | v3 / 按规格构建模型 | [I/Q 变频](../tasks/v3-filter-iq-conversion/instruction.md) | [SOURCE](../tasks/v3-filter-iq-conversion/SOURCE.md) / v4-364+400 | 无历史卡 |
+| 滤波、均衡与 RF | v3 / 按规格构建模型 | [动态包络](../tasks/v3-filter-envelope/instruction.md) | [SOURCE](../tasks/v3-filter-envelope/SOURCE.md) / v4-336 | 无历史卡 |
+| 滤波、均衡与 RF | v3 / 电路测试与表征 | [扫频激励与复数频响测量](../tasks/v3-filter-sweep-measurement/instruction.md) | [SOURCE](../tasks/v3-filter-sweep-measurement/SOURCE.md) / original-filter-measurement | 无历史卡 |
+| 模拟校准与伺服 | v2 / 按规格构建模型 | [前台 RDAC 校准](../tasks/v2-spec-183-foreground-rdac-calibrator/instruction.md) | [SOURCE](../tasks/v2-spec-183-foreground-rdac-calibrator/SOURCE.md) / v4-183 | 无历史卡 |
+| 模拟校准与伺服 | v3 / 扩展与集成 | [持续失调校准](../tasks/v3-calibration-continuous-offset/instruction.md) | [SOURCE](../tasks/v3-calibration-continuous-offset/SOURCE.md) / calibration-frontends-306-369-390 | 无历史卡 |
+| 模拟校准与伺服 | v3 / 扩展与集成 | [共模伺服](../tasks/v3-calibration-common-mode-servo/instruction.md) | [SOURCE](../tasks/v3-calibration-common-mode-servo/SOURCE.md) / calibration-frontends-306-369-390 | 无历史卡 |
+| 电源、复位与响应测试 | v2 / 诊断与修复 | [去抖资格修复](../tasks/v2-repair-debounce-latch/instruction.md) | [SOURCE](../tasks/v2-repair-debounce-latch/SOURCE.md) / v4-family-005 | [case-0014](cases/diagnosis-repair/power/case-0014-debounce-qualification/README.md) |
+| 电源、复位与响应测试 | v2 / 诊断与修复 | [复位释放序列修复](../tasks/v2-repair-reset-sequencer/instruction.md) | [SOURCE](../tasks/v2-repair-reset-sequencer/SOURCE.md) / v4-family-272 | [case-0015](cases/diagnosis-repair/power/case-0015-reset-release-sequencer/README.md) |
+| 电源、复位与响应测试 | v2 / 诊断与修复 | [UVLO 欠压恢复修复](../tasks/v2-repair-uvlo-brownout/instruction.md) | [SOURCE](../tasks/v2-repair-uvlo-brownout/SOURCE.md) / v4-family-046 | 无历史卡 |
+| 电源、复位与响应测试 | v2 / 诊断与修复 | [多模块 UVLO 复位链修复](../tasks/v2-repair-uvlo-reset-chain/instruction.md) | [SOURCE](../tasks/v2-repair-uvlo-reset-chain/SOURCE.md) / original-uvlo-chain-case0009 | [case-0009](cases/diagnosis-repair/power/case-0009-uvlo-reset-chain/README.md) |
+| 电源、复位与响应测试 | v2 / 电路测试与表征 | [真实 POR 响应测试台](../tasks/v2-test-por-sequence/instruction.md) | [SOURCE](../tasks/v2-test-por-sequence/SOURCE.md) / case-0001-sky130-ajc-por | [case-0001](cases/testing-characterization/power/case-0001-por-sequence/README.md) |
+| 电源、复位与响应测试 | v3 / 电路测试与表征 | [真实 LDO 启动测量](../tasks/v3-ldo-startup-measurement/instruction.md) | [SOURCE](../tasks/v3-ldo-startup-measurement/SOURCE.md) / adb-ldo-ota5 | [case-0002](cases/testing-characterization/power/case-0002-ldo-startup/README.md) |
+| 电源、复位与响应测试 | v3 / 电路测试与表征 | [真实 LDO 响应驱动 line/load 实验](../tasks/v3-ldo-response-experiment/instruction.md) | [SOURCE](../tasks/v3-ldo-response-experiment/SOURCE.md) / adb-ldo-ota5 | 无历史卡 |
 
 <!-- task-inventory:end -->
 
