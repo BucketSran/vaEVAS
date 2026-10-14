@@ -1,0 +1,2 @@
+`include "disciplines.vams"
+module m(u,y,r); input u; output y; inout r; electrical u,y,r; genvar i; real q,n; analog begin @(initial_step) begin q=-2; n=0; end @(timer(1)) for(i=0;i<0;i=i+1) begin if(V(missing,r)>0.5) n=1; end V(y,r)<+n; end endmodule

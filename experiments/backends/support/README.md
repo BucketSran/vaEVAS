@@ -1,5 +1,7 @@
 # 四后端支持范围实测
 
+[空循环声明与当前 timer 安全修复](retained-safety/README.md)保存同源实际对照与明确的拒绝边界，不新增 Q 资格。
+
 [累计测试清单](../../../evas/validation/paper/COVERAGE.md)登记本页各批次和新增 44 组的关系。
 主表按五层能力目录汇总支持结论和已验证精度；具体必测用例见[固定范围](../../../evas/validation/paper/COVERAGE.md#summary-scopes)。
 本页继续保留每个固定组、每一档的原结果、失败与证据缺口。
