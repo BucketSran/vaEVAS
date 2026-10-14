@@ -23,6 +23,8 @@ IR21 共同基础已随 [#174](https://github.com/BucketSran/vaEVAS/pull/174) �
 [事件数组](../../tests/test_r01_event_arrays.py)、[测量事务](../../tests/test_passive_events.py)。
 这些控制不增加固定 Q 成绩；原完整 timing 请求的后续连续耦合拒绝单列。
 
+[原70请求的同版复验摘要](../../../experiments/backends/support/r01-main70-summary.json)保留当前main的工程完成、拒绝与原判据身份，完整资产仍是local-only，不能转为论文Q成绩。[覆盖缺口](../../validation/paper/COVERAGE.md#engineering-gap-audit)将LANG、DYNAMICS、TRANSITION、COMPOSE及事件需求对应到独立卡规划，尚无新增支持声明。
+
 [连续状态与原 timing 请求](../../../experiments/backends/support/r01-causal-timing/README.md)
 补充 DYNAMICS、TIMER、TRANSITION、CROSS、EVENT-CONDITIONS、EVENT-ORDER 与 COMPOSE。
 契约见[连续因果投影](../math/continuous.md)和[事件条件与观察](../math/events.md)。
