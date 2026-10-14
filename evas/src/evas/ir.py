@@ -1,4 +1,4 @@
-"""Version 19: voltage/event IR with held timers and expanded call-site identities.
+"""Version 22: voltage/event IR with pure arithmetic for isolated observers.
 
 There is no node-write operation. Contributions in one instance on the same
 unoriented branch are summed by the kernel. Different instances remain separate
@@ -11,7 +11,7 @@ from typing import Literal
 from .limits import check_ir
 
 
-SCHEMA_VERSION = 21
+SCHEMA_VERSION = 22
 
 
 @dataclass(frozen=True)
@@ -73,7 +73,15 @@ class OperatorRef:
     op: str = field(default="operator", init=False)
 
 
-Expression = Affine | Binary | Power | Select | StateRef | OperatorRef
+@dataclass(frozen=True)
+class EventMath:
+    function: Literal["sqrt", "abs", "min", "max"]
+    args: tuple["Expression", ...]
+    origin: Origin
+    op: str = field(default="event_math", init=False)
+
+
+Expression = Affine | Binary | Power | Select | StateRef | OperatorRef | EventMath
 
 
 @dataclass(frozen=True)

@@ -32,8 +32,9 @@ EVAS 的价值需要由电压域工程行为证明：在正确时刻采样，保
 每类都检查初始化、事件前后读值、历史延续、多个实例和误差控制，再扩展反馈及更复杂组合。
 支持结论仍只维护在总表中。晶体管、电流与电荷方程不属于当前范围；性能优化排在行为与精度之后。
 
-当前开发版本为 **EVAS 0.17.0 / IR21**，尚未发布到公共索引或打 tag。变化、验收范围和历史执行身份见[版本记录](docs/UPDATE.md)。
-IR21 扩展变量分母、顺序初始化及事件输出的数据合同；版本升级不代表支持表新增通过。
+当前开发版本为 **EVAS 0.18.0 / IR22**，尚未发布到公共索引或打 tag。变化、验收范围和历史执行身份见[版本记录](docs/UPDATE.md)。
+IR22 增加隔离观察事件的纯数学表达式，保留 IR21 的变量分母、顺序初始化及事件输出合同。
+事件统计的范围与失败规则见[事件数学](docs/math/events.md#event-math)；版本升级不代表支持表新增通过。
 
 <a id="model-handoff"></a>
 
@@ -236,7 +237,7 @@ pulse 的第 k 次起点为 `d+kP`，四个拐点为 `d+kP`、`d+kP+r`、
 [test_scs.py](tests/test_scs.py)检查。网表解析与源构造分别位于
 [scs.py](src/evas/scs.py)和[scs_sources.py](src/evas/scs_sources.py)。
 
-旧 IR 1–17 必须从原始 VA/manifest 重新编译；前端与内核需要配套。
+旧 IR 1–21 必须从原始 VA/manifest 重新编译；前端与内核需要配套。
 批量工具和兼容性规则见[IR 版本与迁移](#ir-v8-migration)。
 
 ## 验证与开发
@@ -294,7 +295,7 @@ CLI 与迁移工具共用 manifest 校验。`models` 和 `instances` 必须是�
 限 64；函数调用、表达式下降与条件体嵌套共同累计到 80 层展开深度预算，
 避免分别合规的嵌套相乘使编译器递归溢出；不另设累计校验图上限。
 超限时返回带源码位置的 `CompileError`。合法但过大的模型也可能被拒绝，
-包括旧版本偶尔能处理的长表达式。使用 IR21，不通过重关联算式或消去依赖绕过预算；
+包括旧版本偶尔能处理的长表达式。使用 IR22，不通过重关联算式或消去依赖绕过预算；
 更大的模型需要后续共享表达式 IR 或其他有独立验证的方案。
 
 `solve` / `transient` 的 `timeout` 默认 **300 秒**，只限制内核进程执行时间，
@@ -324,7 +325,7 @@ Python 的编译与求解接口：`compile_sources(sources, instances) -> Progra
 已支持的非线性积分路径也应用动态请求来限制内部接受段；隐式 DAE 仍只接受正的无条件常数请求。
 极小步长或无法认证的累计包围会明确失败，资源上限与数学说明见
 [非线性精度控制](docs/math/continuous.md#多项式非线性积分与误差证明)。
-当前实现 Python 前端与 Rust 内核使用 IR v21；版本迁移规则见[下文](#ir-v8-migration)。
+当前实现 Python 前端与 Rust 内核使用 IR v22；版本迁移规则见[下文](#ir-v8-migration)。
 
 Rust 库接口：`Circuit::new(...)` 和无状态的 `Circuit::solve(inputs)`。
 独立 Rust 进程也校验 IR，不能依赖 Python 已验证输入。
@@ -335,7 +336,7 @@ Rust 库接口：`Circuit::new(...)` 和无状态的 `Circuit::solve(inputs)`。
 
 语法解析不依赖 IR；绑定层只依赖语法树与 IR。Rust 求解层依赖内部组装模块，
 组装模块依赖 IR 和表达式校验，不反向调用求解层。`Circuit::new` 保留为公开构造入口，
-内部组装结果不成为新的公共 API。结构化支路身份沿用 v2；当前实现表达式、事件与算子使用 IR v21，序列化迁移规则见下文。
+内部组装结果不成为新的公共 API。结构化支路身份沿用 v2；当前实现表达式、事件与算子使用 IR v22，序列化迁移规则见下文。
 
 当前用 JSON 进程接口使 IR 易于检查，避免先复制旧的复杂 FFI。
 性能基准覆盖 Rust 库内静态求解、批量并行和五类瞬态路径。
@@ -402,10 +403,15 @@ tests 通过的数目不折算为验证条件数；分组与运行方式见
 
 ## IR 与贡献契约
 
-当前实现使用 IR v21，保留模型步长请求 `step_bounds`、纯数学函数及已有动态契约，扩展变量分母、顺序初始化和事件输出；每条贡献的 RHS 是带 `op` 标签的表达式，不含“直接写节点”指令。
+当前实现使用 IR v22，保留模型步长请求 `step_bounds`、连续纯数学函数及 IR21 动态契约。
+IR22 新增隔离观察事件的 `event_math`。每条贡献的 RHS 是带 `op` 标签的表达式，不含“直接写节点”指令。
 `affine` 叶子保存有限常数和不重复的节点系数；`add` / `multiply` 含 `left` / `right`；
 `power` 含 `base` 和整数 `exponent`；半次幂编译为 `sqrt` 调用点。
 `math` 调用点含函数名和输入表达式；认证范围见[纯数学函数](docs/math/operators.md#elementary-functions)。
+`event_math` 含 `function`、`args` 和 `origin`，只接受 `sqrt`、`abs`、`min`、`max`。
+它在事件执行时计算值及区间，不创建连续历史调用点。`sqrt`、`abs` 各有一个参数，
+`min`、`max` 各有两个参数；Rust 校验参数数目、源码位置、实例身份及所有子表达式。
+新增节点的执行范围见[事件数学](docs/math/events.md#event-math)。
 `select` 含比较关系、两侧表达式、两臂值与源码位置。
 Rust 递归检查所有节点、指数和字段，不能绕过前端注入非法表达式。
 每条贡献有源码文件、行列、实例以及本地支路身份。
@@ -440,22 +446,23 @@ Rust 独立检查同一实例内本地端点的绑定一致性、地绑定和规
 
 ### IR 版本与迁移
 
-Program 和成功 Response 的 `schema_version` 均为 **21**，Python 适配器与 Rust 内核同步检查。
+Program 和成功 Response 的 `schema_version` 均为 **22**，Python 适配器与 Rust 内核同步检查。
 旧版本或未知整数版本先于载荷解码返回 `unsupported_ir_version`；版本缺失/错误类型及当前格式错误返回
-`invalid_request`。Rust 库构造入口也检查版本。旧 IR 1–20 的 JSON 须从原始 VA 与 manifest 重新编译，不能只改版本号。
-前端与内核须配套使用。IR21 保留 `step_bounds`，新增变量分母的 `divide` 表达式、顺序初始化和事件输出记录。
+`invalid_request`。Rust 库构造入口也检查版本。旧 IR 1–21 的 JSON 须从原始 VA 与 manifest 重新编译，不能只改版本号。
+前端与内核须配套使用。IR22 新增 `event_math`，仅扩展完整 IR 证明隔离的观察事件；
+物理联立、初始化和固定 start=0 timer 的数学边界保持。IR21 保留 `step_bounds`，新增变量分母的 `divide` 表达式、顺序初始化和事件输出记录。
 `step_bounds` 保存每次 `$bound_step` 的值、激活条件和源码身份。
 IR19 引入的纯数学函数格式继续保留；不能只给旧 JSON 改版本号。
 IR18 将 `State.initial` 扩为有限常数或明确的 0/1 `select` 比较；
 IR21 将初始化扩展到 real/integer 的顺序赋值、默认零值及受限条件；输入仍限 ground/实际 driven 输入。
 初始化先于算子历史、守卫日程、首次电压求解和 t=0 事件；详见[初始化契约](docs/math/events.md#input-initialization)。
-IR1–20 必须从原始 VA/manifest 重新编译，不原地改写历史 IR 或收据。
+IR1–21 必须从原始 VA/manifest 重新编译，不原地改写历史 IR 或收据。
 
-仓库冒烟 manifest 的默认范围为 `evas/validation/smoke/`。批量工具读取原 VA 和实例参数，写入新的 IR21，
+仓库冒烟 manifest 的默认范围为 `evas/validation/smoke/`。批量工具读取原 VA 和实例参数，写入新的 IR22，
 保留每项 manifest/source SHA256 及失败诊断；原 IR、历史波形和收据不改写：
 
 ```sh
-python3 scripts/recompile_evas_manifests.py --output runs/recompile-ir21
+python3 scripts/recompile_evas_manifests.py --output runs/recompile-ir22
 python3 scripts/recompile_evas_manifests.py --output runs/recompile-selected evas/validation/smoke/idt.json
 ```
 

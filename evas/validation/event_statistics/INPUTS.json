@@ -1,0 +1,24 @@
+{
+  "scope": "four fixed integer sanity controls, not Q qualification",
+  "expected": {
+    "fit-stop": "fit 3 2 1 0",
+    "fit-interior": "fit 3 2 1 0",
+    "ordered-math": "math 3 2",
+    "guarded-empty": "empty 0"
+  },
+  "files": {
+    "fit-stop/dut.va": "4ce388fd18ac5c721d59d1d93fd9705ba78d2965aa24fa2b664e9f4435886b57",
+    "fit-stop/tb.scs": "ad21f8e19e7f6996e3c8b9e7f29f344c1af1897c0fbfe0940ab04b1a915e3881",
+    "fit-interior/dut.va": "4ce388fd18ac5c721d59d1d93fd9705ba78d2965aa24fa2b664e9f4435886b57",
+    "fit-interior/tb.scs": "ae83750e0d4953e28419ac070c041ed1698d287982ef0f963439d0cfcc9122bb",
+    "ordered-math/dut.va": "c3ee96e9271204a2751caa01c4e3c39e79c814c1bfe8072c5d7e8efabab7cf63",
+    "ordered-math/tb.scs": "8366f1d7d4db7a310b40ae121c04cb4e4c4706bdbda38717ce3463a77191fd34",
+    "guarded-empty/dut.va": "321b0eea4b540f3084282b9e98941697d4fdd0071d937d69d1e033e3bc082f18",
+    "guarded-empty/tb.scs": "8366f1d7d4db7a310b40ae121c04cb4e4c4706bdbda38717ce3463a77191fd34",
+    "guarded-empty/tb-evas.scs": "9df8fa212d9394549583d799aedd30f769c3b594ab9f89f75af2e621fe25f733",
+    "fit-stop/tb-evas.scs": "2a2c1ca676a9a1f402d008f7f9effbdc8d3dd5e61804ba943be8dfa2e5a6bd81",
+    "fit-interior/tb-evas.scs": "d476f418a416377408b04090c9d87ab96fe6cb4008612235235dd915d0baf453",
+    "ordered-math/tb-evas.scs": "9df8fa212d9394549583d799aedd30f769c3b594ab9f89f75af2e621fe25f733"
+  },
+  "configurations": "tb.scs for Spectre, tb-evas.scs omits only Spectre-specific method=gear2only; EVAS retains its own numerical method"
+}

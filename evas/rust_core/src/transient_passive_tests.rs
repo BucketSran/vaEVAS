@@ -406,3 +406,75 @@ fn held_review_proof_display_calendar_failure_rolls_back_and_retries_same_contro
     assert_eq!(c.accepted.states, clean.accepted.states);
     assert_eq!(c.accepted.states[1], 2.);
 }
+
+#[test]
+fn failed_observer_math_discards_records_states_and_calendar_then_retries() {
+    let (base, trajectory, mut controller, mut calendar) = fixture(0.75);
+    let mut payload = serde_json::to_value(&base.program).unwrap();
+    let origin = payload["events"][1]["origin"].clone();
+    let value = |x: f64| json!({"op":"affine","constant":x,"terms":[]});
+    let mut actions = payload["events"][1]["body"][0]["then_body"]
+        .as_array()
+        .unwrap()
+        .clone();
+    // The domain failure follows both a state write and a display candidate.
+    actions.push(json!({"kind":"assign","state":1,"rhs":{"op":"event_math","function":"sqrt","args":[value(-1.)],"origin":origin}}));
+    payload["events"][1]["body"][0]["then_body"] = json!(actions);
+    let bad = EventModel::new(
+        serde_json::from_value(payload.clone()).unwrap(),
+        base.driven.clone(),
+        base.tolerances.clone(),
+    )
+    .unwrap();
+    let signature = |c: &Vec<ScheduledEvent>| {
+        c.iter()
+            .map(|e| (e.event, e.time, e.bounds()))
+            .collect::<Vec<_>>()
+    };
+    let old = signature(&calendar);
+    for _ in 0..2 {
+        let err = controller
+            .accept_relocalized(&bad, &trajectory, &mut calendar)
+            .unwrap_err();
+        assert_eq!(err.kind, "event_domain");
+        assert_eq!(controller.accepted.time, 0.);
+        assert_eq!(controller.accepted.states, [0., 0., 2.]);
+        assert_eq!(
+            controller.accepted.state_bounds,
+            [I::ZERO, I::ZERO, I::point(2.)]
+        );
+        assert!(controller.records.is_empty() && controller.outputs.is_empty());
+        assert_eq!(controller.event, 0);
+        assert_eq!(signature(&calendar), old);
+    }
+    let last = payload["events"][1]["body"][0]["then_body"]
+        .as_array()
+        .unwrap()
+        .len()
+        - 1;
+    payload["events"][1]["body"][0]["then_body"][last]["rhs"]["args"] = json!([value(4.)]);
+    let good = EventModel::new(
+        serde_json::from_value(payload).unwrap(),
+        base.driven,
+        base.tolerances,
+    )
+    .unwrap();
+    let (_, _, mut clean, mut clean_calendar) = fixture(0.75);
+    controller
+        .accept_relocalized(&good, &trajectory, &mut calendar)
+        .unwrap();
+    clean
+        .accept_relocalized(&good, &trajectory, &mut clean_calendar)
+        .unwrap();
+    assert_eq!(controller.accepted.states, [1., 2., 0.75]);
+    assert_eq!(controller.accepted.states, clean.accepted.states);
+    assert_eq!(
+        controller.accepted.state_bounds,
+        clean.accepted.state_bounds
+    );
+    assert_eq!(
+        serde_json::to_value(&controller.records).unwrap(),
+        serde_json::to_value(&clean.records).unwrap()
+    );
+    assert_eq!(signature(&calendar), signature(&clean_calendar));
+}

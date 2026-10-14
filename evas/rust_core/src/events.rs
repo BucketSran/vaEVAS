@@ -22,6 +22,14 @@ pub(crate) struct AffineState {
 }
 
 impl AffineState {
+    pub(crate) fn union_dependencies(&mut self, other: &Self) {
+        self.node_dependencies.extend(&other.node_dependencies);
+        self.state_dependencies.extend(&other.state_dependencies);
+        self.operator_dependencies
+            .extend(&other.operator_dependencies);
+        self.has_variables |= other.has_variables;
+    }
+
     /// Substitute voltage-affine trial updates for state references. Each update
     /// is based on the accepted old state, with local statement order preserved.
     fn substitute(&self, updates: &[Self]) -> Result<Self, Error> {
@@ -132,6 +140,12 @@ pub(crate) fn affine(
         has_variables: false,
     };
     match expr {
+        Expression::EventMath { .. } => {
+            return Err(Error::new(
+                "unsupported_transient",
+                "pure event mathematics requires an isolated observer",
+            ))
+        }
         Expression::Affine { constant, terms } => {
             crate::expression::validate(expr, program.nodes.len())?;
             result.constant = *constant;
@@ -424,6 +438,8 @@ pub(crate) struct EventModel {
     pub(crate) guard_operators: Vec<BTreeSet<usize>>,
     pub(crate) triggers: Vec<TriggerLeaf>,
     actions: Vec<Vec<(usize, AffineState)>>,
+    pub(crate) action_expressions: Vec<Vec<Expression>>,
+    pub(crate) numeric_actions: Vec<Vec<bool>>,
     pub(crate) conditions: Conditions,
     pub(crate) passive_conditions: Conditions,
     pub(crate) passive_events: Vec<bool>,
@@ -476,6 +492,7 @@ impl EventModel {
             .iter()
             .map(|c| contribution_affine(&c.rhs, &program, &c.origin.instance))
             .collect::<Result<Vec<_>, _>>()?;
+        let passive_events = crate::passive_events::classify(&program)?;
         let mut guards = Vec::new();
         let mut dynamic_guards = Vec::new();
         let mut triggers = Vec::new();
@@ -483,6 +500,7 @@ impl EventModel {
             body: &[crate::ir::Statement],
             program: &Program,
             owner: &str,
+            numeric: bool,
         ) -> Result<(), Error> {
             for statement in body {
                 match statement {
@@ -501,6 +519,12 @@ impl EventModel {
                         crate::display::validate(format, args.len())?;
                         for argument in args {
                             crate::display::validate_expression(argument, program, owner)?;
+                            if !numeric && crate::event_numeric::contains_math(argument) {
+                                return Err(Error::new(
+                                    "unsupported_transient",
+                                    "pure event mathematics requires an isolated observer",
+                                ));
+                            }
                         }
                     }
                     crate::ir::Statement::If {
@@ -508,18 +532,25 @@ impl EventModel {
                         else_body,
                         ..
                     } => {
-                        validate_displays(then_body, program, owner)?;
-                        validate_displays(else_body, program, owner)?;
+                        validate_displays(then_body, program, owner, numeric)?;
+                        validate_displays(else_body, program, owner, numeric)?;
                     }
                     crate::ir::Statement::Assign(_) => {}
                 }
             }
             Ok(())
         }
-        for event in &program.events {
-            validate_displays(&event.body, &program, &event.origin.instance)?;
+        for (index, event) in program.events.iter().enumerate() {
+            validate_displays(
+                &event.body,
+                &program,
+                &event.origin.instance,
+                passive_events[index],
+            )?;
         }
         let mut actions = Vec::new();
+        let mut action_expressions = Vec::new();
+        let mut numeric_actions = Vec::new();
         for (index, event) in program.events.iter().enumerate() {
             if event.origin.instance.is_empty()
                 || event.origin.source.is_empty()
@@ -604,6 +635,8 @@ impl EventModel {
                 });
             }
             let mut body = Vec::new();
+            let mut expressions = Vec::new();
+            let mut numeric = Vec::new();
             for assignment in event.assignments() {
                 let state = program.states.get(assignment.state).ok_or_else(|| {
                     Error::new("invalid_ir", "assignment state index out of range")
@@ -614,7 +647,19 @@ impl EventModel {
                         "event assignment must write a state in its instance",
                     ));
                 }
-                let value = affine(&assignment.rhs, &program, &event.origin.instance)?;
+                let ordinary = affine(&assignment.rhs, &program, &event.origin.instance);
+                let is_numeric = passive_events[index] && ordinary.is_err();
+                let value = if is_numeric {
+                    crate::event_numeric::dependencies(
+                        &assignment.rhs,
+                        &program,
+                        &event.origin.instance,
+                    )?
+                } else {
+                    ordinary?
+                };
+                expressions.push(assignment.rhs.clone());
+                numeric.push(is_numeric);
                 if !value.operator_dependencies.is_empty() {
                     return Err(Error::new(
                         "unsupported_transient",
@@ -622,6 +667,16 @@ impl EventModel {
                     ));
                 }
                 if state.kind == StateKind::Integer
+                    && passive_events[index]
+                    && !crate::event_numeric::integral(&assignment.rhs, &program)
+                {
+                    return Err(Error::new(
+                        "unsupported_transient",
+                        "integer assignments require integral state arithmetic",
+                    ));
+                }
+                if state.kind == StateKind::Integer
+                    && !passive_events[index]
                     && (value.constant.fract() != 0.0
                         || value.nodes.iter().any(|v| *v != 0.0)
                         || value.states.iter().zip(&program.states).any(|(v, s)| {
@@ -636,11 +691,12 @@ impl EventModel {
                 body.push((assignment.state, value));
             }
             actions.push(body);
+            action_expressions.push(expressions);
+            numeric_actions.push(numeric);
         }
-        let passive_events = crate::passive_events::classify(&program)?;
-        let mut conditions = Conditions::new(&program)?;
+        let mut conditions = Conditions::new_with_numeric(&program, &passive_events)?;
         conditions.restrict_events(&passive_events.iter().map(|p| !p).collect::<Vec<_>>());
-        let mut passive_conditions = Conditions::new(&program)?;
+        let mut passive_conditions = Conditions::new_with_numeric(&program, &passive_events)?;
         passive_conditions.restrict_events(&passive_events);
         let (projected, node_inputs) =
             crate::event_accuracy::GuardBounds::passive_program(&program);
@@ -657,6 +713,8 @@ impl EventModel {
             guard_operators: Vec::new(),
             triggers,
             actions,
+            action_expressions,
+            numeric_actions,
             driven,
             tolerances,
             certificate: RefCell::new(None),
@@ -850,6 +908,9 @@ impl EventModel {
     pub(crate) fn check_selection_writers(&self, selection: &Selection) -> Result<(), Error> {
         fn reads_other_writer(expr: &Expression, event: usize, writers: &[Option<usize>]) -> bool {
             match expr {
+                Expression::EventMath { args, .. } => {
+                    args.iter().any(|e| reads_other_writer(e, event, writers))
+                }
                 Expression::State { state } => {
                     writers[*state].is_some_and(|writer| writer != event)
                 }
@@ -1129,20 +1190,47 @@ impl EventModel {
         operators: &[f64],
         inputs: &[I],
     ) -> Result<Circuit, Error> {
+        Circuit::new(
+            self.bound_circuit_program_at(states, operators, inputs)?,
+            &self.driven,
+            self.tolerances.clone(),
+        )
+    }
+
+    fn bound_circuit_program_at(
+        &self,
+        states: &[f64],
+        operators: &[f64],
+        inputs: &[I],
+    ) -> Result<Program, Error> {
         let bounds: Vec<_> = states.iter().copied().map(I::point).collect();
-        let mut p = self.selected_program(&bounds, inputs)?;
-        let rhs = p
+        let selected = self.selected_program_at_roots(&bounds, inputs, &[])?;
+        let rhs = selected
             .contributions
             .iter()
-            .map(|c| affine(&freeze_operators(&c.rhs, operators), &p, &c.origin.instance))
+            .map(|c| {
+                affine(
+                    &freeze_operators(&c.rhs, operators),
+                    &selected,
+                    &c.origin.instance,
+                )
+            })
             .collect::<Result<Vec<_>, _>>()?;
-        p.states.clear();
-        p.events.clear();
-        p.operators.clear();
-        for (c, rhs) in p.contributions.iter_mut().zip(&rhs) {
-            c.rhs = rhs.bind(states, operators)?;
+        // Preserve the same electrical program without cloning tables discarded
+        // by the former clone-and-clear path. Dependencies were validated on selected.
+        let mut program = Program {
+            schema_version: selected.schema_version,
+            nodes: selected.nodes.clone(),
+            contributions: selected.contributions.clone(),
+            states: Vec::new(),
+            events: Vec::new(),
+            operators: Vec::new(),
+            step_bounds: selected.step_bounds.clone(),
+        };
+        for (contribution, rhs) in program.contributions.iter_mut().zip(&rhs) {
+            contribution.rhs = rhs.bind(states, operators)?;
         }
-        Circuit::new(p, &self.driven, self.tolerances.clone())
+        Ok(program)
     }
 
     /// Eliminate trial state updates from F(v, state, t)=0 to obtain an affine
@@ -1437,7 +1525,17 @@ impl EventModel {
                 match step {
                     crate::event_conditions::SelectedStep::Assign(index) => {
                         let (state, expression) = &self.actions[*event][*index];
-                        local[*state] = expression.value(voltages, &local)?;
+                        local[*state] = if self.numeric_actions[*event][*index] {
+                            crate::event_numeric::value(
+                                &self.action_expressions[*event][*index],
+                                &self.program,
+                                &self.program.events[*event].origin.instance,
+                                voltages,
+                                &local,
+                            )?
+                        } else {
+                            expression.value(voltages, &local)?
+                        };
                         check_state(local[*state], &self.program.states[*state].kind)?;
                         after[*state] = local[*state];
                     }
@@ -1487,7 +1585,17 @@ impl EventModel {
             let mut local = before.to_vec();
             for &index in indices {
                 let (state, expression) = &self.actions[*event][index];
-                local[*state] = expression.value(voltages, &local)?;
+                local[*state] = if self.numeric_actions[*event][index] {
+                    crate::event_numeric::value(
+                        &self.action_expressions[*event][index],
+                        &self.program,
+                        &self.program.events[*event].origin.instance,
+                        voltages,
+                        &local,
+                    )?
+                } else {
+                    expression.value(voltages, &local)?
+                };
                 check_state(local[*state], &self.program.states[*state].kind)?;
                 after[*state] = local[*state];
             }

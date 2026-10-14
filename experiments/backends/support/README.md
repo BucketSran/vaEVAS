@@ -1,5 +1,35 @@
 # 四后端支持范围实测
 
+<a id="event-statistics"></a>
+
+## 隔离事件统计与原 gain 请求
+
+EVAS 0.18.0 / IR22 候选使三条原 gain 请求从编译拒绝变为完整通过原 checker，原120秒预算保持。
+同源码 Spectre 21.1.0.509.isr12 已重新运行，三条也全部通过原 checker；完整原生时间及数值与旧参考相同。
+[紧凑收据](r01-event-statistics-summary.json)绑定构建、完整输入映射、checker、新输出和实际配置。
+
+| 原请求 | EVAS 完整运行及原 checker | 实际 Spectre 原 checker |
+| --- | --- | --- |
+| `gain-0` | ✓，10201行 | ✓ |
+| `gain-1` | ✓，10331行 | ✓ |
+| `gain-2` | ✓，10471行 | ✓ |
+
+原有限配对三条全部通过，最大电压差24.56 µV；仍使用原5 ns控制边沿窗口和插值。
+这不证明窗内逐点一致或全时域误差，也不新增论文Q成绩。gain-1是样本不足分支，不能算有效拟合正例。
+早期候选的gain-2超时、所有审查反例、失败和中断回归均保留，不由新成绩覆盖。
+
+另有[四项独立统计控制](../../../evas/validation/event_statistics/README.md)，两个后端均得到手算的整数记录。
+它们检查拟合、停止边界、顺序数学和零样本保护，不给出隐藏回调时刻或Q精度资格。
+EVAS 的网表只去掉 Spectre 专用 `method=gear2only`，VA、刺激和其余设置不变；未适配的初次拒绝保留。
+微控制 Spectre 使用 `reltol=1e-8`、`vabstol=1e-10 V`、`maxstep=0.03125 s`和`gear2only`，
+EVAS 保留对应请求的相对、绝对和步长设置并使用自身求解方法。原gain的Spectre实际生效
+`reltol=1e-7`、`vabstol=1e-9 V`、`iabstol=1e-15 A`、`maxstep=100 ps`、`conservative`及`gear2only`；
+它们与微控制的配置分别记录，不能混成一套精度等级。
+
+原始资料为local-only，仓库收据中的哈希不是公共下载地址。微记录解析器只适用于所列固定源码；
+它不拒绝收满字段后的额外数字续行，真实四份输出无此尾行。十项执行前校准明细未保存，
+后续独立校准按执行后的核对记录，不能当作原执行前证据。原工程checker不受该微解析器影响。
+
 [原 R01 timing 请求与连续历史修复](r01-causal-timing/README.md)保存原 checker 的完整通过、实际 Spectre 有限配对和既有失败；新增一个原请求完成，不改变固定 Q 成绩。
 
 [空循环声明与当前 timer 安全修复](retained-safety/README.md)保存同源实际对照与明确的拒绝边界，不新增 Q 资格。

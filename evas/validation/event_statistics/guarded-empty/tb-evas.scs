@@ -1,0 +1,7 @@
+simulator lang=spectre
+ahdl_include "dut.va"
+simulatorOptions options reltol=1e-8 vabstol=1e-10 iabstol=1e-14
+Vx (x 0) vsource dc=1
+M (x) measure
+tran tran stop=1 maxstep=0.03125
+save x

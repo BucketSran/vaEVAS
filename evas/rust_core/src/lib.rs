@@ -10,6 +10,7 @@ mod display;
 mod dynamic_roots;
 mod event_accuracy;
 mod event_conditions;
+mod event_numeric;
 mod events;
 mod exact_source;
 mod exact_time;
