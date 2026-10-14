@@ -1534,7 +1534,14 @@ fn raw_pwl_roots_mixed_timer_held_epoch_failure_rolls_back_then_same_controller_
         .prepare_events_until(&model, &trajectory, &calendar, Some(calendar[0].time))
         .unwrap();
     let future = controller
-        .prepare_held_future(&model, &trajectory, &next, &records, &calendar[end..])
+        .prepare_held_future(
+            &model,
+            &trajectory,
+            &next,
+            &records,
+            &calendar[end..],
+            &calendar[controller.event..end],
+        )
         .unwrap();
     assert_eq!(
         future.iter().map(|e| e.event).collect::<Vec<_>>(),

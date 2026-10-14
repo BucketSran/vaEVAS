@@ -99,6 +99,52 @@ class DynamicTimer(unittest.TestCase):
         for t,row in zip([0,.25,.5,.75,1],result['solutions']):
             self.assertAlmostEqual(row['voltages'][result['nodes'].index('y')],.5*t*t,delta=1e-9)
 
+    def test_new_current_occurrence_is_rejected_instead_of_silently_consumed(self):
+        # Moving/enabling an unconsumed leaf at the current boundary needs
+        # same-time closure. A consumed OR sibling is not this timer leaf.
+        cases = [
+            ('real b; integer n;',
+             '@(initial_step) begin b=0.5; n=0; end '
+             '@(timer(0,0,0.001)) b=0; @(timer(b,0,0.001)) n=n+1;'),
+            ('real b; integer n;',
+             '@(initial_step) begin b=0.75; n=0; end '
+             '@(timer(0.5,0,0.001)) b=0.5; @(timer(b,0,0.001)) n=n+1;'),
+            ('real b; integer en,n;',
+             '@(initial_step) begin b=0.5; en=0; n=0; end '
+             '@(timer(0.5,0,0.001)) en=1; @(timer(b,0,0.001,en)) n=n+1;'),
+            ('real b; integer n;',
+             '@(initial_step) begin b=0.75; n=0; end '
+             '@(timer(0.5,0,0.001) or timer(b,0,0.001)) begin b=0.5; n=n+1; end'),
+        ]
+        for history in [False, True]:
+            for declarations, body in cases:
+                with self.subTest(history=history, body=body):
+                    source = model(body + ' V(y,r)<+n;' + (
+                        ' V(h,r)<+idt(1,0.75); @(cross(V(h,r)-2,1)) n=n;'
+                        if history else ''), declarations + (' electrical h;' if history else ''))
+                    with self.assertRaisesRegex(KernelError, 'unconsumed held timer'):
+                        run_timer(source, stop=1, times=[0,0.0625,1], step=0.125)
+
+    def test_consumed_period_rewrite_keeps_clock_phase_and_integral_history(self):
+        # After t=0 changes p from .5 to .25 the very same occurrence remains
+        # consumed. Later exact clocks are .25, .5, .75, 1, each once.
+        for history in [False, True]:
+            source = model("""@(initial_step) begin b=0; p=0.5; n=0; end
+              @(timer(b,p,0.001)) begin n=n+1; p=0.25; end
+              V(y,r)<+n;""" + (
+                ' V(h,r)<+idt(1,0.75); @(cross(V(h,r)-2,1)) n=n;'
+                if history else ''), 'real b,p; integer n;' + (' electrical h;' if history else ''))
+            times = [0,0.0625,0.125,0.25,0.5,0.75,1]
+            result = run_timer(source, stop=1, times=times, step=0.125)
+            self.assertEqual([e['time'] for e in result['transient']['events']],
+                             [0,0.25,0.5,0.75,1])
+            self.assertEqual([s['voltages'][result['nodes'].index('y')]
+                              for s in result['solutions']], [1,1,1,2,3,4,5])
+            if history:
+                for t, solution in zip(times, result['solutions']):
+                    self.assertAlmostEqual(solution['voltages'][result['nodes'].index('dut:h')],
+                                           0.75+t, delta=1e-9)
+
     def test_new_dynamic_deadline_bounds_nonlinear_flow_before_blowup(self):
         from test_continuous_dynamics import compile_model, run, values
         # Initially y'=y^2. The first timer moves from .75 to .5 at .25;

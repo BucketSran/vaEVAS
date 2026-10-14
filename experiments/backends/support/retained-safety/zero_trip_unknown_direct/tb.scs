@@ -1,0 +1,7 @@
+simulator lang=spectre
+ahdl_include "dut.va"
+Vu (u 0) vsource type=pwl wave=[0 -1 2 -1]
+dut (u y 0) m
+simulatorOptions options precision="%.17g" reltol=1e-9 vabstol=1e-12 iabstol=1e-15
+tran tran stop=2 maxstep=0.25 method=traponly errpreset=conservative compression=no
+save u y
