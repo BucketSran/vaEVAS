@@ -76,6 +76,14 @@ Python 响应检查要求 `event` 与 `time` 对应已提交事件，`origin` �
 
 无电压贡献的被动模型可在 `initial_step` 中穿插常量初始化与输出；记录先于 `timer(0)`。
 带电压贡献模型的初始化输出仍拒绝。被动模型仍须有足够驱动约束，浮动节点不因只输出而合法。
+
+与零时刻 transition 种子更新组合时，本地集成候选先执行被动 `initial_step`，再执行固定零 timer，
+最后用最终状态构造历史。例如 initial 输出旧 n=0 后赋 n=3，timer 的输出应读到3。
+两个阶段的状态与记录都属于候选，所有认证及历史构造通过后才发布。初始输出读取内部电压时，
+改变 transition 种子的组合仍明确拒绝，避免把最终电压当成 timer 前的电压；种子不变时沿用普通路径。
+混合 initial/timer OR 的变化种子组合也尚未支持。新增[组合回归](../../tests/test_initial_display_transition.py)只证明本地开发行为；
+这项 IR21 新组合尚缺独立审查及实际 Spectre 对照，不能复用旧三模型收据宣称整个组合对齐。
+
 受限 `final_step` 在正常完成 stop 时、同刻 timer 提交及终点波形采样之后读取已接受状态。
 其中的状态赋值反映在 final 事件的 before/after 快照及后续 `$display` 中；
 `transient.states` 最后一行和终点电压仍是 final_step 前的波形，不因最终赋值重新采样。

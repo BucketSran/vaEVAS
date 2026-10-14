@@ -235,6 +235,8 @@ pub(super) fn prepare(
     }))
 }
 
+type PreparedStage = (Vec<f64>, Vec<I>, Vec<EventRecord>);
+
 fn prepare_stage(
     model: &EventModel,
     trajectory: &Trajectory,
@@ -242,7 +244,7 @@ fn prepare_stage(
     ids: &[usize],
     before: &[f64],
     before_bounds: &[I],
-) -> Result<(Vec<f64>, Vec<I>, Vec<EventRecord>), Error> {
+) -> Result<PreparedStage, Error> {
     if blocks.is_empty() {
         return Ok((before.to_vec(), before_bounds.to_vec(), Vec::new()));
     }
