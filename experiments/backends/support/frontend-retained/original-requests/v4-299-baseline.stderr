@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    from pathlib import Path;from evas import compile_sources; p=Path('/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/original-v4-299/sine_vco_idtmod_bound_step.va');compile_sources({p.name:p.read_text()},[])
+                                                                                                                                                                                                                                        ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 37, in compile_sources
+    models = parse_sources(sources)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 25, in parse_sources
+    for path, tokens in preprocess_sources(sources):
+                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 231, in preprocess_sources
+    tokens=file_tokens(name)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 221, in file_tokens
+    output.extend(expand(tokens[i:end])); i=end
+                  ~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 63, in expand
+    fail(f'undefined or unsupported macro {name!r}',token)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 32, in fail
+    raise CompileError(f'{token.source}:{token.line}:{token.column}: {message}', code=code, token=token)
+evas.errors.CompileError: sine_vco_idtmod_bound_step.va:24:33: undefined or unsupported macro 'M_TWO_PI'

@@ -1,0 +1,640 @@
+{
+  "manifests": {
+    "MANIFEST.json": {
+      "files": 10,
+      "sha256": "4750354ded7201cd8ad2108baebd1ecfed040cb394cea3e7ebbd12ac98c9987f",
+      "mismatches": []
+    },
+    "OUTPUT_MANIFEST.json": {
+      "files": 52,
+      "sha256": "543bcdcbf2433393ee48c51bd48cc8391ccbd9e725116cf4cfae2609093204de",
+      "mismatches": []
+    }
+  },
+  "tool": {
+    "file_sha256": {
+      "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+      "/home/cshrc/.cshrc.cadence.sui": "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+      "/home/cshrc/.cshrc.mentor25.sui": "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+    },
+    "version": "sub-version  21.1.0.509.isr12 \n",
+    "execution": {
+      "argv": [
+        "taskset",
+        "-c",
+        "0",
+        "prlimit",
+        "--as=4294967296",
+        "--fsize=33554432",
+        "--",
+        "/bin/csh",
+        "-f",
+        "version.csh"
+      ],
+      "returncode": 0,
+      "timeout": false,
+      "status": "completed",
+      "cleanup": {
+        "signals": [
+          "SIGTERM",
+          "SIGKILL"
+        ],
+        "errors": [],
+        "complete": true
+      },
+      "elapsed_seconds": 1.9064566493034363,
+      "completed_utc": "2026-10-14T05:24:53Z",
+      "log": "version.log",
+      "log_sha256": "d0e6c83a98026a294bfc4b9754c4e294d322b60b1872a28e38f84caccbdf7f81"
+    }
+  },
+  "tool_unchanged": true,
+  "calibration": {
+    "known_accept": true,
+    "known_reject": true,
+    "missing_point_rejected": true,
+    "nonfinite_rejected": true,
+    "missing_node_rejected": true
+  },
+  "interpolation": false,
+  "visibility": "local ignored runs; actual Spectre raw from completed remote execution, not public retained evidence",
+  "cases": {
+    "zero_forcing_filter": {
+      "source_sha256": "c9f63ce25dd32bfee9bcfb00b7302155d2cbacd12ce180ee3b6cec7c7de362f3",
+      "deck_sha256": "9204ab3a6a81d78637ed3012b4c6e6eb865d23f974f7fde652977d6a4c9ec7ad",
+      "psf_sha256": "40340b9c01fe239ae7b2c33ba14bf2558652f2c510c22d5bf3c4e94ac0ab079d",
+      "native_rows": 120040,
+      "completion": {
+        "errors": 0,
+        "warnings": 1,
+        "notices": 3
+      },
+      "effective": {
+        "tolerance.relative": "1.00000e-12",
+        "start": "0.00000",
+        "stop": "6.00000e-06",
+        "maxstep": "5.00000e-11",
+        "reltol": "1.00000e-13",
+        "abstol(V)": "1.00000e-14",
+        "abstol(I)": "1.00000e-15",
+        "errpreset": "\"conservative\"",
+        "method": "\"traponly\"",
+        "gmin": "1.00000e-12"
+      },
+      "warning_extracts": [
+        "Warning from spectre during AHDL read-in.\n    WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow.\n",
+        "    WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow.\n\nReading file:  /edamgr/Spectre/SPECTRE211Hotfix/tools.lnx86/spectre/etc/ahdl/disciplines.vams",
+        "    gmin = 1 pS\n\n"
+      ],
+      "execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 11.166691215708852,
+        "completed_utc": "2026-10-14T05:25:04Z",
+        "log": "stdout.log",
+        "log_sha256": "fc31169bef78ccb686873c595db7acbaf804f8d7a97b3c4116aa16e08fb0faee",
+        "label": "zero_forcing_filter",
+        "source_sha256": "c9f63ce25dd32bfee9bcfb00b7302155d2cbacd12ce180ee3b6cec7c7de362f3",
+        "deck_sha256": "9204ab3a6a81d78637ed3012b4c6e6eb865d23f974f7fde652977d6a4c9ec7ad",
+        "directory_bytes": 5914931
+      },
+      "query_times": [
+        0,
+        5e-07,
+        1e-06,
+        2e-06,
+        3e-06,
+        4e-06,
+        6e-06
+      ],
+      "available_query_times": [
+        0,
+        5e-07
+      ],
+      "missing_exact_query_times": [
+        1e-06,
+        2e-06,
+        3e-06,
+        4e-06,
+        6e-06
+      ],
+      "nearest_native_to_missing": [
+        {
+          "query": 1e-06,
+          "nearest": 9.999999999999394e-07
+        },
+        {
+          "query": 2e-06,
+          "nearest": 1.9999999999993714e-06
+        },
+        {
+          "query": 3e-06,
+          "nearest": 3.000000000001564e-06
+        },
+        {
+          "query": 4e-06,
+          "nearest": 4.000000000001096e-06
+        },
+        {
+          "query": 6e-06,
+          "nearest": 6.000000000003289e-06
+        }
+      ],
+      "spectre_exact_values": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.5,
+          0.0
+        ]
+      ],
+      "independent_oracle_y": [
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "candidate_values": [
+        [
+          -0.0
+        ],
+        [
+          -0.0
+        ],
+        [
+          -0.0
+        ],
+        [
+          -0.0
+        ],
+        [
+          -0.0
+        ],
+        [
+          -0.0
+        ],
+        [
+          -0.0
+        ]
+      ],
+      "candidate_vs_oracle": {
+        "passed": true,
+        "max_abs_error": 0.0,
+        "budget": 1e-09
+      },
+      "spectre_available_vs_oracle": {
+        "passed": true,
+        "max_abs_error": 0.0,
+        "budget": 1e-09
+      },
+      "candidate_available_vs_spectre": {
+        "passed": true,
+        "max_abs_error": 0.0,
+        "budget": 1e-09
+      },
+      "full_paired_qualification": "insufficient_exact_native_points",
+      "pwl_unchanged": true,
+      "source_unchanged": true,
+      "query_and_budget_unchanged": true,
+      "native_trajectory_diagnostic": {
+        "role": "diagnostic_only_no_exact_query_qualification",
+        "rows_checked": 120040,
+        "oracle_input_convention": "Decimal.from_float of original binary64 PWL nodes, tau, actual native/query times; f(0)=0; constant PWL extension after last knot",
+        "oracle_formula": "f=u(t)-slope*tau+(f(a)-u(a)+slope*tau)*exp(-(t-a)/tau); y=u*f",
+        "oracle_precision_digits": 80,
+        "oracle_arithmetic_abs_bound_V": "1E-60",
+        "bound_scope": "Finite elementary expression: <100 operations, intermediate |value|<32, exp arguments in [-13,0], correctly rounded Decimal.exp; conservative 1e-60 V arithmetic bound. Does not bound Spectre solver error or source literal semantic differences.",
+        "binary64_read_abs_bound_V": "2.4703282292062327208828439643411068618252990130716238221279284125033775363510438E-324",
+        "max_abs_error_decimal": "0",
+        "max_abs_error_upper_including_numeric_and_read_rounding": "1.0000000000000000000000000000000000000000000000000000000000000000000000000000000E-60",
+        "worst": {
+          "time": 0.0,
+          "spectre_y": 0.0,
+          "oracle_y_decimal": "0",
+          "error_decimal": "0"
+        },
+        "nearest_original_queries": [
+          {
+            "query": 0,
+            "native_time": 0.0,
+            "dt_decimal": "0",
+            "oracle_query_decimal": "0",
+            "oracle_native_decimal": "0",
+            "oracle_time_shift_abs_decimal": "0",
+            "precision80_vs100_abs_decimal": "0",
+            "spectre_y": 0.0,
+            "spectre_vs_native_oracle_abs_decimal": "0"
+          },
+          {
+            "query": 5e-07,
+            "native_time": 5e-07,
+            "dt_decimal": "0E-73",
+            "oracle_query_decimal": "0",
+            "oracle_native_decimal": "0",
+            "oracle_time_shift_abs_decimal": "0",
+            "precision80_vs100_abs_decimal": "0",
+            "spectre_y": 0.0,
+            "spectre_vs_native_oracle_abs_decimal": "0"
+          },
+          {
+            "query": 1e-06,
+            "native_time": 9.999999999999394e-07,
+            "dt_decimal": "-6.0562855728682474243385058798594400286674499511718750E-20",
+            "oracle_query_decimal": "0",
+            "oracle_native_decimal": "0",
+            "oracle_time_shift_abs_decimal": "0",
+            "precision80_vs100_abs_decimal": "0",
+            "spectre_y": 0.0,
+            "spectre_vs_native_oracle_abs_decimal": "0"
+          },
+          {
+            "query": 2e-06,
+            "native_time": 1.9999999999993714e-06,
+            "dt_decimal": "-6.2849844686269085158869529550429433584213256835937500E-19",
+            "oracle_query_decimal": "0",
+            "oracle_native_decimal": "0",
+            "oracle_time_shift_abs_decimal": "0",
+            "precision80_vs100_abs_decimal": "0",
+            "spectre_y": 0.0,
+            "spectre_vs_native_oracle_abs_decimal": "0"
+          },
+          {
+            "query": 3e-06,
+            "native_time": 3.000000000001564e-06,
+            "dt_decimal": "1.56404633710506557608965749750495888292789459228515625E-18",
+            "oracle_query_decimal": "0",
+            "oracle_native_decimal": "0",
+            "oracle_time_shift_abs_decimal": "0",
+            "precision80_vs100_abs_decimal": "0",
+            "spectre_y": 0.0,
+            "spectre_vs_native_oracle_abs_decimal": "0"
+          },
+          {
+            "query": 4e-06,
+            "native_time": 4.000000000001096e-06,
+            "dt_decimal": "1.0960606337470646387544093158794566988945007324218750E-18",
+            "oracle_query_decimal": "0",
+            "oracle_native_decimal": "0",
+            "oracle_time_shift_abs_decimal": "0",
+            "precision80_vs100_abs_decimal": "0",
+            "spectre_y": 0.0,
+            "spectre_vs_native_oracle_abs_decimal": "0"
+          },
+          {
+            "query": 6e-06,
+            "native_time": 6.000000000003289e-06,
+            "dt_decimal": "3.2890289341884482166022962701390497386455535888671875E-18",
+            "oracle_query_decimal": "0",
+            "oracle_native_decimal": "0",
+            "oracle_time_shift_abs_decimal": "0",
+            "precision80_vs100_abs_decimal": "0",
+            "spectre_y": 0.0,
+            "spectre_vs_native_oracle_abs_decimal": "0"
+          }
+        ],
+        "original_budget_V": 1e-09,
+        "all_native_diagnostic_within_original_budget": true
+      }
+    },
+    "input_filter_product": {
+      "source_sha256": "db758e435d7932bb78f2e2ed601515e1a3778b6741671ddacd681f01814b883e",
+      "deck_sha256": "9204ab3a6a81d78637ed3012b4c6e6eb865d23f974f7fde652977d6a4c9ec7ad",
+      "psf_sha256": "1b7dce22b3fa5baed326637a1ec621dcbbee9559c0500bca158aee0e01b7e638",
+      "native_rows": 120093,
+      "completion": {
+        "errors": 0,
+        "warnings": 1,
+        "notices": 3
+      },
+      "effective": {
+        "tolerance.relative": "1.00000e-12",
+        "start": "0.00000",
+        "stop": "6.00000e-06",
+        "maxstep": "5.00000e-11",
+        "reltol": "1.00000e-13",
+        "abstol(V)": "1.00000e-14",
+        "abstol(I)": "1.00000e-15",
+        "errpreset": "\"conservative\"",
+        "method": "\"traponly\"",
+        "gmin": "1.00000e-12"
+      },
+      "warning_extracts": [
+        "Warning from spectre during AHDL read-in.\n    WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow.\n",
+        "    WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow.\n\nReading file:  /edamgr/Spectre/SPECTRE211Hotfix/tools.lnx86/spectre/etc/ahdl/disciplines.vams",
+        "    gmin = 1 pS\n\n"
+      ],
+      "execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 10.896770657971501,
+        "completed_utc": "2026-10-14T05:25:15Z",
+        "log": "stdout.log",
+        "log_sha256": "ab0c8347583d36acc9118643917c7667943b40ff199b8868fa25ea6246b1696c",
+        "label": "input_filter_product",
+        "source_sha256": "db758e435d7932bb78f2e2ed601515e1a3778b6741671ddacd681f01814b883e",
+        "deck_sha256": "9204ab3a6a81d78637ed3012b4c6e6eb865d23f974f7fde652977d6a4c9ec7ad",
+        "directory_bytes": 8105803
+      },
+      "query_times": [
+        0,
+        5e-07,
+        1e-06,
+        2e-06,
+        3e-06,
+        4e-06,
+        6e-06
+      ],
+      "available_query_times": [
+        0,
+        5e-07
+      ],
+      "missing_exact_query_times": [
+        1e-06,
+        2e-06,
+        3e-06,
+        4e-06,
+        6e-06
+      ],
+      "nearest_native_to_missing": [
+        {
+          "query": 1e-06,
+          "nearest": 9.999999999999394e-07
+        },
+        {
+          "query": 2e-06,
+          "nearest": 1.9999999999993714e-06
+        },
+        {
+          "query": 3e-06,
+          "nearest": 3.000000000001564e-06
+        },
+        {
+          "query": 4e-06,
+          "nearest": 4.000000000001096e-06
+        },
+        {
+          "query": 6e-06,
+          "nearest": 6.000000000003289e-06
+        }
+      ],
+      "spectre_exact_values": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.5,
+          0.0919698602169779
+        ]
+      ],
+      "independent_oracle_y": [
+        [
+          0.0
+        ],
+        [
+          0.09196986029286058
+        ],
+        [
+          0.5676676416183063
+        ],
+        [
+          0.9414901778260607
+        ],
+        [
+          0.9920815566439661
+        ],
+        [
+          0.1364069280109946
+        ],
+        [
+          0.9841827411466367
+        ]
+      ],
+      "candidate_values": [
+        [
+          0.0
+        ],
+        [
+          0.09196986029286058
+        ],
+        [
+          0.5676676416183063
+        ],
+        [
+          0.9414901778260607
+        ],
+        [
+          0.992081556643966
+        ],
+        [
+          0.13640692801099452
+        ],
+        [
+          0.9841827411466368
+        ]
+      ],
+      "candidate_vs_oracle": {
+        "passed": true,
+        "max_abs_error": 1.1102230246251565e-16,
+        "budget": 2e-09
+      },
+      "spectre_available_vs_oracle": {
+        "passed": true,
+        "max_abs_error": 7.588268902125606e-11,
+        "budget": 2e-09
+      },
+      "candidate_available_vs_spectre": {
+        "passed": true,
+        "max_abs_error": 7.588268902125606e-11,
+        "budget": 2e-09
+      },
+      "full_paired_qualification": "insufficient_exact_native_points",
+      "pwl_unchanged": true,
+      "source_unchanged": true,
+      "query_and_budget_unchanged": true,
+      "native_trajectory_diagnostic": {
+        "role": "diagnostic_only_no_exact_query_qualification",
+        "rows_checked": 120093,
+        "oracle_input_convention": "Decimal.from_float of original binary64 PWL nodes, tau, actual native/query times; f(0)=0; constant PWL extension after last knot",
+        "oracle_formula": "f=u(t)-slope*tau+(f(a)-u(a)+slope*tau)*exp(-(t-a)/tau); y=u*f",
+        "oracle_precision_digits": 80,
+        "oracle_arithmetic_abs_bound_V": "1E-60",
+        "bound_scope": "Finite elementary expression: <100 operations, intermediate |value|<32, exp arguments in [-13,0], correctly rounded Decimal.exp; conservative 1e-60 V arithmetic bound. Does not bound Spectre solver error or source literal semantic differences.",
+        "binary64_read_abs_bound_V": "5.5511151231257827021181583404541015625E-17",
+        "max_abs_error_decimal": "2.3062602621490501783256429022871937592016432586194991252702558565641239E-10",
+        "max_abs_error_upper_including_numeric_and_read_rounding": "2.3062608172605624909039131141030278046117995086195091252702558565641239E-10",
+        "worst": {
+          "time": 4.000000050001096e-06,
+          "spectre_y": 0.1364070141415644,
+          "oracle_y_decimal": "0.13640701437219041841050970028874241522275891144262526336194991252702558565641239",
+          "error_decimal": "2.3062602621490501783256429022871937592016432586194991252702558565641239E-10"
+        },
+        "nearest_original_queries": [
+          {
+            "query": 0,
+            "native_time": 0.0,
+            "dt_decimal": "0",
+            "oracle_query_decimal": "0E-153",
+            "oracle_native_decimal": "0E-153",
+            "oracle_time_shift_abs_decimal": "0E-153",
+            "precision80_vs100_abs_decimal": "0E-193",
+            "spectre_y": 0.0,
+            "spectre_vs_native_oracle_abs_decimal": "0E-153"
+          },
+          {
+            "query": 5e-07,
+            "native_time": 5e-07,
+            "dt_decimal": "0E-73",
+            "oracle_query_decimal": "0.091969860292860580398880942540365216861452782757941958626959200424365373936224950",
+            "oracle_native_decimal": "0.091969860292860580398880942540365216861452782757941958626959200424365373936224950",
+            "oracle_time_shift_abs_decimal": "0E-81",
+            "precision80_vs100_abs_decimal": "8.3928681858647991097E-82",
+            "spectre_y": 0.0919698602169779,
+            "spectre_vs_native_oracle_abs_decimal": "7.5882685914067637442151030133452141888801333626959200424365373936224950E-11"
+          },
+          {
+            "query": 1e-06,
+            "native_time": 9.999999999999394e-07,
+            "dt_decimal": "-6.0562855728682474243385058798594400286674499511718750E-20",
+            "oracle_query_decimal": "0.56766764161830634594699974748624220170381577295478794073407943632703668705074384",
+            "oracle_native_decimal": "0.56766764161821959980902355711590700170176144596928015695465307125516951552921798",
+            "oracle_time_shift_abs_decimal": "8.674613797619037033520000205432698550778377942636507186717152152586E-14",
+            "precision80_vs100_abs_decimal": "1.60313643942724726656E-80",
+            "spectre_y": 0.567667641505996,
+            "spectre_vs_native_oracle_abs_decimal": "1.1222357635465122258905522843973752018803015695465307125516951552921798E-10"
+          },
+          {
+            "query": 2e-06,
+            "native_time": 1.9999999999993714e-06,
+            "dt_decimal": "-6.2849844686269085158869529550429433584213256835937500E-19",
+            "oracle_query_decimal": "0.94149017782606074419985926315037841940214026082194985665072052739258852874831322",
+            "oracle_native_decimal": "0.94149017782598719753513415081851309485324295630974480640085390985772182585637509",
+            "oracle_time_shift_abs_decimal": "7.354666472511233186532454889730451220505024986661753486670289193813E-14",
+            "precision80_vs100_abs_decimal": "3.1830655248511832938E-81",
+            "spectre_y": 0.9414901779083138,
+            "spectre_vs_native_oracle_abs_decimal": "8.232659917121799924917393975369063744025519359914609014227817414362491E-11"
+          },
+          {
+            "query": 3e-06,
+            "native_time": 3.000000000001564e-06,
+            "dt_decimal": "1.56404633710506557608965749750495888292789459228515625E-18",
+            "oracle_query_decimal": "0.99208155664396609241825477984260547535870515309323346040687541156571853371825490",
+            "oracle_native_decimal": "0.99208155664088753899334595429280609476252010782824327646457560262602046984579650",
+            "oracle_time_shift_abs_decimal": "3.07855342490882554979938059618504526499018394229980893969806387245840E-12",
+            "precision80_vs100_abs_decimal": "2.3465705157008039704E-81",
+            "spectre_y": 0.9920815566652145,
+            "spectre_vs_native_oracle_abs_decimal": "2.432693114315863327902905059175082723035047353542439737397953015420350E-11"
+          },
+          {
+            "query": 4e-06,
+            "native_time": 4.000000000001096e-06,
+            "dt_decimal": "1.0960606337470646387544093158794566988945007324218750E-18",
+            "oracle_query_decimal": "0.13640692801099448940295744110256369517356549155133505103891084853556291782091024",
+            "oracle_native_decimal": "0.13640692801288759014252305382571724141323203790860040632476176770038277358425376",
+            "oracle_time_shift_abs_decimal": "1.89310073956561272315354623966654635726535528585091916481985576334352E-12",
+            "precision80_vs100_abs_decimal": "8.2213444863195517720E-81",
+            "spectre_y": 0.13640692778226587,
+            "spectre_vs_native_oracle_abs_decimal": "2.3062171580431523102335707182371253717617853132476176770038277358425376E-10"
+          },
+          {
+            "query": 6e-06,
+            "native_time": 6.000000000003289e-06,
+            "dt_decimal": "3.2890289341884482166022962701390497386455535888671875E-18",
+            "oracle_query_decimal": "0.98418274114663676754415615890324669091688665497749767149884374502823775450935862",
+            "oracle_native_decimal": "0.98418274114674081438821233683283737783827012331848418641934550456043539960990298",
+            "oracle_time_shift_abs_decimal": "1.0404684405617792959068692138346834098651492050175953219764510054436E-13",
+            "precision80_vs100_abs_decimal": "3.2633214426039966716E-81",
+            "spectre_y": 0.9841827411952271,
+            "spectre_vs_native_oracle_abs_decimal": "4.848626993051836683862545604310805050964081358065449543956460039009702E-11"
+          }
+        ],
+        "original_budget_V": 2e-09,
+        "all_native_diagnostic_within_original_budget": true
+      }
+    }
+  },
+  "candidate": {
+    "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/n10-controls/candidate.json",
+    "sha256": "a830c20ee048393b5fdcfe1e3ed86090c4a62175de0d32833a89ebf0d5941ee8",
+    "identity_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/FINAL-IDENTITY.json",
+    "identity_sha256": "fd24874f767e95a6110206463d9bd6fecfb8183fbce3324b45ba38a0acbfd8ed",
+    "commit": "e9429435e85bd997e18359f5791fc948cc00a3d6",
+    "kernel_sha256": "642cc6079d39a07fc54870f1d1b2d495dec0a0dbea5dae5a80af06f1ce8c6f1d"
+  },
+  "contract_sha256": "84ac40852c365595f89154dcdb758b6bd9bccc0172ab953a45b1a707fb467648",
+  "analysis_identity": {
+    "script": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-spectre-v2/analyze_pairing.py",
+    "script_sha256": "c6591c0e3c0ea7fef23466f21eb82ffd01f2223c7eb04f7a0ec5b010bc85833c",
+    "mode": "frontend-v2",
+    "argv": [
+      "runs/evas-night-20261014/delivery/frontend-spectre-v2/analyze_pairing.py",
+      "--mode",
+      "frontend-v2",
+      "--native-diagnostic",
+      "--output",
+      "runs/evas-night-20261014/delivery/frontend-spectre-v2/ANALYSIS.json"
+    ],
+    "old_analysis_overwritten": false
+  }
+}

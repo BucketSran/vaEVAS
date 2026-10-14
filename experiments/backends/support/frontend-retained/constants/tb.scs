@@ -1,0 +1,6 @@
+simulator lang=spectre
+ahdl_include "dut.va"
+dut (k0 k1 k2 k3 k4 k5 k6 k7 k8 k9 k10 k11 k12 k13) constants14
+simulatorOptions options precision="%.17g" reltol=1e-9 vabstol=1e-12 iabstol=1e-15
+tran tran stop=1 maxstep=0.125 method=traponly errpreset=conservative compression=no strobeoutput=all strobetimes=[0 0.125 0.5 1]
+save k0 k1 k2 k3 k4 k5 k6 k7 k8 k9 k10 k11 k12 k13

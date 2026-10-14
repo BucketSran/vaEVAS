@@ -1,0 +1,36 @@
+{
+  "unused_scalar": {
+    "outcome": "rejected",
+    "message": "singular_system: fewer voltage constraints than unknown nodes; unknown nodes: [\"dut:floating\", \"y\"]; constraints: unused_scalar.va:2:98 (dut)",
+    "detail": {
+      "kind": "singular_system",
+      "message": "fewer voltage constraints than unknown nodes; unknown nodes: [\"dut:floating\", \"y\"]; constraints: unused_scalar.va:2:98 (dut)",
+      "sample": 0
+    }
+  },
+  "referenced_singular": {
+    "outcome": "rejected",
+    "message": "singular_system: fewer voltage constraints than unknown nodes; unknown nodes: [\"dut:floating\", \"y\"]; constraints: referenced_singular.va:2:98 (dut)",
+    "detail": {
+      "kind": "singular_system",
+      "message": "fewer voltage constraints than unknown nodes; unknown nodes: [\"dut:floating\", \"y\"]; constraints: referenced_singular.va:2:98 (dut)",
+      "sample": 0
+    }
+  },
+  "zero_forcing_filter": {
+    "outcome": "rejected",
+    "message": "singular_system: fewer voltage constraints than unknown nodes; unknown nodes: [\"dut:z\", \"y\"]; constraints: zero_forcing_filter.va:2:120 (dut)",
+    "detail": {
+      "kind": "singular_system",
+      "message": "fewer voltage constraints than unknown nodes; unknown nodes: [\"dut:z\", \"y\"]; constraints: zero_forcing_filter.va:2:120 (dut)"
+    }
+  },
+  "input_filter_product": {
+    "outcome": "rejected",
+    "message": "unsupported_implicit_dynamics: index-one DAE requires one independent voltage constraint per unknown voltage",
+    "detail": {
+      "kind": "unsupported_implicit_dynamics",
+      "message": "index-one DAE requires one independent voltage constraint per unknown voltage"
+    }
+  }
+}

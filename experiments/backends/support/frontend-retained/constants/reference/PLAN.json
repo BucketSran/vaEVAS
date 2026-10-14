@@ -1,0 +1,51 @@
+[
+  {
+    "case": "constants14",
+    "label": "constants14",
+    "role": "standard_constants",
+    "mode": "forced",
+    "status": "not_run",
+    "state_outputs": {},
+    "saved_nodes": [
+      "k0",
+      "k1",
+      "k2",
+      "k3",
+      "k4",
+      "k5",
+      "k6",
+      "k7",
+      "k8",
+      "k9",
+      "k10",
+      "k11",
+      "k12",
+      "k13"
+    ],
+    "query_times_s": [
+      "0",
+      "0.125",
+      "0.5",
+      "1"
+    ],
+    "budget_V": "1e-14",
+    "hypotheses": [
+      "lrm_decimal"
+    ],
+    "acceptance_hypothesis": "lrm_decimal",
+    "requested": {
+      "reltol": "1e-9",
+      "vabstol_V": "1e-12",
+      "iabstol_A": "1e-15",
+      "maxstep_s": "0.125",
+      "stop_s": "1",
+      "method": "traponly",
+      "errpreset": "conservative",
+      "precision": "%.17g"
+    },
+    "source_sha256": "4999a6c71fec89ac2d3943264ef6c2be6d652721b9a0fc415572e42571d0d556",
+    "deck_sha256": "541dff5568bc16f08f4a02d6142f930ea83d6e49e099a54d45bf46590a2b90ca",
+    "request_sha256": "856035346b5df38f2c5cc1223d2db693b761fc68e32b9a854b2793734096023f",
+    "oracle_table_sha256": "18835d1f3f07c4acb3912ba0beb21573de787257aaa6272fcdbae5e80da02f51"
+  }
+]

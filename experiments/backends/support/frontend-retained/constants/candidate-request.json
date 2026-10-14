@@ -1,0 +1,358 @@
+{
+  "program": {
+    "nodes": [
+      "0",
+      "k0",
+      "k1",
+      "k10",
+      "k11",
+      "k12",
+      "k13",
+      "k2",
+      "k3",
+      "k4",
+      "k5",
+      "k6",
+      "k7",
+      "k8",
+      "k9"
+    ],
+    "contributions": [
+      {
+        "branch": {
+          "instance": "dut",
+          "local_positive": "0",
+          "local_negative": "k0",
+          "kind": "voltage"
+        },
+        "positive": 0,
+        "negative": 1,
+        "rhs": {
+          "constant": -2.718281828459045,
+          "terms": [],
+          "op": "affine"
+        },
+        "origin": {
+          "source": "dut.va",
+          "line": 7,
+          "column": 2,
+          "instance": "dut",
+          "expansion": []
+        }
+      },
+      {
+        "branch": {
+          "instance": "dut",
+          "local_positive": "0",
+          "local_negative": "k1",
+          "kind": "voltage"
+        },
+        "positive": 0,
+        "negative": 2,
+        "rhs": {
+          "constant": -1.4426950408889634,
+          "terms": [],
+          "op": "affine"
+        },
+        "origin": {
+          "source": "dut.va",
+          "line": 8,
+          "column": 2,
+          "instance": "dut",
+          "expansion": []
+        }
+      },
+      {
+        "branch": {
+          "instance": "dut",
+          "local_positive": "0",
+          "local_negative": "k2",
+          "kind": "voltage"
+        },
+        "positive": 0,
+        "negative": 7,
+        "rhs": {
+          "constant": -0.4342944819032518,
+          "terms": [],
+          "op": "affine"
+        },
+        "origin": {
+          "source": "dut.va",
+          "line": 9,
+          "column": 2,
+          "instance": "dut",
+          "expansion": []
+        }
+      },
+      {
+        "branch": {
+          "instance": "dut",
+          "local_positive": "0",
+          "local_negative": "k3",
+          "kind": "voltage"
+        },
+        "positive": 0,
+        "negative": 8,
+        "rhs": {
+          "constant": -0.6931471805599453,
+          "terms": [],
+          "op": "affine"
+        },
+        "origin": {
+          "source": "dut.va",
+          "line": 10,
+          "column": 2,
+          "instance": "dut",
+          "expansion": []
+        }
+      },
+      {
+        "branch": {
+          "instance": "dut",
+          "local_positive": "0",
+          "local_negative": "k4",
+          "kind": "voltage"
+        },
+        "positive": 0,
+        "negative": 9,
+        "rhs": {
+          "constant": -2.302585092994046,
+          "terms": [],
+          "op": "affine"
+        },
+        "origin": {
+          "source": "dut.va",
+          "line": 11,
+          "column": 2,
+          "instance": "dut",
+          "expansion": []
+        }
+      },
+      {
+        "branch": {
+          "instance": "dut",
+          "local_positive": "0",
+          "local_negative": "k5",
+          "kind": "voltage"
+        },
+        "positive": 0,
+        "negative": 10,
+        "rhs": {
+          "constant": -3.141592653589793,
+          "terms": [],
+          "op": "affine"
+        },
+        "origin": {
+          "source": "dut.va",
+          "line": 12,
+          "column": 2,
+          "instance": "dut",
+          "expansion": []
+        }
+      },
+      {
+        "branch": {
+          "instance": "dut",
+          "local_positive": "0",
+          "local_negative": "k6",
+          "kind": "voltage"
+        },
+        "positive": 0,
+        "negative": 11,
+        "rhs": {
+          "constant": -6.283185307179586,
+          "terms": [],
+          "op": "affine"
+        },
+        "origin": {
+          "source": "dut.va",
+          "line": 13,
+          "column": 2,
+          "instance": "dut",
+          "expansion": []
+        }
+      },
+      {
+        "branch": {
+          "instance": "dut",
+          "local_positive": "0",
+          "local_negative": "k7",
+          "kind": "voltage"
+        },
+        "positive": 0,
+        "negative": 12,
+        "rhs": {
+          "constant": -1.5707963267948966,
+          "terms": [],
+          "op": "affine"
+        },
+        "origin": {
+          "source": "dut.va",
+          "line": 14,
+          "column": 2,
+          "instance": "dut",
+          "expansion": []
+        }
+      },
+      {
+        "branch": {
+          "instance": "dut",
+          "local_positive": "0",
+          "local_negative": "k8",
+          "kind": "voltage"
+        },
+        "positive": 0,
+        "negative": 13,
+        "rhs": {
+          "constant": -0.7853981633974483,
+          "terms": [],
+          "op": "affine"
+        },
+        "origin": {
+          "source": "dut.va",
+          "line": 15,
+          "column": 2,
+          "instance": "dut",
+          "expansion": []
+        }
+      },
+      {
+        "branch": {
+          "instance": "dut",
+          "local_positive": "0",
+          "local_negative": "k9",
+          "kind": "voltage"
+        },
+        "positive": 0,
+        "negative": 14,
+        "rhs": {
+          "constant": -0.3183098861837907,
+          "terms": [],
+          "op": "affine"
+        },
+        "origin": {
+          "source": "dut.va",
+          "line": 16,
+          "column": 2,
+          "instance": "dut",
+          "expansion": []
+        }
+      },
+      {
+        "branch": {
+          "instance": "dut",
+          "local_positive": "0",
+          "local_negative": "k10",
+          "kind": "voltage"
+        },
+        "positive": 0,
+        "negative": 3,
+        "rhs": {
+          "constant": -0.6366197723675814,
+          "terms": [],
+          "op": "affine"
+        },
+        "origin": {
+          "source": "dut.va",
+          "line": 17,
+          "column": 2,
+          "instance": "dut",
+          "expansion": []
+        }
+      },
+      {
+        "branch": {
+          "instance": "dut",
+          "local_positive": "0",
+          "local_negative": "k11",
+          "kind": "voltage"
+        },
+        "positive": 0,
+        "negative": 4,
+        "rhs": {
+          "constant": -1.1283791670955126,
+          "terms": [],
+          "op": "affine"
+        },
+        "origin": {
+          "source": "dut.va",
+          "line": 18,
+          "column": 2,
+          "instance": "dut",
+          "expansion": []
+        }
+      },
+      {
+        "branch": {
+          "instance": "dut",
+          "local_positive": "0",
+          "local_negative": "k12",
+          "kind": "voltage"
+        },
+        "positive": 0,
+        "negative": 5,
+        "rhs": {
+          "constant": -1.4142135623730951,
+          "terms": [],
+          "op": "affine"
+        },
+        "origin": {
+          "source": "dut.va",
+          "line": 19,
+          "column": 2,
+          "instance": "dut",
+          "expansion": []
+        }
+      },
+      {
+        "branch": {
+          "instance": "dut",
+          "local_positive": "0",
+          "local_negative": "k13",
+          "kind": "voltage"
+        },
+        "positive": 0,
+        "negative": 6,
+        "rhs": {
+          "constant": -0.7071067811865476,
+          "terms": [],
+          "op": "affine"
+        },
+        "origin": {
+          "source": "dut.va",
+          "line": 20,
+          "column": 2,
+          "instance": "dut",
+          "expansion": []
+        }
+      }
+    ],
+    "states": [],
+    "events": [],
+    "operators": [],
+    "schema_version": 19
+  },
+  "driven": [],
+  "samples": [],
+  "transient": {
+    "pwl": [],
+    "output_times": [
+      0.0,
+      0.125,
+      0.5,
+      1.0
+    ],
+    "stop": 1,
+    "max_step": 0.125,
+    "strobetimes": [
+      0.0,
+      0.125,
+      0.5,
+      1.0
+    ]
+  },
+  "tolerances": {
+    "absolute": 1e-14,
+    "relative": 0
+  }
+}

@@ -1,0 +1,38 @@
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/original-source-compile.py", line 4, in <module>
+    D=Path(sys.argv[1]); p=compile_sources({n:(D/n).read_text() for n in ['dut.va','core.va']},[Instance('X_DUT','r01_simultaneous',{n:n for n in ['ain0','ain1','ain2','ain3','track','rst','sel0','sel1','read_en','dout','valid','held0','held1','held2','held3']},{'vinit':0.8,'tau_acq':1e-8,'tau_hold':2e-6,'vleak':0.1,'pedestal':0.006})]);print(json.dumps(p.to_dict()))
+                           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 37, in compile_sources
+    models = parse_sources(sources)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 26, in parse_sources
+    for parsed in Parser('', path, tokens=tokens).parse_all():
+                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/syntax.py", line 719, in parse_all
+    result.append(self.parse(eof=False))
+                  ~~~~~~~~~~^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/syntax.py", line 857, in parse
+    analog, initial, events = self.analog_block() if self.token.text == 'analog' else ([], [], [])
+                              ~~~~~~~~~~~~~~~~~^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/syntax.py", line 645, in analog_block
+    event = self.monitored_event(token, initial)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/syntax.py", line 633, in monitored_event
+    return Event(tuple(triggers), self.statements(True), token)
+                                  ~~~~~~~~~~~~~~~^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/syntax.py", line 425, in statements
+    return self._statements(conditional, analog)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/syntax.py", line 441, in _statements
+    result.extend(self.statements(conditional, analog))
+                  ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/syntax.py", line 425, in statements
+    return self._statements(conditional, analog)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/syntax.py", line 452, in _statements
+    self.take(")")
+    ~~~~~~~~~^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/syntax.py", line 239, in take
+    self.fail(f"expected {text!r}, got {token.text!r}; outside affine-voltage syntax")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/syntax.py", line 234, in fail
+    raise CompileError(f"{token.source or self.source}:{token.line}:{token.column}: {message}", code=code, token=token)
+evas.errors.CompileError: dut.va:49:31: expected ')', got '&&'; outside affine-voltage syntax

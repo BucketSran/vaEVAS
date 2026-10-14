@@ -1,0 +1,448 @@
+
+======================================================================
+ERROR: test_constants_compose_in_compile_output (test_standard_constants.StandardConstants.test_constants_compose_in_compile_output)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 63, in test_constants_compose_in_compile_output
+    self.assert_correctly_rounded(self.contributed('0.5 * `M_SQRT1_2 + `M_LN2'),
+                                  ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 45, in contributed
+    return -self.compile(value, **kwargs).contributions[0].rhs.constant
+            ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 41, in compile
+    return compile_sources({'dut.va': prefix + BODY.replace('VALUE', value), **(headers or {})}, [INSTANCE])
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 37, in compile_sources
+    models = parse_sources(sources)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 25, in parse_sources
+    for path, tokens in preprocess_sources(sources):
+                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 231, in preprocess_sources
+    tokens=file_tokens(name)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 221, in file_tokens
+    output.extend(expand(tokens[i:end])); i=end
+                  ~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 63, in expand
+    fail(f'undefined or unsupported macro {name!r}',token)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 32, in fail
+    raise CompileError(f'{token.source}:{token.line}:{token.column}: {message}', code=code, token=token)
+evas.errors.CompileError: dut.va:3:63: undefined or unsupported macro 'M_SQRT1_2'
+
+======================================================================
+ERROR: test_explicit_include_provides_all_fourteen_lrm_constants (test_standard_constants.StandardConstants.test_explicit_include_provides_all_fourteen_lrm_constants) (macro='M_E')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 59, in test_explicit_include_provides_all_fourteen_lrm_constants
+    self.assert_correctly_rounded(self.contributed(f'`{name}'), text)
+                                  ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 45, in contributed
+    return -self.compile(value, **kwargs).contributions[0].rhs.constant
+            ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 41, in compile
+    return compile_sources({'dut.va': prefix + BODY.replace('VALUE', value), **(headers or {})}, [INSTANCE])
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 37, in compile_sources
+    models = parse_sources(sources)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 25, in parse_sources
+    for path, tokens in preprocess_sources(sources):
+                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 231, in preprocess_sources
+    tokens=file_tokens(name)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 221, in file_tokens
+    output.extend(expand(tokens[i:end])); i=end
+                  ~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 63, in expand
+    fail(f'undefined or unsupported macro {name!r}',token)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 32, in fail
+    raise CompileError(f'{token.source}:{token.line}:{token.column}: {message}', code=code, token=token)
+evas.errors.CompileError: dut.va:3:57: undefined or unsupported macro 'M_E'
+
+======================================================================
+ERROR: test_explicit_include_provides_all_fourteen_lrm_constants (test_standard_constants.StandardConstants.test_explicit_include_provides_all_fourteen_lrm_constants) (macro='M_LOG2E')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 59, in test_explicit_include_provides_all_fourteen_lrm_constants
+    self.assert_correctly_rounded(self.contributed(f'`{name}'), text)
+                                  ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 45, in contributed
+    return -self.compile(value, **kwargs).contributions[0].rhs.constant
+            ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 41, in compile
+    return compile_sources({'dut.va': prefix + BODY.replace('VALUE', value), **(headers or {})}, [INSTANCE])
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 37, in compile_sources
+    models = parse_sources(sources)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 25, in parse_sources
+    for path, tokens in preprocess_sources(sources):
+                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 231, in preprocess_sources
+    tokens=file_tokens(name)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 221, in file_tokens
+    output.extend(expand(tokens[i:end])); i=end
+                  ~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 63, in expand
+    fail(f'undefined or unsupported macro {name!r}',token)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 32, in fail
+    raise CompileError(f'{token.source}:{token.line}:{token.column}: {message}', code=code, token=token)
+evas.errors.CompileError: dut.va:3:57: undefined or unsupported macro 'M_LOG2E'
+
+======================================================================
+ERROR: test_explicit_include_provides_all_fourteen_lrm_constants (test_standard_constants.StandardConstants.test_explicit_include_provides_all_fourteen_lrm_constants) (macro='M_LOG10E')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 59, in test_explicit_include_provides_all_fourteen_lrm_constants
+    self.assert_correctly_rounded(self.contributed(f'`{name}'), text)
+                                  ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 45, in contributed
+    return -self.compile(value, **kwargs).contributions[0].rhs.constant
+            ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 41, in compile
+    return compile_sources({'dut.va': prefix + BODY.replace('VALUE', value), **(headers or {})}, [INSTANCE])
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 37, in compile_sources
+    models = parse_sources(sources)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 25, in parse_sources
+    for path, tokens in preprocess_sources(sources):
+                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 231, in preprocess_sources
+    tokens=file_tokens(name)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 221, in file_tokens
+    output.extend(expand(tokens[i:end])); i=end
+                  ~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 63, in expand
+    fail(f'undefined or unsupported macro {name!r}',token)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 32, in fail
+    raise CompileError(f'{token.source}:{token.line}:{token.column}: {message}', code=code, token=token)
+evas.errors.CompileError: dut.va:3:57: undefined or unsupported macro 'M_LOG10E'
+
+======================================================================
+ERROR: test_explicit_include_provides_all_fourteen_lrm_constants (test_standard_constants.StandardConstants.test_explicit_include_provides_all_fourteen_lrm_constants) (macro='M_LN2')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 59, in test_explicit_include_provides_all_fourteen_lrm_constants
+    self.assert_correctly_rounded(self.contributed(f'`{name}'), text)
+                                  ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 45, in contributed
+    return -self.compile(value, **kwargs).contributions[0].rhs.constant
+            ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 41, in compile
+    return compile_sources({'dut.va': prefix + BODY.replace('VALUE', value), **(headers or {})}, [INSTANCE])
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 37, in compile_sources
+    models = parse_sources(sources)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 25, in parse_sources
+    for path, tokens in preprocess_sources(sources):
+                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 231, in preprocess_sources
+    tokens=file_tokens(name)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 221, in file_tokens
+    output.extend(expand(tokens[i:end])); i=end
+                  ~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 63, in expand
+    fail(f'undefined or unsupported macro {name!r}',token)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 32, in fail
+    raise CompileError(f'{token.source}:{token.line}:{token.column}: {message}', code=code, token=token)
+evas.errors.CompileError: dut.va:3:57: undefined or unsupported macro 'M_LN2'
+
+======================================================================
+ERROR: test_explicit_include_provides_all_fourteen_lrm_constants (test_standard_constants.StandardConstants.test_explicit_include_provides_all_fourteen_lrm_constants) (macro='M_LN10')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 59, in test_explicit_include_provides_all_fourteen_lrm_constants
+    self.assert_correctly_rounded(self.contributed(f'`{name}'), text)
+                                  ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 45, in contributed
+    return -self.compile(value, **kwargs).contributions[0].rhs.constant
+            ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 41, in compile
+    return compile_sources({'dut.va': prefix + BODY.replace('VALUE', value), **(headers or {})}, [INSTANCE])
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 37, in compile_sources
+    models = parse_sources(sources)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 25, in parse_sources
+    for path, tokens in preprocess_sources(sources):
+                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 231, in preprocess_sources
+    tokens=file_tokens(name)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 221, in file_tokens
+    output.extend(expand(tokens[i:end])); i=end
+                  ~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 63, in expand
+    fail(f'undefined or unsupported macro {name!r}',token)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 32, in fail
+    raise CompileError(f'{token.source}:{token.line}:{token.column}: {message}', code=code, token=token)
+evas.errors.CompileError: dut.va:3:57: undefined or unsupported macro 'M_LN10'
+
+======================================================================
+ERROR: test_explicit_include_provides_all_fourteen_lrm_constants (test_standard_constants.StandardConstants.test_explicit_include_provides_all_fourteen_lrm_constants) (macro='M_TWO_PI')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 59, in test_explicit_include_provides_all_fourteen_lrm_constants
+    self.assert_correctly_rounded(self.contributed(f'`{name}'), text)
+                                  ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 45, in contributed
+    return -self.compile(value, **kwargs).contributions[0].rhs.constant
+            ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 41, in compile
+    return compile_sources({'dut.va': prefix + BODY.replace('VALUE', value), **(headers or {})}, [INSTANCE])
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 37, in compile_sources
+    models = parse_sources(sources)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 25, in parse_sources
+    for path, tokens in preprocess_sources(sources):
+                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 231, in preprocess_sources
+    tokens=file_tokens(name)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 221, in file_tokens
+    output.extend(expand(tokens[i:end])); i=end
+                  ~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 63, in expand
+    fail(f'undefined or unsupported macro {name!r}',token)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 32, in fail
+    raise CompileError(f'{token.source}:{token.line}:{token.column}: {message}', code=code, token=token)
+evas.errors.CompileError: dut.va:3:57: undefined or unsupported macro 'M_TWO_PI'
+
+======================================================================
+ERROR: test_explicit_include_provides_all_fourteen_lrm_constants (test_standard_constants.StandardConstants.test_explicit_include_provides_all_fourteen_lrm_constants) (macro='M_PI_2')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 59, in test_explicit_include_provides_all_fourteen_lrm_constants
+    self.assert_correctly_rounded(self.contributed(f'`{name}'), text)
+                                  ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 45, in contributed
+    return -self.compile(value, **kwargs).contributions[0].rhs.constant
+            ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 41, in compile
+    return compile_sources({'dut.va': prefix + BODY.replace('VALUE', value), **(headers or {})}, [INSTANCE])
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 37, in compile_sources
+    models = parse_sources(sources)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 25, in parse_sources
+    for path, tokens in preprocess_sources(sources):
+                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 231, in preprocess_sources
+    tokens=file_tokens(name)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 221, in file_tokens
+    output.extend(expand(tokens[i:end])); i=end
+                  ~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 63, in expand
+    fail(f'undefined or unsupported macro {name!r}',token)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 32, in fail
+    raise CompileError(f'{token.source}:{token.line}:{token.column}: {message}', code=code, token=token)
+evas.errors.CompileError: dut.va:3:57: undefined or unsupported macro 'M_PI_2'
+
+======================================================================
+ERROR: test_explicit_include_provides_all_fourteen_lrm_constants (test_standard_constants.StandardConstants.test_explicit_include_provides_all_fourteen_lrm_constants) (macro='M_PI_4')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 59, in test_explicit_include_provides_all_fourteen_lrm_constants
+    self.assert_correctly_rounded(self.contributed(f'`{name}'), text)
+                                  ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 45, in contributed
+    return -self.compile(value, **kwargs).contributions[0].rhs.constant
+            ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 41, in compile
+    return compile_sources({'dut.va': prefix + BODY.replace('VALUE', value), **(headers or {})}, [INSTANCE])
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 37, in compile_sources
+    models = parse_sources(sources)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 25, in parse_sources
+    for path, tokens in preprocess_sources(sources):
+                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 231, in preprocess_sources
+    tokens=file_tokens(name)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 221, in file_tokens
+    output.extend(expand(tokens[i:end])); i=end
+                  ~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 63, in expand
+    fail(f'undefined or unsupported macro {name!r}',token)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 32, in fail
+    raise CompileError(f'{token.source}:{token.line}:{token.column}: {message}', code=code, token=token)
+evas.errors.CompileError: dut.va:3:57: undefined or unsupported macro 'M_PI_4'
+
+======================================================================
+ERROR: test_explicit_include_provides_all_fourteen_lrm_constants (test_standard_constants.StandardConstants.test_explicit_include_provides_all_fourteen_lrm_constants) (macro='M_1_PI')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 59, in test_explicit_include_provides_all_fourteen_lrm_constants
+    self.assert_correctly_rounded(self.contributed(f'`{name}'), text)
+                                  ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 45, in contributed
+    return -self.compile(value, **kwargs).contributions[0].rhs.constant
+            ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 41, in compile
+    return compile_sources({'dut.va': prefix + BODY.replace('VALUE', value), **(headers or {})}, [INSTANCE])
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 37, in compile_sources
+    models = parse_sources(sources)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 25, in parse_sources
+    for path, tokens in preprocess_sources(sources):
+                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 231, in preprocess_sources
+    tokens=file_tokens(name)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 221, in file_tokens
+    output.extend(expand(tokens[i:end])); i=end
+                  ~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 63, in expand
+    fail(f'undefined or unsupported macro {name!r}',token)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 32, in fail
+    raise CompileError(f'{token.source}:{token.line}:{token.column}: {message}', code=code, token=token)
+evas.errors.CompileError: dut.va:3:57: undefined or unsupported macro 'M_1_PI'
+
+======================================================================
+ERROR: test_explicit_include_provides_all_fourteen_lrm_constants (test_standard_constants.StandardConstants.test_explicit_include_provides_all_fourteen_lrm_constants) (macro='M_2_PI')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 59, in test_explicit_include_provides_all_fourteen_lrm_constants
+    self.assert_correctly_rounded(self.contributed(f'`{name}'), text)
+                                  ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 45, in contributed
+    return -self.compile(value, **kwargs).contributions[0].rhs.constant
+            ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 41, in compile
+    return compile_sources({'dut.va': prefix + BODY.replace('VALUE', value), **(headers or {})}, [INSTANCE])
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 37, in compile_sources
+    models = parse_sources(sources)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 25, in parse_sources
+    for path, tokens in preprocess_sources(sources):
+                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 231, in preprocess_sources
+    tokens=file_tokens(name)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 221, in file_tokens
+    output.extend(expand(tokens[i:end])); i=end
+                  ~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 63, in expand
+    fail(f'undefined or unsupported macro {name!r}',token)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 32, in fail
+    raise CompileError(f'{token.source}:{token.line}:{token.column}: {message}', code=code, token=token)
+evas.errors.CompileError: dut.va:3:57: undefined or unsupported macro 'M_2_PI'
+
+======================================================================
+ERROR: test_explicit_include_provides_all_fourteen_lrm_constants (test_standard_constants.StandardConstants.test_explicit_include_provides_all_fourteen_lrm_constants) (macro='M_2_SQRTPI')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 59, in test_explicit_include_provides_all_fourteen_lrm_constants
+    self.assert_correctly_rounded(self.contributed(f'`{name}'), text)
+                                  ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 45, in contributed
+    return -self.compile(value, **kwargs).contributions[0].rhs.constant
+            ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 41, in compile
+    return compile_sources({'dut.va': prefix + BODY.replace('VALUE', value), **(headers or {})}, [INSTANCE])
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 37, in compile_sources
+    models = parse_sources(sources)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 25, in parse_sources
+    for path, tokens in preprocess_sources(sources):
+                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 231, in preprocess_sources
+    tokens=file_tokens(name)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 221, in file_tokens
+    output.extend(expand(tokens[i:end])); i=end
+                  ~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 63, in expand
+    fail(f'undefined or unsupported macro {name!r}',token)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 32, in fail
+    raise CompileError(f'{token.source}:{token.line}:{token.column}: {message}', code=code, token=token)
+evas.errors.CompileError: dut.va:3:57: undefined or unsupported macro 'M_2_SQRTPI'
+
+======================================================================
+ERROR: test_explicit_include_provides_all_fourteen_lrm_constants (test_standard_constants.StandardConstants.test_explicit_include_provides_all_fourteen_lrm_constants) (macro='M_SQRT2')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 59, in test_explicit_include_provides_all_fourteen_lrm_constants
+    self.assert_correctly_rounded(self.contributed(f'`{name}'), text)
+                                  ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 45, in contributed
+    return -self.compile(value, **kwargs).contributions[0].rhs.constant
+            ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 41, in compile
+    return compile_sources({'dut.va': prefix + BODY.replace('VALUE', value), **(headers or {})}, [INSTANCE])
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 37, in compile_sources
+    models = parse_sources(sources)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 25, in parse_sources
+    for path, tokens in preprocess_sources(sources):
+                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 231, in preprocess_sources
+    tokens=file_tokens(name)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 221, in file_tokens
+    output.extend(expand(tokens[i:end])); i=end
+                  ~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 63, in expand
+    fail(f'undefined or unsupported macro {name!r}',token)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 32, in fail
+    raise CompileError(f'{token.source}:{token.line}:{token.column}: {message}', code=code, token=token)
+evas.errors.CompileError: dut.va:3:57: undefined or unsupported macro 'M_SQRT2'
+
+======================================================================
+ERROR: test_explicit_include_provides_all_fourteen_lrm_constants (test_standard_constants.StandardConstants.test_explicit_include_provides_all_fourteen_lrm_constants) (macro='M_SQRT1_2')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 59, in test_explicit_include_provides_all_fourteen_lrm_constants
+    self.assert_correctly_rounded(self.contributed(f'`{name}'), text)
+                                  ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 45, in contributed
+    return -self.compile(value, **kwargs).contributions[0].rhs.constant
+            ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 41, in compile
+    return compile_sources({'dut.va': prefix + BODY.replace('VALUE', value), **(headers or {})}, [INSTANCE])
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 37, in compile_sources
+    models = parse_sources(sources)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 25, in parse_sources
+    for path, tokens in preprocess_sources(sources):
+                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 231, in preprocess_sources
+    tokens=file_tokens(name)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 221, in file_tokens
+    output.extend(expand(tokens[i:end])); i=end
+                  ~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 63, in expand
+    fail(f'undefined or unsupported macro {name!r}',token)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 32, in fail
+    raise CompileError(f'{token.source}:{token.line}:{token.column}: {message}', code=code, token=token)
+evas.errors.CompileError: dut.va:3:57: undefined or unsupported macro 'M_SQRT1_2'
+
+======================================================================
+ERROR: test_repeated_includes_are_guarded_and_stable (test_standard_constants.StandardConstants.test_repeated_includes_are_guarded_and_stable)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 83, in test_repeated_includes_are_guarded_and_stable
+    program = compile_sources({'dut.va': prefix + BODY.replace('VALUE', '`M_LOG2E')}, [INSTANCE])
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 37, in compile_sources
+    models = parse_sources(sources)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/frontend.py", line 25, in parse_sources
+    for path, tokens in preprocess_sources(sources):
+                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 231, in preprocess_sources
+    tokens=file_tokens(name)
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 221, in file_tokens
+    output.extend(expand(tokens[i:end])); i=end
+                  ~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 63, in expand
+    fail(f'undefined or unsupported macro {name!r}',token)
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python/evas/preprocessor.py", line 32, in fail
+    raise CompileError(f'{token.source}:{token.line}:{token.column}: {message}', code=code, token=token)
+evas.errors.CompileError: dut.va:4:57: undefined or unsupported macro 'M_LOG2E'
+
+======================================================================
+FAIL: test_explicit_include_provides_all_fourteen_lrm_constants (test_standard_constants.StandardConstants.test_explicit_include_provides_all_fourteen_lrm_constants)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/tests/test_standard_constants.py", line 60, in test_explicit_include_provides_all_fourteen_lrm_constants
+    self.assertEqual(STANDARD_ENVIRONMENT, 'evas-voltage-vams-v2')
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'evas-voltage-vams-v1' != 'evas-voltage-vams-v2'
+- evas-voltage-vams-v1
+?                    ^
++ evas-voltage-vams-v2
+?                    ^
+
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.020s
+
+FAILED (failures=1, errors=15)

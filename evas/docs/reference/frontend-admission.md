@@ -8,9 +8,13 @@
 
 `electrical` 是受支持的 discipline 名称，使用前必须声明。
 显式 `include "disciplines.vams"` 可使用 `standard_headers.py` 中的
-`evas-voltage-vams-v1` 环境，定义 Voltage/V、Current/I 以及 continuous electrical。
-显式 `include "constants.vams"` 提供有限数学宏 `M_PI`。
-没有该 include 或用户 define 的 `M_PI` 不再隐式预定义。
+`evas-voltage-vams-v2` 环境，定义 Voltage/V、Current/I 以及 continuous electrical。
+显式 `include "constants.vams"` 提供 VAMS 2.4 Annex D.3 的十四个数学常量：
+`M_E`、`M_LOG2E`、`M_LOG10E`、`M_LN2`、`M_LN10`、`M_PI`、`M_TWO_PI`、
+`M_PI_2`、`M_PI_4`、`M_1_PI`、`M_2_PI`、`M_2_SQRTPI`、`M_SQRT2`、`M_SQRT1_2`。
+例如，显式包含后 ``V(y) <+ `M_TWO_PI;`` 使用标准小数舍入为 binary64 的值。
+`M_PI` 保留原 literal 及 binary64 值；数学常量依据标准定义，不读取商业仿真器头文件。
+没有该 include 或用户 define 时，数学宏仍未定义。`default_transition` 是独立编译指令，仍未支持。
 调用者提供的同路径文件总是优先，空头文件不等价于标准定义。
 不搜索机器文件系统，不隐式为没有 include 的模型添加 discipline。
 
@@ -78,7 +82,7 @@ nature 的 abstol 也不改变 manifest 的求解容差。
 - 预处理器支持对象/函数宏、续行、define/undef、条件编译和 include guard。
   include 只读取调用者在 sources/manifest models 中提供的文件，不搜索外部目录。
   显式包含标准 `constants.vams` / `disciplines.vams` 时，优先使用调用者提供的同路径头；
-  未提供时采用版本化的有限 `evas-voltage-vams-v1` 环境，数学常量仅保留 `M_PI`。
+  未提供时采用版本化的有限 `evas-voltage-vams-v2` 环境，数学常量范围见本页的十四个标准定义。
   `electrical` 使用前必须有支持的 discipline/nature 定义；缺失定义与不兼容头文件拒绝编译。
   实数字面量的小数点两侧必须有数字，例如 `0.5`、`1.0`；`.5`、`1.` 均拒绝。
   具体范围及迁移见本页的编译准入规则。
@@ -95,6 +99,11 @@ nature 的 abstol 也不改变 manifest 的求解容差。
 - manifest 指定顶层实例和端口到全局网络的映射；可展开模块内层次实例。
   命名/位置端口及参数覆盖进入同一关系 IR；内部节点与动态身份按完整实例路径隔离。
 - 全局 `0` 为固定地；其他驱动节点由调用者显式指定。每个样本提供完整驱动值。
+- 只声明、从未引用的私有 electrical 节点不进入 `Program.nodes` 与电压未知量。
+  例如 `electrical dead;` 不参与任何表达式或子实例连接时，`V(y)<+2*V(u);` 不因它成为奇异系统。
+  编译器先验证所有声明，再裁剪私有节点；端口、地、子实例连接及任意结构引用都保留。
+  `0*V(dead)`、未选中分支和零次静态循环中的引用也保留；向量任一位有引用时保留整个向量。
+  引用而未约束的节点仍会导致奇异系统，不赋予隐式地电压。
 - 支持 real 输入的纯 `analog function`：局部顺序赋值、模块参数和受限嵌套调用。
   接受 `< <= > >=` 谓词的有限 if/else 分支，保留条件进入时的局部值及所有支路结构校验。
   函数在绑定前展开为同一关系 IR；不含电压访问、历史调用或递归。范围与独立答案见
@@ -119,3 +128,7 @@ nature 的 abstol 也不改变 manifest 的求解容差。
 实现拒绝不等于语言标准禁止。
 仍拒绝超出范围的循环、generate/实例数组、通用数组、命名支路、电流贡献、宏拼接/字符串化及其他编译指令等。
 不同本地贡献支路因端口连接成为同一节点对的情况也明确拒绝，等待独立契约验证。
+
+## 标准头与私有节点的实际有限对照
+
+十四个常量复用同源实际 Spectre 记录；未引用节点的四个控制保留基线拒绝、候选结果及实际参考。两个动态控制的原 exact query 配对仍缺证，v1 product 超预算仍保留。另立的有界近点对照满足原预算，只认证实际样本与原 query 解析值的有限比较，不能认证缺失的 Spectre(q)，也不授予 Q 或完整原任务资格。输入、设置、独立解析界与可复核小证据见[前端有限对照](../../../experiments/backends/support/frontend-retained/README.md)。
