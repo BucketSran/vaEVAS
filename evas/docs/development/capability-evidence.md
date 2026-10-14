@@ -4,6 +4,11 @@
 面向使用者的支持结论只在[四后端支持范围](../COMPARISON.md)维护，详细接受与拒绝条件由所链接的契约维护。
 收据只证明其固定执行版本；下表仅登记 ID 与证据，供追溯工具读取，不维护第二份支持状态或当前 main 通过率。
 
+[空循环声明与当前 timer 安全修复](../../../experiments/backends/support/retained-safety/README.md)
+补充 LANG、TIMER、EVENT-ORDER、COMPOSE 的 main 适配证据。
+非法节点改为编译失败；新生成当前 timer 改为明确拒绝，尚不支持同刻闭包。
+五个实际 Spectre 探针和开发回归不改变原表 Q 档及历史成绩。
+
 [旧整链 Q 补验与中断边沿积分](../../../experiments/backends/support/README.md#legacy-chain-q)
 补充 TIMER、TRANSITION、DYNAMICS、COMPOSE、QUALIFICATION。
 旧整链使用 main `7344e4db` 对应内核代码；[新增前馈积分](../math/operators.md#transition-integral)

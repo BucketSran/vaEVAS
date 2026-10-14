@@ -22,6 +22,9 @@
 EVAS 0.15.0 / IR19 纳入中断边沿积分实现；该行 Q3 来自发布前候选的实际运行。
 原预算和历史成绩继续保留，实际对照见[本轮记录](../../experiments/backends/support/README.md#legacy-chain-q)。
 
+[空循环声明与当前 timer 修复](../../experiments/backends/support/retained-safety/README.md)只消除错误接受。
+新生成当前 timer 仍需同刻闭包，本轮没有改动下面各行的历史精度结论。
+
 结果来自不同版本，**不是当前 main 的一次全量验收**。
 五个数学函数的修复见[更新记录](../../experiments/backends/support/README.md#q3-closure)，
 原11格的补证见[后续核对](../../experiments/backends/support/README.md#evidence-followup)，

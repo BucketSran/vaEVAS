@@ -116,6 +116,7 @@ impl Controller {
         next: &Frame,
         records: &[EventRecord],
         remaining: &[ScheduledEvent],
+        batch: &[ScheduledEvent],
     ) -> Result<Vec<ScheduledEvent>, Error> {
         let window = records.iter().fold(I::point(next.time), |t, r| {
             let [lo, hi] = r.observation_time_bounds.unwrap_or([r.time, r.time]);
@@ -207,6 +208,7 @@ impl Controller {
             next.time,
             &changed,
             remaining,
+            batch,
         )
     }
 
@@ -2285,3 +2287,7 @@ mod tests {
         }
     }
 }
+
+#[cfg(test)]
+#[path = "transient_timer_boundary_tests.rs"]
+mod timer_boundary_tests;
