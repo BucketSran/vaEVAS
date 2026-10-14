@@ -21,7 +21,6 @@ class InitialEvents(unittest.TestCase):
 
     def test_analysis_specific_and_mixed_global_monitored_events_are_explicit(self):
         for trigger in ('initial_step("dc")', 'initial_step("tran")',
-                        'initial_step or timer(0,0,1e-12)',
                         'initial_step or initial_step("unknown")'):
             with self.subTest(trigger=trigger), self.assertRaises(CompileError) as caught:
                 compile_sources({'init.va':model('@('+trigger+') n=7; V(y,r)<+n;', 'integer n;')},[instance()])

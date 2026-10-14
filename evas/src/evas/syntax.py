@@ -27,7 +27,7 @@ class Token:
 _TOKEN = re.compile(
     r"(?P<space>\s+)|(?P<comment>//[^\n]*|/\*[\s\S]*?\*/)"
     r'|(?P<include>`include[ \t]+"[^"\n]+")'
-    r"|(?P<macro>`M_PI\b)|(?P<system>\$abstime\b)|(?P<task>\$(?:bound_step|display)\b)"
+    r"|(?P<macro>`M_PI\b)|(?P<system>\$abstime\b)|(?P<task>\$(?:bound_step|display|strobe)\b)"
     r'|(?P<directive>`[A-Za-z_][A-Za-z_0-9]*)|(?P<string>"[^"\n]*")'
     r"|(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?[TGMkKmunpfa]?)"
     r"|(?P<name>[A-Za-z_][A-Za-z_0-9]*)|(?P<symbol><\+|<=|>=|==|!=|&&|\|\||'\{|[\[\]:<>(){}+*/%;,=@#.?!\-])"
@@ -177,6 +177,7 @@ class Event:
     triggers: tuple[Trigger, ...]
     body: tuple[Assignment | Conditional | Loop, ...]
     token: Token
+    shared_initial_timer: bool = False
 
 
 @dataclass(frozen=True)
@@ -602,13 +603,13 @@ class Parser:
             rhs = self.expression()
             self.take(";")
             return (ContributionStatement(branch, rhs, token),)
-        if token.text == '$display':
+        if token.text in ('$display', '$strobe'):
             from .display import validate_format
             self.take()
             self.take('(')
             literal = self.take()
             if literal.kind != 'string':
-                self.fail('$display requires a literal format string', literal)
+                self.fail(f'{token.text} requires a literal format string', literal)
             args = []
             while self.token.text == ',':
                 self.take(',')
@@ -721,8 +722,10 @@ class Parser:
         if initial_count:
             if not unqualified:
                 self.fail('analysis-specific initialization requires an analysis lifecycle; include an unqualified initial_step leaf', token, code='unsupported_initial_event')
-            if triggers and (qualified or initial_count != 1 or any(leaf.kind != 'cross' for leaf in triggers)):
-                self.fail('mixed initialization requires one unqualified initial_step and only cross leaves', token, code='unsupported_initial_event')
+            shared_timer = len(triggers) == 1 and triggers[0].kind == 'timer'
+            if triggers and (qualified or initial_count != 1 or
+                             not (shared_timer or all(leaf.kind == 'cross' for leaf in triggers))):
+                self.fail('mixed initialization requires one unqualified initial_step and cross leaves or one fixed timer', token, code='unsupported_initial_event')
             previous_context = self.mixed_initial_body
             self.mixed_initial_body = bool(triggers)
             try:
@@ -746,7 +749,7 @@ class Parser:
             if not initialization(body):
                 self.fail('initial_step body requires assignments, conditionals or static genvar loops', token, code='unsupported_initial_event')
             initial.extend(body)
-            return Event(tuple(triggers), body, token) if triggers else None
+            return Event(tuple(triggers), body, token, shared_initial_timer=shared_timer) if triggers else None
         return Event(tuple(triggers), self.statements(True), token)
 
     def analog_block(self):

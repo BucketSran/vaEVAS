@@ -13,7 +13,13 @@
 [事件时间](../../tests/test_event_time.py)、[整数循环](../../tests/test_integer_loops.py)、[模型步长](../../tests/test_bound_step.py)和
 [SCS 驱动保留](../../tests/test_scs_driven_nodes.py)。既有[语言](../../tests/test_r01_language.py)与
 [纯表达式](../../tests/test_stateless_expressions.py)回归继续保留。
-该候选未合入，检查与原始 70 条件复跑仍在进行，也没有新的实际 Spectre 对照；历史成绩保留。
+该基线未合入；冻结时尚无新的实际 Spectre 对照，不能用其包版本转授已发布能力。历史成绩保留。
+
+[后续事件与连续历史切片](../../../experiments/backends/night-slices/README.md)补充 LANG、TIMER、
+EVENT-ORDER、EVENT-CONDITIONS、TRANSITION、DYNAMICS、COMPOSE、QUALIFICATION 的候选实现和有限实际证据。
+涵盖受限事件数组、隐式步长控制、初始化、辅助电压依赖、精确期限及根窗口历史；新当前 timer 仍安全拒绝。
+统一 v9 重放原 70 条件，12 完成并通过旧输出 checker，12 编译失败、46 运行拒绝或超时。
+数值、原生观测和完整实际配对分别报告；未完成的 GLM 审查、原始模型缺口和 local-only 证据不改变主表成绩。
 
 [旧整链 Q 补验与中断边沿积分](../../../experiments/backends/support/README.md#legacy-chain-q)
 补充 TIMER、TRANSITION、DYNAMICS、COMPOSE、QUALIFICATION。

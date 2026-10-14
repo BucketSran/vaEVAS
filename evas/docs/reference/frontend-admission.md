@@ -8,9 +8,10 @@
 
 `electrical` 是受支持的 discipline 名称，使用前必须声明。
 显式 `include "disciplines.vams"` 可使用 `standard_headers.py` 中的
-`evas-voltage-vams-v1` 环境，定义 Voltage/V、Current/I 以及 continuous electrical。
-显式 `include "constants.vams"` 提供有限数学宏 `M_PI`。
-没有该 include 或用户 define 的 `M_PI` 不再隐式预定义。
+`evas-voltage-vams-v2` 环境，定义 Voltage/V、Current/I 以及 continuous electrical。
+显式 `include "constants.vams"` 提供 VAMS 2.4 附录 D.3 的 14 个数学宏，
+包括 `M_PI`、`M_TWO_PI`、`M_E`、对数及平方根常量；原 `M_PI` 的 binary64 值不变。
+这些宏只在显式 include 或用户 define 后可用；不隐式注入，也不扩展物理常量。
 调用者提供的同路径文件总是优先，空头文件不等价于标准定义。
 不搜索机器文件系统，不隐式为没有 include 的模型添加 discipline。
 
@@ -67,7 +68,10 @@ nature 的 abstol 也不改变 manifest 的求解容差。
   受限条件、逻辑与三元表达式可以组合已接受的初值。
   另支持一个无分析限定 `initial_step` 与 cross 叶子的共享常量赋值体：初始化安装一次，
   后续 cross 触发时执行同一体。赋值须无条件，所有状态合计初始化须唯一、完整且为实例常量。
-  混合体中的 timer、多个或分析限定初始化叶，以及电压/状态/历史相关初值仍拒绝。
+  这个 cross 共享形式中的 timer、多个或分析限定初始化叶，以及电压/状态/历史相关初值仍拒绝。
+  本地候选另接受一个无分析限定 initial_step 与单固定 timer 的共享体，限已有合法初始化且无输出记录。
+  初始化仍先于历史建立，共享 timer(0) 只消费一次零触发；独立事件块不去重。
+  多 timer、cross+timer、保持状态 timer 和 raw IR 生命周期 OR 仍拒绝，见[单 timer 初始化](../math/events.md#initial-timer)。
   纯初始化 OR 保持已有规则；详见[初始化/cross 契约](../math/events.md#initial-cross)。
 
 依据是 [Verilog-AMS 2.4 LRM](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
@@ -81,7 +85,7 @@ nature 的 abstol 也不改变 manifest 的求解容差。
 - 预处理器支持对象/函数宏、续行、define/undef、条件编译和 include guard。
   include 只读取调用者在 sources/manifest models 中提供的文件，不搜索外部目录。
   显式包含标准 `constants.vams` / `disciplines.vams` 时，优先使用调用者提供的同路径头；
-  未提供时采用版本化的有限 `evas-voltage-vams-v1` 环境，数学常量仅保留 `M_PI`。
+  未提供时采用版本化的有限 `evas-voltage-vams-v2` 环境，数学常量范围见本页开头。
   `electrical` 使用前必须有支持的 discipline/nature 定义；缺失定义与不兼容头文件拒绝编译。
   实数字面量的小数点两侧必须有数字，例如 `0.5`、`1.0`；`.5`、`1.` 均拒绝。
   具体范围及迁移见本页的编译准入规则。
@@ -97,6 +101,10 @@ nature 的 abstol 也不改变 manifest 的求解容差。
 - 标量 `case` 使用精确相等和源码首个匹配分支，最多 16 个非 default 标签，至多一个 default。
   互异数值字面量标签采用平衡比较树；参数标签或重叠标签保留首匹配顺序，仍检查表达式展开预算。
   独立回归见 [case 选择](../../tests/test_case_statements.py)。
+- 受支持模拟事件体中的 `$strobe` 是 `$display` 的有限格式别名，复用同一 Display IR 与接受记录事务。
+  这不新增数字域调度或带电压贡献的初始化显示，见[事件输出](../math/events.md#display-records)。
+- 固定 timer 显式 time_tol=0 可编译；运行时仍要求域内期限为精确单点。负容差、保持状态 timer 的零容差仍拒绝，
+  省略容差仍是 1 ps，见[固定 timer](../math/events.md#固定-timer)。
 - 普通 analog 体接受 [`$bound_step(expr)`](../math/events.md#bound-step)，按顺序局部环境记录请求。
   初始化体、事件体及新历史调用仍拒绝；具体运行路径和动态值限制见链接契约。
 - 表达式支持括号、单目正负、加减、乘法和除法。变量分母的连续认证见[有理连续流](../math/continuous.md#selected-flow)。
@@ -132,11 +140,18 @@ nature 的 abstol 也不改变 manifest 的求解容差。
 IR21 还接受声明为标量 `integer` 的固定边界 `for`，初始化、终止边界和步长均须为实例常量整数。
 编译展开仍保留控制变量每轮的赋值、退出值及零次循环的初始值。例如
 `for(i=0;i<3;i=i+1)` 退出后 i=3，`for(i=2;i<2;i=i+1)` 不执行循环体但 i=2。
-循环体不得写自己的控制变量，运行期状态边界及动态数组下标仍拒绝。
+循环体不得写自己的控制变量，运行期状态边界仍拒绝；事件中的动态数组下标见下文。
 独立回归见 [整数循环](../../tests/test_integer_loops.py)。
 总迭代与展开语句各限 4096，事件及其体内叶子分别计数；每个展开的历史调用分别占用一个算子槽。
 也支持一维 real/integer 变量数组：实例常量范围和静态下标，总元素数限 4096，
-数组元素在绑定后展开为独立标量。动态下标、多维及参数数组仍缺。
+数组元素在绑定后展开为独立标量。多维及参数数组仍缺。
+本地候选另接受事件和 final_step 中可证明范围的整数状态下标。
+例如先执行 `i=1; a[i]=7; x=a[i];`，后两句使用更新后的 i，x 得到 7。
+编译器在各条语句的位置计算保守整数范围，只有整个范围均位于数组声明范围内才展开读写。
+不能证明合法或可能越界时明确拒绝，不返回默认零，也不丢弃写入。
+该能力不包括连续电压驱动下标或运行时循环；N03 的循环入口/出口事实仍待实现。
+独立回归见 [动态事件数组](../../tests/test_r01_event_arrays.py)，
+实际范围见[数组对照证据](../../../experiments/backends/night-slices/README.md#n02)。
 范围与独立答案见[循环展开契约](../../validation/ANALOG_CONDITIONS_CONTRACT.md#静态-genvar-循环的分支候选)。
 
 动态算子的参数与组合契约见[算子手册](../math/operators.md)和[事件手册](../math/events.md)。

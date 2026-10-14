@@ -205,6 +205,7 @@ impl Controller {
                 time,
                 &independent_changed,
                 remaining,
+                batch,
             )?;
             self.prepare_physical_history(model, trajectory, next, batch, &physical_pending)?;
         }
@@ -315,6 +316,7 @@ impl Controller {
             time,
             &changed,
             &retained,
+            batch,
         )?;
         Ok(event_acceptance::CalendarPlan::History {
             pending,

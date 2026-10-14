@@ -1,4 +1,13 @@
-"""Scalarize instance-sized variable arrays before shared semantic lowering."""
+"""Scalarize instance-sized variable arrays before shared semantic lowering.
+
+Constant indices become ordinary element states here. Event and final_step
+bodies may keep *dynamic* typed-integer indices as residual ``index`` nodes;
+the instance compiler lowers those into balanced Select reads and single-path
+balanced If writes with per-use range admission (N02). The source provenance
+gate below runs before any constant-subscript array read is rewritten into a
+plain parameter name, so index-of-index and function-origin indices stay
+rejected even though scalarization or function inlining could execute them.
+"""
 from dataclasses import replace
 from .errors import CompileError
 from .ir import Affine
@@ -7,6 +16,38 @@ from .syntax import Assignment, Conditional, Expr, Display
 from .elaboration import unroll_loops
 
 ARRAY_BUDGET = 4096
+
+#: Source grammar admitted for a dynamic index in this first N02 slice.
+INDEX_OPS = frozenset(('number', 'parameter', '+', '-', '*', '/', '%', 'unary+', 'unary-'))
+#: Event leaves whose bodies execute per firing, not during initialization.
+DYNAMIC_EVENT_KINDS = frozenset(('timer', 'cross', 'final_step'))
+
+
+def _index_fail(message, token, model, *, code="array_index_type"):
+    raise CompileError(f'{token.source or model.source}:{token.line}:{token.column}: {message}',
+                       code=code, token=token)
+
+
+def gate_dynamic_index(expr, model):
+    """Reject every index source outside the approved typed-integer grammar.
+
+    This is a syntactic provenance gate on the pre-scalarized tree: nested array
+    reads (including constant subscripts), function results (marked ``real`` or
+    wrapped in ``checked`` after inlining), analog calls, voltage/operator/time
+    access and decision or real operands are all rejected here, before
+    scalarization could disguise them as ordinary parameters.
+    """
+    def visit(item):
+        if item.result_type == 'real' or item.op not in INDEX_OPS:
+            _index_fail(f"dynamic array index requires typed integer arithmetic over literals, "
+                        f"integer parameters and integer states; {item.op!r} sources are rejected",
+                        item.token, model)
+        if item.op == 'number' and not (item.token.text.isdecimal() or item.token.kind == 'name'):
+            _index_fail("dynamic array index literals must be integers", item.token, model)
+        for arg in item.args:
+            visit(arg)
+
+    visit(expr)
 
 
 def scalarize_arrays(model, parameter):
@@ -22,6 +63,19 @@ def scalarize_arrays(model, parameter):
                 or not -2147483648 <= value.constant <= 2147483647):
             fail('array bound/index requires a signed 32-bit instance-constant integer', expr.token)
         return int(value.constant)
+
+    def constant_index(expr):
+        """Instance-constant index, or None when the index is dynamic."""
+        try:
+            value = lower(expr, parameter, {}, model.source)
+        except CompileError as error:
+            if error.diagnostic['code'] == 'resource_budget':
+                raise
+            return None
+        if (isinstance(value, Affine) and not value.terms and value.constant.is_integer()
+                and -2147483648 <= value.constant <= 2147483647):
+            return int(value.constant)
+        return None
 
     ranges = {}
     variables = {}
@@ -39,10 +93,16 @@ def scalarize_arrays(model, parameter):
         for index in indices:
             variables[f'{name}[{index}]'] = kind
 
-    def element(name, index, token):
+    def element(name, index, token, dynamic):
         if name not in ranges:
             fail(f'indexed identifier {name!r} is not a variable array', token)
-        value = integer(index)
+        value = constant_index(index)
+        if value is None:
+            if not dynamic:
+                fail('dynamic array indices are supported only in event and final_step bodies', index.token,
+                     code='unsupported_array_index')
+            gate_dynamic_index(index, model)
+            return None
         if value not in ranges[name]:
             fail(f'array index {value} is outside {name!r} declaration', index.token)
         return f'{name}[{value}]'
@@ -50,40 +110,65 @@ def scalarize_arrays(model, parameter):
     # This cache belongs to one instance's scalarization, with fixed bounds.
     # Keep the input alive as well as its replacement to avoid ID reuse.
     expressions = {}
-    def expression(expr):
+    def expression(expr, dynamic):
         key = id(expr)
         if key not in expressions:
-            expressions[key] = (expr, transform_expression(expr))
+            expressions[key] = (expr, transform_expression(expr, dynamic))
         return expressions[key][1]
 
-    def transform_expression(expr):
+    def transform_expression(expr, dynamic):
         if expr.op == 'index':
-            return Expr('parameter', element(expr.value, expr.args[0], expr.token), (), expr.token)
+            name = element(expr.value, expr.args[0], expr.token, dynamic)
+            if name is None:
+                # Residual dynamic read; lowered to a balanced Select by the
+                # instance compiler with its own use-site admission.
+                return Expr('index', expr.value, (expression(expr.args[0], dynamic),), expr.token)
+            return Expr('parameter', name, (), expr.token)
         if expr.op == 'parameter' and expr.value in ranges:
             fail('array value requires an explicit element index', expr.token)
-        return replace(expr, args=tuple(expression(a) for a in expr.args))
+        return replace(expr, args=tuple(expression(a, dynamic) for a in expr.args))
 
-    def body(statements):
+    def body(statements, dynamic=False):
         result = []
         for statement in statements:
             if isinstance(statement, Conditional):
-                result.append(replace(statement, left=expression(statement.left), right=expression(statement.right),
-                                      then_body=body(statement.then_body), else_body=body(statement.else_body)))
+                result.append(replace(statement, left=expression(statement.left, dynamic),
+                                      right=expression(statement.right, dynamic),
+                                      then_body=body(statement.then_body, dynamic),
+                                      else_body=body(statement.else_body, dynamic)))
             elif isinstance(statement, Display):
-                result.append(replace(statement, args=tuple(expression(arg) for arg in statement.args)))
+                result.append(replace(statement, args=tuple(expression(arg, dynamic) for arg in statement.args)))
             elif isinstance(statement, Assignment):
                 name = statement.name
                 if statement.index is not None:
-                    name = element(name, statement.index, statement.token)
+                    element_name = element(name, statement.index, statement.token, dynamic)
+                    if element_name is None:
+                        # Residual dynamic write; the compiler expands it into a
+                        # single-path balanced If dispatch over all slots.
+                        result.append(replace(statement, rhs=expression(statement.rhs, dynamic),
+                                              index=expression(statement.index, dynamic)))
+                        continue
+                    name = element_name
                 elif name in ranges:
                     fail('array assignment requires an explicit element index', statement.token)
-                result.append(replace(statement, name=name, rhs=expression(statement.rhs), index=None))
+                result.append(replace(statement, name=name, rhs=expression(statement.rhs, dynamic), index=None))
             else:
-                result.append(replace(statement, rhs=expression(statement.rhs)))
+                result.append(replace(statement, rhs=expression(statement.rhs, dynamic)))
         return tuple(result)
 
-    return replace(model, variables=variables, arrays={}, analog=list(body(unroll_loops(model, parameter))),
-                   initial=list(body(model.initial)), events=[replace(event, body=body(event.body), triggers=tuple(
-                       replace(leaf, arguments=tuple(expression(a) if a is not None else None
+    def event_body(event):
+        # Bodies that also execute during initialization keep the constant-only
+        # rule; shared initial timers and initial_step leaves never admit them.
+        dynamic = (not event.shared_initial_timer
+                   and all(leaf.kind in DYNAMIC_EVENT_KINDS for leaf in event.triggers))
+        return body(event.body, dynamic)
+
+    # Element bounds stay on the model so the instance compiler can rebuild the
+    # slot list for residual dynamic indices.
+    return replace(model, variables=variables,
+                   analog=list(body(unroll_loops(model, parameter))),
+                   initial=list(body(model.initial)),
+                   events=[replace(event, body=event_body(event), triggers=tuple(
+                       replace(leaf, arguments=tuple(expression(a, False) if a is not None else None
                                                    for a in leaf.arguments)) for leaf in event.triggers))
                        for event in model.events])

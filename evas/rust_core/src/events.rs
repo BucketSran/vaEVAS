@@ -316,6 +316,18 @@ pub(crate) fn contribution_affine(
                     && v.node_dependencies.is_empty()
                     && v.state_dependencies.is_empty()
             };
+            let timed_only = |v: &AffineState| {
+                operator_only(v)
+                    && v.operator_dependencies.iter().all(|&i| {
+                        matches!(
+                            program.operators[i],
+                            crate::ir::OperatorSpec::Transition { .. }
+                        )
+                    })
+            };
+            let timed_voltage_coefficient = matches!(expr, Expression::Multiply { .. })
+                && ((a.operator_dependencies.is_empty() && timed_only(&b))
+                    || (b.operator_dependencies.is_empty() && timed_only(&a)));
             let sampled_coefficient = matches!(expr, Expression::Multiply { .. })
                 && ((state_only(&a) && operator_only(&b)) || (operator_only(&a) && state_only(&b)));
             if matches!(expr, Expression::Divide { .. }) && b.has_variables {
@@ -326,7 +338,7 @@ pub(crate) fn contribution_affine(
             }
             let scalar_product = matches!(expr, Expression::Multiply { .. })
                 && (!a.has_variables || !b.has_variables);
-            let mut result = if sampled_coefficient || scalar_product {
+            let mut result = if sampled_coefficient || scalar_product || timed_voltage_coefficient {
                 affine(
                     &freeze_operators(&representative, &vec![1.0; program.operators.len()]),
                     program,
@@ -564,7 +576,7 @@ impl EventModel {
                             || *start < 0.0
                             || !period.is_finite()
                             || !time_tolerance.is_finite()
-                            || *time_tolerance <= 0.0
+                            || *time_tolerance < 0.0
                         {
                             return Err(Error::new("invalid_ir", "invalid timer settings"));
                         }

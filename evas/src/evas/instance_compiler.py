@@ -14,7 +14,8 @@ from .lowering import lower, scale
 from .limits import check_ir
 from .parameters import bind_parameters
 from .elaboration import unroll_loops
-from .array_elaboration import scalarize_arrays
+from .array_elaboration import scalarize_arrays, ARRAY_BUDGET
+from . import event_index_domains
 from .syntax import (CompileError, Model, contains_operator, contains_decision,
                      Assignment as SyntaxAssignment, Conditional as SyntaxConditional, Display as SyntaxDisplay,
                      Loop, ContributionStatement, BoundStep, OPERATOR_NAMES, DECISION_NAMES)
@@ -89,13 +90,22 @@ class InstanceCompiler:
     def compile(self):
         self.cache = bind_parameters(self.model, self.instance.parameters, self.instance.name)
         self.model = scalarize_arrays(self.model, self.parameter)
+        self.array_elements = self._declared_elements()
+        self.array_dispatch_leaves = 0
+        self.array_flow = {}
+        self._array_flow_holder = []
         # A declaration does not become held state just because another variable
         # has an event writer. Walk writes (including conditional/loop bodies),
         # so event targets retain the VA declaration default of zero.
         def writes(statements):
             for statement in statements:
                 if isinstance(statement, SyntaxAssignment):
-                    yield statement.name
+                    if statement.index is not None and statement.name in self.array_elements:
+                        # A dynamic write can select any declared slot.
+                        yield from (f'{statement.name}[{k}]'
+                                    for k in self.array_elements[statement.name])
+                    else:
+                        yield statement.name
                 elif isinstance(statement, SyntaxConditional):
                     yield from writes(statement.then_body)
                     yield from writes(statement.else_body)
@@ -110,14 +120,18 @@ class InstanceCompiler:
         def expression_reads(expr):
             if expr is None:
                 return set()
-            names = {expr.value} if expr.op == "parameter" else set()
+            if expr.op == "index" and str(expr.value) in self.array_elements:
+                # A dynamic read can observe any declared slot.
+                names = {f'{expr.value}[{k}]' for k in self.array_elements[str(expr.value)]}
+            else:
+                names = {expr.value} if expr.op == "parameter" else set()
             for arg in expr.args:
                 names.update(expression_reads(arg))
             return names
         def reads(statements):
             names = set()
             for statement in statements:
-                for field in ("rhs", "left", "right", "start", "limit", "update"):
+                for field in ("rhs", "index", "left", "right", "start", "limit", "update"):
                     if hasattr(statement, field):
                         names.update(expression_reads(getattr(statement, field)))
                 if isinstance(statement, SyntaxDisplay):
@@ -140,8 +154,29 @@ class InstanceCompiler:
         self.state_ids = {name: len(self.compilation.states) + index for index, name in enumerate(self.state_names)}
         self.initialize_states()
         self.infer_integer_state_ranges()
+        self.analyze_event_index_domains()
         for event in self.model.events:
             triggers = tuple(self.trigger(leaf) for leaf in event.triggers)
+            if event.shared_initial_timer:
+                # Source initialization has already established states before
+                # continuous histories are constructed. Only the shared zero
+                # callback is consumed; independent timer(0) blocks are intact.
+                trigger = triggers[0]
+                if len(triggers) != 1 or not isinstance(trigger, TimerTrigger):
+                    raise CompileError("shared initial_step requires a fixed timer",
+                                       code="unsupported_initial_event", token=event.token)
+                if trigger.start == 0:
+                    if trigger.period > 0:
+                        # Copy p exactly: p+k*p == (k+1)*p as binary rationals.
+                        # Do not add/round an arbitrary positive start here.
+                        trigger = TimerTrigger(trigger.period, trigger.period,
+                                               trigger.time_tolerance, trigger.enabled)
+                    else:
+                        # Keep a disabled, validated leaf so body validation and
+                        # trigger identities are not silently skipped.
+                        trigger = TimerTrigger(trigger.start, trigger.period,
+                                               trigger.time_tolerance, False)
+                triggers = (trigger,)
             event_trigger = triggers[0] if len(triggers) == 1 else OrTrigger(triggers)
             origin = Origin(event.token.source or self.model.source, event.token.line, event.token.column, self.instance.name, event.token.expansion)
             self.compilation.events.append(Event(event_trigger, self.body(event.body), origin))
@@ -394,13 +429,19 @@ class InstanceCompiler:
                 return any(contains_state(part) for part in (expr.left, expr.right, expr.then_value, expr.else_value))
             return isinstance(expr, Power) and contains_state(expr.base)
         def writes(statements):
+            # Dynamic indexed writes conservatively target every declared slot.
             for statement in statements:
                 if isinstance(statement, SyntaxAssignment):
-                    yield statement
+                    if statement.index is not None and statement.name in self.array_elements:
+                        targets = tuple(f'{statement.name}[{k}]'
+                                        for k in self.array_elements[statement.name])
+                    else:
+                        targets = (statement.name,)
+                    yield targets, statement.rhs
                 elif isinstance(statement, SyntaxConditional):
                     yield from writes(statement.then_body)
                     yield from writes(statement.else_body)
-        writers = [statement for event in self.model.events for statement in writes(event.body)]
+        writers = [writer for event in self.model.events for writer in writes(event.body)]
         for name in self.state_names:
             if self.model.variables[name] != "integer":
                 continue
@@ -408,12 +449,13 @@ class InstanceCompiler:
             initial = self.initials[name]
             initial = Affine(initial, ()) if isinstance(initial, (int, float)) else initial
             bounds = [self.integral_bounds(initial)]
-            for statement in writers:
-                if statement.name != name:
+            for targets, rhs in writers:
+                if name not in targets:
                     continue
                 try:
-                    value = self.lower_event(statement.rhs, self.symbol, self.node_ids,
-                        preserve_structure=True, decisions=self.expression_select, node_declarations=True)
+                    value = self.lower_event(rhs, self.symbol, self.node_ids,
+                        preserve_structure=True, decisions=self.expression_select,
+                        node_declarations=True, indices=self.conservative_array_read)
                     if contains_state(value) or not self.integral(value):
                         raise CompileError("state-dependent integer bound")
                     bounds.append(self.integral_bounds(value))
@@ -465,6 +507,133 @@ class InstanceCompiler:
             value = Binary("add", numerator, scale(value, -float(divisor)))
         check_ir(value, origin)
         return value
+
+    def _declared_elements(self):
+        """Ascending slot integers per retained array declaration."""
+        def integer(expr):
+            value = lower(expr, self.parameter, {}, self.model.source)
+            if (not isinstance(value, Affine) or value.terms or not value.constant.is_integer()
+                    or not -2147483648 <= value.constant <= 2147483647):
+                raise CompileError(f'{self.model.source}:{expr.token.line}:{expr.token.column}: '
+                                   f'array declaration bound requires a signed 32-bit instance-constant integer',
+                                   token=expr.token, instance=self.instance.name)
+            return int(value.constant)
+        return {name: tuple(range(min(integer(left), integer(right)), max(integer(left), integer(right)) + 1))
+                for name, (left, right) in self.model.arrays.items()}
+
+    def analyze_event_index_domains(self):
+        """Global entry invariant plus per-use FlowFacts for dynamic indices."""
+        states = [name for name in self.state_names if self.model.variables[name] == "integer"]
+        initial = {}
+        for name in states:
+            value = self.initials[name]
+            if isinstance(value, (int, float)):
+                bounds = (int(value), int(value))
+            else:
+                low, high = self.integral_bounds(value)
+                bounds = (int(low), int(high))
+            initial[name] = event_index_domains.clamp(bounds)
+        bodies = [event.body for event in self.model.events]
+        def parameters(name):
+            return self.parameter(name)
+        def location_of(token):
+            return f"{token.source or self.model.source}:{token.line}:{token.column}"
+        try:
+            domains, _widened = event_index_domains.entry_domains(
+                bodies, initial, arrays=self.array_elements,
+                parameters=parameters, states=states)
+            facts, holder = event_index_domains.use_site_facts(
+                bodies, domains, arrays=self.array_elements,
+                parameters=parameters, location_of=location_of)
+        except ValueError as error:
+            raise CompileError(f'{self.model.source}: {error}', code='resource_budget',
+                               instance=self.instance.name)
+        self.event_entry_domains = domains
+        self.array_flow = facts
+        self._array_flow_holder = holder
+
+    def _dynamic_index(self, expr, token, access, array):
+        """Lower one residual dynamic index with typed checks and admission."""
+        location = f"{token.source or self.model.source}:{token.line}:{token.column}"
+        entry = self.array_flow.get(id(expr))
+        if entry is None:
+            raise CompileError(f'{location}: dynamic {access} index of {array!r} lacks flow facts',
+                               code='array_index_range', token=token, instance=self.instance.name)
+        _, facts = entry
+        elements = self.array_elements.get(array, ())
+        if not elements:
+            raise CompileError(f'{location}: {array!r} is not a declared variable array',
+                               token=token, instance=self.instance.name)
+        if not self.integer_type(expr):
+            raise CompileError(f'{location}: dynamic array index of {array!r} requires a typed integer expression',
+                               code='array_index_type', token=token, instance=self.instance.name)
+        value = self.lower_event(expr, self.symbol, self.node_ids, preserve_structure=True)
+        if not self.integral(value):
+            raise CompileError(f'{location}: dynamic array index of {array!r} requires integral arithmetic',
+                               code='array_index_type', token=token, instance=self.instance.name)
+        low, high = elements[0], elements[-1]
+        if not event_index_domains.within(facts.index, low, high):
+            raise CompileError(f'{location}: dynamic {access} index of {array!r} is not provably within '
+                               f'[{low}:{high}]; interval [{facts.index[0]},{facts.index[1]}]',
+                               code='array_index_range', token=token, instance=self.instance.name)
+        return value
+
+    def _array_read_tree(self, array, elements, index_value, token):
+        """Complete balanced Select over every declared slot (no fallback arm)."""
+        origin = Origin(token.source or self.model.source, token.line, token.column,
+                        self.instance.name, token.expansion)
+        def tree(items):
+            if len(items) == 1:
+                return StateRef(self.state_ids[f'{array}[{items[0]}]'])
+            middle = len(items) // 2
+            boundary = items[middle - 1] + 0.5
+            return Select("lt", index_value, Affine(boundary, ()),
+                          tree(items[:middle]), tree(items[middle:]), origin)
+        result = tree(elements)
+        check_ir(result, origin)
+        self.expression_decision_origins.add(origin)
+        return result
+
+    def event_index_read(self, expr):
+        """`indices` hook: residual dynamic read in an event expression."""
+        array = str(expr.value)
+        elements = self.array_elements.get(array, ())
+        index_value = self._dynamic_index(expr.args[0], expr.token, 'read', array)
+        return self._array_read_tree(array, elements, index_value, expr.token)
+
+    def conservative_array_read(self, expr):
+        """Range-inference view of a dynamic read: a Select over every slot."""
+        array = str(expr.value)
+        elements = self.array_elements.get(array, ())
+        index_value = self.lower_event(expr.args[0], self.symbol, self.node_ids, preserve_structure=True)
+        return self._array_read_tree(array, elements, index_value, expr.token)
+
+    def event_array_write(self, statement, origin):
+        """Single-path balanced If dispatch; only the selected slot is assigned."""
+        array = statement.name
+        elements = self.array_elements.get(array, ())
+        index_value = self._dynamic_index(statement.index, statement.token, 'write', array)
+        kind = self.model.variables[f'{array}[{elements[0]}]']
+        value = self.lower_event(statement.rhs, self.symbol, self.node_ids, preserve_structure=True,
+                                 decisions=self.expression_select, validate_decision=self.validate_decision_expression,
+                                 node_declarations=True, indices=self.event_index_read,
+                                 integer_assignment_root=(kind == "integer"))
+        if kind == "integer" and not self.integral(value):
+            raise CompileError("integer assignment requires integral state arithmetic",
+                               token=statement.token, instance=self.instance.name)
+        def dispatch(items):
+            if len(items) == 1:
+                self.array_dispatch_leaves += 1
+                if self.array_dispatch_leaves > ARRAY_BUDGET:
+                    raise CompileError('dynamic array dispatch budget (4096 leaves) exceeded',
+                                       code='resource_budget', token=statement.token,
+                                       instance=self.instance.name)
+                return self.event_assignment(self.state_ids[f'{array}[{items[0]}]'], value, origin)
+            middle = len(items) // 2
+            boundary = items[middle - 1] + 0.5
+            return (Conditional("lt", index_value, Affine(boundary, ()),
+                                tuple(dispatch(items[:middle])), tuple(dispatch(items[middle:])), origin),)
+        return dispatch(elements)
 
     def waveform(self, expr, resolve):
         resolve = self.typed_resolve(resolve)
@@ -616,8 +785,8 @@ class InstanceCompiler:
             arguments = leaf.arguments + (None,) * (4-len(leaf.arguments))
             start_arg, period_arg, tolerance_arg, enable_arg = arguments
             time_tol = 1e-12 if tolerance_arg is None else setting(tolerance_arg)
-            if time_tol <= 0:
-                raise CompileError("timer requires nonnegative start and positive time_tol")
+            if time_tol < 0:
+                raise CompileError("timer requires nonnegative start and time_tol")
             values = [self.lower_event(arg, self.symbol, {}, preserve_structure=True) if arg is not None else Affine(0., ())
                       for arg in (start_arg, period_arg, enable_arg)]
             if enable_arg is None:
@@ -625,9 +794,11 @@ class InstanceCompiler:
             if all(isinstance(value, Affine) and not value.terms for value in values):
                 start, period, enabled = (value.constant for value in values)
                 if start < 0:
-                    raise CompileError("timer requires nonnegative start and positive time_tol")
+                    raise CompileError("timer requires nonnegative start and time_tol")
                 result = TimerTrigger(start, period, time_tol, enabled != 0)
             else:
+                if time_tol == 0:
+                    raise CompileError("zero time_tol requires fixed timer parameters")
                 result = HeldTimerTrigger(values[0], values[1], time_tol, values[2])
         return result
 
@@ -638,16 +809,21 @@ class InstanceCompiler:
             if isinstance(statement, SyntaxDisplay):
                 arguments = tuple(self.lower_event(arg, self.symbol, self.node_ids,
                     preserve_structure=True, decisions=self.expression_select,
-                    validate_decision=self.validate_decision_expression, node_declarations=True)
+                    validate_decision=self.validate_decision_expression, node_declarations=True,
+                    indices=self.event_index_read)
                     for arg in statement.args)
                 result.append(Display(statement.format, arguments, origin))
             elif isinstance(statement, SyntaxConditional):
                 # The kernel evaluates predicates against the preceding
                 # assignments, preserving procedural statement order.
-                left = self.lower_event(statement.left, self.symbol, self.node_ids, preserve_structure=True, decisions=self.expression_select, node_declarations=True)
-                right = self.lower_event(statement.right, self.symbol, self.node_ids, preserve_structure=True, decisions=self.expression_select, node_declarations=True)
+                left = self.lower_event(statement.left, self.symbol, self.node_ids, preserve_structure=True, decisions=self.expression_select, node_declarations=True, indices=self.event_index_read)
+                right = self.lower_event(statement.right, self.symbol, self.node_ids, preserve_structure=True, decisions=self.expression_select, node_declarations=True, indices=self.event_index_read)
                 result.extend(self.event_conditional({"<": "lt", "<=": "le", ">": "gt", ">=": "ge"}[statement.relation],
                                           left, right, self.body(statement.then_body), self.body(statement.else_body), origin))
+            elif isinstance(statement, SyntaxAssignment) and statement.index is not None:
+                # Dynamic array write: index and RHS at their sequential site,
+                # single-path dispatch with exactly one selected-slot leaf.
+                result.extend(self.event_array_write(statement, origin))
             else:
                 if statement.name not in self.state_ids:
                     raise CompileError(f"{self.model.source}:{statement.token.line}: assignment target must be an instance state")
@@ -655,6 +831,7 @@ class InstanceCompiler:
                 # when a coefficient cancels or underflows to zero.
                 value = self.lower_event(statement.rhs, self.symbol, self.node_ids, preserve_structure=True,
                                          decisions=self.expression_select, validate_decision=self.validate_decision_expression, node_declarations=True,
+                                         indices=self.event_index_read,
                                          integer_assignment_root=self.model.variables[statement.name] == "integer")
                 if self.model.variables[statement.name] == "integer" and not self.integral(value):
                     raise CompileError("integer assignment requires integral state arithmetic")

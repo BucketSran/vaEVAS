@@ -252,6 +252,47 @@ impl Curve {
         RootTime::from_affine(segment, [a, b], bounds)
     }
 
+    /// Exact roots and knots of an already validated affine source curve.
+    /// A zero plateau or a nonrepresentable root has no first-slice schedule.
+    /// This API is used by source-target plans; existing guard rules are unchanged.
+    pub(crate) fn isolated_zero_cuts(&self) -> Option<Vec<f64>> {
+        let mut work = Budget(0);
+        let mut out = Vec::new();
+        for pair in self.0.windows(2) {
+            let (a, x) = &pair[0];
+            let (b, y) = &pair[1];
+            if a >= b || (x.is_zero() && y.is_zero()) {
+                return None;
+            }
+            for t in [a, b] {
+                let bounds = enclosure(t)?;
+                if bounds.lo != bounds.hi {
+                    return None;
+                }
+                out.push(bounds.lo);
+            }
+            if x.is_zero() || y.is_zero() || x.is_positive() == y.is_positive() {
+                continue;
+            }
+            let duration = work.check(b - a)?;
+            let delta = work.check(y - x)?;
+            let numerator = work.check(x * duration)?;
+            let shift = work.check(numerator / delta)?;
+            let root = work.check(a - shift)?;
+            if root <= *a || root >= *b {
+                return None;
+            }
+            let bounds = enclosure(&root)?;
+            if bounds.lo != bounds.hi {
+                return None;
+            }
+            out.push(bounds.lo);
+        }
+        out.sort_by(f64::total_cmp);
+        out.dedup();
+        Some(out)
+    }
+
     pub(crate) fn source(points: &[[f64; 2]]) -> Option<Self> {
         if points.len() > MAX_POINTS {
             return None;

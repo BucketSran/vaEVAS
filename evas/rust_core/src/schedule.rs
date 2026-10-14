@@ -592,6 +592,64 @@ impl Moment {
 /// Resolve a complete cluster with certified physical order. Keep nominal
 /// enclosures for sampling/forward-error propagation; representative delays
 /// neither erase uncertainty nor relax any clock's original tolerance.
+// Only a certified equal-time group containing a fixed zero-tolerance timer
+// may use this contraction. Each fixed clock must independently prove the same
+// singleton, contained in its original enclosure. Other moment kinds keep
+// their own certificates and must still pass the ordinary accepts check.
+fn contract_zero_timer_group(
+    events: &mut [ScheduledEvent],
+    model: &EventModel,
+) -> Result<Option<f64>, Error> {
+    let mut time = None;
+    for event in events.iter() {
+        if matches!(
+            model.triggers[event.event].trigger,
+            EventTrigger::Timer {
+                time_tolerance: 0.0,
+                ..
+            }
+        ) {
+            let bounds = event.bounds();
+            if bounds.lo != bounds.hi || !bounds.finite() || time.is_some_and(|t| t != bounds.lo) {
+                return Err(unresolved(
+                    "zero-tolerance timer group is not one exact point",
+                ));
+            }
+            time = Some(bounds.lo);
+        }
+    }
+    let Some(time) = time else { return Ok(None) };
+    // Prove the whole group before changing its local certificates.
+    for event in events.iter() {
+        if let Moment::Timer {
+            bounds,
+            start,
+            period,
+            index,
+        } = event.moment
+        {
+            let exact = Clock {
+                start,
+                period,
+                index,
+            }
+            .bounds()
+            .ok_or_else(|| unresolved("fixed timer exact clock has no finite bounds"))?;
+            if exact != I::point(time) || bounds.lo > time || bounds.hi < time {
+                return Err(unresolved(
+                    "fixed timer cannot share the zero-tolerance point",
+                ));
+            }
+        }
+    }
+    for event in events.iter_mut() {
+        if let Moment::Timer { bounds, .. } = &mut event.moment {
+            *bounds = I::point(time);
+        }
+    }
+    Ok(Some(time))
+}
+
 fn order_fixed_timers(
     events: &mut [ScheduledEvent],
     model: &EventModel,
@@ -634,11 +692,19 @@ fn order_fixed_timers(
         }
         // All equal nominal times must share one representative, including
         // when their different arithmetic decompositions have different bounds.
-        let mut time = events[start..end]
-            .iter()
-            .map(|e| e.time.max(e.bounds().hi))
-            .fold(0.0, f64::max);
+        let zero_time = contract_zero_timer_group(&mut events[start..end], model)?;
+        let mut time = zero_time.unwrap_or_else(|| {
+            events[start..end]
+                .iter()
+                .map(|e| e.time.max(e.bounds().hi))
+                .fold(0.0, f64::max)
+        });
         if let Some(prior) = previous {
+            if zero_time.is_some() && prior >= time {
+                return Err(unresolved(
+                    "prior event occupies a zero-tolerance timer time",
+                ));
+            }
             time = time.max(prior.next_up());
         }
         if !time.is_finite() {
@@ -680,9 +746,17 @@ fn add_timer(
     model: &EventModel,
     states: Option<&[I]>,
     after: Option<f64>,
+    boundary: Option<&TimerBoundary<'_>>,
 ) -> Result<(), Error> {
     let stop = config.stop;
     let forced_points = !config.strobetimes.is_empty();
+    let zero_tolerance = matches!(
+        trigger,
+        EventTrigger::Timer {
+            time_tolerance: 0.0,
+            ..
+        }
+    );
     let (start, period, enabled, held) = match trigger {
         EventTrigger::Timer {
             start,
@@ -747,7 +821,31 @@ fn add_timer(
         // enclosure covers both product and sum. Choosing its upper endpoint
         // cannot fire early, including when the source omitted time_tol. The
         // clock remains start + index * period, never prior accepted time + T.
-        let mut bounds = if forced_points && start.lo == start.hi && period.lo == period.hi {
+        // For a fixed zero budget, first prove whether this clock is outside
+        // the requested domain. A later nonrepresentable clock must not reject
+        // an otherwise valid finite prefix whose stop precedes that clock.
+        let exact_clock = Clock {
+            start: start.lo,
+            period: period.lo,
+            index,
+        };
+        if zero_tolerance
+            && exact_clock.order(Clock {
+                start: stop,
+                period: 0.,
+                index: 0,
+            }) == Some(std::cmp::Ordering::Greater)
+        {
+            break;
+        }
+        let mut bounds = if zero_tolerance {
+            if (index as f64).mul_add(period.lo, start.lo) == f64::INFINITY {
+                break;
+            }
+            exact_clock
+                .bounds()
+                .ok_or_else(|| unresolved("zero-tolerance timer has no finite exact bounds"))?
+        } else if forced_points && start.lo == start.hi && period.lo == period.hi {
             // A forced solve point must not be crossed only because interval
             // arithmetic widened an otherwise exactly ordered source clock.
             // A held clock qualifies only when both current parameters are
@@ -805,6 +903,27 @@ fn add_timer(
             return Err(unresolved(
                 "cannot certify timer nominal time relative to stop",
             ));
+        }
+        if zero_tolerance && bounds.lo != bounds.hi {
+            return Err(unresolved("zero-tolerance timer time is not representable"));
+        }
+        if held {
+            if let Some(boundary) = boundary {
+                let clock = (start.lo == start.hi && period.lo == period.hi).then_some(Clock {
+                    start: start.lo,
+                    period: period.lo,
+                    index,
+                });
+                if boundary.already_past_or_consumed(event, bounds, clock)? {
+                    if period.hi <= 0. {
+                        break;
+                    }
+                    continue;
+                }
+                if after.is_some_and(|time| bounds.lo <= time) {
+                    return Err(unresolved("future held timer cannot be ordered after the accepted representative"));
+                }
+            }
         }
         if let Some(after) = after {
             if bounds.hi <= after {
@@ -891,6 +1010,7 @@ pub(crate) fn schedule_held(
             after: None,
             changed: &[],
             pending: &[],
+            boundary: None,
         }),
         CalendarScope::All,
     )
@@ -903,7 +1023,9 @@ pub(crate) fn reschedule_held(
     after: f64,
     changed: &[bool],
     pending: &[ScheduledEvent],
+    consumed: &[ScheduledEvent],
 ) -> Result<Vec<ScheduledEvent>, Error> {
+    let boundary = TimerBoundary::new(model, after, consumed)?;
     schedule_with_history(
         model,
         trajectory,
@@ -913,6 +1035,7 @@ pub(crate) fn reschedule_held(
             after: Some(after),
             changed,
             pending,
+            boundary: Some(&boundary),
         }),
         CalendarScope::All,
     )
@@ -954,6 +1077,7 @@ pub(crate) fn independent_epoch(
             after,
             changed: &changed,
             pending: &[],
+            boundary: None,
         }),
         CalendarScope::Independent,
     )
@@ -974,7 +1098,9 @@ pub(crate) fn reschedule_independent(
     after: f64,
     changed: &[bool],
     pending: &[ScheduledEvent],
+    consumed: &[ScheduledEvent],
 ) -> Result<Vec<ScheduledEvent>, Error> {
+    let boundary = TimerBoundary::new(model, after, consumed)?;
     schedule_with_history(
         model,
         trajectory,
@@ -984,6 +1110,7 @@ pub(crate) fn reschedule_independent(
             after: Some(after),
             changed,
             pending,
+            boundary: Some(&boundary),
         }),
         CalendarScope::Independent,
     )
@@ -1009,6 +1136,7 @@ pub(crate) fn history_epoch(
             after: epoch.after,
             changed: &changed,
             pending: epoch.pending,
+            boundary: None,
         }),
         CalendarScope::History {
             until: epoch.until,
@@ -1017,11 +1145,81 @@ pub(crate) fn history_epoch(
     )
 }
 
+/// Evidence from this candidate batch, never from a body ID or an older event.
+/// A changed held clock cannot silently create an unconsumed current occurrence.
+struct TimerBoundary<'a> {
+    observation: I,
+    consumed: std::collections::BTreeMap<usize, &'a ScheduledEvent>,
+    common_moment: Option<&'a Moment>,
+}
+
+impl<'a> TimerBoundary<'a> {
+    fn new(model: &EventModel, after: f64, batch: &'a [ScheduledEvent]) -> Result<Self, Error> {
+        if !after.is_finite() || batch.is_empty() {
+            return Err(unresolved("held timer rescheduling requires the current event batch"));
+        }
+        let mut observation = I::point(after);
+        let mut consumed = std::collections::BTreeMap::new();
+        for event in batch {
+            if event.time != after || event.event >= model.triggers.len()
+                || !event.bounds().finite() || event.bounds().lo > event.bounds().hi {
+                return Err(unresolved("held timer boundary does not identify the current batch"));
+            }
+            observation = observation.hull(event.bounds());
+            if matches!(model.triggers[event.event].trigger, EventTrigger::HeldTimer { .. }) {
+                if !matches!(event.moment, Moment::HeldTimer { .. })
+                    || consumed.insert(event.event, event).is_some() {
+                    return Err(unresolved("held timer consumption requires a unique timer leaf"));
+                }
+            }
+        }
+        let first = &batch[0].moment;
+        let common_moment = batch.iter().all(|event| {
+            first.exact_order(&event.moment) == Some(std::cmp::Ordering::Equal)
+                || (first.bounds().lo == first.bounds().hi && first.bounds() == event.bounds())
+        }).then_some(first);
+        Ok(Self { observation, consumed, common_moment })
+    }
+
+    fn already_past_or_consumed(&self, leaf: usize, bounds: I, clock: Option<Clock>)
+        -> Result<bool, Error>
+    {
+        if bounds.hi < self.observation.lo {
+            return Ok(true);
+        }
+        if bounds.lo > self.observation.hi {
+            return Ok(false);
+        }
+        if let (Some(clock), Some(old)) = (clock, self.common_moment) {
+            let candidate = Moment::HeldTimer { bounds, index: clock.index, clock: Some(clock) };
+            match candidate.exact_order(old) {
+                Some(std::cmp::Ordering::Less) => return Ok(true),
+                Some(std::cmp::Ordering::Greater) => return Ok(false),
+                _ => {}
+            }
+        }
+        if let Some(old) = self.consumed.get(&leaf) {
+            let same_clock = match (clock, old.clock()) {
+                (Some(new), Some(old)) => new.order(old) == Some(std::cmp::Ordering::Equal),
+                _ => bounds.lo == bounds.hi && bounds == old.bounds(),
+            };
+            if same_clock {
+                return Ok(true);
+            }
+        }
+        if bounds.lo != bounds.hi {
+            return Err(unresolved("dynamic timer window overlaps the accepted boundary"));
+        }
+        Err(unresolved("new unconsumed held timer at current event boundary requires a same-time closure"))
+    }
+}
+
 struct HeldCalendar<'a> {
     states: &'a [I],
     after: Option<f64>,
     changed: &'a [bool],
     pending: &'a [ScheduledEvent],
+    boundary: Option<&'a TimerBoundary<'a>>,
 }
 
 impl HeldCalendar<'_> {
@@ -1095,7 +1293,11 @@ fn schedule_with_history(
     if let Some(bounds) = &bounds {
         // Each source-selected branch is checked at its actual input value.
         for &time in &trajectory.knots {
-            let circuit = model.circuit_at(&model.initial(), &vec![0.; model.program.operators.len()], &trajectory.value_bounds(time))?;
+            let circuit = model.circuit_at(
+                &model.initial(),
+                &vec![0.; model.program.operators.len()],
+                &trajectory.value_bounds(time),
+            )?;
             circuit.solve(&trajectory.values(time))?;
         }
         for (index, leaf) in model.triggers.iter().enumerate() {
@@ -1410,6 +1612,7 @@ fn schedule_with_history(
             model,
             held.as_ref().map(|h| h.states),
             held.as_ref().and_then(|h| h.after),
+            held.as_ref().and_then(|h| h.boundary),
         )?;
     }
     if let Some(after) = held.as_ref().and_then(|h| h.after) {
@@ -1723,3 +1926,7 @@ mod exact_history_root_tests {
         assert!(!first.accepts(tight.hi, &trigger));
     }
 }
+
+#[cfg(test)]
+#[path = "schedule_timer_boundary_tests.rs"]
+mod timer_boundary_tests;

@@ -13,6 +13,9 @@ use std::sync::Arc;
 
 const MAX_LAPLACE_ORDER: usize = 8;
 
+#[path = "continuous_readout.rs"]
+mod readout;
+
 #[path = "continuous_derivatives.rs"]
 mod derivatives;
 #[path = "nonlinear_dynamics.rs"]
@@ -142,6 +145,20 @@ struct Context {
     trajectory: Trajectory,
     driven: Vec<String>,
     force_integrals: bool,
+    detached_timed: bool,
+}
+
+impl Context {
+    fn new(program: &Program, trajectory: &Trajectory, driven: &[String]) -> Result<Self, Error> {
+        let projected = readout::project(program, driven)?;
+        Ok(Self {
+            detached_timed: projected.is_some(),
+            program: projected.unwrap_or_else(|| program.clone()),
+            trajectory: trajectory.clone(),
+            driven: driven.to_vec(),
+            force_integrals: false,
+        })
+    }
 }
 
 fn local_context(context: &Arc<Context>, horizon: f64) -> Arc<Context> {
@@ -156,6 +173,7 @@ fn local_context(context: &Arc<Context>, horizon: f64) -> Arc<Context> {
         trajectory,
         driven: context.driven.clone(),
         force_integrals: context.force_integrals,
+        detached_timed: context.detached_timed,
     })
 }
 
@@ -209,12 +227,7 @@ impl LinearContinuous {
         states: &[f64],
     ) -> Result<Option<Self>, Error> {
         Self::build(
-            Arc::new(Context {
-                program: program.clone(),
-                trajectory: trajectory.clone(),
-                driven: driven.to_vec(),
-                force_integrals: false,
-            }),
+            Arc::new(Context::new(program, trajectory, driven)?),
             states.iter().copied().map(I::point).collect(),
             0.0,
             None,
@@ -325,6 +338,9 @@ impl LinearContinuous {
             state_count,
             source_count,
             &parameters,
+            // Linear trajectories have no post-elimination polynomial
+            // consumers; their step controls read solved outputs directly.
+            &[],
         )?;
         let solved =
             affine_bounds::eliminate(algebraic.rows.clone(), algebraic.x_count, algebraic.width)?;
@@ -676,6 +692,7 @@ impl AlgebraicSystem {
         state_count: usize,
         source_count: usize,
         parameters: &[I],
+        auxiliary_roots: &[(&Expression, &Origin)],
     ) -> Result<Self, Error> {
         let mut operator_columns = vec![None; program.operators.len()];
         let mut column = 0;
@@ -691,6 +708,15 @@ impl AlgebraicSystem {
             if let Some(input) = &op.input {
                 add_rhs_internal_nodes(&mut active_nodes, input, program, &driven);
             }
+        }
+        // Auxiliary roots are expressions a later consumer compiles against the
+        // eliminated mapping (step-bound active/value controls and mathematical
+        // inputs). Their internal voltage dependencies need columns before the
+        // closure runs, even when the current mode does not read the node.
+        // Driven nodes keep their source columns and never gain unknowns; a
+        // missing or conflicting definition still rejects below.
+        for (expr, origin) in auxiliary_roots {
+            add_auxiliary_root_nodes(&mut active_nodes, expr, program, origin, &driven)?;
         }
         loop {
             let before = active_nodes.len();
@@ -1025,6 +1051,75 @@ fn add_structural_internal_nodes(
     for &node in dependencies {
         if node != 0 && !driven_nodes.contains(&node) {
             nodes.insert(node);
+        }
+    }
+}
+
+// Structural node collection for an auxiliary root expression. Every selection
+// arm and every explicit reference counts, including zero coefficients: the
+// consumer compiles the full expression, so the mapping must solve all of it.
+// Non-network operator references are not seeded here; the compiled column
+// checks keep rejecting dependencies on unsupported dynamic operators.
+fn add_auxiliary_root_nodes(
+    nodes: &mut BTreeSet<usize>,
+    expr: &Expression,
+    program: &Program,
+    origin: &Origin,
+    driven: &BTreeSet<usize>,
+) -> Result<(), Error> {
+    match expr {
+        Expression::Add { left, right }
+        | Expression::Multiply { left, right }
+        | Expression::Divide { left, right } => {
+            add_auxiliary_root_nodes(nodes, left, program, origin, driven)?;
+            add_auxiliary_root_nodes(nodes, right, program, origin, driven)
+        }
+        Expression::Power { base, .. } => {
+            add_auxiliary_root_nodes(nodes, base, program, origin, driven)
+        }
+        Expression::Select {
+            left,
+            right,
+            then_value,
+            else_value,
+            ..
+        } => {
+            for child in [left, right, then_value, else_value] {
+                add_auxiliary_root_nodes(nodes, child, program, origin, driven)?;
+            }
+            Ok(())
+        }
+        Expression::Operator { operator }
+            if matches!(
+                program.operators.get(*operator),
+                Some(OperatorSpec::Math {
+                    function: crate::ir::MathFunction::Exp,
+                    ..
+                })
+            ) =>
+        {
+            let OperatorSpec::Math {
+                input, origin: math_origin, ..
+            } = &program.operators[*operator]
+            else {
+                unreachable!()
+            };
+            if math_origin.instance != origin.instance {
+                return Err(Error::new(
+                    "invalid_ir",
+                    "operator reference must belong to its instance",
+                ));
+            }
+            add_auxiliary_root_nodes(nodes, input, program, math_origin, driven)
+        }
+        _ => {
+            let dependencies = structural_affine(expr, program, origin)?;
+            for node in dependencies.node_dependencies {
+                if node != 0 && !driven.contains(&node) {
+                    nodes.insert(node);
+                }
+            }
+            Ok(())
         }
     }
 }

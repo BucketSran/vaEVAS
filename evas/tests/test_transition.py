@@ -56,17 +56,38 @@ module m(u,y,z,w,r); input u; output y,z,w; inout r;
                     i=result['nodes'].index(node)
                     self.assertEqual([row['voltages'][i] for row in result['solutions']],expected)
 
-    def test_same_time_feedback_uses_current_operator_value_on_cached_batches(self):
-        # At t=1 and t=2 the frozen ramp is .5 and 1. Solving a=y+1,
-        # y=.5*a+z gives a=3,4. An old-voltage read or cached z gives wrong states.
+    def test_timer_zero_final_seed_is_seen_by_later_cached_batches(self):
+        # N18 final-closure initialization makes z=1 from zero. The later
+        # equation a=.5*a+z+1 therefore gives a=4 at both callbacks. The old
+        # pre-closure oracle is retained in the N18 evidence snapshot.
         body = """@(initial_step) begin a=0; b=0; end
           @(timer(0,0,0.001)) b=1;
           @(timer(1,1,0.001)) a=V(y,r)+1;
           V(y,r)<+0.5*a+transition(b,0,2,2);"""
         for step in [2.5, .125]:
             result=run_transition(body,[0,1,1.5,2,2.5],2.5,step)
-            self.assert_waveform(result,[0,2,2.25,3,3])
+            self.assert_waveform(result,[1,3,3,3,3])
+            self.assertEqual([event['after'][0] for event in result['transient']['events']], [0,4,4])
+
+    def test_positive_time_feedback_uses_current_operator_value_on_cached_batches(self):
+        # Move the initial target update into normal transient operation.
+        # The frozen ramp is .5 at 1.5 and 1 at 2.5, giving a=3 then 4.
+        body = """@(initial_step) begin a=0; b=0; end
+          @(timer(0.5,0,0.001)) b=1;
+          @(timer(1.5,1,0.001)) a=V(y,r)+1;
+          V(y,r)<+0.5*a+transition(b,0,2,2);"""
+        for step in [3., .125]:
+            result=run_transition(body,[0,.5,1.5,2.,2.5,3.],3.,step)
+            self.assert_waveform(result,[0,0,2,2.25,3,3])
             self.assertEqual([event['after'][0] for event in result['transient']['events']], [0,3,4])
+
+    def test_positive_time_target_at_previous_edge_endpoint(self):
+        body = """@(initial_step) begin a=0.2; b=0; end
+          @(timer(1n,0,1p)) a=0.8;
+          @(timer(5n,0,1p)) b=-0.8;
+          V(y,r)<+transition(a+b,0,4n,8n);"""
+        result=run_transition(body,[0,1e-9,3e-9,5e-9,9e-9,13e-9],13e-9)
+        self.assert_waveform(result,[.2,.2,.5,.8,.4,0])
 
     def test_edge_nonzero_initial_delay_and_asymmetric_times(self):
         body = '''@(initial_step) begin a=0; b=0; end
@@ -130,13 +151,13 @@ module m(u,y,z,w,r); input u; output y,z,w; inout r;
         sparse = run_transition(body, [0,13.5e-9,16e-9], 16e-9)
         self.assertEqual(sparse['solutions'][1], coarse['solutions'][4])
 
-    def test_timer_zero_and_target_at_previous_edge_endpoint(self):
+    def test_timer_zero_final_seed_and_later_target_update(self):
         body = '''@(initial_step) begin a=0.2; b=0; end
           @(timer(0,0,1p)) a=0.8;
           @(timer(4n,0,1p)) b=-0.8;
           V(y,r)<+transition(a+b,0,4n,8n);'''
         result = run_transition(body, [0,2e-9,4e-9,8e-9,12e-9], 12e-9)
-        self.assert_waveform(result,[.2,.5,.8,.4,0])
+        self.assert_waveform(result,[.8,.8,.8,.4,0])
         self.assertEqual(result['transient']['states'][0], [.8,0])
 
     def test_same_instant_state_changes_have_one_common_input(self):
@@ -180,11 +201,53 @@ class TransitionRejections(unittest.TestCase):
                            'transition(a,a,1n,1n)']:
             with self.subTest(expression=expression), self.assertRaises(CompileError):
                 compile_transition(f'@(initial_step) a=0; V(y,r)<+{expression};','real a;')
-        for expression in ['transition(a,0,1n,1n)*V(u,r)',
-                           'transition(a,0,1n,1n)*(V(u,r)-V(u,r))',
-                           'transition(a,0,1n,1n)*(V(u,r)/1e308/1e308)', 'transition(a*a,0,1n,1n)']:
+        for expression in ['transition(a*a,0,1n,1n)']:
             with self.subTest(expression=expression), self.assertRaises(KernelError):
                 run_transition(f'@(initial_step) a=0; V(y,r)<+{expression};',[0,1e-9],1e-9,declarations='real a;')
+
+
+    def test_independent_transition_is_a_voltage_readout_coefficient(self):
+        # The transition is held history; multiplying its current value by an
+        # input voltage does not feed that voltage into the history.
+        times = [0., .25, .375, .5, .75, 1.]
+        denominator = Fraction(1e308)
+        def gate(t):
+            return 2 + 2 * min(Fraction(1), max(Fraction(0), (t-Fraction(1,4))*4))
+        expressions = [
+            ('V(u,r)', lambda t: gate(t)*(1+t)),
+            ('V(u,r)-V(u,r)', lambda t: Fraction(0)),
+            ('V(u,r)/1e308/1e308', lambda t: gate(t)*(1+t)/(denominator**2)),
+        ]
+        for expr, oracle in expressions:
+            with self.subTest(expression=expr):
+                p = compile_transition('@(initial_step) a=2; @(timer(0.25,0,0)) a=4; '
+                    f'V(y,r)<+transition(a,0,0.25,0.25)*({expr});', 'real a;')
+                results = []
+                for ts, step in [(times, .0625), ([0.,.375,1.], 1.)]:
+                    result = transient(p, {'u':[[0.,1.],[1.,2.]]}, ts,
+                        stop=1., max_step=step, vabstol=1e-10, reltol=0., kernel=KERNEL)
+                    i = result['nodes'].index('y')
+                    enclosures = result['observation_evidence']['voltage_bounds_V']
+                    self.assertEqual(len(result['solutions']), len(ts))
+                    self.assertEqual(len(enclosures), len(ts))
+                    for t, row, bound in zip(ts, result['solutions'], enclosures, strict=True):
+                        value = Fraction(row['voltages'][i])
+                        lo, hi = map(Fraction, bound[i])
+                        answer = oracle(Fraction(t))
+                        # Do not convert the tiny positive underflow oracle to
+                        # float: that would erase the enclosure obligation.
+                        self.assertLessEqual(lo, answer)
+                        self.assertLessEqual(answer, hi)
+                        self.assertLessEqual(lo, value)
+                        self.assertLessEqual(value, hi)
+                        self.assertLessEqual(max(value-lo,hi-value), Fraction(1e-10))
+                        self.assertLessEqual(abs(value-answer), Fraction(2e-12))
+                        self.assertLessEqual(row['max_residual_ratio'], 1)
+                    results.append(result)
+                self.assertEqual(results[1]['solutions'],
+                    [results[0]['solutions'][times.index(t)] for t in [0.,.375,1.]])
+                self.assertEqual(results[1]['transient']['events'],results[0]['transient']['events'])
+
 
     def test_cross_through_operator_output_rejected(self):
         body='''@(initial_step) begin a=0; b=0; end
@@ -228,15 +291,21 @@ class TransitionRejections(unittest.TestCase):
             with self.subTest(delay=delay, edge=edge), self.assertRaisesRegex(KernelError,'time resolution'):
                 run_transition(body,[0,start+32],start+32,declarations='real a;')
 
-    def test_nearby_user_and_operator_deadlines_cannot_round_to_ties(self):
+    def test_point_timer_order_preserves_internal_deadline_checks(self):
         # Exact binary64 1 + .1 differs from binary64 1.1. Rounding both
         # deadlines to one timestamp is not a proof that they coincide.
         body = """@(initial_step) begin a=0; b=0; end
           @(timer(1,0,0.001)) a=1;
           @(timer(1.1,0,0.001)) b=1;
           V(y,r)<+transition(a,0.1,0.5,0.5)+b;"""
-        with self.assertRaisesRegex(KernelError,'deadline ordering'):
-            run_transition(body,[0,2],2)
+        # The minimal certified enclosure proves activation is before this
+        # point timer. The timer changes b; it cannot delay the edge's history.
+        times = [0, 1.1, 1.35, 1.6, 2]
+        start = Fraction(1) + Fraction(.1)
+        expected = [float(min(Fraction(1), max(Fraction(0),
+                    (Fraction(t)-start)/Fraction(.5)))) + int(t >= 1.1)
+                    for t in times]
+        TransitionContracts.assert_waveform(self, run_transition(body,times,2), expected)
         close = math.nextafter(.1, math.inf)
         body = f"""@(initial_step) a=0;
           @(timer(1,0,0.001)) a=1;

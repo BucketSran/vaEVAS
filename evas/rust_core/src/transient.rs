@@ -21,6 +21,9 @@ mod history_calendar;
 #[path = "transient_root_refinement.rs"]
 mod root_refinement;
 
+#[path = "transient_initialization.rs"]
+mod transition_initialization;
+
 #[derive(Clone)]
 struct Frame {
     time: f64,
@@ -116,6 +119,7 @@ impl Controller {
         next: &Frame,
         records: &[EventRecord],
         remaining: &[ScheduledEvent],
+        batch: &[ScheduledEvent],
     ) -> Result<Vec<ScheduledEvent>, Error> {
         let window = records.iter().fold(I::point(next.time), |t, r| {
             let [lo, hi] = r.observation_time_bounds.unwrap_or([r.time, r.time]);
@@ -207,6 +211,7 @@ impl Controller {
             next.time,
             &changed,
             remaining,
+            batch,
         )
     }
 
@@ -340,7 +345,7 @@ fn prepare_root_window_impl(
     // Every trial starts from accepted uncertainty, regardless of whether the
     // program has conditional statements or history operators.
     let old_bounds = accepted.state_bounds.as_slice();
-    operators.advance(time, time_bounds, &accepted.states, old_bounds, &[])?;
+    operators.advance_old(time, time_bounds, &accepted.states, old_bounds)?;
     // Positive edge durations make transition continuous at a target change.
     // Freeze its current value for the same-time state/voltage solve, then
     // install the new target only in this disposable candidate history.
@@ -531,11 +536,44 @@ fn prepare_batch_until(
         .collect();
     let next = prepare_root_window(model, trajectory, accepted, moment, &blocks)?;
     next.operators.check_deadline_order(event_time, None)?;
+    let records = records_for_batch(
+        model,
+        trajectory,
+        accepted,
+        &next,
+        event_time,
+        event_bounds,
+        ids,
+    )?;
+    Ok((next, records))
+}
+
+fn records_for_batch(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    accepted: &Frame,
+    next: &Frame,
+    event_time: f64,
+    event_bounds: I,
+    ids: &[usize],
+) -> Result<Vec<EventRecord>, Error> {
+    let blocks: Vec<_> = ids
+        .iter()
+        .map(|&id| model.triggers[id].event)
+        .collect::<std::collections::BTreeSet<_>>()
+        .into_iter()
+        .collect();
     let selection = model.conditions.select_at_roots(
-        &blocks, &trajectory.value_bounds(event_time), ids, &accepted.state_bounds,
+        &blocks,
+        &trajectory.value_bounds(event_time),
+        ids,
+        &accepted.state_bounds,
     )?;
     let (_, candidate_displays) = model.apply_with_displays(
-        &selection, &next.solution.voltages, &accepted.states, event_time,
+        &selection,
+        &next.solution.voltages,
+        &accepted.states,
+        event_time,
     )?;
     let mut records = Vec::new();
     for id in blocks {
@@ -637,10 +675,14 @@ fn prepare_batch_until(
             fired_triggers: fired,
             before: accepted.states.clone(),
             after: next.states.clone(),
-            display_records: candidate_displays.iter().filter(|r| r.event == id).cloned().collect(),
+            display_records: candidate_displays
+                .iter()
+                .filter(|r| r.event == id)
+                .cloned()
+                .collect(),
         });
     }
-    Ok((next, records))
+    Ok(records)
 }
 
 fn prepare_calendar_batch(
@@ -754,7 +796,7 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
             }))
     {
         transient.max_step =
-            crate::step_bounds::constant_cap(&request.program, transient.max_step)?;
+            crate::step_bounds::implicit_gate(&request.program, transient.max_step)?;
         return crate::continuous::run_implicit(
             request.program,
             request.driven,
@@ -767,10 +809,20 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
 
     let model = EventModel::new(request.program, request.driven, request.tolerances)?;
     let step_bounds = crate::step_bounds::Bounds::new(&model.program)?;
-    let initial = model.initial();
+    let mut bootstrap = transition_initialization::prepare_states(&model, &trajectory)?;
+    let initial = bootstrap
+        .as_ref()
+        .map_or_else(|| model.initial(), |b| b.states.clone());
     let relocalize = model.relocalized_guards.iter().any(|&held| held);
     let history_calendar = model.guard_operators.iter().any(|ops| !ops.is_empty());
-    let (operators, mut crossings) = if history_calendar {
+    let (mut operators, mut crossings) = if let Some(future) = bootstrap.as_ref().and_then(|b| b.future.as_ref()) {
+        let crossings = future.clone();
+        let operators = Operators::new_until(
+            &model.program, &trajectory, &model.driven, &initial,
+            prediction_end(&model, &trajectory, crossings.first()), &model.tolerances,
+        )?;
+        (operators, crossings)
+    } else if history_calendar {
         history_calendar::initialize(&model, &trajectory, &initial)?
     } else if relocalize {
         let bounds: Vec<_> = initial.iter().copied().map(I::point).collect();
@@ -807,11 +859,59 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
         )?;
         (operators, crossings)
     };
-    let circuit = model.circuit_at(&initial, &operators.values(0.0)?, &trajectory.value_bounds(0.0))?;
+    let bootstrap_cursor = if let Some(b) = &bootstrap {
+        let cursor = b.cursor(&model, &crossings)?;
+        let (candidate, replay) = if b.fresh_point_graph {
+            let replay = Operators::new_until(
+                &model.program, &trajectory, &model.driven, &initial,
+                prediction_end(&model, &trajectory, crossings.first()), &model.tolerances,
+            )?;
+            (operators.clone(), replay)
+        } else {
+            // Constructor-only mixed initialization: certified independent
+            // continuous histories freshly built from the final point state
+            // beside re-seeded transitions. An uncertified graph keeps the
+            // original closed-graph bootstrap and its diagnostic.
+            let horizon = prediction_end(&model, &trajectory, crossings.first());
+            match Operators::new_initialized_until(
+                &model.program, &trajectory, &model.driven, &initial, &b.bounds,
+                horizon, &model.tolerances,
+            ) {
+                Ok((candidate, replay)) => (candidate, replay),
+                // Admission failures keep the original closed-graph bootstrap
+                // and its diagnostic; a failure inside the admitted slice
+                // (source proof, seeding) must surface, not be masked by it.
+                Err(error) if error.kind == "unsupported_initial_history" => (
+                    operators.bootstrapped_transitions(&initial, &b.bounds)?,
+                    operators.bootstrapped_transitions(&initial, &b.bounds)?,
+                ),
+                Err(error) => return Err(error),
+            }
+        };
+        if !candidate.same_reset_history(&replay) {
+            return Err(Error::new(
+                "event_consistency",
+                "transition bootstrap history changed during replay",
+            ));
+        }
+        candidate.check_deadline_order(0., crossings.get(cursor).map(|e| e.bounds()))?;
+        operators = candidate;
+        cursor
+    } else {
+        0
+    };
+    let circuit = model.circuit_at(
+        &initial,
+        &operators.values(0.0)?,
+        &trajectory.value_bounds(0.0),
+    )?;
     let mut accepted = Frame {
         time: 0.0,
         solution: circuit.solve(&trajectory.values(0.0))?,
-        state_bounds: initial.iter().copied().map(I::point).collect(),
+        state_bounds: bootstrap.as_ref().map_or_else(
+            || initial.iter().copied().map(I::point).collect(),
+            |b| b.bounds.clone(),
+        ),
         states: initial,
         circuit,
         operators,
@@ -844,28 +944,53 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
     let mut solutions = Vec::new();
     let mut sample_origins = Vec::new();
     let (mut output, mut knot) = (0, 1);
+    let bootstrapped = bootstrap.is_some();
     let mut controller = Controller {
         accepted,
-        event: 0,
-        records: Vec::new(),
+        event: bootstrap_cursor,
+        records: bootstrap.take().map_or_else(Vec::new, |b| b.records),
         outputs: Vec::new(),
     };
     // Passive measurement initial bodies run before ordinary timer(0) blocks.
-    let initials: Vec<_> = model.triggers.iter().enumerate()
-        .filter_map(|(index, leaf)| matches!(leaf.trigger, EventTrigger::InitialStep { .. }).then_some(index))
+    let initials: Vec<_> = model
+        .triggers
+        .iter()
+        .enumerate()
+        .filter_map(|(index, leaf)| {
+            matches!(leaf.trigger, EventTrigger::InitialStep { .. }).then_some(index)
+        })
         .collect();
-    if !initials.is_empty() {
+    if !bootstrapped && !initials.is_empty() {
         if initials.iter().any(|&id| {
-            let owner = &model.program.events[model.triggers[id].event].origin.instance;
-            model.program.contributions.iter().any(|c| &c.origin.instance == owner)
+            let owner = &model.program.events[model.triggers[id].event]
+                .origin
+                .instance;
+            model
+                .program
+                .contributions
+                .iter()
+                .any(|c| &c.origin.instance == owner)
         }) {
-            return Err(Error::new("unsupported_initial_event", "initial display requires a passive measurement model"));
+            return Err(Error::new(
+                "unsupported_initial_event",
+                "initial display requires a passive measurement model",
+            ));
         }
-        let (frame, records) = prepare_batch_until(&model, &trajectory, &controller.accepted,
-            EventMoment { representative: 0.0, observation: I::point(0.0),
-                fired_roots: &initials, prediction_end: trajectory.config.stop })?;
+        let (frame, records) = prepare_batch_until(
+            &model,
+            &trajectory,
+            &controller.accepted,
+            EventMoment {
+                representative: 0.0,
+                observation: I::point(0.0),
+                fired_roots: &initials,
+                prediction_end: trajectory.config.stop,
+            },
+        )?;
         controller.commit_events(frame, records, 0);
-        if relocalize { crossings = schedule_held(&model, &trajectory, &controller.accepted.state_bounds)?; }
+        if relocalize {
+            crossings = schedule_held(&model, &trajectory, &controller.accepted.state_bounds)?;
+        }
     }
     let mut preflighted_event = None;
     loop {
@@ -1051,12 +1176,23 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                 // reuse a factor only when its coefficients still agree.
                 let inputs = trajectory.values(time);
                 let input_bounds = trajectory.value_bounds(time);
-                let mut selected_circuit = if model.program.contributions.iter().any(|c| crate::analog::has_select(&c.rhs)) {
-                    let mut circuit = model.circuit_at(&controller.accepted.states, &[], &input_bounds)?;
+                let mut selected_circuit = if model
+                    .program
+                    .contributions
+                    .iter()
+                    .any(|c| crate::analog::has_select(&c.rhs))
+                {
+                    let mut circuit =
+                        model.circuit_at(&controller.accepted.states, &[], &input_bounds)?;
                     circuit.reuse_affine_factor_from(&controller.accepted.circuit);
                     Some(circuit)
-                } else { None };
-                let mut solution = selected_circuit.as_mut().unwrap_or(&mut controller.accepted.circuit).solve(&inputs)?;
+                } else {
+                    None
+                };
+                let mut solution = selected_circuit
+                    .as_mut()
+                    .unwrap_or(&mut controller.accepted.circuit)
+                    .solve(&inputs)?;
                 let (state_bounds, node_bounds) = model.certify_observation(
                     &model.conditions.select(&[], &input_bounds)?,
                     &input_bounds,
@@ -1068,7 +1204,9 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                 crate::observation::retain_bounds(&mut solution, node_bounds);
                 controller.accepted.solution = solution;
                 controller.accepted.state_bounds = state_bounds;
-                if let Some(circuit) = selected_circuit { controller.accepted.circuit = circuit; }
+                if let Some(circuit) = selected_circuit {
+                    controller.accepted.circuit = circuit;
+                }
                 controller.accepted.time = time;
             }
         }
@@ -1087,16 +1225,33 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
     }
     // Lifecycle final blocks execute after every ordinary event at stop, even
     // when their source declaration precedes a timer firing at the same time.
-    let finals: Vec<_> = model.triggers.iter().enumerate()
-        .filter_map(|(index, leaf)| matches!(leaf.trigger, EventTrigger::FinalStep { .. }).then_some(index))
+    let finals: Vec<_> = model
+        .triggers
+        .iter()
+        .enumerate()
+        .filter_map(|(index, leaf)| {
+            matches!(leaf.trigger, EventTrigger::FinalStep { .. }).then_some(index)
+        })
         .collect();
     if !finals.is_empty() {
-        let (frame, records) = prepare_batch_until(&model, &trajectory, &controller.accepted,
-            EventMoment { representative: trajectory.config.stop, observation: I::point(trajectory.config.stop),
-                fired_roots: &finals, prediction_end: trajectory.config.stop })?;
+        let (frame, records) = prepare_batch_until(
+            &model,
+            &trajectory,
+            &controller.accepted,
+            EventMoment {
+                representative: trajectory.config.stop,
+                observation: I::point(trajectory.config.stop),
+                fired_roots: &finals,
+                prediction_end: trajectory.config.stop,
+            },
+        )?;
         controller.commit_events(frame, records, controller.event);
     }
-    trace.display_records = controller.records.iter().flat_map(|r| r.display_records.iter().cloned()).collect();
+    trace.display_records = controller
+        .records
+        .iter()
+        .flat_map(|r| r.display_records.iter().cloned())
+        .collect();
     trace.events = controller.records;
     // Internal source-derived nodes are mathematical lowering details, never
     // user inputs/outputs or a change to the external serialized IR contract.

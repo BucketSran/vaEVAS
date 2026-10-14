@@ -6,10 +6,10 @@ from evas import compile_sources, transient, KernelError
 from test_affine import KERNEL, instance, model
 
 
-def execute(body, declarations, times=(0, .25, .5, .75, 1)):
+def execute(body, declarations, times=(0, .25, .5, .75, 1), stop=1):
     p = compile_sources({'event-select.va': model(body, declarations)}, [instance()])
-    result = transient(p, {'u': [[0, 0], [1, 1]]}, list(times),
-                       stop=1, max_step=1, kernel=KERNEL)
+    result = transient(p, {'u': [[0, 0], [stop, stop]]}, list(times),
+                       stop=stop, max_step=stop, kernel=KERNEL)
     index = result['nodes'].index('y')
     return [row['voltages'][index] for row in result['solutions']]
 
@@ -73,15 +73,26 @@ class EventSelectContracts(unittest.TestCase):
 
 
 class SampledOperatorCoefficientContracts(unittest.TestCase):
-    def test_joint_state_update_uses_current_transition_coefficient(self):
-        # At t=.5 the ramp coefficient is .5. q=y+1, y=.5*q
-        # therefore settles to q=2, y=1; freezing q first gives y=0.
+    def test_timer_zero_final_seed_makes_joint_equations_inconsistent(self):
+        # The final zero-time seed is 1, so at .5 the equations are
+        # q=y+1 and y=q. There is no solution.
         body = """@(initial_step) begin q=0; valid=0; end
             @(timer(0)) valid=1;
             @(timer(0.5)) q=V(y,r)+1;
             V(y,r)<+q*transition(valid,0,1,1);"""
-        values = execute(body, 'real q; integer valid;')
-        self.assertEqual(values, [0,0,1,1.5,2])
+        with self.assertRaisesRegex(KernelError, 'singular_system'):
+            execute(body, 'real q; integer valid;')
+
+    def test_joint_state_update_uses_current_transition_coefficient(self):
+        # Shift both original events by .25. At .75 the coefficient is .5:
+        # q=y+1, y=.5*q settle to q=2, y=1. Freezing q first gives y=0.
+        body = """@(initial_step) begin q=0; valid=0; end
+            @(timer(0.25)) valid=1;
+            @(timer(0.75)) q=V(y,r)+1;
+            V(y,r)<+q*transition(valid,0,1,1);"""
+        values = execute(body, 'real q; integer valid;',
+                         times=(0,.25,.5,.75,1,1.25), stop=1.25)
+        self.assertEqual(values, [0,0,0,1,1.5,2])
 
     def test_state_times_internal_voltage_stays_unsupported(self):
         body = """@(initial_step) q=1; @(timer(0.5)) q=2;

@@ -6,8 +6,8 @@ mod assembly;
 mod batch;
 mod continuous;
 pub mod diagnostics;
-mod dynamic_roots;
 mod display;
+mod dynamic_roots;
 mod event_accuracy;
 mod event_conditions;
 mod events;
@@ -41,6 +41,8 @@ mod step_bounds;
 mod strobe;
 mod transient;
 mod transition;
+mod transition_source_plan;
+mod transition_source_state;
 
 #[cfg(test)]
 mod performance_probes;
@@ -62,13 +64,20 @@ pub fn run_with_threads(mut request: Request, static_threads: usize) -> Result<R
     // It is a driven quantity, so event samples retain their root-time enclosure.
     if request.program.nodes.iter().any(|n| n == "$abstime") {
         if request.driven.iter().any(|n| n == "$abstime") {
-            return Err(Error::new("invalid_inputs", "absolute time cannot be externally driven"));
+            return Err(Error::new(
+                "invalid_inputs",
+                "absolute time cannot be externally driven",
+            ));
         }
         request.driven.push("$abstime".into());
         if let Some(transient) = &mut request.transient {
-            transient.pwl.push(vec![[0.0, 0.0], [transient.stop, transient.stop]]);
+            transient
+                .pwl
+                .push(vec![[0.0, 0.0], [transient.stop, transient.stop]]);
         } else {
-            for sample in &mut request.samples { sample.push(0.0); }
+            for sample in &mut request.samples {
+                sample.push(0.0);
+            }
         }
     }
     if !(1..=64).contains(&static_threads) {

@@ -51,7 +51,8 @@ def lower(expr: Expr, parameters: Callable[[str], float | Expression], nodes: Ma
           source: str, operators: Callable[[Expr], Expression] | None = None, preserve_structure: bool = False,
           decisions: Callable[..., Select] | None = None,
           validate_decision: Callable[[Expr, Expression], None] | None = None,
-          decision_scope: bool = False, *, memo: dict | None = None,
+          decision_scope: bool = False, indices: Callable[[Expr], Expression] | None = None, *,
+          memo: dict | None = None,
           node_declarations: bool = False) -> Expression:
     validator = getattr(parameters, "validate_integer_operation", None)
     depth = getattr(parameters, "integer_operation_depth", 0)
@@ -59,7 +60,7 @@ def lower(expr: Expr, parameters: Callable[[str], float | Expression], nodes: Ma
         parameters.integer_operation_depth = depth + 1
     try:
         value = _lower_checked(expr, parameters, nodes, source, operators, preserve_structure,
-                               decisions, validate_decision, decision_scope,
+                               decisions, validate_decision, decision_scope, indices,
                                memo=memo, node_declarations=node_declarations)
         if validator is not None:
             validator(expr, value, root=depth == 0 and getattr(parameters, "allow_integer_assignment_root", False))
@@ -70,29 +71,29 @@ def lower(expr: Expr, parameters: Callable[[str], float | Expression], nodes: Ma
 
 
 def _lower_checked(expr, parameters, nodes, source, operators, preserve_structure,
-                   decisions, validate_decision, decision_scope, *, memo, node_declarations):
+                   decisions, validate_decision, decision_scope, indices, *, memo, node_declarations):
     # Only a caller with the complete declared electrical environment may label
     # a missing voltage node invalid. Closed constant/state contexts stay unknown.
     # This flag changes failure metadata only, never voltage acceptance or IR.
     # Opt-in reuse for one fixed parameter/node binding without registration
     # callbacks. Callers own the lifetime and must not share across contexts.
     if memo is not None:
-        if operators is not None or decisions is not None or validate_decision is not None:
+        if operators is not None or decisions is not None or validate_decision is not None or indices is not None:
             raise ValueError("lower memo cannot be used with semantic callbacks")
         key = (id(expr), preserve_structure, decision_scope)
         if key not in memo:
             value = _lower(expr, parameters, nodes, source, operators, preserve_structure,
-                           decisions, validate_decision, decision_scope, memo, node_declarations)
+                           decisions, validate_decision, decision_scope, indices, memo, node_declarations)
             memo[key] = (expr, value)
         value = memo[key][1]
     else:
         value = _lower(expr, parameters, nodes, source, operators, preserve_structure,
-                       decisions, validate_decision, decision_scope, None, node_declarations)
+                       decisions, validate_decision, decision_scope, indices, None, node_declarations)
     return value
 
 
 def _lower(expr, parameters, nodes, source, operators, preserve_structure,
-           decisions, validate_decision, decision_scope, memo, node_declarations):
+           decisions, validate_decision, decision_scope, indices, memo, node_declarations):
     def fail(message, *, code="compile_error"):
         raise CompileError(f"{expr.token.source or source}:{expr.token.line}:{expr.token.column}: {message}",
                            code=code, token=expr.token)
@@ -102,7 +103,7 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
         if scope and decisions is None:
             fail("decision expressions are only supported in stateless ordinary analog expressions")
         values = [lower(arg, parameters, nodes, source, operators,
-                        preserve_structure or scope, decisions, validate_decision, scope, memo=memo, node_declarations=node_declarations)
+                        preserve_structure or scope, decisions, validate_decision, scope, indices, memo=memo, node_declarations=node_declarations)
                   for arg in expr.args]
         if scope and validate_decision is not None:
             for arg, value in zip(expr.args, values):
@@ -115,7 +116,7 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
             fail("decision expressions are only supported in stateless ordinary analog expressions")
         if contains_operator(expr):
             fail("decision expressions do not support waveform operators in any operand or arm")
-        values = [lower(arg, parameters, nodes, source, operators, True, decisions, validate_decision, True, memo=memo, node_declarations=node_declarations) for arg in expr.args]
+        values = [lower(arg, parameters, nodes, source, operators, True, decisions, validate_decision, True, indices, memo=memo, node_declarations=node_declarations) for arg in expr.args]
         zero, one = Affine(0.0, ()), Affine(1.0, ())
         def select(relation, left, right, then_value, else_value):
             return decisions(expr, relation, left, right, then_value, else_value)
@@ -157,15 +158,15 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
     bound_exponent = None
     if expr.op == "power":
         bound_exponent = lower(expr.args[1], parameters, nodes, source,
-                               preserve_structure=preserve_structure, memo=memo,
-                               node_declarations=node_declarations)
+                               preserve_structure=preserve_structure, indices=indices,
+                               memo=memo, node_declarations=node_declarations)
         exponent = bound_exponent
         if isinstance(exponent, Affine) and not exponent.terms and exponent.constant == 0.5:
             if decision_scope:
                 fail("decision expressions do not support waveform operators in any operand or arm")
             return lower(Expr("sqrt", None, (expr.args[0],), expr.token, expr.expansion),
                          parameters, nodes, source, operators, preserve_structure,
-                         decisions, validate_decision, decision_scope,
+                         decisions, validate_decision, decision_scope, indices,
                          memo=memo, node_declarations=node_declarations)
     if expr.op in ("cos", "exp", "ln", "sqrt") and operators is None:
         argument = lower(expr.args[0], parameters, nodes, source,
@@ -188,6 +189,8 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
     if expr.op == "call":
         fail(f"unknown analog function {expr.value!r}")
     if expr.op == 'index':
+        if indices is not None:
+            return indices(expr)
         fail('array index requires scalarization before semantic lowering')
     if expr.op == "array":
         fail("standard array literals are only supported as laplace_nd coefficient lists")
@@ -211,7 +214,7 @@ def _lower(expr, parameters, nodes, source, operators, preserve_structure,
         return affine(0.0, {} if nodes[p] == nodes[n] else {nodes[p]: 1.0, nodes[n]: -1.0})
     values = [bound_exponent if expr.op == "power" and i == 1 else
               lower(arg, parameters, nodes, source, operators, preserve_structure,
-                    decisions, validate_decision, decision_scope, memo=memo,
+                    decisions, validate_decision, decision_scope, indices, memo=memo,
                     node_declarations=node_declarations)
               for i, arg in enumerate(expr.args)]
     a = values[0]

@@ -120,7 +120,7 @@ mod initialization;
 mod implicit;
 pub(crate) use implicit::run as run_implicit;
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 enum Polynomial {
     Linear(Vec<I>),
     Add(Box<Self>, Box<Self>),
@@ -634,6 +634,10 @@ impl DenseStep {
     }
 }
 
+#[path = "nonlinear_root_window.rs"]
+mod root_window;
+use root_window::HistoryStep;
+
 // Physical state immediately after the final event map, before propagation
 // from its uncertain time to the published representative.
 #[derive(Clone, PartialEq)]
@@ -656,7 +660,7 @@ pub(crate) struct NonlinearContinuous {
     accuracy_rows: Vec<Vec<I>>,
     tolerances: Tolerances,
     initial: Vec<I>,
-    steps: Arc<Vec<DenseStep>>,
+    steps: Arc<Vec<HistoryStep>>,
     start: f64,
     event_dependent: bool,
     event_seed: Option<PhysicalEventSeed>,
@@ -732,12 +736,7 @@ impl NonlinearContinuous {
         tolerances: &Tolerances,
     ) -> Result<Self, Error> {
         Self::build(
-            Arc::new(Context {
-                program: program.clone(),
-                trajectory: trajectory.clone(),
-                driven: driven.to_vec(),
-                force_integrals: false,
-            }),
+            Arc::new(Context::new(program, trajectory, driven)?),
             states.iter().copied().map(I::point).collect(),
             0.0,
             None,
@@ -770,13 +769,15 @@ impl NonlinearContinuous {
     ) -> Result<Self, Error> {
         if selection::needed(&context.program) {
             let stop = context.trajectory.config.stop;
-            let cuts = selection::cuts(&context, &parameters, start, stop)?;
-            let end = cuts.iter().find(|c| c.lo > start).map_or(stop, |c| c.lo);
-            let probe = if end > start {
-                start * 0.5 + end * 0.5
-            } else {
-                start
+            let parts = selection::nonlinear_parts(&context, &parameters, start, stop)?;
+            let probe = match parts.first() {
+                Some((_,Some(root))) => root.lo.next_down(),
+                Some((span,None)) => span.lo*0.5+span.hi*0.5,
+                None => start,
             };
+            if probe < 0.0 || probe > stop {
+                return Err(Error::new("condition_precision", "no physical mode witness at initialization"));
+            }
             let frozen = selection::freeze_context(&context, &parameters, probe)?;
             let mut result = Self::initialized(frozen, parameters, start, restart, tolerances)?;
             result.context = context;
@@ -793,6 +794,9 @@ impl NonlinearContinuous {
         let mut state_count = 0;
         let mut event_dependent = false;
         for (i, spec) in program.operators.iter().enumerate() {
+            if context.detached_timed && matches!(spec, OperatorSpec::Transition { .. }) {
+                continue;
+            }
             if let OperatorSpec::Math {
                 input,
                 function,
@@ -883,6 +887,24 @@ impl NonlinearContinuous {
                 "nonlinear state/source dimension exceeds 32",
             ));
         }
+        // The builder below compiles step-bound active/value controls and
+        // every mathematical exp input against the eliminated mapping. Give
+        // the algebraic construction those roots so each internal voltage they
+        // reference is solved before elimination rather than rejected at
+        // compile time; all structural/ownership checks still apply.
+        let auxiliary_roots: Vec<(&Expression, &Origin)> = program
+            .step_bounds
+            .iter()
+            .flat_map(|bound| [(&bound.active, &bound.origin), (&bound.value, &bound.origin)])
+            .chain(program.operators.iter().filter_map(|spec| match spec {
+                OperatorSpec::Math {
+                    input,
+                    origin,
+                    function: crate::ir::MathFunction::Exp,
+                } => Some((input, origin)),
+                _ => None,
+            }))
+            .collect();
         let system = AlgebraicSystem::new(
             program,
             &operators,
@@ -891,18 +913,26 @@ impl NonlinearContinuous {
             state_count,
             driven.len(),
             &parameters,
+            &auxiliary_roots,
         )?;
         let rows = affine_bounds::eliminate(system.rows.clone(), system.x_count, system.width)?;
         let mapping = back_substitute_eliminated(&rows, system.x_count, system.width)?;
         let values = build_value_rows(&operators, &system, &mapping)?;
         // Include every solved voltage, including high-gain aliases, rather
         // than applying a state-magnitude budget to the operator values alone.
-        let accuracy_rows = system
+        let mut accuracy_rows: Vec<Vec<I>> = system
             .node_columns
             .iter()
             .flatten()
             .map(|&column| mapping[column].clone())
             .collect();
+        // A source-forced state can have no required algebraic node after the
+        // causal split. It still needs an internal refinement target. Full
+        // output intervals are independently checked by settlement; a large
+        // downstream gain may still reject rather than silently widen a budget.
+        if context.detached_timed && accuracy_rows.is_empty() {
+            accuracy_rows.extend(values.iter().cloned());
+        }
         let mut functions = vec![Polynomial::Linear(vec![I::ZERO; system.width]); state_count];
         for op in &operators {
             match &program.operators[op.operator] {
@@ -1048,6 +1078,10 @@ impl NonlinearContinuous {
     }
 
     fn derivative_jets(&self, variables: &[Jet], slopes: &[I], order: usize) -> Option<Vec<Jet>> {
+        if let Some(velocity) = self.steps.first().and_then(|s| s.root_velocity()) {
+            if self.steps.len()!=1 || order!=0 { return None; }
+            return Some(velocity.iter().map(|&v| vec![v]).collect());
+        }
         if let Some(field) = &self.implicit {
             field.jets(&self.functions, variables, slopes, order)
         } else {
@@ -1492,111 +1526,50 @@ impl NonlinearContinuous {
         horizon: f64,
         remaining_work: &mut usize,
     ) -> Result<(), Error> {
-        if selection::needed(&self.context.program) {
+        // Implicit admission already forbids physical conditional equations.
+        // Its remaining Select expressions only request mesh limits; freezing
+        // physical modes here would rebuild a different trajectory/history.
+        if self.implicit.is_none() && selection::needed(&self.context.program) {
             let certified = self.certified_end();
             if horizon <= certified {
                 return Ok(());
             }
-            let cuts = selection::cuts(&self.context, &self.parameters, self.start, horizon)?;
-            let mut seed = if self.modes.is_empty() {
-                self.initial.clone()
-            } else {
-                self.modes
-                    .last()
-                    .unwrap()
-                    .2
-                    .state_bounds(I::point(certified))?
-            };
+            let parts = selection::nonlinear_parts(&self.context, &self.parameters, self.start, horizon)?;
+            let mut seed = self.state_bounds(I::point(certified))?;
             let mut modes = self.modes.clone();
             let mut new_steps = Vec::new();
-            for pair in cuts.windows(2) {
-                let (begin, end) = (pair[0].hi, pair[1].hi);
-                if end <= certified || begin == end {
-                    continue;
-                }
-                let (mut mode, mode_begin, prefix) = if begin < certified {
-                    let (mode_begin, prior_end, prior) = modes.pop().ok_or_else(|| {
-                        Error::new(
-                            "event_resolution",
-                            "selected continuation lacks immutable prefix",
-                        )
-                    })?;
-                    if prior_end != certified {
-                        return Err(Error::new(
-                            "event_resolution",
-                            "selected continuation prefix ends at a different physical time",
-                        ));
+            for (span, root) in parts {
+                let begin = span.lo.max(certified);
+                let end = span.hi;
+                if end <= begin { continue; }
+                let (mut mode, mode_begin, prefix) = if let Some(root) = root {
+                    let mode = self.root_window_mode(root, I{lo:begin,hi:end}, &seed, remaining_work)?;
+                    (mode,begin,0)
+                } else if span.lo < certified {
+                    let (mode_begin, prior_end, prior) = modes.pop().ok_or_else(||
+                        Error::new("event_resolution", "selected continuation lacks immutable prefix"))?;
+                    if prior_end != certified || prior.steps.iter().any(|s| s.is_root()) {
+                        return Err(Error::new("event_resolution", "selected continuation has incompatible physical prefix"));
                     }
-                    ((*prior).clone(), mode_begin, prior.steps.len())
+                    ((*prior).clone(),mode_begin,prior.steps.len())
                 } else {
-                    // At a previously accepted uncertain switch, include every
-                    // pre-switch endpoint before starting the post-switch flow.
-                    if pair[0].lo != pair[0].hi {
-                        if let Some((_, _, prior)) = modes.last() {
-                            for (v, b) in seed.iter_mut().zip(prior.state_bounds(I {
-                                lo: pair[0].lo.max(prior.start),
-                                hi: pair[0].hi,
-                            })?) {
-                                *v = v.hull(b);
-                            }
-                        }
+                    let probe = begin*0.5+end*0.5;
+                    if probe <= begin || probe >= end {
+                        return Err(Error::new("condition_precision", "no representable interior of physical mode"));
                     }
-                    // A source root enclosure can overlap an event restart.
-                    // Freeze within this physical epoch, never before its seed.
-                    let probe = begin * 0.5 + pair[1].lo.max(begin) * 0.5;
                     let frozen = selection::freeze_context(&self.context, &self.parameters, probe)?;
-                    let mut mode = Self::initialized(
-                        frozen,
-                        self.parameters.clone(),
-                        begin,
-                        Some(seed.clone()),
-                        &self.tolerances,
-                    )?;
-                    if pair[0].lo != pair[0].hi {
-                        let elapsed = I {
-                            lo: 0.,
-                            hi: (I::point(pair[0].hi) - I::point(pair[0].lo)).hi,
-                        };
-                        let source = mode.source_bounds(pair[0]);
-                        let (_, image) = mode
-                            .picard_enclosure(&mode.initial, &source, &[], elapsed)
-                            .ok_or_else(|| {
-                                Error::new(
-                                    "condition_precision",
-                                    "cannot bound post-switch root-window propagation",
-                                )
-                            })?;
-                        mode.initial = image;
-                    }
-                    (mode, begin, 0)
+                    let mode = Self::initialized(frozen,self.parameters.clone(),begin,Some(seed.clone()),&self.tolerances)?;
+                    (mode,begin,0)
                 };
                 crate::diagnostics::counter("selected_nonlinear_mode_extensions", 1);
                 let available = *remaining_work;
-                let propagation = mode.propagate_with_budget(end, remaining_work);
-                crate::diagnostics::counter(
-                    "selected_nonlinear_trial_evaluations",
-                    available - *remaining_work,
-                );
-                propagation?;
+                mode.propagate_with_budget(end, remaining_work)?;
+                crate::diagnostics::counter("selected_nonlinear_trial_evaluations",available-*remaining_work);
                 seed = mode.state_bounds(I::point(end))?;
-                if pair[1].lo != pair[1].hi {
-                    for (v, b) in seed.iter_mut().zip(mode.state_bounds(I {
-                        // The accepted event seed already contains the earlier
-                        // physical event window. This mode owns only t>=start;
-                        // its root-time Picard allowance below remains intact.
-                        lo: pair[1].lo.max(mode.start),
-                        hi: pair[1].hi,
-                    })?) {
-                        *v = v.hull(b);
-                    }
-                }
                 new_steps.extend(mode.steps.iter().skip(prefix).cloned());
-                modes.push((mode_begin, end, Arc::new(mode)));
-                if self.steps.len() + new_steps.len() > self.step_budget() {
-                    return Err(Error::new(
-                        "waveform_accuracy",
-                        "selected nonlinear histories exceed cumulative internal step limit",
-                    ));
+                modes.push((mode_begin,end,Arc::new(mode)));
+                if self.steps.len()+new_steps.len()>self.step_budget() {
+                    return Err(Error::new("waveform_accuracy", "selected nonlinear histories exceed cumulative internal step limit"));
                 }
             }
             Arc::make_mut(&mut self.steps).extend(new_steps);
@@ -1701,6 +1674,11 @@ impl NonlinearContinuous {
                 }
                 let source = trajectory.value_bounds(start);
                 let mut step = 0.125_f64.min(trajectory.config.max_step);
+                if let Some(field) = &self.implicit {
+                    if let Some(cap) = field.step_cap(&state, &source)? {
+                        step = step.min(cap);
+                    }
+                }
                 let variables: Vec<_> = state.iter().chain(&source).map(|&v| vec![v]).collect();
                 for (active, value) in &self.step_bounds {
                     let active = active.jet(&variables, 0)[0];
@@ -1823,7 +1801,7 @@ impl NonlinearContinuous {
                     return Ok(false);
                 }
                 start = step.end;
-                Arc::make_mut(&mut self.steps).push(step);
+                Arc::make_mut(&mut self.steps).push(HistoryStep::taylor(step));
                 crate::diagnostics::counter("nonlinear_certified_candidate_steps", 1);
                 crate::diagnostics::record(
                     "nonlinear_candidate",
@@ -1884,6 +1862,12 @@ impl NonlinearContinuous {
     }
     pub(super) fn reset_active(&self, slot: usize) -> bool {
         self.operators[slot].held_reset
+    }
+    /// Same constructor-scoped meaning as the linear runtime: the retained
+    /// projection proof that this subproblem has no structural transition
+    /// dependency. Consumed only by fresh final-state initialization.
+    pub(super) fn detached_from_transitions(&self) -> bool {
+        self.context.detached_timed
     }
     pub(super) fn changes_on_event(&self) -> bool {
         self.event_dependent
@@ -2114,6 +2098,49 @@ impl NonlinearContinuous {
         }
         source
     }
+    // Backward-reaching uncertain event consumers cannot silently reuse the
+    // initial selected field. A single unchanged compiled field is sufficient;
+    // crossing selected modes requires a separate switched-event certificate.
+    fn event_picard_enclosure(&self, initial:&[I], window:I, slopes:&[I], elapsed:I)
+        -> Result<(Vec<I>,Vec<I>),Error> {
+        let fail=|| Error::new("event_resolution", "uncertain event window crosses unproved selected flow");
+        if !selection::physical_needed(&self.context.program) {
+            return self.picard_enclosure(initial,&self.source_bounds(window),slopes,elapsed).ok_or_else(fail);
+        }
+        let parts=selection::nonlinear_parts(&self.context,&self.parameters,window.lo,window.hi)?;
+        let mut fields:Vec<Self>=Vec::new();
+        for (span,root) in parts {
+            let witnesses=if let Some(root)=root {
+                selection::isolated_root_witnesses(&self.context,&self.parameters,root)?.to_vec()
+            } else {
+                let probe=span.lo*0.5+span.hi*0.5;
+                if probe<=span.lo || probe>=span.hi { return Err(fail()); }
+                vec![probe]
+            };
+            for probe in witnesses {
+                if probe<0. || probe>self.context.trajectory.config.stop { return Err(fail()); }
+                let next=Self::initialized(selection::freeze_context(&self.context,&self.parameters,probe)?,
+                    self.parameters.clone(),window.lo,Some(initial.to_vec()),&self.tolerances)?;
+                if let Some(prior)=fields.first() {
+                    if !root_window::compatible(prior,&next,initial) { return Err(fail()); }
+                }
+                if fields.iter().any(|f| f.functions==next.functions) { continue; }
+                fields.push(next);
+                if fields.len()>32 { return Err(fail()); }
+            }
+        }
+        let source=self.source_bounds(window);
+        // This event certificate has its own explicit bounded allowance. It is
+        // not the propagation suffix budget; diagnostics count actual work.
+        let allowance=2*TUBE_ATTEMPTS*32+32;
+        let mut remaining=allowance;
+        let refs:Vec<_>=fields.iter().collect();
+        let result=Self::switched_enclosure(&refs,initial,&source,window,elapsed,&mut remaining,allowance);
+        crate::diagnostics::counter("selected_event_field_evaluations",allowance-remaining);
+        let (tube,velocity)=result?;
+        let image=initial.iter().zip(velocity).map(|(&x,d)|x+elapsed*d).collect();
+        Ok((tube,image))
+    }
     // Only ordered event observations may use this backward-reaching box.
     // Ordinary state_bounds deliberately keeps its accepted-start restriction.
     fn ordered_event_state(&self, window: I) -> Result<Vec<I>, Error> {
@@ -2142,15 +2169,8 @@ impl NonlinearContinuous {
             lo: 0.0,
             hi: (I::point(window.hi) - I::point(seed.window.lo)).hi,
         };
-        let (source, slopes) = self.context.trajectory.range(coverage)?;
-        let (_, image) = self
-            .picard_enclosure(&seed.state_after_map, &source, &slopes, elapsed)
-            .ok_or_else(|| {
-                Error::new(
-                    "event_resolution",
-                    "cannot certify ordered nonlinear event trajectory tube",
-                )
-            })?;
+        let (_, slopes) = self.context.trajectory.range(coverage)?;
+        let (_, image) = self.event_picard_enclosure(&seed.state_after_map, coverage, &slopes, elapsed)?;
         Ok(image)
     }
 
@@ -2186,14 +2206,7 @@ impl NonlinearContinuous {
                 lo: 0.0,
                 hi: (I::point(time) - I::point(window.lo)).hi,
             };
-            let (_, image) = next
-                .picard_enclosure(&next.initial, &self.source_bounds(window), &[], elapsed)
-                .ok_or_else(|| {
-                    Error::new(
-                        "event_resolution",
-                        "cannot certify nonlinear event-to-representative trajectory tube",
-                    )
-                })?;
+            let (_, image) = next.event_picard_enclosure(&next.initial, window, &[], elapsed)?;
             next.initial = image;
         }
         next.propagate_until(horizon)?;
@@ -2358,6 +2371,7 @@ mod tests {
                 program,
                 trajectory,
                 force_integrals: false,
+                detached_timed: false,
                 driven: vec![],
             }),
             parameters: vec![],

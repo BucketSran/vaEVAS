@@ -16,7 +16,7 @@ pub(crate) struct Projection {
 /// Structural dependencies are checked before projection. Cancellation must
 /// not admit feedback, state forcing or a second history accidentally.
 pub(crate) fn projection(program: &Program, driven: &[String], index: usize) -> Option<Projection> {
-    let (input, origin, integral) = match &program.operators[index] {
+    let (input, origin) = match &program.operators[index] {
         OperatorSpec::LaplaceNd {
             input,
             numerator,
@@ -27,14 +27,14 @@ pub(crate) fn projection(program: &Program, driven: &[String], index: usize) -> 
             && denominator[0] > 0.
             && denominator[1] > 0. =>
         {
-            (input, origin, false)
+            (input, origin)
         }
         OperatorSpec::Idt {
             input,
             reset: None,
             origin,
             ..
-        } => (input, origin, true),
+        } => (input, origin),
         _ => return None,
     };
     let driven_nodes: BTreeSet<_> = driven
@@ -71,8 +71,7 @@ pub(crate) fn projection(program: &Program, driven: &[String], index: usize) -> 
         return None;
     }
     let parent = *operators.iter().next()?;
-    if (integral && parent >= index)
-        || !matches!(program.operators[parent], OperatorSpec::Transition { .. })
+    if !matches!(program.operators[parent], OperatorSpec::Transition { .. })
         || program.operators[parent].origin().instance != origin.instance
     {
         return None;
@@ -186,6 +185,15 @@ impl ActivationPrefix {
 }
 
 impl Filter {
+    pub(crate) fn reinitialized(
+        &self,
+        parent: &Transition,
+        numerator: &[f64],
+        denominator: &[f64],
+    ) -> Result<Self, Error> {
+        Self::new(self.projection, parent, numerator, denominator)
+    }
+
     pub(crate) fn reaches_deadline(&self, parent: &Transition, time: f64) -> bool {
         parent.next_breakpoint(self.time).is_some_and(|t| t <= time)
     }

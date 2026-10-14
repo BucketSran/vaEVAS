@@ -104,6 +104,19 @@ impl Continuous {
             cursor: 0.,
         })))
     }
+    /// Constructor-scoped independence certificate: this subproblem carries the
+    /// complete causal projection proof that no required equation depends on a
+    /// transition. Only `Operators::new_initialized_until` may consume it, on
+    /// the object built in the same call. A restarted object may retain this
+    /// dependency fact; freshness comes from that constructor-only entry, not
+    /// from this flag. Anchored histories are excluded.
+    pub(crate) fn detached_from_transitions(&self) -> bool {
+        match self {
+            Self::Linear(v) => v.context.detached_timed,
+            Self::Nonlinear(v) => v.detached_from_transitions(),
+            Self::Anchored(_) => false,
+        }
+    }
     pub(crate) fn has_local_observation(&self) -> bool {
         matches!(self,Self::Anchored(v) if v.observation.is_some())
     }
@@ -175,6 +188,8 @@ impl Continuous {
         }) {
             return Ok(None);
         }
+        let prepared = Context::new(program, trajectory, driven)?;
+        let program = &prepared.program;
         if selection::needed(program) {
             let parameters: Vec<_> = states.iter().copied().map(I::point).collect();
             let context = Arc::new(Context {
@@ -182,6 +197,7 @@ impl Continuous {
                 trajectory: trajectory.clone(),
                 driven: driven.to_vec(),
                 force_integrals: true,
+                detached_timed: prepared.detached_timed,
             });
             let frozen = selection::freeze_context(&context, &parameters, 0.)?;
             if program.operators.iter().any(|op|matches!(op,OperatorSpec::Idt{input,..}|OperatorSpec::LaplaceNd{input,..} if selection::has_variable_division(input)||nonlinear::contains_exp_operator(input,program))) || frozen.program.operators.iter().any(|op|matches!(op,OperatorSpec::Idt{input,..}|OperatorSpec::LaplaceNd{input,..} if affine_bounds::affine(input,&frozen.program).is_err())) {

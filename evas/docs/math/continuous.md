@@ -28,7 +28,62 @@ IR21 的 `divide` 保留变量分母，连续积分可执行可认证的有理�
 详细定义域见[纯数学函数](operators.md#elementary-functions)。
 实现见 [continuous_select.rs](../../rust_core/src/continuous_select.rs) 与
 [nonlinear_dynamics.rs](../../rust_core/src/nonlinear_dynamics.rs)，独立答案见
-[选路积分与有理流](../../tests/test_r01_runtime_select.py)。本候选尚无新的实际 Spectre 对照。
+[选路积分与有理流](../../tests/test_r01_runtime_select.py)。
+有限 nested-select 实际对照见[证据范围](../../../experiments/backends/night-slices/README.md#n08)，
+不涵盖本节所有有理流与 exp 组合。
+
+### 仅被步长控制或数学输出读取的内部电压
+
+本地候选在建立非线性网络时，也收集 `$bound_step` 条件/值及 `exp` 输入所读取的内部电压。
+例如内部节点 `w=2*u` 虽不直接进入积分右端，只要 `exp(w)` 被输出或 w 控制步长，
+仍须先解出 w。旧路径遗漏这些依赖后会拒绝本来有唯一解的模型。
+
+所有条件分支和零系数引用都保留；未定义、冲突定义、跨实例及不支持的历史反馈继续拒绝。
+这项修复没有新增一般非线性代数求解器，也不证明每次步长控制都实际限制了网格。
+见[辅助依赖回归](../../tests/test_auxiliary_continuous_roots.py)与
+[四例实际对照](../../../experiments/backends/night-slices/README.md#n09b)。
+
+### 嵌套条件的候选根
+
+本地候选允许谓词的左右表达式内嵌 Select，包括受限加法、常量乘法和常量除法组合。
+每个选择模式仍须通过原联合仿射检查，且只依赖本实例许可的源、ground 和保持状态。
+不活动分支也检查结构、来源和定义域；零乘数不能隐藏内部节点、算子或跨实例状态。
+
+例如 `idt(((u<0.25 ? u : 2*u)>1) ? 1 : 0,0)` 在 u=t 时的答案为 `max(t-0.5,0)`。
+只收集内层 .25 切点会漏掉父条件在 .5 的新根。实现递归枚举所有完整仿射候选，
+在每个源 PWL 段定位候选根，再与子条件根取并集；不活动候选的多余切点只分段，不改变状态。
+没有嵌套谓词时不扩展这套候选枚举；下节根窗口历史规则也适用于普通物理谓词。
+
+同源同段且结构相同的根可复用；两个不同非点根窗口重叠或接触时拒绝，不能合并成假同刻。
+端点符号无法证明、根不能严格隔离、相邻切点之间没有可表示的严格内部探测点，
+或候选枚举预算耗尽时返回 `condition_precision`。相同单点可去重。
+尤其不能把舍入到端点的探测值冻结为整个开区间模式，否则短区间内的积分面积会丢失。
+保持状态事件后从接受历史重建模式，原积分和滤波状态继续传播；根窗口仍进入历史包围。
+这不开放非线性或内部算子谓词、一般选路滤波独立网络，也不改变 #131 的近根组合范围。
+
+实现见 [continuous_select_candidates.rs](../../rust_core/src/continuous_select_candidates.rs)，
+独立回归 [test_nested_predicate_cuts.py](../../tests/test_nested_predicate_cuts.py) 检查父根、布尔算术、
+根窗口内窄脉冲拒绝，以及线性与非线性消费者的相邻浮点切点拒绝。
+
+### 根窗口内的物理历史
+
+非点根窗口跨过预测终点时，不能丢掉窗口，也不能把它当成终点之后的事件。
+例如输入在 timer 前刚越过阈值，积分已经积累一小段面积；timer 改变参数后，仍须保留这段面积。
+本地候选在非线性选路历史中为这个时间段保存单独的历史，联合包围切换前后的可行导数，再把认证终值交给事件更新。
+窗口内的查询也使用这段历史，不能只修正最后一个值而继续返回旧轨迹。
+
+两侧模式必须使用同一组物理状态和输出映射，所有模式通过共同的自映射与电压误差检查。
+邻近另一个根、模式无法完整枚举或误差超预算时，返回明确错误。
+普通模式分段需要严格内部观察点；根窗口本身可以没有可表示的内部浮点时刻。
+线性传播的旧切点路径未被这个桥段替换。
+用于判断两侧模式的观察点也必须与其他根隔离，不能恰好越过第二个根而漏掉窄脉冲。
+这没有改变原误差门槛，也没有扩展 #131 的近根查询范围。
+
+根窗口传播消耗所在轨迹的工作预算。事件窗口的有限模式检查另有计数和上限，
+最多 32 种模式、16 次包围重试；当前还不是整个请求共享一个累计预算。
+实现见 [nonlinear_root_window.rs](../../rust_core/src/nonlinear_root_window.rs)，
+回归见 [test_root_window_history.py](../../tests/test_root_window_history.py)，
+实际比较和仍缺的资格见[根窗口证据](../../../experiments/backends/night-slices/README.md#n19)。
 
 ## 行为与边界
 
@@ -669,6 +724,29 @@ PWL 折点更新源斜率，电压和积分的完整状态包围继续保留。
 Picard 管和 Taylor 包围的依据可参见
 [Nedialkov、Jackson、Corliss 的 validated IVP 论文](https://doi.org/10.1016/S0096-3003(98)10083-8)；
 这些数学依据不证明与 Spectre 内部算法或数值结果一致；后端/性能执行以实验收据为准。
+
+<a id="implicit-bound-step"></a>
+
+### 隐式 DAE 的动态步长请求
+
+在上述无事件、无离散状态的 DAE 内，`$bound_step` 可读取已认证节点、已有算子、时间与源。
+每个内部接受段起点用完整状态包围求输出，包括滤波器直接通路；不能拿 Newton 代表值代替。
+活动请求采用区间下界，与 max_step、内部步长上限及已知段末共同限制实际积分段。
+条件沿用源仿射结构准入，可能激活时保守应用请求；完全不活动的值不求值。
+这种条件读取不新增根搜索，不保证捕捉接受点之间任意短的激活窗口。
+
+隐式路径要求活动请求整个区间严格为正。零、负数或无法认证的值拒绝；
+已认证但小于当前可表示时间间隔的正请求遵守最小推进规则。
+通用显式路径允许零请求的规则不由此改变。半步重试及后缀精化仍消耗共同试算预算，
+失败不发布部分历史、状态或记录；同一对象可从原接受前缀重试。
+
+实现见 [step_bounds.rs](../../rust_core/src/step_bounds.rs) 与
+[implicit_dynamics.rs](../../rust_core/src/implicit_dynamics.rs)。独立回归
+[test_implicit_bound_step.py](../../tests/test_implicit_bound_step.py) 和
+[implicit_bound_tests.rs](../../rust_core/src/implicit_bound_tests.rs) 检查内部段宽、条件准入、
+完整输出坐标、直接通路、严格正值与耗尽预算后的回退。
+[12 组实际输出对照](../../../experiments/backends/night-slices/README.md#n05)使用 y=t 的选定分支，
+不单独证明内部步长约束生效，也没有保存 z 的原生输出。
 
 ## 非线性 guard 的根证明
 

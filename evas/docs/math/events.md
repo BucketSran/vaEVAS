@@ -37,7 +37,12 @@
 非线性积分器在每个内部接受段起点认证活动条件和请求值，以请求区间下界限制实际积分段；
 动态请求也不能只增加外层控制器计数。内部积分同样应用可能激活的请求；
 非法条件、未认证的请求数值、非有限值或负值明确拒绝。
-隐式 DAE 仍只接受正的无条件常数请求，其他请求在该路径返回 `unsupported_bound_step`。
+本地候选的无事件隐式 DAE 也在每个内部接受段起点读取请求。值可依赖该路径已支持的
+节点电压、已有算子输出、时间和源；激活条件仍限源仿射谓词，所有分支先做结构检查。
+活动请求的整个区间须严格为正，零请求在隐式路径拒绝；已认证的极小正值仍服从最小可表示推进规则。
+条件只在接受段起点读取，不承诺发现两次接受点之间任意窄的激活窗口。
+请求限制网格，不建立新的物理模式，也不解除隐式网络的事件、复位和离散状态限制。
+具体方法见[隐式 DAE 步长请求](continuous.md#implicit-bound-step)。
 已支持的线性解析历史由接受帧上的动态请求限制推进，不改变解析公式。
 这不是一般动态模型的完整 `$bound_step` 支持。
 
@@ -47,7 +52,9 @@ Rust 的 `step_bounds.rs` 验证引用和来源、计算认证上限；`transien
 [test_bound_step.py](../../tests/test_bound_step.py) 独立检查多调用/实例取最小值、条件释放、
 事件后状态、语句顺序、查询不改变终值、非法 IR，以及 `y'=y²,y(0)=1` 的解析答案和实际积分段宽度。
 [test_r01_language.py](../../tests/test_r01_language.py) 补语言入口回归。
-这份开发候选尚无新的实际 Spectre 对照，不能据此宣称跨模拟器行为对齐。
+隐式扩展的独立回归见 [test_implicit_bound_step.py](../../tests/test_implicit_bound_step.py)。
+[有限实际证据](../../../experiments/backends/night-slices/README.md#n05)区分输出数值对照与内部段宽检查；
+输出正确本身不能证明每个 `$bound_step` 限制已生效。
 
 <a id="state-operator-contribution"></a>
 
@@ -67,7 +74,7 @@ Rust 的 `step_bounds.rs` 验证引用和来源、计算认证上限；`transien
 
 ## 事件输出记录与时间
 
-受支持事件体中的 `$display` 按语句顺序求值，只输出实际选中分支。格式限 `%d`、`%g`、
+受支持模拟事件体中的 `$display` 与 `$strobe` 使用同一记录路径，按语句顺序求值，只输出实际选中分支。格式限 `%d`、`%g`、
 `%.Ng`（N 为 1–32）及 `%%`，格式转换数须与数值参数数目相同。结果保存在
 `transient.display_records`，每条包含 `time`、`event`、`origin`、`text`。
 记录与候选事件共同验收后提交；失败试算、丢弃与重试不重复输出。
@@ -80,8 +87,11 @@ Rust 的 `step_bounds.rs` 验证引用和来源、计算认证上限；`transien
 失败运行不补发最终记录。
 `$abstime` 读取内核驱动的合成时间节点，事件采样使用事件时间，不能由外部 PWL 覆盖。
 
-独立回归见 [输出记录](../../tests/test_display.py)和[事件时间](../../tests/test_event_time.py)。
-这些开发检查不提供本候选的实际 Spectre 对照。
+模拟域别名依据 VAMS LRM 2023 §9.4.1、§9.4.6；不引入数字域 postponed 调度语义。
+`$strobe` 沿用相同的初值、层级、有限格式和失败事务限制，不能用于绕过拒绝。
+独立回归见 [输出记录](../../tests/test_display.py)、[模拟 strobe 别名](../../tests/test_strobe_task.py)
+和[事件时间](../../tests/test_event_time.py)。[六组实际记录对照](../../../experiments/backends/night-slices/README.md#n14)
+限受支持模型，不包含 final_step 修改物理电压的兼容性。
 
 <a id="event-or"></a>
 
@@ -93,7 +103,8 @@ Rust 的 `step_bounds.rs` 验证引用和来源、计算认证上限；`transien
 `E_B = E_0 ∪ E_1 ∪ ...`。这是事件集合合并；每个调用继续独立监测自己的 guard、方向、
 时间容差及表达式容差。依据与首版选择见[独立契约](../../validation/EVENT_CONDITIONS_CONTRACT.md#trigger-set)。
 OR 接受 cross/timer 叶子的并集；每个叶子保留自己的时间证书。
-原始 IR 中的空/单叶/嵌套 OR 仍拒绝。
+原始 IR 中的空/单叶/嵌套 OR，以及包含 initial_step 或 final_step 的 OR 均拒绝。
+前端的有限共享初始化另行归一化，见[单固定 timer 共用初始化体](#initial-timer)。
 
 IR 使用 `trigger/body/origin` 事件块，OR trigger 内保存叶子列表。
 `EventModel` 为叶子保存 `(block, leaf)` 身份，写者与赋值路径仍按 block 管理。
@@ -202,6 +213,31 @@ body 只能包含无条件赋值；当前开发切片也允许在体内静态展
 `[7,7,2,7]`；参数 9 得到 `[9,9,2,9]`。还检查数组、重复运行、叶子顺序/去重、
 t=0 顺序、同刻冲突与明确拒绝边界。有限开发检查不证明完整 SAR/va04 支持，
 也不替代外部仿真器对照或任意动态组合验收。
+
+<a id="initial-timer"></a>
+
+## 单固定 timer 共用初始化体
+
+本地候选接受一个无分析限定 `initial_step` 与一个固定 timer 的 OR，两个叶子的书写顺序均可。
+共享体必须属于现有合法初始化域，且不含 `$display` 或 `$strobe`。例如
+`@(initial_step or timer(0,0.25)) n=n+1;` 使缺省为零的 n 初始化为 1，随后在 .25、.5 s 变为 2、3。
+共享的零时刻只执行一次；两个独立块中的 initial_step 与 timer(0) 仍各自执行。
+
+初始化体按原源序运行，并在建立算子历史之前完成；不能把初始化换成普通 timer(0)。
+否则 transition 的初值可能错误地从零起步，积分和滤波也会读到错误初态。
+输入条件及静态展开仍受已有初始化准入限制，不新增任意电压或历史相关初值。
+
+实例绑定后，start=0 且 period=p>0 的 runtime timer 改为 start=p，period 保持 p。
+精确时钟满足 `Q(p)+k·Q(p)=(k+1)·Q(p)`，其中 Q 表示机器数对应的精确有理数；不预先舍入乘加。
+start>0 保留原日程。start=0 且 period≤0 时只保留初始化作用；禁用 timer 也只初始化。
+实现保留禁用 Event 占位及其 body 校验，避免改变事件索引或隐藏非法 IR。
+多 timer、timer 与 cross 混合、保持状态 timer、重复或限定初始化叶、共享体输出记录仍拒绝。
+纯初始化 OR 与初始化/cross 的既有规则分别保留。
+
+独立回归 [test_initial_timer.py](../../tests/test_initial_timer.py) 检查非幂等赋值、独立零事件、
+历史初值、输入与数组源序、多实例及 raw IR 生命周期 OR 拒绝。
+[八组实际证据](../../../experiments/backends/night-slices/README.md#n07b)支持有限初始化与计数输出，
+保留 7 个缺失原生查询；积分误差没有事前 Q 门槛，不作为新精度成绩。
 
 ## 连续动态与多项式 guard
 
@@ -479,13 +515,15 @@ stop 事件经过相同的事件后求解和残差验收，成功提交后才返
 [LRM 2.4 §5.10.3.3](https://www.accellera.org/images/downloads/standards/v-ams/VAMS-LRM-2-4.pdf)
 的 `analog_expression_or_null` / `constant_expression_or_null`；start 和显式 enable 不能留空。
 前端把省略的 period 归一化为 0，enable 归一化为 1，time_tol 归一化为 `1e-12 s`，
-再生成当前 IR18，不引入另一套计时器。1 ps 是 EVAS 的实现选择，规范没有规定这个数值，
-也不代表 Spectre 的缺省值。LRM 允许显式零容差；EVAS 当前仍要求显式容差为正。
+再生成当前 Timer IR，不引入另一套计时器。1 ps 是 EVAS 的实现选择，规范没有规定这个数值，
+也不代表 Spectre 的缺省值。本地候选允许固定 timer 显式 time_tol=0，负容差仍拒绝。
+保持状态 timer 仍要求正容差；省略容差的行为不变。
 固定日程的 start 必须为非负有限实例常数，period 为有限实例常数。
 enable 为有限实例常数，0 禁用，非零启用；禁用不跳过模型的语法、IR 和依赖检查。
 保持状态控制的参数见[动态 timer](#held-timer)，混合事件见[事件 OR](#event-or)。
 
 周期事件定义为编译后 binary64 数值对应的实数 `t_k=start+k*period`。
+这是 EVAS 的数学时钟合同，不是 LRM 指定的浮点生成算法，也不承诺复制 Spectre 的漏触发。
 内核由固定起点和精确整数 k 生成每个时刻，并用向外舍入界包围乘加误差；
 实际候选取该区间的上界 `s_k`，须证明 `0<=s_k-t_k<=time_tol`。
 这满足缺省容差时“在名义时刻或稍后”的要求；显式正容差也沿用相同选择。
@@ -496,12 +534,24 @@ enable 为有限实例常数，0 禁用，非零启用；禁用不跳过模型�
 不会从上次实际事件时间累加周期，也不按容差合并相邻名义事件。
 同刻 timer 与 cross 共享事件前状态，并联立求解事件后的电压；整数赋值顺序和批次写者冲突规则与 cross 一致。
 
-非空 strobe 请求对起点、周期均为精确单值的 timer 使用更窄的包围，包含精确保持参数。`exact_time.rs::Clock::bounds`
+显式零容差固定 timer 在普通查询与 strobe 下都用 `Clock::bounds()` 的最小包围。
+只有域内每个到期时刻可表示为单点时才接受，否则返回 `event_resolution`。
+例如 start=0、stop=0.625、period=0.125 的各期限可精确表示；
+`3·Q(0.1)` 不能表示为 binary64 单点，零容差下拒绝。
+先判断禁用及期限是否在请求时域内，再对域内期限检查分辨率，不因域外非点期限误拒绝。
+
+同刻固定 timer 组若含零容差叶，先证明精确时钟相等，再要求各叶最小证书都是同一个单点、
+且包含于各自原包围，才共同使用该代表点。普通查询与强制点使用相同规则。
+不同近邻事件不因此合并；不含零容差的组保留既有策略。
+独立回归见 [test_zero_timer.py](../../tests/test_zero_timer.py)，
+[实际对照](../../../experiments/backends/night-slices/README.md#n07a)分别保留 dyadic 一致与 decimal 拒绝。
+
+非空 strobe 请求对起点、周期均为精确单值的正容差 timer 使用更窄的包围，包含精确保持参数。`exact_time.rs::Clock::bounds`
 用 FMA 提出最近舍入值，再以精确有理数符号比较决定它在 `t_k` 的哪一侧。
 可表示的 `t_k` 得到单点；否则得到相邻两个浮点数，并再次验证上下界。
 `schedule.rs::add_timer` 取其上界后，继续执行原有顺序、`time_tol`、stop 和提交检查。
 这样消除了普通区间乘加的额外膨胀，不会把实际早于事件的 strobe 当作事件后状态。
-普通查询通常保留原包围；若有限包围跨过 stop，则先精确比较 `t_k` 与 stop。
+正容差普通查询通常保留原包围；若有限包围跨过 stop，则先精确比较 `t_k` 与 stop。
 确认事件在 stop 之后便结束日程；确认在 stop 内才复用 `Clock::bounds` 收紧包围。
 这样可消除区间乘加的额外膨胀，不会把 stop 之后的事件提前纳入。
 原时间容差、相邻事件顺序和提交检查继续生效；不确定保持参数与非有限包围的拒绝不变。
@@ -970,7 +1020,21 @@ start=0、period 从 .5 改为 .25 后依旧按 0+.25k 定位，不从改写时�
 答案在 .5 前为 1/(1−t)，之后为 1/t；不能沿旧增长流场预测到 stop。
 同一 Controller 另检查新日程成功、未来流场失败后的完整回退与修正重试。
 连续电压参数、动态 tolerance、一般非线性参数仍需补齐。历史驱动 guard 的受限联合预测见“事件修改积分轨迹后的根重定位”。
-独立回归见 [test_dynamic_timer.py](../../tests/test_dynamic_timer.py)。该切片无新 Spectre 对照。
+独立回归见 [test_dynamic_timer.py](../../tests/test_dynamic_timer.py)。
+私有冻结候选 root-v8 的精确零起点切片完成了有限实际 Spectre 初始化对照，见[初始化证据](../../../experiments/backends/night-slices/README.md#n18)。
+v8 修复已折入 managed 工作区，受影响回归仍在进行；这不是 main 已交付支持。
+它保留已消费事件身份，再按最终参数建立未来日程；新创建的未消费零事件仍拒绝。
+这份有限证据不覆盖本节全部动态重排、反馈与历史组合。
+
+新候选同时修复重排时静默丢失当前事件的情况。若别的回调把一个 held timer 的起点改到
+当前时刻，不能把它当作已经发生。调度器核对本批真正消费的触发叶及其精确时钟身份；
+只有同一叶的已消费时刻可以跳过，OR 共用事件体不代表其他叶也已消费。
+新生成的当前事件或无法证明顺序的重叠窗口目前返回 `event_resolution`。
+这是安全拒绝，尚未实现迭代的同刻闭包。状态、输出记录及未来日程仍一起回退。
+见[公开反例](../../tests/test_held_timer_current_boundary.py)、
+[控制器回退测试](../../rust_core/src/transient_timer_boundary_tests.rs)与
+[实际范围](../../../experiments/backends/night-slices/README.md#n21)。
+
 
 
 ## 有界局部因果闭包（候选）

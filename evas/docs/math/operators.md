@@ -97,7 +97,56 @@ Rust 另检查队列/边沿的候选回退；新增同刻电压目标与变化�
 新增默认 fall 的[同源有限控制](../../../experiments/backends/transition-default-fall/README.md)核对了完整边沿、中断和两个实例。
 显式 timer 容差 `1e-12` 控制的实际原生波形满足 `1e-8 V` 预算；原 `1e-18` 参考未产生目标变化而保留失败。
 所需观察点缺失、原始状态逐点差以及 callback 窗口/计数证据不足仍保留；不据此宣称一般 timer 或后端全对齐。
-连续电压输入、嵌套、动态参数、缺省 rise/零边沿和算子反馈尚未支持。
+一般连续电压输入、嵌套、动态参数、缺省 rise/零边沿和算子反馈尚未支持。
+
+### 源条件改变目标与零时刻初始化
+
+以下初始化规则已进入本地集成候选，尚未合入 main；具体被测身份由证据索引固定。
+候选接受可认证的直接源条件所产生的分段常量目标。
+例如 `transition(u>0.5 ? 1 : 0,0,.1)` 在 `u=t` 时，在 0.5 s 改变目标并开始边沿。
+源根必须能证明为一个精确时刻；不能用附近的浮点值代替不确定根。
+目标改变前先消费旧历史，再安装新目标，下游已支持的积分和滤波继续保留其状态。
+这不允许把任意连续输入直接送入 `transition`。
+
+精确零时刻的初始化和 timer 先完成一次状态更新，再创建 transition 的初始值。
+例如 q 初始为 0、timer(0) 将其改为 1，输出从 1 开始；不能人为增加一段从 0 到 1 的启动边沿。
+根恰为零的严格源比较仍区分零点值与正时间右侧目标。
+下游滤波从同一初始值建立历史，积分保留自己的显式初值。
+
+范围限可证明的零时刻事务、已支持的 transition 及其直接滤波或积分。
+源无关且不改变种子和时钟参数的赋值可沿用旧初始化路径，但仍执行原事件验证。
+运行时 timer 的已消费零事件身份会保留，参数改写后再建立未来日程。
+若改写创建另一个尚未消费的零事件，当前明确拒绝，不猜测重复执行次数。
+不确定初始时刻、未证明的反馈和受影响的其他历史组合仍拒绝。
+
+候选还允许与目标无反馈关系的独立连续历史共存。例如 `q=1` 的最终零时刻状态可同时
+作为 transition 的种子和独立 `idt(q,0)` 的斜率。构造器先核对最终状态是有限单点，
+再从该状态新建连续历史；不能给已经推进的历史对象补一个“可重置”标记。
+连续历史保留自己的 IC/DC 规则，两份事件回放只共享不可变的连续结果。
+所有分支、复位和步长控制均须证明与定时历史独立；隐藏反馈、非点最终状态及未支持的
+absdelay/slew 混合仍拒绝。见 [独立初始化回归](../../tests/test_independent_initial_history.py)
+及[实际证据](../../../experiments/backends/night-slices/README.md#n18c)。
+
+实际 Spectre 证据与适用版本见[初始化证据](../../../experiments/backends/night-slices/README.md#n18)。
+独立测试见 [test_transition_initialization.py](../../tests/test_transition_initialization.py) 和
+[test_held_transition_initialization.py](../../tests/test_held_transition_initialization.py)。
+
+### 精确期限与 point 用户事件的顺序
+
+本地候选对有精确三项机器数和的期限，保存该实数和的最窄 binary64 包围。
+代表时刻仍取上端，因而 breakpoint、当前边沿是否结束及下游 filter/integral 分段使用同一证书。
+仅补排序判断而保留偏宽的旧代表时刻是不够的：近邻 timer 再改目标时，可能误选中断或重启分支。
+
+对精确 point 用户事件，精确有理数比较可以证明 deadline 在其前、后或同刻，
+还须验证保存包围及上端代表符合这个顺序。区间重叠本身不代表数学上无法排序。
+不同内部 deadline 的重叠、队列次序、中断边沿缺少精确和的期限，以及非 point 用户根，
+仍受原保守拒绝约束，不能套用 point 例外。值、斜率与目标的误差继续传播，失败候选仍整体丢弃。
+
+独立回归 [test_exact_transition_deadlines.py](../../tests/test_exact_transition_deadlines.py)
+使用 Fraction/Decimal 答案检查两种顺序、符号、相等、同向再改目标、滤波与积分，
+并保留非点 cross 及不同内部期限的拒绝。
+[实际证据](../../../experiments/backends/night-slices/README.md#n06)把有限数值对照与严格顺序资格分开；
+极近的实际 Spectre 回调可以落入另一中断分支，只作 characterization，不能记为数学端点排序对齐。
 
 ### 历史误差与电压精度
 

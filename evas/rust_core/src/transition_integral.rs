@@ -30,6 +30,10 @@ impl ActivationPrefix {
 }
 
 impl Integral {
+    pub(crate) fn reinitialized(&self, ic: f64) -> Result<Self, Error> {
+        Self::new(self.projection, ic)
+    }
+
     pub(crate) fn new(projection: Projection, ic: f64) -> Result<Self, Error> {
         if !ic.is_finite() {
             return Err(Error::new(

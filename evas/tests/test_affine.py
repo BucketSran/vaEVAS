@@ -117,7 +117,7 @@ class AffineContracts(unittest.TestCase):
 
     def test_singular_and_floating_circuits_fail(self):
         for source in [model("V(y,r)<+V(u,r)+V(y,r);"),
-                       model("V(y,r)<+V(u,r);", "electrical floating;")]:
+                       model("V(y,r)<+V(u,r)+V(floating);", "electrical floating;")]:
             with self.subTest(source=source), self.assertRaises(KernelError) as error:
                 execute(source)
             self.assertEqual(error.exception.detail["kind"], "singular_system")

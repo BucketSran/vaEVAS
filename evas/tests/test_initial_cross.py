@@ -87,13 +87,11 @@ class InitialCross(unittest.TestCase):
             self.assertEqual(caught.exception.diagnostic['code'], 'unsupported_initial_event')
             self.assertIn('unsupported initial_step value', str(caught.exception))
 
-    def test_qualified_repeated_initial_and_timer_mixtures_remain_rejected(self):
+    def test_qualified_repeated_initial_and_multi_leaf_timer_mixtures_remain_rejected(self):
         for trigger in (
             'initial_step("dc") or cross(V(u,r)-2,1,1e-12,1e-9)',
             'initial_step or initial_step("tran") or cross(V(u,r)-2,1,1e-12,1e-9)',
             'initial_step or initial_step or cross(V(u,r)-2,1,1e-12,1e-9)',
-            'initial_step or timer(0)',
-            'timer(0) or initial_step',
             'initial_step or cross(V(u,r)-2,1,1e-12,1e-9) or timer(1)',
         ):
             with self.subTest(trigger=trigger), self.assertRaises(CompileError) as caught:

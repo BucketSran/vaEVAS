@@ -18,6 +18,38 @@ impl Deadline {
     pub(crate) fn overlaps(&self, other: I) -> bool {
         self.bounds.lo <= other.hi && other.lo <= self.bounds.hi
     }
+
+    /// A point user event can be ordered against an exact fixed-time sum.
+    /// The stored upper representative must realize that order as well.
+    /// This does not order two distinct, overlapping operator deadlines:
+    /// they can share a representative while requiring different histories.
+    pub(crate) fn ordered_with_point(&self, event: I) -> bool {
+        if event.lo != event.hi || !event.finite() {
+            return false;
+        }
+        let proof = || {
+            let exact = exact_sum(self.sum?)?;
+            if crate::exact_source::enclosure(&exact)? != self.bounds {
+                return None;
+            }
+            Some(match exact.cmp(&crate::exact_source::binary(event.lo)?) {
+                std::cmp::Ordering::Less => self.bounds.hi <= event.lo,
+                std::cmp::Ordering::Equal => self.bounds == event,
+                std::cmp::Ordering::Greater => self.bounds.hi > event.hi,
+            })
+        };
+        proof().unwrap_or(false)
+    }
+}
+
+fn exact_sum(terms: [f64; 3]) -> Option<num_rational::BigRational> {
+    // Three finite binary64 terms have a bounded exact representation;
+    // unlike a general expression this cannot grow with model size.
+    terms
+        .into_iter()
+        .try_fold(crate::exact_source::binary(0.)?, |sum, term| {
+            Some(sum + crate::exact_source::binary(term)?)
+        })
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -53,6 +85,22 @@ fn invalid(message: &str) -> Error {
 }
 
 fn deadline(bounds: I, scale: f64, sum: Option<[f64; 3]>) -> Result<Deadline, Error> {
+    // Keep the exact-time witness and the time used to advance history in
+    // agreement. Merely proving order at the calendar gate would still let
+    // a needlessly wide upper endpoint advance past a user timer.
+    let bounds = if let Some(terms) = sum {
+        let exact = exact_sum(terms)
+            .and_then(|value| crate::exact_source::enclosure(&value))
+            .ok_or_else(|| invalid("cannot enclose exact transition deadline"))?;
+        if !bounds.finite() || exact.lo < bounds.lo || exact.hi > bounds.hi {
+            return Err(invalid(
+                "exact transition deadline disagrees with its enclosure",
+            ));
+        }
+        exact
+    } else {
+        bounds
+    };
     // Supported-slice time-resolution gate: representative-at-upper-bound
     // displacement must be <= 1% of the declared delay/edge time. This is not
     // a total waveform error bound and does not authorize uncertain ordering.
@@ -455,6 +503,49 @@ impl Transition {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn exact_fixed_edge_deadline_has_the_minimal_binary_enclosure() {
+        let a = 2e-6;
+        let b = 2.5e-7;
+        let exact =
+            crate::exact_source::binary(a).unwrap() + crate::exact_source::binary(b).unwrap();
+        let expected = crate::exact_source::enclosure(&exact).unwrap();
+        let scheduled = deadline(I::point(a) + I::point(b), b, Some([a, b, 0.])).unwrap();
+        assert_eq!(scheduled.bounds, expected);
+        // The exact end precedes this user timer although naive interval
+        // addition encloses both sides of it. Its scheduled upper bound must
+        // therefore not be after the timer.
+        assert!(exact < crate::exact_source::binary(2.25e-6).unwrap());
+        assert!(scheduled.bounds.hi <= 2.25e-6);
+        assert!(scheduled.ordered_with_point(I::point(2.25e-6)));
+        assert!(scheduled.ordered_with_point(I::point(2.25e-6_f64.next_down())));
+        assert!(!scheduled.ordered_with_point(I {
+            lo: 2.25e-6_f64.next_down(),
+            hi: 2.25e-6,
+        }));
+    }
+
+    #[test]
+    fn unproved_and_distinct_overlapping_deadlines_are_not_coincident() {
+        let a = deadline(
+            I::point(0.1) + I::point(0.1) + I::point(0.2),
+            0.2,
+            Some([0.1, 0.1, 0.2]),
+        )
+        .unwrap();
+        let b = deadline(I::point(0.3) + I::point(0.1), 0.1, Some([0.3, 0.1, 0.])).unwrap();
+        assert_eq!(a.bounds.hi, b.bounds.hi);
+        assert!(a.overlaps(b.bounds));
+        assert!(!a.coincides(&b));
+        let unproved = Deadline {
+            bounds: b.bounds,
+            sum: None,
+        };
+        assert!(!unproved.ordered_with_point(I::point(0.4)));
+        let equal = deadline(I::point(0.25) + I::point(0.5), 0.5, Some([0.25, 0.5, 0.])).unwrap();
+        assert!(equal.ordered_with_point(I::point(0.75)));
+    }
 
     #[test]
     fn equal_enclosures_do_not_prove_a_rewritten_target_unchanged() {

@@ -22,6 +22,19 @@ def execute(body, times, stop, *, atol, declarations='real a;', step=None, rtol=
 
 
 class TransitionAccuracy(unittest.TestCase):
+    def assert_enclosed(self, result, node, expected, atol, rtol=0):
+        index = result['nodes'].index(node)
+        evidence = result['observation_evidence']
+        bound_index = evidence['nodes'].index(node)
+        for row, bounds, exact in zip(result['solutions'], evidence['voltage_bounds_V'], expected, strict=True):
+            actual = F(row['voltages'][index])
+            lo, hi = map(F, bounds[bound_index])
+            budget = F(atol) + F(rtol)*abs(exact)
+            self.assertLessEqual(lo, exact)
+            self.assertLessEqual(exact, hi)
+            self.assertLessEqual(abs(actual-exact), budget)
+            self.assertLessEqual(max(abs(actual-lo), abs(actual-hi)), budget)
+
     def test_sample_inside_uncertain_delayed_start_is_rejected(self):
         start, delay = 1e12, .10005
         sample = start + delay
@@ -49,47 +62,78 @@ class TransitionAccuracy(unittest.TestCase):
         y = result['solutions'][2]['voltages'][result['nodes'].index('y')]
         self.assertLessEqual(abs(F(y) - (F(1, 2)-F(delay))), F(1e-3))
 
-    def test_network_gain_is_included_in_history_error_budget(self):
-        # An inexact 1/3 ramp value is amplified; checking the operator alone
-        # against a voltage tolerance would miss the output's tighter budget.
+    def test_timer_zero_final_seed_has_exact_network_gain(self):
+        # The zero closure seeds transition at 1; no initial 1/3 ramp exists.
         body = ('@(initial_step) a=0; @(timer(0,0,0.001)) a=1; '
                 'V(y,r)<+1073741824*transition(a,0,3,3);')
-        with self.assertRaisesRegex(KernelError, 'waveform_accuracy'):
-            execute(body, [0,1,3], 3, atol=1e-10)
-        result = execute(body, [0,1,3], 3, atol=1e-6)
-        y = result['solutions'][1]['voltages'][result['nodes'].index('y')]
-        self.assertLessEqual(abs(F(y) - F(1073741824,3)), F(1e-6))
+        result = execute(body, [0,1,3], 3, atol=1e-10)
+        self.assert_enclosed(result, 'y', [F(1073741824)]*3, 1e-10)
 
-    def test_multiple_interruptions_match_independent_rational_knots(self):
-        # m=1/3 to t=1, then -1/6 to t=2, then +1/6 to t=4.
+    def test_network_gain_is_included_in_history_error_budget(self):
+        # Shift the edge and old queries by 1/4 to preserve the inexact 1/3
+        # history independently of zero-time initialization.
+        body = ('@(initial_step) a=0; @(timer(0.25,0,0.001)) a=1; '
+                'V(y,r)<+1073741824*transition(a,0,3,3);')
+        with self.assertRaisesRegex(KernelError, 'waveform_accuracy'):
+            execute(body, [0,.25,1.25,3.25], 3.25, atol=1e-10)
+        result = execute(body, [0,.25,1.25,3.25], 3.25, atol=1e-6)
+        self.assert_enclosed(result, 'y',
+                             [F(0),F(0),F(1073741824,3),F(1073741824)],1e-6)
+
+    def test_timer_zero_final_seed_changes_interruption_origin(self):
         body = ('@(initial_step) begin a=0;b=0;c=0;end '
                 '@(timer(0,0,0.001)) a=1; @(timer(1,0,0.001)) b=-1; '
                 '@(timer(2,0,0.001)) c=0.5; '
                 'V(y,r)<+transition(a+b+c,0,3,6);')
         times = [0,.5,1,1.5,2,2.5,4,5]
-        expected = [F(0),F(1,6),F(1,3),F(1,4),F(1,6),F(1,4),F(1,2),F(1,2)]
+        # Start at 1. First descent has slope -1/6; the same-direction
+        # interruption retains origin 1 and changes its slope to -1/12.
+        expected = [F(1),F(1),F(1),F(11,12),F(5,6),F(19,24),F(2,3),F(7,12)]
         for step in [5,.125]:
             result = execute(body,times,5,atol=1e-12,
                              declarations='real a,b,c;',step=step)
-            y = result['nodes'].index('y')
-            for row, exact in zip(result['solutions'],expected,strict=True):
-                self.assertLessEqual(abs(F(row['voltages'][y])-exact),F(1e-12))
+            self.assert_enclosed(result,'y',expected,1e-12)
 
-    def test_sampled_state_keeps_history_error_across_events(self):
+    def test_multiple_interruptions_match_independent_rational_knots(self):
+        # Original nonzero slopes 1/3, -1/6, +1/6, with all events and
+        # queries shifted by 1/4 so initialization cannot erase the first edge.
+        body = ('@(initial_step) begin a=0;b=0;c=0;end '
+                '@(timer(0.25,0,0.001)) a=1; @(timer(1.25,0,0.001)) b=-1; '
+                '@(timer(2.25,0,0.001)) c=0.5; '
+                'V(y,r)<+transition(a+b+c,0,3,6);')
+        times = [0,.25,.75,1.25,1.75,2.25,2.75,4.25,5.25]
+        expected = [F(0),F(0),F(1,6),F(1,3),F(1,4),F(1,6),F(1,4),F(1,2),F(1,2)]
+        for step in [5.25,.125]:
+            result = execute(body,times,5.25,atol=1e-12,
+                             declarations='real a,b,c;',step=step)
+            self.assert_enclosed(result,'y',expected,1e-12)
+
+    def test_timer_zero_final_seed_is_sampled_as_one(self):
         body = ('@(initial_step) begin a=0;b=0;c=0;end '
                 '@(timer(0,0,0.001)) a=1; @(timer(1,0,0.001)) b=V(y,r); '
                 '@(timer(2,0,0.001)) c=1073741824*V(z,r)-357913941.3333333+1; '
                 'V(y,r)<+transition(a,0,3,3); V(z,r)<+b; V(w,r)<+c;')
+        result = execute(body,[0,1,2,3],3,atol=1e-9,rtol=1e-9,
+                         declarations='real a,b,c; electrical z,w;')
+        exact = F(1073741824)-F(357913941.3333333)+1
+        self.assert_enclosed(result,'y',[F(1)]*4,1e-9,1e-9)
+        self.assert_enclosed(result,'dut:z',[F(0),F(1),F(1),F(1)],1e-9,1e-9)
+        self.assert_enclosed(result,'dut:w',[F(0),F(0),exact,exact],1e-9,1e-9)
+
+    def test_sampled_state_keeps_history_error_across_events(self):
+        body = ('@(initial_step) begin a=0;b=0;c=0;end '
+                '@(timer(0.25,0,0.001)) a=1; @(timer(1.25,0,0.001)) b=V(y,r); '
+                '@(timer(2.25,0,0.001)) c=1073741824*V(z,r)-357913941.3333333+1; '
+                'V(y,r)<+transition(a,0,3,3); V(z,r)<+b; V(w,r)<+c;')
         declarations = 'real a,b,c; electrical z,w;'
-        # At t=1, sampling 1/3 meets this budget. At t=2, amplifying the
-        # retained uncertainty does not. Treating b as exact would accept it.
+        # Sample 1/3 at t=1.25; at t=2.25 its retained uncertainty is
+        # amplified. Treating the sampled state as exact would accept it.
+        times = [0,.25,1.25,2.25,3.25]
         with self.assertRaisesRegex(KernelError, 'waveform_accuracy'):
-            execute(body,[0,1,2,3],3,atol=1e-9,rtol=1e-9,declarations=declarations)
-        result = execute(body,[0,1,2,3],3,atol=1e-6,rtol=1e-6,declarations=declarations)
-        w = result['nodes'].index('dut:w')
-        actual = result['solutions'][2]['voltages'][w]
+            execute(body,times,3.25,atol=1e-9,rtol=1e-9,declarations=declarations)
+        result = execute(body,times,3.25,atol=1e-6,rtol=1e-6,declarations=declarations)
         exact = F(1073741824,3)-F(357913941.3333333)+1
-        self.assertLessEqual(abs(F(actual)-exact),F(1e-6))
+        self.assert_enclosed(result,'dut:w',[F(0),F(0),F(0),exact,exact],1e-6,1e-6)
 
     def test_initial_affine_input_roundoff_is_checked(self):
         # State coefficients remain in IR. Their exact sum is not the rounded

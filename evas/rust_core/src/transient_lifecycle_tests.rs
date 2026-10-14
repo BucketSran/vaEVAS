@@ -1534,7 +1534,7 @@ fn raw_pwl_roots_mixed_timer_held_epoch_failure_rolls_back_then_same_controller_
         .prepare_events_until(&model, &trajectory, &calendar, Some(calendar[0].time))
         .unwrap();
     let future = controller
-        .prepare_held_future(&model, &trajectory, &next, &records, &calendar[end..])
+        .prepare_held_future(&model, &trajectory, &next, &records, &calendar[end..], &calendar[controller.event..end])
         .unwrap();
     assert_eq!(
         future.iter().map(|e| e.event).collect::<Vec<_>>(),
@@ -1691,3 +1691,7 @@ fn extended_source_timer_cluster_later_failure_rolls_back_then_same_controller_r
         [0, 1, 2, 3]
     );
 }
+
+#[cfg(test)]
+#[path = "transient_timer_boundary_tests.rs"]
+mod timer_boundary_tests;

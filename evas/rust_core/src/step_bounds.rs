@@ -165,37 +165,10 @@ impl Bounds {
             .chain(states.iter().copied())
             .chain(operators.iter().copied())
             .collect();
-        let evaluate = |expr: &Expression| {
-            let resolved = crate::expression::resolve_selects(expr, &values)?;
-            crate::solver::interval_expression(&resolved, &values)
-        };
-        let mut step = max_step;
-        for (active, value) in &self.expressions {
-            let active =
-                possible_activation(active, &|e| crate::expression::resolve_selects(e, &values))?;
-            let active = crate::solver::interval_expression(&active, &values)?;
-            if active.zero() {
-                continue;
-            }
-            if !active.finite() {
-                return Err(Error::new(
-                    "bound_step_precision",
-                    "nonfinite $bound_step activation",
-                ));
-            }
-            // A finite enclosure containing both zero and nonzero values may
-            // activate this request; use its unchanged certified value below.
-            let value = evaluate(value)?;
-            if !value.finite() || value.lo < 0. {
-                return Err(Error::new(
-                    "invalid_bound_step",
-                    "$bound_step must be certified finite and nonnegative",
-                ));
-            }
-            step = step.min(value.lo);
-        }
+        let cap = frame_cap(&self.expressions, &values, false)?;
         // Downward addition cannot exceed the certified bound. The simulator's
         // minimum timestep is the next representable time, also for a zero bound.
+        let step = cap.map_or(max_step, |cap| max_step.min(cap));
         let end = if (time + step).is_finite() {
             (I::point(time) + I::point(step)).lo
         } else {
@@ -203,10 +176,68 @@ impl Bounds {
         };
         Ok(end.max(time.next_up()))
     }
+
+    /// Owner-validated `(active, value)` pairs in program-IR index space
+    /// (nodes, then states, then operators), for certified-frame consumers
+    /// that assemble their own interval values, such as implicit dynamics.
+    pub(crate) fn expressions(&self) -> &[(Expression, Expression)] {
+        &self.expressions
+    }
 }
 
-/// The implicit trajectory builder presently accepts only unconditional constants.
-/// Its internal integration mesh is capped before construction, never after it.
+/// Minimum cap over requests that are not certified inactive in one accepted
+/// frame. `values` is indexed in program-IR space (nodes, states, operators).
+/// `strict_positive` rejects values not proven strictly positive: implicit
+/// dynamics refuse a zero request instead of advancing by the minimum
+/// representable timestep, which the generic path permits via `next_up`.
+/// Returns `None` when every request is certified inactive.
+pub(crate) fn frame_cap(
+    expressions: &[(Expression, Expression)],
+    values: &[I],
+    strict_positive: bool,
+) -> Result<Option<f64>, Error> {
+    let evaluate = |expr: &Expression| {
+        let resolved = crate::expression::resolve_selects(expr, values)?;
+        crate::solver::interval_expression(&resolved, values)
+    };
+    let mut cap = None;
+    for (active, value) in expressions {
+        let active =
+            possible_activation(active, &|e| crate::expression::resolve_selects(e, values))?;
+        let active = crate::solver::interval_expression(&active, values)?;
+        if active.zero() {
+            continue;
+        }
+        if !active.finite() {
+            return Err(Error::new(
+                "bound_step_precision",
+                "nonfinite $bound_step activation",
+            ));
+        }
+        // A finite enclosure containing both zero and nonzero values may
+        // activate this request; use its unchanged certified value below.
+        let value = evaluate(value)?;
+        if strict_positive {
+            if !value.finite() || !(value.lo > 0.) {
+                return Err(Error::new(
+                    "invalid_bound_step",
+                    "$bound_step must be certified finite and strictly positive",
+                ));
+            }
+        } else if !value.finite() || value.lo < 0. {
+            return Err(Error::new(
+                "invalid_bound_step",
+                "$bound_step must be certified finite and nonnegative",
+            ));
+        }
+        cap = Some(cap.map_or(value.lo, |cap: f64| cap.min(value.lo)));
+    }
+    Ok(cap)
+}
+
+/// Preconstructed numerical histories accept only unconditional constants;
+/// their separate integration mesh is capped before construction, never after.
+/// The implicit trajectory gate itself is `implicit_gate` below.
 pub(crate) fn constant_cap(program: &Program, max_step: f64) -> Result<f64, Error> {
     let mut step = max_step;
     for bound in &program.step_bounds {
@@ -233,6 +264,33 @@ pub(crate) fn constant_cap(program: &Program, max_step: f64) -> Result<f64, Erro
             ));
         }
         step = step.min(*value);
+    }
+    Ok(step)
+}
+
+/// The implicit trajectory gate pre-caps `max_step` with unconditional
+/// positive constants and admits every other structurally valid request.
+/// Conditional and dynamic requests are enforced per accepted segment by the
+/// implicit flow's certified-frame evaluator, so they are no longer refused
+/// here. An inactive constant condition is skipped, not rejected.
+pub(crate) fn implicit_gate(program: &Program, max_step: f64) -> Result<f64, Error> {
+    let mut step = max_step;
+    for bound in &program.step_bounds {
+        if let (
+            Expression::Affine {
+                constant: active,
+                terms: a,
+            },
+            Expression::Affine {
+                constant: value,
+                terms: v,
+            },
+        ) = (&bound.active, &bound.value)
+        {
+            if a.is_empty() && v.is_empty() && *active != 0. && *value > 0. {
+                step = step.min(*value);
+            }
+        }
     }
     Ok(step)
 }

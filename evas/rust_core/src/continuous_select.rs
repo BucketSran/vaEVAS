@@ -1,12 +1,21 @@
 //! Source/held predicates freeze a continuous mode, never its physical state.
 use super::*;
+#[path = "continuous_select_candidates.rs"]
+mod candidates;
+#[path = "continuous_step_simplify.rs"]
+mod step_simplify;
 
-pub(crate) fn resolve_selection(
+pub(crate) fn resolve_selection(expr:&Expression,program:&Program,driven:&[String],nodes:&[I],states:&[I])
+    -> Result<Expression,Error> {
+    resolve_with_source(expr,program,driven,nodes,states,None)
+}
+fn resolve_with_source(
     expr: &Expression,
     program: &Program,
     driven: &[String],
     nodes: &[I],
     states: &[I],
+    exact: Option<&dyn Fn(&Expression,&Expression)->Option<i8>>,
 ) -> Result<Expression, Error> {
     match expr {
         Expression::Select {
@@ -17,8 +26,8 @@ pub(crate) fn resolve_selection(
             else_value,
             origin,
         } => {
-            let left = resolve_selection(left, program, driven, nodes, states)?;
-            let right = resolve_selection(right, program, driven, nodes, states)?;
+            let left = resolve_with_source(left, program, driven, nodes, states, exact)?;
+            let right = resolve_with_source(right, program, driven, nodes, states, exact)?;
             predicate(&left, program, driven, &origin.instance)?;
             predicate(&right, program, driven, &origin.instance)?;
             let a = affine_bounds::affine(&left, program)?;
@@ -39,6 +48,11 @@ pub(crate) fn resolve_selection(
             // Point predicates retain the exact binary64 affine product-sum certificate.
             let selected = if decision.0 || decision.1 {
                 decision.0
+            } else if let Some(sign)=exact.and_then(|f| f(&left,&right)) {
+                match relation {
+                    crate::ir::Relation::Lt=>sign<0,crate::ir::Relation::Le=>sign<=0,
+                    crate::ir::Relation::Gt=>sign>0,crate::ir::Relation::Ge=>sign>=0,
+                }
             } else {
                 let bind = |e: &Expression| bind_states(e, states);
                 let probe = Expression::Select {
@@ -60,28 +74,29 @@ pub(crate) fn resolve_selection(
                     Expression::Affine { constant: 1., .. }
                 )
             };
-            resolve_selection(
+            resolve_with_source(
                 if selected { then_value } else { else_value },
                 program,
                 driven,
                 nodes,
                 states,
+                exact,
             )
         }
         Expression::Add { left, right } => Ok(Expression::Add {
-            left: Box::new(resolve_selection(left, program, driven, nodes, states)?),
-            right: Box::new(resolve_selection(right, program, driven, nodes, states)?),
+            left: Box::new(resolve_with_source(left, program, driven, nodes, states, exact)?),
+            right: Box::new(resolve_with_source(right, program, driven, nodes, states, exact)?),
         }),
         Expression::Multiply { left, right } => Ok(Expression::Multiply {
-            left: Box::new(resolve_selection(left, program, driven, nodes, states)?),
-            right: Box::new(resolve_selection(right, program, driven, nodes, states)?),
+            left: Box::new(resolve_with_source(left, program, driven, nodes, states, exact)?),
+            right: Box::new(resolve_with_source(right, program, driven, nodes, states, exact)?),
         }),
         Expression::Divide { left, right } => Ok(Expression::Divide {
-            left: Box::new(resolve_selection(left, program, driven, nodes, states)?),
-            right: Box::new(resolve_selection(right, program, driven, nodes, states)?),
+            left: Box::new(resolve_with_source(left, program, driven, nodes, states, exact)?),
+            right: Box::new(resolve_with_source(right, program, driven, nodes, states, exact)?),
         }),
         Expression::Power { base, exponent } => Ok(Expression::Power {
-            base: Box::new(resolve_selection(base, program, driven, nodes, states)?),
+            base: Box::new(resolve_with_source(base, program, driven, nodes, states, exact)?),
             exponent: *exponent,
         }),
         _ => Ok(expr.clone()),
@@ -123,16 +138,10 @@ fn predicate(
     driven: &[String],
     owner: &str,
 ) -> Result<crate::events::AffineState, Error> {
-    if let Expression::Select {
-        left,
-        right,
-        then_value,
-        else_value,
-        ..
-    } = expr
-    {
-        for child in [left, right, then_value, else_value] {
-            predicate(child, program, driven, owner)?;
+    if crate::analog::has_select(expr) {
+        let forms = candidates::forms(expr, &mut 4096)?;
+        for form in forms {
+            predicate(&form, program, driven, owner)?;
         }
         return crate::events::affine(
             &Expression::Affine {
@@ -178,6 +187,8 @@ pub(crate) fn validate(
             {
                 return Err(Error::new("invalid_ir", "invalid continuous select origin"));
             }
+            validate(left, program, driven, owner)?;
+            validate(right, program, driven, owner)?;
             predicate(left, program, driven, owner)?;
             predicate(right, program, driven, owner)?;
             validate(then_value, program, driven, owner)?;
@@ -194,7 +205,7 @@ pub(crate) fn validate(
     }
 }
 
-fn expressions(program: &Program) -> impl Iterator<Item = (&Expression, &str)> {
+fn physical_expressions(program: &Program) -> impl Iterator<Item = (&Expression, &str)> {
     program
         .contributions
         .iter()
@@ -206,12 +217,18 @@ fn expressions(program: &Program) -> impl Iterator<Item = (&Expression, &str)> {
             | OperatorSpec::Math { input, origin, .. } => Some((input, origin.instance.as_str())),
             _ => None,
         }))
+}
+fn expressions(program: &Program) -> impl Iterator<Item = (&Expression, &str)> {
+    physical_expressions(program)
         .chain(program.step_bounds.iter().flat_map(|b| {
             [
                 (&b.active, b.origin.instance.as_str()),
                 (&b.value, b.origin.instance.as_str()),
             ]
         }))
+}
+pub(super) fn physical_needed(program: &Program) -> bool {
+    physical_expressions(program).any(|(e,_)| crate::analog::has_select(e))
 }
 pub(super) fn needed(program: &Program) -> bool {
     expressions(program).any(|(e, _)| crate::analog::has_select(e))
@@ -296,7 +313,8 @@ pub(super) fn build(
     start: f64,
     restart: Option<Vec<I>>,
 ) -> Result<Option<LinearContinuous>, Error> {
-    let program = &context.program;
+    let history_program = step_simplify::program(&context, &parameters)?;
+    let program = &history_program;
     let mut cuts = vec![I::point(start), I::point(context.trajectory.config.stop)];
     cuts.extend(
         context
@@ -307,16 +325,31 @@ pub(super) fn build(
             .filter(|&t| t > start)
             .map(I::point),
     );
+    let strict = expressions(program).any(|(e, _)| candidates::nested(e));
+    let mut roots = candidates::Roots::new();
     for (expr, owner) in expressions(program) {
         validate(expr, program, &context.driven, owner)?;
-        collect(
-            expr,
-            program,
-            &context.driven,
-            &context.trajectory,
-            &parameters,
-            &mut cuts,
-        )?;
+        if strict {
+            roots.collect(
+                expr,
+                program,
+                &context.driven,
+                &context.trajectory,
+                &parameters,
+            )?;
+        } else {
+            collect(
+                expr,
+                program,
+                &context.driven,
+                &context.trajectory,
+                &parameters,
+                &mut cuts,
+            )?;
+        }
+    }
+    if strict {
+        roots.finish(&mut cuts, start, context.trajectory.config.stop)?;
     }
     cuts.retain(|c| c.hi >= start);
     cuts.sort_by(|a, b| a.hi.total_cmp(&b.hi));
@@ -330,6 +363,12 @@ pub(super) fn build(
             continue;
         }
         let mid = begin * 0.5 + pair[1].lo * 0.5;
+        if strict && (mid <= begin || mid >= pair[1].lo) {
+            return Err(Error::new(
+                "condition_precision",
+                "no representable interior of selected mode",
+            ));
+        }
         let mut nodes = vec![I::ZERO; program.nodes.len()];
         for (name, v) in context
             .driven
@@ -372,6 +411,7 @@ pub(super) fn build(
             trajectory,
             driven: context.driven.clone(),
             force_integrals: true,
+            detached_timed: context.detached_timed,
         });
         let mut branch =
             LinearContinuous::build(branch_context.clone(), parameters.clone(), begin, seed)?
@@ -446,6 +486,7 @@ pub(super) fn cuts(
     start: f64,
     horizon: f64,
 ) -> Result<Vec<I>, Error> {
+    let program = step_simplify::program(context, parameters)?;
     let mut cuts = vec![I::point(start), I::point(horizon)];
     cuts.extend(
         context
@@ -456,21 +497,61 @@ pub(super) fn cuts(
             .filter(|&t| t > start && t < horizon)
             .map(I::point),
     );
-    for (expr, owner) in expressions(&context.program) {
-        validate(expr, &context.program, &context.driven, owner)?;
-        collect(
-            expr,
-            &context.program,
-            &context.driven,
-            &context.trajectory,
-            parameters,
-            &mut cuts,
-        )?;
+    let strict = expressions(&program).any(|(e, _)| candidates::nested(e));
+    let mut roots = candidates::Roots::new();
+    for (expr, owner) in expressions(&program) {
+        validate(expr, &program, &context.driven, owner)?;
+        if strict {
+            roots.collect(
+                expr,
+                &program,
+                &context.driven,
+                &context.trajectory,
+                parameters,
+            )?;
+        } else {
+            collect(
+                expr,
+                &program,
+                &context.driven,
+                &context.trajectory,
+                parameters,
+                &mut cuts,
+            )?;
+        }
+    }
+    if strict {
+        roots.finish(&mut cuts, start, horizon)?;
     }
     cuts.retain(|c| c.hi >= start && c.hi <= horizon);
     cuts.sort_by(|a, b| a.hi.total_cmp(&b.hi));
     cuts.dedup();
     Ok(cuts)
+}
+// Every part has a physical interval and, for an uncertain switch, its full
+// root certificate. PWL corners split coverage but never truncate the proof.
+pub(super) fn nonlinear_parts(
+    context: &Context, parameters: &[I], start: f64, horizon: f64,
+) -> Result<Vec<(I, Option<I>)>, Error> {
+    let program = step_simplify::program(context, parameters)?;
+    let mut roots = candidates::Roots::new();
+    for (expr, owner) in expressions(&program) {
+        validate(expr, &program, &context.driven, owner)?;
+        roots.collect(expr, &program, &context.driven, &context.trajectory, parameters)?;
+    }
+    let roots = roots.window_roots(start, horizon)?;
+    let mut points = vec![start,horizon];
+    points.extend(context.trajectory.knots.iter().copied().filter(|t| *t>start && *t<horizon));
+    points.extend(context.trajectory.config.strobetimes.iter().copied().filter(|t| *t>start && *t<horizon));
+    for root in &roots {
+        points.extend([root.lo,root.hi].into_iter().filter(|t| *t>start && *t<horizon));
+    }
+    points.sort_by(f64::total_cmp); points.dedup();
+    Ok(points.windows(2).map(|p| {
+        let span=I{lo:p[0],hi:p[1]};
+        let root=roots.iter().find(|r| r.lo<r.hi && span.lo<r.hi && span.hi>r.lo).copied();
+        (span,root)
+    }).collect())
 }
 pub(super) fn freeze_context(
     context: &Arc<Context>,
@@ -490,14 +571,18 @@ pub(super) fn freeze_context(
             .position(|n| n == name)
             .unwrap()] = v;
     }
-    let mut frozen = context.program.clone();
+    let input_nodes:Vec<_>=context.driven.iter().map(|name|context.program.nodes.iter().position(|n|n==name).unwrap()).collect();
+    let exact=|left:&Expression,right:&Expression| context.trajectory.original_predicate_sign(
+        &bind_states(left,parameters).ok()?,&bind_states(right,parameters).ok()?,&input_nodes,time);
+    let mut frozen = step_simplify::program(context, parameters)?;
     for c in &mut frozen.contributions {
-        c.rhs = resolve_selection(
+        c.rhs = resolve_with_source(
             &c.rhs,
             &context.program,
             &context.driven,
             &nodes,
             parameters,
+            Some(&exact),
         )?;
     }
     for o in &mut frozen.operators {
@@ -507,21 +592,22 @@ pub(super) fn freeze_context(
             | OperatorSpec::Ddt { input, .. }
             | OperatorSpec::Math { input, .. } => {
                 *input =
-                    resolve_selection(input, &context.program, &context.driven, &nodes, parameters)?
+                    resolve_with_source(input, &context.program, &context.driven, &nodes, parameters,Some(&exact))?
             }
             _ => {}
         }
     }
     for b in &mut frozen.step_bounds {
         b.active = crate::step_bounds::possible_activation(&b.active, &|e| {
-            resolve_selection(e, &context.program, &context.driven, &nodes, parameters)
+            resolve_with_source(e, &context.program, &context.driven, &nodes, parameters,Some(&exact))
         })?;
-        b.value = resolve_selection(
+        b.value = resolve_with_source(
             &b.value,
             &context.program,
             &context.driven,
             &nodes,
             parameters,
+            Some(&exact),
         )?;
     }
     Ok(Arc::new(Context {
@@ -529,6 +615,7 @@ pub(super) fn freeze_context(
         trajectory: context.trajectory.clone(),
         driven: context.driven.clone(),
         force_integrals: true,
+        detached_timed: context.detached_timed,
     }))
 }
 
@@ -546,4 +633,21 @@ pub(super) fn has_variable_division(expr: &Expression) -> bool {
         } => has_variable_division(then_value) || has_variable_division(else_value),
         _ => false,
     }
+}
+
+// Source-root witnesses must be isolated from every
+// predicate root, even if that other root is outside the prediction horizon.
+pub(super) fn isolated_root_witnesses(context:&Context,parameters:&[I],root:I)->Result<[f64;2],Error> {
+    let fail=||Error::new("condition_precision","root side witness touches another predicate root");
+    let left=root.lo.next_down();let right=root.hi.next_up();
+    if !root.finite() || root.lo>=root.hi || left<0. || right>context.trajectory.config.stop { return Err(fail()); }
+    let program=step_simplify::program(context,parameters)?;
+    let mut roots=candidates::Roots::new();
+    for (expr,owner) in expressions(&program) {
+        validate(expr,&program,&context.driven,owner)?;
+        roots.collect(expr,&program,&context.driven,&context.trajectory,parameters)?;
+    }
+    let neighbors=roots.window_roots(left,right)?;
+    if neighbors.is_empty() || neighbors.iter().any(|r| *r!=root) { return Err(fail()); }
+    Ok([left,right])
 }

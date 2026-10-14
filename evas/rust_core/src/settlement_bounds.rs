@@ -10,6 +10,9 @@ use std::collections::BTreeMap;
 
 #[path = "filter_budget.rs"]
 mod filter_budget;
+#[path = "initial_state_invariance.rs"]
+mod initial_state_invariance;
+pub(crate) use initial_state_invariance::unchanged as unchanged_initial_states;
 pub(crate) use filter_budget::FilterBudget;
 
 // Preserve operator history uncertainty as interval coefficients. State and
@@ -81,6 +84,33 @@ fn substitute(row: &[I], updates: &[Vec<I>], nodes: usize) -> Vec<I> {
         }
     }
     result
+}
+
+fn state_updates(
+    p: &crate::ir::Program,
+    selection: &Selection,
+    bind: impl Fn(&Expression) -> Result<Vec<I>, Error>,
+) -> Result<Vec<Vec<I>>, Error> {
+    let count = p.nodes.len();
+    let variables = count + p.states.len() + p.operators.len();
+    let initial: Vec<_> = (0..p.states.len())
+        .map(|k| {
+            let mut row = vec![I::ZERO; variables + 1];
+            row[count + k] = I::ONE;
+            row
+        })
+        .collect();
+    let mut updates = initial.clone();
+    for (event, indices) in &selection.actions {
+        let assignments = p.events[*event].assignments();
+        let mut local = initial.clone();
+        for &index in indices {
+            let action = assignments[index];
+            local[action.state] = substitute(&bind(&action.rhs)?, &local, count);
+            updates[action.state] = local[action.state].clone();
+        }
+    }
+    Ok(updates)
 }
 
 pub(crate) struct Bounds {
@@ -187,6 +217,48 @@ impl Bounds {
         None
     }
 
+    /// Project an independently proved direct-input/held batch without solving
+    /// any voltage network or inventing an operator observation.
+    pub(crate) fn held_inputs(model: &EventModel, selection: &Selection) -> Result<Self, Error> {
+        let p = &model.program;
+        let count = p.nodes.len();
+        let variables = count + p.states.len() + p.operators.len();
+        let driven: Vec<_> = model
+            .driven
+            .iter()
+            .map(|n| p.nodes.iter().position(|v| v == n).unwrap())
+            .collect();
+        let updates = state_updates(p, selection, |e| affine(e, p))?;
+        let mut states = Vec::with_capacity(updates.len());
+        for row in updates {
+            if row[..count]
+                .iter()
+                .enumerate()
+                .any(|(i, x)| i != 0 && !driven.contains(&i) && !x.zero())
+                || row[count + p.states.len()..variables]
+                    .iter()
+                    .any(|x| !x.zero())
+            {
+                return Err(Error::new(
+                    "unsupported_initial_history",
+                    "bootstrap state update has unresolved voltage or history dependence",
+                ));
+            }
+            states.push(
+                driven
+                    .iter()
+                    .map(|&i| row[i])
+                    .chain(row[count..count + p.states.len()].iter().copied())
+                    .chain([row[variables]])
+                    .collect(),
+            );
+        }
+        Ok(Self {
+            nodes: Vec::new(),
+            states,
+        })
+    }
+
     pub(crate) fn new(model: &EventModel, selection: &Selection) -> Result<Self, Error> {
         Self::for_program(model, selection, &model.program)
     }
@@ -225,23 +297,7 @@ impl Bounds {
         let unknown: Vec<_> = (1..count).filter(|n| !driven.contains(n)).collect();
         let n = unknown.len();
         let width = driven.len() + parameters + 1;
-        let initial: Vec<_> = (0..p.states.len())
-            .map(|k| {
-                let mut row = vec![I::ZERO; variables + 1];
-                row[count + k] = I::ONE;
-                row
-            })
-            .collect();
-        let mut updates = initial.clone();
-        for (event, indices) in &selection.actions {
-            let assignments = p.events[*event].assignments();
-            let mut local = initial.clone();
-            for &index in indices {
-                let action = assignments[index];
-                local[action.state] = substitute(&bind(&action.rhs)?, &local, count);
-                updates[action.state] = local[action.state].clone();
-            }
-        }
+        let updates = state_updates(p, selection, bind)?;
         let mut grouped = BTreeMap::new();
         for c in &p.contributions {
             let rhs = substitute(&bind(&c.rhs)?, &updates, count);

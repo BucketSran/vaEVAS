@@ -488,7 +488,8 @@ impl EventTrigger {
     pub fn leaves(&self) -> Result<Vec<&Self>, Error> {
         match self {
             Self::Or { triggers } => {
-                if triggers.len() < 2 || triggers.iter().any(|t| matches!(t, Self::Or { .. })) {
+                if triggers.len() < 2 || triggers.iter().any(|t|
+                    matches!(t, Self::Or { .. } | Self::InitialStep {} | Self::FinalStep {})) {
                     return Err(Error::new(
                         "invalid_ir",
                         "event OR requires at least two cross/timer leaves",

@@ -6,14 +6,58 @@ use super::*;
 use crate::ir::{Response, Solution, Tolerances, TransientInputs, TransientTrace};
 use crate::solver::Circuit;
 
+/// Mesh-only timestep requests evaluated from certified implicit frames.
+/// Implicit admission has already rejected Select/state/event references in
+/// contributions and operator inputs, so any Select surviving here is a
+/// numeric mesh condition and must not trigger physical-mode reconstruction.
+#[derive(Clone)]
+pub(super) struct ImplicitBounds {
+    // Owner-validated (active, value) pairs in program-IR index space.
+    expressions: Vec<(Expression, Expression)>,
+    // Program node -> combined [state, source] coordinate; None is ground.
+    nodes: Vec<Option<usize>>,
+    // One interval output polynomial per program operator.
+    outputs: Vec<Polynomial>,
+}
+
+impl ImplicitBounds {
+    /// Minimum cap over requests not certified inactive at one accepted
+    /// segment start. Values are assembled in program-IR order (nodes, then
+    /// operators); implicit admission guarantees no held Program states on
+    /// this event-free path. Operator enclosures are full interval outputs,
+    /// never a Newton midpoint, and the shared step-bound rules require each
+    /// active value to be proven finite and strictly positive.
+    pub(super) fn cap(&self, state: &[I], source: &[I]) -> Result<Option<f64>, Error> {
+        let combined: Vec<_> = state.iter().chain(source).copied().collect();
+        let variables: Vec<Jet> = combined.iter().map(|&value| vec![value]).collect();
+        let mut values = Vec::with_capacity(self.nodes.len() + self.outputs.len());
+        for &index in &self.nodes {
+            values.push(index.map_or(I::ZERO, |i| combined[i]));
+        }
+        for output in &self.outputs {
+            values.push(output.jet(&variables, 0)[0]);
+        }
+        crate::step_bounds::frame_cap(&self.expressions, &values, true)
+    }
+}
+
 #[derive(Clone)]
 pub(super) struct ImplicitField {
     physical: usize,
     // Derivatives of each original constraint wrt [physical state, voltage, source].
     gradients: Vec<Vec<Polynomial>>,
+    // Mesh-only $bound_step requests; None when the program declares none.
+    bounds: Option<ImplicitBounds>,
 }
 
 impl ImplicitField {
+    pub(super) fn step_cap(&self, state: &[I], source: &[I]) -> Result<Option<f64>, Error> {
+        match &self.bounds {
+            Some(bounds) => bounds.cap(state, source),
+            None => Ok(None),
+        }
+    }
+
     // A structurally constant voltage Jacobian defines a polynomial vector
     // field for each fixed PWL slope. This is a global expression check, not
     // a Jacobian evaluated at the selected initial root. Variable/rational
@@ -625,6 +669,14 @@ fn initialize(
             "index-one polynomial DAE currently requires an event-free network",
         ));
     }
+    // Mesh-only Selects bypass physical mode reconstruction below, but not
+    // the public IR admission rules. Validate every branch, even inactive
+    // requests, before using their values from certified implicit frames.
+    for bound in &program.step_bounds {
+        for expression in [&bound.active, &bound.value] {
+            selection::validate(expression, program, driven, &bound.origin.instance)?;
+        }
+    }
     let mut initial = Vec::new();
     let mut operators = Vec::new();
     let mut identities = BTreeSet::new();
@@ -811,9 +863,25 @@ fn initialize(
             _ => unreachable!(),
         }
     }
+    let bounds = if program.step_bounds.is_empty() {
+        None
+    } else {
+        let requests = crate::step_bounds::Bounds::new(program)?;
+        Some(ImplicitBounds {
+            expressions: requests.expressions().to_vec(),
+            nodes: coordinates
+                .nodes
+                .iter()
+                .zip(&coordinates.sources)
+                .map(|(&node, &source)| node.or(source))
+                .collect(),
+            outputs: coordinates.outputs.clone(),
+        })
+    };
     let mut flow = NonlinearContinuous {
         context: Arc::new(Context {
             force_integrals: false,
+            detached_timed: false,
             program: program.clone(),
             trajectory: trajectory.clone(),
             driven: driven.to_vec(),
@@ -826,6 +894,7 @@ fn initialize(
         implicit: Some(ImplicitField {
             physical,
             gradients,
+            bounds,
         }),
         operators,
         // This private DAE flow exposes only physical/voltage state bounds.
@@ -1063,6 +1132,7 @@ mod tests {
         )];
         let field = ImplicitField {
             physical: 1,
+            bounds: None,
             gradients: vec![vec![
                 constant(1.0),
                 constant(1.0),
@@ -1081,6 +1151,7 @@ mod tests {
         // with h. Pointwise invertibility cannot authorize polynomial recovery.
         let variable_field = ImplicitField {
             physical: 1,
+            bounds: None,
             gradients: vec![vec![
                 constant(1.0),
                 Polynomial::Add(Box::new(constant(0.875)), Box::new(coordinate(1))),
@@ -1092,6 +1163,7 @@ mod tests {
             .is_none());
         let singular = ImplicitField {
             physical: 1,
+            bounds: None,
             gradients: vec![vec![constant(1.0), constant(0.0), constant(-1.0)]],
         };
         assert!(singular
@@ -1111,6 +1183,7 @@ mod tests {
         let constant = |c| Polynomial::Linear(vec![I::ZERO, I::ZERO, I::point(c)]);
         let field = ImplicitField {
             physical: 1,
+            bounds: None,
             gradients: vec![vec![
                 constant(-1.0),
                 Polynomial::Add(
@@ -1208,3 +1281,7 @@ mod tests {
         assert_eq!(flow.state_bounds(I::ONE).unwrap(), original);
     }
 }
+
+#[cfg(test)]
+#[path = "implicit_bound_tests.rs"]
+mod bound_tests;

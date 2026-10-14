@@ -336,7 +336,18 @@ def elaborate_loops(model: Model, parameter):
                     if expr.op == 'index':
                         if expr.value not in model.arrays:
                             fail('indexed identifier is not a declared variable array', expr.token)
-                        index = constant(expr.args[0], active)
+                        try:
+                            index = constant(expr.args[0], active)
+                        except CompileError as error:
+                            if error.diagnostic['code'] == 'resource_budget':
+                                raise
+                            # Dynamic typed-integer reads stay residual here; the
+                            # scalarization gate and the compiler's per-use range
+                            # admission own their rejection. For this structural
+                            # check the read behaves as one affine state read.
+                            result = Expr('parameter', expr.value, (), expr.token)
+                            memo[key] = (expr, result)
+                            return result
                         first, last = (constant(bound, active) for bound in model.arrays[expr.value])
                         if not min(first,last) <= index <= max(first,last):
                             fail('event predicate array index is outside its declaration', expr.token)
@@ -371,7 +382,10 @@ def elaborate_loops(model: Model, parameter):
                     fail('genvar can only be assigned in its for control', statement.token)
                 expression(statement.rhs)
                 if statement.index is not None:
-                    expression(substitute(statement.index, active), True)
+                    # Assignment-target indices may be typed integer state
+                    # expressions (N02); conditions and loop controls keep the
+                    # state-free rule above.
+                    expression(substitute(statement.index, active))
 
     def validate_initial_body(statements, active, in_loop=False):
         # Validate the unexpanded tree too: a zero-trip loop cannot erase a
