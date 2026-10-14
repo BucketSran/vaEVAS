@@ -73,15 +73,39 @@ class EventSelectContracts(unittest.TestCase):
 
 
 class SampledOperatorCoefficientContracts(unittest.TestCase):
-    def test_joint_state_update_uses_current_transition_coefficient(self):
-        # At t=.5 the ramp coefficient is .5. q=y+1, y=.5*q
-        # therefore settles to q=2, y=1; freezing q first gives y=0.
+    def test_zero_timer_unit_feedback_rejects_inconsistent_joint_equations(self):
+        # Frozen original source and old [0,0,1,1.5,2] criterion remain in
+        # validation/r01/legacy-transition-coefficient-v1.json. With the final
+        # zero-time seed, c=1: q=y+1 and y=q are inconsistent. Spectre's
+        # disaster-recovery skip is not a valid accepted event to reproduce.
         body = """@(initial_step) begin q=0; valid=0; end
             @(timer(0)) valid=1;
             @(timer(0.5)) q=V(y,r)+1;
             V(y,r)<+q*transition(valid,0,1,1);"""
+        with self.assertRaisesRegex(KernelError, 'singular_system'):
+            execute(body, 'real q; integer valid;')
+
+    def test_joint_state_update_uses_current_transition_coefficient(self):
+        # Positive-time enable: c(.5)=.375, so q=y+1 and y=.375*q
+        # give q=8/5. A stale/pre-event coefficient yields a different answer.
+        body = """@(initial_step) begin q=0; valid=0; end
+            @(timer(0.125)) valid=1;
+            @(timer(0.5)) q=V(y,r)+1;
+            V(y,r)<+q*transition(valid,0,1,1);"""
         values = execute(body, 'real q; integer valid;')
-        self.assertEqual(values, [0,0,1,1.5,2])
+        for actual, expected in zip(values, [0,0,.6,1,1.4]):
+            self.assertAlmostEqual(actual, expected, places=12)
+
+    def test_unit_feedback_model_completes_before_inconsistent_event(self):
+        import json
+        from pathlib import Path
+        frozen = json.loads((Path(__file__).resolve().parents[1] / 'validation'
+                             / 'r01' / 'legacy-transition-coefficient-v1.json').read_text())
+        p = compile_sources({'event-select.va': frozen['source']}, [instance()])
+        result = transient(p, {'u': [[0,0],[1,1]]}, [0,.25,.499999],
+                           stop=.499999, max_step=1, kernel=KERNEL)
+        index = result['nodes'].index('y')
+        self.assertEqual([row['voltages'][index] for row in result['solutions']], [0,0,0])
 
     def test_state_times_internal_voltage_stays_unsupported(self):
         body = """@(initial_step) q=1; @(timer(0.5)) q=2;

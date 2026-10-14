@@ -1,0 +1,1235 @@
+{
+  "scope": "Seven fixed diagnostic executions; not added to original19/original70 grades.",
+  "analysis_source_sha256": "29786d7e7dea472d34f4ff30c3727263ca80ad19061feaab0f1cc08f94c7b04d",
+  "archive_sha256": "2321bf942d406bb96c77b2871e27715f5ab0baf22eb67eab00d77adc678c8329",
+  "tool_version": "sub-version  21.1.0.509.isr12 \n",
+  "tool_identity_before_after_match": true,
+  "kernel_sha256": "db5284c07ea10939f42519322b975f4e02bd1d625c828ca182fbe5b219b9a07f",
+  "original_source_sha256": "865ae32ffbb0a2ab482bb01ced3509dc2b50f222b53922ddba5a7561bd136f2e",
+  "legacy_expectation_file": "evas/validation/r01/legacy-transition-coefficient-v1.json",
+  "frozen_voltage_budget": 1e-08,
+  "raw_availability": "local-only",
+  "cases": {
+    "original_sparse": {
+      "source_sha256": "865ae32ffbb0a2ab482bb01ced3509dc2b50f222b53922ddba5a7561bd136f2e",
+      "deck_sha256": "1e31e8f3b9825446a2b43bfc4d80d7bdea80d42f4198912629565a5c1a35b388",
+      "psf_sha256": "87f6f5f1e586a0d293121024f5a3a5f042d7653a968027af86e88a50a628a70e",
+      "spectre_log_sha256": "51f5f92e82125efcf23a505d7f57950ea12b6608f7622b838c18b19a7818feed",
+      "native_rows": 5,
+      "effective_settings": {
+        "version": "\"21.1.0.509.isr12\"",
+        "tolerance.relative": "1.00000e-09",
+        "start": "0.00000",
+        "stop": "1.00000",
+        "maxstep": "0.0312500",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-11",
+        "abstol(I)": "1.00000e-15",
+        "errpreset": "\"conservative\"",
+        "method": "\"gear2only\"",
+        "gmin": "1.00000e-12"
+      },
+      "recovery_skipped_breakpoint": true,
+      "selected_query_rows": [
+        {
+          "query": 0,
+          "exact_native_matches": [
+            {
+              "index": 0,
+              "token": {
+                "time": "0.000000000000000e+00",
+                "voltages": {
+                  "u": "0.000000000000000e+00",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.25,
+          "exact_native_matches": [
+            {
+              "index": 1,
+              "token": {
+                "time": "2.500000000000000e-01",
+                "voltages": {
+                  "u": "2.500000000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.5,
+          "exact_native_matches": []
+        },
+        {
+          "query": 0.75,
+          "exact_native_matches": [
+            {
+              "index": 3,
+              "token": {
+                "time": "7.500000000000000e-01",
+                "voltages": {
+                  "u": "7.500000000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 1,
+          "exact_native_matches": [
+            {
+              "index": 4,
+              "token": {
+                "time": "1.000000000000000e+00",
+                "voltages": {
+                  "u": "1.000000000000000e+00",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "salient_log_lines": [
+        {
+          "line": 180,
+          "text": "    Newton iteration fails to converge at time = 499.9999999980163 ms step = 19.98401444325282 fs."
+        },
+        {
+          "line": 181,
+          "text": "        Disaster recovery algorithm is enabled to search for a converged solution."
+        },
+        {
+          "line": 192,
+          "text": "    WARNING (SPECTRE-17087): A breakpoint at time = 500 ms is stepped over in disaster recovery algorithm."
+        },
+        {
+          "line": 236,
+          "text": "spectre completes with 0 errors, 2 warnings, and 4 notices."
+        }
+      ],
+      "control_smooth_observations": null,
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; real q; integer valid; analog begin @(initial_step) begin q=0; valid=0; end\n            @(timer(0)) valid=1;\n            @(timer(0.5)) q=V(y,r)+1;\n            V(y,r)<+q*transition(valid,0,1,1); end endmodule",
+      "deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVinput (u 0) vsource type=pwl wave=[0 0 1 1]\nXdut (u y 0) m\nsimulatorOptions options reltol=1e-9 vabstol=1e-11 iabstol=1e-15 digits=17\ntran tran stop=1 maxstep=0.03125 errpreset=conservative strobetimes=[0 0.25 0.5 0.75 1]\nsave u y\n",
+      "qualification": "diagnostic, skipped inconsistent breakpoint"
+    },
+    "original_dense": {
+      "source_sha256": "865ae32ffbb0a2ab482bb01ced3509dc2b50f222b53922ddba5a7561bd136f2e",
+      "deck_sha256": "1c869ff907c6905970112494711840b6ae9fcc54aa8a0c4586344fd5be912fb2",
+      "psf_sha256": "583bae5a6fb7109d54a4aa599bbc621ab3b20890cd4cce64cb2aa601832621e1",
+      "spectre_log_sha256": "c906b201f17f65212bb73c982909ce2adf6686ff7e17ee371f6357087f83dc8c",
+      "native_rows": 11,
+      "effective_settings": {
+        "version": "\"21.1.0.509.isr12\"",
+        "tolerance.relative": "1.00000e-09",
+        "start": "0.00000",
+        "stop": "1.00000",
+        "maxstep": "0.0312500",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-11",
+        "abstol(I)": "1.00000e-15",
+        "errpreset": "\"conservative\"",
+        "method": "\"gear2only\"",
+        "gmin": "1.00000e-12"
+      },
+      "recovery_skipped_breakpoint": true,
+      "selected_query_rows": [
+        {
+          "query": 0,
+          "exact_native_matches": [
+            {
+              "index": 0,
+              "token": {
+                "time": "0.000000000000000e+00",
+                "voltages": {
+                  "u": "0.000000000000000e+00",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.125,
+          "exact_native_matches": [
+            {
+              "index": 1,
+              "token": {
+                "time": "1.250000000000000e-01",
+                "voltages": {
+                  "u": "1.250000000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.25,
+          "exact_native_matches": [
+            {
+              "index": 2,
+              "token": {
+                "time": "2.500000000000000e-01",
+                "voltages": {
+                  "u": "2.500000000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.375,
+          "exact_native_matches": [
+            {
+              "index": 3,
+              "token": {
+                "time": "3.750000000000000e-01",
+                "voltages": {
+                  "u": "3.750000000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.499999,
+          "exact_native_matches": [
+            {
+              "index": 4,
+              "token": {
+                "time": "4.999990000000000e-01",
+                "voltages": {
+                  "u": "4.999990000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.5,
+          "exact_native_matches": []
+        },
+        {
+          "query": 0.500001,
+          "exact_native_matches": [
+            {
+              "index": 6,
+              "token": {
+                "time": "5.000010000000000e-01",
+                "voltages": {
+                  "u": "5.000010000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.625,
+          "exact_native_matches": [
+            {
+              "index": 7,
+              "token": {
+                "time": "6.250000000000000e-01",
+                "voltages": {
+                  "u": "6.250000000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.75,
+          "exact_native_matches": [
+            {
+              "index": 8,
+              "token": {
+                "time": "7.500000000000000e-01",
+                "voltages": {
+                  "u": "7.500000000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.875,
+          "exact_native_matches": [
+            {
+              "index": 9,
+              "token": {
+                "time": "8.750000000000000e-01",
+                "voltages": {
+                  "u": "8.750000000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 1,
+          "exact_native_matches": [
+            {
+              "index": 10,
+              "token": {
+                "time": "1.000000000000000e+00",
+                "voltages": {
+                  "u": "1.000000000000000e+00",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "salient_log_lines": [
+        {
+          "line": 169,
+          "text": "    Newton iteration fails to converge at time = 499.9999999980159 ms step = 19.98401444325282 fs."
+        },
+        {
+          "line": 170,
+          "text": "        Disaster recovery algorithm is enabled to search for a converged solution."
+        },
+        {
+          "line": 182,
+          "text": "    WARNING (SPECTRE-17087): A breakpoint at time = 500 ms is stepped over in disaster recovery algorithm."
+        },
+        {
+          "line": 225,
+          "text": "spectre completes with 0 errors, 2 warnings, and 4 notices."
+        }
+      ],
+      "control_smooth_observations": null,
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; real q; integer valid; analog begin @(initial_step) begin q=0; valid=0; end\n            @(timer(0)) valid=1;\n            @(timer(0.5)) q=V(y,r)+1;\n            V(y,r)<+q*transition(valid,0,1,1); end endmodule",
+      "deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVinput (u 0) vsource type=pwl wave=[0 0 1 1]\nXdut (u y 0) m\nsimulatorOptions options reltol=1e-9 vabstol=1e-11 iabstol=1e-15 digits=17\ntran tran stop=1 maxstep=0.03125 errpreset=conservative strobetimes=[0 0.125 0.25 0.375 0.49999900000000003 0.5 0.50000100000000003 0.625 0.75 0.875 1]\nsave u y\n",
+      "qualification": "diagnostic, skipped inconsistent breakpoint"
+    },
+    "original_ordinary": {
+      "source_sha256": "865ae32ffbb0a2ab482bb01ced3509dc2b50f222b53922ddba5a7561bd136f2e",
+      "deck_sha256": "479e2d37c837e5c1313f5599e603bf0cded96e0711792f06424b15592b958b53",
+      "psf_sha256": "5d9168ec2b2379020cf423e7539587c6f29377f728e1eedfaeebb13e59ce6389",
+      "spectre_log_sha256": "abd312578fae8b06b0d2a0c9074d40e398d273ea9fdc538b632129b78c7bf05f",
+      "native_rows": 137,
+      "effective_settings": {
+        "version": "\"21.1.0.509.isr12\"",
+        "tolerance.relative": "1.00000e-09",
+        "start": "0.00000",
+        "stop": "1.00000",
+        "maxstep": "0.0312500",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-11",
+        "abstol(I)": "1.00000e-15",
+        "errpreset": "\"conservative\"",
+        "method": "\"gear2only\"",
+        "gmin": "1.00000e-12"
+      },
+      "recovery_skipped_breakpoint": true,
+      "selected_query_rows": [
+        {
+          "query": 0,
+          "exact_native_matches": [
+            {
+              "index": 0,
+              "token": {
+                "time": "0.000000000000000e+00",
+                "voltages": {
+                  "u": "0.000000000000000e+00",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.25,
+          "exact_native_matches": []
+        },
+        {
+          "query": 0.5,
+          "exact_native_matches": []
+        },
+        {
+          "query": 0.75,
+          "exact_native_matches": []
+        },
+        {
+          "query": 1,
+          "exact_native_matches": [
+            {
+              "index": 136,
+              "token": {
+                "time": "1.000000000000000e+00",
+                "voltages": {
+                  "u": "1.000000000000000e+00",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "salient_log_lines": [
+        {
+          "line": 180,
+          "text": "    Newton iteration fails to converge at time = 499.9999999980067 ms step = 19.98401444325282 fs."
+        },
+        {
+          "line": 181,
+          "text": "        Disaster recovery algorithm is enabled to search for a converged solution."
+        },
+        {
+          "line": 193,
+          "text": "    WARNING (SPECTRE-17087): A breakpoint at time = 500 ms is stepped over in disaster recovery algorithm."
+        },
+        {
+          "line": 236,
+          "text": "spectre completes with 0 errors, 2 warnings, and 4 notices."
+        }
+      ],
+      "control_smooth_observations": null,
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; real q; integer valid; analog begin @(initial_step) begin q=0; valid=0; end\n            @(timer(0)) valid=1;\n            @(timer(0.5)) q=V(y,r)+1;\n            V(y,r)<+q*transition(valid,0,1,1); end endmodule",
+      "deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVinput (u 0) vsource type=pwl wave=[0 0 1 1]\nXdut (u y 0) m\nsimulatorOptions options reltol=1e-9 vabstol=1e-11 iabstol=1e-15 digits=17\ntran tran stop=1 maxstep=0.03125 errpreset=conservative\nsave u y\n",
+      "qualification": "diagnostic, skipped inconsistent breakpoint"
+    },
+    "coefficient": {
+      "source_sha256": "ced55776ea4b9e83fcfcaadfef3bc0ffcdf55108ed0eaf2bb8977bf0b9386f10",
+      "deck_sha256": "1c869ff907c6905970112494711840b6ae9fcc54aa8a0c4586344fd5be912fb2",
+      "psf_sha256": "01bb3c4138f2e1ca532cf54591484ae004e75ec2df0886f24aa222de86defa88",
+      "spectre_log_sha256": "23d9bb4593107fbe67dc79e96ca42b1e6cf79405443c4db101d16fe8014596ac",
+      "native_rows": 11,
+      "effective_settings": {
+        "version": "\"21.1.0.509.isr12\"",
+        "tolerance.relative": "1.00000e-09",
+        "start": "0.00000",
+        "stop": "1.00000",
+        "maxstep": "0.0312500",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-11",
+        "abstol(I)": "1.00000e-15",
+        "errpreset": "\"conservative\"",
+        "method": "\"gear2only\"",
+        "gmin": "1.00000e-12"
+      },
+      "recovery_skipped_breakpoint": false,
+      "selected_query_rows": [
+        {
+          "query": 0,
+          "exact_native_matches": [
+            {
+              "index": 0,
+              "token": {
+                "time": "0.000000000000000e+00",
+                "voltages": {
+                  "u": "0.000000000000000e+00",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.125,
+          "exact_native_matches": [
+            {
+              "index": 1,
+              "token": {
+                "time": "1.250000000000000e-01",
+                "voltages": {
+                  "u": "1.250000000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.25,
+          "exact_native_matches": [
+            {
+              "index": 2,
+              "token": {
+                "time": "2.500000000000000e-01",
+                "voltages": {
+                  "u": "2.500000000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.375,
+          "exact_native_matches": [
+            {
+              "index": 3,
+              "token": {
+                "time": "3.750000000000000e-01",
+                "voltages": {
+                  "u": "3.750000000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.499999,
+          "exact_native_matches": [
+            {
+              "index": 4,
+              "token": {
+                "time": "4.999990000000000e-01",
+                "voltages": {
+                  "u": "4.999990000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.5,
+          "exact_native_matches": [
+            {
+              "index": 5,
+              "token": {
+                "time": "5.000000000000000e-01",
+                "voltages": {
+                  "u": "5.000000000000000e-01",
+                  "y": "1.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.500001,
+          "exact_native_matches": [
+            {
+              "index": 6,
+              "token": {
+                "time": "5.000010000000000e-01",
+                "voltages": {
+                  "u": "5.000010000000000e-01",
+                  "y": "1.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.625,
+          "exact_native_matches": [
+            {
+              "index": 7,
+              "token": {
+                "time": "6.250000000000000e-01",
+                "voltages": {
+                  "u": "6.250000000000000e-01",
+                  "y": "1.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.75,
+          "exact_native_matches": [
+            {
+              "index": 8,
+              "token": {
+                "time": "7.500000000000000e-01",
+                "voltages": {
+                  "u": "7.500000000000000e-01",
+                  "y": "1.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.875,
+          "exact_native_matches": [
+            {
+              "index": 9,
+              "token": {
+                "time": "8.750000000000000e-01",
+                "voltages": {
+                  "u": "8.750000000000000e-01",
+                  "y": "1.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 1,
+          "exact_native_matches": [
+            {
+              "index": 10,
+              "token": {
+                "time": "1.000000000000000e+00",
+                "voltages": {
+                  "u": "1.000000000000000e+00",
+                  "y": "1.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "salient_log_lines": [
+        {
+          "line": 184,
+          "text": "spectre completes with 0 errors, 1 warning, and 3 notices."
+        }
+      ],
+      "control_smooth_observations": {
+        "finite_native_rows": 11,
+        "max_abs_error_V": "0E-15",
+        "budget_V": "1e-8",
+        "within_budget": true,
+        "event_boundary": "0.5 s native export included; export token does not certify hidden callback time",
+        "evAs_pair_max_decimal_distance_V": "0E-15"
+      },
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; real q; integer valid; analog begin @(initial_step) begin q=0; valid=0; end\n            @(timer(0)) valid=1;\n            @(timer(0.5)) q=1;\n            V(y,r)<+q*transition(valid,0,1,1); end endmodule",
+      "deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVinput (u 0) vsource type=pwl wave=[0 0 1 1]\nXdut (u y 0) m\nsimulatorOptions options reltol=1e-9 vabstol=1e-11 iabstol=1e-15 digits=17\ntran tran stop=1 maxstep=0.03125 errpreset=conservative strobetimes=[0 0.125 0.25 0.375 0.49999900000000003 0.5 0.50000100000000003 0.625 0.75 0.875 1]\nsave u y\n",
+      "qualification": "finite positive control only"
+    },
+    "contractive": {
+      "source_sha256": "9e326eeb0f35653151f72e591ad439e9ea328b1efde0c23c709a0a31de1badf9",
+      "deck_sha256": "1c869ff907c6905970112494711840b6ae9fcc54aa8a0c4586344fd5be912fb2",
+      "psf_sha256": "6ffabef872820d99baa49ac86f093f406cfbc75ed4ff5296fc9583c4b0442be2",
+      "spectre_log_sha256": "14605cc5395c1ec4c2e268d7cb8591e4b63fa3978e2190cfe5cd71898ccf5d60",
+      "native_rows": 11,
+      "effective_settings": {
+        "version": "\"21.1.0.509.isr12\"",
+        "tolerance.relative": "1.00000e-09",
+        "start": "0.00000",
+        "stop": "1.00000",
+        "maxstep": "0.0312500",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-11",
+        "abstol(I)": "1.00000e-15",
+        "errpreset": "\"conservative\"",
+        "method": "\"gear2only\"",
+        "gmin": "1.00000e-12"
+      },
+      "recovery_skipped_breakpoint": false,
+      "selected_query_rows": [
+        {
+          "query": 0,
+          "exact_native_matches": [
+            {
+              "index": 0,
+              "token": {
+                "time": "0.000000000000000e+00",
+                "voltages": {
+                  "u": "0.000000000000000e+00",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.125,
+          "exact_native_matches": [
+            {
+              "index": 1,
+              "token": {
+                "time": "1.250000000000000e-01",
+                "voltages": {
+                  "u": "1.250000000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.25,
+          "exact_native_matches": [
+            {
+              "index": 2,
+              "token": {
+                "time": "2.500000000000000e-01",
+                "voltages": {
+                  "u": "2.500000000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.375,
+          "exact_native_matches": [
+            {
+              "index": 3,
+              "token": {
+                "time": "3.750000000000000e-01",
+                "voltages": {
+                  "u": "3.750000000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.499999,
+          "exact_native_matches": [
+            {
+              "index": 4,
+              "token": {
+                "time": "4.999990000000000e-01",
+                "voltages": {
+                  "u": "4.999990000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.5,
+          "exact_native_matches": [
+            {
+              "index": 5,
+              "token": {
+                "time": "5.000000000000000e-01",
+                "voltages": {
+                  "u": "5.000000000000000e-01",
+                  "y": "2.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.500001,
+          "exact_native_matches": [
+            {
+              "index": 6,
+              "token": {
+                "time": "5.000010000000000e-01",
+                "voltages": {
+                  "u": "5.000010000000000e-01",
+                  "y": "2.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.625,
+          "exact_native_matches": [
+            {
+              "index": 7,
+              "token": {
+                "time": "6.250000000000000e-01",
+                "voltages": {
+                  "u": "6.250000000000000e-01",
+                  "y": "2.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.75,
+          "exact_native_matches": [
+            {
+              "index": 8,
+              "token": {
+                "time": "7.500000000000000e-01",
+                "voltages": {
+                  "u": "7.500000000000000e-01",
+                  "y": "2.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.875,
+          "exact_native_matches": [
+            {
+              "index": 9,
+              "token": {
+                "time": "8.750000000000000e-01",
+                "voltages": {
+                  "u": "8.750000000000000e-01",
+                  "y": "2.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 1,
+          "exact_native_matches": [
+            {
+              "index": 10,
+              "token": {
+                "time": "1.000000000000000e+00",
+                "voltages": {
+                  "u": "1.000000000000000e+00",
+                  "y": "2.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "salient_log_lines": [
+        {
+          "line": 184,
+          "text": "spectre completes with 0 errors, 1 warning, and 3 notices."
+        }
+      ],
+      "control_smooth_observations": {
+        "finite_native_rows": 11,
+        "max_abs_error_V": "0E-15",
+        "budget_V": "1e-8",
+        "within_budget": true,
+        "event_boundary": "0.5 s native export included; export token does not certify hidden callback time",
+        "evAs_pair_max_decimal_distance_V": "0E-15"
+      },
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; real q; integer valid; analog begin @(initial_step) begin q=0; valid=0; end\n            @(timer(0)) valid=1;\n            @(timer(0.5)) q=0.5*V(y,r)+1;\n            V(y,r)<+q*transition(valid,0,1,1); end endmodule",
+      "deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVinput (u 0) vsource type=pwl wave=[0 0 1 1]\nXdut (u y 0) m\nsimulatorOptions options reltol=1e-9 vabstol=1e-11 iabstol=1e-15 digits=17\ntran tran stop=1 maxstep=0.03125 errpreset=conservative strobetimes=[0 0.125 0.25 0.375 0.49999900000000003 0.5 0.50000100000000003 0.625 0.75 0.875 1]\nsave u y\n",
+      "qualification": "finite positive control only"
+    },
+    "delayed": {
+      "source_sha256": "67b72e657e44ffc47d02327e2638eb6da6acaae9be4d09ee47efc31d641808aa",
+      "deck_sha256": "1c869ff907c6905970112494711840b6ae9fcc54aa8a0c4586344fd5be912fb2",
+      "psf_sha256": "40f8f0bc283b6ccd03a8ff49f44f107147a364f4506a66dc487c3526c03eada7",
+      "spectre_log_sha256": "182c4272426cef404374283a479c1bd035da1398e251a83c4742ee814b753b26",
+      "native_rows": 11,
+      "effective_settings": {
+        "version": "\"21.1.0.509.isr12\"",
+        "tolerance.relative": "1.00000e-09",
+        "start": "0.00000",
+        "stop": "1.00000",
+        "maxstep": "0.0312500",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-11",
+        "abstol(I)": "1.00000e-15",
+        "errpreset": "\"conservative\"",
+        "method": "\"gear2only\"",
+        "gmin": "1.00000e-12"
+      },
+      "recovery_skipped_breakpoint": false,
+      "selected_query_rows": [
+        {
+          "query": 0,
+          "exact_native_matches": [
+            {
+              "index": 0,
+              "token": {
+                "time": "0.000000000000000e+00",
+                "voltages": {
+                  "u": "0.000000000000000e+00",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.125,
+          "exact_native_matches": [
+            {
+              "index": 1,
+              "token": {
+                "time": "1.250000000000000e-01",
+                "voltages": {
+                  "u": "1.250000000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.25,
+          "exact_native_matches": [
+            {
+              "index": 2,
+              "token": {
+                "time": "2.500000000000000e-01",
+                "voltages": {
+                  "u": "2.500000000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.375,
+          "exact_native_matches": [
+            {
+              "index": 3,
+              "token": {
+                "time": "3.750000000000000e-01",
+                "voltages": {
+                  "u": "3.750000000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.499999,
+          "exact_native_matches": [
+            {
+              "index": 4,
+              "token": {
+                "time": "4.999990000000000e-01",
+                "voltages": {
+                  "u": "4.999990000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.5,
+          "exact_native_matches": [
+            {
+              "index": 5,
+              "token": {
+                "time": "5.000000000000000e-01",
+                "voltages": {
+                  "u": "5.000000000000000e-01",
+                  "y": "6.000000000000001e-01"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.500001,
+          "exact_native_matches": [
+            {
+              "index": 6,
+              "token": {
+                "time": "5.000010000000000e-01",
+                "voltages": {
+                  "u": "5.000010000000000e-01",
+                  "y": "6.000016000000001e-01"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.625,
+          "exact_native_matches": [
+            {
+              "index": 7,
+              "token": {
+                "time": "6.250000000000000e-01",
+                "voltages": {
+                  "u": "6.250000000000000e-01",
+                  "y": "8.000000000000000e-01"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.75,
+          "exact_native_matches": [
+            {
+              "index": 8,
+              "token": {
+                "time": "7.500000000000000e-01",
+                "voltages": {
+                  "u": "7.500000000000000e-01",
+                  "y": "1.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.875,
+          "exact_native_matches": [
+            {
+              "index": 9,
+              "token": {
+                "time": "8.750000000000000e-01",
+                "voltages": {
+                  "u": "8.750000000000000e-01",
+                  "y": "1.200000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 1,
+          "exact_native_matches": [
+            {
+              "index": 10,
+              "token": {
+                "time": "1.000000000000000e+00",
+                "voltages": {
+                  "u": "1.000000000000000e+00",
+                  "y": "1.400000000000000e+00"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "salient_log_lines": [
+        {
+          "line": 184,
+          "text": "spectre completes with 0 errors, 1 warning, and 3 notices."
+        }
+      ],
+      "control_smooth_observations": {
+        "finite_native_rows": 11,
+        "max_abs_error_V": "1.0E-16",
+        "budget_V": "1e-8",
+        "within_budget": true,
+        "event_boundary": "0.5 s native export included; export token does not certify hidden callback time",
+        "evAs_pair_max_decimal_distance_V": "2E-16"
+      },
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; real q; integer valid; analog begin @(initial_step) begin q=0; valid=0; end\n            @(timer(0.125)) valid=1;\n            @(timer(0.5)) q=V(y,r)+1;\n            V(y,r)<+q*transition(valid,0,1,1); end endmodule",
+      "deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVinput (u 0) vsource type=pwl wave=[0 0 1 1]\nXdut (u y 0) m\nsimulatorOptions options reltol=1e-9 vabstol=1e-11 iabstol=1e-15 digits=17\ntran tran stop=1 maxstep=0.03125 errpreset=conservative strobetimes=[0 0.125 0.25 0.375 0.49999900000000003 0.5 0.50000100000000003 0.625 0.75 0.875 1]\nsave u y\n",
+      "qualification": "finite positive control only"
+    },
+    "marked": {
+      "source_sha256": "946b73e21d0ed971227dee3965da02315be3dc026cdf64a219aca20e0f14a6e6",
+      "deck_sha256": "1c869ff907c6905970112494711840b6ae9fcc54aa8a0c4586344fd5be912fb2",
+      "psf_sha256": "3e6715fff85c991f9e0e254413a93a47aa602cffef369feb96995c7c100b647e",
+      "spectre_log_sha256": "d84fec8fc861060777c468dadcc49b8149bf94e151705a1dec6d63bbfd6cffde",
+      "native_rows": 11,
+      "effective_settings": {
+        "version": "\"21.1.0.509.isr12\"",
+        "tolerance.relative": "1.00000e-09",
+        "start": "0.00000",
+        "stop": "1.00000",
+        "maxstep": "0.0312500",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-11",
+        "abstol(I)": "1.00000e-15",
+        "errpreset": "\"conservative\"",
+        "method": "\"gear2only\"",
+        "gmin": "1.00000e-12"
+      },
+      "recovery_skipped_breakpoint": true,
+      "selected_query_rows": [
+        {
+          "query": 0,
+          "exact_native_matches": [
+            {
+              "index": 0,
+              "token": {
+                "time": "0.000000000000000e+00",
+                "voltages": {
+                  "u": "0.000000000000000e+00",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.125,
+          "exact_native_matches": [
+            {
+              "index": 1,
+              "token": {
+                "time": "1.250000000000000e-01",
+                "voltages": {
+                  "u": "1.250000000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.25,
+          "exact_native_matches": [
+            {
+              "index": 2,
+              "token": {
+                "time": "2.500000000000000e-01",
+                "voltages": {
+                  "u": "2.500000000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.375,
+          "exact_native_matches": [
+            {
+              "index": 3,
+              "token": {
+                "time": "3.750000000000000e-01",
+                "voltages": {
+                  "u": "3.750000000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.499999,
+          "exact_native_matches": [
+            {
+              "index": 4,
+              "token": {
+                "time": "4.999990000000000e-01",
+                "voltages": {
+                  "u": "4.999990000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.5,
+          "exact_native_matches": []
+        },
+        {
+          "query": 0.500001,
+          "exact_native_matches": [
+            {
+              "index": 6,
+              "token": {
+                "time": "5.000010000000000e-01",
+                "voltages": {
+                  "u": "5.000010000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.625,
+          "exact_native_matches": [
+            {
+              "index": 7,
+              "token": {
+                "time": "6.250000000000000e-01",
+                "voltages": {
+                  "u": "6.250000000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.75,
+          "exact_native_matches": [
+            {
+              "index": 8,
+              "token": {
+                "time": "7.500000000000000e-01",
+                "voltages": {
+                  "u": "7.500000000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 0.875,
+          "exact_native_matches": [
+            {
+              "index": 9,
+              "token": {
+                "time": "8.750000000000000e-01",
+                "voltages": {
+                  "u": "8.750000000000000e-01",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "query": 1,
+          "exact_native_matches": [
+            {
+              "index": 10,
+              "token": {
+                "time": "1.000000000000000e+00",
+                "voltages": {
+                  "u": "1.000000000000000e+00",
+                  "y": "0.000000000000000e+00"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "salient_log_lines": [
+        {
+          "line": 114,
+          "text": "R01ZERO before t=0 valid=0"
+        },
+        {
+          "line": 115,
+          "text": "R01ZERO after t=0 valid=1"
+        },
+        {
+          "line": 171,
+          "text": "    Newton iteration fails to converge at time = 499.9999999980159 ms step = 19.98401444325282 fs."
+        },
+        {
+          "line": 172,
+          "text": "        Disaster recovery algorithm is enabled to search for a converged solution."
+        },
+        {
+          "line": 184,
+          "text": "    WARNING (SPECTRE-17087): A breakpoint at time = 500 ms is stepped over in disaster recovery algorithm."
+        },
+        {
+          "line": 186,
+          "text": "......9......8......7......6......5......4......3......2......1.....R01FINAL t=1 q=0 y=0"
+        },
+        {
+          "line": 228,
+          "text": "spectre completes with 0 errors, 2 warnings, and 4 notices."
+        }
+      ],
+      "control_smooth_observations": null,
+      "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; real q; integer valid; analog begin @(initial_step) begin q=0; valid=0; end\n            @(timer(0)) begin $display(\"R01ZERO before t=%.17g valid=%d\",$abstime,valid); valid=1; $display(\"R01ZERO after t=%.17g valid=%d\",$abstime,valid); end\n            @(timer(0.5)) begin $display(\"R01SAMPLE before t=%.17g q=%.17g y=%.17g\",$abstime,q,V(y,r)); q=V(y,r)+1; $display(\"R01SAMPLE after t=%.17g q=%.17g y=%.17g\",$abstime,q,V(y,r)); end\n            V(y,r)<+q*transition(valid,0,1,1);\n@(final_step) $display(\"R01FINAL t=%.17g q=%.17g y=%.17g\",$abstime,q,V(y,r)); end endmodule",
+      "deck": "simulator lang=spectre\nahdl_include \"dut.va\"\nVinput (u 0) vsource type=pwl wave=[0 0 1 1]\nXdut (u y 0) m\nsimulatorOptions options reltol=1e-9 vabstol=1e-11 iabstol=1e-15 digits=17\ntran tran stop=1 maxstep=0.03125 errpreset=conservative strobetimes=[0 0.125 0.25 0.375 0.49999900000000003 0.5 0.50000100000000003 0.625 0.75 0.875 1]\nsave u y\n",
+      "qualification": "diagnostic, skipped inconsistent breakpoint"
+    }
+  }
+}

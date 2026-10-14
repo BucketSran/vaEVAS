@@ -199,7 +199,7 @@ def _validate_loop_node_declarations(model: Model):
     evaluates indices nor proves types, ranges or event activation. Keep strong
     references in the cache; never share it across models or compilations.
     """
-    from .syntax import ContributionStatement
+    from .syntax import ContributionStatement, Display
 
     pending = [*model.initial, *model.analog, *model.events]
     seen = {}
@@ -229,6 +229,8 @@ def _validate_loop_node_declarations(model: Model):
                 pending.append(item.index)
         elif isinstance(item, ContributionStatement):
             pending.extend((item.branch, item.rhs))
+        elif isinstance(item, Display):
+            pending.extend(item.args)
         else:
             raise CompileError('unsupported statement in loop declaration check', token=item.token)
         seen[key] = item
