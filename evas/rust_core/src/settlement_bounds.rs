@@ -373,6 +373,30 @@ impl Bounds {
         })
     }
 
+    /// Event-time voltage forcing, distinct from the later b observation.
+    pub(crate) fn node_enclosures(
+        &self,
+        inputs: &[I],
+        before: &[I],
+        operators: &[I],
+    ) -> Result<Vec<I>, Error> {
+        let parameters: Vec<_> = inputs
+            .iter()
+            .chain(before)
+            .chain(operators)
+            .copied()
+            .chain([I::ONE])
+            .collect();
+        let nodes: Vec<_> = self.nodes.iter().map(|row| dot(row, &parameters)).collect();
+        if nodes.iter().any(|n| !n.finite()) {
+            return Err(Error::new(
+                "event_accuracy",
+                "nonfinite physical event voltage enclosure",
+            ));
+        }
+        Ok(nodes)
+    }
+
     pub(crate) fn check_states(
         &self,
         model: &EventModel,

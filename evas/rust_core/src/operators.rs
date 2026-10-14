@@ -971,6 +971,25 @@ pub(crate) struct Operators {
     direct: Vec<Option<DirectInput>>,
     continuous: Option<Arc<Continuous>>,
     horizon: f64,
+    isolated_parameters: Vec<(usize, f64)>,
+}
+
+// Only structurally isolated instance slots are normalized here. The
+// Controller retains actual measurement states; physical history never uses
+// their changing values as restart/cache keys.
+fn physical_parameters<'a, T: Copy>(
+    values: &'a [T],
+    isolated: &[(usize, f64)],
+    forcing: impl Fn(f64) -> T,
+) -> std::borrow::Cow<'a, [T]> {
+    if isolated.is_empty() {
+        return std::borrow::Cow::Borrowed(values);
+    }
+    let mut physical = values.to_vec();
+    for &(index, initial) in isolated {
+        physical[index] = forcing(initial);
+    }
+    std::borrow::Cow::Owned(physical)
 }
 
 // Borrows one immutable history base at one time. Every advanced trial clones
@@ -991,6 +1010,8 @@ impl Evaluation<'_> {
         time_bounds: I,
         parameters: &[I],
     ) -> Result<(Operators, Vec<f64>, Vec<I>), Error> {
+        let parameters = physical_parameters(parameters, &self.base.isolated_parameters, I::point);
+        let parameters = parameters.as_ref();
         let mut observed = self.base.clone();
         if let Some(continuous) = &self.base.continuous {
             observed.continuous = Some(Arc::new(continuous.mapped_event(
@@ -1080,6 +1101,10 @@ impl Evaluation<'_> {
         horizon: f64,
     ) -> Result<Operators, Error> {
         let _timing = crate::diagnostics::span("history.advance_candidate");
+        let states = physical_parameters(states, &self.base.isolated_parameters, |value| value);
+        let bounds = physical_parameters(bounds, &self.base.isolated_parameters, I::point);
+        let states = states.as_ref();
+        let bounds = bounds.as_ref();
 
         let copying = crate::diagnostics::span("history.clone");
         let mut candidate = self.base.clone();
@@ -1260,6 +1285,16 @@ impl Operators {
         tolerances: &Tolerances,
     ) -> Result<Self, Error> {
         let _timing = crate::diagnostics::span("history.prepare");
+        let owners = crate::passive_events::isolated_instances(program);
+        let isolated_parameters = program
+            .states
+            .iter()
+            .enumerate()
+            .filter(|(_, state)| owners.contains(&state.instance))
+            .map(|(index, state)| state.initial.constant().map(|initial| (index, initial)))
+            .collect::<Result<Vec<_>, Error>>()?;
+        let physical_states = physical_parameters(states, &isolated_parameters, |value| value);
+        let states = physical_states.as_ref();
 
         let mut identities = BTreeSet::new();
         for spec in &program.operators {
@@ -1619,6 +1654,7 @@ impl Operators {
             direct,
             continuous,
             horizon,
+            isolated_parameters,
         })
     }
 
@@ -1952,6 +1988,21 @@ impl Operators {
         changed: &[usize],
     ) -> Result<(), Error> {
         let _timing = crate::diagnostics::span("history.advance");
+        let physical_states = physical_parameters(states, &self.isolated_parameters, |value| value);
+        let physical_bounds = physical_parameters(bounds, &self.isolated_parameters, I::point);
+        let states = physical_states.as_ref();
+        let bounds = physical_bounds.as_ref();
+        let physical_changes: Vec<_> = changed
+            .iter()
+            .copied()
+            .filter(|state| {
+                !self
+                    .isolated_parameters
+                    .iter()
+                    .any(|(index, _)| index == state)
+            })
+            .collect();
+        let changed = physical_changes.as_slice();
 
         // Consume the OLD edge before any candidate target/queue mutation.
         // Compute all predictions first so a failure cannot partially update

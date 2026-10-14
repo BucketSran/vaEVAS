@@ -437,7 +437,7 @@ impl Event {
             for statement in body {
                 match statement {
                     Statement::Assign(a) => out.push(a),
-                    Statement::Display { .. } => {},
+                    Statement::Display { .. } => {}
                     Statement::If {
                         then_body,
                         else_body,

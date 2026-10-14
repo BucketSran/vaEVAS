@@ -1,0 +1,233 @@
+{
+  "family": "frontend",
+  "label": "parameter_math",
+  "budget_V": 1e-09,
+  "paired_finite_pass": true,
+  "pairs": [
+    {
+      "time": "0",
+      "node": "y",
+      "dut_math_error_V": "0.0",
+      "reference_math_error_V": "0E-15",
+      "dut_reference_error_V": "0E-15",
+      "pass": true
+    },
+    {
+      "time": "0.75",
+      "node": "y",
+      "dut_math_error_V": "0.0",
+      "reference_math_error_V": "0E-15",
+      "dut_reference_error_V": "0E-15",
+      "pass": true
+    },
+    {
+      "time": "1",
+      "node": "y",
+      "dut_math_error_V": "0.0",
+      "reference_math_error_V": "0E-15",
+      "dut_reference_error_V": "0E-15",
+      "pass": true
+    }
+  ],
+  "queries": [
+    {
+      "time": "0",
+      "native_time_token": "0.000000000000000e+00",
+      "native_voltages": {
+        "y": "0.000000000000000e+00"
+      },
+      "dut_voltages": {
+        "y": -0.0
+      },
+      "dut_voltage_bounds": {
+        "y": [
+          -0.0,
+          0.0
+        ]
+      },
+      "independent_expected": {
+        "y": 0
+      },
+      "dut_states": {
+        "X_dut:q": 0.0,
+        "X_dut:x": 0.0
+      },
+      "dut_time_token": "0.0"
+    },
+    {
+      "time": "0.75",
+      "native_time_token": "7.500000000000000e-01",
+      "native_voltages": {
+        "y": "2.000000000000000e+00"
+      },
+      "dut_voltages": {
+        "y": 2.0
+      },
+      "dut_voltage_bounds": {
+        "y": [
+          2.0,
+          2.0
+        ]
+      },
+      "independent_expected": {
+        "y": 2
+      },
+      "dut_states": {
+        "X_dut:q": 0.0,
+        "X_dut:x": 2.0
+      },
+      "dut_time_token": "0.75"
+    },
+    {
+      "time": "1",
+      "native_time_token": "1.000000000000000e+00",
+      "native_voltages": {
+        "y": "2.000000000000000e+00"
+      },
+      "dut_voltages": {
+        "y": 2.0
+      },
+      "dut_voltage_bounds": {
+        "y": [
+          2.0,
+          2.0
+        ]
+      },
+      "independent_expected": {
+        "y": 2
+      },
+      "dut_states": {
+        "X_dut:q": 0.0,
+        "X_dut:x": 2.0
+      },
+      "dut_time_token": "1.0"
+    }
+  ],
+  "effective_dut_controls": {
+    "absolute_V": 1e-09,
+    "relative": 1e-06,
+    "stop_s": 1.0,
+    "max_step_s": 0.125,
+    "max_step_applied": true
+  },
+  "dut_testbench": {
+    "input_format": "spectre-voltage-subset",
+    "path": "r01-timing/frontend-reference/inputs/parameter_math/tb.scs",
+    "sha256": "24e8beca3366975c5185bca6bd39a28288c3af12c855d33121445da81831d8ae",
+    "model_sha256": {
+      "r01-timing/frontend-reference/inputs/parameter_math/dut.va": "7023440e711a0b12bfa475928ff4f41a43cea3c219de1a6c561d2449398bdef1"
+    },
+    "effective_tolerances": {
+      "vabstol": 1e-09,
+      "reltol": 1e-06
+    },
+    "output_grid": "0, k*maxstep below stop, stop",
+    "pulse_corner_rounding_seconds": {
+      "Vu": 0.0
+    },
+    "strobe_controls": {
+      "strobeperiod": 0.25
+    },
+    "forced_times": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ]
+  },
+  "ignored_options_field": null,
+  "ignored_options_limit": "No ignored-options field appears, stderr is empty; effective controls and strobe evidence confirm reported API settings. This does not establish Spectre method equivalence.",
+  "stderr_empty": true,
+  "stdout_sha256": "96535f633bd4d9d58acc51166319f7f50390db1dd8191d8a109012338024f80a",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "execution_receipt_sha256": "f22b6e5c4195dc6a190f3b0e88f3d7cb4fca7eb0ce2c51accfa358c64ffce8f5",
+  "input_sha256": {
+    "dut.va": "7023440e711a0b12bfa475928ff4f41a43cea3c219de1a6c561d2449398bdef1",
+    "tb.scs": "24e8beca3366975c5185bca6bd39a28288c3af12c855d33121445da81831d8ae"
+  },
+  "kernel_sha256": "e13f60ee52e5fd558e08ddd468dff6d7c980bfce9daceb9c1e159682f240458a",
+  "reference_execution_group": "frontend-spectre-v1",
+  "reference_analysis_sha256": "42c5b1581748fce79e88cdec989746c3c3b203c5a8d7660bcd5a186d5d9b2da2",
+  "psf_sha256": "069a40dc9469dd6c43ea9b6df9a48362d54dbd39dae7d9ee6f2591588f31c355",
+  "reference_effective": {
+    "tolerance.relative": "1.00000e-06",
+    "reltol": "1.00000e-06",
+    "abstol(V)": "1.00000e-09",
+    "abstol(I)": "1.00000e-12",
+    "stop": "1.00000",
+    "maxstep": "0.125000",
+    "method": "\"traponly\"",
+    "errpreset": "\"moderate\"",
+    "gmin": "1.00000e-12"
+  },
+  "reference_warnings": [
+    {
+      "log_line": 52,
+      "text": "WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow."
+    }
+  ],
+  "dut_portability_advisories": {
+    "schema_version": 2,
+    "record_limit": 128,
+    "records": [
+      {
+        "code": "timer_observation_boundary",
+        "nonblocking": true,
+        "message": "Observation is inside or within one binary64 neighbor of a committed timer deadline enclosure. A backend may trigger elsewhere within the model's timing tolerance. Check samples and downstream history against their budgets; this notice neither proves a mismatch nor accepts a changed final result.",
+        "event_record": 0,
+        "event": 0,
+        "trigger": 0,
+        "origin": "r01-timing/frontend-reference/inputs/parameter_math/dut.va:3:35 (X_dut)",
+        "query_source": "output_times",
+        "query_index": 4,
+        "query_time_s": 0.5,
+        "time_bounds_s": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "code": "timer_observation_boundary",
+        "nonblocking": true,
+        "message": "Observation is inside or within one binary64 neighbor of a committed timer deadline enclosure. A backend may trigger elsewhere within the model's timing tolerance. Check samples and downstream history against their budgets; this notice neither proves a mismatch nor accepts a changed final result.",
+        "event_record": 0,
+        "event": 0,
+        "trigger": 0,
+        "origin": "r01-timing/frontend-reference/inputs/parameter_math/dut.va:3:35 (X_dut)",
+        "query_source": "strobetimes",
+        "query_index": 2,
+        "query_time_s": 0.5,
+        "time_bounds_s": [
+          0.5,
+          0.5
+        ]
+      }
+    ],
+    "model_records": [],
+    "dropped_records": 0,
+    "truncated": false
+  },
+  "dut_events": [
+    {
+      "time": 0.5,
+      "event": 0,
+      "origin": "r01-timing/frontend-reference/inputs/parameter_math/dut.va:3:35 (X_dut)",
+      "kind": "timer",
+      "before": [
+        0.0,
+        0.0
+      ],
+      "after": [
+        0.0,
+        2.0
+      ]
+    }
+  ],
+  "raw_availability": "local-only",
+  "extraction": {
+    "source_stdout_sha256": "96535f633bd4d9d58acc51166319f7f50390db1dd8191d8a109012338024f80a",
+    "source_stdout_artifact": "final-dut-v3/frontend/parameter_math/stdout.json",
+    "representation": "Finite response extraction with normalized input paths; package SHA is in PACKAGE-MANIFEST.json. Original stdout SHA identifies full local-only response."
+  }
+}

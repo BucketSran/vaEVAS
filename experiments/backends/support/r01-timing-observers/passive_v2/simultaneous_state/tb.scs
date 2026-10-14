@@ -1,0 +1,9 @@
+simulator lang=spectre
+ahdl_include "dut.va"
+ahdl_include "obs.va"
+simulatorOptions options reltol=1e-6 vabstol=1e-9
+Vu (u 0) vsource type=pwl wave=[0 0 1 1]
+D (u y) dut
+M (u y) obs
+tran tran stop=1 maxstep=0.125 strobetimes=[0 0.25 0.5 0.75 0.875 1]
+save y

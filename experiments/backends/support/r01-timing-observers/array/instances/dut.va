@@ -1,0 +1,2 @@
+`include "disciplines.vams"
+module m(u,y,r); input u;output y;inout r;electrical u,y,r;integer b;real a[0:1];parameter integer k=1; analog begin @(initial_step) b=1; @(timer(0.5)) a[b]=k; V(y,r)<+a[1]; end endmodule

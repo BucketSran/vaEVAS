@@ -425,6 +425,8 @@ pub(crate) struct EventModel {
     pub(crate) triggers: Vec<TriggerLeaf>,
     actions: Vec<Vec<(usize, AffineState)>>,
     pub(crate) conditions: Conditions,
+    pub(crate) passive_conditions: Conditions,
+    pub(crate) passive_events: Vec<bool>,
     pub(crate) driven: Vec<String>,
     pub(crate) tolerances: Tolerances,
     // Bounded one-batch cache; stores coefficients, never accepted/trial state.
@@ -635,9 +637,18 @@ impl EventModel {
             }
             actions.push(body);
         }
-        let conditions = Conditions::new(&program)?;
+        let passive_events = crate::passive_events::classify(&program)?;
+        let mut conditions = Conditions::new(&program)?;
+        conditions.restrict_events(&passive_events.iter().map(|p| !p).collect::<Vec<_>>());
+        let mut passive_conditions = Conditions::new(&program)?;
+        passive_conditions.restrict_events(&passive_events);
+        let (projected, node_inputs) =
+            crate::event_accuracy::GuardBounds::passive_program(&program);
+        passive_conditions.prepare(&projected, &node_inputs)?;
         let mut model = Self {
             conditions,
+            passive_conditions,
+            passive_events,
             program,
             rhs,
             guards,
@@ -845,6 +856,8 @@ impl EventModel {
             }
         }
         self.conditions
+            .check_selection_readers(selection, &writers)?;
+        self.passive_conditions
             .check_selection_readers(selection, &writers)?;
         for (event, indices) in &selection.actions {
             for &index in indices {

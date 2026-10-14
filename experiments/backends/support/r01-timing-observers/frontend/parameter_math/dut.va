@@ -1,0 +1,4 @@
+`include "disciplines.vams"
+module m(u,y,r); input u; output y; inout r; electrical u,y,r; parameter integer mode=1; real q,x;
+analog begin @(initial_step) q=0; @(timer(0.5)) if(mode==0) x=sqrt(q); else x=2; V(y,r)<+x; end
+endmodule

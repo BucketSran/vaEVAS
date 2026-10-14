@@ -1,0 +1,493 @@
+{
+  "schema_version": 1,
+  "files": {
+    "ORIGINS.json": {
+      "normalized_sha256": "a5adbb5ea3eb5b3cf66b2ef9597bd295aa6e3c432d77d790d47211dc1191feda",
+      "origin": null
+    },
+    "README.md": {
+      "normalized_sha256": "3701a3740979177a46f338be1baeb3a7dc87c4ce97a7f48806af0db22187bbba",
+      "origin": null
+    },
+    "SUMMARY.json": {
+      "normalized_sha256": "fed6dc6b892894fbce7ee5b23fc5c084a2c2e22eaefe954b454f477c6ca9bf90",
+      "origin": {
+        "artifact": "final-paired-v3/SUMMARY.json",
+        "sha256": "aa9829d4fd16a48a7eb10237f667adf9dfaf98cd4f87ab1fadbef25c6a3d63e1",
+        "representation": "Retained stage summary augmented with package availability scope, distinct package SHA"
+      }
+    },
+    "array/default_zero_read/dut.va": {
+      "normalized_sha256": "74bb9ab45b30492a89c4d42ab9fb97c4fe9a18eb69a82c86603ff9ab331c4ae3",
+      "origin": {
+        "artifact": "final-paired-v3/array/default_zero_read/dut.va",
+        "sha256": "74bb9ab45b30492a89c4d42ab9fb97c4fe9a18eb69a82c86603ff9ab331c4ae3",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "array/default_zero_read/evidence.json": {
+      "normalized_sha256": "38a76d7556f58a24f65d29947dc396f71693a81c01aad4d02882fdb27124e016",
+      "origin": {
+        "artifact": "final-paired-v3/array/default_zero_read/evidence.json",
+        "sha256": "a5d399ce75f7ba8fda5a6ec1640429611cf663a59c59a3936782174ec9b1e11e",
+        "representation": "sanitized finite extraction amended with actual DUT time tokens, distinct from original full stdout"
+      }
+    },
+    "array/default_zero_read/tb.scs": {
+      "normalized_sha256": "24e8beca3366975c5185bca6bd39a28288c3af12c855d33121445da81831d8ae",
+      "origin": {
+        "artifact": "final-paired-v3/array/default_zero_read/tb.scs",
+        "sha256": "24e8beca3366975c5185bca6bd39a28288c3af12c855d33121445da81831d8ae",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "array/default_zero_write/dut.va": {
+      "normalized_sha256": "0de6add5eb795d5643b526f369b7eeb55e0ce99fb23b7810ee6f7d9291c63fbd",
+      "origin": {
+        "artifact": "final-paired-v3/array/default_zero_write/dut.va",
+        "sha256": "0de6add5eb795d5643b526f369b7eeb55e0ce99fb23b7810ee6f7d9291c63fbd",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "array/default_zero_write/evidence.json": {
+      "normalized_sha256": "62cca3eed1d40021a04aef2258636d4ea3e8c236f5367db01002af4f53d03f57",
+      "origin": {
+        "artifact": "final-paired-v3/array/default_zero_write/evidence.json",
+        "sha256": "e9099def9e89141ddeba7b22a256985b82901817331e6494d0b26f9b76c4fabf",
+        "representation": "sanitized finite extraction amended with actual DUT time tokens, distinct from original full stdout"
+      }
+    },
+    "array/default_zero_write/tb.scs": {
+      "normalized_sha256": "24e8beca3366975c5185bca6bd39a28288c3af12c855d33121445da81831d8ae",
+      "origin": {
+        "artifact": "final-paired-v3/array/default_zero_write/tb.scs",
+        "sha256": "24e8beca3366975c5185bca6bd39a28288c3af12c855d33121445da81831d8ae",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "array/instances/dut.va": {
+      "normalized_sha256": "8b3f3a2d4206f8400a98c6c3c6e7ebe337f60ef306cdbc970441460354f6ab1e",
+      "origin": {
+        "artifact": "final-paired-v3/array/instances/dut.va",
+        "sha256": "8b3f3a2d4206f8400a98c6c3c6e7ebe337f60ef306cdbc970441460354f6ab1e",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "array/instances/evidence.json": {
+      "normalized_sha256": "f84cc35c2986c2807cb7eec938171547533cd9c0e17f2e51162a68855b1814b9",
+      "origin": {
+        "artifact": "final-paired-v3/array/instances/evidence.json",
+        "sha256": "020847a8905061aeccbb010ed7bfb8faf4a2ec66b7d510f0caccb59b8a3147b3",
+        "representation": "sanitized finite extraction amended with actual DUT time tokens, distinct from original full stdout"
+      }
+    },
+    "array/instances/tb.scs": {
+      "normalized_sha256": "af6ffccadceb23d9f27851a51f82dc4b1592ee70aa1bed7a093601f11c70b5bc",
+      "origin": {
+        "artifact": "final-paired-v3/array/instances/tb.scs",
+        "sha256": "af6ffccadceb23d9f27851a51f82dc4b1592ee70aa1bed7a093601f11c70b5bc",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "array/negative_divisor/dut.va": {
+      "normalized_sha256": "df7ab9f1575f3a6b686fa9733ad0cdeb73c4c1d47739150172fd8b8f34112c89",
+      "origin": {
+        "artifact": "final-paired-v3/array/negative_divisor/dut.va",
+        "sha256": "df7ab9f1575f3a6b686fa9733ad0cdeb73c4c1d47739150172fd8b8f34112c89",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "array/negative_divisor/evidence.json": {
+      "normalized_sha256": "eaaee938782d555dd2609e3e0363bbd85dfb7916885461befa4082f3eeb5f9af",
+      "origin": {
+        "artifact": "final-paired-v3/array/negative_divisor/evidence.json",
+        "sha256": "c01c458f7ac82fe0eddf9c30c66643fa279e2adbe174335ad221d9a8c2a9edf7",
+        "representation": "sanitized finite extraction amended with actual DUT time tokens, distinct from original full stdout"
+      }
+    },
+    "array/negative_divisor/tb.scs": {
+      "normalized_sha256": "24e8beca3366975c5185bca6bd39a28288c3af12c855d33121445da81831d8ae",
+      "origin": {
+        "artifact": "final-paired-v3/array/negative_divisor/tb.scs",
+        "sha256": "24e8beca3366975c5185bca6bd39a28288c3af12c855d33121445da81831d8ae",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "array/negative_modulo/dut.va": {
+      "normalized_sha256": "4ee9b5113f5b458c0c4a1812e4c1e10c455b1502b13a3cb247a56dc948f2cca6",
+      "origin": {
+        "artifact": "final-paired-v3/array/negative_modulo/dut.va",
+        "sha256": "4ee9b5113f5b458c0c4a1812e4c1e10c455b1502b13a3cb247a56dc948f2cca6",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "array/negative_modulo/evidence.json": {
+      "normalized_sha256": "dae9e673e9f194420fa483797377386557e5b09579310c09c1862d50f79ca19f",
+      "origin": {
+        "artifact": "final-paired-v3/array/negative_modulo/evidence.json",
+        "sha256": "f5ff42d5442912b95c872e3b1cbc3ff1a9bf97d370bcc0ca37de3dd348f7493f",
+        "representation": "sanitized finite extraction amended with actual DUT time tokens, distinct from original full stdout"
+      }
+    },
+    "array/negative_modulo/tb.scs": {
+      "normalized_sha256": "24e8beca3366975c5185bca6bd39a28288c3af12c855d33121445da81831d8ae",
+      "origin": {
+        "artifact": "final-paired-v3/array/negative_modulo/tb.scs",
+        "sha256": "24e8beca3366975c5185bca6bd39a28288c3af12c855d33121445da81831d8ae",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "array/positive_modulo/dut.va": {
+      "normalized_sha256": "121d7a299b6028de7f97d7827a48003e1670cb7715ac97bf0059439198aa16e4",
+      "origin": {
+        "artifact": "final-paired-v3/array/positive_modulo/dut.va",
+        "sha256": "121d7a299b6028de7f97d7827a48003e1670cb7715ac97bf0059439198aa16e4",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "array/positive_modulo/evidence.json": {
+      "normalized_sha256": "784a403d90116f8067c693888762d2d4cbd1a570bcf7fdea166859e4a795c39f",
+      "origin": {
+        "artifact": "final-paired-v3/array/positive_modulo/evidence.json",
+        "sha256": "99dea78dc37fefc9c17ab348a0ef6821e182adb2713d12ac0e70e126b3580500",
+        "representation": "sanitized finite extraction amended with actual DUT time tokens, distinct from original full stdout"
+      }
+    },
+    "array/positive_modulo/tb.scs": {
+      "normalized_sha256": "24e8beca3366975c5185bca6bd39a28288c3af12c855d33121445da81831d8ae",
+      "origin": {
+        "artifact": "final-paired-v3/array/positive_modulo/tb.scs",
+        "sha256": "24e8beca3366975c5185bca6bd39a28288c3af12c855d33121445da81831d8ae",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "array/scalar_dynamic_rhs/dut.va": {
+      "normalized_sha256": "68980e5c340d3fc8e91a7eaa1ed251c292abe1b0fe4585c0588e63a6086c3d88",
+      "origin": {
+        "artifact": "final-paired-v3/array/scalar_dynamic_rhs/dut.va",
+        "sha256": "68980e5c340d3fc8e91a7eaa1ed251c292abe1b0fe4585c0588e63a6086c3d88",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "array/scalar_dynamic_rhs/evidence.json": {
+      "normalized_sha256": "36d784410810487cf82b973f29c179e3a19110463f45998e0be045032b5d9a2a",
+      "origin": {
+        "artifact": "final-paired-v3/array/scalar_dynamic_rhs/evidence.json",
+        "sha256": "e6a6c81cf85fe34b6c62894c02ae02bff79d9b7cd8b121d32681f1715160b27e",
+        "representation": "sanitized finite extraction amended with actual DUT time tokens, distinct from original full stdout"
+      }
+    },
+    "array/scalar_dynamic_rhs/tb.scs": {
+      "normalized_sha256": "24e8beca3366975c5185bca6bd39a28288c3af12c855d33121445da81831d8ae",
+      "origin": {
+        "artifact": "final-paired-v3/array/scalar_dynamic_rhs/tb.scs",
+        "sha256": "24e8beca3366975c5185bca6bd39a28288c3af12c855d33121445da81831d8ae",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "frontend/ordered_predicate/dut.va": {
+      "normalized_sha256": "063e030017a23457c68e55961e54c791dc115ca91b4703c999dccf6af29f6e09",
+      "origin": {
+        "artifact": "final-paired-v3/frontend/ordered_predicate/dut.va",
+        "sha256": "063e030017a23457c68e55961e54c791dc115ca91b4703c999dccf6af29f6e09",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "frontend/ordered_predicate/evidence.json": {
+      "normalized_sha256": "98ef868079c051440a1f5a4d9036bc27cf78c0490eee29c503b2b55a2a7c58f9",
+      "origin": {
+        "artifact": "final-paired-v3/frontend/ordered_predicate/evidence.json",
+        "sha256": "abd75b2e9a33cfc70cd4e16edf15af63f5577880fde359a121d1a1c26f280c42",
+        "representation": "sanitized finite extraction amended with actual DUT time tokens, distinct from original full stdout"
+      }
+    },
+    "frontend/ordered_predicate/tb.scs": {
+      "normalized_sha256": "3a6f011171fa3be8ea67671b78aebf3d02b5b5986ea94bfaf36dc3872b77705f",
+      "origin": {
+        "artifact": "final-paired-v3/frontend/ordered_predicate/tb.scs",
+        "sha256": "3a6f011171fa3be8ea67671b78aebf3d02b5b5986ea94bfaf36dc3872b77705f",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "frontend/parameter_math/dut.va": {
+      "normalized_sha256": "7023440e711a0b12bfa475928ff4f41a43cea3c219de1a6c561d2449398bdef1",
+      "origin": {
+        "artifact": "final-paired-v3/frontend/parameter_math/dut.va",
+        "sha256": "7023440e711a0b12bfa475928ff4f41a43cea3c219de1a6c561d2449398bdef1",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "frontend/parameter_math/evidence.json": {
+      "normalized_sha256": "9cdf97fbf939783182876f07e61e075fa28bfa8fea37fc96b5d70f6498dd311b",
+      "origin": {
+        "artifact": "final-paired-v3/frontend/parameter_math/evidence.json",
+        "sha256": "77e28df6ab05864d79450f184cb5e0036065823cdb9a28e985ac60768e903806",
+        "representation": "sanitized finite extraction amended with actual DUT time tokens, distinct from original full stdout"
+      }
+    },
+    "frontend/parameter_math/tb.scs": {
+      "normalized_sha256": "24e8beca3366975c5185bca6bd39a28288c3af12c855d33121445da81831d8ae",
+      "origin": {
+        "artifact": "final-paired-v3/frontend/parameter_math/tb.scs",
+        "sha256": "24e8beca3366975c5185bca6bd39a28288c3af12c855d33121445da81831d8ae",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "frontend/predicate_loops/dut.va": {
+      "normalized_sha256": "372cb0334b66c8e6638a5feb9a2ff97e013efb008861f0183ef7f22f46017107",
+      "origin": {
+        "artifact": "final-paired-v3/frontend/predicate_loops/dut.va",
+        "sha256": "372cb0334b66c8e6638a5feb9a2ff97e013efb008861f0183ef7f22f46017107",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "frontend/predicate_loops/evidence.json": {
+      "normalized_sha256": "c7b1e34cfdf30b05fea3309be9c971e4205e758eface2b6f2acecec615ce8c50",
+      "origin": {
+        "artifact": "final-paired-v3/frontend/predicate_loops/evidence.json",
+        "sha256": "98307f1b1df1de164612b1651bd4c598b5bf42e7813636c93bed8d37a28cc6dc",
+        "representation": "sanitized finite extraction amended with actual DUT time tokens, distinct from original full stdout"
+      }
+    },
+    "frontend/predicate_loops/tb.scs": {
+      "normalized_sha256": "3a6f011171fa3be8ea67671b78aebf3d02b5b5986ea94bfaf36dc3872b77705f",
+      "origin": {
+        "artifact": "final-paired-v3/frontend/predicate_loops/tb.scs",
+        "sha256": "3a6f011171fa3be8ea67671b78aebf3d02b5b5986ea94bfaf36dc3872b77705f",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "frontend/selection_arm/dut.va": {
+      "normalized_sha256": "f65a3d598842d115ba96b484b5cb0c7e1e5663c59dccb28e97918277ad168793",
+      "origin": {
+        "artifact": "final-paired-v3/frontend/selection_arm/dut.va",
+        "sha256": "f65a3d598842d115ba96b484b5cb0c7e1e5663c59dccb28e97918277ad168793",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "frontend/selection_arm/evidence.json": {
+      "normalized_sha256": "4370875a31469c32d8fe3df565f3ddbfb502d257a2045262f7876673352a1e38",
+      "origin": {
+        "artifact": "final-paired-v3/frontend/selection_arm/evidence.json",
+        "sha256": "85b191ee4d8a9981bed66639ed275696a9b895305f00e33f4ccbd0546d5d1b22",
+        "representation": "sanitized finite extraction amended with actual DUT time tokens, distinct from original full stdout"
+      }
+    },
+    "frontend/selection_arm/tb.scs": {
+      "normalized_sha256": "5cd68ec4dd347d745316756bc0e303b5b301ae6dda73cfe3415ba0979210c0cb",
+      "origin": {
+        "artifact": "final-paired-v3/frontend/selection_arm/tb.scs",
+        "sha256": "5cd68ec4dd347d745316756bc0e303b5b301ae6dda73cfe3415ba0979210c0cb",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "frontend/typed_integer/dut.va": {
+      "normalized_sha256": "b6bda596fefb6f2a951d4dc9bffbe1bf4ca11a63eca077485557896289baec3f",
+      "origin": {
+        "artifact": "final-paired-v3/frontend/typed_integer/dut.va",
+        "sha256": "b6bda596fefb6f2a951d4dc9bffbe1bf4ca11a63eca077485557896289baec3f",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "frontend/typed_integer/evidence.json": {
+      "normalized_sha256": "caf84056bf84585891fb783da17cb9c63c07d69f9e3ccac3a267dcefcd0cb487",
+      "origin": {
+        "artifact": "final-paired-v3/frontend/typed_integer/evidence.json",
+        "sha256": "9e5f30943ae96955422615fb4d3332f25421871cc76f77fe024b7855a7f2717b",
+        "representation": "sanitized finite extraction amended with actual DUT time tokens, distinct from original full stdout"
+      }
+    },
+    "frontend/typed_integer/tb.scs": {
+      "normalized_sha256": "5cd68ec4dd347d745316756bc0e303b5b301ae6dda73cfe3415ba0979210c0cb",
+      "origin": {
+        "artifact": "final-paired-v3/frontend/typed_integer/tb.scs",
+        "sha256": "5cd68ec4dd347d745316756bc0e303b5b301ae6dda73cfe3415ba0979210c0cb",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "frontend/typed_real/dut.va": {
+      "normalized_sha256": "9face163aa7741db2a702a213e24b4451e32aa1579cc49f97070a3c87ae136f7",
+      "origin": {
+        "artifact": "final-paired-v3/frontend/typed_real/dut.va",
+        "sha256": "9face163aa7741db2a702a213e24b4451e32aa1579cc49f97070a3c87ae136f7",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "frontend/typed_real/evidence.json": {
+      "normalized_sha256": "1d790dc83c80dc5d1efcf96ebeda477725c85f326cca07c19b68fb539d260032",
+      "origin": {
+        "artifact": "final-paired-v3/frontend/typed_real/evidence.json",
+        "sha256": "148294e0f339a644913bd50536d194408ba1b7649c9585d373b6f6afd2bdb7bd",
+        "representation": "sanitized finite extraction amended with actual DUT time tokens, distinct from original full stdout"
+      }
+    },
+    "frontend/typed_real/tb.scs": {
+      "normalized_sha256": "5cd68ec4dd347d745316756bc0e303b5b301ae6dda73cfe3415ba0979210c0cb",
+      "origin": {
+        "artifact": "final-paired-v3/frontend/typed_real/tb.scs",
+        "sha256": "5cd68ec4dd347d745316756bc0e303b5b301ae6dda73cfe3415ba0979210c0cb",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "passive/integral_sample/dut.va": {
+      "normalized_sha256": "9ec27c57d909fe41e2d7da17f54a8a9d8991b8b4d326b10e29316d0d16766c81",
+      "origin": {
+        "artifact": "final-paired-v3/passive/integral_sample/dut.va",
+        "sha256": "9ec27c57d909fe41e2d7da17f54a8a9d8991b8b4d326b10e29316d0d16766c81",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "passive/integral_sample/evidence.json": {
+      "normalized_sha256": "f9a128ba78012013deb5bc21f387d081204ad23a4bcbbb68a17aaff84be9170e",
+      "origin": {
+        "artifact": "final-paired-v3/passive/integral_sample/evidence.json",
+        "sha256": "7ae5a903b32d1633583cfb21d8ad3f806110c88e3844530c1a7e2c70214f84bc",
+        "representation": "sanitized finite extraction amended with actual DUT time tokens, distinct from original full stdout"
+      }
+    },
+    "passive/integral_sample/obs.va": {
+      "normalized_sha256": "7a6ec8c683b5469f2a35c973d29def3a969e0cc955ae05b424af7f256911c9a8",
+      "origin": {
+        "artifact": "final-paired-v3/passive/integral_sample/obs.va",
+        "sha256": "7a6ec8c683b5469f2a35c973d29def3a969e0cc955ae05b424af7f256911c9a8",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "passive/integral_sample/tb.scs": {
+      "normalized_sha256": "e97078de66cf9f5f77612aab493f03b3c628e1a68b4419966894baeb2164711a",
+      "origin": {
+        "artifact": "final-paired-v3/passive/integral_sample/tb.scs",
+        "sha256": "e97078de66cf9f5f77612aab493f03b3c628e1a68b4419966894baeb2164711a",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "passive/later_state/dut.va": {
+      "normalized_sha256": "c636815a54f779c46ac414f0a5c591d0da27539c2e5416621c932b14c20914d4",
+      "origin": {
+        "artifact": "final-paired-v3/passive/later_state/dut.va",
+        "sha256": "c636815a54f779c46ac414f0a5c591d0da27539c2e5416621c932b14c20914d4",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "passive/later_state/evidence.json": {
+      "normalized_sha256": "6562dbe4caa116870bf92cf84d8b4e73d7c79184242601aee4685f46896ea908",
+      "origin": {
+        "artifact": "final-paired-v3/passive/later_state/evidence.json",
+        "sha256": "508c9a62a3304c3c9606c6c7d43e7ca658f29cb2e3797a4a9015125e0a033d4c",
+        "representation": "sanitized finite extraction amended with actual DUT time tokens, distinct from original full stdout"
+      }
+    },
+    "passive/later_state/obs.va": {
+      "normalized_sha256": "0d3bb474a10500c683ade49288bd4f1424990fab0adfe221ed207f8fe51f2774",
+      "origin": {
+        "artifact": "final-paired-v3/passive/later_state/obs.va",
+        "sha256": "0d3bb474a10500c683ade49288bd4f1424990fab0adfe221ed207f8fe51f2774",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "passive/later_state/tb.scs": {
+      "normalized_sha256": "e97078de66cf9f5f77612aab493f03b3c628e1a68b4419966894baeb2164711a",
+      "origin": {
+        "artifact": "final-paired-v3/passive/later_state/tb.scs",
+        "sha256": "e97078de66cf9f5f77612aab493f03b3c628e1a68b4419966894baeb2164711a",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "passive/transition_sample/dut.va": {
+      "normalized_sha256": "15e52f2a4ee5c6cde9ecf0f1889575454b014c2411c4cdcedd4e2604a87dc14f",
+      "origin": {
+        "artifact": "final-paired-v3/passive/transition_sample/dut.va",
+        "sha256": "15e52f2a4ee5c6cde9ecf0f1889575454b014c2411c4cdcedd4e2604a87dc14f",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "passive/transition_sample/evidence.json": {
+      "normalized_sha256": "5df19236b063852b3b906c8797b8fac4ead2de8848a8a8883db05a367cf59e04",
+      "origin": {
+        "artifact": "final-paired-v3/passive/transition_sample/evidence.json",
+        "sha256": "af71c2266a2cd759a802d927664d6265c6b22fe3fe104781e45be26061aec346",
+        "representation": "sanitized finite extraction amended with actual DUT time tokens, distinct from original full stdout"
+      }
+    },
+    "passive/transition_sample/obs.va": {
+      "normalized_sha256": "0d3bb474a10500c683ade49288bd4f1424990fab0adfe221ed207f8fe51f2774",
+      "origin": {
+        "artifact": "final-paired-v3/passive/transition_sample/obs.va",
+        "sha256": "0d3bb474a10500c683ade49288bd4f1424990fab0adfe221ed207f8fe51f2774",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "passive/transition_sample/tb.scs": {
+      "normalized_sha256": "e97078de66cf9f5f77612aab493f03b3c628e1a68b4419966894baeb2164711a",
+      "origin": {
+        "artifact": "final-paired-v3/passive/transition_sample/tb.scs",
+        "sha256": "e97078de66cf9f5f77612aab493f03b3c628e1a68b4419966894baeb2164711a",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "passive_v2/simultaneous_state/dut.va": {
+      "normalized_sha256": "a4a586c3758a19b852023d3ee83c173530c09b4ec950a8859daf6191d1369c74",
+      "origin": {
+        "artifact": "final-paired-v3/passive_v2/simultaneous_state/dut.va",
+        "sha256": "a4a586c3758a19b852023d3ee83c173530c09b4ec950a8859daf6191d1369c74",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "passive_v2/simultaneous_state/evidence.json": {
+      "normalized_sha256": "e743f55c92b4ff7ab7660d7c1f89b3b2923281bfb85f40770ff0bc703aca4f33",
+      "origin": {
+        "artifact": "final-paired-v3/passive_v2/simultaneous_state/evidence.json",
+        "sha256": "f2f2de3ba8b7f590c6ed2229dca90a4a3e73b9a9503f6596df089a0bd4a2115d",
+        "representation": "sanitized finite extraction amended with actual DUT time tokens, distinct from original full stdout"
+      }
+    },
+    "passive_v2/simultaneous_state/obs.va": {
+      "normalized_sha256": "e2b717ed6a85bb217fc0a18b0967156cf4c1863abe1693d348dc7198e2aeac16",
+      "origin": {
+        "artifact": "final-paired-v3/passive_v2/simultaneous_state/obs.va",
+        "sha256": "e2b717ed6a85bb217fc0a18b0967156cf4c1863abe1693d348dc7198e2aeac16",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "passive_v2/simultaneous_state/tb.scs": {
+      "normalized_sha256": "2a094acfb38f11fe44fc881b2f314564196a5cac9127b0e9d235eedd30702664",
+      "origin": {
+        "artifact": "final-paired-v3/passive_v2/simultaneous_state/tb.scs",
+        "sha256": "2a094acfb38f11fe44fc881b2f314564196a5cac9127b0e9d235eedd30702664",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "reference-provenance.json": {
+      "normalized_sha256": "53d2a5152d64cabfbaefb9783b7d096383973d175e00e67570f9b7df91a37935",
+      "origin": {
+        "artifact": "final-paired-v3/reference-provenance.json",
+        "sha256": "53d2a5152d64cabfbaefb9783b7d096383973d175e00e67570f9b7df91a37935",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "simultaneous-v1-failure.json": {
+      "normalized_sha256": "77608e19ead43d9e041bac3a91301d070efb7d1cbe60b918d1cc26d859b5cdaf",
+      "origin": {
+        "artifact": "passive-reference-analysis-v2/simultaneous-v1-failure.json",
+        "sha256": "77608e19ead43d9e041bac3a91301d070efb7d1cbe60b918d1cc26d859b5cdaf",
+        "representation": "unchanged compact historical failed execution and diagnostic"
+      }
+    },
+    "source-identity.json": {
+      "normalized_sha256": "8ab565e52920a49f6c41160179c3df87fc3970f36765d36a382ecfdf89592dfa",
+      "origin": {
+        "artifact": "final-paired-v3/source-identity.json",
+        "sha256": "8ab565e52920a49f6c41160179c3df87fc3970f36765d36a382ecfdf89592dfa",
+        "representation": "unchanged copy of retained sanitized stage artifact"
+      }
+    },
+    "verify.py": {
+      "normalized_sha256": "6fa6a2f5d03c99c03458f19a3fb774406a2e019f1351e00b0263474af1668d34",
+      "origin": null
+    },
+    "final-source-adaptation.json": {
+      "normalized_sha256": "38af64e380ca1b5ade68e9221c5c570bf91f75b5947c4c33cdd31ddce7dbfc98",
+      "origin": null
+    }
+  }
+}

@@ -1,0 +1,155 @@
+{
+  "status": "pass",
+  "scope": "Portable retained finite replay only, no simulator/raw replay",
+  "cases_passed": 17,
+  "query_points": 63,
+  "voltage_values": 66,
+  "outcomes": [
+    {
+      "family": "array",
+      "label": "positive_modulo",
+      "query_points": 3,
+      "voltage_values": 3,
+      "max_pair_error_V": "0",
+      "pass": true
+    },
+    {
+      "family": "array",
+      "label": "negative_modulo",
+      "query_points": 3,
+      "voltage_values": 3,
+      "max_pair_error_V": "0",
+      "pass": true
+    },
+    {
+      "family": "array",
+      "label": "negative_divisor",
+      "query_points": 3,
+      "voltage_values": 3,
+      "max_pair_error_V": "0",
+      "pass": true
+    },
+    {
+      "family": "array",
+      "label": "default_zero_write",
+      "query_points": 3,
+      "voltage_values": 3,
+      "max_pair_error_V": "0",
+      "pass": true
+    },
+    {
+      "family": "array",
+      "label": "default_zero_read",
+      "query_points": 3,
+      "voltage_values": 3,
+      "max_pair_error_V": "0",
+      "pass": true
+    },
+    {
+      "family": "array",
+      "label": "scalar_dynamic_rhs",
+      "query_points": 3,
+      "voltage_values": 3,
+      "max_pair_error_V": "0",
+      "pass": true
+    },
+    {
+      "family": "array",
+      "label": "instances",
+      "query_points": 3,
+      "voltage_values": 6,
+      "max_pair_error_V": "0",
+      "pass": true
+    },
+    {
+      "family": "frontend",
+      "label": "predicate_loops",
+      "query_points": 3,
+      "voltage_values": 3,
+      "max_pair_error_V": "0",
+      "pass": true
+    },
+    {
+      "family": "frontend",
+      "label": "ordered_predicate",
+      "query_points": 3,
+      "voltage_values": 3,
+      "max_pair_error_V": "0",
+      "pass": true
+    },
+    {
+      "family": "frontend",
+      "label": "parameter_math",
+      "query_points": 3,
+      "voltage_values": 3,
+      "max_pair_error_V": "0",
+      "pass": true
+    },
+    {
+      "family": "frontend",
+      "label": "typed_integer",
+      "query_points": 3,
+      "voltage_values": 3,
+      "max_pair_error_V": "0",
+      "pass": true
+    },
+    {
+      "family": "frontend",
+      "label": "typed_real",
+      "query_points": 3,
+      "voltage_values": 3,
+      "max_pair_error_V": "0",
+      "pass": true
+    },
+    {
+      "family": "frontend",
+      "label": "selection_arm",
+      "query_points": 3,
+      "voltage_values": 3,
+      "max_pair_error_V": "0",
+      "pass": true
+    },
+    {
+      "family": "passive",
+      "label": "later_state",
+      "query_points": 6,
+      "voltage_values": 6,
+      "max_pair_error_V": "0",
+      "pass": true
+    },
+    {
+      "family": "passive",
+      "label": "integral_sample",
+      "query_points": 6,
+      "voltage_values": 6,
+      "max_pair_error_V": "1E-16",
+      "pass": true
+    },
+    {
+      "family": "passive",
+      "label": "transition_sample",
+      "query_points": 6,
+      "voltage_values": 6,
+      "max_pair_error_V": "0",
+      "pass": true
+    },
+    {
+      "family": "passive_v2",
+      "label": "simultaneous_state",
+      "query_points": 6,
+      "voltage_values": 6,
+      "max_pair_error_V": "0",
+      "pass": true
+    }
+  ],
+  "calibration": {
+    "correct_values_accepted": true,
+    "over_budget_dut_rejected": true,
+    "nonfinite_reference_rejected": true,
+    "nonexact_query_time_rejected": true,
+    "wrong_display_count_rejected": true
+  },
+  "historical_v1_configuration_failure_preserved": true,
+  "original_timing_completed": false,
+  "Q_changed": false
+}

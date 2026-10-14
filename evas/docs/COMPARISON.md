@@ -29,6 +29,10 @@ EVAS 0.15.0 / IR19 纳入中断边沿积分实现；该行 Q3 来自发布前候
 它们使用独立控制预算，不属于下表固定 Q 用例。原16条复跑仍为12条完成，原70没有形成最终版本的完整验收，
 因此不改下表历史成绩。一般数学函数与非线性电压代数耦合及更广组合仍有缺口。
 
+[事件数组和独立测量控制](../../experiments/backends/support/r01-timing-observers/README.md)
+补充受限动态下标、参数裁剪和测量器读取物理输出的实际证据，使用独立 1e-9 V 预算。
+它们不替换本表必测集。原 timing 请求还有下游 transition 与连续网络的组合缺口，未计作整题通过。
+
 固定零时刻 timer 的 transition 初态修正已取得[三模型实际有限配对](../../experiments/backends/support/README.md#initial-transition-seed)。
 该修复使用原 `1e-8 V` 预算；第四反馈模型仅作诊断，不新增本表 Q 成绩，也不覆盖一般历史反馈。
 

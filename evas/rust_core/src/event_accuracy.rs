@@ -175,6 +175,22 @@ impl GuardBounds {
         })
     }
 
+    /// Every voltage here is a forcing value certified by the physical stage.
+    /// No voltage equation is solved or inferred by this projection.
+    pub(crate) fn passive_program(program: &Program) -> (Program, Vec<String>) {
+        let mut projected = program.clone();
+        projected.contributions.clear();
+        // Preserve original global operator columns for every trigger leaf.
+        // Operator guards cannot project onto node/state forcing and obtain
+        // no passive zero-set match. Dropping these columns can alias op0 to
+        // the constant or make later operator IDs index outside the row.
+        // This Program is only an expression projection, never a history.
+
+        projected.step_bounds.clear();
+        let driven = program.nodes[1..].to_vec();
+        (projected, driven)
+    }
+
     pub(crate) fn changed_by(&self, before: &[I], after: &[I]) -> Vec<bool> {
         self.state_coefficients
             .iter()
