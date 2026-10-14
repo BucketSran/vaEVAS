@@ -1,0 +1,1712 @@
+{
+  "scope": "Curated record of local-only original R01 execution and unchanged grading. This is not a public full-raw replay or a new paper Q qualification.",
+  "main_sha": "efd17ed61f8a8131845c56a498ef1b4204bdbe94",
+  "package_version": "0.17.0",
+  "ir_version": 21,
+  "kernel_sha256": "c5bad0e8e37d1de0afa0360a1c9a1180aca4add1b21d8b25435f087097e1edba",
+  "summary": {
+    "total": 70,
+    "baseline_commit": "ce677d592ebcab1b97b9146c3aa560b9810c02dd",
+    "archived_night_commit": "59d82ee0ad1e0d485d5a0d56ac02414ec6720da5",
+    "latest_main_commit": "efd17ed61f8a8131845c56a498ef1b4204bdbe94",
+    "baseline_completed": 12,
+    "night59_completed": 12,
+    "latest_completed": 23,
+    "newly_completed_since_baseline": [
+      "r01-integrate-interleaved/c0",
+      "r01-integrate-interleaved/c1",
+      "r01-integrate-interleaved/c2",
+      "r01-integrate-interleaved/core-boundary",
+      "r01-measure-interleaved-time/timing-0",
+      "r01-measure-interleaved-time/timing-1",
+      "r01-measure-interleaved-time/timing-2",
+      "r01-repair-interleaved/c0",
+      "r01-repair-interleaved/c1",
+      "r01-repair-interleaved/c2",
+      "r01-repair-interleaved/core-boundary"
+    ],
+    "regressed_since_baseline": [],
+    "diagnostic_changed_from_baseline": 28,
+    "diagnostic_changed_from_night59": 55,
+    "cause_counts": {
+      "dynamic_bound_step": 12,
+      "completed": 23,
+      "event_non_affine": 23,
+      "implicit_events": 3,
+      "runtime_loop": 3,
+      "final_division": 3,
+      "array_range_relation": 3
+    },
+    "categories": {
+      "EVAS支持缺口": 47,
+      "已完成；验收另列": 23
+    },
+    "original_checker_passed": 23,
+    "finite_output_passed": 23,
+    "finite_input_output_passed": 14,
+    "interpretation": "Changed diagnostics are not completed requests or proof that only one defect remains. The current run has 47 support rejections and zero timeouts. Support rejection is not an observed wrong waveform. Prior timeouts remain retained as historical results."
+  },
+  "source_binding": {
+    "exit_code": 0,
+    "elapsed_seconds": 728.7355571250009,
+    "source_kernel_checker_unchanged": true,
+    "timeout_source": "Unmodified frozen cases.json; CLI kernel 120s, parent 135s.",
+    "source_before_sha256": "276f9e5f4eec3bc43aba3f1c529924de4767843b831fc60f927cf9e17e56433a",
+    "source_after_sha256": "276f9e5f4eec3bc43aba3f1c529924de4767843b831fc60f927cf9e17e56433a"
+  },
+  "original_selection_sha256": "4695ff14ee64fc75cf3b2a1c68320aa757f02d48c35ec897567a62edb4e39c9e",
+  "retained_result_sha256": "a100c3e4f88fef87cc708187511fd52c0e77827ba7c5c924a95da4123cec381a",
+  "retained_grades_sha256": "743f42353f6266c2c98127cb28082a1d5ea6e811f5493ca804580945a48e43ac",
+  "independent_audit_sha256": {
+    "review/astra/REPORT.md": "3f70ba85f4b228ddad00e369946063a15bc4f5512a9e1aed377c9728b6538ba3",
+    "review/astra/INDEPENDENT-CHECK.json": "45cafc46b9c9501cfa4ad27d4ff3fede1c62ce5d4d1a394f4df411f7d998c85a",
+    "review/contracts/INPUT-GRID-AUDIT.json": "820dc6f22ee09db47f3d3ccc18a04c1653793108f49d6b1dba45e9762cf5752f",
+    "review/contracts/MUX-INDEX-AUDIT.json": "0a2f748a73ff2f156ee9abae8bc688e17b2728b1c039830f11ea336745fe5999"
+  },
+  "input_observation_diagnosis": "Nine completed cases failed original input pairing. Independent direct PWL/native-row checks explain those failures by interpolation across missing PWL knots. Original 14/23 joint and old 6/12 verdicts are unchanged. This does not establish unobserved or continuous-state accuracy.",
+  "inputs_and_full_raw_availability": "local-only, no public retrieval URL",
+  "cases": [
+    {
+      "id": "r01-check-pingpong/c0",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "dynamic_bound_step",
+      "reason": "隐式连续求解只接受常量无条件步长，原模型的动态步长尚未支持",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "2c04b98e80faa1c56e4981552acf308a8c7de81d62feac2ad99a5b55ba8f0fda",
+        "run/work/verifier/c0/circuit.va": "1d346f4b2fbd3e3c595870a261e39506966054334894dcb8266eef427c255837",
+        "run/work/verifier/c0/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c0/dut.va": "2c04b98e80faa1c56e4981552acf308a8c7de81d62feac2ad99a5b55ba8f0fda",
+        "run/work/verifier/c0/tb.scs": "375f8153d4f23fcbf01c7677f6c209a908f7112bc3a5b183b534cc99faaaf307"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_bound_step",
+      "actual_diagnostic_kind": "unsupported_bound_step",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-check-pingpong/c1",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "dynamic_bound_step",
+      "reason": "隐式连续求解只接受常量无条件步长，原模型的动态步长尚未支持",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "2c04b98e80faa1c56e4981552acf308a8c7de81d62feac2ad99a5b55ba8f0fda",
+        "run/work/verifier/c1/circuit.va": "399226bd010067acec021c79e0281ce27c83970a42a8a3477774697e50cd0c47",
+        "run/work/verifier/c1/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c1/dut.va": "2c04b98e80faa1c56e4981552acf308a8c7de81d62feac2ad99a5b55ba8f0fda",
+        "run/work/verifier/c1/tb.scs": "0363cb5a50a61a5efbfab25dc0897645e962fdc813ecf4ec0bf9057692596090"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_bound_step",
+      "actual_diagnostic_kind": "unsupported_bound_step",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-check-pingpong/c2",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "dynamic_bound_step",
+      "reason": "隐式连续求解只接受常量无条件步长，原模型的动态步长尚未支持",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "2c04b98e80faa1c56e4981552acf308a8c7de81d62feac2ad99a5b55ba8f0fda",
+        "run/work/verifier/c2/circuit.va": "2957e47ac6226ddef425d9092b6a28798c69e251c0ae04ee7486d7cb01040d24",
+        "run/work/verifier/c2/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c2/dut.va": "2c04b98e80faa1c56e4981552acf308a8c7de81d62feac2ad99a5b55ba8f0fda",
+        "run/work/verifier/c2/tb.scs": "83e4c2fa5fe5ff8fda74f77fff217bed2182e968fe085089eeb263eb8779fa0c"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_bound_step",
+      "actual_diagnostic_kind": "unsupported_bound_step",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-extend-hold/c0",
+      "baseline_status": "completed",
+      "night59_status": "completed",
+      "latest_status": "completed",
+      "first_cause": "completed",
+      "reason": "完成仿真",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c0/dut.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c0/tb.scs": "4e0fb6cb4d477ed1258409b69f4ebda74344d50d08f2ac64bdf50218b1904478"
+      },
+      "actual_diagnostic_code": null,
+      "actual_diagnostic_kind": null,
+      "original_checker_passed": true,
+      "finite_output_passed": true,
+      "finite_input_output_passed": true,
+      "original_checker_sha256": {
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+        "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+      },
+      "evas_response_sha256": "c835c2b6d3562570c34138940a839e81fba05637c68c4e2060de7d1ee122985e",
+      "spectre_waveform_sha256": "03858eed95ecbbe40c5f2e134fcaddb81fc03d8b664bcb0066a78d40018425f6"
+    },
+    {
+      "id": "r01-extend-hold/c1",
+      "baseline_status": "completed",
+      "night59_status": "completed",
+      "latest_status": "completed",
+      "first_cause": "completed",
+      "reason": "完成仿真",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c1/dut.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c1/tb.scs": "c036cbc7bc21625b9af85d620db78f6cae92d40b1134f4ca8c2255218241b10d"
+      },
+      "actual_diagnostic_code": null,
+      "actual_diagnostic_kind": null,
+      "original_checker_passed": true,
+      "finite_output_passed": true,
+      "finite_input_output_passed": false,
+      "original_checker_sha256": {
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+        "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+      },
+      "evas_response_sha256": "4c286a69b2e5a8faba88b84dcf052d742e95482c2c98d78f7ea59696b6ab1d92",
+      "spectre_waveform_sha256": "f5df07612b4686d6d0f1ef1a17c4db73ec3a5589ee65175cf7869eb25c632c1c"
+    },
+    {
+      "id": "r01-extend-hold/c2",
+      "baseline_status": "completed",
+      "night59_status": "completed",
+      "latest_status": "completed",
+      "first_cause": "completed",
+      "reason": "完成仿真",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c2/dut.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c2/tb.scs": "2a2499f6a905e10d19e08bf0fffe8d6104c14009327a979cdf38be3860225ccb"
+      },
+      "actual_diagnostic_code": null,
+      "actual_diagnostic_kind": null,
+      "original_checker_passed": true,
+      "finite_output_passed": true,
+      "finite_input_output_passed": true,
+      "original_checker_sha256": {
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+        "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+      },
+      "evas_response_sha256": "33110fe910c28d41731865676fe68828c42315514ee2a453b19af4fdf2d55da8",
+      "spectre_waveform_sha256": "01d6abac873db90df1472253af938bc8493a0d0964880bd1839036ec79ba3998"
+    },
+    {
+      "id": "r01-extend-mux-early/c0",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "event_non_affine",
+      "reason": "电压、保持状态或算子输出的乘积超出联合仿射准入",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+        "run/work/verifier/c0/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c0/dut.va": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+        "run/work/verifier/c0/tb.scs": "c890dd68df4962b003dbf4ed6f3756b0422528872f65a994e94029ee1f88791f"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_transient",
+      "actual_diagnostic_kind": "unsupported_transient",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-extend-mux-early/c1",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "event_non_affine",
+      "reason": "电压、保持状态或算子输出的乘积超出联合仿射准入",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+        "run/work/verifier/c1/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c1/dut.va": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+        "run/work/verifier/c1/tb.scs": "bce2202a0b35d0f873ca1e03faf0903b399b7a90187bbcf9b9c3ffb04b1edecc"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_transient",
+      "actual_diagnostic_kind": "unsupported_transient",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-extend-mux-early/c2",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "event_non_affine",
+      "reason": "电压、保持状态或算子输出的乘积超出联合仿射准入",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+        "run/work/verifier/c2/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c2/dut.va": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+        "run/work/verifier/c2/tb.scs": "16d6e7c21a171fa55732a211a152fbb0d523296d6869f88aab18f4b169c38e64"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_transient",
+      "actual_diagnostic_kind": "unsupported_transient",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-extend-mux-early/core-boundary",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "event_non_affine",
+      "reason": "电压、保持状态或算子输出的乘积超出联合仿射准入",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+        "run/work/verifier/core-boundary/core.va": "061320ed3eaf2f6bc8c83178209361edba4279613503561ade08b6fa4b69c405",
+        "run/work/verifier/core-boundary/dut.va": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+        "run/work/verifier/core-boundary/tb.scs": "c890dd68df4962b003dbf4ed6f3756b0422528872f65a994e94029ee1f88791f"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_transient",
+      "actual_diagnostic_kind": "unsupported_transient",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-integrate-cds/c0",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "dynamic_bound_step",
+      "reason": "隐式连续求解只接受常量无条件步长，原模型的动态步长尚未支持",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "8487933d3ffcb4cd1edda442f82ea2da8f7f84b0d858ca950e4958ab5fe7b280",
+        "run/work/verifier/c0/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c0/dut.va": "8487933d3ffcb4cd1edda442f82ea2da8f7f84b0d858ca950e4958ab5fe7b280",
+        "run/work/verifier/c0/tb.scs": "4f0a95790609904837f4f951a0a8e37b99191c5d4644e3f42e8abdd74f2b6156"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_bound_step",
+      "actual_diagnostic_kind": "unsupported_bound_step",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-integrate-cds/c1",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "dynamic_bound_step",
+      "reason": "隐式连续求解只接受常量无条件步长，原模型的动态步长尚未支持",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "8487933d3ffcb4cd1edda442f82ea2da8f7f84b0d858ca950e4958ab5fe7b280",
+        "run/work/verifier/c1/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c1/dut.va": "8487933d3ffcb4cd1edda442f82ea2da8f7f84b0d858ca950e4958ab5fe7b280",
+        "run/work/verifier/c1/tb.scs": "961ad8287cfc5ec3d39cb62ea1e486c58c1626aad9e74013ab0dedcee1d69f18"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_bound_step",
+      "actual_diagnostic_kind": "unsupported_bound_step",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-integrate-cds/c2",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "dynamic_bound_step",
+      "reason": "隐式连续求解只接受常量无条件步长，原模型的动态步长尚未支持",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "8487933d3ffcb4cd1edda442f82ea2da8f7f84b0d858ca950e4958ab5fe7b280",
+        "run/work/verifier/c2/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c2/dut.va": "8487933d3ffcb4cd1edda442f82ea2da8f7f84b0d858ca950e4958ab5fe7b280",
+        "run/work/verifier/c2/tb.scs": "9d3fe20304910b4840fe6019ad5a02b53d8c50c56786e21f8f73a09f9577fec1"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_bound_step",
+      "actual_diagnostic_kind": "unsupported_bound_step",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-integrate-cds/core-boundary",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "implicit_events",
+      "reason": "隐式微分代数路径尚不能与事件/离散状态组合",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "8487933d3ffcb4cd1edda442f82ea2da8f7f84b0d858ca950e4958ab5fe7b280",
+        "run/work/verifier/core-boundary/core.va": "061320ed3eaf2f6bc8c83178209361edba4279613503561ade08b6fa4b69c405",
+        "run/work/verifier/core-boundary/dut.va": "8487933d3ffcb4cd1edda442f82ea2da8f7f84b0d858ca950e4958ab5fe7b280",
+        "run/work/verifier/core-boundary/tb.scs": "4f0a95790609904837f4f951a0a8e37b99191c5d4644e3f42e8abdd74f2b6156"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_implicit_dynamics",
+      "actual_diagnostic_kind": "unsupported_implicit_dynamics",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-integrate-interleaved/c0",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "completed",
+      "first_cause": "completed",
+      "reason": "完成仿真",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "a0e95764645c716359dec99afa037ec4299202b49b7dcfbc6587245501bae3cd",
+        "run/work/verifier/c0/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c0/dut.va": "a0e95764645c716359dec99afa037ec4299202b49b7dcfbc6587245501bae3cd",
+        "run/work/verifier/c0/tb.scs": "8e4b3125c84c0d0fbb1395b5f95a8802f1464130b3b71dd583095f77d4a30be5"
+      },
+      "actual_diagnostic_code": null,
+      "actual_diagnostic_kind": null,
+      "original_checker_passed": true,
+      "finite_output_passed": true,
+      "finite_input_output_passed": true,
+      "original_checker_sha256": {
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+        "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+      },
+      "evas_response_sha256": "2bbb61113d748c92fb4b90b76ee08aaace4f2010423e8848a7886933f50dd88e",
+      "spectre_waveform_sha256": "cff29e56da70d3a0e91c2de2c3c7d1dbd8fa46176949c0fea1d207a12e93b087"
+    },
+    {
+      "id": "r01-integrate-interleaved/c1",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "completed",
+      "first_cause": "completed",
+      "reason": "完成仿真",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "a0e95764645c716359dec99afa037ec4299202b49b7dcfbc6587245501bae3cd",
+        "run/work/verifier/c1/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c1/dut.va": "a0e95764645c716359dec99afa037ec4299202b49b7dcfbc6587245501bae3cd",
+        "run/work/verifier/c1/tb.scs": "53d9750689a72debb4d1c8d156181b7a2bac610be914457bb79136a4660db7d1"
+      },
+      "actual_diagnostic_code": null,
+      "actual_diagnostic_kind": null,
+      "original_checker_passed": true,
+      "finite_output_passed": true,
+      "finite_input_output_passed": false,
+      "original_checker_sha256": {
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+        "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+      },
+      "evas_response_sha256": "9536cd2832d1ec5549f4f421588a6b3495545a68d37581db161d928187558027",
+      "spectre_waveform_sha256": "9db4e1f9d5c05f9754fa4eea4ea63fdcd2789dd683895ac3c693fcfed5c6b7cb"
+    },
+    {
+      "id": "r01-integrate-interleaved/c2",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "completed",
+      "first_cause": "completed",
+      "reason": "完成仿真",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "a0e95764645c716359dec99afa037ec4299202b49b7dcfbc6587245501bae3cd",
+        "run/work/verifier/c2/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c2/dut.va": "a0e95764645c716359dec99afa037ec4299202b49b7dcfbc6587245501bae3cd",
+        "run/work/verifier/c2/tb.scs": "3bb37e8ac65381e464c38a108fff75c425300ff73ba8cc4b29569b540d43f54d"
+      },
+      "actual_diagnostic_code": null,
+      "actual_diagnostic_kind": null,
+      "original_checker_passed": true,
+      "finite_output_passed": true,
+      "finite_input_output_passed": true,
+      "original_checker_sha256": {
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+        "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+      },
+      "evas_response_sha256": "28d2ccda5503329a68be9c58608654c1183afeb0c8f4fbe443e6bfddf7487911",
+      "spectre_waveform_sha256": "84e9d5d212b40589a703c6872f8e318b1e48dfd0ffbeed253e3a8e284ecf82d5"
+    },
+    {
+      "id": "r01-integrate-interleaved/core-boundary",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "completed",
+      "first_cause": "completed",
+      "reason": "完成仿真",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "a0e95764645c716359dec99afa037ec4299202b49b7dcfbc6587245501bae3cd",
+        "run/work/verifier/core-boundary/core.va": "061320ed3eaf2f6bc8c83178209361edba4279613503561ade08b6fa4b69c405",
+        "run/work/verifier/core-boundary/dut.va": "a0e95764645c716359dec99afa037ec4299202b49b7dcfbc6587245501bae3cd",
+        "run/work/verifier/core-boundary/tb.scs": "8e4b3125c84c0d0fbb1395b5f95a8802f1464130b3b71dd583095f77d4a30be5"
+      },
+      "actual_diagnostic_code": null,
+      "actual_diagnostic_kind": null,
+      "original_checker_passed": true,
+      "finite_output_passed": true,
+      "finite_input_output_passed": true,
+      "original_checker_sha256": {
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+        "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+      },
+      "evas_response_sha256": "d503a2b94d5e4f28d096a82bc2ace766f2fad777ead79cc096c07fc4014d2e0e",
+      "spectre_waveform_sha256": "b0ba41c2563ab70588173a5b52f566eef1765df330b93ed1ae2cde250f92384f"
+    },
+    {
+      "id": "r01-integrate-mux/c0",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "event_non_affine",
+      "reason": "电压、保持状态或算子输出的乘积超出联合仿射准入",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+        "run/work/verifier/c0/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c0/dut.va": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+        "run/work/verifier/c0/tb.scs": "52b08df44758a4ba8f4362dff6eced5740f8520b16b576f9a9d590499344ce0f"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_transient",
+      "actual_diagnostic_kind": "unsupported_transient",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-integrate-mux/c1",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "event_non_affine",
+      "reason": "电压、保持状态或算子输出的乘积超出联合仿射准入",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+        "run/work/verifier/c1/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c1/dut.va": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+        "run/work/verifier/c1/tb.scs": "406217bf2d998eaa23e65042364e7d8828ba5c5ad34ec97817dd79c8f98967e5"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_transient",
+      "actual_diagnostic_kind": "unsupported_transient",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-integrate-mux/c2",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "event_non_affine",
+      "reason": "电压、保持状态或算子输出的乘积超出联合仿射准入",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+        "run/work/verifier/c2/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c2/dut.va": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+        "run/work/verifier/c2/tb.scs": "1c12255a50ac42daadc612e2bc15ad6be0b4189149f688f127bd69bdf9c94c20"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_transient",
+      "actual_diagnostic_kind": "unsupported_transient",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-integrate-mux/core-boundary",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "event_non_affine",
+      "reason": "电压、保持状态或算子输出的乘积超出联合仿射准入",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+        "run/work/verifier/core-boundary/core.va": "061320ed3eaf2f6bc8c83178209361edba4279613503561ade08b6fa4b69c405",
+        "run/work/verifier/core-boundary/dut.va": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+        "run/work/verifier/core-boundary/tb.scs": "52b08df44758a4ba8f4362dff6eced5740f8520b16b576f9a9d590499344ce0f"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_transient",
+      "actual_diagnostic_kind": "unsupported_transient",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-integrate-pingpong/c0",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "dynamic_bound_step",
+      "reason": "隐式连续求解只接受常量无条件步长，原模型的动态步长尚未支持",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "1d346f4b2fbd3e3c595870a261e39506966054334894dcb8266eef427c255837",
+        "run/work/verifier/c0/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c0/dut.va": "1d346f4b2fbd3e3c595870a261e39506966054334894dcb8266eef427c255837",
+        "run/work/verifier/c0/tb.scs": "c526061fe65b2a079ab290423f26041908cf61825777cc3445c3d32963290641"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_bound_step",
+      "actual_diagnostic_kind": "unsupported_bound_step",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-integrate-pingpong/c1",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "dynamic_bound_step",
+      "reason": "隐式连续求解只接受常量无条件步长，原模型的动态步长尚未支持",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "1d346f4b2fbd3e3c595870a261e39506966054334894dcb8266eef427c255837",
+        "run/work/verifier/c1/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c1/dut.va": "1d346f4b2fbd3e3c595870a261e39506966054334894dcb8266eef427c255837",
+        "run/work/verifier/c1/tb.scs": "139d01db9374f7da39d5ab51c2a50701cca1c385b3d06a746c1afccb11e0ed60"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_bound_step",
+      "actual_diagnostic_kind": "unsupported_bound_step",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-integrate-pingpong/c2",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "dynamic_bound_step",
+      "reason": "隐式连续求解只接受常量无条件步长，原模型的动态步长尚未支持",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "1d346f4b2fbd3e3c595870a261e39506966054334894dcb8266eef427c255837",
+        "run/work/verifier/c2/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c2/dut.va": "1d346f4b2fbd3e3c595870a261e39506966054334894dcb8266eef427c255837",
+        "run/work/verifier/c2/tb.scs": "22c2f36dd230af132671fced565ddc2c03daa60a5fbaab73fcc481125a6b7a14"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_bound_step",
+      "actual_diagnostic_kind": "unsupported_bound_step",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-integrate-pingpong/core-boundary",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "implicit_events",
+      "reason": "隐式微分代数路径尚不能与事件/离散状态组合",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "1d346f4b2fbd3e3c595870a261e39506966054334894dcb8266eef427c255837",
+        "run/work/verifier/core-boundary/core.va": "061320ed3eaf2f6bc8c83178209361edba4279613503561ade08b6fa4b69c405",
+        "run/work/verifier/core-boundary/dut.va": "1d346f4b2fbd3e3c595870a261e39506966054334894dcb8266eef427c255837",
+        "run/work/verifier/core-boundary/tb.scs": "c526061fe65b2a079ab290423f26041908cf61825777cc3445c3d32963290641"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_implicit_dynamics",
+      "actual_diagnostic_kind": "unsupported_implicit_dynamics",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-integrate-sync/c0",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "event_non_affine",
+      "reason": "电压、保持状态或算子输出的乘积超出联合仿射准入",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+        "run/work/verifier/c0/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c0/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+        "run/work/verifier/c0/tb.scs": "3b7ed7b9b38bb66c5d0ae2d0a7ca5ade360fae99265a3e6a5153b5e92fb84bb1"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_transient",
+      "actual_diagnostic_kind": "unsupported_transient",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-integrate-sync/c1",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "event_non_affine",
+      "reason": "电压、保持状态或算子输出的乘积超出联合仿射准入",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+        "run/work/verifier/c1/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c1/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+        "run/work/verifier/c1/tb.scs": "3fcce4e7d3585c5545adbb76a27bdbf6c0cade60a87f5d05d03458d9b3e673d5"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_transient",
+      "actual_diagnostic_kind": "unsupported_transient",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-integrate-sync/c2",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "event_non_affine",
+      "reason": "电压、保持状态或算子输出的乘积超出联合仿射准入",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+        "run/work/verifier/c2/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c2/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+        "run/work/verifier/c2/tb.scs": "9e3dd504c886f7735e70d56eb10061eaa2bfff504934c0ffaa4eea08b9aa41b5"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_transient",
+      "actual_diagnostic_kind": "unsupported_transient",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-integrate-sync/core-boundary",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "event_non_affine",
+      "reason": "电压、保持状态或算子输出的乘积超出联合仿射准入",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+        "run/work/verifier/core-boundary/core.va": "061320ed3eaf2f6bc8c83178209361edba4279613503561ade08b6fa4b69c405",
+        "run/work/verifier/core-boundary/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+        "run/work/verifier/core-boundary/tb.scs": "3b7ed7b9b38bb66c5d0ae2d0a7ca5ade360fae99265a3e6a5153b5e92fb84bb1"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_transient",
+      "actual_diagnostic_kind": "unsupported_transient",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-measure-cds/cds-0",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "runtime_loop",
+      "reason": "运行时循环及数组索引证明",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "f6c31c5aa1c0f61ae7a97cc81cecd042ead1ee5310233a82eda8f557f5d493eb",
+        "run/work/verifier/cds-0/circuit.va": "8487933d3ffcb4cd1edda442f82ea2da8f7f84b0d858ca950e4958ab5fe7b280",
+        "run/work/verifier/cds-0/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/cds-0/dut.va": "f6c31c5aa1c0f61ae7a97cc81cecd042ead1ee5310233a82eda8f557f5d493eb",
+        "run/work/verifier/cds-0/tb.scs": "2d1881dd9c785835a6891cdda7223e734f3fa5c0046904200167b3024ef4f6bd"
+      },
+      "actual_diagnostic_code": "compile_error",
+      "actual_diagnostic_kind": "compile_error",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-measure-cds/cds-1",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "runtime_loop",
+      "reason": "运行时循环及数组索引证明",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "f6c31c5aa1c0f61ae7a97cc81cecd042ead1ee5310233a82eda8f557f5d493eb",
+        "run/work/verifier/cds-1/circuit.va": "5c48f67e2bd5451727ff43d0df37b85fcd69c3f6d8ad4c368addb8161a085479",
+        "run/work/verifier/cds-1/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/cds-1/dut.va": "f6c31c5aa1c0f61ae7a97cc81cecd042ead1ee5310233a82eda8f557f5d493eb",
+        "run/work/verifier/cds-1/tb.scs": "ba357a3cd44e21cb5f8957dcc590bec4ed393ce3881926bdbf086264befb47eb"
+      },
+      "actual_diagnostic_code": "compile_error",
+      "actual_diagnostic_kind": "compile_error",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-measure-cds/cds-2",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "runtime_loop",
+      "reason": "运行时循环及数组索引证明",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "f6c31c5aa1c0f61ae7a97cc81cecd042ead1ee5310233a82eda8f557f5d493eb",
+        "run/work/verifier/cds-2/circuit.va": "c069492366e708856c1e79b529dbb1240aee042bffcb42908e5d5245f1fe6a35",
+        "run/work/verifier/cds-2/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/cds-2/dut.va": "f6c31c5aa1c0f61ae7a97cc81cecd042ead1ee5310233a82eda8f557f5d493eb",
+        "run/work/verifier/cds-2/tb.scs": "c30880d83c2d2ef5b8ef3b065722cf72245672bf27f9d9540b9478984703bbe3"
+      },
+      "actual_diagnostic_code": "compile_error",
+      "actual_diagnostic_kind": "compile_error",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-measure-interleaved-gain/gain-0",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "final_division",
+      "reason": "final_step统计计算中的状态相关除法未支持",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "35ec2aeec967e364d85c7b0e994ec8c43a6d5ff330c760c08bb3d383827373fb",
+        "run/work/verifier/gain-0/circuit.va": "a0e95764645c716359dec99afa037ec4299202b49b7dcfbc6587245501bae3cd",
+        "run/work/verifier/gain-0/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/gain-0/dut.va": "35ec2aeec967e364d85c7b0e994ec8c43a6d5ff330c760c08bb3d383827373fb",
+        "run/work/verifier/gain-0/tb.scs": "61d9c8fd384beb760e5e54fa7aad796f25a3d65f7371713f3c893a9592b2f8ed"
+      },
+      "actual_diagnostic_code": "compile_error",
+      "actual_diagnostic_kind": "compile_error",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-measure-interleaved-gain/gain-1",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "final_division",
+      "reason": "final_step统计计算中的状态相关除法未支持",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "35ec2aeec967e364d85c7b0e994ec8c43a6d5ff330c760c08bb3d383827373fb",
+        "run/work/verifier/gain-1/circuit.va": "680bd8e9ff36920b9a8edd7119b0af75686e92605c2dde4a296cb07e73910595",
+        "run/work/verifier/gain-1/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/gain-1/dut.va": "35ec2aeec967e364d85c7b0e994ec8c43a6d5ff330c760c08bb3d383827373fb",
+        "run/work/verifier/gain-1/tb.scs": "bcab439e4933f7e8830294f475e02793c6161c7540c90a8c0b3fbbffb6e3419f"
+      },
+      "actual_diagnostic_code": "compile_error",
+      "actual_diagnostic_kind": "compile_error",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-measure-interleaved-gain/gain-2",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "final_division",
+      "reason": "final_step统计计算中的状态相关除法未支持",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "35ec2aeec967e364d85c7b0e994ec8c43a6d5ff330c760c08bb3d383827373fb",
+        "run/work/verifier/gain-2/circuit.va": "37535ed17e92c9a1742b3a86a2f1906f987f04aa730e4b37fdb4d1c1799e296c",
+        "run/work/verifier/gain-2/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/gain-2/dut.va": "35ec2aeec967e364d85c7b0e994ec8c43a6d5ff330c760c08bb3d383827373fb",
+        "run/work/verifier/gain-2/tb.scs": "46ffb3a1b778a4846e8f1482513086d4fd53d617b0ded7a650e6e22c0fe519e6"
+      },
+      "actual_diagnostic_code": "compile_error",
+      "actual_diagnostic_kind": "compile_error",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-measure-interleaved-time/timing-0",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "completed",
+      "first_cause": "completed",
+      "reason": "完成仿真",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "3fd936e27d1a73164481cc1b7016c7408e74c8aac5b352f953409c2b6879af4a",
+        "run/work/verifier/timing-0/circuit.va": "a0e95764645c716359dec99afa037ec4299202b49b7dcfbc6587245501bae3cd",
+        "run/work/verifier/timing-0/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/timing-0/dut.va": "3fd936e27d1a73164481cc1b7016c7408e74c8aac5b352f953409c2b6879af4a",
+        "run/work/verifier/timing-0/tb.scs": "6232188f970e7591fb969b71f7a04c0bc95b3565ad03e7c4c116844c5de31df0"
+      },
+      "actual_diagnostic_code": null,
+      "actual_diagnostic_kind": null,
+      "original_checker_passed": true,
+      "finite_output_passed": true,
+      "finite_input_output_passed": true,
+      "original_checker_sha256": {
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+        "r01_characterization.py": "c5b337a4cdd7b9c53334d20f5456e8b8165cf492976a81470e7d475738975eeb",
+        "r01_measurements.py": "5df8763a26265dd5b702758fc5b51b0813c8919f4473bef10641b76de38d857f",
+        "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "verify.py": "df8d23f54fe3c17432e77d2e06f28f4d31bc1d73ac9f199164656706a41fdd56"
+      },
+      "evas_response_sha256": "b13358d0ffd389f07a0c9fddf4f4f05695ce1d2b38ffec202c74c22002de243a",
+      "spectre_waveform_sha256": "bb6a73b086cbe7d9cee5c033be3bf1c6b6f6298098773934be72cfea82d6b36d"
+    },
+    {
+      "id": "r01-measure-interleaved-time/timing-1",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "completed",
+      "first_cause": "completed",
+      "reason": "完成仿真",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "3fd936e27d1a73164481cc1b7016c7408e74c8aac5b352f953409c2b6879af4a",
+        "run/work/verifier/timing-1/circuit.va": "a0e95764645c716359dec99afa037ec4299202b49b7dcfbc6587245501bae3cd",
+        "run/work/verifier/timing-1/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/timing-1/dut.va": "3fd936e27d1a73164481cc1b7016c7408e74c8aac5b352f953409c2b6879af4a",
+        "run/work/verifier/timing-1/tb.scs": "4883751f0e4f54a923e86a28fd0c84503f78e042125f6363e40946c48fe4097a"
+      },
+      "actual_diagnostic_code": null,
+      "actual_diagnostic_kind": null,
+      "original_checker_passed": true,
+      "finite_output_passed": true,
+      "finite_input_output_passed": false,
+      "original_checker_sha256": {
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+        "r01_characterization.py": "c5b337a4cdd7b9c53334d20f5456e8b8165cf492976a81470e7d475738975eeb",
+        "r01_measurements.py": "5df8763a26265dd5b702758fc5b51b0813c8919f4473bef10641b76de38d857f",
+        "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "verify.py": "df8d23f54fe3c17432e77d2e06f28f4d31bc1d73ac9f199164656706a41fdd56"
+      },
+      "evas_response_sha256": "313a06d31c56580b33f38b7d9673e41f2aef8daa15a0a9a5d60c30755d5a819e",
+      "spectre_waveform_sha256": "1816c98f6e01c2a91b42b32eb885369ffd2df7c4368664b63a9d3fc81b928955"
+    },
+    {
+      "id": "r01-measure-interleaved-time/timing-2",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "completed",
+      "first_cause": "completed",
+      "reason": "完成仿真",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "3fd936e27d1a73164481cc1b7016c7408e74c8aac5b352f953409c2b6879af4a",
+        "run/work/verifier/timing-2/circuit.va": "0a073a848f354c05eb4c9417532640b0ff459e5a5a1be45dc08d9c35fc371db9",
+        "run/work/verifier/timing-2/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/timing-2/dut.va": "3fd936e27d1a73164481cc1b7016c7408e74c8aac5b352f953409c2b6879af4a",
+        "run/work/verifier/timing-2/tb.scs": "08dd542246375bc81653f0bae91081161af91dc024b321802d7839ed98229774"
+      },
+      "actual_diagnostic_code": null,
+      "actual_diagnostic_kind": null,
+      "original_checker_passed": true,
+      "finite_output_passed": true,
+      "finite_input_output_passed": true,
+      "original_checker_sha256": {
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+        "r01_characterization.py": "c5b337a4cdd7b9c53334d20f5456e8b8165cf492976a81470e7d475738975eeb",
+        "r01_measurements.py": "5df8763a26265dd5b702758fc5b51b0813c8919f4473bef10641b76de38d857f",
+        "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "verify.py": "df8d23f54fe3c17432e77d2e06f28f4d31bc1d73ac9f199164656706a41fdd56"
+      },
+      "evas_response_sha256": "3330bc484110ce760e41a51fb1249c3697d07f3960806be3c11ca52a6a65c016",
+      "spectre_waveform_sha256": "4fa99d5aa562da5c9a04acda079ebe10b1428301ba19e2a210a952b0ad0dec6d"
+    },
+    {
+      "id": "r01-measure-mux/mux-0",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "array_range_relation",
+      "reason": "MUX跨事件的计数器与pending关系尚不能证明数组下界",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "3bbf20649d4fc9871c25006c72396ed939d8dcab461215d2eb63257b206e6dd1",
+        "run/work/verifier/mux-0/circuit.va": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+        "run/work/verifier/mux-0/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/mux-0/dut.va": "3bbf20649d4fc9871c25006c72396ed939d8dcab461215d2eb63257b206e6dd1",
+        "run/work/verifier/mux-0/tb.scs": "bca3e1aa8e4b4eae280014de6e6c93ee7a378c6fa70ee478136d9b399bd982da"
+      },
+      "actual_diagnostic_code": "array_index_range",
+      "actual_diagnostic_kind": "compile_error",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-measure-mux/mux-1",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "array_range_relation",
+      "reason": "MUX跨事件的计数器与pending关系尚不能证明数组下界",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "3bbf20649d4fc9871c25006c72396ed939d8dcab461215d2eb63257b206e6dd1",
+        "run/work/verifier/mux-1/circuit.va": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+        "run/work/verifier/mux-1/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/mux-1/dut.va": "3bbf20649d4fc9871c25006c72396ed939d8dcab461215d2eb63257b206e6dd1",
+        "run/work/verifier/mux-1/tb.scs": "3e975c8b8a3a61d9dda68db96f8a967c2bf74440cbd28340724b7c8f09f40a58"
+      },
+      "actual_diagnostic_code": "array_index_range",
+      "actual_diagnostic_kind": "compile_error",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-measure-mux/mux-2",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "array_range_relation",
+      "reason": "MUX跨事件的计数器与pending关系尚不能证明数组下界",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "3bbf20649d4fc9871c25006c72396ed939d8dcab461215d2eb63257b206e6dd1",
+        "run/work/verifier/mux-2/circuit.va": "92111c7a9b04f3a119a19981f8de442dc7e91c05c4b416032b522979ca19f533",
+        "run/work/verifier/mux-2/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/mux-2/dut.va": "3bbf20649d4fc9871c25006c72396ed939d8dcab461215d2eb63257b206e6dd1",
+        "run/work/verifier/mux-2/tb.scs": "37b1a41a67ab914f15ccc566ea08058b76839d2bf0c2406db46714e05241f144"
+      },
+      "actual_diagnostic_code": "array_index_range",
+      "actual_diagnostic_kind": "compile_error",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-measure-sync/c0",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "event_non_affine",
+      "reason": "电压、保持状态或算子输出的乘积超出联合仿射准入",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "72bc338a1f515f5fad29b1c2caa417ba40b781f51bddb2a1dcb547104927aac9",
+        "run/work/verifier/c0/circuit.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+        "run/work/verifier/c0/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c0/dut.va": "72bc338a1f515f5fad29b1c2caa417ba40b781f51bddb2a1dcb547104927aac9",
+        "run/work/verifier/c0/tb.scs": "03c5295beef1a7cc919064c25f12b3b259e07292129dd3a6759f9a452886fce1"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_transient",
+      "actual_diagnostic_kind": "unsupported_transient",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-measure-sync/c1",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "event_non_affine",
+      "reason": "电压、保持状态或算子输出的乘积超出联合仿射准入",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "72bc338a1f515f5fad29b1c2caa417ba40b781f51bddb2a1dcb547104927aac9",
+        "run/work/verifier/c1/circuit.va": "abddf840f8bd034d326046b31eb434d7db764416b5cfaea5fc4e98b1f12ca4d6",
+        "run/work/verifier/c1/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c1/dut.va": "72bc338a1f515f5fad29b1c2caa417ba40b781f51bddb2a1dcb547104927aac9",
+        "run/work/verifier/c1/tb.scs": "a4c40670ede93d7c0f1f3875f07ee6520e1d53cde79c8a2b744776593379decf"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_transient",
+      "actual_diagnostic_kind": "unsupported_transient",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-measure-sync/c2",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "event_non_affine",
+      "reason": "电压、保持状态或算子输出的乘积超出联合仿射准入",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "72bc338a1f515f5fad29b1c2caa417ba40b781f51bddb2a1dcb547104927aac9",
+        "run/work/verifier/c2/circuit.va": "6c75f7a762b9cb83cb79c68b710aab1fba77ab49bfed5b8a8645aa504327739d",
+        "run/work/verifier/c2/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c2/dut.va": "72bc338a1f515f5fad29b1c2caa417ba40b781f51bddb2a1dcb547104927aac9",
+        "run/work/verifier/c2/tb.scs": "f2782d2e19563bc18ffb7f90a6e18e28067f83922233357c4ffa994009ee65e7"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_transient",
+      "actual_diagnostic_kind": "unsupported_transient",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-repair-cds/c0",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "dynamic_bound_step",
+      "reason": "隐式连续求解只接受常量无条件步长，原模型的动态步长尚未支持",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "8487933d3ffcb4cd1edda442f82ea2da8f7f84b0d858ca950e4958ab5fe7b280",
+        "run/work/verifier/c0/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c0/dut.va": "8487933d3ffcb4cd1edda442f82ea2da8f7f84b0d858ca950e4958ab5fe7b280",
+        "run/work/verifier/c0/tb.scs": "a53616257ae55e04e7c2440e0c167fca20eab5b943c7f075ef261ee08d95dc62"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_bound_step",
+      "actual_diagnostic_kind": "unsupported_bound_step",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-repair-cds/c1",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "dynamic_bound_step",
+      "reason": "隐式连续求解只接受常量无条件步长，原模型的动态步长尚未支持",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "8487933d3ffcb4cd1edda442f82ea2da8f7f84b0d858ca950e4958ab5fe7b280",
+        "run/work/verifier/c1/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c1/dut.va": "8487933d3ffcb4cd1edda442f82ea2da8f7f84b0d858ca950e4958ab5fe7b280",
+        "run/work/verifier/c1/tb.scs": "ce2b743ec027d0d4ae2c25d4ef9826ccdb7ccfa1d6d9bd7c7d8b1cf15b9aa44a"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_bound_step",
+      "actual_diagnostic_kind": "unsupported_bound_step",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-repair-cds/c2",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "dynamic_bound_step",
+      "reason": "隐式连续求解只接受常量无条件步长，原模型的动态步长尚未支持",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "8487933d3ffcb4cd1edda442f82ea2da8f7f84b0d858ca950e4958ab5fe7b280",
+        "run/work/verifier/c2/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c2/dut.va": "8487933d3ffcb4cd1edda442f82ea2da8f7f84b0d858ca950e4958ab5fe7b280",
+        "run/work/verifier/c2/tb.scs": "676ddcfd44886a83f025aabacfef3912ba52c633efb50a25be9785b6b8d0dbcd"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_bound_step",
+      "actual_diagnostic_kind": "unsupported_bound_step",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-repair-cds/core-boundary",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "implicit_events",
+      "reason": "隐式微分代数路径尚不能与事件/离散状态组合",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "8487933d3ffcb4cd1edda442f82ea2da8f7f84b0d858ca950e4958ab5fe7b280",
+        "run/work/verifier/core-boundary/core.va": "061320ed3eaf2f6bc8c83178209361edba4279613503561ade08b6fa4b69c405",
+        "run/work/verifier/core-boundary/dut.va": "8487933d3ffcb4cd1edda442f82ea2da8f7f84b0d858ca950e4958ab5fe7b280",
+        "run/work/verifier/core-boundary/tb.scs": "a53616257ae55e04e7c2440e0c167fca20eab5b943c7f075ef261ee08d95dc62"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_implicit_dynamics",
+      "actual_diagnostic_kind": "unsupported_implicit_dynamics",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-repair-interleaved/c0",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "completed",
+      "first_cause": "completed",
+      "reason": "完成仿真",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "a0e95764645c716359dec99afa037ec4299202b49b7dcfbc6587245501bae3cd",
+        "run/work/verifier/c0/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c0/dut.va": "a0e95764645c716359dec99afa037ec4299202b49b7dcfbc6587245501bae3cd",
+        "run/work/verifier/c0/tb.scs": "d60cb82a43ec66c52c11e7eded3e37059ff19d8920066051f7e1786054e8aec5"
+      },
+      "actual_diagnostic_code": null,
+      "actual_diagnostic_kind": null,
+      "original_checker_passed": true,
+      "finite_output_passed": true,
+      "finite_input_output_passed": true,
+      "original_checker_sha256": {
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+        "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+      },
+      "evas_response_sha256": "5e928056f3c7346ec095f8258c1dc12a9275d69b8ee8ac54deda1be26490b792",
+      "spectre_waveform_sha256": "2ba7463fbfe54b3a23be863f8efe22e483f9c3faaa3d403dde0f20e2a05536d8"
+    },
+    {
+      "id": "r01-repair-interleaved/c1",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "completed",
+      "first_cause": "completed",
+      "reason": "完成仿真",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "a0e95764645c716359dec99afa037ec4299202b49b7dcfbc6587245501bae3cd",
+        "run/work/verifier/c1/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c1/dut.va": "a0e95764645c716359dec99afa037ec4299202b49b7dcfbc6587245501bae3cd",
+        "run/work/verifier/c1/tb.scs": "6b0256923d2a7a035a7f5c97696697d807ea99e3d62dbcd2f76fea2ec39ac6c2"
+      },
+      "actual_diagnostic_code": null,
+      "actual_diagnostic_kind": null,
+      "original_checker_passed": true,
+      "finite_output_passed": true,
+      "finite_input_output_passed": false,
+      "original_checker_sha256": {
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+        "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+      },
+      "evas_response_sha256": "aef7cee505e252ed462cae52cd06a5300f66258c1ea6f299cdc8844ca232e0e2",
+      "spectre_waveform_sha256": "211c54a65f705ea2b12cb84a3e1008af97eda87eb4820e607fd26def74640004"
+    },
+    {
+      "id": "r01-repair-interleaved/c2",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "completed",
+      "first_cause": "completed",
+      "reason": "完成仿真",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "a0e95764645c716359dec99afa037ec4299202b49b7dcfbc6587245501bae3cd",
+        "run/work/verifier/c2/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c2/dut.va": "a0e95764645c716359dec99afa037ec4299202b49b7dcfbc6587245501bae3cd",
+        "run/work/verifier/c2/tb.scs": "075e192aee9991c1f6f1946f3ab4919b3df82825051ea5d9accee89f435261d2"
+      },
+      "actual_diagnostic_code": null,
+      "actual_diagnostic_kind": null,
+      "original_checker_passed": true,
+      "finite_output_passed": true,
+      "finite_input_output_passed": true,
+      "original_checker_sha256": {
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+        "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+      },
+      "evas_response_sha256": "17a61a45d29134020b33183178559d5ab4f5797dd5fd522e255e3718569ea1ba",
+      "spectre_waveform_sha256": "808285dd110abe23bf756ae00f9057440c039b421b1defd61328f681329e8f79"
+    },
+    {
+      "id": "r01-repair-interleaved/core-boundary",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "completed",
+      "first_cause": "completed",
+      "reason": "完成仿真",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "a0e95764645c716359dec99afa037ec4299202b49b7dcfbc6587245501bae3cd",
+        "run/work/verifier/core-boundary/core.va": "061320ed3eaf2f6bc8c83178209361edba4279613503561ade08b6fa4b69c405",
+        "run/work/verifier/core-boundary/dut.va": "a0e95764645c716359dec99afa037ec4299202b49b7dcfbc6587245501bae3cd",
+        "run/work/verifier/core-boundary/tb.scs": "d60cb82a43ec66c52c11e7eded3e37059ff19d8920066051f7e1786054e8aec5"
+      },
+      "actual_diagnostic_code": null,
+      "actual_diagnostic_kind": null,
+      "original_checker_passed": true,
+      "finite_output_passed": true,
+      "finite_input_output_passed": true,
+      "original_checker_sha256": {
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+        "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+      },
+      "evas_response_sha256": "9fe5e6105dc91153d9f4662aa05d816473107037265ab37b150b9dd263bbf8c1",
+      "spectre_waveform_sha256": "119e66560a6bc8cae86a9dd3b3fa6395605400d26250b86be054e6555fe6e34e"
+    },
+    {
+      "id": "r01-repair-mux/c0",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "event_non_affine",
+      "reason": "电压、保持状态或算子输出的乘积超出联合仿射准入",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+        "run/work/verifier/c0/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c0/dut.va": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+        "run/work/verifier/c0/tb.scs": "c890dd68df4962b003dbf4ed6f3756b0422528872f65a994e94029ee1f88791f"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_transient",
+      "actual_diagnostic_kind": "unsupported_transient",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-repair-mux/c1",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "event_non_affine",
+      "reason": "电压、保持状态或算子输出的乘积超出联合仿射准入",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+        "run/work/verifier/c1/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c1/dut.va": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+        "run/work/verifier/c1/tb.scs": "bce2202a0b35d0f873ca1e03faf0903b399b7a90187bbcf9b9c3ffb04b1edecc"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_transient",
+      "actual_diagnostic_kind": "unsupported_transient",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-repair-mux/c2",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "event_non_affine",
+      "reason": "电压、保持状态或算子输出的乘积超出联合仿射准入",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+        "run/work/verifier/c2/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c2/dut.va": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+        "run/work/verifier/c2/tb.scs": "16d6e7c21a171fa55732a211a152fbb0d523296d6869f88aab18f4b169c38e64"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_transient",
+      "actual_diagnostic_kind": "unsupported_transient",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-repair-mux/core-boundary",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "event_non_affine",
+      "reason": "电压、保持状态或算子输出的乘积超出联合仿射准入",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+        "run/work/verifier/core-boundary/core.va": "061320ed3eaf2f6bc8c83178209361edba4279613503561ade08b6fa4b69c405",
+        "run/work/verifier/core-boundary/dut.va": "3986c4b73b4eb957ad4a83be8ca6ec9659dc3b4011aca3e0d09ebe55e17af302",
+        "run/work/verifier/core-boundary/tb.scs": "c890dd68df4962b003dbf4ed6f3756b0422528872f65a994e94029ee1f88791f"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_transient",
+      "actual_diagnostic_kind": "unsupported_transient",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-repair-recovery/c2",
+      "baseline_status": "completed",
+      "night59_status": "completed",
+      "latest_status": "completed",
+      "first_cause": "completed",
+      "reason": "完成仿真",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c2/dut.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c2/tb.scs": "2a2499f6a905e10d19e08bf0fffe8d6104c14009327a979cdf38be3860225ccb"
+      },
+      "actual_diagnostic_code": null,
+      "actual_diagnostic_kind": null,
+      "original_checker_passed": true,
+      "finite_output_passed": true,
+      "finite_input_output_passed": true,
+      "original_checker_sha256": {
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+        "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+      },
+      "evas_response_sha256": "fadf2c01529bc9970af663a88dd81c415c9bda92a47e8047cbbc28070b9b232d",
+      "spectre_waveform_sha256": "193d9deb7b9bf6d77a12bfc54cd34d52872e418143d51effdfdbcac53ba66cf8"
+    },
+    {
+      "id": "r01-repair-recovery/c0",
+      "baseline_status": "completed",
+      "night59_status": "completed",
+      "latest_status": "completed",
+      "first_cause": "completed",
+      "reason": "完成仿真",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c0/dut.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c0/tb.scs": "4e0fb6cb4d477ed1258409b69f4ebda74344d50d08f2ac64bdf50218b1904478"
+      },
+      "actual_diagnostic_code": null,
+      "actual_diagnostic_kind": null,
+      "original_checker_passed": true,
+      "finite_output_passed": true,
+      "finite_input_output_passed": true,
+      "original_checker_sha256": {
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+        "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+      },
+      "evas_response_sha256": "c238c1b0c6d94ab31c6e5060393bd0f2ef234684e5ca82efed660092035288ae",
+      "spectre_waveform_sha256": "152d250b043923337498f8a98974ae941762ed2212358cd227b541ddf502304e"
+    },
+    {
+      "id": "r01-repair-recovery/c1",
+      "baseline_status": "completed",
+      "night59_status": "completed",
+      "latest_status": "completed",
+      "first_cause": "completed",
+      "reason": "完成仿真",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c1/dut.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c1/tb.scs": "c036cbc7bc21625b9af85d620db78f6cae92d40b1134f4ca8c2255218241b10d"
+      },
+      "actual_diagnostic_code": null,
+      "actual_diagnostic_kind": null,
+      "original_checker_passed": true,
+      "finite_output_passed": true,
+      "finite_input_output_passed": false,
+      "original_checker_sha256": {
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+        "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+      },
+      "evas_response_sha256": "7a333862f4db300c50f150bffd72c5e58ef2cd3129c0b39c479ee682f7b711cd",
+      "spectre_waveform_sha256": "de4630e070061400d1372a229bc6eeed37e3d09634e5bc27a58b9c74120c3f9e"
+    },
+    {
+      "id": "r01-repair-sync/c0",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "event_non_affine",
+      "reason": "电压、保持状态或算子输出的乘积超出联合仿射准入",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+        "run/work/verifier/c0/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c0/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+        "run/work/verifier/c0/tb.scs": "3b7ed7b9b38bb66c5d0ae2d0a7ca5ade360fae99265a3e6a5153b5e92fb84bb1"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_transient",
+      "actual_diagnostic_kind": "unsupported_transient",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-repair-sync/c1",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "event_non_affine",
+      "reason": "电压、保持状态或算子输出的乘积超出联合仿射准入",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+        "run/work/verifier/c1/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c1/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+        "run/work/verifier/c1/tb.scs": "3fcce4e7d3585c5545adbb76a27bdbf6c0cade60a87f5d05d03458d9b3e673d5"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_transient",
+      "actual_diagnostic_kind": "unsupported_transient",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-repair-sync/c2",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "event_non_affine",
+      "reason": "电压、保持状态或算子输出的乘积超出联合仿射准入",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+        "run/work/verifier/c2/core.va": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+        "run/work/verifier/c2/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+        "run/work/verifier/c2/tb.scs": "9e3dd504c886f7735e70d56eb10061eaa2bfff504934c0ffaa4eea08b9aa41b5"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_transient",
+      "actual_diagnostic_kind": "unsupported_transient",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-repair-sync/core-boundary",
+      "baseline_status": "failed",
+      "night59_status": "failed",
+      "latest_status": "failed",
+      "first_cause": "event_non_affine",
+      "reason": "电压、保持状态或算子输出的乘积超出联合仿射准入",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+        "run/work/verifier/core-boundary/core.va": "061320ed3eaf2f6bc8c83178209361edba4279613503561ade08b6fa4b69c405",
+        "run/work/verifier/core-boundary/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+        "run/work/verifier/core-boundary/tb.scs": "3b7ed7b9b38bb66c5d0ae2d0a7ca5ade360fae99265a3e6a5153b5e92fb84bb1"
+      },
+      "actual_diagnostic_code": "kernel.unsupported_transient",
+      "actual_diagnostic_kind": "unsupported_transient",
+      "original_checker_passed": null,
+      "finite_output_passed": null,
+      "finite_input_output_passed": null
+    },
+    {
+      "id": "r01-spec-acquisition/c0",
+      "baseline_status": "completed",
+      "night59_status": "completed",
+      "latest_status": "completed",
+      "first_cause": "completed",
+      "reason": "完成仿真",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "bd1cfe0c11bbe3c75453fb528e3ac2e5aa72e710fa5bc9ed3bcb197ed2b1eec5",
+        "run/work/verifier/c0/dut.va": "bd1cfe0c11bbe3c75453fb528e3ac2e5aa72e710fa5bc9ed3bcb197ed2b1eec5",
+        "run/work/verifier/c0/tb.scs": "344ad3f97563d6f6787b1a239783fb63370ca8e9bcce8234b99f8ba8c39e5ce2"
+      },
+      "actual_diagnostic_code": null,
+      "actual_diagnostic_kind": null,
+      "original_checker_passed": true,
+      "finite_output_passed": true,
+      "finite_input_output_passed": true,
+      "original_checker_sha256": {
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+        "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+      },
+      "evas_response_sha256": "fac4b3b01640c941deab336345a30739f5776a880e767370dd17c58a270cefe5",
+      "spectre_waveform_sha256": "643170bcd796090331c7b52004160c34db80b4af68d9286112ce5649c4044332"
+    },
+    {
+      "id": "r01-spec-acquisition/c1",
+      "baseline_status": "completed",
+      "night59_status": "completed",
+      "latest_status": "completed",
+      "first_cause": "completed",
+      "reason": "完成仿真",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "bd1cfe0c11bbe3c75453fb528e3ac2e5aa72e710fa5bc9ed3bcb197ed2b1eec5",
+        "run/work/verifier/c1/dut.va": "bd1cfe0c11bbe3c75453fb528e3ac2e5aa72e710fa5bc9ed3bcb197ed2b1eec5",
+        "run/work/verifier/c1/tb.scs": "621bcb202d1b1d3fdb962ede3267c7675489569aa864723e5b16512b9ac9a2c7"
+      },
+      "actual_diagnostic_code": null,
+      "actual_diagnostic_kind": null,
+      "original_checker_passed": true,
+      "finite_output_passed": true,
+      "finite_input_output_passed": false,
+      "original_checker_sha256": {
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+        "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+      },
+      "evas_response_sha256": "7797cfede30d953f6d643ebc79bbdf09dcfd1ce66d5cd4988d05398ef191cd69",
+      "spectre_waveform_sha256": "02a846a12afbdf9f349b70a62eb1d870a4c9aeea2c5475c77a5b5358043528e2"
+    },
+    {
+      "id": "r01-spec-acquisition/c2",
+      "baseline_status": "completed",
+      "night59_status": "completed",
+      "latest_status": "completed",
+      "first_cause": "completed",
+      "reason": "完成仿真",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "bd1cfe0c11bbe3c75453fb528e3ac2e5aa72e710fa5bc9ed3bcb197ed2b1eec5",
+        "run/work/verifier/c2/dut.va": "bd1cfe0c11bbe3c75453fb528e3ac2e5aa72e710fa5bc9ed3bcb197ed2b1eec5",
+        "run/work/verifier/c2/tb.scs": "343facb1010562e33234671714bbb4ca5d054bc0a9ae412feff1af6fe06529dd"
+      },
+      "actual_diagnostic_code": null,
+      "actual_diagnostic_kind": null,
+      "original_checker_passed": true,
+      "finite_output_passed": true,
+      "finite_input_output_passed": false,
+      "original_checker_sha256": {
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+        "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+      },
+      "evas_response_sha256": "6b20732f926b0afe2bcaba448cce47852b38f9f862adbc456004584bef6b3b19",
+      "spectre_waveform_sha256": "b32cad1ccfa332a95b12cdca75c3fa220c187caf03fa50b8968ed00ff51e6770"
+    },
+    {
+      "id": "r01-spec-ideal/c0",
+      "baseline_status": "completed",
+      "night59_status": "completed",
+      "latest_status": "completed",
+      "first_cause": "completed",
+      "reason": "完成仿真",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "1997a8bb8f487a5d49729b16da786361f8459fb2846b6d085cd9f9f82c6d4228",
+        "run/work/verifier/c0/dut.va": "1997a8bb8f487a5d49729b16da786361f8459fb2846b6d085cd9f9f82c6d4228",
+        "run/work/verifier/c0/tb.scs": "25abc928bc80837c99b4861d6ecb85f828ea31e2e7351873d20d7f5ffb3a9442"
+      },
+      "actual_diagnostic_code": null,
+      "actual_diagnostic_kind": null,
+      "original_checker_passed": true,
+      "finite_output_passed": true,
+      "finite_input_output_passed": true,
+      "original_checker_sha256": {
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+        "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+      },
+      "evas_response_sha256": "73bb64af804d57f9dcf4eab7d0d954cbdd4284369b5a00605f4a47e3c97ecded",
+      "spectre_waveform_sha256": "ab72df098b651c02336cb20ae567bd49d310944130abfba0ea8574cb7387718e"
+    },
+    {
+      "id": "r01-spec-ideal/c1",
+      "baseline_status": "completed",
+      "night59_status": "completed",
+      "latest_status": "completed",
+      "first_cause": "completed",
+      "reason": "完成仿真",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "1997a8bb8f487a5d49729b16da786361f8459fb2846b6d085cd9f9f82c6d4228",
+        "run/work/verifier/c1/dut.va": "1997a8bb8f487a5d49729b16da786361f8459fb2846b6d085cd9f9f82c6d4228",
+        "run/work/verifier/c1/tb.scs": "5f4b8ddb5fe3da84fed4df59ac8f80f9f2420eedb0bf97e94fc9c484bb65dc46"
+      },
+      "actual_diagnostic_code": null,
+      "actual_diagnostic_kind": null,
+      "original_checker_passed": true,
+      "finite_output_passed": true,
+      "finite_input_output_passed": false,
+      "original_checker_sha256": {
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+        "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+      },
+      "evas_response_sha256": "0579206b482153eb4c0819f75408f6dfcffeedef7419e14232cf0bcc9685588b",
+      "spectre_waveform_sha256": "9672c501fa5fa7861a3de2780b379b719bfa30f3acb432f0120ef4a270e0d7ea"
+    },
+    {
+      "id": "r01-spec-ideal/c2",
+      "baseline_status": "completed",
+      "night59_status": "completed",
+      "latest_status": "completed",
+      "first_cause": "completed",
+      "reason": "完成仿真",
+      "timeout_seconds": 120.0,
+      "input_sha256": {
+        "candidate/files/dut.va": "1997a8bb8f487a5d49729b16da786361f8459fb2846b6d085cd9f9f82c6d4228",
+        "run/work/verifier/c2/dut.va": "1997a8bb8f487a5d49729b16da786361f8459fb2846b6d085cd9f9f82c6d4228",
+        "run/work/verifier/c2/tb.scs": "4e6ae394cef92e95c28480718c6e407dae1c20b991a741a4cd4524824721dbd9"
+      },
+      "actual_diagnostic_code": null,
+      "actual_diagnostic_kind": null,
+      "original_checker_passed": true,
+      "finite_output_passed": true,
+      "finite_input_output_passed": false,
+      "original_checker_sha256": {
+        "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+        "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+        "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+        "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+        "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+        "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+      },
+      "evas_response_sha256": "8aa6e3e56d97e6ab11aea4da3ee250e43c62452b505d9235733c8f1618a4f330",
+      "spectre_waveform_sha256": "3a58664178c15ddf168450e9037363f943790b4225a770018f57833b1a2a27f6"
+    }
+  ]
+}

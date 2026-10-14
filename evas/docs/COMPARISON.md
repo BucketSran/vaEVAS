@@ -12,6 +12,8 @@
 1 mV 小信号 Q3 为 **1.1 nV**。时间、状态和关键边界也须通过，详见[评测标准](COMPARISON-METHODOLOGY.md)。
 只检查窗外、只有正确数字或只有运行成功，都不能打勾。
 
+**本表尚未覆盖全部工程写法。** 静态下标数组通过，不代表跨事件下标已通过；电压表达式中的数学函数通过，也不代表事件块中的统计计算已通过。新增需求与独立必测用例见[覆盖缺口与修复交付](../validation/paper/COVERAGE.md#engineering-gap-audit)。旧行范围和成绩保留，扩展项须另行验收。
+
 [#167](https://github.com/BucketSran/vaEVAS/pull/167) 已合入 main，补齐两类 `ddt`、采样后积分和局部 strobe。
 本轮用独立新版 checker 重新验收旧窗口冲突的两个模型，三格取得 **✓ Q3**。
 时间判断采用原有限导出分辨率，严格“没有提前触发”仍单列为未决；详见[新版结果](../../experiments/backends/support/README.md#root-window-v3)。
@@ -26,7 +28,7 @@ EVAS 0.15.0 / IR19 纳入中断边沿积分实现；该行 Q3 来自发布前候
 受限状态谓词、事件输出记录、合成时间驱动、有理连续流、受限 exp forcing 及保持物理状态的条件选路，
 并将动态 [`$bound_step`](math/events.md#bound-step) 传入已支持的非线性内部积分段。
 最终候选已取得[七项基础和三项初态的实际有限对照](../../experiments/backends/support/r01-root-windows/final-controls/README.md)，
-它们使用独立控制预算，不属于下表固定 Q 用例。原16条复跑仍为12条完成，原70没有形成最终版本的完整验收，
+它们使用独立控制预算，R01 工程复验也使用原任务判据，均不属于下表固定 Q 用例，
 因此不改下表历史成绩。一般数学函数与非线性电压代数耦合及更广组合仍有缺口。
 
 [事件数组和独立测量控制](../../experiments/backends/support/r01-timing-observers/README.md)
@@ -62,7 +64,7 @@ EVAS 0.15.0 / IR19 纳入中断边沿积分实现；该行 Q3 来自发布前候
 | [顺序赋值](../validation/paper/COVERAGE.md#scope-l1-05) | ✓ Q3 | ✓ Q3 | ✓ Q3 | ✓ Q3 |
 | [用户函数](../validation/paper/COVERAGE.md#scope-l1-06) | ✓ Q3 | ✓ Q3 | ✓ Q3 | ✓ Q3 |
 | [静态循环](../validation/paper/COVERAGE.md#scope-l1-07) | ✓ Q3 | ✓ Q3 | 编译失败 | ✓ Q3 |
-| [变量数组](../validation/paper/COVERAGE.md#scope-l1-08) | ✓ Q3 | ✓ Q3 | 编译失败 | ✓ Q3 |
+| [变量数组：静态下标](../validation/paper/COVERAGE.md#scope-l1-08) | ✓ Q3 | ✓ Q3 | 编译失败 | ✓ Q3 |
 | [电气向量](../validation/paper/COVERAGE.md#scope-l1-09) | ✓ Q3 | ✓ Q3 | 编译失败 | ✓ Q3 |
 | [模块层次](../validation/paper/COVERAGE.md#scope-l1-10) | ✓ Q3 | 编译失败 | ✓ Q3 | ✓ Q3 |
 | [sin](../validation/paper/COVERAGE.md#scope-l1-11) | ✓ Q3 | ✓ Q3 | ✓ Q3 | ✓ Q3 |
