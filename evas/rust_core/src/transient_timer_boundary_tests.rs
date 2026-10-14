@@ -97,6 +97,7 @@ fn fixture(
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
     let accepted = Frame {
+        time_proofs: Default::default(),
         time: 0.,
         solution: circuit.solve(&good.values(0.)).unwrap(),
         circuit,

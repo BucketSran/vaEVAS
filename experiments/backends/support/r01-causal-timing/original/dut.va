@@ -1,0 +1,122 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module interleaved_measure(vin,track0,track1,read_clk,rst,held0,held1,
+                          serial,valid,branch_id,sample_index,sample_time);
+input vin,track0,track1,read_clk,rst,held0,held1,serial,valid,branch_id,sample_index,sample_time;
+electrical vin,track0,track1,read_clk,rst,held0,held1,serial,valid,branch_id,sample_index,sample_time;
+parameter integer mode=1;
+parameter real observe_delay=5n, vcm=0.9, vinit=0.8, acq_nominal=30n, wait_nominal=8n, time_scale=1u;
+integer seg, sid, req, next_branch, count, b, i, pending, qb, qs, qseg, qcount;
+integer active[0:1], ready[0:1], identity[0:1], n[0:1], periods[0:1], waits[0:1];
+integer qcode, qgood, code, good, last_sid, last_b, prev_sid[0:1], enough[0:1];
+real ta[0:1], th[0:1], h0[0:1], he[0:1], u0[0:1], u[0:1];
+real sx[0:1], sy[0:1], sxx[0:1], sxy[0:1], syy[0:1], lo[0:1], hi[0:1];
+real gg[0:1], oo[0:1], rr[0:1], psum[0:1], wsum[0:1], prev_t[0:1];
+real eserial, ebranch, estamp, last_hold,last_consumed,due,qt,qh,qu,qhe,qh0,qhr,qa,qu0,xx,yy,den;
+analog begin
+ @(initial_step) begin
+   seg=0;sid=0;req=0;next_branch=0;count=-1;pending=0;due=1e30;
+   eserial=vinit;ebranch=0;estamp=0;last_sid=0;last_b=-1;last_hold=0;last_consumed=-1;
+   for(i=0;i<2;i=i+1) begin
+     active[i]=0;ready[i]=0;identity[i]=0;prev_sid[i]=0;prev_t[i]=0;
+     n[i]=0;sx[i]=0;sy[i]=0;sxx[i]=0;sxy[i]=0;syy[i]=0;lo[i]=1e30;hi[i]=-1e30;
+     periods[i]=0;waits[i]=0;psum[i]=0;wsum[i]=0;
+     if(V(rst)<0.9 && ((i==0 && V(track0)>0.9)||(i==1 && V(track1)>0.9))) begin
+       sid=sid+1;identity[i]=sid;active[i]=1;ta[i]=0;u0[i]=V(vin);h0[i]=(i==0?V(held0):V(held1));
+       $display("R01,B,%d,%d,%d,%.12g,%.12g,%.12g",seg,sid,i,0.0,h0[i],u0[i]);
+     end
+   end
+ end
+ @(cross(V(rst)-0.9,+1)) begin
+   if(pending) $display("R01,X,%d,%.12g,1",req,$abstime);
+   pending=0;due=1e30;
+   for(i=0;i<2;i=i+1) begin
+     if(active[i]||ready[i]) $display("R01,L,%d,%d,%d,%.12g,2",seg,identity[i],i,$abstime);
+     active[i]=0;ready[i]=0;prev_sid[i]=0;
+   end
+   eserial=vinit;ebranch=0;estamp=0;seg=seg+1;next_branch=0;count=-1;last_consumed=-1;last_sid=0;
+ end
+ @(cross(V(track0)-0.9,+1) or cross(V(track1)-0.9,+1) or cross(V(rst)-0.9,-1)) begin
+   for(i=0;i<2;i=i+1) begin
+     if(V(rst)<=0.9 && ((i==0 && V(track0)>=0.9)||(i==1 && V(track1)>=0.9)) && !active[i]) begin
+       if(ready[i]) $display("R01,L,%d,%d,%d,%.12g,1",seg,identity[i],i,$abstime);
+       sid=sid+1;identity[i]=sid;active[i]=1;ready[i]=0;ta[i]=$abstime;
+       h0[i]=(i==0?V(held0):V(held1));u0[i]=V(vin);
+       $display("R01,B,%d,%d,%d,%.12g,%.12g,%.12g",seg,sid,i,ta[i],h0[i],u0[i]);
+     end
+   end
+ end
+ @(cross(V(track0)-0.9,-1) or cross(V(track1)-0.9,-1)) begin
+   for(i=0;i<2;i=i+1) begin
+     if(V(rst)<0.9 && ((i==0 && V(track0)<=0.9)||(i==1 && V(track1)<=0.9)) && active[i]) begin
+       active[i]=0;ready[i]=1;th[i]=$abstime;u[i]=V(vin);he[i]=(i==0?V(held0):V(held1));
+       $display("R01,H,%d,%d,%d,%.12g,%.12g,%.12g",seg,identity[i],i,th[i],u[i],he[i]);
+       if(mode==1) begin
+         if(last_sid!=0) $display("R01,J,%d,%d,%d,%d,%d,%.12g",seg,last_sid,last_b,identity[i],i,th[i]-last_hold);
+         if(prev_sid[i]!=0) begin
+           $display("R01,K,%d,%d,%d,%d,%.12g",seg,prev_sid[i],identity[i],i,th[i]-prev_t[i]);
+           periods[i]=periods[i]+1;psum[i]=psum[i]+th[i]-prev_t[i];
+         end
+       end
+       last_sid=identity[i];last_b=i;last_hold=th[i];prev_sid[i]=identity[i];prev_t[i]=th[i];
+     end
+   end
+ end
+ @(cross(V(read_clk)-0.9,+1)) begin
+   if(pending) $display("R01,X,%d,%.12g,2",req,$abstime);
+   pending=0;due=1e30;req=req+1;b=next_branch;code=0;
+   if(V(rst)>=0.9) code=1;
+   else if(active[b]) code=2;
+   else if(!ready[b]) code=3;
+   else if(th[b]<=last_consumed) code=4;
+   $display("R01,Q,%d,%d,%.12g,%d,%d,%d",req,seg,$abstime,(code==0?identity[b]:0),b,code);
+   qcode=code;qseg=seg;qt=$abstime;qcount=count;pending=1;due=$abstime+observe_delay;
+   if(code==0) begin
+     pending=1;qb=b;qs=identity[b];qseg=seg;qt=$abstime;qh=th[b];qu=u[b];qhe=he[b];qh0=h0[b];qa=ta[b];qu0=u0[b];
+     qhr=(b==0?V(held0):V(held1));ready[b]=0;next_branch=1-b;count=count+1;qcount=count;last_consumed=th[b];due=$abstime+observe_delay;
+     eserial=qhr;ebranch=1.8*b;estamp=qh;
+     waits[b]=waits[b]+1;wsum[b]=wsum[b]+qt-qh;
+   end
+ end
+ @(timer(due)) begin
+   if(pending) begin
+     if(qcode!=0) begin
+       qgood=abs(V(serial)-eserial)<=0.002 && abs(V(valid))<=0.002 && abs(V(branch_id)-ebranch)<=0.002 && abs(V(sample_index)-qcount)<=0.002 && abs(V(sample_time)*time_scale-estamp)<=0.25n;
+       $display("R01,I,%d,%d,%.12g,%.12g,%d,%.12g,%.12g,%.12g,%.12g,%.12g,%d",req,qseg,qt,$abstime,qcode,V(serial),V(valid),V(branch_id),V(sample_index),V(sample_time)*time_scale,qgood);
+     end else begin
+     good=abs(V(valid)-1.8)<=0.002 && abs(V(branch_id)-1.8*qb)<=0.002 && abs(V(sample_index)-qcount)<=0.002 && abs(V(sample_time)*time_scale-qh)<=0.25n;
+     code=0;
+     if(abs(qh-qa-acq_nominal)>0.25n) code=code+1;
+     if(abs(qt-qh-wait_nominal)>0.25n) code=code+2;
+     if(abs(qh0-vinit)>0.004) code=code+4;
+     if(abs(qu-qu0)>0.002) code=code+8;
+     if(!good) code=code+16;
+     $display("R01,O,%d,%d,%d,%d,%.12g,%.12g,%.12g,%.12g,%.12g,%.12g,%.12g,%.12g,%.12g,%.12g,%.12g,%.12g,%.12g,%.12g,%.12g,%.12g,%d",
+       req,qseg,qs,qb,qt,$abstime,qh,qt-qh,qu,qh0,qhe,qhr,V(serial),V(valid),V(branch_id),V(sample_index),V(sample_time)*time_scale,qhe-qu,qhr-qhe,V(serial)-qu,code);
+     if(mode==0 && code==0) begin
+       xx=qu-vcm;yy=V(serial)-vcm;n[qb]=n[qb]+1;sx[qb]=sx[qb]+xx;sy[qb]=sy[qb]+yy;
+       sxx[qb]=sxx[qb]+xx*xx;sxy[qb]=sxy[qb]+xx*yy;syy[qb]=syy[qb]+yy*yy;
+       if(qu<lo[qb]) lo[qb]=qu;
+       if(qu>hi[qb]) hi[qb]=qu;
+     end
+     end
+     pending=0;due=1e30;
+   end
+ end
+ @(final_step) begin
+   if(pending) $display("R01,X,%d,%.12g,3",req,$abstime);
+   for(i=0;i<2;i=i+1) begin
+     if(active[i]||ready[i]) $display("R01,L,%d,%d,%d,%.12g,3",seg,identity[i],i,$abstime);
+     if(mode==0) begin
+       den=n[i]*sxx[i]-sx[i]*sx[i];enough[i]=(n[i]>=3 && lo[i]<vcm && hi[i]>vcm && den>1e-12);gg[i]=0;oo[i]=0;rr[i]=0;
+       if(enough[i]) begin
+         gg[i]=(n[i]*sxy[i]-sx[i]*sy[i])/den;oo[i]=(sy[i]-gg[i]*sx[i])/n[i];
+         rr[i]=sqrt(max(0.0,(syy[i]-gg[i]*sxy[i]-oo[i]*sy[i])/n[i]));
+       end
+       $display("R01,F,%d,%d,%d,%.12g,%.12g,%.12g,%.12g,%.12g",i,enough[i],n[i],(n[i]>0?lo[i]:0.0),(n[i]>0?hi[i]:0.0),gg[i],oo[i],rr[i]);
+     end else $display("R01,Y,%d,%d,%.12g,%d,%.12g",i,periods[i],psum[i],waits[i],wsum[i]);
+   end
+   if(mode==0) $display("R01,D,%d,%.12g,%.12g",enough[0]&&enough[1],(enough[0]&&enough[1]?gg[1]-gg[0]:0.0),(enough[0]&&enough[1]?oo[1]-oo[0]:0.0));
+ end
+end
+endmodule

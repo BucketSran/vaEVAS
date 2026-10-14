@@ -1,0 +1,58 @@
+{
+  "retained_hashes_and_finite_recompute": true,
+  "scope": "No simulator/full-raw replay; original fullchecker verdict is retained receipt identity, not recomputed from bulk raw.",
+  "full_original_completed": 1,
+  "full_original_protected_checks_receipt": 2219,
+  "full_finite_interpolated_times": 291,
+  "full_finite_maxima_V": {
+    "branch_id": 0.0,
+    "held0": 1.1669663131264052e-05,
+    "held1": 1.989715156325289e-05,
+    "sample_index": 0.0,
+    "sample_time": 5.005562631055227e-11,
+    "serial": 1.6238169285420767e-05,
+    "valid": 0.0,
+    "read_clk": 0.0,
+    "rst": 0.0,
+    "track0": 0.0,
+    "track1": 0.0,
+    "vin": 4.765077221691172e-13
+  },
+  "sample_time_maximum_error_s": 5.0055626310552265e-17,
+  "records": 55,
+  "reference_time_fields": 62,
+  "historical_failures_preserved": 11,
+  "n09_historical0538": {
+    "artifact_replay_consistent": true,
+    "scope": "Retained finite data only; not a simulator/full raw replay",
+    "n09_controls_passed": 6,
+    "n09_voltage_pairs": 169,
+    "deadline_available_modes_passed": 6,
+    "deadline_original_complete_modes": 0,
+    "original_full_completed": 1,
+    "historical_failures_preserved": 11,
+    "final_N09_pending": false
+  },
+  "n09_latest_c5": {
+    "controls": 6,
+    "query_points": 44,
+    "voltage_pairs": 169,
+    "kernel_sha256": "c5bad0e8e37d1de0afa0360a1c9a1180aca4add1b21d8b25435f087097e1edba"
+  },
+  "passive_complete": 0,
+  "passive_controls": 2,
+  "initial": [
+    {
+      "variant": "initial-v1",
+      "complete_gate": false,
+      "missing_tokens": [
+        "2"
+      ]
+    },
+    {
+      "variant": "initial-v2",
+      "complete_gate": true,
+      "missing_tokens": []
+    }
+  ]
+}

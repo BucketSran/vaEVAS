@@ -814,6 +814,8 @@ fn initialize(
     let mut flow = NonlinearContinuous {
         context: Arc::new(Context {
             force_integrals: false,
+            detached_timed: false,
+            live_parameters: None,
             program: program.clone(),
             trajectory: trajectory.clone(),
             driven: driven.to_vec(),

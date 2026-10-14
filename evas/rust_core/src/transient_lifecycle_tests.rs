@@ -50,6 +50,7 @@ fn relocalization_fixture() -> (EventModel, Trajectory, Controller, Vec<Schedule
     let operators = Operators::new(&model.program, &trajectory, &model.driven, &states).unwrap();
     let circuit = model.circuit(&states).unwrap();
     let accepted = Frame {
+        time_proofs: Default::default(),
         time: 0.,
         solution: circuit.solve(&[0.]).unwrap(),
         circuit,
@@ -119,6 +120,7 @@ fn timer_history_fixture() -> (EventModel, Trajectory, Controller, Vec<Scheduled
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
     let accepted = Frame {
+        time_proofs: Default::default(),
         time: 0.,
         solution: circuit.solve(&[0.]).unwrap(),
         circuit,
@@ -183,6 +185,7 @@ fn failed_new_timer_flow_horizon_rolls_back_then_corrected_retry_matches_clean()
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
     let accepted = Frame {
+        time_proofs: Default::default(),
         time: 0.,
         solution: circuit.solve(&[0.]).unwrap(),
         circuit,
@@ -421,6 +424,7 @@ pub(super) fn fixture() -> (EventModel, Trajectory, Controller, Vec<ScheduledEve
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
     let accepted = Frame {
+        time_proofs: Default::default(),
         time: 0.,
         state_bounds: states.iter().copied().map(I::point).collect(),
         states,
@@ -565,6 +569,7 @@ pub(super) fn nonlinear_horizon_fixture(
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
     let accepted = Frame {
+        time_proofs: Default::default(),
         time: 0.,
         solution: circuit.solve(&[]).unwrap(),
         state_bounds: states.iter().copied().map(I::point).collect(),
@@ -685,6 +690,7 @@ pub(super) fn history_guard_fixture() -> (EventModel, Trajectory, Controller, Ve
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
     let accepted = Frame {
+        time_proofs: Default::default(),
         time: 0.,
         solution: circuit.solve(&[0.]).unwrap(),
         circuit,
@@ -820,6 +826,7 @@ fn two_delays_accuracy_failure_discard_and_earlier_retry_preserve_frame() {
         .circuit_with(&[], &operators.values(0.0).unwrap())
         .unwrap();
     let accepted = Frame {
+        time_proofs: Default::default(),
         time: 0.0,
         solution: circuit.solve(&trajectory.values(0.0)).unwrap(),
         circuit,
@@ -894,6 +901,7 @@ fn delayed_timer_root_fixture(
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
     let accepted = Frame {
+        time_proofs: Default::default(),
         time: 0.,
         solution: circuit.solve(&[0.]).unwrap(),
         circuit,
@@ -1029,6 +1037,7 @@ fn later_microevent_failure_rolls_back_entire_sequence_and_same_controller_retry
             .unwrap();
         let controller = Controller {
             accepted: Frame {
+                time_proofs: Default::default(),
                 time: 0.,
                 solution: circuit.solve(&[0.]).unwrap(),
                 circuit,
@@ -1228,6 +1237,7 @@ fn later_same_time_writer_conflict_rolls_back_whole_sequence_and_same_controller
             .unwrap();
         let controller = Controller {
             accepted: Frame {
+                time_proofs: Default::default(),
                 time: 0.,
                 solution: circuit.solve(&[0.]).unwrap(),
                 circuit,
@@ -1349,6 +1359,7 @@ fn shared_self_counter_conflict_preserves_frame_then_retries_in_same_controller(
     let state_bounds: Vec<_> = states.iter().copied().map(I::point).collect();
     let mut controller = Controller {
         accepted: Frame {
+            time_proofs: Default::default(),
             time: 0.,
             states,
             state_bounds: state_bounds.clone(),
@@ -1453,6 +1464,7 @@ fn raw_source_held_epoch_fixture_at(
         .circuit_with(&states, &operators.values(0.).unwrap())
         .unwrap();
     let accepted = Frame {
+        time_proofs: Default::default(),
         time: 0.,
         solution: circuit.solve(&trajectory.values(0.)).unwrap(),
         circuit,

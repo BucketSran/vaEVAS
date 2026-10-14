@@ -1,0 +1,2 @@
+`include "disciplines.vams"
+module m(u,y,r); input u; output y; inout r; electrical u,y,r; real q;electrical a,i,f; analog begin @(initial_step)q=0; @(cross(V(u,r)-1,1,1e-9,1e-9))q=1; V(y,r)<+transition(q,0.0,0.01);V(a,r)<+transition(2*q,0.0,0.01);V(i,r)<+idt(V(y,r),0);V(f,r)<+laplace_nd(V(a,r),'{1},'{1,0.01}); end endmodule

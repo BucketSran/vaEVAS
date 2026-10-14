@@ -17,7 +17,7 @@ pub(crate) struct Budget(pub(crate) usize);
 
 /// An immutable time proved from original affine source arithmetic. Construction
 /// is bounded and must agree with the interval discovery that found the root.
-#[derive(Clone)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub(crate) struct RootTime(R);
 
 pub(crate) fn enclosure(value: &R) -> Option<I> {
@@ -49,6 +49,22 @@ fn contains(bounds: I, value: &R) -> bool {
 }
 
 impl RootTime {
+    /// Original fixed-clock arithmetic; the proof must fit discovery unchanged.
+    pub(crate) fn from_clock(clock: crate::exact_time::Clock, discovery: I) -> Option<Self> {
+        if clock.index > crate::schedule::EVENT_BUDGET {
+            return None;
+        }
+        let mut budget = Budget(0);
+        let offset = budget.check(binary(clock.period)? * R::from_integer(clock.index.into()))?;
+        let time = budget.check(binary(clock.start)? + offset)?;
+        contains(discovery, &time).then_some(Self(time))
+    }
+
+    pub(crate) fn shifted_fixed(&self, delta: f64, discovery: I) -> Option<Self> {
+        let time = Budget(0).check(&self.0 + binary(delta)?)?;
+        contains(discovery, &time).then_some(Self(time))
+    }
+
     pub(crate) fn affine(value: R, slope: R, bounds: I) -> Option<Self> {
         if slope.is_zero() {
             return None;

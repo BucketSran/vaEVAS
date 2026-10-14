@@ -40,6 +40,7 @@ fn fixture() -> (EventModel, Trajectory, Frame) {
         .circuit_with(&states, &operators.values(0.0).unwrap())
         .unwrap();
     let frame = Frame {
+        time_proofs: Default::default(),
         time: 0.0,
         state_bounds: vec![I::ZERO],
         states,

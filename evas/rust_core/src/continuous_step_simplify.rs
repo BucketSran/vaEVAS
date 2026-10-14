@@ -1,5 +1,5 @@
 //! Remove a mesh-only condition from a private history program only after
-//! proving a positive lower bound for every possible active cap.
+//! proving every possible active cap is no tighter than the existing max step.
 //! The original runtime program, dependencies and accepted-frame checks remain.
 use super::*;
 
@@ -103,9 +103,10 @@ pub(super) fn program(context: &Context, parameters: &[I]) -> Result<Program, Er
         let Some(value) = enclose(&bound.value, &nodes, parameters) else {
             continue;
         };
-        if value.lo > 0. && max_step > 0. && max_step.is_finite() {
-            // This cap is conservative whether the original request was active
-            // or not, throughout the full prediction domain and held epoch.
+        if value.lo >= max_step && max_step > 0. && max_step.is_finite() {
+            // Only a redundant cap can lose its activation condition without
+            // forcing smaller steps throughout an otherwise inactive epoch.
+            // Tighter caps retain their original condition and physical cuts.
             bound.active = Expression::Affine {
                 constant: 1.,
                 terms: vec![],
@@ -150,6 +151,8 @@ mod tests {
             trajectory: Trajectory::new(t, 1).unwrap(),
             driven: vec!["u".to_owned()],
             force_integrals: false,
+            detached_timed: false,
+            live_parameters: None,
         }
     }
     #[test]
@@ -167,9 +170,10 @@ mod tests {
         );
         let tighter = program(&c, &[I::point(0.0625)]).unwrap();
         assert_eq!(
-            tighter.step_bounds[0].value,
-            serde_json::from_value(constant(0.0625)).unwrap()
+            tighter.step_bounds[0].active,
+            c.program.step_bounds[0].active
         );
+        assert_eq!(tighter.step_bounds[0].value, c.program.step_bounds[0].value);
         assert_eq!(before, serde_json::to_string(&c.program).unwrap());
     }
     #[test]
@@ -185,10 +189,12 @@ mod tests {
             assert_eq!(after.step_bounds[0].value, c.program.step_bounds[0].value);
         }
         let c = context(select(constant(0.25), constant(0.0625)));
+        let tighter = program(&c, &[I::ONE]).unwrap();
         assert_eq!(
-            program(&c, &[I::ONE]).unwrap().step_bounds[0].value,
-            serde_json::from_value(constant(0.0625)).unwrap()
+            tighter.step_bounds[0].active,
+            c.program.step_bounds[0].active
         );
+        assert_eq!(tighter.step_bounds[0].value, c.program.step_bounds[0].value);
         let c = context(select(constant(0.25), constant(0.5)));
         assert_ne!(
             program(&c, &[I::ONE]).unwrap().step_bounds[0].value,

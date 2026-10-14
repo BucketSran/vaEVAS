@@ -73,6 +73,7 @@ fn fixture() -> (EventModel, Trajectory, Frame) {
         .circuit_with(&states, &operators.values(0.0).unwrap())
         .unwrap();
     let initial = Frame {
+        time_proofs: Default::default(),
         time: 0.0,
         state_bounds: states.iter().copied().map(I::point).collect(),
         states,
@@ -216,6 +217,7 @@ fn corrected_future_preserves_accepted_prefix_and_invalidates_same_time_values()
         accepted.operators.bounds(1.0).unwrap()
     );
     let corrected = Frame {
+        time_proofs: Default::default(),
         operators,
         ..accepted
     };

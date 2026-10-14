@@ -1,6 +1,6 @@
 //! One transaction for changed-event state and its matching future calendar.
 use super::*;
-use crate::schedule::{history_epoch, HistoryEpoch};
+use crate::schedule::HistoryEpoch;
 
 #[derive(Clone, Copy)]
 pub(super) enum Strategy {
@@ -22,6 +22,34 @@ struct PreparedBatch {
     records: Vec<EventRecord>,
     end: usize,
     future: Vec<ScheduledEvent>,
+}
+
+// Calendar IDs name trigger leaves; isolation is certified for event bodies
+// from the complete original IR, not from the selected mode or state changes.
+pub(super) fn passive_batch(model: &EventModel, batch: &[ScheduledEvent]) -> bool {
+    !batch.is_empty()
+        && batch
+            .iter()
+            .all(|event| model.passive_events[model.triggers[event.event].event])
+}
+
+// Passive callbacks change observer state, never physical history. A timed
+// runtime advanced to b may already have consumed an edge, so a query below b
+// must advance the immutable pre-suffix seed instead of reading it backwards.
+fn observation_seed(
+    model: &EventModel,
+    phases: &[(Frame, Vec<ScheduledEvent>)],
+    phase: usize,
+) -> Frame {
+    let mut seed = phases[phase].0.clone();
+    let mut physical = phase;
+    while physical > 0 && passive_batch(model, &phases[physical].1) {
+        physical -= 1;
+    }
+    if physical != phase {
+        seed.operators = phases[physical].0.operators.clone();
+    }
+    seed
 }
 
 // Held roots already have their final certificates. History roots need the
@@ -54,7 +82,7 @@ impl CalendarPlan {
     ) -> Result<Vec<ScheduledEvent>, Error> {
         match self {
             Self::Held(future) => Ok(future),
-            Self::History { pending, consumed } => history_epoch(
+            Self::History { pending, consumed } => crate::schedule::history_epoch_with_time_proofs(
                 model,
                 trajectory,
                 &next.operators,
@@ -65,6 +93,7 @@ impl CalendarPlan {
                     consumed: &consumed,
                     pending: &pending,
                 },
+                Some(&next.time_proofs),
             ),
         }
     }
@@ -138,11 +167,13 @@ impl PreparedEvents {
             });
             if let Some(time) = forced {
                 if time != next.time {
+                    let seed = observation_seed(model, &phases, phases.len() - 1);
                     next = prepare_root_window(
                         model,
                         trajectory,
-                        &next,
+                        &seed,
                         EventMoment {
+                            exact_root: None,
                             representative: time,
                             observation: I::point(time),
                             fired_roots: &[],
@@ -192,31 +223,34 @@ impl PreparedEvents {
             if time <= controller.accepted.time || time >= next.time {
                 continue;
             }
-            let mut phase = &phases[0].0;
-            for (frame, physical_batch) in &phases[1..] {
+            let mut phase = 0;
+            for (index, (_, physical_batch)) in phases.iter().enumerate().skip(1) {
                 let mut occurred = true;
                 for event in physical_batch {
                     occurred &= match event.physical_order_for_query(time, model, trajectory) {
                         Some(std::cmp::Ordering::Less | std::cmp::Ordering::Equal) => true,
                         Some(std::cmp::Ordering::Greater) => false,
                         None => {
+                            event.record_ambiguous_query("event_acceptance.phase", time);
                             return Err(Error::new(
                                 "event_resolution",
                                 "output query cannot certify its physical event phase",
-                            ))
+                            ));
                         }
                     };
                 }
                 if !occurred {
                     break;
                 }
-                phase = frame;
+                phase = index;
             }
+            let seed = observation_seed(model, &phases, phase);
             outputs.push(prepare_root_window(
                 model,
                 trajectory,
-                phase,
+                &seed,
                 EventMoment {
+                    exact_root: None,
                     representative: time,
                     observation: I::point(time),
                     fired_roots: &[],
@@ -366,7 +400,7 @@ impl Controller {
         *calendar = future;
         Ok(())
     }
-    fn prepare_final_history(
+    pub(super) fn prepare_final_history(
         model: &EventModel,
         trajectory: &Trajectory,
         mut next: Frame,
@@ -463,6 +497,7 @@ mod tests {
                 .unwrap();
             let controller = Controller {
                 accepted: Frame {
+                    time_proofs: Default::default(),
                     time: 0.,
                     solution: circuit.solve(&[0.]).unwrap(),
                     circuit,
@@ -596,6 +631,7 @@ mod tests {
             .unwrap();
         let mut controller = Controller {
             accepted: Frame {
+                time_proofs: Default::default(),
                 time: 0.,
                 solution: circuit.solve(&[0.]).unwrap(),
                 circuit,
@@ -719,6 +755,7 @@ mod tests {
             (
                 Controller {
                     accepted: Frame {
+                        time_proofs: Default::default(),
                         time: 0.,
                         solution: circuit.solve(&[0.3]).unwrap(),
                         circuit,
@@ -1157,5 +1194,168 @@ mod tests {
                 .map(|e| (e.time, e.event, e.bounds()))
                 .collect::<Vec<_>>()
         );
+    }
+}
+
+#[cfg(test)]
+mod passive_seed_review {
+    use super::*;
+    use crate::ir::{Tolerances, TransientInputs};
+    use serde_json::json;
+    #[test]
+    fn suffix_seed_preserves_selected_observer_state_and_stops_at_physical_or_mixed_batch() {
+        let o = |s: &str| json!({"source":"seed.va","line":1,"column":1,"instance":s});
+        let timer = |s: f64| json!({"kind":"timer","start":s,"period":0,"enabled":true,"time_tolerance":1e-6});
+        let p=serde_json::from_value(json!({"schema_version":SCHEMA_VERSION,"nodes":["0","y"],
+            "states":[{"instance":"D","name":"q","kind":"real","initial":0},{"instance":"M","name":"count","kind":"integer","initial":0}],
+            "operators":[{"kind":"transition","input":{"op":"state","state":0},"delay":0,"rise":1,"fall":1,"origin":o("D")}],
+            "contributions":[{"origin":o("D"),"branch":{"instance":"D","local_positive":"out","local_negative":"ref","kind":"voltage"},"positive":1,"negative":0,"rhs":{"op":"operator","operator":0}}],
+            "events":[{"origin":o("M"),"trigger":{"kind":"or","triggers":[timer(0.6),timer(0.7)]},"body":[{"kind":"assign","state":1,"rhs":{"op":"affine","constant":1,"terms":[]}}]},
+                {"origin":o("D"),"trigger":timer(1.1),"body":[{"kind":"assign","state":0,"rhs":{"op":"affine","constant":0,"terms":[]}}]}]})).unwrap();
+        let model = EventModel::new(p, vec![], Tolerances::default()).unwrap();
+        assert_eq!(model.passive_events, vec![true, false]);
+        let trajectory = Trajectory::new(
+            TransientInputs {
+                pwl: vec![],
+                output_times: vec![0., 0.75, 1.875, 2.5],
+                strobetimes: vec![],
+                stop: 2.5,
+                max_step: 0.25,
+            },
+            0,
+        )
+        .unwrap();
+        let calendar = schedule_held(&model, &trajectory, &[I::ZERO, I::ZERO]).unwrap();
+        assert_eq!(
+            calendar.iter().map(|e| e.event).collect::<Vec<_>>(),
+            vec![0, 1, 2]
+        );
+        assert!(passive_batch(&model, &[calendar[1].clone()]));
+        assert!(!passive_batch(&model, &[]));
+        assert!(!passive_batch(
+            &model,
+            &[calendar[1].clone(), calendar[2].clone()]
+        ));
+        let mut base_ops = Operators::new(&model.program, &trajectory, &[], &[0., 0.]).unwrap();
+        base_ops
+            .advance(0., I::ZERO, &[1., 0.], &[I::ONE, I::ZERO], &[0])
+            .unwrap();
+        let frame = |time: f64, states: Vec<f64>, operators: Operators| {
+            let circuit = model
+                .circuit_with(&states, &operators.values(time).unwrap())
+                .unwrap();
+            Frame {
+                time,
+                solution: circuit.solve(&[]).unwrap(),
+                circuit,
+                operators,
+                state_bounds: states.iter().copied().map(I::point).collect(),
+                states,
+                time_proofs: Default::default(),
+            }
+        };
+        let initial = frame(0., vec![1., 0.], base_ops.clone());
+        let mut consumed = base_ops.clone();
+        consumed
+            .advance(1.25, I::point(1.25), &[1., 1.], &[I::ONE, I::ONE], &[1])
+            .unwrap();
+        let first = frame(1.25, vec![1., 1.], consumed.clone());
+        let second = frame(1.5, vec![1., 2.], consumed.clone());
+        let mut changed = consumed;
+        changed
+            .advance(
+                1.75,
+                I::point(1.75),
+                &[0., 2.],
+                &[I::ZERO, I::point(2.)],
+                &[0],
+            )
+            .unwrap();
+        let physical = frame(1.75, vec![0., 2.], changed.clone());
+        changed
+            .advance(2., I::point(2.), &[0., 3.], &[I::ZERO, I::point(3.)], &[1])
+            .unwrap();
+        let third = frame(2., vec![0., 3.], changed);
+        let phases = vec![
+            (initial, vec![]),
+            (first, vec![calendar[0].clone()]),
+            (second, vec![calendar[1].clone()]),
+            (physical, vec![calendar[2].clone()]),
+            (third, vec![calendar[0].clone()]),
+        ];
+        assert_eq!(phases[1].0.operators.values(0.75).unwrap()[0], 1.);
+        for (phase, count) in [(1, 1.), (2, 2.)] {
+            let seed = observation_seed(&model, &phases, phase);
+            assert_eq!(seed.states[1], count);
+            assert_eq!(seed.operators.values(0.75).unwrap()[0], 0.75);
+            let query = prepare_root_window(
+                &model,
+                &trajectory,
+                &seed,
+                EventMoment {
+                    exact_root: None,
+                    representative: 0.75,
+                    observation: I::point(0.75),
+                    fired_roots: &[],
+                    prediction_end: 0.75,
+                },
+                &[],
+            )
+            .unwrap();
+            assert_eq!(query.solution.voltages[1], 0.75);
+            assert_eq!(query.states[1], count);
+            let future = prepare_root_window(
+                &model,
+                &trajectory,
+                &query,
+                EventMoment {
+                    exact_root: None,
+                    representative: 1.5,
+                    observation: I::point(1.5),
+                    fired_roots: &[],
+                    prediction_end: 1.5,
+                },
+                &[],
+            )
+            .unwrap();
+            assert_eq!(future.solution.voltages[1], 1.);
+            assert_eq!(future.states[1], count);
+        }
+        let seed = observation_seed(&model, &phases, 4);
+        assert_eq!(seed.states, vec![0., 3.]);
+        assert_eq!(seed.operators.values(1.875).unwrap()[0], 0.875);
+        assert_eq!(
+            observation_seed(&model, &phases, 3)
+                .operators
+                .values(1.875)
+                .unwrap()[0],
+            0.875
+        );
+        let mut mixed = phases.clone();
+        mixed[4].1.push(calendar[2].clone());
+        assert_eq!(
+            observation_seed(&model, &mixed, 4)
+                .operators
+                .values(1.875)
+                .unwrap(),
+            mixed[4].0.operators.values(1.875).unwrap()
+        );
+        // Query failure owns only clones; the shared accepted snapshots stay intact.
+        let before = phases[1].0.operators.values(0.75).unwrap();
+        assert!(prepare_root_window(
+            &model,
+            &trajectory,
+            &seed,
+            EventMoment {
+                exact_root: None,
+                representative: f64::NAN,
+                observation: I::point(f64::NAN),
+                fired_roots: &[],
+                prediction_end: 2.5
+            },
+            &[]
+        )
+        .is_err());
+        assert_eq!(phases[1].0.operators.values(0.75).unwrap(), before);
     }
 }

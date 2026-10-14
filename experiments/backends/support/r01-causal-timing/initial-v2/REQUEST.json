@@ -1,0 +1,189 @@
+{
+  "program": {
+    "nodes": [
+      "0",
+      "z"
+    ],
+    "contributions": [
+      {
+        "branch": {
+          "instance": "D",
+          "local_positive": "0",
+          "local_negative": "z",
+          "kind": "voltage"
+        },
+        "positive": 0,
+        "negative": 1,
+        "rhs": {
+          "op": "multiply",
+          "left": {
+            "constant": -1.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "right": {
+            "operator": 0,
+            "op": "operator"
+          }
+        },
+        "origin": {
+          "source": "initial-observer.va",
+          "line": 2,
+          "column": 99,
+          "instance": "D",
+          "expansion": []
+        }
+      }
+    ],
+    "states": [
+      {
+        "instance": "D",
+        "name": "q",
+        "kind": "real",
+        "initial": 1.0
+      }
+    ],
+    "events": [
+      {
+        "trigger": {
+          "start": 0.5,
+          "period": 0.0,
+          "time_tolerance": 1e-12,
+          "enabled": true,
+          "kind": "timer"
+        },
+        "body": [
+          {
+            "state": 0,
+            "rhs": {
+              "constant": -1.0,
+              "terms": [],
+              "op": "affine"
+            },
+            "kind": "assign"
+          }
+        ],
+        "origin": {
+          "source": "initial-observer.va",
+          "line": 2,
+          "column": 81,
+          "instance": "D",
+          "expansion": []
+        }
+      },
+      {
+        "trigger": {
+          "kind": "initial_step"
+        },
+        "body": [
+          {
+            "format": "initial=%g",
+            "args": [
+              {
+                "constant": 0.0,
+                "terms": [
+                  {
+                    "node": 0,
+                    "coefficient": -1.0
+                  },
+                  {
+                    "node": 1,
+                    "coefficient": 1.0
+                  }
+                ],
+                "op": "affine"
+              }
+            ],
+            "origin": {
+              "source": "initial-observer.va",
+              "line": 3,
+              "column": 69,
+              "instance": "M",
+              "expansion": []
+            },
+            "kind": "display"
+          }
+        ],
+        "origin": {
+          "source": "initial-observer.va",
+          "line": 3,
+          "column": 54,
+          "instance": "M",
+          "expansion": []
+        }
+      }
+    ],
+    "operators": [
+      {
+        "input": {
+          "op": "multiply",
+          "left": {
+            "op": "multiply",
+            "left": {
+              "state": 0,
+              "op": "state"
+            },
+            "right": {
+              "constant": 0.0,
+              "terms": [
+                {
+                  "node": 0,
+                  "coefficient": -1.0
+                },
+                {
+                  "node": 1,
+                  "coefficient": 1.0
+                }
+              ],
+              "op": "affine"
+            }
+          },
+          "right": {
+            "constant": 0.0,
+            "terms": [
+              {
+                "node": 0,
+                "coefficient": -1.0
+              },
+              {
+                "node": 1,
+                "coefficient": 1.0
+              }
+            ],
+            "op": "affine"
+          }
+        },
+        "ic": 1.0,
+        "origin": {
+          "source": "initial-observer.va",
+          "line": 2,
+          "column": 105,
+          "instance": "D",
+          "expansion": []
+        },
+        "reset": null,
+        "kind": "idt"
+      }
+    ],
+    "schema_version": 21,
+    "step_bounds": []
+  },
+  "driven": [],
+  "samples": [],
+  "transient": {
+    "pwl": [],
+    "output_times": [
+      0.0,
+      0.25,
+      0.5,
+      1.0,
+      2.0
+    ],
+    "stop": 2.0,
+    "max_step": 0.05
+  },
+  "tolerances": {
+    "absolute": 1e-09,
+    "relative": 1e-06
+  }
+}

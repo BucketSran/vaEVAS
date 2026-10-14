@@ -40,6 +40,7 @@ fn held(clock: Option<Clock>, bounds: I, time: f64) -> ScheduledEvent {
         time,
         event: 2,
         moment: Moment::HeldTimer {
+            exact: None,
             bounds,
             index: clock.map_or(0, |c| c.index),
             clock,
@@ -70,14 +71,14 @@ fn check_exact_anchor_orders_both_sides_without_consuming_equal_new_leaf() {
     assert_eq!(c.order(point(b.lo)), Some(std::cmp::Ordering::Greater));
     assert_eq!(c.order(point(b.hi)), Some(std::cmp::Ordering::Less));
     assert!(boundary
-        .already_past_or_consumed(2, I::point(b.lo), Some(point(b.lo)))
+        .already_past_or_consumed(2, I::point(b.lo), Some(point(b.lo)), None)
         .unwrap());
     assert!(!boundary
-        .already_past_or_consumed(2, I::point(b.hi), Some(point(b.hi)))
+        .already_past_or_consumed(2, I::point(b.hi), Some(point(b.hi)), None)
         .unwrap());
     assert_eq!(
         boundary
-            .already_past_or_consumed(2, b, Some(c))
+            .already_past_or_consumed(2, b, Some(c), None)
             .unwrap_err()
             .kind,
         "event_resolution"
@@ -90,7 +91,7 @@ fn check_fixed_or_leaf_never_authorizes_held_sibling() {
     let boundary = TimerBoundary::new(&m, 0.5, &batch).unwrap();
     assert_eq!(
         boundary
-            .already_past_or_consumed(2, I::point(0.5), Some(point(0.5)))
+            .already_past_or_consumed(2, I::point(0.5), Some(point(0.5)), None)
             .unwrap_err()
             .kind,
         "event_resolution"
@@ -108,7 +109,7 @@ fn check_fixed_or_leaf_never_authorizes_held_sibling() {
     let batch = [fixed(point(0.5), 0.5), held(Some(old), I::point(0.5), 0.5)];
     let boundary = TimerBoundary::new(&m, 0.5, &batch).unwrap();
     assert!(boundary
-        .already_past_or_consumed(2, I::point(0.5), Some(new))
+        .already_past_or_consumed(2, I::point(0.5), Some(new), None)
         .unwrap());
 }
 fn check_equal_uncertain_boxes_do_not_prove_consumed_clock_identity() {
@@ -118,14 +119,14 @@ fn check_equal_uncertain_boxes_do_not_prove_consumed_clock_identity() {
     let boundary = TimerBoundary::new(&m, 0.6, &batch).unwrap();
     assert_eq!(
         boundary
-            .already_past_or_consumed(2, b, None)
+            .already_past_or_consumed(2, b, None, None)
             .unwrap_err()
             .kind,
         "event_resolution"
     );
     assert_eq!(
         boundary
-            .already_past_or_consumed(2, I::point(0.5), Some(point(0.5)))
+            .already_past_or_consumed(2, I::point(0.5), Some(point(0.5)), None)
             .unwrap_err()
             .kind,
         "event_resolution"
@@ -148,7 +149,7 @@ fn check_mixed_moments_with_shared_representative_have_no_common_anchor() {
     // Candidate at upper endpoint is not proved future against whole batch.
     assert_eq!(
         boundary
-            .already_past_or_consumed(2, I::point(b.hi), Some(point(b.hi)))
+            .already_past_or_consumed(2, I::point(b.hi), Some(point(b.hi)), None)
             .unwrap_err()
             .kind,
         "event_resolution"

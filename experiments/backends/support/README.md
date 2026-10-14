@@ -1,5 +1,7 @@
 # 四后端支持范围实测
 
+[原 R01 timing 请求与连续历史修复](r01-causal-timing/README.md)保存原 checker 的完整通过、实际 Spectre 有限配对和既有失败；新增一个原请求完成，不改变固定 Q 成绩。
+
 [空循环声明与当前 timer 安全修复](retained-safety/README.md)保存同源实际对照与明确的拒绝边界，不新增 Q 资格。
 
 [累计测试清单](../../../evas/validation/paper/COVERAGE.md)登记本页各批次和新增 44 组的关系。

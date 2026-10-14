@@ -995,6 +995,7 @@ fn physical_parameters<'a, T: Copy>(
 // Borrows one immutable history base at one time. Every advanced trial clones
 // this same base; cached values cannot escape into a different time or history.
 pub(crate) struct Evaluation<'a> {
+    exact_root: Option<crate::exact_source::RootTime>,
     base: &'a Operators,
     time: f64,
     pub(crate) values: Vec<f64>,
@@ -1122,7 +1123,14 @@ impl Evaluation<'_> {
                 )?));
             }
         }
-        candidate.advance(self.time, time_bounds, states, bounds, changed)?;
+        candidate.advance_with_exact(
+            self.time,
+            time_bounds,
+            states,
+            bounds,
+            changed,
+            self.exact_root.as_ref(),
+        )?;
         Ok(candidate)
     }
 }
@@ -1782,7 +1790,23 @@ impl Operators {
     }
 
     pub(crate) fn evaluation(&self, time: f64) -> Result<Evaluation<'_>, Error> {
+        self.evaluation_at_root(time, None, I::point(time))
+    }
+
+    pub(crate) fn evaluation_at_root(
+        &self,
+        time: f64,
+        exact_root: Option<&crate::exact_source::RootTime>,
+        window: I,
+    ) -> Result<Evaluation<'_>, Error> {
+        if exact_root.is_some_and(|root| root.refine(window).is_none()) {
+            return Err(Error::new(
+                "event_resolution",
+                "exact event root is outside observation enclosure",
+            ));
+        }
         Ok(Evaluation {
+            exact_root: exact_root.cloned(),
             base: self,
             time,
             values: self.values(time)?,
@@ -1987,6 +2011,18 @@ impl Operators {
         bounds: &[I],
         changed: &[usize],
     ) -> Result<(), Error> {
+        self.advance_with_exact(time, time_bounds, states, bounds, changed, None)
+    }
+
+    fn advance_with_exact(
+        &mut self,
+        time: f64,
+        time_bounds: I,
+        states: &[f64],
+        bounds: &[I],
+        changed: &[usize],
+        exact_root: Option<&crate::exact_source::RootTime>,
+    ) -> Result<(), Error> {
         let _timing = crate::diagnostics::span("history.advance");
         let physical_states = physical_parameters(states, &self.isolated_parameters, |value| value);
         let physical_bounds = physical_parameters(bounds, &self.isolated_parameters, I::point);
@@ -2041,12 +2077,13 @@ impl Operators {
                 .zip(bounds.iter().copied().chain([I::ONE]))
                 .fold(I::ZERO, |sum, (&a, b)| sum + a * b);
             let mut preview = old.clone();
-            preview.advance_at(
+            preview.advance_at_with_exact(
                 time,
                 time_bounds,
                 input.value(&[], states)?,
                 target_bounds,
                 may_change,
+                exact_root,
             )?;
             let prediction = match entry {
                 Runtime::TransitionFilter { history, .. } => Runtime::TransitionFilter {
@@ -2119,12 +2156,13 @@ impl Operators {
                         .zip(bounds.iter().copied().chain([I::ONE]))
                         .fold(I::ZERO, |sum, (&a, b)| sum + a * b);
                     let may_change = changed.iter().any(|s| input.state_dependencies.contains(s));
-                    history.advance_at(
+                    history.advance_at_with_exact(
                         time,
                         time_bounds,
                         input.value(&[], states)?,
                         bounds,
                         may_change,
+                        exact_root,
                     )?
                 }
                 Runtime::Slew(_) | Runtime::SlewCascade(_) => {}
@@ -2547,5 +2585,81 @@ mod reset_operator_tests {
         ));
         let rejected = inexact_product.active(&[I::ONE]).err().unwrap();
         assert_eq!(rejected.kind, "unsupported_operator");
+    }
+}
+
+#[cfg(test)]
+mod exact_deadline_review_tests {
+    use super::*;
+    use crate::exact_source::RootTime;
+
+    #[test]
+    fn evaluation_rejects_incompatible_exact_window_without_changing_history() {
+        let origin = serde_json::json!({"source":"evaluation_review.va","line":1,"column":1,"instance":"dut"});
+        let program:Program=serde_json::from_value(serde_json::json!({
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","y"],
+            "states":[{"instance":"dut","name":"q","kind":"real","initial":0}],
+            "operators":[{"kind":"transition","input":{"op":"state","state":0},"delay":0.125,"rise":0.25,"fall":0.25,"origin":origin}],
+            "contributions":[{"branch":{"instance":"dut","local_positive":"y","local_negative":"r","kind":"voltage"},
+                "positive":1,"negative":0,"rhs":{"op":"operator","operator":0},"origin":origin}]
+        })).unwrap();
+        let trajectory = Trajectory::new(
+            crate::ir::TransientInputs {
+                strobetimes: vec![],
+                pwl: vec![],
+                output_times: vec![0., 2.],
+                stop: 2.,
+                max_step: 0.125,
+            },
+            0,
+        )
+        .unwrap();
+        let mut base = Operators::new(&program, &trajectory, &[], &[0.]).unwrap();
+        base.advance(0.25, I::point(0.25), &[1.], &[I::ONE], &[0])
+            .unwrap();
+        let retained = base.clone();
+        let root = RootTime::from_clock(
+            crate::exact_time::Clock {
+                start: 0.5,
+                period: 0.,
+                index: 0,
+            },
+            I::point(0.5),
+        )
+        .unwrap();
+        for window in [
+            I::point(0.75),
+            I { lo: 0.6, hi: 0.4 },
+            I {
+                lo: f64::NAN,
+                hi: 0.5,
+            },
+            I {
+                lo: 0.,
+                hi: f64::INFINITY,
+            },
+        ] {
+            let error = base
+                .evaluation_at_root(1., Some(&root), window)
+                .err()
+                .unwrap();
+            assert_eq!(error.kind, "event_resolution");
+            assert_eq!(
+                error.message,
+                "exact event root is outside observation enclosure"
+            );
+            assert!(base.same_reset_history(&retained));
+            for time in [0.3, 0.4, 0.5, 1.] {
+                assert_eq!(base.values(time).unwrap(), retained.values(time).unwrap());
+                assert_eq!(base.bounds(time).unwrap(), retained.bounds(time).unwrap());
+            }
+        }
+        let valid = base
+            .evaluation_at_root(0.5, Some(&root), I::point(0.5))
+            .unwrap();
+        assert_eq!(
+            valid.exact_root.as_ref().unwrap().order(&root),
+            std::cmp::Ordering::Equal
+        );
     }
 }

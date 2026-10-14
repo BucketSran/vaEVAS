@@ -1,0 +1,9 @@
+simulator lang=spectre
+ahdl_include "dut.va"
+Vu (u 0) vsource type=pwl wave=[0 1 1 1]
+Vv (v 0) vsource type=pwl wave=[0 2 1 2]
+a (u y0 z0 0) m
+b (v y1 z1 0) m
+simulatorOptions options precision="%.17g" reltol=1e-9 vabstol=1e-12 iabstol=1e-15
+tran tran stop=1 maxstep=0.00048828125 method=traponly errpreset=conservative compression=no strobeoutput=all strobetimes=[0 0.125 0.25 0.375 0.5 0.75 1]
+save u v y0 z0 y1 z1
