@@ -1,0 +1,638 @@
+[
+  {
+    "task_id": "r01-extend-hold",
+    "condition": "c0",
+    "checker_module": "r01_sampling",
+    "checker_sha256": {
+      "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+      "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+      "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+    },
+    "original_checker": {
+      "passed": true,
+      "checks": 419,
+      "max_abs_error": {
+        "vout": 2.734544806815009e-06
+      },
+      "failures": []
+    },
+    "paired_observation": {
+      "output_nodes": [
+        "vout"
+      ],
+      "input_nodes": [
+        "rst",
+        "track",
+        "vin"
+      ],
+      "output_passed": true,
+      "input_passed": true,
+      "scope": "501 uniform candidates excluding original 5 ns control-edge windows; finite observation only",
+      "max_abs_difference": {
+        "rst": 0.0,
+        "track": 0.0,
+        "vin": 4.765077221691172e-13,
+        "vout": 4.7111967067747784e-05
+      },
+      "tolerances": {
+        "rst": 0.002,
+        "track": 0.002,
+        "vin": 0.002,
+        "vout": 0.002
+      },
+      "passed": true,
+      "spectre_version": "2026/10/13 14:34:06 System is not a supported distribution\n2026/10/13 14:34:06 An error occurred. We don't recognize OS \n2026/10/13 14:34:06 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/13 14:34:06 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+      "spectre_waveform_sha256": "03858eed95ecbbe40c5f2e134fcaddb81fc03d8b664bcb0066a78d40018425f6",
+      "observation_count": 405,
+      "observation_times_sha256": "936413df784dd84f94dbcdf38a96fefb39ec8f4225ba3ddd153c94cb11edda18"
+    },
+    "evas_response_sha256": "c835c2b6d3562570c34138940a839e81fba05637c68c4e2060de7d1ee122985e",
+    "waveform_rows": 9001
+  },
+  {
+    "task_id": "r01-extend-hold",
+    "condition": "c1",
+    "checker_module": "r01_sampling",
+    "checker_sha256": {
+      "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+      "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+      "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+    },
+    "original_checker": {
+      "passed": true,
+      "checks": 432,
+      "max_abs_error": {
+        "vout": 2.626808815964221e-06
+      },
+      "failures": []
+    },
+    "paired_observation": {
+      "output_nodes": [
+        "vout"
+      ],
+      "input_nodes": [
+        "rst",
+        "track",
+        "vin"
+      ],
+      "output_passed": true,
+      "input_passed": false,
+      "scope": "501 uniform candidates excluding original 5 ns control-edge windows; finite observation only",
+      "max_abs_difference": {
+        "rst": 0.0,
+        "track": 0.0,
+        "vin": 0.0840000000000074,
+        "vout": 3.420384062979842e-05
+      },
+      "tolerances": {
+        "rst": 0.002,
+        "track": 0.002,
+        "vin": 0.002,
+        "vout": 0.002
+      },
+      "passed": false,
+      "spectre_version": "2026/10/13 14:34:20 System is not a supported distribution\n2026/10/13 14:34:20 An error occurred. We don't recognize OS \n2026/10/13 14:34:20 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/13 14:34:20 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+      "spectre_waveform_sha256": "f5df07612b4686d6d0f1ef1a17c4db73ec3a5589ee65175cf7869eb25c632c1c",
+      "observation_count": 417,
+      "observation_times_sha256": "d2333fe07bc27eb035efa6bad22953aba2f864f6014b04b6658f1bc39d0b06e4"
+    },
+    "evas_response_sha256": "4c286a69b2e5a8faba88b84dcf052d742e95482c2c98d78f7ea59696b6ab1d92",
+    "waveform_rows": 10341
+  },
+  {
+    "task_id": "r01-extend-hold",
+    "condition": "c2",
+    "checker_module": "r01_sampling",
+    "checker_sha256": {
+      "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+      "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+      "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+    },
+    "original_checker": {
+      "passed": true,
+      "checks": 444,
+      "max_abs_error": {
+        "vout": 1.93248531488166e-06
+      },
+      "failures": []
+    },
+    "paired_observation": {
+      "output_nodes": [
+        "vout"
+      ],
+      "input_nodes": [
+        "rst",
+        "track",
+        "vin"
+      ],
+      "output_passed": true,
+      "input_passed": true,
+      "scope": "501 uniform candidates excluding original 5 ns control-edge windows; finite observation only",
+      "max_abs_difference": {
+        "rst": 0.0,
+        "track": 0.0,
+        "vin": 0.0,
+        "vout": 3.447311027160449e-05
+      },
+      "tolerances": {
+        "rst": 0.002,
+        "track": 0.002,
+        "vin": 0.002,
+        "vout": 0.002
+      },
+      "passed": true,
+      "spectre_version": "2026/10/13 14:34:34 System is not a supported distribution\n2026/10/13 14:34:34 An error occurred. We don't recognize OS \n2026/10/13 14:34:34 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/13 14:34:34 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+      "spectre_waveform_sha256": "01d6abac873db90df1472253af938bc8493a0d0964880bd1839036ec79ba3998",
+      "observation_count": 431,
+      "observation_times_sha256": "23cfd4425e57e172418e37976d4ad37754cd43b7700493cc4d30ecef7a417ab4"
+    },
+    "evas_response_sha256": "33110fe910c28d41731865676fe68828c42315514ee2a453b19af4fdf2d55da8",
+    "waveform_rows": 8141
+  },
+  {
+    "task_id": "r01-repair-recovery",
+    "condition": "c2",
+    "checker_module": "r01_sampling",
+    "checker_sha256": {
+      "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+      "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+      "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+    },
+    "original_checker": {
+      "passed": true,
+      "checks": 444,
+      "max_abs_error": {
+        "vout": 1.93248531488166e-06
+      },
+      "failures": []
+    },
+    "paired_observation": {
+      "output_nodes": [
+        "vout"
+      ],
+      "input_nodes": [
+        "rst",
+        "track",
+        "vin"
+      ],
+      "output_passed": true,
+      "input_passed": true,
+      "scope": "501 uniform candidates excluding original 5 ns control-edge windows; finite observation only",
+      "max_abs_difference": {
+        "rst": 0.0,
+        "track": 0.0,
+        "vin": 0.0,
+        "vout": 3.447311027160449e-05
+      },
+      "tolerances": {
+        "rst": 0.002,
+        "track": 0.002,
+        "vin": 0.002,
+        "vout": 0.002
+      },
+      "passed": true,
+      "spectre_version": "2026/10/13 14:35:07 System is not a supported distribution\n2026/10/13 14:35:07 An error occurred. We don't recognize OS \n2026/10/13 14:35:07 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/13 14:35:07 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+      "spectre_waveform_sha256": "193d9deb7b9bf6d77a12bfc54cd34d52872e418143d51effdfdbcac53ba66cf8",
+      "observation_count": 431,
+      "observation_times_sha256": "23cfd4425e57e172418e37976d4ad37754cd43b7700493cc4d30ecef7a417ab4"
+    },
+    "evas_response_sha256": "fadf2c01529bc9970af663a88dd81c415c9bda92a47e8047cbbc28070b9b232d",
+    "waveform_rows": 8141
+  },
+  {
+    "task_id": "r01-repair-recovery",
+    "condition": "c0",
+    "checker_module": "r01_sampling",
+    "checker_sha256": {
+      "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+      "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+      "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+    },
+    "original_checker": {
+      "passed": true,
+      "checks": 419,
+      "max_abs_error": {
+        "vout": 2.734544806815009e-06
+      },
+      "failures": []
+    },
+    "paired_observation": {
+      "output_nodes": [
+        "vout"
+      ],
+      "input_nodes": [
+        "rst",
+        "track",
+        "vin"
+      ],
+      "output_passed": true,
+      "input_passed": true,
+      "scope": "501 uniform candidates excluding original 5 ns control-edge windows; finite observation only",
+      "max_abs_difference": {
+        "rst": 0.0,
+        "track": 0.0,
+        "vin": 4.765077221691172e-13,
+        "vout": 4.7111967067747784e-05
+      },
+      "tolerances": {
+        "rst": 0.002,
+        "track": 0.002,
+        "vin": 0.002,
+        "vout": 0.002
+      },
+      "passed": true,
+      "spectre_version": "2026/10/13 14:35:20 System is not a supported distribution\n2026/10/13 14:35:20 An error occurred. We don't recognize OS \n2026/10/13 14:35:20 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/13 14:35:20 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+      "spectre_waveform_sha256": "152d250b043923337498f8a98974ae941762ed2212358cd227b541ddf502304e",
+      "observation_count": 405,
+      "observation_times_sha256": "936413df784dd84f94dbcdf38a96fefb39ec8f4225ba3ddd153c94cb11edda18"
+    },
+    "evas_response_sha256": "c238c1b0c6d94ab31c6e5060393bd0f2ef234684e5ca82efed660092035288ae",
+    "waveform_rows": 9001
+  },
+  {
+    "task_id": "r01-repair-recovery",
+    "condition": "c1",
+    "checker_module": "r01_sampling",
+    "checker_sha256": {
+      "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+      "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+      "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+    },
+    "original_checker": {
+      "passed": true,
+      "checks": 432,
+      "max_abs_error": {
+        "vout": 2.626808815964221e-06
+      },
+      "failures": []
+    },
+    "paired_observation": {
+      "output_nodes": [
+        "vout"
+      ],
+      "input_nodes": [
+        "rst",
+        "track",
+        "vin"
+      ],
+      "output_passed": true,
+      "input_passed": false,
+      "scope": "501 uniform candidates excluding original 5 ns control-edge windows; finite observation only",
+      "max_abs_difference": {
+        "rst": 0.0,
+        "track": 0.0,
+        "vin": 0.0840000000000074,
+        "vout": 3.420384062979842e-05
+      },
+      "tolerances": {
+        "rst": 0.002,
+        "track": 0.002,
+        "vin": 0.002,
+        "vout": 0.002
+      },
+      "passed": false,
+      "spectre_version": "2026/10/13 14:35:38 System is not a supported distribution\n2026/10/13 14:35:38 An error occurred. We don't recognize OS \n2026/10/13 14:35:38 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/13 14:35:38 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+      "spectre_waveform_sha256": "de4630e070061400d1372a229bc6eeed37e3d09634e5bc27a58b9c74120c3f9e",
+      "observation_count": 417,
+      "observation_times_sha256": "d2333fe07bc27eb035efa6bad22953aba2f864f6014b04b6658f1bc39d0b06e4"
+    },
+    "evas_response_sha256": "7a333862f4db300c50f150bffd72c5e58ef2cd3129c0b39c479ee682f7b711cd",
+    "waveform_rows": 10341
+  },
+  {
+    "task_id": "r01-spec-acquisition",
+    "condition": "c0",
+    "checker_module": "r01_sampling",
+    "checker_sha256": {
+      "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+      "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+      "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+    },
+    "original_checker": {
+      "passed": true,
+      "checks": 419,
+      "max_abs_error": {
+        "vout": 2.0174992709787176e-07
+      },
+      "failures": []
+    },
+    "paired_observation": {
+      "output_nodes": [
+        "vout"
+      ],
+      "input_nodes": [
+        "rst",
+        "track",
+        "vin"
+      ],
+      "output_passed": true,
+      "input_passed": true,
+      "scope": "501 uniform candidates excluding original 5 ns control-edge windows; finite observation only",
+      "max_abs_difference": {
+        "rst": 0.0,
+        "track": 0.0,
+        "vin": 4.765077221691172e-13,
+        "vout": 1.4328468084801038e-05
+      },
+      "tolerances": {
+        "rst": 0.002,
+        "track": 0.002,
+        "vin": 0.002,
+        "vout": 0.002
+      },
+      "passed": true,
+      "spectre_version": "2026/10/13 14:34:06 System is not a supported distribution\n2026/10/13 14:34:06 An error occurred. We don't recognize OS \n2026/10/13 14:34:06 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/13 14:34:06 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+      "spectre_waveform_sha256": "643170bcd796090331c7b52004160c34db80b4af68d9286112ce5649c4044332",
+      "observation_count": 405,
+      "observation_times_sha256": "936413df784dd84f94dbcdf38a96fefb39ec8f4225ba3ddd153c94cb11edda18"
+    },
+    "evas_response_sha256": "fac4b3b01640c941deab336345a30739f5776a880e767370dd17c58a270cefe5",
+    "waveform_rows": 9001
+  },
+  {
+    "task_id": "r01-spec-acquisition",
+    "condition": "c1",
+    "checker_module": "r01_sampling",
+    "checker_sha256": {
+      "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+      "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+      "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+    },
+    "original_checker": {
+      "passed": true,
+      "checks": 432,
+      "max_abs_error": {
+        "vout": 5.794641422751656e-06
+      },
+      "failures": []
+    },
+    "paired_observation": {
+      "output_nodes": [
+        "vout"
+      ],
+      "input_nodes": [
+        "rst",
+        "track",
+        "vin"
+      ],
+      "output_passed": true,
+      "input_passed": false,
+      "scope": "501 uniform candidates excluding original 5 ns control-edge windows; finite observation only",
+      "max_abs_difference": {
+        "rst": 0.0,
+        "track": 0.0,
+        "vin": 0.0840000000000074,
+        "vout": 2.0385750904516886e-05
+      },
+      "tolerances": {
+        "rst": 0.002,
+        "track": 0.002,
+        "vin": 0.002,
+        "vout": 0.002
+      },
+      "passed": false,
+      "spectre_version": "2026/10/13 14:34:20 System is not a supported distribution\n2026/10/13 14:34:20 An error occurred. We don't recognize OS \n2026/10/13 14:34:20 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/13 14:34:20 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+      "spectre_waveform_sha256": "02a846a12afbdf9f349b70a62eb1d870a4c9aeea2c5475c77a5b5358043528e2",
+      "observation_count": 417,
+      "observation_times_sha256": "d2333fe07bc27eb035efa6bad22953aba2f864f6014b04b6658f1bc39d0b06e4"
+    },
+    "evas_response_sha256": "7797cfede30d953f6d643ebc79bbdf09dcfd1ce66d5cd4988d05398ef191cd69",
+    "waveform_rows": 10341
+  },
+  {
+    "task_id": "r01-spec-acquisition",
+    "condition": "c2",
+    "checker_module": "r01_sampling",
+    "checker_sha256": {
+      "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+      "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+      "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+    },
+    "original_checker": {
+      "passed": true,
+      "checks": 403,
+      "max_abs_error": {
+        "vout": 5.820564219716218e-06
+      },
+      "failures": []
+    },
+    "paired_observation": {
+      "output_nodes": [
+        "vout"
+      ],
+      "input_nodes": [
+        "rst",
+        "track",
+        "vin"
+      ],
+      "output_passed": true,
+      "input_passed": false,
+      "scope": "501 uniform candidates excluding original 5 ns control-edge windows; finite observation only",
+      "max_abs_difference": {
+        "rst": 0.0,
+        "track": 0.0,
+        "vin": 0.15399999999997777,
+        "vout": 1.8042304819498867e-05
+      },
+      "tolerances": {
+        "rst": 0.002,
+        "track": 0.002,
+        "vin": 0.002,
+        "vout": 0.002
+      },
+      "passed": false,
+      "spectre_version": "2026/10/13 14:34:34 System is not a supported distribution\n2026/10/13 14:34:34 An error occurred. We don't recognize OS \n2026/10/13 14:34:34 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/13 14:34:34 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+      "spectre_waveform_sha256": "b32cad1ccfa332a95b12cdca75c3fa220c187caf03fa50b8968ed00ff51e6770",
+      "observation_count": 388,
+      "observation_times_sha256": "67163ac6585d685ad9bbfd0ac6b4dea75822453cde80b50ed12bd860765e5a92"
+    },
+    "evas_response_sha256": "6b20732f926b0afe2bcaba448cce47852b38f9f862adbc456004584bef6b3b19",
+    "waveform_rows": 8141
+  },
+  {
+    "task_id": "r01-spec-ideal",
+    "condition": "c0",
+    "checker_module": "r01_sampling",
+    "checker_sha256": {
+      "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+      "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+      "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+    },
+    "original_checker": {
+      "passed": true,
+      "checks": 419,
+      "max_abs_error": {
+        "vout": 4.762856775641922e-13
+      },
+      "failures": []
+    },
+    "paired_observation": {
+      "output_nodes": [
+        "vout"
+      ],
+      "input_nodes": [
+        "rst",
+        "track",
+        "vin"
+      ],
+      "output_passed": true,
+      "input_passed": true,
+      "scope": "501 uniform candidates excluding original 5 ns control-edge windows; finite observation only",
+      "max_abs_difference": {
+        "rst": 0.0,
+        "track": 0.0,
+        "vin": 4.765077221691172e-13,
+        "vout": 4.765077221691172e-13
+      },
+      "tolerances": {
+        "rst": 0.002,
+        "track": 0.002,
+        "vin": 0.002,
+        "vout": 0.002
+      },
+      "passed": true,
+      "spectre_version": "2026/10/13 14:21:37 System is not a supported distribution\n2026/10/13 14:21:37 An error occurred. We don't recognize OS \n2026/10/13 14:21:37 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/13 14:21:37 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+      "spectre_waveform_sha256": "ab72df098b651c02336cb20ae567bd49d310944130abfba0ea8574cb7387718e",
+      "observation_count": 405,
+      "observation_times_sha256": "936413df784dd84f94dbcdf38a96fefb39ec8f4225ba3ddd153c94cb11edda18"
+    },
+    "evas_response_sha256": "73bb64af804d57f9dcf4eab7d0d954cbdd4284369b5a00605f4a47e3c97ecded",
+    "waveform_rows": 9001
+  },
+  {
+    "task_id": "r01-spec-ideal",
+    "condition": "c1",
+    "checker_module": "r01_sampling",
+    "checker_sha256": {
+      "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+      "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+      "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+    },
+    "original_checker": {
+      "passed": true,
+      "checks": 432,
+      "max_abs_error": {
+        "vout": 0
+      },
+      "failures": []
+    },
+    "paired_observation": {
+      "output_nodes": [
+        "vout"
+      ],
+      "input_nodes": [
+        "rst",
+        "track",
+        "vin"
+      ],
+      "output_passed": true,
+      "input_passed": false,
+      "scope": "501 uniform candidates excluding original 5 ns control-edge windows; finite observation only",
+      "max_abs_difference": {
+        "rst": 0.0,
+        "track": 0.0,
+        "vin": 0.0840000000000074,
+        "vout": 0.0
+      },
+      "tolerances": {
+        "rst": 0.002,
+        "track": 0.002,
+        "vin": 0.002,
+        "vout": 0.002
+      },
+      "passed": false,
+      "spectre_version": "2026/10/13 14:21:55 System is not a supported distribution\n2026/10/13 14:21:55 An error occurred. We don't recognize OS \n2026/10/13 14:21:55 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/13 14:21:55 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+      "spectre_waveform_sha256": "9672c501fa5fa7861a3de2780b379b719bfa30f3acb432f0120ef4a270e0d7ea",
+      "observation_count": 417,
+      "observation_times_sha256": "d2333fe07bc27eb035efa6bad22953aba2f864f6014b04b6658f1bc39d0b06e4"
+    },
+    "evas_response_sha256": "0579206b482153eb4c0819f75408f6dfcffeedef7419e14232cf0bcc9685588b",
+    "waveform_rows": 10341
+  },
+  {
+    "task_id": "r01-spec-ideal",
+    "condition": "c2",
+    "checker_module": "r01_sampling",
+    "checker_sha256": {
+      "adc_linearity.py": "ba6cc24170a775fe08245c2d6afae19c24626a47e83c7c6b4fea0207d2995361",
+      "circuit_task.py": "84140efeb0dc9bbcc11a0958a386f41cea3cf6fd5b867b8565aa0c86c77ff79e",
+      "harbor_entry.py": "6f7315b0cd74390f0384e1f7186957def968dcd846ec4d6ab94124e42385ac5c",
+      "r01_sampling.py": "d135e19ec945eb1885a16f3a172fb248fb8466bf48fef0437fa97da272e6d62d",
+      "v2_runtime.py": "a72efb84946e1fd7527dd106bbb1ccdcb497bb8e204b5758739b8f8ac6165c09",
+      "verify.py": "73fcd605cbb87ba59ca58ed1dd51de5eec0c9441103888f1b6c92fce33ef12ee"
+    },
+    "original_checker": {
+      "passed": true,
+      "checks": 403,
+      "max_abs_error": {
+        "vout": 0
+      },
+      "failures": []
+    },
+    "paired_observation": {
+      "output_nodes": [
+        "vout"
+      ],
+      "input_nodes": [
+        "rst",
+        "track",
+        "vin"
+      ],
+      "output_passed": true,
+      "input_passed": false,
+      "scope": "501 uniform candidates excluding original 5 ns control-edge windows; finite observation only",
+      "max_abs_difference": {
+        "rst": 0.0,
+        "track": 0.0,
+        "vin": 0.15399999999997777,
+        "vout": 0.0
+      },
+      "tolerances": {
+        "rst": 0.002,
+        "track": 0.002,
+        "vin": 0.002,
+        "vout": 0.002
+      },
+      "passed": false,
+      "spectre_version": "2026/10/13 14:22:32 System is not a supported distribution\n2026/10/13 14:22:32 An error occurred. We don't recognize OS \n2026/10/13 14:22:32 WARNING This OS does not appear to be a Cadence supported Linux configuration.\n2026/10/13 14:22:32 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\n/usr/bin/lsb_release: line 180: /etc/os-release: No such file or directory\nsub-version  21.1.0.509.isr12 \n",
+      "spectre_waveform_sha256": "3a58664178c15ddf168450e9037363f943790b4225a770018f57833b1a2a27f6",
+      "observation_count": 388,
+      "observation_times_sha256": "67163ac6585d685ad9bbfd0ac6b4dea75822453cde80b50ed12bd860765e5a92"
+    },
+    "evas_response_sha256": "8aa6e3e56d97e6ab11aea4da3ee250e43c62452b505d9235733c8f1618a4f330",
+    "waveform_rows": 8141
+  }
+]

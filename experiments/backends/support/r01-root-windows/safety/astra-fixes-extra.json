@@ -1,0 +1,52 @@
+{
+  "kernel_sha256": "507ca273777ad46e28ac4acdd7182b61143490511046a8012e9ad581882a2ccc",
+  "records": [
+    {
+      "name": "inactive_ternary_arm_read",
+      "body": "@(timer(.5)) q=1; @(timer(.5)) $display(\"v=%g\",V(u,r)>0?0:q);",
+      "expected": null,
+      "error": "display.va:2:93: real literal requires digits on both sides of the decimal point",
+      "pass": false
+    },
+    {
+      "name": "power_read",
+      "body": "@(timer(.5)) q=1; @(timer(.5)) $display(\"v=%g\",pow(q,2));",
+      "expected": null,
+      "error": "display.va:2:93: real literal requires digits on both sides of the decimal point",
+      "pass": false
+    },
+    {
+      "name": "display_index_after_skipped_then",
+      "body": "@(timer(.5)) q=1; @(timer(.5)) begin if(V(u,r)<0) $display(\"skip=%g\",0); else $display(\"q=%g\",q); end",
+      "expected": null,
+      "error": "display.va:2:93: real literal requires digits on both sides of the decimal point",
+      "pass": false
+    },
+    {
+      "name": "display_index_after_skipped_else",
+      "body": "@(timer(.5)) q=1; @(timer(.5)) begin if(V(u,r)>0) $display(\"safe=%g\",0); else $display(\"skip=%g\",0); $display(\"q=%g\",q); end",
+      "expected": null,
+      "error": "display.va:2:93: real literal requires digits on both sides of the decimal point",
+      "pass": false
+    },
+    {
+      "name": "unselected_writer",
+      "body": "@(timer(.5)) if(V(u,r)<0) q=1; @(timer(.5)) $display(\"q=%g\",q);",
+      "expected": [
+        "q=0"
+      ],
+      "error": "display.va:2:93: real literal requires digits on both sides of the decimal point",
+      "pass": false
+    },
+    {
+      "name": "unselected_display_then_selected_constant",
+      "body": "@(timer(.5)) q=1; @(timer(.5)) begin if(V(u,r)<0) $display(\"skip=%g\",q); else $display(\"safe=%g\",2); $display(\"tail=%g\",3); end",
+      "expected": [
+        "safe=2",
+        "tail=3"
+      ],
+      "error": "display.va:2:93: real literal requires digits on both sides of the decimal point",
+      "pass": false
+    }
+  ]
+}

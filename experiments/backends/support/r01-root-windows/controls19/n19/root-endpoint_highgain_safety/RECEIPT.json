@@ -1,0 +1,74 @@
+{
+  "id": "n19/root-endpoint_highgain_safety",
+  "source_sha256": "ff5df389d123471db743641e9ae0a5cf5450b0735e42fc6744905ea4032c5fb7",
+  "controls": {
+    "instances": [
+      {
+        "name": "dut",
+        "module": "m",
+        "connections": {
+          "u": "u",
+          "y": "y",
+          "z": "z",
+          "w": "w",
+          "r": "0"
+        }
+      }
+    ],
+    "pwl": {
+      "u": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1e-07,
+          0.0
+        ],
+        [
+          1.002e-07,
+          1.8
+        ],
+        [
+          2e-07,
+          1.8
+        ]
+      ]
+    },
+    "output_times": [
+      0.0,
+      5e-08,
+      1e-07,
+      1.002e-07,
+      1.25e-07,
+      1.5e-07,
+      2e-07
+    ],
+    "stop": 2e-07,
+    "max_step": 1e-10,
+    "vabstol": 1e-09,
+    "reltol": 1e-06,
+    "strobetimes": [
+      0.0,
+      5e-08,
+      1e-07,
+      1.002e-07,
+      1.25e-07,
+      1.5e-07,
+      2e-07
+    ],
+    "timeout": 120
+  },
+  "kernel_sha256": "867a112262b1311f07f0a612a594b471ad6c7b3c1a3bea9e207f7a06ea8cece4",
+  "program_sha256": "9ea71bf0849a0eefc6b081d893b5a88df391ce13b9c5da1bdaf7706744e453d7",
+  "status": "rejected",
+  "exception": {
+    "type": "KernelError",
+    "message": "waveform_accuracy: root-window endpoint exceeds the unchanged voltage budget",
+    "detail": {
+      "kind": "waveform_accuracy",
+      "message": "root-window endpoint exceeds the unchanged voltage budget"
+    }
+  },
+  "elapsed_seconds": 0.8873477091547102
+}

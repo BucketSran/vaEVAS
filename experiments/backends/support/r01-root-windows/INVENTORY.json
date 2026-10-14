@@ -1,0 +1,1837 @@
+{
+  "availability": "repository-contained curated files; full execution/raw/bulk PSF remains local-only",
+  "files": {
+    "provenance/REFERENCE-MAP.json": {
+      "original_local_path": "delivery/r01-reference-plan/REFERENCE-MAP.json",
+      "sha256": "487d2f058c0589320a68505830d28bc59df7948c951e725075cdd4992a16aba8",
+      "kind": "verbatim; machine path locator normalized, original hash retained",
+      "original_sha256": "edcb47b33b24d858802c361f97301132ca569333e8e36cf9d2d2955f38991143"
+    },
+    "provenance/pair_candidate.py": {
+      "original_local_path": "delivery/r01-reference-plan/pair_candidate.py",
+      "sha256": "1a1d100c76f6cad35c7b83521decf9f92ca57cd4a23edd47b9fa2731a6a9bf8b",
+      "kind": "verbatim"
+    },
+    "oracles/n19_oracle.py": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n19_oracle.py",
+      "sha256": "b3c20d5b2a418a426bf2a3906453a9e0cb3285c158adfc633816128bc626c175",
+      "kind": "verbatim"
+    },
+    "controls19/SUMMARY.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/SUMMARY.json",
+      "sha256": "1b7fcdd391a3b792b61f7443fe17043b682cd00eba2928b2f10c4224f1376f34",
+      "kind": "verbatim"
+    },
+    "controls19/PAIRING.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/PAIRING.json",
+      "sha256": "df2f38d226fa5a520f9ece1dbbbb76aa9f80aec8473ffd984b6b94447cd34719",
+      "kind": "verbatim; machine path locator normalized, original hash retained",
+      "original_sha256": "e5e2ee28112653fd379516aba8bd6266dafc8ec45356d0aa149138f3618d8257"
+    },
+    "controls19/IDENTITY.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/IDENTITY.json",
+      "sha256": "ee9717eb4fe12fc8b485c4caf9431951fb023ae4e90f9e393a64e268d869ca84",
+      "kind": "verbatim; machine path locator normalized, original hash retained",
+      "original_sha256": "e42426647143e7c2f29d07a464489b5bdc4b66419489cd291d631f9ec0079948"
+    },
+    "controls19/AFTER.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/AFTER.json",
+      "sha256": "ff0ee89b05dfd6c8773dde0c1dca65affaa57669872e97378869814a5ccad428",
+      "kind": "verbatim"
+    },
+    "controls19/LINEAR-REFERENCE-AUDIT.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/LINEAR-REFERENCE-AUDIT.json",
+      "sha256": "6035633a7ce0f050cb1a8d730218fdcd681529165fcf01be497334a0169a850b",
+      "kind": "verbatim; machine path locator normalized, original hash retained",
+      "original_sha256": "8d4c8b50f6c8a1de2ccc2710a428e56d7ec1e316154a77204b294798a3b5f421"
+    },
+    "controls19/MANIFEST.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/MANIFEST.json",
+      "sha256": "1561444a4918e1e1f02321bdfdd34705aed9ffa099f8c44a8d9ba2860cb4c576",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-parent-fine/dut.va": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n08/n08-parent-fine/dut.va",
+      "sha256": "042c286b6ffcabc84636fb65d504817b7fc578ebc3500e68971abac126899a51",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-parent-fine/SPEC.json": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n08/n08-parent-fine/SPEC.json",
+      "sha256": "c8259d8717421e0ab9b3e0ec373ed5f1130e327b1cdc7b45e34c6cfecf2f8ea2",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-parent-fine/RECEIPT.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n08/n08-parent-fine/RECEIPT.json",
+      "sha256": "a33eefe8c5295fee60abb78315b784d09f821573205b49f67bac2999a7948dc8",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-parent-fine/response.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n08/n08-parent-fine/response.json",
+      "sha256": "a1e2978f19144446391153fd898f5f3a47f0198bdd8dc16179a3642321e5bb35",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-parent-fine/reference/dut.va": {
+      "original_local_path": "remote/n08-n06-v1/raw/n08-parent-fine/dut.va",
+      "sha256": "042c286b6ffcabc84636fb65d504817b7fc578ebc3500e68971abac126899a51",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-parent-fine/reference/tb.scs": {
+      "original_local_path": "remote/n08-n06-v1/raw/n08-parent-fine/tb.scs",
+      "sha256": "cc2d9def9775a8b4c63fb26f2c0ba45d308935e907f5700015955fad8b8b7337",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-parent-fine/reference/RESULT.json": {
+      "original_local_path": "remote/n08-n06-v1/raw/n08-parent-fine/RESULT.json",
+      "sha256": "9e3f7ac5abbd9fb45680fe0adf4e19969ae4a780a844613b160f496eb2a06731",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-parent-fine/reference/query-native.psf": {
+      "original_local_path": "remote/n08-n06-v1/raw/n08-parent-fine/psf/tran.tran.tran",
+      "original_sha256": "3d1e5133509e7dec079c9932c3c9a79d7b2779c581c67e06528546fc02cd42be",
+      "sha256": "766c11eb657b130c4f7861aec653943360fc1ed1876a7f50fb92d721b1e07dcf",
+      "kind": "verbatim original HEADER and exact query VALUE blocks; no interpolation",
+      "original_native_rows": 1039,
+      "selected_original_row_indices": [
+        0,
+        141,
+        519,
+        663
+      ],
+      "missing_original_query_tokens": [
+        "0.25",
+        "0.375",
+        "0.75",
+        "0.875",
+        "1"
+      ],
+      "full_psf_availability": "local-only; missing verdict preserved from full-file source analysis; excerpt cannot independently prove absence"
+    },
+    "controls19/n08/n08-parent-fine/reference/spectre-log.json": {
+      "original_local_path": "remote/n08-n06-v1/raw/n08-parent-fine/spectre.log",
+      "original_sha256": "5c2efbcee0351c85d135c0e1618736a92b656573874fc9a3c0671054b6381403",
+      "sha256": "593f8bdfd87d3ca7f1a89281b12bfc94a02695351b6d563433c9306559fcae53",
+      "kind": "exact selected warning/completion/callback/floating lines"
+    },
+    "controls19/reference-runs/n08-n06-v1/TOOL_IDENTITY.json": {
+      "original_local_path": "remote/n08-n06-v1/raw/TOOL_IDENTITY.json",
+      "sha256": "0568fc5620481747beba3727ceedf66a16586a4cae3565c11948f52b4f06bcc7",
+      "kind": "verbatim; machine path locator normalized, original hash retained",
+      "original_sha256": "9aeff47c563a2e34a8b306ee28cd8b489f55463d93d579cf77b4b28d18b97d8e"
+    },
+    "controls19/reference-runs/n08-n06-v1/EXECUTION.json": {
+      "original_local_path": "remote/n08-n06-v1/raw/EXECUTION.json",
+      "sha256": "f7d817b9801176ae67fc510596c4c58e6144cc5caebf729bece3d4a8b1dde1ff",
+      "kind": "verbatim"
+    },
+    "controls19/reference-runs/n08-n06-v1/MANIFEST.json": {
+      "original_local_path": "remote/n08-n06-v1/raw/MANIFEST.json",
+      "sha256": "32e39483220b8f46edd4870b480ad5b2c77c529cdda179aad948d7a1d8800a05",
+      "kind": "verbatim"
+    },
+    "controls19/reference-runs/n08-n06-v1/OUTPUT_MANIFEST.json": {
+      "original_local_path": "remote/n08-n06-v1/raw/OUTPUT_MANIFEST.json",
+      "sha256": "7c631b1123bc9da4f40d58dfe890181200c50dac1ac4a1ffaa6a1bf3074754c5",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-boolean-fine/dut.va": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n08/n08-boolean-fine/dut.va",
+      "sha256": "76b858fd4e24dab13459cb5cc0ee46ebcf540fca640e3011df17b4ddbf9faf80",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-boolean-fine/SPEC.json": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n08/n08-boolean-fine/SPEC.json",
+      "sha256": "c8259d8717421e0ab9b3e0ec373ed5f1130e327b1cdc7b45e34c6cfecf2f8ea2",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-boolean-fine/RECEIPT.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n08/n08-boolean-fine/RECEIPT.json",
+      "sha256": "d3e38b63c5ad735f5941706bac9437e61fe4256ce3b08d91ce521eb2ee1d62e8",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-boolean-fine/response.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n08/n08-boolean-fine/response.json",
+      "sha256": "68b7da36e01f12b26be1e9d6a7e33733a2c73f42aec3930d58e8510077730794",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-boolean-fine/reference/dut.va": {
+      "original_local_path": "remote/n08-n06-v1/raw/n08-boolean-fine/dut.va",
+      "sha256": "76b858fd4e24dab13459cb5cc0ee46ebcf540fca640e3011df17b4ddbf9faf80",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-boolean-fine/reference/tb.scs": {
+      "original_local_path": "remote/n08-n06-v1/raw/n08-boolean-fine/tb.scs",
+      "sha256": "cc2d9def9775a8b4c63fb26f2c0ba45d308935e907f5700015955fad8b8b7337",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-boolean-fine/reference/RESULT.json": {
+      "original_local_path": "remote/n08-n06-v1/raw/n08-boolean-fine/RESULT.json",
+      "sha256": "cf5d15806eed05ff5892ce12c4a4816f4073376cc74f067ceeb683eec832bffe",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-boolean-fine/reference/query-native.psf": {
+      "original_local_path": "remote/n08-n06-v1/raw/n08-boolean-fine/psf/tran.tran.tran",
+      "original_sha256": "8404c99ad9eb0ae8d121c75564ebed28371936cfe723fbd24832ed3a84170449",
+      "sha256": "60b601e93e9648a99282b1a8fe107c4939726b21c4986c104d086213e7b0acc2",
+      "kind": "verbatim original HEADER and exact query VALUE blocks; no interpolation",
+      "original_native_rows": 1039,
+      "selected_original_row_indices": [
+        0,
+        141,
+        269,
+        413
+      ],
+      "missing_original_query_tokens": [
+        "0.5",
+        "0.625",
+        "0.75",
+        "0.875",
+        "1"
+      ],
+      "full_psf_availability": "local-only; missing verdict preserved from full-file source analysis; excerpt cannot independently prove absence"
+    },
+    "controls19/n08/n08-boolean-fine/reference/spectre-log.json": {
+      "original_local_path": "remote/n08-n06-v1/raw/n08-boolean-fine/spectre.log",
+      "original_sha256": "c751c10a195536812af291a962239250589326387296c2d68c3f3aaf37d21a82",
+      "sha256": "5528139fb5faeba08f71c2217ba18ff437ca77ac1e364f6beba3bdf4ed5bbea8",
+      "kind": "exact selected warning/completion/callback/floating lines"
+    },
+    "controls19/n08/n08-held-fine/dut.va": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n08/n08-held-fine/dut.va",
+      "sha256": "3680e8a4073e88603c0bb87377a7118a30ce06215e30385978d8bd57d1d05f2d",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-held-fine/SPEC.json": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n08/n08-held-fine/SPEC.json",
+      "sha256": "c8259d8717421e0ab9b3e0ec373ed5f1130e327b1cdc7b45e34c6cfecf2f8ea2",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-held-fine/RECEIPT.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n08/n08-held-fine/RECEIPT.json",
+      "sha256": "1a680fa42a6a000d304c6c7a9ebd6aaa1395ad07b2fd0a53ee69a678fbd18997",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-held-fine/response.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n08/n08-held-fine/response.json",
+      "sha256": "73206552dcf95f7bb01e041a2858f28671d5c72cc1bca9e445ba794166668ab3",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-held-fine/reference/dut.va": {
+      "original_local_path": "remote/n08-n06-v1/raw/n08-held-fine/dut.va",
+      "sha256": "3680e8a4073e88603c0bb87377a7118a30ce06215e30385978d8bd57d1d05f2d",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-held-fine/reference/tb.scs": {
+      "original_local_path": "remote/n08-n06-v1/raw/n08-held-fine/tb.scs",
+      "sha256": "cc2d9def9775a8b4c63fb26f2c0ba45d308935e907f5700015955fad8b8b7337",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-held-fine/reference/RESULT.json": {
+      "original_local_path": "remote/n08-n06-v1/raw/n08-held-fine/RESULT.json",
+      "sha256": "1fa29e56ac9e5e48dfba3f5c78f7ff00d7ff8f5c2b97dbe386037460f4aed255",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-held-fine/reference/query-native.psf": {
+      "original_local_path": "remote/n08-n06-v1/raw/n08-held-fine/psf/tran.tran.tran",
+      "original_sha256": "bac85a495ebb172431c14c3ff7e805c5c1ede7136b2837f66169a2f15bf2ba57",
+      "sha256": "9c9a17db4e5005f5ca2c5be405a98cdee6fd491bab3112aee36f14222376ac42",
+      "kind": "verbatim original HEADER and exact query VALUE blocks; no interpolation",
+      "original_native_rows": 1066,
+      "selected_original_row_indices": [
+        0,
+        141,
+        420,
+        565
+      ],
+      "missing_original_query_tokens": [
+        "0.25",
+        "0.625",
+        "0.75",
+        "0.875",
+        "1"
+      ],
+      "full_psf_availability": "local-only; missing verdict preserved from full-file source analysis; excerpt cannot independently prove absence"
+    },
+    "controls19/n08/n08-held-fine/reference/spectre-log.json": {
+      "original_local_path": "remote/n08-n06-v1/raw/n08-held-fine/spectre.log",
+      "original_sha256": "f2eff601a9ffda9fea23d6690adcb07101da10c1bf1f2767b15493a72da4d63a",
+      "sha256": "dd9830711954ed6aaea40c011ca030301efe45066356506e624fa9baefae774b",
+      "kind": "exact selected warning/completion/callback/floating lines"
+    },
+    "controls19/n08/n08-nonlinear-fine/dut.va": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n08/n08-nonlinear-fine/dut.va",
+      "sha256": "80d26f8d21fd143623971164004cc7ded564f18ed81f92b5bed76b826398936e",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-nonlinear-fine/SPEC.json": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n08/n08-nonlinear-fine/SPEC.json",
+      "sha256": "c8259d8717421e0ab9b3e0ec373ed5f1130e327b1cdc7b45e34c6cfecf2f8ea2",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-nonlinear-fine/RECEIPT.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n08/n08-nonlinear-fine/RECEIPT.json",
+      "sha256": "657ae11d23411e146e56a75bc6f63fddecf8f436c16621602e8bcaca0ea5a0fa",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-nonlinear-fine/response.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n08/n08-nonlinear-fine/response.json",
+      "sha256": "ef2de74218ab990a56638f6beb5b17d6f1db2018c478bdcc0e824315eb9e1e03",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-nonlinear-fine/reference/dut.va": {
+      "original_local_path": "remote/n08-n06-v1/raw/n08-nonlinear-fine/dut.va",
+      "sha256": "80d26f8d21fd143623971164004cc7ded564f18ed81f92b5bed76b826398936e",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-nonlinear-fine/reference/tb.scs": {
+      "original_local_path": "remote/n08-n06-v1/raw/n08-nonlinear-fine/tb.scs",
+      "sha256": "cc2d9def9775a8b4c63fb26f2c0ba45d308935e907f5700015955fad8b8b7337",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-nonlinear-fine/reference/RESULT.json": {
+      "original_local_path": "remote/n08-n06-v1/raw/n08-nonlinear-fine/RESULT.json",
+      "sha256": "76c3159360c27ab12831279d2c78761fc9b66242dc0b433451fffd679bb03f82",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-nonlinear-fine/reference/query-native.psf": {
+      "original_local_path": "remote/n08-n06-v1/raw/n08-nonlinear-fine/psf/tran.tran.tran",
+      "original_sha256": "db0406d44c0d9c4e7a7624fe872df939417f61401388c7e70d9ac89be119662b",
+      "sha256": "bd882b5e18c1505d10641ff8ff23bbc3c10914ea8e597d6fd81ab29d8de7ce05",
+      "kind": "verbatim original HEADER and exact query VALUE blocks; no interpolation",
+      "original_native_rows": 2237,
+      "selected_original_row_indices": [
+        0,
+        141,
+        519,
+        961,
+        1386,
+        1811,
+        2236
+      ],
+      "missing_original_query_tokens": [
+        "0.25",
+        "0.375"
+      ],
+      "full_psf_availability": "local-only; missing verdict preserved from full-file source analysis; excerpt cannot independently prove absence"
+    },
+    "controls19/n08/n08-nonlinear-fine/reference/spectre-log.json": {
+      "original_local_path": "remote/n08-n06-v1/raw/n08-nonlinear-fine/spectre.log",
+      "original_sha256": "ef25a8b43d061aecbc92add614b4cab0a9cba96e011f3751677036328da2ed1f",
+      "sha256": "1758d125d15dd3a5f5f101952e8e2f5d28587760a5d3699dbfcd104782df38e0",
+      "kind": "exact selected warning/completion/callback/floating lines"
+    },
+    "controls19/n08/n08-filter-fine/dut.va": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n08/n08-filter-fine/dut.va",
+      "sha256": "f2252f56bbec1f05a4461c8b22cf32be643af3e91ef556422171eaa9071f7cd0",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-filter-fine/SPEC.json": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n08/n08-filter-fine/SPEC.json",
+      "sha256": "c8259d8717421e0ab9b3e0ec373ed5f1130e327b1cdc7b45e34c6cfecf2f8ea2",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-filter-fine/RECEIPT.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n08/n08-filter-fine/RECEIPT.json",
+      "sha256": "da93d131d830a4623e83b0020207598c0740095d4b82f426a6a36e3de892c4a6",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-filter-fine/response.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n08/n08-filter-fine/response.json",
+      "sha256": "582f0f62d0efcf29353e0f992eaafd88ba1b88efa9d5dcf2a203285a1063ca5c",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-filter-fine/reference/dut.va": {
+      "original_local_path": "remote/n08-filter-v2/raw/n08-filter-fine/dut.va",
+      "sha256": "f2252f56bbec1f05a4461c8b22cf32be643af3e91ef556422171eaa9071f7cd0",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-filter-fine/reference/tb.scs": {
+      "original_local_path": "remote/n08-filter-v2/raw/n08-filter-fine/tb.scs",
+      "sha256": "cc2d9def9775a8b4c63fb26f2c0ba45d308935e907f5700015955fad8b8b7337",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-filter-fine/reference/RESULT.json": {
+      "original_local_path": "remote/n08-filter-v2/raw/n08-filter-fine/RESULT.json",
+      "sha256": "93287d5aff834c65090c2487394f43dfe011b6b9e0b0c2ae5ccc3d32103e4fb7",
+      "kind": "verbatim"
+    },
+    "controls19/n08/n08-filter-fine/reference/query-native.psf": {
+      "original_local_path": "remote/n08-filter-v2/raw/n08-filter-fine/psf/tran.tran.tran",
+      "original_sha256": "ee58a789ecc3943984ec2e7d1b2dbf6edb4d784ab440752ced74dbd60070bb37",
+      "sha256": "70a84f31f73310848c3f9aabf74f12180bc1cd3d1431efd7c2d1b9ded6474eb4",
+      "kind": "verbatim original HEADER and exact query VALUE blocks; no interpolation",
+      "original_native_rows": 1868,
+      "selected_original_row_indices": [
+        0,
+        141,
+        519,
+        1084,
+        1418,
+        1624,
+        1867
+      ],
+      "missing_original_query_tokens": [
+        "0.25",
+        "0.375"
+      ],
+      "full_psf_availability": "local-only; missing verdict preserved from full-file source analysis; excerpt cannot independently prove absence"
+    },
+    "controls19/n08/n08-filter-fine/reference/spectre-log.json": {
+      "original_local_path": "remote/n08-filter-v2/raw/n08-filter-fine/spectre.log",
+      "original_sha256": "607173fb97a9d1b8dfcea4d21df5d6f2b38386905b645b86e50d304b48890f50",
+      "sha256": "35c77cf047794c4921af71a35dbb4596717aa96f6de06ceabd65e7d51679f255",
+      "kind": "exact selected warning/completion/callback/floating lines"
+    },
+    "controls19/reference-runs/n08-filter-v2/TOOL_IDENTITY.json": {
+      "original_local_path": "remote/n08-filter-v2/raw/TOOL_IDENTITY.json",
+      "sha256": "22db7dba0f421733f433a29047373c3a03749dccad3f65fd4050adaa093b343e",
+      "kind": "verbatim; machine path locator normalized, original hash retained",
+      "original_sha256": "4b3980b7de40c848918e0a7b48fac3c2e62574e8b3e03b44c7c229f1c6c74ac0"
+    },
+    "controls19/reference-runs/n08-filter-v2/EXECUTION.json": {
+      "original_local_path": "remote/n08-filter-v2/raw/EXECUTION.json",
+      "sha256": "154333b34919f21ebddfb6b00b7efa45dfbe0911d7fd1afde66e9cab57e34cc9",
+      "kind": "verbatim"
+    },
+    "controls19/reference-runs/n08-filter-v2/MANIFEST.json": {
+      "original_local_path": "remote/n08-filter-v2/raw/MANIFEST.json",
+      "sha256": "ebe131aac84e02ad80e4781cdafcf0a11ad91013048149c9bd12c7c34062aaff",
+      "kind": "verbatim"
+    },
+    "controls19/reference-runs/n08-filter-v2/OUTPUT_MANIFEST.json": {
+      "original_local_path": "remote/n08-filter-v2/raw/OUTPUT_MANIFEST.json",
+      "sha256": "4efa7bfcac19117d34cda2e6d4a66ffeb13a1512ff80ce05fc8907addfc9a443",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-third_rise_integral/dut.va": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n19/root-third_rise_integral/dut.va",
+      "sha256": "effcf8bed0a691bd2c567145826c67833073e960957d59d0da54c96b01cf9974",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-third_rise_integral/SPEC.json": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n19/root-third_rise_integral/SPEC.json",
+      "sha256": "1ec4ad761c9a9fb6d5ca5d877e197798f4a02e08cf835d336da4e3caf48a068a",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-third_rise_integral/RECEIPT.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n19/root-third_rise_integral/RECEIPT.json",
+      "sha256": "65074253590a324db0e31cea061301dc50fa99334634d2d4225ee2b160eee3ac",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-third_rise_integral/response.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n19/root-third_rise_integral/response.json",
+      "sha256": "f827dfb737532f40dde2447dbee9a3dd20587f2c3504885b8530524bd9111620",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-third_rise_integral/reference/dut.va": {
+      "original_local_path": "remote/n19-root-window-v1/raw/root-third_rise_integral/dut.va",
+      "sha256": "effcf8bed0a691bd2c567145826c67833073e960957d59d0da54c96b01cf9974",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-third_rise_integral/reference/tb.scs": {
+      "original_local_path": "remote/n19-root-window-v1/raw/root-third_rise_integral/tb.scs",
+      "sha256": "0d8c43b19c1677fffc76b82cfa5bc2650668297be7d937a2e19e5ba7650659c0",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-third_rise_integral/reference/RESULT.json": {
+      "original_local_path": "remote/n19-root-window-v1/raw/root-third_rise_integral/RESULT.json",
+      "sha256": "0bc035aee3003f68ebb7a98f965b7cffcb69359f80a0c3d9261508e21a731532",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-third_rise_integral/reference/query-native.psf": {
+      "original_local_path": "remote/n19-root-window-v1/raw/root-third_rise_integral/psf/tran.tran.tran",
+      "original_sha256": "037ddabd94091811cebc7cc7d58f45354d7bffdc33bf757e5946a3d0ee75bdc8",
+      "sha256": "7db4739e7d0394c277f01f68011521ac6863ac4f91078950f42a2b4c53882940",
+      "kind": "verbatim original HEADER and exact query VALUE blocks; no interpolation",
+      "original_native_rows": 1387,
+      "selected_original_row_indices": [
+        0,
+        35,
+        51,
+        315,
+        685,
+        1015,
+        1331,
+        1370,
+        1386
+      ],
+      "missing_original_query_tokens": [],
+      "full_psf_availability": "local-only; missing verdict preserved from full-file source analysis; excerpt cannot independently prove absence"
+    },
+    "controls19/n19/root-third_rise_integral/reference/spectre-log.json": {
+      "original_local_path": "remote/n19-root-window-v1/raw/root-third_rise_integral/spectre.log",
+      "original_sha256": "b0d23bbd1a4d4f56176f472fff22b5cb1108355fafa9f2a55ec29ad50842ca2c",
+      "sha256": "7ca9fc8b2d7855dcc928d02ad276a3081f93c4deca3d6fcbf7840a718edd8408",
+      "kind": "exact selected warning/completion/callback/floating lines"
+    },
+    "controls19/reference-runs/n19-root-window-v1/TOOL_IDENTITY.json": {
+      "original_local_path": "remote/n19-root-window-v1/raw/TOOL_IDENTITY.json",
+      "sha256": "f0bba7bc6566e414b7d6093a7fc0b9c432fabb8d107d9dbd05d76a069596a00c",
+      "kind": "verbatim; machine path locator normalized, original hash retained",
+      "original_sha256": "b008ebb6656fdd70701e3728fc61a088fa056904233654c655338160742360e4"
+    },
+    "controls19/reference-runs/n19-root-window-v1/TOOL_IDENTITY_AFTER.json": {
+      "original_local_path": "remote/n19-root-window-v1/raw/TOOL_IDENTITY_AFTER.json",
+      "sha256": "28e379597227b09f8d86a1b5f50982f4e14c66552ab912a02e5e97dbbc678a66",
+      "kind": "verbatim; machine path locator normalized, original hash retained",
+      "original_sha256": "e2a8caea590af8458ef5738f552028106c0da50d755c54b6aaaec219fef220e9"
+    },
+    "controls19/reference-runs/n19-root-window-v1/EXECUTION.json": {
+      "original_local_path": "remote/n19-root-window-v1/raw/EXECUTION.json",
+      "sha256": "18739a0a92d1d9a71fffa690c32c722a6538e59168ba04815f9ec7a0bde3c122",
+      "kind": "verbatim"
+    },
+    "controls19/reference-runs/n19-root-window-v1/MANIFEST.json": {
+      "original_local_path": "remote/n19-root-window-v1/raw/MANIFEST.json",
+      "sha256": "933b9ac1362bd74b75f3e8ff437362af5e61f474f4d4566299b37b0972360f19",
+      "kind": "verbatim"
+    },
+    "controls19/reference-runs/n19-root-window-v1/OUTPUT_MANIFEST.json": {
+      "original_local_path": "remote/n19-root-window-v1/raw/OUTPUT_MANIFEST.json",
+      "sha256": "d105c29204eb27265c729650a0ac21c9c42d94b1e609830c4066a8c570c635bf",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_rise_after_cascade/dut.va": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n19/root-endpoint_rise_after_cascade/dut.va",
+      "sha256": "ebec8fc57b2bf414d3e2ebe0b46313237b018a184eecceb6b5971d738f5f11eb",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_rise_after_cascade/SPEC.json": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n19/root-endpoint_rise_after_cascade/SPEC.json",
+      "sha256": "8b805342f5a8bba56e909acac2e4a56ee5669e7151ece693504f6b86b7a8eedf",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_rise_after_cascade/RECEIPT.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n19/root-endpoint_rise_after_cascade/RECEIPT.json",
+      "sha256": "ef5f0cb806d76a3ba165276bfd64f27aec1b002766ea15b8a7a2d2bbced94cb8",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_rise_after_cascade/response.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n19/root-endpoint_rise_after_cascade/response.json",
+      "sha256": "3a881e12f651c073a30fa3144b64a66e9f5cf478d3739bc5588bce40c23bc2f7",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_rise_after_cascade/reference/dut.va": {
+      "original_local_path": "remote/n19-strobe-refinement-v1/raw/root-endpoint_rise_after_cascade/dut.va",
+      "sha256": "ebec8fc57b2bf414d3e2ebe0b46313237b018a184eecceb6b5971d738f5f11eb",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_rise_after_cascade/reference/tb.scs": {
+      "original_local_path": "remote/n19-strobe-refinement-v1/raw/root-endpoint_rise_after_cascade/tb.scs",
+      "sha256": "d1e4ba36e1eda5e906e45876eac4c35d88ea47876500044ff3b8326ba5e0db4f",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_rise_after_cascade/reference/RESULT.json": {
+      "original_local_path": "remote/n19-strobe-refinement-v1/raw/root-endpoint_rise_after_cascade/RESULT.json",
+      "sha256": "4ccf3ea03ab557c5216f9f4490c59b1673d308cb63d9c46ff98edc0659451eba",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_rise_after_cascade/reference/query-native.psf": {
+      "original_local_path": "remote/n19-strobe-refinement-v1/raw/root-endpoint_rise_after_cascade/psf/tran.tran.tran",
+      "original_sha256": "a0e93d3c673e0b13c87426bbe6c606ee7bf82faee810395708722389f85d2c8f",
+      "sha256": "720a17f7e1352a8ee17ccf958e02e564f6d48f9e61eb9c577686431ea96a9dd8",
+      "kind": "verbatim original HEADER and exact query VALUE blocks; no interpolation",
+      "original_native_rows": 3004,
+      "selected_original_row_indices": [
+        0,
+        730,
+        1445,
+        1562,
+        1930,
+        2288,
+        3003
+      ],
+      "missing_original_query_tokens": [],
+      "full_psf_availability": "local-only; missing verdict preserved from full-file source analysis; excerpt cannot independently prove absence"
+    },
+    "controls19/n19/root-endpoint_rise_after_cascade/reference/spectre-log.json": {
+      "original_local_path": "remote/n19-strobe-refinement-v1/raw/root-endpoint_rise_after_cascade/spectre.log",
+      "original_sha256": "2f5fd0c84f486d0f03c89f2e11d65e9d5b93083471adfc4e73a71fd01084d8d4",
+      "sha256": "069f0c6bbcc02f8859af877c3bd9f9eefc4cdccea458a9b14796f7aed695cd3a",
+      "kind": "exact selected warning/completion/callback/floating lines"
+    },
+    "controls19/reference-runs/n19-strobe-refinement-v1/TOOL_IDENTITY.json": {
+      "original_local_path": "remote/n19-strobe-refinement-v1/raw/TOOL_IDENTITY.json",
+      "sha256": "9a98b8ea6be85a9e373747f3a9e06f353965c029ae1c42686f5bd093064aeb86",
+      "kind": "verbatim; machine path locator normalized, original hash retained",
+      "original_sha256": "4a8918e667cbc91c0b8c37130581f95827d7ac8364dcad13eeeea20c80f13d86"
+    },
+    "controls19/reference-runs/n19-strobe-refinement-v1/TOOL_IDENTITY_AFTER.json": {
+      "original_local_path": "remote/n19-strobe-refinement-v1/raw/TOOL_IDENTITY_AFTER.json",
+      "sha256": "28e379597227b09f8d86a1b5f50982f4e14c66552ab912a02e5e97dbbc678a66",
+      "kind": "verbatim; machine path locator normalized, original hash retained",
+      "original_sha256": "e2a8caea590af8458ef5738f552028106c0da50d755c54b6aaaec219fef220e9"
+    },
+    "controls19/reference-runs/n19-strobe-refinement-v1/EXECUTION.json": {
+      "original_local_path": "remote/n19-strobe-refinement-v1/raw/EXECUTION.json",
+      "sha256": "8a684be4ecb1366c7d8a8b067ad4147608f6b2e94ccbe6b7a130f587b42ef275",
+      "kind": "verbatim"
+    },
+    "controls19/reference-runs/n19-strobe-refinement-v1/MANIFEST.json": {
+      "original_local_path": "remote/n19-strobe-refinement-v1/raw/MANIFEST.json",
+      "sha256": "77a6fdcf3f3154e7c4c4314fa2ee8896ab82a773304ed048b95114cef7953c53",
+      "kind": "verbatim"
+    },
+    "controls19/reference-runs/n19-strobe-refinement-v1/OUTPUT_MANIFEST.json": {
+      "original_local_path": "remote/n19-strobe-refinement-v1/raw/OUTPUT_MANIFEST.json",
+      "sha256": "45057c67bb40b2b6a01786f6c5b234f5735a9e754910fb70911b869d023328d9",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_fall_before_cascade/dut.va": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n19/root-endpoint_fall_before_cascade/dut.va",
+      "sha256": "ed9a968a5ca8201039309ff07efd854215c4c552211d8fb49355d502b46ccabd",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_fall_before_cascade/SPEC.json": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n19/root-endpoint_fall_before_cascade/SPEC.json",
+      "sha256": "418548af32fd24614fc340fe162615205441fcd71170d869ae96fa33688eb5ab",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_fall_before_cascade/RECEIPT.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n19/root-endpoint_fall_before_cascade/RECEIPT.json",
+      "sha256": "1a13e8dda8f7d2491ade5f86738ccbe39d3df998c2d5005ab8a564b46caa98b1",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_fall_before_cascade/response.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n19/root-endpoint_fall_before_cascade/response.json",
+      "sha256": "a880bc9205e7860f8da91cf1f2c5ccf8d4fea78da17eba9ef0ee75631c11ebcc",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_fall_before_cascade/reference/dut.va": {
+      "original_local_path": "remote/n19-strobe-refinement-v1/raw/root-endpoint_fall_before_cascade/dut.va",
+      "sha256": "ed9a968a5ca8201039309ff07efd854215c4c552211d8fb49355d502b46ccabd",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_fall_before_cascade/reference/tb.scs": {
+      "original_local_path": "remote/n19-strobe-refinement-v1/raw/root-endpoint_fall_before_cascade/tb.scs",
+      "sha256": "cc8ece4df807ab18480460c73fc1a184e9946e944858d48736154e36f346a679",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_fall_before_cascade/reference/RESULT.json": {
+      "original_local_path": "remote/n19-strobe-refinement-v1/raw/root-endpoint_fall_before_cascade/RESULT.json",
+      "sha256": "75c53657c10d416d955986efbf793dc0782454c5b8f97723eaeb454ccfa39665",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_fall_before_cascade/reference/query-native.psf": {
+      "original_local_path": "remote/n19-strobe-refinement-v1/raw/root-endpoint_fall_before_cascade/psf/tran.tran.tran",
+      "original_sha256": "7cff72a80715962d3a338bd5fb41401e2ed7048960429d4620b4fcd1c8ba9812",
+      "sha256": "299447ad0cb05a064460b535bef76917a52557d7adac190d6c9d11a52ff51b2c",
+      "kind": "verbatim original HEADER and exact query VALUE blocks; no interpolation",
+      "original_native_rows": 2973,
+      "selected_original_row_indices": [
+        0,
+        730,
+        1445,
+        1531,
+        1899,
+        2257,
+        2972
+      ],
+      "missing_original_query_tokens": [],
+      "full_psf_availability": "local-only; missing verdict preserved from full-file source analysis; excerpt cannot independently prove absence"
+    },
+    "controls19/n19/root-endpoint_fall_before_cascade/reference/spectre-log.json": {
+      "original_local_path": "remote/n19-strobe-refinement-v1/raw/root-endpoint_fall_before_cascade/spectre.log",
+      "original_sha256": "5d28ec7bc47dd3b41e64f3d087b3c2ae9b2033b533291791ff27bdc06dedbe93",
+      "sha256": "906ca9ff20b9217b8624a5e60dbf5f8938e6598762cdca22000e9078a3f1dd7f",
+      "kind": "exact selected warning/completion/callback/floating lines"
+    },
+    "controls19/n19/root-endpoint_rise_separated/dut.va": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n19/root-endpoint_rise_separated/dut.va",
+      "sha256": "cc8b7f601b8538ce7869477196a4211fddb250cbe737a987f0ee31c0c7369522",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_rise_separated/SPEC.json": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n19/root-endpoint_rise_separated/SPEC.json",
+      "sha256": "8b805342f5a8bba56e909acac2e4a56ee5669e7151ece693504f6b86b7a8eedf",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_rise_separated/RECEIPT.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n19/root-endpoint_rise_separated/RECEIPT.json",
+      "sha256": "150f62e965c877be1dbbfd39409c5ba29551dcec1c4554c2585b0967bdafe151",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_rise_separated/response.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n19/root-endpoint_rise_separated/response.json",
+      "sha256": "364b000dd14627cb91314d262bd12e4ecdfb2b6bcc7d0c0b28157d83495dca94",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_rise_separated/reference/dut.va": {
+      "original_local_path": "remote/n19-strobe-refinement-v1/raw/root-endpoint_rise_separated/dut.va",
+      "sha256": "cc8b7f601b8538ce7869477196a4211fddb250cbe737a987f0ee31c0c7369522",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_rise_separated/reference/tb.scs": {
+      "original_local_path": "remote/n19-strobe-refinement-v1/raw/root-endpoint_rise_separated/tb.scs",
+      "sha256": "d1e4ba36e1eda5e906e45876eac4c35d88ea47876500044ff3b8326ba5e0db4f",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_rise_separated/reference/RESULT.json": {
+      "original_local_path": "remote/n19-strobe-refinement-v1/raw/root-endpoint_rise_separated/RESULT.json",
+      "sha256": "bf6b4505150cc4cb9630fdaabeed37b4208f1dcc454154651623247a60c46819",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_rise_separated/reference/query-native.psf": {
+      "original_local_path": "remote/n19-strobe-refinement-v1/raw/root-endpoint_rise_separated/psf/tran.tran.tran",
+      "original_sha256": "02b6e8916293b675d193d279032396ea283fe0c119b24067c898705be4747de2",
+      "sha256": "79f19d6f7a82decf4febc75156663d1f0f45cf299d9c61c02564e2d19f1fd289",
+      "kind": "verbatim original HEADER and exact query VALUE blocks; no interpolation",
+      "original_native_rows": 3286,
+      "selected_original_row_indices": [
+        0,
+        715,
+        1430,
+        1797,
+        2212,
+        2570,
+        3285
+      ],
+      "missing_original_query_tokens": [],
+      "full_psf_availability": "local-only; missing verdict preserved from full-file source analysis; excerpt cannot independently prove absence"
+    },
+    "controls19/n19/root-endpoint_rise_separated/reference/spectre-log.json": {
+      "original_local_path": "remote/n19-strobe-refinement-v1/raw/root-endpoint_rise_separated/spectre.log",
+      "original_sha256": "59bc0c9e1f404fac17aaac436e1e9aeb2a983bc41177a9283068406bba7603be",
+      "sha256": "cd728ebaf8b4e352b259b8f07aed8f383400bbfd94b7c55af76e697de1f60714",
+      "kind": "exact selected warning/completion/callback/floating lines"
+    },
+    "controls19/n19/root-third_fall_filter/dut.va": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n19/root-third_fall_filter/dut.va",
+      "sha256": "6e12cbf357bfba46a44b92e48ead6d2c70cb732a65527548d5332176fa7cdf40",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-third_fall_filter/SPEC.json": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n19/root-third_fall_filter/SPEC.json",
+      "sha256": "c7c07adb8afea2f7bf885b94ee8e82210e28c539620f38bb3ac2adc29a84e3bf",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-third_fall_filter/RECEIPT.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n19/root-third_fall_filter/RECEIPT.json",
+      "sha256": "c218aa788f9c38dbe700023fe78f39adf3e5543dfd45af89445fad43799b04c7",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-third_fall_filter/response.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n19/root-third_fall_filter/response.json",
+      "sha256": "2f8cca57970eba13bc2985292d2b8df0e969bb7680a244cc7fee38ca0ed66113",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-third_fall_filter/reference/dut.va": {
+      "original_local_path": "remote/n19-root-window-v1/raw/root-third_fall_filter/dut.va",
+      "sha256": "6e12cbf357bfba46a44b92e48ead6d2c70cb732a65527548d5332176fa7cdf40",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-third_fall_filter/reference/tb.scs": {
+      "original_local_path": "remote/n19-root-window-v1/raw/root-third_fall_filter/tb.scs",
+      "sha256": "d62051380f7efca13da591f182a76f1b6bbe7047e4679f3c2ddfc70171ebdd12",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-third_fall_filter/reference/RESULT.json": {
+      "original_local_path": "remote/n19-root-window-v1/raw/root-third_fall_filter/RESULT.json",
+      "sha256": "32320fd4d7d8aacc50b20f6dd90361d5bb607ed64cccb8edcbde6b19a7ab4e0b",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-third_fall_filter/reference/query-native.psf": {
+      "original_local_path": "remote/n19-root-window-v1/raw/root-third_fall_filter/psf/tran.tran.tran",
+      "original_sha256": "73a22577d0bce7350fdbd51698750ec44371ed12b7d1f80fa98049a140dabb3a",
+      "sha256": "56c8070e0d4625a4ee669262b4c4e310cbceeaeccd3232a3a0269f5bd275b541",
+      "kind": "verbatim original HEADER and exact query VALUE blocks; no interpolation",
+      "original_native_rows": 2981,
+      "selected_original_row_indices": [
+        0,
+        35,
+        51,
+        918,
+        1793,
+        2166,
+        2396,
+        2747,
+        2980
+      ],
+      "missing_original_query_tokens": [],
+      "full_psf_availability": "local-only; missing verdict preserved from full-file source analysis; excerpt cannot independently prove absence"
+    },
+    "controls19/n19/root-third_fall_filter/reference/spectre-log.json": {
+      "original_local_path": "remote/n19-root-window-v1/raw/root-third_fall_filter/spectre.log",
+      "original_sha256": "354feb6760897061468b78278b5bc4c4d5b1d69de4bcccdd9bc31fa972571d6b",
+      "sha256": "55d52d96a73fe959af77c78662cda733af2a1e8a2c5d4550780b4a3cc0bfde37",
+      "kind": "exact selected warning/completion/callback/floating lines"
+    },
+    "controls19/n19/root-endpoint_highgain_safety/dut.va": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n19/root-endpoint_highgain_safety/dut.va",
+      "sha256": "ff5df389d123471db743641e9ae0a5cf5450b0735e42fc6744905ea4032c5fb7",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_highgain_safety/SPEC.json": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n19/root-endpoint_highgain_safety/SPEC.json",
+      "sha256": "1882bd6dc91c380925b4271b362f27eaaa22e285266842f5ee76dbd649f0a985",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_highgain_safety/RECEIPT.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n19/root-endpoint_highgain_safety/RECEIPT.json",
+      "sha256": "019181df76e041ab8cd36c17c02acc249982110b313d4e8b4cdedfcf002115ed",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_highgain_safety/reference/dut.va": {
+      "original_local_path": "remote/n19-root-window-v1/raw/root-endpoint_highgain_safety/dut.va",
+      "sha256": "ff5df389d123471db743641e9ae0a5cf5450b0735e42fc6744905ea4032c5fb7",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_highgain_safety/reference/tb.scs": {
+      "original_local_path": "remote/n19-root-window-v1/raw/root-endpoint_highgain_safety/tb.scs",
+      "sha256": "76c10d3fd5c1c55c15d3dd0711c3472c9618e4f78536dd9ead93dfa53aad0e6a",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_highgain_safety/reference/RESULT.json": {
+      "original_local_path": "remote/n19-root-window-v1/raw/root-endpoint_highgain_safety/RESULT.json",
+      "sha256": "252093326e5864289690b774d730aeac600d198c4d8859d1cadce252e656a8fa",
+      "kind": "verbatim"
+    },
+    "controls19/n19/root-endpoint_highgain_safety/reference/query-native.psf": {
+      "original_local_path": "remote/n19-root-window-v1/raw/root-endpoint_highgain_safety/psf/tran.tran.tran",
+      "original_sha256": "945ec7d1dbe1cec26678f522a7b55a3167b645eea79128b741b33c4fb1cb807f",
+      "sha256": "dca0639978c7e96c260be7ecad85557021444da8ac4466a3f1ed20021763a72d",
+      "kind": "verbatim original HEADER and exact query VALUE blocks; no interpolation",
+      "original_native_rows": 2030,
+      "selected_original_row_indices": [
+        0,
+        1017,
+        1279
+      ],
+      "missing_original_query_tokens": [
+        "4.9999999999999998E-8",
+        "9.9999999999999995E-8",
+        "1.4999999999999999E-7",
+        "1.9999999999999999E-7"
+      ],
+      "full_psf_availability": "local-only; missing verdict preserved from full-file source analysis; excerpt cannot independently prove absence"
+    },
+    "controls19/n19/root-endpoint_highgain_safety/reference/spectre-log.json": {
+      "original_local_path": "remote/n19-root-window-v1/raw/root-endpoint_highgain_safety/spectre.log",
+      "original_sha256": "653ace1a59e0111e460815f4ef6d661cccd7da49777e1b1fc59fac3be52e1803",
+      "sha256": "79eab5e2eb2b17ee404469bc5bc200ba6bf9545669be7e6deda1c1458d5963ef",
+      "kind": "exact selected warning/completion/callback/floating lines"
+    },
+    "controls19/n08c/n08c-transres-positive-forced/dut.va": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n08c/n08c-transres-positive-forced/dut.va",
+      "sha256": "a0b2b14ef90f7fecb1e0e0cf635b32bd44c69c13dd8c930f53f695476477235e",
+      "kind": "verbatim"
+    },
+    "controls19/n08c/n08c-transres-positive-forced/SPEC.json": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n08c/n08c-transres-positive-forced/SPEC.json",
+      "sha256": "ab302eb33f53f10ad99170860ce33e7449d5873cd08f189afcb532d39240da32",
+      "kind": "verbatim"
+    },
+    "controls19/n08c/n08c-transres-positive-forced/RECEIPT.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n08c/n08c-transres-positive-forced/RECEIPT.json",
+      "sha256": "592ae70fd44f187628dabce9f2d7f7aab4d811d033441fed07c377bd1074c573",
+      "kind": "verbatim"
+    },
+    "controls19/n08c/n08c-transres-positive-forced/response.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n08c/n08c-transres-positive-forced/response.json",
+      "sha256": "f8eff61515e9252e73d7ec4c40f1279b7ea74edf08d47f8d3a2cd8856dbc9fe3",
+      "kind": "verbatim"
+    },
+    "controls19/n08c/n08c-transres-positive-forced/reference/dut.va": {
+      "original_local_path": "remote/n08c-transres-positive-v1/raw/n08c-transres-positive-forced/dut.va",
+      "sha256": "a0b2b14ef90f7fecb1e0e0cf635b32bd44c69c13dd8c930f53f695476477235e",
+      "kind": "verbatim"
+    },
+    "controls19/n08c/n08c-transres-positive-forced/reference/tb.scs": {
+      "original_local_path": "remote/n08c-transres-positive-v1/raw/n08c-transres-positive-forced/tb.scs",
+      "sha256": "5c8fd6b4b2592f75f998dcc1db5ff33cd08dd303107a01d582c3f6a62fdd7937",
+      "kind": "verbatim"
+    },
+    "controls19/n08c/n08c-transres-positive-forced/reference/RESULT.json": {
+      "original_local_path": "remote/n08c-transres-positive-v1/raw/n08c-transres-positive-forced/RESULT.json",
+      "sha256": "6f7c4a0bfe360f36aaf45862da20c2b8b895e293c1d15212908b6ce87c1ace37",
+      "kind": "verbatim"
+    },
+    "controls19/n08c/n08c-transres-positive-forced/reference/query-native.psf": {
+      "original_local_path": "remote/n08c-transres-positive-v1/raw/n08c-transres-positive-forced/psf/tran.tran.tran",
+      "original_sha256": "e466c06a8951eea686bd2266f001c4103136ceba9255443f236d560f0e83e69b",
+      "sha256": "1b05dc41a62f7367cd1d9077d2492a89e81e0022e1d9e0cba2113ac95a58a23c",
+      "kind": "verbatim original HEADER and exact query VALUE blocks; no interpolation",
+      "original_native_rows": 476,
+      "selected_original_row_indices": [
+        0,
+        301,
+        326,
+        353,
+        475
+      ],
+      "missing_original_query_tokens": [],
+      "full_psf_availability": "local-only; missing verdict preserved from full-file source analysis; excerpt cannot independently prove absence"
+    },
+    "controls19/n08c/n08c-transres-positive-forced/reference/spectre-log.json": {
+      "original_local_path": "remote/n08c-transres-positive-v1/raw/n08c-transres-positive-forced/spectre.log",
+      "original_sha256": "4c8d1f4bab01db7296bd2c6b608d07be3d893e4879e99fe0c652acef40cb959d",
+      "sha256": "01d05c2a7f65153dc6b4c58dc8b345d13ab171e830f294dc53fd86fea1d1f3d2",
+      "kind": "exact selected warning/completion/callback/floating lines"
+    },
+    "controls19/reference-runs/n08c-transres-positive-v1/TOOL_IDENTITY.json": {
+      "original_local_path": "remote/n08c-transres-positive-v1/raw/TOOL_IDENTITY.json",
+      "sha256": "23b7904987a2ffb816ddf7fbedd7e1b71056090698151f243c63a02f2596b2e0",
+      "kind": "verbatim; machine path locator normalized, original hash retained",
+      "original_sha256": "ffd018f46f576a87d50ca096330e924ca3a85383bba62b0779ed5d39e34e4709"
+    },
+    "controls19/reference-runs/n08c-transres-positive-v1/TOOL_IDENTITY_AFTER.json": {
+      "original_local_path": "remote/n08c-transres-positive-v1/raw/TOOL_IDENTITY_AFTER.json",
+      "sha256": "28e379597227b09f8d86a1b5f50982f4e14c66552ab912a02e5e97dbbc678a66",
+      "kind": "verbatim; machine path locator normalized, original hash retained",
+      "original_sha256": "e2a8caea590af8458ef5738f552028106c0da50d755c54b6aaaec219fef220e9"
+    },
+    "controls19/reference-runs/n08c-transres-positive-v1/EXECUTION.json": {
+      "original_local_path": "remote/n08c-transres-positive-v1/raw/EXECUTION.json",
+      "sha256": "c21171c3fcda1efff7b640186c5b39e0f9e4773ff9537501b18931aad88849cf",
+      "kind": "verbatim"
+    },
+    "controls19/reference-runs/n08c-transres-positive-v1/MANIFEST.json": {
+      "original_local_path": "remote/n08c-transres-positive-v1/raw/MANIFEST.json",
+      "sha256": "460802076c9b6d2a221bd459a1174ea48a68cb9b248479676128ea52909dd8e1",
+      "kind": "verbatim"
+    },
+    "controls19/reference-runs/n08c-transres-positive-v1/OUTPUT_MANIFEST.json": {
+      "original_local_path": "remote/n08c-transres-positive-v1/raw/OUTPUT_MANIFEST.json",
+      "sha256": "ec38bf972bc718c5fbeb97e98d274c623a9f98a18389881a2e69b00875569b51",
+      "kind": "verbatim"
+    },
+    "controls19/n07a/n07-zero_tol_dyadic-marked-ordinary/dut.va": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n07a/n07-zero_tol_dyadic-marked-ordinary/dut.va",
+      "sha256": "1498ac448d75bf19abbfa51c96d8e185b857a154ad9326815383f985edf5911b",
+      "kind": "verbatim"
+    },
+    "controls19/n07a/n07-zero_tol_dyadic-marked-ordinary/SPEC.json": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n07a/n07-zero_tol_dyadic-marked-ordinary/SPEC.json",
+      "sha256": "63e042ab2e6441faff034e6831e9678e2255aabdf2eec789c8ec7483aa930ad6",
+      "kind": "verbatim"
+    },
+    "controls19/n07a/n07-zero_tol_dyadic-marked-ordinary/RECEIPT.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n07a/n07-zero_tol_dyadic-marked-ordinary/RECEIPT.json",
+      "sha256": "ac14b3b2c2644d3aacf2461a97c0816a5bb880d73ddd7ae924c43d82e1fd4e61",
+      "kind": "verbatim"
+    },
+    "controls19/n07a/n07-zero_tol_dyadic-marked-ordinary/reference/dut.va": {
+      "original_local_path": "remote/n07-zero-v2/raw/n07-zero_tol_dyadic-marked-ordinary/dut.va",
+      "sha256": "1498ac448d75bf19abbfa51c96d8e185b857a154ad9326815383f985edf5911b",
+      "kind": "verbatim"
+    },
+    "controls19/n07a/n07-zero_tol_dyadic-marked-ordinary/reference/tb.scs": {
+      "original_local_path": "remote/n07-zero-v2/raw/n07-zero_tol_dyadic-marked-ordinary/tb.scs",
+      "sha256": "5362a040f10fbd6b356ac4e62b8302aeb5c759a426853e7d068e4dc1c21e08a4",
+      "kind": "verbatim"
+    },
+    "controls19/n07a/n07-zero_tol_dyadic-marked-ordinary/reference/RESULT.json": {
+      "original_local_path": "remote/n07-zero-v2/raw/n07-zero_tol_dyadic-marked-ordinary/RESULT.json",
+      "sha256": "a6f4caa52e2b94f14dd06ba495e86e55f1456e4f4452113a161fa9e9f2d4fe82",
+      "kind": "verbatim"
+    },
+    "controls19/n07a/n07-zero_tol_dyadic-marked-ordinary/reference/query-native.psf": {
+      "original_local_path": "remote/n07-zero-v2/raw/n07-zero_tol_dyadic-marked-ordinary/psf/tran.tran.tran",
+      "original_sha256": "78f8e9786e518cd96ce60e1718325b0852ba1203ade2f4aba3bfba9ad75d58ce",
+      "sha256": "ff98688ef59bfc70a4284c02f912895c02eb1fab8ba96c95e9de295454b20454",
+      "kind": "verbatim original HEADER and exact query VALUE blocks; no interpolation",
+      "original_native_rows": 180,
+      "selected_original_row_indices": [
+        0,
+        34,
+        68,
+        105,
+        142,
+        179
+      ],
+      "missing_original_query_tokens": [],
+      "full_psf_availability": "local-only; missing verdict preserved from full-file source analysis; excerpt cannot independently prove absence"
+    },
+    "controls19/n07a/n07-zero_tol_dyadic-marked-ordinary/reference/spectre-log.json": {
+      "original_local_path": "remote/n07-zero-v2/raw/n07-zero_tol_dyadic-marked-ordinary/spectre.log",
+      "original_sha256": "5c4eecf82a9aca9193837dbbb91b453b853f274245124d33ff8ea4d02a7618fb",
+      "sha256": "ca5e12b1771e19df10abad888432606a9dee35d4332e43af13d48c991a337718",
+      "kind": "exact selected warning/completion/callback/floating lines"
+    },
+    "controls19/reference-runs/n07-zero-v2/TOOL_IDENTITY.json": {
+      "original_local_path": "remote/n07-zero-v2/raw/TOOL_IDENTITY.json",
+      "sha256": "264a4c70d4a0b7b37aabeca6808a77c2aa4581a53685f343b529cc5a5913fc5b",
+      "kind": "verbatim; machine path locator normalized, original hash retained",
+      "original_sha256": "b0d302758ee3b80f04cc86eaa93dcc8357ddda894eb55cbb3e6e023eb9088208"
+    },
+    "controls19/reference-runs/n07-zero-v2/EXECUTION.json": {
+      "original_local_path": "remote/n07-zero-v2/raw/EXECUTION.json",
+      "sha256": "a55ed4664b41ecf4c5c88c874713ee072550ee4b6e25f857bbe32b6126c2a80e",
+      "kind": "verbatim"
+    },
+    "controls19/reference-runs/n07-zero-v2/MANIFEST.json": {
+      "original_local_path": "remote/n07-zero-v2/raw/MANIFEST.json",
+      "sha256": "4b61b1479d5f4dc8c20bc7d91ce3b656bcf661e538d6dabbff206e330d56bcb8",
+      "kind": "verbatim"
+    },
+    "controls19/reference-runs/n07-zero-v2/OUTPUT_MANIFEST.json": {
+      "original_local_path": "remote/n07-zero-v2/raw/OUTPUT_MANIFEST.json",
+      "sha256": "ccc8aa05072caa9f6948437babbf97b35f2046800acfe7d75252e018c5469ee8",
+      "kind": "verbatim"
+    },
+    "controls19/n07a/n07-zero_tol_dyadic-marked-strobed/dut.va": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n07a/n07-zero_tol_dyadic-marked-strobed/dut.va",
+      "sha256": "1498ac448d75bf19abbfa51c96d8e185b857a154ad9326815383f985edf5911b",
+      "kind": "verbatim"
+    },
+    "controls19/n07a/n07-zero_tol_dyadic-marked-strobed/SPEC.json": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n07a/n07-zero_tol_dyadic-marked-strobed/SPEC.json",
+      "sha256": "62df15db4f942ef7072a22f4cf85cd2d51a506f2235008f4bbce470f40643f13",
+      "kind": "verbatim"
+    },
+    "controls19/n07a/n07-zero_tol_dyadic-marked-strobed/RECEIPT.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n07a/n07-zero_tol_dyadic-marked-strobed/RECEIPT.json",
+      "sha256": "303994224aac7c2debb117ec75d6fc6871817e1419a940497472d48efe49da7f",
+      "kind": "verbatim"
+    },
+    "controls19/n07a/n07-zero_tol_dyadic-marked-strobed/reference/dut.va": {
+      "original_local_path": "remote/n07-zero-v2/raw/n07-zero_tol_dyadic-marked-strobed/dut.va",
+      "sha256": "1498ac448d75bf19abbfa51c96d8e185b857a154ad9326815383f985edf5911b",
+      "kind": "verbatim"
+    },
+    "controls19/n07a/n07-zero_tol_dyadic-marked-strobed/reference/tb.scs": {
+      "original_local_path": "remote/n07-zero-v2/raw/n07-zero_tol_dyadic-marked-strobed/tb.scs",
+      "sha256": "4e5716d9c9245b31aa92e2e5d4adb767f9c105aff51228ff8ac74858406d31db",
+      "kind": "verbatim"
+    },
+    "controls19/n07a/n07-zero_tol_dyadic-marked-strobed/reference/RESULT.json": {
+      "original_local_path": "remote/n07-zero-v2/raw/n07-zero_tol_dyadic-marked-strobed/RESULT.json",
+      "sha256": "fd52b33c73d9318deb7933f492e7afa2e4bc27307ac70bd2059343952f7659e5",
+      "kind": "verbatim"
+    },
+    "controls19/n07a/n07-zero_tol_dyadic-marked-strobed/reference/query-native.psf": {
+      "original_local_path": "remote/n07-zero-v2/raw/n07-zero_tol_dyadic-marked-strobed/psf/tran.tran.tran",
+      "original_sha256": "8d1057f543481739dc58c57917d6d6e6efd1ae540eb70e75212fe202f6efaed0",
+      "sha256": "a6609b3b7e997e1d65489a649088d63a1434d3b8c544621c4201cabf06998bc0",
+      "kind": "verbatim original HEADER and exact query VALUE blocks; no interpolation",
+      "original_native_rows": 180,
+      "selected_original_row_indices": [
+        0,
+        34,
+        68,
+        105,
+        142,
+        179
+      ],
+      "missing_original_query_tokens": [],
+      "full_psf_availability": "local-only; missing verdict preserved from full-file source analysis; excerpt cannot independently prove absence"
+    },
+    "controls19/n07a/n07-zero_tol_dyadic-marked-strobed/reference/spectre-log.json": {
+      "original_local_path": "remote/n07-zero-v2/raw/n07-zero_tol_dyadic-marked-strobed/spectre.log",
+      "original_sha256": "188d5bf97aa40e68180b73f0019c0d9234443bb635c4d27f630a7222e0e1caee",
+      "sha256": "c186d6552f27fb403f5276d65da5ba1243150a87823c47738718b7a681c87d44",
+      "kind": "exact selected warning/completion/callback/floating lines"
+    },
+    "controls19/n07a/n07-zero_tol_decimal-marked-ordinary/dut.va": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n07a/n07-zero_tol_decimal-marked-ordinary/dut.va",
+      "sha256": "bbafa8bec4f4659590684e349aa422d668597b8b672104ff227d6d830b42f793",
+      "kind": "verbatim"
+    },
+    "controls19/n07a/n07-zero_tol_decimal-marked-ordinary/SPEC.json": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n07a/n07-zero_tol_decimal-marked-ordinary/SPEC.json",
+      "sha256": "63e042ab2e6441faff034e6831e9678e2255aabdf2eec789c8ec7483aa930ad6",
+      "kind": "verbatim"
+    },
+    "controls19/n07a/n07-zero_tol_decimal-marked-ordinary/RECEIPT.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n07a/n07-zero_tol_decimal-marked-ordinary/RECEIPT.json",
+      "sha256": "ae9f09b1fadb360cf31f9ec8857ab800470b6f6688c5e2d9673e80038cdef9c9",
+      "kind": "verbatim"
+    },
+    "controls19/n07a/n07-zero_tol_decimal-marked-ordinary/reference/dut.va": {
+      "original_local_path": "remote/n07-zero-v2/raw/n07-zero_tol_decimal-marked-ordinary/dut.va",
+      "sha256": "bbafa8bec4f4659590684e349aa422d668597b8b672104ff227d6d830b42f793",
+      "kind": "verbatim"
+    },
+    "controls19/n07a/n07-zero_tol_decimal-marked-ordinary/reference/tb.scs": {
+      "original_local_path": "remote/n07-zero-v2/raw/n07-zero_tol_decimal-marked-ordinary/tb.scs",
+      "sha256": "5362a040f10fbd6b356ac4e62b8302aeb5c759a426853e7d068e4dc1c21e08a4",
+      "kind": "verbatim"
+    },
+    "controls19/n07a/n07-zero_tol_decimal-marked-ordinary/reference/RESULT.json": {
+      "original_local_path": "remote/n07-zero-v2/raw/n07-zero_tol_decimal-marked-ordinary/RESULT.json",
+      "sha256": "d4be4bd60022f895e9d044277880046982ed01b8bfe54e070a3b340dc89ef264",
+      "kind": "verbatim"
+    },
+    "controls19/n07a/n07-zero_tol_decimal-marked-ordinary/reference/query-native.psf": {
+      "original_local_path": "remote/n07-zero-v2/raw/n07-zero_tol_decimal-marked-ordinary/psf/tran.tran.tran",
+      "original_sha256": "fac355358276cea9510f4eef63852b4901951392b099b7056fc2b26c9364ed66",
+      "sha256": "fc9bf5df5b9051ba2afcc95b7761fc55bf969b120e6b459b119ea7d057ecdb0a",
+      "kind": "verbatim original HEADER and exact query VALUE blocks; no interpolation",
+      "original_native_rows": 171,
+      "selected_original_row_indices": [
+        0,
+        130,
+        170
+      ],
+      "missing_original_query_tokens": [
+        "0.125",
+        "0.25",
+        "0.375"
+      ],
+      "full_psf_availability": "local-only; missing verdict preserved from full-file source analysis; excerpt cannot independently prove absence"
+    },
+    "controls19/n07a/n07-zero_tol_decimal-marked-ordinary/reference/spectre-log.json": {
+      "original_local_path": "remote/n07-zero-v2/raw/n07-zero_tol_decimal-marked-ordinary/spectre.log",
+      "original_sha256": "69d50e4d008ed6cc754c8153479bb7c6d449e610e9beeb1ceb02eb05b47b835d",
+      "sha256": "3493c0f521f4c16b2163636c26e61ad95728d3391fd723f590ac0c823a71b194",
+      "kind": "exact selected warning/completion/callback/floating lines"
+    },
+    "controls19/n07a/n07-zero_tol_decimal-marked-strobed/dut.va": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n07a/n07-zero_tol_decimal-marked-strobed/dut.va",
+      "sha256": "bbafa8bec4f4659590684e349aa422d668597b8b672104ff227d6d830b42f793",
+      "kind": "verbatim"
+    },
+    "controls19/n07a/n07-zero_tol_decimal-marked-strobed/SPEC.json": {
+      "original_local_path": "delivery/r01-reference-plan/frozen/n07a/n07-zero_tol_decimal-marked-strobed/SPEC.json",
+      "sha256": "62df15db4f942ef7072a22f4cf85cd2d51a506f2235008f4bbce470f40643f13",
+      "kind": "verbatim"
+    },
+    "controls19/n07a/n07-zero_tol_decimal-marked-strobed/RECEIPT.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/n07a/n07-zero_tol_decimal-marked-strobed/RECEIPT.json",
+      "sha256": "b3cf76a07c0de5e6e31656c1d422271da0fe928c6e5a247c7fac4046dce43ba9",
+      "kind": "verbatim"
+    },
+    "controls19/n07a/n07-zero_tol_decimal-marked-strobed/reference/dut.va": {
+      "original_local_path": "remote/n07-zero-v2/raw/n07-zero_tol_decimal-marked-strobed/dut.va",
+      "sha256": "bbafa8bec4f4659590684e349aa422d668597b8b672104ff227d6d830b42f793",
+      "kind": "verbatim"
+    },
+    "controls19/n07a/n07-zero_tol_decimal-marked-strobed/reference/tb.scs": {
+      "original_local_path": "remote/n07-zero-v2/raw/n07-zero_tol_decimal-marked-strobed/tb.scs",
+      "sha256": "4e5716d9c9245b31aa92e2e5d4adb767f9c105aff51228ff8ac74858406d31db",
+      "kind": "verbatim"
+    },
+    "controls19/n07a/n07-zero_tol_decimal-marked-strobed/reference/RESULT.json": {
+      "original_local_path": "remote/n07-zero-v2/raw/n07-zero_tol_decimal-marked-strobed/RESULT.json",
+      "sha256": "220cf98ce39011d772aa50b7d5da20f3f308f0c001ac20b654522aaf69f8cc9c",
+      "kind": "verbatim"
+    },
+    "controls19/n07a/n07-zero_tol_decimal-marked-strobed/reference/query-native.psf": {
+      "original_local_path": "remote/n07-zero-v2/raw/n07-zero_tol_decimal-marked-strobed/psf/tran.tran.tran",
+      "original_sha256": "e49a92745b7b5ab75cdf23a161fa3e43e9e075e2155a07710672a45c429abd28",
+      "sha256": "0476f05d7f2ece17d1557530eaa8a5af9e42ff2200463ab3600a224623bf0397",
+      "kind": "verbatim original HEADER and exact query VALUE blocks; no interpolation",
+      "original_native_rows": 159,
+      "selected_original_row_indices": [
+        0,
+        37,
+        118,
+        158
+      ],
+      "missing_original_query_tokens": [
+        "0.25",
+        "0.375"
+      ],
+      "full_psf_availability": "local-only; missing verdict preserved from full-file source analysis; excerpt cannot independently prove absence"
+    },
+    "controls19/n07a/n07-zero_tol_decimal-marked-strobed/reference/spectre-log.json": {
+      "original_local_path": "remote/n07-zero-v2/raw/n07-zero_tol_decimal-marked-strobed/spectre.log",
+      "original_sha256": "a373c42c29f9347d0a307a6a1d1c80603afa747f077a38bd4302c77def8bb0df",
+      "sha256": "a9ef811120fab0e253cc860b11e27a771f5ae7c1de11f09df75907a8a93f99ba",
+      "kind": "exact selected warning/completion/callback/floating lines"
+    },
+    "controls19/linear/linear_idt/dut.va": {
+      "original_local_path": "delivery/r01-reference-plan/linear-controls-v2/inputs/linear_idt/dut.va",
+      "sha256": "83e38780fecbed5f03ffe1cbd6b8d3a6cb0ca5134a74e43b263586094e3f0ac3",
+      "kind": "verbatim"
+    },
+    "controls19/linear/linear_idt/SPEC.json": {
+      "original_local_path": "delivery/r01-reference-plan/linear-controls-v2/inputs/linear_idt/REQUEST.json",
+      "sha256": "641a95fb2bd5f8d1770185340cbf9713588882b89b5da8ec0070e212bcde15dd",
+      "kind": "verbatim"
+    },
+    "controls19/linear/linear_idt/RECEIPT.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/linear/linear_idt/RECEIPT.json",
+      "sha256": "74e9cf940890655b733a0a8ea816e298ad7021ac682b499a27fd1ab5030d3cc6",
+      "kind": "verbatim"
+    },
+    "controls19/linear/linear_idt/response.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/linear/linear_idt/response.json",
+      "sha256": "c7e99f26590f6ada4d742b74ed686ccef74e667b8e8bc1852a8e47427569619d",
+      "kind": "verbatim"
+    },
+    "controls19/linear/linear_idt/reference/dut.va": {
+      "original_local_path": "delivery/r01-linear-spectre-v1/raw/linear_idt/dut.va",
+      "sha256": "83e38780fecbed5f03ffe1cbd6b8d3a6cb0ca5134a74e43b263586094e3f0ac3",
+      "kind": "verbatim"
+    },
+    "controls19/linear/linear_idt/reference/tb.scs": {
+      "original_local_path": "delivery/r01-linear-spectre-v1/raw/linear_idt/tb.scs",
+      "sha256": "1aaa53f16168b041523b62e79103c20d2e35d9074776b928967bc88a4d2fb5d8",
+      "kind": "verbatim"
+    },
+    "controls19/linear/linear_idt/reference/RESULT.json": {
+      "original_local_path": "delivery/r01-linear-spectre-v1/raw/linear_idt/RESULT.json",
+      "sha256": "ad6c3bd600a77083c4b5f6fda186683f24f241d58892f171b0523763f7aea430",
+      "kind": "verbatim"
+    },
+    "controls19/linear/linear_idt/reference/query-native.psf": {
+      "original_local_path": "delivery/r01-linear-spectre-v1/raw/linear_idt/psf/tran.tran.tran",
+      "original_sha256": "0e8e98a6797dbee12e73d706933aed519fc312f0e8349c6984711587fcc0f086",
+      "sha256": "f614ca98130226f089e50bd47e27ed21338075f045b9ec9c33d2fe177e23b17a",
+      "kind": "verbatim original HEADER and exact query VALUE blocks; no interpolation",
+      "original_native_rows": 32828,
+      "selected_original_row_indices": [
+        0,
+        8207,
+        16425,
+        24635,
+        32827
+      ],
+      "missing_original_query_tokens": [],
+      "full_psf_availability": "local-only; missing verdict preserved from full-file source analysis; excerpt cannot independently prove absence"
+    },
+    "controls19/linear/linear_idt/reference/spectre-log.json": {
+      "original_local_path": "delivery/r01-linear-spectre-v1/raw/linear_idt/spectre.log",
+      "original_sha256": "1335fe75debd5812885fb3fbe3f74d4ceab3c426dd1032f056d5da869f8bac80",
+      "sha256": "2c550fb1c80413aaff51eaa9ce59773333234c8e8285d278fec04a4b6ace3cee",
+      "kind": "exact selected warning/completion/callback/floating lines"
+    },
+    "controls19/reference-runs/r01-linear-spectre-v1/TOOL_IDENTITY.json": {
+      "original_local_path": "delivery/r01-linear-spectre-v1/raw/TOOL_IDENTITY.json",
+      "sha256": "9d90f586f1575fb07f367fbc5cdc2d9b3c153b33b6191625eedefa29956fabe0",
+      "kind": "verbatim; machine path locator normalized, original hash retained",
+      "original_sha256": "3c53a06a751343065b06bda596ea7276bef3d2952cf2d85c5942245d52ce08b2"
+    },
+    "controls19/reference-runs/r01-linear-spectre-v1/TOOL_IDENTITY_AFTER.json": {
+      "original_local_path": "delivery/r01-linear-spectre-v1/raw/TOOL_IDENTITY_AFTER.json",
+      "sha256": "28e379597227b09f8d86a1b5f50982f4e14c66552ab912a02e5e97dbbc678a66",
+      "kind": "verbatim; machine path locator normalized, original hash retained",
+      "original_sha256": "e2a8caea590af8458ef5738f552028106c0da50d755c54b6aaaec219fef220e9"
+    },
+    "controls19/reference-runs/r01-linear-spectre-v1/EXECUTION.json": {
+      "original_local_path": "delivery/r01-linear-spectre-v1/raw/EXECUTION.json",
+      "sha256": "41a7dd00afb7ba2e5b7edfb37b0cdbc8a5ff9245645e674167113f7dbb456735",
+      "kind": "verbatim"
+    },
+    "controls19/reference-runs/r01-linear-spectre-v1/MANIFEST.json": {
+      "original_local_path": "delivery/r01-linear-spectre-v1/raw/MANIFEST.json",
+      "sha256": "c1877f8761aea1e53018d1bda3cc4e39fad619c5270151b65dc9a11787a9e814",
+      "kind": "verbatim"
+    },
+    "controls19/reference-runs/r01-linear-spectre-v1/OUTPUT_MANIFEST.json": {
+      "original_local_path": "delivery/r01-linear-spectre-v1/raw/OUTPUT_MANIFEST.json",
+      "sha256": "1811dc984eb285d7ae352c938b5277afdbeeff4c12615460facdf2b2522eeeb8",
+      "kind": "verbatim"
+    },
+    "controls19/linear/linear_filter/dut.va": {
+      "original_local_path": "delivery/r01-reference-plan/linear-controls-v2/inputs/linear_filter/dut.va",
+      "sha256": "dd2f08d7db6da7354280f4591a79ab9fc458a05b9dc8da022bcc6565d3c93694",
+      "kind": "verbatim"
+    },
+    "controls19/linear/linear_filter/SPEC.json": {
+      "original_local_path": "delivery/r01-reference-plan/linear-controls-v2/inputs/linear_filter/REQUEST.json",
+      "sha256": "641a95fb2bd5f8d1770185340cbf9713588882b89b5da8ec0070e212bcde15dd",
+      "kind": "verbatim"
+    },
+    "controls19/linear/linear_filter/RECEIPT.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/linear/linear_filter/RECEIPT.json",
+      "sha256": "bc40e37256e3a2c7ef2f58a7e085c369e0954eaaa77b415eb8a5fb2d98de70ce",
+      "kind": "verbatim"
+    },
+    "controls19/linear/linear_filter/reference/dut.va": {
+      "original_local_path": "delivery/r01-linear-spectre-v1/raw/linear_filter/dut.va",
+      "sha256": "dd2f08d7db6da7354280f4591a79ab9fc458a05b9dc8da022bcc6565d3c93694",
+      "kind": "verbatim"
+    },
+    "controls19/linear/linear_filter/reference/tb.scs": {
+      "original_local_path": "delivery/r01-linear-spectre-v1/raw/linear_filter/tb.scs",
+      "sha256": "1aaa53f16168b041523b62e79103c20d2e35d9074776b928967bc88a4d2fb5d8",
+      "kind": "verbatim"
+    },
+    "controls19/linear/linear_filter/reference/RESULT.json": {
+      "original_local_path": "delivery/r01-linear-spectre-v1/raw/linear_filter/RESULT.json",
+      "sha256": "d6a5eb01a8c0cddf93b5d365ea78b86fea61fd6fbac62b5cb05a62bdefa0f221",
+      "kind": "verbatim"
+    },
+    "controls19/linear/linear_filter/reference/query-native.psf": {
+      "original_local_path": "delivery/r01-linear-spectre-v1/raw/linear_filter/psf/tran.tran.tran",
+      "original_sha256": "9c5a1b84b1fd2ce813dc3f21e328285809f99714aa73032939fb190dd6e312ed",
+      "sha256": "73e96f16bf8e7d12996744c90a5e5477e626c1db4e6afedb1956249c6469c483",
+      "kind": "verbatim original HEADER and exact query VALUE blocks; no interpolation",
+      "original_native_rows": 32832,
+      "selected_original_row_indices": [
+        0,
+        8207,
+        16428,
+        24639,
+        32831
+      ],
+      "missing_original_query_tokens": [],
+      "full_psf_availability": "local-only; missing verdict preserved from full-file source analysis; excerpt cannot independently prove absence"
+    },
+    "controls19/linear/linear_filter/reference/spectre-log.json": {
+      "original_local_path": "delivery/r01-linear-spectre-v1/raw/linear_filter/spectre.log",
+      "original_sha256": "70db8dc902e879148664a3b21a5327bd72e2a16849c07076cfc4f396a7ac6657",
+      "sha256": "a696c0c74c4e03622ed7994ed0337289e709b09cfec8ec37837b11c3266db456",
+      "kind": "exact selected warning/completion/callback/floating lines"
+    },
+    "controls19/linear/linear_held_gate/dut.va": {
+      "original_local_path": "delivery/r01-reference-plan/linear-controls-v2/inputs/linear_held_gate/dut.va",
+      "sha256": "a488d140cc7dc3fb9c23b06deeea09f12574f3d926444dcc45cf92f873223b8e",
+      "kind": "verbatim"
+    },
+    "controls19/linear/linear_held_gate/SPEC.json": {
+      "original_local_path": "delivery/r01-reference-plan/linear-controls-v2/inputs/linear_held_gate/REQUEST.json",
+      "sha256": "641a95fb2bd5f8d1770185340cbf9713588882b89b5da8ec0070e212bcde15dd",
+      "kind": "verbatim"
+    },
+    "controls19/linear/linear_held_gate/RECEIPT.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/linear/linear_held_gate/RECEIPT.json",
+      "sha256": "de31d1c3e32d1b4c315645eae155a30c3dc6780a5f195852ad9982e17d5d8ab3",
+      "kind": "verbatim"
+    },
+    "controls19/linear/linear_held_gate/response.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-final-v1/linear/linear_held_gate/response.json",
+      "sha256": "06fa925f3e378340b9104c147f249d86bcde4b2dd0c69a044ecaeee953288b4d",
+      "kind": "verbatim"
+    },
+    "controls19/linear/linear_held_gate/reference/dut.va": {
+      "original_local_path": "delivery/r01-linear-spectre-v1/raw/linear_held_gate/dut.va",
+      "sha256": "a488d140cc7dc3fb9c23b06deeea09f12574f3d926444dcc45cf92f873223b8e",
+      "kind": "verbatim"
+    },
+    "controls19/linear/linear_held_gate/reference/tb.scs": {
+      "original_local_path": "delivery/r01-linear-spectre-v1/raw/linear_held_gate/tb.scs",
+      "sha256": "1aaa53f16168b041523b62e79103c20d2e35d9074776b928967bc88a4d2fb5d8",
+      "kind": "verbatim"
+    },
+    "controls19/linear/linear_held_gate/reference/RESULT.json": {
+      "original_local_path": "delivery/r01-linear-spectre-v1/raw/linear_held_gate/RESULT.json",
+      "sha256": "fe4371ad056f90180151a6e4c0b1bb1b8a0686ec55a44ca08d5b31f5961415cf",
+      "kind": "verbatim"
+    },
+    "controls19/linear/linear_held_gate/reference/query-native.psf": {
+      "original_local_path": "delivery/r01-linear-spectre-v1/raw/linear_held_gate/psf/tran.tran.tran",
+      "original_sha256": "a4406c36fb296e038b3eae1bec6455df0e52568af4b2a2369ffec1f18ed8b4d9",
+      "sha256": "71873fe119b1e3fda987d4095a43bac94026164ce6bfd5ec3e8e634d2c5d8f5d",
+      "kind": "verbatim original HEADER and exact query VALUE blocks; no interpolation",
+      "original_native_rows": 32865,
+      "selected_original_row_indices": [
+        0,
+        8207,
+        16425,
+        24656,
+        32864
+      ],
+      "missing_original_query_tokens": [],
+      "full_psf_availability": "local-only; missing verdict preserved from full-file source analysis; excerpt cannot independently prove absence"
+    },
+    "controls19/linear/linear_held_gate/reference/spectre-log.json": {
+      "original_local_path": "delivery/r01-linear-spectre-v1/raw/linear_held_gate/spectre.log",
+      "original_sha256": "3d381802b4ee4109ab09be25ef2ce841ad12243613c6fce55af408b72a8ba479",
+      "sha256": "66b21e8db15a5a7898e85db7b3c2332eb4fa3c28c5795b35e9eeac36458563c5",
+      "kind": "exact selected warning/completion/callback/floating lines"
+    },
+    "safety/astra-probe-results.json": {
+      "original_local_path": "delivery/r01-review/astra-probe-results.json",
+      "sha256": "fab908c658e8bf1f6b80425336d8a76cc7ac9b48663deea2935b17bb51400701",
+      "kind": "verbatim; machine path locator normalized, original hash retained",
+      "original_sha256": "ec4e93508bf2d9ed81bf49985148b228b509f34dcdca43fa142aee7ab8189664"
+    },
+    "safety/astra-probe-results-fixed.json": {
+      "original_local_path": "delivery/r01-review/astra-probe-results-fixed.json",
+      "sha256": "1820b5f196c879e2628bb18f6c5fcfd5207cfd18e22491d2ded0191192bf8679",
+      "kind": "verbatim; machine path locator normalized, original hash retained",
+      "original_sha256": "0072a63f9ccb99af5b0ea55b5c5652b27877e235c09373ae5073d0a7d42e4742"
+    },
+    "safety/astra-fixes-extra.json": {
+      "original_local_path": "delivery/r01-review/astra-fixes-extra.json",
+      "sha256": "eb4774052488f6e57814ac50be145dae9113622d2ba7ba5e85b8ecb848143757",
+      "kind": "verbatim"
+    },
+    "safety/astra-fixes-extra-v2.json": {
+      "original_local_path": "delivery/r01-review/astra-fixes-extra-v2.json",
+      "sha256": "2156fe85c42a7918940cf9c5b905b8cf5fe02cc9c0183a517c027e873a5f10fe",
+      "kind": "verbatim"
+    },
+    "safety/astra-fixes-identity.json": {
+      "original_local_path": "delivery/r01-review/astra-fixes-identity.json",
+      "sha256": "d0216ecf1f1ecd92c79752df6271ef925f0ff0396349a5792d3d37809b9e5c0d",
+      "kind": "verbatim"
+    },
+    "original16/r01-results.json": {
+      "original_local_path": "delivery/r01-originals-v2/r01-results.json",
+      "sha256": "639b841e22ded083c9c2445f98b5e8648694c5b4453b05a267259d4aa1c156e3",
+      "kind": "verbatim; machine path locator normalized, original hash retained",
+      "original_sha256": "434a24184a0f54f4e487813ed18125c7723f3a611c89de462e46d184abbc5a2d"
+    },
+    "original16/r01-summary.json": {
+      "original_local_path": "delivery/r01-originals-v2/r01-summary.json",
+      "sha256": "4445e7bf0015792c23bdb0e1973fc0469ec236c61fa0b0affe9d58036dd38fa2",
+      "kind": "verbatim"
+    },
+    "original16/regrade-summary.json": {
+      "original_local_path": "delivery/r01-originals-v2/regrade-summary.json",
+      "sha256": "3fa1e2eab4adfd0fbd0fd9319a57302d72d8fdf5bf5f016ecaeba998659ade37",
+      "kind": "verbatim"
+    },
+    "original16/EXECUTION.json": {
+      "original_local_path": "delivery/r01-originals-v2/EXECUTION.json",
+      "sha256": "9e7eb6a554e2b0514ac62b04ed12b72b4de85747903be123fab48c3b8d5fec34",
+      "kind": "verbatim; machine path locator normalized, original hash retained",
+      "original_sha256": "7c8350bad6c648dbb93fcefd4b76a927cc000f9ea99d7c21b020c4425bf6d84b"
+    },
+    "original16/SOURCE-BEFORE.json": {
+      "original_local_path": "delivery/r01-originals-v2/SOURCE-BEFORE.json",
+      "original_sha256": "400dcc3c2a151ac90463eeb5b73f9cb6b4642eb869255748f6286d92723dee4b",
+      "sha256": "1e12f2845fe1a1dec355983af7328b4742c4493272ce09db4675a515ffb45768",
+      "kind": "source array deduplicated to SOURCE-IDENTITY.json; original full-file hash retained; machine path locator normalized, original hash retained"
+    },
+    "original16/SOURCE-AFTER.json": {
+      "original_local_path": "delivery/r01-originals-v2/SOURCE-AFTER.json",
+      "original_sha256": "7997cb6b19db14fa5287863707a3f1e90e4f78e0fbfabcba1a1ec3a122389e96",
+      "sha256": "3e213efa2cb2650047a1fd496e9380113a803616d41c776a25a5ec565f8ec7a4",
+      "kind": "source array deduplicated to SOURCE-IDENTITY.json; original full-file hash retained"
+    },
+    "original16/INPUT-OBSERVATION-WITNESSES.json": {
+      "original_local_path": "delivery/r01-originals-v2/INPUT-OBSERVATION-WITNESSES.json",
+      "sha256": "3d7372f149aec45ba93d56d8a8078e542cb9cf5286066728b5563055d74e9aed",
+      "kind": "verbatim"
+    },
+    "original16/regrade-compact.json": {
+      "original_local_path": "delivery/r01-originals-v2/regrade.json",
+      "original_sha256": "2c2d908156d6765fdfcaacf63591d064f61dd44c44601ab905216016cab288ea",
+      "sha256": "a84bb69c2ec8596323177706e7416e6677b20b0bad5ca7a82eb78d5654b6f954",
+      "kind": "original per-case verdicts/maximum/errors preserved; observation times replaced by count and list hash"
+    },
+    "original16/comparison-summary.json": {
+      "original_local_path": "delivery/r01-originals-v2/BEFORE-AFTER.json",
+      "original_sha256": "1509674eb2196206e8b1dace7750630c1ccd7f0c247af5ccec812ab6514bb7c7",
+      "sha256": "50f1c5135c010a1385d844d431d9d1f842ee726e0f95ab85d40c684020be37cb",
+      "kind": "aggregate identities and unchanged-input/checker counts only; full before/after local-only"
+    },
+    "SOURCE-IDENTITY.json": {
+      "original_local_path": "delivery/r01-plan/REVIEW-FIXED-COMPLETE-IDENTITY.json",
+      "sha256": "4dc0ac169987fc27a0546267ccbe29fc024e999be561f45ae58507de3cbb2c75",
+      "kind": "verbatim; machine path locator normalized, original hash retained",
+      "original_sha256": "b82d98da472466d5d3c224d0a2b93b749f192d9409d0817e30dea4132331d8f7"
+    },
+    "display4/ANALYSIS-original-budget.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-display-final-v1/ANALYSIS-original-budget.json",
+      "sha256": "3c6edfc1a7e8e8358df8159cce93cf69cb709c2f9c6910ebb98802ed167cd340",
+      "kind": "verbatim; machine path locator normalized, original hash retained",
+      "original_sha256": "21e89cf39ea5689c80008321869bab7b4fd46881cf5398d52a98972721fc28bb"
+    },
+    "display4/ANALYSIS.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-display-final-v1/ANALYSIS.json",
+      "sha256": "4f130f6c209fffd7b44821e5c29d4df54c94ac6029602a767efe5d2aad8218ea",
+      "kind": "verbatim; machine path locator normalized, original hash retained",
+      "original_sha256": "e904f1ee3043766e76cb9388279c24c21c7c90e478dbf0cbd9fc5ce880c9d636"
+    },
+    "display4/IDENTITY.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-display-final-v1/IDENTITY.json",
+      "sha256": "94398cfc8ea24ceb842e72e0130b02592279e8b4fff48d5b74459d09f959239f",
+      "kind": "verbatim; machine path locator normalized, original hash retained",
+      "original_sha256": "02b9b42df9509a65ea6a9e3004d973dedc189bcc91cdd02a14e6c4911c74911a"
+    },
+    "display4/MANIFEST.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-display-final-v1/MANIFEST.json",
+      "sha256": "a6ae5585728520e1bb2281a7a12fa68036c9c9324505e01c9e9ebe877f624397",
+      "kind": "verbatim"
+    },
+    "provenance/pair_display.py": {
+      "original_local_path": "delivery/r01-reference-plan/pair_display.py",
+      "sha256": "6c78a63df71297920e524bc786c28c2856edd2746a4e8bcae08ca9453f2e83d6",
+      "kind": "verbatim"
+    },
+    "provenance/finalize_display_analysis.py": {
+      "original_local_path": "delivery/r01-reference-plan/finalize_display_analysis.py",
+      "sha256": "84710c130a519f792d4c40f047f4c1db068e2053fa3c96b6f4cc9d9c7936f745",
+      "kind": "verbatim"
+    },
+    "display4/VARIANT-MAP.json": {
+      "original_local_path": "delivery/r01-reference-plan/n07-display-controls-v1/inputs/VARIANT-MAP.json",
+      "sha256": "5fb49b401c2531d3f8f7a0e53fd0834938a598c2bb100257af91f582bd13e41f",
+      "kind": "verbatim; machine path locator normalized, original hash retained",
+      "original_sha256": "eb1695d3ca1f27a552153d8e963a2e3d371909c20146cf4d365cb3559ec42ae0"
+    },
+    "display4/n07-zero_tol_dyadic-marked-ordinary/dut.va": {
+      "original_local_path": "delivery/r01-zero-timer-spectre-v1/raw/n07-zero_tol_dyadic-marked-ordinary/dut.va",
+      "sha256": "91203108910e8ff7047f26297f295999e6315ab3a8f80b9940aa8cf671aa9608",
+      "kind": "verbatim"
+    },
+    "display4/n07-zero_tol_dyadic-marked-ordinary/tb.scs": {
+      "original_local_path": "delivery/r01-zero-timer-spectre-v1/raw/n07-zero_tol_dyadic-marked-ordinary/tb.scs",
+      "sha256": "5362a040f10fbd6b356ac4e62b8302aeb5c759a426853e7d068e4dc1c21e08a4",
+      "kind": "verbatim"
+    },
+    "display4/n07-zero_tol_dyadic-marked-ordinary/REQUEST.json": {
+      "original_local_path": "delivery/r01-zero-timer-spectre-v1/raw/n07-zero_tol_dyadic-marked-ordinary/REQUEST.json",
+      "sha256": "63e042ab2e6441faff034e6831e9678e2255aabdf2eec789c8ec7483aa930ad6",
+      "kind": "verbatim"
+    },
+    "display4/n07-zero_tol_dyadic-marked-ordinary/RECEIPT.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-display-final-v1/n07-zero_tol_dyadic-marked-ordinary/RECEIPT.json",
+      "sha256": "c70686c77072f284a123df9c791981e656248f93752051bfbe8eff28c17947ca",
+      "kind": "verbatim"
+    },
+    "display4/n07-zero_tol_dyadic-marked-ordinary/response.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-display-final-v1/n07-zero_tol_dyadic-marked-ordinary/response.json",
+      "sha256": "d2a35a28c29c6758e368825742e292158d694baea358b6faadec6005e2b05ee0",
+      "kind": "verbatim"
+    },
+    "display4/n07-zero_tol_dyadic-marked-ordinary/query-native.psf": {
+      "original_local_path": "delivery/r01-zero-timer-spectre-v1/raw/n07-zero_tol_dyadic-marked-ordinary/psf/tran.tran.tran",
+      "original_sha256": "88eecaf25cb5c108e8f44d84ed60edf7f970012047db4a343255e9900b76a7c7",
+      "sha256": "17ae51a87e48bd56a98ff456087d2fd3c42de93364f29e2bba6afd25f0608722",
+      "kind": "original header and exact query blocks, no interpolation",
+      "original_native_rows": 180,
+      "selected_original_row_indices": [
+        0,
+        34,
+        68,
+        105,
+        142,
+        179
+      ],
+      "missing_original_query_tokens": [],
+      "full_psf_availability": "local-only; excerpt cannot independently prove full-file absence"
+    },
+    "display4/n07-zero_tol_dyadic-marked-ordinary/spectre-log-excerpt.json": {
+      "original_local_path": "delivery/r01-zero-timer-spectre-v1/raw/n07-zero_tol_dyadic-marked-ordinary/spectre.log",
+      "original_sha256": "53220953116bf9054aa16f0e371960a0b80c25d60f8a66c641752ff214da1187",
+      "sha256": "e7f36cb8bfe8457ac26623f1c8f4ebe30b186abc28b488560bd2411157170dc7",
+      "kind": "exact selected callback/warning/completion lines"
+    },
+    "display4/n07-zero_tol_dyadic-marked-strobed/dut.va": {
+      "original_local_path": "delivery/r01-zero-timer-spectre-v1/raw/n07-zero_tol_dyadic-marked-strobed/dut.va",
+      "sha256": "91203108910e8ff7047f26297f295999e6315ab3a8f80b9940aa8cf671aa9608",
+      "kind": "verbatim"
+    },
+    "display4/n07-zero_tol_dyadic-marked-strobed/tb.scs": {
+      "original_local_path": "delivery/r01-zero-timer-spectre-v1/raw/n07-zero_tol_dyadic-marked-strobed/tb.scs",
+      "sha256": "4e5716d9c9245b31aa92e2e5d4adb767f9c105aff51228ff8ac74858406d31db",
+      "kind": "verbatim"
+    },
+    "display4/n07-zero_tol_dyadic-marked-strobed/REQUEST.json": {
+      "original_local_path": "delivery/r01-zero-timer-spectre-v1/raw/n07-zero_tol_dyadic-marked-strobed/REQUEST.json",
+      "sha256": "62df15db4f942ef7072a22f4cf85cd2d51a506f2235008f4bbce470f40643f13",
+      "kind": "verbatim"
+    },
+    "display4/n07-zero_tol_dyadic-marked-strobed/RECEIPT.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-display-final-v1/n07-zero_tol_dyadic-marked-strobed/RECEIPT.json",
+      "sha256": "90b13b94100244d90a222aff46be5f5be6c140742e138726873c59b7b53a1db2",
+      "kind": "verbatim"
+    },
+    "display4/n07-zero_tol_dyadic-marked-strobed/response.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-display-final-v1/n07-zero_tol_dyadic-marked-strobed/response.json",
+      "sha256": "a5889de81be8877283642bd5b82fb42d469e733a8bd5e7a9f39afa228ceb9f06",
+      "kind": "verbatim"
+    },
+    "display4/n07-zero_tol_dyadic-marked-strobed/query-native.psf": {
+      "original_local_path": "delivery/r01-zero-timer-spectre-v1/raw/n07-zero_tol_dyadic-marked-strobed/psf/tran.tran.tran",
+      "original_sha256": "396bfa107763c8fe0e5075f8ebc5d4994eb83100da34726caa0097db829c1465",
+      "sha256": "d26de41f5c913a246bcc3692449a745d114773a294d8c28684432429966f7501",
+      "kind": "original header and exact query blocks, no interpolation",
+      "original_native_rows": 180,
+      "selected_original_row_indices": [
+        0,
+        34,
+        68,
+        105,
+        142,
+        179
+      ],
+      "missing_original_query_tokens": [],
+      "full_psf_availability": "local-only; excerpt cannot independently prove full-file absence"
+    },
+    "display4/n07-zero_tol_dyadic-marked-strobed/spectre-log-excerpt.json": {
+      "original_local_path": "delivery/r01-zero-timer-spectre-v1/raw/n07-zero_tol_dyadic-marked-strobed/spectre.log",
+      "original_sha256": "67bb91f2aa7a0af128bcdb0f4cdb1622696ea9a71ac6ae779ca1149d8845c129",
+      "sha256": "31535b77927402f3028c19bf0a4af8b8b97d21cca05a01c11ce83f72eda076f7",
+      "kind": "exact selected callback/warning/completion lines"
+    },
+    "display4/n07-zero_tol_decimal-marked-ordinary/dut.va": {
+      "original_local_path": "delivery/r01-zero-timer-spectre-v1/raw/n07-zero_tol_decimal-marked-ordinary/dut.va",
+      "sha256": "509d6a12a71e9a3fc494a367e38f2dad9dbf2008ec2e03e891f598fc396cce24",
+      "kind": "verbatim"
+    },
+    "display4/n07-zero_tol_decimal-marked-ordinary/tb.scs": {
+      "original_local_path": "delivery/r01-zero-timer-spectre-v1/raw/n07-zero_tol_decimal-marked-ordinary/tb.scs",
+      "sha256": "5362a040f10fbd6b356ac4e62b8302aeb5c759a426853e7d068e4dc1c21e08a4",
+      "kind": "verbatim"
+    },
+    "display4/n07-zero_tol_decimal-marked-ordinary/REQUEST.json": {
+      "original_local_path": "delivery/r01-zero-timer-spectre-v1/raw/n07-zero_tol_decimal-marked-ordinary/REQUEST.json",
+      "sha256": "63e042ab2e6441faff034e6831e9678e2255aabdf2eec789c8ec7483aa930ad6",
+      "kind": "verbatim"
+    },
+    "display4/n07-zero_tol_decimal-marked-ordinary/RECEIPT.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-display-final-v1/n07-zero_tol_decimal-marked-ordinary/RECEIPT.json",
+      "sha256": "e05a96e1e7916d2c1c19b11d2757b477ab4a0bf04a85905be70dff9755c1eb97",
+      "kind": "verbatim"
+    },
+    "display4/n07-zero_tol_decimal-marked-ordinary/query-native.psf": {
+      "original_local_path": "delivery/r01-zero-timer-spectre-v1/raw/n07-zero_tol_decimal-marked-ordinary/psf/tran.tran.tran",
+      "original_sha256": "2bec601d9b0a274c375d6cda7e3c2678b36f438790c27d0718ea72cccd6a99e7",
+      "sha256": "945361e350bfcc943d18a6e05df51cc1bbfa14ce666323641d1fa185f81b61d0",
+      "kind": "original header and exact query blocks, no interpolation",
+      "original_native_rows": 171,
+      "selected_original_row_indices": [
+        0,
+        130,
+        170
+      ],
+      "missing_original_query_tokens": [
+        "0.125",
+        "0.25",
+        "0.375"
+      ],
+      "full_psf_availability": "local-only; excerpt cannot independently prove full-file absence"
+    },
+    "display4/n07-zero_tol_decimal-marked-ordinary/spectre-log-excerpt.json": {
+      "original_local_path": "delivery/r01-zero-timer-spectre-v1/raw/n07-zero_tol_decimal-marked-ordinary/spectre.log",
+      "original_sha256": "7de60b9d1b25b210d7b44cc422b7fd9a4ec7a0b9e8d69fcb355cf7a7dbd16772",
+      "sha256": "f56a12e2a8ea07b39a16f87290fb155e6837e8b3ce80b886b3d996952eb2ca91",
+      "kind": "exact selected callback/warning/completion lines"
+    },
+    "display4/n07-zero_tol_decimal-marked-strobed/dut.va": {
+      "original_local_path": "delivery/r01-zero-timer-spectre-v1/raw/n07-zero_tol_decimal-marked-strobed/dut.va",
+      "sha256": "509d6a12a71e9a3fc494a367e38f2dad9dbf2008ec2e03e891f598fc396cce24",
+      "kind": "verbatim"
+    },
+    "display4/n07-zero_tol_decimal-marked-strobed/tb.scs": {
+      "original_local_path": "delivery/r01-zero-timer-spectre-v1/raw/n07-zero_tol_decimal-marked-strobed/tb.scs",
+      "sha256": "4e5716d9c9245b31aa92e2e5d4adb767f9c105aff51228ff8ac74858406d31db",
+      "kind": "verbatim"
+    },
+    "display4/n07-zero_tol_decimal-marked-strobed/REQUEST.json": {
+      "original_local_path": "delivery/r01-zero-timer-spectre-v1/raw/n07-zero_tol_decimal-marked-strobed/REQUEST.json",
+      "sha256": "62df15db4f942ef7072a22f4cf85cd2d51a506f2235008f4bbce470f40643f13",
+      "kind": "verbatim"
+    },
+    "display4/n07-zero_tol_decimal-marked-strobed/RECEIPT.json": {
+      "original_local_path": "delivery/r01-reference-plan/paired-display-final-v1/n07-zero_tol_decimal-marked-strobed/RECEIPT.json",
+      "sha256": "f98de1e39dec1af46b95588b755f90d1f0214e2e0c1f73e03bd87f4163baae06",
+      "kind": "verbatim"
+    },
+    "display4/n07-zero_tol_decimal-marked-strobed/query-native.psf": {
+      "original_local_path": "delivery/r01-zero-timer-spectre-v1/raw/n07-zero_tol_decimal-marked-strobed/psf/tran.tran.tran",
+      "original_sha256": "ea659d9f7db5920b5bb9130df7b97a88f77920a22cd86690d57e6e826e5ace84",
+      "sha256": "08be069ca2ce5ac6a6f831b1972ae82e89e76f7bafc599f71f36d964fab294f6",
+      "kind": "original header and exact query blocks, no interpolation",
+      "original_native_rows": 159,
+      "selected_original_row_indices": [
+        0,
+        37,
+        118,
+        158
+      ],
+      "missing_original_query_tokens": [
+        "0.25",
+        "0.375"
+      ],
+      "full_psf_availability": "local-only; excerpt cannot independently prove full-file absence"
+    },
+    "display4/n07-zero_tol_decimal-marked-strobed/spectre-log-excerpt.json": {
+      "original_local_path": "delivery/r01-zero-timer-spectre-v1/raw/n07-zero_tol_decimal-marked-strobed/spectre.log",
+      "original_sha256": "799a496e1b48648400da456a3c83da9ac2f0918c515c5fcb0a37dd61234fceda",
+      "sha256": "a4d0ae9d3ffe998d8b74f78b63c2c28c0b9b9c50a96a55e2aab6ae7701e48106",
+      "kind": "exact selected callback/warning/completion lines"
+    },
+    "display4/reference-run/TOOL_IDENTITY.json": {
+      "original_local_path": "delivery/r01-zero-timer-spectre-v1/raw/TOOL_IDENTITY.json",
+      "sha256": "0203aec1a0c62185f0317d7702d5f86f746975b9d3da0921a278fe50f13aac49",
+      "kind": "verbatim; machine path locator normalized, original hash retained",
+      "original_sha256": "e7568192849f3b6c5e62add192e89f4158050dd51766505f5a13844e14ac64a4"
+    },
+    "display4/reference-run/TOOL_IDENTITY_AFTER.json": {
+      "original_local_path": "delivery/r01-zero-timer-spectre-v1/raw/TOOL_IDENTITY_AFTER.json",
+      "sha256": "28e379597227b09f8d86a1b5f50982f4e14c66552ab912a02e5e97dbbc678a66",
+      "kind": "verbatim; machine path locator normalized, original hash retained",
+      "original_sha256": "e2a8caea590af8458ef5738f552028106c0da50d755c54b6aaaec219fef220e9"
+    },
+    "display4/reference-run/MANIFEST.json": {
+      "original_local_path": "delivery/r01-zero-timer-spectre-v1/raw/MANIFEST.json",
+      "sha256": "e7bb9ec13309f8f5e768f91b67853faf67eeee322be20cc70d563b29f892a067",
+      "kind": "verbatim"
+    },
+    "display4/reference-run/OUTPUT_MANIFEST.json": {
+      "original_local_path": "delivery/r01-zero-timer-spectre-v1/raw/OUTPUT_MANIFEST.json",
+      "sha256": "e71963f62da2c3d83ced8bbb86485283b7a17e16d3fbda8f3abfda9b2d2ea180",
+      "kind": "verbatim"
+    },
+    "display4/reference-run/EXECUTION.json": {
+      "original_local_path": "delivery/r01-zero-timer-spectre-v1/raw/EXECUTION.json",
+      "sha256": "0c1710f77e6344e19f1b982ccdd73dc59366b370febb225cdf1d3cde7f518f92",
+      "kind": "verbatim"
+    },
+    "original16/inputs/r01-extend-hold/c0/tb.scs": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-extend-hold/c0/run/work/verifier/c0/tb.scs",
+      "sha256": "4e0fb6cb4d477ed1258409b69f4ebda74344d50d08f2ac64bdf50218b1904478",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-extend-hold/c0/dut.va": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-extend-hold/c0/run/work/verifier/c0/dut.va",
+      "sha256": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-extend-hold/c1/tb.scs": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-extend-hold/c1/run/work/verifier/c1/tb.scs",
+      "sha256": "c036cbc7bc21625b9af85d620db78f6cae92d40b1134f4ca8c2255218241b10d",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-extend-hold/c1/dut.va": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-extend-hold/c1/run/work/verifier/c1/dut.va",
+      "sha256": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-extend-hold/c2/tb.scs": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-extend-hold/c2/run/work/verifier/c2/tb.scs",
+      "sha256": "2a2499f6a905e10d19e08bf0fffe8d6104c14009327a979cdf38be3860225ccb",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-extend-hold/c2/dut.va": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-extend-hold/c2/run/work/verifier/c2/dut.va",
+      "sha256": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-integrate-sync/c2/tb.scs": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-integrate-sync/c2/run/work/verifier/c2/tb.scs",
+      "sha256": "9e3dd504c886f7735e70d56eb10061eaa2bfff504934c0ffaa4eea08b9aa41b5",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-integrate-sync/c2/dut.va": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-integrate-sync/c2/run/work/verifier/c2/dut.va",
+      "sha256": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-integrate-sync/core-boundary/tb.scs": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-integrate-sync/core-boundary/run/work/verifier/core-boundary/tb.scs",
+      "sha256": "3b7ed7b9b38bb66c5d0ae2d0a7ca5ade360fae99265a3e6a5153b5e92fb84bb1",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-integrate-sync/core-boundary/dut.va": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-integrate-sync/core-boundary/run/work/verifier/core-boundary/dut.va",
+      "sha256": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-repair-recovery/c2/tb.scs": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-repair-recovery/c2/run/work/verifier/c2/tb.scs",
+      "sha256": "2a2499f6a905e10d19e08bf0fffe8d6104c14009327a979cdf38be3860225ccb",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-repair-recovery/c2/dut.va": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-repair-recovery/c2/run/work/verifier/c2/dut.va",
+      "sha256": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-repair-recovery/c0/tb.scs": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-repair-recovery/c0/run/work/verifier/c0/tb.scs",
+      "sha256": "4e0fb6cb4d477ed1258409b69f4ebda74344d50d08f2ac64bdf50218b1904478",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-repair-recovery/c0/dut.va": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-repair-recovery/c0/run/work/verifier/c0/dut.va",
+      "sha256": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-repair-recovery/c1/tb.scs": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-repair-recovery/c1/run/work/verifier/c1/tb.scs",
+      "sha256": "c036cbc7bc21625b9af85d620db78f6cae92d40b1134f4ca8c2255218241b10d",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-repair-recovery/c1/dut.va": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-repair-recovery/c1/run/work/verifier/c1/dut.va",
+      "sha256": "65252f9e5f9e7cfdebac14d2f5d8775ece9215ca2cdc85e9f1501cffcb571e15",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-repair-sync/c2/tb.scs": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-repair-sync/c2/run/work/verifier/c2/tb.scs",
+      "sha256": "9e3dd504c886f7735e70d56eb10061eaa2bfff504934c0ffaa4eea08b9aa41b5",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-repair-sync/c2/dut.va": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-repair-sync/c2/run/work/verifier/c2/dut.va",
+      "sha256": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-repair-sync/core-boundary/tb.scs": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-repair-sync/core-boundary/run/work/verifier/core-boundary/tb.scs",
+      "sha256": "3b7ed7b9b38bb66c5d0ae2d0a7ca5ade360fae99265a3e6a5153b5e92fb84bb1",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-repair-sync/core-boundary/dut.va": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-repair-sync/core-boundary/run/work/verifier/core-boundary/dut.va",
+      "sha256": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-spec-acquisition/c0/tb.scs": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-spec-acquisition/c0/run/work/verifier/c0/tb.scs",
+      "sha256": "344ad3f97563d6f6787b1a239783fb63370ca8e9bcce8234b99f8ba8c39e5ce2",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-spec-acquisition/c0/dut.va": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-spec-acquisition/c0/run/work/verifier/c0/dut.va",
+      "sha256": "bd1cfe0c11bbe3c75453fb528e3ac2e5aa72e710fa5bc9ed3bcb197ed2b1eec5",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-spec-acquisition/c1/tb.scs": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-spec-acquisition/c1/run/work/verifier/c1/tb.scs",
+      "sha256": "621bcb202d1b1d3fdb962ede3267c7675489569aa864723e5b16512b9ac9a2c7",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-spec-acquisition/c1/dut.va": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-spec-acquisition/c1/run/work/verifier/c1/dut.va",
+      "sha256": "bd1cfe0c11bbe3c75453fb528e3ac2e5aa72e710fa5bc9ed3bcb197ed2b1eec5",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-spec-acquisition/c2/tb.scs": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-spec-acquisition/c2/run/work/verifier/c2/tb.scs",
+      "sha256": "343facb1010562e33234671714bbb4ca5d054bc0a9ae412feff1af6fe06529dd",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-spec-acquisition/c2/dut.va": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-spec-acquisition/c2/run/work/verifier/c2/dut.va",
+      "sha256": "bd1cfe0c11bbe3c75453fb528e3ac2e5aa72e710fa5bc9ed3bcb197ed2b1eec5",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-spec-ideal/c0/tb.scs": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-spec-ideal/c0/run/work/verifier/c0/tb.scs",
+      "sha256": "25abc928bc80837c99b4861d6ecb85f828ea31e2e7351873d20d7f5ffb3a9442",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-spec-ideal/c0/dut.va": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-spec-ideal/c0/run/work/verifier/c0/dut.va",
+      "sha256": "1997a8bb8f487a5d49729b16da786361f8459fb2846b6d085cd9f9f82c6d4228",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-spec-ideal/c1/tb.scs": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-spec-ideal/c1/run/work/verifier/c1/tb.scs",
+      "sha256": "5f4b8ddb5fe3da84fed4df59ac8f80f9f2420eedb0bf97e94fc9c484bb65dc46",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-spec-ideal/c1/dut.va": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-spec-ideal/c1/run/work/verifier/c1/dut.va",
+      "sha256": "1997a8bb8f487a5d49729b16da786361f8459fb2846b6d085cd9f9f82c6d4228",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-spec-ideal/c2/tb.scs": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-spec-ideal/c2/run/work/verifier/c2/tb.scs",
+      "sha256": "4e6ae394cef92e95c28480718c6e407dae1c20b991a741a4cd4524824721dbd9",
+      "kind": "verbatim original input"
+    },
+    "original16/inputs/r01-spec-ideal/c2/dut.va": {
+      "original_local_path": "runs/r01-evas-compat-20261013/spectre/r01-spec-ideal/c2/run/work/verifier/c2/dut.va",
+      "sha256": "1997a8bb8f487a5d49729b16da786361f8459fb2846b6d085cd9f9f82c6d4228",
+      "kind": "verbatim original input"
+    },
+    "provenance/COMMITTED-SOURCE.json": {
+      "sha256": "675e2896a200d28bcd2fb9de7bd0019a8acbd6a6b18aabd78f783ace61dd3712",
+      "original_local_path": "delivery/r01-plan/REVIEW-FIXED-COMPLETE-IDENTITY.json",
+      "original_sha256": "b82d98da472466d5d3c224d0a2b93b749f192d9409d0817e30dea4132331d8f7",
+      "kind": "source snapshot verification plus supplied commit locator"
+    },
+    "README.md": {
+      "sha256": "fac9d9832dd110268f93d73e1489b75f2c83ad4b7537e3861a842e92e32e14ed",
+      "original_local_path": "delivery/r01-public-evidence/README.md",
+      "kind": "new portable curation documentation/checker; not simulator execution"
+    },
+    "verify.py": {
+      "sha256": "25d3dc53db4d09cbfa9a3ee016c8a6271c129349b71d8185fac1464555b9300d",
+      "original_local_path": "delivery/r01-public-evidence/verify.py",
+      "kind": "new portable curation documentation/checker; not simulator execution"
+    }
+  },
+  "original_archive_locator": "local-only archive:vaEVAS/current/runs/evas-night-20261014; no public download implied"
+}

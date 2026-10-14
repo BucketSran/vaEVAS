@@ -1,0 +1,10 @@
+simulator lang=spectre
+global 0
+simulatorOptions options reltol=1e-6 vabstol=1e-9 iabstol=1e-15
+ahdl_include "dut.va"
+V_vin (vin 0) vsource type=pwl wave=[0 0.3 1.0175e-07 0.3 1.0195e-07 1.6 1.9215e-07 1.6 1.9235e-07 0.2 3.899e-07 0.2 3.901e-07 1.1 5.481e-07 1.1 5.483e-07 0.55 9.097e-07 0.55 9.099e-07 1.45]
+V_rst (rst 0) vsource type=pwl wave=[0 0 4.125e-07 0 4.127e-07 1.8 4.2832e-07 1.8 4.2852e-07 0 7.176e-07 0 7.178e-07 1.8 7.3342e-07 1.8 7.3362e-07 0]
+V_track (track 0) vsource type=pwl wave=[0 0 5.09e-08 0 5.11e-08 1.8 6.785e-08 1.8 6.805e-08 0 1.3e-07 0 1.302e-07 1.8 1.3904e-07 1.8 1.3924e-07 0 1.752e-07 0 1.754e-07 1.8 1.8085e-07 1.8 1.8105e-07 0 2.4865e-07 0 2.4885e-07 1.8 2.9385e-07 1.8 2.9405e-07 0 4.012e-07 0 4.014e-07 1.8 4.4075e-07 1.8 4.4095e-07 0 5.255e-07 0 5.257e-07 1.8 6.046e-07 1.8 6.048e-07 0 8.984e-07 0 8.986e-07 1.8 9.4925e-07 1.8 9.4945e-07 0]
+X_DUT (vin track rst vout) r01_track_hold_basic vinit=0.4 tau_acq=1.7e-08 tau_reset=2e-09 acq_curvature=0.6 vmid=0.9 vscale=0.9
+tran tran stop=1.034e-06 maxstep=100p errpreset=conservative
+save vin rst track vout

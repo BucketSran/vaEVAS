@@ -1,0 +1,63 @@
+{
+  "id": "n19/root-third_fall_filter",
+  "source_sha256": "6e12cbf357bfba46a44b92e48ead6d2c70cb732a65527548d5332176fa7cdf40",
+  "controls": {
+    "instances": [
+      {
+        "name": "dut",
+        "module": "m",
+        "connections": {
+          "u": "u",
+          "y": "y",
+          "z": "z",
+          "w": "w",
+          "r": "0"
+        }
+      }
+    ],
+    "pwl": {
+      "u": [
+        [
+          0.0,
+          3.0
+        ],
+        [
+          1.0,
+          0.0
+        ]
+      ]
+    },
+    "output_times": [
+      0.0,
+      0.125,
+      0.25,
+      0.375,
+      0.5,
+      0.625,
+      0.75,
+      0.875,
+      1.0
+    ],
+    "stop": 1.0,
+    "max_step": 0.0078125,
+    "vabstol": 1e-12,
+    "reltol": 1e-09,
+    "strobetimes": [
+      0.0,
+      0.125,
+      0.25,
+      0.375,
+      0.5,
+      0.625,
+      0.75,
+      0.875,
+      1.0
+    ],
+    "timeout": 120
+  },
+  "kernel_sha256": "867a112262b1311f07f0a612a594b471ad6c7b3c1a3bea9e207f7a06ea8cece4",
+  "program_sha256": "59b1af0e450af213c09f48136d5196450277759ccb1bc5831030a22786195217",
+  "status": "completed",
+  "response_sha256": "2f8cca57970eba13bc2985292d2b8df0e969bb7680a244cc7fee38ca0ed66113",
+  "elapsed_seconds": 0.3395440001040697
+}

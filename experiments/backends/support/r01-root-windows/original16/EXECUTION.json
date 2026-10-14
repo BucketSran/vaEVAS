@@ -1,0 +1,29 @@
+[
+  {
+    "name": "replay",
+    "command": [
+      "python3",
+      "-B",
+      "archive:vaEVAS/current/runs/evas-night-20261014/delivery/original-map/r01-originals-v2-config/configured-replay.py",
+      "--kernel",
+      "archive:vaEVAS/worktrees/evas-r01-delivery/evas/rust_core/target/release/evas-kernel",
+      "--output",
+      "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-originals-v2"
+    ],
+    "returncode": 0,
+    "elapsed_seconds": 132.9111988544464,
+    "identity_drift": []
+  },
+  {
+    "name": "regrade",
+    "command": [
+      "python3",
+      "-B",
+      "archive:vaEVAS/current/runs/evas-night-20261014/originals-public-head-59d82ee0/regrade.py",
+      "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-originals-v2"
+    ],
+    "returncode": 0,
+    "elapsed_seconds": 4.067781209945679,
+    "identity_drift": []
+  }
+]

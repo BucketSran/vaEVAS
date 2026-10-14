@@ -1,0 +1,2614 @@
+{
+  "status": "candidate not executed; new linear references pending",
+  "scope": "16 reused control requests plus 3 new ordinary linear controls; controls are not original R01 tasks",
+  "cases": [
+    {
+      "id": "n08/n08-parent-fine",
+      "group": "n08",
+      "case": "parent",
+      "label": "n08-parent-fine",
+      "role": "physical_control",
+      "budget_V": 1e-06,
+      "source": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n08/n08-parent-fine/dut.va",
+      "source_sha256": "042c286b6ffcabc84636fb65d504817b7fc578ebc3500e68971abac126899a51",
+      "spec": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n08/n08-parent-fine/SPEC.json",
+      "spec_sha256": "c8259d8717421e0ab9b3e0ec373ed5f1130e327b1cdc7b45e34c6cfecf2f8ea2",
+      "reference_source": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08-n06-v1/raw/n08-parent-fine/dut.va",
+      "reference_source_sha256": "042c286b6ffcabc84636fb65d504817b7fc578ebc3500e68971abac126899a51",
+      "reference_deck": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08-n06-v1/raw/n08-parent-fine/tb.scs",
+      "reference_deck_sha256": "cc2d9def9775a8b4c63fb26f2c0ba45d308935e907f5700015955fad8b8b7337",
+      "reference_psf": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08-n06-v1/raw/n08-parent-fine/psf/tran.tran.tran",
+      "reference_psf_sha256": "3d1e5133509e7dec079c9932c3c9a79d7b2779c581c67e06528546fc02cd42be",
+      "reference_log": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08-n06-v1/raw/n08-parent-fine/spectre.log",
+      "reference_log_sha256": "5c2efbcee0351c85d135c0e1618736a92b656573874fc9a3c0671054b6381403",
+      "reference_requested": {
+        "reltol": 1e-09,
+        "vabstol": 1e-11,
+        "maxstep": 0.001
+      },
+      "reference_effective": {
+        "tolerance.relative": "1.00000e-09",
+        "stop": "1.00000",
+        "maxstep": "0.00100000",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-11",
+        "abstol(I)": "1.00000e-15",
+        "method": "\"traponly\"",
+        "gmin": "1.00000e-12"
+      },
+      "native_rows": 1039,
+      "query_tokens": [
+        "0",
+        "0.125",
+        "0.25",
+        "0.375",
+        "0.5",
+        "0.625",
+        "0.75",
+        "0.875",
+        "1"
+      ],
+      "missing_exact_native_tokens": [
+        "0.25",
+        "0.375",
+        "0.75",
+        "0.875",
+        "1"
+      ],
+      "reference_execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 8.907824916765094,
+        "completed_utc": "2026-10-13T21:08:46Z",
+        "log": "stdout.log",
+        "log_sha256": "70158519654f52f5e1056c89518bfcdf8b25e75f3d0f602f27f045f8a6b5e370",
+        "label": "n08-parent-fine",
+        "source_sha256": "042c286b6ffcabc84636fb65d504817b7fc578ebc3500e68971abac126899a51",
+        "deck_sha256": "cc2d9def9775a8b4c63fb26f2c0ba45d308935e907f5700015955fad8b8b7337",
+        "directory_bytes": 174004
+      },
+      "old_result": {
+        "label": "n08-parent-fine",
+        "spectre_math_error_V": 1.6425583310164527e-08,
+        "evas_math_error_V": 1.1102230246251565e-16,
+        "pair_native_error_V": 1.6425583310164527e-08,
+        "budget_V": 1e-06,
+        "numeric_pass": true,
+        "observations_complete": false,
+        "observations": [
+          {
+            "time": 0.0,
+            "row_indices": [
+              0
+            ],
+            "kind": "native_saved",
+            "time_tokens": [
+              "0"
+            ],
+            "error_V": 0.0
+          },
+          {
+            "time": 0.125,
+            "row_indices": [
+              141
+            ],
+            "kind": "native_saved",
+            "time_tokens": [
+              "0.125"
+            ],
+            "error_V": 0.0
+          },
+          {
+            "time": 0.25,
+            "row_indices": [],
+            "kind": "unavailable",
+            "time_tokens": [],
+            "error_V": null
+          },
+          {
+            "time": 0.375,
+            "row_indices": [],
+            "kind": "unavailable",
+            "time_tokens": [],
+            "error_V": null
+          },
+          {
+            "time": 0.5,
+            "row_indices": [
+              519
+            ],
+            "kind": "native_saved",
+            "time_tokens": [
+              "0.5"
+            ],
+            "error_V": 0.0
+          },
+          {
+            "time": 0.625,
+            "row_indices": [
+              663
+            ],
+            "kind": "native_saved",
+            "time_tokens": [
+              "0.625"
+            ],
+            "error_V": 1.6425583310164527e-08
+          },
+          {
+            "time": 0.75,
+            "row_indices": [],
+            "kind": "unavailable",
+            "time_tokens": [],
+            "error_V": null
+          },
+          {
+            "time": 0.875,
+            "row_indices": [],
+            "kind": "unavailable",
+            "time_tokens": [],
+            "error_V": null
+          },
+          {
+            "time": 1.0,
+            "row_indices": [],
+            "kind": "unavailable",
+            "time_tokens": [],
+            "error_V": null
+          }
+        ],
+        "native_rows": 1039,
+        "requested": {
+          "reltol": 1e-09,
+          "vabstol": 1e-11,
+          "maxstep": 0.001
+        },
+        "effective": {
+          "effective": {
+            "stop_s": {
+              "value": 1.0,
+              "line": 122,
+              "raw": "    stop = 1 s",
+              "scope": "transient:tran"
+            },
+            "maxstep_s": {
+              "value": 0.001,
+              "line": 124,
+              "raw": "    maxstep = 1 ms",
+              "scope": "transient:tran"
+            },
+            "reltol": {
+              "value": 1e-10,
+              "line": 128,
+              "raw": "    reltol = 100e-12",
+              "scope": "transient:tran"
+            },
+            "vabstol_V": {
+              "value": 1e-11,
+              "line": 129,
+              "raw": "    abstol(V) = 10 pV",
+              "scope": "transient:tran"
+            },
+            "iabstol_A": {
+              "value": 1e-15,
+              "line": 130,
+              "raw": "    abstol(I) = 1 fA",
+              "scope": "transient:tran"
+            },
+            "method": {
+              "value": "traponly",
+              "line": 135,
+              "raw": "    method = traponly",
+              "scope": "transient:tran"
+            }
+          },
+          "global_user": {
+            "vabstol_V": {
+              "value": 1e-11,
+              "line": 85,
+              "raw": "            vabstol = 1e-11",
+              "scope": "global_user"
+            },
+            "iabstol_A": {
+              "value": 1e-15,
+              "line": 86,
+              "raw": "            iabstol = 1e-15",
+              "scope": "global_user"
+            },
+            "reltol": {
+              "value": 1e-09,
+              "line": 87,
+              "raw": "             reltol = 1e-09",
+              "scope": "global_user"
+            }
+          },
+          "psf_effective": {
+            "stop_s": {
+              "value": 1.0,
+              "line": 14,
+              "raw": "\"stop\" 1.00000",
+              "scope": "psf_transient:tran"
+            },
+            "maxstep_s": {
+              "value": 0.001,
+              "line": 17,
+              "raw": "\"maxstep\" 0.00100000",
+              "scope": "psf_transient:tran"
+            },
+            "reltol": {
+              "value": 1e-10,
+              "line": 21,
+              "raw": "\"reltol\" 1.00000e-10",
+              "scope": "psf_transient:tran"
+            },
+            "vabstol_V": {
+              "value": 1e-11,
+              "line": 22,
+              "raw": "\"abstol(V)\" 1.00000e-11",
+              "scope": "psf_transient:tran"
+            },
+            "iabstol_A": {
+              "value": 1e-15,
+              "line": 23,
+              "raw": "\"abstol(I)\" 1.00000e-15",
+              "scope": "psf_transient:tran"
+            },
+            "method": {
+              "value": "traponly",
+              "line": 28,
+              "raw": "\"method\" \"traponly\"",
+              "scope": "psf_transient:tran"
+            }
+          },
+          "psf_relative_metadata": {
+            "tolerance.relative": {
+              "value": 1e-09,
+              "line": 11,
+              "raw": "\"tolerance.relative\" 1.00000e-09",
+              "scope": "psf_header"
+            }
+          }
+        },
+        "identity": {
+          "kernel_sha256": "dcc40978d95990d75113d5d32d3818e195fcdf8dc4de58f130e63c9bb3b8f84e",
+          "program_sha256": "c19e44034a285f2b32651f8dfc1511647a8718d350e146a737dda942626169d3",
+          "source_sha256": "042c286b6ffcabc84636fb65d504817b7fc578ebc3500e68971abac126899a51",
+          "deck_sha256": "cc2d9def9775a8b4c63fb26f2c0ba45d308935e907f5700015955fad8b8b7337",
+          "analyzer_sha256": "7e464c8dda929515bff8e3e9a18102f7488b035f812c7bde59414acd9c0394cd"
+        },
+        "scope": "New diagnostic, independent continuous voltage oracle; no historical grades replaced. Exact callback-side equality is not asserted."
+      }
+    },
+    {
+      "id": "n08/n08-boolean-fine",
+      "group": "n08",
+      "case": "boolean",
+      "label": "n08-boolean-fine",
+      "role": "physical_control",
+      "budget_V": 1e-06,
+      "source": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n08/n08-boolean-fine/dut.va",
+      "source_sha256": "76b858fd4e24dab13459cb5cc0ee46ebcf540fca640e3011df17b4ddbf9faf80",
+      "spec": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n08/n08-boolean-fine/SPEC.json",
+      "spec_sha256": "c8259d8717421e0ab9b3e0ec373ed5f1130e327b1cdc7b45e34c6cfecf2f8ea2",
+      "reference_source": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08-n06-v1/raw/n08-boolean-fine/dut.va",
+      "reference_source_sha256": "76b858fd4e24dab13459cb5cc0ee46ebcf540fca640e3011df17b4ddbf9faf80",
+      "reference_deck": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08-n06-v1/raw/n08-boolean-fine/tb.scs",
+      "reference_deck_sha256": "cc2d9def9775a8b4c63fb26f2c0ba45d308935e907f5700015955fad8b8b7337",
+      "reference_psf": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08-n06-v1/raw/n08-boolean-fine/psf/tran.tran.tran",
+      "reference_psf_sha256": "8404c99ad9eb0ae8d121c75564ebed28371936cfe723fbd24832ed3a84170449",
+      "reference_log": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08-n06-v1/raw/n08-boolean-fine/spectre.log",
+      "reference_log_sha256": "c751c10a195536812af291a962239250589326387296c2d68c3f3aaf37d21a82",
+      "reference_requested": {
+        "reltol": 1e-09,
+        "vabstol": 1e-11,
+        "maxstep": 0.001
+      },
+      "reference_effective": {
+        "tolerance.relative": "1.00000e-09",
+        "stop": "1.00000",
+        "maxstep": "0.00100000",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-11",
+        "abstol(I)": "1.00000e-15",
+        "method": "\"traponly\"",
+        "gmin": "1.00000e-12"
+      },
+      "native_rows": 1039,
+      "query_tokens": [
+        "0",
+        "0.125",
+        "0.25",
+        "0.375",
+        "0.5",
+        "0.625",
+        "0.75",
+        "0.875",
+        "1"
+      ],
+      "missing_exact_native_tokens": [
+        "0.5",
+        "0.625",
+        "0.75",
+        "0.875",
+        "1"
+      ],
+      "reference_execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 9.04303027689457,
+        "completed_utc": "2026-10-13T21:09:04Z",
+        "log": "stdout.log",
+        "log_sha256": "eeb09ffa060acce6e34f67db66b8d0a54fb887e155e4aaca56add50994076a67",
+        "label": "n08-boolean-fine",
+        "source_sha256": "76b858fd4e24dab13459cb5cc0ee46ebcf540fca640e3011df17b4ddbf9faf80",
+        "deck_sha256": "cc2d9def9775a8b4c63fb26f2c0ba45d308935e907f5700015955fad8b8b7337",
+        "directory_bytes": 178540
+      },
+      "old_result": {
+        "label": "n08-boolean-fine",
+        "spectre_math_error_V": 1.6425583226897853e-08,
+        "evas_math_error_V": 2.220446049250313e-16,
+        "pair_native_error_V": 1.6425583199142224e-08,
+        "budget_V": 1e-06,
+        "numeric_pass": true,
+        "observations_complete": false,
+        "observations": [
+          {
+            "time": 0.0,
+            "row_indices": [
+              0
+            ],
+            "kind": "native_saved",
+            "time_tokens": [
+              "0"
+            ],
+            "error_V": 0.0
+          },
+          {
+            "time": 0.125,
+            "row_indices": [
+              141
+            ],
+            "kind": "native_saved",
+            "time_tokens": [
+              "0.125"
+            ],
+            "error_V": 0.0
+          },
+          {
+            "time": 0.25,
+            "row_indices": [
+              269
+            ],
+            "kind": "native_saved",
+            "time_tokens": [
+              "0.25"
+            ],
+            "error_V": 0.0
+          },
+          {
+            "time": 0.375,
+            "row_indices": [
+              413
+            ],
+            "kind": "native_saved",
+            "time_tokens": [
+              "0.375"
+            ],
+            "error_V": 1.6425583199142224e-08
+          },
+          {
+            "time": 0.5,
+            "row_indices": [],
+            "kind": "unavailable",
+            "time_tokens": [],
+            "error_V": null
+          },
+          {
+            "time": 0.625,
+            "row_indices": [],
+            "kind": "unavailable",
+            "time_tokens": [],
+            "error_V": null
+          },
+          {
+            "time": 0.75,
+            "row_indices": [],
+            "kind": "unavailable",
+            "time_tokens": [],
+            "error_V": null
+          },
+          {
+            "time": 0.875,
+            "row_indices": [],
+            "kind": "unavailable",
+            "time_tokens": [],
+            "error_V": null
+          },
+          {
+            "time": 1.0,
+            "row_indices": [],
+            "kind": "unavailable",
+            "time_tokens": [],
+            "error_V": null
+          }
+        ],
+        "native_rows": 1039,
+        "requested": {
+          "reltol": 1e-09,
+          "vabstol": 1e-11,
+          "maxstep": 0.001
+        },
+        "effective": {
+          "effective": {
+            "stop_s": {
+              "value": 1.0,
+              "line": 122,
+              "raw": "    stop = 1 s",
+              "scope": "transient:tran"
+            },
+            "maxstep_s": {
+              "value": 0.001,
+              "line": 124,
+              "raw": "    maxstep = 1 ms",
+              "scope": "transient:tran"
+            },
+            "reltol": {
+              "value": 1e-10,
+              "line": 128,
+              "raw": "    reltol = 100e-12",
+              "scope": "transient:tran"
+            },
+            "vabstol_V": {
+              "value": 1e-11,
+              "line": 129,
+              "raw": "    abstol(V) = 10 pV",
+              "scope": "transient:tran"
+            },
+            "iabstol_A": {
+              "value": 1e-15,
+              "line": 130,
+              "raw": "    abstol(I) = 1 fA",
+              "scope": "transient:tran"
+            },
+            "method": {
+              "value": "traponly",
+              "line": 135,
+              "raw": "    method = traponly",
+              "scope": "transient:tran"
+            }
+          },
+          "global_user": {
+            "vabstol_V": {
+              "value": 1e-11,
+              "line": 85,
+              "raw": "            vabstol = 1e-11",
+              "scope": "global_user"
+            },
+            "iabstol_A": {
+              "value": 1e-15,
+              "line": 86,
+              "raw": "            iabstol = 1e-15",
+              "scope": "global_user"
+            },
+            "reltol": {
+              "value": 1e-09,
+              "line": 87,
+              "raw": "             reltol = 1e-09",
+              "scope": "global_user"
+            }
+          },
+          "psf_effective": {
+            "stop_s": {
+              "value": 1.0,
+              "line": 14,
+              "raw": "\"stop\" 1.00000",
+              "scope": "psf_transient:tran"
+            },
+            "maxstep_s": {
+              "value": 0.001,
+              "line": 17,
+              "raw": "\"maxstep\" 0.00100000",
+              "scope": "psf_transient:tran"
+            },
+            "reltol": {
+              "value": 1e-10,
+              "line": 21,
+              "raw": "\"reltol\" 1.00000e-10",
+              "scope": "psf_transient:tran"
+            },
+            "vabstol_V": {
+              "value": 1e-11,
+              "line": 22,
+              "raw": "\"abstol(V)\" 1.00000e-11",
+              "scope": "psf_transient:tran"
+            },
+            "iabstol_A": {
+              "value": 1e-15,
+              "line": 23,
+              "raw": "\"abstol(I)\" 1.00000e-15",
+              "scope": "psf_transient:tran"
+            },
+            "method": {
+              "value": "traponly",
+              "line": 28,
+              "raw": "\"method\" \"traponly\"",
+              "scope": "psf_transient:tran"
+            }
+          },
+          "psf_relative_metadata": {
+            "tolerance.relative": {
+              "value": 1e-09,
+              "line": 11,
+              "raw": "\"tolerance.relative\" 1.00000e-09",
+              "scope": "psf_header"
+            }
+          }
+        },
+        "identity": {
+          "kernel_sha256": "dcc40978d95990d75113d5d32d3818e195fcdf8dc4de58f130e63c9bb3b8f84e",
+          "program_sha256": "ca0bb3fc0337ea66fdf2a666c36b4b1a9336a75237c0a02d072a17e8027f0aa1",
+          "source_sha256": "76b858fd4e24dab13459cb5cc0ee46ebcf540fca640e3011df17b4ddbf9faf80",
+          "deck_sha256": "cc2d9def9775a8b4c63fb26f2c0ba45d308935e907f5700015955fad8b8b7337",
+          "analyzer_sha256": "7e464c8dda929515bff8e3e9a18102f7488b035f812c7bde59414acd9c0394cd"
+        },
+        "scope": "New diagnostic, independent continuous voltage oracle; no historical grades replaced. Exact callback-side equality is not asserted."
+      }
+    },
+    {
+      "id": "n08/n08-held-fine",
+      "group": "n08",
+      "case": "held",
+      "label": "n08-held-fine",
+      "role": "physical_control",
+      "budget_V": 1e-06,
+      "source": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n08/n08-held-fine/dut.va",
+      "source_sha256": "3680e8a4073e88603c0bb87377a7118a30ce06215e30385978d8bd57d1d05f2d",
+      "spec": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n08/n08-held-fine/SPEC.json",
+      "spec_sha256": "c8259d8717421e0ab9b3e0ec373ed5f1130e327b1cdc7b45e34c6cfecf2f8ea2",
+      "reference_source": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08-n06-v1/raw/n08-held-fine/dut.va",
+      "reference_source_sha256": "3680e8a4073e88603c0bb87377a7118a30ce06215e30385978d8bd57d1d05f2d",
+      "reference_deck": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08-n06-v1/raw/n08-held-fine/tb.scs",
+      "reference_deck_sha256": "cc2d9def9775a8b4c63fb26f2c0ba45d308935e907f5700015955fad8b8b7337",
+      "reference_psf": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08-n06-v1/raw/n08-held-fine/psf/tran.tran.tran",
+      "reference_psf_sha256": "bac85a495ebb172431c14c3ff7e805c5c1ede7136b2837f66169a2f15bf2ba57",
+      "reference_log": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08-n06-v1/raw/n08-held-fine/spectre.log",
+      "reference_log_sha256": "f2eff601a9ffda9fea23d6690adcb07101da10c1bf1f2767b15493a72da4d63a",
+      "reference_requested": {
+        "reltol": 1e-09,
+        "vabstol": 1e-11,
+        "maxstep": 0.001
+      },
+      "reference_effective": {
+        "tolerance.relative": "1.00000e-09",
+        "stop": "1.00000",
+        "maxstep": "0.00100000",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-11",
+        "abstol(I)": "1.00000e-15",
+        "method": "\"traponly\"",
+        "gmin": "1.00000e-12"
+      },
+      "native_rows": 1066,
+      "query_tokens": [
+        "0",
+        "0.125",
+        "0.25",
+        "0.375",
+        "0.5",
+        "0.625",
+        "0.75",
+        "0.875",
+        "1"
+      ],
+      "missing_exact_native_tokens": [
+        "0.25",
+        "0.625",
+        "0.75",
+        "0.875",
+        "1"
+      ],
+      "reference_execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 9.332865312695503,
+        "completed_utc": "2026-10-13T21:09:23Z",
+        "log": "stdout.log",
+        "log_sha256": "ece9584280571e78e136cadb068deba0ce776f4bfd1d030dd263909db0be8c2e",
+        "label": "n08-held-fine",
+        "source_sha256": "3680e8a4073e88603c0bb87377a7118a30ce06215e30385978d8bd57d1d05f2d",
+        "deck_sha256": "cc2d9def9775a8b4c63fb26f2c0ba45d308935e907f5700015955fad8b8b7337",
+        "directory_bytes": 197712
+      },
+      "old_result": {
+        "label": "n08-held-fine",
+        "spectre_math_error_V": 2.4173301138574743e-09,
+        "evas_math_error_V": 3.3306690738754696e-16,
+        "pair_native_error_V": 2.4173297252794157e-09,
+        "budget_V": 1e-06,
+        "numeric_pass": true,
+        "observations_complete": false,
+        "observations": [
+          {
+            "time": 0.0,
+            "row_indices": [
+              0
+            ],
+            "kind": "native_saved",
+            "time_tokens": [
+              "0"
+            ],
+            "error_V": 0.0
+          },
+          {
+            "time": 0.125,
+            "row_indices": [
+              141
+            ],
+            "kind": "native_saved",
+            "time_tokens": [
+              "0.125"
+            ],
+            "error_V": 5.551115123125783e-17
+          },
+          {
+            "time": 0.25,
+            "row_indices": [],
+            "kind": "unavailable",
+            "time_tokens": [],
+            "error_V": null
+          },
+          {
+            "time": 0.375,
+            "row_indices": [
+              420
+            ],
+            "kind": "native_saved",
+            "time_tokens": [
+              "0.375"
+            ],
+            "error_V": 2.4173296142571132e-09
+          },
+          {
+            "time": 0.5,
+            "row_indices": [
+              565
+            ],
+            "kind": "native_saved",
+            "time_tokens": [
+              "0.5"
+            ],
+            "error_V": 2.4173297252794157e-09
+          },
+          {
+            "time": 0.625,
+            "row_indices": [],
+            "kind": "unavailable",
+            "time_tokens": [],
+            "error_V": null
+          },
+          {
+            "time": 0.75,
+            "row_indices": [],
+            "kind": "unavailable",
+            "time_tokens": [],
+            "error_V": null
+          },
+          {
+            "time": 0.875,
+            "row_indices": [],
+            "kind": "unavailable",
+            "time_tokens": [],
+            "error_V": null
+          },
+          {
+            "time": 1.0,
+            "row_indices": [],
+            "kind": "unavailable",
+            "time_tokens": [],
+            "error_V": null
+          }
+        ],
+        "native_rows": 1066,
+        "requested": {
+          "reltol": 1e-09,
+          "vabstol": 1e-11,
+          "maxstep": 0.001
+        },
+        "effective": {
+          "effective": {
+            "stop_s": {
+              "value": 1.0,
+              "line": 122,
+              "raw": "    stop = 1 s",
+              "scope": "transient:tran"
+            },
+            "maxstep_s": {
+              "value": 0.001,
+              "line": 124,
+              "raw": "    maxstep = 1 ms",
+              "scope": "transient:tran"
+            },
+            "reltol": {
+              "value": 1e-10,
+              "line": 128,
+              "raw": "    reltol = 100e-12",
+              "scope": "transient:tran"
+            },
+            "vabstol_V": {
+              "value": 1e-11,
+              "line": 129,
+              "raw": "    abstol(V) = 10 pV",
+              "scope": "transient:tran"
+            },
+            "iabstol_A": {
+              "value": 1e-15,
+              "line": 130,
+              "raw": "    abstol(I) = 1 fA",
+              "scope": "transient:tran"
+            },
+            "method": {
+              "value": "traponly",
+              "line": 135,
+              "raw": "    method = traponly",
+              "scope": "transient:tran"
+            }
+          },
+          "global_user": {
+            "vabstol_V": {
+              "value": 1e-11,
+              "line": 85,
+              "raw": "            vabstol = 1e-11",
+              "scope": "global_user"
+            },
+            "iabstol_A": {
+              "value": 1e-15,
+              "line": 86,
+              "raw": "            iabstol = 1e-15",
+              "scope": "global_user"
+            },
+            "reltol": {
+              "value": 1e-09,
+              "line": 87,
+              "raw": "             reltol = 1e-09",
+              "scope": "global_user"
+            }
+          },
+          "psf_effective": {
+            "stop_s": {
+              "value": 1.0,
+              "line": 14,
+              "raw": "\"stop\" 1.00000",
+              "scope": "psf_transient:tran"
+            },
+            "maxstep_s": {
+              "value": 0.001,
+              "line": 17,
+              "raw": "\"maxstep\" 0.00100000",
+              "scope": "psf_transient:tran"
+            },
+            "reltol": {
+              "value": 1e-10,
+              "line": 21,
+              "raw": "\"reltol\" 1.00000e-10",
+              "scope": "psf_transient:tran"
+            },
+            "vabstol_V": {
+              "value": 1e-11,
+              "line": 22,
+              "raw": "\"abstol(V)\" 1.00000e-11",
+              "scope": "psf_transient:tran"
+            },
+            "iabstol_A": {
+              "value": 1e-15,
+              "line": 23,
+              "raw": "\"abstol(I)\" 1.00000e-15",
+              "scope": "psf_transient:tran"
+            },
+            "method": {
+              "value": "traponly",
+              "line": 28,
+              "raw": "\"method\" \"traponly\"",
+              "scope": "psf_transient:tran"
+            }
+          },
+          "psf_relative_metadata": {
+            "tolerance.relative": {
+              "value": 1e-09,
+              "line": 11,
+              "raw": "\"tolerance.relative\" 1.00000e-09",
+              "scope": "psf_header"
+            }
+          }
+        },
+        "identity": {
+          "kernel_sha256": "dcc40978d95990d75113d5d32d3818e195fcdf8dc4de58f130e63c9bb3b8f84e",
+          "program_sha256": "8c88dbb059216a5fcdee2d9a424abf1e163e82c9a5b419cba0c948c7bcf558bd",
+          "source_sha256": "3680e8a4073e88603c0bb87377a7118a30ce06215e30385978d8bd57d1d05f2d",
+          "deck_sha256": "cc2d9def9775a8b4c63fb26f2c0ba45d308935e907f5700015955fad8b8b7337",
+          "analyzer_sha256": "7e464c8dda929515bff8e3e9a18102f7488b035f812c7bde59414acd9c0394cd"
+        },
+        "scope": "New diagnostic, independent continuous voltage oracle; no historical grades replaced. Exact callback-side equality is not asserted."
+      }
+    },
+    {
+      "id": "n08/n08-nonlinear-fine",
+      "group": "n08",
+      "case": "nonlinear",
+      "label": "n08-nonlinear-fine",
+      "role": "physical_control",
+      "budget_V": 1e-06,
+      "source": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n08/n08-nonlinear-fine/dut.va",
+      "source_sha256": "80d26f8d21fd143623971164004cc7ded564f18ed81f92b5bed76b826398936e",
+      "spec": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n08/n08-nonlinear-fine/SPEC.json",
+      "spec_sha256": "c8259d8717421e0ab9b3e0ec373ed5f1130e327b1cdc7b45e34c6cfecf2f8ea2",
+      "reference_source": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08-n06-v1/raw/n08-nonlinear-fine/dut.va",
+      "reference_source_sha256": "80d26f8d21fd143623971164004cc7ded564f18ed81f92b5bed76b826398936e",
+      "reference_deck": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08-n06-v1/raw/n08-nonlinear-fine/tb.scs",
+      "reference_deck_sha256": "cc2d9def9775a8b4c63fb26f2c0ba45d308935e907f5700015955fad8b8b7337",
+      "reference_psf": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08-n06-v1/raw/n08-nonlinear-fine/psf/tran.tran.tran",
+      "reference_psf_sha256": "db0406d44c0d9c4e7a7624fe872df939417f61401388c7e70d9ac89be119662b",
+      "reference_log": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08-n06-v1/raw/n08-nonlinear-fine/spectre.log",
+      "reference_log_sha256": "ef25a8b43d061aecbc92add614b4cab0a9cba96e011f3751677036328da2ed1f",
+      "reference_requested": {
+        "reltol": 1e-09,
+        "vabstol": 1e-11,
+        "maxstep": 0.001
+      },
+      "reference_effective": {
+        "tolerance.relative": "1.00000e-09",
+        "stop": "1.00000",
+        "maxstep": "0.00100000",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-11",
+        "abstol(I)": "1.00000e-15",
+        "method": "\"traponly\"",
+        "gmin": "1.00000e-12"
+      },
+      "native_rows": 2237,
+      "query_tokens": [
+        "0",
+        "0.125",
+        "0.25",
+        "0.375",
+        "0.5",
+        "0.625",
+        "0.75",
+        "0.875",
+        "1"
+      ],
+      "missing_exact_native_tokens": [
+        "0.25",
+        "0.375"
+      ],
+      "reference_execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 8.977846052497625,
+        "completed_utc": "2026-10-13T21:09:41Z",
+        "log": "stdout.log",
+        "log_sha256": "b3f8f2cb9bafe25277c860110564c6212641f8975da757014f61a5d40a6e8852",
+        "label": "n08-nonlinear-fine",
+        "source_sha256": "80d26f8d21fd143623971164004cc7ded564f18ed81f92b5bed76b826398936e",
+        "deck_sha256": "cc2d9def9775a8b4c63fb26f2c0ba45d308935e907f5700015955fad8b8b7337",
+        "directory_bytes": 270130
+      },
+      "old_result": {
+        "label": "n08-nonlinear-fine",
+        "spectre_math_error_V": 1.6104480173029234e-08,
+        "evas_math_error_V": 1.1102230246251565e-16,
+        "pair_native_error_V": 1.605901116252806e-08,
+        "budget_V": 1e-06,
+        "numeric_pass": true,
+        "observations_complete": false,
+        "observations": [
+          {
+            "time": 0.0,
+            "row_indices": [
+              0
+            ],
+            "kind": "native_saved",
+            "time_tokens": [
+              "0"
+            ],
+            "error_V": 0.0
+          },
+          {
+            "time": 0.125,
+            "row_indices": [
+              141
+            ],
+            "kind": "native_saved",
+            "time_tokens": [
+              "0.125"
+            ],
+            "error_V": 0.0
+          },
+          {
+            "time": 0.25,
+            "row_indices": [],
+            "kind": "unavailable",
+            "time_tokens": [],
+            "error_V": null
+          },
+          {
+            "time": 0.375,
+            "row_indices": [],
+            "kind": "unavailable",
+            "time_tokens": [],
+            "error_V": null
+          },
+          {
+            "time": 0.5,
+            "row_indices": [
+              519
+            ],
+            "kind": "native_saved",
+            "time_tokens": [
+              "0.5"
+            ],
+            "error_V": 0.0
+          },
+          {
+            "time": 0.625,
+            "row_indices": [
+              961
+            ],
+            "kind": "native_saved",
+            "time_tokens": [
+              "0.625"
+            ],
+            "error_V": 1.605901116252806e-08
+          },
+          {
+            "time": 0.75,
+            "row_indices": [
+              1386
+            ],
+            "kind": "native_saved",
+            "time_tokens": [
+              "0.75"
+            ],
+            "error_V": 1.560008661138923e-08
+          },
+          {
+            "time": 0.875,
+            "row_indices": [
+              1811
+            ],
+            "kind": "native_saved",
+            "time_tokens": [
+              "0.875"
+            ],
+            "error_V": 1.4847950036145363e-08
+          },
+          {
+            "time": 1.0,
+            "row_indices": [
+              2236
+            ],
+            "kind": "native_saved",
+            "time_tokens": [
+              "1"
+            ],
+            "error_V": 1.3981038549104596e-08
+          }
+        ],
+        "native_rows": 2237,
+        "requested": {
+          "reltol": 1e-09,
+          "vabstol": 1e-11,
+          "maxstep": 0.001
+        },
+        "effective": {
+          "effective": {
+            "stop_s": {
+              "value": 1.0,
+              "line": 122,
+              "raw": "    stop = 1 s",
+              "scope": "transient:tran"
+            },
+            "maxstep_s": {
+              "value": 0.001,
+              "line": 124,
+              "raw": "    maxstep = 1 ms",
+              "scope": "transient:tran"
+            },
+            "reltol": {
+              "value": 1e-10,
+              "line": 128,
+              "raw": "    reltol = 100e-12",
+              "scope": "transient:tran"
+            },
+            "vabstol_V": {
+              "value": 1e-11,
+              "line": 129,
+              "raw": "    abstol(V) = 10 pV",
+              "scope": "transient:tran"
+            },
+            "iabstol_A": {
+              "value": 1e-15,
+              "line": 130,
+              "raw": "    abstol(I) = 1 fA",
+              "scope": "transient:tran"
+            },
+            "method": {
+              "value": "traponly",
+              "line": 135,
+              "raw": "    method = traponly",
+              "scope": "transient:tran"
+            }
+          },
+          "global_user": {
+            "vabstol_V": {
+              "value": 1e-11,
+              "line": 85,
+              "raw": "            vabstol = 1e-11",
+              "scope": "global_user"
+            },
+            "iabstol_A": {
+              "value": 1e-15,
+              "line": 86,
+              "raw": "            iabstol = 1e-15",
+              "scope": "global_user"
+            },
+            "reltol": {
+              "value": 1e-09,
+              "line": 87,
+              "raw": "             reltol = 1e-09",
+              "scope": "global_user"
+            }
+          },
+          "psf_effective": {
+            "stop_s": {
+              "value": 1.0,
+              "line": 14,
+              "raw": "\"stop\" 1.00000",
+              "scope": "psf_transient:tran"
+            },
+            "maxstep_s": {
+              "value": 0.001,
+              "line": 17,
+              "raw": "\"maxstep\" 0.00100000",
+              "scope": "psf_transient:tran"
+            },
+            "reltol": {
+              "value": 1e-10,
+              "line": 21,
+              "raw": "\"reltol\" 1.00000e-10",
+              "scope": "psf_transient:tran"
+            },
+            "vabstol_V": {
+              "value": 1e-11,
+              "line": 22,
+              "raw": "\"abstol(V)\" 1.00000e-11",
+              "scope": "psf_transient:tran"
+            },
+            "iabstol_A": {
+              "value": 1e-15,
+              "line": 23,
+              "raw": "\"abstol(I)\" 1.00000e-15",
+              "scope": "psf_transient:tran"
+            },
+            "method": {
+              "value": "traponly",
+              "line": 28,
+              "raw": "\"method\" \"traponly\"",
+              "scope": "psf_transient:tran"
+            }
+          },
+          "psf_relative_metadata": {
+            "tolerance.relative": {
+              "value": 1e-09,
+              "line": 11,
+              "raw": "\"tolerance.relative\" 1.00000e-09",
+              "scope": "psf_header"
+            }
+          }
+        },
+        "identity": {
+          "kernel_sha256": "dcc40978d95990d75113d5d32d3818e195fcdf8dc4de58f130e63c9bb3b8f84e",
+          "program_sha256": "f0b91a5709468397c241bea02dae0b9756cbc50b2a2cfe2216ac1211c77f83eb",
+          "source_sha256": "80d26f8d21fd143623971164004cc7ded564f18ed81f92b5bed76b826398936e",
+          "deck_sha256": "cc2d9def9775a8b4c63fb26f2c0ba45d308935e907f5700015955fad8b8b7337",
+          "analyzer_sha256": "7e464c8dda929515bff8e3e9a18102f7488b035f812c7bde59414acd9c0394cd"
+        },
+        "scope": "New diagnostic, independent continuous voltage oracle; no historical grades replaced. Exact callback-side equality is not asserted."
+      }
+    },
+    {
+      "id": "n08/n08-filter-fine",
+      "group": "n08",
+      "case": "filter",
+      "label": "n08-filter-fine",
+      "role": "physical_control",
+      "budget_V": 1e-06,
+      "source": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n08/n08-filter-fine/dut.va",
+      "source_sha256": "f2252f56bbec1f05a4461c8b22cf32be643af3e91ef556422171eaa9071f7cd0",
+      "spec": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n08/n08-filter-fine/SPEC.json",
+      "spec_sha256": "c8259d8717421e0ab9b3e0ec373ed5f1130e327b1cdc7b45e34c6cfecf2f8ea2",
+      "reference_source": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08-filter-v2/raw/n08-filter-fine/dut.va",
+      "reference_source_sha256": "f2252f56bbec1f05a4461c8b22cf32be643af3e91ef556422171eaa9071f7cd0",
+      "reference_deck": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08-filter-v2/raw/n08-filter-fine/tb.scs",
+      "reference_deck_sha256": "cc2d9def9775a8b4c63fb26f2c0ba45d308935e907f5700015955fad8b8b7337",
+      "reference_psf": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08-filter-v2/raw/n08-filter-fine/psf/tran.tran.tran",
+      "reference_psf_sha256": "ee58a789ecc3943984ec2e7d1b2dbf6edb4d784ab440752ced74dbd60070bb37",
+      "reference_log": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08-filter-v2/raw/n08-filter-fine/spectre.log",
+      "reference_log_sha256": "607173fb97a9d1b8dfcea4d21df5d6f2b38386905b645b86e50d304b48890f50",
+      "reference_requested": {
+        "reltol": 1e-09,
+        "vabstol": 1e-11,
+        "maxstep": 0.001
+      },
+      "reference_effective": {
+        "tolerance.relative": "1.00000e-09",
+        "stop": "1.00000",
+        "maxstep": "0.00100000",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-11",
+        "abstol(I)": "1.00000e-15",
+        "method": "\"traponly\"",
+        "gmin": "1.00000e-12"
+      },
+      "native_rows": 1868,
+      "query_tokens": [
+        "0",
+        "0.125",
+        "0.25",
+        "0.375",
+        "0.5",
+        "0.625",
+        "0.75",
+        "0.875",
+        "1"
+      ],
+      "missing_exact_native_tokens": [
+        "0.25",
+        "0.375"
+      ],
+      "reference_execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 9.221129404380918,
+        "completed_utc": "2026-10-13T21:13:58Z",
+        "log": "stdout.log",
+        "log_sha256": "6833b12b898081c13ebe349d609696f0abb9b035c88c52f99350de2802d5df5d",
+        "label": "n08-filter-fine",
+        "source_sha256": "f2252f56bbec1f05a4461c8b22cf32be643af3e91ef556422171eaa9071f7cd0",
+        "deck_sha256": "cc2d9def9775a8b4c63fb26f2c0ba45d308935e907f5700015955fad8b8b7337",
+        "directory_bytes": 257836
+      },
+      "old_result": {
+        "label": "n08-filter-fine",
+        "spectre_math_error_V": 3.5356987893031544e-08,
+        "evas_math_error_V": 6.661338147750939e-16,
+        "pair_native_error_V": 3.5248680974042657e-08,
+        "budget_V": 1e-06,
+        "numeric_pass": true,
+        "observations_complete": false,
+        "observations": [
+          {
+            "time": 0.0,
+            "row_indices": [
+              0
+            ],
+            "kind": "native_saved",
+            "time_tokens": [
+              "0"
+            ],
+            "error_V": 0.0
+          },
+          {
+            "time": 0.125,
+            "row_indices": [
+              141
+            ],
+            "kind": "native_saved",
+            "time_tokens": [
+              "0.125"
+            ],
+            "error_V": 0.0
+          },
+          {
+            "time": 0.25,
+            "row_indices": [],
+            "kind": "unavailable",
+            "time_tokens": [],
+            "error_V": null
+          },
+          {
+            "time": 0.375,
+            "row_indices": [],
+            "kind": "unavailable",
+            "time_tokens": [],
+            "error_V": null
+          },
+          {
+            "time": 0.5,
+            "row_indices": [
+              519
+            ],
+            "kind": "native_saved",
+            "time_tokens": [
+              "0.5"
+            ],
+            "error_V": 0.0
+          },
+          {
+            "time": 0.625,
+            "row_indices": [
+              1084
+            ],
+            "kind": "native_saved",
+            "time_tokens": [
+              "0.625"
+            ],
+            "error_V": 2.3825194622739687e-08
+          },
+          {
+            "time": 0.75,
+            "row_indices": [
+              1418
+            ],
+            "kind": "native_saved",
+            "time_tokens": [
+              "0.75"
+            ],
+            "error_V": 3.2594783760941937e-08
+          },
+          {
+            "time": 0.875,
+            "row_indices": [
+              1624
+            ],
+            "kind": "native_saved",
+            "time_tokens": [
+              "0.875"
+            ],
+            "error_V": 3.5248680974042657e-08
+          },
+          {
+            "time": 1.0,
+            "row_indices": [
+              1867
+            ],
+            "kind": "native_saved",
+            "time_tokens": [
+              "1"
+            ],
+            "error_V": 3.026370321013161e-08
+          }
+        ],
+        "native_rows": 1868,
+        "requested": {
+          "reltol": 1e-09,
+          "vabstol": 1e-11,
+          "maxstep": 0.001
+        },
+        "effective": {
+          "effective": {
+            "stop_s": {
+              "value": 1.0,
+              "line": 119,
+              "raw": "    stop = 1 s",
+              "scope": "transient:tran"
+            },
+            "maxstep_s": {
+              "value": 0.001,
+              "line": 121,
+              "raw": "    maxstep = 1 ms",
+              "scope": "transient:tran"
+            },
+            "reltol": {
+              "value": 1e-10,
+              "line": 125,
+              "raw": "    reltol = 100e-12",
+              "scope": "transient:tran"
+            },
+            "vabstol_V": {
+              "value": 1e-11,
+              "line": 126,
+              "raw": "    abstol(V) = 10 pV",
+              "scope": "transient:tran"
+            },
+            "iabstol_A": {
+              "value": 1e-15,
+              "line": 127,
+              "raw": "    abstol(I) = 1 fA",
+              "scope": "transient:tran"
+            },
+            "method": {
+              "value": "traponly",
+              "line": 132,
+              "raw": "    method = traponly",
+              "scope": "transient:tran"
+            }
+          },
+          "global_user": {
+            "vabstol_V": {
+              "value": 1e-11,
+              "line": 82,
+              "raw": "            vabstol = 1e-11",
+              "scope": "global_user"
+            },
+            "iabstol_A": {
+              "value": 1e-15,
+              "line": 83,
+              "raw": "            iabstol = 1e-15",
+              "scope": "global_user"
+            },
+            "reltol": {
+              "value": 1e-09,
+              "line": 84,
+              "raw": "             reltol = 1e-09",
+              "scope": "global_user"
+            }
+          },
+          "psf_effective": {
+            "stop_s": {
+              "value": 1.0,
+              "line": 14,
+              "raw": "\"stop\" 1.00000",
+              "scope": "psf_transient:tran"
+            },
+            "maxstep_s": {
+              "value": 0.001,
+              "line": 17,
+              "raw": "\"maxstep\" 0.00100000",
+              "scope": "psf_transient:tran"
+            },
+            "reltol": {
+              "value": 1e-10,
+              "line": 21,
+              "raw": "\"reltol\" 1.00000e-10",
+              "scope": "psf_transient:tran"
+            },
+            "vabstol_V": {
+              "value": 1e-11,
+              "line": 22,
+              "raw": "\"abstol(V)\" 1.00000e-11",
+              "scope": "psf_transient:tran"
+            },
+            "iabstol_A": {
+              "value": 1e-15,
+              "line": 23,
+              "raw": "\"abstol(I)\" 1.00000e-15",
+              "scope": "psf_transient:tran"
+            },
+            "method": {
+              "value": "traponly",
+              "line": 28,
+              "raw": "\"method\" \"traponly\"",
+              "scope": "psf_transient:tran"
+            }
+          },
+          "psf_relative_metadata": {
+            "tolerance.relative": {
+              "value": 1e-09,
+              "line": 11,
+              "raw": "\"tolerance.relative\" 1.00000e-09",
+              "scope": "psf_header"
+            }
+          }
+        },
+        "identity": {
+          "kernel_sha256": "dcc40978d95990d75113d5d32d3818e195fcdf8dc4de58f130e63c9bb3b8f84e",
+          "program_sha256": "638e4387c0e137ddc02b34f63ea1279659f922cae775b10caef09e097b7ea31d",
+          "source_sha256": "f2252f56bbec1f05a4461c8b22cf32be643af3e91ef556422171eaa9071f7cd0",
+          "deck_sha256": "cc2d9def9775a8b4c63fb26f2c0ba45d308935e907f5700015955fad8b8b7337",
+          "analyzer_sha256": "7e464c8dda929515bff8e3e9a18102f7488b035f812c7bde59414acd9c0394cd"
+        },
+        "scope": "New diagnostic, independent continuous voltage oracle; no historical grades replaced. Exact callback-side equality is not asserted."
+      }
+    },
+    {
+      "id": "n19/root-third_rise_integral",
+      "group": "n19",
+      "case": "third_rise_integral",
+      "label": "root-third_rise_integral",
+      "role": "physical_history",
+      "budget_V": 1e-06,
+      "source": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n19/root-third_rise_integral/dut.va",
+      "source_sha256": "effcf8bed0a691bd2c567145826c67833073e960957d59d0da54c96b01cf9974",
+      "spec": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n19/root-third_rise_integral/SPEC.json",
+      "spec_sha256": "1ec4ad761c9a9fb6d5ca5d877e197798f4a02e08cf835d336da4e3caf48a068a",
+      "reference_source": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-root-window-v1/raw/root-third_rise_integral/dut.va",
+      "reference_source_sha256": "effcf8bed0a691bd2c567145826c67833073e960957d59d0da54c96b01cf9974",
+      "reference_deck": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-root-window-v1/raw/root-third_rise_integral/tb.scs",
+      "reference_deck_sha256": "0d8c43b19c1677fffc76b82cfa5bc2650668297be7d937a2e19e5ba7650659c0",
+      "reference_psf": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-root-window-v1/raw/root-third_rise_integral/psf/tran.tran.tran",
+      "reference_psf_sha256": "037ddabd94091811cebc7cc7d58f45354d7bffdc33bf757e5946a3d0ee75bdc8",
+      "reference_log": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-root-window-v1/raw/root-third_rise_integral/spectre.log",
+      "reference_log_sha256": "b0d23bbd1a4d4f56176f472fff22b5cb1108355fafa9f2a55ec29ad50842ca2c",
+      "reference_requested": {
+        "reltol": "1e-9",
+        "vabstol_V": "1e-12",
+        "iabstol_A": "1e-15",
+        "maxstep_s": "0.0078125",
+        "stop_s": "1",
+        "method": "traponly",
+        "errpreset": "conservative",
+        "precision": "%.17g"
+      },
+      "reference_effective": {
+        "tolerance.relative": "1.00000e-09",
+        "stop": "1.00000",
+        "maxstep": "0.00781250",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-12",
+        "abstol(I)": "1.00000e-15",
+        "method": "\"traponly\"",
+        "gmin": "1.00000e-12"
+      },
+      "native_rows": 1387,
+      "query_tokens": [
+        "0",
+        "0.125",
+        "0.25",
+        "0.375",
+        "0.5",
+        "0.625",
+        "0.75",
+        "0.875",
+        "1"
+      ],
+      "missing_exact_native_tokens": [],
+      "reference_execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 15.348007259890437,
+        "completed_utc": "2026-10-14T00:28:26Z",
+        "log": "stdout.log",
+        "log_sha256": "5124c87607af70aeb6a455287ef847e41d9f77209c6cf961be7d2f22123c251f",
+        "label": "root-third_rise_integral",
+        "source_sha256": "effcf8bed0a691bd2c567145826c67833073e960957d59d0da54c96b01cf9974",
+        "deck_sha256": "0d8c43b19c1677fffc76b82cfa5bc2650668297be7d937a2e19e5ba7650659c0",
+        "directory_bytes": 297362
+      },
+      "old_result": {
+        "old_ev_results": "archive:vaEVAS/current/runs/evas-night-20261014/n19-paired-v7/RESULTS.json",
+        "reference_results": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-root-window-v1/ANALYSIS-v1.json"
+      }
+    },
+    {
+      "id": "n19/root-endpoint_rise_after_cascade",
+      "group": "n19",
+      "case": "endpoint_rise_after_cascade",
+      "label": "root-endpoint_rise_after_cascade",
+      "role": "physical_history",
+      "budget_V": 1e-06,
+      "source": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n19/root-endpoint_rise_after_cascade/dut.va",
+      "source_sha256": "ebec8fc57b2bf414d3e2ebe0b46313237b018a184eecceb6b5971d738f5f11eb",
+      "spec": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n19/root-endpoint_rise_after_cascade/SPEC.json",
+      "spec_sha256": "8b805342f5a8bba56e909acac2e4a56ee5669e7151ece693504f6b86b7a8eedf",
+      "reference_source": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-strobe-refinement-v1/raw/root-endpoint_rise_after_cascade/dut.va",
+      "reference_source_sha256": "ebec8fc57b2bf414d3e2ebe0b46313237b018a184eecceb6b5971d738f5f11eb",
+      "reference_deck": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-strobe-refinement-v1/raw/root-endpoint_rise_after_cascade/tb.scs",
+      "reference_deck_sha256": "d1e4ba36e1eda5e906e45876eac4c35d88ea47876500044ff3b8326ba5e0db4f",
+      "reference_psf": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-strobe-refinement-v1/raw/root-endpoint_rise_after_cascade/psf/tran.tran.tran",
+      "reference_psf_sha256": "a0e93d3c673e0b13c87426bbe6c606ee7bf82faee810395708722389f85d2c8f",
+      "reference_log": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-strobe-refinement-v1/raw/root-endpoint_rise_after_cascade/spectre.log",
+      "reference_log_sha256": "2f5fd0c84f486d0f03c89f2e11d65e9d5b93083471adfc4e73a71fd01084d8d4",
+      "reference_requested": {
+        "reltol": "1e-9",
+        "vabstol_V": "1e-12",
+        "iabstol_A": "1e-15",
+        "maxstep_s": "7e-11",
+        "stop_s": "1.9999999999999999e-07",
+        "method": "traponly",
+        "errpreset": "conservative",
+        "precision": "%.17g"
+      },
+      "reference_effective": {
+        "tolerance.relative": "1.00000e-09",
+        "stop": "2.00000e-07",
+        "maxstep": "7.00000e-11",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-12",
+        "abstol(I)": "1.00000e-15",
+        "method": "\"traponly\"",
+        "gmin": "1.00000e-12"
+      },
+      "native_rows": 3004,
+      "query_tokens": [
+        "0",
+        "4.9999999999999998e-08",
+        "9.9999999999999995e-08",
+        "1.002e-07",
+        "1.2499999999999999e-07",
+        "1.4999999999999999e-07",
+        "1.9999999999999999e-07"
+      ],
+      "missing_exact_native_tokens": [],
+      "reference_execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 15.818902615457773,
+        "completed_utc": "2026-10-14T00:49:09Z",
+        "log": "stdout.log",
+        "log_sha256": "ec4b24d0b4cb435f886f2c76f09da4f2a959dc609c8c062e371d57cbfb1145ec",
+        "label": "root-endpoint_rise_after_cascade",
+        "source_sha256": "ebec8fc57b2bf414d3e2ebe0b46313237b018a184eecceb6b5971d738f5f11eb",
+        "deck_sha256": "d1e4ba36e1eda5e906e45876eac4c35d88ea47876500044ff3b8326ba5e0db4f",
+        "directory_bytes": 434733
+      },
+      "old_result": {
+        "old_ev_results": "archive:vaEVAS/current/runs/evas-night-20261014/n19-paired-v7/RESULTS.json",
+        "reference_results": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-strobe-refinement-v1/RESULTS.json"
+      }
+    },
+    {
+      "id": "n19/root-endpoint_fall_before_cascade",
+      "group": "n19",
+      "case": "endpoint_fall_before_cascade",
+      "label": "root-endpoint_fall_before_cascade",
+      "role": "physical_history",
+      "budget_V": 1e-06,
+      "source": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n19/root-endpoint_fall_before_cascade/dut.va",
+      "source_sha256": "ed9a968a5ca8201039309ff07efd854215c4c552211d8fb49355d502b46ccabd",
+      "spec": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n19/root-endpoint_fall_before_cascade/SPEC.json",
+      "spec_sha256": "418548af32fd24614fc340fe162615205441fcd71170d869ae96fa33688eb5ab",
+      "reference_source": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-strobe-refinement-v1/raw/root-endpoint_fall_before_cascade/dut.va",
+      "reference_source_sha256": "ed9a968a5ca8201039309ff07efd854215c4c552211d8fb49355d502b46ccabd",
+      "reference_deck": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-strobe-refinement-v1/raw/root-endpoint_fall_before_cascade/tb.scs",
+      "reference_deck_sha256": "cc8ece4df807ab18480460c73fc1a184e9946e944858d48736154e36f346a679",
+      "reference_psf": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-strobe-refinement-v1/raw/root-endpoint_fall_before_cascade/psf/tran.tran.tran",
+      "reference_psf_sha256": "7cff72a80715962d3a338bd5fb41401e2ed7048960429d4620b4fcd1c8ba9812",
+      "reference_log": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-strobe-refinement-v1/raw/root-endpoint_fall_before_cascade/spectre.log",
+      "reference_log_sha256": "5d28ec7bc47dd3b41e64f3d087b3c2ae9b2033b533291791ff27bdc06dedbe93",
+      "reference_requested": {
+        "reltol": "1e-9",
+        "vabstol_V": "1e-12",
+        "iabstol_A": "1e-15",
+        "maxstep_s": "7e-11",
+        "stop_s": "1.9999999999999999e-07",
+        "method": "traponly",
+        "errpreset": "conservative",
+        "precision": "%.17g"
+      },
+      "reference_effective": {
+        "tolerance.relative": "1.00000e-09",
+        "stop": "2.00000e-07",
+        "maxstep": "7.00000e-11",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-12",
+        "abstol(I)": "1.00000e-15",
+        "method": "\"traponly\"",
+        "gmin": "1.00000e-12"
+      },
+      "native_rows": 2973,
+      "query_tokens": [
+        "0",
+        "4.9999999999999998e-08",
+        "9.9999999999999995e-08",
+        "1.002e-07",
+        "1.2499999999999999e-07",
+        "1.4999999999999999e-07",
+        "1.9999999999999999e-07"
+      ],
+      "missing_exact_native_tokens": [],
+      "reference_execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 15.943643948063254,
+        "completed_utc": "2026-10-14T00:49:25Z",
+        "log": "stdout.log",
+        "log_sha256": "024ec7eb9f4066988f122e97f1554d9030de26da000573dd3ff3cfc128d9c076",
+        "label": "root-endpoint_fall_before_cascade",
+        "source_sha256": "ed9a968a5ca8201039309ff07efd854215c4c552211d8fb49355d502b46ccabd",
+        "deck_sha256": "cc8ece4df807ab18480460c73fc1a184e9946e944858d48736154e36f346a679",
+        "directory_bytes": 429652
+      },
+      "old_result": {
+        "old_ev_results": "archive:vaEVAS/current/runs/evas-night-20261014/n19-paired-v7/RESULTS.json",
+        "reference_results": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-strobe-refinement-v1/RESULTS.json"
+      }
+    },
+    {
+      "id": "n19/root-endpoint_rise_separated",
+      "group": "n19",
+      "case": "endpoint_rise_separated",
+      "label": "root-endpoint_rise_separated",
+      "role": "physical_history",
+      "budget_V": 1e-06,
+      "source": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n19/root-endpoint_rise_separated/dut.va",
+      "source_sha256": "cc8b7f601b8538ce7869477196a4211fddb250cbe737a987f0ee31c0c7369522",
+      "spec": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n19/root-endpoint_rise_separated/SPEC.json",
+      "spec_sha256": "8b805342f5a8bba56e909acac2e4a56ee5669e7151ece693504f6b86b7a8eedf",
+      "reference_source": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-strobe-refinement-v1/raw/root-endpoint_rise_separated/dut.va",
+      "reference_source_sha256": "cc8b7f601b8538ce7869477196a4211fddb250cbe737a987f0ee31c0c7369522",
+      "reference_deck": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-strobe-refinement-v1/raw/root-endpoint_rise_separated/tb.scs",
+      "reference_deck_sha256": "d1e4ba36e1eda5e906e45876eac4c35d88ea47876500044ff3b8326ba5e0db4f",
+      "reference_psf": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-strobe-refinement-v1/raw/root-endpoint_rise_separated/psf/tran.tran.tran",
+      "reference_psf_sha256": "02b6e8916293b675d193d279032396ea283fe0c119b24067c898705be4747de2",
+      "reference_log": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-strobe-refinement-v1/raw/root-endpoint_rise_separated/spectre.log",
+      "reference_log_sha256": "59bc0c9e1f404fac17aaac436e1e9aeb2a983bc41177a9283068406bba7603be",
+      "reference_requested": {
+        "reltol": "1e-9",
+        "vabstol_V": "1e-12",
+        "iabstol_A": "1e-15",
+        "maxstep_s": "7e-11",
+        "stop_s": "1.9999999999999999e-07",
+        "method": "traponly",
+        "errpreset": "conservative",
+        "precision": "%.17g"
+      },
+      "reference_effective": {
+        "tolerance.relative": "1.00000e-09",
+        "stop": "2.00000e-07",
+        "maxstep": "7.00000e-11",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-12",
+        "abstol(I)": "1.00000e-15",
+        "method": "\"traponly\"",
+        "gmin": "1.00000e-12"
+      },
+      "native_rows": 3286,
+      "query_tokens": [
+        "0",
+        "4.9999999999999998e-08",
+        "9.9999999999999995e-08",
+        "1.002e-07",
+        "1.2499999999999999e-07",
+        "1.4999999999999999e-07",
+        "1.9999999999999999e-07"
+      ],
+      "missing_exact_native_tokens": [],
+      "reference_execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 15.705824691802263,
+        "completed_utc": "2026-10-14T00:49:40Z",
+        "log": "stdout.log",
+        "log_sha256": "166d584a0e1297d6f1ab8de3680f74cb4382a1996a224c1ab70da5abee536334",
+        "label": "root-endpoint_rise_separated",
+        "source_sha256": "cc8b7f601b8538ce7869477196a4211fddb250cbe737a987f0ee31c0c7369522",
+        "deck_sha256": "d1e4ba36e1eda5e906e45876eac4c35d88ea47876500044ff3b8326ba5e0db4f",
+        "directory_bytes": 415023
+      },
+      "old_result": {
+        "old_ev_results": "archive:vaEVAS/current/runs/evas-night-20261014/n19-paired-v7/RESULTS.json",
+        "reference_results": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-strobe-refinement-v1/RESULTS.json"
+      }
+    },
+    {
+      "id": "n19/root-third_fall_filter",
+      "group": "n19",
+      "case": "third_fall_filter",
+      "label": "root-third_fall_filter",
+      "role": "physical_history",
+      "budget_V": 1e-06,
+      "source": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n19/root-third_fall_filter/dut.va",
+      "source_sha256": "6e12cbf357bfba46a44b92e48ead6d2c70cb732a65527548d5332176fa7cdf40",
+      "spec": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n19/root-third_fall_filter/SPEC.json",
+      "spec_sha256": "c7c07adb8afea2f7bf885b94ee8e82210e28c539620f38bb3ac2adc29a84e3bf",
+      "reference_source": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-root-window-v1/raw/root-third_fall_filter/dut.va",
+      "reference_source_sha256": "6e12cbf357bfba46a44b92e48ead6d2c70cb732a65527548d5332176fa7cdf40",
+      "reference_deck": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-root-window-v1/raw/root-third_fall_filter/tb.scs",
+      "reference_deck_sha256": "d62051380f7efca13da591f182a76f1b6bbe7047e4679f3c2ddfc70171ebdd12",
+      "reference_psf": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-root-window-v1/raw/root-third_fall_filter/psf/tran.tran.tran",
+      "reference_psf_sha256": "73a22577d0bce7350fdbd51698750ec44371ed12b7d1f80fa98049a140dabb3a",
+      "reference_log": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-root-window-v1/raw/root-third_fall_filter/spectre.log",
+      "reference_log_sha256": "354feb6760897061468b78278b5bc4c4d5b1d69de4bcccdd9bc31fa972571d6b",
+      "reference_requested": {
+        "reltol": "1e-9",
+        "vabstol_V": "1e-12",
+        "iabstol_A": "1e-15",
+        "maxstep_s": "0.0078125",
+        "stop_s": "1",
+        "method": "traponly",
+        "errpreset": "conservative",
+        "precision": "%.17g"
+      },
+      "reference_effective": {
+        "tolerance.relative": "1.00000e-09",
+        "stop": "1.00000",
+        "maxstep": "0.00781250",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-12",
+        "abstol(I)": "1.00000e-15",
+        "method": "\"traponly\"",
+        "gmin": "1.00000e-12"
+      },
+      "native_rows": 2981,
+      "query_tokens": [
+        "0",
+        "0.125",
+        "0.25",
+        "0.375",
+        "0.5",
+        "0.625",
+        "0.75",
+        "0.875",
+        "1"
+      ],
+      "missing_exact_native_tokens": [],
+      "reference_execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 16.63282346725464,
+        "completed_utc": "2026-10-14T00:29:31Z",
+        "log": "stdout.log",
+        "log_sha256": "cdc020e2c1d2a7d284dfdbd11aeb1c3efe069df7e1d34004d768c1d8d5e444d0",
+        "label": "root-third_fall_filter",
+        "source_sha256": "6e12cbf357bfba46a44b92e48ead6d2c70cb732a65527548d5332176fa7cdf40",
+        "deck_sha256": "d62051380f7efca13da591f182a76f1b6bbe7047e4679f3c2ddfc70171ebdd12",
+        "directory_bytes": 468366
+      },
+      "old_result": {
+        "old_ev_results": "archive:vaEVAS/current/runs/evas-night-20261014/n19-paired-v7/RESULTS.json",
+        "reference_results": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-root-window-v1/ANALYSIS-v1.json"
+      }
+    },
+    {
+      "id": "n19/root-endpoint_highgain_safety",
+      "group": "n19",
+      "case": "endpoint_highgain_safety",
+      "label": "root-endpoint_highgain_safety",
+      "role": "unscored_safety",
+      "budget_V": 1e-06,
+      "source": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n19/root-endpoint_highgain_safety/dut.va",
+      "source_sha256": "ff5df389d123471db743641e9ae0a5cf5450b0735e42fc6744905ea4032c5fb7",
+      "spec": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n19/root-endpoint_highgain_safety/SPEC.json",
+      "spec_sha256": "1882bd6dc91c380925b4271b362f27eaaa22e285266842f5ee76dbd649f0a985",
+      "reference_source": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-root-window-v1/raw/root-endpoint_highgain_safety/dut.va",
+      "reference_source_sha256": "ff5df389d123471db743641e9ae0a5cf5450b0735e42fc6744905ea4032c5fb7",
+      "reference_deck": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-root-window-v1/raw/root-endpoint_highgain_safety/tb.scs",
+      "reference_deck_sha256": "76c10d3fd5c1c55c15d3dd0711c3472c9618e4f78536dd9ead93dfa53aad0e6a",
+      "reference_psf": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-root-window-v1/raw/root-endpoint_highgain_safety/psf/tran.tran.tran",
+      "reference_psf_sha256": "945ec7d1dbe1cec26678f522a7b55a3167b645eea79128b741b33c4fb1cb807f",
+      "reference_log": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-root-window-v1/raw/root-endpoint_highgain_safety/spectre.log",
+      "reference_log_sha256": "653ace1a59e0111e460815f4ef6d661cccd7da49777e1b1fc59fac3be52e1803",
+      "reference_requested": {
+        "reltol": "1e-9",
+        "vabstol_V": "1e-12",
+        "iabstol_A": "1e-15",
+        "maxstep_s": "1e-10",
+        "stop_s": "1.9999999999999999e-07",
+        "method": "traponly",
+        "errpreset": "conservative",
+        "precision": "%.17g"
+      },
+      "reference_effective": {
+        "tolerance.relative": "1.00000e-09",
+        "stop": "2.00000e-07",
+        "maxstep": "1.00000e-10",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-12",
+        "abstol(I)": "1.00000e-15",
+        "method": "\"traponly\"",
+        "gmin": "1.00000e-12"
+      },
+      "native_rows": 2030,
+      "query_tokens": [
+        "0",
+        "4.9999999999999998e-08",
+        "9.9999999999999995e-08",
+        "1.002e-07",
+        "1.2499999999999999e-07",
+        "1.4999999999999999e-07",
+        "1.9999999999999999e-07"
+      ],
+      "missing_exact_native_tokens": [
+        "4.9999999999999998e-08",
+        "9.9999999999999995e-08",
+        "1.4999999999999999e-07",
+        "1.9999999999999999e-07"
+      ],
+      "reference_execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 9.294109240174294,
+        "completed_utc": "2026-10-14T00:29:40Z",
+        "log": "stdout.log",
+        "log_sha256": "1a9016fb5ce0557f45bcd73069992eac741c244f351cd8d1bd0147f78420606d",
+        "label": "root-endpoint_highgain_safety",
+        "source_sha256": "ff5df389d123471db743641e9ae0a5cf5450b0735e42fc6744905ea4032c5fb7",
+        "deck_sha256": "76c10d3fd5c1c55c15d3dd0711c3472c9618e4f78536dd9ead93dfa53aad0e6a",
+        "directory_bytes": 253651
+      },
+      "old_result": {
+        "old_ev_results": "archive:vaEVAS/current/runs/evas-night-20261014/n19-paired-v7/RESULTS.json",
+        "reference_results": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-root-window-v1/ANALYSIS-v1.json"
+      }
+    },
+    {
+      "id": "n08c/n08c-transres-positive-forced",
+      "group": "n08c",
+      "case": "exact_nested_endpoint",
+      "label": "n08c-transres-positive-forced",
+      "role": "physical_control",
+      "budget_V": 1e-08,
+      "source": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n08c/n08c-transres-positive-forced/dut.va",
+      "source_sha256": "a0b2b14ef90f7fecb1e0e0cf635b32bd44c69c13dd8c930f53f695476477235e",
+      "spec": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n08c/n08c-transres-positive-forced/SPEC.json",
+      "spec_sha256": "ab302eb33f53f10ad99170860ce33e7449d5873cd08f189afcb532d39240da32",
+      "reference_source": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08c-transres-positive-v1/raw/n08c-transres-positive-forced/dut.va",
+      "reference_source_sha256": "a0b2b14ef90f7fecb1e0e0cf635b32bd44c69c13dd8c930f53f695476477235e",
+      "reference_deck": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08c-transres-positive-v1/raw/n08c-transres-positive-forced/tb.scs",
+      "reference_deck_sha256": "5c8fd6b4b2592f75f998dcc1db5ff33cd08dd303107a01d582c3f6a62fdd7937",
+      "reference_psf": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08c-transres-positive-v1/raw/n08c-transres-positive-forced/psf/tran.tran.tran",
+      "reference_psf_sha256": "e466c06a8951eea686bd2266f001c4103136ceba9255443f236d560f0e83e69b",
+      "reference_log": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08c-transres-positive-v1/raw/n08c-transres-positive-forced/spectre.log",
+      "reference_log_sha256": "4c8d1f4bab01db7296bd2c6b608d07be3d893e4879e99fe0c652acef40cb959d",
+      "reference_requested": {
+        "reltol": "1e-9",
+        "vabstol_V": "1e-12",
+        "iabstol_A": "1e-15",
+        "maxstep_s": "1e-10",
+        "stop_s": "4e-8",
+        "method": "traponly",
+        "errpreset": "conservative",
+        "precision": "%.17g",
+        "transres_s": "1e-24"
+      },
+      "reference_effective": {
+        "tolerance.relative": "1.00000e-09",
+        "stop": "4.00000e-08",
+        "maxstep": "1.00000e-10",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-12",
+        "abstol(I)": "1.00000e-15",
+        "method": "\"traponly\"",
+        "gmin": "1.00000e-12"
+      },
+      "native_rows": 476,
+      "query_tokens": [
+        "0",
+        "2.9999999999999997e-08",
+        "3.0099999999999998e-08",
+        "3.0199999999999999e-08",
+        "4.0000000000000001e-08"
+      ],
+      "missing_exact_native_tokens": [],
+      "reference_execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 9.507334284484386,
+        "completed_utc": "2026-10-13T22:52:07Z",
+        "log": "stdout.log",
+        "log_sha256": "ca22a1ea97366b2172db658e04e7614a3282bdcfbee831158202dca7b1f8b46d",
+        "label": "n08c-transres-positive-forced",
+        "source_sha256": "a0b2b14ef90f7fecb1e0e0cf635b32bd44c69c13dd8c930f53f695476477235e",
+        "deck_sha256": "5c8fd6b4b2592f75f998dcc1db5ff33cd08dd303107a01d582c3f6a62fdd7937",
+        "directory_bytes": 161294
+      },
+      "old_result": {
+        "reference_analysis": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08c-transres-positive-v1/ANALYSIS.json",
+        "scope": "ordinary means observation mode; DUT still nested"
+      }
+    },
+    {
+      "id": "n07a/n07-zero_tol_dyadic-marked-ordinary",
+      "group": "n07a",
+      "case": "zero_tol_dyadic",
+      "label": "n07-zero_tol_dyadic-marked-ordinary",
+      "role": "exact_dyadic_control",
+      "budget_V": 0,
+      "source": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n07a/n07-zero_tol_dyadic-marked-ordinary/dut.va",
+      "source_sha256": "1498ac448d75bf19abbfa51c96d8e185b857a154ad9326815383f985edf5911b",
+      "spec": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n07a/n07-zero_tol_dyadic-marked-ordinary/SPEC.json",
+      "spec_sha256": "63e042ab2e6441faff034e6831e9678e2255aabdf2eec789c8ec7483aa930ad6",
+      "reference_source": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n07-zero-v2/raw/n07-zero_tol_dyadic-marked-ordinary/dut.va",
+      "reference_source_sha256": "1498ac448d75bf19abbfa51c96d8e185b857a154ad9326815383f985edf5911b",
+      "reference_deck": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n07-zero-v2/raw/n07-zero_tol_dyadic-marked-ordinary/tb.scs",
+      "reference_deck_sha256": "5362a040f10fbd6b356ac4e62b8302aeb5c759a426853e7d068e4dc1c21e08a4",
+      "reference_psf": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n07-zero-v2/raw/n07-zero_tol_dyadic-marked-ordinary/psf/tran.tran.tran",
+      "reference_psf_sha256": "78f8e9786e518cd96ce60e1718325b0852ba1203ade2f4aba3bfba9ad75d58ce",
+      "reference_log": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n07-zero-v2/raw/n07-zero_tol_dyadic-marked-ordinary/spectre.log",
+      "reference_log_sha256": "5c4eecf82a9aca9193837dbbb91b453b853f274245124d33ff8ea4d02a7618fb",
+      "reference_requested": {
+        "reltol": 1e-09,
+        "vabstol": 1e-11,
+        "iabstol": 1e-15,
+        "maxstep": 0.005
+      },
+      "reference_effective": {
+        "tolerance.relative": "1.00000e-09",
+        "stop": "0.625000",
+        "maxstep": "0.00500000",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-11",
+        "abstol(I)": "1.00000e-15",
+        "method": "\"traponly\"",
+        "gmin": "1.00000e-12"
+      },
+      "native_rows": 180,
+      "query_tokens": [
+        "0",
+        "0.125",
+        "0.25",
+        "0.375",
+        "0.5",
+        "0.625"
+      ],
+      "missing_exact_native_tokens": [],
+      "reference_execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 9.445052400231361,
+        "completed_utc": "2026-10-13T21:28:36Z",
+        "log": "stdout.log",
+        "log_sha256": "9128949cc454b28cdf2179e2c32acf6af2cc3bd9db79646d3b8d8d719eb405c3",
+        "label": "n07-zero_tol_dyadic-marked-ordinary",
+        "source_sha256": "1498ac448d75bf19abbfa51c96d8e185b857a154ad9326815383f985edf5911b",
+        "deck_sha256": "5362a040f10fbd6b356ac4e62b8302aeb5c759a426853e7d068e4dc1c21e08a4",
+        "directory_bytes": 120176
+      },
+      "old_result": {
+        "summary": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n07-zero-v2/N07A-PAIRED-SUMMARY.json"
+      }
+    },
+    {
+      "id": "n07a/n07-zero_tol_dyadic-marked-strobed",
+      "group": "n07a",
+      "case": "zero_tol_dyadic",
+      "label": "n07-zero_tol_dyadic-marked-strobed",
+      "role": "exact_dyadic_control",
+      "budget_V": 0,
+      "source": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n07a/n07-zero_tol_dyadic-marked-strobed/dut.va",
+      "source_sha256": "1498ac448d75bf19abbfa51c96d8e185b857a154ad9326815383f985edf5911b",
+      "spec": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n07a/n07-zero_tol_dyadic-marked-strobed/SPEC.json",
+      "spec_sha256": "62df15db4f942ef7072a22f4cf85cd2d51a506f2235008f4bbce470f40643f13",
+      "reference_source": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n07-zero-v2/raw/n07-zero_tol_dyadic-marked-strobed/dut.va",
+      "reference_source_sha256": "1498ac448d75bf19abbfa51c96d8e185b857a154ad9326815383f985edf5911b",
+      "reference_deck": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n07-zero-v2/raw/n07-zero_tol_dyadic-marked-strobed/tb.scs",
+      "reference_deck_sha256": "4e5716d9c9245b31aa92e2e5d4adb767f9c105aff51228ff8ac74858406d31db",
+      "reference_psf": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n07-zero-v2/raw/n07-zero_tol_dyadic-marked-strobed/psf/tran.tran.tran",
+      "reference_psf_sha256": "8d1057f543481739dc58c57917d6d6e6efd1ae540eb70e75212fe202f6efaed0",
+      "reference_log": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n07-zero-v2/raw/n07-zero_tol_dyadic-marked-strobed/spectre.log",
+      "reference_log_sha256": "188d5bf97aa40e68180b73f0019c0d9234443bb635c4d27f630a7222e0e1caee",
+      "reference_requested": {
+        "reltol": 1e-09,
+        "vabstol": 1e-11,
+        "iabstol": 1e-15,
+        "maxstep": 0.005
+      },
+      "reference_effective": {
+        "tolerance.relative": "1.00000e-09",
+        "stop": "0.625000",
+        "maxstep": "0.00500000",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-11",
+        "abstol(I)": "1.00000e-15",
+        "method": "\"traponly\"",
+        "gmin": "1.00000e-12"
+      },
+      "native_rows": 180,
+      "query_tokens": [
+        "0",
+        "0.125",
+        "0.25",
+        "0.375",
+        "0.5",
+        "0.625"
+      ],
+      "missing_exact_native_tokens": [],
+      "reference_execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 9.04753971658647,
+        "completed_utc": "2026-10-13T21:28:45Z",
+        "log": "stdout.log",
+        "log_sha256": "cf36a6bb8451afe4fef7260574a8a982e0f25f47d156e78ead6112ed5fb75636",
+        "label": "n07-zero_tol_dyadic-marked-strobed",
+        "source_sha256": "1498ac448d75bf19abbfa51c96d8e185b857a154ad9326815383f985edf5911b",
+        "deck_sha256": "4e5716d9c9245b31aa92e2e5d4adb767f9c105aff51228ff8ac74858406d31db",
+        "directory_bytes": 120149
+      },
+      "old_result": {
+        "summary": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n07-zero-v2/N07A-PAIRED-SUMMARY.json"
+      }
+    },
+    {
+      "id": "n07a/n07-zero_tol_decimal-marked-ordinary",
+      "group": "n07a",
+      "case": "zero_tol_decimal",
+      "label": "n07-zero_tol_decimal-marked-ordinary",
+      "role": "unscored_safety",
+      "budget_V": 0,
+      "source": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n07a/n07-zero_tol_decimal-marked-ordinary/dut.va",
+      "source_sha256": "bbafa8bec4f4659590684e349aa422d668597b8b672104ff227d6d830b42f793",
+      "spec": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n07a/n07-zero_tol_decimal-marked-ordinary/SPEC.json",
+      "spec_sha256": "63e042ab2e6441faff034e6831e9678e2255aabdf2eec789c8ec7483aa930ad6",
+      "reference_source": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n07-zero-v2/raw/n07-zero_tol_decimal-marked-ordinary/dut.va",
+      "reference_source_sha256": "bbafa8bec4f4659590684e349aa422d668597b8b672104ff227d6d830b42f793",
+      "reference_deck": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n07-zero-v2/raw/n07-zero_tol_decimal-marked-ordinary/tb.scs",
+      "reference_deck_sha256": "5362a040f10fbd6b356ac4e62b8302aeb5c759a426853e7d068e4dc1c21e08a4",
+      "reference_psf": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n07-zero-v2/raw/n07-zero_tol_decimal-marked-ordinary/psf/tran.tran.tran",
+      "reference_psf_sha256": "fac355358276cea9510f4eef63852b4901951392b099b7056fc2b26c9364ed66",
+      "reference_log": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n07-zero-v2/raw/n07-zero_tol_decimal-marked-ordinary/spectre.log",
+      "reference_log_sha256": "69d50e4d008ed6cc754c8153479bb7c6d449e610e9beeb1ceb02eb05b47b835d",
+      "reference_requested": {
+        "reltol": 1e-09,
+        "vabstol": 1e-11,
+        "iabstol": 1e-15,
+        "maxstep": 0.005
+      },
+      "reference_effective": {
+        "tolerance.relative": "1.00000e-09",
+        "stop": "0.625000",
+        "maxstep": "0.00500000",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-11",
+        "abstol(I)": "1.00000e-15",
+        "method": "\"traponly\"",
+        "gmin": "1.00000e-12"
+      },
+      "native_rows": 171,
+      "query_tokens": [
+        "0",
+        "0.125",
+        "0.25",
+        "0.375",
+        "0.5",
+        "0.625"
+      ],
+      "missing_exact_native_tokens": [
+        "0.125",
+        "0.25",
+        "0.375"
+      ],
+      "reference_execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 9.090553911402822,
+        "completed_utc": "2026-10-13T21:28:54Z",
+        "log": "stdout.log",
+        "log_sha256": "58f7ae5cd197e9d839afbbfb485aa08f6b09f6ed35d74f191c2579daabc2fc46",
+        "label": "n07-zero_tol_decimal-marked-ordinary",
+        "source_sha256": "bbafa8bec4f4659590684e349aa422d668597b8b672104ff227d6d830b42f793",
+        "deck_sha256": "5362a040f10fbd6b356ac4e62b8302aeb5c759a426853e7d068e4dc1c21e08a4",
+        "directory_bytes": 119921
+      },
+      "old_result": {
+        "summary": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n07-zero-v2/N07A-PAIRED-SUMMARY.json"
+      }
+    },
+    {
+      "id": "n07a/n07-zero_tol_decimal-marked-strobed",
+      "group": "n07a",
+      "case": "zero_tol_decimal",
+      "label": "n07-zero_tol_decimal-marked-strobed",
+      "role": "unscored_safety",
+      "budget_V": 0,
+      "source": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n07a/n07-zero_tol_decimal-marked-strobed/dut.va",
+      "source_sha256": "bbafa8bec4f4659590684e349aa422d668597b8b672104ff227d6d830b42f793",
+      "spec": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/frozen/n07a/n07-zero_tol_decimal-marked-strobed/SPEC.json",
+      "spec_sha256": "62df15db4f942ef7072a22f4cf85cd2d51a506f2235008f4bbce470f40643f13",
+      "reference_source": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n07-zero-v2/raw/n07-zero_tol_decimal-marked-strobed/dut.va",
+      "reference_source_sha256": "bbafa8bec4f4659590684e349aa422d668597b8b672104ff227d6d830b42f793",
+      "reference_deck": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n07-zero-v2/raw/n07-zero_tol_decimal-marked-strobed/tb.scs",
+      "reference_deck_sha256": "4e5716d9c9245b31aa92e2e5d4adb767f9c105aff51228ff8ac74858406d31db",
+      "reference_psf": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n07-zero-v2/raw/n07-zero_tol_decimal-marked-strobed/psf/tran.tran.tran",
+      "reference_psf_sha256": "e49a92745b7b5ab75cdf23a161fa3e43e9e075e2155a07710672a45c429abd28",
+      "reference_log": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n07-zero-v2/raw/n07-zero_tol_decimal-marked-strobed/spectre.log",
+      "reference_log_sha256": "a373c42c29f9347d0a307a6a1d1c80603afa747f077a38bd4302c77def8bb0df",
+      "reference_requested": {
+        "reltol": 1e-09,
+        "vabstol": 1e-11,
+        "iabstol": 1e-15,
+        "maxstep": 0.005
+      },
+      "reference_effective": {
+        "tolerance.relative": "1.00000e-09",
+        "stop": "0.625000",
+        "maxstep": "0.00500000",
+        "reltol": "1.00000e-10",
+        "abstol(V)": "1.00000e-11",
+        "abstol(I)": "1.00000e-15",
+        "method": "\"traponly\"",
+        "gmin": "1.00000e-12"
+      },
+      "native_rows": 159,
+      "query_tokens": [
+        "0",
+        "0.125",
+        "0.25",
+        "0.375",
+        "0.5",
+        "0.625"
+      ],
+      "missing_exact_native_tokens": [
+        "0.25",
+        "0.375"
+      ],
+      "reference_execution": {
+        "argv": [
+          "taskset",
+          "-c",
+          "0",
+          "prlimit",
+          "--as=4294967296",
+          "--fsize=33554432",
+          "--",
+          "/bin/csh",
+          "-f",
+          "run.csh"
+        ],
+        "returncode": 0,
+        "timeout": false,
+        "status": "completed",
+        "cleanup": {
+          "signals": [
+            "SIGTERM",
+            "SIGKILL"
+          ],
+          "errors": [],
+          "complete": true
+        },
+        "elapsed_seconds": 9.41738273575902,
+        "completed_utc": "2026-10-13T21:29:04Z",
+        "log": "stdout.log",
+        "log_sha256": "ddacb192fd53ded850b806173b30f4aa516596693d929b1b66e89a474bf36c69",
+        "label": "n07-zero_tol_decimal-marked-strobed",
+        "source_sha256": "bbafa8bec4f4659590684e349aa422d668597b8b672104ff227d6d830b42f793",
+        "deck_sha256": "4e5716d9c9245b31aa92e2e5d4adb767f9c105aff51228ff8ac74858406d31db",
+        "directory_bytes": 119434
+      },
+      "old_result": {
+        "summary": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n07-zero-v2/N07A-PAIRED-SUMMARY.json"
+      }
+    },
+    {
+      "id": "linear/linear_idt",
+      "group": "linear",
+      "case": "linear_idt",
+      "label": "linear_idt",
+      "role": "qualification",
+      "budget_V": 1e-08,
+      "source": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/linear-controls-v2/inputs/linear_idt/dut.va",
+      "source_sha256": "83e38780fecbed5f03ffe1cbd6b8d3a6cb0ca5134a74e43b263586094e3f0ac3",
+      "spec": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/linear-controls-v2/inputs/linear_idt/REQUEST.json",
+      "spec_sha256": "641a95fb2bd5f8d1770185340cbf9713588882b89b5da8ec0070e212bcde15dd",
+      "reference_status": "pending root remote execution",
+      "expected_y_decimal": [
+        ".25",
+        ".75",
+        "1.25",
+        "1",
+        ".75"
+      ]
+    },
+    {
+      "id": "linear/linear_filter",
+      "group": "linear",
+      "case": "linear_filter",
+      "label": "linear_filter",
+      "role": "qualification",
+      "budget_V": 1e-08,
+      "source": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/linear-controls-v2/inputs/linear_filter/dut.va",
+      "source_sha256": "dd2f08d7db6da7354280f4591a79ab9fc458a05b9dc8da022bcc6565d3c93694",
+      "spec": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/linear-controls-v2/inputs/linear_filter/REQUEST.json",
+      "spec_sha256": "641a95fb2bd5f8d1770185340cbf9713588882b89b5da8ec0070e212bcde15dd",
+      "reference_status": "pending root remote execution",
+      "expected_y_decimal": [
+        "2",
+        "2",
+        "2",
+        "0.1036383235143269647865713104843826023374333930953035035235104050923844872346994",
+        "-0.59399415029016192431800151508254678977710536227127235559552338203777987769553693"
+      ]
+    },
+    {
+      "id": "linear/linear_held_gate",
+      "group": "linear",
+      "case": "linear_held_gate",
+      "label": "linear_held_gate",
+      "role": "qualification",
+      "budget_V": 1e-08,
+      "source": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/linear-controls-v2/inputs/linear_held_gate/dut.va",
+      "source_sha256": "a488d140cc7dc3fb9c23b06deeea09f12574f3d926444dcc45cf92f873223b8e",
+      "spec": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/linear-controls-v2/inputs/linear_held_gate/REQUEST.json",
+      "spec_sha256": "641a95fb2bd5f8d1770185340cbf9713588882b89b5da8ec0070e212bcde15dd",
+      "reference_status": "pending root remote execution",
+      "expected_y_decimal": [
+        ".25",
+        ".75",
+        "1.25",
+        "1",
+        "1"
+      ]
+    }
+  ],
+  "reused_reference_manifest_checks": {
+    "remote/n08-n06-v1": {
+      "MANIFEST.json": {
+        "path": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08-n06-v1/raw/MANIFEST.json",
+        "sha256": "32e39483220b8f46edd4870b480ad5b2c77c529cdda179aad948d7a1d8800a05",
+        "files_checked": 32
+      },
+      "OUTPUT_MANIFEST.json": {
+        "path": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08-n06-v1/raw/OUTPUT_MANIFEST.json",
+        "sha256": "7c631b1123bc9da4f40d58dfe890181200c50dac1ac4a1ffaa6a1bf3074754c5",
+        "files_checked": 265
+      }
+    },
+    "remote/n08-filter-v2": {
+      "MANIFEST.json": {
+        "path": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08-filter-v2/raw/MANIFEST.json",
+        "sha256": "ebe131aac84e02ad80e4781cdafcf0a11ad91013048149c9bd12c7c34062aaff",
+        "files_checked": 8
+      },
+      "OUTPUT_MANIFEST.json": {
+        "path": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08-filter-v2/raw/OUTPUT_MANIFEST.json",
+        "sha256": "4efa7bfcac19117d34cda2e6d4a66ffeb13a1512ff80ce05fc8907addfc9a443",
+        "files_checked": 49
+      }
+    },
+    "remote/n19-root-window-v1": {
+      "MANIFEST.json": {
+        "path": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-root-window-v1/raw/MANIFEST.json",
+        "sha256": "933b9ac1362bd74b75f3e8ff437362af5e61f474f4d4566299b37b0972360f19",
+        "files_checked": 76
+      },
+      "OUTPUT_MANIFEST.json": {
+        "path": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-root-window-v1/raw/OUTPUT_MANIFEST.json",
+        "sha256": "d105c29204eb27265c729650a0ac21c9c42d94b1e609830c4066a8c570c635bf",
+        "files_checked": 182
+      }
+    },
+    "remote/n19-strobe-refinement-v1": {
+      "MANIFEST.json": {
+        "path": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-strobe-refinement-v1/raw/MANIFEST.json",
+        "sha256": "77a6fdcf3f3154e7c4c4314fa2ee8896ab82a773304ed048b95114cef7953c53",
+        "files_checked": 24
+      },
+      "OUTPUT_MANIFEST.json": {
+        "path": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n19-strobe-refinement-v1/raw/OUTPUT_MANIFEST.json",
+        "sha256": "45057c67bb40b2b6a01786f6c5b234f5735a9e754910fb70911b869d023328d9",
+        "files_checked": 82
+      }
+    },
+    "remote/n08c-transres-positive-v1": {
+      "MANIFEST.json": {
+        "path": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08c-transres-positive-v1/raw/MANIFEST.json",
+        "sha256": "460802076c9b6d2a221bd459a1174ea48a68cb9b248479676128ea52909dd8e1",
+        "files_checked": 28
+      },
+      "OUTPUT_MANIFEST.json": {
+        "path": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n08c-transres-positive-v1/raw/OUTPUT_MANIFEST.json",
+        "sha256": "ec38bf972bc718c5fbeb97e98d274c623a9f98a18389881a2e69b00875569b51",
+        "files_checked": 70
+      }
+    },
+    "remote/n07-zero-v2": {
+      "MANIFEST.json": {
+        "path": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n07-zero-v2/raw/MANIFEST.json",
+        "sha256": "4b61b1479d5f4dc8c20bc7d91ce3b656bcf661e538d6dabbff206e330d56bcb8",
+        "files_checked": 12
+      },
+      "OUTPUT_MANIFEST.json": {
+        "path": "archive:vaEVAS/current/runs/evas-night-20261014/remote/n07-zero-v2/raw/OUTPUT_MANIFEST.json",
+        "sha256": "ccc8aa05072caa9f6948437babbf97b35f2046800acfe7d75252e018c5469ee8",
+        "files_checked": 85
+      }
+    }
+  },
+  "original70_map": "archive:vaEVAS/current/runs/evas-night-20261014/delivery/r01-reference-plan/ORIGINAL70-REFERENCE-MAP.json",
+  "original70_denominator": 70,
+  "n19_oracle_sha256": "b3c20d5b2a418a426bf2a3906453a9e0cb3285c158adfc633816128bc626c175",
+  "retained_failures": [
+    "n08 base four numeric failures and all original missing native points",
+    "n08 old v1 filter frontend syntax failure",
+    "n08c transres=0 incomplete/failed run",
+    "n19 old three ns incomplete and unscored highgain",
+    "n07 decimal explicit rejection",
+    "r01 P1 unsafe successful old output, P2 old display read bypass",
+    "all original70 failed/timeouts and checker/pair results unchanged"
+  ]
+}

@@ -1,0 +1,278 @@
+{
+  "scope": "original frozen 19 controls; no original70 rerun; no score/checker modifications",
+  "counts": {
+    "denominator": 19,
+    "compiled": 15,
+    "compile_rejected": 4,
+    "execution_completed": 13,
+    "kernel_rejected": 2,
+    "finite_original_native_pair_and_math_budget_pass": 8,
+    "completed_but_missing_original_native_queries": 5
+  },
+  "all_timeout_seconds": 120,
+  "cases": [
+    {
+      "id": "n08/n08-parent-fine",
+      "candidate_status": "completed",
+      "compile_completed": true,
+      "finite_pair_pass": false,
+      "math_all_contains": true,
+      "missing": [
+        "0.25",
+        "0.375",
+        "0.75",
+        "0.875",
+        "1"
+      ],
+      "original_budget_V": 1e-06,
+      "old_result_refs": null,
+      "exception": null
+    },
+    {
+      "id": "n08/n08-boolean-fine",
+      "candidate_status": "completed",
+      "compile_completed": true,
+      "finite_pair_pass": false,
+      "math_all_contains": true,
+      "missing": [
+        "0.5",
+        "0.625",
+        "0.75",
+        "0.875",
+        "1"
+      ],
+      "original_budget_V": 1e-06,
+      "old_result_refs": null,
+      "exception": null
+    },
+    {
+      "id": "n08/n08-held-fine",
+      "candidate_status": "completed",
+      "compile_completed": true,
+      "finite_pair_pass": false,
+      "math_all_contains": true,
+      "missing": [
+        "0.25",
+        "0.625",
+        "0.75",
+        "0.875",
+        "1"
+      ],
+      "original_budget_V": 1e-06,
+      "old_result_refs": null,
+      "exception": null
+    },
+    {
+      "id": "n08/n08-nonlinear-fine",
+      "candidate_status": "completed",
+      "compile_completed": true,
+      "finite_pair_pass": false,
+      "math_all_contains": true,
+      "missing": [
+        "0.25",
+        "0.375"
+      ],
+      "original_budget_V": 1e-06,
+      "old_result_refs": null,
+      "exception": null
+    },
+    {
+      "id": "n08/n08-filter-fine",
+      "candidate_status": "completed",
+      "compile_completed": true,
+      "finite_pair_pass": false,
+      "math_all_contains": true,
+      "missing": [
+        "0.25",
+        "0.375"
+      ],
+      "original_budget_V": 1e-06,
+      "old_result_refs": null,
+      "exception": null
+    },
+    {
+      "id": "n19/root-third_rise_integral",
+      "candidate_status": "completed",
+      "compile_completed": true,
+      "finite_pair_pass": true,
+      "math_all_contains": true,
+      "missing": [],
+      "original_budget_V": 1e-06,
+      "old_result_refs": null,
+      "exception": null
+    },
+    {
+      "id": "n19/root-endpoint_rise_after_cascade",
+      "candidate_status": "completed",
+      "compile_completed": true,
+      "finite_pair_pass": true,
+      "math_all_contains": true,
+      "missing": [],
+      "original_budget_V": 1e-06,
+      "old_result_refs": null,
+      "exception": null
+    },
+    {
+      "id": "n19/root-endpoint_fall_before_cascade",
+      "candidate_status": "completed",
+      "compile_completed": true,
+      "finite_pair_pass": true,
+      "math_all_contains": true,
+      "missing": [],
+      "original_budget_V": 1e-06,
+      "old_result_refs": null,
+      "exception": null
+    },
+    {
+      "id": "n19/root-endpoint_rise_separated",
+      "candidate_status": "completed",
+      "compile_completed": true,
+      "finite_pair_pass": true,
+      "math_all_contains": true,
+      "missing": [],
+      "original_budget_V": 1e-06,
+      "old_result_refs": null,
+      "exception": null
+    },
+    {
+      "id": "n19/root-third_fall_filter",
+      "candidate_status": "completed",
+      "compile_completed": true,
+      "finite_pair_pass": true,
+      "math_all_contains": true,
+      "missing": [],
+      "original_budget_V": 1e-06,
+      "old_result_refs": null,
+      "exception": null
+    },
+    {
+      "id": "n19/root-endpoint_highgain_safety",
+      "candidate_status": "rejected",
+      "compile_completed": true,
+      "finite_pair_pass": null,
+      "math_all_contains": null,
+      "missing": null,
+      "original_budget_V": 1e-06,
+      "old_result_refs": null,
+      "exception": {
+        "type": "KernelError",
+        "message": "waveform_accuracy: root-window endpoint exceeds the unchanged voltage budget",
+        "detail": {
+          "kind": "waveform_accuracy",
+          "message": "root-window endpoint exceeds the unchanged voltage budget"
+        }
+      }
+    },
+    {
+      "id": "n08c/n08c-transres-positive-forced",
+      "candidate_status": "completed",
+      "compile_completed": true,
+      "finite_pair_pass": true,
+      "math_all_contains": true,
+      "missing": [],
+      "original_budget_V": 1e-08,
+      "old_result_refs": null,
+      "exception": null
+    },
+    {
+      "id": "n07a/n07-zero_tol_dyadic-marked-ordinary",
+      "candidate_status": "rejected",
+      "compile_completed": false,
+      "finite_pair_pass": null,
+      "math_all_contains": null,
+      "missing": null,
+      "original_budget_V": 0,
+      "old_result_refs": null,
+      "exception": {
+        "type": "CompileError",
+        "message": "dut.va:3:68: expected a non-reserved identifier",
+        "detail": null
+      }
+    },
+    {
+      "id": "n07a/n07-zero_tol_dyadic-marked-strobed",
+      "candidate_status": "rejected",
+      "compile_completed": false,
+      "finite_pair_pass": null,
+      "math_all_contains": null,
+      "missing": null,
+      "original_budget_V": 0,
+      "old_result_refs": null,
+      "exception": {
+        "type": "CompileError",
+        "message": "dut.va:3:68: expected a non-reserved identifier",
+        "detail": null
+      }
+    },
+    {
+      "id": "n07a/n07-zero_tol_decimal-marked-ordinary",
+      "candidate_status": "rejected",
+      "compile_completed": false,
+      "finite_pair_pass": null,
+      "math_all_contains": null,
+      "missing": null,
+      "original_budget_V": 0,
+      "old_result_refs": null,
+      "exception": {
+        "type": "CompileError",
+        "message": "dut.va:3:64: expected a non-reserved identifier",
+        "detail": null
+      }
+    },
+    {
+      "id": "n07a/n07-zero_tol_decimal-marked-strobed",
+      "candidate_status": "rejected",
+      "compile_completed": false,
+      "finite_pair_pass": null,
+      "math_all_contains": null,
+      "missing": null,
+      "original_budget_V": 0,
+      "old_result_refs": null,
+      "exception": {
+        "type": "CompileError",
+        "message": "dut.va:3:64: expected a non-reserved identifier",
+        "detail": null
+      }
+    },
+    {
+      "id": "linear/linear_idt",
+      "candidate_status": "completed",
+      "compile_completed": true,
+      "finite_pair_pass": true,
+      "math_all_contains": true,
+      "missing": [],
+      "original_budget_V": 1e-08,
+      "old_result_refs": null,
+      "exception": null
+    },
+    {
+      "id": "linear/linear_filter",
+      "candidate_status": "rejected",
+      "compile_completed": true,
+      "finite_pair_pass": null,
+      "math_all_contains": null,
+      "missing": null,
+      "original_budget_V": 1e-08,
+      "old_result_refs": null,
+      "exception": {
+        "type": "KernelError",
+        "message": "unsupported_operator: selected continuous mode contains no integral network",
+        "detail": {
+          "kind": "unsupported_operator",
+          "message": "selected continuous mode contains no integral network"
+        }
+      }
+    },
+    {
+      "id": "linear/linear_held_gate",
+      "candidate_status": "completed",
+      "compile_completed": true,
+      "finite_pair_pass": true,
+      "math_all_contains": true,
+      "missing": [],
+      "original_budget_V": 1e-08,
+      "old_result_refs": null,
+      "exception": null
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+`include "constants.vams"
+`include "disciplines.vams"
+
+// Voltage-domain track/hold core. Nominal design parameters, not PDK fits.
+// The memory voltage is a continuous solver state; clock events never sample vin.
+module r01_track_hold(vin, track, rst, vout);
+    input vin, track, rst;
+    output vout;
+    electrical vin, track, rst, vout;
+    electrical memory;
+
+    parameter real vth = 0.9;
+    parameter real vinit = 0.9;
+    parameter real tau_acq = 10n from (0:inf);
+    parameter real tau_hold = 200u from (0:inf);
+    parameter real vleak = 0.0;
+    parameter real pedestal = 2m;
+    parameter real vmid = 0.9;
+    parameter real vscale = 0.9 from (0:inf);
+    parameter real acq_curvature = 0.6 from [0:inf);
+    parameter real tau_reset = 2n from (0:inf);
+    parameter real tau_ped = 200p from (0:inf);
+
+    real hold_entry, normalized_input, effective_tau, rate, age;
+
+    analog begin
+        // No fictional clock edge at t=0, even when initial track is low.
+        @(initial_step) hold_entry = -1.0;
+        @(cross(V(track)-vth, -1)) begin
+            if (V(rst) <= vth)
+                hold_entry = $abstime;
+            else
+                hold_entry = -1.0;
+        end
+        // Cancellation is permanent: a later reset release cannot resume a kick.
+        @(cross(V(track)-vth, +1) or cross(V(rst)-vth, +1))
+            hold_entry = -1.0;
+
+        normalized_input = (V(vin)-vmid)/vscale;
+        effective_tau = tau_acq *
+            (1.0 + acq_curvature*normalized_input*normalized_input);
+        rate = 0.0;
+        age = 0.0;
+        if (V(rst) > vth) begin
+            rate = (vinit-V(memory))/tau_reset;
+            $bound_step(tau_reset/16.0);
+        end else if (V(track) > vth) begin
+            rate = (V(vin)-V(memory))/effective_tau;
+            $bound_step(effective_tau/16.0);
+        end else begin
+            rate = (vleak-V(memory))/tau_hold;
+            $bound_step(tau_hold/32.0);
+            if (hold_entry >= 0.0) begin
+                age = $abstime-hold_entry;
+                // Integrated voltage change approaches pedestal. This is finite
+                // charge injection, rather than an algebraic output offset.
+                rate = rate + pedestal/tau_ped*exp(-age/tau_ped);
+                if (age < 12.0*tau_ped)
+                    $bound_step(tau_ped/16.0);
+            end
+        end
+
+        // Unconditional idt and node feedback give the solver a state equation.
+        // vinit applies in DC and at transient startup for every control level.
+        V(memory) <+ idt(rate, vinit);
+        V(vout) <+ V(memory);
+    end
+endmodule

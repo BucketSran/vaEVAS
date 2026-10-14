@@ -1,0 +1,206 @@
+[
+  {
+    "task_id": "r01-extend-hold",
+    "condition": "c1",
+    "node": "vin",
+    "finite_time": 1.92324e-07,
+    "evas_interpolated": 0.46600000000003894,
+    "spectre_interpolated": 0.38200000000003154,
+    "difference": 0.0840000000000074,
+    "original_tolerance": 0.002,
+    "evas_saved_bracket": [
+      {
+        "time": 1.923e-07,
+        "vin": 0.5500000000000463
+      },
+      {
+        "time": 1.924e-07,
+        "vin": 0.2
+      }
+    ],
+    "spectre_native_bracket": [
+      {
+        "time": 1.92252349999992e-07,
+        "vin": 0.8835500000560395
+      },
+      {
+        "time": 1.9235e-07,
+        "vin": 0.2
+      }
+    ],
+    "original_deck_source_line": "V_vin (vin 0) vsource type=pwl wave=[0 0.3 1.0175e-07 0.3 1.0195e-07 1.6 1.9215e-07 1.6 1.9235e-07 0.2 3.899e-07 0.2 3.901e-07 1.1 5.481e-07 1.1 5.483e-07 0.55 9.097e-07 0.55 9.099e-07 1.45]",
+    "original_deck_sha256": "c036cbc7bc21625b9af85d620db78f6cae92d40b1134f4ca8c2255218241b10d",
+    "spectre_psf_sha256": "f5df07612b4686d6d0f1ef1a17c4db73ec3a5589ee65175cf7869eb25c632c1c",
+    "interpretation": "finite interpolation observations at the saved grids; not an independent continuous waveform certificate; original failure preserved"
+  },
+  {
+    "task_id": "r01-repair-recovery",
+    "condition": "c1",
+    "node": "vin",
+    "finite_time": 1.92324e-07,
+    "evas_interpolated": 0.46600000000003894,
+    "spectre_interpolated": 0.38200000000003154,
+    "difference": 0.0840000000000074,
+    "original_tolerance": 0.002,
+    "evas_saved_bracket": [
+      {
+        "time": 1.923e-07,
+        "vin": 0.5500000000000463
+      },
+      {
+        "time": 1.924e-07,
+        "vin": 0.2
+      }
+    ],
+    "spectre_native_bracket": [
+      {
+        "time": 1.92252349999992e-07,
+        "vin": 0.8835500000560395
+      },
+      {
+        "time": 1.9235e-07,
+        "vin": 0.2
+      }
+    ],
+    "original_deck_source_line": "V_vin (vin 0) vsource type=pwl wave=[0 0.3 1.0175e-07 0.3 1.0195e-07 1.6 1.9215e-07 1.6 1.9235e-07 0.2 3.899e-07 0.2 3.901e-07 1.1 5.481e-07 1.1 5.483e-07 0.55 9.097e-07 0.55 9.099e-07 1.45]",
+    "original_deck_sha256": "c036cbc7bc21625b9af85d620db78f6cae92d40b1134f4ca8c2255218241b10d",
+    "spectre_psf_sha256": "de4630e070061400d1372a229bc6eeed37e3d09634e5bc27a58b9c74120c3f9e",
+    "interpretation": "finite interpolation observations at the saved grids; not an independent continuous waveform certificate; original failure preserved"
+  },
+  {
+    "task_id": "r01-spec-acquisition",
+    "condition": "c1",
+    "node": "vin",
+    "finite_time": 1.92324e-07,
+    "evas_interpolated": 0.46600000000003894,
+    "spectre_interpolated": 0.38200000000003154,
+    "difference": 0.0840000000000074,
+    "original_tolerance": 0.002,
+    "evas_saved_bracket": [
+      {
+        "time": 1.923e-07,
+        "vin": 0.5500000000000463
+      },
+      {
+        "time": 1.924e-07,
+        "vin": 0.2
+      }
+    ],
+    "spectre_native_bracket": [
+      {
+        "time": 1.92252349999992e-07,
+        "vin": 0.8835500000560395
+      },
+      {
+        "time": 1.9235e-07,
+        "vin": 0.2
+      }
+    ],
+    "original_deck_source_line": "V_vin (vin 0) vsource type=pwl wave=[0 0.3 1.0175e-07 0.3 1.0195e-07 1.6 1.9215e-07 1.6 1.9235e-07 0.2 3.899e-07 0.2 3.901e-07 1.1 5.481e-07 1.1 5.483e-07 0.55 9.097e-07 0.55 9.099e-07 1.45]",
+    "original_deck_sha256": "621bcb202d1b1d3fdb962ede3267c7675489569aa864723e5b16512b9ac9a2c7",
+    "spectre_psf_sha256": "02a846a12afbdf9f349b70a62eb1d870a4c9aeea2c5475c77a5b5358043528e2",
+    "interpretation": "finite interpolation observations at the saved grids; not an independent continuous waveform certificate; original failure preserved"
+  },
+  {
+    "task_id": "r01-spec-acquisition",
+    "condition": "c2",
+    "node": "vin",
+    "finite_time": 1.6605600000000001e-07,
+    "evas_interpolated": 0.3539999999999778,
+    "spectre_interpolated": 0.2,
+    "difference": 0.15399999999997777,
+    "original_tolerance": 0.002,
+    "evas_saved_bracket": [
+      {
+        "time": 1.66e-07,
+        "vin": 0.55
+      },
+      {
+        "time": 1.661e-07,
+        "vin": 0.2
+      }
+    ],
+    "spectre_native_bracket": [
+      {
+        "time": 1.660551689000006e-07,
+        "vin": 0.2
+      },
+      {
+        "time": 1.660603785000012e-07,
+        "vin": 0.2
+      }
+    ],
+    "original_deck_source_line": "V_vin (vin 0) vsource type=pwl wave=[0 0.3 9.625e-08 0.3 9.645e-08 1.6 1.6585e-07 1.6 1.6605e-07 0.2 3.181e-07 0.2 3.183e-07 1.1 4.399e-07 1.1 4.401e-07 0.55 7.183e-07 0.55 7.185e-07 1.45]",
+    "original_deck_sha256": "343facb1010562e33234671714bbb4ca5d054bc0a9ae412feff1af6fe06529dd",
+    "spectre_psf_sha256": "b32cad1ccfa332a95b12cdca75c3fa220c187caf03fa50b8968ed00ff51e6770",
+    "interpretation": "finite interpolation observations at the saved grids; not an independent continuous waveform certificate; original failure preserved"
+  },
+  {
+    "task_id": "r01-spec-ideal",
+    "condition": "c1",
+    "node": "vin",
+    "finite_time": 1.92324e-07,
+    "evas_interpolated": 0.46600000000003894,
+    "spectre_interpolated": 0.38200000000003154,
+    "difference": 0.0840000000000074,
+    "original_tolerance": 0.002,
+    "evas_saved_bracket": [
+      {
+        "time": 1.923e-07,
+        "vin": 0.5500000000000463
+      },
+      {
+        "time": 1.924e-07,
+        "vin": 0.2
+      }
+    ],
+    "spectre_native_bracket": [
+      {
+        "time": 1.92252349999992e-07,
+        "vin": 0.8835500000560395
+      },
+      {
+        "time": 1.9235e-07,
+        "vin": 0.2
+      }
+    ],
+    "original_deck_source_line": "V_vin (vin 0) vsource type=pwl wave=[0 0.3 1.0175e-07 0.3 1.0195e-07 1.6 1.9215e-07 1.6 1.9235e-07 0.2 3.899e-07 0.2 3.901e-07 1.1 5.481e-07 1.1 5.483e-07 0.55 9.097e-07 0.55 9.099e-07 1.45]",
+    "original_deck_sha256": "5f4b8ddb5fe3da84fed4df59ac8f80f9f2420eedb0bf97e94fc9c484bb65dc46",
+    "spectre_psf_sha256": "9672c501fa5fa7861a3de2780b379b719bfa30f3acb432f0120ef4a270e0d7ea",
+    "interpretation": "finite interpolation observations at the saved grids; not an independent continuous waveform certificate; original failure preserved"
+  },
+  {
+    "task_id": "r01-spec-ideal",
+    "condition": "c2",
+    "node": "vin",
+    "finite_time": 1.6605600000000001e-07,
+    "evas_interpolated": 0.3539999999999778,
+    "spectre_interpolated": 0.2,
+    "difference": 0.15399999999997777,
+    "original_tolerance": 0.002,
+    "evas_saved_bracket": [
+      {
+        "time": 1.66e-07,
+        "vin": 0.55
+      },
+      {
+        "time": 1.661e-07,
+        "vin": 0.2
+      }
+    ],
+    "spectre_native_bracket": [
+      {
+        "time": 1.660551689000006e-07,
+        "vin": 0.2
+      },
+      {
+        "time": 1.660603785000012e-07,
+        "vin": 0.2
+      }
+    ],
+    "original_deck_source_line": "V_vin (vin 0) vsource type=pwl wave=[0 0.3 9.625e-08 0.3 9.645e-08 1.6 1.6585e-07 1.6 1.6605e-07 0.2 3.181e-07 0.2 3.183e-07 1.1 4.399e-07 1.1 4.401e-07 0.55 7.183e-07 0.55 7.185e-07 1.45]",
+    "original_deck_sha256": "4e6ae394cef92e95c28480718c6e407dae1c20b991a741a4cd4524824721dbd9",
+    "spectre_psf_sha256": "3a58664178c15ddf168450e9037363f943790b4225a770018f57833b1a2a27f6",
+    "interpretation": "finite interpolation observations at the saved grids; not an independent continuous waveform certificate; original failure preserved"
+  }
+]

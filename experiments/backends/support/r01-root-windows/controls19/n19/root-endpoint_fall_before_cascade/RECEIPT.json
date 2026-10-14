@@ -1,0 +1,67 @@
+{
+  "id": "n19/root-endpoint_fall_before_cascade",
+  "source_sha256": "ed9a968a5ca8201039309ff07efd854215c4c552211d8fb49355d502b46ccabd",
+  "controls": {
+    "instances": [
+      {
+        "name": "dut",
+        "module": "m",
+        "connections": {
+          "u": "u",
+          "y": "y",
+          "z": "z",
+          "w": "w",
+          "r": "0"
+        }
+      }
+    ],
+    "pwl": {
+      "u": [
+        [
+          0.0,
+          1.8
+        ],
+        [
+          1e-07,
+          1.8
+        ],
+        [
+          1.002e-07,
+          0.0
+        ],
+        [
+          2e-07,
+          0.0
+        ]
+      ]
+    },
+    "output_times": [
+      0.0,
+      5e-08,
+      1e-07,
+      1.002e-07,
+      1.25e-07,
+      1.5e-07,
+      2e-07
+    ],
+    "stop": 2e-07,
+    "max_step": 1e-10,
+    "vabstol": 1e-12,
+    "reltol": 1e-09,
+    "strobetimes": [
+      0.0,
+      5e-08,
+      1e-07,
+      1.002e-07,
+      1.25e-07,
+      1.5e-07,
+      2e-07
+    ],
+    "timeout": 120
+  },
+  "kernel_sha256": "867a112262b1311f07f0a612a594b471ad6c7b3c1a3bea9e207f7a06ea8cece4",
+  "program_sha256": "a468d6da61e3922b2f30a7bec5a895fde4af7ead8d09bd70c73c8e785dbdcde4",
+  "status": "completed",
+  "response_sha256": "a880bc9205e7860f8da91cf1f2c5ccf8d4fea78da17eba9ef0ee75631c11ebcc",
+  "elapsed_seconds": 2.712948250118643
+}

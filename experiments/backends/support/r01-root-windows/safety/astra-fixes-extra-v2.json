@@ -1,0 +1,458 @@
+{
+  "kernel_sha256": "507ca273777ad46e28ac4acdd7182b61143490511046a8012e9ad581882a2ccc",
+  "records": [
+    {
+      "name": "inactive_ternary_arm_read",
+      "body": "@(timer(0.5)) q=1; @(timer(0.5)) $display(\"v=%g\",V(u,r)>0?0:q);",
+      "expected": null,
+      "error": "unsupported_cross: simultaneous event blocks cannot read state written by another selected block",
+      "pass": true
+    },
+    {
+      "name": "power_read",
+      "body": "@(timer(0.5)) q=1; @(timer(0.5)) $display(\"v=%g\",pow(q,2));",
+      "expected": null,
+      "error": "unsupported_cross: simultaneous event blocks cannot read state written by another selected block",
+      "pass": true
+    },
+    {
+      "name": "display_index_after_skipped_then",
+      "body": "@(timer(0.5)) q=1; @(timer(0.5)) begin if(V(u,r)<0) $display(\"skip=%g\",0); else $display(\"q=%g\",q); end",
+      "expected": null,
+      "error": "unsupported_cross: simultaneous event blocks cannot read state written by another selected block",
+      "pass": true
+    },
+    {
+      "name": "display_index_after_skipped_else",
+      "body": "@(timer(0.5)) q=1; @(timer(0.5)) begin if(V(u,r)>0) $display(\"safe=%g\",0); else $display(\"skip=%g\",0); $display(\"q=%g\",q); end",
+      "expected": null,
+      "error": "unsupported_cross: simultaneous event blocks cannot read state written by another selected block",
+      "pass": true
+    },
+    {
+      "name": "unselected_writer",
+      "body": "@(timer(0.5)) if(V(u,r)<0) q=1; @(timer(0.5)) $display(\"q=%g\",q);",
+      "expected": [
+        "q=0"
+      ],
+      "response": {
+        "portability_advisories": {
+          "schema_version": 2,
+          "record_limit": 128,
+          "records": [
+            {
+              "code": "timer_observation_boundary",
+              "nonblocking": true,
+              "message": "Observation is inside or within one binary64 neighbor of a committed timer deadline enclosure. A backend may trigger elsewhere within the model's timing tolerance. Check samples and downstream history against their budgets; this notice neither proves a mismatch nor accepts a changed final result.",
+              "event_record": 0,
+              "event": 0,
+              "trigger": 0,
+              "origin": "display.va:2:85 (dut)",
+              "query_source": "output_times",
+              "query_index": 1,
+              "query_time_s": 0.5,
+              "time_bounds_s": [
+                0.5,
+                0.5
+              ]
+            },
+            {
+              "code": "timer_observation_boundary",
+              "nonblocking": true,
+              "message": "Observation is inside or within one binary64 neighbor of a committed timer deadline enclosure. A backend may trigger elsewhere within the model's timing tolerance. Check samples and downstream history against their budgets; this notice neither proves a mismatch nor accepts a changed final result.",
+              "event_record": 1,
+              "event": 1,
+              "trigger": 0,
+              "origin": "display.va:2:117 (dut)",
+              "query_source": "output_times",
+              "query_index": 1,
+              "query_time_s": 0.5,
+              "time_bounds_s": [
+                0.5,
+                0.5
+              ]
+            }
+          ],
+          "model_records": [],
+          "dropped_records": 0,
+          "truncated": false
+        },
+        "observation_evidence": {
+          "schema_version": 1,
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "effective_controls": {
+            "absolute_V": 1e-12,
+            "relative": 1e-10,
+            "stop_s": 1.0,
+            "max_step_s": 1.0,
+            "max_step_applied": true
+          },
+          "sample_origins": [
+            "accepted_controller_frame",
+            "accepted_controller_frame",
+            "accepted_controller_frame"
+          ],
+          "initial_settled": true,
+          "voltage_bounds_V": [
+            [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0
+              ],
+              [
+                -0.0,
+                0.0
+              ]
+            ],
+            [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0
+              ],
+              [
+                -0.0,
+                0.0
+              ]
+            ],
+            [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0
+              ],
+              [
+                -0.0,
+                0.0
+              ]
+            ]
+          ]
+        },
+        "engine": "evas-events-0.17.0",
+        "schema_version": 21,
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "solutions": [
+          {
+            "voltages": [
+              0.0,
+              1.0,
+              -0.0
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              1.0,
+              -0.0
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              1.0,
+              -0.0
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          }
+        ],
+        "transient": {
+          "times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "state_names": [
+            "dut:q"
+          ],
+          "states": [
+            [
+              0.0
+            ],
+            [
+              0.0
+            ],
+            [
+              0.0
+            ]
+          ],
+          "events": [
+            {
+              "time": 0.5,
+              "event": 0,
+              "origin": "display.va:2:85 (dut)",
+              "kind": "timer",
+              "before": [
+                0.0
+              ],
+              "after": [
+                0.0
+              ]
+            },
+            {
+              "time": 0.5,
+              "event": 1,
+              "origin": "display.va:2:117 (dut)",
+              "kind": "timer",
+              "before": [
+                0.0
+              ],
+              "after": [
+                0.0
+              ]
+            }
+          ],
+          "display_records": [
+            {
+              "time": 0.5,
+              "event": 1,
+              "origin": "display.va:2:131 (dut)",
+              "text": "q=0"
+            }
+          ],
+          "accepted_steps": 2,
+          "discarded_trials": 0
+        }
+      },
+      "pass": true
+    },
+    {
+      "name": "unselected_display_then_selected_constant",
+      "body": "@(timer(0.5)) q=1; @(timer(0.5)) begin if(V(u,r)<0) $display(\"skip=%g\",q); else $display(\"safe=%g\",2); $display(\"tail=%g\",3); end",
+      "expected": [
+        "safe=2",
+        "tail=3"
+      ],
+      "response": {
+        "portability_advisories": {
+          "schema_version": 2,
+          "record_limit": 128,
+          "records": [
+            {
+              "code": "timer_observation_boundary",
+              "nonblocking": true,
+              "message": "Observation is inside or within one binary64 neighbor of a committed timer deadline enclosure. A backend may trigger elsewhere within the model's timing tolerance. Check samples and downstream history against their budgets; this notice neither proves a mismatch nor accepts a changed final result.",
+              "event_record": 0,
+              "event": 0,
+              "trigger": 0,
+              "origin": "display.va:2:85 (dut)",
+              "query_source": "output_times",
+              "query_index": 1,
+              "query_time_s": 0.5,
+              "time_bounds_s": [
+                0.5,
+                0.5
+              ]
+            },
+            {
+              "code": "timer_observation_boundary",
+              "nonblocking": true,
+              "message": "Observation is inside or within one binary64 neighbor of a committed timer deadline enclosure. A backend may trigger elsewhere within the model's timing tolerance. Check samples and downstream history against their budgets; this notice neither proves a mismatch nor accepts a changed final result.",
+              "event_record": 1,
+              "event": 1,
+              "trigger": 0,
+              "origin": "display.va:2:104 (dut)",
+              "query_source": "output_times",
+              "query_index": 1,
+              "query_time_s": 0.5,
+              "time_bounds_s": [
+                0.5,
+                0.5
+              ]
+            }
+          ],
+          "model_records": [],
+          "dropped_records": 0,
+          "truncated": false
+        },
+        "observation_evidence": {
+          "schema_version": 1,
+          "nodes": [
+            "0",
+            "u",
+            "y"
+          ],
+          "effective_controls": {
+            "absolute_V": 1e-12,
+            "relative": 1e-10,
+            "stop_s": 1.0,
+            "max_step_s": 1.0,
+            "max_step_applied": true
+          },
+          "sample_origins": [
+            "accepted_controller_frame",
+            "accepted_controller_frame",
+            "accepted_controller_frame"
+          ],
+          "initial_settled": true,
+          "voltage_bounds_V": [
+            [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0
+              ],
+              [
+                -0.0,
+                0.0
+              ]
+            ],
+            [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0
+              ],
+              [
+                1.0,
+                1.0
+              ]
+            ],
+            [
+              [
+                0.0,
+                0.0
+              ],
+              [
+                1.0,
+                1.0
+              ],
+              [
+                1.0,
+                1.0
+              ]
+            ]
+          ]
+        },
+        "engine": "evas-events-0.17.0",
+        "schema_version": 21,
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "solutions": [
+          {
+            "voltages": [
+              0.0,
+              1.0,
+              -0.0
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              1.0,
+              1.0
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          },
+          {
+            "voltages": [
+              0.0,
+              1.0,
+              1.0
+            ],
+            "max_residual_v": 0.0,
+            "max_residual_ratio": 0.0
+          }
+        ],
+        "transient": {
+          "times": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "state_names": [
+            "dut:q"
+          ],
+          "states": [
+            [
+              0.0
+            ],
+            [
+              1.0
+            ],
+            [
+              1.0
+            ]
+          ],
+          "events": [
+            {
+              "time": 0.5,
+              "event": 0,
+              "origin": "display.va:2:85 (dut)",
+              "kind": "timer",
+              "before": [
+                0.0
+              ],
+              "after": [
+                1.0
+              ]
+            },
+            {
+              "time": 0.5,
+              "event": 1,
+              "origin": "display.va:2:104 (dut)",
+              "kind": "timer",
+              "before": [
+                0.0
+              ],
+              "after": [
+                1.0
+              ]
+            }
+          ],
+          "display_records": [
+            {
+              "time": 0.5,
+              "event": 1,
+              "origin": "display.va:2:165 (dut)",
+              "text": "safe=2"
+            },
+            {
+              "time": 0.5,
+              "event": 1,
+              "origin": "display.va:2:188 (dut)",
+              "text": "tail=3"
+            }
+          ],
+          "accepted_steps": 2,
+          "discarded_trials": 0
+        }
+      },
+      "pass": true
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+simulator lang=spectre
+global 0
+simulatorOptions options reltol=1e-6 vabstol=1e-9 iabstol=1e-15
+ahdl_include "core.va"
+ahdl_include "dut.va"
+V_vin (vin 0) vsource type=pwl wave=[0 0.3 9.625e-08 0.3 9.645e-08 1.6 1.6585e-07 1.6 1.6605e-07 0.2 3.181e-07 0.2 3.183e-07 1.1 4.399e-07 1.1 4.401e-07 0.55 7.183e-07 0.55 7.185e-07 1.45]
+V_rst (rst 0) vsource type=pwl wave=[0 0 3.355e-07 0 3.357e-07 1.8 3.4768e-07 1.8 3.4788e-07 0]
+V_track (track 0) vsource type=pwl wave=[0 1.8 5.71e-08 1.8 5.73e-08 1.8 1.006e-07 1.8 1.008e-07 0 2.485e-07 0 2.487e-07 1.8 2.5546e-07 1.8 2.5566e-07 0 3.268e-07 0 3.27e-07 1.8 3.5725e-07 1.8 3.5745e-07 0 5.356e-07 0 5.358e-07 1.8 5.8345e-07 1.8 5.8365e-07 0]
+V_ain0 (ain0 0) vsource type=pwl wave=[0 0.25 2.92e-07 0.25 2.922e-07 1.45 5.965e-07 1.45 5.967e-07 0.325]
+V_ain1 (ain1 0) vsource type=pwl wave=[0 0.65 2.92e-07 0.65 2.922e-07 1.05 5.965e-07 1.05 5.967e-07 0.525]
+V_ain2 (ain2 0) vsource type=pwl wave=[0 1.05 2.92e-07 1.05 2.922e-07 0.65 5.965e-07 0.65 5.967e-07 0.725]
+V_ain3 (ain3 0) vsource type=pwl wave=[0 1.55 2.92e-07 1.55 2.922e-07 0.15 5.965e-07 0.15 5.967e-07 0.975]
+V_read_en (read_en 0) vsource type=pwl wave=[0 0 8.32e-08 0 8.34e-08 1.8 1.18e-07 1.8 1.182e-07 0 1.441e-07 0 1.443e-07 1.8 1.615e-07 1.8 1.617e-07 0 1.876e-07 0 1.878e-07 1.8 2.05e-07 1.8 2.052e-07 0 2.6155e-07 0 2.6175e-07 1.8 2.6329e-07 1.8 2.6349e-07 0 2.833e-07 0 2.835e-07 1.8 3.094e-07 1.8 3.096e-07 0 3.2506e-07 0 3.2526e-07 1.8 3.6334e-07 1.8 3.6354e-07 0 3.79e-07 0 3.792e-07 1.8 3.964e-07 1.8 3.966e-07 0 6.139e-07 0 6.141e-07 1.8 6.4e-07 1.8 6.402e-07 0 6.661e-07 0 6.663e-07 1.8 6.922e-07 1.8 6.924e-07 0 7.705e-07 0 7.707e-07 1.8 7.879e-07 1.8 7.881e-07 0 8.053e-07 0 8.055e-07 1.8 8.1313e-07 1.8 8.1333e-07 0]
+V_sel0 (sel0 0) vsource type=pwl wave=[0 0 1.3105e-07 0 1.3125e-07 1.8 1.7455e-07 1.8 1.7475e-07 0 2.311e-07 0 2.313e-07 1.8 3.181e-07 1.8 3.183e-07 0 5.095e-07 0 5.097e-07 1.8 6.487e-07 1.8 6.489e-07 0 7.357e-07 0 7.359e-07 1.8]
+V_sel1 (sel1 0) vsource type=pwl wave=[0 0 1.7542e-07 0 1.7562e-07 1.8 2.3197e-07 1.8 2.3217e-07 0 3.703e-07 0 3.705e-07 1.8 5.1037e-07 1.8 5.1057e-07 0 6.4957e-07 0 6.4977e-07 1.8]
+X_DUT (ain0 ain1 ain2 ain3 track rst sel0 sel1 read_en dout valid held0 held1 held2 held3) r01_simultaneous vinit=0.8 tau_acq=1e-08 tau_hold=2e-06 vleak=0.1 pedestal=0.006
+tran tran stop=8.14e-07 maxstep=100p errpreset=conservative
+save vin rst track ain0 ain1 ain2 ain3 read_en sel0 sel1 dout valid held0 held1 held2 held3

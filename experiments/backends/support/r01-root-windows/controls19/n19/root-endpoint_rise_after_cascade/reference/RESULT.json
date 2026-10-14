@@ -1,0 +1,33 @@
+{
+  "argv": [
+    "taskset",
+    "-c",
+    "0",
+    "prlimit",
+    "--as=4294967296",
+    "--fsize=33554432",
+    "--",
+    "/bin/csh",
+    "-f",
+    "run.csh"
+  ],
+  "returncode": 0,
+  "timeout": false,
+  "status": "completed",
+  "cleanup": {
+    "signals": [
+      "SIGTERM",
+      "SIGKILL"
+    ],
+    "errors": [],
+    "complete": true
+  },
+  "elapsed_seconds": 15.818902615457773,
+  "completed_utc": "2026-10-14T00:49:09Z",
+  "log": "stdout.log",
+  "log_sha256": "ec4b24d0b4cb435f886f2c76f09da4f2a959dc609c8c062e371d57cbfb1145ec",
+  "label": "root-endpoint_rise_after_cascade",
+  "source_sha256": "ebec8fc57b2bf414d3e2ebe0b46313237b018a184eecceb6b5971d738f5f11eb",
+  "deck_sha256": "d1e4ba36e1eda5e906e45876eac4c35d88ea47876500044ff3b8326ba5e0db4f",
+  "directory_bytes": 434733
+}

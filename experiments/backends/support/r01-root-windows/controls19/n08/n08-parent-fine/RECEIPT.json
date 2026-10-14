@@ -1,0 +1,60 @@
+{
+  "id": "n08/n08-parent-fine",
+  "source_sha256": "042c286b6ffcabc84636fb65d504817b7fc578ebc3500e68971abac126899a51",
+  "controls": {
+    "instances": [
+      {
+        "name": "dut",
+        "module": "m",
+        "connections": {
+          "u": "u",
+          "y": "y"
+        }
+      }
+    ],
+    "pwl": {
+      "u": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    "output_times": [
+      0.0,
+      0.125,
+      0.25,
+      0.375,
+      0.5,
+      0.625,
+      0.75,
+      0.875,
+      1.0
+    ],
+    "stop": 1,
+    "max_step": 0.001,
+    "vabstol": 1e-11,
+    "reltol": 1e-09,
+    "strobetimes": [
+      0.0,
+      0.125,
+      0.25,
+      0.375,
+      0.5,
+      0.625,
+      0.75,
+      0.875,
+      1.0
+    ],
+    "timeout": 120
+  },
+  "kernel_sha256": "867a112262b1311f07f0a612a594b471ad6c7b3c1a3bea9e207f7a06ea8cece4",
+  "program_sha256": "c19e44034a285f2b32651f8dfc1511647a8718d350e146a737dda942626169d3",
+  "status": "completed",
+  "response_sha256": "a1e2978f19144446391153fd898f5f3a47f0198bdd8dc16179a3642321e5bb35",
+  "elapsed_seconds": 0.3483278329949826
+}

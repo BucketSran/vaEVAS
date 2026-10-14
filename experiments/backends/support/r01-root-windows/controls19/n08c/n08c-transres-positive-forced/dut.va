@@ -1,0 +1,8 @@
+`include "disciplines.vams"
+module endpoint_ns(u,y); input u; output y; electrical u,y; integer n;
+analog begin
+ @(initial_step) n=0;
+ @(cross(V(u)-0.9,+1)) n=n+1;
+ V(y)<+idt(((V(u)>0.45?V(u):0)>0.9?1e8:0.0),0)+0*n;
+end
+endmodule

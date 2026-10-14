@@ -1,0 +1,33 @@
+{
+  "argv": [
+    "taskset",
+    "-c",
+    "0",
+    "prlimit",
+    "--as=4294967296",
+    "--fsize=33554432",
+    "--",
+    "/bin/csh",
+    "-f",
+    "run.csh"
+  ],
+  "returncode": 0,
+  "timeout": false,
+  "status": "completed",
+  "cleanup": {
+    "signals": [
+      "SIGTERM",
+      "SIGKILL"
+    ],
+    "errors": [],
+    "complete": true
+  },
+  "elapsed_seconds": 15.348007259890437,
+  "completed_utc": "2026-10-14T00:28:26Z",
+  "log": "stdout.log",
+  "log_sha256": "5124c87607af70aeb6a455287ef847e41d9f77209c6cf961be7d2f22123c251f",
+  "label": "root-third_rise_integral",
+  "source_sha256": "effcf8bed0a691bd2c567145826c67833073e960957d59d0da54c96b01cf9974",
+  "deck_sha256": "0d8c43b19c1677fffc76b82cfa5bc2650668297be7d937a2e19e5ba7650659c0",
+  "directory_bytes": 297362
+}

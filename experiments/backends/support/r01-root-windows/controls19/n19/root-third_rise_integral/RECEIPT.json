@@ -1,0 +1,63 @@
+{
+  "id": "n19/root-third_rise_integral",
+  "source_sha256": "effcf8bed0a691bd2c567145826c67833073e960957d59d0da54c96b01cf9974",
+  "controls": {
+    "instances": [
+      {
+        "name": "dut",
+        "module": "m",
+        "connections": {
+          "u": "u",
+          "y": "y",
+          "z": "z",
+          "w": "w",
+          "r": "0"
+        }
+      }
+    ],
+    "pwl": {
+      "u": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          3.0
+        ]
+      ]
+    },
+    "output_times": [
+      0.0,
+      0.125,
+      0.25,
+      0.375,
+      0.5,
+      0.625,
+      0.75,
+      0.875,
+      1.0
+    ],
+    "stop": 1.0,
+    "max_step": 0.0078125,
+    "vabstol": 1e-12,
+    "reltol": 1e-09,
+    "strobetimes": [
+      0.0,
+      0.125,
+      0.25,
+      0.375,
+      0.5,
+      0.625,
+      0.75,
+      0.875,
+      1.0
+    ],
+    "timeout": 120
+  },
+  "kernel_sha256": "867a112262b1311f07f0a612a594b471ad6c7b3c1a3bea9e207f7a06ea8cece4",
+  "program_sha256": "097d807b519f8a6ac9ecde2cd1355f73173cd8c754437762c1f006c3059d0f83",
+  "status": "completed",
+  "response_sha256": "f827dfb737532f40dde2447dbee9a3dd20587f2c3504885b8530524bd9111620",
+  "elapsed_seconds": 0.21466104220598936
+}

@@ -1,0 +1,37 @@
+{
+  "file_sha256": {
+    "/edamgr/Spectre/SPECTRE211Hotfix/tools/bin/spectre": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "backend-config:cadence.sui": "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+    "backend-config:mentor25.sui": "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+  },
+  "version": "sub-version  21.1.0.509.isr12 \n",
+  "execution": {
+    "argv": [
+      "taskset",
+      "-c",
+      "0",
+      "prlimit",
+      "--as=4294967296",
+      "--fsize=33554432",
+      "--",
+      "/bin/csh",
+      "-f",
+      "version.csh"
+    ],
+    "returncode": 0,
+    "timeout": false,
+    "status": "completed",
+    "cleanup": {
+      "signals": [
+        "SIGTERM",
+        "SIGKILL"
+      ],
+      "errors": [],
+      "complete": true
+    },
+    "elapsed_seconds": 1.9588979240506887,
+    "completed_utc": "2026-10-14T05:53:16Z",
+    "log": "version.log",
+    "log_sha256": "d0e6c83a98026a294bfc4b9754c4e294d322b60b1872a28e38f84caccbdf7f81"
+  }
+}
