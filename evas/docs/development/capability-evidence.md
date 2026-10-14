@@ -23,6 +23,12 @@ IR21 共同基础已随 [#174](https://github.com/BucketSran/vaEVAS/pull/174) �
 [事件数组](../../tests/test_r01_event_arrays.py)、[测量事务](../../tests/test_passive_events.py)。
 这些控制不增加固定 Q 成绩；原完整 timing 请求的后续连续耦合拒绝单列。
 
+[连续状态与原 timing 请求](../../../experiments/backends/support/r01-causal-timing/README.md)
+补充 DYNAMICS、TIMER、TRANSITION、CROSS、EVENT-CONDITIONS、EVENT-ORDER 与 COMPOSE。
+契约见[连续因果投影](../math/continuous.md)和[事件条件与观察](../math/events.md)。
+原 timing-0 完整执行并通过原 checker，实际有限配对、所有历史失败及未完成原生点分别保留；不增加固定 Q 成绩。
+开发回归覆盖[因果状态](../../tests/test_n09_causal_state_readout.py)、[辅助节点](../../tests/test_auxiliary_continuous_roots.py)、[条件步长](../../tests/test_conditional_history_mesh.py)、[时间来源](../../tests/test_held_time_provenance.py)、[精确期限](../../tests/test_exact_transition_deadlines.py)、[等价事件分支](../../tests/test_event_branch_agreement.py)、[被动查询相位](../../tests/test_passive_history_phase.py)与[初始期限](../../tests/test_initial_observer_horizon.py)。
+
 [空循环声明与当前 timer 安全修复](../../../experiments/backends/support/retained-safety/README.md)
 补充 LANG、TIMER、EVENT-ORDER、COMPOSE 的 main 适配证据。
 非法节点改为编译失败；新生成当前 timer 改为明确拒绝，尚不支持同刻闭包。

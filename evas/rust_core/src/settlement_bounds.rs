@@ -249,6 +249,38 @@ impl Bounds {
         })
     }
 
+    /// Only affinity-shape failures permit sampled-coefficient fallback. All
+    /// other diagnostics propagate; a failed matrix/accuracy proof is never
+    /// interpreted as a cache miss. Examine both factors and all references,
+    /// including exact zero terms, with the existing joint-affinity checker.
+    pub(crate) fn sample_independent(
+        model: &EventModel,
+        selection: &Selection,
+    ) -> Result<bool, Error> {
+        let p = &model.program;
+        let assignments = selection.actions.iter().flat_map(|(event, indices)| {
+            let actions = p.events[*event].assignments();
+            indices.iter().map(move |&index| &actions[index].rhs)
+        });
+        for expression in p.contributions.iter().map(|c| &c.rhs).chain(assignments) {
+            if let Err(error) = affine(expression, p) {
+                if error.kind == "event_resolution"
+                    && matches!(
+                        error.message.as_str(),
+                        "cannot certify jointly affine event expression"
+                            | "cannot certify affine variable division"
+                            | "cannot bound a polynomial event expression"
+                            | "cannot bound an ordinary analog conditional in an event expression"
+                    )
+                {
+                    return Ok(false);
+                }
+                return Err(error);
+            }
+        }
+        Ok(true)
+    }
+
     pub(crate) fn new(model: &EventModel, selection: &Selection) -> Result<Self, Error> {
         Self::for_program(model, selection, &model.program)
     }
@@ -267,6 +299,7 @@ impl Bounds {
         p: &crate::ir::Program,
         operators: &[I],
     ) -> Result<Self, Error> {
+        crate::diagnostics::counter("certificate_bounds_builds", 1);
         let bind = |expr: &Expression| {
             if operators.is_empty() {
                 affine(expr, p)

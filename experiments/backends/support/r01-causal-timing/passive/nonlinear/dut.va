@@ -1,0 +1,9 @@
+`include "disciplines.vams"
+module physical(u,z,e);input u;output z,e;electrical u,z,e;real q,due;
+analog begin @(initial_step) begin q=0;due=100;end
+V(z)<+idt(1/(1+V(u)*V(u)),0);V(e)<+0; end endmodule
+module observer(u,z);input u,z;electrical u,z,dummy;real due,seen;integer count;
+analog begin @(initial_step) begin due=100;seen=0;count=0;end
+@(cross(V(u)-1,1,1e-9,1e-9)) due=$abstime+0.1;
+@(timer(due,0,1e-9)) begin count=count+1;seen=V(z);$display("sample %d",count);end
+ end endmodule

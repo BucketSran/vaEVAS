@@ -736,12 +736,7 @@ impl NonlinearContinuous {
         tolerances: &Tolerances,
     ) -> Result<Self, Error> {
         Self::build(
-            Arc::new(Context {
-                program: program.clone(),
-                trajectory: trajectory.clone(),
-                driven: driven.to_vec(),
-                force_integrals: false,
-            }),
+            Arc::new(Context::new(program, trajectory, driven)?),
             states.iter().copied().map(I::point).collect(),
             0.0,
             None,
@@ -802,6 +797,9 @@ impl NonlinearContinuous {
         let mut state_count = 0;
         let mut event_dependent = false;
         for (i, spec) in program.operators.iter().enumerate() {
+            if context.detached_timed && matches!(spec, OperatorSpec::Transition { .. }) {
+                continue;
+            }
             if let OperatorSpec::Math {
                 input,
                 function,
@@ -892,6 +890,29 @@ impl NonlinearContinuous {
                 "nonlinear state/source dimension exceeds 32",
             ));
         }
+        // The builder below compiles step-bound active/value controls and
+        // every mathematical exp input against the eliminated mapping. Give
+        // the algebraic construction those roots so each internal voltage they
+        // reference is solved before elimination rather than rejected at
+        // compile time; all structural/ownership checks still apply.
+        let auxiliary_roots: Vec<(&Expression, &Origin)> = program
+            .step_bounds
+            .iter()
+            .flat_map(|bound| {
+                [
+                    (&bound.active, &bound.origin),
+                    (&bound.value, &bound.origin),
+                ]
+            })
+            .chain(program.operators.iter().filter_map(|spec| match spec {
+                OperatorSpec::Math {
+                    input,
+                    origin,
+                    function: crate::ir::MathFunction::Exp,
+                } => Some((input, origin)),
+                _ => None,
+            }))
+            .collect();
         let system = AlgebraicSystem::new(
             program,
             &operators,
@@ -900,18 +921,24 @@ impl NonlinearContinuous {
             state_count,
             driven.len(),
             &parameters,
+            &auxiliary_roots,
         )?;
         let rows = affine_bounds::eliminate(system.rows.clone(), system.x_count, system.width)?;
         let mapping = back_substitute_eliminated(&rows, system.x_count, system.width)?;
         let values = build_value_rows(&operators, &system, &mapping)?;
         // Include every solved voltage, including high-gain aliases, rather
         // than applying a state-magnitude budget to the operator values alone.
-        let accuracy_rows = system
+        let mut accuracy_rows: Vec<Vec<I>> = system
             .node_columns
             .iter()
             .flatten()
             .map(|&column| mapping[column].clone())
             .collect();
+        // Source-forced states retain a refinement target after the split.
+        // Full original output budgets remain checked by settlement.
+        if context.detached_timed && accuracy_rows.is_empty() {
+            accuracy_rows.extend(values.iter().cloned());
+        }
         let mut functions = vec![Polynomial::Linear(vec![I::ZERO; system.width]); state_count];
         for op in &operators {
             match &program.operators[op.operator] {
@@ -2235,7 +2262,11 @@ impl NonlinearContinuous {
         horizon: f64,
     ) -> Result<Self, Error> {
         let mut next = self.mapped_event(time, window, parameters)?;
-        if !self.event_dependent || self.parameters == parameters {
+        if !self.event_dependent
+            || self
+                .context
+                .parameters_equal(&self.parameters, parameters)?
+        {
             next.propagate_until(horizon)?;
             return Ok(next);
         }
@@ -2257,7 +2288,11 @@ impl NonlinearContinuous {
         window: I,
         parameters: &[I],
     ) -> Result<Self, Error> {
-        if !self.event_dependent || self.parameters == parameters {
+        if !self.event_dependent
+            || self
+                .context
+                .parameters_equal(&self.parameters, parameters)?
+        {
             return Ok(self.clone());
         }
         if !time.is_finite() || !window.finite() || window.hi != time {
@@ -2435,6 +2470,8 @@ mod tests {
                 program,
                 trajectory,
                 force_integrals: false,
+                detached_timed: false,
+                live_parameters: None,
                 driven: vec![],
             }),
             parameters: vec![],

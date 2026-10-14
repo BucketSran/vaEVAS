@@ -31,7 +31,7 @@ EVAS 0.15.0 / IR19 纳入中断边沿积分实现；该行 Q3 来自发布前候
 
 [事件数组和独立测量控制](../../experiments/backends/support/r01-timing-observers/README.md)
 补充受限动态下标、参数裁剪和测量器读取物理输出的实际证据，使用独立 1e-9 V 预算。
-它们不替换本表必测集。原 timing 请求还有下游 transition 与连续网络的组合缺口，未计作整题通过。
+它们不替换本表必测集。后续[连续状态与测量组合修复](../../experiments/backends/support/r01-causal-timing/README.md)已使原 `timing-0` 在原 120 秒内完成 9001 行，并通过原 checker 与 2219 项保护检查。与实际 Spectre 的原有限配对最大电压差 19.90 µV，仍采用原边沿窗口与插值，不能记作本表的新 Q 成绩或全时域一致。其他原任务的结果分别保留。
 
 固定零时刻 timer 的 transition 初态修正已取得[三模型实际有限配对](../../experiments/backends/support/README.md#initial-transition-seed)。
 该修复使用原 `1e-8 V` 预算；第四反馈模型仅作诊断，不新增本表 Q 成绩，也不覆盖一般历史反馈。

@@ -146,6 +146,7 @@ impl Controller {
                 trajectory,
                 &next,
                 EventMoment {
+                    exact_root: None,
                     representative: time,
                     observation: I::point(time),
                     fired_roots: &[],
@@ -369,6 +370,7 @@ mod tests {
             .circuit_with(&model.initial(), &operators.values(0.).unwrap())
             .unwrap();
         let accepted = Frame {
+            time_proofs: Default::default(),
             time: 0.,
             states: model.initial(),
             state_bounds: vec![I::ZERO],

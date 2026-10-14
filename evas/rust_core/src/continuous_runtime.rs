@@ -175,6 +175,8 @@ impl Continuous {
         }) {
             return Ok(None);
         }
+        let prepared = Context::new(program, trajectory, driven)?;
+        let program = &prepared.program;
         if selection::needed(program) {
             let parameters: Vec<_> = states.iter().copied().map(I::point).collect();
             let context = Arc::new(Context {
@@ -182,6 +184,8 @@ impl Continuous {
                 trajectory: trajectory.clone(),
                 driven: driven.to_vec(),
                 force_integrals: true,
+                detached_timed: prepared.detached_timed,
+                live_parameters: prepared.live_parameters.clone(),
             });
             let frozen = selection::freeze_context(&context, &parameters, 0.)?;
             if program.operators.iter().any(|op|matches!(op,OperatorSpec::Idt{input,..}|OperatorSpec::LaplaceNd{input,..} if selection::has_variable_division(input)||nonlinear::contains_exp_operator(input,program))) || frozen.program.operators.iter().any(|op|matches!(op,OperatorSpec::Idt{input,..}|OperatorSpec::LaplaceNd{input,..} if affine_bounds::affine(input,&frozen.program).is_err())) {

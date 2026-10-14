@@ -1,0 +1,51 @@
+{
+  "label": "initial_horizon",
+  "source_sha256": "66c1fea247bb372957c7d49f5fbc6d7ac27db918c96dbe3c9dfcb8067f264300",
+  "deck_sha256": "2fddd1ef4eaf2737f27686e40b97fb3a44f4b35f10e38546a054fe78d49b28f1",
+  "request_sha256": "d41d6fc03107a0ab756dd5d085323a7ba195c358581caa99468227959ec6362e",
+  "fixed_kernel_sha256": "c5bad0e8e37d1de0afa0360a1c9a1180aca4add1b21d8b25435f087097e1edba",
+  "query_tokens": [
+    "0",
+    "0.25",
+    "0.5",
+    "1",
+    "2"
+  ],
+  "budget_V": "1e-8",
+  "independent_expected_V": [
+    "1",
+    "4/3",
+    "2",
+    "1",
+    "1/2"
+  ],
+  "independent_solution": "z=1/(1-t) for t<.5, z=1/t for t>=.5",
+  "callback_expected": "initial=1 exactly one; original Display no timestamp",
+  "requested_reference": {
+    "reltol": "1e-10",
+    "vabstol": "1e-13",
+    "iabstol": "1e-15",
+    "maxstep": "1e-6",
+    "method": "traponly",
+    "errpreset": "conservative",
+    "stop": "2",
+    "strobeoutput": "strobeonly",
+    "saveahdlvars": "all"
+  },
+  "DUT_requested_controls": {
+    "absolute": 1e-09,
+    "relative": 1e-06,
+    "pwl": [],
+    "output_times": [
+      0.0,
+      0.25,
+      0.5,
+      1.0,
+      2.0
+    ],
+    "stop": 2.0,
+    "max_step": 0.05
+  },
+  "source_basis": "Exact bytes initial-observer.va; no logger/formula change; D physical/M observer/no stimulus",
+  "adaptation": "Explicit precision candidate calibration: only requested reltol1e-9\u21921e-10/vabstol1e-12\u21921e-13/maxstep1e-5\u21921e-6. Same VA/ground/stimulus/5queries/stop2/gate1e-8."
+}

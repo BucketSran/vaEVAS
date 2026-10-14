@@ -4,7 +4,7 @@ use crate::event_accuracy::{unresolved, GuardBounds};
 use crate::events::EventModel;
 use crate::exact_time::Clock;
 use crate::interval::Interval as I;
-use crate::ir::{Error, EventTrigger, TransientInputs};
+use crate::ir::{Error, EventTrigger, Expression, TransientInputs};
 use crate::operators::Operators;
 use crate::pwl::{Root, Trajectory};
 use std::sync::Arc;
@@ -22,7 +22,51 @@ pub(crate) struct ScheduledEvent {
     fixed_predecessor: Option<f64>,
 }
 
+/// Every calendar leaf must prove the same mathematical root independently.
+/// A representative or overlapping discovery boxes are never an identity.
+pub(crate) fn common_root(events: &[ScheduledEvent]) -> Option<crate::exact_source::RootTime> {
+    let first = events.first()?.exact_root()?;
+    for event in events.iter().skip(1) {
+        if first.order(&event.exact_root()?) != std::cmp::Ordering::Equal {
+            return None;
+        }
+    }
+    Some(first)
+}
+
 impl ScheduledEvent {
+    pub(crate) fn record_ambiguous_query(&self, site: &str, query: f64) {
+        let (kind, clock, exact) = match &self.moment {
+            Moment::HeldTimer { clock, exact, .. } => {
+                ("held_timer", clock.is_some(), exact.is_some())
+            }
+            Moment::Timer { .. } => ("timer", true, false),
+            Moment::Cross(_) => ("source_cross", false, self.exact_root().is_some()),
+            Moment::Anchored { exact, .. } => ("anchored", false, exact.is_some()),
+            Moment::Dynamic { exact, .. } => ("dynamic", false, exact.is_some()),
+        };
+        crate::diagnostics::detail(
+            "ambiguous_query",
+            "rejected",
+            Some(query),
+            &serde_json::json!({
+                "site":site,"query":query,"leaf":self.event,"representative":self.time,
+                "bounds":[self.bounds().lo,self.bounds().hi],"moment":kind,"clock":clock,"exact":exact
+            }),
+        );
+    }
+    fn exact_root(&self) -> Option<crate::exact_source::RootTime> {
+        let root = if let Some(root) = self.moment.exact_history_root() {
+            root.clone()
+        } else if let Moment::Cross(root) = &self.moment {
+            root.rational_time()?
+        } else {
+            crate::exact_source::RootTime::from_clock(self.moment.clock()?, self.bounds())?
+        };
+        root.refine(self.bounds())?;
+        Some(root)
+    }
+
     pub(crate) fn exact_input_value(
         &self,
         model: &EventModel,
@@ -359,6 +403,7 @@ enum Moment {
         index: usize,
     },
     HeldTimer {
+        exact: Option<crate::exact_source::RootTime>,
         bounds: I,
         index: usize,
         clock: Option<Clock>,
@@ -386,7 +431,9 @@ impl Moment {
     }
     fn exact_history_root(&self) -> Option<&crate::exact_source::RootTime> {
         match self {
-            Self::Dynamic { exact, .. } | Self::Anchored { exact, .. } => exact.as_ref(),
+            Self::Dynamic { exact, .. }
+            | Self::Anchored { exact, .. }
+            | Self::HeldTimer { exact, .. } => exact.as_ref(),
             _ => None,
         }
     }
@@ -448,6 +495,10 @@ impl Moment {
     }
 
     fn bounds(&self) -> I {
+        // Optional held-state provenance must not contract numeric sampling.
+        if let Self::HeldTimer { bounds, .. } = self {
+            return *bounds;
+        }
         let discovery = match self {
             Self::Cross(root) => root.bounds,
             Self::Anchored { bounds, .. } => *bounds,
@@ -748,6 +799,7 @@ fn add_timer(
     states: Option<&[I]>,
     after: Option<f64>,
     boundary: Option<&TimerBoundary<'_>>,
+    time_proofs: Option<&crate::transient::time_provenance::TimeProofs>,
 ) -> Result<(), Error> {
     let stop = config.stop;
     let forced_points = !config.strobetimes.is_empty();
@@ -802,6 +854,23 @@ fn add_timer(
             (start, period, enabled, true)
         }
         _ => return Ok(()),
+    };
+    let exact = if let EventTrigger::HeldTimer {
+        start: expression,
+        period,
+        ..
+    } = trigger
+    {
+        if matches!(period.as_ref(), Expression::Affine {constant,terms} if terms.is_empty() && constant.is_finite() && *constant<=0.)
+        {
+            time_proofs
+                .and_then(|proofs| crate::transient::time_provenance::value(expression, proofs))
+                .filter(|root| root.refine(start).is_some())
+        } else {
+            None
+        }
+    } else {
+        None
     };
     if !enabled || start.lo > stop {
         return Ok(());
@@ -915,7 +984,7 @@ fn add_timer(
                     period: period.lo,
                     index,
                 });
-                if boundary.already_past_or_consumed(event, bounds, clock)? {
+                if boundary.already_past_or_consumed(event, bounds, clock, exact.as_ref())? {
                     if period.hi <= 0. {
                         break;
                     }
@@ -956,6 +1025,7 @@ fn add_timer(
             event,
             moment: if held {
                 Moment::HeldTimer {
+                    exact: exact.clone().filter(|root| root.refine(bounds).is_some()),
                     bounds,
                     index,
                     clock: (start.lo == start.hi && period.lo == period.hi).then_some(Clock {
@@ -1004,11 +1074,21 @@ pub(crate) fn schedule_held(
     trajectory: &Trajectory,
     states: &[I],
 ) -> Result<Vec<ScheduledEvent>, Error> {
+    schedule_held_with_time_proofs(model, trajectory, states, None)
+}
+
+pub(crate) fn schedule_held_with_time_proofs(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    states: &[I],
+    time_proofs: Option<&crate::transient::time_provenance::TimeProofs>,
+) -> Result<Vec<ScheduledEvent>, Error> {
     schedule_with_history(
         model,
         trajectory,
         None,
         Some(HeldCalendar {
+            time_proofs,
             states,
             after: None,
             changed: &[],
@@ -1019,6 +1099,7 @@ pub(crate) fn schedule_held(
     )
 }
 
+#[allow(dead_code)] // Retain the existing no-provenance entry for compatibility.
 pub(crate) fn reschedule_held(
     model: &EventModel,
     trajectory: &Trajectory,
@@ -1028,12 +1109,29 @@ pub(crate) fn reschedule_held(
     pending: &[ScheduledEvent],
     consumed: &[ScheduledEvent],
 ) -> Result<Vec<ScheduledEvent>, Error> {
+    reschedule_held_with_time_proofs(
+        model, trajectory, states, after, changed, pending, consumed, None,
+    )
+}
+
+#[allow(clippy::too_many_arguments)] // Existing calendar inputs plus independent optional proof.
+pub(crate) fn reschedule_held_with_time_proofs(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    states: &[I],
+    after: f64,
+    changed: &[bool],
+    pending: &[ScheduledEvent],
+    consumed: &[ScheduledEvent],
+    time_proofs: Option<&crate::transient::time_provenance::TimeProofs>,
+) -> Result<Vec<ScheduledEvent>, Error> {
     let boundary = TimerBoundary::new(model, after, consumed)?;
     schedule_with_history(
         model,
         trajectory,
         None,
         Some(HeldCalendar {
+            time_proofs,
             states,
             after: Some(after),
             changed,
@@ -1070,12 +1168,23 @@ pub(crate) fn independent_epoch(
     states: &[I],
     after: Option<f64>,
 ) -> Result<Vec<ScheduledEvent>, Error> {
+    independent_epoch_with_time_proofs(model, trajectory, states, after, None)
+}
+
+pub(crate) fn independent_epoch_with_time_proofs(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    states: &[I],
+    after: Option<f64>,
+    time_proofs: Option<&crate::transient::time_provenance::TimeProofs>,
+) -> Result<Vec<ScheduledEvent>, Error> {
     let changed = vec![true; model.triggers.len()];
     schedule_with_history(
         model,
         trajectory,
         None,
         Some(HeldCalendar {
+            time_proofs,
             states,
             after,
             changed: &changed,
@@ -1094,6 +1203,7 @@ pub(crate) struct HistoryEpoch<'a> {
     pub(crate) pending: &'a [ScheduledEvent],
 }
 
+#[allow(dead_code)] // Retain the existing no-provenance entry for compatibility.
 pub(crate) fn reschedule_independent(
     model: &EventModel,
     trajectory: &Trajectory,
@@ -1103,12 +1213,29 @@ pub(crate) fn reschedule_independent(
     pending: &[ScheduledEvent],
     consumed: &[ScheduledEvent],
 ) -> Result<Vec<ScheduledEvent>, Error> {
+    reschedule_independent_with_time_proofs(
+        model, trajectory, states, after, changed, pending, consumed, None,
+    )
+}
+
+#[allow(clippy::too_many_arguments)] // Existing calendar inputs plus independent optional proof.
+pub(crate) fn reschedule_independent_with_time_proofs(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    states: &[I],
+    after: f64,
+    changed: &[bool],
+    pending: &[ScheduledEvent],
+    consumed: &[ScheduledEvent],
+    time_proofs: Option<&crate::transient::time_provenance::TimeProofs>,
+) -> Result<Vec<ScheduledEvent>, Error> {
     let boundary = TimerBoundary::new(model, after, consumed)?;
     schedule_with_history(
         model,
         trajectory,
         None,
         Some(HeldCalendar {
+            time_proofs,
             states,
             after: Some(after),
             changed,
@@ -1125,6 +1252,16 @@ pub(crate) fn history_epoch(
     operators: &Operators,
     epoch: HistoryEpoch<'_>,
 ) -> Result<Vec<ScheduledEvent>, Error> {
+    history_epoch_with_time_proofs(model, trajectory, operators, epoch, None)
+}
+
+pub(crate) fn history_epoch_with_time_proofs(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    operators: &Operators,
+    epoch: HistoryEpoch<'_>,
+    time_proofs: Option<&crate::transient::time_provenance::TimeProofs>,
+) -> Result<Vec<ScheduledEvent>, Error> {
     let changed: Vec<_> = model
         .guard_operators
         .iter()
@@ -1135,6 +1272,7 @@ pub(crate) fn history_epoch(
         trajectory,
         Some(operators),
         Some(HeldCalendar {
+            time_proofs,
             states: epoch.states,
             after: epoch.after,
             changed: &changed,
@@ -1207,6 +1345,7 @@ impl<'a> TimerBoundary<'a> {
         leaf: usize,
         bounds: I,
         clock: Option<Clock>,
+        exact: Option<&crate::exact_source::RootTime>,
     ) -> Result<bool, Error> {
         if bounds.hi < self.observation.lo {
             return Ok(true);
@@ -1214,8 +1353,24 @@ impl<'a> TimerBoundary<'a> {
         if bounds.lo > self.observation.hi {
             return Ok(false);
         }
+        let candidate = Moment::HeldTimer {
+            bounds,
+            index: clock.map_or(0, |c| c.index),
+            clock,
+            exact: exact.cloned(),
+        };
+        if let Some(old) = self.common_moment {
+            if exact.is_some() {
+                match candidate.exact_order(old) {
+                    Some(std::cmp::Ordering::Less) => return Ok(true),
+                    Some(std::cmp::Ordering::Greater) => return Ok(false),
+                    _ => {}
+                }
+            }
+        }
         if let (Some(clock), Some(old)) = (clock, self.common_moment) {
             let candidate = Moment::HeldTimer {
+                exact: exact.cloned(),
                 bounds,
                 index: clock.index,
                 clock: Some(clock),
@@ -1227,6 +1382,11 @@ impl<'a> TimerBoundary<'a> {
             }
         }
         if let Some(old) = self.consumed.get(&leaf) {
+            if exact.is_some()
+                && candidate.exact_order(&old.moment) == Some(std::cmp::Ordering::Equal)
+            {
+                return Ok(true);
+            }
             let same_clock = match (clock, old.clock()) {
                 (Some(new), Some(old)) => new.order(old) == Some(std::cmp::Ordering::Equal),
                 _ => bounds.lo == bounds.hi && bounds == old.bounds(),
@@ -1247,6 +1407,7 @@ impl<'a> TimerBoundary<'a> {
 }
 
 struct HeldCalendar<'a> {
+    time_proofs: Option<&'a crate::transient::time_provenance::TimeProofs>,
     states: &'a [I],
     after: Option<f64>,
     changed: &'a [bool],
@@ -1645,6 +1806,7 @@ fn schedule_with_history(
             held.as_ref().map(|h| h.states),
             held.as_ref().and_then(|h| h.after),
             held.as_ref().and_then(|h| h.boundary),
+            held.as_ref().and_then(|h| h.time_proofs),
         )?;
     }
     if let Some(after) = held.as_ref().and_then(|h| h.after) {
@@ -1962,3 +2124,359 @@ mod exact_history_root_tests {
 #[cfg(test)]
 #[path = "schedule_timer_boundary_tests.rs"]
 mod timer_boundary_tests;
+
+#[cfg(test)]
+mod common_exact_root_tests {
+    use super::*;
+    use crate::exact_source::RootTime;
+    use num_rational::BigRational as R;
+    use num_traits::One;
+    fn event(exact: Option<RootTime>) -> ScheduledEvent {
+        ScheduledEvent {
+            time: 0.4,
+            event: 0,
+            fixed_predecessor: None,
+            moment: Moment::Dynamic {
+                history: None,
+                exact,
+                bounds: I { lo: 0.3, hi: 0.4 },
+                derivative: I::ONE,
+                end: 1.,
+            },
+        }
+    }
+    #[test]
+    fn identical_discovery_boxes_do_not_prove_common_root() {
+        let a =
+            RootTime::affine(-R::one(), R::from_integer(3.into()), I { lo: 0.3, hi: 0.4 }).unwrap();
+        let b = RootTime::affine(
+            -R::from_integer(7.into()),
+            R::from_integer(20.into()),
+            I { lo: 0.3, hi: 0.4 },
+        )
+        .unwrap();
+        assert!(common_root(&[event(Some(a.clone())), event(Some(a.clone()))]).is_some());
+        assert!(common_root(&[event(Some(a.clone())), event(Some(b))]).is_none());
+        assert!(common_root(&[event(Some(a)), event(None)]).is_none());
+        assert!(common_root(&[]).is_none());
+    }
+    #[test]
+    fn fixed_clock_and_history_root_require_mathematical_equality() {
+        let window = I { lo: 0.3, hi: 0.4 };
+        let root = RootTime::from_clock(
+            Clock {
+                start: 0.1,
+                period: 0.25,
+                index: 1,
+            },
+            window,
+        )
+        .unwrap();
+        let history = event(Some(root));
+        let timer = ScheduledEvent {
+            time: 0.4,
+            event: 1,
+            fixed_predecessor: None,
+            moment: Moment::Timer {
+                bounds: window,
+                start: 0.1,
+                period: 0.25,
+                index: 1,
+            },
+        };
+        assert!(common_root(&[history, timer]).is_some());
+        assert!(RootTime::from_clock(
+            Clock {
+                start: 0.,
+                period: 1.,
+                index: EVENT_BUDGET + 1
+            },
+            window
+        )
+        .is_none());
+    }
+}
+
+#[cfg(test)]
+mod exact_deadline_review_tests {
+    use super::*;
+    use crate::exact_source::{binary, RootTime};
+    use num_rational::BigRational as R;
+    use num_traits::One;
+
+    #[test]
+    fn anchored_absolute_root_is_not_shifted_again_by_common_root() {
+        let origin =
+            serde_json::json!({"source":"anchored_review.va","line":1,"column":1,"instance":"dut"});
+        let program = serde_json::from_value(serde_json::json!({
+            "schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","y"],
+            "operators":[{"kind":"idt","input":{"op":"affine","constant":1,"terms":[{"node":1,"coefficient":1}]},"ic":0,"origin":origin}],
+            "contributions":[{"branch":{"instance":"dut","local_positive":"y","local_negative":"r","kind":"voltage"},
+                "positive":1,"negative":0,"rhs":{"op":"operator","operator":0},"origin":origin}]
+        })).unwrap();
+        let trajectory = Trajectory::new(
+            crate::ir::TransientInputs {
+                strobetimes: vec![],
+                pwl: vec![],
+                output_times: vec![0., 2.],
+                stop: 2.,
+                max_step: 0.125,
+            },
+            0,
+        )
+        .unwrap();
+        let history = Arc::new(
+            Continuous::new(&program, &trajectory, &[], &[])
+                .unwrap()
+                .unwrap(),
+        );
+        let anchor = Clock {
+            start: 0.1,
+            period: 0.2,
+            index: 1,
+        };
+        let local =
+            RootTime::affine(-R::one(), R::from_integer(3.into()), I { lo: 0.3, hi: 0.4 }).unwrap();
+        let absolute = local.shifted_clock(anchor).unwrap();
+        let window = absolute.bounds().unwrap();
+        // Independently form the expected absolute value from original binary parameters.
+        let expected_value =
+            binary(0.1).unwrap() + binary(0.2).unwrap() + R::new(1.into(), 3.into());
+        let expected = RootTime::affine(-expected_value.clone(), R::one(), window).unwrap();
+        let event = ScheduledEvent {
+            time: window.hi,
+            event: 0,
+            fixed_predecessor: None,
+            moment: Moment::Anchored {
+                anchor,
+                delta: local.bounds().unwrap(),
+                derivative: I::ONE,
+                end: 2.,
+                bounds: window,
+                history,
+                exact: Some(absolute),
+            },
+        };
+        let companion = ScheduledEvent {
+            time: window.hi,
+            event: 1,
+            fixed_predecessor: None,
+            moment: Moment::Dynamic {
+                history: None,
+                exact: Some(expected.clone()),
+                bounds: window,
+                derivative: I::ONE,
+                end: 2.,
+            },
+        };
+        let common = common_root(&[event, companion]).unwrap();
+        assert_eq!(common.order(&expected), std::cmp::Ordering::Equal);
+        assert_ne!(
+            common.order(&expected.shifted_clock(anchor).unwrap()),
+            std::cmp::Ordering::Equal
+        );
+        assert_eq!(common.bounds(), Some(window));
+        // Carry the extracted proof through both pending activation and fresh end.
+        let mut edge = crate::transition::Transition::new(0., 0.125, 0.25, 0.25).unwrap();
+        edge.advance_at_with_exact(window.hi, window, 1., I::ONE, true, Some(&common))
+            .unwrap();
+        let activation = edge.next_breakpoint(0.).unwrap();
+        edge.advance_at(activation, I::point(activation), 1., I::ONE, false)
+            .unwrap();
+        // Independent callback at absolute+.25 with duration .125 has the same
+        // endpoint. Neither source time is a point, so old point/sum keys cannot pass.
+        let reference_root = RootTime::affine(
+            -(expected_value + binary(0.25).unwrap()),
+            R::one(),
+            I { lo: 0., hi: 2. },
+        )
+        .unwrap();
+        let reference_window = reference_root.bounds().unwrap();
+        let mut reference = crate::transition::Transition::new(0., 0., 0.125, 0.125).unwrap();
+        reference
+            .advance_at_with_exact(
+                reference_window.hi,
+                reference_window,
+                1.,
+                I::ONE,
+                true,
+                Some(&reference_root),
+            )
+            .unwrap();
+        assert!(
+            edge.deadlines(activation)[0].coincides(&reference.deadlines(reference_window.hi)[0])
+        );
+    }
+}
+
+#[cfg(test)]
+mod held_review_tests {
+    use super::*;
+    use crate::exact_source::RootTime;
+    use num_rational::BigRational as R;
+    fn root(value: R) -> RootTime {
+        RootTime::affine(-value, R::from_integer(1.into()), I { lo: 0., hi: 1. }).unwrap()
+    }
+    #[test]
+    fn held_exact_preserves_wide_box_and_consumes_only_matching_leaf() {
+        let a = root(R::new(1.into(), 3.into()));
+        let b = root(R::new(1.into(), 3.into()) + R::new(1.into(), (1u64 << 60).into()));
+        let bounds = I { lo: 0.3, hi: 0.4 };
+        let old = ScheduledEvent {
+            time: 0.4,
+            event: 2,
+            fixed_predecessor: None,
+            moment: Moment::HeldTimer {
+                bounds,
+                index: 0,
+                clock: None,
+                exact: Some(a.clone()),
+            },
+        };
+        assert_eq!(old.bounds(), bounds);
+        assert_ne!(old.bounds(), a.bounds().unwrap());
+        let boundary = TimerBoundary {
+            observation: bounds,
+            consumed: std::collections::BTreeMap::from([(2, &old)]),
+            common_moment: Some(&old.moment),
+        };
+        assert!(boundary
+            .already_past_or_consumed(2, bounds, None, Some(&a))
+            .unwrap());
+        assert!(boundary
+            .already_past_or_consumed(3, bounds, None, Some(&a))
+            .is_err());
+        assert!(!boundary
+            .already_past_or_consumed(2, bounds, None, Some(&b))
+            .unwrap());
+        assert!(boundary
+            .already_past_or_consumed(2, bounds, None, None)
+            .is_err());
+        for t in [1. / 3., (1. / 3.0_f64).next_up()] {
+            assert_eq!(
+                old.physical_order_at(t),
+                Some(
+                    a.clock_delta_order(
+                        Clock {
+                            start: t,
+                            period: 0.,
+                            index: 0
+                        },
+                        0.
+                    )
+                    .unwrap()
+                )
+            );
+        }
+    }
+}
+#[cfg(test)]
+mod held_calendar_review_tests {
+    use super::*;
+    use crate::exact_source::RootTime;
+    use crate::transient::time_provenance::{invalidate_timers, TimeProofs};
+    use num_rational::BigRational as R;
+    use serde_json::json;
+    fn fixture(dynamic_period: bool) -> (EventModel, Trajectory) {
+        let o = json!({"source":"review.va","line":1,"column":1,"instance":"D"});
+        let c = |v: f64| json!({"op":"affine","constant":v,"terms":[]});
+        let s = |i: usize| json!({"op":"state","state":i});
+        let period = if dynamic_period { s(2) } else { c(0.) };
+        let p=serde_json::from_value(json!({"schema_version":crate::ir::SCHEMA_VERSION,"nodes":["0","y"],"states":[{"instance":"D","name":"due","kind":"real","initial":0.3333333333333333},{"instance":"D","name":"enabled","kind":"real","initial":1},{"instance":"D","name":"period","kind":"real","initial":0}],"operators":[],"events":[{"origin":o,"trigger":{"kind":"timer","start":0.1,"period":0,"enabled":true,"time_tolerance":1e-6},"body":[]},{"origin":o,"trigger":{"kind":"held_timer","start":s(0),"period":period,"enabled":s(1),"time_tolerance":0.2},"body":[]}],"contributions":[{"origin":o,"branch":{"instance":"D","local_positive":"out","local_negative":"ref","kind":"voltage"},"positive":1,"negative":0,"rhs":s(0)}]})).unwrap();
+        let m = EventModel::new(p, vec![], crate::ir::Tolerances::default()).unwrap();
+        let t = Trajectory::new(
+            crate::ir::TransientInputs {
+                pwl: vec![],
+                strobetimes: vec![],
+                output_times: vec![0., 1.],
+                stop: 1.,
+                max_step: 0.1,
+            },
+            0,
+        )
+        .unwrap();
+        (m, t)
+    }
+    #[test]
+    fn same_numeric_bounds_proof_replacement_clear_and_cancel_rebuild_calendar() {
+        let (m, t) = fixture(false);
+        let wide = I { lo: 0.3, hi: 0.4 };
+        let states = [wide, I::ONE, I::ZERO];
+        let proof = |v: R| RootTime::affine(-v, R::from_integer(1.into()), wide).unwrap();
+        let a = proof(R::new(1.into(), 3.into()));
+        let b = proof(R::new(1.into(), 3.into()) + R::new(1.into(), (1u64 << 60).into()));
+        let before = TimeProofs::from([(0, a.clone())]);
+        let calendar = schedule_held_with_time_proofs(&m, &t, &states, Some(&before)).unwrap();
+        let batch = vec![calendar[0].clone()];
+        let pending = vec![calendar[1].clone()];
+        assert_eq!(pending[0].exact_root(), Some(a.clone()));
+        assert_eq!(pending[0].bounds(), wide);
+        for after in [TimeProofs::from([(0, b.clone())]), TimeProofs::new()] {
+            let mut changed = vec![false; 2];
+            invalidate_timers(&m.triggers, &before, &after, &mut changed);
+            assert_eq!(changed, vec![false, true]);
+            let next = reschedule_held_with_time_proofs(
+                &m,
+                &t,
+                &states,
+                0.1,
+                &changed,
+                &pending,
+                &batch,
+                Some(&after),
+            )
+            .unwrap();
+            assert_eq!(next.len(), 1);
+            assert_eq!(next[0].exact_root(), after.get(&0).cloned());
+            assert_eq!(next[0].time, pending[0].time);
+            assert_eq!(next[0].bounds(), pending[0].bounds());
+        }
+        // Reusing the old changed mask would retain a stale key; calibrate the detector.
+        let after = TimeProofs::from([(0, b.clone())]);
+        let stale = reschedule_held_with_time_proofs(
+            &m,
+            &t,
+            &states,
+            0.1,
+            &[false, false],
+            &pending,
+            &batch,
+            Some(&after),
+        )
+        .unwrap();
+        assert_eq!(stale[0].exact_root(), Some(a));
+        assert_ne!(stale[0].exact_root(), Some(b));
+        let cancelled = reschedule_held_with_time_proofs(
+            &m,
+            &t,
+            &[wide, I::ZERO, I::ZERO],
+            0.1,
+            &[false, true],
+            &pending,
+            &batch,
+            Some(&after),
+        )
+        .unwrap();
+        assert!(cancelled.is_empty());
+        let rearmed = reschedule_held_with_time_proofs(
+            &m,
+            &t,
+            &states,
+            0.1,
+            &[false, true],
+            &cancelled,
+            &batch,
+            Some(&after),
+        )
+        .unwrap();
+        assert_eq!(rearmed[0].exact_root(), after.get(&0).cloned());
+        let (dynamic, t) = fixture(true);
+        let no_key = schedule_held_with_time_proofs(&dynamic, &t, &states, Some(&after)).unwrap();
+        assert!(no_key
+            .iter()
+            .find(|e| e.event == 1)
+            .unwrap()
+            .exact_root()
+            .is_none());
+    }
+}

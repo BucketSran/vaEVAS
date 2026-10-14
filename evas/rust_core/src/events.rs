@@ -710,7 +710,14 @@ impl EventModel {
             .iter()
             .zip(&self.program.contributions)
             .any(|(a, b)| a.rhs != b.rhs);
-        if resolved || !operators.is_empty() {
+        // An unchanged original graph may retain operator outputs as live
+        // forcing columns. Its map depends on Selection, not their samples.
+        let cached = self
+            .certificate
+            .borrow()
+            .as_ref()
+            .is_some_and(|(path, _)| path == selection);
+        if resolved || !(cached || Bounds::sample_independent(self, selection)?) {
             let bounds = Bounds::for_program_with_operators(self, selection, &selected, operators)?;
             let result =
                 bounds.check_observation(self, inputs, before, operators, voltages, states)?;
@@ -731,12 +738,30 @@ impl EventModel {
         let mut cache = self.certificate.borrow_mut();
         if !cache.as_ref().is_some_and(|(path, _)| path == selection) {
             *cache = Some((selection.clone(), Bounds::new(self, selection)?));
+        } else {
+            crate::diagnostics::counter("certificate_cache_hits", 1);
         }
-        cache
+        let result = cache
             .as_ref()
             .unwrap()
             .1
-            .check_observation(self, inputs, before, operators, voltages, states)
+            .check_observation(self, inputs, before, operators, voltages, states)?;
+        // Preserve the original operator-bearing path's enclosure replay.
+        if !operators.is_empty() {
+            let replay = self.selected_program_at_roots(&result.0, inputs, fired)?;
+            if replay
+                .contributions
+                .iter()
+                .zip(&selected.contributions)
+                .any(|(a, b)| a.rhs != b.rhs)
+            {
+                return Err(Error::new(
+                    "event_condition",
+                    "state enclosure changes contribution selection",
+                ));
+            }
+        }
+        Ok(result)
     }
 
     #[allow(clippy::too_many_arguments)] // Root, state and voltage certificates are distinct inputs.
@@ -762,7 +787,14 @@ impl EventModel {
             .iter()
             .zip(&self.program.contributions)
             .any(|(a, b)| a.rhs != b.rhs);
-        if resolved || !operators.is_empty() {
+        // An unchanged original graph may retain operator outputs as live
+        // forcing columns. Its map depends on Selection, not their samples.
+        let cached = self
+            .certificate
+            .borrow()
+            .as_ref()
+            .is_some_and(|(path, _)| path == selection);
+        if resolved || !(cached || Bounds::sample_independent(self, selection)?) {
             let bounds = Bounds::for_program_with_operators(self, selection, &selected, operators)?;
             let result = bounds.check_states(self, inputs, before, operators, voltages, states)?;
             let replay = self.selected_program_at_roots(&result, inputs, fired)?;
@@ -782,12 +814,29 @@ impl EventModel {
         let mut cache = self.certificate.borrow_mut();
         if !cache.as_ref().is_some_and(|(path, _)| path == selection) {
             *cache = Some((selection.clone(), Bounds::new(self, selection)?));
+        } else {
+            crate::diagnostics::counter("certificate_cache_hits", 1);
         }
-        cache
+        let result = cache
             .as_ref()
             .unwrap()
             .1
-            .check_states(self, inputs, before, operators, voltages, states)
+            .check_states(self, inputs, before, operators, voltages, states)?;
+        if !operators.is_empty() {
+            let replay = self.selected_program_at_roots(&result, inputs, fired)?;
+            if replay
+                .contributions
+                .iter()
+                .zip(&selected.contributions)
+                .any(|(a, b)| a.rhs != b.rhs)
+            {
+                return Err(Error::new(
+                    "event_condition",
+                    "state enclosure changes contribution selection",
+                ));
+            }
+        }
+        Ok(result)
     }
 
     pub(crate) fn assigned(&self, selection: &Selection) -> Vec<usize> {
@@ -955,6 +1004,7 @@ impl EventModel {
     /// Freeze certified predicates, retaining selected arm state references.
     pub(crate) fn selected_program(&self, states: &[I], inputs: &[I]) -> Result<Program, Error> {
         self.selected_program_at_roots(states, inputs, &[])
+            .map(std::borrow::Cow::into_owned)
     }
 
     pub(crate) fn selected_program_at_roots(
@@ -962,7 +1012,7 @@ impl EventModel {
         states: &[I],
         inputs: &[I],
         fired: &[usize],
-    ) -> Result<Program, Error> {
+    ) -> Result<std::borrow::Cow<'_, Program>, Error> {
         let mut nodes = vec![I::ZERO; self.program.nodes.len()];
         for (name, &value) in self.driven.iter().zip(inputs) {
             let index = self
@@ -972,6 +1022,17 @@ impl EventModel {
                 .position(|n| n == name)
                 .ok_or_else(|| Error::new("invalid_inputs", "unknown driven node"))?;
             nodes[index] = value;
+        }
+        // This function changes contribution Select nodes only. With none in
+        // the complete original RHS trees, the validated program is identical;
+        // borrow it rather than cloning every unrelated event statement.
+        if self
+            .program
+            .contributions
+            .iter()
+            .all(|c| !crate::analog::has_select(&c.rhs))
+        {
+            return Ok(std::borrow::Cow::Borrowed(&self.program));
         }
         let mut p = self.program.clone();
         for c in &mut p.contributions {
@@ -983,7 +1044,7 @@ impl EventModel {
                 states,
             )?;
         }
-        Ok(p)
+        Ok(std::borrow::Cow::Owned(p))
     }
 
     fn resolve_root_selects(&self, e: &Expression, fired: &[usize]) -> Result<Expression, Error> {
@@ -1130,7 +1191,17 @@ impl EventModel {
                 updates[*state] = local[*state].clone();
             }
         }
-        let mut program = selected.clone();
+        // Match the previous clone-and-clear result without first cloning the
+        // immutable state/event/operator trees that the voltage solve discards.
+        let mut program = Program {
+            schema_version: selected.schema_version,
+            nodes: selected.nodes.clone(),
+            contributions: selected.contributions.clone(),
+            states: Vec::new(),
+            events: Vec::new(),
+            operators: Vec::new(),
+            step_bounds: selected.step_bounds.clone(),
+        };
         let rhs = selected
             .contributions
             .iter()
@@ -1142,9 +1213,6 @@ impl EventModel {
                 )
             })
             .collect::<Result<Vec<_>, _>>()?;
-        program.states.clear();
-        program.events.clear();
-        program.operators.clear();
         for (contribution, rhs) in program.contributions.iter_mut().zip(&rhs) {
             contribution.rhs = rhs.substitute(&updates)?.bind(&[], operators)?;
         }
@@ -1427,3 +1495,7 @@ impl EventModel {
         Ok(after)
     }
 }
+
+#[cfg(test)]
+#[path = "events_certificate_cache_tests.rs"]
+mod certificate_cache_tests;

@@ -44,6 +44,7 @@ fn fixture(body: Value, history: bool, points: &[[f64; 2]]) -> (EventModel, Traj
         .circuit_with(&states, &operators.values(0.0).unwrap())
         .unwrap();
     let frame = Frame {
+        time_proofs: Default::default(),
         time: 0.0,
         state_bounds: states.iter().copied().map(I::point).collect(),
         states,

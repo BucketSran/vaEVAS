@@ -3,17 +3,23 @@ use crate::interval::Interval as I;
 use crate::ir::Error;
 use std::collections::VecDeque;
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub(crate) struct Deadline {
     pub(crate) bounds: I,
     // Exact symbolic sum when available; equal enclosures alone do not prove
     // coincident real deadlines. Interrupted-edge endpoints have no sum key.
     sum: Option<[f64; 3]>,
+    exact: Option<crate::exact_source::RootTime>,
 }
 impl Deadline {
     pub(crate) fn coincides(&self, other: &Self) -> bool {
         (self.bounds.lo == self.bounds.hi && self.bounds == other.bounds)
             || (self.sum.is_some() && self.sum == other.sum)
+            || self
+                .exact
+                .as_ref()
+                .zip(other.exact.as_ref())
+                .is_some_and(|(a, b)| a.order(b) == std::cmp::Ordering::Equal)
     }
     pub(crate) fn overlaps(&self, other: I) -> bool {
         self.bounds.lo <= other.hi && other.lo <= self.bounds.hi
@@ -67,7 +73,11 @@ fn deadline(bounds: I, scale: f64, sum: Option<[f64; 3]>) -> Result<Deadline, Er
         terms.sort_by(f64::total_cmp);
         terms
     });
-    Ok(Deadline { bounds, sum })
+    Ok(Deadline {
+        bounds,
+        sum,
+        exact: None,
+    })
 }
 
 impl Transition {
@@ -168,7 +178,7 @@ impl Transition {
 
     pub(crate) fn value_bounds(&self, time: f64) -> Result<I, Error> {
         let held = self.bounds_at(I::point(time));
-        if let Some(&(deadline, target, bounds)) = self.pending.front() {
+        if let Some((deadline, target, bounds)) = self.pending.front().cloned() {
             if deadline.bounds.lo < time && time < deadline.bounds.hi {
                 // A sample may fall after the exact activation but before its
                 // representative upper time. Enclose both possibilities without
@@ -265,9 +275,9 @@ impl Transition {
     pub(crate) fn deadlines(&self, after: f64) -> Vec<Deadline> {
         self.pending
             .front()
-            .map(|(deadline, _, _)| *deadline)
+            .map(|(deadline, _, _)| deadline.clone())
             .into_iter()
-            .chain(self.edge.as_ref().map(|e| e.end))
+            .chain(self.edge.as_ref().map(|e| e.end.clone()))
             .filter(|deadline| deadline.bounds.hi > after)
             .collect()
     }
@@ -334,7 +344,13 @@ impl Transition {
             }
             (moment.bounds + remaining, None)
         };
-        let end = deadline(end_bounds, duration, sum)?;
+        let mut end = deadline(end_bounds, duration, sum)?;
+        if active.is_none() {
+            end.exact = moment
+                .exact
+                .as_ref()
+                .and_then(|root| root.shifted_fixed(duration, end_bounds));
+        }
         if end.bounds.lo <= time {
             return Err(invalid("transition edge cannot advance representable time"));
         }
@@ -379,6 +395,21 @@ impl Transition {
         bounds: I,
         may_change: bool,
     ) -> Result<(), Error> {
+        self.advance_at_with_exact(time, time_bounds, input, bounds, may_change, None)
+    }
+
+    pub(crate) fn advance_at_with_exact(
+        &mut self,
+        time: f64,
+        time_bounds: I,
+        input: f64,
+        bounds: I,
+        may_change: bool,
+        exact_root: Option<&crate::exact_source::RootTime>,
+    ) -> Result<(), Error> {
+        if exact_root.is_some_and(|root| root.refine(time_bounds).is_none()) {
+            return Err(invalid("exact transition root is outside event enclosure"));
+        }
         if !time_bounds.finite() || time_bounds.lo > time_bounds.hi || time_bounds.hi > time {
             return Err(invalid("invalid transition event-time enclosure"));
         }
@@ -416,6 +447,7 @@ impl Transition {
                 self.target(
                     Deadline {
                         bounds: time_bounds,
+                        exact: exact_root.cloned(),
                         sum: (time_bounds.lo == time_bounds.hi).then_some([
                             time_bounds.lo,
                             0.0,
@@ -426,11 +458,13 @@ impl Transition {
                     bounds,
                 )?;
             } else {
-                let next = deadline(
+                let mut next = deadline(
                     time_bounds + I::point(self.delay),
                     self.delay,
                     (time_bounds.lo == time_bounds.hi).then_some([time_bounds.lo, self.delay, 0.0]),
                 )?;
+                next.exact =
+                    exact_root.and_then(|root| root.shifted_fixed(self.delay, next.bounds));
                 if next.bounds.lo <= time {
                     return Err(invalid(
                         "transition delay cannot advance representable time",
@@ -510,5 +544,150 @@ mod tests {
         exact.advance(2.0, 1.0).unwrap();
         exact.advance(6.0, 0.5).unwrap();
         near(exact.value(100.0).unwrap(), 0.5);
+    }
+}
+
+#[cfg(test)]
+mod exact_deadline_tests {
+    use super::*;
+    use crate::exact_source::RootTime;
+    use num_rational::BigRational as R;
+    use num_traits::One;
+
+    fn root() -> RootTime {
+        RootTime::affine(-R::one(), R::from_integer(3.into()), I { lo: 0.3, hi: 0.4 }).unwrap()
+    }
+
+    #[test]
+    fn fresh_exact_proof_changes_no_time_or_waveform_bits() {
+        let root = root();
+        let window = root.bounds().unwrap();
+        for delay in [0., 0.125] {
+            let mut old = Transition::new(0., delay, 0.125, 0.125).unwrap();
+            let mut new = old.clone();
+            old.advance_at(window.hi, window, 1., I::ONE, true).unwrap();
+            new.advance_at_with_exact(window.hi, window, 1., I::ONE, true, Some(&root))
+                .unwrap();
+            assert_eq!(old.deadlines(0.)[0].bounds, new.deadlines(0.)[0].bounds);
+            assert!(new.deadlines(0.)[0].exact.is_some());
+            assert!(!old.deadlines(0.)[0].coincides(&new.deadlines(0.)[0]));
+            for t in [window.hi, 0.4, 0.5, 0.6] {
+                assert_eq!(
+                    old.value(t).unwrap().to_bits(),
+                    new.value(t).unwrap().to_bits()
+                );
+                assert_eq!(old.value_bounds(t).unwrap(), new.value_bounds(t).unwrap());
+            }
+            if delay > 0. {
+                let time = new.next_breakpoint(0.).unwrap();
+                old.advance_at(time, I::point(time), 1., I::ONE, false)
+                    .unwrap();
+                new.advance_at(time, I::point(time), 1., I::ONE, false)
+                    .unwrap();
+                assert!(new.edge.as_ref().unwrap().end.exact.is_some());
+                assert_eq!(
+                    old.edge.as_ref().unwrap().end.bounds,
+                    new.edge.as_ref().unwrap().end.bounds
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn fresh_shared_anchor_coincides_but_interrupted_endpoint_does_not_invent_key() {
+        let root = root();
+        let window = root.bounds().unwrap();
+        let mut a = Transition::new(0., 0., 0.75, 0.75).unwrap();
+        let mut b = a.clone();
+        a.advance_at_with_exact(window.hi, window, 1., I::ONE, true, Some(&root))
+            .unwrap();
+        b.advance_at_with_exact(window.hi, window, 2., I::point(2.), true, Some(&root))
+            .unwrap();
+        assert!(a
+            .edge
+            .as_ref()
+            .unwrap()
+            .end
+            .coincides(&b.edge.as_ref().unwrap().end));
+        let next = RootTime::from_clock(
+            crate::exact_time::Clock {
+                start: 0.5,
+                period: 0.,
+                index: 0,
+            },
+            I::point(0.5),
+        )
+        .unwrap();
+        a.advance_at_with_exact(0.5, I::point(0.5), 2., I::point(2.), true, Some(&next))
+            .unwrap();
+        assert!(a.edge.as_ref().unwrap().end.exact.is_none());
+        assert!(a.edge.as_ref().unwrap().end.sum.is_none());
+    }
+
+    #[test]
+    fn split_fixed_arithmetic_is_exact_and_stays_bounded_by_discovery() {
+        let root = root();
+        let wide = I { lo: 0., hi: 1. };
+        let split = root
+            .shifted_fixed(0.1, wide)
+            .unwrap()
+            .shifted_fixed(0.2, wide)
+            .unwrap();
+        let rounded = root.shifted_fixed(0.1 + 0.2, wide).unwrap();
+        assert_ne!(split.order(&rounded), std::cmp::Ordering::Equal);
+        assert!(root.shifted_fixed(0.1, I::point(0.5)).is_none());
+        assert!(root.shifted_fixed(f64::INFINITY, wide).is_none());
+    }
+}
+
+#[cfg(test)]
+mod exact_deadline_review_tests {
+    use super::*;
+    use crate::exact_source::RootTime;
+
+    #[test]
+    fn mismatched_or_malformed_exact_window_rejects_before_queue_mutation() {
+        let root = RootTime::from_clock(
+            crate::exact_time::Clock {
+                start: 0.5,
+                period: 0.,
+                index: 0,
+            },
+            I::point(0.5),
+        )
+        .unwrap();
+        let mut retained = Transition::new(0., 0.125, 0.25, 0.25).unwrap();
+        retained
+            .advance_at(0.25, I::point(0.25), 1., I::ONE, true)
+            .unwrap();
+        assert!(!retained.pending.is_empty());
+        for window in [
+            I::point(0.75),
+            I { lo: 0.6, hi: 0.4 },
+            I {
+                lo: f64::NAN,
+                hi: 0.5,
+            },
+            I {
+                lo: 0.,
+                hi: f64::INFINITY,
+            },
+        ] {
+            let mut candidate = retained.clone();
+            let error = candidate
+                .advance_at_with_exact(1., window, 2., I::point(2.), true, Some(&root))
+                .unwrap_err();
+            assert_eq!(error.kind, "event_resolution");
+            assert_eq!(
+                error.message,
+                "exact transition root is outside event enclosure"
+            );
+            assert_eq!(candidate, retained);
+        }
+        let mut valid = retained.clone();
+        valid
+            .advance_at_with_exact(0.5, I::point(0.5), 2., I::point(2.), true, Some(&root))
+            .unwrap();
+        assert_ne!(valid, retained);
     }
 }

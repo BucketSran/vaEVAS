@@ -1,0 +1,304 @@
+{
+  "nodes": [
+    "0",
+    "dut:f",
+    "u",
+    "y",
+    "z"
+  ],
+  "contributions": [
+    {
+      "branch": {
+        "instance": "dut",
+        "local_positive": "f",
+        "local_negative": "r",
+        "kind": "voltage"
+      },
+      "positive": 1,
+      "negative": 0,
+      "rhs": {
+        "op": "multiply",
+        "left": {
+          "constant": 2.0,
+          "terms": [],
+          "op": "affine"
+        },
+        "right": {
+          "constant": 0.0,
+          "terms": [
+            {
+              "node": 0,
+              "coefficient": -1.0
+            },
+            {
+              "node": 2,
+              "coefficient": 1.0
+            }
+          ],
+          "op": "affine"
+        }
+      },
+      "origin": {
+        "source": "dut.va",
+        "line": 6,
+        "column": 2,
+        "instance": "dut",
+        "expansion": []
+      }
+    },
+    {
+      "branch": {
+        "instance": "dut",
+        "local_positive": "r",
+        "local_negative": "z",
+        "kind": "voltage"
+      },
+      "positive": 0,
+      "negative": 4,
+      "rhs": {
+        "op": "multiply",
+        "left": {
+          "constant": -1.0,
+          "terms": [],
+          "op": "affine"
+        },
+        "right": {
+          "operator": 0,
+          "op": "operator"
+        }
+      },
+      "origin": {
+        "source": "dut.va",
+        "line": 7,
+        "column": 2,
+        "instance": "dut",
+        "expansion": []
+      }
+    },
+    {
+      "branch": {
+        "instance": "dut",
+        "local_positive": "r",
+        "local_negative": "y",
+        "kind": "voltage"
+      },
+      "positive": 0,
+      "negative": 3,
+      "rhs": {
+        "op": "multiply",
+        "left": {
+          "constant": -1.0,
+          "terms": [],
+          "op": "affine"
+        },
+        "right": {
+          "operator": 1,
+          "op": "operator"
+        }
+      },
+      "origin": {
+        "source": "dut.va",
+        "line": 8,
+        "column": 2,
+        "instance": "dut",
+        "expansion": []
+      }
+    }
+  ],
+  "states": [
+    {
+      "instance": "dut",
+      "name": "n",
+      "kind": "integer",
+      "initial": 0.0
+    }
+  ],
+  "events": [
+    {
+      "trigger": {
+        "start": 0.25,
+        "period": 0.0,
+        "time_tolerance": 0.0,
+        "enabled": true,
+        "kind": "timer"
+      },
+      "body": [
+        {
+          "state": 0,
+          "rhs": {
+            "constant": 1.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "kind": "assign"
+        }
+      ],
+      "origin": {
+        "source": "dut.va",
+        "line": 5,
+        "column": 2,
+        "instance": "dut",
+        "expansion": []
+      }
+    }
+  ],
+  "operators": [
+    {
+      "input": {
+        "op": "divide",
+        "left": {
+          "op": "add",
+          "left": {
+            "constant": 1.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "right": {
+            "constant": -0.0,
+            "terms": [
+              {
+                "node": 0,
+                "coefficient": 1.0
+              },
+              {
+                "node": 4,
+                "coefficient": -1.0
+              }
+            ],
+            "op": "affine"
+          }
+        },
+        "right": {
+          "op": "add",
+          "left": {
+            "constant": 1.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "right": {
+            "op": "multiply",
+            "left": {
+              "constant": 0.0,
+              "terms": [
+                {
+                  "node": 0,
+                  "coefficient": -1.0
+                },
+                {
+                  "node": 2,
+                  "coefficient": 1.0
+                }
+              ],
+              "op": "affine"
+            },
+            "right": {
+              "constant": 0.0,
+              "terms": [
+                {
+                  "node": 0,
+                  "coefficient": -1.0
+                },
+                {
+                  "node": 2,
+                  "coefficient": 1.0
+                }
+              ],
+              "op": "affine"
+            }
+          }
+        }
+      },
+      "ic": 0.25,
+      "origin": {
+        "source": "dut.va",
+        "line": 7,
+        "column": 10,
+        "instance": "dut",
+        "expansion": []
+      },
+      "reset": null,
+      "kind": "idt"
+    },
+    {
+      "input": {
+        "state": 0,
+        "op": "state"
+      },
+      "delay": 0.0,
+      "rise": 0.25,
+      "fall": 0.25,
+      "origin": {
+        "source": "dut.va",
+        "line": 8,
+        "column": 10,
+        "instance": "dut",
+        "expansion": []
+      },
+      "kind": "transition"
+    }
+  ],
+  "schema_version": 21,
+  "step_bounds": [
+    {
+      "value": {
+        "op": "multiply",
+        "left": {
+          "constant": 0.0625,
+          "terms": [],
+          "op": "affine"
+        },
+        "right": {
+          "op": "add",
+          "left": {
+            "constant": 1.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "right": {
+            "op": "multiply",
+            "left": {
+              "constant": 0.0,
+              "terms": [
+                {
+                  "node": 0,
+                  "coefficient": -1.0
+                },
+                {
+                  "node": 1,
+                  "coefficient": 1.0
+                }
+              ],
+              "op": "affine"
+            },
+            "right": {
+              "constant": 0.0,
+              "terms": [
+                {
+                  "node": 0,
+                  "coefficient": -1.0
+                },
+                {
+                  "node": 1,
+                  "coefficient": 1.0
+                }
+              ],
+              "op": "affine"
+            }
+          }
+        }
+      },
+      "active": {
+        "constant": 1.0,
+        "terms": [],
+        "op": "affine"
+      },
+      "origin": {
+        "source": "dut.va",
+        "line": 9,
+        "column": 2,
+        "instance": "dut",
+        "expansion": []
+      }
+    }
+  ]
+}

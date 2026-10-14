@@ -1,0 +1,3 @@
+`include "disciplines.vams"
+module physical(z);output z;electrical z;real q;analog begin @(initial_step)q=1;@(timer(0.5))q=-1;V(z)<+idt(q*V(z)*V(z),1);end endmodule
+module observer(z);input z;electrical z;analog begin @(initial_step)$display("initial=%g",V(z));end endmodule

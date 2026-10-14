@@ -1,7 +1,7 @@
 //! Rebuild history-dependent calendars inside the controller's event transaction.
 use super::*;
 use crate::guard_trajectory::GuardTrajectory;
-use crate::schedule::{history_epoch, independent_epoch, reschedule_independent, HistoryEpoch};
+use crate::schedule::{history_epoch, independent_epoch, HistoryEpoch};
 
 pub(super) fn initialize(
     model: &EventModel,
@@ -81,24 +81,28 @@ impl Controller {
             // this same transaction beyond the query. Window overlap alone is
             // not permission to force an otherwise ordinary source-driven flow
             // into an autonomous local epoch.
-            let mut needs_closure = trajectory.config.output_times.iter().any(|&query| {
-                query >= window.lo
-                    && query <= time
-                    && (query < time
-                        || pending.first().is_some_and(|event| {
-                            event.time > query
-                                && matches!(
-                                    event.physical_order_at(query),
-                                    Some(std::cmp::Ordering::Less | std::cmp::Ordering::Equal)
-                                )
-                        }))
-                    && batch.iter().all(|event| {
-                        matches!(
-                            event.physical_order_at(query),
-                            Some(std::cmp::Ordering::Less | std::cmp::Ordering::Equal)
-                        )
-                    })
-            });
+            // An isolated observer does not establish a new physical flow.
+            // Its phase queries advance the immutable pre-observer seed. Keep
+            // the history-root window checks below, including observer guards.
+            let mut needs_closure = !event_acceptance::passive_batch(model, batch)
+                && trajectory.config.output_times.iter().any(|&query| {
+                    query >= window.lo
+                        && query <= time
+                        && (query < time
+                            || pending.first().is_some_and(|event| {
+                                event.time > query
+                                    && matches!(
+                                        event.physical_order_at(query),
+                                        Some(std::cmp::Ordering::Less | std::cmp::Ordering::Equal)
+                                    )
+                            }))
+                        && batch.iter().all(|event| {
+                            matches!(
+                                event.physical_order_at(query),
+                                Some(std::cmp::Ordering::Less | std::cmp::Ordering::Equal)
+                            )
+                        })
+                });
             for (index, leaf) in model.triggers.iter().enumerate() {
                 if model.guard_operators[index].is_empty() || consumed.contains(&index) {
                     continue;
@@ -198,7 +202,13 @@ impl Controller {
                     _ => {}
                 }
             }
-            let physical_pending = reschedule_independent(
+            time_provenance::invalidate_timers(
+                &model.triggers,
+                &self.accepted.time_proofs,
+                &next.time_proofs,
+                &mut independent_changed,
+            );
+            let physical_pending = crate::schedule::reschedule_independent_with_time_proofs(
                 model,
                 trajectory,
                 &next.state_bounds,
@@ -206,6 +216,7 @@ impl Controller {
                 &independent_changed,
                 remaining,
                 batch,
+                Some(&next.time_proofs),
             )?;
             self.prepare_physical_history(model, trajectory, next, batch, &physical_pending)?;
         }
@@ -296,6 +307,12 @@ impl Controller {
                     "event-dependent guard jump or uncertain same-time crossing requires an event closure contract"));
             }
         }
+        time_provenance::invalidate_timers(
+            &model.triggers,
+            &self.accepted.time_proofs,
+            &next.time_proofs,
+            &mut changed,
+        );
         let mut retained = remaining.to_vec();
         if next.operators.local_epoch().is_some() {
             let mut prior = batch.last().unwrap().clone();
@@ -309,7 +326,7 @@ impl Controller {
                 prior = event.clone();
             }
         }
-        let pending = reschedule_independent(
+        let pending = crate::schedule::reschedule_independent_with_time_proofs(
             model,
             trajectory,
             &next.state_bounds,
@@ -317,6 +334,7 @@ impl Controller {
             &changed,
             &retained,
             batch,
+            Some(&next.time_proofs),
         )?;
         Ok(event_acceptance::CalendarPlan::History {
             pending,

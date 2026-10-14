@@ -1,0 +1,672 @@
+{
+  "nodes": [
+    "0",
+    "a:f",
+    "a:g",
+    "b:f",
+    "b:g",
+    "u",
+    "v",
+    "y0",
+    "y1",
+    "z0",
+    "z1"
+  ],
+  "contributions": [
+    {
+      "branch": {
+        "instance": "a",
+        "local_positive": "f",
+        "local_negative": "r",
+        "kind": "voltage"
+      },
+      "positive": 1,
+      "negative": 0,
+      "rhs": {
+        "op": "multiply",
+        "left": {
+          "constant": 2.0,
+          "terms": [],
+          "op": "affine"
+        },
+        "right": {
+          "constant": 0.0,
+          "terms": [
+            {
+              "node": 0,
+              "coefficient": -1.0
+            },
+            {
+              "node": 5,
+              "coefficient": 1.0
+            }
+          ],
+          "op": "affine"
+        }
+      },
+      "origin": {
+        "source": "dut.va",
+        "line": 6,
+        "column": 2,
+        "instance": "a",
+        "expansion": []
+      }
+    },
+    {
+      "branch": {
+        "instance": "a",
+        "local_positive": "r",
+        "local_negative": "z",
+        "kind": "voltage"
+      },
+      "positive": 0,
+      "negative": 9,
+      "rhs": {
+        "op": "multiply",
+        "left": {
+          "constant": -1.0,
+          "terms": [],
+          "op": "affine"
+        },
+        "right": {
+          "operator": 0,
+          "op": "operator"
+        }
+      },
+      "origin": {
+        "source": "dut.va",
+        "line": 7,
+        "column": 2,
+        "instance": "a",
+        "expansion": []
+      }
+    },
+    {
+      "branch": {
+        "instance": "a",
+        "local_positive": "g",
+        "local_negative": "r",
+        "kind": "voltage"
+      },
+      "positive": 2,
+      "negative": 0,
+      "rhs": {
+        "op": "add",
+        "left": {
+          "constant": 0.0,
+          "terms": [
+            {
+              "node": 0,
+              "coefficient": -1.0
+            },
+            {
+              "node": 1,
+              "coefficient": 1.0
+            }
+          ],
+          "op": "affine"
+        },
+        "right": {
+          "constant": 0.25,
+          "terms": [],
+          "op": "affine"
+        }
+      },
+      "origin": {
+        "source": "dut.va",
+        "line": 8,
+        "column": 2,
+        "instance": "a",
+        "expansion": []
+      }
+    },
+    {
+      "branch": {
+        "instance": "a",
+        "local_positive": "r",
+        "local_negative": "y",
+        "kind": "voltage"
+      },
+      "positive": 0,
+      "negative": 7,
+      "rhs": {
+        "op": "multiply",
+        "left": {
+          "constant": -1.0,
+          "terms": [],
+          "op": "affine"
+        },
+        "right": {
+          "operator": 1,
+          "op": "operator"
+        }
+      },
+      "origin": {
+        "source": "dut.va",
+        "line": 9,
+        "column": 2,
+        "instance": "a",
+        "expansion": []
+      }
+    },
+    {
+      "branch": {
+        "instance": "b",
+        "local_positive": "f",
+        "local_negative": "r",
+        "kind": "voltage"
+      },
+      "positive": 3,
+      "negative": 0,
+      "rhs": {
+        "op": "multiply",
+        "left": {
+          "constant": 2.0,
+          "terms": [],
+          "op": "affine"
+        },
+        "right": {
+          "constant": 0.0,
+          "terms": [
+            {
+              "node": 0,
+              "coefficient": -1.0
+            },
+            {
+              "node": 6,
+              "coefficient": 1.0
+            }
+          ],
+          "op": "affine"
+        }
+      },
+      "origin": {
+        "source": "dut.va",
+        "line": 6,
+        "column": 2,
+        "instance": "b",
+        "expansion": []
+      }
+    },
+    {
+      "branch": {
+        "instance": "b",
+        "local_positive": "r",
+        "local_negative": "z",
+        "kind": "voltage"
+      },
+      "positive": 0,
+      "negative": 10,
+      "rhs": {
+        "op": "multiply",
+        "left": {
+          "constant": -1.0,
+          "terms": [],
+          "op": "affine"
+        },
+        "right": {
+          "operator": 2,
+          "op": "operator"
+        }
+      },
+      "origin": {
+        "source": "dut.va",
+        "line": 7,
+        "column": 2,
+        "instance": "b",
+        "expansion": []
+      }
+    },
+    {
+      "branch": {
+        "instance": "b",
+        "local_positive": "g",
+        "local_negative": "r",
+        "kind": "voltage"
+      },
+      "positive": 4,
+      "negative": 0,
+      "rhs": {
+        "op": "add",
+        "left": {
+          "constant": 0.0,
+          "terms": [
+            {
+              "node": 0,
+              "coefficient": -1.0
+            },
+            {
+              "node": 3,
+              "coefficient": 1.0
+            }
+          ],
+          "op": "affine"
+        },
+        "right": {
+          "constant": 0.25,
+          "terms": [],
+          "op": "affine"
+        }
+      },
+      "origin": {
+        "source": "dut.va",
+        "line": 8,
+        "column": 2,
+        "instance": "b",
+        "expansion": []
+      }
+    },
+    {
+      "branch": {
+        "instance": "b",
+        "local_positive": "r",
+        "local_negative": "y",
+        "kind": "voltage"
+      },
+      "positive": 0,
+      "negative": 8,
+      "rhs": {
+        "op": "multiply",
+        "left": {
+          "constant": -1.0,
+          "terms": [],
+          "op": "affine"
+        },
+        "right": {
+          "operator": 3,
+          "op": "operator"
+        }
+      },
+      "origin": {
+        "source": "dut.va",
+        "line": 9,
+        "column": 2,
+        "instance": "b",
+        "expansion": []
+      }
+    }
+  ],
+  "states": [
+    {
+      "instance": "a",
+      "name": "n",
+      "kind": "integer",
+      "initial": 0.0
+    },
+    {
+      "instance": "b",
+      "name": "n",
+      "kind": "integer",
+      "initial": 0.0
+    }
+  ],
+  "events": [
+    {
+      "trigger": {
+        "start": 0.25,
+        "period": 0.0,
+        "time_tolerance": 0.0,
+        "enabled": true,
+        "kind": "timer"
+      },
+      "body": [
+        {
+          "state": 0,
+          "rhs": {
+            "constant": 1.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "kind": "assign"
+        }
+      ],
+      "origin": {
+        "source": "dut.va",
+        "line": 5,
+        "column": 2,
+        "instance": "a",
+        "expansion": []
+      }
+    },
+    {
+      "trigger": {
+        "start": 0.25,
+        "period": 0.0,
+        "time_tolerance": 0.0,
+        "enabled": true,
+        "kind": "timer"
+      },
+      "body": [
+        {
+          "state": 1,
+          "rhs": {
+            "constant": 1.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "kind": "assign"
+        }
+      ],
+      "origin": {
+        "source": "dut.va",
+        "line": 5,
+        "column": 2,
+        "instance": "b",
+        "expansion": []
+      }
+    }
+  ],
+  "operators": [
+    {
+      "input": {
+        "op": "divide",
+        "left": {
+          "op": "add",
+          "left": {
+            "constant": 1.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "right": {
+            "constant": -0.0,
+            "terms": [
+              {
+                "node": 0,
+                "coefficient": 1.0
+              },
+              {
+                "node": 9,
+                "coefficient": -1.0
+              }
+            ],
+            "op": "affine"
+          }
+        },
+        "right": {
+          "op": "add",
+          "left": {
+            "constant": 1.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "right": {
+            "op": "multiply",
+            "left": {
+              "constant": 0.0,
+              "terms": [
+                {
+                  "node": 0,
+                  "coefficient": -1.0
+                },
+                {
+                  "node": 5,
+                  "coefficient": 1.0
+                }
+              ],
+              "op": "affine"
+            },
+            "right": {
+              "constant": 0.0,
+              "terms": [
+                {
+                  "node": 0,
+                  "coefficient": -1.0
+                },
+                {
+                  "node": 5,
+                  "coefficient": 1.0
+                }
+              ],
+              "op": "affine"
+            }
+          }
+        }
+      },
+      "ic": 0.25,
+      "origin": {
+        "source": "dut.va",
+        "line": 7,
+        "column": 10,
+        "instance": "a",
+        "expansion": []
+      },
+      "reset": null,
+      "kind": "idt"
+    },
+    {
+      "input": {
+        "state": 0,
+        "op": "state"
+      },
+      "delay": 0.0,
+      "rise": 0.25,
+      "fall": 0.25,
+      "origin": {
+        "source": "dut.va",
+        "line": 9,
+        "column": 10,
+        "instance": "a",
+        "expansion": []
+      },
+      "kind": "transition"
+    },
+    {
+      "input": {
+        "op": "divide",
+        "left": {
+          "op": "add",
+          "left": {
+            "constant": 1.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "right": {
+            "constant": -0.0,
+            "terms": [
+              {
+                "node": 0,
+                "coefficient": 1.0
+              },
+              {
+                "node": 10,
+                "coefficient": -1.0
+              }
+            ],
+            "op": "affine"
+          }
+        },
+        "right": {
+          "op": "add",
+          "left": {
+            "constant": 1.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "right": {
+            "op": "multiply",
+            "left": {
+              "constant": 0.0,
+              "terms": [
+                {
+                  "node": 0,
+                  "coefficient": -1.0
+                },
+                {
+                  "node": 6,
+                  "coefficient": 1.0
+                }
+              ],
+              "op": "affine"
+            },
+            "right": {
+              "constant": 0.0,
+              "terms": [
+                {
+                  "node": 0,
+                  "coefficient": -1.0
+                },
+                {
+                  "node": 6,
+                  "coefficient": 1.0
+                }
+              ],
+              "op": "affine"
+            }
+          }
+        }
+      },
+      "ic": 0.25,
+      "origin": {
+        "source": "dut.va",
+        "line": 7,
+        "column": 10,
+        "instance": "b",
+        "expansion": []
+      },
+      "reset": null,
+      "kind": "idt"
+    },
+    {
+      "input": {
+        "state": 1,
+        "op": "state"
+      },
+      "delay": 0.0,
+      "rise": 0.25,
+      "fall": 0.25,
+      "origin": {
+        "source": "dut.va",
+        "line": 9,
+        "column": 10,
+        "instance": "b",
+        "expansion": []
+      },
+      "kind": "transition"
+    }
+  ],
+  "schema_version": 21,
+  "step_bounds": [
+    {
+      "value": {
+        "op": "multiply",
+        "left": {
+          "constant": 0.0625,
+          "terms": [],
+          "op": "affine"
+        },
+        "right": {
+          "op": "add",
+          "left": {
+            "constant": 1.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "right": {
+            "op": "multiply",
+            "left": {
+              "constant": 0.0,
+              "terms": [
+                {
+                  "node": 0,
+                  "coefficient": -1.0
+                },
+                {
+                  "node": 2,
+                  "coefficient": 1.0
+                }
+              ],
+              "op": "affine"
+            },
+            "right": {
+              "constant": 0.0,
+              "terms": [
+                {
+                  "node": 0,
+                  "coefficient": -1.0
+                },
+                {
+                  "node": 2,
+                  "coefficient": 1.0
+                }
+              ],
+              "op": "affine"
+            }
+          }
+        }
+      },
+      "active": {
+        "constant": 1.0,
+        "terms": [],
+        "op": "affine"
+      },
+      "origin": {
+        "source": "dut.va",
+        "line": 10,
+        "column": 2,
+        "instance": "a",
+        "expansion": []
+      }
+    },
+    {
+      "value": {
+        "op": "multiply",
+        "left": {
+          "constant": 0.0625,
+          "terms": [],
+          "op": "affine"
+        },
+        "right": {
+          "op": "add",
+          "left": {
+            "constant": 1.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "right": {
+            "op": "multiply",
+            "left": {
+              "constant": 0.0,
+              "terms": [
+                {
+                  "node": 0,
+                  "coefficient": -1.0
+                },
+                {
+                  "node": 4,
+                  "coefficient": 1.0
+                }
+              ],
+              "op": "affine"
+            },
+            "right": {
+              "constant": 0.0,
+              "terms": [
+                {
+                  "node": 0,
+                  "coefficient": -1.0
+                },
+                {
+                  "node": 4,
+                  "coefficient": 1.0
+                }
+              ],
+              "op": "affine"
+            }
+          }
+        }
+      },
+      "active": {
+        "constant": 1.0,
+        "terms": [],
+        "op": "affine"
+      },
+      "origin": {
+        "source": "dut.va",
+        "line": 10,
+        "column": 2,
+        "instance": "b",
+        "expansion": []
+      }
+    }
+  ]
+}

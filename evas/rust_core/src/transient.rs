@@ -7,9 +7,7 @@ use crate::ir::{
 };
 use crate::operators::Operators;
 use crate::pwl::Trajectory;
-use crate::schedule::{
-    independent_schedule, reschedule_held, schedule, schedule_held, ScheduledEvent,
-};
+use crate::schedule::{independent_schedule, schedule, schedule_held, ScheduledEvent};
 use crate::solver::Circuit;
 
 #[path = "transient_event_acceptance.rs"]
@@ -24,8 +22,12 @@ mod initialization;
 #[path = "transient_root_refinement.rs"]
 mod root_refinement;
 
+#[path = "event_time_provenance.rs"]
+pub(crate) mod time_provenance;
+
 #[derive(Clone)]
 struct Frame {
+    time_proofs: time_provenance::TimeProofs,
     time: f64,
     states: Vec<f64>,
     state_bounds: Vec<I>,
@@ -204,7 +206,13 @@ impl Controller {
                 ));
             }
         }
-        reschedule_held(
+        time_provenance::invalidate_timers(
+            &model.triggers,
+            &self.accepted.time_proofs,
+            &next.time_proofs,
+            &mut changed,
+        );
+        crate::schedule::reschedule_held_with_time_proofs(
             model,
             trajectory,
             &next.state_bounds,
@@ -212,6 +220,7 @@ impl Controller {
             &changed,
             remaining,
             batch,
+            Some(&next.time_proofs),
         )
     }
 
@@ -237,6 +246,7 @@ impl Controller {
 // only a representative. No late-trigger policy is silently substituted.
 #[derive(Clone, Copy)]
 struct EventMoment<'a> {
+    exact_root: Option<&'a crate::exact_source::RootTime>,
     representative: f64,
     observation: I,
     fired_roots: &'a [usize],
@@ -281,6 +291,7 @@ fn prepare_event_with_bounds(
         trajectory,
         accepted,
         EventMoment {
+            exact_root: None,
             representative: time,
             observation: time_bounds,
             fired_roots: &[],
@@ -360,6 +371,7 @@ fn prepare_root_window_selected_impl(
     let _timing = crate::diagnostics::span("controller.prepare_candidate");
 
     let EventMoment {
+        exact_root,
         representative: time,
         observation: time_bounds,
         fired_roots: fired_leaves,
@@ -382,7 +394,7 @@ fn prepare_root_window_selected_impl(
     // Freeze its current value for the same-time state/voltage solve, then
     // install the new target only in this disposable candidate history.
     let base = operators;
-    let mut frozen = base.evaluation(time)?;
+    let mut frozen = base.evaluation_at_root(time, exact_root, time_bounds)?;
     frozen.bounds = base.event_bounds(time, time_bounds)?;
     let inputs = trajectory.values(time);
     let input_bounds = trajectory.range(time_bounds)?.0;
@@ -532,10 +544,20 @@ fn prepare_root_window_selected_impl(
         selection.ordered_steps.sort_by_key(|(event, _)| *event);
         model.check_selection_writers(&selection)?;
     }
+    let time_proofs = time_provenance::apply(
+        model,
+        trajectory,
+        &selection,
+        &accepted.time_proofs,
+        exact_root,
+        old_bounds,
+        &prepared.bounds,
+    );
     // Refinement belongs to this observation, never future root predictions.
     operators.refine_ordinary_phase(false);
     Ok((
         Frame {
+            time_proofs,
             time,
             states: prepared.states,
             state_bounds: prepared.bounds,
@@ -590,6 +612,7 @@ fn prepare_batch_with_bounds(
         trajectory,
         accepted,
         EventMoment {
+            exact_root: None,
             representative: event_time,
             observation: event_bounds,
             fired_roots: ids,
@@ -765,6 +788,7 @@ fn prepare_calendar_batch(
             scheduled, clock, model,
         )?)?;
         local_accepted = Frame {
+            time_proofs: accepted.time_proofs.clone(),
             time: accepted.time,
             states: accepted.states.clone(),
             state_bounds: accepted.state_bounds.clone(),
@@ -776,6 +800,7 @@ fn prepare_calendar_batch(
     } else {
         accepted
     };
+    let exact_root = crate::schedule::common_root(scheduled);
     let ids: Vec<_> = scheduled.iter().map(|e| e.event).collect();
     let bounds =
         scheduled
@@ -790,6 +815,7 @@ fn prepare_calendar_batch(
         trajectory,
         accepted,
         EventMoment {
+            exact_root: exact_root.as_ref(),
             representative: time,
             observation: bounds,
             fired_roots: &ids,
@@ -932,6 +958,7 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
         &trajectory.value_bounds(0.0),
     )?;
     let mut accepted = Frame {
+        time_proofs: Default::default(),
         time: 0.0,
         solution: circuit.solve(&trajectory.values(0.0))?,
         state_bounds: initial_bounds,
@@ -999,20 +1026,70 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                 "initial display requires a passive measurement model",
             ));
         }
+        // Initial bodies keep their existing execution path. Only complete-IR
+        // isolated observers with source/held calendars may bound prediction
+        // by the already certified next event. History-root calendars retain
+        // their original preparation until their t=0 closure is defined.
+        let bounded_initial =
+            !history_calendar && !model.dynamic_guards.iter().any(|&dynamic| dynamic) && {
+                let isolated = crate::passive_events::isolated_instances(&model.program);
+                initials.iter().all(|&id| {
+                    isolated.contains(
+                        &model.program.events[model.triggers[id].event]
+                            .origin
+                            .instance,
+                    )
+                })
+            };
+        let initial_horizon = if bounded_initial {
+            prediction_end(&model, &trajectory, crossings.get(controller.event))
+        } else {
+            trajectory.config.stop
+        };
         let (frame, records) = prepare_batch_until(
             &model,
             &trajectory,
             &controller.accepted,
             EventMoment {
+                exact_root: None,
                 representative: 0.0,
                 observation: I::point(0.0),
                 fired_roots: &initials,
-                prediction_end: trajectory.config.stop,
+                prediction_end: initial_horizon,
             },
         )?;
-        controller.commit_events(frame, records, 0);
-        if relocalize {
-            crossings = schedule_held(&model, &trajectory, &controller.accepted.state_bounds)?;
+        if bounded_initial {
+            // An initial observer may move a default due=0 timer into the
+            // future, cancel it, or retain a zero timer. Rebuild from time zero
+            // before extending; the initial body consumes no timer leaf.
+            let future = if relocalize {
+                crate::schedule::schedule_held_with_time_proofs(
+                    &model,
+                    &trajectory,
+                    &frame.state_bounds,
+                    Some(&frame.time_proofs),
+                )?
+            } else {
+                crossings.clone()
+            };
+            let (frame, future) = Controller::prepare_final_history(
+                &model,
+                &trajectory,
+                frame,
+                event_acceptance::CalendarPlan::Held(future),
+            )?;
+            controller.commit_events(frame, records, 0);
+            crossings = future;
+        } else {
+            controller.commit_events(frame, records, 0);
+            if relocalize {
+                crossings = crate::schedule::schedule_held_with_time_proofs(
+                    &model,
+                    &trajectory,
+                    &controller.accepted.state_bounds,
+                    Some(&controller.accepted.time_proofs),
+                )?;
+            }
         }
     }
     let mut preflighted_event = None;
@@ -1128,6 +1205,9 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                         .is_none()
             })
         {
+            if let Some(event) = crossings.get(controller.event) {
+                event.record_ambiguous_query("transient.pending", time);
+            }
             return Err(Error::new(
                 "event_resolution",
                 "output query cannot certify its physical event phase",
@@ -1175,6 +1255,7 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
                         &trajectory,
                         &controller.accepted,
                         EventMoment {
+                            exact_root: None,
                             representative: time,
                             observation: I::point(time),
                             fired_roots: &[],
@@ -1262,6 +1343,7 @@ pub(crate) fn run_inner(request: Request) -> Result<Response, Error> {
             &trajectory,
             &controller.accepted,
             EventMoment {
+                exact_root: None,
                 representative: trajectory.config.stop,
                 observation: I::point(trajectory.config.stop),
                 fired_roots: &finals,
@@ -1466,6 +1548,7 @@ mod tests {
             .circuit_with(&states, &operators.values(0.0).unwrap())
             .unwrap();
         let frame = Frame {
+            time_proofs: Default::default(),
             time: 0.0,
             state_bounds: states.iter().copied().map(I::point).collect(),
             states,
@@ -1543,6 +1626,7 @@ mod tests {
             .circuit_with(&model.initial(), &operators.values(0.).unwrap())
             .unwrap();
         let frame = Frame {
+            time_proofs: Default::default(),
             time: 0.,
             states: model.initial(),
             state_bounds: vec![I::ZERO],
@@ -1701,6 +1785,7 @@ mod tests {
             .circuit_with(&states, &operators.values(0.0).unwrap())
             .unwrap();
         let initial = Frame {
+            time_proofs: Default::default(),
             time: 0.0,
             state_bounds: vec![I::ONE],
             states,
@@ -1766,6 +1851,7 @@ mod tests {
             .circuit_with(&states, &operators.values(0.0).unwrap())
             .unwrap();
         let before = Frame {
+            time_proofs: Default::default(),
             time: 0.0,
             state_bounds: states.iter().copied().map(I::point).collect(),
             states,
@@ -1853,6 +1939,7 @@ mod tests {
             .circuit_with(&before.states, &operators.values(0.0).unwrap())
             .unwrap();
         let corrected = Frame {
+            time_proofs: Default::default(),
             time: 0.0,
             states: before.states.clone(),
             state_bounds: before.state_bounds.clone(),
@@ -1916,6 +2003,7 @@ mod tests {
             .circuit_with(&states, &operators.values(0.).unwrap())
             .unwrap();
         let before = Frame {
+            time_proofs: Default::default(),
             time: 0.,
             state_bounds: vec![I::ZERO],
             states,
@@ -1925,6 +2013,7 @@ mod tests {
         };
         let time = 4.5e-6;
         let moment = EventMoment {
+            exact_root: None,
             representative: time,
             observation: I::point(time),
             fired_roots: &[],
@@ -1951,6 +2040,7 @@ mod tests {
             "waveform_accuracy"
         );
         let root_moment = EventMoment {
+            exact_root: None,
             fired_roots: &[0],
             ..moment
         };
@@ -1962,6 +2052,7 @@ mod tests {
             "waveform_accuracy"
         );
         let window_moment = EventMoment {
+            exact_root: None,
             observation: I {
                 lo: time - 2e-12,
                 hi: time + 2e-12,
@@ -1992,6 +2083,7 @@ mod tests {
         assert_eq!(retried.state_bounds, clean.state_bounds);
         assert_eq!(retried.operators.bounds(time).unwrap(), ordinary_bounds);
         let later = EventMoment {
+            exact_root: None,
             representative: 4.500002e-6,
             observation: I::point(4.500002e-6),
             ..moment
@@ -2030,6 +2122,7 @@ mod tests {
             .circuit_with(&states, &operators.values(0.0).unwrap())
             .unwrap();
         let initial = Frame {
+            time_proofs: Default::default(),
             time: 0.0,
             state_bounds: states.iter().copied().map(I::point).collect(),
             states,
@@ -2107,6 +2200,7 @@ mod tests {
         let states = model.initial();
         let circuit = model.circuit(&states).unwrap();
         let before = Frame {
+            time_proofs: Default::default(),
             time: 0.0,
             state_bounds: states.iter().copied().map(I::point).collect(),
             states,
@@ -2187,6 +2281,7 @@ mod tests {
         .unwrap();
         let circuit = model.circuit(&model.initial()).unwrap();
         let frame = Frame {
+            time_proofs: Default::default(),
             time: 0.0,
             state_bounds: model.initial().into_iter().map(I::point).collect(),
             states: model.initial(),
@@ -2236,6 +2331,7 @@ mod tests {
         let operators = Operators::default();
         let circuit = model.circuit(&model.initial()).unwrap();
         let before = Frame {
+            time_proofs: Default::default(),
             time: 0.,
             state_bounds: vec![I::ZERO],
             states: model.initial(),
@@ -2321,6 +2417,7 @@ mod tests {
             let model = EventModel::new(program, vec!["u".into()], Tolerances::default()).unwrap();
             let circuit = model.circuit(&model.initial()).unwrap();
             let before = Frame {
+                time_proofs: Default::default(),
                 time: 0.0,
                 state_bounds: model.initial().into_iter().map(I::point).collect(),
                 states: model.initial(),
@@ -2380,6 +2477,7 @@ mod tests {
                 .circuit_with(&states, &operators.values(0.0).unwrap())
                 .unwrap();
             let before = Frame {
+                time_proofs: Default::default(),
                 time: 0.0,
                 state_bounds: states.iter().copied().map(I::point).collect(),
                 states,
@@ -2449,6 +2547,7 @@ mod tests {
             .circuit_with(&states, &operators.values(0.0).unwrap())
             .unwrap();
         let before = Frame {
+            time_proofs: Default::default(),
             time: 0.0,
             state_bounds: states.iter().copied().map(I::point).collect(),
             states,
@@ -2488,6 +2587,7 @@ mod tests {
                     EventModel::new(program, vec!["u".into()], Tolerances::default()).unwrap();
                 let circuit = model.circuit(&model.initial()).unwrap();
                 let before = Frame {
+                    time_proofs: Default::default(),
                     time: 0.0,
                     state_bounds: model.initial().into_iter().map(I::point).collect(),
                     states: model.initial(),
@@ -2549,6 +2649,7 @@ mod tests {
         .unwrap();
         let circuit = model.circuit(&model.initial()).unwrap();
         let before = Frame {
+            time_proofs: Default::default(),
             time: 0.0,
             state_bounds: model.initial().into_iter().map(I::point).collect(),
             states: model.initial(),

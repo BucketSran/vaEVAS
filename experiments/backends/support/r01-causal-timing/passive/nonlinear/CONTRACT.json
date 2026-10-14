@@ -1,0 +1,78 @@
+{
+  "label": "nonlinear",
+  "status": "prepared_not_run",
+  "source_sha256": "30186c447180431abcc83e768371a02718fc671f5d737b4da24bbc878e8ca451",
+  "deck_sha256": "5e70511e4dd9ccff4adcd75193db5d897e65848699ab72a1d996f87239328bde",
+  "fixed_DUT_kernel_sha256": "6ee70d827cad5b3bca6e88bcded9db4f0168b59557eb6553d3dad4a40b905abc",
+  "positive_receipt_sha256": "09c9eb8758fea73dd5bff1055c827f01851e4686e54c1e8b96dc5382d1022d12",
+  "positive_receipt_name": "nonlinear-plain",
+  "unit_source_sha256": "183b391120934faf9d85a6c24063ee8050721a4d65d1a9dce867008c2f990ea8",
+  "source_basis": "Exact source string from the fixed6ee positive receipt, no logger/formula/port changes",
+  "query_times_binary64": [
+    0.0,
+    0.3,
+    0.4333333333333333,
+    0.43333333333333335,
+    0.4333333333333334,
+    0.6,
+    0.75
+  ],
+  "query_tokens": [
+    "0",
+    "0.29999999999999999",
+    "0.43333333333333329",
+    "0.43333333333333335",
+    "0.4333333333333334",
+    "0.59999999999999998",
+    "0.75"
+  ],
+  "away_edge_tokens": [
+    "0",
+    "0.29999999999999999",
+    "0.59999999999999998",
+    "0.75"
+  ],
+  "boundary_neighbor_tokens": [
+    "0.43333333333333329",
+    "0.43333333333333335",
+    "0.4333333333333334"
+  ],
+  "exact_due_fraction": "46837436124653159/108086391056891904",
+  "original_count_oracle": [
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1
+  ],
+  "budget_V": "1e-8",
+  "independent_flow": "z(t)=atan(3t)/3",
+  "seen_oracle": "flow(exact_due); do not assert same mathematical boundary count in Spectre; record actual count/seen on each original neighbor",
+  "DUT_API_controls": {
+    "vabstol": 1e-08,
+    "reltol": 0,
+    "stop": 0.75,
+    "max_step": 0.05,
+    "forced": false
+  },
+  "requested_spectre": {
+    "reltol": "1e-9",
+    "vabstol_V": "1e-12",
+    "iabstol_A": "1e-15",
+    "maxstep_s": "1e-5",
+    "stop_s": ".75",
+    "method": "traponly",
+    "errpreset": "conservative",
+    "precision": "%.17g",
+    "strobeoutput": "strobeonly",
+    "saveahdlvars": "all"
+  },
+  "callback_instrumentation": "Original Display sample<count> only, no timestamp or seen added. AHDL variable saving requested without changing VA.",
+  "potential_evidence_gaps": [
+    "Spectre may omit exact final/neighbor tokens; preserve missing points, no interpolation.",
+    "Display lacks$abstime; count/seen native variables may support observed phase but not exact root certificate.",
+    "AHDL save fields must be verified actually present; requested saving is not a measurement."
+  ]
+}

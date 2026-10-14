@@ -348,6 +348,8 @@ pub(super) fn build(
             trajectory,
             driven: context.driven.clone(),
             force_integrals: true,
+            detached_timed: context.detached_timed,
+            live_parameters: context.live_parameters.clone(),
         });
         let mut branch =
             LinearContinuous::build(branch_context.clone(), parameters.clone(), begin, seed)?
@@ -568,6 +570,8 @@ pub(super) fn freeze_context(
         trajectory: context.trajectory.clone(),
         driven: context.driven.clone(),
         force_integrals: true,
+        detached_timed: context.detached_timed,
+        live_parameters: context.live_parameters.clone(),
     }))
 }
 
