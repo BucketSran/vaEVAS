@@ -1,6 +1,7 @@
 # 首批元数据映射
 
-工程动作对应 benchmark README 已确定的七类工作目标。`engineering_action` 描述任务要求，Harbor 的 `category` 保持原值，不用于统计七类覆盖。
+本页记录历史首批采用的七类工作目标，不是当前五类任务的规范。当前分类见[任务定义](../../docs/task-types.md)，本批元数据与结果保留原身份。
+`engineering_action` 描述本批任务要求，Harbor 的 `category` 保持原值，不用于统计七类覆盖。
 
 | 中文合同 | engineering_action |
 | --- | --- |

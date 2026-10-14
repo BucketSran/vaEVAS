@@ -222,8 +222,9 @@ python3 -B -m unittest discover -s experiments/backends/dvs2-spectre-validation 
 ## 环境与结果
 
 每个任务在自己的 `environment/` 中声明运行环境。
-当前使用固定 digest 的 Python 基础镜像与远端 Spectre verifier；
-任务镜像本身不包含商业仿真器，运行时必须按初筛说明指定 verifier。
+现有远端 Spectre 题使用固定 digest 的 Python 基础镜像与远端 verifier；
+这些任务镜像本身不包含商业仿真器，运行时按各题所属批次的说明指定 verifier。
+这不是后续所有题的统一后端要求，后端选择遵循前面的固定后端原则。
 镜像应记录依赖版本和构建方法；执行记录应保存实际使用的镜像身份。
 完整运行日志与临时输出放在 Git 忽略的 `runs/` 中。
 

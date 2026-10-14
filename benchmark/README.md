@@ -23,6 +23,7 @@
 每道题仅计一次；历史初筛、旧七类题集和设计卡不额外加入这 56 题。
 
 当前先整理 main 的材料、工作分支和待完成事项，暂不开始实际题目设计或模型实验。
+材料集合、分支状态和后续整理事项见[当前盘点](workbench/DISCUSSION.md#当前材料与待整理事项)。
 电路功能与场景审核仍以 [#159](https://github.com/BucketSran/vaEVAS/issues/159) 为入口，
 例如 [R01 采样与多通道读出](workbench/circuits/r01-sampling/README.md)。
 R01 的 20 道新题草稿、参考解、checker 和旧格式运行记录仍保留在本地工作区，尚未进入 main，
