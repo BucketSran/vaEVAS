@@ -27,6 +27,7 @@ mod linear;
 mod nonlinear;
 mod observation;
 mod operators;
+mod passive_events;
 mod portability;
 mod pwl;
 mod reset_dependencies;

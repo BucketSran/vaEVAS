@@ -297,7 +297,19 @@ fn prepare_root_window(
     moment: EventMoment<'_>,
     events: &[usize],
 ) -> Result<Frame, Error> {
-    let ordinary = prepare_root_window_impl(model, trajectory, accepted, moment, events, false);
+    prepare_root_window_selected(model, trajectory, accepted, moment, events)
+        .map(|(frame, _)| frame)
+}
+
+fn prepare_root_window_selected(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    accepted: &Frame,
+    moment: EventMoment<'_>,
+    events: &[usize],
+) -> Result<(Frame, crate::event_conditions::Selection), Error> {
+    let ordinary =
+        prepare_root_window_selected_impl(model, trajectory, accepted, moment, events, false);
     match ordinary {
         Err(error)
             if error.kind == "waveform_accuracy"
@@ -311,12 +323,13 @@ fn prepare_root_window(
             // Retry the entire disposable settlement from accepted history.
             // The proof refines representatives and every downstream bound;
             // neither an event/root window nor its timing is changed.
-            prepare_root_window_impl(model, trajectory, accepted, moment, events, true)
+            prepare_root_window_selected_impl(model, trajectory, accepted, moment, events, true)
         }
         result => result,
     }
 }
 
+#[cfg(test)]
 fn prepare_root_window_impl(
     model: &EventModel,
     trajectory: &Trajectory,
@@ -325,6 +338,25 @@ fn prepare_root_window_impl(
     events: &[usize],
     refine_ordinary_phase: bool,
 ) -> Result<Frame, Error> {
+    prepare_root_window_selected_impl(
+        model,
+        trajectory,
+        accepted,
+        moment,
+        events,
+        refine_ordinary_phase,
+    )
+    .map(|(frame, _)| frame)
+}
+
+fn prepare_root_window_selected_impl(
+    model: &EventModel,
+    trajectory: &Trajectory,
+    accepted: &Frame,
+    moment: EventMoment<'_>,
+    events: &[usize],
+    refine_ordinary_phase: bool,
+) -> Result<(Frame, crate::event_conditions::Selection), Error> {
     let _timing = crate::diagnostics::span("controller.prepare_candidate");
 
     let EventMoment {
@@ -454,16 +486,65 @@ fn prepare_root_window_impl(
         )?;
         crate::observation::retain_bounds(&mut prepared.solution, nodes);
     }
+    // The physical same-time closure is complete. Its event-time operator
+    // forcing covers tau; future-history/b-point bounds must not replace it.
+    let mut selection =
+        model
+            .conditions
+            .select_at_roots(events, &input_bounds, fired_leaves, old_bounds)?;
+    if events.iter().any(|&event| model.passive_events[event]) {
+        let selected = model.selected_program_at_roots(
+            &prepared
+                .states
+                .iter()
+                .copied()
+                .map(I::point)
+                .collect::<Vec<_>>(),
+            &input_bounds,
+            fired_leaves,
+        )?;
+        let map = crate::settlement_bounds::Bounds::for_program_with_operators(
+            model,
+            &selection,
+            &selected,
+            &observation.1,
+        )?;
+        let nodes = map.node_enclosures(&input_bounds, old_bounds, &observation.1)?;
+        let passive = crate::passive_events::prepare(
+            model,
+            events,
+            fired_leaves,
+            &prepared.solution.voltages,
+            &nodes,
+            &accepted.states,
+            old_bounds,
+        )?;
+        for state in model.assigned(&passive.selection) {
+            prepared.states[state] = passive.states[state];
+            prepared.bounds[state] = passive.bounds[state];
+        }
+        selection.actions.extend(passive.selection.actions);
+        selection
+            .ordered_steps
+            .extend(passive.selection.ordered_steps);
+        selection.decisions.extend(passive.selection.decisions);
+        selection.actions.sort_by_key(|(event, _)| *event);
+        selection.ordered_steps.sort_by_key(|(event, _)| *event);
+        model.check_selection_writers(&selection)?;
+    }
     // Refinement belongs to this observation, never future root predictions.
     operators.refine_ordinary_phase(false);
-    Ok(Frame {
-        time,
-        states: prepared.states,
-        state_bounds: prepared.bounds,
-        solution: prepared.solution,
-        circuit: prepared.circuit,
-        operators,
-    })
+    Ok((
+        Frame {
+            time,
+            states: prepared.states,
+            state_bounds: prepared.bounds,
+            solution: prepared.solution,
+            circuit: prepared.circuit,
+            operators,
+        },
+        selection,
+    ))
 }
 
 #[cfg(test)]
@@ -534,20 +615,31 @@ fn prepare_batch_until(
         .collect::<std::collections::BTreeSet<_>>()
         .into_iter()
         .collect();
-    let next = prepare_root_window(model, trajectory, accepted, moment, &blocks)?;
+    let (next, selection) =
+        prepare_root_window_selected(model, trajectory, accepted, moment, &blocks)?;
     next.operators.check_deadline_order(event_time, None)?;
-    let selection = model.conditions.select_at_roots(
-        &blocks,
-        &trajectory.value_bounds(event_time),
-        ids,
-        &accepted.state_bounds,
-    )?;
-    let (_, candidate_displays) = model.apply_with_displays(
+    let (display_states, candidate_displays) = model.apply_with_displays(
         &selection,
         &next.solution.voltages,
         &accepted.states,
         event_time,
     )?;
+    // Displays replay the identical certified path. An observer cannot
+    // publish text from a state different from the prepared event candidate.
+    for (event, indices) in &selection.actions {
+        if model.passive_events[*event] {
+            let assignments = model.program.events[*event].assignments();
+            for &index in indices {
+                let state = assignments[index].state;
+                if display_states[state] != next.states[state] {
+                    return Err(Error::new(
+                        "event_consistency",
+                        "passive display replay changed prepared state",
+                    ));
+                }
+            }
+        }
+    }
     let mut records = Vec::new();
     for id in blocks {
         let mut fired = Vec::new();
@@ -2483,3 +2575,7 @@ mod tests {
 #[cfg(test)]
 #[path = "transient_timer_boundary_tests.rs"]
 mod timer_boundary_tests;
+
+#[cfg(test)]
+#[path = "transient_passive_tests.rs"]
+mod passive_tests;

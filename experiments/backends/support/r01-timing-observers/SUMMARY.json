@@ -1,0 +1,149 @@
+{
+  "scope": "17 added finite controls paired at original budgets; not original timing task completion",
+  "denominator": 17,
+  "finite_pair_pass": 17,
+  "family_counts": {
+    "array": 7,
+    "frontend": 6,
+    "passive_including_v2": 4
+  },
+  "query_time_points": 63,
+  "query_voltage_values": 66,
+  "kernel_sha256": "e13f60ee52e5fd558e08ddd468dff6d7c980bfce9daceb9c1e159682f240458a",
+  "kernel_profile": "release",
+  "execution_manifest_sha256": "b1281c2fc1d615a1a1bb520f6b4ec8320cd3112bb2df332034ef19dbf74c2a7f",
+  "all_execution_returncodes_zero": true,
+  "all_stderr_empty": true,
+  "source_identity_file": "source-identity.json",
+  "reference_provenance_file": "reference-provenance.json",
+  "checker_sha256": "7701ae023075a13e49d9a10adbf0e410724176fb7602ec5f57fbc1a0637a0935",
+  "calibration": {
+    "correct_accept": true,
+    "wrong_value_reject": true,
+    "nonfinite_reject": true
+  },
+  "original_timing_status": "Not completed: originaltiming-release-v2 downstream transition remains rejected when mixed into continuous network; these small controls do not close that obligation.",
+  "original_timing_evidence": {
+    "artifact": "original-passive-release-v2/r01/r01-measure-interleaved-time/timing-0/stderr.json",
+    "stderr_sha256": "e526ed497baa7e24aff5eec6b6e8d45375885150d5651524b3e4060d6a886063",
+    "code": "kernel.unsupported_operator",
+    "stage": "kernel",
+    "summary_sha256": "4ebd638af7048aebe3d23759833e5a3b42defe26e4a29a313072f38f4d7d05f0",
+    "completed": 0,
+    "kernel_invoked": 1,
+    "warnings": [
+      {
+        "code": "ignored_scs_option",
+        "option": "iabstol",
+        "requested_value": 1e-15,
+        "effective_controls": null
+      },
+      {
+        "code": "ignored_scs_option",
+        "option": "errpreset",
+        "requested_value": "conservative",
+        "effective_controls": {
+          "vabstol": 1e-09,
+          "reltol": 1e-06,
+          "max_step": 1e-10
+        }
+      }
+    ]
+  },
+  "original_scores_and_Q_changed": false,
+  "limits": [
+    "Finite queries only, no complete original timing/full-time qualification.",
+    "Spectre passive Display lacks callback timestamps; DUT display times must not be treated as Spectre times.",
+    "selection_arm hidden x measured only by DUT; Spectre constant output does not prove hidden callback effect.",
+    "simultaneous Spectre v1 configuration failure and correction provenance preserved in original analysis.",
+    "Raw evidence local-only; no public archive claim."
+  ],
+  "cases": [
+    {
+      "family": "array",
+      "label": "positive_modulo",
+      "pass": true
+    },
+    {
+      "family": "array",
+      "label": "negative_modulo",
+      "pass": true
+    },
+    {
+      "family": "array",
+      "label": "negative_divisor",
+      "pass": true
+    },
+    {
+      "family": "array",
+      "label": "default_zero_write",
+      "pass": true
+    },
+    {
+      "family": "array",
+      "label": "default_zero_read",
+      "pass": true
+    },
+    {
+      "family": "array",
+      "label": "scalar_dynamic_rhs",
+      "pass": true
+    },
+    {
+      "family": "array",
+      "label": "instances",
+      "pass": true
+    },
+    {
+      "family": "frontend",
+      "label": "predicate_loops",
+      "pass": true
+    },
+    {
+      "family": "frontend",
+      "label": "ordered_predicate",
+      "pass": true
+    },
+    {
+      "family": "frontend",
+      "label": "parameter_math",
+      "pass": true
+    },
+    {
+      "family": "frontend",
+      "label": "typed_integer",
+      "pass": true
+    },
+    {
+      "family": "frontend",
+      "label": "typed_real",
+      "pass": true
+    },
+    {
+      "family": "frontend",
+      "label": "selection_arm",
+      "pass": true
+    },
+    {
+      "family": "passive",
+      "label": "later_state",
+      "pass": true
+    },
+    {
+      "family": "passive",
+      "label": "integral_sample",
+      "pass": true
+    },
+    {
+      "family": "passive",
+      "label": "transition_sample",
+      "pass": true
+    },
+    {
+      "family": "passive_v2",
+      "label": "simultaneous_state",
+      "pass": true
+    }
+  ],
+  "package_scope": "Repository-contained finite extracts, no public raw archive"
+}

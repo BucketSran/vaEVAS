@@ -1,0 +1,46 @@
+{
+  "classification": "deck_configuration_failure_not_semantics_result",
+  "execution": {
+    "argv": [
+      "taskset",
+      "-c",
+      "0",
+      "prlimit",
+      "--as=4294967296",
+      "--fsize=33554432",
+      "--",
+      "/bin/csh",
+      "-f",
+      "run.csh"
+    ],
+    "returncode": 2,
+    "timeout": false,
+    "status": "completed",
+    "cleanup": {
+      "signals": [
+        "SIGTERM",
+        "SIGKILL"
+      ],
+      "errors": [],
+      "complete": true
+    },
+    "elapsed_seconds": 16.32438763603568,
+    "completed_utc": "2026-10-14T09:55:45Z",
+    "log": "stdout.log",
+    "log_sha256": "09c29f0c4892f422ed9ed3846fd8c8962a2101f726695651cc242f9f52fca68d",
+    "label": "simultaneous_state",
+    "source_sha256": "a4a586c3758a19b852023d3ee83c173530c09b4ec950a8859daf6191d1369c74",
+    "deck_sha256": "d5d720465230dc8d7eab06b23e3e125e563e0fc1399dc233eed3f7479bce7c31",
+    "directory_bytes": 208766
+  },
+  "receipt_sha256": "74f426c55ea02f37ae09ea4883ffa928b85d5f5a72dd3395ecc969e7272d2da8",
+  "errors": [
+    {
+      "log_line": 62,
+      "text": "ERROR (SFE-23): \"tb.scs\" 5: The instance `Vu' is referencing an undefined model or subcircuit, `pwl'. Either include the file containing the definition of `pwl', or define `pwl' before running the simulation."
+    }
+  ],
+  "spectre_log_sha256": "6447774f37c57b2397f35e5979d35b1ba7a98e75ce0003b93d4a355576484c58",
+  "original_deck_sha256": "d5d720465230dc8d7eab06b23e3e125e563e0fc1399dc233eed3f7479bce7c31",
+  "history_preserved": true
+}

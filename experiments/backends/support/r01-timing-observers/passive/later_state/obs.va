@@ -1,0 +1,2 @@
+`include "disciplines.vams"
+module obs(u,y); input u,y; electrical u,y; real seen,due; integer count; analog begin @(initial_step) begin seen=0;due=100;count=0;end @(timer(0.75)) begin if(V(y)>0.4) begin seen=V(y); due=0.875; $display("seen %.12g",seen); end end @(timer(due)) begin count=count+1;$display("due %d",count); end @(final_step) $display("final %.12g %d",seen,count); end endmodule

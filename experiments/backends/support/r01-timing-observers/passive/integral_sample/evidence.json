@@ -1,0 +1,522 @@
+{
+  "family": "passive",
+  "label": "integral_sample",
+  "budget_V": 1e-09,
+  "paired_finite_pass": true,
+  "pairs": [
+    {
+      "time": "0",
+      "node": "y",
+      "dut_math_error_V": "0.0",
+      "reference_math_error_V": "0E-15",
+      "dut_reference_error_V": "0E-15",
+      "pass": true
+    },
+    {
+      "time": "0.25",
+      "node": "y",
+      "dut_math_error_V": "0.00",
+      "reference_math_error_V": "0E-16",
+      "dut_reference_error_V": "0E-16",
+      "pass": true
+    },
+    {
+      "time": "0.5",
+      "node": "y",
+      "dut_math_error_V": "0.0",
+      "reference_math_error_V": "0E-16",
+      "dut_reference_error_V": "0E-16",
+      "pass": true
+    },
+    {
+      "time": "0.75",
+      "node": "y",
+      "dut_math_error_V": "0.00",
+      "reference_math_error_V": "0E-16",
+      "dut_reference_error_V": "0E-16",
+      "pass": true
+    },
+    {
+      "time": "0.875",
+      "node": "y",
+      "dut_math_error_V": "0.000",
+      "reference_math_error_V": "1E-16",
+      "dut_reference_error_V": "1E-16",
+      "pass": true
+    },
+    {
+      "time": "1",
+      "node": "y",
+      "dut_math_error_V": "0.0",
+      "reference_math_error_V": "0E-15",
+      "dut_reference_error_V": "0E-15",
+      "pass": true
+    }
+  ],
+  "queries": [
+    {
+      "time": "0",
+      "native_time_token": "0.000000000000000e+00",
+      "native_voltages": {
+        "y": "0.000000000000000e+00"
+      },
+      "dut_voltages": {
+        "y": -0.0
+      },
+      "dut_voltage_bounds": {
+        "y": [
+          -0.0,
+          0.0
+        ]
+      },
+      "independent_expected": {
+        "y": "0"
+      },
+      "dut_states": {
+        "D:q": 0.0,
+        "M:seen": 0.0,
+        "M:due": 100.0,
+        "M:count": 0.0
+      },
+      "dut_time_token": "0.0"
+    },
+    {
+      "time": "0.25",
+      "native_time_token": "2.500000000000000e-01",
+      "native_voltages": {
+        "y": "2.500000000000000e-01"
+      },
+      "dut_voltages": {
+        "y": 0.25
+      },
+      "dut_voltage_bounds": {
+        "y": [
+          0.25,
+          0.25
+        ]
+      },
+      "independent_expected": {
+        "y": "0.25"
+      },
+      "dut_states": {
+        "D:q": 1.0,
+        "M:seen": 0.0,
+        "M:due": 100.0,
+        "M:count": 0.0
+      },
+      "dut_time_token": "0.25"
+    },
+    {
+      "time": "0.5",
+      "native_time_token": "5.000000000000000e-01",
+      "native_voltages": {
+        "y": "5.000000000000000e-01"
+      },
+      "dut_voltages": {
+        "y": 0.5
+      },
+      "dut_voltage_bounds": {
+        "y": [
+          0.5,
+          0.5
+        ]
+      },
+      "independent_expected": {
+        "y": "0.5"
+      },
+      "dut_states": {
+        "D:q": 1.0,
+        "M:seen": 0.5,
+        "M:due": 0.75,
+        "M:count": 0.0
+      },
+      "dut_time_token": "0.5"
+    },
+    {
+      "time": "0.75",
+      "native_time_token": "7.500000000000000e-01",
+      "native_voltages": {
+        "y": "7.500000000000000e-01"
+      },
+      "dut_voltages": {
+        "y": 0.75
+      },
+      "dut_voltage_bounds": {
+        "y": [
+          0.75,
+          0.75
+        ]
+      },
+      "independent_expected": {
+        "y": "0.75"
+      },
+      "dut_states": {
+        "D:q": 1.0,
+        "M:seen": 0.5,
+        "M:due": 0.75,
+        "M:count": 1.0
+      },
+      "dut_time_token": "0.75"
+    },
+    {
+      "time": "0.875",
+      "native_time_token": "8.750000000000000e-01",
+      "native_voltages": {
+        "y": "8.750000000000001e-01"
+      },
+      "dut_voltages": {
+        "y": 0.875
+      },
+      "dut_voltage_bounds": {
+        "y": [
+          0.875,
+          0.875
+        ]
+      },
+      "independent_expected": {
+        "y": "0.875"
+      },
+      "dut_states": {
+        "D:q": 1.0,
+        "M:seen": 0.5,
+        "M:due": 0.75,
+        "M:count": 1.0
+      },
+      "dut_time_token": "0.875"
+    },
+    {
+      "time": "1",
+      "native_time_token": "1.000000000000000e+00",
+      "native_voltages": {
+        "y": "1.000000000000000e+00"
+      },
+      "dut_voltages": {
+        "y": 1.0
+      },
+      "dut_voltage_bounds": {
+        "y": [
+          1.0,
+          1.0
+        ]
+      },
+      "independent_expected": {
+        "y": "1"
+      },
+      "dut_states": {
+        "D:q": 1.0,
+        "M:seen": 0.5,
+        "M:due": 0.75,
+        "M:count": 1.0
+      },
+      "dut_time_token": "1.0"
+    }
+  ],
+  "effective_dut_controls": {
+    "absolute_V": 1e-09,
+    "relative": 1e-06,
+    "stop_s": 1.0,
+    "max_step_s": 0.125,
+    "max_step_applied": true
+  },
+  "dut_testbench": {
+    "input_format": "spectre-voltage-subset",
+    "path": "r01-timing/passive-reference/inputs/integral_sample/tb.scs",
+    "sha256": "e97078de66cf9f5f77612aab493f03b3c628e1a68b4419966894baeb2164711a",
+    "model_sha256": {
+      "r01-timing/passive-reference/inputs/integral_sample/dut.va": "9ec27c57d909fe41e2d7da17f54a8a9d8991b8b4d326b10e29316d0d16766c81",
+      "r01-timing/passive-reference/inputs/integral_sample/obs.va": "7a6ec8c683b5469f2a35c973d29def3a969e0cc955ae05b424af7f256911c9a8"
+    },
+    "effective_tolerances": {
+      "vabstol": 1e-09,
+      "reltol": 1e-06
+    },
+    "output_grid": "0, k*maxstep below stop, stop",
+    "pulse_corner_rounding_seconds": {
+      "Vu": 0.0
+    },
+    "strobe_controls": {
+      "strobetimes": [
+        0.0,
+        0.25,
+        0.5,
+        0.75,
+        0.875,
+        1.0
+      ]
+    },
+    "forced_times": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      0.875,
+      1.0
+    ]
+  },
+  "ignored_options_field": null,
+  "ignored_options_limit": "No ignored-options field appears, stderr is empty; effective controls and strobe evidence confirm reported API settings. This does not establish Spectre method equivalence.",
+  "stderr_empty": true,
+  "stdout_sha256": "6f258745f2235cbe1e7872e2b68af5d1c2fbce601baa87b70789559e6a4b54f6",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "execution_receipt_sha256": "52545cb914c016ccc7b0b13bcc39f2cd1702e908f42c549fcd7d140a6b52c352",
+  "input_sha256": {
+    "dut.va": "9ec27c57d909fe41e2d7da17f54a8a9d8991b8b4d326b10e29316d0d16766c81",
+    "obs.va": "7a6ec8c683b5469f2a35c973d29def3a969e0cc955ae05b424af7f256911c9a8",
+    "tb.scs": "e97078de66cf9f5f77612aab493f03b3c628e1a68b4419966894baeb2164711a"
+  },
+  "kernel_sha256": "e13f60ee52e5fd558e08ddd468dff6d7c980bfce9daceb9c1e159682f240458a",
+  "reference_execution_group": "passive-spectre-v1",
+  "reference_analysis_sha256": "d6d41ff091108e085001cbdebfc4204644d5a404ae131b252d28b0982ea4a0bb",
+  "psf_sha256": "a7e78facdc3116c9e39cc88f29c01ac8c0f97d54db59028073e6b8895c437f9c",
+  "reference_effective": {
+    "tolerance.relative": "1.00000e-06",
+    "reltol": "1.00000e-06",
+    "abstol(V)": "1.00000e-09",
+    "abstol(I)": "1.00000e-12",
+    "stop": "1.00000",
+    "maxstep": "0.125000",
+    "method": "\"traponly\"",
+    "errpreset": "\"moderate\"",
+    "gmin": "1.00000e-12"
+  },
+  "reference_warnings": [
+    {
+      "log_line": 52,
+      "text": "WARNING (VACOMP-2435): The environment variable CDS_AHDLCMI_ENABLE is no longer supported. Therefore, the simulator will use the default compiled C code flow."
+    }
+  ],
+  "dut_portability_advisories": {
+    "schema_version": 2,
+    "record_limit": 128,
+    "records": [
+      {
+        "code": "timer_observation_boundary",
+        "nonblocking": true,
+        "message": "Observation is inside or within one binary64 neighbor of a committed timer deadline enclosure. A backend may trigger elsewhere within the model's timing tolerance. Check samples and downstream history against their budgets; this notice neither proves a mismatch nor accepts a changed final result.",
+        "event_record": 0,
+        "event": 0,
+        "trigger": 0,
+        "origin": "r01-timing/passive-reference/inputs/integral_sample/dut.va:2:95 (D)",
+        "query_source": "output_times",
+        "query_index": 2,
+        "query_time_s": 0.25,
+        "time_bounds_s": [
+          0.25,
+          0.25
+        ]
+      },
+      {
+        "code": "timer_observation_boundary",
+        "nonblocking": true,
+        "message": "Observation is inside or within one binary64 neighbor of a committed timer deadline enclosure. A backend may trigger elsewhere within the model's timing tolerance. Check samples and downstream history against their budgets; this notice neither proves a mismatch nor accepts a changed final result.",
+        "event_record": 0,
+        "event": 0,
+        "trigger": 0,
+        "origin": "r01-timing/passive-reference/inputs/integral_sample/dut.va:2:95 (D)",
+        "query_source": "strobetimes",
+        "query_index": 1,
+        "query_time_s": 0.25,
+        "time_bounds_s": [
+          0.25,
+          0.25
+        ]
+      },
+      {
+        "code": "timer_observation_boundary",
+        "nonblocking": true,
+        "message": "Observation is inside or within one binary64 neighbor of a committed timer deadline enclosure. A backend may trigger elsewhere within the model's timing tolerance. Check samples and downstream history against their budgets; this notice neither proves a mismatch nor accepts a changed final result.",
+        "event_record": 1,
+        "event": 1,
+        "trigger": 0,
+        "origin": "r01-timing/passive-reference/inputs/integral_sample/obs.va:2:137 (M)",
+        "query_source": "output_times",
+        "query_index": 4,
+        "query_time_s": 0.5,
+        "time_bounds_s": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "code": "timer_observation_boundary",
+        "nonblocking": true,
+        "message": "Observation is inside or within one binary64 neighbor of a committed timer deadline enclosure. A backend may trigger elsewhere within the model's timing tolerance. Check samples and downstream history against their budgets; this notice neither proves a mismatch nor accepts a changed final result.",
+        "event_record": 1,
+        "event": 1,
+        "trigger": 0,
+        "origin": "r01-timing/passive-reference/inputs/integral_sample/obs.va:2:137 (M)",
+        "query_source": "strobetimes",
+        "query_index": 2,
+        "query_time_s": 0.5,
+        "time_bounds_s": [
+          0.5,
+          0.5
+        ]
+      },
+      {
+        "code": "timer_observation_boundary",
+        "nonblocking": true,
+        "message": "Observation is inside or within one binary64 neighbor of a committed timer deadline enclosure. A backend may trigger elsewhere within the model's timing tolerance. Check samples and downstream history against their budgets; this notice neither proves a mismatch nor accepts a changed final result.",
+        "event_record": 2,
+        "event": 2,
+        "trigger": 0,
+        "origin": "r01-timing/passive-reference/inputs/integral_sample/obs.va:2:234 (M)",
+        "query_source": "output_times",
+        "query_index": 6,
+        "query_time_s": 0.75,
+        "time_bounds_s": [
+          0.75,
+          0.75
+        ]
+      },
+      {
+        "code": "timer_observation_boundary",
+        "nonblocking": true,
+        "message": "Observation is inside or within one binary64 neighbor of a committed timer deadline enclosure. A backend may trigger elsewhere within the model's timing tolerance. Check samples and downstream history against their budgets; this notice neither proves a mismatch nor accepts a changed final result.",
+        "event_record": 2,
+        "event": 2,
+        "trigger": 0,
+        "origin": "r01-timing/passive-reference/inputs/integral_sample/obs.va:2:234 (M)",
+        "query_source": "strobetimes",
+        "query_index": 3,
+        "query_time_s": 0.75,
+        "time_bounds_s": [
+          0.75,
+          0.75
+        ]
+      }
+    ],
+    "model_records": [],
+    "dropped_records": 0,
+    "truncated": false
+  },
+  "dut_events": [
+    {
+      "time": 0.25,
+      "event": 0,
+      "origin": "r01-timing/passive-reference/inputs/integral_sample/dut.va:2:95 (D)",
+      "kind": "timer",
+      "before": [
+        0.0,
+        0.0,
+        100.0,
+        0.0
+      ],
+      "after": [
+        1.0,
+        0.0,
+        100.0,
+        0.0
+      ]
+    },
+    {
+      "time": 0.5,
+      "event": 1,
+      "origin": "r01-timing/passive-reference/inputs/integral_sample/obs.va:2:137 (M)",
+      "kind": "timer",
+      "before": [
+        1.0,
+        0.0,
+        100.0,
+        0.0
+      ],
+      "after": [
+        1.0,
+        0.5,
+        0.75,
+        0.0
+      ]
+    },
+    {
+      "time": 0.75,
+      "event": 2,
+      "origin": "r01-timing/passive-reference/inputs/integral_sample/obs.va:2:234 (M)",
+      "kind": "timer",
+      "before": [
+        1.0,
+        0.5,
+        0.75,
+        0.0
+      ],
+      "after": [
+        1.0,
+        0.5,
+        0.75,
+        1.0
+      ]
+    },
+    {
+      "time": 1.0,
+      "event": 3,
+      "origin": "r01-timing/passive-reference/inputs/integral_sample/obs.va:2:298 (M)",
+      "kind": "final_step",
+      "before": [
+        1.0,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "after": [
+        1.0,
+        0.5,
+        0.75,
+        1.0
+      ]
+    }
+  ],
+  "raw_availability": "local-only",
+  "display_values_order_count_pass": true,
+  "dut_display_records": [
+    {
+      "time": 0.5,
+      "event": 1,
+      "origin": "r01-timing/passive-reference/inputs/integral_sample/obs.va:2:197 (M)",
+      "text": "seen 0.5"
+    },
+    {
+      "time": 0.75,
+      "event": 2,
+      "origin": "r01-timing/passive-reference/inputs/integral_sample/obs.va:2:268 (M)",
+      "text": "due 1"
+    },
+    {
+      "time": 1.0,
+      "event": 3,
+      "origin": "r01-timing/passive-reference/inputs/integral_sample/obs.va:2:312 (M)",
+      "text": "final 0.5 1"
+    }
+  ],
+  "spectre_display_records": [
+    {
+      "log_line": 149,
+      "raw_line": "......9......8......7......seen 0.5",
+      "progress_prefix": "......9......8......7......",
+      "text": "seen 0.5"
+    },
+    {
+      "log_line": 150,
+      "raw_line": "......9......8......7......6......5......4......due 1",
+      "progress_prefix": "......9......8......7......6......5......4......",
+      "text": "due 1"
+    },
+    {
+      "log_line": 151,
+      "raw_line": "......9......8......7......6......5......4......3......2......1...final 0.5 1",
+      "progress_prefix": "......9......8......7......6......5......4......3......2......1...",
+      "text": "final 0.5 1"
+    }
+  ],
+  "dut_final_states": {
+    "D:q": 1.0,
+    "M:seen": 0.5,
+    "M:due": 0.75,
+    "M:count": 1.0
+  },
+  "spectre_callback_time_directly_measured": false,
+  "display_time_limit": "No $abstime or explicit callback timestamp in Display. Progress prefix is not an exact callback timestamp. Nominal times use source semantics and observed waveform, not direct callback timing.",
+  "extraction": {
+    "source_stdout_sha256": "6f258745f2235cbe1e7872e2b68af5d1c2fbce601baa87b70789559e6a4b54f6",
+    "source_stdout_artifact": "final-dut-v3/passive/integral_sample/stdout.json",
+    "representation": "Finite response extraction with normalized input paths; package SHA is in PACKAGE-MANIFEST.json. Original stdout SHA identifies full local-only response."
+  }
+}

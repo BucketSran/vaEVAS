@@ -4,7 +4,7 @@
 面向使用者的支持结论只在[四后端支持范围](../COMPARISON.md)维护，详细接受与拒绝条件由所链接的契约维护。
 收据只证明其固定执行版本；下表仅登记 ID 与证据，供追溯工具读取，不维护第二份支持状态或当前 main 通过率。
 
-本地 IR21 开发候选补充 LANG、ANALOG、CROSS、TIMER、EVENT-ORDER、EVENT-CONDITIONS、DYNAMICS、COMPOSE 和 DEV:scs-input。
+IR21 共同基础已随 [#174](https://github.com/BucketSran/vaEVAS/pull/174) 合入 main，补充 LANG、ANALOG、CROSS、TIMER、EVENT-ORDER、EVENT-CONDITIONS、DYNAMICS、COMPOSE 和 DEV:scs-input。
 契约见[局部变量与条件支路](../../validation/ANALOG_CONDITIONS_CONTRACT.md)、
 [事件条件与输出记录](../math/events.md)、[连续选路与有理流](../math/continuous.md#selected-flow)。
 开发回归包括[顺序初始化和整数类型](../../tests/test_r01_runtime_frontend.py)、
@@ -13,7 +13,15 @@
 [事件时间](../../tests/test_event_time.py)、[整数循环](../../tests/test_integer_loops.py)、[模型步长](../../tests/test_bound_step.py)和
 [SCS 驱动保留](../../tests/test_scs_driven_nodes.py)。既有[语言](../../tests/test_r01_language.py)与
 [纯表达式](../../tests/test_stateless_expressions.py)回归继续保留。
-该候选未合入，检查与原始 70 条件复跑仍在进行，也没有新的实际 Spectre 对照；历史成绩保留。
+基础有限对照见[最终控制](../../../experiments/backends/support/r01-root-windows/final-controls/README.md)。
+原始 70 条件没有最终版本的全量验收；本轮增补与原完整任务结果见下段，历史成绩保留。
+
+[事件数组与独立测量](../../../experiments/backends/support/r01-timing-observers/README.md)
+补充 LANG、CROSS、TIMER、EVENT-CONDITIONS、EVENT-ORDER、COMPOSE 的有限开发证据。
+契约见[参数与下标准入](../reference/frontend-admission.md)及[独立测量](../math/events.md#passive-observer)，
+回归见[原树义务](../../tests/test_event_parameter_specialization.py)、
+[事件数组](../../tests/test_r01_event_arrays.py)、[测量事务](../../tests/test_passive_events.py)。
+这些控制不增加固定 Q 成绩；原完整 timing 请求的后续连续耦合拒绝单列。
 
 [空循环声明与当前 timer 安全修复](../../../experiments/backends/support/retained-safety/README.md)
 补充 LANG、TIMER、EVENT-ORDER、COMPOSE 的 main 适配证据。

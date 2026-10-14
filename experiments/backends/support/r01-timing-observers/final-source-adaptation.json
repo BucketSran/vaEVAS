@@ -1,0 +1,318 @@
+{
+  "kind": "actual same-input byte-identical replay after diagnostic-only frontend fix and optional Rust IR comma formatting",
+  "source_identity": {
+    "evas/src/evas/__init__.py": "fed2c06e3761f249fb116ef4d462e79a10617d1a7b3ad6f7e8fd18a4254c5ae3",
+    "evas/src/evas/__main__.py": "03467610db7d5563c99f2ffcf65c8f258175575fff18a38ca89dc5854439d651",
+    "evas/src/evas/array_elaboration.py": "119587782600f675e8fc9451f9b55dae731496c90bbba9d3c93dfce965faac9a",
+    "evas/src/evas/diagnostics.py": "e787f6c1b0ab3939fa37c15ec6da550f59520c6f99edf29e9c53784f31e3308f",
+    "evas/src/evas/display.py": "c53802f643b2405e1f3da36596a8d4674aebf409635232ded3dc52f852f38b5c",
+    "evas/src/evas/elaboration.py": "87857ddb3b2c551a2f92621da604f80d52cbd74a977aa1a9b766238196a0045e",
+    "evas/src/evas/errors.py": "4716787d137c2232e13d9b9b7231b407d5c87a38c755345c63bc9df91a45a158",
+    "evas/src/evas/event_index_domains.py": "08393aa045e1c32394580432f27c6b4fe3264ab78677faeb316ef4c7080ec847",
+    "evas/src/evas/event_specialization.py": "1b3a6ebcf98e3e8d88561d8b4b68ba0c677293d3d20a2f362082ad5c1cf25166",
+    "evas/src/evas/frontend.py": "310159f89cea075ff3f35a7d46e7177dfd8888eb8841528ddb924be45768854a",
+    "evas/src/evas/hierarchy.py": "ec8cd24105bfb646f28874dd40fe0923ae51ca5d22b45b1be0e6153347a7a10b",
+    "evas/src/evas/identity.py": "19e2ee901ba5bd66a15416bd7716914ba8a6ff75e82f4f68965cebe673a27a10",
+    "evas/src/evas/instance_compiler.py": "da06d60c960532f5f27c55c11f30fc602bea4cefefe1d328c8ddae43768d61bf",
+    "evas/src/evas/integer_constants.py": "649fb679717ef1af390049d0fe94f38062443ed5619d4b93292ca437e333e44a",
+    "evas/src/evas/ir.py": "e2c55f9180b49b15e5f8806f1def29b23b766ad5a1f9009e24d0ec51ba5d51c1",
+    "evas/src/evas/kernel.py": "1d0bef0c91ba28a68861bda5a2e76b180c9eb97cb7e4ee9e3d0f53961a6e3d71",
+    "evas/src/evas/limits.py": "896f2d5894c1f904028a0e103451bc7e95d58ab45d5df921c6469dd154e71577",
+    "evas/src/evas/lint.py": "6be0cd29484d30bbb71ad2e53ee53ada42ab4122643a82775263d9176039655b",
+    "evas/src/evas/lowering.py": "a7a070aa0281edaca32b395d86bcd26e7f9b06d16bbbf0b18845e83848535ad8",
+    "evas/src/evas/manifest.py": "358f6205417bc66008d8a83f98f653e5469f3f5199cf4c9c00b5c3a414979270",
+    "evas/src/evas/mcp.py": "c0a42d3e91abbf14e6f194f6bdb62a7b47ad8ef483456d2611bee0b9aaabee1e",
+    "evas/src/evas/migrate.py": "d3cb966a7a4aa2029a70f593bcecc8ea05b85f586e53b004a9daf644e9742477",
+    "evas/src/evas/node_elaboration.py": "c21db591e370dc5efcfde9ee31eaf26cf4f69727536bfd775c86e2b58916ded5",
+    "evas/src/evas/parameters.py": "dabee137af04c2718076fb640e58ae12ff4d6a8406a8e3bd0e9154c100deef13",
+    "evas/src/evas/predicate_structure.py": "0f145fafcf1a926877f555207da48d54e6334e8ffbde1d9b385499ea74d11543",
+    "evas/src/evas/preprocessor.py": "83d54364c2cbc993da5d749bb3582f4ef5de110deff5f23a41ad9af4d928478c",
+    "evas/src/evas/protocol.py": "6259e984782022afd7abfe50dc4e58a454bf30ca219829f4f32a6586467795a9",
+    "evas/src/evas/query.py": "2fda97253f88c236d308d795aeae52a00ff5cfbb458f87a4bcfdc3751fae4f64",
+    "evas/src/evas/results.py": "91bc585e4ee9a871fce7da38beebebe71218f0b59c7dda57fec904a9994810bd",
+    "evas/src/evas/runtime.py": "e467f9de3635dcd23813771ea528e57fa35dd98c36dce893b35f920f278c7c0f",
+    "evas/src/evas/scs.py": "3f5d686dc29880d6a181409ee85b01dda7edb3a38e1c5713452b9a885f56a82b",
+    "evas/src/evas/scs_sources.py": "4b7ba0c20ebf5363c70de30e6fdc460a2b83ca33ae62498ece2b5db93a4b2775",
+    "evas/src/evas/standard_headers.py": "efe0b2421d400ac723cfdf71c5d406cdef510dc89d3556ad999e2253600ec88e",
+    "evas/src/evas/strobe.py": "18d6b1911436459a7a19ee100d309636f5d0d75acd927b228219367098f19c80",
+    "evas/src/evas/syntax.py": "15b49e6573ef8fa52eaa9703e026044f484f6659350367b70c548ceb01498b09",
+    "evas/rust_core/src/absdelay.rs": "e0f6144590856b3a95d03a59af58e9032309fa1e316a41c063a40ec9f73109c7",
+    "evas/rust_core/src/accuracy.rs": "03fd769af88f73072a1964a942b9b9d1503196c56c5c4cb48cec7f21ee084d35",
+    "evas/rust_core/src/affine_bounds.rs": "0683f15162c812c8e4359f48998b5b261a61bc3ab60fdc4a8ef30a9b8a6bfe6e",
+    "evas/rust_core/src/analog.rs": "1505d79dc24df924c7544da0a0fdfa9a6280bffb67f5ee191dad0ff2f13ad484",
+    "evas/rust_core/src/assembly.rs": "beab047ea57b6510e00e897b1caf02e437f3a30bd1567f92bc39c0a7e40b62f9",
+    "evas/rust_core/src/batch.rs": "ba227471ba388b4efd361e9a523352b7626bb80cd51141a00ca2b1c97eed2888",
+    "evas/rust_core/src/continuous.rs": "e7f4b4b0d9c425574357da0b10d645ff3d8115ca306e4d3f4836269f2fea4eed",
+    "evas/rust_core/src/continuous_derivatives.rs": "a87e3f3395f7a671f39aafc487a381bc484b9f9640fe4cd57e914d798cf93f09",
+    "evas/rust_core/src/continuous_history.rs": "628f2a6a2c04c6cc326bd26d6605e25baa58aed3c872d74bb0a1ee77b138613c",
+    "evas/rust_core/src/continuous_initialization.rs": "5145a36a517b9ba3ace0fb6241ebbd615fef6004b50aeb5dc99d76ff295874a8",
+    "evas/rust_core/src/continuous_runtime.rs": "ce769275fd31a85f43cf0f0e4b51a62528a0fc52f926f556ab72033b634b6fa1",
+    "evas/rust_core/src/continuous_select.rs": "67bc2218f31b66d478179096de62bf2b0910911a4bf189efe3255cd587041938",
+    "evas/rust_core/src/continuous_select_cache_tests.rs": "4c86a3d1eef26832c428d5bb70dfe4fef7d0ae0b440e5a1a083d41ecf2f3bda5",
+    "evas/rust_core/src/continuous_select_candidates.rs": "e06b7ea373f3be85c24edcd744c6fc8e70504f9c796b172b4821244209707926",
+    "evas/rust_core/src/continuous_step_simplify.rs": "6eb21f7aa44f234105814f7d8483e764ce96d44acf026195cb341a985baba741",
+    "evas/rust_core/src/diagnostics.rs": "bd0feac3399c8b43bf14de204677d58a160d3648416242a76d3eae46e0dea699",
+    "evas/rust_core/src/direct_derivative.rs": "3379f1dc9283af5f1d53b6d3bd03dc6cec00d04de9bcfd45ddb4bab1002e9183",
+    "evas/rust_core/src/display.rs": "7b0dc22cd76d81c374b6f127e87f676f54ed19cbe1f81c4875e9dca1f5ac9fd5",
+    "evas/rust_core/src/dynamic_roots.rs": "30146ae2e527e12c6596aff3b0dad3cd172def2af80d27e3b92131032cb6a827",
+    "evas/rust_core/src/event_accuracy.rs": "c47e232ee5da680bcc488cfc49af55e5123635aba960634d31874b179998185b",
+    "evas/rust_core/src/event_conditions.rs": "72b2a8c37c51b0b1e8c71fe0058d767a7f96a54792d74578cbc8b0c95b648b33",
+    "evas/rust_core/src/events.rs": "c730aedf8751be38ebd247164751f55cb00f74bf783f378befb0b48302c2f2e0",
+    "evas/rust_core/src/exact_affine_history.rs": "768c7509b3d76e901e12b166291d0bb8ae7f282791fa513a72f087b07100f161",
+    "evas/rust_core/src/exact_source.rs": "dfd4022c98a257948720ca572d8b912889d425849e19d5e47a0f3f886ba63a7c",
+    "evas/rust_core/src/exact_time.rs": "68e8415109ff7138b27195fe8d32f686441c61d4b012e774e31ede58e5eef824",
+    "evas/rust_core/src/expression.rs": "f6d9a5852d6f55371cd3f6634bf030545efa19274e73f89aee2b10624b5cda2b",
+    "evas/rust_core/src/filter_budget.rs": "94807ee47a346648b5eb4d7d4af03366c0f1f1b79a0e67f636fc279c90b67656",
+    "evas/rust_core/src/guard_trajectory.rs": "c919578fe553f2e87ded91d054780e8e66d505db688894875a8506ae826ec84c",
+    "evas/rust_core/src/idt.rs": "df77ea0c2faa19c5a3b7947000c75a52cf0be79d0937a96d8f14c02a40881573",
+    "evas/rust_core/src/idtmod.rs": "b40261e69921bcbcf1c0a24413ae55a9a317415307a62b3c4a516b8c63ff4c82",
+    "evas/rust_core/src/implicit_dynamics.rs": "db474c82a1a28fca546c46c8451b1ac2d2b968efabd68a4549108e3f132b41f5",
+    "evas/rust_core/src/initial_state_invariance.rs": "f7e65f5fc9c969457702f667db4bc8af7484304fd28b9956d7cfcf96c7bb7745",
+    "evas/rust_core/src/initialization.rs": "d6b88d2b63329538e7a72f0d27b09cc6eefd810612830c617685be2dca9865ed",
+    "evas/rust_core/src/input_clamp.rs": "c9a214c80d2e352ccafde153c4b38184074553753ce71b6b0cb4bfa698c048cd",
+    "evas/rust_core/src/interval.rs": "89a83ce96dbf6cdc217a046c9885ca0cf580c6e6f932c36f0195120d49e53f56",
+    "evas/rust_core/src/interval_properties.rs": "2e6b4228da7833b1d686d1e54b0b9d9c9ed78c8adc02b894282cb23775f95c08",
+    "evas/rust_core/src/ir.rs": "cc687fdd3d78e908644537aa8194d3a3ccb3dcb5b88c11a78d7b3e640ad97ea0",
+    "evas/rust_core/src/laplace.rs": "8f211b465b19d062033392ef6defbc1bdc66b34c7be9172ab3c41e32a9e7b3d1",
+    "evas/rust_core/src/lib.rs": "e8291ba91e7181792cecf6599115885f074b96d512481a70c238cb3d7c4f346c",
+    "evas/rust_core/src/linear.rs": "e0280cfcaaebd2449ab5e4474daf5cd19e6a9fbda5db53e14e5229fc81a4eb36",
+    "evas/rust_core/src/main.rs": "70626c73fa421340afcc53c025a220720b208657273ba3f5e20bc1e4c6e01c3c",
+    "evas/rust_core/src/math_functions.rs": "a57b876344f203b03d3dc0a2bb8f49bce673abd35619f55552c0a0d29b7f13a0",
+    "evas/rust_core/src/nonlinear.rs": "1e535704fb6dc14a577496ed47315ddf6e5f887d6dfa2b62b78d9b7b3a275863",
+    "evas/rust_core/src/nonlinear_dynamics.rs": "c21fdea17bce4348d1b518b7c9aefca64060b7bdec54b1c71612bb82d8a80511",
+    "evas/rust_core/src/nonlinear_root_window.rs": "7341efc680fc3f1a247803651875bdc115791426f587acdcb8b10d9386e302dd",
+    "evas/rust_core/src/observation.rs": "a4bddbd4b5f336883909fe66fd5a5cf3e636fb6da265d8c7be05e48107fcee32",
+    "evas/rust_core/src/operators.rs": "dd002832c62e7b237b95028a2eafb6a2427020e98dbf5fc0eb18b88b9cb8bf72",
+    "evas/rust_core/src/passive_events.rs": "132d1d3420538b9d81d02db9e67fd714df6fa10b9202fe6fab295ad4a171b493",
+    "evas/rust_core/src/performance_probes.rs": "9fc67b5a15eae74e9894c082c92ac5c5a99a5372754c00bee2100bd3f18748ef",
+    "evas/rust_core/src/portability.rs": "c101c1075de370d3622ad270bb0ca7bdf73c6ba2b3ed6ddd940a45a3c8134cb4",
+    "evas/rust_core/src/pwl.rs": "016d8512f6005d66386e56fc41c9fc31b2aac766d96dd61989d912c633a1539e",
+    "evas/rust_core/src/reset_dependencies.rs": "3f894fe282b3e22b7d07e7022a9e9aa9e6e06dc641591bdae25c0a7acf26f51f",
+    "evas/rust_core/src/schedule.rs": "17fecc63b0a8ec156fcc65aab44a91bceb50ae919e0d21b87f413eb07bcc7233",
+    "evas/rust_core/src/schedule_timer_boundary_tests.rs": "21a63657e6d46891e6fbc98711b00914ef94e049454db949ce4d91b1147e8c64",
+    "evas/rust_core/src/settlement.rs": "df2caef2ae17243231a6749504f60ab663545304ca8df4c9fed501277fcc3897",
+    "evas/rust_core/src/settlement_bounds.rs": "02e3e84962f2aaf7f4974459e9d6d0e3ed5e278ad3070b8119556b7ba19649a4",
+    "evas/rust_core/src/slew.rs": "cd9621ef82290f024bc1485ba3d0494c78f43c9d7b242f5ff41808b1632af36f",
+    "evas/rust_core/src/slew_cascade.rs": "26b9cedd714dd24893d2076818d84c8905525da29c900c4df97bf9a7c40cc7b8",
+    "evas/rust_core/src/solver.rs": "1114f108dbdec616dc5f35117a2e14eb0c25bec370253d1c2d77ae1ad4317941",
+    "evas/rust_core/src/solver_cache_tests.rs": "727acd4fc9084bb6e546a8aa70e2f1e5bd476d27265f5198c5cdd08b0a7fd3fa",
+    "evas/rust_core/src/state_space.rs": "bc791c33b49c78259c0efa4b89203758830b6f90b461058d6a526ada5e1b2a94",
+    "evas/rust_core/src/step_bounds.rs": "1d0ee01f8d6985813c0a2b61f8b598ebdf65bcf430ed6a502610eacf90c4f01a",
+    "evas/rust_core/src/strobe.rs": "2cb7db0c54f6cf4656186343f764399132a9704f8b65552b00e737c9108c16af",
+    "evas/rust_core/src/transient.rs": "58eb80f4bf9cd54fc8e53ba5b2c8a6e77aae5435627473e64f7f28a146265e0b",
+    "evas/rust_core/src/transient_condition_tests.rs": "ae26baead05ef62ec4196834e2df8059ee1c27ccb718d1e53dde290b49fc65b5",
+    "evas/rust_core/src/transient_event_acceptance.rs": "338db6e99e8fbb74c9400da42f3250f8ae374de25c31f0d14810a02b74687cb9",
+    "evas/rust_core/src/transient_history_calendar.rs": "cf3431c7582c5ef79801cadbf220e6db5587c480a28e03f4aae9b3bcef4ca921",
+    "evas/rust_core/src/transient_idt_tests.rs": "dfd640a90830437089e8389eedf7e354bd20253b47e3dcc7d3226dd1a496ee33",
+    "evas/rust_core/src/transient_initialization.rs": "ef583bfd5bcf89570be4d8517f24e93f523803750cd9ca53ee13da3663b39551",
+    "evas/rust_core/src/transient_lifecycle_tests.rs": "3b8ba85438f7279ef28d81bdb734ae0bb525965b2148e9e381cffa7da94138a9",
+    "evas/rust_core/src/transient_passive_tests.rs": "61837c4b5830c52cd0d953b8c77572d793f3179b642d65e9c8c239a99f3607c4",
+    "evas/rust_core/src/transient_root_refinement.rs": "ec72d524e91de3fbc08f4d036aab5a2ef2681babcd4440da945f635f80cf887a",
+    "evas/rust_core/src/transient_timer_boundary_tests.rs": "c63ed28b17a2a91354f62a17e8703ecaee316d09b201dbf58ba30d654704c96d",
+    "evas/rust_core/src/transient_window_tests.rs": "08285e435c4e7df5b2a31ac259347840e72a63ef7941953ee850655fdc1a7909",
+    "evas/rust_core/src/transition.rs": "61de1f3b626e78f656d3b8d81a1ecfb14786fc5dfb117a548e1351edd46edf30",
+    "evas/rust_core/src/transition_filter.rs": "4c150a62e482910ebe7e2bf666b4687044b4bedaeb2a7c7bf4c39b7f1f98df24",
+    "evas/rust_core/src/transition_integral.rs": "e5e32e03013915527e80c646ceecfba86d65161dbfa4c6df6c1ad0f8282447ed",
+    "evas/rust_core/ir/src/lib.rs": "cf727cca26ba9a6c2a62390d1025127cafd7fbf261477d7d0ce92760eea3c69c"
+  },
+  "kernel_sha256": "e13f60ee52e5fd558e08ddd468dff6d7c980bfce9daceb9c1e159682f240458a",
+  "kernel_matches_original_e13": true,
+  "source_changes": [
+    "event_specialization.py: preserve code/message and attach source token to previously unlocated errors; accepted path unchanged",
+    "ir/src/lib.rs: remove optional comma from empty Display match arm; rebuilt release byte-identical"
+  ],
+  "cases": [
+    {
+      "family": "array",
+      "label": "positive_modulo",
+      "before_stdout_sha256": "42e6c39b683d2f5a41bd5ce04a908661a380b764ff4fd599aa9dbe026e217f59",
+      "after_stdout_sha256": "42e6c39b683d2f5a41bd5ce04a908661a380b764ff4fd599aa9dbe026e217f59",
+      "unchanged": true,
+      "input_sha256": {
+        "dut.va": "121d7a299b6028de7f97d7827a48003e1670cb7715ac97bf0059439198aa16e4",
+        "tb.scs": "24e8beca3366975c5185bca6bd39a28288c3af12c855d33121445da81831d8ae"
+      }
+    },
+    {
+      "family": "array",
+      "label": "negative_modulo",
+      "before_stdout_sha256": "c2e38071b47de3e37a27bc2da09718a9b4e5dd2194c91bb0f5c8667433da1699",
+      "after_stdout_sha256": "c2e38071b47de3e37a27bc2da09718a9b4e5dd2194c91bb0f5c8667433da1699",
+      "unchanged": true,
+      "input_sha256": {
+        "dut.va": "4ee9b5113f5b458c0c4a1812e4c1e10c455b1502b13a3cb247a56dc948f2cca6",
+        "tb.scs": "24e8beca3366975c5185bca6bd39a28288c3af12c855d33121445da81831d8ae"
+      }
+    },
+    {
+      "family": "array",
+      "label": "negative_divisor",
+      "before_stdout_sha256": "0678083912b26124c9b69de70c3d601b8613b09bf8d983646bd2afa3ce0be1fe",
+      "after_stdout_sha256": "0678083912b26124c9b69de70c3d601b8613b09bf8d983646bd2afa3ce0be1fe",
+      "unchanged": true,
+      "input_sha256": {
+        "dut.va": "df7ab9f1575f3a6b686fa9733ad0cdeb73c4c1d47739150172fd8b8f34112c89",
+        "tb.scs": "24e8beca3366975c5185bca6bd39a28288c3af12c855d33121445da81831d8ae"
+      }
+    },
+    {
+      "family": "array",
+      "label": "default_zero_write",
+      "before_stdout_sha256": "7c39e5f1b3ac0a6735c6c3c6c1c8762791943fa611ababc1ed05d18d5c6e9d05",
+      "after_stdout_sha256": "7c39e5f1b3ac0a6735c6c3c6c1c8762791943fa611ababc1ed05d18d5c6e9d05",
+      "unchanged": true,
+      "input_sha256": {
+        "dut.va": "0de6add5eb795d5643b526f369b7eeb55e0ce99fb23b7810ee6f7d9291c63fbd",
+        "tb.scs": "24e8beca3366975c5185bca6bd39a28288c3af12c855d33121445da81831d8ae"
+      }
+    },
+    {
+      "family": "array",
+      "label": "default_zero_read",
+      "before_stdout_sha256": "91a56e83d1740a1f7147ecaf796d930e8e70dcc0c8ef2e6412fc129a93136888",
+      "after_stdout_sha256": "91a56e83d1740a1f7147ecaf796d930e8e70dcc0c8ef2e6412fc129a93136888",
+      "unchanged": true,
+      "input_sha256": {
+        "dut.va": "74bb9ab45b30492a89c4d42ab9fb97c4fe9a18eb69a82c86603ff9ab331c4ae3",
+        "tb.scs": "24e8beca3366975c5185bca6bd39a28288c3af12c855d33121445da81831d8ae"
+      }
+    },
+    {
+      "family": "array",
+      "label": "scalar_dynamic_rhs",
+      "before_stdout_sha256": "c9b0c1945b58b64f4d83e6d60f958b0eed1b484c9cda5235fbbdaeb15ee04ae7",
+      "after_stdout_sha256": "c9b0c1945b58b64f4d83e6d60f958b0eed1b484c9cda5235fbbdaeb15ee04ae7",
+      "unchanged": true,
+      "input_sha256": {
+        "dut.va": "68980e5c340d3fc8e91a7eaa1ed251c292abe1b0fe4585c0588e63a6086c3d88",
+        "tb.scs": "24e8beca3366975c5185bca6bd39a28288c3af12c855d33121445da81831d8ae"
+      }
+    },
+    {
+      "family": "array",
+      "label": "instances",
+      "before_stdout_sha256": "25708331fc7138fb0d045f3a20e01f18a8c96a13b92dfaff248dea51b49fed88",
+      "after_stdout_sha256": "25708331fc7138fb0d045f3a20e01f18a8c96a13b92dfaff248dea51b49fed88",
+      "unchanged": true,
+      "input_sha256": {
+        "dut.va": "8b3f3a2d4206f8400a98c6c3c6e7ebe337f60ef306cdbc970441460354f6ab1e",
+        "tb.scs": "af6ffccadceb23d9f27851a51f82dc4b1592ee70aa1bed7a093601f11c70b5bc"
+      }
+    },
+    {
+      "family": "frontend",
+      "label": "predicate_loops",
+      "before_stdout_sha256": "926f73308eff2c380d6a7ded2b46be3390a7f65885e70d525c94bf4a4c3cf36e",
+      "after_stdout_sha256": "926f73308eff2c380d6a7ded2b46be3390a7f65885e70d525c94bf4a4c3cf36e",
+      "unchanged": true,
+      "input_sha256": {
+        "dut.va": "372cb0334b66c8e6638a5feb9a2ff97e013efb008861f0183ef7f22f46017107",
+        "tb.scs": "3a6f011171fa3be8ea67671b78aebf3d02b5b5986ea94bfaf36dc3872b77705f"
+      }
+    },
+    {
+      "family": "frontend",
+      "label": "ordered_predicate",
+      "before_stdout_sha256": "1c5c961607702e5cc8cf16eb44d619045a04a0e84c502408d8825a6b1765c59c",
+      "after_stdout_sha256": "1c5c961607702e5cc8cf16eb44d619045a04a0e84c502408d8825a6b1765c59c",
+      "unchanged": true,
+      "input_sha256": {
+        "dut.va": "063e030017a23457c68e55961e54c791dc115ca91b4703c999dccf6af29f6e09",
+        "tb.scs": "3a6f011171fa3be8ea67671b78aebf3d02b5b5986ea94bfaf36dc3872b77705f"
+      }
+    },
+    {
+      "family": "frontend",
+      "label": "parameter_math",
+      "before_stdout_sha256": "96535f633bd4d9d58acc51166319f7f50390db1dd8191d8a109012338024f80a",
+      "after_stdout_sha256": "96535f633bd4d9d58acc51166319f7f50390db1dd8191d8a109012338024f80a",
+      "unchanged": true,
+      "input_sha256": {
+        "dut.va": "7023440e711a0b12bfa475928ff4f41a43cea3c219de1a6c561d2449398bdef1",
+        "tb.scs": "24e8beca3366975c5185bca6bd39a28288c3af12c855d33121445da81831d8ae"
+      }
+    },
+    {
+      "family": "frontend",
+      "label": "typed_integer",
+      "before_stdout_sha256": "2cff397ca8c74c7df34dd16b147cb0c206405720c2ef29e6dab97ddb82c4b3ef",
+      "after_stdout_sha256": "2cff397ca8c74c7df34dd16b147cb0c206405720c2ef29e6dab97ddb82c4b3ef",
+      "unchanged": true,
+      "input_sha256": {
+        "dut.va": "b6bda596fefb6f2a951d4dc9bffbe1bf4ca11a63eca077485557896289baec3f",
+        "tb.scs": "5cd68ec4dd347d745316756bc0e303b5b301ae6dda73cfe3415ba0979210c0cb"
+      }
+    },
+    {
+      "family": "frontend",
+      "label": "typed_real",
+      "before_stdout_sha256": "1f101b26bc7cdfd3e471e29703ea1419ed05e8ddb5098fbc659500d9baa0e2d7",
+      "after_stdout_sha256": "1f101b26bc7cdfd3e471e29703ea1419ed05e8ddb5098fbc659500d9baa0e2d7",
+      "unchanged": true,
+      "input_sha256": {
+        "dut.va": "9face163aa7741db2a702a213e24b4451e32aa1579cc49f97070a3c87ae136f7",
+        "tb.scs": "5cd68ec4dd347d745316756bc0e303b5b301ae6dda73cfe3415ba0979210c0cb"
+      }
+    },
+    {
+      "family": "frontend",
+      "label": "selection_arm",
+      "before_stdout_sha256": "7e5c533ab1597f9c1afd788635aa815e133c7823324fbef2ceec0f34047b7780",
+      "after_stdout_sha256": "7e5c533ab1597f9c1afd788635aa815e133c7823324fbef2ceec0f34047b7780",
+      "unchanged": true,
+      "input_sha256": {
+        "dut.va": "f65a3d598842d115ba96b484b5cb0c7e1e5663c59dccb28e97918277ad168793",
+        "tb.scs": "5cd68ec4dd347d745316756bc0e303b5b301ae6dda73cfe3415ba0979210c0cb"
+      }
+    },
+    {
+      "family": "passive",
+      "label": "later_state",
+      "before_stdout_sha256": "00fea28e838711bcb279187b631e71e4d5e4038c5b33d67df48e39b60e57f798",
+      "after_stdout_sha256": "00fea28e838711bcb279187b631e71e4d5e4038c5b33d67df48e39b60e57f798",
+      "unchanged": true,
+      "input_sha256": {
+        "dut.va": "c636815a54f779c46ac414f0a5c591d0da27539c2e5416621c932b14c20914d4",
+        "obs.va": "0d3bb474a10500c683ade49288bd4f1424990fab0adfe221ed207f8fe51f2774",
+        "tb.scs": "e97078de66cf9f5f77612aab493f03b3c628e1a68b4419966894baeb2164711a"
+      }
+    },
+    {
+      "family": "passive",
+      "label": "integral_sample",
+      "before_stdout_sha256": "6f258745f2235cbe1e7872e2b68af5d1c2fbce601baa87b70789559e6a4b54f6",
+      "after_stdout_sha256": "6f258745f2235cbe1e7872e2b68af5d1c2fbce601baa87b70789559e6a4b54f6",
+      "unchanged": true,
+      "input_sha256": {
+        "dut.va": "9ec27c57d909fe41e2d7da17f54a8a9d8991b8b4d326b10e29316d0d16766c81",
+        "obs.va": "7a6ec8c683b5469f2a35c973d29def3a969e0cc955ae05b424af7f256911c9a8",
+        "tb.scs": "e97078de66cf9f5f77612aab493f03b3c628e1a68b4419966894baeb2164711a"
+      }
+    },
+    {
+      "family": "passive",
+      "label": "transition_sample",
+      "before_stdout_sha256": "ec0fd86fcf0a74ac3eb09784b3b69c925d5188139687e3b9729ef5c17b7add98",
+      "after_stdout_sha256": "ec0fd86fcf0a74ac3eb09784b3b69c925d5188139687e3b9729ef5c17b7add98",
+      "unchanged": true,
+      "input_sha256": {
+        "dut.va": "15e52f2a4ee5c6cde9ecf0f1889575454b014c2411c4cdcedd4e2604a87dc14f",
+        "obs.va": "0d3bb474a10500c683ade49288bd4f1424990fab0adfe221ed207f8fe51f2774",
+        "tb.scs": "e97078de66cf9f5f77612aab493f03b3c628e1a68b4419966894baeb2164711a"
+      }
+    },
+    {
+      "family": "passive_v2",
+      "label": "simultaneous_state",
+      "before_stdout_sha256": "faeaf6113d74f49888504e489e5e62da21f82cacf909d383f0f2beffde7a8512",
+      "after_stdout_sha256": "faeaf6113d74f49888504e489e5e62da21f82cacf909d383f0f2beffde7a8512",
+      "unchanged": true,
+      "input_sha256": {
+        "dut.va": "a4a586c3758a19b852023d3ee83c173530c09b4ec950a8859daf6191d1369c74",
+        "obs.va": "e2b717ed6a85bb217fc0a18b0967156cf4c1863abe1693d348dc7198e2aeac16",
+        "tb.scs": "2a094acfb38f11fe44fc881b2f314564196a5cac9127b0e9d235eedd30702664"
+      }
+    }
+  ],
+  "raw_available": "local-only; repository retains finite outputs and original hashes, not a public full-stdout archive"
+}

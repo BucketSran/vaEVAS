@@ -11,7 +11,7 @@ pub(crate) struct Selection {
     pub(crate) actions: Vec<(usize, Vec<usize>)>,
     pub(crate) ordered_steps: Vec<(usize, Vec<SelectedStep>)>,
     // Include decisions even when both arms contain no assignments.
-    decisions: Vec<(usize, bool)>,
+    pub(crate) decisions: Vec<(usize, bool)>,
 }
 
 #[cfg(test)]
@@ -87,6 +87,7 @@ pub(crate) struct Conditions {
     assignments: Vec<Vec<AssignmentBounds>>,
     stateful_events: Vec<bool>,
     state_count: usize,
+    active_events: Vec<bool>,
 }
 
 struct AssignmentBounds {
@@ -251,7 +252,25 @@ impl Conditions {
             assignments,
             stateful_events,
             state_count: program.states.len(),
+            active_events: vec![true; program.events.len()],
         })
+    }
+
+    /// Preserve predicate/action IDs while selecting only the assigned stage.
+    pub(crate) fn restrict_events(&mut self, active: &[bool]) {
+        self.active_events = active.to_vec();
+        for (event, body) in self.bodies.iter_mut().enumerate() {
+            if !active[event] {
+                body.clear();
+            }
+        }
+        for (event, assignments) in self.assignments.iter_mut().enumerate() {
+            if !active[event] {
+                for assignment in assignments {
+                    assignment.row = usize::MAX;
+                }
+            }
+        }
     }
 
     pub(crate) fn enabled(&self) -> bool {
@@ -282,7 +301,11 @@ impl Conditions {
     }
 
     pub(crate) fn check_dependencies(&self, affected: &[bool]) -> Result<(), Error> {
-        for predicate in &self.predicates {
+        for predicate in self
+            .predicates
+            .iter()
+            .filter(|p| self.active_events[p.event])
+        {
             if predicate
                 .dependencies
                 .node_dependencies
@@ -327,7 +350,7 @@ impl Conditions {
             let mut expressions: Vec<_> = self
                 .predicates
                 .iter()
-                .map(|p| Some(&p.expression))
+                .map(|p| self.active_events[p.event].then_some(&p.expression))
                 .collect();
             for assignment in self
                 .assignments
@@ -349,7 +372,11 @@ impl Conditions {
                 for trigger in event.trigger.leaves()? {
                     let matches = if let EventTrigger::Cross { guard, .. } = trigger {
                         let expressions: Vec<_> = std::iter::once(Some(guard))
-                            .chain(self.predicates.iter().map(|p| Some(&p.expression)))
+                            .chain(
+                                self.predicates
+                                    .iter()
+                                    .map(|p| self.active_events[p.event].then_some(&p.expression)),
+                            )
                             .collect();
                         GuardBounds::stateful_expressions(program, driven, &expressions)
                             .map(|bounds| {
@@ -473,6 +500,9 @@ impl Conditions {
         }
         let mut result = Selection::default();
         for &event in events {
+            if !self.active_events[event] {
+                continue;
+            }
             if self.stateful_events[event] && before_bounds.len() != self.state_count {
                 return Err(Error::new(
                     "invalid_ir",

@@ -339,20 +339,121 @@ def elaborate_loops(model: Model, parameter):
                 fail('static integer for body cannot modify its loop control variable', statement.token)
         return integer_local
 
-    def validate_event_body(statements, active, affected):
+    def validate_event_body(statements, active, affected, erased=False):
         # Empty static loops must not erase unsupported event-body structure.
-        def expression(expr, predicate=False, seen=None):
+        def integral_type(expr):
+            if expr.result_type == 'real':
+                return False
+            if expr.result_type == 'integer':
+                return True
+            if expr.op == 'number':
+                return expr.token.text.isdecimal() or expr.token.kind == 'name'
+            if expr.op == 'parameter':
+                return (model.variables.get(expr.value) == 'integer' or
+                        model.parameter_types.get(expr.value) == 'integer' or
+                        expr.value in model.genvars)
+            if expr.op in ('<', '<=', '>', '>=', '==', '!=', '&&', '||', 'unary!'):
+                return True
+            if expr.op == 'index':
+                return model.variables.get(expr.value) == 'integer'
+            if expr.op == 'checked':
+                return integral_type(expr.args[0])
+            if expr.op == 'ternary':
+                return all(integral_type(arg) for arg in expr.args[1:])
+            return expr.op in ('+', '-', '*', '/', '%', 'unary+', 'unary-') and all(integral_type(arg) for arg in expr.args)
+
+        def integer_range(expr):
+            # An erased body has no runtime signed32 check. Use the declaration
+            # domain for states, the bound value for parameters/genvars, and
+            # validate each typed intermediate before an outer fold erases it.
+            if expr.op == 'number':
+                return int(expr.value), int(expr.value)
+            if expr.op == 'parameter':
+                if expr.value in active:
+                    return active[expr.value], active[expr.value]
+                if expr.value in model.parameters:
+                    value = parameter(expr.value)
+                    return int(value), int(value)
+                return -2147483648, 2147483647
+            if expr.op == 'index':
+                return -2147483648, 2147483647
+            if expr.op in ('<', '<=', '>', '>=', '==', '!=', '&&', '||', 'unary!'):
+                return 0, 1
+            if expr.op == 'checked':
+                return integer_range(expr.args[0])
+            if expr.op == 'ternary':
+                a, b = (integer_range(arg) for arg in expr.args[1:])
+                return min(a[0], b[0]), max(a[1], b[1])
+            a = integer_range(expr.args[0])
+            if expr.op == 'unary+':
+                return a
+            if expr.op == 'unary-':
+                return -a[1], -a[0]
+            b = integer_range(expr.args[1])
+            if expr.op == '+':
+                return a[0]+b[0], a[1]+b[1]
+            if expr.op == '-':
+                return a[0]-b[1], a[1]-b[0]
+            if expr.op == '*':
+                products = [x*y for x in a for y in b]
+                return min(products), max(products)
+            if b[0] != b[1] or b[0] == 0:
+                fail('erased integer division/modulo requires a nonzero constant divisor', expr.token)
+            divisor = b[0]
+            if expr.op == '%':
+                width = abs(divisor)-1
+                return max(a[0], -width) if a[0] < 0 else 0, min(a[1], width) if a[1] > 0 else 0
+            def quotient(value):
+                return (abs(value)//abs(divisor)) * (-1 if (value < 0) != (divisor < 0) else 1)
+            values = [quotient(value) for value in a]
+            return min(values), max(values)
+
+        def expression(expr, predicate=False, seen=None, *, assignment_root=False):
             if seen is None:
                 seen = set()
             if id(expr) in seen:
                 return
             seen.add(id(expr))
-            if expr.op in OPERATOR_NAMES:
+            if expr.op in OPERATOR_NAMES and expr.op not in ("sin", "cos", "exp", "ln", "sqrt"):
                 fail('event bodies do not support history/operator calls', expr.token)
+            if expr.op == 'parameter' and expr.value in model.arrays:
+                fail('array identifier requires an index', expr.token)
+            if expr.op == 'parameter' and expr.value not in model.variables and expr.value not in model.parameters and expr.value not in model.genvars and expr.value not in active:
+                fail(f'unknown parameter or variable {expr.value!r}', expr.token)
+            if expr.op == 'index':
+                if expr.value not in model.arrays:
+                    fail('indexed identifier is not a declared variable array', expr.token)
+                from .array_elaboration import gate_dynamic_index
+                gate_dynamic_index(substitute(expr.args[0], active), model)
+                try:
+                    index = constant(expr.args[0], active)
+                except CompileError as error:
+                    if error.diagnostic['code'] == 'resource_budget':
+                        raise
+                    if erased:
+                        fail('erased loop dynamic array index lacks a retained use-site proof', expr.token,
+                             code='array_index_range')
+                else:
+                    first, last = (constant(bound, active) for bound in model.arrays[expr.value])
+                    if not min(first, last) <= index <= max(first, last):
+                        fail('array index is outside its declaration', expr.token, code='array_index_range')
             if predicate and expr.op in ('parameter', 'index') and expr.value in model.variables:
                 fail('event conditions and loop controls cannot depend on state', expr.token)
             for arg in expr.args:
                 expression(arg, predicate, seen)
+            if erased and expr.op in ('+', '-', '*', '/', '%', 'unary+', 'unary-') and integral_type(expr):
+                low, high = integer_range(expr)
+                if low < -2147483648 or high > 2147483647:
+                    def unknown_state(item):
+                        return (item.op == 'index' or item.op == 'parameter' and
+                                item.value in model.variables and item.value not in active or
+                                any(unknown_state(arg) for arg in item.args))
+                    # Match the retained assignment's final signed32 check.
+                    # Only its full value may retain an unknown state domain;
+                    # every inner operation still needs its own range proof.
+                    if not (assignment_root and unknown_state(expr) and
+                            low <= 2147483647 and high >= -2147483648):
+                        fail('erased loop integer intermediate may exceed signed 32-bit range', expr.token)
 
         for statement in statements:
             if isinstance(statement, Loop):
@@ -364,7 +465,10 @@ def elaborate_loops(model: Model, parameter):
                     expression(substitute(expr, scope), True)
                 constant(statement.limit, scope)
                 constant(statement.update, scope)
-                validate_event_body(statement.body, scope, affected)
+                limit = constant(statement.limit, scope)
+                reachable = {'<': start < limit, '<=': start <= limit,
+                             '>': start > limit, '>=': start >= limit}[statement.relation]
+                validate_event_body(statement.body, scope, affected, erased or not reachable)
             elif isinstance(statement, Conditional):
                 expression(statement.left)
                 expression(statement.right)
@@ -383,7 +487,16 @@ def elaborate_loops(model: Model, parameter):
                     if expr.op == 'index':
                         if expr.value not in model.arrays:
                             fail('indexed identifier is not a declared variable array', expr.token)
-                        index = constant(expr.args[0], active)
+                        try:
+                            index = constant(expr.args[0], active)
+                        except CompileError as error:
+                            if error.diagnostic['code'] == 'resource_budget':
+                                raise
+                            from .array_elaboration import gate_dynamic_index
+                            gate_dynamic_index(expr.args[0], model)
+                            result = Expr('parameter', expr.value, (), expr.token)
+                            memo[key] = (expr, result)
+                            return result
                         first, last = (constant(bound, active) for bound in model.arrays[expr.value])
                         if not min(first,last) <= index <= max(first,last):
                             fail('event predicate array index is outside its declaration', expr.token)
@@ -400,14 +513,20 @@ def elaborate_loops(model: Model, parameter):
                     from .ir import StateRef
                     def resolve(name):
                         return StateRef(0) if name in model.variables or name.split('[',1)[0] in model.arrays else parameter(name)
-                    value = lower(scalar(substitute(expr, active)), resolve, nodes,
-                                  model.source, preserve_structure=True, memo={})
+                    scalar_expr = scalar(substitute(expr, active))
+                    from .syntax import contains_decision
+                    if contains_decision(scalar_expr):
+                        from .predicate_structure import lower_predicate_structure
+                        value = lower_predicate_structure(scalar_expr, resolve, nodes, model.source)
+                    else:
+                        value = lower(scalar_expr, resolve, nodes,
+                                      model.source, preserve_structure=True, memo={})
                     if _predicate_degree(value) is None:
                         fail('event conditions require affine voltage/state predicates', expr.token)
                     if dependencies(expr, active)[0] & affected:
                         fail('event condition may depend on state through the voltage network', expr.token)
-                validate_event_body(statement.then_body, active, affected)
-                validate_event_body(statement.else_body, active, affected)
+                validate_event_body(statement.then_body, active, affected, erased)
+                validate_event_body(statement.else_body, active, affected, erased)
             elif isinstance(statement, Display):
                 for arg in statement.args:
                     expression(arg)
@@ -416,9 +535,15 @@ def elaborate_loops(model: Model, parameter):
                     fail('event bodies require assignments or supported conditionals', statement.token)
                 if statement.name in model.genvars:
                     fail('genvar can only be assigned in its for control', statement.token)
-                expression(statement.rhs)
+                expression(statement.rhs, assignment_root=(model.variables.get(statement.name) == 'integer'))
+                if erased and model.variables.get(statement.name) == 'integer':
+                    if not integral_type(statement.rhs):
+                        fail('erased loop integer assignment requires integral source arithmetic', statement.token)
                 if statement.index is not None:
-                    expression(substitute(statement.index, active), True)
+                    expression(substitute(statement.index, active))
+                    if erased:
+                        # Reuse the same read-side structural/type/range gate.
+                        expression(Expr('index', statement.name, (statement.index,), statement.token))
 
     def validate_initial_body(statements, active, in_loop=False):
         # Validate the unexpanded tree too: a zero-trip loop cannot erase a
