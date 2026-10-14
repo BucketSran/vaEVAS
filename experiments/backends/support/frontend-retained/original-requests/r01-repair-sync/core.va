@@ -1,0 +1,26 @@
+`include "constants.vams"
+`include "disciplines.vams"
+module r01_track_hold(vin, track, rst, vout);
+    input vin, track, rst;
+    output vout;
+    electrical vin, track, rst, vout;
+    electrical memory;
+
+    parameter real vth = 0.9;
+    parameter real vinit = 0.9;
+    parameter real tau_acq = 10n from (0:inf);
+    parameter real tau_hold = 200u from (0:inf);
+    parameter real vleak = 0.0;
+    parameter real pedestal = 2m;
+    parameter real vmid = 0.9;
+    parameter real vscale = 0.9 from (0:inf);
+    parameter real acq_curvature = 0.6 from [0:inf);
+    parameter real tau_reset = 2n from (0:inf);
+    parameter real tau_ped = 200p from (0:inf);
+
+    real hold_entry, normalized_input, effective_tau, rate, age;
+
+    analog begin
+ V(vout) <+ 0.2 + 0.3*V(vin) + 0.1*V(track)/1.8 + 0.05*V(rst)/1.8;
+ end
+endmodule

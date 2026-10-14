@@ -1,0 +1,160 @@
+{
+  "base": "ff5d0fd9",
+  "working_head": "4145da56b30f35bb9b4b9b225d37483639c8119f",
+  "source": {
+    "evas/src/evas/standard_headers.py": "efe0b2421d400ac723cfdf71c5d406cdef510dc89d3556ad999e2253600ec88e",
+    "evas/src/evas/hierarchy.py": "ec8cd24105bfb646f28874dd40fe0923ae51ca5d22b45b1be0e6153347a7a10b"
+  },
+  "kernel": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/rust_core/target/debug/evas-kernel",
+  "kernel_sha256": "642cc6079d39a07fc54870f1d1b2d495dec0a0dbea5dae5a80af06f1ce8c6f1d",
+  "runs": [
+    {
+      "label": "v4-299-baseline",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-c",
+        "from pathlib import Path;from evas import compile_sources; p=Path('/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/original-v4-299/sine_vco_idtmod_bound_step.va');compile_sources({p.name:p.read_text()},[])"
+      ],
+      "pythonpath": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python",
+      "returncode": 1,
+      "kernel_sha256": "642cc6079d39a07fc54870f1d1b2d495dec0a0dbea5dae5a80af06f1ce8c6f1d",
+      "timeout_seconds": 120
+    },
+    {
+      "label": "v4-299-candidate",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-c",
+        "from pathlib import Path;from evas import compile_sources; p=Path('/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/original-v4-299/sine_vco_idtmod_bound_step.va');compile_sources({p.name:p.read_text()},[])"
+      ],
+      "pythonpath": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/src",
+      "returncode": 1,
+      "kernel_sha256": "642cc6079d39a07fc54870f1d1b2d495dec0a0dbea5dae5a80af06f1ce8c6f1d",
+      "timeout_seconds": 120
+    },
+    {
+      "label": "r01-integrate-sync-baseline",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-m",
+        "evas",
+        "simulate",
+        "tb.scs",
+        "--kernel",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/rust_core/target/debug/evas-kernel"
+      ],
+      "pythonpath": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python",
+      "returncode": 2,
+      "kernel_sha256": "642cc6079d39a07fc54870f1d1b2d495dec0a0dbea5dae5a80af06f1ce8c6f1d",
+      "timeout_seconds": 120
+    },
+    {
+      "label": "r01-integrate-sync-candidate",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-m",
+        "evas",
+        "simulate",
+        "tb.scs",
+        "--kernel",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/rust_core/target/debug/evas-kernel"
+      ],
+      "pythonpath": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/src",
+      "returncode": 2,
+      "kernel_sha256": "642cc6079d39a07fc54870f1d1b2d495dec0a0dbea5dae5a80af06f1ce8c6f1d",
+      "timeout_seconds": 120
+    },
+    {
+      "label": "r01-repair-sync-baseline",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-m",
+        "evas",
+        "simulate",
+        "tb.scs",
+        "--kernel",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/rust_core/target/debug/evas-kernel"
+      ],
+      "pythonpath": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/baseline-python",
+      "returncode": 2,
+      "kernel_sha256": "642cc6079d39a07fc54870f1d1b2d495dec0a0dbea5dae5a80af06f1ce8c6f1d",
+      "timeout_seconds": 120
+    },
+    {
+      "label": "r01-repair-sync-candidate",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-m",
+        "evas",
+        "simulate",
+        "tb.scs",
+        "--kernel",
+        "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/rust_core/target/debug/evas-kernel"
+      ],
+      "pythonpath": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/src",
+      "returncode": 2,
+      "kernel_sha256": "642cc6079d39a07fc54870f1d1b2d495dec0a0dbea5dae5a80af06f1ce8c6f1d",
+      "timeout_seconds": 120
+    },
+    {
+      "label": "constants14-candidate",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-c",
+        "from pathlib import Path\nimport json, subprocess\nfrom evas import Instance, compile_sources\nfrom evas.standard_headers import STANDARD_ENVIRONMENT\nD=Path('/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/frontend-port/constants14');K=Path('/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/rust_core/target/debug/evas-kernel')\nsource=(D/'dut.va').read_text(); ports=['k'+str(i) for i in range(14)]\np=compile_sources({'dut.va':source},[Instance('dut','constants14',{p:p for p in ports})])\nr=json.loads(Path('/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/remote/n20a-standard-headers-v1/inputs/constants14/request.json').read_text());r['program']=p.to_dict()\n(D/'candidate-request.json').write_text(json.dumps(r,indent=2))\ns=subprocess.run([str(K)],input=json.dumps(r),capture_output=True,text=True,timeout=90)\n(D/'candidate-response.json').write_text(s.stdout);(D/'kernel-stderr.log').write_text(s.stderr)\nprint(json.dumps({'environment':STANDARD_ENVIRONMENT,'returncode':s.returncode,'schema_version':p.schema_version}));raise SystemExit(s.returncode)\n"
+      ],
+      "pythonpath": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/worktrees/evas-frontend-retained/evas/src",
+      "returncode": 0,
+      "kernel_sha256": "642cc6079d39a07fc54870f1d1b2d495dec0a0dbea5dae5a80af06f1ce8c6f1d",
+      "timeout_seconds": 90
+    }
+  ],
+  "artifacts": {
+    "n10a-first-green.log": "08a569789529501f51abcf33a45dc3719e7fa14d5be74c6bd46a39730f64de4c",
+    "n10a-baseline.log": "cb6ac62db2a21154737cf164917d5a65ad36f83007acbbe71e3b35e50f4f4e31",
+    "n10a-baseline.json": "7f02934d32a8b3855221ae13f204c029960328738e2a745d0fa7fdbb1d6d6deb",
+    "r01-integrate-sync-candidate.stderr": "528a056f09fa0955d4240250b4ac1698ee4eac88d83131353a4fe9c2d9941c86",
+    "v4-299-candidate.stderr": "0b777a8f61f6e3648a797de2dfae18553894fa6b41340e86c63a89a03bfb634b",
+    "n20a-baseline-v2.json": "1072193901c7a0e75f1f944e45d5efef5ee99bdbeefccda639dfc7fc2a5f59f0",
+    "r01-repair-sync-candidate.stderr": "6c8d3eac6cbc4c29be37b7b6bd3f016af41e0f935fedfcc139c39dbbf3e87e27",
+    "n10a-green.json": "a06467c7107253fb33d1780694ebe87efe8b1c8183e14ef0d2d81784a673b8da",
+    "r01-integrate-sync-baseline.stderr": "528a056f09fa0955d4240250b4ac1698ee4eac88d83131353a4fe9c2d9941c86",
+    "n20a-baseline.log": "0d5d2f1ebd2c437da4a31f60e9b3b00efacf9a7e2381ed81797363bd730502b9",
+    "r01-integrate-sync-baseline.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "n20a-baseline-v2.log": "eb8d7a66069b90c4af6c23ed43f28da8f0f0e52205ca27f413da490aeb2eb9c8",
+    "v4-299-candidate.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "r01-repair-sync-candidate.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "r01-integrate-sync-candidate.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "v4-299-baseline.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "replay.py": "b4daada3033b5623a7de2dca3d80fddb43175434b17b69cf8510bb7c49a2448c",
+    "constants14-candidate.stdout": "dd954f1aae8c82e93eb244f7533ca8a086a20cb3c5b6021d3b90505dfb9259c8",
+    "r01-repair-sync-baseline.stderr": "6c8d3eac6cbc4c29be37b7b6bd3f016af41e0f935fedfcc139c39dbbf3e87e27",
+    "n20a-green.log": "448ed6fe435c63cb911fc41a379a2a7e1404a3bcdc9188c85641e26a3071659e",
+    "n20a-baseline.json": "c487d15e88aef45593ca84703a2b18e7cd7a9637bac937469986ec96db54bba0",
+    "n10a-green.log": "d6451011634e9240b8f3de1af3a3b7f9c217afa8a9a03e609c7e3c426408cdbb",
+    "r01-repair-sync-baseline.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "constants14-candidate.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "v4-299-baseline.stderr": "41f33ac8624242eaafca9d6024a1953b84a565e6dede83c8a78d42b9080265ab",
+    "n20a-green.json": "6c63b269a7462b12a4c85eeda58342942f5eb4c6c9dfe6fce25bf54bdd174137",
+    "r01-repair-sync/tb.scs": "3b7ed7b9b38bb66c5d0ae2d0a7ca5ade360fae99265a3e6a5153b5e92fb84bb1",
+    "r01-repair-sync/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+    "r01-repair-sync/core.va": "061320ed3eaf2f6bc8c83178209361edba4279613503561ade08b6fa4b69c405",
+    "constants14/candidate-request.json": "2df8c1b93f653470ecf302662d3dbcf48d9f0781535aff0d3ad3ff3737e7f932",
+    "constants14/tb.scs": "541dff5568bc16f08f4a02d6142f930ea83d6e49e099a54d45bf46590a2b90ca",
+    "constants14/dut.va": "4999a6c71fec89ac2d3943264ef6c2be6d652721b9a0fc415572e42571d0d556",
+    "constants14/kernel-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "constants14/candidate-response.json": "6724fc1b07daa4ce548088958590aa376145cd5a4242f2010b51e78fb54b14e1",
+    "constants14/ORACLES.json": "18835d1f3f07c4acb3912ba0beb21573de787257aaa6272fcdbae5e80da02f51",
+    "original-v4-299/sine_vco_idtmod_bound_step.va": "e7d4b7824584139fc18980b04c6c1b4d20191c0cd0436ba10251a008387e0737",
+    "r01-integrate-sync/tb.scs": "3b7ed7b9b38bb66c5d0ae2d0a7ca5ade360fae99265a3e6a5153b5e92fb84bb1",
+    "r01-integrate-sync/dut.va": "e444e4c46d03d9d9e396b1ffa44516567b36180ff0b8defb73b179664be6a15a",
+    "r01-integrate-sync/core.va": "061320ed3eaf2f6bc8c83178209361edba4279613503561ade08b6fa4b69c405"
+  }
+}

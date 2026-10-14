@@ -676,7 +676,8 @@ wrapped 相位本身是不连续输出。严格区间若横跨 wrap 点，默认
 无事件/初始化的普通 local real 可重复无条件赋值，每条赋值捕获当时表达式；每个动态调用仍有独立身份。
 例如 ``phase = idtmod(...); V(out)<+sin(2*`M_PI*phase);`` 不创建持久状态。
 条件动态调用仍拒绝；普通条件与动态算子联立也尚未支持。`constants.vams`
-当前只解析窄集合中的 `` `M_PI``，不会执行 include 文件或引入任意宏系统。
+数学宏由显式 include 展开，支持范围见[标准头编译准入](../reference/frontend-admission.md)。
+例如 `M_TWO_PI` 与原 `2*M_PI` 保留各自 binary64 系数来源；标准头补齐常量不改变周期误差的认证规则。
 
 验证入口：[test_phase.py](../../tests/test_phase.py) 使用固定常频、chirp、负频率和 Decimal 高精度正弦答案，
 检查仿射重复引用、隐藏依赖、相消误差、wrap 两侧包围、exact wrap 及 raw IR 畸形字段。

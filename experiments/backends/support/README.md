@@ -32,6 +32,10 @@ EVAS 使用 absolute `1e-8 V`、relative `0`、stop `1 s`、max_step `0.125 s`�
 支持边界、`idt` 自身 ic、种子不变兼容路径和明确拒绝见[算子合同](../../../evas/docs/math/operators.md#transition)。
 开发回归另验 OR 去重、正时刻邻居、整数/writer 检查与失败后重试；它们不替代实际后端对齐。
 
+## 标准头与未引用私有节点的前端有限对照
+
+[留存小证据与结论](frontend-retained/README.md)覆盖十四个常量同源参考复用、四个私有节点控件，以及原请求仍阻塞的事实。N10a 动态控制的 v1 超预算和 v2 exact-query 缺时刻保留；附加近点对照只比较实际样本与原查询解析值，不认证缺失的 Spectre(q)，不回写本页任何 Q 条件。
+
 <a id="legacy-chain-q"></a>
 
 ## 旧整链 Q 验收与中断边沿积分（2026-10-13）

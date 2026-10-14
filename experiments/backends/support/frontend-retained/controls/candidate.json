@@ -1,0 +1,532 @@
+{
+  "unused_scalar": {
+    "outcome": "success",
+    "result": {
+      "engine": "evas-static-0.15.0",
+      "schema_version": 19,
+      "nodes": [
+        "0",
+        "u",
+        "y"
+      ],
+      "solutions": [
+        {
+          "voltages": [
+            0.0,
+            0.0,
+            -0.0
+          ],
+          "max_residual_v": 0.0,
+          "max_residual_ratio": 0.0
+        },
+        {
+          "voltages": [
+            0.0,
+            0.5,
+            0.5
+          ],
+          "max_residual_v": 0.0,
+          "max_residual_ratio": 0.0
+        }
+      ]
+    }
+  },
+  "referenced_singular": {
+    "outcome": "rejected",
+    "message": "singular_system: fewer voltage constraints than unknown nodes; unknown nodes: [\"dut:floating\", \"y\"]; constraints: referenced_singular.va:2:98 (dut)",
+    "detail": {
+      "kind": "singular_system",
+      "message": "fewer voltage constraints than unknown nodes; unknown nodes: [\"dut:floating\", \"y\"]; constraints: referenced_singular.va:2:98 (dut)",
+      "sample": 0
+    }
+  },
+  "zero_forcing_filter": {
+    "outcome": "success",
+    "result": {
+      "observation_evidence": {
+        "schema_version": 1,
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "effective_controls": {
+          "absolute_V": 1e-09,
+          "relative": 0.0,
+          "stop_s": 6e-06,
+          "max_step_s": 1e-05,
+          "max_step_applied": true
+        },
+        "sample_origins": [
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame",
+          "accepted_controller_frame"
+        ],
+        "initial_settled": true,
+        "voltage_bounds_V": [
+          [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              -0.0,
+              0.0
+            ]
+          ],
+          [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.5,
+              0.5
+            ],
+            [
+              -1.7771377973721033e-68,
+              1.7771377973721033e-68
+            ]
+          ],
+          [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              1.0,
+              1.0
+            ],
+            [
+              -2.4309111457218186e-68,
+              2.4309111457218186e-68
+            ]
+          ],
+          [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              1.0,
+              1.0
+            ],
+            [
+              -3.2899291024385783e-69,
+              3.2899291024385783e-69
+            ]
+          ],
+          [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              1.0,
+              1.0
+            ],
+            [
+              -4.452921050524474e-70,
+              4.452921050524474e-70
+            ]
+          ],
+          [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              -1.0,
+              -1.0
+            ],
+            [
+              -6.046581951286076e-56,
+              6.046581951286076e-56
+            ]
+          ],
+          [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              -1.0,
+              -1.0
+            ],
+            [
+              -1.107470115308955e-57,
+              1.107470115308955e-57
+            ]
+          ]
+        ]
+      },
+      "engine": "evas-events-0.15.0",
+      "schema_version": 19,
+      "nodes": [
+        "0",
+        "u",
+        "y"
+      ],
+      "solutions": [
+        {
+          "voltages": [
+            0.0,
+            0.0,
+            -0.0
+          ],
+          "max_residual_v": 0.0,
+          "max_residual_ratio": 0.0
+        },
+        {
+          "voltages": [
+            0.0,
+            0.5,
+            -0.0
+          ],
+          "max_residual_v": 0.0,
+          "max_residual_ratio": 0.0
+        },
+        {
+          "voltages": [
+            0.0,
+            1.0,
+            -0.0
+          ],
+          "max_residual_v": 0.0,
+          "max_residual_ratio": 0.0
+        },
+        {
+          "voltages": [
+            0.0,
+            1.0,
+            -0.0
+          ],
+          "max_residual_v": 0.0,
+          "max_residual_ratio": 0.0
+        },
+        {
+          "voltages": [
+            0.0,
+            1.0,
+            -0.0
+          ],
+          "max_residual_v": 0.0,
+          "max_residual_ratio": 0.0
+        },
+        {
+          "voltages": [
+            0.0,
+            -1.0,
+            -0.0
+          ],
+          "max_residual_v": 0.0,
+          "max_residual_ratio": 0.0
+        },
+        {
+          "voltages": [
+            0.0,
+            -1.0,
+            -0.0
+          ],
+          "max_residual_v": 0.0,
+          "max_residual_ratio": 0.0
+        }
+      ],
+      "transient": {
+        "times": [
+          0.0,
+          5e-07,
+          1e-06,
+          2e-06,
+          3e-06,
+          4e-06,
+          6e-06
+        ],
+        "state_names": [
+          "dut:q"
+        ],
+        "states": [
+          [
+            0.0
+          ],
+          [
+            0.0
+          ],
+          [
+            0.0
+          ],
+          [
+            0.0
+          ],
+          [
+            0.0
+          ],
+          [
+            0.0
+          ],
+          [
+            0.0
+          ]
+        ],
+        "events": [],
+        "accepted_steps": 6,
+        "discarded_trials": 0
+      }
+    }
+  },
+  "input_filter_product": {
+    "outcome": "success",
+    "result": {
+      "observation_evidence": {
+        "schema_version": 1,
+        "nodes": [
+          "0",
+          "u",
+          "y"
+        ],
+        "effective_controls": {
+          "absolute_V": 1e-09,
+          "relative": 0.0,
+          "stop_s": 6e-06,
+          "max_step_s": 1e-05,
+          "max_step_applied": true
+        },
+        "sample_origins": [
+          "implicit_history_evaluation",
+          "implicit_history_evaluation",
+          "implicit_history_evaluation",
+          "implicit_history_evaluation",
+          "implicit_history_evaluation",
+          "implicit_history_evaluation",
+          "implicit_history_evaluation"
+        ],
+        "initial_settled": true,
+        "voltage_bounds_V": [
+          [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ],
+            [
+              -1.0000000000000003e-15,
+              1.0000000000000003e-15
+            ]
+          ],
+          [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.5,
+              0.5
+            ],
+            [
+              0.0919698602928595,
+              0.09196986029286165
+            ]
+          ],
+          [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              1.0,
+              1.0
+            ],
+            [
+              0.5676676416183046,
+              0.567667641618308
+            ]
+          ],
+          [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              1.0,
+              1.0
+            ],
+            [
+              0.9414901778260578,
+              0.9414901778260636
+            ]
+          ],
+          [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              1.0,
+              1.0
+            ],
+            [
+              0.9920815566439617,
+              0.9920815566439705
+            ]
+          ],
+          [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              -1.0,
+              -1.0
+            ],
+            [
+              0.13640692801098805,
+              0.13640692801100096
+            ]
+          ],
+          [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              -1.0,
+              -1.0
+            ],
+            [
+              0.9841827411466273,
+              0.9841827411466463
+            ]
+          ]
+        ]
+      },
+      "engine": "evas-implicit-0.15.0",
+      "schema_version": 19,
+      "nodes": [
+        "0",
+        "u",
+        "y"
+      ],
+      "solutions": [
+        {
+          "voltages": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "max_residual_v": 0.0,
+          "max_residual_ratio": 0.0,
+          "max_scaled_residual_ratio": 0.0,
+          "max_voltage_correction_v": 0.0,
+          "max_voltage_correction_ratio": 0.0
+        },
+        {
+          "voltages": [
+            0.0,
+            0.5,
+            0.09196986029286058
+          ],
+          "max_residual_v": 0.0,
+          "max_residual_ratio": 0.0,
+          "max_scaled_residual_ratio": 0.0,
+          "max_voltage_correction_v": 0.0,
+          "max_voltage_correction_ratio": 0.0
+        },
+        {
+          "voltages": [
+            0.0,
+            1.0,
+            0.5676676416183063
+          ],
+          "max_residual_v": 1.1102230246251565e-16,
+          "max_residual_ratio": 1.1102230246251564e-07,
+          "max_scaled_residual_ratio": 1.1102230246251564e-07,
+          "max_voltage_correction_v": 1.1102230246251565e-16,
+          "max_voltage_correction_ratio": 1.1102230246251564e-07
+        },
+        {
+          "voltages": [
+            0.0,
+            1.0,
+            0.9414901778260607
+          ],
+          "max_residual_v": 0.0,
+          "max_residual_ratio": 0.0,
+          "max_scaled_residual_ratio": 0.0,
+          "max_voltage_correction_v": 0.0,
+          "max_voltage_correction_ratio": 0.0
+        },
+        {
+          "voltages": [
+            0.0,
+            1.0,
+            0.992081556643966
+          ],
+          "max_residual_v": 0.0,
+          "max_residual_ratio": 0.0,
+          "max_scaled_residual_ratio": 0.0,
+          "max_voltage_correction_v": 0.0,
+          "max_voltage_correction_ratio": 0.0
+        },
+        {
+          "voltages": [
+            0.0,
+            -1.0,
+            0.13640692801099452
+          ],
+          "max_residual_v": 2.7755575615628914e-17,
+          "max_residual_ratio": 2.775557561562891e-08,
+          "max_scaled_residual_ratio": 2.775557561562891e-08,
+          "max_voltage_correction_v": 2.7755575615628914e-17,
+          "max_voltage_correction_ratio": 2.775557561562891e-08
+        },
+        {
+          "voltages": [
+            0.0,
+            -1.0,
+            0.9841827411466368
+          ],
+          "max_residual_v": 0.0,
+          "max_residual_ratio": 0.0,
+          "max_scaled_residual_ratio": 0.0,
+          "max_voltage_correction_v": 0.0,
+          "max_voltage_correction_ratio": 0.0
+        }
+      ],
+      "transient": {
+        "times": [
+          0.0,
+          5e-07,
+          1e-06,
+          2e-06,
+          3e-06,
+          4e-06,
+          6e-06
+        ],
+        "state_names": [],
+        "states": [
+          [],
+          [],
+          [],
+          [],
+          [],
+          [],
+          []
+        ],
+        "events": [],
+        "accepted_steps": 47,
+        "discarded_trials": 0
+      }
+    }
+  }
+}

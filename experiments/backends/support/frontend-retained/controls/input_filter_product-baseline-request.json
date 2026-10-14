@@ -1,0 +1,139 @@
+{
+  "program": {
+    "nodes": [
+      "0",
+      "dut:z",
+      "u",
+      "y"
+    ],
+    "contributions": [
+      {
+        "branch": {
+          "instance": "dut",
+          "local_positive": "r",
+          "local_negative": "y",
+          "kind": "voltage"
+        },
+        "positive": 0,
+        "negative": 3,
+        "rhs": {
+          "op": "multiply",
+          "left": {
+            "constant": -1.0,
+            "terms": [],
+            "op": "affine"
+          },
+          "right": {
+            "op": "multiply",
+            "left": {
+              "operator": 0,
+              "op": "operator"
+            },
+            "right": {
+              "constant": 0.0,
+              "terms": [
+                {
+                  "node": 0,
+                  "coefficient": -1.0
+                },
+                {
+                  "node": 2,
+                  "coefficient": 1.0
+                }
+              ],
+              "op": "affine"
+            }
+          }
+        },
+        "origin": {
+          "source": "input_filter_product.va",
+          "line": 2,
+          "column": 99,
+          "instance": "dut",
+          "expansion": []
+        }
+      }
+    ],
+    "states": [],
+    "events": [],
+    "operators": [
+      {
+        "input": {
+          "constant": 0.0,
+          "terms": [
+            {
+              "node": 0,
+              "coefficient": -1.0
+            },
+            {
+              "node": 2,
+              "coefficient": 1.0
+            }
+          ],
+          "op": "affine"
+        },
+        "numerator": [
+          1.0
+        ],
+        "denominator": [
+          1.0,
+          5e-07
+        ],
+        "origin": {
+          "source": "input_filter_product.va",
+          "line": 2,
+          "column": 107,
+          "instance": "dut",
+          "expansion": []
+        },
+        "kind": "laplace_nd"
+      }
+    ],
+    "schema_version": 19
+  },
+  "driven": [
+    "u"
+  ],
+  "samples": [],
+  "tolerances": {
+    "absolute": 1e-09,
+    "relative": 0
+  },
+  "transient": {
+    "pwl": [
+      [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1e-06,
+          1.0
+        ],
+        [
+          3e-06,
+          1.0
+        ],
+        [
+          4e-06,
+          -1.0
+        ],
+        [
+          6e-06,
+          -1.0
+        ]
+      ]
+    ],
+    "output_times": [
+      0,
+      5e-07,
+      1e-06,
+      2e-06,
+      3e-06,
+      4e-06,
+      6e-06
+    ],
+    "stop": 6e-06,
+    "max_step": 1e-05
+  }
+}

@@ -1,0 +1,134 @@
+[
+  {
+    "argv": [
+      "taskset",
+      "-c",
+      "0",
+      "prlimit",
+      "--as=4294967296",
+      "--fsize=33554432",
+      "--",
+      "/bin/csh",
+      "-f",
+      "run.csh"
+    ],
+    "returncode": 0,
+    "timeout": false,
+    "status": "completed",
+    "cleanup": {
+      "signals": [
+        "SIGTERM",
+        "SIGKILL"
+      ],
+      "errors": [],
+      "complete": true
+    },
+    "elapsed_seconds": 9.403899928554893,
+    "completed_utc": "2026-10-14T05:19:50Z",
+    "log": "stdout.log",
+    "log_sha256": "93bb9c459a9d3e942dfbd6b582b82c57602e6c14e74563313939f58768b55092",
+    "label": "unused_scalar",
+    "source_sha256": "c19422f975845f0dd33e583c4a64badb51cc8e75a7a36420ea5a69e782b86dc9",
+    "deck_sha256": "6c0f411e26a0afa568f2c8a1ffe183b9970b114d374477301b0862a7abf45c51",
+    "directory_bytes": 97826
+  },
+  {
+    "argv": [
+      "taskset",
+      "-c",
+      "0",
+      "prlimit",
+      "--as=4294967296",
+      "--fsize=33554432",
+      "--",
+      "/bin/csh",
+      "-f",
+      "run.csh"
+    ],
+    "returncode": 0,
+    "timeout": false,
+    "status": "completed",
+    "cleanup": {
+      "signals": [
+        "SIGTERM",
+        "SIGKILL"
+      ],
+      "errors": [],
+      "complete": true
+    },
+    "elapsed_seconds": 9.354806818068027,
+    "completed_utc": "2026-10-14T05:19:59Z",
+    "log": "stdout.log",
+    "log_sha256": "db42b6c96a7c446544e71824cfbcd8fc7240011b6d614bba1107c73c19e77e5e",
+    "label": "zero_forcing_filter",
+    "source_sha256": "c9f63ce25dd32bfee9bcfb00b7302155d2cbacd12ce180ee3b6cec7c7de362f3",
+    "deck_sha256": "5144dc46867a207008f5d4b4408d960f9b70c4bd5fa9710132fb96cdad56cfc1",
+    "directory_bytes": 116666
+  },
+  {
+    "argv": [
+      "taskset",
+      "-c",
+      "0",
+      "prlimit",
+      "--as=4294967296",
+      "--fsize=33554432",
+      "--",
+      "/bin/csh",
+      "-f",
+      "run.csh"
+    ],
+    "returncode": 0,
+    "timeout": false,
+    "status": "completed",
+    "cleanup": {
+      "signals": [
+        "SIGTERM",
+        "SIGKILL"
+      ],
+      "errors": [],
+      "complete": true
+    },
+    "elapsed_seconds": 9.245279770344496,
+    "completed_utc": "2026-10-14T05:20:09Z",
+    "log": "stdout.log",
+    "log_sha256": "15d5c55e8bb71375f7a16ab2fa83475b40b44c4d24ad7ec92c19cc5e1fdeeee9",
+    "label": "input_filter_product",
+    "source_sha256": "db758e435d7932bb78f2e2ed601515e1a3778b6741671ddacd681f01814b883e",
+    "deck_sha256": "5144dc46867a207008f5d4b4408d960f9b70c4bd5fa9710132fb96cdad56cfc1",
+    "directory_bytes": 123513
+  },
+  {
+    "argv": [
+      "taskset",
+      "-c",
+      "0",
+      "prlimit",
+      "--as=4294967296",
+      "--fsize=33554432",
+      "--",
+      "/bin/csh",
+      "-f",
+      "run.csh"
+    ],
+    "returncode": 0,
+    "timeout": false,
+    "status": "completed",
+    "cleanup": {
+      "signals": [
+        "SIGTERM",
+        "SIGKILL"
+      ],
+      "errors": [],
+      "complete": true
+    },
+    "elapsed_seconds": 9.318453799933195,
+    "completed_utc": "2026-10-14T05:20:18Z",
+    "log": "stdout.log",
+    "log_sha256": "dad6fa45c84efe32a8eb895230aacec69677119ec63815f0130dea24708ab15b",
+    "label": "referenced_singular",
+    "source_sha256": "28abe32cba048c10cc3bf1bdfb747eded1ea49842113852db3c938590d49f773",
+    "deck_sha256": "6c0f411e26a0afa568f2c8a1ffe183b9970b114d374477301b0862a7abf45c51",
+    "directory_bytes": 100254
+  }
+]

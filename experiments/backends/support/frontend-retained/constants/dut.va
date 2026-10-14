@@ -1,0 +1,22 @@
+`include "disciplines.vams"
+`include "constants.vams"
+module constants14(k0,k1,k2,k3,k4,k5,k6,k7,k8,k9,k10,k11,k12,k13);
+output k0,k1,k2,k3,k4,k5,k6,k7,k8,k9,k10,k11,k12,k13;
+electrical k0,k1,k2,k3,k4,k5,k6,k7,k8,k9,k10,k11,k12,k13;
+analog begin
+ V(k0) <+ `M_E;
+ V(k1) <+ `M_LOG2E;
+ V(k2) <+ `M_LOG10E;
+ V(k3) <+ `M_LN2;
+ V(k4) <+ `M_LN10;
+ V(k5) <+ `M_PI;
+ V(k6) <+ `M_TWO_PI;
+ V(k7) <+ `M_PI_2;
+ V(k8) <+ `M_PI_4;
+ V(k9) <+ `M_1_PI;
+ V(k10) <+ `M_2_PI;
+ V(k11) <+ `M_2_SQRTPI;
+ V(k12) <+ `M_SQRT2;
+ V(k13) <+ `M_SQRT1_2;
+end
+endmodule

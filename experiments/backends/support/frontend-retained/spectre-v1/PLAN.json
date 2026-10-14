@@ -1,0 +1,88 @@
+[
+  {
+    "label": "unused_scalar",
+    "case": "unused_scalar",
+    "source_sha256": "c19422f975845f0dd33e583c4a64badb51cc8e75a7a36420ea5a69e782b86dc9",
+    "saved_nodes": [
+      "u",
+      "y"
+    ],
+    "query_times": [
+      0,
+      1
+    ],
+    "stop": 1.0,
+    "maxstep": 0.03125,
+    "voltage_budget": 1e-09,
+    "role": "qualification",
+    "oracle": "y=u; y=0; or u times exact first-order PWL recurrence, tau=0.5us as applicable",
+    "static_evas_scope": "u=0 and0.5 only"
+  },
+  {
+    "label": "zero_forcing_filter",
+    "case": "zero_forcing_filter",
+    "source_sha256": "c9f63ce25dd32bfee9bcfb00b7302155d2cbacd12ce180ee3b6cec7c7de362f3",
+    "saved_nodes": [
+      "u",
+      "y"
+    ],
+    "query_times": [
+      0,
+      5e-07,
+      1e-06,
+      2e-06,
+      3e-06,
+      4e-06,
+      6e-06
+    ],
+    "stop": 6e-06,
+    "maxstep": 5e-10,
+    "voltage_budget": 1e-09,
+    "role": "qualification",
+    "oracle": "y=u; y=0; or u times exact first-order PWL recurrence, tau=0.5us as applicable",
+    "static_evas_scope": null
+  },
+  {
+    "label": "input_filter_product",
+    "case": "input_filter_product",
+    "source_sha256": "db758e435d7932bb78f2e2ed601515e1a3778b6741671ddacd681f01814b883e",
+    "saved_nodes": [
+      "u",
+      "y"
+    ],
+    "query_times": [
+      0,
+      5e-07,
+      1e-06,
+      2e-06,
+      3e-06,
+      4e-06,
+      6e-06
+    ],
+    "stop": 6e-06,
+    "maxstep": 5e-10,
+    "voltage_budget": 2e-09,
+    "role": "qualification",
+    "oracle": "y=u; y=0; or u times exact first-order PWL recurrence, tau=0.5us as applicable",
+    "static_evas_scope": null
+  },
+  {
+    "label": "referenced_singular",
+    "case": "referenced_singular",
+    "source_sha256": "28abe32cba048c10cc3bf1bdfb747eded1ea49842113852db3c938590d49f773",
+    "saved_nodes": [
+      "u",
+      "y"
+    ],
+    "query_times": [
+      0,
+      1
+    ],
+    "stop": 1.0,
+    "maxstep": 0.03125,
+    "voltage_budget": 1e-09,
+    "role": "diagnostic_underdetermined",
+    "oracle": "y=u; y=0; or u times exact first-order PWL recurrence, tau=0.5us as applicable",
+    "static_evas_scope": "u=0 and0.5 only"
+  }
+]

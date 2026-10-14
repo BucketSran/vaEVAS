@@ -1,0 +1,54 @@
+[
+  {
+    "label": "zero_forcing_filter",
+    "case": "zero_forcing_filter",
+    "source_sha256": "c9f63ce25dd32bfee9bcfb00b7302155d2cbacd12ce180ee3b6cec7c7de362f3",
+    "saved_nodes": [
+      "u",
+      "y"
+    ],
+    "query_times": [
+      0,
+      5e-07,
+      1e-06,
+      2e-06,
+      3e-06,
+      4e-06,
+      6e-06
+    ],
+    "stop": 6e-06,
+    "maxstep": 5e-11,
+    "voltage_budget": 1e-09,
+    "role": "qualification",
+    "oracle": "y=u; y=0; or u times exact first-order PWL recurrence, tau=0.5us as applicable",
+    "static_evas_scope": null,
+    "reference_change": "Tighter numerical controls and periodic native observation; source/stimulus/required query points/budget unchanged. Prior v1 stays failed.",
+    "parent_run": "frontend-spectre-v1"
+  },
+  {
+    "label": "input_filter_product",
+    "case": "input_filter_product",
+    "source_sha256": "db758e435d7932bb78f2e2ed601515e1a3778b6741671ddacd681f01814b883e",
+    "saved_nodes": [
+      "u",
+      "y"
+    ],
+    "query_times": [
+      0,
+      5e-07,
+      1e-06,
+      2e-06,
+      3e-06,
+      4e-06,
+      6e-06
+    ],
+    "stop": 6e-06,
+    "maxstep": 5e-11,
+    "voltage_budget": 2e-09,
+    "role": "qualification",
+    "oracle": "y=u; y=0; or u times exact first-order PWL recurrence, tau=0.5us as applicable",
+    "static_evas_scope": null,
+    "reference_change": "Tighter numerical controls and periodic native observation; source/stimulus/required query points/budget unchanged. Prior v1 stays failed.",
+    "parent_run": "frontend-spectre-v1"
+  }
+]

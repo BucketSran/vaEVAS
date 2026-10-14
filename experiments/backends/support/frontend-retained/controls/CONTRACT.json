@@ -1,0 +1,112 @@
+{
+  "sources": "byte-for-byte .va fixtures in this directory",
+  "instances": {
+    "name": "dut",
+    "module": "m",
+    "connections": {
+      "u": "u",
+      "y": "y",
+      "r": "0"
+    }
+  },
+  "static_controls": {
+    "driven": [
+      "u"
+    ],
+    "samples": [
+      [
+        0
+      ],
+      [
+        0.5
+      ]
+    ],
+    "absolute": 1e-09,
+    "relative": 0
+  },
+  "transient_controls": {
+    "pwl": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        1e-06,
+        1.0
+      ],
+      [
+        3e-06,
+        1.0
+      ],
+      [
+        4e-06,
+        -1.0
+      ],
+      [
+        6e-06,
+        -1.0
+      ]
+    ],
+    "output_times": [
+      0,
+      5e-07,
+      1e-06,
+      2e-06,
+      3e-06,
+      4e-06,
+      6e-06
+    ],
+    "stop": 6e-06,
+    "max_step": 1e-05,
+    "absolute": 1e-09,
+    "relative": 0
+  },
+  "expected": {
+    "unused_scalar": {
+      "y": [
+        0,
+        0.5
+      ],
+      "omitted": [
+        "dut:floating"
+      ]
+    },
+    "referenced_singular": {
+      "rejection_kind": "singular_system",
+      "retained": [
+        "dut:floating"
+      ],
+      "voltage_oracle": "underconstrained; no invented ground value"
+    },
+    "zero_forcing_filter": {
+      "y": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "omitted": [
+        "dut:z"
+      ]
+    },
+    "input_filter_product": {
+      "y": [
+        0.0,
+        0.09196986029286058,
+        0.5676676416183063,
+        0.9414901778260607,
+        0.9920815566439661,
+        0.1364069280109945,
+        0.9841827411466367
+      ],
+      "absolute_gate": 2e-09,
+      "omitted": [
+        "dut:z"
+      ]
+    }
+  },
+  "oracle": "Independent Decimal segment solution of tau*f'+f=u, tau=0.5e-6; product y=u*f. Implementation reused from fixed test_laplace.py oracle, not DUT outputs."
+}
