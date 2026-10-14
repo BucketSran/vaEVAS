@@ -45,7 +45,8 @@ def run():
  for group,labels,initial in [('base',p['base_labels'],False),('initial',p['initial_labels'],True)]:
   for label in labels:
    f=P/group/label;a=load(f/'evidence.json')
-   assert sha(f/'dut.va')==a['source_sha256'] and sha(f/'tb.scs')==a['deck_sha256']
+   source=load(f/'dut-source.json')['source'].encode('utf8') if (f/'dut-source.json').exists() else (f/'dut.va').read_bytes()
+   assert hashlib.sha256(source).hexdigest()==a['source_sha256'] and sha(f/'tb.scs')==a['deck_sha256']
    if initial:assert sha(f/'dut-response.json')==a['dut_response_sha256']
    else:
     assert sha(f/'REQUEST.json')==a['request_sha256'] and sha(f/'tb.evas.scs')==a['evas_deck_sha256']

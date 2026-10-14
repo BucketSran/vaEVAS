@@ -1,0 +1,5 @@
+{
+  "encoding": "utf-8",
+  "source": "`include \"disciplines.vams\"\nmodule m(u,y,r); input u; output y; inout r; electrical u,y,r; \nanalog begin V(y,r)<+idt(V(u,r)<0.5 ? 2*(1-V(y,r)) : -V(y,r),0); end endmodule\n",
+  "source_sha256": "14e4a0e708f506aeb3b8f30d8b784a6fcb0028d4fac64f37e5721056158b6e79"
+}
