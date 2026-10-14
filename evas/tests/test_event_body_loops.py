@@ -22,6 +22,34 @@ def values(result, node='y'):
 
 
 class EventBodyLoops(unittest.TestCase):
+    def test_empty_loops_do_not_erase_undeclared_voltage_nodes(self):
+        bodies = [
+            '@(timer(1)) for(i=0;i<0;i=i+1) if(V(missing,r)>0.5) n=1;',
+            '@(timer(1)) for(i=0;i<0;i=i+1) n=V(missing,r);',
+            '@(timer(1)) for(i=0;i<0;i=i+1) n=0*V(missing,r);',
+            '@(timer(1)) for(i=0;i<0;i=i+1) if(V(u,r)>0) n=1; else n=V(missing,r);',
+            'for(i=0;i<0;i=i+1) V(y,r)<+V(missing,r);',
+            'for(i=0;i<0;i=i+1) V(missing,r)<+1;',
+            'for(i=0;i<0;i=i+1) $bound_step(1+V(missing,r));',
+            'for(i=0;i<0;i=i+1) $display("%.17g",V(missing,r));',
+            'for(i=0;i<0;i=i+1) @(timer(1)) n=V(missing,r);',
+            'for(i=0;i<0;i=i+1) @(cross(V(missing,r)-0.5,1)) n=1;',
+        ]
+        for body in bodies:
+            with self.subTest(body=body):
+                with self.assertRaises(CompileError) as caught:
+                    compile_loop('@(initial_step) n=0; '+body+' V(y,r)<+n;')
+                self.assertEqual(caught.exception.diagnostic['code'], 'undeclared_node')
+                self.assertIn('missing', str(caught.exception))
+
+    def test_valid_empty_loop_has_no_runtime_effect_after_failed_binding(self):
+        body = '@(initial_step) n=0; @(timer(1)) for(i=0;i<0;i=i+1) n=V(u,r); V(y,r)<+n;'
+        first = compile_loop(body)
+        with self.assertRaises(CompileError):
+            compile_loop(body.replace('V(u,r)', 'V(missing,r)'))
+        self.assertEqual(first.to_dict(), compile_loop(body).to_dict())
+        self.assertEqual(values(run(first)), [0,0,0,0])
+
     def test_discarded_function_dag_in_event_predicate_keeps_binding_and_validation(self):
         from unittest.mock import patch
         import evas.elaboration as elaboration

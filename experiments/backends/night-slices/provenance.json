@@ -1,6 +1,6 @@
 {
   "status": "local-only draft; publication/archive links pending",
-  "source_basis": "Completed scoped Astra reports and identified stored summaries; no simulator run or renewed implementation review in this documentation task",
+  "source_basis": "Identified implementation, actual comparisons and review reports; local candidate evidence, not release or complete dual-review qualification",
   "development_baseline": "ce677d592ebcab1b97b9146c3aa560b9810c02dd",
   "local_evidence_root": "current/runs/evas-night-20261014",
   "paired_kernel_sha256": {
@@ -52,7 +52,15 @@
     "remote/n09-readout-v1/ANALYSIS-transmitted.json": "e3fef5157b9056c020c62b977fe501257c1395700946c1fb5c0ef324bb0092e6",
     "remote/n09-readout-v1/paired-evas-transmitted/IDENTITY.json": "dcdd225fffca9742feb4a1728473af50cfcd042a06b37253026e3a1223e041aa",
     "remote/source-transition-v3/raw/MANIFEST.json": "b0973bc34390cd5f127583b033a7b5caf47f50b86af657431d435e304532ffd4",
-    "remote/n08d-lifecycle-v1/raw/MANIFEST.json": "c1da05060fbdc64fa6ae099a70562083b33c07993be6065b155099d597cde320"
+    "remote/n08d-lifecycle-v1/raw/MANIFEST.json": "c1da05060fbdc64fa6ae099a70562083b33c07993be6065b155099d597cde320",
+    "review/astra-n22a-implementation-v1/REPORT.md": "43ce2b47becfece079916ad4f3b3797ce2586ebbe7430d7f69f539db7c09e51a",
+    "review/astra-n22a-implementation-v1/CHECKS.json": "f524c0974fabe66747372883674f233bd9c30b895b522e0c8638a721c46650c0",
+    "review/astra-n22a-implementation-v1/public-19.log": "bdfcc223389aa49fc66085a212f7957b4ad9e8c912197f76783f1da9ad687499",
+    "n22a-node-bindings/red-v2.log": "ff72f4c0dd694100aeca7acf77bf92ad23800e56761205d77a1d85d918e4afc7",
+    "n22a-node-bindings/green-v1.log": "f519c7b0a214e8f2457aa780705847aae1a982704c72a9f7010b947ee2745b2c",
+    "n22a-node-bindings/full-python-v1/result.json": "c28aa1abdad31cedd1221747528aaf28279175050f883eb2f5bbc9509de1fa1f",
+    "n22a-node-bindings/full-python-v1/source-before.json": "e7af53764f6a75fc8ef5b8c3f49da6f8771dbf7271e1d76f245df3cfd9c771a8",
+    "n22a-node-bindings/full-python-v1/python.log": "df849672dd3ca311453b6f50c005e8a515b8fb853c710adaaaeca867d46f51e9"
   },
   "limits": [
     "These hashes were collected during documentation assembly, not before the original runs.",
@@ -117,7 +125,13 @@
     "package-v10/result.json": "a0792dc67650cc54862a3df440cf1250a9fab6582ec900017140e13d96b36f68",
     "package-v10/installed/complete.json": "802b8ab40d4769ecad6d777e8ba33ab3981778bd71ec0dd993b179920fab60bd",
     "package-features-v10/RESULT.json": "d48b6bcf63f4dfff76b6d048e68cd1d1394652008926fedf9fb87d1e5c6fee08",
-    "check_package_features_v10.py": "2a09a4179298ed06bf036445ef20fbf15a1184fa58d8bb4b3a4e22736646f92c"
+    "check_package_features_v10.py": "2a09a4179298ed06bf036445ef20fbf15a1184fa58d8bb4b3a4e22736646f92c",
+    "review/astra-n22-admission-actual/REPORT.md": "649cd845a53c076db622a034f3f4e89373f82b96f60b31c8ea668d22f92c7b14",
+    "review/astra-n22-admission-actual/N22A-ANALYSIS.json": "5856fe8d651d6b9ea48c0d4e2b566c7904b20c3d9fdfa8fdbac2afa86e8183ce",
+    "review/astra-n22-admission-actual/EVAS-N22A-ADMISSION.json": "bba3d7cfc0b2e5dda56a4d5387c06be9701453698906b508209be3af90d04203",
+    "n22a-node-bindings/candidate-v1/IDENTITY.json": "358680526073c548b342cf8a499bfb397f13aab9800b9a7ee9eeac8041cdb1c9",
+    "review/astra-final-trail-v10/REPORT.md": "fb310c63e558757bc7d5d3589b0cb639eca7b76c0083650b7bb62ddecd2b162f",
+    "final-guard-check-v10/result.json": "cb666988e18f402e502075018c0c4cd828fd1d11cee2f55e4d40e89cc4c8fca8"
   },
   "integration_v9": {
     "kernel_sha256": "998e1a9403abcee5afc6e733e4a391220f9587b36b0e92e83cabcb5a0321e173",
