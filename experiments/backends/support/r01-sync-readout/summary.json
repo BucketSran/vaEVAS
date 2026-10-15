@@ -1174,12 +1174,137 @@
     "raw": "local-only under /Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync",
     "historical_results": "unchanged, including failed and interrupted candidates",
     "adaptation_failures": "evas-cards-sync-final and v2 netlist failures; v3 ramp analysis failure; final unique conditions v4/v5",
-    "qualification": "Actual point callback records are diagnostic; missing externally qualified export/time/callback and actual boundary observations remain insufficient."
+    "qualification": "Actual point callback records are diagnostic; missing externally qualified export/time/callback and actual boundary observations remain insufficient.",
+    "final_copy_failure": "original-order-gate-v4 retained OS permission refusal before kernel start; executable mode restored, v4b is the final run; no source/checker change"
   },
   "reviews": {
     "astra": {
-      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/review/timeout-final-astra.md",
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/review/timeout-final-astra-before-gate.md",
       "sha256": "af064e66e2f8b5ce479e4ce6e87acfd543477066feec6a61577feae9ddd9e6d4"
+    },
+    "astra_order_gate": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/review/timeout-final-astra-gate-frozen.md",
+      "sha256": "848e823bca331345221799376e1a3d035425f57475cdd4c4b9881ef371060067"
     }
+  },
+  "final_revalidation": {
+    "source": {
+      "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/implementation/SOURCE-order-gate-v4.json",
+      "sha256": "7e089ff8f5417ee97d2c9f568768ef3b6a1926094f9d231fc274407d48ffbbdf"
+    },
+    "binaries": {
+      "release": "a106fba1f1f6c283318a45e383b7cc76b2cbe1e3acd05cd3ab5725f609ea0a1a",
+      "debug": "51c272b7ea3f7263e55129e742a20aedef5c7e382c243d9c1cf4858336689f5e"
+    },
+    "head": "fe2b8e411c6997b5b7f030f6952d92cf659c63a6",
+    "original_requests": [
+      {
+        "case": "c0",
+        "elapsed_seconds": 76.13204299999052,
+        "rows": 9001,
+        "original_checker_passed": false,
+        "original_pair_passed": false,
+        "all_response_equal_previous": true,
+        "receipts": {
+          "result.json": {
+            "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/implementation/original-order-gate-v4b/r01/r01-integrate-sync/c0/result.json",
+            "sha256": "ba92e29ca39cd6d113765c6fa853316c4ec95f1e4a6c9649844ac3f6d81ae10e"
+          },
+          "stdout.json": {
+            "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/implementation/original-order-gate-v4b/r01/r01-integrate-sync/c0/stdout.json",
+            "sha256": "e4f67e361080d7d15cead1b2680bb665161dccc3a37fd55a0ba819c8c7cd7f8b"
+          },
+          "regrade.json": {
+            "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/implementation/original-order-gate-v4b/r01/r01-integrate-sync/c0/regrade.json",
+            "sha256": "59a1ea3c4d7f3495b6cb24c6eb7d9ef3acd7dca4793a5456c31580c115ebf5ed"
+          }
+        }
+      },
+      {
+        "case": "core-boundary",
+        "elapsed_seconds": 16.358103499995195,
+        "rows": 9001,
+        "original_checker_passed": false,
+        "original_pair_passed": false,
+        "all_response_equal_previous": true,
+        "receipts": {
+          "result.json": {
+            "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/implementation/original-order-gate-v4b/r01/r01-integrate-sync/core-boundary/result.json",
+            "sha256": "f5585d53e6b7bf7dc8a33f5a88c34f9e459f260f7de2d8c688ae9d4d5e69b850"
+          },
+          "stdout.json": {
+            "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/implementation/original-order-gate-v4b/r01/r01-integrate-sync/core-boundary/stdout.json",
+            "sha256": "ecf09fa9f5f8e68daaf462ceadf0b1f8cb7bba9a520b085110a496c9566d2e9e"
+          },
+          "regrade.json": {
+            "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/implementation/original-order-gate-v4b/r01/r01-integrate-sync/core-boundary/regrade.json",
+            "sha256": "3c5c6690caf341397bf914abf0f96f12879780f0d5d7f64d6ae69590cc3bb754"
+          }
+        }
+      }
+    ],
+    "cards": [
+      {
+        "case": "ramp",
+        "receipt": {
+          "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/evas-cards-order-gate-v1/ramp/RESULT.json",
+          "sha256": "0cf0875621035f09a5660c36eee1989d386137f1654262e2e7e90fed194e3ee5"
+        },
+        "rows": 385,
+        "error_upper_V": 0.0,
+        "behavior": "pass",
+        "Q_status": "not_qualified"
+      },
+      {
+        "case": "ramp-g1000",
+        "receipt": {
+          "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/evas-cards-order-gate-v1/ramp-g1000/RESULT.json",
+          "sha256": "cb769d025c0d76ea99c2ca46228e1c0b819fef9c9ff1927e60d02e281528947e"
+        },
+        "rows": 385,
+        "error_upper_V": 4.547473508864641e-13,
+        "behavior": "pass",
+        "Q_status": "not_qualified"
+      },
+      {
+        "case": "history",
+        "receipt": {
+          "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/evas-cards-order-gate-v1/history/RESULT.json",
+          "sha256": "c1ca832422006e310187340b8295c2cdb4a5986617ded77cec80707d41703d86"
+        },
+        "rows": 385,
+        "error_upper_V": 0.0,
+        "behavior": "pass",
+        "Q_status": "not_qualified"
+      }
+    ],
+    "checks": {
+      "rust": {
+        "passed": 342,
+        "ignored": 1,
+        "log": {
+          "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/implementation/order-gate-all-rust.log",
+          "sha256": "69e2bf898c65041c8f6309b0d6ba72964c938e75ddb4457ee284ab029100ddb0"
+        }
+      },
+      "python_targeted": {
+        "passed": 25,
+        "log": {
+          "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/implementation/source-only-order-gate-python.log",
+          "sha256": "7bc6301a4178d5a98dc5d95577d9456a4970ec7e87087598989e63f638468b6d"
+        }
+      },
+      "previous_full_python": {
+        "status": "FAIL",
+        "tests": 1649,
+        "failures": 4,
+        "receipt": {
+          "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/implementation/timeout-python-all-receipt.json",
+          "sha256": "13274fbaf4b81e209ee6ea34b13d051a0eaa8c89f89175e42f9b6604821dac60"
+        }
+      },
+      "full_CI": "pending on final PR revision"
+    },
+    "reference_reuse": "Unmodified original VA, sources and numeric requests still match original-spectre-v2. Full EVAS response exactly matches the previously paired candidate, including all solution values and events. Actual Spectre rerun not repeated for the unchanged reference identity."
   }
 }

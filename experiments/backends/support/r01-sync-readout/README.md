@@ -7,7 +7,7 @@
 | 物理 core，`r01-integrate-sync/c0` | 完成9001行；原 checker 失败 | 完成10902行；原 checker 通过 |
 | 连接夹具，`core-boundary` | 完整运行；原 checker 失败 | 完成10052行；原 checker 通过 |
 
-物理请求本次耗时91.34秒，原内核120秒、父进程135秒上限不变。这只证明本次请求完成，不表示一般性能排名或稳定的加速倍数。两份原 VA、刺激、容差、checker及历史成绩均保留。
+物理请求首候选耗时91.34秒，收窄低阶优化范围后的最终复验为76.13秒；两次完整响应逐位相同，原内核120秒、父进程135秒上限不变。这只证明本次请求完成，不表示一般性能排名或稳定的加速倍数。两份原 VA、刺激、容差、checker及历史成绩均保留。
 
 ## 哪部分已经正确，哪部分还不同
 
@@ -23,7 +23,11 @@
 
 这些结果**没有取得新Q资格**：实际关键边界两侧观察及外部导出/回调资格仍不完整。两张滤波卡在本批仍未实现，保留原正例及原拒绝，不记入通过数。另有相邻浮点切点的非线性事件窗口保守拒绝，归入#119，#131不动。
 
-原工程Spectre实际生效 `reltol=1e-7`、`vabstol=1e-9 V`、`iabstol=1e-15 A`、`maxstep=100 ps`、`conservative`、`gear2only`。独立三卡的Spectre为 `reltol=1e-10`、`vabstol=1e-11 V`、`iabstol=1e-15 A`、`maxstep=T/128`，其中 `T=2^-20 s`；EVAS为请求的 `reltol=1e-9`、`vabstol=1e-11 V`、同一maxstep及显式观察时刻。EVAS不应用Spectre的preset或积分method，也没有电流未知量。
+原工程Spectre实际生效 `reltol=1e-7`、`vabstol=1e-9 V`、`iabstol=1e-15 A`、`maxstep=100 ps`、`conservative`、`gear2only`；EVAS使用原网表请求的 `reltol=1e-6`、`vabstol=1e-9 V`、`maxstep=100 ps`，不应用Spectre的preset。
+
+独立三卡的Spectre为 `reltol=1e-10`、`vabstol=1e-11 V`、`iabstol=1e-15 A`、`maxstep=T/128`，其中 `T=2^-20 s`；EVAS为请求的 `reltol=1e-9`、`vabstol=1e-11 V`、同一maxstep及显式观察时刻。EVAS使用自身积分方法，也没有电流未知量。
+
+完整回归首轮有4项失败：一项强制点下的代表值变化、三项旧拒绝范围断言。现在纯源场保留原高阶路径，原逐位断言通过；三条乘积原式保留并新增非零输入正例。原失败日志保存，最终Rust为342通过、1忽略，相关Python为25通过；完整CI状态以PR最终提交为准。
 
 ## 复核入口
 
