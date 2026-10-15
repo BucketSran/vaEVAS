@@ -318,6 +318,12 @@ def load_scs(path: str | Path) -> ScsTestbench:
         points,error=voltage_points(settings,stop,source_fail)
         waveforms[net]=[[t,v if nodes[1]=='0' else -v] for t,v in points]
         rounding[token.text]=error
+    # Keep the physical PWL definition intact. Saving every source corner
+    # prevents a later linear interpolation of the saved drive from skipping
+    # a pulse or replacing a piecewise-linear segment by a different line.
+    times=sorted(set(times).union(t for points in waveforms.values() for t,_ in points if 0<=t<=stop))
+    if len(times)>POINT_BUDGET:
+        fail('output point budget (100000) exceeded after including source corners')
     models=parse_sources(sources)
     instances=[]
     for token,nodes,name,settings in devices:
@@ -368,7 +374,7 @@ def load_scs(path: str | Path) -> ScsTestbench:
                   transient=dict(sources=waveforms,output_times=times,stop=stop,max_step=step,**strobe))
     metadata=dict(input_format='spectre-voltage-subset',path=str(path),sha256=hashlib.sha256(text.encode()).hexdigest(),
                   model_sha256=model_sha256,
-                  effective_tolerances=effective,output_grid='0, k*maxstep below stop, stop',
+                  effective_tolerances=effective,output_grid='union of 0, k*maxstep below stop, stop, source corners within stop',
                   pulse_corner_rounding_seconds=rounding)
     if generated_sha256:
         metadata['generated_model_sha256']=generated_sha256

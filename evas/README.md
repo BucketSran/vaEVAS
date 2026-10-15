@@ -176,7 +176,7 @@ API 为 `evas.scs.load_scs(path)`（检查测试台并返回 manifest 和模型�
 | 数字 | 有限十进制、科学计数和单字母 SI 后缀 `T G M k K m u n p f a`；可引用先前 `parameters` 语句的常量 |
 | `vsource` | 一端接地；`dc`；从零开始、时间严格递增的 `wave=[time value ...]`；显式 `delay/rise/width/fall/period/val0/val1` 的线性 pulse |
 | `bsource` 电压式 | 一端接地；`v=V(node)`，可加减一个有限常量或先前 `parameters` 常量；偏移可用一层括号包住，例如 `v=V(vin)+(-0.04)` |
-| 瞬态 | 一条 `tran tran stop=... maxstep=...`，两项必须显式指定且为正；观察点取 `0`、转换为浮点数后仍小于 stop 的 `k*maxstep` 和一次 stop；可另给 [strobe 五项控制](docs/reference/strobe.md)，不改变常规观察网格 |
+| 瞬态 | 一条 `tran tran stop=... maxstep=...`，两项必须显式指定且为正；观察点取 `0`、转换为浮点数后仍小于 stop 的 `k*maxstep`、一次 stop，以及 `[0, stop]` 内全部源折点的并集；可另给 [strobe 五项控制](docs/reference/strobe.md)，不改变常规观察网格 |
 | 精度 | `options reltol=... vabstol=...`，映射到现有 EVAS 设置；未指定项使用 EVAS 默认值，不采用 Spectre 默认值 |
 | 电流容差兼容 | `options iabstol=...` 接受有限、非负标量，但发出 warning；EVAS 没有电流未知量，该值不参与求解 |
 | 精度预设兼容 | `tran` 的 `errpreset=liberal/moderate/conservative` 接受但发出 warning，不应用 Spectre 的预设调整；使用显式容差和步长，未指定容差使用 EVAS 默认值 |
@@ -230,6 +230,9 @@ pulse 的第 k 次起点为 `d+kP`，四个拐点为 `d+kP`、`d+kP+r`、
 这会拒绝部分常用十进制时间组合；不能用很小的电压方程残差掩盖源时刻舍入。
 输出中的 `testbench.pulse_corner_rounding_seconds` 保留源构造的检查结果。
 这不是通过输出网格采样近似 pulse；改变 maxstep 不改变源拐点。
+保存网格包含源折点，避免后续对保存的驱动电压做线性插值时漏掉窄脉冲。
+例如源在 `.25 s` 为零、`.375 s` 为 `1 V`、`.4375 s` 回零，即使 `maxstep=.5 s`，
+这三个时刻仍被保存。驱动电压可按原线段插值；模型输出若含非线性或事件，仍须按各自观察合同验收。
 网表 token、输出点和每个 pulse 点均有 100000 的资源上限。
 
 `testbench` 同时记录测试台/模型 SHA256、生效容差及观察网格约定。

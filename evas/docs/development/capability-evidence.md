@@ -11,6 +11,8 @@
 动态系数滤波的原IR准入、历史延续和最终认证失败回退见 `test_live_transition_filter.py`
 与 `transient_timer_boundary_tests.rs`；外部取证资格仍不完整，不新增Q资格。
 
+[源折点保存修复](../../../experiments/backends/support/scs-source-observation/README.md)补充 DEV:scs-input 的有限开发证据；修复保存插值漏脉冲，不改变原Q成绩。
+
 IR21 共同基础已随 [#174](https://github.com/BucketSran/vaEVAS/pull/174) 合入 main，补充 LANG、ANALOG、CROSS、TIMER、EVENT-ORDER、EVENT-CONDITIONS、DYNAMICS、COMPOSE 和 DEV:scs-input。
 契约见[局部变量与条件支路](../../validation/ANALOG_CONDITIONS_CONTRACT.md)、
 [事件条件与输出记录](../math/events.md)、[连续选路与有理流](../math/continuous.md#selected-flow)。
