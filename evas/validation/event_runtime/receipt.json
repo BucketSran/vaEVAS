@@ -1,0 +1,110 @@
+{
+  "status": "actual serial Spectre3/3 completed; all three independent integer/native grid comparisons PASS",
+  "cases": {
+    "sequential": {
+      "psf_sha256": "aed4303d733437cdd3d5c73a7f58d29d5529ba1407f2890e014399def48aaf79",
+      "native_spectre_log_sha256": "95ce7c3e724220380d4c2400b77f4ffc02039ff312a095624788990f69ff3977",
+      "stdout_sha256": "0bc8e6d0a1d93b586dc531c8b836134241bce23819ce0f323ec380eb35fb0079",
+      "execution_receipt_sha256": "7d88df10e61f2f79ef8549b2ec9de5f29039fcb5882435e0168db0bf2c0d2108",
+      "execution_status": "completed",
+      "returncode": 0,
+      "timeout": false,
+      "timeout_s": 90,
+      "completed_utc": "2026-10-15T12:37:56Z",
+      "VA_SCS_hashes": {
+        "dut.va": "fdc5144e594e5ee2df6a6713910ac88a428787bc19ac750a6b537664e95dbc71",
+        "tb.scs": "05d9e568693b01d761a5dc8cda8483a030029a28cb12d073e37cc37669d82a4a"
+      },
+      "evas_stdout_sha256": "a949c273b89fee414da274079410079de0b3bb61c88ee613578515dc4f508f7c",
+      "evas_program_sha256": "35d53171eba4cf8d2addd622449c276dc0371b5ca18d1337c78edc51f40be0a7"
+    },
+    "nested": {
+      "psf_sha256": "54f301eb740454cb4cca7734d51a6fbd92faa34dfef7ac95d22b91437666d3d7",
+      "native_spectre_log_sha256": "70fa367092521b284cf1c6baed0022c7d003cfc788864c711912369890c7b9fe",
+      "stdout_sha256": "ca2ee5e33dbc6078aa316a7cee5cb87429e606c5936a04dbc2318b15041ea330",
+      "execution_receipt_sha256": "3d14d64d4e7afd1944421134b195ee5e188eb1a347b961629d9c06567baa2367",
+      "execution_status": "completed",
+      "returncode": 0,
+      "timeout": false,
+      "timeout_s": 90,
+      "completed_utc": "2026-10-15T12:38:06Z",
+      "VA_SCS_hashes": {
+        "dut.va": "e4c2e87c31765f0a96994c2dc14d78650dcb565695eae51c75679d8a17fd195e",
+        "tb.scs": "05d9e568693b01d761a5dc8cda8483a030029a28cb12d073e37cc37669d82a4a"
+      },
+      "evas_stdout_sha256": "256270f453e0c7bcd05b9a150ebe47e7de10735ce22c6d4ea8d1b636cbdbf18b",
+      "evas_program_sha256": "e0e4e42938374fd7954b9c51e229394a9ededc05a8c558daebf7efe46575d95d"
+    },
+    "quotient": {
+      "psf_sha256": "110ff0345394fd0ac6c058bac3be10f8a47beaa2a1df6481308f7ca0f3102ed9",
+      "native_spectre_log_sha256": "350047adda364a4664dc578c68a4f433b8195f1e782d21f3e8ff120603f1d600",
+      "stdout_sha256": "4a3bd67f18c70466cef97f3f1252528b38a43188360994a51923313c0a449abc",
+      "execution_receipt_sha256": "b6adf27c747ea46f379468b41616c72605e54940d1edc336ead3ee024a517e22",
+      "execution_status": "completed",
+      "returncode": 0,
+      "timeout": false,
+      "timeout_s": 90,
+      "completed_utc": "2026-10-15T12:38:15Z",
+      "VA_SCS_hashes": {
+        "dut.va": "b7b2295742bf18fa6ba56cf2f01301e1e68bd775760241049af7dd436b8f7e7f",
+        "tb.scs": "05d9e568693b01d761a5dc8cda8483a030029a28cb12d073e37cc37669d82a4a"
+      },
+      "evas_stdout_sha256": "bdda1c01d1ae222ce9981d85c1cf788cb17f9643c47a09e70f61d13a8269f3df",
+      "evas_program_sha256": "6c978dac03a5e847e4090a652f34b70e49c4c8d9ce8ccbf5b606f15fff7a0538"
+    }
+  },
+  "tool_identity": {
+    "version": "sub-version  21.1.0.509.isr12",
+    "simulator_binary_sha256": "72fe7e6e958b514d9a0f8bf85e7a08807ea9b34ecbd0ef5ae0586618d549889f",
+    "environment_setup_file_sha256": [
+      "cbc0e31440120b7c981a887956ec4fb2a27a73d29b4e9f54fd97000df3e6daa3",
+      "a076b988bdb067b1ced9ef9365ce4f1554c3e26fefa48d0ae09b062ce89dce59"
+    ],
+    "before_after_all_hashes_identical": true,
+    "before_after_source": "local-only TOOL_IDENTITY.json and TOOL_IDENTITY_AFTER.json"
+  },
+  "input_manifest_sha256": "80d62c24be358f9ac138c0171d944c9fb29bbe426ee868beddf86a36df0131b5",
+  "output_manifest_sha256": "48e1124848f7652c1468d8bdbd66dfad0c7d48f47081a6cf6b798f0797e67857",
+  "transfer_receipt_sha256": "b077b066473756256e9d590b2334af61a9514c44365867611bdfef36208f29ef",
+  "execution_receipt_sha256": "acf4067b7caeefb6e5283ce475ca73d21227e4cef94f7195e6d049d2b8e54ebc",
+  "evassource_manifest_sha256": "756eb1c7f955d293788afc7522404a38ac5ca366334821a6892d305b8e924752",
+  "python_v3_manifest_sha256": "bdea17606a4ba5ebd74be8db1d5211872289793211887efd8e909f6a1b2d7a8c",
+  "kernel_sha256": "9612009ae60c6e016e7895b67df1d86688013ee74eeb9e4bbed5b6a339a716ba",
+  "rust_release_receipt_sha256": "acbb0271d17495f7fcd9ac377992646c67d6d41e34564d520bc6a3e8187f7ba4",
+  "scope": "Bound to earlier L Python-v3/v5 local EVAS execution; not F integrated rerun or originalCDS recovery/newQ.",
+  "retention": {
+    "local_only_no_public_download": "Original PSF, full stdout/spectre logs, execution/transfer/tool setup records, frozen kernel and private environment setup files. Their hashes bind identity but are not download links.",
+    "prior_packet_failure": "packet-v1 omitted inputs.py and failed import before starting Spectre; retained locally as packaging failure, excluded from three native numerical results, not relabeled a simulator/numerical failure.",
+    "prepared_public_package_pending_root_integration": "Models/decks/contract/calibration and analysis tools/native decimal extracts/native display extracts/settings extracts/results/relative source hashes"
+  },
+  "publication_status": "local candidate package only; not yet merged/published",
+  "previous_packaging_failure_log_sha256": "0d3ccceb0669dc1039eaa24882c598b085576c2a2dc557abff2d85640db54c5e",
+  "calibration": "calibration.log: original record3accept18reject; exactdecimal1accept1reject; voltagegrid1accept5reject; all PASS",
+  "retained_files_sha256": {
+    "CONTRACT.json": "11af7a65e664d4199ba2e455e3b00e781c6885e4cf5848b2cc7c052e70e2c36e",
+    "README.md": "2bbed4467028770780250c9e0f5ebd32e1ccd6b4607a651c6aba81a3ce371956",
+    "analyze.py": "51887dfb935621cf1d9516cd10932e6bc919db1f08b8654929678fe9d122a491",
+    "analyze_package.py": "22974db273088c3d6fa6b10605c7a5e36f4d9482743e1ef8472489827b0dce26",
+    "calibration.log": "3757490d3caaa7f044ddb51ec02bf2c181517a7231281629355e84f68b7f94aa",
+    "nested/dut.va": "e4c2e87c31765f0a96994c2dc14d78650dcb565695eae51c75679d8a17fd195e",
+    "nested/effective-settings.json": "893c0ed73606293e9b7d88a84ca0138c8568303552c973311056ff93513c7708",
+    "nested/evas-display.txt": "9dc110cf3684f61b09a27fd3416ee21676990ee1254dd0ccedbe56a6fa80a6c7",
+    "nested/observations.json": "ada061b62b6c5a5e44433f2f481302ffa229c3a1426fc6ca78d8791cca3d4aa3",
+    "nested/spectre-display.txt": "9dc110cf3684f61b09a27fd3416ee21676990ee1254dd0ccedbe56a6fa80a6c7",
+    "nested/tb.scs": "05d9e568693b01d761a5dc8cda8483a030029a28cb12d073e37cc37669d82a4a",
+    "quotient/dut.va": "b7b2295742bf18fa6ba56cf2f01301e1e68bd775760241049af7dd436b8f7e7f",
+    "quotient/effective-settings.json": "893c0ed73606293e9b7d88a84ca0138c8568303552c973311056ff93513c7708",
+    "quotient/evas-display.txt": "e7fca566f80390a73ef97dd601ba962bb8c141505b146e46a7eb23e8d49ba12c",
+    "quotient/observations.json": "ada061b62b6c5a5e44433f2f481302ffa229c3a1426fc6ca78d8791cca3d4aa3",
+    "quotient/spectre-display.txt": "e7fca566f80390a73ef97dd601ba962bb8c141505b146e46a7eb23e8d49ba12c",
+    "quotient/tb.scs": "05d9e568693b01d761a5dc8cda8483a030029a28cb12d073e37cc37669d82a4a",
+    "result.json": "92a63f83774e31fc7566892c12a61ffe0f47db6168c4f44fde634a66942b8326",
+    "sequential/dut.va": "fdc5144e594e5ee2df6a6713910ac88a428787bc19ac750a6b537664e95dbc71",
+    "sequential/effective-settings.json": "893c0ed73606293e9b7d88a84ca0138c8568303552c973311056ff93513c7708",
+    "sequential/evas-display.txt": "4d3935e8433a915d79d8a4f9f448f3c03b3bdf89d1f6fff7a65bc032695b0135",
+    "sequential/observations.json": "ada061b62b6c5a5e44433f2f481302ffa229c3a1426fc6ca78d8791cca3d4aa3",
+    "sequential/spectre-display.txt": "4d3935e8433a915d79d8a4f9f448f3c03b3bdf89d1f6fff7a65bc032695b0135",
+    "sequential/tb.scs": "05d9e568693b01d761a5dc8cda8483a030029a28cb12d073e37cc37669d82a4a",
+    "source-identities.json": "4ecc6fcd2100e2c8ec326170cd47ed602613465c7ba76fe8324daa9045498ad1"
+  }
+}

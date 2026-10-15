@@ -10,6 +10,7 @@ mod display;
 mod dynamic_roots;
 mod event_accuracy;
 mod event_conditions;
+mod event_control;
 mod event_numeric;
 mod events;
 mod exact_source;
@@ -61,6 +62,7 @@ pub fn run(request: Request) -> Result<Response, Error> {
 pub fn run_with_threads(mut request: Request, static_threads: usize) -> Result<Response, Error> {
     let _timing = crate::diagnostics::span("kernel.run");
     ir::check_schema_version(u64::from(request.program.schema_version))?;
+    event_control::validate(&request.program)?;
     step_bounds::Bounds::new(&request.program)?;
     if let Some(config) = &request.transient {
         if let Some(errors) = &config.pwl_errors_v {

@@ -2763,3 +2763,7 @@ mod passive_tests;
 #[cfg(test)]
 #[path = "transient_time_proof_tests.rs"]
 mod time_proof_tests;
+
+#[cfg(test)]
+#[path = "transient_event_control_tests.rs"]
+mod event_control_tests;

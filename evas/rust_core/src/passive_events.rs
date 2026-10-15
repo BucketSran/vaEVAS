@@ -139,6 +139,16 @@ pub(crate) fn prepare(
     fn displays<'a>(body: &'a [crate::ir::Statement], out: &mut Vec<&'a [crate::ir::Expression]>) {
         for step in body {
             match step {
+                crate::ir::Statement::Loop {
+                    initialize,
+                    body,
+                    update,
+                    ..
+                } => {
+                    displays(initialize, out);
+                    displays(body, out);
+                    displays(update, out);
+                }
                 crate::ir::Statement::Display { args, .. } => out.push(args),
                 crate::ir::Statement::If {
                     then_body,
@@ -163,7 +173,7 @@ pub(crate) fn prepare(
             match step {
                 crate::event_conditions::SelectedStep::Assign(index) => {
                     let expression = &assignments[*index];
-                    let assignment = targets[*index];
+                    let assignment = &targets[*index];
                     let exact = if model.numeric_actions[*event][*index] {
                         crate::event_numeric::bounds(expression, nodes, &local)?
                     } else {

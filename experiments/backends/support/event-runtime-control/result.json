@@ -1,0 +1,198 @@
+{
+  "status": "PASS within pure-language scope; unmerged",
+  "Rust": {
+    "kernel_tests_passed": 360,
+    "kernel_tests_ignored": 1,
+    "IR_transport_passed": 2,
+    "workspace_test_exit": "PASS",
+    "clippy_alltargets": "PASS"
+  },
+  "Python": {
+    "runtime_public": 17,
+    "original_language_cohort": 128,
+    "initial_and_implicit_parent": 22,
+    "identity_output": 20,
+    "cohorts_overlap_do_not_sum": true
+  },
+  "actual_reference_microcases": {
+    "sequential": {
+      "status": "PASS",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-m",
+        "evas",
+        "simulate",
+        {
+          "availability": "local-only",
+          "basename": "tb.scs",
+          "private_path_string_sha256": "eafb38a3ead6e9e10dea8b6065a6ea7312812d638a71db3ff8bbff322c3587cb"
+        },
+        "--kernel",
+        {
+          "availability": "local-only",
+          "basename": "evas-kernel",
+          "private_path_string_sha256": "23d1cce5224c0b23a154b4abad98d20ae956d873356a8744a0b4912474922883"
+        },
+        "--timeout",
+        "120"
+      ],
+      "kernel_sha256": "e87dac60d88a5e66e70435d67957ad8fd2bec91a15674847d943141b2d741865",
+      "base": "969b1b88770c03b2bc519e8397b7e0969be9947a+IR23 only",
+      "VA_sha256": "fdc5144e594e5ee2df6a6713910ac88a428787bc19ac750a6b537664e95dbc71",
+      "SCS_sha256": "05d9e568693b01d761a5dc8cda8483a030029a28cb12d073e37cc37669d82a4a",
+      "actual": {
+        "te": 0.5,
+        "n": 3.0,
+        "i": 3.0,
+        "acc": 10.0,
+        "a0": 1.0,
+        "a1": 3.0,
+        "a2": 6.0,
+        "a3": 0.0
+      },
+      "reference_receipt_sha256": "049107441f29aa183c139e0f353be4045ecc8d4f219950738f4b1c444792cbf7",
+      "native_saved_times": [
+        0.0,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "native_u": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source_voltage_error_V": 0.0,
+      "Spectre": "actual serial runtime-raw-v2 reference reused; no new Spectre execution; rawPSF local-only",
+      "stdout_sha256": "5630883965d1456cadf9cca15c7644087f3e4193e7cc3027a7a8640a1f5e7ac3"
+    },
+    "nested": {
+      "status": "PASS",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-m",
+        "evas",
+        "simulate",
+        {
+          "availability": "local-only",
+          "basename": "tb.scs",
+          "private_path_string_sha256": "914d8c454be79ee327d2c98c46e663bacb8aefc2910950e23896ab29ad4566aa"
+        },
+        "--kernel",
+        {
+          "availability": "local-only",
+          "basename": "evas-kernel",
+          "private_path_string_sha256": "23d1cce5224c0b23a154b4abad98d20ae956d873356a8744a0b4912474922883"
+        },
+        "--timeout",
+        "120"
+      ],
+      "kernel_sha256": "e87dac60d88a5e66e70435d67957ad8fd2bec91a15674847d943141b2d741865",
+      "base": "969b1b88770c03b2bc519e8397b7e0969be9947a+IR23 only",
+      "VA_sha256": "e4c2e87c31765f0a96994c2dc14d78650dcb565695eae51c75679d8a17fd195e",
+      "SCS_sha256": "05d9e568693b01d761a5dc8cda8483a030029a28cb12d073e37cc37669d82a4a",
+      "actual": {
+        "te": 0.5,
+        "n": 2.0,
+        "i": 2.0,
+        "j": 3.0,
+        "acc": 21.0,
+        "a0": 3.0,
+        "a1": 5.0,
+        "a2": 7.0
+      },
+      "reference_receipt_sha256": "049107441f29aa183c139e0f353be4045ecc8d4f219950738f4b1c444792cbf7",
+      "native_saved_times": [
+        0.0,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "native_u": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source_voltage_error_V": 0.0,
+      "Spectre": "actual serial runtime-raw-v2 reference reused; no new Spectre execution; rawPSF local-only",
+      "stdout_sha256": "2fe015f1750d87619e7bfd2bd2c413bd0a8b456cc0a8f952fdfa322a913d5a9c"
+    },
+    "quotient": {
+      "status": "PASS",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-B",
+        "-m",
+        "evas",
+        "simulate",
+        {
+          "availability": "local-only",
+          "basename": "tb.scs",
+          "private_path_string_sha256": "82630ac72bb62c2a60f208d3f4310b78b54368069e65954cb6b45c1ce2989e43"
+        },
+        "--kernel",
+        {
+          "availability": "local-only",
+          "basename": "evas-kernel",
+          "private_path_string_sha256": "23d1cce5224c0b23a154b4abad98d20ae956d873356a8744a0b4912474922883"
+        },
+        "--timeout",
+        "120"
+      ],
+      "kernel_sha256": "e87dac60d88a5e66e70435d67957ad8fd2bec91a15674847d943141b2d741865",
+      "base": "969b1b88770c03b2bc519e8397b7e0969be9947a+IR23 only",
+      "VA_sha256": "b7b2295742bf18fa6ba56cf2f01301e1e68bd775760241049af7dd436b8f7e7f",
+      "SCS_sha256": "05d9e568693b01d761a5dc8cda8483a030029a28cb12d073e37cc37669d82a4a",
+      "actual": {
+        "te": 0.5,
+        "n": 4.0,
+        "i": 2.0,
+        "q": 2.0,
+        "rem": 1.0,
+        "acc": 5.0,
+        "a0": 0.0,
+        "a1": 2.0,
+        "a2": 3.0,
+        "a3": 0.0
+      },
+      "reference_receipt_sha256": "049107441f29aa183c139e0f353be4045ecc8d4f219950738f4b1c444792cbf7",
+      "native_saved_times": [
+        0.0,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "native_u": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "source_voltage_error_V": 0.0,
+      "Spectre": "actual serial runtime-raw-v2 reference reused; no new Spectre execution; rawPSF local-only",
+      "stdout_sha256": "83ed9b05a289478cbdfe8374c385d83cf340301b6edaeff123686d4f1bf9c0c4"
+    }
+  },
+  "out_of_scope_P129": {
+    "status": "FAIL diagnostic only",
+    "included_in_patch": false,
+    "reason": "Core event-group migration assertions are not main969 language behavior; main969 original test bytes retained",
+    "log_sha256": "ad6390200611ae6b551f38a1e4f338e9c9dec668613a50305f6f1aa89eb3405b"
+  },
+  "CDS_original": "NOT_COMPLETE; checker NOT_RUN. Both earlier F20 combination and a later pure-main+IR23+proof candidate encountered a transition root/enclosure mismatch; this is not proof the language slice restores an original task.",
+  "version": "0.18.0 candidate / IR23; root owns 0.19.0 and final versioned checks",
+  "public_transcription": {
+    "original_result_sha256": "7c9fa01500d3e731edd8a22fd3d9863e93aa31a996160be4fd08f36e675e2895",
+    "rule": "Absolute private paths withheld; prior0.18candidate results retain original identities. Version019 evidence is separate."
+  }
+}

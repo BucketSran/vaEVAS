@@ -3,6 +3,21 @@
 本页记录版本变化与[历史执行身份](#检查点身份)。当前支持结论见[四后端支持范围](COMPARISON.md)，
 逐项证据见[证据索引](development/capability-evidence.md)。单 PR 的细节以 PR/commit 描述为准，本页只留摘要。
 
+
+## EVAS 0.19.0 / IR23：有界事件循环与数组
+
+独立测量实例可在普通事件和 final_step 中使用运行期 integer 循环、带检查的数组读写。
+循环保持顺序、退出控制变量值和嵌套迭代；所有中间整数节点检查 signed32，越界或超预算整批回退。
+物理贡献、初始化、历史算子输入和固定 timer 的隐式 DAE 桥不因此获得新循环准入。
+
+本版同时保留已合入的源折点保存、pulse 舍入误差、跨实例初态、隐式动态步长及固定 timer DAE 续算修复（#183–#187）。
+[事件循环证据](../../experiments/backends/support/event-runtime-control/README.md)含三个实际 Spectre 控制及原 100 nV 验收。
+语言准入不等于整题完成：原 CDS/MUX 仍有后续物理事件和历史依赖，未取得新的原 checker 通过数；旧成绩不改写。
+
+Python 前端与 Rust 内核必须配套使用 IR23，旧 IR1–22 从原 VA/manifest 重编译。
+原有 DAE 回归 fixture 也从原源码重新生成，除 schema 外与原 IR22 的物理内容和浮点位完全相同。
+这不是公共 PyPI 或 tag 发布；安装产物及主分支整合身份另行记录。#131 不变。
+
 ## 2026-10-15：事件统计源码候选 EVAS 0.18.0 / IR22
 
 IR22 新增 `event_math`，在完整 IR 证明隔离的观察事件中执行 `sqrt`、`abs`、`min`、`max`、

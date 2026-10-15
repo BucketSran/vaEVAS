@@ -5,7 +5,10 @@ use super::*;
 
 fn enclose(e: &Expression, nodes: &[I], states: &[I]) -> Option<I> {
     let value = match e {
-        Expression::EventMath { .. } => return None,
+        Expression::ArrayRead { .. }
+        | Expression::CheckedInteger { .. }
+        | Expression::CheckedIndex { .. }
+        | Expression::EventMath { .. } => return None,
         Expression::Affine { constant, terms } => {
             terms.iter().try_fold(I::point(*constant), |sum, term| {
                 Some(sum + I::point(term.coefficient) * *nodes.get(term.node)?)

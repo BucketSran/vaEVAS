@@ -1,0 +1,52 @@
+{
+  "sequential": {
+    "expected": {
+      "n": 3,
+      "i": 3,
+      "acc": 10,
+      "a0": 1,
+      "a1": 3,
+      "a2": 6,
+      "a3": 0
+    },
+    "event_time": 0.5,
+    "event_time_tolerance_s": 1e-12,
+    "global_body_iterations": 3,
+    "expected_voltage_u": 1,
+    "voltage_budget_v": 1e-07
+  },
+  "nested": {
+    "expected": {
+      "n": 2,
+      "i": 2,
+      "j": 3,
+      "acc": 21,
+      "a0": 3,
+      "a1": 5,
+      "a2": 7
+    },
+    "event_time": 0.5,
+    "event_time_tolerance_s": 1e-12,
+    "global_body_iterations": 8,
+    "expected_voltage_u": 1,
+    "voltage_budget_v": 1e-07
+  },
+  "quotient": {
+    "expected": {
+      "n": 4,
+      "i": 2,
+      "q": 2,
+      "rem": 1,
+      "acc": 5,
+      "a0": 0,
+      "a1": 2,
+      "a2": 3,
+      "a3": 0
+    },
+    "event_time": 0.5,
+    "event_time_tolerance_s": 1e-12,
+    "global_body_iterations": 2,
+    "expected_voltage_u": 1,
+    "voltage_budget_v": 1e-07
+  }
+}

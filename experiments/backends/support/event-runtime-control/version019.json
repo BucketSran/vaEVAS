@@ -1,0 +1,114 @@
+{
+  "version": "0.19.0",
+  "schema_version": 23,
+  "kernel_sha256": "e4dbbd8c126ab130c82c1880458303fe8239277b206ac600a2230d7eee727540",
+  "runtime_and_identity_tests": {
+    "count": 37,
+    "status": "PASS",
+    "log_sha256": "4c3676824e73bf2537c49cfe939378e59fd02d5feeadfe5bc64efc4b6af9425b"
+  },
+  "actual_spectre_reference": "Reused fixed3cases; sameVA/SCS hashes, three new019 EVAS executions; no freshSpectre run",
+  "cases": {
+    "sequential": {
+      "status": "PASS",
+      "kernel_sha256": "e4dbbd8c126ab130c82c1880458303fe8239277b206ac600a2230d7eee727540",
+      "VA_sha256": "fdc5144e594e5ee2df6a6713910ac88a428787bc19ac750a6b537664e95dbc71",
+      "SCS_sha256": "05d9e568693b01d761a5dc8cda8483a030029a28cb12d073e37cc37669d82a4a",
+      "actual": {
+        "te": 0.5,
+        "n": 3.0,
+        "i": 3.0,
+        "acc": 10.0,
+        "a0": 1.0,
+        "a1": 3.0,
+        "a2": 6.0,
+        "a3": 0.0
+      },
+      "reference_receipt_sha256": "049107441f29aa183c139e0f353be4045ecc8d4f219950738f4b1c444792cbf7",
+      "Spectre": "reused original serial runtime-raw-v2 actual native record/settings/grid; no new Spectre execution",
+      "stdout_sha256": "94d36b3923da75e2b074d76f5c57f34c5452c4a096c6163f1594968d8a7e631c",
+      "command_template": [
+        "python3",
+        "-B",
+        "-m",
+        "evas",
+        "simulate",
+        "<case>/tb.scs",
+        "--kernel",
+        "<paired019kernel>",
+        "--timeout",
+        "120"
+      ],
+      "literal_command_sha256": "a04149c9190a66f29e05040e52dfcdf177ec27342d4be3c8fd7b29d8204f14a4"
+    },
+    "nested": {
+      "status": "PASS",
+      "kernel_sha256": "e4dbbd8c126ab130c82c1880458303fe8239277b206ac600a2230d7eee727540",
+      "VA_sha256": "e4c2e87c31765f0a96994c2dc14d78650dcb565695eae51c75679d8a17fd195e",
+      "SCS_sha256": "05d9e568693b01d761a5dc8cda8483a030029a28cb12d073e37cc37669d82a4a",
+      "actual": {
+        "te": 0.5,
+        "n": 2.0,
+        "i": 2.0,
+        "j": 3.0,
+        "acc": 21.0,
+        "a0": 3.0,
+        "a1": 5.0,
+        "a2": 7.0
+      },
+      "reference_receipt_sha256": "049107441f29aa183c139e0f353be4045ecc8d4f219950738f4b1c444792cbf7",
+      "Spectre": "reused original serial runtime-raw-v2 actual native record/settings/grid; no new Spectre execution",
+      "stdout_sha256": "e5254d256d356077a3bdda40137fcade7dcbd6508b12beb5f0cbed11d9b5047f",
+      "command_template": [
+        "python3",
+        "-B",
+        "-m",
+        "evas",
+        "simulate",
+        "<case>/tb.scs",
+        "--kernel",
+        "<paired019kernel>",
+        "--timeout",
+        "120"
+      ],
+      "literal_command_sha256": "4f52163cf7f0c729b50cea88b9b628e171914a0bf140c024ddb0816ebb8607b4"
+    },
+    "quotient": {
+      "status": "PASS",
+      "kernel_sha256": "e4dbbd8c126ab130c82c1880458303fe8239277b206ac600a2230d7eee727540",
+      "VA_sha256": "b7b2295742bf18fa6ba56cf2f01301e1e68bd775760241049af7dd436b8f7e7f",
+      "SCS_sha256": "05d9e568693b01d761a5dc8cda8483a030029a28cb12d073e37cc37669d82a4a",
+      "actual": {
+        "te": 0.5,
+        "n": 4.0,
+        "i": 2.0,
+        "q": 2.0,
+        "rem": 1.0,
+        "acc": 5.0,
+        "a0": 0.0,
+        "a1": 2.0,
+        "a2": 3.0,
+        "a3": 0.0
+      },
+      "reference_receipt_sha256": "049107441f29aa183c139e0f353be4045ecc8d4f219950738f4b1c444792cbf7",
+      "Spectre": "reused original serial runtime-raw-v2 actual native record/settings/grid; no new Spectre execution",
+      "stdout_sha256": "0d97a56b907ad3776396d3231c70edf1a3ba648fa6b779e1b05d47d06dd3027f",
+      "command_template": [
+        "python3",
+        "-B",
+        "-m",
+        "evas",
+        "simulate",
+        "<case>/tb.scs",
+        "--kernel",
+        "<paired019kernel>",
+        "--timeout",
+        "120"
+      ],
+      "literal_command_sha256": "b64e879538dca48f35b281c3ab3dbb4c363189295f20056424dcb682dd635a88"
+    }
+  },
+  "source_semantic_review": "34files imported exact from MAIN969 IR23 fixed candidate; production math unchanged by version019 and documentation; CI ofpublishedhead pending",
+  "old_scores": "unchanged; no originalCDS/MUX complete or newQ claim",
+  "raw_availability": "local-only; hashes identify unavailable bulk, not public download"
+}
