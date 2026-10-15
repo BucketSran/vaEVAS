@@ -1,5 +1,20 @@
 # Strobe control fixtures
 
+## 显式保存策略
+
+`output-policy/case.json` 固定同源码的三倍增益与窄 PWL 脉冲、五份 SCS 设置和独立电压答案。
+`output_policy.py` 在实际保存时刻检查源电压、输出、精确强制点和终止行。
+`strobeonly` 在周期窗口内只保存强制点，窗口外须保留同后端普通观察行；没有 strobe 时不删行。
+两个后端的常规时间步不同，不要求整张时间表一致，也不通过插值补缺失强制点。
+电压绝对预算固定为 `1e-10 V`，时间身份用精确数值相等判断。
+
+这些条件依据同源码 Spectre 21.1.0.509.isr12 的实际有限对照，包括显式表只保存
+`.125/.625/1`，以及周期窗口 `.2–.8 s` 内只保存 `.325/.575 s` 的观测。
+新记录与原控制证据分开，不覆盖旧 t=0 缺失或设置资格。
+`test_output_policy.py` 校准缺失终止点、缺失窗口外行、窗口内多余行、相邻浮点时刻、错误电压及非有限值的拒绝。
+`test_scs.py` 另比较两种策略的完整输出、事件状态和强制点证书，验证保存选择不改变物理历史。
+完整事件保持和积分行为仍按下方原合同验收。
+
 ## Fixed timer history consumers
 
 `timer_composition.py` reuses SEF-TIMER, SEF-INTERRUPT and SEF-ISOLATION without

@@ -3,7 +3,7 @@
 当前实现通过 Python `transient`、JSON manifest 和受限 `.scs` 入口提供 strobe 控制。
 它与 `output_times` 分开：后者请求输出，前者要求计算在指定时刻落点。
 `.scs` 的 `tran` 接受下表五项控制，使用相同展开规则；`stop` 和 `maxstep` 仍须显式指定。
-Spectre 的 `strobeoutput` 保存策略和别名尚未实现，未知选项明确拒绝。
+`.scs` 还接受显式 `strobeoutput=all/strobeonly` 保存策略，见下文。别名和显式零周期仍拒绝。
 这是一项有限控制能力，不代表已复制 Spectre 的内部积分或浮点运算顺序。
 
 ```python
@@ -70,3 +70,27 @@ strobe 请求是 IR18 引入的可选扩展，当前编译格式为 IR19；旧�
 `simulate_scs` 将原控制交给已有 API。适配元数据同时记录控制参数和展开时间表。
 [入口测试](../../tests/test_scs.py)与[接入配对说明](../../../experiments/backends/strobe/README.md#scs-adapter-checkpoint)
 覆盖该入口；沿用既有实际 Spectre 观测，原缺失时间与设置资格 I 保留。
+
+## 显式保存策略
+
+`strobeoutput` 只选择 `simulate_scs` 响应中的 `saved` 行；完整 `solutions`、
+`transient` 状态与事件、`strobe_evidence` 和观察证书保持相同。
+`all` 保存常规观察行和强制行的并集。`strobeonly` 保存强制行和终止时刻；
+若使用周期窗口，还保存窗口外的常规行。窗口包含两端，终止时刻始终保留。
+没有 strobe 控制或只有空的显式表时，两种策略都保存常规观察行。
+周期表为空的 `strobeonly` 组合尚未核对参考行为，明确拒绝。
+
+例如 `stop=1 maxstep=.25 strobetimes=[.125 .625] strobeoutput=strobeonly`
+保存 `[.125,.625,1]`，终止时刻无需另列为强制点。
+改为 `strobeperiod=.25 strobedelay=.125 skipstart=.2 skipstop=.8` 后，
+强制点为 `[.325,.575]`；常规网格位于窗口外的 `0` 和 `1` 也被保存。
+原始源折点仍定义源波形，`strobeonly` 可按请求移除窗口内的源折点保存行。
+
+未指定 `strobeoutput` 时，EVAS 保留原保存合同：`saved` 仅含常规观察行，强制点另存。
+这与 Spectre 的默认 `strobeonly` 不同；需要保存策略的测试台须显式给出选项。
+本次同源码实际 Spectre 21.1.0.509.isr12 对照核对了显式表、周期窗口及无 strobe 的两种策略，
+没有要求两个后端采用相同常规时间步。
+[固定模型与判据](../../validation/strobe/output-policy/case.json)、
+[独立检查器](../../validation/strobe/output_policy.py)及
+[拒绝校准](../../validation/strobe/test_output_policy.py)保留精确时刻、窗口外行和终止行义务。
+Spectre 默认策略见 [Cadence strobe 说明](https://community.cadence.com/cadence_blogs_8/b/cic/posts/spectre-tech-tips-using-the-spectre-strobe-feature)。

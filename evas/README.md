@@ -177,6 +177,7 @@ API 为 `evas.scs.load_scs(path)`（检查测试台并返回 manifest 和模型�
 | `vsource` | 一端接地；`dc`；从零开始、时间严格递增的 `wave=[time value ...]`；显式 `delay/rise/width/fall/period/val0/val1` 的线性 pulse |
 | `bsource` 电压式 | 一端接地；`v=V(node)`，可加减一个有限常量或先前 `parameters` 常量；偏移可用一层括号包住，例如 `v=V(vin)+(-0.04)` |
 | 瞬态 | 一条 `tran tran stop=... maxstep=...`，两项必须显式指定且为正；观察点取 `0`、转换为浮点数后仍小于 stop 的 `k*maxstep`、一次 stop，以及 `[0, stop]` 内全部源折点的并集；可另给 [strobe 五项控制](docs/reference/strobe.md)，不改变常规观察网格 |
+| 保存策略 | 显式 `tran strobeoutput=all/strobeonly` 选择常规与强制行的并集，或强制行加终止行；周期窗口外保留常规行，详见 [strobe 保存合同](docs/reference/strobe.md#显式保存策略) |
 | 精度 | `options reltol=... vabstol=...`，映射到现有 EVAS 设置；未指定项使用 EVAS 默认值，不采用 Spectre 默认值 |
 | 电流容差兼容 | `options iabstol=...` 接受有限、非负标量，但发出 warning；EVAS 没有电流未知量，该值不参与求解 |
 | 精度预设兼容 | `tran` 的 `errpreset=liberal/moderate/conservative` 接受但发出 warning，不应用 Spectre 的预设调整；使用显式容差和步长，未指定容差使用 EVAS 默认值 |
@@ -225,10 +226,17 @@ CLI 在 stderr 输出包含 `warnings` 的 JSON，成功结果仍在 stdout。
 DC 和 PWL 保留输入数值与所有拐点。PWL 末点之后保持最后的值。
 pulse 的第 k 次起点为 `d+kP`，四个拐点为 `d+kP`、`d+kP+r`、
 `d+kP+r+w`、`d+kP+r+w+f`；要求 `r,f,P>0`、`d,w>=0`、`r+w+f<=P`。
-拐点由已解析的 binary64 参数用有理数计算；非恒定 pulse 的拐点必须能精确表示为 binary64。
-不能精确表示或时刻分辨率不能表示边沿时明确拒绝，等待源时刻不确定性进入全网络误差链。
-这会拒绝部分常用十进制时间组合；不能用很小的电压方程残差掩盖源时刻舍入。
-输出中的 `testbench.pulse_corner_rounding_seconds` 保留源构造的检查结果。
+拐点由已解析的 binary64 参数用有理数计算，再舍入为保存的 binary64 时刻。
+不能精确表示的拐点会产生源电压误差界，该界随电压关系和固定 timer 的采样状态一起传播，
+输出误差超出 `vabstol/reltol` 预算时拒绝。时刻分辨率不能区分边沿时仍明确拒绝。
+例如 `delay=1e9 rise=.2` 的时刻舍入约为 `4.77e-8 s`；`0–1 V` 上升沿的源误差界约为 `2.39e-7 V`，
+经三倍增益后的误差也必须满足输出预算，方程残差很小不能代替这项检查。
+有源误差的请求目前只支持代数电压关系、初始化和固定 timer 采样；cross、保持状态 timer 及全部连续算子明确拒绝。
+它尚未解决带源时间误差的动态行为。没有源误差的原请求保留已有执行路径。
+`testbench.pulse_corner_proofs` 保留精确有理数拐点、舍入时刻和电压误差界，
+`pulse_corner_rounding_seconds` 保留最大时刻偏差。Python `transient` 及 manifest 可用
+`source_errors={"node": upper_bound_V}` 提供每个驱动源的有限非负绝对电压误差界，未列出的源为零；
+此选项不属于静态 `solve` API。
 这不是通过输出网格采样近似 pulse；改变 maxstep 不改变源拐点。
 保存网格包含源折点，避免后续对保存的驱动电压做线性插值时漏掉窄脉冲。
 例如源在 `.25 s` 为零、`.375 s` 为 `1 V`、`.4375 s` 回零，即使 `maxstep=.5 s`，

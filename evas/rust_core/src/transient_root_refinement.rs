@@ -355,6 +355,7 @@ mod tests {
         .unwrap();
         let trajectory = Trajectory::new(
             TransientInputs {
+                pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![vec![[0., 0.], [3., 3.]]],
                 output_times: vec![0., 3.],

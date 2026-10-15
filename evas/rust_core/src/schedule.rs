@@ -2216,6 +2216,7 @@ mod exact_deadline_review_tests {
         })).unwrap();
         let trajectory = Trajectory::new(
             crate::ir::TransientInputs {
+                pwl_errors_v: None,
                 strobetimes: vec![],
                 pwl: vec![],
                 output_times: vec![0., 2.],
@@ -2386,6 +2387,7 @@ mod held_calendar_review_tests {
         let m = EventModel::new(p, vec![], crate::ir::Tolerances::default()).unwrap();
         let t = Trajectory::new(
             crate::ir::TransientInputs {
+                pwl_errors_v: None,
                 pwl: vec![],
                 strobetimes: vec![],
                 output_times: vec![0., 1.],

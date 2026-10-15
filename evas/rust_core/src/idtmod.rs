@@ -247,6 +247,7 @@ mod tests {
         use crate::ir::{Expression, Term, TransientInputs};
         let mut trajectory = crate::pwl::Trajectory::new(
             TransientInputs {
+                pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: Vec::new(),
                 output_times: vec![0.0, 1.0],

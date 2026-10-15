@@ -2582,6 +2582,7 @@ mod tests {
         })).unwrap();
         let trajectory = Trajectory::new(
             crate::ir::TransientInputs {
+                pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![],
                 output_times: vec![0.0, 0.5],
@@ -2630,6 +2631,7 @@ mod tests {
         .unwrap();
         let trajectory = Trajectory::new(
             crate::ir::TransientInputs {
+                pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![],
                 output_times: vec![0.0, 0.125],
@@ -2783,6 +2785,7 @@ mod tests {
         })).unwrap();
         let trajectory = Trajectory::new(
             crate::ir::TransientInputs {
+                pwl_errors_v: None,
                 strobetimes: vec![],
                 pwl: vec![vec![[0., 0.], [0.125, 0.125]]],
                 output_times: vec![0., 0.125],
@@ -3147,6 +3150,7 @@ mod tests {
         for strobetimes in [vec![], vec![0.03125, 0.0625, 0.09375]] {
             let trajectory = Trajectory::new(
                 crate::ir::TransientInputs {
+                    pwl_errors_v: None,
                     strobetimes,
                     pwl: vec![vec![[0., 0.], [0.125, 0.125]]],
                     output_times: vec![0., 0.125],
@@ -3328,6 +3332,7 @@ mod tests {
         })).unwrap();
         let trajectory = Trajectory::new(
             crate::ir::TransientInputs {
+                pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![vec![[0.0, 0.0], [0.5, 1.0], [1.0, 0.0]]],
                 output_times: vec![0.0, 1.0],

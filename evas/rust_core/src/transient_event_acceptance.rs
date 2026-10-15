@@ -744,6 +744,7 @@ mod tests {
         .unwrap();
         let mut trajectory = Trajectory::new(
             crate::ir::TransientInputs {
+                pwl_errors_v: None,
                 strobetimes: vec![],
                 pwl: vec![vec![[0., 0.3], [0.5, 0.3]]],
                 output_times: vec![0., 0.005, 0.025, 0.03, 0.5],
@@ -1226,6 +1227,7 @@ mod passive_seed_review {
         assert_eq!(model.passive_events, vec![true, false]);
         let trajectory = Trajectory::new(
             TransientInputs {
+                pwl_errors_v: None,
                 pwl: vec![],
                 output_times: vec![0., 0.75, 1.875, 2.5],
                 strobetimes: vec![],

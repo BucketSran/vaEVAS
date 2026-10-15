@@ -5,6 +5,20 @@ import math
 POINT_BUDGET = 100_000
 
 
+def _upper_float(exact, fail):
+    try:
+        value=float(exact)
+    except OverflowError:
+        fail('pulse source error bound is not finite')
+    if not math.isfinite(value):
+        fail('pulse source error bound is not finite')
+    if Q(value)<exact:
+        value=math.nextafter(value,math.inf)
+    if not math.isfinite(value):
+        fail('pulse source error bound is not finite')
+    return value
+
+
 def voltage_points(settings, stop, fail):
     kind = settings.get('type', 'dc')
     allowed = {'dc': {'type','dc'}, 'pwl': {'type','wave'},
@@ -22,7 +36,7 @@ def voltage_points(settings, stop, fail):
         if name not in ('type','edgetype','wave') and not isinstance(value,float):
             fail(f'{name} must be a scalar numeric source setting')
     if kind == 'dc':
-        return [[0.,settings['dc']],[stop,settings['dc']]], 0.
+        return [[0.,settings['dc']],[stop,settings['dc']]], 0., None
     if kind == 'pwl':
         wave = settings['wave']
         if not isinstance(wave,list) or len(wave)<2 or len(wave)%2:
@@ -32,7 +46,7 @@ def voltage_points(settings, stop, fail):
             fail('PWL must start at zero with strictly increasing times; jumps are unsupported')
         if points[-1][0] < stop:
             points.append([stop,points[-1][1]])
-        return points, 0.
+        return points, 0., None
 
     if settings.get('edgetype','linear') != 'linear':
         fail('pulse only supports linear edges', unsupported=True)
@@ -43,7 +57,7 @@ def voltage_points(settings, stop, fail):
     if 4*count+2 > POINT_BUDGET:
         fail('pulse point budget (100000) exceeded')
     low,high = settings['val0'],settings['val1']
-    points, rounding = [[0.,low]], 0.
+    points, rounding, corners = [[0.,low]], Q(0), []
     for index in range(count):
         start = delay + index*period
         for exact,value in ((start,low),(start+rise,high),(start+rise+width,high),(start+rise+width+fall,low)):
@@ -53,9 +67,12 @@ def voltage_points(settings, stop, fail):
                 fail('pulse corner time is not finite')
             if not math.isfinite(time):
                 fail('pulse corner time is not finite')
-            rounding = max(rounding,float(abs(Q(time)-exact)))
-            if Q(time) != exact and low != high:
-                fail('pulse corner is not exactly representable; source-time uncertainty propagation is not yet supported', unsupported=True)
+            delta=abs(Q(time)-exact)
+            rounding = max(rounding,delta)
+            corners.append(dict(exact_time_numerator=str(exact.numerator),
+                                exact_time_denominator=str(exact.denominator),
+                                rounded_time_seconds=time,
+                                time_error_bound_seconds=_upper_float(delta,fail),value_V=value))
             if time == points[-1][0] and value == points[-1][1]:
                 continue
             if time <= points[-1][0]:
@@ -63,4 +80,13 @@ def voltage_points(settings, stop, fail):
             points.append([time,value])
     if points[-1][0] < stop:
         points.append([stop,points[-1][1]])
-    return points, rounding
+    # Map each exact corner to its rounded corner and interpolate the time
+    # displacement linearly. Its magnitude stays below the largest corner
+    # displacement. The exact pulse is Lipschitz with this maximum slope,
+    # so the nominal PWL differs everywhere by at most L * displacement.
+    # Endpoint voltages are original binary64 inputs, with no value rounding.
+    slope=abs(Q(high)-Q(low))/min(rise,fall)
+    error=_upper_float(slope*rounding,fail)
+    return points, _upper_float(rounding,fail), dict(corners=corners,
+                voltage_error_bound_V=error,value_rounding_error_V=0.,
+                maximum_slope_numerator=str(slope.numerator),maximum_slope_denominator=str(slope.denominator))

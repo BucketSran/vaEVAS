@@ -13,6 +13,8 @@
 
 [源折点保存修复](../../../experiments/backends/support/scs-source-observation/README.md)补充 DEV:scs-input 的有限开发证据；修复保存插值漏脉冲，不改变原Q成绩。
 
+[Pulse 源误差和保存策略](../../../experiments/backends/support/scs-source-uncertainty/README.md)补充 DEV:scs-input 与 TIMER 的有限开发证据；非零源误差仍不支持动态算子或 cross，不改变原Q成绩。
+
 IR21 共同基础已随 [#174](https://github.com/BucketSran/vaEVAS/pull/174) 合入 main，补充 LANG、ANALOG、CROSS、TIMER、EVENT-ORDER、EVENT-CONDITIONS、DYNAMICS、COMPOSE 和 DEV:scs-input。
 契约见[局部变量与条件支路](../../validation/ANALOG_CONDITIONS_CONTRACT.md)、
 [事件条件与输出记录](../math/events.md)、[连续选路与有理流](../math/continuous.md#selected-flow)。

@@ -407,6 +407,7 @@ mod tests {
     fn trajectory(value: f64) -> Trajectory {
         Trajectory::new(
             TransientInputs {
+                pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![vec![[0., value], [1., value]]],
                 output_times: vec![0., 1.],

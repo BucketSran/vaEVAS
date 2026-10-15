@@ -1824,6 +1824,7 @@ mod tests {
     fn no_source_trajectory(stop: f64) -> Trajectory {
         Trajectory::new(
             TransientInputs {
+                pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: Vec::new(),
                 output_times: vec![0.0, stop],
@@ -1867,6 +1868,7 @@ mod tests {
     fn zero_width_terminal_segment_keeps_zero_source_slope() {
         let trajectory = Trajectory::new(
             TransientInputs {
+                pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![vec![[0.0, 0.0], [1.0, 1.0]]],
                 output_times: vec![0.0, 1.0],
@@ -1989,6 +1991,7 @@ mod tests {
     fn ramp_filter_trajectory(tau: f64) -> Trajectory {
         Trajectory::new(
             TransientInputs {
+                pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![vec![[0.0, 0.0], [2.0 * tau, 2.0]]],
                 output_times: vec![0.0, 0.5 * tau, tau, 2.0 * tau],
@@ -2247,6 +2250,7 @@ mod tests {
         };
         let trajectory = Trajectory::new(
             TransientInputs {
+                pwl_errors_v: None,
                 strobetimes: Vec::new(),
                 pwl: vec![vec![[0.0, 1.0], [1.0, 1.0]]],
                 output_times: vec![0.0, 1.0],

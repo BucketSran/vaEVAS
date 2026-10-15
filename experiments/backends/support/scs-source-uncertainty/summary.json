@@ -1,0 +1,183 @@
+{
+  "scope": "finite development evidence; source rounding in non-operator voltage relations and fixed timers",
+  "source_error_proof": {
+    "exact_sup_error_numerator": "858993459",
+    "exact_sup_error_denominator": "3602880560889856",
+    "uniform_bound_V": 2.3841857904605135e-07,
+    "negative_control_half_bound": "rejected"
+  },
+  "local_original_wide_V": 1e-05,
+  "local_original_tight_V": 5e-07,
+  "finite_reference": {
+    "numeric_status": "PASS on five exact native pairs",
+    "evidence_status": "INCOMPLETE requested adjacent-float strobe times not all present in Spectre output",
+    "budget_V": 1e-05,
+    "max_difference_V": 1.430511475053464e-06,
+    "pairs": [
+      {
+        "time_s": 999999999.9999999,
+        "EVAS_y_V": -0.0,
+        "Spectre_y_V": 0.0,
+        "difference_V": 0.0
+      },
+      {
+        "time_s": 1000000000.2,
+        "EVAS_y_V": 3.0,
+        "Spectre_y_V": 2.999998927116394,
+        "difference_V": 1.0728836059570312e-06
+      },
+      {
+        "time_s": 1000000000.4,
+        "EVAS_y_V": 3.0,
+        "Spectre_y_V": 3.0,
+        "difference_V": 0.0
+      },
+      {
+        "time_s": 1000000000.6,
+        "EVAS_y_V": -0.0,
+        "Spectre_y_V": 1.430511475053464e-06,
+        "difference_V": 1.430511475053464e-06
+      },
+      {
+        "time_s": 1000000001.0,
+        "EVAS_y_V": -0.0,
+        "Spectre_y_V": 0.0,
+        "difference_V": 0.0
+      }
+    ],
+    "Spectre_requested_but_not_observed_strobetimes": [
+      1000000000.0,
+      1000000000.0000001,
+      1000000000.1999999,
+      1000000000.2000002,
+      1000000000.3999999,
+      1000000000.4000001,
+      1000000000.5999999,
+      1000000000.6000001,
+      1000000000.9999999
+    ]
+  },
+  "reference_version": "Spectre21.1.0.509.isr12",
+  "source_sha256": {
+    "source-errors-wide.scs": "eb4678edabf1fa91dec5792e7f84bd9d34b1fa9ed9f8fae060d0334b27791adb",
+    "source-errors-gain-tight.scs": "3e061a62f3eb02c4f5a7bf7037a76c37b2645abba37a9f44a9b2fc6ee1c77272",
+    "source-errors-gain.va": "fe26848fed20d82b851c4c5ef2a5f4a60f768856570e95b7cfcca79a06612ddb"
+  },
+  "limitations": [
+    "No general derivative or continuous-history uncertainty support; any operator/cross/held timer rejects nonzero source errors.",
+    "Raw local reference archive is retained but not a public reproducibility claim.",
+    "Original request/checker/history unchanged; no new Q qualification."
+  ],
+  "strobe_policy_cases": [
+    {
+      "case": "all-no-strobe",
+      "status": "PASS",
+      "EVAS": {
+        "rows": 7,
+        "forced_times": [],
+        "terminal_retained": true
+      },
+      "Spectre": {
+        "rows": 103,
+        "forced_times": [],
+        "terminal_retained": true
+      },
+      "exact_direct_times": [
+        1.0
+      ]
+    },
+    {
+      "case": "only-no-strobe",
+      "status": "PASS",
+      "EVAS": {
+        "rows": 7,
+        "forced_times": [],
+        "terminal_retained": true
+      },
+      "Spectre": {
+        "rows": 103,
+        "forced_times": [],
+        "terminal_retained": true
+      },
+      "exact_direct_times": [
+        1.0
+      ]
+    },
+    {
+      "case": "all-period-window",
+      "status": "PASS",
+      "EVAS": {
+        "rows": 9,
+        "forced_times": [
+          0.325,
+          0.575
+        ],
+        "terminal_retained": true
+      },
+      "Spectre": {
+        "rows": 108,
+        "forced_times": [
+          0.325,
+          0.575
+        ],
+        "terminal_retained": true
+      },
+      "exact_direct_times": [
+        0.325,
+        0.575,
+        1.0
+      ]
+    },
+    {
+      "case": "only-period-window",
+      "status": "PASS",
+      "EVAS": {
+        "rows": 4,
+        "forced_times": [
+          0.325,
+          0.575
+        ],
+        "terminal_retained": true
+      },
+      "Spectre": {
+        "rows": 12,
+        "forced_times": [
+          0.325,
+          0.575
+        ],
+        "terminal_retained": true
+      },
+      "exact_direct_times": [
+        0.325,
+        0.575,
+        1.0
+      ]
+    },
+    {
+      "case": "strobeonly-explicit",
+      "status": "PASS",
+      "EVAS": {
+        "rows": 3,
+        "forced_times": [
+          0.125,
+          0.625
+        ],
+        "terminal_retained": true
+      },
+      "Spectre": {
+        "rows": 3,
+        "forced_times": [
+          0.125,
+          0.625
+        ],
+        "terminal_retained": true
+      },
+      "exact_direct_times": [
+        0.125,
+        0.625,
+        1.0
+      ]
+    }
+  ],
+  "strobe_physical_history_invariance": "all complete solutions/transient/strobe/observation objects equal for both no-strobe and periodic policy pairs"
+}

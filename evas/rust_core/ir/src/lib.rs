@@ -515,9 +515,22 @@ impl EventTrigger {
     }
 }
 
+fn source_errors<'de, D: serde::Deserializer<'de>>(
+    deserializer: D,
+) -> Result<Option<Vec<f64>>, D::Error> {
+    Vec::<f64>::deserialize(deserializer).map(Some)
+}
+
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct TransientInputs {
+    #[serde(
+        default,
+        rename = "pwl_errors_V",
+        deserialize_with = "source_errors",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub pwl_errors_v: Option<Vec<f64>>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub strobetimes: Vec<f64>,
     pub pwl: Vec<Vec<[f64; 2]>>,
