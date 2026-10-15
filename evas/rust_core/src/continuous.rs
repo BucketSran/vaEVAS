@@ -923,6 +923,23 @@ fn select_network_operators(
         }
     }
     if selected.is_empty() {
+        // No continuous state is jointly propagated, but every contribution
+        // still needs the original affine structure check. The only added
+        // exception is the same finite source-affine/single-transition family
+        // proved for dedicated live filters, checked per original expression.
+        for contribution in &program.contributions {
+            if let Err(error) = structural_affine(&contribution.rhs, program, &contribution.origin)
+            {
+                if !crate::operators::transition_filter::live_contribution(
+                    &contribution.rhs,
+                    program,
+                    &driven,
+                    &contribution.origin.instance,
+                ) {
+                    return Err(error);
+                }
+            }
+        }
         return Ok(Vec::new());
     }
     loop {

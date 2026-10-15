@@ -42,6 +42,19 @@ class CertificateCache(unittest.TestCase):
             execute('@(initial_step)q=2; V(y,r)<+q*idt(V(u,r),0);')
         self.assertEqual(caught.exception.detail['kind'],'unsupported_transient')
 
+    def test_live_filter_does_not_admit_an_independent_state_integral_product(self):
+        # First prove the mixed direct integral + dedicated live filter is
+        # valid; the only rejected change is q multiplying the independent idt.
+        live_filter = """V(feed)<+(2+V(u,r))*transition(q,0,0.25,0.25);
+            V(aux)<+laplace_nd(V(feed),'{1},'{1,0.25});"""
+        declarations = 'real q;electrical feed,aux;'
+        prefix = '@(initial_step)q=2;'
+        valid = execute(prefix + 'V(y,r)<+idt(V(u,r),0);' + live_filter, declarations)
+        self.assertEqual(output(valid),[0.,0.25,0.5,0.75,1.])
+        with self.assertRaises(KernelError) as caught:
+            execute(prefix + 'V(y,r)<+q*idt(V(u,r),0);' + live_filter, declarations)
+        self.assertEqual(caught.exception.detail['kind'],'unsupported_transient')
+
     def test_singular_same_time_feedback_remains_rejected(self):
         with self.assertRaises(KernelError) as caught:
             execute('@(initial_step)q=0; @(timer(0.5,0,0.001))q=V(y,r); V(y,r)<+q+idt(V(u,r),0);')

@@ -8,7 +8,7 @@ use std::sync::Arc;
 
 #[path = "transition_filter_input.rs"]
 mod input;
-pub(crate) use input::specification as live_specification;
+pub(crate) use input::{live_contribution, specification as live_specification};
 
 #[derive(Clone, Copy, PartialEq)]
 pub(crate) struct Projection {

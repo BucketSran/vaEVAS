@@ -187,6 +187,26 @@ impl Parser<'_> {
         }
     }
 }
+/// A contribution outside a jointly propagated network may use precisely the
+/// same source-affine, single-edge expression family as the dedicated filter.
+/// This proof visits original operands before cancellation or zero scaling.
+pub(crate) fn live_contribution(
+    expression: &Expression,
+    program: &Program,
+    driven: &[String],
+    owner: &str,
+) -> bool {
+    let mut parser = Parser {
+        program,
+        driven,
+        owner,
+        visiting: BTreeSet::new(),
+    };
+    parser
+        .expression(expression)
+        .is_some_and(|f| f.parent.is_some() && f.a.iter().chain(&f.b).all(|x| x.finite()))
+}
+
 pub(crate) fn specification(program: &Program, driven: &[String], index: usize) -> Option<Spec> {
     let OperatorSpec::LaplaceNd {
         input,

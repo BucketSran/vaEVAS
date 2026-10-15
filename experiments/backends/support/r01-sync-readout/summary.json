@@ -2144,6 +2144,109 @@
         "local_path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/review/filter-final-astra.md",
         "sha256": "70c0f67e5ec9aad558bef2864a4d9c7fec33efa468467c772ef50020cb7062df"
       }
+    },
+    "admission_repair": {
+      "reason": "First full CI exposed an empty-network structural-check bypass; preserve original q*idt rejection and check each contribution before the bounded live-transition exception.",
+      "source_manifest": {
+        "path": "filter-implementation/SOURCE-filter-ci-structural.json",
+        "sha256": "a941690a7ecdf68385af12cd137f2761b02c20a7c88b5a58ae7e11e9eba1b00c"
+      },
+      "receipt": {
+        "parent": "9f6d9b88dc1e9562eb07de9d2334b20a19abdbb9",
+        "source_manifest": "SOURCE-filter-ci-structural.json",
+        "source_manifest_sha256": "a941690a7ecdf68385af12cd137f2761b02c20a7c88b5a58ae7e11e9eba1b00c",
+        "source_files_verified": 314,
+        "incremental_patch": "ci-structural-increment.patch",
+        "binaries": {
+          "debug": {
+            "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/filter-implementation/ci-structural-debug-kernel",
+            "sha256": "4b6e4e3dbc9fa09daa517ae398653d29cefe42c43aeb04fc221b74cdeda7b714",
+            "executable": true
+          },
+          "release": {
+            "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/filter-implementation/ci-structural-release-kernel",
+            "sha256": "27e5ba5c1aab354b50dae8e30f9247877c15f34fb3b94771c613afbef84a029c",
+            "executable": true
+          }
+        },
+        "change": "Restore original structural_affine validation for every contribution when selected continuous network is empty. Only the failed expression itself may receive the shared finite source-affine/single-transition parser exception.",
+        "checks": {
+          "python_focused": "137 passed; 33.996s",
+          "rust": "349 passed; 1 ignored; 27.56s",
+          "clippy": "all-targets -D warnings PASS; 3.07s; local Rust 1.95.0",
+          "fmt": "PASS",
+          "diff_check": "PASS",
+          "workspace_visibility": "PASS"
+        },
+        "original_ci_test": "test_certificate_cache.CertificateCache.test_unsupported_continuous_state_product_remains_rejected unchanged",
+        "new_test": "test_live_filter_does_not_admit_an_independent_state_integral_product: unscaled independent idt legal positive; same mixed card with q*idt rejects as unsupported_transient",
+        "red_identity": {
+          "binary": "filter-final-debug-kernel",
+          "sha256": "7cb2b9cee05cf02f1c5cf89b11b82668aa47fe0994251898914dd1d016a56c32",
+          "note": "Preserved pre-CI-filter-fix debug binary. Both original and qualified mixed rejection tests fail by not raising. Original #182 CI log retained separately as pr182-first-ci-failed.log."
+        },
+        "first_fixture_limit": "Initial direct nonlinear filter-input mixed fixture rejected through unrelated generic solver dispatch; first log retained, revised fixture uses proven grounded alias and a legal positive control to isolate structural bypass.",
+        "log_sha256": {
+          "ci-structural-red.log": "e6ff3b278109c1c3fe588d984dddd6698dea6d1bc4a313bf2b5d7ea064c68659",
+          "ci-structural-red-qualified-mixed.log": "776a4f5823c52c1338cfdf0fcfe2db9658b1e63389e58292b717122bbd6f42ba",
+          "ci-structural-controls-second.log": "051d1b5a3a07fdb13cac5381f0aefe8b4c21409248e08e6561fbf77a1423a387",
+          "ci-structural-python-focused.log": "d72527f147ec37d03ac7b98ca572a870cc6f830ad5186fb7cb577a0f756bbb9d",
+          "ci-structural-rust-all.log": "338cd8a3700fee5bd0128fbe89ab2ab2b29df2c7339d0e37a5f7c5a2cdf6f92b",
+          "ci-structural-clippy.log": "cc97b500ffa13273f1302dc78a6c61626b6f4740433de25744b7316b3a33d575",
+          "ci-structural-workspaces.log": "5373f05c5ae58229e534d37c163cb3c753caf509148d2e6e2ec248343b386b61",
+          "ci-structural-release.log": "7f7a82ab43830e5f7c9de254f1e7e6116513a86e4cb31acabe92d44cb716ecbb"
+        },
+        "limits": [
+          "No full local Python rerun; complete CI remains required.",
+          "No checker threshold or original rejection assertion changed.",
+          "Review/Git/remote remain root-owned; no new qualification or Spectre alignment claim."
+        ]
+      },
+      "previous_full_ci": {
+        "run_id": 38698084507,
+        "python_tests": 1657,
+        "failures": 1,
+        "test": "test_unsupported_continuous_state_product_remains_rejected",
+        "log_sha256": "5880fe3e40cd937f39f447835c7789d49a4e919c6bd88594c3a4bd24c6bb7014"
+      },
+      "card_replay": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/evas-cards-filter-ci-structural-analysis-v1/RESULT.json",
+        "sha256": "95c95935410a740cc5039d92a28a3844639d0a990743e4c1c834bb560f7983d5",
+        "five_complete_responses_identical": true,
+        "checker_unchanged": true,
+        "numerical_and_behavior": "pass at original finite observations",
+        "Q_status": "not_qualified; original external qualification gaps retained"
+      },
+      "original_request_replay": [
+        {
+          "condition": "c0",
+          "elapsed_seconds": 74.13515691699286,
+          "rows": 9001,
+          "status": "completed",
+          "complete_response_equal_to_previous_filter": true
+        },
+        {
+          "condition": "core-boundary",
+          "elapsed_seconds": 16.586656250001397,
+          "rows": 9001,
+          "status": "completed",
+          "complete_response_equal_to_previous_filter": true
+        }
+      ],
+      "original_checker": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/filter-implementation/original-filter-ci-structural-v1/regrade.json",
+        "sha256": "06b0b63878df10223a73a5331647d74d13a543a94ba8fa74c62b3f7921e468e8",
+        "passes": 0,
+        "denominator": 2,
+        "strict_threshold_failure_retained": true
+      },
+      "review": {
+        "path": "/Users/bucketsran/Documents/TsingProject/research/vaEVAS/current/runs/evas-night-20261014/delivery/issue-repair-20261015/next-sync/review/filter-admission-fix-astra.md",
+        "sha256": "f5ebee0035e5b9c40a524d824d122016e96f64db500c2dd43921549abbb9175d",
+        "result": "No new actionable defect in frozen admission repair; explicitly supersedes prior overstrong global-validation claim"
+      },
+      "spectre_reuse": "Reference VA, stimulus and effective settings unchanged; all five final EVAS complete responses identical. Reuse previously executed actual Spectre, not a new remote run.",
+      "full_ci": "Final PR head CI is the acceptance source; previous failed run retained."
     }
   }
 }
